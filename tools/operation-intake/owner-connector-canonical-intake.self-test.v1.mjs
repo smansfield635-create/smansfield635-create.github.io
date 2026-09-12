@@ -13,6 +13,10 @@ const request = {
     schema:'INTAKE_COMPLETENESS_RECEIPT_v1', receiptId:'SELF_TEST_OWNER_CONNECTOR_COMPLETENESS', result:'COMPLETE_NO_QUESTIONS_REQUIRED',
     unresolvedMaterialQuestions:[], receiptDigest:'self-test-owner-connector-completeness', authorityEffect:'NONE_BY_INTAKE_COMPLETENESS_RECEIPT'
   },
+  functionalCoordination:{
+    schema:'FUNCTIONAL_BEARING_COORDINATION_v1', applicabilityClass:'MATERIAL_GOVERNED_ENGINEERING',
+    functionalBearing:{mode:'SINGLE',bearings:['E'],exemptionReason:null}, primitiveRequirements:['E'], authorityEffect:'NONE'
+  },
   allowedPaths:['index.html'], prohibitedPaths:['forbidden/'], requiredOutputs:['receipt'],
   exactTestCommand:'node self-test', workflowPath:'self-test.yml', artifactPaths:['self-test.json'], fingerprintDomain:{kind:'self-test'}, errorPrecedence:['FAIL_CLOSED'], stopConditions:['FAIL'], terminalDispositions:['PASS_CLOSED','FAIL_CLOSED']
 };

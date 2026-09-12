@@ -1,10 +1,10 @@
 {
   "schema": "REPOSITORY_OPERATION_SUCCESSOR_PROTOCOL_v1",
   "protocolId": "GENERIC_STALE_HEAD_SUCCESSOR_AND_SUPERSESSION_PROTOCOL_v1",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "status": "ACTIVE_WHEN_PRESENT_ON_DEFAULT_BRANCH_AND_VALIDATION_PASS",
   "repository": "smansfield635-create/smansfield635-create.github.io",
-  "purpose": "Replace manual stale-head closure and re-admission with one fail-closed successor transaction, and deterministically compile fresh strict-successor packets after a ratifying main advance without inheriting authority or relabeling evidence.",
+  "purpose": "Replace manual stale-head closure and re-admission with one fail-closed successor transaction, deterministically compile fresh strict-successor packets after a ratifying main advance, and require fresh functional coordination for runtime-or-authority successors without inheriting authority or relabeling evidence.",
   "governingLaw": "AUTHORITY_FOR_H0_DOES_NOT_IMPLY_AUTHORITY_FOR_H1",
   "trigger": "AN_ACTIVE_OPERATION_HAS_A_GOVERNING_HEAD_DIFFERENT_FROM_CURRENT_REFS_HEADS_MAIN",
   "entryGate": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
@@ -26,23 +26,25 @@
     "automaticEvidenceRelabeling": false,
     "automaticProductMutation": false,
     "existingAtomicSuccessorGateStillRequired": true,
+    "functionalCoordination": {
+      "runtimeOrAuthorityFreshValueRequired": true,
+      "predecessorValueInherited": false,
+      "genericRebindAllowed": false,
+      "authorityEffectRequired": "NONE",
+      "preBearingPredecessorMigration": "SUCCESSOR_MUST_SUPPLY_FRESH_FUNCTIONAL_COORDINATION",
+      "validationAuthority": ".github/ai-router/functional-routing/compass-functional-router.v1.mjs"
+    },
     "remoteInvocationMarker": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1",
     "remoteInvocationSchema": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_INVOCATION_REQUEST_v1",
     "remoteInvocationWorkflow": ".github/workflows/remote-operation-successor-v1.yml",
-    "failureLaw": "ANY_UNDECLARED_PREDECESSOR_HEAD_BINDING_SCOPE_CHANGE_AUTHORITY_CHANGE_OR_ARBITRARY_REBIND_FAILS_CLOSED_BEFORE_THE_ATOMIC_SUCCESSOR_GATE"
+    "failureLaw": "ANY_UNDECLARED_PREDECESSOR_HEAD_BINDING_SCOPE_CHANGE_AUTHORITY_CHANGE_FUNCTIONAL_COORDINATION_INHERITANCE_OR_ARBITRARY_REBIND_FAILS_CLOSED_BEFORE_THE_ATOMIC_SUCCESSOR_GATE"
   },
   "dependencies": {
     "currentMainConstructionBaseline": "8df49529c3895ff07ee4655f3dd3ec708bb977aa",
-    "currentMainLockManager": {
-      "path": "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
-      "gitBlobSha": "0aa440a3de30e145c7912fcfe2833fb8430ffbb0",
-      "modifiedByThisProtocol": false
-    },
-    "currentMainIntakeGate": {
-      "path": "tools/operation-intake/repository-operation-intake-gate.v1.mjs",
-      "gitBlobSha": "f0b22e6b9574507632f1ad07647710971a4d63de",
-      "modifiedByThisProtocol": false
-    },
+    "currentMainLockManager": {"path": "tools/operation-intake/repository-operation-lock-manager.v1.mjs", "gitBlobSha": "0aa440a3de30e145c7912fcfe2833fb8430ffbb0", "modifiedByThisProtocol": false},
+    "currentMainIntakeGate": {"path": "tools/operation-intake/repository-operation-intake-gate.v1.mjs", "gitBlobSha": "f0b22e6b9574507632f1ad07647710971a4d63de", "modifiedByThisProtocol": true},
+    "functionalRouter": {"path": ".github/ai-router/functional-routing/compass-functional-router.v1.mjs", "gitBlobSha": "ca3a7a8b6099001ff8d350a3f59c4d9e5422dad4", "modifiedByThisProtocol": false},
+    "frozenCompassConstitution": {"path": "control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json", "gitBlobSha": "49e08bd13e09e70e9363e9c5e18c6f778288cbfe", "modifiedByThisProtocol": false},
     "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
     "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
     "governingRef": "refs/heads/main"
@@ -76,6 +78,8 @@
   "authorityAndEvidence": {
     "authorityInherited": false,
     "authoritySource": "FRESH_SUCCESSOR_REQUEST_AND_CONSTRUCTION_PROCEDURE",
+    "functionalCoordinationAuthorityEffect": "NONE",
+    "functionalCoordinationInherited": false,
     "exactHeadRevalidationRequired": true,
     "predecessorEvidenceMayBePreservedByReference": true,
     "predecessorEvidenceMayNotBeRelabeledAsSuccessorExactHeadEvidence": true,
@@ -85,11 +89,8 @@
     "imiModificationRequired": false,
     "productMutationAuthorityCreated": false
   },
-  "successfulReceipt": {
-    "schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
-    "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED"
-  },
-  "failureLaw": "ANY_IDENTITY_HEAD_GENERATION_SCOPE_AUTHORITY_OR_EXHAUSTED_COMPARE_AND_SWAP_MISMATCH_FAILS_CLOSED_WITH_NO_SUCCESSOR_AUTHORITY",
+  "successfulReceipt": {"schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1", "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED"},
+  "failureLaw": "ANY_IDENTITY_HEAD_GENERATION_SCOPE_AUTHORITY_FUNCTIONAL_COORDINATION_OR_EXHAUSTED_COMPARE_AND_SWAP_MISMATCH_FAILS_CLOSED_WITH_NO_SUCCESSOR_AUTHORITY",
   "usage": {
     "directCommand": "GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>",
     "compileCommand": "node .github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs --input <COMPILE_REQUEST.json> --output <COMPILED_PACKET.json>",
@@ -104,15 +105,12 @@
     "originalOperationId": "GENERIC_STALE_HEAD_SUCCESSOR_AND_SUPERSESSION_PROTOCOL_INSTALLATION_v1_CORRECTED_001",
     "originalGoverningHead": "8df49529c3895ff07ee4655f3dd3ec708bb977aa",
     "originalLockGeneration": 700,
-    "failedCompilerExtensionAttempt": {
-      "operationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_001",
-      "lockGeneration": 1176,
-      "terminalDisposition": "FAIL_CLOSED",
-      "reason": "DIFFERENTIAL_CONTINUITY_PINNED_CONSUMER_MISSING_FROM_INITIAL_SCOPE"
-    },
+    "failedCompilerExtensionAttempt": {"operationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_001", "lockGeneration": 1176, "terminalDisposition": "FAIL_CLOSED", "reason": "DIFFERENTIAL_CONTINUITY_PINNED_CONSUMER_MISSING_FROM_INITIAL_SCOPE"},
     "compilerExtensionOperationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_002",
     "compilerExtensionLockGeneration": 1183,
     "compilerExtensionGoverningHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
+    "functionalBearingMigrationOperationId": "FUNCTIONAL_BEARING_INTAKE_SUCCESSOR_MIGRATION_V1_20260912_001",
+    "functionalBearingMigrationLockGeneration": 2137,
     "activationCondition": "MERGED_TO_DEFAULT_BRANCH_WITH_REQUIRED_ROUTER_SUCCESSOR_COMPILER_DIFFERENTIAL_AND_CONTINUITY_VALIDATION_PASS"
   }
 }

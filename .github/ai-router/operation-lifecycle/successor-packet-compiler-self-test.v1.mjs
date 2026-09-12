@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { compileSuccessorPacket, COMPILER_RECEIPT_SCHEMA } from './successor-packet-compiler.v1.mjs';
+import { compileSuccessorPacket, COMPILER_RECEIPT_SCHEMA, RUNTIME_OR_AUTHORITY_OPERATION_CLASS } from './successor-packet-compiler.v1.mjs';
 
 const OLD = '1111111111111111111111111111111111111111';
 const NEW = '2222222222222222222222222222222222222222';
@@ -77,8 +77,24 @@ function fixture() {
   };
 }
 
-function expectThrow(name, mutate, code) {
+function runtimeFixture({ predecessorHasCoordination = false } = {}) {
   const input = fixture();
+  input.predecessor.constructionProcedure.operationClass = RUNTIME_OR_AUTHORITY_OPERATION_CLASS;
+  if (predecessorHasCoordination) {
+    input.predecessor.operationRequest.functionalCoordination = {
+      schema: 'FUNCTIONAL_BEARING_COORDINATION_v1', applicabilityClass: 'MATERIAL_GOVERNED_ENGINEERING',
+      functionalBearing: { mode: 'SINGLE', bearings: ['E'], exemptionReason: null }, primitiveRequirements: ['E'], authorityEffect: 'NONE'
+    };
+  }
+  input.successor.functionalCoordination = {
+    schema: 'FUNCTIONAL_BEARING_COORDINATION_v1', applicabilityClass: 'MATERIAL_GOVERNED_ENGINEERING',
+    functionalBearing: { mode: 'ROUTE', bearings: ['W','ESE','SSW'], exemptionReason: null }, primitiveRequirements: ['W','E','S'], authorityEffect: 'NONE'
+  };
+  return input;
+}
+
+function expectThrow(name, mutate, code, make = fixture) {
+  const input = make();
   mutate(input);
   try {
     compileSuccessorPacket(input);
@@ -114,6 +130,26 @@ function run() {
     if (out.operationRequest.subjectIdentity.frozenSubjectHead === NEW) throw new Error('EVIDENCE_RELABELLED');
     if (out.compilerReceipt.predecessorEvidenceRelabeledAsSuccessorEvidence !== false) throw new Error('RECEIPT_EVIDENCE_POLICY_WRONG');
   });
+
+  pass('PRE_BEARING_RUNTIME_SUCCESSOR_ACCEPTS_FRESH_FUNCTIONAL_COORDINATION', () => {
+    const out = compileSuccessorPacket(runtimeFixture());
+    if (!out.operationRequest.functionalCoordination) throw new Error('FRESH_FUNCTIONAL_COORDINATION_NOT_INSERTED');
+    if (out.compilerReceipt.functionalCoordinationInherited !== false) throw new Error('FUNCTIONAL_COORDINATION_INHERITED');
+    if (!out.compilerReceipt.freshFunctionalCoordinationRequired || !out.compilerReceipt.freshFunctionalCoordinationSupplied) throw new Error('FRESH_COORDINATION_RECEIPT_INVALID');
+  });
+  pass('RUNTIME_SUCCESSOR_FRESH_FUNCTIONAL_COORDINATION_REQUIRED', () => expectThrow('fresh-required', (i) => { delete i.successor.functionalCoordination; }, 'FRESH_FUNCTIONAL_COORDINATION_REQUIRED', runtimeFixture));
+  pass('PREDECESSOR_FUNCTIONAL_COORDINATION_NOT_INHERITED', () => {
+    const input = runtimeFixture({ predecessorHasCoordination: true });
+    input.successor.functionalCoordination.functionalBearing = { mode: 'SINGLE', bearings: ['N'], exemptionReason: null };
+    input.successor.functionalCoordination.primitiveRequirements = ['N'];
+    const out = compileSuccessorPacket(input);
+    if (out.operationRequest.functionalCoordination.functionalBearing.bearings.join(',') !== 'N') throw new Error('PREDECESSOR_COORDINATION_INHERITED');
+  });
+  pass('FUNCTIONAL_COORDINATION_GENERIC_REBIND_FORBIDDEN', () => expectThrow('coord-rebind', (i) => {
+    i.predecessor.operationRequest.functionalCoordination = { schema:'FUNCTIONAL_BEARING_COORDINATION_v1', applicabilityClass:'MATERIAL_GOVERNED_ENGINEERING', functionalBearing:{mode:'SINGLE',bearings:['E'],exemptionReason:null}, primitiveRequirements:['E'], authorityEffect:'NONE' };
+    i.successor.rebinds.push({ document:'operationRequest', pointer:'/functionalCoordination/applicabilityClass', mode:'REPLACE_SUBSTRING_EXACTLY_ONCE', from:OLD, to:NEW });
+  }, 'FUNCTIONAL_COORDINATION_REBIND_FORBIDDEN', runtimeFixture));
+  pass('SUCCESSOR_FUNCTIONAL_COORDINATION_AUTHORITY_ZERO', () => expectThrow('coord-authority', (i) => { i.successor.functionalCoordination.authorityEffect = 'GRANT'; }, 'AUTHORITY_EFFECT_NONZERO', runtimeFixture));
 
   return {
     schema: 'REPOSITORY_OPERATION_SUCCESSOR_PACKET_COMPILER_SELF_TEST_RECEIPT_v1',

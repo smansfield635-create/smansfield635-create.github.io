@@ -1,0 +1,159 @@
+name: Gen2128 One-Shot Cinematic Render
+
+on:
+  push:
+    branches:
+      - ops/gen2128-one-shot-render-20260912
+    paths:
+      - .github/workflows/gen2128-one-shot-render.yml
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TARGET_BRANCH: candidate/awards-cinematic-epilogue-first-picture-20260911-002
+      TARGET_HEAD: bd6af5fa35d35d85c3c246b7a1d0c4593524b702
+      MEDIA: showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4
+      MASTER_URL: https://commons.wikimedia.org/wiki/Special:Redirect/file/Vivaldi_-_Four_Seasons_2_Summer_mvt_1_Allegro_non_molto_-_John_Harrison_violin.oga
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reset to frozen carrier head
+        run: |
+          set -euo pipefail
+          git checkout --detach "$TARGET_HEAD"
+          test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+
+      - name: Recover seven frozen dependency blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          prefixes=(872d20b1 a67a4e95 8910148d 4f407900 698dc392 8e094b2b a7a60734)
+          for p in "${prefixes[@]}"; do
+            line="$(git rev-list --objects --all | awk -v p="$p" 'index($1,p)==1 {print; exit}')"
+            test -n "$line" || { echo "MISSING_OBJECT_PREFIX:$p"; exit 1; }
+            sha="${line%% *}"
+            path="${line#* }"
+            test "$sha" != "$path" || { echo "MISSING_OBJECT_PATH:$p"; exit 1; }
+            mkdir -p "$(dirname "$path")"
+            git cat-file blob "$sha" > "$path"
+            observed="$(git hash-object "$path")"
+            test "$observed" = "$sha" || { echo "BLOB_MISMATCH:$path:$sha:$observed"; exit 1; }
+            echo "RECOVERED $p $sha $path"
+          done
+
+      - name: Verify recursive module closure
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,re,sys
+          root=pathlib.Path('.').resolve()
+          start=root/'showroom/globe/h-earth/awards/cinematic/epilogue/renderer.mjs'
+          seen=set(); edges=0; missing=[]
+          rx=re.compile(r"(?:from\s+|import\s*\()\s*['\"]([^'\"]+)['\"]")
+          def visit(p):
+              global edges
+              p=p.resolve()
+              if p in seen or not p.exists(): return
+              seen.add(p)
+              if p.suffix not in {'.js','.mjs'}: return
+              text=p.read_text(errors='ignore')
+              for spec in rx.findall(text):
+                  if not spec.startswith('.'): continue
+                  edges+=1
+                  q=(p.parent/spec).resolve()
+                  if q.suffix=='':
+                      for ext in ('.js','.mjs'):
+                          if q.with_suffix(ext).exists(): q=q.with_suffix(ext); break
+                  if not q.exists(): missing.append((str(p.relative_to(root)),spec,str(q.relative_to(root))))
+                  else: visit(q)
+          visit(start)
+          print(f'FILES_VISITED={len(seen)} IMPORT_EDGES={edges} MISSING={len(missing)}')
+          for m in missing: print('MISSING',*m)
+          if missing: sys.exit(1)
+          PY
+
+      - name: Install render toolchain
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+          mkdir -p /tmp/gen2128-node
+          cd /tmp/gen2128-node
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+
+      - name: Acquire canonical Vivaldi master and build frozen 58.774s audio
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 4 --retry-delay 3 "$MASTER_URL" -o /tmp/vivaldi-summer-mvt1.oga
+          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 /tmp/vivaldi-summer-mvt1.oga
+          # Existing Chapter Two binding starts this exact master at 167.000s. The
+          # frozen carrier window starts at 88.770s, so source time is 255.770s.
+          # The page audio is looped; continue from 0 after the 302.093333s master end.
+          ffmpeg -y -v error -i /tmp/vivaldi-summer-mvt1.oga -filter_complex \
+            "[0:a]atrim=start=255.770:end=302.093333333333,asetpts=PTS-STARTPTS[a0];[0:a]atrim=start=0:end=12.450666666667,asetpts=PTS-STARTPTS[a1];[a0][a1]concat=n=2:v=0:a=1,aresample=48000[a]" \
+            -map "[a]" -t 58.774 -ac 2 -c:a pcm_s16le /tmp/gen2128-audio.wav
+          ffprobe -v error -show_entries stream=sample_rate,channels,duration -of json /tmp/gen2128-audio.wav
+
+      - name: Render 1763 deterministic frames and encode picture
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/gen2128-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          sleep 2
+          cat >/tmp/gen2128-node/render.cjs <<'NODE'
+          const { chromium } = require('playwright');
+          const { spawn } = require('child_process');
+          (async()=>{
+            const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-gpu-sandbox','--no-sandbox']});
+            const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});
+            page.on('console',m=>console.log('BROWSER',m.type(),m.text()));
+            page.on('pageerror',e=>console.error('PAGEERROR',e.message));
+            await page.goto('http://127.0.0.1:8765/showroom/globe/h-earth/awards/cinematic/epilogue/render.html',{waitUntil:'load',timeout:120000});
+            await page.waitForFunction(()=>window.DGB_AWARDS_EPILOGUE_RENDER && typeof window.DGB_AWARDS_EPILOGUE_RENDER.renderAt==='function',null,{timeout:120000});
+            const ff=spawn('ffmpeg',['-y','-v','error','-f','image2pipe','-vcodec','png','-framerate','30','-i','-','-an','-c:v','libx264','-profile:v','high','-level','4.1','-pix_fmt','yuv420p','-colorspace','bt709','-color_trc','bt709','-color_primaries','bt709','-frames:v','1763','/tmp/gen2128-picture.mp4'],{stdio:['pipe','inherit','inherit']});
+            for(let i=0;i<1763;i++){
+              const t=i/30;
+              await page.evaluate(t=>window.DGB_AWARDS_EPILOGUE_RENDER.renderAt(t),t);
+              const png=await page.locator('#picture').screenshot({type:'png'});
+              if(!ff.stdin.write(png)) await new Promise(r=>ff.stdin.once('drain',r));
+              if(i%100===0) console.log(`FRAME ${i}/1763 t=${t.toFixed(3)}`);
+            }
+            ff.stdin.end();
+            const code=await new Promise(r=>ff.on('close',r));
+            await browser.close();
+            if(code!==0) process.exit(code||1);
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          cd /tmp/gen2128-node
+          node render.cjs
+          ffprobe -v error -count_frames -show_entries stream=codec_name,profile,width,height,pix_fmt,avg_frame_rate,nb_read_frames,duration -of json /tmp/gen2128-picture.mp4
+
+      - name: Mux exact master and run committed verifier
+        run: |
+          set -euo pipefail
+          mkdir -p "$(dirname "$MEDIA")"
+          ffmpeg -y -v error -i /tmp/gen2128-picture.mp4 -i /tmp/gen2128-audio.wav \
+            -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 192k -ar 48000 -ac 2 \
+            -t 58.774 -movflags +faststart "$MEDIA"
+          node showroom/globe/h-earth/awards/qualification/verify-cinematic-epilogue-v1.mjs | tee /tmp/gen2128-verifier.json
+          sha256sum "$MEDIA" | tee /tmp/gen2128-media.sha256
+
+      - name: Commit only verified MP4 onto frozen carrier
+        run: |
+          set -euo pipefail
+          git status --short
+          git add -- "$MEDIA"
+          staged="$(git diff --cached --name-only)"
+          test "$staged" = "$MEDIA" || { echo "UNAUTHORIZED_STAGED_PATHS:$staged"; exit 1; }
+          git -c user.name='dgb-render-bot' -c user.email='actions@users.noreply.github.com' commit -m 'media: add verified Gen2128 cinematic master'
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"

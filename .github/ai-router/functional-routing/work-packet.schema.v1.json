@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "FUNCTIONAL_BEARING_WORK_PACKET_v1",
+  "title": "Functional Bearing Work Packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema","packetId","parentOperationId","applicabilityClass","functionalBearing","R","L","D","A","objective","requiredOutput","evidenceRefs","unresolvedConditions","prohibitedAuthority","handoff"],
+  "properties": {
+    "schema": {"const": "FUNCTIONAL_BEARING_WORK_PACKET_v1"},
+    "packetId": {"type":"string","minLength":1},
+    "parentOperationId": {"type":"string","minLength":1},
+    "applicabilityClass": {"enum":["MATERIAL_GOVERNED_ENGINEERING","STATIC_EDITORIAL_MICRO","READ_ONLY_ADMINISTRATIVE","SOURCE_READBACK"]},
+    "functionalBearing": {
+      "type":"object","additionalProperties":false,"required":["mode","bearings","exemptionReason"],
+      "properties": {
+        "mode":{"enum":["SINGLE","ROUTE","EXEMPT"]},
+        "bearings":{"type":"array","uniqueItems":false,"items":{"enum":["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"]}},
+        "exemptionReason":{"type":["string","null"]}
+      }
+    },
+    "R":{"type":"object"},
+    "L":{"type":"object"},
+    "D":{"type":"object"},
+    "A":{"type":"object"},
+    "objective":{"type":"string","minLength":1},
+    "requiredOutput":{"type":"string","minLength":1},
+    "evidenceRefs":{"type":"array","items":{"type":"string"}},
+    "unresolvedConditions":{"type":"array","items":{"type":"string"}},
+    "prohibitedAuthority":{"type":"array","items":{"type":"string"}},
+    "handoff":{"type":"object","additionalProperties":false,"required":["predecessorPacketId","successorRelation"],"properties":{"predecessorPacketId":{"type":["string","null"]},"successorRelation":{"type":["string","null"]}}},
+    "primitiveRequirements":{"type":"array","uniqueItems":true,"items":{"enum":["N","E","S","W"]}}
+  }
+}

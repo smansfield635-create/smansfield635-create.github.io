@@ -1,9 +1,9 @@
 {
   "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
-  "operationId": "AWARDS_LIVING_OBJECT_COHERENCE_CYCLE_C_RECONSTRUCT_20260911_006",
-  "lockGeneration": 2106,
-  "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
-  "predecessorHead": "18b0449b366adb5dd00a2fb9ee6682621e1af695",
+  "operationId": "AWARDS_LIVING_OBJECT_TRUST_CYCLE_D_20260911_002",
+  "lockGeneration": 2112,
+  "governingHead": "423f428f8d8a0a000de65ba792be8c6f002ce1e6",
+  "predecessorHead": "423f428f8d8a0a000de65ba792be8c6f002ce1e6",
   "ownerAcceptanceInterpretation": {
     "perCycleVisualReapprovalRequired": false,
     "priorVisualAuditControlsCyclesAThroughE": true,
@@ -61,7 +61,30 @@
       "technicalQualification": "PASS_CLOSED",
       "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
     },
-    "D_TRUST": {"status": "NOT_STARTED"},
+    "D_TRUST": {
+      "status": "PASS_CLOSED",
+      "claim": "Software should have to earn the right to say it worked.",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/trust-cycle-d.mjs",
+      "sourceBinding": {
+        "governanceIndexPath": "governance/index.html",
+        "governanceIndexBlob": "9b216d8f86e5dbc76794ab01ce967d3e9357ef21",
+        "governanceRuntimePath": "governance/governance.js",
+        "governanceRuntimeBlob": "d4404826317739dca929f046c960fd5fd11f6995",
+        "evidenceIndexPath": "evidence/index.html",
+        "evidenceIndexBlob": "69b15800b1d7ef044a1ab7e77b84861bdd81602f",
+        "evidenceConditionPath": "evidence/current-public-condition.mjs",
+        "evidenceConditionBlob": "b2d4231a984da4579ad71528dd1276df023fd1aa"
+      },
+      "semanticBinding": {
+        "authorityProgression": ["INTENT", "EXECUTION", "VERIFICATION", "EVIDENCE", "AUTHORIZED_CLAIM"],
+        "boundedDispositions": ["HOLD", "DENY", "FAIL_CLOSED", "AUTHORIZED"],
+        "executionImpliesSuccess": false,
+        "executionImpliesClaimAuthority": false,
+        "authorizedClaimRequires": ["VERIFICATION", "EVIDENCE"]
+      },
+      "technicalQualification": "PASS_CLOSED",
+      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
+    },
     "E_ESTATE": {"status": "NOT_STARTED"},
     "F_SHARED_COMPOSITION": {"status": "NOT_STARTED"}
   },
@@ -70,6 +93,8 @@
     "priorClosedCyclesReadOnly": true,
     "coherenceDiagnosticProductMutationAuthorized": false,
     "numericCoherenceScoreClaimAuthorized": false,
+    "trustSourceMutationAuthorized": false,
+    "executionAloneAuthorizesTrustClaim": false,
     "bottomTrophyCarouselMutationAuthorized": false,
     "prematureMergeAuthorized": false,
     "deploymentPublicationAuthorized": false

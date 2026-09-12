@@ -1592,6 +1592,49 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
+    "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
+          "lockGeneration": 2161,
+          "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+          "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001",
+          "procedureLocatorDigest": "381d2c23969a97381cd1c4b0c0802e5d4494a2c909b31704f22b412bd6da5091",
+          "requestDigest": "1c6090a302d21cf5d25cf81100d014a38afada5a44e497113cec74a80c593a26",
+          "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50"
+        },
+        "bindingDigest": "905e8327278ecaba8d968c9eee25d5a505b6c8779fa6e94d549c1254c83751f3",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "85f4b05f5e4f89b35da949bb1a90acba3215b01b97abc6772652a107eab0b2e0",
+          "commentId": 5647621700,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3192,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34709327734,
+          "workflowSha": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb"
+        },
+        "lineageAnchorCommitSha": "cc1b94b575adece461e1e0afc5231d6c01ae5ccc",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
+      "lockGeneration": 2161,
+      "lockScope": "H_EARTH:AUDRALIA:CLOUD_PRESENTATION:ADVANCED_GLOBAL_POPULATION:V1",
+      "operationId": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001",
+      "procedureLocatorDigest": "381d2c23969a97381cd1c4b0c0802e5d4494a2c909b31704f22b412bd6da5091",
+      "released": false,
+      "requestDigest": "1c6090a302d21cf5d25cf81100d014a38afada5a44e497113cec74a80c593a26",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "30540ae1b0d9b0bd25e4af93f8e2978d33e34833a234374e83764050933b8a50",
+      "state": "ADMITTED_LOCKED"
+    },
     "30aafa8cd70c2229714d2737d9e771d42657aa675aaf3505acceaf10d6c71bc1": {
       "governingHead": "9662c03b106387ff8046e191867214dd1f947a91",
       "lockGeneration": 1588,
@@ -9189,7 +9232,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2160,
+  "lockGeneration": 2161,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

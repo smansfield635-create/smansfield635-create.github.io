@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-world-gen2152-fast-preflight-20f0a830-20260912",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3177,
+  "requestBranch": "ai-dispatch-request-awards-world-gen2152-preflight",
+  "requestCommit": "5a2493aa0c78c5adabd4f92d4f68ae591993edf7",
+  "requestCommitParent": "13ecdc693defd88fee2158956951c1da4d0ba676",
+  "currentMainSha": "13ecdc693defd88fee2158956951c1da4d0ba676",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "20f0a830441dbd09778ed65077ceb0057bd912d6",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34704701019",
+  "dispatchedRunId": 34704710049,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34704710049",
+  "dispatchedRunHeadSha": "13ecdc693defd88fee2158956951c1da4d0ba676",
+  "dispatchedAt": "2026-09-12T16:16:10.483Z",
+  "resolvedAt": "2026-09-12T16:16:14.424Z"
+}

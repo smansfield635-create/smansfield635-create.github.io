@@ -15,7 +15,8 @@ const NON_EXPERIENCE_H_EARTH_PREFIXES=[
   'h-earth-3d/evidence/'
 ];
 const NON_EXPERIENCE_H_EARTH_SHOWROOM_PREFIXES=[
-  'showroom/globe/h-earth/diagnostic/'
+  'showroom/globe/h-earth/diagnostic/',
+  'showroom/globe/h-earth/awards/'
 ];
 const NON_EXPERIENCE_AUDRALIA_PREFIXES=[
   'showroom/globe/audralia/disposition/',

@@ -7493,42 +7493,60 @@
     "da82dcce160093d1b11844937903a48c9622706a52e505576b89ab6583c842ad": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
-          "lockGeneration": 2151,
+          "governingHead": "244d232532cf7d045bcff87e708b10a2c4ab0fc1",
+          "lockGeneration": 2152,
           "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:WORLD_TRUE_3D_VISUAL_CORRECTIVE",
-          "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001",
-          "procedureLocatorDigest": "eb37b6e278423d31ab735e5b7913ed85ec63d98d618910ba5b088d3d2ac32d7d",
-          "requestDigest": "eba8675c2f47215a8eeb177feb63caa929b391bbc93122bf6236f70421239c59",
+          "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001_REBIND_001",
+          "procedureLocatorDigest": "3250876d210b33294a27060de63be89881e408128949bdec2b1594e3b2b0d888",
+          "requestDigest": "a5269f657c5d7e9444d84af048e26e01cd60096648627cbb4413f2a41fbf065b",
           "scopeHash": "da82dcce160093d1b11844937903a48c9622706a52e505576b89ab6583c842ad"
         },
-        "bindingDigest": "6452743b330a05d13428374e97ea27375b3623fdc460ffb3f4faafb652580a0a",
+        "bindingDigest": "4d98ca89be0cd1a71937283dd4e6be727f38e8883f8c8b08343192adbf5c9afd",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "f0900007f1b6c7e9fa77c1f72e1432f3ed379d145ab3ee39c7dd44f1853c43f1",
-          "commentId": 5647004125,
+          "commentBodySha256": "9a193903798f44f2b141188e0ceafb22d49909c0bb8d3777e95f288c7ed7bd76",
+          "commentId": 5647040879,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 3145,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 34703893876,
+          "workflowRunId": 34704228627,
           "workflowSha": "244d232532cf7d045bcff87e708b10a2c4ab0fc1"
         },
-        "lineageAnchorCommitSha": "851a381fb6566c66ef5ef270a645588b13438ca3",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "acfd9d045de909bb4215abced766ab89e76254cc",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
-      "lockGeneration": 2151,
+      "governingHead": "244d232532cf7d045bcff87e708b10a2c4ab0fc1",
+      "lockGeneration": 2152,
       "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:WORLD_TRUE_3D_VISUAL_CORRECTIVE",
-      "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001",
-      "procedureLocatorDigest": "eb37b6e278423d31ab735e5b7913ed85ec63d98d618910ba5b088d3d2ac32d7d",
+      "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001_REBIND_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
+        "lockGeneration": 2151,
+        "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:WORLD_TRUE_3D_VISUAL_CORRECTIVE",
+        "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001",
+        "preservedEvidenceRefs": [
+          "issue:3145",
+          "issuecomment:5647006307",
+          "issuecomment:5647020746",
+          "commit:8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
+          "commit:244d232532cf7d045bcff87e708b10a2c4ab0fc1"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001_REBIND_001_TRANSITION"
+      },
+      "procedureLocatorDigest": "3250876d210b33294a27060de63be89881e408128949bdec2b1594e3b2b0d888",
       "released": false,
-      "requestDigest": "eba8675c2f47215a8eeb177feb63caa929b391bbc93122bf6236f70421239c59",
+      "requestDigest": "a5269f657c5d7e9444d84af048e26e01cd60096648627cbb4413f2a41fbf065b",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "da82dcce160093d1b11844937903a48c9622706a52e505576b89ab6583c842ad",
       "state": "ADMITTED_LOCKED"
@@ -8888,7 +8906,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2151,
+  "lockGeneration": 2152,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -50122,6 +50140,68 @@
       "scopeHash": "4b2d7b2094bb42437793c1b4bc62e0057078203f18244259d96edf0f232de647",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
+          "lockGeneration": 2151,
+          "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:WORLD_TRUE_3D_VISUAL_CORRECTIVE",
+          "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001",
+          "procedureLocatorDigest": "eb37b6e278423d31ab735e5b7913ed85ec63d98d618910ba5b088d3d2ac32d7d",
+          "requestDigest": "eba8675c2f47215a8eeb177feb63caa929b391bbc93122bf6236f70421239c59",
+          "scopeHash": "da82dcce160093d1b11844937903a48c9622706a52e505576b89ab6583c842ad"
+        },
+        "bindingDigest": "6452743b330a05d13428374e97ea27375b3623fdc460ffb3f4faafb652580a0a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f0900007f1b6c7e9fa77c1f72e1432f3ed379d145ab3ee39c7dd44f1853c43f1",
+          "commentId": 5647004125,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3145,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34703893876,
+          "workflowSha": "244d232532cf7d045bcff87e708b10a2c4ab0fc1"
+        },
+        "lineageAnchorCommitSha": "851a381fb6566c66ef5ef270a645588b13438ca3",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
+      "lockGeneration": 2151,
+      "lockScope": "H_EARTH:AWARDS:LIVING_OBJECT:WORLD_TRUE_3D_VISUAL_CORRECTIVE",
+      "operationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001",
+      "procedureLocatorDigest": "eb37b6e278423d31ab735e5b7913ed85ec63d98d618910ba5b088d3d2ac32d7d",
+      "released": true,
+      "requestDigest": "eba8675c2f47215a8eeb177feb63caa929b391bbc93122bf6236f70421239c59",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "da82dcce160093d1b11844937903a48c9622706a52e505576b89ab6583c842ad",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:3145",
+          "issuecomment:5647006307",
+          "issuecomment:5647020746",
+          "commit:8ab52a15833a4e4e0cdc71e57caa1fc6d473a4da",
+          "commit:244d232532cf7d045bcff87e708b10a2c4ab0fc1"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "244d232532cf7d045bcff87e708b10a2c4ab0fc1",
+        "successorLockGeneration": 2152,
+        "successorLockScope": "H_EARTH:AWARDS:LIVING_OBJECT:WORLD_TRUE_3D_VISUAL_CORRECTIVE",
+        "successorOperationId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001_REBIND_001",
+        "transitionId": "AWARDS_WORLD_TRUE_3D_VISUAL_CORRECTIVE_20260912_001_REBIND_001_TRANSITION"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -42,7 +42,7 @@
     ],
     "interactions": [
       {
-        "name": "Achievement spatial instrument advances to Native Craft",
+        "name": "Achievement spatial instrument advances to World",
         "action": {
           "type": "click",
           "selector": "[data-achievement-next]"
@@ -50,7 +50,7 @@
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-achievement-stage] .instrument-card[data-story=\"native\"]",
+            "selector": "[data-achievement-stage] .instrument-card[data-story=\"world\"]",
             "name": "aria-current",
             "value": "true"
           },

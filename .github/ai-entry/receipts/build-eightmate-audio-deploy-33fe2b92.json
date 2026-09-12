@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "build-eightmate-audio-deploy-33fe2b92",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3130,
+  "requestBranch": "ai-dispatch-request-build-eightmate-deploy-33fe2b92",
+  "requestCommit": "ee744650b396ebc251e8abae5399a167525810da",
+  "requestCommitParent": "33fe2b92ec327d235e3d50bad42657245c2ffe82",
+  "currentMainSha": "33fe2b92ec327d235e3d50bad42657245c2ffe82",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "33fe2b92ec327d235e3d50bad42657245c2ffe82",
+    "surface_id": "build"
+  },
+  "bridgeRunId": "34670153673",
+  "dispatchedRunId": 34670160023,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34670160023",
+  "dispatchedRunHeadSha": "33fe2b92ec327d235e3d50bad42657245c2ffe82",
+  "dispatchedAt": "2026-09-12T03:21:48.459Z",
+  "resolvedAt": "2026-09-12T03:21:53.216Z"
+}

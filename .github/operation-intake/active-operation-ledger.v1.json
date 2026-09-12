@@ -9174,6 +9174,49 @@
       "scopeHash": "f972e84b465e1b63fd935b753f376a1a79e0a9ba9d8f6335fbf084c7fae80bae",
       "state": "ADMITTED_LOCKED"
     },
+    "fa2aa0ddfe5f166fe1506a94ca713b292e461d7e20c1a8136b03f77a6c94bab9": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "521c4b146337e16c784b9f3f0a6bb94045b756b5",
+          "lockGeneration": 2164,
+          "lockScope": "H_EARTH:AWARDS:ACHIEVEMENT_RECOGNITION_FIRST_RECOVERY:V1",
+          "operationId": "AWARDS_CHAMBER_RECOGNITION_FIRST_RECOVERY_20260912_001",
+          "procedureLocatorDigest": "1547d82dca26e83bd0366eec347c8e0bb09278462a993ed171914c1093260943",
+          "requestDigest": "93120d49155e8a05bb3fc42d9f6ffb843d09593ff587f3c7258bff7acc27281c",
+          "scopeHash": "fa2aa0ddfe5f166fe1506a94ca713b292e461d7e20c1a8136b03f77a6c94bab9"
+        },
+        "bindingDigest": "f2e97db013455251574f0242548e7b707ed34a8e17ea1fe8c1e81d163f9e7a53",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d934d46cb6803bc4714d6bf71e2e34c8c79ce2f10d49d519c79638b837663434",
+          "commentId": 5647744076,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3194,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34710427246,
+          "workflowSha": "521c4b146337e16c784b9f3f0a6bb94045b756b5"
+        },
+        "lineageAnchorCommitSha": "9e6d5cfb21264a108471a067792ad724b2e6b1b3",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "521c4b146337e16c784b9f3f0a6bb94045b756b5",
+      "lockGeneration": 2164,
+      "lockScope": "H_EARTH:AWARDS:ACHIEVEMENT_RECOGNITION_FIRST_RECOVERY:V1",
+      "operationId": "AWARDS_CHAMBER_RECOGNITION_FIRST_RECOVERY_20260912_001",
+      "procedureLocatorDigest": "1547d82dca26e83bd0366eec347c8e0bb09278462a993ed171914c1093260943",
+      "released": false,
+      "requestDigest": "93120d49155e8a05bb3fc42d9f6ffb843d09593ff587f3c7258bff7acc27281c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fa2aa0ddfe5f166fe1506a94ca713b292e461d7e20c1a8136b03f77a6c94bab9",
+      "state": "ADMITTED_LOCKED"
+    },
     "fa7ed4cf2243f2ab1ef1fe1a927aab4672af0c5d0659c64c825b7dce0869d7c6": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -9318,7 +9361,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2163,
+  "lockGeneration": 2164,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

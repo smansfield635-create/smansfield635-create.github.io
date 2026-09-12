@@ -228,6 +228,93 @@ export function selfTest() {
     assert.equal(contract.bootstrap.allowsRepositoryMutation, false);
     for (const entry of ['AI_ENTRYPOINT.json', 'AGENTS.md', '.github/ai-router/shared-procedures.v1.json']) assert.match(fs.readFileSync(path.join(root, entry), 'utf8'), /agent-invocation\/contract\.v1\.json/);
   });
+  // These assertions guard the startup procedure and source locators only.
+  // They neither install tools nor simulate proof that a real room invoked one.
+  const readStartupContract = () => JSON.parse(fs.readFileSync(contractPath, 'utf8'));
+  run('root-entry-exposes-existing-startup-and-office-sections', () => {
+    const contract = readStartupContract();
+    const entry = JSON.parse(fs.readFileSync(path.join(root, 'AI_ENTRYPOINT.json'), 'utf8'));
+    for (const section of ['startupDiscovery', 'complementaryOfficeDiscovery']) {
+      assert.equal(entry.canonicalAgentInvocation[section], `.github/ai-router/agent-invocation/contract.v1.json#${section}`);
+      assert.ok(contract[section]);
+      assert.match(fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8'), new RegExp(section));
+    }
+    assert.equal(entry.canonicalAgentInvocation.emptyDeferredRegistryProvesNativeUnavailable, false);
+  });
+  run('empty-deferred-registry-cannot-hide-direct-native-capability', () => {
+    const discovery = readStartupContract().startupDiscovery;
+    assert.deepEqual(discovery.discoveryOrder, ['DIRECTLY_ADVERTISED_TOOL_NAMESPACES', 'AVAILABLE_DEFERRED_TOOL_DISCOVERY_IF_NEEDED']);
+    assert.equal(discovery.allToolsIsCompleteHostCatalog, false);
+    assert.equal(discovery.directToolRequiresDeferredRegistryMatch, false);
+    assert.match(discovery.outcomes.NATIVE_AGENT_TOOL_AVAILABLE.condition, /direct or advertised deferred/);
+    assert.equal(discovery.outcomes.NATIVE_AGENT_TOOL_AVAILABLE.invocationProved, false);
+    assert.equal(discovery.deferredDiscoveryOnlyWhenAdvertised, true);
+  });
+  run('native-call-namespace-cannot-be-invented-or-nested', () => {
+    const discovery = readStartupContract().startupDiscovery;
+    assert.equal(discovery.advertisedCallableNamesRequired, true);
+    assert.equal(discovery.inventedApiNamesAllowed, false);
+    assert.equal(discovery.namespacePolicy.examplesRequireActualHostAdvertisement, true);
+    assert.equal(discovery.namespacePolicy.directCollaborationCallsInsideFunctionsExecAllowed, false);
+    assert.equal(discovery.namespacePolicy.directCollaborationCallsThroughToolsObjectAllowed, false);
+    assert.deepEqual(discovery.namespacePolicy.directNativeExamples, ['collaboration.spawn_agent', 'collaboration.followup_task']);
+  });
+  run('incomplete-discovery-unexposed-capability-and-failed-call-stay-distinct', () => {
+    const discovery = readStartupContract().startupDiscovery;
+    assert.deepEqual(Object.keys(discovery.outcomes).sort(), ['NATIVE_AGENT_TOOL_AVAILABLE', 'NATIVE_AGENT_DISCOVERY_INCOMPLETE', 'NATIVE_AGENT_CAPABILITY_UNEXPOSED', 'NATIVE_AGENT_INVOCATION_CALL_FAILED'].sort());
+    assert.match(discovery.outcomes.NATIVE_AGENT_DISCOVERY_INCOMPLETE.condition, /uninspected or failed/);
+    assert.match(discovery.outcomes.NATIVE_AGENT_CAPABILITY_UNEXPOSED.condition, /inspected successfully/);
+    assert.match(discovery.outcomes.NATIVE_AGENT_CAPABILITY_UNEXPOSED.next, /NATIVE_AGENT_INVOCATION_UNAVAILABLE_STOP_SUBSTANTIVE_WORK/);
+    assert.match(discovery.outcomes.NATIVE_AGENT_INVOCATION_CALL_FAILED.next, /exact failure/);
+    assert.match(discovery.requiredObservations.join('\n'), /source event/);
+  });
+  run('startup-retains-native-proof-bootstrap-and-untested-device-boundaries', () => {
+    const contract = readStartupContract();
+    assert.equal(contract.startupDiscovery.installsHostTools, false);
+    assert.equal(contract.startupDiscovery.createsAuthority, false);
+    assert.equal(contract.startupDiscovery.untestedRoomOrDeviceInvocationProven, false);
+    assert.equal(contract.hostEnforcement.hostOrConnectorInterpositionInstalled, false);
+    assert.equal(contract.hostEnforcement.globalBypassPreventionProven, false);
+    assert.equal(contract.bootstrap.allowsProductInspection, false);
+    assert.equal(contract.bootstrap.allowsRepositoryMutation, false);
+    assert.ok(contract.evidence.requiredStartProof.includes('native returned task identity'));
+    assert.ok(contract.evidence.requiredCompletionProof.includes('independent native observer and source readback'));
+  });
+  run('office-discovery-preserves-existing-roles-and-sole-backend', () => {
+    const discovery = readStartupContract().complementaryOfficeDiscovery;
+    const offices = Object.fromEntries(discovery.offices.map(office => [office.office, office]));
+    assert.deepEqual(Object.keys(offices), ['EQUIPMENT_ROOM', 'NORTH_RETURN', 'LAB_EXECUTION', 'EXECUTION_SUBSTRATE', 'POST_MATERIALIZATION_VERIFICATION', 'ESTATE_STEWARD', 'ACK_RETURN']);
+    assert.equal(offices.LAB_EXECUTION.identity, 'Dextrion');
+    assert.equal(offices.LAB_EXECUTION.purpose, 'IMPLEMENTATION_DISCIPLINE_AND_EXECUTION_PREPARATION');
+    assert.equal(offices.ESTATE_STEWARD.identity, 'Jeeves');
+    assert.equal(offices.ESTATE_STEWARD.technicalDispositionMutable, false);
+    assert.deepEqual(discovery.offices.filter(office => office.executionBackend).map(office => office.backendId), ['CANONICAL_EXECUTION_SUBSTRATE_V1']);
+    assert.deepEqual(Object.keys(readStartupContract().identities), ['N', 'E', 'S', 'W']);
+  });
+  run('private-source-locators-remain-complete-and-current-head-bound', () => {
+    const discovery = readStartupContract().complementaryOfficeDiscovery;
+    assert.equal(discovery.sourceRepository, 'smansfield635-create/geodiametrics1');
+    assert.equal(discovery.sourceRef, 'refs/heads/main');
+    assert.equal(discovery.resolveCurrentPrivateMainWhenApplicable, true);
+    assert.equal(discovery.observedSourceHeadRole, 'HISTORICAL_DISCOVERY_PROVENANCE_NOT_CURRENT_AUTHORITY');
+    assert.match(discovery.observedSourceHead, /^[0-9a-f]{40}$/);
+    assert.deepEqual(discovery.entryPaths, ['AI_ENTRYPOINT.json', 'AGENTS.md']);
+    const base = 'control-plane/transferability-program/compass-agent-runtime-v0.1/';
+    assert.deepEqual(discovery.sourcePaths, {
+      capabilityCrosswalk: base + 'agentic-convergence-capability-crosswalk.v1.json',
+      runtimeContract: base + 'runtime-contract.v0.1.json',
+      productionEntryContract: base + 'production-typed-runtime-entry.v1.json'
+    });
+  });
+  run('private-office-map-cannot-force-routing-authority-or-full-route-proof', () => {
+    const discovery = readStartupContract().complementaryOfficeDiscovery;
+    assert.equal(discovery.mode, 'DISCOVERY_ONLY_TASK_PROPORTIONAL');
+    assert.equal(discovery.afterInitialNativeInvocation, true);
+    for (const flag of ['automaticPrivateRouting', 'allOfficesRequiredForEveryTask', 'privateAccessGranted', 'privateExecutionAuthorityGranted', 'integratedRouteProvenByDiscovery']) assert.equal(discovery[flag], false);
+    assert.equal(discovery.authorityEffect, 'NONE');
+    assert.match(discovery.resolutionSteps.join('\n'), /REQUIRED_PRIVATE_SOURCE_UNAVAILABLE/);
+    assert.match(discovery.resolutionSteps.join('\n'), /do not reconstruct private authority or block unrelated authorized public work/);
+  });
   const failures = checks.filter(check => !check.pass);
   return {schema: 'CANONICAL_NATIVE_AGENT_EVIDENCE_SELF_TEST_v1', result: failures.length ? 'FAIL_CLOSED' : 'PASS_CLOSED', fixtureProvenance: 'SYNTHETIC_ONLY_NOT_ACTUAL_AGENT_INVOCATION_EVIDENCE', checks: checks.length, passed: checks.length - failures.length, failed: failures.length, failures, authorityEffect: 'NONE', actualInvocationProved: false, workAuthorized: false};
 }

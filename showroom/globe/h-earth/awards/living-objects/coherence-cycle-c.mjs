@@ -33,15 +33,33 @@ body{position:relative;isolation:isolate;background:radial-gradient(circle at 52
 body::before{content:"";position:absolute;inset:8% 7%;z-index:0;border-radius:50%;background:radial-gradient(ellipse,rgba(215,116,135,.10),rgba(75,173,194,.035) 48%,transparent 72%);filter:blur(9px);pointer-events:none}
 body::after{content:"";position:absolute;inset:11%;z-index:0;border:1px solid rgba(122,210,226,.08);border-radius:50%;box-shadow:0 0 34px rgba(105,193,210,.045),inset 0 0 30px rgba(220,129,146,.035);pointer-events:none}
 canvas{position:relative;z-index:1;display:block;width:100%;height:100%;min-width:100%;min-height:100%;pointer-events:none;filter:brightness(1.12) saturate(1.06) drop-shadow(0 18px 24px rgba(18,2,8,.46))}
-</style></head><body><canvas id="brain" data-capability-brain-v9 aria-hidden="true"></canvas><script src="${DONOR.stagePath}?v=${DONOR.stageBlob}"></script><script src="${DONOR.brainPath}?v=${DONOR.brainBlob}"></script><script>
+</style></head><body><canvas id="brain" aria-hidden="true"></canvas><script src="${DONOR.stagePath}?v=${DONOR.stageBlob}"></script><script src="${DONOR.brainPath}?v=${DONOR.brainBlob}"></script><script>
 const canvas=document.getElementById('brain');
+let foreground=true;
+const api=window.CapabilityObjectStage?.mount?.(canvas,{
+  meshFactory:window.CompassBrainV9?.build,
+  foreground:()=>foreground,
+  initialYaw:.48,
+  initialPitch:-.075,
+  spin:.000085,
+  scale:1,
+  dataset:{
+    brainRenderer:'COMPASS_BRAIN_V9_REFERENCE_REBUILD_v2',
+    brainContract:'COMPASS_COHERISCOPE_ANATOMICAL_WEBGL_v9_REFERENCE_REBUILD',
+    brainMaterial:'NATIVE_ROSE_FLESH_V6',
+    brainDepthModel:'TRUE_WEBGL_GEOMETRY',
+    brainComponents:'bilateral-hemispheres,longitudinal-fissure,central-sulcus,lateral-sulcus,paired-cerebellar-lobes,pons,medulla,brainstem',
+    brainReferenceTarget:'APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE'
+  }
+})||null;
 window.__AWARDS_DONOR_BRIDGE__={
   kind:'BRAIN_V9',
-  ready:()=>!!canvas._brainV9,
-  inspect:()=>canvas._brainV9?.inspect?.()||null,
-  activate:()=>canvas._brainV9?.capture?.()||null,
-  restore:()=>canvas._brainV9?.setView?.(.48,-.075),
-  destroy:()=>canvas._brainV9?.destroy?.()
+  ready:()=>!!api,
+  inspect:()=>api?.inspect?.()||null,
+  activate:()=>api?.capture?.()||null,
+  restore:()=>api?.setView?.(.48,-.075),
+  setForeground:on=>{foreground=!!on;if(foreground)api?.capture?.()},
+  destroy:()=>api?.destroy?.()
 };
 </script></body></html>`;
 
@@ -75,14 +93,14 @@ export function mountCoherenceLivingObject(root,options={}){
   root.dataset.ambientEnvironment='DARK_DEPTH_FIELD';
   root.dataset.motion='CONTINUOUS_SLOW_ROTATION';
   let state='FOREGROUND_REST',phase='loading',destroyed=false,timer=0,bridge=null,error=null;
-  const ready=waitForBridge(frame).then(x=>{if(destroyed)return null;bridge=x;phase='rest';return x}).catch(e=>{error=e;phase='error';return null});
+  const ready=waitForBridge(frame).then(x=>{if(destroyed)return null;bridge=x;phase='rest';bridge.setForeground?.(true);return x}).catch(e=>{error=e;phase='error';return null});
   function S(next){if(!LIFECYCLE.includes(next))throw new Error('COHERENCE_INVALID_STATE');state=next;root.dataset.objectState=next;return next}
-  function settleVisual(){frame.style.transform='scale(1)';frame.style.filter='none';frame.style.opacity='1'}
-  function setState(next){S(next);if(next==='FOREGROUND_REST'||next==='FOREGROUND_IDLE'||next==='APPROACHING')settleVisual();return next}
-  function playSignature(){S('SIGNATURE_PLAY');phase='rotation';bridge?.activate?.();if(!reduced){frame.style.transform='scale(1.018)';frame.style.filter='brightness(1.06) saturate(1.04)';clearTimeout(timer);timer=setTimeout(()=>{if(destroyed)return;settleVisual();phase='rest';S('FOREGROUND_IDLE')},760)}else{phase='rest';S('FOREGROUND_IDLE')}return performance.now()}
-  function selectResponse(){S('SELECT_RESPONSE');if(!reduced)frame.style.transform='scale(.985)'}
-  function readerOpen(){S('READER_OPEN');frame.style.opacity='.82'}
-  function restore(){S('RETURN_RESTORING');clearTimeout(timer);settleVisual();bridge?.restore?.();timer=setTimeout(()=>{if(!destroyed){phase='rest';S('FOREGROUND_REST')}},reduced?0:220)}
+  function settleVisual(){frame.style.transform='scale(1)';frame.style.filter='none';frame.style.opacity='1';bridge?.setForeground?.(true)}
+  function setState(next){S(next);if(next==='REAR_INERT'){bridge?.setForeground?.(false);return next}if(next==='FOREGROUND_REST'||next==='FOREGROUND_IDLE'||next==='APPROACHING')settleVisual();return next}
+  function playSignature(){S('SIGNATURE_PLAY');phase='rotation';bridge?.setForeground?.(true);bridge?.activate?.();if(!reduced){frame.style.transform='scale(1.018)';frame.style.filter='brightness(1.06) saturate(1.04)';clearTimeout(timer);timer=setTimeout(()=>{if(destroyed)return;settleVisual();phase='rest';S('FOREGROUND_IDLE')},760)}else{phase='rest';S('FOREGROUND_IDLE')}return performance.now()}
+  function selectResponse(){S('SELECT_RESPONSE');bridge?.setForeground?.(true);if(!reduced)frame.style.transform='scale(.985)'}
+  function readerOpen(){S('READER_OPEN');bridge?.setForeground?.(false);frame.style.opacity='.82'}
+  function restore(){S('RETURN_RESTORING');clearTimeout(timer);bridge?.setForeground?.(true);settleVisual();bridge?.restore?.();timer=setTimeout(()=>{if(!destroyed){phase='rest';S('FOREGROUND_REST')}},reduced?0:220)}
   function inspect(){return Object.freeze({contract:CONTRACT.id,state,phase,reducedMotion:!!reduced,webglContexts:destroyed?0:1,renderer:DONOR.version,donorContract:DONOR.contract,referenceTarget:DONOR.referenceTarget,recognizableObject:'BRAIN',signatureEvent:CONTRACT.signatureEvent,eventCount:1,donorReady:!!bridge,donorError:error?.message||null,donorInspection:bridge?.inspect?.()||null,sourceBinding:CONTRACT.sourceBinding,presentationAuthority:'APPROVED_HIGH_FIDELITY_BRAIN_V9',ambientEnvironment:'DARK_DEPTH_FIELD'})}
   function destroy(){destroyed=true;clearTimeout(timer);bridge?.destroy?.();bridge=null;try{frame.src='about:blank'}catch{}frame.remove();root.replaceChildren()}
   return Object.freeze({contract:CONTRACT,ready,setState,playSignature,selectResponse,readerOpen,restore,inspect,destroy,element:frame});

@@ -5,6 +5,19 @@
   "authorityLimit": "PROCEDURES_SUPPLY_OPERATIONAL_METHODS_AND_NEVER_CREATE_PROJECT_AUTHORITY",
   "procedures": [
     {
+      "procedureId": "FUNCTIONAL_BEARING_ROUTING",
+      "purpose": "Require and validate Compass functional bearing for material governed engineering work while preserving existing project, path, lifecycle, verification, merge, deployment, and certification authority.",
+      "constitution": "control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json",
+      "router": ".github/ai-router/functional-routing/compass-functional-router.v1.mjs",
+      "workPacketSchema": ".github/ai-router/functional-routing/work-packet.schema.v1.json",
+      "executionReceiptSchema": ".github/ai-router/functional-routing/execution-receipt.schema.v1.json",
+      "applicability": {"required": ["MATERIAL_GOVERNED_ENGINEERING"], "exempt": ["STATIC_EDITORIAL_MICRO", "READ_ONLY_ADMINISTRATIVE", "SOURCE_READBACK"], "unclassified": "FAIL_CLOSED"},
+      "steps": ["Classify applicability before functional routing; unclassified or ambiguous applicability fails closed.", "For MATERIAL_GOVERNED_ENGINEERING require one frozen bearing or an ordered multi-bearing route.", "Resolve every bearing against the frozen Compass constitution; no task-specific bearing may be invented.", "Enforce ACL-1 and OSL-1; opposing or three/four-primitive work decomposes rather than collapsing into one station.", "Preserve O=(B,R,L,D,A), evidence, unresolved conditions, and handoff relations in attributable work packets and execution receipts.", "Preserve granted authority exactly; bearing has authorityEffect=NONE and never grants project, path, mutation, merge, deployment, release, or certification authority.", "Use the existing execution substrate and independent verification mechanisms; do not create a second executor or sixteen worker identities."],
+      "failClosedWhen": ["APPLICABILITY_UNCLASSIFIED", "BEARING_REQUIRED_MISSING", "BEARING_NOT_IN_CONSTITUTION", "OSL1_VIOLATION", "MULTI_PRIMITIVE_DECOMPOSITION_REQUIRED", "AUTHORITY_EFFECT_NONZERO", "CONSTITUTION_MISSING_OR_CHANGED"],
+      "authorityCreated": false,
+      "bearingAuthorityEffect": "NONE"
+    },
+    {
       "procedureId": "REPOSITORY_ENTRY",
       "purpose": "Resolve the owning project and load its instructions before substantive action.",
       "steps": ["Read AI_ENTRYPOINT.json.", "Run the repository entry router for every affected path.", "Load every resolved project entrypoint, nested AGENTS.md, registry, validator, and stopping rule.", "Honor the emitted disposition."],

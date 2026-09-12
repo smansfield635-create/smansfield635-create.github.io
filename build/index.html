@@ -93,6 +93,31 @@ const mountOrbit=root=>{const consoleEl=root.querySelector('[data-orbit-console]
 document.querySelectorAll('[data-spatial-instrument]').forEach(mountOrbit);
 })();
 </script>
+<script>
+(()=>{
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)'),cosmos=document.querySelector('[data-dgb-fibonacci-cosmos]'),start=document.querySelector('#start');
+if(!cosmos||!start)return;
+const canvas=document.createElement('canvas');canvas.dataset.dgbFireworks='';canvas.setAttribute('aria-hidden','true');Object.assign(canvas.style,{position:'fixed',inset:'0',width:'100%',height:'100%',display:'block',zIndex:'0',pointerEvents:'none'});cosmos.insertAdjacentElement('afterend',canvas);
+const ctx=canvas.getContext('2d',{alpha:true});if(!ctx)return;
+const colors=['#f4d58a','#fff1c8','#d9e8f0','#ecd38e','#78ddef','#c0adff'],rockets=[],particles=[],timers=new Set();
+let width=0,height=0,dpr=1,raf=0,last=0,normalTimer=0,finalePlayed=false,finaleActive=false,hidden=document.hidden;
+const coarse=window.matchMedia('(pointer:coarse)'),lowCore=()=>Number(navigator.hardwareConcurrency||8)<=4,quality=()=>coarse.matches||innerWidth<700||lowCore()?.62:1,cap=()=>quality()<1?96:180,rand=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.floor(Math.random()*a.length)];
+const clearTimer=id=>{if(id){clearTimeout(id);timers.delete(id)}},later=(fn,ms)=>{const id=setTimeout(()=>{timers.delete(id);fn()},ms);timers.add(id);return id},clearAllTimers=()=>{clearTimer(normalTimer);normalTimer=0;timers.forEach(clearTimeout);timers.clear()};
+const resize=()=>{width=Math.max(1,innerWidth);height=Math.max(1,innerHeight);dpr=Math.min(devicePixelRatio||1,quality()<1?1.25:1.5);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)};
+const ensureFrame=()=>{if(!raf&&!reduce.matches&&!hidden){last=performance.now();raf=requestAnimationFrame(frame)}};
+const familyConfig=family=>family==='WILLOW'?{count:Math.round(30*quality()),speed:[68,142],life:[2.25,3.05],gravity:34,drag:.987,trail:7}:family==='CHRYSANTHEMUM'?{count:Math.round(38*quality()),speed:[105,205],life:[1.28,1.8],gravity:52,drag:.982,trail:4}:{count:Math.round(30*quality()),speed:[118,215],life:[.95,1.32],gravity:58,drag:.979,trail:2};
+const burst=(rocket)=>{const cfg=familyConfig(rocket.family),room=Math.max(0,cap()-particles.length),count=Math.min(cfg.count,room);for(let i=0;i<count;i++){const angle=Math.PI*2*i/Math.max(1,count)+rand(-.055,.055),speed=rand(...cfg.speed),life=rand(...cfg.life);particles.push({x:rocket.x,y:rocket.y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,age:0,life,gravity:cfg.gravity,drag:cfg.drag,trailMax:cfg.trail,trail:[],color:rocket.color,size:rocket.family==='WILLOW'?1.45:1.2})}}
+const launch=(family='PEONY',xNorm=rand(.16,.84),targetNorm=rand(.18,.46))=>{if(reduce.matches||hidden)return;rockets.push({x:width*xNorm,y:height+14,vx:rand(-8,8),vy:-rand(305,390),target:height*targetNorm,family,color:family==='WILLOW'?pick(['#f4d58a','#ecd38e','#fff1c8']):pick(colors),age:0});ensureFrame()};
+const drawParticle=p=>{const alpha=Math.max(0,1-p.age/p.life),points=p.trail;if(points.length>1){ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.strokeStyle=p.color;ctx.globalAlpha=alpha*.32;ctx.lineWidth=.8;ctx.stroke()}ctx.globalAlpha=alpha*.88;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1};
+function frame(now){raf=0;if(reduce.matches||hidden){ctx.clearRect(0,0,width,height);return}const dt=Math.min(.033,Math.max(.001,(now-last)/1000));last=now;ctx.clearRect(0,0,width,height);for(let i=rockets.length-1;i>=0;i--){const r=rockets[i];r.age+=dt;r.x+=r.vx*dt;r.y+=r.vy*dt;r.vy+=115*dt;ctx.globalAlpha=.55;ctx.fillStyle=r.color;ctx.fillRect(r.x-1,r.y-4,2,8);ctx.globalAlpha=1;if(r.y<=r.target||r.vy>=-46||r.age>1.8){rockets.splice(i,1);burst(r)}}for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.age+=dt;if(p.age>=p.life){particles.splice(i,1);continue}p.trail.unshift({x:p.x,y:p.y});if(p.trail.length>p.trailMax)p.trail.length=p.trailMax;p.vx*=Math.pow(p.drag,dt*60);p.vy=p.vy*Math.pow(p.drag,dt*60)+p.gravity*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;drawParticle(p)}if(rockets.length||particles.length)raf=requestAnimationFrame(frame)}
+const scheduleNormal=(delay=rand(6500,12000))=>{clearTimer(normalTimer);normalTimer=0;if(reduce.matches||hidden||finaleActive)return;normalTimer=later(()=>{normalTimer=0;launch(Math.random()<.42?'CHRYSANTHEMUM':'PEONY');if(Math.random()<.16)later(()=>{if(!finaleActive)launch('PEONY',rand(.18,.82),rand(.22,.43))},900);scheduleNormal()},delay)};
+const playFinale=()=>{if(finalePlayed||reduce.matches||hidden)return;finalePlayed=true;finaleActive=true;clearTimer(normalTimer);normalTimer=0;[[0,'CHRYSANTHEMUM',.27,.3],[950,'PEONY',.73,.24],[1950,'CHRYSANTHEMUM',.42,.2],[3150,'WILLOW',.62,.18]].forEach(([ms,f,x,y])=>later(()=>launch(f,x,y),ms));later(()=>{finaleActive=false;scheduleNormal(12000)},6100)};
+const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting&&e.intersectionRatio>=.35))playFinale()},{threshold:[.35]});observer.observe(start);
+const stopMotion=()=>{if(raf)cancelAnimationFrame(raf);raf=0;rockets.length=0;particles.length=0;clearAllTimers();ctx.clearRect(0,0,width,height)};
+const resume=()=>{if(reduce.matches||hidden)return;resize();scheduleNormal(rand(4500,8500));if(rockets.length||particles.length)ensureFrame()};
+document.addEventListener('visibilitychange',()=>{hidden=document.hidden;if(hidden)stopMotion();else resume()});reduce.addEventListener?.('change',()=>{reduce.matches?stopMotion():resume()});coarse.addEventListener?.('change',resize);addEventListener('resize',resize,{passive:true});resize();if(reduce.matches){canvas.style.display='none'}else{canvas.style.display='block';scheduleNormal(rand(3800,7200))}
+})();
+</script>
 <script src="/assets/build/fibonacci-cosmos.js?v=7" defer></script>
 </body>
 </html>

@@ -5301,6 +5301,49 @@
       "scopeHash": "9beeac2932b89e112e2afb556e031bd10cd3fb33116f4cf040672e4a3d466fe2",
       "state": "ADMITTED_LOCKED"
     },
+    "9c4df426547213902d6ca58bca243a388453b09771c744b2829d85c636e310e2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "74d92fb5caf766a0a63651496a1e020d35af5486",
+          "lockGeneration": 2125,
+          "lockScope": "BUILD:PUBLIC_PAGE:FIREWORKS_RECORDED_AUDIO:ADOPTION_RELEASE:V1",
+          "operationId": "BUILD_FIREWORKS_EIGHTMATE_AUDIO_ADOPTION_RELEASE_20260911_001",
+          "procedureLocatorDigest": "6f0ef8141d536911d87063ac6324ab825f84e225c01d5d21a07ae39178fe2594",
+          "requestDigest": "04a633005002318eea8b996085aff6d0088b9b9b82e3a94dac2079c3bad16a5d",
+          "scopeHash": "9c4df426547213902d6ca58bca243a388453b09771c744b2829d85c636e310e2"
+        },
+        "bindingDigest": "e6c92b5bcea7b606925d42407bf886cd094c1a8e9ca66ad6955ad473cbc72d5f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "989fb9adf210aba9e8167d04756378eca76bc7371792e4ad2ba0b138515b0945",
+          "commentId": 5643101755,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3092,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34669962383,
+          "workflowSha": "74d92fb5caf766a0a63651496a1e020d35af5486"
+        },
+        "lineageAnchorCommitSha": "9a42907e236921fefe02142f0f61d16a917aadf8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "74d92fb5caf766a0a63651496a1e020d35af5486",
+      "lockGeneration": 2125,
+      "lockScope": "BUILD:PUBLIC_PAGE:FIREWORKS_RECORDED_AUDIO:ADOPTION_RELEASE:V1",
+      "operationId": "BUILD_FIREWORKS_EIGHTMATE_AUDIO_ADOPTION_RELEASE_20260911_001",
+      "procedureLocatorDigest": "6f0ef8141d536911d87063ac6324ab825f84e225c01d5d21a07ae39178fe2594",
+      "released": false,
+      "requestDigest": "04a633005002318eea8b996085aff6d0088b9b9b82e3a94dac2079c3bad16a5d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9c4df426547213902d6ca58bca243a388453b09771c744b2829d85c636e310e2",
+      "state": "ADMITTED_LOCKED"
+    },
     "9c7969cf12c94c7ba1cac334c89cc7b68167ed8d04be7848cc3bfe9b48d1b1de": {
       "governingHead": "032c17e968f141a430d80084f21a05226a36a44f",
       "lockGeneration": 292,
@@ -8440,7 +8483,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2124,
+  "lockGeneration": 2125,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -25,10 +25,6 @@
     {
       "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-cloud-pass.mjs",
       "sha256": "c077d8cee0f89219df6dbf17dcdd352650356d1b8654d0e2cfd39eeee81cfb5e"
-    },
-    {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
-      "sha256": "732e7957cdddeb536f1e8ccd1ab2d6db840fca199a376f5057f919a989c64451"
     }
   ],
   "invariants": {

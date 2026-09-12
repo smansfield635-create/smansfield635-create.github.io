@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "FUNCTIONAL_BEARING_EXECUTION_RECEIPT_v1",
+  "title": "Functional Bearing Execution Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema","operationId","packetId","constitutionBlob","orderedRoute","participatingBearings","handoffPreserved","authorityEffect","A","result","heldOrRejectedWork","independentVerificationIdentity"],
+  "properties": {
+    "schema":{"const":"FUNCTIONAL_BEARING_EXECUTION_RECEIPT_v1"},
+    "operationId":{"type":"string","minLength":1},
+    "packetId":{"type":"string","minLength":1},
+    "constitutionBlob":{"const":"49e08bd13e09e70e9363e9c5e18c6f778288cbfe"},
+    "orderedRoute":{"type":"array","items":{"enum":["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"]}},
+    "participatingBearings":{"type":"array","items":{"enum":["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"]}},
+    "handoffPreserved":{"type":"object","required":["R","L","D","A","evidenceRefs","unresolvedConditions"]},
+    "authorityEffect":{"const":"NONE"},
+    "A":{"type":"object"},
+    "result":{"enum":["ROUTE_RESOLVED","EXEMPT","HELD","REJECTED","FAIL_CLOSED"]},
+    "heldOrRejectedWork":{"type":"array","items":{"type":"string"}},
+    "independentVerificationIdentity":{"type":["object","null"]}
+  }
+}

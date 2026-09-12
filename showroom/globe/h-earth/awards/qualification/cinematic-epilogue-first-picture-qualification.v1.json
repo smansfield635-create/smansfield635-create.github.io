@@ -1,0 +1,53 @@
+{
+  "schema": "AWARDS_CINEMATIC_EPILOGUE_FIRST_PICTURE_QUALIFICATION_v1",
+  "operationId": "AWARDS_CINEMATIC_EPILOGUE_FIRST_PICTURE_CONSTRUCTION_20260911_002",
+  "lockGeneration": 2128,
+  "governingHead": "ec39bc5ac6529e015f147433d9a39df05757fe65",
+  "result": "FAIL_CLOSED_MEDIA_RENDER_ENVIRONMENT_BLOCKED",
+  "constructionState": "SOURCE_BOUND_RENDERER_AND_EXACT_VERIFIER_MATERIALIZED",
+  "mediaState": "REVIEW_MASTER_NOT_YET_ENCODED",
+  "reason": "CURRENT_EXECUTION_CONTAINER_CANNOT_MATERIALIZE_CONNECTED_GITHUB_CANONICAL_DEPENDENCY_GRAPH_FOR_BROWSER_RENDER_BECAUSE_OUTBOUND_GITHUB_DNS_IS_DISABLED",
+  "evidence": {
+    "ownerSourceClipsPresentLocally": [
+      {"file":"1423.mp4","bytes":47020138,"sha256":"942a374aec8842c49a4895f7eb3964b4f4095281426dbf7d75cc0d6e6b45ef43"},
+      {"file":"25731.mp4","bytes":319778838,"sha256":"15960d2efd251589d4d5560026ee0a287e4211e64caef504a99d1d0c79f88df5"},
+      {"file":"1424.mp4","bytes":7828534,"sha256":"6e1c3b0b5d1f01a34ffce86660deac72c0601c3cb8da2aba4207e7ab40c6ba9c"},
+      {"file":"1000002020.mp4","bytes":13650077,"sha256":"8653f6c56d58884d28f9330b39b64660e67331e3bf61b033b200df2b270f0c43"}
+    ],
+    "ffmpegAvailable": true,
+    "ffmpegVersionFamily": "7.1.5",
+    "ffprobeAvailable": true,
+    "terminalDurationProbePerformed": true,
+    "terminalDurationProbe": {
+      "audioConformSeconds": 58.774,
+      "authoredCadenceFps": 30,
+      "decodedVideoFrames": 1763,
+      "decodedVideoDurationSeconds": 58.766667,
+      "containerDurationSeconds": 58.774,
+      "residualLastFrameHoldSeconds": 0.007333,
+      "blackTailRequired": false,
+      "extraAuthoredTailFrameRequired": false
+    },
+    "repositoryCloneAttempt": "BLOCKED_DNS",
+    "rawGitHubFetchAttempt": "BLOCKED_DNS",
+    "observedNetworkError": "Could not resolve host: raw.githubusercontent.com",
+    "canonicalSourcesVerifiedThroughConnectedGitHub": true,
+    "canonicalSourceBindingManifestMaterialized": true,
+    "deterministicRendererMaterialized": true,
+    "exactVerifierMaterialized": true,
+    "generatedSubstituteAttempted": false
+  },
+  "requiredNextExecution": "MATERIALIZE_EXACT_CANDIDATE_CHECKOUT_IN_AN_AUTHORIZED_BROWSER_RENDER_ENVIRONMENT_WITH_REPOSITORY_DEPENDENCIES_AVAILABLE; CAPTURE DGB_AWARDS_EPILOGUE_RENDER.renderAt(n/30) FOR N=0..1762; EXTRACT CLIP002 AUDIO 88.770..147.544; ENCODE H264_HIGH_YUV420P_BT709_PLUS_AAC_LC_48K_STEREO; RUN verify-cinematic-epilogue-v1.mjs; STOP FOR OWNER_REVIEW",
+  "mutationBoundary": {
+    "liveAwardsIndexMutation": false,
+    "canonicalDonorSourceMutation": false,
+    "registryMutation": false,
+    "generatedImagery": false,
+    "rawScreenRecordingFinalPicture": false
+  },
+  "publicationAuthorized": false,
+  "deploymentAuthorized": false,
+  "liveIntegrationAuthorized": false,
+  "mergeAuthorized": false,
+  "ownerReviewReached": false
+}

@@ -210,12 +210,17 @@ jobs:
             }
             throw new Error('LOCAL_STAGE_SERVER_UNAVAILABLE');
           }
-          async function canvasReady(page,selector){
+          async function objectReady(page,selector){
             await page.waitForSelector(selector,{timeout:20000});
             await page.waitForFunction(sel=>{
-              const el=document.querySelector(sel);const c=el?.querySelector('canvas')||(el instanceof HTMLCanvasElement?el:null);
-              if(!el||!c)return false;
-              return c.width>=120&&c.height>=120;
+              const el=document.querySelector(sel);
+              if(!el)return false;
+              const canvas=el.querySelector('canvas')||(el instanceof HTMLCanvasElement?el:null);
+              if(canvas)return canvas.width>=120&&canvas.height>=120;
+              const svg=el.querySelector('svg')||(el instanceof SVGElement?el:null);
+              if(svg){const r=svg.getBoundingClientRect();return r.width>=80&&r.height>=80;}
+              const r=el.getBoundingClientRect();
+              return r.width>=80&&r.height>=80&&el.childElementCount>0;
             },{timeout:30000},selector);
             await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
             await sleep(900);
@@ -262,7 +267,7 @@ jobs:
                 await setViewport(page,v);
                 await page.goto(`${baseUrl}${awardsPath}__recognition-standalone.html?story=${story}`,{waitUntil:'networkidle0',timeout:45000});
                 await page.waitForFunction(()=>window.__recognitionReady===true,{timeout:30000});
-                await canvasReady(page,'#host');
+                await objectReady(page,'#host');
                 const file=path.join(evidenceDir,`standalone-${story}-${v.name}.png`);
                 await captureElement(page,'#host',file,{targetSha,mode:'standalone',object:story,viewport:{name:v.name,width:v.width,height:v.height,deviceScaleFactor:v.deviceScaleFactor},textHidden:true});
                 await page.close();
@@ -284,7 +289,7 @@ jobs:
                 await page.waitForFunction(target=>document.querySelector(`[data-achievement-stage] .instrument-card[data-story="${target}"]`)?.getAttribute('aria-current')==='true',{timeout:10000},story);
                 const cardSel=`[data-achievement-stage] .instrument-card[data-story="${story}"]`;
                 const hostSel=`${cardSel} .living-object-shell`;
-                await canvasReady(page,hostSel);
+                await objectReady(page,hostSel);
                 await page.$eval(cardSel,card=>{
                   for(const el of card.querySelectorAll('.surface-copy,.kicker,h3,.surface-thought,.open-cue'))el.style.visibility='hidden';
                 });

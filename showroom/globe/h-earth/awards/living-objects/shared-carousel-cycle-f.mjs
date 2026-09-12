@@ -5,10 +5,10 @@ import {mountTrustLivingObject,AWARDS_TRUST_CYCLE_D_CONTRACT} from './trust-cycl
 import {createAwardsEstateCycleE,AWARDS_ESTATE_CYCLE_E_CONTRACT} from './estate-cycle-e.mjs';
 
 const CONTRACT=Object.freeze({
-  id:'AWARDS_SHARED_CAROUSEL_COMPOSITION_CYCLE_F_V1',
+  id:'AWARDS_SHARED_CAROUSEL_COMPOSITION_CYCLE_F_V2_RECOGNITION_FIRST',
   cycle:'F_SHARED_COMPOSITION',
-  claim:'Five independently closed living objects compose into one shared Awards carousel without losing their identities.',
-  governingHead:'a7399e6c08378e59b3544f3cf6839a1abf8dd8f9',
+  claim:'Five independently recognizable estate objects compose into one shared Awards carousel without forcing a common visual cage.',
+  governingHead:'521c4b146337e16c784b9f3f0a6bb94045b756b5',
   objectContracts:Object.freeze({
     experience:AWARDS_EXPERIENCE_CYCLE_A_CONTRACT.id,
     world:AWARDS_WORLD_CYCLE_B_CONTRACT.id,
@@ -16,45 +16,55 @@ const CONTRACT=Object.freeze({
     trust:AWARDS_TRUST_CYCLE_D_CONTRACT.id,
     estate:AWARDS_ESTATE_CYCLE_E_CONTRACT.id
   }),
+  compositionProfiles:Object.freeze({
+    experience:Object.freeze({shape:'VERTICAL_ARCHITECTURAL_WINDOW',aspect:'2/3'}),
+    world:Object.freeze({shape:'WIDE_ENVIRONMENTAL_WORLD',aspect:'16/9'}),
+    coherence:Object.freeze({shape:'COMPACT_ANATOMICAL_FIELD',aspect:'6/5'}),
+    trust:Object.freeze({shape:'PANORAMIC_MOUNTAIN_RANGE',aspect:'2/1'}),
+    estate:Object.freeze({shape:'ARCHITECTURAL_THREE_QUARTER_FIELD',aspect:'4/3'})
+  }),
   sharedLifecycle:Object.freeze(['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING']),
   traversal:Object.freeze({swipeDrag:true,rearTapToFront:true,activeTapToReader:true,keyboard:true,exactHashFocusRestReturn:true}),
   runtime:Object.freeze({maxActiveLivingObjectInstances:1,rearHeavyRuntime:false,inactiveTeardown:true}),
+  recognitionLaw:Object.freeze({sharedCircleForbidden:true,objectSpecificFootprints:true,integrationMayNotDegradeStandaloneRecognition:true}),
   reducedMotionEquivalent:true,
   bottomTrophyCarouselMutationAuthorized:false
 });
 
 const STYLE_ID='awards-shared-carousel-cycle-f-style';
 const STYLE=`
-[data-living-host]{display:block;position:absolute;inset:auto clamp(12px,2.5vw,26px) auto auto;width:clamp(150px,28%,220px);aspect-ratio:1;top:50%;transform:translateY(-50%);overflow:visible;contain:layout paint style;pointer-events:none}
-[data-living-host]>*{width:100%;height:100%}
+[data-living-host]{display:block;position:absolute;top:50%;right:clamp(8px,2.2vw,24px);transform:translateY(-50%);overflow:visible;contain:layout paint style;pointer-events:none;z-index:0}
+[data-living-host]::before{display:none!important;content:none!important}
+[data-living-host]>*{display:block;width:100%!important;height:100%!important;min-height:0!important;max-width:none!important}
+[data-living-host][data-story-kind="experience"]{width:clamp(180px,28%,250px);aspect-ratio:2/3}
+[data-living-host][data-story-kind="world"]{width:clamp(300px,48%,470px);aspect-ratio:16/9}
+[data-living-host][data-story-kind="coherence"]{width:clamp(240px,38%,350px);aspect-ratio:6/5}
+[data-living-host][data-story-kind="trust"]{width:clamp(320px,51%,510px);aspect-ratio:2/1}
+[data-living-host][data-story-kind="estate"]{width:clamp(285px,45%,440px);aspect-ratio:4/3}
+.achievement-stage .instrument-card[data-story="experience"] .feature{padding-right:clamp(205px,34%,290px)}
+.achievement-stage .instrument-card[data-story="world"] .feature{padding-right:clamp(325px,51%,500px)}
+.achievement-stage .instrument-card[data-story="coherence"] .feature{padding-right:clamp(265px,42%,390px)}
+.achievement-stage .instrument-card[data-story="trust"] .feature{padding-right:clamp(345px,54%,530px)}
+.achievement-stage .instrument-card[data-story="estate"] .feature{padding-right:clamp(310px,48%,465px)}
 [data-living-host][data-shared-state="REAR_INERT"]{opacity:.32;filter:saturate(.72) blur(1px)}
 [data-living-host][data-shared-state="APPROACHING"]{opacity:.72}
-[data-living-host][data-shared-state="SELECT_RESPONSE"]{transform:translateY(-50%) scale(.96)}
+[data-living-host][data-shared-state="SELECT_RESPONSE"]{transform:translateY(-50%) scale(.97)}
 [data-living-host][data-shared-state="READER_OPEN"]{opacity:.78}
-.awards-lo--experience{position:relative;width:100%;height:100%;min-height:220px;perspective:760px;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 50% 48%,rgba(137,227,255,.08),transparent 42%)}
-.awards-lo--experience .exp-space{position:absolute;inset:4%;transform-style:preserve-3d;perspective:680px}
-.awards-lo--experience .exp-field{position:absolute;inset:10%;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.18,.78,.2,1)}
-.awards-lo--experience .exp-node{position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) translateZ(var(--z)) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .72s cubic-bezier(.18,.78,.2,1),opacity .4s ease}
-.awards-lo--experience .exp-crystal{position:absolute;inset:0;border:1px solid rgba(137,227,255,.45);transform:rotate(45deg);background:rgba(8,25,38,.72);box-shadow:0 0 18px rgba(137,227,255,.12)}
-.awards-lo--experience .exp-crystal span{position:absolute;inset:0;display:grid;place-items:center;transform:rotate(-45deg);font:800 7px/1 system-ui;color:#dff9ff}
-.awards-lo--experience .exp-core{position:absolute;left:50%;top:50%;width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(234,211,154,.42);box-shadow:0 0 30px rgba(234,211,154,.1)}
-.awards-lo--experience .exp-core__ring{position:absolute;inset:8%;border-radius:50%;border:1px solid rgba(137,227,255,.24)}
-.awards-lo--experience .exp-core__ring--b{inset:23%;border-color:rgba(147,224,189,.36)}
-.awards-lo--experience .exp-core__point{position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:50%;transform:translate(-50%,-50%);background:#ead39a;box-shadow:0 0 14px #ead39a}
-.awards-lo--experience .exp-horizon{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%) rotateX(68deg);border:1px solid rgba(137,227,255,.12)}
-.awards-lo--experience .exp-horizon--outer{width:86%;height:86%}.awards-lo--experience .exp-horizon--inner{width:60%;height:60%}
-.awards-lo--experience .exp-cluster{position:absolute;left:50%;top:50%;width:76px;height:76px;transform:translate(-50%,-50%) scale(.42);opacity:0;transition:.65s ease}
-.awards-lo--experience .exp-room{position:absolute;width:18px;height:18px;border:1px solid rgba(147,224,189,.5);background:rgba(8,25,38,.84);display:grid;place-items:center;font:700 5px/1 system-ui;color:#dfffe9}.awards-lo--experience .exp-room--1{left:0;top:29px}.awards-lo--experience .exp-room--2{right:0;top:29px}.awards-lo--experience .exp-room--3{left:29px;top:0}.awards-lo--experience .exp-room--4{left:29px;bottom:0}
-.awards-lo--experience .exp-threshold{position:absolute;left:50%;top:50%;width:58px;height:74px;transform:translate(-50%,-50%) translateZ(42px) scale(.45);opacity:0;transition:.65s ease}.awards-lo--experience .exp-threshold__frame{position:absolute;inset:0;border:1px solid rgba(234,211,154,.6);background:rgba(7,18,27,.5);box-shadow:0 0 25px rgba(234,211,154,.08)}
-.awards-lo--experience[data-exp-phase="orient"] .exp-field{transform:rotateZ(10deg) scale(1.03)}
-.awards-lo--experience[data-exp-phase="cluster"] .exp-node{opacity:.35}.awards-lo--experience[data-exp-phase="cluster"] .exp-cluster{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.awards-lo--experience[data-exp-phase="select"] .exp-cluster{opacity:1;transform:translate(-50%,-50%) scale(1.12)}
-.awards-lo--experience[data-exp-phase="threshold"] .exp-threshold,.awards-lo--experience[data-exp-phase="travel"] .exp-threshold{opacity:1;transform:translate(-50%,-50%) translateZ(42px) scale(1)}
-.awards-lo--experience[data-exp-phase="rear"]{opacity:.28;filter:saturate(.7) blur(1px)}
-.awards-lo--experience[data-exp-phase="equivalent"] .exp-cluster{opacity:.82;transform:translate(-50%,-50%) scale(.9)}.awards-lo--experience[data-exp-phase="equivalent"] .exp-threshold{opacity:.72;transform:translate(-50%,-50%) scale(.82)}
-.awards-shared-rear-cue{position:absolute;inset:18%;display:grid;place-items:center;border:1px solid rgba(147,224,189,.2);border-radius:50%;font:800 10px/1 system-ui;letter-spacing:.14em;color:rgba(215,239,230,.64);text-align:center}
-@media(max-width:760px){[data-living-host]{right:-2px;width:170px}}
-@media(prefers-reduced-motion:reduce){[data-living-host],.awards-lo--experience *{transition:none!important;animation:none!important}}
+.awards-shared-rear-cue{position:absolute;inset:18%;display:grid;place-items:center;border:1px solid rgba(147,224,189,.18);border-radius:22px;font:800 10px/1 system-ui;letter-spacing:.14em;color:rgba(215,239,230,.64);text-align:center;background:linear-gradient(145deg,rgba(147,224,189,.025),rgba(2,8,11,.22))}
+@media(max-width:760px){
+  .achievement-stage .feature{padding:clamp(24px,7vw,34px) clamp(20px,6vw,30px) 220px!important;min-height:440px}
+  [data-living-host]{left:50%;right:auto;top:auto;bottom:18px;transform:translateX(-50%);max-width:88%}
+  [data-living-host][data-story-kind="experience"]{width:min(184px,66%);aspect-ratio:2/3}
+  [data-living-host][data-story-kind="world"]{width:min(300px,90%);aspect-ratio:16/9}
+  [data-living-host][data-story-kind="coherence"]{width:min(255px,82%);aspect-ratio:6/5}
+  [data-living-host][data-story-kind="trust"]{width:min(310px,92%);aspect-ratio:2/1}
+  [data-living-host][data-story-kind="estate"]{width:min(280px,88%);aspect-ratio:4/3}
+  .achievement-stage .instrument-card[data-story="experience"] .feature{padding-bottom:292px!important;min-height:515px}
+  .achievement-stage .instrument-card[data-story="coherence"] .feature{padding-bottom:245px!important;min-height:470px}
+  .achievement-stage .instrument-card[data-story="estate"] .feature{padding-bottom:255px!important;min-height:480px}
+  [data-living-host][data-shared-state="SELECT_RESPONSE"]{transform:translateX(-50%) scale(.97)}
+}
+@media(prefers-reduced-motion:reduce){[data-living-host]{transition:none!important;animation:none!important}}
 `;
 
 const labels=Object.freeze({experience:'EXPERIENCE',world:'WORLD',coherence:'COHERENCE',trust:'TRUST',estate:'ESTATE'});
@@ -101,7 +111,7 @@ export function createAwardsSharedCarouselCycleF(cards,{reducedMotion=false}={})
   }
   async function select(card,open){if(card!==activeCard||!activeObject)return;token++;clearTimeout(timer);setShared(card,'SELECT_RESPONSE');activeObject.selectResponse?.();if(!reducedMotion)await new Promise(r=>setTimeout(r,230));if(card!==activeCard||!activeObject)return;setShared(card,'READER_OPEN');activeObject.readerOpen?.();open?.()}
   function restore(card){if(!card)return;token++;clearTimeout(timer);if(card!==activeCard||!activeObject){destroyActive();if(activeCard)paintRear(activeCard,reducedMotion);activeCard=card;activeObject=mountObject(card,reducedMotion)}setShared(card,'RETURN_RESTORING');activeObject.restore?.();requestAnimationFrame(()=>{if(card!==activeCard)return;activeObject?.setState?.('FOREGROUND_REST');setShared(card,'FOREGROUND_REST')})}
-  function inspect(){const objectInspection=activeObject?.inspect?.()||null;return Object.freeze({controller:CONTRACT.id,cycle:CONTRACT.cycle,states:CONTRACT.sharedLifecycle,activeStory:activeCard?.dataset.story||null,activeObjectContract:activeObject?.contract?.id||null,activeLivingObjectInstances:activeObject?1:0,maxActiveLivingObjectInstances:1,rearHeavyRuntime:false,inactiveTeardown:true,topWebglContexts:Number(objectInspection?.webglContexts||0),reducedMotion:!!reducedMotion,objectInspection})}
+  function inspect(){const objectInspection=activeObject?.inspect?.()||null;return Object.freeze({controller:CONTRACT.id,cycle:CONTRACT.cycle,states:CONTRACT.sharedLifecycle,activeStory:activeCard?.dataset.story||null,activeObjectContract:activeObject?.contract?.id||null,activeLivingObjectInstances:activeObject?1:0,maxActiveLivingObjectInstances:1,rearHeavyRuntime:false,inactiveTeardown:true,topWebglContexts:Number(objectInspection?.webglContexts||0),reducedMotion:!!reducedMotion,compositionProfile:CONTRACT.compositionProfiles[activeCard?.dataset.story]||null,objectInspection})}
   function teardown(){token++;clearTimeout(timer);destroyActive();if(activeCard)paintRear(activeCard,reducedMotion);activeCard=null}
   return Object.freeze({contract:CONTRACT,activate,select,restore,inspect,teardown})
 }

@@ -6977,49 +6977,6 @@
       "scopeHash": "dde866deb3700ab6b9d918ca488f97d44312979b3f4ee00c50c1356841393d02",
       "state": "ADMITTED_LOCKED"
     },
-    "deae9fb01491aaf258fbd31d9251099c485fa2534424ce16d9f89e5ac710e6bc": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "751b93edbd662573231b651e2f915c3a5882a942",
-          "lockGeneration": 2103,
-          "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE",
-          "operationId": "CHARACTERS_G4_MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE_20260911_001",
-          "procedureLocatorDigest": "abbf3db8d40d7594a84072b29a1d20703ff1908552ac6550e567a0424486c1ce",
-          "requestDigest": "8a6f18df2b9f8fc016f68c2b76cb739ffe805cfddedc90450164df69104ef3bd",
-          "scopeHash": "deae9fb01491aaf258fbd31d9251099c485fa2534424ce16d9f89e5ac710e6bc"
-        },
-        "bindingDigest": "fac40ccc1b96c233b81bc34a5238e68b7fedc7d95b4c0222fa5200fa42fece12",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "aa9ed35dde5149568ae493e6ac02e010502b4322597741ef4354d062587dc564",
-          "commentId": 5642052443,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2954,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34660638660,
-          "workflowSha": "751b93edbd662573231b651e2f915c3a5882a942"
-        },
-        "lineageAnchorCommitSha": "1b82678ad23f0d9ddb152ae968edbd4779cd57a5",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "751b93edbd662573231b651e2f915c3a5882a942",
-      "lockGeneration": 2103,
-      "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE",
-      "operationId": "CHARACTERS_G4_MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE_20260911_001",
-      "procedureLocatorDigest": "abbf3db8d40d7594a84072b29a1d20703ff1908552ac6550e567a0424486c1ce",
-      "released": false,
-      "requestDigest": "8a6f18df2b9f8fc016f68c2b76cb739ffe805cfddedc90450164df69104ef3bd",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "deae9fb01491aaf258fbd31d9251099c485fa2534424ce16d9f89e5ac710e6bc",
-      "state": "ADMITTED_LOCKED"
-    },
     "deeb7089d9e25420cb38cf013c7bb9b1f3d546523c68d30d7fb0f505f299766a": {
       "governingHead": "f9e63ce0e08e1c3bbf69c1afcffe8de6aed41c13",
       "lockGeneration": 1651,
@@ -47848,6 +47805,50 @@
       "scopeHash": "6f9bb1170d11bbe9a7f0735db2f033630fd3ab1903a0fd518b283aae04a464e0",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "751b93edbd662573231b651e2f915c3a5882a942",
+          "lockGeneration": 2103,
+          "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE",
+          "operationId": "CHARACTERS_G4_MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE_20260911_001",
+          "procedureLocatorDigest": "abbf3db8d40d7594a84072b29a1d20703ff1908552ac6550e567a0424486c1ce",
+          "requestDigest": "8a6f18df2b9f8fc016f68c2b76cb739ffe805cfddedc90450164df69104ef3bd",
+          "scopeHash": "deae9fb01491aaf258fbd31d9251099c485fa2534424ce16d9f89e5ac710e6bc"
+        },
+        "bindingDigest": "fac40ccc1b96c233b81bc34a5238e68b7fedc7d95b4c0222fa5200fa42fece12",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "aa9ed35dde5149568ae493e6ac02e010502b4322597741ef4354d062587dc564",
+          "commentId": 5642052443,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2954,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34660638660,
+          "workflowSha": "751b93edbd662573231b651e2f915c3a5882a942"
+        },
+        "lineageAnchorCommitSha": "1b82678ad23f0d9ddb152ae968edbd4779cd57a5",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "751b93edbd662573231b651e2f915c3a5882a942",
+      "lockGeneration": 2103,
+      "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE",
+      "operationId": "CHARACTERS_G4_MANOR_AUDIT_MAP_PRESENTATION_CORRECTIVE_20260911_001",
+      "procedureLocatorDigest": "abbf3db8d40d7594a84072b29a1d20703ff1908552ac6550e567a0424486c1ce",
+      "released": true,
+      "requestDigest": "8a6f18df2b9f8fc016f68c2b76cb739ffe805cfddedc90450164df69104ef3bd",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "deae9fb01491aaf258fbd31d9251099c485fa2534424ce16d9f89e5ac710e6bc",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "schema": "AUDRALIA_GESTURE_RESPONSE_DIAGNOSTIC_RECEIPT_v1",
+  "operationId": "AUDRALIA_HOOK5_GESTURE_RESPONSE_DIAGNOSTIC_20260828_005",
+  "lockGeneration": 1792,
+  "governingHead": "ef443c9e37a532447a9fe7eea1f328b2f6679f35",
+  "precedent": {
+    "pullRequest": 204,
+    "preservationReference": "docs/H_EARTH_GROUND_INTERACTION_INSTRUMENTATION_REFERENCE.md"
+  },
+  "productMutationAllowed": false,
+  "originalHEarthRun8EChamberMutationAllowed": false,
+  "measurementContract": [
+    "ONE_FINGER_LOOK_RESPONSE_MEASURED",
+    "NO_SYNTHETIC_POLE_CROSSING",
+    "TWO_FINGER_TRAVEL_STATE_CHANGE_MEASURED",
+    "PINCH_DISTINCT_FROM_TRAVEL",
+    "FIRST_RESPONSE_LATENCY_MEASURED",
+    "POST_RELEASE_RESPONSE_MEASURED"
+  ],
+  "executionResult": "PENDING_EXACT_CANDIDATE_BROWSER_QUALIFICATION"
+}

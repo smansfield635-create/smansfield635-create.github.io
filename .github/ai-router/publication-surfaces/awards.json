@@ -17,8 +17,8 @@
         "data-trophy-prev",
         "data-trophy-next",
         "1 / 6",
-        "Drag · swipe · tap a visible card to bring it forward · tap the active card to inspect · or use Left/Right keys",
-        "Swipe · drag · tap a visible chapter to bring it forward · or use Left/Right keys · the sequence wraps"
+        "Drag or swipe · tap a visible card to bring it forward · tap the active card to open",
+        "Drag or swipe · tap a visible chapter to bring it forward · tap the active chapter to open"
       ],
       "excludes": [
         "class=\"rail\" role=\"tablist\" aria-label=\"Achievement stories\"",

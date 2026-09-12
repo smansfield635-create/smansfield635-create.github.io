@@ -56,6 +56,49 @@
       ]
     }
   },
+  "qualificationRouting": {
+    "schema": "QUALIFICATION_PROPORTIONALITY_POLICY_v1",
+    "governingSequence": [
+      "CLASSIFY_CHANGE",
+      "ROUTE_EXACT_PATH_AUTHORITY",
+      "ONE_ADMISSION_IF_REQUIRED",
+      "RUN_ONLY_DISCRIMINATING_CHECKS",
+      "MERGE",
+      "RELEASE_SEPARATELY"
+    ],
+    "separationLaw": "FILESYSTEM_OWNERSHIP_NE_PRODUCT_SEMANTICS_NE_QUALIFICATION_SCOPE",
+    "proofLadder": [
+      "EXACT_BASE",
+      "EXACT_DECLARED_DIFF",
+      "PATH_AUTHORITY_VALID",
+      "PRODUCT_SPECIFIC_VERIFIER",
+      "ONE_RELEVANT_INTEGRATION_CHECK",
+      "PASS_CLOSED"
+    ],
+    "gateSelectionLaw": "A_CHECK_MAY_GATE_ONLY_IF_THE_CURRENT_CANDIDATE_CAN_CAUSE_ITS_FAILURE_CLASS_AND_THE_CHECK_INSPECTS_THAT_DEPENDENCY_OR_SURFACE",
+    "historicalFailureBeforeCandidateInspectionDisposition": "EVIDENCE_ONLY_NON_GATING",
+    "awardsUnderHEarth": {
+      "pathFamily": "showroom/globe/h-earth/awards/**",
+      "filesystemOwner": "H_EARTH_NAMESPACE_PATH_AUTHORITY",
+      "productSemantics": "AWARDS",
+      "qualificationScope": "AWARDS_ONLY_UNLESS_DECLARED_DIFF_CROSSES_A_REAL_H_EARTH_ENGINE_DEPENDENCY",
+      "hEarthRegistryAndPreflightRole": "BOUNDED_NAMESPACE_AND_PATH_AUTHORITY_CHECK",
+      "fullHEarthEngineQualificationImpliedByPathNesting": false,
+      "requiredProductVerifier": "AWARDS_SPECIFIC_VERIFIER",
+      "requiredIntegrationCheckCount": 1
+    },
+    "rebindLaw": {
+      "byteIdenticalCandidateWithUnchangedRelevantDependencies": "CONTINUITY_VERIFICATION",
+      "designOrScientificRestartRequired": false
+    },
+    "crossSubsystemLaw": {
+      "realDependencyCrossed": "RETAIN_RELEVANT_CROSS_SUBSYSTEM_INTEGRATION_GATES",
+      "directoryNestingAloneCreatesDependency": false
+    },
+    "ambiguityDisposition": "FAIL_CLOSED_RUNTIME_OR_AUTHORITY",
+    "prerequisiteConvergenceLaw": "REUSE_ESTABLISHED_BOUNDED_PATH_FAMILY_REGISTRATION_UNLESS_A_GENUINELY_NEW_AUTHORITY_BOUNDARY_IS_CROSSED",
+    "mergeIsRelease": false
+  },
   "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
   "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
   "runtimeAuthorityCannotBeCreatedByProportionalClassification": true,

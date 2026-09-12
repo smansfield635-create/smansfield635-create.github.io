@@ -1,0 +1,77 @@
+{
+  "schema": "AWARDS_LIVING_OBJECT_CYCLE_LEDGER_v1",
+  "operationId": "AWARDS_LIVING_OBJECT_COHERENCE_CYCLE_C_RECONSTRUCT_20260911_006",
+  "lockGeneration": 2106,
+  "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
+  "predecessorHead": "18b0449b366adb5dd00a2fb9ee6682621e1af695",
+  "ownerAcceptanceInterpretation": {
+    "perCycleVisualReapprovalRequired": false,
+    "priorVisualAuditControlsCyclesAThroughE": true,
+    "finalCycleFCompositionVisualApprovalRequired": true,
+    "deploymentPublicationAuthorized": false
+  },
+  "cycles": {
+    "A_EXPERIENCE": {
+      "status": "PASS_CLOSED",
+      "claim": "A website can behave like a place.",
+      "candidateCommit": "55eef607570f576bff89fa84401140b678ca2568",
+      "qualificationReceiptCommentId": 5642139933,
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/experience-cycle-a.mjs",
+      "sourceBinding": {
+        "compassController": "568a6b2cd608a4cbcd62cf70ed59b241c39c90d2",
+        "compassGeometry": "fe35d8d844859a6af810684ace53d2c65258522f",
+        "compassRenderer": "965376dd8a92686bc7008d1fea4846b5f8300872",
+        "mirrorlandWindow": "f99d3ffedf7b7654d067d21d9363eb287877f852"
+      },
+      "technicalQualification": "PASS_CLOSED",
+      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
+    },
+    "B_WORLD": {
+      "status": "PASS_CLOSED",
+      "claim": "The browser can hold a world.",
+      "candidateCommit": "8ecf1492c03c92ea13bff7cc63e6fef4d9775f03",
+      "objectCommit": "13d1a61c55f77034d97070ea3866f9197d6c84bf",
+      "objectBlob": "d0e6238befcfd06dc7abc0fce91605b85a8846d2",
+      "qualificationReceiptCommentId": 5642189560,
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/world-cycle-b.mjs",
+      "sourceBinding": {
+        "hEarthIndex": "b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c",
+        "hEarthRenderer": "799d37cec5244e6aa19b7d94dffe37e182b85884",
+        "hEarthEnvironment": "3f3bc750b0e1a87531e0ea425dc0ac343fb18381",
+        "hEarthCompositor": "3764f0d53b0564de7a5e983bd339dda75017bc82"
+      },
+      "technicalQualification": "PASS_CLOSED",
+      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
+    },
+    "C_COHERENCE": {
+      "status": "PASS_CLOSED",
+      "claim": "Coherence can be inspected without pretending uncertainty is certainty.",
+      "objectPath": "showroom/globe/h-earth/awards/living-objects/coherence-cycle-c.mjs",
+      "sourceBinding": {
+        "coherenceDiagnosticPath": "products/coherence-diagnostic/index.html",
+        "coherenceDiagnosticBlob": "b0785f36d913c286dc19e042f33ea91afcd166bc"
+      },
+      "semanticBinding": {
+        "dimensions": ["SCOPE", "RECEIPTS", "RULES", "SCALE"],
+        "actionClasses": ["PROCEED", "HOLD", "CONTAIN"],
+        "numericScoreAuthorized": false,
+        "coherenceIndexMeaning": "QUALITATIVE_SOURCE_BOUND_ALIGNMENT_INDEX",
+        "scoreMeaning": "BOUNDED_ACTION_CLASSIFICATION_NOT_A_NUMERIC_EFFICACY_SCORE"
+      },
+      "technicalQualification": "PASS_CLOSED",
+      "visualAcceptance": "SATISFIED_BY_PRIOR_AUDIT_NO_PER_CYCLE_REAPPROVAL"
+    },
+    "D_TRUST": {"status": "NOT_STARTED"},
+    "E_ESTATE": {"status": "NOT_STARTED"},
+    "F_SHARED_COMPOSITION": {"status": "NOT_STARTED"}
+  },
+  "invariants": {
+    "cycleOrder": ["A_EXPERIENCE", "B_WORLD", "C_COHERENCE", "D_TRUST", "E_ESTATE", "F_SHARED_COMPOSITION"],
+    "priorClosedCyclesReadOnly": true,
+    "coherenceDiagnosticProductMutationAuthorized": false,
+    "numericCoherenceScoreClaimAuthorized": false,
+    "bottomTrophyCarouselMutationAuthorized": false,
+    "prematureMergeAuthorized": false,
+    "deploymentPublicationAuthorized": false
+  }
+}

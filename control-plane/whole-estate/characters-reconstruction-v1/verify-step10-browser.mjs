@@ -10,6 +10,7 @@ const cases=[
   {id:'mobile',viewport:{width:390,height:844},reducedMotion:'no-preference',isMobile:true,proveFilmPlay:false},
   {id:'reduced-motion',viewport:{width:1440,height:900},reducedMotion:'reduce',isMobile:false,proveFilmPlay:false}
 ];
+const NON_CARDINAL_IDS=new Set(['crossing','dextrion','manor','auren','jeeves','remote']);
 
 const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
 const receipts=[];
@@ -68,25 +69,51 @@ for(const spec of cases){
   let returnStatus='';
   let travelError='';
   let selectedSignalId='';
-  const availableSignal=page.locator('.signal:not([hidden]):not(.unseen):not([aria-hidden="true"])').filter({hasNot:page.locator('[tabindex="-1"]')}).first();
-  if(await availableSignal.count()){
-    selectedSignalId=await availableSignal.getAttribute('data-id')||'';
-    try{
-      await availableSignal.click();
-      await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
-      arrivalStatus=await page.locator('#status').textContent();
-      await page.locator('#return').click();
-      await page.waitForFunction(()=>!document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
-      await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
-      returnStatus=await page.locator('#status').textContent();
-      returnPath=/Orbit/.test(returnStatus||'');
-    }catch(error){
-      travelError=String(error?.message||error);
+  let travelSource='';
+  let nonCardinalFallbackStatus='';
+  let nonCardinalFallbackOk=false;
+  try{
+    const projectedNonCardinals=page.locator('.signal:not([hidden]):not(.unseen):not([aria-hidden="true"])');
+    const projectedCount=await projectedNonCardinals.count();
+    let selected=null;
+    for(let i=0;i<projectedCount;i++){
+      const candidate=projectedNonCardinals.nth(i);
+      const id=await candidate.getAttribute('data-id');
+      if(id&&NON_CARDINAL_IDS.has(id)){selected=candidate;selectedSignalId=id;travelSource='signal';break;}
     }
+    if(selected){
+      await selected.click();
+    }else{
+      await page.locator('#map-toggle').click();
+      await page.waitForFunction(()=>document.querySelector('#coast-map')?.classList.contains('show')===true,null,{timeout:3000});
+      const crossingNode=page.locator('.map-node[data-id="crossing"]:not([hidden])');
+      if(!await crossingNode.count())throw new Error('NO_USER_ACTIONABLE_NONCARDINAL_ROUTE');
+      selectedSignalId='crossing';travelSource='map';
+      await crossingNode.click();
+    }
+    await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
+    arrivalStatus=await page.locator('#status').textContent();
+    const inspect=page.locator('#inspect.show');
+    if(await inspect.count()){
+      await inspect.click();
+      await page.waitForFunction(()=>document.querySelector('#story')?.classList.contains('show')===true&&!!document.querySelector('[data-card-enter]'),null,{timeout:3000});
+      await page.locator('[data-card-enter]').first().click();
+      nonCardinalFallbackStatus=await page.locator('#status').textContent();
+      nonCardinalFallbackOk=/Coming Soon/.test(nonCardinalFallbackStatus||'')&&await page.locator('#return.show').count()>0;
+      await page.locator('[data-card-return]').first().click();
+    }else{
+      await page.locator('#return').click();
+    }
+    await page.waitForFunction(()=>!document.querySelector('#return')?.classList.contains('show'),null,{timeout:15000});
+    await page.waitForFunction(()=>/Orbit/.test(document.querySelector('#status')?.textContent||''),null,{timeout:15000});
+    returnStatus=await page.locator('#status').textContent();
+    returnPath=/Orbit/.test(returnStatus||'');
+  }catch(error){
+    travelError=String(error?.message||error);
   }
 
-  let cardinalPreviewProof={signalAvailable:false,phaseBefore:'',phaseAfter:'',returnHiddenInPreview:false,enterSceneControl:false,enteredScene:false,returnedToOrbit:false,error:''};
-  const cardinalSignal=page.locator('.signal[data-id="alaric"]:not(.unseen):not([aria-hidden="true"])');
+  let cardinalPreviewProof={signalAvailable:false,phaseBefore:'',phaseAfter:'',returnHiddenInPreview:false,sourceEnterSceneControl:false,visibleEnterControl:false,enteredScene:false,returnedToOrbit:false,error:''};
+  const cardinalSignal=page.locator('.signal[data-id="alaric"]:not([hidden]):not(.unseen):not([aria-hidden="true"])');
   if(await cardinalSignal.count()){
     cardinalPreviewProof.signalAvailable=true;
     try{
@@ -96,13 +123,14 @@ for(const spec of cases){
       const preview=await page.evaluate(()=>({
         phase:window.__DGB_CARDINAL_PROPAGATION__?.phase||'',
         returnShown:document.querySelector('#return')?.classList.contains('show')===true,
-        enterScene:[...document.querySelectorAll('#story button')].some(b=>/Enter scene/i.test(b.textContent||''))
+        sourceEnterScene:[...document.querySelectorAll('#story .story-source button')].some(b=>/^Enter scene$/i.test((b.textContent||'').trim())),
+        visibleEnter:!!document.querySelector('#story [data-card-enter]')
       }));
       cardinalPreviewProof.phaseAfter=preview.phase;
       cardinalPreviewProof.returnHiddenInPreview=!preview.returnShown;
-      cardinalPreviewProof.enterSceneControl=preview.enterScene;
-      const enter=page.locator('#story button',{hasText:'Enter scene'}).first();
-      await enter.click();
+      cardinalPreviewProof.sourceEnterSceneControl=preview.sourceEnterScene;
+      cardinalPreviewProof.visibleEnterControl=preview.visibleEnter;
+      await page.locator('#story [data-card-enter]').first().click();
       await page.waitForFunction(()=>document.querySelector('#return')?.classList.contains('show')===true,null,{timeout:15000});
       cardinalPreviewProof.enteredScene=await page.evaluate(()=>window.__DGB_CARDINAL_PROPAGATION__?.phase==='CHARACTER_SCENE');
       await page.locator('#return').click();
@@ -112,7 +140,7 @@ for(const spec of cases){
       cardinalPreviewProof.error=String(error?.message||error);
     }
   }
-  const cardinalPreviewOk=cardinalPreviewProof.signalAvailable&&cardinalPreviewProof.phaseAfter==='ENCOUNTER_PREVIEW'&&cardinalPreviewProof.returnHiddenInPreview&&cardinalPreviewProof.enterSceneControl&&cardinalPreviewProof.enteredScene&&cardinalPreviewProof.returnedToOrbit&&!cardinalPreviewProof.error;
+  const cardinalPreviewOk=cardinalPreviewProof.signalAvailable&&cardinalPreviewProof.phaseAfter==='ENCOUNTER_PREVIEW'&&cardinalPreviewProof.returnHiddenInPreview&&cardinalPreviewProof.sourceEnterSceneControl&&cardinalPreviewProof.visibleEnterControl&&cardinalPreviewProof.enteredScene&&cardinalPreviewProof.returnedToOrbit&&!cardinalPreviewProof.error;
 
   const mapButton=page.locator('#map-toggle');
   await mapButton.click();
@@ -172,13 +200,13 @@ for(const spec of cases){
   await page.screenshot({path:`${outDir}/${spec.id}.png`,fullPage:true});
   const filmPlayOk=!spec.proveFilmPlay||(filmPlayProof.playing&&filmPlayProof.inFilmSkip&&filmPlayProof.webglVisible&&filmPlayProof.audioElement);
   const mapCloseOk=mapOpen&&mapClosed&&!mapCloseClickError;
-  const ok=introControls&&filmPlayOk&&replayAvailable&&routeContract&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&!travelError&&cardinalPreviewOk&&mapCloseOk&&pageErrors.length===0;
+  const ok=introControls&&filmPlayOk&&replayAvailable&&routeContract&&initial.webgl2&&!initial.fatal&&initial.signalCount>0&&noHorizontalEscape&&returnPath&&!travelError&&nonCardinalFallbackOk&&cardinalPreviewOk&&mapCloseOk&&pageErrors.length===0;
   if(!ok) failed=true;
-  receipts.push({id:spec.id,ok,intro,introControls,filmPlayProof,filmPlayOk,replayAvailable,connectedRoutes,routeContract,initial,selectedSignalId,arrivalStatus,returnStatus,returnPath,travelError,cardinalPreviewProof,cardinalPreviewOk,mapOpen,mapClosed,mapCloseOk,mapCloseClickError,mapHitTest,noHorizontalEscape,pageErrors,consoleErrors});
+  receipts.push({id:spec.id,ok,intro,introControls,filmPlayProof,filmPlayOk,replayAvailable,connectedRoutes,routeContract,initial,selectedSignalId,travelSource,arrivalStatus,nonCardinalFallbackStatus,nonCardinalFallbackOk,returnStatus,returnPath,travelError,cardinalPreviewProof,cardinalPreviewOk,mapOpen,mapClosed,mapCloseOk,mapCloseClickError,mapHitTest,noHorizontalEscape,pageErrors,consoleErrors});
   await context.close();
 }
 await browser.close();
-const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',diagnostic:'GEN2111_SEMANTIC_SIGNAL_AND_CARDINAL_PREVIEW_V2',cases:receipts};
+const receipt={schema:'CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2',result:failed?'FAIL':'PASS',diagnostic:'GEN2114_VISIBLE_ENTER_HANDOFF_V1',cases:receipts};
 fs.writeFileSync(`${outDir}/receipt.json`,JSON.stringify(receipt,null,2));
 console.log(JSON.stringify(receipt,null,2));
 if(failed) process.exit(1);

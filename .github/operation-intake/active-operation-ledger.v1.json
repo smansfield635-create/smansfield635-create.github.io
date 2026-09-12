@@ -2386,49 +2386,6 @@
       "scopeHash": "5486754a5840916d35b367bd549d43ab762b6b08ce33b50bc6a484ac0af79c64",
       "state": "ADMITTED_LOCKED"
     },
-    "557b65e9686fdeaf23699dd02e5a63b024850d4838e8048e83a068656ddf3b31": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
-          "lockGeneration": 2107,
-          "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_MOON_MAP_PRESENTATION_SUCCESSOR",
-          "operationId": "CHARACTERS_G4_MANOR_MOON_MAP_PRESENTATION_SUCCESSOR_20260911_001",
-          "procedureLocatorDigest": "7d5ceb8e9d76c86849f83fce5215fed5f02544c4399315aeb60e3352621ec0ea",
-          "requestDigest": "0760934c5c7757ed665c52d6e0a059859a96674f95454d72dd1280a253993d7d",
-          "scopeHash": "557b65e9686fdeaf23699dd02e5a63b024850d4838e8048e83a068656ddf3b31"
-        },
-        "bindingDigest": "15078398576878ba7135ea96a5287c0de70bed02aef91a7642a000bd997e0c51",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e80ac0650e7c387f034655c78271a14a9a8c17b1a927358058bcc2ad0f0522e7",
-          "commentId": 5642493149,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2954,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34664513472,
-          "workflowSha": "0c00c49f678c1ea6f597e864ca08d538dc05b274"
-        },
-        "lineageAnchorCommitSha": "45f6f88af02a76e8df68a34fcb06ee9cd9a5ed99",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
-      "lockGeneration": 2107,
-      "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_MOON_MAP_PRESENTATION_SUCCESSOR",
-      "operationId": "CHARACTERS_G4_MANOR_MOON_MAP_PRESENTATION_SUCCESSOR_20260911_001",
-      "procedureLocatorDigest": "7d5ceb8e9d76c86849f83fce5215fed5f02544c4399315aeb60e3352621ec0ea",
-      "released": false,
-      "requestDigest": "0760934c5c7757ed665c52d6e0a059859a96674f95454d72dd1280a253993d7d",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "557b65e9686fdeaf23699dd02e5a63b024850d4838e8048e83a068656ddf3b31",
-      "state": "ADMITTED_LOCKED"
-    },
     "55f119b3a5ec354f2d225459a5da85cf2b0d2166074fe2993c7e90e780745e71": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -48109,6 +48066,50 @@
       "scopeHash": "36fb7673540bc131b48e9ff6975fa05659ac59cbf77af1de659aa427596ed43d",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
+          "lockGeneration": 2107,
+          "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_MOON_MAP_PRESENTATION_SUCCESSOR",
+          "operationId": "CHARACTERS_G4_MANOR_MOON_MAP_PRESENTATION_SUCCESSOR_20260911_001",
+          "procedureLocatorDigest": "7d5ceb8e9d76c86849f83fce5215fed5f02544c4399315aeb60e3352621ec0ea",
+          "requestDigest": "0760934c5c7757ed665c52d6e0a059859a96674f95454d72dd1280a253993d7d",
+          "scopeHash": "557b65e9686fdeaf23699dd02e5a63b024850d4838e8048e83a068656ddf3b31"
+        },
+        "bindingDigest": "15078398576878ba7135ea96a5287c0de70bed02aef91a7642a000bd997e0c51",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e80ac0650e7c387f034655c78271a14a9a8c17b1a927358058bcc2ad0f0522e7",
+          "commentId": 5642493149,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2954,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34664513472,
+          "workflowSha": "0c00c49f678c1ea6f597e864ca08d538dc05b274"
+        },
+        "lineageAnchorCommitSha": "45f6f88af02a76e8df68a34fcb06ee9cd9a5ed99",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0c00c49f678c1ea6f597e864ca08d538dc05b274",
+      "lockGeneration": 2107,
+      "lockScope": "CHARACTERS:GRATITUDE_COAST:G4:MANOR_MOON_MAP_PRESENTATION_SUCCESSOR",
+      "operationId": "CHARACTERS_G4_MANOR_MOON_MAP_PRESENTATION_SUCCESSOR_20260911_001",
+      "procedureLocatorDigest": "7d5ceb8e9d76c86849f83fce5215fed5f02544c4399315aeb60e3352621ec0ea",
+      "released": true,
+      "requestDigest": "0760934c5c7757ed665c52d6e0a059859a96674f95454d72dd1280a253993d7d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "557b65e9686fdeaf23699dd02e5a63b024850d4838e8048e83a068656ddf3b31",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

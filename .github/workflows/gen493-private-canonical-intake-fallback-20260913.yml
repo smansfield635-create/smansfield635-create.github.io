@@ -1,0 +1,20 @@
+name: Gen493 Private Canonical Intake Fallback
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '602'
+      private_comment: '5651042688'
+      expected_request_id: 'PROGRESSIVE_CONTINUITY_ROUTER_PASS_SELF_TEST_CORRECTION_20260912_001_EXEC'
+      exact_private_head: '0dfbe032f56e44dd8655e525dcbb5847c3bbaf2a'
+      callback_issue: '3247'
+    secrets: inherit

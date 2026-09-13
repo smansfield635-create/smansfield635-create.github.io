@@ -57,9 +57,18 @@
       "aiEntryBridge": ".github/workflows/ai-entry-workflow-dispatch-bridge.yml",
       "canonicalIntake": ".github/workflows/canonical-operation-intake-transport-v1.yml",
       "successorGateway": ".github/workflows/remote-operation-successor-v1.yml",
-      "automaticRelease": ".github/workflows/ai-entry-auto-release.yml",
       "publicationPreflight": ".github/workflows/publication-preflight-v1.yml",
       "publicationDeploy": ".github/workflows/pages-exact-head-deploy-v3.yml"
+    },
+    "retiredWorkflows": {
+      "automaticRelease": {
+        "workflow": ".github/workflows/ai-entry-auto-release.yml",
+        "status": "RETIRED_NON_MANDATORY",
+        "mayGate": false,
+        "localityInstrumentRequired": false,
+        "replacementCapability": "PAGES_EXACT_HEAD_DEPLOY",
+        "replacementWorkflow": ".github/workflows/pages-exact-head-deploy-v3.yml"
+      }
     },
     "canonicalGatewayWorkingSets": {
       "canonicalIntake": [
@@ -86,25 +95,8 @@
       "allowedPrefix": "inspection/audralia-24057-exact/snapshot/",
       "wholeExcludedTreeMaterializationAllowed": false
     },
-    "prospectiveEnforcement": "NEW_OR_MODIFIED_WORKFLOWS_MUST_DECLARE_BOUNDED_SPARSE_WORKING_SET_OR_EXPLICIT_APPROVED_EXCEPTION",
-    "legacyUnrestrictedWorkflows": "MIGRATION_DEBT_NOT_PRECEDENT",
-    "automaticReleaseWorkingSet": {
-      "ordinaryPublicRoots": "DYNAMIC_TOP_LEVEL_ROOTS_EXCLUDING_BULK_AND_CONTROL_PLANE_ROOTS",
-      "excludedTopLevelRoots": [
-        ".github",
-        "preview",
-        "node_modules",
-        "h-earth-live-6d18e158"
-      ],
-      "excludedProtectedClosure": "inspection/audralia-24057-exact",
-      "explicitIncludedSubtrees": [
-        "preview/bt4/entitlement-v1",
-        "preview/bt4/operational-release-v1",
-        "h-earth-live-6d18e158/showroom/globe/h-earth"
-      ],
-      "sparseIndexEntryLimitExclusive": 20000,
-      "materializedFileLimitExclusive": 20000
-    }
+    "prospectiveEnforcement": "NEW_OR_MODIFIED_ACTIVE_WORKFLOWS_MUST_DECLARE_BOUNDED_SPARSE_WORKING_SET_OR_EXPLICIT_APPROVED_EXCEPTION",
+    "legacyUnrestrictedWorkflows": "MIGRATION_DEBT_NOT_PRECEDENT"
   },
   "publicationPathConsistency": {
     "canonicalCapabilityId": "PAGES_EXACT_HEAD_DEPLOY",
@@ -122,7 +114,8 @@
     "STATUS_ONLY_RESPONSE_WHEN_A_LAWFUL_EXECUTION_STEP_IS_AVAILABLE",
     "CLAIMING_FETCH_OR_ANALYSIS_IS_IN_PROGRESS_AFTER_THE_ATTEMPT_HAS_ALREADY_ENDED",
     "UNRESTRICTED_CHECKOUT_WITHOUT_EXPLICIT_WHOLE_REPOSITORY_EXCEPTION",
-    "MATERIALIZE_EXCLUDED_PUBLICATION_ROOTS_THEN_DISCARD"
+    "MATERIALIZE_EXCLUDED_PUBLICATION_ROOTS_THEN_DISCARD",
+    "RETIRED_WORKFLOW_ENROLLED_AS_MANDATORY_INSTRUMENT"
   ],
   "selfTest": ".github/ai-router/execution-efficiency-self-test.v1.mjs",
   "authorityCreated": false,

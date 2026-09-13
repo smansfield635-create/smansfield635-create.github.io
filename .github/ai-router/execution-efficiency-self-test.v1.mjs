@@ -12,6 +12,7 @@ const shared = readJson('.github/ai-router/shared-procedures.v1.json');
 const capability = readJson('.github/ai-router/workflow-dispatch-capability.v1.json');
 const release = readJson('.github/ai-router/publication-release-contract.v1.json');
 const policy = readJson('.github/ai-router/execution-efficiency-policy.v1.json');
+const retiredAutomaticRelease = readText('.github/workflows/ai-entry-auto-release.yml');
 
 const pagesCapability = capability.capabilities?.PAGES_EXACT_HEAD_DEPLOY;
 const expectedWorkflow = pagesCapability?.workflow ? `.github/workflows/${pagesCapability.workflow}` : null;
@@ -34,6 +35,20 @@ if (policy.checkoutLocality?.unrestrictedCheckoutAllowedByDefault !== false) fai
 if (policy.checkoutLocality?.materializeExcludedRootsThenDiscardAllowed !== false) fail('EXCLUDED_ROOT_MATERIALIZATION_NOT_FORBIDDEN');
 if (policy.checkoutLocality?.exactCommitObjectReadbackForExcludedProtectedClosuresAllowed !== true) fail('PROTECTED_OBJECT_READBACK_NOT_ALLOWED');
 if (!policy.forbiddenPatterns?.includes('UNRESTRICTED_CHECKOUT_WITHOUT_EXPLICIT_WHOLE_REPOSITORY_EXCEPTION')) fail('UNRESTRICTED_CHECKOUT_FORBIDDEN_PATTERN_MISSING');
+if (!policy.forbiddenPatterns?.includes('RETIRED_WORKFLOW_ENROLLED_AS_MANDATORY_INSTRUMENT')) fail('RETIRED_WORKFLOW_ENROLLMENT_FORBIDDEN_PATTERN_MISSING');
+
+const retired = policy.checkoutLocality?.retiredWorkflows?.automaticRelease;
+if (retired?.workflow !== '.github/workflows/ai-entry-auto-release.yml') fail('RETIRED_AUTOMATIC_RELEASE_IDENTITY_DRIFT');
+if (retired?.status !== 'RETIRED_NON_MANDATORY') fail('RETIRED_AUTOMATIC_RELEASE_STATUS_DRIFT');
+if (retired?.mayGate !== false) fail('RETIRED_AUTOMATIC_RELEASE_MAY_GATE');
+if (retired?.localityInstrumentRequired !== false) fail('RETIRED_AUTOMATIC_RELEASE_STILL_MANDATORY');
+if (retired?.replacementCapability !== 'PAGES_EXACT_HEAD_DEPLOY') fail('RETIRED_AUTOMATIC_RELEASE_REPLACEMENT_CAPABILITY_DRIFT');
+if (retired?.replacementWorkflow !== expectedWorkflow) fail('RETIRED_AUTOMATIC_RELEASE_REPLACEMENT_WORKFLOW_DRIFT');
+if (Object.values(policy.checkoutLocality?.centralWorkflows || {}).includes('.github/workflows/ai-entry-auto-release.yml')) fail('RETIRED_AUTOMATIC_RELEASE_STILL_CENTRAL');
+if (!retiredAutomaticRelease.includes('AI_ENTRY_AUTOMATIC_EXACT_HEAD_RELEASE=RETIRED')) fail('RETIRED_AUTOMATIC_RELEASE_MARKER_MISSING');
+if (!retiredAutomaticRelease.includes('workflow_dispatch:')) fail('RETIRED_AUTOMATIC_RELEASE_NOT_MANUALLY_INSPECTABLE');
+if (/^\s*push\s*:/m.test(retiredAutomaticRelease)) fail('RETIRED_AUTOMATIC_RELEASE_PUSH_AUTHORITY_REMAINS');
+if (/pages:\s*write/.test(retiredAutomaticRelease)) fail('RETIRED_AUTOMATIC_RELEASE_PAGES_WRITE_REMAINS');
 
 const requireSparseCheckout = (workflowPath, {bridge = false, requiredPaths = [], forbidRootWide = false} = {}) => {
   const text = readText(workflowPath);
@@ -74,37 +89,13 @@ const requirePublicationSparseIndex = (workflowPath) => {
   return text;
 };
 
-const requireAutomaticReleaseSparseIndex = (workflowPath) => {
-  const text = readText(workflowPath);
-  if ((text.match(/uses:\s*actions\/checkout@v4/g) || []).length !== 0) fail(`AUTO_RELEASE_ACTIONS_CHECKOUT_FORBIDDEN:${workflowPath}`);
-  if (!text.includes('git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"')) fail(`AUTO_RELEASE_EXACT_PARTIAL_FETCH_MISSING:${workflowPath}`);
-  if (!text.includes('git sparse-checkout init --cone --sparse-index')) fail(`AUTO_RELEASE_SPARSE_INDEX_INIT_MISSING:${workflowPath}`);
-  if (!text.includes('git config --bool index.sparse')) fail(`AUTO_RELEASE_SPARSE_INDEX_ASSERTION_MISSING:${workflowPath}`);
-  if (!text.includes('git ls-tree -d --name-only FETCH_HEAD')) fail(`AUTO_RELEASE_ROOT_TREE_ENUMERATION_MISSING:${workflowPath}`);
-  if (!text.includes('git ls-tree -d --name-only "FETCH_HEAD:inspection"')) fail(`AUTO_RELEASE_INSPECTION_TREE_ENUMERATION_MISSING:${workflowPath}`);
-  if (!text.includes('test "$child" = "audralia-24057-exact" && continue')) fail(`AUTO_RELEASE_PROTECTED_SNAPSHOT_WORKTREE_EXCLUSION_MISSING:${workflowPath}`);
-  if (!text.includes('test ! -e inspection/audralia-24057-exact')) fail(`AUTO_RELEASE_PROTECTED_SNAPSHOT_ABSENCE_ASSERTION_MISSING:${workflowPath}`);
-  if (!text.includes('test "$sparse_entries" -lt 20000')) fail(`AUTO_RELEASE_SPARSE_INDEX_BOUND_MISSING:${workflowPath}`);
-  if (!text.includes('test "$materialized_files" -lt 20000')) fail(`AUTO_RELEASE_MATERIALIZED_FILE_BOUND_MISSING:${workflowPath}`);
-  if (text.includes('sparse-checkout-cone-mode: false')) fail(`AUTO_RELEASE_NON_CONE_CHECKOUT_FORBIDDEN:${workflowPath}`);
-  if (text.includes('\n            /*\n')) fail(`AUTO_RELEASE_ROOT_WIDE_NEGATIVE_PATTERN_FORBIDDEN:${workflowPath}`);
-  for (const required of [
-    'preview/bt4/entitlement-v1',
-    'preview/bt4/operational-release-v1',
-    'h-earth-live-6d18e158/showroom/globe/h-earth'
-  ]) if (!text.includes(required)) fail(`AUTO_RELEASE_REQUIRED_SUBTREE_MISSING:${workflowPath}:${required}`);
-  if (!text.includes('.github|preview|node_modules|h-earth-live-6d18e158')) fail(`AUTO_RELEASE_BULK_EXCLUSION_SET_MISSING:${workflowPath}`);
-  return text;
-};
-
 const workflows = policy.checkoutLocality?.centralWorkflows || {};
 const bridgeWorkflow = workflows.aiEntryBridge;
 const canonicalIntakeWorkflow = workflows.canonicalIntake;
 const successorGatewayWorkflow = workflows.successorGateway;
-const automaticReleaseWorkflow = workflows.automaticRelease;
 const preflightWorkflow = workflows.publicationPreflight;
 const deployWorkflow = workflows.publicationDeploy;
-if (!bridgeWorkflow || !canonicalIntakeWorkflow || !successorGatewayWorkflow || !automaticReleaseWorkflow || !preflightWorkflow || !deployWorkflow) fail('CENTRAL_CHECKOUT_LOCALITY_WORKFLOW_BINDINGS_MISSING');
+if (!bridgeWorkflow || !canonicalIntakeWorkflow || !successorGatewayWorkflow || !preflightWorkflow || !deployWorkflow) fail('CENTRAL_CHECKOUT_LOCALITY_WORKFLOW_BINDINGS_MISSING');
 else {
   requireSparseCheckout(bridgeWorkflow, {bridge: true, forbidRootWide: true});
   requireSparseCheckout(canonicalIntakeWorkflow, {
@@ -115,7 +106,6 @@ else {
     requiredPaths: policy.checkoutLocality?.canonicalGatewayWorkingSets?.successorGateway || [],
     forbidRootWide: true
   });
-  requireAutomaticReleaseSparseIndex(automaticReleaseWorkflow);
   requirePublicationSparseIndex(preflightWorkflow);
   requirePublicationSparseIndex(deployWorkflow);
 }
@@ -130,7 +120,7 @@ if (expectedWorkflow) {
 }
 
 if (!process.exitCode) {
-  const centralSparseCheckoutVerified = [bridgeWorkflow, canonicalIntakeWorkflow, successorGatewayWorkflow, automaticReleaseWorkflow, preflightWorkflow, deployWorkflow];
+  const centralSparseCheckoutVerified = [bridgeWorkflow, canonicalIntakeWorkflow, successorGatewayWorkflow, preflightWorkflow, deployWorkflow];
   process.stdout.write(JSON.stringify({
     schema: 'AI_PROCEDURAL_EXECUTION_EFFICIENCY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
@@ -140,9 +130,9 @@ if (!process.exitCode) {
     noRepeatedEquivalentProbeWithoutNewEvidence: true,
     checkoutLocalityDefault: policy.checkoutLocality.defaultMode,
     unrestrictedCheckoutAllowedByDefault: false,
-    automaticReleaseCheckoutMode: 'EXACT_REF_PARTIAL_FETCH_CONE_SPARSE_INDEX',
-    automaticReleaseActionsCheckoutAllowed: false,
-    automaticReleaseFullIndexTraversalAllowed: false,
+    automaticReleaseStatus: retired.status,
+    automaticReleaseMandatoryInstrument: false,
+    automaticReleasePushAuthority: false,
     publicationCheckoutMode: 'EXACT_REF_PARTIAL_FETCH_CONE_SPARSE_INDEX',
     publicationActionsCheckoutAllowed: false,
     publicationFullIndexTraversalAllowed: false,

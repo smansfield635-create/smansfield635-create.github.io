@@ -1,7 +1,7 @@
 /**
- * H-Earth repository registry validator dependency loader v31 successor.
- * Preserves the v30 Audralia cloud-globalization receipt recognition successor
- * and adds only the Gen2187 tablet single-context runtime exact-path recognition.
+ * H-Earth repository registry validator dependency loader v32 successor.
+ * Preserves the v31 Audralia tablet single-context runtime exact-path recognition
+ * and adds only the Gen2193 tablet morphology-atlas exact-path recognition.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
@@ -10,7 +10,8 @@ import {
 import {verifyHEarthAwardsRecognizableSuccessorVerifierPathRecognition} from './accepted-amendments/h-earth.repository-registry.awards-recognizable-successor-verifier-path-recognition.js';
 import {verifyHEarthAudraliaTabletCloudPassPathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-cloud-pass-path-recognition.js';
 import {verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-cloud-globalization-experience-receipt-path-recognition.js';
-import registryFacade,{verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-single-context-runtime-path-recognition.js';
+import {verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-single-context-runtime-path-recognition.js';
+import registryFacade,{verifyHEarthAudraliaTabletMorphologyAtlasPathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-morphology-atlas-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
@@ -19,6 +20,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const pathRecognitionVerification=verifyHEarthAudraliaTabletCloudPassPathRecognition();
   const receiptPathRecognitionVerification=verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition();
   const tabletRuntimePathRecognitionVerification=verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition();
+  const tabletMorphologyAtlasPathRecognitionVerification=verifyHEarthAudraliaTabletMorphologyAtlasPathRecognition();
   const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const successorChecks=deepFreeze({
@@ -47,6 +49,13 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     tabletSingleContextRuntimeOccurrenceBound:tabletRuntimePathRecognitionVerification.checks.governingOccurrencePresent===true,
     tabletSingleContextRuntimeExactPathOnly:tabletRuntimePathRecognitionVerification.checks.exactPathOnly===true&&tabletRuntimePathRecognitionVerification.checks.noPrefixRegistration===true,
     tabletSingleContextRuntimeNoAuthorityLeak:tabletRuntimePathRecognitionVerification.checks.auditOnly===true&&tabletRuntimePathRecognitionVerification.checks.pathResolutionOnly===true&&tabletRuntimePathRecognitionVerification.checks.noProductRuntimeAuthority===true&&tabletRuntimePathRecognitionVerification.checks.noPreflightWaiver===true&&tabletRuntimePathRecognitionVerification.checks.noPublicationAuthority===true,
+    predecessorV31RecognitionPreserved:tabletRuntimePathRecognitionVerification.eligible===true,
+    tabletMorphologyAtlasPathRecognitionEligible:tabletMorphologyAtlasPathRecognitionVerification.eligible===true,
+    tabletMorphologyAtlasExactPathResolved:tabletMorphologyAtlasPathRecognitionVerification.checks.exactTargetPathCount===true&&tabletMorphologyAtlasPathRecognitionVerification.checks.targetPathResolves===true,
+    tabletMorphologyAtlasTruthfulMainAbsence:tabletMorphologyAtlasPathRecognitionVerification.checks.truthfulAbsentAtMain===true,
+    tabletMorphologyAtlasCandidateIdentityBound:tabletMorphologyAtlasPathRecognitionVerification.checks.frozenCandidateBound===true&&tabletMorphologyAtlasPathRecognitionVerification.checks.candidateBlobBound===true,
+    tabletMorphologyAtlasExactPathOnly:tabletMorphologyAtlasPathRecognitionVerification.checks.exactPathOnly===true&&tabletMorphologyAtlasPathRecognitionVerification.checks.noPrefixRegistration===true,
+    tabletMorphologyAtlasNoAuthorityLeak:tabletMorphologyAtlasPathRecognitionVerification.checks.auditOnly===true&&tabletMorphologyAtlasPathRecognitionVerification.checks.pathResolutionOnly===true&&tabletMorphologyAtlasPathRecognitionVerification.checks.noProductRuntimeAuthority===true&&tabletMorphologyAtlasPathRecognitionVerification.checks.noPreflightWaiver===true&&tabletMorphologyAtlasPathRecognitionVerification.checks.noPublicationAuthority===true,
     registryIdPreserved:registryInstance.registryId===base.registryInstance.registryId,
     registryVersionPreserved:registryInstance.registryVersion===base.registryInstance.registryVersion,
     schemaIdPreserved:registryInstance.schemaId===base.registryInstance.schemaId,
@@ -58,7 +67,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const successorIntegrityVerified=Object.values(successorChecks).every(Boolean);
   return deepFreeze({
     ...base,
-    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v31_AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME_EXACT_PATH_RECOGNITION_SUCCESSOR',
+    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v32_AUDRALIA_TABLET_MORPHOLOGY_ATLAS_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -68,6 +77,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       audraliaTabletCloudPassPathRecognition:pathRecognitionVerification.eligible===true,
       audraliaCloudGlobalizationExperienceReceiptPathRecognition:receiptPathRecognitionVerification.eligible===true,
       audraliaTabletSingleContextRuntimePathRecognition:tabletRuntimePathRecognitionVerification.eligible===true,
+      audraliaTabletMorphologyAtlasPathRecognition:tabletMorphologyAtlasPathRecognitionVerification.eligible===true,
       awardsRecognizableSuccessorVerifierPathRecognitionSuccessorIntegrity:successorIntegrityVerified
     }),
     identityVerified:base.identityVerified,
@@ -78,6 +88,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     audraliaTabletCloudPassPathRecognitionVerification:pathRecognitionVerification,
     audraliaCloudGlobalizationExperienceReceiptPathRecognitionVerification:receiptPathRecognitionVerification,
     audraliaTabletSingleContextRuntimePathRecognitionVerification:tabletRuntimePathRecognitionVerification,
+    audraliaTabletMorphologyAtlasPathRecognitionVerification:tabletMorphologyAtlasPathRecognitionVerification,
     boundary:deepFreeze({
       ...base.boundary,
       audraliaCloudGlobalizationExperienceReceiptExactPathRecognitionOnly:true,
@@ -91,6 +102,11 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       audraliaTabletSingleContextRuntimePrefixWideRegistrationAuthorityCreated:false,
       audraliaTabletSingleContextRuntimePreflightWaiverAuthorityCreated:false,
       audraliaTabletSingleContextRuntimeDeploymentPublicationAuthorityCreated:false,
+      audraliaTabletMorphologyAtlasExactPathRecognitionOnly:true,
+      audraliaTabletMorphologyAtlasProductMutationAuthorityCreated:false,
+      audraliaTabletMorphologyAtlasPrefixWideRegistrationAuthorityCreated:false,
+      audraliaTabletMorphologyAtlasPreflightWaiverAuthorityCreated:false,
+      audraliaTabletMorphologyAtlasDeploymentPublicationAuthorityCreated:false,
       awardsRecognizableSuccessorVerifierExactPathRecognitionOnly:true,
       awardsRecognizableSuccessorVerifierProductMutationAuthorityCreated:false,
       awardsRecognizableSuccessorVerifierQualificationMutationAuthorityCreated:false,
@@ -113,6 +129,12 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       audraliaTabletSingleContextRuntimePrefixWideRegistrationAuthorized:false,
       audraliaTabletSingleContextRuntimePreflightWaiverAuthorized:false,
       audraliaTabletSingleContextRuntimeDeploymentPublicationAuthorized:false,
+      audraliaTabletMorphologyAtlasPathRecognitionLoaded:true,
+      audraliaTabletMorphologyAtlasPathRecognitionSuccessorIntegrityVerified:successorIntegrityVerified,
+      audraliaTabletMorphologyAtlasProductMutationAuthorized:false,
+      audraliaTabletMorphologyAtlasPrefixWideRegistrationAuthorized:false,
+      audraliaTabletMorphologyAtlasPreflightWaiverAuthorized:false,
+      audraliaTabletMorphologyAtlasDeploymentPublicationAuthorized:false,
       awardsRecognizableSuccessorVerifierPathRecognitionLoaded:true,
       awardsRecognizableSuccessorVerifierPathRecognitionSuccessorIntegrityVerified:successorIntegrityVerified,
       inheritedIdentityStatePreserved:true,

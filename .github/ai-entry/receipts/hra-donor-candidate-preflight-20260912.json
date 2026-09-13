@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hra-donor-candidate-preflight-20260912",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3228,
+  "requestBranch": "ai-dispatch-request-hra-donor-candidate-preflight-20260912",
+  "requestCommit": "f86e375d6854df7081ca58ff2f60d8316774b1ce",
+  "requestCommitParent": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+  "currentMainSha": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "bc2249ac61098306e3173fb2df7058c97d06f1de",
+    "surface_id": "brain-gen1-hra"
+  },
+  "bridgeRunId": "34727433633",
+  "dispatchedRunId": 34727440457,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34727440457",
+  "dispatchedRunHeadSha": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+  "dispatchedAt": "2026-09-13T00:13:58.694Z",
+  "resolvedAt": "2026-09-13T00:14:02.428Z"
+}

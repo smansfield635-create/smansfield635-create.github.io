@@ -157,9 +157,11 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 12,
+    assertions: 11,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
+    historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',
+    selectedFixtureDisposition: selectedRegistryChange.result,
     authorityEffect: 'NONE'
   };
 }
@@ -197,8 +199,18 @@ try {
     process.exit(0);
   }
 
+  const embeddedSelfTest = runSelfTest();
   if (options.pathsFile) options.paths.push(...readPathsFile(options.pathsFile));
-  const receipt = evaluateWorkflowApplicability({ workflow: options.workflow, changedPaths: options.paths });
+  const receipt = {
+    ...evaluateWorkflowApplicability({ workflow: options.workflow, changedPaths: options.paths }),
+    embeddedSelfTest: {
+      result: embeddedSelfTest.result,
+      assertions: embeddedSelfTest.assertions,
+      regression: embeddedSelfTest.regression,
+      historicalRegressionDisposition: embeddedSelfTest.historicalRegressionDisposition,
+      selectedFixtureDisposition: embeddedSelfTest.selectedFixtureDisposition
+    }
+  };
   const serialized = `${JSON.stringify(receipt, null, 2)}\n`;
 
   if (options.output) {

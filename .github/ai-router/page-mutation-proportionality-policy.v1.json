@@ -27,6 +27,55 @@
       "MERGE_DEPLOYMENT_PUBLICATION_SEPARATION"
     ]
   },
+  "workflowApplicability": {
+    "schema": "WORKFLOW_APPLICABILITY_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED_WHEN_SELECTED",
+    "decisionPrecedesExpensiveExecution": true,
+    "selectionAuthority": "WHOLE_ESTATE_EXECUTION_DECISION_v1",
+    "filesystemPathOrDirectoryPrefixAloneMaySelect": false,
+    "semanticDependencyRequiredForSelection": true,
+    "unselectedDisposition": "NOT_APPLICABLE",
+    "unselectedExitSemantic": "NEUTRAL_SUCCESS",
+    "severityClasses": [
+      "SELECTED_BLOCKER",
+      "ADVISORY_UNSELECTED",
+      "INFRASTRUCTURE_DEFECT",
+      "NOT_APPLICABLE"
+    ],
+    "operatorAlertPolicy": {
+      "alert": [
+        "SELECTED_BLOCKER",
+        "INFRASTRUCTURE_DEFECT"
+      ],
+      "doNotAlert": [
+        "ADVISORY_UNSELECTED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "legacyWorkflowAdapters": {
+      "H_EARTH_REPOSITORY_REGISTRY_PREFLIGHT": {
+        "selector": "tools/workflow-applicability-gate.v1.mjs",
+        "onlyExplicitRegistryOrControlPlaneDependencySelects": true,
+        "ordinaryProductPathPrefixMatchDoesNotSelect": true,
+        "selectedDependencyFailureRemainsFailClosed": true
+      }
+    },
+    "authorityEffect": "ROUTING_AND_FAILURE_SIGNAL_CLASSIFICATION_ONLY"
+  },
+  "instrumentPromotion": {
+    "schema": "INSTRUMENT_PROMOTION_NET_VALUE_POLICY_v1",
+    "status": "ACTIVE",
+    "mandatoryEscalationRequiresMeasuredNetValue": true,
+    "requiredEvidence": [
+      "TRANSITION_CORRECTNESS_IMPROVEMENT",
+      "DEPENDENCY_LOCALIZATION_OR_RECOVERY_FIDELITY_IMPROVEMENT",
+      "FALSE_BLOCK_OVERHEAD_MEASURED",
+      "COMPUTATION_AND_INFORMATION_OVERHEAD_MEASURED_AGAINST_BASELINE"
+    ],
+    "noMeasuredNetValueDisposition": "ADVISORY_OR_REJECTED",
+    "instrumentCannotCreateItsOwnNeedForMandatoryStatus": true,
+    "authorityEffect": "NONE_UNTIL_SEPARATELY_RATIFIED"
+  },
   "classes": {
     "STATIC_EDITORIAL_MICRO": {
       "canonicalAdmissionRequired": false,

@@ -1,6 +1,8 @@
 const LIFECYCLE=Object.freeze(['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING']);
 const SIGNATURE_SECONDS=6.5;
 const TERMINAL_COUNT=9;
+const COMPLETION_HOLD_MS=450;
+const NATURAL_RETURN_MS=900;
 const CONTRACT=Object.freeze({
   id:'AWARDS_TRUST_LIVING_OBJECT_ANCIENT_ENERGY_TREE_3D_V1',
   cycle:'D_TRUST',
@@ -69,7 +71,7 @@ varying vec4 v_c;
 varying float v_progress;
 varying float v_kind;
 varying vec3 v_world;
-uniform float u_energy,u_rest,u_pulse,u_time;
+uniform float u_energy,u_rest,u_pulse,u_time,u_emission;
 void main(){
   vec3 N=normalize(v_n);
   vec3 L=normalize(vec3(-.42,.78,-.48));
@@ -82,7 +84,7 @@ void main(){
   float rootRest=u_rest*(1.0-smoothstep(.12,.22,v_progress));
   float terminal=step(1.5,v_kind)*reached;
   float circulation=step(.985,u_energy)*(.5+.5*sin(u_time*.00075-v_progress*19.0))*reached;
-  float glow=clamp(reached*.17+front*.72+rootRest*.34+terminal*.48+circulation*.06+u_pulse*(1.0-smoothstep(.34,.62,v_progress))*.46,0.0,1.0);
+  float glow=clamp(reached*.17+front*.72+rootRest*.34+terminal*.48+circulation*.06+u_pulse*(1.0-smoothstep(.34,.62,v_progress))*.46,0.0,1.0)*u_emission;
   vec3 teal=vec3(.20,.92,.76);
   vec3 warm=vec3(.68,.52,.26);
   vec3 lit=mix(base,teal,glow);
@@ -282,12 +284,12 @@ export function mountTrustLivingObject(root,options={}){
   const U=name=>gl.getUniformLocation(p,name);
   const uniforms={
     yaw:U('u_yaw'),pitch:U('u_pitch'),scale:U('u_scale'),aspect:U('u_aspect'),cam:U('u_cam'),
-    energy:U('u_energy'),rest:U('u_rest'),pulse:U('u_pulse'),sway:U('u_sway'),time:U('u_time'),settle:U('u_settle')
+    energy:U('u_energy'),rest:U('u_rest'),pulse:U('u_pulse'),sway:U('u_sway'),time:U('u_time'),settle:U('u_settle'),emission:U('u_emission')
   };
 
   const reduced=options.reducedMotion??(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-  let state='FOREGROUND_REST',phase='rest',destroyed=false,raf=0,timer=0,signatureStart=-1,settleStart=-1,pulseStart=-1,idleStart=-1;
-  let completed=false,currentEnergy=0,resolvedTerminals=0,drawCount=0,lastAspect=1,lastDrawAt=0;
+  let state='FOREGROUND_REST',phase='rest',destroyed=false,raf=0,timer=0,signatureStart=-1,settleStart=-1,pulseStart=-1,idleStart=-1,naturalReturnStart=-1;
+  let completed=false,currentEnergy=0,currentEmission=1,resolvedTerminals=0,drawCount=0,lastAspect=1,lastDrawAt=0;
   const now=()=>typeof performance!=='undefined'?performance.now():Date.now();
 
   function cancelLoop(){if(raf){cancelAnimationFrame(raf);raf=0}if(timer){clearTimeout(timer);timer=0}}
@@ -309,33 +311,43 @@ export function mountTrustLivingObject(root,options={}){
   function render(t=now()){
     if(destroyed)return;
     const aspect=resize();
-    let energy=completed?1:0,rest=0,pulse=0,sway=0,settle=1;
+    let energy=completed?1:0,emission=completed?0:1,rest=0,pulse=0,sway=0,settle=1;
     if(settleStart>=0&&!reduced){
       settle=Math.max(0,Math.min(1,(t-settleStart)/850));
       if(settle>=1)settleStart=-1;
     }
     if(state==='SIGNATURE_PLAY'){
-      energy=reduced?1:signatureEnergy(t);
+      energy=reduced?1:signatureEnergy(t);emission=1;
       sway=reduced?0:.32;
       if(reduced||energy>=1){
-        energy=1;completed=true;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;phase='idle';state='FOREGROUND_IDLE';idleStart=t;
+        energy=1;emission=reduced?0:1;completed=true;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;phase='idle';state='FOREGROUND_IDLE';idleStart=t;naturalReturnStart=reduced?-1:t;
       }
     }else if(state==='FOREGROUND_IDLE'){
-      energy=1;sway=reduced?0:.62;
+      energy=completed?1:0;emission=0;sway=reduced?0:.62;
+      if(completed&&!reduced&&naturalReturnStart>=0){
+        const elapsed=Math.max(0,t-naturalReturnStart);
+        if(elapsed<=COMPLETION_HOLD_MS)emission=1;
+        else{
+          const q=Math.max(0,Math.min(1,(elapsed-COMPLETION_HOLD_MS)/NATURAL_RETURN_MS));
+          const eased=q*q*(3-2*q);
+          emission=1-eased;
+          if(q>=1)naturalReturnStart=-1;
+        }
+      }
     }else if(state==='SELECT_RESPONSE'){
-      energy=completed?1:.34;
+      energy=completed?1:.34;emission=1;
       if(pulseStart>=0&&!reduced){
         const q=Math.max(0,Math.min(1,(t-pulseStart)/430));pulse=Math.sin(q*Math.PI);
         if(q>=1)pulseStart=-1;
       }else pulse=reduced?.45:0;
     }else if(state==='READER_OPEN'){
-      energy=completed?1:0;
+      energy=completed?1:0;emission=completed?0:1;
     }else if(state==='RETURN_RESTORING'){
-      energy=completed?1:0;sway=0;
+      energy=completed?1:0;emission=completed?0:1;sway=0;
     }else{
-      energy=completed?1:0;rest=completed?0:.72;
+      energy=completed?1:0;emission=completed?0:1;rest=completed?0:.72;
     }
-    currentEnergy=energy;resolvedTerminals=terminalResolved(energy);
+    currentEnergy=energy;currentEmission=emission;resolvedTerminals=completed?TERMINAL_COUNT:terminalResolved(energy);
     const wide=aspect>=1.55,portrait=aspect<.9;
     const scale=wide?1.06:portrait?.72:.90;
     const cam=wide?4.28:portrait?4.95:4.58;
@@ -344,7 +356,7 @@ export function mountTrustLivingObject(root,options={}){
     const pitch=-.075+(1-settle)*.028;
     gl.clearColor(.003,.009,.010,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     gl.uniform1f(uniforms.yaw,yaw);gl.uniform1f(uniforms.pitch,pitch);gl.uniform1f(uniforms.scale,scale);gl.uniform1f(uniforms.aspect,aspect);gl.uniform1f(uniforms.cam,cam);
-    gl.uniform1f(uniforms.energy,energy);gl.uniform1f(uniforms.rest,rest);gl.uniform1f(uniforms.pulse,pulse);gl.uniform1f(uniforms.sway,sway);gl.uniform1f(uniforms.time,t);gl.uniform1f(uniforms.settle,settle);
+    gl.uniform1f(uniforms.energy,energy);gl.uniform1f(uniforms.rest,rest);gl.uniform1f(uniforms.pulse,pulse);gl.uniform1f(uniforms.sway,sway);gl.uniform1f(uniforms.time,t);gl.uniform1f(uniforms.settle,settle);gl.uniform1f(uniforms.emission,emission);
     gl.drawElements(gl.TRIANGLES,gpu.count,gl.UNSIGNED_SHORT,0);drawCount++;lastDrawAt=t;
   }
   function shouldAnimate(t=now()){
@@ -381,7 +393,7 @@ export function mountTrustLivingObject(root,options={}){
       S(next);phase=completed?'completed-rest':'rest';paintOnce();return next;
     }
     if(next==='FOREGROUND_IDLE'){
-      S(next);phase='idle';completed=true;currentEnergy=1;resolvedTerminals=TERMINAL_COUNT;idleStart=now();paintOnce();return next;
+      S(next);phase='idle';completed=true;currentEnergy=1;currentEmission=0;resolvedTerminals=TERMINAL_COUNT;idleStart=now();naturalReturnStart=-1;paintOnce();return next;
     }
     if(next==='READER_OPEN'){
       S(next);phase='reader';cancelLoop();render(now());return next;
@@ -399,9 +411,9 @@ export function mountTrustLivingObject(root,options={}){
   }
   function playSignature(){
     if(destroyed)return null;
-    S('SIGNATURE_PLAY');phase='root-to-crown';signatureStart=now();completed=false;resolvedTerminals=0;
+    S('SIGNATURE_PLAY');phase='root-to-crown';signatureStart=now();naturalReturnStart=-1;completed=false;currentEmission=1;resolvedTerminals=0;
     if(reduced){
-      completed=true;currentEnergy=1;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;S('FOREGROUND_IDLE');phase='idle';render(now());
+      completed=true;currentEnergy=1;currentEmission=0;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;naturalReturnStart=-1;S('FOREGROUND_IDLE');phase='idle';render(now());
       return now();
     }
     paintOnce();return signatureStart;
@@ -432,8 +444,8 @@ export function mountTrustLivingObject(root,options={}){
     return Object.freeze({
       contract:CONTRACT.id,state,phase,reducedMotion:!!reduced,webglContexts:destroyed?0:1,
       renderer:CONTRACT.renderer,recognizableObject:CONTRACT.recognizableObject,terminalNodeCount:TERMINAL_COUNT,
-      resolvedTerminalCount:resolvedTerminals,signatureSeconds:SIGNATURE_SECONDS,energyProgress:Number(currentEnergy.toFixed(4)),
-      completedSignature:completed,renderLoopActive:!!(raf||timer),drawCount,lastDrawAt:Number(lastDrawAt.toFixed(2)),
+      resolvedTerminalCount:resolvedTerminals,signatureSeconds:SIGNATURE_SECONDS,energyProgress:Number(currentEnergy.toFixed(4)),emissionLevel:Number(currentEmission.toFixed(4)),
+      completedSignature:completed,terminalNaturalColorRestored:completed&&currentEmission<=.001,renderLoopActive:!!(raf||timer),drawCount,lastDrawAt:Number(lastDrawAt.toFixed(2)),
       geometryRebuiltPerFrame:false,staticGeometry:true,responsiveAspect:Number(lastAspect.toFixed(3)),contextKind:'webgl1',
       conceptualLineage:CONTRACT.sourceBinding.conceptualLineage,donorPathAsserted:false,lifecycle:CONTRACT.lifecycle
     });

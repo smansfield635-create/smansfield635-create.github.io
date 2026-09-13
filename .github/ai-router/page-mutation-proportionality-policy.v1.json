@@ -7,6 +7,26 @@
   "router": "tools/repository-ai-entry-router.mjs",
   "legacyGovernedRouter": "tools/repository-ai-entry-router.v3-legacy.mjs",
   "staticVerifier": "tools/static-editorial-micro-verifier.v1.mjs",
+  "wholeEstateExecutionDecision": {
+    "schema": "WHOLE_ESTATE_EXECUTION_DECISION_v1",
+    "status": "AUTHORITATIVE_FOR_BLOCKING_GATE_SELECTION",
+    "producer": "tools/repository-ai-entry-router.mjs",
+    "oneClassificationPerRequestedOperation": true,
+    "oneBlockingDecisionPerRequestedOperation": true,
+    "onlySelectedGatesMayBlock": true,
+    "unselectedWorkflowFailureDisposition": "ADVISORY_NON_BLOCKING_EVIDENCE",
+    "filesystemPathOrDirectoryPrefixAloneMaySelectBlockingGate": false,
+    "semanticDependencyRequiredForNonDirectGate": true,
+    "readOnlyMayEscalateToMutationSemantics": false,
+    "controlPlaneDefectMayManufactureProductPrerequisite": false,
+    "safetyCorePreserved": [
+      "EXACT_HEAD_CUSTODY",
+      "BOUNDED_MUTATION_SCOPE",
+      "CANONICAL_INTAKE_WHEN_REQUIRED",
+      "SCIENTIFIC_AND_EMPIRICAL_FAIL_CLOSED_BOUNDARIES",
+      "MERGE_DEPLOYMENT_PUBLICATION_SEPARATION"
+    ]
+  },
   "classes": {
     "STATIC_EDITORIAL_MICRO": {
       "canonicalAdmissionRequired": false,
@@ -56,14 +76,106 @@
       ]
     }
   },
+  "precedentReuse": {
+    "schema": "WHOLE_ESTATE_PRECEDENT_REUSE_POLICY_v1",
+    "status": "ACTIVE_DEFAULT",
+    "governingRule": "REUSE_ACCEPTED_PRECEDENT_AND_QUALIFY_ONLY_THE_DECLARED_DELTA_AND_DIRECTLY_AFFECTED_DEPENDENCIES",
+    "requiredBeforeNewConstructionWhenApplicable": true,
+    "inheritanceRequires": [
+      "ACCEPTED_PRECEDENT_IDENTITY",
+      "EXACT_SOURCE_OR_CONTENT_IDENTITY_WHEN_BYTE_REUSE_IS_CLAIMED",
+      "EXPLICIT_UNCHANGED_BEHAVIOR_CONTRACT",
+      "DECLARED_DELTA",
+      "DIRECT_DEPENDENCY_SET",
+      "NO_AUTHORITY_OR_CLAIM_UPGRADE_BY_INHERITANCE"
+    ],
+    "unchangedQualifiedBytesRequalifyFromZero": false,
+    "unchangedBehavioralContractMayInheritPriorEvidence": true,
+    "changedBehaviorRequiresFreshRelevantEvidence": true,
+    "newProjectOrPageMayReuseAcceptedPrecedent": true,
+    "precedentUseCreatesProjectAuthority": false,
+    "ambiguityDisposition": "QUALIFY_THE_AMBIGUOUS_PROPERTY_NOT_THE_ENTIRE_PRECEDENT_FROM_ZERO"
+  },
+  "candidateScopeRecognition": {
+    "schema": "ADMITTED_CANDIDATE_SCOPE_RECOGNITION_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "governingRule": "AN_EXACT_PATH_DECLARED_IN_AN_ADMITTED_ALLOWED_PATH_SET_IS_RECOGNIZED_FOR_THAT_OPERATION_EVEN_IF_THE_PATH_IS_CANDIDATE_CREATED",
+    "candidateCreatedPathNeedsSeparatePersistentRegistration": false,
+    "persistentRegistrationRequiredOnlyWhen": [
+      "NEW_DURABLE_PROJECT_AUTHORITY_BOUNDARY",
+      "NEW_DURABLE_WORKFLOW_OWNERSHIP_BOUNDARY",
+      "NEW_DURABLE_PUBLICATION_SURFACE",
+      "NEW_DURABLE_CONTROL_PLANE_CAPABILITY_OR_AUTHORITY"
+    ],
+    "candidateRecognitionMayExpandAllowedPaths": false,
+    "candidateRecognitionMayCreatePrefixAuthority": false,
+    "candidateRecognitionMayWaiveProjectQualification": false,
+    "candidateRecognitionEndsWithOperation": true
+  },
+  "agentExecutionProportionality": {
+    "schema": "AGENT_EXECUTION_PROPORTIONALITY_POLICY_v1",
+    "status": "ACTIVE",
+    "contract": ".github/ai-router/agent-invocation/contract.v1.json",
+    "notRequiredFor": [
+      "READ_ONLY_ADMINISTRATIVE",
+      "SOURCE_READBACK",
+      "STATUS_INSPECTION",
+      "STATIC_EDITORIAL_MICRO",
+      "BOUNDED_PAGE_RELEASE",
+      "DETERMINISTIC_REGISTRY_METADATA",
+      "EXACT_IDENTITY_READBACK"
+    ],
+    "requiredFor": [
+      "MATERIAL_GOVERNED_ENGINEERING",
+      "CONTROL_PLANE",
+      "SCIENTIFIC_OR_EMPIRICAL",
+      "AUTHORITY_BOUNDARY_CHANGE",
+      "DISPUTED_INDEPENDENT_QUALIFICATION"
+    ],
+    "nativeAgentAvailabilityDeterminesExecutabilityForExemptWork": false,
+    "agentExecutionCreatesAuthority": false
+  },
+  "continuityByDefault": {
+    "schema": "DISJOINT_MAIN_MOVEMENT_CONTINUITY_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "onMainMovement": "DIFFERENTIAL_CONTINUITY_FIRST",
+    "disjointRelevantDependencyChange": false,
+    "disjointChangeDisposition": "CARRY_FORWARD_APPROVED",
+    "strictSuccessorRequiredOnlyWhen": [
+      "RELEVANT_SCOPE_CHANGED",
+      "RELEVANT_DEPENDENCY_CHANGED",
+      "AUTHORITY_BOUNDARY_CHANGED",
+      "SCIENTIFIC_OR_EMPIRICAL_FREEZE_CHANGED",
+      "CONTINUITY_EVIDENCE_INCOMPLETE_OR_CONTRADICTORY"
+    ],
+    "mainMovementAloneForcesStrictSuccessor": false,
+    "carryForwardMayExpandAuthority": false
+  },
+  "failureTaxonomy": {
+    "schema": "WHOLE_ESTATE_BLOCKER_TAXONOMY_v1",
+    "classes": [
+      "PRODUCT_DEFECT",
+      "QUALIFICATION_HARNESS_DEFECT",
+      "CONTROL_PLANE_DEFECT",
+      "EXECUTION_SUBSTRATE_DEFECT",
+      "AUTHORITY_DEFECT",
+      "PUBLICATION_DEFECT",
+      "SCIENTIFIC_OR_EMPIRICAL_DEFECT"
+    ],
+    "failureMustRemainInLocalizedClassUntilNewEvidenceChangesIt": true,
+    "controlPlaneDefectMayCreateProductRepairRequirement": false,
+    "qualificationHarnessDefectMayBeRelabeledProductDefectWithoutProductEvidence": false
+  },
   "qualificationRouting": {
     "schema": "QUALIFICATION_PROPORTIONALITY_POLICY_v1",
     "status": "ACTIVE_FAIL_CLOSED",
     "sequence": [
-      "CLASSIFY_CHANGE",
+      "CLASSIFY_CHANGE_ONCE",
+      "RESOLVE_WHOLE_ESTATE_EXECUTION_DECISION",
       "ROUTE_EXACT_PATHS",
       "ADMIT_ONCE_IF_REQUIRED",
-      "RUN_ONLY_DISCRIMINATING_CHECKS",
+      "IDENTIFY_ACCEPTED_PRECEDENT_WHEN_APPLICABLE",
+      "RUN_ONLY_SELECTED_DISCRIMINATING_CHECKS",
       "MERGE_AFTER_PASS",
       "RELEASE_SEPARATELY"
     ],
@@ -72,12 +184,17 @@
       "EXACT_BASE",
       "EXACT_DECLARED_DIFF",
       "PATH_AUTHORITY_VALID",
+      "PRECEDENT_CONTINUITY_WHEN_CLAIMED",
       "PRODUCT_SPECIFIC_VERIFIER",
       "ONE_RELEVANT_INTEGRATION_CHECK",
       "PASS_CLOSED"
     ],
+    "blockingGateLaw": "A_GATE_MAY_BLOCK_ONLY_IF_IT_INSPECTS_A_CHANGED_BYTE_OR_DECLARED_DIRECT_DEPENDENCY_OR_THE_CANONICAL_EXECUTION_DECISION_EXPLICITLY_ESTABLISHES_A_SEMANTIC_DEPENDENCY",
+    "unselectedGateDisposition": "ADVISORY_NON_BLOCKING_EVIDENCE",
     "additionalGateLaw": "ADDITIONAL_CHECK_MAY_GATE_ONLY_WHEN_IT_NAMES_A_CONCRETE_FAILURE_CLASS_THE_CURRENT_CANDIDATE_CAN_CAUSE_AND_ACTUALLY_INSPECTS_THAT_DEPENDENCY_OR_SURFACE",
     "historicalFailureLaw": "WORKFLOW_FAILURE_BEFORE_CANDIDATE_INSPECTION_IS_EVIDENCE_ONLY_NOT_A_GATE",
+    "directoryPrefixLaw": "DIRECTORY_PREFIX_MATCHING_MAY_DISCOVER_CANDIDATES_BUT_MAY_NOT_BY_ITSELF_ESTABLISH_PRODUCT_SEMANTICS_OR_BLOCKING_AUTHORITY",
+    "controlPlaneDefectLaw": "CONTROL_PLANE_OR_QUALIFICATION_MISCLASSIFICATION_MUST_BE_REPAIRED_IN_ITS_OWN_CLASS_AND_MUST_NOT_MANUFACTURE_A_PRODUCT_PREREQUISITE",
     "awardsUnderHEarth": {
       "pathPattern": "showroom/globe/h-earth/awards/**",
       "filesystemOwner": "H_EARTH",
@@ -95,7 +212,9 @@
     },
     "prerequisiteConvergence": {
       "reuseEstablishedBoundedPathFamilyRegistration": true,
-      "bespokeSiblingPrerequisiteCycleAllowedOnlyForNewAuthorityBoundary": true
+      "bespokeSiblingPrerequisiteCycleAllowedOnlyForNewAuthorityBoundary": true,
+      "misclassificationMayCreateRegistrationPrerequisite": false,
+      "admittedCandidatePathMayRequireRecognitionPRSolelyBecauseNew": false
     },
     "deterministicRegistryMetadataPrerequisite": {
       "schema": "DETERMINISTIC_REGISTRY_METADATA_QUALIFICATION_POLICY_v1",

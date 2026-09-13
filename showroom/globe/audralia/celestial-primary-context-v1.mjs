@@ -3,8 +3,8 @@ const canvas=document.querySelector('[data-h-earth-map-wide-canvas]');
 const runtime=window.__AUDRALIA_TABLET_SINGLE_CONTEXT__;
 if(!(canvas instanceof HTMLCanvasElement))throw new Error('AUDRALIA_PARITY_CELESTIAL_CANVAS_MISSING');
 if(!runtime?.renderer||typeof runtime.getCameraFrame!=='function')throw new Error('AUDRALIA_PARITY_CELESTIAL_RUNTIME_MISSING');
-const gl=canvas.getContext('webgl2');
-if(!gl)throw new Error('AUDRALIA_PARITY_CELESTIAL_PRIMARY_CONTEXT_UNAVAILABLE');
+const gl=window.__AUDRALIA_PRIMARY_GL__;
+if(!(gl instanceof WebGL2RenderingContext))throw new Error('AUDRALIA_PARITY_CELESTIAL_PRIMARY_CONTEXT_UNAVAILABLE');
 
 const SUN=Object.freeze([.42,.78,.46]);
 const MOON_A=Object.freeze([.15,.66,-.74]);
@@ -49,5 +49,5 @@ function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>reque
 for(const type of ['pointerdown','pointermove','pointerup','pointercancel','wheel','dblclick'])canvas.addEventListener(type,schedule,{passive:true});
 window.addEventListener('keydown',schedule,{passive:true});window.addEventListener('resize',schedule,{passive:true});document.querySelector('[data-fit-world]')?.addEventListener('click',schedule,{passive:true});
 render();
-const evidence=Object.freeze({policyId:POLICY_ID,usesPrimaryWorldCanvas:true,newCanvasCreated:false,uniqueWebGLContextExpected:1,stars:true,sun:true,moons:2,atmosphere:true,getRuntimeEvidence:()=>Object.freeze({renderedFrames})});
+const evidence=Object.freeze({policyId:POLICY_ID,usesPrimaryWorldCanvas:true,newCanvasCreated:false,newContextRequested:false,uniqueWebGLContextExpected:1,stars:true,sun:true,moons:2,atmosphere:true,getRuntimeEvidence:()=>Object.freeze({renderedFrames})});
 Object.defineProperty(window,'__AUDRALIA_TABLET_PRIMARY_CONTEXT_CELESTIAL__',{value:evidence,writable:false,configurable:false});

@@ -64,7 +64,7 @@
       ".github/ai-router/",
       ".github/workflows/remote-operation-successor-v1.yml",
       ".github/workflows/bounded-binary-object-transfer-v1.yml",
-      "tools/ai-room-transport/bounded-binary-object-transfer-v1.mjs",
+      "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
       "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs",
       ".github/ai-toolset-transport/bounded-binary-object-transfer.v1.json",
       "tools/operation-intake/"

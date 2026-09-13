@@ -1,0 +1,267 @@
+name: T1 PR603 Private Qualification Fallback
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  qualification:
+    if: github.event.pull_request.head.ref == 'ai-dispatch-t1-pr603-qualification-20260913'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      BASE_SHA: 0dfbe032f56e44dd8655e525dcbb5847c3bbaf2a
+      CANDIDATE_SHA: 2844a409832cc4d7edbc4fadea0f7b54473e24ea
+      OPERATION_ID: PROGRESSIVE_CONTINUITY_ROUTER_PASS_SELF_TEST_CORRECTION_20260912_001
+      TARGET_PATH: .github/ai-router/system-continuity/progressive-system-continuity-self-test.v1.mjs
+
+    steps:
+      - name: Mint private-repository installation token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+
+      - name: Verify Gen493 remains admitted and locked
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1" \
+            > "$RUNNER_TEMP/ledger-response.json"
+          python - <<'PY'
+          import base64, json, os
+          response=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'ledger-response.json'),encoding='utf-8'))
+          ledger=json.loads(base64.b64decode(response['content']).decode('utf-8'))
+          matches=[v for v in (ledger.get('activeScopes') or {}).values() if v.get('operationId')==os.environ['OPERATION_ID']]
+          if len(matches)!=1: raise SystemExit('GEN493_ACTIVE_LOCK_NOT_UNIQUE')
+          row=matches[0]
+          if row.get('lockGeneration')!=493 or row.get('state')!='ADMITTED_LOCKED' or row.get('released') is not False: raise SystemExit('GEN493_NOT_ADMITTED_LOCKED')
+          if row.get('governingHead')!=os.environ['BASE_SHA']: raise SystemExit('GEN493_GOVERNING_HEAD_MISMATCH')
+          PY
+
+      - name: Check out exact private PR603 candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.CANDIDATE_SHA }}
+          token: ${{ steps.private-token.outputs.token }}
+          fetch-depth: 0
+          path: private-candidate
+          persist-credentials: false
+
+      - name: Verify exact candidate and frozen one-file diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-candidate"
+          test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
+          git cat-file -e "$BASE_SHA^{commit}"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "$TARGET_PATH"
+          read -r adds dels file < <(git diff --numstat "$BASE_SHA" "$CANDIDATE_SHA" -- "$TARGET_PATH")
+          test "$adds" = "1"
+          test "$dels" = "1"
+          test "$file" = "$TARGET_PATH"
+
+      - name: Tarian — execute frozen T1 mechanical gates
+        id: tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-candidate"
+          node .github/ai-router/system-continuity/progressive-system-continuity-self-test.v1.mjs --output "$RUNNER_TEMP/progressive-self-test.json"
+          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+          jq -e '.result == "PASS" or .result == "PASS_CLOSED"' "$RUNNER_TEMP/progressive-self-test.json" >/dev/null
+          jq -e '.result == "PASS" or .result == "PASS_CLOSED"' "$RUNNER_TEMP/router-self-test.json" >/dev/null
+
+          set +e
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --task 'T1 mutation availability negative control' \
+            --path "$TARGET_PATH" \
+            --output "$RUNNER_TEMP/mutation-negative.json"
+          negative_status=$?
+          set -e
+          test "$negative_status" -ne 0
+          jq -e '.disposition != "PASS" and .operationIntakeExecution.result == "STOP"' "$RUNNER_TEMP/mutation-negative.json" >/dev/null
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          printf '%s\n' "$negative_status" > "$RUNNER_TEMP/mutation-negative-status.txt"
+
+      - name: Build source-bound qualification receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os
+          rt=os.environ['RUNNER_TEMP']
+          def load(n): return json.load(open(os.path.join(rt,n),encoding='utf-8'))
+          def sha(n): return hashlib.sha256(open(os.path.join(rt,n),'rb').read()).hexdigest()
+          receipt={
+            'schema':'T1_PR603_QUALIFICATION_EXECUTION_RECEIPT_v1',
+            'result':'MECHANICAL_GATES_PASS',
+            'operationId':os.environ['OPERATION_ID'],
+            'generation':493,
+            'baseSha':os.environ['BASE_SHA'],
+            'candidateSha':os.environ['CANDIDATE_SHA'],
+            'changedPath':os.environ['TARGET_PATH'],
+            'diff':{'changedFiles':1,'additions':1,'deletions':1},
+            'progressive':{'result':load('progressive-self-test.json').get('result'),'sha256':sha('progressive-self-test.json')},
+            'rootRouter':{'result':load('router-self-test.json').get('result'),'sha256':sha('router-self-test.json')},
+            'mutationWithoutAvailability':{'result':'FAIL_CLOSED','processStatus':int(open(os.path.join(rt,'mutation-negative-status.txt')).read().strip()),'receiptDisposition':load('mutation-negative.json').get('disposition'),'intakeResult':(load('mutation-negative.json').get('operationIntakeExecution') or {}).get('result'),'sha256':sha('mutation-negative.json')},
+            'repositoryMutationPerformed':False,
+            'mergePerformed':False,
+            'deploymentPerformed':False,
+          }
+          out=os.path.join(rt,'t1-pr603-qualification-receipt.json')
+          open(out,'w',encoding='utf-8').write(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
+          PY
+
+      - name: Upload qualification evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: t1-pr603-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/progressive-self-test.json
+            ${{ runner.temp }}/router-self-test.json
+            ${{ runner.temp }}/mutation-negative.json
+            ${{ runner.temp }}/t1-pr603-qualification-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+  boundary-review:
+    if: github.event.pull_request.head.ref == 'ai-dispatch-t1-pr603-qualification-20260913'
+    needs: qualification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_SHA: 0dfbe032f56e44dd8655e525dcbb5847c3bbaf2a
+      CANDIDATE_SHA: 2844a409832cc4d7edbc4fadea0f7b54473e24ea
+      TARGET_PATH: .github/ai-router/system-continuity/progressive-system-continuity-self-test.v1.mjs
+      CALLBACK_ISSUE: '3249'
+
+    steps:
+      - name: Mint independent private-repository read token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+
+      - name: Soren — independent exact-head source readback
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.CANDIDATE_SHA }}
+          token: ${{ steps.private-token.outputs.token }}
+          fetch-depth: 0
+          path: independent-readback
+          persist-credentials: false
+
+      - name: Soren — verify one-file semantic boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/independent-readback"
+          test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "$TARGET_PATH"
+          read -r adds dels file < <(git diff --numstat "$BASE_SHA" "$CANDIDATE_SHA" -- "$TARGET_PATH")
+          test "$adds" = "1" && test "$dels" = "1" && test "$file" = "$TARGET_PATH"
+          git diff "$BASE_SHA" "$CANDIDATE_SHA" -- "$TARGET_PATH" > "$RUNNER_TEMP/t1.diff"
+          grep -F -- "-function routerPass" "$RUNNER_TEMP/t1.diff" | grep -F -- "--mutation-intent" >/dev/null
+          grep -F -- "+function routerPass" "$RUNNER_TEMP/t1.diff" >/dev/null
+          if grep -F -- "+function routerPass" "$RUNNER_TEMP/t1.diff" | grep -F -- "--mutation-intent" >/dev/null; then exit 1; fi
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Download Tarian qualification evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: t1-pr603-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/t1-evidence
+
+      - name: Soren — adjudicate frozen T1 gates
+        id: adjudicate
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt="$RUNNER_TEMP/t1-evidence/t1-pr603-qualification-receipt.json"
+          jq -e --arg head "$CANDIDATE_SHA" --arg path "$TARGET_PATH" '
+            .result=="MECHANICAL_GATES_PASS" and
+            .candidateSha==$head and .changedPath==$path and
+            .diff.changedFiles==1 and .diff.additions==1 and .diff.deletions==1 and
+            (.progressive.result=="PASS" or .progressive.result=="PASS_CLOSED") and
+            (.rootRouter.result=="PASS" or .rootRouter.result=="PASS_CLOSED") and
+            .mutationWithoutAvailability.result=="FAIL_CLOSED" and
+            .mutationWithoutAvailability.processStatus!=0 and
+            .mutationWithoutAvailability.intakeResult=="STOP" and
+            .repositoryMutationPerformed==false and .mergePerformed==false and .deploymentPerformed==false
+          ' "$receipt" >/dev/null
+          python - <<'PY'
+          import hashlib,json,os
+          p=os.path.join(os.environ['RUNNER_TEMP'],'t1-evidence','t1-pr603-qualification-receipt.json')
+          raw=open(p,'rb').read()
+          out={
+            'schema':'T1_PR603_INDEPENDENT_BOUNDARY_RECEIPT_v1',
+            'result':'PASS_CLOSED',
+            'candidateSha':os.environ['CANDIDATE_SHA'],
+            'qualificationReceiptSha256':hashlib.sha256(raw).hexdigest(),
+            'exactOneFileDiff':True,
+            'mutationAvailabilityLawPreserved':True,
+            'independentFreshCheckout':True,
+            'repairAuthorityUsed':False,
+            'mergeAuthorityCreated':False,
+          }
+          q=os.path.join(os.environ['RUNNER_TEMP'],'t1-boundary-receipt.json')
+          open(q,'w',encoding='utf-8').write(json.dumps(out,sort_keys=True,indent=2)+'\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+            f.write('qualification_sha='+out['qualificationReceiptSha256']+'\n')
+            f.write('result='+out['result']+'\n')
+          PY
+
+      - name: Publish T1 callback result
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ steps.adjudicate.outputs.result }}
+          QUALIFICATION_SHA: ${{ steps.adjudicate.outputs.qualification_sha }}
+        run: |
+          set -euo pipefail
+          body="T1_PR603_QUALIFICATION_RESULT_V1\nresult: $RESULT\ncandidateSha: $CANDIDATE_SHA\nqualificationReceiptSha256: $QUALIFICATION_SHA\nrunId: $GITHUB_RUN_ID\nrunAttempt: $GITHUB_RUN_ATTEMPT\nindependentBoundary: PASS_CLOSED"
+          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/t1-callback.json"
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$CALLBACK_ISSUE/comments" \
+            --data-binary "@$RUNNER_TEMP/t1-callback.json" >/dev/null
+
+      - name: Upload independent boundary receipt
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: t1-pr603-boundary-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/t1-boundary-receipt.json
+          if-no-files-found: error
+          retention-days: 90

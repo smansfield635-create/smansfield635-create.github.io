@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "awards-hra-brain-publish-20260913",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3229,
+  "requestBranch": "ai-dispatch-request-awards-hra-brain-publish-20260913",
+  "requestCommit": "1500106ec4a8b096b143c652137092c62528698b",
+  "currentMainSha": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+  "bridgeRunId": "34727685897",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-09-13T00:19:58.144Z"
+}

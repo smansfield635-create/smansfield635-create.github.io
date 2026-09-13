@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-trust-precision-deploy-efd3b6ea",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3257,
+  "requestBranch": "ai-dispatch-request-awards-trust-precision-deploy-efd3b6ea",
+  "requestCommit": "2e76f1befa76b0ff9f6fb4d1c51d73122960df3a",
+  "requestCommitParent": "efd3b6ea0c2427faf8385736a67e626a357a3702",
+  "currentMainSha": "efd3b6ea0c2427faf8385736a67e626a357a3702",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "efd3b6ea0c2427faf8385736a67e626a357a3702",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34764991462",
+  "dispatchedRunId": 34765028165,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34765028165",
+  "dispatchedRunHeadSha": "efd3b6ea0c2427faf8385736a67e626a357a3702",
+  "dispatchedAt": "2026-09-13T15:14:59.672Z",
+  "resolvedAt": "2026-09-13T15:15:03.254Z"
+}

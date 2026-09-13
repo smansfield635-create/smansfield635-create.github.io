@@ -20,6 +20,7 @@ const sub=(a,b)=>a.map((v,i)=>v-b[i]);
 const scale=(a,s)=>a.map(v=>v*s);
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const setStatus=(text,state=text)=>{if(statusNode){statusNode.textContent=text;statusNode.dataset.status=state;}};
+const nextPaint=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
 
 function tangentDirection(u,v){
   const radius=Math.hypot(u,v);
@@ -204,28 +205,46 @@ export async function initializeAudraliaTabletSingleContextClouds(){
   setStatus('building…','AUDRALIA_SINGLE_CONTEXT_CLOUDS_BUILDING');
   if(loaderStage)loaderStage.textContent='Building the Audralia world…';
 
+  const startupSequence=[];
   const rendererModule=await import('./renderer.precomputed.mjs');
   const constructed=constructPrimaryRenderer(rendererModule);
   const renderer=constructed.renderer;
-  const clouds=createAudraliaTabletCloudPass({gl:constructed.primaryGl,worldCanvas:canvas});
-  const controls=wire(renderer,clouds);
+  startupSequence.push('PRIMARY_CONTEXT_READY');
 
   renderer.render();
+  startupSequence.push('PRIMARY_WORLD_RENDERED');
+  if(loaderStage)loaderStage.textContent='Audralia world ready · staging clouds…';
+  await nextPaint();
+  startupSequence.push('PRIMARY_WORLD_FRAME_PRESENTED');
+
+  const clouds=createAudraliaTabletCloudPass({gl:constructed.primaryGl,worldCanvas:canvas});
+  startupSequence.push('CLOUD_PASS_CONSTRUCTED');
+  const controls=wire(renderer,clouds);
   controls.renderClouds();
+  startupSequence.push('CLOUD_FIRST_DRAW');
+
+  const worldIndex=startupSequence.indexOf('PRIMARY_WORLD_RENDERED');
+  const presentedIndex=startupSequence.indexOf('PRIMARY_WORLD_FRAME_PRESENTED');
+  const cloudConstructIndex=startupSequence.indexOf('CLOUD_PASS_CONSTRUCTED');
+  const cloudDrawIndex=startupSequence.indexOf('CLOUD_FIRST_DRAW');
+  const worldBeforeCloud=worldIndex>=0&&presentedIndex>worldIndex&&cloudConstructIndex>presentedIndex&&cloudDrawIndex>cloudConstructIndex;
 
   const failures=[];
   if(constructed.webgl2ContextRequests!==1)failures.push('WEBGL_CONTEXT_REQUEST_COUNT');
   if(clouds.getEvidence().primaryContextOnly!==true)failures.push('CLOUD_PRIMARY_CONTEXT_BINDING');
   if(clouds.getEvidence().createsCanvas!==false)failures.push('CLOUD_CANVAS_CREATION');
   if(clouds.getEvidence().regionalSystemsIncluded!==false)failures.push('REGIONAL_WEATHER_SCOPE');
+  if(worldBeforeCloud!==true)failures.push('WORLD_BEFORE_CLOUD_ORDER');
   const runtime=Object.freeze({
-    schema:'AUDRALIA_TABLET_SINGLE_CONTEXT_CLOUDS_RUNTIME_v1',
+    schema:'AUDRALIA_TABLET_SINGLE_CONTEXT_CLOUDS_RUNTIME_v2_WORLD_FIRST',
     renderer,
     clouds,
-    renderingMode:'EXACT_PRIMARY_WORLD_SINGLE_WEBGL_CONTEXT_WITH_CLOUD_PASS',
+    renderingMode:'EXACT_PRIMARY_WORLD_SINGLE_WEBGL_CONTEXT_WITH_STAGED_CLOUD_PASS',
     fallbackActive:false,
     exactApprovedGeometry:true,
     cloudPassActive:true,
+    worldRenderedBeforeCloudPass:worldBeforeCloud,
+    startupSequence:Object.freeze([...startupSequence]),
     regionalWeatherDeferred:true,
     localWeatherDeferred:true,
     celestialDeferred:true,
@@ -236,7 +255,8 @@ export async function initializeAudraliaTabletSingleContextClouds(){
       singleWebGLContext:constructed.webgl2ContextRequests===1,
       webgl2ContextRequests:constructed.webgl2ContextRequests,
       cloudPassUsesPrimaryContext:clouds.getEvidence().primaryContextOnly===true,
-      additionalCanvasCount:0
+      additionalCanvasCount:0,
+      worldRenderedBeforeCloudPass:worldBeforeCloud
     }),
     getRuntime:()=>runtime,
     getCameraFrame:()=>cameraFrame(renderer),

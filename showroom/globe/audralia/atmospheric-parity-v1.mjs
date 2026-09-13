@@ -3,6 +3,7 @@ const previousShaderSource=WebGL2RenderingContext.prototype.shaderSource;
 let phonePatches=0;
 let tabletPatches=0;
 let rejected=0;
+let primaryContextCaptured=false;
 
 const PARITY_GLSL=`
 float apBand(float h,float lo,float hi){return smoothstep(lo,lo+5.0,h)*(1.0-smoothstep(hi-7.0,hi,h));}
@@ -119,8 +120,13 @@ WebGL2RenderingContext.prototype.shaderSource=function(shader,source){
     if(phone!==next)next=phone;
     else{
       const tablet=augmentTablet(next);
-      if(tablet!==next)next=tablet;
-      else rejected++;
+      if(tablet!==next){
+        next=tablet;
+        if(!primaryContextCaptured){
+          Object.defineProperty(window,'__AUDRALIA_PRIMARY_GL__',{value:this,writable:false,configurable:false});
+          primaryContextCaptured=true;
+        }
+      }else rejected++;
     }
   }
   return previousShaderSource.call(this,shader,next);
@@ -141,7 +147,7 @@ const evidence=Object.freeze({
     'DISTRIBUTED_CIRROSTRATUS_VEILS','DISTRIBUTED_ALTOCUMULUS_FIELDS'
   ]),
   additionalFieldInstances:Object.freeze({marineBanks:3,tradeFields:3,commaFronts:2,mccComplexes:2,cirrusPlumes:5,cirrostratusVeils:4,altocumulusFields:5}),
-  getRuntimeEvidence:()=>Object.freeze({phonePatches,tabletPatches,rejectedShaderSubmissions:rejected})
+  getRuntimeEvidence:()=>Object.freeze({phonePatches,tabletPatches,rejectedShaderSubmissions:rejected,primaryContextCaptured})
 });
 
 Object.defineProperty(window,'__AUDRALIA_FULL_ATMOSPHERIC_PARITY__',{value:evidence,writable:false,configurable:false});

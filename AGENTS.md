@@ -1,26 +1,34 @@
 # Repository agent entrypoint
 
-Read `AI_ENTRYPOINT.json` first and classify the requested page mutation before escalating into repository-operation authority.
+Read `AI_ENTRYPOINT.json` first. For every repository task, use `tools/repository-ai-entry-router.mjs` to resolve the repository route and, for mutations, the proportional mutation class before escalating into repository-operation authority.
 
-## Mandatory native invocation of canonical agents
+## Whole-estate execution convergence
 
-For every repository task, load `.github/ai-router/agent-invocation/contract.v1.json` and actually invoke the appropriate existing canonical agent function through the available native agent tools before substantive work. This applies to reading, inspection, diagnosis, static edits, construction, qualification, adoption, publication, and control-plane operations. The owner requirement is recorded in issue #3209.
+The root router emits `WHOLE_ESTATE_EXECUTION_DECISION_v1`. That decision is the authoritative repository-level answer for blocking-gate selection across Awards, cinematic work, Audralia, Characters, Build, Research, and future projects.
 
-Alaric/N owns Navigation, Elara/E Signal, Tarian/S Continuity, and Soren/W Boundary. Resolve intermediate bearings through the frozen constitution; they compose existing functions and do not create more identities. Dispatch only the functions needed for the task. Preserve opposing-function separation and independent review. A native task assigned one of these functions is an execution instance; do not claim a separate persistent model or create sixteen workers.
+Only gates selected by that decision may block the requested operation. A workflow that was not selected remains evidence only: its failure is `ADVISORY_NON_BLOCKING_EVIDENCE` unless new evidence establishes a direct dependency or the canonical decision is recomputed to select it. Directory placement, project ancestry, or a broad path prefix does not by itself establish product semantics or blocking authority.
 
-The initial room may perform only the contract's minimal source discovery and current-main/tool-availability observations needed to make the correct invocation. This bootstrap creates no product inspection or mutation authority. Follow `startupDiscovery` in the invocation contract: inspect directly advertised native tool namespaces first, then any actually advertised deferred discovery surface if the needed callable is still unresolved. `ALL_TOOLS` is not the full host tool catalog; an empty search there does not prove that directly advertised collaboration tools are absent. Use only callable names and argument schemas actually advertised by this host. When `collaboration.spawn_agent` or `collaboration.followup_task` is exposed directly, call it directly outside `functions.exec` and the `tools.*` object; do not invent aliases or APIs.
+A gate may block only when it inspects a changed byte, an explicitly declared direct dependency, or a semantic dependency established by the canonical decision. A control-plane or qualification-classification defect must be repaired in its own class; it must not manufacture a product prerequisite.
 
-Freeze the assignment before the actual spawn or applicable existing-task followup and retain its returned native task identity and source event. Distinguish `NATIVE_AGENT_DISCOVERY_INCOMPLETE` (an advertised discovery surface remains unresolved), `NATIVE_AGENT_CAPABILITY_UNEXPOSED` (all available discovery was inspected successfully and the required capability is absent), and `NATIVE_AGENT_INVOCATION_CALL_FAILED` (an exposed callable returned an error). Preserve the exact callable, error and source event on failure. Incomplete discovery is not proof of tool absence. A genuinely unexposed capability yields `NATIVE_AGENT_INVOCATION_UNAVAILABLE_STOP_SUBSTANTIVE_WORK`; a failed call stops the unresolved assignment without relabeling it as absent tooling. Repository instructions cannot attach missing host tools. A role written in JSON, a route receipt, or a room silently calling itself an agent is not a substitute for invocation.
+Use accepted precedent before inventing a new implementation. When an accepted construct is reused, bind its source identity, state the unchanged behavioral contract, declare the delta, and requalify only the delta and directly affected dependencies. Unchanged qualified bytes and unchanged behavioral contracts do not restart from zero. Precedent reuse never upgrades authority, scientific standing, or public claims.
 
-The same contract's `complementaryOfficeDiscovery` points to the existing Equipment Room, North Return, Dextrion's Lab Execution, canonical execution substrate, Soren's post-materialization verification, Jeeves's owner-facing relay and ACK Return. All sixteen functional stations remain available through the frozen constitution. After initial native invocation, discover complementary sources only when the task needs them: resolve current private `smansfield635-create/geodiametrics1` main, read its `AI_ENTRYPOINT.json` and `AGENTS.md`, then the exact source contracts at that head. These are discovery pointers, not automatic private routing or private authority. Missing required private access/source stops the dependent step; it does not block unrelated authorized public work. Preserve four cardinal identities, task-proportional offices, the sole existing execution backend and unchanged technical dispositions. A public task does not require every office or the full integrated private route merely because the map is discoverable.
+An exact candidate path listed in an admitted operation's `allowedPaths` / `exactAllowedRepositoryPaths` is recognized for that operation even when the file is candidate-created. Do not create a separate persistent registration prerequisite merely because the path is new. Persistent registration is reserved for a genuinely new durable authority boundary such as permanent project ownership, workflow ownership, publication surface, or control-plane capability.
 
-Work is assigned by bounded task, not by individual tool call. Reuse an invoked worker for its unchanged assignment; issue an attributable native followup when head, scope, authority, objective or lifecycle changes. The coordinator may manage admission, transport and handoffs under the declared operation while assigned agents perform their bounded work. It must not silently replace their work with unassigned execution.
+Read-only, status, source-readback, exact-identity, deterministic registry/metadata, static-editorial, and bounded non-authoritative release work must not acquire mutation semantics or mandatory native-agent ceremony merely by passing through shared infrastructure. Runtime, scientific/empirical, authority-boundary, and control-plane mutations remain fail-closed to their applicable governed paths.
 
-Before claiming completion, qualification, adoption or publication, retain the native returned output and its digest and obtain independent native source readback. Record the actual task identities, canonical functions, assignment, invocation event, output event and unresolved conditions. The observer must be a different native execution instance and must actually inspect the source events and output. A file-only evidence validator can check structure and consistency; it cannot authenticate a native invocation. Neither synthetic tests nor supplied observation JSON establishes source authenticity. Missing source evidence remains `EXECUTION_UNVERIFIED`.
+## Proportional canonical-agent execution
 
-Apply this invocation procedure in addition to existing proportional classification, intake, project routing, lifecycle and release rules. The legacy functional router's static/read-only/source-readback exemptions concern that routing schema only; they do not exempt native invocation. Read-only and static work do not acquire a new mutation-intake requirement from agent invocation. Passive CI and fixed canonical intake are not intelligent agents. Failed or withdrawn work may still release authority through canonical closure without a successful-agent result.
+Load `.github/ai-router/agent-invocation/contract.v1.json` and obey the `agentMode` in `WHOLE_ESTATE_EXECUTION_DECISION_v1`. Canonical agents remain the functional execution and review architecture where their separation materially contributes to safety; they are not a universal entrance fee for every repository interaction.
 
-Report the canonical function, actual native task identity, and completed output or precise unresolved boundary. Distinguish assigned, invoked, running, returned and independently checked. Repository instructions mandate this behavior for compliant rooms; they do not establish host/connector-wide interception of direct GitHub tools. Keep `CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT` open until its declared evidence exists.
+`NOT_REQUIRED` agent mode applies to read-only administration, source/status/exact-identity readback, deterministic registry/metadata proof, `STATIC_EDITORIAL_MICRO`, and `BOUNDED_PAGE_RELEASE`. These tasks may proceed directly under their resolved repository/project authority. Do not perform native-agent discovery solely to create ceremony and do not invent agent receipts.
+
+`REQUIRED` agent mode applies to material governed engineering, control-plane authority work, scientific or empirical execution, authority-boundary change, and disputed independent qualification. For those tasks, Alaric/N owns Navigation, Elara/E Signal, Tarian/S Continuity, and Soren/W Boundary. Resolve intermediate bearings through the frozen constitution; they compose existing functions and do not create more identities. Preserve opposed-function separation where the controlling task requires it.
+
+When required agent execution is present, inspect directly advertised native tool namespaces first and use the host's actual callable names. If native spawn/followup is genuinely unexposed and the owner explicitly directs execution in the current room, the existing co-located cardinal room may satisfy functional execution with phase-bound receipts; never claim native spawn, separate model instances, or independent-model review that did not occur. Native tool availability never blocks an agent-exempt task.
+
+Complementary-office discovery is task-proportional. Resolve the private Equipment Room, North Return, Dextrion, execution substrate, Soren post-materialization verification, Jeeves relay, or ACK Return only when the controlling operation actually depends on those offices. Missing private access stops that dependent step, not unrelated authorized public work.
+
+Agent invocation never creates mutation, merge, deployment, scientific, or publication authority. When native execution or independent native review is actually claimed, retain its attributable source evidence. File-only validation and synthetic tests remain structural evidence, not proof that an invocation occurred.
 
 ## Canonical abstraction before implementation
 
@@ -40,7 +48,7 @@ Load `.github/ai-router/execution-efficiency-policy.v1.json` and apply shared pr
 
 A probe counts as progress only when it yields new evidence: a new immutable identity, exact assertion, log/artifact content, state transition, or newly eliminated hypothesis. After a probe yields `NO_NEW_EVIDENCE`, do not repeat an equivalent probe. At most one second attempt may pursue the same evidence purpose, and only if it changes transport, identifier resolution, evidence source, or query surface. Rephrasing the same retrieval is not a strategy change.
 
-For a failed workflow, localize the first failed step and extract its exact assertion or strongest available machine evidence before proposing repair. Downstream skipped steps are consequences, not separate diagnoses. Do not blind-rerun an unchanged failure, create serial equivalent dispatch carriers, or mutate product/runtime bytes from a verification failure before fault localization.
+For a failed workflow, first determine whether that workflow is selected by the current `WHOLE_ESTATE_EXECUTION_DECISION_v1`. If it is unselected, record it as advisory evidence and do not create a blocker from it. If selected, localize the first failed step and extract its exact assertion or strongest available machine evidence before proposing repair. Downstream skipped steps are consequences, not separate diagnoses. Do not blind-rerun an unchanged failure, create serial equivalent dispatch carriers, or mutate product/runtime bytes from a verification failure before fault localization.
 
 If evidence remains unavailable after the allowed escalation, stop repetition and report the exact missing evidence boundary. Do not describe repeated retrieval attempts as investigation progress. When a lawful execution step is available, execute it rather than returning status only. Every execution report should state what completed, what new evidence was obtained or that none was obtained, the current boundary, and the next lawful action or blocker.
 
@@ -53,6 +61,8 @@ Use the root router for mutation classification:
 ```text
 node tools/repository-ai-entry-router.mjs --mutation-intent --task <BOUNDED_TASK_DESCRIPTION> --path <repository-path> [--path <repository-path> ...]
 ```
+
+The returned `WHOLE_ESTATE_EXECUTION_DECISION_v1` is the blocking selector. Resolve accepted precedent before construction. If precedent applies, record its accepted source identity, unchanged behavioral contract, declared delta, and direct dependencies. Do not requalify unrelated inherited behavior.
 
 If the receipt classifies the request as `STATIC_EDITORIAL_MICRO`, construct only the declared static diff and verify it against the exact base and candidate heads:
 
@@ -80,23 +90,25 @@ Evidence collected after this release remains bound to the exact frozen candidat
 
 ## Moving-head successor continuity
 
-If an already-active governed operation becomes stale because its recorded governing head is no longer the current `refs/heads/main`, do not manually close the predecessor and separately reacquire a replacement lock. Prepare a fresh successor operation request and construction procedure bound to the new exact `main`, plus a `REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_REQUEST_v1`, then run:
+Main movement is not itself a reason to manufacture a successor generation. When an active governed operation's recorded head differs from current `main`, run differential continuity first. If the intervening changes are disjoint from the operation's scope and direct dependencies, preserve the exact candidate/evidence and use `CARRY_FORWARD_APPROVED`; do not restart design, qualification, or admission from zero.
+
+A strict successor is required only when relevant scope, direct dependency, authority boundary, scientific/empirical freeze, or continuity evidence materially changed or remains incomplete/contradictory. When strict successor is required, prepare a fresh successor operation request and construction procedure bound to the new exact `main`, plus a `REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_REQUEST_v1`, then run:
 
 ```text
 GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>
 ```
 
-Continue only if the command-emitted receipt returns `SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED`. That result means the exact predecessor was preserved in terminal history as `SUPERSEDED` and the fresh successor was admitted in the same compare-and-swap ledger transaction. The successor gate never carries old authority forward implicitly: `inheritedAuthority` must be empty, a fresh successor request and construction procedure are mandatory, and exact-head revalidation remains required. A stale-head transition does not convert predecessor evidence into evidence for the new head.
+Continue only if the command-emitted receipt returns `SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED`. That result means the exact predecessor was preserved in terminal history as `SUPERSEDED` and the fresh successor was admitted in the same compare-and-swap ledger transaction. The successor gate never carries old authority forward implicitly: `inheritedAuthority` must be empty, a fresh successor request and construction procedure are mandatory, and exact-head revalidation remains required for the relevant changed dependencies. A stale-head transition does not automatically invalidate unrelated evidence.
 
-After ordinary admission or successful successor admission, run the repository entry router against every affected path:
+After ordinary admission, approved carry-forward, or successful successor admission, run the repository entry router against every affected path:
 
 ```text
 node tools/repository-ai-entry-router.mjs --path <repository-path> [--path <repository-path> ...]
 ```
 
-For a proposed change, add `--mutation-intent` and a bounded `--task` description so the proportional classifier can resolve the mutation class. For many paths, use `--paths-file <newline-delimited-file>`. Honor the router disposition and load every project entrypoint, nested `AGENTS.md`, registry, procedure, validator, and stopping boundary named in the receipt.
+For a proposed change, add `--mutation-intent` and a bounded `--task` description so the proportional classifier can resolve the mutation class. For many paths, use `--paths-file <newline-delimited-file>`. Honor the router disposition and the `WHOLE_ESTATE_EXECUTION_DECISION_v1`. Load every project entrypoint and narrower instruction that is relevant to the selected route and direct dependency surface; do not convert unrelated discovered instructions into new blockers.
 
-The intake gate establishes whether a governed operation may begin and atomically locks its declared scope. The successor gate establishes only moving-head continuity through a freshly validated successor request and an atomic supersession/admission transaction. Neither gate grants project-specific mutation, merge, canonicalization, runtime, renderer, deployment, or production authority. The root router remains a dispatcher and proportional classifier, not a source of project authority. Shared GitHub procedures explain how to resolve commits, create clean checkouts, use GitHub Actions, retrieve artifacts, verify hashes, publish receipts, and verify rollback; they do not grant project authority.
+The intake gate establishes whether a governed operation may begin and atomically locks its declared scope. Differential continuity determines whether disjoint main movement can carry forward. The successor gate establishes moving-head continuity only when a strict successor is actually required. None grants project-specific mutation, merge, canonicalization, runtime, renderer, deployment, or production authority. The root router remains a dispatcher, proportional classifier, and blocking-gate selector, not a source of project authority. Shared GitHub procedures explain execution mechanics; they do not grant project authority.
 
 ## Whole-estate narrative and display continuity
 
@@ -113,7 +125,7 @@ Before construction, resolve the route display contract declared by the constitu
 
 Preserve the authority separation: Compass owns global orientation and narrative anchoring; Governance is the public information-design and bounded-interaction reference; Evidence anchors claims and proof; Laws supplies runtime and semantic ceilings. Runtime classes are ceilings, not requirements. Semantic object identity may persist across transitions when continuity adds meaning, but continuity does not require one renderer or one universal page shell. Mobile is a distinct composition, reduced motion must preserve complete semantics, visual polish cannot create claim authority, and discovery may reveal depth without silently changing the public cardinal map.
 
-This global context does not widen mutation scope, create project authority, grant renderer/runtime authority, alter scientific standing, create claim authority, or substitute for project-specific entrypoints, nested `AGENTS.md`, evidence boundaries, or existing validation gates. If a task is not visual or experiential, do not invent display work merely because the constitution is globally discoverable.
+This global context does not widen mutation scope, create project authority, grant renderer/runtime authority, alter scientific standing, create claim authority, or substitute for project-specific entrypoints, nested `AGENTS.md`, evidence boundaries, or selected validation gates. If a task is not visual or experiential, do not invent display work merely because the constitution is globally discoverable.
 
 ## Progressive system continuity
 
@@ -133,19 +145,19 @@ The continuity track supplements rather than replaces proportional classificatio
 
 For remote read-only assessment after the track is installed, use an owner/member/collaborator issue comment beginning with `PROGRESSIVE_SYSTEM_CONTINUITY_REQUEST_V1` followed by the closed assessment JSON. The route may return a receipt to the triggering issue but may not mutate repository content or the operation ledger.
 
-For H-Earth and Audralia/globe experience paths, the router delegates to the existing H-Earth registry and automatic preflight. Preserve all narrower instructions below `h-earth-3d/` and `showroom/globe/h-earth/`. Before any experience-changing H-Earth or Audralia/globe upgrade, the operation must additionally load and satisfy `h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json`; the `H-Earth Experience Anchor Gate` is a hard acceptance boundary and may not be bypassed or weakened without explicit user authorization replacing the anchor.
+For H-Earth and Audralia/globe experience paths, the router may delegate to the existing H-Earth registry and experience anchor when those surfaces are selected by the whole-estate execution decision or are direct dependencies of the changed bytes. Preserve narrower instructions below `h-earth-3d/` and `showroom/globe/h-earth/` as relevant project evidence; they do not gain unrelated blocking authority from directory location alone. For an experience-changing H-Earth or Audralia/globe upgrade, `h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json` remains a hard acceptance boundary unless explicit user authority replaces it.
 
 Governed intake outcomes:
 
 - `ADMITTED_AND_LOCKED`: the complete request and canonical construction procedure passed intake, and the declared scope lock was atomically acquired. Continue only within the admitted paths and separately resolved project authority.
 - `INPUT_INCOMPLETE_NOT_STARTED`: no governed operation has started; governed branch creation, writes, workflows, and implementation inference remain prohibited.
-- `ACTIVE_SCOPE_ALREADY_LOCKED`: another governed operation owns the same scope; no competing governed operation may begin. If that exact active operation is stale only because `main` advanced, use the successor continuity gate rather than a manual close/re-admit sequence.
+- `ACTIVE_SCOPE_ALREADY_LOCKED`: another governed operation owns the same scope; no competing governed operation may begin. If that exact active operation is stale only because `main` advanced, use differential continuity first and strict successor only when it returns `STRICT_SUCCESSOR_REQUIRED`.
 - `SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED`: the exact active predecessor was atomically preserved as `SUPERSEDED` and replaced by a freshly admitted exact-head successor. Continue only within the fresh successor request and separately resolved project authority.
 
 Router dispositions:
 
-- `PASS`: project/procedure routing resolved, or a static editorial micro mutation was deterministically classified; continue only within the applicable bounded authority and verification rules.
-- `REVIEW_REQUIRED`: routing is incomplete or the path is not yet registered; report the limitation before project-specific action.
+- `PASS`: project/procedure routing resolved; continue only within the applicable bounded authority, the selected gate set, and verification rules.
+- `REVIEW_REQUIRED`: routing is incomplete or the path is not yet registered. For an admitted candidate-created path, first apply candidate-scope recognition before creating any persistent registration prerequisite.
 - `BLOCK`: the requested action is prohibited by the resolved route.
 - `STOP`: identity, scope, or authority resolution failed; do not proceed.
 - `NOT_APPLICABLE`: no project-specific router controls the operation.

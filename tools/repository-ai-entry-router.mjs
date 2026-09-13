@@ -90,8 +90,71 @@ function classifyPageMutation(paths, task = '') {
   if (staticPresentationOnly && hasCss && containsAny(upperTask, PRESENTATION_TASK_TOKENS) && !containsAny(upperTask, CSS_RUNTIME_TOKENS)) return { mutationClass: 'STATIC_EDITORIAL_MICRO', reasonCode: 'BOUNDED_STATIC_PRESENTATION_INTENT', canonicalAdmissionRequired: false, pageExcellenceRequired: false, verifier: STATIC_VERIFIER, requiredProofs: ['EXACT_HEAD', 'DECLARED_PATHS_ONLY', 'NO_EXECUTABLE_RUNTIME_DELTA', 'NO_UNRELATED_DIFF', 'STATIC_PRESENTATION_ONLY'] };
   return governed('AMBIGUOUS_MUTATION_FAIL_CLOSED');
 }
+function buildWholeEstateExecutionDecision(classification, normalizedPaths, task = '', routeReceipt = null) {
+  const mutationClass = classification.mutationClass;
+  const readOnly = mutationClass === 'READ_ONLY';
+  const authoritySurface = normalizedPaths.some((filePath) => AUTHORITY_PREFIXES.some((prefix) => filePath.startsWith(prefix)));
+  const agentMode = readOnly || mutationClass === 'STATIC_EDITORIAL_MICRO' || mutationClass === 'BOUNDED_PAGE_RELEASE'
+    ? 'NOT_REQUIRED'
+    : authoritySurface ? 'REQUIRED' : 'PROPORTIONAL_BY_PROJECT_RISK';
+  const selectedGateClasses = readOnly
+    ? ['PROJECT_ROUTE_READBACK']
+    : mutationClass === 'STATIC_EDITORIAL_MICRO'
+      ? ['PROJECT_ROUTE', 'EXACT_DIFF', 'STATIC_EDITORIAL_VERIFIER']
+      : mutationClass === 'BOUNDED_PAGE_RELEASE'
+        ? ['PROJECT_ROUTE', 'EXACT_DIFF', 'BOUNDED_RELEASE_PROOFS', 'EXACT_HEAD_PUBLICATION_SEQUENCE_WHEN_RELEASE_REQUESTED']
+        : ['CANONICAL_INTAKE', 'PROJECT_ROUTE', 'DIRECT_DEPENDENCY_QUALIFICATION', 'PRODUCT_OR_AUTHORITY_SPECIFIC_VERIFIER'];
+  return {
+    schema: 'WHOLE_ESTATE_EXECUTION_DECISION_v1',
+    status: 'AUTHORITATIVE_FOR_BLOCKING_GATE_SELECTION',
+    mutationClass,
+    classificationReason: classification.reasonCode ?? (readOnly ? 'READ_ONLY_ROUTE' : null),
+    declaredPaths: normalizedPaths,
+    task: task || null,
+    canonicalAdmissionRequired: classification.canonicalAdmissionRequired === true,
+    agentMode,
+    selectedGateClasses,
+    gatePolicy: {
+      onlySelectedGatesMayBlock: true,
+      blockingRequiresChangedByteDirectDependencyOrExplicitSemanticDependency: true,
+      filesystemDirectoryPrefixAloneMayBlock: false,
+      unselectedWorkflowFailureDisposition: 'ADVISORY_NON_BLOCKING_EVIDENCE'
+    },
+    precedentReuse: {
+      default: 'REUSE_ACCEPTED_PRECEDENT_BEFORE_NEW_CONSTRUCTION',
+      unchangedQualifiedBehaviorMayInheritEvidence: true,
+      inheritanceRequiresAcceptedIdentityAndExplicitUnchangedContract: true,
+      qualifyOnlyDeclaredDeltaAndDirectlyAffectedDependencies: true,
+      authorityOrClaimUpgradeByInheritanceAllowed: false
+    },
+    candidateScopeRecognition: {
+      exactDeclaredCandidatePathsRecognizedForOperation: true,
+      candidateCreatedPathNeedsSeparatePersistentRegistrationSolelyBecauseNew: false,
+      persistentRegistrationRequiredOnlyForDurableAuthorityBoundary: true,
+      mayExpandDeclaredScope: false
+    },
+    continuity: {
+      mainMovementAloneForcesStrictSuccessor: false,
+      disjointMovementDefault: 'DIFFERENTIAL_CONTINUITY_THEN_CARRY_FORWARD',
+      strictSuccessorOnlyForRelevantScopeDependencyAuthorityScientificChangeOrIncompleteEvidence: true
+    },
+    invariants: {
+      readOnlyMayEscalateToMutationSemantics: false,
+      controlPlaneDefectMayManufactureProductPrerequisite: false,
+      exactHeadCustodyPreserved: true,
+      boundedMutationScopePreserved: true,
+      scientificAndEmpiricalFailClosedBoundariesPreserved: true,
+      mergeDeploymentPublicationSeparationPreserved: true
+    },
+    blockerTaxonomy: ['PRODUCT_DEFECT', 'QUALIFICATION_HARNESS_DEFECT', 'CONTROL_PLANE_DEFECT', 'EXECUTION_SUBSTRATE_DEFECT', 'AUTHORITY_DEFECT', 'PUBLICATION_DEFECT', 'SCIENTIFIC_OR_EMPIRICAL_DEFECT'],
+    routeDisposition: routeReceipt?.disposition ?? null,
+    authorityEffect: 'NONE'
+  };
+}
 function stripMutationOnlyArgs(argv) { const stripped = []; for (let i = 0; i < argv.length; i += 1) { const token = argv[i]; if (token === '--mutation-intent') continue; if (token === '--intake-availability-receipt') { i += 1; continue; } if (token === '--output') { i += 1; continue; } stripped.push(token); } return stripped; }
+function stripOutputArg(argv) { const stripped = []; for (let i = 0; i < argv.length; i += 1) { const token = argv[i]; if (token === '--output') { i += 1; continue; } stripped.push(token); } return stripped; }
 function runLegacy(root, argv) { return spawnSync(process.execPath, [path.join(root, LEGACY_RELATIVE), ...argv], { cwd: root, encoding: 'utf8' }); }
+function parseLegacyReceipt(legacy) { let receipt = null; try { receipt = JSON.parse(legacy.stdout || '{}'); } catch { die(`LEGACY_ROUTE_RECEIPT_INVALID:${legacy.stderr || legacy.stdout}`); } return receipt; }
 function writeReceipt(output, receipt) { const text = `${JSON.stringify(receipt, null, 2)}\n`; if (output) { const absolute = path.resolve(output); fs.mkdirSync(path.dirname(absolute), { recursive: true }); fs.writeFileSync(absolute, text); } process.stdout.write(text); }
 function selfTest(root) {
   const cases = [
@@ -110,24 +173,43 @@ function selfTest(root) {
     const actual = classifyPageMutation(paths,task);
     return {id,expected,actual:actual.mutationClass,pass:actual.mutationClass===expected};
   });
+  const decisionFixtures = [
+    buildWholeEstateExecutionDecision({mutationClass:'READ_ONLY',canonicalAdmissionRequired:false},['README.md'],'read status'),
+    buildWholeEstateExecutionDecision(classifyPageMutation(['index.html'],'fix typo in page text'),['index.html'],'fix typo in page text'),
+    buildWholeEstateExecutionDecision(classifyPageMutation(['.github/ai-router/router.v1.json'],'control plane repair'),['.github/ai-router/router.v1.json'],'control plane repair')
+  ];
+  const decisionChecks = [
+    decisionFixtures[0].agentMode === 'NOT_REQUIRED' && decisionFixtures[0].invariants.readOnlyMayEscalateToMutationSemantics === false,
+    decisionFixtures[1].gatePolicy.onlySelectedGatesMayBlock === true && decisionFixtures[1].candidateScopeRecognition.candidateCreatedPathNeedsSeparatePersistentRegistrationSolelyBecauseNew === false,
+    decisionFixtures[1].precedentReuse.qualifyOnlyDeclaredDeltaAndDirectlyAffectedDependencies === true,
+    decisionFixtures[2].agentMode === 'REQUIRED' && decisionFixtures[2].canonicalAdmissionRequired === true,
+    decisionFixtures.every((decision) => decision.gatePolicy.filesystemDirectoryPrefixAloneMayBlock === false),
+    decisionFixtures.every((decision) => decision.invariants.controlPlaneDefectMayManufactureProductPrerequisite === false),
+    decisionFixtures.every((decision) => decision.continuity.mainMovementAloneForcesStrictSuccessor === false)
+  ];
   const legacy = runLegacy(root,['--self-test']);
   let legacyReceipt=null;
   try { legacyReceipt=JSON.parse(legacy.stdout||'{}'); } catch {}
   const legacyPass=legacy.status===0&&legacyReceipt?.result==='PASS';
-  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&legacyPass?'PASS':'FAIL', scenarios:cases, legacyRouterSelfTest:legacyPass?'PASS':'FAIL' };
+  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&decisionChecks.every(Boolean)&&legacyPass?'PASS':'FAIL', scenarios:cases, wholeEstateExecutionDecisionChecks:decisionChecks, legacyRouterSelfTest:legacyPass?'PASS':'FAIL' };
 }
 const root = discoverRoot(process.cwd());
 const argv = process.argv.slice(2);
 const parsed = parseArgs(argv);
 if (parsed.selfTest) { const receipt=selfTest(root); writeReceipt(parsed.output,receipt); process.exit(receipt.result==='PASS'?0:1); }
-if (!parsed.mutationIntent) { const legacy=runLegacy(root,argv); process.stdout.write(legacy.stdout||''); process.stderr.write(legacy.stderr||''); process.exit(legacy.status??1); }
 const paths=collectPaths(root,parsed);
+if (!parsed.mutationIntent) {
+  const legacy=runLegacy(root,stripOutputArg(argv));
+  const routeReceipt=parseLegacyReceipt(legacy);
+  const classification={mutationClass:'READ_ONLY',reasonCode:'READ_ONLY_ROUTE',canonicalAdmissionRequired:false,pageExcellenceRequired:false};
+  const receipt={...routeReceipt,schema:'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3',mutationIntent:false,wholeEstateExecutionDecision:buildWholeEstateExecutionDecision(classification,paths,parsed.task,routeReceipt)};
+  writeReceipt(parsed.output,receipt);
+  process.exit(legacy.status??1);
+}
 const classification=classifyPageMutation(paths,parsed.task);
 const proportionalBypass = classification.mutationClass==='STATIC_EDITORIAL_MICRO' || classification.mutationClass==='BOUNDED_PAGE_RELEASE';
-if (!proportionalBypass) { const legacy=runLegacy(root,argv); process.stdout.write(legacy.stdout||''); process.stderr.write(legacy.stderr||''); process.exit(legacy.status??1); }
-const legacy=runLegacy(root,stripMutationOnlyArgs(argv));
-let routeReceipt=null;
-try { routeReceipt=JSON.parse(legacy.stdout||'{}'); } catch { die(`LEGACY_ROUTE_RECEIPT_INVALID:${legacy.stderr||legacy.stdout}`); }
+const legacy=runLegacy(root,proportionalBypass?stripMutationOnlyArgs(argv):stripOutputArg(argv));
+const routeReceipt=parseLegacyReceipt(legacy);
 const blocked=legacy.status!==0||routeReceipt.disposition!=='PASS';
 const isStatic = classification.mutationClass==='STATIC_EDITORIAL_MICRO';
 const passResult = isStatic ? 'PASS_STATIC_EDITORIAL_MICRO' : 'PASS_BOUNDED_PAGE_RELEASE';
@@ -142,21 +224,22 @@ const receipt={
   pageMutationClassification:{
     schema:'PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1',
     instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1',
-    result:blocked?'BLOCK':passResult,
+    result:blocked?'BLOCK':(proportionalBypass?passResult:'PASS_GOVERNED_RUNTIME_OR_AUTHORITY'),
     ...classification,
     declaredPaths:paths,
     task:parsed.task||null,
     ambiguityPolicy:'RUNTIME_OR_AUTHORITY'
   },
-  operationIntakeExecution:blocked?null:{
+  wholeEstateExecutionDecision:buildWholeEstateExecutionDecision(classification,paths,parsed.task,routeReceipt),
+  ...(proportionalBypass?{operationIntakeExecution:blocked?null:{
     schema:'REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1',
     result:executionResult,
     backendId:null,
     canonicalAdmissionRequired:false,
     reasonCode
-  },
-  disposition:blocked?routeReceipt.disposition:'PASS',
-  reasonCodes:[...new Set([...(routeReceipt.reasonCodes??[]),blocked?blockedReason:successReason])]
+  }}:{}),
+  disposition:proportionalBypass?(blocked?routeReceipt.disposition:'PASS'):routeReceipt.disposition,
+  reasonCodes:[...new Set([...(routeReceipt.reasonCodes??[]),proportionalBypass?(blocked?blockedReason:successReason):'WHOLE_ESTATE_EXECUTION_DECISION_BOUND'])]
 };
 writeReceipt(parsed.output,receipt);
 process.exit(blocked?1:0);

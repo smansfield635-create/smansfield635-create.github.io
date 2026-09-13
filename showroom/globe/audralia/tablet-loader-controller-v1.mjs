@@ -48,7 +48,7 @@ function complete(){
   if(fill)fill.style.width='100%';
   if(track)track.setAttribute('aria-valuenow','100');
   if(note)note.textContent='One continuous world is ready · single-context tablet rendering is active.';
-  if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},420);}
+  if(loader){loader.hidden=false;loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},420);}
 }
 function fail(label,error){
   if(failed||ready)return;
@@ -56,7 +56,7 @@ function fail(label,error){
   const message=error instanceof Error?error.message:String(error||'unknown startup error');
   if(stage)stage.textContent=label;
   if(progress)progress.textContent='startup stopped';
-  if(loader)loader.classList.add('is-error');
+  if(loader){loader.hidden=false;loader.classList.remove('is-ready');loader.classList.add('is-error');}
   if(note){
     note.textContent=`${label}: ${message}`;
     const retry=document.createElement('button');retry.type='button';retry.textContent='Retry Audralia';retry.style.cssText='margin-top:14px;padding:10px 16px;border:1px solid rgba(225,239,219,.28);border-radius:999px;background:rgba(225,239,219,.08);color:inherit;font:inherit';retry.addEventListener('click',()=>location.reload());note.after(retry);

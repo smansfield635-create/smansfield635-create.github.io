@@ -95,12 +95,22 @@ function constructPrimaryRenderer(rendererModule){
 
 function wire(renderer,clouds){
   const pointers=new Map();
-  let gesture=null,wheelTimer=0;
+  let gesture=null,wheelTimer=0,renderCelestial=null;
   const safe=value=>Math.max(-64,Math.min(64,Number(value)||0));
   const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   const midpoint=(a,b)=>({x:(a.x+b.x)*.5,y:(a.y+b.y)*.5});
   const ordered=()=>[...pointers.entries()].sort((a,b)=>Number(a[0])-Number(b[0]));
   const renderClouds=()=>clouds.render(cameraFrame(renderer));
+  const renderEnrichment=()=>{
+    renderClouds();
+    if(renderCelestial)renderCelestial();
+  };
+  const installCelestialPass=pass=>{
+    if(typeof pass!=='function')throw new Error('AUDRALIA_TABLET_CELESTIAL_PASS_REQUIRED');
+    renderCelestial=pass;
+    renderer.render();
+    renderEnrichment();
+  };
   const beginTwo=()=>{
     const entries=ordered();
     if(entries.length!==2){gesture=null;return;}
@@ -120,7 +130,7 @@ function wire(renderer,clouds){
     pointers.set(event.pointerId,next);
     if(pointers.size===1){
       renderer.orbit(safe(next.x-previous.x),safe(next.y-previous.y));
-      renderClouds();
+      renderEnrichment();
       return;
     }
     if(pointers.size!==2)return;
@@ -143,7 +153,7 @@ function wire(renderer,clouds){
     }
     gesture.lastMid=mid;
     gesture.lastDistance=dist;
-    renderClouds();
+    renderEnrichment();
   });
   const clear=event=>{
     pointers.delete(event.pointerId);
@@ -151,7 +161,7 @@ function wire(renderer,clouds){
     if(pointers.size===0){
       clouds.endInteraction();
       renderer.render();
-      renderClouds();
+      renderEnrichment();
     }else{
       clouds.beginInteraction();
     }
@@ -163,23 +173,23 @@ function wire(renderer,clouds){
     event.preventDefault();
     clouds.beginInteraction();
     renderer.zoom(event.deltaY);
-    renderClouds();
+    renderEnrichment();
     clearTimeout(wheelTimer);
     wheelTimer=setTimeout(()=>{
       clouds.endInteraction();
       renderer.render();
-      renderClouds();
+      renderEnrichment();
     },140);
   },{passive:false});
   canvas.addEventListener('dblclick',()=>{
     renderer.focusGratitude();
     clouds.endInteraction();
-    renderClouds();
+    renderEnrichment();
   });
   focusButton?.addEventListener('click',()=>{
     renderer.focusGratitude();
     clouds.endInteraction();
-    renderClouds();
+    renderEnrichment();
   });
   window.addEventListener('keydown',event=>{
     const key=event.key.toLowerCase();
@@ -190,14 +200,14 @@ function wire(renderer,clouds){
     else return;
     event.preventDefault();
     clouds.endInteraction();
-    renderClouds();
+    renderEnrichment();
   });
   window.addEventListener('resize',()=>{
     renderer.render();
     clouds.endInteraction();
-    renderClouds();
+    renderEnrichment();
   });
-  return Object.freeze({renderClouds});
+  return Object.freeze({renderClouds,renderEnrichment,installCelestialPass});
 }
 
 export async function initializeAudraliaTabletSingleContextClouds(){
@@ -240,6 +250,8 @@ export async function initializeAudraliaTabletSingleContextClouds(){
     renderer,
     clouds,
     renderingMode:'EXACT_PRIMARY_WORLD_SINGLE_WEBGL_CONTEXT_WITH_STAGED_CLOUD_PASS',
+    frameOwner:'AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME',
+    compositeOrder:'PRIMARY_WORLD_THEN_CLOUDS_THEN_CELESTIAL',
     fallbackActive:false,
     exactApprovedGeometry:true,
     cloudPassActive:true,
@@ -248,6 +260,7 @@ export async function initializeAudraliaTabletSingleContextClouds(){
     regionalWeatherDeferred:true,
     localWeatherDeferred:true,
     celestialDeferred:true,
+    celestialIntegratedThroughPrimaryRuntime:true,
     optionalMultiContextEnrichmentDeferred:true,
     invariants:Object.freeze({
       pass:failures.length===0,
@@ -258,6 +271,7 @@ export async function initializeAudraliaTabletSingleContextClouds(){
       additionalCanvasCount:0,
       worldRenderedBeforeCloudPass:worldBeforeCloud
     }),
+    installCelestialPass:controls.installCelestialPass,
     getRuntime:()=>runtime,
     getCameraFrame:()=>cameraFrame(renderer),
     getCloudEvidence:()=>clouds.getEvidence()

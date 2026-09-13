@@ -25,6 +25,10 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
           path: source
+          sparse-checkout: |
+            showroom/globe/h-earth
+            h-earth-3d
+          sparse-checkout-cone-mode: true
 
       - uses: actions/setup-node@v4
         with:
@@ -63,7 +67,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/gen491-frames" "$RUNNER_TEMP/gen491-output/checkpoints"
-          cat > "$RUNNER_TEMP/gen491-capture.mjs" <<'NODE'
+          cat > "$GITHUB_WORKSPACE/gen491-capture.mjs" <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
           import { chromium } from 'playwright';
@@ -140,7 +144,7 @@ jobs:
           await browser.close();
           console.log(JSON.stringify({result:'PASS',frameCount:frame}));
           NODE
-          node "$RUNNER_TEMP/gen491-capture.mjs"
+          node "$GITHUB_WORKSPACE/gen491-capture.mjs"
 
       - name: Encode and mechanically verify CP-04 source reel
         shell: bash

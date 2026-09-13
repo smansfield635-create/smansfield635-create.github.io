@@ -123,7 +123,20 @@
       environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
     });
   </script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"></script>
+  <script type="module">
+    if (window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active !== true) {
+      await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST');
+    } else {
+      window.__AUDRALIA_TABLET_LEGACY_OVERLAY_BOOTSTRAP_SUPPRESSED__ = Object.freeze({
+        schema: 'AUDRALIA_TABLET_LEGACY_OVERLAY_BOOTSTRAP_SUPPRESSION_v1',
+        constrainedTablet: true,
+        legacyGAOverlayLoaded: false,
+        legacyW5OverlayLoaded: false,
+        additionalCanvasCount: 0,
+        additionalWebGLContexts: 0
+      });
+    }
+  </script>
   <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
   <script type="module">
     const exactRoot = '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/';

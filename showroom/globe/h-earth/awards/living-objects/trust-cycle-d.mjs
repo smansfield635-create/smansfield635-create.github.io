@@ -1,6 +1,8 @@
 const LIFECYCLE=Object.freeze(['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING']);
 const SIGNATURE_SECONDS=6.5;
 const TERMINAL_COUNT=9;
+const COMPLETION_HOLD_MS=450;
+const NATURAL_RETURN_MS=900;
 const CONTRACT=Object.freeze({
   id:'AWARDS_TRUST_LIVING_OBJECT_ANCIENT_ENERGY_TREE_3D_V1',
   cycle:'D_TRUST',
@@ -286,7 +288,7 @@ export function mountTrustLivingObject(root,options={}){
   };
 
   const reduced=options.reducedMotion??(typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-  let state='FOREGROUND_REST',phase='rest',destroyed=false,raf=0,timer=0,signatureStart=-1,settleStart=-1,pulseStart=-1,idleStart=-1;
+  let state='FOREGROUND_REST',phase='rest',destroyed=false,raf=0,timer=0,signatureStart=-1,settleStart=-1,pulseStart=-1,idleStart=-1,naturalReturnStart=-1;
   let completed=false,currentEnergy=0,resolvedTerminals=0,drawCount=0,lastAspect=1,lastDrawAt=0;
   const now=()=>typeof performance!=='undefined'?performance.now():Date.now();
 
@@ -309,7 +311,7 @@ export function mountTrustLivingObject(root,options={}){
   function render(t=now()){
     if(destroyed)return;
     const aspect=resize();
-    let energy=completed?1:0,rest=0,pulse=0,sway=0,settle=1;
+    let energy=0,rest=0,pulse=0,sway=0,settle=1;
     if(settleStart>=0&&!reduced){
       settle=Math.max(0,Math.min(1,(t-settleStart)/850));
       if(settle>=1)settleStart=-1;
@@ -318,10 +320,20 @@ export function mountTrustLivingObject(root,options={}){
       energy=reduced?1:signatureEnergy(t);
       sway=reduced?0:.32;
       if(reduced||energy>=1){
-        energy=1;completed=true;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;phase='idle';state='FOREGROUND_IDLE';idleStart=t;
+        energy=reduced?0:1;completed=true;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;phase='idle';state='FOREGROUND_IDLE';idleStart=t;naturalReturnStart=reduced?-1:t;
       }
     }else if(state==='FOREGROUND_IDLE'){
-      energy=1;sway=reduced?0:.62;
+      sway=reduced?0:.62;
+      if(completed&&!reduced&&naturalReturnStart>=0){
+        const elapsed=Math.max(0,t-naturalReturnStart);
+        if(elapsed<=COMPLETION_HOLD_MS)energy=1;
+        else{
+          const q=Math.max(0,Math.min(1,(elapsed-COMPLETION_HOLD_MS)/NATURAL_RETURN_MS));
+          const eased=q*q*(3-2*q);
+          energy=1-eased;
+          if(q>=1)naturalReturnStart=-1;
+        }
+      }
     }else if(state==='SELECT_RESPONSE'){
       energy=completed?1:.34;
       if(pulseStart>=0&&!reduced){
@@ -329,13 +341,13 @@ export function mountTrustLivingObject(root,options={}){
         if(q>=1)pulseStart=-1;
       }else pulse=reduced?.45:0;
     }else if(state==='READER_OPEN'){
-      energy=completed?1:0;
+      energy=0;
     }else if(state==='RETURN_RESTORING'){
-      energy=completed?1:0;sway=0;
+      energy=0;sway=0;
     }else{
-      energy=completed?1:0;rest=completed?0:.72;
+      energy=0;rest=completed?0:.72;
     }
-    currentEnergy=energy;resolvedTerminals=terminalResolved(energy);
+    currentEnergy=energy;resolvedTerminals=completed?TERMINAL_COUNT:terminalResolved(energy);
     const wide=aspect>=1.55,portrait=aspect<.9;
     const scale=wide?1.06:portrait?.72:.90;
     const cam=wide?4.28:portrait?4.95:4.58;
@@ -381,7 +393,7 @@ export function mountTrustLivingObject(root,options={}){
       S(next);phase=completed?'completed-rest':'rest';paintOnce();return next;
     }
     if(next==='FOREGROUND_IDLE'){
-      S(next);phase='idle';completed=true;currentEnergy=1;resolvedTerminals=TERMINAL_COUNT;idleStart=now();paintOnce();return next;
+      S(next);phase='idle';completed=true;currentEnergy=0;resolvedTerminals=TERMINAL_COUNT;idleStart=now();naturalReturnStart=-1;paintOnce();return next;
     }
     if(next==='READER_OPEN'){
       S(next);phase='reader';cancelLoop();render(now());return next;
@@ -399,9 +411,9 @@ export function mountTrustLivingObject(root,options={}){
   }
   function playSignature(){
     if(destroyed)return null;
-    S('SIGNATURE_PLAY');phase='root-to-crown';signatureStart=now();completed=false;resolvedTerminals=0;
+    S('SIGNATURE_PLAY');phase='root-to-crown';signatureStart=now();naturalReturnStart=-1;completed=false;resolvedTerminals=0;
     if(reduced){
-      completed=true;currentEnergy=1;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;S('FOREGROUND_IDLE');phase='idle';render(now());
+      completed=true;currentEnergy=0;resolvedTerminals=TERMINAL_COUNT;signatureStart=-1;naturalReturnStart=-1;S('FOREGROUND_IDLE');phase='idle';render(now());
       return now();
     }
     paintOnce();return signatureStart;
@@ -433,7 +445,7 @@ export function mountTrustLivingObject(root,options={}){
       contract:CONTRACT.id,state,phase,reducedMotion:!!reduced,webglContexts:destroyed?0:1,
       renderer:CONTRACT.renderer,recognizableObject:CONTRACT.recognizableObject,terminalNodeCount:TERMINAL_COUNT,
       resolvedTerminalCount:resolvedTerminals,signatureSeconds:SIGNATURE_SECONDS,energyProgress:Number(currentEnergy.toFixed(4)),
-      completedSignature:completed,renderLoopActive:!!(raf||timer),drawCount,lastDrawAt:Number(lastDrawAt.toFixed(2)),
+      completedSignature:completed,terminalNaturalColorRestored:completed&&currentEnergy<=.001,renderLoopActive:!!(raf||timer),drawCount,lastDrawAt:Number(lastDrawAt.toFixed(2)),
       geometryRebuiltPerFrame:false,staticGeometry:true,responsiveAspect:Number(lastAspect.toFixed(3)),contextKind:'webgl1',
       conceptualLineage:CONTRACT.sourceBinding.conceptualLineage,donorPathAsserted:false,lifecycle:CONTRACT.lifecycle
     });

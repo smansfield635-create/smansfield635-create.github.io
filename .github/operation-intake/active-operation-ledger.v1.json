@@ -3284,49 +3284,6 @@
       "scopeHash": "5e36e37c837036a3eaccd5c00ca5fbfea00c9d5626cd1c3cbdc46a94935a0745",
       "state": "ADMITTED_LOCKED"
     },
-    "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "195c0cdead57e18ec6261185a26e08bed52e570e",
-          "lockGeneration": 2175,
-          "lockScope": "H_EARTH:AWARDS:WORLD_TRUST_RECOGNITION:V1",
-          "operationId": "AWARDS_WORLD_TRUST_RECOGNITION_SUCCESSOR_20260912_002",
-          "procedureLocatorDigest": "70bdb062fdb2891c32959056d428362433a1cfe1ca750208208883b239c9d014",
-          "requestDigest": "6dd86568d4a9bf80119be82c108fc5d161f4720890c6f7d1c78c69589fee9b7c",
-          "scopeHash": "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80"
-        },
-        "bindingDigest": "00fdb288a94398516828a6f993175627c3b6fb34c5e2e1b6f253fcdccb75eaea",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "94c583b709892de7a1fd2d4719144bd66a104f619cc1b55211bbbdda5f1dcd0c",
-          "commentId": 5649185732,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3214,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34723543267,
-          "workflowSha": "195c0cdead57e18ec6261185a26e08bed52e570e"
-        },
-        "lineageAnchorCommitSha": "9f1c25e344d1946b8ffb1fa7ffea005e32100143",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "195c0cdead57e18ec6261185a26e08bed52e570e",
-      "lockGeneration": 2175,
-      "lockScope": "H_EARTH:AWARDS:WORLD_TRUST_RECOGNITION:V1",
-      "operationId": "AWARDS_WORLD_TRUST_RECOGNITION_SUCCESSOR_20260912_002",
-      "procedureLocatorDigest": "70bdb062fdb2891c32959056d428362433a1cfe1ca750208208883b239c9d014",
-      "released": false,
-      "requestDigest": "6dd86568d4a9bf80119be82c108fc5d161f4720890c6f7d1c78c69589fee9b7c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80",
-      "state": "ADMITTED_LOCKED"
-    },
     "5e5c30caab71198dc5563abfb095ef69a55d3530130d2a7510ee3243cd73b83d": {
       "governingHead": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
       "lockGeneration": 656,
@@ -7690,6 +7647,65 @@
       "scopeHash": "ca2a3443af8f938ae9a4b50b2ec2ab1c3be6e3abe7c942914f97f0add03f32fb",
       "state": "ADMITTED_LOCKED"
     },
+    "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+          "lockGeneration": 2180,
+          "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+          "operationId": "AWARDS_TRUST_ANCIENT_ENERGY_TREE_3D_20260912_001",
+          "procedureLocatorDigest": "e34868389d70a75989cc6094ea335c24a40b2591e4aa7e4108eabc09332516f1",
+          "requestDigest": "3b36378c6dc79b718108263f42c672cde44f452a2c91af37bc7cd61594181c96",
+          "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7"
+        },
+        "bindingDigest": "6e813a02cc0718cd4936e07a93e690203bad69b4102b9ed09f3932c1e4db57b2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b6d826976d51e77fc3f675c7089261a910aedef2823d314acd0229b534361196",
+          "commentId": 5649746869,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3233,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34728723061,
+          "workflowSha": "f628feae90cc8c2be4201e826a0856c0d3035b01"
+        },
+        "lineageAnchorCommitSha": "517737a8b4d81b9dfed9d1e99a78e08f01e91155",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+      "lockGeneration": 2180,
+      "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+      "operationId": "AWARDS_TRUST_ANCIENT_ENERGY_TREE_3D_20260912_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "195c0cdead57e18ec6261185a26e08bed52e570e",
+        "lockGeneration": 2175,
+        "lockScope": "H_EARTH:AWARDS:WORLD_TRUST_RECOGNITION:V1",
+        "operationId": "AWARDS_WORLD_TRUST_RECOGNITION_SUCCESSOR_20260912_002",
+        "preservedEvidenceRefs": [
+          "issue:3214",
+          "candidate:9a16af19cc59f7fd58dc34b5ba61a03dcbd0d031",
+          "issue:3233"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_TRUST_ANCIENT_ENERGY_TREE_SUCCESSOR_TRANSITION_20260912_001"
+      },
+      "procedureLocatorDigest": "e34868389d70a75989cc6094ea335c24a40b2591e4aa7e4108eabc09332516f1",
+      "released": false,
+      "requestDigest": "3b36378c6dc79b718108263f42c672cde44f452a2c91af37bc7cd61594181c96",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7",
+      "state": "ADMITTED_LOCKED"
+    },
     "caa45ac0f797a0d80e17db8bd6f8436be8a4786b4a125e2c59c888701d1c02a9": {
       "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
       "independentAuthorityProvenance": {
@@ -9619,7 +9635,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2179,
+  "lockGeneration": 2180,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -51675,6 +51691,66 @@
       "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "195c0cdead57e18ec6261185a26e08bed52e570e",
+          "lockGeneration": 2175,
+          "lockScope": "H_EARTH:AWARDS:WORLD_TRUST_RECOGNITION:V1",
+          "operationId": "AWARDS_WORLD_TRUST_RECOGNITION_SUCCESSOR_20260912_002",
+          "procedureLocatorDigest": "70bdb062fdb2891c32959056d428362433a1cfe1ca750208208883b239c9d014",
+          "requestDigest": "6dd86568d4a9bf80119be82c108fc5d161f4720890c6f7d1c78c69589fee9b7c",
+          "scopeHash": "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80"
+        },
+        "bindingDigest": "00fdb288a94398516828a6f993175627c3b6fb34c5e2e1b6f253fcdccb75eaea",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "94c583b709892de7a1fd2d4719144bd66a104f619cc1b55211bbbdda5f1dcd0c",
+          "commentId": 5649185732,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3214,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34723543267,
+          "workflowSha": "195c0cdead57e18ec6261185a26e08bed52e570e"
+        },
+        "lineageAnchorCommitSha": "9f1c25e344d1946b8ffb1fa7ffea005e32100143",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "195c0cdead57e18ec6261185a26e08bed52e570e",
+      "lockGeneration": 2175,
+      "lockScope": "H_EARTH:AWARDS:WORLD_TRUST_RECOGNITION:V1",
+      "operationId": "AWARDS_WORLD_TRUST_RECOGNITION_SUCCESSOR_20260912_002",
+      "procedureLocatorDigest": "70bdb062fdb2891c32959056d428362433a1cfe1ca750208208883b239c9d014",
+      "released": true,
+      "requestDigest": "6dd86568d4a9bf80119be82c108fc5d161f4720890c6f7d1c78c69589fee9b7c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5e555ca9501b782fc6d137e3cef35c3892417bad19f9cbda073e72e0f62f0d80",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:3214",
+          "candidate:9a16af19cc59f7fd58dc34b5ba61a03dcbd0d031",
+          "issue:3233"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+        "successorLockGeneration": 2180,
+        "successorLockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+        "successorOperationId": "AWARDS_TRUST_ANCIENT_ENERGY_TREE_3D_20260912_001",
+        "transitionId": "AWARDS_TRUST_ANCIENT_ENERGY_TREE_SUCCESSOR_TRANSITION_20260912_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

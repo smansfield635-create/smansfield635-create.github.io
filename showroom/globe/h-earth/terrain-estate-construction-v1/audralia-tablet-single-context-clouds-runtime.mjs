@@ -95,21 +95,70 @@ function constructPrimaryRenderer(rendererModule){
 
 function wire(renderer,clouds){
   const pointers=new Map();
-  let gesture=null,wheelTimer=0,renderCelestial=null;
+  let gesture=null,wheelTimer=0,renderCelestial=null,rafToken=0,pendingAction=null;
+  let rawPointerMoveEvents=0,rawWheelEvents=0,rafFlushes=0,interactionWorldCloudComposites=0,settledFullComposites=0,celestialSettledFrames=0,pendingModeReplacements=0;
   const safe=value=>Math.max(-64,Math.min(64,Number(value)||0));
   const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   const midpoint=(a,b)=>({x:(a.x+b.x)*.5,y:(a.y+b.y)*.5});
   const ordered=()=>[...pointers.entries()].sort((a,b)=>Number(a[0])-Number(b[0]));
   const renderClouds=()=>clouds.render(cameraFrame(renderer));
-  const renderEnrichment=()=>{
+  const applyAction=action=>{
+    if(!action)return false;
+    if(action.type==='ORBIT')renderer.orbit(safe(action.dx),safe(action.dy));
+    else if(action.type==='TRAVEL')renderer.panScreen(safe(action.dx),safe(action.dy));
+    else if(action.type==='ZOOM')renderer.zoomByFactor(clamp(action.factor,.5,2));
+    else if(action.type==='WHEEL')renderer.zoom(action.delta);
+    else return false;
+    return true;
+  };
+  const mergeAction=(current,next)=>{
+    if(!current)return next;
+    if(current.type!==next.type){pendingModeReplacements++;return next;}
+    if(next.type==='ORBIT'||next.type==='TRAVEL')return {type:next.type,dx:current.dx+next.dx,dy:current.dy+next.dy};
+    if(next.type==='ZOOM')return {type:'ZOOM',factor:current.factor*next.factor};
+    if(next.type==='WHEEL')return {type:'WHEEL',delta:current.delta+next.delta};
+    return next;
+  };
+  const flushInteractionFrame=()=>{
+    rafToken=0;
+    const action=pendingAction;
+    pendingAction=null;
+    if(!action)return;
+    if(!applyAction(action))return;
     renderClouds();
-    if(renderCelestial)renderCelestial();
+    rafFlushes++;
+    interactionWorldCloudComposites++;
+  };
+  const queueInteractionAction=action=>{
+    pendingAction=mergeAction(pendingAction,action);
+    if(!rafToken)rafToken=requestAnimationFrame(flushInteractionFrame);
+  };
+  const cancelScheduledInteraction=()=>{
+    if(rafToken){cancelAnimationFrame(rafToken);rafToken=0;}
+  };
+  const renderSettledComposite=()=>{
+    cancelScheduledInteraction();
+    const action=pendingAction;
+    pendingAction=null;
+    clouds.endInteraction();
+    if(!applyAction(action))renderer.render();
+    renderClouds();
+    if(renderCelestial){renderCelestial();celestialSettledFrames++;}
+    settledFullComposites++;
+  };
+  const runDiscreteComposite=action=>{
+    cancelScheduledInteraction();
+    pendingAction=null;
+    clouds.endInteraction();
+    action();
+    renderClouds();
+    if(renderCelestial){renderCelestial();celestialSettledFrames++;}
+    settledFullComposites++;
   };
   const installCelestialPass=pass=>{
     if(typeof pass!=='function')throw new Error('AUDRALIA_TABLET_CELESTIAL_PASS_REQUIRED');
     renderCelestial=pass;
-    renderer.render();
-    renderEnrichment();
+    renderSettledComposite();
   };
   const beginTwo=()=>{
     const entries=ordered();
@@ -126,11 +175,11 @@ function wire(renderer,clouds){
   canvas.addEventListener('pointermove',event=>{
     const previous=pointers.get(event.pointerId);
     if(!previous)return;
+    rawPointerMoveEvents++;
     const next={x:event.clientX,y:event.clientY};
     pointers.set(event.pointerId,next);
     if(pointers.size===1){
-      renderer.orbit(safe(next.x-previous.x),safe(next.y-previous.y));
-      renderEnrichment();
+      queueInteractionAction({type:'ORBIT',dx:next.x-previous.x,dy:next.y-previous.y});
       return;
     }
     if(pointers.size!==2)return;
@@ -147,21 +196,18 @@ function wire(renderer,clouds){
       else return;
     }
     if(gesture.mode==='TRAVEL'){
-      renderer.panScreen(safe((mid.x-gesture.lastMid.x)*1.45),safe((mid.y-gesture.lastMid.y)*1.45));
+      queueInteractionAction({type:'TRAVEL',dx:(mid.x-gesture.lastMid.x)*1.45,dy:(mid.y-gesture.lastMid.y)*1.45});
     }else{
-      renderer.zoomByFactor(dist/Math.max(1,gesture.lastDistance));
+      queueInteractionAction({type:'ZOOM',factor:dist/Math.max(1,gesture.lastDistance)});
     }
     gesture.lastMid=mid;
     gesture.lastDistance=dist;
-    renderEnrichment();
   });
   const clear=event=>{
-    pointers.delete(event.pointerId);
+    if(!pointers.delete(event.pointerId))return;
     if(pointers.size===2)beginTwo();else gesture=null;
     if(pointers.size===0){
-      clouds.endInteraction();
-      renderer.render();
-      renderEnrichment();
+      renderSettledComposite();
     }else{
       clouds.beginInteraction();
     }
@@ -171,43 +217,46 @@ function wire(renderer,clouds){
   canvas.addEventListener('lostpointercapture',clear);
   canvas.addEventListener('wheel',event=>{
     event.preventDefault();
+    rawWheelEvents++;
     clouds.beginInteraction();
-    renderer.zoom(event.deltaY);
-    renderEnrichment();
+    queueInteractionAction({type:'WHEEL',delta:event.deltaY});
     clearTimeout(wheelTimer);
     wheelTimer=setTimeout(()=>{
-      clouds.endInteraction();
-      renderer.render();
-      renderEnrichment();
+      wheelTimer=0;
+      renderSettledComposite();
     },140);
   },{passive:false});
-  canvas.addEventListener('dblclick',()=>{
-    renderer.focusGratitude();
-    clouds.endInteraction();
-    renderEnrichment();
-  });
-  focusButton?.addEventListener('click',()=>{
-    renderer.focusGratitude();
-    clouds.endInteraction();
-    renderEnrichment();
-  });
+  canvas.addEventListener('dblclick',()=>runDiscreteComposite(()=>renderer.focusGratitude()));
+  focusButton?.addEventListener('click',()=>runDiscreteComposite(()=>renderer.focusGratitude()));
   window.addEventListener('keydown',event=>{
     const key=event.key.toLowerCase();
-    if(['w','arrowup'].includes(key))renderer.panScreen(0,-12);
-    else if(['s','arrowdown'].includes(key))renderer.panScreen(0,12);
-    else if(['a','arrowleft'].includes(key))renderer.panScreen(12,0);
-    else if(['d','arrowright'].includes(key))renderer.panScreen(-12,0);
+    let action=null;
+    if(['w','arrowup'].includes(key))action=()=>renderer.panScreen(0,-12);
+    else if(['s','arrowdown'].includes(key))action=()=>renderer.panScreen(0,12);
+    else if(['a','arrowleft'].includes(key))action=()=>renderer.panScreen(12,0);
+    else if(['d','arrowright'].includes(key))action=()=>renderer.panScreen(-12,0);
     else return;
     event.preventDefault();
-    clouds.endInteraction();
-    renderEnrichment();
+    runDiscreteComposite(action);
   });
-  window.addEventListener('resize',()=>{
-    renderer.render();
-    clouds.endInteraction();
-    renderEnrichment();
+  window.addEventListener('resize',()=>runDiscreteComposite(()=>renderer.render()));
+  const getSchedulingEvidence=()=>Object.freeze({
+    policy:'AUDRALIA_TABLET_INTERACTION_FRAME_BUDGET_v1',
+    rawPointerMoveEvents,
+    rawWheelEvents,
+    rafFlushes,
+    interactionWorldCloudComposites,
+    settledFullComposites,
+    celestialSettledFrames,
+    celestialDuringActiveGestureFrames:0,
+    pendingModeReplacements,
+    rawEventDirectRender:false,
+    atMostOneInteractionCompositePerRaf:true,
+    cloudsRemainActiveDuringInteraction:true,
+    celestialDeferredDuringInteraction:true,
+    fullCompositeAfterSettle:true
   });
-  return Object.freeze({renderClouds,renderEnrichment,installCelestialPass});
+  return Object.freeze({renderClouds,renderSettledComposite,installCelestialPass,getSchedulingEvidence});
 }
 
 export async function initializeAudraliaTabletSingleContextClouds(){
@@ -252,6 +301,8 @@ export async function initializeAudraliaTabletSingleContextClouds(){
     renderingMode:'EXACT_PRIMARY_WORLD_SINGLE_WEBGL_CONTEXT_WITH_STAGED_CLOUD_PASS',
     frameOwner:'AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME',
     compositeOrder:'PRIMARY_WORLD_THEN_CLOUDS_THEN_CELESTIAL',
+    activeInteractionCompositeOrder:'PRIMARY_WORLD_THEN_CLOUDS',
+    interactionScheduling:'REQUEST_ANIMATION_FRAME_COALESCED_v1',
     fallbackActive:false,
     exactApprovedGeometry:true,
     cloudPassActive:true,
@@ -261,6 +312,7 @@ export async function initializeAudraliaTabletSingleContextClouds(){
     localWeatherDeferred:true,
     celestialDeferred:true,
     celestialIntegratedThroughPrimaryRuntime:true,
+    celestialDeferredDuringInteraction:true,
     optionalMultiContextEnrichmentDeferred:true,
     invariants:Object.freeze({
       pass:failures.length===0,
@@ -269,12 +321,15 @@ export async function initializeAudraliaTabletSingleContextClouds(){
       webgl2ContextRequests:constructed.webgl2ContextRequests,
       cloudPassUsesPrimaryContext:clouds.getEvidence().primaryContextOnly===true,
       additionalCanvasCount:0,
-      worldRenderedBeforeCloudPass:worldBeforeCloud
+      worldRenderedBeforeCloudPass:worldBeforeCloud,
+      rawEventDirectRender:false,
+      atMostOneInteractionCompositePerRaf:true
     }),
     installCelestialPass:controls.installCelestialPass,
     getRuntime:()=>runtime,
     getCameraFrame:()=>cameraFrame(renderer),
-    getCloudEvidence:()=>clouds.getEvidence()
+    getCloudEvidence:()=>clouds.getEvidence(),
+    getInteractionSchedulingEvidence:controls.getSchedulingEvidence
   });
 
   if(runtime.invariants.pass!==true)throw new Error(`AUDRALIA_SINGLE_CONTEXT_CLOUD_INVARIANT_FAIL:${runtime.invariants.failures.join(',')}`);

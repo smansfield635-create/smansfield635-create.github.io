@@ -81,6 +81,35 @@ function isExplicitHEarthRegistryDependency(repositoryPath) {
   );
 }
 
+function isIgnoredHEarthAdministrativePath(repositoryPath) {
+  const value = normalizeRepositoryPath(repositoryPath);
+  return (
+    value === 'h-earth-3d/AGENTS.md' ||
+    value === 'showroom/globe/h-earth/AGENTS.md' ||
+    value.startsWith('h-earth-3d/experience-anchor/evidence/') ||
+    value.startsWith('h-earth-3d/experience-anchor/receipts/')
+  );
+}
+
+function isKnownProductSemanticPath(repositoryPath) {
+  const value = normalizeRepositoryPath(repositoryPath);
+  return (
+    value.startsWith('showroom/globe/h-earth/') ||
+    value === 'showroom/globe/audralia/diagnostic/index.html' ||
+    value === 'showroom/globe/audralia/diagnostic/index.controls.js' ||
+    value === 'showroom/globe/audralia/diagnostic/index.inspection.lane.js' ||
+    value === 'showroom/globe/audralia/final-cloud-shader-composition-v1.mjs'
+  );
+}
+
+function isAmbiguousHEarthAuthorityScope(repositoryPath) {
+  const value = normalizeRepositoryPath(repositoryPath);
+  if (!value.startsWith('h-earth-3d/')) return false;
+  if (isIgnoredHEarthAdministrativePath(value)) return false;
+  if (isExplicitHEarthRegistryDependency(value)) return false;
+  return true;
+}
+
 export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedPaths = [] } = {}) {
   if (workflow !== WORKFLOW_ID) {
     const error = new Error(`UNSUPPORTED_WORKFLOW:${workflow}`);
@@ -89,8 +118,17 @@ export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedP
   }
 
   const normalizedPaths = uniqueSorted(changedPaths);
-  const selectedPaths = normalizedPaths.filter(isExplicitHEarthRegistryDependency);
+  const explicitDependencyPaths = normalizedPaths.filter(isExplicitHEarthRegistryDependency);
+  const ambiguousAuthorityPaths = normalizedPaths.filter(isAmbiguousHEarthAuthorityScope);
+  const knownProductPaths = normalizedPaths.filter(isKnownProductSemanticPath);
+  const selectedPaths = uniqueSorted([...explicitDependencyPaths, ...ambiguousAuthorityPaths]);
   const selectedByDecision = selectedPaths.length > 0;
+
+  const reasonCodes = [];
+  if (explicitDependencyPaths.length > 0) reasonCodes.push('EXPLICIT_REGISTRY_OR_CONTROL_PLANE_DEPENDENCY');
+  if (ambiguousAuthorityPaths.length > 0) reasonCodes.push('AMBIGUOUS_H_EARTH_AUTHORITY_SCOPE_FAIL_CLOSED');
+  if (!selectedByDecision && knownProductPaths.length > 0) reasonCodes.push('KNOWN_PRODUCT_SEMANTICS_WITHOUT_REGISTRY_DEPENDENCY');
+  if (!selectedByDecision) reasonCodes.push('DIRECTORY_PREFIX_MATCH_ALONE_DOES_NOT_SELECT');
 
   return {
     schema: SCHEMA,
@@ -103,12 +141,15 @@ export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedP
     mayExecuteExpensiveWork: selectedByDecision,
     changedPaths: normalizedPaths,
     selectedPaths,
-    reasonCodes: selectedByDecision
-      ? ['EXPLICIT_REGISTRY_OR_CONTROL_PLANE_DEPENDENCY']
-      : ['NO_EXPLICIT_REGISTRY_OR_CONTROL_PLANE_DEPENDENCY', 'DIRECTORY_PREFIX_MATCH_ALONE_DOES_NOT_SELECT'],
+    explicitDependencyPaths,
+    ambiguousAuthorityPaths,
+    knownProductPaths,
+    reasonCodes,
     invariants: {
       prefixMatchAloneMaySelectBlockingGate: false,
-      ordinaryProductPathMayCreateRegistryPrerequisiteSolelyByLocation: false,
+      knownProductRuntimePathMayCreateRegistryPrerequisiteSolelyByLocation: false,
+      ambiguousHEarthAuthorityScopeFailsClosed: true,
+      durableAuthorityBoundaryRequiresExplicitOrUnambiguousAuthorityEvidence: true,
       selectedDependencyFailureRemainsFailClosed: true,
       exactHeadCustodyPreserved: true,
       boundedMutationScopePreserved: true,
@@ -135,6 +176,7 @@ function runSelfTest() {
   assert(historicalAudraliaRegression.result === 'NOT_APPLICABLE', 'AUDRALIA_THREE_PATH_NOT_APPLICABLE');
   assert(historicalAudraliaRegression.mayExecuteExpensiveWork === false, 'AUDRALIA_THREE_PATH_NO_EXPENSIVE_WORK');
   assert(historicalAudraliaRegression.severity === 'NOT_APPLICABLE', 'AUDRALIA_THREE_PATH_NEUTRAL_SEVERITY');
+  assert(historicalAudraliaRegression.knownProductPaths.length === 3, 'AUDRALIA_THREE_PATH_PRODUCT_SEMANTICS');
 
   const selectedRegistryChange = evaluateWorkflowApplicability({
     changedPaths: ['h-earth-3d/registry/candidate.v1.json']
@@ -143,10 +185,21 @@ function runSelfTest() {
   assert(selectedRegistryChange.mayExecuteExpensiveWork === true, 'REGISTRY_CHANGE_MAY_EXECUTE');
   assert(selectedRegistryChange.severity === 'SELECTED_BLOCKER', 'REGISTRY_CHANGE_BLOCKER_SEVERITY');
 
+  const ambiguousHEarthChange = evaluateWorkflowApplicability({
+    changedPaths: ['h-earth-3d/new-authority-boundary.mjs']
+  });
+  assert(ambiguousHEarthChange.result === 'SELECTED', 'AMBIGUOUS_H_EARTH_FAILS_CLOSED');
+  assert(ambiguousHEarthChange.reasonCodes.includes('AMBIGUOUS_H_EARTH_AUTHORITY_SCOPE_FAIL_CLOSED'), 'AMBIGUOUS_REASON_TYPED');
+
   const workflowSelfChange = evaluateWorkflowApplicability({
     changedPaths: ['.github/workflows/h-earth-repository-registry-preflight.yml']
   });
   assert(workflowSelfChange.result === 'SELECTED', 'WORKFLOW_SELF_CHANGE_SELECTED');
+
+  const ignoredEvidenceChange = evaluateWorkflowApplicability({
+    changedPaths: ['h-earth-3d/experience-anchor/evidence/receipt.json']
+  });
+  assert(ignoredEvidenceChange.result === 'NOT_APPLICABLE', 'EVIDENCE_ONLY_NOT_APPLICABLE');
 
   const unrelatedChange = evaluateWorkflowApplicability({ changedPaths: ['README.md'] });
   assert(unrelatedChange.result === 'NOT_APPLICABLE', 'UNRELATED_CHANGE_NOT_APPLICABLE');
@@ -157,11 +210,13 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 11,
+    assertions: 15,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
     historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',
     selectedFixtureDisposition: selectedRegistryChange.result,
+    ambiguousFixture: 'H_EARTH_UNCLASSIFIED_AUTHORITY_SCOPE',
+    ambiguousFixtureDisposition: ambiguousHEarthChange.result,
     authorityEffect: 'NONE'
   };
 }
@@ -176,6 +231,8 @@ function helpText() {
     '  node tools/workflow-applicability-gate.v1.mjs --self-test',
     '',
     'This gate decides whether a legacy workflow is semantically selected before expensive execution.',
+    'Known product runtime paths without a registry dependency are NOT_APPLICABLE.',
+    'Ambiguous h-earth-3d authority scope remains SELECTED and fail-closed.',
     'NOT_APPLICABLE is a neutral-success disposition and creates no authority.'
   ].join('\n');
 }
@@ -208,7 +265,8 @@ try {
       assertions: embeddedSelfTest.assertions,
       regression: embeddedSelfTest.regression,
       historicalRegressionDisposition: embeddedSelfTest.historicalRegressionDisposition,
-      selectedFixtureDisposition: embeddedSelfTest.selectedFixtureDisposition
+      selectedFixtureDisposition: embeddedSelfTest.selectedFixtureDisposition,
+      ambiguousFixtureDisposition: embeddedSelfTest.ambiguousFixtureDisposition
     }
   };
   const serialized = `${JSON.stringify(receipt, null, 2)}\n`;

@@ -13,7 +13,7 @@ const MOON_B=Object.freeze([-.58,.48,-.66]);
 const VS=`#version 300 es
 precision highp float;
 out vec2 vNdc;
-void main(){vec2 p=gl_VerID==0?vec2(-1.0,-1.0):(gl_VerID==1?vec2(3.0,-1.0):vec2(-1.0,3.0));vNdc=p;gl_Position=vec4(p,0.0,1.0);}`.replaceAll('gl_VerID','gl_VertexID');
+void main(){vec2 p=gl_VertexID==0?vec2(-1.0,-1.0):(gl_VertexID==1?vec2(3.0,-1.0):vec2(-1.0,3.0));vNdc=p;gl_Position=vec4(p,0.0,1.0);}`;
 const FS=`#version 300 es
 precision highp float;
 in vec2 vNdc;
@@ -32,12 +32,12 @@ vec4 sunDisc(vec3 rd,vec3 sun){float a=clamp(dot(rd,normalize(sun)),0.0,1.0),dis
 void main(){
   vec3 rd=normalize(uForward+vNdc.x*uAspect*uTanHalfFov*uRight+vNdc.y*uTanHalfFov*uUp),sun=normalize(uSunDir);
   float planet=sphereNear(uEye,rd,RADIUS);
-  if(planet>0.0){vec3 p=uEye+rd*planet,n=normalize(p-CENTER);float solar=dot(n,sun),night=smoothstep(.10,-.30,solar),twilight=exp(-abs(solar)*12.0);vec3 c=mix(vec3(.004,.010,.024),vec3(.16,.055,.030),twilight*.34);float a=night*.62+twilight*.055;if(a<.002)discard;outColor=vec4(c,a);return;}
+  if(planet>0.0){vec3 p=uEye+rd*planet,n=normalize(p-CENTER);float solar=dot(n,sun),night=1.0-smoothstep(-.30,.10,solar),twilight=exp(-abs(solar)*12.0);vec3 c=mix(vec3(.004,.010,.024),vec3(.16,.055,.030),twilight*.34);float a=night*.62+twilight*.055;if(a<.002)discard;outColor=vec4(c,a);return;}
   float altitude=max(0.0,length(uEye-CENTER)-RADIUS),observerDay=dot(normalize(uEye-CENTER),sun),atmo=1.0-smoothstep(180.0,1350.0,altitude),day=smoothstep(-.16,.24,observerDay),solarProx=smoothstep(.90,.9996,dot(rd,sun));
   float starVis=clamp(1.0-atmo*day,0.0,1.0)*(1.0-solarProx*.96);vec3 color=stars(rd,starVis);float alpha=clamp(max(max(color.r,color.g),color.b),0.0,.90);
   vec4 ma=moon(rd,normalize(uMoonA),.030,sun,vec3(.78,.87,.98)),mb=moon(rd,normalize(uMoonB),.019,sun,vec3(.96,.79,.61)),sd=sunDisc(rd,sun);
   color=mix(color,ma.rgb,ma.a);alpha=max(alpha,ma.a);color=mix(color,mb.rgb,mb.a);alpha=max(alpha,mb.a);color=mix(color,sd.rgb,sd.a);alpha=max(alpha,sd.a);
-  float shell=sphereNear(uEye,rd,ATMOSPHERE_RADIUS);if(shell>0.0){vec3 p=uEye+rd*shell,n=normalize(p-CENTER);float solar=dot(n,sun),tangent=pow(1.0-abs(dot(n,-rd)),4.6),twilight=exp(-abs(solar)*10.0),night=smoothstep(.04,-.24,solar);vec3 ac=mix(vec3(.88,.28,.10),vec3(.12,.32,.64),night*.82);float aa=tangent*(.018+.19*twilight+.025*night);color=mix(color,ac,aa);alpha=max(alpha,aa);}
+  float shell=sphereNear(uEye,rd,ATMOSPHERE_RADIUS);if(shell>0.0){vec3 p=uEye+rd*shell,n=normalize(p-CENTER);float solar=dot(n,sun),tangent=pow(1.0-abs(dot(n,-rd)),4.6),twilight=exp(-abs(solar)*10.0),night=1.0-smoothstep(-.24,.04,solar);vec3 ac=mix(vec3(.88,.28,.10),vec3(.12,.32,.64),night*.82);float aa=tangent*(.018+.19*twilight+.025*night);color=mix(color,ac,aa);alpha=max(alpha,aa);}
   if(alpha<.002)discard;outColor=vec4(color,alpha);
 }`;
 function compile(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(`AUDRALIA_PARITY_CELESTIAL_SHADER:${gl.getShaderInfoLog(s)}`);return s;}

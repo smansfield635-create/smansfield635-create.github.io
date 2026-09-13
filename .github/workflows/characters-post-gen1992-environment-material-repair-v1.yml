@@ -1,0 +1,186 @@
+name: Characters Post-Gen2003 V2 Canopy Void Feasibility Diagnostic v1
+
+on:
+  pull_request:
+    paths:
+      - 'control-plane/whole-estate/characters-reconstruction-v1/post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.mjs'
+      - '.github/workflows/characters-post-gen1992-environment-material-repair-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  OPERATION_ID: MIRRORLAND_POST_GEN2003_V2_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_20260908_001
+  LOCK_GENERATION: '2004'
+  GOVERNING_MAIN: 8f97bb035dce439cf28ca156b2fcd5bdfc6a1953
+  GEN2001: fc466a0d08adbaeb9672d4618f670105cf1af87c
+  GEN2002: 3a5dd83b936c7041257e73a3ebe30c306a7516f5
+  GEN2003: 33b8878ad6b6fd5fad942138a26f48881187bfc7
+  V2_TOOLING_HEAD: 834038c23711c3eed83dc21964027bd515852b51
+  V2_CONTRACT_BLOB: 84014a5a51a50d43e86c9e4f54bb0804d3655af1
+  V2_VERIFIER_BLOB: 6a7007cb37d04ea5af3542783342043c5c0a5829
+  AHBK_HEAD: d1d2580509c5f66802899ef6a07174a124604d08
+  AHBK_SPEC_SHA256: 1c61a7101763dd39815b76b3dc71e9b6767c3be42f511860f572af73b343f297
+
+jobs:
+  read-only-canopy-void-feasibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Materialize exact diagnostic tooling with locality law
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p diagnostic
+          git -C diagnostic init
+          git -C diagnostic remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C diagnostic -c protocol.version=2 fetch --no-tags --depth=8 --filter=blob:none origin "${{ github.event.pull_request.head.sha }}" "$GOVERNING_MAIN"
+          git -C diagnostic sparse-checkout init --cone --sparse-index
+          git -C diagnostic sparse-checkout set control-plane/whole-estate/characters-reconstruction-v1 .github/workflows
+          git -C diagnostic checkout --detach "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C diagnostic rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C diagnostic config --bool index.sparse)" = "true"
+          test "$(git -C diagnostic config --bool core.sparseCheckoutCone)" = "true"
+
+      - name: Verify exact three-path diagnostic-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git -C diagnostic rev-parse HEAD^{commit})"
+          test "$(git -C diagnostic merge-base "$GOVERNING_MAIN" "$HEAD_SHA")" = "$GOVERNING_MAIN"
+          mapfile -t CHANGED < <(git -C diagnostic diff --name-only "$GOVERNING_MAIN"..."$HEAD_SHA" | sort)
+          EXPECTED=(
+            '.github/workflows/characters-post-gen1992-environment-material-repair-v1.yml'
+            'control-plane/whole-estate/characters-reconstruction-v1/post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.json'
+            'control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.mjs'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 3
+          for i in "${!EXPECTED_SORTED[@]}"; do test "${CHANGED[$i]}" = "${EXPECTED_SORTED[$i]}"; done
+          test -z "$(git -C diagnostic diff --name-only "$GOVERNING_MAIN"..."$HEAD_SHA" -- characters h-earth-3d showroom infrastructure/state-bound-admissibility-kernel-v1)"
+          test -z "$(git -C diagnostic status --porcelain)"
+          echo "DIAGNOSTIC_HEAD=$HEAD_SHA" >> "$GITHUB_ENV"
+
+      - name: Materialize exact Gen2001 Gen2002 Gen2003 products read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in "gen2001:$GEN2001" "gen2002:$GEN2002" "gen2003:$GEN2003"; do
+            name="${spec%%:*}"; sha="${spec#*:}"
+            mkdir -p "$name"
+            git -C "$name" init
+            git -C "$name" remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+            git -C "$name" -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$sha"
+            git -C "$name" sparse-checkout init --cone --sparse-index
+            git -C "$name" sparse-checkout set \
+              characters \
+              h-earth-3d/terrain \
+              h-earth-3d/integration \
+              h-earth-3d/control-plane/run-8 \
+              h-earth-3d/zones \
+              h-earth-3d/cells \
+              h-earth-3d/objects \
+              showroom/globe/h-earth/render
+            git -C "$name" checkout --detach FETCH_HEAD
+            test "$(git -C "$name" rev-parse HEAD^{commit})" = "$sha"
+            test "$(git -C "$name" config --bool index.sparse)" = "true"
+            test "$(git -C "$name" config --bool core.sparseCheckoutCone)" = "true"
+            test -z "$(git -C "$name" status --porcelain)"
+          done
+
+      - name: Materialize immutable V2 and AHBK references read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p v2-tooling ahbk
+          git -C v2-tooling init
+          git -C v2-tooling remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C v2-tooling -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$V2_TOOLING_HEAD"
+          git -C v2-tooling sparse-checkout init --cone --sparse-index
+          git -C v2-tooling sparse-checkout set control-plane/whole-estate/characters-reconstruction-v1
+          git -C v2-tooling checkout --detach FETCH_HEAD
+          test "$(git -C v2-tooling rev-parse HEAD^{commit})" = "$V2_TOOLING_HEAD"
+          test "$(git -C v2-tooling hash-object control-plane/whole-estate/characters-reconstruction-v1/gen1983-camera-space-environment-diagnostics-v2-contract.v1.json)" = "$V2_CONTRACT_BLOB"
+          test "$(git -C v2-tooling hash-object control-plane/whole-estate/characters-reconstruction-v1/verify-gen1983-camera-space-environment-diagnostics-v2.v1.mjs)" = "$V2_VERIFIER_BLOB"
+          test "$(git -C v2-tooling config --bool index.sparse)" = "true"
+          test "$(git -C v2-tooling config --bool core.sparseCheckoutCone)" = "true"
+
+          git -C ahbk init
+          git -C ahbk remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C ahbk -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$AHBK_HEAD"
+          git -C ahbk sparse-checkout init --cone --sparse-index
+          git -C ahbk sparse-checkout set infrastructure/state-bound-admissibility-kernel-v1
+          git -C ahbk checkout --detach FETCH_HEAD
+          test "$(git -C ahbk rev-parse HEAD^{commit})" = "$AHBK_HEAD"
+          test "$(sha256sum ahbk/infrastructure/state-bound-admissibility-kernel-v1/AHBK_NORMATIVE_SPECIFICATION_v1.md | awk '{print $1}')" = "$AHBK_SPEC_SHA256"
+          test "$(git -C ahbk config --bool index.sparse)" = "true"
+          test "$(git -C ahbk config --bool core.sparseCheckoutCone)" = "true"
+          test -z "$(git -C v2-tooling status --porcelain)"
+          test -z "$(git -C ahbk status --porcelain)"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate diagnostic source before execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check diagnostic/control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.mjs
+          node -e "const c=require('./diagnostic/control-plane/whole-estate/characters-reconstruction-v1/post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.json'); if(c.authority!=='READ_ONLY_DIAGNOSTIC_ONLY'||c.fixedPopulationBudget!==818||c.receiptRestrictions.emitRepairCoordinates!==false)process.exit(1)"
+
+      - name: Run Gen2004 read-only diagnostic process one
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/post-gen2003-v2-canopy-void-feasibility-diagnostic"
+          node diagnostic/control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.mjs \
+            --gen2001-root gen2001 \
+            --gen2002-root gen2002 \
+            --gen2003-root gen2003 \
+            --v2-root v2-tooling \
+            --ahbk-root ahbk \
+            --output "$RUNNER_TEMP/post-gen2003-v2-canopy-void-feasibility-diagnostic/diagnostic-receipt.json"
+
+      - name: Run Gen2004 read-only diagnostic process two
+        shell: bash
+        run: |
+          set -euo pipefail
+          node diagnostic/control-plane/whole-estate/characters-reconstruction-v1/verify-post-gen2003-v2-canopy-void-feasibility-diagnostic.v1.mjs \
+            --gen2001-root gen2001 \
+            --gen2002-root gen2002 \
+            --gen2003-root gen2003 \
+            --v2-root v2-tooling \
+            --ahbk-root ahbk \
+            --output "$RUNNER_TEMP/post-gen2003-v2-canopy-void-feasibility-diagnostic/diagnostic-repeat-receipt.json"
+          cmp "$RUNNER_TEMP/post-gen2003-v2-canopy-void-feasibility-diagnostic/diagnostic-receipt.json" "$RUNNER_TEMP/post-gen2003-v2-canopy-void-feasibility-diagnostic/diagnostic-repeat-receipt.json"
+
+      - name: Enforce read-only bounded diagnostic semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=process.env.RUNNER_TEMP+'/post-gen2003-v2-canopy-void-feasibility-diagnostic/diagnostic-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p));
+          if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.diagnosticDisposition!=='INTERPRETABLE_READ_ONLY')process.exit(1);
+          if(!['FEASIBLE_CERTIFIED','INFEASIBLE_CERTIFIED','UNRESOLVED_BY_BOUNDED_SEARCH'].includes(r.fixed818Feasibility?.disposition))process.exit(1);
+          if(r.fixed818Feasibility?.disposition==='FEASIBLE_CERTIFIED'&&!/^[0-9a-f]{64}$/.test(r.fixed818Feasibility?.certificateDigest||''))process.exit(1);
+          if(r.interpretation?.productMechanicalState!=='NON_CLEAR_UNCHANGED'||r.interpretation?.materialDisposition!=='UNASSIGNED_UNCHANGED'||r.interpretation?.repairAuthorityCreated!==false)process.exit(1);
+          const forbidden=new Set(['x','z','ix','iz','selectedCandidateIds','candidateCoordinates','repairCoordinates','componentLocation']);
+          const walk=v=>{if(!v||typeof v!=='object')return;for(const [k,x] of Object.entries(v)){if(forbidden.has(k))throw new Error('FORBIDDEN_RECEIPT_FIELD:'+k);walk(x);}};
+          walk(r);
+          NODE
+          for name in diagnostic gen2001 gen2002 gen2003 v2-tooling ahbk; do test -z "$(git -C "$name" status --porcelain)"; done
+
+      - name: Upload Gen2004 read-only diagnostic receipts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-gen2003-v2-canopy-void-feasibility-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/post-gen2003-v2-canopy-void-feasibility-diagnostic/*.json
+          if-no-files-found: warn
+          retention-days: 90

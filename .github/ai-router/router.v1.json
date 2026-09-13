@@ -23,6 +23,7 @@
       "AGENTS.md",
       "AI_ENTRYPOINT.json",
       "tools/repository-ai-entry-router.mjs",
+      "tools/static-editorial-micro-verifier.v1.mjs",
       ".github/workflows/repository-ai-entry-router-validation.yml",
       ".github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml",
       "tools/ai-room-transport/active-conformance.v1.mjs",

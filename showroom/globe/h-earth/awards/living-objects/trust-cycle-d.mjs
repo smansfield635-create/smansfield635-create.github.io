@@ -217,7 +217,6 @@ function buildTree(){
     terminals.push(b[3]);
   });
 
-  // Two dead/broken limbs give the crown visible age without texture dependence.
   tube(g,T3,[-.43,1.10,.43],.09,.052,.35,.50,oldBark,0,7,91);
   tube(g,[-.43,1.10,.43],[-.73,1.23,.64],.052,.031,.50,.61,oldBark,0,7,92);
   tube(g,T4,[.33,1.48,.48],.074,.043,.39,.55,oldBark,0,7,93);
@@ -273,8 +272,10 @@ export function mountTrustLivingObject(root,options={}){
   canvas.dataset.trustObject='ANCIENT_ENERGY_TREE_3D';
   root.replaceChildren(canvas);
 
-  const gl=canvas.getContext('webgl2',{alpha:true,antialias:true,powerPreference:'high-performance'})||canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'high-performance'});
-  if(!gl)throw new Error('TRUST_WEBGL_REQUIRED');
+  const contextOptions={alpha:true,antialias:true,powerPreference:'high-performance'};
+  const gl=canvas.getContext('webgl',contextOptions);
+  if(!gl)throw new Error('TRUST_WEBGL1_REQUIRED');
+  canvas.dataset.trustContext='webgl1';
   const p=program(gl),gpu=upload(gl,buildTree());
   gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);bind(gl,p,gpu);
   const U=name=>gl.getUniformLocation(p,name);
@@ -432,7 +433,7 @@ export function mountTrustLivingObject(root,options={}){
       renderer:CONTRACT.renderer,recognizableObject:CONTRACT.recognizableObject,terminalNodeCount:TERMINAL_COUNT,
       resolvedTerminalCount:resolvedTerminals,signatureSeconds:SIGNATURE_SECONDS,energyProgress:Number(currentEnergy.toFixed(4)),
       completedSignature:completed,renderLoopActive:!!(raf||timer),drawCount,lastDrawAt:Number(lastDrawAt.toFixed(2)),
-      geometryRebuiltPerFrame:false,staticGeometry:true,responsiveAspect:Number(lastAspect.toFixed(3)),
+      geometryRebuiltPerFrame:false,staticGeometry:true,responsiveAspect:Number(lastAspect.toFixed(3)),contextKind:'webgl1',
       conceptualLineage:CONTRACT.sourceBinding.conceptualLineage,donorPathAsserted:false,lifecycle:CONTRACT.lifecycle
     });
   }

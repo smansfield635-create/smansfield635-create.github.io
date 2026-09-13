@@ -1495,6 +1495,49 @@
       "scopeHash": "29faefeb037e128676d0cd86d7542c497e2cf6f151d47a24410af7b1abefb882",
       "state": "ADMITTED_LOCKED"
     },
+    "2be09d668e576d4d0ad22ad9ca3638e71f14f127e93e2acff929cfe468f45f0d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+          "lockGeneration": 2182,
+          "lockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:V1",
+          "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_V1_20260912_001",
+          "procedureLocatorDigest": "ef6d4a97e9c2d2ad7ef6a6b6b1d996838b3bec08a594d3e6a3ccc2ac1e5bdfce",
+          "requestDigest": "e886c1f90e6e72dfc69223bd2c4614cf90754ed113411ec3a45bfa72186d82ed",
+          "scopeHash": "2be09d668e576d4d0ad22ad9ca3638e71f14f127e93e2acff929cfe468f45f0d"
+        },
+        "bindingDigest": "0cc09636b68d4eba38f77f911f7a587b5ec5ef7579e857e866d53d1cf7d34405",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "66754594cc5046c5c3c67d420df711e3767c617ad55199546dd748a530cab9d1",
+          "commentId": 5649930435,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3235,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34730433029,
+          "workflowSha": "f628feae90cc8c2be4201e826a0856c0d3035b01"
+        },
+        "lineageAnchorCommitSha": "f7134df4543d026648a473d7ff5d9d110abe615a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+      "lockGeneration": 2182,
+      "lockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:V1",
+      "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_V1_20260912_001",
+      "procedureLocatorDigest": "ef6d4a97e9c2d2ad7ef6a6b6b1d996838b3bec08a594d3e6a3ccc2ac1e5bdfce",
+      "released": false,
+      "requestDigest": "e886c1f90e6e72dfc69223bd2c4614cf90754ed113411ec3a45bfa72186d82ed",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2be09d668e576d4d0ad22ad9ca3638e71f14f127e93e2acff929cfe468f45f0d",
+      "state": "ADMITTED_LOCKED"
+    },
     "2c0cadccc37dc25b49642974357234cfa3479cb174b2783cfbab7e0072db8fe9": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -9635,7 +9678,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2181,
+  "lockGeneration": 2182,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

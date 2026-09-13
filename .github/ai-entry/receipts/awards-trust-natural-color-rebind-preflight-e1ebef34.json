@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-trust-natural-color-rebind-preflight-e1ebef34",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3263,
+  "requestBranch": "ai-dispatch-request-awards-trust-natural-color-rebind-preflight-e1ebef34",
+  "requestCommit": "bd99800cfb1c16d6fb2d2461cac60cb275a91378",
+  "requestCommitParent": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+  "currentMainSha": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34766581134",
+  "dispatchedRunId": 34766590289,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34766590289",
+  "dispatchedRunHeadSha": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+  "dispatchedAt": "2026-09-13T15:46:13.494Z",
+  "resolvedAt": "2026-09-13T15:46:17.177Z"
+}

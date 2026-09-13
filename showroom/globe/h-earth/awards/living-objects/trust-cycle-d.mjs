@@ -277,7 +277,7 @@ export function mountTrustLivingObject(root,options={}){
   const gl=canvas.getContext('webgl2',{alpha:true,antialias:true,powerPreference:'high-performance'})||canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'high-performance'});
   if(!gl)throw new Error('TRUST_WEBGL_REQUIRED');
   const p=program(gl),gpu=upload(gl,buildTree());
-  gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);bind(gl,p,gpu);
+  gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.frontFace(gl.CW);gl.cullFace(gl.BACK);bind(gl,p,gpu);
   const U=name=>gl.getUniformLocation(p,name);
   const uniforms={
     yaw:U('u_yaw'),pitch:U('u_pitch'),scale:U('u_scale'),aspect:U('u_aspect'),cam:U('u_cam'),

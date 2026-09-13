@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-trust-natural-color-rebind-deploy-e1ebef34",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3264,
+  "requestBranch": "ai-dispatch-request-awards-trust-natural-color-rebind-deploy-e1ebef34",
+  "requestCommit": "94668868797fde22c0a8a0fb3b135ccdbdf421f7",
+  "requestCommitParent": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+  "currentMainSha": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34766683470",
+  "dispatchedRunId": 34766690622,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34766690622",
+  "dispatchedRunHeadSha": "e1ebef34b86eb6defefab478f86487928dcb36ac",
+  "dispatchedAt": "2026-09-13T15:48:15.480Z",
+  "resolvedAt": "2026-09-13T15:48:21.986Z"
+}

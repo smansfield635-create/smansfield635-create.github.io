@@ -41,29 +41,69 @@
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
   "reviewSummary": {
-    "operation": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
-    "lockGeneration": 2169,
-    "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
-    "reconciliationBase": "68ba1039054c35f5bb30720e2f53b12d15f8d4ae",
-    "carryForwardDisposition": "CARRY_FORWARD_APPROVED",
-    "preservedProductCandidate": "91e5fcecf291d419ffedad75ce9d885e07d69ca6",
+    "operation": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+    "lockGeneration": 2178,
+    "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+    "reconciliationBase": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+    "admissionRoute": "FRESH_CANONICAL_SUCCESSOR",
+    "admissionDisposition": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+    "authorityInherited": false,
+    "preservedProductCandidate": "109166adb6fe939d2cdba78797f74877e17e1c1d",
     "productBlobPreservation": {
       "index": "9f7eb0076f9ab8f7bbd3b3776c614009f70beaf7",
       "fap1Weather": "631959a9807242f4fd995ecc077ba2bec0e1bdb2",
       "tabletCloudPass": "de19bbf6c8f4d42cfc5be0cbc0491bac9d0b7d2b",
       "unchangedTabletRuntime": "8d574a20c081a1bde71393f5f783d0637efe8551"
     },
-    "finding": "Current-main reconciliation preserves every product byte from the frozen cloud-globalization candidate. Only this acceptance-receipt metadata is refreshed. The exact cloud source, geography, terrain, ocean, camera, navigation, primary context and canvas architecture, tablet pixel and raymarch budgets, celestial authority and local/regional runtime boundaries are unchanged by reconciliation.",
+    "admission": {
+      "source": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649477909",
+      "receipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649485343",
+      "canonicalSuccessorCommit": "dfddc207326d2b6414193ada5d92135298abb957",
+      "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
+      "procedureDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
+      "receiptSha256": "4fa154fe65d4125bdc4c98ccafffc711a5aed5c1e1454010c0552391b332a4c5"
+    },
+    "finding": "Current-main reconciliation reapplies the exact three frozen cloud product blobs and the existing anchor receipt. Seven separately admitted verification and CI paths are corrected. This reviewSummary change binds the source-continuity record to the actual successor admission; it does not alter product design or assert fresh runtime qualification. Geography, terrain, ocean, camera, navigation, primary context and canvas architecture, tablet pixel and raymarch budgets, celestial authority and local/regional runtime boundaries remain unchanged.",
     "tabletBoundary": "The tablet path remains one primary WebGL2 context with zero additional canvas or renderer and retains the frozen 8-step rest / 6-step interaction cloud raymarch ceilings.",
-    "qualificationBoundary": "This PASS is limited to the immutable H-Earth experience-anchor and same-world continuity criterion plus source-level cloud authority boundaries. It does not assert physical tablet stability or final owner visual acceptance; those remain post-publication physical-device traversal evidence.",
+    "qualificationStatus": "PENDING_FRESH_EXACT_CANDIDATE_VERIFICATION",
+    "qualificationBoundary": "The preserved top-level PASS concerns the historical immutable H-Earth experience-anchor, same-world continuity and source-level cloud boundaries. Fresh exact-candidate source, runtime, GPU, browser and passive CI qualification remain separate and pending. Physical tablet stability and final owner visual acceptance are not asserted and retain their original postpublication physical-device traversal timing.",
     "historicalVisualEvidenceRole": "The OW04 evidence remains the historical canonical-world continuity baseline. It is not fresh visual evidence for this cloud candidate and is not relabeled as such. Fresh qualification binds source identity, preserved world boundaries, and execution of current exact-candidate gates.",
-    "predecessorReview": {
-      "operation": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001",
-      "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
-      "productCandidateBeforeReceipt": "9c1b26cd7f220bf07b7a47c78a605cc2e8deb307",
-      "finding": "The candidate changes cloud presentation only. It retires the cheap global background cloud field as a visible authority, preserves the proven structured cyclone and long organized-band grammar, distributes advanced variants at additional geographic anchors, and keeps deliberate clear-air windows. Geography, terrain, ocean, camera, direct interaction, navigation, primary canvas/context architecture, tablet render-pixel budget, regional/local weather authority and celestial authority are unchanged.",
+    "predecessorAdmission": {
+      "operation": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
+      "lockGeneration": 2177,
+      "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+      "terminalDisposition": "SUPERSEDED",
+      "authorityInherited": false,
+      "source": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649317263",
+      "receipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649374723",
+      "canonicalAcquisitionCommit": "9be5ae284489f77e7e93a2e7a5c5a10af60f1193",
+      "evidenceRole": "Historical admission and interrupted construction continuity only; not successor qualification."
+    },
+    "historicalReview": {
+      "operation": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+      "lockGeneration": 2169,
+      "governingHead": "f1204cd375181ae611abe0766187f7871b3521a4",
+      "reconciliationBase": "68ba1039054c35f5bb30720e2f53b12d15f8d4ae",
+      "carryForwardDisposition": "CARRY_FORWARD_APPROVED",
+      "preservedProductCandidate": "91e5fcecf291d419ffedad75ce9d885e07d69ca6",
+      "productBlobPreservation": {
+        "index": "9f7eb0076f9ab8f7bbd3b3776c614009f70beaf7",
+        "fap1Weather": "631959a9807242f4fd995ecc077ba2bec0e1bdb2",
+        "tabletCloudPass": "de19bbf6c8f4d42cfc5be0cbc0491bac9d0b7d2b",
+        "unchangedTabletRuntime": "8d574a20c081a1bde71393f5f783d0637efe8551"
+      },
+      "finding": "Current-main reconciliation preserves every product byte from the frozen cloud-globalization candidate. Only this acceptance-receipt metadata is refreshed. The exact cloud source, geography, terrain, ocean, camera, navigation, primary context and canvas architecture, tablet pixel and raymarch budgets, celestial authority and local/regional runtime boundaries are unchanged by reconciliation.",
       "tabletBoundary": "The tablet path remains one primary WebGL2 context with zero additional canvas or renderer and retains the frozen 8-step rest / 6-step interaction cloud raymarch ceilings.",
-      "qualificationBoundary": "This PASS is limited to the immutable H-Earth experience-anchor and same-world continuity criterion plus source-level cloud authority boundaries. It does not assert physical tablet stability or final owner visual acceptance; those remain post-publication physical-device traversal evidence."
+      "qualificationBoundary": "This PASS is limited to the immutable H-Earth experience-anchor and same-world continuity criterion plus source-level cloud authority boundaries. It does not assert physical tablet stability or final owner visual acceptance; those remain post-publication physical-device traversal evidence.",
+      "historicalVisualEvidenceRole": "The OW04 evidence remains the historical canonical-world continuity baseline. It is not fresh visual evidence for this cloud candidate and is not relabeled as such. Fresh qualification binds source identity, preserved world boundaries, and execution of current exact-candidate gates.",
+      "predecessorReview": {
+        "operation": "AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_001",
+        "governingHead": "152be0c1d318dde932c8d1ad9fbecbe7bbce7ccb",
+        "productCandidateBeforeReceipt": "9c1b26cd7f220bf07b7a47c78a605cc2e8deb307",
+        "finding": "The candidate changes cloud presentation only. It retires the cheap global background cloud field as a visible authority, preserves the proven structured cyclone and long organized-band grammar, distributes advanced variants at additional geographic anchors, and keeps deliberate clear-air windows. Geography, terrain, ocean, camera, direct interaction, navigation, primary canvas/context architecture, tablet render-pixel budget, regional/local weather authority and celestial authority are unchanged.",
+        "tabletBoundary": "The tablet path remains one primary WebGL2 context with zero additional canvas or renderer and retains the frozen 8-step rest / 6-step interaction cloud raymarch ceilings.",
+        "qualificationBoundary": "This PASS is limited to the immutable H-Earth experience-anchor and same-world continuity criterion plus source-level cloud authority boundaries. It does not assert physical tablet stability or final owner visual acceptance; those remain post-publication physical-device traversal evidence."
+      }
     }
   }
 }

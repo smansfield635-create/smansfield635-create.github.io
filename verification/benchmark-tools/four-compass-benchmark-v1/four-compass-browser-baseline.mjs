@@ -320,20 +320,54 @@ async function runCompassScenario(browser, authorityId, profileName, config) {
 async function runAuxiliaryScenario(browser, authorityId, profileName, config) {
   const { page, telemetry } = await createPage(browser, profileName);
   const record = { authorityId, lane: "AUXILIARY_CONTROL", route: config.route, posture: config.posture, compassAuthority: false, profile: profileName, status: "PENDING", navigation: null, actions: [], captures: [], telemetry };
+  const requireCondition = (condition, code) => { if (!condition) throw new Error(code); };
   try {
     record.navigation = await navigate(page, config);
+    await page.waitForFunction(() => {
+      const state = window.DGBHomeArrival?.inspect?.();
+      const stage = document.querySelector('[data-home-manor-stage]');
+      if (stage?.dataset.homeManorStatus === 'error' || stage?.dataset.homeManorStatus === 'timeout') {
+        throw new Error(`HOME_ARRIVAL_RUNTIME_FAILED:${stage.dataset.homeManorStatus}:${document.querySelector('[data-home-arrival]')?.dataset.homeArrivalError || ''}`);
+      }
+      return state?.contract === 'HOME_ARRIVAL_EXTERIOR_v1' && state.ready === true && stage?.dataset.homeManorStatus === 'ready';
+    }, { timeout: 15000 });
+    record.arrival = await page.evaluate(() => ({
+      inspection: window.DGBHomeArrival.inspect(),
+      ready: document.querySelector('[data-home-arrival]')?.dataset.homeArrivalReady,
+      canvasCount: document.querySelectorAll('[data-home-manor-canvas]').length,
+      returnHref: document.querySelector('a.home-brand')?.getAttribute('href'),
+      paths: Array.from(document.querySelectorAll('#ways-forward a.home-path')).map(a => a.getAttribute('href')),
+      disclosureInitiallyOpen: document.querySelector('details.home-disclosure')?.open
+    }));
+    requireCondition(record.arrival.ready === 'true' && record.arrival.canvasCount === 1 && record.arrival.inspection.torchCount === 6, 'HOME_ARRIVAL_CONTRACT_FAILED');
+    requireCondition(record.arrival.returnHref === '/' && JSON.stringify(record.arrival.paths) === JSON.stringify(['/door/', '/explore/', '/campaigns/consider-the-energy/']), 'HOME_ARRIVAL_ROUTE_CONTRACT_FAILED');
+    requireCondition(record.arrival.disclosureInitiallyOpen === false, 'HOME_DISCLOSURE_INITIAL_STATE_FAILED');
     record.captures.push(await capture(page, authorityId, profileName, "INITIAL", config, OUTPUTS.auxiliaryScreenshotRoot, false));
     record.captures.push(await capture(page, authorityId, profileName, "INITIAL", config, OUTPUTS.auxiliaryScreenshotRoot, true));
-    record.actions.push(await activate(page, config.cardinal, profileName));
-    record.captures.push(await capture(page, authorityId, profileName, "PROFILE_RULES_SELECTED", config, OUTPUTS.auxiliaryScreenshotRoot));
-    const disclosure = await page.$(config.disclosure);
-    if (disclosure) {
-      await disclosure.evaluate(element => element.scrollIntoView({ block: "center", inline: "center" }));
-      await disclosure.click({ delay: 60 }).catch(() => disclosure.evaluate(element => element.click()));
-      await sleep(700);
-      record.actions.push({ selector: config.disclosure, result: "ACTIVATED" });
-    } else record.actions.push({ selector: config.disclosure, result: "TARGET_ABSENT" });
-    record.captures.push(await capture(page, authorityId, profileName, "DISCLOSURE_ATTEMPT", config, OUTPUTS.auxiliaryScreenshotRoot));
+    const choose = await activate(page, config.cardinal, profileName);
+    record.actions.push(choose);
+    requireCondition(choose.result === 'ACTIVATED', 'HOME_CHOOSE_ROUTE_TARGET_MISSING');
+    await page.waitForFunction(() => location.hash === '#ways-forward', { timeout: 5000 });
+    const target = await selectorRect(page, '#ways-forward');
+    requireCondition(target?.rendered && target.intersectsViewport, 'HOME_WAYS_FORWARD_NOT_VISIBLE');
+    record.captures.push(await capture(page, authorityId, profileName, "WAYS_FORWARD_SELECTED", config, OUTPUTS.auxiliaryScreenshotRoot));
+    const disclosure = await activate(page, config.disclosure, profileName);
+    record.actions.push(disclosure);
+    requireCondition(disclosure.result === 'ACTIVATED', 'HOME_DISCLOSURE_TARGET_MISSING');
+    record.disclosure = await page.$eval('details.home-disclosure', element => ({
+      open: element.open,
+      routes: Array.from(element.querySelectorAll('a.home-route-chip')).map(a => a.getAttribute('href'))
+    }));
+    requireCondition(record.disclosure.open === true, 'HOME_DISCLOSURE_DID_NOT_OPEN');
+    requireCondition(JSON.stringify(record.disclosure.routes) === JSON.stringify(['/prelude/', '/laws/', '/evidence/', '/products/', '/campaigns/consider-the-energy/', '/meet-sean-mansfield/']), 'HOME_DISCLOSURE_ROUTES_FAILED');
+    record.captures.push(await capture(page, authorityId, profileName, "DISCLOSURE_OPEN", config, OUTPUTS.auxiliaryScreenshotRoot));
+    const returned = await activate(page, config.returnControl, profileName);
+    record.actions.push(returned);
+    requireCondition(returned.result === 'ACTIVATED', 'HOME_RETURN_CONTROL_MISSING');
+    await page.waitForSelector('main[data-compass-root]', { timeout: 15000 });
+    record.returnedToCompass = new URL(page.url()).pathname === '/';
+    requireCondition(record.returnedToCompass, 'HOME_RETURN_TO_COMPASS_FAILED');
+    requireCondition(telemetry.pageErrors.length === 0, `HOME_PAGE_ERROR:${telemetry.pageErrors.join('|')}`);
     record.status = "EXECUTED";
   } catch (error) {
     record.status = "HARNESS_FAILURE";
@@ -443,14 +477,14 @@ async function main() {
       for (const [authorityId, config] of Object.entries(COMPASS_CORPUS)) {
         const record = await runCompassScenario(browser, authorityId, profileName, config);
         compassRecords.push(record);
-        console.log(JSON.stringify({ lane: "FOUR_COMPASS_CORPUS", authorityId, profileName, status: record.status, captures: record.captures.length }));
+        console.log(JSON.stringify({ lane: "FOUR_COMPASS_CORPUS", authorityId, profileName, status: record.status, captures: record.captures.length, harnessFailure: record.harnessFailure || null }));
       }
     }
     for (const profileName of Object.keys(PROFILES)) {
       for (const [authorityId, config] of Object.entries(AUXILIARY_CONTROLS)) {
         const record = await runAuxiliaryScenario(browser, authorityId, profileName, config);
         auxiliaryRecords.push(record);
-        console.log(JSON.stringify({ lane: "AUXILIARY_CONTROL", authorityId, profileName, status: record.status, captures: record.captures.length }));
+        console.log(JSON.stringify({ lane: "AUXILIARY_CONTROL", authorityId, profileName, status: record.status, captures: record.captures.length, harnessFailure: record.harnessFailure || null }));
       }
     }
   } finally {

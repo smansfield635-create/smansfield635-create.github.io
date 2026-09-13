@@ -1,10 +1,109 @@
-const BRAIN_URL='https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb';
-const INSPECTOR_NORMALIZATION=Object.freeze({source:'/inspection/compass/brain-gen1-hra/inspector.js',blob:'1af870372007f93d72f7864a5f698432f0cfab21',mode:'ORTHOGRAPHIC_NORMALIZED_OBJECT',fitExtent:1.58,baseYaw:.30,basePitch:-.055});
-const CONTRACT=Object.freeze({id:'AWARDS_COHERENCE_LIVING_OBJECT_TRUE_3D_V4_RECOGNITION_FIRST',cycle:'C_COHERENCE',claim:'Coherence can be inspected without pretending uncertainty is certainty.',recognizableObject:'BRAIN',renderer:'WEBGL_3D_QUALIFIED_GLB',signatureEvent:'NEURAL_SYNCHRONIZATION',eventCount:1,compositionProfile:Object.freeze({reference:'INSPECTOR_NORMALIZATION',projection:'ORTHOGRAPHIC',fitExtent:INSPECTOR_NORMALIZATION.fitExtent,targetFrameOccupancy:.92,hostShape:'COMPACT_ANATOMICAL_FIELD'}),sourceBinding:Object.freeze({brainFreeze:Object.freeze({path:'/inspection/compass/brain-gen1-hra/geometry.freeze.v1.json',blob:'48048557e21435310dc8c255c3e880df3deb208c',authority:'NIH Human Reference Atlas',asset:'Allen_M_Brain.glb',meshes:283,triangles:656268}),brainInspector:Object.freeze({path:INSPECTOR_NORMALIZATION.source,blob:INSPECTOR_NORMALIZATION.blob}),assetUrl:BRAIN_URL}),geometryLaw:Object.freeze({vertexMutation:'FORBIDDEN',topologyMutation:'FORBIDDEN',componentRemodeling:'FORBIDDEN'}),lifecycle:Object.freeze(['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING'])});
-const VS=`attribute vec3 a_position;attribute vec3 a_normal;uniform mat4 u_model;uniform vec3 u_center;uniform float u_norm,u_yaw,u_pitch,u_aspect,u_zoom,u_pulse;varying vec3 v_n;varying float v_p;void main(){vec3 p=(u_model*vec4(a_position,1.0)).xyz;vec3 n=mat3(u_model)*a_normal;p=(p-u_center)*u_norm;float cy=cos(u_yaw),sy=sin(u_yaw),cx=cos(u_pitch),sx=sin(u_pitch);p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);p=vec3(p.x,cx*p.y-sx*p.z,sx*p.y+cx*p.z);n=vec3(n.x,cx*n.y-sx*n.z,sx*n.y+cx*n.z);p*=u_zoom;gl_Position=vec4(p.x/max(u_aspect,1.0),p.y,p.z*.48,1.0);v_n=normalize(n);v_p=u_pulse;}`;const FS=`precision mediump float;varying vec3 v_n;varying float v_p;uniform float u_variant;void main(){vec3 L=normalize(vec3(-.34,.64,-.69));float d=.34+.66*max(0.0,dot(normalize(v_n),L));vec3 base=mix(vec3(.46,.17,.27),vec3(.84,.46,.56),.45+.22*sin(u_variant*2.17));base=mix(base,vec3(.98,.68,.77),v_p*.30);gl_FragColor=vec4(base*d,1.0);}`;
-function sh(gl,t,s){const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error('BRAIN_SHADER:'+gl.getShaderInfoLog(x));return x}function prog(gl){const p=gl.createProgram();gl.attachShader(p,sh(gl,gl.VERTEX_SHADER,VS));gl.attachShader(p,sh(gl,gl.FRAGMENT_SHADER,FS));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error('BRAIN_LINK:'+gl.getProgramInfoLog(p));return p}
-const I=()=>new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];return o}function trs(n){if(n.matrix)return new Float32Array(n.matrix);const t=n.translation||[0,0,0],s=n.scale||[1,1,1],q=n.rotation||[0,0,0,1],x=q[0],y=q[1],z=q[2],w=q[3],x2=x+x,y2=y+y,z2=z+z,xx=x*x2,xy=x*y2,xz=x*z2,yy=y*y2,yz=y*z2,zz=z*z2,wx=w*x2,wy=w*y2,wz=w*z2;return new Float32Array([(1-(yy+zz))*s[0],(xy+wz)*s[0],(xz-wy)*s[0],0,(xy-wz)*s[1],(1-(xx+zz))*s[1],(yz+wx)*s[1],0,(xz+wy)*s[2],(yz-wx)*s[2],(1-(xx+yy))*s[2],0,t[0],t[1],t[2],1])}function tp(m,p){return[m[0]*p[0]+m[4]*p[1]+m[8]*p[2]+m[12],m[1]*p[0]+m[5]*p[1]+m[9]*p[2]+m[13],m[2]*p[0]+m[6]*p[1]+m[10]*p[2]+m[14]]}
-function parseGLB(buf){const dv=new DataView(buf);if(dv.getUint32(0,true)!==0x46546c67)throw new Error('BRAIN_GLB_MAGIC');let off=12,json=null,bin=null;while(off<buf.byteLength){const len=dv.getUint32(off,true),type=dv.getUint32(off+4,true);off+=8;const chunk=buf.slice(off,off+len);off+=len;if(type===0x4E4F534A)json=JSON.parse(new TextDecoder().decode(chunk));else if(type===0x004E4942)bin=chunk}if(!json||!bin)throw new Error('BRAIN_GLB_CHUNKS');return{g:json,bin}}
-function compType(gl,t){return t===5121?gl.UNSIGNED_BYTE:t===5123?gl.UNSIGNED_SHORT:t===5125?gl.UNSIGNED_INT:t===5120?gl.BYTE:t===5122?gl.SHORT:gl.FLOAT}function comps(type){return type==='SCALAR'?1:type==='VEC2'?2:type==='VEC3'?3:type==='VEC4'?4:type==='MAT4'?16:3}
-async function buildBrain(gl,p){const res=await fetch(BRAIN_URL,{mode:'cors'});if(!res.ok)throw new Error('BRAIN_FETCH_'+res.status);const{g,bin}=parseGLB(await res.arrayBuffer()),views=g.bufferViews||[],acc=g.accessors||[],buffers=new Map();function getBuf(vi,target){const key=vi+':'+target;if(buffers.has(key))return buffers.get(key);const v=views[vi],b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,new Uint8Array(bin,v.byteOffset||0,v.byteLength),gl.STATIC_DRAW);buffers.set(key,b);return b}const draws=[];let lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];function addMesh(mi,mat){const mesh=g.meshes?.[mi];if(!mesh)return;for(const pr of mesh.primitives||[]){if(pr.mode!=null&&pr.mode!==4)continue;const pa=acc[pr.attributes?.POSITION],na=acc[pr.attributes?.NORMAL];if(!pa||!na)continue;const pv=views[pa.bufferView],nv=views[na.bufferView],ia=pr.indices!=null?acc[pr.indices]:null;const draw={model:mat,pos:getBuf(pa.bufferView,gl.ARRAY_BUFFER),norm:getBuf(na.bufferView,gl.ARRAY_BUFFER),posSize:comps(pa.type),normSize:comps(na.type),posType:compType(gl,pa.componentType),normType:compType(gl,na.componentType),posNorm:!!pa.normalized,normNorm:!!na.normalized,posStride:pv.byteStride||0,normStride:nv.byteStride||0,posOff:pa.byteOffset||0,normOff:na.byteOffset||0,count:ia?ia.count:pa.count,index:ia?getBuf(ia.bufferView,gl.ELEMENT_ARRAY_BUFFER):null,indexType:ia?compType(gl,ia.componentType):null,indexOff:ia?(ia.byteOffset||0):0};draws.push(draw);if(pa.min&&pa.max){for(const x of[pa.min[0],pa.max[0]])for(const y of[pa.min[1],pa.max[1]])for(const z of[pa.min[2],pa.max[2]]){const q=tp(mat,[x,y,z]);for(let j=0;j<3;j++){lo[j]=Math.min(lo[j],q[j]);hi[j]=Math.max(hi[j],q[j])}}}}}function walk(ni,parent){const n=g.nodes?.[ni];if(!n)return;const world=mul(parent,trs(n));if(n.mesh!=null)addMesh(n.mesh,world);for(const c of n.children||[])walk(c,world)}const scene=g.scenes?.[g.scene??0],roots=scene?.nodes||g.nodes?.map((_,i)=>i)||[];for(const n of roots)walk(n,I());if(!draws.length)throw new Error('BRAIN_NO_DRAWS');const center=lo.every(Number.isFinite)?lo.map((v,i)=>(v+hi[i])/2):[0,0,0],extent=Math.max(...hi.map((v,i)=>v-lo[i]).filter(Number.isFinite),1),norm=INSPECTOR_NORMALIZATION.fitExtent/extent;return{g,draws,buffers,center,norm,meshCount:g.meshes?.length||0,triangleCount:656268}}
-export function mountCoherenceLivingObject(root,options={}){if(!root||typeof root.replaceChildren!=='function')throw new TypeError('COHERENCE_ROOT_REQUIRED');const doc=root.ownerDocument||document,canvas=doc.createElement('canvas');canvas.className='awards-true3d-canvas awards-brain-true3d';canvas.style.cssText='display:block;width:100%;height:100%;min-height:0;pointer-events:none';canvas.setAttribute('aria-hidden','true');root.replaceChildren(canvas);const gl=canvas.getContext('webgl2',{alpha:true,antialias:true})||canvas.getContext('webgl',{alpha:true,antialias:true});if(!gl)throw new Error('COHERENCE_WEBGL_REQUIRED');const p=prog(gl);gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);const A={pos:gl.getAttribLocation(p,'a_position'),norm:gl.getAttribLocation(p,'a_normal')},U={model:gl.getUniformLocation(p,'u_model'),center:gl.getUniformLocation(p,'u_center'),norm:gl.getUniformLocation(p,'u_norm'),yaw:gl.getUniformLocation(p,'u_yaw'),pitch:gl.getUniformLocation(p,'u_pitch'),aspect:gl.getUniformLocation(p,'u_aspect'),zoom:gl.getUniformLocation(p,'u_zoom'),pulse:gl.getUniformLocation(p,'u_pulse'),variant:gl.getUniformLocation(p,'u_variant')};let asset=null,error=null,state='FOREGROUND_REST',phase='loading',destroyed=false,raf=0,start=performance.now(),sig=-1;const reduced=options.reducedMotion??matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false;const ready=buildBrain(gl,p).then(x=>{asset=x;phase='rest';return x}).catch(e=>{error=e;phase='error';console.error(e)});function resize(){const d=Math.min(2,devicePixelRatio||1),w=Math.max(1,Math.round(canvas.clientWidth*d)),h=Math.max(1,Math.round(canvas.clientHeight*d));if(w!==canvas.width||h!==canvas.height){canvas.width=w;canvas.height=h}gl.viewport(0,0,w,h);return w/h}function frame(t){if(destroyed)return;const asp=resize(),st=sig<0?99:(t-sig)/1000,pulse=reduced?.35:(sig>=0?Math.max(0,Math.sin(Math.min(Math.PI,st*Math.PI/2.5))):0);if(sig>=0&&st>3.1){sig=-1;phase='rest';state='FOREGROUND_IDLE'}gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(asset){gl.uniform3fv(U.center,asset.center);gl.uniform1f(U.norm,asset.norm);gl.uniform1f(U.yaw,INSPECTOR_NORMALIZATION.baseYaw+.045*Math.sin((t-start)/4200)+pulse*.055);gl.uniform1f(U.pitch,INSPECTOR_NORMALIZATION.basePitch);gl.uniform1f(U.aspect,asp);gl.uniform1f(U.zoom,1.36+.035*pulse);gl.uniform1f(U.pulse,pulse);let i=0;for(const d of asset.draws){gl.uniformMatrix4fv(U.model,false,d.model);gl.uniform1f(U.variant,(i++%17)/17);gl.bindBuffer(gl.ARRAY_BUFFER,d.pos);gl.enableVertexAttribArray(A.pos);gl.vertexAttribPointer(A.pos,d.posSize,d.posType,d.posNorm,d.posStride,d.posOff);gl.bindBuffer(gl.ARRAY_BUFFER,d.norm);gl.enableVertexAttribArray(A.norm);gl.vertexAttribPointer(A.norm,d.normSize,d.normType,d.normNorm,d.normStride,d.normOff);if(d.index){gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,d.index);gl.drawElements(gl.TRIANGLES,d.count,d.indexType,d.indexOff)}else gl.drawArrays(gl.TRIANGLES,0,d.count)}}raf=requestAnimationFrame(frame)}raf=requestAnimationFrame(frame);function S(x){if(!CONTRACT.lifecycle.includes(x))throw new Error('COHERENCE_INVALID_STATE');state=x;return x}function playSignature(){S('SIGNATURE_PLAY');phase='sync';sig=performance.now();return sig}function selectResponse(){S('SELECT_RESPONSE')}function readerOpen(){S('READER_OPEN')}function restore(){S('RETURN_RESTORING');sig=-1;phase=asset?'rest':'loading';setTimeout(()=>{if(!destroyed)S('FOREGROUND_REST')},reduced?0:260)}function setLifecycle(x){S(x)}function inspect(){return Object.freeze({contract:CONTRACT.id,state,phase,reducedMotion:!!reduced,webglContexts:1,renderer:'WEBGL_3D_QUALIFIED_GLB',recognizableObject:'BRAIN',signatureEvent:CONTRACT.signatureEvent,eventCount:1,assetUrl:BRAIN_URL,assetLoaded:!!asset,assetError:error?.message||null,meshCount:asset?.meshCount??283,triangleCount:656268,geometryLaw:CONTRACT.geometryLaw,compositionProfile:CONTRACT.compositionProfile,normalization:INSPECTOR_NORMALIZATION,sourceBinding:CONTRACT.sourceBinding})}function destroy(){destroyed=true;cancelAnimationFrame(raf);if(asset)for(const b of asset.buffers.values())gl.deleteBuffer(b);gl.deleteProgram(p);gl.getExtension('WEBGL_lose_context')?.loseContext();root.replaceChildren()}return Object.freeze({contract:CONTRACT,ready,setState:setLifecycle,playSignature,selectResponse,readerOpen,restore,inspect,destroy,element:canvas})}export{CONTRACT as AWARDS_COHERENCE_CYCLE_C_CONTRACT};
+const DONOR=Object.freeze({
+  stagePath:'/assets/compass/capability-object-stage.js',
+  stageBlob:'0a7578ce4628e6774cb8da79c2434dbe96d0d6f0',
+  brainPath:'/assets/compass/capability-object-brain-v9.js',
+  brainBlob:'5908a5ed2e364159d6c6eabde74887225b922620',
+  version:'COMPASS_BRAIN_V9_REFERENCE_REBUILD_v2',
+  contract:'COMPASS_COHERISCOPE_ANATOMICAL_WEBGL_v9_REFERENCE_REBUILD',
+  referenceTarget:'APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE'
+});
+const LIFECYCLE=Object.freeze(['REAR_INERT','APPROACHING','FOREGROUND_REST','SIGNATURE_PLAY','FOREGROUND_IDLE','SELECT_RESPONSE','READER_OPEN','RETURN_RESTORING']);
+const CONTRACT=Object.freeze({
+  id:'AWARDS_COHERENCE_LIVING_OBJECT_APPROVED_BRAIN_V9_AMBIENT_V6',
+  cycle:'C_COHERENCE',
+  claim:'Coherence can be inspected without pretending uncertainty is certainty.',
+  recognizableObject:'BRAIN',
+  renderer:'APPROVED_HIGH_FIDELITY_BRAIN_V9',
+  signatureEvent:'CONTINUOUS_SLOW_ROTATION',
+  eventCount:1,
+  compositionProfile:Object.freeze({
+    reference:'LIVE_COHERISCOPE_APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE',
+    hostShape:'COMPACT_ANATOMICAL_FIELD',
+    presentationAuthority:'APPROVED_REFERENCE_RENDERER',
+    environment:'DARK_AMBIENT_DEPTH_FIELD',
+    motion:'CONTINUOUS_SLOW_ROTATION'
+  }),
+  sourceBinding:Object.freeze({approvedBrainV9:DONOR}),
+  lifecycle:LIFECYCLE
+});
+
+const srcdoc=()=>`<!doctype html><html><head><meta charset="utf-8"><meta name="color-scheme" content="dark"><style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}
+body{position:relative;isolation:isolate;background:radial-gradient(circle at 52% 46%,rgba(173,73,94,.18),transparent 32%),radial-gradient(circle at 50% 52%,rgba(85,194,214,.08),transparent 60%),linear-gradient(145deg,rgba(7,16,22,.98),rgba(2,6,10,.99) 72%)}
+body::before{content:"";position:absolute;inset:8% 7%;z-index:0;border-radius:50%;background:radial-gradient(ellipse,rgba(215,116,135,.10),rgba(75,173,194,.035) 48%,transparent 72%);filter:blur(9px);pointer-events:none}
+body::after{content:"";position:absolute;inset:11%;z-index:0;border:1px solid rgba(122,210,226,.08);border-radius:50%;box-shadow:0 0 34px rgba(105,193,210,.045),inset 0 0 30px rgba(220,129,146,.035);pointer-events:none}
+canvas{position:relative;z-index:1;display:block;width:100%;height:100%;min-width:100%;min-height:100%;pointer-events:none;filter:brightness(1.12) saturate(1.06) drop-shadow(0 18px 24px rgba(18,2,8,.46))}
+</style></head><body><canvas id="brain" aria-hidden="true"></canvas><script src="${DONOR.stagePath}?v=${DONOR.stageBlob}"></script><script src="${DONOR.brainPath}?v=${DONOR.brainBlob}"></script><script>
+const canvas=document.getElementById('brain');
+let foreground=true;
+const api=window.CapabilityObjectStage?.mount?.(canvas,{
+  meshFactory:window.CompassBrainV9?.build,
+  foreground:()=>foreground,
+  initialYaw:.48,
+  initialPitch:-.075,
+  spin:.000085,
+  scale:1,
+  dataset:{
+    brainRenderer:'COMPASS_BRAIN_V9_REFERENCE_REBUILD_v2',
+    brainContract:'COMPASS_COHERISCOPE_ANATOMICAL_WEBGL_v9_REFERENCE_REBUILD',
+    brainMaterial:'NATIVE_ROSE_FLESH_V6',
+    brainDepthModel:'TRUE_WEBGL_GEOMETRY',
+    brainComponents:'bilateral-hemispheres,longitudinal-fissure,central-sulcus,lateral-sulcus,paired-cerebellar-lobes,pons,medulla,brainstem',
+    brainReferenceTarget:'APPROVED_HIGH_FIDELITY_ANATOMICAL_REFERENCE'
+  }
+})||null;
+window.__AWARDS_DONOR_BRIDGE__={
+  kind:'BRAIN_V9',
+  ready:()=>!!api,
+  inspect:()=>api?.inspect?.()||null,
+  activate:()=>api?.capture?.()||null,
+  restore:()=>api?.setView?.(.48,-.075),
+  setForeground:on=>{foreground=!!on;if(foreground)api?.capture?.()},
+  destroy:()=>api?.destroy?.()
+};
+</script></body></html>`;
+
+function waitForBridge(frame,timeout=7000){
+  return new Promise((resolve,reject)=>{
+    const start=performance.now();
+    const poll=()=>{
+      const bridge=frame.contentWindow?.__AWARDS_DONOR_BRIDGE__;
+      if(bridge?.ready?.())return resolve(bridge);
+      if(performance.now()-start>timeout)return reject(new Error('COHERENCE_APPROVED_BRAIN_V9_READY_TIMEOUT'));
+      requestAnimationFrame(poll);
+    };
+    poll();
+  });
+}
+
+export function mountCoherenceLivingObject(root,options={}){
+  if(!root||typeof root.replaceChildren!=='function')throw new TypeError('COHERENCE_ROOT_REQUIRED');
+  const doc=root.ownerDocument||document;
+  const reduced=options.reducedMotion??globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false;
+  const frame=doc.createElement('iframe');
+  frame.className='awards-true3d-frame awards-brain-approved-v9-frame';
+  frame.setAttribute('title','Coheriscope approved anatomical brain');
+  frame.setAttribute('aria-hidden','true');
+  frame.style.cssText='display:block;width:100%;height:100%;min-height:0;border:0;background:#03080d;pointer-events:none;overflow:hidden;border-radius:16px;box-shadow:inset 0 0 32px rgba(109,204,220,.045),0 12px 30px rgba(0,0,0,.22);transform-origin:50% 50%;transition:transform 260ms ease,filter 260ms ease,opacity 260ms ease';
+  frame.srcdoc=srcdoc();
+  root.replaceChildren(frame);
+  root.dataset.presentationAuthority='APPROVED_HIGH_FIDELITY_BRAIN_V9';
+  root.dataset.donorPath=DONOR.brainPath;
+  root.dataset.donorBlob=DONOR.brainBlob;
+  root.dataset.ambientEnvironment='DARK_DEPTH_FIELD';
+  root.dataset.motion='CONTINUOUS_SLOW_ROTATION';
+  let state='FOREGROUND_REST',phase='loading',destroyed=false,timer=0,bridge=null,error=null;
+  const ready=waitForBridge(frame).then(x=>{if(destroyed)return null;bridge=x;phase='rest';bridge.setForeground?.(true);return x}).catch(e=>{error=e;phase='error';return null});
+  function S(next){if(!LIFECYCLE.includes(next))throw new Error('COHERENCE_INVALID_STATE');state=next;root.dataset.objectState=next;return next}
+  function settleVisual(){frame.style.transform='scale(1)';frame.style.filter='none';frame.style.opacity='1';bridge?.setForeground?.(true)}
+  function setState(next){S(next);if(next==='REAR_INERT'){bridge?.setForeground?.(false);return next}if(next==='FOREGROUND_REST'||next==='FOREGROUND_IDLE'||next==='APPROACHING')settleVisual();return next}
+  function playSignature(){S('SIGNATURE_PLAY');phase='rotation';bridge?.setForeground?.(true);bridge?.activate?.();if(!reduced){frame.style.transform='scale(1.018)';frame.style.filter='brightness(1.06) saturate(1.04)';clearTimeout(timer);timer=setTimeout(()=>{if(destroyed)return;settleVisual();phase='rest';S('FOREGROUND_IDLE')},760)}else{phase='rest';S('FOREGROUND_IDLE')}return performance.now()}
+  function selectResponse(){S('SELECT_RESPONSE');bridge?.setForeground?.(true);if(!reduced)frame.style.transform='scale(.985)'}
+  function readerOpen(){S('READER_OPEN');bridge?.setForeground?.(false);frame.style.opacity='.82'}
+  function restore(){S('RETURN_RESTORING');clearTimeout(timer);bridge?.setForeground?.(true);settleVisual();bridge?.restore?.();timer=setTimeout(()=>{if(!destroyed){phase='rest';S('FOREGROUND_REST')}},reduced?0:220)}
+  function inspect(){return Object.freeze({contract:CONTRACT.id,state,phase,reducedMotion:!!reduced,webglContexts:destroyed?0:1,renderer:DONOR.version,donorContract:DONOR.contract,referenceTarget:DONOR.referenceTarget,recognizableObject:'BRAIN',signatureEvent:CONTRACT.signatureEvent,eventCount:1,donorReady:!!bridge,donorError:error?.message||null,donorInspection:bridge?.inspect?.()||null,sourceBinding:CONTRACT.sourceBinding,presentationAuthority:'APPROVED_HIGH_FIDELITY_BRAIN_V9',ambientEnvironment:'DARK_DEPTH_FIELD'})}
+  function destroy(){destroyed=true;clearTimeout(timer);bridge?.destroy?.();bridge=null;try{frame.src='about:blank'}catch{}frame.remove();root.replaceChildren()}
+  return Object.freeze({contract:CONTRACT,ready,setState,playSignature,selectResponse,readerOpen,restore,inspect,destroy,element:frame});
+}
+
+export{CONTRACT as AWARDS_COHERENCE_CYCLE_C_CONTRACT};

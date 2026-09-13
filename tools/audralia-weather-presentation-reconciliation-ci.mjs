@@ -1,301 +1,197 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
+import {fileURLToPath} from 'node:url';
 import puppeteer from 'puppeteer-core';
 
-const base='http://127.0.0.1:4173';
-const chrome=process.env.CHROME_PATH;
-if(!chrome)throw new Error('CHROME_PATH_MISSING');
-
+const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const BASE='http://127.0.0.1:4173';
+const FIXED_TIME=Date.parse('2026-08-24T22:00:00.000Z');
+const SCHEMA='AUDRALIA_TABLET_CLOUD_RESTORATION_QUALIFICATION_RECEIPT_v1';
 const INDEX='showroom/globe/audralia/index.html';
-const COMPOSITOR='showroom/globe/audralia/final-cloud-shader-composition-v1.mjs';
-const DIRECT_FAP1=['showroom','globe','audralia','fap1-weather-presentation-v1.mjs'].join('/');
-const SNAPSHOT_FAP1=['inspection','audralia-24057-exact','snapshot','showroom','globe','audralia','fap1-weather-presentation-v1.mjs'].join('/');
-const SNAPSHOT_RENDERER=['inspection','audralia-24057-exact','snapshot','showroom','globe','audralia','weather-presentation-reconciliation','exterior-weather.mjs'].join('/');
-const POLICY_ID='AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1';
-const LIVE_SCHEMA='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v8_FINAL_CLOUD_COMPOSITION';
-const FIXED_TIME_MS=Date.parse('2026-08-24T22:00:00.000Z');
+const PHONE_FAP='showroom/globe/audralia/fap1-weather-presentation-v1.mjs';
+const TABLET_PASS='showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-cloud-pass.mjs';
+const TABLET_RUNTIME='showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs';
+const PHONE_FAP_MAIN_BLOB='d4c7d230ea8ffa265cfd347629ec2e46d653726c';
+const TABLET_RUNTIME_SCHEMA='AUDRALIA_TABLET_SINGLE_CONTEXT_CLOUDS_RUNTIME_v2_WORLD_FIRST';
+const TABLET_IMPORT_ID='AUDRALIA_TABLET_CLOUD_RESTORATION_GEN2182_20260912';
 
-const REQUIRED_STAGES=Object.freeze([
-  'FAP1_ORGANIZED_WEATHER_V6',
-  'XYZ_VOLUMETRIC_DEPTH_V2',
-  'ACF1_PRESENTATION_V3',
-  'DIRECT_DENSITY_V4'
-]);
-const V6_FAMILIES=Object.freeze(['CIRRUS_FIELD','CIRROSTRATUS_VEIL','ALTOCUMULUS_FIELD']);
+const read=p=>fs.readFileSync(path.join(ROOT,p),'utf8');
+const readBytes=p=>fs.readFileSync(path.join(ROOT,p));
+function gitBlob(bytes){return crypto.createHash('sha1').update(Buffer.from(`blob ${bytes.length}\0`)).update(bytes).digest('hex');}
+function count(source,re){return [...source.matchAll(re)].length;}
+function targetFromLatLon(lat,lon){
+  const R=6200,north=[0,.5,-.8660254037844386],meridian=[0,.8660254037844386,.5],east=[1,0,0],cl=Math.cos(lat);
+  const direction=[0,1,2].map(i=>east[i]*cl*Math.sin(lon)+meridian[i]*cl*Math.cos(lon)+north[i]*Math.sin(lat));
+  const length=Math.hypot(...direction)||1;for(let i=0;i<3;i++)direction[i]/=length;
+  const angle=Math.acos(Math.max(-1,Math.min(1,direction[1]))),sine=Math.sin(angle);
+  return {targetU:Math.abs(sine)<1e-9?0:R*angle*direction[0]/sine,targetV:Math.abs(sine)<1e-9?0:R*angle*direction[2]/sine,distance:5000,pitch:1.08,yaw:0};
+}
+const TABLET_CAUSAL_PROBE=Object.freeze(targetFromLatLon(.593412,-1.274090));
 
 function staticCandidate(){
-  const index=fs.readFileSync(INDEX,'utf8');
-  const compositor=fs.readFileSync(COMPOSITOR,'utf8');
-  const directFap1=fs.readFileSync(DIRECT_FAP1,'utf8');
-  const snapshotFap1=fs.readFileSync(SNAPSHOT_FAP1,'utf8');
-  const renderer=fs.readFileSync(SNAPSHOT_RENDERER,'utf8');
+  const index=read(INDEX),phone=readBytes(PHONE_FAP),tablet=read(TABLET_PASS),runtime=read(TABLET_RUNTIME);
+  assert.equal(gitBlob(phone),PHONE_FAP_MAIN_BLOB,'PHONE_FAP_PRODUCT_BYTE_DRIFT');
+  assert.match(index,new RegExp(`audralia-tablet-single-context-clouds-runtime\\.mjs\\?cb=${TABLET_IMPORT_ID}`),'TABLET_LOCAL_RUNTIME_BINDING_MISSING');
+  assert.match(index,/await import\('\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/weather-presentation-reconciliation\/app\.mjs\?cb=EXACT_24057'\)/,'PHONE_NONCONSTRAINED_RUNTIME_PATH_DRIFT');
+  assert.match(index,/await import\('\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/fap1-weather-presentation-v1\.mjs\?cb=EXACT_24057'\)/,'PHONE_SNAPSHOT_FAP_STARTUP_DRIFT');
+  assert.doesNotMatch(index,/\.\/fap1-weather-presentation-v1\.mjs\?cb=AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION/,'GEN2181_PHONE_BINDING_LEAK');
+  assert.match(index,/const tabletPixelBudget = 921600;/,'TABLET_PIXEL_BUDGET_DRIFT');
 
-  assert.equal(directFap1,snapshotFap1,'FAP1_SOURCE_SNAPSHOT_BYTE_PARITY_FAILURE');
-  assert.match(index,new RegExp(LIVE_SCHEMA),'LIVE_FINAL_COMPOSITION_SCHEMA_MISSING');
-  assert.match(index,/final-cloud-shader-composition-v1\.mjs\?cb=AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION_v1/,'FINAL_COMPOSITOR_REQUEST_IDENTITY_MISSING');
-  assert.doesNotMatch(index,/type="module" src="\.\/fap1-orbital-support-tuning-v1\.mjs/,'LEGACY_DIRECT_WRAPPER_STILL_BOOTED_SEPARATELY');
-  assert.doesNotMatch(index,/type="module" src="\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/acf1-cloud-presentation-v1\.mjs/,'LEGACY_ACF1_WRAPPER_STILL_BOOTED_SEPARATELY');
-  assert.doesNotMatch(index,/type="module" src="\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/fap1-xyz-volumetric-depth-v1\.mjs/,'LEGACY_XYZ_WRAPPER_STILL_BOOTED_SEPARATELY');
-  assert.doesNotMatch(index,/type="module" src="\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/fap1-weather-presentation-v1\.mjs/,'LEGACY_FAP1_WRAPPER_STILL_BOOTED_SEPARATELY');
+  assert.match(tablet,/const REST_STEPS=8;/,'TABLET_REST_STEP_DRIFT');
+  assert.match(tablet,/const INTERACTION_STEPS=6;/,'TABLET_INTERACTION_STEP_DRIFT');
+  assert.equal(count(tablet,/weather\+=frontSystem\(/g),5,'TABLET_FRONT_COUNT');
+  assert.equal(count(tablet,/weather\+=jetSystem\(/g),4,'TABLET_JET_COUNT');
+  assert.equal(count(tablet,/weather\+=cycloneSystem\(/g),2,'TABLET_CYCLONE_COUNT');
+  assert.match(tablet,/vec3 advancedCloudField\(vec3 p\)/,'TABLET_ADVANCED_FIELD_MISSING');
+  assert.doesNotMatch(tablet,/float globalCloudSupport\(/,'TABLET_CHEAP_GLOBAL_FIELD_REMAINS');
+  assert.match(tablet,/primaryContextOnly:true,createsCanvas:false,requestsWebGLContext:false/,'TABLET_RESOURCE_CONTRACT_DRIFT');
+  assert.match(tablet,/frontalSystemCount:5,jetBandSystemCount:4,cycloneSystemCount:2,totalAdvancedSystemInstances:11/,'TABLET_ADVANCED_EVIDENCE_DRIFT');
+  assert.match(tablet,/rayMarchCeilingsChanged:false/,'TABLET_RAYMARCH_CEILING_DRIFT');
+  assert.doesNotMatch(tablet,/createElement\(\s*['"]canvas['"]\s*\)/,'TABLET_PASS_NEW_CANVAS');
+  assert.doesNotMatch(tablet,/getContext\(\s*['"]webgl2['"]\s*\)/,'TABLET_PASS_NEW_CONTEXT_REQUEST');
 
-  assert.match(compositor,new RegExp(POLICY_ID),'FINAL_COMPOSITOR_POLICY_MISSING');
-  assert.match(compositor,/AUDRALIA_FINAL_DIRECT_DENSITY_SUPPORT_v1/,'FINAL_DIRECT_DENSITY_REPAIR_MISSING');
-  assert.match(compositor,/cloudAblation/,'V6_ABLATION_CONTROL_MISSING');
-  assert.match(compositor,/FINAL_CLOUD_SHADER_GLSL_VERSION_NOT_FIRST_LINE/,'FINAL_GLSL_VERSION_ORDER_GUARD_MISSING');
-  for(const stage of REQUIRED_STAGES)assert.match(compositor,new RegExp(stage),`FINAL_STAGE_DECLARATION_MISSING:${stage}`);
-  for(const family of V6_FAMILIES)assert.match(snapshotFap1,new RegExp(family),`V6_FAMILY_SOURCE_MISSING:${family}`);
+  assert.match(runtime,new RegExp(TABLET_RUNTIME_SCHEMA),'TABLET_WORLD_FIRST_SCHEMA_MISSING');
+  assert.match(runtime,/startupSequence\.push\('PRIMARY_WORLD_RENDERED'\)/,'TABLET_WORLD_RENDER_MARKER_MISSING');
+  assert.match(runtime,/startupSequence\.push\('PRIMARY_WORLD_FRAME_PRESENTED'\)/,'TABLET_WORLD_PRESENT_MARKER_MISSING');
+  assert.match(runtime,/startupSequence\.push\('CLOUD_PASS_CONSTRUCTED'\)/,'TABLET_CLOUD_CONSTRUCT_MARKER_MISSING');
+  assert.match(runtime,/worldRenderedBeforeCloudPass:worldBeforeCloud/,'TABLET_WORLD_FIRST_INVARIANT_MISSING');
+  const init=runtime.slice(runtime.indexOf('export async function initializeAudraliaTabletSingleContextClouds'));
+  const worldDraw=init.indexOf('renderer.render();'),paint=init.indexOf('await nextPaint();'),cloudConstruct=init.indexOf('createAudraliaTabletCloudPass({gl:constructed.primaryGl,worldCanvas:canvas})');
+  assert.ok(worldDraw>=0&&paint>worldDraw&&cloudConstruct>paint,'TABLET_SOURCE_WORLD_FIRST_ORDER_FAILURE');
+  assert.doesNotMatch(runtime,/createElement\(\s*['"]canvas['"]\s*\)/,'TABLET_RUNTIME_NEW_CANVAS');
 
-  assert.match(renderer,/const REST_STEPS=32,INTERACTION_STEPS=15,REST_MAX_PIXELS=230000,INTERACTION_MAX_PIXELS=90000;/,'FINAL_COMPOSITION_PERFORMANCE_CEILINGS_CHANGED');
-  assert.match(renderer,/uSysA\[8\]/,'FINAL_COMPOSITION_NATIVE_SYSTEM_ARRAY_CHANGED');
-  assert.doesNotMatch(compositor,/createElement\(\s*['"]canvas['"]\s*\)/,'FINAL_COMPOSITOR_ADDITIONAL_CANVAS_SOURCE_DETECTED');
-  assert.doesNotMatch(compositor,/new\s+OffscreenCanvas\s*\(/,'FINAL_COMPOSITOR_OFFSCREEN_CANVAS_SOURCE_DETECTED');
-
-  return Object.freeze({
-    policyId:POLICY_ID,
-    liveSchema:LIVE_SCHEMA,
-    fap1ByteParity:true,
-    requiredStages:REQUIRED_STAGES,
-    v6Families:V6_FAMILIES,
-    glslVersionFirstLineGuard:true,
-    frozenPerformanceCeilings:true,
-    additionalRenderCanvasSource:false
-  });
+  return Object.freeze({phoneProductBlob:PHONE_FAP_MAIN_BLOB,phoneDisposition:'KNOWN_GOOD_REFERENCE_REGRESSION_ONLY',tabletDisposition:'CONSTRAINED_REPAIR_TARGET',tabletAdvancedSystems:Object.freeze({fronts:5,jets:4,cyclones:2,total:11}),tabletBudgets:Object.freeze({restSteps:8,interactionSteps:6,maximumPrimaryRenderPixels:921600}),tabletRuntimeSchema:TABLET_RUNTIME_SCHEMA,tabletCausalProbe:TABLET_CAUSAL_PROBE,physicalTabletStabilityClaimed:false});
 }
 
-const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function installRuntimeAudit({fixedTime,ablateAdvancedCloud,forceTouch}){
+  const NativeDate=Date;
+  class FixedDate extends NativeDate{constructor(...args){super(...(args.length?args:[fixedTime]));}static now(){return fixedTime;}}
+  Object.setPrototypeOf(FixedDate,NativeDate);globalThis.Date=FixedDate;
+  if(forceTouch){try{Object.defineProperty(navigator,'maxTouchPoints',{configurable:true,get:()=>5});}catch{}}
 
-async function waitForAuthoritativeRuntime(page,{timeout=105000,label='runtime'}={}){
-  const started=Date.now();
-  let last=null;
-  while(Date.now()-started<timeout){
-    last=await page.evaluate(()=>({
-      reconciliationPresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__),
-      runtimePresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()),
-      pass:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.pass===true,
-      failures:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()?.invariants?.failures||[],
-      reconciliationError:window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__||null,
-      loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),
-      loaderStage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,
-      status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null
-    }));
-    if(last.reconciliationError)throw new Error(`${label.toUpperCase()}_RECONCILIATION_ERROR ${JSON.stringify(last)}`);
-    if(last.pass)return last;
-    await sleep(250);
-  }
-  throw new Error(`${label.toUpperCase()}_AUTHORITATIVE_RUNTIME_TIMEOUT ${JSON.stringify(last)}`);
-}
+  const audit={contextRequests:0,uniqueContexts:0,advancedShaderSubmissions:0,ablationApplied:false,cloudDraws:0,captures:[],failures:[]};
+  const seenContexts=new WeakSet();
+  const originalGetContext=HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext=function(type,attributes){
+    const gl=originalGetContext.call(this,type,attributes);
+    if(gl&&/^webgl/.test(type)){audit.contextRequests++;if(!seenContexts.has(gl)){seenContexts.add(gl);audit.uniqueContexts++;}globalThis.__AUDRALIA_QUALIFICATION_GL__=gl;}
+    return gl;
+  };
 
-async function waitForComposition(page,{timeout=20000,label='composition'}={}){
-  const started=Date.now();
-  let last=null;
-  while(Date.now()-started<timeout){
-    last=await page.evaluate(()=>{
-      const c=window.__AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION__;
-      return {
-        present:Boolean(c),
-        policyId:c?.policyId||null,
-        evidence:c?.getRuntimeEvidence?.()||null
-      };
-    });
-    const ev=last?.evidence;
-    if(last.present&&ev?.composedCloudShaders>=1&&typeof ev?.finalShaderSha256==='string'&&ev.finalShaderSha256.length===64&&ev?.finalStageEvidence?.pass===true)return last;
-    await sleep(100);
-  }
-  throw new Error(`${label.toUpperCase()}_FINAL_COMPOSITION_TIMEOUT ${JSON.stringify(last)}`);
-}
+  const P=WebGL2RenderingContext.prototype;
+  const nativeShaderSource=P.shaderSource,nativeAttachShader=P.attachShader,nativeDrawArrays=P.drawArrays;
+  const cloudShaders=new WeakSet(),cloudPrograms=new WeakSet();
+  const summarize=(gl)=>{
+    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,total=width*height,pixels=new Uint8Array(total*4);gl.finish();gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+    let checksum=2166136261>>>0,alpha=0,rgb=0,nonzero=0;
+    for(let i=0;i<pixels.length;i+=4){const r=pixels[i],g=pixels[i+1],b=pixels[i+2],a=pixels[i+3];checksum=Math.imul(checksum^r,16777619)>>>0;checksum=Math.imul(checksum^g,16777619)>>>0;checksum=Math.imul(checksum^b,16777619)>>>0;checksum=Math.imul(checksum^a,16777619)>>>0;alpha+=a/255;rgb+=(r+g+b)/(3*255);if(r||g||b||a)nonzero++;}
+    return {width,height,checksum,meanAlpha:alpha/Math.max(1,total),meanRgb:rgb/Math.max(1,total),nonzeroFraction:nonzero/Math.max(1,total)};
+  };
+  const readBytes=(gl)=>{const total=gl.drawingBufferWidth*gl.drawingBufferHeight,pixels=new Uint8Array(total*4);gl.finish();gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,pixels);return pixels;};
+  const changedPixels=(after,before)=>{let changed=0;for(let i=0;i<after.length;i+=4)if(after[i]!==before[i]||after[i+1]!==before[i+1]||after[i+2]!==before[i+2]||after[i+3]!==before[i+3])changed++;return changed;};
 
-function installErrorCapture(page){
-  const pageErrors=[],consoleErrors=[];
-  page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
-  page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
-  return {pageErrors,consoleErrors};
-}
-
-function targetFromLatLon(lat,lon){
-  const R=6200;
-  const north=[0,.5,-.8660254037844386];
-  const meridian=[0,.8660254037844386,.5];
-  const east=[1,0,0];
-  const cl=Math.cos(lat);
-  const direction=[0,1,2].map(i=>east[i]*cl*Math.sin(lon)+meridian[i]*cl*Math.cos(lon)+north[i]*Math.sin(lat));
-  const length=Math.hypot(...direction)||1;
-  for(let i=0;i<3;i++)direction[i]/=length;
-  const angle=Math.acos(Math.max(-1,Math.min(1,direction[1])));
-  const sine=Math.sin(angle);
-  if(Math.abs(sine)<1e-9)return {targetU:0,targetV:0};
-  return {targetU:R*angle*direction[0]/sine,targetV:R*angle*direction[2]/sine};
-}
-
-const PROBES=Object.freeze([
-  Object.freeze({id:'CIRRUS_A',...targetFromLatLon(.610865,-2.827433),distance:5000,pitch:1.08,yaw:0}),
-  Object.freeze({id:'CIRROSTRATUS_B',...targetFromLatLon(-.191986,.872665),distance:5000,pitch:1.08,yaw:.34}),
-  Object.freeze({id:'ALTOCUMULUS_C',...targetFromLatLon(.733038,1.745329),distance:5000,pitch:1.08,yaw:-.28}),
-  Object.freeze({id:'CIRRUS_C_NEAR_GRATITUDE',...targetFromLatLon(.209440,.191986),distance:5000,pitch:1.08,yaw:.18})
-]);
-
-async function captureExteriorMetrics(page,probe){
-  return page.evaluate(async probe=>{
-    const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
-    if(!proof?.setCameraStateForTest)throw new Error('FINAL_FRAME_PROOF_CAMERA_CONTROL_MISSING');
-    const state={targetU:probe.targetU,targetV:probe.targetV,distance:probe.distance,pitch:probe.pitch,yaw:probe.yaw};
-    proof.setCameraStateForTest(state);
-    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-    proof.setCameraStateForTest(state);
-    const canvas=proof.exterior?.overlay;
-    if(!(canvas instanceof HTMLCanvasElement))throw new Error('FINAL_FRAME_EXTERIOR_CANVAS_MISSING');
-    const gl=canvas.getContext('webgl2');
-    if(!gl)throw new Error('FINAL_FRAME_EXTERIOR_WEBGL2_MISSING');
-    gl.finish();
-    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,total=width*height;
-    if(total<=0)throw new Error('FINAL_FRAME_EMPTY_DRAWING_BUFFER');
-    const pixels=new Uint8Array(total*4);
-    gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-    let alphaNonzero=0,alphaStrong=0,alphaSum=0,rgbSum=0,weightedChecksum=0;
-    for(let i=0,p=0;i<pixels.length;i+=4,p++){
-      const r=pixels[i],g=pixels[i+1],b=pixels[i+2],a=pixels[i+3];
-      if(a>8)alphaNonzero++;
-      if(a>32)alphaStrong++;
-      alphaSum+=a/255;
-      rgbSum+=(r+g+b)/(3*255);
-      weightedChecksum=(weightedChecksum+((p%65521)+1)*(r+3*g+7*b+11*a))%2147483647;
+  P.shaderSource=function(shader,source){
+    let submitted=source;
+    if(typeof source==='string'&&source.includes('vec3 advancedCloudField(vec3 p)')){
+      cloudShaders.add(shader);audit.advancedShaderSubmissions++;
+      const needle='vec3 cloud=advancedCloudField(p);';
+      if(ablateAdvancedCloud){const occurrences=source.split(needle).length-1;if(occurrences!==1)audit.failures.push(`ABLATION_CALL_COUNT_${occurrences}`);else{submitted=source.replace(needle,'vec3 cloud=vec3(0.0);');audit.ablationApplied=true;}}
     }
-    const camera=proof.renderer?.getSnapshot?.()||null;
-    return {
-      id:probe.id,width,height,
-      nonzeroFraction:alphaNonzero/total,
-      strongFraction:alphaStrong/total,
-      meanAlpha:alphaSum/total,
-      meanRgb:rgbSum/total,
-      weightedChecksum,
-      camera
-    };
-  },probe);
+    return nativeShaderSource.call(this,shader,submitted);
+  };
+  P.attachShader=function(program,shader){if(cloudShaders.has(shader))cloudPrograms.add(program);return nativeAttachShader.call(this,program,shader);};
+  P.drawArrays=function(...args){
+    const program=this.getParameter(this.CURRENT_PROGRAM),relevant=cloudPrograms.has(program);
+    let beforeBytes=null,beforeSummary=null;
+    if(relevant){beforeBytes=readBytes(this);beforeSummary=summarize(this);}
+    const result=nativeDrawArrays.apply(this,args);
+    if(relevant){audit.cloudDraws++;const afterBytes=readBytes(this),afterSummary=summarize(this);audit.captures.push({before:beforeSummary,after:afterSummary,changedPixels:changedPixels(afterBytes,beforeBytes)});}
+    return result;
+  };
+  globalThis.__AUDRALIA_GEN2182_AUDIT__=audit;
 }
 
-async function captureVariant(browser,{ablateV6=false}={}){
-  const page=await browser.newPage();
-  await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
-  await page.evaluateOnNewDocument(fixed=>{
-    const NativeDate=Date;
-    class FixedDate extends NativeDate{
-      constructor(...args){super(...(args.length?args:[fixed]));}
-      static now(){return fixed;}
+async function openVariant(browser,{profile,ablateAdvancedCloud=false}){
+  const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e?.stack||e)));
+  const isTablet=profile==='TABLET';
+  await page.setViewport(isTablet?{width:1280,height:800,deviceScaleFactor:2,isMobile:true,hasTouch:true}:{width:720,height:1280,deviceScaleFactor:1,isMobile:true,hasTouch:true});
+  await page.evaluateOnNewDocument(installRuntimeAudit,{fixedTime:FIXED_TIME,ablateAdvancedCloud,forceTouch:true});
+  try{
+    await page.goto(BASE+'/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:60000});
+    await page.waitForFunction(()=>{const startup=window.__AUDRALIA_TABLET_STARTUP_STABILITY__;if(startup?.status==='FAILED')throw new Error(`STARTUP_FAILED:${startup.error}`);return startup?.status==='COMPLETE';},{timeout:120000});
+    if(isTablet){
+      await page.evaluate(probe=>{
+        const runtime=window.__AUDRALIA_TABLET_SINGLE_CONTEXT__;
+        if(!runtime?.renderer?.state||!runtime?.clouds?.render||typeof runtime.getCameraFrame!=='function')throw new Error('TABLET_CAUSAL_PROBE_CONTROL_MISSING');
+        Object.assign(runtime.renderer.state,probe);runtime.renderer.render();runtime.clouds.endInteraction();runtime.clouds.render(runtime.getCameraFrame());
+      },TABLET_CAUSAL_PROBE);
     }
-    Object.setPrototypeOf(FixedDate,NativeDate);
-    globalThis.Date=FixedDate;
-  },FIXED_TIME_MS);
-  const errors=installErrorCapture(page);
-  const suffix=ablateV6?'?cloudAblation=v6':'';
-  await page.goto(`${base}/showroom/globe/audralia/${suffix}`,{waitUntil:'domcontentloaded',timeout:60000});
-  const authoritative=await waitForAuthoritativeRuntime(page,{label:ablateV6?'ablated':'enabled'});
-  const composition=await waitForComposition(page,{label:ablateV6?'ablated_composition':'enabled_composition'});
-  const live=await page.evaluate(()=>({
-    integration:window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,
-    status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
-    loaderProgress:Number(document.querySelector('[data-audralia-loader]')?.dataset?.progress||0),
-    worldCanvasCount:document.querySelectorAll('[data-h-earth-map-wide-canvas]').length,
-    canvasCount:document.querySelectorAll('canvas').length,
-    composition:window.__AUDRALIA_FINAL_CLOUD_SHADER_COMPOSITION__?.getRuntimeEvidence?.()||null
-  }));
-  const probes=[];
-  for(const probe of PROBES)probes.push(await captureExteriorMetrics(page,probe));
-  await page.close();
-  return Object.freeze({ablateV6,authoritative,composition,live,probes,errors});
+    const result=await page.evaluate(profile=>{
+      const startup=window.__AUDRALIA_TABLET_STARTUP_STABILITY__,budget=window.__AUDRALIA_RENDER_PIXEL_BUDGET__,integration=window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,audit=window.__AUDRALIA_GEN2182_AUDIT__,tablet=window.__AUDRALIA_TABLET_SINGLE_CONTEXT__||null,proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__||null;
+      return {profile,startup,budget,integration,audit,canvasCount:document.querySelectorAll('canvas').length,worldCanvasCount:document.querySelectorAll('[data-h-earth-map-wide-canvas]').length,status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,tablet:tablet?{schema:tablet.schema,renderingMode:tablet.renderingMode,worldRenderedBeforeCloudPass:tablet.worldRenderedBeforeCloudPass,startupSequence:tablet.startupSequence,invariants:tablet.invariants,cloudEvidence:tablet.getCloudEvidence?.(),cloudRuntime:tablet.clouds?.getRuntime?.()}:null,phone:profile==='PHONE'?{schema:proof?.schema||null,runtimePass:proof?.getRuntime?.()?.invariants?.pass===true,runtimeFailures:proof?.getRuntime?.()?.invariants?.failures||[],hasCameraFrame:typeof proof?.getCameraFrame==='function'}:null};
+    },profile);
+    result.errors=errors;return result;
+  }finally{await page.close();}
 }
 
-function compareCausality(enabled,ablated){
-  assert.equal(enabled.probes.length,ablated.probes.length,'FRAMEBUFFER_PROBE_COUNT_MISMATCH');
-  const probes=enabled.probes.map((on,index)=>{
-    const off=ablated.probes[index];
-    assert.equal(on.id,off.id,'FRAMEBUFFER_PROBE_ID_MISMATCH');
-    assert.equal(on.width,off.width,'FRAMEBUFFER_WIDTH_MISMATCH');
-    assert.equal(on.height,off.height,'FRAMEBUFFER_HEIGHT_MISMATCH');
-    return Object.freeze({
-      id:on.id,
-      enabled:on,
-      ablated:off,
-      delta:Object.freeze({
-        nonzeroFraction:on.nonzeroFraction-off.nonzeroFraction,
-        strongFraction:on.strongFraction-off.strongFraction,
-        meanAlpha:on.meanAlpha-off.meanAlpha,
-        meanRgb:on.meanRgb-off.meanRgb,
-        checksumDifferent:on.weightedChecksum!==off.weightedChecksum
-      })
-    });
-  });
-  const positive=probes.filter(p=>p.delta.meanAlpha>0&&p.delta.checksumDifferent);
-  const material=probes.filter(p=>p.delta.meanAlpha>=.0015&&(p.delta.nonzeroFraction>=.002||p.delta.strongFraction>=.002));
-  const maxMeanAlphaDelta=Math.max(...probes.map(p=>p.delta.meanAlpha));
-  const maxCoverageDelta=Math.max(...probes.map(p=>Math.max(p.delta.nonzeroFraction,p.delta.strongFraction)));
-  return Object.freeze({
-    probes:Object.freeze(probes),
-    positiveProbeCount:positive.length,
-    materialProbeCount:material.length,
-    maxMeanAlphaDelta,
-    maxCoverageDelta,
-    pass:positive.length>=2&&material.length>=1&&maxMeanAlphaDelta>=.0015&&maxCoverageDelta>=.002
-  });
+function verifyPhone(phone){
+  assert.equal(phone.errors.length,0,'PHONE_PAGE_ERROR');
+  assert.equal(phone.budget?.active,false,'PHONE_WRONGLY_ENTERED_CONSTRAINED_PATH');
+  assert.equal(phone.tablet,null,'PHONE_TABLET_RUNTIME_PRESENT');
+  assert.equal(phone.phone?.runtimePass,true,'PHONE_RUNTIME_REGRESSION');
+  assert.equal(phone.phone?.hasCameraFrame,true,'PHONE_CAMERA_RUNTIME_REGRESSION');
+  assert.equal(phone.worldCanvasCount,1,'PHONE_WORLD_CANVAS_COUNT');
+  return Object.freeze({pass:true,disposition:'REGRESSION_REFERENCE_ONLY_NO_ORIGINAL_DEFECT_CLAIM'});
 }
 
-const staticEvidence=staticCandidate();
-console.log(JSON.stringify({staticEvidence},null,2));
+function verifyTablet(enabled,ablated){
+  for(const [label,v] of [['enabled',enabled],['ablated',ablated]]){
+    assert.equal(v.errors.length,0,`TABLET_${label.toUpperCase()}_PAGE_ERROR`);
+    assert.equal(v.budget?.active,true,`TABLET_${label.toUpperCase()}_NOT_CONSTRAINED`);
+    assert.equal(v.budget?.maximumPrimaryRenderPixels,921600,`TABLET_${label.toUpperCase()}_PIXEL_BUDGET`);
+    assert.equal(v.tablet?.schema,TABLET_RUNTIME_SCHEMA,`TABLET_${label.toUpperCase()}_RUNTIME_SCHEMA`);
+    assert.equal(v.tablet?.worldRenderedBeforeCloudPass,true,`TABLET_${label.toUpperCase()}_WORLD_FIRST`);
+    assert.deepEqual(v.tablet?.startupSequence,['PRIMARY_CONTEXT_READY','PRIMARY_WORLD_RENDERED','PRIMARY_WORLD_FRAME_PRESENTED','CLOUD_PASS_CONSTRUCTED','CLOUD_FIRST_DRAW'],`TABLET_${label.toUpperCase()}_STARTUP_SEQUENCE`);
+    assert.equal(v.tablet?.invariants?.pass,true,`TABLET_${label.toUpperCase()}_INVARIANTS`);
+    assert.equal(v.tablet?.invariants?.singleWebGLContext,true,`TABLET_${label.toUpperCase()}_SINGLE_CONTEXT`);
+    assert.equal(v.tablet?.invariants?.webgl2ContextRequests,1,`TABLET_${label.toUpperCase()}_CONTEXT_REQUESTS`);
+    assert.equal(v.tablet?.invariants?.additionalCanvasCount,0,`TABLET_${label.toUpperCase()}_ADDITIONAL_CANVAS`);
+    assert.equal(v.tablet?.cloudEvidence?.primaryContextOnly,true,`TABLET_${label.toUpperCase()}_CLOUD_PRIMARY_CONTEXT`);
+    assert.equal(v.tablet?.cloudEvidence?.createsCanvas,false,`TABLET_${label.toUpperCase()}_CLOUD_CREATED_CANVAS`);
+    assert.equal(v.tablet?.cloudEvidence?.requestsWebGLContext,false,`TABLET_${label.toUpperCase()}_CLOUD_CONTEXT_REQUEST`);
+    assert.equal(v.tablet?.cloudEvidence?.restStepCount,8,`TABLET_${label.toUpperCase()}_REST_STEPS`);
+    assert.equal(v.tablet?.cloudEvidence?.interactionStepCount,6,`TABLET_${label.toUpperCase()}_INTERACTION_STEPS`);
+    assert.equal(v.tablet?.cloudEvidence?.totalAdvancedSystemInstances,11,`TABLET_${label.toUpperCase()}_ADVANCED_SYSTEM_COUNT`);
+    assert.equal(v.audit?.uniqueContexts,1,`TABLET_${label.toUpperCase()}_AUDIT_UNIQUE_CONTEXTS`);
+    assert.ok(v.audit?.advancedShaderSubmissions>=1,`TABLET_${label.toUpperCase()}_ADVANCED_SHADER_NOT_SUBMITTED`);
+    assert.ok(v.audit?.cloudDraws>=2,`TABLET_${label.toUpperCase()}_ADVANCED_DRAW_MISSING`);
+    assert.equal(v.audit?.failures?.length,0,`TABLET_${label.toUpperCase()}_AUDIT_FAILURE`);
+  }
+  assert.equal(enabled.audit.ablationApplied,false,'TABLET_ENABLED_UNEXPECTED_ABLATION');
+  assert.equal(ablated.audit.ablationApplied,true,'TABLET_ABLATION_NOT_APPLIED');
+  const on=[...enabled.audit.captures].sort((a,b)=>b.changedPixels-a.changedPixels)[0],offMax=Math.max(...ablated.audit.captures.map(c=>c.changedPixels));
+  assert.ok(on,'TABLET_FRAMEBUFFER_CAPTURE_MISSING');
+  assert.ok(on.changedPixels>0,'TABLET_ADVANCED_CLOUD_VISIBLE_CONTRIBUTION_FAILURE');
+  assert.equal(offMax,0,'TABLET_ABLATION_CHANGED_FRAMEBUFFER');
+  assert.notEqual(on.before.checksum,on.after.checksum,'TABLET_ENABLED_PIXEL_HASH_UNCHANGED');
+  return Object.freeze({pass:true,enabledChangedPixels:on.changedPixels,ablatedMaxChangedPixels:offMax,enabledBeforeChecksum:on.before.checksum,enabledAfterChecksum:on.after.checksum,causalProbe:TABLET_CAUSAL_PROBE,physicalTabletStabilityClaimed:false});
+}
 
-const browser=await puppeteer.launch({
-  executablePath:chrome,
-  headless:'new',
-  args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']
-});
-
+const receipt={schema:SCHEMA,result:'FAIL_CLOSED',mechanicalOnly:true,physicalTabletStabilityClaimed:false,ownerPhysicalDeviceAcceptanceRequiredBeforePublication:true};
+let browser=null;
 try{
-  const enabled=await captureVariant(browser,{ablateV6:false});
-  const ablated=await captureVariant(browser,{ablateV6:true});
-
-  for(const variant of [enabled,ablated]){
-    assert.equal(variant.errors.pageErrors.length,0,`${variant.ablateV6?'ABLATION':'ENABLED'}_PAGE_ERROR`);
-    assert.equal(variant.live.integration?.schema,LIVE_SCHEMA,'LIVE_INTEGRATION_SCHEMA_DRIFT');
-    assert.equal(variant.live.integration?.startupArchitecture,'APPROVED_PRESENTATION_PRE_RENDER_v1','LIVE_STARTUP_ARCHITECTURE_DRIFT');
-    assert.equal(variant.live.integration?.cameraSemanticsFrozen,true,'LIVE_CAMERA_SEMANTICS_NOT_FROZEN');
-    assert.equal(variant.live.integration?.finalCloudShaderComposition,POLICY_ID,'LIVE_FINAL_COMPOSITION_BINDING_MISSING');
-    assert.ok(variant.live.loaderProgress>=4,'LIVE_LOADER_NOT_READY');
-    assert.ok(String(variant.live.status).includes('USER_REVIEW_REQUIRED'),'LIVE_RUNTIME_NOT_READY');
-    assert.equal(variant.live.worldCanvasCount,1,'LIVE_PRIMARY_WORLD_CANVAS_MULTIPLIED');
-    assert.equal(variant.composition.policyId,POLICY_ID,'FINAL_COMPOSITION_POLICY_DRIFT');
-    assert.equal(variant.composition.evidence?.finalStageEvidence?.pass,true,'FINAL_COMPOSITION_STAGE_FAILURE');
-    assert.equal(variant.composition.evidence?.composedCloudShaders,1,'FINAL_COMPOSITION_EXPECTED_ONE_CLOUD_SHADER');
-    assert.equal(variant.composition.evidence?.rejectedCloudShaders,0,'FINAL_COMPOSITION_REJECTED_SHADER');
-    assert.equal(variant.composition.evidence?.finalShaderSha256?.length,64,'FINAL_SHADER_SHA256_MISSING');
-    for(const stage of REQUIRED_STAGES){
-      const evidence=variant.composition.evidence.finalStageEvidence.stages?.[stage];
-      assert.equal(evidence?.observedMutationCount,evidence?.requiredMutationCount,`FINAL_STAGE_MUTATION_COUNT_FAILURE:${stage}`);
-    }
-  }
-
-  assert.equal(enabled.composition.evidence.finalAblationMode,'NONE','ENABLED_VARIANT_ABLATION_STATE_WRONG');
-  assert.equal(ablated.composition.evidence.finalAblationMode,'V6_FIELDS_ABLATED','ABLATION_VARIANT_STATE_WRONG');
-  assert.notEqual(enabled.composition.evidence.finalShaderSha256,ablated.composition.evidence.finalShaderSha256,'V6_ABLATION_FINAL_SHADER_HASH_IDENTICAL');
-
-  const causality=compareCausality(enabled,ablated);
-  console.log(JSON.stringify({schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',staticEvidence,enabled,ablated,causality},null,2));
-  if(!causality.pass)throw new Error(`FRAMEBUFFER_CAUSALITY_FAILURE ${JSON.stringify({positiveProbeCount:causality.positiveProbeCount,materialProbeCount:causality.materialProbeCount,maxMeanAlphaDelta:causality.maxMeanAlphaDelta,maxCoverageDelta:causality.maxCoverageDelta})}`);
-
-  console.log(JSON.stringify({
-    schema:'AUDRALIA_FINAL_CLOUD_SHADER_CAUSALITY_QUALIFICATION_v1',
-    result:'PASS',
-    policyId:POLICY_ID,
-    enabledFinalShaderSha256:enabled.composition.evidence.finalShaderSha256,
-    ablatedFinalShaderSha256:ablated.composition.evidence.finalShaderSha256,
-    finalStageEvidence:enabled.composition.evidence.finalStageEvidence,
-    causality:Object.freeze({
-      positiveProbeCount:causality.positiveProbeCount,
-      materialProbeCount:causality.materialProbeCount,
-      maxMeanAlphaDelta:causality.maxMeanAlphaDelta,
-      maxCoverageDelta:causality.maxCoverageDelta
-    }),
-    singleVolumetricPassPreserved:true,
-    performanceCeilingsFrozen:true,
-    productionDeploymentPerformed:false
-  },null,2));
+  receipt.staticEvidence=staticCandidate();
+  const chrome=process.env.CHROME_PATH;assert.ok(chrome,'CHROME_PATH_MISSING');
+  browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+  receipt.browserVersion=await browser.version();
+  const phone=await openVariant(browser,{profile:'PHONE'});receipt.phone=verifyPhone(phone);
+  const tabletEnabled=await openVariant(browser,{profile:'TABLET',ablateAdvancedCloud:false}),tabletAblated=await openVariant(browser,{profile:'TABLET',ablateAdvancedCloud:true});
+  receipt.tablet=verifyTablet(tabletEnabled,tabletAblated);receipt.tabletRuntimeEvidence={enabled:tabletEnabled.tablet,ablated:tabletAblated.tablet};receipt.result='PASS';
+}catch(error){receipt.failure=String(error?.stack||error);process.exitCode=1;
 }finally{
-  await browser.close();
+  if(browser)try{await browser.close();}catch(error){receipt.closeFailure=String(error);receipt.result='FAIL_CLOSED';process.exitCode=1;}
+  console.log(JSON.stringify(receipt,null,2));
 }

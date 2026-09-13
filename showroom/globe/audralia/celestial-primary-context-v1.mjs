@@ -3,6 +3,7 @@ const canvas=document.querySelector('[data-h-earth-map-wide-canvas]');
 const runtime=window.__AUDRALIA_TABLET_SINGLE_CONTEXT__;
 if(!(canvas instanceof HTMLCanvasElement))throw new Error('AUDRALIA_PARITY_CELESTIAL_CANVAS_MISSING');
 if(!runtime?.renderer||typeof runtime.getCameraFrame!=='function')throw new Error('AUDRALIA_PARITY_CELESTIAL_RUNTIME_MISSING');
+if(typeof runtime.installCelestialPass!=='function')throw new Error('AUDRALIA_TABLET_FRAME_OWNER_INSTALL_HOOK_REQUIRED');
 const gl=window.__AUDRALIA_PRIMARY_GL__;
 if(!(gl instanceof WebGL2RenderingContext))throw new Error('AUDRALIA_PARITY_CELESTIAL_PRIMARY_CONTEXT_UNAVAILABLE');
 
@@ -43,11 +44,8 @@ void main(){
 function compile(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(`AUDRALIA_PARITY_CELESTIAL_SHADER:${gl.getShaderInfoLog(s)}`);return s;}
 const program=gl.createProgram();const vs=compile(gl.VERTEX_SHADER,VS),fs=compile(gl.FRAGMENT_SHADER,FS);gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(`AUDRALIA_PARITY_CELESTIAL_LINK:${gl.getProgramInfoLog(program)}`);
 const vao=gl.createVertexArray();const U=Object.freeze(Object.fromEntries(['uEye','uForward','uRight','uUp','uSunDir','uMoonA','uMoonB','uAspect','uTanHalfFov'].map(n=>[n,gl.getUniformLocation(program,n)])));
-let queued=false,renderedFrames=0;
-function render(){queued=false;const frame=runtime.getCameraFrame();gl.viewport(0,0,canvas.width,canvas.height);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(program);gl.bindVertexArray(vao);gl.uniform3fv(U.uEye,frame.eye);gl.uniform3fv(U.uForward,frame.forward);gl.uniform3fv(U.uRight,frame.right);gl.uniform3fv(U.uUp,frame.up);gl.uniform3fv(U.uSunDir,SUN);gl.uniform3fv(U.uMoonA,MOON_A);gl.uniform3fv(U.uMoonB,MOON_B);gl.uniform1f(U.uAspect,canvas.width/Math.max(1,canvas.height));gl.uniform1f(U.uTanHalfFov,Math.tan(55*Math.PI/360));gl.drawArrays(gl.TRIANGLES,0,3);gl.bindVertexArray(null);gl.disable(gl.BLEND);gl.depthMask(true);gl.enable(gl.DEPTH_TEST);renderedFrames++;}
-function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>requestAnimationFrame(render));}
-for(const type of ['pointerdown','pointermove','pointerup','pointercancel','wheel','dblclick'])canvas.addEventListener(type,schedule,{passive:true});
-window.addEventListener('keydown',schedule,{passive:true});window.addEventListener('resize',schedule,{passive:true});document.querySelector('[data-fit-world]')?.addEventListener('click',schedule,{passive:true});
-render();
-const evidence=Object.freeze({policyId:POLICY_ID,usesPrimaryWorldCanvas:true,newCanvasCreated:false,newContextRequested:false,uniqueWebGLContextExpected:1,stars:true,sun:true,moons:2,atmosphere:true,getRuntimeEvidence:()=>Object.freeze({renderedFrames})});
+let renderedFrames=0;
+function render(){const frame=runtime.getCameraFrame();gl.viewport(0,0,canvas.width,canvas.height);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(program);gl.bindVertexArray(vao);gl.uniform3fv(U.uEye,frame.eye);gl.uniform3fv(U.uForward,frame.forward);gl.uniform3fv(U.uRight,frame.right);gl.uniform3fv(U.uUp,frame.up);gl.uniform3fv(U.uSunDir,SUN);gl.uniform3fv(U.uMoonA,MOON_A);gl.uniform3fv(U.uMoonB,MOON_B);gl.uniform1f(U.uAspect,canvas.width/Math.max(1,canvas.height));gl.uniform1f(U.uTanHalfFov,Math.tan(55*Math.PI/360));gl.drawArrays(gl.TRIANGLES,0,3);gl.bindVertexArray(null);gl.disable(gl.BLEND);gl.depthMask(true);gl.enable(gl.DEPTH_TEST);renderedFrames++;}
+runtime.installCelestialPass(render);
+const evidence=Object.freeze({policyId:POLICY_ID,usesPrimaryWorldCanvas:true,newCanvasCreated:false,newContextRequested:false,uniqueWebGLContextExpected:1,stars:true,sun:true,moons:2,atmosphere:true,frameOwner:'AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME',compositeOrder:'PRIMARY_WORLD_THEN_CLOUDS_THEN_CELESTIAL',independentAnimationFrameScheduling:false,independentEventFrameOwnership:false,getRuntimeEvidence:()=>Object.freeze({renderedFrames})});
 Object.defineProperty(window,'__AUDRALIA_TABLET_PRIMARY_CONTEXT_CELESTIAL__',{value:evidence,writable:false,configurable:false});

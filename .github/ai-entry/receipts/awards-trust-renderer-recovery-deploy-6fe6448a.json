@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "awards-trust-renderer-recovery-deploy-6fe6448a",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3245,
+  "requestBranch": "ai-dispatch-request-awards-trust-recovery-deploy-6fe6448a",
+  "requestCommit": "4a8bf5bb879487af4e85e09c5a67386d0554706b",
+  "currentMainSha": "6fe6448a8e811500bdefbd14f258caf8ba0d0cbd",
+  "bridgeRunId": "34736844044",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-09-13T04:00:25.574Z"
+}

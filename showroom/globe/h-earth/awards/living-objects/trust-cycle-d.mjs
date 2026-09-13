@@ -55,8 +55,7 @@ void main(){
   n=vec3(n.x,cx*n.y-sx*n.z,sx*n.y+cx*n.z);
   float settleScale=mix(.91,1.0,u_settle);
   p*=u_scale*settleScale;
-  float z=max(.8,p.z+u_cam);
-  gl_Position=vec4(p.x*1.82/u_aspect,p.y*1.82,z-1.05,z);
+  gl_Position=vec4(p.x*.72/u_aspect,p.y*.43,clamp(-p.z*.18,-.85,.85),1.0);
   v_n=normalize(n);
   v_c=a_color;
   v_progress=a_progress;
@@ -74,9 +73,9 @@ void main(){
   vec3 N=normalize(v_n);
   vec3 L=normalize(vec3(-.42,.78,-.48));
   vec3 R=normalize(vec3(.55,.20,.74));
-  float diffuse=.25+.62*max(0.0,dot(N,L));
+  float diffuse=.44+.56*max(0.0,dot(N,L));
   float rim=.16*pow(1.0-max(0.0,dot(N,R)),2.0);
-  vec3 base=v_c.rgb*(diffuse+rim);
+  vec3 base=v_c.rgb*(diffuse+rim)+vec3(.012,.016,.014);
   float reached=smoothstep(v_progress-.025,v_progress+.018,u_energy);
   float front=1.0-smoothstep(.00,.060,abs(u_energy-v_progress));
   float rootRest=u_rest*(1.0-smoothstep(.12,.22,v_progress));
@@ -277,7 +276,7 @@ export function mountTrustLivingObject(root,options={}){
   const gl=canvas.getContext('webgl2',{alpha:true,antialias:true,powerPreference:'high-performance'})||canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'high-performance'});
   if(!gl)throw new Error('TRUST_WEBGL_REQUIRED');
   const p=program(gl),gpu=upload(gl,buildTree());
-  gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.frontFace(gl.CW);gl.cullFace(gl.BACK);bind(gl,p,gpu);
+  gl.useProgram(p);gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);bind(gl,p,gpu);
   const U=name=>gl.getUniformLocation(p,name);
   const uniforms={
     yaw:U('u_yaw'),pitch:U('u_pitch'),scale:U('u_scale'),aspect:U('u_aspect'),cam:U('u_cam'),

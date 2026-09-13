@@ -21,13 +21,19 @@ const TABLET_IMPORT_ID='AUDRALIA_TABLET_CLOUD_RESTORATION_GEN2182_20260912';
 const read=p=>fs.readFileSync(path.join(ROOT,p),'utf8');
 const readBytes=p=>fs.readFileSync(path.join(ROOT,p));
 function gitBlob(bytes){return crypto.createHash('sha1').update(Buffer.from(`blob ${bytes.length}\0`)).update(bytes).digest('hex');}
-
 function count(source,re){return [...source.matchAll(re)].length;}
+function targetFromLatLon(lat,lon){
+  const R=6200,north=[0,.5,-.8660254037844386],meridian=[0,.8660254037844386,.5],east=[1,0,0],cl=Math.cos(lat);
+  const direction=[0,1,2].map(i=>east[i]*cl*Math.sin(lon)+meridian[i]*cl*Math.cos(lon)+north[i]*Math.sin(lat));
+  const length=Math.hypot(...direction)||1;for(let i=0;i<3;i++)direction[i]/=length;
+  const angle=Math.acos(Math.max(-1,Math.min(1,direction[1]))),sine=Math.sin(angle);
+  return {targetU:Math.abs(sine)<1e-9?0:R*angle*direction[0]/sine,targetV:Math.abs(sine)<1e-9?0:R*angle*direction[2]/sine,distance:5000,pitch:1.08,yaw:0};
+}
+const TABLET_CAUSAL_PROBE=Object.freeze(targetFromLatLon(.593412,-1.274090));
 
 function staticCandidate(){
   const index=read(INDEX),phone=readBytes(PHONE_FAP),tablet=read(TABLET_PASS),runtime=read(TABLET_RUNTIME);
   assert.equal(gitBlob(phone),PHONE_FAP_MAIN_BLOB,'PHONE_FAP_PRODUCT_BYTE_DRIFT');
-
   assert.match(index,new RegExp(`audralia-tablet-single-context-clouds-runtime\\.mjs\\?cb=${TABLET_IMPORT_ID}`),'TABLET_LOCAL_RUNTIME_BINDING_MISSING');
   assert.match(index,/await import\('\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/weather-presentation-reconciliation\/app\.mjs\?cb=EXACT_24057'\)/,'PHONE_NONCONSTRAINED_RUNTIME_PATH_DRIFT');
   assert.match(index,/await import\('\/inspection\/audralia-24057-exact\/snapshot\/showroom\/globe\/audralia\/fap1-weather-presentation-v1\.mjs\?cb=EXACT_24057'\)/,'PHONE_SNAPSHOT_FAP_STARTUP_DRIFT');
@@ -53,21 +59,11 @@ function staticCandidate(){
   assert.match(runtime,/startupSequence\.push\('CLOUD_PASS_CONSTRUCTED'\)/,'TABLET_CLOUD_CONSTRUCT_MARKER_MISSING');
   assert.match(runtime,/worldRenderedBeforeCloudPass:worldBeforeCloud/,'TABLET_WORLD_FIRST_INVARIANT_MISSING');
   const init=runtime.slice(runtime.indexOf('export async function initializeAudraliaTabletSingleContextClouds'));
-  const worldDraw=init.indexOf('renderer.render();');
-  const paint=init.indexOf('await nextPaint();');
-  const cloudConstruct=init.indexOf('createAudraliaTabletCloudPass({gl:constructed.primaryGl,worldCanvas:canvas})');
+  const worldDraw=init.indexOf('renderer.render();'),paint=init.indexOf('await nextPaint();'),cloudConstruct=init.indexOf('createAudraliaTabletCloudPass({gl:constructed.primaryGl,worldCanvas:canvas})');
   assert.ok(worldDraw>=0&&paint>worldDraw&&cloudConstruct>paint,'TABLET_SOURCE_WORLD_FIRST_ORDER_FAILURE');
   assert.doesNotMatch(runtime,/createElement\(\s*['"]canvas['"]\s*\)/,'TABLET_RUNTIME_NEW_CANVAS');
 
-  return Object.freeze({
-    phoneProductBlob:PHONE_FAP_MAIN_BLOB,
-    phoneDisposition:'KNOWN_GOOD_REFERENCE_REGRESSION_ONLY',
-    tabletDisposition:'CONSTRAINED_REPAIR_TARGET',
-    tabletAdvancedSystems:Object.freeze({fronts:5,jets:4,cyclones:2,total:11}),
-    tabletBudgets:Object.freeze({restSteps:8,interactionSteps:6,maximumPrimaryRenderPixels:921600}),
-    tabletRuntimeSchema:TABLET_RUNTIME_SCHEMA,
-    physicalTabletStabilityClaimed:false
-  });
+  return Object.freeze({phoneProductBlob:PHONE_FAP_MAIN_BLOB,phoneDisposition:'KNOWN_GOOD_REFERENCE_REGRESSION_ONLY',tabletDisposition:'CONSTRAINED_REPAIR_TARGET',tabletAdvancedSystems:Object.freeze({fronts:5,jets:4,cyclones:2,total:11}),tabletBudgets:Object.freeze({restSteps:8,interactionSteps:6,maximumPrimaryRenderPixels:921600}),tabletRuntimeSchema:TABLET_RUNTIME_SCHEMA,tabletCausalProbe:TABLET_CAUSAL_PROBE,physicalTabletStabilityClaimed:false});
 }
 
 function installRuntimeAudit({fixedTime,ablateAdvancedCloud,forceTouch}){
@@ -81,11 +77,7 @@ function installRuntimeAudit({fixedTime,ablateAdvancedCloud,forceTouch}){
   const originalGetContext=HTMLCanvasElement.prototype.getContext;
   HTMLCanvasElement.prototype.getContext=function(type,attributes){
     const gl=originalGetContext.call(this,type,attributes);
-    if(gl&&/^webgl/.test(type)){
-      audit.contextRequests++;
-      if(!seenContexts.has(gl)){seenContexts.add(gl);audit.uniqueContexts++;}
-      globalThis.__AUDRALIA_QUALIFICATION_GL__=gl;
-    }
+    if(gl&&/^webgl/.test(type)){audit.contextRequests++;if(!seenContexts.has(gl)){seenContexts.add(gl);audit.uniqueContexts++;}globalThis.__AUDRALIA_QUALIFICATION_GL__=gl;}
     return gl;
   };
 
@@ -93,31 +85,20 @@ function installRuntimeAudit({fixedTime,ablateAdvancedCloud,forceTouch}){
   const nativeShaderSource=P.shaderSource,nativeAttachShader=P.attachShader,nativeDrawArrays=P.drawArrays;
   const cloudShaders=new WeakSet(),cloudPrograms=new WeakSet();
   const summarize=(gl)=>{
-    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,total=width*height;
-    const pixels=new Uint8Array(total*4);gl.finish();gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+    const width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,total=width*height,pixels=new Uint8Array(total*4);gl.finish();gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
     let checksum=2166136261>>>0,alpha=0,rgb=0,nonzero=0;
-    for(let i=0;i<pixels.length;i+=4){
-      const r=pixels[i],g=pixels[i+1],b=pixels[i+2],a=pixels[i+3];
-      checksum=Math.imul(checksum^r,16777619)>>>0;checksum=Math.imul(checksum^g,16777619)>>>0;checksum=Math.imul(checksum^b,16777619)>>>0;checksum=Math.imul(checksum^a,16777619)>>>0;
-      alpha+=a/255;rgb+=(r+g+b)/(3*255);if(r||g||b||a)nonzero++;
-    }
+    for(let i=0;i<pixels.length;i+=4){const r=pixels[i],g=pixels[i+1],b=pixels[i+2],a=pixels[i+3];checksum=Math.imul(checksum^r,16777619)>>>0;checksum=Math.imul(checksum^g,16777619)>>>0;checksum=Math.imul(checksum^b,16777619)>>>0;checksum=Math.imul(checksum^a,16777619)>>>0;alpha+=a/255;rgb+=(r+g+b)/(3*255);if(r||g||b||a)nonzero++;}
     return {width,height,checksum,meanAlpha:alpha/Math.max(1,total),meanRgb:rgb/Math.max(1,total),nonzeroFraction:nonzero/Math.max(1,total)};
   };
-  const changedPixels=(gl,before)=>{
-    const total=gl.drawingBufferWidth*gl.drawingBufferHeight,pixels=new Uint8Array(total*4);gl.finish();gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-    let changed=0;for(let i=0,p=0;i<pixels.length;i+=4,p++)if(pixels[i]!==before[i]||pixels[i+1]!==before[i+1]||pixels[i+2]!==before[i+2]||pixels[i+3]!==before[i+3])changed++;
-    return changed;
-  };
+  const readBytes=(gl)=>{const total=gl.drawingBufferWidth*gl.drawingBufferHeight,pixels=new Uint8Array(total*4);gl.finish();gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,pixels);return pixels;};
+  const changedPixels=(after,before)=>{let changed=0;for(let i=0;i<after.length;i+=4)if(after[i]!==before[i]||after[i+1]!==before[i+1]||after[i+2]!==before[i+2]||after[i+3]!==before[i+3])changed++;return changed;};
 
   P.shaderSource=function(shader,source){
     let submitted=source;
     if(typeof source==='string'&&source.includes('vec3 advancedCloudField(vec3 p)')){
       cloudShaders.add(shader);audit.advancedShaderSubmissions++;
       const needle='vec3 cloud=advancedCloudField(p);';
-      if(ablateAdvancedCloud){
-        const occurrences=source.split(needle).length-1;
-        if(occurrences!==1){audit.failures.push(`ABLATION_CALL_COUNT_${occurrences}`);}else{submitted=source.replace(needle,'vec3 cloud=vec3(0.0);');audit.ablationApplied=true;}
-      }
+      if(ablateAdvancedCloud){const occurrences=source.split(needle).length-1;if(occurrences!==1)audit.failures.push(`ABLATION_CALL_COUNT_${occurrences}`);else{submitted=source.replace(needle,'vec3 cloud=vec3(0.0);');audit.ablationApplied=true;}}
     }
     return nativeShaderSource.call(this,shader,submitted);
   };
@@ -125,61 +106,34 @@ function installRuntimeAudit({fixedTime,ablateAdvancedCloud,forceTouch}){
   P.drawArrays=function(...args){
     const program=this.getParameter(this.CURRENT_PROGRAM),relevant=cloudPrograms.has(program);
     let beforeBytes=null,beforeSummary=null;
-    if(relevant){
-      const width=this.drawingBufferWidth,height=this.drawingBufferHeight,total=width*height;
-      beforeBytes=new Uint8Array(total*4);this.finish();this.readPixels(0,0,width,height,this.RGBA,this.UNSIGNED_BYTE,beforeBytes);beforeSummary=summarize(this);
-    }
+    if(relevant){beforeBytes=readBytes(this);beforeSummary=summarize(this);}
     const result=nativeDrawArrays.apply(this,args);
-    if(relevant){audit.cloudDraws++;const afterSummary=summarize(this);audit.captures.push({before:beforeSummary,after:afterSummary,changedPixels:changedPixels(this,beforeBytes)});}
+    if(relevant){audit.cloudDraws++;const afterBytes=readBytes(this),afterSummary=summarize(this);audit.captures.push({before:beforeSummary,after:afterSummary,changedPixels:changedPixels(afterBytes,beforeBytes)});}
     return result;
   };
   globalThis.__AUDRALIA_GEN2182_AUDIT__=audit;
 }
 
 async function openVariant(browser,{profile,ablateAdvancedCloud=false}){
-  const page=await browser.newPage();
-  const errors=[];page.on('pageerror',e=>errors.push(String(e?.stack||e)));
+  const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e?.stack||e)));
   const isTablet=profile==='TABLET';
   await page.setViewport(isTablet?{width:1280,height:800,deviceScaleFactor:2,isMobile:true,hasTouch:true}:{width:720,height:1280,deviceScaleFactor:1,isMobile:true,hasTouch:true});
   await page.evaluateOnNewDocument(installRuntimeAudit,{fixedTime:FIXED_TIME,ablateAdvancedCloud,forceTouch:true});
   try{
     await page.goto(BASE+'/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:60000});
-    await page.waitForFunction(()=>{
-      const startup=window.__AUDRALIA_TABLET_STARTUP_STABILITY__;
-      if(startup?.status==='FAILED')throw new Error(`STARTUP_FAILED:${startup.error}`);
-      return startup?.status==='COMPLETE';
-    },{timeout:120000});
+    await page.waitForFunction(()=>{const startup=window.__AUDRALIA_TABLET_STARTUP_STABILITY__;if(startup?.status==='FAILED')throw new Error(`STARTUP_FAILED:${startup.error}`);return startup?.status==='COMPLETE';},{timeout:120000});
+    if(isTablet){
+      await page.evaluate(probe=>{
+        const runtime=window.__AUDRALIA_TABLET_SINGLE_CONTEXT__;
+        if(!runtime?.renderer?.state||!runtime?.clouds?.render||typeof runtime.getCameraFrame!=='function')throw new Error('TABLET_CAUSAL_PROBE_CONTROL_MISSING');
+        Object.assign(runtime.renderer.state,probe);runtime.renderer.render();runtime.clouds.endInteraction();runtime.clouds.render(runtime.getCameraFrame());
+      },TABLET_CAUSAL_PROBE);
+    }
     const result=await page.evaluate(profile=>{
-      const startup=window.__AUDRALIA_TABLET_STARTUP_STABILITY__;
-      const budget=window.__AUDRALIA_RENDER_PIXEL_BUDGET__;
-      const integration=window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__;
-      const audit=window.__AUDRALIA_GEN2182_AUDIT__;
-      const tablet=window.__AUDRALIA_TABLET_SINGLE_CONTEXT__||null;
-      const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__||null;
-      return {
-        profile,startup,budget,integration,audit,
-        canvasCount:document.querySelectorAll('canvas').length,
-        worldCanvasCount:document.querySelectorAll('[data-h-earth-map-wide-canvas]').length,
-        status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
-        tablet:tablet?{
-          schema:tablet.schema,
-          renderingMode:tablet.renderingMode,
-          worldRenderedBeforeCloudPass:tablet.worldRenderedBeforeCloudPass,
-          startupSequence:tablet.startupSequence,
-          invariants:tablet.invariants,
-          cloudEvidence:tablet.getCloudEvidence?.(),
-          cloudRuntime:tablet.clouds?.getRuntime?.()
-        }:null,
-        phone:profile==='PHONE'?{
-          schema:proof?.schema||null,
-          runtimePass:proof?.getRuntime?.()?.invariants?.pass===true,
-          runtimeFailures:proof?.getRuntime?.()?.invariants?.failures||[],
-          hasCameraFrame:typeof proof?.getCameraFrame==='function'
-        }:null
-      };
+      const startup=window.__AUDRALIA_TABLET_STARTUP_STABILITY__,budget=window.__AUDRALIA_RENDER_PIXEL_BUDGET__,integration=window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,audit=window.__AUDRALIA_GEN2182_AUDIT__,tablet=window.__AUDRALIA_TABLET_SINGLE_CONTEXT__||null,proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__||null;
+      return {profile,startup,budget,integration,audit,canvasCount:document.querySelectorAll('canvas').length,worldCanvasCount:document.querySelectorAll('[data-h-earth-map-wide-canvas]').length,status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,tablet:tablet?{schema:tablet.schema,renderingMode:tablet.renderingMode,worldRenderedBeforeCloudPass:tablet.worldRenderedBeforeCloudPass,startupSequence:tablet.startupSequence,invariants:tablet.invariants,cloudEvidence:tablet.getCloudEvidence?.(),cloudRuntime:tablet.clouds?.getRuntime?.()}:null,phone:profile==='PHONE'?{schema:proof?.schema||null,runtimePass:proof?.getRuntime?.()?.invariants?.pass===true,runtimeFailures:proof?.getRuntime?.()?.invariants?.failures||[],hasCameraFrame:typeof proof?.getCameraFrame==='function'}:null};
     },profile);
-    result.errors=errors;
-    return result;
+    result.errors=errors;return result;
   }finally{await page.close();}
 }
 
@@ -213,18 +167,17 @@ function verifyTablet(enabled,ablated){
     assert.equal(v.tablet?.cloudEvidence?.totalAdvancedSystemInstances,11,`TABLET_${label.toUpperCase()}_ADVANCED_SYSTEM_COUNT`);
     assert.equal(v.audit?.uniqueContexts,1,`TABLET_${label.toUpperCase()}_AUDIT_UNIQUE_CONTEXTS`);
     assert.ok(v.audit?.advancedShaderSubmissions>=1,`TABLET_${label.toUpperCase()}_ADVANCED_SHADER_NOT_SUBMITTED`);
-    assert.ok(v.audit?.cloudDraws>=1,`TABLET_${label.toUpperCase()}_ADVANCED_DRAW_MISSING`);
+    assert.ok(v.audit?.cloudDraws>=2,`TABLET_${label.toUpperCase()}_ADVANCED_DRAW_MISSING`);
     assert.equal(v.audit?.failures?.length,0,`TABLET_${label.toUpperCase()}_AUDIT_FAILURE`);
   }
   assert.equal(enabled.audit.ablationApplied,false,'TABLET_ENABLED_UNEXPECTED_ABLATION');
   assert.equal(ablated.audit.ablationApplied,true,'TABLET_ABLATION_NOT_APPLIED');
-  const on=enabled.audit.captures[0],off=ablated.audit.captures[0];
-  assert.ok(on&&off,'TABLET_FRAMEBUFFER_CAPTURE_MISSING');
+  const on=[...enabled.audit.captures].sort((a,b)=>b.changedPixels-a.changedPixels)[0],offMax=Math.max(...ablated.audit.captures.map(c=>c.changedPixels));
+  assert.ok(on,'TABLET_FRAMEBUFFER_CAPTURE_MISSING');
   assert.ok(on.changedPixels>0,'TABLET_ADVANCED_CLOUD_VISIBLE_CONTRIBUTION_FAILURE');
-  assert.equal(off.changedPixels,0,'TABLET_ABLATION_CHANGED_FRAMEBUFFER');
+  assert.equal(offMax,0,'TABLET_ABLATION_CHANGED_FRAMEBUFFER');
   assert.notEqual(on.before.checksum,on.after.checksum,'TABLET_ENABLED_PIXEL_HASH_UNCHANGED');
-  assert.equal(off.before.checksum,off.after.checksum,'TABLET_ABLATED_PIXEL_HASH_CHANGED');
-  return Object.freeze({pass:true,enabledChangedPixels:on.changedPixels,ablatedChangedPixels:off.changedPixels,enabledBeforeChecksum:on.before.checksum,enabledAfterChecksum:on.after.checksum,physicalTabletStabilityClaimed:false});
+  return Object.freeze({pass:true,enabledChangedPixels:on.changedPixels,ablatedMaxChangedPixels:offMax,enabledBeforeChecksum:on.before.checksum,enabledAfterChecksum:on.after.checksum,causalProbe:TABLET_CAUSAL_PROBE,physicalTabletStabilityClaimed:false});
 }
 
 const receipt={schema:SCHEMA,result:'FAIL_CLOSED',mechanicalOnly:true,physicalTabletStabilityClaimed:false,ownerPhysicalDeviceAcceptanceRequiredBeforePublication:true};
@@ -234,13 +187,9 @@ try{
   const chrome=process.env.CHROME_PATH;assert.ok(chrome,'CHROME_PATH_MISSING');
   browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
   receipt.browserVersion=await browser.version();
-  const phone=await openVariant(browser,{profile:'PHONE'});
-  receipt.phone=verifyPhone(phone);
-  const tabletEnabled=await openVariant(browser,{profile:'TABLET',ablateAdvancedCloud:false});
-  const tabletAblated=await openVariant(browser,{profile:'TABLET',ablateAdvancedCloud:true});
-  receipt.tablet=verifyTablet(tabletEnabled,tabletAblated);
-  receipt.tabletRuntimeEvidence={enabled:tabletEnabled.tablet,ablated:tabletAblated.tablet};
-  receipt.result='PASS';
+  const phone=await openVariant(browser,{profile:'PHONE'});receipt.phone=verifyPhone(phone);
+  const tabletEnabled=await openVariant(browser,{profile:'TABLET',ablateAdvancedCloud:false}),tabletAblated=await openVariant(browser,{profile:'TABLET',ablateAdvancedCloud:true});
+  receipt.tablet=verifyTablet(tabletEnabled,tabletAblated);receipt.tabletRuntimeEvidence={enabled:tabletEnabled.tablet,ablated:tabletAblated.tablet};receipt.result='PASS';
 }catch(error){receipt.failure=String(error?.stack||error);process.exitCode=1;
 }finally{
   if(browser)try{await browser.close();}catch(error){receipt.closeFailure=String(error);receipt.result='FAIL_CLOSED';process.exitCode=1;}

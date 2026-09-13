@@ -8074,42 +8074,60 @@
     "d6e73040bb3435dc76311beef150c0c1377457ca94e8d8b1f4909b11cd42a38e": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
-          "lockGeneration": 2183,
+          "governingHead": "46675fcc67c989489ce8b5fd43b123881d5d8dd8",
+          "lockGeneration": 2184,
           "lockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:ANCHOR_ACCEPTANCE:V1",
-          "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_001",
-          "procedureLocatorDigest": "b2e4979c42930f7eaa9c5ecff3869190f3a2e7a5816858bd41d567047e044761",
-          "requestDigest": "47e42df5a9575e48309051b73d4c26dbd5c1d5e62b9ac11fa13004ebfafeb425",
+          "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_S2",
+          "procedureLocatorDigest": "ddfb146dd4801698ceeb36e5d32e21628de4f7d5f37c4d51fe129dfd8b99be18",
+          "requestDigest": "ed794377b3a565f5a8c109cc6c751f14ce7460c6898e2fe382eb3b52eba1c60a",
           "scopeHash": "d6e73040bb3435dc76311beef150c0c1377457ca94e8d8b1f4909b11cd42a38e"
         },
-        "bindingDigest": "9ab41737ac251f5a0bdf6be1a9343a87f0e134fefdccfa500e751aac93442be8",
+        "bindingDigest": "91a862414bd514ea0b59baa833f624f00f27c648fb5696939d85d8806159e5d6",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "13bbbf314add7e6352ff7beb674ec47c51f6dff189146eb1b8092368c40dc199",
-          "commentId": 5650499615,
+          "commentBodySha256": "5e9465bebfcbfb6059ef4253763aed7b3f0c9cedfe1bc1ade8179eca633208f2",
+          "commentId": 5650606533,
           "eventAction": "created",
           "eventName": "issue_comment",
           "issueNumber": 3235,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 34734391095,
-          "workflowSha": "f628feae90cc8c2be4201e826a0856c0d3035b01"
+          "workflowRunId": 34734858530,
+          "workflowSha": "46675fcc67c989489ce8b5fd43b123881d5d8dd8"
         },
-        "lineageAnchorCommitSha": "39becfc8ae4f16e0388d06b4b40eb72f54ceb23f",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "788ded8ad94071f7a87b6971597c9bfcdd59822d",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
-      "lockGeneration": 2183,
+      "governingHead": "46675fcc67c989489ce8b5fd43b123881d5d8dd8",
+      "lockGeneration": 2184,
       "lockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:ANCHOR_ACCEPTANCE:V1",
-      "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_001",
-      "procedureLocatorDigest": "b2e4979c42930f7eaa9c5ecff3869190f3a2e7a5816858bd41d567047e044761",
+      "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_S2",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+        "lockGeneration": 2183,
+        "lockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:ANCHOR_ACCEPTANCE:V1",
+        "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_001",
+        "preservedEvidenceRefs": [
+          "issue:3235",
+          "pr:3236",
+          "candidate:094e7b75c5268260046d05cf767fb999c8f2a31b",
+          "qualification-run:34730730395",
+          "differential:CARRY_FORWARD_APPROVED_COMPLETE_DISJOINT_CHANGE_PROVEN"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_TABLET_CLOUD_ANCHOR_HEAD_ADVANCE_F628FEAE_TO_46675FCC_V3"
+      },
+      "procedureLocatorDigest": "ddfb146dd4801698ceeb36e5d32e21628de4f7d5f37c4d51fe129dfd8b99be18",
       "released": false,
-      "requestDigest": "47e42df5a9575e48309051b73d4c26dbd5c1d5e62b9ac11fa13004ebfafeb425",
+      "requestDigest": "ed794377b3a565f5a8c109cc6c751f14ce7460c6898e2fe382eb3b52eba1c60a",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d6e73040bb3435dc76311beef150c0c1377457ca94e8d8b1f4909b11cd42a38e",
       "state": "ADMITTED_LOCKED"
@@ -9678,7 +9696,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2183,
+  "lockGeneration": 2184,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -51882,6 +51900,68 @@
       "scopeHash": "2be09d668e576d4d0ad22ad9ca3638e71f14f127e93e2acff929cfe468f45f0d",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+          "lockGeneration": 2183,
+          "lockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:ANCHOR_ACCEPTANCE:V1",
+          "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_001",
+          "procedureLocatorDigest": "b2e4979c42930f7eaa9c5ecff3869190f3a2e7a5816858bd41d567047e044761",
+          "requestDigest": "47e42df5a9575e48309051b73d4c26dbd5c1d5e62b9ac11fa13004ebfafeb425",
+          "scopeHash": "d6e73040bb3435dc76311beef150c0c1377457ca94e8d8b1f4909b11cd42a38e"
+        },
+        "bindingDigest": "9ab41737ac251f5a0bdf6be1a9343a87f0e134fefdccfa500e751aac93442be8",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "13bbbf314add7e6352ff7beb674ec47c51f6dff189146eb1b8092368c40dc199",
+          "commentId": 5650499615,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3235,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34734391095,
+          "workflowSha": "f628feae90cc8c2be4201e826a0856c0d3035b01"
+        },
+        "lineageAnchorCommitSha": "39becfc8ae4f16e0388d06b4b40eb72f54ceb23f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+      "lockGeneration": 2183,
+      "lockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:ANCHOR_ACCEPTANCE:V1",
+      "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_001",
+      "procedureLocatorDigest": "b2e4979c42930f7eaa9c5ecff3869190f3a2e7a5816858bd41d567047e044761",
+      "released": true,
+      "requestDigest": "47e42df5a9575e48309051b73d4c26dbd5c1d5e62b9ac11fa13004ebfafeb425",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d6e73040bb3435dc76311beef150c0c1377457ca94e8d8b1f4909b11cd42a38e",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:3235",
+          "pr:3236",
+          "candidate:094e7b75c5268260046d05cf767fb999c8f2a31b",
+          "qualification-run:34730730395",
+          "differential:CARRY_FORWARD_APPROVED_COMPLETE_DISJOINT_CHANGE_PROVEN"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "46675fcc67c989489ce8b5fd43b123881d5d8dd8",
+        "successorLockGeneration": 2184,
+        "successorLockScope": "H_EARTH:AUDRALIA:TABLET_CLOUD_RESTORATION:ANCHOR_ACCEPTANCE:V1",
+        "successorOperationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_S2",
+        "transitionId": "AUDRALIA_TABLET_CLOUD_ANCHOR_HEAD_ADVANCE_F628FEAE_TO_46675FCC_V3"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -85,6 +85,7 @@
         "showroom/globe/audralia/diagnostic/index.inspection.lane.js",
         "showroom/globe/audralia/fap1-weather-presentation-v1.mjs",
         "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs",
+        "showroom/globe/audralia/celestial-primary-context-v1.mjs",
         "showroom/globe/audralia/index.html",
         "showroom/globe/audralia/index.css",
         "tools/audralia-weather-presentation-reconciliation-ci.mjs",

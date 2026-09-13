@@ -7850,49 +7850,6 @@
       "scopeHash": "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27",
       "state": "ADMITTED_LOCKED"
     },
-    "cd5258971ed31f1571f72ed31cf9c264ab76ee12e42c218fd8dad73ff2587c57": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "98b9390bd52a1469731ea882b3cc8bf427f3169a",
-          "lockGeneration": 2201,
-          "lockScope": "CONTROL_PLANE:SYSTEM_CONTINUITY:FINAL_GAP_RECONCILIATION:V1",
-          "operationId": "CONTROL_PLANE_FINAL_GAP_RECONCILIATION_20260913_001",
-          "procedureLocatorDigest": "e7cf1a58dfbde58af845fc72d99a49988f584a852ba46c433f05fb2fbcd2134d",
-          "requestDigest": "7a9c38943e78abf614c59895c54e7bf4495a4ba98328270b1210e10c2091a846",
-          "scopeHash": "cd5258971ed31f1571f72ed31cf9c264ab76ee12e42c218fd8dad73ff2587c57"
-        },
-        "bindingDigest": "3b8f090266b960ffbf8b4d4a6d914cdc67a53f6c0a0fc9ff0b6b9e24c1dd5ae2",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "2ed8ddd96fbb80a2bc8f093064e2102724bc6055b0bc4ce577185803c380c72e",
-          "commentId": 5655804790,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3288,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34779921425,
-          "workflowSha": "98b9390bd52a1469731ea882b3cc8bf427f3169a"
-        },
-        "lineageAnchorCommitSha": "e8c77a3200907754245afa0a65cbcafbb5479c51",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "98b9390bd52a1469731ea882b3cc8bf427f3169a",
-      "lockGeneration": 2201,
-      "lockScope": "CONTROL_PLANE:SYSTEM_CONTINUITY:FINAL_GAP_RECONCILIATION:V1",
-      "operationId": "CONTROL_PLANE_FINAL_GAP_RECONCILIATION_20260913_001",
-      "procedureLocatorDigest": "e7cf1a58dfbde58af845fc72d99a49988f584a852ba46c433f05fb2fbcd2134d",
-      "released": false,
-      "requestDigest": "7a9c38943e78abf614c59895c54e7bf4495a4ba98328270b1210e10c2091a846",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "cd5258971ed31f1571f72ed31cf9c264ab76ee12e42c218fd8dad73ff2587c57",
-      "state": "ADMITTED_LOCKED"
-    },
     "cdff2f07b40bfaf3f197d945cc27879d6deaec109d02d303c74987ebcc355a10": {
       "governingHead": "651f726ebc07ef16a33a813fc44d88f9cd42c662",
       "lockGeneration": 189,
@@ -52868,6 +52825,50 @@
       "scopeHash": "84dfe31c59905dfa7319cb405b950a451531005f499021feeac229e591023eb9",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "98b9390bd52a1469731ea882b3cc8bf427f3169a",
+          "lockGeneration": 2201,
+          "lockScope": "CONTROL_PLANE:SYSTEM_CONTINUITY:FINAL_GAP_RECONCILIATION:V1",
+          "operationId": "CONTROL_PLANE_FINAL_GAP_RECONCILIATION_20260913_001",
+          "procedureLocatorDigest": "e7cf1a58dfbde58af845fc72d99a49988f584a852ba46c433f05fb2fbcd2134d",
+          "requestDigest": "7a9c38943e78abf614c59895c54e7bf4495a4ba98328270b1210e10c2091a846",
+          "scopeHash": "cd5258971ed31f1571f72ed31cf9c264ab76ee12e42c218fd8dad73ff2587c57"
+        },
+        "bindingDigest": "3b8f090266b960ffbf8b4d4a6d914cdc67a53f6c0a0fc9ff0b6b9e24c1dd5ae2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "2ed8ddd96fbb80a2bc8f093064e2102724bc6055b0bc4ce577185803c380c72e",
+          "commentId": 5655804790,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3288,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34779921425,
+          "workflowSha": "98b9390bd52a1469731ea882b3cc8bf427f3169a"
+        },
+        "lineageAnchorCommitSha": "e8c77a3200907754245afa0a65cbcafbb5479c51",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "98b9390bd52a1469731ea882b3cc8bf427f3169a",
+      "lockGeneration": 2201,
+      "lockScope": "CONTROL_PLANE:SYSTEM_CONTINUITY:FINAL_GAP_RECONCILIATION:V1",
+      "operationId": "CONTROL_PLANE_FINAL_GAP_RECONCILIATION_20260913_001",
+      "procedureLocatorDigest": "e7cf1a58dfbde58af845fc72d99a49988f584a852ba46c433f05fb2fbcd2134d",
+      "released": true,
+      "requestDigest": "7a9c38943e78abf614c59895c54e7bf4495a4ba98328270b1210e10c2091a846",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cd5258971ed31f1571f72ed31cf9c264ab76ee12e42c218fd8dad73ff2587c57",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

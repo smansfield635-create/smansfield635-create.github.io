@@ -7647,68 +7647,6 @@
       "scopeHash": "ca2a3443af8f938ae9a4b50b2ec2ab1c3be6e3abe7c942914f97f0add03f32fb",
       "state": "ADMITTED_LOCKED"
     },
-    "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "46675fcc67c989489ce8b5fd43b123881d5d8dd8",
-          "lockGeneration": 2185,
-          "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
-          "operationId": "AWARDS_TRUST_FRONT_FACE_VISIBILITY_CORRECTION_20260912_002",
-          "procedureLocatorDigest": "5a325dcf6e30acf026822df44c5cb026ac9e1acc761c0e9e406dd6aaaa474327",
-          "requestDigest": "871781b56e5357625a2f2b5c4b0e51eaca04f71558b620be142e64d2327dcdf6",
-          "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7"
-        },
-        "bindingDigest": "ea486aa7658260180aee56b5c9d4a0024691ac263f2c6b8620a97761a8ec0983",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "98bf77f5d23410326663a75440ee0caf6c16b547f7ed6d75ec949050d97716fc",
-          "commentId": 5650739688,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3233,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34735445341,
-          "workflowSha": "46675fcc67c989489ce8b5fd43b123881d5d8dd8"
-        },
-        "lineageAnchorCommitSha": "e71a0e2ff084d696f90f04226d71f0477c29c39b",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "46675fcc67c989489ce8b5fd43b123881d5d8dd8",
-      "lockGeneration": 2185,
-      "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
-      "operationId": "AWARDS_TRUST_FRONT_FACE_VISIBILITY_CORRECTION_20260912_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
-        "lockGeneration": 2180,
-        "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
-        "operationId": "AWARDS_TRUST_ANCIENT_ENERGY_TREE_3D_20260912_001",
-        "preservedEvidenceRefs": [
-          "issue:3233",
-          "pr:3234",
-          "candidate:ee3f353dd34bca203540b3f2fd4654331f37c74a",
-          "published-main:46675fcc67c989489ce8b5fd43b123881d5d8dd8",
-          "owner-tablet-live-defect-screenshot:20260912",
-          "failed-successor-attempt:5650727804"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AWARDS_TRUST_FRONT_FACE_VISIBILITY_SUCCESSOR_20260912_002"
-      },
-      "procedureLocatorDigest": "5a325dcf6e30acf026822df44c5cb026ac9e1acc761c0e9e406dd6aaaa474327",
-      "released": false,
-      "requestDigest": "871781b56e5357625a2f2b5c4b0e51eaca04f71558b620be142e64d2327dcdf6",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7",
-      "state": "ADMITTED_LOCKED"
-    },
     "caa45ac0f797a0d80e17db8bd6f8436be8a4786b4a125e2c59c888701d1c02a9": {
       "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
       "independentAuthorityProvenance": {
@@ -52044,6 +51982,69 @@
         "transitionId": "AWARDS_TRUST_FRONT_FACE_VISIBILITY_SUCCESSOR_20260912_002"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "46675fcc67c989489ce8b5fd43b123881d5d8dd8",
+          "lockGeneration": 2185,
+          "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+          "operationId": "AWARDS_TRUST_FRONT_FACE_VISIBILITY_CORRECTION_20260912_002",
+          "procedureLocatorDigest": "5a325dcf6e30acf026822df44c5cb026ac9e1acc761c0e9e406dd6aaaa474327",
+          "requestDigest": "871781b56e5357625a2f2b5c4b0e51eaca04f71558b620be142e64d2327dcdf6",
+          "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7"
+        },
+        "bindingDigest": "ea486aa7658260180aee56b5c9d4a0024691ac263f2c6b8620a97761a8ec0983",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "98bf77f5d23410326663a75440ee0caf6c16b547f7ed6d75ec949050d97716fc",
+          "commentId": 5650739688,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3233,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34735445341,
+          "workflowSha": "46675fcc67c989489ce8b5fd43b123881d5d8dd8"
+        },
+        "lineageAnchorCommitSha": "e71a0e2ff084d696f90f04226d71f0477c29c39b",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "46675fcc67c989489ce8b5fd43b123881d5d8dd8",
+      "lockGeneration": 2185,
+      "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+      "operationId": "AWARDS_TRUST_FRONT_FACE_VISIBILITY_CORRECTION_20260912_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+        "lockGeneration": 2180,
+        "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+        "operationId": "AWARDS_TRUST_ANCIENT_ENERGY_TREE_3D_20260912_001",
+        "preservedEvidenceRefs": [
+          "issue:3233",
+          "pr:3234",
+          "candidate:ee3f353dd34bca203540b3f2fd4654331f37c74a",
+          "published-main:46675fcc67c989489ce8b5fd43b123881d5d8dd8",
+          "owner-tablet-live-defect-screenshot:20260912",
+          "failed-successor-attempt:5650727804"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_TRUST_FRONT_FACE_VISIBILITY_SUCCESSOR_20260912_002"
+      },
+      "procedureLocatorDigest": "5a325dcf6e30acf026822df44c5cb026ac9e1acc761c0e9e406dd6aaaa474327",
+      "released": true,
+      "requestDigest": "871781b56e5357625a2f2b5c4b0e51eaca04f71558b620be142e64d2327dcdf6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

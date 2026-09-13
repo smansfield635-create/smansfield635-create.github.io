@@ -1,0 +1,68 @@
+{
+  "schema": "POST_GEN2003_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_CONTRACT_v1",
+  "operationId": "MIRRORLAND_POST_GEN2003_CANOPY_VOID_FEASIBILITY_DIAGNOSTIC_20260908_001",
+  "lockGeneration": 2006,
+  "governingHead": "691339e6becbaf724e4ac28bd4cd9c1834254d83",
+  "gen2001Foundation": "fc466a0d08adbaeb9672d4618f670105cf1af87c",
+  "gen2002NegativeCandidate": "3a5dd83b936c7041257e73a3ebe30c306a7516f5",
+  "gen2003NegativeCandidate": "33b8878ad6b6fd5fad942138a26f48881187bfc7",
+  "immutableV2ToolingHead": "834038c23711c3eed83dc21964027bd515852b51",
+  "ahbkReferenceHead": "d1d2580509c5f66802899ef6a07174a124604d08",
+  "canonicalCanopyCount": 818,
+  "productMutationAllowed": false,
+  "candidateUniverseLaw": {
+    "authority": "GEN2001_GENERIC_ECOLOGY_GRID_OPENING_LAW_ONLY",
+    "columns": 196,
+    "rows": 147,
+    "insetFraction": 0.025,
+    "jitterFraction": 0.18,
+    "minimumForestWeight": 0.04,
+    "minimumShorelineDistance": 6,
+    "drainageClass": "LAND",
+    "openingExcluded": true,
+    "positiveCanopyDensityRequired": true,
+    "failureCoordinatesForbiddenDuringGeneration": true
+  },
+  "v2CanopyLaw": {
+    "footprintRadius": 320,
+    "cellSize": 32,
+    "canopyInfluenceRadius": 30,
+    "minimumOccupiedCellRatio": 0.42,
+    "minimumLargestComponentRatio": 0.78,
+    "maximumEmptyCorridorCells": 4,
+    "connectivity": "FOUR_NEIGHBOR",
+    "corridorAxes": ["ROW", "COLUMN"]
+  },
+  "feasibilitySemantics": {
+    "FEASIBLE": "EXACT_818_UNIQUE_GENERIC_CANDIDATE_IDS_WITH_ALL_SEVEN_IMMUTABLE_V2_CANOPY_STATES_CLEAR",
+    "INFEASIBLE": "MACHINE_CHECKABLE_CERTIFICATE_REQUIRED",
+    "UNRESOLVED": "NO_CERTIFICATE_AND_NO_EXACT_818_CLEAR_WITNESS_FOUND",
+    "heuristicFailureMayNotBecomeInfeasible": true
+  },
+  "requiredAnalyses": [
+    "EXACT_V2_MASKS_GEN2001_GEN2002_GEN2003",
+    "ELIGIBLE_EMPTY_COMPONENT_MORPHOLOGY",
+    "DIRECTIONAL_FIVE_CELL_COVERAGE_OBLIGATIONS",
+    "CELL_CENTER_NEAREST_CANOPY_COVERAGE_SUMMARY",
+    "GEN2001_LAWFUL_GENERIC_CANDIDATE_UNIVERSE",
+    "CANDIDATE_TO_CELL_AND_WINDOW_COVERAGE_MATRIX_SUMMARY",
+    "FIXED_818_FEASIBILITY_DISPOSITION",
+    "READ_ONLY_WITNESS_V2_CANOPY_EVALUATION_IF_FEASIBLE",
+    "AHBK_STYLE_NONCOMPENSATORY_BOUNDARY_RECORD",
+    "GEN2001_GEN2002_GEN2003_SPATIAL_DELTA_AND_INVARIANCE"
+  ],
+  "prohibited": [
+    "CHARACTERS_PRODUCT_MUTATION",
+    "H_EARTH_MUTATION",
+    "AHBK_MUTATION",
+    "V2_THRESHOLD_CAMERA_OR_STATE_MUTATION",
+    "FAILURE_COORDINATE_TARGETED_CANDIDATE_UNIVERSE",
+    "GEN2004_REPAIR_CONSTRUCTION",
+    "MAP_CARD_CLOUD_NAVIGATION_MUTATION",
+    "MERGE",
+    "DEPLOYMENT",
+    "PUBLICATION",
+    "MATERIAL_ACCEPTANCE",
+    "ENVIRONMENT_FLOOR_FREEZE"
+  ]
+}

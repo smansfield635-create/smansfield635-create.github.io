@@ -5,8 +5,12 @@ const MESH_URLS = Object.freeze(PART_LENGTHS.map((_, index) =>
 const MAGIC = 'AUDGMV1';
 
 const readMagic = buffer => new TextDecoder().decode(new Uint8Array(buffer, 0, 7));
+const yieldToPaint = () => new Promise(resolve => {
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => resolve());
+  else setTimeout(resolve, 0);
+});
 
-export async function loadPrecomputedGratitudeMesh() {
+export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetweenChunks=false}={}) {
   const startedAt = performance.now();
   if (typeof DecompressionStream !== 'function') {
     throw new Error('AUDRALIA_MESH_DECOMPRESSION_UNAVAILABLE');
@@ -14,6 +18,7 @@ export async function loadPrecomputedGratitudeMesh() {
   const totalLength = PART_LENGTHS.reduce((total, length) => total + length, 0);
   const merged = new Uint8Array(totalLength);
   let mergedOffset = 0;
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'START',index:-1,total:MESH_URLS.length,expandedBytes:0,totalExpandedBytes:totalLength}));
   for (let index = 0; index < MESH_URLS.length; index += 1) {
     const url = MESH_URLS[index];
     const response = await fetch(url, { cache: 'force-cache' });
@@ -23,6 +28,8 @@ export async function loadPrecomputedGratitudeMesh() {
     if (part.byteLength !== PART_LENGTHS[index]) throw new Error(`AUDRALIA_MESH_PART_${index}_LENGTH_INVALID`);
     merged.set(new Uint8Array(part), mergedOffset);
     mergedOffset += part.byteLength;
+    if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'PART',index,total:MESH_URLS.length,expandedBytes:mergedOffset,totalExpandedBytes:totalLength}));
+    if (yieldBetweenChunks) await yieldToPaint();
   }
   const buffer = merged.buffer;
   const view = new DataView(buffer);
@@ -58,10 +65,12 @@ export async function loadPrecomputedGratitudeMesh() {
     verifiedChunkCount: MESH_URLS.length,
     peakExpandedMeshCopies: 1,
     sequentialChunkAssembly: true,
+    sameOriginCriticalPath: MESH_URLS.every(url => url.origin === location.origin),
     loadMilliseconds: performance.now() - startedAt,
     landMesh: Object.freeze({ vertices: landVertices, indices: landIndices, statistics: Object.freeze(statistics.land) }),
     coastalWaterMesh: Object.freeze({ vertices: waterVertices, indices: waterIndices, statistics: Object.freeze(statistics.water) })
   });
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'COMPLETE',index:MESH_URLS.length-1,total:MESH_URLS.length,expandedBytes:totalLength,totalExpandedBytes:totalLength}));
   return window.__AUDRALIA_PRECOMPUTED_GRATITUDE_MESH__;
 }
 

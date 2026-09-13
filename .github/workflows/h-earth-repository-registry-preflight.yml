@@ -7,6 +7,8 @@ on:
       - '!h-earth-3d/registry/**'
       - 'h-earth-3d/registry/validation/h-earth-audralia-final-cloud-compositor-path-recognition-verifier.v1.mjs'
       - '.github/workflows/h-earth-repository-registry-preflight.yml'
+      - '.github/ai-router/page-mutation-proportionality-policy.v1.json'
+      - 'tools/workflow-applicability-gate.v1.mjs'
       - '!h-earth-3d/experience-anchor/evidence/**'
       - '!h-earth-3d/experience-anchor/receipts/**'
       - '!h-earth-3d/AGENTS.md'
@@ -22,6 +24,8 @@ on:
       - '!h-earth-3d/registry/**'
       - 'h-earth-3d/registry/validation/h-earth-audralia-final-cloud-compositor-path-recognition-verifier.v1.mjs'
       - '.github/workflows/h-earth-repository-registry-preflight.yml'
+      - '.github/ai-router/page-mutation-proportionality-policy.v1.json'
+      - 'tools/workflow-applicability-gate.v1.mjs'
       - '!h-earth-3d/experience-anchor/evidence/**'
       - '!h-earth-3d/experience-anchor/receipts/**'
       - '!h-earth-3d/AGENTS.md'
@@ -51,6 +55,7 @@ jobs:
           sparse-checkout: |
             /h-earth-3d/registry/
             /tools/h-earth-repository-registry-auto-preflight.mjs
+            /tools/workflow-applicability-gate.v1.mjs
 
       - name: Discover changed governed H-Earth paths
         shell: bash
@@ -76,7 +81,34 @@ jobs:
 
           cat /tmp/h-earth-changed-paths.txt
 
-      - name: Execute automatic H-Earth registry preflight
+      - name: Decide whole-estate workflow applicability
+        id: applicability
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/workflow-applicability-gate.v1.mjs \
+            --workflow H_EARTH_REPOSITORY_REGISTRY_PREFLIGHT \
+            --paths-file /tmp/all-changed-paths.txt \
+            --output /tmp/workflow-applicability-receipt.json
+          node <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync('/tmp/workflow-applicability-receipt.json', 'utf8'));
+          if (!['SELECTED', 'NOT_APPLICABLE'].includes(receipt.result)) throw new Error('WORKFLOW_APPLICABILITY_RESULT_INVALID');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `selected=${receipt.selectedByDecision ? 'true' : 'false'}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `severity=${receipt.severity}\n`);
+          NODE
+
+      - name: Record neutral non-applicability
+        if: ${{ steps.applicability.outputs.selected != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'H-Earth repository-registry preflight is NOT_APPLICABLE for this change set.'
+          echo 'No expensive registry preflight is executed; this is a neutral-success disposition.'
+          cat /tmp/workflow-applicability-receipt.json
+
+      - name: Execute selected automatic H-Earth registry preflight
+        if: ${{ steps.applicability.outputs.selected == 'true' }}
         run: |
           node --experimental-default-type=module \
             tools/h-earth-repository-registry-auto-preflight.mjs \
@@ -85,12 +117,14 @@ jobs:
             --mutation-intent \
             --output /tmp/h-earth-automatic-preflight-receipt.json
 
-      - name: Upload deterministic preflight receipt
+      - name: Upload deterministic applicability and preflight receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-automatic-preflight-receipt
-          path: /tmp/h-earth-automatic-preflight-receipt.json
+          path: |
+            /tmp/workflow-applicability-receipt.json
+            /tmp/h-earth-automatic-preflight-receipt.json
           if-no-files-found: error
           retention-days: 30
 

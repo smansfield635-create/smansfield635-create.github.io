@@ -97,6 +97,46 @@
       "reuseEstablishedBoundedPathFamilyRegistration": true,
       "bespokeSiblingPrerequisiteCycleAllowedOnlyForNewAuthorityBoundary": true
     },
+    "deterministicRegistryMetadataPrerequisite": {
+      "schema": "DETERMINISTIC_REGISTRY_METADATA_QUALIFICATION_POLICY_v1",
+      "status": "ACTIVE_FAIL_CLOSED",
+      "applicability": "REGISTRY_OR_METADATA_ONLY_PREREQUISITE_WITH_NO_PRODUCT_RUNTIME_BEHAVIOR_OR_EXTERNAL_STATE_DELTA",
+      "requiredEligibilityProofs": [
+        "IMMUTABLE_CANDIDATE_COMMIT",
+        "EXACT_DECLARED_DIFF",
+        "TARGET_OBJECT_IDENTITY_BOUND_WHEN_APPLICABLE",
+        "AUTHORITY_BOUNDARY_PROVEN",
+        "NO_PRODUCT_OR_RUNTIME_BYTE_MUTATION",
+        "NO_PREFIX_OR_WAIVER_AUTHORITY_EXPANSION",
+        "RELEVANT_DEPENDENCY_CONTINUITY_PROVEN",
+        "ALL_PENDING_VERIFIER_PREDICATES_REDUCIBLE_TO_IMMUTABLE_REPOSITORY_FACTS",
+        "INDEPENDENT_AUTHORITATIVE_REPOSITORY_EVIDENCE_COVERS_EACH_PENDING_PREDICATE"
+      ],
+      "equivalentProofResult": "EQUIVALENT_DETERMINISTIC_PROOF_PASS",
+      "executionRequirement": "EQUIVALENT_CONTENT_ADDRESSED_PROOF_ALLOWED_WHEN_ALL_ELIGIBILITY_PROOFS_PASS",
+      "runtimeBehavioralExecutionRequired": true,
+      "executionRequiredClasses": [
+        "RUNTIME_BEHAVIOR",
+        "EXTERNAL_STATE",
+        "DEVICE_OR_BROWSER_BEHAVIOR",
+        "SCIENTIFIC_OR_EMPIRICAL_RESULT",
+        "ENVIRONMENT_DEPENDENT_RESULT",
+        "GENERATED_OR_SIDE_EFFECTFUL_RUNTIME_RESULT",
+        "AMBIGUOUS_PREDICATE"
+      ],
+      "activeOperationReAdjudication": {
+        "allowed": true,
+        "requiresExplicitOwnerRatification": true,
+        "requiresCandidateBytesUnchanged": true,
+        "requiresOriginalScopeUnchanged": true,
+        "maySubstituteOnlyPendingExecutionGate": true,
+        "mayNotRelabelFailedBehavioralEvidence": true,
+        "mayNotExpandMergeDeploymentOrPublicationAuthority": true
+      },
+      "ambiguityDisposition": "EXECUTION_REQUIRED",
+      "failureDisposition": "FAIL_CLOSED",
+      "authorityEffect": "QUALIFICATION_EVIDENCE_SUBSTITUTION_ONLY"
+    },
     "crossSubsystemChange": {
       "retainRelevantCrossSubsystemGate": true,
       "directoryLocationAloneCreatesCrossSubsystemChange": false

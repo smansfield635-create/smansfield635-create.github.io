@@ -1,3 +1,5 @@
+import {createAudraliaTabletMorphologyAtlas} from './audralia-tablet-weather-morphology-atlas-v1.mjs';
+
 const EPOCH_MS=Date.parse('2026-08-08T03:26:20.000Z');
 const TIME_SCALE=24;
 const REST_STEPS=8;
@@ -20,7 +22,8 @@ out vec4 outColor;
 uniform vec3 uEye,uForward,uRight,uUp,uSunDir;
 uniform float uAspect,uTanHalfFov,uTimeHours,uOpacity,uFullDetail;
 uniform int uStepCount;
-const float R=6200.0,OUTER=6308.0,OCCLUDER=6227.0;
+uniform sampler2D uMorphologyAtlas;
+const float R=6200.0,OUTER=6308.0,OCCLUDER=6227.0,PI=3.141592653589793,TAU=6.283185307179586;
 const vec3 CENTER=vec3(0.0,-6200.0,0.0);
 const vec3 NORTH=vec3(0.0,.5,-.8660254037844386);
 const vec3 MERIDIAN=vec3(0.0,.8660254037844386,.5);
@@ -85,6 +88,20 @@ vec3 cycloneSystem(float h,float lat,float lon,float cLat,float cLon,float phase
   return vec3(low+outflow,low*.34+outflow*.97,low*.95);
 }
 
+vec3 atlasMorphology(float h,float lat,float lon,float broad,float detail){
+  vec2 uv=vec2(fract(lon/TAU+.5),clamp(lat/PI+.5,0.0,1.0));
+  vec4 atlas=texture(uMorphologyAtlas,uv);
+  float broken=.38+.62*textureBreak(broad,detail,lat*3.7+lon*1.9);
+  float low=atlas.r*band(h,30.0,62.0)*broken*.72;
+  float mid=atlas.g*band(h,50.0,86.0)*(.45+.55*broken)*.68;
+  float high=atlas.b*band(h,76.0,108.0)*(.48+.52*broken)*.62;
+  float conv=atlas.a*band(h,31.0,104.0)*(.50+.50*broken)*.74;
+  float mass=low+mid+high+conv;
+  float ice=mid*.18+high*.995+conv*.46;
+  float precip=low*.04+mid*.05+conv*.72;
+  return vec3(mass,ice,precip);
+}
+
 vec3 advancedCloudField(vec3 p){
   vec3 q=p-CENTER;float rr=length(q);if(rr<=0.0)return vec3(0.0);
   float h=rr-R;vec3 radial=q/rr;
@@ -93,7 +110,7 @@ vec3 advancedCloudField(vec3 p){
   float t=uTimeHours*.0065;
   float broad=fbm(radial*14.0+vec3(t*.26,-t*.18,t*.21));
   float detail=broad;if(uFullDetail>.5)detail=fbm(radial*27.0+vec3(-t*.17,t*.23,-t*.12));
-  vec3 weather=vec3(0.0);
+  vec3 weather=atlasMorphology(h,lat,lon,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,.593412,-1.274090,-.34,.10,1.00,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,.488692,.436332,.28,1.20,.88,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,-.558505,.733038,-.12,2.10,.92,broad,detail);
@@ -107,7 +124,7 @@ vec3 advancedCloudField(vec3 p){
   weather+=cycloneSystem(h,lat,lon,.349066,2.705260,2.4,.82,broad,detail);
   float clear=max(diskAt(lat,lon,.453786,-.314159,.30),max(diskAt(lat,lon,-.10,-1.88,.20),diskAt(lat,lon,.18,1.78,.18)));
   weather*=1.0-.88*clear;
-  return vec3(clamp(weather.x,0.0,1.45),clamp(weather.y,0.0,1.0),clamp(weather.z,0.0,1.0));
+  return vec3(clamp(weather.x,0.0,1.70),clamp(weather.y,0.0,1.25),clamp(weather.z,0.0,1.12));
 }
 
 void main(){
@@ -139,7 +156,7 @@ void main(){
     rayT+=stepLen;
   }
   if(alpha<.003){outColor=vec4(0.0);return;}
-  outColor=vec4(premul/max(alpha,.0001),clamp(alpha,0.0,.82));
+  outColor=vec4(premul/max(alpha,.0001),clamp(alpha,0.0,.84));
 }`;
 
 function compile(gl,type,source){
@@ -155,23 +172,26 @@ function makeProgram(gl){
 export function createAudraliaTabletCloudPass({gl,worldCanvas}={}){
   if(!gl||typeof gl.drawArrays!=='function')throw new Error('AUDRALIA_TABLET_CLOUD_PRIMARY_CONTEXT_MISSING');
   if(!(worldCanvas instanceof HTMLCanvasElement))throw new Error('AUDRALIA_TABLET_CLOUD_CANVAS_MISSING');
-  const program=makeProgram(gl),vao=gl.createVertexArray();
-  const uniforms=Object.freeze(Object.fromEntries(['uEye','uForward','uRight','uUp','uSunDir','uAspect','uTanHalfFov','uTimeHours','uOpacity','uFullDetail','uStepCount'].map(name=>[name,gl.getUniformLocation(program,name)])));
+  const program=makeProgram(gl),vao=gl.createVertexArray(),atlas=createAudraliaTabletMorphologyAtlas(gl);
+  const uniforms=Object.freeze(Object.fromEntries(['uEye','uForward','uRight','uUp','uSunDir','uAspect','uTanHalfFov','uTimeHours','uOpacity','uFullDetail','uStepCount','uMorphologyAtlas'].map(name=>[name,gl.getUniformLocation(program,name)])));
   let interaction=false,renderedFrames=0;
   function render(camera){
     if(!camera?.eye||!camera?.forward||!camera?.right||!camera?.up)throw new Error('AUDRALIA_TABLET_CLOUD_CAMERA_FRAME_INVALID');
     const stepCount=interaction?INTERACTION_STEPS:REST_STEPS,timeHours=Math.max(0,(Date.now()-EPOCH_MS)/3600000*TIME_SCALE);
     gl.viewport(0,0,worldCanvas.width,worldCanvas.height);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(program);gl.bindVertexArray(vao);
+    gl.activeTexture(gl.TEXTURE0+atlas.unit);gl.bindTexture(gl.TEXTURE_2D,atlas.texture);gl.uniform1i(uniforms.uMorphologyAtlas,atlas.unit);
     gl.uniform3fv(uniforms.uEye,camera.eye);gl.uniform3fv(uniforms.uForward,camera.forward);gl.uniform3fv(uniforms.uRight,camera.right);gl.uniform3fv(uniforms.uUp,camera.up);gl.uniform3fv(uniforms.uSunDir,SUN_DIRECTION);
-    gl.uniform1f(uniforms.uAspect,worldCanvas.width/Math.max(1,worldCanvas.height));gl.uniform1f(uniforms.uTanHalfFov,Math.tan(55*Math.PI/360));gl.uniform1f(uniforms.uTimeHours,timeHours);gl.uniform1f(uniforms.uOpacity,.80);gl.uniform1f(uniforms.uFullDetail,interaction?0:1);gl.uniform1i(uniforms.uStepCount,stepCount);
+    gl.uniform1f(uniforms.uAspect,worldCanvas.width/Math.max(1,worldCanvas.height));gl.uniform1f(uniforms.uTanHalfFov,Math.tan(55*Math.PI/360));gl.uniform1f(uniforms.uTimeHours,timeHours);gl.uniform1f(uniforms.uOpacity,.82);gl.uniform1f(uniforms.uFullDetail,interaction?0:1);gl.uniform1i(uniforms.uStepCount,stepCount);
     gl.drawArrays(gl.TRIANGLES,0,3);gl.bindVertexArray(null);gl.disable(gl.BLEND);gl.depthMask(true);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LESS);renderedFrames++;
     return Object.freeze({renderedFrames,stepCount,interaction});
   }
   const evidence=Object.freeze({
-    schema:'AUDRALIA_TABLET_SAME_CONTEXT_ADVANCED_CLOUD_PASS_v2',
-    source:'FAP1_PROVEN_DONOR_GRAMMAR_GLOBALIZED',
+    schema:'AUDRALIA_TABLET_SAME_CONTEXT_ADVANCED_CLOUD_PASS_v3_ATLAS',
+    source:'FAP1_PROVEN_DONOR_GRAMMAR_PLUS_BOUNDED_MORPHOLOGY_ATLAS',
     primaryContextOnly:true,createsCanvas:false,requestsWebGLContext:false,
     cheapGlobalCloudSupportIncluded:false,advancedOrganizedWeatherOnly:true,
+    morphologyAtlasActive:true,morphologyAtlas:atlas.evidence,
+    perRayAnalyticParityInjection:false,
     structuredCycloneDonorPreserved:true,longFrontalDonorPreserved:true,longJetBandDonorPreserved:true,
     frontalSystemCount:5,jetBandSystemCount:4,cycloneSystemCount:2,totalAdvancedSystemInstances:11,
     clearAirWindowsPreserved:true,regionalSystemsIncluded:false,canonicalLocalWeatherIncluded:false,precipitationRuntimeIncluded:false,celestialIncluded:false,

@@ -7647,6 +7647,49 @@
       "scopeHash": "ca2a3443af8f938ae9a4b50b2ec2ab1c3be6e3abe7c942914f97f0add03f32fb",
       "state": "ADMITTED_LOCKED"
     },
+    "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "88d7cf8ee4fb047b055a03777244d8b86051cabc",
+          "lockGeneration": 2186,
+          "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+          "operationId": "AWARDS_TRUST_VISIBLE_RENDERER_RECOVERY_20260912_004",
+          "procedureLocatorDigest": "48237a6cd62cd01de7f89cfff55606a5c19814402214fcf2d65b4b6132a50674",
+          "requestDigest": "9e6cff6255518ffee48339b4be77a2b625cdeec8a4b9c4d15c67ccc66dd53832",
+          "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7"
+        },
+        "bindingDigest": "96c6ba70ec6341548c4e015c8dbcb6e7a01c550587e82f1434d1195ca7c042a2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c409a3e10d66ca70b222ad7c5dbb15709f7d9d1c5272e3a2ef3d8506d90ecaf2",
+          "commentId": 5650980221,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3233,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34736513539,
+          "workflowSha": "88d7cf8ee4fb047b055a03777244d8b86051cabc"
+        },
+        "lineageAnchorCommitSha": "39052a8c210aaaf6ba424d7dc676fcc9254c7327",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "88d7cf8ee4fb047b055a03777244d8b86051cabc",
+      "lockGeneration": 2186,
+      "lockScope": "H_EARTH:AWARDS:TRUST:ANCIENT_ENERGY_TREE_3D:V1",
+      "operationId": "AWARDS_TRUST_VISIBLE_RENDERER_RECOVERY_20260912_004",
+      "procedureLocatorDigest": "48237a6cd62cd01de7f89cfff55606a5c19814402214fcf2d65b4b6132a50674",
+      "released": false,
+      "requestDigest": "9e6cff6255518ffee48339b4be77a2b625cdeec8a4b9c4d15c67ccc66dd53832",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ca8794f28d4dc114761610b9f8a99df884dfd134436f85b5c16e2a47c15a14f7",
+      "state": "ADMITTED_LOCKED"
+    },
     "caa45ac0f797a0d80e17db8bd6f8436be8a4786b4a125e2c59c888701d1c02a9": {
       "governingHead": "c2dbceb0267b124f5c34ac2fdf5245fc2015bca3",
       "independentAuthorityProvenance": {
@@ -9637,7 +9680,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2185,
+  "lockGeneration": 2186,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

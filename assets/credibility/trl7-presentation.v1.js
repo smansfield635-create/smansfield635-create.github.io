@@ -1,12 +1,11 @@
 (()=>{"use strict";
 const path=location.pathname;
-const type=path.startsWith("/evidence")?"evidence":path.startsWith("/governance")?"governance":path.startsWith("/build")?"build":path.startsWith("/showroom/globe/h-earth/awards")?"awards":null;
+const type=path.startsWith("/evidence")?"evidence":path.startsWith("/governance")?"governance":path.startsWith("/build")?"build":null;
 if(!type||document.querySelector("[data-dgb-trl7-tabs]"))return;
 const page={
 evidence:{k:"Technology Readiness",h:"Operationally demonstrated. Self-assessed at Software TRL 7.",m:"The governed software-construction platform has moved beyond isolated testing into demonstrated operational feasibility in the environment where it actually operates."},
 governance:{k:"Operational Maturity",h:"The governance system has been demonstrated in operation.",m:"Control, bounded execution, continuity, recovery and qualification are not presented here as a diagram alone. Together they support a bounded self-assessment at Software TRL 7."},
-build:{k:"Built on demonstrated machinery",h:"More ambitious does not have to mean less controlled.",m:"The platform behind Diamond Gate has been exercised against real repositories, automation, recovery conditions and product qualification, supporting a bounded Software TRL 7 self-assessment."},
-awards:{k:"Technology Readiness",h:"From ambitious experiment to operational technology.",m:"The work represented here is backed by a governed construction platform whose key functions have been demonstrated together in its operational environment, supporting a bounded Software TRL 7 self-assessment."}
+build:{k:"Built on demonstrated machinery",h:"More ambitious does not have to mean less controlled.",m:"The platform behind Diamond Gate has been exercised against real repositories, automation, recovery conditions and product qualification, supporting a bounded Software TRL 7 self-assessment."}
 }[type];
 const tabs={
 meaning:{label:"Meaning",eyebrow:page.k,title:page.h,body:page.m,foot:"Software TRL 7 is a technology-maturity statement, not an award, certification or claim that every Diamond Gate artifact independently has the same maturity."},
@@ -25,6 +24,5 @@ const main=document.querySelector("main");
 if(type==="evidence"){const host=document.querySelector(".orientation");host?host.insertAdjacentElement("afterend",s):main?.append(s);}
 else if(type==="governance"){const host=document.querySelector(".closing");host?host.insertAdjacentElement("beforebegin",s):main?.append(s);}
 else if(type==="build"){const host=document.querySelector(".final-call");host?host.insertAdjacentElement("beforebegin",s):main?.append(s);}
-else if(type==="awards"){const host=document.querySelector(".campaign");host?host.insertAdjacentElement("beforebegin",s):main?.append(s);}
 render("meaning");
 })();

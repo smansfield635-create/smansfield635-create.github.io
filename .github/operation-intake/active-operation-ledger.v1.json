@@ -67,6 +67,49 @@
       "scopeHash": "01a314ffcd4d1ec341cedcc0f64e83a3304850361cab9869908dce31cb915862",
       "state": "ADMITTED_LOCKED"
     },
+    "029a87c8c3e0b3adb728e17626292417f98b26cf0244768e7d94dcb5af07d3d2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "76ec9ad2a7c1e6cb3e11659fd8d46d929eb65f50",
+          "lockGeneration": 2208,
+          "lockScope": "REPOSITORY_CONTROL_PLANE:STATIC_EDITORIAL_MICRO_VERIFIER:MINIFIED_HTML_FALSE_POSITIVE_REPAIR:V1",
+          "operationId": "REPOSITORY_STATIC_EDITORIAL_VERIFIER_MINIFIED_HTML_REPAIR_20260914_001",
+          "procedureLocatorDigest": "a1a9bc1e903e58e1490c574be82592235748e9581c802742d4f2cf77fe6ed738",
+          "requestDigest": "7f3b24407ea775e9467aa09b0d49973d125b4ee6acbc6cbc21a8276469f9dfd0",
+          "scopeHash": "029a87c8c3e0b3adb728e17626292417f98b26cf0244768e7d94dcb5af07d3d2"
+        },
+        "bindingDigest": "9c513f1a5a7b1bee5cff5964513be1fe5a660694f0dc4160c520a50b48e7e92a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "66e016a85fcfc0edc909e0a3aeabc140f7952ae08cfbcc4b0c4d32e8563df464",
+          "commentId": 5656881539,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3315,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34788978368,
+          "workflowSha": "76ec9ad2a7c1e6cb3e11659fd8d46d929eb65f50"
+        },
+        "lineageAnchorCommitSha": "85dffc40e0865be4cdeaff3214576f3b9ec8ff2c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "76ec9ad2a7c1e6cb3e11659fd8d46d929eb65f50",
+      "lockGeneration": 2208,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:STATIC_EDITORIAL_MICRO_VERIFIER:MINIFIED_HTML_FALSE_POSITIVE_REPAIR:V1",
+      "operationId": "REPOSITORY_STATIC_EDITORIAL_VERIFIER_MINIFIED_HTML_REPAIR_20260914_001",
+      "procedureLocatorDigest": "a1a9bc1e903e58e1490c574be82592235748e9581c802742d4f2cf77fe6ed738",
+      "released": false,
+      "requestDigest": "7f3b24407ea775e9467aa09b0d49973d125b4ee6acbc6cbc21a8276469f9dfd0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "029a87c8c3e0b3adb728e17626292417f98b26cf0244768e7d94dcb5af07d3d2",
+      "state": "ADMITTED_LOCKED"
+    },
     "02ca5f62227a02a7d233eb0923bf2f11b44d3ea30cd692499df324a076711157": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -10022,7 +10065,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2207,
+  "lockGeneration": 2208,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

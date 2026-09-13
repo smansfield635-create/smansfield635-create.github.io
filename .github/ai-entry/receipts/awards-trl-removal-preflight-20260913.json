@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-trl-removal-preflight-20260913",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3302,
+  "requestBranch": "ai-dispatch-request-awards-trl-removal-preflight-20260913",
+  "requestCommit": "ddc21c7867f4ff68227f701f9c3a1505682e3991",
+  "requestCommitParent": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+  "currentMainSha": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34782969977",
+  "dispatchedRunId": 34782977859,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34782977859",
+  "dispatchedRunHeadSha": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+  "dispatchedAt": "2026-09-13T21:09:48.002Z",
+  "resolvedAt": "2026-09-13T21:09:51.957Z"
+}

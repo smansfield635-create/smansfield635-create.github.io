@@ -99,7 +99,7 @@
     })();
 
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST',
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v8_ADVANCED_CLOUD_GLOBALIZATION',
       legacyPlanetActive: false,
       canonicalWeatherSpatialLod: true,
       weatherPresentationReconciliation: true,
@@ -107,9 +107,11 @@
       acf1CloudPresentation: true,
       fap1XYZVolumetricDepth: true,
       fap1OrganizedWeatherCandidate: true,
+      advancedCloudGlobalization: true,
+      cheapGlobalCloudVisualAuthority: false,
       approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3',
       directDenseCloudCoverage: false,
-      cloudCoverageUpgradeDeferred: true,
+      cloudCoverageUpgradeDeferred: false,
       loadingContinuity: 'AUDRALIA_LOADING_CONTINUITY_v4',
       startupArchitecture: 'APPROVED_PRESENTATION_PRE_RENDER_v1',
       tabletStartupStability: 'PRECOMPUTED_EXACT_MESH_BEFORE_PRIMARY_WORLD_v1',
@@ -123,7 +125,6 @@
   <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"></script>
   <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
   <script type="module">
-    const exactRoot = '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/';
     const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve()));
     const primaryWorldReady = async () => {
       const deadline = performance.now() + 30000;
@@ -152,11 +153,11 @@
       await nextFrame();
       await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057');
       await nextFrame();
-      await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057');
+      await import('./fap1-weather-presentation-v1.mjs?cb=AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912');
       await nextFrame();
       const constrainedTablet = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;
       if (constrainedTablet) {
-        const { initializeAudraliaTabletSingleContextClouds } = await import('https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@adaf564f4c3a07d5825c209238d8c89bd098f75d/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs');
+        const { initializeAudraliaTabletSingleContextClouds } = await import('../h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912');
         await initializeAudraliaTabletSingleContextClouds();
       } else {
         await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057');

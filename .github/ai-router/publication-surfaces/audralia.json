@@ -1,18 +1,30 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia",
-  "description": "Live Audralia planetary environment using the approved preserved model authority with informative loading continuity and the qualified distributed-weather v6 successor enabled.",
+  "description": "Live Audralia planetary environment preserves the approved model authority and loading continuity, with the advanced-only v7 organized-weather source and constrained-tablet same-context cloud path. Source checks do not replace exact-candidate runtime qualification.",
   "checks": [
     {
       "path": "/showroom/globe/audralia/",
       "includes": [
-        "Audralia · Planetary World",
+        "Audralia \u00b7 Planetary World",
         "approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3'",
-        "cloudCoverageUpgradeDeferred: true",
+        "AUDRALIA_LIVE_PLANETARY_INTEGRATION_v8_ADVANCED_CLOUD_GLOBALIZATION",
+        "acf1CloudPresentation: true",
+        "fap1XYZVolumetricDepth: true",
+        "fap1OrganizedWeatherCandidate: true",
+        "advancedCloudGlobalization: true",
+        "cheapGlobalCloudVisualAuthority: false",
+        "cloudCoverageUpgradeDeferred: false",
         "directDenseCloudCoverage: false",
         "APPROVED_PRESENTATION_PRE_RENDER_v1",
         "Orbital cloud field",
-        "AUDRALIA_LOADING_CONTINUITY_v4"
+        "AUDRALIA_LOADING_CONTINUITY_v4",
+        "await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057')",
+        "await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057')",
+        "await import('./fap1-weather-presentation-v1.mjs?cb=AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912')",
+        "const constrainedTablet = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;",
+        "await import('../h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912')",
+        "await initializeAudraliaTabletSingleContextClouds();"
       ],
       "excludes": [
         "http-equiv=\"refresh\"",
@@ -22,29 +34,34 @@
     {
       "path": "/showroom/globe/audralia/fap1-weather-presentation-v1.mjs",
       "includes": [
-        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6",
-        "MARINE_STRATUS_STRATOCUMULUS_BANK",
-        "TRADE_CUMULUS_STREETS",
-        "MIDLATITUDE_COMMA_FRONT",
-        "MESOSCALE_CONVECTIVE_COMPLEX",
-        "HIGH_CIRRUS_CIRROCUMULUS_JET_PLUME",
-        "CIRRUS_FIELD",
-        "CIRROSTRATUS_VEIL",
-        "ALTOCUMULUS_FIELD",
-        "immersiveCloudInterior:true",
-        "structuredCyclone:true",
-        "sparseHemisphereDiversified:true",
-        "planetaryCloudFieldCoverage:true",
-        "cirrusFieldMultiplicity:true",
-        "cirrostratusVeilMultiplicity:true",
-        "altocumulusFieldMultiplicity:true",
+        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v7_GLOBAL_ADVANCED_ONLY",
+        "acceptedWorldPreserved:true",
+        "geographyMutation:false",
+        "oceanMutation:false",
+        "cameraMutation:false",
+        "navigationMutation:false",
+        "visibleBackgroundGlobalCloudSupport:false",
+        "advancedOrganizedWeatherOnly:true",
+        "structuredCycloneDonorPreserved:true",
+        "longFrontalDonorPreserved:true",
+        "longJetBandDonorPreserved:true",
+        "additionalRenderPasses:0",
+        "rayMarchCeilingsChanged:false",
+        "frontalSystemCount:5",
+        "jetBandSystemCount:4",
+        "cycloneSystemCount:2",
+        "totalAdvancedSystemInstances:11",
         "clearAirWindowsPreserved:true",
-        "existingCloudSystemsExpanded:false",
-        "singlePassRaymarchPreserved:true",
-        "performanceCeilingsFrozen:true"
+        "fap1FrontSystem",
+        "fap1JetSystem",
+        "fap1CycloneSystem",
+        "fap1ClearCorridor",
+        "float background=0.0*(1.0-clearCorridor);"
       ],
       "excludes": [
-        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6_INTEGRATED_COVERAGE"
+        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6",
+        "advancedOrganizedWeatherOnly:false",
+        "visibleBackgroundGlobalCloudSupport:true"
       ]
     },
     {
@@ -62,6 +79,56 @@
       "path": "/showroom/globe/audralia/loading-continuity-v3.css",
       "includes": [
         "AUDRALIA_LOADING_CONTINUITY_v4"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-cloud-pass.mjs",
+      "includes": [
+        "AUDRALIA_TABLET_SAME_CONTEXT_ADVANCED_CLOUD_PASS_v2",
+        "FAP1_PROVEN_DONOR_GRAMMAR_GLOBALIZED",
+        "primaryContextOnly:true",
+        "createsCanvas:false",
+        "requestsWebGLContext:false",
+        "cheapGlobalCloudSupportIncluded:false",
+        "advancedOrganizedWeatherOnly:true",
+        "structuredCycloneDonorPreserved:true",
+        "longFrontalDonorPreserved:true",
+        "longJetBandDonorPreserved:true",
+        "frontalSystemCount:5",
+        "jetBandSystemCount:4",
+        "cycloneSystemCount:2",
+        "totalAdvancedSystemInstances:11",
+        "clearAirWindowsPreserved:true",
+        "const REST_STEPS=8;",
+        "const INTERACTION_STEPS=6;",
+        "restStepCount:REST_STEPS",
+        "interactionStepCount:INTERACTION_STEPS",
+        "rayMarchCeilingsChanged:false",
+        "regionalSystemsIncluded:false",
+        "canonicalLocalWeatherIncluded:false",
+        "precipitationRuntimeIncluded:false",
+        "celestialIncluded:false",
+        "gl.uniform1i(uniforms.uStepCount,stepCount);",
+        "vec3 cloud=advancedCloudField(p);"
+      ],
+      "excludes": [
+        "cheapGlobalCloudSupportIncluded:true",
+        "createsCanvas:true",
+        "requestsWebGLContext:true"
+      ]
+    },
+    {
+      "path": "/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
+      "includes": [
+        "import {createAudraliaTabletCloudPass} from './audralia-tablet-cloud-pass.mjs';",
+        "AUDRALIA_TABLET_SINGLE_CONTEXT_CLOUDS_RUNTIME_v1",
+        "EXACT_PRIMARY_WORLD_SINGLE_WEBGL_CONTEXT_WITH_CLOUD_PASS",
+        "createAudraliaTabletCloudPass({gl:constructed.primaryGl,worldCanvas:canvas})",
+        "singleWebGLContext:constructed.webgl2ContextRequests===1",
+        "cloudPassUsesPrimaryContext:clouds.getEvidence().primaryContextOnly===true",
+        "additionalCanvasCount:0",
+        "loader.classList.add('is-ready')"
       ],
       "excludes": []
     }

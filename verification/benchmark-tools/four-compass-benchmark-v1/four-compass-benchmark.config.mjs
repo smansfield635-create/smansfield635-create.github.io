@@ -88,15 +88,15 @@ export const AUXILIARY_CONTROLS = deepFreeze({
     route: "/home/",
     posture: "POSITIVE_NON_COMPASS_SHELL_REFERENCE",
     compassAuthority: false,
-    root: "html[data-page='home-value-profile']",
-    scene: "#value-profile",
+    root: "html[data-page='home-arrival'][data-contract='HOME_ARRIVAL_EXTERIOR_v1']",
+    scene: "[data-home-arrival]",
     gestureSurface: null,
-    cardinal: "button.profile-tab[data-profile='rules']",
-    child: "[data-profile-panel='rules'] details summary, [data-profile='rules']",
-    returnControl: "a[href='/']",
-    panel: "[data-profile-panel='rules'], [data-profile-content='rules']",
-    disclosure: "[data-profile-panel='rules'] details summary, details.receiver-chamber summary",
-    stateAttr: "data-compass-behavior"
+    cardinal: "a.home-button[href='#ways-forward']",
+    child: "#ways-forward a.home-path[href='/door/']",
+    returnControl: "a.home-brand[href='/']",
+    panel: "details.home-disclosure",
+    disclosure: "details.home-disclosure > summary",
+    stateAttr: "data-contract"
   }
 });
 

@@ -12,6 +12,10 @@ on:
       - 'showroom/globe/audralia/loading-continuity-v3.css'
       - 'showroom/globe/audralia/diagnostic/index.inspection.authority.js'
       - '.github/workflows/bt4-world-diagnostic-entitlement-v1.yml'
+      - 'showroom/globe/audralia/fap1-weather-presentation-v1.mjs'
+      - 'showroom/globe/audralia/startup-bootstrap-v2.mjs'
+      - 'showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-cloud-pass.mjs'
+      - 'showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs'
   workflow_dispatch:
 
 permissions:
@@ -32,5 +36,9 @@ jobs:
             /showroom/globe/audralia/fap1-orbital-support-tuning-v1.mjs
             /showroom/globe/audralia/loading-continuity-v3.css
             /showroom/globe/audralia/diagnostic/index.inspection.authority.js
+            /showroom/globe/audralia/fap1-weather-presentation-v1.mjs
+            /showroom/globe/audralia/startup-bootstrap-v2.mjs
+            /showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-cloud-pass.mjs
+            /showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs
       - name: Verify real-object world/runtime and diagnostic entitlement invariants
         run: node research/bt4/verify-world-diagnostic-entitlement.v1.mjs

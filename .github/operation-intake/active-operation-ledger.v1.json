@@ -9623,6 +9623,49 @@
       "scopeHash": "fcd91cbae886c9a05af16cec1cc0572b293b5a0ed92cf72eb65715f852646973",
       "state": "ADMITTED_LOCKED"
     },
+    "fde80f06feb51ca5120d5540dbd89c2ec9c8ce47c449872163b97f434a97d674": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+          "lockGeneration": 2179,
+          "lockScope": "H_EARTH:AWARDS:COHERENCE:HRA_BRAIN_RESTORATION:V1",
+          "operationId": "AWARDS_COHERENCE_HRA_BRAIN_RESTORATION_20260912_001",
+          "procedureLocatorDigest": "92b887872d4130811bbf9f693f7f9b24597c6d6875e6db4700c9d3c5443b0502",
+          "requestDigest": "fd573c0bd48760de2d1073fa59bde097a8902691607425ad6da8a7e997050551",
+          "scopeHash": "fde80f06feb51ca5120d5540dbd89c2ec9c8ce47c449872163b97f434a97d674"
+        },
+        "bindingDigest": "d0f2f4c41636660300865a0aba66a5e6f4331d5f4da679321e1845d6e1f2ace9",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c226719eac0c2541eba03f0c2c30eefe1e249f3fb32a6108c6385bc535f7e205",
+          "commentId": 5649554017,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3208,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34726970325,
+          "workflowSha": "00f6fc66520d82ff6ce92aeb6020226737a459fb"
+        },
+        "lineageAnchorCommitSha": "dfddc207326d2b6414193ada5d92135298abb957",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+      "lockGeneration": 2179,
+      "lockScope": "H_EARTH:AWARDS:COHERENCE:HRA_BRAIN_RESTORATION:V1",
+      "operationId": "AWARDS_COHERENCE_HRA_BRAIN_RESTORATION_20260912_001",
+      "procedureLocatorDigest": "92b887872d4130811bbf9f693f7f9b24597c6d6875e6db4700c9d3c5443b0502",
+      "released": false,
+      "requestDigest": "fd573c0bd48760de2d1073fa59bde097a8902691607425ad6da8a7e997050551",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fde80f06feb51ca5120d5540dbd89c2ec9c8ce47c449872163b97f434a97d674",
+      "state": "ADMITTED_LOCKED"
+    },
     "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247": {
       "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
       "lockGeneration": 1544,
@@ -9651,7 +9694,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2178,
+  "lockGeneration": 2179,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -9120,81 +9120,6 @@
       "scopeHash": "ef93474a94914d81d0ef9c216f4fbc06f8c70db9a5b117648856c2dcff0bdd5c",
       "state": "ADMITTED_LOCKED"
     },
-    "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd": {
-      "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
-          "lockGeneration": 2178,
-          "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
-          "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
-          "procedureLocatorDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
-          "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
-          "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd"
-        },
-        "bindingDigest": "b420a90bea9ab5a08efb41f5f99afde2fdb1291f79b0b22fbca85f274bcadecc",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "03c3f620ac3d4365aa80c63ffeb27ca890ba4817",
-          "observedLockRefHead": "9be5ae284489f77e7e93a2e7a5c5a10af60f1193"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "f2933489edfa3946a02c962fcaa6fcd8d73d68f0cda9d7e7c35c2451801e9c97",
-          "commentId": 5649477909,
-          "issueNumber": 3193,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
-            "lockGeneration": 2177,
-            "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
-            "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001"
-          },
-          "successor": {
-            "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
-            "lockGeneration": 2178,
-            "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
-            "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001"
-          },
-          "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 2178,
-      "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
-      "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
-        "lockGeneration": 2177,
-        "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
-        "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649317263",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649374723",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5647621700",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5648128923",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/109166adb6fe939d2cdba78797f74877e17e1c1d",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
-          "sha256:dacb99ca7f9f970918745f094dd2dd5a97a8b2fa7eaae59bd44c4c08d88b979c:soren-pr3193-acceptance-review.txt",
-          "sha256:1314f1fb14f3a971d7294e3dab5caac9da8b76c6883a819511f1dd1c4be59e91:soren-gen2177-recovery-review.txt"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
-      },
-      "procedureLocatorDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
-      "released": false,
-      "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd",
-      "state": "ADMITTED_LOCKED"
-    },
     "f0328e088743d44f0a05c8e9ad006e073c32d93fa33d39ebd00559fa921bf623": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -51637,6 +51562,119 @@
         "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+          "lockGeneration": 2178,
+          "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+          "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+          "procedureLocatorDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
+          "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
+          "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd"
+        },
+        "bindingDigest": "b420a90bea9ab5a08efb41f5f99afde2fdb1291f79b0b22fbca85f274bcadecc",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "03c3f620ac3d4365aa80c63ffeb27ca890ba4817",
+          "observedLockRefHead": "9be5ae284489f77e7e93a2e7a5c5a10af60f1193"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "f2933489edfa3946a02c962fcaa6fcd8d73d68f0cda9d7e7c35c2451801e9c97",
+          "commentId": 5649477909,
+          "issueNumber": 3193,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+            "lockGeneration": 2177,
+            "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+            "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001"
+          },
+          "successor": {
+            "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+            "lockGeneration": 2178,
+            "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+            "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001"
+          },
+          "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+          "lockGeneration": 2178,
+          "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+          "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+          "procedureLocatorDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
+          "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
+          "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd"
+        },
+        "bindingDigest": "ad879a2cf081a10e4cd2a6a4aafe71cef12bb2235aa3456d2935c9b0b970b2d9",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "50eeeadf28b01d77806efdce1a748362da2f6314",
+          "observedLockRefHead": "d16cc73fe75326bb1a0b9938901100e0be64c7d9"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "f77155d3ed661c4aa610c972f9c84c84dca4c3d7a6aed59ea9f51b669a911be2",
+          "commentId": 5649571970,
+          "issueNumber": 3193,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "00f6fc66520d82ff6ce92aeb6020226737a459fb",
+          "lockGeneration": 2178,
+          "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+          "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+          "released": true,
+          "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2178,
+      "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+      "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_CURRENT_MAIN_SUCCESSOR_V1_20260912_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+        "lockGeneration": 2177,
+        "lockScope": "H_EARTH:PR3193:FROZEN_CLOUD_QUALIFICATION_RECONCILIATION:V1",
+        "operationId": "PR3193_FROZEN_CLOUD_CANDIDATE_QUALIFICATION_RECONCILIATION_V1_20260912_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649317263",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3193#issuecomment-5649374723",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5647621700",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3192#issuecomment-5648128923",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/109166adb6fe939d2cdba78797f74877e17e1c1d",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/254bdf9b5a9c5c01dbfcd9378a3cc6d5de046df5",
+          "sha256:dacb99ca7f9f970918745f094dd2dd5a97a8b2fa7eaae59bd44c4c08d88b979c:soren-pr3193-acceptance-review.txt",
+          "sha256:1314f1fb14f3a971d7294e3dab5caac9da8b76c6883a819511f1dd1c4be59e91:soren-gen2177-recovery-review.txt"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "PR3193_GEN2177_TO_CURRENT_MAIN_00F6FC66520D_SUCCESSOR_V1_20260912_001"
+      },
+      "procedureLocatorDigest": "2b6bf082498cde1efa4c789abd1960302ac51f06f74c9c4f196f3d797c774ece",
+      "released": true,
+      "requestDigest": "6268a08c9a390210d230cbc6e954f25e836883a0a2088846b50d1db0dd52336f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ef9fc16e8849d7978f038b316fbaa0de6a07845b2901645e0dba484af7bfc0fd",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

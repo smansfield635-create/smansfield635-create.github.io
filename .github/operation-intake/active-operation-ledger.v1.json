@@ -5050,49 +5050,6 @@
       "scopeHash": "8454f0f1162ba0263b05c2d1d48a6c70d398cf753a1ddb5ca4f56f0e038180c4",
       "state": "ADMITTED_LOCKED"
     },
-    "845c8741ef062dd4590347d9cfe37fd51b47ab83b2e7e2e9697d06074ab48ebb": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b623eb67b4cb2a834a1e60f4bcb21b3069c541f4",
-          "lockGeneration": 2203,
-          "lockScope": "CONTROL_PLANE:ROUTER:H_EARTH:AUDRALIA_CELESTIAL_EXACT_PATH:V1",
-          "operationId": "AUDRALIA_CELESTIAL_ROOT_ROUTE_REGISTRATION_20260913_003",
-          "procedureLocatorDigest": "55cf99ae4c7290d471373d174e166115d05341f20f027a88733f78e2fd569fb3",
-          "requestDigest": "ca29ffa6c972837615f5d1ec91d1c737f1f24b3c06b073acab784126b53fe0eb",
-          "scopeHash": "845c8741ef062dd4590347d9cfe37fd51b47ab83b2e7e2e9697d06074ab48ebb"
-        },
-        "bindingDigest": "3c0b2a240f23ef4ed18c3bf0fb2836de9e1df4b93eddd5ae5cf27b182ee0f975",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e686168ca06852f4de0e814b39f88b2d9c30de604be73bb19a453ba7f7e294ae",
-          "commentId": 5656090630,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3268,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34782355886,
-          "workflowSha": "b623eb67b4cb2a834a1e60f4bcb21b3069c541f4"
-        },
-        "lineageAnchorCommitSha": "7da2bdbc2400779faf1610b333ad9e67da31f9f8",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "b623eb67b4cb2a834a1e60f4bcb21b3069c541f4",
-      "lockGeneration": 2203,
-      "lockScope": "CONTROL_PLANE:ROUTER:H_EARTH:AUDRALIA_CELESTIAL_EXACT_PATH:V1",
-      "operationId": "AUDRALIA_CELESTIAL_ROOT_ROUTE_REGISTRATION_20260913_003",
-      "procedureLocatorDigest": "55cf99ae4c7290d471373d174e166115d05341f20f027a88733f78e2fd569fb3",
-      "released": false,
-      "requestDigest": "ca29ffa6c972837615f5d1ec91d1c737f1f24b3c06b073acab784126b53fe0eb",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "845c8741ef062dd4590347d9cfe37fd51b47ab83b2e7e2e9697d06074ab48ebb",
-      "state": "ADMITTED_LOCKED"
-    },
     "848a948144db7c24e083cb4be07a426e12adbd2dfe3def546012e2205a4bed8b": {
       "governingHead": "55e6af4cbee08effd3b008d124908d518493d14c",
       "lockGeneration": 1622,
@@ -52910,6 +52867,50 @@
       "requestDigest": "7a9c38943e78abf614c59895c54e7bf4495a4ba98328270b1210e10c2091a846",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "cd5258971ed31f1571f72ed31cf9c264ab76ee12e42c218fd8dad73ff2587c57",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b623eb67b4cb2a834a1e60f4bcb21b3069c541f4",
+          "lockGeneration": 2203,
+          "lockScope": "CONTROL_PLANE:ROUTER:H_EARTH:AUDRALIA_CELESTIAL_EXACT_PATH:V1",
+          "operationId": "AUDRALIA_CELESTIAL_ROOT_ROUTE_REGISTRATION_20260913_003",
+          "procedureLocatorDigest": "55cf99ae4c7290d471373d174e166115d05341f20f027a88733f78e2fd569fb3",
+          "requestDigest": "ca29ffa6c972837615f5d1ec91d1c737f1f24b3c06b073acab784126b53fe0eb",
+          "scopeHash": "845c8741ef062dd4590347d9cfe37fd51b47ab83b2e7e2e9697d06074ab48ebb"
+        },
+        "bindingDigest": "3c0b2a240f23ef4ed18c3bf0fb2836de9e1df4b93eddd5ae5cf27b182ee0f975",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e686168ca06852f4de0e814b39f88b2d9c30de604be73bb19a453ba7f7e294ae",
+          "commentId": 5656090630,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3268,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34782355886,
+          "workflowSha": "b623eb67b4cb2a834a1e60f4bcb21b3069c541f4"
+        },
+        "lineageAnchorCommitSha": "7da2bdbc2400779faf1610b333ad9e67da31f9f8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b623eb67b4cb2a834a1e60f4bcb21b3069c541f4",
+      "lockGeneration": 2203,
+      "lockScope": "CONTROL_PLANE:ROUTER:H_EARTH:AUDRALIA_CELESTIAL_EXACT_PATH:V1",
+      "operationId": "AUDRALIA_CELESTIAL_ROOT_ROUTE_REGISTRATION_20260913_003",
+      "procedureLocatorDigest": "55cf99ae4c7290d471373d174e166115d05341f20f027a88733f78e2fd569fb3",
+      "released": true,
+      "requestDigest": "ca29ffa6c972837615f5d1ec91d1c737f1f24b3c06b073acab784126b53fe0eb",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "845c8741ef062dd4590347d9cfe37fd51b47ab83b2e7e2e9697d06074ab48ebb",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

@@ -1,0 +1,7 @@
+{
+  "schema": "COMPASS_ADVERSARIAL_HOLDOUT_CLASSIFIER_SUBMISSION_v1_1",
+  "classifierId": "REPLACE_WITH_INDEPENDENT_CLASSIFIER_ID",
+  "corpusSha256": "6b237426c06518daa2fe7e274ae3901af2d450a9131bab0e64cfd8b19fd7df67",
+  "keyAccessedBeforeSubmission": false,
+  "classifications": []
+}

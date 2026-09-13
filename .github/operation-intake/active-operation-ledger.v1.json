@@ -5105,6 +5105,49 @@
       "scopeHash": "84b79eb01ddde1937435d8ff0898012ef5da7b98c79376a96175645a2f710dfa",
       "state": "ADMITTED_LOCKED"
     },
+    "84dfe31c59905dfa7319cb405b950a451531005f499021feeac229e591023eb9": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "21b3951b073dde7fadc808e7d93827e51db47e57",
+          "lockGeneration": 2200,
+          "lockScope": "H_EARTH:AWARDS:FIREWORKS_ENVIRONMENTAL_INTEGRATION:V1",
+          "operationId": "AWARDS_FIREWORKS_ENVIRONMENTAL_INTEGRATION_20260913_001",
+          "procedureLocatorDigest": "1e9b68a88ffdf52c684fecab707f422fca3e34a6788a2ea87447d4a677b99b0f",
+          "requestDigest": "19ee1e2de12d951fc5472713e4ce9d9ae87d5b3fd18fa97feea1f4317c4eb565",
+          "scopeHash": "84dfe31c59905dfa7319cb405b950a451531005f499021feeac229e591023eb9"
+        },
+        "bindingDigest": "1393e3f13bfa132dec2f5faefee04f5009eb5167eb759ef843787bb7540e571d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "151f0ef63b859aaad50c39c4945575e381a5a77a6c77f2834bcd7dab68014725",
+          "commentId": 5655657910,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3286,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34778650556,
+          "workflowSha": "21b3951b073dde7fadc808e7d93827e51db47e57"
+        },
+        "lineageAnchorCommitSha": "3f0d856ac8c68469c6e275a746da6e1b5df88848",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "21b3951b073dde7fadc808e7d93827e51db47e57",
+      "lockGeneration": 2200,
+      "lockScope": "H_EARTH:AWARDS:FIREWORKS_ENVIRONMENTAL_INTEGRATION:V1",
+      "operationId": "AWARDS_FIREWORKS_ENVIRONMENTAL_INTEGRATION_20260913_001",
+      "procedureLocatorDigest": "1e9b68a88ffdf52c684fecab707f422fca3e34a6788a2ea87447d4a677b99b0f",
+      "released": false,
+      "requestDigest": "19ee1e2de12d951fc5472713e4ce9d9ae87d5b3fd18fa97feea1f4317c4eb565",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "84dfe31c59905dfa7319cb405b950a451531005f499021feeac229e591023eb9",
+      "state": "ADMITTED_LOCKED"
+    },
     "851cf6a5f1740f2f02695effe729b8166674fba36df7a0914a98bc8c1f58c9cf": {
       "governingHead": "1a4d75c136fd20eca5c24bb21a96ae4ddbd4b1d8",
       "lockGeneration": 1681,
@@ -9893,7 +9936,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2199,
+  "lockGeneration": 2200,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

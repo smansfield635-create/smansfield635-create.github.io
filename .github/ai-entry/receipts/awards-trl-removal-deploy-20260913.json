@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-trl-removal-deploy-20260913",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3303,
+  "requestBranch": "ai-dispatch-request-awards-trl-removal-deploy-20260913",
+  "requestCommit": "e62d8a8a314abff55e8ab7f9e88ae47f6cd32977",
+  "requestCommitParent": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+  "currentMainSha": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34783085334",
+  "dispatchedRunId": 34783093163,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34783093163",
+  "dispatchedRunHeadSha": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+  "dispatchedAt": "2026-09-13T21:12:02.606Z",
+  "resolvedAt": "2026-09-13T21:12:06.072Z"
+}

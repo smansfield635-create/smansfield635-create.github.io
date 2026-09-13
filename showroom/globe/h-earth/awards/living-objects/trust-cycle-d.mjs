@@ -30,7 +30,8 @@ const CONTRACT=Object.freeze({
   lifecycle:LIFECYCLE
 });
 
-const VS=`attribute vec3 a_position;
+const VS=`precision mediump float;
+attribute vec3 a_position;
 attribute vec3 a_normal;
 attribute vec4 a_color;
 attribute float a_progress;

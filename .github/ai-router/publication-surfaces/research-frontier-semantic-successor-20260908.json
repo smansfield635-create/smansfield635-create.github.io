@@ -16,7 +16,7 @@
         "MECHANISM REPLICATED",
         "Orientation v2 selected",
         "The constraint is shared. The evidence is not.",
-        "CONVERGING QUESTIONS AND RESULTS ≠ ONE POOLED CLAIM."
+        "PROVENANCE ≠ EVIDENCE."
       ],
       "excludes": []
     }
@@ -126,7 +126,7 @@
           {
             "type": "textContains",
             "selector": "[data-shared-bridge]",
-            "value": "CONVERGING QUESTIONS AND RESULTS ≠ ONE POOLED CLAIM."
+            "value": "PROVENANCE ≠ EVIDENCE."
           }
         ],
         "timeoutMs": 5000

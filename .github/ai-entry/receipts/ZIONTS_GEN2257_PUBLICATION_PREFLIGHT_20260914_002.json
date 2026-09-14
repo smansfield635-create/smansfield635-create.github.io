@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "ZIONTS_GEN2257_PUBLICATION_PREFLIGHT_20260914_002",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3433,
+  "requestBranch": "ai-dispatch-request-zionts-gen2257-preflight",
+  "requestCommit": "5f1c537a3109ca2e2dd7fa35868a9398f7c570e4",
+  "requestCommitParent": "ccb4f559c61540dfdb11a9d0049fc5396fc0d267",
+  "currentMainSha": "ccb4f559c61540dfdb11a9d0049fc5396fc0d267",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "576e4f20d11cfca099c1324a0d25c27c299110a8",
+    "surface_id": "zionts"
+  },
+  "bridgeRunId": "34878670559",
+  "dispatchedRunId": 34878690246,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34878690246",
+  "dispatchedRunHeadSha": "ccb4f559c61540dfdb11a9d0049fc5396fc0d267",
+  "dispatchedAt": "2026-09-14T18:05:34.410Z",
+  "resolvedAt": "2026-09-14T18:05:38.183Z"
+}

@@ -1,4 +1,5 @@
 name: Temporary Compass cold-media gating executor
+# retry: corrected cinematic block anchors
 
 on:
   push:

@@ -1,0 +1,99 @@
+name: Temporary Chapter 02 final convergence
+
+on:
+  push:
+    branches:
+      - release/chapter02-final-convergence-20260913
+    paths:
+      - '.github/workflows/tmp-ch02-final-convergence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  converge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/chapter02-final-convergence-20260913
+          fetch-depth: 0
+
+      - name: Install media tooling
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+
+      - name: Fetch and verify immutable 40.2s picture master
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ch02
+          curl -fL --retry 4 --retry-delay 2 \
+            'https://drive.usercontent.google.com/download?id=1wZra2-_Y-ZpUVw6H8-gndnq1qIIy7bgL&export=download&confirm=t' \
+            -o /tmp/ch02/picture.mp4
+          test "$(stat -c%s /tmp/ch02/picture.mp4)" -eq 1498587
+          echo '4d351ce55d186f9448e9702e2a961083cb53005ca70b4d8f5add5aeb90e309da  /tmp/ch02/picture.mp4' | sha256sum -c -
+          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,profile,width,height,pix_fmt,r_frame_rate,nb_frames -show_entries format=duration -of default=nw=1 /tmp/ch02/picture.mp4
+
+      - name: Mux preserved approved predecessor audio without altering picture
+        run: |
+          set -euo pipefail
+          SRC='showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4'
+          OUT='showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          test -f "$SRC"
+          mkdir -p "$(dirname "$OUT")"
+          ffmpeg -y -i /tmp/ch02/picture.mp4 -i "$SRC" \
+            -filter_complex '[1:a:0]atrim=start=0:end=40.2,asetpts=PTS-STARTPTS[a]' \
+            -map 0:v:0 -map '[a]' \
+            -c:v copy -c:a aac -b:a 192k -ar 48000 -ac 2 \
+            -movflags +faststart -t 40.2 "$OUT"
+          ffmpeg -v error -i /tmp/ch02/picture.mp4 -map 0:v:0 -c:v copy -bsf:v h264_mp4toannexb -f h264 /tmp/ch02/picture.h264
+          ffmpeg -v error -i "$OUT" -map 0:v:0 -c:v copy -bsf:v h264_mp4toannexb -f h264 /tmp/ch02/final.h264
+          test "$(sha256sum /tmp/ch02/picture.h264 | cut -d' ' -f1)" = 'b92f04c33d3c1e16501b6436644e639049f172a597209c88202e301fa42ac97c'
+          cmp /tmp/ch02/picture.h264 /tmp/ch02/final.h264
+          test "$(sha256sum "$OUT" | cut -d' ' -f1)" = '70fd91b3811a3ddb7b7dca5b993903dcbae13f2510c862b55e2bffda8d4f1c7f'
+          test "$(stat -c%s "$OUT")" -eq 2496069
+          ffprobe -v error -show_entries stream=index,codec_type,codec_name,profile,width,height,pix_fmt,r_frame_rate,nb_frames,sample_rate,channels -show_entries format=duration -of default=nw=1 "$OUT" | tee /tmp/ch02/final-probe.txt
+          grep -F 'duration=40.200000' /tmp/ch02/final-probe.txt
+          grep -F 'width=1280' /tmp/ch02/final-probe.txt
+          grep -F 'height=720' /tmp/ch02/final-probe.txt
+          grep -F 'r_frame_rate=30/1' /tmp/ch02/final-probe.txt
+          grep -F 'nb_frames=1206' /tmp/ch02/final-probe.txt
+          grep -F 'codec_name=aac' /tmp/ch02/final-probe.txt
+
+      - name: Apply exact Chapter 02 binding delta
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('showroom/globe/h-earth/awards/index.html')
+          s = p.read_text()
+          old_src = '/showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4'
+          new_src = '/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          old_desc = 'Chapter 02 · 58.774-second deterministic cinematic presentation.'
+          new_desc = 'Chapter 02 · 40.200-second deterministic cinematic presentation.'
+          if s.count(old_src) != 1:
+              raise SystemExit(f'expected exactly one old Chapter 02 source binding, got {s.count(old_src)}')
+          if s.count(old_desc) != 1:
+              raise SystemExit(f'expected exactly one old Chapter 02 runtime description, got {s.count(old_desc)}')
+          s = s.replace(old_src, new_src, 1).replace(old_desc, new_desc, 1)
+          p.write_text(s)
+
+      - name: Verify bounded product delta
+        run: |
+          set -euo pipefail
+          grep -F '/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4' showroom/globe/h-earth/awards/index.html
+          grep -F 'Chapter 02 · 40.200-second deterministic cinematic presentation.' showroom/globe/h-earth/awards/index.html
+          ! grep -F '/showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4' showroom/globe/h-earth/awards/index.html
+          grep -F 'John Harrison, violin' showroom/globe/h-earth/awards/index.html
+
+      - name: Commit exact two-path convergence candidate and remove carrier
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/tmp-ch02-final-convergence.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/awards/index.html showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4
+          git diff --cached --name-only
+          git commit -m 'Publish Chapter 02 40.2-second successor cinematic'
+          git push origin HEAD:release/chapter02-final-convergence-20260913

@@ -17,15 +17,52 @@ assert 'installFirstEntryHiddenSyncGate' not in cap
 cap_path.write_text(cap,encoding='utf-8')
 
 ori=ori_path.read_text(encoding='utf-8')
-replacements={
-    "ambientVideo.preload='auto';":"ambientVideo.preload='none';",
-    "  ambientVideo.src=CONTRACT.mediaPath;\n":"",
-    "video.preload='auto';":"video.preload='none';",
-    "  video.src=CONTRACT.mediaPath;\n":"",
-}
-for old,new in replacements.items():
-    assert ori.count(old)==1, f'orientation replacement count mismatch: {old!r}'
-    ori=ori.replace(old,new,1)
+ambient_block_old="""  const ambientVideo=document.createElement('video');
+  ambientVideo.className='compass-prerendered-player__ambient-video';
+  ambientVideo.playsInline=true;
+  ambientVideo.preload='auto';
+  ambientVideo.controls=false;
+  ambientVideo.muted=true;
+  ambientVideo.disablePictureInPicture=true;
+  ambientVideo.setAttribute('aria-hidden','true');
+  ambientVideo.poster=CONTRACT.posterPath;
+  ambientVideo.src=CONTRACT.mediaPath;
+"""
+ambient_block_new="""  const ambientVideo=document.createElement('video');
+  ambientVideo.className='compass-prerendered-player__ambient-video';
+  ambientVideo.playsInline=true;
+  ambientVideo.preload='none';
+  ambientVideo.controls=false;
+  ambientVideo.muted=true;
+  ambientVideo.disablePictureInPicture=true;
+  ambientVideo.setAttribute('aria-hidden','true');
+  ambientVideo.poster=CONTRACT.posterPath;
+"""
+video_block_old="""  const video=document.createElement('video');
+  video.className='compass-prerendered-player__video';
+  video.playsInline=true;
+  video.preload='auto';
+  video.controls=false;
+  video.disablePictureInPicture=true;
+  video.setAttribute('aria-label','Diamond Gate Bridge orientation film');
+  video.setAttribute('data-main-orientation-video','');
+  video.poster=CONTRACT.posterPath;
+  video.src=CONTRACT.mediaPath;
+"""
+video_block_new="""  const video=document.createElement('video');
+  video.className='compass-prerendered-player__video';
+  video.playsInline=true;
+  video.preload='none';
+  video.controls=false;
+  video.disablePictureInPicture=true;
+  video.setAttribute('aria-label','Diamond Gate Bridge orientation film');
+  video.setAttribute('data-main-orientation-video','');
+  video.poster=CONTRACT.posterPath;
+"""
+assert ori.count(ambient_block_old)==1, 'ambient cinematic block mismatch'
+assert ori.count(video_block_old)==1, 'foreground cinematic block mismatch'
+ori=ori.replace(ambient_block_old,ambient_block_new,1)
+ori=ori.replace(video_block_old,video_block_new,1)
 
 anchor="function currentNavigationType(){"
 assert ori.count(anchor)==1

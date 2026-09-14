@@ -8221,6 +8221,49 @@
       "scopeHash": "caa45ac0f797a0d80e17db8bd6f8436be8a4786b4a125e2c59c888701d1c02a9",
       "state": "ADMITTED_LOCKED"
     },
+    "cad5056b5913bd877cc522ed475428815dac9c0d56d93c3ea8e8cfe12c94461c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
+          "lockGeneration": 2259,
+          "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:STAGE_III_ENVIRONMENTAL_FEEDING:V1",
+          "operationId": "COMMUNITY_STAGE_III_PUBLICATION_MANIFEST_RECONCILIATION_20260914_001",
+          "procedureLocatorDigest": "b3324a27a52eca107e43dfba502767046c217b3869db8fd6651820d559688e73",
+          "requestDigest": "747c12e4e102734fa8680942ffbd790df60bb5d05b13d903a81e57113bb07383",
+          "scopeHash": "cad5056b5913bd877cc522ed475428815dac9c0d56d93c3ea8e8cfe12c94461c"
+        },
+        "bindingDigest": "2b896c36e1a3ce4689be4586ab75dabbc976da72e86b6ff6e8f638c03f8005ed",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "68796a3cea921e4487c8a0193078c789dc51df0fee74b8dd74e17ddba596948c",
+          "commentId": 5669018438,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3437,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34883307299,
+          "workflowSha": "28784c87e1706e0c427680ebfa4b7763c1a83cef"
+        },
+        "lineageAnchorCommitSha": "caa2be9cf93f5909a5dcb5b108ed7a5fdfd16e4c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
+      "lockGeneration": 2259,
+      "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:STAGE_III_ENVIRONMENTAL_FEEDING:V1",
+      "operationId": "COMMUNITY_STAGE_III_PUBLICATION_MANIFEST_RECONCILIATION_20260914_001",
+      "procedureLocatorDigest": "b3324a27a52eca107e43dfba502767046c217b3869db8fd6651820d559688e73",
+      "released": false,
+      "requestDigest": "747c12e4e102734fa8680942ffbd790df60bb5d05b13d903a81e57113bb07383",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cad5056b5913bd877cc522ed475428815dac9c0d56d93c3ea8e8cfe12c94461c",
+      "state": "ADMITTED_LOCKED"
+    },
     "cbabcd980e40a4d6abdfbebf6c3729764f021b7471309ed46c1432d5641e7170": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -10491,7 +10534,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2258,
+  "lockGeneration": 2259,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

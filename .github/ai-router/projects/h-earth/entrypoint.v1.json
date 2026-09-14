@@ -22,8 +22,27 @@
   ],
   "requiredInstructions": [
     "h-earth-3d/AGENTS.md",
-    "showroom/globe/h-earth/AGENTS.md"
+    "showroom/globe/h-earth/AGENTS.md",
+    ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+    ".github/ai-router/human-disposition/exact-candidate-physical-preview-applicability.v1.json"
   ],
+  "exactCandidatePhysicalPreview": {
+    "status": "ACTIVE_FAIL_CLOSED",
+    "rootContract": ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+    "applicability": ".github/ai-router/human-disposition/exact-candidate-physical-preview-applicability.v1.json",
+    "appliesTo": [
+      "H_EARTH_BROWSER_NATIVE_VISUAL_OR_DEVICE_REVIEW",
+      "AUDRALIA_PHYSICAL_OR_PERCEPTUAL_ACCEPTANCE",
+      "H_EARTH_AWARDS_BROWSER_NATIVE_VISUAL_OR_CINEMATIC_ACCEPTANCE"
+    ],
+    "candidateFinalizationBeforeTerminalClosureWhenDeclared": true,
+    "dispositions": ["KEEP", "ONE_REPAIR", "REJECT"],
+    "oneRepairRequiresActiveOriginalScope": true,
+    "productionDeploymentAsPreviewWorkaroundAllowed": false,
+    "genericHeadlessCreatesPhysicalDeviceAcceptance": false,
+    "finalLiveExactHeadVerificationRequired": true,
+    "authorityCreatedByBinding": false
+  },
   "humanDispositionBindings": {
     "AUDRALIA": {
       "status": "ACTIVE_FAIL_CLOSED",
@@ -160,6 +179,8 @@
     "NARRATIVE_WORLD_RECIPROCAL_CONTRADICTION_DETECTED",
     "ACOUSTIC_GEOGRAPHIC_OR_DISTANCE_CONTRADICTION_DETECTED",
     "SILENT_NARRATIVE_OR_GEOGRAPHIC_HOLD_RESOLUTION_DETECTED",
-    "MISSING_OR_INVALID_AUDRALIA_HUMAN_DISPOSITION_BINDING_WHEN_APPLICABLE"
+    "MISSING_OR_INVALID_AUDRALIA_HUMAN_DISPOSITION_BINDING_WHEN_APPLICABLE",
+    "DO_NOT_DEPLOY_PRODUCTION_MERELY_TO_OBTAIN_EXACT_CANDIDATE_PHYSICAL_OR_PERCEPTUAL_REVIEW",
+    "DO_NOT_TERMINALLY_CLOSE_BEFORE_A_DECLARED_REQUIRED_CANDIDATE_PREVIEW_DISPOSITION_WHEN_BOUNDED_REPAIR_AUTHORITY_IS_INTENTIONALLY_RETAINED"
   ]
 }

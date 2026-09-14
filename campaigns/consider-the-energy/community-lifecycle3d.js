@@ -480,7 +480,6 @@ function mount(host){
 
 export { CONTRACT as DGB_COMMUNITY_LIFECYCLE_3D_CONTRACT };
 
-// Gen2273 structural checkpoint: identity and coordinate law only. Rendering remains baseline-identical here.
 const GEN2273_STATE=Object.freeze({
   DOMAIN_STATIC:'DOMAIN_STATIC',
   GLOBAL_RELEASE:'GLOBAL_RELEASE',
@@ -543,28 +542,302 @@ function P_local(object,timeSeconds){
   if(object.motionProfile===GEN2273_MOTION_PROFILE.AUTUMN)return A(home,V(Math.sin(t*.58+phase)*amp*1.15,Math.cos(t*.51+phase)*amp*.90,Math.sin(t*.39+phase)*amp*.55));
   return A(home,V(Math.sin(t*.44+phase)*amp*.82,-Math.abs(Math.cos(t*.36+phase))*amp*.58,Math.sin(t*.27+phase)*amp*.30));
 }
-function gen2273EightStateController(ms,settlementDurationSeconds=GEN2273_SETTLEMENT_CANDIDATES[0],reduced=false){
-  const seconds=Math.max(0,ms)/1000,settlementDuration=GEN2273_SETTLEMENT_CANDIDATES.includes(settlementDurationSeconds)?settlementDurationSeconds:GEN2273_SETTLEMENT_CANDIDATES[0],lockSeconds=GEN2273_TREE_COMPLETE_SECONDS+settlementDuration;
-  if(reduced)return Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,progress:1,globalCirculationAuthority:false,domainLocked:true,settlementDuration});
-  if(seconds<CONTRACT.feedingWindowSeconds[0])return{state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,progress:clamp(seconds/CONTRACT.feedingWindowSeconds[0]),globalCirculationAuthority:false,domainLocked:false,settlementDuration};
-  if(seconds<CONTRACT.feedingWindowSeconds[1])return{state:GEN2273_STATE.GLOBAL_RELEASE,stateIndex:1,progress:clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(CONTRACT.feedingWindowSeconds[1]-CONTRACT.feedingWindowSeconds[0])),globalCirculationAuthority:true,domainLocked:false,settlementDuration};
-  if(seconds<GEN2273_TREE_COMPLETE_SECONDS)return{state:GEN2273_STATE.SPIRAL_GROWTH,stateIndex:2,progress:clamp((seconds-CONTRACT.feedingWindowSeconds[1])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[1])),globalCirculationAuthority:true,domainLocked:false,settlementDuration};
-  if(seconds===GEN2273_TREE_COMPLETE_SECONDS)return{state:GEN2273_STATE.TREE_COMPLETE,stateIndex:3,progress:1,globalCirculationAuthority:true,domainLocked:false,settlementDuration};
-  if(seconds<lockSeconds)return{state:GEN2273_STATE.SETTLEMENT,stateIndex:4,progress:clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration),globalCirculationAuthority:true,domainLocked:false,settlementDuration};
-  if(seconds===lockSeconds)return{state:GEN2273_STATE.DOMAIN_LOCK,stateIndex:5,progress:1,globalCirculationAuthority:false,domainLocked:true,settlementDuration};
-  if(seconds<lockSeconds+CONTRACT.environmentCycleSeconds)return{state:GEN2273_STATE.FOUR_DOMAIN_ACTIVE,stateIndex:6,progress:clamp((seconds-lockSeconds)/CONTRACT.environmentCycleSeconds),globalCirculationAuthority:false,domainLocked:true,settlementDuration};
-  return{state:GEN2273_STATE.COEXISTENCE,stateIndex:7,progress:1,globalCirculationAuthority:false,domainLocked:true,settlementDuration};
+
+// Gen2273 bounded runtime-binding checkpoint. No qualification duration is selected here.
+mount=function(){throw Error('GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_NOT_READY')};
+const GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS=1.9;
+const GEN2273_EPSILON=1e-7;
+const gen2273CloneXYZ=p=>({x:p.x,y:p.y,z:p.z});
+const gen2273Distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
+const gen2273SameXYZ=(a,b,epsilon=GEN2273_EPSILON)=>gen2273Distance(a,b)<=epsilon;
+const GEN2273_DOMAIN_HANDOFF_XYZ=Object.freeze(GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>Object.freeze({...object.homeXYZ})));
+
+P_circulation=function(object,progress){
+  const t=clamp(progress),home=P_static(object),phase=object.spiralPhase+t*Math.PI*4,r0=Math.max(.68,Math.hypot(home.x,home.z)*.92),radius=mix(r0,.46,t),lift=mix(home.y,.52+object.domain*.22,t);
+  const target=V(Math.cos(phase)*radius,lift+Math.sin(phase*1.7)*.13*t,Math.sin(phase)*radius+Math.sin(phase*.73+object.depthBand)*.16*t);
+  return L(home,target,smoother(t));
+};
+P_local=function(object,timeSeconds){
+  const home=P_static(object),t=Math.max(0,timeSeconds),depth=DEPTH_PLANES[object.depthBand]||DEPTH_PLANES[1],amp=.050*depth.motion,phase=object.spiralPhase;
+  const ds=w=>Math.sin(phase+t*w)-Math.sin(phase),dc=w=>Math.cos(phase+t*w)-Math.cos(phase);
+  if(object.motionProfile===GEN2273_MOTION_PROFILE.SPRING)return A(home,V(ds(.55)*amp*.82,dc(.38)*amp*.58,ds(.31)*amp*.52));
+  if(object.motionProfile===GEN2273_MOTION_PROFILE.SUMMER)return A(home,V(ds(.90)*amp*1.40,-(1-Math.cos(t*1.70))*amp*1.15,dc(.45)*amp*.34));
+  if(object.motionProfile===GEN2273_MOTION_PROFILE.AUTUMN)return A(home,V(ds(.58)*amp*1.45,dc(.43)*amp*.55,ds(.67)*amp*1.10));
+  return A(home,V(ds(.24)*amp*.55,-(1-Math.cos(t*.36))*amp*.42,ds(.20)*amp*.85));
+};
+
+function gen2273SettlementDuration(value){
+  const candidate=Number(value);
+  return GEN2273_SETTLEMENT_CANDIDATES.includes(candidate)?candidate:GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS;
+}
+function createGen2273Runtime(settlementDurationSeconds=GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS,reduced=false){
+  const settlementDuration=gen2273SettlementDuration(settlementDurationSeconds),lockSeconds=GEN2273_TREE_COMPLETE_SECONDS+settlementDuration,registry=GEN2273_MOBILE_OBJECT_REGISTRY;
+  const currentXYZ=registry.map(P_static).map(gen2273CloneXYZ),settlementOrigin=Array(registry.length).fill(null),transitionLog=[];
+  let maxSeconds=0,stateIndex=reduced?GEN2273_STATE_ORDER.length-1:0,circulationProgress=0,settlementProgress=reduced?1:0,settlementOriginCaptureCount=0,circulationEvaluations=0,circulationEvaluationsAtSettlement=null,localTimeSeconds=0;
+  let globalCirculationAuthority=false,globalCirculationUpdatePathEnabled=false,entranceAuthorityActive=!reduced,treeGrowthAuthorityActive=!reduced,communityInteractionAvailable=!!reduced,domainLocalPhysicsAuthoritative=!!reduced,domainLocked=!!reduced;
+  const state=()=>GEN2273_STATE_ORDER[stateIndex];
+  const handoff=index=>GEN2273_DOMAIN_HANDOFF_XYZ[index];
+  const setCurrent=(index,p)=>{currentXYZ[index]=gen2273CloneXYZ(p)};
+  const enter=(index,atSeconds)=>{
+    if(index<=stateIndex)return;
+    stateIndex=index;
+    transitionLog.push(Object.freeze({state:GEN2273_STATE_ORDER[index],stateIndex:index,atSeconds}));
+    if(index===1){globalCirculationAuthority=true;globalCirculationUpdatePathEnabled=true;}
+    if(index===3){
+      circulationProgress=1;
+      registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,1));circulationEvaluations++});
+      treeGrowthAuthorityActive=false;
+    }
+    if(index===4){
+      if(settlementOriginCaptureCount===0){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(currentXYZ[i]));settlementOriginCaptureCount++})}
+      circulationEvaluationsAtSettlement=circulationEvaluations;
+      globalCirculationAuthority=false;
+      globalCirculationUpdatePathEnabled=false;
+    }
+    if(index===5){
+      settlementProgress=1;
+      registry.forEach((object,i)=>setCurrent(i,handoff(i)));
+      globalCirculationAuthority=false;
+      globalCirculationUpdatePathEnabled=false;
+      entranceAuthorityActive=false;
+      treeGrowthAuthorityActive=false;
+      communityInteractionAvailable=true;
+      domainLocalPhysicsAuthoritative=true;
+      domainLocked=true;
+    }
+  };
+  const updateCirculation=seconds=>{
+    if(!globalCirculationAuthority||!globalCirculationUpdatePathEnabled||stateIndex>=4)return;
+    const next=clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[0]));
+    circulationProgress=Math.max(circulationProgress,next);
+    registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,circulationProgress));circulationEvaluations++});
+  };
+  const updateSettlement=seconds=>{
+    if(stateIndex!==4)return;
+    const next=clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration);
+    settlementProgress=Math.max(settlementProgress,next);
+    const eased=smoother(settlementProgress);
+    registry.forEach((object,i)=>setCurrent(i,L(settlementOrigin[i],handoff(i),eased)));
+  };
+  const updateLocal=seconds=>{
+    if(!domainLocked||!domainLocalPhysicsAuthoritative)return;
+    localTimeSeconds=Math.max(localTimeSeconds,Math.max(0,seconds-lockSeconds));
+    if(reduced){registry.forEach((object,i)=>setCurrent(i,handoff(i)));return}
+    registry.forEach((object,i)=>setCurrent(i,P_local(object,localTimeSeconds)));
+  };
+  const snapshot=()=>Object.freeze({
+    state:state(),stateIndex,progress:stateIndex===4?settlementProgress:stateIndex<3?circulationProgress:1,
+    settlementDuration,lockSeconds,maxSeconds,circulationProgress,settlementProgress,settlementOriginCaptureCount,
+    globalCirculation:globalCirculationAuthority?1:0,
+    globalCirculationAuthority,
+    globalCirculationUpdatePath:globalCirculationUpdatePathEnabled?'ENABLED':'DISABLED',
+    entranceAuthority:entranceAuthorityActive?'ACTIVE':'TERMINATED',
+    treeGrowthAuthority:treeGrowthAuthorityActive?'ACTIVE':'TERMINATED',
+    communityInteractionAvailable,domainLocalPhysicsAuthoritative,domainLocked,localTimeSeconds,
+    postSettlementCirculationEvaluations:circulationEvaluationsAtSettlement===null?0:circulationEvaluations-circulationEvaluationsAtSettlement,
+    transitionLog:Object.freeze(transitionLog.map(entry=>entry))
+  });
+  if(reduced){
+    registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(handoff(i)));settlementOriginCaptureCount++});
+    transitionLog.push(Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,atSeconds:0,reduced:true}));
+  }else transitionLog.push(Object.freeze({state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,atSeconds:0}));
+  const advance=ms=>{
+    const rawSeconds=Math.max(0,Number(ms)||0)/1000;
+    maxSeconds=Math.max(maxSeconds,rawSeconds);
+    const seconds=maxSeconds;
+    if(reduced){updateLocal(seconds);return snapshot()}
+    if(seconds>=CONTRACT.feedingWindowSeconds[0])enter(1,CONTRACT.feedingWindowSeconds[0]);
+    if(seconds>=CONTRACT.feedingWindowSeconds[1])enter(2,CONTRACT.feedingWindowSeconds[1]);
+    if(seconds<GEN2273_TREE_COMPLETE_SECONDS)updateCirculation(seconds);
+    if(seconds>=GEN2273_TREE_COMPLETE_SECONDS){enter(3,GEN2273_TREE_COMPLETE_SECONDS);enter(4,GEN2273_TREE_COMPLETE_SECONDS)}
+    if(stateIndex===4)updateSettlement(seconds);
+    if(seconds>=lockSeconds){enter(5,lockSeconds);enter(6,lockSeconds);enter(7,lockSeconds)}
+    if(domainLocked)updateLocal(seconds);
+    return snapshot();
+  };
+  return Object.freeze({registry,currentXYZ,settlementOrigin,advance,snapshot});
+}
+const GEN2273_CONTROLLER_CACHE=new Map();
+function gen2273EightStateController(ms,settlementDurationSeconds=GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS,reduced=false){
+  const duration=gen2273SettlementDuration(settlementDurationSeconds),key=`${duration}:${reduced?'reduced':'full'}`;
+  if(!GEN2273_CONTROLLER_CACHE.has(key))GEN2273_CONTROLLER_CACHE.set(key,createGen2273Runtime(duration,reduced));
+  return GEN2273_CONTROLLER_CACHE.get(key).advance(ms);
 }
 
-const GEN2273_STRUCTURAL_CHECKPOINT=Object.freeze({
-  id:'GEN2273_STRUCTURAL_CHECKPOINT_V1',
+function gen2273AssertBoundRanges(g){
+  const ranges=g.objectRanges||[],ids=ranges.map(range=>range.objectId),unique=new Set(ids),vertexCount=g.p.length/3;
+  const ordered=ids.length===GEN2273_MOBILE_OBJECT_REGISTRY.length&&ids.every((id,index)=>id===index);
+  const valid=ranges.every(range=>Number.isInteger(range.startVertex)&&Number.isInteger(range.endVertex)&&range.startVertex>=0&&range.endVertex>range.startVertex&&range.endVertex<=vertexCount);
+  if(!ordered||unique.size!==GEN2273_MOBILE_OBJECT_REGISTRY.length||!valid)throw Error('GEN2273_RUNTIME_BINDING_RANGE_FAILURE');
+  return Object.freeze({passed:true,objectRangeCount:ranges.length,uniqueObjectIds:unique.size,ordered:true,visibleFeedPopulationCount:0});
+}
+
+const GEN2273_BASE_VERTEX_SOURCE=vertexSource;
+vertexSource=function(webgl2,precision){
+  let source=GEN2273_BASE_VERTEX_SOURCE(webgl2,precision),next=source.replace('if(zoneEnv>.5&&u_reduced<.5){','if(false){');
+  if(next===source)throw Error('GEN2273_ZONE_SHADER_AUTHORITY_MARKER_MISSING');
+  source=next;
+  next=source.replace('float sway=(u_reduced>.5?0.0:.008)*crown*alive;','float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-zoneEnv);');
+  if(next===source)throw Error('GEN2273_SHARED_SWAY_MARKER_MISSING');
+  return next;
+};
+const GEN2273_BASE_FRAGMENT_SOURCE=fragmentSource;
+fragmentSource=function(webgl2,precision){
+  const source=GEN2273_BASE_FRAGMENT_SOURCE(webgl2,precision),next=source.replace('alpha*=mix(1.0,1.0-u_lifecycle,feed);','alpha*=1.0-feed;');
+  if(next===source)throw Error('GEN2273_FEED_POPULATION_MARKER_MISSING');
+  return next;
+};
+
+addQuadrantEnvironment=function(g){
+  const count=GEN2273_OBJECTS_PER_DEPTH;
+  g.objectRanges=[];
+  for(const zone of QUADRANT_VOLUMES){
+    DEPTH_PLANES.forEach((plane,depthIndex)=>{
+      for(let i=0;i<count;i++){
+        const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),q=.10+zone.season*.17+depthIndex*.018+i*.006,near=plane.scale,alpha=plane.alpha,startVertex=g.p.length/3;
+        if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2273_CANONICAL_IDENTITY_BINDING_FAILURE');
+        if(zone.season===SEASON.SPRING){
+          if(i%3===0)flower(g,p,q,zone.kind,zone.season,.58*near,alpha);
+          else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,zone.kind,5,3,zone.season);
+        }else if(zone.season===SEASON.SUMMER){
+          rainStroke(g,p,q,zone.kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));
+          if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,zone.kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
+          if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,zone.kind,6,3,zone.season);
+        }else if(zone.season===SEASON.AUTUMN){
+          leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha));
+        }else{
+          if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,zone.kind,zone.season,alpha);
+          else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,zone.kind,5,3,zone.season);
+          if(depthIndex===0&&i%4===1)orb(g,A(p,V(.10,.02,-.02)),V(.13*near,.060*near,.050*near),[.64,.78,.86,alpha*.20],q,zone.kind,6,3,zone.season);
+        }
+        g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));
+      }
+    });
+  }
+  const dockSpring=V(-1.06,1.48,.18),dockSummer=V(-1.17,.72,.15),dockAutumn=V(1.10,.76,.14),dockWinter=V(1.02,1.54,.16);
+  [V(-.10,.04,0),V(.02,.12,.02),V(.12,-.03,-.01)].forEach((d,i)=>flower(g,A(dockSpring,d),.80,KIND.FEED_SPRING,SEASON.SPRING,.92+i*.08));
+  [V(-.12,.10,.00),V(-.03,.03,.02),V(.08,.12,-.02),V(.14,-.01,.03)].forEach((d,i)=>rainStroke(g,A(dockSummer,d),.81,KIND.FEED_SUMMER,SEASON.SUMMER,.95+i*.04));
+  windStroke(g,A(dockSummer,V(0,-.12,.01)),.81,KIND.FEED_SUMMER,SEASON.SUMMER,1.1);
+  [V(-.13,.08,.00),V(-.02,.14,.02),V(.10,.07,-.02),V(-.08,-.06,.03),V(.11,-.08,.01)].forEach((d,i)=>leaf(g,A(dockAutumn,d),.82,KIND.FEED_AUTUMN,SEASON.AUTUMN,.90+(i%2)*.18,i%2?[.91,.48,.09,1]:[.69,.29,.045,1]));
+  [V(-.10,.05,.00),V(.08,.11,.02),V(.05,-.08,-.02)].forEach((d,i)=>snowflake(g,A(dockWinter,d),.075+i*.008,.83,KIND.FEED_WINTER,SEASON.WINTER));
+};
+
+const GEN2273_BASE_RENDERER=renderer;
+renderer=function(gl,g,backend){
+  const R=GEN2273_BASE_RENDERER(gl,g,backend);
+  R.basePositions=new Float32Array(g.p);
+  R.positionData=new Float32Array(g.p);
+  gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);
+  gl.bufferData(gl.ARRAY_BUFFER,R.positionData,gl.DYNAMIC_DRAW);
+  return R;
+};
+function gen2273ApplyRendererPositions(gl,R,g,runtime){
+  R.positionData.set(R.basePositions);
+  for(const range of g.objectRanges){
+    const identity=GEN2273_MOBILE_OBJECT_REGISTRY[range.objectId],current=runtime.currentXYZ[range.objectId],dx=current.x-identity.homeXYZ.x,dy=current.y-identity.homeXYZ.y,dz=current.z-identity.homeXYZ.z;
+    for(let vertex=range.startVertex;vertex<range.endVertex;vertex++){const offset=vertex*3;R.positionData[offset]=R.basePositions[offset]+dx;R.positionData[offset+1]=R.basePositions[offset+1]+dy;R.positionData[offset+2]=R.basePositions[offset+2]+dz}
+  }
+  gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);
+  gl.bufferSubData(gl.ARRAY_BUFFER,0,R.positionData);
+}
+function gen2273EnvironmentState(ms,reduced,lockSeconds){
+  if(reduced)return{active:true,phase:'FOUR_DOMAIN_ACTIVE',progress:1,color:[.012,.026,.052,.68]};
+  const lockMs=lockSeconds*1000;
+  if(ms<lockMs){const u=clamp(ms/lockMs);return{active:true,phase:'ENTRANCE_AND_SETTLEMENT',progress:u,color:[mix(.006,.014,u),mix(.014,.030,u),mix(.032,.060,u),.68]}}
+  const period=CONTRACT.environmentCycleSeconds*1000,t=((ms-lockMs)%period+period)%period,u=t/period;
+  const frames=[{at:0,phase:'FOUR_DOMAIN_ACTIVE',color:[.014,.030,.060,.68]},{at:.25,phase:'LOCAL_MOVEMENT',color:[.018,.070,.080,.60]},{at:.50,phase:'LOCAL_DENSITY',color:[.095,.038,.020,.70]},{at:.75,phase:'LOCAL_RECOVERY',color:[.004,.010,.034,.78]},{at:1,phase:'FOUR_DOMAIN_ACTIVE',color:[.014,.030,.060,.68]}];
+  let a=frames[0],b=frames[1];for(let i=0;i<frames.length-1;i++)if(u>=frames[i].at&&u<=frames[i+1].at){a=frames[i];b=frames[i+1];break}
+  const q=smooth(a.at,b.at,u);return{active:true,phase:a.phase,progress:u,color:a.color.map((value,index)=>mix(value,b.color[index],q))};
+}
+function gen2273CycleTimeSeconds(ms,lockSeconds){const lockMs=lockSeconds*1000;if(ms<=lockMs)return Math.max(0,ms)/1000;const period=CONTRACT.environmentCycleSeconds*1000;return(((ms-lockMs)%period+period)%period)/1000}
+
+const GEN2273_BOUND_GEOMETRY=build();
+const GEN2273_BINDING_PROOF=gen2273AssertBoundRanges(GEN2273_BOUND_GEOMETRY);
+function runGen2273MechanicalCheckpointProofs(){
+  const ids=GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>object.objectId),names=GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>object.id),identityFrozen=GEN2273_MOBILE_OBJECT_REGISTRY.every(Object.isFrozen),uniqueIdentity=new Set(ids).size===96&&new Set(names).size===96&&ids.every((id,index)=>id===index);
+  const circulationStartsAtHome=GEN2273_MOBILE_OBJECT_REGISTRY.every(object=>gen2273SameXYZ(P_circulation(object,0),P_static(object)));
+  const localStartsAtHome=GEN2273_MOBILE_OBJECT_REGISTRY.every(object=>gen2273SameXYZ(P_local(object,0),P_static(object)));
+  const controller=createGen2273Runtime(1.9,false),indices=[];
+  [0,3500,12500,18400,19350,20300].forEach(ms=>indices.push(controller.advance(ms).stateIndex));
+  const lockSnapshot=controller.snapshot(),originBefore=gen2273CloneXYZ(controller.settlementOrigin[0]),stateBefore=lockSnapshot.stateIndex;
+  const earlierSnapshot=controller.advance(1000),originAfter=controller.settlementOrigin[0];
+  const monotonic=indices.every((value,index)=>index===0||value>=indices[index-1])&&earlierSnapshot.stateIndex===stateBefore;
+  const orderedTransitions=lockSnapshot.transitionLog.map(entry=>entry.state).join('|')===GEN2273_STATE_ORDER.join('|');
+  const originCapturedOnce=lockSnapshot.settlementOriginCaptureCount===96&&gen2273SameXYZ(originBefore,originAfter);
+  const physical=createGen2273Runtime(1.9,false);physical.advance(18400);const origin=gen2273CloneXYZ(physical.settlementOrigin[0]);physical.advance(19350);const expectedMid=L(origin,GEN2273_DOMAIN_HANDOFF_XYZ[0],smoother(.5)),midError=gen2273Distance(physical.currentXYZ[0],expectedMid);physical.advance(20300);const lockError=gen2273Distance(physical.currentXYZ[0],GEN2273_DOMAIN_HANDOFF_XYZ[0]),physicalSnapshot=physical.snapshot();
+  const durationLaw=GEN2273_SETTLEMENT_CANDIDATES.every(duration=>Math.abs(createGen2273Runtime(duration,false).snapshot().lockSeconds-(GEN2273_TREE_COMPLETE_SECONDS+duration))<GEN2273_EPSILON);
+  const signatures=[0,24,48,72].map(id=>{const object=GEN2273_MOBILE_OBJECT_REGISTRY[id],home=P_static(object),local=P_local(object,1);return V(local.x-home.x,local.y-home.y,local.z-home.z)});
+  let distinctLocal=true;for(let i=0;i<signatures.length;i++)for(let j=i+1;j<signatures.length;j++)if(gen2273Distance(signatures[i],signatures[j])<.001)distinctLocal=false;
+  const identityState=Object.freeze({passed:uniqueIdentity&&identityFrozen&&GEN2273_BINDING_PROOF.passed&&monotonic&&orderedTransitions&&originCapturedOnce,objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,rangeCount:GEN2273_BINDING_PROOF.objectRangeCount,uniqueObjectIds:GEN2273_BINDING_PROOF.uniqueObjectIds,monotonic,orderedTransitions,originCapturedOnce,noRespawnOrSecondVisiblePopulation:GEN2273_BINDING_PROOF.visibleFeedPopulationCount===0});
+  const physicalContinuity=Object.freeze({passed:circulationStartsAtHome&&localStartsAtHome&&midError<GEN2273_EPSILON&&lockError<GEN2273_EPSILON&&physicalSnapshot.postSettlementCirculationEvaluations===0&&durationLaw,circulationStartsAtHome,localStartsAtHome,midpointError:midError,lockError,postSettlementCirculationEvaluations:physicalSnapshot.postSettlementCirculationEvaluations,durationLaw});
+  const productBoundary=Object.freeze({passed:lockSnapshot.globalCirculation===0&&lockSnapshot.globalCirculationUpdatePath==='DISABLED'&&lockSnapshot.entranceAuthority==='TERMINATED'&&lockSnapshot.treeGrowthAuthority==='TERMINATED'&&lockSnapshot.communityInteractionAvailable&&lockSnapshot.domainLocalPhysicsAuthoritative&&lockSnapshot.domainLocked&&lockSnapshot.state===GEN2273_STATE.COEXISTENCE&&distinctLocal,domainLockAtSeconds:lockSnapshot.lockSeconds,noPostLockWait:lockSnapshot.state===GEN2273_STATE.COEXISTENCE,distinctDomainLocalMotion:distinctLocal,communityInteractionAvailable:lockSnapshot.communityInteractionAvailable});
+  return Object.freeze({passed:identityState.passed&&physicalContinuity.passed&&productBoundary.passed,identityState,physicalContinuity,productBoundary});
+}
+const GEN2273_MECHANICAL_CHECKPOINT_PROOFS=runGen2273MechanicalCheckpointProofs();
+if(!GEN2273_MECHANICAL_CHECKPOINT_PROOFS.passed)throw Error('GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_PROOF_FAILURE');
+const GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=Object.freeze({
+  id:'GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_V2',
+  parentCheckpointCommit:'48d4de88cda14942614929fe30c4a2c3b6788cf1',
   governingHead:'f9c0ed375724a2e073a49f913eb8adc0d5e2ca38',
   stateOrder:GEN2273_STATE_ORDER,
   objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,
-  stableIdentityFields:Object.freeze(['id','objectId','domain','domainName','homeXYZ','spiralPhase','depthBand','depthBandName','motionProfile']),
-  positionLaws:Object.freeze(['P_static','P_circulation','P_local']),
   settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,
-  treeCompleteAnchorSeconds:GEN2273_TREE_COMPLETE_SECONDS,
-  renderMutationApplied:false
+  constructionBaselineDurationSeconds:GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS,
+  selectedSettlementDuration:null,
+  renderMutationApplied:true,
+  qualificationVariantsRendered:false,
+  evidenceHarnessFrozen:false,
+  proofs:GEN2273_MECHANICAL_CHECKPOINT_PROOFS,
+  nextLawfulAction:'FREEZE_EVIDENCE_HARNESS_THEN_RUN_1_5_1_9_2_3_WITHOUT_TUNING'
 });
-globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2273_STRUCTURAL_CHECKPOINT;
+globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;
+globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;
+globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2273Runtime});
+
+function gen2273Mount(host){
+  const doc=host.ownerDocument||document,mq=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)'),reduced=!!mq?.matches,settlementDuration=gen2273SettlementDuration(globalThis.DGB_COMMUNITY_GEN2273_SETTLEMENT_DURATION),runtime=createGen2273Runtime(settlementDuration,reduced);
+  const style=doc.createElement('style');style.dataset.communityLifecycleStyle='true';style.textContent='[data-community-lifecycle-mount]{position:relative;isolation:isolate;overflow:hidden;min-height:22rem}.community-lifecycle3d-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}.community-lifecycle3d-canvas:active{cursor:grabbing}@media(max-width:720px){[data-community-lifecycle-mount]{min-height:25rem}}@media(prefers-reduced-motion:reduce){.community-lifecycle3d-canvas{cursor:default}}';doc.head.append(style);
+  const options={alpha:true,antialias:true,depth:true,powerPreference:'low-power'},backendDefs=[{id:'webgl2',contexts:['webgl2'],webglVersion:2,shaderLanguage:'GLSL ES 3.00'},{id:'webgl1',contexts:['webgl','experimental-webgl'],webglVersion:1,shaderLanguage:'GLSL ES 1.00'}],geometry=GEN2273_BOUND_GEOMETRY,attempts=[];
+  let canvas,gl,R,backend,io,ro,raf=0,dead=false,contextLost=false,visible=true,start=performance.now(),last=start,baseYaw=-.20,targetYaw=baseYaw,yaw=baseYaw,targetPitch=-.055,pitch=targetPitch,drag=null,frameCount=0,contextLossCount=0,contextRestoreCount=0,firstProof=null,genState=runtime.snapshot().state,lifecycleState=reduced?LIFE_CYCLE.TWO:LIFE_CYCLE.ONE,treeState=reduced?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',environmentPhase=reduced?'FOUR_DOMAIN_ACTIVE':'ENTRANCE_AND_SETTLEMENT',transferActive=false,treeGeometryLocked=reduced;
+  const publishReceipt=(failure=null,extra={})=>{const gen=runtime.snapshot();globalThis.DGB_COMMUNITY_LIFECYCLE_3D_RECEIPT=Object.freeze({
+    contract:CONTRACT,initialized:!!R&&!failure,firstDraw:!!firstProof?.passed,visibleFrame:!!firstProof?.passed,backend:backend?.id||null,webglContexts:backend?1:0,webglVersion:backend?.webglVersion||null,shaderLanguage:backend?.shaderLanguage||null,precision:R?.precision||null,frameCount,contextLossCount,contextRestoreCount,
+    fixedGeometry:true,geometryRebuiltPerFrame:false,geometryFinite:true,treeLockPhase:.56,seasonCount:4,settlementDeterministic:true,boundedInspectionDegrees:22,reducedMotion:reduced,
+    lifecycleState,gen2273State:gen.state,gen2273StateIndex:gen.stateIndex,gen2273SettlementDuration:settlementDuration,gen2273LockSeconds:gen.lockSeconds,treeCycleMode:'GEN2273_EIGHT_STATE_LATCHED',treeCycleComplete:gen.domainLocked,treeState,treeGeometryLocked,transferActive,formationRestartCount:0,postLockTransferRestart:false,
+    canonicalMobileObjectCount:96,canonicalRendererBindingCount:geometry.objectRanges.length,settlementOriginCaptureCount:gen.settlementOriginCaptureCount,postSettlementCirculationEvaluations:gen.postSettlementCirculationEvaluations,globalCirculation:gen.globalCirculation,globalCirculationUpdatePath:gen.globalCirculationUpdatePath,entranceAuthority:gen.entranceAuthority,treeGrowthAuthority:gen.treeGrowthAuthority,communityInteractionAvailable:gen.communityInteractionAvailable,domainLocalPhysicsAuthoritative:gen.domainLocalPhysicsAuthoritative,
+    environmentActive:true,environmentPhase,environmentCycleSeconds:CONTRACT.environmentCycleSeconds,ambientRhythmMode:'DOMAIN_LOCAL_PHYSICS',environmentMode:CONTRACT.environment,environmentSectorCount:4,environmentDepthPlaneCount:CONTRACT.environmentDepthPlanes.length,permanentQuadrants:true,feedOrbitRevolutions:0,feedPathMode:'CANONICAL_OBJECT_CIRCULATION',feedTravelCompletesAtSeconds:GEN2273_TREE_COMPLETE_SECONDS,transferShutdownAtSeconds:gen.lockSeconds,guideRemnantsAfterLock:false,postLockFeeding:false,protectedCenter:true,rimTaper:null,
+    woodMaterialSystem:'CLASS_ASSIGNED_BROWN_ONLY',foliageMaterialClass:'FOLIAGE',fallbackPreserved:false,fallbackRemoved:true,vertexCount:R?.vertices||geometry.p.length/3,triangleCount:R?.triangles||geometry.i.length/3,visibleFrameProof:firstProof,backendAttempts:attempts.map(x=>({...x})),mechanicalCheckpoint:GEN2273_PRODUCT_BOUNDARY_CHECKPOINT,failure,...extra
+  })};
+  const publishFailure=(reason,extra={})=>{host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus=reason;host.dataset.lifecycleFallback='none';publishReceipt(reason,extra)};
+  const makeCanvas=()=>{const c=doc.createElement('canvas');c.className='community-lifecycle3d-canvas';c.setAttribute('aria-hidden','true');return c};
+  const resize=()=>{const r=canvas.getBoundingClientRect(),cap=Math.min(r.width,r.height)<520?1.25:1.5,d=Math.min(cap,Math.max(1,globalThis.devicePixelRatio||1)),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}gl.viewport(0,0,w,h);return w/Math.max(1,h)};
+  const draw=(now=performance.now(),prove=false)=>{
+    if(dead||contextLost||!R)return false;
+    const asp=resize(),elapsed=Math.max(0,now-start),gen=runtime.advance(elapsed),s=gen.stateIndex>=3?MATURE_TREE_STATE:lifecycle(Math.min(elapsed,GEN2273_TREE_COMPLETE_SECONDS*1000)),env=gen2273EnvironmentState(elapsed,reduced,gen.lockSeconds),nextLifecycle=gen.domainLocked?LIFE_CYCLE.TWO:LIFE_CYCLE.ONE,nextTreeState=gen.stateIndex>=3?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',nextEnvironmentPhase=env.phase,stateChanged=gen.state!==genState||nextLifecycle!==lifecycleState||nextTreeState!==treeState||nextEnvironmentPhase!==environmentPhase,dt=Math.min(40,Math.max(0,now-last));
+    genState=gen.state;lifecycleState=nextLifecycle;treeState=nextTreeState;environmentPhase=nextEnvironmentPhase;transferActive=gen.globalCirculationAuthority;treeGeometryLocked=gen.stateIndex>=3;last=now;
+    if(!reduced){const e=1-Math.exp(-dt/135);yaw+=(targetYaw-yaw)*e;pitch+=(targetPitch-pitch)*e}
+    gen2273ApplyRendererPositions(gl,R,geometry,runtime);
+    gl.useProgram(R.p);if(R.vao)gl.bindVertexArray(R.vao);gl.clearColor(...env.color);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+    gl.uniform1f(R.u.yaw,yaw);gl.uniform1f(R.u.pitch,pitch);gl.uniform1f(R.u.scale,asp<.76?1.04:asp<1.05?1.10:1.15);gl.uniform1f(R.u.aspect,asp);gl.uniform1f(R.u.camera,4.55);
+    gl.uniform1f(R.u.time,gen2273CycleTimeSeconds(elapsed,gen.lockSeconds));gl.uniform1f(R.u.intro,reduced?CONTRACT.cycleSeconds:Math.min(CONTRACT.cycleSeconds,elapsed/1000));gl.uniform1f(R.u.progress,s.p);gl.uniform1f(R.u.activity,s.activity);gl.uniform1f(R.u.retained,s.retained);gl.uniform1f(R.u.renewal,s.renewal);gl.uniform1f(R.u.reduced,reduced?1:0);gl.uniform1f(R.u.lifecycle,gen.domainLocked?1:0);
+    gl.drawElements(gl.TRIANGLES,R.count,gl.UNSIGNED_SHORT,0);const err=gl.getError();if(err!==gl.NO_ERROR)throw Error(`LIFECYCLE_DRAW_GL:${err}`);frameCount++;
+    if(stateChanged){host.dataset.lifecycleState=lifecycleState;host.dataset.gen2273State=gen.state;host.dataset.gen2273StateIndex=String(gen.stateIndex);host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;host.dataset.lifecycleFeeding=transferActive?'active':'stopped';host.dataset.communityInteraction=gen.communityInteractionAvailable?'available':'entrance';if(firstProof?.passed)publishReceipt()}
+    return prove?visiblePixelProof(gl,canvas):true;
+  };
+  host.dataset.lifecycleStatus='initializing';host.dataset.lifecycleContract=CONTRACT.id;host.dataset.lifecycleState=lifecycleState;host.dataset.gen2273State=genState;host.dataset.lifecycleFeeding='stopped';host.setAttribute('role','img');
+  host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains remain visible while the same residents circulate through tree formation, settle back to their domains, and continue under distinct local motion after the entrance ends.');
+  for(const def of backendDefs){const c=makeCanvas();let candidateGl=null,candidateR=null,contextName=null;for(const name of def.contexts){try{candidateGl=c.getContext(name,options)}catch{}if(candidateGl){contextName=name;break}}if(!candidateGl){attempts.push({backend:def.id,result:'context-unavailable'});continue}try{candidateR=renderer(candidateGl,geometry,def);const setupError=candidateGl.getError();if(setupError!==candidateGl.NO_ERROR)throw Error(`renderer-gl-error-${setupError}`);canvas=c;gl=candidateGl;R=candidateR;backend={...def,contextName};host.append(canvas);const proof=draw(start,true);if(!proof?.passed)throw Error('visible-frame-proof-failed');firstProof=proof;attempts.push({backend:def.id,result:'selected'});break}catch(error){attempts.push({backend:def.id,result:'failed',reason:String(error?.message||error)});dispose(candidateGl,candidateR);c.remove();canvas=undefined;gl=undefined;R=undefined;backend=undefined}}
+  if(!R){host.removeAttribute('role');host.removeAttribute('aria-label');style.remove();publishFailure(attempts.every(x=>x.result==='context-unavailable')?'webgl-unavailable':'renderer-initialization-failed');return}
+  host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';publishReceipt();
+  const stopAnimation=()=>{if(raf){cancelAnimationFrame(raf);raf=0}},hardFail=reason=>{if(dead)return;dead=true;stopAnimation();io?.disconnect();ro?.disconnect();publishFailure(reason)},tick=now=>{raf=0;if(dead||contextLost||reduced||!visible||doc.hidden)return;try{draw(now)}catch{hardFail('frame-draw-failed');return}raf=requestAnimationFrame(tick)},kick=()=>{if(dead||contextLost)return;if(reduced){try{draw()}catch{hardFail('frame-draw-failed')}return}if(visible&&!doc.hidden&&!raf){last=performance.now();raf=requestAnimationFrame(tick)}};
+  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(dead)return;contextLost=true;contextLossCount++;stopAnimation();host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus='context-lost';publishReceipt('context-lost',{recoverable:true})});
+  canvas.addEventListener('webglcontextrestored',()=>{if(dead)return;try{R=renderer(gl,geometry,backend);contextLost=false;contextRestoreCount++;last=performance.now();const proof=draw(last,true);if(!proof?.passed)throw Error('visible-frame-proof-failed');firstProof=proof;host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';publishReceipt(null,{restored:true});kick()}catch{contextLost=false;hardFail('context-restore-failed')}});
+  const yawLimit=22*Math.PI/180;
+  canvas.addEventListener('pointerdown',event=>{if(reduced||event.button!==0)return;drag={id:event.pointerId,x:event.clientX,y:event.clientY,startYaw:yaw,axis:null};canvas.setPointerCapture?.(event.pointerId)});
+  canvas.addEventListener('pointermove',event=>{if(reduced)return;const rect=canvas.getBoundingClientRect();if(drag&&event.pointerId===drag.id){const dx=event.clientX-drag.x,dy=event.clientY-drag.y;if(!drag.axis&&Math.hypot(dx,dy)>7)drag.axis=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y';if(drag.axis==='x'){event.preventDefault();targetYaw=baseYaw+clamp(dx/Math.max(1,rect.width)*1.6,-yawLimit,yawLimit);kick()}return}if(event.pointerType==='mouse'&&rect.width){targetYaw=baseYaw+(((event.clientX-rect.left)/rect.width)*2-1)*.08;targetPitch=-.055-(((event.clientY-rect.top)/rect.height)*2-1)*.035;kick()}},{passive:false});
+  const release=event=>{if(!drag||event.pointerId!==drag.id)return;drag=null;targetYaw=baseYaw;targetPitch=-.055;kick()};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);canvas.addEventListener('pointerleave',()=>{if(!drag){targetYaw=baseYaw;targetPitch=-.055;kick()}},{passive:true});
+  doc.addEventListener('visibilitychange',()=>{if(doc.hidden)stopAnimation();else kick()},{passive:true});
+  if('IntersectionObserver'in globalThis){io=new IntersectionObserver(entries=>{visible=entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>.02);if(!visible)stopAnimation();kick()},{rootMargin:'120px 0px',threshold:[0,.02]});io.observe(host)}
+  if('ResizeObserver'in globalThis){ro=new ResizeObserver(()=>{if(contextLost||dead)return;try{const proof=draw(performance.now(),!firstProof?.passed);if(proof&&proof!==true&&!proof.passed)hardFail('resize-draw-failed');else kick()}catch{hardFail('resize-draw-failed')}});ro.observe(host)}
+  kick();
+}
+mount=gen2273Mount;

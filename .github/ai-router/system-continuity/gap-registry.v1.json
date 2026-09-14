@@ -324,6 +324,39 @@
       ],
       "closureRequirements": [],
       "authorityCreated": false
+    },
+    {
+      "gapId": "AUTHORITY_PROVENANCE_RECEIPT_RETRIEVAL_PAGINATION_DEPENDENCY",
+      "status": "OPEN",
+      "discoveredAtHead": "c8a51652d511705304a03e4e3d16b83b6390f151",
+      "coordinationIssue": 3384,
+      "summary": "Canonical authority provenance reauthentication can fail after successful admission because the workflow-bot receipt was rediscovered by scanning at most six 100-comment pages on a growing coordination issue. Generation 2228 reproduced the defect in both successor and terminal-closure paths. The gap remains OPEN until complete-pagination compatibility, exact receipt recovery for the production specimen, differential-continuity revalidation, and real Gen2228 closure all pass.",
+      "interfaceKeys": [
+        "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1",
+        "CANONICAL_OPERATION_INTAKE_RETURN_V1",
+        "REMOTE_OPERATION_SUCCESSOR_RECEIPT_V1",
+        "REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1"
+      ],
+      "pathScopes": [
+        "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+        "tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs",
+        ".github/workflows/canonical-operation-intake-transport-v1.yml",
+        ".github/workflows/remote-operation-successor-v1.yml"
+      ],
+      "evidenceRefs": [
+        "ISSUE_3384",
+        "GEN2228_CANONICAL_ADMISSION_RUN_34851805643",
+        "GEN2228_SUCCESSOR_AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND",
+        "GEN2228_TERMINAL_CLOSURE_AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND",
+        "GEN2229_PROVENANCE_REPAIR_ADMISSION_RUN_34854643198"
+      ],
+      "closureRequirements": [
+        "OVER_600_COMMENT_REGRESSION_PASS",
+        "GEN2228_EXACT_RECEIPT_REAUTHENTICATION_PASS",
+        "GEN2228_TERMINAL_CLOSURE_PASS",
+        "DIFFERENTIAL_CONTINUITY_DISJOINT_CARRY_FORWARD_REVALIDATED"
+      ],
+      "authorityCreated": false
     }
   ]
 }

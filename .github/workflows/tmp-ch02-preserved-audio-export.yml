@@ -11,10 +11,10 @@ jobs:
       - name: Stage preserved Chapter 02 carriers
         run: |
           mkdir -p out
-          cp showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4 out/failed-gen2128-carrier.mp4
           cp showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4 out/approved-30s-vivaldi-carrier.mp4
+          cp showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4 out/predecessor-18s-vivaldi-carrier.mp4
       - uses: actions/upload-artifact@v4
         with:
-          name: preserved-chapter02-audio-carriers
+          name: preserved-chapter02-approved-audio-predecessors
           path: out/
           if-no-files-found: error

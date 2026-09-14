@@ -7311,69 +7311,6 @@
       "scopeHash": "ae3a228ec6626ba8b7f3d5a77f8fa559334c7bf152521a19bc38c749798df358",
       "state": "ADMITTED_LOCKED"
     },
-    "ae58a25719dceb7e83ef11adc8ff5b3c0226ddeb868cc8f45be7e55ece64d60a": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "f9c0ed375724a2e073a49f913eb8adc0d5e2ca38",
-          "lockGeneration": 2274,
-          "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING",
-          "operationId": "AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING_20260914_002",
-          "procedureLocatorDigest": "af65016f4fc1ae100d994367df2019043bdff1042cdfff98cbc7258fd615fa80",
-          "requestDigest": "eb070368158ccc6391d05d205a3d0fe1efa343145f2125801d2350c217769741",
-          "scopeHash": "ae58a25719dceb7e83ef11adc8ff5b3c0226ddeb868cc8f45be7e55ece64d60a"
-        },
-        "bindingDigest": "0d3dd8520eb3eb5100af12edd5b83ace5c5ff5dc87b3e223b7ce56b1d1b87bfa",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "1f56ceced7d41259c4f4cbfb1b595a42763f0ee8f5a5744defc7f9a2dfab8c45",
-          "commentId": 5671512510,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3350,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34902840268,
-          "workflowSha": "f9c0ed375724a2e073a49f913eb8adc0d5e2ca38"
-        },
-        "lineageAnchorCommitSha": "975567a3b5d84eca67eb0cb0dd159a2660f9503a",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "f9c0ed375724a2e073a49f913eb8adc0d5e2ca38",
-      "lockGeneration": 2274,
-      "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING",
-      "operationId": "AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING_20260914_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "b604752bc6326f4bb9fed8add10c1efe4452c4ff",
-        "lockGeneration": 2264,
-        "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_42S_REVIEW_MASTER",
-        "operationId": "AWARDS_CHAPTER_02_FINAL_42S_REVIEW_MASTER_20260914_004",
-        "preservedEvidenceRefs": [
-          "ISSUE_3350_OWNER_FREEZE_42S_FINAL_BUILD_MANIFEST_CONTRACT_5670832115",
-          "ISSUE_3350_42S_FINAL_BUILD_MANIFEST_V1_5670992237",
-          "ISSUE_3350_42S_FINAL_BUILD_MANIFEST_V2_5671064790",
-          "GEN2264_TECHNICAL_COMPARISON_EVIDENCE_ONLY_5670140065",
-          "DRIVE_MASTER_AUDIO_CARRIER_DIAMOND_GATE_H_EARTH_AUDRALIA_CHAPTER02_FINAL_42S_REVIEW_V1",
-          "CORROBORATING_DRIVE_MASTER_CHAPTER02_FINAL_REVIEW_V4_42S",
-          "FAILED_SUCCESSOR_5671157133_FINGERPRINT_DOMAIN_ONLY_NO_MUTATION"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AWARDS_CH02_GEN2264_TO_MASTER_AUDIO_PICTURE_BINDING_20260914_002"
-      },
-      "procedureLocatorDigest": "af65016f4fc1ae100d994367df2019043bdff1042cdfff98cbc7258fd615fa80",
-      "released": false,
-      "requestDigest": "eb070368158ccc6391d05d205a3d0fe1efa343145f2125801d2350c217769741",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ae58a25719dceb7e83ef11adc8ff5b3c0226ddeb868cc8f45be7e55ece64d60a",
-      "state": "ADMITTED_LOCKED"
-    },
     "b005780502dd946f07165ee8dc69dabc7435554d107eb54a089ac8d16fdfed99": {
       "governingHead": "f1016a29d28b0790041567eae1c05dab572bb6ed",
       "lockGeneration": 156,
@@ -56252,6 +56189,70 @@
         "transitionId": "AWARDS_CH02_GEN2264_TO_MASTER_AUDIO_PICTURE_BINDING_20260914_002"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f9c0ed375724a2e073a49f913eb8adc0d5e2ca38",
+          "lockGeneration": 2274,
+          "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING",
+          "operationId": "AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING_20260914_002",
+          "procedureLocatorDigest": "af65016f4fc1ae100d994367df2019043bdff1042cdfff98cbc7258fd615fa80",
+          "requestDigest": "eb070368158ccc6391d05d205a3d0fe1efa343145f2125801d2350c217769741",
+          "scopeHash": "ae58a25719dceb7e83ef11adc8ff5b3c0226ddeb868cc8f45be7e55ece64d60a"
+        },
+        "bindingDigest": "0d3dd8520eb3eb5100af12edd5b83ace5c5ff5dc87b3e223b7ce56b1d1b87bfa",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1f56ceced7d41259c4f4cbfb1b595a42763f0ee8f5a5744defc7f9a2dfab8c45",
+          "commentId": 5671512510,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3350,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34902840268,
+          "workflowSha": "f9c0ed375724a2e073a49f913eb8adc0d5e2ca38"
+        },
+        "lineageAnchorCommitSha": "975567a3b5d84eca67eb0cb0dd159a2660f9503a",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f9c0ed375724a2e073a49f913eb8adc0d5e2ca38",
+      "lockGeneration": 2274,
+      "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING",
+      "operationId": "AWARDS_CHAPTER_02_FINAL_42S_MASTER_AUDIO_PICTURE_BINDING_20260914_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "b604752bc6326f4bb9fed8add10c1efe4452c4ff",
+        "lockGeneration": 2264,
+        "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_42S_REVIEW_MASTER",
+        "operationId": "AWARDS_CHAPTER_02_FINAL_42S_REVIEW_MASTER_20260914_004",
+        "preservedEvidenceRefs": [
+          "ISSUE_3350_OWNER_FREEZE_42S_FINAL_BUILD_MANIFEST_CONTRACT_5670832115",
+          "ISSUE_3350_42S_FINAL_BUILD_MANIFEST_V1_5670992237",
+          "ISSUE_3350_42S_FINAL_BUILD_MANIFEST_V2_5671064790",
+          "GEN2264_TECHNICAL_COMPARISON_EVIDENCE_ONLY_5670140065",
+          "DRIVE_MASTER_AUDIO_CARRIER_DIAMOND_GATE_H_EARTH_AUDRALIA_CHAPTER02_FINAL_42S_REVIEW_V1",
+          "CORROBORATING_DRIVE_MASTER_CHAPTER02_FINAL_REVIEW_V4_42S",
+          "FAILED_SUCCESSOR_5671157133_FINGERPRINT_DOMAIN_ONLY_NO_MUTATION"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_CH02_GEN2264_TO_MASTER_AUDIO_PICTURE_BINDING_20260914_002"
+      },
+      "procedureLocatorDigest": "af65016f4fc1ae100d994367df2019043bdff1042cdfff98cbc7258fd615fa80",
+      "released": true,
+      "requestDigest": "eb070368158ccc6391d05d205a3d0fe1efa343145f2125801d2350c217769741",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ae58a25719dceb7e83ef11adc8ff5b3c0226ddeb868cc8f45be7e55ece64d60a",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

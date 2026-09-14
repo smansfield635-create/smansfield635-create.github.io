@@ -4697,6 +4697,49 @@
       "scopeHash": "7514c09859cffc07a70bcb5d0aebf9eb7b036a812b05192a73ff6b1f2de8ad8d",
       "state": "ADMITTED_LOCKED"
     },
+    "756985b60a8699030a7b7c23c91bbc30993bab04d5b3483802a7ba351a68b084": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b604752bc6326f4bb9fed8add10c1efe4452c4ff",
+          "lockGeneration": 2262,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_IV_PERMANENT_QUADRANT_DEPTH:V1",
+          "operationId": "COMMUNITY_STAGE_IV_PERMANENT_QUADRANT_DEPTH_20260914_001",
+          "procedureLocatorDigest": "5540ca0d48f746a78233aab3853e730d8d37a8b181dd3eacead2c2d0809f456e",
+          "requestDigest": "fcbeb16c2f94aa14eb26be028046d16c5fcfb9d3e5017ad935dcb41ac6c8a10f",
+          "scopeHash": "756985b60a8699030a7b7c23c91bbc30993bab04d5b3483802a7ba351a68b084"
+        },
+        "bindingDigest": "27a3f0bb46f8d79399b5647e59f7ce5561a47015b62473ecd8a5dba4f3f67412",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c84c0871f67c2e2145a8e43de8311a1163a5f2c91fb252dac9506718d420e912",
+          "commentId": 5669946003,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3443,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34889847128,
+          "workflowSha": "b604752bc6326f4bb9fed8add10c1efe4452c4ff"
+        },
+        "lineageAnchorCommitSha": "d0828909d8e91be910732a85198ac55d0a6918e6",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b604752bc6326f4bb9fed8add10c1efe4452c4ff",
+      "lockGeneration": 2262,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_IV_PERMANENT_QUADRANT_DEPTH:V1",
+      "operationId": "COMMUNITY_STAGE_IV_PERMANENT_QUADRANT_DEPTH_20260914_001",
+      "procedureLocatorDigest": "5540ca0d48f746a78233aab3853e730d8d37a8b181dd3eacead2c2d0809f456e",
+      "released": false,
+      "requestDigest": "fcbeb16c2f94aa14eb26be028046d16c5fcfb9d3e5017ad935dcb41ac6c8a10f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "756985b60a8699030a7b7c23c91bbc30993bab04d5b3483802a7ba351a68b084",
+      "state": "ADMITTED_LOCKED"
+    },
     "762e904550167722cf6b26349c50f104b9397614e7e863101b727be29295920a": {
       "governingHead": "38da390a802c25a615366c6f896d7501558c0811",
       "lockGeneration": 608,
@@ -10534,7 +10577,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2261,
+  "lockGeneration": 2262,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

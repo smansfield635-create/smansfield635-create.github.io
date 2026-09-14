@@ -4307,6 +4307,49 @@
       "scopeHash": "6cb86d6f0acfcdd744704cbc4633d67bd8f6f730bee3727baf0b614073f45b9b",
       "state": "ADMITTED_LOCKED"
     },
+    "6d5b4eb3bcb11434969afd29655a6fcbb0aef45617c802def0e2377b7e094970": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
+          "lockGeneration": 2260,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_III_PRODUCT_ADOPTION:V1",
+          "operationId": "COMMUNITY_STAGE_III_PRODUCT_ADOPTION_20260914_001",
+          "procedureLocatorDigest": "dbc7971c0704d00667ffaebb2b646028532725f5eb9dce46058cf0d69eb17320",
+          "requestDigest": "eba9dd8e18b40a77da6b7e0e084e075635dc56b689ed50e6f5901335149863e5",
+          "scopeHash": "6d5b4eb3bcb11434969afd29655a6fcbb0aef45617c802def0e2377b7e094970"
+        },
+        "bindingDigest": "6a7a0b9174adb4452091ac23b208adcc89b096539b4e0ea193de65ed2376912d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "05e3434de28e25da694d9b894d13d1d50f7e82032a27d6269547d5414f7404ea",
+          "commentId": 5669114777,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3439,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34884088672,
+          "workflowSha": "28784c87e1706e0c427680ebfa4b7763c1a83cef"
+        },
+        "lineageAnchorCommitSha": "c4a2b5c2c859bdb085b7a971103515458ae1b7d8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
+      "lockGeneration": 2260,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_III_PRODUCT_ADOPTION:V1",
+      "operationId": "COMMUNITY_STAGE_III_PRODUCT_ADOPTION_20260914_001",
+      "procedureLocatorDigest": "dbc7971c0704d00667ffaebb2b646028532725f5eb9dce46058cf0d69eb17320",
+      "released": false,
+      "requestDigest": "eba9dd8e18b40a77da6b7e0e084e075635dc56b689ed50e6f5901335149863e5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6d5b4eb3bcb11434969afd29655a6fcbb0aef45617c802def0e2377b7e094970",
+      "state": "ADMITTED_LOCKED"
+    },
     "6da62b42406e020e753a2570c63c0d9ad4d196bf5947a42919d20a9e5259cf6b": {
       "governingHead": "d33a6d19d7d236412ff27c067a3db2900dd1083c",
       "lockGeneration": 950,
@@ -10491,7 +10534,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2259,
+  "lockGeneration": 2260,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

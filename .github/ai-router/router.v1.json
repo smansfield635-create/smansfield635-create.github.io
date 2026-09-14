@@ -259,6 +259,14 @@
       "priority": 100
     },
     {
+      "projectId": "ESTATE_COSMIC_CONTINUITY",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": ["assets/dgb-estate-cosmos.js"],
+      "entrypoint": ".github/ai-router/projects/estate-cosmic-continuity/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
       "projectId": "BUILD",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": [],

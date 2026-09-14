@@ -34,7 +34,6 @@ const CONTRACT = Object.freeze({
 });
 
 const root = document.querySelector('[data-community-lifecycle-mount]');
-if (root) mount(root);
 
 function V(x,y,z){const q=v3(x,y,z);if(!q)throw Error('LIFECYCLE_VECTOR');return q}
 function A(a,b){const q=add(a,b);if(!q)throw Error('LIFECYCLE_ADD');return q}
@@ -265,5 +264,7 @@ function mount(host){
   if('ResizeObserver'in globalThis){ro=new ResizeObserver(()=>{if(contextLost||dead)return;try{const proof=draw(performance.now(),!firstProof?.passed);if(proof&&proof!==true&&!proof.passed)hardFail('resize-draw-failed');else kick()}catch{hardFail('resize-draw-failed')}});ro.observe(host)}
   kick();
 }
+
+if (root) mount(root);
 
 export { CONTRACT as DGB_COMMUNITY_LIFECYCLE_3D_CONTRACT };

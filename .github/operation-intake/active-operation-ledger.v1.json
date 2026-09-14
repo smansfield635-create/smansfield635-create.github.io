@@ -9058,6 +9058,49 @@
       "scopeHash": "e512953f3ea980fa5b3a9dd35dc7fe1fd9f68782c9d6abb99d832aa8afbfc741",
       "state": "ADMITTED_LOCKED"
     },
+    "e5e369dff395d6bb9496393c5db584f8fcbb8141db5c317453c5201bb83194de": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "93575b66d16242d3fc7242bd00e5b5db8fcf74fa",
+          "lockGeneration": 2215,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:COMMUNITY_3D_LIFECYCLE:V1",
+          "operationId": "COMMUNITY_GEOMETRY_KERNEL_3D_LIFECYCLE_20260913_001",
+          "procedureLocatorDigest": "360ffc9117439b97a39c74016abb55f1703f663520eb8e6e3133d5076b89f228",
+          "requestDigest": "8af619f5107fcf07e2165a14e0a156b06ee23aa947c80174c26744612a9a60f4",
+          "scopeHash": "e5e369dff395d6bb9496393c5db584f8fcbb8141db5c317453c5201bb83194de"
+        },
+        "bindingDigest": "9b52115a4601a8b8dbd23c8e970b9812089669dcf9d66a5eaa6e9d8c44662580",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6fd11ae0c1e93b38dde4c798854c3e11caacb6087a978d227edb426d99fde541",
+          "commentId": 5658093612,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3338,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34798672817,
+          "workflowSha": "93575b66d16242d3fc7242bd00e5b5db8fcf74fa"
+        },
+        "lineageAnchorCommitSha": "10b2dbf014e882720bb132dd8cee9fd70689a5aa",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "93575b66d16242d3fc7242bd00e5b5db8fcf74fa",
+      "lockGeneration": 2215,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:COMMUNITY_3D_LIFECYCLE:V1",
+      "operationId": "COMMUNITY_GEOMETRY_KERNEL_3D_LIFECYCLE_20260913_001",
+      "procedureLocatorDigest": "360ffc9117439b97a39c74016abb55f1703f663520eb8e6e3133d5076b89f228",
+      "released": false,
+      "requestDigest": "8af619f5107fcf07e2165a14e0a156b06ee23aa947c80174c26744612a9a60f4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e5e369dff395d6bb9496393c5db584f8fcbb8141db5c317453c5201bb83194de",
+      "state": "ADMITTED_LOCKED"
+    },
     "e5ea3daf509ed50beb2dd98ec7e0f88dfc7fd4593d645d8cad4c8768d42b577b": {
       "governingHead": "92b71c2bc452fa3e9153ce2cb863da6bcb672249",
       "lockGeneration": 114,
@@ -10108,7 +10151,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2214,
+  "lockGeneration": 2215,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

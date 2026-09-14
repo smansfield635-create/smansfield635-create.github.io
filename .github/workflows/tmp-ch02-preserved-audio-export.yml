@@ -8,12 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Stage preserved Chapter 02 carrier
+      - name: Stage preserved Chapter 02 carriers
         run: |
           mkdir -p out
-          cp showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4 out/preserved-chapter02-carrier.mp4
+          cp showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4 out/failed-gen2128-carrier.mp4
+          cp showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4 out/approved-30s-vivaldi-carrier.mp4
       - uses: actions/upload-artifact@v4
         with:
-          name: preserved-chapter02-carrier
-          path: out/preserved-chapter02-carrier.mp4
+          name: preserved-chapter02-audio-carriers
+          path: out/
           if-no-files-found: error

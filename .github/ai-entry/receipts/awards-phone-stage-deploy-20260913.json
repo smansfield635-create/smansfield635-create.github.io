@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "awards-phone-stage-deploy-20260913",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3343,
+  "requestBranch": "ai-dispatch-request-awards-phone-deploy-20260913",
+  "requestCommit": "e92cbe46e5efb40d8cfc9d5139f94707a7a24ee6",
+  "requestCommitParent": "5af2f018487620a57a1160ebed0d8cc412a1a032",
+  "currentMainSha": "5af2f018487620a57a1160ebed0d8cc412a1a032",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "5af2f018487620a57a1160ebed0d8cc412a1a032",
+    "surface_id": "awards"
+  },
+  "bridgeRunId": "34800183900",
+  "dispatchedRunId": 34800194526,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34800194526",
+  "dispatchedRunHeadSha": "5af2f018487620a57a1160ebed0d8cc412a1a032",
+  "dispatchedAt": "2026-09-14T02:44:07.365Z",
+  "resolvedAt": "2026-09-14T02:44:11.434Z"
+}

@@ -267,6 +267,17 @@
       "priority": 100
     },
     {
+      "projectId": "SHOWROOM_GLOBE_ZIONTS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "showroom/globe/earth/index.html",
+        "showroom/globe/earth/index.js"
+      ],
+      "entrypoint": ".github/ai-router/projects/showroom-globe-zionts/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
       "projectId": "BUILD",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": [],

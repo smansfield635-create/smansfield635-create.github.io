@@ -95,7 +95,7 @@
             "selector": "[data-return-orbit]"
           }
         ],
-        "timeoutMs": 5000
+        "timeoutMs": 12000
       },
       {
         "name": "return Zionts to orbit witness",

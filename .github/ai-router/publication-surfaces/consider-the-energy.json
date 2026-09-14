@@ -9,7 +9,7 @@
         "data-route=\"/campaigns/consider-the-energy/\"",
         "data-community-lifecycle-mount></figure>",
         "/assets/dgb-estate-cosmos.js",
-        "/campaigns/consider-the-energy/community-lifecycle3d.js?v=20260914-boot-order-recovery",
+        "/campaigns/consider-the-energy/community-lifecycle3d.js?v=20260914-one-shot-environment-v1",
         "Consider the Community with Consider the Energy."
       ],
       "excludes": [
@@ -25,6 +25,11 @@
         "SEED','ROOTS','NETWORK','GROWTH','TREE_LOCK','SETTLEMENT','CONTRIBUTION','RENEWAL",
         "SPRING','SUMMER','AUTUMN','WINTER",
         "b5289094db8648800197a03226d6322902960b48",
+        "lifecycleMode: 'ONE_SHOT_INTRO_THEN_MATURE_LOCK'",
+        "environment: 'LOCAL_HERO_POST_LOCK'",
+        "environmentCycleSeconds: 72",
+        "treeCycleComplete:treeState==='TREE_MATURE_LOCK'",
+        "environmentActive:environmentPhase!=='INACTIVE'",
         "function precisionProfile(gl)",
         "gl.getShaderPrecisionFormat",
         "#version 300 es",

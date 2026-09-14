@@ -1,0 +1,23 @@
+{
+  "schema": "RESEARCH_FRONTIER_REPRODUCTION_MANIFEST_v1",
+  "objectId": "RFV3-01",
+  "publicTitle": "Same State. Different Future.",
+  "technicalBinding": "RELATIONAL_TRANSITION_GEOMETRY + LVTG/LVM lineage + separate C-MAPSS predictive track",
+  "evidenceStatus": ["BOUNDED_EMPIRICAL"],
+  "sourceDispositions": ["PREDICTIVE_SIGNAL", "MECHANISM_SUPPORTED", "MECHANISM_REPLICATED", "NOT_IDENTIFIABLE_HISTORY_PRESERVED"],
+  "question": "Can present state look the same while the structure of the transitions still available carries additional predictive or causal information?",
+  "inputs": ["frozen C-MAPSS predictive records", "RTS24 equal-present-state equal-resource intervention twins", "30 sealed selected states", "pglib_opf_case60_c independent system"],
+  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2848"],
+  "comparator": "Frozen C-MAPSS baseline for prediction; matched equal-budget intervention twin for RTG.",
+  "procedure": ["preserve frozen selection/comparator rules", "compute D_i = sign(Delta_PROBE_i) * Delta_CHALLENGE_i", "compute T = mean_i(D_i)", "repeat frozen RTG test on the independent system without pooling experiments"],
+  "environment": "Public specification is implementation-neutral; exact historical execution environment is not represented as fully recomputable here.",
+  "expectedOutputs": {"cmapsFD003":"RMSE 39.0971 -> 26.2617 (+32.83%)","cmapsFD004":"RMSE 50.1103 -> 47.5843 (+5.04%)","cmapsFD002":"OBJECT_FAILURE; no scientific outcome","rtgSupport":{"T":0.5624591503267974,"ci95":[0.3326645453503039,0.7558825450242793]},"rtgReplication":{"system":"pglib_opf_case60_c","T":0.21785206258890463,"ci95":[0.11979333549127599,0.34360525563157146]}},
+  "acceptanceCriteria": "Recomputed outputs must preserve each experiment's frozen contract and must not pool prediction, mechanism support, and replication into one disposition.",
+  "verifier": "Independent recomputation against the public method/result records; no claim that every historical execution byte is available.",
+  "sourceIdentities": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md", "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2848"],
+  "knownGaps": ["incomplete original RTG raw-cell custody", "original selected-state-ledger bytes unavailable", "unaffiliated laboratory reproduction not observed"],
+  "proprietaryBoundary": "Complete Diamond Gate Bridge implementation is not required if a neutral implementation preserves the frozen inputs, intervention, statistic, comparator and acceptance criteria.",
+  "claimCeiling": "Bounded predictive utility and bounded controlled relational effect with independent-system prospective replication under frozen model semantics only; no universal or cross-domain law.",
+  "reproductionPackagingState": "RECORD_BOUND",
+  "externalReproductionObserved": false
+}

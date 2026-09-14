@@ -3340,6 +3340,49 @@
       "scopeHash": "55f254a2c22ee5db6f18e7d071a5584707a051b619d968d0e342b3c6df13c094",
       "state": "ADMITTED_LOCKED"
     },
+    "57bc32b942cc3bbaa92628e38db53a12a1ab6f3cf607babab3a6da08ab0be5f2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a4c3301d021456b386e6c877c2f89dbf322b8905",
+          "lockGeneration": 2267,
+          "lockScope": "PUBLICATION_SURFACE:ZIONTS:GEN2263:APPROACH_TIMEOUT:V1",
+          "operationId": "ZIONTS_GEN2263_PUBLICATION_APPROACH_TIMEOUT_REPAIR_20260914_001",
+          "procedureLocatorDigest": "8c57c031ca42da891309fb904b625396c29d0ec0d9f58dbd3bfa1450cf153a4a",
+          "requestDigest": "3e9b657a1d50d70b816c715c9199ab27600e247ee4a90296e00f71665f3b7879",
+          "scopeHash": "57bc32b942cc3bbaa92628e38db53a12a1ab6f3cf607babab3a6da08ab0be5f2"
+        },
+        "bindingDigest": "1262119bc817e014dfc42644a0617493f8639b7793782705b366c88d1a27fd8a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "da571a3000f0ba3a4defbc7ae2e728b01d5dbaa322a2f169cb662081b6c750a4",
+          "commentId": 5670390516,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3395,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34893416899,
+          "workflowSha": "a4c3301d021456b386e6c877c2f89dbf322b8905"
+        },
+        "lineageAnchorCommitSha": "2f502f3c43ae81e2c2f4fef8e3a1e6b0210ee24f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a4c3301d021456b386e6c877c2f89dbf322b8905",
+      "lockGeneration": 2267,
+      "lockScope": "PUBLICATION_SURFACE:ZIONTS:GEN2263:APPROACH_TIMEOUT:V1",
+      "operationId": "ZIONTS_GEN2263_PUBLICATION_APPROACH_TIMEOUT_REPAIR_20260914_001",
+      "procedureLocatorDigest": "8c57c031ca42da891309fb904b625396c29d0ec0d9f58dbd3bfa1450cf153a4a",
+      "released": false,
+      "requestDigest": "3e9b657a1d50d70b816c715c9199ab27600e247ee4a90296e00f71665f3b7879",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "57bc32b942cc3bbaa92628e38db53a12a1ab6f3cf607babab3a6da08ab0be5f2",
+      "state": "ADMITTED_LOCKED"
+    },
     "57f1964b5ea75cd4ce6a71ea83c8aa26e15590d6cc5ad71b4f08861f882cb961": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -10663,7 +10706,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2266,
+  "lockGeneration": 2267,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

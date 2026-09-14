@@ -1,0 +1,175 @@
+name: Temporary Compass cold-media gating executor
+
+on:
+  push:
+    branches:
+      - perf/compass-cold-media-gating-20260913-001
+    paths:
+      - .github/workflows/temp-compass-cold-media-gating.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: perf/compass-cold-media-gating-20260913-001
+          fetch-depth: 0
+
+      - name: Apply bounded cold-media scheduling repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          cap_path=Path('assets/compass/compass.capability-carousel.js')
+          ori_path=Path('assets/compass/compass.orientation-cinematic.js')
+          idx_path=Path('index.html')
+
+          # 1) Roll back only the failed hidden-sync RAF experiment.
+          cap=cap_path.read_text(encoding='utf-8')
+          start="function installFirstEntryHiddenSyncGate(){"
+          end="installFirstEntryHiddenSyncGate();\n"
+          assert cap.count(start)==1, 'hidden-sync gate start count mismatch'
+          assert cap.count(end)==1, 'hidden-sync gate end count mismatch'
+          i=cap.index(start)
+          j=cap.index(end,i)+len(end)
+          cap=cap[:i]+cap[j:]
+          assert 'installFirstEntryHiddenSyncGate' not in cap
+          cap_path.write_text(cap,encoding='utf-8')
+
+          # 2) Preserve the two-video cinematic composition, but do not attach
+          # the 9.1 MB master to either layer until Play is actually chosen.
+          ori=ori_path.read_text(encoding='utf-8')
+          replacements={
+            "ambientVideo.preload='auto';":"ambientVideo.preload='none';",
+            "  ambientVideo.src=CONTRACT.mediaPath;\n":"",
+            "video.preload='auto';":"video.preload='none';",
+            "  video.src=CONTRACT.mediaPath;\n":"",
+          }
+          for old,new in replacements.items():
+            assert ori.count(old)==1, f'orientation replacement count mismatch: {old!r}'
+            ori=ori.replace(old,new,1)
+
+          anchor="function currentNavigationType(){"
+          assert ori.count(anchor)==1
+          helper="""function activateCinematicMedia(){
+  const activate=media=>{
+    if(!media||media.dataset.mediaActivated==='true')return;
+    media.dataset.mediaActivated='true';
+    media.preload='auto';
+    media.src=CONTRACT.mediaPath;
+    media.load();
+  };
+  activate(session.ambientVideo);
+  activate(session.video);
+}
+
+"""
+          ori=ori.replace(anchor,helper+anchor,1)
+
+          play_anchor="""function play(){
+  if(session.state!==STATE.ARMED||session.playRequested)return;
+  if(reduced()){settle('reduced-motion-complete');return;}
+  session.playRequested=true;
+"""
+          play_replacement="""function play(){
+  if(session.state!==STATE.ARMED||session.playRequested)return;
+  if(reduced()){settle('reduced-motion-complete');return;}
+  activateCinematicMedia();
+  session.playRequested=true;
+"""
+          assert ori.count(play_anchor)==1, 'play anchor mismatch'
+          ori=ori.replace(play_anchor,play_replacement,1)
+          assert "ambientVideo.src=CONTRACT.mediaPath" not in ori
+          assert "video.src=CONTRACT.mediaPath" not in ori
+          assert ori.count('activateCinematicMedia();')==1
+          ori_path.write_text(ori,encoding='utf-8')
+
+          # 3) Defer the collapsed Chapter One film and ambient soundtrack.
+          idx=idx_path.read_text(encoding='utf-8')
+          chapter_old='<video controls preload="metadata" playsinline aria-label="Diamond Gate Bridge — Chapter One"><source src="/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4" type="video/mp4"></video>'
+          chapter_new='<video controls preload="none" playsinline aria-label="Diamond Gate Bridge — Chapter One" data-compass-chapter-one-video><source data-src="/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4" type="video/mp4"></video>'
+          assert idx.count(chapter_old)==1, 'Chapter One media anchor mismatch'
+          idx=idx.replace(chapter_old,chapter_new,1)
+
+          audio_old='<audio data-compass-ambient-audio autoplay loop playsinline preload="auto" aria-hidden="true" style="display:none"><source src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg" type="audio/ogg"></audio>'
+          audio_new='<audio data-compass-ambient-audio loop playsinline preload="none" aria-hidden="true" style="display:none"><source data-src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg" type="audio/ogg"></audio>'
+          assert idx.count(audio_old)==1, 'ambient audio anchor mismatch'
+          idx=idx.replace(audio_old,audio_new,1)
+
+          chapter_js_old="""    select(0);
+  }
+  const motivation=document.querySelector('[data-compass-motivation]');
+"""
+          chapter_js_new="""    select(0);
+    const activateChapterFilm=()=>{if(!chapter.open)return;const video=chapter.querySelector('[data-compass-chapter-one-video]');const source=video?.querySelector('source[data-src]');if(source&&!source.getAttribute('src')){video.preload='metadata';source.setAttribute('src',source.dataset.src||'');video.load();}};
+    chapter.addEventListener('toggle',activateChapterFilm);
+  }
+  const motivation=document.querySelector('[data-compass-motivation]');
+"""
+          assert idx.count(chapter_js_old)==1, 'Chapter One activation JS anchor mismatch'
+          idx=idx.replace(chapter_js_old,chapter_js_new,1)
+
+          ambient_js_old="""  if(ambient){ambient.volume=.24;const tryAmbient=()=>{if(!ambient.paused)return;const q=ambient.play();if(q&&q.catch)q.catch(()=>{})};tryAmbient();['pointerdown','pointerup','touchstart','touchend','click','keydown','wheel'].forEach(type=>document.addEventListener(type,tryAmbient,{passive:type!=='keydown'}));}
+"""
+          ambient_js_new="""  if(ambient){ambient.volume=.24;const activateAmbient=()=>{if(ambient.dataset.mediaActivated==='true')return;const source=ambient.querySelector('source[data-src]');if(source&&!source.getAttribute('src')){source.setAttribute('src',source.dataset.src||'');ambient.load();}ambient.dataset.mediaActivated='true';};const tryAmbient=()=>{activateAmbient();if(!ambient.paused)return;const q=ambient.play();if(q&&q.catch)q.catch(()=>{})};['pointerdown','pointerup','touchstart','touchend','click','keydown','wheel'].forEach(type=>document.addEventListener(type,tryAmbient,{passive:type!=='keydown'}));}
+"""
+          assert idx.count(ambient_js_old)==1, 'ambient activation JS anchor mismatch'
+          idx=idx.replace(ambient_js_old,ambient_js_new,1)
+
+          # Content-derived request identities so the measurement cannot hit the old runtime.
+          cap_cb=hashlib.sha256(cap_path.read_bytes()).hexdigest()[:16]
+          ori_cb=hashlib.sha256(ori_path.read_bytes()).hexdigest()[:16]
+          old_cap='compass.capability-carousel.js?v=compass-bounded-viewport-scheduling-001&cb=3bde95175e339ef8'
+          new_cap=f'compass.capability-carousel.js?v=compass-cold-media-gating-v1&cb={cap_cb}'
+          old_ori='compass.orientation-cinematic.js?v=audralia-immersive-title-v1&cb=6c8c39913ba3fa26'
+          new_ori=f'compass.orientation-cinematic.js?v=compass-cold-media-gating-v1&cb={ori_cb}'
+          assert idx.count(old_cap)==1, 'capability request identity anchor mismatch'
+          assert idx.count(old_ori)==1, 'orientation request identity anchor mismatch'
+          idx=idx.replace(old_cap,new_cap,1).replace(old_ori,new_ori,1)
+
+          # Cold HTML must not contain a network-active source for the three large media requests.
+          assert 'source src="/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4"' not in idx
+          assert 'source src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg"' not in idx
+          assert 'data-compass-ambient-audio autoplay' not in idx
+          assert 'data-compass-chapter-one-video' in idx
+          idx_path.write_text(idx,encoding='utf-8')
+
+          print('COLD_MEDIA_GATING_PATCH_PASS')
+          print('capability_cb='+cap_cb)
+          print('orientation_cb='+ori_cb)
+          PY
+
+          node --check assets/compass/compass.capability-carousel.js
+          node --check assets/compass/compass.orientation-cinematic.js
+
+          python - <<'PY'
+          from pathlib import Path
+          idx=Path('index.html').read_text(encoding='utf-8')
+          ori=Path('assets/compass/compass.orientation-cinematic.js').read_text(encoding='utf-8')
+          cap=Path('assets/compass/compass.capability-carousel.js').read_text(encoding='utf-8')
+          assert 'installFirstEntryHiddenSyncGate' not in cap
+          assert 'preload="none" playsinline aria-label="Diamond Gate Bridge — Chapter One" data-compass-chapter-one-video' in idx
+          assert 'data-compass-ambient-audio loop playsinline preload="none"' in idx
+          assert "ambientVideo.preload='none'" in ori and "video.preload='none'" in ori
+          assert ori.count('media.src=CONTRACT.mediaPath;')==1
+          print('COLD_MEDIA_GATING_STATIC_QUALIFICATION_PASS')
+          PY
+
+      - name: Commit bounded candidate and remove temporary executor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "ChatGPT Codex Connector"
+          git config user.email "noreply@openai.com"
+          git rm .github/workflows/temp-compass-cold-media-gating.yml
+          git add index.html assets/compass/compass.capability-carousel.js assets/compass/compass.orientation-cinematic.js
+          git diff --cached --check
+          git commit -m "Compass: defer cold media until explicit user intent"
+          git push origin HEAD:perf/compass-cold-media-gating-20260913-001

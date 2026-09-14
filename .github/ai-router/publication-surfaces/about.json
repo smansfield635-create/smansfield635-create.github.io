@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "about",
-  "description": "Qualified cinematic About estate with Audralia WORLD, authoritative Mirrorland STORY, Play/Skip threshold, user-gesture soundtrack start, one-month chronology calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
+  "description": "Qualified cinematic About estate with Audralia WORLD, authoritative Mirrorland STORY, Play/Skip threshold, user-gesture soundtrack start, navigable January–September history calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
   "checks": [
     {
       "path": "/about/index.html",
@@ -9,14 +9,20 @@
         "data-about-generation=\"documentary-estate-v2-reconstructed\"",
         "data-play-intro",
         "data-skip-intro",
-        "Chronology · repository evidence",
+        "Chronology · navigable history",
         "data-prev",
-        "August 2026",
+        "data-calendar-reader",
+        "September 2026",
+        "AI RULES",
+        "CLAIM RULES",
+        "AGENT RESULT",
+        "GRATITUDE COAST",
         "The human layer",
         "The work is ultimately about people."
       ],
       "excludes": [
-        "Eight historical states · repository anchors"
+        "Eight historical states · repository anchors",
+        "Chronology · repository evidence"
       ]
     },
     {
@@ -61,6 +67,70 @@
           {
             "type": "exists",
             "selector": "#about-main"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar previous month is keyboard operable",
+        "action": {
+          "type": "key",
+          "selector": "[data-prev]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "[data-title]",
+            "value": "August 2026"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar returns to September",
+        "action": {
+          "type": "click",
+          "selector": "[data-next]"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "[data-title]",
+            "value": "September 2026"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar event opens navigable history reader",
+        "action": {
+          "type": "click",
+          "selector": ".calendar-event"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-calendar-reader]:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-reader-title]",
+            "value": "Agentic result"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar reader explicit close restores closed state",
+        "action": {
+          "type": "click",
+          "selector": "[data-reader-close]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-calendar-reader][hidden]"
           }
         ],
         "timeoutMs": 5000

@@ -1,0 +1,56 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "SHOWROOM_GLOBE_ZIONTS",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [],
+  "ownedExactPaths": [
+    "showroom/globe/earth/index.html",
+    "showroom/globe/earth/index.js"
+  ],
+  "entrypoint": ".github/ai-router/projects/showroom-globe-zionts/entrypoint.v1.json",
+  "authorityBoundary": [
+    "PROJECT_REGISTRATION_CREATES_ROUTING_IDENTITY_ONLY_NOT_PRODUCT_MUTATION_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+    "SHOWROOM_GLOBE_ZIONTS_OWNS_ONLY_THE_EXISTING_ZIONTS_HTML_AND_RUNTIME_EXACT_PATHS",
+    "SHOWROOM_GLOBE_ZIONTS_DOES_NOT_OWN_SHOWROOM_GLOBE_AUDRALIA_H_EARTH_AWARDS_COMPASS_ASSETS_OR_NEIGHBORING_ROUTES",
+    "ZIONTS_IS_A_PASSIVE_NARRATIVE_FIRST_PLANETARY_PRESENTATION_NOT_AN_INSPECTABLE_OR_NAVIGABLE_WORLD",
+    "PLANETARY_INTERACTION_WORLD_SIMULATION_AND_CROSS_PROJECT_RUNTIME_AUTHORITY_MUST_BE_SEPARATELY_AUTHORIZED_AND_ARE_NOT_CREATED_BY_THIS_REGISTRATION"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json",
+    ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
+    "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_RUNTIME_OR_AUTHORITY_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path showroom/globe/earth/index.html --path showroom/globe/earth/index.js --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/showroom-globe-zionts-router-receipt.json",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "LOAD_ZIONTS_OWNER_CONTRACT_AND_PSLAM_ACK_PACK",
+      "BOUNDED_ZIONTS_CONSTRUCTION",
+      "FRESH_EXACT_HEAD_QUALIFICATION",
+      "OWNER_VISUAL_REVIEW",
+      "SEPARATE_EXACT_HEAD_MERGE_AND_PUBLICATION_AUTHORITY"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "EXACT_SUBJECT_HEAD",
+      "CLEAN_WORKTREE_OR_EQUIVALENT_EXACT_REMOTE_BRANCH_STATE",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_BOTH_EXACT_ZIONTS_PATHS"
+    ]
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_REQUIRED_AND_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_EITHER_ZIONTS_PATH_DOES_NOT_RESOLVE_UNIQUELY_TO_SHOWROOM_GLOBE_ZIONTS",
+    "STOP_IF_SCOPE_EXPANDS_BEYOND_THE_TWO_EXACT_ZIONTS_PATHS_WITHOUT_FRESH_AUTHORITY",
+    "STOP_IF_AUDRALIA_H_EARTH_OR_OTHER_WORLD_RUNTIME_AUTHORITY_IS_INFERRED_FROM_THIS_ROUTE",
+    "STOP_BEFORE_MERGE_DEPLOYMENT_OR_PUBLICATION_WITHOUT_SEPARATE_EXACT_HEAD_AUTHORITY"
+  ]
+}

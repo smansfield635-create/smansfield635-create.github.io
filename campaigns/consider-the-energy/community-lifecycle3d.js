@@ -23,27 +23,38 @@ const CONTRACT = Object.freeze({
   }),
   engineeringPrecedent: 'ANCIENT_ENERGY_TREE_3D_FIXED_SKELETAL_WEBGL',
   lifecycle: Object.freeze(['SEED','ROOTS','NETWORK','GROWTH','TREE_LOCK','SETTLEMENT','CONTRIBUTION','RENEWAL']),
+  lifecycleStates: Object.freeze(['LIFE_CYCLE_ONE_FORMATION','LIFE_CYCLE_TWO_AMBIENT']),
+  lifecycleMode: 'EXPLICIT_DUAL_LIFECYCLE_HARD_TRANSITION',
+  lifecycleTransitionSeconds: 18.4,
+  treeGeometryLock: 'HARD_AFTER_FORMATION',
+  transferMode: 'LIFE_CYCLE_ONE_ONLY',
+  postLockTransferRestart: false,
+  ambientRhythm: 'INDEPENDENT_CALM_MOVEMENT_GUST_DENSITY_RECOVERY',
   seasons: Object.freeze(['SPRING','SUMMER','AUTUMN','WINTER']),
   phaseWindows: Object.freeze({SEED:[0,.09],ROOTS:[.09,.22],NETWORK:[.22,.35],GROWTH:[.35,.56],TREE_LOCK:[.56,.64],SETTLEMENT:[.64,.78],CONTRIBUTION:[.78,.90],RENEWAL:[.90,1]}),
   treeLock: .56,
   inspectionYawLimitDegrees: 22,
   renderer: 'ONE_CONTEXT_WEBGL_FIXED_GEOMETRY_SHADER_PROGRESS',
-  lifecycleMode: 'ONE_SHOT_INTRO_THEN_MATURE_LOCK',
-  environment: 'FOUR_SECTOR_TAPERED_RIM_FEEDS_THEN_PERIMETER_ONLY',
+  environment: 'FOUR_PERMANENT_QUADRANT_VOLUMES_WITH_DEPTH_FEEDS',
+  environmentArchitecture: 'PERMANENT_QUADRANT_VOLUMES_PROTECTED_CENTER',
   environmentCycleSeconds: 72,
   environmentSectors: Object.freeze(['SPRING_FLOWERS_POLLEN','SUMMER_RAIN_WIND','AUTUMN_LEAVES','WINTER_SNOW']),
-  feedOrbitRevolutions: 1.5,
+  environmentDepthPlanes: Object.freeze(['BACKGROUND','MIDGROUND','FOREGROUND']),
+  environmentDepthModel: 'REAL_Z_SEPARATION_SCALE_OPACITY_MOTION_RATE',
+  feedPath: 'ZONE_SOURCE_TO_CENTER_DEPTH_TRAVERSAL',
+  feedOrbitRevolutions: 0,
   feedingWindowSeconds: Object.freeze([3.5,12.5]),
   dockingWindowSeconds: Object.freeze([12.5,16.5]),
   guideDissolveWindowSeconds: Object.freeze([16.5,18.4]),
   matureLockSeconds: 18.4,
   protectedCenter: true,
-  rimTaper: 'WIDEST_LEFT_RIGHT_THIN_TOP_BOTTOM',
+  rimTaper: null,
   postLockFeeding: false,
   topologyRandomness: false,
   cycleSeconds: 18.4
 });
 
+const LIFE_CYCLE=Object.freeze({ONE:'LIFE_CYCLE_ONE_FORMATION',TWO:'LIFE_CYCLE_TWO_AMBIENT'});
 const root = document.querySelector('[data-community-lifecycle-mount]');
 if (root) queueMicrotask(() => mount(root));
 
@@ -63,9 +74,27 @@ const KIND=Object.freeze({
   ROOT:0,NETWORK:1,TREE:2,CORE:3,SPRING:4,SUMMER:5,AUTUMN:6,WINTER:7,GEAR:8,
   CONTRIBUTION:9,RETURN:10,STAR:11,
   FEED_SPRING:12,FEED_SUMMER:13,FEED_AUTUMN:14,FEED_WINTER:15,GUIDE:16,
-  RIM_SPRING:17,RIM_SUMMER:18,RIM_AUTUMN:19,RIM_WINTER:20
+  ZONE_SPRING:17,ZONE_SUMMER:18,ZONE_AUTUMN:19,ZONE_WINTER:20,FOLIAGE:21
 });
 const SEASON=Object.freeze({NONE:-1,SPRING:0,SUMMER:1,AUTUMN:2,WINTER:3});
+const WOOD_MATERIAL=Object.freeze({
+  ROOT:Object.freeze([.145,.078,.038,1]),
+  TRUNK:Object.freeze([.205,.118,.058,1]),
+  PRIMARY:Object.freeze([.235,.132,.064,1]),
+  SECONDARY:Object.freeze([.195,.103,.049,1]),
+  TWIG:Object.freeze([.165,.085,.041,1])
+});
+const DEPTH_PLANES=Object.freeze([
+  Object.freeze({id:'BACKGROUND',z:-.78,scale:.58,alpha:.34,motion:.46}),
+  Object.freeze({id:'MIDGROUND',z:-.12,scale:.88,alpha:.62,motion:.78}),
+  Object.freeze({id:'FOREGROUND',z:.62,scale:1.24,alpha:.82,motion:1.18})
+]);
+const QUADRANT_VOLUMES=Object.freeze([
+  Object.freeze({season:SEASON.SPRING,kind:KIND.ZONE_SPRING,id:'FLOWERS',x:-1.74,y:1.50,xSpan:.72,ySpan:.92}),
+  Object.freeze({season:SEASON.SUMMER,kind:KIND.ZONE_SUMMER,id:'RAIN',x:-1.76,y:.02,xSpan:.72,ySpan:1.18}),
+  Object.freeze({season:SEASON.AUTUMN,kind:KIND.ZONE_AUTUMN,id:'LEAVES',x:1.76,y:.02,xSpan:.72,ySpan:1.18}),
+  Object.freeze({season:SEASON.WINTER,kind:KIND.ZONE_WINTER,id:'SNOW',x:1.74,y:1.50,xSpan:.72,ySpan:.92})
+]);
 
 function mesh(){return{p:[],n:[],c:[],q:[],k:[],s:[],i:[]}}
 function vert(g,p,n,c,q,k,season=SEASON.NONE){const i=g.p.length/3;g.p.push(p.x,p.y,p.z);g.n.push(n.x,n.y,n.z);g.c.push(...c);g.q.push(q);g.k.push(k);g.s.push(season);return i}
@@ -102,14 +131,14 @@ function cubeCore(g,o,size,color){
   orb(g,o,V(.095,.095,.095),[.98,.78,.28,1],.035,KIND.CORE,8,5);
 }
 function gear(g,o,r,teeth,q,color,season=SEASON.AUTUMN){ring(g,o,r,r,o.z,.017,q,color,KIND.GEAR,season,20);ring(g,o,r*.48,r*.48,o.z,.015,q,color,KIND.GEAR,season,16);for(let i=0;i<teeth;i++){const a=Math.PI*2*i/teeth,p0=V(o.x+Math.cos(a)*r*.78,o.y+Math.sin(a)*r*.78,o.z),p1=V(o.x+Math.cos(a)*r*1.16,o.y+Math.sin(a)*r*1.16,o.z);tube(g,p0,p1,.014,.014,q,q,color,KIND.GEAR,5,800+i,season)}}
-function flower(g,o,q,kind=KIND.SPRING,season=SEASON.SPRING,scale0=1){
-  const petal=[.95,.52,.67,1],center=[1,.78,.32,1];
+function flower(g,o,q,kind=KIND.SPRING,season=SEASON.SPRING,scale0=1,colorAlpha=1){
+  const petal=[.95,.52,.67,colorAlpha],center=[1,.78,.32,colorAlpha];
   orb(g,o,V(.035,.035,.028),center,q,kind,6,3,season);
   for(let i=0;i<5;i++){const a=Math.PI*2*i/5,p=A(o,V(Math.cos(a)*.065*scale0,Math.sin(a)*.065*scale0,(i%2-.5)*.02));orb(g,p,V(.052,.033,.025),petal,q,kind,6,3,season)}
 }
 function blossom(g,o,q,scale0=1){flower(g,o,q,KIND.SPRING,SEASON.SPRING,scale0)}
-function snowflake(g,o,r,q,kind=KIND.WINTER,season=SEASON.WINTER){
-  const c=[.72,.90,1,1];
+function snowflake(g,o,r,q,kind=KIND.WINTER,season=SEASON.WINTER,colorAlpha=1){
+  const c=[.72,.90,1,colorAlpha];
   for(let i=0;i<6;i++){const a=Math.PI*i/3,e=V(o.x+Math.cos(a)*r,o.y+Math.sin(a)*r,o.z);tube(g,o,e,.012,.005,q,q,c,kind,5,900+i,season);const m=L(o,e,.62),p1=A(m,V(-Math.sin(a)*r*.18,Math.cos(a)*r*.18,0)),p2=A(m,V(Math.sin(a)*r*.18,-Math.cos(a)*r*.18,0));tube(g,m,p1,.007,.003,q,q,c,kind,5,920+i,season);tube(g,m,p2,.007,.003,q,q,c,kind,5,940+i,season)}
 }
 function frost(g,o,r,q){snowflake(g,o,r,q)}
@@ -117,57 +146,68 @@ function bird(g,o,q){const c=[.98,.86,.58,1],l=A(o,V(-.20,.05,0)),r=A(o,V(.20,.0
 function leaf(g,o,q,kind,season,scale0=1,color=[.82,.40,.08,1]){orb(g,o,V(.075*scale0,.035*scale0,.028*scale0),color,q,kind,7,3,season)}
 function rainStroke(g,o,q,kind,season,scale0=1,color=[.12,.58,.90,.88]){tube(g,A(o,V(-.035,.075,.018)),A(o,V(.035,-.085,-.018)),.011*scale0,.006*scale0,q,q,color,kind,5,1120+Math.round(q*100),season)}
 function windStroke(g,o,q,kind,season,scale0=1,color=[.28,.78,.90,.78]){arc(g,A(o,V(-.12*scale0,0,0)),A(o,V(0,.065*scale0,.025)),A(o,V(.13*scale0,0,0)),.009,q,q,color,kind,1180+Math.round(q*100),season,6)}
+const alphaColor=(c,a)=>[c[0],c[1],c[2],a];
 
-function rimPoint(season,i,count){
-  const starts=[Math.PI/2,Math.PI,Math.PI*1.5,0],a=starts[season]+((i+.5)/count)*(Math.PI/2),side=Math.abs(Math.cos(a));
-  const band=.05+.18*side,offset=((i%3)-1)*band,rx=1.60+offset,ry=2.35+offset*.42;
-  return V(Math.cos(a)*rx,.28+Math.sin(a)*ry,-.16+(i%4)*.10);
+function quadrantPoint(zone,plane,i,count){
+  const col=i%4,row=Math.floor(i/4),cols=4,rows=Math.ceil(count/cols);
+  const x=((col+.5)/cols-.5)*2*zone.xSpan;
+  const y=((row+.5)/rows-.5)*2*zone.ySpan;
+  const jitterX=((i*7)%5-2)*.028,jitterY=((i*11)%7-3)*.022;
+  return V(zone.x+x+jitterX,zone.y+y+jitterY,plane.z+((i%3)-1)*.055);
 }
-function addEnvironment(g){
+function addQuadrantEnvironment(g){
+  const count=8;
+  for(const zone of QUADRANT_VOLUMES){
+    DEPTH_PLANES.forEach((plane,depthIndex)=>{
+      for(let i=0;i<count;i++){
+        const p=quadrantPoint(zone,plane,i,count),q=.10+zone.season*.17+depthIndex*.018+i*.006,near=plane.scale,alpha=plane.alpha;
+        if(zone.season===SEASON.SPRING){
+          if(i%3===0)flower(g,p,q,zone.kind,zone.season,.58*near,alpha);
+          else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,zone.kind,5,3,zone.season);
+        }else if(zone.season===SEASON.SUMMER){
+          rainStroke(g,p,q,zone.kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));
+          if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,zone.kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
+          if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,zone.kind,6,3,zone.season);
+        }else if(zone.season===SEASON.AUTUMN){
+          leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha));
+        }else{
+          if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,zone.kind,zone.season,alpha);
+          else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,zone.kind,5,3,zone.season);
+          if(depthIndex===0&&i%4===1)orb(g,A(p,V(.10,.02,-.02)),V(.13*near,.060*near,.050*near),[.64,.78,.86,alpha*.20],q,zone.kind,6,3,zone.season);
+        }
+      }
+    });
+  }
+
   const dockSpring=V(-1.06,1.48,.18),dockSummer=V(-1.17,.72,.15),dockAutumn=V(1.10,.76,.14),dockWinter=V(1.02,1.54,.16);
   [V(-.10,.04,0),V(.02,.12,.02),V(.12,-.03,-.01)].forEach((d,i)=>flower(g,A(dockSpring,d),.80,KIND.FEED_SPRING,SEASON.SPRING,.92+i*.08));
   [V(-.12,.10,.00),V(-.03,.03,.02),V(.08,.12,-.02),V(.14,-.01,.03)].forEach((d,i)=>rainStroke(g,A(dockSummer,d),.81,KIND.FEED_SUMMER,SEASON.SUMMER,.95+i*.04));
   windStroke(g,A(dockSummer,V(0,-.12,.01)),.81,KIND.FEED_SUMMER,SEASON.SUMMER,1.1);
   [V(-.13,.08,.00),V(-.02,.14,.02),V(.10,.07,-.02),V(-.08,-.06,.03),V(.11,-.08,.01)].forEach((d,i)=>leaf(g,A(dockAutumn,d),.82,KIND.FEED_AUTUMN,SEASON.AUTUMN,.90+(i%2)*.18,i%2?[.91,.48,.09,1]:[.69,.29,.045,1]));
   [V(-.10,.05,.00),V(.08,.11,.02),V(.05,-.08,-.02)].forEach((d,i)=>snowflake(g,A(dockWinter,d),.075+i*.008,.83,KIND.FEED_WINTER,SEASON.WINTER));
-
-  const count=12;
-  for(let i=0;i<count;i++){
-    const p=rimPoint(SEASON.SPRING,i,count),q=.10+i*.013;
-    if(i%3===0)flower(g,p,q,KIND.RIM_SPRING,SEASON.SPRING,.55);
-    else orb(g,p,V(.026,.018,.020),i%2?[.98,.60,.72,.86]:[1,.78,.36,.86],q,KIND.RIM_SPRING,5,3,SEASON.SPRING);
-  }
-  for(let i=0;i<count;i++){
-    const p=rimPoint(SEASON.SUMMER,i,count),q=.27+i*.013;
-    rainStroke(g,p,q,KIND.RIM_SUMMER,SEASON.SUMMER,.78);
-    if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,KIND.RIM_SUMMER,SEASON.SUMMER,.62);
-  }
-  for(let i=0;i<count;i++){
-    const p=rimPoint(SEASON.AUTUMN,i,count),q=.44+i*.013;
-    leaf(g,p,q,KIND.RIM_AUTUMN,SEASON.AUTUMN,.72+(i%3)*.10,i%2?[.94,.49,.08,.90]:[.68,.27,.035,.90]);
-  }
-  for(let i=0;i<count;i++){
-    const p=rimPoint(SEASON.WINTER,i,count),q=.61+i*.013;
-    if(i%3===0)snowflake(g,p,.052+(i%2)*.008,q,KIND.RIM_WINTER,SEASON.WINTER);
-    else orb(g,p,V(.025,.025,.021),[.74,.91,1,.88],q,KIND.RIM_WINTER,5,3,SEASON.WINTER);
-  }
 }
 
+function assertFiniteGeometry(g){
+  const finite=[g.p,g.n,g.c,g.q,g.k,g.s].every(values=>values.every(Number.isFinite));
+  const indices=g.i.every((value)=>Number.isInteger(value)&&value>=0&&value<g.p.length/3);
+  if(!finite||!indices)throw Error('LIFECYCLE_NONFINITE_GEOMETRY');
+  return true;
+}
 function build(){
   const g=mesh();
-  const bark=[.20,.12,.065,1],dark=[.105,.064,.035,1],network=[.055,.18,.22,1],coreGold=[.82,.58,.18,1],springGreen=[.08,.28,.12,1],summerGreen=[.03,.20,.11,1],water=[.08,.42,.72,.92],autumn=[.72,.35,.07,1],winter=[.64,.77,.82,1],returnBlue=[.04,.22,.34,1];
+  const dark=WOOD_MATERIAL.ROOT,network=[.055,.18,.22,1],coreGold=[.82,.58,.18,1],springGreen=[.08,.28,.12,1],summerGreen=[.03,.20,.11,1],water=[.08,.42,.72,.92],autumn=[.72,.35,.07,1],winter=[.64,.77,.82,1],returnBlue=[.04,.22,.34,1];
   const O=V(0,-.28,0);
   cubeCore(g,V(0,-.05,0),.52,coreGold);
   const roots=[V(-1.46,-1.05,.26),V(-1.06,-1.22,-.48),V(-.38,-1.30,-.74),V(.42,-1.28,-.70),V(1.10,-1.18,-.42),V(1.48,-1.04,.28),V(.91,-1.21,.67),V(-.91,-1.20,.69)];
-  roots.forEach((e,i)=>{const m=L(O,e,.48);tube(g,O,A(m,V(0,.04,0)),.17,.084,.09,.16,bark,KIND.ROOT,8,10+i);tube(g,A(m,V(0,.04,0)),e,.084,.028,.16,.22,dark,KIND.ROOT,7,30+i)});
+  roots.forEach((e,i)=>{const m=L(O,e,.48);tube(g,O,A(m,V(0,.04,0)),.17,.084,.09,.16,WOOD_MATERIAL.ROOT,KIND.ROOT,8,10+i);tube(g,A(m,V(0,.04,0)),e,.084,.028,.16,.22,dark,KIND.ROOT,7,30+i)});
   for(let i=0;i<roots.length;i++){const a=roots[i],b=roots[(i+1)%roots.length],m=A(L(a,b,.5),V(0,.12,0));tube(g,a,m,.023,.019,.22,.28,network,KIND.NETWORK,6,50+i*2);tube(g,m,b,.019,.023,.28,.33,network,KIND.NETWORK,6,51+i*2)}
   for(let i=0;i<4;i++){const h=V(0,-.96+i*.012,-.04+i*.02);tube(g,roots[i],h,.017,.023,.25,.31,network,KIND.NETWORK,5,70+i);tube(g,h,roots[i+4],.023,.017,.31,.35,network,KIND.NETWORK,5,80+i)}
   const trunk=[[O,V(-.07,.10,.03),.22,.18,.35,.40],[V(-.07,.10,.03),V(.05,.58,-.03),.18,.145,.40,.46],[V(.05,.58,-.03),V(-.04,1.04,.04),.145,.112,.46,.51],[V(-.04,1.04,.04),V(.03,1.43,-.02),.112,.082,.51,.56]];
-  trunk.forEach((s,i)=>tube(g,s[0],s[1],s[2],s[3],s[4],s[5],i<2?bark:summerGreen,KIND.TREE,8,100+i));
+  trunk.forEach((s,i)=>tube(g,s[0],s[1],s[2],s[3],s[4],s[5],i<2?WOOD_MATERIAL.TRUNK:WOOD_MATERIAL.PRIMARY,KIND.TREE,8,100+i));
   const tips=[V(-1.43,.56,.30),V(-1.20,.98,-.18),V(-.89,1.42,.20),V(-.44,1.72,-.10),V(.42,1.79,-.10),V(.91,1.51,.18),V(1.22,1.08,-.24),V(1.43,.66,.23),V(.03,1.99,.10)];
   const starts=[V(-.06,.29,.03),V(.03,.52,-.02),V(-.02,.74,.02),V(0,.92,.02),V(.02,1.15,-.01),V(.03,1.34,-.02)];
-  tips.forEach((t,i)=>{const s=starts[Math.min(starts.length-1,Math.floor(i*starts.length/tips.length))],side=i%2?-1:1,b=V((s.x+t.x)*.52+side*.06,mix(s.y,t.y,.48)+.12,(s.z+t.z)*.48+(i%3-1)*.09);tube(g,s,b,.078-i*.003,.044,.42+i*.006,.50+i*.004,bark,KIND.TREE,7,120+i*2);tube(g,b,t,.044,.018,.50+i*.004,.56,i<4?springGreen:i<7?summerGreen:winter,KIND.TREE,6,121+i*2)});
-  [[-.95,1.48,.06,.32,.22,.23,SEASON.SPRING,springGreen],[-.56,1.78,.00,.34,.24,.24,SEASON.SPRING,springGreen],[-.84,.92,.18,.28,.21,.22,SEASON.SUMMER,summerGreen],[-.42,1.22,-.08,.30,.22,.23,SEASON.SUMMER,summerGreen],[.48,1.20,.06,.30,.22,.23,SEASON.AUTUMN,autumn],[.91,.91,-.07,.28,.21,.22,SEASON.AUTUMN,autumn],[.58,1.76,.03,.34,.24,.24,SEASON.WINTER,winter],[.96,1.45,.08,.31,.22,.23,SEASON.WINTER,winter]].forEach((x)=>orb(g,V(x[0],x[1],x[2]),V(x[3],x[4],x[5]),x[7],.548,KIND.TREE,7,4,x[6]));
+  tips.forEach((t,i)=>{const s=starts[Math.min(starts.length-1,Math.floor(i*starts.length/tips.length))],side=i%2?-1:1,b=V((s.x+t.x)*.52+side*.06,mix(s.y,t.y,.48)+.12,(s.z+t.z)*.48+(i%3-1)*.09);tube(g,s,b,.078-i*.003,.044,.42+i*.006,.50+i*.004,WOOD_MATERIAL.PRIMARY,KIND.TREE,7,120+i*2);tube(g,b,t,.044,.018,.50+i*.004,.56,WOOD_MATERIAL.SECONDARY,KIND.TREE,6,121+i*2)});
+  [[-.95,1.48,.06,.32,.22,.23,SEASON.SPRING,springGreen],[-.56,1.78,.00,.34,.24,.24,SEASON.SPRING,springGreen],[-.84,.92,.18,.28,.21,.22,SEASON.SUMMER,summerGreen],[-.42,1.22,-.08,.30,.22,.23,SEASON.SUMMER,summerGreen],[.48,1.20,.06,.30,.22,.23,SEASON.AUTUMN,autumn],[.91,.91,-.07,.28,.21,.22,SEASON.AUTUMN,autumn],[.58,1.76,.03,.34,.24,.24,SEASON.WINTER,winter],[.96,1.45,.08,.31,.22,.23,SEASON.WINTER,winter]].forEach((x)=>orb(g,V(x[0],x[1],x[2]),V(x[3],x[4],x[5]),x[7],.548,KIND.FOLIAGE,7,4,x[6]));
   const top=V(0,2.28,.02),leftRoot=V(-1.12,-1.05,.16),rightRoot=V(1.12,-1.05,.16);
   arc(g,top,V(-1.72,.72,.08),leftRoot,.014,.54,.56,[.58,.77,.76,.75],KIND.GUIDE,300,SEASON.NONE,18);
   arc(g,top,V(1.72,.72,.08),rightRoot,.014,.54,.56,[.82,.61,.26,.75],KIND.GUIDE,340,SEASON.NONE,18);
@@ -180,16 +220,17 @@ function build(){
   [V(-1.08,.42,.16),V(-.80,.74,-.10),V(-.56,1.05,.05)].forEach((p,i)=>orb(g,p,V(.15,.10,.12),summerGreen,.70+i*.011,KIND.SUMMER,7,4,SEASON.SUMMER));
   const autumnNodes=[V(.42,.52,.04),V(.75,.64,-.02),V(1.02,.78,.08),V(.56,.93,.09),V(.88,1.08,-.05),V(1.18,.99,.02)];
   autumnNodes.forEach((p,i)=>orb(g,p,V(.115,.075,.095),i%2?[.88,.46,.08,1]:[.66,.28,.045,1],.665+i*.012,KIND.AUTUMN,7,4,SEASON.AUTUMN));
-  for(let i=0;i<autumnNodes.length-1;i++)tube(g,autumnNodes[i],autumnNodes[i+1],.012,.012,.69+i*.008,.69+i*.008,[.82,.48,.12,.86],KIND.AUTUMN,5,460+i,SEASON.AUTUMN);
+  for(let i=0;i<autumnNodes.length-1;i++)tube(g,autumnNodes[i],autumnNodes[i+1],.012,.012,.69+i*.008,.69+i*.008,WOOD_MATERIAL.TWIG,KIND.AUTUMN,5,460+i,SEASON.AUTUMN);
   gear(g,V(.55,-.67,.24),.20,8,.72,[.58,.37,.16,.82]);gear(g,V(.93,-.82,.05),.16,7,.745,[.47,.31,.17,.74]);gear(g,V(.25,-.91,-.16),.13,6,.758,[.50,.34,.19,.70]);
   const winterBase=V(.28,1.26,.02),winterTips=[V(.62,1.57,.08),V(.91,1.73,-.03),V(1.15,1.50,.05),V(.78,1.96,.04),V(1.22,1.89,.09)];
-  winterTips.forEach((p,i)=>{tube(g,winterBase,p,.026,.008,.65+i*.014,.69+i*.014,[.61,.76,.80,1],KIND.WINTER,5,490+i,SEASON.WINTER);frost(g,p,.09+i*.008,.71+i*.012)});
+  winterTips.forEach((p,i)=>{tube(g,winterBase,p,.026,.008,.65+i*.014,.69+i*.014,WOOD_MATERIAL.TWIG,KIND.WINTER,5,490+i,SEASON.WINTER);frost(g,p,.09+i*.008,.71+i*.012)});
   [V(.63,1.35,.03),V(.95,1.30,-.02)].forEach((p,i)=>orb(g,p,V(.07,.12,.065),[.43,.58,.55,1],.74+i*.012,KIND.WINTER,7,4,SEASON.WINTER));
   const contrib=[V(-1.36,.62,.30),V(-.77,1.52,.18),V(-.36,1.77,-.06),V(.48,1.81,-.05),V(.92,1.56,.11),V(1.32,.89,.08),V(.02,2.08,.07)];
   contrib.forEach((p,i)=>orb(g,p,V(.065,.082,.06),[.98,.71,.20,1],.79+i*.013,KIND.CONTRIBUTION,7,4,i<3?SEASON.SPRING:i<4?SEASON.SUMMER:i<6?SEASON.AUTUMN:SEASON.WINTER));
   [[contrib[0],roots[1],-1],[contrib[2],roots[7],-1],[contrib[4],roots[6],1],[contrib[5],roots[4],1],[contrib[6],roots[3],1]].forEach(([a,b,side],i)=>arc(g,a,V(side*(1.72+i*.08),.22+i*.08,.72-i*.18),b,.019,.90+i*.012,.985,returnBlue,KIND.RETURN,1000+i*24,SEASON.NONE,16));
-  addEnvironment(g);
+  addQuadrantEnvironment(g);
   if(g.p.length/3>65535)throw Error('LIFECYCLE_VERTEX_BUDGET');
+  assertFiniteGeometry(g);
   return g;
 }
 
@@ -205,10 +246,10 @@ function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}p
 ${webgl2?'in':'attribute'} vec3 a_position,a_normal;
 ${webgl2?'in':'attribute'} vec4 a_color;
 ${webgl2?'in':'attribute'} float a_phase,a_kind,a_season;
-uniform float u_yaw,u_pitch,u_scale,u_aspect,u_camera,u_time,u_intro,u_progress,u_reduced;
+uniform float u_yaw,u_pitch,u_scale,u_aspect,u_camera,u_time,u_intro,u_progress,u_reduced,u_lifecycle;
 ${webgl2?'out':'varying'} vec3 v_n;
 ${webgl2?'out':'varying'} vec4 v_c;
-${webgl2?'out':'varying'} float v_q,v_k,v_s,v_settle;
+${webgl2?'out':'varying'} float v_q,v_k,v_s,v_settle,v_rhythm;
 float ss(float a,float b,float x){float t=clamp((x-a)/max(.0001,b-a),0.0,1.0);return t*t*(3.0-2.0*t);}
 void main(){
   float cy=cos(u_yaw),sy=sin(u_yaw),cp=cos(u_pitch),sp=sin(u_pitch);
@@ -226,31 +267,48 @@ void main(){
 
   float feed=step(11.5,a_kind)*step(a_kind,15.5);
   if(feed>.5){
-    vec3 dock=vec3(-1.06,1.48,.18);
-    float start=2.35619449,dir=1.0,delay=0.0;
-    if(a_kind>12.5&&a_kind<13.5){dock=vec3(-1.17,.72,.15);start=3.92699082;dir=-1.0;delay=.35;}
-    else if(a_kind>13.5&&a_kind<14.5){dock=vec3(1.10,.76,.14);start=5.49778714;dir=1.0;delay=.70;}
-    else if(a_kind>14.5){dock=vec3(1.02,1.54,.16);start=.78539816;dir=-1.0;delay=1.05;}
-    float orbitT=ss(3.5,12.5,u_intro),angle=start+dir*9.42477796*orbitT;
-    float rx=mix(1.62,1.46,orbitT),ry=mix(2.26,1.60,orbitT);
-    vec3 orbitPos=vec3(cos(angle)*rx,.28+sin(angle)*ry,.12*sin(angle*2.0+a_kind));
+    vec3 dock=vec3(-1.06,1.48,.18),source=vec3(-1.78,1.72,-.52),waypoint=vec3(-.78,1.14,.28);
+    float delay=0.0;
+    if(a_kind>12.5&&a_kind<13.5){dock=vec3(-1.17,.72,.15);source=vec3(-1.82,.10,.58);waypoint=vec3(-.82,.58,-.10);delay=.25;}
+    else if(a_kind>13.5&&a_kind<14.5){dock=vec3(1.10,.76,.14);source=vec3(1.82,.08,-.48);waypoint=vec3(.82,.58,.22);delay=.50;}
+    else if(a_kind>14.5){dock=vec3(1.02,1.54,.16);source=vec3(1.78,1.72,.56);waypoint=vec3(.78,1.16,-.12);delay=.75;}
+    float travelT=ss(3.5+delay,12.0+delay,u_intro);
     float dockT=ss(12.5+delay,16.5,u_intro);
-    if(u_reduced>.5)dockT=1.0;
-    p+=mix(orbitPos,dock,dockT)-dock;
+    if(u_reduced>.5||u_lifecycle>.5){travelT=1.0;dockT=1.0;}
+    vec3 route=mix(source,waypoint,travelT);
+    route+=vec3(0.0,sin(3.14159265*travelT)*.16,sin(3.14159265*travelT+a_kind)*.22);
+    vec3 feedPos=mix(route,dock,dockT);
+    p+=feedPos-dock;
   }
 
-  float rimEnv=step(16.5,a_kind)*step(a_kind,20.5);
-  if(rimEnv>.5&&u_reduced<.5){
-    vec2 center=vec2(0.0,.28),r=p.xy-center;
-    float kindPhase=(a_kind-17.0)*1.37;
-    float da=sin(u_time*(.26+.055*(a_kind-17.0))+a_phase*31.0+kindPhase)*(.018+.006*abs(cos(atan(r.y,r.x))));
-    float ca=cos(da),sa=sin(da);
-    r=vec2(ca*r.x-sa*r.y,sa*r.x+ca*r.y);
-    p.xy=center+r;
-    if(a_kind>17.5&&a_kind<18.5)p.y+=sin(u_time*1.55+a_phase*41.0)*.075;
-    else if(a_kind>18.5&&a_kind<19.5){p.x+=sin(u_time*.78+a_phase*37.0)*.050;p.y+=cos(u_time*.64+a_phase*29.0)*.060;}
-    else if(a_kind>19.5)p+=vec3(sin(u_time*.55+a_phase*43.0)*.035,cos(u_time*.48+a_phase*33.0)*.045,0.0);
-    else p+=vec3(sin(u_time*.72+a_phase*35.0)*.035,cos(u_time*.61+a_phase*27.0)*.040,0.0);
+  float zoneEnv=step(16.5,a_kind)*step(a_kind,20.5);
+  float rhythm=1.0;
+  if(zoneEnv>.5&&u_reduced<.5){
+    float depth=clamp((a_position.z+1.0)/2.0,0.0,1.0);
+    float speed=mix(.46,1.18,depth),amp=mix(.018,.078,depth);
+    if(a_kind>16.5&&a_kind<17.5){
+      float wave=.5+.5*sin(u_time*.28+a_phase*19.0+.4);rhythm=.28+.72*ss(.18,.82,wave);
+      p.x+=sin(u_time*.42*speed+a_phase*31.0)*amp*.70*rhythm;
+      p.y+=cos(u_time*.35*speed+a_phase*23.0)*amp*.62*rhythm;
+      p.z+=sin(u_time*.28*speed+a_phase*19.0)*amp*.34*rhythm;
+    }else if(a_kind>17.5&&a_kind<18.5){
+      float wave=.5+.5*sin(u_time*.21+a_phase*17.0+1.7);rhythm=.24+.76*ss(.24,.76,wave);
+      float burst=.62+.38*rhythm;
+      p.x+=sin(u_time*.74*speed+a_phase*37.0)*amp*burst;
+      p.y-=abs(sin(u_time*.92*speed+a_phase*29.0))*amp*.90*rhythm;
+    }else if(a_kind>18.5&&a_kind<19.5){
+      float wave=.5+.5*sin(u_time*.25+a_phase*23.0+3.1);rhythm=.30+.70*ss(.20,.80,wave);
+      p.x+=sin(u_time*.58*speed+a_phase*41.0)*amp*1.05*rhythm;
+      p.y+=cos(u_time*.51*speed+a_phase*33.0)*amp*.86*rhythm;
+      p.z+=sin(u_time*.39*speed+a_phase*27.0)*amp*.42*rhythm;
+    }else{
+      float wave=.5+.5*sin(u_time*.17+a_phase*13.0+4.6);rhythm=.22+.78*ss(.26,.74,wave);
+      float gust=.55+.45*rhythm;
+      p.x+=sin(u_time*.44*speed+a_phase*43.0)*amp*gust;
+      p.y-=abs(cos(u_time*.36*speed+a_phase*35.0))*amp*.52*rhythm;
+      p.z+=sin(u_time*.27*speed+a_phase*21.0)*amp*.24*rhythm;
+    }
+    rhythm=mix(.42,rhythm,u_lifecycle);
   }
 
   float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);
@@ -264,19 +322,19 @@ void main(){
   p.y-=.28;p*=u_scale;
   float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
   gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
-  v_n=normalize(n);v_c=a_color;v_q=a_phase;v_k=a_kind;v_s=a_season;v_settle=settle;
+  v_n=normalize(n);v_c=a_color;v_q=a_phase;v_k=a_kind;v_s=a_season;v_settle=settle;v_rhythm=rhythm;
 }`}
 function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;
 ${webgl2?'in':'varying'} vec3 v_n;${webgl2?'in':'varying'} vec4 v_c;
-${webgl2?'in':'varying'} float v_q,v_k,v_s,v_settle;
-uniform float u_time,u_intro,u_progress,u_activity,u_retained,u_renewal,u_reduced;
+${webgl2?'in':'varying'} float v_q,v_k,v_s,v_settle,v_rhythm;
+uniform float u_time,u_intro,u_progress,u_activity,u_retained,u_renewal,u_reduced,u_lifecycle;
 ${webgl2?'out vec4 lifecycleColor;':''}
 float ss(float a,float b,float x){float t=clamp((x-a)/max(.0001,b-a),0.0,1.0);return t*t*(3.0-2.0*t);}
 void main(){
   vec3 N=normalize(v_n),K=normalize(vec3(-.42,.78,.52)),F=normalize(vec3(.58,.18,-.72));
   float d=.30+.58*max(0.0,dot(N,K))+.16*max(0.0,dot(N,F)),rim=.20*pow(1.0-max(0.0,dot(N,normalize(vec3(.12,.08,1.0)))),2.1);
   vec3 base=v_c.rgb*(d+rim)+vec3(.012,.014,.013);
-  float feed=step(11.5,v_k)*step(v_k,15.5),rimEnv=step(16.5,v_k)*step(v_k,20.5),special=max(feed,rimEnv);
+  float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),special=max(feed,zoneEnv);
   float reached=ss(v_q-.035,v_q+.012,u_progress),front=1.0-ss(.0,.050,abs(u_progress-v_q));
   if(u_reduced>.5){reached=1.0;front=0.0;}
   reached=mix(reached,1.0,special);
@@ -288,9 +346,9 @@ void main(){
   seasonal=mix(seasonal,vec3(.08,.48,.38),summer*.20);
   seasonal=mix(seasonal,vec3(.82,.40,.08),autumn*.24);
   seasonal=mix(seasonal,vec3(.58,.79,.88),winter*.22);
-  float circ=(.5+.5*sin(u_time*.72-v_q*23.0))*reached;
-  float envPulse=(.55+.45*sin(u_time*(.62+.08*max(0.0,v_k-17.0))+v_q*29.0))*rimEnv;
-  float glow=(reached*.18+front*.72)*u_activity+network*reached*.10+core*(.22+.12*circ)+contrib*reached*(.30+.20*circ)+renew*u_renewal*(.24+.38*front)+star*reached*.35+u_retained*(1.0-ss(.22,.40,v_q))*.18+feed*(.18+.20*circ)+rimEnv*(.13+.18*envPulse);
+  float pulse=(.5+.5*sin(u_time*.72-v_q*23.0))*reached;
+  float envPulse=(.55+.45*sin(u_time*(.62+.08*max(0.0,v_k-17.0))+v_q*29.0))*zoneEnv;
+  float glow=(reached*.18+front*.72)*u_activity+network*reached*.10+core*(.22+.12*pulse)+contrib*reached*(.30+.20*pulse)+renew*u_renewal*(.24+.38*front)+star*reached*.35+u_retained*(1.0-ss(.22,.40,v_q))*.18+feed*(.18+.20*pulse)+zoneEnv*(.09+.12*envPulse);
   glow=clamp(glow,0.0,1.0);
   vec3 energy=vec3(.20,.84,.78);
   energy=mix(energy,vec3(.98,.70,.22),autumn*.40+contrib*.32+star*.45);
@@ -302,6 +360,8 @@ void main(){
   float transientGuide=clamp(guide+renew,0.0,1.0),guideVisible=(1.0-ss(16.5,18.15,u_intro))*(1.0-step(18.399,u_intro));
   if(u_reduced>.5)guideVisible=0.0;
   alpha*=mix(1.0,guideVisible,transientGuide);
+  alpha*=mix(1.0,1.0-u_lifecycle,feed);
+  alpha*=mix(1.0,.62+.38*v_rhythm,zoneEnv*u_lifecycle);
   ${webgl2?'lifecycleColor':'gl_FragColor'}=vec4(lit,alpha);
 }`}
 function shader(gl,type,source){const q=gl.createShader(type);gl.shaderSource(q,source);gl.compileShader(q);if(!gl.getShaderParameter(q,gl.COMPILE_STATUS)){const m=gl.getShaderInfoLog(q)||'UNKNOWN';gl.deleteShader(q);throw Error('LIFECYCLE_SHADER:'+m)}return q}
@@ -313,7 +373,7 @@ function renderer(gl,g,backend){
   gl.useProgram(p);
   [['a_position','p',3],['a_normal','n',3],['a_color','c',4],['a_phase','q',1],['a_kind','k',1],['a_season','s',1]].forEach(([name,key,size])=>{const l=gl.getAttribLocation(p,name);if(l<0)throw Error('LIFECYCLE_ATTRIBUTE:'+name);gl.bindBuffer(gl.ARRAY_BUFFER,b[key]);gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,size,gl.FLOAT,false,0,0)});
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,b.i);
-  const U=n=>gl.getUniformLocation(p,n),u={yaw:U('u_yaw'),pitch:U('u_pitch'),scale:U('u_scale'),aspect:U('u_aspect'),camera:U('u_camera'),time:U('u_time'),intro:U('u_intro'),progress:U('u_progress'),activity:U('u_activity'),retained:U('u_retained'),renewal:U('u_renewal'),reduced:U('u_reduced')};
+  const U=n=>gl.getUniformLocation(p,n),u={yaw:U('u_yaw'),pitch:U('u_pitch'),scale:U('u_scale'),aspect:U('u_aspect'),camera:U('u_camera'),time:U('u_time'),intro:U('u_intro'),progress:U('u_progress'),activity:U('u_activity'),retained:U('u_retained'),renewal:U('u_renewal'),reduced:U('u_reduced'),lifecycle:U('u_lifecycle')};
   gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
   return{p,b,u,vao,precision,count:g.i.length,vertices:g.p.length/3,triangles:g.i.length/3};
 }
@@ -326,20 +386,25 @@ function lifecycle(ms){
   const renewal=smooth(.90,.995,p),activity=t<fade?1:mix(1,MATURE_TREE_STATE.activity,smooth(fade,period,t));
   return{p,activity,renewal,retained:clamp(.24+renewal*.48+(1-activity)*.22)};
 }
+function lifecycleController(ms,reduced=false){
+  const boundary=CONTRACT.lifecycleTransitionSeconds*1000;
+  if(reduced||ms>=boundary)return Object.freeze({state:LIFE_CYCLE.TWO,tree:MATURE_TREE_STATE,treeLocked:true,transferActive:false,formationProgress:1});
+  return{state:LIFE_CYCLE.ONE,tree:lifecycle(ms),treeLocked:false,transferActive:true,formationProgress:clamp(ms/boundary)};
+}
 function environmentState(ms,reduced=false){
   const intro=CONTRACT.cycleSeconds*1000;
-  if(reduced)return{active:true,phase:'FOUR_SECTOR_STATIC',progress:1,color:[.012,.026,.052,.68]};
+  if(reduced)return{active:true,phase:'FOUR_QUADRANT_STATIC',progress:1,color:[.012,.026,.052,.68]};
   if(ms<intro){
     const u=clamp(ms/intro);
-    return{active:true,phase:'FEEDING_RIM',progress:u,color:[mix(.006,.014,u),mix(.014,.028,u),mix(.032,.055,u),.66]};
+    return{active:true,phase:'QUADRANT_FORMATION_FEEDS',progress:u,color:[mix(.006,.014,u),mix(.014,.028,u),mix(.032,.055,u),.66]};
   }
   const period=CONTRACT.environmentCycleSeconds*1000,t=((ms-intro)%period+period)%period,u=t/period;
   const frames=[
-    {at:0,phase:'DAWN',color:[.014,.030,.060,.68]},
-    {at:.25,phase:'DAY',color:[.018,.070,.080,.60]},
-    {at:.50,phase:'DUSK',color:[.095,.038,.020,.70]},
-    {at:.75,phase:'NIGHT',color:[.004,.010,.034,.78]},
-    {at:1,phase:'DAWN',color:[.014,.030,.060,.68]}
+    {at:0,phase:'AMBIENT_CALM',color:[.014,.030,.060,.68]},
+    {at:.25,phase:'AMBIENT_MOVEMENT',color:[.018,.070,.080,.60]},
+    {at:.50,phase:'AMBIENT_GUST_DENSITY',color:[.095,.038,.020,.70]},
+    {at:.75,phase:'AMBIENT_RECOVERY',color:[.004,.010,.034,.78]},
+    {at:1,phase:'AMBIENT_CALM',color:[.014,.030,.060,.68]}
   ];
   let a=frames[0],b=frames[1];
   for(let i=0;i<frames.length-1;i++)if(u>=frames[i].at&&u<=frames[i+1].at){a=frames[i];b=frames[i+1];break}
@@ -362,31 +427,32 @@ function mount(host){
   const doc=host.ownerDocument||document,mq=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)'),reduced=!!mq?.matches;
   const style=doc.createElement('style');style.dataset.communityLifecycleStyle='true';style.textContent='[data-community-lifecycle-mount]{position:relative;isolation:isolate;overflow:hidden;min-height:22rem}.community-lifecycle3d-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}.community-lifecycle3d-canvas:active{cursor:grabbing}@media(max-width:720px){[data-community-lifecycle-mount]{min-height:25rem}}@media(prefers-reduced-motion:reduce){.community-lifecycle3d-canvas{cursor:default}}';doc.head.append(style);
   const options={alpha:true,antialias:true,depth:true,powerPreference:'low-power'},backendDefs=[{id:'webgl2',contexts:['webgl2'],webglVersion:2,shaderLanguage:'GLSL ES 3.00'},{id:'webgl1',contexts:['webgl','experimental-webgl'],webglVersion:1,shaderLanguage:'GLSL ES 1.00'}],geometry=build(),attempts=[];
-  let canvas,gl,R,backend,io,ro,raf=0,dead=false,contextLost=false,visible=true,start=performance.now(),last=start,baseYaw=-.20,targetYaw=baseYaw,yaw=baseYaw,targetPitch=-.055,pitch=targetPitch,drag=null,frameCount=0,contextLossCount=0,contextRestoreCount=0,firstProof=null,treeState=reduced?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',environmentPhase=reduced?'FOUR_SECTOR_STATIC':'FEEDING_RIM';
+  let canvas,gl,R,backend,io,ro,raf=0,dead=false,contextLost=false,visible=true,start=performance.now(),last=start,baseYaw=-.20,targetYaw=baseYaw,yaw=baseYaw,targetPitch=-.055,pitch=targetPitch,drag=null,frameCount=0,contextLossCount=0,contextRestoreCount=0,firstProof=null,lifecycleState=reduced?LIFE_CYCLE.TWO:LIFE_CYCLE.ONE,treeState=reduced?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',environmentPhase=reduced?'FOUR_QUADRANT_STATIC':'QUADRANT_FORMATION_FEEDS',transferActive=!reduced,treeGeometryLocked=reduced;
   const publishReceipt=(failure=null,extra={})=>{globalThis.DGB_COMMUNITY_LIFECYCLE_3D_RECEIPT=Object.freeze({
     contract:CONTRACT,initialized:!!R&&!failure,firstDraw:!!firstProof?.passed,visibleFrame:!!firstProof?.passed,backend:backend?.id||null,webglContexts:backend?1:0,webglVersion:backend?.webglVersion||null,shaderLanguage:backend?.shaderLanguage||null,precision:R?.precision||null,frameCount,contextLossCount,contextRestoreCount,
-    fixedGeometry:true,geometryRebuiltPerFrame:false,treeLockPhase:.56,seasonCount:4,settlementDeterministic:true,boundedInspectionDegrees:22,reducedMotion:reduced,
-    treeCycleMode:CONTRACT.lifecycleMode,treeCycleComplete:treeState==='TREE_MATURE_LOCK',treeState,environmentActive:true,environmentPhase,environmentCycleSeconds:CONTRACT.environmentCycleSeconds,
-    environmentMode:CONTRACT.environment,environmentSectorCount:4,feedOrbitRevolutions:CONTRACT.feedOrbitRevolutions,feedingStopsAtSeconds:16.5,guideRemnantsAfterLock:false,postLockFeeding:false,protectedCenter:true,rimTaper:CONTRACT.rimTaper,
-    fallbackPreserved:false,fallbackRemoved:true,vertexCount:R?.vertices||geometry.p.length/3,triangleCount:R?.triangles||geometry.i.length/3,visibleFrameProof:firstProof,backendAttempts:attempts.map(x=>({...x})),failure,...extra
+    fixedGeometry:true,geometryRebuiltPerFrame:false,geometryFinite:true,treeLockPhase:.56,seasonCount:4,settlementDeterministic:true,boundedInspectionDegrees:22,reducedMotion:reduced,
+    lifecycleState,lifecycleTransitionSeconds:CONTRACT.lifecycleTransitionSeconds,treeCycleMode:CONTRACT.lifecycleMode,treeCycleComplete:lifecycleState===LIFE_CYCLE.TWO,treeState,treeGeometryLocked,transferActive,formationRestartCount:0,postLockTransferRestart:false,
+    environmentActive:true,environmentPhase,environmentCycleSeconds:CONTRACT.environmentCycleSeconds,ambientRhythmMode:CONTRACT.ambientRhythm,
+    environmentMode:CONTRACT.environment,environmentSectorCount:4,environmentDepthPlaneCount:CONTRACT.environmentDepthPlanes.length,permanentQuadrants:true,feedOrbitRevolutions:0,feedPathMode:CONTRACT.feedPath,feedTravelCompletesAtSeconds:16.5,transferShutdownAtSeconds:18.4,guideRemnantsAfterLock:false,postLockFeeding:false,protectedCenter:true,rimTaper:null,
+    woodMaterialSystem:'CLASS_ASSIGNED_BROWN_ONLY',foliageMaterialClass:'FOLIAGE',fallbackPreserved:false,fallbackRemoved:true,vertexCount:R?.vertices||geometry.p.length/3,triangleCount:R?.triangles||geometry.i.length/3,visibleFrameProof:firstProof,backendAttempts:attempts.map(x=>({...x})),failure,...extra
   })};
   const publishFailure=(reason,extra={})=>{host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus=reason;host.dataset.lifecycleFallback='none';publishReceipt(reason,extra)};
   const makeCanvas=()=>{const c=doc.createElement('canvas');c.className='community-lifecycle3d-canvas';c.setAttribute('aria-hidden','true');return c};
   const resize=()=>{const r=canvas.getBoundingClientRect(),cap=Math.min(r.width,r.height)<520?1.25:1.5,d=Math.min(cap,Math.max(1,globalThis.devicePixelRatio||1)),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}gl.viewport(0,0,w,h);return w/Math.max(1,h)};
   const draw=(now=performance.now(),prove=false)=>{
     if(dead||contextLost||!R)return false;
-    const asp=resize(),elapsed=Math.max(0,now-start),s=reduced?MATURE_TREE_STATE:lifecycle(elapsed),env=environmentState(elapsed,reduced),nextTreeState=(reduced||elapsed>=CONTRACT.cycleSeconds*1000)?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',nextEnvironmentPhase=env.phase,stateChanged=nextTreeState!==treeState||nextEnvironmentPhase!==environmentPhase,dt=Math.min(40,Math.max(0,now-last));
-    treeState=nextTreeState;environmentPhase=nextEnvironmentPhase;last=now;
+    const asp=resize(),elapsed=Math.max(0,now-start),ctl=lifecycleController(elapsed,reduced),s=ctl.tree,env=environmentState(elapsed,reduced),nextTreeState=ctl.treeLocked?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',nextEnvironmentPhase=env.phase,stateChanged=ctl.state!==lifecycleState||nextTreeState!==treeState||nextEnvironmentPhase!==environmentPhase,dt=Math.min(40,Math.max(0,now-last));
+    lifecycleState=ctl.state;treeState=nextTreeState;environmentPhase=nextEnvironmentPhase;transferActive=ctl.transferActive;treeGeometryLocked=ctl.treeLocked;last=now;
     if(!reduced){const e=1-Math.exp(-dt/135);yaw+=(targetYaw-yaw)*e;pitch+=(targetPitch-pitch)*e}
     gl.useProgram(R.p);if(R.vao)gl.bindVertexArray(R.vao);gl.clearColor(...env.color);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
     gl.uniform1f(R.u.yaw,yaw);gl.uniform1f(R.u.pitch,pitch);gl.uniform1f(R.u.scale,asp<.76?1.04:asp<1.05?1.10:1.15);gl.uniform1f(R.u.aspect,asp);gl.uniform1f(R.u.camera,4.55);
-    gl.uniform1f(R.u.time,cycleTimeSeconds(elapsed));gl.uniform1f(R.u.intro,reduced?CONTRACT.cycleSeconds:Math.min(CONTRACT.cycleSeconds,elapsed/1000));gl.uniform1f(R.u.progress,s.p);gl.uniform1f(R.u.activity,s.activity);gl.uniform1f(R.u.retained,s.retained);gl.uniform1f(R.u.renewal,s.renewal);gl.uniform1f(R.u.reduced,reduced?1:0);
+    gl.uniform1f(R.u.time,cycleTimeSeconds(elapsed));gl.uniform1f(R.u.intro,reduced?CONTRACT.cycleSeconds:Math.min(CONTRACT.cycleSeconds,elapsed/1000));gl.uniform1f(R.u.progress,s.p);gl.uniform1f(R.u.activity,s.activity);gl.uniform1f(R.u.retained,s.retained);gl.uniform1f(R.u.renewal,s.renewal);gl.uniform1f(R.u.reduced,reduced?1:0);gl.uniform1f(R.u.lifecycle,lifecycleState===LIFE_CYCLE.TWO?1:0);
     gl.drawElements(gl.TRIANGLES,R.count,gl.UNSIGNED_SHORT,0);const err=gl.getError();if(err!==gl.NO_ERROR)throw Error(`LIFECYCLE_DRAW_GL:${err}`);frameCount++;
-    if(stateChanged){host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;host.dataset.lifecycleFeeding=treeState==='TREE_MATURE_LOCK'?'stopped':'active';if(firstProof?.passed)publishReceipt()}
+    if(stateChanged){host.dataset.lifecycleState=lifecycleState;host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;host.dataset.lifecycleFeeding=transferActive?'active':'stopped';if(firstProof?.passed)publishReceipt()}
     return prove?visiblePixelProof(gl,canvas):true;
   };
-  host.dataset.lifecycleStatus='initializing';host.dataset.lifecycleContract=CONTRACT.id;host.dataset.lifecycleFeeding=reduced?'stopped':'active';host.setAttribute('role','img');
-  host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Spring flowers, Summer rain and wind, Autumn leaves, and Winter snow fill a tapered outer environment, feed inward, spiral around the forming tree, settle visibly on its exterior, and then remain outside the protected center after the mature tree locks.');
+  host.dataset.lifecycleStatus='initializing';host.dataset.lifecycleContract=CONTRACT.id;host.dataset.lifecycleState=lifecycleState;host.dataset.lifecycleFeeding=transferActive?'active':'stopped';host.setAttribute('role','img');
+  host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental zones occupy the full stage at multiple depths: Spring flowers, Summer rain and wind, Autumn leaves, and Winter snow. Life Cycle One moves environmental material inward to form the central tree. At 18.4 seconds the tree locks, transfer stops, and Life Cycle Two continues as four local living environments around the mature tree.');
   for(const def of backendDefs){
     const c=makeCanvas();let candidateGl=null,candidateR=null,contextName=null;
     for(const name of def.contexts){try{candidateGl=c.getContext(name,options)}catch{}if(candidateGl){contextName=name;break}}
@@ -394,7 +460,7 @@ function mount(host){
     try{candidateR=renderer(candidateGl,geometry,def);const setupError=candidateGl.getError();if(setupError!==candidateGl.NO_ERROR)throw Error(`renderer-gl-error-${setupError}`);canvas=c;gl=candidateGl;R=candidateR;backend={...def,contextName};host.append(canvas);const proof=draw(start,true);if(!proof?.passed)throw Error('visible-frame-proof-failed');firstProof=proof;attempts.push({backend:def.id,result:'selected'});break}catch(error){attempts.push({backend:def.id,result:'failed',reason:String(error?.message||error)});dispose(candidateGl,candidateR);c.remove();canvas=undefined;gl=undefined;R=undefined;backend=undefined}
   }
   if(!R){host.removeAttribute('role');host.removeAttribute('aria-label');style.remove();publishFailure(attempts.every(x=>x.result==='context-unavailable')?'webgl-unavailable':'renderer-initialization-failed');return}
-  host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;publishReceipt();
+  host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';host.dataset.lifecycleState=lifecycleState;host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;publishReceipt();
   const stopAnimation=()=>{if(raf){cancelAnimationFrame(raf);raf=0}};
   const hardFail=reason=>{if(dead)return;dead=true;stopAnimation();io?.disconnect();ro?.disconnect();publishFailure(reason)};
   const tick=now=>{raf=0;if(dead||contextLost||reduced||!visible||doc.hidden)return;try{draw(now)}catch{hardFail('frame-draw-failed');return}raf=requestAnimationFrame(tick)};

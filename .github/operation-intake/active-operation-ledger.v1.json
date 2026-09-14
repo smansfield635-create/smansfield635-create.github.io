@@ -7608,49 +7608,6 @@
       "scopeHash": "b97df7525443f153ed5ce9410430bebb6d692bb9040df2810e892126f3a10198",
       "state": "ADMITTED_LOCKED"
     },
-    "b9dd3ed8a78641a54eff9c73cedcd94876b4e0534f5dae7e9c9af11216e87007": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "033173fd72c97e52239a3b850227143f98e68d53",
-          "lockGeneration": 2271,
-          "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:GEN2265_MANIFEST_ADOPTION_PUBLICATION:V1",
-          "operationId": "COMMUNITY_GEN2265_MANIFEST_ADOPTION_AND_PUBLICATION_20260914_001",
-          "procedureLocatorDigest": "76cf1b283591d677bc021e549c2f1e79a49ccaa9f1d797c4cdfea2deedd5ef16",
-          "requestDigest": "38c6cbeaa7b7af3622b768ebf064e8480b4ef226a2035d61b62cc3f43780f76c",
-          "scopeHash": "b9dd3ed8a78641a54eff9c73cedcd94876b4e0534f5dae7e9c9af11216e87007"
-        },
-        "bindingDigest": "409c3c9d7a8c8b04c214732f44b9f0ca78ec62f674d3c75bdcdc27e66de92df6",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "1ab09a39e9f7571838dd0ef0ffb8d8fe10cc743273096b1f53eff86616421fec",
-          "commentId": 5670747280,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3458,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34896344025,
-          "workflowSha": "033173fd72c97e52239a3b850227143f98e68d53"
-        },
-        "lineageAnchorCommitSha": "a755ed9749ca9cb51983192983dda73c3c8543b5",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "033173fd72c97e52239a3b850227143f98e68d53",
-      "lockGeneration": 2271,
-      "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:GEN2265_MANIFEST_ADOPTION_PUBLICATION:V1",
-      "operationId": "COMMUNITY_GEN2265_MANIFEST_ADOPTION_AND_PUBLICATION_20260914_001",
-      "procedureLocatorDigest": "76cf1b283591d677bc021e549c2f1e79a49ccaa9f1d797c4cdfea2deedd5ef16",
-      "released": false,
-      "requestDigest": "38c6cbeaa7b7af3622b768ebf064e8480b4ef226a2035d61b62cc3f43780f76c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "b9dd3ed8a78641a54eff9c73cedcd94876b4e0534f5dae7e9c9af11216e87007",
-      "state": "ADMITTED_LOCKED"
-    },
     "bb638420fe76f1dfd6ab87392ad1fe4b6088121cc7efef2d2a9989cbffe3e570": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -56079,6 +56036,50 @@
       "requestDigest": "bf9cb31212b755e64f6bf42725d9c8de932a32e2e1f5dcb3919417953a6caeb5",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "648ce180275e08b22291fe865264fe74924ff3ff470d37ce05f7f87121058a47",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "033173fd72c97e52239a3b850227143f98e68d53",
+          "lockGeneration": 2271,
+          "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:GEN2265_MANIFEST_ADOPTION_PUBLICATION:V1",
+          "operationId": "COMMUNITY_GEN2265_MANIFEST_ADOPTION_AND_PUBLICATION_20260914_001",
+          "procedureLocatorDigest": "76cf1b283591d677bc021e549c2f1e79a49ccaa9f1d797c4cdfea2deedd5ef16",
+          "requestDigest": "38c6cbeaa7b7af3622b768ebf064e8480b4ef226a2035d61b62cc3f43780f76c",
+          "scopeHash": "b9dd3ed8a78641a54eff9c73cedcd94876b4e0534f5dae7e9c9af11216e87007"
+        },
+        "bindingDigest": "409c3c9d7a8c8b04c214732f44b9f0ca78ec62f674d3c75bdcdc27e66de92df6",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1ab09a39e9f7571838dd0ef0ffb8d8fe10cc743273096b1f53eff86616421fec",
+          "commentId": 5670747280,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3458,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34896344025,
+          "workflowSha": "033173fd72c97e52239a3b850227143f98e68d53"
+        },
+        "lineageAnchorCommitSha": "a755ed9749ca9cb51983192983dda73c3c8543b5",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "033173fd72c97e52239a3b850227143f98e68d53",
+      "lockGeneration": 2271,
+      "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:GEN2265_MANIFEST_ADOPTION_PUBLICATION:V1",
+      "operationId": "COMMUNITY_GEN2265_MANIFEST_ADOPTION_AND_PUBLICATION_20260914_001",
+      "procedureLocatorDigest": "76cf1b283591d677bc021e549c2f1e79a49ccaa9f1d797c4cdfea2deedd5ef16",
+      "released": true,
+      "requestDigest": "38c6cbeaa7b7af3622b768ebf064e8480b4ef226a2035d61b62cc3f43780f76c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b9dd3ed8a78641a54eff9c73cedcd94876b4e0534f5dae7e9c9af11216e87007",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

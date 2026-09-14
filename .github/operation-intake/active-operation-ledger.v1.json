@@ -5909,49 +5909,6 @@
       "scopeHash": "9117f7ce218f720de5583b25dbd8234cbe489e61edb7376aa14c4aaedca58ac7",
       "state": "ADMITTED_LOCKED"
     },
-    "91354986b697c69293e4d139d1d48c0e29ec79ea5063459f46107a8204cb68ea": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
-          "lockGeneration": 2258,
-          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT:V1",
-          "operationId": "COMMUNITY_STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT_20260914_001",
-          "procedureLocatorDigest": "e4468c83e28bd5d660414a5889ea7b7a4409856aaa28cf878fb8be96a19ed9ad",
-          "requestDigest": "ded6849892e089d2271061d600fdcd11923757d8dc609618555f6626e9149814",
-          "scopeHash": "91354986b697c69293e4d139d1d48c0e29ec79ea5063459f46107a8204cb68ea"
-        },
-        "bindingDigest": "e4b016bec72434a7911b53e6dd99c137ca02a9ccc5c49f4b095a6d989b796033",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "90bfd5e774f6b594eb0d0869af6ff440869b523e9a4613aa5a65ab075c8a8a46",
-          "commentId": 5668758146,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3435,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34881215637,
-          "workflowSha": "28784c87e1706e0c427680ebfa4b7763c1a83cef"
-        },
-        "lineageAnchorCommitSha": "4aad13200eff4bee0dd8c3d673ab5d0c995b2d0c",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
-      "lockGeneration": 2258,
-      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT:V1",
-      "operationId": "COMMUNITY_STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT_20260914_001",
-      "procedureLocatorDigest": "e4468c83e28bd5d660414a5889ea7b7a4409856aaa28cf878fb8be96a19ed9ad",
-      "released": false,
-      "requestDigest": "ded6849892e089d2271061d600fdcd11923757d8dc609618555f6626e9149814",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "91354986b697c69293e4d139d1d48c0e29ec79ea5063459f46107a8204cb68ea",
-      "state": "ADMITTED_LOCKED"
-    },
     "91498847235a51be58ef771a735c58e11a5e9b4ae49e65b29a5f9fc377c830ee": {
       "governingHead": "5928b5019102d762137b1749b7489b337426f151",
       "lockGeneration": 298,
@@ -55510,6 +55467,50 @@
       "requestDigest": "5e421f0399220cf82f10fac6d37dca1a4e1a577c1cded190b75bda2133932942",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "eaaef8dc9100c2e077e4d86129800e4c58ffc6c80763eb9f0a4c1369e22384c6",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
+          "lockGeneration": 2258,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT:V1",
+          "operationId": "COMMUNITY_STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT_20260914_001",
+          "procedureLocatorDigest": "e4468c83e28bd5d660414a5889ea7b7a4409856aaa28cf878fb8be96a19ed9ad",
+          "requestDigest": "ded6849892e089d2271061d600fdcd11923757d8dc609618555f6626e9149814",
+          "scopeHash": "91354986b697c69293e4d139d1d48c0e29ec79ea5063459f46107a8204cb68ea"
+        },
+        "bindingDigest": "e4b016bec72434a7911b53e6dd99c137ca02a9ccc5c49f4b095a6d989b796033",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "90bfd5e774f6b594eb0d0869af6ff440869b523e9a4613aa5a65ab075c8a8a46",
+          "commentId": 5668758146,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3435,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34881215637,
+          "workflowSha": "28784c87e1706e0c427680ebfa4b7763c1a83cef"
+        },
+        "lineageAnchorCommitSha": "4aad13200eff4bee0dd8c3d673ab5d0c995b2d0c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "28784c87e1706e0c427680ebfa4b7763c1a83cef",
+      "lockGeneration": 2258,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT:V1",
+      "operationId": "COMMUNITY_STAGE_III_ENVIRONMENTAL_FEEDING_ORBIT_20260914_001",
+      "procedureLocatorDigest": "e4468c83e28bd5d660414a5889ea7b7a4409856aaa28cf878fb8be96a19ed9ad",
+      "released": true,
+      "requestDigest": "ded6849892e089d2271061d600fdcd11923757d8dc609618555f6626e9149814",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "91354986b697c69293e4d139d1d48c0e29ec79ea5063459f46107a8204cb68ea",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

@@ -1,5 +1,48 @@
 {
   "activeScopes": {
+    "00922a41e0096e0e0089d810ace1e786c14ac96c781fad3d158862131575898e": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b604752bc6326f4bb9fed8add10c1efe4452c4ff",
+          "lockGeneration": 2263,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:BOUNDED_CINEMATIC_WITNESS_TRAVERSAL:V1",
+          "operationId": "ZIONTS_BOUNDED_CINEMATIC_WITNESS_TRAVERSAL_20260914_001",
+          "procedureLocatorDigest": "223ef1f3b2696f7438ecf5f8dd6b82d4170cec781d6ab2f0ad0f1d9ddb5ad173",
+          "requestDigest": "6fa476fbcea9cccf8f42945d9f2a20539503991c36d81c75905b783c65c20294",
+          "scopeHash": "00922a41e0096e0e0089d810ace1e786c14ac96c781fad3d158862131575898e"
+        },
+        "bindingDigest": "b7d0fffe298aaf0b10ecf50b702c66221c1ff78f17507b9320053b0a227c5e10",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0f3ff96539eb1a7bd08ec5a0d763fb17239643a3b8241c62e8b90eff99dc7ef2",
+          "commentId": 5670039296,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3395,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34890544418,
+          "workflowSha": "b604752bc6326f4bb9fed8add10c1efe4452c4ff"
+        },
+        "lineageAnchorCommitSha": "0605cfd26079cede0f1d516e703dc39dccf1cb61",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b604752bc6326f4bb9fed8add10c1efe4452c4ff",
+      "lockGeneration": 2263,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:BOUNDED_CINEMATIC_WITNESS_TRAVERSAL:V1",
+      "operationId": "ZIONTS_BOUNDED_CINEMATIC_WITNESS_TRAVERSAL_20260914_001",
+      "procedureLocatorDigest": "223ef1f3b2696f7438ecf5f8dd6b82d4170cec781d6ab2f0ad0f1d9ddb5ad173",
+      "released": false,
+      "requestDigest": "6fa476fbcea9cccf8f42945d9f2a20539503991c36d81c75905b783c65c20294",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "00922a41e0096e0e0089d810ace1e786c14ac96c781fad3d158862131575898e",
+      "state": "ADMITTED_LOCKED"
+    },
     "00acf74cd821d4287b7729c95e2909bdbfd3204aa34cc7954b472288ec23ce25": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -10577,7 +10620,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2262,
+  "lockGeneration": 2263,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,0 +1,115 @@
+name: Chapter 02 final AV precedent materialization
+
+on:
+  push:
+    branches:
+      - agent/ch02-final-av-precedent-20260914
+    paths:
+      - .github/workflows/ch02-final-av-precedent.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build-final:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/ch02-final-av-precedent-20260914
+          fetch-depth: 0
+
+      - name: Install media tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+
+      - name: Recover exact frozen 40.200-second picture master
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ch02 showroom/globe/h-earth/awards/media
+          curl -fL --retry 4 --retry-delay 2 \
+            'https://drive.usercontent.google.com/download?id=1wZra2-_Y-ZpUVw6H8-gndnq1qIIy7bgL&export=download&confirm=t' \
+            -o /tmp/ch02/picture.mp4
+          test "$(stat -c%s /tmp/ch02/picture.mp4)" -eq 1498587
+          echo '4d351ce55d186f9448e9702e2a961083cb53005ca70b4d8f5add5aeb90e309da  /tmp/ch02/picture.mp4' | sha256sum -c -
+          test "$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 /tmp/ch02/picture.mp4)" = '40.200000'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of default=nw=1:nk=1 /tmp/ch02/picture.mp4)" = '1280'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=nw=1:nk=1 /tmp/ch02/picture.mp4)" = '720'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of default=nw=1:nk=1 /tmp/ch02/picture.mp4)" = '30/1'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nw=1:nk=1 /tmp/ch02/picture.mp4)" = '1206'
+
+      - name: Fetch and verify canonical John Harrison Vivaldi source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 4 --retry-delay 2 \
+            'https://upload.wikimedia.org/wikipedia/commons/a/a5/Vivaldi_-_Four_Seasons_2_Summer_mvt_1_Allegro_non_molto_-_John_Harrison_violin.oga' \
+            -o /tmp/ch02/vivaldi.oga
+          test "$(stat -c%s /tmp/ch02/vivaldi.oga)" -eq 5845347
+          echo 'e30b3c82cd8a9fdfe4e2b3cbce4d59ab8654789c  /tmp/ch02/vivaldi.oga' | sha1sum -c -
+          test "$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 /tmp/ch02/vivaldi.oga)" = '302.093333'
+
+      - name: Mux exact 157.000-197.200 window without altering picture stream
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT='showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          ffmpeg -y \
+            -i /tmp/ch02/picture.mp4 \
+            -ss 157.000 -i /tmp/ch02/vivaldi.oga \
+            -t 40.200 \
+            -map 0:v:0 -map 1:a:0 \
+            -c:v copy -c:a aac -b:a 192k \
+            -movflags +faststart -shortest \
+            "$OUT"
+          ffmpeg -v error -i /tmp/ch02/picture.mp4 -map 0:v:0 -c:v copy -bsf:v h264_mp4toannexb -f h264 /tmp/ch02/picture.h264
+          ffmpeg -v error -i "$OUT" -map 0:v:0 -c:v copy -bsf:v h264_mp4toannexb -f h264 /tmp/ch02/final.h264
+          test "$(sha256sum /tmp/ch02/picture.h264 | cut -d' ' -f1)" = "$(sha256sum /tmp/ch02/final.h264 | cut -d' ' -f1)"
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1:nk=1 "$OUT")" = 'h264'
+          test "$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=nw=1:nk=1 "$OUT")" = 'aac'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of default=nw=1:nk=1 "$OUT")" = '1280'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=nw=1:nk=1 "$OUT")" = '720'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of default=nw=1:nk=1 "$OUT")" = '30/1'
+          test "$(ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nw=1:nk=1 "$OUT")" = '1206'
+          python - <<'PY'
+          import subprocess
+          out='showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          d=float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',out],text=True).strip())
+          assert abs(d-40.2) <= 0.001, d
+          PY
+          echo "FINAL_SHA256=$(sha256sum "$OUT" | cut -d' ' -f1)" >> "$GITHUB_ENV"
+
+      - name: Rebind Chapter 02 only
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('showroom/globe/h-earth/awards/index.html')
+          s=p.read_text()
+          old='/showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4'
+          new='/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          assert s.count(old)==1, s.count(old)
+          assert s.count('58.774-second')==1, s.count('58.774-second')
+          s=s.replace(old,new,1).replace('58.774-second','40.200-second',1)
+          p.write_text(s)
+
+      - name: Enforce exact final product delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/ch02-final-av-precedent.yml
+          git add showroom/globe/h-earth/awards/index.html showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4
+          mapfile -t changed < <(git diff --cached --name-only | sort)
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 3
+          test "${changed[0]}" = '.github/workflows/ch02-final-av-precedent.yml'
+          test "${changed[1]}" = 'showroom/globe/h-earth/awards/index.html'
+          test "${changed[2]}" = 'showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Materialize exact Chapter 02 final AV successor [sha256=${FINAL_SHA256}]"
+          git push origin HEAD:agent/ch02-final-av-precedent-20260914
+          test -z "$(git diff --name-only b76c40683993e73815701df0f675842d68e8b364..HEAD -- .github/workflows/ch02-final-av-precedent.yml)"

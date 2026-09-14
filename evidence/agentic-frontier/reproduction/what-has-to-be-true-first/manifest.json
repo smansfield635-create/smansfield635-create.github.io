@@ -1,0 +1,23 @@
+{
+  "schema": "RESEARCH_FRONTIER_REPRODUCTION_MANIFEST_v1",
+  "objectId": "RFV3-02",
+  "publicTitle": "What Has to Be True First?",
+  "technicalBinding": "STRUCTURAL_ADMISSIBILITY_SCIENCE",
+  "evidenceStatus": ["METHODOLOGICAL_DIAGNOSIS", "NOT_DISTINGUISHED"],
+  "sourceDispositions": ["NOT_DISTINGUISHED"],
+  "question": "Are some conditions gates that must be satisfied before comparison is allowed to begin?",
+  "inputs": ["formal noncompensatory admissibility definition", "Net6 diagnostic cases", "Net3 diagnostic cases", "Anytown diagnostic cases", "corrective physical heldout"],
+  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md"],
+  "comparator": "Strongest physical comparator under the same frozen heldout false-admission criterion.",
+  "procedure": ["freeze admissibility definition before heldout inspection", "apply SAS and strongest comparator to identical heldout cases", "count false admissions and endpoint disagreements", "adjudicate only under the frozen criterion and preserve a null result without retuning"],
+  "environment": "Implementation-neutral bounded diagnostic specification; no dependency on proprietary production runtime is required.",
+  "expectedOutputs": {"disposition":"NOT_DISTINGUISHED","net6EndpointDisagreement":"0/510","net3EndpointDisagreement":"2/22","anytownEndpointDisagreement":"2-4/17","heldoutFalseAdmissions":{"SAS":0,"strongestComparator":0}},
+  "acceptanceCriteria": "The reproduced disposition must follow the frozen false-admission criterion; unrelated positive results may not be substituted for SAS evidence.",
+  "verifier": "Independent recomputation of the frozen admissibility/comparator counts against the public method record.",
+  "sourceIdentities": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md"],
+  "knownGaps": ["general empirical superiority unestablished", "future matched-present-state/different-future-admissibility successor not executed here", "unaffiliated reproduction not observed"],
+  "proprietaryBoundary": "A neutral implementation may reproduce the published admissibility rule and comparator without the complete Diamond Gate Bridge implementation.",
+  "claimCeiling": "Formalized noncompensatory admissibility object plus bounded diagnosis only; no cross-domain empirical superiority or universal noncompensation law.",
+  "reproductionPackagingState": "RECORD_BOUND",
+  "externalReproductionObserved": false
+}

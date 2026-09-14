@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "compass-coheriscope-copy-20260913-001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3323,
+  "requestBranch": "ai-dispatch-request-compass-coheriscope-copy-20260913-001",
+  "requestCommit": "c6c11c19a3b4c9714561bdf32441d7fe0e83d6eb",
+  "requestCommitParent": "62e1c92d2f76b5ec87abaac4daf9c83718f31424",
+  "currentMainSha": "62e1c92d2f76b5ec87abaac4daf9c83718f31424",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "62e1c92d2f76b5ec87abaac4daf9c83718f31424",
+    "surface_id": "compass-r11a-v7-v8-hybrid-20260909"
+  },
+  "bridgeRunId": "34791329970",
+  "dispatchedRunId": 34791340479,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34791340479",
+  "dispatchedRunHeadSha": "62e1c92d2f76b5ec87abaac4daf9c83718f31424",
+  "dispatchedAt": "2026-09-14T00:01:06.850Z",
+  "resolvedAt": "2026-09-14T00:01:13.657Z"
+}

@@ -1,18 +1,20 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "consider-the-energy",
-  "description": "Consider the Energy Community page exact-head verification for the four-season lifecycle sculpture and shared estate cosmic background. Generic headless publication runtime verifies the shared decorative canvas and error-free page load; the WebGL tree implementation and its explicit fail-closed fallback are bound statically because WebGL availability is environment-dependent.",
+  "description": "Consider the Energy Community page exact-head publication verification for the Gen2223 four-season lifecycle stage and shared estate cosmic background. Static checks bind the stage-final lifecycle consumer and first-draw-gated source contract. Generic headless runtime verifies only the environment-independent shared decorative canvas and error-free page load; it does not establish lifecycle GPU first draw. Physical-device lifecycle acceptance occurs only after exact-head publication and live source verification.",
   "checks": [
     {
       "path": "/campaigns/consider-the-energy/index.html",
       "includes": [
         "data-route=\"/campaigns/consider-the-energy/\"",
-        "data-community-lifecycle-mount",
+        "data-community-lifecycle-mount></figure>",
         "/assets/dgb-estate-cosmos.js",
-        "/campaigns/consider-the-energy/community-lifecycle3d.js",
+        "/campaigns/consider-the-energy/community-lifecycle3d.js?v=20260914-stage-final",
         "Consider the Community with Consider the Energy."
       ],
-      "excludes": []
+      "excludes": [
+        "data-community-lifecycle-fallback"
+      ]
     },
     {
       "path": "/campaigns/consider-the-energy/community-lifecycle3d.js",
@@ -22,13 +24,22 @@
         "SEED','ROOTS','NETWORK','GROWTH','TREE_LOCK','SETTLEMENT','CONTRIBUTION','RENEWAL",
         "SPRING','SUMMER','AUTUMN','WINTER",
         "b5289094db8648800197a03226d6322902960b48",
+        "canvas.getContext('webgl'",
+        "canvas.getContext('experimental-webgl'",
+        "host.dataset.lifecycleFallback='none'",
+        "host.dataset.lifecycleStatus='initializing'",
+        "first-draw-failed",
+        "host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready'",
+        "initialized:true,firstDraw:true",
+        "webglContexts:1,webglVersion:1",
+        "seasonCount:4",
+        "fallbackPreserved:false,fallbackRemoved:true"
+      ],
+      "excludes": [
         "canvas.getContext('webgl2'",
         "host.dataset.lifecycleFallback='webgl-unavailable'",
-        "host.dataset.lifecycleReady='true'",
-        "webglContexts:1",
         "fallbackPreserved:!!fallback"
-      ],
-      "excludes": []
+      ]
     },
     {
       "path": "/assets/dgb-estate-cosmos.js",

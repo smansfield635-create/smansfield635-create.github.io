@@ -1,40 +1,5 @@
 (()=>{
 'use strict';
-function installFirstEntryHiddenSyncGate(){
-  const nativeRaf=globalThis.requestAnimationFrame.bind(globalThis);
-  const targetNames=new Set(['syncReadableCardinal','renderProjectedRoomLabel']);
-  const pending=new Map();
-  let mode='PENDING';
-  let syntheticId=0;
-  const release=reason=>{
-    if(mode==='RELEASED')return;
-    mode='RELEASED';
-    globalThis.requestAnimationFrame=nativeRaf;
-    for(const callback of pending.values())nativeRaf(callback);
-    pending.clear();
-    document.documentElement.dataset.compassHiddenSyncGate=`released-${reason}`;
-  };
-  globalThis.requestAnimationFrame=callback=>{
-    if(mode!=='RELEASED'&&typeof callback==='function'&&targetNames.has(callback.name)){
-      pending.set(callback.name,callback);
-      return --syntheticId;
-    }
-    return nativeRaf(callback);
-  };
-  document.addEventListener('dgb:compass-orientation-entry-decision',event=>{
-    if(event?.detail?.offer===true){
-      mode='HOLD';
-      document.documentElement.dataset.compassHiddenSyncGate='held-for-intro';
-      return;
-    }
-    release('entry-bypass');
-  },{once:true});
-  document.addEventListener('dgb:compass-orientation-cinematic-settled',()=>release('cinematic-settled'),{once:true});
-  const failOpen=()=>setTimeout(()=>{if(mode==='PENDING')release('fail-open')},1500);
-  if(document.readyState==='complete')failOpen();
-  else window.addEventListener('load',failOpen,{once:true});
-}
-installFirstEntryHiddenSyncGate();
 const PRESENTATION_OWNER='DGB_COMPASS_PRESENTATION_OWNER_GEN1591';
 const LIVE_COMPOSITE_BUILD='gen1596-surgical-composite-5';
 const MIRROR_MANOR_CAROUSEL_RELEASE='mirror-manor-gothic-phase3-carousel-v6-material-detail-final';

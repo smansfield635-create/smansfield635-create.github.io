@@ -168,24 +168,22 @@ function buildOverlay(){
   const ambientVideo=document.createElement('video');
   ambientVideo.className='compass-prerendered-player__ambient-video';
   ambientVideo.playsInline=true;
-  ambientVideo.preload='auto';
+  ambientVideo.preload='none';
   ambientVideo.controls=false;
   ambientVideo.muted=true;
   ambientVideo.disablePictureInPicture=true;
   ambientVideo.setAttribute('aria-hidden','true');
   ambientVideo.poster=CONTRACT.posterPath;
-  ambientVideo.src=CONTRACT.mediaPath;
 
   const video=document.createElement('video');
   video.className='compass-prerendered-player__video';
   video.playsInline=true;
-  video.preload='auto';
+  video.preload='none';
   video.controls=false;
   video.disablePictureInPicture=true;
   video.setAttribute('aria-label','Diamond Gate Bridge orientation film');
   video.setAttribute('data-main-orientation-video','');
   video.poster=CONTRACT.posterPath;
-  video.src=CONTRACT.mediaPath;
 
   const audraliaHoldAmbient=document.createElement('canvas');
   audraliaHoldAmbient.className='compass-prerendered-player__audralia-hold compass-prerendered-player__audralia-hold--ambient';
@@ -223,6 +221,18 @@ function buildOverlay(){
   session.entryCanvas=q('[data-main-orientation-entry-canvas]',gate);
   document.body.append(overlay);
   return overlay;
+}
+
+function activateCinematicMedia(){
+  const activate=media=>{
+    if(!media||media.dataset.mediaActivated==='true')return;
+    media.dataset.mediaActivated='true';
+    media.preload='auto';
+    media.src=CONTRACT.mediaPath;
+    media.load();
+  };
+  activate(session.ambientVideo);
+  activate(session.video);
 }
 
 function currentNavigationType(){
@@ -599,6 +609,7 @@ async function maybeStartMasterPlayback(){
 function play(){
   if(session.state!==STATE.ARMED||session.playRequested)return;
   if(reduced()){settle('reduced-motion-complete');return;}
+  activateCinematicMedia();
   session.playRequested=true;
   session.entryAction='play';
   session.entryTransitionComplete=true;

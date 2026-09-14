@@ -67,7 +67,7 @@
     "enabled": true,
     "path": "/evidence/",
     "readyAttribute": {
-      "selector": "[data-current-public-condition]",
+      "selector": ".current-condition[data-current-public-condition]",
       "name": "data-ready",
       "contains": "true"
     },

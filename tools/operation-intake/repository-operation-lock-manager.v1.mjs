@@ -43,6 +43,25 @@ export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   workflowRunId: 32931494268
 })];
 
+export const EXACT_AUTHORITY_RECEIPT_RECOVERIES = [
+  stable({
+    operationId: 'ROUTER_BINARY_PACKET_INGRESS_CLOSURE_20260914_001',
+    lockGeneration: 2228,
+    issueNumber: 578,
+    receiptCommentId: 5665057398,
+    workflowRunId: 34851805643,
+    origin: 'CANONICAL_INTAKE'
+  }),
+  stable({
+    operationId: 'AUTHORITY_PROVENANCE_EXACT_RECEIPT_RETRIEVAL_CLOSURE_20260914_002',
+    lockGeneration: 2229,
+    issueNumber: 578,
+    receiptCommentId: 5665429583,
+    workflowRunId: 34854643198,
+    origin: 'CANONICAL_INTAKE'
+  })
+];
+
 export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [
   stable({
     commitSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
@@ -278,10 +297,11 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
 }
 
 async function fetchComment(repository,token,commentId){return req(`${base(repository)}/issues/comments/${commentId}`,{headers:H(token)})}
-async function fetchIssueComments(repository,token,issueNumber,maxPages=6){const all=[];for(let page=1;page<=maxPages;page++){const values=await req(`${base(repository)}/issues/${issueNumber}/comments?per_page=100&page=${page}`,{headers:H(token)});if(!Array.isArray(values))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','issue.comments','authority-provenance');all.push(...values);if(values.length<100)break}return all}
+export async function fetchIssueComments(repository,token,issueNumber){const all=[];for(let page=1;;page++){const values=await req(`${base(repository)}/issues/${issueNumber}/comments?per_page=100&page=${page}`,{headers:H(token)});if(!Array.isArray(values))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','issue.comments','authority-provenance');all.push(...values);if(values.length<100)return all}}
 function verifyCanonicalSourceComment(lock,body){const envelope=parseMarkedJson(body,CANONICAL_MARKER),request=envelope?.operationRequest,procedure=envelope?.constructionProcedure;if(!request||!procedure)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','canonical-envelope','authority-provenance');const expected=authorityIdentity(lock);if(request.operationId!==expected.operationId||canonScope(request.lockScope)!==expected.lockScope||request.exactGoverningHead!==expected.governingHead)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','ROW_IDENTITY_MISMATCH');if(sha(canonical(request))!==expected.requestDigest||sha(canonical(procedure))!==expected.procedureLocatorDigest)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','REQUEST_OR_PROCEDURE_DIGEST_MISMATCH')}
 function parseSuccessorReceiptComment(body){if(typeof body!=='string'||!body.startsWith('REMOTE_OPERATION_SUCCESSOR_RECEIPT_V1'))return null;const match=body.match(/```json\s*([\s\S]*?)\s*```/);if(!match)return null;try{return JSON.parse(match[1])}catch{return null}}
 function botReceiptMatches(lock,comments,origin,runId){if(origin==='CANONICAL_INTAKE'){const op=`operationId = ${lock.operationId}`,gen=`lockGeneration = ${lock.lockGeneration}`,run=`workflowRun = ${runId}`;return comments.some(c=>c?.user?.login==='github-actions[bot]'&&typeof c.body==='string'&&c.body.includes('CANONICAL_OPERATION_INTAKE_RETURN_V1')&&c.body.includes('canonicalResult = ADMITTED_AND_LOCKED')&&c.body.includes(op)&&c.body.includes(gen)&&c.body.includes(run))}return comments.some(c=>{if(c?.user?.login!=='github-actions[bot]')return false;const r=parseSuccessorReceiptComment(c.body);if(!r||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED')return false;const s=r.successor||{};return s.operationId===lock.operationId&&canonScope(s.lockScope)===canonScope(lock.lockScope)&&s.lockGeneration===lock.lockGeneration&&s.governingHead===lock.governingHead&&s.requestDigest===lock.requestDigest&&s.procedureLocatorDigest===lock.procedureLocatorDigest})}
+function exactAuthorityReceiptRecovery(lock,origin,inv){return EXACT_AUTHORITY_RECEIPT_RECOVERIES.find(value=>value.operationId===lock.operationId&&value.lockGeneration===lock.lockGeneration&&value.issueNumber===inv.issueNumber&&value.workflowRunId===inv.workflowRunId&&value.origin===origin)||null}
 
 export async function verifyRemoteAuthorityProvenance({repository,token,lock,branchHead}) {
   validateActiveLock(lock,lock.scopeHash);
@@ -292,8 +312,10 @@ export async function verifyRemoteAuthorityProvenance({repository,token,lock,bra
   const comment=await fetchComment(repository,token,inv.commentId);
   if(comment?.id!==inv.commentId||comment?.issue_url?.split('/').pop()!==String(inv.issueNumber)||comment?.user?.login!==inv.commentAuthorLogin||comment?.author_association!==inv.commentAuthorAssociation||sha(comment?.body||'')!==inv.commentBodySha256||markerFromBody(comment?.body)!==inv.marker)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','authority-provenance','SOURCE_COMMENT_MISMATCH');
   if(p.origin==='CANONICAL_INTAKE'){if(inv.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');verifyCanonicalSourceComment(lock,comment.body)}else{if(!SUCCESSOR_MARKERS.has(inv.marker))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');for(const value of [lock.operationId,lock.lockScope,lock.governingHead])if(!comment.body.includes(value))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment.body','authority-provenance','SUCCESSOR_ROW_NOT_BOUND_TO_SOURCE')}
+  const exactRecovery=exactAuthorityReceiptRecovery(lock,p.origin,inv);
+  if(exactRecovery){const receipt=await fetchComment(repository,token,exactRecovery.receiptCommentId);if(receipt?.id!==exactRecovery.receiptCommentId||receipt?.issue_url?.split('/').pop()!==String(inv.issueNumber)||receipt?.user?.login!=='github-actions[bot]'||!botReceiptMatches(lock,[receipt],p.origin,inv.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','issue.comments','authority-provenance','EXACT_RECEIPT_RECOVERY_MISMATCH');return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:p.origin,authorityIdentity:bound.authorityIdentity,issueNumber:inv.issueNumber,commentId:inv.commentId,receiptCommentId:exactRecovery.receiptCommentId,receiptRetrieval:'EXACT_COMMENT_ID',workflowRunId:inv.workflowRunId,lineage})}
   const comments=await fetchIssueComments(repository,token,inv.issueNumber);if(!botReceiptMatches(lock,comments,p.origin,inv.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','issue.comments','authority-provenance');
-  return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:p.origin,authorityIdentity:bound.authorityIdentity,issueNumber:inv.issueNumber,commentId:inv.commentId,workflowRunId:inv.workflowRunId,lineage});
+  return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:p.origin,authorityIdentity:bound.authorityIdentity,issueNumber:inv.issueNumber,commentId:inv.commentId,receiptRetrieval:'COMPLETE_PAGINATION_COMPATIBILITY',workflowRunId:inv.workflowRunId,lineage});
 }
 
 export async function acquireRemote(a) {

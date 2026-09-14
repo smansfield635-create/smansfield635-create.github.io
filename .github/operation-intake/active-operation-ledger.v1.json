@@ -928,6 +928,49 @@
       "scopeHash": "10cb84d67d54fe220398b79cdfd44565392cc3b586f67abfdd4d26cf565c14c1",
       "state": "ADMITTED_LOCKED"
     },
+    "10d434fbf643c14f5e05800113af8f8b7a6d96bdc6b54e5d8da168c7bf3e2a99": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b76c40683993e73815701df0f675842d68e8b364",
+          "lockGeneration": 2225,
+          "lockScope": "PUBLIC_LEGITIMACY:EVIDENCE:PHONE_INSPECTION:V1",
+          "operationId": "EVIDENCE_PHONE_INSPECTION_ARCHITECTURE_REPAIR_20260914_001",
+          "procedureLocatorDigest": "39d35c669bab805add252d03b21fd3d891ed25e13193d737e6fa3b844d22109a",
+          "requestDigest": "7d87359ccc5c4a6aec9bb732270beea20c7b5abf7bd5d85df1de770ce8b25ea0",
+          "scopeHash": "10d434fbf643c14f5e05800113af8f8b7a6d96bdc6b54e5d8da168c7bf3e2a99"
+        },
+        "bindingDigest": "966b2ddad1015095d2d15f4471b06af47aa56d9c3c205ab3984e00b8d9ee352b",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "3b55e3a8ce981b152e77144c8cc9846eec5f38754a304bed9a864b0eb016f2d5",
+          "commentId": 5659553676,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3372,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34810595311,
+          "workflowSha": "b76c40683993e73815701df0f675842d68e8b364"
+        },
+        "lineageAnchorCommitSha": "969a5fd044b0bb61a91e3016fc4f8f991d4d4c65",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b76c40683993e73815701df0f675842d68e8b364",
+      "lockGeneration": 2225,
+      "lockScope": "PUBLIC_LEGITIMACY:EVIDENCE:PHONE_INSPECTION:V1",
+      "operationId": "EVIDENCE_PHONE_INSPECTION_ARCHITECTURE_REPAIR_20260914_001",
+      "procedureLocatorDigest": "39d35c669bab805add252d03b21fd3d891ed25e13193d737e6fa3b844d22109a",
+      "released": false,
+      "requestDigest": "7d87359ccc5c4a6aec9bb732270beea20c7b5abf7bd5d85df1de770ce8b25ea0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "10d434fbf643c14f5e05800113af8f8b7a6d96bdc6b54e5d8da168c7bf3e2a99",
+      "state": "ADMITTED_LOCKED"
+    },
     "111efe97c22f5811081b02df2089e9503bb6ed12f5e7b2a9e28c7e7a1742f0ca": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -10256,7 +10299,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2224,
+  "lockGeneration": 2225,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

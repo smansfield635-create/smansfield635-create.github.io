@@ -28,7 +28,9 @@ const CONTRACT = Object.freeze({
   treeLock: .56,
   inspectionYawLimitDegrees: 22,
   renderer: 'ONE_CONTEXT_WEBGL_FIXED_GEOMETRY_SHADER_PROGRESS',
-  environment: false,
+  lifecycleMode: 'ONE_SHOT_INTRO_THEN_MATURE_LOCK',
+  environment: 'LOCAL_HERO_POST_LOCK',
+  environmentCycleSeconds: 72,
   topologyRandomness: false,
   cycleSeconds: 18.4
 });
@@ -167,7 +169,7 @@ void main(){
   n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);
   p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);
   n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);
-  p.y-=.16;p*=u_scale;
+  p.y-=.28;p*=u_scale;
   float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
   gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
   v_n=normalize(n);v_c=a_color;v_q=a_phase;v_k=a_kind;v_s=a_season;v_settle=settle;
@@ -217,13 +219,38 @@ function renderer(gl,g,backend){
   return{p,b,u,vao,precision,count:g.i.length,vertices:g.p.length/3,triangles:g.i.length/3};
 }
 function dispose(gl,R){if(!R)return;try{Object.values(R.b||{}).forEach(x=>gl.deleteBuffer(x));if(R.vao)gl.deleteVertexArray(R.vao);if(R.p)gl.deleteProgram(R.p)}catch{}}
+const MATURE_TREE_STATE=Object.freeze({p:.995,activity:.58,renewal:1,retained:.8124});
 function lifecycle(ms){
-  const period=CONTRACT.cycleSeconds*1000,t=((ms%period)+period)%period,hold=900,end=16400,fade=17400;
+  const period=CONTRACT.cycleSeconds*1000,t=clamp(ms,0,period),hold=900,end=16400,fade=17400;
+  if(t>=period)return MATURE_TREE_STATE;
   let p=.035;if(t>hold){const u=clamp((Math.min(t,end)-hold)/(end-hold));p=mix(.035,.995,smoother(u))}
-  const renewal=smooth(.90,.995,p),activity=t<fade?1:1-smooth(fade,period,t);
+  const renewal=smooth(.90,.995,p),activity=t<fade?1:mix(1,MATURE_TREE_STATE.activity,smooth(fade,period,t));
   return{p,activity,renewal,retained:clamp(.24+renewal*.48+(1-activity)*.22)};
 }
-function cycleTimeSeconds(ms){const period=CONTRACT.cycleSeconds*1000;return(((ms%period)+period)%period)/1000}
+function environmentState(ms,reduced=false){
+  const intro=CONTRACT.cycleSeconds*1000;
+  if(reduced)return{active:true,phase:'DAWN',progress:0,color:[.018,.035,.065,.56]};
+  if(ms<intro)return{active:false,phase:'INTRO',progress:0,color:[0,0,0,0]};
+  const period=CONTRACT.environmentCycleSeconds*1000,t=((ms-intro)%period+period)%period,u=t/period;
+  const frames=[
+    {at:0,phase:'DAWN',color:[.018,.035,.065,.56]},
+    {at:.25,phase:'DAY',color:[.025,.075,.085,.48]},
+    {at:.50,phase:'DUSK',color:[.105,.043,.025,.60]},
+    {at:.75,phase:'NIGHT',color:[.006,.012,.038,.72]},
+    {at:1,phase:'DAWN',color:[.018,.035,.065,.56]}
+  ];
+  let a=frames[0],b=frames[1];
+  for(let i=0;i<frames.length-1;i++)if(u>=frames[i].at&&u<=frames[i+1].at){a=frames[i];b=frames[i+1];break}
+  const q=smooth(a.at,b.at,u),color=a.color.map((v,i)=>mix(v,b.color[i],q)),activation=smooth(0,5000,ms-intro);
+  color[3]*=activation;
+  return{active:true,phase:a.phase,progress:u,color};
+}
+function cycleTimeSeconds(ms){
+  const intro=CONTRACT.cycleSeconds*1000;
+  if(ms<=intro)return Math.max(0,ms)/1000;
+  const period=CONTRACT.environmentCycleSeconds*1000;
+  return(((ms-intro)%period+period)%period)/1000;
+}
 function visiblePixelProof(gl,canvas){
   const w=canvas.width,h=canvas.height,size=Math.max(1,Math.min(32,w,h)),pixels=new Uint8Array(size*size*4);let sampledPixels=0,nonTransparentPixels=0;
   for(const fy of[.25,.5,.75])for(const fx of[.25,.5,.75]){const x=Math.max(0,Math.min(w-size,Math.round(w*fx-size/2))),y=Math.max(0,Math.min(h-size,Math.round(h*fy-size/2)));gl.readPixels(x,y,size,size,gl.RGBA,gl.UNSIGNED_BYTE,pixels);const err=gl.getError();if(err!==gl.NO_ERROR)return{passed:false,sampleSize:size,sampledPixels,nonTransparentPixels,glError:err};sampledPixels+=size*size;for(let i=3;i<pixels.length;i+=4)if(pixels[i]>0)nonTransparentPixels++}
@@ -234,13 +261,13 @@ function mount(host){
   const doc=host.ownerDocument||document,mq=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)'),reduced=!!mq?.matches;
   const style=doc.createElement('style');style.dataset.communityLifecycleStyle='true';style.textContent='[data-community-lifecycle-mount]{position:relative;isolation:isolate;overflow:hidden;min-height:22rem}.community-lifecycle3d-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}.community-lifecycle3d-canvas:active{cursor:grabbing}@media(max-width:720px){[data-community-lifecycle-mount]{min-height:25rem}}@media(prefers-reduced-motion:reduce){.community-lifecycle3d-canvas{cursor:default}}';doc.head.append(style);
   const options={alpha:true,antialias:true,depth:true,powerPreference:'low-power'},backendDefs=[{id:'webgl2',contexts:['webgl2'],webglVersion:2,shaderLanguage:'GLSL ES 3.00'},{id:'webgl1',contexts:['webgl','experimental-webgl'],webglVersion:1,shaderLanguage:'GLSL ES 1.00'}],geometry=build(),attempts=[];
-  let canvas,gl,R,backend,io,ro,raf=0,dead=false,contextLost=false,visible=true,start=performance.now(),last=start,baseYaw=-.20,targetYaw=baseYaw,yaw=baseYaw,targetPitch=-.055,pitch=targetPitch,drag=null,frameCount=0,contextLossCount=0,contextRestoreCount=0,firstProof=null;
-  const publishReceipt=(failure=null,extra={})=>{globalThis.DGB_COMMUNITY_LIFECYCLE_3D_RECEIPT=Object.freeze({contract:CONTRACT,initialized:!!R&&!failure,firstDraw:!!firstProof?.passed,visibleFrame:!!firstProof?.passed,backend:backend?.id||null,webglContexts:backend?1:0,webglVersion:backend?.webglVersion||null,shaderLanguage:backend?.shaderLanguage||null,precision:R?.precision||null,frameCount,contextLossCount,contextRestoreCount,fixedGeometry:true,geometryRebuiltPerFrame:false,treeLockPhase:.56,seasonCount:4,settlementDeterministic:true,boundedInspectionDegrees:22,reducedMotion:reduced,fallbackPreserved:false,fallbackRemoved:true,vertexCount:R?.vertices||geometry.p.length/3,triangleCount:R?.triangles||geometry.i.length/3,visibleFrameProof:firstProof,backendAttempts:attempts.map(x=>({...x})),failure,...extra})};
+  let canvas,gl,R,backend,io,ro,raf=0,dead=false,contextLost=false,visible=true,start=performance.now(),last=start,baseYaw=-.20,targetYaw=baseYaw,yaw=baseYaw,targetPitch=-.055,pitch=targetPitch,drag=null,frameCount=0,contextLossCount=0,contextRestoreCount=0,firstProof=null,treeState=reduced?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',environmentPhase=reduced?'DAWN':'INACTIVE';
+  const publishReceipt=(failure=null,extra={})=>{globalThis.DGB_COMMUNITY_LIFECYCLE_3D_RECEIPT=Object.freeze({contract:CONTRACT,initialized:!!R&&!failure,firstDraw:!!firstProof?.passed,visibleFrame:!!firstProof?.passed,backend:backend?.id||null,webglContexts:backend?1:0,webglVersion:backend?.webglVersion||null,shaderLanguage:backend?.shaderLanguage||null,precision:R?.precision||null,frameCount,contextLossCount,contextRestoreCount,fixedGeometry:true,geometryRebuiltPerFrame:false,treeLockPhase:.56,seasonCount:4,settlementDeterministic:true,boundedInspectionDegrees:22,reducedMotion:reduced,treeCycleMode:CONTRACT.lifecycleMode,treeCycleComplete:treeState==='TREE_MATURE_LOCK',treeState,environmentActive:environmentPhase!=='INACTIVE',environmentPhase,environmentCycleSeconds:CONTRACT.environmentCycleSeconds,fallbackPreserved:false,fallbackRemoved:true,vertexCount:R?.vertices||geometry.p.length/3,triangleCount:R?.triangles||geometry.i.length/3,visibleFrameProof:firstProof,backendAttempts:attempts.map(x=>({...x})),failure,...extra})};
   const publishFailure=(reason,extra={})=>{host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus=reason;host.dataset.lifecycleFallback='none';publishReceipt(reason,extra)};
   const makeCanvas=()=>{const c=doc.createElement('canvas');c.className='community-lifecycle3d-canvas';c.setAttribute('aria-hidden','true');return c};
   const resize=()=>{const r=canvas.getBoundingClientRect(),cap=Math.min(r.width,r.height)<520?1.25:1.5,d=Math.min(cap,Math.max(1,globalThis.devicePixelRatio||1)),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}gl.viewport(0,0,w,h);return w/Math.max(1,h)};
-  const draw=(now=performance.now(),prove=false)=>{if(dead||contextLost||!R)return false;const asp=resize(),elapsed=now-start,s=reduced?{p:.995,activity:.58,renewal:1,retained:.64}:lifecycle(elapsed),dt=Math.min(40,Math.max(0,now-last));last=now;if(!reduced){const e=1-Math.exp(-dt/135);yaw+=(targetYaw-yaw)*e;pitch+=(targetPitch-pitch)*e}gl.useProgram(R.p);if(R.vao)gl.bindVertexArray(R.vao);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform1f(R.u.yaw,yaw);gl.uniform1f(R.u.pitch,pitch);gl.uniform1f(R.u.scale,asp<.76?.82:asp<1.05?.94:1.02);gl.uniform1f(R.u.aspect,asp);gl.uniform1f(R.u.camera,4.55);gl.uniform1f(R.u.time,cycleTimeSeconds(elapsed));gl.uniform1f(R.u.progress,s.p);gl.uniform1f(R.u.activity,s.activity);gl.uniform1f(R.u.retained,s.retained);gl.uniform1f(R.u.renewal,s.renewal);gl.uniform1f(R.u.reduced,reduced?1:0);gl.drawElements(gl.TRIANGLES,R.count,gl.UNSIGNED_SHORT,0);const err=gl.getError();if(err!==gl.NO_ERROR)throw Error(`LIFECYCLE_DRAW_GL:${err}`);frameCount++;return prove?visiblePixelProof(gl,canvas):true};
-  host.dataset.lifecycleStatus='initializing';host.dataset.lifecycleContract=CONTRACT.id;host.setAttribute('role','img');host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. A Diamond Gate core grows through roots and network into one tree carrying Spring, Summer, Autumn, and Winter; seasonal motifs settle after the tree matures, contribution circulates outward, and renewal returns to the roots.');
+  const draw=(now=performance.now(),prove=false)=>{if(dead||contextLost||!R)return false;const asp=resize(),elapsed=Math.max(0,now-start),s=reduced?MATURE_TREE_STATE:lifecycle(elapsed),env=environmentState(elapsed,reduced),nextTreeState=(reduced||elapsed>=CONTRACT.cycleSeconds*1000)?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',nextEnvironmentPhase=env.active?env.phase:'INACTIVE',stateChanged=nextTreeState!==treeState||nextEnvironmentPhase!==environmentPhase,dt=Math.min(40,Math.max(0,now-last));treeState=nextTreeState;environmentPhase=nextEnvironmentPhase;last=now;if(!reduced){const e=1-Math.exp(-dt/135);yaw+=(targetYaw-yaw)*e;pitch+=(targetPitch-pitch)*e}gl.useProgram(R.p);if(R.vao)gl.bindVertexArray(R.vao);gl.clearColor(...env.color);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform1f(R.u.yaw,yaw);gl.uniform1f(R.u.pitch,pitch);gl.uniform1f(R.u.scale,asp<.76?1.04:asp<1.05?1.10:1.15);gl.uniform1f(R.u.aspect,asp);gl.uniform1f(R.u.camera,4.55);gl.uniform1f(R.u.time,cycleTimeSeconds(elapsed));gl.uniform1f(R.u.progress,s.p);gl.uniform1f(R.u.activity,s.activity);gl.uniform1f(R.u.retained,s.retained);gl.uniform1f(R.u.renewal,s.renewal);gl.uniform1f(R.u.reduced,reduced?1:0);gl.drawElements(gl.TRIANGLES,R.count,gl.UNSIGNED_SHORT,0);const err=gl.getError();if(err!==gl.NO_ERROR)throw Error(`LIFECYCLE_DRAW_GL:${err}`);frameCount++;if(stateChanged){host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;if(firstProof?.passed)publishReceipt()}return prove?visiblePixelProof(gl,canvas):true};
+  host.dataset.lifecycleStatus='initializing';host.dataset.lifecycleContract=CONTRACT.id;host.setAttribute('role','img');host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. A Diamond Gate core grows through roots and network into one tree carrying Spring, Summer, Autumn, and Winter; after its first lifecycle the mature tree remains while the surrounding light moves through a slower environmental cycle.');
   for(const def of backendDefs){
     const c=makeCanvas();let candidateGl=null,candidateR=null,contextName=null;
     for(const name of def.contexts){try{candidateGl=c.getContext(name,options)}catch{}if(candidateGl){contextName=name;break}}
@@ -248,7 +275,7 @@ function mount(host){
     try{candidateR=renderer(candidateGl,geometry,def);const setupError=candidateGl.getError();if(setupError!==candidateGl.NO_ERROR)throw Error(`renderer-gl-error-${setupError}`);canvas=c;gl=candidateGl;R=candidateR;backend={...def,contextName};host.append(canvas);const proof=draw(start,true);if(!proof?.passed)throw Error('visible-frame-proof-failed');firstProof=proof;attempts.push({backend:def.id,result:'selected'});break}catch(error){attempts.push({backend:def.id,result:'failed',reason:String(error?.message||error)});dispose(candidateGl,candidateR);c.remove();canvas=undefined;gl=undefined;R=undefined;backend=undefined}
   }
   if(!R){host.removeAttribute('role');host.removeAttribute('aria-label');style.remove();publishFailure(attempts.every(x=>x.result==='context-unavailable')?'webgl-unavailable':'renderer-initialization-failed');return}
-  host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';publishReceipt();
+  host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;publishReceipt();
   const stopAnimation=()=>{if(raf){cancelAnimationFrame(raf);raf=0}};
   const hardFail=reason=>{if(dead)return;dead=true;stopAnimation();io?.disconnect();ro?.disconnect();publishFailure(reason)};
   const tick=now=>{raf=0;if(dead||contextLost||reduced||!visible||doc.hidden)return;try{draw(now)}catch{hardFail('frame-draw-failed');return}raf=requestAnimationFrame(tick)};

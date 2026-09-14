@@ -1,0 +1,23 @@
+{
+  "schema": "RESEARCH_FRONTIER_REPRODUCTION_MANIFEST_v1",
+  "objectId": "RFV3-05",
+  "publicTitle": "Can the Agent Actually Do the Work?",
+  "technicalBinding": "AGENTIC_FRONTIER_FULL24_V1",
+  "evidenceStatus": ["CONFIGURATION_BOUNDED", "PREREGISTERED_NOT_EXECUTED"],
+  "sourceDispositions": ["STUDY1_CONFIGURATION_BOUNDED", "STUDY2_PREREGISTERED_NOT_EXECUTED"],
+  "question": "Can an agent complete verified work under a known definition of done, not merely describe how it might be done?",
+  "inputs": ["24 frozen tasks", "four preregistered strata", "Diamond Gate tested configuration", "tested OpenHands configuration", "frozen grading contract"],
+  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/full24-v1/"],
+  "comparator": "Tested stock OpenHands configuration on the same frozen task population; comparator end-to-end tool-loop health remained unresolved.",
+  "procedure": ["use frozen task set and configuration identities", "run under preserved task/grading rules", "count only independently verified completions", "classify outcomes as DG_ONLY, OH_ONLY, BOTH_PASS or NEITHER without treating transport failure as scientific failure"],
+  "environment": "Configuration-bounded study; exact public result record and verifier are preserved in full24-v1.",
+  "expectedOutputs": {"diamondGatePass":10,"openHandsPass":0,"totalTasks":24,"DG_ONLY":10,"OH_ONLY":0,"BOTH_PASS":0,"NEITHER":14},
+  "acceptanceCriteria": "The preserved Full24 record must validate under its public verifier and any experimental rerun must preserve the frozen task, configuration and grading identities.",
+  "verifier": "/evidence/agentic-frontier/research-records/full24-v1/verify-full24-record-v1.mjs",
+  "sourceIdentities": ["/evidence/agentic-frontier/research-records/full24-v1/results-v1.jsonl", "/evidence/agentic-frontier/research-records/full24-v1/adjudication-v1.md", "/evidence/agentic-frontier/research-records/full24-v1/claim-ceiling-receipt-v1.json", "/evidence/agentic-frontier/research-records/full24-v1/summary-v1.md", "/evidence/agentic-frontier/research-records/full24-v1/verify-full24-record-v1.mjs", "/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md"],
+  "knownGaps": ["comparator end-to-end tool-loop health unresolved", "Study 2 not executed", "unaffiliated external reproduction not observed"],
+  "proprietaryBoundary": "The public Full24 bundle and frozen task/configuration contract are the reproduction interface; unrelated proprietary orchestration/control-plane code is not required.",
+  "claimCeiling": "Configuration-bounded Study 1 observation only; no universal ranking, architecture-only causation, Kernel causation or completed Study 2.",
+  "reproductionPackagingState": "RECORD_VERIFY_READY",
+  "externalReproductionObserved": false
+}

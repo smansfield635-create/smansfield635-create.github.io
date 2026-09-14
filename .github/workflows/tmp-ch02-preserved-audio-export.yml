@@ -1,0 +1,19 @@
+name: Temporary Chapter 02 preserved audio export
+on:
+  push:
+    branches:
+      - tmp/ch02-preserved-audio-export-20260913
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage preserved Chapter 02 carrier
+        run: |
+          mkdir -p out
+          cp showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4 out/preserved-chapter02-carrier.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preserved-chapter02-carrier
+          path: out/preserved-chapter02-carrier.mp4
+          if-no-files-found: error

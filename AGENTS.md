@@ -88,6 +88,22 @@ A governed mutation lock protects repository mutation, not the elapsed duration 
 
 Evidence collected after this release remains bound to the exact frozen candidate. If that evidence identifies a defect requiring any repository mutation, obtain a fresh ordinary admission or lawful successor before changing bytes. Do not use `MUTATION_CLOSED_EVIDENCE_CONTINUES` while an authorized write, candidate-finalization step, or mutation-dependent commit is still pending.
 
+### Exact-candidate physical preview as candidate finalization
+
+Load `.github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json` when an admitted construction scope declares physical or perceptual review required before adoption, merge, or publication. In that case, the exact-candidate physical review is a candidate-finalization step until a candidate-bound `CANDIDATE_PERCEPTUAL_ACCEPTANCE` disposition is recorded. It is not downstream evidence merely because the preview itself is read-only.
+
+Do **not** use `MUTATION_CLOSED_EVIDENCE_CONTINUES` before that required disposition when the admitted construction procedure intentionally retains bounded repair authority through physical review. The final physical gate must bind an immutable exact candidate identity; a moving branch alias alone is not sufficient. The preview substrate must remain read-only and must not mutate repository bytes or production.
+
+The only canonical dispositions are `KEEP`, `ONE_REPAIR`, and `REJECT`:
+
+- `KEEP`: freeze the exact candidate identity. No further candidate-byte mutation is allowed under that disposition. Then close the mutation scope normally and resolve adoption, merge, deployment, and publication through their separate authorities.
+- `ONE_REPAIR`: allowed only for one specific observed defect while the original admitted mutation scope remains active and only when the repair stays entirely inside the already-authorized paths, intent, authority, and architecture. Create a new immutable candidate identity, supersede the prior perceptual disposition, requalify only the changed delta and directly affected dependencies, and physically preview the new exact candidate again.
+- `REJECT`: do not publish the candidate. Close it through the applicable rejected or withdrawn terminal disposition.
+
+If a requested repair would expand path scope, intent, authority, or architecture—or if the original operation has already been terminally closed—`ONE_REPAIR` is unavailable. Obtain a fresh ordinary admission or lawful successor before changing bytes.
+
+If the preferred preview transport is unavailable, use another lawful read-only exact-head substrate or report `PREVIEW_TRANSPORT_UNAVAILABLE`. Do not perform a production deployment merely as a preview workaround. A preview never creates merge, deployment, publication, scientific, empirical, runtime, or claim authority, and final authoritative Pages exact-head verification remains required after release.
+
 ## Moving-head successor continuity
 
 Main movement is not itself a reason to manufacture a successor generation. When an active governed operation's recorded head differs from current `main`, run differential continuity first. If the intervening changes are disjoint from the operation's scope and direct dependencies, preserve the exact candidate/evidence and use `CARRY_FORWARD_APPROVED`; do not restart design, qualification, or admission from zero.

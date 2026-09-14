@@ -324,6 +324,39 @@
       ],
       "closureRequirements": [],
       "authorityCreated": false
+    },
+    {
+      "gapId": "EXACT_CANDIDATE_PHYSICAL_PREVIEW_CONTINUITY",
+      "status": "OPEN",
+      "discoveredAtHead": "f9c0ed375724a2e073a49f913eb8adc0d5e2ca38",
+      "closedAtHead": null,
+      "coordinationIssue": 3464,
+      "summary": "The control plane already had an exact-head execution substrate, candidate-bound perceptual acceptance, and publication separation, but lacked a durable producer-consumer protocol that keeps declared physical review inside candidate finalization and defines KEEP, ONE_REPAIR, and REJECT without using production as the preview mechanism.",
+      "interfaceKeys": [
+        "LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE",
+        "CANDIDATE_PERCEPTUAL_ACCEPTANCE",
+        "MUTATION_CLOSED_EVIDENCE_CONTINUES",
+        "EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1",
+        "PUBLICATION_RELEASE_CONTRACT_v1"
+      ],
+      "pathScopes": [
+        "AI_ENTRYPOINT.json",
+        "AGENTS.md",
+        ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+        ".github/ai-router/human-disposition/exact-candidate-physical-preview-self-test.v1.mjs"
+      ],
+      "evidenceRefs": [
+        "ISSUE_3461_GEN2272_EXACT_SHA_PHYSICAL_REVIEW_PRECEDENT",
+        "ISSUE_3464_OWNER_SPECIFICATION",
+        "ISSUE_3466_CANONICAL_ADMISSION_GENERATION_2275"
+      ],
+      "closureRequirements": [
+        "CONTROL_PLANE_CANDIDATE_SELF_TEST_PASS",
+        "PRODUCER_CONSUMER_TRANSITION_SIMULATION_PASS",
+        "POST_MERGE_COLD_ROOM_DISCOVERY_PROOF",
+        "NO_UNRESOLVED_RELATED_OPEN_GAP"
+      ],
+      "authorityCreated": false
     }
   ]
 }

@@ -1,0 +1,96 @@
+{
+  "schema": "EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "capabilityId": "EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1",
+  "purpose": "Provide a provider-neutral, read-only, immutable-candidate physical and perceptual review gate before adoption or publication when an admitted construction scope declares that review required.",
+  "precedent": {
+    "accepted": "GEN2272_EXACT_SHA_PHYSICAL_PHONE_REVIEW",
+    "providerAuthorityCreated": false,
+    "precedentCreatesProductAuthority": false
+  },
+  "eligibility": {
+    "requires": [
+      "IMMUTABLE_CANDIDATE_IDENTITY",
+      "READ_ONLY_RENDERING_WITHOUT_REPOSITORY_OR_PRODUCTION_MUTATION",
+      "CANDIDATE_RENDERABLE_ON_TARGET_REVIEW_DEVICE_OR_LAWFUL_EQUIVALENT"
+    ],
+    "finalPhysicalGateRequiresImmutableCandidateIdentity": true,
+    "branchAliasAloneSufficientForFinalGate": false,
+    "candidateMustRemainBoundToItsExactBytes": true
+  },
+  "transport": {
+    "class": "LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE",
+    "providerNeutral": true,
+    "readOnly": true,
+    "repositoryMutation": false,
+    "productionMutation": false,
+    "productionDeploymentAsPreviewWorkaroundAllowed": false,
+    "providerCreatesAuthority": false,
+    "providerStatusMayBlockRelease": false
+  },
+  "candidateFinalization": {
+    "declaredRequiredPhysicalReviewIsCandidateFinalizationStep": true,
+    "mutationClosedEvidenceContinuesBeforeDispositionAllowed": false,
+    "activeOriginalMutationScopeRequiredForOneRepair": true,
+    "reviewSequence": [
+      "EXACT_CANDIDATE_COMMIT",
+      "AUTOMATED_QUALIFICATION",
+      "EXACT_SHA_PHYSICAL_PREVIEW",
+      "HUMAN_DISPOSITION"
+    ]
+  },
+  "checkpoint": {
+    "checkpointType": "CANDIDATE_PERCEPTUAL_ACCEPTANCE",
+    "bindingClass": "CANDIDATE_BOUND",
+    "candidateIdentityRequired": true,
+    "authorityEffect": "NONE_BY_HUMAN_CHECKPOINT_RECEIPT"
+  },
+  "dispositions": {
+    "KEEP": {
+      "candidateFrozen": true,
+      "furtherCandidateMutationAllowed": false,
+      "next": "NORMAL_TERMINAL_CLOSURE_THEN_SEPARATE_ADOPTION_RELEASE_AUTHORITY",
+      "authorityCreated": false
+    },
+    "ONE_REPAIR": {
+      "specificObservedDefectRequired": true,
+      "originalAdmittedScopeMustRemainActive": true,
+      "allowedPathsMayExpand": false,
+      "intentMayExpand": false,
+      "authorityMayExpand": false,
+      "architectureMayExpand": false,
+      "newImmutableCandidateIdentityRequired": true,
+      "previousPerceptualDispositionSuperseded": true,
+      "requalification": "DECLARED_DELTA_AND_DIRECTLY_AFFECTED_DEPENDENCIES_ONLY",
+      "next": "NEW_EXACT_SHA_PHYSICAL_PREVIEW",
+      "authorityCreated": false
+    },
+    "REJECT": {
+      "publicationAllowed": false,
+      "next": "REJECTED_OR_WITHDRAWN_TERMINAL_CLOSURE",
+      "authorityCreated": false
+    }
+  },
+  "terminalClosureBoundary": {
+    "oneRepairAfterTerminalClosureAllowed": false,
+    "furtherMutationRequires": "FRESH_ORDINARY_ADMISSION_OR_LAWFUL_SUCCESSOR"
+  },
+  "releaseBoundary": {
+    "keepCreatesMergeAuthority": false,
+    "keepCreatesDeploymentAuthority": false,
+    "keepCreatesPublicationAuthority": false,
+    "publicationReleaseContractUnchanged": true,
+    "finalPagesExactHeadVerificationRequired": true
+  },
+  "standingBoundary": {
+    "previewCreatesScientificStanding": false,
+    "previewCreatesEmpiricalStanding": false,
+    "previewCreatesClaimAuthority": false,
+    "previewCreatesRuntimeAuthority": false
+  },
+  "failureDisposition": {
+    "previewTransportUnavailable": "USE_ANOTHER_LAWFUL_READ_ONLY_EXACT_HEAD_SUBSTRATE_OR_REPORT_PREVIEW_TRANSPORT_UNAVAILABLE",
+    "doNotDeployProductionAsPreview": true
+  },
+  "authorityEffect": "NONE_BY_PREVIEW_OR_PERCEPTUAL_ACCEPTANCE"
+}

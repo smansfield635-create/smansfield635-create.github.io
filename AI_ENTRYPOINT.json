@@ -105,6 +105,24 @@
       "INCOMPLETE_SCOPE_AMBIGUOUS"
     ]
   },
+  "exactCandidatePhysicalPreview": {
+    "schema": "EXACT_CANDIDATE_PHYSICAL_PREVIEW_ROOT_BINDING_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "contract": ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+    "selfTest": ".github/ai-router/human-disposition/exact-candidate-physical-preview-self-test.v1.mjs",
+    "checkpointType": "CANDIDATE_PERCEPTUAL_ACCEPTANCE",
+    "bindingClass": "CANDIDATE_BOUND",
+    "candidateFinalizationRule": "DECLARED_REQUIRED_PHYSICAL_REVIEW_REMAINS_CANDIDATE_FINALIZATION_UNTIL_KEEP_OR_REJECT_OR_SCOPE_EXCEEDING_REPAIR",
+    "dispositions": [
+      "KEEP",
+      "ONE_REPAIR",
+      "REJECT"
+    ],
+    "previewTransportClass": "LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE",
+    "productionDeploymentAsPreviewWorkaroundAllowed": false,
+    "authorityEffect": "NONE_BY_PREVIEW_OR_PERCEPTUAL_ACCEPTANCE",
+    "publicationBoundary": "PUBLICATION_RELEASE_CONTRACT_UNCHANGED"
+  },
   "pageMutationProportionality": {
     "schema": "PAGE_MUTATION_PROPORTIONALITY_POLICY_v1",
     "policy": ".github/ai-router/page-mutation-proportionality-policy.v1.json",

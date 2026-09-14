@@ -1,0 +1,92 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "zionts",
+  "description": "ZIONTS consequence-path publication contract: passive dead-planet witness with progressive narrative disclosure.",
+  "checks": [
+    {
+      "path": "/showroom/globe/earth/",
+      "includes": [
+        "data-route=\"/showroom/globe/earth/\"",
+        "data-page=\"zionts\"",
+        "data-contract=\"ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_v1\"",
+        "data-parent-route=\"/showroom/globe/\"",
+        "data-planet-input-authority=\"none\"",
+        "What remains when a living world can no longer carry life?",
+        "ZIONTS is the warning left behind.",
+        "data-story-carousel",
+        "data-story-index=\"0\"",
+        "data-story-index=\"1\"",
+        "data-story-index=\"2\"",
+        "./index.js?v=20260914-gen2252"
+      ],
+      "excludes": [
+        "Triple G",
+        "data-planet-input-authority=\"enabled\""
+      ]
+    },
+    {
+      "path": "/showroom/globe/earth/index.js",
+      "includes": [
+        "ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_v1",
+        "inputAuthority:\"NONE\"",
+        "canvas.style.pointerEvents=\"none\"",
+        "data-story-carousel",
+        "touchstart",
+        "prefers-reduced-motion: reduce",
+        "document.documentElement.dataset.ziontsRenderer=\"ready\""
+      ],
+      "excludes": [
+        "pointerdown",
+        "wheel",
+        "OrbitControls",
+        "showroom/globe/audralia/",
+        "showroom/globe/h-earth/"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/earth/",
+    "timeoutMs": 30000,
+    "readySelector": "#ziontsPlanet",
+    "readyAttribute": {
+      "selector": "html",
+      "name": "data-zionts-renderer",
+      "contains": "ready"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/earth/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "advance consequence view",
+        "action": {
+          "type": "click",
+          "selector": "[data-story-index=\"1\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#zionts-story-2",
+            "name": "aria-hidden",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-story-index=\"1\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-story-count]",
+            "value": "2 of 3"
+          }
+        ]
+      }
+    ]
+  }
+}

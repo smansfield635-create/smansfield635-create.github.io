@@ -15,9 +15,21 @@
   "mutableStateAuthority": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2171",
   "humanDispositionSourceRecord": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2220",
   "rootHumanDispositionProtocol": ".github/ai-router/human-disposition/",
+  "exactCandidatePhysicalPreview": {
+    "contract": ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+    "applicability": ".github/ai-router/human-disposition/exact-candidate-physical-preview-applicability.v1.json",
+    "candidateFinalizationWhenDeclared": true,
+    "dispositions": ["KEEP", "ONE_REPAIR", "REJECT"],
+    "productionDeploymentAsPreviewWorkaroundAllowed": false,
+    "genericHeadlessCreatesPhysicalDeviceAcceptance": false,
+    "finalLiveExactHeadVerificationRequired": true,
+    "authorityCreatedByBinding": false
+  },
   "startupLoadOrder": [
     "AI_ENTRYPOINT.json",
     ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+    ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+    ".github/ai-router/human-disposition/exact-candidate-physical-preview-applicability.v1.json",
     ".github/ai-router/human-disposition/projects/audralia/manifest.v1.json",
     ".github/ai-router/human-disposition/projects/audralia/decision-ledger.v1.json",
     "CURRENT_AUDRALIA_HUMAN_CHECKPOINTS",
@@ -36,7 +48,14 @@
     "DO_NOT_CONVERT_AUTOMATED_RUNTIME_PASS_INTO_OWNER_VISIBLE_ACCEPTANCE",
     "DO_NOT_TREAT_UNREPRODUCED_RISK_AS_PROVEN_ROOT_CAUSE",
     "DO_NOT_REASK_ESTABLISHED_INTENT_UNLESS_A_REVALIDATION_TRIGGER_FIRES",
-    "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED"
+    "NO_MATERIAL_HUMAN_UNKNOWN_ENTERS_INTAKE_UNDECLARED",
+    "WHEN_AN_ADMITTED_AUDRALIA_SCOPE_REQUIRES_PHYSICAL_OR_PERCEPTUAL_ACCEPTANCE_AND_THE_IMMUTABLE_EXACT_CANDIDATE_IS_LAWFULLY_RENDERABLE_READ_ONLY_TREAT_THAT_REVIEW_AS_CANDIDATE_FINALIZATION_BEFORE_TERMINAL_MUTATION_CLOSURE",
+    "ONE_REPAIR_REQUIRES_THE_ORIGINAL_ADMITTED_SCOPE_TO_REMAIN_ACTIVE_AND_MAY_NOT_EXPAND_PATHS_INTENT_AUTHORITY_OR_ARCHITECTURE",
+    "ONE_REPAIR_CREATES_A_NEW_IMMUTABLE_CANDIDATE_AND_SUPERSEDES_THE_PRIOR_PERCEPTUAL_DISPOSITION",
+    "DO_NOT_DEPLOY_PRODUCTION_MERELY_TO_OBTAIN_PREVIEW_OR_PHYSICAL_REVIEW_EVIDENCE",
+    "GENERIC_HEADLESS_EVIDENCE_DOES_NOT_CREATE_PHYSICAL_DEVICE_ACCEPTANCE",
+    "PREVIEW_CREATES_NO_MERGE_DEPLOYMENT_PUBLICATION_SCIENTIFIC_EMPIRICAL_RUNTIME_OR_CLAIM_AUTHORITY",
+    "FINAL_PRODUCTION_ORIGIN_AND_PAGES_EXACT_HEAD_VERIFICATION_REMAINS_REQUIRED_WHERE_APPLICABLE"
   ],
   "failureDisposition": "STOP_IF_REQUIRED_AUDRALIA_HUMAN_DISPOSITION_STATE_IS_MISSING_UNREADABLE_OR_MATERIALLY_CONTRADICTORY",
   "authorityCreatedByBinding": false,

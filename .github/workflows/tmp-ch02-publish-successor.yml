@@ -1,0 +1,96 @@
+name: Temporary Chapter 02 successor publication
+on:
+  push:
+    branches:
+      - tmp/ch02-preserved-audio-export-20260913
+    paths:
+      - .github/workflows/tmp-ch02-publish-successor.yml
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify publication base
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "93575b66d16242d3fc7242bd00e5b5db8fcf74fa"
+      - name: Recover frozen 40.2-second picture master
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ch02 showroom/globe/h-earth/awards/media
+          curl -fL --retry 4 --retry-delay 2 \
+            'https://drive.usercontent.google.com/download?id=1wZra2-_Y-ZpUVw6H8-gndnq1qIIy7bgL&export=download&confirm=t' \
+            -o /tmp/ch02/picture.mp4
+          test "$(stat -c%s /tmp/ch02/picture.mp4)" -eq 1498587
+          echo '4d351ce55d186f9448e9702e2a961083cb53005ca70b4d8f5add5aeb90e309da  /tmp/ch02/picture.mp4' | sha256sum -c -
+          ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames,r_frame_rate,width,height -show_entries format=duration -of default=nw=1 /tmp/ch02/picture.mp4 | tee /tmp/ch02/picture.probe
+          grep -F 'nb_read_frames=1206' /tmp/ch02/picture.probe
+          grep -F 'duration=40.200000' /tmp/ch02/picture.probe
+      - name: Recover exact approved Vivaldi recording
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 4 --retry-delay 2 \
+            'https://upload.wikimedia.org/wikipedia/commons/a/a5/Vivaldi_-_Four_Seasons_2_Summer_mvt_1_Allegro_non_molto_-_John_Harrison_violin.oga' \
+            -o /tmp/ch02/vivaldi.oga
+          test "$(stat -c%s /tmp/ch02/vivaldi.oga)" -eq 5845347
+          test "$(md5sum /tmp/ch02/vivaldi.oga | awk '{print $1}')" = "e30b3c82cd8a9fdfe4e2b3cbce4d59ab8654789c"
+      - name: Mux exact 02:37 to 03:17.2 soundtrack window
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT='showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          ffmpeg -y \
+            -i /tmp/ch02/picture.mp4 \
+            -ss 157 -i /tmp/ch02/vivaldi.oga \
+            -t 40.200 \
+            -map 0:v:0 -map 1:a:0 \
+            -c:v copy -c:a aac -b:a 192k \
+            -movflags +faststart \
+            "$OUT"
+          ffprobe -v error -count_frames -show_entries stream=index,codec_type,codec_name,width,height,r_frame_rate,nb_read_frames -show_entries format=duration,size -of default=nw=1 "$OUT" | tee /tmp/ch02/final.probe
+          grep -F 'duration=40.200000' /tmp/ch02/final.probe
+          grep -F 'nb_read_frames=1206' /tmp/ch02/final.probe
+          sha256sum "$OUT" | tee /tmp/ch02/final.sha256
+      - name: Rebind Awards Chapter 02 to successor master
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('showroom/globe/h-earth/awards/index.html')
+          s = p.read_text()
+          old = '/showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4'
+          new = '/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          if old not in s:
+              raise SystemExit('current live Chapter 02 source binding not found')
+          s = s.replace(old, new, 1)
+          s = s.replace('58.774-second', '40.200-second', 1)
+          s, n = re.subn(r'(<video\s+id="world-reel"[^>]*aria-label=")[^"]*(")', r'\g<1>40.200-second Chapter 02 globe, H-Earth traversal and estate cinematic with embedded Vivaldi score\g<2>', s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit('world-reel aria-label binding not found')
+          p.write_text(s)
+      - name: Verify publication package
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET='/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4'
+          grep -F "$TARGET" showroom/globe/h-earth/awards/index.html
+          grep -F '40.200-second' showroom/globe/h-earth/awards/index.html
+          ! grep -F '/showroom/globe/h-earth/awards/media/awards-cinematic-epilogue-first-picture-v1.mp4' showroom/globe/h-earth/awards/index.html
+      - name: Publish exact successor to public main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/awards/index.html showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4
+          git commit -m 'Publish 40.2-second Chapter 02 successor cinematic'
+          git push origin HEAD:main
+          git rev-parse HEAD

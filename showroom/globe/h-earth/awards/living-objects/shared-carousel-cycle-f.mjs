@@ -52,6 +52,7 @@ const STYLE=`
 [data-living-host][data-shared-state="READER_OPEN"]{opacity:.78}
 .awards-shared-rear-cue{position:absolute;inset:18%;display:grid;place-items:center;border:1px solid rgba(147,224,189,.18);border-radius:22px;font:800 10px/1 system-ui;letter-spacing:.14em;color:rgba(215,239,230,.64);text-align:center;background:linear-gradient(145deg,rgba(147,224,189,.025),rgba(2,8,11,.22))}
 @media(max-width:760px){
+  .achievement-stage[data-ready="true"]{height:560px}
   .achievement-stage .feature{padding:clamp(24px,7vw,34px) clamp(20px,6vw,30px) 220px!important;min-height:440px}
   [data-living-host]{left:50%;right:auto;top:auto;bottom:18px;transform:translateX(-50%);max-width:88%}
   [data-living-host][data-story-kind="experience"]{width:min(184px,66%);aspect-ratio:2/3}

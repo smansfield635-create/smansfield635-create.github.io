@@ -1803,49 +1803,6 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
-    "2ebd4b56f0229d062fad56fea0eb6daecf0ff26b03f513ac2bf2d68c37f8862f": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "caa3c77432d4668b0e563e21a5b091aa529d6dd4",
-          "lockGeneration": 2245,
-          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY:V1",
-          "operationId": "COMMUNITY_LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY_REPAIR_20260914_001",
-          "procedureLocatorDigest": "4d0b0983c919aba3283c990ceafd05c7384544ea510d6002998b129f8f2c170e",
-          "requestDigest": "61a34af02f9eba197b8238a2ed574af3fe5cdf5bf56ae810b48301771894b423",
-          "scopeHash": "2ebd4b56f0229d062fad56fea0eb6daecf0ff26b03f513ac2bf2d68c37f8862f"
-        },
-        "bindingDigest": "449347e007931b6ac733bcb8f3ce7a9e681f42726c13c2c3091eb88a0da8ba81",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "6e90e3147b7fe2c2f0707895a705f0b66b951669f0fbf20bc654a6fd8c3a3340",
-          "commentId": 5667411606,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3410,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34870149851,
-          "workflowSha": "caa3c77432d4668b0e563e21a5b091aa529d6dd4"
-        },
-        "lineageAnchorCommitSha": "1efe38b0c4aa3a608fbe66ccf51ad947828e6476",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "caa3c77432d4668b0e563e21a5b091aa529d6dd4",
-      "lockGeneration": 2245,
-      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY:V1",
-      "operationId": "COMMUNITY_LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY_REPAIR_20260914_001",
-      "procedureLocatorDigest": "4d0b0983c919aba3283c990ceafd05c7384544ea510d6002998b129f8f2c170e",
-      "released": false,
-      "requestDigest": "61a34af02f9eba197b8238a2ed574af3fe5cdf5bf56ae810b48301771894b423",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "2ebd4b56f0229d062fad56fea0eb6daecf0ff26b03f513ac2bf2d68c37f8862f",
-      "state": "ADMITTED_LOCKED"
-    },
     "30aafa8cd70c2229714d2737d9e771d42657aa675aaf3505acceaf10d6c71bc1": {
       "governingHead": "9662c03b106387ff8046e191867214dd1f947a91",
       "lockGeneration": 1588,
@@ -54902,6 +54859,50 @@
       "scopeHash": "bc765cbf551804acdb088c9eb8ce0de90717b2ca74662f131c460fa1233af313",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "caa3c77432d4668b0e563e21a5b091aa529d6dd4",
+          "lockGeneration": 2245,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY:V1",
+          "operationId": "COMMUNITY_LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY_REPAIR_20260914_001",
+          "procedureLocatorDigest": "4d0b0983c919aba3283c990ceafd05c7384544ea510d6002998b129f8f2c170e",
+          "requestDigest": "61a34af02f9eba197b8238a2ed574af3fe5cdf5bf56ae810b48301771894b423",
+          "scopeHash": "2ebd4b56f0229d062fad56fea0eb6daecf0ff26b03f513ac2bf2d68c37f8862f"
+        },
+        "bindingDigest": "449347e007931b6ac733bcb8f3ce7a9e681f42726c13c2c3091eb88a0da8ba81",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6e90e3147b7fe2c2f0707895a705f0b66b951669f0fbf20bc654a6fd8c3a3340",
+          "commentId": 5667411606,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3410,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34870149851,
+          "workflowSha": "caa3c77432d4668b0e563e21a5b091aa529d6dd4"
+        },
+        "lineageAnchorCommitSha": "1efe38b0c4aa3a608fbe66ccf51ad947828e6476",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "caa3c77432d4668b0e563e21a5b091aa529d6dd4",
+      "lockGeneration": 2245,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY:V1",
+      "operationId": "COMMUNITY_LIFECYCLE_BOOT_ORDER_AND_ASSET_IDENTITY_REPAIR_20260914_001",
+      "procedureLocatorDigest": "4d0b0983c919aba3283c990ceafd05c7384544ea510d6002998b129f8f2c170e",
+      "released": true,
+      "requestDigest": "61a34af02f9eba197b8238a2ed574af3fe5cdf5bf56ae810b48301771894b423",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2ebd4b56f0229d062fad56fea0eb6daecf0ff26b03f513ac2bf2d68c37f8862f",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

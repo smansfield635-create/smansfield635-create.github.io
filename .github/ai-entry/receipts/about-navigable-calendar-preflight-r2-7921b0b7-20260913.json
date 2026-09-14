@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "about-navigable-calendar-preflight-r2-7921b0b7-20260913",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3365,
+  "requestBranch": "ai-dispatch-request-about-calendar-preflight-r2-20260913",
+  "requestCommit": "de67f7a06c86c57ebb6961db3a5301020d41ac91",
+  "requestCommitParent": "42f308a9bb0afb325720cef74fcd124ffa94b735",
+  "currentMainSha": "42f308a9bb0afb325720cef74fcd124ffa94b735",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "7921b0b72713ec64767f65ed2001ca76b61adf97",
+    "surface_id": "about"
+  },
+  "bridgeRunId": "34808240036",
+  "dispatchedRunId": 34808250069,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34808250069",
+  "dispatchedRunHeadSha": "42f308a9bb0afb325720cef74fcd124ffa94b735",
+  "dispatchedAt": "2026-09-14T05:03:47.885Z",
+  "resolvedAt": "2026-09-14T05:03:51.561Z"
+}

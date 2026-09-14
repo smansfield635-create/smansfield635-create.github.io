@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "evidence-phone-inspection-preflight-2552e626-20260914",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3374,
+  "requestBranch": "ai-dispatch-request-evidence-phone-preflight-2552e626-20260914",
+  "requestCommit": "030440f7f069061c21dc08ce047edf2d7e5615bc",
+  "requestCommitParent": "b76c40683993e73815701df0f675842d68e8b364",
+  "currentMainSha": "b76c40683993e73815701df0f675842d68e8b364",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "2552e626366ced927d35f16a1f00d029df077db4",
+    "surface_id": "evidence"
+  },
+  "bridgeRunId": "34810920237",
+  "dispatchedRunId": 34810928676,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34810928676",
+  "dispatchedRunHeadSha": "b76c40683993e73815701df0f675842d68e8b364",
+  "dispatchedAt": "2026-09-14T05:47:44.369Z",
+  "resolvedAt": "2026-09-14T05:47:47.916Z"
+}

@@ -6105,6 +6105,49 @@
       "scopeHash": "93f505e76d6e7e46e013f15a8240ec1b96224560b761866f27b092513299182d",
       "state": "ADMITTED_LOCKED"
     },
+    "944622794ae4dd8a3914b05343f469b4dfca7cadf72b22bb2609e69ee038059c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a4c3301d021456b386e6c877c2f89dbf322b8905",
+          "lockGeneration": 2269,
+          "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:GEN2265_STAGE_IV_DUAL_LIFECYCLE:V1",
+          "operationId": "COMMUNITY_GEN2265_PUBLICATION_MANIFEST_RECONCILIATION_20260914_003",
+          "procedureLocatorDigest": "d9803e64c77ab047811d92e69cbd95b80dd18bff08f10854d21339bc7463723a",
+          "requestDigest": "4c279dd7ab68fd1f995674c4736669fa706bdbb5e309adaf75871c7bff3d5716",
+          "scopeHash": "944622794ae4dd8a3914b05343f469b4dfca7cadf72b22bb2609e69ee038059c"
+        },
+        "bindingDigest": "d897efeba95064e33bfa3ed84c0f51d7864b10ea44ca293de8827e97ae125621",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1c837587f4ac9ae1f19895e7834dfb7e75d4eca3ce798d77960f492f20a21b9f",
+          "commentId": 5670579685,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3453,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34894962671,
+          "workflowSha": "ad60e7bd1064677fdfbeed55a117ab29590f85b7"
+        },
+        "lineageAnchorCommitSha": "601eb7ff24cf5d050d585c8724718a20b930990c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a4c3301d021456b386e6c877c2f89dbf322b8905",
+      "lockGeneration": 2269,
+      "lockScope": "PUBLICATION_SURFACE:CONSIDER_THE_ENERGY:GEN2265_STAGE_IV_DUAL_LIFECYCLE:V1",
+      "operationId": "COMMUNITY_GEN2265_PUBLICATION_MANIFEST_RECONCILIATION_20260914_003",
+      "procedureLocatorDigest": "d9803e64c77ab047811d92e69cbd95b80dd18bff08f10854d21339bc7463723a",
+      "released": false,
+      "requestDigest": "4c279dd7ab68fd1f995674c4736669fa706bdbb5e309adaf75871c7bff3d5716",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "944622794ae4dd8a3914b05343f469b4dfca7cadf72b22bb2609e69ee038059c",
+      "state": "ADMITTED_LOCKED"
+    },
     "9485a119ec533eed9ce9e0d01e6d0d672d2384d21fc0b70a6f0fd8ab413071ab": {
       "governingHead": "24d18cba2aa56c7fc5eaf135976700d9e9e7c04f",
       "lockGeneration": 355,
@@ -10663,7 +10706,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2268,
+  "lockGeneration": 2269,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

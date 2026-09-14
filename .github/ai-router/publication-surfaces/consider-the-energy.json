@@ -1,0 +1,61 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "consider-the-energy",
+  "description": "Consider the Energy Community page exact-head verification for the four-season lifecycle sculpture and shared estate cosmic background.",
+  "checks": [
+    {
+      "path": "/campaigns/consider-the-energy/index.html",
+      "includes": [
+        "data-route=\"/campaigns/consider-the-energy/\"",
+        "data-community-lifecycle-mount",
+        "/assets/dgb-estate-cosmos.js",
+        "/campaigns/consider-the-energy/community-lifecycle3d.js",
+        "Consider the Community with Consider the Energy."
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/consider-the-energy/community-lifecycle3d.js",
+      "includes": [
+        "DGB_COMMUNITY_LIFECYCLE_TREE_4SEASON_GEOMETRY_v1",
+        "COMMUNITY_FOUR_SEASON_LIFECYCLE_SCULPTURE",
+        "SEED','ROOTS','NETWORK','GROWTH','TREE_LOCK','SETTLEMENT','CONTRIBUTION','RENEWAL",
+        "SPRING','SUMMER','AUTUMN','WINTER",
+        "b5289094db8648800197a03226d6322902960b48",
+        "webglContexts:1",
+        "fallbackPreserved:!!fallback"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/dgb-estate-cosmos.js",
+      "includes": [
+        "DGB_ESTATE_COSMIC_CONTINUITY_v1",
+        "pointerEvents: \"none\"",
+        "mobileDprCap: 1",
+        "desktopDprCap: 1.25",
+        "visibilitychange",
+        "prefers-reduced-motion: reduce"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/campaigns/consider-the-energy/",
+    "timeoutMs": 15000,
+    "readySelector": "#dgb-estate-cosmos[data-dgb-estate-cosmos-status=\"available\"]",
+    "readyAttribute": {
+      "selector": "[data-community-lifecycle-mount]",
+      "name": "data-lifecycle-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/campaigns/consider-the-energy/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": []
+  }
+}

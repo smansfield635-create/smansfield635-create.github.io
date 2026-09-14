@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "about-phone-mirrorland-preflight-20260913",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3345,
+  "requestBranch": "ai-dispatch-request-about-phone-preflight-20260913",
+  "requestCommit": "fa3d4c26c56779c0c31a2dcd0f1bd6f49b263b6d",
+  "requestCommitParent": "87634c7a2d0e6a145bf2f64cc4749ff600dc2d26",
+  "currentMainSha": "87634c7a2d0e6a145bf2f64cc4749ff600dc2d26",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "87634c7a2d0e6a145bf2f64cc4749ff600dc2d26",
+    "surface_id": "about"
+  },
+  "bridgeRunId": "34802055488",
+  "dispatchedRunId": 34802065522,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/34802065522",
+  "dispatchedRunHeadSha": "87634c7a2d0e6a145bf2f64cc4749ff600dc2d26",
+  "dispatchedAt": "2026-09-14T03:16:46.163Z",
+  "resolvedAt": "2026-09-14T03:16:52.739Z"
+}

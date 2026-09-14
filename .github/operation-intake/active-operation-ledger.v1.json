@@ -10141,49 +10141,6 @@
       "scopeHash": "f0fae24b2d5e6c908be90c6d8d0a0c9a7f8c5254758d48b0621c797e8b2b33bb",
       "state": "ADMITTED_LOCKED"
     },
-    "f2331746909c69b08601b4bc2b0fce94ae61af46e573ad0c5c5f96d2b858e7ec": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "d93fa4750bc3bc05edb5255b19fde505ac1e8e4c",
-          "lockGeneration": 2238,
-          "lockScope": "SHOWROOM_GLOBE:ZIONTS:PASSIVE_PLANET_NARRATIVE_RECONSTRUCTION:V1",
-          "operationId": "ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_RECONSTRUCTION_20260914_001",
-          "procedureLocatorDigest": "1dea28edc79644875664aac393aa17fd236dee2d86f6159794ac1604dcec1335",
-          "requestDigest": "f17d6171c099c1092de6a8b6763ca6210a64f893a0f4451c42d2f3d4af6cb3a5",
-          "scopeHash": "f2331746909c69b08601b4bc2b0fce94ae61af46e573ad0c5c5f96d2b858e7ec"
-        },
-        "bindingDigest": "4f54a1a2eb3566b06868c7e06a72c4c4051d25147b597438ec097f700283c61b",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "0ecb78bb05c644af1caeb90b65e9b16e566f8ef7358627b3090b26497fc9fadd",
-          "commentId": 5666747964,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3395,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34864979963,
-          "workflowSha": "d93fa4750bc3bc05edb5255b19fde505ac1e8e4c"
-        },
-        "lineageAnchorCommitSha": "1c41b048fc7d88dce5e30237c974f9ca82fb07da",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "d93fa4750bc3bc05edb5255b19fde505ac1e8e4c",
-      "lockGeneration": 2238,
-      "lockScope": "SHOWROOM_GLOBE:ZIONTS:PASSIVE_PLANET_NARRATIVE_RECONSTRUCTION:V1",
-      "operationId": "ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_RECONSTRUCTION_20260914_001",
-      "procedureLocatorDigest": "1dea28edc79644875664aac393aa17fd236dee2d86f6159794ac1604dcec1335",
-      "released": false,
-      "requestDigest": "f17d6171c099c1092de6a8b6763ca6210a64f893a0f4451c42d2f3d4af6cb3a5",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "f2331746909c69b08601b4bc2b0fce94ae61af46e573ad0c5c5f96d2b858e7ec",
-      "state": "ADMITTED_LOCKED"
-    },
     "f38ebc3a9fade06e8b82494b50bcb52fa321cd6758d97032e1b1a27d5e603ddb": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 458,
@@ -54638,6 +54595,50 @@
       "scopeHash": "00df2c4e0063cf0f19f76802cbd8ed33c1f84c098ba8076b7adf3338697ff9f8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d93fa4750bc3bc05edb5255b19fde505ac1e8e4c",
+          "lockGeneration": 2238,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:PASSIVE_PLANET_NARRATIVE_RECONSTRUCTION:V1",
+          "operationId": "ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_RECONSTRUCTION_20260914_001",
+          "procedureLocatorDigest": "1dea28edc79644875664aac393aa17fd236dee2d86f6159794ac1604dcec1335",
+          "requestDigest": "f17d6171c099c1092de6a8b6763ca6210a64f893a0f4451c42d2f3d4af6cb3a5",
+          "scopeHash": "f2331746909c69b08601b4bc2b0fce94ae61af46e573ad0c5c5f96d2b858e7ec"
+        },
+        "bindingDigest": "4f54a1a2eb3566b06868c7e06a72c4c4051d25147b597438ec097f700283c61b",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0ecb78bb05c644af1caeb90b65e9b16e566f8ef7358627b3090b26497fc9fadd",
+          "commentId": 5666747964,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3395,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34864979963,
+          "workflowSha": "d93fa4750bc3bc05edb5255b19fde505ac1e8e4c"
+        },
+        "lineageAnchorCommitSha": "1c41b048fc7d88dce5e30237c974f9ca82fb07da",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d93fa4750bc3bc05edb5255b19fde505ac1e8e4c",
+      "lockGeneration": 2238,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:PASSIVE_PLANET_NARRATIVE_RECONSTRUCTION:V1",
+      "operationId": "ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_RECONSTRUCTION_20260914_001",
+      "procedureLocatorDigest": "1dea28edc79644875664aac393aa17fd236dee2d86f6159794ac1604dcec1335",
+      "released": true,
+      "requestDigest": "f17d6171c099c1092de6a8b6763ca6210a64f893a0f4451c42d2f3d4af6cb3a5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f2331746909c69b08601b4bc2b0fce94ae61af46e573ad0c5c5f96d2b858e7ec",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

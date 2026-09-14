@@ -479,3 +479,92 @@ function mount(host){
 }
 
 export { CONTRACT as DGB_COMMUNITY_LIFECYCLE_3D_CONTRACT };
+
+// Gen2273 structural checkpoint: identity and coordinate law only. Rendering remains baseline-identical here.
+const GEN2273_STATE=Object.freeze({
+  DOMAIN_STATIC:'DOMAIN_STATIC',
+  GLOBAL_RELEASE:'GLOBAL_RELEASE',
+  SPIRAL_GROWTH:'SPIRAL_GROWTH',
+  TREE_COMPLETE:'TREE_COMPLETE',
+  SETTLEMENT:'SETTLEMENT',
+  DOMAIN_LOCK:'DOMAIN_LOCK',
+  FOUR_DOMAIN_ACTIVE:'FOUR_DOMAIN_ACTIVE',
+  COEXISTENCE:'COEXISTENCE'
+});
+const GEN2273_STATE_ORDER=Object.freeze([
+  GEN2273_STATE.DOMAIN_STATIC,
+  GEN2273_STATE.GLOBAL_RELEASE,
+  GEN2273_STATE.SPIRAL_GROWTH,
+  GEN2273_STATE.TREE_COMPLETE,
+  GEN2273_STATE.SETTLEMENT,
+  GEN2273_STATE.DOMAIN_LOCK,
+  GEN2273_STATE.FOUR_DOMAIN_ACTIVE,
+  GEN2273_STATE.COEXISTENCE
+]);
+const GEN2273_SETTLEMENT_CANDIDATES=Object.freeze([1.5,1.9,2.3]);
+const GEN2273_TREE_COMPLETE_SECONDS=18.4;
+const GEN2273_OBJECTS_PER_DEPTH=8;
+const GEN2273_MOTION_PROFILE=Object.freeze({SPRING:0,SUMMER:1,AUTUMN:2,WINTER:3});
+
+function gen2273ObjectId(season,depthBand,index){return season*DEPTH_PLANES.length*GEN2273_OBJECTS_PER_DEPTH+depthBand*GEN2273_OBJECTS_PER_DEPTH+index}
+function createGen2273MobileObjectRegistry(){
+  const registry=[];
+  for(const zone of QUADRANT_VOLUMES){
+    DEPTH_PLANES.forEach((plane,depthBand)=>{
+      for(let index=0;index<GEN2273_OBJECTS_PER_DEPTH;index++){
+        const home=quadrantPoint(zone,plane,index,GEN2273_OBJECTS_PER_DEPTH),objectId=gen2273ObjectId(zone.season,depthBand,index);
+        registry.push(Object.freeze({
+          id:`${CONTRACT.seasons[zone.season]}-${plane.id}-${String(index).padStart(2,'0')}`,
+          objectId,
+          domain:zone.season,
+          domainName:CONTRACT.seasons[zone.season],
+          homeXYZ:Object.freeze({x:home.x,y:home.y,z:home.z}),
+          spiralPhase:(objectId/Math.max(1,QUADRANT_VOLUMES.length*DEPTH_PLANES.length*GEN2273_OBJECTS_PER_DEPTH))*Math.PI*2,
+          depthBand,
+          depthBandName:plane.id,
+          motionProfile:zone.season
+        }));
+      }
+    });
+  }
+  return Object.freeze(registry);
+}
+const GEN2273_MOBILE_OBJECT_REGISTRY=createGen2273MobileObjectRegistry();
+
+function P_static(object){return V(object.homeXYZ.x,object.homeXYZ.y,object.homeXYZ.z)}
+function P_circulation(object,progress){
+  const t=clamp(progress),home=P_static(object),phase=object.spiralPhase+t*Math.PI*4,r0=Math.max(.68,Math.hypot(home.x,home.z)*.92),radius=mix(r0,.46,t),lift=mix(home.y,.52+object.domain*.22,t);
+  return V(Math.cos(phase)*radius,lift+Math.sin(phase*1.7)*.13*t,Math.sin(phase)*radius+Math.sin(phase*.73+object.depthBand)*.16*t);
+}
+function P_local(object,timeSeconds){
+  const home=P_static(object),t=Math.max(0,timeSeconds),depth=DEPTH_PLANES[object.depthBand]||DEPTH_PLANES[1],amp=.022*depth.motion,phase=object.spiralPhase;
+  if(object.motionProfile===GEN2273_MOTION_PROFILE.SPRING)return A(home,V(Math.sin(t*.42+phase)*amp,Math.cos(t*.35+phase)*amp*.75,Math.sin(t*.28+phase)*amp*.45));
+  if(object.motionProfile===GEN2273_MOTION_PROFILE.SUMMER)return A(home,V(Math.sin(t*.74+phase)*amp*1.25,-Math.abs(Math.sin(t*.92+phase))*amp,Math.cos(t*.31+phase)*amp*.35));
+  if(object.motionProfile===GEN2273_MOTION_PROFILE.AUTUMN)return A(home,V(Math.sin(t*.58+phase)*amp*1.15,Math.cos(t*.51+phase)*amp*.90,Math.sin(t*.39+phase)*amp*.55));
+  return A(home,V(Math.sin(t*.44+phase)*amp*.82,-Math.abs(Math.cos(t*.36+phase))*amp*.58,Math.sin(t*.27+phase)*amp*.30));
+}
+function gen2273EightStateController(ms,settlementDurationSeconds=GEN2273_SETTLEMENT_CANDIDATES[0],reduced=false){
+  const seconds=Math.max(0,ms)/1000,settlementDuration=GEN2273_SETTLEMENT_CANDIDATES.includes(settlementDurationSeconds)?settlementDurationSeconds:GEN2273_SETTLEMENT_CANDIDATES[0],lockSeconds=GEN2273_TREE_COMPLETE_SECONDS+settlementDuration;
+  if(reduced)return Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,progress:1,globalCirculationAuthority:false,domainLocked:true,settlementDuration});
+  if(seconds<CONTRACT.feedingWindowSeconds[0])return{state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,progress:clamp(seconds/CONTRACT.feedingWindowSeconds[0]),globalCirculationAuthority:false,domainLocked:false,settlementDuration};
+  if(seconds<CONTRACT.feedingWindowSeconds[1])return{state:GEN2273_STATE.GLOBAL_RELEASE,stateIndex:1,progress:clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(CONTRACT.feedingWindowSeconds[1]-CONTRACT.feedingWindowSeconds[0])),globalCirculationAuthority:true,domainLocked:false,settlementDuration};
+  if(seconds<GEN2273_TREE_COMPLETE_SECONDS)return{state:GEN2273_STATE.SPIRAL_GROWTH,stateIndex:2,progress:clamp((seconds-CONTRACT.feedingWindowSeconds[1])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[1])),globalCirculationAuthority:true,domainLocked:false,settlementDuration};
+  if(seconds===GEN2273_TREE_COMPLETE_SECONDS)return{state:GEN2273_STATE.TREE_COMPLETE,stateIndex:3,progress:1,globalCirculationAuthority:true,domainLocked:false,settlementDuration};
+  if(seconds<lockSeconds)return{state:GEN2273_STATE.SETTLEMENT,stateIndex:4,progress:clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration),globalCirculationAuthority:true,domainLocked:false,settlementDuration};
+  if(seconds===lockSeconds)return{state:GEN2273_STATE.DOMAIN_LOCK,stateIndex:5,progress:1,globalCirculationAuthority:false,domainLocked:true,settlementDuration};
+  if(seconds<lockSeconds+CONTRACT.environmentCycleSeconds)return{state:GEN2273_STATE.FOUR_DOMAIN_ACTIVE,stateIndex:6,progress:clamp((seconds-lockSeconds)/CONTRACT.environmentCycleSeconds),globalCirculationAuthority:false,domainLocked:true,settlementDuration};
+  return{state:GEN2273_STATE.COEXISTENCE,stateIndex:7,progress:1,globalCirculationAuthority:false,domainLocked:true,settlementDuration};
+}
+
+const GEN2273_STRUCTURAL_CHECKPOINT=Object.freeze({
+  id:'GEN2273_STRUCTURAL_CHECKPOINT_V1',
+  governingHead:'f9c0ed375724a2e073a49f913eb8adc0d5e2ca38',
+  stateOrder:GEN2273_STATE_ORDER,
+  objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,
+  stableIdentityFields:Object.freeze(['id','objectId','domain','domainName','homeXYZ','spiralPhase','depthBand','depthBandName','motionProfile']),
+  positionLaws:Object.freeze(['P_static','P_circulation','P_local']),
+  settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,
+  treeCompleteAnchorSeconds:GEN2273_TREE_COMPLETE_SECONDS,
+  renderMutationApplied:false
+});
+globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2273_STRUCTURAL_CHECKPOINT;

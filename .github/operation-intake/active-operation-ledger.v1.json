@@ -459,6 +459,68 @@
       "scopeHash": "07e9979bbbaaef838730736b040ed4f669d287051dcf77446ced8bb5f69be39a",
       "state": "ADMITTED_LOCKED"
     },
+    "086025523ab871abffe9d0575040892e606ae65e5191ee527c70fd54e762f41f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b76c40683993e73815701df0f675842d68e8b364",
+          "lockGeneration": 2224,
+          "lockScope": "H_EARTH_AWARDS_CHAPTER_02_RUNTIME_SCORE_CONVERGENCE",
+          "operationId": "AWARDS_CHAPTER_02_RUNTIME_SCORE_CONVERGENCE_20260914_006",
+          "procedureLocatorDigest": "5fa04c021d089db6f3a72281f356c7ba63d506be5f78b9a8593ec18501b10e83",
+          "requestDigest": "bc3f8e30cbb93034a7c05b5fa36b447cc203f847a357f3a558808c9f793563da",
+          "scopeHash": "086025523ab871abffe9d0575040892e606ae65e5191ee527c70fd54e762f41f"
+        },
+        "bindingDigest": "50947d19b616d09651469057134075fb96b3105813ae62512d76a9f791adbc96",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "89596043a47725413b2af2c3d98f6975c8c726c3e78c3b8fa4b74bbb5f69ea50",
+          "commentId": 5659419146,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3350,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34809463642,
+          "workflowSha": "b76c40683993e73815701df0f675842d68e8b364"
+        },
+        "lineageAnchorCommitSha": "29264c996c855ff240b9a2af9894db126330bdbc",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b76c40683993e73815701df0f675842d68e8b364",
+      "lockGeneration": 2224,
+      "lockScope": "H_EARTH_AWARDS_CHAPTER_02_RUNTIME_SCORE_CONVERGENCE",
+      "operationId": "AWARDS_CHAPTER_02_RUNTIME_SCORE_CONVERGENCE_20260914_006",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "02d0ef7abee1c378fedb3529b5204843917e8852",
+        "lockGeneration": 2219,
+        "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE",
+        "operationId": "AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE_20260913_002",
+        "preservedEvidenceRefs": [
+          "ISSUE_3182_PRE_RENDER_FREEZE",
+          "ISSUE_3350_OWNER_CORRECTION_5659300989",
+          "PICTURE_SHA256_4D351CE55D186F9448E9702E2A961083CB53005CA70B4D8F5ADD5AEB90E309DA",
+          "HISTORICAL_AWARDS_REMOTE_SCORE_PRECEDENT_F5744DF07B70E142B4C33C37578A5E873109E707",
+          "FAILED_SUCCESSOR_5659334771_APPLICABILITY_ONLY_NO_MUTATION",
+          "FAILED_SUCCESSOR_5659391560_REASON_CODE_ONLY_NO_MUTATION"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_CH02_GEN2219_TO_RUNTIME_SCORE_CONVERGENCE_20260914_005"
+      },
+      "procedureLocatorDigest": "5fa04c021d089db6f3a72281f356c7ba63d506be5f78b9a8593ec18501b10e83",
+      "released": false,
+      "requestDigest": "bc3f8e30cbb93034a7c05b5fa36b447cc203f847a357f3a558808c9f793563da",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "086025523ab871abffe9d0575040892e606ae65e5191ee527c70fd54e762f41f",
+      "state": "ADMITTED_LOCKED"
+    },
     "08e56fd88a3fb60792990d5287e6e83fc0d7a7116302f8f4e78c8f11c926a7d0": {
       "governingHead": "23214cf857c1591c1b6eac34a12af1e346882a95",
       "lockGeneration": 1567,
@@ -1524,49 +1586,6 @@
       "requestDigest": "8191640e2808b966fe71b1fa024b0c36e9dae3f8fd3e5d2d6392490bc3eb30e2",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "26a170fff6651c3fdfe56ca2d95114a3f0b168dfd8cf361da6f856f5032b72d2",
-      "state": "ADMITTED_LOCKED"
-    },
-    "288f78ebbf9cfaa50400839cbc87b0dda1e95e3cbe6b2a3e99b89873a3aee536": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "02d0ef7abee1c378fedb3529b5204843917e8852",
-          "lockGeneration": 2219,
-          "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE",
-          "operationId": "AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE_20260913_002",
-          "procedureLocatorDigest": "67dab92f9e8ff8ba9f82cb4ac6d51818f497ecc03470b7d40736da17051deeb4",
-          "requestDigest": "ac9398e3961f9c37633d21235d30d852fa43fccd8ca7cf0595a174fce9c35ca2",
-          "scopeHash": "288f78ebbf9cfaa50400839cbc87b0dda1e95e3cbe6b2a3e99b89873a3aee536"
-        },
-        "bindingDigest": "bf1db7d302d3a05b158f15c1a3ebda34ae5599585aab60cd9039222481624bbf",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "d681eab7ec57c0f3ac57854362a6f32eecf60419249ed846f72370c4f16277d9",
-          "commentId": 5658714529,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3350,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34803915089,
-          "workflowSha": "02d0ef7abee1c378fedb3529b5204843917e8852"
-        },
-        "lineageAnchorCommitSha": "c22bfaf463ea91c6957040c70c877477eab1da2f",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "02d0ef7abee1c378fedb3529b5204843917e8852",
-      "lockGeneration": 2219,
-      "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE",
-      "operationId": "AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE_20260913_002",
-      "procedureLocatorDigest": "67dab92f9e8ff8ba9f82cb4ac6d51818f497ecc03470b7d40736da17051deeb4",
-      "released": false,
-      "requestDigest": "ac9398e3961f9c37633d21235d30d852fa43fccd8ca7cf0595a174fce9c35ca2",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "288f78ebbf9cfaa50400839cbc87b0dda1e95e3cbe6b2a3e99b89873a3aee536",
       "state": "ADMITTED_LOCKED"
     },
     "29faefeb037e128676d0cd86d7542c497e2cf6f151d47a24410af7b1abefb882": {
@@ -10237,7 +10256,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2223,
+  "lockGeneration": 2224,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -53786,6 +53805,69 @@
       "scopeHash": "81855530d115b243b0709fe32db5b90ad81980212e6eff0a417d110f12cf0bfc",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "02d0ef7abee1c378fedb3529b5204843917e8852",
+          "lockGeneration": 2219,
+          "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE",
+          "operationId": "AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE_20260913_002",
+          "procedureLocatorDigest": "67dab92f9e8ff8ba9f82cb4ac6d51818f497ecc03470b7d40736da17051deeb4",
+          "requestDigest": "ac9398e3961f9c37633d21235d30d852fa43fccd8ca7cf0595a174fce9c35ca2",
+          "scopeHash": "288f78ebbf9cfaa50400839cbc87b0dda1e95e3cbe6b2a3e99b89873a3aee536"
+        },
+        "bindingDigest": "bf1db7d302d3a05b158f15c1a3ebda34ae5599585aab60cd9039222481624bbf",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d681eab7ec57c0f3ac57854362a6f32eecf60419249ed846f72370c4f16277d9",
+          "commentId": 5658714529,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3350,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34803915089,
+          "workflowSha": "02d0ef7abee1c378fedb3529b5204843917e8852"
+        },
+        "lineageAnchorCommitSha": "c22bfaf463ea91c6957040c70c877477eab1da2f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "02d0ef7abee1c378fedb3529b5204843917e8852",
+      "lockGeneration": 2219,
+      "lockScope": "H_EARTH_AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE",
+      "operationId": "AWARDS_CHAPTER_02_FINAL_AV_CONVERGENCE_20260913_002",
+      "procedureLocatorDigest": "67dab92f9e8ff8ba9f82cb4ac6d51818f497ecc03470b7d40736da17051deeb4",
+      "released": true,
+      "requestDigest": "ac9398e3961f9c37633d21235d30d852fa43fccd8ca7cf0595a174fce9c35ca2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "288f78ebbf9cfaa50400839cbc87b0dda1e95e3cbe6b2a3e99b89873a3aee536",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ISSUE_3182_PRE_RENDER_FREEZE",
+          "ISSUE_3350_OWNER_CORRECTION_5659300989",
+          "PICTURE_SHA256_4D351CE55D186F9448E9702E2A961083CB53005CA70B4D8F5ADD5AEB90E309DA",
+          "HISTORICAL_AWARDS_REMOTE_SCORE_PRECEDENT_F5744DF07B70E142B4C33C37578A5E873109E707",
+          "FAILED_SUCCESSOR_5659334771_APPLICABILITY_ONLY_NO_MUTATION",
+          "FAILED_SUCCESSOR_5659391560_REASON_CODE_ONLY_NO_MUTATION"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "b76c40683993e73815701df0f675842d68e8b364",
+        "successorLockGeneration": 2224,
+        "successorLockScope": "H_EARTH_AWARDS_CHAPTER_02_RUNTIME_SCORE_CONVERGENCE",
+        "successorOperationId": "AWARDS_CHAPTER_02_RUNTIME_SCORE_CONVERGENCE_20260914_006",
+        "transitionId": "AWARDS_CH02_GEN2219_TO_RUNTIME_SCORE_CONVERGENCE_20260914_005"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

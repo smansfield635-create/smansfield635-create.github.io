@@ -10213,49 +10213,6 @@
       "scopeHash": "f74adb3896842c399662213636c027dc0bead95c0175c520262ca0686124c38e",
       "state": "ADMITTED_LOCKED"
     },
-    "f7b1bbfbd42ec8c123935c178aa082aa69852549c5535953bf2bcba7c8be5774": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "5b9584271c8359a7f9b2374959fa9214aa6fb8d4",
-          "lockGeneration": 2251,
-          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:ONE_SHOT_TREE_ENVIRONMENT:V1",
-          "operationId": "COMMUNITY_STAGE_II_ONE_SHOT_TREE_ENVIRONMENT_20260914_001",
-          "procedureLocatorDigest": "da94db341c074525627cdbb50809280af809ac20536efaf51fa9d42eb6f22fcc",
-          "requestDigest": "447a0b122383d36888449d153ffe141016c3b0811af88956caf7324d70943e65",
-          "scopeHash": "f7b1bbfbd42ec8c123935c178aa082aa69852549c5535953bf2bcba7c8be5774"
-        },
-        "bindingDigest": "b1568eee93ff98bceb832041b1c295f25ca28ff5fab976fb5c31073ddcf86ff0",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "9cd06155e71953a3c9a139dca21db817d350e7be807d19958fb41f822925ddaa",
-          "commentId": 5667901051,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3420,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34874189421,
-          "workflowSha": "5b9584271c8359a7f9b2374959fa9214aa6fb8d4"
-        },
-        "lineageAnchorCommitSha": "14254aaafd02ac734c04966927594244fc676433",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "5b9584271c8359a7f9b2374959fa9214aa6fb8d4",
-      "lockGeneration": 2251,
-      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:ONE_SHOT_TREE_ENVIRONMENT:V1",
-      "operationId": "COMMUNITY_STAGE_II_ONE_SHOT_TREE_ENVIRONMENT_20260914_001",
-      "procedureLocatorDigest": "da94db341c074525627cdbb50809280af809ac20536efaf51fa9d42eb6f22fcc",
-      "released": false,
-      "requestDigest": "447a0b122383d36888449d153ffe141016c3b0811af88956caf7324d70943e65",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "f7b1bbfbd42ec8c123935c178aa082aa69852549c5535953bf2bcba7c8be5774",
-      "state": "ADMITTED_LOCKED"
-    },
     "f82fe94305cfa25f098c075a46c7b4c0a5c5d6565014f8b18196a08c5195ca1f": {
       "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
       "lockGeneration": 598,
@@ -55204,6 +55161,50 @@
       "scopeHash": "2515dcf93db2efb1c540e0801656b26ec78d0530907886f31cfa3b46f7869edc",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "5b9584271c8359a7f9b2374959fa9214aa6fb8d4",
+          "lockGeneration": 2251,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:ONE_SHOT_TREE_ENVIRONMENT:V1",
+          "operationId": "COMMUNITY_STAGE_II_ONE_SHOT_TREE_ENVIRONMENT_20260914_001",
+          "procedureLocatorDigest": "da94db341c074525627cdbb50809280af809ac20536efaf51fa9d42eb6f22fcc",
+          "requestDigest": "447a0b122383d36888449d153ffe141016c3b0811af88956caf7324d70943e65",
+          "scopeHash": "f7b1bbfbd42ec8c123935c178aa082aa69852549c5535953bf2bcba7c8be5774"
+        },
+        "bindingDigest": "b1568eee93ff98bceb832041b1c295f25ca28ff5fab976fb5c31073ddcf86ff0",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "9cd06155e71953a3c9a139dca21db817d350e7be807d19958fb41f822925ddaa",
+          "commentId": 5667901051,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3420,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34874189421,
+          "workflowSha": "5b9584271c8359a7f9b2374959fa9214aa6fb8d4"
+        },
+        "lineageAnchorCommitSha": "14254aaafd02ac734c04966927594244fc676433",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "5b9584271c8359a7f9b2374959fa9214aa6fb8d4",
+      "lockGeneration": 2251,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:ONE_SHOT_TREE_ENVIRONMENT:V1",
+      "operationId": "COMMUNITY_STAGE_II_ONE_SHOT_TREE_ENVIRONMENT_20260914_001",
+      "procedureLocatorDigest": "da94db341c074525627cdbb50809280af809ac20536efaf51fa9d42eb6f22fcc",
+      "released": true,
+      "requestDigest": "447a0b122383d36888449d153ffe141016c3b0811af88956caf7324d70943e65",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f7b1bbfbd42ec8c123935c178aa082aa69852549c5535953bf2bcba7c8be5774",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

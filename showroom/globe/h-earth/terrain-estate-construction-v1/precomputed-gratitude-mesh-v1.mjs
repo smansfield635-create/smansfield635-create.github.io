@@ -2,6 +2,7 @@ const PART_LENGTHS = Object.freeze([1200000, 1200000, 1200000, 1200000, 1200000,
 const MESH_URLS = Object.freeze(PART_LENGTHS.map((_, index) =>
   new URL(`./gratitude-mesh-v1.part-${String(index).padStart(2, '0')}.gz`, import.meta.url)
 ));
+const SINGLE_MESH_URL = new URL('./gratitude-mesh-v1.bin.gz', import.meta.url);
 const MAGIC = 'AUDGMV1';
 
 const readMagic = buffer => new TextDecoder().decode(new Uint8Array(buffer, 0, 7));
@@ -58,11 +59,41 @@ function beginAudraliaPresentationWarmup() {
   return warmup;
 }
 
-async function fetchMeshPart(index) {
-  const response = await fetch(MESH_URLS[index], { cache: 'force-cache' });
-  if (!response.ok) throw new Error(`AUDRALIA_MESH_PART_${index}_FETCH_FAILED_${response.status}`);
-  if (!response.body) throw new Error(`AUDRALIA_MESH_PART_${index}_BODY_UNAVAILABLE`);
+async function fetchMeshResponse(url, label) {
+  const response = await fetch(url, { cache: 'force-cache' });
+  if (!response.ok) throw new Error(`${label}_FETCH_FAILED_${response.status}`);
+  if (!response.body) throw new Error(`${label}_BODY_UNAVAILABLE`);
   return response;
+}
+
+async function decompressResponse(response) {
+  return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+}
+
+async function loadSingleArchive(totalLength, onProgress) {
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'START',index:-1,total:1,expandedBytes:0,totalExpandedBytes:totalLength,transport:'SINGLE_ARCHIVE'}));
+  const response = await fetchMeshResponse(SINGLE_MESH_URL, 'AUDRALIA_MESH_ARCHIVE');
+  const buffer = await decompressResponse(response);
+  if (buffer.byteLength !== totalLength) throw new Error('AUDRALIA_MESH_ARCHIVE_LENGTH_INVALID');
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'COMPLETE',index:0,total:1,expandedBytes:totalLength,totalExpandedBytes:totalLength,transport:'SINGLE_ARCHIVE'}));
+  return buffer;
+}
+
+async function loadChunkedArchive(totalLength, onProgress) {
+  const merged = new Uint8Array(totalLength);
+  let mergedOffset = 0;
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'START',index:-1,total:MESH_URLS.length,expandedBytes:0,totalExpandedBytes:totalLength,transport:'CHUNKED_TABLET'}));
+  for (let index = 0; index < MESH_URLS.length; index += 1) {
+    const response = await fetchMeshResponse(MESH_URLS[index], `AUDRALIA_MESH_PART_${index}`);
+    const part = await decompressResponse(response);
+    if (part.byteLength !== PART_LENGTHS[index]) throw new Error(`AUDRALIA_MESH_PART_${index}_LENGTH_INVALID`);
+    merged.set(new Uint8Array(part), mergedOffset);
+    mergedOffset += part.byteLength;
+    if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'PART',index,total:MESH_URLS.length,expandedBytes:mergedOffset,totalExpandedBytes:totalLength,transport:'CHUNKED_TABLET'}));
+    await yieldToPaint();
+  }
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'COMPLETE',index:MESH_URLS.length-1,total:MESH_URLS.length,expandedBytes:totalLength,totalExpandedBytes:totalLength,transport:'CHUNKED_TABLET'}));
+  return merged.buffer;
 }
 
 export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetweenChunks=false}={}) {
@@ -72,27 +103,10 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     throw new Error('AUDRALIA_MESH_DECOMPRESSION_UNAVAILABLE');
   }
   const totalLength = PART_LENGTHS.reduce((total, length) => total + length, 0);
-  const merged = new Uint8Array(totalLength);
-  let mergedOffset = 0;
-  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'START',index:-1,total:MESH_URLS.length,expandedBytes:0,totalExpandedBytes:totalLength}));
-
-  let pendingResponse = fetchMeshPart(0);
-  for (let index = 0; index < MESH_URLS.length; index += 1) {
-    const response = await pendingResponse;
-    if (!yieldBetweenChunks && index + 1 < MESH_URLS.length) {
-      pendingResponse = fetchMeshPart(index + 1);
-    }
-    const part = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
-    if (part.byteLength !== PART_LENGTHS[index]) throw new Error(`AUDRALIA_MESH_PART_${index}_LENGTH_INVALID`);
-    merged.set(new Uint8Array(part), mergedOffset);
-    mergedOffset += part.byteLength;
-    if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'PART',index,total:MESH_URLS.length,expandedBytes:mergedOffset,totalExpandedBytes:totalLength}));
-    if (yieldBetweenChunks) {
-      await yieldToPaint();
-      if (index + 1 < MESH_URLS.length) pendingResponse = fetchMeshPart(index + 1);
-    }
-  }
-  const buffer = merged.buffer;
+  const transport = yieldBetweenChunks ? 'CHUNKED_TABLET' : 'SINGLE_ARCHIVE';
+  const buffer = yieldBetweenChunks
+    ? await loadChunkedArchive(totalLength, onProgress)
+    : await loadSingleArchive(totalLength, onProgress);
   const view = new DataView(buffer);
   if (readMagic(buffer) !== MAGIC || view.getUint32(8, true) !== 1) {
     throw new Error('AUDRALIA_MESH_HEADER_INVALID');
@@ -123,17 +137,19 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     schema: 'AUDRALIA_PRECOMPUTED_GRATITUDE_MESH_v1',
     identicalApprovedGeometry: true,
     browserConstructionRemoved: true,
-    verifiedChunkCount: MESH_URLS.length,
+    transport,
+    verifiedChunkCount: yieldBetweenChunks ? MESH_URLS.length : 1,
     peakExpandedMeshCopies: 1,
-    sequentialChunkAssembly: true,
-    oneRequestLookahead: !yieldBetweenChunks,
+    sequentialChunkAssembly: yieldBetweenChunks,
+    singleArchiveTransport: !yieldBetweenChunks,
     presentationWarmupConcurrent: Boolean(presentationWarmup),
-    sameOriginCriticalPath: MESH_URLS.every(url => url.origin === location.origin),
+    sameOriginCriticalPath: yieldBetweenChunks
+      ? MESH_URLS.every(url => url.origin === location.origin)
+      : SINGLE_MESH_URL.origin === location.origin,
     loadMilliseconds: performance.now() - startedAt,
     landMesh: Object.freeze({ vertices: landVertices, indices: landIndices, statistics: Object.freeze(statistics.land) }),
     coastalWaterMesh: Object.freeze({ vertices: waterVertices, indices: waterIndices, statistics: Object.freeze(statistics.water) })
   });
-  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'COMPLETE',index:MESH_URLS.length-1,total:MESH_URLS.length,expandedBytes:totalLength,totalExpandedBytes:totalLength}));
   return window.__AUDRALIA_PRECOMPUTED_GRATITUDE_MESH__;
 }
 

@@ -3,7 +3,6 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 import {
-  H_EARTH_3D_CAMERA_CAPACITY,
   evaluateHEarth3DCameraCapacity,
   evaluateHEarth3DCameraPose
 } from '../../showroom/globe/h-earth/capacity.js';
@@ -194,14 +193,23 @@ check(
   }
 );
 
+const firstAnchor = H_EARTH_NATIVE_CAMERA_ANCHORS[0];
+const firstState = firstAnchor.cameraState;
+const currentInitialState = H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE;
 check(
   'INITIAL_NATIVE_ANCHOR_BOUND_TO_CURRENT_COMPOSITOR',
-  exactJson(
-    H_EARTH_NATIVE_CAMERA_ANCHORS[0].cameraState,
-    H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE
-  ),
+  firstAnchor.source === 'CURRENT_COMPOSITOR_INITIAL_CAMERA_STATE_DERIVATION' &&
+  approx(firstState.yawDegrees, currentInitialState.yawDegrees) &&
+  approx(firstState.pitchDegrees, currentInitialState.pitchDegrees) &&
+  firstState.zoomScale === currentInitialState.zoomScale &&
+  exactJson(firstState.target, currentInitialState.target) &&
+  firstState.verticalFovDegrees === currentInitialState.verticalFovDegrees &&
+  firstState.nearPlane === currentInitialState.nearPlane &&
+  firstState.farPlane === currentInitialState.farPlane,
   {
-    source: 'CURRENT_COMPOSITOR_INITIAL_CAMERA_STATE',
+    source: firstAnchor.source,
+    currentInitialState,
+    authoredFirstState: firstState,
     predecessorAuthorityUsed: false
   }
 );

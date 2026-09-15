@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-audralia-live-planetary="active" data-audralia-lightweight-repair="gen2281-r4-mature-world">
+<html lang="en" data-audralia-live-planetary="active" data-audralia-lightweight-repair="gen2281-r5-mature-world">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -25,7 +25,7 @@
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
     <div class="audralia-loading-panel" data-audralia-loader-panel>
       <div class="audralia-loading-kicker">DIAMOND GATE · WORLD SYSTEM</div>
-      <div class="audralia-loading-version">LIVE BUILD · MATURE WORLD · LIGHTER BOOT R4</div>
+      <div class="audralia-loading-version">LIVE BUILD · MATURE WORLD · LIGHTER BOOT R5</div>
       <div class="audralia-loading-mark" aria-hidden="true"><span>A</span></div>
       <div class="audralia-loading-title">Audralia</div>
       <div class="audralia-loading-subtitle">Entering a continuous planetary world</div>
@@ -38,7 +38,7 @@
       </div>
       <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
       <div class="audralia-loading-meta"><span data-audralia-loader-progress>mature world</span><span data-audralia-loader-elapsed>0.0s</span></div>
-      <div class="audralia-loading-note">Same Audralia world. Legacy qualification loader removed; render pressure now selects bounded device budgets.</div>
+      <div class="audralia-loading-note">Same Audralia world. Startup is serialized; soundtrack and local H-Earth detail are off the primary world critical path.</div>
     </div>
   </div>
 
@@ -103,7 +103,7 @@
     })();
 
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_GEN2281_R4_MATURE_WORLD',
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_GEN2281_R5_MATURE_WORLD',
       legacyPlanetActive: false,
       legacyQualificationLoaderActive: false,
       canonicalWeatherSpatialLod: true,
@@ -120,31 +120,33 @@
       tabletMorphologyAuthority: 'AUDRALIA_TABLET_WEATHER_MORPHOLOGY_ATLAS_v1',
       tabletCelestialParity: 'PRIMARY_CONTEXT_SUN_STARS_TWO_MOONS_ATMOSPHERE',
       loadingContinuity: 'AUDRALIA_TABLET_LOADER_CONTROLLER_v1_ALL_DEVICES',
-      startupArchitecture: 'MATURE_CANONICAL_WORLD_DYNAMIC_GEOMETRY_NO_PRECOMPUTED_MESH_R2',
+      startupArchitecture: 'SERIALIZED_MATURE_WORLD_SINGLE_OWNER_R1',
       precomputedHEarthMeshBootDependency: false,
       browserMeshConstruction: true,
       localHEarthDetail: 'HANDOFF_ONLY',
+      soundtrackCriticalPath: false,
       tabletFramebufferBudget: 'AUDRALIA_RENDER_PIXEL_BUDGET_v2_RENDER_PRESSURE',
       startupInstrumentation: 'AUDRALIA_TABLET_LOADER_CONTROLLER_v1_ALL_DEVICES',
       estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
       environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
     });
   </script>
-  <script type="module">
-    await import('./tablet-loader-controller-v1.mjs?cb=AUDRALIA_MATURE_WORLD_R4_LOADER');
-    window.__AUDRALIA_LEGACY_QUALIFICATION_LOADER_SUPPRESSED__ = Object.freeze({
-      schema: 'AUDRALIA_LEGACY_QUALIFICATION_LOADER_SUPPRESSION_v1',
-      loaderProgressImported: false,
-      replacement: 'AUDRALIA_TABLET_LOADER_CONTROLLER_v1',
-      deviceScope: 'ALL_DEVICES'
-    });
-  </script>
-  <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
+
   <script type="module">
     const DONOR_BASE = 'https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@3c5b7ece95bb6d642e527737bb60647c032e29dd';
     const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve()));
+    const loaderModule = await import('./tablet-loader-controller-v1.mjs?cb=AUDRALIA_MATURE_WORLD_R5_LOADER');
+    const loaderController = loaderModule.default || window.__AUDRALIA_TABLET_LOADER_CONTROLLER__;
     const constrainedDevice = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;
-    const loaderController = window.__AUDRALIA_TABLET_LOADER_CONTROLLER__;
+
+    window.__AUDRALIA_LEGACY_QUALIFICATION_LOADER_SUPPRESSED__ = Object.freeze({
+      schema: 'AUDRALIA_LEGACY_QUALIFICATION_LOADER_SUPPRESSION_v2',
+      loaderProgressImported: false,
+      replacement: 'AUDRALIA_TABLET_LOADER_CONTROLLER_v1',
+      deviceScope: 'ALL_DEVICES',
+      serializedWithWorldStartup: true
+    });
+
     const primaryWorldReady = async () => {
       const deadline = performance.now() + 30000;
       while (performance.now() < deadline) {
@@ -156,7 +158,7 @@
     };
 
     window.__AUDRALIA_TABLET_STARTUP_STABILITY__ = {
-      schema: 'AUDRALIA_STARTUP_STABILITY_GEN2281_R4_MATURE_WORLD',
+      schema: 'AUDRALIA_STARTUP_STABILITY_GEN2281_R5_MATURE_WORLD',
       sameEnvironment: true,
       fallbackEnvironment: false,
       primaryWorldBeforeCelestialWebGL: true,
@@ -165,11 +167,15 @@
       legacyQualificationLoaderActive: false,
       constrainedByRenderPixelPressure: constrainedDevice,
       tabletAnalyticParityHotLoopDisabled: constrainedDevice,
+      serializedLoaderAndWorldOwner: true,
       status: 'LOADING_PRIMARY_WORLD'
     };
 
     try {
-      loaderController?.worldStart();
+      loaderController.worldStart();
+      void import('./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_R5').catch(error => {
+        console.warn('AUDRALIA_SOUNDTRACK_NONBLOCKING_LOAD_FAILED', error);
+      });
       await nextFrame();
       await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057`);
       await nextFrame();
@@ -182,13 +188,13 @@
       await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057`);
       await nextFrame();
       if (constrainedDevice) {
-        loaderController?.cloudsStart();
+        loaderController.cloudsStart();
         const { initializeAudraliaTabletSingleContextClouds } = await import(`${DONOR_BASE}/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=AUDRALIA_TABLET_RECOVERY_3268_v1`);
         await initializeAudraliaTabletSingleContextClouds();
-        loaderController?.worldPresented();
-        loaderController?.cloudsReady();
+        loaderController.worldPresented();
+        loaderController.cloudsReady();
         await nextFrame();
-        loaderController?.celestialStart();
+        loaderController.celestialStart();
         await import(`${DONOR_BASE}/showroom/globe/audralia/celestial-primary-context-v1.mjs?cb=AUDRALIA_TABLET_RECOVERY_3268_v1`);
       } else {
         await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057`);
@@ -201,11 +207,11 @@
         await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057`);
       }
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'COMPLETE';
-      loaderController?.complete();
+      loaderController.complete();
     } catch (error) {
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'FAILED';
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.error = String(error?.message || error);
-      loaderController?.fail('Audralia startup stopped',error);
+      loaderController.fail('Audralia startup stopped',error);
       console.error('AUDRALIA_MATURE_WORLD_LIGHTWEIGHT_BOOT_FAILED', error);
       const status = document.querySelector('[data-h-earth-status]');
       if (status) status.textContent = 'Audralia could not finish loading';

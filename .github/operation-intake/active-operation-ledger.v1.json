@@ -10250,6 +10250,49 @@
       "scopeHash": "ef93474a94914d81d0ef9c216f4fbc06f8c70db9a5b117648856c2dcff0bdd5c",
       "state": "ADMITTED_LOCKED"
     },
+    "eff03ab682047222cd2b7556730a1d197562d2501faf5c77264d1b7f4da7ff18": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+          "lockGeneration": 2283,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:GEN2283_FOUR_CORNER_DOMAIN_GEOMETRY:V1",
+          "operationId": "COMMUNITY_GEN2283_FOUR_CORNER_DOMAIN_GEOMETRY_20260915_001",
+          "procedureLocatorDigest": "31e84a4e0671fec270aaf389555bf3bd593d8a0002869ba4197ffed9fc799289",
+          "requestDigest": "793b3b5c49fe412b0ef26a969013fdf8e961547c72f44e74d84ae94d10526193",
+          "scopeHash": "eff03ab682047222cd2b7556730a1d197562d2501faf5c77264d1b7f4da7ff18"
+        },
+        "bindingDigest": "6e1785ab50a01c631dba3c96edab513b9378d3c808e634faf960b773ef80f30c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "9ed1fc1d71c2ee1a3f0356a656cdcf60cc8dd88d238ca151fb904235e7bc5f16",
+          "commentId": 5682861912,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3462,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34987576286,
+          "workflowSha": "3c5b7ece95bb6d642e527737bb60647c032e29dd"
+        },
+        "lineageAnchorCommitSha": "491211037a1c32b7ca10cacc2263c13585f67885",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+      "lockGeneration": 2283,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:GEN2283_FOUR_CORNER_DOMAIN_GEOMETRY:V1",
+      "operationId": "COMMUNITY_GEN2283_FOUR_CORNER_DOMAIN_GEOMETRY_20260915_001",
+      "procedureLocatorDigest": "31e84a4e0671fec270aaf389555bf3bd593d8a0002869ba4197ffed9fc799289",
+      "released": false,
+      "requestDigest": "793b3b5c49fe412b0ef26a969013fdf8e961547c72f44e74d84ae94d10526193",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "eff03ab682047222cd2b7556730a1d197562d2501faf5c77264d1b7f4da7ff18",
+      "state": "ADMITTED_LOCKED"
+    },
     "f0328e088743d44f0a05c8e9ad006e073c32d93fa33d39ebd00559fa921bf623": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -10792,7 +10835,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2282,
+  "lockGeneration": 2283,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

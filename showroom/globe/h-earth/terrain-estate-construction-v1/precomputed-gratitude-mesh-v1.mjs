@@ -68,6 +68,7 @@ async function fetchMeshPart(index) {
 export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetweenChunks=false}={}) {
   const startedAt = performance.now();
   const presentationWarmup = beginAudraliaPresentationWarmup();
+  const audraliaRequestLookahead = Boolean(presentationWarmup) && !yieldBetweenChunks;
   if (typeof DecompressionStream !== 'function') {
     throw new Error('AUDRALIA_MESH_DECOMPRESSION_UNAVAILABLE');
   }
@@ -79,7 +80,7 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
   let pendingResponse = fetchMeshPart(0);
   for (let index = 0; index < MESH_URLS.length; index += 1) {
     const response = await pendingResponse;
-    if (!yieldBetweenChunks && index + 1 < MESH_URLS.length) {
+    if (audraliaRequestLookahead && index + 1 < MESH_URLS.length) {
       pendingResponse = fetchMeshPart(index + 1);
     }
     const part = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
@@ -90,6 +91,8 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     if (yieldBetweenChunks) {
       await yieldToPaint();
       if (index + 1 < MESH_URLS.length) pendingResponse = fetchMeshPart(index + 1);
+    } else if (!audraliaRequestLookahead && index + 1 < MESH_URLS.length) {
+      pendingResponse = fetchMeshPart(index + 1);
     }
   }
   const buffer = merged.buffer;
@@ -126,7 +129,7 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     verifiedChunkCount: MESH_URLS.length,
     peakExpandedMeshCopies: 1,
     sequentialChunkAssembly: true,
-    oneRequestLookahead: !yieldBetweenChunks,
+    oneRequestLookahead: audraliaRequestLookahead,
     presentationWarmupConcurrent: Boolean(presentationWarmup),
     sameOriginCriticalPath: MESH_URLS.every(url => url.origin === location.origin),
     loadMilliseconds: performance.now() - startedAt,

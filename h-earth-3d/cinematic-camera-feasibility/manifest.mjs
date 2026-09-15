@@ -278,20 +278,21 @@ export function buildManifestCore() {
     const planetaryCamera = createPlanetaryCamera(localCamera);
     frames.push({
       frame,
-      timeSeconds: round(frame / FPS, 9),
-      localAuthoring: {
-        ...localCamera,
+      position: [planetaryCamera.position.x, planetaryCamera.position.y, planetaryCamera.position.z],
+      target: [planetaryCamera.target.x, planetaryCamera.target.y, planetaryCamera.target.z],
+      up: [planetaryCamera.up.x, planetaryCamera.up.y, planetaryCamera.up.z],
+      local: {
+        position: [localCamera.position.x, localCamera.position.y, localCamera.position.z],
+        focusPoint: [localCamera.focusPoint.x, localCamera.focusPoint.y, localCamera.focusPoint.z],
+        target: [localCamera.target.x, localCamera.target.y, localCamera.target.z],
+        yawDegrees: localCamera.yawDegrees,
+        pitchDegrees: localCamera.pitchDegrees,
         canonicalTerrainElevationAtCamera: round(canonicalTerrainElevation),
         terrainClearance: round(terrainClearance)
       },
-      position: planetaryCamera.position,
-      target: planetaryCamera.target,
-      up: planetaryCamera.up,
-      verticalFovDegrees: planetaryCamera.verticalFovDegrees,
-      nearPlane: planetaryCamera.nearPlane,
-      farPlane: planetaryCamera.farPlane,
-      worldIdentityId: WORLD_IDENTITY_ID,
-      rendererIdentityId: RENDERER_IDENTITY_ID
+      projection: [planetaryCamera.verticalFovDegrees, planetaryCamera.nearPlane, planetaryCamera.farPlane],
+      worldIdentity: WORLD_IDENTITY_ID,
+      rendererIdentity: RENDERER_IDENTITY_ID
     });
   }
 
@@ -326,6 +327,23 @@ export function buildManifestCore() {
       frameIndependence:
         'MASTER_FRAME_TO_MANIFEST_LOOKUP_TO_EXPLICIT_STATE_TO_INDEPENDENT_DRAW_TO_CAPTURE',
       shardLaw: 'MAXIMUM_30_DRAWS_PER_RENDERER_CONTEXT_THEN_CONTEXT_MUST_BE_LOST_OR_PAGE_DISCARDED'
+    },
+    frameRecordSchema: {
+      position: '[planetaryX,planetaryY,planetaryZ]',
+      target: '[planetaryX,planetaryY,planetaryZ]',
+      up: '[planetaryX,planetaryY,planetaryZ]',
+      local: {
+        position: '[regionX,regionY,regionZ]',
+        focusPoint: '[regionX,regionY,regionZ]',
+        target: '[regionX,regionY,regionZ]',
+        yawDegrees: 'number',
+        pitchDegrees: 'number',
+        canonicalTerrainElevationAtCamera: 'number',
+        terrainClearance: 'number'
+      },
+      projection: '[verticalFovDegrees,nearPlane,farPlane]',
+      worldIdentity: 'exact identity id',
+      rendererIdentity: 'exact identity id'
     },
     authoredPoses: AUTHORED_POSES.map((entry) => ({
       frame: entry.frame,

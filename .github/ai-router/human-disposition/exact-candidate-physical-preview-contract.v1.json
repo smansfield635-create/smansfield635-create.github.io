@@ -2,11 +2,12 @@
   "schema": "EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1",
   "status": "ACTIVE_FAIL_CLOSED",
   "capabilityId": "EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1",
-  "purpose": "Provide a provider-neutral, read-only, immutable-candidate physical and perceptual review gate before adoption or publication when an admitted construction scope declares that review required.",
+  "purpose": "Provide a first-party or already-owner-controlled, read-only, immutable-candidate physical and perceptual review gate before adoption or publication when an admitted construction scope declares that review required.",
   "precedent": {
     "accepted": "GEN2272_EXACT_SHA_PHYSICAL_PHONE_REVIEW",
     "providerAuthorityCreated": false,
-    "precedentCreatesProductAuthority": false
+    "precedentCreatesProductAuthority": false,
+    "historicalExternalProviderPrecedentCreatesAuthority": false
   },
   "eligibility": {
     "requires": [
@@ -19,8 +20,14 @@
     "candidateMustRemainBoundToItsExactBytes": true
   },
   "transport": {
-    "class": "LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE",
-    "providerNeutral": true,
+    "class": "FIRST_PARTY_OR_OWNER_CONTROLLED_EXACT_HEAD_EXECUTION_SUBSTRATE",
+    "providerNeutral": false,
+    "firstPartyOrOwnerControlledRequiredByDefault": true,
+    "thirdPartyProviderAllowedByDefault": false,
+    "thirdPartyPluginSuggestionAllowedByDefault": false,
+    "externalProviderRequiresExplicitOwnerRequest": true,
+    "historicalExternalProviderPrecedentCreatesAuthority": false,
+    "policyRefreshRequiredBeforeProviderSelection": true,
     "readOnly": true,
     "repositoryMutation": false,
     "productionMutation": false,
@@ -89,7 +96,8 @@
     "previewCreatesRuntimeAuthority": false
   },
   "failureDisposition": {
-    "previewTransportUnavailable": "USE_ANOTHER_LAWFUL_READ_ONLY_EXACT_HEAD_SUBSTRATE_OR_REPORT_PREVIEW_TRANSPORT_UNAVAILABLE",
+    "previewTransportUnavailable": "PRESERVE_CANDIDATE_AND_REPORT_PREVIEW_TRANSPORT_UNAVAILABLE_LOCAL_NONPROPAGATING",
+    "thirdPartyProviderSuggestionOnUnavailable": "PROHIBITED_WITHOUT_EXPLICIT_OWNER_REQUEST",
     "doNotDeployProductionAsPreview": true
   },
   "authorityEffect": "NONE_BY_PREVIEW_OR_PERCEPTUAL_ACCEPTANCE"

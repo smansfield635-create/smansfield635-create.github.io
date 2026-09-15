@@ -160,7 +160,14 @@
       "ONE_REPAIR",
       "REJECT"
     ],
-    "previewTransportClass": "LOCAL_OR_EXTERNAL_EXACT_HEAD_EXECUTION_SUBSTRATE",
+    "previewTransportClass": "FIRST_PARTY_OR_OWNER_CONTROLLED_EXACT_HEAD_EXECUTION_SUBSTRATE",
+    "firstPartyOrOwnerControlledPreviewRequiredByDefault": true,
+    "thirdPartyPreviewProviderAllowedByDefault": false,
+    "thirdPartyPluginSuggestionAllowedByDefault": false,
+    "externalPreviewProviderRequiresExplicitOwnerRequest": true,
+    "historicalExternalPreviewPrecedentCreatesCurrentAuthority": false,
+    "policyRefreshRequiredBeforeProviderSelection": true,
+    "previewTransportUnavailableDisposition": "PRESERVE_CANDIDATE_AND_REPORT_PREVIEW_TRANSPORT_UNAVAILABLE_LOCAL_NONPROPAGATING",
     "productionDeploymentAsPreviewWorkaroundAllowed": false,
     "authorityEffect": "NONE_BY_PREVIEW_OR_PERCEPTUAL_ACCEPTANCE",
     "publicationBoundary": "PUBLICATION_RELEASE_CONTRACT_UNCHANGED"

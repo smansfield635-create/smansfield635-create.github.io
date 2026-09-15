@@ -14,12 +14,12 @@ const EXPECTED = Object.freeze({
   retiredGeographyBlob: 'a67a4e95f7634eb97a375ff103d95bdc81c64f0b',
   geographyContract: 'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1',
   geographyRevision: 5,
-  rendererInputBlob: '2ec91580954417189e859e9c3bdef3eb0f66c6d7'
+  snapshotRendererBlob: '872d20b17bb0cd89d9613ca0262b25350890a617'
 });
 const PATHS = Object.freeze({
   geography: 'inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js',
   terrain: 'inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain/h-earth.terrain-field.js',
-  renderer: 'showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs',
+  renderer: 'inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs',
   outputDir: 'showroom/globe/h-earth/terrain-estate-construction-v1',
   fullMesh: 'showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.bin.gz',
   provenance: 'showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.provenance.json'
@@ -39,15 +39,15 @@ const stableJson = value => `${JSON.stringify(value, null, 2)}\n`;
 
 const geographyBytes = assertBlob(PATHS.geography, EXPECTED.geographyBlob, 'CANONICAL_GEOGRAPHY');
 const terrainBytes = assertBlob(PATHS.terrain, EXPECTED.terrainBlob, 'CANONICAL_TERRAIN');
-const rendererBytes = assertBlob(PATHS.renderer, EXPECTED.rendererInputBlob, 'PRECOMPUTED_RENDERER_INPUT');
+const rendererBytes = assertBlob(PATHS.renderer, EXPECTED.snapshotRendererBlob, 'CANONICAL_SNAPSHOT_RENDERER');
 
 const canonicalGeographyUrl = pathToFileURL(path.join(ROOT, PATHS.geography)).href;
 let rendererSource = rendererBytes.toString('utf8');
-const oldImport = "from '../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';";
-if (!rendererSource.includes(oldImport)) fail('PRECOMPUTED_RENDERER_GEOGRAPHY_IMPORT_NOT_FOUND');
-rendererSource = rendererSource.replace(oldImport, `from '${canonicalGeographyUrl}';`);
+const snapshotImport = "from '../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';";
+if (!rendererSource.includes(snapshotImport)) fail('SNAPSHOT_RENDERER_GEOGRAPHY_IMPORT_NOT_FOUND');
+rendererSource = rendererSource.replace(snapshotImport, `from '${canonicalGeographyUrl}';`);
 const buildMarker = 'function buildGratitudeMeshes(){';
-if (!rendererSource.includes(buildMarker)) fail('PRECOMPUTED_RENDERER_BUILD_FUNCTION_NOT_FOUND');
+if (!rendererSource.includes(buildMarker)) fail('SNAPSHOT_RENDERER_BUILD_FUNCTION_NOT_FOUND');
 rendererSource = rendererSource.replace(buildMarker, 'export function buildGratitudeMeshes(){');
 
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'audralia-canonical-rebind-'));
@@ -135,8 +135,8 @@ const provenance = Object.freeze({
   }),
   rendererGenerationSource: Object.freeze({
     path: PATHS.renderer,
-    gitBlobSha: EXPECTED.rendererInputBlob,
-    geographyImportReboundForGeneration: true
+    gitBlobSha: EXPECTED.snapshotRendererBlob,
+    geographyImportResolvedToCanonicalSnapshot: true
   }),
   hydrology: Object.freeze({
     derivationLaw: hydrology?.continental?.derivationLaw ?? null,
@@ -183,6 +183,7 @@ console.log(stableJson({
   operationId: OPERATION_ID,
   geographyBlob: EXPECTED.geographyBlob,
   terrainBlob: EXPECTED.terrainBlob,
+  snapshotRendererBlob: EXPECTED.snapshotRendererBlob,
   payloadSha256: provenance.mesh.payloadSha256,
   fullGzipSha256: provenance.mesh.fullGzipSha256,
   partLengths: provenance.mesh.parts.map(part => part.expandedBytes),

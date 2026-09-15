@@ -973,3 +973,181 @@ globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2282_PRODUCT_BOU
 globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2282Runtime,semanticRepair:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1'});
 const GEN2282_BASE_MOUNT=gen2273Mount;
 mount=function(host){GEN2282_BASE_MOUNT(host);host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains continue operating while the same tracked cohort circulates inward, settles irreversibly into the mature central tree, and remains there without rebound.');};
+
+// Gen2289 Checkpoint A: planar four-corner composition only. Motion binding remains frozen.
+const GEN2289_PLANAR_KIND_BASE=26;
+const GEN2289_PLANAR_Z=0;
+const gen2289PlanarKind=season=>GEN2289_PLANAR_KIND_BASE+season;
+const GEN2289_STAGE_AUTHORITY=Object.freeze({
+  tree:Object.freeze({id:'TREE',nx:.50,ny:.50,x:0,y:.34}),
+  domains:Object.freeze([
+    Object.freeze({season:SEASON.SPRING,id:'SPRING',corner:'NW',nx:.20,ny:.20,x:-1.72,y:1.52,xSpan:.46,ySpan:.34}),
+    Object.freeze({season:SEASON.WINTER,id:'WINTER',corner:'NE',nx:.80,ny:.20,x:1.72,y:1.52,xSpan:.46,ySpan:.34}),
+    Object.freeze({season:SEASON.SUMMER,id:'SUMMER',corner:'SW',nx:.20,ny:.80,x:-1.72,y:-.72,xSpan:.46,ySpan:.34}),
+    Object.freeze({season:SEASON.AUTUMN,id:'AUTUMN',corner:'SE',nx:.80,ny:.80,x:1.72,y:-.72,xSpan:.46,ySpan:.34})
+  ])
+});
+const GEN2289_STAGE_BY_SEASON=Object.freeze(Object.fromEntries(GEN2289_STAGE_AUTHORITY.domains.map(domain=>[domain.season,domain])));
+function gen2289PDomain2D(anchor,localX=0,localY=0){return V(anchor.x+localX,anchor.y+localY,GEN2289_PLANAR_Z)}
+function gen2289PCohort3D(anchor,identity){
+  const plane=DEPTH_PLANES[identity.depthBand]||DEPTH_PLANES[1],local=identity.objectId%GEN2273_OBJECTS_PER_DEPTH,col=local%4,row=Math.floor(local/4),x=((col+.5)/4-.5)*anchor.xSpan*1.45,y=((row+.5)/2-.5)*anchor.ySpan*1.45;
+  return V(anchor.x+x,anchor.y+y,plane.z+((local%3)-1)*.055);
+}
+function gen2289PlanarTri(g,a,b,c,color,q,kind,season){const n=V(0,0,1),base=g.p.length/3;vert(g,a,n,color,q,kind,season);vert(g,b,n,color,q,kind,season);vert(g,c,n,color,q,kind,season);g.i.push(base,base+1,base+2)}
+function gen2289PlanarDisc(g,center,rx,ry,color,q,kind,season,segments=12){const n=V(0,0,1),base=g.p.length/3;vert(g,V(center.x,center.y,GEN2289_PLANAR_Z),n,color,q,kind,season);for(let i=0;i<=segments;i++){const a=Math.PI*2*i/segments;vert(g,V(center.x+Math.cos(a)*rx,center.y+Math.sin(a)*ry,GEN2289_PLANAR_Z),n,color,q,kind,season)}for(let i=0;i<segments;i++)g.i.push(base,base+1+i,base+2+i)}
+function gen2289PlanarStroke(g,a,b,width,color,q,kind,season){const dx=b.x-a.x,dy=b.y-a.y,len=Math.max(.0001,Math.hypot(dx,dy)),px=-dy/len*width,py=dx/len*width,z=GEN2289_PLANAR_Z,p0=V(a.x+px,a.y+py,z),p1=V(a.x-px,a.y-py,z),p2=V(b.x-px,b.y-py,z),p3=V(b.x+px,b.y+py,z);gen2289PlanarTri(g,p0,p1,p2,color,q,kind,season);gen2289PlanarTri(g,p0,p2,p3,color,q,kind,season)}
+function gen2289EmitPlanarDomain(g,anchor){
+  const kind=gen2289PlanarKind(anchor.season),q=.12+anchor.season*.17,p=(x,y)=>gen2289PDomain2D(anchor,x,y);
+  if(anchor.season===SEASON.SPRING){
+    gen2289PlanarStroke(g,p(-.22,-.18),p(-.18,.18),.012,[.16,.46,.22,.54],q,kind,anchor.season);
+    for(const [x,y,s] of [[-.18,.14,.10],[-.02,.02,.085],[.18,.12,.095],[.12,-.12,.07]]){gen2289PlanarDisc(g,p(x,y),s,s*.72,[.92,.48,.66,.64],q,kind,anchor.season,10);gen2289PlanarDisc(g,p(x,y),s*.34,s*.34,[1,.78,.30,.78],q,kind,anchor.season,10)}
+  }else if(anchor.season===SEASON.WINTER){
+    for(const [x,y,s] of [[-.18,.11,.12],[.05,.02,.10],[.20,.15,.085],[-.02,-.15,.075]])for(let i=0;i<3;i++){const a=Math.PI*i/3,dx=Math.cos(a)*s,dy=Math.sin(a)*s;gen2289PlanarStroke(g,p(x-dx,y-dy),p(x+dx,y+dy),.009,[.70,.90,1,.70],q,kind,anchor.season)}
+  }else if(anchor.season===SEASON.SUMMER){
+    gen2289PlanarDisc(g,p(-.05,.18),.26,.08,[.17,.48,.58,.30],q,kind,anchor.season,14);
+    for(const [x,y] of [[-.24,.09],[-.10,.04],[.04,.08],[.18,.02],[-.02,-.10],[.22,-.14]])gen2289PlanarStroke(g,p(x,y),p(x+.06,y-.18),.010,[.18,.62,.92,.66],q,kind,anchor.season);
+  }else{
+    for(const [x,y,rx,ry,c] of [[-.21,.13,.10,.055,[.90,.46,.08,.68]],[-.03,.02,.11,.06,[.68,.28,.04,.72]],[.17,.12,.09,.05,[.96,.58,.10,.68]],[.12,-.13,.10,.055,[.72,.31,.05,.70]],[-.18,-.10,.08,.045,[.86,.39,.06,.64]]]){gen2289PlanarDisc(g,p(x,y),rx,ry,c,q,kind,anchor.season,8);gen2289PlanarStroke(g,p(x-rx*.45,y),p(x+rx*.45,y),.006,[.36,.16,.04,.70],q,kind,anchor.season)}
+  }
+}
+
+addQuadrantEnvironment=function(g){
+  const count=GEN2273_OBJECTS_PER_DEPTH;
+  g.objectRanges=[];g.permanentDomainRanges=[];g.planarDomainRanges=[];
+  for(const anchor of GEN2289_STAGE_AUTHORITY.domains){const startVertex=g.p.length/3;gen2289EmitPlanarDomain(g,anchor);const endVertex=g.p.length/3;g.planarDomainRanges.push(Object.freeze({domain:anchor.season,corner:anchor.corner,startVertex,endVertex}));g.permanentDomainRanges.push(Object.freeze({domain:anchor.season,startVertex,endVertex}));}
+  for(const zone of QUADRANT_VOLUMES)DEPTH_PLANES.forEach((plane,depthIndex)=>{for(let i=0;i<count;i++){const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2289_CHECKPOINT_A_IDENTITY_PRESERVATION_FAILURE');gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));}});
+};
+
+const GEN2289_BASE_VERTEX_SOURCE=vertexSource;
+vertexSource=function(webgl2,precision){
+  let source=GEN2289_BASE_VERTEX_SOURCE(webgl2,precision);
+  let next=source.replace('vec3 p=a_position,n=a_normal;','vec3 p=a_position,n=a_normal;\n  float planarDomain=step(25.5,a_kind)*step(a_kind,29.5);');if(next===source)throw Error('GEN2289_PLANAR_VERTEX_CLASS_MARKER_MISSING');source=next;
+  next=source.replace('float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);','float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort)*(1.0-planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_SWAY_BYPASS_MARKER_MISSING');source=next;
+  const projection=`p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);
+  n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);
+  p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);
+  n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);
+  p.y-=.28;p*=u_scale;
+  float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
+  gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);`;
+  const planarProjection=`if(planarDomain>.5){
+    vec2 worldAnchor=vec2(-1.72,1.52),stageAnchor=vec2(.20,.20);
+    if(a_season>.5&&a_season<1.5){worldAnchor=vec2(-1.72,-.72);stageAnchor=vec2(.20,.80);}
+    else if(a_season>1.5&&a_season<2.5){worldAnchor=vec2(1.72,-.72);stageAnchor=vec2(.80,.80);}
+    else if(a_season>2.5){worldAnchor=vec2(1.72,1.52);stageAnchor=vec2(.80,.20);}
+    vec2 local=(a_position.xy-worldAnchor)*.32;local.x/=max(u_aspect,.72);vec2 stage=stageAnchor+local;
+    gl_Position=vec4(stage.x*2.0-1.0,1.0-stage.y*2.0,.92,1.0);
+    n=vec3(0.0,0.0,1.0);
+  }else{
+    p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);
+    n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);
+    p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);
+    n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);
+    p.y-=.28;p*=u_scale;
+    float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
+    gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
+  }`;
+  next=source.replace(projection,planarProjection);if(next===source)throw Error('GEN2289_PLANAR_CAMERA_BYPASS_MARKER_MISSING');return next;
+};
+const GEN2289_BASE_FRAGMENT_SOURCE=fragmentSource;
+fragmentSource=function(webgl2,precision){
+  let source=GEN2289_BASE_FRAGMENT_SOURCE(webgl2,precision);
+  let next=source.replace('float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);','float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),planarDomain=step(25.5,v_k)*step(v_k,29.5),special=max(max(max(feed,zoneEnv),trackedCohort),planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_FRAGMENT_CLASS_MARKER_MISSING');source=next;
+  next=source.replace('vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;','vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;\n  lit=mix(lit,v_c.rgb,planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_LIGHTING_BYPASS_MARKER_MISSING');return next;
+};
+
+const GEN2289_CHECKPOINT_A_GEOMETRY=build();
+for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2289_CHECKPOINT_A_GEOMETRY[key];
+GEN2273_BOUND_GEOMETRY.objectRanges=GEN2289_CHECKPOINT_A_GEOMETRY.objectRanges;
+GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2289_CHECKPOINT_A_GEOMETRY.permanentDomainRanges;
+GEN2273_BOUND_GEOMETRY.planarDomainRanges=GEN2289_CHECKPOINT_A_GEOMETRY.planarDomainRanges;
+
+function runGen2289CheckpointA(){
+  const expected=Object.freeze({NW:SEASON.SPRING,NE:SEASON.WINTER,SW:SEASON.SUMMER,SE:SEASON.AUTUMN}),domains=GEN2289_STAGE_AUTHORITY.domains,byCorner=new Map(domains.map(domain=>[domain.corner,domain]));
+  const cornerIdentity=Object.entries(expected).every(([corner,season])=>byCorner.get(corner)?.season===season),normalizedTargets=domains.every(domain=>Math.abs(domain.nx-(domain.corner.endsWith('W')?.20:.80))<1e-9&&Math.abs(domain.ny-(domain.corner.startsWith('N')?.20:.80))<1e-9),treeCentered=GEN2289_STAGE_AUTHORITY.tree.nx===.50&&GEN2289_STAGE_AUTHORITY.tree.ny===.50;
+  const ranges=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],planarVerticesByDomain=new Map(domains.map(domain=>[domain.season,[]]));
+  for(const range of ranges){const values=planarVerticesByDomain.get(range.domain);if(!values)continue;for(let vertex=range.startVertex;vertex<range.endVertex;vertex++)values.push({x:GEN2273_BOUND_GEOMETRY.p[vertex*3],y:GEN2273_BOUND_GEOMETRY.p[vertex*3+1],z:GEN2273_BOUND_GEOMETRY.p[vertex*3+2]});}
+  const planarVertices=[...planarVerticesByDomain.values()].flat(),zeroDepth=planarVertices.length>0&&planarVertices.every(p=>Math.abs(p.z-GEN2289_PLANAR_Z)<1e-9),centerClear=planarVertices.every(p=>!(Math.abs(p.x)<.78&&p.y>-.26&&p.y<1.08));
+  const corridorsClear=domains.every(domain=>{const points=planarVerticesByDomain.get(domain.season)||[];return points.length>0&&points.every(p=>{const stageX=domain.nx+((p.x-domain.x)*.32)/.72,stageY=domain.ny+(p.y-domain.y)*.32;return(stageX<.40||stageX>.60)&&(stageY<.40||stageY>.60);});});
+  const fourRanges=ranges.length===4&&new Set(ranges.map(range=>range.domain)).size===4,treeDominantByComposition=centerClear&&corridorsClear&&GEN2289_STAGE_AUTHORITY.domains.every(domain=>Math.abs(domain.x)>=1.70&&Math.abs(domain.xSpan)<=.46&&Math.abs(domain.ySpan)<=.34);
+  const vertexLaw=vertexSource(false,'highp'),fragmentLaw=fragmentSource(false,'highp'),webgl2VertexLaw=vertexSource(true,'highp'),webgl2FragmentLaw=fragmentSource(true,'highp'),cameraBypass=vertexLaw.includes('if(planarDomain>.5){')&&vertexLaw.includes('stageAnchor=vec2(.20,.20)'),lightingBypass=fragmentLaw.includes('lit=mix(lit,v_c.rgb,planarDomain);'),webgl2VersionSerialization=webgl2VertexLaw.startsWith('#version 300 es\nprecision highp float;')&&webgl2FragmentLaw.startsWith('#version 300 es\nprecision highp float;');
+  const trackedUnchanged=GEN2273_BOUND_GEOMETRY.objectRanges.length===96&&GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&GEN2273_BOUND_GEOMETRY.objectRanges.every((range,index)=>range.objectId===index);
+  const inheritedGen2282=runGen2282BinaryQualification();
+  const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,checkpoint:'A',cornerIdentity,normalizedTargets,treeCentered,fourPlanarDomainRanges:fourRanges,zeroDomainZDepth:zeroDepth,cameraYawPitchPerspectiveBypass:cameraBypass,lightingBypass,webgl2VersionSerialization,protectedCenterClear:centerClear,protectedCorridorsClear:corridorsClear,treeDominantByComposition,trackedCohortBindingCount:GEN2273_BOUND_GEOMETRY.objectRanges.length,trackedCohortUnchanged:trackedUnchanged,inheritedGen2282BinaryPass:inheritedGen2282.passed,planarVertexCount:planarVertices.length,nextLawfulAction:'HUMAN_CHECKPOINT_A_REVIEW_BEFORE_MOTION_BINDING',passed:cornerIdentity&&normalizedTargets&&treeCentered&&fourRanges&&zeroDepth&&cameraBypass&&lightingBypass&&webgl2VersionSerialization&&centerClear&&corridorsClear&&treeDominantByComposition&&trackedUnchanged&&inheritedGen2282.passed});
+  return receipt;
+}
+const GEN2289_CHECKPOINT_A_RECEIPT=runGen2289CheckpointA();
+if(!GEN2289_CHECKPOINT_A_RECEIPT.passed)throw Error('GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_FAILURE');
+globalThis.DGB_COMMUNITY_GEN2289_STAGE_AUTHORITY=GEN2289_STAGE_AUTHORITY;
+globalThis.DGB_COMMUNITY_GEN2289_CHECKPOINT_A_RECEIPT=GEN2289_CHECKPOINT_A_RECEIPT;
+const GEN2289_CHECKPOINT_A_BASE_MOUNT=mount;
+mount=function(host){GEN2289_CHECKPOINT_A_BASE_MOUNT(host);host.dataset.communityDomainModel='PLANAR_CHECKPOINT_A';host.setAttribute('aria-label','Community lifecycle checkpoint A. Four permanent planar seasonal domains occupy the four stage corners while the central tree and tracked lifecycle remain three-dimensional. Motion binding for the planar domains is intentionally not yet enabled.');};
+
+// Gen2289 Checkpoint B: bounded planar-domain local motion only.
+const GEN2289_PLANAR_MOTION_CYCLE_SECONDS=24;
+const GEN2289_PLANAR_MOTION_PROFILES=Object.freeze({
+  [SEASON.SPRING]:Object.freeze({xAmplitude:.012,yAmplitude:.008,xHarmonic:1,yHarmonic:2,xPhase:.20,yPhase:.65}),
+  [SEASON.SUMMER]:Object.freeze({xAmplitude:.014,yAmplitude:.006,xHarmonic:1,yHarmonic:3,xPhase:1.10,yPhase:.35}),
+  [SEASON.AUTUMN]:Object.freeze({xAmplitude:.010,yAmplitude:.010,xHarmonic:2,yHarmonic:2,xPhase:2.15,yPhase:1.05}),
+  [SEASON.WINTER]:Object.freeze({xAmplitude:.008,yAmplitude:.012,xHarmonic:2,yHarmonic:1,xPhase:2.85,yPhase:1.55})
+});
+function gen2289PlanarMotion2D(season,timeSeconds,reduced=false){
+  if(reduced)return Object.freeze({x:0,y:0});
+  const profile=GEN2289_PLANAR_MOTION_PROFILES[season];
+  if(!profile)throw Error('GEN2289_CHECKPOINT_B_UNKNOWN_DOMAIN');
+  const cycle=GEN2289_PLANAR_MOTION_CYCLE_SECONDS,t=((Math.max(0,Number(timeSeconds)||0)%cycle)+cycle)%cycle,angle=t/cycle*Math.PI*2;
+  return Object.freeze({x:Math.sin(angle*profile.xHarmonic+profile.xPhase)*profile.xAmplitude,y:Math.cos(angle*profile.yHarmonic+profile.yPhase)*profile.yAmplitude});
+}
+function gen2289RuntimeReduced(runtime){return runtime.snapshot().transitionLog.some(entry=>entry?.reduced===true)}
+const GEN2289_CHECKPOINT_B_BASE_APPLY_RENDERER_POSITIONS=gen2273ApplyRendererPositions;
+gen2273ApplyRendererPositions=function(gl,R,g,runtime){
+  GEN2289_CHECKPOINT_B_BASE_APPLY_RENDERER_POSITIONS(gl,R,g,runtime);
+  const snapshot=runtime.snapshot(),reduced=gen2289RuntimeReduced(runtime);
+  for(const range of g.planarDomainRanges||[]){
+    const motion=gen2289PlanarMotion2D(range.domain,snapshot.maxSeconds,reduced);
+    for(let vertex=range.startVertex;vertex<range.endVertex;vertex++){
+      const offset=vertex*3;
+      R.positionData[offset]+=motion.x;
+      R.positionData[offset+1]+=motion.y;
+    }
+  }
+  gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);
+  gl.bufferSubData(gl.ARRAY_BUFFER,0,R.positionData);
+};
+function runGen2289CheckpointBMechanicalCore(){
+  const checkpointARegression=runGen2289CheckpointA(),domains=GEN2289_STAGE_AUTHORITY.domains,ranges=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],samples=Array.from({length:97},(_,i)=>GEN2289_PLANAR_MOTION_CYCLE_SECONDS*i/96),planarVerticesByDomain=new Map(domains.map(domain=>[domain.season,[]]));
+  for(const range of ranges){const values=planarVerticesByDomain.get(range.domain);if(!values)continue;for(let vertex=range.startVertex;vertex<range.endVertex;vertex++)values.push({x:GEN2273_BOUND_GEOMETRY.p[vertex*3],y:GEN2273_BOUND_GEOMETRY.p[vertex*3+1],z:GEN2273_BOUND_GEOMETRY.p[vertex*3+2]});}
+  let planarZFixed=true,motionXYOnly=true,boundedDomainLocalMotion=true,assignedCornerBoundsPreserved=true,protectedCenterClearAllSamples=true,protectedCorridorsClearAllSamples=true;
+  const activityByDomain=new Map(domains.map(domain=>[domain.season,false]));
+  for(const time of samples)for(const domain of domains){
+    const motion=gen2289PlanarMotion2D(domain.season,time,false),keys=Object.keys(motion).sort().join('|');
+    if(keys!=='x|y'||!Number.isFinite(motion.x)||!Number.isFinite(motion.y))motionXYOnly=false;
+    const profile=GEN2289_PLANAR_MOTION_PROFILES[domain.season];
+    if(Math.abs(motion.x)>profile.xAmplitude+1e-12||Math.abs(motion.y)>profile.yAmplitude+1e-12)boundedDomainLocalMotion=false;
+    if(Math.hypot(motion.x,motion.y)>1e-7)activityByDomain.set(domain.season,true);
+    for(const point of planarVerticesByDomain.get(domain.season)||[]){
+      if(Math.abs(point.z-GEN2289_PLANAR_Z)>1e-9)planarZFixed=false;
+      const stageX=domain.nx+((point.x-domain.x)*.32)/.72+motion.x,stageY=domain.ny+(point.y-domain.y)*.32+motion.y,inViewport=stageX>=0&&stageX<=1&&stageY>=0&&stageY<=1,xAssigned=domain.corner.endsWith('W')?stageX<.40:stageX>.60,yAssigned=domain.corner.startsWith('N')?stageY<.40:stageY>.60;
+      if(!(inViewport&&xAssigned&&yAssigned))assignedCornerBoundsPreserved=false;
+      if(stageX>=.40&&stageX<=.60&&stageY>=.40&&stageY<=.60)protectedCenterClearAllSamples=false;
+      if(!((stageX<.40||stageX>.60)&&(stageY<.40||stageY>.60)))protectedCorridorsClearAllSamples=false;
+    }
+  }
+  const reducedMotionEquivalence=domains.every(domain=>samples.every(time=>{const motion=gen2289PlanarMotion2D(domain.season,time,true);return motion.x===0&&motion.y===0}))&&planarZFixed;
+  const inheritedGen2282=runGen2282BinaryQualification(),runtime=createGen2282Runtime(GEN2273_SELECTED_SETTLEMENT_SECONDS,false),lockMs=(GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS)*1000;
+  runtime.advance(lockMs);runtime.advance(lockMs+GEN2289_PLANAR_MOTION_CYCLE_SECONDS*2000);const post=runtime.snapshot();
+  const same96ObjectIdentity=checkpointARegression.trackedCohortUnchanged&&GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&GEN2273_BOUND_GEOMETRY.objectRanges.length===96&&inheritedGen2282.SAME_OBJECT_IDENTITY_96==='PASS';
+  const domainDepletion=inheritedGen2282.DOMAIN_DEPLETION===true||ranges.length!==4||activityByDomain.size!==4;
+  const domainActivityPostSettlement=inheritedGen2282.DOMAIN_ACTIVITY_POST_SETTLEMENT==='PASS'&&[...activityByDomain.values()].every(Boolean);
+  const terminalReboundCount=inheritedGen2282.terminalReboundCount,objectReplacementCount=inheritedGen2282.objectReplacementCount,postSettlementCohortUpdateCount=post.postSettlementCirculationEvaluations;
+  const actualMotionBinding=gen2273ApplyRendererPositions.toString().includes('gen2289PlanarMotion2D')&&gen2273ApplyRendererPositions.toString().includes('R.positionData[offset]+=motion.x')&&gen2273ApplyRendererPositions.toString().includes('R.positionData[offset+1]+=motion.y');
+  const oneCanvasOneContext=gen2273Mount.toString().match(/createElement\('canvas'\)/g)?.length===1&&!gen2273ApplyRendererPositions.toString().includes('createElement');
+  const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_CHECKPOINT_B_MECHANICAL_CORE_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,checkpoint:'B',checkpointARegressionPass:checkpointARegression.passed,planarDomainCount:ranges.length,planarZFixed,motionXYOnly,cameraResponseZero:checkpointARegression.cameraYawPitchPerspectiveBypass,lightingResponseBypassed:checkpointARegression.lightingBypass,boundedDomainLocalMotion:boundedDomainLocalMotion&&actualMotionBinding,assignedCornerBoundsPreserved,protectedCenterClearAllSamples,protectedCorridorsClearAllSamples,treeDominancePreserved:checkpointARegression.treeDominantByComposition&&protectedCorridorsClearAllSamples,same96ObjectIdentity,domainDepletion,domainActivityPostSettlement,terminalReboundCount,objectReplacementCount,postSettlementCohortUpdateCount,oneCanvasOneContext:!!oneCanvasOneContext,reducedMotionEquivalence,sampleCount:samples.length,motionCycleSeconds:GEN2289_PLANAR_MOTION_CYCLE_SECONDS,externalGatesRequired:Object.freeze(['NODE_CHECK_PASS','NO_UNRELATED_DIFF']),passed:checkpointARegression.passed&&ranges.length===4&&planarZFixed&&motionXYOnly&&checkpointARegression.cameraYawPitchPerspectiveBypass&&checkpointARegression.lightingBypass&&boundedDomainLocalMotion&&actualMotionBinding&&assignedCornerBoundsPreserved&&protectedCenterClearAllSamples&&protectedCorridorsClearAllSamples&&checkpointARegression.treeDominantByComposition&&same96ObjectIdentity&&!domainDepletion&&domainActivityPostSettlement&&terminalReboundCount===0&&objectReplacementCount===0&&postSettlementCohortUpdateCount===0&&!!oneCanvasOneContext&&reducedMotionEquivalence});
+  return receipt;
+}
+const GEN2289_CHECKPOINT_B_MECHANICAL_CORE_RECEIPT=runGen2289CheckpointBMechanicalCore();
+if(!GEN2289_CHECKPOINT_B_MECHANICAL_CORE_RECEIPT.passed)throw Error('GEN2289_CHECKPOINT_B_MECHANICAL_CORE_FAILURE');
+globalThis.DGB_COMMUNITY_GEN2289_CHECKPOINT_B_MECHANICAL_CORE_RECEIPT=GEN2289_CHECKPOINT_B_MECHANICAL_CORE_RECEIPT;
+globalThis.DGB_COMMUNITY_GEN2289_PLANAR_MOTION=Object.freeze({cycleSeconds:GEN2289_PLANAR_MOTION_CYCLE_SECONDS,profiles:GEN2289_PLANAR_MOTION_PROFILES,position2D:gen2289PlanarMotion2D});
+const GEN2289_CHECKPOINT_B_BASE_MOUNT=mount;
+mount=function(host){GEN2289_CHECKPOINT_B_BASE_MOUNT(host);host.dataset.communityDomainModel='PLANAR_CHECKPOINT_B';host.setAttribute('aria-label','Community lifecycle checkpoint B. Four permanent planar seasonal domains remain anchored in the four stage corners with bounded season-specific local motion while the central tree and tracked lifecycle remain three-dimensional.');};

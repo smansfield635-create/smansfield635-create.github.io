@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { prepare } from './repository-operation-intake-gate.v1.mjs';
 import {
   acquireLocal,
+  authorityIdentity,
   canonical,
   ledger,
   sha,
@@ -73,7 +74,8 @@ export function planOwnerConnectorAdmission({
     lockScope: q.request.lockScope,
     governingHead: q.request.exactGoverningHead,
     requestDigest: q.requestDigest,
-    procedureLocatorDigest: q.procedureLocatorDigest
+    procedureLocatorDigest: q.procedureLocatorDigest,
+    constructionBranchIdentity: q.request.constructionBranchIdentity
   });
 
   if (!acquired.acquired) {
@@ -100,15 +102,7 @@ export function planOwnerConnectorAdmission({
       commentBodySha256: sha(source.body),
       marker: MARKER
     },
-    authorityIdentity: {
-      operationId: acquired.lock.operationId,
-      lockScope: acquired.lock.lockScope,
-      scopeHash: acquired.lock.scopeHash,
-      governingHead: acquired.lock.governingHead,
-      requestDigest: acquired.lock.requestDigest,
-      procedureLocatorDigest: acquired.lock.procedureLocatorDigest,
-      lockGeneration: acquired.lock.lockGeneration
-    },
+    authorityIdentity: authorityIdentity(acquired.lock),
     compareAndSwap: {
       observedLedgerBlobSha: ledgerBlob,
       observedLockRefHead: lockRefHead
@@ -136,6 +130,7 @@ export function planOwnerConnectorAdmission({
     governingHead: lock.governingHead,
     requestDigest: lock.requestDigest,
     procedureLocatorDigest: lock.procedureLocatorDigest,
+    constructionBranchIdentity: lock.constructionBranchIdentity ?? null,
     independentAuthorityProvenance,
     observedLedgerBlobSha: ledgerBlob,
     observedLockRefHead: lockRefHead,

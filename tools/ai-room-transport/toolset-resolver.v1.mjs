@@ -51,6 +51,11 @@ export function validateExecutionRequest(request) {
   return stable(request);
 }
 
+function validateLockGeneration(lock) {
+  if (!Number.isInteger(lock.lockGeneration) || lock.lockGeneration <= 0) fail('LOCK_GENERATION_INVALID', lock.lockGeneration);
+  return lock.lockGeneration;
+}
+
 function validateAdmission(admission, descriptor) {
   assertObject(admission, 'ADMISSION_RECEIPT_INVALID');
   if (admission.schema !== 'REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1') fail('ADMISSION_RECEIPT_SCHEMA_MISMATCH');
@@ -61,11 +66,20 @@ function validateAdmission(admission, descriptor) {
   const lock = assertObject(admission.lock, 'ADMISSION_LOCK_MISSING');
   if (lock.operationId !== descriptor.operationId) fail('DESCRIPTOR_AND_ADMISSION_MISMATCH', 'lock.operationId');
   if (lock.released === true || lock.state === 'TERMINAL') fail('EXPIRED_OR_CLOSED_LOCK');
-  if (!['ADMITTED_LOCKED', 'EXECUTING'].includes(lock.state)) fail('LOCK_STATE_NOT_EXECUTABLE', lock.state);
+
+  if (Object.hasOwn(lock, 'state')) {
+    if (!['ADMITTED_LOCKED', 'EXECUTING'].includes(lock.state)) fail('LOCK_STATE_NOT_EXECUTABLE', lock.state);
+    if (Object.hasOwn(lock, 'result') && lock.result !== 'ADMITTED_AND_LOCKED') fail('LOCK_STATE_NOT_EXECUTABLE', lock.result);
+    if (Object.hasOwn(lock, 'lockAcquired') && lock.lockAcquired !== true) fail('LOCK_STATE_NOT_EXECUTABLE', lock.lockAcquired);
+  } else {
+    if (lock.result !== 'ADMITTED_AND_LOCKED' || lock.lockAcquired !== true) fail('LOCK_STATE_NOT_EXECUTABLE', lock.result ?? 'MISSING_CANONICAL_REMOTE_LOCK_EVIDENCE');
+  }
+
+  const lockGeneration = validateLockGeneration(lock);
   return stable({
     mode: 'EXACT_OPERATION_ID',
     authorizedOperationId: descriptor.operationId,
-    admissionLockGeneration: lock.lockGeneration,
+    admissionLockGeneration: lockGeneration,
     successorCompatibilityUsed: false,
     successorCompatibilityReceipt: null
   });

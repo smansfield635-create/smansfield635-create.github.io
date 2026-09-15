@@ -86,9 +86,10 @@ export const H_EARTH_NATIVE_CAMERA_ANCHOR_FRAMES =
 export const H_EARTH_NATIVE_CAMERA_ANCHORS = deepFreeze([
   {
     frame: 720,
+    source: 'CURRENT_COMPOSITOR_INITIAL_CAMERA_STATE_DERIVATION',
     cameraState: {
-      yawDegrees: 10,
-      pitchDegrees: -8,
+      yawDegrees: 25.159302,
+      pitchDegrees: 1.963628,
       zoomScale: 1,
       target: { x: 28, y: 10.5, z: -82 },
       verticalFovDegrees: 56,
@@ -98,6 +99,7 @@ export const H_EARTH_NATIVE_CAMERA_ANCHORS = deepFreeze([
   },
   {
     frame: 780,
+    source: 'NATIVE_GROUND_OBSERVER_AUTHORED_APPROACH',
     cameraState: {
       yawDegrees: 8,
       pitchDegrees: -12,
@@ -110,6 +112,7 @@ export const H_EARTH_NATIVE_CAMERA_ANCHORS = deepFreeze([
   },
   {
     frame: 840,
+    source: 'NATIVE_GROUND_OBSERVER_AUTHORED_APPROACH',
     cameraState: {
       yawDegrees: 5,
       pitchDegrees: -16,
@@ -122,6 +125,7 @@ export const H_EARTH_NATIVE_CAMERA_ANCHORS = deepFreeze([
   },
   {
     frame: 900,
+    source: 'NATIVE_GROUND_OBSERVER_AUTHORED_APPROACH',
     cameraState: {
       yawDegrees: 2,
       pitchDegrees: -20,
@@ -134,6 +138,7 @@ export const H_EARTH_NATIVE_CAMERA_ANCHORS = deepFreeze([
   },
   {
     frame: 959,
+    source: 'NATIVE_GROUND_OBSERVER_AUTHORED_APPROACH',
     cameraState: {
       yawDegrees: 0,
       pitchDegrees: -24,
@@ -242,7 +247,7 @@ export function buildHEarthNativeCameraCanonicalManifestString() {
 }
 
 export const H_EARTH_NATIVE_CAMERA_MANIFEST_SHA256 =
-  'cd31877054ec93ece439dc8f772b4dccd05e15bcfeeec26a0d4bc4e02cbc2e24';
+  '226fdb529f27e4f6f6dfe37b88effbdcbe0d9ff0f9e3c8e1723bfcf6db2e7c92';
 
 export const H_EARTH_NATIVE_CAMERA_FEASIBILITY_MANIFEST = deepFreeze({
   schema: H_EARTH_NATIVE_CAMERA_FEASIBILITY_MANIFEST_SCHEMA,

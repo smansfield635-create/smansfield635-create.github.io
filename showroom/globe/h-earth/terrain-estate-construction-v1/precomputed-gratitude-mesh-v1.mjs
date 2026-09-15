@@ -10,8 +10,64 @@ const yieldToPaint = () => new Promise(resolve => {
   else setTimeout(resolve, 0);
 });
 
+const AUDRALIA_PATCH_MODULES = Object.freeze({
+  acf1: '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057',
+  xyz: '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057',
+  parity: '/showroom/globe/audralia/atmospheric-parity-v1.mjs?cb=AUDRALIA_FULL_ATMOSPHERIC_PARITY_3265_v1',
+  weather: '/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057'
+});
+
+function beginAudraliaPresentationWarmup() {
+  if (typeof window === 'undefined' || !window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__) return null;
+  if (window.__AUDRALIA_PRESENTATION_PATCH_WARMUP__) return window.__AUDRALIA_PRESENTATION_PATCH_WARMUP__;
+
+  const constrainedTablet = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;
+  const startedAt = performance.now();
+  const warmup = (async () => {
+    await import(AUDRALIA_PATCH_MODULES.acf1);
+    await yieldToPaint();
+    await import(AUDRALIA_PATCH_MODULES.xyz);
+    await yieldToPaint();
+    if (!constrainedTablet) {
+      await import(AUDRALIA_PATCH_MODULES.parity);
+      await yieldToPaint();
+    }
+    await import(AUDRALIA_PATCH_MODULES.weather);
+    return Object.freeze({
+      schema: 'AUDRALIA_PRESENTATION_PATCH_WARMUP_v1',
+      ready: true,
+      constrainedTablet,
+      loadMilliseconds: performance.now() - startedAt,
+      patchOrder: Object.freeze(constrainedTablet
+        ? ['ACF1', 'FAP1_XYZ', 'FAP1_WEATHER']
+        : ['ACF1', 'FAP1_XYZ', 'ATMOSPHERIC_PARITY', 'FAP1_WEATHER'])
+    });
+  })().catch(error => Object.freeze({
+    schema: 'AUDRALIA_PRESENTATION_PATCH_WARMUP_v1',
+    ready: false,
+    constrainedTablet,
+    loadMilliseconds: performance.now() - startedAt,
+    error: String(error?.message || error)
+  }));
+
+  Object.defineProperty(window, '__AUDRALIA_PRESENTATION_PATCH_WARMUP__', {
+    value: warmup,
+    writable: false,
+    configurable: false
+  });
+  return warmup;
+}
+
+async function fetchMeshPart(index) {
+  const response = await fetch(MESH_URLS[index], { cache: 'force-cache' });
+  if (!response.ok) throw new Error(`AUDRALIA_MESH_PART_${index}_FETCH_FAILED_${response.status}`);
+  if (!response.body) throw new Error(`AUDRALIA_MESH_PART_${index}_BODY_UNAVAILABLE`);
+  return response;
+}
+
 export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetweenChunks=false}={}) {
   const startedAt = performance.now();
+  const presentationWarmup = beginAudraliaPresentationWarmup();
   if (typeof DecompressionStream !== 'function') {
     throw new Error('AUDRALIA_MESH_DECOMPRESSION_UNAVAILABLE');
   }
@@ -19,17 +75,22 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
   const merged = new Uint8Array(totalLength);
   let mergedOffset = 0;
   if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'START',index:-1,total:MESH_URLS.length,expandedBytes:0,totalExpandedBytes:totalLength}));
+
+  let pendingResponse = fetchMeshPart(0);
   for (let index = 0; index < MESH_URLS.length; index += 1) {
-    const url = MESH_URLS[index];
-    const response = await fetch(url, { cache: 'force-cache' });
-    if (!response.ok) throw new Error(`AUDRALIA_MESH_PART_${index}_FETCH_FAILED_${response.status}`);
-    if (!response.body) throw new Error(`AUDRALIA_MESH_PART_${index}_BODY_UNAVAILABLE`);
+    const response = await pendingResponse;
+    if (!yieldBetweenChunks && index + 1 < MESH_URLS.length) {
+      pendingResponse = fetchMeshPart(index + 1);
+    }
     const part = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
     if (part.byteLength !== PART_LENGTHS[index]) throw new Error(`AUDRALIA_MESH_PART_${index}_LENGTH_INVALID`);
     merged.set(new Uint8Array(part), mergedOffset);
     mergedOffset += part.byteLength;
     if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'PART',index,total:MESH_URLS.length,expandedBytes:mergedOffset,totalExpandedBytes:totalLength}));
-    if (yieldBetweenChunks) await yieldToPaint();
+    if (yieldBetweenChunks) {
+      await yieldToPaint();
+      if (index + 1 < MESH_URLS.length) pendingResponse = fetchMeshPart(index + 1);
+    }
   }
   const buffer = merged.buffer;
   const view = new DataView(buffer);
@@ -65,6 +126,8 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     verifiedChunkCount: MESH_URLS.length,
     peakExpandedMeshCopies: 1,
     sequentialChunkAssembly: true,
+    oneRequestLookahead: !yieldBetweenChunks,
+    presentationWarmupConcurrent: Boolean(presentationWarmup),
     sameOriginCriticalPath: MESH_URLS.every(url => url.origin === location.origin),
     loadMilliseconds: performance.now() - startedAt,
     landMesh: Object.freeze({ vertices: landVertices, indices: landIndices, statistics: Object.freeze(statistics.land) }),

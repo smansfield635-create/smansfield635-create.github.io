@@ -85,6 +85,7 @@ const normalize = (a) => {
   if (!(n > Number.EPSILON)) throw new Error('CAMERA_VECTOR_DEGENERATE');
   return scale(a, 1 / n);
 };
+const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
 const cleanVector = (a) => vector(round(a.x), round(a.y), round(a.z));
 
 export function stableStringify(value) {
@@ -276,24 +277,18 @@ export function buildManifestCore() {
       throw new Error(`TERRAIN_CLEARANCE_TOO_SMALL:${frame}:${terrainClearance}`);
     }
     const planetaryCamera = createPlanetaryCamera(localCamera);
-    frames.push({
+    frames.push([
       frame,
-      position: [planetaryCamera.position.x, planetaryCamera.position.y, planetaryCamera.position.z],
-      target: [planetaryCamera.target.x, planetaryCamera.target.y, planetaryCamera.target.z],
-      up: [planetaryCamera.up.x, planetaryCamera.up.y, planetaryCamera.up.z],
-      local: {
-        position: [localCamera.position.x, localCamera.position.y, localCamera.position.z],
-        focusPoint: [localCamera.focusPoint.x, localCamera.focusPoint.y, localCamera.focusPoint.z],
-        target: [localCamera.target.x, localCamera.target.y, localCamera.target.z],
-        yawDegrees: localCamera.yawDegrees,
-        pitchDegrees: localCamera.pitchDegrees,
-        canonicalTerrainElevationAtCamera: round(canonicalTerrainElevation),
-        terrainClearance: round(terrainClearance)
-      },
-      projection: [planetaryCamera.verticalFovDegrees, planetaryCamera.nearPlane, planetaryCamera.farPlane],
-      worldIdentity: WORLD_IDENTITY_ID,
-      rendererIdentity: RENDERER_IDENTITY_ID
-    });
+      planetaryCamera.position.x, planetaryCamera.position.y, planetaryCamera.position.z,
+      planetaryCamera.target.x, planetaryCamera.target.y, planetaryCamera.target.z,
+      planetaryCamera.up.x, planetaryCamera.up.y, planetaryCamera.up.z,
+      planetaryCamera.verticalFovDegrees, planetaryCamera.nearPlane, planetaryCamera.farPlane,
+      localCamera.position.x, localCamera.position.y, localCamera.position.z,
+      localCamera.target.x, localCamera.target.y, localCamera.target.z,
+      localCamera.yawDegrees, localCamera.pitchDegrees,
+      round(canonicalTerrainElevation), round(terrainClearance),
+      'W', 'R'
+    ]);
   }
 
   return {
@@ -329,21 +324,23 @@ export function buildManifestCore() {
       shardLaw: 'MAXIMUM_30_DRAWS_PER_RENDERER_CONTEXT_THEN_CONTEXT_MUST_BE_LOST_OR_PAGE_DISCARDED'
     },
     frameRecordSchema: {
-      position: '[planetaryX,planetaryY,planetaryZ]',
-      target: '[planetaryX,planetaryY,planetaryZ]',
-      up: '[planetaryX,planetaryY,planetaryZ]',
-      local: {
-        position: '[regionX,regionY,regionZ]',
-        focusPoint: '[regionX,regionY,regionZ]',
-        target: '[regionX,regionY,regionZ]',
-        yawDegrees: 'number',
-        pitchDegrees: 'number',
-        canonicalTerrainElevationAtCamera: 'number',
-        terrainClearance: 'number'
-      },
-      projection: '[verticalFovDegrees,nearPlane,farPlane]',
-      worldIdentity: 'exact identity id',
-      rendererIdentity: 'exact identity id'
+      type: 'POSITIONAL_ARRAY',
+      fields: [
+        'frame',
+        'position.x','position.y','position.z',
+        'target.x','target.y','target.z',
+        'up.x','up.y','up.z',
+        'verticalFovDegrees','nearPlane','farPlane',
+        'local.position.x','local.position.y','local.position.z',
+        'local.target.x','local.target.y','local.target.z',
+        'local.yawDegrees','local.pitchDegrees',
+        'local.canonicalTerrainElevationAtCamera','local.terrainClearance',
+        'worldIdentityCode','rendererIdentityCode'
+      ],
+      identityCodes: {
+        W: WORLD_IDENTITY_ID,
+        R: RENDERER_IDENTITY_ID
+      }
     },
     authoredPoses: AUTHORED_POSES.map((entry) => ({
       frame: entry.frame,

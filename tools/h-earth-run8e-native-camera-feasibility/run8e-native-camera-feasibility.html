@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Run 8E · Gen2287 Native Camera Five-Anchor Feasibility</title>
+  <style>
+    :root{color-scheme:dark;font-family:system-ui,sans-serif;background:#080b0d;color:#eef5f3}
+    body{margin:0;padding:20px;background:#080b0d}h1{font-size:1.25rem;margin:0 0 8px}p{color:#aab7b3;margin:0 0 18px}
+    #status{font-family:ui-monospace,monospace;margin:12px 0 18px}.grid{display:grid;gap:18px}.card{border:1px solid #2a3435;border-radius:12px;overflow:hidden;background:#0d1214}.head{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;font-family:ui-monospace,monospace;font-size:.8rem}.frame{font-weight:800}.hash{overflow-wrap:anywhere;color:#b8c6c2}.stage{aspect-ratio:16/9;background:#000}.stage canvas{width:100%;height:100%;display:block}.receipt{margin:0;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.45 ui-monospace,monospace;color:#aebbb7;background:#090d0f}
+  </style>
+</head>
+<body>
+  <h1>Run 8E native-camera consumption · five frozen anchors</h1>
+  <p>Off-production feasibility surface. Product/runtime/world bytes are read-only donors.</p>
+  <div id="status">INITIALIZING</div>
+  <main id="grid" class="grid"></main>
+  <script type="module">
+    import {
+      H_EARTH_RUN8E_NATIVE_CAMERA_ANCHOR_FRAMES,
+      renderHEarthRun8ENativeCameraAnchor
+    } from './run8e-native-camera-feasibility-runtime.v1.mjs';
+
+    const status = document.getElementById('status');
+    const grid = document.getElementById('grid');
+    const receipts = [];
+
+    const hex = (bytes) => [...new Uint8Array(bytes)].map((value) => value.toString(16).padStart(2, '0')).join('');
+    const sha256 = async (bytes) => hex(await crypto.subtle.digest('SHA-256', bytes));
+
+    try {
+      for (const masterFrame of H_EARTH_RUN8E_NATIVE_CAMERA_ANCHOR_FRAMES) {
+        status.textContent = `RENDERING ${masterFrame}`;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        const result = renderHEarthRun8ENativeCameraAnchor(masterFrame, {
+          width: 1280,
+          height: 720,
+          pixelRatio: 1,
+          timeOfDayHours: 15.25
+        });
+        const imageSha256 = await sha256(result.rgba);
+        const card = document.createElement('section');
+        card.className = 'card';
+        const head = document.createElement('div');
+        head.className = 'head';
+        head.innerHTML = `<span class="frame">FRAME ${masterFrame}</span><span class="hash">${imageSha256}</span>`;
+        const stage = document.createElement('div');
+        stage.className = 'stage';
+        const canvas = document.createElement('canvas');
+        canvas.width = result.width;
+        canvas.height = result.height;
+        canvas.getContext('2d', { alpha: false }).putImageData(
+          new ImageData(result.rgba, result.width, result.height),
+          0,
+          0
+        );
+        stage.append(canvas);
+        const receipt = {
+          masterFrame,
+          imageSha256,
+          inheritedManifestSha256: result.inheritedManifestSha256,
+          inheritedCameraState: result.inheritedCameraState,
+          resolvedPose: result.resolvedPose,
+          worldFrameId: result.worldFrameId,
+          worldContractId: result.worldContractId,
+          packet002TransferContractId: result.packet002TransferContractId,
+          successorMountainIncluded: result.successorMountainIncluded,
+          primitiveCount: result.primitiveCount,
+          plannedTriangleCount: result.plannedTriangleCount,
+          rejectedFragmentCount: result.rejectedFragmentCount,
+          writtenPixelCount: result.writtenPixelCount,
+          skyPixelCount: result.skyPixelCount,
+          alphaClosed: result.alphaClosed,
+          singlePhysicalDepthDomainExecuted: result.singlePhysicalDepthDomainExecuted
+        };
+        receipts.push(receipt);
+        const pre = document.createElement('pre');
+        pre.className = 'receipt';
+        pre.textContent = JSON.stringify(receipt, null, 2);
+        card.append(head, stage, pre);
+        grid.append(card);
+      }
+      window.H_EARTH_RUN8E_NATIVE_CAMERA_FEASIBILITY = Object.freeze({
+        ready: true,
+        anchorFrames: Object.freeze([...H_EARTH_RUN8E_NATIVE_CAMERA_ANCHOR_FRAMES]),
+        receipts: Object.freeze(receipts.map((receipt) => Object.freeze(receipt)))
+      });
+      document.documentElement.dataset.run8eNativeCameraReady = 'true';
+      status.textContent = 'FIVE_ANCHORS_RENDERED · AWAITING PHYSICAL DISPOSITION';
+    } catch (error) {
+      document.documentElement.dataset.run8eNativeCameraReady = 'false';
+      status.textContent = `FAIL_CLOSED · ${error.message}`;
+      console.error(error);
+      throw error;
+    }
+  </script>
+</body>
+</html>

@@ -12,15 +12,18 @@
     "githubActionsAllowedForManualAgentDispatch": false,
     "githubActionsFixedCanonicalIntakeFallbackAllowed": true,
     "githubActionsFixedExactHeadQualificationAllowed": true,
+    "githubActionsFixedRegisteredGeneratorWritebackAllowed": true,
     "githubActionsPermittedRoles": [
       "PASSIVE_CI_AFTER_REPOSITORY_CHANGE",
       "HISTORICAL_EVIDENCE_INSPECTION",
       "LATER_REPLAY_WHEN_SEPARATELY_AUTHORIZED",
       "FIXED_CANONICAL_INTAKE_FALLBACK",
-      "FIXED_EXACT_HEAD_QUALIFICATION_EXECUTION"
+      "FIXED_EXACT_HEAD_QUALIFICATION_EXECUTION",
+      "FIXED_REGISTERED_EXACT_BRANCH_GENERATOR_WRITEBACK"
     ],
     "requiredExecutionPreference": [
       "CONNECTED_GITHUB_API_OR_NATIVE_AGENT_TOOLS",
+      "REGISTERED_FIXED_EXACT_BRANCH_GENERATOR_WRITEBACK_ON_GITHUB_ACTIONS_WHEN_DESCRIPTOR_AND_ACTIVE_ADMISSION_ALLOW",
       "REGISTERED_FIXED_EXACT_HEAD_QUALIFICATION_ON_GITHUB_ACTIONS",
       "FIXED_CANONICAL_INTAKE_FALLBACK_WHEN_NATIVE_TRANSPORT_UNAVAILABLE",
       "AUTHORIZED_CODESPACE_OR_DISPOSABLE_BUILDER",
@@ -47,13 +50,43 @@
       "transientFailureDispositionSource": ".github/ai-router/failure-disposition/registry.v1.json",
       "authorityEffect": "FIXED_QUALIFICATION_EXECUTION_ONLY"
     },
+    "fixedRegisteredGeneratorWriteback": {
+      "schema": "FIXED_REGISTERED_GENERATOR_WRITEBACK_ACTIONS_BINDING_v1",
+      "status": "ALLOWED_BOUNDED",
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflow": ".github/workflows/ai-room-execution-transport.yml",
+      "extensionRegistry": ".github/ai-toolset-transport/authorized-toolset-registry.audralia-execution-succession.v1.json",
+      "requiredDescriptorStatus": "ACTIVE_CERTIFIED",
+      "activeCanonicalAdmissionRequired": true,
+      "closedWorldRequired": true,
+      "arbitraryCommandAllowed": false,
+      "callerSuppliedBranchAllowed": false,
+      "callerSuppliedExpectedHeadAllowed": false,
+      "descriptorFixedNonMainBranchRequired": true,
+      "descriptorFixedExpectedHeadRequired": true,
+      "expectedHeadMustEqualExactToolingHead": true,
+      "allowedMutationPathsRequired": true,
+      "changedPathsValidatedBeforeCommit": true,
+      "fastForwardOnly": true,
+      "mainWritebackAllowed": false,
+      "childCommandGitHubTokenAllowed": false,
+      "oneWritebackCommitMaximum": true,
+      "generalAgentExecution": false,
+      "mutationAuthorityCreated": false,
+      "usesExistingOperationMutationAuthorityOnly": true,
+      "mergeAuthorityCreated": false,
+      "deploymentAuthorityCreated": false,
+      "releaseAuthorityCreated": false,
+      "authorityEffect": "FIXED_REGISTERED_GENERATOR_WRITEBACK_EXECUTION_ONLY"
+    },
     "prohibited": [
       "DO_NOT_DISPATCH_GITHUB_ACTIONS_TO_PERFORM_GENERAL_AGENT_WORK",
-      "DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_GENERAL_NATIVE_EXECUTION; ONLY_REGISTERED_FIXED_CANONICAL_INTAKE_OR_FIXED_EXACT_HEAD_QUALIFICATION_ARE_ALLOWED",
-      "DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_A_REGISTERED_FIXED_EXACT_HEAD_QUALIFICATION_ALREADY_EXISTS"
+      "DO_NOT_USE_WORKFLOW_RUNS_AS_A_SUBSTITUTE_FOR_GENERAL_NATIVE_EXECUTION; ONLY_REGISTERED_FIXED_CANONICAL_INTAKE_FIXED_EXACT_HEAD_QUALIFICATION_OR_FIXED_REGISTERED_GENERATOR_WRITEBACK_ARE_ALLOWED",
+      "DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_A_REGISTERED_FIXED_EXECUTION_ROUTE_ALREADY_EXISTS",
+      "DO_NOT_USE_REGISTERED_GENERATOR_WRITEBACK_WITHOUT_DESCRIPTOR_FIXED_NON_MAIN_BRANCH_EXPECTED_HEAD_ALLOWED_PATHS_AND_ACTIVE_CANONICAL_ADMISSION"
     ],
-    "failureDisposition": "FIRST_READ_WHOLE_ESTATE_EXECUTION_DECISION; AGENT_TOOL_UNAVAILABILITY_DOES_NOT_BLOCK_AGENT_EXEMPT_WORK; FOR A REGISTERED FIXED EXACT-HEAD QUALIFICATION USE THE CLOSED-WORLD GITHUB ACTIONS QUALIFICATION RUNNER BEFORE EXTERNAL BYTE TRANSPORT; FOR REQUIRED GENERAL AGENT WORK USE OWNER_DIRECTED_CO_LOCATED_CARDINAL_FALLBACK WHEN AUTHORIZED OR REPORT THE REQUIRED EXECUTION SURFACE BOUNDARY; FOR CANONICAL INTAKE TRANSPORT UNAVAILABILITY USE THE REGISTERED FIXED CANONICAL INTAKE FALLBACK WITH THE SAME REQUEST AND PROCEDURE; CLASSIFY ANY EXECUTION FAILURE THROUGH FAILURE_DISPOSITION_NORMALIZATION BEFORE TERMINATION OR RENEWED AUTHORIZATION",
-    "precedent": "Issue #678 three-tier Codespace execution substrate integration separates disposable builder/fresh-verifier execution from later GitHub Actions replay; Issue #3054 restores the fixed canonical-intake workflow as a bounded transport fallback; the existing ACTIVE_CERTIFIED closed-world AI room execution transport already runs fixed registered commands on GITHUB_ACTIONS_CLEAN_EXECUTION; Issue #3272 makes agent execution proportional rather than a universal executability prerequisite; Issue #3495 authorizes reuse of that existing closed-world runner for fixed exact-head qualification without enabling general agent execution."
+    "failureDisposition": "FIRST_READ_WHOLE_ESTATE_EXECUTION_DECISION; AGENT_TOOL_UNAVAILABILITY_DOES_NOT_BLOCK_AGENT_EXEMPT_WORK; FOR AN ACTIVE ADMITTED OPERATION WITH A REGISTERED FIXED GENERATOR WRITEBACK DESCRIPTOR USE THAT CLOSED_WORLD GITHUB ACTIONS ROUTE BEFORE EXTERNAL BYTE TRANSPORT; FOR A REGISTERED FIXED EXACT_HEAD QUALIFICATION USE THE CLOSED_WORLD GITHUB ACTIONS QUALIFICATION RUNNER BEFORE EXTERNAL BYTE TRANSPORT; FOR REQUIRED GENERAL AGENT WORK USE OWNER_DIRECTED_CO_LOCATED_CARDINAL_FALLBACK WHEN AUTHORIZED OR REPORT THE REQUIRED EXECUTION_SURFACE_BOUNDARY; FOR CANONICAL INTAKE TRANSPORT UNAVAILABILITY USE THE REGISTERED FIXED CANONICAL INTAKE FALLBACK WITH THE SAME REQUEST AND PROCEDURE; CLASSIFY ANY EXECUTION FAILURE THROUGH FAILURE_DISPOSITION_NORMALIZATION BEFORE TERMINATION OR RENEWED AUTHORIZATION",
+    "precedent": "Issue #678 three-tier Codespace execution substrate integration separates disposable builder/fresh-verifier execution from later GitHub Actions replay; Issue #3054 restores the fixed canonical-intake workflow as a bounded transport fallback; the existing ACTIVE_CERTIFIED closed-world AI room execution transport runs fixed registered commands on GITHUB_ACTIONS_CLEAN_EXECUTION; Issue #3272 makes agent execution proportional rather than a universal executability prerequisite; Issue #3495 authorizes reuse of that existing closed-world runner for fixed exact-head qualification without enabling general agent execution; Issue #3511 extends the same runner with descriptor-fixed, active-admission-bound, fast-forward-only non-main generator writeback without creating new mutation authority."
   },
   "routerRegistry": ".github/ai-router/router.v1.json",
   "routerCli": "tools/repository-ai-entry-router.mjs",
@@ -442,7 +475,9 @@
     "GENERAL_AGENT_EXECUTION_MUST_NOT_USE_GITHUB_ACTIONS",
     "FIXED_CANONICAL_INTAKE_WORKFLOW_IS_AUTHORIZED_ONLY_AS_A_BOUNDED_TRANSPORT_FALLBACK_WHEN_NATIVE_INTAKE_TRANSPORT_IS_UNAVAILABLE",
     "FIXED_EXACT_HEAD_QUALIFICATION_ON_GITHUB_ACTIONS_IS_ALLOWED_ONLY_FOR_ACTIVE_CERTIFIED_CLOSED_WORLD_REGISTERED_FIXED_COMMANDS_AND_CREATES_NO_PRODUCT_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
-    "GITHUB_ACTIONS_OTHER_THAN_REGISTERED_FIXED_CANONICAL_INTAKE_OR_REGISTERED_FIXED_EXACT_HEAD_QUALIFICATION_ARE_CI_EVIDENCE_OR_SEPARATELY_AUTHORIZED_LATER_REPLAY_NOT_GENERAL_AGENT_EXECUTION_TRANSPORT",
+    "FIXED_REGISTERED_GENERATOR_WRITEBACK_ON_GITHUB_ACTIONS_IS_ALLOWED_ONLY_FOR_ACTIVE_CERTIFIED_CLOSED_WORLD_DESCRIPTORS_BOUND_TO_AN_ACTIVE_CANONICAL_ADMISSION_DESCRIPTOR_FIXED_NON_MAIN_BRANCH_DESCRIPTOR_FIXED_EXPECTED_HEAD_AND_EXACT_ALLOWED_MUTATION_PATHS",
+    "FIXED_REGISTERED_GENERATOR_WRITEBACK_MAY_EXERCISE_EXISTING_ADMITTED_MUTATION_AUTHORITY_BUT_MUST_NOT_CREATE_OR_EXPAND_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
+    "GITHUB_ACTIONS_OTHER_THAN_REGISTERED_FIXED_CANONICAL_INTAKE_REGISTERED_FIXED_EXACT_HEAD_QUALIFICATION_OR_REGISTERED_FIXED_GENERATOR_WRITEBACK_ARE_CI_EVIDENCE_OR_SEPARATELY_AUTHORIZED_LATER_REPLAY_NOT_GENERAL_AGENT_EXECUTION_TRANSPORT",
     "CLASSIFY_PAGE_MUTATION_BEFORE_AUTHORITY_ESCALATION",
     "NO_REPEATED_EQUIVALENT_PROBE_WITHOUT_NEW_EVIDENCE",
     "CHANGE_EVIDENCE_SURFACE_AFTER_FIRST_FAILED_RETRIEVAL",

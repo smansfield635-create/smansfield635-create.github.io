@@ -36,6 +36,10 @@ const FORBIDDEN_REQUEST_KEYS = [
   'environmentOverride',
   'extraArguments'
 ];
+const ACCEPTED_ROUTER_RECEIPT_SCHEMAS = new Set([
+  'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1',
+  'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3'
+]);
 
 export function validateExecutionRequest(request) {
   assertClosedKeys(request, REQUEST_REQUIRED, REQUEST_ALLOWED, 'EXECUTION_REQUEST');
@@ -69,7 +73,7 @@ function validateAdmission(admission, descriptor) {
 
 function validateRouter(router, descriptor) {
   assertObject(router, 'ROUTER_RECEIPT_INVALID');
-  if (router.schema !== 'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1') fail('ROUTER_RECEIPT_SCHEMA_MISMATCH');
+  if (!ACCEPTED_ROUTER_RECEIPT_SCHEMAS.has(router.schema)) fail('ROUTER_RECEIPT_SCHEMA_MISMATCH');
   if (router.disposition !== 'PASS') fail('ROUTER_DISPOSITION_NOT_PASS', router.disposition);
   const routes = Array.isArray(router.routes) ? router.routes : [];
   const matching = routes.filter(route => route.projectId === descriptor.projectId && route.disposition === 'PASS');

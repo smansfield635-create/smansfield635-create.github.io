@@ -11,7 +11,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
   actions: read
   issues: write
   pull-requests: write
@@ -156,7 +156,8 @@ jobs:
               `exactToolingHead = ${receipt.exactToolingHead ?? 'UNKNOWN'}`,
               `selectedBackend = ${receipt.selectedBackend ?? 'UNKNOWN'}`,
               `toolingMaterializationMode = ${receipt.toolingMaterializationMode ?? 'UNKNOWN'}`,
-              `outputStreamingMode = ${receipt.outputStreamingMode ?? 'UNKNOWN'}`,
+              `writebackPerformed = ${receipt.writebackPerformed ?? false}`,
+              `writebackCandidateHead = ${receipt.writebackCandidateHead ?? 'NONE'}`,
               `errorCode = ${receipt.errorCode ?? 'NONE'}`,
               `workflowRun = ${context.runId}`,
               `artifactName = ai-room-command-execution-receipt-${context.runId}-${process.env.GITHUB_RUN_ATTEMPT}`,

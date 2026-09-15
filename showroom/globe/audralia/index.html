@@ -173,6 +173,13 @@
 
     try {
       loaderController.worldStart();
+      window.__AUDRALIA_SERIALIZED_STARTUP_RECEIPT__ = Object.freeze({
+        schema: 'AUDRALIA_SERIALIZED_STARTUP_RECEIPT_v1',
+        loaderControllerReady: true,
+        worldStartIssued: true,
+        constrainedDevice,
+        timestamp: performance.now()
+      });
       void import('./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_R5').catch(error => {
         console.warn('AUDRALIA_SOUNDTRACK_NONBLOCKING_LOAD_FAILED', error);
       });

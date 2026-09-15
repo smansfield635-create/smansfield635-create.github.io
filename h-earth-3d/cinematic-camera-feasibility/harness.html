@@ -1,78 +1,11 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>H-Earth Cinematic Camera Feasibility</title>
-<style>
-html,body{margin:0;background:#02070a;color:#eaf4f2;font:14px/1.45 system-ui,sans-serif}
-main{max-width:1320px;margin:0 auto;padding:16px}header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
-code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-canvas{display:block;width:1280px;max-width:100%;aspect-ratio:16/9;background:#000;border:1px solid #294047}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#071014;padding:12px;border-radius:8px}
-</style></head>
-<body><main><header><h1>H-Earth camera feasibility</h1><code id="status">BOOT</code></header>
-<canvas id="stage" width="1280" height="720"></canvas><pre id="receipt"></pre></main>
-<script type="module">
-import {createHEarthRun8ER3AFrameUniformPacket} from '../../showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js';
-import {
-  createHEarthRun8ER3CPersistentRenderer,H_EARTH_RUN_8E_R3C_RENDERER_ID,H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID
-} from '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
-
-const statusNode=document.getElementById('status'),receiptNode=document.getElementById('receipt'),canvas=document.getElementById('stage');
-const manifest=await fetch('./manifest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`MANIFEST_HTTP_${r.status}`);return r.json()});
-const params=new URLSearchParams(location.search),mode=params.get('mode')??'anchors',shardIndex=Number(params.get('shard')??0),
-  explicitFrame=Number(params.get('frame')??720),pngRequested=params.get('png')==='1';
-const frameMap=new Map(manifest.frames.map(r=>[r.frame,r]));
-let selectedFrames;
-if(mode==='anchors')selectedFrames=[...manifest.anchorFrames];
-else if(mode==='sparse')selectedFrames=[...manifest.sparseFrames];
-else if(mode==='shard'){const shard=manifest.shards.find(x=>x.index===shardIndex);if(!shard)throw new Error('SHARD_INDEX_INVALID');selectedFrames=Array.from({length:30},(_,i)=>shard.startFrame+i);}
-else if(mode==='frame')selectedFrames=[explicitFrame];else throw new Error('MODE_INVALID');
-if(selectedFrames.length>30)throw new Error('DRAW_BUDGET_EXCEEDED');
-if(selectedFrames.some(f=>!frameMap.has(f)))throw new Error('FRAME_SELECTION_OUTSIDE_MANIFEST');
-const vec=a=>({x:a[0],y:a[1],z:a[2]}),tolerance=2e-7;
-const close=(a,b)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=tolerance;
-const vecClose=(a,b)=>close(a?.x,b?.x)&&close(a?.y,b?.y)&&close(a?.z,b?.z);
-function navigationState(r){return Object.freeze({
-  contractId:manifest.identities.navigation.contractId,stateId:`H_EARTH_CINEMATIC_CAMERA_MANIFEST_FRAME_${r.frame}`,
-  sequence:r.frame-manifest.masterCoordinateSystem.startFrame+1,action:'CINEMATIC_CAMERA_MANIFEST',accepted:true,recovered:false,
-  rejectionReason:null,position:Object.freeze(vec(r.local.position)),yawDegrees:r.local.yawDegrees,pitchDegrees:r.local.pitchDegrees,
-  verticalFovDegrees:r.projection[0],terrainClearanceReceiptId:`H_EARTH_CINEMATIC_CAMERA_CLEARANCE_${r.frame}`,
-  canonicalCameraStateAuthority:false,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false
-})}
-function packetFor(r,sequence){
-  const packet=createHEarthRun8ER3AFrameUniformPacket({navigationState:navigationState(r),viewport:manifest.masterCoordinateSystem.viewport,frameSequence:sequence});
-  if(packet.packageOccurrenceId!==manifest.identities.world.packageOccurrenceId)throw new Error(`WORLD_OCCURRENCE_MISMATCH:${r.frame}`);
-  if(!vecClose(packet.camera.localAuthoringPosition,vec(r.local.position)))throw new Error(`LOCAL_POSITION_MISMATCH:${r.frame}`);
-  if(!vecClose(packet.camera.localAuthoringTarget,vec(r.local.target)))throw new Error(`LOCAL_TARGET_MISMATCH:${r.frame}`);
-  if(!vecClose(packet.camera.position,vec(r.position)))throw new Error(`PLANETARY_POSITION_MISMATCH:${r.frame}`);
-  if(!vecClose(packet.camera.target,vec(r.target)))throw new Error(`PLANETARY_TARGET_MISMATCH:${r.frame}`);
-  if(!vecClose(packet.camera.up,vec(r.up)))throw new Error(`PLANETARY_UP_MISMATCH:${r.frame}`);
-  if(!close(packet.camera.verticalFovDegrees,r.projection[0])||!close(packet.camera.nearPlane,r.projection[1])||!close(packet.camera.farPlane,r.projection[2]))
-    throw new Error(`PROJECTION_MISMATCH:${r.frame}`);
-  return packet;
-}
-const records=selectedFrames.map((frame,index)=>({manifest:frameMap.get(frame),packet:packetFor(frame,index+1)}));
-const renderer=createHEarthRun8ER3CPersistentRenderer({canvas,width:manifest.masterCoordinateSystem.viewport.width,height:manifest.masterCoordinateSystem.viewport.height});
-if(renderer.rendererId!==manifest.identities.renderer.rendererId)throw new Error('RENDERER_ID_MISMATCH');
-if(renderer.presentationProfileId!==manifest.identities.renderer.presentationProfileId)throw new Error('PRESENTATION_PROFILE_MISMATCH');
-renderer.initialize(records[0].packet);
-const captures=[];
-for(const {manifest:r,packet} of records){
-  renderer.renderFrame(packet);renderer.presentColorFrame();
-  const capture=renderer.captureColorFrame(`master-${r.frame}`,{includePng:pngRequested||mode==='frame'});
-  captures.push({frame:r.frame,colorSummary:capture.summary,pngEncoded:Boolean(capture.pngDataUrl),pngDataUrlLength:capture.pngDataUrl?.length??0});
-  if(mode==='frame'&&capture.pngDataUrl)window.H_EARTH_CINEMATIC_CAMERA_LAST_PNG=capture.pngDataUrl;
-}
-const receipt=Object.freeze({
-  schema:'H_EARTH_CINEMATIC_CAMERA_CAPTURE_RECEIPT_v1',operationId:manifest.operationId,exactGoverningHead:manifest.exactGoverningHead,
-  manifestSha256:manifest.manifestDigest.sha256,mode,shardIndex:mode==='shard'?shardIndex:null,frameCount:selectedFrames.length,frames:selectedFrames,
-  drawBudgetMaximum:30,drawBudgetRespected:selectedFrames.length<=30,worldIdentityId:manifest.identities.world.identityId,
-  rendererIdentityId:manifest.identities.renderer.identityId,rendererId:H_EARTH_RUN_8E_R3C_RENDERER_ID,
-  presentationProfileId:H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,captures,resources:renderer.getResourceReceipt(),
-  noProductionMutation:true,noRuntimeSourceMutation:true
-});
-window.H_EARTH_CINEMATIC_CAMERA_FEASIBILITY_RECEIPT=receipt;receiptNode.textContent=JSON.stringify(receipt,null,2);
-statusNode.textContent=`PASS · ${mode} · ${selectedFrames.length} frame(s)`;
-const lose=canvas.getContext('webgl2')?.getExtension('WEBGL_lose_context');if(lose){lose.loseContext();statusNode.textContent+=' · CONTEXT_LOST_AFTER_CAPTURE';}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>H-Earth Cinematic Camera Feasibility</title><style>html,body{margin:0;background:#02070a;color:#eaf4f2;font:14px/1.45 system-ui,sans-serif}main{max-width:1320px;margin:0 auto;padding:16px}header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}canvas{display:block;width:1280px;max-width:100%;aspect-ratio:16/9;background:#000;border:1px solid #294047}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#071014;padding:12px;border-radius:8px}</style></head><body><main><header><h1>H-Earth camera feasibility</h1><code id="status">BOOT</code></header><canvas id="stage" width="1280" height="720"></canvas><pre id="receipt"></pre></main><script type="module">
+import{createHEarthRun8ER3AFrameUniformPacket}from'../../showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js';
+import{createHEarthRun8ER3CPersistentRenderer,H_EARTH_RUN_8E_R3C_RENDERER_ID,H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID}from'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+const statusNode=document.getElementById('status'),receiptNode=document.getElementById('receipt'),canvas=document.getElementById('stage'),manifest=await fetch('./manifest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`MANIFEST_HTTP_${r.status}`);return r.json()}),params=new URLSearchParams(location.search),mode=params.get('mode')??'anchors',shardIndex=Number(params.get('shard')??0),explicitFrame=Number(params.get('frame')??720),pngRequested=params.get('png')==='1',frameMap=new Map(manifest.frames.map(r=>[r[0],r]));
+let selectedFrames;if(mode==='anchors')selectedFrames=[...manifest.anchorFrames];else if(mode==='sparse')selectedFrames=[...manifest.sparseFrames];else if(mode==='shard'){const shard=manifest.shards.find(x=>x.index===shardIndex);if(!shard)throw new Error('SHARD_INDEX_INVALID');selectedFrames=Array.from({length:30},(_,i)=>shard.startFrame+i)}else if(mode==='frame')selectedFrames=[explicitFrame];else throw new Error('MODE_INVALID');if(selectedFrames.length>30)throw new Error('DRAW_BUDGET_EXCEEDED');if(selectedFrames.some(f=>!frameMap.has(f)))throw new Error('FRAME_SELECTION_OUTSIDE_MANIFEST');
+const vec=(r,i)=>({x:r[i],y:r[i+1],z:r[i+2]}),tol=2e-7,close=(a,b)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=tol,vecClose=(a,b)=>close(a?.x,b?.x)&&close(a?.y,b?.y)&&close(a?.z,b?.z);
+function navigationState(r){return Object.freeze({contractId:manifest.identities.navigation.contractId,stateId:`H_EARTH_CINEMATIC_CAMERA_MANIFEST_FRAME_${r[0]}`,sequence:r[0]-manifest.masterCoordinateSystem.startFrame+1,action:'CINEMATIC_CAMERA_MANIFEST',accepted:true,recovered:false,rejectionReason:null,position:Object.freeze(vec(r,13)),yawDegrees:r[19],pitchDegrees:r[20],verticalFovDegrees:r[10],terrainClearanceReceiptId:`H_EARTH_CINEMATIC_CAMERA_CLEARANCE_${r[0]}`,canonicalCameraStateAuthority:false,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false})}
+function packetFor(r,sequence){const p=createHEarthRun8ER3AFrameUniformPacket({navigationState:navigationState(r),viewport:manifest.masterCoordinateSystem.viewport,frameSequence:sequence});if(p.packageOccurrenceId!==manifest.identities.world.packageOccurrenceId)throw new Error(`WORLD_OCCURRENCE_MISMATCH:${r[0]}`);if(!vecClose(p.camera.localAuthoringPosition,vec(r,13)))throw new Error(`LOCAL_POSITION_MISMATCH:${r[0]}`);if(!vecClose(p.camera.localAuthoringTarget,vec(r,16)))throw new Error(`LOCAL_TARGET_MISMATCH:${r[0]}`);if(!vecClose(p.camera.position,vec(r,1)))throw new Error(`PLANETARY_POSITION_MISMATCH:${r[0]}`);if(!vecClose(p.camera.target,vec(r,4)))throw new Error(`PLANETARY_TARGET_MISMATCH:${r[0]}`);if(!vecClose(p.camera.up,vec(r,7)))throw new Error(`PLANETARY_UP_MISMATCH:${r[0]}`);if(!close(p.camera.verticalFovDegrees,r[10])||!close(p.camera.nearPlane,r[11])||!close(p.camera.farPlane,r[12]))throw new Error(`PROJECTION_MISMATCH:${r[0]}`);return p}
+const records=selectedFrames.map((frame,index)=>({manifest:frameMap.get(frame),packet:packetFor(frame,index+1)})),renderer=createHEarthRun8ER3CPersistentRenderer({canvas,width:manifest.masterCoordinateSystem.viewport.width,height:manifest.masterCoordinateSystem.viewport.height});if(renderer.rendererId!==manifest.identities.renderer.rendererId)throw new Error('RENDERER_ID_MISMATCH');if(renderer.presentationProfileId!==manifest.identities.renderer.presentationProfileId)throw new Error('PRESENTATION_PROFILE_MISMATCH');renderer.initialize(records[0].packet);const captures=[];for(const{manifest:r,packet}of records){renderer.renderFrame(packet);renderer.presentColorFrame();const c=renderer.captureColorFrame(`master-${r[0]}`,{includePng:pngRequested||mode==='frame'});captures.push({frame:r[0],colorSummary:c.summary,pngEncoded:Boolean(c.pngDataUrl),pngDataUrlLength:c.pngDataUrl?.length??0});if(mode==='frame'&&c.pngDataUrl)window.H_EARTH_CINEMATIC_CAMERA_LAST_PNG=c.pngDataUrl}
+const receipt=Object.freeze({schema:'H_EARTH_CINEMATIC_CAMERA_CAPTURE_RECEIPT_v1',operationId:manifest.operationId,exactGoverningHead:manifest.exactGoverningHead,manifestSha256:manifest.manifestDigest.sha256,mode,shardIndex:mode==='shard'?shardIndex:null,frameCount:selectedFrames.length,frames:selectedFrames,drawBudgetMaximum:30,drawBudgetRespected:selectedFrames.length<=30,worldIdentityId:manifest.identities.world.identityId,rendererIdentityId:manifest.identities.renderer.identityId,rendererId:H_EARTH_RUN_8E_R3C_RENDERER_ID,presentationProfileId:H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,captures,resources:renderer.getResourceReceipt(),noProductionMutation:true,noRuntimeSourceMutation:true});window.H_EARTH_CINEMATIC_CAMERA_FEASIBILITY_RECEIPT=receipt;receiptNode.textContent=JSON.stringify(receipt,null,2);statusNode.textContent=`PASS · ${mode} · ${selectedFrames.length} frame(s)`;const lose=canvas.getContext('webgl2')?.getExtension('WEBGL_lose_context');if(lose){lose.loseContext();statusNode.textContent+=' · CONTEXT_LOST_AFTER_CAPTURE'}
 </script></body></html>

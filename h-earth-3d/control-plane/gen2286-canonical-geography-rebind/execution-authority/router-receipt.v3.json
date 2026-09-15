@@ -1,0 +1,104 @@
+{
+  "conversationMemoryRequired": false,
+  "disposition": "PASS",
+  "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+  "mutationIntent": true,
+  "operationIntakeExecution": {
+    "canonicalLocator": ".github/operation-intake/locator.v1.json",
+    "executionWorkflow": ".github/workflows/canonical-operation-intake-transport-v1.yml",
+    "fixedCommand": "node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --input <REQUEST_ENVELOPE.json> --output <TRANSPORT_RECEIPT.json>",
+    "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+    "parallelGovernanceUsed": false,
+    "result": "CANONICAL_REMOTE_INTAKE_TRANSPORT_REQUIRED"
+  },
+  "pageMutationClassification": {
+    "ambiguityPolicy": "RUNTIME_OR_AUTHORITY",
+    "canonicalAdmissionRequired": true,
+    "declaredPaths": [
+      "showroom/globe/audralia/index.html"
+    ],
+    "instrumentId": "PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1",
+    "mutationClass": "RUNTIME_OR_AUTHORITY",
+    "pageExcellenceRequired": true,
+    "reasonCode": "RUNTIME_SEMANTICS_DECLARED",
+    "result": "PASS_GOVERNED_RUNTIME_OR_AUTHORITY",
+    "schema": "PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1",
+    "task": "Execute admitted Audralia runtime authority canonical geography rebind generator at exact Gen2286 head"
+  },
+  "reasonCodes": [
+    "WHOLE_ESTATE_EXECUTION_DECISION_BOUND"
+  ],
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "routerId": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
+  "routes": [
+    {
+      "disposition": "PASS",
+      "path": "showroom/globe/audralia/index.html",
+      "projectId": "H_EARTH",
+      "routeClass": "REGISTERED_PROJECT"
+    }
+  ],
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "task": "Execute admitted Audralia runtime authority canonical geography rebind generator at exact Gen2286 head",
+  "wholeEstateExecutionDecision": {
+    "agentMode": "PROPORTIONAL_BY_PROJECT_RISK",
+    "authorityEffect": "NONE",
+    "blockerTaxonomy": [
+      "PRODUCT_DEFECT",
+      "QUALIFICATION_HARNESS_DEFECT",
+      "CONTROL_PLANE_DEFECT",
+      "EXECUTION_SUBSTRATE_DEFECT",
+      "AUTHORITY_DEFECT",
+      "PUBLICATION_DEFECT",
+      "SCIENTIFIC_OR_EMPIRICAL_DEFECT"
+    ],
+    "candidateScopeRecognition": {
+      "candidateCreatedPathNeedsSeparatePersistentRegistrationSolelyBecauseNew": false,
+      "exactDeclaredCandidatePathsRecognizedForOperation": true,
+      "mayExpandDeclaredScope": false,
+      "persistentRegistrationRequiredOnlyForDurableAuthorityBoundary": true
+    },
+    "canonicalAdmissionRequired": true,
+    "classificationReason": "RUNTIME_SEMANTICS_DECLARED",
+    "continuity": {
+      "disjointMovementDefault": "DIFFERENTIAL_CONTINUITY_THEN_CARRY_FORWARD",
+      "mainMovementAloneForcesStrictSuccessor": false,
+      "strictSuccessorOnlyForRelevantScopeDependencyAuthorityScientificChangeOrIncompleteEvidence": true
+    },
+    "declaredPaths": [
+      "showroom/globe/audralia/index.html"
+    ],
+    "gatePolicy": {
+      "blockingRequiresChangedByteDirectDependencyOrExplicitSemanticDependency": true,
+      "filesystemDirectoryPrefixAloneMayBlock": false,
+      "onlySelectedGatesMayBlock": true,
+      "unselectedWorkflowFailureDisposition": "ADVISORY_NON_BLOCKING_EVIDENCE"
+    },
+    "invariants": {
+      "boundedMutationScopePreserved": true,
+      "controlPlaneDefectMayManufactureProductPrerequisite": false,
+      "exactHeadCustodyPreserved": true,
+      "mergeDeploymentPublicationSeparationPreserved": true,
+      "readOnlyMayEscalateToMutationSemantics": false,
+      "scientificAndEmpiricalFailClosedBoundariesPreserved": true
+    },
+    "mutationClass": "RUNTIME_OR_AUTHORITY",
+    "precedentReuse": {
+      "authorityOrClaimUpgradeByInheritanceAllowed": false,
+      "default": "REUSE_ACCEPTED_PRECEDENT_BEFORE_NEW_CONSTRUCTION",
+      "inheritanceRequiresAcceptedIdentityAndExplicitUnchangedContract": true,
+      "qualifyOnlyDeclaredDeltaAndDirectlyAffectedDependencies": true,
+      "unchangedQualifiedBehaviorMayInheritEvidence": true
+    },
+    "routeDisposition": "PASS",
+    "schema": "WHOLE_ESTATE_EXECUTION_DECISION_v1",
+    "selectedGateClasses": [
+      "CANONICAL_INTAKE",
+      "PROJECT_ROUTE",
+      "DIRECT_DEPENDENCY_QUALIFICATION",
+      "PRODUCT_OR_AUTHORITY_SPECIFIC_VERIFIER"
+    ],
+    "status": "AUTHORITATIVE_FOR_BLOCKING_GATE_SELECTION",
+    "task": "Execute admitted Audralia runtime authority canonical geography rebind generator at exact Gen2286 head"
+  }
+}

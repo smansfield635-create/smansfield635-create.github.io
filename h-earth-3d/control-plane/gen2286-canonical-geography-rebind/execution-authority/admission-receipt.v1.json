@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "45a660638c599d98ad9b511406f4a87237f692ef",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "2eeff672dc9f324f32bb4ba38cd3cb6c066a410c",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2286,
+    "lockScope": "H_EARTH:AUDRALIA:CANONICAL_GEOGRAPHY_REBIND:24057_REV5:V1",
+    "observedBranchHead": "572df34a04cc9eedd36c57fc8aeb3c917af95ff8",
+    "observedLedgerBlobSha": "ae25b365b850230e6a06a3f9ea9b03a65157c6be",
+    "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "1a57d811bdad57de0f8eed5eebff7f613655500ca8f79f594af245d387b154cf"
+  },
+  "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "0d4f0b0f701f56bcbc4791baaaf93ee821ca5d5e0bbb3ddd63d98da98a2851bf",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "24701c457f43b1681c79846a932c075a18a7271bf57dc23d229f13d9ff2d59be",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

@@ -699,7 +699,7 @@ addQuadrantEnvironment=function(g){
         if(zone.season===SEASON.SPRING){
           if(i%3===0)flower(g,p,q,zone.kind,zone.season,.58*near,alpha);
           else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,zone.kind,5,3,zone.season);
-        }else if(zone.season===SEASON.SUMER){
+        }else if(zone.season===SEASON.SUMMER){
           rainStroke(g,p,q,zone.kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));
           if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,zone.kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
           if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,zone.kind,6,3,zone.season);

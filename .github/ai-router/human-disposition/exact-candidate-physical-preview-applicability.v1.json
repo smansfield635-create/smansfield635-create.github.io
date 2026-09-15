@@ -1,0 +1,64 @@
+{
+  "schema": "EXACT_CANDIDATE_PHYSICAL_PREVIEW_APPLICABILITY_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "rootContract": ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+  "rootSelfTest": ".github/ai-router/human-disposition/exact-candidate-physical-preview-self-test.v1.mjs",
+  "defaultRule": "WHEN_AN_ADMITTED_CONSTRUCTION_SCOPE_REQUIRES_PHYSICAL_OR_PERCEPTUAL_ACCEPTANCE_AND_THE_EXACT_CANDIDATE_CAN_BE_LAWFULLY_RENDERED_READ_ONLY_THAT_ACCEPTANCE_IS_CANDIDATE_FINALIZATION_BEFORE_TERMINAL_CLOSURE",
+  "historicalPostPublicationOnlyInstructions": "HISTORICAL_EVIDENCE_NOT_FUTURE_DEFAULT_UNLESS_CURRENT_OPERATION_PROVES_PRODUCTION_ORIGIN_DEPENDENCE",
+  "dispositions": ["KEEP", "ONE_REPAIR", "REJECT"],
+  "surfaces": {
+    "H_EARTH_CORE": {
+      "pathScopes": ["h-earth-3d/**", "showroom/globe/h-earth/**"],
+      "prePublicationCandidateReview": "ELIGIBLE_WHEN_EXACT_CANDIDATE_RENDERABLE",
+      "reviewClasses": ["PHYSICAL_DEVICE", "PERCEPTUAL", "RESPONSIVE", "BROWSER_RUNTIME"],
+      "finalLiveVerificationStillRequired": true
+    },
+    "AUDRALIA": {
+      "pathScopes": ["showroom/globe/audralia/**"],
+      "prePublicationCandidateReview": "ELIGIBLE_WHEN_EXACT_CANDIDATE_RENDERABLE",
+      "reviewClasses": ["PHYSICAL_DEVICE", "PERCEPTUAL", "RESPONSIVE", "GPU_WHEN_THE_PREVIEW_SUBSTRATE_ACTUALLY_EXERCISES_THE_TARGET_DEVICE_OR_LAWFUL_EQUIVALENT"],
+      "genericHeadlessCreatesPhysicalDeviceAcceptance": false,
+      "finalLiveVerificationStillRequired": true
+    },
+    "H_EARTH_AWARDS": {
+      "pathScopes": ["showroom/globe/h-earth/awards/**"],
+      "prePublicationCandidateReview": "ELIGIBLE_WHEN_EXACT_ARTIFACT_OR_BROWSER_CANDIDATE_RENDERABLE",
+      "reviewClasses": ["VISUAL", "CINEMATIC", "RESPONSIVE", "PERCEPTUAL"],
+      "finalLiveVerificationStillRequired": true
+    },
+    "COMMUNITY_CONSIDER_THE_ENERGY": {
+      "exactPaths": ["campaigns/consider-the-energy/index.html", "campaigns/consider-the-energy/community-lifecycle3d.js"],
+      "prePublicationCandidateReview": "ELIGIBLE_WHEN_EXACT_CANDIDATE_RENDERABLE",
+      "reviewClasses": ["PHYSICAL_DEVICE", "PERCEPTUAL", "RESPONSIVE", "BROWSER_RUNTIME"],
+      "genericHeadlessCreatesPhysicalDeviceAcceptance": false,
+      "finalLiveVerificationStillRequired": true
+    },
+    "SHOWROOM_GLOBE_ZIONTS": {
+      "exactPaths": ["showroom/globe/earth/index.html", "showroom/globe/earth/index.js"],
+      "prePublicationCandidateReview": "DEFAULT_FOR_DECLARED_PHYSICAL_OR_PERCEPTUAL_ACCEPTANCE",
+      "reviewClasses": ["PHYSICAL_DEVICE", "PERCEPTUAL", "RESPONSIVE", "WEBGL"],
+      "finalLiveVerificationStillRequired": true
+    }
+  },
+  "oneRepairBoundary": {
+    "originalAdmittedScopeMustRemainActive": true,
+    "allowedPathIntentAuthorityOrArchitectureExpansionAllowed": false,
+    "newImmutableCandidateIdentityRequired": true,
+    "priorPerceptualDispositionSuperseded": true,
+    "afterTerminalClosure": "FRESH_ORDINARY_ADMISSION_OR_LAWFUL_SUCCESSOR_REQUIRED"
+  },
+  "originSensitiveExceptions": [
+    "PRODUCTION_ORIGIN",
+    "PAGES_ROUTING",
+    "SERVICE_WORKER_SCOPE",
+    "AUTHENTICATION",
+    "REDIRECTS",
+    "BACKEND_STATE",
+    "ORIGIN_BOUND_CORS_OR_CSP",
+    "CDN_OR_CACHE_BEHAVIOR"
+  ],
+  "productionDeploymentAsPreviewWorkaroundAllowed": false,
+  "genericHeadlessMayMasqueradeAsPhysicalDeviceAcceptance": false,
+  "previewCreatesMergeDeploymentPublicationScientificEmpiricalRuntimeOrClaimAuthority": false,
+  "authorityEffect": "NONE"
+}

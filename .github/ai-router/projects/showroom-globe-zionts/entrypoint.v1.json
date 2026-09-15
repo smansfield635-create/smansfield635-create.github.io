@@ -18,12 +18,25 @@
   "requiredInstructions": [
     "AGENTS.md",
     "AI_ENTRYPOINT.json",
+    ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+    ".github/ai-router/human-disposition/exact-candidate-physical-preview-applicability.v1.json",
     ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
     "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json"
   ],
   "registries": [
     ".github/ai-router/router.v1.json"
   ],
+  "exactCandidatePhysicalPreview": {
+    "status": "ACTIVE_FAIL_CLOSED",
+    "contract": ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+    "applicability": ".github/ai-router/human-disposition/exact-candidate-physical-preview-applicability.v1.json",
+    "candidateFinalizationBeforeTerminalClosureWhenDeclared": true,
+    "dispositions": ["KEEP", "ONE_REPAIR", "REJECT"],
+    "oneRepairRequiresActiveOriginalScope": true,
+    "productionDeploymentAsPreviewWorkaroundAllowed": false,
+    "finalLiveExactHeadVerificationRequired": true,
+    "authorityCreatedByBinding": false
+  },
   "procedures": {
     "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_RUNTIME_OR_AUTHORITY_MUTATION",
     "routerCommand": "node tools/repository-ai-entry-router.mjs --path showroom/globe/earth/index.html --path showroom/globe/earth/index.js --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/showroom-globe-zionts-router-receipt.json",
@@ -33,8 +46,13 @@
       "LOAD_ZIONTS_OWNER_CONTRACT_AND_PSALM_ACK_PACK",
       "BOUNDED_ZIONTS_CONSTRUCTION",
       "FRESH_EXACT_HEAD_QUALIFICATION",
-      "OWNER_VISUAL_REVIEW",
-      "SEPARATE_EXACT_HEAD_MERGE_AND_PUBLICATION_AUTHORITY"
+      "FREEZE_IMMUTABLE_EXACT_CANDIDATE",
+      "EXACT_CANDIDATE_PHYSICAL_PREVIEW_WHEN_PHYSICAL_OR_PERCEPTUAL_REVIEW_IS_DECLARED",
+      "CANDIDATE_PERCEPTUAL_ACCEPTANCE_KEEP_ONE_REPAIR_OR_REJECT",
+      "ONE_REPAIR_IF_SELECTED_REQUALIFY_DELTA_FREEZE_NEW_SHA_AND_PREVIEW_AGAIN",
+      "TERMINAL_MUTATION_CLOSURE_AFTER_KEEP_OR_REJECT",
+      "SEPARATE_EXACT_HEAD_MERGE_AND_PUBLICATION_AUTHORITY",
+      "FINAL_LIVE_EXACT_HEAD_VERIFICATION"
     ]
   },
   "localExecution": {
@@ -51,6 +69,9 @@
     "STOP_IF_EITHER_ZIONTS_PATH_DOES_NOT_RESOLVE_UNIQUELY_TO_SHOWROOM_GLOBE_ZIONTS",
     "STOP_IF_SCOPE_EXPANDS_BEYOND_THE_TWO_EXACT_ZIONTS_PATHS_WITHOUT_FRESH_AUTHORITY",
     "STOP_IF_AUDRALIA_H_EARTH_OR_OTHER_WORLD_RUNTIME_AUTHORITY_IS_INFERRED_FROM_THIS_ROUTE",
+    "DO_NOT_TERMINALLY_CLOSE_BEFORE_A_DECLARED_REQUIRED_EXACT_CANDIDATE_PREVIEW_DISPOSITION_WHEN_BOUNDED_REPAIR_AUTHORITY_IS_INTENTIONALLY_RETAINED",
+    "DO_NOT_DEPLOY_PRODUCTION_MERELY_TO_OBTAIN_PREVIEW_OR_PHYSICAL_REVIEW_EVIDENCE",
+    "STOP_IF_ONE_REPAIR_WOULD_EXPAND_PATHS_INTENT_AUTHORITY_OR_ARCHITECTURE_OR_IF_THE_ORIGINAL_OPERATION_IS_ALREADY_TERMINALLY_CLOSED",
     "STOP_BEFORE_MERGE_DEPLOYMENT_OR_PUBLICATION_WITHOUT_SEPARATE_EXACT_HEAD_AUTHORITY"
   ]
 }

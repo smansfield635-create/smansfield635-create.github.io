@@ -242,7 +242,8 @@ function precisionProfile(gl){
   const vertex=precisionRecord(gl,gl.VERTEX_SHADER),fragment=precisionRecord(gl,gl.FRAGMENT_SHADER),usable=p=>!!p&&(p.precision>0||p.rangeMax>0),selected=usable(vertex.high)&&usable(fragment.high)?'highp':'mediump';
   return{selected,vertex,fragment};
 }
-function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;
+function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\
+':''}precision ${precision} float;
 ${webgl2?'in':'attribute'} vec3 a_position,a_normal;
 ${webgl2?'in':'attribute'} vec4 a_color;
 ${webgl2?'in':'attribute'} float a_phase,a_kind,a_season;
@@ -324,7 +325,8 @@ void main(){
   gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
   v_n=normalize(n);v_c=a_color;v_q=a_phase;v_k=a_kind;v_s=a_season;v_settle=settle;v_rhythm=rhythm;
 }`}
-function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;
+function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\
+':''}precision ${precision} float;
 ${webgl2?'in':'varying'} vec3 v_n;${webgl2?'in':'varying'} vec4 v_c;
 ${webgl2?'in':'varying'} float v_q,v_k,v_s,v_settle,v_rhythm;
 uniform float u_time,u_intro,u_progress,u_activity,u_retained,u_renewal,u_reduced,u_lifecycle;
@@ -841,3 +843,135 @@ function gen2273Mount(host){
   kick();
 }
 mount=gen2273Mount;
+
+// Gen2282 bounded semantic repair: permanent domains stay active while the tracked cohort settles into the tree.
+const GEN2282_TRACKED_KIND_BASE=22;
+const GEN2282_PERMANENT_DOMAIN_COUNT=4;
+const gen2282TrackedKind=season=>GEN2282_TRACKED_KIND_BASE+season;
+
+function gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,kind,alphaScale=1,scaleFactor=1){
+  const q=.10+zone.season*.17+depthIndex*.018+i*.006,near=plane.scale*scaleFactor,alpha=clamp(plane.alpha*alphaScale,0,1);
+  if(zone.season===SEASON.SPRING){
+    if(i%3===0)flower(g,p,q,kind,zone.season,.58*near,alpha);
+    else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,kind,5,3,zone.season);
+  }else if(zone.season===SEASON.SUMMER){
+    rainStroke(g,p,q,kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));
+    if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
+    if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,kind,6,3,zone.season);
+  }else if(zone.season===SEASON.AUTUMN){
+    leaf(g,p,q,kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha));
+  }else{
+    if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,kind,zone.season,alpha);
+    else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,kind,5,3,zone.season);
+    if(depthIndex===0&&i%4===1)orb(g,A(p,V(.10,.02,-.02)),V(.13*near,.060*near,.050*near),[.64,.78,.86,alpha*.20],q,kind,6,3,zone.season);
+  }
+}
+
+addQuadrantEnvironment=function(g){
+  const count=GEN2273_OBJECTS_PER_DEPTH;
+  g.objectRanges=[];
+  g.permanentDomainRanges=[];
+  for(const zone of QUADRANT_VOLUMES){
+    DEPTH_PLANES.forEach((plane,depthIndex)=>{
+      for(let i=0;i<count;i++){
+        const base=quadrantPoint(zone,plane,i,count),offset=V((i%2?1:-1)*.045,((i%3)-1)*.030,0),p=A(base,offset),startVertex=g.p.length/3;
+        gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,zone.kind,.62,.90);
+        g.permanentDomainRanges.push(Object.freeze({domain:zone.season,startVertex,endVertex:g.p.length/3}));
+      }
+    });
+  }
+  for(const zone of QUADRANT_VOLUMES){
+    DEPTH_PLANES.forEach((plane,depthIndex)=>{
+      for(let i=0;i<count;i++){
+        const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;
+        if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2282_CANONICAL_IDENTITY_BINDING_FAILURE');
+        gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);
+        g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));
+      }
+    });
+  }
+};
+
+vertexSource=function(webgl2,precision){
+  let source=GEN2273_BASE_VERTEX_SOURCE(webgl2,precision);
+  const marker='float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive;';
+  const replacement='float trackedCohort=step(21.5,a_kind)*step(a_kind,25.5);\n  float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);';
+  const next=source.replace(marker,replacement);
+  if(next===source)throw Error('GEN2282_TRACKED_SWAY_MARKER_MISSING');
+  return next;
+};
+fragmentSource=function(webgl2,precision){
+  let source=GEN2273_BASE_FRAGMENT_SOURCE(webgl2,precision);
+  const specialMarker='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),special=max(feed,zoneEnv);';
+  const specialReplacement='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);';
+  let next=source.replace(specialMarker,specialReplacement);
+  if(next===source)throw Error('GEN2282_TRACKED_FRAGMENT_MARKER_MISSING');
+  source=next;
+  next=source.replace('alpha*=mix(1.0,1.0-u_lifecycle,feed);','alpha*=1.0-feed;');
+  if(next===source)throw Error('GEN2282_FEED_VISIBILITY_MARKER_MISSING');
+  return next;
+};
+
+function gen2282TreeSettlementXYZ(object){
+  const final=P_circulation(object,1),radial=Math.max(.001,Math.hypot(final.x,final.z)),local=object.objectId%(DEPTH_PLANES.length*GEN2273_OBJECTS_PER_DEPTH),targetRadius=.075+(local%4)*.025+object.depthBand*.010,factor=Math.min(.55,targetRadius/radial);
+  const yBase=[1.42,.72,1.00,1.55][object.domain],row=Math.floor((local%8)/2),y=yBase+(row-1.5)*.060+(object.depthBand-1)*.045;
+  return V(final.x*factor,y,final.z*factor);
+}
+const GEN2282_TREE_SETTLEMENT_XYZ=Object.freeze(GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>Object.freeze(gen2273CloneXYZ(gen2282TreeSettlementXYZ(object)))));
+
+function createGen2282Runtime(settlementDurationSeconds=GEN2273_SELECTED_SETTLEMENT_SECONDS,reduced=false){
+  const settlementDuration=gen2273SettlementDuration(settlementDurationSeconds),lockSeconds=GEN2273_TREE_COMPLETE_SECONDS+settlementDuration,registry=GEN2273_MOBILE_OBJECT_REGISTRY;
+  const target=index=>GEN2282_TREE_SETTLEMENT_XYZ[index],currentXYZ=registry.map((object,i)=>gen2273CloneXYZ(reduced?target(i):P_static(object))),settlementOrigin=Array(registry.length).fill(null),transitionLog=[];
+  let maxSeconds=0,stateIndex=reduced?GEN2273_STATE_ORDER.length-1:0,circulationProgress=0,settlementProgress=reduced?1:0,settlementOriginCaptureCount=0,circulationEvaluations=0,circulationEvaluationsAtSettlement=null,localTimeSeconds=0;
+  let globalCirculationAuthority=false,globalCirculationUpdatePathEnabled=false,entranceAuthorityActive=!reduced,treeGrowthAuthorityActive=!reduced,communityInteractionAvailable=!!reduced,domainLocalPhysicsAuthoritative=!!reduced,domainLocked=!!reduced;
+  const state=()=>GEN2273_STATE_ORDER[stateIndex],setCurrent=(index,p)=>{currentXYZ[index]=gen2273CloneXYZ(p)};
+  const enter=(index,atSeconds)=>{
+    if(index<=stateIndex)return;
+    stateIndex=index;transitionLog.push(Object.freeze({state:GEN2273_STATE_ORDER[index],stateIndex:index,atSeconds}));
+    if(index===1){globalCirculationAuthority=true;globalCirculationUpdatePathEnabled=true;}
+    if(index===3){circulationProgress=1;registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,1));circulationEvaluations++});treeGrowthAuthorityActive=false;}
+    if(index===4){if(settlementOriginCaptureCount===0){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(currentXYZ[i]));settlementOriginCaptureCount++})}circulationEvaluationsAtSettlement=circulationEvaluations;globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false;}
+    if(index===5){settlementProgress=1;registry.forEach((object,i)=>setCurrent(i,target(i)));globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false;entranceAuthorityActive=false;treeGrowthAuthorityActive=false;communityInteractionAvailable=true;domainLocalPhysicsAuthoritative=true;domainLocked=true;}
+  };
+  const updateCirculation=seconds=>{if(!globalCirculationAuthority||!globalCirculationUpdatePathEnabled||stateIndex>=4)return;const next=clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[0]));circulationProgress=Math.max(circulationProgress,next);registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,circulationProgress));circulationEvaluations++});};
+  const updateSettlement=seconds=>{if(stateIndex!==4)return;const next=clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration);settlementProgress=Math.max(settlementProgress,next);const eased=smoother(settlementProgress);registry.forEach((object,i)=>setCurrent(i,L(settlementOrigin[i],target(i),eased)));};
+  const updateLocal=seconds=>{if(!domainLocked||!domainLocalPhysicsAuthoritative)return;localTimeSeconds=Math.max(localTimeSeconds,Math.max(0,seconds-lockSeconds));};
+  const settledObjectCount=()=>domainLocked?currentXYZ.reduce((count,p,i)=>count+(gen2273SameXYZ(p,target(i))?1:0),0):0;
+  const snapshot=()=>Object.freeze({state:state(),stateIndex,progress:stateIndex===4?settlementProgress:stateIndex<3?circulationProgress:1,settlementDuration,lockSeconds,maxSeconds,circulationProgress,settlementProgress,settlementOriginCaptureCount,globalCirculation:globalCirculationAuthority?1:0,globalCirculationAuthority,globalCirculationUpdatePath:globalCirculationUpdatePathEnabled?'ENABLED':'DISABLED',entranceAuthority:entranceAuthorityActive?'ACTIVE':'TERMINATED',treeGrowthAuthority:treeGrowthAuthorityActive?'ACTIVE':'TERMINATED',communityInteractionAvailable,domainLocalPhysicsAuthoritative,domainLocked,localTimeSeconds,postSettlementCirculationEvaluations:circulationEvaluationsAtSettlement===null?0:circulationEvaluations-circulationEvaluationsAtSettlement,persistentDomainCount:GEN2282_PERMANENT_DOMAIN_COUNT,domainActivityPostSettlement:domainLocked&&domainLocalPhysicsAuthoritative,domainDepletion:false,settledObjectCount:settledObjectCount(),terminalReboundCount:domainLocked?registry.length-settledObjectCount():0,objectReplacementCount:0,transitionLog:Object.freeze(transitionLog.map(entry=>entry))});
+  if(reduced){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(target(i)));settlementOriginCaptureCount++});transitionLog.push(Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,atSeconds:0,reduced:true}));}
+  else transitionLog.push(Object.freeze({state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,atSeconds:0}));
+  const advance=ms=>{const rawSeconds=Math.max(0,Number(ms)||0)/1000;maxSeconds=Math.max(maxSeconds,rawSeconds);const seconds=maxSeconds;if(reduced){updateLocal(seconds);return snapshot()}if(seconds>=CONTRACT.feedingWindowSeconds[0])enter(1,CONTRACT.feedingWindowSeconds[0]);if(seconds>=CONTRACT.feedingWindowSeconds[1])enter(2,CONTRACT.feedingWindowSeconds[1]);if(seconds<GEN2273_TREE_COMPLETE_SECONDS)updateCirculation(seconds);if(seconds>=GEN2273_TREE_COMPLETE_SECONDS){enter(3,GEN2273_TREE_COMPLETE_SECONDS);enter(4,GEN2273_TREE_COMPLETE_SECONDS)}if(stateIndex===4)updateSettlement(seconds);if(seconds>=lockSeconds){enter(5,lockSeconds);enter(6,lockSeconds);enter(7,lockSeconds)}if(domainLocked)updateLocal(seconds);return snapshot();};
+  return Object.freeze({registry,currentXYZ,settlementOrigin,advance,snapshot});
+}
+
+const GEN2282_REBUILT_GEOMETRY=build();
+for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2282_REBUILT_GEOMETRY[key];
+GEN2273_BOUND_GEOMETRY.objectRanges=GEN2282_REBUILT_GEOMETRY.objectRanges;
+GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2282_REBUILT_GEOMETRY.permanentDomainRanges;
+createGen2273Runtime=createGen2282Runtime;
+GEN2273_CONTROLLER_CACHE.clear();
+
+function runGen2282BinaryQualification(){
+  const registry=GEN2273_MOBILE_OBJECT_REGISTRY,binding=gen2273AssertBoundRanges(GEN2273_BOUND_GEOMETRY),ids=registry.map(object=>object.objectId),names=registry.map(object=>object.id);
+  const sameObjectIdentity=registry.length===96&&new Set(ids).size===96&&new Set(names).size===96&&ids.every((id,index)=>id===index)&&registry.every(Object.isFrozen)&&binding.passed;
+  const permanentDomains=new Set((GEN2273_BOUND_GEOMETRY.permanentDomainRanges||[]).map(range=>range.domain)),persistentDomainCount=permanentDomains.size;
+  const trackedStart=Math.min(...GEN2273_BOUND_GEOMETRY.objectRanges.map(range=>range.startVertex)),permanentEnd=Math.max(...GEN2273_BOUND_GEOMETRY.permanentDomainRanges.map(range=>range.endVertex)),domainDepletion=!(persistentDomainCount===4&&permanentEnd<=trackedStart);
+  const runtime=createGen2282Runtime(GEN2273_SELECTED_SETTLEMENT_SECONDS,false),lockMs=(GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS)*1000;
+  runtime.advance(GEN2273_TREE_COMPLETE_SECONDS*1000);
+  let previousRadial=runtime.currentXYZ.map(p=>Math.hypot(p.x,p.z)),settlementOutwardStepCount=0;
+  for(const fraction of [.25,.50,.75,1]){runtime.advance((GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS*fraction)*1000);const currentRadial=runtime.currentXYZ.map(p=>Math.hypot(p.x,p.z));currentRadial.forEach((value,i)=>{if(value>previousRadial[i]+GEN2273_EPSILON)settlementOutwardStepCount++});previousRadial=currentRadial;}
+  runtime.advance(lockMs);const atLock=runtime.currentXYZ.map(gen2273CloneXYZ),lockSnapshot=runtime.snapshot();runtime.advance(lockMs+12000);const after=runtime.currentXYZ,terminalReboundCount=after.reduce((count,p,i)=>count+(gen2273SameXYZ(p,atLock[i])?0:1),0),settledObjectCount=after.reduce((count,p,i)=>count+(gen2273SameXYZ(p,GEN2282_TREE_SETTLEMENT_XYZ[i])?1:0),0);
+  const vertexLaw=vertexSource(false,'highp'),domainActivityPostSettlement=persistentDomainCount===4&&vertexLaw.includes('if(zoneEnv>.5&&u_reduced<.5){')&&!vertexLaw.includes('if(false){')&&gen2273CycleTimeSeconds(lockMs+1000,lockSnapshot.lockSeconds)!==gen2273CycleTimeSeconds(lockMs+2000,lockSnapshot.lockSeconds);
+  const objectReplacementCount=registry.reduce((count,object,i)=>count+(object===runtime.registry[i]?0:1),0);
+  const receipt=Object.freeze({schema:'COMMUNITY_GEN2282_TREE_SETTLEMENT_BINARY_RECEIPT_v1',SAME_OBJECT_IDENTITY_96:sameObjectIdentity?'PASS':'FAIL',PERSISTENT_DOMAIN_COUNT_4:persistentDomainCount===4?'PASS':'FAIL',TERMINAL_REBOUND_COUNT_0:terminalReboundCount===0?'PASS':'FAIL',SETTLED_OBJECT_COUNT_96:settledObjectCount===96?'PASS':'FAIL',DOMAIN_ACTIVITY_POST_SETTLEMENT:domainActivityPostSettlement?'PASS':'FAIL',DOMAIN_DEPLETION:domainDepletion,OBJECT_REPLACEMENT_COUNT_0:objectReplacementCount===0?'PASS':'FAIL',settlementOutwardStepCount,terminalReboundCount,settledObjectCount,persistentDomainCount,objectReplacementCount,passed:sameObjectIdentity&&persistentDomainCount===4&&terminalReboundCount===0&&settledObjectCount===96&&domainActivityPostSettlement&&!domainDepletion&&objectReplacementCount===0&&settlementOutwardStepCount===0});
+  return receipt;
+}
+const GEN2282_BINARY_RECEIPT=runGen2282BinaryQualification();
+if(!GEN2282_BINARY_RECEIPT.passed)throw Error('GEN2282_TREE_SETTLEMENT_BINARY_QUALIFICATION_FAILURE');
+const GEN2282_PRODUCT_BOUNDARY_CHECKPOINT=Object.freeze({id:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1',governingHead:'140b5e6cf4b07cfef4a8f0e494b69437b7d02f8a',objectCount:96,persistentDomainCount:4,settlementTarget:'CENTRAL_TREE',terminalBehavior:'STABLE_OPERATION_NO_REBOUND',binaryReceipt:GEN2282_BINARY_RECEIPT,nextLawfulAction:'EXACT_SHA_PHYSICAL_PREVIEW'});
+globalThis.DGB_COMMUNITY_GEN2282_BINARY_RECEIPT=GEN2282_BINARY_RECEIPT;
+globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2282_PRODUCT_BOUNDARY_CHECKPOINT;
+globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2282_PRODUCT_BOUNDARY_CHECKPOINT;
+globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2282Runtime,semanticRepair:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1'});
+const GEN2282_BASE_MOUNT=gen2273Mount;
+mount=function(host){GEN2282_BASE_MOUNT(host);host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains continue operating while the same tracked cohort circulates inward, settles irreversibly into the mature central tree, and remains there without rebound.');};

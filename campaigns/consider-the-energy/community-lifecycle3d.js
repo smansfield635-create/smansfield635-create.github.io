@@ -242,8 +242,7 @@ function precisionProfile(gl){
   const vertex=precisionRecord(gl,gl.VERTEX_SHADER),fragment=precisionRecord(gl,gl.FRAGMENT_SHADER),usable=p=>!!p&&(p.precision>0||p.rangeMax>0),selected=usable(vertex.high)&&usable(fragment.high)?'highp':'mediump';
   return{selected,vertex,fragment};
 }
-function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\
-':''}precision ${precision} float;
+function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;
 ${webgl2?'in':'attribute'} vec3 a_position,a_normal;
 ${webgl2?'in':'attribute'} vec4 a_color;
 ${webgl2?'in':'attribute'} float a_phase,a_kind,a_season;
@@ -325,8 +324,7 @@ void main(){
   gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
   v_n=normalize(n);v_c=a_color;v_q=a_phase;v_k=a_kind;v_s=a_season;v_settle=settle;v_rhythm=rhythm;
 }`}
-function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\
-':''}precision ${precision} float;
+function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;
 ${webgl2?'in':'varying'} vec3 v_n;${webgl2?'in':'varying'} vec4 v_c;
 ${webgl2?'in':'varying'} float v_q,v_k,v_s,v_settle,v_rhythm;
 uniform float u_time,u_intro,u_progress,u_activity,u_retained,u_renewal,u_reduced,u_lifecycle;

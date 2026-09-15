@@ -102,7 +102,7 @@ The only canonical dispositions are `KEEP`, `ONE_REPAIR`, and `REJECT`:
 
 If a requested repair would expand path scope, intent, authority, or architecture—or if the original operation has already been terminally closed—`ONE_REPAIR` is unavailable. Obtain a fresh ordinary admission or lawful successor before changing bytes.
 
-If the preferred preview transport is unavailable, use another lawful read-only exact-head substrate or report `PREVIEW_TRANSPORT_UNAVAILABLE`. Do not perform a production deployment merely as a preview workaround. A preview never creates merge, deployment, publication, scientific, empirical, runtime, or claim authority, and final authoritative Pages exact-head verification remains required after release.
+Before selecting any preview provider or substrate, re-read the current `AI_ENTRYPOINT.json` and `.github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json`. Do not recommend, install, or select a third-party preview, staging, hosting, or plugin provider unless the owner explicitly requests or authorizes external-provider use for the current operation. Historical raw.githack or other external-provider precedent creates no current provider authority. If no eligible first-party or already-owner-controlled exact-head preview is available, preserve the immutable candidate and report `PREVIEW_TRANSPORT_UNAVAILABLE` as a local, nonpropagating preview boundary. Do not invent another provider and do not perform a production deployment as a preview workaround. A preview never creates merge, deployment, publication, scientific, empirical, runtime, or claim authority, and final authoritative Pages exact-head verification remains required after release.
 
 ## Moving-head successor continuity
 

@@ -99,6 +99,66 @@ function expected(id, code, fn) {
   }
 }
 
+export function runAdmissionLockCompatibilitySelfTest({ root = '.', holder = 'ADMISSION_LOCK_COMPATIBILITY' } = {}) {
+  const registry = readJson(path.join(root, REGISTRY));
+  const base = fixture(registry, holder);
+
+  const legacyResolution = resolveToolset({ ...clone(base), allowCandidate: true });
+  if (legacyResolution.result !== 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED') fail('LEGACY_LOCK_REGRESSION');
+
+  const remote = clone(base);
+  delete remote.admissionReceipt.lock.state;
+  delete remote.admissionReceipt.lock.released;
+  remote.admissionReceipt.lock.result = 'ADMITTED_AND_LOCKED';
+  remote.admissionReceipt.lock.lockAcquired = true;
+  remote.admissionReceipt.lock.lockGeneration = 2297;
+  const remoteResolution = resolveToolset({ ...remote, allowCandidate: true });
+  if (remoteResolution.result !== 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED' || remoteResolution.admissionLockGeneration !== 2297) {
+    fail('CURRENT_CANONICAL_REMOTE_LOCK_FORM_REJECTED');
+  }
+
+  const negatives = [];
+  negatives.push(expected('REMOTE_LOCK_NOT_ACQUIRED', 'LOCK_STATE_NOT_EXECUTABLE', () => {
+    const x = clone(remote); x.admissionReceipt.lock.lockAcquired = false; resolveToolset({ ...x, allowCandidate: true });
+  }));
+  negatives.push(expected('REMOTE_LOCK_RESULT_MISSING', 'LOCK_STATE_NOT_EXECUTABLE', () => {
+    const x = clone(remote); delete x.admissionReceipt.lock.result; resolveToolset({ ...x, allowCandidate: true });
+  }));
+  negatives.push(expected('REMOTE_LOCK_GENERATION_INVALID', 'LOCK_GENERATION_INVALID', () => {
+    const x = clone(remote); x.admissionReceipt.lock.lockGeneration = 0; resolveToolset({ ...x, allowCandidate: true });
+  }));
+  negatives.push(expected('EXPLICIT_STATE_CONTRADICTS_RESULT', 'LOCK_STATE_NOT_EXECUTABLE', () => {
+    const x = clone(base); x.admissionReceipt.lock.result = 'RELEASED'; resolveToolset({ ...x, allowCandidate: true });
+  }));
+  negatives.push(expected('EXPLICIT_STATE_CONTRADICTS_LOCK_ACQUIRED', 'LOCK_STATE_NOT_EXECUTABLE', () => {
+    const x = clone(base); x.admissionReceipt.lock.lockAcquired = false; resolveToolset({ ...x, allowCandidate: true });
+  }));
+  negatives.push(expected('EXPLICIT_STATE_NON_EXECUTABLE', 'LOCK_STATE_NOT_EXECUTABLE', () => {
+    const x = clone(base); x.admissionReceipt.lock.state = 'PENDING'; resolveToolset({ ...x, allowCandidate: true });
+  }));
+  negatives.push(expected('ADMISSION_WORKFLOW_AUTHORIZATION_FALSE', 'ADMISSION_EXECUTION_NOT_AUTHORIZED', () => {
+    const x = clone(remote); x.admissionReceipt.workflowExecutionAuthorized = false; resolveToolset({ ...x, allowCandidate: true });
+  }));
+  negatives.push(expected('REMOTE_LOCK_OPERATION_MISMATCH', 'DESCRIPTOR_AND_ADMISSION_MISMATCH', () => {
+    const x = clone(remote); x.admissionReceipt.lock.operationId = 'OTHER_OPERATION_v1'; resolveToolset({ ...x, allowCandidate: true });
+  }));
+
+  if (!negatives.every(test => test.pass)) fail('ADMISSION_LOCK_COMPATIBILITY_NEGATIVE_FAILURE', canonical(negatives.filter(test => !test.pass)));
+
+  return stable({
+    schema: 'AI_ROOM_ADMISSION_LOCK_COMPATIBILITY_SELF_TEST_RECEIPT_v1',
+    result: 'PASS_CLOSED',
+    legacyExplicitStateAccepted: true,
+    canonicalRemoteLockShapeAccepted: true,
+    canonicalRemoteLockReferenceGeneration: 2297,
+    negativeFixtureCount: negatives.length,
+    negativeFixturesPassed: negatives.filter(test => test.pass).length,
+    negativeResults: negatives,
+    authorityBroadeningObserved: false,
+    productMutationPerformed: false
+  });
+}
+
 function runNegative(base, descriptor, positiveReceipt) {
   const tests = [];
   tests.push(expected('ARBITRARY_COMMAND_FROM_ISSUE', 'EXECUTION_REQUEST_UNKNOWN_FIELD', () => {
@@ -250,6 +310,11 @@ export function runSelfTest({ root, expectedHead, holder, outputDir }) {
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (!args['expected-head']) {
+    const receipt = runAdmissionLockCompatibilitySelfTest({ root: path.resolve(args.root ?? '.'), holder: args.holder ?? 'ADMISSION_LOCK_COMPATIBILITY' });
+    process.stdout.write(`${JSON.stringify(receipt, null, 2)}\n`);
+    return;
+  }
   runSelfTest({
     root: path.resolve(args.root ?? '.'),
     expectedHead: args['expected-head'],

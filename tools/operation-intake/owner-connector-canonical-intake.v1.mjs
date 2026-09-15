@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { prepare } from './repository-operation-intake-gate.v1.mjs';
 import {
   acquireLocal,
-  authorityIdentity,
   canonical,
   ledger,
   sha,
@@ -90,6 +89,15 @@ export function planOwnerConnectorAdmission({
     });
   }
 
+  const authorityIdentity = {
+    operationId: acquired.lock.operationId,
+    lockScope: acquired.lock.lockScope,
+    scopeHash: acquired.lock.scopeHash,
+    governingHead: acquired.lock.governingHead,
+    requestDigest: acquired.lock.requestDigest,
+    procedureLocatorDigest: acquired.lock.procedureLocatorDigest,
+    lockGeneration: acquired.lock.lockGeneration
+  };
   const core = stable({
     schema: CONTRACT_SCHEMA,
     transportId: TRANSPORT_ID,
@@ -102,10 +110,11 @@ export function planOwnerConnectorAdmission({
       commentBodySha256: sha(source.body),
       marker: MARKER
     },
-    authorityIdentity: authorityIdentity(acquired.lock),
+    authorityIdentity,
     compareAndSwap: {
       observedLedgerBlobSha: ledgerBlob,
-      observedLockRefHead: lockRefHead
+      observedLockRefHead: lockRefHead,
+      constructionBranchIdentity: acquired.lock.constructionBranchIdentity ?? null
     }
   });
   const independentAuthorityProvenance = stable({ ...core, bindingDigest: sha(canonical(core)) });

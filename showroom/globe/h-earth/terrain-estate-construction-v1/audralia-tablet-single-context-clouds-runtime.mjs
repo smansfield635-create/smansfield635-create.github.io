@@ -2,8 +2,18 @@ import {
   H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY as HYDRO,
   resolveHEarthMapWideShorelineZ,
   sampleHEarthMapWideEnvironmentTerrainCandidate as sampleTerrain
-} from '../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
+} from '/inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 import {createAudraliaTabletCloudPass} from './audralia-tablet-cloud-pass.mjs';
+
+export const AUDRALIA_TABLET_GEOGRAPHY_BINDING=Object.freeze({
+  schema:'AUDRALIA_CANONICAL_GEOGRAPHY_RUNTIME_BINDING_v1',
+  geographyPath:'/inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js',
+  geographyGitBlobSha:'50991dd777ccd015fd8a6d8eae7b4d02b4a8450c',
+  terrainGitBlobSha:'f4f65b05ab303a11fb1d9c4e25de211fde73722a',
+  contractId:'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1',
+  reconstructionRevision:5,
+  retiredRev3Reachable:false
+});
 
 const canvas=document.querySelector('[data-h-earth-map-wide-canvas]');
 const statusNode=document.querySelector('[data-h-earth-status]');
@@ -263,6 +273,9 @@ export async function initializeAudraliaTabletSingleContextClouds(){
   if(!(canvas instanceof HTMLCanvasElement))throw new Error('AUDRALIA_SINGLE_CONTEXT_CANVAS_MISSING');
   setStatus('building…','AUDRALIA_SINGLE_CONTEXT_CLOUDS_BUILDING');
   if(loaderStage)loaderStage.textContent='Building the Audralia world…';
+  const meshBinding=window.__AUDRALIA_CANONICAL_GEOGRAPHY_AUTHORITY__;
+  if(meshBinding?.geographyGitBlobSha!==AUDRALIA_TABLET_GEOGRAPHY_BINDING.geographyGitBlobSha)throw new Error('AUDRALIA_TABLET_GEOGRAPHY_PROVENANCE_MISMATCH');
+  if(meshBinding?.terrainGitBlobSha!==AUDRALIA_TABLET_GEOGRAPHY_BINDING.terrainGitBlobSha)throw new Error('AUDRALIA_TABLET_TERRAIN_PROVENANCE_MISMATCH');
 
   const startupSequence=[];
   const rendererModule=await import('./renderer.precomputed.mjs');
@@ -298,13 +311,18 @@ export async function initializeAudraliaTabletSingleContextClouds(){
     schema:'AUDRALIA_TABLET_SINGLE_CONTEXT_CLOUDS_RUNTIME_v2_WORLD_FIRST',
     renderer,
     clouds,
+    geographyBinding:AUDRALIA_TABLET_GEOGRAPHY_BINDING,
+    geographyGitBlobSha:AUDRALIA_TABLET_GEOGRAPHY_BINDING.geographyGitBlobSha,
+    terrainGitBlobSha:AUDRALIA_TABLET_GEOGRAPHY_BINDING.terrainGitBlobSha,
+    hydrologyFingerprintSha256:meshBinding.hydrologyFingerprintSha256,
     renderingMode:'EXACT_PRIMARY_WORLD_SINGLE_WEBGL_CONTEXT_WITH_STAGED_CLOUD_PASS',
     frameOwner:'AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME',
     compositeOrder:'PRIMARY_WORLD_THEN_CLOUDS_THEN_CELESTIAL',
     activeInteractionCompositeOrder:'PRIMARY_WORLD_THEN_CLOUDS',
     interactionScheduling:'REQUEST_ANIMATION_FRAME_COALESCED_v1',
     fallbackActive:false,
-    exactApprovedGeometry:true,
+    exactApprovedGeometry:false,
+    canonicalAuthorityBound:true,
     cloudPassActive:true,
     worldRenderedBeforeCloudPass:worldBeforeCloud,
     startupSequence:Object.freeze([...startupSequence]),
@@ -323,7 +341,9 @@ export async function initializeAudraliaTabletSingleContextClouds(){
       additionalCanvasCount:0,
       worldRenderedBeforeCloudPass:worldBeforeCloud,
       rawEventDirectRender:false,
-      atMostOneInteractionCompositePerRaf:true
+      atMostOneInteractionCompositePerRaf:true,
+      canonicalGeographyAuthorityCount:1,
+      retiredRev3Reachable:false
     }),
     installCelestialPass:controls.installCelestialPass,
     getRuntime:()=>runtime,
@@ -336,6 +356,7 @@ export async function initializeAudraliaTabletSingleContextClouds(){
   window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({
     operationId:runtime.schema,
     renderer,
+    geographyBinding:AUDRALIA_TABLET_GEOGRAPHY_BINDING,
     fallbackActive:false,
     cloudEvidence:clouds.getEvidence()
   });

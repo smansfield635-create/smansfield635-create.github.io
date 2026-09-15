@@ -242,8 +242,7 @@ function precisionProfile(gl){
   const vertex=precisionRecord(gl,gl.VERTEX_SHADER),fragment=precisionRecord(gl,gl.FRAGMENT_SHADER),usable=p=>!!p&&(p.precision>0||p.rangeMax>0),selected=usable(vertex.high)&&usable(fragment.high)?'highp':'mediump';
   return{selected,vertex,fragment};
 }
-function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\
-':''}precision ${precision} float;
+function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;
 ${webgl2?'in':'attribute'} vec3 a_position,a_normal;
 ${webgl2?'in':'attribute'} vec4 a_color;
 ${webgl2?'in':'attribute'} float a_phase,a_kind,a_season;
@@ -325,8 +324,7 @@ void main(){
   gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
   v_n=normalize(n);v_c=a_color;v_q=a_phase;v_k=a_kind;v_s=a_season;v_settle=settle;v_rhythm=rhythm;
 }`}
-function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\
-':''}precision ${precision} float;
+function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;
 ${webgl2?'in':'varying'} vec3 v_n;${webgl2?'in':'varying'} vec4 v_c;
 ${webgl2?'in':'varying'} float v_q,v_k,v_s,v_settle,v_rhythm;
 uniform float u_time,u_intro,u_progress,u_activity,u_retained,u_renewal,u_reduced,u_lifecycle;
@@ -706,7 +704,7 @@ addQuadrantEnvironment=function(g){
           if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,zone.kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
           if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,zone.kind,6,3,zone.season);
         }else if(zone.season===SEASON.AUTUMN){
-          leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha));
+          leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha),q,zone.kind,5,3,zone.season);
         }else{
           if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,zone.kind,zone.season,alpha);
           else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,zone.kind,5,3,zone.season);
@@ -894,11 +892,8 @@ addQuadrantEnvironment=function(g){
 
 vertexSource=function(webgl2,precision){
   let source=GEN2273_BASE_VERTEX_SOURCE(webgl2,precision);
-  const marker='float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\
-  float sway=(u_reduced>.5?0.0:.008)*crown*alive;';
-  const replacement='float trackedCohort=step(21.5,a_kind)*step(a_kind,25.5);\
-  float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\
-  float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);';
+  const marker='float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive;';
+  const replacement='float trackedCohort=step(21.5,a_kind)*step(a_kind,25.5);\n  float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);';
   const next=source.replace(marker,replacement);
   if(next===source)throw Error('GEN2282_TRACKED_SWAY_MARKER_MISSING');
   return next;
@@ -1026,41 +1021,39 @@ addQuadrantEnvironment=function(g){
 const GEN2289_BASE_VERTEX_SOURCE=vertexSource;
 vertexSource=function(webgl2,precision){
   let source=GEN2289_BASE_VERTEX_SOURCE(webgl2,precision);
-  let next=source.replace('vec3 p=a_position,n=a_normal;','vec3 p=a_position,n=a_normal;\
-  float planarDomain=step(25.5,a_kind)*step(a_kind,29.5);');if(next===source)throw Error('GEN2289_PLANAR_VERTEX_CLASS_MARKER_MISSING');source=next;
+  let next=source.replace('vec3 p=a_position,n=a_normal;','vec3 p=a_position,n=a_normal;\n  float planarDomain=step(25.5,a_kind)*step(a_kind,29.5);');if(next===source)throw Error('GEN2289_PLANAR_VERTEX_CLASS_MARKER_MISSING');source=next;
   next=source.replace('float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);','float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort)*(1.0-planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_SWAY_BYPASS_MARKER_MISSING');source=next;
-  const projection='p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);\
-  n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);\
-  p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);\
-  n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);\
-  p.y-=.28;p*=u_scale;\
-  float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);\
-  gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);';
-  const planarProjection='if(planarDomain>.5){\
-    vec2 worldAnchor=vec2(-1.72,1.52),stageAnchor=vec2(.20,.20);\
-    if(a_season>.5&&a_season<1.5){worldAnchor=vec2(-1.72,-.72);stageAnchor=vec2(.20,.80);}\
-    else if(a_season>1.5&&a_season<2.5){worldAnchor=vec2(1.72,-.72);stageAnchor=vec2(.80,.80);}\
-    else if(a_season>2.5){worldAnchor=vec2(1.72,1.52);stageAnchor=vec2(.80,.20);}\
-    vec2 local=(a_position.xy-worldAnchor)*.32;local.x/=max(u_aspect,.72);vec2 stage=stageAnchor+local;\
-    gl_Position=vec4(stage.x*2.0-1.0,1.0-stage.y*2.0,.92,1.0);\
-    n=vec3(0.0,0.0,1.0);\
-  }else{\
-    p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);\
-    n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);\
-    p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);\
-    n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);\
-    p.y-=.28;p*=u_scale;\
-    float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);\
-    gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);\
-  }';
+  const projection=`p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);
+  n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);
+  p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);
+  n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);
+  p.y-=.28;p*=u_scale;
+  float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
+  gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);`;
+  const planarProjection=`if(planarDomain>.5){
+    vec2 worldAnchor=vec2(-1.72,1.52),stageAnchor=vec2(.20,.20);
+    if(a_season>.5&&a_season<1.5){worldAnchor=vec2(-1.72,-.72);stageAnchor=vec2(.20,.80);}
+    else if(a_season>1.5&&a_season<2.5){worldAnchor=vec2(1.72,-.72);stageAnchor=vec2(.80,.80);}
+    else if(a_season>2.5){worldAnchor=vec2(1.72,1.52);stageAnchor=vec2(.80,.20);}
+    vec2 local=(a_position.xy-worldAnchor)*.32;local.x/=max(u_aspect,.72);vec2 stage=stageAnchor+local;
+    gl_Position=vec4(stage.x*2.0-1.0,1.0-stage.y*2.0,.92,1.0);
+    n=vec3(0.0,0.0,1.0);
+  }else{
+    p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);
+    n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);
+    p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);
+    n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);
+    p.y-=.28;p*=u_scale;
+    float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
+    gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
+  }`;
   next=source.replace(projection,planarProjection);if(next===source)throw Error('GEN2289_PLANAR_CAMERA_BYPASS_MARKER_MISSING');return next;
 };
 const GEN2289_BASE_FRAGMENT_SOURCE=fragmentSource;
 fragmentSource=function(webgl2,precision){
   let source=GEN2289_BASE_FRAGMENT_SOURCE(webgl2,precision);
   let next=source.replace('float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);','float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),planarDomain=step(25.5,v_k)*step(v_k,29.5),special=max(max(max(feed,zoneEnv),trackedCohort),planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_FRAGMENT_CLASS_MARKER_MISSING');source=next;
-  next=source.replace('vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;','vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;\
-  lit=mix(lit,v_c.rgb,planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_LIGHTING_BYPASS_MARKER_MISSING');return next;
+  next=source.replace('vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;','vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;\n  lit=mix(lit,v_c.rgb,planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_LIGHTING_BYPASS_MARKER_MISSING');return next;
 };
 
 const GEN2289_CHECKPOINT_A_GEOMETRY=build();

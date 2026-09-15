@@ -7,6 +7,7 @@ const locator = load('.github/operation-intake/locator.v1.json');
 const contract = load('.github/operation-intake/owner-connector-admission-contract.v1.json');
 const registry = load('.github/operation-intake/authorized-intake-transports.v1.json');
 const protocol = load('.github/operation-intake/connected-github-native-admission-protocol.v1.json');
+const branchContract = load('.github/operation-intake/construction-branch-identity-contract.v1.json');
 
 const failures = [];
 const results = [];
@@ -23,6 +24,7 @@ const PROFILE='CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1';
 const LEDGER='.github/operation-intake/active-operation-ledger.v1.json';
 const LOCK='refs/heads/operation-locks/repository-operation-intake-v1';
 const MESSAGE='Acquire operation lock <LOCK_GENERATION>: <OPERATION_ID>';
+const BRANCH_SCHEMA='REPOSITORY_OPERATION_CONSTRUCTION_BRANCH_IDENTITY_v1';
 const REQUIRED=[
   'FETCH_OWNER_SOURCE_COMMENT','FETCH_CURRENT_MAIN_HEAD','FETCH_LOCK_REF','FETCH_LEDGER_BLOB_AND_CONTENT',
   'CREATE_BLOB','CREATE_TREE_FROM_EXACT_LOCK_HEAD_TREE','CREATE_SINGLE_PARENT_COMMIT','UPDATE_LOCK_REF_NON_FORCE',
@@ -65,10 +67,27 @@ check('protocol binds existing semantic backend exactly',()=>{
   eq(protocol.semanticBackend.secondLedgerCreated,false,'SECOND_LEDGER_CREATED');
 });
 
+check('construction branch identity is fail-closed resumption authority',()=>{
+  eq(branchContract.schema,'REPOSITORY_OPERATION_CONSTRUCTION_BRANCH_IDENTITY_CONTRACT_v1','BRANCH_CONTRACT_SCHEMA_DRIFT');
+  eq(branchContract.status,'ACTIVE_FAIL_CLOSED','BRANCH_CONTRACT_NOT_ACTIVE');
+  eq(branchContract.bindingSchema,BRANCH_SCHEMA,'BRANCH_BINDING_SCHEMA_DRIFT');
+  eq(branchContract.applicability.legacyLocksWithoutBindingRemainReadable,true,'LEGACY_READABILITY_LOST');
+  eq(protocol.constructionBranchIdentity.contract,'.github/operation-intake/construction-branch-identity-contract.v1.json','BRANCH_CONTRACT_NOT_BOUND');
+  eq(protocol.constructionBranchIdentity.bindingSchema,BRANCH_SCHEMA,'PROTOCOL_BRANCH_SCHEMA_DRIFT');
+  eq(protocol.constructionBranchIdentity.requiredForNewRuntimeAuthorityAdmissions,true,'BRANCH_IDENTITY_OPTIONAL');
+  eq(protocol.constructionBranchIdentity.exactRecordedBranchRefIsOnlyResumptionAuthority,true,'RECORDED_REF_NOT_AUTHORITATIVE');
+  eq(protocol.constructionBranchIdentity.branchSearchIsDiscoveryOnly,true,'BRANCH_SEARCH_AUTHORITY_LEAK');
+  eq(protocol.constructionBranchIdentity.fuzzyBranchNameMatchingCreatesAuthority,false,'FUZZY_BRANCH_AUTHORITY_ENABLED');
+  eq(protocol.constructionBranchIdentity.mainRefAllowed,false,'MAIN_REF_ALLOWED');
+  eq(protocol.constructionBranchIdentity.canonicalLockRefAllowed,false,'LOCK_REF_ALLOWED');
+  eq(protocol.constructionBranchIdentity.recordedRefAncestryVerificationRequiredBeforeResume,true,'ANCESTRY_CHECK_OPTIONAL');
+  assert(protocol.prohibitions.includes('NO_FUZZY_BRANCH_NAME_AUTHORITY'),'FUZZY_BRANCH_PROHIBITION_MISSING');
+});
+
 check('required connector primitive set is closed',()=>sameArray(protocol.requiredConnectorPrimitives,REQUIRED,'PRIMITIVE_SET_DRIFT'));
-check('canonical commit and non-force law preserved',()=>{eq(protocol.writeLaw.canonicalCommitMessage,MESSAGE,'COMMIT_MESSAGE_DRIFT');eq(protocol.writeLaw.lockRefUpdateForce,false,'FORCE_UPDATE_ENABLED');eq(protocol.writeLaw.exactChangedPaths?.length ?? 0,0,'UNEXPECTED_WRITE_LAW_SHAPE');sameArray(protocol.writeLaw.exactAllowedPaths,[LEDGER],'WRITE_PATH_EXPANSION');});
-check('readback and lineage remain mandatory',()=>{eq(protocol.readbackLaw.required,true,'READBACK_OPTIONAL');eq(protocol.readbackLaw.receiptBeforeReadbackAllowed,false,'RECEIPT_BEFORE_READBACK');eq(protocol.readbackLaw.lineageVerificationRequired,true,'LINEAGE_OPTIONAL');eq(protocol.readbackLaw.independentAuthorityProvenanceRequired,true,'PROVENANCE_OPTIONAL');});
-check('GitHub Actions remain prohibited for agent execution',()=>{eq(protocol.githubActions.agentExecutionAllowed,false,'ACTIONS_AGENT_EXECUTION_ENABLED');assert(protocol.prohibitions.includes('NO_GITHUB_ACTIONS_AGENT_EXECUTION_TRANSPORT'),'ACTIONS_PROHIBITION_MISSING');});
+check('canonical commit and non-force law preserved',()=>{eq(protocol.writeLaw.canonicalCommitMessage,MESSAGE,'COMMIT_MESSAGE_DRIFT');eq(protocol.writeLaw.lockRefUpdateForce,false,'FORCE_UPDATE_ENABLED');sameArray(protocol.writeLaw.exactAllowedPaths,[LEDGER],'WRITE_PATH_EXPANSION');});
+check('readback and lineage remain mandatory',()=>{eq(protocol.readbackLaw.required,true,'READBACK_OPTIONAL');eq(protocol.readbackLaw.receiptBeforeReadbackAllowed,false,'RECEIPT_BEFORE_READBACK');eq(protocol.readbackLaw.lineageVerificationRequired,true,'LINEAGE_OPTIONAL');eq(protocol.readbackLaw.independentAuthorityProvenanceRequired,true,'PROVENANCE_OPTIONAL');eq(protocol.readbackLaw.constructionBranchIdentityReadbackRequired,true,'BRANCH_IDENTITY_READBACK_OPTIONAL');});
+check('GitHub Actions remain prohibited for general agent execution',()=>{eq(protocol.githubActions.generalAgentExecutionAllowed,false,'ACTIONS_AGENT_EXECUTION_ENABLED');assert(protocol.prohibitions.includes('NO_GITHUB_ACTIONS_GENERAL_AGENT_EXECUTION_TRANSPORT'),'ACTIONS_PROHIBITION_MISSING');});
 check('planner remains plan not receipt',()=>{eq(contract.semantics.planIsReceipt,false,'CONTRACT_PLAN_AS_RECEIPT');const step=protocol.executionSequence.find(x=>x.action==='RUN_EXISTING_OWNER_CONNECTOR_PLANNER_UNCHANGED');eq(step?.plannerOutputIsReceipt,false,'PROTOCOL_PLAN_AS_RECEIPT');});
 
 function validateTranscript(t){
@@ -77,18 +96,21 @@ function validateTranscript(t){
   eq(t.currentMain,t.expectedMain,'GOVERNING_HEAD_MISMATCH');
   eq(t.plan?.schema,'OWNER_CONNECTOR_CANONICAL_INTAKE_PLAN_v1','PLAN_SCHEMA_INVALID'); eq(t.plan?.plannerIsAdmissionReceipt,false,'PLAN_AS_RECEIPT'); eq(t.plan?.result,'ADMITTED_AND_LOCKED','PLANNER_NON_ADMISSION');
   sameArray(t.plan?.changedPaths,[LEDGER],'PLAN_PATH_EXPANSION');
+  eq(t.plan?.constructionBranchIdentity?.schema,BRANCH_SCHEMA,'PLAN_BRANCH_IDENTITY_MISSING');
+  eq(t.plan?.constructionBranchIdentity?.canonicalBranchRef,t.expectedBranchRef,'PLAN_BRANCH_REF_MISMATCH');
   eq(t.prewriteMain,t.currentMain,'STALE_MAIN_AT_WRITE'); eq(t.prewriteLockRef,t.observedLockRef,'STALE_LOCK_REF_AT_WRITE'); eq(t.prewriteLedgerBlob,t.observedLedgerBlob,'STALE_LEDGER_AT_WRITE');
   eq(t.commit?.parent,t.observedLockRef,'WRONG_PARENT'); eq(t.commit?.message,`Acquire operation lock ${t.plan.lockGeneration}: ${t.plan.operationId}`,'WRONG_COMMIT_MESSAGE'); sameArray(t.commit?.changedPaths,[LEDGER],'COMMIT_PATH_EXPANSION');
-  eq(t.refUpdate?.force,false,'FORCE_REF_UPDATE'); eq(t.readback?.lockRef,t.commit.sha,'LOCK_REF_READBACK_MISMATCH'); eq(t.readback?.ledgerOperationId,t.plan.operationId,'LEDGER_READBACK_MISMATCH'); eq(t.readback?.lineageVerified,true,'LINEAGE_FAILURE'); eq(t.readback?.independentAuthorityProvenanceVerified,true,'PROVENANCE_FAILURE');
+  eq(t.refUpdate?.force,false,'FORCE_REF_UPDATE'); eq(t.readback?.lockRef,t.commit.sha,'LOCK_REF_READBACK_MISMATCH'); eq(t.readback?.ledgerOperationId,t.plan.operationId,'LEDGER_READBACK_MISMATCH'); eq(t.readback?.constructionBranchRef,t.expectedBranchRef,'BRANCH_IDENTITY_READBACK_MISMATCH'); eq(t.readback?.lineageVerified,true,'LINEAGE_FAILURE'); eq(t.readback?.independentAuthorityProvenanceVerified,true,'PROVENANCE_FAILURE');
   return 'ADMITTED_AND_LOCKED';
 }
+const branchRef='refs/heads/self-test/exact-branch';
 const base={
-  primitives:[...REQUIRED], source:{authorLogin:'smansfield635-create',authorAssociation:'OWNER',marker:'CANONICAL_OPERATION_INTAKE_REQUEST_V1'}, expectedMain:'a'.repeat(40), currentMain:'a'.repeat(40), observedLockRef:'b'.repeat(40), observedLedgerBlob:'c'.repeat(40),
-  plan:{schema:'OWNER_CONNECTOR_CANONICAL_INTAKE_PLAN_v1',plannerIsAdmissionReceipt:false,result:'ADMITTED_AND_LOCKED',operationId:'TEST_OPERATION',lockGeneration:479,changedPaths:[LEDGER]}, prewriteMain:'a'.repeat(40),prewriteLockRef:'b'.repeat(40),prewriteLedgerBlob:'c'.repeat(40),
-  commit:{sha:'d'.repeat(40),parent:'b'.repeat(40),message:'Acquire operation lock 479: TEST_OPERATION',changedPaths:[LEDGER]},refUpdate:{force:false},readback:{lockRef:'d'.repeat(40),ledgerOperationId:'TEST_OPERATION',lineageVerified:true,independentAuthorityProvenanceVerified:true}
+  primitives:[...REQUIRED], source:{authorLogin:'smansfield635-create',authorAssociation:'OWNER',marker:'CANONICAL_OPERATION_INTAKE_REQUEST_V1'}, expectedMain:'a'.repeat(40), currentMain:'a'.repeat(40), expectedBranchRef:branchRef, observedLockRef:'b'.repeat(40), observedLedgerBlob:'c'.repeat(40),
+  plan:{schema:'OWNER_CONNECTOR_CANONICAL_INTAKE_PLAN_v1',plannerIsAdmissionReceipt:false,result:'ADMITTED_AND_LOCKED',operationId:'TEST_OPERATION',lockGeneration:479,changedPaths:[LEDGER],constructionBranchIdentity:{schema:BRANCH_SCHEMA,canonicalBranchRef:branchRef,admittedBase:'a'.repeat(40),branchCreationHead:'a'.repeat(40)}}, prewriteMain:'a'.repeat(40),prewriteLockRef:'b'.repeat(40),prewriteLedgerBlob:'c'.repeat(40),
+  commit:{sha:'d'.repeat(40),parent:'b'.repeat(40),message:'Acquire operation lock 479: TEST_OPERATION',changedPaths:[LEDGER]},refUpdate:{force:false},readback:{lockRef:'d'.repeat(40),ledgerOperationId:'TEST_OPERATION',constructionBranchRef:branchRef,lineageVerified:true,independentAuthorityProvenanceVerified:true}
 };
 const clone=()=>structuredClone(base);
-check('simulated happy path admits only after readback',()=>eq(validateTranscript(clone()),'ADMITTED_AND_LOCKED','HAPPY_PATH_FAILED'));
+check('simulated happy path admits only after exact branch readback',()=>eq(validateTranscript(clone()),'ADMITTED_AND_LOCKED','HAPPY_PATH_FAILED'));
 const negative=[
   ['missing primitive','MISSING_PRIMITIVE',t=>{t.primitives=t.primitives.filter(x=>x!=='CREATE_BLOB');}],
   ['stale main','GOVERNING_HEAD_MISMATCH',t=>{t.currentMain='e'.repeat(40);}],
@@ -102,11 +124,13 @@ const negative=[
   ['wrong commit message','WRONG_COMMIT_MESSAGE',t=>{t.commit.message='Acquire lock';}],
   ['plan as receipt','PLAN_AS_RECEIPT',t=>{t.plan.plannerIsAdmissionReceipt=true;}],
   ['incomplete readback','LOCK_REF_READBACK_MISMATCH',t=>{t.readback.lockRef='e'.repeat(40);}],
+  ['branch readback drift','BRANCH_IDENTITY_READBACK_MISMATCH',t=>{t.readback.constructionBranchRef='refs/heads/self-test/other';}],
+  ['fuzzy branch substitution','PLAN_BRANCH_REF_MISMATCH',t=>{t.plan.constructionBranchIdentity.canonicalBranchRef='refs/heads/self-test/similar-operation-name';}],
   ['lineage failure','LINEAGE_FAILURE',t=>{t.readback.lineageVerified=false;}],
   ['provenance failure','PROVENANCE_FAILURE',t=>{t.readback.independentAuthorityProvenanceVerified=false;}]
 ];
 for(const [name,expected,mutate] of negative) check(`fail closed: ${name}`,()=>{const t=clone();mutate(t);let error=null;try{validateTranscript(t);}catch(e){error=e;}assert(error,`NEGATIVE_DID_NOT_FAIL:${name}`);assert(error.message.startsWith(expected),`WRONG_FAILURE:${name}:${error.message}`);});
 
-const receipt={schema:'CONNECTED_GITHUB_NATIVE_ADMISSION_PROTOCOL_SELF_TEST_RECEIPT_v1',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',scenarioCount:results.length,passedCount:results.filter(x=>x.pass).length,failedCount:failures.length,canonicalTransportId:TRANSPORT,connectedProfileId:PROFILE,canonicalLedger:LEDGER,canonicalLockRef:LOCK,secondBackendCreated:false,secondLedgerCreated:false,githubActionsAgentExecutionEnabled:false,results};
+const receipt={schema:'CONNECTED_GITHUB_NATIVE_ADMISSION_PROTOCOL_SELF_TEST_RECEIPT_v1',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',scenarioCount:results.length,passedCount:results.filter(x=>x.pass).length,failedCount:failures.length,canonicalTransportId:TRANSPORT,connectedProfileId:PROFILE,canonicalLedger:LEDGER,canonicalLockRef:LOCK,constructionBranchBindingSchema:BRANCH_SCHEMA,secondBackendCreated:false,secondLedgerCreated:false,githubActionsGeneralAgentExecutionEnabled:false,results};
 process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
 if(failures.length) process.exitCode=1;

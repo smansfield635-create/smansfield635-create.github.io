@@ -81,7 +81,8 @@ const receipt='h-earth-3d/experience-anchor/receipts/AUDRALIA_CANONICAL_GEOGRAPH
 pass(exists(receipt),'H_EARTH_EXPERIENCE_ANCHOR_RECEIPT_MISSING');
 if(exists(receipt)){
   const r=JSON.parse(text(receipt));
-  pass(r.result==='PASS_CLOSED'||r.result==='PASS_STATIC_CANDIDATE','H_EARTH_EXPERIENCE_ANCHOR_RECEIPT_NOT_PASSING');
+  pass(r.schema==='H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1','H_EARTH_EXPERIENCE_ANCHOR_RECEIPT_SCHEMA');
+  pass(r.disposition==='PASS'||r.result==='PASS_CLOSED'||r.result==='PASS_STATIC_CANDIDATE','H_EARTH_EXPERIENCE_ANCHOR_RECEIPT_NOT_PASSING');
   pass(r.canonicalGeographyGitBlobSha===CANONICAL_GEO_BLOB,'EXPERIENCE_RECEIPT_GEOGRAPHY_MISMATCH');
   pass(r.canonicalTerrainGitBlobSha===CANONICAL_TERRAIN_BLOB,'EXPERIENCE_RECEIPT_TERRAIN_MISMATCH');
 }

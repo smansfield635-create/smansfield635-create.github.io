@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H-Earth Cinematic Camera Feasibility</title>
+<style>
+html,body{margin:0;background:#02070a;color:#eaf4f2;font:14px/1.45 system-ui,sans-serif}
+main{max-width:1320px;margin:0 auto;padding:16px}
+header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+canvas{display:block;width:1280px;max-width:100%;aspect-ratio:16/9;background:#000;border:1px solid #294047}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#071014;padding:12px;border-radius:8px}
+</style>
+</head>
+<body>
+<main>
+<header><h1>H-Earth camera feasibility</h1><code id="status">BOOT</code></header>
+<canvas id="stage" width="1280" height="720"></canvas>
+<pre id="receipt"></pre>
+</main>
+<script type="module">
+import {
+  createHEarthRun8ER3AFrameUniformPacket
+} from '../../showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js';
+import {
+  createHEarthRun8ER3CPersistentRenderer,
+  H_EARTH_RUN_8E_R3C_RENDERER_ID,
+  H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID
+} from '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+
+const statusNode=document.getElementById('status');
+const receiptNode=document.getElementById('receipt');
+const canvas=document.getElementById('stage');
+const manifest=await fetch('./manifest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`MANIFEST_HTTP_${r.status}`);return r.json()});
+const params=new URLSearchParams(location.search);
+const mode=params.get('mode')??'anchors';
+const shardIndex=Number(params.get('shard')??0);
+const explicitFrame=Number(params.get('frame')??720);
+const pngRequested=params.get('png')==='1';
+const frameMap=new Map(manifest.frames.map(record=>[record.frame,record]));
+let selectedFrames;
+if(mode==='anchors')selectedFrames=[...manifest.anchorFrames];
+else if(mode==='sparse')selectedFrames=[...manifest.sparseFrames];
+else if(mode==='shard'){
+  const shard=manifest.shards.find(x=>x.index===shardIndex);
+  if(!shard)throw new Error('SHARD_INDEX_INVALID');
+  selectedFrames=Array.from({length:shard.endFrame-shard.startFrame+1},(_,i)=>shard.startFrame+i);
+}else if(mode==='frame')selectedFrames=[explicitFrame];
+else throw new Error('MODE_INVALID');
+if(selectedFrames.length>30)throw new Error('DRAW_BUDGET_EXCEEDED');
+if(selectedFrames.some(frame=>!frameMap.has(frame)))throw new Error('FRAME_SELECTION_OUTSIDE_MANIFEST');
+
+const tolerance=2e-7;
+const close=(a,b)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=tolerance;
+const vecClose=(a,b)=>close(a?.x,b?.x)&&close(a?.y,b?.y)&&close(a?.z,b?.z);
+function navigationState(record){
+  const local=record.localAuthoring;
+  return Object.freeze({
+    contractId:manifest.identities.navigation.contractId,
+    stateId:`H_EARTH_CINEMATIC_CAMERA_MANIFEST_FRAME_${record.frame}`,
+    sequence:record.frame-manifest.masterCoordinateSystem.startFrame+1,
+    action:'CINEMATIC_CAMERA_MANIFEST',
+    accepted:true,
+    recovered:false,
+    rejectionReason:null,
+    position:Object.freeze({...local.position}),
+    yawDegrees:local.yawDegrees,
+    pitchDegrees:local.pitchDegrees,
+    verticalFovDegrees:local.verticalFovDegrees,
+    terrainClearanceReceiptId:`H_EARTH_CINEMATIC_CAMERA_CLEARANCE_${record.frame}`,
+    canonicalCameraStateAuthority:false,
+    geographyAuthorityCreated:false,
+    topologyAuthorityCreated:false,
+    navigationScaleAuthorityCreated:false
+  });
+}
+function packetFor(record,sequence){
+  const packet=createHEarthRun8ER3AFrameUniformPacket({
+    navigationState:navigationState(record),
+    viewport:manifest.masterCoordinateSystem.viewport,
+    frameSequence:sequence
+  });
+  if(packet.packageOccurrenceId!==manifest.identities.world.packageOccurrenceId)throw new Error(`WORLD_OCCURRENCE_MISMATCH:${record.frame}`);
+  if(!vecClose(packet.camera.localAuthoringPosition,record.localAuthoring.position))throw new Error(`LOCAL_POSITION_MISMATCH:${record.frame}`);
+  if(!vecClose(packet.camera.localAuthoringTarget,record.localAuthoring.target))throw new Error(`LOCAL_TARGET_MISMATCH:${record.frame}`);
+  if(!vecClose(packet.camera.position,record.position))throw new Error(`PLANETARY_POSITION_MISMATCH:${record.frame}`);
+  if(!vecClose(packet.camera.target,record.target))throw new Error(`PLANETARY_TARGET_MISMATCH:${record.frame}`);
+  if(!vecClose(packet.camera.up,record.up))throw new Error(`PLANETARY_UP_MISMATCH:${record.frame}`);
+  if(!close(packet.camera.verticalFovDegrees,record.verticalFovDegrees)||
+     !close(packet.camera.nearPlane,record.nearPlane)||
+     !close(packet.camera.farPlane,record.farPlane))throw new Error(`PROJECTION_MISMATCH:${record.frame}`);
+  return packet;
+}
+const records=selectedFrames.map((frame,index)=>({manifest:frameMap.get(frame),packet:packetFor(frame,index+1)}));
+const renderer=createHEarthRun8ER3CPersistentRenderer({
+  canvas,
+  width:manifest.masterCoordinateSystem.viewport.width,
+  height:manifest.masterCoordinateSystem.viewport.height
+});
+if(renderer.rendererId!==manifest.identities.renderer.rendererId)throw new Error('RENDERER_ID_MISMATCH');
+if(renderer.presentationProfileId!==manifest.identities.renderer.presentationProfileId)throw new Error('PRESENTATION_PROFILE_MISMATCH');
+renderer.initialize(records[0].packet);
+const captures=[];
+for(const {manifest:record,packet} of records){
+  renderer.renderFrame(packet);
+  renderer.presentColorFrame();
+  const capture=renderer.captureColorFrame(`master-${record.frame}`,{includePng:pngRequested||mode==='frame'});
+  captures.push({
+    frame:record.frame,
+    colorSummary:capture.summary,
+    pngEncoded:Boolean(capture.pngDataUrl),
+    pngDataUrlLength:capture.pngDataUrl?.length??0
+  });
+  if(mode==='frame'&&capture.pngDataUrl){
+    window.H_EARTH_CINEMATIC_CAMERA_LAST_PNG=capture.pngDataUrl;
+  }
+}
+const resourceReceipt=renderer.getResourceReceipt();
+const receipt=Object.freeze({
+  schema:'H_EARTH_CINEMATIC_CAMERA_CAPTURE_RECEIPT_v1',
+  operationId:manifest.operationId,
+  exactGoverningHead:manifest.exactGoverningHead,
+  manifestSha256:manifest.manifestDigest.sha256,
+  mode,
+  shardIndex:mode==='shard'?shardIndex:null,
+  frameCount:selectedFrames.length,
+  frames:selectedFrames,
+  drawBudgetMaximum:30,
+  drawBudgetRespected:selectedFrames.length<=30,
+  worldIdentityId:manifest.identities.world.identityId,
+  rendererIdentityId:manifest.identities.renderer.identityId,
+  rendererId:H_EARTH_RUN_8E_R3C_RENDERER_ID,
+  presentationProfileId:H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
+  captures,
+  resources:resourceReceipt,
+  noProductionMutation:true,
+  noRuntimeSourceMutation:true
+});
+window.H_EARTH_CINEMATIC_CAMERA_FEASIBILITY_RECEIPT=receipt;
+receiptNode.textContent=JSON.stringify(receipt,null,2);
+statusNode.textContent=`PASS · ${mode} · ${selectedFrames.length} frame(s)`;
+const gl=canvas.getContext('webgl2');
+const lose=gl?.getExtension('WEBGL_lose_context');
+if(lose){lose.loseContext();statusNode.textContent+=` · CONTEXT_LOST_AFTER_CAPTURE`;}
+</script>
+</body>
+</html>

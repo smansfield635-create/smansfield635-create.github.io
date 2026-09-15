@@ -699,12 +699,12 @@ addQuadrantEnvironment=function(g){
         if(zone.season===SEASON.SPRING){
           if(i%3===0)flower(g,p,q,zone.kind,zone.season,.58*near,alpha);
           else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,zone.kind,5,3,zone.season);
-        }else if(zone.season===SEASON.SUMMER){
+        }else if(zone.season===SEASON.SUMER){
           rainStroke(g,p,q,zone.kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));
           if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,zone.kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
           if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,zone.kind,6,3,zone.season);
         }else if(zone.season===SEASON.AUTUMN){
-          leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha),q,zone.kind,5,3,zone.season);
+          leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha));
         }else{
           if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,zone.kind,zone.season,alpha);
           else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,zone.kind,5,3,zone.season);
@@ -1065,13 +1065,15 @@ GEN2273_BOUND_GEOMETRY.planarDomainRanges=GEN2289_CHECKPOINT_A_GEOMETRY.planarDo
 function runGen2289CheckpointA(){
   const expected=Object.freeze({NW:SEASON.SPRING,NE:SEASON.WINTER,SW:SEASON.SUMMER,SE:SEASON.AUTUMN}),domains=GEN2289_STAGE_AUTHORITY.domains,byCorner=new Map(domains.map(domain=>[domain.corner,domain]));
   const cornerIdentity=Object.entries(expected).every(([corner,season])=>byCorner.get(corner)?.season===season),normalizedTargets=domains.every(domain=>Math.abs(domain.nx-(domain.corner.endsWith('W')?.20:.80))<1e-9&&Math.abs(domain.ny-(domain.corner.startsWith('N')?.20:.80))<1e-9),treeCentered=GEN2289_STAGE_AUTHORITY.tree.nx===.50&&GEN2289_STAGE_AUTHORITY.tree.ny===.50;
-  const planarVertices=(GEN2273_BOUND_GEOMETRY.planarDomainRanges||[]).flatMap(range=>{const values=[];for(let vertex=range.startVertex;vertex<range.endVertex;vertex++)values.push({x:GEN2273_BOUND_GEOMETRY.p[vertex*3],y:GEN2273_BOUND_GEOMETRY.p[vertex*3+1],z:GEN2273_BOUND_GEOMETRY.p[vertex*3+2]});return values});
-  const zeroDepth=planarVertices.length>0&&planarVertices.every(p=>Math.abs(p.z-GEN2289_PLANAR_Z)<1e-9),centerClear=planarVertices.every(p=>!(Math.abs(p.x)<.78&&p.y>-.26&&p.y<1.08));
-  const ranges=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],fourRanges=ranges.length===4&&new Set(ranges.map(range=>range.domain)).size===4,treeDominantByComposition=centerClear&&GEN2289_STAGE_AUTHORITY.domains.every(domain=>Math.abs(domain.x)>=1.70&&Math.abs(domain.xSpan)<=.46&&Math.abs(domain.ySpan)<=.34);
-  const vertexLaw=vertexSource(false,'highp'),fragmentLaw=fragmentSource(false,'highp'),cameraBypass=vertexLaw.includes('if(planarDomain>.5){')&&vertexLaw.includes('stageAnchor=vec2(.20,.20)'),lightingBypass=fragmentLaw.includes('lit=mix(lit,v_c.rgb,planarDomain);');
+  const ranges=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],planarVerticesByDomain=new Map(domains.map(domain=>[domain.season,[]]));
+  for(const range of ranges){const values=planarVerticesByDomain.get(range.domain);if(!values)continue;for(let vertex=range.startVertex;vertex<range.endVertex;vertex++)values.push({x:GEN2273_BOUND_GEOMETRY.p[vertex*3],y:GEN2273_BOUND_GEOMETRY.p[vertex*3+1],z:GEN2273_BOUND_GEOMETRY.p[vertex*3+2]});}
+  const planarVertices=[...planarVerticesByDomain.values()].flat(),zeroDepth=planarVertices.length>0&&planarVertices.every(p=>Math.abs(p.z-GEN2289_PLANAR_Z)<1e-9),centerClear=planarVertices.every(p=>!(Math.abs(p.x)<.78&&p.y>-.26&&p.y<1.08));
+  const corridorsClear=domains.every(domain=>{const points=planarVerticesByDomain.get(domain.season)||[];return points.length>0&&points.every(p=>{const stageX=domain.nx+((p.x-domain.x)*.32)/.72,stageY=domain.ny+(p.y-domain.y)*.32;return(stageX<.40||stageX>.60)&&(stageY<.40||stageY>.60);});});
+  const fourRanges=ranges.length===4&&new Set(ranges.map(range=>range.domain)).size===4,treeDominantByComposition=centerClear&&corridorsClear&&GEN2289_STAGE_AUTHORITY.domains.every(domain=>Math.abs(domain.x)>=1.70&&Math.abs(domain.xSpan)<=.46&&Math.abs(domain.ySpan)<=.34);
+  const vertexLaw=vertexSource(false,'highp'),fragmentLaw=fragmentSource(false,'highp'),webgl2VertexLaw=vertexSource(true,'highp'),webgl2FragmentLaw=fragmentSource(true,'highp'),cameraBypass=vertexLaw.includes('if(planarDomain>.5){')&&vertexLaw.includes('stageAnchor=vec2(.20,.20)'),lightingBypass=fragmentLaw.includes('lit=mix(lit,v_c.rgb,planarDomain);'),webgl2VersionSerialization=webgl2VertexLaw.startsWith('#version 300 es\nprecision highp float;')&&webgl2FragmentLaw.startsWith('#version 300 es\nprecision highp float;');
   const trackedUnchanged=GEN2273_BOUND_GEOMETRY.objectRanges.length===96&&GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&GEN2273_BOUND_GEOMETRY.objectRanges.every((range,index)=>range.objectId===index);
   const inheritedGen2282=runGen2282BinaryQualification();
-  const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,checkpoint:'A',cornerIdentity,normalizedTargets,treeCentered,fourPlanarDomainRanges:fourRanges,zeroDomainZDepth:zeroDepth,cameraYawPitchPerspectiveBypass:cameraBypass,lightingBypass,protectedCenterClear:centerClear,treeDominantByComposition,trackedCohortBindingCount:GEN2273_BOUND_GEOMETRY.objectRanges.length,trackedCohortUnchanged:trackedUnchanged,inheritedGen2282BinaryPass:inheritedGen2282.passed,planarVertexCount:planarVertices.length,nextLawfulAction:'HUMAN_CHECKPOINT_A_REVIEW_BEFORE_MOTION_BINDING',passed:cornerIdentity&&normalizedTargets&&treeCentered&&fourRanges&&zeroDepth&&cameraBypass&&lightingBypass&&centerClear&&treeDominantByComposition&&trackedUnchanged&&inheritedGen2282.passed});
+  const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,checkpoint:'A',cornerIdentity,normalizedTargets,treeCentered,fourPlanarDomainRanges:fourRanges,zeroDomainZDepth:zeroDepth,cameraYawPitchPerspectiveBypass:cameraBypass,lightingBypass,webgl2VersionSerialization,protectedCenterClear:centerClear,protectedCorridorsClear:corridorsClear,treeDominantByComposition,trackedCohortBindingCount:GEN2273_BOUND_GEOMETRY.objectRanges.length,trackedCohortUnchanged:trackedUnchanged,inheritedGen2282BinaryPass:inheritedGen2282.passed,planarVertexCount:planarVertices.length,nextLawfulAction:'HUMAN_CHECKPOINT_A_REVIEW_BEFORE_MOTION_BINDING',passed:cornerIdentity&&normalizedTargets&&treeCentered&&fourRanges&&zeroDepth&&cameraBypass&&lightingBypass&&webgl2VersionSerialization&&centerClear&&corridorsClear&&treeDominantByComposition&&trackedUnchanged&&inheritedGen2282.passed});
   return receipt;
 }
 const GEN2289_CHECKPOINT_A_RECEIPT=runGen2289CheckpointA();

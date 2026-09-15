@@ -144,7 +144,7 @@
     const DONOR_BASE = 'https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@3c5b7ece95bb6d642e527737bb60647c032e29dd';
     const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve()));
     const constrainedDevice = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;
-    const tabletLoader = window.__AUDRALIA_TABLET_LOADER_CONTROLLER__;
+    const loaderController = window.__AUDRALIA_TABLET_LOADER_CONTROLLER__;
     const primaryWorldReady = async () => {
       const deadline = performance.now() + 30000;
       while (performance.now() < deadline) {
@@ -169,7 +169,7 @@
     };
 
     try {
-      tabletLoader?.worldStart();
+      loaderController?.worldStart();
       await nextFrame();
       await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057`);
       await nextFrame();
@@ -182,13 +182,13 @@
       await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057`);
       await nextFrame();
       if (constrainedDevice) {
-        tabletLoader?.cloudsStart();
+        loaderController?.cloudsStart();
         const { initializeAudraliaTabletSingleContextClouds } = await import(`${DONOR_BASE}/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=AUDRALIA_TABLET_RECOVERY_3268_v1`);
         await initializeAudraliaTabletSingleContextClouds();
-        tabletLoader?.worldPresented();
-        tabletLoader?.cloudsReady();
+        loaderController?.worldPresented();
+        loaderController?.cloudsReady();
         await nextFrame();
-        tabletLoader?.celestialStart();
+        loaderController?.celestialStart();
         await import(`${DONOR_BASE}/showroom/globe/audralia/celestial-primary-context-v1.mjs?cb=AUDRALIA_TABLET_RECOVERY_3268_v1`);
       } else {
         await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057`);
@@ -201,11 +201,11 @@
         await import(`${DONOR_BASE}/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057`);
       }
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'COMPLETE';
-      tabletLoader?.complete();
+      loaderController?.complete();
     } catch (error) {
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'FAILED';
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.error = String(error?.message || error);
-      tabletLoader?.fail('Audralia startup stopped',error);
+      loaderController?.fail('Audralia startup stopped',error);
       console.error('AUDRALIA_MATURE_WORLD_LIGHTWEIGHT_BOOT_FAILED', error);
       const status = document.querySelector('[data-h-earth-status]');
       if (status) status.textContent = 'Audralia could not finish loading';

@@ -5715,6 +5715,49 @@
       "scopeHash": "8a74b6eb54ba442eb13530e5ad8d854926b11e26633e56ec4192ab765c56878e",
       "state": "ADMITTED_LOCKED"
     },
+    "8a74ef0b595016c90606c2ab75af5b79f2ecc5830ed1bd9a2947f4d8bc6d2916": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "140b5e6cf4b07cfef4a8f0e494b69437b7d02f8a",
+          "lockGeneration": 2280,
+          "lockScope": "H_EARTH_AWARDS_CHAPTER_02_CURRENT_CANONICAL_GEOGRAPHIC_MOTION_PROOF",
+          "operationId": "AWARDS_CHAPTER_02_CURRENT_CANONICAL_GEOGRAPHIC_MOTION_PROOF_20260914_002",
+          "procedureLocatorDigest": "4c1fa09a1560336b2d78739f7c11067809082267998d5d9749a98e4da9d8c3db",
+          "requestDigest": "215c34d010bb75d5e74521660b3ec3de89d0bb348b78753f78e198b19c72832f",
+          "scopeHash": "8a74ef0b595016c90606c2ab75af5b79f2ecc5830ed1bd9a2947f4d8bc6d2916"
+        },
+        "bindingDigest": "12ef20beb1cd0bd62c5212cf6c77b893ac32a2ae490e9d0ea1767d675733f4f4",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f0cfd75d79d2d17ebc96b89027daee84f717e410ab64bb347f0a7da7c482353e",
+          "commentId": 5673193075,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3350,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34916683422,
+          "workflowSha": "140b5e6cf4b07cfef4a8f0e494b69437b7d02f8a"
+        },
+        "lineageAnchorCommitSha": "037059d8370288991e67dcf616b8a3f8cc04cccb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "140b5e6cf4b07cfef4a8f0e494b69437b7d02f8a",
+      "lockGeneration": 2280,
+      "lockScope": "H_EARTH_AWARDS_CHAPTER_02_CURRENT_CANONICAL_GEOGRAPHIC_MOTION_PROOF",
+      "operationId": "AWARDS_CHAPTER_02_CURRENT_CANONICAL_GEOGRAPHIC_MOTION_PROOF_20260914_002",
+      "procedureLocatorDigest": "4c1fa09a1560336b2d78739f7c11067809082267998d5d9749a98e4da9d8c3db",
+      "released": false,
+      "requestDigest": "215c34d010bb75d5e74521660b3ec3de89d0bb348b78753f78e198b19c72832f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8a74ef0b595016c90606c2ab75af5b79f2ecc5830ed1bd9a2947f4d8bc6d2916",
+      "state": "ADMITTED_LOCKED"
+    },
     "8aa83ef0f77c262e81d2ded245c9ddccf3d87ea40a908b5fc0b7ac7424fea036": {
       "governingHead": "f9c4676260148bfd86fc4bb7e53642bd942b3d1d",
       "lockGeneration": 975,
@@ -10663,7 +10706,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2279,
+  "lockGeneration": 2280,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

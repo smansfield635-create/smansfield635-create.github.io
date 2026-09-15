@@ -57,6 +57,24 @@
     "controlPlaneDefectMayManufactureProductPrerequisite": false,
     "authorityCreated": false
   },
+  "failureDispositionNormalization": {
+    "schema": "FAILURE_DISPOSITION_ROOT_BINDING_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "registry": ".github/ai-router/failure-disposition/registry.v1.json",
+    "classifier": ".github/ai-router/failure-disposition/classifier.v1.mjs",
+    "selfTest": ".github/ai-router/failure-disposition/self-test.v1.mjs",
+    "governingEquation": "FAILURE FACTS × OBSERVATION SOURCE × DEPENDENCY RELATIONSHIP × AUTHORITY STATE = RECOVERY RIGHTS",
+    "continuationHook": "BEFORE_FAILURE_BASED_TERMINATION_OR_RENEWED_AUTHORIZATION",
+    "requiredBeforeFailureBasedTerminationOrRenewedAuthorization": true,
+    "noClassificationNoFailureBasedTerminationDecision": true,
+    "blockingPropagationRequiresProvenDependencyEdge": true,
+    "mirrorNotificationCreatesAuthority": false,
+    "sameCandidateTransientContinuationBudget": 1,
+    "unknownDisposition": "FAIL_CLOSED_AT_CLASSIFICATION_BOUNDARY_NOT_CANDIDATE_INVALIDATION",
+    "classificationCreatesAuthority": false,
+    "classificationCreatesDependencyEdges": false,
+    "authorityEffect": "NONE"
+  },
   "executionEfficiency": {
     "schema": "AI_PROCEDURAL_EXECUTION_EFFICIENCY_BINDING_v1",
     "policy": ".github/ai-router/execution-efficiency-policy.v1.json",

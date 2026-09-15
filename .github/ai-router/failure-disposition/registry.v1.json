@@ -1,0 +1,96 @@
+{
+  "schema": "FAILURE_DISPOSITION_REGISTRY_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "authorityEffect": "NONE",
+  "governingEquation": "FAILURE FACTS × OBSERVATION SOURCE × DEPENDENCY RELATIONSHIP × AUTHORITY STATE = RECOVERY RIGHTS",
+  "failureClasses": [
+    "PRODUCT_FAILURE",
+    "EVIDENCE_OR_TEST_FAILURE",
+    "AUTHORITY_LINEAGE",
+    "EXECUTION_TRANSIENT",
+    "EXECUTION_CAPABILITY_UNAVAILABLE",
+    "EXECUTION_CAPABILITY_OR_PROVIDER_LIMIT",
+    "UNKNOWN"
+  ],
+  "observationSources": [
+    "CANONICAL_REPOSITORY_EVIDENCE",
+    "MIRROR_NOTIFICATION",
+    "EXTERNAL_PROVIDER_SIGNAL",
+    "ROOM_LOCAL_EXECUTION",
+    "UNKNOWN"
+  ],
+  "dependencyRelationships": [
+    "CHANGED_BYTE",
+    "DECLARED_DIRECT_DEPENDENCY",
+    "EXPLICIT_CANONICAL_SEMANTIC_DEPENDENCY",
+    "NONE",
+    "UNKNOWN"
+  ],
+  "authorityStates": [
+    "VALID_UNCHANGED",
+    "AMBIGUOUS_LINEAGE",
+    "REVOKED_OR_SUPERSEDED",
+    "UNKNOWN"
+  ],
+  "blockingDispositions": [
+    "BLOCKING_CURRENT_OPERATION",
+    "BLOCKED_LOCAL_NONPROPAGATING",
+    "ADVISORY_NONBLOCKING",
+    "CLASSIFICATION_BOUNDARY_FAIL_CLOSED"
+  ],
+  "recoveryDispositions": [
+    "REPAIR_SAME_AUTHORITY",
+    "RETRY_SAME_CANDIDATE",
+    "REQUIRES_FRESH_AUTHORITY",
+    "REJECT_CANDIDATE",
+    "ADVISORY_CONTINUE",
+    "FAIL_CLOSED_CLASSIFICATION_REQUIRED",
+    "NONE"
+  ],
+  "candidateEffects": [
+    "PRESERVE",
+    "PRESERVE_UNPROVEN",
+    "PRESERVE_PENDING_AUTHORITY",
+    "UNCHANGED_ADVISORY",
+    "REJECT"
+  ],
+  "hardInvariants": {
+    "mirrorNotificationCreatesAuthority": false,
+    "propagationRequiresProvenDependencyEdge": true,
+    "transientSameCandidateContinuationBudget": 1,
+    "transientContinuationRequires": [
+      "AUTHORITY_STATE_VALID_UNCHANGED",
+      "CANDIDATE_BYTES_STABLE",
+      "SCOPE_STABLE",
+      "NO_NEGATIVE_PRODUCT_ASSERTION"
+    ],
+    "executionCapabilityUnavailableCandidateEffect": "PRESERVE",
+    "executionCapabilityUnavailableBlockingDisposition": "BLOCKED_LOCAL_NONPROPAGATING",
+    "dependencyDisjointBlockingDisposition": "ADVISORY_NONBLOCKING",
+    "unknownDisposition": "CLASSIFICATION_BOUNDARY_FAIL_CLOSED",
+    "unknownAutomaticallyInvalidatesCandidate": false,
+    "notificationMirrorDisposableRequires": [
+      "CANONICAL_DURABLE_EVIDENCE_CONFIRMED",
+      "NO_UNIQUE_UNRESOLVED_INFORMATION"
+    ]
+  },
+  "provenDependencyEdges": [
+    "CHANGED_BYTE",
+    "DECLARED_DIRECT_DEPENDENCY",
+    "EXPLICIT_CANONICAL_SEMANTIC_DEPENDENCY"
+  ],
+  "classificationPrecedence": [
+    "INVALID_OR_CONTRADICTORY_FACTS_TO_UNKNOWN_BOUNDARY",
+    "MIRROR_NOTIFICATION_TO_ADVISORY_NONBLOCKING",
+    "UNSELECTED_OR_DEPENDENCY_NONE_TO_ADVISORY_NONBLOCKING",
+    "UNKNOWN_DEPENDENCY_OR_AUTHORITY_TO_CLASSIFICATION_BOUNDARY",
+    "REVOKED_OR_SUPERSEDED_AUTHORITY_TO_FRESH_AUTHORITY",
+    "AUTHORITY_LINEAGE_TO_REPAIR_OR_FRESH_AUTHORITY",
+    "EXECUTION_TRANSIENT_TO_ONE_BOUNDED_SAME_CANDIDATE_CONTINUATION_IF_STABLE",
+    "EXECUTION_CAPABILITY_TO_LOCAL_NONPROPAGATING_BLOCK",
+    "PRODUCT_FAILURE_TO_REJECT_WHEN_NEGATIVE_ASSERTION_IS_PROVEN",
+    "EVIDENCE_OR_TEST_FAILURE_TO_REJECT_OR_REPAIR_WITHIN_PROVEN_DEPENDENCY_SCOPE"
+  ],
+  "classificationCreatesAuthority": false,
+  "classificationCreatesDependencyEdges": false
+}

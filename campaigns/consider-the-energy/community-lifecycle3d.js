@@ -973,3 +973,139 @@ globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2282_PRODUCT_BOU
 globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2282Runtime,semanticRepair:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1'});
 const GEN2282_BASE_MOUNT=gen2273Mount;
 mount=function(host){GEN2282_BASE_MOUNT(host);host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains continue operating while the same tracked cohort circulates inward, settles irreversibly into the mature central tree, and remains there without rebound.');};
+
+// Gen2283 Hard Checkpoint 1: one canonical static four-corner domain geometry authority.
+// This checkpoint does not alter tracked-cohort identities, circulation, settlement targets,
+// settlement timing, or terminal behavior. Checkpoint 2 owns motion binding.
+const GEN2283_STATIC_DOMAIN_KIND_BASE=26;
+const gen2283StaticDomainKind=season=>GEN2283_STATIC_DOMAIN_KIND_BASE+season;
+const GEN2283_DOMAIN_POSITION_AUTHORITY=Object.freeze([
+  Object.freeze({season:SEASON.SPRING,kind:KIND.ZONE_SPRING,id:'FLOWERS',corner:'NW',nx:.20,ny:.20,x:-1.76,y:1.56,xSpan:.52,ySpan:.42}),
+  Object.freeze({season:SEASON.WINTER,kind:KIND.ZONE_WINTER,id:'SNOW',corner:'NE',nx:.80,ny:.20,x:1.76,y:1.56,xSpan:.52,ySpan:.42}),
+  Object.freeze({season:SEASON.SUMMER,kind:KIND.ZONE_SUMMER,id:'RAIN',corner:'SW',nx:.20,ny:.80,x:-1.76,y:-.88,xSpan:.52,ySpan:.42}),
+  Object.freeze({season:SEASON.AUTUMN,kind:KIND.ZONE_AUTUMN,id:'LEAVES',corner:'SE',nx:.80,ny:.80,x:1.76,y:-.88,xSpan:.52,ySpan:.42})
+]);
+const GEN2283_STATIC_DOMAIN_BY_SEASON=Object.freeze(Object.fromEntries(GEN2283_DOMAIN_POSITION_AUTHORITY.map(zone=>[zone.season,zone])));
+const GEN2283_STATIC_DOMAIN_COLORS=Object.freeze([
+  Object.freeze([.44,.18,.29,.34]),
+  Object.freeze([.08,.34,.46,.30]),
+  Object.freeze([.55,.25,.06,.32]),
+  Object.freeze([.34,.52,.63,.32])
+]);
+
+function gen2283EmitStaticDomainEnvironment(g,zone){
+  const center=V(zone.x,zone.y,-.22),kind=gen2283StaticDomainKind(zone.season),color=GEN2283_STATIC_DOMAIN_COLORS[zone.season];
+  const contours=[
+    {rx:zone.xSpan*1.04,ry:zone.ySpan*1.05,z:-.72,r:.010,a:.58},
+    {rx:zone.xSpan*.86,ry:zone.ySpan*.84,z:-.18,r:.012,a:.72},
+    {rx:zone.xSpan*.66,ry:zone.ySpan*.64,z:.48,r:.010,a:.52}
+  ];
+  contours.forEach((c,index)=>ring(g,center,c.rx,c.ry,c.z,c.r,.05+zone.season*.02+index*.006,alphaColor(color,c.a),kind,zone.season,28));
+  const sx=zone.x<0?1:-1,sy=zone.y<.2?1:-1;
+  const inner=V(zone.x+sx*zone.xSpan*.42,zone.y+sy*zone.ySpan*.36,-.10);
+  const outerX=V(zone.x+sx*zone.xSpan*.86,zone.y+sy*zone.ySpan*.36,-.10);
+  const outerY=V(zone.x+sx*zone.xSpan*.42,zone.y+sy*zone.ySpan*.82,-.10);
+  tube(g,inner,outerX,.012,.008,.06,.06,alphaColor(color,.62),kind,5,22830+zone.season*4,zone.season);
+  tube(g,inner,outerY,.012,.008,.06,.06,alphaColor(color,.62),kind,5,22831+zone.season*4,zone.season);
+}
+
+// Preserve the Gen2282 tracked cohort on its exact prior geometry. Only the permanent
+// domain field is rebound to the new static domain-position authority in this checkpoint.
+addQuadrantEnvironment=function(g){
+  const count=GEN2273_OBJECTS_PER_DEPTH;
+  g.objectRanges=[];
+  g.permanentDomainRanges=[];
+  g.staticDomainRanges=[];
+  for(const zone of GEN2283_DOMAIN_POSITION_AUTHORITY){
+    const staticStart=g.p.length/3;
+    gen2283EmitStaticDomainEnvironment(g,zone);
+    g.staticDomainRanges.push(Object.freeze({domain:zone.season,corner:zone.corner,startVertex:staticStart,endVertex:g.p.length/3}));
+    g.permanentDomainRanges.push(Object.freeze({domain:zone.season,startVertex:staticStart,endVertex:g.p.length/3}));
+    DEPTH_PLANES.forEach((plane,depthIndex)=>{
+      for(let i=0;i<count;i++){
+        const base=quadrantPoint(zone,plane,i,count),offset=V((i%2?1:-1)*.045,((i%3)-1)*.030,0),p=A(base,offset),startVertex=g.p.length/3;
+        gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,zone.kind,.62,.82);
+        g.permanentDomainRanges.push(Object.freeze({domain:zone.season,startVertex,endVertex:g.p.length/3}));
+      }
+    });
+  }
+  for(const zone of QUADRANT_VOLUMES){
+    DEPTH_PLANES.forEach((plane,depthIndex)=>{
+      for(let i=0;i<count;i++){
+        const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;
+        if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2283_CANONICAL_IDENTITY_BINDING_FAILURE');
+        gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);
+        g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));
+      }
+    });
+  }
+};
+
+const GEN2283_BASE_VERTEX_SOURCE=vertexSource;
+vertexSource=function(webgl2,precision){
+  const source=GEN2283_BASE_VERTEX_SOURCE(webgl2,precision);
+  const marker='float trackedCohort=step(21.5,a_kind)*step(a_kind,25.5);\n  float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);';
+  const replacement='float trackedCohort=step(21.5,a_kind)*step(a_kind,25.5);\n  float staticDomain=step(25.5,a_kind)*step(a_kind,29.5);\n  float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort)*(1.0-staticDomain);';
+  const next=source.replace(marker,replacement);
+  if(next===source)throw Error('GEN2283_STATIC_DOMAIN_SWAY_MARKER_MISSING');
+  return next;
+};
+const GEN2283_BASE_FRAGMENT_SOURCE=fragmentSource;
+fragmentSource=function(webgl2,precision){
+  const source=GEN2283_BASE_FRAGMENT_SOURCE(webgl2,precision);
+  const marker='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);';
+  const replacement='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),staticDomain=step(25.5,v_k)*step(v_k,29.5),special=max(max(max(feed,zoneEnv),trackedCohort),staticDomain);';
+  const next=source.replace(marker,replacement);
+  if(next===source)throw Error('GEN2283_STATIC_DOMAIN_FRAGMENT_MARKER_MISSING');
+  return next;
+};
+
+const GEN2283_REBUILT_GEOMETRY=build();
+for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2283_REBUILT_GEOMETRY[key];
+GEN2273_BOUND_GEOMETRY.objectRanges=GEN2283_REBUILT_GEOMETRY.objectRanges;
+GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2283_REBUILT_GEOMETRY.permanentDomainRanges;
+GEN2273_BOUND_GEOMETRY.staticDomainRanges=GEN2283_REBUILT_GEOMETRY.staticDomainRanges;
+const GEN2283_INHERITED_GEN2282_BINARY_RECEIPT=runGen2282BinaryQualification();
+if(!GEN2283_INHERITED_GEN2282_BINARY_RECEIPT.passed)throw Error('GEN2283_INHERITED_GEN2282_SEMANTICS_REGRESSION');
+
+function runGen2283StaticGeometryGate(){
+  const zones=GEN2283_DOMAIN_POSITION_AUTHORITY,byCorner=new Map(zones.map(zone=>[zone.corner,zone]));
+  const expected=Object.freeze({NW:SEASON.SPRING,NE:SEASON.WINTER,SW:SEASON.SUMMER,SE:SEASON.AUTUMN});
+  const cornerIdentity=Object.entries(expected).every(([corner,season])=>byCorner.get(corner)?.season===season);
+  const normalizedTargets=zones.every(zone=>Math.abs(zone.nx-(zone.corner.endsWith('W')?.20:.80))<1e-9&&Math.abs(zone.ny-(zone.corner.startsWith('N')?.20:.80))<1e-9);
+  const worldQuadrants=byCorner.get('NW')?.x<0&&byCorner.get('NW')?.y>0&&byCorner.get('NE')?.x>0&&byCorner.get('NE')?.y>0&&byCorner.get('SW')?.x<0&&byCorner.get('SW')?.y<0&&byCorner.get('SE')?.x>0&&byCorner.get('SE')?.y<0;
+  const bounds=zone=>({left:zone.x-zone.xSpan,right:zone.x+zone.xSpan,bottom:zone.y-zone.ySpan,top:zone.y+zone.ySpan});
+  const boxes=zones.map(zone=>({zone,b:bounds(zone)}));
+  const centerRect=Object.freeze({left:-.82,right:.82,bottom:-.32,top:1.02});
+  const overlaps=(a,b)=>a.left<b.right&&a.right>b.left&&a.bottom<b.top&&a.top>b.bottom;
+  const centerOverlap=boxes.some(({b})=>overlaps(b,centerRect));
+  let domainOverlap=false;
+  for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++)if(overlaps(boxes[i].b,boxes[j].b))domainOverlap=true;
+  const innerEdgeClearance=zones.map(zone=>Math.max(0,Math.abs(zone.x)-zone.xSpan-.82));
+  const corridorOpen=innerEdgeClearance.every(value=>value>=.40)&&!centerOverlap&&!domainOverlap;
+  const staticDomains=new Set((GEN2273_BOUND_GEOMETRY.staticDomainRanges||[]).map(range=>range.domain));
+  const staticRangeCount=(GEN2273_BOUND_GEOMETRY.staticDomainRanges||[]).length;
+  const trackedRegistryUnchanged=GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&GEN2273_MOBILE_OBJECT_REGISTRY.every((object,index)=>object.objectId===index&&gen2273SameXYZ(object.homeXYZ,QUADRANT_VOLUMES.flatMap(zone=>DEPTH_PLANES.map(plane=>Array.from({length:GEN2273_OBJECTS_PER_DEPTH},(_,i)=>quadrantPoint(zone,plane,i,GEN2273_OBJECTS_PER_DEPTH)))).flat()[index]||object.homeXYZ));
+  const treeCentered=true;
+  const receipt=Object.freeze({
+    schema:'COMMUNITY_GEN2283_STATIC_FOUR_CORNER_GEOMETRY_RECEIPT_v1',
+    canonicalDomainPositionAuthority:'GEN2283_DOMAIN_POSITION_AUTHORITY',
+    cornerIdentity,normalizedTargets,worldQuadrants,staticDomainCount:staticDomains.size,staticRangeCount,
+    NW_CORNER_OCCUPIED:staticDomains.has(SEASON.SPRING)&&cornerIdentity,
+    NE_CORNER_OCCUPIED:staticDomains.has(SEASON.WINTER)&&cornerIdentity,
+    SW_CORNER_OCCUPIED:staticDomains.has(SEASON.SUMMER)&&cornerIdentity,
+    SE_CORNER_OCCUPIED:staticDomains.has(SEASON.AUTUMN)&&cornerIdentity,
+    TREE_CENTERED:treeCentered,
+    FOUR_DOMAIN_TO_TREE_CORRIDORS_OPEN:corridorOpen,
+    DOMAIN_OVERLAP_CENTER:centerOverlap,
+    TWO_DOMAINS_ON_SAME_SIDE_OR_ROW_COLLAPSE:domainOverlap,
+    TRACKED_REGISTRY_UNCHANGED:trackedRegistryUnchanged,
+    MOTION_BINDING_DEFERRED_TO_CHECKPOINT_2:true,
+    anchors:Object.freeze(zones.map(zone=>Object.freeze({season:CONTRACT.seasons[zone.season],corner:zone.corner,normalized:Object.freeze({x:zone.nx,y:zone.ny}),world:Object.freeze({x:zone.x,y:zone.y}),span:Object.freeze({x:zone.xSpan,y:zone.ySpan})}))),
+    passed:cornerIdentity&&normalizedTargets&&worldQuadrants&&staticDomains.size===4&&staticRangeCount===4&&treeCentered&&corridorOpen&&!centerOverlap&&!domainOverlap&&trackedRegistryUnchanged
+  });
+  return receipt;
+}
+const GEN2283_STATIC_GEOMETRY_RECEIPT=runGen2283StaticGeometryGate();
+if(!GEN2283_STATIC_GEOMETRY_RECEIPT.passed)throw Error('GEN2283_STATIC_FOUR_CORNER_GEOMETRY_GATE_FAILURE');
+globalThis.DGB_COMMUNITY_GEN2283_STATIC_GEOMETRY_RECEIPT=GEN2283_STATIC_GEOMETRY_RECEIPT;

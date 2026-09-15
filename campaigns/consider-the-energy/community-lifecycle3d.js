@@ -543,9 +543,9 @@ function P_local(object,timeSeconds){
   return A(home,V(Math.sin(t*.44+phase)*amp*.82,-Math.abs(Math.cos(t*.36+phase))*amp*.58,Math.sin(t*.27+phase)*amp*.30));
 }
 
-// Gen2273 bounded runtime-binding checkpoint. No qualification duration is selected here.
+// Gen2273 qualified winner materialization. Settlement duration is frozen by qualification evidence.
 mount=function(){throw Error('GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_NOT_READY')};
-const GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS=1.9;
+const GEN2273_SELECTED_SETTLEMENT_SECONDS=1.5;
 const GEN2273_EPSILON=1e-7;
 const gen2273CloneXYZ=p=>({x:p.x,y:p.y,z:p.z});
 const gen2273Distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
@@ -568,9 +568,9 @@ P_local=function(object,timeSeconds){
 
 function gen2273SettlementDuration(value){
   const candidate=Number(value);
-  return GEN2273_SETTLEMENT_CANDIDATES.includes(candidate)?candidate:GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS;
+  return GEN2273_SETTLEMENT_CANDIDATES.includes(candidate)?candidate:GEN2273_SELECTED_SETTLEMENT_SECONDS;
 }
-function createGen2273Runtime(settlementDurationSeconds=GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS,reduced=false){
+function createGen2273Runtime(settlementDurationSeconds=GEN2273_SELECTED_SETTLEMENT_SECONDS,reduced=false){
   const settlementDuration=gen2273SettlementDuration(settlementDurationSeconds),lockSeconds=GEN2273_TREE_COMPLETE_SECONDS+settlementDuration,registry=GEN2273_MOBILE_OBJECT_REGISTRY;
   const currentXYZ=registry.map(P_static).map(gen2273CloneXYZ),settlementOrigin=Array(registry.length).fill(null),transitionLog=[];
   let maxSeconds=0,stateIndex=reduced?GEN2273_STATE_ORDER.length-1:0,circulationProgress=0,settlementProgress=reduced?1:0,settlementOriginCaptureCount=0,circulationEvaluations=0,circulationEvaluationsAtSettlement=null,localTimeSeconds=0;
@@ -658,7 +658,7 @@ function createGen2273Runtime(settlementDurationSeconds=GEN2273_UNQUALIFIED_BASE
   return Object.freeze({registry,currentXYZ,settlementOrigin,advance,snapshot});
 }
 const GEN2273_CONTROLLER_CACHE=new Map();
-function gen2273EightStateController(ms,settlementDurationSeconds=GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS,reduced=false){
+function gen2273EightStateController(ms,settlementDurationSeconds=GEN2273_SELECTED_SETTLEMENT_SECONDS,reduced=false){
   const duration=gen2273SettlementDuration(settlementDurationSeconds),key=`${duration}:${reduced?'reduced':'full'}`;
   if(!GEN2273_CONTROLLER_CACHE.has(key))GEN2273_CONTROLLER_CACHE.set(key,createGen2273Runtime(duration,reduced));
   return GEN2273_CONTROLLER_CACHE.get(key).advance(ms);
@@ -782,13 +782,13 @@ const GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=Object.freeze({
   stateOrder:GEN2273_STATE_ORDER,
   objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,
   settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,
-  constructionBaselineDurationSeconds:GEN2273_UNQUALIFIED_BASELINE_SETTLEMENT_SECONDS,
-  selectedSettlementDuration:null,
+  constructionBaselineDurationSeconds:1.9,
+  selectedSettlementDuration:GEN2273_SELECTED_SETTLEMENT_SECONDS,
   renderMutationApplied:true,
-  qualificationVariantsRendered:false,
-  evidenceHarnessFrozen:false,
+  qualificationVariantsRendered:true,
+  evidenceHarnessFrozen:true,
   proofs:GEN2273_MECHANICAL_CHECKPOINT_PROOFS,
-  nextLawfulAction:'FREEZE_EVIDENCE_HARNESS_THEN_RUN_1_5_1_9_2_3_WITHOUT_TUNING'
+  nextLawfulAction:'AUTOMATED_QUALIFICATION_THEN_EXACT_SHA_PHYSICAL_PREVIEW'
 });
 globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;
 globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;

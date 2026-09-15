@@ -1,0 +1,44 @@
+{
+  "schema": "REPOSITORY_OPERATION_CONSTRUCTION_BRANCH_IDENTITY_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "bindingSchema": "REPOSITORY_OPERATION_CONSTRUCTION_BRANCH_IDENTITY_v1",
+  "purpose": "Bind each new runtime-or-authority admission to one explicit construction lineage so branch discovery cannot create operation authority.",
+  "applicability": {
+    "requiredForNewOperationClasses": [
+      "RUNTIME_OR_AUTHORITY"
+    ],
+    "legacyLocksWithoutBindingRemainReadable": true,
+    "legacyBackfillRequired": false
+  },
+  "requiredFields": [
+    "canonicalBranchRef",
+    "admittedBase",
+    "branchCreationHead"
+  ],
+  "validation": {
+    "canonicalBranchRefPrefix": "refs/heads/",
+    "prohibitedBranchRefs": [
+      "refs/heads/main",
+      "refs/heads/operation-locks/repository-operation-intake-v1"
+    ],
+    "admittedBaseMustEqualExactGoverningHead": true,
+    "branchCreationHeadMustEqualExactGoverningHead": true,
+    "branchNameInferenceAllowed": false,
+    "branchSearchCreatesAuthority": false
+  },
+  "lockBinding": {
+    "field": "constructionBranchIdentity",
+    "includedInAuthorityIdentityWhenPresent": true,
+    "includedInAuthorityProvenanceWhenPresent": true,
+    "receiptCarriesLockBinding": true
+  },
+  "executorLaw": {
+    "onlyRecordedCanonicalBranchRefMayResumeOperation": true,
+    "branchSearchIsDiscoveryOnly": true,
+    "fuzzyNameMatchingIsAuthority": false,
+    "missingRecordedRefDisposition": "BRANCH_IDENTITY_DRIFT_FAIL_CLOSED",
+    "unexpectedLineageDisposition": "BRANCH_IDENTITY_DRIFT_FAIL_CLOSED",
+    "recordedRefMustDescendFromAdmittedBase": true
+  },
+  "authorityEffect": "NONE_BY_CONTRACT_ALONE"
+}

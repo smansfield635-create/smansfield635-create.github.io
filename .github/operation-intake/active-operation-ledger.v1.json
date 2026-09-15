@@ -2295,6 +2295,49 @@
       "scopeHash": "39ed4fe935f9398bfa5535681a6362d729aade0df7119464e24eaf8473202225",
       "state": "ADMITTED_LOCKED"
     },
+    "39f24081d167232d928f683a8812ab264309fc29db307c8e8325f7d6453fa70d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+          "lockGeneration": 2285,
+          "lockScope": "H_EARTH:CINEMATIC_CAMERA_FEASIBILITY:MASTER_720_959:V1",
+          "operationId": "H_EARTH_CINEMATIC_CAMERA_FEASIBILITY_20260915_001",
+          "procedureLocatorDigest": "559c545904cc94026206bc0e9fc3bdbc21576d29566037e5fb6b00915c3bca37",
+          "requestDigest": "0184f67f9c3a9177f39670431c09039f619272728610d5e20679413ef452dd38",
+          "scopeHash": "39f24081d167232d928f683a8812ab264309fc29db307c8e8325f7d6453fa70d"
+        },
+        "bindingDigest": "b965d78c36f40a9e5da51bb3089252e4d8904f52699050da3b87f9e36778ff25",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "50339c3090104bee30ffcd229e795c8c2b76576cd0c49c3afa14a1f86b7d2505",
+          "commentId": 5683257159,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3481,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34990183163,
+          "workflowSha": "3c5b7ece95bb6d642e527737bb60647c032e29dd"
+        },
+        "lineageAnchorCommitSha": "42d0a5a468d913cf559c7418a498a306c3be4234",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+      "lockGeneration": 2285,
+      "lockScope": "H_EARTH:CINEMATIC_CAMERA_FEASIBILITY:MASTER_720_959:V1",
+      "operationId": "H_EARTH_CINEMATIC_CAMERA_FEASIBILITY_20260915_001",
+      "procedureLocatorDigest": "559c545904cc94026206bc0e9fc3bdbc21576d29566037e5fb6b00915c3bca37",
+      "released": false,
+      "requestDigest": "0184f67f9c3a9177f39670431c09039f619272728610d5e20679413ef452dd38",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "39f24081d167232d928f683a8812ab264309fc29db307c8e8325f7d6453fa70d",
+      "state": "ADMITTED_LOCKED"
+    },
     "39f2877f74288d2df31f1bf51fe8ff2a76435d0f118e5c44b6380e1b23159a6f": {
       "governingHead": "82c8eae2a9ba67e2a1c7acf3885e193015069532",
       "lockGeneration": 1685,
@@ -10878,7 +10921,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2284,
+  "lockGeneration": 2285,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

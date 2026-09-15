@@ -9400,49 +9400,6 @@
       "scopeHash": "dbb3be875a160b8d1b32c59516c7c8f02a24f72223106b64cddea5fd6bdb5d2d",
       "state": "ADMITTED_LOCKED"
     },
-    "dcaa7340525029c13442a1ac16182789cf3e7a9ede5a5158ec64f3014ae6ca07": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "4aab9c2993b7763fe3afdb46a6d9b74ac17ca18c",
-          "lockGeneration": 2295,
-          "lockScope": "CONTROL_PLANE:RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR:V1",
-          "operationId": "CONTROL_PLANE_RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR_20260915_001",
-          "procedureLocatorDigest": "87cd94bbd67e1ff35731aa04b94876e6b9e9e94f24b4596209ad0469f7b7c59e",
-          "requestDigest": "d99ea04f5a7300480c63cf2103aa2c6fbf607e54c2d4f266440b7ad504a19a46",
-          "scopeHash": "dcaa7340525029c13442a1ac16182789cf3e7a9ede5a5158ec64f3014ae6ca07"
-        },
-        "bindingDigest": "a8f3f11fefbf278701865e5e514ec3887f47183fec2f350a1a1828d8af8a8eec",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "d9305a64e19308f42c6c147e4b1ae39a5d0e6f4cd6b91c3d99b93b3b9b665d60",
-          "commentId": 5688392824,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3500,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35026260430,
-          "workflowSha": "4aab9c2993b7763fe3afdb46a6d9b74ac17ca18c"
-        },
-        "lineageAnchorCommitSha": "dbec0514b7eeb711c9811cd5419bfb79f1efa6ab",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "4aab9c2993b7763fe3afdb46a6d9b74ac17ca18c",
-      "lockGeneration": 2295,
-      "lockScope": "CONTROL_PLANE:RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR:V1",
-      "operationId": "CONTROL_PLANE_RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR_20260915_001",
-      "procedureLocatorDigest": "87cd94bbd67e1ff35731aa04b94876e6b9e9e94f24b4596209ad0469f7b7c59e",
-      "released": false,
-      "requestDigest": "d99ea04f5a7300480c63cf2103aa2c6fbf607e54c2d4f266440b7ad504a19a46",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "dcaa7340525029c13442a1ac16182789cf3e7a9ede5a5158ec64f3014ae6ca07",
-      "state": "ADMITTED_LOCKED"
-    },
     "dcb8807096524221b4c75b2299492770d174ab0ff0a4b784d9a12ee75e6388fa": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -57167,6 +57124,50 @@
       "scopeHash": "3a0a399d210af3703581bc34b64dc1512a48360282d04d189e8c96b1f634bec9",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "4aab9c2993b7763fe3afdb46a6d9b74ac17ca18c",
+          "lockGeneration": 2295,
+          "lockScope": "CONTROL_PLANE:RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR:V1",
+          "operationId": "CONTROL_PLANE_RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR_20260915_001",
+          "procedureLocatorDigest": "87cd94bbd67e1ff35731aa04b94876e6b9e9e94f24b4596209ad0469f7b7c59e",
+          "requestDigest": "d99ea04f5a7300480c63cf2103aa2c6fbf607e54c2d4f266440b7ad504a19a46",
+          "scopeHash": "dcaa7340525029c13442a1ac16182789cf3e7a9ede5a5158ec64f3014ae6ca07"
+        },
+        "bindingDigest": "a8f3f11fefbf278701865e5e514ec3887f47183fec2f350a1a1828d8af8a8eec",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d9305a64e19308f42c6c147e4b1ae39a5d0e6f4cd6b91c3d99b93b3b9b665d60",
+          "commentId": 5688392824,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3500,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35026260430,
+          "workflowSha": "4aab9c2993b7763fe3afdb46a6d9b74ac17ca18c"
+        },
+        "lineageAnchorCommitSha": "dbec0514b7eeb711c9811cd5419bfb79f1efa6ab",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "4aab9c2993b7763fe3afdb46a6d9b74ac17ca18c",
+      "lockGeneration": 2295,
+      "lockScope": "CONTROL_PLANE:RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR:V1",
+      "operationId": "CONTROL_PLANE_RUN8E_FIXED_RUNNER_INTEGRATION_REPAIR_20260915_001",
+      "procedureLocatorDigest": "87cd94bbd67e1ff35731aa04b94876e6b9e9e94f24b4596209ad0469f7b7c59e",
+      "released": true,
+      "requestDigest": "d99ea04f5a7300480c63cf2103aa2c6fbf607e54c2d4f266440b7ad504a19a46",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "dcaa7340525029c13442a1ac16182789cf3e7a9ede5a5158ec64f3014ae6ca07",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

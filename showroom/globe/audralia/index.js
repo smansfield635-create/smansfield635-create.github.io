@@ -1018,6 +1018,25 @@
     return getViewState();
   }
 
+  function setCinematicViewState(viewState) {
+    if (
+      !viewState ||
+      typeof viewState !== "object" ||
+      !Number.isFinite(viewState.yaw) ||
+      !Number.isFinite(viewState.pitch) ||
+      !Number.isFinite(viewState.distance)
+    ) {
+      throw new TypeError("Cinematic view state requires finite yaw, pitch, and distance.");
+    }
+
+    state.yaw = viewState.yaw;
+    state.pitch = clamp(viewState.pitch, -1.16, 1.16);
+    state.distance = clamp(viewState.distance, MIN_DISTANCE, MAX_DISTANCE);
+    state.autoRotate = false;
+    state.needsRender = true;
+    return getViewState();
+  }
+
   function togglePause(force) {
     state.paused = typeof force === "boolean" ? force : !state.paused;
     state.needsRender = true;
@@ -1621,6 +1640,7 @@
     resize,
     destroy,
     resetView,
+    setCinematicViewState,
     togglePause,
     toggleClouds,
     toggleAtmosphere,

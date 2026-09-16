@@ -1,16 +1,16 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia",
-  "description": "Live Audralia planetary environment using the approved preserved model authority with informative loading continuity and the qualified distributed-weather v6 successor enabled.",
+  "description": "Live Audralia planetary environment using the approved preserved model authority with the accepted constrained-tablet single-primary-WebGL-context baseline restored.",
   "checks": [
     {
       "path": "/showroom/globe/audralia/",
       "includes": [
         "Audralia · Planetary World",
         "approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3'",
-        "cloudCoverageUpgradeDeferred: false",
-        "directDenseCloudCoverage: true",
-        "AUDRALIA_LIVE_PLANETARY_INTEGRATION_v9_TABLET_RECOVERY_ATLAS",
+        "cloudCoverageUpgradeDeferred: true",
+        "directDenseCloudCoverage: false",
+        "AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST",
         "Orbital cloud field",
         "AUDRALIA_LOADING_CONTINUITY_v4"
       ],

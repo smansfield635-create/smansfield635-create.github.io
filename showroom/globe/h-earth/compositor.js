@@ -942,7 +942,7 @@ function strictSnapshot(
                 `${path}.${key}`
             }
           )
-      };
+        };
     }
   }
 
@@ -2774,7 +2774,17 @@ function clampTarget(target) {
         POSITION_BOUNDS.xMax
       )
     ),
-    GROUND_OBSERVER_EYE_HEIGHT,
+    clamp(
+      target.y,
+      Math.max(
+        TARGET_BOUNDS.yMin,
+        POSITION_BOUNDS.yMin
+      ),
+      Math.min(
+        TARGET_BOUNDS.yMax,
+        POSITION_BOUNDS.yMax
+      )
+    ),
     clamp(
       target.z,
       Math.max(

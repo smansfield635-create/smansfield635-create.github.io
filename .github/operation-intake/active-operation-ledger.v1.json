@@ -3351,6 +3351,49 @@
       "scopeHash": "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd",
       "state": "ADMITTED_LOCKED"
     },
+    "50a03ce7d4831bf70929c7c99ec03ee8aa2ff151d643182c2b1158d2ef28ac41": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9df9b2e0b1e289f707d4541df69713d4cafdacf2",
+          "lockGeneration": 2322,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:NEWS_FIBONACCI:R1_CONTINUITY_REFINEMENT",
+          "operationId": "COMMUNITY_NEWS_FIBONACCI_R1_CONTINUITY_REFINEMENT_20260916_001",
+          "procedureLocatorDigest": "3a87f9fca3945e99e89ca92c93a875dd928700702217691410586f3eb5e4824f",
+          "requestDigest": "4dc8c4171ffb1c32c24ba2ace995cca67c7924b1525a7f55c231d1fb2173e1da",
+          "scopeHash": "50a03ce7d4831bf70929c7c99ec03ee8aa2ff151d643182c2b1158d2ef28ac41"
+        },
+        "bindingDigest": "765e2ff2e22a14176647cf99ad7d791f322f3b4fd3a89c5bf44abc3a28345ef4",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b3548531a1992272f5d3365d611f8e3f3fcccb710b519eb975787bd0e914697b",
+          "commentId": 5700491835,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3549,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35118783378,
+          "workflowSha": "9df9b2e0b1e289f707d4541df69713d4cafdacf2"
+        },
+        "lineageAnchorCommitSha": "e111517bf4e3840e7833fa1b0a6ef30a00e11d9d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9df9b2e0b1e289f707d4541df69713d4cafdacf2",
+      "lockGeneration": 2322,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:NEWS_FIBONACCI:R1_CONTINUITY_REFINEMENT",
+      "operationId": "COMMUNITY_NEWS_FIBONACCI_R1_CONTINUITY_REFINEMENT_20260916_001",
+      "procedureLocatorDigest": "3a87f9fca3945e99e89ca92c93a875dd928700702217691410586f3eb5e4824f",
+      "released": false,
+      "requestDigest": "4dc8c4171ffb1c32c24ba2ace995cca67c7924b1525a7f55c231d1fb2173e1da",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "50a03ce7d4831bf70929c7c99ec03ee8aa2ff151d643182c2b1158d2ef28ac41",
+      "state": "ADMITTED_LOCKED"
+    },
     "511c7eadbeb82f058825b668a4864e160d63c698c38d56a13054524816900167": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -11781,7 +11824,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2321,
+  "lockGeneration": 2322,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

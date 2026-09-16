@@ -4,7 +4,7 @@ import {
   resolveHEarthMapWideReservoirBoundaryPoint,
   resolveHEarthMapWideShorelineZ,
   sampleHEarthMapWideEnvironmentTerrainCandidate as sampleTerrain
-} from '../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
+} from '../../../../inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const c01=v=>clamp(v,0,1);

@@ -11,11 +11,11 @@
   <script type="importmap">
     {
       "imports": {
-        "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@eb8447cb28c43dc47a9a80e76cc782f134b7bdf0/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs"
+        "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs?cb=AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_v1"
       }
     }
   </script>
-  <link rel="modulepreload" crossorigin="anonymous" href="https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@eb8447cb28c43dc47a9a80e76cc782f134b7bdf0/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs">
+  <link rel="modulepreload" crossorigin="anonymous" href="/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs?cb=AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_v1">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs?cb=EXACT_24057">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-renderer.mjs?cb=EXACT_24057">
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4">
@@ -121,6 +121,11 @@
       tabletFramebufferBudget: 'AUDRALIA_RENDER_PIXEL_BUDGET_v1',
       startupInstrumentation: 'AUDRALIA_TABLET_LOADER_CONTROLLER_v1',
       estateSoundtrack: 'AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1',
+      geographyAuthority: 'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1',
+      geographySourceBlob: '50991dd777ccd015fd8a6d8eae7b4d02b4a8450c',
+      terrainSourceBlob: 'f4f65b05ab303a11fb1d9c4e25de211fde73722a',
+      fastMeshProvenance: '/showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.provenance.json',
+      deviceAuthorityDivergence: false,
       environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
     });
   </script>
@@ -166,7 +171,7 @@
 
     try {
       tabletLoader?.meshStart();
-      const { loadPrecomputedGratitudeMesh } = await import('../h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=AUDRALIA_TABLET_RECOVERY_3268_v1');
+      const { loadPrecomputedGratitudeMesh } = await import('../h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_v1');
       await loadPrecomputedGratitudeMesh({
         yieldBetweenChunks: constrainedTablet,
         onProgress: constrainedTablet ? event => {
@@ -188,7 +193,7 @@
       await nextFrame();
       if (constrainedTablet) {
         tabletLoader?.cloudsStart();
-        const { initializeAudraliaTabletSingleContextClouds } = await import('../h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=AUDRALIA_TABLET_RECOVERY_3268_v1');
+        const { initializeAudraliaTabletSingleContextClouds } = await import('../h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_v1');
         await initializeAudraliaTabletSingleContextClouds();
         tabletLoader?.worldPresented();
         tabletLoader?.cloudsReady();

@@ -3,67 +3,43 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import cp from 'node:child_process';
-import { pathToFileURL } from 'node:url';
 
 const SHA40=/^[0-9a-f]{40}$/;
 const REPO_PATH=/^[A-Za-z0-9._/-]+$/;
 const GLOBAL=/^[A-Za-z_$][A-Za-z0-9_$]{2,127}$/;
-const SCHEMA=/^[A-Z0-9][A-Z0-9_.:-]{2,255}$/;
+const ID=/^[A-Z0-9][A-Z0-9_.:-]{2,255}$/;
 const PROFILE='NODE_SYNTAX_AND_GLOBAL_RECEIPT_V1';
-
 function fail(code,detail=null){const e=new Error(detail==null?code:`${code}:${detail}`);e.code=code;e.detail=detail;throw e}
 function args(argv){const out={};for(let i=0;i<argv.length;i+=2){const k=argv[i],v=argv[i+1];if(!k?.startsWith('--')||v==null)fail('ARGUMENT_INVALID',k);out[k.slice(2)]=v}return out}
 function run(command,argv,cwd){const r=cp.spawnSync(command,argv,{cwd,encoding:'utf8',maxBuffer:64*1024*1024});return{status:r.status??1,stdout:r.stdout??'',stderr:r.stderr??'',error:r.error?.message??null}}
 function git(argv,cwd,allow=false){const r=run('git',argv,cwd);if(!allow&&(r.status!==0||r.error))fail('GIT_COMMAND_FAILED',`${argv.join(' ')}:${r.stderr||r.error}`);return r}
 function cleanPath(value){if(typeof value!=='string'||!REPO_PATH.test(value)||value.startsWith('/')||value==='..'||value.startsWith('../')||value.includes('/../'))fail('TARGET_PATH_INVALID',value);return value}
-
 function main(){
-  const a=args(process.argv.slice(2));
-  const candidate=a['candidate-head'];
-  const target=cleanPath(a['target-path']);
-  const expectedBlob=a['expected-blob'];
-  const receiptGlobal=a['receipt-global'];
-  const expectedReceiptSchema=a['expected-receipt-schema'];
-  const profile=a['qualification-profile'];
-  const output=a.output;
+  const a=args(process.argv.slice(2)),candidate=a['candidate-head'],target=cleanPath(a['target-path']),expectedBlob=a['expected-blob'],receiptGlobal=a['receipt-global'],expectedReceiptSchema=a['expected-receipt-schema'],expectedOperationId=a['expected-operation-id'],profile=a['qualification-profile'],output=a.output;
   if(!SHA40.test(candidate??''))fail('CANDIDATE_HEAD_INVALID',candidate);
   if(!SHA40.test(expectedBlob??''))fail('EXPECTED_BLOB_INVALID',expectedBlob);
   if(!GLOBAL.test(receiptGlobal??''))fail('RECEIPT_GLOBAL_INVALID',receiptGlobal);
-  if(!SCHEMA.test(expectedReceiptSchema??''))fail('EXPECTED_RECEIPT_SCHEMA_INVALID',expectedReceiptSchema);
+  if(!ID.test(expectedReceiptSchema??''))fail('EXPECTED_RECEIPT_SCHEMA_INVALID',expectedReceiptSchema);
+  if(!ID.test(expectedOperationId??''))fail('EXPECTED_OPERATION_ID_INVALID',expectedOperationId);
   if(profile!==PROFILE)fail('QUALIFICATION_PROFILE_NOT_AUTHORIZED',profile);
   if(!output)fail('OUTPUT_REQUIRED');
-
   const root=process.cwd();
   if(git(['cat-file','-e',`${candidate}^{commit}`],root,true).status!==0)fail('CANDIDATE_HEAD_NOT_AVAILABLE',candidate);
-  const blob=git(['rev-parse',`${candidate}:${target}`],root,true);
-  if(blob.status!==0)fail('TARGET_PATH_NOT_AT_CANDIDATE',target);
-  const actualBlob=blob.stdout.trim();
-  if(actualBlob!==expectedBlob)fail('TARGET_BLOB_MISMATCH',`${expectedBlob}:${actualBlob}`);
-
-  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'resume-bound-qualification-'));
-  const worktree=path.join(temp,'candidate');
+  const blob=git(['rev-parse',`${candidate}:${target}`],root,true);if(blob.status!==0)fail('TARGET_PATH_NOT_AT_CANDIDATE',target);const actualBlob=blob.stdout.trim();if(actualBlob!==expectedBlob)fail('TARGET_BLOB_MISMATCH',`${expectedBlob}:${actualBlob}`);
+  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'resume-bound-qualification-')),worktree=path.join(temp,'candidate');
   try{
     git(['worktree','add','--detach',worktree,candidate],root);
-    const subject=path.join(worktree,target);
-    const syntax=run(process.execPath,['--check',subject],worktree);
-    if(syntax.status!==0||syntax.error)fail('NODE_SYNTAX_CHECK_FAILED',syntax.stderr||syntax.error);
-
-    const runner=path.join(temp,'runner.mjs');
-    const resultPath=path.join(temp,'receipt.json');
+    const subject=path.join(worktree,target),syntax=run(process.execPath,['--check',subject],worktree);if(syntax.status!==0||syntax.error)fail('NODE_SYNTAX_CHECK_FAILED',syntax.stderr||syntax.error);
+    const runner=path.join(temp,'runner.mjs'),resultPath=path.join(temp,'receipt.json');
     fs.writeFileSync(runner,`import fs from 'node:fs';\nimport {pathToFileURL} from 'node:url';\nglobalThis.window=globalThis;\nglobalThis.document={querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>({style:{},dataset:{},setAttribute(){},append(){},appendChild(){},getContext:()=>null})};\nglobalThis.navigator={userAgent:'GENERIC_RESUME_BOUND_QUALIFIER'};\nglobalThis.requestAnimationFrame=()=>0;\nglobalThis.cancelAnimationFrame=()=>{};\nawait import(pathToFileURL(${JSON.stringify(subject)}).href+'?resumeBoundQualification=1');\nconst value=globalThis[${JSON.stringify(receiptGlobal)}];\nfs.writeFileSync(${JSON.stringify(resultPath)},JSON.stringify(value??null));\n`);
-    const execute=run(process.execPath,[runner],worktree);
-    if(execute.status!==0||execute.error)fail('BOUNDED_MODULE_EXECUTION_FAILED',execute.stderr||execute.error);
+    const execute=run(process.execPath,[runner],worktree);if(execute.status!==0||execute.error)fail('BOUNDED_MODULE_EXECUTION_FAILED',execute.stderr||execute.error);
     let receipt;try{receipt=JSON.parse(fs.readFileSync(resultPath,'utf8'))}catch{fail('QUALIFICATION_RECEIPT_MISSING')}
     if(!receipt||typeof receipt!=='object'||Array.isArray(receipt))fail('QUALIFICATION_RECEIPT_INVALID');
     if(receipt.schema!==expectedReceiptSchema)fail('QUALIFICATION_RECEIPT_SCHEMA_MISMATCH',receipt.schema??null);
+    if(receipt.operationId!==expectedOperationId)fail('QUALIFICATION_RECEIPT_OPERATION_MISMATCH',receipt.operationId??null);
     if(receipt.passed!==true)fail('QUALIFICATION_RECEIPT_NOT_PASS');
-
-    const out={schema:'RESUME_BOUND_EXACT_HEAD_QUALIFICATION_RECEIPT_v1',result:'PASS_CLOSED',profile,candidateHead:candidate,targetPath:target,targetBlob:actualBlob,receiptGlobal,receiptSchema:receipt.schema,subjectReceipt:receipt,sourceMutationPerformed:false,productMutationPerformed:false,branchCreated:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false};
+    const out={schema:'RESUME_BOUND_EXACT_HEAD_QUALIFICATION_RECEIPT_v1',result:'PASS_CLOSED',profile,candidateHead:candidate,targetPath:target,targetBlob:actualBlob,expectedOperationId,receiptGlobal,receiptSchema:receipt.schema,subjectReceipt:receipt,sourceMutationPerformed:false,productMutationPerformed:false,branchCreated:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false};
     fs.writeFileSync(output,`${JSON.stringify(out,null,2)}\n`);
-  } finally {
-    git(['worktree','remove','--force',worktree],root,true);
-    fs.rmSync(temp,{recursive:true,force:true});
-  }
+  }finally{git(['worktree','remove','--force',worktree],root,true);fs.rmSync(temp,{recursive:true,force:true})}
 }
-
 try{main()}catch(error){process.stderr.write(`${JSON.stringify({schema:'RESUME_BOUND_EXACT_HEAD_QUALIFICATION_FAILURE_v1',result:'FAIL_CLOSED',errorCode:error.code??'UNEXPECTED_QUALIFICATION_ERROR',detail:error.detail??error.message})}\n`);process.exit(1)}

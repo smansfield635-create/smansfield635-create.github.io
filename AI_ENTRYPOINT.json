@@ -85,7 +85,7 @@
       "DO_NOT_CREATE_SERIAL_ACTIONS_CARRIERS_WHEN_A_REGISTERED_FIXED_EXECUTION_ROUTE_ALREADY_EXISTS",
       "DO_NOT_USE_REGISTERED_GENERATOR_WRITEBACK_WITHOUT_DESCRIPTOR_FIXED_NON_MAIN_BRANCH_EXPECTED_HEAD_ALLOWED_PATHS_AND_ACTIVE_CANONICAL_ADMISSION"
     ],
-    "failureDisposition": "FIRST_READ_WHOLE_ESTATE_EXECUTION_DECISION; AGENT_TOOL_UNAVAILABILITY_DOES_NOT_BLOCK_AGENT_EXEMPT_WORK; FOR AN ACTIVE ADMITTED OPERATION WITH A REGISTERED FIXED GENERATOR WRITEBACK DESCRIPTOR USE THAT CLOSED_WORLD GITHUB ACTIONS ROUTE BEFORE EXTERNAL BYTE TRANSPORT; FOR A REGISTERED FIXED EXACT_HEAD QUALIFICATION USE THE CLOSED_WORLD GITHUB ACTIONS QUALIFICATION RUNNER BEFORE EXTERNAL BYTE TRANSPORT; FOR REQUIRED GENERAL AGENT WORK USE OWNER_DIRECTED_CO_LOCATED_CARDINAL_FALLBACK WHEN AUTHORIZED OR REPORT THE REQUIRED EXECUTION_SURFACE_BOUNDARY; FOR CANONICAL INTAKE TRANSPORT UNAVAILABILITY USE THE REGISTERED FIXED CANONICAL INTAKE FALLBACK WITH THE SAME REQUEST AND PROCEDURE; CLASSIFY ANY EXECUTION FAILURE THROUGH FAILURE_DISPOSITION_NORMALIZATION BEFORE TERMINATION OR RENEWED AUTHORIZATION",
+    "failureDisposition": "FIRST_READ_WHOLE_ESTATE_EXECUTION_DECISION; AGENT_TOOL_UNAVAILABILITY_DOES_NOT_BLOCK_AGENT_EXEMPT_WORK; FOR AN ACTIVE ADMITTED OPERATION WITH A REGISTERED FIXED GENERATOR WRITEBACK DESCRIPTOR USE THAT CLOSED_WORLD GITHUB ACTIONS ROUTE BEFORE EXTERNAL BYTE TRANSPORT; FOR A REGISTERED FIXED EXACT_HEAD QUALIFICATION USE THE CLOSED_WORLD GITHUB ACTIONS QUALIFICATION RUNNER BEFORE EXTERNAL BYTE TRANSPORT; FOR REQUIRED GENERAL AGENT WORK USE OWNER_DIRECTED_CO_LOCATED_CARDINAL_FALLBACK WHEN AUTHORIZED OR REPORT THE REQUIRED_EXECUTION_SURFACE_BOUNDARY; FOR CANONICAL INTAKE TRANSPORT UNAVAILABILITY USE THE REGISTERED FIXED CANONICAL INTAKE FALLBACK WITH THE SAME REQUEST AND PROCEDURE; CLASSIFY ANY EXECUTION FAILURE THROUGH FAILURE_DISPOSITION_NORMALIZATION BEFORE TERMINATION OR RENEWED AUTHORIZATION",
     "precedent": "Issue #678 three-tier Codespace execution substrate integration separates disposable builder/fresh-verifier execution from later GitHub Actions replay; Issue #3054 restores the fixed canonical-intake workflow as a bounded transport fallback; the existing ACTIVE_CERTIFIED closed-world AI room execution transport runs fixed registered commands on GITHUB_ACTIONS_CLEAN_EXECUTION; Issue #3272 makes agent execution proportional rather than a universal executability prerequisite; Issue #3495 authorizes reuse of that existing closed-world runner for fixed exact-head qualification without enabling general agent execution; Issue #3511 extends the same runner with descriptor-fixed, active-admission-bound, fast-forward-only non-main generator writeback without creating new mutation authority."
   },
   "routerRegistry": ".github/ai-router/router.v1.json",
@@ -116,6 +116,30 @@
     "scientificAuthorityCreated": false,
     "claimAuthorityCreated": false,
     "authorityEffect": "NONE_ADMINISTRATIVE_CONTINUATION_DISCOVERY_ONLY"
+  },
+  "canonicalPacketCompilation": {
+    "schema": "CANONICAL_PACKET_COMPILATION_ROOT_BINDING_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "compiler": "tools/operation-intake/canonical-packet-compiler.v1.mjs",
+    "selfTest": "tools/operation-intake/canonical-packet-compiler-self-test.v1.mjs",
+    "semanticValidator": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+    "requiredBeforeCanonicalIntakeSubmission": true,
+    "requiredReceiptSchema": "CANONICAL_PACKET_READY_RECEIPT_v1",
+    "requiredResult": "PACKET_READY",
+    "handBuiltCanonicalIntakeSubmissionAllowed": false,
+    "requestProcedureEnvelopeAndCommentDigestsRequired": true,
+    "completedStateMustBeCompiledNotReconstructedAtSubmission": true,
+    "packetNotReadyDisposition": "INPUT_INCOMPLETE_NOT_STARTED_NO_SUBMISSION",
+    "packetReadyCreatesAuthority": false,
+    "admissionAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "releaseAuthorityCreated": false,
+    "publicationAuthorityCreated": false,
+    "scientificAuthorityCreated": false,
+    "claimAuthorityCreated": false,
+    "authorityEffect": "NONE_PACKET_COMPILATION_ONLY"
   },
   "wholeEstateExecutionDecision": {
     "schema": "WHOLE_ESTATE_EXECUTION_DECISION_v1",

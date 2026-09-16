@@ -1,0 +1,20 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "COMMUNITY_NEWS_FIBONACCI_R1_CONTINUITY_REFINEMENT_20260916_001",
+  "projectId": "PUBLIC_CAMPAIGNS_COMMUNITY",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "COMMUNITY_NEWS_FIBONACCI_R1_CONTINUITY_REFINEMENT_20260916_001",
+    "lockAcquired": true,
+    "lockGeneration": 2322,
+    "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:NEWS_FIBONACCI:R1_CONTINUITY_REFINEMENT",
+    "scopeHash": "50a03ce7d4831bf70929c7c99ec03ee8aa2ff151d643182c2b1158d2ef28ac41",
+    "acquisitionCommitSha": "b481b152668e640ffc3cacdc6c44de0b4aa939c8",
+    "committedLedgerBlobSha": "158cbbadd5d8a3c53d2642f0087d8353810cfae6",
+    "authorityProvenanceBound": true
+  }
+}

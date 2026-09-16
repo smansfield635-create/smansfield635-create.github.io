@@ -5,6 +5,7 @@ const TIME_SCALE=24;
 const REST_STEPS=8;
 const INTERACTION_STEPS=6;
 const SUN_DIRECTION=Object.freeze([.42,.78,.46]);
+const VISIBILITY_PROBE_ROWS=12;
 
 const VS=`#version 300 es
 precision highp float;
@@ -44,6 +45,23 @@ vec2 localAt(float lat,float lon,float cLat,float cLon){return vec2(wrapPi(lon-c
 float diskAt(float lat,float lon,float cLat,float cLon,float radius){return 1.0-smoothstep(radius*.62,radius,length(localAt(lat,lon,cLat,cLon)));}
 float ellipseAt(vec2 q,vec2 c,vec2 size,float angle){float ca=cos(angle),sa=sin(angle);vec2 d=q-c;vec2 p=vec2(ca*d.x+sa*d.y,-sa*d.x+ca*d.y)/size;return 1.0-smoothstep(.58,1.04,length(p));}
 float textureBreak(float broad,float detail,float phase){return smoothstep(.42,.72,broad*.68+detail*.32+.07*sin(phase*2.7+broad*5.0));}
+float climateBand(float lat,float center,float halfWidth){return 1.0-smoothstep(halfWidth*.58,halfWidth,abs(lat-center));}
+
+float globalCloudSupport(float h,float lat,float lon,float broad,float detail){
+  float t=uTimeHours*.0065;
+  float eqc=.045*sin(lon*2.0+t)+.018*sin(lon*5.0-t*.7);
+  float eq=climateBand(lat,eqc,.23);
+  float sub=climateBand(lat,.43+.026*sin(lon*1.5-t*.45),.18)+climateBand(lat,-.43+.024*sin(lon*1.7+t*.38),.18);
+  float mid=climateBand(lat,.76+.042*sin(lon*2.1+t*.24),.22)+climateBand(lat,-.75+.040*sin(lon*2.0-t*.22),.22);
+  float hi=climateBand(lat,1.05+.028*sin(lon*2.7+t*.18),.24)+climateBand(lat,-1.04+.026*sin(lon*2.5-t*.17),.24);
+  float low=band(h,30.0,65.0),middle=band(h,44.0,86.0),high=band(h,67.0,108.0);
+  float lonWave=.5+.5*sin(lon*3.2+sin(lat*5.1)*1.25+t*.46);
+  float broken=smoothstep(.50,.70,broad*.72+detail*.28+.075*lonWave);
+  float clearWave=.5+.5*sin(lon*1.12-lat*2.35+t*.20);
+  float clearSlot=.64+.36*(1.0-smoothstep(.72,.93,clearWave));
+  float climate=eq*(low*.58+middle*.34)+sub*low*.42+mid*(middle*.60+high*.18)+hi*high*.28;
+  return clamp(climate*broken*clearSlot*.38,0.0,.34);
+}
 
 vec3 frontSystem(vec3 radial,float h,float lat,float lon,float cLat,float cLon,float angle,float phase,float strength,float broad,float detail){
   float t=uTimeHours*.0065;
@@ -108,9 +126,10 @@ vec3 advancedCloudField(vec3 p){
   float lat=asin(clamp(dot(radial,NORTH),-1.0,1.0));
   float lon=atan(dot(radial,EAST),dot(radial,MERIDIAN));
   float t=uTimeHours*.0065;
-  float broad=fbm(radial*14.0+vec3(t*.26,-t*.18,t*.21));
-  float detail=broad;if(uFullDetail>.5)detail=fbm(radial*27.0+vec3(-t*.17,t*.23,-t*.12));
-  vec3 weather=atlasMorphology(h,lat,lon,broad,detail);
+  float broad=fbm(radial*8.2+vec3(t*.72,-t*.21,t*.36));
+  float detail=broad;if(uFullDetail>.5)detail=fbm(radial*18.0+vec3(-t*.34,t*.19,t*.51));
+  float background=globalCloudSupport(h,lat,lon,broad,detail);
+  vec3 weather=vec3(background,background*smoothstep(66.0,96.0,h)*.78,background*(1.0-smoothstep(58.0,82.0,h))*.10);
   weather+=frontSystem(radial,h,lat,lon,.593412,-1.274090,-.34,.10,1.00,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,.488692,.436332,.28,1.20,.88,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,-.558505,.733038,-.12,2.10,.92,broad,detail);
@@ -168,36 +187,63 @@ function makeProgram(gl){
   gl.attachShader(program,vertex);gl.attachShader(program,fragment);gl.linkProgram(program);gl.deleteShader(vertex);gl.deleteShader(fragment);
   if(!gl.getProgramParameter(program,gl.LINK_STATUS)){const message=gl.getProgramInfoLog(program)||'unknown';gl.deleteProgram(program);throw new Error(`AUDRALIA_TABLET_CLOUD_PROGRAM_LINK_FAILED:${message}`);}return program;
 }
+function sampleColorRows(gl,width,height,rowCount=VISIBILITY_PROBE_ROWS){
+  const rows=Math.max(1,Math.min(rowCount,height)),stride=width*4,data=new Uint8Array(stride*rows),row=new Uint8Array(stride);
+  for(let i=0;i<rows;i++){
+    const y=Math.max(0,Math.min(height-1,Math.floor((i+.5)*height/rows)));
+    gl.readPixels(0,y,width,1,gl.RGBA,gl.UNSIGNED_BYTE,row);
+    data.set(row,i*stride);
+  }
+  return Object.freeze({data,rows,width});
+}
+function summarizeVisibilityDelta(before,after){
+  if(!before||!after||before.data.length!==after.data.length)return Object.freeze({pass:false,reason:'PROBE_SHAPE_MISMATCH'});
+  let changed=0,totalRgbDelta=0,maxRgbDelta=0;
+  const pixels=before.data.length/4;
+  for(let i=0;i<before.data.length;i+=4){
+    const dr=Math.abs(after.data[i]-before.data[i]),dg=Math.abs(after.data[i+1]-before.data[i+1]),db=Math.abs(after.data[i+2]-before.data[i+2]);
+    const peak=Math.max(dr,dg,db);if(peak>=3)changed++;totalRgbDelta+=dr+dg+db;maxRgbDelta=Math.max(maxRgbDelta,peak);
+  }
+  const meanRgbDelta=totalRgbDelta/Math.max(1,pixels*3),changedFraction=changed/Math.max(1,pixels);
+  return Object.freeze({schema:'AUDRALIA_TABLET_CLOUD_FRAMEBUFFER_DELTA_v1',pass:changed>=8&&meanRgbDelta>.02,sampledPixels:pixels,changedSamplePixels:changed,changedFraction,meanRgbDelta,maxRgbDelta});
+}
 
 export function createAudraliaTabletCloudPass({gl,worldCanvas}={}){
   if(!gl||typeof gl.drawArrays!=='function')throw new Error('AUDRALIA_TABLET_CLOUD_PRIMARY_CONTEXT_MISSING');
   if(!(worldCanvas instanceof HTMLCanvasElement))throw new Error('AUDRALIA_TABLET_CLOUD_CANVAS_MISSING');
   const program=makeProgram(gl),vao=gl.createVertexArray(),atlas=createAudraliaTabletMorphologyAtlas(gl);
   const uniforms=Object.freeze(Object.fromEntries(['uEye','uForward','uRight','uUp','uSunDir','uAspect','uTanHalfFov','uTimeHours','uOpacity','uFullDetail','uStepCount','uMorphologyAtlas'].map(name=>[name,gl.getUniformLocation(program,name)])));
-  let interaction=false,renderedFrames=0;
+  let interaction=false,renderedFrames=0,visibilityProof=null;
   function render(camera){
     if(!camera?.eye||!camera?.forward||!camera?.right||!camera?.up)throw new Error('AUDRALIA_TABLET_CLOUD_CAMERA_FRAME_INVALID');
     const stepCount=interaction?INTERACTION_STEPS:REST_STEPS,timeHours=Math.max(0,(Date.now()-EPOCH_MS)/3600000*TIME_SCALE);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.disable(gl.SCISSOR_TEST);gl.disable(gl.CULL_FACE);gl.disable(gl.STENCIL_TEST);gl.colorMask(true,true,true,true);gl.blendEquation(gl.FUNC_ADD);
+    const before=renderedFrames===0?sampleColorRows(gl,worldCanvas.width,worldCanvas.height):null;
     gl.viewport(0,0,worldCanvas.width,worldCanvas.height);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(program);gl.bindVertexArray(vao);
     gl.activeTexture(gl.TEXTURE0+atlas.unit);gl.bindTexture(gl.TEXTURE_2D,atlas.texture);gl.uniform1i(uniforms.uMorphologyAtlas,atlas.unit);
     gl.uniform3fv(uniforms.uEye,camera.eye);gl.uniform3fv(uniforms.uForward,camera.forward);gl.uniform3fv(uniforms.uRight,camera.right);gl.uniform3fv(uniforms.uUp,camera.up);gl.uniform3fv(uniforms.uSunDir,SUN_DIRECTION);
     gl.uniform1f(uniforms.uAspect,worldCanvas.width/Math.max(1,worldCanvas.height));gl.uniform1f(uniforms.uTanHalfFov,Math.tan(55*Math.PI/360));gl.uniform1f(uniforms.uTimeHours,timeHours);gl.uniform1f(uniforms.uOpacity,.82);gl.uniform1f(uniforms.uFullDetail,interaction?0:1);gl.uniform1i(uniforms.uStepCount,stepCount);
-    gl.drawArrays(gl.TRIANGLES,0,3);gl.bindVertexArray(null);gl.disable(gl.BLEND);gl.depthMask(true);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LESS);renderedFrames++;
-    return Object.freeze({renderedFrames,stepCount,interaction});
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    if(before){
+      const after=sampleColorRows(gl,worldCanvas.width,worldCanvas.height);visibilityProof=summarizeVisibilityDelta(before,after);globalThis.__AUDRALIA_TABLET_CLOUD_VISIBILITY_PROOF__=visibilityProof;
+    }
+    gl.bindVertexArray(null);gl.disable(gl.BLEND);gl.depthMask(true);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LESS);renderedFrames++;
+    return Object.freeze({renderedFrames,stepCount,interaction,visibilityProof});
   }
-  const evidence=Object.freeze({
-    schema:'AUDRALIA_TABLET_SAME_CONTEXT_ADVANCED_CLOUD_PASS_v3_ATLAS',
-    source:'FAP1_PROVEN_DONOR_GRAMMAR_PLUS_BOUNDED_MORPHOLOGY_ATLAS',
+  const staticEvidence=Object.freeze({
+    schema:'AUDRALIA_TABLET_SAME_CONTEXT_ADVANCED_CLOUD_PASS_v5_ANALYTIC_PARITY_PROBE',
+    source:'PHONE_ANALYTIC_GLOBAL_SUPPORT_PLUS_EXISTING_ORGANIZED_WEATHER_GRAMMAR',
     primaryContextOnly:true,createsCanvas:false,requestsWebGLContext:false,
-    cheapGlobalCloudSupportIncluded:false,advancedOrganizedWeatherOnly:true,
-    morphologyAtlasActive:true,morphologyAtlas:atlas.evidence,
-    perRayAnalyticParityInjection:false,
+    cheapGlobalCloudSupportIncluded:true,advancedOrganizedWeatherOnly:false,
+    morphologyAtlasActive:false,morphologyAtlasAllocatedButVisuallyInactive:true,morphologyAtlas:atlas.evidence,
+    phoneAnalyticGlobalSupportParity:true,framebufferVisibilityProbe:true,
     structuredCycloneDonorPreserved:true,longFrontalDonorPreserved:true,longJetBandDonorPreserved:true,
     frontalSystemCount:5,jetBandSystemCount:4,cycloneSystemCount:2,totalAdvancedSystemInstances:11,
     clearAirWindowsPreserved:true,regionalSystemsIncluded:false,canonicalLocalWeatherIncluded:false,precipitationRuntimeIncluded:false,celestialIncluded:false,
     restStepCount:REST_STEPS,interactionStepCount:INTERACTION_STEPS,rayMarchCeilingsChanged:false
   });
-  return Object.freeze({render,beginInteraction:()=>{interaction=true;},endInteraction:()=>{interaction=false;},getEvidence:()=>evidence,getRuntime:()=>Object.freeze({renderedFrames,interaction})});
+  const getEvidence=()=>Object.freeze({...staticEvidence,visibilityProof});
+  return Object.freeze({render,beginInteraction:()=>{interaction=true;},endInteraction:()=>{interaction=false;},getEvidence,getRuntime:()=>Object.freeze({renderedFrames,interaction,visibilityProof})});
 }
 
 export default createAudraliaTabletCloudPass;

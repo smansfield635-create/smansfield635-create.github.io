@@ -1,0 +1,10 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "disposition": "PASS",
+  "routes": [
+    {
+      "projectId": "PUBLIC_CAMPAIGNS_COMMUNITY",
+      "disposition": "PASS"
+    }
+  ]
+}

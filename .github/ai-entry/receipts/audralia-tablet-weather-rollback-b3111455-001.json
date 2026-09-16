@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "audralia-tablet-weather-rollback-b3111455-001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3566,
+  "requestBranch": "ai-dispatch-request-audralia-tablet-rollback-b3111455",
+  "requestCommit": "6ed8e6207af41924ae74d0a33bf025be0a201315",
+  "requestCommitParent": "b3111455e7b7b503bf861f7a294b1d755215340a",
+  "currentMainSha": "b3111455e7b7b503bf861f7a294b1d755215340a",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b3111455e7b7b503bf861f7a294b1d755215340a",
+    "surface_id": "audralia"
+  },
+  "bridgeRunId": "35134839627",
+  "dispatchedRunId": 35134868747,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35134868747",
+  "dispatchedRunHeadSha": "b3111455e7b7b503bf861f7a294b1d755215340a",
+  "dispatchedAt": "2026-09-16T18:30:49.014Z",
+  "resolvedAt": "2026-09-16T18:30:53.269Z"
+}

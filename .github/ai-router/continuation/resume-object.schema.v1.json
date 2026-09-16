@@ -35,8 +35,8 @@
             "targetPath": {"type": "string", "pattern": "^[A-Za-z0-9._/-]+$"},
             "expectedBlob": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
             "receiptGlobal": {"type": "string", "pattern": "^[A-Za-z_$][A-Za-z0-9_$]{2,127}$"},
-            "expectedReceiptSchema": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,255}$"},
-            "expectedOperationId": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,255}$"},
+            "expectedReceiptSchema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,255}$"},
+            "expectedOperationId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,255}$"},
             "qualificationProfile": {"const": "NODE_SYNTAX_AND_GLOBAL_RECEIPT_V1"}
           }
         }

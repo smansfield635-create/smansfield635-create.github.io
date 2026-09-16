@@ -11,7 +11,9 @@ const deepFreeze = (value) => {
 };
 
 const round6 = (value) => Number(value.toFixed(6));
-const smoothstep = (progress) => progress * progress * (3 - 2 * progress);
+
+export const H_EARTH_NATIVE_CAMERA_INTERPOLATION_LAW_ID =
+  'RUN8E_ANCHOR_PRESERVING_MONOTONE_C1_HERMITE_V1';
 
 export const H_EARTH_NATIVE_CAMERA_FEASIBILITY_MANIFEST_SCHEMA =
   'H_EARTH_NATIVE_CAMERA_FEASIBILITY_MANIFEST_v1';
@@ -151,20 +153,128 @@ export const H_EARTH_NATIVE_CAMERA_ANCHORS = deepFreeze([
   }
 ]);
 
-const interpolateCameraState = (left, right, progress) => {
-  const weight = smoothstep(progress);
-  const interpolate = (a, b) => round6(a + (b - a) * weight);
+const unwrapDegrees = (values) => {
+  const unwrapped = [values[0]];
 
-  const zoomScale = interpolate(left.zoomScale, right.zoomScale);
+  for (let index = 1; index < values.length; index += 1) {
+    let value = values[index];
+    const previous = unwrapped[index - 1];
+
+    while (value - previous > 180) value -= 360;
+    while (value - previous < -180) value += 360;
+
+    unwrapped.push(value);
+  }
+
+  return Object.freeze(unwrapped);
+};
+
+const segmentDurations = Object.freeze(
+  H_EARTH_NATIVE_CAMERA_ANCHORS
+    .slice(0, -1)
+    .map((anchor, index) => H_EARTH_NATIVE_CAMERA_ANCHORS[index + 1].frame - anchor.frame)
+);
+
+const weightedHarmonicMean = (previousSecant, nextSecant, previousDuration, nextDuration) => {
+  if (previousSecant * nextSecant <= 0) return 0;
+
+  const weight1 = 2 * nextDuration + previousDuration;
+  const weight2 = nextDuration + 2 * previousDuration;
+
+  return (
+    (weight1 + weight2) /
+    (weight1 / previousSecant + weight2 / nextSecant)
+  );
+};
+
+const buildTangents = (values) => {
+  const secants = segmentDurations.map(
+    (duration, index) => (values[index + 1] - values[index]) / duration
+  );
+
+  const tangents = [0];
+
+  for (let index = 1; index < values.length - 1; index += 1) {
+    tangents.push(
+      weightedHarmonicMean(
+        secants[index - 1],
+        secants[index],
+        segmentDurations[index - 1],
+        segmentDurations[index]
+      )
+    );
+  }
+
+  tangents.push(0);
+  return Object.freeze(tangents);
+};
+
+const yawDegreesUnwrapped = unwrapDegrees(
+  H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.yawDegrees)
+);
+
+const cameraSeries = deepFreeze({
+  yawDegrees: {
+    values: yawDegreesUnwrapped,
+    tangents: buildTangents(yawDegreesUnwrapped)
+  },
+  pitchDegrees: {
+    values: H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.pitchDegrees),
+    tangents: buildTangents(H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.pitchDegrees))
+  },
+  zoomScale: {
+    values: H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.zoomScale),
+    tangents: buildTangents(H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.zoomScale))
+  },
+  targetX: {
+    values: H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.target.x),
+    tangents: buildTangents(H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.target.x))
+  },
+  targetZ: {
+    values: H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.target.z),
+    tangents: buildTangents(H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor) => anchor.cameraState.target.z))
+  }
+});
+
+export const H_EARTH_NATIVE_CAMERA_TANGENT_LEDGER = deepFreeze(
+  H_EARTH_NATIVE_CAMERA_ANCHORS.map((anchor, index) => ({
+    frame: anchor.frame,
+    yawDegreesPerFrame: cameraSeries.yawDegrees.tangents[index],
+    pitchDegreesPerFrame: cameraSeries.pitchDegrees.tangents[index],
+    zoomScalePerFrame: cameraSeries.zoomScale.tangents[index],
+    targetXPerFrame: cameraSeries.targetX.tangents[index],
+    targetZPerFrame: cameraSeries.targetZ.tangents[index],
+    verticalFovDegreesPerFrame: 56 * cameraSeries.zoomScale.tangents[index]
+  }))
+);
+
+const interpolateHermite = (series, leftIndex, progress) => {
+  const duration = segmentDurations[leftIndex];
+  const value0 = series.values[leftIndex];
+  const value1 = series.values[leftIndex + 1];
+  const tangent0 = series.tangents[leftIndex];
+  const tangent1 = series.tangents[leftIndex + 1];
+  const u2 = progress * progress;
+  const u3 = u2 * progress;
+  const h00 = 2 * u3 - 3 * u2 + 1;
+  const h10 = u3 - 2 * u2 + progress;
+  const h01 = -2 * u3 + 3 * u2;
+  const h11 = u3 - u2;
+
+  return h00 * value0 + h10 * duration * tangent0 + h01 * value1 + h11 * duration * tangent1;
+};
+
+const interpolateCameraState = (leftIndex, progress) => {
+  const zoomScale = round6(interpolateHermite(cameraSeries.zoomScale, leftIndex, progress));
 
   return deepFreeze({
-    yawDegrees: interpolate(left.yawDegrees, right.yawDegrees),
-    pitchDegrees: interpolate(left.pitchDegrees, right.pitchDegrees),
+    yawDegrees: round6(interpolateHermite(cameraSeries.yawDegrees, leftIndex, progress)),
+    pitchDegrees: round6(interpolateHermite(cameraSeries.pitchDegrees, leftIndex, progress)),
     zoomScale,
     target: {
-      x: interpolate(left.target.x, right.target.x),
+      x: round6(interpolateHermite(cameraSeries.targetX, leftIndex, progress)),
       y: 10.5,
-      z: interpolate(left.target.z, right.target.z)
+      z: round6(interpolateHermite(cameraSeries.targetZ, leftIndex, progress))
     },
     verticalFovDegrees: round6(56 * zoomScale),
     nearPlane: 0.25,
@@ -181,9 +291,12 @@ const buildCameraStateForFrame = (frame) => {
     const left = H_EARTH_NATIVE_CAMERA_ANCHORS[index];
     const right = H_EARTH_NATIVE_CAMERA_ANCHORS[index + 1];
 
-    if (frame >= left.frame && frame <= right.frame) {
+    if (frame === left.frame) return left.cameraState;
+    if (frame === right.frame) return right.cameraState;
+
+    if (frame > left.frame && frame < right.frame) {
       const progress = (frame - left.frame) / (right.frame - left.frame);
-      return interpolateCameraState(left.cameraState, right.cameraState, progress);
+      return interpolateCameraState(index, progress);
     }
   }
 
@@ -221,6 +334,7 @@ export function buildHEarthNativeCameraCanonicalManifestString() {
     `compositorBlob=${H_EARTH_NATIVE_CAMERA_FEASIBILITY_DONORS.compositor.blob}`,
     `capacityBlob=${H_EARTH_NATIVE_CAMERA_FEASIBILITY_DONORS.capacity.blob}`,
     `rendererBlob=${H_EARTH_NATIVE_CAMERA_FEASIBILITY_DONORS.renderer.blob}`,
+    `interpolationLaw=${H_EARTH_NATIVE_CAMERA_INTERPOLATION_LAW_ID}`,
     'frameRange=720-959',
     'frameCount=240',
     'viewport=1280x720',
@@ -247,7 +361,7 @@ export function buildHEarthNativeCameraCanonicalManifestString() {
 }
 
 export const H_EARTH_NATIVE_CAMERA_MANIFEST_SHA256 =
-  '226fdb529f27e4f6f6dfe37b88effbdcbe0d9ff0f9e3c8e1723bfcf6db2e7c92';
+  '555d1d815a834503c6ed97f27f330bae28341b242058663e371f36d7e056de16';
 
 export const H_EARTH_NATIVE_CAMERA_FEASIBILITY_MANIFEST = deepFreeze({
   schema: H_EARTH_NATIVE_CAMERA_FEASIBILITY_MANIFEST_SCHEMA,
@@ -256,6 +370,8 @@ export const H_EARTH_NATIVE_CAMERA_FEASIBILITY_MANIFEST = deepFreeze({
   viewport: { widthPx: 1280, heightPx: 720, pixelRatio: 1 },
   frameRange: { firstFrame: 720, lastFrame: 959, frameCount: 240, fps: 30 },
   nativeCameraStateSchema: H_EARTH_NATIVE_CAMERA_STATE_SCHEMA,
+  interpolationLawId: H_EARTH_NATIVE_CAMERA_INTERPOLATION_LAW_ID,
+  tangentLedger: H_EARTH_NATIVE_CAMERA_TANGENT_LEDGER,
   anchorFrames: H_EARTH_NATIVE_CAMERA_ANCHOR_FRAMES,
   anchors: H_EARTH_NATIVE_CAMERA_ANCHORS,
   states: H_EARTH_NATIVE_CAMERA_STATES,

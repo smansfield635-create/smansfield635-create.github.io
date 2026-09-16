@@ -1,0 +1,20 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001",
+  "projectId": "PUBLIC_CAMPAIGNS_COMMUNITY",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001",
+    "lockAcquired": true,
+    "lockGeneration": 2289,
+    "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE:V1",
+    "scopeHash": "95b6463b8567ffc7dfac17e957844d60970018ed258737b2a726736d55fc4c93",
+    "acquisitionCommitSha": "6aaf40217e204c82feaf7f38b02cda06188ee553",
+    "committedLedgerBlobSha": "cf8d4b5a5b8a2930b27e6327eb3bc1016ce0563c",
+    "authorityProvenanceBound": true
+  }
+}

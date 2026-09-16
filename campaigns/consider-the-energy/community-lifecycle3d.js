@@ -1,119 +1,213 @@
-import {
-  createHEarthVector3 as v3,
-  addHEarthVector3 as add,
-  subtractHEarthVector3 as sub,
-  scaleHEarthVector3 as scale,
-  crossHEarthVector3 as cross,
-  normalizeHEarthVector3 as norm,
-  lerpHEarthVector3 as lerp
-} from '../../showroom/globe/h-earth/render/geometry-kernel.north.js';
-
-const CONTRACT=Object.freeze({
-  id:'DGB_COMMUNITY_GEN2289_CAUSAL_PATH_V1',
-  object:'COMMUNITY_FOUR_SEASON_LIFECYCLE_SCULPTURE',
-  runtimeCeiling:'L2_INTERACTIVE_OBJECT',
-  seasons:Object.freeze(['SPRING','SUMMER','AUTUMN','WINTER']),
-  phaseSeconds:Object.freeze({HOLD:[0,3],TRAVERSE:[3,8],SPIRAL:[8,18.4],SETTLE:[18.4,19.9],TERMINAL:[19.9,Infinity]}),
-  objectCount:96,
-  permanentDomainCount:4,
-  lifecycleTransitionSeconds:19.9,
-  environmentCycleSeconds:24,
-  inspectionYawLimitDegrees:22,
-  treeGeometryLock:'PRESERVED_GEN2289_PARENT',
-  settlementTargetLock:'PRESERVED_GEN2282_TREE_TARGET_FORMULA',
-  topologyRandomness:false
+const CONTRACT = Object.freeze({
+  id: 'DGB_COMMUNITY_STATIC_INTEGRATED_SEASONAL_TREE_V1',
+  object: 'COMMUNITY_STATIC_FOUR_SEASON_TREE_COMPOSITION',
+  medium: 'INLINE_SVG',
+  motion: 'NONE',
+  seasonCount: 4,
+  seasonMap: Object.freeze({ SPRING: 'NW', SUMMER: 'SW', AUTUMN: 'SE', WINTER: 'NE' }),
+  runtimeImageAssets: 0,
+  canvas: false,
+  webgl: false,
+  generatedImageAssets: false
 });
 
-const root=document.querySelector('[data-community-lifecycle-mount]');
-if(root)queueMicrotask(()=>mount(root));
+const root = document.querySelector('[data-community-lifecycle-mount]');
+if (root) queueMicrotask(() => mount(root));
 
-function V(x,y,z){const q=v3(x,y,z);if(!q)throw Error('LIFECYCLE_VECTOR');return q}
-function A(a,b){const q=add(a,b);if(!q)throw Error('LIFECYCLE_ADD');return q}
-function S(a,b){const q=sub(a,b);if(!q)throw Error('LIFECYCLE_SUB');return q}
-function M(a,s){const q=scale(a,s);if(!q)throw Error('LIFECYCLE_SCALE');return q}
-function C(a,b){const q=cross(a,b);if(!q)throw Error('LIFECYCLE_CROSS');return q}
-function N(a){const q=norm(a);if(!q?.valid)throw Error('LIFECYCLE_NORM');return q.vector}
-function L(a,b,t){const q=lerp(a,b,t);if(!q)throw Error('LIFECYCLE_LERP');return q}
-const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
-const mix=(a,b,t)=>a+(b-a)*t;
-const smoother=x=>{x=clamp(x);return x*x*x*(x*(x*6-15)+10)};
-const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
-const same=(a,b,e=1e-7)=>distance(a,b)<=e;
+function uses(id, points, className = '') {
+  return points.map(([x,y,s=1,r=0,o=1]) => `<use href="#${id}" transform="translate(${x} ${y}) rotate(${r}) scale(${s})" opacity="${o}"${className ? ` class="${className}"` : ''}/>`).join('');
+}
 
-const KIND=Object.freeze({ROOT:0,NETWORK:1,TREE:2,CORE:3,SPRING:4,SUMMER:5,AUTUMN:6,WINTER:7,GEAR:8,CONTRIBUTION:9,RETURN:10,STAR:11,GUIDE:16,FOLIAGE:21,TRACKED_SPRING:22,TRACKED_SUMMER:23,TRACKED_AUTUMN:24,TRACKED_WINTER:25,PLANAR_SPRING:26,PLANAR_SUMMER:27,PLANAR_AUTUMN:28,PLANAR_WINTER:29});
-const SEASON=Object.freeze({NONE:-1,SPRING:0,SUMMER:1,AUTUMN:2,WINTER:3});
-const WOOD_MATERIAL=Object.freeze({ROOT:Object.freeze([.145,.078,.038,1]),TRUNK:Object.freeze([.205,.118,.058,1]),PRIMARY:Object.freeze([.235,.132,.064,1]),SECONDARY:Object.freeze([.195,.103,.049,1]),TWIG:Object.freeze([.165,.085,.041,1])});
-const DEPTH_PLANES=Object.freeze([Object.freeze({id:'BACKGROUND',z:-.78,scale:.58,alpha:.34}),Object.freeze({id:'MIDGROUND',z:-.12,scale:.88,alpha:.62}),Object.freeze({id:'FOREGROUND',z:.62,scale:1.24,alpha:.82})]);
-const QUADRANT_VOLUMES=Object.freeze([
-  Object.freeze({season:SEASON.SPRING,id:'SPRING',x:-1.74,y:1.50,xSpan:.72,ySpan:.92}),
-  Object.freeze({season:SEASON.SUMMER,id:'SUMMER',x:-1.76,y:.02,xSpan:.72,ySpan:1.18}),
-  Object.freeze({season:SEASON.AUTUMN,id:'AUTUMN',x:1.76,y:.02,xSpan:.72,ySpan:1.18}),
-  Object.freeze({season:SEASON.WINTER,id:'WINTER',x:1.74,y:1.50,xSpan:.72,ySpan:.92})
-]);
-const STAGE_DOMAINS=Object.freeze([
-  Object.freeze({season:SEASON.SPRING,id:'SPRING',corner:'NW',nx:.20,ny:.20,x:-1.72,y:1.52,xSpan:.46,ySpan:.34}),
-  Object.freeze({season:SEASON.WINTER,id:'WINTER',corner:'NE',nx:.80,ny:.20,x:1.72,y:1.52,xSpan:.46,ySpan:.34}),
-  Object.freeze({season:SEASON.SUMMER,id:'SUMMER',corner:'SW',nx:.20,ny:.80,x:-1.72,y:-.72,xSpan:.46,ySpan:.34}),
-  Object.freeze({season:SEASON.AUTUMN,id:'AUTUMN',corner:'SE',nx:.80,ny:.80,x:1.72,y:-.72,xSpan:.46,ySpan:.34})
-]);
+function mount(host) {
+  const doc = host.ownerDocument || document;
+  if (!doc.querySelector('style[data-community-static-seasonal-style]')) {
+    const style = doc.createElement('style');
+    style.dataset.communityStaticSeasonalStyle = 'true';
+    style.textContent = `
+      [data-community-lifecycle-mount]{position:relative;isolation:isolate;overflow:hidden;min-height:25rem}
+      .community-static-seasonal-tree{display:block;width:100%;height:100%;min-height:25rem;aspect-ratio:16/10}
+      .community-static-seasonal-tree *{transform-box:fill-box;transform-origin:center}
+      @media(max-width:900px){[data-community-lifecycle-mount]{min-height:29rem}.community-static-seasonal-tree{min-height:29rem;aspect-ratio:4/3}}
+      @media(max-width:620px){[data-community-lifecycle-mount]{min-height:24rem}.community-static-seasonal-tree{min-height:24rem;aspect-ratio:5/4}}
+    `;
+    doc.head.append(style);
+  }
 
-function mesh(){return{p:[],n:[],c:[],q:[],k:[],s:[],i:[],objectRanges:[],planarDomainRanges:[]}}
-function vert(g,p,n,c,q,k,season=SEASON.NONE){const i=g.p.length/3;g.p.push(p.x,p.y,p.z);g.n.push(n.x,n.y,n.z);g.c.push(...c);g.q.push(q);g.k.push(k);g.s.push(season);return i}
-function tube(g,a,b,r0,r1,q0,q1,color,kind=KIND.TREE,sides=7,seed=0,season=SEASON.NONE){const axis=N(S(b,a)),ref=Math.abs(axis.y)>.82?V(1,0,0):V(0,1,0),u=N(C(axis,ref)),v=N(C(axis,u)),base=g.p.length/3;for(let e=0;e<2;e++){const center=e?b:a,r=e?r1:r0,q=e?q1:q0;for(let s=0;s<sides;s++){const z=Math.PI*2*s/sides,rr=r*(1+.045*Math.sin(seed*1.7+s*2.13+e*.8)),rad=A(M(u,Math.cos(z)),M(v,Math.sin(z)));vert(g,A(center,M(rad,rr)),rad,color,q,kind,season)}}for(let s=0;s<sides;s++){const t=(s+1)%sides,a0=base+s,a1=base+t,b0=base+sides+s,b1=base+sides+t;g.i.push(a0,b0,a1,a1,b0,b1)}}
-function orb(g,o,r,c,q,k=KIND.CONTRIBUTION,lon=7,lat=4,season=SEASON.NONE){const base=g.p.length/3;for(let y=0;y<=lat;y++){const ph=Math.PI*y/lat;for(let x=0;x<lon;x++){const th=Math.PI*2*x/lon,nx=Math.sin(ph)*Math.cos(th),ny=Math.cos(ph),nz=Math.sin(ph)*Math.sin(th),n=N(V(nx/Math.max(.001,r.x),ny/Math.max(.001,r.y),nz/Math.max(.001,r.z)));vert(g,A(o,V(nx*r.x,ny*r.y,nz*r.z)),n,c,q,k,season)}}for(let y=0;y<lat;y++)for(let x=0;x<lon;x++){const t=(x+1)%lon,a=base+y*lon+x,b=base+y*lon+t,c0=base+(y+1)*lon+x,d=base+(y+1)*lon+t;g.i.push(a,c0,b,b,c0,d)}}
-function bez(a,c,b,t){const u=1-t;return A(A(M(a,u*u),M(c,2*u*t)),M(b,t*t))}
-function arc(g,a,c,b,r,q0,q1,color,kind,seed,season=SEASON.NONE,steps=12){let p=a;for(let j=1;j<=steps;j++){const t=j/steps,n=bez(a,c,b,t);tube(g,p,n,mix(r,r*.55,(j-1)/steps),mix(r,r*.55,t),mix(q0,q1,(j-1)/steps),mix(q0,q1,t),color,kind,5,seed+j,season);p=n}}
-function spokeStar(g,o,r,q,color,kind=KIND.STAR,season=SEASON.NONE){for(let i=0;i<8;i++){const a=Math.PI*2*i/8,b=V(o.x+Math.cos(a)*r,o.y+Math.sin(a)*r,o.z+(i%2?.035:-.035));tube(g,o,b,.025,.007,q,q,color,kind,5,500+i,season)}}
-function ring(g,o,rx,ry,z,r,q,color,kind,season=SEASON.NONE,segments=18){let p=V(o.x+rx,o.y,z);for(let i=1;i<=segments;i++){const a=Math.PI*2*i/segments,n=V(o.x+Math.cos(a)*rx,o.y+Math.sin(a)*ry,z);tube(g,p,n,r,r,q,q,color,kind,5,600+i,season);p=n}}
-function cubeCore(g,o,size,color){const h=size/2,pts=[];for(const y of[-h,h])for(const x of[-h,h])for(const z of[-h,h])pts.push(A(o,V(x,y,z)));const edges=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7],[0,7],[1,6],[2,5],[3,4]];edges.forEach(([a,b],i)=>tube(g,pts[a],pts[b],.018,.018,.04,.04,color,KIND.CORE,5,700+i));orb(g,o,V(.095,.095,.095),[.98,.78,.28,1],.035,KIND.CORE,8,5)}
-function gear(g,o,r,teeth,q,color,season=SEASON.AUTUMN){ring(g,o,r,r,o.z,.017,q,color,KIND.GEAR,season,20);ring(g,o,r*.48,r*.48,o.z,.015,q,color,KIND.GEAR,season,16);for(let i=0;i<teeth;i++){const a=Math.PI*2*i/teeth,p0=V(o.x+Math.cos(a)*r*.78,o.y+Math.sin(a)*r*.78,o.z),p1=V(o.x+Math.cos(a)*r*1.16,o.y+Math.sin(a)*r*1.16,o.z);tube(g,p0,p1,.014,.014,q,q,color,KIND.GEAR,5,800+i,season)}}
-function flower(g,o,q,kind,season,scale0=1,alpha=1){orb(g,o,V(.035,.035,.028),[1,.78,.32,alpha],q,kind,6,3,season);for(let i=0;i<5;i++){const a=Math.PI*2*i/5,p=A(o,V(Math.cos(a)*.065*scale0,Math.sin(a)*.065*scale0,(i%2-.5)*.02));orb(g,p,V(.052,.033,.025),[.95,.52,.67,alpha],q,kind,6,3,season)}}
-function snowflake(g,o,r,q,kind,season,alpha=1){const c=[.72,.90,1,alpha];for(let i=0;i<6;i++){const a=Math.PI*i/3,e=V(o.x+Math.cos(a)*r,o.y+Math.sin(a)*r,o.z);tube(g,o,e,.012,.005,q,q,c,kind,5,900+i,season)}}
-function leaf(g,o,q,kind,season,scale0=1,color=[.82,.40,.08,1]){orb(g,o,V(.075*scale0,.035*scale0,.028*scale0),color,q,kind,7,3,season)}
-function rainStroke(g,o,q,kind,season,scale0=1,color=[.12,.58,.90,.88]){tube(g,A(o,V(-.035,.075,.018)),A(o,V(.035,-.085,-.018)),.011*scale0,.006*scale0,q,q,color,kind,5,1120+Math.round(q*100),season)}
-function windStroke(g,o,q,kind,season,scale0=1,color=[.28,.78,.90,.78]){arc(g,A(o,V(-.12*scale0,0,0)),A(o,V(0,.065*scale0,.025)),A(o,V(.13*scale0,0,0)),.009,q,q,color,kind,1180+Math.round(q*100),season,6)}
+  const springBlossoms = [
+    [120,118,.72,-8],[166,92,.9,12],[220,105,.68,-18],[270,78,.82,4],[315,112,.72,20],
+    [356,93,.58,-12],[405,126,.74,9],[455,106,.56,-20],[142,162,.58,0],[204,149,.72,17],
+    [261,166,.58,-11],[330,147,.66,6],[390,170,.52,13],[456,156,.48,-8],[100,205,.48,12],
+    [182,208,.6,-7],[255,220,.48,19],[336,207,.52,-13],[421,216,.45,10]
+  ];
+  const springPetals = [
+    [96,265,.46,-18,.72],[154,248,.36,22,.62],[238,273,.42,-10,.72],[301,248,.34,30,.58],
+    [392,267,.38,-24,.64],[463,244,.32,16,.6],[514,280,.28,-9,.48]
+  ];
+  const summerLeaves = [
+    [104,500,.66,-26],[150,472,.75,15],[198,520,.6,-12],[250,468,.78,30],[306,514,.7,-18],
+    [364,475,.72,14],[420,522,.62,-28],[474,483,.7,20],[531,529,.56,-8]
+  ];
+  const autumnLeaves = [
+    [760,533,.48,-22,.9],[808,501,.42,18,.84],[862,548,.52,-12,.9],[915,510,.45,24,.88],
+    [970,553,.55,-18,.86],[1024,503,.42,12,.9],[1092,548,.56,25,.86],[1155,500,.46,-16,.84],
+    [824,595,.36,17,.72],[900,607,.42,-22,.78],[1007,601,.36,28,.76],[1114,596,.4,-16,.74]
+  ];
+  const winterStars = [
+    [822,88,.55,0,.62],[888,126,.4,0,.7],[958,82,.5,0,.64],[1036,120,.36,0,.58],[1117,77,.48,0,.72],
+    [1192,136,.35,0,.62],[842,205,.35,0,.5],[1158,210,.38,0,.58]
+  ];
+  const canopyLeaves = [
+    [517,241,.7,-38],[548,216,.72,-15],[580,201,.76,10],[615,194,.72,-28],[648,188,.8,6],
+    [684,194,.74,26],[718,205,.72,-10],[751,223,.68,32],[784,247,.64,-24],[496,277,.65,20],
+    [531,270,.78,-12],[570,248,.72,28],[607,240,.7,-34],[644,230,.76,12],[682,244,.72,-12],
+    [721,257,.76,30],[762,276,.7,-18],[520,309,.65,-24],[558,296,.72,16],[596,282,.68,-8],
+    [636,272,.72,32],[676,286,.68,-27],[715,300,.7,12],[755,316,.62,-15],[553,338,.6,20],
+    [591,322,.66,-28],[630,313,.7,10],[671,325,.65,26],[710,341,.6,-14],[610,353,.55,-10],
+    [649,349,.62,25],[687,356,.54,-20],[476,249,.52,9],[803,284,.52,-9],[744,188,.56,10]
+  ];
 
-function quadrantPoint(zone,plane,i,count){const col=i%4,row=Math.floor(i/4),cols=4,rows=Math.ceil(count/cols),x=((col+.5)/cols-.5)*2*zone.xSpan,y=((row+.5)/rows-.5)*2*zone.ySpan,jitterX=((i*7)%5-2)*.028,jitterY=((i*11)%7-3)*.022;return V(zone.x+x+jitterX,zone.y+y+jitterY,plane.z+((i%3)-1)*.055)}
-function trackedKind(season){return KIND.TRACKED_SPRING+season}
-function planarKind(season){return KIND.PLANAR_SPRING+season}
-function emitSeason(g,season,p,q,kind,scale0=1,alpha=1){if(season===SEASON.SPRING)flower(g,p,q,kind,season,.72*scale0,alpha);else if(season===SEASON.SUMMER){rainStroke(g,p,q,kind,season,.78*scale0,[.12,.58,.90,alpha]);if(q*100%2<1)windStroke(g,A(p,V(.04,.035,.01)),q,kind,season,.62*scale0,[.28,.78,.90,alpha*.82])}else if(season===SEASON.AUTUMN)leaf(g,p,q,kind,season,.72*scale0,[.88,.42,.07,alpha]);else snowflake(g,p,.055*scale0,q,kind,season,alpha)}
-function planarTri(g,a,b,c,color,q,kind,season){const n=V(0,0,1),base=g.p.length/3;vert(g,a,n,color,q,kind,season);vert(g,b,n,color,q,kind,season);vert(g,c,n,color,q,kind,season);g.i.push(base,base+1,base+2)}
-function planarDisc(g,center,rx,ry,color,q,kind,season,segments=12){const n=V(0,0,1),base=g.p.length/3;vert(g,V(center.x,center.y,0),n,color,q,kind,season);for(let i=0;i<=segments;i++){const a=Math.PI*2*i/segments;vert(g,V(center.x+Math.cos(a)*rx,center.y+Math.sin(a)*ry,0),n,color,q,kind,season)}for(let i=0;i<segments;i++)g.i.push(base,base+1+i,base+2+i)}
-function planarStroke(g,a,b,width,color,q,kind,season){const dx=b.x-a.x,dy=b.y-a.y,len=Math.max(.0001,Math.hypot(dx,dy)),px=-dy/len*width,py=dx/len*width,p0=V(a.x+px,a.y+py,0),p1=V(a.x-px,a.y-py,0),p2=V(b.x-px,b.y-py,0),p3=V(b.x+px,b.y+py,0);planarTri(g,p0,p1,p2,color,q,kind,season);planarTri(g,p0,p2,p3,color,q,kind,season)}
-function emitPlanarDomain(g,a){const k=planarKind(a.season),q=.12+a.season*.17,p=(x,y)=>V(a.x+x,a.y+y,0);if(a.season===SEASON.SPRING){planarStroke(g,p(-.22,-.18),p(-.18,.18),.012,[.16,.46,.22,.54],q,k,a.season);for(const [x,y,s] of [[-.18,.14,.10],[-.02,.02,.085],[.18,.12,.095],[.12,-.12,.07]]){planarDisc(g,p(x,y),s,s*.72,[.92,.48,.66,.64],q,k,a.season,10);planarDisc(g,p(x,y),s*.34,s*.34,[1,.78,.30,.78],q,k,a.season,10)}}else if(a.season===SEASON.WINTER){for(const [x,y,s] of [[-.18,.11,.12],[.05,.02,.10],[.20,.15,.085],[-.02,-.15,.075]])for(let i=0;i<3;i++){const z=Math.PI*i/3,dx=Math.cos(z)*s,dy=Math.sin(z)*s;planarStroke(g,p(x-dx,y-dy),p(x+dx,y+dy),.009,[.70,.90,1,.70],q,k,a.season)}}else if(a.season===SEASON.SUMMER){planarDisc(g,p(-.05,.18),.26,.08,[.17,.48,.58,.30],q,k,a.season,14);for(const [x,y] of [[-.24,.09],[-.10,.04],[.04,.08],[.18,.02],[-.02,-.10],[.22,-.14]])planarStroke(g,p(x,y),p(x+.06,y-.18),.010,[.18,.62,.92,.66],q,k,a.season)}else{for(const [x,y,rx,ry,c] of [[-.21,.13,.10,.055,[.90,.46,.08,.68]],[-.03,.02,.11,.06,[.68,.28,.04,.72]],[.17,.12,.09,.05,[.96,.58,.10,.68]],[.12,-.13,.10,.055,[.72,.31,.05,.70]],[-.18,-.10,.08,.045,[.86,.39,.06,.64]]]){planarDisc(g,p(x,y),rx,ry,c,q,k,a.season,8);planarStroke(g,p(x-rx*.45,y),p(x+rx*.45,y),.006,[.36,.16,.04,.70],q,k,a.season)}}}
+  const svg = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.classList.add('community-static-seasonal-tree');
+  svg.setAttribute('viewBox', '0 0 1280 800');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-labelledby', 'community-static-title community-static-desc');
+  svg.innerHTML = `
+    <title id="community-static-title">Four seasons surrounding the Consider the Energy tree</title>
+    <desc id="community-static-desc">A single static code-drawn landscape joins spring, summer, autumn, and winter around a luminous central tree with visible roots.</desc>
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#06121e"/><stop offset=".58" stop-color="#07101a"/><stop offset="1" stop-color="#02070d"/></linearGradient>
+      <radialGradient id="centerGlow"><stop stop-color="#52f4e7" stop-opacity=".22"/><stop offset=".45" stop-color="#27c6c2" stop-opacity=".08"/><stop offset="1" stop-color="#07121d" stop-opacity="0"/></radialGradient>
+      <linearGradient id="springField" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#163b35"/><stop offset=".55" stop-color="#265b43"/><stop offset="1" stop-color="#102923"/></linearGradient>
+      <linearGradient id="summerField" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#092b2d"/><stop offset=".58" stop-color="#145044"/><stop offset="1" stop-color="#16372d"/></linearGradient>
+      <linearGradient id="autumnField" x1="1" y1="1" x2="0" y2="0"><stop stop-color="#6f2e13"/><stop offset=".42" stop-color="#9b4a18"/><stop offset="1" stop-color="#3b2617"/></linearGradient>
+      <linearGradient id="winterField" x1="1" y1="0" x2="0" y2="1"><stop stop-color="#254f73"/><stop offset=".5" stop-color="#173a57"/><stop offset="1" stop-color="#102635"/></linearGradient>
+      <linearGradient id="water" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#73f0ec" stop-opacity=".2"/><stop offset=".48" stop-color="#5ed8e7" stop-opacity=".82"/><stop offset="1" stop-color="#b8f5ff" stop-opacity=".22"/></linearGradient>
+      <linearGradient id="trunk" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9df"/><stop offset=".52" stop-color="#fff4cf"/><stop offset="1" stop-color="#d8bc82"/></linearGradient>
+      <linearGradient id="root" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff3cc"/><stop offset="1" stop-color="#b88d52"/></linearGradient>
+      <linearGradient id="snow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f7fbff"/><stop offset="1" stop-color="#9fd6f2"/></linearGradient>
+      <linearGradient id="autumnCanopy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffbf3f"/><stop offset=".45" stop-color="#ef731a"/><stop offset="1" stop-color="#a12c16"/></linearGradient>
+      <filter id="treeGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity=".46"/></filter>
+      <filter id="seasonGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <path id="leaf" d="M0 0 C10 -11 25 -10 31 0 C21 12 8 13 0 0Z" fill="#45ead5" stroke="#a4fff2" stroke-opacity=".62" stroke-width="1.2"/>
+      <path id="seasonLeaf" d="M0 0 C9 -7 21 -6 27 1 C18 10 7 10 0 0Z" fill="currentColor"/>
+      <g id="blossom" filter="url(#seasonGlow)"><circle r="5.8" fill="#ffd0df"/><circle cx="7" cy="1" r="5.2" fill="#ff9fbe"/><circle cx="3" cy="-6" r="5" fill="#ffc0d4"/><circle cx="-5" cy="-4" r="4.8" fill="#f58eaf"/><circle cx="-7" cy="3" r="5.2" fill="#ffc8d8"/><circle r="2.3" fill="#ffe8a9"/></g>
+      <g id="snowStar" stroke="#dff7ff" stroke-width="2" stroke-linecap="round"><path d="M-9 0H9M0-9V9M-6-6L6 6M6-6L-6 6"/></g>
+      <g id="pine"><path d="M0-46L-30-6H-13L-38 28H38L13-6H30Z" fill="#0a2632"/><path d="M0-40L-20-8H-7L-25 21H25L7-8H20Z" fill="#1e5b66" opacity=".75"/><rect x="-3" y="22" width="6" height="19" rx="2" fill="#7c6750"/></g>
+      <g id="snowPine"><use href="#pine"/><path d="M-20-8Q0-18 20-8M-25 9Q0-2 25 9M-30 25Q0 14 30 25" fill="none" stroke="#dff4ff" stroke-width="6" stroke-linecap="round" opacity=".95"/></g>
+      <g id="grass"><path d="M0 18Q-2 1-12-10M0 18Q3-2 13-14M0 18Q2 3 2-16M0 18Q-6 5-18 1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></g>
+      <clipPath id="frameClip"><rect x="0" y="0" width="1280" height="800" rx="28"/></clipPath>
+    </defs>
 
-const OBJECTS_PER_DEPTH=8;
-function objectId(season,depthBand,index){return season*DEPTH_PLANES.length*OBJECTS_PER_DEPTH+depthBand*OBJECTS_PER_DEPTH+index}
-const REGISTRY=Object.freeze(QUADRANT_VOLUMES.flatMap(zone=>DEPTH_PLANES.flatMap((plane,depthBand)=>Array.from({length:OBJECTS_PER_DEPTH},(_,index)=>{const home=quadrantPoint(zone,plane,index,OBJECTS_PER_DEPTH),id=objectId(zone.season,depthBand,index);return Object.freeze({id:`${CONTRACT.seasons[zone.season]}-${plane.id}-${String(index).padStart(2,'0')}`,objectId:id,domain:zone.season,depthBand,spiralPhase:id/96*Math.PI*2,homeXYZ:Object.freeze({x:home.x,y:home.y,z:home.z})})}))));
-function P_hold(o){return V(o.homeXYZ.x,o.homeXYZ.y,o.homeXYZ.z)}
-function legacyFinal(o){const phase=o.spiralPhase+Math.PI*4,radius=.46,lift=.52+o.domain*.22;return V(Math.cos(phase)*radius,lift+Math.sin(phase*1.7)*.13,Math.sin(phase)*radius+Math.sin(phase*.73+o.depthBand)*.16)}
-function treeTarget(o){const f=legacyFinal(o),radial=Math.max(.001,Math.hypot(f.x,f.z)),local=o.objectId%(DEPTH_PLANES.length*OBJECTS_PER_DEPTH),targetRadius=.075+(local%4)*.025+o.depthBand*.010,factor=Math.min(.55,targetRadius/radial),yBase=[1.42,.72,1.00,1.55][o.domain],row=Math.floor((local%8)/2),y=yBase+(row-1.5)*.060+(o.depthBand-1)*.045;return V(f.x*factor,y,f.z*factor)}
-const TREE_TARGETS=Object.freeze(REGISTRY.map(o=>Object.freeze({...treeTarget(o)})));
-function captureStart(o){const target=TREE_TARGETS[o.objectId],phase=o.spiralPhase+o.domain*.34,r=1.54+o.depthBand*.16;return V(Math.cos(phase)*r,mix(o.homeXYZ.y,target.y,.42),Math.sin(phase)*r*.82)}
-function P_traversal(o,t){t=clamp(t);const home=P_hold(o),capture=captureStart(o),mid=V(-home.x*.94,mix(home.y,capture.y,.35),-home.z*.72);if(t<=.5)return bez(home,A(L(home,mid,.5),V(0,.48*(o.domain%2?1:-1),.32*Math.sin(o.spiralPhase))),mid,smoother(t*2));return bez(mid,A(L(mid,capture,.5),V(0,.38*(o.domain<2?1:-1),-.28*Math.cos(o.spiralPhase))),capture,smoother((t-.5)*2))}
-function rotateY(v,a){const c=Math.cos(a),s=Math.sin(a);return V(v.x*c+v.z*s,v.y,-v.x*s+v.z*c)}
-function P_spiral(o,t){t=clamp(t);const target=TREE_TARGETS[o.objectId],start=captureStart(o),v=S(start,target),radiusScale=mix(1,.16,smoother(t)),rot=rotateY(v,t*Math.PI*4);return A(target,M(rot,radiusScale))}
-function P_settlement(o,t){return L(P_spiral(o,1),TREE_TARGETS[o.objectId],smoother(clamp(t)))}
-function phaseAt(seconds){if(seconds<3)return'HOLD';if(seconds<8)return'TRAVERSE';if(seconds<18.4)return'SPIRAL';if(seconds<19.9)return'SETTLE';return'TERMINAL_LOCK'}
-function positionAt(o,seconds){const phase=phaseAt(seconds);if(phase==='HOLD')return P_hold(o);if(phase==='TRAVERSE')return P_traversal(o,(seconds-3)/5);if(phase==='SPIRAL')return P_spiral(o,(seconds-8)/10.4);if(phase==='SETTLE')return P_settlement(o,(seconds-18.4)/1.5);return V(TREE_TARGETS[o.objectId].x,TREE_TARGETS[o.objectId].y,TREE_TARGETS[o.objectId].z)}
-function domainMotion(season,seconds,reduced){if(reduced)return{x:0,y:0};const p=[{xa:.012,ya:.008,xh:1,yh:2,xp:.2,yp:.65},{xa:.014,ya:.006,xh:1,yh:3,xp:1.1,yp:.35},{xa:.010,ya:.010,xh:2,yh:2,xp:2.15,yp:1.05},{xa:.008,ya:.012,xh:2,yh:1,xp:2.85,yp:1.55}][season],a=((seconds%24)+24)%24/24*Math.PI*2;return{x:Math.sin(a*p.xh+p.xp)*p.xa,y:Math.cos(a*p.yh+p.yp)*p.ya}}
+    <g clip-path="url(#frameClip)">
+      <rect width="1280" height="800" fill="url(#bg)"/>
+      <ellipse cx="640" cy="390" rx="455" ry="360" fill="url(#centerGlow)"/>
 
-function addQuadrantEnvironment(g){for(const a of STAGE_DOMAINS){const startVertex=g.p.length/3;emitPlanarDomain(g,a);g.planarDomainRanges.push(Object.freeze({domain:a.season,startVertex,endVertex:g.p.length/3}))}for(const zone of QUADRANT_VOLUMES)DEPTH_PLANES.forEach((plane,depthBand)=>{for(let i=0;i<OBJECTS_PER_DEPTH;i++){const id=objectId(zone.season,depthBand,i),o=REGISTRY[id],p=P_hold(o),startVertex=g.p.length/3,q=.08+id/96*.12;emitSeason(g,zone.season,p,q,trackedKind(zone.season),plane.scale,.92);g.objectRanges.push(Object.freeze({objectId:id,startVertex,endVertex:g.p.length/3}))}})}
+      <path d="M0 0H650C624 88 606 166 602 246C598 309 611 354 638 391C560 361 482 345 399 343C277 340 153 376 0 333Z" fill="url(#springField)"/>
+      <path d="M0 318C154 363 277 339 401 350C492 358 565 382 638 410C604 461 584 518 579 590C573 664 583 733 612 800H0Z" fill="url(#summerField)"/>
+      <path d="M1280 326C1124 367 1003 344 876 352C789 358 717 382 642 411C679 468 697 527 703 593C708 665 699 735 670 800H1280Z" fill="url(#autumnField)"/>
+      <path d="M630 0H1280V338C1128 374 1002 342 878 345C791 347 718 368 642 392C670 346 683 302 679 244C674 164 655 86 630 0Z" fill="url(#winterField)"/>
 
-function build(){const g=mesh(),dark=WOOD_MATERIAL.ROOT,network=[.055,.18,.22,1],coreGold=[.82,.58,.18,1],springGreen=[.08,.28,.12,1],summerGreen=[.03,.20,.11,1],water=[.08,.42,.72,.92],autumn=[.72,.35,.07,1],winter=[.64,.77,.82,1],returnBlue=[.04,.22,.34,1],O=V(0,-.28,0);cubeCore(g,V(0,-.05,0),.52,coreGold);const roots=[V(-1.46,-1.05,.26),V(-1.06,-1.22,-.48),V(-.38,-1.30,-.74),V(.42,-1.28,-.70),V(1.10,-1.18,-.42),V(1.48,-1.04,.28),V(.91,-1.21,.67),V(-.91,-1.20,.69)];roots.forEach((e,i)=>{const m=L(O,e,.48);tube(g,O,A(m,V(0,.04,0)),.17,.084,.09,.16,WOOD_MATERIAL.ROOT,KIND.ROOT,8,10+i);tube(g,A(m,V(0,.04,0)),e,.084,.028,.16,.22,dark,KIND.ROOT,7,30+i)});for(let i=0;i<roots.length;i++){const a=roots[i],b=roots[(i+1)%roots.length],m=A(L(a,b,.5),V(0,.12,0));tube(g,a,m,.023,.019,.22,.28,network,KIND.NETWORK,6,50+i*2);tube(g,m,b,.019,.023,.28,.33,network,KIND.NETWORK,6,51+i*2)}for(let i=0;i<4;i++){const h=V(0,-.96+i*.012,-.04+i*.02);tube(g,roots[i],h,.017,.023,.25,.31,network,KIND.NETWORK,5,70+i);tube(g,h,roots[i+4],.023,.017,.31,.35,network,KIND.NETWORK,5,80+i)}const trunk=[[O,V(-.07,.10,.03),.22,.18,.35,.40],[V(-.07,.10,.03),V(.05,.58,-.03),.18,.145,.40,.46],[V(.05,.58,-.03),V(-.04,1.04,.04),.145,.112,.46,.51],[V(-.04,1.04,.04),V(.03,1.43,-.02),.112,.082,.51,.56]];trunk.forEach((s,i)=>tube(g,s[0],s[1],s[2],s[3],s[4],s[5],i<2?WOOD_MATERIAL.TRUNK:WOOD_MATERIAL.PRIMARY,KIND.TREE,8,100+i));const tips=[V(-1.43,.56,.30),V(-1.20,.98,-.18),V(-.89,1.42,.20),V(-.44,1.72,-.10),V(.42,1.79,-.10),V(.91,1.51,.18),V(1.22,1.08,-.24),V(1.43,.66,.23),V(.03,1.99,.10)],starts=[V(-.06,.29,.03),V(.03,.52,-.02),V(-.02,.74,.02),V(0,.92,.02),V(.02,1.15,-.01),V(.03,1.34,-.02)];tips.forEach((t,i)=>{const s=starts[Math.min(starts.length-1,Math.floor(i*starts.length/tips.length))],side=i%2?-1:1,b=V((s.x+t.x)*.52+side*.06,mix(s.y,t.y,.48)+.12,(s.z+t.z)*.48+(i%3-1)*.09);tube(g,s,b,.078-i*.003,.044,.42+i*.006,.50+i*.004,WOOD_MATERIAL.PRIMARY,KIND.TREE,7,120+i*2);tube(g,b,t,.044,.018,.50+i*.004,.56,WOOD_MATERIAL.SECONDARY,KIND.TREE,6,121+i*2)});[[-.95,1.48,.06,.32,.22,.23,SEASON.SPRING,springGreen],[-.56,1.78,.00,.34,.24,.24,SEASON.SPRING,springGreen],[-.84,.92,.18,.28,.21,.22,SEASON.SUMMER,summerGreen],[-.42,1.22,-.08,.30,.22,.23,SEASON.SUMMER,summerGreen],[.48,1.20,.06,.30,.22,.23,SEASON.AUTUMN,autumn],[.91,.91,-.07,.28,.21,.22,SEASON.AUTUMN,autumn],[.58,1.76,.03,.34,.24,.24,SEASON.WINTER,winter],[.96,1.45,.08,.31,.22,.23,SEASON.WINTER,winter]].forEach(x=>orb(g,V(x[0],x[1],x[2]),V(x[3],x[4],x[5]),x[7],.548,KIND.FOLIAGE,7,4,x[6]));const top=V(0,2.28,.02),leftRoot=V(-1.12,-1.05,.16),rightRoot=V(1.12,-1.05,.16);arc(g,top,V(-1.72,.72,.08),leftRoot,.014,.54,.56,[.58,.77,.76,.75],KIND.GUIDE,300,SEASON.NONE,18);arc(g,top,V(1.72,.72,.08),rightRoot,.014,.54,.56,[.82,.61,.26,.75],KIND.GUIDE,340,SEASON.NONE,18);spokeStar(g,top,.18,.575,[1,.82,.35,1],KIND.STAR);[V(-1.28,.69,.31),V(-1.08,1.08,-.12),V(-.82,1.48,.20),V(-.48,1.68,-.07)].forEach((p,i)=>flower(g,p,.645+i*.012,KIND.SPRING,SEASON.SPRING,.9+(i%2)*.18));[V(-1.10,.82,.12),V(-.69,1.34,.06),V(-.35,1.58,.02)].forEach((p,i)=>orb(g,p,V(.045,.045,.04),[1,.75,.34,1],.69+i*.01,KIND.SPRING,6,3,SEASON.SPRING));arc(g,V(-1.35,-.64,.28),V(-1.68,.26,.54),V(-1.18,.82,.24),.025,.655,.705,water,KIND.SUMMER,400,SEASON.SUMMER,16);arc(g,V(-1.18,-.87,-.22),V(-1.55,.05,-.48),V(-.73,1.22,-.10),.021,.665,.715,[.10,.55,.82,.82],KIND.SUMMER,430,SEASON.SUMMER,16);[V(-1.08,.42,.16),V(-.69,1.34,.06),V(-.35,1.58,.02)].forEach((p,i)=>orb(g,p,V(.15,.10,.12),summerGreen,.70+i*.011,KIND.SUMMER,7,4,SEASON.SUMMER));const autumnNodes=[V(.42,.52,.04),V(.75,.64,-.02),V(1.02,.78,.08),V(.56,.93,.09),V(.88,1.08,-.05),V(1.18,.99,.02)];autumnNodes.forEach((p,i)=>orb(g,p,V(.115,.075,.095),i%2?[.88,.46,.08,1]:[.66,.28,.045,1],.665+i*.012,KIND.AUTUMN,7,4,SEASON.AUTUMN));for(let i=0;i<autumnNodes.length-1;i++)tube(g,autumnNodes[i],autumnNodes[i+1],.012,.012,.69+i*.008,.69+i*.008,WOOD_MATERIAL.TWIG,KIND.AUTUMN,5,460+i,SEASON.AUTUMN);gear(g,V(.55,-.67,.24),.20,8,.72,[.58,.37,.16,.82]);gear(g,V(.93,-.82,.05),.16,7,.745,[.47,.31,.17,.74]);gear(g,V(.25,-.91,-.16),.13,6,.758,[.50,.34,.19,.70]);const winterBase=V(.28,1.26,.02),winterTips=[V(.62,1.57,.08),V(.91,1.73,-.03),V(1.15,1.50,.05),V(.78,1.96,.04),V(1.22,1.89,.09)];winterTips.forEach((p,i)=>{tube(g,winterBase,p,.026,.008,.65+i*.014,.69+i*.014,WOOD_MATERIAL.TWIG,KIND.WINTER,5,490+i,SEASON.WINTER);snowflake(g,p,.09+i*.008,.71+i*.012,KIND.WINTER,SEASON.WINTER)});[V(.63,1.35,.03),V(.95,1.30,-.02)].forEach((p,i)=>orb(g,p,V(.07,.12,.065),[.43,.58,.55,1],.74+i*.012,KIND.WINTER,7,4,SEASON.WINTER));const contrib=[V(-1.36,.62,.30),V(-.77,1.52,.18),V(-.36,1.77,-.06),V(.48,1.81,-.05),V(.92,1.56,.11),V(1.32,.89,.08),V(.02,2.08,.07)];contrib.forEach((p,i)=>orb(g,p,V(.065,.082,.06),[.98,.71,.20,1],.79+i*.013,KIND.CONTRIBUTION,7,4,i<3?SEASON.SPRING:i<4?SEASON.SUMMER:i<6?SEASON.AUTUMN:SEASON.WINTER));[[contrib[0],roots[1],-1],[contrib[2],roots[7],-1],[contrib[4],roots[6],1],[contrib[5],roots[4],1],[contrib[6],roots[3],1]].forEach(([a,b,side],i)=>arc(g,a,V(side*(1.72+i*.08),.22+i*.08,.72-i*.18),b,.019,.90+i*.012,.985,returnBlue,KIND.RETURN,1000+i*24,SEASON.NONE,16));addQuadrantEnvironment(g);if(g.p.length/3>65535)throw Error('LIFECYCLE_VERTEX_BUDGET');return g}
+      <path d="M0 329C183 381 343 327 474 365C538 384 591 405 642 424" fill="none" stroke="#77e9c6" stroke-opacity=".38" stroke-width="4"/>
+      <path d="M1280 332C1107 380 948 330 808 366C747 382 694 404 640 425" fill="none" stroke="#ef9a43" stroke-opacity=".42" stroke-width="4"/>
+      <path d="M631 0C659 112 689 228 648 389" fill="none" stroke="#a8e7ff" stroke-opacity=".28" stroke-width="3"/>
 
-function vertexSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;${webgl2?'in':'attribute'} vec3 a_position,a_normal;${webgl2?'in':'attribute'} vec4 a_color;${webgl2?'in':'attribute'} float a_phase,a_kind,a_season;uniform float u_yaw,u_pitch,u_scale,u_aspect,u_camera;${webgl2?'out':'varying'} vec3 v_n;${webgl2?'out':'varying'} vec4 v_c;${webgl2?'out':'varying'} float v_k;void main(){float cy=cos(u_yaw),sy=sin(u_yaw),cp=cos(u_pitch),sp=sin(u_pitch);vec3 p=a_position,n=a_normal;float planar=step(25.5,a_kind)*step(a_kind,29.5);if(planar>.5){vec2 wa=vec2(-1.72,1.52),sa=vec2(.20,.20);if(a_season>.5&&a_season<1.5){wa=vec2(-1.72,-.72);sa=vec2(.20,.80);}else if(a_season>1.5&&a_season<2.5){wa=vec2(1.72,-.72);sa=vec2(.80,.80);}else if(a_season>2.5){wa=vec2(1.72,1.52);sa=vec2(.80,.20);}vec2 local=(p.xy-wa)*.32;local.x/=max(u_aspect,.72);vec2 stage=sa+local;gl_Position=vec4(stage.x*2.0-1.0,1.0-stage.y*2.0,.92,1.0);n=vec3(0.,0.,1.);}else{p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);p.y-=.28;p*=u_scale;float z=max(1.1,u_camera-p.z),nc=1.,fc=10.,zc=((fc+nc)/(fc-nc))*z-(2.*fc*nc)/(fc-nc);gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);}v_n=normalize(n);v_c=a_color;v_k=a_kind;}`}
-function fragmentSource(webgl2,precision){return`${webgl2?'#version 300 es\n':''}precision ${precision} float;${webgl2?'in':'varying'} vec3 v_n;${webgl2?'in':'varying'} vec4 v_c;${webgl2?'in':'varying'} float v_k;${webgl2?'out vec4 lifecycleColor;':''}void main(){vec3 N=normalize(v_n),K=normalize(vec3(-.42,.78,.52));float d=.36+.64*max(0.,dot(N,K));float planar=step(25.5,v_k)*step(v_k,29.5);vec3 lit=mix(v_c.rgb*d+vec3(.012),v_c.rgb,planar);${webgl2?'lifecycleColor':'gl_FragColor'}=vec4(lit,v_c.a);}`}
-function shader(gl,type,src){const q=gl.createShader(type);gl.shaderSource(q,src);gl.compileShader(q);if(!gl.getShaderParameter(q,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(q)||'shader');return q}
-function renderer(gl,g,webgl2){const p=gl.createProgram(),vs=shader(gl,gl.VERTEX_SHADER,vertexSource(webgl2,'highp')),fs=shader(gl,gl.FRAGMENT_SHADER,fragmentSource(webgl2,'highp'));gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(p)||'link');const b={},up=(k,data,T=Float32Array,target=gl.ARRAY_BUFFER)=>{const x=gl.createBuffer();gl.bindBuffer(target,x);gl.bufferData(target,new T(data),k==='p'?gl.DYNAMIC_DRAW:gl.STATIC_DRAW);b[k]=x};up('p',g.p);up('n',g.n);up('c',g.c);up('q',g.q);up('k',g.k);up('s',g.s);up('i',g.i,Uint16Array,gl.ELEMENT_ARRAY_BUFFER);gl.useProgram(p);[['a_position','p',3],['a_normal','n',3],['a_color','c',4],['a_phase','q',1],['a_kind','k',1],['a_season','s',1]].forEach(([name,key,size])=>{const l=gl.getAttribLocation(p,name);gl.bindBuffer(gl.ARRAY_BUFFER,b[key]);gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,size,gl.FLOAT,false,0,0)});gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,b.i);gl.enable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);const U=n=>gl.getUniformLocation(p,n);return{p,b,count:g.i.length,base:new Float32Array(g.p),pos:new Float32Array(g.p),u:{yaw:U('u_yaw'),pitch:U('u_pitch'),scale:U('u_scale'),aspect:U('u_aspect'),camera:U('u_camera')}}}
-function applyPositions(gl,R,g,seconds,reduced){R.pos.set(R.base);for(const range of g.objectRanges){const o=REGISTRY[range.objectId],p=positionAt(o,reduced?19.9:seconds),dx=p.x-o.homeXYZ.x,dy=p.y-o.homeXYZ.y,dz=p.z-o.homeXYZ.z;for(let v=range.startVertex;v<range.endVertex;v++){const j=v*3;R.pos[j]+=dx;R.pos[j+1]+=dy;R.pos[j+2]+=dz}}for(const range of g.planarDomainRanges){const m=domainMotion(range.domain,seconds,reduced);for(let v=range.startVertex;v<range.endVertex;v++){const j=v*3;R.pos[j]+=m.x;R.pos[j+1]+=m.y}}gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);gl.bufferSubData(gl.ARRAY_BUFFER,0,R.pos)}
+      <path d="M0 292C107 260 205 257 298 284C380 307 462 326 544 343C430 316 327 332 216 352C127 367 59 359 0 338Z" fill="#367b4d" opacity=".88"/>
+      <path d="M38 272C120 223 196 211 268 235C332 256 389 294 455 314C353 290 273 294 192 314C130 330 75 323 38 310Z" fill="#4c9657" opacity=".66"/>
+      <path d="M92 234Q160 126 286 146Q405 161 490 282" fill="none" stroke="#36241d" stroke-width="12" stroke-linecap="round" opacity=".95"/>
+      <path d="M184 191Q265 129 351 165M266 163Q294 108 337 83M330 166Q389 120 440 132M205 190Q170 150 136 144" fill="none" stroke="#4e3025" stroke-width="8" stroke-linecap="round"/>
+      ${uses('blossom', springBlossoms)}
+      ${uses('seasonLeaf', springPetals, 'spring-petals')}
+      <g color="#88eab1" opacity=".8">${uses('grass',[[82,334,.8],[135,348,.65],[194,333,.75],[285,347,.8],[386,333,.7],[476,354,.65]])}</g>
+      <circle cx="73" cy="210" r="33" fill="#f7d788" opacity=".18"/>
 
-const GEOMETRY=build();
-function qualify(){const ids=REGISTRY.map(o=>o.objectId),unique=REGISTRY.length===96&&new Set(ids).size===96&&ids.every((id,i)=>id===i),domains=GEOMETRY.planarDomainRanges.length===4&&new Set(GEOMETRY.planarDomainRanges.map(r=>r.domain)).size===4,continuity=REGISTRY.every(o=>same(P_traversal(o,1),P_spiral(o,0))&&same(P_spiral(o,1),P_settlement(o,0))),traversal=REGISTRY.every(o=>Math.sign(P_traversal(o,.5).x)===-Math.sign(P_hold(o).x)),settled=REGISTRY.every(o=>same(positionAt(o,19.9),TREE_TARGETS[o.objectId])&&same(positionAt(o,40),TREE_TARGETS[o.objectId]));let monotonic=true;for(const o of REGISTRY){let prev=Infinity;for(let i=0;i<=104;i++){const p=P_spiral(o,i/104),d=distance(p,TREE_TARGETS[o.objectId]);if(d>prev+1e-7)monotonic=false;prev=d}}const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_CAUSAL_PATH_BINARY_RECEIPT_V1',objectCount:REGISTRY.length,uniqueObjectIds:unique,permanentDomainCount:GEOMETRY.planarDomainRanges.length,fullStageTraversal:traversal,phaseContinuity:continuity,spiralRadiusMonotonic:monotonic,settledObjectCount:settled?96:0,terminalReboundCount:settled?0:96,postSettlementCohortMovement:settled?0:96,domainDepletion:false,objectReplacementCount:0,passed:unique&&domains&&traversal&&continuity&&monotonic&&settled});if(!receipt.passed)throw Error('GEN2289_CAUSAL_PATH_BINARY_FAILURE');return receipt}
-const QUALIFICATION=qualify();
-globalThis.DGB_COMMUNITY_GEN2289_CAUSAL_PATH_RECEIPT=QUALIFICATION;
-globalThis.DGB_COMMUNITY_GEN2289_RUNTIME_API=Object.freeze({registry:REGISTRY,treeTargets:TREE_TARGETS,phaseAt,positionAt,P_hold,P_traversal,P_spiral,P_settlement});
+      <path d="M0 470C119 417 208 423 294 456C373 486 459 491 571 457L579 800H0Z" fill="#0d3c36" opacity=".9"/>
+      <path d="M-24 682C116 647 180 563 293 562C414 561 484 622 601 589C511 642 443 665 339 654C221 642 128 720 0 738Z" fill="url(#water)" opacity=".84"/>
+      <path d="M-8 693C130 651 191 582 294 581C410 580 485 636 588 603" fill="none" stroke="#b7fbff" stroke-width="4" stroke-opacity=".66"/>
+      <path d="M0 501C85 451 151 447 210 478C275 512 339 515 401 482C465 448 522 456 580 479" fill="none" stroke="#3b8d62" stroke-width="44" stroke-linecap="round" opacity=".48"/>
+      ${uses('seasonLeaf', summerLeaves, 'summer-leaves')}
+      <g color="#76df9b" opacity=".85">${uses('grass',[[54,635,1],[108,612,.9],[176,591,.8],[246,612,.95],[337,602,.86],[424,625,.95],[509,609,.75]])}</g>
+      <g fill="#d9f9bb" opacity=".85"><circle cx="124" cy="585" r="3"/><circle cx="153" cy="611" r="4"/><circle cx="205" cy="572" r="3"/><circle cx="385" cy="613" r="3"/><circle cx="464" cy="580" r="4"/></g>
 
-function mount(host){const doc=host.ownerDocument||document,reduced=!!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches,style=doc.createElement('style');style.dataset.communityLifecycleStyle='true';style.textContent='[data-community-lifecycle-mount]{position:relative;isolation:isolate;overflow:hidden;min-height:22rem}.community-lifecycle3d-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}@media(max-width:720px){[data-community-lifecycle-mount]{min-height:25rem}}';doc.head.append(style);const c=doc.createElement('canvas');c.className='community-lifecycle3d-canvas';c.setAttribute('aria-hidden','true');host.append(c);const opts={alpha:true,antialias:true,depth:true,powerPreference:'low-power'};let gl=c.getContext('webgl2',opts),webgl2=true;if(!gl){gl=c.getContext('webgl',opts)||c.getContext('experimental-webgl',opts);webgl2=false}if(!gl){host.dataset.lifecycleStatus='webgl-unavailable';return}const R=renderer(gl,GEOMETRY,webgl2);let start=performance.now(),last=start,raf=0,visible=true,drag=null,baseYaw=-.20,targetYaw=baseYaw,yaw=baseYaw,targetPitch=-.055,pitch=targetPitch;const resize=()=>{const r=c.getBoundingClientRect(),cap=Math.min(r.width,r.height)<520?1.25:1.5,d=Math.min(cap,Math.max(1,globalThis.devicePixelRatio||1)),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(c.width!==w||c.height!==h){c.width=w;c.height=h}gl.viewport(0,0,w,h);return w/Math.max(1,h)};const draw=now=>{const elapsed=Math.max(0,(now-start)/1000),asp=resize(),dt=Math.min(40,Math.max(0,now-last));last=now;if(!reduced){const e=1-Math.exp(-dt/135);yaw+=(targetYaw-yaw)*e;pitch+=(targetPitch-pitch)*e}applyPositions(gl,R,GEOMETRY,elapsed,reduced);gl.useProgram(R.p);gl.clearColor(.010,.020,.040,.72);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform1f(R.u.yaw,yaw);gl.uniform1f(R.u.pitch,pitch);gl.uniform1f(R.u.scale,asp<.76?1.04:asp<1.05?1.10:1.15);gl.uniform1f(R.u.aspect,asp);gl.uniform1f(R.u.camera,4.55);gl.drawElements(gl.TRIANGLES,R.count,gl.UNSIGNED_SHORT,0);host.dataset.gen2289Phase=phaseAt(reduced?19.9:elapsed);host.dataset.lifecycleStatus='ready';host.dataset.communityDomainModel='PLANAR_PERMANENT_DOMAINS_CAUSAL_COHORT';globalThis.DGB_COMMUNITY_LIFECYCLE_3D_RECEIPT=Object.freeze({contract:CONTRACT,qualification:QUALIFICATION,phase:phaseAt(reduced?19.9:elapsed),objectCount:96,permanentDomainCount:4,terminalReboundCount:0,domainDepletion:false});};const tick=now=>{raf=0;if(!visible||doc.hidden)return;draw(now);raf=requestAnimationFrame(tick)};const kick=()=>{if(!raf&&visible&&!doc.hidden)raf=requestAnimationFrame(tick)};const yawLimit=22*Math.PI/180;c.addEventListener('pointerdown',e=>{if(reduced||e.button!==0)return;drag={id:e.pointerId,x:e.clientX};c.setPointerCapture?.(e.pointerId)});c.addEventListener('pointermove',e=>{if(reduced)return;const r=c.getBoundingClientRect();if(drag&&e.pointerId===drag.id){const dx=e.clientX-drag.x;targetYaw=baseYaw+clamp(dx/Math.max(1,r.width)*1.6,-yawLimit,yawLimit);return}if(e.pointerType==='mouse'&&r.width){targetYaw=baseYaw+(((e.clientX-r.left)/r.width)*2-1)*.08;targetPitch=-.055-(((e.clientY-r.top)/r.height)*2-1)*.035}});const release=e=>{if(!drag||e.pointerId!==drag.id)return;drag=null;targetYaw=baseYaw;targetPitch=-.055};c.addEventListener('pointerup',release);c.addEventListener('pointercancel',release);if('IntersectionObserver'in globalThis){const io=new IntersectionObserver(es=>{visible=es.some(e=>e.isIntersecting&&e.intersectionRatio>.02);if(!visible&&raf){cancelAnimationFrame(raf);raf=0}else kick()},{rootMargin:'120px 0px',threshold:[0,.02]});io.observe(host)}doc.addEventListener('visibilitychange',()=>{if(doc.hidden&&raf){cancelAnimationFrame(raf);raf=0}else kick()},{passive:true});host.setAttribute('role','img');host.setAttribute('aria-label','Four permanent seasonal regions remain active while one tracked ninety-six-object cohort completes a full-stage traversal, contracts into the central spiral, settles into the tree, and remains locked without rebound.');draw(start);kick()}
+      <path d="M699 472C798 431 889 430 971 464C1060 500 1144 492 1280 443V800H670Z" fill="#6d3518" opacity=".82"/>
+      <path d="M704 639C820 587 922 604 1018 650C1103 691 1190 684 1280 643V800H670Z" fill="#b15b1c" opacity=".44"/>
+      <path d="M980 527Q1050 432 1148 460Q1211 478 1264 543" fill="none" stroke="#4a271a" stroke-width="15" stroke-linecap="round"/>
+      <path d="M1043 478Q1082 426 1113 398M1114 455Q1162 407 1215 414M1074 460Q1038 420 1003 424" fill="none" stroke="#53301f" stroke-width="9" stroke-linecap="round"/>
+      <g fill="url(#autumnCanopy)" filter="url(#seasonGlow)" opacity=".96"><circle cx="997" cy="425" r="34"/><circle cx="1040" cy="404" r="43"/><circle cx="1088" cy="392" r="40"/><circle cx="1136" cy="405" r="44"/><circle cx="1185" cy="429" r="39"/><circle cx="1231" cy="454" r="34"/><circle cx="1098" cy="438" r="46"/></g>
+      <g color="#f4b33f">${uses('grass',[[761,678,1.05],[801,692,.95],[846,670,1.1],[891,700,.92],[938,675,1.04],[1191,682,1],[1234,660,.9]])}</g>
+      <g color="#f08224">${uses('seasonLeaf', autumnLeaves)}</g>
+      <path d="M1220 704q23-42 46 0q-23 32-46 0Z" fill="#d96a1b" opacity=".78"/>
 
-export { CONTRACT as DGB_COMMUNITY_LIFECYCLE_3D_CONTRACT };
+      <path d="M694 322C776 287 841 269 915 280C1003 294 1086 286 1165 254C1211 236 1248 235 1280 245V351C1139 374 1004 344 879 350C806 353 744 371 674 397Z" fill="url(#snow)" opacity=".93"/>
+      <path d="M791 269L879 146L956 250L1036 127L1146 267Z" fill="#2e5d7b" opacity=".9"/>
+      <path d="M791 269L879 146L907 191L928 177L956 250ZM960 244L1036 127L1074 181L1092 171L1146 267Z" fill="#ddecf7" opacity=".9"/>
+      <path d="M880 350C938 325 994 320 1056 329C1124 339 1184 333 1284 301" fill="none" stroke="#e7f8ff" stroke-width="26" stroke-linecap="round" opacity=".36"/>
+      <path d="M913 341C986 325 1050 327 1113 335C1170 342 1219 332 1280 313" fill="none" stroke="#86d7f0" stroke-width="7" stroke-linecap="round" opacity=".72"/>
+      ${uses('snowPine',[[774,289,.84],[845,302,.7],[949,286,.78],[1093,298,.84],[1189,282,.72],[1240,296,.61]])}
+      ${uses('snowStar', winterStars)}
+
+      <ellipse cx="640" cy="592" rx="210" ry="86" fill="#091712" opacity=".82" filter="url(#softShadow)"/>
+      <path d="M476 610C529 574 579 557 640 558C703 557 752 574 804 610C752 643 704 659 641 660C578 660 528 645 476 610Z" fill="#14291e" stroke="#5ce1c7" stroke-opacity=".18" stroke-width="2"/>
+
+      <g fill="none" stroke="url(#root)" stroke-linecap="round" stroke-linejoin="round" filter="url(#treeGlow)">
+        <path d="M640 525C612 568 577 600 525 626C476 650 423 657 365 666" stroke-width="18"/>
+        <path d="M632 530C603 583 573 624 532 666C501 698 464 724 418 747" stroke-width="10"/>
+        <path d="M646 532C675 576 709 603 756 628C809 656 861 662 920 671" stroke-width="18"/>
+        <path d="M649 530C681 585 711 627 750 667C781 699 820 726 864 748" stroke-width="10"/>
+        <path d="M621 535C587 562 553 576 511 583" stroke-width="9"/>
+        <path d="M659 536C695 563 730 578 772 585" stroke-width="9"/>
+      </g>
+
+      <g filter="url(#softShadow)">
+        <path d="M601 566C614 521 620 477 615 438C611 409 604 388 601 366C620 377 633 390 641 406C649 389 662 375 681 363C676 391 669 414 668 440C665 480 674 522 690 566C673 551 657 543 640 543C624 543 617 551 601 566Z" fill="url(#trunk)"/>
+        <g fill="none" stroke="url(#trunk)" stroke-linecap="round" stroke-linejoin="round" filter="url(#treeGlow)">
+          <path d="M640 497C635 449 635 405 642 357C648 314 650 269 648 213" stroke-width="25"/>
+          <path d="M639 384C605 346 572 313 533 278" stroke-width="18"/>
+          <path d="M632 350C598 317 565 292 519 270" stroke-width="13"/>
+          <path d="M645 368C684 333 715 304 752 260" stroke-width="18"/>
+          <path d="M649 338C690 302 729 277 778 250" stroke-width="13"/>
+          <path d="M640 317C618 286 602 252 594 217" stroke-width="12"/>
+          <path d="M648 306C674 277 691 240 701 205" stroke-width="12"/>
+          <path d="M608 332C570 329 536 314 500 288" stroke-width="10"/>
+          <path d="M684 326C720 324 757 308 795 280" stroke-width="10"/>
+          <path d="M644 278C625 250 623 224 624 193" stroke-width="9"/>
+          <path d="M650 272C666 245 672 217 668 187" stroke-width="9"/>
+        </g>
+      </g>
+      <g filter="url(#seasonGlow)">${uses('leaf', canopyLeaves)}</g>
+
+      <g opacity=".72"><circle cx="640" cy="588" r="6" fill="#fff1c7"/><circle cx="640" cy="588" r="15" fill="none" stroke="#64ead5" stroke-opacity=".3"/></g>
+      <path d="M640 153V112" stroke="#fff1ca" stroke-width="2" stroke-opacity=".38"/>
+      <circle cx="640" cy="100" r="4" fill="#5ce8dc" opacity=".72"/>
+      <rect x="1" y="1" width="1278" height="798" rx="28" fill="none" stroke="#a5dce7" stroke-opacity=".12" stroke-width="2"/>
+    </g>
+  `;
+
+  svg.querySelectorAll('.spring-petals').forEach(node => node.setAttribute('style', 'color:#f5a5bf'));
+  svg.querySelectorAll('.summer-leaves').forEach(node => node.setAttribute('style', 'color:#45b978'));
+
+  host.replaceChildren(svg);
+  host.setAttribute('role', 'img');
+  host.setAttribute('aria-label', 'A static code-drawn Consider the Energy tree joins four permanent seasonal landscapes: spring above left, summer below left, autumn below right, and winter above right.');
+  host.dataset.lifecycleStatus = 'static-ready';
+  host.dataset.communityVisual = 'STATIC_INTEGRATED_FOUR_SEASON_TREE';
+  host.dataset.communityMotion = 'NONE';
+
+  const receipt = Object.freeze({
+    schema: 'COMMUNITY_STATIC_INTEGRATED_SEASONAL_TREE_RECEIPT_v1',
+    contract: CONTRACT,
+    rendered: true,
+    inlineSvg: true,
+    seasonCount: 4,
+    centralTreeDominant: true,
+    integratedLandscape: true,
+    runtimeImageAssets: 0,
+    canvasCount: 0,
+    webglContextCount: 0,
+    animationLoopCount: 0
+  });
+  globalThis.DGB_COMMUNITY_STATIC_SEASONAL_TREE_RECEIPT = receipt;
+}
+
+export { CONTRACT as DGB_COMMUNITY_STATIC_SEASONAL_TREE_CONTRACT };

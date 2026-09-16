@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "ace528b2cc6e2777b897d77ce873dca9cc2c4de9",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "6ccb9809e7db4cd58c66e823acb9ef3bd5f6c35d",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2314,
+    "lockScope": "H_EARTH:RUN8E_FULL_240_FRAME_CAPTURE:S01_S08:AABC3B886:V1",
+    "observedBranchHead": "a86cbbbe7b80e730e870710a2ec365d513da3a28",
+    "observedLedgerBlobSha": "db1f9d2b98db19773cf730f2b182ee749844f7be",
+    "operationId": "H_EARTH_RUN8E_FULL_240_FRAME_CAPTURE_20260916_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "95dc80ffd9eba614d78426c18bfb80dd6795ebbfcd7216bb14a810cb54ad8a9a"
+  },
+  "operationId": "H_EARTH_RUN8E_FULL_240_FRAME_CAPTURE_20260916_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "6f20d6d72f50da4384092ab7f7d667e7ad6eef75dc8ccf8271b669d06201b69f",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "5dd32563efb769d44aecd8db31d90dbbf4ca6a327db669be584074ef61ba2f46",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

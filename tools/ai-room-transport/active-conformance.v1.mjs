@@ -39,13 +39,30 @@ function parseArgs(argv) {
   return result;
 }
 function unique(values, code) { assert(new Set(values).size === values.length, code); }
+function finitePatternAlternatives(pattern) {
+  const match = typeof pattern === 'string' ? pattern.match(/^\^\(([^()]+)\)\$$/) : null;
+  if (!match) return [];
+  return match[1].split('|').filter(value => /^[A-Za-z0-9_.:-]+$/.test(value));
+}
+function expectedStringValue(name, schema, index) {
+  const regex = typeof schema.pattern === 'string' ? new RegExp(schema.pattern) : null;
+  const candidates = [];
+  if (/head/i.test(name)) candidates.push(`${(index % 8) + 1}`.repeat(40));
+  if (/holder/i.test(name)) candidates.push(`ACTIVE_CONFORMANCE_${index}`);
+  if (Array.isArray(schema.enum)) {
+    for (const value of schema.enum) {
+      if (typeof value === 'string' || typeof value === 'number') candidates.push(String(value));
+    }
+  }
+  candidates.push(`VALUE_${index}`);
+  candidates.push(...finitePatternAlternatives(schema.pattern));
+  const legal = candidates.find(value => !regex || regex.test(value));
+  if (legal !== undefined) return legal;
+  fail('CONFORMANCE_FIXTURE_PATTERN_UNSATISFIED', name);
+}
 function expectedValue(name, schema, index) {
   if (Object.hasOwn(schema, 'const')) return schema.const;
-  if (schema.type === 'string') {
-    if (/head/i.test(name)) return `${(index % 8) + 1}`.repeat(40);
-    if (/holder/i.test(name)) return `ACTIVE_CONFORMANCE_${index}`;
-    return `VALUE_${index}`;
-  }
+  if (schema.type === 'string') return expectedStringValue(name, schema, index);
   if (schema.type === 'boolean') return true;
   if (schema.type === 'integer' || schema.type === 'number') return 1;
   if (schema.type === 'array') return [];
@@ -55,6 +72,15 @@ function expectedValue(name, schema, index) {
 function expectedFailure(fn, code) {
   try { fn(); } catch (error) { assert(error.code === code, 'NEGATIVE_ERROR_CODE_MISMATCH', `${code}:${error.code}`); return; }
   fail('NEGATIVE_DID_NOT_FAIL', code);
+}
+function validateFixtureConstruction() {
+  assert(expectedValue('plain', { type: 'string' }, 3) === 'VALUE_3', 'FIXTURE_UNCONSTRAINED_STRING_REGRESSION');
+  assert(expectedValue('mode', { type: 'string', enum: ['ALPHA', 'BETA'] }, 3) === 'ALPHA', 'FIXTURE_STRING_ENUM_REGRESSION');
+  assert(expectedValue('masterFrame', { type: 'string', pattern: '^(728|736)$', enum: [728, 736] }, 3) === '728', 'FIXTURE_PATTERN_ENUM_STRING_COERCION_REGRESSION');
+  const holder = expectedValue('executionHolder', { type: 'string', pattern: '^[A-Z0-9][A-Z0-9_.:-]{2,127}$' }, 3);
+  assert(/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(holder), 'FIXTURE_HOLDER_PATTERN_REGRESSION');
+  expectedFailure(() => expectedValue('unsupported', { type: 'string', pattern: '^Z{3}$' }, 3), 'CONFORMANCE_FIXTURE_PATTERN_UNSATISFIED');
+  return true;
 }
 function validateGenesis(root) {
   const manifest = readJson(path.join(root, MANIFEST_PATH));
@@ -97,6 +123,7 @@ export function runConformance({ root, expectedHead, holder }) {
   const actualHead = git(root, 'rev-parse', 'HEAD^{commit}');
   assert(actualHead === expectedHead, 'EXACT_HEAD_MISMATCH', `${expectedHead}:${actualHead}`);
   assert(git(root, 'status', '--porcelain=v1', '--untracked-files=all') === '', 'DIRTY_WORKTREE');
+  validateFixtureConstruction();
   const genesis = validateGenesis(root);
   const registry = readJson(path.join(root, REGISTRY_PATH));
   assert(git(root, 'rev-parse', `${ACTIVATION_HEAD}:${REGISTRY_PATH}`) === ACTIVATION_REGISTRY_BLOB, 'ACTIVATION_REGISTRY_BLOB_MISMATCH');

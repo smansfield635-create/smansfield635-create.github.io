@@ -14,12 +14,19 @@ if (mount) {
       image.loading = 'eager';
       image.style.display = 'block';
       image.style.width = '100%';
-      image.style.height = '100%';
-      image.style.maxHeight = '36rem';
+      image.style.height = 'auto';
+      image.style.maxHeight = 'none';
       image.style.objectFit = 'contain';
       image.style.objectPosition = 'center';
       image.style.background = '#000';
+
       mount.classList.add('campaign-hero__media--native');
+      mount.style.minHeight = '0';
+      mount.style.margin = '0';
+      mount.style.padding = '0';
+      mount.style.background = 'none';
+      mount.style.borderLeft = '0';
+      mount.style.alignSelf = 'center';
       mount.replaceChildren(image);
     })
     .catch((error) => {

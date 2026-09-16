@@ -5,22 +5,7 @@
   "description": "Single authoritative successor-room continuation object. Supporting lock, failure, preview, execution and writeback mechanisms are internal inputs and do not create independent room-level continuation authority.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema",
-    "status",
-    "operationId",
-    "authorityGeneration",
-    "projectId",
-    "exactBranch",
-    "exactHead",
-    "allowedPaths",
-    "completedCheckpoints",
-    "preservedEvidence",
-    "nextAction",
-    "requiredVerifier",
-    "stopCondition",
-    "authorityEffect"
-  ],
+  "required": ["schema","status","operationId","authorityGeneration","projectId","exactBranch","exactHead","allowedPaths","completedCheckpoints","preservedEvidence","nextAction","requiredVerifier","stopCondition","authorityEffect"],
   "properties": {
     "schema": {"const": "CONTROL_PLANE_RESUME_OBJECT_v1"},
     "status": {"enum": ["ACTIVE_RESUMABLE", "BLOCKED_EXACT_BINDING", "TERMINAL"]},
@@ -29,23 +14,9 @@
     "projectId": {"type": "string", "minLength": 2},
     "exactBranch": {"type": "string", "pattern": "^refs/heads/[A-Za-z0-9._/-]+$"},
     "exactHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-    "allowedPaths": {
-      "type": "array",
-      "minItems": 1,
-      "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
-    },
-    "completedCheckpoints": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
-    },
-    "preservedEvidence": {
-      "type": "array",
-      "minItems": 1,
-      "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
-    },
+    "allowedPaths": {"type": "array","minItems": 1,"uniqueItems": true,"items": {"type": "string", "minLength": 1}},
+    "completedCheckpoints": {"type": "array","uniqueItems": true,"items": {"type": "string", "minLength": 1}},
+    "preservedEvidence": {"type": "array","minItems": 1,"uniqueItems": true,"items": {"type": "string", "minLength": 1}},
     "nextAction": {
       "type": "object",
       "additionalProperties": false,
@@ -54,28 +25,26 @@
         "actionId": {"type": "string", "minLength": 1},
         "actionClass": {"enum": ["CONSTRUCTION", "REGISTERED_WRITEBACK", "QUALIFICATION", "PHYSICAL_REVIEW", "MERGE", "PUBLICATION", "TERMINAL_CLOSE"]},
         "binding": {"type": "string", "minLength": 1},
-        "expectedResult": {"type": "string", "minLength": 1}
-      }
+        "expectedResult": {"type": "string", "minLength": 1},
+        "qualificationBinding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["candidateHead","targetPath","expectedBlob","receiptGlobal","expectedReceiptSchema","expectedOperationId","qualificationProfile"],
+          "properties": {
+            "candidateHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+            "targetPath": {"type": "string", "pattern": "^[A-Za-z0-9._/-]+$"},
+            "expectedBlob": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+            "receiptGlobal": {"type": "string", "pattern": "^[A-Za-z_$][A-Za-z0-9_$]{2,127}$"},
+            "expectedReceiptSchema": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,255}$"},
+            "expectedOperationId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,255}$"},
+            "qualificationProfile": {"const": "NODE_SYNTAX_AND_GLOBAL_RECEIPT_V1"}
+          }
+        }
+      },
+      "allOf": [{"if":{"properties":{"actionClass":{"const":"QUALIFICATION"}}},"then":{"required":["qualificationBinding"]}}]
     },
-    "requiredVerifier": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["verifierId", "binding", "successResult"],
-      "properties": {
-        "verifierId": {"type": "string", "minLength": 1},
-        "binding": {"type": "string", "minLength": 1},
-        "successResult": {"type": "string", "minLength": 1}
-      }
-    },
-    "stopCondition": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["conditionId", "disposition"],
-      "properties": {
-        "conditionId": {"type": "string", "minLength": 1},
-        "disposition": {"type": "string", "minLength": 1}
-      }
-    },
+    "requiredVerifier": {"type":"object","additionalProperties":false,"required":["verifierId","binding","successResult"],"properties":{"verifierId":{"type":"string","minLength":1},"binding":{"type":"string","minLength":1},"successResult":{"type":"string","minLength":1}}},
+    "stopCondition": {"type":"object","additionalProperties":false,"required":["conditionId","disposition"],"properties":{"conditionId":{"type":"string","minLength":1},"disposition":{"type":"string","minLength":1}}},
     "authorityEffect": {"const": "NONE_RESUME_OBJECT_ONLY"}
   },
   "x-containment": {
@@ -88,14 +57,9 @@
     "newCapabilityClassesFrozen": true,
     "newFallbackClassesFrozen": true,
     "newClassifierClassesFrozen": true,
+    "resumeBoundQualificationFulfillment": "FIXED_EXACT_HEAD_QUALIFICATION_EXECUTION",
+    "resumeBoundQualificationAuthorityEffect": "NONE_INTERNAL_FULFILLMENT_ONLY",
     "systemicDefectStopThreshold": 2,
-    "safetyCore": [
-      "EXACT_HEAD_CUSTODY",
-      "BOUNDED_MUTATION_SCOPE",
-      "CANONICAL_AUTHORITY",
-      "PROVEN_DEPENDENCY_BEFORE_FAILURE_PROPAGATION",
-      "MERGE_IS_NOT_DEPLOYMENT",
-      "FAIL_CLOSED_ON_REAL_AMBIGUITY"
-    ]
+    "safetyCore": ["EXACT_HEAD_CUSTODY","BOUNDED_MUTATION_SCOPE","CANONICAL_AUTHORITY","PROVEN_DEPENDENCY_BEFORE_FAILURE_PROPAGATION","MERGE_IS_NOT_DEPLOYMENT","FAIL_CLOSED_ON_REAL_AMBIGUITY"]
   }
 }

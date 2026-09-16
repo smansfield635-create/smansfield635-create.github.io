@@ -543,7 +543,6 @@ function P_local(object,timeSeconds){
   return A(home,V(Math.sin(t*.44+phase)*amp*.82,-Math.abs(Math.cos(t*.36+phase))*amp*.58,Math.sin(t*.27+phase)*amp*.30));
 }
 
-// Gen2273 qualified winner materialization. Settlement duration is frozen by qualification evidence.
 mount=function(){throw Error('GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_NOT_READY')};
 const GEN2273_SELECTED_SETTLEMENT_SECONDS=1.5;
 const GEN2273_EPSILON=1e-7;
@@ -583,454 +582,96 @@ function createGen2273Runtime(settlementDurationSeconds=GEN2273_SELECTED_SETTLEM
     stateIndex=index;
     transitionLog.push(Object.freeze({state:GEN2273_STATE_ORDER[index],stateIndex:index,atSeconds}));
     if(index===1){globalCirculationAuthority=true;globalCirculationUpdatePathEnabled=true;}
-    if(index===3){
-      circulationProgress=1;
-      registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,1));circulationEvaluations++});
-      treeGrowthAuthorityActive=false;
-    }
-    if(index===4){
-      if(settlementOriginCaptureCount===0){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(currentXYZ[i]));settlementOriginCaptureCount++})}
-      circulationEvaluationsAtSettlement=circulationEvaluations;
-      globalCirculationAuthority=false;
-      globalCirculationUpdatePathEnabled=false;
-    }
-    if(index===5){
-      settlementProgress=1;
-      registry.forEach((object,i)=>setCurrent(i,handoff(i)));
-      globalCirculationAuthority=false;
-      globalCirculationUpdatePathEnabled=false;
-      entranceAuthorityActive=false;
-      treeGrowthAuthorityActive=false;
-      communityInteractionAvailable=true;
-      domainLocalPhysicsAuthoritative=true;
-      domainLocked=true;
-    }
+    if(index===3){circulationProgress=1;registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,1));circulationEvaluations++});treeGrowthAuthorityActive=false;}
+    if(index===4){if(settlementOriginCaptureCount===0){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(currentXYZ[i]));settlementOriginCaptureCount++})}circulationEvaluationsAtSettlement=circulationEvaluations;globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false;}
+    if(index===5){settlementProgress=1;registry.forEach((object,i)=>setCurrent(i,handoff(i)));globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false;entranceAuthorityActive=false;treeGrowthAuthorityActive=false;communityInteractionAvailable=true;domainLocalPhysicsAuthoritative=true;domainLocked=true;}
   };
-  const updateCirculation=seconds=>{
-    if(!globalCirculationAuthority||!globalCirculationUpdatePathEnabled||stateIndex>=4)return;
-    const next=clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[0]));
-    circulationProgress=Math.max(circulationProgress,next);
-    registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,circulationProgress));circulationEvaluations++});
-  };
-  const updateSettlement=seconds=>{
-    if(stateIndex!==4)return;
-    const next=clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration);
-    settlementProgress=Math.max(settlementProgress,next);
-    const eased=smoother(settlementProgress);
-    registry.forEach((object,i)=>setCurrent(i,L(settlementOrigin[i],handoff(i),eased)));
-  };
-  const updateLocal=seconds=>{
-    if(!domainLocked||!domainLocalPhysicsAuthoritative)return;
-    localTimeSeconds=Math.max(localTimeSeconds,Math.max(0,seconds-lockSeconds));
-    if(reduced){registry.forEach((object,i)=>setCurrent(i,handoff(i)));return}
-    registry.forEach((object,i)=>setCurrent(i,P_local(object,localTimeSeconds)));
-  };
-  const snapshot=()=>Object.freeze({
-    state:state(),stateIndex,progress:stateIndex===4?settlementProgress:stateIndex<3?circulationProgress:1,
-    settlementDuration,lockSeconds,maxSeconds,circulationProgress,settlementProgress,settlementOriginCaptureCount,
-    globalCirculation:globalCirculationAuthority?1:0,
-    globalCirculationAuthority,
-    globalCirculationUpdatePath:globalCirculationUpdatePathEnabled?'ENABLED':'DISABLED',
-    entranceAuthority:entranceAuthorityActive?'ACTIVE':'TERMINATED',
-    treeGrowthAuthority:treeGrowthAuthorityActive?'ACTIVE':'TERMINATED',
-    communityInteractionAvailable,domainLocalPhysicsAuthoritative,domainLocked,localTimeSeconds,
-    postSettlementCirculationEvaluations:circulationEvaluationsAtSettlement===null?0:circulationEvaluations-circulationEvaluationsAtSettlement,
-    transitionLog:Object.freeze(transitionLog.map(entry=>entry))
-  });
-  if(reduced){
-    registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(handoff(i)));settlementOriginCaptureCount++});
-    transitionLog.push(Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,atSeconds:0,reduced:true}));
-  }else transitionLog.push(Object.freeze({state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,atSeconds:0}));
-  const advance=ms=>{
-    const rawSeconds=Math.max(0,Number(ms)||0)/1000;
-    maxSeconds=Math.max(maxSeconds,rawSeconds);
-    const seconds=maxSeconds;
-    if(reduced){updateLocal(seconds);return snapshot()}
-    if(seconds>=CONTRACT.feedingWindowSeconds[0])enter(1,CONTRACT.feedingWindowSeconds[0]);
-    if(seconds>=CONTRACT.feedingWindowSeconds[1])enter(2,CONTRACT.feedingWindowSeconds[1]);
-    if(seconds<GEN2273_TREE_COMPLETE_SECONDS)updateCirculation(seconds);
-    if(seconds>=GEN2273_TREE_COMPLETE_SECONDS){enter(3,GEN2273_TREE_COMPLETE_SECONDS);enter(4,GEN2273_TREE_COMPLETE_SECONDS)}
-    if(stateIndex===4)updateSettlement(seconds);
-    if(seconds>=lockSeconds){enter(5,lockSeconds);enter(6,lockSeconds);enter(7,lockSeconds)}
-    if(domainLocked)updateLocal(seconds);
-    return snapshot();
-  };
+  const updateCirculation=seconds=>{if(!globalCirculationAuthority||!globalCirculationUpdatePathEnabled||stateIndex>=4)return;const next=clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[0]));circulationProgress=Math.max(circulationProgress,next);registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,circulationProgress));circulationEvaluations++});};
+  const updateSettlement=seconds=>{if(stateIndex!==4)return;const next=clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration);settlementProgress=Math.max(settlementProgress,next);const eased=smoother(settlementProgress);registry.forEach((object,i)=>setCurrent(i,L(settlementOrigin[i],handoff(i),eased)));};
+  const updateLocal=seconds=>{if(!domainLocked||!domainLocalPhysicsAuthoritative)return;localTimeSeconds=Math.max(localTimeSeconds,Math.max(0,seconds-lockSeconds));if(reduced){registry.forEach((object,i)=>setCurrent(i,handoff(i)));return}registry.forEach((object,i)=>setCurrent(i,P_local(object,localTimeSeconds)));};
+  const snapshot=()=>Object.freeze({state:state(),stateIndex,progress:stateIndex===4?settlementProgress:stateIndex<3?circulationProgress:1,settlementDuration,lockSeconds,maxSeconds,circulationProgress,settlementProgress,settlementOriginCaptureCount,globalCirculation:globalCirculationAuthority?1:0,globalCirculationAuthority,globalCirculationUpdatePath:globalCirculationUpdatePathEnabled?'ENABLED':'DISABLED',entranceAuthority:entranceAuthorityActive?'ACTIVE':'TERMINATED',treeGrowthAuthority:treeGrowthAuthorityActive?'ACTIVE':'TERMINATED',communityInteractionAvailable,domainLocalPhysicsAuthoritative,domainLocked,localTimeSeconds,postSettlementCirculationEvaluations:circulationEvaluationsAtSettlement===null?0:circulationEvaluations-circulationEvaluationsAtSettlement,transitionLog:Object.freeze(transitionLog.map(entry=>entry))});
+  if(reduced){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(handoff(i)));settlementOriginCaptureCount++});transitionLog.push(Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,atSeconds:0,reduced:true}));}
+  else transitionLog.push(Object.freeze({state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,atSeconds:0}));
+  const advance=ms=>{const rawSeconds=Math.max(0,Number(ms)||0)/1000;maxSeconds=Math.max(maxSeconds,rawSeconds);const seconds=maxSeconds;if(reduced){updateLocal(seconds);return snapshot()}if(seconds>=CONTRACT.feedingWindowSeconds[0])enter(1,CONTRACT.feedingWindowSeconds[0]);if(seconds>=CONTRACT.feedingWindowSeconds[1])enter(2,CONTRACT.feedingWindowSeconds[1]);if(seconds<GEN2273_TREE_COMPLETE_SECONDS)updateCirculation(seconds);if(seconds>=GEN2273_TREE_COMPLETE_SECONDS){enter(3,GEN2273_TREE_COMPLETE_SECONDS);enter(4,GEN2273_TREE_COMPLETE_SECONDS)}if(stateIndex===4)updateSettlement(seconds);if(seconds>=lockSeconds){enter(5,lockSeconds);enter(6,lockSeconds);enter(7,lockSeconds)}if(domainLocked)updateLocal(seconds);return snapshot();};
   return Object.freeze({registry,currentXYZ,settlementOrigin,advance,snapshot});
 }
 const GEN2273_CONTROLLER_CACHE=new Map();
-function gen2273EightStateController(ms,settlementDurationSeconds=GEN2273_SELECTED_SETTLEMENT_SECONDS,reduced=false){
-  const duration=gen2273SettlementDuration(settlementDurationSeconds),key=`${duration}:${reduced?'reduced':'full'}`;
-  if(!GEN2273_CONTROLLER_CACHE.has(key))GEN2273_CONTROLLER_CACHE.set(key,createGen2273Runtime(duration,reduced));
-  return GEN2273_CONTROLLER_CACHE.get(key).advance(ms);
-}
+function gen2273EightStateController(ms,settlementDurationSeconds=GEN2273_SELECTED_SETTLEMENT_SECONDS,reduced=false){const duration=gen2273SettlementDuration(settlementDurationSeconds),key=`${duration}:${reduced?'reduced':'full'}`;if(!GEN2273_CONTROLLER_CACHE.has(key))GEN2273_CONTROLLER_CACHE.set(key,createGen2273Runtime(duration,reduced));return GEN2273_CONTROLLER_CACHE.get(key).advance(ms)}
 
-function gen2273AssertBoundRanges(g){
-  const ranges=g.objectRanges||[],ids=ranges.map(range=>range.objectId),unique=new Set(ids),vertexCount=g.p.length/3;
-  const ordered=ids.length===GEN2273_MOBILE_OBJECT_REGISTRY.length&&ids.every((id,index)=>id===index);
-  const valid=ranges.every(range=>Number.isInteger(range.startVertex)&&Number.isInteger(range.endVertex)&&range.startVertex>=0&&range.endVertex>range.startVertex&&range.endVertex<=vertexCount);
-  if(!ordered||unique.size!==GEN2273_MOBILE_OBJECT_REGISTRY.length||!valid)throw Error('GEN2273_RUNTIME_BINDING_RANGE_FAILURE');
-  return Object.freeze({passed:true,objectRangeCount:ranges.length,uniqueObjectIds:unique.size,ordered:true,visibleFeedPopulationCount:0});
-}
+function gen2273AssertBoundRanges(g){const ranges=g.objectRanges||[],ids=ranges.map(range=>range.objectId),unique=new Set(ids),vertexCount=g.p.length/3;const ordered=ids.length===GEN2273_MOBILE_OBJECT_REGISTRY.length&&ids.every((id,index)=>id===index);const valid=ranges.every(range=>Number.isInteger(range.startVertex)&&Number.isInteger(range.endVertex)&&range.startVertex>=0&&range.endVertex>range.startVertex&&range.endVertex<=vertexCount);if(!ordered||unique.size!==GEN2273_MOBILE_OBJECT_REGISTRY.length||!valid)throw Error('GEN2273_RUNTIME_BINDING_RANGE_FAILURE');return Object.freeze({passed:true,objectRangeCount:ranges.length,uniqueObjectIds:unique.size,ordered:true,visibleFeedPopulationCount:0})}
 
 const GEN2273_BASE_VERTEX_SOURCE=vertexSource;
-vertexSource=function(webgl2,precision){
-  let source=GEN2273_BASE_VERTEX_SOURCE(webgl2,precision),next=source.replace('if(zoneEnv>.5&&u_reduced<.5){','if(false){');
-  if(next===source)throw Error('GEN2273_ZONE_SHADER_AUTHORITY_MARKER_MISSING');
-  source=next;
-  next=source.replace('float sway=(u_reduced>.5?0.0:.008)*crown*alive;','float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-zoneEnv);');
-  if(next===source)throw Error('GEN2273_SHARED_SWAY_MARKER_MISSING');
-  return next;
-};
+vertexSource=function(webgl2,precision){let source=GEN2273_BASE_VERTEX_SOURCE(webgl2,precision),next=source.replace('if(zoneEnv>.5&&u_reduced<.5){','if(false){');if(next===source)throw Error('GEN2273_ZONE_SHADER_AUTHORITY_MARKER_MISSING');source=next;next=source.replace('float sway=(u_reduced>.5?0.0:.008)*crown*alive;','float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-zoneEnv);');if(next===source)throw Error('GEN2273_SHARED_SWAY_MARKER_MISSING');return next};
 const GEN2273_BASE_FRAGMENT_SOURCE=fragmentSource;
-fragmentSource=function(webgl2,precision){
-  const source=GEN2273_BASE_FRAGMENT_SOURCE(webgl2,precision),next=source.replace('alpha*=mix(1.0,1.0-u_lifecycle,feed);','alpha*=1.0-feed;');
-  if(next===source)throw Error('GEN2273_FEED_POPULATION_MARKER_MISSING');
-  return next;
-};
+fragmentSource=function(webgl2,precision){const source=GEN2273_BASE_FRAGMENT_SOURCE(webgl2,precision),next=source.replace('alpha*=mix(1.0,1.0-u_lifecycle,feed);','alpha*=1.0-feed;');if(next===source)throw Error('GEN2273_FEED_POPULATION_MARKER_MISSING');return next};
 
 addQuadrantEnvironment=function(g){
-  const count=GEN2273_OBJECTS_PER_DEPTH;
-  g.objectRanges=[];
-  for(const zone of QUADRANT_VOLUMES){
-    DEPTH_PLANES.forEach((plane,depthIndex)=>{
-      for(let i=0;i<count;i++){
-        const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),q=.10+zone.season*.17+depthIndex*.018+i*.006,near=plane.scale,alpha=plane.alpha,startVertex=g.p.length/3;
-        if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2273_CANONICAL_IDENTITY_BINDING_FAILURE');
-        if(zone.season===SEASON.SPRING){
-          if(i%3===0)flower(g,p,q,zone.kind,zone.season,.58*near,alpha);
-          else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,zone.kind,5,3,zone.season);
-        }else if(zone.season===SEASON.SUMMER){
-          rainStroke(g,p,q,zone.kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));
-          if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,zone.kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
-          if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,zone.kind,6,3,zone.season);
-        }else if(zone.season===SEASON.AUTUMN){
-          leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha));
-        }else{
-          if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,zone.kind,zone.season,alpha);
-          else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,zone.kind,5,3,zone.season);
-          if(depthIndex===0&&i%4===1)orb(g,A(p,V(.10,.02,-.02)),V(.13*near,.060*near,.050*near),[.64,.78,.86,alpha*.20],q,zone.kind,6,3,zone.season);
-        }
-        g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));
-      }
-    });
-  }
-  const dockSpring=V(-1.06,1.48,.18),dockSummer=V(-1.17,.72,.15),dockAutumn=V(1.10,.76,.14),dockWinter=V(1.02,1.54,.16);
-  [V(-.10,.04,0),V(.02,.12,.02),V(.12,-.03,-.01)].forEach((d,i)=>flower(g,A(dockSpring,d),.80,KIND.FEED_SPRING,SEASON.SPRING,.92+i*.08));
-  [V(-.12,.10,.00),V(-.03,.03,.02),V(.08,.12,-.02),V(.14,-.01,.03)].forEach((d,i)=>rainStroke(g,A(dockSummer,d),.81,KIND.FEED_SUMMER,SEASON.SUMMER,.95+i*.04));
-  windStroke(g,A(dockSummer,V(0,-.12,.01)),.81,KIND.FEED_SUMMER,SEASON.SUMMER,1.1);
-  [V(-.13,.08,.00),V(-.02,.14,.02),V(.10,.07,-.02),V(-.08,-.06,.03),V(.11,-.08,.01)].forEach((d,i)=>leaf(g,A(dockAutumn,d),.82,KIND.FEED_AUTUMN,SEASON.AUTUMN,.90+(i%2)*.18,i%2?[.91,.48,.09,1]:[.69,.29,.045,1]));
-  [V(-.10,.05,.00),V(.08,.11,.02),V(.05,-.08,-.02)].forEach((d,i)=>snowflake(g,A(dockWinter,d),.075+i*.008,.83,KIND.FEED_WINTER,SEASON.WINTER));
+  const count=GEN2273_OBJECTS_PER_DEPTH;g.objectRanges=[];
+  for(const zone of QUADRANT_VOLUMES)DEPTH_PLANES.forEach((plane,depthIndex)=>{for(let i=0;i<count;i++){const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),q=.10+zone.season*.17+depthIndex*.018+i*.006,near=plane.scale,alpha=plane.alpha,startVertex=g.p.length/3;if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2273_CANONICAL_IDENTITY_BINDING_FAILURE');if(zone.season===SEASON.SPRING){if(i%3===0)flower(g,p,q,zone.kind,zone.season,.58*near,alpha);else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,zone.kind,5,3,zone.season)}else if(zone.season===SEASON.SUMMER){rainStroke(g,p,q,zone.kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,zone.kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,zone.kind,6,3,zone.season)}else if(zone.season===SEASON.AUTUMN){leaf(g,p,q,zone.kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha))}else{if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,zone.kind,zone.season,alpha);else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,zone.kind,5,3,zone.season);if(depthIndex===0&&i%4===1)orb(g,A(p,V(.10,.02,-.02)),V(.13*near,.060*near,.050*near),[.64,.78,.86,alpha*.20],q,zone.kind,6,3,zone.season)}g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}))}});
 };
 
 const GEN2273_BASE_RENDERER=renderer;
-renderer=function(gl,g,backend){
-  const R=GEN2273_BASE_RENDERER(gl,g,backend);
-  R.basePositions=new Float32Array(g.p);
-  R.positionData=new Float32Array(g.p);
-  gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);
-  gl.bufferData(gl.ARRAY_BUFFER,R.positionData,gl.DYNAMIC_DRAW);
-  return R;
-};
-function gen2273ApplyRendererPositions(gl,R,g,runtime){
-  R.positionData.set(R.basePositions);
-  for(const range of g.objectRanges){
-    const identity=GEN2273_MOBILE_OBJECT_REGISTRY[range.objectId],current=runtime.currentXYZ[range.objectId],dx=current.x-identity.homeXYZ.x,dy=current.y-identity.homeXYZ.y,dz=current.z-identity.homeXYZ.z;
-    for(let vertex=range.startVertex;vertex<range.endVertex;vertex++){const offset=vertex*3;R.positionData[offset]=R.basePositions[offset]+dx;R.positionData[offset+1]=R.basePositions[offset+1]+dy;R.positionData[offset+2]=R.basePositions[offset+2]+dz}
-  }
-  gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);
-  gl.bufferSubData(gl.ARRAY_BUFFER,0,R.positionData);
-}
-function gen2273EnvironmentState(ms,reduced,lockSeconds){
-  if(reduced)return{active:true,phase:'FOUR_DOMAIN_ACTIVE',progress:1,color:[.012,.026,.052,.68]};
-  const lockMs=lockSeconds*1000;
-  if(ms<lockMs){const u=clamp(ms/lockMs);return{active:true,phase:'ENTRANCE_AND_SETTLEMENT',progress:u,color:[mix(.006,.014,u),mix(.014,.030,u),mix(.032,.060,u),.68]}}
-  const period=CONTRACT.environmentCycleSeconds*1000,t=((ms-lockMs)%period+period)%period,u=t/period;
-  const frames=[{at:0,phase:'FOUR_DOMAIN_ACTIVE',color:[.014,.030,.060,.68]},{at:.25,phase:'LOCAL_MOVEMENT',color:[.018,.070,.080,.60]},{at:.50,phase:'LOCAL_DENSITY',color:[.095,.038,.020,.70]},{at:.75,phase:'LOCAL_RECOVERY',color:[.004,.010,.034,.78]},{at:1,phase:'FOUR_DOMAIN_ACTIVE',color:[.014,.030,.060,.68]}];
-  let a=frames[0],b=frames[1];for(let i=0;i<frames.length-1;i++)if(u>=frames[i].at&&u<=frames[i+1].at){a=frames[i];b=frames[i+1];break}
-  const q=smooth(a.at,b.at,u);return{active:true,phase:a.phase,progress:u,color:a.color.map((value,index)=>mix(value,b.color[index],q))};
-}
+renderer=function(gl,g,backend){const R=GEN2273_BASE_RENDERER(gl,g,backend);R.basePositions=new Float32Array(g.p);R.positionData=new Float32Array(g.p);gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);gl.bufferData(gl.ARRAY_BUFFER,R.positionData,gl.DYNAMIC_DRAW);return R};
+function gen2273ApplyRendererPositions(gl,R,g,runtime){R.positionData.set(R.basePositions);for(const range of g.objectRanges){const identity=GEN2273_MOBILE_OBJECT_REGISTRY[range.objectId],current=runtime.currentXYZ[range.objectId],dx=current.x-identity.homeXYZ.x,dy=current.y-identity.homeXYZ.y,dz=current.z-identity.homeXYZ.z;for(let vertex=range.startVertex;vertex<range.endVertex;vertex++){const offset=vertex*3;R.positionData[offset]=R.basePositions[offset]+dx;R.positionData[offset+1]=R.basePositions[offset+1]+dy;R.positionData[offset+2]=R.basePositions[offset+2]+dz}}gl.bindBuffer(gl.ARRAY_BUFFER,R.b.p);gl.bufferSubData(gl.ARRAY_BUFFER,0,R.positionData)}
+function gen2273EnvironmentState(ms,reduced,lockSeconds){if(reduced)return{active:true,phase:'FOUR_DOMAIN_ACTIVE',progress:1,color:[.012,.026,.052,.68]};const lockMs=lockSeconds*1000;if(ms<lockMs){const u=clamp(ms/lockMs);return{active:true,phase:'ENTRANCE_AND_SETTLEMENT',progress:u,color:[mix(.006,.014,u),mix(.014,.030,u),mix(.032,.060,u),.68]}}const period=CONTRACT.environmentCycleSeconds*1000,t=((ms-lockMs)%period+period)%period,u=t/period;const frames=[{at:0,phase:'FOUR_DOMAIN_ACTIVE',color:[.014,.030,.060,.68]},{at:.25,phase:'LOCAL_MOVEMENT',color:[.018,.070,.080,.60]},{at:.50,phase:'LOCAL_DENSITY',color:[.095,.038,.020,.70]},{at:.75,phase:'LOCAL_RECOVERY',color:[.004,.010,.034,.78]},{at:1,phase:'FOUR_DOMAIN_ACTIVE',color:[.014,.030,.060,.68]}];let a=frames[0],b=frames[1];for(let i=0;i<frames.length-1;i++)if(u>=frames[i].at&&u<=frames[i+1].at){a=frames[i];b=frames[i+1];break}const q=smooth(a.at,b.at,u);return{active:true,phase:a.phase,progress:u,color:a.color.map((value,index)=>mix(value,b.color[index],q))}}
 function gen2273CycleTimeSeconds(ms,lockSeconds){const lockMs=lockSeconds*1000;if(ms<=lockMs)return Math.max(0,ms)/1000;const period=CONTRACT.environmentCycleSeconds*1000;return(((ms-lockMs)%period+period)%period)/1000}
 
 const GEN2273_BOUND_GEOMETRY=build();
 const GEN2273_BINDING_PROOF=gen2273AssertBoundRanges(GEN2273_BOUND_GEOMETRY);
-function runGen2273MechanicalCheckpointProofs(){
-  const ids=GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>object.objectId),names=GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>object.id),identityFrozen=GEN2273_MOBILE_OBJECT_REGISTRY.every(Object.isFrozen),uniqueIdentity=new Set(ids).size===96&&new Set(names).size===96&&ids.every((id,index)=>id===index);
-  const circulationStartsAtHome=GEN2273_MOBILE_OBJECT_REGISTRY.every(object=>gen2273SameXYZ(P_circulation(object,0),P_static(object)));
-  const localStartsAtHome=GEN2273_MOBILE_OBJECT_REGISTRY.every(object=>gen2273SameXYZ(P_local(object,0),P_static(object)));
-  const controller=createGen2273Runtime(1.9,false),indices=[];
-  [0,3500,12500,18400,19350,20300].forEach(ms=>indices.push(controller.advance(ms).stateIndex));
-  const lockSnapshot=controller.snapshot(),originBefore=gen2273CloneXYZ(controller.settlementOrigin[0]),stateBefore=lockSnapshot.stateIndex;
-  const earlierSnapshot=controller.advance(1000),originAfter=controller.settlementOrigin[0];
-  const monotonic=indices.every((value,index)=>index===0||value>=indices[index-1])&&earlierSnapshot.stateIndex===stateBefore;
-  const orderedTransitions=lockSnapshot.transitionLog.map(entry=>entry.state).join('|')===GEN2273_STATE_ORDER.join('|');
-  const originCapturedOnce=lockSnapshot.settlementOriginCaptureCount===96&&gen2273SameXYZ(originBefore,originAfter);
-  const physical=createGen2273Runtime(1.9,false);physical.advance(18400);const origin=gen2273CloneXYZ(physical.settlementOrigin[0]);physical.advance(19350);const expectedMid=L(origin,GEN2273_DOMAIN_HANDOFF_XYZ[0],smoother(.5)),midError=gen2273Distance(physical.currentXYZ[0],expectedMid);physical.advance(20300);const lockError=gen2273Distance(physical.currentXYZ[0],GEN2273_DOMAIN_HANDOFF_XYZ[0]),physicalSnapshot=physical.snapshot();
-  const durationLaw=GEN2273_SETTLEMENT_CANDIDATES.every(duration=>Math.abs(createGen2273Runtime(duration,false).snapshot().lockSeconds-(GEN2273_TREE_COMPLETE_SECONDS+duration))<GEN2273_EPSILON);
-  const signatures=[0,24,48,72].map(id=>{const object=GEN2273_MOBILE_OBJECT_REGISTRY[id],home=P_static(object),local=P_local(object,1);return V(local.x-home.x,local.y-home.y,local.z-home.z)});
-  let distinctLocal=true;for(let i=0;i<signatures.length;i++)for(let j=i+1;j<signatures.length;j++)if(gen2273Distance(signatures[i],signatures[j])<.001)distinctLocal=false;
-  const identityState=Object.freeze({passed:uniqueIdentity&&identityFrozen&&GEN2273_BINDING_PROOF.passed&&monotonic&&orderedTransitions&&originCapturedOnce,objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,rangeCount:GEN2273_BINDING_PROOF.objectRangeCount,uniqueObjectIds:GEN2273_BINDING_PROOF.uniqueObjectIds,monotonic,orderedTransitions,originCapturedOnce,noRespawnOrSecondVisiblePopulation:GEN2273_BINDING_PROOF.visibleFeedPopulationCount===0});
-  const physicalContinuity=Object.freeze({passed:circulationStartsAtHome&&localStartsAtHome&&midError<GEN2273_EPSILON&&lockError<GEN2273_EPSILON&&physicalSnapshot.postSettlementCirculationEvaluations===0&&durationLaw,circulationStartsAtHome,localStartsAtHome,midpointError:midError,lockError,postSettlementCirculationEvaluations:physicalSnapshot.postSettlementCirculationEvaluations,durationLaw});
-  const productBoundary=Object.freeze({passed:lockSnapshot.globalCirculation===0&&lockSnapshot.globalCirculationUpdatePath==='DISABLED'&&lockSnapshot.entranceAuthority==='TERMINATED'&&lockSnapshot.treeGrowthAuthority==='TERMINATED'&&lockSnapshot.communityInteractionAvailable&&lockSnapshot.domainLocalPhysicsAuthoritative&&lockSnapshot.domainLocked&&lockSnapshot.state===GEN2273_STATE.COEXISTENCE&&distinctLocal,domainLockAtSeconds:lockSnapshot.lockSeconds,noPostLockWait:lockSnapshot.state===GEN2273_STATE.COEXISTENCE,distinctDomainLocalMotion:distinctLocal,communityInteractionAvailable:lockSnapshot.communityInteractionAvailable});
-  return Object.freeze({passed:identityState.passed&&physicalContinuity.passed&&productBoundary.passed,identityState,physicalContinuity,productBoundary});
-}
+function runGen2273MechanicalCheckpointProofs(){const ids=GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>object.objectId),names=GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>object.id),identityFrozen=GEN2273_MOBILE_OBJECT_REGISTRY.every(Object.isFrozen),uniqueIdentity=new Set(ids).size===96&&new Set(names).size===96&&ids.every((id,index)=>id===index);const circulationStartsAtHome=GEN2273_MOBILE_OBJECT_REGISTRY.every(object=>gen2273SameXYZ(P_circulation(object,0),P_static(object)));const localStartsAtHome=GEN2273_MOBILE_OBJECT_REGISTRY.every(object=>gen2273SameXYZ(P_local(object,0),P_static(object)));const controller=createGen2273Runtime(1.9,false),indices=[];[0,3500,12500,18400,19350,20300].forEach(ms=>indices.push(controller.advance(ms).stateIndex));const lockSnapshot=controller.snapshot(),originBefore=gen2273CloneXYZ(controller.settlementOrigin[0]),stateBefore=lockSnapshot.stateIndex;const earlierSnapshot=controller.advance(1000),originAfter=controller.settlementOrigin[0];const monotonic=indices.every((value,index)=>index===0||value>=indices[index-1])&&earlierSnapshot.stateIndex===stateBefore;const orderedTransitions=lockSnapshot.transitionLog.map(entry=>entry.state).join('|')===GEN2273_STATE_ORDER.join('|');const originCapturedOnce=lockSnapshot.settlementOriginCaptureCount===96&&gen2273SameXYZ(originBefore,originAfter);const physical=createGen2273Runtime(1.9,false);physical.advance(18400);const origin=gen2273CloneXYZ(physical.settlementOrigin[0]);physical.advance(19350);const expectedMid=L(origin,GEN2273_DOMAIN_HANDOFF_XYZ[0],smoother(.5)),midError=gen2273Distance(physical.currentXYZ[0],expectedMid);physical.advance(20300);const lockError=gen2273Distance(physical.currentXYZ[0],GEN2273_DOMAIN_HANDOFF_XYZ[0]),physicalSnapshot=physical.snapshot();const durationLaw=GEN2273_SETTLEMENT_CANDIDATES.every(duration=>Math.abs(createGen2273Runtime(duration,false).snapshot().lockSeconds-(GEN2273_TREE_COMPLETE_SECONDS+duration))<GEN2273_EPSILON);const signatures=[0,24,48,72].map(id=>{const object=GEN2273_MOBILE_OBJECT_REGISTRY[id],home=P_static(object),local=P_local(object,1);return V(local.x-home.x,local.y-home.y,local.z-home.z)});let distinctLocal=true;for(let i=0;i<signatures.length;i++)for(let j=i+1;j<signatures.length;j++)if(gen2273Distance(signatures[i],signatures[j])<.001)distinctLocal=false;const identityState=Object.freeze({passed:uniqueIdentity&&identityFrozen&&GEN2273_BINDING_PROOF.passed&&monotonic&&orderedTransitions&&originCapturedOnce,objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,rangeCount:GEN2273_BINDING_PROOF.objectRangeCount,uniqueObjectIds:GEN2273_BINDING_PROOF.uniqueObjectIds,monotonic,orderedTransitions,originCapturedOnce,noRespawnOrSecondVisiblePopulation:GEN2273_BINDING_PROOF.visibleFeedPopulationCount===0});const physicalContinuity=Object.freeze({passed:circulationStartsAtHome&&localStartsAtHome&&midError<GEN2273_EPSILON&&lockError<GEN2273_EPSILON&&physicalSnapshot.postSettlementCirculationEvaluations===0&&durationLaw,circulationStartsAtHome,localStartsAtHome,midpointError:midError,lockError,postSettlementCirculationEvaluations:physicalSnapshot.postSettlementCirculationEvaluations,durationLaw});const productBoundary=Object.freeze({passed:lockSnapshot.globalCirculation===0&&lockSnapshot.globalCirculationUpdatePath==='DISABLED'&&lockSnapshot.entranceAuthority==='TERMINATED'&&lockSnapshot.treeGrowthAuthority==='TERMINATED'&&lockSnapshot.communityInteractionAvailable&&lockSnapshot.domainLocalPhysicsAuthoritative&&lockSnapshot.domainLocked&&lockSnapshot.state===GEN2273_STATE.COEXISTENCE&&distinctLocal,domainLockAtSeconds:lockSnapshot.lockSeconds,noPostLockWait:lockSnapshot.state===GEN2273_STATE.COEXISTENCE,distinctDomainLocalMotion:distinctLocal,communityInteractionAvailable:lockSnapshot.communityInteractionAvailable});return Object.freeze({passed:identityState.passed&&physicalContinuity.passed&&productBoundary.passed,identityState,physicalContinuity,productBoundary})}
 const GEN2273_MECHANICAL_CHECKPOINT_PROOFS=runGen2273MechanicalCheckpointProofs();
 if(!GEN2273_MECHANICAL_CHECKPOINT_PROOFS.passed)throw Error('GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_PROOF_FAILURE');
-const GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=Object.freeze({
-  id:'GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_V2',
-  parentCheckpointCommit:'48d4de88cda14942614929fe30c4a2c3b6788cf1',
-  governingHead:'f9c0ed375724a2e073a49f913eb8adc0d5e2ca38',
-  stateOrder:GEN2273_STATE_ORDER,
-  objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,
-  settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,
-  constructionBaselineDurationSeconds:1.9,
-  selectedSettlementDuration:GEN2273_SELECTED_SETTLEMENT_SECONDS,
-  renderMutationApplied:true,
-  qualificationVariantsRendered:true,
-  evidenceHarnessFrozen:true,
-  proofs:GEN2273_MECHANICAL_CHECKPOINT_PROOFS,
-  nextLawfulAction:'AUTOMATED_QUALIFICATION_THEN_EXACT_SHA_PHYSICAL_PREVIEW'
-});
-globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;
-globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;
-globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2273Runtime});
+const GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=Object.freeze({id:'GEN2273_PRODUCT_BOUNDARY_CHECKPOINT_V2',parentCheckpointCommit:'48d4de88cda14942614929fe30c4a2c3b6788cf1',governingHead:'f9c0ed375724a2e073a49f913eb8adc0d5e2ca38',stateOrder:GEN2273_STATE_ORDER,objectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,constructionBaselineDurationSeconds:1.9,selectedSettlementDuration:GEN2273_SELECTED_SETTLEMENT_SECONDS,renderMutationApplied:true,qualificationVariantsRendered:true,evidenceHarnessFrozen:true,proofs:GEN2273_MECHANICAL_CHECKPOINT_PROOFS,nextLawfulAction:'AUTOMATED_QUALIFICATION_THEN_EXACT_SHA_PHYSICAL_PREVIEW'});
+globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2273_PRODUCT_BOUNDARY_CHECKPOINT;globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2273Runtime});
 
 function gen2273Mount(host){
   const doc=host.ownerDocument||document,mq=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)'),reduced=!!mq?.matches,settlementDuration=gen2273SettlementDuration(globalThis.DGB_COMMUNITY_GEN2273_SETTLEMENT_DURATION),runtime=createGen2273Runtime(settlementDuration,reduced);
   const style=doc.createElement('style');style.dataset.communityLifecycleStyle='true';style.textContent='[data-community-lifecycle-mount]{position:relative;isolation:isolate;overflow:hidden;min-height:22rem}.community-lifecycle3d-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}.community-lifecycle3d-canvas:active{cursor:grabbing}@media(max-width:720px){[data-community-lifecycle-mount]{min-height:25rem}}@media(prefers-reduced-motion:reduce){.community-lifecycle3d-canvas{cursor:default}}';doc.head.append(style);
   const options={alpha:true,antialias:true,depth:true,powerPreference:'low-power'},backendDefs=[{id:'webgl2',contexts:['webgl2'],webglVersion:2,shaderLanguage:'GLSL ES 3.00'},{id:'webgl1',contexts:['webgl','experimental-webgl'],webglVersion:1,shaderLanguage:'GLSL ES 1.00'}],geometry=GEN2273_BOUND_GEOMETRY,attempts=[];
   let canvas,gl,R,backend,io,ro,raf=0,dead=false,contextLost=false,visible=true,start=performance.now(),last=start,baseYaw=-.20,targetYaw=baseYaw,yaw=baseYaw,targetPitch=-.055,pitch=targetPitch,drag=null,frameCount=0,contextLossCount=0,contextRestoreCount=0,firstProof=null,genState=runtime.snapshot().state,lifecycleState=reduced?LIFE_CYCLE.TWO:LIFE_CYCLE.ONE,treeState=reduced?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',environmentPhase=reduced?'FOUR_DOMAIN_ACTIVE':'ENTRANCE_AND_SETTLEMENT',transferActive=false,treeGeometryLocked=reduced;
-  const publishReceipt=(failure=null,extra={})=>{const gen=runtime.snapshot();globalThis.DGB_COMMUNITY_LIFECYCLE_3D_RECEIPT=Object.freeze({
-    contract:CONTRACT,initialized:!!R&&!failure,firstDraw:!!firstProof?.passed,visibleFrame:!!firstProof?.passed,backend:backend?.id||null,webglContexts:backend?1:0,webglVersion:backend?.webglVersion||null,shaderLanguage:backend?.shaderLanguage||null,precision:R?.precision||null,frameCount,contextLossCount,contextRestoreCount,
-    fixedGeometry:true,geometryRebuiltPerFrame:false,geometryFinite:true,treeLockPhase:.56,seasonCount:4,settlementDeterministic:true,boundedInspectionDegrees:22,reducedMotion:reduced,
-    lifecycleState,gen2273State:gen.state,gen2273StateIndex:gen.stateIndex,gen2273SettlementDuration:settlementDuration,gen2273LockSeconds:gen.lockSeconds,treeCycleMode:'GEN2273_EIGHT_STATE_LATCHED',treeCycleComplete:gen.domainLocked,treeState,treeGeometryLocked,transferActive,formationRestartCount:0,postLockTransferRestart:false,
-    canonicalMobileObjectCount:96,canonicalRendererBindingCount:geometry.objectRanges.length,settlementOriginCaptureCount:gen.settlementOriginCaptureCount,postSettlementCirculationEvaluations:gen.postSettlementCirculationEvaluations,globalCirculation:gen.globalCirculation,globalCirculationUpdatePath:gen.globalCirculationUpdatePath,entranceAuthority:gen.entranceAuthority,treeGrowthAuthority:gen.treeGrowthAuthority,communityInteractionAvailable:gen.communityInteractionAvailable,domainLocalPhysicsAuthoritative:gen.domainLocalPhysicsAuthoritative,
-    environmentActive:true,environmentPhase,environmentCycleSeconds:CONTRACT.environmentCycleSeconds,ambientRhythmMode:'DOMAIN_LOCAL_PHYSICS',environmentMode:CONTRACT.environment,environmentSectorCount:4,environmentDepthPlaneCount:CONTRACT.environmentDepthPlanes.length,permanentQuadrants:true,feedOrbitRevolutions:0,feedPathMode:'CANONICAL_OBJECT_CIRCULATION',feedTravelCompletesAtSeconds:GEN2273_TREE_COMPLETE_SECONDS,transferShutdownAtSeconds:gen.lockSeconds,guideRemnantsAfterLock:false,postLockFeeding:false,protectedCenter:true,rimTaper:null,
-    woodMaterialSystem:'CLASS_ASSIGNED_BROWN_ONLY',foliageMaterialClass:'FOLIAGE',fallbackPreserved:false,fallbackRemoved:true,vertexCount:R?.vertices||geometry.p.length/3,triangleCount:R?.triangles||geometry.i.length/3,visibleFrameProof:firstProof,backendAttempts:attempts.map(x=>({...x})),mechanicalCheckpoint:GEN2273_PRODUCT_BOUNDARY_CHECKPOINT,failure,...extra
-  })};
-  const publishFailure=(reason,extra={})=>{host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus=reason;host.dataset.lifecycleFallback='none';publishReceipt(reason,extra)};
-  const makeCanvas=()=>{const c=doc.createElement('canvas');c.className='community-lifecycle3d-canvas';c.setAttribute('aria-hidden','true');return c};
-  const resize=()=>{const r=canvas.getBoundingClientRect(),cap=Math.min(r.width,r.height)<520?1.25:1.5,d=Math.min(cap,Math.max(1,globalThis.devicePixelRatio||1)),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}gl.viewport(0,0,w,h);return w/Math.max(1,h)};
-  const draw=(now=performance.now(),prove=false)=>{
-    if(dead||contextLost||!R)return false;
-    const asp=resize(),elapsed=Math.max(0,now-start),gen=runtime.advance(elapsed),s=gen.stateIndex>=3?MATURE_TREE_STATE:lifecycle(Math.min(elapsed,GEN2273_TREE_COMPLETE_SECONDS*1000)),env=gen2273EnvironmentState(elapsed,reduced,gen.lockSeconds),nextLifecycle=gen.domainLocked?LIFE_CYCLE.TWO:LIFE_CYCLE.ONE,nextTreeState=gen.stateIndex>=3?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',nextEnvironmentPhase=env.phase,stateChanged=gen.state!==genState||nextLifecycle!==lifecycleState||nextTreeState!==treeState||nextEnvironmentPhase!==environmentPhase,dt=Math.min(40,Math.max(0,now-last));
-    genState=gen.state;lifecycleState=nextLifecycle;treeState=nextTreeState;environmentPhase=nextEnvironmentPhase;transferActive=gen.globalCirculationAuthority;treeGeometryLocked=gen.stateIndex>=3;last=now;
-    if(!reduced){const e=1-Math.exp(-dt/135);yaw+=(targetYaw-yaw)*e;pitch+=(targetPitch-pitch)*e}
-    gen2273ApplyRendererPositions(gl,R,geometry,runtime);
-    gl.useProgram(R.p);if(R.vao)gl.bindVertexArray(R.vao);gl.clearColor(...env.color);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-    gl.uniform1f(R.u.yaw,yaw);gl.uniform1f(R.u.pitch,pitch);gl.uniform1f(R.u.scale,asp<.76?1.04:asp<1.05?1.10:1.15);gl.uniform1f(R.u.aspect,asp);gl.uniform1f(R.u.camera,4.55);
-    gl.uniform1f(R.u.time,gen2273CycleTimeSeconds(elapsed,gen.lockSeconds));gl.uniform1f(R.u.intro,reduced?CONTRACT.cycleSeconds:Math.min(CONTRACT.cycleSeconds,elapsed/1000));gl.uniform1f(R.u.progress,s.p);gl.uniform1f(R.u.activity,s.activity);gl.uniform1f(R.u.retained,s.retained);gl.uniform1f(R.u.renewal,s.renewal);gl.uniform1f(R.u.reduced,reduced?1:0);gl.uniform1f(R.u.lifecycle,gen.domainLocked?1:0);
-    gl.drawElements(gl.TRIANGLES,R.count,gl.UNSIGNED_SHORT,0);const err=gl.getError();if(err!==gl.NO_ERROR)throw Error(`LIFECYCLE_DRAW_GL:${err}`);frameCount++;
-    if(stateChanged){host.dataset.lifecycleState=lifecycleState;host.dataset.gen2273State=gen.state;host.dataset.gen2273StateIndex=String(gen.stateIndex);host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;host.dataset.lifecycleFeeding=transferActive?'active':'stopped';host.dataset.communityInteraction=gen.communityInteractionAvailable?'available':'entrance';if(firstProof?.passed)publishReceipt()}
-    return prove?visiblePixelProof(gl,canvas):true;
-  };
-  host.dataset.lifecycleStatus='initializing';host.dataset.lifecycleContract=CONTRACT.id;host.dataset.lifecycleState=lifecycleState;host.dataset.gen2273State=genState;host.dataset.lifecycleFeeding='stopped';host.setAttribute('role','img');
-  host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains remain visible while the same residents circulate through tree formation, settle back to their domains, and continue under distinct local motion after the entrance ends.');
+  const publishReceipt=(failure=null,extra={})=>{const gen=runtime.snapshot();globalThis.DGB_COMMUNITY_LIFECYCLE_3D_RECEIPT=Object.freeze({contract:CONTRACT,initialized:!!R&&!failure,firstDraw:!!firstProof?.passed,visibleFrame:!!firstProof?.passed,backend:backend?.id||null,webglContexts:backend?1:0,webglVersion:backend?.webglVersion||null,shaderLanguage:backend?.shaderLanguage||null,precision:R?.precision||null,frameCount,contextLossCount,contextRestoreCount,fixedGeometry:true,geometryRebuiltPerFrame:false,geometryFinite:true,treeLockPhase:.56,seasonCount:4,settlementDeterministic:true,boundedInspectionDegrees:22,reducedMotion:reduced,lifecycleState,gen2273State:gen.state,gen2273StateIndex:gen.stateIndex,gen2273SettlementDuration:settlementDuration,gen2273LockSeconds:gen.lockSeconds,treeCycleMode:'GEN2273_EIGHT_STATE_LATCHED',treeCycleComplete:gen.domainLocked,treeState,treeGeometryLocked,transferActive,formationRestartCount:0,postLockTransferRestart:false,canonicalMobileObjectCount:96,canonicalRendererBindingCount:geometry.objectRanges.length,settlementOriginCaptureCount:gen.settlementOriginCaptureCount,postSettlementCirculationEvaluations:gen.postSettlementCirculationEvaluations,globalCirculation:gen.globalCirculation,globalCirculationUpdatePath:gen.globalCirculationUpdatePath,entranceAuthority:gen.entranceAuthority,treeGrowthAuthority:gen.treeGrowthAuthority,communityInteractionAvailable:gen.communityInteractionAvailable,domainLocalPhysicsAuthoritative:gen.domainLocalPhysicsAuthoritative,environmentActive:true,environmentPhase,environmentCycleSeconds:CONTRACT.environmentCycleSeconds,ambientRhythmMode:'DOMAIN_LOCAL_PHYSICS',environmentMode:CONTRACT.environment,environmentSectorCount:4,environmentDepthPlaneCount:CONTRACT.environmentDepthPlanes.length,permanentQuadrants:true,feedOrbitRevolutions:0,feedPathMode:'CANONICAL_OBJECT_CIRCULATION',feedTravelCompletesAtSeconds:GEN2273_TREE_COMPLETE_SECONDS,transferShutdownAtSeconds:gen.lockSeconds,guideRemnantsAfterLock:false,postLockFeeding:false,protectedCenter:true,rimTaper:null,woodMaterialSystem:'CLASS_ASSIGNED_BROWN_ONLY',foliageMaterialClass:'FOLIAGE',fallbackPreserved:false,fallbackRemoved:true,vertexCount:R?.vertices||geometry.p.length/3,triangleCount:R?.triangles||geometry.i.length/3,visibleFrameProof:firstProof,backendAttempts:attempts.map(x=>({...x})),mechanicalCheckpoint:GEN2273_PRODUCT_BOUNDARY_CHECKPOINT,failure,...extra})};
+  const publishFailure=(reason,extra={})=>{host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus=reason;host.dataset.lifecycleFallback='none';publishReceipt(reason,extra)},makeCanvas=()=>{const c=doc.createElement('canvas');c.className='community-lifecycle3d-canvas';c.setAttribute('aria-hidden','true');return c},resize=()=>{const r=canvas.getBoundingClientRect(),cap=Math.min(r.width,r.height)<520?1.25:1.5,d=Math.min(cap,Math.max(1,globalThis.devicePixelRatio||1)),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}gl.viewport(0,0,w,h);return w/Math.max(1,h)};
+  const draw=(now=performance.now(),prove=false)=>{if(dead||contextLost||!R)return false;const asp=resize(),elapsed=Math.max(0,now-start),gen=runtime.advance(elapsed),s=gen.stateIndex>=3?MATURE_TREE_STATE:lifecycle(Math.min(elapsed,GEN2273_TREE_COMPLETE_SECONDS*1000)),env=gen2273EnvironmentState(elapsed,reduced,gen.lockSeconds),nextLifecycle=gen.domainLocked?LIFE_CYCLE.TWO:LIFE_CYCLE.ONE,nextTreeState=gen.stateIndex>=3?'TREE_MATURE_LOCK':'INTRO_LIFECYCLE',nextEnvironmentPhase=env.phase,stateChanged=gen.state!==genState||nextLifecycle!==lifecycleState||nextTreeState!==treeState||nextEnvironmentPhase!==environmentPhase,dt=Math.min(40,Math.max(0,now-last));genState=gen.state;lifecycleState=nextLifecycle;treeState=nextTreeState;environmentPhase=nextEnvironmentPhase;transferActive=gen.globalCirculationAuthority;treeGeometryLocked=gen.stateIndex>=3;last=now;if(!reduced){const e=1-Math.exp(-dt/135);yaw+=(targetYaw-yaw)*e;pitch+=(targetPitch-pitch)*e}gen2273ApplyRendererPositions(gl,R,geometry,runtime);gl.useProgram(R.p);if(R.vao)gl.bindVertexArray(R.vao);gl.clearColor(...env.color);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform1f(R.u.yaw,yaw);gl.uniform1f(R.u.pitch,pitch);gl.uniform1f(R.u.scale,asp<.76?1.04:asp<1.05?1.10:1.15);gl.uniform1f(R.u.aspect,asp);gl.uniform1f(R.u.camera,4.55);gl.uniform1f(R.u.time,gen2273CycleTimeSeconds(elapsed,gen.lockSeconds));gl.uniform1f(R.u.intro,reduced?CONTRACT.cycleSeconds:Math.min(CONTRACT.cycleSeconds,elapsed/1000));gl.uniform1f(R.u.progress,s.p);gl.uniform1f(R.u.activity,s.activity);gl.uniform1f(R.u.retained,s.retained);gl.uniform1f(R.u.renewal,s.renewal);gl.uniform1f(R.u.reduced,reduced?1:0);gl.uniform1f(R.u.lifecycle,gen.domainLocked?1:0);gl.drawElements(gl.TRIANGLES,R.count,gl.UNSIGNED_SHORT,0);const err=gl.getError();if(err!==gl.NO_ERROR)throw Error(`LIFECYCLE_DRAW_GL:${err}`);frameCount++;if(stateChanged){host.dataset.lifecycleState=lifecycleState;host.dataset.gen2273State=gen.state;host.dataset.gen2273StateIndex=String(gen.stateIndex);host.dataset.lifecycleStage=treeState;host.dataset.lifecycleEnvironment=environmentPhase;host.dataset.lifecycleFeeding=transferActive?'active':'stopped';host.dataset.communityInteraction=gen.communityInteractionAvailable?'available':'entrance';if(firstProof?.passed)publishReceipt()}return prove?visiblePixelProof(gl,canvas):true};
+  host.dataset.lifecycleStatus='initializing';host.dataset.lifecycleContract=CONTRACT.id;host.dataset.lifecycleState=lifecycleState;host.dataset.gen2273State=genState;host.dataset.lifecycleFeeding='stopped';host.setAttribute('role','img');host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains remain visible while the same residents circulate through tree formation, settle back to their domains, and continue under distinct local motion after the entrance ends.');
   for(const def of backendDefs){const c=makeCanvas();let candidateGl=null,candidateR=null,contextName=null;for(const name of def.contexts){try{candidateGl=c.getContext(name,options)}catch{}if(candidateGl){contextName=name;break}}if(!candidateGl){attempts.push({backend:def.id,result:'context-unavailable'});continue}try{candidateR=renderer(candidateGl,geometry,def);const setupError=candidateGl.getError();if(setupError!==candidateGl.NO_ERROR)throw Error(`renderer-gl-error-${setupError}`);canvas=c;gl=candidateGl;R=candidateR;backend={...def,contextName};host.append(canvas);const proof=draw(start,true);if(!proof?.passed)throw Error('visible-frame-proof-failed');firstProof=proof;attempts.push({backend:def.id,result:'selected'});break}catch(error){attempts.push({backend:def.id,result:'failed',reason:String(error?.message||error)});dispose(candidateGl,candidateR);c.remove();canvas=undefined;gl=undefined;R=undefined;backend=undefined}}
-  if(!R){host.removeAttribute('role');host.removeAttribute('aria-label');style.remove();publishFailure(attempts.every(x=>x.result==='context-unavailable')?'webgl-unavailable':'renderer-initialization-failed');return}
-  host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';publishReceipt();
-  const stopAnimation=()=>{if(raf){cancelAnimationFrame(raf);raf=0}},hardFail=reason=>{if(dead)return;dead=true;stopAnimation();io?.disconnect();ro?.disconnect();publishFailure(reason)},tick=now=>{raf=0;if(dead||contextLost||reduced||!visible||doc.hidden)return;try{draw(now)}catch{hardFail('frame-draw-failed');return}raf=requestAnimationFrame(tick)},kick=()=>{if(dead||contextLost)return;if(reduced){try{draw()}catch{hardFail('frame-draw-failed')}return}if(visible&&!doc.hidden&&!raf){last=performance.now();raf=requestAnimationFrame(tick)}};
-  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(dead)return;contextLost=true;contextLossCount++;stopAnimation();host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus='context-lost';publishReceipt('context-lost',{recoverable:true})});
-  canvas.addEventListener('webglcontextrestored',()=>{if(dead)return;try{R=renderer(gl,geometry,backend);contextLost=false;contextRestoreCount++;last=performance.now();const proof=draw(last,true);if(!proof?.passed)throw Error('visible-frame-proof-failed');firstProof=proof;host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';publishReceipt(null,{restored:true});kick()}catch{contextLost=false;hardFail('context-restore-failed')}});
-  const yawLimit=22*Math.PI/180;
-  canvas.addEventListener('pointerdown',event=>{if(reduced||event.button!==0)return;drag={id:event.pointerId,x:event.clientX,y:event.clientY,startYaw:yaw,axis:null};canvas.setPointerCapture?.(event.pointerId)});
-  canvas.addEventListener('pointermove',event=>{if(reduced)return;const rect=canvas.getBoundingClientRect();if(drag&&event.pointerId===drag.id){const dx=event.clientX-drag.x,dy=event.clientY-drag.y;if(!drag.axis&&Math.hypot(dx,dy)>7)drag.axis=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y';if(drag.axis==='x'){event.preventDefault();targetYaw=baseYaw+clamp(dx/Math.max(1,rect.width)*1.6,-yawLimit,yawLimit);kick()}return}if(event.pointerType==='mouse'&&rect.width){targetYaw=baseYaw+(((event.clientX-rect.left)/rect.width)*2-1)*.08;targetPitch=-.055-(((event.clientY-rect.top)/rect.height)*2-1)*.035;kick()}},{passive:false});
-  const release=event=>{if(!drag||event.pointerId!==drag.id)return;drag=null;targetYaw=baseYaw;targetPitch=-.055;kick()};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);canvas.addEventListener('pointerleave',()=>{if(!drag){targetYaw=baseYaw;targetPitch=-.055;kick()}},{passive:true});
-  doc.addEventListener('visibilitychange',()=>{if(doc.hidden)stopAnimation();else kick()},{passive:true});
-  if('IntersectionObserver'in globalThis){io=new IntersectionObserver(entries=>{visible=entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>.02);if(!visible)stopAnimation();kick()},{rootMargin:'120px 0px',threshold:[0,.02]});io.observe(host)}
-  if('ResizeObserver'in globalThis){ro=new ResizeObserver(()=>{if(contextLost||dead)return;try{const proof=draw(performance.now(),!firstProof?.passed);if(proof&&proof!==true&&!proof.passed)hardFail('resize-draw-failed');else kick()}catch{hardFail('resize-draw-failed')}});ro.observe(host)}
-  kick();
+  if(!R){host.removeAttribute('role');host.removeAttribute('aria-label');style.remove();publishFailure(attempts.every(x=>x.result==='context-unavailable')?'webgl-unavailable':'renderer-initialization-failed');return}host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';publishReceipt();const stopAnimation=()=>{if(raf){cancelAnimationFrame(raf);raf=0}},hardFail=reason=>{if(dead)return;dead=true;stopAnimation();io?.disconnect();ro?.disconnect();publishFailure(reason)},tick=now=>{raf=0;if(dead||contextLost||reduced||!visible||doc.hidden)return;try{draw(now)}catch{hardFail('frame-draw-failed');return}raf=requestAnimationFrame(tick)},kick=()=>{if(dead||contextLost)return;if(reduced){try{draw()}catch{hardFail('frame-draw-failed')}return}if(visible&&!doc.hidden&&!raf){last=performance.now();raf=requestAnimationFrame(tick)}};canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(dead)return;contextLost=true;contextLossCount++;stopAnimation();host.removeAttribute('data-lifecycle-ready');host.dataset.lifecycleStatus='context-lost';publishReceipt('context-lost',{recoverable:true})});canvas.addEventListener('webglcontextrestored',()=>{if(dead)return;try{R=renderer(gl,geometry,backend);contextLost=false;contextRestoreCount++;last=performance.now();const proof=draw(last,true);if(!proof?.passed)throw Error('visible-frame-proof-failed');firstProof=proof;host.dataset.lifecycleReady='true';host.dataset.lifecycleStatus='ready';publishReceipt(null,{restored:true});kick()}catch{contextLost=false;hardFail('context-restore-failed')}});const yawLimit=22*Math.PI/180;canvas.addEventListener('pointerdown',event=>{if(reduced||event.button!==0)return;drag={id:event.pointerId,x:event.clientX,y:event.clientY,startYaw:yaw,axis:null};canvas.setPointerCapture?.(event.pointerId)});canvas.addEventListener('pointermove',event=>{if(reduced)return;const rect=canvas.getBoundingClientRect();if(drag&&event.pointerId===drag.id){const dx=event.clientX-drag.x,dy=event.clientY-drag.y;if(!drag.axis&&Math.hypot(dx,dy)>7)drag.axis=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y';if(drag.axis==='x'){event.preventDefault();targetYaw=baseYaw+clamp(dx/Math.max(1,rect.width)*1.6,-yawLimit,yawLimit);kick()}return}if(event.pointerType==='mouse'&&rect.width){targetYaw=baseYaw+(((event.clientX-rect.left)/rect.width)*2-1)*.08;targetPitch=-.055-(((event.clientY-rect.top)/rect.height)*2-1)*.035;kick()}},{passive:false});const release=event=>{if(!drag||event.pointerId!==drag.id)return;drag=null;targetYaw=baseYaw;targetPitch=-.055;kick()};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);canvas.addEventListener('pointerleave',()=>{if(!drag){targetYaw=baseYaw;targetPitch=-.055;kick()}},{passive:true});doc.addEventListener('visibilitychange',()=>{if(doc.hidden)stopAnimation();else kick()},{passive:true});if('IntersectionObserver'in globalThis){io=new IntersectionObserver(entries=>{visible=entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>.02);if(!visible)stopAnimation();kick()},{rootMargin:'120px 0px',threshold:[0,.02]});io.observe(host)}if('ResizeObserver'in globalThis){ro=new ResizeObserver(()=>{if(contextLost||dead)return;try{const proof=draw(performance.now(),!firstProof?.passed);if(proof&&proof!==true&&!proof.passed)hardFail('resize-draw-failed');else kick()}catch{hardFail('resize-draw-failed')}});ro.observe(host)}kick();
 }
 mount=gen2273Mount;
 
-// Gen2282 bounded semantic repair: permanent domains stay active while the tracked cohort settles into the tree.
 const GEN2282_TRACKED_KIND_BASE=22;
 const GEN2282_PERMANENT_DOMAIN_COUNT=4;
 const gen2282TrackedKind=season=>GEN2282_TRACKED_KIND_BASE+season;
-
-function gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,kind,alphaScale=1,scaleFactor=1){
-  const q=.10+zone.season*.17+depthIndex*.018+i*.006,near=plane.scale*scaleFactor,alpha=clamp(plane.alpha*alphaScale,0,1);
-  if(zone.season===SEASON.SPRING){
-    if(i%3===0)flower(g,p,q,kind,zone.season,.58*near,alpha);
-    else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,kind,5,3,zone.season);
-  }else if(zone.season===SEASON.SUMMER){
-    rainStroke(g,p,q,kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));
-    if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));
-    if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,kind,6,3,zone.season);
-  }else if(zone.season===SEASON.AUTUMN){
-    leaf(g,p,q,kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha));
-  }else{
-    if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,kind,zone.season,alpha);
-    else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,kind,5,3,zone.season);
-    if(depthIndex===0&&i%4===1)orb(g,A(p,V(.10,.02,-.02)),V(.13*near,.060*near,.050*near),[.64,.78,.86,alpha*.20],q,kind,6,3,zone.season);
-  }
-}
-
-addQuadrantEnvironment=function(g){
-  const count=GEN2273_OBJECTS_PER_DEPTH;
-  g.objectRanges=[];
-  g.permanentDomainRanges=[];
-  for(const zone of QUADRANT_VOLUMES){
-    DEPTH_PLANES.forEach((plane,depthIndex)=>{
-      for(let i=0;i<count;i++){
-        const base=quadrantPoint(zone,plane,i,count),offset=V((i%2?1:-1)*.045,((i%3)-1)*.030,0),p=A(base,offset),startVertex=g.p.length/3;
-        gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,zone.kind,.62,.90);
-        g.permanentDomainRanges.push(Object.freeze({domain:zone.season,startVertex,endVertex:g.p.length/3}));
-      }
-    });
-  }
-  for(const zone of QUADRANT_VOLUMES){
-    DEPTH_PLANES.forEach((plane,depthIndex)=>{
-      for(let i=0;i<count;i++){
-        const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;
-        if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2282_CANONICAL_IDENTITY_BINDING_FAILURE');
-        gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);
-        g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));
-      }
-    });
-  }
-};
-
-vertexSource=function(webgl2,precision){
-  let source=GEN2273_BASE_VERTEX_SOURCE(webgl2,precision);
-  const marker='float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive;';
-  const replacement='float trackedCohort=step(21.5,a_kind)*step(a_kind,25.5);\n  float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);';
-  const next=source.replace(marker,replacement);
-  if(next===source)throw Error('GEN2282_TRACKED_SWAY_MARKER_MISSING');
-  return next;
-};
-fragmentSource=function(webgl2,precision){
-  let source=GEN2273_BASE_FRAGMENT_SOURCE(webgl2,precision);
-  const specialMarker='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),special=max(feed,zoneEnv);';
-  const specialReplacement='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);';
-  let next=source.replace(specialMarker,specialReplacement);
-  if(next===source)throw Error('GEN2282_TRACKED_FRAGMENT_MARKER_MISSING');
-  source=next;
-  next=source.replace('alpha*=mix(1.0,1.0-u_lifecycle,feed);','alpha*=1.0-feed;');
-  if(next===source)throw Error('GEN2282_FEED_VISIBILITY_MARKER_MISSING');
-  return next;
-};
-
-function gen2282TreeSettlementXYZ(object){
-  const final=P_circulation(object,1),radial=Math.max(.001,Math.hypot(final.x,final.z)),local=object.objectId%(DEPTH_PLANES.length*GEN2273_OBJECTS_PER_DEPTH),targetRadius=.075+(local%4)*.025+object.depthBand*.010,factor=Math.min(.55,targetRadius/radial);
-  const yBase=[1.42,.72,1.00,1.55][object.domain],row=Math.floor((local%8)/2),y=yBase+(row-1.5)*.060+(object.depthBand-1)*.045;
-  return V(final.x*factor,y,final.z*factor);
-}
+function gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,kind,alphaScale=1,scaleFactor=1){const q=.10+zone.season*.17+depthIndex*.018+i*.006,near=plane.scale*scaleFactor,alpha=clamp(plane.alpha*alphaScale,0,1);if(zone.season===SEASON.SPRING){if(i%3===0)flower(g,p,q,kind,zone.season,.58*near,alpha);else orb(g,p,V(.026*near,.018*near,.020*near),i%2?alphaColor([.98,.60,.72,1],alpha):alphaColor([1,.78,.36,1],alpha),q,kind,5,3,zone.season)}else if(zone.season===SEASON.SUMMER){rainStroke(g,p,q,kind,zone.season,.66*near,alphaColor([.12,.58,.90,1],alpha));if(i%4===0)windStroke(g,A(p,V(.04,.035,.01)),q,kind,zone.season,.55*near,alphaColor([.28,.78,.90,1],alpha*.82));if(depthIndex===0&&i%4===2)orb(g,A(p,V(.08,.03,-.03)),V(.10*near,.055*near,.045*near),alphaColor([.24,.55,.65,1],alpha*.26),q,kind,6,3,zone.season)}else if(zone.season===SEASON.AUTUMN){leaf(g,p,q,kind,zone.season,.66*near,i%2?alphaColor([.94,.49,.08,1],alpha):alphaColor([.68,.27,.035,1],alpha))}else{if(i%3===0)snowflake(g,p,.045*near+(i%2)*.007,q,kind,zone.season,alpha);else orb(g,p,V(.024*near,.024*near,.021*near),[.74,.91,1,alpha],q,kind,5,3,zone.season);if(depthIndex===0&&i%4===1)orb(g,A(p,V(.10,.02,-.02)),V(.13*near,.060*near,.050*near),[.64,.78,.86,alpha*.20],q,kind,6,3,zone.season)}}
+addQuadrantEnvironment=function(g){const count=GEN2273_OBJECTS_PER_DEPTH;g.objectRanges=[];g.permanentDomainRanges=[];for(const zone of QUADRANT_VOLUMES){DEPTH_PLANES.forEach((plane,depthIndex)=>{for(let i=0;i<count;i++){const base=quadrantPoint(zone,plane,i,count),offset=V((i%2?1:-1)*.045,((i%3)-1)*.030,0),p=A(base,offset),startVertex=g.p.length/3;gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,zone.kind,.62,.90);g.permanentDomainRanges.push(Object.freeze({domain:zone.season,startVertex,endVertex:g.p.length/3}))}})}for(const zone of QUADRANT_VOLUMES){DEPTH_PLANES.forEach((plane,depthIndex)=>{for(let i=0;i<count;i++){const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2282_CANONICAL_IDENTITY_BINDING_FAILURE');gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}))}})}};
+vertexSource=function(webgl2,precision){let source=GEN2273_BASE_VERTEX_SOURCE(webgl2,precision);const marker='float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive;',replacement='float trackedCohort=step(21.5,a_kind)*step(a_kind,25.5);\n  float crown=ss(.2,1.95,p.y),alive=ss(.35,.56,u_progress);\n  float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);',next=source.replace(marker,replacement);if(next===source)throw Error('GEN2282_TRACKED_SWAY_MARKER_MISSING');return next};
+fragmentSource=function(webgl2,precision){let source=GEN2273_BASE_FRAGMENT_SOURCE(webgl2,precision);const specialMarker='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),special=max(feed,zoneEnv);',specialReplacement='float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);';let next=source.replace(specialMarker,specialReplacement);if(next===source)throw Error('GEN2282_TRACKED_FRAGMENT_MARKER_MISSING');source=next;next=source.replace('alpha*=mix(1.0,1.0-u_lifecycle,feed);','alpha*=1.0-feed;');if(next===source)throw Error('GEN2282_FEED_VISIBILITY_MARKER_MISSING');return next};
+function gen2282TreeSettlementXYZ(object){const final=P_circulation(object,1),radial=Math.max(.001,Math.hypot(final.x,final.z)),local=object.objectId%(DEPTH_PLANES.length*GEN2273_OBJECTS_PER_DEPTH),targetRadius=.075+(local%4)*.025+object.depthBand*.010,factor=Math.min(.55,targetRadius/radial);const yBase=[1.42,.72,1.00,1.55][object.domain],row=Math.floor((local%8)/2),y=yBase+(row-1.5)*.060+(object.depthBand-1)*.045;return V(final.x*factor,y,final.z*factor)}
 const GEN2282_TREE_SETTLEMENT_XYZ=Object.freeze(GEN2273_MOBILE_OBJECT_REGISTRY.map(object=>Object.freeze(gen2273CloneXYZ(gen2282TreeSettlementXYZ(object)))));
+function createGen2282Runtime(settlementDurationSeconds=GEN2273_SELECTED_SETTLEMENT_SECONDS,reduced=false){const settlementDuration=gen2273SettlementDuration(settlementDurationSeconds),lockSeconds=GEN2273_TREE_COMPLETE_SECONDS+settlementDuration,registry=GEN2273_MOBILE_OBJECT_REGISTRY;const target=index=>GEN2282_TREE_SETTLEMENT_XYZ[index],currentXYZ=registry.map((object,i)=>gen2273CloneXYZ(reduced?target(i):P_static(object))),settlementOrigin=Array(registry.length).fill(null),transitionLog=[];let maxSeconds=0,stateIndex=reduced?GEN2273_STATE_ORDER.length-1:0,circulationProgress=0,settlementProgress=reduced?1:0,settlementOriginCaptureCount=0,circulationEvaluations=0,circulationEvaluationsAtSettlement=null,localTimeSeconds=0;let globalCirculationAuthority=false,globalCirculationUpdatePathEnabled=false,entranceAuthorityActive=!reduced,treeGrowthAuthorityActive=!reduced,communityInteractionAvailable=!!reduced,domainLocalPhysicsAuthoritative=!!reduced,domainLocked=!!reduced;const state=()=>GEN2273_STATE_ORDER[stateIndex],setCurrent=(index,p)=>{currentXYZ[index]=gen2273CloneXYZ(p)};const enter=(index,atSeconds)=>{if(index<=stateIndex)return;stateIndex=index;transitionLog.push(Object.freeze({state:GEN2273_STATE_ORDER[index],stateIndex:index,atSeconds}));if(index===1){globalCirculationAuthority=true;globalCirculationUpdatePathEnabled=true}if(index===3){circulationProgress=1;registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,1));circulationEvaluations++});treeGrowthAuthorityActive=false}if(index===4){if(settlementOriginCaptureCount===0){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(currentXYZ[i]));settlementOriginCaptureCount++})}circulationEvaluationsAtSettlement=circulationEvaluations;globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false}if(index===5){settlementProgress=1;registry.forEach((object,i)=>setCurrent(i,target(i)));globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false;entranceAuthorityActive=false;treeGrowthAuthorityActive=false;communityInteractionAvailable=true;domainLocalPhysicsAuthoritative=true;domainLocked=true}};const updateCirculation=seconds=>{if(!globalCirculationAuthority||!globalCirculationUpdatePathEnabled||stateIndex>=4)return;const next=clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[0]));circulationProgress=Math.max(circulationProgress,next);registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,circulationProgress));circulationEvaluations++})};const updateSettlement=seconds=>{if(stateIndex!==4)return;const next=clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration);settlementProgress=Math.max(settlementProgress,next);const eased=smoother(settlementProgress);registry.forEach((object,i)=>setCurrent(i,L(settlementOrigin[i],target(i),eased)))};const updateLocal=seconds=>{if(!domainLocked||!domainLocalPhysicsAuthoritative)return;localTimeSeconds=Math.max(localTimeSeconds,Math.max(0,seconds-lockSeconds))};const settledObjectCount=()=>domainLocked?currentXYZ.reduce((count,p,i)=>count+(gen2273SameXYZ(p,target(i))?1:0),0):0;const snapshot=()=>Object.freeze({state:state(),stateIndex,progress:stateIndex===4?settlementProgress:stateIndex<3?circulationProgress:1,settlementDuration,lockSeconds,maxSeconds,circulationProgress,settlementProgress,settlementOriginCaptureCount,globalCirculation:globalCirculationAuthority?1:0,globalCirculationAuthority,globalCirculationUpdatePath:globalCirculationUpdatePathEnabled?'ENABLED':'DISABLED',entranceAuthority:entranceAuthorityActive?'ACTIVE':'TERMINATED',treeGrowthAuthority:treeGrowthAuthorityActive?'ACTIVE':'TERMINATED',communityInteractionAvailable,domainLocalPhysicsAuthoritative,domainLocked,localTimeSeconds,postSettlementCirculationEvaluations:circulationEvaluationsAtSettlement===null?0:circulationEvaluations-circulationEvaluationsAtSettlement,persistentDomainCount:GEN2282_PERMANENT_DOMAIN_COUNT,domainActivityPostSettlement:domainLocked&&domainLocalPhysicsAuthoritative,domainDepletion:false,settledObjectCount:settledObjectCount(),terminalReboundCount:domainLocked?registry.length-settledObjectCount():0,objectReplacementCount:0,transitionLog:Object.freeze(transitionLog.map(entry=>entry))});if(reduced){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(target(i)));settlementOriginCaptureCount++});transitionLog.push(Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,atSeconds:0,reduced:true}))}else transitionLog.push(Object.freeze({state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,atSeconds:0}));const advance=ms=>{const rawSeconds=Math.max(0,Number(ms)||0)/1000;maxSeconds=Math.max(maxSeconds,rawSeconds);const seconds=maxSeconds;if(reduced){updateLocal(seconds);return snapshot()}if(seconds>=CONTRACT.feedingWindowSeconds[0])enter(1,CONTRACT.feedingWindowSeconds[0]);if(seconds>=CONTRACT.feedingWindowSeconds[1])enter(2,CONTRACT.feedingWindowSeconds[1]);if(seconds<GEN2273_TREE_COMPLETE_SECONDS)updateCirculation(seconds);if(seconds>=GEN2273_TREE_COMPLETE_SECONDS){enter(3,GEN2273_TREE_COMPLETE_SECONDS);enter(4,GEN2273_TREE_COMPLETE_SECONDS)}if(stateIndex===4)updateSettlement(seconds);if(seconds>=lockSeconds){enter(5,lockSeconds);enter(6,lockSeconds);enter(7,lockSeconds)}if(domainLocked)updateLocal(seconds);return snapshot()};return Object.freeze({registry,currentXYZ,settlementOrigin,advance,snapshot})}
+const GEN2282_REBUILT_GEOMETRY=build();for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2282_REBUILT_GEOMETRY[key];GEN2273_BOUND_GEOMETRY.objectRanges=GEN2282_REBUILT_GEOMETRY.objectRanges;GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2282_REBUILT_GEOMETRY.permanentDomainRanges;createGen2273Runtime=createGen2282Runtime;GEN2273_CONTROLLER_CACHE.clear();
+function runGen2282BinaryQualification(){const registry=GEN2273_MOBILE_OBJECT_REGISTRY,binding=gen2273AssertBoundRanges(GEN2273_BOUND_GEOMETRY),ids=registry.map(object=>object.objectId),names=registry.map(object=>object.id);const sameObjectIdentity=registry.length===96&&new Set(ids).size===96&&new Set(names).size===96&&ids.every((id,index)=>id===index)&&registry.every(Object.isFrozen)&&binding.passed;const permanentDomains=new Set((GEN2273_BOUND_GEOMETRY.permanentDomainRanges||[]).map(range=>range.domain)),persistentDomainCount=permanentDomains.size;const trackedStart=Math.min(...GEN2273_BOUND_GEOMETRY.objectRanges.map(range=>range.startVertex)),permanentEnd=Math.max(...GEN2273_BOUND_GEOMETRY.permanentDomainRanges.map(range=>range.endVertex)),domainDepletion=!(persistentDomainCount===4&&permanentEnd<=trackedStart);const runtime=createGen2282Runtime(GEN2273_SELECTED_SETTLEMENT_SECONDS,false),lockMs=(GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS)*1000;runtime.advance(GEN2273_TREE_COMPLETE_SECONDS*1000);let previousRadial=runtime.currentXYZ.map(p=>Math.hypot(p.x,p.z)),settlementOutwardStepCount=0;for(const fraction of [.25,.50,.75,1]){runtime.advance((GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS*fraction)*1000);const currentRadial=runtime.currentXYZ.map(p=>Math.hypot(p.x,p.z));currentRadial.forEach((value,i)=>{if(value>previousRadial[i]+GEN2273_EPSILON)settlementOutwardStepCount++});previousRadial=currentRadial}runtime.advance(lockMs);const atLock=runtime.currentXYZ.map(gen2273CloneXYZ),lockSnapshot=runtime.snapshot();runtime.advance(lockMs+12000);const after=runtime.currentXYZ,terminalReboundCount=after.reduce((count,p,i)=>count+(gen2273SameXYZ(p,atLock[i])?0:1),0),settledObjectCount=after.reduce((count,p,i)=>count+(gen2273SameXYZ(p,GEN2282_TREE_SETTLEMENT_XYZ[i])?1:0),0);const vertexLaw=vertexSource(false,'highp'),domainActivityPostSettlement=persistentDomainCount===4&&vertexLaw.includes('if(zoneEnv>.5&&u_reduced<.5){')&&!vertexLaw.includes('if(false){')&&gen2273CycleTimeSeconds(lockMs+1000,lockSnapshot.lockSeconds)!==gen2273CycleTimeSeconds(lockMs+2000,lockSnapshot.lockSeconds);const objectReplacementCount=registry.reduce((count,object,i)=>count+(object===runtime.registry[i]?0:1),0);const receipt=Object.freeze({schema:'COMMUNITY_GEN2282_TREE_SETTLEMENT_BINARY_RECEIPT_v1',SAME_OBJECT_IDENTITY_96:sameObjectIdentity?'PASS':'FAIL',PERSISTENT_DOMAIN_COUNT_4:persistentDomainCount===4?'PASS':'FAIL',TERMINAL_REBOUND_COUNT_0:terminalReboundCount===0?'PASS':'FAIL',SETTLED_OBJECT_COUNT_96:settledObjectCount===96?'PASS':'FAIL',DOMAIN_ACTIVITY_POST_SETTLEMENT:domainActivityPostSettlement?'PASS':'FAIL',DOMAIN_DEPLETION:domainDepletion,OBJECT_REPLACEMENT_COUNT_0:objectReplacementCount===0?'PASS':'FAIL',settlementOutwardStepCount,terminalReboundCount,settledObjectCount,persistentDomainCount,objectReplacementCount,passed:sameObjectIdentity&&persistentDomainCount===4&&terminalReboundCount===0&&settledObjectCount===96&&domainActivityPostSettlement&&!domainDepletion&&objectReplacementCount===0&&settlementOutwardStepCount===0});return receipt}
+const GEN2282_BINARY_RECEIPT=runGen2282BinaryQualification();if(!GEN2282_BINARY_RECEIPT.passed)throw Error('GEN2282_TREE_SETTLEMENT_BINARY_QUALIFICATION_FAILURE');const GEN2282_PRODUCT_BOUNDARY_CHECKPOINT=Object.freeze({id:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1',governingHead:'140b5e6cf4b07cfef4a8f0e494b69437b7d02f8a',objectCount:96,persistentDomainCount:4,settlementTarget:'CENTRAL_TREE',terminalBehavior:'STABLE_OPERATION_NO_REBOUND',binaryReceipt:GEN2282_BINARY_RECEIPT,nextLawfulAction:'EXACT_SHA_PHYSICAL_PREVIEW'});globalThis.DGB_COMMUNITY_GEN2282_BINARY_RECEIPT=GEN2282_BINARY_RECEIPT;globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2282_PRODUCT_BOUNDARY_CHECKPOINT;globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2282_PRODUCT_BOUNDARY_CHECKPOINT;globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2282Runtime,semanticRepair:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1'});const GEN2282_BASE_MOUNT=gen2273Mount;mount=function(host){GEN2282_BASE_MOUNT(host);host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains continue operating while the same tracked cohort circulates inward, settles irreversibly into the mature central tree, and remains there without rebound.')};
 
-function createGen2282Runtime(settlementDurationSeconds=GEN2273_SELECTED_SETTLEMENT_SECONDS,reduced=false){
-  const settlementDuration=gen2273SettlementDuration(settlementDurationSeconds),lockSeconds=GEN2273_TREE_COMPLETE_SECONDS+settlementDuration,registry=GEN2273_MOBILE_OBJECT_REGISTRY;
-  const target=index=>GEN2282_TREE_SETTLEMENT_XYZ[index],currentXYZ=registry.map((object,i)=>gen2273CloneXYZ(reduced?target(i):P_static(object))),settlementOrigin=Array(registry.length).fill(null),transitionLog=[];
-  let maxSeconds=0,stateIndex=reduced?GEN2273_STATE_ORDER.length-1:0,circulationProgress=0,settlementProgress=reduced?1:0,settlementOriginCaptureCount=0,circulationEvaluations=0,circulationEvaluationsAtSettlement=null,localTimeSeconds=0;
-  let globalCirculationAuthority=false,globalCirculationUpdatePathEnabled=false,entranceAuthorityActive=!reduced,treeGrowthAuthorityActive=!reduced,communityInteractionAvailable=!!reduced,domainLocalPhysicsAuthoritative=!!reduced,domainLocked=!!reduced;
-  const state=()=>GEN2273_STATE_ORDER[stateIndex],setCurrent=(index,p)=>{currentXYZ[index]=gen2273CloneXYZ(p)};
-  const enter=(index,atSeconds)=>{
-    if(index<=stateIndex)return;
-    stateIndex=index;transitionLog.push(Object.freeze({state:GEN2273_STATE_ORDER[index],stateIndex:index,atSeconds}));
-    if(index===1){globalCirculationAuthority=true;globalCirculationUpdatePathEnabled=true;}
-    if(index===3){circulationProgress=1;registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,1));circulationEvaluations++});treeGrowthAuthorityActive=false;}
-    if(index===4){if(settlementOriginCaptureCount===0){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(currentXYZ[i]));settlementOriginCaptureCount++})}circulationEvaluationsAtSettlement=circulationEvaluations;globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false;}
-    if(index===5){settlementProgress=1;registry.forEach((object,i)=>setCurrent(i,target(i)));globalCirculationAuthority=false;globalCirculationUpdatePathEnabled=false;entranceAuthorityActive=false;treeGrowthAuthorityActive=false;communityInteractionAvailable=true;domainLocalPhysicsAuthoritative=true;domainLocked=true;}
-  };
-  const updateCirculation=seconds=>{if(!globalCirculationAuthority||!globalCirculationUpdatePathEnabled||stateIndex>=4)return;const next=clamp((seconds-CONTRACT.feedingWindowSeconds[0])/(GEN2273_TREE_COMPLETE_SECONDS-CONTRACT.feedingWindowSeconds[0]));circulationProgress=Math.max(circulationProgress,next);registry.forEach((object,i)=>{setCurrent(i,P_circulation(object,circulationProgress));circulationEvaluations++});};
-  const updateSettlement=seconds=>{if(stateIndex!==4)return;const next=clamp((seconds-GEN2273_TREE_COMPLETE_SECONDS)/settlementDuration);settlementProgress=Math.max(settlementProgress,next);const eased=smoother(settlementProgress);registry.forEach((object,i)=>setCurrent(i,L(settlementOrigin[i],target(i),eased)));};
-  const updateLocal=seconds=>{if(!domainLocked||!domainLocalPhysicsAuthoritative)return;localTimeSeconds=Math.max(localTimeSeconds,Math.max(0,seconds-lockSeconds));};
-  const settledObjectCount=()=>domainLocked?currentXYZ.reduce((count,p,i)=>count+(gen2273SameXYZ(p,target(i))?1:0),0):0;
-  const snapshot=()=>Object.freeze({state:state(),stateIndex,progress:stateIndex===4?settlementProgress:stateIndex<3?circulationProgress:1,settlementDuration,lockSeconds,maxSeconds,circulationProgress,settlementProgress,settlementOriginCaptureCount,globalCirculation:globalCirculationAuthority?1:0,globalCirculationAuthority,globalCirculationUpdatePath:globalCirculationUpdatePathEnabled?'ENABLED':'DISABLED',entranceAuthority:entranceAuthorityActive?'ACTIVE':'TERMINATED',treeGrowthAuthority:treeGrowthAuthorityActive?'ACTIVE':'TERMINATED',communityInteractionAvailable,domainLocalPhysicsAuthoritative,domainLocked,localTimeSeconds,postSettlementCirculationEvaluations:circulationEvaluationsAtSettlement===null?0:circulationEvaluations-circulationEvaluationsAtSettlement,persistentDomainCount:GEN2282_PERMANENT_DOMAIN_COUNT,domainActivityPostSettlement:domainLocked&&domainLocalPhysicsAuthoritative,domainDepletion:false,settledObjectCount:settledObjectCount(),terminalReboundCount:domainLocked?registry.length-settledObjectCount():0,objectReplacementCount:0,transitionLog:Object.freeze(transitionLog.map(entry=>entry))});
-  if(reduced){registry.forEach((object,i)=>{settlementOrigin[i]=Object.freeze(gen2273CloneXYZ(target(i)));settlementOriginCaptureCount++});transitionLog.push(Object.freeze({state:GEN2273_STATE.COEXISTENCE,stateIndex:7,atSeconds:0,reduced:true}));}
-  else transitionLog.push(Object.freeze({state:GEN2273_STATE.DOMAIN_STATIC,stateIndex:0,atSeconds:0}));
-  const advance=ms=>{const rawSeconds=Math.max(0,Number(ms)||0)/1000;maxSeconds=Math.max(maxSeconds,rawSeconds);const seconds=maxSeconds;if(reduced){updateLocal(seconds);return snapshot()}if(seconds>=CONTRACT.feedingWindowSeconds[0])enter(1,CONTRACT.feedingWindowSeconds[0]);if(seconds>=CONTRACT.feedingWindowSeconds[1])enter(2,CONTRACT.feedingWindowSeconds[1]);if(seconds<GEN2273_TREE_COMPLETE_SECONDS)updateCirculation(seconds);if(seconds>=GEN2273_TREE_COMPLETE_SECONDS){enter(3,GEN2273_TREE_COMPLETE_SECONDS);enter(4,GEN2273_TREE_COMPLETE_SECONDS)}if(stateIndex===4)updateSettlement(seconds);if(seconds>=lockSeconds){enter(5,lockSeconds);enter(6,lockSeconds);enter(7,lockSeconds)}if(domainLocked)updateLocal(seconds);return snapshot();};
-  return Object.freeze({registry,currentXYZ,settlementOrigin,advance,snapshot});
-}
-
-const GEN2282_REBUILT_GEOMETRY=build();
-for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2282_REBUILT_GEOMETRY[key];
-GEN2273_BOUND_GEOMETRY.objectRanges=GEN2282_REBUILT_GEOMETRY.objectRanges;
-GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2282_REBUILT_GEOMETRY.permanentDomainRanges;
-createGen2273Runtime=createGen2282Runtime;
-GEN2273_CONTROLLER_CACHE.clear();
-
-function runGen2282BinaryQualification(){
-  const registry=GEN2273_MOBILE_OBJECT_REGISTRY,binding=gen2273AssertBoundRanges(GEN2273_BOUND_GEOMETRY),ids=registry.map(object=>object.objectId),names=registry.map(object=>object.id);
-  const sameObjectIdentity=registry.length===96&&new Set(ids).size===96&&new Set(names).size===96&&ids.every((id,index)=>id===index)&&registry.every(Object.isFrozen)&&binding.passed;
-  const permanentDomains=new Set((GEN2273_BOUND_GEOMETRY.permanentDomainRanges||[]).map(range=>range.domain)),persistentDomainCount=permanentDomains.size;
-  const trackedStart=Math.min(...GEN2273_BOUND_GEOMETRY.objectRanges.map(range=>range.startVertex)),permanentEnd=Math.max(...GEN2273_BOUND_GEOMETRY.permanentDomainRanges.map(range=>range.endVertex)),domainDepletion=!(persistentDomainCount===4&&permanentEnd<=trackedStart);
-  const runtime=createGen2282Runtime(GEN2273_SELECTED_SETTLEMENT_SECONDS,false),lockMs=(GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS)*1000;
-  runtime.advance(GEN2273_TREE_COMPLETE_SECONDS*1000);
-  let previousRadial=runtime.currentXYZ.map(p=>Math.hypot(p.x,p.z)),settlementOutwardStepCount=0;
-  for(const fraction of [.25,.50,.75,1]){runtime.advance((GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS*fraction)*1000);const currentRadial=runtime.currentXYZ.map(p=>Math.hypot(p.x,p.z));currentRadial.forEach((value,i)=>{if(value>previousRadial[i]+GEN2273_EPSILON)settlementOutwardStepCount++});previousRadial=currentRadial;}
-  runtime.advance(lockMs);const atLock=runtime.currentXYZ.map(gen2273CloneXYZ),lockSnapshot=runtime.snapshot();runtime.advance(lockMs+12000);const after=runtime.currentXYZ,terminalReboundCount=after.reduce((count,p,i)=>count+(gen2273SameXYZ(p,atLock[i])?0:1),0),settledObjectCount=after.reduce((count,p,i)=>count+(gen2273SameXYZ(p,GEN2282_TREE_SETTLEMENT_XYZ[i])?1:0),0);
-  const vertexLaw=vertexSource(false,'highp'),domainActivityPostSettlement=persistentDomainCount===4&&vertexLaw.includes('if(zoneEnv>.5&&u_reduced<.5){')&&!vertexLaw.includes('if(false){')&&gen2273CycleTimeSeconds(lockMs+1000,lockSnapshot.lockSeconds)!==gen2273CycleTimeSeconds(lockMs+2000,lockSnapshot.lockSeconds);
-  const objectReplacementCount=registry.reduce((count,object,i)=>count+(object===runtime.registry[i]?0:1),0);
-  const receipt=Object.freeze({schema:'COMMUNITY_GEN2282_TREE_SETTLEMENT_BINARY_RECEIPT_v1',SAME_OBJECT_IDENTITY_96:sameObjectIdentity?'PASS':'FAIL',PERSISTENT_DOMAIN_COUNT_4:persistentDomainCount===4?'PASS':'FAIL',TERMINAL_REBOUND_COUNT_0:terminalReboundCount===0?'PASS':'FAIL',SETTLED_OBJECT_COUNT_96:settledObjectCount===96?'PASS':'FAIL',DOMAIN_ACTIVITY_POST_SETTLEMENT:domainActivityPostSettlement?'PASS':'FAIL',DOMAIN_DEPLETION:domainDepletion,OBJECT_REPLACEMENT_COUNT_0:objectReplacementCount===0?'PASS':'FAIL',settlementOutwardStepCount,terminalReboundCount,settledObjectCount,persistentDomainCount,objectReplacementCount,passed:sameObjectIdentity&&persistentDomainCount===4&&terminalReboundCount===0&&settledObjectCount===96&&domainActivityPostSettlement&&!domainDepletion&&objectReplacementCount===0&&settlementOutwardStepCount===0});
-  return receipt;
-}
-const GEN2282_BINARY_RECEIPT=runGen2282BinaryQualification();
-if(!GEN2282_BINARY_RECEIPT.passed)throw Error('GEN2282_TREE_SETTLEMENT_BINARY_QUALIFICATION_FAILURE');
-const GEN2282_PRODUCT_BOUNDARY_CHECKPOINT=Object.freeze({id:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1',governingHead:'140b5e6cf4b07cfef4a8f0e494b69437b7d02f8a',objectCount:96,persistentDomainCount:4,settlementTarget:'CENTRAL_TREE',terminalBehavior:'STABLE_OPERATION_NO_REBOUND',binaryReceipt:GEN2282_BINARY_RECEIPT,nextLawfulAction:'EXACT_SHA_PHYSICAL_PREVIEW'});
-globalThis.DGB_COMMUNITY_GEN2282_BINARY_RECEIPT=GEN2282_BINARY_RECEIPT;
-globalThis.DGB_COMMUNITY_GEN2273_STRUCTURAL_CHECKPOINT=GEN2282_PRODUCT_BOUNDARY_CHECKPOINT;
-globalThis.DGB_COMMUNITY_GEN2273_PRODUCT_BOUNDARY_CHECKPOINT=GEN2282_PRODUCT_BOUNDARY_CHECKPOINT;
-globalThis.DGB_COMMUNITY_GEN2273_RUNTIME_API=Object.freeze({stateOrder:GEN2273_STATE_ORDER,settlementCandidates:GEN2273_SETTLEMENT_CANDIDATES,createRuntime:createGen2282Runtime,semanticRepair:'GEN2282_TREE_SETTLEMENT_SEMANTIC_REPAIR_V1'});
-const GEN2282_BASE_MOUNT=gen2273Mount;
-mount=function(host){GEN2282_BASE_MOUNT(host);host.setAttribute('aria-label','Animated three-dimensional Community lifecycle sculpture. Four permanent environmental domains continue operating while the same tracked cohort circulates inward, settles irreversibly into the mature central tree, and remains there without rebound.');};
-
-// Gen2289 Checkpoint A: planar four-corner composition only. Motion binding remains frozen.
 const GEN2289_PLANAR_KIND_BASE=26;
 const GEN2289_PLANAR_Z=0;
 const gen2289PlanarKind=season=>GEN2289_PLANAR_KIND_BASE+season;
-const GEN2289_STAGE_AUTHORITY=Object.freeze({
-  tree:Object.freeze({id:'TREE',nx:.50,ny:.50,x:0,y:.34}),
-  domains:Object.freeze([
-    Object.freeze({season:SEASON.SPRING,id:'SPRING',corner:'NW',nx:.20,ny:.20,x:-1.72,y:1.52,xSpan:.46,ySpan:.34}),
-    Object.freeze({season:SEASON.WINTER,id:'WINTER',corner:'NE',nx:.80,ny:.20,x:1.72,y:1.52,xSpan:.46,ySpan:.34}),
-    Object.freeze({season:SEASON.SUMMER,id:'SUMMER',corner:'SW',nx:.20,ny:.80,x:-1.72,y:-.72,xSpan:.46,ySpan:.34}),
-    Object.freeze({season:SEASON.AUTUMN,id:'AUTUMN',corner:'SE',nx:.80,ny:.80,x:1.72,y:-.72,xSpan:.46,ySpan:.34})
-  ])
-});
+const GEN2289_STAGE_AUTHORITY=Object.freeze({tree:Object.freeze({id:'TREE',nx:.50,ny:.50,x:0,y:.34}),domains:Object.freeze([Object.freeze({season:SEASON.SPRING,id:'SPRING',corner:'NW',nx:.20,ny:.20,x:-1.72,y:1.52,xSpan:.46,ySpan:.34}),Object.freeze({season:SEASON.WINTER,id:'WINTER',corner:'NE',nx:.80,ny:.20,x:1.72,y:1.52,xSpan:.46,ySpan:.34}),Object.freeze({season:SEASON.SUMMER,id:'SUMMER',corner:'SW',nx:.20,ny:.80,x:-1.72,y:-.72,xSpan:.46,ySpan:.34}),Object.freeze({season:SEASON.AUTUMN,id:'AUTUMN',corner:'SE',nx:.80,ny:.80,x:1.72,y:-.72,xSpan:.46,ySpan:.34})])});
 const GEN2289_STAGE_BY_SEASON=Object.freeze(Object.fromEntries(GEN2289_STAGE_AUTHORITY.domains.map(domain=>[domain.season,domain])));
 function gen2289PDomain2D(anchor,localX=0,localY=0){return V(anchor.x+localX,anchor.y+localY,GEN2289_PLANAR_Z)}
-function gen2289PCohort3D(anchor,identity){
-  const plane=DEPTH_PLANES[identity.depthBand]||DEPTH_PLANES[1],local=identity.objectId%GEN2273_OBJECTS_PER_DEPTH,col=local%4,row=Math.floor(local/4),x=((col+.5)/4-.5)*anchor.xSpan*1.45,y=((row+.5)/2-.5)*anchor.ySpan*1.45;
-  return V(anchor.x+x,anchor.y+y,plane.z+((local%3)-1)*.055);
-}
+function gen2289PCohort3D(anchor,identity){const plane=DEPTH_PLANES[identity.depthBand]||DEPTH_PLANES[1],local=identity.objectId%GEN2273_OBJECTS_PER_DEPTH,col=local%4,row=Math.floor(local/4),x=((col+.5)/4-.5)*anchor.xSpan*1.45,y=((row+.5)/2-.5)*anchor.ySpan*1.45;return V(anchor.x+x,anchor.y+y,plane.z+((local%3)-1)*.055)}
 function gen2289PlanarTri(g,a,b,c,color,q,kind,season){const n=V(0,0,1),base=g.p.length/3;vert(g,a,n,color,q,kind,season);vert(g,b,n,color,q,kind,season);vert(g,c,n,color,q,kind,season);g.i.push(base,base+1,base+2)}
 function gen2289PlanarDisc(g,center,rx,ry,color,q,kind,season,segments=12){const n=V(0,0,1),base=g.p.length/3;vert(g,V(center.x,center.y,GEN2289_PLANAR_Z),n,color,q,kind,season);for(let i=0;i<=segments;i++){const a=Math.PI*2*i/segments;vert(g,V(center.x+Math.cos(a)*rx,center.y+Math.sin(a)*ry,GEN2289_PLANAR_Z),n,color,q,kind,season)}for(let i=0;i<segments;i++)g.i.push(base,base+1+i,base+2+i)}
 function gen2289PlanarStroke(g,a,b,width,color,q,kind,season){const dx=b.x-a.x,dy=b.y-a.y,len=Math.max(.0001,Math.hypot(dx,dy)),px=-dy/len*width,py=dx/len*width,z=GEN2289_PLANAR_Z,p0=V(a.x+px,a.y+py,z),p1=V(a.x-px,a.y-py,z),p2=V(b.x-px,b.y-py,z),p3=V(b.x+px,b.y+py,z);gen2289PlanarTri(g,p0,p1,p2,color,q,kind,season);gen2289PlanarTri(g,p0,p2,p3,color,q,kind,season)}
-function gen2289EmitPlanarDomain(g,anchor){
-  const kind=gen2289PlanarKind(anchor.season),q=.12+anchor.season*.17,p=(x,y)=>gen2289PDomain2D(anchor,x,y);
-  if(anchor.season===SEASON.SPRING){
-    gen2289PlanarStroke(g,p(-.22,-.18),p(-.18,.18),.012,[.16,.46,.22,.54],q,kind,anchor.season);
-    for(const [x,y,s] of [[-.18,.14,.10],[-.02,.02,.085],[.18,.12,.095],[.12,-.12,.07]]){gen2289PlanarDisc(g,p(x,y),s,s*.72,[.92,.48,.66,.64],q,kind,anchor.season,10);gen2289PlanarDisc(g,p(x,y),s*.34,s*.34,[1,.78,.30,.78],q,kind,anchor.season,10)}
-  }else if(anchor.season===SEASON.WINTER){
-    for(const [x,y,s] of [[-.18,.11,.12],[.05,.02,.10],[.20,.15,.085],[-.02,-.15,.075]])for(let i=0;i<3;i++){const a=Math.PI*i/3,dx=Math.cos(a)*s,dy=Math.sin(a)*s;gen2289PlanarStroke(g,p(x-dx,y-dy),p(x+dx,y+dy),.009,[.70,.90,1,.70],q,kind,anchor.season)}
-  }else if(anchor.season===SEASON.SUMMER){
-    gen2289PlanarDisc(g,p(-.05,.18),.26,.08,[.17,.48,.58,.30],q,kind,anchor.season,14);
-    for(const [x,y] of [[-.24,.09],[-.10,.04],[.04,.08],[.18,.02],[-.02,-.10],[.22,-.14]])gen2289PlanarStroke(g,p(x,y),p(x+.06,y-.18),.010,[.18,.62,.92,.66],q,kind,anchor.season);
-  }else{
-    for(const [x,y,rx,ry,c] of [[-.21,.13,.10,.055,[.90,.46,.08,.68]],[-.03,.02,.11,.06,[.68,.28,.04,.72]],[.17,.12,.09,.05,[.96,.58,.10,.68]],[.12,-.13,.10,.055,[.72,.31,.05,.70]],[-.18,-.10,.08,.045,[.86,.39,.06,.64]]]){gen2289PlanarDisc(g,p(x,y),rx,ry,c,q,kind,anchor.season,8);gen2289PlanarStroke(g,p(x-rx*.45,y),p(x+rx*.45,y),.006,[.36,.16,.04,.70],q,kind,anchor.season)}
-  }
-}
-
-addQuadrantEnvironment=function(g){
-  const count=GEN2273_OBJECTS_PER_DEPTH;
-  g.objectRanges=[];g.permanentDomainRanges=[];g.planarDomainRanges=[];
-  for(const anchor of GEN2289_STAGE_AUTHORITY.domains){const startVertex=g.p.length/3;gen2289EmitPlanarDomain(g,anchor);const endVertex=g.p.length/3;g.planarDomainRanges.push(Object.freeze({domain:anchor.season,corner:anchor.corner,startVertex,endVertex}));g.permanentDomainRanges.push(Object.freeze({domain:anchor.season,startVertex,endVertex}));}
-  for(const zone of QUADRANT_VOLUMES)DEPTH_PLANES.forEach((plane,depthIndex)=>{for(let i=0;i<count;i++){const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2289_CHECKPOINT_A_IDENTITY_PRESERVATION_FAILURE');gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));}});
-};
-
+function gen2289EmitPlanarDomain(g,anchor){const kind=gen2289PlanarKind(anchor.season),q=.12+anchor.season*.17,p=(x,y)=>gen2289PDomain2D(anchor,x,y);if(anchor.season===SEASON.SPRING){gen2289PlanarStroke(g,p(-.22,-.18),p(-.18,.18),.012,[.16,.46,.22,.54],q,kind,anchor.season);for(const [x,y,s] of [[-.18,.14,.10],[-.02,.02,.085],[.18,.12,.095],[.12,-.12,.07]]){gen2289PlanarDisc(g,p(x,y),s,s*.72,[.92,.48,.66,.64],q,kind,anchor.season,10);gen2289PlanarDisc(g,p(x,y),s*.34,s*.34,[1,.78,.30,.78],q,kind,anchor.season,10)}}else if(anchor.season===SEASON.WINTER){for(const [x,y,s] of [[-.18,.11,.12],[.05,.02,.10],[.20,.15,.085],[-.02,-.15,.075]])for(let i=0;i<3;i++){const a=Math.PI*i/3,dx=Math.cos(a)*s,dy=Math.sin(a)*s;gen2289PlanarStroke(g,p(x-dx,y-dy),p(x+dx,y+dy),.009,[.70,.90,1,.70],q,kind,anchor.season)}}else if(anchor.season===SEASON.SUMMER){gen2289PlanarDisc(g,p(-.05,.18),.26,.08,[.17,.48,.58,.30],q,kind,anchor.season,14);for(const [x,y] of [[-.24,.09],[-.10,.04],[.04,.08],[.18,.02],[-.02,-.10],[.22,-.14]])gen2289PlanarStroke(g,p(x,y),p(x+.06,y-.18),.010,[.18,.62,.92,.66],q,kind,anchor.season)}else{for(const [x,y,rx,ry,c] of [[-.21,.13,.10,.055,[.90,.46,.08,.68]],[-.03,.02,.11,.06,[.68,.28,.04,.72]],[.17,.12,.09,.05,[.96,.58,.10,.68]],[.12,-.13,.10,.055,[.72,.31,.05,.70]],[-.18,-.10,.08,.045,[.86,.39,.06,.64]]]){gen2289PlanarDisc(g,p(x,y),rx,ry,c,q,kind,anchor.season,8);gen2289PlanarStroke(g,p(x-rx*.45,y),p(x+rx*.45,y),.006,[.36,.16,.04,.70],q,kind,anchor.season)}}}
+addQuadrantEnvironment=function(g){const count=GEN2273_OBJECTS_PER_DEPTH;g.objectRanges=[];g.permanentDomainRanges=[];g.planarDomainRanges=[];for(const anchor of GEN2289_STAGE_AUTHORITY.domains){const startVertex=g.p.length/3;gen2289EmitPlanarDomain(g,anchor);const endVertex=g.p.length/3;g.planarDomainRanges.push(Object.freeze({domain:anchor.season,corner:anchor.corner,startVertex,endVertex}));g.permanentDomainRanges.push(Object.freeze({domain:anchor.season,startVertex,endVertex}))}for(const zone of QUADRANT_VOLUMES)DEPTH_PLANES.forEach((plane,depthIndex)=>{for(let i=0;i<count;i++){const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2289_CHECKPOINT_A_IDENTITY_PRESERVATION_FAILURE');gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}))}})};
 const GEN2289_BASE_VERTEX_SOURCE=vertexSource;
-vertexSource=function(webgl2,precision){
-  let source=GEN2289_BASE_VERTEX_SOURCE(webgl2,precision);
-  let next=source.replace('vec3 p=a_position,n=a_normal;','vec3 p=a_position,n=a_normal;\n  float planarDomain=step(25.5,a_kind)*step(a_kind,29.5);');if(next===source)throw Error('GEN2289_PLANAR_VERTEX_CLASS_MARKER_MISSING');source=next;
-  next=source.replace('float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);','float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort)*(1.0-planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_SWAY_BYPASS_MARKER_MISSING');source=next;
-  const projection=`p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);
+vertexSource=function(webgl2,precision){let source=GEN2289_BASE_VERTEX_SOURCE(webgl2,precision);let next=source.replace('vec3 p=a_position,n=a_normal;','vec3 p=a_position,n=a_normal;\n  float planarDomain=step(25.5,a_kind)*step(a_kind,29.5);');if(next===source)throw Error('GEN2289_PLANAR_VERTEX_CLASS_MARKER_MISSING');source=next;next=source.replace('float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort);','float sway=(u_reduced>.5?0.0:.008)*crown*alive*(1.0-trackedCohort)*(1.0-planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_SWAY_BYPASS_MARKER_MISSING');source=next;const projection=`p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);
   n=vec3(cy*n.x+sy*n.z,n.y,-sy*n.x+cy*n.z);
   p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);
   n=vec3(n.x,cp*n.y-sp*n.z,sp*n.y+cp*n.z);
   p.y-=.28;p*=u_scale;
   float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
-  gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);`;
-  const planarProjection=`if(planarDomain>.5){
+  gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);`;const planarProjection=`if(planarDomain>.5){
     vec2 worldAnchor=vec2(-1.72,1.52),stageAnchor=vec2(.20,.20);
     if(a_season>.5&&a_season<1.5){worldAnchor=vec2(-1.72,-.72);stageAnchor=vec2(.20,.80);}
     else if(a_season>1.5&&a_season<2.5){worldAnchor=vec2(1.72,-.72);stageAnchor=vec2(.80,.80);}
@@ -1046,39 +687,94 @@ vertexSource=function(webgl2,precision){
     p.y-=.28;p*=u_scale;
     float z=max(1.1,u_camera-p.z),nc=1.0,fc=10.0,zc=((fc+nc)/(fc-nc))*z-(2.0*fc*nc)/(fc-nc);
     gl_Position=vec4(p.x*1.70/u_aspect,p.y*1.70,zc,z);
-  }`;
-  next=source.replace(projection,planarProjection);if(next===source)throw Error('GEN2289_PLANAR_CAMERA_BYPASS_MARKER_MISSING');return next;
-};
+  }`;next=source.replace(projection,planarProjection);if(next===source)throw Error('GEN2289_PLANAR_CAMERA_BYPASS_MARKER_MISSING');return next};
 const GEN2289_BASE_FRAGMENT_SOURCE=fragmentSource;
-fragmentSource=function(webgl2,precision){
-  let source=GEN2289_BASE_FRAGMENT_SOURCE(webgl2,precision);
-  let next=source.replace('float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);','float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),planarDomain=step(25.5,v_k)*step(v_k,29.5),special=max(max(max(feed,zoneEnv),trackedCohort),planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_FRAGMENT_CLASS_MARKER_MISSING');source=next;
-  next=source.replace('vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;','vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;\n  lit=mix(lit,v_c.rgb,planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_LIGHTING_BYPASS_MARKER_MISSING');return next;
+fragmentSource=function(webgl2,precision){let source=GEN2289_BASE_FRAGMENT_SOURCE(webgl2,precision);let next=source.replace('float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),special=max(max(feed,zoneEnv),trackedCohort);','float feed=step(11.5,v_k)*step(v_k,15.5),zoneEnv=step(16.5,v_k)*step(v_k,20.5),trackedCohort=step(21.5,v_k)*step(v_k,25.5),planarDomain=step(25.5,v_k)*step(v_k,29.5),special=max(max(max(feed,zoneEnv),trackedCohort),planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_FRAGMENT_CLASS_MARKER_MISSING');source=next;next=source.replace('vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;','vec3 lit=mix(seasonal,energy,glow*.68)+energy*front*.16*u_activity;\n  lit=mix(lit,v_c.rgb,planarDomain);');if(next===source)throw Error('GEN2289_PLANAR_LIGHTING_BYPASS_MARKER_MISSING');return next};
+const GEN2289_CHECKPOINT_A_GEOMETRY=build();for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2289_CHECKPOINT_A_GEOMETRY[key];GEN2273_BOUND_GEOMETRY.objectRanges=GEN2289_CHECKPOINT_A_GEOMETRY.objectRanges;GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2289_CHECKPOINT_A_GEOMETRY.permanentDomainRanges;GEN2273_BOUND_GEOMETRY.planarDomainRanges=GEN2289_CHECKPOINT_A_GEOMETRY.planarDomainRanges;
+function runGen2289CheckpointA(){const expected=Object.freeze({NW:SEASON.SPRING,NE:SEASON.WINTER,SW:SEASON.SUMMER,SE:SEASON.AUTUMN}),domains=GEN2289_STAGE_AUTHORITY.domains,byCorner=new Map(domains.map(domain=>[domain.corner,domain]));const cornerIdentity=Object.entries(expected).every(([corner,season])=>byCorner.get(corner)?.season===season),normalizedTargets=domains.every(domain=>Math.abs(domain.nx-(domain.corner.endsWith('W')?.20:.80))<1e-9&&Math.abs(domain.ny-(domain.corner.startsWith('N')?.20:.80))<1e-9),treeCentered=GEN2289_STAGE_AUTHORITY.tree.nx===.50&&GEN2289_STAGE_AUTHORITY.tree.ny===.50;const ranges=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],planarVerticesByDomain=new Map(domains.map(domain=>[domain.season,[]]));for(const range of ranges){const values=planarVerticesByDomain.get(range.domain);if(!values)continue;for(let vertex=range.startVertex;vertex<range.endVertex;vertex++)values.push({x:GEN2273_BOUND_GEOMETRY.p[vertex*3],y:GEN2273_BOUND_GEOMETRY.p[vertex*3+1],z:GEN2273_BOUND_GEOMETRY.p[vertex*3+2]})}const planarVertices=[...planarVerticesByDomain.values()].flat(),zeroDepth=planarVertices.length>0&&planarVertices.every(p=>Math.abs(p.z-GEN2289_PLANAR_Z)<1e-9),centerClear=planarVertices.every(p=>!(Math.abs(p.x)<.78&&p.y>-.26&&p.y<1.08));const corridorsClear=domains.every(domain=>{const points=planarVerticesByDomain.get(domain.season)||[];return points.length>0&&points.every(p=>{const stageX=domain.nx+((p.x-domain.x)*.32)/.72,stageY=domain.ny+(p.y-domain.y)*.32;return(stageX<.40||stageX>.60)&&(stageY<.40||stageY>.60)})});const fourRanges=ranges.length===4&&new Set(ranges.map(range=>range.domain)).size===4,treeDominantByComposition=centerClear&&corridorsClear&&GEN2289_STAGE_AUTHORITY.domains.every(domain=>Math.abs(domain.x)>=1.70&&Math.abs(domain.xSpan)<=.46&&Math.abs(domain.ySpan)<=.34);const vertexLaw=vertexSource(false,'highp'),fragmentLaw=fragmentSource(false,'highp'),webgl2VertexLaw=vertexSource(true,'highp'),webgl2FragmentLaw=fragmentSource(true,'highp'),cameraBypass=vertexLaw.includes('if(planarDomain>.5){')&&vertexLaw.includes('stageAnchor=vec2(.20,.20)'),lightingBypass=fragmentLaw.includes('lit=mix(lit,v_c.rgb,planarDomain);'),webgl2VersionSerialization=webgl2VertexLaw.startsWith('#version 300 es\nprecision highp float;')&&webgl2FragmentLaw.startsWith('#version 300 es\nprecision highp float;');const trackedUnchanged=GEN2273_BOUND_GEOMETRY.objectRanges.length===96&&GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&GEN2273_BOUND_GEOMETRY.objectRanges.every((range,index)=>range.objectId===index);const inheritedGen2282=runGen2282BinaryQualification();const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,checkpoint:'A',cornerIdentity,normalizedTargets,treeCentered,fourPlanarDomainRanges:fourRanges,zeroDomainZDepth:zeroDepth,cameraYawPitchPerspectiveBypass:cameraBypass,lightingBypass,webgl2VersionSerialization,protectedCenterClear:centerClear,protectedCorridorsClear:corridorsClear,treeDominantByComposition,trackedCohortBindingCount:GEN2273_BOUND_GEOMETRY.objectRanges.length,trackedCohortUnchanged:trackedUnchanged,inheritedGen2282BinaryPass:inheritedGen2282.passed,planarVertexCount:planarVertices.length,nextLawfulAction:'HUMAN_CHECKPOINT_A_REVIEW_BEFORE_MOTION_BINDING',passed:cornerIdentity&&normalizedTargets&&treeCentered&&fourRanges&&zeroDepth&&cameraBypass&&lightingBypass&&webgl2VersionSerialization&&centerClear&&corridorsClear&&treeDominantByComposition&&trackedUnchanged&&inheritedGen2282.passed});return receipt}
+const GEN2289_CHECKPOINT_A_RECEIPT=runGen2289CheckpointA();if(!GEN2289_CHECKPOINT_A_RECEIPT.passed)throw Error('GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_FAILURE');globalThis.DGB_COMMUNITY_GEN2289_STAGE_AUTHORITY=GEN2289_STAGE_AUTHORITY;globalThis.DGB_COMMUNITY_GEN2289_CHECKPOINT_A_RECEIPT=GEN2289_CHECKPOINT_A_RECEIPT;const GEN2289_CHECKPOINT_A_BASE_MOUNT=mount;mount=function(host){GEN2289_CHECKPOINT_A_BASE_MOUNT(host);host.dataset.communityDomainModel='PLANAR_CHECKPOINT_A';host.setAttribute('aria-label','Community lifecycle checkpoint A. Four permanent planar seasonal domains occupy the four stage corners while the central tree and tracked lifecycle remain three-dimensional. Motion binding for the planar domains is intentionally not yet enabled.')};
+
+// Gen2289 recalibrated Checkpoint A: source worlds, embedded portals, zero visible connector curves.
+function gen2289PlanarRing(g,center,outerX,outerY,innerX,innerY,color,q,kind,season,segments=18){
+  const n=V(0,0,1),base=g.p.length/3;
+  for(let i=0;i<segments;i++){
+    const a=Math.PI*2*i/segments;
+    vert(g,V(center.x+Math.cos(a)*outerX,center.y+Math.sin(a)*outerY,GEN2289_PLANAR_Z),n,color,q,kind,season);
+    vert(g,V(center.x+Math.cos(a)*innerX,center.y+Math.sin(a)*innerY,GEN2289_PLANAR_Z),n,color,q,kind,season);
+  }
+  for(let i=0;i<segments;i++){
+    const j=(i+1)%segments,o0=base+i*2,i0=o0+1,o1=base+j*2,i1=o1+1;
+    g.i.push(o0,i0,o1,o1,i0,i1);
+  }
+}
+function gen2289PortalLocal(anchor){return Object.freeze({x:anchor.corner.endsWith('W')?.27:-.27,y:anchor.corner.startsWith('N')?.08:-.08})}
+function gen2289PortalColor(season){return season===SEASON.SPRING?[1,.66,.82,.92]:season===SEASON.SUMMER?[.20,.78,1,.92]:season===SEASON.AUTUMN?[1,.58,.12,.92]:[.76,.94,1,.94]}
+function gen2289EmitPortal(g,anchor){
+  const local=gen2289PortalLocal(anchor),center=gen2289PDomain2D(anchor,local.x,local.y),kind=gen2289PlanarKind(anchor.season),q=.155+anchor.season*.17,color=gen2289PortalColor(anchor.season);
+  gen2289PlanarRing(g,center,.105,.078,.060,.043,color,q,kind,anchor.season,20);
+  const inward=anchor.corner.endsWith('W')?1:-1;
+  gen2289PlanarStroke(g,gen2289PDomain2D(anchor,local.x-inward*.13,local.y),gen2289PDomain2D(anchor,local.x-inward*.075,local.y),.010,color,q,kind,anchor.season);
+  return Object.freeze({domain:anchor.season,corner:anchor.corner,localX:local.x,localY:local.y});
+}
+gen2289EmitPlanarDomain=function(g,anchor){
+  const kind=gen2289PlanarKind(anchor.season),q=.12+anchor.season*.17,p=(x,y)=>gen2289PDomain2D(anchor,x,y);
+  if(anchor.season===SEASON.SPRING){
+    for(const [x0,y0,x1,y1,w,c] of [[-.30,-.20,-.24,.20,.012,[.10,.42,.20,.62]],[-.18,-.18,-.10,.18,.010,[.18,.54,.26,.58]],[-.05,-.16,.02,.17,.009,[.24,.58,.30,.50]]])gen2289PlanarStroke(g,p(x0,y0),p(x1,y1),w,c,q,kind,anchor.season);
+    for(const [x,y,s] of [[-.27,.18,.075],[-.15,.08,.09],[-.03,.20,.075],[.08,.02,.085],[-.05,-.15,.07]]){gen2289PlanarDisc(g,p(x,y),s,s*.68,[.96,.50,.70,.74],q,kind,anchor.season,10);gen2289PlanarDisc(g,p(x,y),s*.30,s*.30,[1,.82,.34,.82],q,kind,anchor.season,8)}
+  }else if(anchor.season===SEASON.SUMMER){
+    gen2289PlanarStroke(g,p(-.31,.20),p(.09,.20),.022,[.10,.38,.52,.42],q,kind,anchor.season);
+    for(const [x,y] of [[-.28,.14],[-.18,.06],[-.08,.15],[.02,.04],[.11,.13],[-.22,-.08],[-.08,-.13],[.07,-.07]])gen2289PlanarStroke(g,p(x,y),p(x+.055,y-.145),.010,[.18,.66,.96,.76],q,kind,anchor.season);
+    for(const [x,y,rx] of [[-.22,.22,.09],[-.02,.22,.11],[.13,.21,.075]])gen2289PlanarDisc(g,p(x,y),rx,.040,[.28,.68,.78,.34],q,kind,anchor.season,12);
+  }else if(anchor.season===SEASON.AUTUMN){
+    for(const [x,y,rx,ry,c] of [[-.28,.17,.085,.046,[.96,.50,.08,.76]],[-.16,.02,.105,.057,[.72,.29,.04,.78]],[-.02,.17,.085,.047,[1,.62,.13,.74]],[.09,.02,.09,.050,[.82,.34,.04,.78]],[-.20,-.14,.075,.041,[.90,.42,.06,.70]],[-.02,-.13,.083,.045,[.64,.24,.03,.74]]]){gen2289PlanarDisc(g,p(x,y),rx,ry,c,q,kind,anchor.season,9);gen2289PlanarStroke(g,p(x-rx*.45,y),p(x+rx*.45,y),.006,[.34,.14,.035,.72],q,kind,anchor.season)}
+  }else{
+    for(const [x,y,s] of [[-.28,.16,.09],[-.14,.04,.075],[-.03,.19,.085],[.09,.04,.072],[-.18,-.14,.068],[.02,-.12,.076]])for(let i=0;i<3;i++){const a=Math.PI*i/3,dx=Math.cos(a)*s,dy=Math.sin(a)*s;gen2289PlanarStroke(g,p(x-dx,y-dy),p(x+dx,y+dy),.008,[.72,.92,1,.80],q,kind,anchor.season)}
+    for(const [x,y] of [[-.30,-.02],[-.06,.01],[.10,.18],[-.14,.20]])gen2289PlanarDisc(g,p(x,y),.022,.022,[.86,.97,1,.82],q,kind,anchor.season,8);
+  }
 };
-
-const GEN2289_CHECKPOINT_A_GEOMETRY=build();
-for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2289_CHECKPOINT_A_GEOMETRY[key];
-GEN2273_BOUND_GEOMETRY.objectRanges=GEN2289_CHECKPOINT_A_GEOMETRY.objectRanges;
-GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2289_CHECKPOINT_A_GEOMETRY.permanentDomainRanges;
-GEN2273_BOUND_GEOMETRY.planarDomainRanges=GEN2289_CHECKPOINT_A_GEOMETRY.planarDomainRanges;
-
-function runGen2289CheckpointA(){
-  const expected=Object.freeze({NW:SEASON.SPRING,NE:SEASON.WINTER,SW:SEASON.SUMMER,SE:SEASON.AUTUMN}),domains=GEN2289_STAGE_AUTHORITY.domains,byCorner=new Map(domains.map(domain=>[domain.corner,domain]));
-  const cornerIdentity=Object.entries(expected).every(([corner,season])=>byCorner.get(corner)?.season===season),normalizedTargets=domains.every(domain=>Math.abs(domain.nx-(domain.corner.endsWith('W')?.20:.80))<1e-9&&Math.abs(domain.ny-(domain.corner.startsWith('N')?.20:.80))<1e-9),treeCentered=GEN2289_STAGE_AUTHORITY.tree.nx===.50&&GEN2289_STAGE_AUTHORITY.tree.ny===.50;
-  const ranges=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],planarVerticesByDomain=new Map(domains.map(domain=>[domain.season,[]]));
-  for(const range of ranges){const values=planarVerticesByDomain.get(range.domain);if(!values)continue;for(let vertex=range.startVertex;vertex<range.endVertex;vertex++)values.push({x:GEN2273_BOUND_GEOMETRY.p[vertex*3],y:GEN2273_BOUND_GEOMETRY.p[vertex*3+1],z:GEN2273_BOUND_GEOMETRY.p[vertex*3+2]});}
-  const planarVertices=[...planarVerticesByDomain.values()].flat(),zeroDepth=planarVertices.length>0&&planarVertices.every(p=>Math.abs(p.z-GEN2289_PLANAR_Z)<1e-9),centerClear=planarVertices.every(p=>!(Math.abs(p.x)<.78&&p.y>-.26&&p.y<1.08));
-  const corridorsClear=domains.every(domain=>{const points=planarVerticesByDomain.get(domain.season)||[];return points.length>0&&points.every(p=>{const stageX=domain.nx+((p.x-domain.x)*.32)/.72,stageY=domain.ny+(p.y-domain.y)*.32;return(stageX<.40||stageX>.60)&&(stageY<.40||stageY>.60);});});
-  const fourRanges=ranges.length===4&&new Set(ranges.map(range=>range.domain)).size===4,treeDominantByComposition=centerClear&&corridorsClear&&GEN2289_STAGE_AUTHORITY.domains.every(domain=>Math.abs(domain.x)>=1.70&&Math.abs(domain.xSpan)<=.46&&Math.abs(domain.ySpan)<=.34);
-  const vertexLaw=vertexSource(false,'highp'),fragmentLaw=fragmentSource(false,'highp'),webgl2VertexLaw=vertexSource(true,'highp'),webgl2FragmentLaw=fragmentSource(true,'highp'),cameraBypass=vertexLaw.includes('if(planarDomain>.5){')&&vertexLaw.includes('stageAnchor=vec2(.20,.20)'),lightingBypass=fragmentLaw.includes('lit=mix(lit,v_c.rgb,planarDomain);'),webgl2VersionSerialization=webgl2VertexLaw.startsWith('#version 300 es\nprecision highp float;')&&webgl2FragmentLaw.startsWith('#version 300 es\nprecision highp float;');
-  const trackedUnchanged=GEN2273_BOUND_GEOMETRY.objectRanges.length===96&&GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&GEN2273_BOUND_GEOMETRY.objectRanges.every((range,index)=>range.objectId===index);
-  const inheritedGen2282=runGen2282BinaryQualification();
-  const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,checkpoint:'A',cornerIdentity,normalizedTargets,treeCentered,fourPlanarDomainRanges:fourRanges,zeroDomainZDepth:zeroDepth,cameraYawPitchPerspectiveBypass:cameraBypass,lightingBypass,webgl2VersionSerialization,protectedCenterClear:centerClear,protectedCorridorsClear:corridorsClear,treeDominantByComposition,trackedCohortBindingCount:GEN2273_BOUND_GEOMETRY.objectRanges.length,trackedCohortUnchanged:trackedUnchanged,inheritedGen2282BinaryPass:inheritedGen2282.passed,planarVertexCount:planarVertices.length,nextLawfulAction:'HUMAN_CHECKPOINT_A_REVIEW_BEFORE_MOTION_BINDING',passed:cornerIdentity&&normalizedTargets&&treeCentered&&fourRanges&&zeroDepth&&cameraBypass&&lightingBypass&&webgl2VersionSerialization&&centerClear&&corridorsClear&&treeDominantByComposition&&trackedUnchanged&&inheritedGen2282.passed});
+addQuadrantEnvironment=function(g){
+  const count=GEN2273_OBJECTS_PER_DEPTH;
+  g.objectRanges=[];g.permanentDomainRanges=[];g.planarDomainRanges=[];g.portalRanges=[];
+  for(const anchor of GEN2289_STAGE_AUTHORITY.domains){
+    const startVertex=g.p.length/3;
+    gen2289EmitPlanarDomain(g,anchor);
+    const portalStart=g.p.length/3,portalMeta=gen2289EmitPortal(g,anchor),endVertex=g.p.length/3;
+    g.planarDomainRanges.push(Object.freeze({domain:anchor.season,corner:anchor.corner,startVertex,endVertex}));
+    g.permanentDomainRanges.push(Object.freeze({domain:anchor.season,startVertex,endVertex}));
+    g.portalRanges.push(Object.freeze({...portalMeta,startVertex:portalStart,endVertex}));
+  }
+  for(const zone of QUADRANT_VOLUMES)DEPTH_PLANES.forEach((plane,depthIndex)=>{for(let i=0;i<count;i++){
+    const objectId=gen2273ObjectId(zone.season,depthIndex,i),identity=GEN2273_MOBILE_OBJECT_REGISTRY[objectId],p=quadrantPoint(zone,plane,i,count),startVertex=g.p.length/3;
+    if(!identity||identity.objectId!==objectId||identity.domain!==zone.season||identity.depthBand!==depthIndex||!gen2273SameXYZ(identity.homeXYZ,p))throw Error('GEN2289_RECAL_A_IDENTITY_PRESERVATION_FAILURE');
+    gen2282EmitSeasonMotif(g,zone,plane,depthIndex,i,p,gen2282TrackedKind(zone.season),.92,1);
+    g.objectRanges.push(Object.freeze({objectId,startVertex,endVertex:g.p.length/3}));
+  }});
+};
+const GEN2289_RECAL_A_BASE_FRAGMENT_SOURCE=fragmentSource;
+fragmentSource=function(webgl2,precision){
+  const source=GEN2289_RECAL_A_BASE_FRAGMENT_SOURCE(webgl2,precision),output=`${webgl2?'lifecycleColor':'gl_FragColor'}=vec4(lit,alpha);`,replacement=`float prohibitedConnector=max(1.0-step(.45,abs(v_k-10.0)),1.0-step(.45,abs(v_k-16.0)));\n  alpha*=1.0-prohibitedConnector;\n  ${output}`,next=source.replace(output,replacement);
+  if(next===source)throw Error('GEN2289_RECAL_A_CONNECTOR_SUPPRESSION_MARKER_MISSING');
+  return next;
+};
+const GEN2289_RECAL_A_GEOMETRY=build();
+for(const key of ['p','n','c','q','k','s','i'])GEN2273_BOUND_GEOMETRY[key]=GEN2289_RECAL_A_GEOMETRY[key];
+GEN2273_BOUND_GEOMETRY.objectRanges=GEN2289_RECAL_A_GEOMETRY.objectRanges;
+GEN2273_BOUND_GEOMETRY.permanentDomainRanges=GEN2289_RECAL_A_GEOMETRY.permanentDomainRanges;
+GEN2273_BOUND_GEOMETRY.planarDomainRanges=GEN2289_RECAL_A_GEOMETRY.planarDomainRanges;
+GEN2273_BOUND_GEOMETRY.portalRanges=GEN2289_RECAL_A_GEOMETRY.portalRanges;
+function runGen2289RecalibratedCheckpointA(){
+  const worlds=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],portals=GEN2273_BOUND_GEOMETRY.portalRanges||[],worldDomains=new Set(worlds.map(range=>range.domain)),portalDomains=new Set(portals.map(range=>range.domain));
+  const sourceWorldCount=worlds.length,portalCount=portals.length,worldIdentityPass=sourceWorldCount===4&&worldDomains.size===4,portalIdentityPass=portalCount===4&&portalDomains.size===4;
+  const portalEmbedded=portals.every(portal=>{const world=worlds.find(range=>range.domain===portal.domain);return !!world&&portal.startVertex>=world.startVertex&&portal.endVertex<=world.endVertex&&portal.endVertex>portal.startVertex});
+  const trackedObjectCount=GEN2273_BOUND_GEOMETRY.objectRanges?.length||0,trackedIdentityPass=trackedObjectCount===96&&GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&GEN2273_BOUND_GEOMETRY.objectRanges.every((range,index)=>range.objectId===index);
+  const fragmentLaw=fragmentSource(false,'highp'),visibleConnectorCount=fragmentLaw.includes('alpha*=1.0-prohibitedConnector;')&&fragmentLaw.includes('abs(v_k-10.0)')&&fragmentLaw.includes('abs(v_k-16.0)')?0:1;
+  const inherited=runGen2282BinaryQualification(),domainDepletion=inherited.DOMAIN_DEPLETION===true;
+  const receipt=Object.freeze({schema:'COMMUNITY_GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,checkpoint:'A',sourceWorldCount,portalCount,visibleConnectorCount,worldIdentityPass,portalIdentityPass,portalEmbedded,trackedObjectCount,trackedIdentityPass,domainDepletion,inheritedGen2282BinaryPass:inherited.passed,nextLawfulAction:'CHECKPOINT_A_EXACT_EXECUTION_AND_VISUAL_QUALIFICATION',passed:sourceWorldCount===4&&portalCount===4&&visibleConnectorCount===0&&worldIdentityPass&&portalIdentityPass&&portalEmbedded&&trackedIdentityPass&&!domainDepletion&&inherited.passed});
   return receipt;
 }
-const GEN2289_CHECKPOINT_A_RECEIPT=runGen2289CheckpointA();
-if(!GEN2289_CHECKPOINT_A_RECEIPT.passed)throw Error('GEN2289_CHECKPOINT_A_PLANAR_COMPOSITION_FAILURE');
-globalThis.DGB_COMMUNITY_GEN2289_STAGE_AUTHORITY=GEN2289_STAGE_AUTHORITY;
-globalThis.DGB_COMMUNITY_GEN2289_CHECKPOINT_A_RECEIPT=GEN2289_CHECKPOINT_A_RECEIPT;
-const GEN2289_CHECKPOINT_A_BASE_MOUNT=mount;
-mount=function(host){GEN2289_CHECKPOINT_A_BASE_MOUNT(host);host.dataset.communityDomainModel='PLANAR_CHECKPOINT_A';host.setAttribute('aria-label','Community lifecycle checkpoint A. Four permanent planar seasonal domains occupy the four stage corners while the central tree and tracked lifecycle remain three-dimensional. Motion binding for the planar domains is intentionally not yet enabled.');};
+const GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT=runGen2289RecalibratedCheckpointA();
+if(!GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT.passed)throw Error('GEN2289_RECALIBRATED_CHECKPOINT_A_FAILURE');
+globalThis.DGB_COMMUNITY_GEN2289_CHECKPOINT_A_RECEIPT=GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT;
+globalThis.DGB_COMMUNITY_GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT=GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT;
+const GEN2289_RECAL_A_BASE_MOUNT=mount;
+mount=function(host){GEN2289_RECAL_A_BASE_MOUNT(host);host.dataset.communityDomainModel='RECALIBRATED_SOURCE_WORLDS_PORTALS_A';host.setAttribute('aria-label','Community lifecycle checkpoint A. Four permanent seasonal source worlds surround the central tree, each with an embedded portal. Visible guide strings and return connector curves are suppressed. The tracked 96-object lifecycle remains preserved for later release and motion checkpoints.')};

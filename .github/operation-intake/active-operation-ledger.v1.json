@@ -6758,6 +6758,49 @@
       "scopeHash": "9a2b61db975e60504f5ee77aafd5e3915cd18d5abbe4cc2498e526fa40f13ba2",
       "state": "ADMITTED_LOCKED"
     },
+    "9a669f2349bb42bc4eb98c3939b2c02eadd54a80a8cd7767466ba2036ac020e5": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a75b4c70c0d74612e2c28016631f46baa812b424",
+          "lockGeneration": 2309,
+          "lockScope": "CONTROL_PLANE:ACTIVE_CONFORMANCE:CONSTRAINED_STRING_FIXTURE:V1",
+          "operationId": "CONTROL_PLANE_ACTIVE_CONFORMANCE_CONSTRAINED_STRING_FIXTURE_REPAIR_20260916_001",
+          "procedureLocatorDigest": "8bfe81401d1ffd530deb3ad3d36456d23234928402f493f8da1ad06259c3f80a",
+          "requestDigest": "05308a29b7e617afa31d0c3b13ddd80455999098209cabe634656912a6fe30a4",
+          "scopeHash": "9a669f2349bb42bc4eb98c3939b2c02eadd54a80a8cd7767466ba2036ac020e5"
+        },
+        "bindingDigest": "154c7537fea4d03d956f0634f6f2020e3af8791adfbd11b1d4b4ea529aa64ad5",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "23fd8d18194ab12e913d3bae4ac6d20bbcb4fc581d01451e0d15af0e27a657ba",
+          "commentId": 5691006911,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3528,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35047341405,
+          "workflowSha": "a75b4c70c0d74612e2c28016631f46baa812b424"
+        },
+        "lineageAnchorCommitSha": "1dcaa7061072a3b834cedebe34e513dea7569ceb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a75b4c70c0d74612e2c28016631f46baa812b424",
+      "lockGeneration": 2309,
+      "lockScope": "CONTROL_PLANE:ACTIVE_CONFORMANCE:CONSTRAINED_STRING_FIXTURE:V1",
+      "operationId": "CONTROL_PLANE_ACTIVE_CONFORMANCE_CONSTRAINED_STRING_FIXTURE_REPAIR_20260916_001",
+      "procedureLocatorDigest": "8bfe81401d1ffd530deb3ad3d36456d23234928402f493f8da1ad06259c3f80a",
+      "released": false,
+      "requestDigest": "05308a29b7e617afa31d0c3b13ddd80455999098209cabe634656912a6fe30a4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9a669f2349bb42bc4eb98c3939b2c02eadd54a80a8cd7767466ba2036ac020e5",
+      "state": "ADMITTED_LOCKED"
+    },
     "9aed87a97b66500f9c4937666d301980600f681694d45b619875059c23348825": {
       "governingHead": "cc8c8e7ba57a758729eccac5a1080f609c9cfeac",
       "lockGeneration": 362,
@@ -11480,7 +11523,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2308,
+  "lockGeneration": 2309,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

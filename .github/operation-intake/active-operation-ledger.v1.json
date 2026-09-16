@@ -1303,6 +1303,49 @@
       "scopeHash": "175a7e083dd13cd000b5601aaf940c5b0b3b367b0ebe256b43b71e5a47552265",
       "state": "ADMITTED_LOCKED"
     },
+    "1788126ed62970e70fb58fd03cd493f4fe3664d37433647d2893622c516dcc7d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b3111455e7b7b503bf861f7a294b1d755215340a",
+          "lockGeneration": 2332,
+          "lockScope": "H_EARTH:AUDRALIA:TABLET_WEATHER:PRODUCTION_TEST_ADOPTION:V1",
+          "operationId": "AUDRALIA_TABLET_WEATHER_PRODUCTION_TEST_ADOPTION_20260916_001",
+          "procedureLocatorDigest": "c3e9ce21e6ccdd7008dc54316a65e24ff89268584c2ab0989fb7ff4fa41987c5",
+          "requestDigest": "d2598b60292eb0906169b93cf053bff396bc27727bbd454c3e8bff81fe40874a",
+          "scopeHash": "1788126ed62970e70fb58fd03cd493f4fe3664d37433647d2893622c516dcc7d"
+        },
+        "bindingDigest": "97b74e13da08b964d0c2521c1e2ade56a0969264bed6745b97cc45bfb0f02852",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "77c4719d17bfdf9035f778b19bbc8d4e62904691998265e15f6736025b59b3fd",
+          "commentId": 5702218616,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3476,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35132312587,
+          "workflowSha": "b3111455e7b7b503bf861f7a294b1d755215340a"
+        },
+        "lineageAnchorCommitSha": "92e468b58063712692c387c112ddc8840296c843",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b3111455e7b7b503bf861f7a294b1d755215340a",
+      "lockGeneration": 2332,
+      "lockScope": "H_EARTH:AUDRALIA:TABLET_WEATHER:PRODUCTION_TEST_ADOPTION:V1",
+      "operationId": "AUDRALIA_TABLET_WEATHER_PRODUCTION_TEST_ADOPTION_20260916_001",
+      "procedureLocatorDigest": "c3e9ce21e6ccdd7008dc54316a65e24ff89268584c2ab0989fb7ff4fa41987c5",
+      "released": false,
+      "requestDigest": "d2598b60292eb0906169b93cf053bff396bc27727bbd454c3e8bff81fe40874a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1788126ed62970e70fb58fd03cd493f4fe3664d37433647d2893622c516dcc7d",
+      "state": "ADMITTED_LOCKED"
+    },
     "18965398d20b7bb87e40a3c84c9a9b9299fe5c3abf539de3f9437b113918fcb1": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -11867,7 +11910,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2331,
+  "lockGeneration": 2332,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

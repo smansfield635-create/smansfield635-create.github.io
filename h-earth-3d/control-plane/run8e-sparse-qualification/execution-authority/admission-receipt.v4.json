@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "b80d0e3accaff6950494654d217844a297ce57f1",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "d39315f51efa47204a93ab7856a9d2b95485e0fd",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2329,
+    "lockScope": "H_EARTH:RUN8E_TEMPORAL_CONTINUITY:SPARSE_THREE_ANCHOR_PHYSICAL_QUALIFICATION:20802E02:V1",
+    "observedBranchHead": "2c4ee4f406993f720bb5f307e045ddfebbd6a98f",
+    "observedLedgerBlobSha": "e783d08ee67201ddb8c3a0c644e338b3b7adce1f",
+    "operationId": "H_EARTH_RUN8E_EXACT_CANDIDATE_SPARSE_BOUNDARY_QUALIFICATION_20260916_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "832490f8b26adf9c870eebf13a3573aec80d796076344d6899c8c35e347be3b5"
+  },
+  "operationId": "H_EARTH_RUN8E_EXACT_CANDIDATE_SPARSE_BOUNDARY_QUALIFICATION_20260916_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "283c532627501129700fd076989ed976db8d530454ac6a662edb8c1c240d0baf",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "000febb1eae8a2caba7f6a5c896d014b836a4bf8d92ea979f2b05219519667c9",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

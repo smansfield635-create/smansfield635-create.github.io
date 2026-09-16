@@ -846,3 +846,64 @@ const GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT=runGen2289M1MechanicalViability();
 globalThis.DGB_COMMUNITY_GEN2289_M1_VIABILITY_RECEIPT=GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT;
 globalThis.DGB_COMMUNITY_GEN2289_M1_MOTION_API=Object.freeze({newsWeights:GEN2289_M1_NEWS_WEIGHTS,boundaries:GEN2289_M1_BOUNDARIES,goldenAngle:GEN2289_M1_GOLDEN_ANGLE,seasonSequence:GEN2289_M1_SEASON_SEQUENCE,releaseOffset:gen2289M1ReleaseOffset,position:P_circulation,receipt:GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT});
 if(!GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT.passed)throw Error('GEN2289_M1_NEWS_FIBONACCI_MECHANICAL_VIABILITY_FAILURE');
+
+// Gen2322 R1: append-only NEWS/Fibonacci phase-continuity overlay.
+const GEN2322_R1_OPERATION_ID='COMMUNITY_NEWS_FIBONACCI_R1_CONTINUITY_REFINEMENT_20260916_001';
+const GEN2322_R1_M1_P_CIRCULATION=P_circulation;
+const GEN2322_R1_BOUNDARY_EPSILON=1e-5;
+const GEN2322_R1_CLOCK_SAMPLES=1024;
+const GEN2322_R1_PHASE_BOUNDARIES=Object.freeze([
+  Object.freeze({id:'N',value:GEN2289_M1_BOUNDARIES.N}),
+  Object.freeze({id:'E',value:GEN2289_M1_BOUNDARIES.E}),
+  Object.freeze({id:'W',value:GEN2289_M1_BOUNDARIES.W}),
+  Object.freeze({id:'S',value:GEN2289_M1_BOUNDARIES.S})
+]);
+const gen2322R1ExactXYZ=(a,b)=>a.x===b.x&&a.y===b.y&&a.z===b.z;
+const gen2322R1VectorDelta=(a,b)=>Object.freeze({x:a.x-b.x,y:a.y-b.y,z:a.z-b.z});
+const gen2322R1VectorScale=(a,s)=>Object.freeze({x:a.x*s,y:a.y*s,z:a.z*s});
+const gen2322R1VectorDistance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
+function gen2322R1Clock(localPhase){return smoother(clamp(localPhase))}
+
+P_circulation=function(object,progress){
+  const t=clamp(progress),release=gen2289M1ReleaseOffset(object),home=P_static(object),N=GEN2289_M1_BOUNDARIES.N,E=GEN2289_M1_BOUNDARIES.E,W=GEN2289_M1_BOUNDARIES.W;
+  if(t<=release)return home;
+  if(t<=N)return L(home,gen2289M1PortalXYZ(object),smoother((t-release)/Math.max(1e-9,N-release)));
+  if(t<=E)return gen2289M1ExpansionPosition(object,gen2322R1Clock((t-N)/(E-N)));
+  if(t<=W)return gen2289M1TurbulencePosition(object,gen2322R1Clock((t-E)/(W-E)));
+  return gen2289M1SettlementApproachPosition(object,gen2322R1Clock((t-W)/(1-W)));
+};
+
+function gen2322R1ClockMonotonicity(){
+  let previous=-Infinity,min=Infinity,max=-Infinity;
+  for(let i=0;i<=GEN2322_R1_CLOCK_SAMPLES;i++){
+    const input=i/GEN2322_R1_CLOCK_SAMPLES,value=gen2322R1Clock(input);
+    if(value<previous||value<0||value>1)return Object.freeze({passed:false,samples:GEN2322_R1_CLOCK_SAMPLES+1,min,max,first:gen2322R1Clock(0),last:gen2322R1Clock(1)});
+    previous=value;min=Math.min(min,value);max=Math.max(max,value);
+  }
+  return Object.freeze({passed:gen2322R1Clock(0)===0&&gen2322R1Clock(1)===1,samples:GEN2322_R1_CLOCK_SAMPLES+1,min,max,first:gen2322R1Clock(0),last:gen2322R1Clock(1)});
+}
+function gen2322R1EndpointProof(){
+  const registry=GEN2273_MOBILE_OBJECT_REGISTRY,phaseEndpoints=GEN2322_R1_PHASE_BOUNDARIES.map(boundary=>Object.freeze({id:boundary.id,value:boundary.value,preserved:registry.every(object=>gen2322R1ExactXYZ(GEN2322_R1_M1_P_CIRCULATION(object,boundary.value),P_circulation(object,boundary.value)))}));
+  const releaseEndpointsPreserved=registry.every(object=>{const release=gen2289M1ReleaseOffset(object);return gen2322R1ExactXYZ(GEN2322_R1_M1_P_CIRCULATION(object,release),P_circulation(object,release))});
+  return Object.freeze({passed:releaseEndpointsPreserved&&phaseEndpoints.every(endpoint=>endpoint.preserved),trackedObjectCount:registry.length,releaseEndpointsPreserved,phaseEndpoints:Object.freeze(phaseEndpoints)});
+}
+function gen2322R1BoundaryVelocityJump(positionFn,object,boundary,h=GEN2322_R1_BOUNDARY_EPSILON){
+  const left=positionFn(object,boundary-h),center=positionFn(object,boundary),right=positionFn(object,boundary+h),leftVelocity=gen2322R1VectorScale(gen2322R1VectorDelta(center,left),1/h),rightVelocity=gen2322R1VectorScale(gen2322R1VectorDelta(right,center),1/h);
+  return gen2322R1VectorDistance(leftVelocity,rightVelocity);
+}
+function gen2322R1VelocityProof(){
+  const registry=GEN2273_MOBILE_OBJECT_REGISTRY,boundaries=[GEN2289_M1_BOUNDARIES.N,GEN2289_M1_BOUNDARIES.E,GEN2289_M1_BOUNDARIES.W];
+  let beforeMax=0,afterMax=0,beforeSum=0,afterSum=0,count=0;
+  const perBoundary=boundaries.map((boundary,index)=>{let before=0,after=0;for(const object of registry){const b=gen2322R1BoundaryVelocityJump(GEN2322_R1_M1_P_CIRCULATION,object,boundary),a=gen2322R1BoundaryVelocityJump(P_circulation,object,boundary);before=Math.max(before,b);after=Math.max(after,a);beforeSum+=b;afterSum+=a;count++}beforeMax=Math.max(beforeMax,before);afterMax=Math.max(afterMax,after);return Object.freeze({id:['N','E','W'][index],boundary,beforeMax:before,afterMax:after,reductionRatio:before>0?after/before:0})});
+  const reductionRatio=beforeMax>0?afterMax/beforeMax:0,meanBefore=count?beforeSum/count:0,meanAfter=count?afterSum/count:0,materiallyReduced=beforeMax>GEN2273_EPSILON&&afterMax<beforeMax*.25&&meanAfter<meanBefore*.25;
+  return Object.freeze({passed:materiallyReduced,epsilon:GEN2322_R1_BOUNDARY_EPSILON,beforeMax,afterMax,reductionRatio,meanBefore,meanAfter,perBoundary:Object.freeze(perBoundary),materiallyReduced});
+}
+function runGen2322R1ContinuityQualification(){
+  const endpointProof=gen2322R1EndpointProof(),clockProof=gen2322R1ClockMonotonicity(),velocityProof=gen2322R1VelocityProof(),m1Regression=runGen2289M1MechanicalViability();
+  const architectureFrozen=GEN2289_M1_NEWS_WEIGHTS.N===3&&GEN2289_M1_NEWS_WEIGHTS.E===5&&GEN2289_M1_NEWS_WEIGHTS.W===13&&GEN2289_M1_NEWS_WEIGHTS.S===8&&GEN2289_M1_SEASON_SEQUENCE.join(',')==='1,2,3,5'&&GEN2273_MOBILE_OBJECT_REGISTRY.length===96&&m1Regression.sourceWorldCount===4&&m1Regression.portalCount===4&&m1Regression.visibleConnectorCount===0&&m1Regression.domainDepletion===false&&m1Regression.terminalReboundCount===0&&m1Regression.settledObjectCount===96&&m1Regression.objectReplacementCount===0;
+  const passed=endpointProof.passed&&clockProof.passed&&velocityProof.passed&&m1Regression.passed&&architectureFrozen;
+  return Object.freeze({schema:'COMMUNITY_NEWS_FIBONACCI_R1_CONTINUITY_RECEIPT_v1',operationId:GEN2322_R1_OPERATION_ID,lockGeneration:2322,candidate:'R1',trackedObjectCount:GEN2273_MOBILE_OBJECT_REGISTRY.length,newsWeights:GEN2289_M1_NEWS_WEIGHTS,newsBoundaries:GEN2289_M1_BOUNDARIES,goldenAngle:GEN2289_M1_GOLDEN_ANGLE,seasonSequence:GEN2289_M1_SEASON_SEQUENCE,nReleaseClockPreserved:true,ewsClockReparameterization:'EXISTING_SMOOTHER_FUNCTION_ONLY',endpointProof,clockProof,velocityProof,m1RegressionPass:m1Regression.passed,m1Regression,architectureFrozen,passed,disposition:passed?'PASS_CLOSED_QUALIFIED':'FAIL_CLOSED'});
+}
+const GEN2322_R1_CONTINUITY_RECEIPT=runGen2322R1ContinuityQualification();
+globalThis.DGB_COMMUNITY_NEWS_FIBONACCI_R1_CONTINUITY_RECEIPT=GEN2322_R1_CONTINUITY_RECEIPT;
+if(!GEN2322_R1_CONTINUITY_RECEIPT.passed)throw Error('GEN2322_R1_CONTINUITY_QUALIFICATION_FAILURE');

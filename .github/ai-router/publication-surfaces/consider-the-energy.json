@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "consider-the-energy",
-  "description": "Consider the Energy Community exact-head publication verification for the Gen2289 causal cohort lifecycle. Static checks bind the published runtime to four permanent seasonal regions, one tracked 96-object cohort, fixed HOLD/TRAVERSE/SPIRAL/SETTLE/TERMINAL timing, preserved Gen2289 tree geometry, preserved Gen2282 tree settlement targets, and the shared estate cosmic background. Generic headless runtime verifies the environment-independent shared decorative canvas and error-free page load; final authoritative live exact-head verification remains required for publication truth.",
+  "description": "Consider the Energy Community exact-head publication verification for the current production image hero. Static checks bind the page to the production image loader, intrinsic image sizing, collapsed inherited stage chrome, the exact image-source pointer, and the shared estate cosmic background. Generic headless runtime verifies the environment-independent shared decorative canvas and error-free page load; final authoritative live exact-head verification remains required for publication truth.",
   "checks": [
     {
       "path": "/campaigns/consider-the-energy/index.html",
@@ -9,42 +9,41 @@
         "data-route=\"/campaigns/consider-the-energy/\"",
         "data-community-lifecycle-mount></figure>",
         "/assets/dgb-estate-cosmos.js",
-        "/campaigns/consider-the-energy/community-lifecycle3d.js?v=20260914-gen2265-eight-state-lifecycle-v2",
+        "/campaigns/consider-the-energy/community-logo.production.js?v=20260916-topology-production-v1",
         "Consider the Community with Consider the Energy."
       ],
       "excludes": [
         "data-community-lifecycle-fallback",
+        "/campaigns/consider-the-energy/community-lifecycle3d.js?v=20260914-gen2265-eight-state-lifecycle-v2",
         "community-lifecycle3d.js?v=20260914-stage-final"
       ]
     },
     {
-      "path": "/campaigns/consider-the-energy/community-lifecycle3d.js",
+      "path": "/campaigns/consider-the-energy/community-logo.production.js",
       "includes": [
-        "DGB_COMMUNITY_GEN2289_CAUSAL_PATH_V1",
-        "COMMUNITY_FOUR_SEASON_LIFECYCLE_SCULPTURE",
-        "seasons:Object.freeze(['SPRING','SUMMER','AUTUMN','WINTER'])",
-        "phaseSeconds:Object.freeze({HOLD:[0,3],TRAVERSE:[3,8],SPIRAL:[8,18.4],SETTLE:[18.4,19.9],TERMINAL:[19.9,Infinity]})",
-        "objectCount:96",
-        "permanentDomainCount:4",
-        "lifecycleTransitionSeconds:19.9",
-        "environmentCycleSeconds:24",
-        "treeGeometryLock:'PRESERVED_GEN2289_PARENT'",
-        "settlementTargetLock:'PRESERVED_GEN2282_TREE_TARGET_FORMULA'",
-        "topologyRandomness:false",
-        "TRACKED_SPRING:22",
-        "TRACKED_WINTER:25",
-        "PLANAR_SPRING:26",
-        "PLANAR_WINTER:29",
-        "corner:'NW'",
-        "corner:'NE'",
-        "corner:'SW'",
-        "corner:'SE'",
-        "queueMicrotask(()=>mount(root))"
+        "fetch('./community-image-source.txt', { cache: 'no-store' })",
+        "image.alt = 'Consider the Energy tree emblem'",
+        "image.style.width = '100%'",
+        "image.style.height = 'auto'",
+        "image.style.maxHeight = 'none'",
+        "image.style.objectFit = 'contain'",
+        "mount.style.minHeight = '0'",
+        "mount.style.padding = '0'",
+        "mount.style.background = 'none'",
+        "mount.style.borderLeft = '0'",
+        "mount.replaceChildren(image)"
       ],
       "excludes": [
-        "DGB_COMMUNITY_LIFECYCLE_TREE_4SEASON_GEOMETRY_v1",
-        "if (root) mount(root);"
+        "image.style.height = '100%'",
+        "image.style.maxHeight = '36rem'"
       ]
+    },
+    {
+      "path": "/campaigns/consider-the-energy/community-image-source.txt",
+      "includes": [
+        "https://drive.google.com/thumbnail?id=1ex4LMF-WW9gLmeVeernhEEl4X1q5OzHX&sz=w1600"
+      ],
+      "excludes": []
     },
     {
       "path": "/assets/dgb-estate-cosmos.js",

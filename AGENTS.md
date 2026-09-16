@@ -109,3 +109,19 @@ The containment sequence is:
 `FREEZE -> BASELINE -> DELTA AUDIT -> REDUCE -> RESUME_OBJECT -> GEN2286 COLD-ROOM PROOF -> THREE ADDITIONAL COLD-ROOM PROOFS -> AWARD-WINDOW FREEZE`.
 
 After the four cold-room specimens pass, treat the control plane as frozen through the award-submission window except for a demonstrated safety-critical defect. Product work should then use the frozen spine rather than continue control-plane evolution.
+
+## Project continuation administrative hook
+
+For a fresh project room, treat natural-language instructions substantially equivalent to “New information is attached to the most recent work in this project. Please continue.” as a continuation request, not as permission to reconstruct or redesign the project.
+
+Resolve `.github/ai-router/continuation/project-continuation-hook.v1.json` after `AI_ENTRYPOINT.json`. Match the current project before global chronology. Prefer a valid `CONTROL_PLANE_RESUME_OBJECT_v1`; otherwise use an exact registered frozen seam; otherwise resolve the latest unresolved operation supported by the current project registration and repository evidence. Fail closed only if materially equal competing continuations remain after repository resolution.
+
+New attachments, screenshots, videos, logs, or owner observations are evidence for the resolved continuation. They do not independently create mutation, successor, merge, deployment, publication, scientific, or claim authority.
+
+Preserve completed checkpoints. Resume from the first incomplete checkpoint. A fresh room does not justify a new generation. If `main` moved, run differential continuity first and carry forward unchanged candidate/evidence when the movement is disjoint.
+
+Keep product workstreams separate. Audralia, Community, Zionts, Compass, Laws, Research/Public Legitimacy, Characters/Mirrorland, and shared control-plane work are not interchangeable merely because one conversation is newer. A shared control-plane interruption suspends but does not replace the product continuation; after the blocker closes, return to the suspended product continuation unless the owner redirects priorities.
+
+On continuation, report only the continuation resolved, exact candidate/checkpoint, effect of new evidence, action executed, current boundary, and next lawful action or blocker. The acceptance law is:
+
+`NEW ROOM -> CURRENT PROJECT -> VALID CONTINUATION -> NEW EVIDENCE -> FIRST INCOMPLETE CHECKPOINT -> ONE LAWFUL NEXT ACTION`.

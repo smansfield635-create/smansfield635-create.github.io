@@ -117,7 +117,7 @@ const negatives = [
   expectFailure('35100631722_TRANSPORT_ENVELOPE_INCOMPLETE', () => validateCompiledComment(missingProcedureComment), 'TRANSPORT_ENVELOPE_INCOMPLETE'),
   expectFailure('35104746859_MALFORMED_JSON_EXTRA_CONTENT', () => validateCompiledComment(`${malformedBase}\n{}`), 'TRANSPORT_COMMENT_JSON_INVALID'),
   expectFailure('35105007144_MALFORMED_JSON_EXTRA_CONTENT', () => validateCompiledComment(`${malformedBase}\n[]`), 'TRANSPORT_COMMENT_JSON_INVALID'),
-  expectFailure('35113108135_INPUT_INCOMPLETE_WORKFLOW_PATH', () => compileCanonicalPacket(runtimeMissingWorkflow.request, runtimeMissingWorkflow.procedure), 'CONSTRUCTION_PROCEDURE_INVALID'),
+  expectFailure('35113108135_INPUT_INCOMPLETE_WORKFLOW_PATH', () => compileCanonicalPacket(runtimeMissingWorkflow.request, runtimeMissingWorkflow.procedure), 'MISSING_REQUIRED_REQUEST_FIELD'),
   expectFailure('35114532078_MALFORMED_JSON_EXTRA_CONTENT', () => validateCompiledComment(`${malformedBase}\nnull`), 'TRANSPORT_COMMENT_JSON_INVALID')
 ];
 

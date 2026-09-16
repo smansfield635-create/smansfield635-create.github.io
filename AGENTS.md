@@ -1,181 +1,111 @@
 # Repository agent entrypoint
 
-Read `AI_ENTRYPOINT.json` first. For every repository task, use `tools/repository-ai-entry-router.mjs` to resolve the repository route and, for mutations, the proportional mutation class before escalating into repository-operation authority.
+Read `AI_ENTRYPOINT.json` first. Use `tools/repository-ai-entry-router.mjs` to resolve repository/project routing and mutation class. These instructions define the room-facing operating surface; deeper control-plane mechanisms do not create independent room-level authority.
+
+## Gen2303 containment: resume before reconstructing
+
+During `CONTROL_PLANE_CONTAINMENT_AND_CONTINUATION_REDUCTION_20260915_001` / lock generation `2303`, creation of new control-plane capability classes, fallback classes, execution transports, classifier classes, or policy layers is frozen. The comparison baseline is `a4778f219b37efba7d25534fca9f3128b9ec9a26`; it is comparison evidence only and is never a reset target.
+
+For any continuation or successor-room task, resolve `.github/ai-router/continuation/resume-object.schema.v1.json` first. A valid `CONTROL_PLANE_RESUME_OBJECT_v1` is the single authoritative room-facing continuation object. It must bind:
+
+- operation identity and authority generation;
+- project;
+- exact branch and exact 40-hex head;
+- exact allowed mutation paths;
+- completed checkpoints;
+- preserved evidence;
+- exactly one next action;
+- required verifier;
+- stop condition;
+- `authorityEffect = NONE_RESUME_OBJECT_ONLY`.
+
+When a valid resume object exists, do not independently reconstruct branch identity, lock state, execution descriptor, workflow choice, failure classifier, historical comments, lineage, preview policy, or writeback mechanics before performing the bound next action. Those mechanisms may remain required internally, but they are subordinate inputs beneath the resume object. If an exact binding is missing, stale, contradictory, or invalid, stop on that exact binding; do not invent a second continuation authority and do not restart product design.
+
+The acceptance law is:
+
+`FRESH ROOM -> ONE RESUME_OBJECT -> ONE NEXT ACTION OR ONE EXACT INVALID BINDING`.
+
+Gen2286 is the first cold-room specimen. Its preserved continuation is exact branch `refs/heads/audralia-canonical-geography-rebind-20260915-001`, exact head `ab675886e494a36849b23eb842d2bd6cd42009da`, registered generator writeback, read-only verification of the resulting exact candidate, then stop for owner physical-device disposition. Do not reopen Audralia architecture while that object remains valid.
+
+Two newly discovered systemic control-plane defects during cold-room qualification fail the containment/restoration cycle. Do not answer a second systemic defect by adding another mechanism class.
+
+## Safety core — preserved
+
+The containment operation simplifies coordination; it does not weaken governance. Preserve all of the following:
+
+1. exact-head custody;
+2. bounded mutation scope;
+3. canonical authority and single-flight locking for governed mutation;
+4. failure propagation only across a proven selected dependency;
+5. ambiguity fails closed;
+6. unchanged qualified bytes do not restart from zero without a relevant dependency change;
+7. merge is not deployment and deployment is not live verification;
+8. preview, qualification, resume, routing, and evidence never create mutation/merge/deployment/publication/scientific authority by themselves.
 
 ## Whole-estate execution convergence
 
-The root router emits `WHOLE_ESTATE_EXECUTION_DECISION_v1`. That decision is the authoritative repository-level answer for blocking-gate selection across Awards, cinematic work, Audralia, Characters, Build, Research, and future projects.
+`WHOLE_ESTATE_EXECUTION_DECISION_v1` remains authoritative for blocking-gate selection. Only selected gates may block. Unselected workflow failures are advisory evidence unless a direct dependency or canonical semantic dependency is established. Directory placement or broad path ancestry does not by itself create product semantics or blocking authority.
 
-Only gates selected by that decision may block the requested operation. A workflow that was not selected remains evidence only: its failure is `ADVISORY_NON_BLOCKING_EVIDENCE` unless new evidence establishes a direct dependency or the canonical decision is recomputed to select it. Directory placement, project ancestry, or a broad path prefix does not by itself establish product semantics or blocking authority.
+Use accepted precedent before new construction. Bind the accepted source identity, unchanged behavioral contract, declared delta, and direct dependencies. Requalify the delta and directly affected dependencies only. Candidate-created exact paths inside an admitted `allowedPaths` scope do not require a new persistent registration merely because they are new.
 
-A gate may block only when it inspects a changed byte, an explicitly declared direct dependency, or a semantic dependency established by the canonical decision. A control-plane or qualification-classification defect must be repaired in its own class; it must not manufacture a product prerequisite.
-
-Use accepted precedent before inventing a new implementation. When an accepted construct is reused, bind its source identity, state the unchanged behavioral contract, declare the delta, and requalify only the delta and directly affected dependencies. Unchanged qualified bytes and unchanged behavioral contracts do not restart from zero. Precedent reuse never upgrades authority, scientific standing, or public claims.
-
-An exact candidate path listed in an admitted operation's `allowedPaths` / `exactAllowedRepositoryPaths` is recognized for that operation even when the file is candidate-created. Do not create a separate persistent registration prerequisite merely because the path is new. Persistent registration is reserved for a genuinely new durable authority boundary such as permanent project ownership, workflow ownership, publication surface, or control-plane capability.
-
-Read-only, status, source-readback, exact-identity, deterministic registry/metadata, static-editorial, and bounded non-authoritative release work must not acquire mutation semantics or mandatory native-agent ceremony merely by passing through shared infrastructure. Runtime, scientific/empirical, authority-boundary, and control-plane mutations remain fail-closed to their applicable governed paths.
+A control-plane defect must be repaired in its own class and must not manufacture a product prerequisite. During Gen2303 containment, prefer folding or removing a mechanism over creating another one.
 
 ## Proportional canonical-agent execution
 
-Load `.github/ai-router/agent-invocation/contract.v1.json` and obey the `agentMode` in `WHOLE_ESTATE_EXECUTION_DECISION_v1`. Canonical agents remain the functional execution and review architecture where their separation materially contributes to safety; they are not a universal entrance fee for every repository interaction.
+Obey the `agentMode` returned by the whole-estate decision. Agent execution is proportional, not a universal entrance fee.
 
-`NOT_REQUIRED` agent mode applies to read-only administration, source/status/exact-identity readback, deterministic registry/metadata proof, `STATIC_EDITORIAL_MICRO`, and `BOUNDED_PAGE_RELEASE`. These tasks may proceed directly under their resolved repository/project authority. Do not perform native-agent discovery solely to create ceremony and do not invent agent receipts.
+`NOT_REQUIRED` applies to read-only administration, status/source/exact-identity readback, deterministic registry/metadata proof, `STATIC_EDITORIAL_MICRO`, and `BOUNDED_PAGE_RELEASE` where current policy says so.
 
-`REQUIRED` agent mode applies to material governed engineering, control-plane authority work, scientific or empirical execution, authority-boundary change, and disputed independent qualification. For those tasks, Alaric/N owns Navigation, Elara/E Signal, Tarian/S Continuity, and Soren/W Boundary. Resolve intermediate bearings through the frozen constitution; they compose existing functions and do not create more identities. Preserve opposed-function separation where the controlling task requires it.
+`REQUIRED` applies to material governed engineering, control-plane authority work, scientific/empirical execution, authority-boundary change, or disputed independent qualification. Where required, preserve the functional separation of Alaric/N, Elara/E, Tarian/S, and Soren/W. If the host lacks native spawn/followup and the owner explicitly directs execution in the current room, the already-adopted co-located cardinal fallback may be used; do not claim independent model instances that did not exist.
 
-When required agent execution is present, inspect directly advertised native tool namespaces first and use the host's actual callable names. If native spawn/followup is genuinely unexposed and the owner explicitly directs execution in the current room, the existing co-located cardinal room may satisfy functional execution with phase-bound receipts; never claim native spawn, separate model instances, or independent-model review that did not occur. Native tool availability never blocks an agent-exempt task.
-
-Complementary-office discovery is task-proportional. Resolve the private Equipment Room, North Return, Dextrion, execution substrate, Soren post-materialization verification, Jeeves relay, or ACK Return only when the controlling operation actually depends on those offices. Missing private access stops that dependent step, not unrelated authorized public work.
-
-Agent invocation never creates mutation, merge, deployment, scientific, or publication authority. When native execution or independent native review is actually claimed, retain its attributable source evidence. File-only validation and synthetic tests remain structural evidence, not proof that an invocation occurred.
+Agent invocation never creates repository authority.
 
 ## Canonical abstraction before implementation
 
-Before constructing any control-plane workaround, determine whether `AI_ENTRYPOINT.json`, its registered router/procedure registries, or an existing canonical workflow already exposes the required capability. Existing canonical abstractions outrank room-invented lower-level mechanisms.
+Before building a workaround, ask whether the current AI entrypoint, router, procedure registry, or existing registered execution capability already performs the required function. Existing canonical abstractions outrank room-invented lower-level mechanisms.
 
-For canonical operation admission, the operation ledger is an implementation detail of the registered intake gate. Do **not** reconstruct, truncate, partially rewrite, synthesize, or directly mutate the canonical operation ledger merely because a room can inspect it or because its connector cannot perform the desired low-level Git operation. Use the canonical operation-intake transport/gate declared by `AI_ENTRYPOINT.json` and continue only on its authentic command-emitted receipt.
+The canonical operation ledger is an implementation detail. Do not directly reconstruct or mutate it unless the intake implementation itself is the separately authorized repair target. Use the registered canonical intake transport/gate and continue only on its authentic command-emitted receipt.
 
-A direct operation-ledger mutation is permitted only under separate explicit control-plane repair authority that names the intake implementation itself as the repair target. Without that authority, any attempted descent into blob/tree/commit/ref manipulation must fail closed and return to canonical intake.
+For governed `RUNTIME_OR_AUTHORITY` mutation, no branch creation or repository write is authorized until canonical intake returns `ADMITTED_AND_LOCKED`. `INPUT_INCOMPLETE_NOT_STARTED` means no operation exists. `ACTIVE_SCOPE_ALREADY_LOCKED` blocks a competing operation in that scope.
 
-If canonical intake transport is unavailable or fails, preserve the exact transport/gate failure and report `CANONICAL_INTAKE_TRANSPORT_UNAVAILABLE_OR_FAILED`. Do not treat transport/tool limitation as authority to invent a replacement admission mechanism. Before spending material execution time on a workaround, ask: `DOES_THE_CANONICAL_SPINE_ALREADY_EXPOSE_THIS_CAPABILITY?` If yes, use it. If no—or the registered capability demonstrably fails—escalate that capability as the repair target rather than bypassing it.
-
-Durable incident/lesson record: issue #2191.
+Main movement alone does not force a successor. Run differential continuity first. Carry forward unchanged candidate/evidence when intervening movement is proven disjoint. Use strict successor only for a relevant changed scope/dependency/authority/scientific freeze or incomplete/contradictory continuity.
 
 ## Procedural execution efficiency
 
-Load `.github/ai-router/execution-efficiency-policy.v1.json` and apply shared procedure `EVIDENCE_BEARING_EXECUTION` to diagnostics, GitHub Actions inspection, workflow-log retrieval, publication verification, and control-plane troubleshooting.
+A probe counts as progress only when it yields new evidence: a new immutable identity, exact assertion, log/artifact content, state transition, or eliminated hypothesis. Do not repeat an equivalent probe after `NO_NEW_EVIDENCE`. Localize the first selected failed assertion before repair. Do not blind-rerun unchanged failures.
 
-A probe counts as progress only when it yields new evidence: a new immutable identity, exact assertion, log/artifact content, state transition, or newly eliminated hypothesis. After a probe yields `NO_NEW_EVIDENCE`, do not repeat an equivalent probe. At most one second attempt may pursue the same evidence purpose, and only if it changes transport, identifier resolution, evidence source, or query surface. Rephrasing the same retrieval is not a strategy change.
+When a lawful execution step is available, execute it instead of returning status only. Every execution report should state what completed, what evidence changed, the current boundary, and the next lawful action or blocker.
 
-For a failed workflow, first determine whether that workflow is selected by the current `WHOLE_ESTATE_EXECUTION_DECISION_v1`. If it is unselected, record it as advisory evidence and do not create a blocker from it. If selected, localize the first failed step and extract its exact assertion or strongest available machine evidence before proposing repair. Downstream skipped steps are consequences, not separate diagnoses. Do not blind-rerun an unchanged failure, create serial equivalent dispatch carriers, or mutate product/runtime bytes from a verification failure before fault localization.
+## Mutation classification
 
-If evidence remains unavailable after the allowed escalation, stop repetition and report the exact missing evidence boundary. Do not describe repeated retrieval attempts as investigation progress. When a lawful execution step is available, execute it rather than returning status only. Every execution report should state what completed, what new evidence was obtained or that none was obtained, the current boundary, and the next lawful action or blocker.
-
-For a deterministically classified `STATIC_EDITORIAL_MICRO` change—such as bounded copy, wording, label, headline, instructions, typo, punctuation, or non-runtime static presentation work—the canonical operation intake gate and Page Excellence are **not required**. These changes must instead remain exact-head bound, touch only the declared static paths, contain no executable/runtime delta, contain no unrelated diff, and pass `tools/static-editorial-micro-verifier.v1.mjs` before adoption.
-
-For any `RUNTIME_OR_AUTHORITY` change—including executable files, runtime behavior, navigation, routing, event handling, state machines, gestures, DOM authority, control-plane/governance work, mixed changes, or anything ambiguous—the existing governed path remains mandatory. Ambiguity fails closed into `RUNTIME_OR_AUTHORITY`; static classification never creates runtime or project authority and never bypasses project registration.
-
-Use the root router for mutation classification:
+For a proposed mutation, use:
 
 ```text
 node tools/repository-ai-entry-router.mjs --mutation-intent --task <BOUNDED_TASK_DESCRIPTION> --path <repository-path> [--path <repository-path> ...]
 ```
 
-The returned `WHOLE_ESTATE_EXECUTION_DECISION_v1` is the blocking selector. Resolve accepted precedent before construction. If precedent applies, record its accepted source identity, unchanged behavioral contract, declared delta, and direct dependencies. Do not requalify unrelated inherited behavior.
+`STATIC_EDITORIAL_MICRO` stays exact-head bound, declared-path only, non-runtime, and uses the static-editorial verifier. `RUNTIME_OR_AUTHORITY` uses canonical intake and applicable project governance. Ambiguity remains `RUNTIME_OR_AUTHORITY`.
 
-If the receipt classifies the request as `STATIC_EDITORIAL_MICRO`, construct only the declared static diff and verify it against the exact base and candidate heads:
+For governed operations, preserve the request/procedure pair, intake-completeness receipt, and required functional-bearing coordination. Continue only on the authentic admission receipt.
 
-```text
-node tools/static-editorial-micro-verifier.v1.mjs --base <EXACT_BASE_SHA> --head <EXACT_CANDIDATE_SHA> --path <declared-path> [--path ...]
-```
+## Mutation closure and evidence
 
-Continue only on verifier `PASS`. If the classifier returns `RUNTIME_OR_AUTHORITY`, follow the canonical intake procedure below and continue only after `ADMITTED_AND_LOCKED`.
+Once all authorized writes are complete and the exact candidate is immutable, a mutation scope may be closed with `MUTATION_CLOSED_EVIDENCE_CONTINUES` when only downstream read-only evidence remains. Do not use that disposition while a candidate-finalization write or an admitted bounded repair is still pending.
 
-1. Read `AI_ENTRYPOINT.json`.
-2. Resolve the operation request and its canonical construction-procedure locator.
-3. For governed mutations, run the intake gate:
+If physical/perceptual review is an admitted candidate-finalization gate, preserve exact-candidate identity and use only the existing `KEEP | ONE_REPAIR | REJECT` semantics. Preview unavailability preserves the candidate; it does not authorize production deployment or an unrequested third-party provider.
 
-```text
-node tools/operation-intake/repository-operation-intake-gate.v1.mjs --request <REQUEST.json> --procedure <PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <ADMISSION_RECEIPT.json>
-```
+## Publication separation
 
-For governed mutations, no branch creation, repository write, workflow execution, or implementation inference is authorized unless the command-emitted receipt returns `ADMITTED_AND_LOCKED`. `INPUT_INCOMPLETE_NOT_STARTED` means no governed operation exists. `ACTIVE_SCOPE_ALREADY_LOCKED` blocks a competing governed operation in the same canonical scope. `BLOCKED_OPEN` retains the lock until a terminal closure receipt is committed.
-
-### Release mutation scope before read-only evidence waits
-
-A governed mutation lock protects repository mutation, not the elapsed duration of downstream read-only evidence collection. Once every authorized repository write is complete, the exact candidate head is immutable, and no further mutation is authorized while CI, browser, Page Excellence, Awards, or other read-only evidence executes, close the active mutation scope through canonical terminal closure with `MUTATION_CLOSED_EVIDENCE_CONTINUES` before waiting on that evidence. This disposition must release the active scope and preserve the operation in terminal history; it does not convert pending evidence into a pass and does not grant any new authority.
-
-Evidence collected after this release remains bound to the exact frozen candidate. If that evidence identifies a defect requiring any repository mutation, obtain a fresh ordinary admission or lawful successor before changing bytes. Do not use `MUTATION_CLOSED_EVIDENCE_CONTINUES` while an authorized write, candidate-finalization step, or mutation-dependent commit is still pending.
-
-### Exact-candidate physical preview as candidate finalization
-
-Load `.github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json` when an admitted construction scope declares physical or perceptual review required before adoption, merge, or publication. In that case, the exact-candidate physical review is a candidate-finalization step until a candidate-bound `CANDIDATE_PERCEPTUAL_ACCEPTANCE` disposition is recorded. It is not downstream evidence merely because the preview itself is read-only.
-
-Do **not** use `MUTATION_CLOSED_EVIDENCE_CONTINUES` before that required disposition when the admitted construction procedure intentionally retains bounded repair authority through physical review. The final physical gate must bind an immutable exact candidate identity; a moving branch alias alone is not sufficient. The preview substrate must remain read-only and must not mutate repository bytes or production.
-
-The only canonical dispositions are `KEEP`, `ONE_REPAIR`, and `REJECT`:
-
-- `KEEP`: freeze the exact candidate identity. No further candidate-byte mutation is allowed under that disposition. Then close the mutation scope normally and resolve adoption, merge, deployment, and publication through their separate authorities.
-- `ONE_REPAIR`: allowed only for one specific observed defect while the original admitted mutation scope remains active and only when the repair stays entirely inside the already-authorized paths, intent, authority, and architecture. Create a new immutable candidate identity, supersede the prior perceptual disposition, requalify only the changed delta and directly affected dependencies, and physically preview the new exact candidate again.
-- `REJECT`: do not publish the candidate. Close it through the applicable rejected or withdrawn terminal disposition.
-
-If a requested repair would expand path scope, intent, authority, or architecture—or if the original operation has already been terminally closed—`ONE_REPAIR` is unavailable. Obtain a fresh ordinary admission or lawful successor before changing bytes.
-
-Before selecting any preview provider or substrate, re-read the current `AI_ENTRYPOINT.json` and `.github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json`. Do not recommend, install, or select a third-party preview, staging, hosting, or plugin provider unless the owner explicitly requests or authorizes external-provider use for the current operation. Historical raw.githack or other external-provider precedent creates no current provider authority. If no eligible first-party or already-owner-controlled exact-head preview is available, preserve the immutable candidate and report `PREVIEW_TRANSPORT_UNAVAILABLE` as a local, nonpropagating preview boundary. Do not invent another provider and do not perform a production deployment as a preview workaround. A preview never creates merge, deployment, publication, scientific, empirical, runtime, or claim authority, and final authoritative Pages exact-head verification remains required after release.
-
-## Moving-head successor continuity
-
-Main movement is not itself a reason to manufacture a successor generation. When an active governed operation's recorded head differs from current `main`, run differential continuity first. If the intervening changes are disjoint from the operation's scope and direct dependencies, preserve the exact candidate/evidence and use `CARRY_FORWARD_APPROVED`; do not restart design, qualification, or admission from zero.
-
-A strict successor is required only when relevant scope, direct dependency, authority boundary, scientific/empirical freeze, or continuity evidence materially changed or remains incomplete/contradictory. When strict successor is required, prepare a fresh successor operation request and construction procedure bound to the new exact `main`, plus a `REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_REQUEST_v1`, then run:
-
-```text
-GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>
-```
-
-Continue only if the command-emitted receipt returns `SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED`. That result means the exact predecessor was preserved in terminal history as `SUPERSEDED` and the fresh successor was admitted in the same compare-and-swap ledger transaction. The successor gate never carries old authority forward implicitly: `inheritedAuthority` must be empty, a fresh successor request and construction procedure are mandatory, and exact-head revalidation remains required for the relevant changed dependencies. A stale-head transition does not automatically invalidate unrelated evidence.
-
-After ordinary admission, approved carry-forward, or successful successor admission, run the repository entry router against every affected path:
-
-```text
-node tools/repository-ai-entry-router.mjs --path <repository-path> [--path <repository-path> ...]
-```
-
-For a proposed change, add `--mutation-intent` and a bounded `--task` description so the proportional classifier can resolve the mutation class. For many paths, use `--paths-file <newline-delimited-file>`. Honor the router disposition and the `WHOLE_ESTATE_EXECUTION_DECISION_v1`. Load every project entrypoint and narrower instruction that is relevant to the selected route and direct dependency surface; do not convert unrelated discovered instructions into new blockers.
-
-The intake gate establishes whether a governed operation may begin and atomically locks its declared scope. Differential continuity determines whether disjoint main movement can carry forward. The successor gate establishes moving-head continuity only when a strict successor is actually required. None grants project-specific mutation, merge, canonicalization, runtime, renderer, deployment, or production authority. The root router remains a dispatcher, proportional classifier, and blocking-gate selector, not a source of project authority. Shared GitHub procedures explain execution mechanics; they do not grant project authority.
+Merge alone is never live release. Publication remains the registered exact-head release sequence in `AI_ENTRYPOINT.json`, ending in authoritative live exact-head verification. Vercel remains non-authoritative for repository publication gating where the current AI entrypoint says so.
 
 ## Whole-estate narrative and display continuity
 
-For every applicable public or experiential construction task, after proportional classification and repository routing are resolved—and after canonical intake when the mutation class requires it—load the whole-estate continuity context before visual construction begins:
+For public/experiential construction tasks, after routing and any required canonical intake, load the applicable display-continuity constitution, narrative development map, and narrative spine. Runtime classes are ceilings rather than mandatory complexity. Mobile is a distinct composition, reduced motion must preserve semantics, and visual polish never creates claim authority.
 
-- `.github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json`
-- `.github/ai-router/display-continuity-constitution-v1/README.md`
-- `control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json`
-- `control-plane/whole-estate/narrative-spine-constitution-v1/narrative-spine.v1.json` when the narrative relation is material.
+## Gen2303 award-window freeze target
 
-This requirement applies to new public pages, material public-page renewals, frontiers, products, rooms, worlds, campaigns, Showroom work, navigation and transition changes, persistent-object work, responsive composition, shared visual systems, and any estate-wide display-coherence or continuity claim. It does not convert a bounded static editorial micro change into a Page Excellence operation.
+The containment sequence is:
 
-Before construction, resolve the route display contract declared by the constitution: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, explicit return, claim boundary, local visual identity, and continuity hook.
+`FREEZE -> BASELINE -> DELTA AUDIT -> REDUCE -> RESUME_OBJECT -> GEN2286 COLD-ROOM PROOF -> THREE ADDITIONAL COLD-ROOM PROOFS -> AWARD-WINDOW FREEZE`.
 
-Preserve the authority separation: Compass owns global orientation and narrative anchoring; Governance is the public information-design and bounded-interaction reference; Evidence anchors claims and proof; Laws supplies runtime and semantic ceilings. Runtime classes are ceilings, not requirements. Semantic object identity may persist across transitions when continuity adds meaning, but continuity does not require one renderer or one universal page shell. Mobile is a distinct composition, reduced motion must preserve complete semantics, visual polish cannot create claim authority, and discovery may reveal depth without silently changing the public cardinal map.
-
-This global context does not widen mutation scope, create project authority, grant renderer/runtime authority, alter scientific standing, create claim authority, or substitute for project-specific entrypoints, nested `AGENTS.md`, evidence boundaries, or selected validation gates. If a task is not visual or experiential, do not invent display work merely because the constitution is globally discoverable.
-
-## Progressive system continuity
-
-For a shared infrastructure or control-plane change, inspect `.github/ai-router/system-continuity/gap-registry.v1.json` before declaring the surrounding system closed. If the proposed interfaces or paths intersect an `OPEN` gap, declare and reconcile that gap rather than creating a parallel workaround.
-
-Extract both producer and consumer contracts. In particular, treat operation-ID policy, receipt schemas, authority semantics, lifecycle state, and invocation surfaces as interfaces that must compose. A local self-test or component PASS proves only local correctness unless the downstream transition is also proven.
-
-Use the read-only continuity gate when evaluating shared-system closure:
-
-```text
-node .github/ai-router/system-continuity/progressive-system-continuity-gate.v1.mjs --input <ASSESSMENT_REQUEST.json> --output <ASSESSMENT_RECEIPT.json>
-```
-
-`LOCAL_CAPABILITY_CLOSED` is not `SYSTEM_GAP_CLOSED`. `SYSTEM_GAP_CLOSED` requires local correctness, producer-consumer interface compatibility, transition simulation, a real remote invocation proof, post-merge continuity proof, and no unresolved related open gap. The continuity track never grants repository writes, lifecycle or terminal-closure authority, successor authority, merge/deployment authority, product authority, semantic/scientific authority, or generic command authority.
-
-The continuity track supplements rather than replaces proportional classification, repository intake where required, moving-head successor handling, canonical terminal closure, project routing, Page Excellence where required, or project-specific authority. Ordinary project work does not acquire extra authority from continuity PASS; continuity is mandatory only when a shared-system closure claim or shared control-plane interface change is being evaluated.
-
-For remote read-only assessment after the track is installed, use an owner/member/collaborator issue comment beginning with `PROGRESSIVE_SYSTEM_CONTINUITY_REQUEST_V1` followed by the closed assessment JSON. The route may return a receipt to the triggering issue but may not mutate repository content or the operation ledger.
-
-For H-Earth and Audralia/globe experience paths, the router may delegate to the existing H-Earth registry and experience anchor when those surfaces are selected by the whole-estate execution decision or are direct dependencies of the changed bytes. Preserve narrower instructions below `h-earth-3d/` and `showroom/globe/h-earth/` as relevant project evidence; they do not gain unrelated blocking authority from directory location alone. For an experience-changing H-Earth or Audralia/globe upgrade, `h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json` remains a hard acceptance boundary unless explicit user authority replaces it.
-
-Governed intake outcomes:
-
-- `ADMITTED_AND_LOCKED`: the complete request and canonical construction procedure passed intake, and the declared scope lock was atomically acquired. Continue only within the admitted paths and separately resolved project authority.
-- `INPUT_INCOMPLETE_NOT_STARTED`: no governed operation has started; governed branch creation, writes, workflows, and implementation inference remain prohibited.
-- `ACTIVE_SCOPE_ALREADY_LOCKED`: another governed operation owns the same scope; no competing governed operation may begin. If that exact active operation is stale only because `main` advanced, use differential continuity first and strict successor only when it returns `STRICT_SUCCESSOR_REQUIRED`.
-- `SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED`: the exact active predecessor was atomically preserved as `SUPERSEDED` and replaced by a freshly admitted exact-head successor. Continue only within the fresh successor request and separately resolved project authority.
-
-Router dispositions:
-
-- `PASS`: project/procedure routing resolved; continue only within the applicable bounded authority, the selected gate set, and verification rules.
-- `REVIEW_REQUIRED`: routing is incomplete or the path is not yet registered. For an admitted candidate-created path, first apply candidate-scope recognition before creating any persistent registration prerequisite.
-- `BLOCK`: the requested action is prohibited by the resolved route.
-- `STOP`: identity, scope, or authority resolution failed; do not proceed.
-- `NOT_APPLICABLE`: no project-specific router controls the operation.
-
-Conversation memory, screenshots, summaries, private working state, and manually reconstructed execution are not substitutes for repository-resident instructions or command-emitted receipts.
+After the four cold-room specimens pass, treat the control plane as frozen through the award-submission window except for a demonstrated safety-critical defect. Product work should then use the frozen spine rather than continue control-plane evolution.

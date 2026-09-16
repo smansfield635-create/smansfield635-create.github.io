@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "CONSIDER_ENERGY_COSMIC_LIVE_DEPLOY_20260916_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3590,
+  "requestBranch": "ai-dispatch-request-consider-energy-cosmic-20260916-001",
+  "requestCommit": "2071ed634dc2546dbd6d3b0591b0028bba716cc5",
+  "requestCommitParent": "3eadf53ace6658e52d7de5a58286a9d2962ab96c",
+  "currentMainSha": "3eadf53ace6658e52d7de5a58286a9d2962ab96c",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "3eadf53ace6658e52d7de5a58286a9d2962ab96c",
+    "surface_id": "consider-the-energy"
+  },
+  "bridgeRunId": "35149398314",
+  "dispatchedRunId": 35149416286,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35149416286",
+  "dispatchedRunHeadSha": "3eadf53ace6658e52d7de5a58286a9d2962ab96c",
+  "dispatchedAt": "2026-09-16T20:55:27.274Z",
+  "resolvedAt": "2026-09-16T20:55:31.233Z"
+}

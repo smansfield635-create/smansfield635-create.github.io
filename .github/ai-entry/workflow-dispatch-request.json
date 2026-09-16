@@ -1,6 +1,6 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "audralia-rollback-preflight-b3111455-001",
+  "requestId": "audralia-rollback-preflight-b3111455-002",
   "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
-  "inputs": {"surface_id":"audralia"}
+  "inputs": {"target_sha":"b3111455e7b7b503bf861f7a294b1d755215340a","surface_id":"audralia"}
 }

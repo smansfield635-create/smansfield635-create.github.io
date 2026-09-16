@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "audralia-rollback-preflight-b3111455-001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3567,
+  "requestBranch": "ai-dispatch-request-audralia-rollback-preflight-b3111455",
+  "requestCommit": "5142035c02dee8e27621310df01cb6b97da6c879",
+  "currentMainSha": "b3111455e7b7b503bf861f7a294b1d755215340a",
+  "bridgeRunId": "35134896502",
+  "error": "Missing required input: target_sha",
+  "failedAt": "2026-09-16T18:31:15.310Z"
+}

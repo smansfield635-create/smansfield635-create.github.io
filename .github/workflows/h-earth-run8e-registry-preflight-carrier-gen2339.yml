@@ -1,0 +1,96 @@
+name: H-Earth Run8E Registry Preflight Carrier Gen2339
+
+on:
+  push:
+    branches:
+      - verification/h-earth-run8e-admission-receipt-registry-preflight-gen2339
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact carrier head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Verify exact one-path carrier delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='edbf93d7c63f5d669b6e80fa3e2980b00cb03fcc'
+          CARRIER_PATH='.github/workflows/h-earth-run8e-registry-preflight-carrier-gen2339.yml'
+          test "$(git rev-parse HEAD^)" = "$BASE"
+          test "$(git diff --name-only "$BASE"..HEAD)" = "$CARRIER_PATH"
+
+      - name: Execute unchanged automatic H-Earth preflight and assert exact-path resolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --path h-earth-3d/control-plane/run8e-sparse-qualification/execution-authority/admission-receipt.v4.json \
+            --task "Run8E sparse admission receipt registry fresh execution proof" \
+            --mutation-intent \
+            --output /tmp/h-earth-run8e-registry-preflight.json
+
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const receipt = JSON.parse(fs.readFileSync('/tmp/h-earth-run8e-registry-preflight.json', 'utf8'));
+          const target = '/h-earth-3d/control-plane/run8e-sparse-qualification/execution-authority/admission-receipt.v4.json';
+          const nodeId = 'H_EARTH_RUN8E_SPARSE_ADMISSION_RECEIPT_EXACT_PATH_RECOGNITION_SCOPE';
+          const classifications = receipt?.pathClassification?.classifications ?? [];
+          const entry = classifications.find((item) => item.repositoryPath === target);
+
+          function containsExact(value, targetValue) {
+            if (value === targetValue) return true;
+            if (Array.isArray(value)) return value.some((item) => containsExact(item, targetValue));
+            if (value && typeof value === 'object') return Object.values(value).some((item) => containsExact(item, targetValue));
+            return false;
+          }
+
+          const checks = {
+            activationActivated: receipt.activationStatus === 'ACTIVATED',
+            exactOneTarget: classifications.length === 1 && entry != null,
+            targetRegistered: entry?.classification === 'REGISTERED_H_EARTH_PATH' && entry?.registered === true,
+            targetNodeResolved: Array.isArray(entry?.resolvedNodeIds) && entry.resolvedNodeIds.includes(nodeId),
+            noRequestedPathUnresolved: !containsExact(receipt, 'REQUESTED_PATH_UNRESOLVED'),
+            noOperationScopeUnresolved: !containsExact(receipt, 'OPERATION_SCOPE_UNRESOLVED'),
+            lawfulNonStop: receipt.finalDisposition !== 'BLOCK' && receipt.finalDisposition !== 'STOP',
+            readOnlyOperation: receipt?.operationInput?.requestedMutation === false,
+            mutationStillForbidden: receipt.mutationMayProceed === false,
+            noSourceAuthority: receipt?.boundaries?.sourceAuthorityCreated === false,
+            noMutationAuthority: receipt?.boundaries?.mutationAuthorityCreated === false,
+            noMergeAuthority: receipt?.boundaries?.mergeAuthorityCreated === false,
+            noCanonicalizationAuthority: receipt?.boundaries?.canonicalizationAuthorityCreated === false
+          };
+
+          const passed = Object.values(checks).every(Boolean);
+          const assertion = {
+            schema: 'H_EARTH_RUN8E_REGISTRY_PREFLIGHT_CARRIER_ASSERTION_RECEIPT_v1',
+            result: passed ? 'PASS' : 'FAIL',
+            governingCandidate: 'edbf93d7c63f5d669b6e80fa3e2980b00cb03fcc',
+            targetPath: target,
+            resolvedNodeId: nodeId,
+            dependenciesVerified: receipt.dependenciesVerified,
+            finalDisposition: receipt.finalDisposition,
+            checks,
+            authorityEffect: 'NONE_READ_ONLY_PREFLIGHT_EVIDENCE_ONLY'
+          };
+          fs.writeFileSync('/tmp/h-earth-run8e-registry-preflight-assertion.json', `${JSON.stringify(assertion, null, 2)}\n`);
+          console.log(JSON.stringify(assertion, null, 2));
+          if (!passed) process.exit(1);
+          NODE
+
+      - name: Upload preflight receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-registry-preflight-gen2339
+          path: |
+            /tmp/h-earth-run8e-registry-preflight.json
+            /tmp/h-earth-run8e-registry-preflight-assertion.json
+          retention-days: 30

@@ -81,18 +81,10 @@ vec3 cycloneSystem(float h,float lat,float lon,float cLat,float cLon,float phase
   float b4=ellipseAt(q,vec2(-.105,.275),vec2(.24,.058),1.10+phase*.02);
   float b5=ellipseAt(q,vec2(-.275,.135),vec2(.25,.060),1.50-phase*.02);
   float b6=ellipseAt(q,vec2(-.315,-.095),vec2(.23,.055),-1.25-phase*.03);
-  float b7=ellipseAt(q,vec2(-.135,-.300),vec2(.24,.060),-.78-phase*.02);
-  float b8=ellipseAt(q,vec2(.145,-.315),vec2(.22,.052),-.42+phase*.02);
-  float segmented=max(max(max(b1,b2),max(b3,b4)),max(max(b5,b6),max(b7,b8)));
-  float segmentErosion=.18+.82*textureBreak(detail,broad,phase+2.0);
-  float bands=segmented*segmentErosion;
-  float c1=ellipseAt(q,vec2(.18,.08),vec2(.075,.095),.30+phase*.02);
-  float c2=ellipseAt(q,vec2(-.16,.22),vec2(.070,.10),-.20-phase*.02);
-  float c3=ellipseAt(q,vec2(-.27,-.08),vec2(.085,.11),.55+phase*.02);
-  float c4=ellipseAt(q,vec2(.10,-.27),vec2(.080,.105),-.35-phase*.02);
-  float bursts=max(max(c1,c2),max(c3,c4))*(.30+.70*textureBreak(broad,detail,phase+4.1));
-  float low=(eyewall*1.12+bands*.70+bursts*.78)*envelope*band(h,30.0,86.0)*(1.0-eye*.995)*strength;
-  float outflow=ellipseAt(q-vec2(.055,.035),vec2(0.0),vec2(.48,.34),-.18)*band(h,79.0,108.0)*(.30+.70*textureBreak(broad,detail,phase+3.0))*.42*(1.0-eye*.55)*strength;
+  float segmented=max(max(max(b1,b2),max(b3,b4)),max(b5,b6));
+  float bands=segmented*(.18+.82*textureBreak(detail,broad,phase+2.0));
+  float low=(eyewall*1.12+bands*.74)*envelope*band(h,30.0,86.0)*(1.0-eye*.995)*strength;
+  float outflow=ellipseAt(q-vec2(.055,.035),vec2(0.0),vec2(.48,.34),-.18)*band(h,79.0,108.0)*(.28+.72*textureBreak(broad,detail,phase+3.0))*.42*(1.0-eye*.55)*strength;
   return vec3(low+outflow,low*.34+outflow*.97,low*.95);
 }
 
@@ -118,8 +110,7 @@ vec3 advancedCloudField(vec3 p){
   float t=uTimeHours*.0065;
   float broad=fbm(radial*14.0+vec3(t*.26,-t*.18,t*.21));
   float detail=broad;if(uFullDetail>.5)detail=fbm(radial*27.0+vec3(-t*.17,t*.23,-t*.12));
-  float mainCycloneFocus=diskAt(lat,lon,-.628319,-2.199115+t*.010,.56);
-  vec3 weather=atlasMorphology(h,lat,lon,broad,detail)*(1.0-.72*mainCycloneFocus);
+  vec3 weather=atlasMorphology(h,lat,lon,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,.593412,-1.274090,-.34,.10,1.00,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,.488692,.436332,.28,1.20,.88,broad,detail);
   weather+=frontSystem(radial,h,lat,lon,-.558505,.733038,-.12,2.10,.92,broad,detail);
@@ -195,15 +186,13 @@ export function createAudraliaTabletCloudPass({gl,worldCanvas}={}){
     return Object.freeze({renderedFrames,stepCount,interaction});
   }
   const evidence=Object.freeze({
-    schema:'AUDRALIA_TABLET_SAME_CONTEXT_ADVANCED_CLOUD_PASS_v4_HURRICANE_PARITY',
-    source:'FAP1_MATURE_MAIN_CYCLONE_PARITY_PLUS_BOUNDED_MORPHOLOGY_ATLAS',
+    schema:'AUDRALIA_TABLET_SAME_CONTEXT_ADVANCED_CLOUD_PASS_v3_ATLAS',
+    source:'FAP1_PROVEN_DONOR_GRAMMAR_PLUS_BOUNDED_MORPHOLOGY_ATLAS',
     primaryContextOnly:true,createsCanvas:false,requestsWebGLContext:false,
     cheapGlobalCloudSupportIncluded:false,advancedOrganizedWeatherOnly:true,
     morphologyAtlasActive:true,morphologyAtlas:atlas.evidence,
-    perRayAnalyticParityInjection:true,
-    structuredCycloneDonorPreserved:true,mainCyclonePhoneGrammarParity:true,
-    mainCycloneSegmentedBandCount:8,mainCycloneConvectiveBurstCount:4,atlasSuppressedInsideMainCyclone:true,
-    longFrontalDonorPreserved:true,longJetBandDonorPreserved:true,
+    perRayAnalyticParityInjection:false,
+    structuredCycloneDonorPreserved:true,longFrontalDonorPreserved:true,longJetBandDonorPreserved:true,
     frontalSystemCount:5,jetBandSystemCount:4,cycloneSystemCount:2,totalAdvancedSystemInstances:11,
     clearAirWindowsPreserved:true,regionalSystemsIncluded:false,canonicalLocalWeatherIncluded:false,precipitationRuntimeIncluded:false,celestialIncluded:false,
     restStepCount:REST_STEPS,interactionStepCount:INTERACTION_STEPS,rayMarchCeilingsChanged:false

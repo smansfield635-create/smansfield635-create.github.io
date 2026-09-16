@@ -7146,49 +7146,6 @@
       "scopeHash": "9beeac2932b89e112e2afb556e031bd10cd3fb33116f4cf040672e4a3d466fe2",
       "state": "ADMITTED_LOCKED"
     },
-    "9c1e9168b61ead60c398bc03a60a469351b1c3c90f3e2bf8a8d1f1576b753cd9": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b3111455e7b7b503bf861f7a294b1d755215340a",
-          "lockGeneration": 2331,
-          "lockScope": "H_EARTH:AUDRALIA:TABLET_WEATHER_PARITY:V1",
-          "operationId": "AUDRALIA_TABLET_WEATHER_PARITY_REPAIR_20260916_001",
-          "procedureLocatorDigest": "2a0edbf389b9fab5372fbf03af54ab5f98240cd97bcad66eec9e58a64ed5820b",
-          "requestDigest": "cb805302f45367cd9dbc124587415ec191c2a2ad77e9374a8e3297dcef55738d",
-          "scopeHash": "9c1e9168b61ead60c398bc03a60a469351b1c3c90f3e2bf8a8d1f1576b753cd9"
-        },
-        "bindingDigest": "1bd45bca861e8c85c13678092ef851cf39b9d624a428de673beb7c43c3eccaa0",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "762bf65d7b0431426c2f799c5b3503b2dfb7c164b511a3f85f20eeced7134d75",
-          "commentId": 5702076782,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3476,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35131200637,
-          "workflowSha": "b3111455e7b7b503bf861f7a294b1d755215340a"
-        },
-        "lineageAnchorCommitSha": "b1c7feb68c1c6b148546f38e8ad302e7b4856a92",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "b3111455e7b7b503bf861f7a294b1d755215340a",
-      "lockGeneration": 2331,
-      "lockScope": "H_EARTH:AUDRALIA:TABLET_WEATHER_PARITY:V1",
-      "operationId": "AUDRALIA_TABLET_WEATHER_PARITY_REPAIR_20260916_001",
-      "procedureLocatorDigest": "2a0edbf389b9fab5372fbf03af54ab5f98240cd97bcad66eec9e58a64ed5820b",
-      "released": false,
-      "requestDigest": "cb805302f45367cd9dbc124587415ec191c2a2ad77e9374a8e3297dcef55738d",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9c1e9168b61ead60c398bc03a60a469351b1c3c90f3e2bf8a8d1f1576b753cd9",
-      "state": "ADMITTED_LOCKED"
-    },
     "9c4df426547213902d6ca58bca243a388453b09771c744b2829d85c636e310e2": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -58732,6 +58689,50 @@
       "scopeHash": "832490f8b26adf9c870eebf13a3573aec80d796076344d6899c8c35e347be3b5",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b3111455e7b7b503bf861f7a294b1d755215340a",
+          "lockGeneration": 2331,
+          "lockScope": "H_EARTH:AUDRALIA:TABLET_WEATHER_PARITY:V1",
+          "operationId": "AUDRALIA_TABLET_WEATHER_PARITY_REPAIR_20260916_001",
+          "procedureLocatorDigest": "2a0edbf389b9fab5372fbf03af54ab5f98240cd97bcad66eec9e58a64ed5820b",
+          "requestDigest": "cb805302f45367cd9dbc124587415ec191c2a2ad77e9374a8e3297dcef55738d",
+          "scopeHash": "9c1e9168b61ead60c398bc03a60a469351b1c3c90f3e2bf8a8d1f1576b753cd9"
+        },
+        "bindingDigest": "1bd45bca861e8c85c13678092ef851cf39b9d624a428de673beb7c43c3eccaa0",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "762bf65d7b0431426c2f799c5b3503b2dfb7c164b511a3f85f20eeced7134d75",
+          "commentId": 5702076782,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3476,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35131200637,
+          "workflowSha": "b3111455e7b7b503bf861f7a294b1d755215340a"
+        },
+        "lineageAnchorCommitSha": "b1c7feb68c1c6b148546f38e8ad302e7b4856a92",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b3111455e7b7b503bf861f7a294b1d755215340a",
+      "lockGeneration": 2331,
+      "lockScope": "H_EARTH:AUDRALIA:TABLET_WEATHER_PARITY:V1",
+      "operationId": "AUDRALIA_TABLET_WEATHER_PARITY_REPAIR_20260916_001",
+      "procedureLocatorDigest": "2a0edbf389b9fab5372fbf03af54ab5f98240cd97bcad66eec9e58a64ed5820b",
+      "released": true,
+      "requestDigest": "cb805302f45367cd9dbc124587415ec191c2a2ad77e9374a8e3297dcef55738d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9c1e9168b61ead60c398bc03a60a469351b1c3c90f3e2bf8a8d1f1576b753cd9",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

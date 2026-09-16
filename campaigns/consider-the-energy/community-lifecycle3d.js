@@ -778,3 +778,71 @@ globalThis.DGB_COMMUNITY_GEN2289_CHECKPOINT_A_RECEIPT=GEN2289_RECALIBRATED_CHECK
 globalThis.DGB_COMMUNITY_GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT=GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT;
 const GEN2289_RECAL_A_BASE_MOUNT=mount;
 mount=function(host){GEN2289_RECAL_A_BASE_MOUNT(host);host.dataset.communityDomainModel='RECALIBRATED_SOURCE_WORLDS_PORTALS_A';host.setAttribute('aria-label','Community lifecycle checkpoint A. Four permanent seasonal source worlds surround the central tree, each with an embedded portal. Visible guide strings and return connector curves are suppressed. The tracked 96-object lifecycle remains preserved for later release and motion checkpoints.')};
+
+// Gen2289 M1: NEWS/Fibonacci motion viability candidate.
+const GEN2289_M1_NEWS_WEIGHTS=Object.freeze({N:3,E:5,W:13,S:8});
+const GEN2289_M1_NEWS_TOTAL=29;
+const GEN2289_M1_BOUNDARIES=Object.freeze({N:3/29,E:8/29,W:21/29,S:1});
+const GEN2289_M1_GOLDEN_ANGLE=Math.PI*(3-Math.sqrt(5));
+const GEN2289_M1_SEASON_SEQUENCE=Object.freeze([1,2,3,5]);
+const GEN2289_M1_SEASON_TURN=Object.freeze([.38,-.24,.55,-.31]);
+const gen2289M1Fract=x=>x-Math.floor(x);
+const gen2289M1Angle=p=>Math.atan2(p.z,p.x);
+const gen2289M1WrapAngle=x=>Math.atan2(Math.sin(x),Math.cos(x));
+function gen2289M1ReleaseOffset(object){
+  const golden=gen2289M1Fract((object.objectId+1)*GEN2289_M1_GOLDEN_ANGLE/(Math.PI*2)),season=GEN2289_M1_SEASON_SEQUENCE[object.domain]/11,depth=(object.depthBand+1)/13;
+  return GEN2289_M1_BOUNDARIES.N*(.06+.78*gen2289M1Fract(golden+season+depth));
+}
+function gen2289M1PortalXYZ(object){
+  const anchor=GEN2289_STAGE_BY_SEASON[object.domain],local=gen2289PortalLocal(anchor),plane=DEPTH_PLANES[object.depthBand]||DEPTH_PLANES[1];
+  return V(anchor.x+local.x*.82,anchor.y+local.y*.80,plane.z*.34+((object.objectId%3)-1)*.045);
+}
+function gen2289M1ExpansionEnd(object){
+  const phase=(object.objectId+1)*GEN2289_M1_GOLDEN_ANGLE,r=.88+.16*Math.sin(phase*1.37+object.domain*.73),y=.56+(object.depthBand-1)*.18+.12*Math.sin(phase*.61+object.domain);
+  return V(Math.cos(phase)*r,y,Math.sin(phase)*r);
+}
+function gen2289M1ExpansionPosition(object,e){
+  e=clamp(e);const q=smoother(e),phase=(object.objectId+1)*GEN2289_M1_GOLDEN_ANGLE,p=L(gen2289M1PortalXYZ(object),gen2289M1ExpansionEnd(object),q),pulse=Math.sin(Math.PI*e);let offset;
+  if(object.domain===SEASON.SPRING)offset=V(Math.sin(phase+e*9)*.16*pulse,Math.cos(phase*.7+e*11)*.12*pulse,Math.sin(phase*.5-e*7)*.14*pulse);
+  else if(object.domain===SEASON.SUMMER)offset=V((.22*e+Math.sin(phase+e*4)*.08)*pulse,-.16*e*pulse,Math.sin(phase*.55+e*5)*.10*pulse);
+  else if(object.domain===SEASON.AUTUMN){const angle=e*2.4+phase*.15;offset=V(Math.cos(angle)*.20*pulse,Math.sin(phase+e*5.5)*.07*pulse,Math.sin(angle)*.20*pulse);}
+  else{const sharp=Math.sin(phase+e*6)+.45*Math.sin(phase*2+e*13);offset=V(sharp*.11*pulse,Math.sin(phase*.33+e*3)*.05*pulse,(Math.cos(phase+e*7)-Math.sin(phase*.7))*.10*pulse);}
+  return A(p,offset);
+}
+function gen2289M1TurbulencePosition(object,w){
+  w=clamp(w);const start=gen2289M1ExpansionEnd(object),phase=(object.objectId+1)*GEN2289_M1_GOLDEN_ANGLE,r=.52+.24*(.5+.5*Math.sin(phase*.83+object.depthBand)),angularRate=[2.8,3.2,1.3,2.55][object.domain],angle=phase*.43+w*angularRate,shared=V(Math.cos(angle)*r,.70+.18*Math.sin(phase*.29+w*4.2)+(object.depthBand-1)*.07,Math.sin(angle)*r),base=L(start,shared,smoother(clamp(w/.42))),ramp=smoother(clamp(w/.16));let offset;
+  if(object.domain===SEASON.SPRING)offset=V((Math.sin(phase+w*17)*.22+Math.sin(phase*.6-w*9)*.07)*ramp,Math.cos(phase*.8+w*13)*.15*ramp,Math.sin(phase*.4+w*11)*.18*ramp);
+  else if(object.domain===SEASON.SUMMER)offset=V((.24*Math.sin(phase*.45+w*6.2)+.18*w)*ramp,-.10*(.5+.5*Math.sin(phase+w*8))*ramp,.20*Math.sin(phase*.72+w*5.4)*ramp);
+  else if(object.domain===SEASON.AUTUMN){const tumble=phase+w*(8+1.6*Math.sin(phase)),gust=.65+.35*Math.sin(phase*.37+w*10);offset=V(Math.cos(tumble)*.28*gust*ramp,Math.sin(phase*.5+w*7)*.12*ramp,Math.sin(tumble)*.28*gust*ramp);}
+  else{const step=Math.sin(phase+w*12)+.5*Math.sin(phase*2+w*23),quiet=.48+.52*(.5+.5*Math.sin(phase*.31+w*3.4));offset=V(step*.18*quiet*ramp,Math.sin(phase*.27+w*5)*.08*quiet*ramp,(Math.cos(phase+w*15)-.35*Math.sin(phase*.6+w*4))*.18*quiet*ramp);}
+  return A(base,offset);
+}
+function gen2289M1Organization(progress){return progress<=GEN2289_M1_BOUNDARIES.W?0:smoother((progress-GEN2289_M1_BOUNDARIES.W)/(1-GEN2289_M1_BOUNDARIES.W));}
+function gen2289M1SettlementApproachPosition(object,s){
+  s=clamp(s);const start=gen2289M1TurbulencePosition(object,1),target=GEN2282_TREE_SETTLEMENT_XYZ[object.objectId],organization=smoother(s),distanceScale=1-.66*organization,turn=GEN2289_M1_SEASON_TURN[object.domain]*Math.sin(Math.PI*s)*(1-.25*organization),dx=start.x-target.x,dy=start.y-target.y,dz=start.z-target.z,rx=dx*Math.cos(turn)-dz*Math.sin(turn),rz=dx*Math.sin(turn)+dz*Math.cos(turn);
+  return V(target.x+rx*distanceScale,target.y+dy*distanceScale,target.z+rz*distanceScale);
+}
+P_circulation=function(object,progress){
+  const t=clamp(progress),release=gen2289M1ReleaseOffset(object),home=P_static(object),N=GEN2289_M1_BOUNDARIES.N,E=GEN2289_M1_BOUNDARIES.E,W=GEN2289_M1_BOUNDARIES.W;
+  if(t<=release)return home;
+  if(t<=N)return L(home,gen2289M1PortalXYZ(object),smoother((t-release)/Math.max(1e-9,N-release)));
+  if(t<=E)return gen2289M1ExpansionPosition(object,(t-N)/(E-N));
+  if(t<=W)return gen2289M1TurbulencePosition(object,(t-E)/(W-E));
+  return gen2289M1SettlementApproachPosition(object,(t-W)/(1-W));
+};
+function runGen2289M1MechanicalViability(){
+  const registry=GEN2273_MOBILE_OBJECT_REGISTRY,ranges=GEN2273_BOUND_GEOMETRY.objectRanges||[],worlds=GEN2273_BOUND_GEOMETRY.planarDomainRanges||[],portals=GEN2273_BOUND_GEOMETRY.portalRanges||[],releaseOffsets=registry.map(gen2289M1ReleaseOffset),releaseSpread=Math.max(...releaseOffsets)-Math.min(...releaseOffsets),releaseUniqueCount=new Set(releaseOffsets.map(value=>value.toFixed(12))).size,noGlobalSynchronousRelease=releaseSpread>GEN2273_EPSILON&&releaseUniqueCount===96;
+  const signatureObjects=[SEASON.SPRING,SEASON.SUMMER,SEASON.AUTUMN,SEASON.WINTER].map(season=>registry.find(object=>object.domain===season&&object.depthBand===1)),signatureTimes=[GEN2289_M1_BOUNDARIES.N+(GEN2289_M1_BOUNDARIES.E-GEN2289_M1_BOUNDARIES.N)*.55,GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.35,GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.78],trajectorySignatures=signatureObjects.map(object=>signatureTimes.flatMap(time=>{const p=P_circulation(object,time);return[p.x,p.y,p.z].map(value=>Number(value.toFixed(6)))})),distinctSeasonalTrajectorySignatures=new Set(trajectorySignatures.map(signature=>JSON.stringify(signature))).size;
+  const wSample=GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.55,wPositions=registry.map(object=>P_circulation(object,wSample)),crossSeasonNearest=wPositions.map((point,index)=>{let nearest=Infinity;for(let j=0;j<wPositions.length;j++){if(registry[j].domain===registry[index].domain)continue;nearest=Math.min(nearest,gen2273Distance(point,wPositions[j]));}return nearest;}),crossSeasonIntermingling=crossSeasonNearest.every(distance=>distance<.55);
+  const angularDeltas=signatureObjects.map(object=>{const a=P_circulation(object,GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.20),b=P_circulation(object,GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.80);return gen2289M1WrapAngle(gen2289M1Angle(b)-gen2289M1Angle(a));}),radialMeans=signatureObjects.map(object=>{const a=P_circulation(object,GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.20),b=P_circulation(object,GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.80);return(Math.hypot(a.x,a.z)+Math.hypot(b.x,b.z))*.5;}),angularSpread=Math.max(...angularDeltas)-Math.min(...angularDeltas),radialSpread=Math.max(...radialMeans)-Math.min(...radialMeans),commonOrbitDetected=angularSpread<.15&&radialSpread<.12;
+  const organizationW95=gen2289M1Organization(GEN2289_M1_BOUNDARIES.E+(GEN2289_M1_BOUNDARIES.W-GEN2289_M1_BOUNDARIES.E)*.95),organizationSMid=gen2289M1Organization(GEN2289_M1_BOUNDARIES.W+(1-GEN2289_M1_BOUNDARIES.W)*.50),organizationSLate=gen2289M1Organization(GEN2289_M1_BOUNDARIES.W+(1-GEN2289_M1_BOUNDARIES.W)*.85),lateOrganization=organizationW95<.05&&organizationSMid>.35&&organizationSLate>organizationSMid;
+  let targetDistanceMonotonic=true,maxTargetDistanceIncrease=0;for(const object of registry){const target=GEN2282_TREE_SETTLEMENT_XYZ[object.objectId];let previous=Infinity;for(let step=0;step<=20;step++){const globalT=GEN2289_M1_BOUNDARIES.W+(1-GEN2289_M1_BOUNDARIES.W)*(step/20),distance=gen2273Distance(P_circulation(object,globalT),target),increase=distance-previous;if(increase>maxTargetDistanceIncrease)maxTargetDistanceIncrease=increase;if(increase>GEN2273_EPSILON)targetDistanceMonotonic=false;previous=distance;}}
+  const runtime=createGen2282Runtime(GEN2273_SELECTED_SETTLEMENT_SECONDS,false),lockMs=(GEN2273_TREE_COMPLETE_SECONDS+GEN2273_SELECTED_SETTLEMENT_SECONDS)*1000;runtime.advance(lockMs);const atLock=runtime.currentXYZ.map(gen2273CloneXYZ),lockSnapshot=runtime.snapshot();runtime.advance(lockMs+12000);const after=runtime.currentXYZ,settledObjectCount=after.reduce((count,p,index)=>count+(gen2273SameXYZ(p,GEN2282_TREE_SETTLEMENT_XYZ[index])?1:0),0),terminalReboundCount=after.reduce((count,p,index)=>count+(gen2273SameXYZ(p,atLock[index])?0:1),0),objectReplacementCount=registry.reduce((count,object,index)=>count+(object===runtime.registry[index]?0:1),0),sameObjectIdentityPreserved=registry.length===96&&ranges.length===96&&ranges.every((range,index)=>range.objectId===index)&&registry.every(Object.isFrozen)&&objectReplacementCount===0;
+  const sourceWorldCount=worlds.length,portalCount=portals.length,visibleConnectorCount=GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT.visibleConnectorCount,domainDepletion=GEN2289_RECALIBRATED_CHECKPOINT_A_RECEIPT.domainDepletion===true,permanentDomainActivityPostSettlement=lockSnapshot.domainActivityPostSettlement===true,preservationPass=sourceWorldCount===4&&portalCount===4&&visibleConnectorCount===0&&!domainDepletion&&sameObjectIdentityPreserved&&settledObjectCount===96&&terminalReboundCount===0&&permanentDomainActivityPostSettlement;
+  const passed=preservationPass&&noGlobalSynchronousRelease&&distinctSeasonalTrajectorySignatures===4&&crossSeasonIntermingling&&!commonOrbitDetected&&lateOrganization&&targetDistanceMonotonic;
+  return Object.freeze({schema:'COMMUNITY_GEN2289_M1_NEWS_FIBONACCI_MECHANICAL_VIABILITY_RECEIPT_v1',operationId:'COMMUNITY_HYBRID_PLANAR_DOMAINS_3D_LIFECYCLE_20260915_001',lockGeneration:2289,candidate:'M1',trackedObjectCount:registry.length,sourceWorldCount,portalCount,visibleConnectorCount,domainDepletion,objectReplacementCount,terminalReboundCount,settledObjectCount,releaseSpread,releaseUniqueCount,noGlobalSynchronousRelease,seasonalTrajectorySignatureCount:distinctSeasonalTrajectorySignatures,trajectorySignatures,crossSeasonIntermingling,crossSeasonNearestMaximum:Math.max(...crossSeasonNearest),commonOrbitDetected,angularSpread,radialSpread,organizationW95,organizationSMid,organizationSLate,lateOrganization,targetDistanceMonotonic,maxTargetDistanceIncrease,permanentDomainActivityPostSettlement,sameObjectIdentityPreserved,newsWeights:GEN2289_M1_NEWS_WEIGHTS,newsBoundaries:GEN2289_M1_BOUNDARIES,goldenAngle:GEN2289_M1_GOLDEN_ANGLE,seasonSequence:GEN2289_M1_SEASON_SEQUENCE,passed,disposition:passed?'KEEP_AND_UPGRADE_LIFECYCLE':'M1_MECHANICAL_FAILURE_REQUIRES_FROZEN_DECISION_GRAPH'});
+}
+const GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT=runGen2289M1MechanicalViability();
+globalThis.DGB_COMMUNITY_GEN2289_M1_VIABILITY_RECEIPT=GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT;
+globalThis.DGB_COMMUNITY_GEN2289_M1_MOTION_API=Object.freeze({newsWeights:GEN2289_M1_NEWS_WEIGHTS,boundaries:GEN2289_M1_BOUNDARIES,goldenAngle:GEN2289_M1_GOLDEN_ANGLE,seasonSequence:GEN2289_M1_SEASON_SEQUENCE,releaseOffset:gen2289M1ReleaseOffset,position:P_circulation,receipt:GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT});
+if(!GEN2289_M1_MECHANICAL_VIABILITY_RECEIPT.passed)throw Error('GEN2289_M1_NEWS_FIBONACCI_MECHANICAL_VIABILITY_FAILURE');

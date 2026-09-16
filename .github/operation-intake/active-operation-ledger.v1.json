@@ -8606,6 +8606,49 @@
       "scopeHash": "c4a6c80d043347df4fe4f1fa2846d903656e6e668355c6b9049b1af3a6cfbadf",
       "state": "ADMITTED_LOCKED"
     },
+    "c649297d19f45732235bbde22e0a3a300db54eeb334f06a10d8313cced735741": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "aa1d21773715cf5c320f17c8dfc50f77a5eff869",
+          "lockGeneration": 2304,
+          "lockScope": "CINEMATIC:CAMERA_CAPABILITY_CLOSURE:HEARTH_Y_AUDRALIA_EXACT_STATE:V1",
+          "operationId": "CINEMATIC_CAMERA_CAPABILITY_CLOSURE_3521_20260915_001",
+          "procedureLocatorDigest": "694df2f44452c39f37b2c9b2074dc0ee79eb561a63e09d324cd44238b6e57b66",
+          "requestDigest": "0e0593acad334cb466f2929f7f617786e1d5b69baad2a76b158c60fc061b3da5",
+          "scopeHash": "c649297d19f45732235bbde22e0a3a300db54eeb334f06a10d8313cced735741"
+        },
+        "bindingDigest": "516b0950ba6e93ba2650bb837f0dc54b58227bcc0df69f3a7fbe02b33b43ebba",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e3d034898a489d3ba11294d74d850c436150817b42e80bb28c0bb1c013e41233",
+          "commentId": 5689982287,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3521,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35039204970,
+          "workflowSha": "aa1d21773715cf5c320f17c8dfc50f77a5eff869"
+        },
+        "lineageAnchorCommitSha": "d19583b1748de6ef2ee9c01e242d1c79e8940c39",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "aa1d21773715cf5c320f17c8dfc50f77a5eff869",
+      "lockGeneration": 2304,
+      "lockScope": "CINEMATIC:CAMERA_CAPABILITY_CLOSURE:HEARTH_Y_AUDRALIA_EXACT_STATE:V1",
+      "operationId": "CINEMATIC_CAMERA_CAPABILITY_CLOSURE_3521_20260915_001",
+      "procedureLocatorDigest": "694df2f44452c39f37b2c9b2074dc0ee79eb561a63e09d324cd44238b6e57b66",
+      "released": false,
+      "requestDigest": "0e0593acad334cb466f2929f7f617786e1d5b69baad2a76b158c60fc061b3da5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c649297d19f45732235bbde22e0a3a300db54eeb334f06a10d8313cced735741",
+      "state": "ADMITTED_LOCKED"
+    },
     "c69e36ab428ae19cd898a5701a460585c7b2736289f8ac6684f5322da7861bbf": {
       "governingHead": "ffaaabdbd7691dd1079a7afdb81a62310fda706a",
       "lockGeneration": 180,
@@ -11265,7 +11308,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2303,
+  "lockGeneration": 2304,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

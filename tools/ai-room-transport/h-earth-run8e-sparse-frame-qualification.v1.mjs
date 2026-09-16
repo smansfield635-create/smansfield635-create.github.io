@@ -7,11 +7,12 @@ import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 
-const EXACT_CANDIDATE = 'aabc3b8866836b82408ce639b16d25f6daf7ec8e';
-const EXACT_MANIFEST_SHA256 = '226fdb529f27e4f6f6dfe37b88effbdcbe0d9ff0f9e3c8e1723bfcf6db2e7c92';
+const EXACT_CANDIDATE = '20802e02890e1be8b93c0f1b75fef0f973985e96';
+const EXACT_MANIFEST_SHA256 = '555d1d815a834503c6ed97f27f330bae28341b242058663e371f36d7e056de16';
 const ALLOWED_FRAMES = new Set([
-  728,736,744,752,760,768,776,784,792,800,808,816,824,832,
-  848,856,864,872,880,888,896,904,912,920,928,936,944,952
+  776,777,778,779,780,781,782,783,784,
+  836,837,838,839,840,841,842,843,844,
+  896,897,898,899,900,901,902,903,904
 ]);
 
 function parseArgs(argv) {
@@ -175,7 +176,7 @@ async function execute(args) {
     const receipt = {
       schema: 'H_EARTH_RUN8E_SPARSE_FRAME_QUALIFICATION_RECEIPT_v1',
       result: 'PASS',
-      operationId: 'H_EARTH_RUN8E_NATIVE_CAMERA_SPARSE_QUALIFICATION_20260915_001',
+      operationId: 'H_EARTH_RUN8E_EXACT_CANDIDATE_SPARSE_BOUNDARY_QUALIFICATION_20260916_001',
       executionHolder,
       candidateHead,
       masterFrame,
@@ -225,7 +226,7 @@ async function main() {
       writeReceipt(output, {
         schema: 'H_EARTH_RUN8E_SPARSE_FRAME_QUALIFICATION_RECEIPT_v1',
         result: 'FAIL',
-        operationId: 'H_EARTH_RUN8E_NATIVE_CAMERA_SPARSE_QUALIFICATION_20260915_001',
+        operationId: 'H_EARTH_RUN8E_EXACT_CANDIDATE_SPARSE_BOUNDARY_QUALIFICATION_20260916_001',
         executionHolder: args['execution-holder'] ?? null,
         candidateHead: args['candidate-head'] ?? null,
         masterFrame: Number.isFinite(Number(args['master-frame'])) ? Number(args['master-frame']) : null,

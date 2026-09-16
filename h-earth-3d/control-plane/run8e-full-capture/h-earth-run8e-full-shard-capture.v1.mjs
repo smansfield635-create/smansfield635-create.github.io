@@ -7,8 +7,8 @@ import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 
-const EXACT_CANDIDATE = 'aabc3b8866836b82408ce639b16d25f6daf7ec8e';
-const EXACT_MANIFEST_SHA256 = '226fdb529f27e4f6f6dfe37b88effbdcbe0d9ff0f9e3c8e1723bfcf6db2e7c92';
+const EXACT_CANDIDATE = '20802e02890e1be8b93c0f1b75fef0f973985e96';
+const EXACT_MANIFEST_SHA256 = '555d1d815a834503c6ed97f27f330bae28341b242058663e371f36d7e056de16';
 const OPERATION_ID = 'H_EARTH_RUN8E_FULL_240_FRAME_CAPTURE_20260916_001';
 const RECEIPT_SCHEMA = 'H_EARTH_RUN8E_FULL_SHARD_CAPTURE_RECEIPT_v1';
 const SHARDS = Object.freeze({

@@ -110,10 +110,10 @@
       approvedModelAuthority: '1d45379f81ea4089e9c5f3d7d9688e702be9add3',
       directDenseCloudCoverage: true,
       cloudCoverageUpgradeDeferred: false,
-      atmosphericParity: 'PHONE_ANALYTIC_PLUS_TABLET_MORPHOLOGY_ATLAS_v1',
+      atmosphericParity: 'SHARED_PHONE_AUDRALIA_PRODUCT_PATH_v1',
       phoneTabletLayerFamiliesAligned: true,
-      tabletMorphologyAuthority: 'AUDRALIA_TABLET_WEATHER_MORPHOLOGY_ATLAS_v1',
-      tabletCelestialParity: 'PRIMARY_CONTEXT_SUN_STARS_TWO_MOONS_ATMOSPHERE',
+      tabletMorphologyAuthority: null,
+      tabletCelestialParity: 'SHARED_CANONICAL_CELESTIAL_CHECKPOINT_24057',
       loadingContinuity: 'AUDRALIA_TABLET_LOADER_CONTROLLER_v1',
       startupArchitecture: 'LOCAL_MESH_WORLD_FIRST_ENRICHMENT_SECOND_v2',
       tabletStartupStability: 'SAME_ORIGIN_PRECOMPUTED_MESH_SINGLE_CONTEXT_v2',
@@ -185,31 +185,20 @@
       await nextFrame();
       await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs?cb=EXACT_24057');
       await nextFrame();
-      if (!constrainedTablet) {
-        await import('./atmospheric-parity-v1.mjs?cb=AUDRALIA_FULL_ATMOSPHERIC_PARITY_3265_v1');
-        await nextFrame();
-      }
+      await import('./atmospheric-parity-v1.mjs?cb=AUDRALIA_FULL_ATMOSPHERIC_PARITY_3265_v1');
+      await nextFrame();
       await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057');
       await nextFrame();
-      if (constrainedTablet) {
-        tabletLoader?.cloudsStart();
-        const { initializeAudraliaTabletSingleContextClouds } = await import('../h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_v1');
-        await initializeAudraliaTabletSingleContextClouds();
-        tabletLoader?.worldPresented();
-        tabletLoader?.cloudsReady();
-        await nextFrame();
-        tabletLoader?.celestialStart();
-        await import('./celestial-primary-context-v1.mjs?cb=AUDRALIA_TABLET_RECOVERY_3268_v1');
-      } else {
-        await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057');
-      }
+      tabletLoader?.cloudsStart();
+      await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057');
+      tabletLoader?.worldPresented();
+      tabletLoader?.cloudsReady();
       await primaryWorldReady();
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'PRIMARY_WORLD_READY';
-      if (!constrainedTablet) {
-        await nextFrame();
-        await nextFrame();
-        await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057');
-      }
+      tabletLoader?.celestialStart();
+      await nextFrame();
+      await nextFrame();
+      await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057');
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'COMPLETE';
       tabletLoader?.complete();
     } catch (error) {

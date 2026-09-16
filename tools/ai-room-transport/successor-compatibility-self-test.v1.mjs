@@ -191,7 +191,7 @@ export function runSuccessorCompatibilitySelfTest() {
   const successor = resolveSuccessor();
   assert(successor.result === 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED', 'SUCCESSOR_PATH_FAILED');
   assert(successor.authorizationMode === 'CANONICAL_ONE_HOP_SUCCESSOR', 'SUCCESSOR_MODE_MISSING');
-  assert(successor.operationId === DESCRIPTOR_OPERATION, 'DESCRIPTOR_OPERATION_ID_MUTATED');
+  assert(successor.operationId === SUCCESSOR_OPERATION, 'SUCCESSOR_REQUEST_OPERATION_ID_CHANGED');
   assert(successor.descriptorOperationId === DESCRIPTOR_OPERATION, 'DESCRIPTOR_OPERATION_ID_MISSING');
   assert(successor.authorizedOperationId === SUCCESSOR_OPERATION, 'AUTHORIZED_SUCCESSOR_ID_MISSING');
   assert(successor.successorCompatibilityUsed === true, 'SUCCESSOR_COMPATIBILITY_NOT_RECORDED');

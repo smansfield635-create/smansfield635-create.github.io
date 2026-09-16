@@ -16,6 +16,7 @@ const ACTIVATION_REGISTRY_BLOB = '4c3dc7f96c586c69277274d4110285839f58b092';
 const BASE = '.github/ai-toolset-transport';
 const REGISTRY_PATH = `${BASE}/authorized-toolset-registry.v1.json`;
 const MANIFEST_PATH = `${BASE}/changed-path-manifest.v1.json`;
+const RESUME_QUALIFIER_DESCRIPTOR = 'FIXED_EXACT_HEAD_QUALIFICATION_EXECUTION';
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -119,6 +120,46 @@ function resolutionFixture(descriptor, index) {
     routerReceipt: { schema: 'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1', disposition: 'PASS', routes: [{ projectId: descriptor.projectId, disposition: 'PASS' }] }
   };
 }
+function resumeBoundResolutionFixture(descriptor, index) {
+  const candidateHead = `${(index % 8) + 1}`.repeat(40);
+  const targetPath = 'tools/ai-room-transport/resume-bound-exact-head-qualification.v1.mjs';
+  const operationId = `ACTIVE_CONFORMANCE_RESUME_QUALIFICATION_${index}`;
+  const projectId = 'CONTROL_PLANE';
+  const generation = 9000 + index;
+  const qualificationBinding = {
+    candidateHead,
+    targetPath,
+    expectedBlob: `${((index + 3) % 8) + 1}`.repeat(40),
+    receiptGlobal: `ACTIVE_CONFORMANCE_RECEIPT_${index}`,
+    expectedReceiptSchema: 'ACTIVE_CONFORMANCE_RESUME_RECEIPT_v1',
+    expectedOperationId: operationId,
+    qualificationProfile: 'NODE_SYNTAX_AND_GLOBAL_RECEIPT_V1'
+  };
+  const resume = {
+    schema: 'CONTROL_PLANE_RESUME_OBJECT_v1', status: 'ACTIVE_RESUMABLE', operationId, authorityGeneration: generation,
+    projectId, exactBranch: 'refs/heads/active-conformance-resume-fixture', exactHead: candidateHead,
+    allowedPaths: [targetPath], completedCheckpoints: ['SYNTHETIC_CONFORMANCE_PREDECESSOR'],
+    preservedEvidence: ['ACTIVE_CONFORMANCE_SYNTHETIC_FIXTURE'],
+    nextAction: { actionId: 'ACTIVE_CONFORMANCE_QUALIFICATION', actionClass: 'QUALIFICATION', binding: RESUME_QUALIFIER_DESCRIPTOR, expectedResult: 'PASS', qualificationBinding },
+    requiredVerifier: { verifierId: 'ACTIVE_CONFORMANCE', binding: 'SYNTHETIC_ONLY', successResult: 'PASS' },
+    stopCondition: { conditionId: 'CONFORMANCE_COMPLETE', disposition: 'STOP' }, authorityEffect: 'NONE_RESUME_OBJECT_ONLY'
+  };
+  return {
+    request: {
+      schema: 'AI_ROOM_EXECUTION_REQUEST_v1', requestId: `ACTIVE_CONFORMANCE_REQUEST_${index}`,
+      descriptorId: descriptor.descriptorId, operationId,
+      admissionReceiptIdentity: 'SYNTHETIC_ACTIVE_CONFORMANCE_ADMISSION', routerReceiptIdentity: 'SYNTHETIC_ACTIVE_CONFORMANCE_ROUTE',
+      inputs: { resumeObjectBase64: Buffer.from(JSON.stringify(resume), 'utf8').toString('base64'), ...qualificationBinding },
+      availableCapabilities: {}, requestNonce: `${(index % 8) + 1}`.repeat(64)
+    },
+    admissionReceipt: {
+      schema: 'REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1', result: 'ADMITTED_AND_LOCKED', operationId,
+      projectId, operationStarted: true, workflowExecutionAuthorized: true,
+      lock: { operationId, state: 'ADMITTED_LOCKED', released: false, lockAcquired: true, lockGeneration: generation }
+    },
+    routerReceipt: { schema: 'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1', disposition: 'PASS', routes: [{ projectId, disposition: 'PASS' }] }
+  };
+}
 export function runConformance({ root, expectedHead, holder }) {
   const actualHead = git(root, 'rev-parse', 'HEAD^{commit}');
   assert(actualHead === expectedHead, 'EXACT_HEAD_MISMATCH', `${expectedHead}:${actualHead}`);
@@ -163,10 +204,14 @@ export function runConformance({ root, expectedHead, holder }) {
     assert(provenance, 'ACTIVE_DESCRIPTOR_PROVENANCE_MISSING', descriptor.descriptorId);
     const provenanceDescriptor = standaloneDescriptor ?? activationDescriptor;
     assert(canonical(provenanceDescriptor) === canonical(descriptor), 'ACTIVE_DESCRIPTOR_PROVENANCE_MISMATCH', descriptor.descriptorId);
-    const fixture = resolutionFixture(descriptor, index + 1);
+    const fixture = descriptor.descriptorId === RESUME_QUALIFIER_DESCRIPTOR ? resumeBoundResolutionFixture(descriptor, index + 1) : resolutionFixture(descriptor, index + 1);
     const receipt = resolveToolset({ ...fixture, registry, allowCandidate: false });
     assert(receipt.result === 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED', 'DESCRIPTOR_RESOLUTION_FAILED', descriptor.descriptorId);
-    assert(receipt.authorizationMode === 'EXACT_OPERATION_ID' && receipt.authorizedOperationId === descriptor.operationId, 'DIRECT_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
+    if (descriptor.descriptorId === RESUME_QUALIFIER_DESCRIPTOR) {
+      assert(receipt.authorizationMode === 'RESUME_OBJECT_EXACT_QUALIFICATION' && receipt.authorizedOperationId === fixture.request.operationId, 'RESUME_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
+    } else {
+      assert(receipt.authorizationMode === 'EXACT_OPERATION_ID' && receipt.authorizedOperationId === descriptor.operationId, 'DIRECT_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
+    }
     resolutions.push({ descriptorId: descriptor.descriptorId, operationId: descriptor.operationId, projectId: descriptor.projectId, exactToolingHead: descriptor.exactToolingHead, descriptorDigest: receipt.descriptorDigest, provenance });
   });
   const first = registry.tools[0];
@@ -179,6 +224,12 @@ export function runConformance({ root, expectedHead, holder }) {
   expectedFailure(() => resolveToolset({ ...fixture, registry: shellRegistry }), 'SHELL_EXECUTION_PROHIBITED');
   const unknown = structuredClone(fixture); unknown.request.descriptorId = 'UNKNOWN_DESCRIPTOR';
   expectedFailure(() => resolveToolset({ ...unknown, registry }), 'AUTHORIZED_TOOLSET_NOT_FOUND');
+  const resumeDescriptor = registry.tools.find(x => x.descriptorId === RESUME_QUALIFIER_DESCRIPTOR);
+  assert(resumeDescriptor, 'RESUME_DESCRIPTOR_MISSING');
+  const resumeFixture = resumeBoundResolutionFixture(resumeDescriptor, 19);
+  const directBypass = structuredClone(resumeFixture);
+  directBypass.request.operationId = resumeDescriptor.operationId;
+  expectedFailure(() => resolveToolset({ ...directBypass, registry }), 'RESUME_AND_REQUEST_MISMATCH');
 
   const successorCompatibility = runSuccessorCompatibilitySelfTest();
   assert(successorCompatibility.result === 'PASS_CLOSED_LOCAL_SUCCESSOR_COMPATIBILITY', 'SUCCESSOR_COMPATIBILITY_SELF_TEST_FAILED');
@@ -194,7 +245,7 @@ export function runConformance({ root, expectedHead, holder }) {
     activationHead: ACTIVATION_HEAD, activationRegistryBlob: ACTIVATION_REGISTRY_BLOB,
     registryDigest: sha256(canonical(registry)), activationRegistryDigest: sha256(canonical(activationRegistry)),
     standaloneDescriptorFileCount, frozenActivationInlineDescriptorCount, resolutions,
-    negativeTests: ['DUPLICATE_DESCRIPTOR', 'MOVING_REF', 'SHELL', 'UNKNOWN_DESCRIPTOR'],
+    negativeTests: ['DUPLICATE_DESCRIPTOR', 'MOVING_REF', 'SHELL', 'UNKNOWN_DESCRIPTOR', 'RESUME_DIRECT_AUTHORIZATION_BYPASS'],
     successorCompatibility: {
       result: successorCompatibility.result,
       positiveFixtureCount: successorCompatibility.positiveFixtureCount,
@@ -208,7 +259,7 @@ export function runConformance({ root, expectedHead, holder }) {
     registryStatus: registry.status, closedWorld: registry.closedWorld, descriptorCount: registry.tools.length,
     descriptorFileCount: files.length, standaloneDescriptorFileCount, frozenActivationInlineDescriptorCount,
     descriptorsResolved: resolutions.length, resolutionReceipts: resolutions,
-    negativeFixtureCount: 4, negativeFixturesPassed: 4,
+    negativeFixtureCount: 5, negativeFixturesPassed: 5,
     successorCompatibilityPassed: true,
     successorCompatibilityPositiveFixtureCount: successorCompatibility.positiveFixtureCount,
     successorCompatibilityPositiveFixturesPassed: successorCompatibility.positiveFixturesPassed,

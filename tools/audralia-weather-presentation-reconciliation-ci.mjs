@@ -164,7 +164,7 @@ function verifyCommon(value,label){
   assert.equal(value.integration?.tabletMorphologyAuthority,null,`${label}_TABLET_MORPHOLOGY_AUTHORITY`);
   assert.equal(value.integration?.tabletCelestialParity,'SHARED_CANONICAL_CELESTIAL_CHECKPOINT_24057',`${label}_CELESTIAL_IDENTITY`);
   assert.equal(value.integration?.deviceAuthorityDivergence,false,`${label}_DEVICE_AUTHORITY_DIVERGENCE`);
-  assert.ok(finiteVector(value.cameraBefore?.target),`${label}_CAMERA_TARGET_INVALID`);
+  assert.ok(Number.isFinite(value.cameraBefore?.targetU)&&Number.isFinite(value.cameraBefore?.targetV),`${label}_CAMERA_TARGET_INVALID`);
   assert.ok(Number.isFinite(value.cameraBefore?.distance),`${label}_CAMERA_DISTANCE_INVALID`);
   assert.ok(Number.isFinite(value.cameraAfter?.yaw),`${label}_CAMERA_CONTROL_RESULT_INVALID`);
 }

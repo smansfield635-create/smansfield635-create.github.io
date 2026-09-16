@@ -76,6 +76,28 @@ export function buildFixedCommand(descriptor, inputs, payloadReceiptPath) {
   return { executable, args, digest: commandDigest(executable, args) };
 }
 
+export function extractRegisteredStructuredFailurePayload(descriptor, execution) {
+  if (descriptor?.descriptorId !== 'FIXED_EXACT_HEAD_QUALIFICATION_EXECUTION') return null;
+  if (!Number.isInteger(execution?.status) || execution.status === 0 || execution.error != null) return null;
+  const allowedKeys = ['detail', 'errorCode', 'result', 'schema'];
+  const candidates = [];
+  for (const line of String(execution.stderr ?? '').split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith('{') || !trimmed.endsWith('}')) continue;
+    let value;
+    try { value = JSON.parse(trimmed); } catch { continue; }
+    if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+    if (value.schema !== 'RESUME_BOUND_EXACT_HEAD_QUALIFICATION_FAILURE_v1') continue;
+    if (value.result !== 'FAIL_CLOSED') continue;
+    if (typeof value.errorCode !== 'string' || value.errorCode.length === 0) continue;
+    if (!(value.detail === null || typeof value.detail === 'string')) continue;
+    const keys = Object.keys(value).sort();
+    if (keys.length !== allowedKeys.length || keys.some((key, index) => key !== allowedKeys[index])) continue;
+    candidates.push(value);
+  }
+  return candidates.length === 1 ? stable(candidates[0]) : null;
+}
+
 function changedPaths(toolRoot) {
   const status = git(toolRoot, ['status', '--porcelain=v1', '--untracked-files=all'], true);
   if (status.status !== 0) fail('TOOLING_WORKTREE_STATUS_FAILED');
@@ -263,6 +285,11 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
     if (streamOutput) console.log(`AI_TOOLING_PHASE REGISTERED_COMMAND_END status=${execution.status}`);
     const afterPaths = changedPaths(toolRoot);
     validateChangedPaths(descriptor, afterPaths);
+
+    if (!fs.existsSync(payloadReceiptPath)) {
+      const structuredFailurePayload = extractRegisteredStructuredFailurePayload(descriptor, execution);
+      if (structuredFailurePayload) fs.writeFileSync(payloadReceiptPath, `${JSON.stringify(structuredFailurePayload, null, 2)}\n`);
+    }
 
     let writebackPayload = null;
     if (writebackSpecification && execution.status === 0 && execution.error == null) {

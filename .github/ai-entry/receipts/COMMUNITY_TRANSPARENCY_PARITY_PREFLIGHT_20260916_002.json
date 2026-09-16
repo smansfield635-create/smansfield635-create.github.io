@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "COMMUNITY_TRANSPARENCY_PARITY_PREFLIGHT_20260916_002",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3608,
+  "requestBranch": "ai-dispatch-request-community-transparency-preflight-20260916-r2",
+  "requestCommit": "c9efe88824c955c65041477f62e50c8a744c7f8d",
+  "requestCommitParent": "42a998a8ccc110148260e345d4fa0b32cf9d45fd",
+  "currentMainSha": "42a998a8ccc110148260e345d4fa0b32cf9d45fd",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "42a998a8ccc110148260e345d4fa0b32cf9d45fd",
+    "surface_id": "consider-the-energy"
+  },
+  "bridgeRunId": "35155577353",
+  "dispatchedRunId": 35155607070,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35155607070",
+  "dispatchedRunHeadSha": "42a998a8ccc110148260e345d4fa0b32cf9d45fd",
+  "dispatchedAt": "2026-09-16T22:02:22.529Z",
+  "resolvedAt": "2026-09-16T22:02:26.627Z"
+}

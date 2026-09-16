@@ -7,7 +7,7 @@ import cp from 'node:child_process';
 const SHA40=/^[0-9a-f]{40}$/;
 const REPO_PATH=/^[A-Za-z0-9._/-]+$/;
 const GLOBAL=/^[A-Za-z_$][A-Za-z0-9_$]{2,127}$/;
-const ID=/^[A-Z0-9][A-Z0-9_.:-]{2,255}$/;
+const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{2,255}$/;
 const PROFILE='NODE_SYNTAX_AND_GLOBAL_RECEIPT_V1';
 function fail(code,detail=null){const e=new Error(detail==null?code:`${code}:${detail}`);e.code=code;e.detail=detail;throw e}
 function args(argv){const out={};for(let i=0;i<argv.length;i+=2){const k=argv[i],v=argv[i+1];if(!k?.startsWith('--')||v==null)fail('ARGUMENT_INVALID',k);out[k.slice(2)]=v}return out}

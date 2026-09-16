@@ -7465,49 +7465,6 @@
       "scopeHash": "a0ac1d7567ae8e0d058871db030bc032026e8c95e27e48dd7354b964dce8aec4",
       "state": "ADMITTED_LOCKED"
     },
-    "a0fb4f8889ceeb5e176033bd54d5e142105060de91ee84fbd52d81c5941f77d5": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "765e74b0f6d5b4337f30b39c17192cf23c64dbe1",
-          "lockGeneration": 2316,
-          "lockScope": "CONTROL_PLANE:RESUME_BOUND_QUALIFICATION:CANDIDATE_MATERIALIZATION:V1",
-          "operationId": "CONTROL_PLANE_RESUME_QUALIFIER_CANDIDATE_MATERIALIZATION_REPAIR_20260916_001",
-          "procedureLocatorDigest": "a3c5cfe25a9653a70a3274a799c793a09c4f2e1ea7925903c71f6470944eef76",
-          "requestDigest": "477e5ac38da2705bfcf7a7a96d2e89409f1d67eaf21818233e342bb7329c648e",
-          "scopeHash": "a0fb4f8889ceeb5e176033bd54d5e142105060de91ee84fbd52d81c5941f77d5"
-        },
-        "bindingDigest": "2651dc5bd7551648df86620f3e29943d3920eb181ec4ea92ff2696c2f3faccbf",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "f5edc6b4ad475dd849324755a78934df33d1b920e24f0834bd0e15ae6eb62243",
-          "commentId": 5698133399,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3462,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35101239924,
-          "workflowSha": "765e74b0f6d5b4337f30b39c17192cf23c64dbe1"
-        },
-        "lineageAnchorCommitSha": "45b604b6c181277a29b615f4553667bf99deeb0f",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "765e74b0f6d5b4337f30b39c17192cf23c64dbe1",
-      "lockGeneration": 2316,
-      "lockScope": "CONTROL_PLANE:RESUME_BOUND_QUALIFICATION:CANDIDATE_MATERIALIZATION:V1",
-      "operationId": "CONTROL_PLANE_RESUME_QUALIFIER_CANDIDATE_MATERIALIZATION_REPAIR_20260916_001",
-      "procedureLocatorDigest": "a3c5cfe25a9653a70a3274a799c793a09c4f2e1ea7925903c71f6470944eef76",
-      "released": false,
-      "requestDigest": "477e5ac38da2705bfcf7a7a96d2e89409f1d67eaf21818233e342bb7329c648e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a0fb4f8889ceeb5e176033bd54d5e142105060de91ee84fbd52d81c5941f77d5",
-      "state": "ADMITTED_LOCKED"
-    },
     "a1c085a59ee00ec7b9ee32df74ea7baaf95dae785e5402621cd71efbc74c12a4": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -58072,6 +58029,50 @@
       "requestDigest": "02dc0f33824a7d10557ab0cfc6c84958a47c6b2c011ecf9eff275ebfd9b22f15",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "2a02008a641cdadbd13aa5d93b0a8f9839f6292b982a9936c1166f957c926b77",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "765e74b0f6d5b4337f30b39c17192cf23c64dbe1",
+          "lockGeneration": 2316,
+          "lockScope": "CONTROL_PLANE:RESUME_BOUND_QUALIFICATION:CANDIDATE_MATERIALIZATION:V1",
+          "operationId": "CONTROL_PLANE_RESUME_QUALIFIER_CANDIDATE_MATERIALIZATION_REPAIR_20260916_001",
+          "procedureLocatorDigest": "a3c5cfe25a9653a70a3274a799c793a09c4f2e1ea7925903c71f6470944eef76",
+          "requestDigest": "477e5ac38da2705bfcf7a7a96d2e89409f1d67eaf21818233e342bb7329c648e",
+          "scopeHash": "a0fb4f8889ceeb5e176033bd54d5e142105060de91ee84fbd52d81c5941f77d5"
+        },
+        "bindingDigest": "2651dc5bd7551648df86620f3e29943d3920eb181ec4ea92ff2696c2f3faccbf",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f5edc6b4ad475dd849324755a78934df33d1b920e24f0834bd0e15ae6eb62243",
+          "commentId": 5698133399,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3462,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35101239924,
+          "workflowSha": "765e74b0f6d5b4337f30b39c17192cf23c64dbe1"
+        },
+        "lineageAnchorCommitSha": "45b604b6c181277a29b615f4553667bf99deeb0f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "765e74b0f6d5b4337f30b39c17192cf23c64dbe1",
+      "lockGeneration": 2316,
+      "lockScope": "CONTROL_PLANE:RESUME_BOUND_QUALIFICATION:CANDIDATE_MATERIALIZATION:V1",
+      "operationId": "CONTROL_PLANE_RESUME_QUALIFIER_CANDIDATE_MATERIALIZATION_REPAIR_20260916_001",
+      "procedureLocatorDigest": "a3c5cfe25a9653a70a3274a799c793a09c4f2e1ea7925903c71f6470944eef76",
+      "released": true,
+      "requestDigest": "477e5ac38da2705bfcf7a7a96d2e89409f1d67eaf21818233e342bb7329c648e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a0fb4f8889ceeb5e176033bd54d5e142105060de91ee84fbd52d81c5941f77d5",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

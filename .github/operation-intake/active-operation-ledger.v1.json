@@ -1413,49 +1413,6 @@
       "scopeHash": "18e9aa3aea6f36d4d3e3f100510b9947284239f0fda683b7b31ec54afcc7aa05",
       "state": "ADMITTED_LOCKED"
     },
-    "1a57d811bdad57de0f8eed5eebff7f613655500ca8f79f594af245d387b154cf": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
-          "lockGeneration": 2286,
-          "lockScope": "H_EARTH:AUDRALIA:CANONICAL_GEOGRAPHY_REBIND:24057_REV5:V1",
-          "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
-          "procedureLocatorDigest": "0d4f0b0f701f56bcbc4791baaaf93ee821ca5d5e0bbb3ddd63d98da98a2851bf",
-          "requestDigest": "24701c457f43b1681c79846a932c075a18a7271bf57dc23d229f13d9ff2d59be",
-          "scopeHash": "1a57d811bdad57de0f8eed5eebff7f613655500ca8f79f594af245d387b154cf"
-        },
-        "bindingDigest": "3ae541a8943187568b29701a9c604e92600cc17800f5df85bf2c35bbd80a2ca1",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "2f0a106eba9d597fd3ea5cc68bf001cbd61aed7f8b49019453930ec93d4fbe8f",
-          "commentId": 5683339372,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3476,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 34990770773,
-          "workflowSha": "3c5b7ece95bb6d642e527737bb60647c032e29dd"
-        },
-        "lineageAnchorCommitSha": "572df34a04cc9eedd36c57fc8aeb3c917af95ff8",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
-      "lockGeneration": 2286,
-      "lockScope": "H_EARTH:AUDRALIA:CANONICAL_GEOGRAPHY_REBIND:24057_REV5:V1",
-      "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
-      "procedureLocatorDigest": "0d4f0b0f701f56bcbc4791baaaf93ee821ca5d5e0bbb3ddd63d98da98a2851bf",
-      "released": false,
-      "requestDigest": "24701c457f43b1681c79846a932c075a18a7271bf57dc23d229f13d9ff2d59be",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "1a57d811bdad57de0f8eed5eebff7f613655500ca8f79f594af245d387b154cf",
-      "state": "ADMITTED_LOCKED"
-    },
     "1ae1b91f6e782e73a926087a9891b430c0dbdb107a6f156a63c9eab0996a9c9b": {
       "governingHead": "331284949940c95db80a332235492de4c80d3d43",
       "lockGeneration": 831,
@@ -58469,6 +58426,50 @@
       "scopeHash": "d81447069f41964e734ff7890b7c6c01b6254fc6b0c7147197fec5bd8937ed03",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+          "lockGeneration": 2286,
+          "lockScope": "H_EARTH:AUDRALIA:CANONICAL_GEOGRAPHY_REBIND:24057_REV5:V1",
+          "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
+          "procedureLocatorDigest": "0d4f0b0f701f56bcbc4791baaaf93ee821ca5d5e0bbb3ddd63d98da98a2851bf",
+          "requestDigest": "24701c457f43b1681c79846a932c075a18a7271bf57dc23d229f13d9ff2d59be",
+          "scopeHash": "1a57d811bdad57de0f8eed5eebff7f613655500ca8f79f594af245d387b154cf"
+        },
+        "bindingDigest": "3ae541a8943187568b29701a9c604e92600cc17800f5df85bf2c35bbd80a2ca1",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "2f0a106eba9d597fd3ea5cc68bf001cbd61aed7f8b49019453930ec93d4fbe8f",
+          "commentId": 5683339372,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3476,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 34990770773,
+          "workflowSha": "3c5b7ece95bb6d642e527737bb60647c032e29dd"
+        },
+        "lineageAnchorCommitSha": "572df34a04cc9eedd36c57fc8aeb3c917af95ff8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+      "lockGeneration": 2286,
+      "lockScope": "H_EARTH:AUDRALIA:CANONICAL_GEOGRAPHY_REBIND:24057_REV5:V1",
+      "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
+      "procedureLocatorDigest": "0d4f0b0f701f56bcbc4791baaaf93ee821ca5d5e0bbb3ddd63d98da98a2851bf",
+      "released": true,
+      "requestDigest": "24701c457f43b1681c79846a932c075a18a7271bf57dc23d229f13d9ff2d59be",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1a57d811bdad57de0f8eed5eebff7f613655500ca8f79f594af245d387b154cf",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

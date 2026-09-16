@@ -1,5 +1,5 @@
 const CONTRACT = Object.freeze({
-  id: 'DGB_COMMUNITY_CENTERED_BRANDMARK_STAGE_V2',
+  id: 'DGB_COMMUNITY_CENTERED_BRANDMARK_STAGE_V3',
   object: 'CONSIDER_THE_ENERGY_CODE_AUTHORED_BRANDMARK_STAGE',
   medium: 'INLINE_SVG_CODE_ONLY',
   motion: 'NONE',
@@ -12,16 +12,25 @@ const CONTRACT = Object.freeze({
 const root = document.querySelector('[data-community-lifecycle-mount]');
 if (root) queueMicrotask(() => mount(root));
 
-const leaves = [
-  [188,116,-22,.82],[224,91,8,.92],[264,76,-12,.95],[306,72,10,.9],[350,78,-7,.92],[393,93,16,.88],[432,116,-12,.82],
-  [158,151,16,.8],[201,146,-12,.95],[245,128,14,.92],[288,122,-8,.9],[332,124,10,.94],[377,132,-14,.9],[419,150,9,.9],[461,154,-14,.78],
-  [145,190,-16,.74],[186,187,14,.9],[226,173,-7,.93],[269,168,12,.9],[313,166,-11,.94],[356,171,13,.92],[398,180,-9,.94],[441,193,11,.86],[475,199,-12,.7],
-  [167,225,8,.7],[208,220,-11,.88],[250,211,14,.9],[291,209,-8,.86],[333,211,12,.9],[375,216,-14,.88],[417,226,9,.82],[451,232,-9,.68],
-  [205,253,-10,.65],[248,246,11,.76],[290,242,-9,.78],[335,244,12,.8],[379,250,-11,.76],[418,257,8,.64]
-];
-
-function leafUses() {
-  return leaves.map(([x,y,r,s]) => `<use href="#cte-leaf" transform="translate(${x} ${y}) rotate(${r}) scale(${s})"/>`).join('');
+function canopyLeaves() {
+  let seed = 0x51eaf;
+  const rand = () => {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+  const leaves = [];
+  for (let i = 0; i < 138; i++) {
+    const a = rand() * Math.PI * 2;
+    const rr = Math.sqrt(rand());
+    const x = 350 + Math.cos(a) * rr * 245;
+    const y = 168 + Math.sin(a) * rr * 118;
+    if (y > 276 || y < 38 || x < 88 || x > 612) continue;
+    const scale = .54 + rand() * .43;
+    const rot = -38 + rand() * 76;
+    const opacity = .82 + rand() * .18;
+    leaves.push(`<use href="#cte-leaf" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot.toFixed(1)}) scale(${scale.toFixed(2)})" opacity="${opacity.toFixed(2)}"/>`);
+  }
+  return leaves.join('');
 }
 
 function mount(host) {
@@ -32,35 +41,36 @@ function mount(host) {
     style.dataset.communityLogoStageStyle = 'true';
     style.textContent = `
       [data-community-lifecycle-mount] {
-        min-height: 18rem !important;
-        padding: .7rem !important;
+        min-height: 21rem !important;
+        padding: .55rem !important;
         background:
-          radial-gradient(circle at 50% 46%, rgba(22, 226, 218, .08), transparent 43%),
+          radial-gradient(circle at 50% 43%, rgba(19, 232, 221, .075), transparent 40%),
           #02050b !important;
       }
       .community-logo-stage {
         display: grid;
         width: 100%;
-        min-height: 16.4rem;
+        min-height: 19.6rem;
         place-items: center;
         overflow: hidden;
       }
       .community-logo-stage__mark {
         display: block;
-        width: min(68%, 22rem);
+        width: min(86%, 31rem);
         height: auto;
-        max-height: 18.5rem;
-        filter: drop-shadow(0 .9rem 1.45rem rgba(0,0,0,.56));
+        max-height: 20.2rem;
+        overflow: visible;
+        filter: drop-shadow(0 1rem 1.65rem rgba(0,0,0,.58));
       }
       @media (max-width: 900px) {
-        [data-community-lifecycle-mount] { min-height: 16.8rem !important; padding: .55rem !important; }
-        .community-logo-stage { min-height: 15.4rem; }
-        .community-logo-stage__mark { width: min(62%, 19rem); max-height: 16.8rem; }
+        [data-community-lifecycle-mount] { min-height: 20rem !important; padding: .45rem !important; }
+        .community-logo-stage { min-height: 18.5rem; }
+        .community-logo-stage__mark { width: min(82%, 28rem); max-height: 19.2rem; }
       }
       @media (max-width: 560px) {
-        [data-community-lifecycle-mount] { min-height: 15rem !important; padding: .42rem !important; }
-        .community-logo-stage { min-height: 13.7rem; }
-        .community-logo-stage__mark { width: min(72%, 16.5rem); max-height: 14.6rem; }
+        [data-community-lifecycle-mount] { min-height: 18rem !important; padding: .35rem !important; }
+        .community-logo-stage { min-height: 16.8rem; }
+        .community-logo-stage__mark { width: min(88%, 23rem); max-height: 17.5rem; }
       }
     `;
     doc.head.append(style);
@@ -71,77 +81,113 @@ function mount(host) {
 
   const svg = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.classList.add('community-logo-stage__mark');
-  svg.setAttribute('viewBox', '0 0 620 700');
+  svg.setAttribute('viewBox', '0 0 700 660');
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   svg.setAttribute('role', 'img');
   svg.setAttribute('aria-labelledby', 'cte-logo-title cte-logo-desc');
   svg.innerHTML = `
     <title id="cte-logo-title">Consider the Energy tree logo</title>
-    <desc id="cte-logo-desc">A white tree with teal leaves rises above the Consider the Energy wordmark, with white roots and teal leaf motifs on a black field.</desc>
+    <desc id="cte-logo-desc">A broad luminous white tree with a dense teal-edged canopy, centered Consider the Energy wordmark, teal side motifs, and a deep spreading white root system.</desc>
     <defs>
-      <filter id="cte-cyan-glow" x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="3.2" result="blur"/>
+      <filter id="cte-cyan-glow" x="-90%" y="-90%" width="280%" height="280%">
+        <feGaussianBlur stdDeviation="4.2" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-      <filter id="cte-white-glow" x="-35%" y="-35%" width="170%" height="170%">
-        <feGaussianBlur stdDeviation="1.1" result="blur"/>
+      <filter id="cte-white-glow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="1.4" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-      <path id="cte-leaf" d="M0 0 C10 -12 25 -12 34 0 C24 13 10 14 0 0 Z" fill="#efffff" stroke="#18e7de" stroke-width="5" stroke-linejoin="round" filter="url(#cte-cyan-glow)"/>
+      <path id="cte-leaf" d="M-16 0 C-10 -13 8 -15 18 -3 C12 10 -4 14 -16 0 Z" fill="#f8ffff" stroke="#1debe0" stroke-width="4.5" stroke-linejoin="round" filter="url(#cte-cyan-glow)"/>
     </defs>
 
-    <rect width="620" height="700" rx="22" fill="#020204"/>
-
-    <g aria-hidden="true">${leafUses()}</g>
+    <g aria-hidden="true">${canopyLeaves()}</g>
 
     <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" filter="url(#cte-white-glow)" aria-hidden="true">
-      <path d="M310 286 C308 250 310 212 311 172 C312 139 314 108 316 78" stroke-width="17"/>
-      <path d="M311 179 C280 157 253 136 229 108" stroke-width="13"/>
-      <path d="M311 199 C271 190 229 174 188 150" stroke-width="12"/>
-      <path d="M312 220 C267 218 220 214 172 199" stroke-width="11"/>
-      <path d="M312 167 C340 145 370 120 397 94" stroke-width="13"/>
-      <path d="M312 194 C351 180 391 157 425 126" stroke-width="12"/>
-      <path d="M312 219 C356 216 403 203 448 181" stroke-width="11"/>
-      <path d="M270 151 C252 127 246 106 247 86" stroke-width="9"/>
-      <path d="M355 152 C373 130 381 107 383 86" stroke-width="9"/>
-      <path d="M225 184 C206 169 191 153 181 136" stroke-width="8"/>
-      <path d="M402 179 C423 164 442 147 455 129" stroke-width="8"/>
-      <path d="M310 286 C286 276 266 266 244 248" stroke-width="12"/>
-      <path d="M310 286 C335 275 357 263 377 244" stroke-width="12"/>
+      <path d="M350 305 C350 271 350 236 350 198 C350 157 351 116 352 70" stroke-width="23"/>
+
+      <path d="M350 196 C319 166 294 135 279 95" stroke-width="17"/>
+      <path d="M348 211 C307 189 270 159 241 125" stroke-width="16"/>
+      <path d="M347 231 C302 216 258 192 216 163" stroke-width="15"/>
+      <path d="M346 250 C293 244 242 230 190 207" stroke-width="14"/>
+      <path d="M343 269 C286 269 229 263 171 247" stroke-width="12"/>
+
+      <path d="M351 195 C382 164 409 132 426 93" stroke-width="17"/>
+      <path d="M352 211 C393 188 432 158 461 123" stroke-width="16"/>
+      <path d="M353 231 C399 215 446 190 486 159" stroke-width="15"/>
+      <path d="M354 250 C407 243 460 228 513 203" stroke-width="14"/>
+      <path d="M357 269 C414 268 472 260 530 243" stroke-width="12"/>
+
+      <path d="M307 170 C286 141 275 114 274 86" stroke-width="11"/>
+      <path d="M271 154 C245 131 229 108 221 83" stroke-width="10"/>
+      <path d="M246 194 C214 172 190 149 174 126" stroke-width="9"/>
+      <path d="M217 226 C184 211 151 193 125 170" stroke-width="8"/>
+      <path d="M198 259 C161 257 130 250 103 237" stroke-width="7"/>
+
+      <path d="M393 169 C414 139 426 112 428 84" stroke-width="11"/>
+      <path d="M429 153 C455 130 472 107 480 82" stroke-width="10"/>
+      <path d="M455 193 C487 171 511 147 527 123" stroke-width="9"/>
+      <path d="M484 224 C519 209 551 189 577 166" stroke-width="8"/>
+      <path d="M502 257 C540 254 572 247 600 233" stroke-width="7"/>
+
+      <path d="M330 139 C319 111 314 88 317 65" stroke-width="9"/>
+      <path d="M373 137 C384 108 389 85 387 63" stroke-width="9"/>
+      <path d="M302 218 C278 203 257 185 241 165" stroke-width="8"/>
+      <path d="M398 216 C423 201 445 183 462 163" stroke-width="8"/>
+      <path d="M279 244 C252 239 225 229 201 215" stroke-width="7"/>
+      <path d="M421 243 C449 237 476 227 501 212" stroke-width="7"/>
     </g>
 
-    <line x1="118" y1="302" x2="502" y2="302" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <line x1="82" y1="316" x2="618" y2="316" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
 
-    <g fill="#fff" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="950" letter-spacing="3">
-      <text x="310" y="354" font-size="50">CONSIDER</text>
-      <text x="310" y="414" font-size="50">THE ENERGY</text>
+    <g fill="#fff" text-anchor="middle" font-family="Arial Black, Inter, Arial, sans-serif" font-weight="900" letter-spacing="3.8">
+      <text x="350" y="374" font-size="60">CONSIDER</text>
+      <text x="350" y="440" font-size="60">THE ENERGY</text>
     </g>
 
-    <line x1="120" y1="435" x2="500" y2="435" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <line x1="84" y1="462" x2="616" y2="462" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
 
-    <g fill="none" stroke="#fff" stroke-linecap="round" filter="url(#cte-white-glow)" aria-hidden="true">
-      <path d="M310 438 C309 469 310 493 310 516" stroke-width="15"/>
-      <path d="M310 500 C284 521 256 539 220 553" stroke-width="12"/>
-      <path d="M310 502 C338 519 367 536 402 550" stroke-width="12"/>
-      <path d="M301 514 C266 548 228 575 176 596" stroke-width="10"/>
-      <path d="M319 514 C356 547 395 573 446 594" stroke-width="10"/>
-      <path d="M294 525 C269 574 252 611 247 646" stroke-width="9"/>
-      <path d="M326 525 C353 574 371 611 375 646" stroke-width="9"/>
-      <path d="M281 534 C245 570 211 607 191 644" stroke-width="8"/>
-      <path d="M339 535 C376 570 408 607 428 644" stroke-width="8"/>
-      <path d="M265 543 C226 562 189 575 148 580" stroke-width="7"/>
-      <path d="M354 543 C394 562 431 575 473 581" stroke-width="7"/>
-      <path d="M248 553 C208 544 172 540 136 541" stroke-width="7"/>
-      <path d="M372 553 C413 545 450 541 486 542" stroke-width="7"/>
+    <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" filter="url(#cte-white-glow)" aria-hidden="true">
+      <path d="M350 464 C350 493 350 516 350 536" stroke-width="22"/>
+
+      <path d="M349 526 C319 548 286 565 248 577" stroke-width="15"/>
+      <path d="M351 526 C382 548 416 565 454 577" stroke-width="15"/>
+
+      <path d="M337 536 C303 570 264 596 214 617" stroke-width="12"/>
+      <path d="M363 536 C398 570 438 596 488 617" stroke-width="12"/>
+
+      <path d="M326 545 C297 586 275 621 264 650" stroke-width="11"/>
+      <path d="M374 545 C404 586 427 621 438 650" stroke-width="11"/>
+
+      <path d="M312 553 C274 582 234 601 183 613" stroke-width="10"/>
+      <path d="M388 553 C427 581 468 600 519 612" stroke-width="10"/>
+
+      <path d="M296 560 C251 570 209 574 162 571" stroke-width="9"/>
+      <path d="M404 560 C449 569 492 573 539 570" stroke-width="9"/>
+
+      <path d="M286 569 C250 604 224 629 207 652" stroke-width="8"/>
+      <path d="M414 569 C451 603 478 628 495 652" stroke-width="8"/>
+
+      <path d="M271 576 C226 586 190 596 155 612" stroke-width="7"/>
+      <path d="M429 576 C474 586 511 596 546 612" stroke-width="7"/>
+
+      <path d="M258 580 C219 568 185 562 148 563" stroke-width="7"/>
+      <path d="M442 580 C481 568 516 562 553 563" stroke-width="7"/>
+
+      <path d="M245 586 C214 615 192 635 177 653" stroke-width="6"/>
+      <path d="M455 586 C486 614 509 634 524 652" stroke-width="6"/>
+
+      <path d="M229 592 C199 592 173 596 148 606" stroke-width="6"/>
+      <path d="M471 592 C501 592 528 596 553 606" stroke-width="6"/>
     </g>
 
-    <g fill="#efffff" stroke="#18e7de" stroke-width="5" stroke-linejoin="round" filter="url(#cte-cyan-glow)" aria-hidden="true">
-      <path d="M74 352 C89 335 108 334 119 350 C105 365 86 366 74 352 Z"/>
-      <path d="M74 352 C67 373 77 388 96 390 C102 370 94 356 74 352 Z"/>
-      <path d="M74 352 C60 339 45 339 34 350 C45 364 60 365 74 352 Z"/>
-      <path d="M546 352 C531 335 512 334 501 350 C515 365 534 366 546 352 Z"/>
-      <path d="M546 352 C553 373 543 388 524 390 C518 370 526 356 546 352 Z"/>
-      <path d="M546 352 C560 339 575 339 586 350 C575 364 560 365 546 352 Z"/>
+    <g fill="#f8ffff" stroke="#1debe0" stroke-width="5.5" stroke-linejoin="round" filter="url(#cte-cyan-glow)" aria-hidden="true">
+      <path d="M66 386 C82 366 103 365 117 382 C101 401 80 402 66 386 Z"/>
+      <path d="M66 386 C57 407 67 426 89 430 C99 409 89 391 66 386 Z"/>
+      <path d="M66 386 C49 371 31 372 19 386 C32 402 49 403 66 386 Z"/>
+
+      <path d="M634 386 C618 366 597 365 583 382 C599 401 620 402 634 386 Z"/>
+      <path d="M634 386 C643 407 633 426 611 430 C601 409 611 391 634 386 Z"/>
+      <path d="M634 386 C651 371 669 372 681 386 C668 402 651 403 634 386 Z"/>
     </g>
   `;
 
@@ -155,7 +201,9 @@ function mount(host) {
     centered: true,
     reducedStage: true,
     runtimeImageAssets: 0,
-    codeAuthoredBrandmark: true
+    codeAuthoredBrandmark: true,
+    denseCanopy: true,
+    deepRootSystem: true
   });
 }
 

@@ -1,0 +1,84 @@
+{
+  "schema": "DGB_COMMUNITY_LOGO_TOPOLOGY_AUTHORITY_v1",
+  "status": "FROZEN_OWNER_GEOMETRY_AUTHORITY",
+  "authority": {
+    "purpose": "Durable structural addressing and coordinate authority for the Consider the Energy logo.",
+    "construction_rule": "Future Community logo construction MUST consume this topology as geometry authority. Descriptive approximation, procedural replacement topology, or alternate branch/root namespaces are prohibited unless the owner explicitly supersedes this file.",
+    "source_image_policy": "The owner-supplied source image is reference evidence only and is not a runtime asset.",
+    "source_image_sha256": "b33197501334de69a76fdf8fde5118c196ddbf72f211a2964b407b0296e5f271",
+    "source_image_dimensions_px": [1152, 1536],
+    "coordinate_space": "SOURCE_IMAGE_PIXEL_SPACE_ORIGIN_TOP_LEFT_X_RIGHT_Y_DOWN",
+    "frozen_manifest_sha256": "3c73a495e08852b7195dedb4a36ec004666f48750f92e69c7f7b1c3ed82d5d37",
+    "replacement_topology_allowed": false
+  },
+  "origin": {
+    "id": "T0",
+    "point_px": [560, 638],
+    "meaning": "central trunk / tree origin"
+  },
+  "branch_order_rule": "Primary crown branches are numbered clockwise from the lowest-left structural path to the lowest-right structural path.",
+  "branches": {
+    "B01": {"point_px": [332, 625], "description": "low far-left spread"},
+    "B02": {"point_px": [365, 579], "description": "lower-left diagonal"},
+    "B03": {"point_px": [392, 529], "description": "middle-left diagonal"},
+    "B04": {"point_px": [421, 469], "description": "upper-left outer branch"},
+    "B05": {"point_px": [486, 411], "description": "upper-left / central leader"},
+    "B06": {"point_px": [563, 366], "description": "central/top leader"},
+    "B07": {"point_px": [645, 414], "description": "upper-right leader"},
+    "B08": {"point_px": [715, 462], "description": "upper-right outer branch"},
+    "B09": {"point_px": [762, 534], "description": "middle-right spread"},
+    "B10": {"point_px": [790, 605], "description": "lower-right horizontal spread"}
+  },
+  "branch_fork_rule": "Visible fork off a major branch inherits parent, e.g. B04.1, B04.2, numbered trunk outward.",
+  "leaf_rule": {
+    "format": "Bxx-Lnn",
+    "ordering": "within each physical branch, count from trunk toward branch tip",
+    "persistence": "identifier remains attached to the physical branch/leaf topology across cycles",
+    "instance_map_status": "PENDING_EXACT_LEAF_TRACE"
+  },
+  "root_order_rule": "Principal visible root rays are numbered strictly from far left to far right.",
+  "roots": {
+    "R01": {"tip_point_px": [286, 852]},
+    "R02": {"tip_point_px": [310, 878]},
+    "R03": {"tip_point_px": [330, 905]},
+    "R04": {"tip_point_px": [359, 933]},
+    "R05": {"tip_point_px": [388, 960]},
+    "R06": {"tip_point_px": [427, 1000]},
+    "R07": {"tip_point_px": [466, 1050]},
+    "R08": {"tip_point_px": [510, 1098]},
+    "R09": {"tip_point_px": [559, 1072]},
+    "R10": {"tip_point_px": [600, 1061]},
+    "R11": {"tip_point_px": [647, 1034]},
+    "R12": {"tip_point_px": [697, 1003]},
+    "R13": {"tip_point_px": [742, 973]},
+    "R14": {"tip_point_px": [793, 945]},
+    "R15": {"tip_point_px": [845, 913]},
+    "R16": {"tip_point_px": [889, 875]}
+  },
+  "root_fork_rule": "Secondary forks inherit parent, e.g. R07.1, R07.2.",
+  "motifs": {
+    "M-L01": {"point_px": [223, 711], "namespace": "graphic motif; not tree topology"},
+    "M-L02": {"point_px": [195, 744], "namespace": "graphic motif; not tree topology"},
+    "M-L03": {"point_px": [228, 777], "namespace": "graphic motif; not tree topology"},
+    "M-R01": {"point_px": [910, 712], "namespace": "graphic motif; not tree topology"},
+    "M-R02": {"point_px": [955, 743], "namespace": "graphic motif; not tree topology"},
+    "M-R03": {"point_px": [909, 779], "namespace": "graphic motif; not tree topology"}
+  },
+  "persistence": {
+    "ids_permanent": true,
+    "renumber_on_motion_or_redraw": false,
+    "consume_or_replace_structure": false,
+    "rule": "T0, B01-B10, R01-R16, and M-L/M-R addresses remain attached to the same physical structure across every implementation and later state."
+  },
+  "non_substitution_law": {
+    "procedural_branch_generator_as_authority": false,
+    "procedural_leaf_distribution_as_authority": false,
+    "procedural_root_fan_as_authority": false,
+    "invented_parallel_namespace_as_authority": false,
+    "implementation_may_subdivide": "Only as child addresses inherited from the frozen parent, e.g. B04.1 or R07.2. Subdivision may not change parent identity or visible source geometry."
+  },
+  "known_incomplete_detail": {
+    "exact_leaf_instance_trace": "PENDING_EXACT_LEAF_TRACE",
+    "law": "Do not fabricate exact Bxx-Lnn leaf-instance coordinates until explicitly traced from the source image and added by a later owner-authorized amendment."
+  }
+}

@@ -19,7 +19,9 @@
       "exactToolingHead": "0c5af546a902e81d4670f4e3505e8fb0129d4d08",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
-        "sparsePaths": ["tools/ai-room-transport"],
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
         "sparseIndexEntryLimitExclusive": 2000
       },
       "commandSpecification": {
@@ -27,11 +29,25 @@
         "scriptPath": "tools/ai-room-transport/audralia-gen1754-reproduction.v1.mjs",
         "fixedArguments": [],
         "inputArgumentBindings": [
-          {"argument": "--candidate-head", "inputField": "candidateHead"},
-          {"argument": "--base-head", "inputField": "baseHead"},
-          {"argument": "--execution-holder", "inputField": "executionHolder"}
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--base-head",
+            "inputField": "baseHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
         ],
-        "outputArgumentBindings": [{"argument": "--output", "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"}],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
         "shell": false,
         "extraArgumentsAllowed": false,
         "environmentOverridesAllowed": false,
@@ -39,24 +55,78 @@
       },
       "canonicalInputSchema": {
         "schemaId": "AUDRALIA_GEN1754_EXACT_CANDIDATE_REPRODUCTION_INPUT_v1",
-        "required": ["candidateHead", "baseHead", "executionHolder"],
-        "allowed": ["candidateHead", "baseHead", "executionHolder"],
+        "required": [
+          "candidateHead",
+          "baseHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "baseHead",
+          "executionHolder"
+        ],
         "properties": {
-          "candidateHead": {"type": "string", "const": "41a63ace8b540f2b3ce7f73b6395f90234c7dc3f"},
-          "baseHead": {"type": "string", "const": "bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122"},
-          "executionHolder": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"}
+          "candidateHead": {
+            "type": "string",
+            "const": "41a63ace8b540f2b3ce7f73b6395f90234c7dc3f"
+          },
+          "baseHead": {
+            "type": "string",
+            "const": "bb8b57eaf8c2b89a0ac1f75140654b6a2cf74122"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
         }
       },
       "canonicalOutputSchema": {
         "schemaId": "AUDRALIA_GEN1754_EXACT_CANDIDATE_REPRODUCTION_RECEIPT_v1",
-        "required": ["schema", "result", "operationId", "executionHolder", "baseHead", "candidateHead", "workflowLogRecoveryUsed", "productMutationPerformed", "mergePerformed", "hook4Revealed", "causalRuntimePass", "firstAssertion"]
+        "required": [
+          "schema",
+          "result",
+          "operationId",
+          "executionHolder",
+          "baseHead",
+          "candidateHead",
+          "workflowLogRecoveryUsed",
+          "productMutationPerformed",
+          "mergePerformed",
+          "hook4Revealed",
+          "causalRuntimePass",
+          "firstAssertion"
+        ]
       },
-      "allowedBackends": [{"backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION", "priority": 100, "requirements": ["EXACT_TOOLING_HEAD_FETCHABLE", "FULL_GIT_HISTORY", "NODE_22_AVAILABLE", "COMMAND_RECEIPT_ARTIFACT_UPLOAD"]}],
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
       "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
       "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
       "allowedMutationPaths": [],
-      "prohibitedPaths": ["showroom/", "inspection/", "assets/", "laws/", "h-earth-3d/"],
-      "prohibitedSideEffects": ["PRODUCT_MUTATION", "CANDIDATE_MUTATION", "MERGE", "DEPLOYMENT", "RELEASE", "HOOK_4_REVEAL"],
+      "prohibitedPaths": [
+        "showroom/",
+        "inspection/",
+        "assets/",
+        "laws/",
+        "h-earth-3d/"
+      ],
+      "prohibitedSideEffects": [
+        "PRODUCT_MUTATION",
+        "CANDIDATE_MUTATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "HOOK_4_REVEAL"
+      ],
       "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
       "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
       "successDisposition": "RETURN_EXACT_CANDIDATE_CAUSAL_PASS_OR_FIRST_ASSERTION_TO_HOOK_3",
@@ -85,6 +155,7 @@
           "tools/audralia-canonical-geography-rebind",
           "inspection/audralia-24057-exact/snapshot/h-earth-3d",
           "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1",
+          "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/render",
           "showroom/globe/h-earth/terrain-estate-construction-v1",
           "showroom/globe/audralia",
           "h-earth-3d/experience-anchor/receipts"
@@ -104,17 +175,49 @@
       },
       "canonicalInputSchema": {
         "schemaId": "AUDRALIA_GEN2286_REGISTERED_GENERATOR_WRITEBACK_INPUT_v1",
-        "required": ["executionHolder"],
-        "allowed": ["executionHolder"],
+        "required": [
+          "executionHolder"
+        ],
+        "allowed": [
+          "executionHolder"
+        ],
         "properties": {
-          "executionHolder": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"}
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
         }
       },
       "canonicalOutputSchema": {
         "schemaId": "REGISTERED_GENERATOR_WRITEBACK_RECEIPT_v1",
-        "required": ["schema", "result", "operationId", "descriptorId", "targetBranchRef", "expectedBranchHead", "candidateHead", "changedPaths", "fastForwardOnly", "childCommandGitHubTokenExposed", "mainMutationPerformed", "mergePerformed", "deploymentPerformed", "releasePerformed"]
+        "required": [
+          "schema",
+          "result",
+          "operationId",
+          "descriptorId",
+          "targetBranchRef",
+          "expectedBranchHead",
+          "candidateHead",
+          "changedPaths",
+          "fastForwardOnly",
+          "childCommandGitHubTokenExposed",
+          "mainMutationPerformed",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed"
+        ]
       },
-      "allowedBackends": [{"backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION", "priority": 100, "requirements": ["EXACT_TOOLING_HEAD_FETCHABLE", "NODE_22_AVAILABLE", "COMMAND_RECEIPT_ARTIFACT_UPLOAD"]}],
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
       "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
       "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
       "writebackSpecification": {
@@ -141,8 +244,24 @@
         "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.provenance.json",
         "h-earth-3d/experience-anchor/receipts/AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_v1.json"
       ],
-      "prohibitedPaths": ["inspection/", ".github/", "AI_ENTRYPOINT.json", "assets/", "campaigns/", "laws/", "characters/"],
-      "prohibitedSideEffects": ["ARBITRARY_COMMAND", "UNDECLARED_PATH_MUTATION", "MAIN_MUTATION", "MERGE", "DEPLOYMENT", "RELEASE", "THIRD_PARTY_PROVIDER_SELECTION"],
+      "prohibitedPaths": [
+        "inspection/",
+        ".github/",
+        "AI_ENTRYPOINT.json",
+        "assets/",
+        "campaigns/",
+        "laws/",
+        "characters/"
+      ],
+      "prohibitedSideEffects": [
+        "ARBITRARY_COMMAND",
+        "UNDECLARED_PATH_MUTATION",
+        "MAIN_MUTATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "THIRD_PARTY_PROVIDER_SELECTION"
+      ],
       "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
       "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
       "successDisposition": "RETURN_NEW_EXACT_GEN2286_CANDIDATE_FOR_READ_ONLY_VERIFICATION",

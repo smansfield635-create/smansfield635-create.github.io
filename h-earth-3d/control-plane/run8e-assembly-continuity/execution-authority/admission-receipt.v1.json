@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "e0a1ff6b98e41b778d3cf688edbf5004a2b6e091",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "5d4390b3dd521d1ce7be0ce1164ae4e894f15b0f",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2320,
+    "lockScope": "H_EARTH:RUN8E_240_FRAME_ASSEMBLY_CONTINUITY:720_959:AABC3B886:V1",
+    "observedBranchHead": "3d92152ad9eed3d38e408a567b1efc4b5f14bed9",
+    "observedLedgerBlobSha": "bb94d3ff5e44addc2c9f7885093d6a910793bb1a",
+    "operationId": "H_EARTH_RUN8E_240_FRAME_DETERMINISTIC_ASSEMBLY_CONTINUITY_20260916_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "4ef08075aa2ea72022af832a480a0de68a2bb25e01280059cb05e8c695d497b7"
+  },
+  "operationId": "H_EARTH_RUN8E_240_FRAME_DETERMINISTIC_ASSEMBLY_CONTINUITY_20260916_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "d0132e024193c739e6b907f6b53ed7fba3f988c64a24f19d9b128d062d050701",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "c070b8a4c124a1702c89f9684df3adcb0c31cf648333e0ca478e9555884faf05",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

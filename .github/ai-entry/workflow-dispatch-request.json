@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-publish-c76e9f7a",
+  "requestId": "compass-studio-copy-publish-8b9c272d",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "inputs": {
-    "target_sha": "c76e9f7a86f90c58c359f2a6f80e997cd2f6ef40",
+    "target_sha": "8b9c272d804128b18d1c8a176749f3abc93df5e3",
     "surface_id": "compass-gen1862"
   }
 }

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "STUDIO_COPY_PUBLICATION_20260916_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3623,
+  "requestBranch": "ai-dispatch-request-studio-copy-publication-20260916-001",
+  "requestCommit": "16e3598b0833bf90dc5e20f50e6289fc7e8482fa",
+  "requestCommitParent": "aa106555bf380b488a5a4f2a3d872c9df25f00b0",
+  "currentMainSha": "aa106555bf380b488a5a4f2a3d872c9df25f00b0",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "aa106555bf380b488a5a4f2a3d872c9df25f00b0",
+    "surface_id": "zionts"
+  },
+  "bridgeRunId": "35166813947",
+  "dispatchedRunId": 35166833757,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35166833757",
+  "dispatchedRunHeadSha": "aa106555bf380b488a5a4f2a3d872c9df25f00b0",
+  "dispatchedAt": "2026-09-17T00:30:23.819Z",
+  "resolvedAt": "2026-09-17T00:30:27.768Z"
+}

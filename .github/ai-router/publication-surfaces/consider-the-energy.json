@@ -1,15 +1,17 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "consider-the-energy",
-  "description": "Consider the Energy Community exact-head publication verification for the current production image hero. Static checks bind the page to the production image loader, intrinsic image sizing, collapsed inherited stage chrome, the exact image-source pointer, and the shared estate cosmic background. Generic headless runtime verifies the environment-independent shared decorative canvas and error-free page load; final authoritative live exact-head verification remains required for publication truth.",
+  "description": "Consider the Energy Community exact-head publication verification. Static checks bind the source document to the production image hero, shared estate cosmos, and the shared Community orbit routing/runtime authorities. Runtime verification must observe the dynamically generated four-object orbit in its ready state; route/title/cosmos-only success is insufficient. Final authoritative live exact-head verification remains required for publication truth.",
   "checks": [
     {
       "path": "/campaigns/consider-the-energy/index.html",
       "includes": [
         "data-route=\"/campaigns/consider-the-energy/\"",
         "data-community-lifecycle-mount></figure>",
+        "/campaigns/index.tabs.js",
         "/assets/dgb-estate-cosmos.js",
         "/campaigns/consider-the-energy/community-logo.production.js?v=20260916-transparent-glass-v2",
+        "html[data-page=\"consider-energy\"] .community-orbit{background:radial-gradient(circle at 8% 0%,rgba(53,132,190,.04),transparent 26rem),linear-gradient(180deg,rgba(9,20,36,.14),rgba(3,8,17,.14));border-color:rgba(121,207,255,.16)}",
         "Consider the Community with Consider the Energy."
       ],
       "excludes": [
@@ -17,6 +19,38 @@
         "/campaigns/consider-the-energy/community-lifecycle3d.js?v=20260914-gen2265-eight-state-lifecycle-v2",
         "community-lifecycle3d.js?v=20260914-stage-final"
       ]
+    },
+    {
+      "path": "/campaigns/index.tabs.js",
+      "includes": [
+        "DGB_COMMUNITY_CAMPAIGN_SHARED_TABS_v4",
+        "\"consider-energy\"",
+        "link.href = \"/campaigns/index.orbit.css\"",
+        "script.src = \"/campaigns/index.orbit.js\"",
+        "document.documentElement.dataset.campaignTabsStatus = \"orbit-routed\""
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/index.orbit.js",
+      "includes": [
+        "DGB_COMMUNITY_ORBIT_CAROUSEL_CONTROLLER_v5",
+        "Four connected objects",
+        "Move through the work.",
+        "tabRoot.replaceWith(orbit)",
+        "document.documentElement.dataset.communityOrbitStatus='ready'"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/index.orbit.css",
+      "includes": [
+        "DGB_COMMUNITY_ORBIT_CAROUSEL_v2",
+        ".community-orbit{",
+        ".community-orbit-card{",
+        ".community-orbit-status{"
+      ],
+      "excludes": []
     },
     {
       "path": "/campaigns/consider-the-energy/community-logo.production.js",
@@ -62,7 +96,7 @@
     "enabled": true,
     "path": "/campaigns/consider-the-energy/",
     "timeoutMs": 15000,
-    "readySelector": "#dgb-estate-cosmos[data-dgb-estate-cosmos-status=\"available\"]",
+    "readySelector": "html[data-community-orbit-status=\"ready\"] [data-community-orbit=\"true\"]",
     "binding": {
       "mode": "direct-document",
       "path": "/campaigns/consider-the-energy/"

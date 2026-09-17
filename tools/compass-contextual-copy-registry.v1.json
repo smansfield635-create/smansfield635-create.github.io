@@ -1,0 +1,50 @@
+{
+  "schema": "COMPASS_CONTEXTUAL_COPY_REGISTRY_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "scope": "COMPASS_CONTEXTUAL_COPY",
+  "registrationPolicy": {
+    "unregisteredSectionDisposition": "FAIL_CLOSED_UNREGISTERED_SECTION",
+    "productionRegistrationRequiresInspectedOwnership": true,
+    "arbitraryPathInputAllowed": false,
+    "arbitraryCommandInputAllowed": false,
+    "publicationAuthorityCreated": false
+  },
+  "sections": {
+    "chapter-studio": {
+      "status": "ACTIVE_PRODUCTION",
+      "ownershipClass": "STATIC_PLUS_RUNTIME_WITH_DERIVED_ASSET_IDENTITY",
+      "staticOwner": {
+        "path": "index.html",
+        "sectionAnchor": "id=\"chapter-studio\"",
+        "startMarker": "<div class=\"compass-chapter-disclosure__body\"><p>",
+        "endMarker": "</p><p class=\"compass-chapter-closing\">"
+      },
+      "runtimeOwner": {
+        "path": "assets/compass/compass.readiness-context-v1.js",
+        "sectionAnchor": "if(studio){studio.innerHTML=`",
+        "startMarker": "<div class=\\\"compass-chapter-disclosure__body\\\"><p>",
+        "endMarker": "</p><p class=\\\"compass-chapter-closing\\\">"
+      },
+      "assetIdentity": {
+        "assetPath": "/assets/compass/compass.readiness-context-v1.js",
+        "contentOwner": "runtimeOwner",
+        "tokenStrategy": {
+          "type": "GIT_BLOB_SHA1_PREFIX",
+          "length": 16
+        },
+        "indexReference": {
+          "path": "index.html"
+        },
+        "manifestReference": {
+          "path": ".github/ai-router/publication-surfaces/compass-gen1862.json",
+          "surfaceId": "compass-gen1862"
+        }
+      },
+      "expectedChangedPaths": [
+        ".github/ai-router/publication-surfaces/compass-gen1862.json",
+        "assets/compass/compass.readiness-context-v1.js",
+        "index.html"
+      ]
+    }
+  }
+}

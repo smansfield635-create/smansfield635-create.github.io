@@ -100,10 +100,10 @@ function buildWholeEstateExecutionDecision(classification, normalizedPaths, task
   const selectedGateClasses = readOnly
     ? ['PROJECT_ROUTE_READBACK']
     : mutationClass === 'STATIC_EDITORIAL_MICRO'
-      ? ['PROJECT_ROUTE', 'WRITE_TRANSPORT_CAPABILITY_RESOLUTION', 'EXACT_DIFF', 'STATIC_EDITORIAL_VERIFIER']
+      ? ['PROJECT_ROUTE', 'EXACT_DIFF', 'STATIC_EDITORIAL_VERIFIER']
       : mutationClass === 'BOUNDED_PAGE_RELEASE'
-        ? ['PROJECT_ROUTE', 'WRITE_TRANSPORT_CAPABILITY_RESOLUTION', 'EXACT_DIFF', 'BOUNDED_RELEASE_PROOFS', 'EXACT_HEAD_PUBLICATION_SEQUENCE_WHEN_RELEASE_REQUESTED']
-        : ['CANONICAL_INTAKE', 'PROJECT_ROUTE', 'WRITE_TRANSPORT_CAPABILITY_RESOLUTION', 'DIRECT_DEPENDENCY_QUALIFICATION', 'PRODUCT_OR_AUTHORITY_SPECIFIC_VERIFIER'];
+        ? ['PROJECT_ROUTE', 'EXACT_DIFF', 'BOUNDED_RELEASE_PROOFS', 'EXACT_HEAD_PUBLICATION_SEQUENCE_WHEN_RELEASE_REQUESTED']
+        : ['CANONICAL_INTAKE', 'PROJECT_ROUTE', 'DIRECT_DEPENDENCY_QUALIFICATION', 'PRODUCT_OR_AUTHORITY_SPECIFIC_VERIFIER'];
   return {
     schema: 'WHOLE_ESTATE_EXECUTION_DECISION_v1',
     status: 'AUTHORITATIVE_FOR_BLOCKING_GATE_SELECTION',
@@ -119,27 +119,6 @@ function buildWholeEstateExecutionDecision(classification, normalizedPaths, task
       blockingRequiresChangedByteDirectDependencyOrExplicitSemanticDependency: true,
       filesystemDirectoryPrefixAloneMayBlock: false,
       unselectedWorkflowFailureDisposition: 'ADVISORY_NON_BLOCKING_EVIDENCE'
-    },
-    writeTransportCapabilityResolution: {
-      requiredBeforeFirstWrite: !readOnly,
-      readOnlyExempt: readOnly,
-      selectionBasis: 'CAPABILITY_NOT_IMPLEMENTATION_STYLE',
-      requiredProofs: readOnly ? [] : [
-        'AUTHORIZED_WRITE_SURFACE_RESOLVED',
-        'DECLARED_PATH_TYPES_AND_ACTUAL_SIZES_SUPPORTED',
-        'EXACT_HEAD_BRANCH_AND_MUTATION_SEMANTICS_SUPPORTED',
-        'COMPLETE_SOURCE_MATERIALIZATION_SAFE_FOR_SELECTED_WRITE_PRIMITIVE'
-      ],
-      wholeFileReplacementAllowedWhenExactCompleteMaterializationIsSafe: true,
-      patchPrimitiveRequired: false,
-      preferredSurfaceIncapableDisposition: 'TRY_NEXT_ALREADY_AUTHORIZED_SURFACE_WITHOUT_SCOPE_OR_AUTHORITY_CHANGE',
-      noSafeSurfaceDisposition: 'EXECUTION_TRANSPORT_UNBOUND',
-      unboundEffect: 'BLOCK_EXECUTION_ONLY_PRESERVE_OPERATION_AUTHORITY_CANDIDATE_DESIGN_AND_SCOPE',
-      mayCreateSuccessorGeneration: false,
-      mayInvalidateProductOrCandidate: false,
-      mayRequireReadmissionSolelyForTransportFailure: false,
-      mayMandateTransportImplementation: false,
-      precedent: 'ISSUE_1685_EXECUTION_TRANSPORT_BINDING'
     },
     precedentReuse: {
       default: 'REUSE_ACCEPTED_PRECEDENT_BEFORE_NEW_CONSTRUCTION',
@@ -162,7 +141,6 @@ function buildWholeEstateExecutionDecision(classification, normalizedPaths, task
     invariants: {
       readOnlyMayEscalateToMutationSemantics: false,
       controlPlaneDefectMayManufactureProductPrerequisite: false,
-      executionTransportFailureMayManufactureProductFailure: false,
       exactHeadCustodyPreserved: true,
       boundedMutationScopePreserved: true,
       scientificAndEmpiricalFailClosedBoundariesPreserved: true,
@@ -202,17 +180,11 @@ function selfTest(root) {
   ];
   const decisionChecks = [
     decisionFixtures[0].agentMode === 'NOT_REQUIRED' && decisionFixtures[0].invariants.readOnlyMayEscalateToMutationSemantics === false,
-    !decisionFixtures[0].selectedGateClasses.includes('WRITE_TRANSPORT_CAPABILITY_RESOLUTION') && decisionFixtures[0].writeTransportCapabilityResolution.requiredBeforeFirstWrite === false && decisionFixtures[0].writeTransportCapabilityResolution.readOnlyExempt === true,
-    decisionFixtures.slice(1).every((decision) => decision.selectedGateClasses.includes('WRITE_TRANSPORT_CAPABILITY_RESOLUTION') && decision.writeTransportCapabilityResolution.requiredBeforeFirstWrite === true),
-    decisionFixtures.slice(1).every((decision) => decision.writeTransportCapabilityResolution.selectionBasis === 'CAPABILITY_NOT_IMPLEMENTATION_STYLE' && decision.writeTransportCapabilityResolution.patchPrimitiveRequired === false && decision.writeTransportCapabilityResolution.wholeFileReplacementAllowedWhenExactCompleteMaterializationIsSafe === true),
-    decisionFixtures.slice(1).every((decision) => decision.writeTransportCapabilityResolution.noSafeSurfaceDisposition === 'EXECUTION_TRANSPORT_UNBOUND' && decision.writeTransportCapabilityResolution.unboundEffect === 'BLOCK_EXECUTION_ONLY_PRESERVE_OPERATION_AUTHORITY_CANDIDATE_DESIGN_AND_SCOPE'),
-    decisionFixtures.slice(1).every((decision) => decision.writeTransportCapabilityResolution.mayCreateSuccessorGeneration === false && decision.writeTransportCapabilityResolution.mayInvalidateProductOrCandidate === false && decision.writeTransportCapabilityResolution.mayRequireReadmissionSolelyForTransportFailure === false && decision.writeTransportCapabilityResolution.mayMandateTransportImplementation === false),
     decisionFixtures[1].gatePolicy.onlySelectedGatesMayBlock === true && decisionFixtures[1].candidateScopeRecognition.candidateCreatedPathNeedsSeparatePersistentRegistrationSolelyBecauseNew === false,
     decisionFixtures[1].precedentReuse.qualifyOnlyDeclaredDeltaAndDirectlyAffectedDependencies === true,
     decisionFixtures[2].agentMode === 'REQUIRED' && decisionFixtures[2].canonicalAdmissionRequired === true,
     decisionFixtures.every((decision) => decision.gatePolicy.filesystemDirectoryPrefixAloneMayBlock === false),
     decisionFixtures.every((decision) => decision.invariants.controlPlaneDefectMayManufactureProductPrerequisite === false),
-    decisionFixtures.every((decision) => decision.invariants.executionTransportFailureMayManufactureProductFailure === false),
     decisionFixtures.every((decision) => decision.continuity.mainMovementAloneForcesStrictSuccessor === false)
   ];
   const legacy = runLegacy(root,['--self-test']);

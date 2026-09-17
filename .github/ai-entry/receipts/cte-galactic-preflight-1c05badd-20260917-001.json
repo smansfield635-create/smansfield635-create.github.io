@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "cte-galactic-preflight-1c05badd-20260917-001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3671,
+  "requestBranch": "ai-dispatch-request-cte-preflight-20260917-001",
+  "requestCommit": "005fd0eed0e236c596fc62e00f82c40bd6f22bbb",
+  "requestCommitParent": "1c05baddd04a5aabab587f9a07ce757ba2bef1c1",
+  "currentMainSha": "1c05baddd04a5aabab587f9a07ce757ba2bef1c1",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "1c05baddd04a5aabab587f9a07ce757ba2bef1c1",
+    "surface_id": "consider-the-energy"
+  },
+  "bridgeRunId": "35275467784",
+  "dispatchedRunId": 35275485927,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35275485927",
+  "dispatchedRunHeadSha": "1c05baddd04a5aabab587f9a07ce757ba2bef1c1",
+  "dispatchedAt": "2026-09-17T21:13:53.422Z",
+  "resolvedAt": "2026-09-17T21:13:57.697Z"
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "PROPORTIONAL_EXECUTION_SHORT_CIRCUIT_TEST_PLAN_v1",
+  "cases": [
+    {"id":"PARAGRAPH_COPY","paths":["index.html"],"task":"update approved paragraph copy","expectedClass":"STATIC_EDITORIAL_MICRO","forbiddenPhases":["CANONICAL_INTAKE","CANONICAL_PACKET_COMPILER","RESUME_RECONSTRUCTION","PAGE_EXCELLENCE","AGENT_ORCHESTRATION","TRANSPORT_RESEARCH"]},
+    {"id":"COMMUNITY_STATIC_COLOR","paths":["community/index.css"],"task":"static color presentation change","expectedClass":"STATIC_EDITORIAL_MICRO","forbiddenPhases":["CANONICAL_INTAKE","CANONICAL_PACKET_COMPILER","RESUME_RECONSTRUCTION","PAGE_EXCELLENCE","AGENT_ORCHESTRATION","TRANSPORT_RESEARCH"]},
+    {"id":"RUNTIME_JS","paths":["assets/compass/compass.controller.js"],"task":"change navigation behavior","expectedClass":"RUNTIME_OR_AUTHORITY","canonicalIntakeRequired":true},
+    {"id":"AMBIGUOUS_HTML","paths":["index.html"],"task":"update page","expectedClass":"RUNTIME_OR_AUTHORITY","canonicalIntakeRequired":true}
+  ],
+  "stopLaw":"NO_NEW_GOVERNANCE_CLASS_OR_BACKEND_CREATED_BY_THIS_REPAIR"
+}

@@ -1,10 +1,27 @@
 {
-  "schema": "AI_RELEASE_ENTRYPOINT_v1",
+  "schema": "AI_RELEASE_ENTRYPOINT_v2",
   "status": "ACTIVE",
-  "releaseWorkflow": ".github/workflows/ai-entry-auto-release.yml",
-  "trigger": "PUSH_TO_MAIN",
-  "releaseSequence": ["APPROVED_MERGE", "AUTOMATIC_EXACT_HEAD_DEPLOYMENT", "LIVE_EXACT_HEAD_VERIFICATION"],
+  "productionAuthority": "GITHUB_PAGES_EXACT_HEAD",
+  "releaseWorkflow": ".github/workflows/pages-exact-head-deploy-v3.yml",
+  "trigger": "EXPLICIT_WORKFLOW_DISPATCH_AFTER_APPROVED_MERGE",
+  "requiredInputs": ["target_sha", "surface_id"],
+  "targetShaRequirement": "EXACT_APPROVED_CURRENT_MAIN",
+  "surfaceRequirement": "REGISTERED_PUBLICATION_SURFACE_MANIFEST",
+  "releaseSequence": [
+    "APPROVED_MERGE",
+    "EXPLICIT_EXACT_HEAD_PAGES_DISPATCH",
+    "STATIC_AND_RUNTIME_PREFLIGHT",
+    "GITHUB_PAGES_DEPLOYMENT",
+    "LIVE_EXACT_HEAD_VERIFICATION",
+    "CUSTOM_DOMAIN_ALIAS_CONVERGENCE"
+  ],
   "liveVerificationMarker": ".well-known/dgb-release.json",
   "successResult": "LIVE_EXACT_HEAD_VERIFIED",
-  "ownerManualDeploymentRequired": false
+  "automaticPushToMainRelease": false,
+  "explicitDispatchRequired": true,
+  "ownerManualDeploymentRequired": false,
+  "retiredWorkflow": ".github/workflows/ai-entry-auto-release.yml",
+  "retiredWorkflowCreatesPublicationAuthority": false,
+  "vercelPublicationAuthority": false,
+  "notes": "Production publication is performed only by the registered exact-head GitHub Pages workflow. Passive Vercel status is non-authoritative and must not block release routing."
 }

@@ -1,0 +1,26 @@
+{
+  "schema": "PROPORTIONAL_EXECUTION_SHORT_CIRCUIT_RECEIPT_v1",
+  "status": "READY_FOR_PR_REVIEW",
+  "base": "98455c26eb7a25bb5cedbe845d529f8990e81e43",
+  "precedents": ["PR_1529", "PR_3140", "PR_3522", "PR_3546"],
+  "changedPaths": [
+    "tools/repository-ai-entry-router.mjs",
+    ".github/ai-router/proportional-execution-short-circuit.v1.json",
+    ".github/ai-router/proportional-execution-short-circuit.self-test.v1.mjs",
+    ".github/ai-router/proportional-execution-short-circuit.receipt.v1.json"
+  ],
+  "assertions": {
+    "staticEditorialMicroSelectedGates": ["PROJECT_ROUTE", "EXACT_DIFF", "STATIC_EDITORIAL_VERIFIER"],
+    "canonicalPacketCompilerForStaticEditorialMicro": "NOT_APPLICABLE",
+    "canonicalIntakeForStaticEditorialMicro": "NOT_APPLICABLE",
+    "resumeReconstructionForStaticEditorialMicro": "NOT_APPLICABLE",
+    "pageExcellenceForStaticEditorialMicro": "NOT_APPLICABLE",
+    "transportResolutionRole": "INTERNAL_NON_GATING_EXECUTION_MECHANICS",
+    "transportFallbackPreserved": true,
+    "transportFailureMayCreateProductFailure": false,
+    "transportFailureMayCreateGeneration": false,
+    "transportFailureMayRequireReadmission": false,
+    "governedRuntimeRemainsGoverned": true
+  },
+  "authorityEffect": "ROUTING_REDUCTION_ONLY"
+}

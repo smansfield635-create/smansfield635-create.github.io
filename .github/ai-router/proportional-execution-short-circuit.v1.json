@@ -1,0 +1,31 @@
+{
+  "schema": "PROPORTIONAL_EXECUTION_SHORT_CIRCUIT_v1",
+  "status": "CANDIDATE",
+  "purpose": "Keep proportional page work on its selected route while preserving transport safety as execution mechanics rather than a blocking governance gate.",
+  "precedents": ["PR_1529", "PR_3140", "PR_3522", "PR_3546"],
+  "staticEditorialMicro": {
+    "selectedBlockingGates": ["PROJECT_ROUTE", "EXACT_DIFF", "STATIC_EDITORIAL_VERIFIER"],
+    "canonicalIntake": "NOT_APPLICABLE",
+    "canonicalPacketCompiler": "NOT_APPLICABLE",
+    "resumeReconstruction": "NOT_APPLICABLE",
+    "pageExcellence": "NOT_APPLICABLE",
+    "agentOrchestration": "NOT_REQUIRED",
+    "transportResearch": "NOT_A_PROJECT_PHASE"
+  },
+  "transportExecutionPolicy": {
+    "role": "INTERNAL_NON_GATING_EXECUTION_MECHANICS",
+    "selectionBasis": "CAPABILITY_NOT_IMPLEMENTATION_STYLE",
+    "wholeFileReplacementAllowedWhenExactCompleteMaterializationIsSafe": true,
+    "patchPrimitiveRequired": false,
+    "preferredSurfaceIncapableDisposition": "TRY_NEXT_ALREADY_AUTHORIZED_SURFACE_WITHOUT_SCOPE_OR_AUTHORITY_CHANGE",
+    "noSafeSurfaceDisposition": "EXECUTION_TRANSPORT_UNBOUND",
+    "unboundEffect": "BLOCK_EXECUTION_ONLY_PRESERVE_OPERATION_AUTHORITY_CANDIDATE_DESIGN_AND_SCOPE",
+    "mayCreateSuccessorGeneration": false,
+    "mayInvalidateProductOrCandidate": false,
+    "mayRequireReadmissionSolelyForTransportFailure": false,
+    "mayMandateTransportImplementation": false,
+    "executionTransportFailureMayManufactureProductFailure": false
+  },
+  "escalationLaw": "ONCE_PROPORTIONAL_CLASSIFICATION_SELECTS_A_BOUNDED_ROUTE_DO_NOT_ENTER_UNSELECTED_GOVERNANCE_OR_DISCOVERY_MECHANISMS_UNLESS_CONCRETE_NEW_EVIDENCE_PROVES_A_BOUNDARY_VIOLATION",
+  "authorityEffect": "ROUTING_REDUCTION_ONLY_NO_PRODUCT_OR_RELEASE_AUTHORITY"
+}

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "compass-gen1862",
-  "description": "Compass root publication contract rebound to the preview-gated 45-second Storyboard v2 homepage cinematic, with Skip settlement plus mandatory visible Trophy successor identity and live renderer predicate.",
+  "description": "Compass root publication contract rebound to the current homepage cinematic and lazy-mounted capability carousel, with Skip settlement plus mandatory visible Trophy successor identity and live renderer predicate.",
   "checks": [
     {
       "path": "/",
@@ -48,6 +48,22 @@
           }
         ],
         "timeoutMs": 5000
+      },
+      {
+        "name": "Prime lazy capability enhancement before carousel input",
+        "action": {
+          "type": "click",
+          "selector": "[data-capability-orbit]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-capability-orbit]",
+            "name": "data-capability-mounted",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 10000
       },
       {
         "name": "Activate Awards before Trophy verification",

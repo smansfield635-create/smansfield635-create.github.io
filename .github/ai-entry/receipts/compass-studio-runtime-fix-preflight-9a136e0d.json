@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "compass-studio-runtime-fix-preflight-9a136e0d",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3645,
+  "requestBranch": "ai-dispatch-request-compass-studio-preflight-9a136e0d",
+  "requestCommit": "35b7895e3a058ba3fa947084f5097da01bc09c19",
+  "requestCommitParent": "9a136e0db54f36bc61643562652d63b0ed807d6e",
+  "currentMainSha": "9a136e0db54f36bc61643562652d63b0ed807d6e",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9a136e0db54f36bc61643562652d63b0ed807d6e",
+    "surface_id": "compass-gen1862"
+  },
+  "bridgeRunId": "35181657629",
+  "dispatchedRunId": 35181668426,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35181668426",
+  "dispatchedRunHeadSha": "9a136e0db54f36bc61643562652d63b0ed807d6e",
+  "dispatchedAt": "2026-09-17T04:22:14.301Z",
+  "resolvedAt": "2026-09-17T04:22:18.027Z"
+}

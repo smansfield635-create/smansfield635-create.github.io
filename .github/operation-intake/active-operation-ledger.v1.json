@@ -9339,6 +9339,49 @@
       "scopeHash": "c8170225ecfd16b065547b18e3190cc6c6531cbef77ab380a628c0413467b267",
       "state": "ADMITTED_LOCKED"
     },
+    "c893a337f5e1360cbb875fbc8e8778c4eb7e3f7d1916bedd61f356c5881fd8e3": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "5d8e3080810b65e3d6ac7e63b29bc14554652763",
+          "lockGeneration": 2349,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:RUNTIME_OWNER_GLASS_RECOVERY",
+          "operationId": "COMMUNITY_RUNTIME_OWNER_GLASS_RECOVERY_20260916_004",
+          "procedureLocatorDigest": "db08296686185d0b917361f2319d2c5ebf993ed3de9ec3480939468a758c9299",
+          "requestDigest": "c03adbf942422dc47dd456161a0c7d3027b868419c57d9a093fb671771989a2e",
+          "scopeHash": "c893a337f5e1360cbb875fbc8e8778c4eb7e3f7d1916bedd61f356c5881fd8e3"
+        },
+        "bindingDigest": "1f0ee23ffe73c5bc6a5e3d9b76f4cfae4eeea918fdab8b9fd9a70e8e5ae6df46",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "672d5cc4a2f6cb51d16b1dab7fd8098a27b846acf7291178eef03547a40ad7da",
+          "commentId": 5706877013,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3624,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35169433963,
+          "workflowSha": "5d8e3080810b65e3d6ac7e63b29bc14554652763"
+        },
+        "lineageAnchorCommitSha": "a46c61890182d68cd17d3eeb3501446bf81bc59c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "5d8e3080810b65e3d6ac7e63b29bc14554652763",
+      "lockGeneration": 2349,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:RUNTIME_OWNER_GLASS_RECOVERY",
+      "operationId": "COMMUNITY_RUNTIME_OWNER_GLASS_RECOVERY_20260916_004",
+      "procedureLocatorDigest": "db08296686185d0b917361f2319d2c5ebf993ed3de9ec3480939468a758c9299",
+      "released": false,
+      "requestDigest": "c03adbf942422dc47dd456161a0c7d3027b868419c57d9a093fb671771989a2e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c893a337f5e1360cbb875fbc8e8778c4eb7e3f7d1916bedd61f356c5881fd8e3",
+      "state": "ADMITTED_LOCKED"
+    },
     "c9509ac72e25a571664d36cd4b23964250bd229c604a1d44ab174bb689ad63c7": {
       "governingHead": "5d6a6dc62efe85fa505e4ba6e4dd1a30209570e5",
       "lockGeneration": 1570,
@@ -12039,7 +12082,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2348,
+  "lockGeneration": 2349,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

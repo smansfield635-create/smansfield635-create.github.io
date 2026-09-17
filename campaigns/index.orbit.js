@@ -2,7 +2,7 @@
 (()=>{"use strict";const tabRoot=document.querySelector('[data-campaign-tabs]');if(!tabRoot)return;const tabs=[...tabRoot.querySelectorAll('[role="tab"][data-tab-target]')];const panels=[...tabRoot.querySelectorAll('[role="tabpanel"][data-tab-panel]')];if(tabs.length!==4||panels.length!==4)return;
 const page=document.documentElement.dataset.page||'community';
 const configs={
-  'consider-energy':{label:'Community',faces:[['Condition','Responsibility'],['Baseline','Trajectory'],['Community','Capacity'],['Connected Work','Continuation']]},
+  'consider-energy':{label:'Community',faces:[['Identity','Expression'],['Surface','Potential'],['Energy','Culture'],['Values','Practice']]},
   'rob':{label:'R.O.B.',faces:[['Harm','Intervention'],['Contexts','Patterns'],['Accountability','Integrity'],['Stand','Support']]},
   'wave':{label:'W.A.V.E.',faces:[['Mission','Agency'],['Awareness','Preparation'],['Instructor','Experience'],['Training','Practice']]},
   'mr-lee':{label:'Mr. Lee',faces:[['Service','Path'],['Experience','Application'],['Credentials','Discipline'],['Community Work','Legacy']]},

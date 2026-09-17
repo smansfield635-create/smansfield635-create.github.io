@@ -18,7 +18,7 @@ if (mount) {
       image.style.maxHeight = 'none';
       image.style.objectFit = 'contain';
       image.style.objectPosition = 'center';
-      image.style.background = '#000';
+      image.style.background = 'transparent';
 
       mount.classList.add('campaign-hero__media--native');
       mount.style.minHeight = '0';

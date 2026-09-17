@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-publish-c76e9f7a",
+  "requestId": "CONSIDER_ENERGY_LOGO_TRANSPARENCY_LIVE_DEPLOY_20260916_001",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "inputs": {
-    "target_sha": "c76e9f7a86f90c58c359f2a6f80e997cd2f6ef40",
-    "surface_id": "compass-gen1862"
+    "target_sha": "b344185b8846d37b8afdbb57ec59a1fe9620b474",
+    "surface_id": "consider-the-energy"
   }
 }

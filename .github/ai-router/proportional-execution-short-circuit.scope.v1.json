@@ -1,0 +1,12 @@
+{
+  "schema":"PROPORTIONAL_EXECUTION_SHORT_CIRCUIT_SCOPE_v1",
+  "goal":"RESTORE_PROPORTIONAL_EXECUTION_ACCESS",
+  "productMutation":false,
+  "publicationMutation":false,
+  "newBackend":false,
+  "newClassifierClass":false,
+  "newFallbackClass":false,
+  "governedRuntimeRelaxed":false,
+  "staticEditorialMicroFastPathRestored":true,
+  "transportSafetyRetainedAsPolicy":true
+}

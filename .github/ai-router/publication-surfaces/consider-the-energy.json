@@ -72,7 +72,7 @@
     {
       "path": "/campaigns/consider-the-energy/community-image-source.txt",
       "includes": [
-        "https://drive.google.com/thumbnail?id=1ex4LMF-WW9gLmeVeernhEEl4X1q5OzHX&sz=w1600"
+        "/campaigns/consider-the-energy/consider-the-energy-logo-transparent.png"
       ],
       "excludes": []
     },

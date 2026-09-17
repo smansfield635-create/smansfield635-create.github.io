@@ -278,6 +278,14 @@
       "priority": 100
     },
     {
+      "projectId": "CONSIDER_THE_ENERGY",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["campaigns/consider-the-energy/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/consider-the-energy/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
       "projectId": "BUILD",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": [],

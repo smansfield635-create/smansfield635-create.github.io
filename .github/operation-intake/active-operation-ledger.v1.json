@@ -10696,49 +10696,6 @@
       "scopeHash": "deeb7089d9e25420cb38cf013c7bb9b1f3d546523c68d30d7fb0f505f299766a",
       "state": "ADMITTED_LOCKED"
     },
-    "df497cc595537decffbc9dc1ce17946b2df6e698836fb4c50db4e5d45ff70b26": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "3499c6954692397a46c64a99ca9c9ff5a400166c",
-          "lockGeneration": 2358,
-          "lockScope": "CONSIDER_THE_ENERGY:BRAND_REVIVAL:ADOPTION_RECONCILIATION:V1",
-          "operationId": "CONSIDER_THE_ENERGY_BRAND_REVIVAL_ADOPTION_RECONCILIATION_20260917_001",
-          "procedureLocatorDigest": "9ec472a4f50b5185392d85cf1d33c1182816738e29b26362c68cc843c1a9577d",
-          "requestDigest": "02f1a0f84578ceaae2e85f6b6e5bcaccff5ea777b09a8acfb06f0326616184de",
-          "scopeHash": "df497cc595537decffbc9dc1ce17946b2df6e698836fb4c50db4e5d45ff70b26"
-        },
-        "bindingDigest": "f931064fff1bad83d2a31a710f38aced5aedc6e4c55211c71afc0f6c880d5837",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "5d107285c53cb6bfd9d8789a8d81394f674ee8543c04b7feac7c6866a00e7511",
-          "commentId": 5722439587,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3678,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35285660949,
-          "workflowSha": "3499c6954692397a46c64a99ca9c9ff5a400166c"
-        },
-        "lineageAnchorCommitSha": "6740766af926151680daec5e447510bee200f920",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "3499c6954692397a46c64a99ca9c9ff5a400166c",
-      "lockGeneration": 2358,
-      "lockScope": "CONSIDER_THE_ENERGY:BRAND_REVIVAL:ADOPTION_RECONCILIATION:V1",
-      "operationId": "CONSIDER_THE_ENERGY_BRAND_REVIVAL_ADOPTION_RECONCILIATION_20260917_001",
-      "procedureLocatorDigest": "9ec472a4f50b5185392d85cf1d33c1182816738e29b26362c68cc843c1a9577d",
-      "released": false,
-      "requestDigest": "02f1a0f84578ceaae2e85f6b6e5bcaccff5ea777b09a8acfb06f0326616184de",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "df497cc595537decffbc9dc1ce17946b2df6e698836fb4c50db4e5d45ff70b26",
-      "state": "ADMITTED_LOCKED"
-    },
     "df68cdb1b095c7a15cfe509326091939316db96df4a6ed8b55b594773726407d": {
       "governingHead": "4377f0febacab116a2f23bcbb17756ddd6343e11",
       "lockGeneration": 1448,
@@ -59909,6 +59866,50 @@
       "scopeHash": "9159477acd430d0f58c02fa35bc010091d7c91fb317e08b122119c9b2810ffcb",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3499c6954692397a46c64a99ca9c9ff5a400166c",
+          "lockGeneration": 2358,
+          "lockScope": "CONSIDER_THE_ENERGY:BRAND_REVIVAL:ADOPTION_RECONCILIATION:V1",
+          "operationId": "CONSIDER_THE_ENERGY_BRAND_REVIVAL_ADOPTION_RECONCILIATION_20260917_001",
+          "procedureLocatorDigest": "9ec472a4f50b5185392d85cf1d33c1182816738e29b26362c68cc843c1a9577d",
+          "requestDigest": "02f1a0f84578ceaae2e85f6b6e5bcaccff5ea777b09a8acfb06f0326616184de",
+          "scopeHash": "df497cc595537decffbc9dc1ce17946b2df6e698836fb4c50db4e5d45ff70b26"
+        },
+        "bindingDigest": "f931064fff1bad83d2a31a710f38aced5aedc6e4c55211c71afc0f6c880d5837",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "5d107285c53cb6bfd9d8789a8d81394f674ee8543c04b7feac7c6866a00e7511",
+          "commentId": 5722439587,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3678,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35285660949,
+          "workflowSha": "3499c6954692397a46c64a99ca9c9ff5a400166c"
+        },
+        "lineageAnchorCommitSha": "6740766af926151680daec5e447510bee200f920",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3499c6954692397a46c64a99ca9c9ff5a400166c",
+      "lockGeneration": 2358,
+      "lockScope": "CONSIDER_THE_ENERGY:BRAND_REVIVAL:ADOPTION_RECONCILIATION:V1",
+      "operationId": "CONSIDER_THE_ENERGY_BRAND_REVIVAL_ADOPTION_RECONCILIATION_20260917_001",
+      "procedureLocatorDigest": "9ec472a4f50b5185392d85cf1d33c1182816738e29b26362c68cc843c1a9577d",
+      "released": true,
+      "requestDigest": "02f1a0f84578ceaae2e85f6b6e5bcaccff5ea777b09a8acfb06f0326616184de",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "df497cc595537decffbc9dc1ce17946b2df6e698836fb4c50db4e5d45ff70b26",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

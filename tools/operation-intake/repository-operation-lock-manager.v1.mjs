@@ -8,6 +8,7 @@ export const LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.
 export const LOCK_REF = 'refs/heads/operation-locks/repository-operation-intake-v1';
 export const AUTHORITY_PROVENANCE_SCHEMA = 'REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1';
 export const AUTHORITY_INVOCATION_SCHEMA = 'REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1';
+export const CONSTRUCTION_BRANCH_IDENTITY_SCHEMA = 'REPOSITORY_OPERATION_CONSTRUCTION_BRANCH_IDENTITY_v1';
 export const LEGACY_AUTHORITY_SNAPSHOT_BLOBS = ['f9c84e0a56b3b566f9da8eced8abc9348eb32ef5'];
 export const LEGACY_AUTHORITY_CUTOVER_COMMIT = 'b424015070450aaddc86013d72eaeb2a28bb7b04';
 export const TERMINAL = ['PASS_CLOSED','FAIL_CLOSED','REJECTED_CLOSED','WITHDRAWN','SUPERSEDED','VOIDED','EXPIRED','MUTATION_CLOSED_EVIDENCE_CONTINUES'];
@@ -15,6 +16,7 @@ const ACTIVE = new Set(['ADMITTED_LOCKED','EXECUTING','BLOCKED_OPEN']);
 const TRUSTED_ASSOCIATIONS = new Set(['OWNER','MEMBER','COLLABORATOR']);
 const CANONICAL_MARKER = 'CANONICAL_OPERATION_INTAKE_REQUEST_V1';
 const SUCCESSOR_MARKERS = new Set(['REMOTE_OPERATION_SUCCESSOR_REQUEST_V1','REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1']);
+const PROHIBITED_CONSTRUCTION_BRANCH_REFS = new Set(['refs/heads/main',LOCK_REF]);
 
 export const stable = v => Array.isArray(v) ? v.map(stable) : v && typeof v === 'object' ? Object.fromEntries(Object.keys(v).sort().map(k => [k, stable(v[k])])) : v;
 export const canonical = v => JSON.stringify(stable(v));
@@ -26,6 +28,16 @@ export function err(code, field, source, detail = null) { const e = new Error(`$
 const str = (v,f,s) => { if (typeof v !== 'string' || !v) throw err('MISSING_OR_INVALID_FIELD',f,s); return v; };
 const dig = (v,n,f,s) => { str(v,f,s); if (!new RegExp(`^[0-9a-f]{${n}}$`).test(v)) throw err('MISSING_OR_INVALID_DIGEST',f,s); return v; };
 const pos = (v,f,s) => { if (!Number.isInteger(v) || v < 1) throw err('MISSING_OR_INVALID_FIELD',f,s); return v; };
+
+export function validateConstructionBranchIdentity(value, governingHead = null, source = 'lock-request') {
+  if (!value || typeof value !== 'object' || Array.isArray(value) || value.schema !== CONSTRUCTION_BRANCH_IDENTITY_SCHEMA) throw err('CONSTRUCTION_BRANCH_IDENTITY_SCHEMA_INVALID','constructionBranchIdentity',source);
+  const ref=value.canonicalBranchRef;
+  if (typeof ref!=='string'||!ref.startsWith('refs/heads/')||ref.length<12||/\s/.test(ref)||ref.includes('..')||ref.includes('//')||ref.includes('@{')||ref.includes('\\')) throw err('CONSTRUCTION_BRANCH_REF_INVALID','constructionBranchIdentity.canonicalBranchRef',source);
+  if (PROHIBITED_CONSTRUCTION_BRANCH_REFS.has(ref)) throw err('CONSTRUCTION_BRANCH_REF_PROHIBITED','constructionBranchIdentity.canonicalBranchRef',source,ref);
+  const admittedBase=dig(value.admittedBase,40,'constructionBranchIdentity.admittedBase',source),branchCreationHead=dig(value.branchCreationHead,40,'constructionBranchIdentity.branchCreationHead',source);
+  if (governingHead!==null && (admittedBase!==governingHead||branchCreationHead!==governingHead)) throw err('CONSTRUCTION_BRANCH_IDENTITY_GOVERNING_HEAD_MISMATCH','constructionBranchIdentity',source);
+  return stable({schema:CONSTRUCTION_BRANCH_IDENTITY_SCHEMA,canonicalBranchRef:ref,admittedBase,branchCreationHead});
+}
 
 export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   authorityIdentity: {
@@ -122,6 +134,7 @@ function validateActiveLock(lock, key) {
   dig(lock.requestDigest,64,`${key}.requestDigest`,source);
   dig(lock.procedureLocatorDigest,64,`${key}.procedureLocatorDigest`,source);
   pos(lock.lockGeneration,`${key}.lockGeneration`,source);
+  if (lock.constructionBranchIdentity !== undefined) validateConstructionBranchIdentity(lock.constructionBranchIdentity,lock.governingHead,source);
   if (lock.authorityProvenance !== undefined) verifyAuthorityProvenanceBinding(lock);
 }
 
@@ -159,7 +172,9 @@ export function captureAuthorityInvocationFromEnvironment({ allowedMarkers = [CA
 }
 
 export function authorityIdentity(lock) {
-  return stable({operationId:str(lock.operationId,'operationId','authority-identity'),lockScope:canonScope(lock.lockScope),scopeHash:dig(lock.scopeHash,64,'scopeHash','authority-identity'),governingHead:dig(lock.governingHead,40,'governingHead','authority-identity'),requestDigest:dig(lock.requestDigest,64,'requestDigest','authority-identity'),procedureLocatorDigest:dig(lock.procedureLocatorDigest,64,'procedureLocatorDigest','authority-identity'),lockGeneration:pos(lock.lockGeneration,'lockGeneration','authority-identity')});
+  const identity={operationId:str(lock.operationId,'operationId','authority-identity'),lockScope:canonScope(lock.lockScope),scopeHash:dig(lock.scopeHash,64,'scopeHash','authority-identity'),governingHead:dig(lock.governingHead,40,'governingHead','authority-identity'),requestDigest:dig(lock.requestDigest,64,'requestDigest','authority-identity'),procedureLocatorDigest:dig(lock.procedureLocatorDigest,64,'procedureLocatorDigest','authority-identity'),lockGeneration:pos(lock.lockGeneration,'lockGeneration','authority-identity')};
+  if(lock.constructionBranchIdentity!==undefined)identity.constructionBranchIdentity=validateConstructionBranchIdentity(lock.constructionBranchIdentity,lock.governingHead,'authority-identity');
+  return stable(identity);
 }
 
 export function buildAuthorityProvenance(lock, invocation, origin, lineageAnchorCommitSha = null) {
@@ -184,10 +199,11 @@ export function verifyAuthorityProvenanceBinding(lock) {
 }
 
 export function acquireLocal(raw,r) {
-  const l=ledger(raw),operationId=str(r.operationId,'operationId','lock-request'),lockScope=canonScope(r.lockScope),governingHead=dig(r.governingHead,40,'governingHead','lock-request'),requestDigest=dig(r.requestDigest,64,'requestDigest','lock-request'),procedureLocatorDigest=dig(r.procedureLocatorDigest,64,'procedureLocatorDigest','lock-request'),h=scopeHash(lockScope),x=l.activeScopes[h];
+  const l=ledger(raw),operationId=str(r.operationId,'operationId','lock-request'),lockScope=canonScope(r.lockScope),governingHead=dig(r.governingHead,40,'governingHead','lock-request'),requestDigest=dig(r.requestDigest,64,'requestDigest','lock-request'),procedureLocatorDigest=dig(r.procedureLocatorDigest,64,'procedureLocatorDigest','lock-request'),constructionBranchIdentity=r.constructionBranchIdentity===undefined?undefined:validateConstructionBranchIdentity(r.constructionBranchIdentity,governingHead,'lock-request'),h=scopeHash(lockScope),x=l.activeScopes[h];
   if (x && !x.released && ACTIVE.has(x.state)) return {acquired:false,result:'ACTIVE_SCOPE_ALREADY_LOCKED',errorCode:'ACTIVE_OPERATION_ALREADY_EXISTS',activeOperationId:x.operationId,lockGeneration:x.lockGeneration,scopeHash:h,ledger:l};
   const g=l.lockGeneration+1;
   let lock={schema:'REPOSITORY_OPERATION_LOCK_v1',operationId,lockScope,scopeHash:h,state:'ADMITTED_LOCKED',governingHead,requestDigest,procedureLocatorDigest,lockGeneration:g,released:false};
+  if(constructionBranchIdentity!==undefined)lock={...lock,constructionBranchIdentity};
   const provenance=buildAuthorityProvenance(lock,r.authorityInvocation || null,'CANONICAL_INTAKE',r.authorityLineageAnchorCommitSha || null);
   if (provenance) lock={...lock,authorityProvenance:provenance};
   return {acquired:true,result:'ADMITTED_AND_LOCKED',lock:stable(lock),ledger:stable({...l,lockGeneration:g,activeScopes:{...l.activeScopes,[h]:lock}})};
@@ -279,7 +295,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
 
 async function fetchComment(repository,token,commentId){return req(`${base(repository)}/issues/comments/${commentId}`,{headers:H(token)})}
 async function fetchIssueComments(repository,token,issueNumber){const all=[];for(let page=1;;page++){const values=await req(`${base(repository)}/issues/${issueNumber}/comments?per_page=100&page=${page}`,{headers:H(token)});if(!Array.isArray(values))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','issue.comments','authority-provenance');all.push(...values);if(values.length<100)break}return all}
-function verifyCanonicalSourceComment(lock,body){const envelope=parseMarkedJson(body,CANONICAL_MARKER),request=envelope?.operationRequest,procedure=envelope?.constructionProcedure;if(!request||!procedure)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','canonical-envelope','authority-provenance');const expected=authorityIdentity(lock);if(request.operationId!==expected.operationId||canonScope(request.lockScope)!==expected.lockScope||request.exactGoverningHead!==expected.governingHead)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','ROW_IDENTITY_MISMATCH');if(sha(canonical(request))!==expected.requestDigest||sha(canonical(procedure))!==expected.procedureLocatorDigest)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','REQUEST_OR_PROCEDURE_DIGEST_MISMATCH')}
+function verifyCanonicalSourceComment(lock,body){const envelope=parseMarkedJson(body,CANONICAL_MARKER),request=envelope?.operationRequest,procedure=envelope?.constructionProcedure;if(!request||!procedure)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','canonical-envelope','authority-provenance');const expected=authorityIdentity(lock);if(request.operationId!==expected.operationId||canonScope(request.lockScope)!==expected.lockScope||request.exactGoverningHead!==expected.governingHead)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','ROW_IDENTITY_MISMATCH');if(expected.constructionBranchIdentity!==undefined&&canonical(request.constructionBranchIdentity)!==canonical(expected.constructionBranchIdentity))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest.constructionBranchIdentity','authority-provenance','BRANCH_IDENTITY_MISMATCH');if(sha(canonical(request))!==expected.requestDigest||sha(canonical(procedure))!==expected.procedureLocatorDigest)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','REQUEST_OR_PROCEDURE_DIGEST_MISMATCH')}
 function parseSuccessorReceiptComment(body){if(typeof body!=='string'||!body.startsWith('REMOTE_OPERATION_SUCCESSOR_RECEIPT_V1'))return null;const match=body.match(/```json\s*([\s\S]*?)\s*```/);if(!match)return null;try{return JSON.parse(match[1])}catch{return null}}
 function botReceiptMatches(lock,comments,origin,runId){if(origin==='CANONICAL_INTAKE'){const op=`operationId = ${lock.operationId}`,gen=`lockGeneration = ${lock.lockGeneration}`,run=`workflowRun = ${runId}`;return comments.some(c=>c?.user?.login==='github-actions[bot]'&&typeof c.body==='string'&&c.body.includes('CANONICAL_OPERATION_INTAKE_RETURN_V1')&&c.body.includes('canonicalResult = ADMITTED_AND_LOCKED')&&c.body.includes(op)&&c.body.includes(gen)&&c.body.includes(run))}return comments.some(c=>{if(c?.user?.login!=='github-actions[bot]')return false;const r=parseSuccessorReceiptComment(c.body);if(!r||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED')return false;const s=r.successor||{};return s.operationId===lock.operationId&&canonScope(s.lockScope)===canonScope(lock.lockScope)&&s.lockGeneration===lock.lockGeneration&&s.governingHead===lock.governingHead&&s.requestDigest===lock.requestDigest&&s.procedureLocatorDigest===lock.procedureLocatorDigest})}
 
@@ -303,7 +319,7 @@ export async function acquireRemote(a) {
   if(a.barrierFile){const deadline=Date.now()+Number(a.barrierTimeoutMs||30000);while(!fs.existsSync(path.resolve(a.barrierFile))){if(Date.now()>deadline)throw err('CAS_BARRIER_TIMEOUT','barrierFile','remote-lock');await new Promise(r=>setTimeout(r,50))}}
   if(a.preWriteDelayMs)await new Promise(r=>setTimeout(r,a.preWriteDelayMs));
   const u=await put({...a,blob:o.blob,next:x.ledger,message:`Acquire operation lock ${x.lock.lockGeneration}: ${a.operationId}`});
-  return stable(u.ok?{schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:'ADMITTED_AND_LOCKED',operationId:a.operationId,lockScope:x.lock.lockScope,scopeHash:x.lock.scopeHash,lockGeneration:x.lock.lockGeneration,authorityProvenanceBound:!!x.lock.authorityProvenance,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,committedLedgerBlobSha:u.blob,acquisitionCommitSha:u.commit,contentTransport:o.contentTransport,lockAcquired:true}:{schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:'LOCK_NOT_ACQUIRED',errorCode:u.errorCode,httpStatus:u.httpStatus,operationId:a.operationId,lockScope:x.lock.lockScope,scopeHash:x.lock.scopeHash,lockGeneration:x.lock.lockGeneration,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,contentTransport:o.contentTransport,lockAcquired:false});
+  return stable(u.ok?{schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:'ADMITTED_AND_LOCKED',operationId:a.operationId,lockScope:x.lock.lockScope,scopeHash:x.lock.scopeHash,lockGeneration:x.lock.lockGeneration,constructionBranchIdentity:x.lock.constructionBranchIdentity??null,authorityProvenanceBound:!!x.lock.authorityProvenance,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,committedLedgerBlobSha:u.blob,acquisitionCommitSha:u.commit,contentTransport:o.contentTransport,lockAcquired:true}:{schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:'LOCK_NOT_ACQUIRED',errorCode:u.errorCode,httpStatus:u.httpStatus,operationId:a.operationId,lockScope:x.lock.lockScope,scopeHash:x.lock.scopeHash,lockGeneration:x.lock.lockGeneration,constructionBranchIdentity:x.lock.constructionBranchIdentity??null,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,contentTransport:o.contentTransport,lockAcquired:false});
 }
 
 export async function closeRemote(a) {

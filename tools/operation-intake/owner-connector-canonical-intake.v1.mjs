@@ -73,7 +73,8 @@ export function planOwnerConnectorAdmission({
     lockScope: q.request.lockScope,
     governingHead: q.request.exactGoverningHead,
     requestDigest: q.requestDigest,
-    procedureLocatorDigest: q.procedureLocatorDigest
+    procedureLocatorDigest: q.procedureLocatorDigest,
+    constructionBranchIdentity: q.request.constructionBranchIdentity
   });
 
   if (!acquired.acquired) {
@@ -88,6 +89,15 @@ export function planOwnerConnectorAdmission({
     });
   }
 
+  const authorityIdentity = {
+    operationId: acquired.lock.operationId,
+    lockScope: acquired.lock.lockScope,
+    scopeHash: acquired.lock.scopeHash,
+    governingHead: acquired.lock.governingHead,
+    requestDigest: acquired.lock.requestDigest,
+    procedureLocatorDigest: acquired.lock.procedureLocatorDigest,
+    lockGeneration: acquired.lock.lockGeneration
+  };
   const core = stable({
     schema: CONTRACT_SCHEMA,
     transportId: TRANSPORT_ID,
@@ -100,18 +110,11 @@ export function planOwnerConnectorAdmission({
       commentBodySha256: sha(source.body),
       marker: MARKER
     },
-    authorityIdentity: {
-      operationId: acquired.lock.operationId,
-      lockScope: acquired.lock.lockScope,
-      scopeHash: acquired.lock.scopeHash,
-      governingHead: acquired.lock.governingHead,
-      requestDigest: acquired.lock.requestDigest,
-      procedureLocatorDigest: acquired.lock.procedureLocatorDigest,
-      lockGeneration: acquired.lock.lockGeneration
-    },
+    authorityIdentity,
     compareAndSwap: {
       observedLedgerBlobSha: ledgerBlob,
-      observedLockRefHead: lockRefHead
+      observedLockRefHead: lockRefHead,
+      constructionBranchIdentity: acquired.lock.constructionBranchIdentity ?? null
     }
   });
   const independentAuthorityProvenance = stable({ ...core, bindingDigest: sha(canonical(core)) });
@@ -136,6 +139,7 @@ export function planOwnerConnectorAdmission({
     governingHead: lock.governingHead,
     requestDigest: lock.requestDigest,
     procedureLocatorDigest: lock.procedureLocatorDigest,
+    constructionBranchIdentity: lock.constructionBranchIdentity ?? null,
     independentAuthorityProvenance,
     observedLedgerBlobSha: ledgerBlob,
     observedLockRefHead: lockRefHead,

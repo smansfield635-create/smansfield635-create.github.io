@@ -17,6 +17,20 @@
     "secondBackendCreated": false,
     "secondLedgerCreated": false
   },
+  "constructionBranchIdentity": {
+    "contract": ".github/operation-intake/construction-branch-identity-contract.v1.json",
+    "bindingSchema": "REPOSITORY_OPERATION_CONSTRUCTION_BRANCH_IDENTITY_v1",
+    "requiredForNewRuntimeAuthorityAdmissions": true,
+    "exactRecordedBranchRefIsOnlyResumptionAuthority": true,
+    "branchSearchIsDiscoveryOnly": true,
+    "fuzzyBranchNameMatchingCreatesAuthority": false,
+    "mainRefAllowed": false,
+    "canonicalLockRefAllowed": false,
+    "admittedBaseMustEqualExactGoverningHead": true,
+    "branchCreationHeadMustEqualExactGoverningHead": true,
+    "recordedRefAncestryVerificationRequiredBeforeResume": true,
+    "legacyLocksWithoutBindingRemainReadable": true
+  },
   "authentication": {
     "model": "AMBIENT_AUTHORIZED_CONNECTED_GITHUB_IDENTITY",
     "rawGithubTokenRequiredFromRoom": false,
@@ -107,7 +121,7 @@
     },
     {
       "step": 11,
-      "action": "VERIFY_EXACT_PARENT_MESSAGE_ONE_LEDGER_PATH_LOCK_IDENTITY_AND_INDEPENDENT_AUTHORITY_PROVENANCE",
+      "action": "VERIFY_EXACT_PARENT_MESSAGE_ONE_LEDGER_PATH_LOCK_IDENTITY_CONSTRUCTION_BRANCH_IDENTITY_AND_INDEPENDENT_AUTHORITY_PROVENANCE",
       "authorityEffect": "EVIDENCE_ONLY"
     },
     {
@@ -136,6 +150,7 @@
     ],
     "lineageVerificationRequired": true,
     "independentAuthorityProvenanceRequired": true,
+    "constructionBranchIdentityReadbackRequired": true,
     "receiptBeforeReadbackAllowed": false
   },
   "failureLaw": {
@@ -149,7 +164,8 @@
     "treePathExpansion": "FAIL_CLOSED",
     "forcedRefUpdateRequested": "FAIL_CLOSED",
     "readbackMismatch": "FAIL_CLOSED",
-    "lineageFailure": "FAIL_CLOSED"
+    "lineageFailure": "FAIL_CLOSED",
+    "constructionBranchIdentityDrift": "FAIL_CLOSED"
   },
   "fallbackLaw": {
     "workflowTransportId": "GITHUB_ACTIONS_CANONICAL_INTAKE_V1",
@@ -170,7 +186,8 @@
     "NO_RECEIPT_BEFORE_READBACK",
     "NO_GITHUB_ACTIONS_GENERAL_AGENT_EXECUTION_TRANSPORT",
     "NO_BRANCH_OR_PRODUCT_MUTATION_BEFORE_ADMITTED_AND_LOCKED",
-    "NO_AUTHORITY_INFERENCE_FROM_CONNECTED_TOOL_AVAILABILITY"
+    "NO_AUTHORITY_INFERENCE_FROM_CONNECTED_TOOL_AVAILABILITY",
+    "NO_FUZZY_BRANCH_NAME_AUTHORITY"
   ],
   "githubActions": {
     "generalAgentExecutionAllowed": false,

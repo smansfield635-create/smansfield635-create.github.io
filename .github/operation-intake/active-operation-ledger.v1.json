@@ -11078,49 +11078,6 @@
       "scopeHash": "e258a29e878ae2c636a0fc99e972e1c4f197d13f08208ff19b3190849b81eff5",
       "state": "ADMITTED_LOCKED"
     },
-    "e3409551544f75101e8a816736c0bc8e69089c5d97ff52160c5da49c7d668e37": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
-          "lockGeneration": 2363,
-          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:SOURCE_FORWARD_FOUR_CARD_REWRITE:V2",
-          "operationId": "CONSIDER_THE_ENERGY_SOURCE_FORWARD_FOUR_CARD_REWRITE_20260917_002",
-          "procedureLocatorDigest": "3858b0ac42f75052806ed581ef17acd3bb1d9567ff0b4dc7da58ad76dac3bf16",
-          "requestDigest": "7dfe3633694ec2164f8b8229158906ff7de342a983c4ba9f18bf96c354a40111",
-          "scopeHash": "e3409551544f75101e8a816736c0bc8e69089c5d97ff52160c5da49c7d668e37"
-        },
-        "bindingDigest": "1481c925d64c0856919a645f805c3e97174a259374f36b72cb01d9db5ccee738",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "bf6dcb5ac529a3c76f1826bbca03881e8c1aa98116750248a90022a76e2cfe29",
-          "commentId": 5723142247,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3688,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35291350252,
-          "workflowSha": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be"
-        },
-        "lineageAnchorCommitSha": "1c01d64304a2b4a007664d0fdde478f03cb694c3",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
-      "lockGeneration": 2363,
-      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:SOURCE_FORWARD_FOUR_CARD_REWRITE:V2",
-      "operationId": "CONSIDER_THE_ENERGY_SOURCE_FORWARD_FOUR_CARD_REWRITE_20260917_002",
-      "procedureLocatorDigest": "3858b0ac42f75052806ed581ef17acd3bb1d9567ff0b4dc7da58ad76dac3bf16",
-      "released": false,
-      "requestDigest": "7dfe3633694ec2164f8b8229158906ff7de342a983c4ba9f18bf96c354a40111",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "e3409551544f75101e8a816736c0bc8e69089c5d97ff52160c5da49c7d668e37",
-      "state": "ADMITTED_LOCKED"
-    },
     "e3bfc07108bf422cd637efb94a331e9dac3efd675eb5a674276f922648392227": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -60128,6 +60085,50 @@
       "scopeHash": "9159477acd430d0f58c02fa35bc010091d7c91fb317e08b122119c9b2810ffcb",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
+          "lockGeneration": 2363,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:SOURCE_FORWARD_FOUR_CARD_REWRITE:V2",
+          "operationId": "CONSIDER_THE_ENERGY_SOURCE_FORWARD_FOUR_CARD_REWRITE_20260917_002",
+          "procedureLocatorDigest": "3858b0ac42f75052806ed581ef17acd3bb1d9567ff0b4dc7da58ad76dac3bf16",
+          "requestDigest": "7dfe3633694ec2164f8b8229158906ff7de342a983c4ba9f18bf96c354a40111",
+          "scopeHash": "e3409551544f75101e8a816736c0bc8e69089c5d97ff52160c5da49c7d668e37"
+        },
+        "bindingDigest": "1481c925d64c0856919a645f805c3e97174a259374f36b72cb01d9db5ccee738",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "bf6dcb5ac529a3c76f1826bbca03881e8c1aa98116750248a90022a76e2cfe29",
+          "commentId": 5723142247,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3688,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35291350252,
+          "workflowSha": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be"
+        },
+        "lineageAnchorCommitSha": "1c01d64304a2b4a007664d0fdde478f03cb694c3",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
+      "lockGeneration": 2363,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:SOURCE_FORWARD_FOUR_CARD_REWRITE:V2",
+      "operationId": "CONSIDER_THE_ENERGY_SOURCE_FORWARD_FOUR_CARD_REWRITE_20260917_002",
+      "procedureLocatorDigest": "3858b0ac42f75052806ed581ef17acd3bb1d9567ff0b4dc7da58ad76dac3bf16",
+      "released": true,
+      "requestDigest": "7dfe3633694ec2164f8b8229158906ff7de342a983c4ba9f18bf96c354a40111",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e3409551544f75101e8a816736c0bc8e69089c5d97ff52160c5da49c7d668e37",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

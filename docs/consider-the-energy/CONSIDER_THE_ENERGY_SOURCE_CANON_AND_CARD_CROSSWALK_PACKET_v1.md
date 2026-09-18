@@ -1,7 +1,7 @@
 # CONSIDER THE ENERGY — Source Canon + Card Crosswalk Packet
 
 Status: DURABLE RESEARCH / EDITORIAL CONTROL PACKET  
-Scope: Consider the Energy source-canon recovery, Bamboo factual audit, Underdog crosswalk head start  
+Scope: Consider the Energy source-canon recovery, Bamboo + Community audits, Underdog + Community crosswalk head start  
 Mutation class: STATIC_EDITORIAL_MICRO  
 Page/runtime authority effect: NONE  
 Source page under review: `campaigns/consider-the-energy/index.html`  
@@ -12,7 +12,7 @@ This packet deliberately combines two named artifacts in one bounded repository 
 1. `CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1`
 2. `CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2`
 
-It does **not** rewrite the cards. It freezes the source-first method and establishes Bamboo / Underdog as the first completed audit-and-crosswalk slice.
+It does **not** rewrite the cards. It freezes the source-first method and establishes Bamboo / Underdog plus Community as the first two completed audit-and-crosswalk slices.
 
 ---
 
@@ -451,7 +451,534 @@ When the rewrite phase begins:
 
 ---
 
-# 11. Web research sources for Bamboo
+# 11. CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1 — Community slice
+
+## 11.1 Audit question
+
+What is Community actually carrying from the original Consider the Energy philosophy, and which parts of the current page are later abstractions?
+
+The present page says that energy moves between people, communities are shaped by repeated reinforcement, and repeated energy becomes culture. Those are useful organizing statements, but the older owner-authored material is more concrete. It contains:
+
+- a decision fork;
+- Love / Fear as a directional moral-philosophical contrast;
+- life-preserving versus life-degrading consequences;
+- an effort / energy bank with deposits and withdrawals;
+- service to self versus service to others;
+- a five-part manipulation sequence: Deceit, Defies reality, Distract, Divide, Destroy;
+- an explicit personal-choice boundary: the owner can control his own choice, not everyone else's.
+
+The Community object should recover that machinery before compressing it into culture language.
+
+## 11.2 Source strata
+
+### A. Older owner-authored archive language
+
+From `Love is a peakless mountain.docx`:
+
+> "all things, ideas or actions that sustain and or preserve life are objective and evident expressions or manifestations of love."
+
+The same passage contrasts that with actions the owner describes as degrading life or supporting death and therefore fear-based.
+
+This is the clearest older source for the later directional framework.
+
+Source status: **EXACT OLDER OWNER LANGUAGE**
+
+Editorial status: **SOURCE CANON AS OWNER PHILOSOPHY, NOT AN ESTABLISHED SCIENTIFIC TAXONOMY**
+
+From `Why Morality.rtf`:
+
+> "Morality is the compass provided by the natural flow of all things based on Life."
+
+The same source contains a decision-fork model and the effort-bank metaphor:
+
+> "Treat yourself as if your efforts Were a bank and and the legal tender was energy(effort)."
+
+and:
+
+> "Love equates to making deposits while fear tends to cause withdrawls."
+
+Source status: **EXACT OLDER OWNER LANGUAGE / ORIGINAL CONCRETE METAPHOR**
+
+Preservation status on current page: **MISSING**
+
+This metaphor is important because it makes "energy" operational in the original language as **effort and consequence**, rather than requiring the public page to imply a literal measurable physical energy field between people.
+
+From `The Truth.docx`:
+
+> "Based in vibrations derived from fear or love."
+
+The same source says:
+
+> "As for me, I can only control myself. I choose Love!"
+
+and preserves the owner's five-part manipulation mnemonic:
+
+1. Deceit
+2. Defies reality
+3. Distract
+4. Divide
+5. Destroy
+
+Source status: **EXACT OLDER OWNER LANGUAGE**
+
+The "vibrations" wording belongs to the historical philosophical voice. It should not be silently translated into a scientific claim.
+
+### B. 2026 owner-directed recovery / freeze
+
+Issue #3651 is an owner-directed preconstruction freeze that records a recovered architecture for the original brand philosophy.
+
+It labels the following as **frozen owner-authored**:
+
+> "Fear can be disguised as love, but love can never be disguised as fear."
+
+That line was not independently located in the older Drive documents during this audit. Its current provenance is therefore:
+
+**EXACT OWNER-AUTHORED LINE — OWNER-DIRECTED 2026 FREEZE; OLDER ARCHIVE OCCURRENCE NOT YET LOCATED**
+
+Issue #3651 also freezes this sequence:
+
+`NOTICE -> DISCERN -> ORIENT -> CHOOSE -> ADHERE -> REINFORCE -> DIRECTION`
+
+and this formal directional model:
+
+`LOVE -> PROGRESS -> LIFE / CONTINUATION`
+
+`FEAR -> NOGRESS OR DIGRESS -> STALLED / REDUCED VIABILITY`
+
+The audit did not locate the words `Nogress`, `Digress`, or `Adherence is agency` in the older owner-authored Drive documents.
+
+Therefore those terms are:
+
+**OWNER-APPROVED / FROZEN LATER FORMALIZATION**
+
+not:
+
+**PROVEN VERBATIM EARLY-ARCHIVE LANGUAGE**
+
+That distinction must survive future rewriting.
+
+### C. Current website presentation layer
+
+Current `campaigns/consider-the-energy/index.html` says, among other things:
+
+- fear can spread; courage can spread;
+- isolation can deepen; belonging can deepen;
+- a community is shaped by what people repeatedly reinforce;
+- "Repeated energy becomes culture.";
+- "Adherence is agency."
+
+These are useful later formulations. They should be treated as **current presentation architecture**, not automatically as early source quotations.
+
+---
+
+# 12. Durable Community idea inventory
+
+## C-CANON-01 — Discern direction before judging the label
+
+The older material repeatedly treats decisions as forks and asks the individual to determine what a choice serves and where it leads.
+
+Original mechanism:
+- moral compass;
+- fork / decision;
+- inspect consequence;
+- choose.
+
+Later formalization:
+`NOTICE -> DISCERN -> ORIENT -> CHOOSE -> ... -> DIRECTION`
+
+Preservation on current page: **WEAK**
+
+The page currently emphasizes spread and reinforcement more than discernment.
+
+## C-CANON-02 — Love / Fear is the owner's directional philosophical lens
+
+Older source:
+- Love is associated by the owner with sustaining/preserving life;
+- Fear is associated by the owner with life-degrading, selfish, manipulative, or destructive direction.
+
+This is a **philosophical model authored by the owner**.
+
+It must not be presented as if psychology or physics recognizes all human states as two literal forms of positive/negative energy.
+
+Preservation on current page: **STRONG CONCEPTUALLY, OVER-FORMALIZED TERMINOLOGICALLY**
+
+The present `Progress / Nogress / Digress` model is a useful later formalization, but it should be disclosed internally as later formalization rather than misidentified as the original vocabulary.
+
+## C-CANON-03 — The original energy metaphor is an effort bank
+
+The bank metaphor is one of the clearest concrete devices recovered:
+
+`effort = legal tender`
+
+`love = deposit`
+
+`fear = withdrawal`
+
+The exact old wording is rough, but the teaching device is durable.
+
+It converts "consider the energy" into a question of what an interaction adds, removes, builds, costs, or transfers.
+
+Preservation on current page: **MISSING**
+
+This is a stronger source mechanism than another abstract paragraph about energy.
+
+## C-CANON-04 — Manipulation is a recognition problem, not merely a negative feeling
+
+The Truth preserves:
+
+`DECEIT -> DEFIES REALITY -> DISTRACT -> DIVIDE -> DESTROY`
+
+This gives concrete structure behind the later "False Prophets of Affection" idea and the owner line:
+
+> "Fear can be disguised as love, but love can never be disguised as fear."
+
+Preservation on current page: **WEAK / DELEGATED**
+
+Current architecture correctly sends the deeper manipulation treatment to R.O.B. The Community object should retain only enough of this source mechanism to explain why discernment is necessary.
+
+## C-CANON-05 — Agency is choice under influence, not freedom from influence
+
+Older owner language includes:
+
+> "As for me, I can only control myself. I choose Love!"
+
+This is a stronger provenance anchor for agency than the later phrase `Adherence is agency`.
+
+Community correspondence:
+- people affect one another;
+- influence does not eliminate personal choice;
+- the object should distinguish what reaches a person from what that person chooses to reinforce.
+
+Preservation on current page: **STRONG AS LATER PARAPHRASE**
+
+## C-CANON-06 — Interpersonal affect and norms are empirically real, but "energy" remains a metaphorical bridge
+
+Contemporary research supports narrower claims that matter to the Community object:
+
+- emotional contagion research finds that affect can align across people through interaction, observation, expression, mimicry, and related processes;
+- research on social norms finds that shared expectations can influence behavior through internalization, enforcement, social learning, networks, and repeated practice;
+- norms can spread, persist, change, and sometimes sustain harmful as well as prosocial behavior.
+
+This supports the page's general move from **individual interaction -> group pattern**.
+
+It does **not** scientifically establish:
+
+`LOVE = literal positive energy`
+
+or:
+
+`FEAR = literal negative energy`
+
+or:
+
+`repeated energy = complete definition of culture`.
+
+Canonical boundary:
+- keep the owner's philosophical Love/Fear model clearly identifiable as philosophy;
+- use behavioral/social research only to ground the narrower interpersonal and cultural mechanisms.
+
+## C-CANON-07 — "Repeated energy becomes culture" is a later compression, not the source mechanism itself
+
+The current line is memorable and useful, but the original material is more specific:
+
+`decision -> effort -> consequence -> repeated choices -> effects on self/others`
+
+The current phrase can survive if it is allowed to summarize rather than replace the source mechanism.
+
+Preservation status: **CURRENTLY STRONG, SOURCE DEPTH DILUTED**
+
+## C-CANON-08 — Progress / Nogress / Digress is later conceptual tooling
+
+Issue #3651 defines:
+
+- Progress = movement that creates, restores, protects, develops, or sustains conditions necessary for life and continuation;
+- Nogress = necessary life-sustaining movement has stopped;
+- Digress = movement away from continued viability.
+
+Those definitions are durable **owner-approved current canon**.
+
+They are not yet proven as early archived wording.
+
+Community use:
+- retain them as a later analytic lens if useful;
+- do not allow the terms to crowd out the older bank, fork, choice, and manipulation teaching devices.
+
+---
+
+# 13. Community preservation audit
+
+| Durable element | Current preservation | Finding |
+| --- | --- | --- |
+| Love / Fear directional contrast | STRONG | Central idea survived. |
+| Sustain/preserve life versus degrading direction | MODERATE | Survives indirectly through viability language; original concrete formulation is diluted. |
+| Decision fork / discernment | WEAK | Current page begins closer to reinforcement than to discernment. |
+| Energy-as-effort bank / deposit-withdrawal metaphor | MISSING | Strong original teaching device absent. |
+| Individual choice / "I can only control myself" boundary | MODERATE | Current "Adherence is agency" carries it, but provenance is later paraphrase. |
+| Five-part manipulation recognition model | WEAK / DELEGATED | Correctly mostly belongs in R.O.B.; Community still needs the recognition function. |
+| Fear disguised as love owner line | STRONG | Preserved as owner-authored current canon. |
+| Progress / Nogress / Digress | STRONG CURRENT CANON | Later formalization, not proven early archive language. |
+| Interpersonal influence / reinforcement | STRONG | Useful current abstraction and consistent with social-science mechanisms. |
+| "Repeated energy becomes culture" | STRONG CURRENT COPY | Memorable compression; must not replace the underlying mechanism. |
+| Clear philosophy-vs-science boundary | MISSING | Needed in deeper learning. |
+
+---
+
+# 14. CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2 — Community slice
+
+## OBJECT
+
+`COMMUNITY`
+
+## OBJECT OWNERSHIP
+
+`interpersonal influence / discernment / reinforcement / Love-Fear / culture`
+
+Primary question:
+
+**What enters a relationship, what does it do there, and what do people choose to reinforce?**
+
+This is distinct from Underdog:
+
+- Underdog asks whether visible state tells the whole developmental story.
+- Community asks what happens **between people** and how repeated relational patterns become group conditions.
+
+---
+
+## ORBIT HOOK
+
+Function:
+- establish relational consequence;
+- make the user notice that presence and behavior alter the shared environment;
+- do not explain the complete Love/Fear system yet.
+
+Source concepts:
+- effort has consequence;
+- choices affect self and others;
+- what enters a relationship can add or remove capacity.
+
+Do not use here:
+- the full Progress/Nogress/Digress taxonomy;
+- manipulation's five steps;
+- social-norm research;
+- multiple memorable quotes.
+
+The hook should open the relational question, not solve it.
+
+---
+
+## FRONT ARGUMENT — interpersonal energy / reinforcement
+
+Function:
+- move from individual presence to interaction;
+- establish that communities are built through repeated encounters, not only stated beliefs.
+
+Source-forward content responsibilities:
+
+1. **Interaction has direction.**
+   - Choices can support, restore, clarify, protect, burden, confuse, manipulate, or degrade.
+
+2. **Use the effort-bank mechanism.**
+   - The original metaphor treats effort as the currency.
+   - The useful question is whether an interaction makes a deposit into shared capacity or creates a withdrawal.
+
+3. **Influence is real without being mystical.**
+   - Emotion, behavior, expectations, and norms can influence other people.
+   - "Energy" may remain the owner's umbrella metaphor, but the front should not masquerade metaphor as physics.
+
+4. **Community is repeated relationship.**
+   - What people normalize, reward, punish, imitate, excuse, or reinforce contributes to group patterns.
+
+Potential current thesis territory:
+`Community changes what an individual must carry alone.`
+
+Ownership rule:
+- if retained, use it once in Community.
+- do not repeat it in hero and closing.
+
+---
+
+## BACK REVEAL — Love / Fear as directional discernment
+
+Function:
+- reveal the owner's underlying decision lens;
+- explain why merely feeling "positive" is not the test.
+
+Required source structure:
+
+### 1. Love / Fear
+
+Present as:
+**the owner's philosophical directional model**
+
+not:
+**a scientific binary classification of emotion or physical energy**.
+
+Older source anchor:
+- Love -> what sustains/preserves life.
+- Fear -> what the owner associates with degradation, selfishness, deceit, manipulation, or destructive direction.
+
+### 2. Recognition problem
+
+Use the owner-authored line as the memorable reveal:
+
+`Fear can be disguised as love, but love can never be disguised as fear.`
+
+Its function is not to produce a simplistic emotion test.
+
+Its function is:
+- appearances can mislead;
+- stated affection or benevolent intent does not settle the direction of an action;
+- consequences, honesty, coercion, and manipulation still require discernment.
+
+### 3. Manipulation boundary
+
+The five historical manipulation moves may be referenced as source lineage:
+
+`DECEIT -> DEFY REALITY -> DISTRACT -> DIVIDE -> DESTROY`
+
+But detailed coercive-affection/manipulation treatment belongs to R.O.B.
+
+Community owns:
+**recognize the problem**
+
+R.O.B. owns:
+**deep treatment of the harmful mechanism**
+
+### 4. Later Progress / Nogress / Digress lens
+
+The later owner-approved model may then formalize direction:
+
+`LOVE -> PROGRESS -> LIFE / CONTINUATION`
+
+`FEAR -> NOGRESS OR DIGRESS -> STALLED / REDUCED VIABILITY`
+
+Internal editorial disclosure:
+- this is later conceptual formalization;
+- it should not be attributed as a verbatim early-archive phrase.
+
+### 5. Agency
+
+Ground agency in the older source idea:
+
+`I can only control myself. I choose Love.`
+
+The Community conclusion is therefore not:
+"control the energy around you."
+
+It is:
+**notice influence, discern direction, choose what you reinforce.**
+
+---
+
+## OPTIONAL DEEPER LINK
+
+Recommended function:
+
+`Learn how reinforcement becomes culture`
+
+This deeper-learning layer should do for Community what `Learn about Bamboo` does for Underdog: replace abstraction with mechanism.
+
+Required sequence:
+
+### A. Emotional influence
+Explain, in bounded form, that research on emotional contagion finds that people can partially converge affectively through social interaction, observation, expression, mimicry, and related processes.
+
+### B. Social norms
+Explain that groups develop shared expectations about behavior; norms can influence behavior through learning, internalization, reputation, coordination, rewards, sanctions, and informal enforcement.
+
+### C. Repetition and transmission
+Explain that norms can spread and persist through social networks, repeated interaction, institutions, and cultural transmission.
+
+### D. Prosocial and harmful directions
+Make explicit that group reinforcement is not automatically good. Communities can reinforce cooperation, care, accountability, exclusion, avoidance, aggression, or other patterns.
+
+### E. Return to Consider the Energy
+Translate the research back into the owner's question:
+- What am I adding?
+- What am I rewarding?
+- What am I normalizing?
+- What am I choosing to carry forward?
+
+### F. Where the analogy stops
+State explicitly:
+- psychology does not reduce all emotion to Love and Fear;
+- "energy" in this context is not a demonstrated physical interpersonal substance;
+- culture is not caused by one interaction or one emotional state;
+- people are influenced by groups but retain varying degrees of agency;
+- norms can be contested, changed, resisted, or misperceived.
+
+This boundary makes the philosophy more credible, not less.
+
+---
+
+# 15. Community redundancy reservation
+
+Reserve these territories now:
+
+| Thesis / memorable device | Provisional owner |
+| --- | --- |
+| Visible state is not total developmental state | Underdog |
+| Bamboo / rhizome hidden-development reveal | Underdog |
+| Patience without complacency | Underdog only |
+| Interpersonal consequence / what we add to one another | Community front |
+| Effort bank / deposits and withdrawals | Community |
+| Love / Fear directional lens | Community back |
+| Fear disguised as love | Community back, once |
+| Five manipulation moves | R.O.B. deep treatment; Community recognition only |
+| Progress / Nogress / Digress | Community analytic layer |
+| Repeated reinforcement becoming culture | Community, one final location |
+| Identity becoming expression | Brand |
+| Philosophy becoming public action | Connected Work |
+
+Important correction to the 2026 preconstruction freeze:
+
+`The challenge is to be patient without becoming complacent.`
+
+was previously authorized in both Underdog and Community contexts.
+
+For the forthcoming full redundancy pass, reserve the **memorable line itself to Underdog**. Community may preserve the conceptual distinction between hidden Progress and true Nogress without repeating the quote.
+
+This is exactly the kind of duplication the source-canon-first process is intended to remove.
+
+---
+
+# 16. Community research boundary and external grounding
+
+External research is used here only to test the narrower interpersonal mechanism behind the later Community abstraction.
+
+1. **Emotional contagion review — Frontiers in Psychology / PMC**  
+   https://pmc.ncbi.nlm.nih.gov/articles/PMC8322226/  
+   Supports the narrower proposition that affect can influence and partially align across social interactions through multiple mechanisms.
+
+2. **Scoping review of human emotional contagion research — PMC**  
+   https://pmc.ncbi.nlm.nih.gov/articles/PMC12164912/  
+   Reviews 277 human-subject articles and describes emotional contagion in terms of mimicry, synchronization, and emotional alignment while also noting methodological limitations.
+
+3. **The Power and Pitfalls of Social Norms — Annual Review of Psychology (2025)**  
+   https://www.annualreviews.org/content/journals/10.1146/annurev-psych-020124-120310  
+   Supports the proposition that socially shared norms can influence behavior through internalization and formal/informal enforcement, while also documenting limits and adverse effects.
+
+4. **Norm Dynamics — Annual Review of Psychology (2024)**  
+   https://www.annualreviews.org/content/journals/10.1146/annurev-psych-033020-013319  
+   Reviews how norms emerge, spread through networks and transmission, persist, change, and erode.
+
+5. **Beyond Altruism — Annual Review of Sociology**  
+   https://www.annualreviews.org/content/journals/10.1146/annurev-soc-073014-112242  
+   Reviews how norms, reputation systems, and social networks influence cooperation and prosocial behavior.
+
+Research disposition:
+
+`INTERPERSONAL_INFLUENCE_AND_NORM_REINFORCEMENT = EMPIRICALLY GROUNDED`
+
+`LOVE_FEAR_AS_COMPLETE_SCIENTIFIC_TAXONOMY = NOT CLAIMED`
+
+`INTERPERSONAL_ENERGY_AS_LITERAL_PHYSICAL_SUBSTANCE = NOT CLAIMED`
+
+`OWNER_PHILOSOPHICAL_MODEL = PRESERVED_AS_PHILOSOPHY`
+
+---
+
+# 17. Web research sources for Bamboo
 
 Primary factual sources used for this audit:
 
@@ -475,18 +1002,20 @@ Primary factual sources used for this audit:
 
 ---
 
-# 12. Durable next sequence
+# 18. Durable next sequence
 
-This packet establishes the Bamboo / Underdog head start.
+This packet now establishes two completed audit-and-crosswalk slices:
+
+- Bamboo / Underdog
+- Community
 
 The next source-canon work should proceed in this order:
 
-1. Brand source-canon audit
-2. Community source-canon audit
-3. Connected Work source-canon audit
-4. Complete four-object Crosswalk v2
-5. Full redundancy ownership pass
-6. Source-forward card rewrite
+1. Brand source-canon audit + crosswalk
+2. Connected Work source-canon audit + crosswalk
+3. Complete four-object Crosswalk v2
+4. Full redundancy ownership pass
+5. Source-forward card rewrite
 
 No general page audit is required before those steps.
 
@@ -494,8 +1023,12 @@ No general page audit is required before those steps.
 
 ## Packet disposition
 
-`CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1`: **PARTIAL / BAMBOO SLICE DURABLE**  
-`CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2`: **PARTIAL / UNDERDOG SLICE DURABLE**  
+`CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1`: **PARTIAL / BAMBOO + COMMUNITY SLICES DURABLE**  
+`CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2`: **PARTIAL / UNDERDOG + COMMUNITY SLICES DURABLE**  
 Bamboo factual audit: **COMPLETE FOR CURRENT EDITORIAL PURPOSE**  
-Instagram/video phrase-level recovery: **OPEN — SOURCE POINTER RECOVERED, TRANSCRIPT NOT RECOVERED**  
+Community source audit: **COMPLETE FOR CURRENT EDITORIAL PURPOSE**  
+Community crosswalk: **COMPLETE FOR CURRENT EDITORIAL PURPOSE**  
+Instagram/video phrase-level recovery: **OPEN — SOURCE POINTER AND 2026 RECOVERY RECORD EXIST; ORIGINAL TRANSCRIPT NOT DURABLY RECOVERED**  
+Brand source audit: **NEXT**  
+Connected Work source audit: **PENDING AFTER BRAND**  
 Card rewrite authority: **NOT YET GRANTED BY THIS PACKET**

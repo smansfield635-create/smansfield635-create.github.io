@@ -1,0 +1,82 @@
+{
+  "schema": "L2_CONTROL_PLANE_PRINCIPAL_REGISTRY_v1",
+  "registryId": "L2_CONTROL_PLANE_PRINCIPAL_REGISTRY_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_FAIL_CLOSED_WHEN_REFERENCED",
+  "defaultDecision": "DENY",
+  "purpose": "Bind known L2 control-plane principals to externally authenticated identity evidence and fixed registry roles without creating repository, merge, product, Laws, deployment, or generic command authority.",
+  "identityBoundary": {
+    "authenticationPerformedHere": false,
+    "externalIdentityEvidenceRequired": true,
+    "roleClaimsFromRequestAreNotAuthoritative": true,
+    "registryRolesAreAuthoritativeForThisGate": true,
+    "unknownPrincipalFailsClosed": true,
+    "disabledPrincipalFailsClosed": true,
+    "identityEvidenceMismatchFailsClosed": true
+  },
+  "principals": [
+    {
+      "principalId": "human:github:smansfield635-create",
+      "principalType": "HUMAN_GITHUB_ACTOR",
+      "enabled": true,
+      "tenantId": "IMI_CONTROL_PLANE_PLATFORM",
+      "projectIds": ["IMI_CONTROL_PLANE_PLATFORM"],
+      "roles": ["L2_PLATFORM_ORIGINATOR"],
+      "binding": {
+        "githubLogin": "smansfield635-create",
+        "repository": "smansfield635-create/smansfield635-create.github.io"
+      }
+    },
+    {
+      "principalId": "execution:l2-platform-strike-constructor",
+      "principalType": "BOUNDED_EXECUTION_ROLE",
+      "enabled": true,
+      "tenantId": "IMI_CONTROL_PLANE_PLATFORM",
+      "projectIds": ["IMI_CONTROL_PLANE_PLATFORM"],
+      "roles": ["L2_STRIKE_CONSTRUCTOR"],
+      "binding": {
+        "executionHolder": "L2_CONTROL_PLANE_PLATFORM_STRIKE_CONSTRUCTOR",
+        "repository": "smansfield635-create/smansfield635-create.github.io"
+      }
+    },
+    {
+      "principalId": "execution:l2-platform-strike-fresh-verifier",
+      "principalType": "BOUNDED_EXECUTION_ROLE",
+      "enabled": true,
+      "tenantId": "IMI_CONTROL_PLANE_PLATFORM",
+      "projectIds": ["IMI_CONTROL_PLANE_PLATFORM"],
+      "roles": ["L2_STRIKE_FRESH_VERIFIER"],
+      "binding": {
+        "executionHolder": "L2_CONTROL_PLANE_PLATFORM_STRIKE_FRESH_VERIFIER",
+        "repository": "smansfield635-create/smansfield635-create.github.io"
+      }
+    },
+    {
+      "principalId": "service:github-actions:l2-platform-control-plane",
+      "principalType": "OIDC_SERVICE_PRINCIPAL",
+      "enabled": true,
+      "tenantId": "IMI_CONTROL_PLANE_PLATFORM",
+      "projectIds": ["IMI_CONTROL_PLANE_PLATFORM"],
+      "roles": ["L2_PLATFORM_AUTOMATION"],
+      "binding": {
+        "oidcIssuer": "https://token.actions.githubusercontent.com",
+        "repository": "smansfield635-create/smansfield635-create.github.io",
+        "workflow": ".github/workflows/platform-control-plane-strike-v1.yml"
+      }
+    }
+  ],
+  "authorityBoundary": {
+    "authorityCreated": false,
+    "authenticationAuthorityCreated": false,
+    "repositoryMutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "repositorySettingsAuthorityCreated": false,
+    "branchProtectionAuthorityCreated": false,
+    "rulesetActivationAuthorityCreated": false,
+    "externalRepositoryWriteAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "genericCommandAuthorityCreated": false
+  }
+}

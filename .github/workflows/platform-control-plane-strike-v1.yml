@@ -1,0 +1,49 @@
+name: L2 Platform Control Plane
+
+on:
+  push:
+    branches:
+      - instrumentation/l2-control-plane-platform-deficit-strike-v1-001
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare evidence directory
+        run: mkdir -p artifacts/platform-control-plane-strike
+      - name: Identity RBAC adversarial self-test
+        run: node .github/ai-router/platform-control-plane/identity/authorization-self-test.v1.mjs --output artifacts/platform-control-plane-strike/identity-rbac-receipt.json
+      - name: Federation adversarial self-test
+        run: node .github/ai-router/platform-control-plane/federation/federation-self-test.v1.mjs --output artifacts/platform-control-plane-strike/federation-verification-receipt.json
+      - name: Observability adversarial self-test
+        run: node .github/ai-router/platform-control-plane/observability/observability-self-test.v1.mjs --output artifacts/platform-control-plane-strike/observability-state-receipt.json
+      - name: Enforcement shadow adversarial self-test
+        run: node .github/ai-router/platform-control-plane/enforcement/enforcement-self-test.v1.mjs --output artifacts/platform-control-plane-strike/enforcement-shadow-receipt.json
+      - name: Integrated exact-head adversarial certification
+        run: node .github/ai-router/platform-control-plane/platform-control-plane-self-test.v1.mjs --root . --expected-head "$(git rev-parse HEAD)" --output artifacts/platform-control-plane-strike/final-certification.json
+      - name: Verify no tracked repository mutation from tests
+        run: git diff --exit-code
+      - name: Upload bounded evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: l2-platform-control-plane-strike-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/platform-control-plane-strike/
+          if-no-files-found: error
+          retention-days: 90

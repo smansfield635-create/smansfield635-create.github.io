@@ -199,3 +199,22 @@ Verifier note:
 An initial token-level analytics scan produced a false positive because it matched the non-executable word `analytics` in a comment and the substring `segment` inside `latSegments`. The failed assertion was localized before retry. A behavior/API-specific second pass found no analytics API, telemetry transport, or external I/O. Candidate bytes were not changed between probes.
 
 The candidate is now exact-diff verified and may proceed to physical/perceptual review under the frozen KEEP / REVISE disposition law.
+
+## 11. Owner physical/perceptual disposition
+Checkpoint: `CANDIDATE_PERCEPTUAL_ACCEPTANCE`
+Disposition: `KEEP`
+
+Exact accepted candidate:
+- branch: `rob-zionts-bounded-cinematic-sep17`
+- commit: `189030df1da9f15b2a4ab11f48306c543570e743`
+- HTML blob: `64fbdc7cc6c9932e104651ebde500b18f1bc7599`
+- cinematic JS blob: `5b9a4fe75ac2fff5fb8cd3842f9c3f4ea4bf4e72`
+
+KEEP effect under `EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1`:
+- candidate is frozen;
+- further candidate mutation is not allowed;
+- no repair remains pending;
+- KEEP itself creates no merge, deployment, or publication authority;
+- next lifecycle boundary is normal terminal closure followed by separate adoption/release authority.
+
+No candidate bytes were changed by recording this disposition.

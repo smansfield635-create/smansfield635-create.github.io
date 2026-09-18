@@ -300,6 +300,14 @@
       "ownedExactPaths": ["build/index.html"],
       "entrypoint": ".github/ai-router/projects/build/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "ON_YOUR_SIDE_AAI",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["products/on-your-side-ai/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/on-your-side-aai/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

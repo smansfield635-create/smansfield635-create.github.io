@@ -160,3 +160,42 @@ Display-continuity intake result: `RESOLVED_NO_MATERIAL_UNKNOWN`.
 - all 14 route-display-contract questions are resolved;
 - no fail-closed display-continuity condition is currently triggered;
 - construction remains bounded to the previously frozen implementation boundary and acceptance law.
+
+## 10. Exact-diff verification — bounded page release
+Candidate branch: `rob-zionts-bounded-cinematic-sep17`
+Candidate head: `189030df1da9f15b2a4ab11f48306c543570e743`
+Exact base: `947d24b72c8a0ae086356705e985883a1e805afa`
+Verification result: `PASS_CLOSED`
+
+Changed paths:
+- `campaigns/rob/index.html`
+- `campaigns/rob/rob-zionts-cinematic.js`
+
+Bounded-page-release proof set:
+- `EXACT_HEAD` — PASS
+- `DECLARED_PATHS_ONLY` — PASS
+- `NO_NAVIGATION_DELTA` — PASS
+- `NO_APPLICATION_STATE_AUTHORITY_DELTA` — PASS
+- `NO_SHARED_DOM_AUTHORITY_DELTA` — PASS
+- `NO_ANALYTICS_DELTA` — PASS
+- `IDEMPOTENT_PRESENTATION_RESTORATION` — PASS
+- `NO_UNRELATED_DIFF` — PASS
+
+Additional boundedness checks:
+- `NON_INTERACTIVE_PRESENTATION_ONLY` — PASS
+- `NO_EXTERNAL_IO` — PASS
+
+Exact candidate blobs:
+- `campaigns/rob/index.html` → `64fbdc7cc6c9932e104651ebde500b18f1bc7599`
+- `campaigns/rob/rob-zionts-cinematic.js` → `5b9a4fe75ac2fff5fb8cd3842f9c3f4ea4bf4e72`
+
+Protected-source continuity:
+- canonical R.O.B. shirt source unchanged;
+- shared campaign tabs runtime unchanged;
+- shared campaign orbit runtime unchanged;
+- canonical ZIONTS source paths unchanged.
+
+Verifier note:
+An initial token-level analytics scan produced a false positive because it matched the non-executable word `analytics` in a comment and the substring `segment` inside `latSegments`. The failed assertion was localized before retry. A behavior/API-specific second pass found no analytics API, telemetry transport, or external I/O. Candidate bytes were not changed between probes.
+
+The candidate is now exact-diff verified and may proceed to physical/perceptual review under the frozen KEEP / REVISE disposition law.

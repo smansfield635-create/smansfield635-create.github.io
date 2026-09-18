@@ -1,0 +1,49 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "fd05",
+  "description": "H-Earth FD_05 diagnostic exact-head publication verification. Static checks bind the diagnostic route identity and the mobile command-crown responsive repair; runtime verification confirms the existing diagnostic surface boots without changing diagnostic authority or execution semantics.",
+  "checks": [
+    {
+      "path": "/showroom/globe/h-earth/diagnostic/index.html",
+      "includes": [
+        "<title>H-Earth FD_05 Diagnostic Authority</title>",
+        "id=\"h-earth-fd05-diagnostic\"",
+        "class=\"command-crown\"",
+        "H-EARTH · FD_05",
+        "Diagnostic Authority",
+        "Return to H-Earth",
+        "Return to Estate Laboratory",
+        "Return to Orbit",
+        "./index.css?v=fd05-chamber-ui-20260718a"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/showroom/globe/h-earth/diagnostic/index.css",
+      "includes": [
+        "@media (max-width: 41.999rem)",
+        ".command-crown__identity",
+        "overflow-wrap: normal;",
+        "word-break: normal;",
+        ".command-crown__routes",
+        "flex-direction: column;",
+        "width: 100%;",
+        "justify-content: center;"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/h-earth/diagnostic/",
+    "timeoutMs": 15000,
+    "readySelector": "#h-earth-fd05-diagnostic",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/h-earth/diagnostic/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": []
+  }
+}

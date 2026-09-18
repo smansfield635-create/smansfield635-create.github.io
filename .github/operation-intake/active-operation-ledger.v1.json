@@ -10537,6 +10537,49 @@
       "scopeHash": "dab711e3395bfbc090e661ed69bb00b95137f1417bdf7fa164b34aad45390ea6",
       "state": "ADMITTED_LOCKED"
     },
+    "db796b6e90066fd6f6ace40bdd9eadbd71c20846cb889f1fddbd0e48355b91e2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
+          "lockGeneration": 2362,
+          "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:SOURCE_FORWARD_FOUR_CARD_REWRITE:V1",
+          "operationId": "CONSIDER_THE_ENERGY_SOURCE_FORWARD_FOUR_CARD_REWRITE_20260917_001",
+          "procedureLocatorDigest": "e339c76bc6a3fa42d9d8c1a98230db990a1145bbbbe56ab02694516f7226c8d0",
+          "requestDigest": "e20750f1118a14521ce0497923e31e5df53a15138ee752020ebd05806fcb1ef3",
+          "scopeHash": "db796b6e90066fd6f6ace40bdd9eadbd71c20846cb889f1fddbd0e48355b91e2"
+        },
+        "bindingDigest": "9a24a5faf45486758327d26dd6d85a70abe5130d0e35e88f976d6dc1fec8aec6",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b83bf791acd9c0879cda2f3bb45d1d63e01aa65d695ef0c1517bc4a31088061e",
+          "commentId": 5723132142,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3688,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35291266341,
+          "workflowSha": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be"
+        },
+        "lineageAnchorCommitSha": "2c8b19b1f6c08ec2d865de9ea518022eb54ce112",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
+      "lockGeneration": 2362,
+      "lockScope": "PUBLIC_CAMPAIGNS:CONSIDER_THE_ENERGY:SOURCE_FORWARD_FOUR_CARD_REWRITE:V1",
+      "operationId": "CONSIDER_THE_ENERGY_SOURCE_FORWARD_FOUR_CARD_REWRITE_20260917_001",
+      "procedureLocatorDigest": "e339c76bc6a3fa42d9d8c1a98230db990a1145bbbbe56ab02694516f7226c8d0",
+      "released": false,
+      "requestDigest": "e20750f1118a14521ce0497923e31e5df53a15138ee752020ebd05806fcb1ef3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "db796b6e90066fd6f6ace40bdd9eadbd71c20846cb889f1fddbd0e48355b91e2",
+      "state": "ADMITTED_LOCKED"
+    },
     "dba5223c9bb83585b89475b37864dded65890a1172f4b52ef5e6737ebe3f55bb": {
       "governingHead": "ef83a4c5a687eabf5f28ce56a33472c94d660a5c",
       "lockGeneration": 1710,
@@ -12340,7 +12383,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2361,
+  "lockGeneration": 2362,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

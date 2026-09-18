@@ -286,6 +286,14 @@
       "priority": 100
     },
     {
+      "projectId": "ROB",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["campaigns/rob/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/rob/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
       "projectId": "BUILD",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": [],

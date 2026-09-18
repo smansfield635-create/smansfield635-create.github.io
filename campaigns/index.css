@@ -86,3 +86,154 @@ a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visi
 @media(max-width:900px){.campaign-media-grid{grid-template-columns:1fr}.campaign-topbar{align-items:flex-start;flex-direction:column}.campaign-nav{justify-content:flex-start}.campaign-hero{grid-template-columns:1fr}.campaign-hero__media{min-height:22rem;border-top:1px solid var(--campaign-line);border-left:0}.campaign-route-grid,.campaign-grid--three{grid-template-columns:1fr}.campaign-grid{grid-template-columns:1fr}.campaign-tablist{grid-template-columns:repeat(4,minmax(8rem,1fr))}.campaign-native-visual{width:min(100%,31rem)}}
 @media(max-width:560px){.campaign-shell{width:min(100% - 14px,var(--campaign-max))}.campaign-hero h1{max-width:100%;font-size:clamp(2.45rem,13vw,4.4rem)}.campaign-hero__copy{padding:1.1rem}.campaign-hero__media{min-height:19rem;padding:.65rem}.campaign-tabs{padding:.6rem}.campaign-tab-panel{padding:.9rem}.campaign-tablist button{font-size:.66rem}.campaign-nav a{flex:1 1 auto;justify-content:center}.campaign-native-visual{min-height:23rem}.campaign-native-visual--baseline{min-height:17rem}.campaign-wave-copy{top:7%}.campaign-wave-figures{height:35%}.campaign-profile-stats{grid-template-columns:1fr}.campaign-profile-stats>span{grid-template-columns:auto 1fr;align-items:center}.campaign-training-orbit--two{right:-.25rem}.campaign-training-orbit--four{left:-.25rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* R.O.B. cosmic public-story refinement — page scoped. */
+html[data-page="rob"] body{
+  background:
+    radial-gradient(circle at 72% 11%,rgba(255,123,66,.16),transparent 25rem),
+    radial-gradient(circle at 14% 38%,rgba(75,112,255,.12),transparent 32rem),
+    radial-gradient(circle at 78% 72%,rgba(243,200,111,.08),transparent 30rem),
+    linear-gradient(180deg,#070b14 0%,#02050d 54%,#010207 100%);
+}
+html[data-page="rob"] .campaign-main{gap:clamp(1.25rem,4vw,2.6rem)}
+html[data-page="rob"] .campaign-hero{
+  position:relative;
+  overflow:visible;
+  min-height:34rem;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
+}
+html[data-page="rob"] .campaign-hero::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:3% -4% 1%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 69% 37%,rgba(255,103,52,.16),transparent 30%),
+    radial-gradient(circle at 48% 62%,rgba(86,119,255,.1),transparent 38%);
+  filter:blur(12px);
+}
+html[data-page="rob"] .campaign-hero__copy{padding-left:clamp(.25rem,3vw,2rem)}
+html[data-page="rob"] .campaign-hero__media{
+  position:relative;
+  overflow:visible;
+  min-height:34rem;
+  padding:0;
+  border:0;
+  background:transparent;
+  isolation:isolate;
+}
+html[data-page="rob"] .rob-shirt-object{position:absolute;display:grid;place-items:center}
+html[data-page="rob"] .rob-shirt-object img{display:block;width:100%;height:auto;max-height:none;object-fit:contain}
+html[data-page="rob"] .rob-shirt-object--primary{z-index:2;inset:3% 24% 1% -2%}
+html[data-page="rob"] .rob-shirt-object--primary img{filter:drop-shadow(0 2rem 2.6rem rgba(0,0,0,.52)) drop-shadow(0 0 2.1rem rgba(255,113,60,.12))}
+html[data-page="rob"] .rob-shirt-object--manipulation{
+  z-index:3;
+  width:min(48%,16.5rem);
+  right:-1%;
+  bottom:1%;
+  gap:.45rem;
+  transform:rotate(2.2deg);
+}
+html[data-page="rob"] .rob-shirt-object--manipulation img{filter:drop-shadow(0 1.5rem 2rem rgba(0,0,0,.58))}
+html[data-page="rob"] .rob-shirt-object__label{
+  justify-self:end;
+  max-width:15rem;
+  padding:.4rem .6rem;
+  border:1px solid rgba(255,123,66,.24);
+  border-radius:999px;
+  color:rgba(255,245,220,.78);
+  background:rgba(2,5,13,.72);
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  backdrop-filter:blur(8px);
+}
+html[data-page="rob"] .community-orbit{
+  overflow:visible;
+  border:0;
+  border-radius:0;
+  padding:clamp(.3rem,2vw,.9rem) 0;
+  background:transparent;
+  box-shadow:none;
+  backdrop-filter:none;
+}
+html[data-page="rob"] .community-orbit-stage::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:5% -10% 4%;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at center,rgba(255,113,60,.1),transparent 42%),
+    radial-gradient(ellipse at 30% 58%,rgba(90,120,255,.08),transparent 48%);
+  filter:blur(18px);
+}
+html[data-page="rob"] .community-orbit-ring{
+  border-color:rgba(255,123,66,.2);
+  box-shadow:0 0 6rem rgba(255,91,45,.1),inset 0 0 4rem rgba(255,255,255,.02);
+}
+html[data-page="rob"] .community-orbit-status{
+  border-color:rgba(255,255,255,.06);
+  background:rgba(2,7,15,.26);
+  backdrop-filter:blur(6px);
+}
+html[data-page="rob"] .rob-face-copy,
+html[data-page="rob"] .rob-face-back{display:grid;gap:.8rem}
+html[data-page="rob"] .rob-pattern-line{
+  color:var(--campaign-accent);
+  font-size:clamp(1rem,2.1vw,1.2rem);
+  font-weight:900;
+  letter-spacing:.015em;
+}
+html[data-page="rob"] .community-reader-face>.rob-face-back{align-content:start}
+html[data-page="rob"] .rob-closing{
+  position:relative;
+  overflow:visible;
+  justify-items:center;
+  padding:clamp(2.8rem,7vw,5.8rem) clamp(1rem,5vw,4rem);
+  border:0;
+  border-radius:0;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(255,112,55,.14),transparent 38%),
+    transparent;
+  box-shadow:none;
+  text-align:center;
+  backdrop-filter:none;
+}
+html[data-page="rob"] .rob-closing h2{
+  max-width:18ch;
+  font-size:clamp(2.2rem,6vw,4.6rem);
+  line-height:.94;
+  letter-spacing:-.055em;
+}
+html[data-page="rob"] .rob-closing>p{max-width:52rem;font-size:clamp(1rem,2.1vw,1.2rem)}
+html[data-page="rob"] .rob-closing__line{
+  margin-top:.45rem;
+  color:var(--campaign-accent);
+  font-size:clamp(1.15rem,2.8vw,1.65rem)!important;
+  font-weight:900;
+}
+html[data-page="rob"] .campaign-route-panel{background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,.012)),rgba(3,8,18,.62)}
+@media(max-width:900px){
+  html[data-page="rob"] .campaign-hero{min-height:auto}
+  html[data-page="rob"] .campaign-hero__copy{padding:1rem .35rem .3rem}
+  html[data-page="rob"] .campaign-hero__media{min-height:35rem}
+  html[data-page="rob"] .rob-shirt-object--primary{inset:2% 25% 4% -3%}
+  html[data-page="rob"] .rob-shirt-object--manipulation{right:1%;bottom:0;width:min(47%,15rem)}
+}
+@media(max-width:560px){
+  html[data-page="rob"] .campaign-main{gap:1.4rem}
+  html[data-page="rob"] .campaign-hero__media{min-height:31rem}
+  html[data-page="rob"] .rob-shirt-object--primary{inset:0 22% 7% -6%}
+  html[data-page="rob"] .rob-shirt-object--manipulation{width:48%;right:-1%;bottom:2%}
+  html[data-page="rob"] .rob-shirt-object__label{font-size:.54rem}
+  html[data-page="rob"] .community-orbit{padding:.1rem 0}
+  html[data-page="rob"] .rob-closing{padding:2.7rem .75rem}
+}

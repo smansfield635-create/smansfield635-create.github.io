@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "READER_REPAIR_ROB_PUBLICATION_FAST_PREFLIGHT_ad5100461587_20260918_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3745,
+  "requestBranch": "ai-dispatch-request-reader-repair-rob-preflight-20260918-001",
+  "requestCommit": "217cd7d56d209b047798ba16f9eabb228d859b7b",
+  "requestCommitParent": "ad5100461587643f5bde516b4be3a27a98ad1a5e",
+  "currentMainSha": "ad5100461587643f5bde516b4be3a27a98ad1a5e",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ad5100461587643f5bde516b4be3a27a98ad1a5e",
+    "surface_id": "rob"
+  },
+  "bridgeRunId": "35377384590",
+  "dispatchedRunId": 35377401016,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35377401016",
+  "dispatchedRunHeadSha": "ad5100461587643f5bde516b4be3a27a98ad1a5e",
+  "dispatchedAt": "2026-09-18T17:57:54.790Z",
+  "resolvedAt": "2026-09-18T17:57:58.865Z"
+}

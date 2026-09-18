@@ -1,7 +1,7 @@
 # CONSIDER THE ENERGY — Source Canon + Card Crosswalk Packet
 
 Status: DURABLE RESEARCH / EDITORIAL CONTROL PACKET  
-Scope: Consider the Energy source-canon recovery, Bamboo + Community audits, Underdog + Community crosswalk head start  
+Scope: Complete four-object Consider the Energy source-canon recovery and Card Crosswalk v2; redundancy ownership frozen; card rewrite not yet begun  
 Mutation class: STATIC_EDITORIAL_MICRO  
 Page/runtime authority effect: NONE  
 Source page under review: `campaigns/consider-the-energy/index.html`  
@@ -12,7 +12,7 @@ This packet deliberately combines two named artifacts in one bounded repository 
 1. `CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1`
 2. `CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2`
 
-It does **not** rewrite the cards. It freezes the source-first method and establishes Bamboo / Underdog plus Community as the first two completed audit-and-crosswalk slices.
+It does **not** rewrite the cards. It freezes the source-first method, completes the four-object source audits and crosswalk, and freezes idea/line ownership before any card rewrite.
 
 ---
 
@@ -978,7 +978,738 @@ Research disposition:
 
 ---
 
-# 17. Web research sources for Bamboo
+# 17. CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1 — Brand slice
+
+## 17.1 Audit question
+
+What is the Consider the Energy brand before the page turns it into a card, a shirt, a campaign, or a Diamond Gate Bridge route?
+
+The older source makes the answer broader than the current page.
+
+In `About Sean.docx`, the owner writes:
+
+> "The brand Consider the Energy is the key to so many walks of life"
+
+and:
+
+> "The secrets of the universe can be found in the energy and natural flow of all things."
+
+The same passage frames Consider the Energy as a life mission, an interpretive tool, and a movement intended to illuminate how people live and choose.
+
+That historical voice is metaphysical and expansive. It should be preserved as **owner philosophy / source identity**, not converted into scientific fact.
+
+The current public object has a narrower job: express that identity in a community-facing form without reducing the brand to merchandise.
+
+---
+
+## 17.2 Source strata
+
+### A. Older owner-authored brand identity
+
+Recovered older source establishes:
+
+- the owner explicitly called Consider the Energy a **brand**;
+- the brand was intended to apply across multiple parts of life;
+- the source voice treats "energy" and "natural flow" as an interpretive framework;
+- the owner describes a mission to guide, illuminate, and build a movement around that framework.
+
+Source status:
+**EXACT OLDER OWNER LANGUAGE / BROAD BRAND IDENTITY**
+
+Current preservation:
+**WEAK TO MODERATE**
+
+Reason:
+the current page successfully presents a public identity, but much of the original voice has been compressed into later community-language abstractions.
+
+### B. Owner-approved 2026 recovery
+
+Issue #3651 freezes Brand as:
+
+`Identity <-> Expression`
+
+and preserves:
+
+`Think outside the cube. Consider the energy.`
+
+as a Brand line.
+
+The audit did not independently locate that exact sentence in the older Drive documents reviewed here.
+
+Therefore its provenance is:
+
+**EXACT OWNER-APPROVED BRAND LINE — 2026 RECOVERY/FREEZE; EARLIER ARCHIVE OCCURRENCE NOT YET LOCATED**
+
+That distinction must remain durable.
+
+### C. Owner-selected public expressions
+
+Issue #3651 and subsequent asset work freeze exactly three approved Brand expressions:
+
+1. `Learn to Love to Listen`
+2. `Learn to Live to Laugh`
+3. `The Higher the Risk / The Higher the Ceiling`
+
+These are not generic merchandising slots. They are selected public expressions of the brand.
+
+Source status:
+**OWNER-SELECTED / CURRENT CANONICAL EXPRESSIONS**
+
+Historical phrase-level provenance of every shirt slogan is not established by this audit unless separately recovered.
+
+### D. Current website presentation
+
+Current Brand copy says that Consider the Energy is a public identity shaped by what people bring into community and that identity becomes expression through repeated choices.
+
+That is a coherent later synthesis.
+
+It is not the full historical source identity.
+
+---
+
+# 18. Durable Brand idea inventory
+
+## BND-CANON-01 — The brand is an interpretive practice before it is merchandise
+
+Older source presents Consider the Energy as a way of reading life, direction, choice, and natural flow.
+
+Current preservation: **WEAK**
+
+The present card begins closer to community behavior and public expression than to the source identity itself.
+
+## BND-CANON-02 — Identity precedes expression
+
+The 2026 relation:
+
+`Identity <-> Expression`
+
+is useful because it prevents the shirts from becoming the definition of the brand.
+
+Brand logic:
+
+`WHAT THE BRAND ASKS / MEANS -> HOW THAT IDENTITY BECOMES VISIBLE`
+
+Current preservation: **STRONG**
+
+## BND-CANON-03 — The public question is "what are you bringing with you?"
+
+The current page's question about what one's presence adds to a space is a later formulation consistent with the older source's emphasis on considering the forces and consequences at play.
+
+Source status:
+**LATER PARAPHRASE CONSISTENT WITH OLDER CANON**
+
+Current preservation: **STRONG**
+
+## BND-CANON-04 — "Think outside the cube" belongs to Brand
+
+The line:
+
+`Think outside the cube. Consider the energy.`
+
+works as a compact identity signal.
+
+It should not be repeated elsewhere.
+
+Ownership:
+**BRAND ONLY**
+
+## BND-CANON-05 — Apparel is expression, not proof or definition
+
+The three shirts make identity public, portable, and discussable.
+
+They do not establish the philosophy, and the philosophy should not be reverse-engineered from the shirts alone.
+
+Current preservation: **STRONG VISUALLY / MODERATE CONCEPTUALLY**
+
+## BND-CANON-06 — The original metaphysical voice requires a boundary
+
+Historical source uses broad language about energy, natural flow, and cosmic forces.
+
+Canonical presentation rule:
+
+- preserve that language as owner-authored philosophy/history where relevant;
+- do not present metaphysical claims as established physics;
+- do not erase the original voice merely to make the page sound technical;
+- do not let technical DGB language replace the brand's human voice.
+
+---
+
+# 19. Brand preservation audit
+
+| Durable element | Current preservation | Finding |
+| --- | --- | --- |
+| CTE as broad interpretive brand/practice | WEAK | Current page is narrower and more community-copy driven. |
+| Owner mission / movement quality | MISSING TO WEAK | Historical ambition is largely absent. |
+| Identity before expression | STRONG | Current architecture gets this right. |
+| `Think outside the cube. Consider the energy.` | STRONG | Preserve once as Brand's memorable line. |
+| Three approved public expressions | STRONG | Correctly grouped, though presentation must not read as a store grid. |
+| Shirt slogans as the definition of CTE | REJECTED | Expressions are downstream of identity. |
+| Metaphysical/scientific boundary | WEAK | Must be explicit in deeper learning/internal canon. |
+| Brand as merely a DGB introduction | REJECTED | Issue #3651 correctly prohibits this. |
+
+---
+
+# 20. CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2 — Brand slice
+
+## OBJECT
+
+`BRAND`
+
+## OBJECT OWNERSHIP
+
+`identity / original voice / public expression`
+
+Primary question:
+
+**What is Consider the Energy, and what does it look like when someone chooses to carry that identity into public life?**
+
+---
+
+## ORBIT HOOK
+
+Function:
+- signal identity;
+- create curiosity;
+- avoid explaining Community's reinforcement theory.
+
+Canonical hook territory:
+
+`CONSIDER THE ENERGY = A WAY OF NOTICING WHAT IS AT PLAY BEFORE CHOOSING WHAT TO ADD`
+
+Do not put:
+- Love/Fear taxonomy;
+- Bamboo;
+- child campaigns;
+- all three shirt explanations;
+- full brand history.
+
+---
+
+## FRONT ARGUMENT — identity
+
+Function:
+- recover the source voice;
+- answer what the brand is before showing merchandise.
+
+Required ideas:
+
+1. Consider the Energy began as a broad interpretive idea, not as a product grid.
+2. It asks the individual to notice what is operating in a situation and consider the direction of their own participation.
+3. The brand is intentionally public-facing but remains distinct from Diamond Gate Bridge as a whole.
+4. Historical metaphysical language may be acknowledged as source voice without being presented as scientific proof.
+
+Memorable line ownership:
+
+`Think outside the cube. Consider the energy.`
+
+Use once.
+
+---
+
+## BACK REVEAL — expression
+
+Function:
+- reveal that identity becomes visible through expression.
+
+Required public expressions:
+
+- `Learn to Love to Listen`
+- `Learn to Live to Laugh`
+- `The Higher the Risk / The Higher the Ceiling`
+
+The back is not:
+"a store."
+
+The back is:
+**three examples of a private orientation becoming public language.**
+
+Do not:
+- add unrelated merchandise;
+- import manipulation imagery;
+- turn shirt captions into miniature Community or Underdog essays;
+- repeat the slogans again in Connected Work.
+
+---
+
+## OPTIONAL DEEPER LINK
+
+Recommended function:
+
+`Why Consider the Energy?`
+
+Required contents:
+
+1. older owner-authored brand language;
+2. source history and movement intent;
+3. distinction between metaphor/philosophy and empirical science;
+4. how identity relates to public expression;
+5. links outward only after the identity is understood.
+
+This is the correct place for historical source voice that is too expansive for the card front.
+
+---
+
+# 21. CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1 — Connected Work slice
+
+## 21.1 Audit question
+
+What is Connected Work supposed to reveal beyond a directory of neighboring projects?
+
+The answer is:
+
+**the philosophy becomes action.**
+
+The source line of development is not:
+
+`CTE -> list of related brands`
+
+It is:
+
+`IDEA / VALUE / DISCERNMENT -> PRACTICE / CONSEQUENCE / PUBLIC ACTION`
+
+That is the function the current object only partially performs.
+
+---
+
+## 21.2 Source strata
+
+### A. Older source: action and service orientation
+
+Older owner-authored material repeatedly moves from interpretation toward conduct:
+
+- decisions have consequences;
+- effort is a form of investment;
+- service to self and service to others are contrasted;
+- the owner's brand mission is framed as guiding and illuminating a path for other people.
+
+These sources establish an **action orientation**, but they do not prove that every current child campaign already existed in the same form.
+
+Source status:
+**OLDER PHILOSOPHICAL ACTION LINEAGE**
+
+### B. Current concrete work
+
+The repository now contains distinct public work with its own identity.
+
+#### R.O.B. — Rise Over Bullying
+
+Current source defines R.O.B. around:
+- visibility;
+- solidarity/support;
+- documentation;
+- due process;
+- communal accountability;
+- ending the isolation and silence that allow bullying patterns to persist.
+
+Its own public line is:
+
+`Rob bullies of their ability to bully.`
+
+R.O.B. explicitly rejects retaliation, revenge, unsupported accusation, mob punishment, and public shaming.
+
+Connected Work may point to this work.
+
+It should not reproduce the entire R.O.B. treatment.
+
+#### W.A.V.E. — Women Against Violence Everywhere
+
+Current source defines W.A.V.E. around:
+- women's safety;
+- practical self-defense;
+- awareness;
+- preparation;
+- confidence;
+- agency;
+- freedom of movement;
+- community support.
+
+Its compact public sequence is:
+
+`Awareness. Preparation. Agency.`
+
+Again, Connected Work may point to this practical expression without swallowing the child campaign.
+
+#### Community Expressions / apparel
+
+The Secret of Life / apparel route frames clothing as a way to make values:
+
+- visible;
+- portable;
+- discussable;
+- present in ordinary public life.
+
+That function is valid as practical expression.
+
+However, older child-page wording that says Consider the Energy "supports" or hierarchically contains Nine Summits conflicts with the later sibling-boundary correction.
+
+Do not inherit that hierarchy into Connected Work.
+
+### C. Owner-approved 2026 architecture
+
+Issue #3651 freezes:
+
+`Values <-> Practice`
+
+and assigns Connected Work:
+
+- R.O.B.
+- W.A.V.E.
+- Community Expressions
+
+It also freezes the relationship law:
+
+`Connected, not contained.`
+
+and distinguishes:
+
+- Philosophy = concepts / understanding
+- Nine Summits = narrative / book / journey
+- Consider the Energy = community / participation / public practice
+
+Source status:
+**OWNER-APPROVED CURRENT ARCHITECTURE / LATER FORMALIZATION**
+
+The phrase `Connected, not contained.` is not treated here as proven early-archive wording.
+
+---
+
+# 22. Durable Connected Work idea inventory
+
+## CW-CANON-01 — Philosophy is incomplete if it never changes practice
+
+Connected Work owns the transition:
+
+`VALUE -> ACTION`
+
+not another explanation of the value itself.
+
+Current preservation: **MODERATE**
+
+The current object gestures toward action but then becomes a project taxonomy.
+
+## CW-CANON-02 — R.O.B. is a communal-accountability application
+
+It embodies a practical answer to harmful relational conditions:
+- increase visibility;
+- support the person;
+- document patterns;
+- use responsible accountability;
+- preserve due process.
+
+Current preservation in Connected Work: **WEAK / LABEL-LEVEL**
+
+The child route carries the depth.
+
+## CW-CANON-03 — W.A.V.E. is an agency/preparation application
+
+It embodies practical preparation and capacity around personal safety.
+
+Current preservation in Connected Work: **WEAK / LABEL-LEVEL**
+
+The child route carries the depth.
+
+## CW-CANON-04 — Public expression can itself be practice
+
+Apparel/campaign expression can make values visible and discussable.
+
+This is valid Connected Work territory only at the level of:
+**participation / carrying the message outward.**
+
+The detailed shirt experience belongs to Brand.
+
+## CW-CANON-05 — Connection does not create hierarchy
+
+The current ecosystem contains related bodies of work that illuminate one another.
+
+They are not required to be parent/child.
+
+`Connected, not contained.`
+
+is therefore a structural correction, not merely a slogan.
+
+Current preservation: **STRONG IN CURRENT CTE PAGE / CONTRADICTED BY SOME OLDER CHILD-PAGE COPY**
+
+## CW-CANON-06 — A directory is not a reveal
+
+Listing three links is not enough.
+
+The back reveal must explain **why these works sit together**:
+
+- one philosophy;
+- multiple consequences;
+- different practical arenas;
+- independent identities.
+
+---
+
+# 23. Connected Work preservation audit
+
+| Durable element | Current preservation | Finding |
+| --- | --- | --- |
+| Values/philosophy becoming action | MODERATE | Present, but underdeveloped. |
+| R.O.B. as concrete communal accountability | WEAK ON CTE / STRONG ON CHILD PAGE | CTE mostly labels it. |
+| W.A.V.E. as concrete safety/agency practice | WEAK ON CTE / STRONG ON CHILD PAGE | CTE mostly labels it. |
+| Public expression as participation | MODERATE | Present but overlaps Brand if not bounded. |
+| Sibling continuity | STRONG | Corrected in current CTE architecture. |
+| `Connected, not contained.` | STRONG CURRENT CANON | Later architecture; use once. |
+| Taxonomy/directory treatment | TOO STRONG | Current presentation risks making this a routing card rather than a conceptual reveal. |
+| Parent-child hierarchy among CTE / Nine Summits / Philosophy | REJECTED | Do not inherit stale child-page wording. |
+
+---
+
+# 24. CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2 — Connected Work slice
+
+## OBJECT
+
+`CONNECTED WORK`
+
+## OBJECT OWNERSHIP
+
+`philosophy becoming action / consequence / participation`
+
+Primary question:
+
+**What changes when the philosophy leaves the page and becomes something people actually do?**
+
+---
+
+## ORBIT HOOK
+
+Function:
+- signal consequence;
+- distinguish thought from practice.
+
+Canonical territory:
+
+`VALUES MATTER WHEN THEY CHANGE ACTION`
+
+Do not use:
+- shirt slogans;
+- Love/Fear taxonomy;
+- Bamboo;
+- child-project detail;
+- sibling taxonomy yet.
+
+---
+
+## FRONT ARGUMENT — practice
+
+Function:
+- show three different ways a value becomes action.
+
+### R.O.B.
+Community accountability against bullying:
+support, visibility, evidence, standards, responsible response.
+
+### W.A.V.E.
+Safety and agency:
+awareness, preparation, capacity, support.
+
+### Community Expressions
+Public participation:
+make the message visible, portable, discussable, and present in ordinary shared space.
+
+Front rule:
+**describe the practical consequence, not the organizational chart.**
+
+Each child should receive only enough text to explain its action function.
+
+---
+
+## BACK REVEAL — connected, not contained
+
+Function:
+- explain why the works relate without collapsing their identities.
+
+Required relationship map:
+
+- Philosophy → concepts / meaning / understanding
+- Nine Summits of Love → narrative / book / journey
+- Consider the Energy → community / participation / practice
+
+Reveal:
+
+`Connected, not contained.`
+
+Meaning:
+- shared lineage does not require subordination;
+- one project may apply or illuminate ideas that another develops differently;
+- the network is relational, not a hierarchy that turns every project into a department of CTE.
+
+Do not use the back merely to show more links.
+
+---
+
+## OPTIONAL DEEPER LINK
+
+Recommended function:
+
+`See the work in practice`
+
+It may route to:
+- R.O.B.
+- W.A.V.E.
+- Community Expressions
+
+with one-sentence action descriptions.
+
+It should not recreate those pages inside CTE.
+
+---
+
+# 25. Four-object Crosswalk v2 — completed functional map
+
+| Object | Core ownership | Orbit hook | Front argument | Back reveal | Optional deeper layer |
+| --- | --- | --- | --- | --- | --- |
+| Brand | Identity / original voice / expression | Notice what is at play | What CTE is and asks | Identity becomes public expression through three selected shirts | Why Consider the Energy? |
+| Underdog | Visible state / hidden development | Surface evidence is incomplete | Human condition: present state is not total identity | Bamboo: hidden system, stored capacity, rapid visible emergence | Learn about Bamboo |
+| Community | Interpersonal influence / discernment / culture | Interactions alter shared conditions | Effort, influence, deposits/withdrawals, reinforcement | Love/Fear directional lens, recognition, agency | Learn how reinforcement becomes culture |
+| Connected Work | Philosophy becoming action | Values matter when practiced | R.O.B., W.A.V.E., public participation as consequences | Shared lineage without hierarchy | See the work in practice |
+
+This completes the required structural crosswalk.
+
+It does not authorize finished copy.
+
+---
+
+# 26. FULL REDUNDANCY OWNERSHIP MAP
+
+This section supersedes provisional duplicate placements in earlier preconstruction freezes where necessary.
+
+## 26.1 Page-level hero
+
+Hero owns only:
+- page identity;
+- one community-facing invitation;
+- the proposition that shared behavior has shared consequence.
+
+Hero does **not** own:
+- Bamboo;
+- Love/Fear explanation;
+- shirt slogans;
+- R.O.B./W.A.V.E. detail;
+- sibling architecture.
+
+Do not make the hero a summary of all four cards.
+
+## 26.2 Brand ownership
+
+Brand exclusively owns:
+
+- `Think outside the cube. Consider the energy.`
+- original brand identity / source voice;
+- `Identity <-> Expression`;
+- detailed presentation of the three approved shirt expressions.
+
+The three shirt slogans should not be fully re-presented in Connected Work.
+
+Connected Work may refer only to `Community Expressions` as a participation path.
+
+## 26.3 Underdog ownership
+
+Underdog exclusively owns:
+
+- visible state versus total developmental state;
+- Bamboo as the natural teaching device;
+- `Fail fast. Fail often. Fail forward.`;
+- `The challenge is to be patient without becoming complacent.`;
+- `What was before does not define what is possible.`
+
+Community may discuss true stagnation/Nogress without repeating the patience line.
+
+Community may discuss support/influence without teaching Bamboo.
+
+## 26.4 Community ownership
+
+Community exclusively owns:
+
+- effort-bank / deposit-withdrawal teaching device;
+- Love/Fear as the owner's directional philosophical lens;
+- `Fear can be disguised as love, but love can never be disguised as fear.`;
+- Progress / Nogress / Digress analytic lens;
+- interpersonal reinforcement;
+- the transition from repeated interaction to culture.
+
+The five manipulation moves may be named only as recognition lineage; R.O.B. owns the deep treatment.
+
+## 26.5 Connected Work ownership
+
+Connected Work exclusively owns:
+
+- philosophy/value becoming practical action;
+- CTE-level introduction to R.O.B. as applied communal accountability;
+- CTE-level introduction to W.A.V.E. as applied safety/agency;
+- CTE-level introduction to Community Expressions as public participation;
+- sibling-continuity map;
+- `Connected, not contained.`
+
+Child campaign details remain on their child routes.
+
+## 26.6 Closing ownership
+
+The closing owns only:
+- a page-level synthesis;
+- one final forward-facing consequence/invitation.
+
+It must not:
+- replay every object's thesis;
+- repeat `Repeated energy becomes culture` if that exact line is already used as Community's reveal;
+- repeat Brand's line;
+- repeat Underdog quotes;
+- reproduce Connected Work's sibling map.
+
+## 26.7 Specific duplicate removals required at rewrite time
+
+1. **Patience line**
+   - keep in Underdog;
+   - remove from Community.
+
+2. **Repeated energy / culture**
+   - choose one location inside Community;
+   - closing must use a different synthesis if this line remains in Community.
+
+3. **Shirt slogans**
+   - detailed treatment in Brand only;
+   - Connected Work gets a single Community Expressions pointer.
+
+4. **Love/Fear**
+   - explanation in Community only;
+   - Brand and Connected Work may inherit its consequences without restating taxonomy.
+
+5. **Bamboo / hidden development**
+   - Underdog only;
+   - Community may mention that lack of visible change alone does not prove stagnation only if necessary for Nogress precision, without retelling the metaphor.
+
+6. **Sibling identities**
+   - Connected Work back only;
+   - do not turn hero or other cards into ecosystem maps.
+
+7. **R.O.B. / W.A.V.E. detail**
+   - CTE Connected Work introduces purpose;
+   - child routes own mechanics, safety boundaries, credentials, and full action detail.
+
+---
+
+# 27. Rewrite gate
+
+The interpretation phase is now sufficiently complete for a bounded rewrite to be planned.
+
+However:
+
+`CARD_REWRITE = NOT EXECUTED IN THIS PACKET`
+
+A future rewrite must:
+
+1. write each object from its frozen source canon forward;
+2. honor the ownership map above;
+3. preserve exact owner lines only in their assigned location;
+4. distinguish historical owner language from later formalization;
+5. avoid converting metaphysical source language into scientific claims;
+6. keep orbit hook, front, back, and deeper layer functionally distinct;
+7. use child routes for depth rather than duplicating them;
+8. treat the hero and closing as page-level framing, not fifth and sixth cards.
+
+# 28. Web research sources for Bamboo
 
 Primary factual sources used for this audit:
 
@@ -1002,20 +1733,24 @@ Primary factual sources used for this audit:
 
 ---
 
-# 18. Durable next sequence
+# 29. Durable next sequence
 
-This packet now establishes two completed audit-and-crosswalk slices:
+This packet now completes the source-canon and crosswalk phase for all four objects:
 
-- Bamboo / Underdog
+- Brand
+- Underdog / Bamboo
 - Community
+- Connected Work
 
-The next source-canon work should proceed in this order:
+It also freezes the full redundancy ownership map.
 
-1. Brand source-canon audit + crosswalk
-2. Connected Work source-canon audit + crosswalk
-3. Complete four-object Crosswalk v2
-4. Full redundancy ownership pass
-5. Source-forward card rewrite
+The next lawful editorial step is:
+
+1. bounded source-forward card rewrite;
+2. exact redundancy verification against the ownership map;
+3. only after the writing is accepted, consider product-page mutation under the then-current repository AI entry point.
+
+No general page audit is required before the rewrite.
 
 No general page audit is required before those steps.
 
@@ -1023,12 +1758,12 @@ No general page audit is required before those steps.
 
 ## Packet disposition
 
-`CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1`: **PARTIAL / BAMBOO + COMMUNITY SLICES DURABLE**  
-`CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2`: **PARTIAL / UNDERDOG + COMMUNITY SLICES DURABLE**  
-Bamboo factual audit: **COMPLETE FOR CURRENT EDITORIAL PURPOSE**  
-Community source audit: **COMPLETE FOR CURRENT EDITORIAL PURPOSE**  
-Community crosswalk: **COMPLETE FOR CURRENT EDITORIAL PURPOSE**  
-Instagram/video phrase-level recovery: **OPEN — SOURCE POINTER AND 2026 RECOVERY RECORD EXIST; ORIGINAL TRANSCRIPT NOT DURABLY RECOVERED**  
-Brand source audit: **NEXT**  
-Connected Work source audit: **PENDING AFTER BRAND**  
-Card rewrite authority: **NOT YET GRANTED BY THIS PACKET**
+`CONSIDER_THE_ENERGY_SOURCE_CANON_AUDIT_v1`: **COMPLETE FOR FOUR-OBJECT EDITORIAL PURPOSE**  
+`CONSIDER_THE_ENERGY_CARD_CROSSWALK_v2`: **COMPLETE FOR FOUR-OBJECT EDITORIAL PURPOSE**  
+Brand source audit + crosswalk: **COMPLETE**  
+Bamboo / Underdog audit + crosswalk: **COMPLETE**  
+Community source audit + crosswalk: **COMPLETE**  
+Connected Work source audit + crosswalk: **COMPLETE**  
+Full redundancy ownership map: **FROZEN**  
+Instagram/video phrase-level recovery: **OPEN AS A PROVENANCE ENHANCEMENT — SOURCE POINTER AND 2026 RECOVERY RECORD EXIST; ORIGINAL TRANSCRIPT NOT DURABLY RECOVERED**  
+Card rewrite: **NEXT EDITORIAL STEP / NOT EXECUTED IN THIS PACKET**

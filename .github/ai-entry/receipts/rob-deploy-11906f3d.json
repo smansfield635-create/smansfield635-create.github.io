@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "rob-deploy-11906f3d",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3731,
+  "requestBranch": "ai-dispatch-request-rob-deploy-11906f3d",
+  "requestCommit": "9ba47fb362bab7eaa7b499454403b11473582026",
+  "requestCommitParent": "11906f3de48cf2eb7951316adad16769cdc207cb",
+  "currentMainSha": "11906f3de48cf2eb7951316adad16769cdc207cb",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "11906f3de48cf2eb7951316adad16769cdc207cb",
+    "surface_id": "rob"
+  },
+  "bridgeRunId": "35307282223",
+  "dispatchedRunId": 35307293684,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35307293684",
+  "dispatchedRunHeadSha": "11906f3de48cf2eb7951316adad16769cdc207cb",
+  "dispatchedAt": "2026-09-18T04:31:30.344Z",
+  "resolvedAt": "2026-09-18T04:31:36.742Z"
+}

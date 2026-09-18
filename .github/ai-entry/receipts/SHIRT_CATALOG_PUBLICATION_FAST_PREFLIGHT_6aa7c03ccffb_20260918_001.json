@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "SHIRT_CATALOG_PUBLICATION_FAST_PREFLIGHT_6aa7c03ccffb_20260918_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3758,
+  "requestBranch": "ai-dispatch-request-shirt-catalog-preflight-6aa7c03c",
+  "requestCommit": "fc5103168a6d071246abefeeaf40b719226a12ce",
+  "requestCommitParent": "6aa7c03ccffb42fdaf6996c454ef8a6499717c64",
+  "currentMainSha": "6aa7c03ccffb42fdaf6996c454ef8a6499717c64",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "6aa7c03ccffb42fdaf6996c454ef8a6499717c64",
+    "surface_id": "consider-the-energy"
+  },
+  "bridgeRunId": "35398845906",
+  "dispatchedRunId": 35398862444,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35398862444",
+  "dispatchedRunHeadSha": "6aa7c03ccffb42fdaf6996c454ef8a6499717c64",
+  "dispatchedAt": "2026-09-18T21:51:51.212Z",
+  "resolvedAt": "2026-09-18T21:51:55.096Z"
+}

@@ -259,8 +259,7 @@ h3 { margin: 0; font-size: 1.05rem; }
     word-break: normal;
   }
   .command-crown__routes {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    flex-direction: column;
     width: 100%;
     justify-content: stretch;
   }

@@ -38,13 +38,13 @@ Neither camera convenience, renderer convenience, predecessor footage, nor inher
 
 `EDITORIAL EXPRESSION OWNS HOW LANGUAGE ENTERS THE IMAGE`
 
-`CAMERA OWNS SPACE`
+`CAMERA OWNS VIEWPOINT + SPATIAL MOVEMENT`
 
 No downstream system may silently redefine an upstream authority.
 
 ## Film definition
 
-**A 42-second visual interpretation of a frozen melodic ascendance, with story and cinematography synchronized to the music and executed deterministically.**
+**A deterministic 42-second cinematic execution of the canonical script, temporally governed by the frozen master audio, with cinematography and editorial expression synchronized to their combined semantic and musical arc.**
 
 ## Crosswalk law
 

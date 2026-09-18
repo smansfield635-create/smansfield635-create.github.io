@@ -12081,6 +12081,49 @@
       "scopeHash": "f43aeb80ba517e89fb2b584cf6fca85893a731a60af2f12f99ad726bba79e3d5",
       "state": "ADMITTED_LOCKED"
     },
+    "f49a76c08cce4f6560ec4b007168ebca5fc716899a5b2aa3a936ba0aa620a1be": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+          "lockGeneration": 2366,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:RISE_OVER_BULLYING_PROJECT_REGISTRATION:V1",
+          "operationId": "RISE_OVER_BULLYING_PROJECT_REGISTRATION_20260917_001",
+          "procedureLocatorDigest": "2d1b6adf6a98fdd050748824e0cd5d0c3e3b2ede7696c9b9ac7803bf780f39b4",
+          "requestDigest": "7cb2213f8f1cad55fb91b79136bf9f599ce304c4360289776f418fa74992c008",
+          "scopeHash": "f49a76c08cce4f6560ec4b007168ebca5fc716899a5b2aa3a936ba0aa620a1be"
+        },
+        "bindingDigest": "568edd7c09a7bed1af894bb549e7ec5177c2a15e14c5fd348b2008c23ace90e2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "15605903885be8c8048f3df7f157fc24eb5532c98482d1d222135dc7b9656094",
+          "commentId": 5724517544,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3715,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35301728831,
+          "workflowSha": "b0ed15ab4951018f2be1eaa027c422b6b060ec60"
+        },
+        "lineageAnchorCommitSha": "7309556efe035eed0f87fd294585cd0b79b39542",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+      "lockGeneration": 2366,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:RISE_OVER_BULLYING_PROJECT_REGISTRATION:V1",
+      "operationId": "RISE_OVER_BULLYING_PROJECT_REGISTRATION_20260917_001",
+      "procedureLocatorDigest": "2d1b6adf6a98fdd050748824e0cd5d0c3e3b2ede7696c9b9ac7803bf780f39b4",
+      "released": false,
+      "requestDigest": "7cb2213f8f1cad55fb91b79136bf9f599ce304c4360289776f418fa74992c008",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f49a76c08cce4f6560ec4b007168ebca5fc716899a5b2aa3a936ba0aa620a1be",
+      "state": "ADMITTED_LOCKED"
+    },
     "f54587a999ee440a2453ba47011d2d9598d7a882bb5ff39ca4ae51e6a5aa374c": {
       "governingHead": "85c7ae8092e7a9e7b305f89526e250bf72abe428",
       "lockGeneration": 369,
@@ -12383,7 +12426,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2365,
+  "lockGeneration": 2366,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

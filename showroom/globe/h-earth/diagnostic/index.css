@@ -243,6 +243,40 @@ h3 { margin: 0; font-size: 1.05rem; }
 .diagnostic[data-capture-access="FAILED"] #h-earth-fd05-capture-status,
 .diagnostic[data-cycle-access="FAILED"] #h-earth-fd05-cycle-status { color: var(--finding); }
 
+@media (max-width: 41.999rem) {
+  .command-crown {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .command-crown__identity {
+    width: 100%;
+    min-width: 0;
+  }
+  .command-crown__identity .eyebrow,
+  .command-crown__identity h1,
+  .command-crown__identity .workspace-state {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .command-crown__routes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    justify-content: stretch;
+  }
+  .command-crown__routes a {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .utilities > summary {
+    margin-left: 0;
+  }
+}
+
 @media (min-width: 42rem) {
   .command-crown { grid-template-columns: minmax(0, 1fr) auto auto; }
   .utilities { grid-column: auto; }

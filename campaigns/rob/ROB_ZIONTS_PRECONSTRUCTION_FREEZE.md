@@ -94,5 +94,16 @@ campaigns/rob/index.html + at most one R.O.B.-local ZIONTS presentation module.
 
 Any required mutation outside this boundary stops construction and requires explicit boundary revision.
 
+## 7. Acceptance criteria before construction
+The construction is accepted only if all five visual gates pass on the target viewport:
+
+1. The black rectangular shirt field is gone.
+2. ZIONTS is immediately recognizable as ZIONTS.
+3. The R.O.B. shirt unmistakably occupies the foreground.
+4. ZIONTS and the shirt inhabit one continuous cosmic environment.
+5. The composition flows naturally into “Move through the work” without introducing a new box, stage, or visual seam.
+
+These are visual acceptance gates, not implementation suggestions. A candidate that fails any one of them is REVISE, not KEEP.
+
 ## Construction gate
-No construction is authorized by this record alone until acceptance criteria are frozen. This record exists to make all completed pre-construction phases durable and independently recoverable.
+All seven pre-construction phases are now durably frozen. Bounded construction may proceed only against this frozen record and its bound baseline. Any required mutation outside the frozen implementation boundary stops construction and requires an explicit boundary revision.

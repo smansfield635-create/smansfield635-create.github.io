@@ -1752,8 +1752,6 @@ The next lawful editorial step is:
 
 No general page audit is required before the rewrite.
 
-No general page audit is required before those steps.
-
 ---
 
 ## Packet disposition

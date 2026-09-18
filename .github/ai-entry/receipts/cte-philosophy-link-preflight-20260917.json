@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "cte-philosophy-link-preflight-20260917",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3712,
+  "requestBranch": "ai-dispatch-request-cte-philosophy-preflight-20260917",
+  "requestCommit": "c1edc6d56133f321d2293d980772b0a8a56b99e2",
+  "requestCommitParent": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+  "currentMainSha": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+    "surface_id": "consider-the-energy"
+  },
+  "bridgeRunId": "35296721081",
+  "dispatchedRunId": 35296732564,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35296732564",
+  "dispatchedRunHeadSha": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+  "dispatchedAt": "2026-09-18T01:47:20.286Z",
+  "resolvedAt": "2026-09-18T01:47:23.927Z"
+}

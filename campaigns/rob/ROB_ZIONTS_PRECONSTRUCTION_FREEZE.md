@@ -107,3 +107,56 @@ These are visual acceptance gates, not implementation suggestions. A candidate t
 
 ## Construction gate
 All seven pre-construction phases are now durably frozen. Bounded construction may proceed only against this frozen record and its bound baseline. Any required mutation outside the frozen implementation boundary stops construction and requires an explicit boundary revision.
+
+## 8. Path routing resolution
+Resolved against exact main `947d24b72c8a0ae086356705e985883a1e805afa`.
+
+Authoritative routing evidence:
+- router registry blob: `2d6968cc48244986a98972a86ddda9df462b03fe`
+- R.O.B. project entrypoint blob: `ceca655814644339ab477d4e1a9cbd67572d943b`
+- ZIONTS project entrypoint blob: `214d2b21bc94e42a52bd92060223681740821772`
+
+Construction mutation routing:
+- `campaigns/rob/index.html` → project `ROB` through owned prefix `campaigns/rob/`.
+- optional candidate-created `campaigns/rob/rob-zionts-cinematic.js` → project `ROB` through the same owned prefix. Candidate-created exact paths inside the registered prefix do not require separate persistent registration solely because they are new.
+
+Source-only routing:
+- `showroom/globe/earth/index.html` → project `SHOWROOM_GLOBE_ZIONTS`.
+- `showroom/globe/earth/index.js` → project `SHOWROOM_GLOBE_ZIONTS`.
+
+The ZIONTS paths are read-only source dependencies for this operation and are not part of the mutation scope. No broader `campaigns/`, Consider the Energy, Showroom Globe, Audralia, H-Earth, or shared-control-plane ownership is inferred.
+
+Mutation class remains `BOUNDED_PAGE_RELEASE` so long as the construction stays non-interactive and does not add navigation, routing, shared state, shared DOM authority, analytics, gestures, focus authority, or other website runtime authority.
+
+## 9. Applicable display-continuity intake
+Loaded development context:
+- display continuity constitution blob: `211216453e6af5bc6f64fcae234d7f4cd438b77b`
+- narrative continuity map blob: `9ea64bcd265aa16fb72f145a288404bf719e9a85`
+- narrative spine blob: `8df2184cbde273648849be906a701454993371cb`
+
+Resolved route display contract:
+
+1. **LOCAL_IDENTITY** — R.O.B. remains a community-accountability campaign about recognizing harmful patterns, protecting reality, preserving agency, and changing the conditions that allow bullying to operate.
+2. **NARRATIVE_RELATION** — the campaign role is `UNDERSTANDING_TO_PARTICIPATION_TO_COMMUNITY_EFFECT`. ZIONTS functions as the lifeless-world counterpoint to the living-world responsibility expressed by R.O.B.; the visual relationship must not imply that ZIONTS is evidence for R.O.B. or that either route absorbs the other.
+3. **ORIENTATION_RELATION** — Compass remains the estate-wide orientation authority. This construction creates no new cardinal meaning, route hierarchy, or navigation semantics.
+4. **DISPLAY_ROLE** — `ARRIVE_AND_FRAME_CONSEQUENCE`: establish the campaign statement, physical expression, and silent consequence/counterpoint before handing the visitor into the existing connected-work sequence.
+5. **RUNTIME_CEILING** — `L1_LIGHT_MOTION` ceiling for this construction. Passive cinematic motion and atmosphere are allowed; no interactive-object authority is required. Advanced rendering must degrade gracefully.
+6. **PERSISTENT_OBJECTS** — the canonical R.O.B. shirt identity and canonical ZIONTS world identity persist semantically across this composition. Their identities may be spatially recomposed but not redesigned.
+7. **TRANSITION_MEANING** — campaign statement → physical expression → lifeless-world counterpoint → “Move through the work.” The transition communicates consequence and continuation, not decoration alone.
+8. **PROGRESSIVE_DISCLOSURE** — hero meaning remains immediate; detailed recognition, accountability, and practical material remain in the existing four-object system below. The cosmic field must not dump explanatory copy into the hero.
+9. **MOBILE_COMPOSITION** — mobile is a distinct composition: preserve readable hero copy, recognizable ZIONTS, foreground shirt priority, and the handoff into the orbit system even if scale, crop, and relative placement differ from desktop. Do not merely shrink the desktop scene.
+10. **REDUCED_MOTION_EQUIVALENCE** — if reduced motion is requested or advanced rendering is unavailable, ZIONTS may remain static/fallback while preserving the same semantic relationship, object identity, depth order, and complete page meaning. Rotation is never required to understand the scene.
+11. **RETURN_CONTRACT** — preserve the existing R.O.B. navigation and connected-path recovery. No full-screen trap, hidden route, or new state requiring special escape behavior is introduced.
+12. **CLAIM_BOUNDARY** — ZIONTS remains a narrative/consequence-world object, not scientific proof of a literal discovered planet. The visual presentation also does not create clinical, legal, evidentiary, or diagnostic authority for R.O.B. claims.
+13. **LOCAL_VISUAL_IDENTITY** — R.O.B. keeps its own dark cosmic field, orange/red atmospheric energy, typography, shirt, and campaign hierarchy. Reusing ZIONTS geometry does not import the ZIONTS page chrome, caption system, witness UI, or overall visual skin.
+14. **CONTINUITY_HOOK** — future evolution must preserve the semantic recognition that the R.O.B. shirt is foreground human agency and ZIONTS is the rear-field consequence counterpoint, while keeping both routes independently owned and navigationally distinct.
+
+Display-continuity intake result: `RESOLVED_NO_MATERIAL_UNKNOWN`.
+
+## Construction readiness after routing and display intake
+- exact main remains identical to the frozen baseline;
+- project routing is unique for both declared construction paths;
+- ZIONTS source authority remains read-only and separately owned;
+- all 14 route-display-contract questions are resolved;
+- no fail-closed display-continuity condition is currently triggered;
+- construction remains bounded to the previously frozen implementation boundary and acceptance law.

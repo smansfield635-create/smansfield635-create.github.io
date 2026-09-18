@@ -1,7 +1,7 @@
 /**
- * H-Earth repository registry validator dependency loader v32 successor.
- * Preserves the v31 Audralia tablet single-context runtime recognition successor
- * and adds only the Gen2338 Run8E sparse admission-receipt exact-path recognition.
+ * H-Earth repository registry validator dependency loader v33 successor.
+ * Preserves the v32 Run8E sparse admission-receipt exact-path recognition
+ * and adds only FD_05 diagnostic exact-path recognition.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
@@ -11,7 +11,8 @@ import {verifyHEarthAwardsRecognizableSuccessorVerifierPathRecognition} from './
 import {verifyHEarthAudraliaTabletCloudPassPathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-cloud-pass-path-recognition.js';
 import {verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-cloud-globalization-experience-receipt-path-recognition.js';
 import {verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-single-context-runtime-path-recognition.js';
-import registryFacade,{verifyHEarthRun8ESparseAdmissionReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.run8e-sparse-admission-receipt-path-recognition.js';
+import {verifyHEarthRun8ESparseAdmissionReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.run8e-sparse-admission-receipt-path-recognition.js';
+import registryFacade,{verifyHEarthFd05DiagnosticPathRecognition} from './accepted-amendments/h-earth.repository-registry.fd05-diagnostic-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
@@ -21,6 +22,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const receiptPathRecognitionVerification=verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition();
   const tabletRuntimePathRecognitionVerification=verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition();
   const run8eSparseAdmissionReceiptPathRecognitionVerification=verifyHEarthRun8ESparseAdmissionReceiptPathRecognition();
+  const fd05DiagnosticPathRecognitionVerification=verifyHEarthFd05DiagnosticPathRecognition();
   const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const successorChecks=deepFreeze({
@@ -56,6 +58,11 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     run8eSparseAdmissionReceiptExactPathOnly:run8eSparseAdmissionReceiptPathRecognitionVerification.checks.exactPathOnly===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.noPrefixRegistration===true,
     run8eSparseAdmissionReceiptNoAuthorityLeak:run8eSparseAdmissionReceiptPathRecognitionVerification.checks.auditOnly===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.pathResolutionOnly===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.noProductRuntimeAuthority===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.noCandidateManifestAuthority===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.noRenderCameraAuthority===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.noPreflightWaiver===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.noPublicationAuthority===true&&run8eSparseAdmissionReceiptPathRecognitionVerification.checks.noInheritedAuthority===true,
     run8eSparseAdmissionReceiptGen2329EvidenceBound:run8eSparseAdmissionReceiptPathRecognitionVerification.checks.gen2329EvidenceBound===true,
+    fd05DiagnosticPathRecognitionEligible:fd05DiagnosticPathRecognitionVerification.eligible===true,
+    fd05DiagnosticExactFivePathsResolved:fd05DiagnosticPathRecognitionVerification.checks.exactTargetPathCount===true&&fd05DiagnosticPathRecognitionVerification.checks.allTargetPathsResolve===true,
+    fd05DiagnosticOccurrencesBound:fd05DiagnosticPathRecognitionVerification.checks.governingOccurrencesPresent===true&&fd05DiagnosticPathRecognitionVerification.checks.occurrenceQueriesResolve===true,
+    fd05DiagnosticExactPathOnly:fd05DiagnosticPathRecognitionVerification.checks.exactPathOnly===true&&fd05DiagnosticPathRecognitionVerification.checks.noPrefixRegistration===true,
+    fd05DiagnosticNoAuthorityLeak:fd05DiagnosticPathRecognitionVerification.checks.auditOnly===true&&fd05DiagnosticPathRecognitionVerification.checks.pathResolutionOnly===true&&fd05DiagnosticPathRecognitionVerification.checks.noProductRuntimeAuthority===true&&fd05DiagnosticPathRecognitionVerification.checks.noDiagnosticByteAuthority===true&&fd05DiagnosticPathRecognitionVerification.checks.noPrefixWideAuthority===true&&fd05DiagnosticPathRecognitionVerification.checks.noPreflightWaiver===true&&fd05DiagnosticPathRecognitionVerification.checks.noPublicationAuthority===true,
     registryIdPreserved:registryInstance.registryId===base.registryInstance.registryId,
     registryVersionPreserved:registryInstance.registryVersion===base.registryInstance.registryVersion,
     schemaIdPreserved:registryInstance.schemaId===base.registryInstance.schemaId,
@@ -67,7 +74,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const successorIntegrityVerified=Object.values(successorChecks).every(Boolean);
   return deepFreeze({
     ...base,
-    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v32_RUN8E_SPARSE_ADMISSION_RECEIPT_EXACT_PATH_RECOGNITION_SUCCESSOR',
+    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v33_FD05_DIAGNOSTIC_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -78,7 +85,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       audraliaCloudGlobalizationExperienceReceiptPathRecognition:receiptPathRecognitionVerification.eligible===true,
       audraliaTabletSingleContextRuntimePathRecognition:tabletRuntimePathRecognitionVerification.eligible===true,
       run8eSparseAdmissionReceiptPathRecognition:run8eSparseAdmissionReceiptPathRecognitionVerification.eligible===true,
-      run8eSparseAdmissionReceiptPathRecognitionSuccessorIntegrity:successorIntegrityVerified
+      run8eSparseAdmissionReceiptPathRecognitionSuccessorIntegrity:successorIntegrityVerified,
+      fd05DiagnosticPathRecognition:fd05DiagnosticPathRecognitionVerification.eligible===true,
+      fd05DiagnosticPathRecognitionSuccessorIntegrity:successorIntegrityVerified
     }),
     identityVerified:base.identityVerified,
     inheritedIdentityPreserved:base.identityVerified===false,
@@ -89,6 +98,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     audraliaCloudGlobalizationExperienceReceiptPathRecognitionVerification:receiptPathRecognitionVerification,
     audraliaTabletSingleContextRuntimePathRecognitionVerification:tabletRuntimePathRecognitionVerification,
     run8eSparseAdmissionReceiptPathRecognitionVerification,
+    fd05DiagnosticPathRecognitionVerification,
     boundary:deepFreeze({
       ...base.boundary,
       audraliaCloudGlobalizationExperienceReceiptExactPathRecognitionOnly:true,
@@ -115,7 +125,13 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       run8eSparseAdmissionReceiptPrefixWideRegistrationAuthorityCreated:false,
       run8eSparseAdmissionReceiptPreflightWaiverAuthorityCreated:false,
       run8eSparseAdmissionReceiptDeploymentPublicationAuthorityCreated:false,
-      run8eSparseAdmissionReceiptInheritedOperationAuthorityCreated:false
+      run8eSparseAdmissionReceiptInheritedOperationAuthorityCreated:false,
+      fd05DiagnosticExactPathRecognitionOnly:true,
+      fd05DiagnosticProductRuntimeAuthorityCreated:false,
+      fd05DiagnosticByteMutationAuthorityCreated:false,
+      fd05DiagnosticPrefixWideRegistrationAuthorityCreated:false,
+      fd05DiagnosticPreflightWaiverAuthorityCreated:false,
+      fd05DiagnosticMergeDeploymentPublicationAuthorityCreated:false
     }),
     stoppingCondition:deepFreeze({
       ...base.stoppingCondition,
@@ -148,7 +164,14 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       run8eSparseAdmissionReceiptPrefixWideRegistrationAuthorized:false,
       run8eSparseAdmissionReceiptPreflightWaiverAuthorized:false,
       run8eSparseAdmissionReceiptDeploymentPublicationAuthorized:false,
-      run8eSparseAdmissionReceiptInheritedOperationAuthorityAuthorized:false
+      run8eSparseAdmissionReceiptInheritedOperationAuthorityAuthorized:false,
+      fd05DiagnosticPathRecognitionLoaded:true,
+      fd05DiagnosticPathRecognitionSuccessorIntegrityVerified:successorIntegrityVerified,
+      fd05DiagnosticProductRuntimeMutationAuthorized:false,
+      fd05DiagnosticByteMutationAuthorized:false,
+      fd05DiagnosticPrefixWideRegistrationAuthorized:false,
+      fd05DiagnosticPreflightWaiverAuthorized:false,
+      fd05DiagnosticMergeDeploymentPublicationAuthorized:false
     })
   });
 }

@@ -352,7 +352,54 @@
       html[data-page="rob"] #robZiontsPlanet,
       html[data-page="rob"] .rob-zionts-fallback{transition:none}
     }
-
+    /* Tablet/mobile reader reachability repair: page-local compatibility only. */
+    @media(max-width:1024px){
+      html[data-page="rob"] .community-reader{
+        place-items:stretch center;
+        padding:max(.5rem,env(safe-area-inset-top)) .5rem max(.5rem,env(safe-area-inset-bottom));
+      }
+      html[data-page="rob"] .community-reader__panel{
+        height:calc(100svh - 1rem);
+        height:calc(100dvh - 1rem);
+        max-height:none;
+        min-height:0;
+        overflow-x:hidden;
+        overflow-y:auto;
+        overscroll-behavior-y:contain;
+        -webkit-overflow-scrolling:touch;
+        touch-action:pan-y;
+        scroll-padding-top:4rem;
+      }
+      html[data-page="rob"] .community-reader__top{
+        position:sticky;
+        top:0;
+        align-items:center;
+        flex-direction:row;
+        min-height:3.4rem;
+        padding:.55rem .65rem;
+      }
+      html[data-page="rob"] .community-reader__meta{min-width:0}
+      html[data-page="rob"] .community-reader__meta strong{
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      }
+      html[data-page="rob"] .community-reader__actions{
+        flex:0 0 auto;
+        width:auto;
+      }
+      html[data-page="rob"] .community-reader__actions button{
+        min-height:2.2rem;
+        padding:.45rem .65rem;
+        white-space:nowrap;
+      }
+      html[data-page="rob"] .community-reader__body,
+      html[data-page="rob"] .community-reader-face{
+        min-height:0;
+        max-height:none;
+        overflow:visible;
+      }
+    }
   </style>
   <script defer src="/assets/dgb-estate-cosmos.js"></script>
   <script defer src="/campaigns/index.tabs.js"></script>

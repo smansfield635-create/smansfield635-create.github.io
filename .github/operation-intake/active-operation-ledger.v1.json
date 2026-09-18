@@ -1461,49 +1461,6 @@
       "scopeHash": "1d9d8d95d3f6a61a708cf328302c426749126870c51f0e81d18fbda94c0cd952",
       "state": "ADMITTED_LOCKED"
     },
-    "1ddbb405f05dd4d0f70c48a746607eaca6c22764464f0b6148a45723f6655df2": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
-          "lockGeneration": 2367,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ROB_PROJECT_ROUTE_REGISTRATION:V1",
-          "operationId": "ROB_PROJECT_ROUTE_REGISTRATION_20260917_001",
-          "procedureLocatorDigest": "2a71f61a6668975528b5b94f280d6ffe9eb5b65bef41303e804514239b44c08a",
-          "requestDigest": "087b6345b72c48e8ab62506b5c52947e46b046472e64ce0b3149bc4cf2164e13",
-          "scopeHash": "1ddbb405f05dd4d0f70c48a746607eaca6c22764464f0b6148a45723f6655df2"
-        },
-        "bindingDigest": "6030e8483a24d49b214db045a2a3e951cd4c3ce06481594543b05f9f071cdbbb",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e0e2a5ad5bead38c6800fd2511e91a41dc3c45050d14f6845eb02fb75bbe6247",
-          "commentId": 5724524977,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3716,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35301799866,
-          "workflowSha": "b0ed15ab4951018f2be1eaa027c422b6b060ec60"
-        },
-        "lineageAnchorCommitSha": "1dc0533e2310906cb2b7ecd36c15e50ee3592ca2",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
-      "lockGeneration": 2367,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ROB_PROJECT_ROUTE_REGISTRATION:V1",
-      "operationId": "ROB_PROJECT_ROUTE_REGISTRATION_20260917_001",
-      "procedureLocatorDigest": "2a71f61a6668975528b5b94f280d6ffe9eb5b65bef41303e804514239b44c08a",
-      "released": false,
-      "requestDigest": "087b6345b72c48e8ab62506b5c52947e46b046472e64ce0b3149bc4cf2164e13",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "1ddbb405f05dd4d0f70c48a746607eaca6c22764464f0b6148a45723f6655df2",
-      "state": "ADMITTED_LOCKED"
-    },
     "1e15c6ce4033764ff21796dd1618918d575702bd56793bad4606f01a7258099e": {
       "governingHead": "730b3e628d2ab339904fd4d25015461bc1aaa9ae",
       "lockGeneration": 233,
@@ -60304,6 +60261,50 @@
       "scopeHash": "f49a76c08cce4f6560ec4b007168ebca5fc716899a5b2aa3a936ba0aa620a1be",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+          "lockGeneration": 2367,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ROB_PROJECT_ROUTE_REGISTRATION:V1",
+          "operationId": "ROB_PROJECT_ROUTE_REGISTRATION_20260917_001",
+          "procedureLocatorDigest": "2a71f61a6668975528b5b94f280d6ffe9eb5b65bef41303e804514239b44c08a",
+          "requestDigest": "087b6345b72c48e8ab62506b5c52947e46b046472e64ce0b3149bc4cf2164e13",
+          "scopeHash": "1ddbb405f05dd4d0f70c48a746607eaca6c22764464f0b6148a45723f6655df2"
+        },
+        "bindingDigest": "6030e8483a24d49b214db045a2a3e951cd4c3ce06481594543b05f9f071cdbbb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e0e2a5ad5bead38c6800fd2511e91a41dc3c45050d14f6845eb02fb75bbe6247",
+          "commentId": 5724524977,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3716,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35301799866,
+          "workflowSha": "b0ed15ab4951018f2be1eaa027c422b6b060ec60"
+        },
+        "lineageAnchorCommitSha": "1dc0533e2310906cb2b7ecd36c15e50ee3592ca2",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b0ed15ab4951018f2be1eaa027c422b6b060ec60",
+      "lockGeneration": 2367,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ROB_PROJECT_ROUTE_REGISTRATION:V1",
+      "operationId": "ROB_PROJECT_ROUTE_REGISTRATION_20260917_001",
+      "procedureLocatorDigest": "2a71f61a6668975528b5b94f280d6ffe9eb5b65bef41303e804514239b44c08a",
+      "released": true,
+      "requestDigest": "087b6345b72c48e8ab62506b5c52947e46b046472e64ce0b3149bc4cf2164e13",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1ddbb405f05dd4d0f70c48a746607eaca6c22764464f0b6148a45723f6655df2",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

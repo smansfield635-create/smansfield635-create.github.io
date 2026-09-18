@@ -218,3 +218,18 @@ KEEP effect under `EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1`:
 - next lifecycle boundary is normal terminal closure followed by separate adoption/release authority.
 
 No candidate bytes were changed by recording this disposition.
+
+## 12. Terminal mutation closure
+Disposition: `MUTATION_CLOSED_AFTER_KEEP`
+
+The exact candidate `189030df1da9f15b2a4ab11f48306c543570e743` was accepted KEEP after PASS_CLOSED exact-diff verification. The bounded construction scope is now terminally closed.
+
+Closure effects:
+- no further candidate mutation is authorized under this construction cycle;
+- no repair remains pending;
+- candidate identity is immutable for adoption;
+- closure creates no merge, deployment, or publication authority by itself;
+- adoption and release proceed only through the separate bounded-page-release sequence.
+
+Next lifecycle boundary:
+`APPROVED_COMMIT → ADOPTION/MERGE → PUBLICATION PREFLIGHT → EXPLICIT DEPLOYMENT → LIVE EXACT-HEAD VERIFICATION`.

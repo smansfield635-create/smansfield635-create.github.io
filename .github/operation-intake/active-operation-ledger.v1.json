@@ -1823,6 +1823,49 @@
       "scopeHash": "26a170fff6651c3fdfe56ca2d95114a3f0b168dfd8cf361da6f856f5032b72d2",
       "state": "ADMITTED_LOCKED"
     },
+    "297d84dc3c4b5e2e9b3d9bb1feeb246e78d141f73363939bf45b7dd7a742a5ca": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
+          "lockGeneration": 2364,
+          "lockScope": "CONSIDER_THE_ENERGY:SHIRT_ALPHA_EDGE_REFINEMENT:V1",
+          "operationId": "CONSIDER_THE_ENERGY_SHIRT_ALPHA_EDGE_REFINEMENT_20260917_001",
+          "procedureLocatorDigest": "cf50c1d19c486e3ee75c2baa20905cb2ee65f0cae6d0a6a58f177dcd2b4b5cc5",
+          "requestDigest": "268b3af7f18e84e4ea3ddc1e0d33e0c71b1d99e66e6441aaf7488dd26437b9b1",
+          "scopeHash": "297d84dc3c4b5e2e9b3d9bb1feeb246e78d141f73363939bf45b7dd7a742a5ca"
+        },
+        "bindingDigest": "7917caa88d24db46f9380b86e85ae7634c9fe95d4836dd0063ab239646ee1d48",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "358ed946613cd1c0b9040683d4b61fecdff5b09d34d91fc40db82cd510c5a2dc",
+          "commentId": 5723244096,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3696,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35292210913,
+          "workflowSha": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be"
+        },
+        "lineageAnchorCommitSha": "4b8117a04a92d40e6889cc769ad4f4724f175b39",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ac9bd63759345d8d8e5ae3ca18e1390d57c350be",
+      "lockGeneration": 2364,
+      "lockScope": "CONSIDER_THE_ENERGY:SHIRT_ALPHA_EDGE_REFINEMENT:V1",
+      "operationId": "CONSIDER_THE_ENERGY_SHIRT_ALPHA_EDGE_REFINEMENT_20260917_001",
+      "procedureLocatorDigest": "cf50c1d19c486e3ee75c2baa20905cb2ee65f0cae6d0a6a58f177dcd2b4b5cc5",
+      "released": false,
+      "requestDigest": "268b3af7f18e84e4ea3ddc1e0d33e0c71b1d99e66e6441aaf7488dd26437b9b1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "297d84dc3c4b5e2e9b3d9bb1feeb246e78d141f73363939bf45b7dd7a742a5ca",
+      "state": "ADMITTED_LOCKED"
+    },
     "29faefeb037e128676d0cd86d7542c497e2cf6f151d47a24410af7b1abefb882": {
       "governingHead": "9e9dacaed861ebec4704fad5d5938f83addf9de3",
       "lockGeneration": 99,
@@ -12340,7 +12383,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2363,
+  "lockGeneration": 2364,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

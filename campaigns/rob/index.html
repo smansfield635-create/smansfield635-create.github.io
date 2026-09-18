@@ -156,8 +156,212 @@
       html[data-page="rob"] .community-orbit{padding:.1rem 0}
       html[data-page="rob"] .rob-closing{padding:2.7rem .75rem}
     }
+    /* R.O.B. × ZIONTS bounded cinematic presentation.
+       Frozen law: one universe; ZIONTS behind; R.O.B. in front; no box; no seam. */
+    html[data-page="rob"] .rob-hero{
+      isolation:isolate;
+      min-height:clamp(38rem,67vw,48rem);
+      grid-template-columns:minmax(0,.92fr) minmax(21rem,.88fr);
+      margin-bottom:clamp(-3.4rem,-4vw,-1.6rem);
+      padding-bottom:clamp(3rem,7vw,5.5rem);
+    }
+    html[data-page="rob"] .rob-hero::before{
+      z-index:0;
+      inset:-4% -8% -14%;
+      background:
+        radial-gradient(circle at 78% 25%,rgba(255,101,51,.24),transparent 25%),
+        radial-gradient(circle at 61% 49%,rgba(255,72,36,.10),transparent 34%),
+        radial-gradient(circle at 28% 72%,rgba(75,112,255,.08),transparent 38%);
+      filter:blur(15px);
+    }
+    html[data-page="rob"] .rob-cosmic-field{
+      position:absolute;
+      z-index:0;
+      inset:-8% -12% -22% -8%;
+      overflow:visible;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 15% 18%,rgba(255,255,255,.20) 0 .7px,transparent 1.5px),
+        radial-gradient(circle at 74% 12%,rgba(255,173,141,.20) 0 .7px,transparent 1.55px),
+        radial-gradient(circle at 89% 64%,rgba(255,227,184,.16) 0 .65px,transparent 1.45px);
+      background-size:193px 229px,307px 281px,373px 337px;
+      opacity:.86;
+    }
+    html[data-page="rob"] .rob-cosmic-field::after{
+      content:"";
+      position:absolute;
+      inset:8% -4% -20% 42%;
+      background:
+        radial-gradient(circle at 68% 34%,rgba(255,112,63,.28),transparent 23%),
+        radial-gradient(circle at 53% 55%,rgba(186,66,45,.14),transparent 34%),
+        radial-gradient(ellipse at 50% 80%,rgba(255,113,60,.10),transparent 48%);
+      filter:blur(20px);
+    }
+    html[data-page="rob"] .rob-zionts-field{
+      position:absolute;
+      z-index:1;
+      top:-10%;
+      right:-5%;
+      width:min(67%,46rem);
+      aspect-ratio:1;
+      pointer-events:none;
+      transform:translateZ(0);
+      filter:drop-shadow(0 2.8rem 5.5rem rgba(0,0,0,.58)) drop-shadow(0 0 4rem rgba(170,65,43,.17));
+    }
+    html[data-page="rob"] #robZiontsPlanet{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      opacity:0;
+      transition:opacity .28s ease;
+      pointer-events:none;
+    }
+    html[data-page="rob"] .rob-zionts-fallback{
+      position:absolute;
+      inset:12%;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 31% 27%,rgba(235,130,96,.61),transparent 8%),
+        radial-gradient(circle at 62% 44%,rgba(55,24,20,.9),transparent 11%),
+        radial-gradient(circle at 47% 68%,rgba(159,70,51,.66),transparent 8%),
+        radial-gradient(circle at 36% 34%,#985042 0%,#512b29 32%,#1b1114 65%,#05060a 100%);
+      border:1px solid rgba(239,171,143,.34);
+      box-shadow:inset -6rem -2rem 7rem rgba(0,0,0,.63),0 0 6rem rgba(147,58,42,.20);
+      opacity:.96;
+      transition:opacity .28s ease;
+    }
+    html[data-page="rob"] .rob-zionts-fallback::after{
+      content:"";
+      position:absolute;
+      inset:13% 10% 9% 17%;
+      border-radius:50%;
+      background:
+        linear-gradient(19deg,transparent 46%,rgba(21,8,8,.58) 47% 49%,transparent 50%),
+        linear-gradient(153deg,transparent 51%,rgba(244,156,125,.18) 52% 53%,transparent 54%);
+    }
+    html[data-page="rob"] .rob-zionts-field[data-renderer="ready"] #robZiontsPlanet{opacity:1}
+    html[data-page="rob"] .rob-zionts-field[data-renderer="ready"] .rob-zionts-fallback{opacity:0}
+
+    html[data-page="rob"] .rob-hero .campaign-hero__copy{
+      position:relative;
+      z-index:3;
+      padding-left:clamp(.25rem,3vw,2rem);
+      text-shadow:0 .14rem .8rem rgba(0,0,0,.42);
+    }
+    html[data-page="rob"] .rob-hero .campaign-hero__media{
+      position:relative;
+      z-index:4;
+      overflow:visible;
+      min-height:clamp(35rem,52vw,41rem);
+      margin-top:clamp(2.5rem,8vw,6rem);
+      margin-bottom:clamp(-2.4rem,-3vw,-1rem);
+      padding:0;
+      border:0;
+      background:transparent;
+      isolation:isolate;
+    }
+    html[data-page="rob"] .rob-shirt-object{
+      inset:auto;
+      top:1%;
+      right:-1%;
+      width:min(88%,30rem);
+      aspect-ratio:293/440;
+      overflow:hidden;
+      place-items:stretch;
+      clip-path:polygon(
+        50% 0%,40% 3%,35% 9%,23% 13%,6% 20%,1% 29%,10% 47%,20% 43%,
+        27% 36%,29% 48%,30% 96%,42% 99%,50% 98%,58% 99%,70% 96%,71% 48%,
+        73% 36%,80% 43%,90% 47%,99% 29%,94% 20%,77% 13%,65% 9%,60% 3%
+      );
+      filter:
+        drop-shadow(0 2.1rem 2.8rem rgba(0,0,0,.58))
+        drop-shadow(0 0 1.8rem rgba(255,121,67,.13));
+    }
+    html[data-page="rob"] .rob-shirt-object img{
+      width:100%;
+      height:100%;
+      max-height:none;
+      object-fit:fill;
+      filter:none;
+    }
+    html[data-page="rob"] .community-orbit{
+      position:relative;
+      z-index:2;
+    }
+    html[data-page="rob"] .community-orbit::before{
+      content:"";
+      position:absolute;
+      z-index:-2;
+      inset:-8rem -8% 0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at 72% 0%,rgba(255,102,54,.10),transparent 38%),
+        radial-gradient(ellipse at 46% 7%,rgba(92,119,255,.06),transparent 47%);
+      filter:blur(18px);
+    }
+
+    @media(max-width:900px){
+      html[data-page="rob"] .rob-hero{
+        grid-template-columns:1fr;
+        min-height:auto;
+        margin-bottom:-1.4rem;
+        padding-bottom:3.8rem;
+      }
+      html[data-page="rob"] .rob-hero .campaign-hero__copy{
+        z-index:5;
+        max-width:42rem;
+        padding:1rem .35rem .3rem;
+        background:linear-gradient(90deg,rgba(2,5,12,.72),rgba(2,5,12,.30) 72%,transparent);
+      }
+      html[data-page="rob"] .rob-hero .campaign-hero__media{
+        min-height:35rem;
+        margin:0;
+      }
+      html[data-page="rob"] .rob-zionts-field{
+        top:24%;
+        right:-30%;
+        width:min(108vw,44rem);
+        opacity:.96;
+      }
+      html[data-page="rob"] .rob-shirt-object{
+        top:1rem;
+        left:50%;
+        right:auto;
+        width:min(72vw,28rem);
+        transform:translateX(-43%);
+      }
+    }
+    @media(max-width:560px){
+      html[data-page="rob"] .rob-hero{
+        padding-bottom:3rem;
+      }
+      html[data-page="rob"] .rob-hero .campaign-hero__media{
+        min-height:31rem;
+      }
+      html[data-page="rob"] .rob-zionts-field{
+        top:27%;
+        right:-43%;
+        width:124vw;
+      }
+      html[data-page="rob"] .rob-shirt-object{
+        top:.8rem;
+        width:min(82vw,25rem);
+        transform:translateX(-45%);
+      }
+      html[data-page="rob"] .rob-cosmic-field{
+        inset:-4% -18% -20% -12%;
+      }
+    }
+    @media(prefers-reduced-motion:reduce){
+      html[data-page="rob"] #robZiontsPlanet,
+      html[data-page="rob"] .rob-zionts-fallback{transition:none}
+    }
+
   </style>
   <script defer src="/campaigns/index.tabs.js"></script>
+  <script type="module" src="./rob-zionts-cinematic.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to campaign</a>
@@ -172,6 +376,12 @@
 
     <main id="main" class="campaign-main">
       <section class="campaign-hero rob-hero" aria-labelledby="page-title">
+        <div class="rob-cosmic-field" aria-hidden="true">
+          <div class="rob-zionts-field" data-rob-zionts-field role="img" aria-label="ZIONTS, a lifeless world, behind the R.O.B. campaign shirt">
+            <canvas id="robZiontsPlanet" aria-hidden="true"></canvas>
+            <div class="rob-zionts-fallback" aria-hidden="true"></div>
+          </div>
+        </div>
         <div class="campaign-hero__copy">
           <p class="campaign-kicker">Community Accountability Campaign</p>
           <h1 id="page-title">Rise Over Bullying.</h1>

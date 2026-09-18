@@ -1,0 +1,68 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "rob",
+  "description": "R.O.B. exact-head publication verification for the merged four-object Rise Over Bullying campaign. Static checks bind the locked editorial sequence, R.O.B.-local visual assets, shared campaign orbit router/controller, and exact route identity. Runtime readiness requires the shared orbit controller to initialize the R.O.B. four-object carousel on /campaigns/rob/; final authoritative live exact-head verification remains required for publication truth.",
+  "checks": [
+    {
+      "path": "/campaigns/rob/index.html",
+      "includes": [
+        "data-route=\"/campaigns/rob/\"",
+        "data-page=\"rob\"",
+        "/campaigns/index.tabs.js",
+        "Break the isolation.",
+        "Bullying does not have one face.",
+        "What happens when the explanation you keep hearing no longer matches the experience you keep having?",
+        "What changes when accountability is the standard?",
+        "/campaigns/rob/assets/manipulation-shirt.svg",
+        "/campaigns/rob/assets/five-ds-of-deceit.jpg",
+        "/campaigns/rob/assets/fear-love.png",
+        "Rob bullies of their ability to bully."
+      ],
+      "excludes": [
+        "Bullying has evolved beyond the playground.",
+        "<h2>Community accountability changes the operating environment.</h2>"
+      ]
+    },
+    {
+      "path": "/campaigns/index.tabs.js",
+      "includes": [
+        "const orbitPages = new Set([\"consider-energy\", \"rob\", \"wave\", \"jen-leney\", \"mr-lee\"]);",
+        "script.src = \"/campaigns/index.orbit.js\";",
+        "script.dataset.communityOrbitController = \"true\";"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/index.orbit.js",
+      "includes": [
+        "'rob':{label:'R.O.B.'",
+        "orbit.className='community-orbit';orbit.dataset.communityOrbit='true'",
+        "document.documentElement.dataset.communityOrbitStatus='ready';",
+        "DGB_COMMUNITY_ORBIT_CAROUSEL_v5"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/index.orbit.css",
+      "includes": [
+        ".community-orbit{",
+        ".community-orbit-card{",
+        "DGB_COMMUNITY_ORBIT_CAROUSEL_v2"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/campaigns/rob/",
+    "timeoutMs": 15000,
+    "readySelector": "html[data-community-orbit-status=\"ready\"] .community-orbit[data-community-orbit=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/campaigns/rob/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": []
+  }
+}

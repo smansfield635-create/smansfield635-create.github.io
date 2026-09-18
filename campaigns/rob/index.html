@@ -4,9 +4,159 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>R.O.B. · Rise Over Bullying · Diamond Gate Bridge</title>
-  <meta name="description" content="R.O.B. addresses bullying beyond the playground through visibility, solidarity, documentation, due process, and communal accountability.">
+  <meta name="description" content="R.O.B. helps people recognize harmful patterns, protect reality, and build community accountability without replacing one form of control with another.">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/campaigns/index.css">
+  <style>
+    html[data-page="rob"] body{
+      background:
+        radial-gradient(circle at 72% 11%,rgba(255,123,66,.16),transparent 25rem),
+        radial-gradient(circle at 14% 38%,rgba(75,112,255,.12),transparent 32rem),
+        radial-gradient(circle at 78% 72%,rgba(243,200,111,.08),transparent 30rem),
+        linear-gradient(180deg,#070b14 0%,#02050d 54%,#010207 100%);
+    }
+    html[data-page="rob"] .campaign-main{gap:clamp(1.25rem,4vw,2.6rem)}
+    html[data-page="rob"] .campaign-hero{
+      position:relative;overflow:visible;min-height:34rem;border:0;border-radius:0;
+      background:transparent;box-shadow:none;backdrop-filter:none
+    }
+    html[data-page="rob"] .campaign-hero::before{
+      content:"";position:absolute;z-index:-1;inset:3% -4% 1%;pointer-events:none;
+      background:
+        radial-gradient(circle at 69% 37%,rgba(255,103,52,.16),transparent 30%),
+        radial-gradient(circle at 48% 62%,rgba(86,119,255,.1),transparent 38%);
+      filter:blur(12px)
+    }
+    html[data-page="rob"] .campaign-hero__copy{padding-left:clamp(.25rem,3vw,2rem)}
+    html[data-page="rob"] .campaign-hero__media{
+      position:relative;overflow:visible;min-height:34rem;padding:0;border:0;
+      background:transparent;isolation:isolate
+    }
+    html[data-page="rob"] .rob-shirt-object{
+      position:absolute;inset:1% 8% 0;display:grid;place-items:center
+    }
+    html[data-page="rob"] .rob-shirt-object img{
+      display:block;width:100%;height:100%;max-height:36rem;object-fit:contain;
+      filter:drop-shadow(0 2rem 2.6rem rgba(0,0,0,.52)) drop-shadow(0 0 2.1rem rgba(255,113,60,.12))
+    }
+    html[data-page="rob"] .community-orbit{
+      overflow:visible;border:0;border-radius:0;padding:clamp(.3rem,2vw,.9rem) 0;
+      background:transparent;box-shadow:none;backdrop-filter:none
+    }
+    html[data-page="rob"] .community-orbit-stage::before{
+      content:"";position:absolute;z-index:-1;inset:5% -10% 4%;pointer-events:none;
+      background:
+        radial-gradient(ellipse at center,rgba(255,113,60,.1),transparent 42%),
+        radial-gradient(ellipse at 30% 58%,rgba(90,120,255,.08),transparent 48%);
+      filter:blur(18px)
+    }
+    html[data-page="rob"] .community-orbit-ring{
+      border-color:rgba(255,123,66,.2);
+      box-shadow:0 0 6rem rgba(255,91,45,.1),inset 0 0 4rem rgba(255,255,255,.02)
+    }
+    html[data-page="rob"] .community-orbit-status{
+      border-color:rgba(255,255,255,.06);background:rgba(2,7,15,.26);backdrop-filter:blur(6px)
+    }
+    html[data-page="rob"] .rob-face-copy,
+    html[data-page="rob"] .rob-face-back{display:grid;gap:.9rem;align-content:start}
+    html[data-page="rob"] .rob-face-copy>p,
+    html[data-page="rob"] .rob-face-back>p{max-width:68rem}
+    html[data-page="rob"] .rob-philosophical-punch{
+      color:var(--campaign-accent);font-size:clamp(1.1rem,2.5vw,1.45rem);
+      font-weight:900;line-height:1.25
+    }
+    html[data-page="rob"] .rob-recognition-lines{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem
+    }
+    html[data-page="rob"] .rob-recognition-lines span{
+      padding:.7rem .8rem;border:1px solid rgba(255,255,255,.09);border-radius:.8rem;
+      color:var(--campaign-muted);background:rgba(255,255,255,.025);font-weight:800
+    }
+    html[data-page="rob"] .rob-definition-list{
+      display:grid;grid-template-columns:minmax(9rem,.34fr) 1fr;gap:.35rem .8rem;margin:0
+    }
+    html[data-page="rob"] .rob-definition-list dt{
+      color:var(--campaign-accent);font-weight:900
+    }
+    html[data-page="rob"] .rob-definition-list dd{margin:0 0 .6rem;color:var(--campaign-muted)}
+    html[data-page="rob"] .rob-editorial-visual{
+      display:grid;grid-template-columns:minmax(0,.72fr) minmax(16rem,.45fr);
+      gap:clamp(.8rem,2.5vw,1.4rem);align-items:center;margin-top:.25rem
+    }
+    html[data-page="rob"] .rob-editorial-visual--wide{
+      grid-template-columns:minmax(15rem,.55fr) minmax(0,.8fr)
+    }
+    html[data-page="rob"] .rob-art{
+      display:grid;gap:.55rem;margin:0;min-width:0
+    }
+    html[data-page="rob"] .rob-art img{
+      display:block;width:100%;max-height:31rem;object-fit:contain;
+      filter:drop-shadow(0 1.4rem 2rem rgba(0,0,0,.48))
+    }
+    html[data-page="rob"] .rob-art figcaption{
+      color:var(--campaign-faint);font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase
+    }
+    html[data-page="rob"] .rob-callout{
+      padding:.85rem 1rem;border-left:3px solid var(--campaign-accent);
+      background:rgba(255,255,255,.025);color:var(--campaign-muted)
+    }
+    html[data-page="rob"] .rob-five-ds{
+      color:var(--campaign-accent);font-size:clamp(1rem,2vw,1.25rem);font-weight:950;letter-spacing:.015em
+    }
+    html[data-page="rob"] .rob-coherence-grid{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem
+    }
+    html[data-page="rob"] .rob-coherence-grid article{
+      display:grid;gap:.35rem;padding:.9rem;border:1px solid rgba(255,255,255,.09);
+      border-radius:.9rem;background:rgba(255,255,255,.025)
+    }
+    html[data-page="rob"] .rob-coherence-grid strong{color:var(--campaign-accent)}
+    html[data-page="rob"] .rob-accountability-list{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem
+    }
+    html[data-page="rob"] .rob-accountability-list span{
+      padding:.75rem .85rem;border:1px solid rgba(255,255,255,.09);border-radius:.85rem;
+      color:var(--campaign-muted);background:rgba(255,255,255,.025)
+    }
+    html[data-page="rob"] .rob-accountability-list strong{color:var(--campaign-accent)}
+    html[data-page="rob"] .rob-closing{
+      position:relative;overflow:visible;justify-items:center;
+      padding:clamp(2.8rem,7vw,5.8rem) clamp(1rem,5vw,4rem);
+      border:0;border-radius:0;background:
+        radial-gradient(circle at 50% 45%,rgba(255,112,55,.14),transparent 38%),transparent;
+      box-shadow:none;text-align:center;backdrop-filter:none
+    }
+    html[data-page="rob"] .rob-closing h2{
+      max-width:18ch;font-size:clamp(2.2rem,6vw,4.6rem);line-height:.94;letter-spacing:-.055em
+    }
+    html[data-page="rob"] .rob-closing>p{max-width:52rem;font-size:clamp(1rem,2.1vw,1.2rem)}
+    html[data-page="rob"] .rob-closing__line{
+      margin-top:.45rem;color:var(--campaign-accent);
+      font-size:clamp(1.15rem,2.8vw,1.65rem)!important;font-weight:900
+    }
+    html[data-page="rob"] .campaign-route-panel{
+      background:linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,.012)),rgba(3,8,18,.62)
+    }
+    @media(max-width:900px){
+      html[data-page="rob"] .campaign-hero{min-height:auto}
+      html[data-page="rob"] .campaign-hero__copy{padding:1rem .35rem .3rem}
+      html[data-page="rob"] .campaign-hero__media{min-height:31rem}
+      html[data-page="rob"] .rob-shirt-object{inset:0 4% 2%}
+      html[data-page="rob"] .rob-editorial-visual,
+      html[data-page="rob"] .rob-editorial-visual--wide{grid-template-columns:1fr}
+      html[data-page="rob"] .rob-coherence-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:560px){
+      html[data-page="rob"] .campaign-main{gap:1.4rem}
+      html[data-page="rob"] .campaign-hero__media{min-height:27rem}
+      html[data-page="rob"] .rob-recognition-lines,
+      html[data-page="rob"] .rob-accountability-list{grid-template-columns:1fr}
+      html[data-page="rob"] .rob-definition-list{grid-template-columns:1fr}
+      html[data-page="rob"] .rob-definition-list dd{margin-bottom:.8rem}
+      html[data-page="rob"] .community-orbit{padding:.1rem 0}
+      html[data-page="rob"] .rob-closing{padding:2.7rem .75rem}
+    }
+  </style>
   <script defer src="/campaigns/index.tabs.js"></script>
 </head>
 <body>
@@ -19,32 +169,192 @@
       </a>
       <nav class="campaign-nav" aria-label="Campaign navigation"><a href="/products/">Products</a><a href="/campaigns/consider-the-energy/">Community</a><a href="/campaigns/rob/">R.O.B.</a><a href="/campaigns/wave/">W.A.V.E.</a></nav>
     </header>
+
     <main id="main" class="campaign-main">
-      <section class="campaign-hero" aria-labelledby="page-title">
+      <section class="campaign-hero rob-hero" aria-labelledby="page-title">
         <div class="campaign-hero__copy">
           <p class="campaign-kicker">Community Accountability Campaign</p>
           <h1 id="page-title">Rise Over Bullying.</h1>
           <p class="campaign-hero__lead">Bullying operates wherever repeated power, isolation, intimidation, and silence are allowed to reinforce one another.</p>
           <p class="campaign-hero__line">Rob bullies of their ability to bully.</p>
         </div>
-        <figure class="campaign-hero__media"><img src="/campaigns/assets/rob-rise-over-bullying.svg" alt="Rise Rob Them Back R.O.B. T-shirt design"></figure>
+        <figure class="campaign-hero__media" aria-label="R.O.B. campaign shirt">
+          <div class="rob-shirt-object">
+            <img src="/campaigns/assets/rob-rise-over-bullying.svg" alt="Rise Rob Them Back R.O.B. T-shirt design">
+          </div>
+        </figure>
       </section>
+
       <section class="campaign-tabs" data-campaign-tabs data-active-tab="rob-panel-1" aria-label="Campaign sections">
-        <div class="campaign-tablist" role="tablist" aria-label="Campaign topics"><button type="button" role="tab" id="rob-tab-1" aria-controls="rob-panel-1" aria-selected="true" tabindex="0" data-tab-target="rob-panel-1">The Campaign</button><button type="button" role="tab" id="rob-tab-2" aria-controls="rob-panel-2" aria-selected="false" tabindex="-1" data-tab-target="rob-panel-2">Bullying Today</button><button type="button" role="tab" id="rob-tab-3" aria-controls="rob-panel-3" aria-selected="false" tabindex="-1" data-tab-target="rob-panel-3">Accountability</button><button type="button" role="tab" id="rob-tab-4" aria-controls="rob-panel-4" aria-selected="false" tabindex="-1" data-tab-target="rob-panel-4">Take a Stand</button></div>
+        <div class="campaign-tablist" role="tablist" aria-label="Campaign topics">
+          <button type="button" role="tab" id="rob-tab-1" aria-controls="rob-panel-1" aria-selected="true" tabindex="0" data-tab-target="rob-panel-1">The Campaign</button>
+          <button type="button" role="tab" id="rob-tab-2" aria-controls="rob-panel-2" aria-selected="false" tabindex="-1" data-tab-target="rob-panel-2">Recognize the Pattern</button>
+          <button type="button" role="tab" id="rob-tab-3" aria-controls="rob-panel-3" aria-selected="false" tabindex="-1" data-tab-target="rob-panel-3">Protect Reality</button>
+          <button type="button" role="tab" id="rob-tab-4" aria-controls="rob-panel-4" aria-selected="false" tabindex="-1" data-tab-target="rob-panel-4">Why Community Matters</button>
+        </div>
+
         <div class="campaign-tab-panels">
-          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-1" aria-labelledby="rob-tab-1" aria-hidden="false" data-tab-panel><h2>Rise Over Bullying.</h2><p>R.O.B. turns a familiar word into a community instruction: rob bullies of their ability to bully by ending isolation, increasing visibility, and creating responsible accountability.</p><blockquote class="campaign-quote">Rise. Rob them back. Let’s rob them together.</blockquote><p class="campaign-safety-note"><strong>Not retaliation:</strong> R.O.B. does not authorize bullying, revenge, public shaming, mob punishment, or unsupported accusation.</p></section>
-          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-2" aria-labelledby="rob-tab-2" aria-hidden="true" data-tab-panel hidden><h2>Bullying has evolved beyond the playground.</h2><div class="campaign-grid"><article class="campaign-card"><strong>Workplace</strong><span>Intimidation, humiliation, exclusion, professional sabotage, coercive group pressure, or misuse of authority.</span></article><article class="campaign-card"><strong>Supermarkets, stores, and public spaces</strong><span>Harassment, targeting, degrading treatment, threats, or bystander-enabled intimidation in ordinary community settings.</span></article><article class="campaign-card"><strong>Online and institutional</strong><span>Coordinated ridicule, rumor, exclusion, repeated abuse, or systems that make harmful conduct difficult to challenge.</span></article><article class="campaign-card"><strong>Families and social groups</strong><span>Repeated power imbalances can be disguised as tradition, humor, loyalty, or “just how things are.”</span></article></div><details class="campaign-disclosure"><summary>Cognitive dissonance at scale</summary><div class="campaign-disclosure__body"><p>People can experience conflict between what they believe is right and what their group permits. When that tension is repeatedly rationalized, normalized, or silenced across a workplace or community, it becomes an added toxic factor that helps bullying continue.</p></div></details></section>
-          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-3" aria-labelledby="rob-tab-3" aria-hidden="true" data-tab-panel hidden><h2>Community accountability changes the operating environment.</h2><div class="campaign-statements"><article class="campaign-statement"><strong>Visibility replaces isolation.</strong><span>The targeted person is seen, heard, and supported.</span></article><article class="campaign-statement"><strong>Documentation replaces ambiguity.</strong><span>Patterns, dates, witnesses, and responsible reporting make repeated conduct harder to deny.</span></article><article class="campaign-statement"><strong>Shared standards replace silence.</strong><span>Peers, managers, families, institutions, and bystanders clarify what will not be normalized.</span></article><article class="campaign-statement"><strong>Due process protects integrity.</strong><span>Accountability remains evidence-aware, proportionate, and free from retaliatory harm.</span></article></div></section>
-          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-4" aria-labelledby="rob-tab-4" aria-hidden="true" data-tab-panel hidden><h2>Stand with the person. Address the pattern.</h2><div class="campaign-disclosures"><details class="campaign-disclosure"><summary>In the moment</summary><div class="campaign-disclosure__body"><p>When it is safe, interrupt degrading conduct, move support toward the targeted person, and make clear that the behavior is being witnessed.</p></div></details><details class="campaign-disclosure"><summary>After the incident</summary><div class="campaign-disclosure__body"><p>Check on the person, preserve relevant facts, identify available reporting channels, and ask what support they want rather than taking control away from them.</p></div></details><details class="campaign-disclosure"><summary>When a pattern exists</summary><div class="campaign-disclosure__body"><p>Bring together responsible witnesses, documentation, policy, supervision, community leadership, or professional support appropriate to the setting.</p></div></details><details class="campaign-disclosure"><summary>When danger is immediate</summary><div class="campaign-disclosure__body"><p>Prioritize physical safety and contact appropriate emergency or protective services rather than escalating the confrontation.</p></div></details></div></section>
+          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-1" aria-labelledby="rob-tab-1" aria-hidden="false" data-tab-panel>
+            <h2>Break the isolation.</h2>
+            <div class="rob-face-copy">
+              <p>Bullying becomes more powerful when harm stays private, witnesses stay quiet, and the person being targeted is left to carry the experience alone.</p>
+              <p class="rob-philosophical-punch">R.O.B. changes the conditions that allow bullying to work.</p>
+            </div>
+            <div class="rob-face-back">
+              <h3>Rob them back.</h3>
+              <p>R.O.B. is not about revenge. It is about changing those conditions.</p>
+              <p>Make the harm visible. Move support toward the person. Preserve what happened. Refuse to let silence become permission.</p>
+              <p>The goal is not to overpower the bully. It is to take away the environment that allows bullying to work.</p>
+              <p class="rob-five-ds">Rob them of isolation.<br>Rob them of silence.<br>Rob them of unchecked power.</p>
+              <blockquote class="campaign-quote">Rise. Rob them back. Let’s rob them together.</blockquote>
+            </div>
+          </section>
+
+          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-2" aria-labelledby="rob-tab-2" aria-hidden="true" data-tab-panel hidden>
+            <h2>Bullying does not have one face.</h2>
+            <div class="rob-face-copy">
+              <p>Different expressions. Same destructive current.</p>
+              <p class="rob-philosophical-punch">Look for the pattern—not just the incident.</p>
+            </div>
+            <div class="rob-face-back">
+              <h3>Look at the pattern, not just the incident.</h3>
+              <p>Manipulation is broader than a lie. It is an attempt to shape another person’s perception, emotions, relationships, or choices toward a preferred outcome.</p>
+              <dl class="rob-definition-list">
+                <dt>Deceit</dt><dd>Changes the information.</dd>
+                <dt>Isolation</dt><dd>Limits access to support and other perspectives.</dd>
+                <dt>Gaslighting</dt><dd>Weaponizes manipulation against confidence in perception, memory, or judgment.</dd>
+                <dt>Entitlement</dt><dd>Assumes permission to override another person.</dd>
+                <dt>Presumptive judgment</dt><dd>Assumes superior knowledge of someone else’s reality.</dd>
+                <dt>Oppression</dt><dd>Can emerge when those pressures become powerful and durable enough to constrain agency.</dd>
+              </dl>
+
+              <div class="rob-editorial-visual">
+                <div>
+                  <p>And sometimes control arrives wearing the appearance of something better.</p>
+                  <h3>False Prophets of Affection</h3>
+                  <p>Not every expression of care is genuine.</p>
+                  <p>Concern can conceal control. Protection can become possession. Affection can be used to gain access, compliance, dependency, or influence.</p>
+                  <p class="rob-callout">That does not mean every mistake, disagreement, or awkward expression of care is manipulation. The question is whether a pattern repeatedly moves toward less truth, less agency, more isolation, or more control.</p>
+                </div>
+                <figure class="rob-art">
+                  <img src="/campaigns/rob/assets/manipulation-shirt.svg" alt="Black T-shirt reading Manipulation is when you use other people's minds rather than your own">
+                  <figcaption>Recognize the pattern · Manipulation</figcaption>
+                </figure>
+              </div>
+
+              <details class="campaign-disclosure">
+                <summary>The Five D’s of Deceit</summary>
+                <div class="campaign-disclosure__body rob-editorial-visual rob-editorial-visual--wide">
+                  <figure class="rob-art">
+                    <img src="/campaigns/rob/assets/five-ds-of-deceit.jpg" alt="Five D’s of Deceit editorial graphic">
+                    <figcaption>Deceit → Deviate → Distract → Divide → Destroy</figcaption>
+                  </figure>
+                  <div>
+                    <p class="rob-five-ds">Deceit → Deviate → Distract → Divide → Destroy</p>
+                    <p>Deceit can begin by moving attention away from what actually happened. Distortion rarely needs to erase the truth all at once. Sometimes it only needs to keep people from looking at it clearly long enough.</p>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </section>
+
+          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-3" aria-labelledby="rob-tab-3" aria-hidden="true" data-tab-panel hidden>
+            <h2>What happens when the explanation you keep hearing no longer matches the experience you keep having?</h2>
+            <div class="rob-face-copy">
+              <p>The pressure often begins with explanations that sound ordinary.</p>
+              <div class="rob-recognition-lines" aria-label="Common explanations">
+                <span>“They meant well.”</span>
+                <span>“It was only a joke.”</span>
+                <span>“That’s just how they are.”</span>
+                <span>“Maybe you misunderstood.”</span>
+              </div>
+            </div>
+            <div class="rob-face-back">
+              <h3>When experience and explanation pull apart.</h3>
+              <p>None of those statements automatically proves gaslighting. Sometimes they are ordinary attempts to explain, minimize, avoid conflict, or make sense of an uncomfortable situation.</p>
+              <p>But when explanations repeatedly replace another person’s experience, pressure begins to build.</p>
+              <p>Harm can be conscious or unconscious. Its consequences can be intentional or collateral.</p>
+              <p><strong>Intent matters when responsibility is evaluated. Impact still exists.</strong></p>
+              <p>When what a person experiences and what they are repeatedly told remain in conflict, cognitive dissonance can develop. Cognitive dissonance is not another form of bullying. It is one possible result of sustained contradiction.</p>
+
+              <div class="rob-coherence-grid">
+                <article><strong>Fragmentation</strong><span>Everything starts becoming uncertain. The person may question their memory, judgment, relationships, or ability to act.</span></article>
+                <article><strong>False coherence</strong><span>The contradiction disappears because contrary evidence stops being admitted. Rationalization replaces examination. What once felt wrong becomes normal.</span></article>
+                <article><strong>Healthy coherence</strong><span>The ability to encounter contradiction without surrendering evidence, correction, or agency.</span></article>
+              </div>
+
+              <p>External invalidation can also become internalized. A person may begin repeating the same dismissive explanations to themselves—and sometimes later to others.</p>
+              <p class="rob-callout">You do not have to know someone’s private motive to recognize a harmful pattern. Start with what can actually be observed.</p>
+
+              <div class="rob-editorial-visual rob-editorial-visual--wide">
+                <figure class="rob-art">
+                  <img src="/campaigns/rob/assets/fear-love.png" alt="Fear and love editorial graphic">
+                  <figcaption>False Prophets of Affection · Fear / Love</figcaption>
+                </figure>
+                <div>
+                  <h3>False Prophets of Affection</h3>
+                  <p>Not every expression of care is genuine.</p>
+                  <p class="rob-philosophical-punch">Love does not require someone to surrender reality in order to receive it.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="campaign-tab-panel" role="tabpanel" id="rob-panel-4" aria-labelledby="rob-tab-4" aria-hidden="true" data-tab-panel hidden>
+            <h2>What changes when accountability is the standard?</h2>
+            <div class="rob-face-copy">
+              <p>A person should not have to rise alone.</p>
+              <p class="rob-philosophical-punch">Community changes what harmful power can hide, erase, normalize, and force one person to carry.</p>
+            </div>
+            <div class="rob-face-back">
+              <h3>Community changes the operating environment.</h3>
+              <p>Isolation becomes harder. Patterns become harder to hide. Stories become harder to erase. Harm becomes harder to normalize.</p>
+              <p>Community changes the operating environment because no single person has to carry the entire burden of seeing, remembering, proving, and responding.</p>
+
+              <div class="rob-accountability-list">
+                <span><strong>Visibility</strong> breaks isolation.</span>
+                <span><strong>Documentation</strong> preserves memory.</span>
+                <span><strong>Corroboration</strong> protects reality.</span>
+                <span><strong>Fair process</strong> protects integrity.</span>
+                <span><strong>Accountability</strong> constrains harmful power.</span>
+                <span><strong>Support</strong> restores agency.</span>
+              </div>
+
+              <p>Accountability does not mean taking control away from the person who was harmed.</p>
+              <p class="rob-philosophical-punch">Standing up means standing with them.</p>
+              <p>Ask what support they want. Preserve the facts. Respect their choices. Bring in responsible witnesses, leadership, policy, professional support, or emergency services when the situation requires it.</p>
+              <p>The goal is not to replace one form of control with another.</p>
+              <p>The goal is to create conditions where truth can survive, harmful patterns can be addressed, and people retain the ability to choose what happens next.</p>
+              <blockquote class="campaign-quote">A person should not have to rise alone.</blockquote>
+
+              <div class="campaign-disclosures">
+                <details class="campaign-disclosure"><summary>In the moment</summary><div class="campaign-disclosure__body"><p>When it is safe, interrupt degrading conduct, move support toward the targeted person, and make clear that the behavior is being witnessed.</p></div></details>
+                <details class="campaign-disclosure"><summary>After the incident</summary><div class="campaign-disclosure__body"><p>Check on the person, preserve relevant facts, identify available reporting channels, and ask what support they want rather than taking control away from them.</p></div></details>
+                <details class="campaign-disclosure"><summary>When a pattern exists</summary><div class="campaign-disclosure__body"><p>Bring together responsible witnesses, documentation, policy, supervision, community leadership, or professional support appropriate to the setting.</p></div></details>
+                <details class="campaign-disclosure"><summary>When danger is immediate</summary><div class="campaign-disclosure__body"><p>Prioritize physical safety and contact appropriate emergency or protective services rather than escalating the confrontation.</p></div></details>
+              </div>
+            </div>
+          </section>
         </div>
       </section>
+
+      <section class="campaign-closing rob-closing" aria-labelledby="rob-closing-title">
+        <h2 id="rob-closing-title">A person should not have to rise alone.</h2>
+        <p>See the harm. Support the person. Preserve the truth. Refuse to normalize the pattern.</p>
+        <p class="rob-closing__line">Rob bullies of their ability to bully.</p>
+      </section>
+
       <section class="campaign-route-panel" aria-labelledby="next-title">
         <p class="campaign-kicker">Connected paths</p>
         <h2 id="next-title">Continue through the community.</h2>
-        <div class="campaign-route-grid"><a class="campaign-action" href="/campaigns/consider-the-energy/"><strong>Consider the Energy</strong><span>Return to the community brand and Check Your Baseline.</span></a><a class="campaign-action" href="/campaigns/wave/"><strong>W.A.V.E.</strong><span>Continue from communal accountability into personal safety and agency.</span></a><a class="campaign-action" href="/nine-summits-of-love/"><strong>Nine Summits of Love</strong><span>Explore the values foundation supported by Consider the Energy.</span></a></div>
+        <div class="campaign-route-grid">
+          <a class="campaign-action" href="/campaigns/consider-the-energy/"><strong>Consider the Energy</strong><span>Return to the wider community philosophy and public practice.</span></a>
+          <a class="campaign-action" href="/campaigns/wave/"><strong>W.A.V.E.</strong><span>Continue from communal accountability into personal safety, preparation, and agency.</span></a>
+          <a class="campaign-action" href="/nine-summits-of-love/"><strong>Nine Summits of Love</strong><span>Continue into the narrative journey through the Nine Summits.</span></a>
+        </div>
       </section>
-      <section class="campaign-closing"><h2>A person should not have to rise alone.</h2><p>R.O.B. makes responsibility communal: see the harm, support the target, preserve integrity, and remove the silence in which bullying grows.</p></section>
     </main>
+
     <footer class="campaign-footer">R.O.B. · Rise Over Bullying · Diamond Gate Bridge</footer>
   </div>
 </body>

@@ -29,6 +29,7 @@ const CPU_MODEL_BYTES = 397808192;
 const CPU_MODEL_URL = `https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/resolve/${CPU_MODEL_REVISION}/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf?download=true`;
 const MODEL_URL = new URL("./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/", window.location.href).href;
 const MODEL_LIB_URL = new URL("./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm", window.location.href).href;
+const FIRST_CONTENT_TOKEN_WATCHDOG_MS = 60_000;
 
 const SYSTEM_MESSAGE = [
   "You are On Your Side AAI Public Talk v1, a small browser-local support assistant.",
@@ -97,6 +98,16 @@ const diagnosticState = {
   wasmProbe: { status: "NOT_RUN", httpStatus: null, bytes: null },
   ggufProbe: { status: "NOT_RUN", httpStatus: null, observedContentLength: null },
   ggufDownload: { loaded: 0, total: CPU_MODEL_BYTES, observed: false, complete: false },
+  inferenceTiming: {
+    kind: null,
+    watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS,
+    requestToStreamMs: null,
+    requestToFirstChunkMs: null,
+    requestToFirstContentTokenMs: null,
+    requestToCompletionEndMs: null,
+    watchdogFired: false,
+    watchdogElapsedMs: null
+  },
   versions: {
     primary: "webllm@0.2.85",
     fallback: "wllama@3.4.0",
@@ -122,6 +133,10 @@ function diagnosticError(error) {
   };
 }
 
+function formatDiagnosticMs(value) {
+  return Number.isFinite(value) ? `${value} ms` : "n/a";
+}
+
 function buildDiagnosticReport() {
   const primary = diagnosticState.primaryFailure;
   const fallback = diagnosticState.fallbackFailure;
@@ -145,6 +160,9 @@ function buildDiagnosticReport() {
     `WASM probe: ${diagnosticState.wasmProbe.status} | HTTP ${diagnosticState.wasmProbe.httpStatus ?? "n/a"} | bytes ${diagnosticState.wasmProbe.bytes ?? "n/a"}`,
     `GGUF HEAD: ${diagnosticState.ggufProbe.status} | HTTP ${diagnosticState.ggufProbe.httpStatus ?? "n/a"} | content-length ${diagnosticState.ggufProbe.observedContentLength ?? "n/a"}`,
     `GGUF progress: ${diagnosticState.ggufDownload.loaded} / ${diagnosticState.ggufDownload.total}`,
+    `Inference kind: ${diagnosticState.inferenceTiming.kind || "none"}`,
+    `Inference timing: request→stream ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToStreamMs)} | request→first chunk ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToFirstChunkMs)} | request→first content ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToFirstContentTokenMs)} | request→completion ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToCompletionEndMs)}`,
+    `First-content watchdog: ${diagnosticState.inferenceTiming.watchdogMs} ms | fired ${diagnosticState.inferenceTiming.watchdogFired ? "yes" : "no"} | elapsed ${formatDiagnosticMs(diagnosticState.inferenceTiming.watchdogElapsedMs)}`,
     "",
     "CPU module transport attempts:",
     ...diagnosticState.moduleImportAttempts.map((attempt) =>
@@ -206,7 +224,7 @@ function recordDiagnostic(stage, options = {}) {
     }
   }
   diagnosticState.events.push(event);
-  if (diagnosticState.events.length > 36) diagnosticState.events.shift();
+  if (diagnosticState.events.length > 48) diagnosticState.events.shift();
   renderDiagnostic();
 }
 
@@ -226,7 +244,13 @@ function stageFailureCode(backend, stage, error) {
     CPU_GGUF_DOWNLOAD_COMPLETE: "CPU_MODEL_LOAD_FAILED",
     CPU_MODEL_LOAD: "CPU_MODEL_LOAD_FAILED",
     FIRST_INFERENCE: "FIRST_INFERENCE_FAILED",
-    GENERATION: "GENERATION_FAILED"
+    GENERATION: "GENERATION_FAILED",
+    INFERENCE_REQUEST_SENT: "INFERENCE_REQUEST_FAILED",
+    STREAM_OPENED: "INFERENCE_STREAM_FAILED",
+    FIRST_CHUNK: "FIRST_CHUNK_FAILED",
+    FIRST_CONTENT_TOKEN_WAIT: "FIRST_CONTENT_TOKEN_STALLED",
+    FIRST_CONTENT_TOKEN: "FIRST_CONTENT_TOKEN_FAILED",
+    COMPLETION_END: "COMPLETION_END_FAILED"
   };
   return exact[stage] || (backend === "webllm" ? "WEBLLM_UNKNOWN_FAILURE" : "CPU_FALLBACK_UNKNOWN_FAILURE");
 }
@@ -263,6 +287,23 @@ function resetDiagnosticAttempt() {
   diagnosticState.events = [];
   diagnosticSequence = 0;
   recordDiagnostic("PAGE_BOOT", { backend: "none", result: "ATTEMPT_START" });
+}
+
+function resetInferenceTiming(kind) {
+  diagnosticState.inferenceTiming = {
+    kind,
+    watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS,
+    requestToStreamMs: null,
+    requestToFirstChunkMs: null,
+    requestToFirstContentTokenMs: null,
+    requestToCompletionEndMs: null,
+    watchdogFired: false,
+    watchdogElapsedMs: null
+  };
+}
+
+function inferenceElapsedMs(startedAt) {
+  return Math.max(0, Math.round(performance.now() - startedAt));
 }
 
 async function copyDiagnosticReport() {
@@ -763,35 +804,127 @@ async function sendMessage(text) {
   els.composerNote.textContent = "Generating locally on this device…";
 
   let reply = "";
+  const inferenceKind = firstInferenceCompleted ? "GENERATION" : "FIRST_INFERENCE";
+  const inferenceStartedAt = performance.now();
+  let firstChunkObserved = false;
+  let firstContentTokenObserved = false;
+  let firstTokenWatchdog = null;
+  resetInferenceTiming(inferenceKind);
+
   try {
     const requestMessages = [messages[0], ...messages.slice(1).slice(-10)];
-    const inferenceStage = firstInferenceCompleted ? "GENERATION" : "FIRST_INFERENCE";
-    recordDiagnostic(inferenceStage, { backend: activeBackend || "none" });
+    recordDiagnostic("INFERENCE_REQUEST_SENT", {
+      backend: activeBackend || "none",
+      result: "PASS",
+      details: { kind: inferenceKind, watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS }
+    });
+
+    firstTokenWatchdog = window.setTimeout(() => {
+      if (!generating || stopRequested || firstContentTokenObserved) return;
+      const elapsedMs = inferenceElapsedMs(inferenceStartedAt);
+      diagnosticState.inferenceTiming.watchdogFired = true;
+      diagnosticState.inferenceTiming.watchdogElapsedMs = elapsedMs;
+      recordDiagnostic("FIRST_CONTENT_TOKEN_WAIT", {
+        backend: activeBackend || "none",
+        result: "WARN",
+        code: "FIRST_CONTENT_TOKEN_WATCHDOG",
+        details: {
+          kind: inferenceKind,
+          elapsedMs,
+          watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS
+        }
+      });
+      if (els.diagnosticDetails) els.diagnosticDetails.open = true;
+      els.composerNote.textContent =
+        "First local token is taking longer than expected. Diagnostic timing captured; generation is still running.";
+    }, FIRST_CONTENT_TOKEN_WATCHDOG_MS);
+
     const stream = await createBackendStream(requestMessages);
+    const streamElapsedMs = inferenceElapsedMs(inferenceStartedAt);
+    diagnosticState.inferenceTiming.requestToStreamMs = streamElapsedMs;
+    recordDiagnostic("STREAM_OPENED", {
+      backend: activeBackend || "none",
+      result: "PASS",
+      details: { kind: inferenceKind, elapsedMs: streamElapsedMs }
+    });
 
     for await (const chunk of stream) {
+      if (!firstChunkObserved) {
+        firstChunkObserved = true;
+        const firstChunkElapsedMs = inferenceElapsedMs(inferenceStartedAt);
+        diagnosticState.inferenceTiming.requestToFirstChunkMs = firstChunkElapsedMs;
+        recordDiagnostic("FIRST_CHUNK", {
+          backend: activeBackend || "none",
+          result: "PASS",
+          details: { kind: inferenceKind, elapsedMs: firstChunkElapsedMs }
+        });
+      }
+
       const delta = chunk.choices?.[0]?.delta?.content || "";
       if (delta) {
+        if (!firstContentTokenObserved) {
+          firstContentTokenObserved = true;
+          if (firstTokenWatchdog !== null) {
+            window.clearTimeout(firstTokenWatchdog);
+            firstTokenWatchdog = null;
+          }
+          const firstContentElapsedMs = inferenceElapsedMs(inferenceStartedAt);
+          diagnosticState.inferenceTiming.requestToFirstContentTokenMs = firstContentElapsedMs;
+          recordDiagnostic("FIRST_CONTENT_TOKEN", {
+            backend: activeBackend || "none",
+            result: "PASS",
+            details: { kind: inferenceKind, elapsedMs: firstContentElapsedMs }
+          });
+        }
         reply += delta;
         assistant.body.textContent = reply;
         els.transcript.scrollTop = els.transcript.scrollHeight;
       }
     }
 
+    if (firstTokenWatchdog !== null) {
+      window.clearTimeout(firstTokenWatchdog);
+      firstTokenWatchdog = null;
+    }
+    const completionElapsedMs = inferenceElapsedMs(inferenceStartedAt);
+    diagnosticState.inferenceTiming.requestToCompletionEndMs = completionElapsedMs;
+
     if (reply.trim()) {
+      recordDiagnostic("COMPLETION_END", {
+        backend: activeBackend || "none",
+        result: "PASS",
+        details: { kind: inferenceKind, elapsedMs: completionElapsedMs }
+      });
       messages.push({ role: "assistant", content: reply });
-      recordDiagnostic(inferenceStage, { backend: activeBackend || "none", result: "PASS" });
       firstInferenceCompleted = true;
     } else if (!stopRequested) {
+      const noContentError = new Error("Completion ended without a content token.");
+      recordDiagnostic("COMPLETION_END", {
+        backend: activeBackend || "none",
+        result: "FAIL",
+        code: "COMPLETION_ENDED_WITHOUT_CONTENT",
+        error: noContentError,
+        details: {
+          kind: inferenceKind,
+          elapsedMs: completionElapsedMs,
+          firstChunkObserved
+        }
+      });
+      if (els.diagnosticDetails) els.diagnosticDetails.open = true;
       assistant.body.textContent = "I did not produce a response. Try rephrasing the request.";
     }
   } catch (error) {
+    if (firstTokenWatchdog !== null) {
+      window.clearTimeout(firstTokenWatchdog);
+      firstTokenWatchdog = null;
+    }
     console.error("Native Chat generation failed", error);
     recordDiagnostic(diagnosticState.activeStage, {
       backend: activeBackend || "none",
       result: stopRequested ? "STOPPED" : "FAIL",
       code: stopRequested ? "GENERATION_STOPPED" : stageFailureCode(activeBackend || "none", diagnosticState.activeStage, error),
-      error
+      error,
+      details: { kind: inferenceKind, elapsedMs: inferenceElapsedMs(inferenceStartedAt) }
     });
     if (!stopRequested && els.diagnosticDetails) els.diagnosticDetails.open = true;
     if (stopRequested) {
@@ -802,6 +935,7 @@ async function sendMessage(text) {
         "The local generation stopped unexpectedly. Your prompt was not sent to a hosted model API.";
     }
   } finally {
+    if (firstTokenWatchdog !== null) window.clearTimeout(firstTokenWatchdog);
     assistant.article.classList.remove("streaming");
     generating = false;
     stopRequested = false;

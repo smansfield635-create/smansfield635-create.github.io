@@ -85,7 +85,7 @@ function shouldUseContract(prompt) {
 function shouldUseFirstPartySiteContract(prompt) {
   const text = normalize(prompt).toLowerCase();
   if (!text) return false;
-  const asksAboutFirstParty = /\b(diamond\s*gate\s*bridge|diamondgatebridge\.com|on your side aai|native chat|this website|this site|this page|this build|public talk)\b/.test(text);
+  const asksAboutFirstParty = /\b(diamond\s*gate\s*bridge|diamondgatebridge\.com|on your side aai|native chat|this website|this site|this page|current page|this build|public talk)\b/.test(text);
   const asksForDescription = /\b(what is|what are|tell me|explain|describe|about|can you tell|can you help|why did|how does|what can|role specifically)\b/.test(text);
   return asksAboutFirstParty && asksForDescription;
 }

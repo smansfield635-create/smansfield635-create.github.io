@@ -27,7 +27,7 @@ const CPU_MODEL_REVISION = "b26a58accf53b1a19fbc555d52fdb224bec473f5";
 const CPU_MODEL_SHA256 = "6eb923e7d26e9cea28811e1a8e852009b21242fb157b26149d3b188f3a8c8653";
 const CPU_MODEL_BYTES = 397808192;
 const CPU_MODEL_URL = `https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/resolve/${CPU_MODEL_REVISION}/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf?download=true`;
-const MODEL_URL = new URL("./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/", window.location.href).href;
+const MODEL_URL = new URL("./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/resolve/main/", window.location.href).href;
 const MODEL_LIB_URL = new URL("./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm", window.location.href).href;
 const FIRST_CONTENT_TOKEN_WATCHDOG_MS = 60_000;
 
@@ -355,11 +355,37 @@ function addMessage(role, text, streaming) {
   speaker.textContent = role === "user" ? "You" : "On Your Side";
   const body = document.createElement("div");
   body.className = "message-body";
-  body.textContent = text;
+  let thinkingLabel = null;
+
+  if (role === "assistant" && streaming && !text) {
+    const indicator = document.createElement("span");
+    indicator.className = "thinking-indicator";
+    indicator.setAttribute("role", "status");
+    indicator.setAttribute("aria-live", "polite");
+
+    thinkingLabel = document.createElement("span");
+    thinkingLabel.className = "thinking-label";
+    thinkingLabel.textContent = "Thinking locally";
+
+    const dots = document.createElement("span");
+    dots.className = "thinking-dots";
+    dots.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 3; i += 1) {
+      const dot = document.createElement("span");
+      dot.className = "thinking-dot";
+      dots.append(dot);
+    }
+
+    indicator.append(thinkingLabel, dots);
+    body.append(indicator);
+  } else {
+    body.textContent = text;
+  }
+
   article.append(speaker, body);
   els.transcript.append(article);
   els.transcript.scrollTop = els.transcript.scrollHeight;
-  return { article, body };
+  return { article, body, thinkingLabel };
 }
 
 function resetTranscript() {
@@ -844,6 +870,7 @@ async function sendMessage(text) {
         }
       });
       if (els.diagnosticDetails) els.diagnosticDetails.open = true;
+      if (assistant.thinkingLabel) assistant.thinkingLabel.textContent = "Still thinking locally";
       els.composerNote.textContent =
         "First local token is taking longer than expected. Diagnostic timing captured; generation is still running.";
     }, FIRST_CONTENT_TOKEN_WATCHDOG_MS);
@@ -884,6 +911,7 @@ async function sendMessage(text) {
             result: "PASS",
             details: { kind: inferenceKind, elapsedMs: firstContentElapsedMs }
           });
+          assistant.article.classList.add("has-content");
         }
         reply += delta;
         assistant.body.textContent = reply;

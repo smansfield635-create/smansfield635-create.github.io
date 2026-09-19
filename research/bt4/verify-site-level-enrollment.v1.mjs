@@ -13,7 +13,7 @@ const productionKernel=read('evidence/readiness/bt4-site-governance/entitlement-
 const previewKernel=read('preview/bt4/entitlement-v1/entitlement-engine.v1.mjs');
 const page=read('evidence/readiness/bt4-site-governance/index.html');
 const audralia=read('showroom/globe/audralia/index.html');
-const snapshotLoader=read('inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs');
+const adapterLoader=read('showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs');
 const diagnostic=read('showroom/globe/audralia/diagnostic/index.inspection.authority.js');
 const binding=json('evidence/readiness/governance-gen3-entitlement/binding.v1.json');
 const releaseContract=json('.github/ai-router/publication-release-contract.v1.json');
@@ -40,8 +40,9 @@ assert(page.includes("./site-entitlement.v1.mjs"),'public governance surface is 
 assert(audralia.includes('directDenseCloudCoverage: false'),'current Audralia cloud-policy identity missing');
 assert(audralia.includes('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST'),'current Audralia snapshot loader binding missing');
 assert(audralia.includes('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057'),'current Audralia snapshot reconciliation binding missing');
-assert(snapshotLoader.includes("loader.classList.add('is-ready')"),'current Audralia terminal runtime-ready transition missing');
-assert(snapshotLoader.includes('window.__AUDRALIA_STARTUP_FAILURE__'),'current Audralia startup failure surface missing');
+assert(adapter.includes("getText('/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs')"),'world adapter loader source changed without enrollment reconciliation');
+assert(adapterLoader.includes("classList.add('is-ready')"),'world adapter loader readiness marker missing');
+assert(audralia.includes("window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'FAILED'"),'current Audralia startup failure state missing');
 
 assert(diagnostic.includes('AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_AUTHORITY_STATE'),'real diagnostic authority state surface missing');
 assert(binding.phase==='FRESH_REQUALIFIED'&&Number(binding.epoch)===Number(binding.receiptEpoch),'real scientific claim is not freshly qualified');

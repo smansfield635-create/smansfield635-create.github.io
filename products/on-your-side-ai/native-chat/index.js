@@ -29,15 +29,26 @@ const CPU_MODEL_BYTES = 397808192;
 const CPU_MODEL_URL = `https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/resolve/${CPU_MODEL_REVISION}/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf?download=true`;
 const MODEL_URL = new URL("./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/resolve/main/", window.location.href).href;
 const MODEL_LIB_URL = new URL("./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm", window.location.href).href;
-const FIRST_CONTENT_TOKEN_WATCHDOG_MS = 60_000;
+const FIRST_INFERENCE_FIRST_CONTENT_WATCHDOG_MS = 90_000;
+const GENERATION_FIRST_CONTENT_WATCHDOG_MS = 40_000;
+const RESPONSE_TEMPERATURE = 0.20;
+const RESPONSE_TOP_P = 0.9;
+const RESPONSE_MAX_TOKENS = 220;
+
+function firstContentWatchdogMsForKind(kind) {
+  return kind === "FIRST_INFERENCE"
+    ? FIRST_INFERENCE_FIRST_CONTENT_WATCHDOG_MS
+    : GENERATION_FIRST_CONTENT_WATCHDOG_MS;
+}
 
 const SYSTEM_MESSAGE = [
-  "You are On Your Side AAI Public Talk v1, a small browser-local support assistant.",
-  "Help the user understand, organize, compare, draft, and identify reasonable next steps.",
-  "Be concise, clear, and candid about uncertainty.",
-  "Do not claim professional, medical, legal, financial, scientific, or other expert authority.",
-  "Do not pretend to browse the web, access private files, access a repository, access a private control plane, or execute external actions.",
-  "Never claim that you performed an action you cannot perform.",
+  "You are On Your Side AAI Public Talk v1, the browser-local public conversation assistant on DiamondGateBridge.com.",
+  "You were created to provide lightweight local help with understanding, organizing, comparing, drafting, and deciding reasonable next steps without sending prompts to a hosted model API.",
+  "Answer ordinary questions directly and concisely from your built-in knowledge, and follow the user's requested format when possible.",
+  "For arithmetic or comparisons, work out the result before answering; if you are uncertain, say so rather than guessing.",
+  "If a fact may have changed since your training, say that you cannot verify that it is current.",
+  "You cannot browse the web, access private files or repositories, access a private control plane, or execute external actions; mention these limits only when they matter to the user's request.",
+  "Do not claim professional authority or claim that you performed an action you cannot perform.",
   "Keep the user in control. Always on their side; never in control."
 ].join(" ");
 
@@ -101,7 +112,7 @@ const diagnosticState = {
   ggufDownload: { loaded: 0, total: CPU_MODEL_BYTES, observed: false, complete: false },
   inferenceTiming: {
     kind: null,
-    watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS,
+    watchdogMs: FIRST_INFERENCE_FIRST_CONTENT_WATCHDOG_MS,
     requestToStreamMs: null,
     requestToFirstChunkMs: null,
     requestToFirstContentTokenMs: null,
@@ -294,7 +305,7 @@ function resetDiagnosticAttempt() {
 function resetInferenceTiming(kind) {
   diagnosticState.inferenceTiming = {
     kind,
-    watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS,
+    watchdogMs: firstContentWatchdogMsForKind(kind),
     requestToStreamMs: null,
     requestToFirstChunkMs: null,
     requestToFirstContentTokenMs: null,
@@ -788,9 +799,9 @@ async function createBackendStream(requestMessages) {
     return await engine.chat.completions.create({
       messages: requestMessages,
       stream: true,
-      temperature: 0.65,
-      top_p: 0.9,
-      max_tokens: 420
+      temperature: RESPONSE_TEMPERATURE,
+      top_p: RESPONSE_TOP_P,
+      max_tokens: RESPONSE_MAX_TOKENS
     });
   }
   if (activeBackend === "wllama-cpu") {
@@ -798,9 +809,9 @@ async function createBackendStream(requestMessages) {
     return await engine.createChatCompletion({
       messages: requestMessages,
       stream: true,
-      temperature: 0.65,
-      top_p: 0.9,
-      max_tokens: 420,
+      temperature: RESPONSE_TEMPERATURE,
+      top_p: RESPONSE_TOP_P,
+      max_tokens: RESPONSE_MAX_TOKENS,
       abortSignal: activeAbortController.signal
     });
   }
@@ -845,13 +856,14 @@ async function sendMessage(text) {
   let firstContentTokenObserved = false;
   let firstTokenWatchdog = null;
   resetInferenceTiming(inferenceKind);
+  const watchdogMs = diagnosticState.inferenceTiming.watchdogMs;
 
   try {
     const requestMessages = [messages[0], ...messages.slice(1).slice(-10)];
     recordDiagnostic("INFERENCE_REQUEST_SENT", {
       backend: activeBackend || "none",
       result: "PASS",
-      details: { kind: inferenceKind, watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS }
+      details: { kind: inferenceKind, watchdogMs }
     });
 
     firstTokenWatchdog = window.setTimeout(() => {
@@ -866,14 +878,14 @@ async function sendMessage(text) {
         details: {
           kind: inferenceKind,
           elapsedMs,
-          watchdogMs: FIRST_CONTENT_TOKEN_WATCHDOG_MS
+          watchdogMs
         }
       });
       if (els.diagnosticDetails) els.diagnosticDetails.open = true;
       if (assistant.thinkingLabel) assistant.thinkingLabel.textContent = "Still thinking locally";
       els.composerNote.textContent =
         "First local token is taking longer than expected. Diagnostic timing captured; generation is still running.";
-    }, FIRST_CONTENT_TOKEN_WATCHDOG_MS);
+    }, watchdogMs);
 
     const stream = await createBackendStream(requestMessages);
     const streamElapsedMs = inferenceElapsedMs(inferenceStartedAt);

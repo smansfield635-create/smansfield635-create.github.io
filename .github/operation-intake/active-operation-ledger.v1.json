@@ -11412,6 +11412,49 @@
       "scopeHash": "e78aea49bc3812f8878dada4e45026499c69e99cf593462051081677f8a811b9",
       "state": "ADMITTED_LOCKED"
     },
+    "e7f6f24233a0f361a650d3072df3311771a658cbab80f0e3fac2d6230bdc2593": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1b1b2235cf75576f33cd986ef544363a1569cf9f",
+          "lockGeneration": 2436,
+          "lockScope": "H_EARTH:AUDRALIA:TABLET_CELESTIAL_LITE:RUNTIME_PIN_REBIND:V1",
+          "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_RUNTIME_PIN_REBIND_20260919_001",
+          "procedureLocatorDigest": "574cd88ba4493edf03b0d0e743d37cc41b5454ace17fb739b4bd96121fcd4204",
+          "requestDigest": "1f885cbad3a8484770527e1eaef172225cbf181ace55b498e7f1bcf77620be31",
+          "scopeHash": "e7f6f24233a0f361a650d3072df3311771a658cbab80f0e3fac2d6230bdc2593"
+        },
+        "bindingDigest": "3744faf36976305f297a164c39d6c8c3823ad47976e24f40354077d49a16e58c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "32f2ad04690c0c992b6be9e1868401f540e90acb5851a87e86a2d561d57c787a",
+          "commentId": 5745588305,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3869,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35471890977,
+          "workflowSha": "1b1b2235cf75576f33cd986ef544363a1569cf9f"
+        },
+        "lineageAnchorCommitSha": "a64318da20b7ef12b9ffb71a008e5a7fedcf5e55",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1b1b2235cf75576f33cd986ef544363a1569cf9f",
+      "lockGeneration": 2436,
+      "lockScope": "H_EARTH:AUDRALIA:TABLET_CELESTIAL_LITE:RUNTIME_PIN_REBIND:V1",
+      "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_RUNTIME_PIN_REBIND_20260919_001",
+      "procedureLocatorDigest": "574cd88ba4493edf03b0d0e743d37cc41b5454ace17fb739b4bd96121fcd4204",
+      "released": false,
+      "requestDigest": "1f885cbad3a8484770527e1eaef172225cbf181ace55b498e7f1bcf77620be31",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e7f6f24233a0f361a650d3072df3311771a658cbab80f0e3fac2d6230bdc2593",
+      "state": "ADMITTED_LOCKED"
+    },
     "e80c7122ae7ab821faac311cf8c1ff067c6ff2be01154c366ed5faed3af41b99": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -12598,7 +12641,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2435,
+  "lockGeneration": 2436,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

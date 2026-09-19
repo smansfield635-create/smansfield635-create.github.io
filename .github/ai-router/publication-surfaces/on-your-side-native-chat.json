@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "on-your-side-native-chat",
-  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat JS/CSS runtime identities, preserved WebLLM 0.2.85 primary backend, verified wllama 3.4.0 CPU/WASM fallback substrate, truthful primary/fallback resource disclosure, local stage-level diagnostic evidence, same-origin primary model/WASM assets, user-initiated local model loading, and preserved public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
+  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime identity, preserved WebLLM 0.2.85 primary backend, exact wllama 3.4.0 CPU fallback with ordered version-pinned module transport failover, diagnostic v2 stage/failure-chain evidence, preserved wllama WASM and Qwen GGUF identities, truthful resource disclosure, user-initiated local model loading, and the public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
   "checks": [
     {
       "path": "/products/on-your-side-ai/index.html",
@@ -25,8 +25,8 @@
         "id=\"diagnostic-details\"",
         "id=\"copy-diagnostic\"",
         "<link rel=\"stylesheet\" href=\"./index.css?v=f499fb6a1fa3d4f05541bcb74447f68db265cb0c\" />",
-        "<script type=\"module\" src=\"./index.js?v=4ee7a73ae26a4538582719d3bce77e1e9a4bd4e8\"></script>",
-        "data-native-chat-runtime=\"4ee7a73ae26a4538582719d3bce77e1e9a4bd4e8\""
+        "<script type=\"module\" src=\"./index.js?v=2b33aceb141e13b15c6922a15a1d6a70dc0fe120\"></script>",
+        "data-native-chat-runtime=\"2b33aceb141e13b15c6922a15a1d6a70dc0fe120\""
       ],
       "excludes": []
     },
@@ -41,8 +41,11 @@
         "els.loadButton.addEventListener(\"click\", loadModel);",
         "engine.interruptGenerate();",
         "Public Talk has no repository execution authority.",
-        "https://esm.run/@wllama/wllama@3.4.0",
+        "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/esm/index.js",
+        "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js",
         "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/src/wasm/wllama.wasm",
+        "n_ctx: 2048",
+        "n_threads: 1",
         "n_gpu_layers: 0",
         "engine = await loadCpuFallback(primaryFailureCode || \"WEBLLM_INITIALIZATION_FAILED\")",
         "activeAbortController?.abort();",
@@ -50,7 +53,16 @@
         "RUNTIME_RELEASE_ID !== DECLARED_RUNTIME_RELEASE_ID",
         "NATIVE_CHAT_RUNTIME_RELEASE_ID_MISMATCH",
         "dataset.nativeChatRuntimeActive = RUNTIME_RELEASE_ID",
-        "schema: \"NATIVE_CHAT_LOCAL_DIAGNOSTIC_v1\"",
+        "schema: \"NATIVE_CHAT_LOCAL_DIAGNOSTIC_v2\"",
+        "JSDELIVR_NPM_EXACT",
+        "UNPKG_NPM_EXACT",
+        "CPU_MODULE_PROBE",
+        "moduleImportAttempts",
+        "firstFailedStage",
+        "lastPassedStage",
+        "failureChain",
+        "activeModuleSource",
+        "WLLAMA_REQUIRED_EXPORTS_MISSING",
         "CPU_WASM_FETCH",
         "CPU_GGUF_HEAD_PROBE",
         "CPU_GGUF_DOWNLOAD",
@@ -59,7 +71,9 @@
         "Copy diagnostic report",
         "diagnosticDetails.open = true"
       ],
-      "excludes": []
+      "excludes": [
+        "https://esm.run/@wllama/wllama@3.4.0"
+      ]
     }
   ],
   "runtime": {

@@ -147,20 +147,46 @@ function createState(gl){
       }
 
       if(radius2>1.0)discard;
-      float maria=noise(p*3.4);
-      float highlands=noise(p*12.0);
-      float craterA=abs(sin(length(p-vec2(0.23,-0.11))*34.0))*0.10;
-      float craterB=abs(sin(length(p-vec2(-0.31,0.18))*49.0))*0.055;
-      float light=max(0.12,dot(normal,normalize(vec3(-0.55,0.38,0.74))));
-      vec3 color=mix(
-        vec3(0.27,0.29,0.31),
-        vec3(0.72,0.74,0.72),
-        clamp(highlands*0.72+light,0.0,1.0)
-      );
-      color*=mix(0.68,1.08,maria);
-      color-=(craterA+craterB)*(1.0-light);
-      float limb=smoothstep(1.0,0.82,radius2);
-      outColor=vec4(color,limb*u_visibility*0.92);
+      float maria=noise(p*3.1+vec2(1.7,-2.3));
+      float continental=noise(p*7.2+vec2(-4.1,0.8));
+      float highlands=noise(p*18.0+vec2(3.4,5.7));
+      float micro=noise(p*46.0+vec2(-8.2,2.6));
+
+      float dA=length(p-vec2(0.23,-0.11));
+      float dB=length(p-vec2(-0.31,0.18));
+      float dC=length(p-vec2(0.04,0.37));
+      float dD=length(p-vec2(-0.48,-0.24));
+      float rimA=exp(-pow((dA-0.115)/0.018,2.0));
+      float rimB=exp(-pow((dB-0.082)/0.014,2.0));
+      float rimC=exp(-pow((dC-0.058)/0.011,2.0));
+      float rimD=exp(-pow((dD-0.045)/0.010,2.0));
+      float bowlA=exp(-pow(dA/0.090,2.0));
+      float bowlB=exp(-pow(dB/0.062,2.0));
+      float bowlC=exp(-pow(dC/0.043,2.0));
+      float bowlD=exp(-pow(dD/0.034,2.0));
+      float relief=0.15*(rimA+rimB)+0.11*(rimC+rimD)-0.13*(bowlA+bowlB)-0.08*(bowlC+bowlD);
+
+      vec3 lightDir=normalize(vec3(-0.78,0.30,0.55));
+      float ndl=dot(normal,lightDir);
+      float terminator=smoothstep(-0.10,0.16,ndl);
+      float grazing=pow(max(0.0,1.0-z),2.0);
+      float illumination=mix(0.055,1.0,terminator);
+      illumination*=1.0-0.20*grazing;
+
+      float terrain=0.46*maria+0.25*continental+0.20*highlands+0.09*micro;
+      vec3 darkRock=vec3(0.115,0.125,0.135);
+      vec3 midRock=vec3(0.43,0.445,0.45);
+      vec3 highRock=vec3(0.76,0.77,0.75);
+      vec3 color=mix(darkRock,midRock,clamp(terrain*1.18,0.0,1.0));
+      color=mix(color,highRock,clamp((highlands-0.58)*1.55,0.0,0.72));
+      color*=illumination;
+      color+=vec3(0.30,0.305,0.29)*max(relief,0.0)*terminator;
+      color+=vec3(0.16,0.17,0.18)*min(relief,0.0)*(0.45+0.55*terminator);
+
+      float limb=smoothstep(1.0,0.86,radius2);
+      float edgeShade=mix(0.72,1.0,smoothstep(0.0,0.34,z));
+      color*=edgeShade;
+      outColor=vec4(clamp(color,0.0,1.0),limb*u_visibility*0.94);
     }`);
   const bodyVao=gl.createVertexArray();
 

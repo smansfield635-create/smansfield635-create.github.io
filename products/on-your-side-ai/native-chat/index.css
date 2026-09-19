@@ -55,6 +55,14 @@ h1{font-size:clamp(2.7rem,7vw,6.1rem);line-height:.92;letter-spacing:-.055em;mar
 .progress-wrap{grid-column:1/-1}
 progress{width:100%;height:.65rem;accent-color:var(--mint)}
 #progress-text{margin-top:.45rem;font-size:.8rem}
+.diagnostic-panel{grid-column:1/-1;border:1px solid var(--line);border-radius:.9rem;background:rgba(7,17,15,.72);padding:.8rem .9rem}
+.diagnostic-panel[open]{padding-bottom:1rem}
+.diagnostic-panel summary{cursor:pointer;color:var(--mint);font-size:.82rem;font-weight:780}
+.diagnostic-panel summary::marker{color:var(--gold)}
+.diagnostic-intro{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-top:.8rem}
+.diagnostic-intro p{max-width:680px}
+#diagnostic-report{margin:.8rem 0 0;padding:.8rem;border:1px solid var(--line);border-radius:.7rem;background:#06100e;color:#bdd0c9;font:600 .72rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto}
+#copy-diagnostic{flex:0 0 auto;font-size:.76rem;padding:.55rem .7rem}
 .primary,.secondary{border-radius:.75rem;padding:.72rem .95rem;border:1px solid transparent;font-weight:780}
 .primary{background:var(--mint);color:#07110e}
 .primary:hover:not(:disabled),.primary:focus-visible:not(:disabled){filter:brightness(1.06)}
@@ -97,6 +105,9 @@ footer span{margin-left:auto}
   .load-panel{grid-template-columns:1fr}
   .load-panel .primary{width:100%}
   .progress-wrap{grid-column:auto}
+  .diagnostic-panel{grid-column:auto}
+  .diagnostic-intro{flex-direction:column}
+  #copy-diagnostic{width:100%}
   .chat-shell{min-height:64vh}
   .transcript{max-height:56vh;padding:1rem .8rem}
   .message{max-width:92%}

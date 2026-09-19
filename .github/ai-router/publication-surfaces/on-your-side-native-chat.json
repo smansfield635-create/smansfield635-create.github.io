@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "on-your-side-native-chat",
-  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime identity, preserved WebLLM 0.2.85 primary backend, exact wllama 3.6.0 CPU fallback with ordered version-pinned module transport failover, diagnostic v2 stage/failure-chain evidence, first-inference boundary timing, non-destructive first-content watchdog, WebGPU IndexedDB cache binding, WebLLM-compatible same-origin resolve/main model layout, and truthful first-token thinking state, preserved exact wllama 3.6.0 WASM and Qwen GGUF identities, truthful resource disclosure, user-initiated local model loading, and the public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
+  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime identity, preserved WebLLM 0.2.85 primary backend, exact wllama 3.6.0 CPU fallback with ordered version-pinned module transport failover, diagnostic v2 stage/failure-chain evidence, calibrated cold-versus-warm first-content watchdogs, conservative response sampling and bounded output, WebGPU IndexedDB cache binding, WebLLM-compatible same-origin resolve/main model layout, truthful first-token thinking state, preserved exact wllama 3.6.0 WASM and Qwen GGUF identities, truthful resource disclosure, user-initiated local model loading, and the public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
   "checks": [
     {
       "path": "/products/on-your-side-ai/index.html",
@@ -25,10 +25,13 @@
         "id=\"diagnostic-details\"",
         "id=\"copy-diagnostic\"",
         "<link rel=\"stylesheet\" href=\"./index.css?v=8ef75a894e30827179bef74150e6c714a2d6ee0f\" />",
-        "<script type=\"module\" src=\"./index.js?v=38c3928a289f9b9181b81e7b853bc98c885c62ba\"></script>",
-        "data-native-chat-runtime=\"38c3928a289f9b9181b81e7b853bc98c885c62ba\""
+        "<script type=\"module\" src=\"./index.js?v=2ebdde0912c4831449a44cbdf7e3355db722371e\"></script>",
+        "data-native-chat-runtime=\"2ebdde0912c4831449a44cbdf7e3355db722371e\"",
+        "wllama 3.6.0 can attempt a CPU/WASM fallback using the same Qwen2.5 0.5B model family."
       ],
-      "excludes": []
+      "excludes": [
+        "wllama 3.4.0 can attempt a CPU/WASM fallback"
+      ]
     },
     {
       "path": "/products/on-your-side-ai/native-chat/index.js",
@@ -70,7 +73,6 @@
         "FIRST_INFERENCE",
         "Copy diagnostic report",
         "diagnosticDetails.open = true",
-        "FIRST_CONTENT_TOKEN_WATCHDOG_MS = 60_000",
         "INFERENCE_REQUEST_SENT",
         "STREAM_OPENED",
         "FIRST_CHUNK",
@@ -86,14 +88,30 @@
         "\"Still thinking locally\"",
         "thinking-indicator",
         "thinking-dot",
-        "assistant.article.classList.add(\"has-content\")"
+        "assistant.article.classList.add(\"has-content\")",
+        "FIRST_INFERENCE_FIRST_CONTENT_WATCHDOG_MS = 90_000",
+        "GENERATION_FIRST_CONTENT_WATCHDOG_MS = 40_000",
+        "const RESPONSE_TEMPERATURE = 0.20;",
+        "const RESPONSE_TOP_P = 0.9;",
+        "const RESPONSE_MAX_TOKENS = 220;",
+        "temperature: RESPONSE_TEMPERATURE",
+        "top_p: RESPONSE_TOP_P",
+        "max_tokens: RESPONSE_MAX_TOKENS",
+        "firstContentWatchdogMsForKind(kind)",
+        "const watchdogMs = diagnosticState.inferenceTiming.watchdogMs;",
+        "Answer ordinary questions directly and concisely from your built-in knowledge",
+        "For arithmetic or comparisons, work out the result before answering",
+        "browser-local public conversation assistant on DiamondGateBridge.com"
       ],
       "excludes": [
         "https://esm.run/@wllama/wllama@3.6.0",
         "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/esm/index.js",
         "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js",
         "./runtime/wllama/3.4.0/wllama.wasm",
-        "cacheBackend: \"cache\""
+        "cacheBackend: \"cache\"",
+        "FIRST_CONTENT_TOKEN_WATCHDOG_MS = 60_000",
+        "temperature: 0.65",
+        "max_tokens: 420"
       ]
     },
     {

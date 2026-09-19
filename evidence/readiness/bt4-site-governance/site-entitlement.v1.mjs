@@ -3,6 +3,7 @@ import { serveRequestedState } from './entitlement-engine.v1.mjs?cb=prod1';
 const CLAIM_ID='blinded-governance-generalization';
 const FETCH_DEADLINE_MS=10000;
 const ADAPTER_DEADLINE_MS=15000;
+const AUDRALIA_RUNTIME_RECEIPT='/evidence/readiness/bt4-site-governance/audralia-live-runtime-receipt.v1.json';
 
 async function fetchBounded(url,init={}){
   const controller=new AbortController();
@@ -12,12 +13,20 @@ async function fetchBounded(url,init={}){
 }
 async function getJson(url){const r=await fetchBounded(url);if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.json()}
 async function getText(url){const r=await fetchBounded(url);if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.text()}
+async function getBytes(url){const r=await fetchBounded(url);if(!r.ok)throw new Error(`${url} -> ${r.status}`);return new Uint8Array(await r.arrayBuffer())}
 const out=(id,label,state,detail={})=>({id,label,state,entitlement:serveRequestedState('QUALIFIED',state),detail});
 const held=(id,label,error)=>out(id,label,{epoch:1,provenance:false,reproduction:false,evidence:'insufficient',authority:false,receiptEpoch:0},{error:String(error?.message||error||'adapter unavailable')});
 const withDeadline=(promise,label,timeoutMs=ADAPTER_DEADLINE_MS)=>new Promise((resolve,reject)=>{
   const timer=setTimeout(()=>reject(new Error(`${label} evaluation deadline exceeded after ${timeoutMs}ms`)),timeoutMs);
   Promise.resolve(promise).then(value=>{clearTimeout(timer);resolve(value)},error=>{clearTimeout(timer);reject(error)});
 });
+async function gitBlobHex(bytes){
+  const prefix=new TextEncoder().encode(`blob ${bytes.byteLength}\0`);
+  const input=new Uint8Array(prefix.byteLength+bytes.byteLength);
+  input.set(prefix,0);input.set(bytes,prefix.byteLength);
+  const digest=await crypto.subtle.digest('SHA-1',input);
+  return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 export async function claimAdapter(){
   const [registry,benchmark,identity,binding]=await Promise.all([
@@ -33,16 +42,44 @@ export async function claimAdapter(){
 }
 
 export async function worldAdapter(){
-  const [html,loader]=await Promise.all([
+  const [html,loader,rendererBytes,tabletBytes,receipt]=await Promise.all([
     getText('/showroom/globe/audralia/'),
-    getText('/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs')
+    getText('/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs'),
+    getBytes('/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs'),
+    getBytes('/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs'),
+    getJson(AUDRALIA_RUNTIME_RECEIPT)
   ]);
-  const provenance=html.includes('directDenseCloudCoverage: true')&&loader.includes("classList.add('is-ready')");
-  const state={epoch:1,provenance,reproduction:false,evidence:'supporting',authority:true,receiptEpoch:1};
+  const [rendererBlob,tabletRuntimeBlob]=await Promise.all([gitBlobHex(rendererBytes),gitBlobHex(tabletBytes)]);
+  const receiptValid=
+    receipt?.schema==='AUDRALIA_LIVE_RUNTIME_RECEIPT_v1'&&
+    receipt?.result==='PASS_CLOSED'&&
+    receipt?.surfaceId==='audralia'&&
+    receipt?.qualificationResult==='PASS_CLOSED'&&
+    receipt?.publicationResult==='LIVE_EXACT_HEAD_VERIFIED'&&
+    receipt?.hiddenWebGLRequired===false;
+  const topologyValid=
+    html.includes(receipt?.integrationSchema||'__missing__')&&
+    html.includes('directDenseCloudCoverage: false')&&
+    html.includes(`@${receipt?.tabletRuntimeRef}/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs`)&&
+    loader.includes("classList.add('is-ready')");
+  const identityValid=
+    rendererBlob===receipt?.rendererBlob&&
+    tabletRuntimeBlob===receipt?.tabletRuntimeBlob;
+  const runtimeReady=Boolean(receiptValid&&topologyValid&&identityValid);
+  const state={epoch:1,provenance:Boolean(topologyValid&&identityValid),reproduction:runtimeReady,evidence:receiptValid?'supporting':'insufficient',authority:runtimeReady,receiptEpoch:runtimeReady?1:0};
   return out('world','Audralia world/runtime',state,{
-    runtimeReady:false,
-    runtimeAuthority:'LIVE_RUNTIME_PROBE_DECOUPLED_FROM_EVIDENCE_PAGE',
-    reason:'The Evidence page does not boot a hidden Audralia WebGL runtime. Until a lightweight post-deploy runtime receipt is available to this adapter, runtime reproduction is held closed.'
+    runtimeReady,
+    runtimeAuthority:'DURABLE_AUDRALIA_LIVE_RUNTIME_RECEIPT',
+    receipt:receipt?.schema||null,
+    qualifiedCandidate:receipt?.qualifiedCandidate||null,
+    adoptedCommit:receipt?.adoptedCommit||null,
+    qualificationRun:receipt?.qualificationRun||null,
+    publicationRun:receipt?.publicationRun||null,
+    rendererBlob,
+    tabletRuntimeBlob,
+    reason:runtimeReady
+      ?'Current live Audralia runtime identities match the durable qualification/publication receipt. No hidden WebGL reproduction is required on the Evidence page.'
+      :'Current live Audralia identities do not fully match the durable runtime receipt; the world object remains held closed.'
   });
 }
 

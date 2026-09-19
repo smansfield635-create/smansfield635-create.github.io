@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "on-your-side-native-chat",
-  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime identity, preserved WebLLM 0.2.85 primary backend, exact wllama 3.4.0 CPU fallback with ordered version-pinned module transport failover, diagnostic v2 stage/failure-chain evidence, first-inference boundary timing and non-destructive first-content watchdog, preserved wllama WASM and Qwen GGUF identities, truthful resource disclosure, user-initiated local model loading, and the public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
+  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime identity, preserved WebLLM 0.2.85 primary backend, exact wllama 3.6.0 CPU fallback with ordered version-pinned module transport failover, diagnostic v2 stage/failure-chain evidence, first-inference boundary timing and non-destructive first-content watchdog, preserved exact wllama 3.6.0 WASM and Qwen GGUF identities, truthful resource disclosure, user-initiated local model loading, and the public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
   "checks": [
     {
       "path": "/products/on-your-side-ai/index.html",
@@ -25,8 +25,8 @@
         "id=\"diagnostic-details\"",
         "id=\"copy-diagnostic\"",
         "<link rel=\"stylesheet\" href=\"./index.css?v=f499fb6a1fa3d4f05541bcb74447f68db265cb0c\" />",
-        "<script type=\"module\" src=\"./index.js?v=0a390c5ea9c5c7b16d58655d58123ba07dfc4a7d\"></script>",
-        "data-native-chat-runtime=\"0a390c5ea9c5c7b16d58655d58123ba07dfc4a7d\""
+        "<script type=\"module\" src=\"./index.js?v=bc23da1dbd1d540a2a8c2cf0c042894d872d6306\"></script>",
+        "data-native-chat-runtime=\"bc23da1dbd1d540a2a8c2cf0c042894d872d6306\""
       ],
       "excludes": []
     },
@@ -41,9 +41,9 @@
         "els.loadButton.addEventListener(\"click\", loadModel);",
         "engine.interruptGenerate();",
         "Public Talk has no repository execution authority.",
-        "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/esm/index.js",
-        "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js",
-        "./runtime/wllama/3.4.0/wllama.wasm",
+        "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.6.0/esm/index.js",
+        "https://unpkg.com/@wllama/wllama@3.6.0/esm/index.js",
+        "./runtime/wllama/3.6.0/wllama.wasm",
         "n_ctx: 2048",
         "n_threads: 1",
         "n_gpu_layers: 0",
@@ -80,7 +80,10 @@
         "Diagnostic timing captured; generation is still running."
       ],
       "excludes": [
-        "https://esm.run/@wllama/wllama@3.4.0"
+        "https://esm.run/@wllama/wllama@3.6.0",
+        "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/esm/index.js",
+        "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js",
+        "./runtime/wllama/3.4.0/wllama.wasm"
       ]
     }
   ],

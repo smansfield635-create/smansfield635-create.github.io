@@ -22,7 +22,7 @@ const WLLAMA_MODULE_SOURCES = Object.freeze([
     url: "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js"
   }
 ]);
-const WLLAMA_WASM_URL = "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/src/wasm/wllama.wasm";
+const WLLAMA_WASM_URL = new URL("./runtime/wllama/3.4.0/wllama.wasm", window.location.href).href;
 const CPU_MODEL_REVISION = "b26a58accf53b1a19fbc555d52fdb224bec473f5";
 const CPU_MODEL_SHA256 = "6eb923e7d26e9cea28811e1a8e852009b21242fb157b26149d3b188f3a8c8653";
 const CPU_MODEL_BYTES = 397808192;

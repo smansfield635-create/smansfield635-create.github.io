@@ -1878,6 +1878,49 @@
       "scopeHash": "29faefeb037e128676d0cd86d7542c497e2cf6f151d47a24410af7b1abefb882",
       "state": "ADMITTED_LOCKED"
     },
+    "2b0833675656da0c48250f0d424ae0555c86644bb5bce13657adf1c9243f8e4c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "dd90003cd2375e50bde1be6d9964b13d6a1a16bd",
+          "lockGeneration": 2432,
+          "lockScope": "ESTATE_SOUNDTRACK:THINK_AND_BLINK:SOUNDTRACK_BED_FFMPEG_PREREQUISITE_REPAIR:V2",
+          "operationId": "THINK_AND_BLINK_SOUNDTRACK_BED_FFMPEG_PREREQUISITE_REPAIR_20260919_002",
+          "procedureLocatorDigest": "472a1ac9c932adf895107fd328e87d7ce5a0531a46c38e46ab6c79d586cba427",
+          "requestDigest": "98ab2dcfb191951c4ea550b28b63cc6397e9e3dbc8b67d9442250e47cb6f8a70",
+          "scopeHash": "2b0833675656da0c48250f0d424ae0555c86644bb5bce13657adf1c9243f8e4c"
+        },
+        "bindingDigest": "045462af4844f12610561613e8994eeafeae317008b82ddcc09f7f9ab4138f92",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c811440d456b1c637b1605dfacfa3fcf677b8ef3ba8207cb62b5fad04e9afad6",
+          "commentId": 5745133653,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2141,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35468038601,
+          "workflowSha": "711dfa629aabffd2fdde02b19654ed207d6037b9"
+        },
+        "lineageAnchorCommitSha": "20203a3235c541902b6ccb5cc960c3a390f99716",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "dd90003cd2375e50bde1be6d9964b13d6a1a16bd",
+      "lockGeneration": 2432,
+      "lockScope": "ESTATE_SOUNDTRACK:THINK_AND_BLINK:SOUNDTRACK_BED_FFMPEG_PREREQUISITE_REPAIR:V2",
+      "operationId": "THINK_AND_BLINK_SOUNDTRACK_BED_FFMPEG_PREREQUISITE_REPAIR_20260919_002",
+      "procedureLocatorDigest": "472a1ac9c932adf895107fd328e87d7ce5a0531a46c38e46ab6c79d586cba427",
+      "released": false,
+      "requestDigest": "98ab2dcfb191951c4ea550b28b63cc6397e9e3dbc8b67d9442250e47cb6f8a70",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2b0833675656da0c48250f0d424ae0555c86644bb5bce13657adf1c9243f8e4c",
+      "state": "ADMITTED_LOCKED"
+    },
     "2c0cadccc37dc25b49642974357234cfa3479cb174b2783cfbab7e0072db8fe9": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -12555,7 +12598,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2431,
+  "lockGeneration": 2432,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -12,7 +12,16 @@ document.documentElement.dataset.nativeChatRuntimeActive = RUNTIME_RELEASE_ID;
 
 const MODEL_ID = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
 const WEBLLM_MODULE = "https://esm.run/@mlc-ai/web-llm@0.2.85";
-const WLLAMA_MODULE = "https://esm.run/@wllama/wllama@3.4.0";
+const WLLAMA_MODULE_SOURCES = Object.freeze([
+  {
+    id: "JSDELIVR_NPM_EXACT",
+    url: "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/esm/index.js"
+  },
+  {
+    id: "UNPKG_NPM_EXACT",
+    url: "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js"
+  }
+]);
 const WLLAMA_WASM_URL = "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/src/wasm/wllama.wasm";
 const CPU_MODEL_REVISION = "b26a58accf53b1a19fbc555d52fdb224bec473f5";
 const CPU_MODEL_SHA256 = "6eb923e7d26e9cea28811e1a8e852009b21242fb157b26149d3b188f3a8c8653";
@@ -72,11 +81,16 @@ let firstInferenceCompleted = false;
 let messages = [{ role: "system", content: SYSTEM_MESSAGE }];
 
 const diagnosticState = {
-  schema: "NATIVE_CHAT_LOCAL_DIAGNOSTIC_v1",
+  schema: "NATIVE_CHAT_LOCAL_DIAGNOSTIC_v2",
   runtimeReleaseId: RUNTIME_RELEASE_ID,
   attempt: 0,
   activeStage: "PAGE_BOOT",
   activeBackend: "none",
+  activeModuleSource: null,
+  firstFailedStage: null,
+  lastPassedStage: "PAGE_BOOT",
+  failureChain: [],
+  moduleImportAttempts: [],
   webgpuState: "UNKNOWN",
   primaryFailure: null,
   fallbackFailure: null,
@@ -112,12 +126,16 @@ function buildDiagnosticReport() {
   const primary = diagnosticState.primaryFailure;
   const fallback = diagnosticState.fallbackFailure;
   const lines = [
-    "Native Chat local diagnostic v1",
+    "Native Chat local diagnostic v2",
     "No prompt or conversation content is included.",
     `Runtime release: ${diagnosticState.runtimeReleaseId}`,
     `Attempt: ${diagnosticState.attempt}`,
     `Active backend: ${diagnosticState.activeBackend}`,
     `Active stage: ${diagnosticState.activeStage}`,
+    `Last passed stage: ${diagnosticState.lastPassedStage || "none"}`,
+    `First failed stage: ${diagnosticState.firstFailedStage || "none"}`,
+    `Active module source: ${diagnosticState.activeModuleSource || "none"}`,
+    `Failure chain: ${diagnosticState.failureChain.length ? diagnosticState.failureChain.map((item) => `${item.code}@${item.stage}`).join(" -> ") : "none"}`,
     `WebGPU: ${diagnosticState.webgpuState}`,
     `Primary: ${diagnosticState.versions.primary}`,
     `Fallback: ${diagnosticState.versions.fallback}`,
@@ -127,6 +145,11 @@ function buildDiagnosticReport() {
     `WASM probe: ${diagnosticState.wasmProbe.status} | HTTP ${diagnosticState.wasmProbe.httpStatus ?? "n/a"} | bytes ${diagnosticState.wasmProbe.bytes ?? "n/a"}`,
     `GGUF HEAD: ${diagnosticState.ggufProbe.status} | HTTP ${diagnosticState.ggufProbe.httpStatus ?? "n/a"} | content-length ${diagnosticState.ggufProbe.observedContentLength ?? "n/a"}`,
     `GGUF progress: ${diagnosticState.ggufDownload.loaded} / ${diagnosticState.ggufDownload.total}`,
+    "",
+    "CPU module transport attempts:",
+    ...diagnosticState.moduleImportAttempts.map((attempt) =>
+      `${attempt.sourceId} | probe=${attempt.probeResult} HTTP ${attempt.probeHttpStatus ?? "n/a"} | type=${attempt.contentType || "n/a"} | bytes=${attempt.probeBytes ?? "n/a"} | import=${attempt.importResult}${attempt.error ? ` | ${attempt.error.name}: ${attempt.error.message}` : ""}`
+    ),
     "",
     "Event trace:"
   ];
@@ -143,6 +166,13 @@ function buildDiagnosticReport() {
 function renderDiagnostic() {
   document.documentElement.dataset.nativeChatDiagnosticStage = diagnosticState.activeStage;
   document.documentElement.dataset.nativeChatDiagnosticBackend = diagnosticState.activeBackend;
+  document.documentElement.dataset.nativeChatDiagnosticLastPass = diagnosticState.lastPassedStage || "";
+  document.documentElement.dataset.nativeChatDiagnosticFirstFail = diagnosticState.firstFailedStage || "";
+  if (diagnosticState.activeModuleSource) {
+    document.documentElement.dataset.nativeChatDiagnosticModuleSource = diagnosticState.activeModuleSource;
+  } else {
+    delete document.documentElement.dataset.nativeChatDiagnosticModuleSource;
+  }
   if (diagnosticState.fallbackFailure?.code || diagnosticState.primaryFailure?.code) {
     document.documentElement.dataset.nativeChatDiagnosticCode =
       diagnosticState.fallbackFailure?.code || diagnosticState.primaryFailure?.code;
@@ -167,6 +197,14 @@ function recordDiagnostic(stage, options = {}) {
   if (options.code) event.code = options.code;
   if (options.error) event.error = diagnosticError(options.error);
   if (options.details) event.details = options.details;
+  if (event.result === "PASS") diagnosticState.lastPassedStage = stage;
+  if (event.result === "FAIL") {
+    if (!diagnosticState.firstFailedStage) diagnosticState.firstFailedStage = stage;
+    if (event.code) {
+      diagnosticState.failureChain.push({ backend, stage, code: event.code });
+      if (diagnosticState.failureChain.length > 8) diagnosticState.failureChain.shift();
+    }
+  }
   diagnosticState.events.push(event);
   if (diagnosticState.events.length > 36) diagnosticState.events.shift();
   renderDiagnostic();
@@ -180,6 +218,7 @@ function stageFailureCode(backend, stage, error) {
   const exact = {
     WEBLLM_MODULE_IMPORT: "WEBLLM_MODULE_IMPORT_FAILED",
     WEBLLM_ENGINE_INIT: "WEBLLM_ENGINE_INIT_FAILED",
+    CPU_MODULE_PROBE: "CPU_MODULE_PROBE_FAILED",
     CPU_MODULE_IMPORT: "CPU_MODULE_IMPORT_FAILED",
     CPU_WASM_FETCH: "CPU_WASM_FETCH_FAILED",
     CPU_ENGINE_CONSTRUCT: "CPU_ENGINE_CONSTRUCT_FAILED",
@@ -213,6 +252,11 @@ function resetDiagnosticAttempt() {
   diagnosticState.attempt += 1;
   diagnosticState.primaryFailure = null;
   diagnosticState.fallbackFailure = null;
+  diagnosticState.activeModuleSource = null;
+  diagnosticState.firstFailedStage = null;
+  diagnosticState.lastPassedStage = "PAGE_BOOT";
+  diagnosticState.failureChain = [];
+  diagnosticState.moduleImportAttempts = [];
   diagnosticState.wasmProbe = { status: "NOT_RUN", httpStatus: null, bytes: null };
   diagnosticState.ggufProbe = { status: "NOT_RUN", httpStatus: null, observedContentLength: null };
   diagnosticState.ggufDownload = { loaded: 0, total: CPU_MODEL_BYTES, observed: false, complete: false };
@@ -327,6 +371,7 @@ function classifyLocalError(error, backend, stage = diagnosticState.activeStage)
     return "INSUFFICIENT_MEMORY_OR_RESOURCE_LIMIT";
   }
   if (
+    stage === "CPU_MODULE_PROBE" ||
     stage === "CPU_MODULE_IMPORT" ||
     stage === "CPU_WASM_FETCH" ||
     stage === "CPU_GGUF_DOWNLOAD" ||
@@ -387,6 +432,103 @@ async function loadWebLlmPrimary() {
   return localEngine;
 }
 
+async function importWllamaModule() {
+  let lastError = null;
+
+  for (const source of WLLAMA_MODULE_SOURCES) {
+    const attempt = {
+      sourceId: source.id,
+      host: new URL(source.url).host,
+      probeResult: "NOT_RUN",
+      probeHttpStatus: null,
+      contentType: null,
+      probeBytes: null,
+      importResult: "NOT_RUN",
+      error: null
+    };
+    diagnosticState.moduleImportAttempts.push(attempt);
+    diagnosticState.activeModuleSource = source.id;
+
+    recordDiagnostic("CPU_MODULE_PROBE", {
+      backend: "wllama-cpu",
+      result: "ENTER",
+      details: { sourceId: source.id, host: attempt.host }
+    });
+
+    try {
+      const response = await fetch(source.url, { cache: "force-cache" });
+      attempt.probeHttpStatus = response.status;
+      attempt.contentType = response.headers.get("content-type");
+      if (!response.ok) throw new Error(`WLLAMA_MODULE_HTTP_${response.status}`);
+      const bytes = await response.arrayBuffer();
+      attempt.probeBytes = bytes.byteLength;
+      attempt.probeResult = "PASS";
+      recordDiagnostic("CPU_MODULE_PROBE", {
+        backend: "wllama-cpu",
+        result: "PASS",
+        details: {
+          sourceId: source.id,
+          httpStatus: response.status,
+          contentType: attempt.contentType,
+          bytes: attempt.probeBytes
+        }
+      });
+    } catch (error) {
+      attempt.probeResult = "FAIL";
+      attempt.error = diagnosticError(error);
+      lastError = error;
+      recordDiagnostic("CPU_MODULE_PROBE", {
+        backend: "wllama-cpu",
+        result: "WARN",
+        code: "CPU_MODULE_SOURCE_PROBE_FAILED",
+        error,
+        details: { sourceId: source.id, httpStatus: attempt.probeHttpStatus }
+      });
+      continue;
+    }
+
+    recordDiagnostic("CPU_MODULE_IMPORT", {
+      backend: "wllama-cpu",
+      result: "ENTER",
+      details: { sourceId: source.id }
+    });
+
+    try {
+      const module = await import(source.url);
+      const wllamaExportValid = typeof module.Wllama === "function";
+      const loggerExportValid = module.LoggerWithoutDebug != null;
+      if (!wllamaExportValid || !loggerExportValid) {
+        throw new Error("WLLAMA_REQUIRED_EXPORTS_MISSING");
+      }
+      attempt.importResult = "PASS";
+      recordDiagnostic("CPU_MODULE_IMPORT", {
+        backend: "wllama-cpu",
+        result: "PASS",
+        details: {
+          sourceId: source.id,
+          Wllama: wllamaExportValid,
+          LoggerWithoutDebug: loggerExportValid
+        }
+      });
+      return module;
+    } catch (error) {
+      attempt.importResult = "FAIL";
+      attempt.error = diagnosticError(error);
+      lastError = error;
+      recordDiagnostic("CPU_MODULE_IMPORT", {
+        backend: "wllama-cpu",
+        result: "WARN",
+        code: "CPU_MODULE_SOURCE_IMPORT_FAILED",
+        error,
+        details: { sourceId: source.id }
+      });
+    }
+  }
+
+  diagnosticState.activeModuleSource = null;
+  throw lastError || new Error("WLLAMA_MODULE_TRANSPORT_EXHAUSTED");
+}
+
 async function loadCpuFallback(primaryFailureCode) {
   setStatus(els.deviceStatus, "CPU/WASM fallback starting", "muted");
   setStatus(els.modelStatus, "Loading CPU local model…", "muted");
@@ -394,9 +536,7 @@ async function loadCpuFallback(primaryFailureCode) {
   els.progressText.textContent =
     `${describeLocalError(primaryFailureCode)}. Switching to the CPU/WASM fallback (~398 MB model download on first use)…`;
 
-  recordDiagnostic("CPU_MODULE_IMPORT", { backend: "wllama-cpu" });
-  const { Wllama, LoggerWithoutDebug } = await import(WLLAMA_MODULE);
-  recordDiagnostic("CPU_MODULE_IMPORT", { backend: "wllama-cpu", result: "PASS" });
+  const { Wllama, LoggerWithoutDebug } = await importWllamaModule();
 
   recordDiagnostic("CPU_WASM_FETCH", { backend: "wllama-cpu" });
   const wasmResponse = await fetch(WLLAMA_WASM_URL, { cache: "force-cache" });

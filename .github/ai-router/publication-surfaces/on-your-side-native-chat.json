@@ -108,7 +108,7 @@
         "const watchdogMs = diagnosticState.inferenceTiming.watchdogMs;",
         "Answer ordinary questions directly and concisely from your built-in knowledge",
         "For arithmetic or comparisons, work out the result before answering",
-        "browser-local public conversation assistant on DiamondGateBridge.com"
+        "browser-local cognitive and language executor for On Your Side AAI Public Talk v3 on DiamondGateBridge.com"
       ],
       "excludes": [
         "https://esm.run/@wllama/wllama@3.6.0",

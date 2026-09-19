@@ -6,7 +6,10 @@ import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 
 const SCHEMA='THINK_AND_BLINK_SOUNDTRACK_BED_ASSEMBLY_RECEIPT_v1';
-const OPERATION='THINK_AND_BLINK_SOUNDTRACK_BED_EXECUTION_20260919_001';
+const OPERATION='THINK_AND_BLINK_SOUNDTRACK_BED_EXECUTION_20260919_003';
+const REQUIRED_MEDIA_PACKAGE='ffmpeg';
+const REQUIRED_UBUNTU_ID='ubuntu';
+const REQUIRED_UBUNTU_VERSION='24.04';
 const CONTRACT_COMMENT=5744541283;
 const SAMPLE_RATE=48000;
 const CHANNELS=2;
@@ -42,7 +45,20 @@ const sha256=b=>crypto.createHash('sha256').update(b).digest('hex');
 const round=(v,d=9)=>Math.round(v*10**d)/10**d;
 function fail(code,detail=null){const e=new Error(code);e.code=code;e.detail=detail;throw e;}
 function run(cmd,args,opt={}){const r=spawnSync(cmd,args,{cwd:opt.cwd,encoding:opt.binary?null:'utf8',maxBuffer:128*1024*1024,env:process.env});return{status:r.status??1,stdout:r.stdout??(opt.binary?Buffer.alloc(0):''),stderr:r.stderr??(opt.binary?Buffer.alloc(0):''),error:r.error?.message??null};}
-function requireCommand(name){const r=run(name,['-version']);if(r.status!==0||r.error)fail('REQUIRED_COMMAND_UNAVAILABLE',{name,error:r.error,stderr:String(r.stderr).slice(-1000)});}
+function commandProbe(name){const r=run(name,['-version']);return{available:r.status===0&&!r.error,status:r.status,error:r.error,version:String(r.stdout||r.stderr||'').split(/\r?\n/,1)[0]||null,stderr:String(r.stderr||'').slice(-1000)};}
+function requireCommand(name){const r=commandProbe(name);if(!r.available)fail('REQUIRED_COMMAND_UNAVAILABLE',{name,error:r.error,stderr:r.stderr});return r;}
+function parseOsReleaseText(value){const out={};for(const line of String(value||'').split(/\r?\n/)){const m=line.match(/^([A-Z_]+)=(.*)$/);if(!m)continue;let v=m[2].trim();if((v.startsWith('"')&&v.endsWith('"'))||(v.startsWith("'")&&v.endsWith("'")))v=v.slice(1,-1);out[m[1]]=v;}return out;}
+function supportedProvisioningOs(os){return process.platform==='linux'&&os?.ID===REQUIRED_UBUNTU_ID&&os?.VERSION_ID===REQUIRED_UBUNTU_VERSION;}
+function ensureMediaCommands(){
+  const before={ffmpeg:commandProbe('ffmpeg'),ffprobe:commandProbe('ffprobe')};
+  if(before.ffmpeg.available&&before.ffprobe.available)return{provisioned:false,package:REQUIRED_MEDIA_PACKAGE,ubuntuVersion:REQUIRED_UBUNTU_VERSION,before,after:before};
+  let osRelease={};try{osRelease=parseOsReleaseText(fs.readFileSync('/etc/os-release','utf8'));}catch(e){fail('FFMPEG_PROVISIONING_OS_RELEASE_UNAVAILABLE',{error:e.message});}
+  if(!supportedProvisioningOs(osRelease))fail('FFMPEG_PROVISIONING_UNSUPPORTED_OS',{platform:process.platform,id:osRelease.ID??null,versionId:osRelease.VERSION_ID??null,requiredId:REQUIRED_UBUNTU_ID,requiredVersionId:REQUIRED_UBUNTU_VERSION});
+  const update=run('sudo',['apt-get','update','-qq']);if(update.status!==0||update.error)fail('FFMPEG_PROVISIONING_APT_UPDATE_FAILED',{error:update.error,stderr:String(update.stderr).slice(-2000)});
+  const install=run('sudo',['apt-get','install','-y',REQUIRED_MEDIA_PACKAGE]);if(install.status!==0||install.error)fail('FFMPEG_PROVISIONING_APT_INSTALL_FAILED',{package:REQUIRED_MEDIA_PACKAGE,error:install.error,stderr:String(install.stderr).slice(-4000)});
+  const after={ffmpeg:requireCommand('ffmpeg'),ffprobe:requireCommand('ffprobe')};
+  return{provisioned:true,package:REQUIRED_MEDIA_PACKAGE,ubuntuVersion:REQUIRED_UBUNTU_VERSION,before,after};
+}
 function writeJson(file,value){fs.mkdirSync(path.dirname(path.resolve(file)),{recursive:true});fs.writeFileSync(path.resolve(file),JSON.stringify(stable(value),null,2)+'\n');}
 function writeFailureReceipts(args,value){const bytes=JSON.stringify(stable(value),null,2)+'\n';const targets=[args.receipt,args['diagnostic-receipt']].filter(Boolean);if(!targets.length)return false;for(const file of targets){fs.mkdirSync(path.dirname(path.resolve(file)),{recursive:true});fs.writeFileSync(path.resolve(file),bytes);}return true;}
 function parseArgs(argv){const o={};for(let i=0;i<argv.length;i++){const k=argv[i];if(k==='--assemble'||k==='--self-test'){o[k.slice(2)]=true;continue;}if(!k.startsWith('--'))fail('ARGUMENT_INVALID',k);const v=argv[++i];if(v==null||v.startsWith('--'))fail('ARGUMENT_VALUE_MISSING',k);o[k.slice(2)]=v;}if(Boolean(o.assemble)===Boolean(o['self-test']))fail('MODE_REQUIRED');return o;}
@@ -79,9 +95,12 @@ function selfTest(){const checks=[
   Math.abs((MAP.handoff.source-MAP.campLate.sourceIn)-(MAP.handoff.film-MAP.campLate.filmIn))<1e-9,
   Math.abs((MAP.drop.source-MAP.campLate.sourceIn)-(MAP.drop.film-MAP.campLate.filmIn))<1e-9,
   Math.abs((MAP.terminal.source-MAP.campLate.sourceIn)-(MAP.terminal.film-MAP.campLate.filmIn))<1e-9,
-  filterGraph(-1,-2).includes('adelay=120000|120000')
+  filterGraph(-1,-2).includes('adelay=120000|120000'),
+  OPERATION==='THINK_AND_BLINK_SOUNDTRACK_BED_EXECUTION_20260919_003',
+  REQUIRED_MEDIA_PACKAGE==='ffmpeg'&&REQUIRED_UBUNTU_ID==='ubuntu'&&REQUIRED_UBUNTU_VERSION==='24.04',
+  (()=>{const x=parseOsReleaseText('ID=ubuntu\nVERSION_ID="24.04"\n');return x.ID==='ubuntu'&&x.VERSION_ID==='24.04';})()
 ];const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'think-blink-bed-selftest-'));try{const primary=path.join(tmp,'primary.json'),diagnostic=path.join(tmp,'diagnostic.json');const sentinel={schema:SCHEMA,result:'FAIL_CLOSED',errorCode:'SELF_TEST_SENTINEL',detail:'NETWORK_FREE_FAILURE_RECEIPT_EXPORT',mainMutationPerformed:false,mergePerformed:false,deploymentPerformed:false,publicationPerformed:false};checks.push(writeFailureReceipts({receipt:primary,'diagnostic-receipt':diagnostic},sentinel)===true);const a=fs.readFileSync(primary),b=fs.readFileSync(diagnostic);checks.push(Buffer.compare(a,b)===0);checks.push(JSON.parse(a.toString('utf8')).errorCode==='SELF_TEST_SENTINEL');}finally{fs.rmSync(tmp,{recursive:true,force:true});}return{schema:'THINK_AND_BLINK_SOUNDTRACK_BED_ASSEMBLER_SELF_TEST_v1',result:checks.every(Boolean)?'PASS_CLOSED':'FAIL_CLOSED',checks,passed:checks.filter(Boolean).length,failed:checks.filter(x=>!x).length,networkFetchPerformed:false,repositoryMutationPerformed:false};}
-async function assemble(args){requireCommand('ffmpeg');requireCommand('ffprobe');if(!/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(args['execution-holder']??''))fail('EXECUTION_HOLDER_INVALID');if(!args.audio||!args.receipt)fail('OUTPUT_PATHS_REQUIRED');const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'think-blink-bed-'));try{
+async function assemble(args){const mediaTools=ensureMediaCommands();if(!/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(args['execution-holder']??''))fail('EXECUTION_HOLDER_INVALID');if(!args.audio||!args.receipt)fail('OUTPUT_PATHS_REQUIRED');const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'think-blink-bed-'));try{
     const aq=path.join(tmp,'aquarium.ogg'),lc=path.join(tmp,'campanella.ogg');
     const aqCustody=await fetchExact(SOURCES.AQUARIUM,aq);const lcCustody=await fetchExact(SOURCES.CAMPANELLA,lc);
     const aqProbe=probe(aq),lcProbe=probe(lc);
@@ -109,7 +128,7 @@ async function assemble(args){requireCommand('ffmpeg');requireCommand('ffprobe')
     const receipt={
       schema:SCHEMA,result:Object.values(checks).every(Boolean)?'PASS_CLOSED':'FAIL_CLOSED',operationId:OPERATION,executionHolder:args['execution-holder'],contractCommentId:CONTRACT_COMMENT,
       sources:{AQUARIUM:{...aqCustody,probe:aqProbe,loudness:aqLoud,rights:SOURCES.AQUARIUM.rights},CAMPANELLA:{...lcCustody,probe:lcProbe,loudness:lcLoud,rights:SOURCES.CAMPANELLA.rights}},
-      timeline:MAP,mix:{sampleRate:SAMPLE_RATE,channels:CHANNELS,runtimeSeconds:RUNTIME,duckDb:6,duckAttackMs:40,duckReleaseMs:350,dropProtection:true,limiterApplied:false},
+      timeline:MAP,executionPrerequisites:mediaTools,mix:{sampleRate:SAMPLE_RATE,channels:CHANNELS,runtimeSeconds:RUNTIME,duckDb:6,duckAttackMs:40,duckReleaseMs:350,dropProtection:true,limiterApplied:false},
       output:{path:args.audio,bytes:outBytes.length,sha256:sha256(outBytes),probe:outProbe,codec:'opus',bitrateTarget:'192k',pcmConstructionProbe:renderInfo.pcmProbe,sampleCountExpected},
       verification:{checks,handoffWindow:{start:118,end:121.5,quietest10ms:quiet10,bins10ms:handoffBins10,bins50ms:handoffBins50}},
       sideEffects:{sourceSubstitutionPerformed:false,thirdPartyEditingApplicationUsed:false,mainMutationPerformed:false,mergePerformed:false,deploymentPerformed:false,publicationPerformed:false}

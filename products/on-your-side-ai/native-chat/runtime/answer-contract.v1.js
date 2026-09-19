@@ -1,5 +1,7 @@
 const INDEX_URL = "/products/on-your-side-ai/native-chat/integrity-index/index.v1.json";
 const CONTRACT_ID = "DG_NATIVE_CHAT_EVIDENCE_ANSWER_CONTRACT_v1";
+const FIRST_PARTY_SITE_CONTRACT_ID = "DG_NATIVE_CHAT_FIRST_PARTY_SITE_CONTRACT_v1";
+const GPU_SHADER_CLASSIFICATION_ID = "DG_NATIVE_CHAT_WEBGPU_SHADER_FAILURE_CLASSIFICATION_v1";
 const MODEL_MANIFEST_ALIAS_ID = "DG_NATIVE_CHAT_WEBLLM_MANIFEST_ALIAS_v1";
 const MODEL_MANIFEST_ROOT = "/products/on-your-side-ai/native-chat/runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/resolve/main/";
 const ACCURATE_COMPOSER_NOTE = "Conversation inference stays local. Search is scored locally against the same-origin Integrity Index. No search query leaves the browser in this edition.";
@@ -48,6 +50,14 @@ function shouldUseContract(prompt) {
   return asksForIndex && asksForBuild && asksForBoundaries;
 }
 
+function shouldUseFirstPartySiteContract(prompt) {
+  const text = normalize(prompt).toLowerCase();
+  if (!text) return false;
+  const asksAboutFirstParty = /\b(diamond\s*gate\s*bridge|diamondgatebridge\.com|on your side aai|native chat|this website|this site|this page|this build|public talk)\b/.test(text);
+  const asksForDescription = /\b(what is|what are|tell me|explain|describe|about|can you tell|can you help|why did|how does|what can)\b/.test(text);
+  return asksAboutFirstParty && asksForDescription;
+}
+
 function appendMessage(role, text) {
   const transcript = document.querySelector("#transcript");
   if (!transcript) return null;
@@ -65,8 +75,7 @@ function appendMessage(role, text) {
   return article;
 }
 
-function appendContractAnswer(sources) {
-  const article = appendMessage("assistant", "This is a browser-local Native Chat build for On Your Side AAI. It can help with understanding, organizing, comparing, drafting, and identifying reasonable next steps. It cannot access private repositories, credentials, private control planes, or open-web/live sources. When a current-world question falls outside the bootstrap Integrity Index, it should hold unresolved rather than guess from model memory.");
+function appendSources(article, sources) {
   if (!article || !sources.length) return;
   const section = document.createElement("div");
   section.className = "message-sources";
@@ -86,6 +95,16 @@ function appendContractAnswer(sources) {
   }
   section.append(label, list);
   article.append(section);
+}
+
+function appendContractAnswer(sources) {
+  const article = appendMessage("assistant", "This is a browser-local Native Chat build for On Your Side AAI. It can help with understanding, organizing, comparing, drafting, and identifying reasonable next steps. It cannot access private repositories, credentials, private control planes, or open-web/live sources. When a current-world question falls outside the bootstrap Integrity Index, it should hold unresolved rather than guess from model memory.");
+  appendSources(article, sources);
+}
+
+function appendFirstPartySiteAnswer(sources) {
+  const article = appendMessage("assistant", "Yes. DiamondGateBridge.com is the first-party public site hosting this Native Chat build and the On Your Side AAI public pages. I can discuss the public site, this page, and the local build from the same-origin Integrity Index and visible page evidence. I cannot access private repositories, credentials, private control planes, unpublished files, or take repository actions from this public chat. If a requested fact is outside the first-party index or current page evidence, I should hold unresolved rather than guess.");
+  appendSources(article, sources);
 }
 
 async function loadIndexSources() {
@@ -121,13 +140,29 @@ function correctComposerNote() {
   }
 }
 
+function classifyDiagnosticText(text) {
+  if (/GPUPipelineError|Invalid ShaderModule|entryPoint:\s*"?index_kernel"?/i.test(text)) {
+    return "GPU_SHADER_COMPATIBILITY_FAILURE";
+  }
+  return null;
+}
+
 function correctDiagnosticReport() {
   const report = document.querySelector("#diagnostic-report");
   if (!report || !report.textContent) return;
   let text = report.textContent;
-  const next = text
+  const classification = classifyDiagnosticText(text);
+  let next = text
     .replace(/^Native Chat local diagnostic v2/m, "Native Chat diagnostic schema v2\nRuntime build: Public Talk v3")
     .replace(/^V2 timing:/m, "Evidence timing:");
+  if (classification && !/WebGPU failure class:/m.test(next)) {
+    next = next.replace(
+      /^Primary failure:/m,
+      `WebGPU failure class: ${classification} | ${GPU_SHADER_CLASSIFICATION_ID}\nPrimary failure:`
+    );
+    document.documentElement.dataset.nativeChatWebgpuFailureClass = classification;
+    document.documentElement.dataset.nativeChatWebgpuFailureClassifier = GPU_SHADER_CLASSIFICATION_ID;
+  }
   if (next !== text) report.textContent = next;
 }
 
@@ -152,15 +187,18 @@ function installAnswerContract() {
   if (!form || !prompt) return;
   form.addEventListener("submit", async event => {
     const text = normalize(prompt.value);
-    if (!shouldUseContract(text)) return;
+    const useIndexContract = shouldUseContract(text);
+    const useFirstPartySiteContract = !useIndexContract && shouldUseFirstPartySiteContract(text);
+    if (!useIndexContract && !useFirstPartySiteContract) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     appendMessage("user", text);
     prompt.value = "";
-    setComposerNote("Answering from the local Integrity Index contract…");
+    setComposerNote(useIndexContract ? "Answering from the local Integrity Index contract…" : "Answering from the first-party site contract…");
     try {
       const sources = await loadIndexSources();
-      appendContractAnswer(sources);
+      if (useIndexContract) appendContractAnswer(sources);
+      else appendFirstPartySiteAnswer(sources);
       setComposerNote();
     } catch {
       appendMessage("assistant", "I could not load the local Integrity Index for this turn, so I will hold unresolved rather than guess.");
@@ -171,5 +209,6 @@ function installAnswerContract() {
 
 installTensorCacheAlias();
 document.documentElement.dataset.nativeChatAnswerContract = CONTRACT_ID;
+document.documentElement.dataset.nativeChatFirstPartySiteContract = FIRST_PARTY_SITE_CONTRACT_ID;
 installAnswerContract();
 installUiCorrections();

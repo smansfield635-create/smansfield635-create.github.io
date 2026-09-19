@@ -33,7 +33,8 @@
         "Native Chat V3 runtime identity",
         "answer-contract.v2.first-party-gate.js",
         "NATIVE_CHAT_V3_VISIBLE_RUNTIME_IDENTITY_AND_CONTRACT_GATE_v1",
-        "data-native-chat-contract-ready=\"WAITING\""
+        "data-native-chat-contract-ready=\"WAITING\"",
+        "CONTRACT LAYER FAILED"
       ],
       "excludes": [
         "wllama 3.4.0 can attempt a CPU/WASM fallback"

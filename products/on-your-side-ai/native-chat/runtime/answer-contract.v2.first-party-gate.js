@@ -9,32 +9,24 @@ const MODEL_MANIFEST_ALIAS_ID = "DG_NATIVE_CHAT_WEBLLM_MANIFEST_ALIAS_v1";
 const MODEL_MANIFEST_ROOT = "/products/on-your-side-ai/native-chat/runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/resolve/main/";
 const ACCURATE_COMPOSER_NOTE = "Conversation inference stays local. Search is scored locally against the same-origin Integrity Index. No search query leaves the browser in this edition.";
 
-function installTensorCacheAlias() {
-  if (window.__DG_NATIVE_CHAT_TENSOR_CACHE_ALIAS_INSTALLED__) return;
-  const nativeFetch = window.fetch.bind(window);
-  function aliasUrl(input) {
-    const raw = typeof input === "string"
-      ? input
-      : input instanceof URL
-        ? input.href
-        : input?.url;
-    if (!raw) return null;
-    const url = new URL(raw, window.location.href);
-    if (url.origin === window.location.origin && url.pathname === MODEL_MANIFEST_ROOT + "tensor-cache.json") {
-      url.pathname = MODEL_MANIFEST_ROOT + "ndarray-cache.json";
-      return url.href;
-    }
-    return null;
-  }
-  window.fetch = (input, init) => {
-    const aliased = aliasUrl(input);
-    if (!aliased) return nativeFetch(input, init);
-    document.documentElement.dataset.nativeChatManifestAlias = MODEL_MANIFEST_ALIAS_ID;
-    if (input instanceof Request) return nativeFetch(new Request(aliased, input), init);
-    return nativeFetch(aliased, init);
-  };
-  window.__DG_NATIVE_CHAT_TENSOR_CACHE_ALIAS_INSTALLED__ = true;
-  document.documentElement.dataset.nativeChatManifestAliasInstalled = MODEL_MANIFEST_ALIAS_ID;
+function markContractLayerFailed(error) {
+  const root = document.documentElement;
+  const detail = error instanceof Error ? error.message : String(error || "UNKNOWN_OVERLAY_INITIALIZATION_FAILURE");
+  root.dataset.nativeChatContractReady = "FAILED";
+  root.dataset.nativeChatContractFailure = detail.slice(0, 240);
+  setText("#runtime-identity-gate", "CONTRACT LAYER FAILED");
+  setText("#runtime-identity-answer-contract", "FAILED");
+  setText("#runtime-identity-first-party-contract", "FAILED");
+  setText("#runtime-identity-webgpu-classifier", "FAILED");
+  setText("#runtime-identity-send-gate", "LOCKED");
+  const plate = document.querySelector("#runtime-identity");
+  if (plate) plate.dataset.contractReady = "FAILED";
+  const note = document.querySelector("#composer-note");
+  if (note) note.textContent = "Contract layer failed. The page remains available; sending is locked.";
+  const send = document.querySelector("#send-message");
+  const prompt = document.querySelector("#prompt");
+  if (send) send.disabled = true;
+  if (prompt) prompt.disabled = true;
 }
 
 function normalize(value) {
@@ -274,7 +266,18 @@ function installAnswerContract() {
   }, { capture: true });
 }
 
-installTensorCacheAlias();
-markContractLayerReady();
-installAnswerContract();
-installUiCorrections();
+function initializeOverlay() {
+  try {
+    markContractLayerReady();
+    installAnswerContract();
+    installUiCorrections();
+  } catch (error) {
+    markContractLayerFailed(error);
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeOverlay, { once: true });
+} else {
+  initializeOverlay();
+}

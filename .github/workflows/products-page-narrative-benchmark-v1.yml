@@ -57,9 +57,33 @@ jobs:
           set -euo pipefail
           test -f campaigns/index.css
           test -f campaigns/index.tabs.js
-          test "$(find campaigns -path '*/index.html' -type f | wc -l | tr -d ' ')" = "6"
-          test "$(find campaigns/assets -maxdepth 1 -type f | wc -l | tr -d ' ')" = "6"
-          ! find campaigns -path '*/index.css' -o -path '*/index.js' | grep -vE '^campaigns/index\.(css|tabs\.js)$'
+
+          find campaigns -path '*/index.html' -type f | sort > /tmp/campaign-index-pages.actual.txt
+          cat > /tmp/campaign-index-pages.expected.txt <<'EOF'
+          campaigns/consider-the-energy/index.html
+          campaigns/consider-the-energy/jen-leney/index.html
+          campaigns/consider-the-energy/secret-of-life-edition/index.html
+          campaigns/rob/index.html
+          campaigns/wave/index.html
+          campaigns/wave/mr-lee/index.html
+          campaigns/wave/thai-boxing/index.html
+          EOF
+          sed -i 's/^          //' /tmp/campaign-index-pages.expected.txt
+          diff -u /tmp/campaign-index-pages.expected.txt /tmp/campaign-index-pages.actual.txt
+
+          find campaigns/assets -maxdepth 1 -type f | sort > /tmp/campaign-assets.actual.txt
+          cat > /tmp/campaign-assets.expected.txt <<'EOF'
+          campaigns/assets/consider-energy-baseline.svg
+          campaigns/assets/consider-energy-symbolic.svg
+          campaigns/assets/mr-lee-resume.svg
+          campaigns/assets/rob-rise-over-bullying.svg
+          campaigns/assets/tai-boxing-class.svg
+          campaigns/assets/wave-flyer.svg
+          EOF
+          sed -i 's/^          //' /tmp/campaign-assets.expected.txt
+          diff -u /tmp/campaign-assets.expected.txt /tmp/campaign-assets.actual.txt
+
+          ! find campaigns -mindepth 2 \( -path '*/index.css' -o -path '*/index.js' \) -type f | grep .
 
       - name: Start branch-local static server
         shell: bash

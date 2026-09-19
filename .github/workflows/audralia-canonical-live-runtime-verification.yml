@@ -2,7 +2,7 @@ name: Audralia Canonical Live Runtime Verification
 
 on:
   workflow_run:
-    workflows: ["AI Entry — Automatic Exact-Head Release"]
+    workflows: ["Exact Head Pages Deploy v3"]
     types: [completed]
 
 permissions:

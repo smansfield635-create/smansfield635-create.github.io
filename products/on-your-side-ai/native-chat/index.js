@@ -1,5 +1,5 @@
 import { createSearchClient } from "./runtime/search-client.v1.js?v=2eac6ebe5ab32f57971af9dfcec7b74e6c543b49";
-import { createPersonaAnchor } from "./runtime/persona-anchor.v1.js";
+import { createPersonaAnchor } from "./runtime/persona-anchor.v1.js?v=8c15815b52c7cc0b35598941a27f4ae22c46df10";
 
 const RUNTIME_RELEASE_ID = new URL(import.meta.url).searchParams.get("v") || "";
 const DECLARED_RUNTIME_RELEASE_ID = document.documentElement.dataset.nativeChatRuntime || "";

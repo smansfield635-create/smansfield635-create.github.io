@@ -1,3 +1,5 @@
+import { JEEVES_CHAMBER_BINDING, composeJeevesChamberInstruction } from "./jeeves-chamber-binding.v1.js";
+
 const DEFAULT_VOICE_URL = "/assets/hearth/jeeves/jeeves.voice.js";
 const EXPECTED_VOICE_BLOB = "ebfb51804946d0afbb3f2145029480f803bdd655";
 const EXPECTED_CONTRACT = "DIAMOND_GATE_BRIDGE_JEEVES_ELEVATOR_PITCH_ROUTING_VOICE_TNT_v2";
@@ -33,6 +35,7 @@ export function createPersonaAnchor({
 
   return Object.freeze({
     id: "JEEVES",
+    chamberBindingId: JEEVES_CHAMBER_BINDING.id,
     interfaceId: "DG_PERSONA_ANCHOR_v1",
     voiceUrl,
     versionBoundVoiceUrl,
@@ -53,7 +56,8 @@ export function createPersonaAnchor({
         "Expression law: " + identity.expressionLaw,
         "Boundary law: " + identity.boundaryLaw,
         "Hospitality law: " + identity.hospitalityLaw,
-        "The persona may shape expression and handoff, but it may not change source facts, evidentiary standing, tool permissions, or claim ceilings."
+        "The persona may shape expression and handoff, but it may not change source facts, evidentiary standing, tool permissions, or claim ceilings.",
+        composeJeevesChamberInstruction()
       ].join(" ");
     },
     holdMessage() {

@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-native-chat-runtime="2ebdde0912c4831449a44cbdf7e3355db722371e">
+<html lang="en" data-native-chat-runtime="4d72e990ae7a0c1400d3af014941f62246611f53">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <meta name="description" content="On Your Side AAI Public Talk v1 — browser-local conversation with a small on-device model." />
+  <meta name="description" content="On Your Side AAI Public Talk v2 — browser-local reasoning with bounded current-evidence retrieval." />
   <title>Native Chat — On Your Side AAI</title>
   <link rel="stylesheet" href="./index.css?v=8ef75a894e30827179bef74150e6c714a2d6ee0f" />
 </head>
@@ -16,7 +16,7 @@
       <span>On Your Side AAI</span>
     </a>
     <div class="topbar-actions">
-      <span class="edition">Public Talk v1</span>
+      <span class="edition">Public Talk v2</span>
       <a href="/products/on-your-side-ai/">Return</a>
     </div>
   </header>
@@ -27,7 +27,7 @@
       <h1 id="page-title">Native Chat</h1>
       <p class="lede">A small AI that runs in your browser. It can help you understand, organize, compare, draft, and identify a next step while keeping you in control.</p>
       <div class="boundary-grid" aria-label="Public edition boundaries">
-        <div><strong>Local inference</strong><span>Prompts are not sent to a hosted model API.</span></div>
+        <div><strong>Local inference</strong><span>The language model runs in this browser. When current evidence is required, only a short derived search query is sent to the public search service.</span></div>
         <div><strong>User initiated</strong><span>The WebGPU path is roughly 294 MB. CPU fallback may require about 398 MB more on its first load.</span></div>
         <div><strong>Public boundary</strong><span>No repository credentials, private control plane, or execution authority.</span></div>
       </div>
@@ -69,7 +69,7 @@
         <section class="transcript" id="transcript" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Conversation">
           <article class="message assistant">
             <p class="speaker">On Your Side</p>
-            <div class="message-body">Load the local AI when you are ready. This public build is conversation-only: it cannot access the private repository control plane or take repository actions.</div>
+            <div class="message-body">Load the local AI when you are ready. Jeeves can converse locally and, when freshness matters, consult bounded current public evidence. This build cannot access the private repository control plane or take repository actions.</div>
           </article>
         </section>
 
@@ -90,8 +90,8 @@
 
     <section class="notes" aria-labelledby="notes-title">
       <h2 id="notes-title">What this build is</h2>
-      <p>Public Talk v1 is intentionally narrow. It uses the verified Qwen2.5 0.5B local runtime for lightweight conversation. It does not claim frontier-model capability or professional authority. Research, Diagnostic, and governed private Execution are separate capability layers and are not exposed by this public chat.</p>
-      <p class="technical-note">WebLLM 0.2.85 is the primary browser-local backend. If it cannot initialize, wllama 3.6.0 can attempt a CPU/WASM fallback using the same Qwen2.5 0.5B model family. Diagnostic evidence remains local unless you choose to copy it.</p>
+      <p>Public Talk v2 keeps language-model inference on your device and adds a bounded evidence route for questions that require current public information. Search returns candidate evidence to the local model; search rank is not treated as truth. It does not claim frontier-model capability or professional authority. Governed private Execution remains separate and is not exposed by this public chat.</p>
+      <p class="technical-note">WebLLM 0.2.85 is the primary browser-local backend. If it cannot initialize, wllama 3.6.0 can attempt a CPU/WASM fallback using the same Qwen2.5 0.5B model family. For a freshness-triggered request, a bounded query may leave the browser to retrieve current public source candidates; the conversation itself is not sent to a hosted model API. Diagnostic reports omit prompt and conversation content.</p>
     </section>
   </main>
 
@@ -101,6 +101,6 @@
     <span>On Your Side AAI</span>
   </footer>
 
-  <script type="module" src="./index.js?v=2ebdde0912c4831449a44cbdf7e3355db722371e"></script>
+  <script type="module" src="./index.js?v=4d72e990ae7a0c1400d3af014941f62246611f53"></script>
 </body>
 </html>

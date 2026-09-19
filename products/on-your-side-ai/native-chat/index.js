@@ -1,3 +1,6 @@
+import { createSearchClient } from "./runtime/search-client.v1.js";
+import { createPersonaAnchor } from "./runtime/persona-anchor.v1.js";
+
 const RUNTIME_RELEASE_ID = new URL(import.meta.url).searchParams.get("v") || "";
 const DECLARED_RUNTIME_RELEASE_ID = document.documentElement.dataset.nativeChatRuntime || "";
 
@@ -34,6 +37,14 @@ const GENERATION_FIRST_CONTENT_WATCHDOG_MS = 40_000;
 const RESPONSE_TEMPERATURE = 0.20;
 const RESPONSE_TOP_P = 0.9;
 const RESPONSE_MAX_TOKENS = 220;
+const SEARCH_ENDPOINT = "/api/integrity-search";
+const CANONICAL_JEEVES_VOICE_URL = "/assets/hearth/jeeves/jeeves.voice.js";
+const CANONICAL_JEEVES_VOICE_BLOB = "ebfb51804946d0afbb3f2145029480f803bdd655";
+const searchClient = createSearchClient({ endpoint: SEARCH_ENDPOINT, maxSources: 3 });
+const personaAnchor = createPersonaAnchor({
+  voiceUrl: CANONICAL_JEEVES_VOICE_URL,
+  expectedVoiceBlob: CANONICAL_JEEVES_VOICE_BLOB
+});
 
 function firstContentWatchdogMsForKind(kind) {
   return kind === "FIRST_INFERENCE"
@@ -42,12 +53,12 @@ function firstContentWatchdogMsForKind(kind) {
 }
 
 const SYSTEM_MESSAGE = [
-  "You are On Your Side AAI Public Talk v1, the browser-local public conversation assistant on DiamondGateBridge.com.",
-  "You were created to provide lightweight local help with understanding, organizing, comparing, drafting, and deciding reasonable next steps without sending prompts to a hosted model API.",
+  "You are the browser-local cognitive and language executor for On Your Side AAI Public Talk v2 on DiamondGateBridge.com.",
+  "Provide lightweight local help with understanding, organizing, comparing, drafting, and deciding reasonable next steps. The language model runs locally; when freshness is required, a separate bounded retrieval capability may supply current public evidence.",
   "Answer ordinary questions directly and concisely from your built-in knowledge, and follow the user's requested format when possible.",
   "For arithmetic or comparisons, work out the result before answering; if you are uncertain, say so rather than guessing.",
-  "If a fact may have changed since your training, say that you cannot verify that it is current.",
-  "You cannot browse the web, access private files or repositories, access a private control plane, or execute external actions; mention these limits only when they matter to the user's request.",
+  "For facts that may have changed, do not rely on training memory when current external evidence is supplied; reason from that evidence and preserve its uncertainty.",
+  "You do not browse directly. Bounded search evidence may be supplied separately. You still cannot access private files or repositories, access a private control plane, or execute external actions; mention these limits only when they matter to the user's request.",
   "Do not claim professional authority or claim that you performed an action you cannot perform.",
   "Keep the user in control. Always on their side; never in control."
 ].join(" ");
@@ -125,6 +136,25 @@ const diagnosticState = {
     fallback: "wllama@3.6.0",
     modelRevision: CPU_MODEL_REVISION
   },
+  v2: {
+    responseKnowledgeClass: "LOCAL_KNOWLEDGE",
+    searchTriggered: false,
+    searchTriggerReason: "LOCAL_KNOWLEDGE_ROUTE",
+    toolSelected: "LOCAL_MODEL",
+    searchProviderId: "none",
+    sourceCount: 0,
+    provenanceFamilyCount: 0,
+    contradictionCount: 0,
+    ackPackStatus: "NOT_APPLICABLE",
+    psalmPass2Disposition: "NOT_APPLICABLE",
+    finalStanding: "UNTESTED",
+    personaId: "JEEVES",
+    personaStatus: "NOT_LOADED",
+    requestToSearchMs: null,
+    searchToEvidenceMs: null,
+    evidenceToFirstContentMs: null,
+    requestToCompletionMs: null
+  },
   events: []
 };
 let diagnosticSequence = 0;
@@ -176,6 +206,13 @@ function buildDiagnosticReport() {
     `Inference kind: ${diagnosticState.inferenceTiming.kind || "none"}`,
     `Inference timing: request→stream ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToStreamMs)} | request→first chunk ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToFirstChunkMs)} | request→first content ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToFirstContentTokenMs)} | request→completion ${formatDiagnosticMs(diagnosticState.inferenceTiming.requestToCompletionEndMs)}`,
     `First-content watchdog: ${diagnosticState.inferenceTiming.watchdogMs} ms | fired ${diagnosticState.inferenceTiming.watchdogFired ? "yes" : "no"} | elapsed ${formatDiagnosticMs(diagnosticState.inferenceTiming.watchdogElapsedMs)}`,
+    `Knowledge class: ${diagnosticState.v2.responseKnowledgeClass}`,
+    `Search triggered: ${diagnosticState.v2.searchTriggered ? "yes" : "no"} | reason ${diagnosticState.v2.searchTriggerReason}`,
+    `Tool selected: ${diagnosticState.v2.toolSelected} | provider ${diagnosticState.v2.searchProviderId}`,
+    `Evidence: sources ${diagnosticState.v2.sourceCount} | provenance families ${diagnosticState.v2.provenanceFamilyCount} | contradictions ${diagnosticState.v2.contradictionCount}`,
+    `ACK_PACK: ${diagnosticState.v2.ackPackStatus} | PSALM pass 2 ${diagnosticState.v2.psalmPass2Disposition} | standing ${diagnosticState.v2.finalStanding}`,
+    `Persona: ${diagnosticState.v2.personaId} | ${diagnosticState.v2.personaStatus}`,
+    `V2 timing: request→search ${formatDiagnosticMs(diagnosticState.v2.requestToSearchMs)} | search→evidence ${formatDiagnosticMs(diagnosticState.v2.searchToEvidenceMs)} | evidence→first content ${formatDiagnosticMs(diagnosticState.v2.evidenceToFirstContentMs)} | request→completion ${formatDiagnosticMs(diagnosticState.v2.requestToCompletionMs)}`,
     "",
     "CPU module transport attempts:",
     ...diagnosticState.moduleImportAttempts.map((attempt) =>
@@ -363,7 +400,7 @@ function addMessage(role, text, streaming) {
   article.className = "message " + role + (streaming ? " streaming" : "");
   const speaker = document.createElement("p");
   speaker.className = "speaker";
-  speaker.textContent = role === "user" ? "You" : "On Your Side";
+  speaker.textContent = role === "user" ? "You" : personaAnchor.speakerLabel();
   const body = document.createElement("div");
   body.className = "message-body";
   let thinkingLabel = null;
@@ -830,10 +867,58 @@ function interruptBackend() {
   throw new Error("UNKNOWN_LOCAL_BACKEND_FAILURE");
 }
 
+function resetV2Diagnostic(route) {
+  diagnosticState.v2 = {
+    responseKnowledgeClass: route.knowledgeClass,
+    searchTriggered: route.searchRequired,
+    searchTriggerReason: route.reason,
+    toolSelected: route.searchRequired ? "DG_GENERAL_WEB_SEARCH_TOOL_v1" : "LOCAL_MODEL",
+    searchProviderId: route.searchRequired ? "BRAVE_SEARCH_API_WEB_V1" : "none",
+    sourceCount: 0,
+    provenanceFamilyCount: 0,
+    contradictionCount: 0,
+    ackPackStatus: route.searchRequired ? "PENDING" : "NOT_APPLICABLE",
+    psalmPass2Disposition: route.searchRequired ? "PENDING" : "NOT_APPLICABLE",
+    finalStanding: route.searchRequired ? "UNRESOLVED" : "UNTESTED",
+    personaId: "JEEVES",
+    personaStatus: "NOT_LOADED",
+    requestToSearchMs: null,
+    searchToEvidenceMs: null,
+    evidenceToFirstContentMs: null,
+    requestToCompletionMs: null
+  };
+  renderDiagnostic();
+}
+
+function renderEvidenceSources(article, ackPack) {
+  if (!ackPack?.sourceCandidates?.length) return;
+  const section = document.createElement("div");
+  section.className = "message-sources";
+  const label = document.createElement("p");
+  label.className = "speaker";
+  label.textContent = "Current sources";
+  const list = document.createElement("ol");
+  for (const source of ackPack.sourceCandidates) {
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = source.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = source.title || source.sourceIdentity;
+    item.append(link);
+    list.append(item);
+  }
+  section.append(label, list);
+  article.append(section);
+}
+
 async function sendMessage(text) {
   if (!engine || generating) return;
   const clean = text.trim();
   if (!clean) return;
+  const requestStartedAt = performance.now();
+  const route = searchClient.classify(clean);
+  resetV2Diagnostic(route);
 
   addMessage("user", clean, false);
   messages.push({ role: "user", content: clean });
@@ -850,6 +935,8 @@ async function sendMessage(text) {
   els.composerNote.textContent = "Generating locally on this device…";
 
   let reply = "";
+  let evidenceAck = null;
+  let evidenceReadyAt = null;
   const inferenceKind = firstInferenceCompleted ? "GENERATION" : "FIRST_INFERENCE";
   const inferenceStartedAt = performance.now();
   let firstChunkObserved = false;
@@ -859,7 +946,70 @@ async function sendMessage(text) {
   const watchdogMs = diagnosticState.inferenceTiming.watchdogMs;
 
   try {
-    const requestMessages = [messages[0], ...messages.slice(1).slice(-10)];
+    await personaAnchor.ensureReady();
+    diagnosticState.v2.personaStatus = "READY";
+    assistant.article.querySelector(".speaker").textContent = personaAnchor.speakerLabel();
+    recordDiagnostic("PERSONA_ANCHOR_READY", {
+      backend: activeBackend || "none",
+      result: "PASS",
+      details: { personaId: "JEEVES", interfaceId: "DG_PERSONA_ANCHOR_v1" }
+    });
+
+    if (route.searchRequired) {
+      diagnosticState.v2.requestToSearchMs = inferenceElapsedMs(requestStartedAt);
+      els.composerNote.textContent = "Checking current public sources…";
+      recordDiagnostic("SEARCH_REQUEST_SENT", {
+        backend: activeBackend || "none",
+        result: "PASS",
+        details: { providerId: "BRAVE_SEARCH_API_WEB_V1", maxSources: 3 }
+      });
+      evidenceAck = await searchClient.search(clean);
+      evidenceReadyAt = performance.now();
+      diagnosticState.v2.searchToEvidenceMs = evidenceAck.toolTiming?.searchToEvidenceMs ?? null;
+      diagnosticState.v2.sourceCount = evidenceAck.sourceCandidates?.length || 0;
+      diagnosticState.v2.provenanceFamilyCount = evidenceAck.provenanceFamilies?.length || 0;
+      diagnosticState.v2.contradictionCount = evidenceAck.contradictions?.length || 0;
+      diagnosticState.v2.ackPackStatus = evidenceAck.result;
+      const review = searchClient.evaluateAckPack(evidenceAck);
+      diagnosticState.v2.psalmPass2Disposition = review.disposition;
+      diagnosticState.v2.finalStanding = review.finalStanding;
+      recordDiagnostic("SEARCH_ACK_PACK_RETURNED", {
+        backend: activeBackend || "none",
+        result: evidenceAck.result === "EVIDENCE_RETURNED" ? "PASS" : "WARN",
+        code: evidenceAck.result === "EVIDENCE_RETURNED" ? null : "LIVE_EVIDENCE_UNAVAILABLE",
+        details: {
+          providerId: evidenceAck.providerId,
+          sourceCount: diagnosticState.v2.sourceCount,
+          provenanceFamilyCount: diagnosticState.v2.provenanceFamilyCount,
+          disposition: review.disposition,
+          finalStanding: review.finalStanding
+        }
+      });
+      if (evidenceAck.result !== "EVIDENCE_RETURNED" || evidenceAck.sourceCandidates.length === 0) {
+        diagnosticState.v2.responseKnowledgeClass = "UNRESOLVED";
+        reply = personaAnchor.holdMessage();
+        assistant.article.classList.add("has-content");
+        assistant.body.textContent = reply;
+        messages.push({ role: "assistant", content: reply });
+        recordDiagnostic("CURRENT_FACT_HOLD", {
+          backend: activeBackend || "none",
+          result: "PASS",
+          details: { staleModelFallbackUsed: false }
+        });
+        return;
+      }
+      els.composerNote.textContent = "Current evidence returned. Reasoning over it locally…";
+    }
+
+    const personaSystemMessage = personaAnchor.composeSystemMessage(SYSTEM_MESSAGE);
+    const evidenceMessage = evidenceAck
+      ? { role: "system", content: searchClient.buildEvidenceContext(evidenceAck) }
+      : null;
+    const requestMessages = [
+      { role: "system", content: personaSystemMessage },
+      ...(evidenceMessage ? [evidenceMessage] : []),
+      ...messages.slice(1).slice(-10)
+    ];
     recordDiagnostic("INFERENCE_REQUEST_SENT", {
       backend: activeBackend || "none",
       result: "PASS",
@@ -918,6 +1068,10 @@ async function sendMessage(text) {
           }
           const firstContentElapsedMs = inferenceElapsedMs(inferenceStartedAt);
           diagnosticState.inferenceTiming.requestToFirstContentTokenMs = firstContentElapsedMs;
+          if (evidenceReadyAt !== null) {
+            diagnosticState.v2.evidenceToFirstContentMs =
+              Math.max(0, Math.round(performance.now() - evidenceReadyAt));
+          }
           recordDiagnostic("FIRST_CONTENT_TOKEN", {
             backend: activeBackend || "none",
             result: "PASS",
@@ -945,6 +1099,7 @@ async function sendMessage(text) {
         details: { kind: inferenceKind, elapsedMs: completionElapsedMs }
       });
       messages.push({ role: "assistant", content: reply });
+      if (evidenceAck) renderEvidenceSources(assistant.article, evidenceAck);
       firstInferenceCompleted = true;
     } else if (!stopRequested) {
       const noContentError = new Error("Completion ended without a content token.");
@@ -980,11 +1135,17 @@ async function sendMessage(text) {
       if (!reply.trim()) assistant.body.textContent = "Generation stopped.";
       if (reply.trim()) messages.push({ role: "assistant", content: reply });
     } else {
-      assistant.body.textContent =
-        "The local generation stopped unexpectedly. Your prompt was not sent to a hosted model API.";
+      diagnosticState.v2.responseKnowledgeClass =
+        route.searchRequired ? "UNRESOLVED" : diagnosticState.v2.responseKnowledgeClass;
+      assistant.body.textContent = route.searchRequired
+        ? personaAnchor.holdMessage()
+        : "The local generation stopped unexpectedly. Your prompt was not sent to a hosted model API.";
     }
   } finally {
     if (firstTokenWatchdog !== null) window.clearTimeout(firstTokenWatchdog);
+    diagnosticState.v2.requestToCompletionMs =
+      Math.max(0, Math.round(performance.now() - requestStartedAt));
+    renderDiagnostic();
     assistant.article.classList.remove("streaming");
     generating = false;
     stopRequested = false;
@@ -995,7 +1156,7 @@ async function sendMessage(text) {
     els.stop.disabled = true;
     els.reset.disabled = false;
     els.composerNote.textContent =
-      "Conversation stays in this tab. Public Talk has no repository execution authority.";
+      "Conversation inference stays local. A bounded current-turn search query may leave this tab only when live evidence is required.";
     els.prompt.focus();
   }
 }

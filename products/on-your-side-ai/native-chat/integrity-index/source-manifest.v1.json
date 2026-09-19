@@ -1,0 +1,49 @@
+{
+  "coverageClass": "BOOTSTRAP_FIRST_PARTY_ONLY",
+  "manifestId": "DGB_ON_YOUR_SIDE_AAI_BOOTSTRAP_SOURCES_V1",
+  "maxResults": 3,
+  "providerId": "DG_INTEGRITY_INDEX_V1",
+  "schema": "DG_INTEGRITY_SOURCE_MANIFEST_v1",
+  "sources": [
+    {
+      "canonicalDescription": "On Your Side AAI is assistance-first support for forms, letters, choices, next steps, and plain-language help. Always on your side. Never in control.",
+      "canonicalTitle": "On Your Side AAI · Diamond Gate Bridge",
+      "provenanceFamily": "diamondgatebridge.com",
+      "publicUrl": "https://diamondgatebridge.com/products/on-your-side-ai/",
+      "repositoryPath": "products/on-your-side-ai/index.html",
+      "searchTerms": [
+        "on your side aai",
+        "assistance first support",
+        "forms letters choices next steps",
+        "plain language help",
+        "always on your side never in control",
+        "read explain sort draft next step"
+      ],
+      "sourceBlob": "749abbf3edf833b5973a0af56cc5fbe79ed4811c",
+      "sourceClass": "FIRST_PARTY_CANONICAL_PUBLIC_PAGE",
+      "sourceId": "ON_YOUR_SIDE_AAI_PUBLIC_PRODUCT",
+      "sourceIdentity": "diamondgatebridge.com"
+    },
+    {
+      "canonicalDescription": "On Your Side AAI Public Talk v3 — browser-local reasoning with a repository-owned Integrity Index.",
+      "canonicalTitle": "Native Chat — On Your Side AAI",
+      "provenanceFamily": "diamondgatebridge.com",
+      "publicUrl": "https://diamondgatebridge.com/products/on-your-side-ai/native-chat/",
+      "repositoryPath": "products/on-your-side-ai/native-chat/index.html",
+      "searchTerms": [
+        "native chat",
+        "public talk v3",
+        "browser local ai",
+        "integrity index",
+        "local inference",
+        "jeeves",
+        "on your side aai",
+        "bootstrap first party index"
+      ],
+      "sourceBlob": "91e8627eace3ca855fc456fb507ce767f5244d8b",
+      "sourceClass": "FIRST_PARTY_CANONICAL_PUBLIC_PAGE",
+      "sourceId": "NATIVE_CHAT_PUBLIC_TALK_V3",
+      "sourceIdentity": "diamondgatebridge.com"
+    }
+  ]
+}

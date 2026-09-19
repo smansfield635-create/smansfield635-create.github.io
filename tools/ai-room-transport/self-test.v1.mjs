@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import cp from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -17,7 +18,7 @@ import {
 import { validateExecutionRequest, resolveToolset } from './toolset-resolver.v1.mjs';
 import { selectBackend } from './backend-selector.v1.mjs';
 import { parseTransportBody } from './transport-request-parser.v1.mjs';
-import { dispatchLoaded } from './fixed-command-dispatcher.v1.mjs';
+import { dispatchLoaded, stageValidatedWritebackPaths } from './fixed-command-dispatcher.v1.mjs';
 import { validateCommandReceipt } from './command-receipt-validator.v1.mjs';
 import { applyContinuationGate } from './continuation-gate.v1.mjs';
 
@@ -157,6 +158,62 @@ export function runAdmissionLockCompatibilitySelfTest({ root = '.', holder = 'AD
     authorityBroadeningObserved: false,
     productMutationPerformed: false
   });
+}
+
+export function runRegisteredWritebackSparseStagingSelfTest() {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-room-writeback-sparse-stage-'));
+  const allowed = ['runtime/out.bin', 'runtime/receipt.json'].sort();
+  try {
+    git(root, 'init', '.');
+    git(root, 'config', 'user.name', 'sparse-stage-self-test');
+    git(root, 'config', 'user.email', 'sparse-stage-self-test@example.invalid');
+    fs.mkdirSync(path.join(root, 'tooling'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'tooling', 'seed.txt'), 'seed\n');
+    git(root, 'add', 'tooling/seed.txt');
+    git(root, 'commit', '-m', 'seed sparse staging fixture');
+    git(root, 'sparse-checkout', 'init', '--cone', '--sparse-index');
+    git(root, 'sparse-checkout', 'set', 'tooling');
+    if (git(root, 'config', '--bool', 'index.sparse') !== 'true') fail('SPARSE_STAGING_SELF_TEST_INDEX_NOT_SPARSE');
+
+    fs.mkdirSync(path.join(root, 'runtime'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'runtime', 'out.bin'), 'runtime-bytes\n');
+    fs.writeFileSync(path.join(root, 'runtime', 'receipt.json'), '{}\n');
+    const descriptor = { allowedMutationPaths: allowed, prohibitedPaths: ['forbidden/'] };
+    const staged = stageValidatedWritebackPaths({ descriptor, toolRoot: root, changed: allowed });
+    if (canonical(staged) !== canonical(allowed)) fail('SPARSE_STAGING_SELF_TEST_STAGE_SET_MISMATCH');
+    const sparseList = git(root, 'sparse-checkout', 'list').split(/\r?\n/).filter(Boolean);
+    if (sparseList.includes('runtime')) fail('SPARSE_STAGING_SELF_TEST_RUNTIME_IN_SPARSE_DEFINITION');
+
+    git(root, 'reset', '--hard', 'HEAD');
+    git(root, 'clean', '-fd');
+    fs.mkdirSync(path.join(root, 'forbidden'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'forbidden', 'escape.txt'), 'blocked\n');
+    let observed = null;
+    try {
+      stageValidatedWritebackPaths({ descriptor, toolRoot: root, changed: ['forbidden/escape.txt'] });
+    } catch (error) {
+      observed = error.code ?? error.message;
+    }
+    if (observed !== 'PROHIBITED_PATH_MUTATED') fail('SPARSE_STAGING_SELF_TEST_UNAUTHORIZED_PATH_NOT_REJECTED', String(observed));
+
+    return stable({
+      schema: 'REGISTERED_WRITEBACK_SPARSE_STAGING_SELF_TEST_RECEIPT_v1',
+      result: 'PASS_CLOSED',
+      sparseIndexActive: true,
+      runtimePathOutsideSparseDefinition: true,
+      authorizedOutsideConeStagingPassed: true,
+      stagedPathSetExact: true,
+      unauthorizedPathRejected: true,
+      unauthorizedPathErrorCode: observed,
+      authorityExpanded: false,
+      productMutationPerformed: false,
+      mergePerformed: false,
+      deploymentPerformed: false,
+      releasePerformed: false
+    });
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 }
 
 function runNegative(base, descriptor, positiveReceipt) {

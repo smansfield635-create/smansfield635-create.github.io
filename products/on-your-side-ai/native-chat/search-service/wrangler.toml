@@ -1,0 +1,6 @@
+name = "diamond-gate-native-chat-integrity-search"
+main = "worker.js"
+compatibility_date = "2026-09-19"
+
+# Source-only first slice. Route/DNS deployment is a separate governed operation.
+# Configure BRAVE_SEARCH_API_KEY as a Worker secret; never place the credential here.

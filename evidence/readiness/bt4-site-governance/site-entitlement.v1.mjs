@@ -42,6 +42,8 @@ export async function worldAdapter(){
   const releaseCommit=String(marker?.commit||'');
   const releasePresent=/^[0-9a-f]{40}$/i.test(releaseCommit);
   if(!releasePresent)return closed('LIVE_RELEASE_MARKER_INVALID',{releaseCommit:releaseCommit||null});
+  const localPreflightOrigin=typeof location!=='undefined'&&(location.hostname==='127.0.0.1'||location.hostname==='localhost');
+  if(localPreflightOrigin)return closed('AUDRALIA_RUNTIME_RECEIPT_DEFERRED_DURING_LOCAL_PREFLIGHT',{releaseCommit,origin:location.origin});
 
   let receipt;
   try{receipt=await getJson(`${AUDRALIA_RUNTIME_RECEIPT}?bt4-world=${Date.now()}`)}

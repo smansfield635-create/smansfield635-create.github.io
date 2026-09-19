@@ -6501,6 +6501,49 @@
       "scopeHash": "879b4beef90a48982284956ac85aeda8c3ddcbfbdf49c607c13220c3cf3f823e",
       "state": "ADMITTED_LOCKED"
     },
+    "87e619ea06ed160dd9bfd152c3c8c950ec895328892865981223283586c1c661": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "7263e5c06097b0d0f36e3822a51d503c6d25209d",
+          "lockGeneration": 2440,
+          "lockScope": "H_EARTH:AUDRALIA:TABLET_CELESTIAL_LITE:SUN_VISUAL_CALIBRATION:V1",
+          "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_SUN_VISUAL_CALIBRATION_20260919_001",
+          "procedureLocatorDigest": "9a7779e8dd784300b8b124d4e7906f1f89bc35522259bd2741315f606e460a1d",
+          "requestDigest": "2e8168d0c8613b04ec47f7e1a73c3e41ccc9464df7896550dcc5858cc5a7f376",
+          "scopeHash": "87e619ea06ed160dd9bfd152c3c8c950ec895328892865981223283586c1c661"
+        },
+        "bindingDigest": "d05892f751146b30403f0a07509d4997c00f36cf2cc252b49675451d662022ca",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c12077bfbd60594fa87d6c8290825705c3af2abcbc53c887a97fcbf09b9bd2b2",
+          "commentId": 5745976031,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3869,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35475021023,
+          "workflowSha": "7263e5c06097b0d0f36e3822a51d503c6d25209d"
+        },
+        "lineageAnchorCommitSha": "6830f51647f19453b8029ed9453bbeba72b005e4",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "7263e5c06097b0d0f36e3822a51d503c6d25209d",
+      "lockGeneration": 2440,
+      "lockScope": "H_EARTH:AUDRALIA:TABLET_CELESTIAL_LITE:SUN_VISUAL_CALIBRATION:V1",
+      "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_SUN_VISUAL_CALIBRATION_20260919_001",
+      "procedureLocatorDigest": "9a7779e8dd784300b8b124d4e7906f1f89bc35522259bd2741315f606e460a1d",
+      "released": false,
+      "requestDigest": "2e8168d0c8613b04ec47f7e1a73c3e41ccc9464df7896550dcc5858cc5a7f376",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "87e619ea06ed160dd9bfd152c3c8c950ec895328892865981223283586c1c661",
+      "state": "ADMITTED_LOCKED"
+    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -12641,7 +12684,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2439,
+  "lockGeneration": 2440,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

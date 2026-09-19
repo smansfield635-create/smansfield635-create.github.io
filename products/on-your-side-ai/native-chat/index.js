@@ -34,6 +34,7 @@ const MODEL_URL = new URL("./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/res
 const MODEL_LIB_URL = new URL("./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm", window.location.href).href;
 const FIRST_INFERENCE_FIRST_CONTENT_WATCHDOG_MS = 90_000;
 const GENERATION_FIRST_CONTENT_WATCHDOG_MS = 40_000;
+const CPU_FIRST_CHUNK_WATCHDOG_MS = 30_000;
 const RESPONSE_TEMPERATURE = 0.20;
 const RESPONSE_TOP_P = 0.9;
 const RESPONSE_MAX_TOKENS = 220;
@@ -127,6 +128,10 @@ const diagnosticState = {
     requestToStreamMs: null,
     requestToFirstChunkMs: null,
     requestToFirstContentTokenMs: null,
+    iteratorAcquiredMs: null,
+    iteratorNextRequestedMs: null,
+    firstChunkWatchdogMs: CPU_FIRST_CHUNK_WATCHDOG_MS,
+    firstChunkWatchdogFired: false,
     requestToCompletionEndMs: null,
     watchdogFired: false,
     watchdogElapsedMs: null
@@ -346,6 +351,10 @@ function resetInferenceTiming(kind) {
     requestToStreamMs: null,
     requestToFirstChunkMs: null,
     requestToFirstContentTokenMs: null,
+    iteratorAcquiredMs: null,
+    iteratorNextRequestedMs: null,
+    firstChunkWatchdogMs: CPU_FIRST_CHUNK_WATCHDOG_MS,
+    firstChunkWatchdogFired: false,
     requestToCompletionEndMs: null,
     watchdogFired: false,
     watchdogElapsedMs: null
@@ -1046,9 +1055,66 @@ async function sendMessage(text) {
       details: { kind: inferenceKind, elapsedMs: streamElapsedMs }
     });
 
-    for await (const chunk of stream) {
+    let chunkIterable = stream;
+    let firstChunkWatchdog = null;
+    if (activeBackend === "wllama-cpu") {
+      const iterator = stream?.[Symbol.asyncIterator]?.();
+      if (!iterator || typeof iterator.next !== "function") {
+        throw new Error("CPU_STREAM_ASYNC_ITERATOR_UNAVAILABLE");
+      }
+      const iteratorAcquiredMs = inferenceElapsedMs(inferenceStartedAt);
+      diagnosticState.inferenceTiming.iteratorAcquiredMs = iteratorAcquiredMs;
+      recordDiagnostic("ITERATOR_ACQUIRED", {
+        backend: activeBackend,
+        result: "PASS",
+        details: { kind: inferenceKind, elapsedMs: iteratorAcquiredMs }
+      });
+      chunkIterable = {
+        [Symbol.asyncIterator]() {
+          return {
+            async next() {
+              if (!firstChunkObserved) {
+                const nextRequestedMs = inferenceElapsedMs(inferenceStartedAt);
+                diagnosticState.inferenceTiming.iteratorNextRequestedMs = nextRequestedMs;
+                recordDiagnostic("ITERATOR_NEXT_REQUESTED", {
+                  backend: activeBackend,
+                  result: "PASS",
+                  details: { kind: inferenceKind, elapsedMs: nextRequestedMs }
+                });
+                return await Promise.race([
+                  iterator.next(),
+                  new Promise((_, reject) => {
+                    firstChunkWatchdog = window.setTimeout(() => {
+                      diagnosticState.inferenceTiming.firstChunkWatchdogFired = true;
+                      recordDiagnostic("FIRST_CHUNK_WAIT", {
+                        backend: activeBackend,
+                        result: "FAIL",
+                        code: "CPU_FIRST_CHUNK_TIMEOUT",
+                        details: { kind: inferenceKind, elapsedMs: inferenceElapsedMs(inferenceStartedAt), watchdogMs: CPU_FIRST_CHUNK_WATCHDOG_MS }
+                      });
+                      reject(new Error("CPU_FIRST_CHUNK_TIMEOUT"));
+                    }, CPU_FIRST_CHUNK_WATCHDOG_MS);
+                  })
+                ]);
+              }
+              return await iterator.next();
+            },
+            async return(value) {
+              if (typeof iterator.return === "function") return await iterator.return(value);
+              return { done: true, value };
+            }
+          };
+        }
+      };
+    }
+
+    for await (const chunk of chunkIterable) {
       if (!firstChunkObserved) {
         firstChunkObserved = true;
+        if (firstChunkWatchdog !== null) {
+          window.clearTimeout(firstChunkWatchdog);
+          firstChunkWatchdog = null;
+        }
         const firstChunkElapsedMs = inferenceElapsedMs(inferenceStartedAt);
         diagnosticState.inferenceTiming.requestToFirstChunkMs = firstChunkElapsedMs;
         recordDiagnostic("FIRST_CHUNK", {

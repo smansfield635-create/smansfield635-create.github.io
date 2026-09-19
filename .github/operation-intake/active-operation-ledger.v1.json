@@ -8774,49 +8774,6 @@
       "scopeHash": "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c",
       "state": "ADMITTED_LOCKED"
     },
-    "b49b865101709daa00cb4e344c270590a9a9d0e2adc62590dd6fa825246587d5": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
-          "lockGeneration": 2418,
-          "lockScope": "H_EARTH:AUDRALIA:VERIFIER_TOPOLOGY_RECONCILIATION:V1",
-          "operationId": "AUDRALIA_VERIFIER_TOPOLOGY_RECONCILIATION_20260919_001",
-          "procedureLocatorDigest": "31529bc86e7b7ccaad8b3eed8ebeee38ec69fc341c95a1a8684ca832f0b367c6",
-          "requestDigest": "e66d8f7c859958074effc972fed97c78cf025836ee5b8f781989b2abfdb8f2b9",
-          "scopeHash": "b49b865101709daa00cb4e344c270590a9a9d0e2adc62590dd6fa825246587d5"
-        },
-        "bindingDigest": "44e420e7b48e7f0c88274a442ff459faa96b5f703356b935f1afd6eb7676008f",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "a1a10442e4cf9d214ce085ddac77c66325bd41b04e1681da7e8882fb537d5365",
-          "commentId": 5744242160,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3842,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35460471870,
-          "workflowSha": "a73573e26acef1ec81891f9500884eda90c7c53b"
-        },
-        "lineageAnchorCommitSha": "47efe24a6ef7704d1067d259c689bbed913c0dbb",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
-      "lockGeneration": 2418,
-      "lockScope": "H_EARTH:AUDRALIA:VERIFIER_TOPOLOGY_RECONCILIATION:V1",
-      "operationId": "AUDRALIA_VERIFIER_TOPOLOGY_RECONCILIATION_20260919_001",
-      "procedureLocatorDigest": "31529bc86e7b7ccaad8b3eed8ebeee38ec69fc341c95a1a8684ca832f0b367c6",
-      "released": false,
-      "requestDigest": "e66d8f7c859958074effc972fed97c78cf025836ee5b8f781989b2abfdb8f2b9",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "b49b865101709daa00cb4e344c270590a9a9d0e2adc62590dd6fa825246587d5",
-      "state": "ADMITTED_LOCKED"
-    },
     "b5ca70ab3543b3c5264ca44fa65c3354fe3e3fe2f5313df1333747e3bf8240e4": {
       "governingHead": "2e1b39287a296185b83172715e844d0adcea0743",
       "lockGeneration": 643,
@@ -62545,6 +62502,50 @@
       "scopeHash": "404b199ed7fbd8839fbdd68f97f90e4ae19380d9ef61e5b9a102f90ec7a016e1",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
+          "lockGeneration": 2418,
+          "lockScope": "H_EARTH:AUDRALIA:VERIFIER_TOPOLOGY_RECONCILIATION:V1",
+          "operationId": "AUDRALIA_VERIFIER_TOPOLOGY_RECONCILIATION_20260919_001",
+          "procedureLocatorDigest": "31529bc86e7b7ccaad8b3eed8ebeee38ec69fc341c95a1a8684ca832f0b367c6",
+          "requestDigest": "e66d8f7c859958074effc972fed97c78cf025836ee5b8f781989b2abfdb8f2b9",
+          "scopeHash": "b49b865101709daa00cb4e344c270590a9a9d0e2adc62590dd6fa825246587d5"
+        },
+        "bindingDigest": "44e420e7b48e7f0c88274a442ff459faa96b5f703356b935f1afd6eb7676008f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a1a10442e4cf9d214ce085ddac77c66325bd41b04e1681da7e8882fb537d5365",
+          "commentId": 5744242160,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3842,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35460471870,
+          "workflowSha": "a73573e26acef1ec81891f9500884eda90c7c53b"
+        },
+        "lineageAnchorCommitSha": "47efe24a6ef7704d1067d259c689bbed913c0dbb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
+      "lockGeneration": 2418,
+      "lockScope": "H_EARTH:AUDRALIA:VERIFIER_TOPOLOGY_RECONCILIATION:V1",
+      "operationId": "AUDRALIA_VERIFIER_TOPOLOGY_RECONCILIATION_20260919_001",
+      "procedureLocatorDigest": "31529bc86e7b7ccaad8b3eed8ebeee38ec69fc341c95a1a8684ca832f0b367c6",
+      "released": true,
+      "requestDigest": "e66d8f7c859958074effc972fed97c78cf025836ee5b8f781989b2abfdb8f2b9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b49b865101709daa00cb4e344c270590a9a9d0e2adc62590dd6fa825246587d5",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

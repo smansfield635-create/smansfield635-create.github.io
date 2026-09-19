@@ -3224,49 +3224,6 @@
       "scopeHash": "48a9e935779a71abefddaba119d27ce2cac165ad543855500fb6aa7eaec967ff",
       "state": "ADMITTED_LOCKED"
     },
-    "48d140a719d8dad3909fc6b7cc8a5b4b9f5d0da88a1068318b2ea964565508db": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
-          "lockGeneration": 2414,
-          "lockScope": "ESTATE_SOUNDTRACK:THINK_AND_BLINK:AUDIO_CUSTODY_INSPECTION:V1",
-          "operationId": "THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTION_20260919_004",
-          "procedureLocatorDigest": "ccc2e03d793df2f32a9e550aa90637cab929a497e8e0b214fded7412250bee37",
-          "requestDigest": "e01377e6189d321c7eaa14157d6823598b2d3e13179dec86cfb2ff601952160e",
-          "scopeHash": "48d140a719d8dad3909fc6b7cc8a5b4b9f5d0da88a1068318b2ea964565508db"
-        },
-        "bindingDigest": "de4797828df97d0325ac58502a43d214817c78e4347ab9cfd26d31831073fc14",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "7a8fa446b5d2e4276523b290d6c79ee062122cf4eb30b5d8995c8c37d4871221",
-          "commentId": 5743914023,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 2141,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35458146964,
-          "workflowSha": "a73573e26acef1ec81891f9500884eda90c7c53b"
-        },
-        "lineageAnchorCommitSha": "f820a298c940b30b0ed50c6cb355d5344096511c",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
-      "lockGeneration": 2414,
-      "lockScope": "ESTATE_SOUNDTRACK:THINK_AND_BLINK:AUDIO_CUSTODY_INSPECTION:V1",
-      "operationId": "THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTION_20260919_004",
-      "procedureLocatorDigest": "ccc2e03d793df2f32a9e550aa90637cab929a497e8e0b214fded7412250bee37",
-      "released": false,
-      "requestDigest": "e01377e6189d321c7eaa14157d6823598b2d3e13179dec86cfb2ff601952160e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "48d140a719d8dad3909fc6b7cc8a5b4b9f5d0da88a1068318b2ea964565508db",
-      "state": "ADMITTED_LOCKED"
-    },
     "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1": {
       "governingHead": "b38bc63c99411da65f1fa254a14c84ffea77ee0b",
       "lockGeneration": 244,
@@ -62412,6 +62369,50 @@
       "scopeHash": "c9d2c42feca58b216415c964323e6aad1c5321d867be33c03a3ec8572d9caeb2",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
+          "lockGeneration": 2414,
+          "lockScope": "ESTATE_SOUNDTRACK:THINK_AND_BLINK:AUDIO_CUSTODY_INSPECTION:V1",
+          "operationId": "THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTION_20260919_004",
+          "procedureLocatorDigest": "ccc2e03d793df2f32a9e550aa90637cab929a497e8e0b214fded7412250bee37",
+          "requestDigest": "e01377e6189d321c7eaa14157d6823598b2d3e13179dec86cfb2ff601952160e",
+          "scopeHash": "48d140a719d8dad3909fc6b7cc8a5b4b9f5d0da88a1068318b2ea964565508db"
+        },
+        "bindingDigest": "de4797828df97d0325ac58502a43d214817c78e4347ab9cfd26d31831073fc14",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "7a8fa446b5d2e4276523b290d6c79ee062122cf4eb30b5d8995c8c37d4871221",
+          "commentId": 5743914023,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 2141,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35458146964,
+          "workflowSha": "a73573e26acef1ec81891f9500884eda90c7c53b"
+        },
+        "lineageAnchorCommitSha": "f820a298c940b30b0ed50c6cb355d5344096511c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a73573e26acef1ec81891f9500884eda90c7c53b",
+      "lockGeneration": 2414,
+      "lockScope": "ESTATE_SOUNDTRACK:THINK_AND_BLINK:AUDIO_CUSTODY_INSPECTION:V1",
+      "operationId": "THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTION_20260919_004",
+      "procedureLocatorDigest": "ccc2e03d793df2f32a9e550aa90637cab929a497e8e0b214fded7412250bee37",
+      "released": true,
+      "requestDigest": "e01377e6189d321c7eaa14157d6823598b2d3e13179dec86cfb2ff601952160e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "48d140a719d8dad3909fc6b7cc8a5b4b9f5d0da88a1068318b2ea964565508db",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

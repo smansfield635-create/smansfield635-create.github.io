@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "8dbd08faa323ced0b047063fade2aed6c2ae74d1",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "721f93995a5f414e6eb0cd58eb7007f4d0366f8a",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2387,
+    "lockScope": "ON_YOUR_SIDE_AAI:NATIVE_CHAT_V1:STAGE_C:WLLAMA_WASM_MATERIALIZATION_WITH_EXECUTION_IDENTITIES:V1",
+    "observedBranchHead": "9775c59acfadb440e7d18b615c9f28698fde47b1",
+    "observedLedgerBlobSha": "63aa5906c3faeefcb7e25e4a68b2c56453dc4ce9",
+    "operationId": "ON_YOUR_SIDE_AAI_NATIVE_CHAT_V1_WLLAMA_WASM_MATERIALIZATION_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "f134946ff24266325fd619b968143a0d390faa1beefa9122e8f58ddfc18ce178"
+  },
+  "operationId": "ON_YOUR_SIDE_AAI_NATIVE_CHAT_V1_WLLAMA_WASM_MATERIALIZATION_v1",
+  "operationStarted": true,
+  "procedureLocatorDigest": "ae2464555bc3eb03e9ad7e5331b152eca4b46387e8c9d4fa0933043a80ff7978",
+  "projectId": "ON_YOUR_SIDE_AAI",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "eae56b0cc3f0457713ea00e2511e431881d27603413445dfa70836043536019d",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

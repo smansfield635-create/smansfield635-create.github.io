@@ -36,6 +36,7 @@ jobs:
           sparse-checkout: |
             /evidence/readiness/bt4-site-governance/index.html
             /evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs
+            /evidence/readiness/bt4-site-governance/audralia-live-runtime-receipt.v1.json
             /evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs
             /evidence/readiness/governance-gen3-entitlement/binding.v1.json
             /preview/bt4/entitlement-v1/entitlement-engine.v1.mjs

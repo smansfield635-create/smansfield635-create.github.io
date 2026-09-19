@@ -29,19 +29,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "6eb69946006ba22fedabbf71348ad5275dd60368c8da117c6206aaedf1862939"
-    },
-    {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-celestial-lite.mjs",
-      "sha256": "c1222096bd8a4418c6cfc365f611d2237f134f3403c707c5f8230039a57649ab"
-    },
-    {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
-      "sha256": "e893d94e8057cfc7357c3c259f79b6fed2bbc60fb7062c0ebc54fd0a4c3c8a6d"
+      "sha256": "a5796ac3db14f5e7fbb90f86487497b876831a5021863e2c81135d6b91ad106f"
     }
   ],
-  "productSpecimenCommit": "9579e895760ef0e62b44d816da9d2c702a812422",
-  "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_GEN2431_EXPERIENCE_ACCEPTANCE_20260919_001",
-  "lockGeneration": 2435,
+  "productSpecimenCommit": "50067e367160a5991df1813355a0225a76adedd9",
+  "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_RUNTIME_PIN_REBIND_20260919_001",
+  "lockGeneration": 2436,
   "physicalTabletAcceptanceRequiredAfterPublication": true
 }

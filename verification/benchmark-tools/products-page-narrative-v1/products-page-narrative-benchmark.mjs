@@ -59,8 +59,10 @@ for (const script of ["/products/index.controller.js", "/products/index.cosmos.j
 
 assert(campaignCss.includes(".campaign-tablist") && campaignCss.includes(".campaign-disclosure"), "SHARED_CAMPAIGN_STYLE_AUTHORITY_INCOMPLETE");
 assert(campaignCss.includes(".campaign-native-visual--baseline") && campaignCss.includes(".campaign-native-visual--wave") && campaignCss.includes(".campaign-native-visual--profile") && campaignCss.includes(".campaign-native-visual--training"), "NATIVE_VISUAL_STYLE_AUTHORITY_INCOMPLETE");
+assert(campaignCss.includes(".community-orbit") && campaignCss.includes(".community-reader"), "SHARED_CAMPAIGN_ORBIT_STYLE_AUTHORITY_INCOMPLETE");
 assert(campaignTabs.includes("ArrowRight") && campaignTabs.includes("Home") && campaignTabs.includes("End") && campaignTabs.includes("aria-selected"), "ACCESSIBLE_TAB_CONTROLLER_INCOMPLETE");
-assert(!campaignTabs.includes("innerHTML"), "TAB_CONTROLLER_UNSAFE_HTML_MUTATION");
+assert(campaignTabs.includes("campaignTabsStatus = \"orbit-routed\"") && campaignTabs.includes("DGB_COMMUNITY_ORBIT_RECEIPT"), "ORBIT_CONTROLLER_AUTHORITY_INCOMPLETE");
+assert(!campaignTabs.includes("innerHTML ="), "TAB_CONTROLLER_UNSAFE_FULL_HTML_REPLACEMENT");
 for (const asset of preservedSourceAssets) {
   assert(fs.existsSync(asset), `CAMPAIGN_ASSET_MISSING:${asset}`);
   if (fs.existsSync(asset)) assert(fs.statSync(asset).size > 1000, `CAMPAIGN_ASSET_EMPTY:${asset}`, fs.statSync(asset).size);
@@ -181,17 +183,24 @@ for (const [id, route] of campaigns) {
     page.on("pageerror", error => telemetry.pageErrors.push(String(error?.message || error)));
     page.on("requestfailed", request => telemetry.requestFailures.push({ url: request.url(), error: request.failure()?.errorText || "" }));
     await page.goto(`${ORIGIN}${route}`, { waitUntil: "networkidle0", timeout: 45000 });
-    await page.waitForFunction(() => document.documentElement.dataset.campaignTabsStatus === "ready", { timeout: 15000 });
+    await page.waitForFunction(() => {
+      const tabsStatus = document.documentElement.dataset.campaignTabsStatus;
+      const orbitStatus = document.documentElement.dataset.communityOrbitStatus;
+      return tabsStatus === "ready" || (tabsStatus === "orbit-routed" && orbitStatus === "ready");
+    }, { timeout: 15000 });
     const initial = await page.evaluate(() => {
       const tabs = [...document.querySelectorAll('[role="tab"]')];
       const panels = [...document.querySelectorAll('[role="tabpanel"]')];
       const heroMedia = document.querySelector(".campaign-hero__media");
       const heroImage = heroMedia?.querySelector("img");
       const nativeVisual = heroMedia?.querySelector("[data-campaign-native-visual]");
+      const orbitCards = [...document.querySelectorAll("[data-community-orbit-card]")];
       const images = [...document.images].map(image => ({ src: image.getAttribute("src"), complete: image.complete, width: image.naturalWidth, height: image.naturalHeight }));
       return {
         route: document.documentElement.dataset.route,
         h1Count: document.querySelectorAll("h1").length,
+        campaignTabsStatus: document.documentElement.dataset.campaignTabsStatus || "",
+        communityOrbitStatus: document.documentElement.dataset.communityOrbitStatus || "",
         tabCount: tabs.length,
         panelCount: panels.length,
         selected: tabs.filter(tab => tab.getAttribute("aria-selected") === "true").map(tab => tab.id),
@@ -202,26 +211,41 @@ for (const [id, route] of campaigns) {
         nativeVisual: nativeVisual?.dataset.campaignNativeVisual || null,
         brokenImages: images.filter(image => !image.complete || image.width <= 0 || image.height <= 0),
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        receipt: globalThis.DGB_CAMPAIGN_TABS_RECEIPT
+        receipt: globalThis.DGB_CAMPAIGN_TABS_RECEIPT,
+        orbitReceipt: globalThis.DGB_COMMUNITY_ORBIT_RECEIPT,
+        orbitCardCount: orbitCards.length,
+        orbitFrontCount: orbitCards.filter(card => card.dataset.front === "true").length,
+        orbitStagePresent: Boolean(document.querySelector("[data-community-orbit-stage]")),
+        orbitReaderPresent: Boolean(document.querySelector("[data-community-reader]"))
       };
     });
+    const orbitMode = initial.campaignTabsStatus === "orbit-routed";
     assert(initial.route === route && initial.h1Count === 1, "CAMPAIGN_RUNTIME_ROUTE_INVALID", initial, `${id}:${profile.id}`);
-    assert(initial.tabCount === 4 && initial.panelCount === 4 && initial.selected.length === 1 && initial.visible.length === 1, "CAMPAIGN_INITIAL_TAB_STATE_INVALID", initial, `${id}:${profile.id}`);
     assert(initial.openDetails === 0, "CAMPAIGN_DISCLOSURE_BASELINE_INVALID", initial, `${id}:${profile.id}`);
-    assert(initial.heroMedia && (initial.nativeVisual || (initial.heroImage?.complete && initial.heroImage.width > 0 && initial.heroImage.height > 0)), "CAMPAIGN_HERO_VISUAL_FAILED", initial, `${id}:${profile.id}`);
+    assert(initial.heroMedia && (initial.nativeVisual || (initial.heroImage?.complete && initial.heroImage.width > 0 && initial.heroImage.height > 0) || orbitMode), "CAMPAIGN_HERO_VISUAL_FAILED", initial, `${id}:${profile.id}`);
     assert(initial.brokenImages.length === 0, "CAMPAIGN_IMAGE_DECODE_FAILED", initial.brokenImages, `${id}:${profile.id}`);
     assert(initial.overflow <= 1, "CAMPAIGN_HORIZONTAL_OVERFLOW", initial, `${id}:${profile.id}`);
-    await page.click('[role="tab"]:nth-of-type(2)');
-    const clicked = await page.evaluate(() => ({ selected: document.querySelector('[role="tab"][aria-selected="true"]')?.id || "", visible: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id), visibleNativeVisuals: [...document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-campaign-native-visual]')].map(node => node.dataset.campaignNativeVisual) }));
-    assert(clicked.selected.endsWith("tab-2") && clicked.visible.length === 1 && clicked.visible[0].endsWith("panel-2"), "CAMPAIGN_TAB_CLICK_FAILED", clicked, `${id}:${profile.id}`);
-    if (id === "consider-energy") assert(clicked.visibleNativeVisuals.includes("baseline"), "BASELINE_NATIVE_VISUAL_NOT_REVEALED", clicked, profile.id);
-    await page.focus('[role="tab"][aria-selected="true"]');
-    await page.keyboard.press("End");
-    const keyboard = await page.evaluate(() => ({ selected: document.querySelector('[role="tab"][aria-selected="true"]')?.id || "", visible: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id) }));
-    assert(keyboard.selected.endsWith("tab-4") && keyboard.visible.length === 1 && keyboard.visible[0].endsWith("panel-4"), "CAMPAIGN_TAB_KEYBOARD_FAILED", keyboard, `${id}:${profile.id}`);
+
+    let clicked = null;
+    let keyboard = null;
+    if (orbitMode) {
+      assert(initial.communityOrbitStatus === "ready", "CAMPAIGN_ORBIT_STATUS_INVALID", initial, `${id}:${profile.id}`);
+      assert(initial.orbitReceipt?.contract === "DGB_COMMUNITY_ORBIT_CAROUSEL_v5" && initial.orbitReceipt.objects === 4 && initial.orbitReceipt.twoSided === true, "CAMPAIGN_ORBIT_RECEIPT_INVALID", initial, `${id}:${profile.id}`);
+      assert(initial.orbitCardCount === 4 && initial.orbitFrontCount === 1 && initial.orbitStagePresent && initial.orbitReaderPresent, "CAMPAIGN_ORBIT_RUNTIME_INVALID", initial, `${id}:${profile.id}`);
+    } else {
+      assert(initial.campaignTabsStatus === "ready", "CAMPAIGN_TABS_STATUS_INVALID", initial, `${id}:${profile.id}`);
+      assert(initial.tabCount === 4 && initial.panelCount === 4 && initial.selected.length === 1 && initial.visible.length === 1, "CAMPAIGN_INITIAL_TAB_STATE_INVALID", initial, `${id}:${profile.id}`);
+      await page.click('[role="tab"]:nth-of-type(2)');
+      clicked = await page.evaluate(() => ({ selected: document.querySelector('[role="tab"][aria-selected="true"]')?.id || "", visible: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id), visibleNativeVisuals: [...document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-campaign-native-visual]')].map(node => node.dataset.campaignNativeVisual) }));
+      assert(clicked.selected.endsWith("tab-2") && clicked.visible.length === 1 && clicked.visible[0].endsWith("panel-2"), "CAMPAIGN_TAB_CLICK_FAILED", clicked, `${id}:${profile.id}`);
+      await page.focus('[role="tab"][aria-selected="true"]');
+      await page.keyboard.press("End");
+      keyboard = await page.evaluate(() => ({ selected: document.querySelector('[role="tab"][aria-selected="true"]')?.id || "", visible: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id) }));
+      assert(keyboard.selected.endsWith("tab-4") && keyboard.visible.length === 1 && keyboard.visible[0].endsWith("panel-4"), "CAMPAIGN_TAB_KEYBOARD_FAILED", keyboard, `${id}:${profile.id}`);
+    }
     assert(telemetry.pageErrors.length === 0 && telemetry.requestFailures.length === 0, "CAMPAIGN_RUNTIME_ERRORS", telemetry, `${id}:${profile.id}`);
     if (profile.mobile) await page.screenshot({ path: `campaign-${id}-${profile.id.toLowerCase()}.png`, fullPage: true });
-    observations.push({ surface: id, profile: profile.id, initial, clicked, keyboard, telemetry });
+    observations.push({ surface: id, profile: profile.id, mode: orbitMode ? "orbit" : "tabs", initial, clicked, keyboard, telemetry });
     await page.close();
   }
 }

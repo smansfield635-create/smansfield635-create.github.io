@@ -1,4 +1,4 @@
-import { createSearchClient } from "./runtime/search-client.v1.js";
+import { createSearchClient } from "./runtime/search-client.v1.js?v=2eac6ebe5ab32f57971af9dfcec7b74e6c543b49";
 import { createPersonaAnchor } from "./runtime/persona-anchor.v1.js";
 
 const RUNTIME_RELEASE_ID = new URL(import.meta.url).searchParams.get("v") || "";
@@ -37,10 +37,10 @@ const GENERATION_FIRST_CONTENT_WATCHDOG_MS = 40_000;
 const RESPONSE_TEMPERATURE = 0.20;
 const RESPONSE_TOP_P = 0.9;
 const RESPONSE_MAX_TOKENS = 220;
-const SEARCH_ENDPOINT = "/api/integrity-search";
+const INTEGRITY_INDEX_URL = "/products/on-your-side-ai/native-chat/integrity-index/index.v1.json";
 const CANONICAL_JEEVES_VOICE_URL = "/assets/hearth/jeeves/jeeves.voice.js";
 const CANONICAL_JEEVES_VOICE_BLOB = "ebfb51804946d0afbb3f2145029480f803bdd655";
-const searchClient = createSearchClient({ endpoint: SEARCH_ENDPOINT, maxSources: 3 });
+const searchClient = createSearchClient({ indexUrl: INTEGRITY_INDEX_URL, maxSources: 3 });
 const personaAnchor = createPersonaAnchor({
   voiceUrl: CANONICAL_JEEVES_VOICE_URL,
   expectedVoiceBlob: CANONICAL_JEEVES_VOICE_BLOB
@@ -53,12 +53,12 @@ function firstContentWatchdogMsForKind(kind) {
 }
 
 const SYSTEM_MESSAGE = [
-  "You are the browser-local cognitive and language executor for On Your Side AAI Public Talk v2 on DiamondGateBridge.com.",
-  "Provide lightweight local help with understanding, organizing, comparing, drafting, and deciding reasonable next steps. The language model runs locally; when freshness is required, a separate bounded retrieval capability may supply current public evidence.",
+  "You are the browser-local cognitive and language executor for On Your Side AAI Public Talk v3 on DiamondGateBridge.com.",
+  "Provide lightweight local help with understanding, organizing, comparing, drafting, and deciding reasonable next steps. The language model runs locally; when evidence is required, a repository-owned same-origin Integrity Index may supply candidate public evidence.",
   "Answer ordinary questions directly and concisely from your built-in knowledge, and follow the user's requested format when possible.",
   "For arithmetic or comparisons, work out the result before answering; if you are uncertain, say so rather than guessing.",
   "For facts that may have changed, do not rely on training memory when current external evidence is supplied; reason from that evidence and preserve its uncertainty.",
-  "You do not browse directly. Bounded search evidence may be supplied separately. You still cannot access private files or repositories, access a private control plane, or execute external actions; mention these limits only when they matter to the user's request.",
+  "You do not browse the open web directly. Search queries are evaluated locally against the loaded Integrity Index and do not leave the browser in this edition. The bootstrap index covers only declared first-party public sources; outside that coverage, hold unresolved rather than guess. You still cannot access private files or repositories, access a private control plane, or execute external actions; mention these limits only when they matter to the user's request.",
   "Do not claim professional authority or claim that you performed an action you cannot perform.",
   "Keep the user in control. Always on their side; never in control."
 ].join(" ");
@@ -873,7 +873,7 @@ function resetV2Diagnostic(route) {
     searchTriggered: route.searchRequired,
     searchTriggerReason: route.reason,
     toolSelected: route.searchRequired ? "DG_GENERAL_WEB_SEARCH_TOOL_v1" : "LOCAL_MODEL",
-    searchProviderId: route.searchRequired ? "BRAVE_SEARCH_API_WEB_V1" : "none",
+    searchProviderId: route.searchRequired ? "DG_INTEGRITY_INDEX_V1" : "none",
     sourceCount: 0,
     provenanceFamilyCount: 0,
     contradictionCount: 0,
@@ -961,7 +961,7 @@ async function sendMessage(text) {
       recordDiagnostic("SEARCH_REQUEST_SENT", {
         backend: activeBackend || "none",
         result: "PASS",
-        details: { providerId: "BRAVE_SEARCH_API_WEB_V1", maxSources: 3 }
+        details: { providerId: "DG_INTEGRITY_INDEX_V1", maxSources: 3, coverageClass: "BOOTSTRAP_FIRST_PARTY_ONLY" }
       });
       evidenceAck = await searchClient.search(clean);
       evidenceReadyAt = performance.now();

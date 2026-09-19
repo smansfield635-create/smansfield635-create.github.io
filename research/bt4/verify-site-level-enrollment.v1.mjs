@@ -39,7 +39,7 @@ assert(adapter.includes("receipt?.runtimeVerification?.result==='PASS'"),'world 
 assert(adapter.includes("receipt?.runtimeVerification?.protectedContinuity===true"),'world adapter protected runtime continuity gate missing');
 assert(adapter.includes('const runtimeReady=Boolean(releasePresent&&receiptValid&&surfaceMatch&&shaMatch&&runtimePass)'),'world adapter combined readiness gate missing');
 assert(adapter.includes("evidence:'supporting',authority:true"),'qualified world evidence/authority state missing');
-for(const reason of ['LIVE_RELEASE_MARKER_UNAVAILABLE','AUDRALIA_RUNTIME_RECEIPT_UNAVAILABLE','AUDRALIA_RUNTIME_RECEIPT_SCHEMA_OR_RESULT_MISMATCH','AUDRALIA_RUNTIME_RECEIPT_SURFACE_MISMATCH','AUDRALIA_RUNTIME_RECEIPT_TARGET_SHA_MISMATCH','AUDRALIA_PUBLIC_RUNTIME_VERIFICATION_NOT_PASS'])assert(adapter.includes(reason),`world adapter fail-closed reason missing: ${reason}`);
+for(const reason of ['LIVE_RELEASE_MARKER_UNAVAILABLE','AUDRALIA_RUNTIME_RECEIPT_DEFERRED_DURING_LOCAL_PREFLIGHT','AUDRALIA_RUNTIME_RECEIPT_UNAVAILABLE','AUDRALIA_RUNTIME_RECEIPT_SCHEMA_OR_RESULT_MISMATCH','AUDRALIA_RUNTIME_RECEIPT_SURFACE_MISMATCH','AUDRALIA_RUNTIME_RECEIPT_TARGET_SHA_MISMATCH','AUDRALIA_PUBLIC_RUNTIME_VERIFICATION_NOT_PASS'])assert(adapter.includes(reason),`world adapter fail-closed reason missing: ${reason}`);
 assert(!adapter.includes("createElement('canvas')"),'world adapter must not boot hidden WebGL');
 assert(!adapter.includes('gitBlobHex'),'Evidence page must not hash Audralia runtime product bytes');
 assert(!adapter.includes('audralia-live-runtime-receipt.v1.json'),'Evidence page must not consume the stale static Audralia receipt');
@@ -48,8 +48,8 @@ assert(evidenceSurface.runtime?.readyAttribute?.name==='data-ready'&&evidenceSur
 assert(Number(evidenceSurface.runtime?.timeoutMs)<=25000,'publication verifier timeout exceeds current bounded entitlement contract');
 assert(JSON.stringify(evidenceSurface).includes('/.well-known/dgb-release.json'),'Evidence publication manifest missing live release marker binding');
 assert(JSON.stringify(evidenceSurface).includes('/.well-known/publication-surfaces/audralia-runtime.json'),'Evidence publication manifest missing canonical Audralia runtime receipt binding');
-assert(JSON.stringify(evidenceSurface).includes('site-entitlement.v1.mjs?cb=prod7'),'Evidence publication manifest stale adapter cache identity');
-assert(JSON.stringify(evidenceSurface).includes('current-public-condition.mjs?v=1&cb=prod8'),'Evidence publication manifest stale current-condition cache identity');
+assert(JSON.stringify(evidenceSurface).includes('site-entitlement.v1.mjs?cb=prod8'),'Evidence publication manifest stale adapter cache identity');
+assert(JSON.stringify(evidenceSurface).includes('current-public-condition.mjs?v=1&cb=prod9'),'Evidence publication manifest stale current-condition cache identity');
 assert(!JSON.stringify(evidenceSurface).includes('audralia-live-runtime-receipt.v1.json'),'Evidence publication manifest still binds stale static Audralia receipt');
 
 assert(page.includes("./site-entitlement.v1.mjs"),'public governance surface is not bound to shared site adapters');

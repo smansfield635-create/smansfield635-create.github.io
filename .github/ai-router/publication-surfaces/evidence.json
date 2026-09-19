@@ -9,7 +9,7 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "/evidence/current-public-condition.mjs?v=1&cb=prod8"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod9"
       ],
       "excludes": [
         "Breakthrough 4",
@@ -19,10 +19,10 @@
       ]
     },
     {
-      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod8",
+      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod9",
       "includes": [
         "SITE_ENTITLEMENT_URL",
-        "site-entitlement.v1.mjs?cb=prod7",
+        "site-entitlement.v1.mjs?cb=prod8",
         "await import(SITE_ENTITLEMENT_URL)",
         "data-condition-state",
         "data-condition-objects",
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod7",
+      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod8",
       "includes": [
         "./entitlement-engine.v1.mjs?cb=prod1",
         "FETCH_DEADLINE_MS=10000",
@@ -52,7 +52,8 @@
         "Scientific claim",
         "Audralia world/runtime",
         "Audralia diagnostic authority",
-        "Exact-head public release"
+        "Exact-head public release",
+        "AUDRALIA_RUNTIME_RECEIPT_DEFERRED_DURING_LOCAL_PREFLIGHT"
       ],
       "excludes": [
         "waitForAudraliaReady",

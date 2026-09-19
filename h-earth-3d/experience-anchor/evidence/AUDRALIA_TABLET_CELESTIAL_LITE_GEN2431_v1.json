@@ -1,15 +1,15 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
-  "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_GEN2431_EXPERIENCE_ACCEPTANCE_20260919_001",
-  "lockGeneration": 2435,
-  "productSpecimenCommit": "9579e895760ef0e62b44d816da9d2c702a812422",
+  "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_RUNTIME_PIN_REBIND_20260919_001",
+  "lockGeneration": 2436,
+  "productSpecimenCommit": "50067e367160a5991df1813355a0225a76adedd9",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "productFiles": [
     {
       "path": "showroom/globe/audralia/index.html",
-      "gitBlobSha1": "c34d8b7eb1da6ce5a0d7d5d96a2289e5205ac042",
-      "sha256": "6eb69946006ba22fedabbf71348ad5275dd60368c8da117c6206aaedf1862939"
+      "gitBlobSha1": "7bd2815987b2b2917cd166fde7e39e7d354f4d25",
+      "sha256": "a5796ac3db14f5e7fbb90f86487497b876831a5021863e2c81135d6b91ad106f"
     },
     {
       "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-celestial-lite.mjs",
@@ -85,12 +85,27 @@
     "interactionLaw": "orbit/zoom/pan remain owned by the existing renderer; celestial helper adds no input handler or parallel navigation system",
     "cameraFrameContinuity": "existing renderer camera(), viewScale(), orbit(), zoom(), pan(), and planetaryVantage() remain authoritative",
     "singleContextContinuity": "helper receives existing renderer gl; no canvas or WebGL context creation occurs in helper",
-    "startupContinuity": "existing renderer module remains the consumer; helper is imported by renderer and the Audralia index pins the immutable producer renderer",
+    "startupContinuity": "Constrained tablet now imports the byte-identical single-context runtime from producer commit 59aee8e779a6922fddda94e64b6c0c9583bbed23; its relative renderer import therefore resolves to the celestial-enabled renderer at the same immutable producer commit.",
     "physicalTabletAcceptance": "OWNER_PHYSICAL_DEVICE_ACCEPTANCE_REQUIRED_AFTER_PUBLICATION"
   },
   "anchorReview": {
     "reviewedAgainstAnchor": true,
     "sameWorldConclusion": "PASS",
     "rationale": "The celestial layer changes only the high-altitude expression of the existing Audralia/H-Earth renderer. Local and regional ground experience remains unchanged, and no duplicate product, canvas, runtime, camera, or navigation system is introduced."
+  },
+  "repairObservation": {
+    "schema": "AUDRALIA_TABLET_CELESTIAL_RUNTIME_PIN_REBIND_EVIDENCE_v1",
+    "result": "CONSTRUCTED_PENDING_LIVE_PUBLICATION_VERIFICATION",
+    "oldTabletRuntimePin": "9b768171e284785a7e5c7ee0142cb9368acf597d",
+    "newTabletRuntimePin": "59aee8e779a6922fddda94e64b6c0c9583bbed23",
+    "tabletRuntimePath": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs",
+    "tabletRuntimeGitBlobSha1": "ae5b2e9f786b42332b58872f7f0663e1937b5f04",
+    "tabletRuntimeByteIdentityPreserved": true,
+    "relativeRendererResolution": "59aee8e779a6922fddda94e64b6c0c9583bbed23/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
+    "rendererGitBlobSha1": "29554c57ad14d7ee6a7e7b848dbaef686729b2ab",
+    "helperGitBlobSha1": "9877844b6e2d8c808fe993c3cba27dd0a67164cd",
+    "helperRendererMutationPerformed": false,
+    "tabletRuntimeMutationPerformed": false,
+    "liveConstrainedTabletVisibility": "PENDING_PUBLICATION"
   }
 }

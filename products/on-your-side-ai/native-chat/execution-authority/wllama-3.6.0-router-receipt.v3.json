@@ -1,0 +1,28 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "routerId": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingHead": "7324ac9b59f85a1079612a025d0d733f4f065550",
+  "task": "Verify the ON_YOUR_SIDE_AAI Native Chat wllama 3.6.0 Stage C materializer route for fixed registered writeback execution",
+  "mutationIntent": true,
+  "routes": [
+    {
+      "path": "products/on-your-side-ai/native-chat/materializer/wllama-3.6.0-wasm.materialize.v1.mjs",
+      "routeClass": "REGISTERED_PROJECT",
+      "projectId": "ON_YOUR_SIDE_AAI",
+      "disposition": "PASS"
+    }
+  ],
+  "disposition": "PASS",
+  "conversationMemoryRequired": false,
+  "reasonCodes": [
+    "WHOLE_ESTATE_EXECUTION_DECISION_BOUND"
+  ],
+  "remoteRouterEvidence": {
+    "schema": "REPOSITORY_AI_ROUTER_REMOTE_RETURN_v1",
+    "result": "ROUTER_RECEIPT_RETURNED",
+    "sourceCommentId": 5740168723,
+    "workflowRunId": 35428954081,
+    "requestNonce": "36d0c0f7a6e26d11111111111111111111111111111111111111111111111111"
+  }
+}

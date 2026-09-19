@@ -10,9 +10,9 @@ const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const BASE='http://127.0.0.1:4173';
 const SCHEMA='AUDRALIA_CURRENT_RUNTIME_TOPOLOGY_QUALIFICATION_RECEIPT_v1';
 const INDEX='showroom/globe/audralia/index.html';
-const EXPECTED_INDEX_BLOB='64111194064342044c37e3287df57020d0d78586';
+const EXPECTED_INDEX_BLOB='2108710132506f1c6b30a7dcd6ac751288694251';
 const TABLET_RUNTIME_SCHEMA='AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME_v1';
-const TABLET_RUNTIME_REF='8e1e861eea09e26c0dc9721af83097374b5c1d86';
+const TABLET_RUNTIME_REF='9b768171e284785a7e5c7ee0142cb9368acf597d';
 const SNAPSHOT_PREFIX='/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/';
 const EXPECTED_PIXEL_BUDGET=921600;
 

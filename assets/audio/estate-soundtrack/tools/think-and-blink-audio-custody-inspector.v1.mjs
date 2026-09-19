@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { spawnSync } from 'node:child_process';
+import http from 'node:http';
+import { spawnSync, spawn } from 'node:child_process';
 
 const RECEIPT_SCHEMA = 'THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTION_RECEIPT_v1';
 const SELF_TEST_SCHEMA = 'THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTOR_SELF_TEST_RECEIPT_v1';
@@ -272,34 +273,157 @@ function validateChromeDecodedShape(sourceId, decoded, selectionDiagnostics) {
   return evidence;
 }
 
-function browserDecode(bytes, sourceId, windows = []) {
+async function browserDecode(bytes, sourceId, windows = []) {
   const chrome = findChrome();
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'think-blink-audio-decode-'));
-  const htmlPath = path.join(tmp, 'decode.html');
-  const markerA = '__THINK_BLINK_RESULT_BEGIN__';
-  const markerZ = '__THINK_BLINK_RESULT_END__';
+  const token = crypto.randomBytes(24).toString('hex');
+  const decodePath = `/${token}/decode.html`;
+  const resultPath = `/${token}/result`;
   const base64 = Buffer.from(bytes).toString('base64');
-  const html = `<!doctype html><meta charset="utf-8"><pre id="result">PENDING</pre><script>\n` +
-`const SOURCE_ID=${JSON.stringify(sourceId)};const BASE64=${JSON.stringify(base64)};const WINDOWS=${JSON.stringify(windows)};\n` +
+  const maxResultBytes = 8 * 1024 * 1024;
+  const timeoutMs = 60000;
+  let html = null;
+  let child = null;
+  let timeout = null;
+  let stderrTail = '';
+  let settled = false;
+  let resolveResult;
+  let rejectResult;
+
+  const resultPromise = new Promise((resolve, reject) => {
+    resolveResult = resolve;
+    rejectResult = reject;
+  });
+  const transportError = (code, detail = null) => {
+    const error = new Error(code);
+    error.code = code;
+    error.detail = detail;
+    return error;
+  };
+  const rejectOnce = (error) => {
+    if (settled) return;
+    settled = true;
+    rejectResult(error);
+  };
+  const resolveOnce = (value) => {
+    if (settled) return;
+    settled = true;
+    resolveResult(value);
+  };
+
+  const server = http.createServer((req, res) => {
+    if (req.method === 'GET' && req.url === decodePath) {
+      if (html == null) {
+        res.writeHead(503, { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' });
+        res.end('NOT_READY');
+        return;
+      }
+      res.writeHead(200, {
+        'content-type': 'text/html; charset=utf-8',
+        'cache-control': 'no-store',
+        'content-security-policy': "default-src 'none'; script-src 'unsafe-inline'; connect-src 'self'"
+      });
+      res.end(html);
+      return;
+    }
+
+    if (req.method === 'POST' && req.url === resultPath) {
+      if (settled) {
+        res.writeHead(409, { 'content-type': 'text/plain; charset=utf-8' });
+        res.end('ALREADY_SETTLED');
+        return;
+      }
+      const chunks = [];
+      let total = 0;
+      req.on('data', (chunk) => {
+        total += chunk.length;
+        if (total > maxResultBytes) {
+          rejectOnce(transportError('CHROME_DECODE_RESULT_TOO_LARGE', { sourceId, bytes: total, limit: maxResultBytes }));
+          req.destroy();
+          return;
+        }
+        chunks.push(chunk);
+      });
+      req.on('end', () => {
+        if (settled) return;
+        let decoded;
+        try {
+          decoded = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+        } catch (error) {
+          rejectOnce(transportError('CHROME_DECODE_JSON_INVALID', { sourceId, detail: error.message, bytes: total }));
+          res.writeHead(400, { 'content-type': 'text/plain; charset=utf-8' });
+          res.end('INVALID_JSON');
+          return;
+        }
+        res.writeHead(204, { 'cache-control': 'no-store' });
+        res.end();
+        resolveOnce({ decoded, bytesReceived: total });
+      });
+      req.on('error', (error) => rejectOnce(transportError('CHROME_DECODE_RESULT_STREAM_FAILED', { sourceId, detail: error.message })));
+      return;
+    }
+
+    res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' });
+    res.end('NOT_FOUND');
+  });
+
+  try {
+    await new Promise((resolve, reject) => {
+      server.once('error', reject);
+      server.listen(0, '127.0.0.1', resolve);
+    });
+    const address = server.address();
+    if (!address || typeof address === 'string' || !(address.port > 0)) fail('CHROME_DECODE_LOOPBACK_BIND_FAILED', { sourceId });
+    const origin = `http://127.0.0.1:${address.port}`;
+    const resultUrl = `${origin}${resultPath}`;
+
+    html = `<!doctype html><meta charset="utf-8"><script>\n` +
+`const SOURCE_ID=${JSON.stringify(sourceId)};const BASE64=${JSON.stringify(base64)};const WINDOWS=${JSON.stringify(windows)};const RESULT_URL=${JSON.stringify(resultUrl)};\n` +
 `const round=(v,d=9)=>{const p=10**d;return Math.round(v*p)/p};\n` +
 `function valleys(bins,limit=16){const out=[];for(let i=2;i<bins.length-2;i++){const rms=bins[i].rms;if(rms>bins[i-1].rms||rms>bins[i+1].rms)continue;const before=(bins[i-2].rms+bins[i-1].rms)/2;const after=(bins[i+1].rms+bins[i+2].rms)/2;const shoulder=(before+after)/2;const prominence=shoulder-rms;if(!(prominence>0))continue;out.push({time:round((bins[i].start+bins[i].end)/2,6),rms,peak:bins[i].peak,beforeRms:round(before),afterRms:round(after),prominence:round(prominence),symmetryPenalty:round(Math.abs(before-after)),score:round(prominence-Math.abs(before-after)*.15)});}return out.sort((a,b)=>b.score-a.score||a.time-b.time).slice(0,limit)}\n` +
 `function analyze(buf,w){const first=Math.max(0,Math.floor(w.start*buf.sampleRate));const last=Math.min(buf.length,Math.ceil(w.end*buf.sampleRate));const fpb=Math.max(1,Math.round(w.binSeconds*buf.sampleRate));const data=[];for(let a=first;a<last;a+=fpb){const z=Math.min(last,a+fpb);let sq=0,peak=0,count=0;for(let i=a;i<z;i++){let mono=0;for(let c=0;c<buf.numberOfChannels;c++)mono+=buf.getChannelData(c)[i];mono/=buf.numberOfChannels;const av=Math.abs(mono);if(av>peak)peak=av;sq+=mono*mono;count++;}data.push({start:round(a/buf.sampleRate,6),end:round(z/buf.sampleRate,6),rms:round(Math.sqrt(sq/Math.max(1,count))),peak:round(peak)});}return{id:w.id,start:w.start,end:w.end,binSeconds:w.binSeconds,binCount:data.length,bins:data,candidates:valleys(data)}}\n` +
-`(async()=>{try{const raw=atob(BASE64);const bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);const Ctx=window.AudioContext||window.webkitAudioContext;const ctx=new Ctx({sampleRate:48000});const buf=await ctx.decodeAudioData(bytes.buffer);const result={sourceId:SOURCE_ID,durationSeconds:round(buf.duration,9),sampleRate:buf.sampleRate,channels:buf.numberOfChannels,frames:buf.length,windows:WINDOWS.map(w=>analyze(buf,w))};await ctx.close();document.getElementById('result').textContent=${JSON.stringify(markerA)}+JSON.stringify(result)+${JSON.stringify(markerZ)};}catch(e){document.getElementById('result').textContent=${JSON.stringify(markerA)}+JSON.stringify({error:String(e&&e.stack||e)})+${JSON.stringify(markerZ)};}})();\n` +
+`async function deliver(payload){const r=await fetch(RESULT_URL,{method:'POST',headers:{'content-type':'application/json'},cache:'no-store',body:JSON.stringify(payload)});if(!r.ok)throw new Error('RESULT_POST_'+r.status)}\n` +
+`(async()=>{try{const raw=atob(BASE64);const bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);const Ctx=window.AudioContext||window.webkitAudioContext;const ctx=new Ctx({sampleRate:48000});const buf=await ctx.decodeAudioData(bytes.buffer);const result={sourceId:SOURCE_ID,durationSeconds:round(buf.duration,9),sampleRate:buf.sampleRate,channels:buf.numberOfChannels,frames:buf.length,windows:WINDOWS.map(w=>analyze(buf,w))};await ctx.close();await deliver(result);}catch(e){try{await deliver({sourceId:SOURCE_ID,error:String(e&&e.stack||e)})}catch{}}})();\n` +
 `</script>`;
-  fs.writeFileSync(htmlPath, html, 'utf8');
-  try {
-    const r = spawnSync(chrome.executable, [
+
+    child = spawn(chrome.executable, [
       '--headless=new', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage',
-      '--autoplay-policy=no-user-gesture-required', '--virtual-time-budget=30000', '--dump-dom', `file://${htmlPath}`
-    ], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, timeout: 60000 });
-    if (r.status !== 0) fail('CHROME_DECODE_PROCESS_FAILED', { status: r.status, stderr: String(r.stderr || '').slice(-4000) });
-    const out = String(r.stdout || '');
-    const selection = selectChromeDecodedResult(out, markerA, markerZ, sourceId);
-    const decoded = selection.decoded;
-    if (decoded?.error) fail('CHROME_AUDIO_DECODE_FAILED', { sourceId, error: decoded.error, markerSelection: selection.diagnostics });
-    validateChromeDecodedShape(sourceId, decoded, selection.diagnostics);
+      '--no-first-run', '--disable-default-apps', '--autoplay-policy=no-user-gesture-required',
+      `--user-data-dir=${path.join(tmp, 'chrome-profile')}`, `${origin}${decodePath}`
+    ], { stdio: ['ignore', 'ignore', 'pipe'] });
+
+    child.stderr?.on('data', (chunk) => {
+      stderrTail = (stderrTail + chunk.toString('utf8')).slice(-8000);
+    });
+    child.once('error', (error) => rejectOnce(transportError('CHROME_DECODE_PROCESS_FAILED', { sourceId, detail: error.message, stderrTail })));
+    child.once('exit', (code, signal) => {
+      if (!settled) rejectOnce(transportError('CHROME_DECODE_PROCESS_EXITED_BEFORE_RESULT', { sourceId, code, signal, stderrTail }));
+    });
+
+    timeout = setTimeout(() => {
+      rejectOnce(transportError('CHROME_DECODE_RESULT_TIMEOUT', { sourceId, timeoutMs, stderrTail }));
+    }, timeoutMs);
+
+    const handoff = await resultPromise;
+    const decoded = handoff.decoded;
+    const handoffDiagnostics = {
+      transport: 'LOOPBACK_HTTP_POST',
+      host: '127.0.0.1',
+      resultBytes: handoff.bytesReceived,
+      timeoutMs
+    };
+    if (decoded?.error) fail('CHROME_AUDIO_DECODE_FAILED', { sourceId, error: decoded.error, handoff: handoffDiagnostics });
+    validateChromeDecodedShape(sourceId, decoded, handoffDiagnostics);
     return { chrome, ...decoded };
   } finally {
+    if (timeout) clearTimeout(timeout);
+    if (child && child.exitCode == null) {
+      try { child.kill('SIGKILL'); } catch {}
+    }
+    await new Promise((resolve) => {
+      if (!server.listening) return resolve();
+      server.close(() => resolve());
+    });
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 }
@@ -443,11 +567,11 @@ async function fetchCanonical(source, authority) {
 async function inspect(executionHolder) {
   const aquariumAuthority = await fetchCommonsAuthority(SOURCES.AQUARIUM);
   const aquariumFetch = await fetchCanonical(SOURCES.AQUARIUM, aquariumAuthority);
-  const aquariumDecoded = browserDecode(aquariumFetch.bytes, SOURCES.AQUARIUM.id, []);
+  const aquariumDecoded = await browserDecode(aquariumFetch.bytes, SOURCES.AQUARIUM.id, []);
   validateDecodedIdentity(SOURCES.AQUARIUM, aquariumDecoded, []);
   const campAuthority = await fetchCommonsAuthority(SOURCES.CAMPANELLA);
   const campFetch = await fetchCanonical(SOURCES.CAMPANELLA, campAuthority);
-  const campDecoded = browserDecode(campFetch.bytes, SOURCES.CAMPANELLA.id, CAMPANELLA_WINDOWS);
+  const campDecoded = await browserDecode(campFetch.bytes, SOURCES.CAMPANELLA.id, CAMPANELLA_WINDOWS);
   validateDecodedIdentity(SOURCES.CAMPANELLA, campDecoded, CAMPANELLA_WINDOWS);
   return stable({
     schema: RECEIPT_SCHEMA,

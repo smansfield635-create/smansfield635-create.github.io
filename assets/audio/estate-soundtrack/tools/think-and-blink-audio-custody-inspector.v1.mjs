@@ -12,13 +12,19 @@ const SOURCES = Object.freeze({
     id: 'AUD_01_AQUARIUM_CANONICAL',
     url: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg',
     role: 'OPENING_AND_FINAL_RETURN',
-    rights: 'CC_BY_SA_2_0'
+    rights: 'CC_BY_SA_2_0',
+    commonsTitle: 'File:Saint-Saens - The Carnival of the Animals - 07 Aquarium.ogg',
+    expectedDurationSeconds: 148.006893424036,
+    durationToleranceSeconds: 0.05
   }),
   CAMPANELLA: Object.freeze({
     id: 'AUD_02_LA_CAMPANELLA_GREISS_CANONICAL',
     url: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Liszt-La_Campanella-Greiss.ogg',
     role: 'EMERGENCE_ASCENT_CLIMAX_STRUCTURAL_DROP',
-    rights: 'PUBLIC_DOMAIN_RECORDING_VRT_CONFIRMED'
+    rights: 'PUBLIC_DOMAIN_RECORDING_VRT_CONFIRMED',
+    commonsTitle: 'File:Liszt-La Campanella-Greiss.ogg',
+    expectedDurationSeconds: 372,
+    durationToleranceSeconds: 1
   })
 });
 const CAMPANELLA_WINDOWS = Object.freeze([
@@ -34,6 +40,7 @@ function stable(value) {
   return value;
 }
 function sha256(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
+function sha1(bytes) { return crypto.createHash('sha1').update(bytes).digest('hex'); }
 function fail(code, detail = null) { const e = new Error(code); e.code = code; e.detail = detail; throw e; }
 function round(value, digits = 9) { const p = 10 ** digits; return Math.round(value * p) / p; }
 function writeJson(file, value) {
@@ -155,21 +162,78 @@ function browserDecode(bytes, sourceId, windows = []) {
   }
 }
 
-async function fetchCanonical(source) {
+async function fetchCommonsAuthority(source) {
+  const endpoint = new URL('https://commons.wikimedia.org/w/api.php');
+  endpoint.searchParams.set('action', 'query');
+  endpoint.searchParams.set('format', 'json');
+  endpoint.searchParams.set('prop', 'imageinfo');
+  endpoint.searchParams.set('iiprop', 'size|sha1|mime|mediatype|url');
+  endpoint.searchParams.set('titles', source.commonsTitle);
+  const r = await fetch(endpoint, { redirect: 'error', headers: { 'User-Agent': 'DiamondGateBridge-ThinkAndBlink-AudioCustodyInspector/1.0' } });
+  if (!r.ok) fail('COMMONS_AUTHORITY_FETCH_FAILED', { sourceId: source.id, status: r.status });
+  let payload;
+  try { payload = await r.json(); } catch (e) { fail('COMMONS_AUTHORITY_JSON_INVALID', { sourceId: source.id, detail: e.message }); }
+  const pages = Object.values(payload?.query?.pages ?? {});
+  const info = pages[0]?.imageinfo?.[0];
+  if (!info) fail('COMMONS_AUTHORITY_IMAGEINFO_MISSING', source.id);
+  const authority = {
+    url: String(info.url ?? ''),
+    size: Number(info.size),
+    sha1: String(info.sha1 ?? '').toLowerCase(),
+    mime: String(info.mime ?? '').toLowerCase(),
+    mediatype: String(info.mediatype ?? '').toUpperCase()
+  };
+  if (authority.url !== source.url) fail('COMMONS_AUTHORITY_URL_MISMATCH', { sourceId: source.id, expected: source.url, actual: authority.url });
+  if (!Number.isSafeInteger(authority.size) || authority.size < 1024) fail('COMMONS_AUTHORITY_SIZE_INVALID', { sourceId: source.id, size: authority.size });
+  if (!/^[0-9a-f]{40}$/.test(authority.sha1)) fail('COMMONS_AUTHORITY_SHA1_INVALID', { sourceId: source.id, sha1: authority.sha1 });
+  if (authority.mime !== 'application/ogg' || authority.mediatype !== 'AUDIO') fail('COMMONS_AUTHORITY_MEDIA_TYPE_MISMATCH', { sourceId: source.id, mime: authority.mime, mediatype: authority.mediatype });
+  return authority;
+}
+
+function validateDecodedIdentity(source, decoded, windows = []) {
+  if (Math.abs(decoded.durationSeconds - source.expectedDurationSeconds) > source.durationToleranceSeconds) {
+    fail('DECODED_DURATION_MISMATCH', { sourceId: source.id, expected: source.expectedDurationSeconds, tolerance: source.durationToleranceSeconds, actual: decoded.durationSeconds });
+  }
+  for (const requested of windows) {
+    const observed = decoded.windows?.find((x) => x.id === requested.id);
+    if (!observed || !(observed.binCount > 0) || !Array.isArray(observed.bins) || observed.bins.length !== observed.binCount) {
+      fail('WAVEFORM_WINDOW_EMPTY', { sourceId: source.id, windowId: requested.id });
+    }
+    const first = observed.bins[0], last = observed.bins[observed.bins.length - 1];
+    if (first.start > requested.start + requested.binSeconds || last.end < requested.end - requested.binSeconds) {
+      fail('WAVEFORM_WINDOW_NOT_FULLY_COVERED', { sourceId: source.id, windowId: requested.id, firstStart: first.start, lastEnd: last.end });
+    }
+    if (!Array.isArray(observed.candidates) || observed.candidates.length < 1) {
+      fail('WAVEFORM_CANDIDATE_EVIDENCE_MISSING', { sourceId: source.id, windowId: requested.id });
+    }
+  }
+}
+
+async function fetchCanonical(source, authority) {
   const url = new URL(source.url);
   if (url.protocol !== 'https:' || url.hostname !== 'upload.wikimedia.org') fail('SOURCE_URL_NOT_CANONICAL', source.id);
   const r = await fetch(source.url, { redirect: 'follow', headers: { 'User-Agent': 'DiamondGateBridge-ThinkAndBlink-AudioCustodyInspector/1.0' } });
   if (!r.ok) fail('SOURCE_FETCH_FAILED', { sourceId: source.id, status: r.status });
+  if (r.url !== source.url || r.url !== authority.url) fail('SOURCE_FINAL_URL_MISMATCH', { sourceId: source.id, expected: source.url, actual: r.url });
+  const contentType = String(r.headers.get('content-type') || '').split(';', 1)[0].trim().toLowerCase();
+  if (!['application/ogg', 'audio/ogg'].includes(contentType)) fail('SOURCE_CONTENT_TYPE_MISMATCH', { sourceId: source.id, contentType });
   const bytes = Buffer.from(await r.arrayBuffer());
-  if (bytes.length < 1024) fail('SOURCE_BYTES_IMPLAUSIBLY_SMALL', { sourceId: source.id, bytes: bytes.length });
-  return { bytes, finalUrl: r.url, contentType: r.headers.get('content-type') || null };
+  if (bytes.length !== authority.size) fail('SOURCE_BYTE_COUNT_MISMATCH', { sourceId: source.id, expected: authority.size, actual: bytes.length });
+  if (bytes.subarray(0, 4).toString('ascii') !== 'OggS') fail('SOURCE_OGG_SIGNATURE_MISSING', source.id);
+  const actualSha1 = sha1(bytes);
+  if (actualSha1 !== authority.sha1) fail('SOURCE_SHA1_AUTHORITY_MISMATCH', { sourceId: source.id, expected: authority.sha1, actual: actualSha1 });
+  return { bytes, finalUrl: r.url, contentType, authority };
 }
 
 async function inspect(executionHolder) {
-  const aquariumFetch = await fetchCanonical(SOURCES.AQUARIUM);
+  const aquariumAuthority = await fetchCommonsAuthority(SOURCES.AQUARIUM);
+  const aquariumFetch = await fetchCanonical(SOURCES.AQUARIUM, aquariumAuthority);
   const aquariumDecoded = browserDecode(aquariumFetch.bytes, SOURCES.AQUARIUM.id, []);
-  const campFetch = await fetchCanonical(SOURCES.CAMPANELLA);
+  validateDecodedIdentity(SOURCES.AQUARIUM, aquariumDecoded, []);
+  const campAuthority = await fetchCommonsAuthority(SOURCES.CAMPANELLA);
+  const campFetch = await fetchCanonical(SOURCES.CAMPANELLA, campAuthority);
   const campDecoded = browserDecode(campFetch.bytes, SOURCES.CAMPANELLA.id, CAMPANELLA_WINDOWS);
+  validateDecodedIdentity(SOURCES.CAMPANELLA, campDecoded, CAMPANELLA_WINDOWS);
   return stable({
     schema: RECEIPT_SCHEMA,
     result: 'PASS_CLOSED',
@@ -178,14 +242,16 @@ async function inspect(executionHolder) {
       AQUARIUM: {
         sourceId: SOURCES.AQUARIUM.id, canonicalUrl: SOURCES.AQUARIUM.url, finalUrl: aquariumFetch.finalUrl,
         rights: SOURCES.AQUARIUM.rights, role: SOURCES.AQUARIUM.role, bytes: aquariumFetch.bytes.length,
-        sha256: sha256(aquariumFetch.bytes), contentType: aquariumFetch.contentType,
-        decode: { durationSeconds: aquariumDecoded.durationSeconds, sampleRate: aquariumDecoded.sampleRate, channels: aquariumDecoded.channels, frames: aquariumDecoded.frames, chrome: aquariumDecoded.chrome }
+        sha256: sha256(aquariumFetch.bytes), sha1: sha1(aquariumFetch.bytes), contentType: aquariumFetch.contentType,
+        sourceAuthority: aquariumFetch.authority,
+        decode: { durationSeconds: aquariumDecoded.durationSeconds, expectedDurationSeconds: SOURCES.AQUARIUM.expectedDurationSeconds, durationToleranceSeconds: SOURCES.AQUARIUM.durationToleranceSeconds, sampleRate: aquariumDecoded.sampleRate, channels: aquariumDecoded.channels, frames: aquariumDecoded.frames, chrome: aquariumDecoded.chrome }
       },
       CAMPANELLA: {
         sourceId: SOURCES.CAMPANELLA.id, canonicalUrl: SOURCES.CAMPANELLA.url, finalUrl: campFetch.finalUrl,
         rights: SOURCES.CAMPANELLA.rights, role: SOURCES.CAMPANELLA.role, bytes: campFetch.bytes.length,
-        sha256: sha256(campFetch.bytes), contentType: campFetch.contentType,
-        decode: { durationSeconds: campDecoded.durationSeconds, sampleRate: campDecoded.sampleRate, channels: campDecoded.channels, frames: campDecoded.frames, chrome: campDecoded.chrome },
+        sha256: sha256(campFetch.bytes), sha1: sha1(campFetch.bytes), contentType: campFetch.contentType,
+        sourceAuthority: campFetch.authority,
+        decode: { durationSeconds: campDecoded.durationSeconds, expectedDurationSeconds: SOURCES.CAMPANELLA.expectedDurationSeconds, durationToleranceSeconds: SOURCES.CAMPANELLA.durationToleranceSeconds, sampleRate: campDecoded.sampleRate, channels: campDecoded.channels, frames: campDecoded.frames, chrome: campDecoded.chrome },
         waveformInspection: { windows: campDecoded.windows }
       }
     },
@@ -218,10 +284,13 @@ function selfTest() {
   const nearest = [...window.candidates].sort((x, y) => Math.abs(x.time - 5) - Math.abs(y.time - 5))[0];
   const checks = [
     sha256(Buffer.from('abc')) === 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
+    sha1(Buffer.from('abc')) === 'a9993e364706816aba3e25717850c26c9cd0d89d',
     SOURCES.AQUARIUM.url === 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg',
     SOURCES.CAMPANELLA.url === 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Liszt-La_Campanella-Greiss.ogg',
     CAMPANELLA_WINDOWS[0].start === 98 && CAMPANELLA_WINDOWS[0].end === 150,
     CAMPANELLA_WINDOWS[1].start === 317 && CAMPANELLA_WINDOWS[1].end === 337,
+    SOURCES.AQUARIUM.expectedDurationSeconds === 148.006893424036 && SOURCES.AQUARIUM.durationToleranceSeconds === 0.05,
+    SOURCES.CAMPANELLA.expectedDurationSeconds === 372 && SOURCES.CAMPANELLA.durationToleranceSeconds === 1,
     window.binCount === 40,
     window.candidates.length > 0,
     nearest && Math.abs(nearest.time - 5) <= 0.15 && nearest.rms < 0.03

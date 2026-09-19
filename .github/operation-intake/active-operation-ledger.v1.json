@@ -9441,6 +9441,49 @@
       "scopeHash": "c284fbab25236785b84dbb925a8920db8264e6f23f7327b62c0d55a20ebaf899",
       "state": "ADMITTED_LOCKED"
     },
+    "c2d7f7ec2fa169eb23d9fa691f3f7efdc464f04be33ffdb68eb4ae3186e3b86c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b2d0a89f80f4a554eed3c368142b5b64e1b1026b",
+          "lockGeneration": 2423,
+          "lockScope": "H_EARTH:AUDRALIA:CONSTRAINED_TABLET_CAMERA_FRAME_BINDING_REPAIR:V1",
+          "operationId": "AUDRALIA_CONSTRAINED_TABLET_CAMERA_FRAME_BINDING_REPAIR_20260919_001",
+          "procedureLocatorDigest": "2ecef3e6e2222c8db0cdce0706c05f39ddabc45c52e5cf9afc24d309e1c7e3f9",
+          "requestDigest": "c6c22efb69cf950990dc4eb86a7026e4dd36c1b98e3535002188c604dd0c7197",
+          "scopeHash": "c2d7f7ec2fa169eb23d9fa691f3f7efdc464f04be33ffdb68eb4ae3186e3b86c"
+        },
+        "bindingDigest": "76032a6135985cc12fc9eeab59d95cbc2e75068c5ba2c6cdda0f2e5f0ad87ac9",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "7f45ca9adb93781966d3ff2c7f250fbdc1240e21f3e69c84e47a9c30488ba7b5",
+          "commentId": 5744423133,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3845,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35461927180,
+          "workflowSha": "b2d0a89f80f4a554eed3c368142b5b64e1b1026b"
+        },
+        "lineageAnchorCommitSha": "88143a93a75e27afa69cdc8c81eec30f4c9de20e",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b2d0a89f80f4a554eed3c368142b5b64e1b1026b",
+      "lockGeneration": 2423,
+      "lockScope": "H_EARTH:AUDRALIA:CONSTRAINED_TABLET_CAMERA_FRAME_BINDING_REPAIR:V1",
+      "operationId": "AUDRALIA_CONSTRAINED_TABLET_CAMERA_FRAME_BINDING_REPAIR_20260919_001",
+      "procedureLocatorDigest": "2ecef3e6e2222c8db0cdce0706c05f39ddabc45c52e5cf9afc24d309e1c7e3f9",
+      "released": false,
+      "requestDigest": "c6c22efb69cf950990dc4eb86a7026e4dd36c1b98e3535002188c604dd0c7197",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c2d7f7ec2fa169eb23d9fa691f3f7efdc464f04be33ffdb68eb4ae3186e3b86c",
+      "state": "ADMITTED_LOCKED"
+    },
     "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5": {
       "governingHead": "74e48531e73fa2de687ba6b42777891f28e5a9ba",
       "lockGeneration": 1516,
@@ -12555,7 +12598,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2422,
+  "lockGeneration": 2423,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

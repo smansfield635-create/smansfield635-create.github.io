@@ -276,23 +276,6 @@ jobs:
         with:
           artifact_name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
 
-      - name: Verify deferred Evidence runtime surface
-        env:
-          PAGE_URL: ${{ steps.deploy_final.outputs.page_url }}
-          MANIFEST: ${{ steps.surface.outputs.manifest }}
-          SURFACE_ID: ${{ inputs.surface_id }}
-          REQUESTED_RUNTIME: ${{ steps.surface.outputs.runtime }}
-          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "$REQUESTED_RUNTIME" = "true" ] && [ "$SURFACE_ID" = "evidence" ]; then
-            export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
-            test -n "$CHROME_PATH"
-            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
-            echo "EVIDENCE_RUNTIME_VERIFIED_AFTER_AUDRALIA_RECEIPT_PUBLICATION=$TARGET_SHA"
-          fi
-
       - name: Verify final release marker and Audralia runtime receipt
         env:
           PAGE_URL: ${{ steps.deploy_final.outputs.page_url }}
@@ -319,6 +302,23 @@ jobs:
           done
           echo "FINAL_AUDRALIA_RUNTIME_RECEIPT_MISMATCH target=$TARGET_SHA" >&2
           exit 1
+
+      - name: Verify deferred Evidence runtime surface
+        env:
+          PAGE_URL: ${{ steps.deploy_final.outputs.page_url }}
+          MANIFEST: ${{ steps.surface.outputs.manifest }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          REQUESTED_RUNTIME: ${{ steps.surface.outputs.runtime }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$REQUESTED_RUNTIME" = "true" ] && [ "$SURFACE_ID" = "evidence" ]; then
+            export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+            test -n "$CHROME_PATH"
+            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
+            echo "EVIDENCE_RUNTIME_VERIFIED_AFTER_AUDRALIA_RECEIPT_PUBLICATION=$TARGET_SHA"
+          fi
 
       - name: Verify custom-domain alias convergence
         env:

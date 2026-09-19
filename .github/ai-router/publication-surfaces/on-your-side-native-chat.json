@@ -34,7 +34,6 @@
         "answer-contract.v2.first-party-gate.js",
         "NATIVE_CHAT_V3_VISIBLE_RUNTIME_IDENTITY_AND_CONTRACT_GATE_v1",
         "data-native-chat-contract-ready=\"WAITING\"",
-        "CONTRACT LAYER FAILED",
         "answer-contract.v2.first-party-gate.js"
       ],
       "excludes": [
@@ -136,6 +135,15 @@
       "excludes": [
         "thinking-progress"
       ]
+    },
+    {
+      "path": "/products/on-your-side-ai/native-chat/runtime/answer-contract.v2.first-party-gate.js",
+      "includes": [
+        "CONTRACT LAYER FAILED",
+        "root.dataset.nativeChatContractReady = \"FAILED\"",
+        "markContractLayerFailed(error)"
+      ],
+      "excludes": []
     }
   ],
   "runtime": {

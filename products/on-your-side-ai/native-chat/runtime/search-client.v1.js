@@ -7,7 +7,7 @@ const SEARCH_INTERFACE_ID = "DG_GENERAL_WEB_SEARCH_TOOL_v1";
 const FRESHNESS_PATTERNS = Object.freeze([
   /\b(current|currently|today|latest|right now|recent|recently|still|now|live|newly|just announced)\b/i,
   /\b(yesterday|last night|tonight|tomorrow|this morning|this afternoon|this evening|this week|this weekend|this month|this year)\b/i,
-  /\b(next|upcoming)\s+(?:game|match|event|launch|release|meeting|election|earnings|show|episode|flight|train|bus)\b/i,
+  /\b(next|upcoming)\b.{0,48}\b(?:game|match|event|launch|release|meeting|election|earnings|show|episode|flight|train|bus)\b/i,
   /\bwho\s+(?:is|are)\s+(?:the\s+)?(?:president|vice president|prime minister|governor|mayor|senator|representative|ceo|chair|speaker|secretary|commissioner)\b/i,
   /\b(who won|winner|results?|score|standings|schedule|outage|status|stock price|share price|exchange rate|weather|open now|closed today|earnings)\b/i
 ]);

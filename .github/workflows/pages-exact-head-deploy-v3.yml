@@ -127,6 +127,32 @@ jobs:
           echo "PAGES_PAYLOAD_BYTES=$(jq -r '.payloadBytes' "$RECEIPT")"
           echo "PROTECTED_AUDRALIA_DEPENDENCY_FILES=$(jq -r '.authorizedExcludedRuntimeDependencies.fileCount' "$RECEIPT")"
 
+          held_dir="$STAGE/.well-known/publication-surfaces"
+          held_receipt="$held_dir/audralia-runtime.json"
+          mkdir -p "$held_dir"
+          jq -n \
+            --arg targetSha "$TARGET_SHA" \
+            --arg publicationSurfaceId "$SURFACE_ID" \
+            '{schema:"DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1",result:"HELD_PENDING_RUNTIME_VERIFICATION",surfaceId:"audralia",targetSha:$targetSha,finalUrl:"https://diamondgatebridge.com/showroom/globe/audralia/",runtimeVerification:{schema:"PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1",surfaceId:"audralia",result:"NOT_RUN",protectedContinuity:false},releaseMarkerPath:"/.well-known/dgb-release.json",publicationSurfaceId:$publicationSurfaceId,phase:"PRE_DEPLOY_FAIL_CLOSED_PLACEHOLDER",hiddenWebGLOnEvidencePage:false}' \
+            > "$held_receipt"
+          jq -e --arg targetSha "$TARGET_SHA" '.schema=="DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .result=="HELD_PENDING_RUNTIME_VERIFICATION" and .surfaceId=="audralia" and .targetSha==$targetSha and .runtimeVerification.result=="NOT_RUN" and .hiddenWebGLOnEvidencePage==false' "$held_receipt" >/dev/null
+
+          STAGE="$STAGE" RECEIPT="$RECEIPT" node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const stage=process.env.STAGE;
+          const receiptPath=process.env.RECEIPT;
+          const treeBytes=root=>{let total=0;const walk=d=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);if(e.isDirectory())walk(p);else if(e.isFile())total+=fs.statSync(p).size;}};walk(root);return total;};
+          const topLevelBreakdown=root=>fs.readdirSync(root,{withFileTypes:true}).map(e=>{const p=path.join(root,e.name);return {path:e.name,bytes:e.isDirectory()?treeBytes(p):(e.isFile()?fs.statSync(p).size:0)};}).sort((a,b)=>b.bytes-a.bytes);
+          const files=[];const walk=(dir,rel='')=>{for(const e of fs.readdirSync(dir,{withFileTypes:true})){const r=path.posix.join(rel,e.name),p=path.join(dir,e.name);if(e.isDirectory())walk(p,r);else if(e.isFile())files.push(r);}};walk(stage);files.sort();
+          const h=crypto.createHash('sha256');for(const rel of files){h.update(rel);h.update('\0');h.update(fs.readFileSync(path.join(stage,rel)));h.update('\0');}
+          const receipt=JSON.parse(fs.readFileSync(receiptPath,'utf8'));receipt.payloadDigest=h.digest('hex');receipt.payloadBytes=treeBytes(stage);receipt.topLevelBytes=topLevelBreakdown(stage);
+          fs.writeFileSync(receiptPath,JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          echo "PREFLIGHT_HELD_AUDRALIA_RECEIPT_STAGED=$TARGET_SHA"
+          echo "PAGES_PAYLOAD_BYTES_WITH_HELD_RECEIPT=$(jq -r '.payloadBytes' "$RECEIPT")"
+
       - name: Set up Chrome for preflight
         uses: browser-actions/setup-chrome@v1
         with:

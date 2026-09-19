@@ -15,14 +15,14 @@ const WEBLLM_MODULE = "https://esm.run/@mlc-ai/web-llm@0.2.85";
 const WLLAMA_MODULE_SOURCES = Object.freeze([
   {
     id: "JSDELIVR_NPM_EXACT",
-    url: "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/esm/index.js"
+    url: "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.6.0/esm/index.js"
   },
   {
     id: "UNPKG_NPM_EXACT",
-    url: "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js"
+    url: "https://unpkg.com/@wllama/wllama@3.6.0/esm/index.js"
   }
 ]);
-const WLLAMA_WASM_URL = new URL("./runtime/wllama/3.4.0/wllama.wasm", window.location.href).href;
+const WLLAMA_WASM_URL = new URL("./runtime/wllama/3.6.0/wllama.wasm", window.location.href).href;
 const CPU_MODEL_REVISION = "b26a58accf53b1a19fbc555d52fdb224bec473f5";
 const CPU_MODEL_SHA256 = "6eb923e7d26e9cea28811e1a8e852009b21242fb157b26149d3b188f3a8c8653";
 const CPU_MODEL_BYTES = 397808192;
@@ -110,7 +110,7 @@ const diagnosticState = {
   },
   versions: {
     primary: "webllm@0.2.85",
-    fallback: "wllama@3.4.0",
+    fallback: "wllama@3.6.0",
     modelRevision: CPU_MODEL_REVISION
   },
   events: []
@@ -607,7 +607,7 @@ async function loadCpuFallback(primaryFailureCode) {
   recordDiagnostic("CPU_ENGINE_CONSTRUCT", { backend: "wllama-cpu", result: "PASS" });
 
   console.info("Native Chat CPU fallback identity", {
-    runtime: "wllama@3.4.0",
+    runtime: "wllama@3.6.0",
     modelRevision: CPU_MODEL_REVISION,
     modelSha256: CPU_MODEL_SHA256,
     nGpuLayers: 0

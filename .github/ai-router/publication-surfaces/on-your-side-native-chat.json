@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "on-your-side-native-chat",
-  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime module identity, preserved WebLLM primary backend, verified wllama 3.4.0 CPU/WASM fallback substrate, same-origin primary model/WASM assets, user-initiated local model loading, and preserved public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
+  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat JS/CSS runtime identities, preserved WebLLM 0.2.85 primary backend, verified wllama 3.4.0 CPU/WASM fallback substrate, truthful primary/fallback resource disclosure, local stage-level diagnostic evidence, same-origin primary model/WASM assets, user-initiated local model loading, and preserved public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
   "checks": [
     {
       "path": "/products/on-your-side-ai/index.html",
@@ -21,8 +21,12 @@
         "id=\"load-model\"",
         "Local inference",
         "No repository credentials, private control plane, or execution authority.",
-        "<script type=\"module\" src=\"./index.js?v=a74674d4f754e10fc6d1cced823655d5643ec363\"></script>",
-        "data-native-chat-runtime=\"a74674d4f754e10fc6d1cced823655d5643ec363\""
+        "The WebGPU path is roughly 294 MB. CPU fallback may require about 398 MB more on its first load.",
+        "id=\"diagnostic-details\"",
+        "id=\"copy-diagnostic\"",
+        "<link rel=\"stylesheet\" href=\"./index.css?v=f499fb6a1fa3d4f05541bcb74447f68db265cb0c\" />",
+        "<script type=\"module\" src=\"./index.js?v=4ee7a73ae26a4538582719d3bce77e1e9a4bd4e8\"></script>",
+        "data-native-chat-runtime=\"4ee7a73ae26a4538582719d3bce77e1e9a4bd4e8\""
       ],
       "excludes": []
     },
@@ -45,7 +49,15 @@
         "new URL(import.meta.url).searchParams.get(\"v\")",
         "RUNTIME_RELEASE_ID !== DECLARED_RUNTIME_RELEASE_ID",
         "NATIVE_CHAT_RUNTIME_RELEASE_ID_MISMATCH",
-        "dataset.nativeChatRuntimeActive = RUNTIME_RELEASE_ID"
+        "dataset.nativeChatRuntimeActive = RUNTIME_RELEASE_ID",
+        "schema: \"NATIVE_CHAT_LOCAL_DIAGNOSTIC_v1\"",
+        "CPU_WASM_FETCH",
+        "CPU_GGUF_HEAD_PROBE",
+        "CPU_GGUF_DOWNLOAD",
+        "CPU_MODEL_LOAD",
+        "FIRST_INFERENCE",
+        "Copy diagnostic report",
+        "diagnosticDetails.open = true"
       ],
       "excludes": []
     }

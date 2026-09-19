@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia",
-  "description": "Live Audralia planetary environment verified against the current exact-snapshot phone runtime and constrained-tablet single-context runtime topology.",
+  "description": "Live Audralia planetary environment verified from the public entry contract against the current exact-snapshot phone runtime and constrained-tablet single-context runtime topology.",
   "checks": [
     {
       "path": "/showroom/globe/audralia/",
@@ -22,33 +22,6 @@
         "http-equiv=\"refresh\"",
         "h-earth-live-6d18e158/showroom/globe/audralia"
       ]
-    },
-    {
-      "path": "/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs",
-      "includes": [
-        "AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION_v6",
-        "__AUDRALIA_FAP1_ORGANIZED_WEATHER_PRESENTATION__"
-      ],
-      "excludes": []
-    },
-    {
-      "path": "/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
-      "includes": [
-        "window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__=receipt",
-        "getCameraFrame:()=>cameraFrame(renderer)",
-        "getRuntime:()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_RUNTIME__",
-        "loader.classList.add('is-ready')"
-      ],
-      "excludes": []
-    },
-    {
-      "path": "/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs",
-      "includes": [
-        "window.__AUDRALIA_STARTUP_FAILURE__=Object.freeze",
-        "window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()",
-        "loader.classList.add('is-ready')"
-      ],
-      "excludes": []
     },
     {
       "path": "/showroom/globe/audralia/loading-continuity-v3.css",

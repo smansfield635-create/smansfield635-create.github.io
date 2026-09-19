@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "native-chat-preflight-cecd8e88-20260919",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3901,
+  "requestBranch": "ai-dispatch-request-native-chat-preflight-cecd8e88",
+  "requestCommit": "d5e20980eeec082d5ff8e370c25539e0ccb21d6c",
+  "requestCommitParent": "cecd8e88d9f026277991894d6da1335fc1e0dd54",
+  "currentMainSha": "cecd8e88d9f026277991894d6da1335fc1e0dd54",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "cecd8e88d9f026277991894d6da1335fc1e0dd54",
+    "surface_id": "on-your-side-native-chat"
+  },
+  "bridgeRunId": "35476170319",
+  "dispatchedRunId": 35476176867,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35476176867",
+  "dispatchedRunHeadSha": "cecd8e88d9f026277991894d6da1335fc1e0dd54",
+  "dispatchedAt": "2026-09-19T23:27:28.274Z",
+  "resolvedAt": "2026-09-19T23:27:34.362Z"
+}

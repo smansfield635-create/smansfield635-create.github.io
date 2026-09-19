@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "on-your-side-native-chat",
-  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, browser-local Talk surface, pinned WebLLM loader identity, same-origin model/WASM assets, user-initiated local model loading, and preserved public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
+  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, browser-local Talk surface, preserved WebLLM primary backend, pinned CPU/WASM fallback identity, same-origin primary model/WASM assets, user-initiated local model loading, and preserved public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
   "checks": [
     {
       "path": "/products/on-your-side-ai/index.html",
@@ -32,10 +32,15 @@
         "./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/",
         "./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm",
         "if (!(\"gpu\" in navigator))",
-        "engine = await webllm.CreateMLCEngine(MODEL_ID",
+        "return await webllm.CreateMLCEngine(MODEL_ID",
         "els.loadButton.addEventListener(\"click\", loadModel);",
         "engine.interruptGenerate();",
-        "Public Talk has no repository execution authority."
+        "Public Talk has no repository execution authority.",
+        "https://esm.run/@wllama/wllama@3.1.1",
+        "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.1.1/src/wasm/wllama.wasm",
+        "n_gpu_layers: 0",
+        "engine = await loadCpuFallback(primaryFailureCode || \"WEBLLM_INITIALIZATION_FAILED\")",
+        "activeAbortController?.abort();"
       ],
       "excludes": []
     }

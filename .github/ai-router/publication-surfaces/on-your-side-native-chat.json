@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "on-your-side-native-chat",
-  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime identity, preserved WebLLM 0.2.85 primary backend, exact wllama 3.6.0 CPU fallback with ordered version-pinned module transport failover, diagnostic v2 stage/failure-chain evidence, first-inference boundary timing, non-destructive first-content watchdog, and WebGPU IndexedDB cache binding, preserved exact wllama 3.6.0 WASM and Qwen GGUF identities, truthful resource disclosure, user-initiated local model loading, and the public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
+  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime identity, preserved WebLLM 0.2.85 primary backend, exact wllama 3.6.0 CPU fallback with ordered version-pinned module transport failover, diagnostic v2 stage/failure-chain evidence, first-inference boundary timing, non-destructive first-content watchdog, WebGPU IndexedDB cache binding, WebLLM-compatible same-origin resolve/main model layout, and truthful first-token thinking state, preserved exact wllama 3.6.0 WASM and Qwen GGUF identities, truthful resource disclosure, user-initiated local model loading, and the public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
   "checks": [
     {
       "path": "/products/on-your-side-ai/index.html",
@@ -24,9 +24,9 @@
         "The WebGPU path is roughly 294 MB. CPU fallback may require about 398 MB more on its first load.",
         "id=\"diagnostic-details\"",
         "id=\"copy-diagnostic\"",
-        "<link rel=\"stylesheet\" href=\"./index.css?v=f499fb6a1fa3d4f05541bcb74447f68db265cb0c\" />",
-        "<script type=\"module\" src=\"./index.js?v=dc93288921f01db5729416453a35ee2a454b3fe0\"></script>",
-        "data-native-chat-runtime=\"dc93288921f01db5729416453a35ee2a454b3fe0\""
+        "<link rel=\"stylesheet\" href=\"./index.css?v=8ef75a894e30827179bef74150e6c714a2d6ee0f\" />",
+        "<script type=\"module\" src=\"./index.js?v=38c3928a289f9b9181b81e7b853bc98c885c62ba\"></script>",
+        "data-native-chat-runtime=\"38c3928a289f9b9181b81e7b853bc98c885c62ba\""
       ],
       "excludes": []
     },
@@ -34,7 +34,7 @@
       "path": "/products/on-your-side-ai/native-chat/index.js",
       "includes": [
         "https://esm.run/@mlc-ai/web-llm@0.2.85",
-        "./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/",
+        "./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/resolve/main/",
         "./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm",
         "if (!(\"gpu\" in navigator))",
         "const localEngine = await webllm.CreateMLCEngine(MODEL_ID",
@@ -81,7 +81,12 @@
         "cacheBackend: \"indexeddb\"",
         "webgpuCacheBackend: \"indexeddb\"",
         "WebGPU cache backend: ${diagnosticState.webgpuCacheBackend}",
-        "details: { cacheBackend: appConfig.cacheBackend }"
+        "details: { cacheBackend: appConfig.cacheBackend }",
+        "\"Thinking locally\"",
+        "\"Still thinking locally\"",
+        "thinking-indicator",
+        "thinking-dot",
+        "assistant.article.classList.add(\"has-content\")"
       ],
       "excludes": [
         "https://esm.run/@wllama/wllama@3.6.0",
@@ -89,6 +94,21 @@
         "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js",
         "./runtime/wllama/3.4.0/wllama.wasm",
         "cacheBackend: \"cache\""
+      ]
+    },
+    {
+      "path": "/products/on-your-side-ai/native-chat/index.css",
+      "includes": [
+        ".thinking-indicator",
+        ".thinking-dot",
+        "@keyframes local-thinking-pulse",
+        ".message.streaming.has-content .message-body::after",
+        "@media (prefers-reduced-motion:reduce)",
+        ".thinking-dots{display:none!important}",
+        ".thinking-label::after{content:\"…\"}"
+      ],
+      "excludes": [
+        "thinking-progress"
       ]
     }
   ],

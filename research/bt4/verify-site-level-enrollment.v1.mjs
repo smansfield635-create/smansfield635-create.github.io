@@ -54,7 +54,7 @@ assert(!JSON.stringify(evidenceSurface).includes('audralia-live-runtime-receipt.
 
 assert(page.includes("./site-entitlement.v1.mjs"),'public governance surface is not bound to shared site adapters');
 assert(audralia.includes('directDenseCloudCoverage: false'),'current Audralia cloud policy identity missing');
-assert(audralia.includes('@9b768171e284785a7e5c7ee0142cb9368acf597d/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs'),'current Audralia exact tablet runtime binding missing');
+assert(audralia.includes('@59aee8e779a6922fddda94e64b6c0c9583bbed23/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs'),'current Audralia exact tablet runtime binding missing');
 assert(loader.includes("loader.classList.add('is-ready')"),'Audralia terminal runtime-ready transition missing');
 assert(diagnostic.includes('AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_AUTHORITY_STATE'),'real diagnostic authority state surface missing');
 assert(binding.phase==='FRESH_REQUALIFIED'&&Number(binding.epoch)===Number(binding.receiptEpoch),'real scientific claim is not freshly qualified');

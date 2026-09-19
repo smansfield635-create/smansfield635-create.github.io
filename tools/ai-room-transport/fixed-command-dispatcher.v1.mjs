@@ -182,6 +182,15 @@ function pushFastForwardWithToken(toolRoot, targetBranchRef) {
   if (result.status !== 0 || result.error) fail('WRITEBACK_FAST_FORWARD_PUSH_FAILED', result.stderr || result.error || 'git push failed');
 }
 
+export function stageValidatedWritebackPaths({ descriptor, toolRoot, changed }) {
+  if (!Array.isArray(changed) || changed.length === 0) fail('WRITEBACK_NO_CHANGED_PATHS');
+  validateChangedPaths(descriptor, changed);
+  git(toolRoot, ['add', '--sparse', '-A', '--', ...changed]);
+  const staged = git(toolRoot, ['diff', '--cached', '--name-only']).stdout.split(/\r?\n/).filter(Boolean).sort();
+  if (JSON.stringify(staged) !== JSON.stringify(changed)) fail('WRITEBACK_STAGED_PATH_SET_MISMATCH', `${JSON.stringify(changed)}:${JSON.stringify(staged)}`);
+  return staged;
+}
+
 function performRegisteredWriteback({ descriptor, selectedBackend, toolRoot, changed, payloadReceiptPath }) {
   const specification = validateWritebackSpecification(descriptor, selectedBackend);
   if (!specification) return null;
@@ -194,9 +203,7 @@ function performRegisteredWriteback({ descriptor, selectedBackend, toolRoot, cha
 
   git(toolRoot, ['config', 'user.name', 'github-actions[bot]']);
   git(toolRoot, ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com']);
-  git(toolRoot, ['add', '-A', '--', ...changed]);
-  const staged = git(toolRoot, ['diff', '--cached', '--name-only']).stdout.split(/\r?\n/).filter(Boolean).sort();
-  if (JSON.stringify(staged) !== JSON.stringify(changed)) fail('WRITEBACK_STAGED_PATH_SET_MISMATCH', `${JSON.stringify(changed)}:${JSON.stringify(staged)}`);
+  stageValidatedWritebackPaths({ descriptor, toolRoot, changed });
   git(toolRoot, ['commit', '--no-gpg-sign', '-m', specification.commitMessage]);
   const candidateHead = git(toolRoot, ['rev-parse', 'HEAD^{commit}']).stdout.trim();
   const parentHead = git(toolRoot, ['rev-parse', 'HEAD^1']).stdout.trim();

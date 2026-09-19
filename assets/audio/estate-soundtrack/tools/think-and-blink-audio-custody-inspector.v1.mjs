@@ -129,6 +129,149 @@ function findChrome() {
   fail('CHROME_NOT_AVAILABLE');
 }
 
+function chromeParsedValueType(value) {
+  if (value === null) return 'null';
+  if (Array.isArray(value)) return 'array';
+  return typeof value;
+}
+
+function markerPositions(text, marker, limit = 32) {
+  const out = [];
+  for (let at = 0; out.length < limit;) {
+    const found = text.indexOf(marker, at);
+    if (found < 0) break;
+    out.push(found);
+    at = found + marker.length;
+  }
+  return out;
+}
+
+function chromeDecodeCandidateSummary(candidate) {
+  return {
+    beginIndex: candidate.beginIndex,
+    endIndex: candidate.endIndex,
+    parsed: candidate.parsed,
+    parsedType: candidate.parsedType,
+    ownKeys: candidate.ownKeys,
+    stringLength: candidate.stringLength,
+    parseError: candidate.parseError
+  };
+}
+
+function selectChromeDecodedResult(out, markerA, markerZ, sourceId) {
+  const beginPositions = markerPositions(out, markerA);
+  const endPositions = markerPositions(out, markerZ);
+  if (beginPositions.length === 0 || endPositions.length === 0) {
+    fail('CHROME_DECODE_RESULT_MISSING', {
+      sourceId,
+      markerBeginCount: beginPositions.length,
+      markerEndCount: endPositions.length,
+      stdoutLength: out.length
+    });
+  }
+
+  const candidates = [];
+  for (const beginIndex of beginPositions) {
+    const payloadStart = beginIndex + markerA.length;
+    const endIndex = out.indexOf(markerZ, payloadStart);
+    if (endIndex < 0) continue;
+    const raw = out.slice(payloadStart, endIndex);
+    let parsedValue = null;
+    let parseError = null;
+    try {
+      parsedValue = JSON.parse(raw);
+    } catch (error) {
+      parseError = error.message;
+    }
+    const parsedType = parseError ? 'parse_error' : chromeParsedValueType(parsedValue);
+    const ownKeys = !parseError && parsedValue && typeof parsedValue === 'object' && !Array.isArray(parsedValue)
+      ? Object.keys(parsedValue).sort().slice(0, 32)
+      : [];
+    candidates.push({
+      beginIndex,
+      endIndex,
+      parsedValue,
+      parsedType,
+      ownKeys,
+      parsed: !parseError,
+      stringLength: parsedType === 'string' ? parsedValue.length : null,
+      parseError
+    });
+  }
+
+  const objects = candidates.filter((candidate) =>
+    candidate.parsed &&
+    candidate.parsedValue &&
+    typeof candidate.parsedValue === 'object' &&
+    !Array.isArray(candidate.parsedValue)
+  );
+  const sourceMatched = objects.filter((candidate) =>
+    candidate.parsedValue?.sourceId === sourceId || typeof candidate.parsedValue?.error === 'string'
+  );
+  const eligible = sourceMatched.length === 1 ? sourceMatched : objects;
+
+  if (eligible.length !== 1) {
+    fail('CHROME_DECODE_RESULT_SHAPE_INVALID', {
+      sourceId,
+      markerBeginCount: beginPositions.length,
+      markerEndCount: endPositions.length,
+      candidateCount: candidates.length,
+      objectCandidateCount: objects.length,
+      sourceMatchedObjectCount: sourceMatched.length,
+      candidates: candidates.slice(0, 8).map(chromeDecodeCandidateSummary)
+    });
+  }
+
+  return {
+    decoded: eligible[0].parsedValue,
+    diagnostics: {
+      markerBeginCount: beginPositions.length,
+      markerEndCount: endPositions.length,
+      candidateCount: candidates.length,
+      objectCandidateCount: objects.length,
+      selectedBeginIndex: eligible[0].beginIndex,
+      selectedEndIndex: eligible[0].endIndex,
+      selectedOwnKeys: eligible[0].ownKeys,
+      candidates: candidates.slice(0, 8).map(chromeDecodeCandidateSummary)
+    }
+  };
+}
+
+function validateChromeDecodedShape(sourceId, decoded, selectionDiagnostics) {
+  const ownKeys = decoded && typeof decoded === 'object' && !Array.isArray(decoded)
+    ? Object.keys(decoded).sort()
+    : [];
+  const required = ['sourceId', 'durationSeconds', 'sampleRate', 'channels', 'frames', 'windows'];
+  const missingKeys = required.filter((key) => !Object.hasOwn(decoded ?? {}, key));
+  const evidence = {
+    sourceId,
+    parsedValueType: chromeParsedValueType(decoded),
+    ownKeys: ownKeys.slice(0, 32),
+    missingKeys,
+    sourceIdMatches: decoded?.sourceId === sourceId,
+    durationSecondsFinite: Number.isFinite(decoded?.durationSeconds),
+    sampleRateFinite: Number.isFinite(decoded?.sampleRate),
+    channelsFinite: Number.isFinite(decoded?.channels),
+    framesFinite: Number.isFinite(decoded?.frames),
+    windowsIsArray: Array.isArray(decoded?.windows),
+    windowCount: Array.isArray(decoded?.windows) ? decoded.windows.length : null,
+    markerSelection: selectionDiagnostics
+  };
+  const valid =
+    decoded &&
+    typeof decoded === 'object' &&
+    !Array.isArray(decoded) &&
+    missingKeys.length === 0 &&
+    decoded.sourceId === sourceId &&
+    Number.isFinite(decoded.durationSeconds) && decoded.durationSeconds > 0 &&
+    Number.isFinite(decoded.sampleRate) && decoded.sampleRate > 0 &&
+    Number.isInteger(decoded.channels) && decoded.channels > 0 &&
+    Number.isInteger(decoded.frames) && decoded.frames > 0 &&
+    Array.isArray(decoded.windows);
+  if (!valid) fail('CHROME_DECODE_RESULT_SHAPE_INVALID', evidence);
+  return evidence;
+}
+
 function browserDecode(bytes, sourceId, windows = []) {
   const chrome = findChrome();
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'think-blink-audio-decode-'));
@@ -151,11 +294,10 @@ function browserDecode(bytes, sourceId, windows = []) {
     ], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, timeout: 60000 });
     if (r.status !== 0) fail('CHROME_DECODE_PROCESS_FAILED', { status: r.status, stderr: String(r.stderr || '').slice(-4000) });
     const out = String(r.stdout || '');
-    const a = out.indexOf(markerA), z = out.indexOf(markerZ, a + markerA.length);
-    if (a < 0 || z < 0) fail('CHROME_DECODE_RESULT_MISSING', { stdoutTail: out.slice(-4000), stderrTail: String(r.stderr || '').slice(-4000) });
-    let decoded;
-    try { decoded = JSON.parse(out.slice(a + markerA.length, z)); } catch (e) { fail('CHROME_DECODE_JSON_INVALID', e.message); }
-    if (decoded?.error) fail('CHROME_AUDIO_DECODE_FAILED', decoded.error);
+    const selection = selectChromeDecodedResult(out, markerA, markerZ, sourceId);
+    const decoded = selection.decoded;
+    if (decoded?.error) fail('CHROME_AUDIO_DECODE_FAILED', { sourceId, error: decoded.error, markerSelection: selection.diagnostics });
+    validateChromeDecodedShape(sourceId, decoded, selection.diagnostics);
     return { chrome, ...decoded };
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
@@ -261,6 +403,9 @@ function decodedWindowInventory(decoded) {
 }
 
 function validateDecodedIdentity(source, decoded, windows = []) {
+  if (!Number.isFinite(decoded?.durationSeconds)) {
+    fail('DECODED_DURATION_MISSING_OR_NONFINITE', { sourceId: source.id, actual: decoded?.durationSeconds ?? null, decodedWindowInventory: decodedWindowInventory(decoded) });
+  }
   if (Math.abs(decoded.durationSeconds - source.expectedDurationSeconds) > source.durationToleranceSeconds) {
     fail('DECODED_DURATION_MISMATCH', { sourceId: source.id, expected: source.expectedDurationSeconds, tolerance: source.durationToleranceSeconds, actual: decoded.durationSeconds });
   }
@@ -359,6 +504,39 @@ function selfTest() {
     frames: n,
     windows: [{ id: 'SELF_TEST_WINDOW', start: 4, end: 6, binSeconds: 0.05, binCount: window.binCount, bins: window.bins, candidates: window.candidates }]
   });
+  const markerA = '__THINK_BLINK_RESULT_BEGIN__';
+  const markerZ = '__THINK_BLINK_RESULT_END__';
+  const syntheticDecoded = {
+    sourceId: 'SELF_TEST_SOURCE',
+    durationSeconds: 10,
+    sampleRate: sr,
+    channels: 2,
+    frames: n,
+    windows: []
+  };
+  const falseScriptCandidate = markerA + JSON.stringify('+JSON.stringify(result)+') + markerZ;
+  const trueObjectCandidate = markerA + JSON.stringify(syntheticDecoded) + markerZ;
+  const selectionFixture = selectChromeDecodedResult(falseScriptCandidate + '\n' + trueObjectCandidate, markerA, markerZ, 'SELF_TEST_SOURCE');
+  const selectionShape = validateChromeDecodedShape('SELF_TEST_SOURCE', selectionFixture.decoded, selectionFixture.diagnostics);
+  const malformedShapeRejected = selfTestRejects(
+    () => validateChromeDecodedShape('SELF_TEST_SOURCE', {
+      sourceId: 'SELF_TEST_SOURCE',
+      durationSeconds: null,
+      sampleRate: null,
+      channels: null,
+      frames: null,
+      windows: []
+    }, { synthetic: true }),
+    'CHROME_DECODE_RESULT_SHAPE_INVALID'
+  );
+  const primitiveOnlyRejected = selfTestRejects(
+    () => selectChromeDecodedResult(falseScriptCandidate, markerA, markerZ, 'SELF_TEST_SOURCE'),
+    'CHROME_DECODE_RESULT_SHAPE_INVALID'
+  );
+  const missingDurationRejected = selfTestRejects(
+    () => validateDecodedIdentity({ id: 'SELF_TEST_SOURCE', expectedDurationSeconds: 10, durationToleranceSeconds: 0.1 }, { durationSeconds: undefined, windows: [] }, []),
+    'DECODED_DURATION_MISSING_OR_NONFINITE'
+  );
   const checks = [
     sha256(Buffer.from('abc')) === 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
     sha1(Buffer.from('abc')) === 'a9993e364706816aba3e25717850c26c9cd0d89d',
@@ -388,7 +566,16 @@ function selfTest() {
       diagnosticInventory.windows[0]?.binsLength === window.bins.length &&
       diagnosticInventory.windows[0]?.candidatesLength === window.candidates.length &&
       diagnosticInventory.windows[0]?.firstStart === 4 &&
-      diagnosticInventory.windows[0]?.lastEnd === 6
+      diagnosticInventory.windows[0]?.lastEnd === 6,
+    selectionFixture.decoded?.sourceId === 'SELF_TEST_SOURCE' &&
+      selectionFixture.diagnostics.markerBeginCount === 2 &&
+      selectionFixture.diagnostics.objectCandidateCount === 1 &&
+      selectionFixture.diagnostics.candidates.some((candidate) => candidate.parsedType === 'string') &&
+      selectionShape.durationSecondsFinite === true &&
+      selectionShape.windowsIsArray === true,
+    malformedShapeRejected,
+    primitiveOnlyRejected,
+    missingDurationRejected
   ];
   return stable({
     schema: SELF_TEST_SCHEMA,

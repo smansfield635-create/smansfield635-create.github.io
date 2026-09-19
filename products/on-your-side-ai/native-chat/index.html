@@ -132,10 +132,19 @@
           note.textContent = "Contract layer not ready. Do not send messages from this tab.";
         }
       }
-      const observer = new MutationObserver(lockIfNotReady);
-      observer.observe(document.body, { subtree: true, childList: true, attributes: true });
-      new MutationObserver(lockIfNotReady).observe(root, { attributes: true, attributeFilter: ["data-native-chat-contract-ready"] });
-      window.setInterval(lockIfNotReady, 250);
+      const form = document.querySelector("#composer");
+      if (form) {
+        form.addEventListener("submit", event => {
+          if (root.dataset.nativeChatContractReady === REQUIRED_READY) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          lockIfNotReady();
+        }, { capture: true });
+      }
+      new MutationObserver(lockIfNotReady).observe(root, {
+        attributes: true,
+        attributeFilter: ["data-native-chat-contract-ready"]
+      });
       lockIfNotReady();
     })();
   </script>

@@ -1,0 +1,35 @@
+{
+  "asset": {
+    "bytes": 8524865,
+    "gitBlobSha": "07f3a339592404de061b6080b93a6729a1847f43",
+    "path": "products/on-your-side-ai/native-chat/runtime/wllama/3.6.0/wllama.wasm",
+    "sha256": "95c6ff9ef2a03ff2c63bc91db132f0126a0bd0456b272cd8ae2e0f592fb059f6"
+  },
+  "changedPaths": [
+    "products/on-your-side-ai/native-chat/runtime/wllama/3.6.0/wllama.wasm",
+    "products/on-your-side-ai/native-chat/runtime/wllama/3.6.0/materialization-receipt.v1.json"
+  ],
+  "deploymentPerformed": false,
+  "descriptorRegistrationPerformed": false,
+  "mainMutationPerformed": false,
+  "mergePerformed": false,
+  "operationId": "ON_YOUR_SIDE_AAI_NATIVE_CHAT_V1_WLLAMA_3_6_0_WASM_MATERIALIZATION_v1",
+  "productPageMutationPerformed": false,
+  "publicationPerformed": false,
+  "receiptPath": "products/on-your-side-ai/native-chat/runtime/wllama/3.6.0/materialization-receipt.v1.json",
+  "result": "MATERIALIZED_EXACT",
+  "runtimeRoot": "products/on-your-side-ai/native-chat/runtime",
+  "schema": "AAI_NATIVE_CHAT_WLLAMA_3_6_0_WASM_MATERIALIZER_RECEIPT_v1",
+  "upstream": {
+    "bytes": 8524865,
+    "commit": "f16050d8d51a00602c6a2a6b8ac9c09f490eea7f",
+    "gitBlobSha": "07f3a339592404de061b6080b93a6729a1847f43",
+    "repository": "ngxson/wllama",
+    "sourcePath": "src/wasm/wllama.wasm",
+    "sourceUrl": "https://raw.githubusercontent.com/ngxson/wllama/f16050d8d51a00602c6a2a6b8ac9c09f490eea7f/src/wasm/wllama.wasm",
+    "version": "3.6.0"
+  },
+  "wasmByteCountVerified": true,
+  "wasmGitBlobVerified": true,
+  "wasmSha256Recorded": true
+}

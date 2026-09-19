@@ -16,6 +16,7 @@ const WLLAMA_MODULE = "https://esm.run/@wllama/wllama@3.4.0";
 const WLLAMA_WASM_URL = "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/src/wasm/wllama.wasm";
 const CPU_MODEL_REVISION = "b26a58accf53b1a19fbc555d52fdb224bec473f5";
 const CPU_MODEL_SHA256 = "6eb923e7d26e9cea28811e1a8e852009b21242fb157b26149d3b188f3a8c8653";
+const CPU_MODEL_BYTES = 397808192;
 const CPU_MODEL_URL = `https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/resolve/${CPU_MODEL_REVISION}/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf?download=true`;
 const MODEL_URL = new URL("./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/", window.location.href).href;
 const MODEL_LIB_URL = new URL("./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm", window.location.href).href;
@@ -54,7 +55,10 @@ const els = {
   send: document.querySelector("#send-message"),
   stop: document.querySelector("#stop-generation"),
   reset: document.querySelector("#reset-chat"),
-  composerNote: document.querySelector("#composer-note")
+  composerNote: document.querySelector("#composer-note"),
+  diagnosticDetails: document.querySelector("#diagnostic-details"),
+  diagnosticReport: document.querySelector("#diagnostic-report"),
+  copyDiagnostic: document.querySelector("#copy-diagnostic")
 };
 
 let engine = null;
@@ -64,7 +68,180 @@ let activeAbortController = null;
 let loading = false;
 let generating = false;
 let stopRequested = false;
+let firstInferenceCompleted = false;
 let messages = [{ role: "system", content: SYSTEM_MESSAGE }];
+
+const diagnosticState = {
+  schema: "NATIVE_CHAT_LOCAL_DIAGNOSTIC_v1",
+  runtimeReleaseId: RUNTIME_RELEASE_ID,
+  attempt: 0,
+  activeStage: "PAGE_BOOT",
+  activeBackend: "none",
+  webgpuState: "UNKNOWN",
+  primaryFailure: null,
+  fallbackFailure: null,
+  wasmProbe: { status: "NOT_RUN", httpStatus: null, bytes: null },
+  ggufProbe: { status: "NOT_RUN", httpStatus: null, observedContentLength: null },
+  ggufDownload: { loaded: 0, total: CPU_MODEL_BYTES, observed: false, complete: false },
+  versions: {
+    primary: "webllm@0.2.85",
+    fallback: "wllama@3.4.0",
+    modelRevision: CPU_MODEL_REVISION
+  },
+  events: []
+};
+let diagnosticSequence = 0;
+
+function sanitizeDiagnosticMessage(error) {
+  const raw = String(error?.message || error || "Unknown error")
+    .replace(/\s+/g, " ")
+    .trim();
+  return raw
+    .replace(/(https?:\/\/[^\s?"']+)\?[^\s"']*/gi, "$1?[redacted]")
+    .slice(0, 500);
+}
+
+function diagnosticError(error) {
+  return {
+    name: String(error?.name || "Error").slice(0, 80),
+    message: sanitizeDiagnosticMessage(error)
+  };
+}
+
+function buildDiagnosticReport() {
+  const primary = diagnosticState.primaryFailure;
+  const fallback = diagnosticState.fallbackFailure;
+  const lines = [
+    "Native Chat local diagnostic v1",
+    "No prompt or conversation content is included.",
+    `Runtime release: ${diagnosticState.runtimeReleaseId}`,
+    `Attempt: ${diagnosticState.attempt}`,
+    `Active backend: ${diagnosticState.activeBackend}`,
+    `Active stage: ${diagnosticState.activeStage}`,
+    `WebGPU: ${diagnosticState.webgpuState}`,
+    `Primary: ${diagnosticState.versions.primary}`,
+    `Fallback: ${diagnosticState.versions.fallback}`,
+    `Fallback model revision: ${diagnosticState.versions.modelRevision}`,
+    `Primary failure: ${primary ? `${primary.code} @ ${primary.stage} | ${primary.error.name}: ${primary.error.message}` : "none"}`,
+    `Fallback failure: ${fallback ? `${fallback.code} @ ${fallback.stage} | ${fallback.error.name}: ${fallback.error.message}` : "none"}`,
+    `WASM probe: ${diagnosticState.wasmProbe.status} | HTTP ${diagnosticState.wasmProbe.httpStatus ?? "n/a"} | bytes ${diagnosticState.wasmProbe.bytes ?? "n/a"}`,
+    `GGUF HEAD: ${diagnosticState.ggufProbe.status} | HTTP ${diagnosticState.ggufProbe.httpStatus ?? "n/a"} | content-length ${diagnosticState.ggufProbe.observedContentLength ?? "n/a"}`,
+    `GGUF progress: ${diagnosticState.ggufDownload.loaded} / ${diagnosticState.ggufDownload.total}`,
+    "",
+    "Event trace:"
+  ];
+  for (const event of diagnosticState.events) {
+    let line = `#${event.seq} ${event.backend} ${event.stage} ${event.result}`;
+    if (event.code) line += ` ${event.code}`;
+    if (event.error) line += ` | ${event.error.name}: ${event.error.message}`;
+    if (event.details) line += ` | ${JSON.stringify(event.details)}`;
+    lines.push(line);
+  }
+  return lines.join("\n");
+}
+
+function renderDiagnostic() {
+  document.documentElement.dataset.nativeChatDiagnosticStage = diagnosticState.activeStage;
+  document.documentElement.dataset.nativeChatDiagnosticBackend = diagnosticState.activeBackend;
+  if (diagnosticState.fallbackFailure?.code || diagnosticState.primaryFailure?.code) {
+    document.documentElement.dataset.nativeChatDiagnosticCode =
+      diagnosticState.fallbackFailure?.code || diagnosticState.primaryFailure?.code;
+  } else {
+    delete document.documentElement.dataset.nativeChatDiagnosticCode;
+  }
+  if (els.diagnosticReport) {
+    els.diagnosticReport.textContent = buildDiagnosticReport();
+  }
+}
+
+function recordDiagnostic(stage, options = {}) {
+  const backend = options.backend || diagnosticState.activeBackend || "none";
+  diagnosticState.activeStage = stage;
+  diagnosticState.activeBackend = backend;
+  const event = {
+    seq: ++diagnosticSequence,
+    stage,
+    backend,
+    result: options.result || "ENTER"
+  };
+  if (options.code) event.code = options.code;
+  if (options.error) event.error = diagnosticError(options.error);
+  if (options.details) event.details = options.details;
+  diagnosticState.events.push(event);
+  if (diagnosticState.events.length > 36) diagnosticState.events.shift();
+  renderDiagnostic();
+}
+
+function stageFailureCode(backend, stage, error) {
+  const text = `${error?.name || ""} ${error?.message || error || ""}`.toLowerCase();
+  if (/out of memory|\\boom\\b|memory limit|allocation|arraybuffer|cannot allocate/.test(text)) {
+    return "INSUFFICIENT_MEMORY_OR_RESOURCE_LIMIT";
+  }
+  const exact = {
+    WEBLLM_MODULE_IMPORT: "WEBLLM_MODULE_IMPORT_FAILED",
+    WEBLLM_ENGINE_INIT: "WEBLLM_ENGINE_INIT_FAILED",
+    CPU_MODULE_IMPORT: "CPU_MODULE_IMPORT_FAILED",
+    CPU_WASM_FETCH: "CPU_WASM_FETCH_FAILED",
+    CPU_ENGINE_CONSTRUCT: "CPU_ENGINE_CONSTRUCT_FAILED",
+    CPU_GGUF_DOWNLOAD: "CPU_GGUF_DOWNLOAD_FAILED",
+    CPU_GGUF_DOWNLOAD_COMPLETE: "CPU_MODEL_LOAD_FAILED",
+    CPU_MODEL_LOAD: "CPU_MODEL_LOAD_FAILED",
+    FIRST_INFERENCE: "FIRST_INFERENCE_FAILED",
+    GENERATION: "GENERATION_FAILED"
+  };
+  return exact[stage] || (backend === "webllm" ? "WEBLLM_UNKNOWN_FAILURE" : "CPU_FALLBACK_UNKNOWN_FAILURE");
+}
+
+function recordBackendFailure(kind, error) {
+  const failure = {
+    stage: diagnosticState.activeStage,
+    code: stageFailureCode(diagnosticState.activeBackend, diagnosticState.activeStage, error),
+    error: diagnosticError(error)
+  };
+  if (kind === "primary") diagnosticState.primaryFailure = failure;
+  if (kind === "fallback") diagnosticState.fallbackFailure = failure;
+  recordDiagnostic(failure.stage, {
+    backend: diagnosticState.activeBackend,
+    result: "FAIL",
+    code: failure.code,
+    error
+  });
+  return failure;
+}
+
+function resetDiagnosticAttempt() {
+  diagnosticState.attempt += 1;
+  diagnosticState.primaryFailure = null;
+  diagnosticState.fallbackFailure = null;
+  diagnosticState.wasmProbe = { status: "NOT_RUN", httpStatus: null, bytes: null };
+  diagnosticState.ggufProbe = { status: "NOT_RUN", httpStatus: null, observedContentLength: null };
+  diagnosticState.ggufDownload = { loaded: 0, total: CPU_MODEL_BYTES, observed: false, complete: false };
+  diagnosticState.events = [];
+  diagnosticSequence = 0;
+  recordDiagnostic("PAGE_BOOT", { backend: "none", result: "ATTEMPT_START" });
+}
+
+async function copyDiagnosticReport() {
+  const report = buildDiagnosticReport();
+  try {
+    await navigator.clipboard.writeText(report);
+    els.copyDiagnostic.textContent = "Copied";
+  } catch (error) {
+    const temp = document.createElement("textarea");
+    temp.value = report;
+    temp.setAttribute("readonly", "");
+    temp.style.position = "fixed";
+    temp.style.opacity = "0";
+    document.body.append(temp);
+    temp.select();
+    const copied = document.execCommand("copy");
+    temp.remove();
+    els.copyDiagnostic.textContent = copied ? "Copied" : "Copy unavailable";
+  }
+  window.setTimeout(() => {
+    els.copyDiagnostic.textContent = "Copy diagnostic report";
+  }, 1800);
+}
 
 function setStatus(element, text, kind) {
   element.textContent = text;
@@ -108,8 +285,11 @@ function resetTranscript() {
 }
 
 async function inspectDevice() {
+  recordDiagnostic("WEBGPU_PROBE", { backend: "webllm" });
   if (!("gpu" in navigator)) {
     webgpuAvailable = false;
+    diagnosticState.webgpuState = "UNAVAILABLE";
+    recordDiagnostic("WEBGPU_PROBE", { backend: "webllm", result: "FAIL", code: "WEBGPU_UNAVAILABLE" });
     setStatus(els.deviceStatus, "WebGPU unavailable · CPU fallback ready", "muted");
     document.querySelector("#load-copy").textContent =
       "This browser cannot use the GPU backend. Native Chat can fall back to a CPU/WASM local model when you load the AI.";
@@ -119,28 +299,39 @@ async function inspectDevice() {
     const adapter = await navigator.gpu.requestAdapter();
     if (!adapter) {
       webgpuAvailable = false;
+      diagnosticState.webgpuState = "NO_ADAPTER";
+      recordDiagnostic("WEBGPU_PROBE", { backend: "webllm", result: "FAIL", code: "WEBGPU_ADAPTER_UNAVAILABLE" });
       setStatus(els.deviceStatus, "No WebGPU adapter · CPU fallback ready", "muted");
       document.querySelector("#load-copy").textContent =
         "No usable WebGPU adapter was found. Native Chat can fall back to CPU/WASM local inference.";
       return false;
     }
     webgpuAvailable = true;
+    diagnosticState.webgpuState = "AVAILABLE";
+    recordDiagnostic("WEBGPU_PROBE", { backend: "webllm", result: "PASS" });
     setStatus(els.deviceStatus, "WebGPU available", "good");
     return true;
   } catch (error) {
     console.error("WebGPU inspection failed", error);
     webgpuAvailable = false;
+    diagnosticState.webgpuState = "PROBE_FAILED";
+    recordDiagnostic("WEBGPU_PROBE", { backend: "webllm", result: "FAIL", code: "WEBGPU_PROBE_FAILED", error });
     setStatus(els.deviceStatus, "WebGPU check failed · CPU fallback ready", "muted");
     return false;
   }
 }
 
-function classifyLocalError(error, backend) {
+function classifyLocalError(error, backend, stage = diagnosticState.activeStage) {
   const text = `${error?.name || ""} ${error?.message || error || ""}`.toLowerCase();
-  if (/out of memory|\boom\b|memory limit|allocation|arraybuffer|cannot allocate/.test(text)) {
+  if (/out of memory|\\boom\\b|memory limit|allocation|arraybuffer|cannot allocate/.test(text)) {
     return "INSUFFICIENT_MEMORY_OR_RESOURCE_LIMIT";
   }
-  if (/fetch|network|cors|http|download|integrity|sha-?256/.test(text)) {
+  if (
+    stage === "CPU_MODULE_IMPORT" ||
+    stage === "CPU_WASM_FETCH" ||
+    stage === "CPU_GGUF_DOWNLOAD" ||
+    /fetch|network|cors|download|integrity|sha-?256/.test(text)
+  ) {
     return "MODEL_FETCH_OR_INTEGRITY_FAILURE";
   }
   if (backend === "webllm" && /device.*lost|lost.*device|webgpu|gpu device|shader|validation error|internal error/.test(text)) {
@@ -165,7 +356,9 @@ function describeLocalError(code) {
 }
 
 async function loadWebLlmPrimary() {
+  recordDiagnostic("WEBLLM_MODULE_IMPORT", { backend: "webllm" });
   const webllm = await import(WEBLLM_MODULE);
+  recordDiagnostic("WEBLLM_MODULE_IMPORT", { backend: "webllm", result: "PASS" });
   const appConfig = {
     cacheBackend: "cache",
     model_list: [{
@@ -179,7 +372,8 @@ async function loadWebLlmPrimary() {
     }]
   };
 
-  return await webllm.CreateMLCEngine(MODEL_ID, {
+  recordDiagnostic("WEBLLM_ENGINE_INIT", { backend: "webllm" });
+  const localEngine = await webllm.CreateMLCEngine(MODEL_ID, {
     appConfig,
     initProgressCallback: (report) => {
       if (typeof report.progress === "number" && Number.isFinite(report.progress)) {
@@ -189,6 +383,8 @@ async function loadWebLlmPrimary() {
     },
     logLevel: "WARN"
   });
+  recordDiagnostic("WEBLLM_ENGINE_INIT", { backend: "webllm", result: "PASS" });
+  return localEngine;
 }
 
 async function loadCpuFallback(primaryFailureCode) {
@@ -198,12 +394,36 @@ async function loadCpuFallback(primaryFailureCode) {
   els.progressText.textContent =
     `${describeLocalError(primaryFailureCode)}. Switching to the CPU/WASM fallback (~398 MB model download on first use)…`;
 
+  recordDiagnostic("CPU_MODULE_IMPORT", { backend: "wllama-cpu" });
   const { Wllama, LoggerWithoutDebug } = await import(WLLAMA_MODULE);
+  recordDiagnostic("CPU_MODULE_IMPORT", { backend: "wllama-cpu", result: "PASS" });
+
+  recordDiagnostic("CPU_WASM_FETCH", { backend: "wllama-cpu" });
+  const wasmResponse = await fetch(WLLAMA_WASM_URL, { cache: "force-cache" });
+  diagnosticState.wasmProbe.httpStatus = wasmResponse.status;
+  if (!wasmResponse.ok) {
+    diagnosticState.wasmProbe.status = "FAIL";
+    throw new Error(`WLLAMA_WASM_HTTP_${wasmResponse.status}`);
+  }
+  const wasmBuffer = await wasmResponse.arrayBuffer();
+  diagnosticState.wasmProbe = {
+    status: "PASS",
+    httpStatus: wasmResponse.status,
+    bytes: wasmBuffer.byteLength
+  };
+  recordDiagnostic("CPU_WASM_FETCH", {
+    backend: "wllama-cpu",
+    result: "PASS",
+    details: { httpStatus: wasmResponse.status, bytes: wasmBuffer.byteLength }
+  });
+
+  recordDiagnostic("CPU_ENGINE_CONSTRUCT", { backend: "wllama-cpu" });
   const cpuEngine = new Wllama(
     { default: WLLAMA_WASM_URL },
     { parallelDownloads: 3, logger: LoggerWithoutDebug }
   );
   if (typeof cpuEngine.setCompat === "function") cpuEngine.setCompat(null);
+  recordDiagnostic("CPU_ENGINE_CONSTRUCT", { backend: "wllama-cpu", result: "PASS" });
 
   console.info("Native Chat CPU fallback identity", {
     runtime: "wllama@3.4.0",
@@ -212,23 +432,74 @@ async function loadCpuFallback(primaryFailureCode) {
     nGpuLayers: 0
   });
 
+  recordDiagnostic("CPU_GGUF_HEAD_PROBE", { backend: "wllama-cpu" });
+  try {
+    const probe = await fetch(CPU_MODEL_URL, { method: "HEAD", cache: "no-store" });
+    const observedContentLength = Number(probe.headers.get("content-length")) || null;
+    diagnosticState.ggufProbe = {
+      status: probe.ok ? "PASS" : "HTTP_ERROR",
+      httpStatus: probe.status,
+      observedContentLength
+    };
+    recordDiagnostic("CPU_GGUF_HEAD_PROBE", {
+      backend: "wllama-cpu",
+      result: probe.ok ? "PASS" : "WARN",
+      details: { httpStatus: probe.status, observedContentLength }
+    });
+  } catch (error) {
+    diagnosticState.ggufProbe = {
+      status: "UNAVAILABLE_CONTINUING",
+      httpStatus: null,
+      observedContentLength: null
+    };
+    recordDiagnostic("CPU_GGUF_HEAD_PROBE", {
+      backend: "wllama-cpu",
+      result: "WARN",
+      error
+    });
+  }
+
+  recordDiagnostic("CPU_MODEL_LOAD", { backend: "wllama-cpu" });
   await cpuEngine.loadModelFromUrl(CPU_MODEL_URL, {
     n_ctx: 2048,
     n_threads: 1,
     n_gpu_layers: 0,
     progressCallback: ({ loaded, total }) => {
       if (Number.isFinite(loaded) && Number.isFinite(total) && total > 0) {
+        if (!diagnosticState.ggufDownload.observed) {
+          diagnosticState.ggufDownload.observed = true;
+          recordDiagnostic("CPU_GGUF_DOWNLOAD", {
+            backend: "wllama-cpu",
+            result: "START",
+            details: { loaded, total }
+          });
+        }
+        diagnosticState.ggufDownload.loaded = loaded;
+        diagnosticState.ggufDownload.total = total;
         els.progress.value = Math.max(0, Math.min(1, loaded / total));
         els.progressText.textContent =
           `Loading CPU fallback model… ${Math.round((loaded / total) * 100)}%`;
+        if (loaded >= total && !diagnosticState.ggufDownload.complete) {
+          diagnosticState.ggufDownload.complete = true;
+          recordDiagnostic("CPU_GGUF_DOWNLOAD_COMPLETE", {
+            backend: "wllama-cpu",
+            result: "PASS",
+            details: { loaded, total }
+          });
+          recordDiagnostic("CPU_MODEL_LOAD", { backend: "wllama-cpu", result: "RESUME" });
+        } else {
+          renderDiagnostic();
+        }
       }
     }
   });
+  recordDiagnostic("CPU_MODEL_READY", { backend: "wllama-cpu", result: "PASS" });
   return cpuEngine;
 }
 
 async function loadModel() {
   if (engine || loading) return;
+  resetDiagnosticAttempt();
   loading = true;
   els.loadButton.disabled = true;
   els.progressWrap.hidden = false;
@@ -256,8 +527,9 @@ async function loadModel() {
         els.prompt.focus();
         return;
       } catch (error) {
-        primaryFailureCode = classifyLocalError(error, "webllm");
-        console.error("Native Chat WebLLM primary failed", primaryFailureCode, error);
+        primaryFailureCode = classifyLocalError(error, "webllm", diagnosticState.activeStage);
+        const primaryFailure = recordBackendFailure("primary", error);
+        console.error("Native Chat WebLLM primary failed", primaryFailureCode, primaryFailure.code, error);
         engine = null;
         activeBackend = null;
       }
@@ -276,13 +548,16 @@ async function loadModel() {
       setReadyState(true);
       els.prompt.focus();
     } catch (error) {
-      const fallbackFailureCode = classifyLocalError(error, "wllama-cpu");
-      console.error("Native Chat CPU fallback failed", fallbackFailureCode, error);
+      const fallbackFailureCode = classifyLocalError(error, "wllama-cpu", diagnosticState.activeStage);
+      const fallbackFailure = recordBackendFailure("fallback", error);
+      console.error("Native Chat CPU fallback failed", fallbackFailureCode, fallbackFailure.code, error);
       engine = null;
       activeBackend = null;
       setStatus(els.modelStatus, "Local model unavailable", "bad");
       els.progressText.textContent =
-        `${describeLocalError(fallbackFailureCode)}. Neither local backend started successfully. No prompt was sent to a hosted model API.`;
+        `${describeLocalError(fallbackFailureCode)}. Diagnostic: ${fallbackFailure.code} at ${fallbackFailure.stage}. Neither local backend started successfully. No prompt was sent to a hosted model API.`;
+      if (els.diagnosticDetails) els.diagnosticDetails.open = true;
+      renderDiagnostic();
       els.loadButton.disabled = false;
       els.loadButton.textContent = "Try Again";
       setReadyState(false);
@@ -350,6 +625,8 @@ async function sendMessage(text) {
   let reply = "";
   try {
     const requestMessages = [messages[0], ...messages.slice(1).slice(-10)];
+    const inferenceStage = firstInferenceCompleted ? "GENERATION" : "FIRST_INFERENCE";
+    recordDiagnostic(inferenceStage, { backend: activeBackend || "none" });
     const stream = await createBackendStream(requestMessages);
 
     for await (const chunk of stream) {
@@ -363,11 +640,20 @@ async function sendMessage(text) {
 
     if (reply.trim()) {
       messages.push({ role: "assistant", content: reply });
+      recordDiagnostic(inferenceStage, { backend: activeBackend || "none", result: "PASS" });
+      firstInferenceCompleted = true;
     } else if (!stopRequested) {
       assistant.body.textContent = "I did not produce a response. Try rephrasing the request.";
     }
   } catch (error) {
     console.error("Native Chat generation failed", error);
+    recordDiagnostic(diagnosticState.activeStage, {
+      backend: activeBackend || "none",
+      result: stopRequested ? "STOPPED" : "FAIL",
+      code: stopRequested ? "GENERATION_STOPPED" : stageFailureCode(activeBackend || "none", diagnosticState.activeStage, error),
+      error
+    });
+    if (!stopRequested && els.diagnosticDetails) els.diagnosticDetails.open = true;
     if (stopRequested) {
       if (!reply.trim()) assistant.body.textContent = "Generation stopped.";
       if (reply.trim()) messages.push({ role: "assistant", content: reply });
@@ -423,5 +709,8 @@ els.reset.addEventListener("click", () => {
   els.prompt.focus();
 });
 
+els.copyDiagnostic?.addEventListener("click", copyDiagnosticReport);
+
+recordDiagnostic("PAGE_BOOT", { backend: "none", result: "PASS" });
 setReadyState(false);
 inspectDevice();

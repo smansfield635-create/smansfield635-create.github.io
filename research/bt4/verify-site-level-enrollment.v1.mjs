@@ -9,7 +9,6 @@ const json=p=>JSON.parse(read(p));
 const assert=(c,m)=>{if(!c)throw new Error(m)};
 
 const adapter=read('evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs');
-const runtimeReceipt=json('evidence/readiness/bt4-site-governance/audralia-live-runtime-receipt.v1.json');
 const productionKernel=read('evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs');
 const previewKernel=read('preview/bt4/entitlement-v1/entitlement-engine.v1.mjs');
 const page=read('evidence/readiness/bt4-site-governance/index.html');
@@ -28,39 +27,34 @@ assert(adapter.includes('ADAPTER_DEADLINE_MS=15000'),'bounded adapter deadline m
 assert(adapter.includes('withDeadline(adapter(),id)'),'per-object evaluation deadline is not applied');
 assert(adapter.includes('Promise.allSettled'),'independent object settlement missing');
 
-assert(runtimeReceipt.schema==='AUDRALIA_LIVE_RUNTIME_RECEIPT_v1','Audralia runtime receipt schema drift');
-assert(runtimeReceipt.result==='PASS_CLOSED','Audralia runtime receipt is not terminal PASS_CLOSED');
-assert(runtimeReceipt.surfaceId==='audralia','Audralia runtime receipt surface mismatch');
-assert(runtimeReceipt.qualificationRun===35463049772&&runtimeReceipt.qualificationResult==='PASS_CLOSED','Audralia qualification receipt binding drift');
-assert(runtimeReceipt.publicationRun===35463353855&&runtimeReceipt.publicationResult==='LIVE_EXACT_HEAD_VERIFIED','Audralia publication receipt binding drift');
-assert(runtimeReceipt.qualifiedCandidate==='57324b162560eb42bd55320b5fa5cf89ad3ff54a','Audralia candidate identity drift');
-assert(runtimeReceipt.adoptedCommit==='1954f112b0f3b78d2ca66c4bef341bc6f3c231b3','Audralia adopted commit identity drift');
-assert(runtimeReceipt.indexSourceBlob==='2108710132506f1c6b30a7dcd6ac751288694251','Audralia index source blob drift');
-assert(runtimeReceipt.rendererBlob==='fd787eb387efb195747658518573cb91508f989c','Audralia renderer receipt blob drift');
-assert(runtimeReceipt.tabletRuntimeBlob==='ae5b2e9f786b42332b58872f7f0663e1937b5f04','Audralia tablet runtime receipt blob drift');
-assert(runtimeReceipt.tabletRuntimeRef==='9b768171e284785a7e5c7ee0142cb9368acf597d','Audralia tablet exact-ref drift');
-assert(runtimeReceipt.hiddenWebGLRequired===false,'Evidence world receipt unexpectedly requires hidden WebGL');
 
-assert(adapter.includes("AUDRALIA_RUNTIME_RECEIPT='/evidence/readiness/bt4-site-governance/audralia-live-runtime-receipt.v1.json'"),'world adapter durable receipt binding missing');
-assert(adapter.includes("runtimeAuthority:'DURABLE_AUDRALIA_LIVE_RUNTIME_RECEIPT'"),'world adapter durable receipt authority marker missing');
-assert(adapter.includes("receipt?.result==='PASS_CLOSED'"),'world adapter receipt PASS gate missing');
-assert(adapter.includes("receipt?.publicationResult==='LIVE_EXACT_HEAD_VERIFIED'"),'world adapter publication PASS gate missing');
-assert(adapter.includes("html.includes('directDenseCloudCoverage: false')"),'world adapter current cloud-policy identity missing');
-assert(adapter.includes('rendererBlob===receipt?.rendererBlob'),'world adapter renderer identity gate missing');
-assert(adapter.includes('tabletRuntimeBlob===receipt?.tabletRuntimeBlob'),'world adapter tablet identity gate missing');
-assert(adapter.includes('const runtimeReady=Boolean(receiptValid&&topologyValid&&identityValid)'),'world adapter combined readiness gate missing');
-assert(adapter.includes('reproduction:runtimeReady'),'world adapter reproduction is not bound to durable runtime readiness');
+assert(adapter.includes("LIVE_RELEASE_MARKER='/.well-known/dgb-release.json'"),'world adapter live release marker binding missing');
+assert(adapter.includes("AUDRALIA_RUNTIME_RECEIPT='/.well-known/publication-surfaces/audralia-runtime.json'"),'world adapter canonical publication receipt binding missing');
+assert(adapter.includes("receipt?.schema==='DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1'"),'world adapter receipt schema gate missing');
+assert(adapter.includes("receipt?.surfaceId==='audralia'"),'world adapter Audralia surface gate missing');
+assert(adapter.includes('receiptTargetSha===releaseCommit'),'world adapter release/receipt SHA gate missing');
+assert(adapter.includes("receipt?.runtimeVerification?.schema==='PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1'"),'world adapter runtime verification schema gate missing');
+assert(adapter.includes("receipt?.runtimeVerification?.surfaceId==='audralia'"),'world adapter runtime verification surface gate missing');
+assert(adapter.includes("receipt?.runtimeVerification?.result==='PASS'"),'world adapter public runtime PASS gate missing');
+assert(adapter.includes("receipt?.runtimeVerification?.protectedContinuity===true"),'world adapter protected runtime continuity gate missing');
+assert(adapter.includes('const runtimeReady=Boolean(releasePresent&&receiptValid&&surfaceMatch&&shaMatch&&runtimePass)'),'world adapter combined readiness gate missing');
+assert(adapter.includes("evidence:'supporting',authority:true"),'qualified world evidence/authority state missing');
+for(const reason of ['LIVE_RELEASE_MARKER_UNAVAILABLE','AUDRALIA_RUNTIME_RECEIPT_UNAVAILABLE','AUDRALIA_RUNTIME_RECEIPT_SCHEMA_OR_RESULT_MISMATCH','AUDRALIA_RUNTIME_RECEIPT_SURFACE_MISMATCH','AUDRALIA_RUNTIME_RECEIPT_TARGET_SHA_MISMATCH','AUDRALIA_PUBLIC_RUNTIME_VERIFICATION_NOT_PASS'])assert(adapter.includes(reason),`world adapter fail-closed reason missing: ${reason}`);
 assert(!adapter.includes("createElement('canvas')"),'world adapter must not boot hidden WebGL');
+assert(!adapter.includes('gitBlobHex'),'Evidence page must not hash Audralia runtime product bytes');
+assert(!adapter.includes('audralia-live-runtime-receipt.v1.json'),'Evidence page must not consume the stale static Audralia receipt');
 
 assert(evidenceSurface.runtime?.readyAttribute?.name==='data-ready'&&evidenceSurface.runtime?.readyAttribute?.contains==='true','publication verifier does not require terminal evaluation state');
 assert(Number(evidenceSurface.runtime?.timeoutMs)<=25000,'publication verifier timeout exceeds current bounded entitlement contract');
-assert(JSON.stringify(evidenceSurface).includes('audralia-live-runtime-receipt.v1.json'),'Evidence publication manifest does not verify the runtime receipt');
-assert(JSON.stringify(evidenceSurface).includes('site-entitlement.v1.mjs?cb=prod6'),'Evidence publication manifest stale adapter cache identity');
-assert(JSON.stringify(evidenceSurface).includes('current-public-condition.mjs?v=1&cb=prod7'),'Evidence publication manifest stale current-condition cache identity');
+assert(JSON.stringify(evidenceSurface).includes('/.well-known/dgb-release.json'),'Evidence publication manifest missing live release marker binding');
+assert(JSON.stringify(evidenceSurface).includes('/.well-known/publication-surfaces/audralia-runtime.json'),'Evidence publication manifest missing canonical Audralia runtime receipt binding');
+assert(JSON.stringify(evidenceSurface).includes('site-entitlement.v1.mjs?cb=prod7'),'Evidence publication manifest stale adapter cache identity');
+assert(JSON.stringify(evidenceSurface).includes('current-public-condition.mjs?v=1&cb=prod8'),'Evidence publication manifest stale current-condition cache identity');
+assert(!JSON.stringify(evidenceSurface).includes('audralia-live-runtime-receipt.v1.json'),'Evidence publication manifest still binds stale static Audralia receipt');
 
 assert(page.includes("./site-entitlement.v1.mjs"),'public governance surface is not bound to shared site adapters');
 assert(audralia.includes('directDenseCloudCoverage: false'),'current Audralia cloud policy identity missing');
-assert(audralia.includes(`@${runtimeReceipt.tabletRuntimeRef}/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs`),'current Audralia exact tablet runtime binding missing');
+assert(audralia.includes('@9b768171e284785a7e5c7ee0142cb9368acf597d/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs'),'current Audralia exact tablet runtime binding missing');
 assert(loader.includes("loader.classList.add('is-ready')"),'Audralia terminal runtime-ready transition missing');
 assert(diagnostic.includes('AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_AUTHORITY_STATE'),'real diagnostic authority state surface missing');
 assert(binding.phase==='FRESH_REQUALIFIED'&&Number(binding.epoch)===Number(binding.receiptEpoch),'real scientific claim is not freshly qualified');
@@ -81,7 +75,8 @@ console.log(JSON.stringify({
  boundary:'BT4_SITE_LEVEL_ENROLLMENT',
  kernel:'UNCHANGED_BYTE_IDENTICAL_PRODUCTION_COPY',
  coldLoad:'BOUNDED_FAIL_CLOSED_15000MS_PER_ADAPTER',
- worldRuntimeEvidence:'DURABLE_AUDRALIA_LIVE_RUNTIME_RECEIPT',
+ worldRuntimeEvidence:'CANONICAL_POST_DEPLOY_AUDRALIA_RUNTIME_RECEIPT',
+ releaseMarkerBinding:true,
  hiddenWebGL:false,
  currentAudraliaTopology:'EXACT_24057_SNAPSHOT_PLUS_CONSTRAINED_TABLET_SINGLE_CONTEXT',
  objectClasses:['scientific-claim','world-runtime','diagnostic-authority','software-release'],

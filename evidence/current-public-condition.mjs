@@ -1,4 +1,4 @@
-const SITE_ENTITLEMENT_URL='/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod6';
+const SITE_ENTITLEMENT_URL='/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod7';
 
 const root=document.querySelector('[data-current-public-condition]');
 if(root){

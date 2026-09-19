@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy_final.outputs.page_url }}
     steps:
       - name: Require exact dispatched head
         id: resolve
@@ -223,18 +223,85 @@ jobs:
           SURFACE_ID: ${{ inputs.surface_id }}
           REQUESTED_RUNTIME: ${{ steps.surface.outputs.runtime }}
           AUDRALIA_MANIFEST: .github/ai-router/publication-surfaces/audralia.json
+          AUDRALIA_RUNTIME_VERIFICATION: ${{ runner.temp }}/audralia-runtime-live-verification.json
         shell: bash
         run: |
           set -euo pipefail
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -n "$CHROME_PATH"
-          if [ "$REQUESTED_RUNTIME" = "true" ]; then
+          if [ "$REQUESTED_RUNTIME" = "true" ] && [ "$SURFACE_ID" != "audralia" ]; then
             node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
           fi
-          if [ "$SURFACE_ID" != "audralia" ]; then
-            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$AUDRALIA_MANIFEST"
-          fi
+          node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$AUDRALIA_MANIFEST" > "$AUDRALIA_RUNTIME_VERIFICATION"
+          cat "$AUDRALIA_RUNTIME_VERIFICATION"
+          jq -e '.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .surfaceId=="audralia" and .result=="PASS"' "$AUDRALIA_RUNTIME_VERIFICATION" >/dev/null
           echo "PROTECTED_RUNTIME_SURFACE_CONTINUITY_VERIFIED"
+
+      - name: Materialize public Audralia runtime publication receipt
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          AUDRALIA_RUNTIME_VERIFICATION: ${{ runner.temp }}/audralia-runtime-live-verification.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt_dir="$STAGE/.well-known/publication-surfaces"
+          receipt_path="$receipt_dir/audralia-runtime.json"
+          mkdir -p "$receipt_dir"
+          jq -e '.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .surfaceId=="audralia" and .result=="PASS"' "$AUDRALIA_RUNTIME_VERIFICATION" >/dev/null
+          timestamp="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          jq -n \
+            --slurpfile runtimeVerification "$AUDRALIA_RUNTIME_VERIFICATION" \
+            --arg targetSha "$TARGET_SHA" \
+            --arg publicationSurfaceId "$SURFACE_ID" \
+            --arg finalUrl "https://diamondgatebridge.com/showroom/globe/audralia/" \
+            --arg workflowRunId "$GITHUB_RUN_ID" \
+            --argjson workflowRunAttempt "$GITHUB_RUN_ATTEMPT" \
+            --arg timestamp "$timestamp" \
+            '{schema:"DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1",result:"PASS_CLOSED",surfaceId:"audralia",targetSha:$targetSha,finalUrl:$finalUrl,runtimeVerification:($runtimeVerification[0]+{verifier:"tools/publication-live-verify.mjs",protectedContinuity:true}),releaseMarkerPath:"/.well-known/dgb-release.json",publicationSurfaceId:$publicationSurfaceId,workflowRunId:$workflowRunId,workflowRunAttempt:$workflowRunAttempt,timestamp:$timestamp,hiddenWebGLOnEvidencePage:false}' \
+            > "$receipt_path"
+          jq -e --arg targetSha "$TARGET_SHA" '.schema=="DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .result=="PASS_CLOSED" and .surfaceId=="audralia" and .targetSha==$targetSha and .runtimeVerification.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .runtimeVerification.surfaceId=="audralia" and .runtimeVerification.result=="PASS" and .runtimeVerification.protectedContinuity==true and .hiddenWebGLOnEvidencePage==false' "$receipt_path" >/dev/null
+          echo "AUDRALIA_RUNTIME_PUBLICATION_RECEIPT_MATERIALIZED=$TARGET_SHA"
+
+      - name: Upload exact-head artifact with runtime receipt
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/pages-site
+
+      - name: Deploy exact-head artifact with runtime receipt
+        id: deploy_final
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Verify final release marker and Audralia runtime receipt
+        env:
+          PAGE_URL: ${{ steps.deploy_final.outputs.page_url }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            marker="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "${PAGE_URL%/}/.well-known/dgb-release.json?runtime_receipt=${TARGET_SHA}&attempt=${attempt}" 2>/dev/null || true)"
+            receipt="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "${PAGE_URL%/}/.well-known/publication-surfaces/audralia-runtime.json?target=${TARGET_SHA}&attempt=${attempt}" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
+            receipt_target="$(printf '%s' "$receipt" | jq -r '.targetSha // empty' 2>/dev/null || true)"
+            receipt_surface="$(printf '%s' "$receipt" | jq -r '.surfaceId // empty' 2>/dev/null || true)"
+            receipt_result="$(printf '%s' "$receipt" | jq -r '.result // empty' 2>/dev/null || true)"
+            runtime_surface="$(printf '%s' "$receipt" | jq -r '.runtimeVerification.surfaceId // empty' 2>/dev/null || true)"
+            runtime_result="$(printf '%s' "$receipt" | jq -r '.runtimeVerification.result // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ] && [ "$observed_surface" = "$SURFACE_ID" ] && [ "$receipt_target" = "$TARGET_SHA" ] && [ "$receipt_surface" = "audralia" ] && [ "$receipt_result" = "PASS_CLOSED" ] && [ "$runtime_surface" = "audralia" ] && [ "$runtime_result" = "PASS" ]; then
+              echo "FINAL_RELEASE_MARKER_AND_AUDRALIA_RUNTIME_RECEIPT_VERIFIED=$TARGET_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "FINAL_AUDRALIA_RUNTIME_RECEIPT_MISMATCH target=$TARGET_SHA" >&2
+          exit 1
 
       - name: Verify custom-domain alias convergence
         env:
@@ -268,6 +335,21 @@ jobs:
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
             if [ "$observed" != "$TARGET_SHA" ] || [ "$observed_surface" != "$SURFACE_ID" ]; then
+              sleep 10
+              continue
+            fi
+
+            runtime_receipt_url="${CUSTOM_DOMAIN}/.well-known/publication-surfaces/audralia-runtime.json?dgb_release=${TARGET_SHA}&attempt=${attempt}"
+            runtime_receipt="$(curl --fail --silent --show-error -L --max-time 20 \
+              -H 'Cache-Control: no-cache' \
+              -H 'Pragma: no-cache' \
+              "$runtime_receipt_url" 2>/dev/null || true)"
+            receipt_target="$(printf '%s' "$runtime_receipt" | jq -r '.targetSha // empty' 2>/dev/null || true)"
+            receipt_surface="$(printf '%s' "$runtime_receipt" | jq -r '.surfaceId // empty' 2>/dev/null || true)"
+            receipt_result="$(printf '%s' "$runtime_receipt" | jq -r '.result // empty' 2>/dev/null || true)"
+            runtime_surface="$(printf '%s' "$runtime_receipt" | jq -r '.runtimeVerification.surfaceId // empty' 2>/dev/null || true)"
+            runtime_result="$(printf '%s' "$runtime_receipt" | jq -r '.runtimeVerification.result // empty' 2>/dev/null || true)"
+            if [ "$receipt_target" != "$TARGET_SHA" ] || [ "$receipt_surface" != "audralia" ] || [ "$receipt_result" != "PASS_CLOSED" ] || [ "$runtime_surface" != "audralia" ] || [ "$runtime_result" != "PASS" ]; then
               sleep 10
               continue
             fi

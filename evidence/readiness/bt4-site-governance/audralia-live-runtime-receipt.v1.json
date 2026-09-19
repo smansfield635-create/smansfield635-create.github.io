@@ -1,0 +1,20 @@
+{
+  "schema": "AUDRALIA_LIVE_RUNTIME_RECEIPT_v1",
+  "result": "PASS_CLOSED",
+  "surfaceId": "audralia",
+  "qualifiedCandidate": "57324b162560eb42bd55320b5fa5cf89ad3ff54a",
+  "adoptedCommit": "1954f112b0f3b78d2ca66c4bef341bc6f3c231b3",
+  "qualificationRun": 35463049772,
+  "qualificationResult": "PASS_CLOSED",
+  "publicationRun": 35463353855,
+  "publicationResult": "LIVE_EXACT_HEAD_VERIFIED",
+  "indexSourceBlob": "2108710132506f1c6b30a7dcd6ac751288694251",
+  "rendererBlob": "fd787eb387efb195747658518573cb91508f989c",
+  "tabletRuntimeBlob": "ae5b2e9f786b42332b58872f7f0663e1937b5f04",
+  "tabletRuntimeRef": "9b768171e284785a7e5c7ee0142cb9368acf597d",
+  "runtimeSchema": "AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME_v1",
+  "integrationSchema": "AUDRALIA_LIVE_PLANETARY_INTEGRATION_v7_EXACT_24057_LOADER_FIRST",
+  "directDenseCloudCoverage": false,
+  "hiddenWebGLRequired": false,
+  "productMutationPerformed": false
+}

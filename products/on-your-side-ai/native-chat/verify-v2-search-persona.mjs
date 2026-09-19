@@ -200,11 +200,11 @@ try {
     "My email is sean@example.com. Please search the web for who is the current CEO of OpenAI? Tell me what the evidence establishes and identify the sources used."
   );
   add("MINIMUM_DERIVED_QUERY_FIXTURE",
+    minimized === "who is the current CEO of OpenAI?" &&
     !/sean@example\.com/i.test(minimized) &&
     !/search the web/i.test(minimized) &&
     minimized.length <= 180 &&
-    minimized.split(/\s+/).filter(Boolean).length <= 24 &&
-    /current CEO of OpenAI/i.test(minimized),
+    minimized.split(/\s+/).filter(Boolean).length <= 24,
     minimized
   );
 

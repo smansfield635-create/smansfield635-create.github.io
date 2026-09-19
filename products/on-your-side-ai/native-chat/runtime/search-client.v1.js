@@ -34,12 +34,16 @@ function normalizeTurn(value) {
 }
 
 function stripPrivateClauses(value) {
-  let text = value;
-  for (const pattern of PRIVATE_CLAUSE_PATTERNS) text = text.replace(pattern, " ");
-  return text
+  let text = value
     .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, " ")
     .replace(/(?:\+?\d[\s().-]?){8,}\d/g, " ")
     .replace(/\b\d{8,}\b/g, " ");
+  for (const pattern of PRIVATE_CLAUSE_PATTERNS) text = text.replace(pattern, " ");
+  return text
+    .replace(/\bmy\s+(?:email|phone(?: number)?|address|account(?: number)?|social security(?: number)?|ssn)\s+(?:is|:)\s*/gi, " ")
+    .replace(/^[\s.,;:!?-]+/, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function stripSearchFraming(value) {

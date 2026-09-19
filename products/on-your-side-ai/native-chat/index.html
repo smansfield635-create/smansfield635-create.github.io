@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="On Your Side AAI Public Talk v1 — browser-local conversation with a small on-device model." />
+  <title>Native Chat — On Your Side AAI</title>
+  <link rel="stylesheet" href="./index.css" />
+</head>
+<body>
+  <a class="skip-link" href="#chat">Skip to chat</a>
+  <header class="topbar">
+    <a class="brand" href="/products/on-your-side-ai/" aria-label="Return to On Your Side AAI">
+      <span class="brand-mark" aria-hidden="true">◇</span>
+      <span>On Your Side AAI</span>
+    </a>
+    <div class="topbar-actions">
+      <span class="edition">Public Talk v1</span>
+      <a href="/products/on-your-side-ai/">Return</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Local conversation instrument</p>
+      <h1 id="page-title">Native Chat</h1>
+      <p class="lede">A small AI that runs in your browser. It can help you understand, organize, compare, draft, and identify a next step while keeping you in control.</p>
+      <div class="boundary-grid" aria-label="Public edition boundaries">
+        <div><strong>Local inference</strong><span>Prompts are not sent to a hosted model API.</span></div>
+        <div><strong>User initiated</strong><span>The roughly 294 MB local runtime loads only when you ask.</span></div>
+        <div><strong>Public boundary</strong><span>No repository credentials, private control plane, or execution authority.</span></div>
+      </div>
+    </section>
+
+    <section class="instrument" id="chat" aria-labelledby="chat-title">
+      <div class="instrument-head">
+        <div>
+          <p class="eyebrow">Talk mode</p>
+          <h2 id="chat-title">Always on your side. Never in control.</h2>
+        </div>
+        <div class="status-stack">
+          <span class="status-pill" id="device-status">Checking WebGPU…</span>
+          <span class="status-pill muted" id="model-status">Model not loaded</span>
+        </div>
+      </div>
+
+      <div class="load-panel" id="load-panel">
+        <div>
+          <h3>Start the local AI</h3>
+          <p id="load-copy">The first load downloads and caches the local model assets. Later visits may reuse the browser cache.</p>
+        </div>
+        <button class="primary" id="load-model" type="button">Load Local AI</button>
+        <div class="progress-wrap" id="progress-wrap" hidden>
+          <progress id="load-progress" max="1" value="0">0%</progress>
+          <p id="progress-text" role="status" aria-live="polite">Preparing local runtime…</p>
+        </div>
+      </div>
+
+      <div class="chat-shell" aria-busy="false" id="chat-shell">
+        <section class="transcript" id="transcript" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Conversation">
+          <article class="message assistant">
+            <p class="speaker">On Your Side</p>
+            <div class="message-body">Load the local AI when you are ready. This public build is conversation-only: it cannot access the private repository control plane or take repository actions.</div>
+          </article>
+        </section>
+
+        <form class="composer" id="composer">
+          <label for="prompt">Message</label>
+          <textarea id="prompt" name="prompt" rows="3" maxlength="1600" placeholder="Ask for help understanding, organizing, comparing, drafting, or deciding a next step…" disabled></textarea>
+          <div class="composer-actions">
+            <p class="composer-note" id="composer-note">Load the local AI to begin.</p>
+            <div class="button-row">
+              <button class="secondary" id="reset-chat" type="button" disabled>Reset</button>
+              <button class="secondary danger" id="stop-generation" type="button" disabled>Stop</button>
+              <button class="primary" id="send-message" type="submit" disabled>Send</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="notes" aria-labelledby="notes-title">
+      <h2 id="notes-title">What this build is</h2>
+      <p>Public Talk v1 is intentionally narrow. It uses the verified Qwen2.5 0.5B local runtime for lightweight conversation. It does not claim frontier-model capability or professional authority. Research, Diagnostic, and governed private Execution are separate capability layers and are not exposed by this public chat.</p>
+      <p class="technical-note">WebLLM 0.2.85 loader code is fetched from a pinned public CDN. Model weights and WebGPU runtime assets are served from this site and inference runs in the browser.</p>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/products/">Products</a>
+    <a href="/">Home</a>
+    <span>On Your Side AAI</span>
+  </footer>
+
+  <script type="module" src="./index.js"></script>
+</body>
+</html>

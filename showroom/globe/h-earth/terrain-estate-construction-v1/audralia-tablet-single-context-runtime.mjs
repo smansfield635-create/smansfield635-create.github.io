@@ -93,7 +93,7 @@ export async function initializeAudraliaTabletSingleContext() {
     optionalMultiContextEnrichmentDeferred: true,
     invariants: Object.freeze({ pass: true, failures: Object.freeze([]), singleWebGLContext: true }),
     getRuntime: () => runtime,
-    getCameraFrame: () => Object.freeze({ snapshot: renderer.getSnapshot() })
+    getCameraFrame: () => renderer.getCameraFrame()
   });
   window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__ = Object.freeze({ operationId: runtime.schema, renderer, fallbackActive: false });
   window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__ = runtime;

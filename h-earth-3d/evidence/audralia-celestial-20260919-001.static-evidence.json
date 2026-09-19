@@ -1,0 +1,35 @@
+{
+  "schema": "AUDRALIA_CELESTIAL_STATIC_EVIDENCE_v1",
+  "candidateHead": "d1ad658036f43dd3028630e0c56a212112e7c75a",
+  "experiencePath": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-celestial-lite.mjs",
+  "repositoryBlobSha": "5a1baed1cc5a4f3ecfcda1660236ee273015474d",
+  "evidenceScope": "STATIC_CODE_AND_DIFF_ONLY",
+  "visualEvidence": {
+    "result": "PARTIAL",
+    "facts": [
+      "Celestial renderer remains a transparent overlay: no terrain/world geometry replacement is introduced.",
+      "Sun, moon, and 256 deterministic Fibonacci stars are drawn only when viewScale visibility is nonzero.",
+      "Celestial shader changes affect surface appearance, lighting, corona, relief, and star magnitude distribution."
+    ]
+  },
+  "interactionEvidence": {
+    "result": "PASS_STATIC",
+    "facts": [
+      "Public render entry remains renderAudraliaTabletCelestialLite(gl,{viewScale}).",
+      "No input, camera, routing, traversal, or interaction handler is introduced or modified in this file.",
+      "WebGL state is captured before celestial drawing and restored in finally after drawing."
+    ]
+  },
+  "continuityEvidence": {
+    "result": "PASS_STATIC",
+    "facts": [
+      "visibilityForScale preserves PLANETARY=1, CONTINENT=0.5, REGION/LOCAL=0.",
+      "The candidate does not add a parallel world, dashboard, map application, card UI, or alternate terrain surface.",
+      "Candidate diff is confined to the existing celestial helper."
+    ]
+  },
+  "limitations": [
+    "This artifact does not claim physical-device visual fidelity.",
+    "Static evidence cannot prove perceptual acceptance against the source video; owner/device review remains separate."
+  ]
+}

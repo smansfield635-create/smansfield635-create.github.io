@@ -1,0 +1,96 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "operationId": "AUDRALIA_TABLET_CELESTIAL_LITE_GEN2431_EXPERIENCE_ACCEPTANCE_20260919_001",
+  "lockGeneration": 2435,
+  "productSpecimenCommit": "9579e895760ef0e62b44d816da9d2c702a812422",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "productFiles": [
+    {
+      "path": "showroom/globe/audralia/index.html",
+      "gitBlobSha1": "c34d8b7eb1da6ce5a0d7d5d96a2289e5205ac042",
+      "sha256": "6eb69946006ba22fedabbf71348ad5275dd60368c8da117c6206aaedf1862939"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-celestial-lite.mjs",
+      "gitBlobSha1": "9877844b6e2d8c808fe993c3cba27dd0a67164cd",
+      "sha256": "c1222096bd8a4418c6cfc365f611d2237f134f3403c707c5f8230039a57649ab"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
+      "gitBlobSha1": "29554c57ad14d7ee6a7e7b848dbaef686729b2ab",
+      "sha256": "e893d94e8057cfc7357c3c259f79b6fed2bbc60fb7062c0ebc54fd0a4c3c8a6d"
+    }
+  ],
+  "staticObservations": {
+    "helperCreatesCanvasOrContext": false,
+    "phoneOrLawsRuntimeImports": false,
+    "existingWebGL2ContextReused": true,
+    "rendererIntegration": "renderAudraliaTabletCelestialLite(gl,{viewScale:viewScale()})",
+    "visibilityByExistingViewScale": {
+      "LOCAL": 0,
+      "REGION": 0,
+      "CONTINENT": 0.5,
+      "PLANETARY": 1
+    },
+    "distantDrawCalls": 3,
+    "celestialPassBeforeWorldDepthStencil": true,
+    "producerRendererCommit": "59aee8e779a6922fddda94e64b6c0c9583bbed23",
+    "producerPinOccurrences": 2
+  },
+  "browserObservations": [
+    {
+      "runId": 35469827718,
+      "check": "H-Earth CP3D Renderer Survival",
+      "result": "PASS",
+      "observations": [
+        "crossRuntimeDigestEqual=true",
+        "activePersistentRendererCount=1",
+        "renderer survival outcome=success"
+      ]
+    },
+    {
+      "runId": 35469827788,
+      "check": "Characters Step 9 Regional Bridge / Step 10 Browser Acceptance",
+      "result": "PASS",
+      "observations": [
+        "desktop/mobile regional traversal accepted",
+        "mobile action reachability diagnostic present",
+        "return to orbit interaction preserved"
+      ]
+    },
+    {
+      "runId": 35469827827,
+      "check": "Showroom Label Conformance Benchmark",
+      "result": "PASS",
+      "observations": [
+        "browser benchmark pass=true",
+        "failures=0"
+      ]
+    },
+    {
+      "runId": 35469827642,
+      "check": "Showroom Four-Compass Exact-Head Regression",
+      "result": "PARTIAL_WITH_DISJOINT_AUXILIARY_FAILURE",
+      "observations": [
+        "MAIN/ARCHCOIN/SHOWROOM/LAWS compass corpus executed on desktop and mobile",
+        "compassStatus=PASS_BOUNDED_LANE_BASELINE",
+        "only WEBSITE_HOME_RECEIVER_CONTROL auxiliary lane reported HARNESS_FAILURE",
+        "crossLaneAggregateCreated=false"
+      ]
+    }
+  ],
+  "constrainedTabletObservations": {
+    "visualLaw": "celestial layer is absent at LOCAL and REGION, fades at CONTINENT, and is fully visible only at PLANETARY scale",
+    "interactionLaw": "orbit/zoom/pan remain owned by the existing renderer; celestial helper adds no input handler or parallel navigation system",
+    "cameraFrameContinuity": "existing renderer camera(), viewScale(), orbit(), zoom(), pan(), and planetaryVantage() remain authoritative",
+    "singleContextContinuity": "helper receives existing renderer gl; no canvas or WebGL context creation occurs in helper",
+    "startupContinuity": "existing renderer module remains the consumer; helper is imported by renderer and the Audralia index pins the immutable producer renderer",
+    "physicalTabletAcceptance": "OWNER_PHYSICAL_DEVICE_ACCEPTANCE_REQUIRED_AFTER_PUBLICATION"
+  },
+  "anchorReview": {
+    "reviewedAgainstAnchor": true,
+    "sameWorldConclusion": "PASS",
+    "rationale": "The celestial layer changes only the high-altitude expression of the existing Audralia/H-Earth renderer. Local and regional ground experience remains unchanged, and no duplicate product, canvas, runtime, camera, or navigation system is introduced."
+  }
+}

@@ -162,6 +162,49 @@ function browserDecode(bytes, sourceId, windows = []) {
   }
 }
 
+function normalizeCommonsAuthorityUrl(rawUrl, source) {
+  let authorityUrl, canonicalUrl;
+  try {
+    authorityUrl = new URL(rawUrl);
+    canonicalUrl = new URL(source.url);
+  } catch (error) {
+    fail('COMMONS_AUTHORITY_URL_INVALID', { sourceId: source.id, detail: error.message });
+  }
+  if (
+    authorityUrl.protocol !== canonicalUrl.protocol ||
+    authorityUrl.hostname !== canonicalUrl.hostname ||
+    authorityUrl.port !== canonicalUrl.port ||
+    authorityUrl.username !== '' ||
+    authorityUrl.password !== '' ||
+    authorityUrl.pathname !== canonicalUrl.pathname
+  ) {
+    fail('COMMONS_AUTHORITY_URL_MISMATCH', { sourceId: source.id, expected: source.url, actual: rawUrl });
+  }
+  if (authorityUrl.hash !== '') fail('COMMONS_AUTHORITY_URL_FRAGMENT_PROHIBITED', { sourceId: source.id, actual: rawUrl });
+  const entries = [...authorityUrl.searchParams.entries()];
+  if (entries.length > 0) {
+    const expected = new Map([
+      ['utm_source', 'commons.wikimedia.org'],
+      ['utm_campaign', 'imageinfo'],
+      ['utm_content', 'original']
+    ]);
+    const keys = entries.map(([key]) => key);
+    if (entries.length !== 3 || new Set(keys).size !== 3) {
+      fail('COMMONS_AUTHORITY_QUERY_NOT_AUTHORIZED', { sourceId: source.id, actual: rawUrl });
+    }
+    for (const [key, value] of entries) {
+      if (!expected.has(key) || expected.get(key) !== value) {
+        fail('COMMONS_AUTHORITY_QUERY_NOT_AUTHORIZED', { sourceId: source.id, key, value });
+      }
+    }
+  }
+  return canonicalUrl.toString();
+}
+
+function selfTestRejects(fn, expectedCode) {
+  try { fn(); return false; } catch (error) { return error?.code === expectedCode; }
+}
+
 async function fetchCommonsAuthority(source) {
   const endpoint = new URL('https://commons.wikimedia.org/w/api.php');
   endpoint.searchParams.set('action', 'query');
@@ -178,12 +221,13 @@ async function fetchCommonsAuthority(source) {
   if (!info) fail('COMMONS_AUTHORITY_IMAGEINFO_MISSING', source.id);
   const authority = {
     url: String(info.url ?? ''),
+    normalizedUrl: null,
     size: Number(info.size),
     sha1: String(info.sha1 ?? '').toLowerCase(),
     mime: String(info.mime ?? '').toLowerCase(),
     mediatype: String(info.mediatype ?? '').toUpperCase()
   };
-  if (authority.url !== source.url) fail('COMMONS_AUTHORITY_URL_MISMATCH', { sourceId: source.id, expected: source.url, actual: authority.url });
+  authority.normalizedUrl = normalizeCommonsAuthorityUrl(authority.url, source);
   if (!Number.isSafeInteger(authority.size) || authority.size < 1024) fail('COMMONS_AUTHORITY_SIZE_INVALID', { sourceId: source.id, size: authority.size });
   if (!/^[0-9a-f]{40}$/.test(authority.sha1)) fail('COMMONS_AUTHORITY_SHA1_INVALID', { sourceId: source.id, sha1: authority.sha1 });
   if (authority.mime !== 'application/ogg' || authority.mediatype !== 'AUDIO') fail('COMMONS_AUTHORITY_MEDIA_TYPE_MISMATCH', { sourceId: source.id, mime: authority.mime, mediatype: authority.mediatype });
@@ -214,7 +258,7 @@ async function fetchCanonical(source, authority) {
   if (url.protocol !== 'https:' || url.hostname !== 'upload.wikimedia.org') fail('SOURCE_URL_NOT_CANONICAL', source.id);
   const r = await fetch(source.url, { redirect: 'follow', headers: { 'User-Agent': 'DiamondGateBridge-ThinkAndBlink-AudioCustodyInspector/1.0' } });
   if (!r.ok) fail('SOURCE_FETCH_FAILED', { sourceId: source.id, status: r.status });
-  if (r.url !== source.url || r.url !== authority.url) fail('SOURCE_FINAL_URL_MISMATCH', { sourceId: source.id, expected: source.url, actual: r.url });
+  if (r.url !== source.url || authority.normalizedUrl !== source.url) fail('SOURCE_FINAL_URL_MISMATCH', { sourceId: source.id, expected: source.url, actual: r.url, authorityRawUrl: authority.url, authorityNormalizedUrl: authority.normalizedUrl });
   const contentType = String(r.headers.get('content-type') || '').split(';', 1)[0].trim().toLowerCase();
   if (!['application/ogg', 'audio/ogg'].includes(contentType)) fail('SOURCE_CONTENT_TYPE_MISMATCH', { sourceId: source.id, contentType });
   const bytes = Buffer.from(await r.arrayBuffer());
@@ -291,6 +335,13 @@ function selfTest() {
     CAMPANELLA_WINDOWS[1].start === 317 && CAMPANELLA_WINDOWS[1].end === 337,
     SOURCES.AQUARIUM.expectedDurationSeconds === 148.006893424036 && SOURCES.AQUARIUM.durationToleranceSeconds === 0.05,
     SOURCES.CAMPANELLA.expectedDurationSeconds === 372 && SOURCES.CAMPANELLA.durationToleranceSeconds === 1,
+    normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url, SOURCES.AQUARIUM) === SOURCES.AQUARIUM.url,
+    normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url + '?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original', SOURCES.AQUARIUM) === SOURCES.AQUARIUM.url,
+    normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url + '?utm_content=original&utm_source=commons.wikimedia.org&utm_campaign=imageinfo', SOURCES.AQUARIUM) === SOURCES.AQUARIUM.url,
+    selfTestRejects(() => normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url + '?utm_source=evil&utm_campaign=imageinfo&utm_content=original', SOURCES.AQUARIUM), 'COMMONS_AUTHORITY_QUERY_NOT_AUTHORIZED'),
+    selfTestRejects(() => normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url + '?utm_source=commons.wikimedia.org&utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original', SOURCES.AQUARIUM), 'COMMONS_AUTHORITY_QUERY_NOT_AUTHORIZED'),
+    selfTestRejects(() => normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url + '#fragment', SOURCES.AQUARIUM), 'COMMONS_AUTHORITY_URL_FRAGMENT_PROHIBITED'),
+    selfTestRejects(() => normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url.replace('07_Aquarium.ogg', '08_Aquarium.ogg'), SOURCES.AQUARIUM), 'COMMONS_AUTHORITY_URL_MISMATCH'),
     window.binCount === 40,
     window.candidates.length > 0,
     nearest && Math.abs(nearest.time - 5) <= 0.15 && nearest.rms < 0.03

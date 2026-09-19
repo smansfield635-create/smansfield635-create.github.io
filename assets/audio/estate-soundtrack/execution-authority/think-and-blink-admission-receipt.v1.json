@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "c13463fcc4948fe02ee3be9f0b48d077a581c426",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "f447f8f5b4c8e75180c46e5dc7cbefa93a63df7d",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2405,
+    "lockScope": "ESTATE_SOUNDTRACK:THINK_AND_BLINK:AUDIO_CUSTODY_INSPECTION:V1",
+    "observedBranchHead": "48c36be50812dca0e707d177642114def286c615",
+    "observedLedgerBlobSha": "47c5d4083b9e3094d81286383883530ac19a0494",
+    "operationId": "THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTION_20260919_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "48d140a719d8dad3909fc6b7cc8a5b4b9f5d0da88a1068318b2ea964565508db"
+  },
+  "operationId": "THINK_AND_BLINK_AUDIO_CUSTODY_INSPECTION_20260919_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "1281a7e10180ca77037828c439f0eaabc00db5a0f7dae81e8c40930e5b65f580",
+  "projectId": "ESTATE_SOUNDTRACK",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "e3ce0da251ec6c9343b389a8ed3ba372acafd97292ae68b5711632901dfc6a7e",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

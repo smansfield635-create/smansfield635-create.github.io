@@ -234,6 +234,32 @@ async function fetchCommonsAuthority(source) {
   return authority;
 }
 
+function decodedWindowInventory(decoded) {
+  const windows = Array.isArray(decoded?.windows) ? decoded.windows : [];
+  return {
+    durationSeconds: Number.isFinite(decoded?.durationSeconds) ? decoded.durationSeconds : null,
+    sampleRate: Number.isFinite(decoded?.sampleRate) ? decoded.sampleRate : null,
+    channels: Number.isFinite(decoded?.channels) ? decoded.channels : null,
+    frames: Number.isFinite(decoded?.frames) ? decoded.frames : null,
+    windowCount: windows.length,
+    windows: windows.map((window) => {
+      const bins = Array.isArray(window?.bins) ? window.bins : [];
+      const candidates = Array.isArray(window?.candidates) ? window.candidates : [];
+      return {
+        id: typeof window?.id === 'string' ? window.id : null,
+        start: Number.isFinite(window?.start) ? window.start : null,
+        end: Number.isFinite(window?.end) ? window.end : null,
+        binSeconds: Number.isFinite(window?.binSeconds) ? window.binSeconds : null,
+        binCount: Number.isFinite(window?.binCount) ? window.binCount : null,
+        binsLength: bins.length,
+        candidatesLength: candidates.length,
+        firstStart: bins.length > 0 && Number.isFinite(bins[0]?.start) ? bins[0].start : null,
+        lastEnd: bins.length > 0 && Number.isFinite(bins[bins.length - 1]?.end) ? bins[bins.length - 1].end : null
+      };
+    })
+  };
+}
+
 function validateDecodedIdentity(source, decoded, windows = []) {
   if (Math.abs(decoded.durationSeconds - source.expectedDurationSeconds) > source.durationToleranceSeconds) {
     fail('DECODED_DURATION_MISMATCH', { sourceId: source.id, expected: source.expectedDurationSeconds, tolerance: source.durationToleranceSeconds, actual: decoded.durationSeconds });
@@ -241,7 +267,7 @@ function validateDecodedIdentity(source, decoded, windows = []) {
   for (const requested of windows) {
     const observed = decoded.windows?.find((x) => x.id === requested.id);
     if (!observed || !(observed.binCount > 0) || !Array.isArray(observed.bins) || observed.bins.length !== observed.binCount) {
-      fail('WAVEFORM_WINDOW_EMPTY', { sourceId: source.id, windowId: requested.id });
+      fail('WAVEFORM_WINDOW_EMPTY', { sourceId: source.id, windowId: requested.id, decodedWindowInventory: decodedWindowInventory(decoded) });
     }
     const first = observed.bins[0], last = observed.bins[observed.bins.length - 1];
     if (first.start > requested.start + requested.binSeconds || last.end < requested.end - requested.binSeconds) {
@@ -326,6 +352,13 @@ function selfTest() {
   }
   const window = pcmWindowSummary([a, b], sr, 4, 6, 0.05);
   const nearest = [...window.candidates].sort((x, y) => Math.abs(x.time - 5) - Math.abs(y.time - 5))[0];
+  const diagnosticInventory = decodedWindowInventory({
+    durationSeconds: 10,
+    sampleRate: sr,
+    channels: 2,
+    frames: n,
+    windows: [{ id: 'SELF_TEST_WINDOW', start: 4, end: 6, binSeconds: 0.05, binCount: window.binCount, bins: window.bins, candidates: window.candidates }]
+  });
   const checks = [
     sha256(Buffer.from('abc')) === 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
     sha1(Buffer.from('abc')) === 'a9993e364706816aba3e25717850c26c9cd0d89d',
@@ -344,7 +377,18 @@ function selfTest() {
     selfTestRejects(() => normalizeCommonsAuthorityUrl(SOURCES.AQUARIUM.url.replace('07_Aquarium.ogg', '08_Aquarium.ogg'), SOURCES.AQUARIUM), 'COMMONS_AUTHORITY_URL_MISMATCH'),
     window.binCount === 40,
     window.candidates.length > 0,
-    nearest && Math.abs(nearest.time - 5) <= 0.15 && nearest.rms < 0.03
+    nearest && Math.abs(nearest.time - 5) <= 0.15 && nearest.rms < 0.03,
+    diagnosticInventory.durationSeconds === 10 &&
+      diagnosticInventory.sampleRate === sr &&
+      diagnosticInventory.channels === 2 &&
+      diagnosticInventory.frames === n &&
+      diagnosticInventory.windowCount === 1 &&
+      diagnosticInventory.windows[0]?.id === 'SELF_TEST_WINDOW' &&
+      diagnosticInventory.windows[0]?.binCount === window.binCount &&
+      diagnosticInventory.windows[0]?.binsLength === window.bins.length &&
+      diagnosticInventory.windows[0]?.candidatesLength === window.candidates.length &&
+      diagnosticInventory.windows[0]?.firstStart === 4 &&
+      diagnosticInventory.windows[0]?.lastEnd === 6
   ];
   return stable({
     schema: SELF_TEST_SCHEMA,
@@ -354,6 +398,7 @@ function selfTest() {
     failed: checks.filter((x) => !x).length,
     checks,
     syntheticValleyCandidate: nearest || null,
+    decodedWindowInventoryDiagnostic: diagnosticInventory,
     networkFetchPerformed: false,
     chromeInvoked: false,
     repositoryWritePerformed: false,

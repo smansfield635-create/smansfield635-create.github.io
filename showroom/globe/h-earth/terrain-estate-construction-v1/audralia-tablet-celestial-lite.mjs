@@ -51,14 +51,16 @@ function fibonacciStars(){
   for(let i=0;i<count;i++){
     const t=(i+0.5)/count;
     const radius=Math.sqrt(t)*0.985;
-    const angle=i*goldenAngle+(random()-0.5)*0.04;
+    const angle=i*goldenAngle+(random()-0.5)*0.065;
     let x=Math.cos(angle)*radius*1.18;
     let y=Math.sin(angle)*radius*0.84;
     const deliberateVoid=Math.abs(x)<0.14&&y>0.08&&y<0.42;
     if(deliberateVoid){x*=0.2;y*=0.2}
+    const magnitude=random();
+    const bright=magnitude>0.965?1.0:(magnitude>0.82?0.58:0.22);
     data[i*3]=x;
     data[i*3+1]=y;
-    data[i*3+2]=1.2+3.6*(1-t)*(0.72+random()*0.28);
+    data[i*3+2]=0.85+2.15*(1-t)+2.35*bright;
   }
   return data;
 }
@@ -134,15 +136,24 @@ function createState(gl){
       vec3 normal=normalize(vec3(p,z));
 
       if(u_kind==0){
-        float surface=noise(p*8.0)+0.45*noise(p*19.0);
-        float body=smoothstep(1.0,0.50,radius2);
-        float corona=smoothstep(1.22,0.94,radius2)*(1.0-smoothstep(0.94,0.78,radius2));
+        float granule=noise(p*13.0+vec2(1.3,-0.7));
+        float convection=noise(p*31.0+vec2(-4.2,2.1));
+        float filament=noise(vec2(atan(p.y,p.x)*7.0,length(p)*23.0));
+        float surface=0.52*granule+0.30*convection+0.18*filament;
+        float disk=smoothstep(1.0,0.965,radius2);
+        float limbDark=mix(0.72,1.0,pow(z,0.38));
+        float hotCore=smoothstep(0.88,0.08,radius2);
+        float coronaOuter=smoothstep(1.22,0.985,radius2)*(1.0-smoothstep(0.985,0.955,radius2));
+        float coronaInner=smoothstep(1.08,0.94,radius2)*(1.0-smoothstep(0.94,0.82,radius2));
         vec3 color=mix(
-          vec3(1.0,0.30,0.025),
-          vec3(1.0,0.93,0.44),
-          clamp(surface*0.72+z*0.46,0.0,1.0)
+          vec3(1.0,0.25,0.018),
+          vec3(1.0,0.94,0.50),
+          clamp(surface*0.74+hotCore*0.34,0.0,1.0)
         );
-        outColor=vec4(color,max(body,corona*0.52)*u_visibility);
+        color*=limbDark;
+        color+=vec3(1.0,0.63,0.16)*max(0.0,granule-convection)*0.24;
+        float alpha=max(disk,max(coronaInner*0.38,coronaOuter*0.20));
+        outColor=vec4(clamp(color,0.0,1.0),alpha*u_visibility);
         return;
       }
 

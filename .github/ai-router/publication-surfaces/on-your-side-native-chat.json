@@ -37,7 +37,7 @@
         "./runtime/model/Qwen2.5-0.5B-Instruct-q4f16_1-MLC/",
         "./runtime/webllm/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm",
         "if (!(\"gpu\" in navigator))",
-        "return await webllm.CreateMLCEngine(MODEL_ID",
+        "const localEngine = await webllm.CreateMLCEngine(MODEL_ID",
         "els.loadButton.addEventListener(\"click\", loadModel);",
         "engine.interruptGenerate();",
         "Public Talk has no repository execution authority.",

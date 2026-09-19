@@ -1,0 +1,29 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "errorCode": null,
+  "field": null,
+  "sourceDocument": null,
+  "operationId": "ON_YOUR_SIDE_AAI_NATIVE_CHAT_V1_WLLAMA_3_6_0_WASM_MATERIALIZATION_v1",
+  "projectId": "ON_YOUR_SIDE_AAI",
+  "requestDigest": "6a659a9f566fe5dee297121bdd8674c82f104a9a7407d24e316f213ebd13e2a5",
+  "procedureLocatorDigest": "3fdd7a604fc64e9c693ff96b8858c29236d20916aec18c6a5e72e271ec36b2e9",
+  "operationStarted": true,
+  "branchCreationAuthorized": true,
+  "repositoryWritesAuthorized": true,
+  "workflowExecutionAuthorized": true,
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_LOCK_v1",
+    "operationId": "ON_YOUR_SIDE_AAI_NATIVE_CHAT_V1_WLLAMA_3_6_0_WASM_MATERIALIZATION_v1",
+    "lockScope": "ON_YOUR_SIDE_AAI:NATIVE_CHAT_V1:STAGE_C:WLLAMA_3_6_0_MATERIALIZATION_WITH_EXECUTION_IDENTITIES:V1",
+    "scopeHash": "d25a7eabe0cb0336e6fc8d4a2cb56abe3aef53a2ebc04ebaa51c5bce69ab08b2",
+    "state": "ADMITTED_LOCKED",
+    "governingHead": "7324ac9b59f85a1079612a025d0d733f4f065550",
+    "requestDigest": "6a659a9f566fe5dee297121bdd8674c82f104a9a7407d24e316f213ebd13e2a5",
+    "procedureLocatorDigest": "3fdd7a604fc64e9c693ff96b8858c29236d20916aec18c6a5e72e271ec36b2e9",
+    "lockGeneration": 2394,
+    "released": false
+  }
+}

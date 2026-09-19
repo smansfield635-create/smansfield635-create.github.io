@@ -93,6 +93,7 @@ const diagnosticState = {
   failureChain: [],
   moduleImportAttempts: [],
   webgpuState: "UNKNOWN",
+  webgpuCacheBackend: "indexeddb",
   primaryFailure: null,
   fallbackFailure: null,
   wasmProbe: { status: "NOT_RUN", httpStatus: null, bytes: null },
@@ -152,6 +153,7 @@ function buildDiagnosticReport() {
     `Active module source: ${diagnosticState.activeModuleSource || "none"}`,
     `Failure chain: ${diagnosticState.failureChain.length ? diagnosticState.failureChain.map((item) => `${item.code}@${item.stage}`).join(" -> ") : "none"}`,
     `WebGPU: ${diagnosticState.webgpuState}`,
+    `WebGPU cache backend: ${diagnosticState.webgpuCacheBackend}`,
     `Primary: ${diagnosticState.versions.primary}`,
     `Fallback: ${diagnosticState.versions.fallback}`,
     `Fallback model revision: ${diagnosticState.versions.modelRevision}`,
@@ -446,7 +448,7 @@ async function loadWebLlmPrimary() {
   const webllm = await import(WEBLLM_MODULE);
   recordDiagnostic("WEBLLM_MODULE_IMPORT", { backend: "webllm", result: "PASS" });
   const appConfig = {
-    cacheBackend: "cache",
+    cacheBackend: "indexeddb",
     model_list: [{
       model: MODEL_URL,
       model_id: MODEL_ID,
@@ -458,7 +460,10 @@ async function loadWebLlmPrimary() {
     }]
   };
 
-  recordDiagnostic("WEBLLM_ENGINE_INIT", { backend: "webllm" });
+  recordDiagnostic("WEBLLM_ENGINE_INIT", {
+    backend: "webllm",
+    details: { cacheBackend: appConfig.cacheBackend }
+  });
   const localEngine = await webllm.CreateMLCEngine(MODEL_ID, {
     appConfig,
     initProgressCallback: (report) => {
@@ -469,7 +474,11 @@ async function loadWebLlmPrimary() {
     },
     logLevel: "WARN"
   });
-  recordDiagnostic("WEBLLM_ENGINE_INIT", { backend: "webllm", result: "PASS" });
+  recordDiagnostic("WEBLLM_ENGINE_INIT", {
+    backend: "webllm",
+    result: "PASS",
+    details: { cacheBackend: appConfig.cacheBackend }
+  });
   return localEngine;
 }
 

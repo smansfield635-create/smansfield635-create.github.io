@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "on-your-side-native-chat",
-  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, browser-local Talk surface, preserved WebLLM primary backend, pinned CPU/WASM fallback identity, same-origin primary model/WASM assets, user-initiated local model loading, and preserved public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
+  "description": "On Your Side AAI Native Chat v1 exact-head publication verification. Static checks bind the public parent route, content-addressed Native Chat runtime module identity, preserved WebLLM primary backend, pinned CPU/WASM fallback identity, same-origin primary model/WASM assets, user-initiated local model loading, and preserved public/private authority boundary. Runtime verification requires the Native Chat document to boot and remain navigable without model initialization; it does not judge model intelligence or private control-plane capability.",
   "checks": [
     {
       "path": "/products/on-your-side-ai/index.html",
@@ -21,7 +21,8 @@
         "id=\"load-model\"",
         "Local inference",
         "No repository credentials, private control plane, or execution authority.",
-        "<script type=\"module\" src=\"./index.js\"></script>"
+        "<script type=\"module\" src=\"./index.js?v=03687c92d5e9be2aa15f90e008b3113e1d86b226\"></script>",
+        "data-native-chat-runtime=\"03687c92d5e9be2aa15f90e008b3113e1d86b226\""
       ],
       "excludes": []
     },
@@ -40,7 +41,11 @@
         "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.1.1/src/wasm/wllama.wasm",
         "n_gpu_layers: 0",
         "engine = await loadCpuFallback(primaryFailureCode || \"WEBLLM_INITIALIZATION_FAILED\")",
-        "activeAbortController?.abort();"
+        "activeAbortController?.abort();",
+        "new URL(import.meta.url).searchParams.get(\"v\")",
+        "RUNTIME_RELEASE_ID !== DECLARED_RUNTIME_RELEASE_ID",
+        "NATIVE_CHAT_RUNTIME_RELEASE_ID_MISMATCH",
+        "dataset.nativeChatRuntimeActive = RUNTIME_RELEASE_ID"
       ],
       "excludes": []
     }

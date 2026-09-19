@@ -1,0 +1,24 @@
+name = "diamond-gate-native-chat-integrity-search"
+main = "worker.js"
+compatibility_date = "2026-09-19"
+workers_dev = false
+
+# Source-only release-audit repair. Route/DNS deployment remains a separate governed operation.
+# Configure BRAVE_SEARCH_API_KEY as a Worker secret; never place the credential here.
+# Namespace IDs are reserved for this Worker and must be revalidated for account-level uniqueness during deployment.
+
+[[ratelimits]]
+name = "SEARCH_CLIENT_LIMITER"
+namespace_id = "2416001"
+
+  [ratelimits.simple]
+  limit = 10
+  period = 60
+
+[[ratelimits]]
+name = "SEARCH_GLOBAL_LIMITER"
+namespace_id = "2416002"
+
+  [ratelimits.simple]
+  limit = 60
+  period = 60

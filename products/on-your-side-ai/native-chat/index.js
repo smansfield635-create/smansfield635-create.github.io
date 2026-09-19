@@ -1,3 +1,15 @@
+const RUNTIME_RELEASE_ID = new URL(import.meta.url).searchParams.get("v") || "";
+const DECLARED_RUNTIME_RELEASE_ID = document.documentElement.dataset.nativeChatRuntime || "";
+
+if (
+  !/^[0-9a-f]{40}$/.test(RUNTIME_RELEASE_ID) ||
+  RUNTIME_RELEASE_ID !== DECLARED_RUNTIME_RELEASE_ID
+) {
+  throw new Error("NATIVE_CHAT_RUNTIME_RELEASE_ID_MISMATCH");
+}
+
+document.documentElement.dataset.nativeChatRuntimeActive = RUNTIME_RELEASE_ID;
+
 const MODEL_ID = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
 const WEBLLM_MODULE = "https://esm.run/@mlc-ai/web-llm@0.2.85";
 const WLLAMA_MODULE = "https://esm.run/@wllama/wllama@3.1.1";

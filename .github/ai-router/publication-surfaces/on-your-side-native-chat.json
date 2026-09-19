@@ -26,15 +26,16 @@
         "id=\"copy-diagnostic\"",
         "<link rel=\"stylesheet\" href=\"./index.css?v=8ef75a894e30827179bef74150e6c714a2d6ee0f\" />",
         "<script type=\"module\" src=\"./runtime/answer-contract.v2.first-party-gate.js\"></script>",
-        "<script type=\"module\" src=\"./index.js?v=12a3f9f7e1ff9116a379f070fa7749dc178574de\"></script>",
-        "data-native-chat-runtime=\"12a3f9f7e1ff9116a379f070fa7749dc178574de\"",
+        "<script type=\"module\" src=\"./index.js?v=9f1162b5efeb30662243dcc2ef189eb6b0606d03\"></script>",
+        "data-native-chat-runtime=\"9f1162b5efeb30662243dcc2ef189eb6b0606d03\"",
         "wllama 3.6.0 can attempt a CPU/WASM fallback using the same Qwen2.5 0.5B model family.",
         "id=\"runtime-identity\"",
         "Native Chat V3 runtime identity",
         "answer-contract.v2.first-party-gate.js",
         "NATIVE_CHAT_V3_VISIBLE_RUNTIME_IDENTITY_AND_CONTRACT_GATE_v1",
         "data-native-chat-contract-ready=\"WAITING\"",
-        "CONTRACT LAYER FAILED"
+        "CONTRACT LAYER FAILED",
+        "answer-contract.v2.first-party-gate.js"
       ],
       "excludes": [
         "wllama 3.4.0 can attempt a CPU/WASM fallback"

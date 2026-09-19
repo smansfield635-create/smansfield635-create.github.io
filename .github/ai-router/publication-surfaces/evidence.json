@@ -9,7 +9,7 @@
         "Current Public Condition",
         "What can the estate say right now?",
         "data-current-public-condition",
-        "/evidence/current-public-condition.mjs?v=1&cb=prod6"
+        "/evidence/current-public-condition.mjs?v=1&cb=prod7"
       ],
       "excludes": [
         "Breakthrough 4",
@@ -19,10 +19,10 @@
       ]
     },
     {
-      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod6",
+      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod7",
       "includes": [
         "SITE_ENTITLEMENT_URL",
-        "site-entitlement.v1.mjs?cb=prod5",
+        "site-entitlement.v1.mjs?cb=prod6",
         "await import(SITE_ENTITLEMENT_URL)",
         "data-condition-state",
         "data-condition-objects",
@@ -35,13 +35,16 @@
       ]
     },
     {
-      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod5",
+      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod6",
       "includes": [
         "./entitlement-engine.v1.mjs?cb=prod1",
         "FETCH_DEADLINE_MS=10000",
         "ADAPTER_DEADLINE_MS=15000",
         "Promise.allSettled",
-        "LIVE_RUNTIME_PROBE_DECOUPLED_FROM_EVIDENCE_PAGE",
+        "DURABLE_AUDRALIA_LIVE_RUNTIME_RECEIPT",
+        "audralia-live-runtime-receipt.v1.json",
+        "directDenseCloudCoverage: false",
+        "gitBlobHex",
         "Scientific claim",
         "Audralia world/runtime",
         "Audralia diagnostic authority",
@@ -49,9 +52,23 @@
       ],
       "excludes": [
         "waitForAudraliaReady",
-        "data-audralia-loader",
+        "createElement('canvas')",
         "/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
       ]
+    },
+    {
+      "path": "/evidence/readiness/bt4-site-governance/audralia-live-runtime-receipt.v1.json",
+      "includes": [
+        "AUDRALIA_LIVE_RUNTIME_RECEIPT_v1",
+        "PASS_CLOSED",
+        "LIVE_EXACT_HEAD_VERIFIED",
+        "57324b162560eb42bd55320b5fa5cf89ad3ff54a",
+        "1954f112b0f3b78d2ca66c4bef341bc6f3c231b3",
+        "fd787eb387efb195747658518573cb91508f989c",
+        "ae5b2e9f786b42332b58872f7f0663e1937b5f04",
+        "9b768171e284785a7e5c7ee0142cb9368acf597d"
+      ],
+      "excludes": []
     },
     {
       "path": "/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs",

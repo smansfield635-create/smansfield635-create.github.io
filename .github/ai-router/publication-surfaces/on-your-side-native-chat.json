@@ -25,8 +25,8 @@
         "id=\"diagnostic-details\"",
         "id=\"copy-diagnostic\"",
         "<link rel=\"stylesheet\" href=\"./index.css?v=f499fb6a1fa3d4f05541bcb74447f68db265cb0c\" />",
-        "<script type=\"module\" src=\"./index.js?v=2b33aceb141e13b15c6922a15a1d6a70dc0fe120\"></script>",
-        "data-native-chat-runtime=\"2b33aceb141e13b15c6922a15a1d6a70dc0fe120\""
+        "<script type=\"module\" src=\"./index.js?v=9690435e825e0417711363208aba121a07aa561f\"></script>",
+        "data-native-chat-runtime=\"9690435e825e0417711363208aba121a07aa561f\""
       ],
       "excludes": []
     },
@@ -43,7 +43,7 @@
         "Public Talk has no repository execution authority.",
         "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/esm/index.js",
         "https://unpkg.com/@wllama/wllama@3.4.0/esm/index.js",
-        "https://cdn.jsdelivr.net/npm/@wllama/wllama@3.4.0/src/wasm/wllama.wasm",
+        "./runtime/wllama/3.4.0/wllama.wasm",
         "n_ctx: 2048",
         "n_threads: 1",
         "n_gpu_layers: 0",

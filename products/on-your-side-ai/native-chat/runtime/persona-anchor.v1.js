@@ -2,17 +2,23 @@ const DEFAULT_VOICE_URL = "/assets/hearth/jeeves/jeeves.voice.js";
 const EXPECTED_VOICE_BLOB = "ebfb51804946d0afbb3f2145029480f803bdd655";
 const EXPECTED_CONTRACT = "DIAMOND_GATE_BRIDGE_JEEVES_ELEVATOR_PITCH_ROUTING_VOICE_TNT_v2";
 
+function bindVoiceIdentity(voiceUrl, expectedVoiceBlob) {
+  const separator = voiceUrl.includes("?") ? "&" : "?";
+  return voiceUrl + separator + "v=" + expectedVoiceBlob;
+}
+
 export function createPersonaAnchor({
   voiceUrl = DEFAULT_VOICE_URL,
   expectedVoiceBlob = EXPECTED_VOICE_BLOB
 } = {}) {
   let voice = null;
   let loading = null;
+  const versionBoundVoiceUrl = bindVoiceIdentity(voiceUrl, expectedVoiceBlob);
 
   async function ensureReady() {
     if (voice) return voice;
     if (!loading) {
-      loading = import(voiceUrl).then(() => {
+      loading = import(versionBoundVoiceUrl).then(() => {
         const candidate = window.JEEVES_VOICE;
         if (!candidate || typeof candidate !== "object") throw new Error("JEEVES_VOICE_NOT_LOADED");
         if (candidate.contract !== EXPECTED_CONTRACT) throw new Error("JEEVES_VOICE_CONTRACT_MISMATCH");
@@ -29,6 +35,7 @@ export function createPersonaAnchor({
     id: "JEEVES",
     interfaceId: "DG_PERSONA_ANCHOR_v1",
     voiceUrl,
+    versionBoundVoiceUrl,
     expectedVoiceBlob,
     speakerLabel() {
       return "Jeeves · On Your Side";

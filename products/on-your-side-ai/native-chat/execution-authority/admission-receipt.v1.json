@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "9fbe6ad62752fb63d8bf34702974d840838f071d",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "9f7cbfbfda8fd891879353fc0c47af61d3e68362",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2376,
+    "lockScope": "ON_YOUR_SIDE_AAI:NATIVE_CHAT_V1:STAGE_C:MODEL_MATERIALIZATION_WITH_EXECUTION_IDENTITIES:V2",
+    "observedBranchHead": "4e6f4d0e4341dda168acf7e453ccb37a21c65695",
+    "observedLedgerBlobSha": "405a548169bce8f0dba32413893765c5bd04381a",
+    "operationId": "ON_YOUR_SIDE_AAI_NATIVE_CHAT_V1_MODEL_MATERIALIZATION_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "c3c00e8d63deca5dd9482920caad5060130146b4ef772006192878633101e4e5"
+  },
+  "operationId": "ON_YOUR_SIDE_AAI_NATIVE_CHAT_V1_MODEL_MATERIALIZATION_v1",
+  "operationStarted": true,
+  "procedureLocatorDigest": "c9777100f85af3b880c771b08f48d5731425604c94fb025338bed6183abb314e",
+  "projectId": "ON_YOUR_SIDE_AAI",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "a06d551e8a07dbf74cfe81daebc6db971495edf09c4f89708b7e8e89536c4a10",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

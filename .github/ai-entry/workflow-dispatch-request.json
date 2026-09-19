@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "audralia-camera-frame-release-20260919-001",
+  "requestId": "audralia-camera-frame-release-20260919-002",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "inputs": {
-    "target_sha": "1954f112b0f3b78d2ca66c4bef341bc6f3c231b3",
     "surface_id": "audralia"
   }
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-native-chat-runtime="12a3f9f7e1ff9116a379f070fa7749dc178574de">
+<html lang="en" data-native-chat-runtime="12a3f9f7e1ff9116a379f070fa7749dc178574de" data-native-chat-contract-ready="WAITING">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -55,6 +55,18 @@
           <progress id="load-progress" max="1" value="0">0%</progress>
           <p id="progress-text" role="status" aria-live="polite">Preparing local runtime…</p>
         </div>
+        <section class="diagnostic-panel" id="runtime-identity" data-contract-ready="WAITING" aria-labelledby="runtime-identity-title">
+          <p class="eyebrow">Runtime identity</p>
+          <h3 id="runtime-identity-title">Native Chat V3 runtime identity</h3>
+          <p>Gate: <strong id="runtime-identity-gate">WAITING</strong></p>
+          <p>Source base: <code id="runtime-identity-source-base">892780f0ec57</code></p>
+          <p>Overlay module: <code id="runtime-identity-overlay">answer-contract.v2.first-party-gate.js</code></p>
+          <p>Evidence answer contract: <strong id="runtime-identity-answer-contract">WAITING</strong></p>
+          <p>First-party site contract: <strong id="runtime-identity-first-party-contract">WAITING</strong></p>
+          <p>WebGPU shader classifier: <strong id="runtime-identity-webgpu-classifier">WAITING</strong></p>
+          <p>Send gate: <strong id="runtime-identity-send-gate">LOCKED</strong></p>
+          <p class="technical-note">Gate ID: <code id="runtime-identity-gate-id">NATIVE_CHAT_V3_VISIBLE_RUNTIME_IDENTITY_AND_CONTRACT_GATE_v1</code></p>
+        </section>
         <details class="diagnostic-panel" id="diagnostic-details">
           <summary>Diagnostic details</summary>
           <div class="diagnostic-intro">
@@ -101,7 +113,33 @@
     <span>On Your Side AAI</span>
   </footer>
 
+  <script>
+    (() => {
+      const REQUIRED_READY = "READY";
+      const root = document.documentElement;
+      root.dataset.nativeChatRequiredOverlayModule = "answer-contract.v2.first-party-gate.js";
+      root.dataset.nativeChatRequiredIdentityGate = "NATIVE_CHAT_V3_VISIBLE_RUNTIME_IDENTITY_AND_CONTRACT_GATE_v1";
+      function lockIfNotReady() {
+        if (root.dataset.nativeChatContractReady === REQUIRED_READY) return;
+        const send = document.querySelector("#send-message");
+        const prompt = document.querySelector("#prompt");
+        const note = document.querySelector("#composer-note");
+        const gate = document.querySelector("#runtime-identity-send-gate");
+        if (send) send.disabled = true;
+        if (prompt) prompt.disabled = true;
+        if (gate) gate.textContent = "LOCKED";
+        if (note && !/Load the local AI/i.test(note.textContent || "")) {
+          note.textContent = "Contract layer not ready. Do not send messages from this tab.";
+        }
+      }
+      const observer = new MutationObserver(lockIfNotReady);
+      observer.observe(document.body, { subtree: true, childList: true, attributes: true });
+      new MutationObserver(lockIfNotReady).observe(root, { attributes: true, attributeFilter: ["data-native-chat-contract-ready"] });
+      window.setInterval(lockIfNotReady, 250);
+      lockIfNotReady();
+    })();
+  </script>
+  <script type="module" src="./runtime/answer-contract.v2.first-party-gate.js"></script>
   <script type="module" src="./index.js?v=12a3f9f7e1ff9116a379f070fa7749dc178574de"></script>
-  <script type="module" src="./runtime/answer-contract.v1.js?v=21de38bea58777ce1a5c69c633c082be0e4821f1"></script>
 </body>
 </html>

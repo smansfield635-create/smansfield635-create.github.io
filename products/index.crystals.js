@@ -1338,7 +1338,7 @@
       throw new Error(`PRODUCTS_PRIMARY_COUNT_INVALID:${primaryCount}`);
     }
 
-    if (productCount !== 6) {
+    if (productCount !== PRODUCTS.length) {
       throw new Error(`PRODUCTS_PRODUCT_COUNT_INVALID:${productCount}`);
     }
 

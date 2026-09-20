@@ -70,11 +70,11 @@
     "feedback",
     "effort",
     "focus",
-    "organized",
+    "aware",
     "checklist",
     "draft",
     "final",
-    "focused",
+    "capable",
     "skill"
   ],
   "clusters": {
@@ -125,11 +125,11 @@
       "feedback",
       "effort",
       "focus",
-      "organized",
+      "aware",
       "checklist",
       "draft",
       "final",
-      "focused",
+      "capable",
       "skill"
     ]
   },
@@ -149,6 +149,16 @@
         "creative",
         "organized",
         "focused"
+      ]
+    },
+    "normalization_repair_final": {
+      "removed": [
+        "organized",
+        "focused"
+      ],
+      "replacements": [
+        "aware",
+        "capable"
       ]
     }
   },

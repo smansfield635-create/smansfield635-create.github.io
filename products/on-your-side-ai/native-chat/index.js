@@ -1011,6 +1011,14 @@ async function sendMessage(text) {
     }
 
     const personaSystemMessage = personaAnchor.composeSystemMessage(SYSTEM_MESSAGE);
+    const semanticPlan = personaAnchor.composeSemanticAnswerPlan(clean, messages.slice(1));
+    if (semanticPlan) {
+      recordDiagnostic("SEMANTIC_ANSWER_PLAN", {
+        backend: activeBackend || "none",
+        result: "PASS",
+        details: { subject: semanticPlan.subject, factCount: semanticPlan.facts.length }
+      });
+    }
     recordDiagnostic("CANON_QUERY_CLASSIFIED", {
       backend: activeBackend || "none",
       result: "PASS"
@@ -1034,6 +1042,7 @@ async function sendMessage(text) {
       : null;
     const requestMessages = [
       { role: "system", content: personaSystemMessage },
+      ...(semanticPlan ? [{ role: "system", content: "Resolved semantic answer plan: " + JSON.stringify(semanticPlan) }] : []),
       ...(canonicalContextMessage ? [canonicalContextMessage] : []),
       ...(evidenceMessage ? [evidenceMessage] : []),
       ...messages.slice(1).slice(-10)

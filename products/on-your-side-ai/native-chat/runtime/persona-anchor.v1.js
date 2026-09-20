@@ -104,6 +104,50 @@ export function createPersonaAnchor({
         text: "Canonical context: " + JSON.stringify(context)
       });
     },
+    composeSemanticAnswerPlan(userTurn, conversationState = []) {
+      if (!voice) throw new Error("JEEVES_PERSONA_NOT_READY");
+      const current = normalizeContextText(userTurn).toLowerCase();
+      const recentUsers = conversationState.filter(item => item?.role === "user").slice(-4).map(item => normalizeContextText(item.content).toLowerCase());
+      const prior = recentUsers.slice(0, -1).join(" ");
+      let subject = null;
+      if (/\bmirrorland\b/.test(current)) subject = "MIRRORLAND";
+      if (/\b(character|characters|team|people)\b/.test(current)) subject = "CHARACTERS";
+      if (/\bjeeves\b/.test(current)) subject = "JEEVES";
+      if (/\belara\b/.test(current)) subject = "ELARA";
+      if (!subject && /\b(other|them|they|those|their|her|him|she|he)\b/.test(current)) {
+        if (/\bmirrorland\b/.test(prior)) subject = "CHARACTERS";
+        else if (/\belara\b/.test(prior)) subject = "ELARA";
+        else if (/\bjeeves\b/.test(prior)) subject = "JEEVES";
+      }
+      if (!subject) return null;
+      const team = ["jeeves", "elara", "auren", "soren"].map(id => voice.getTeamMember?.(id)).filter(Boolean);
+      const byId = Object.fromEntries(team.map(member => [member.id, member]));
+      let facts = [];
+      let objective = "";
+      if (subject === "CHARACTERS") {
+        objective = "Answer about the canonical characters. Name the registered team members and distinguish their roles. Do not redefine Mirrorland.";
+        facts = team.map(member => member.name + " — " + member.role + ": " + member.ownership);
+      } else if (subject === "JEEVES") {
+        objective = "Answer about Jeeves himself in first person, using his canonical role and boundary.";
+        const member = byId.jeeves;
+        facts = [member && (member.name + " — " + member.role + ": " + member.ownership), voice.identity?.boundaryLaw].filter(Boolean);
+      } else if (subject === "ELARA") {
+        objective = "Answer from Jeeves's perspective about Elara using her canonical role and ownership. Do not invent biography or feelings.";
+        const member = byId.elara;
+        facts = [member && (member.name + " — " + member.role + ": " + member.ownership), voice.ownership?.handoffs?.elara].filter(Boolean);
+      } else if (subject === "MIRRORLAND") {
+        objective = "Give only Jeeves's authorized introductory framing of Mirrorland and hand depth to the proper canonical pathway. Do not invent world lore.";
+        const elara = voice.getPathway?.("elara");
+        const showroom = voice.getPathway?.("showroom");
+        facts = [elara?.description, elara?.voiceLine, showroom?.description, showroom?.voiceLine].filter(Boolean);
+      }
+      return Object.freeze({
+        subject,
+        objective,
+        facts: Object.freeze(facts),
+        expressionLaw: "Express this plan naturally as Jeeves in no more than 90 words. Use only supplied facts. Do not repeat the previous answer. Do not add categories, biography, lore, relationships, or claims not present in the plan."
+      });
+    },
     composeSystemMessage(baseSystemMessage) {
       if (!voice) throw new Error("JEEVES_PERSONA_NOT_READY");
       const identity = voice.identity;

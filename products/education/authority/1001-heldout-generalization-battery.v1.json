@@ -1,0 +1,5683 @@
+{
+  "object": "EDUCATION_1001_HELDOUT_GENERALIZATION_BATTERY",
+  "version": "v1",
+  "status": "FROZEN_PRE_SCORE",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_DECISIVE_HELDOUT_GENERALIZATION_20260920_001",
+  "canonical_base": "97e0602a2b6acec6fc2062ae6661daf829442277",
+  "protocol_authority": "/products/education/authority/1001-heldout-generalization-protocol.v1.json",
+  "design": {
+    "test_class": "PROSPECTIVE_INTERNAL_HELD_OUT",
+    "task_total": 384,
+    "domain_total": 24,
+    "tasks_per_domain": 16,
+    "battery_reused_from_optimized_256": false,
+    "scoring_result_present": false,
+    "vocabulary_tuning_allowed": false,
+    "task_generation_basis": "Broad ordinary real-world functional domains with predeclared lexical requirements and controlled-paraphrase paths.",
+    "scoring_law": "A if all direct requirements are available; otherwise B if any frozen paraphrase path is fully available and semantically acceptable; otherwise C.",
+    "productive_systems": [
+      "grammar",
+      "morphology",
+      "numeration"
+    ],
+    "lexical_leakage_allowed": false
+  },
+  "tasks": [
+    {
+      "id": "H001",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Introduce yourself to a stranger.",
+      "direct_requirements": [
+        "name",
+        "hello"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H002",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone where you live.",
+      "direct_requirements": [
+        "live",
+        "place"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H003",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain who a person is in your family.",
+      "direct_requirements": [
+        "family",
+        "person"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H004",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask another person's name politely.",
+      "direct_requirements": [
+        "ask",
+        "name",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H005",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say goodbye after a short conversation.",
+      "direct_requirements": [
+        "goodbye",
+        "conversation"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H006",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Introduce a friend to another person.",
+      "direct_requirements": [
+        "friend",
+        "name"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H007",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that information is personal.",
+      "direct_requirements": [
+        "personal",
+        "information"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H008",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask whether a guest may join the group.",
+      "direct_requirements": [
+        "guest",
+        "join",
+        "group"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H009",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Communicate that someone uses a nickname.",
+      "target_concept": "nickname",
+      "direct_requirements": [
+        "nickname"
+      ],
+      "paraphrase_paths": [
+        [
+          "other",
+          "name"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H010",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Identify someone as a relative without naming the exact family role.",
+      "target_concept": "relative",
+      "direct_requirements": [
+        "relative"
+      ],
+      "paraphrase_paths": [
+        [
+          "family",
+          "person"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H011",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Explain that another person shares your home as a roommate.",
+      "target_concept": "roommate",
+      "direct_requirements": [
+        "roommate"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "live",
+          "together"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H012",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Identify a coworker.",
+      "target_concept": "coworker",
+      "direct_requirements": [
+        "coworker"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "work",
+          "with"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H013",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Explain someone's citizenship.",
+      "target_concept": "citizenship",
+      "direct_requirements": [
+        "citizenship"
+      ],
+      "paraphrase_paths": [
+        [
+          "citizen",
+          "country"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H014",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Explain that a person is married.",
+      "target_concept": "married",
+      "direct_requirements": [
+        "married"
+      ],
+      "paraphrase_paths": [
+        [
+          "husband"
+        ],
+        [
+          "wife"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H015",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Explain that someone is single in relationship status.",
+      "target_concept": "single",
+      "direct_requirements": [
+        "single"
+      ],
+      "paraphrase_paths": [
+        [
+          "one",
+          "person"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H016",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "prompt": "Ask how a name or word is pronounced.",
+      "target_concept": "pronunciation",
+      "direct_requirements": [
+        "pronunciation"
+      ],
+      "paraphrase_paths": [
+        [
+          "how",
+          "say",
+          "word"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H017",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone for help politely.",
+      "direct_requirements": [
+        "ask",
+        "help",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H018",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to wait.",
+      "direct_requirements": [
+        "wait",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H019",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Request an explanation.",
+      "direct_requirements": [
+        "explain",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H020",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to show an example.",
+      "direct_requirements": [
+        "show",
+        "example"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H021",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to repeat a sentence.",
+      "direct_requirements": [
+        "repeat",
+        "sentence"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H022",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to speak more slowly.",
+      "direct_requirements": [
+        "speak",
+        "slow"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H023",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Request permission to use something.",
+      "direct_requirements": [
+        "permission",
+        "use"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H024",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to clarify an instruction.",
+      "direct_requirements": [
+        "clarify",
+        "instruction"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H025",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Ask someone to do you a favor.",
+      "target_concept": "favor",
+      "direct_requirements": [
+        "favor"
+      ],
+      "paraphrase_paths": [
+        [
+          "help",
+          "please"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H026",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Request assistance.",
+      "target_concept": "assist",
+      "direct_requirements": [
+        "assist"
+      ],
+      "paraphrase_paths": [
+        [
+          "help"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H027",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Identify the person borrowing something.",
+      "target_concept": "borrower",
+      "direct_requirements": [
+        "borrower"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "borrow"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H028",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Identify the person lending something.",
+      "target_concept": "lender",
+      "direct_requirements": [
+        "lender"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "lend"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H029",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Explain that a request is urgent.",
+      "target_concept": "urgent",
+      "direct_requirements": [
+        "urgent"
+      ],
+      "paraphrase_paths": [
+        [
+          "important",
+          "now"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H030",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Ask for help before a deadline.",
+      "target_concept": "deadline",
+      "direct_requirements": [
+        "deadline"
+      ],
+      "paraphrase_paths": [
+        [
+          "due",
+          "time"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H031",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Request a deadline extension.",
+      "target_concept": "extension",
+      "direct_requirements": [
+        "extension"
+      ],
+      "paraphrase_paths": [
+        [
+          "more",
+          "time"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H032",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "prompt": "Ask for a translation into another language.",
+      "target_concept": "translation",
+      "direct_requirements": [
+        "translation"
+      ],
+      "paraphrase_paths": [
+        [
+          "language",
+          "change"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H033",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Disagree politely.",
+      "direct_requirements": [
+        "disagree",
+        "polite"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H034",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain why you think something is wrong.",
+      "direct_requirements": [
+        "why",
+        "think",
+        "wrong"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H035",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Apologize for a mistake.",
+      "direct_requirements": [
+        "sorry",
+        "mistake"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H036",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask to repair a misunderstanding.",
+      "direct_requirements": [
+        "repair",
+        "understand"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H037",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Refuse a request politely.",
+      "direct_requirements": [
+        "refuse",
+        "polite"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H038",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a situation is unfair.",
+      "direct_requirements": [
+        "unfair",
+        "situation"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H039",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask another person to calm down.",
+      "direct_requirements": [
+        "calm",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H040",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "prompt": "Suggest a fair solution.",
+      "direct_requirements": [
+        "suggest",
+        "fair",
+        "solution"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H041",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "Describe a misunderstanding.",
+      "target_concept": "misunderstanding",
+      "direct_requirements": [
+        "misunderstanding"
+      ],
+      "paraphrase_paths": [
+        [
+          "not",
+          "understand",
+          "same"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H042",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "Suggest a compromise.",
+      "target_concept": "compromise",
+      "direct_requirements": [
+        "compromise"
+      ],
+      "paraphrase_paths": [
+        [
+          "settle",
+          "between"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H043",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "Describe an insult.",
+      "target_concept": "insult",
+      "direct_requirements": [
+        "insult"
+      ],
+      "paraphrase_paths": [
+        [
+          "hurtful",
+          "word"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H044",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "Ask someone not to interrupt.",
+      "target_concept": "interrupt",
+      "direct_requirements": [
+        "interrupt"
+      ],
+      "paraphrase_paths": [
+        [
+          "stop",
+          "person",
+          "speak"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H045",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "Describe blaming someone.",
+      "target_concept": "blame",
+      "direct_requirements": [
+        "blame"
+      ],
+      "paraphrase_paths": [
+        [
+          "say",
+          "cause",
+          "person"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H046",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "Ask for forgiveness.",
+      "target_concept": "forgive",
+      "direct_requirements": [
+        "forgive"
+      ],
+      "paraphrase_paths": [
+        [
+          "forgive"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H047",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "Describe an argument.",
+      "target_concept": "argument",
+      "direct_requirements": [
+        "argument"
+      ],
+      "paraphrase_paths": [
+        [
+          "argue"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H048",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "prompt": "State a personal boundary.",
+      "target_concept": "boundary",
+      "direct_requirements": [
+        "boundary"
+      ],
+      "paraphrase_paths": [
+        [
+          "limit",
+          "relationship"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H049",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Give a left turn direction.",
+      "direct_requirements": [
+        "left",
+        "turn"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H050",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone to go straight.",
+      "direct_requirements": [
+        "straight",
+        "go"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H051",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a place is across the street.",
+      "direct_requirements": [
+        "across",
+        "street"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H052",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask where the bus station is.",
+      "direct_requirements": [
+        "where",
+        "bus",
+        "station"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H053",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain how to reach an airport.",
+      "direct_requirements": [
+        "reach",
+        "airport",
+        "route"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H054",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone a place is behind another place.",
+      "direct_requirements": [
+        "behind",
+        "place"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H055",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask which direction is north.",
+      "direct_requirements": [
+        "which",
+        "direction",
+        "north"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H056",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a train is delayed.",
+      "direct_requirements": [
+        "train",
+        "delay"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H057",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Describe an intersection.",
+      "target_concept": "intersection",
+      "direct_requirements": [
+        "intersection"
+      ],
+      "paraphrase_paths": [
+        [
+          "street",
+          "cross"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H058",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Describe heavy traffic.",
+      "target_concept": "traffic",
+      "direct_requirements": [
+        "traffic"
+      ],
+      "paraphrase_paths": [
+        [
+          "many",
+          "car",
+          "road"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H059",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Ask for the subway.",
+      "target_concept": "subway",
+      "direct_requirements": [
+        "subway"
+      ],
+      "paraphrase_paths": [
+        [
+          "train",
+          "under",
+          "city"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H060",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Ask which platform a train leaves from.",
+      "target_concept": "platform",
+      "direct_requirements": [
+        "platform"
+      ],
+      "paraphrase_paths": [
+        [
+          "station",
+          "place",
+          "train"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H061",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Explain that a route uses a highway.",
+      "target_concept": "highway",
+      "direct_requirements": [
+        "highway"
+      ],
+      "paraphrase_paths": [
+        [
+          "big",
+          "road"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H062",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Ask where to park.",
+      "target_concept": "parking",
+      "direct_requirements": [
+        "parking"
+      ],
+      "paraphrase_paths": [
+        [
+          "place",
+          "car",
+          "stay"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H063",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Ask the fare for a ride.",
+      "target_concept": "fare",
+      "direct_requirements": [
+        "fare"
+      ],
+      "paraphrase_paths": [
+        [
+          "price",
+          "ride"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H064",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "prompt": "Explain that a passenger must transfer.",
+      "target_concept": "transfer",
+      "direct_requirements": [
+        "transfer"
+      ],
+      "paraphrase_paths": [
+        [
+          "transfer"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H065",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask the price of an item.",
+      "direct_requirements": [
+        "ask",
+        "price"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H066",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say an item is too expensive.",
+      "direct_requirements": [
+        "expensive",
+        "very"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H067",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Pay with a card.",
+      "direct_requirements": [
+        "pay",
+        "card"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H068",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for a receipt.",
+      "direct_requirements": [
+        "receipt",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H069",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Request a refund.",
+      "direct_requirements": [
+        "refund",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H070",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a product has a warranty.",
+      "direct_requirements": [
+        "warranty",
+        "product"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H071",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Compare two prices.",
+      "direct_requirements": [
+        "compare",
+        "price"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H072",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask whether you can afford something.",
+      "direct_requirements": [
+        "afford",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H073",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask whether there is a discount.",
+      "target_concept": "discount",
+      "direct_requirements": [
+        "discount"
+      ],
+      "paraphrase_paths": [
+        [
+          "price",
+          "less"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H074",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Use a coupon when buying something.",
+      "target_concept": "coupon",
+      "direct_requirements": [
+        "coupon"
+      ],
+      "paraphrase_paths": [
+        [
+          "paper",
+          "price",
+          "less"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H075",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask for change after paying cash.",
+      "target_concept": "change_money",
+      "direct_requirements": [
+        "change_money"
+      ],
+      "paraphrase_paths": [
+        [
+          "money",
+          "return"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H076",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask for cashback with a card purchase.",
+      "target_concept": "cashback",
+      "direct_requirements": [
+        "cashback"
+      ],
+      "paraphrase_paths": [
+        [
+          "cash",
+          "return",
+          "card"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H077",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask whether tax is included in the total price.",
+      "target_concept": "tax_total",
+      "direct_requirements": [
+        "tax_total"
+      ],
+      "paraphrase_paths": [
+        [
+          "tax",
+          "total"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H078",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask to exchange an item for another.",
+      "target_concept": "exchange_item",
+      "direct_requirements": [
+        "exchange_item"
+      ],
+      "paraphrase_paths": [
+        [
+          "return",
+          "item",
+          "other"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H079",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Explain that an item is sold out.",
+      "target_concept": "sold_out",
+      "direct_requirements": [
+        "sold_out"
+      ],
+      "paraphrase_paths": [
+        [
+          "none",
+          "available"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H080",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask where the checkout area is.",
+      "target_concept": "checkout",
+      "direct_requirements": [
+        "checkout"
+      ],
+      "paraphrase_paths": [
+        [
+          "pay",
+          "store"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H081",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for a menu.",
+      "direct_requirements": [
+        "menu",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H082",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Order dinner.",
+      "direct_requirements": [
+        "order",
+        "dinner"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H083",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that you are hungry.",
+      "direct_requirements": [
+        "hungry"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H084",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for water.",
+      "direct_requirements": [
+        "water",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H085",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe food as sweet.",
+      "direct_requirements": [
+        "food",
+        "sweet"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H086",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a restaurant is crowded.",
+      "direct_requirements": [
+        "restaurant",
+        "crowded"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H087",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for the bill.",
+      "direct_requirements": [
+        "bill",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H088",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Make a restaurant reservation.",
+      "direct_requirements": [
+        "restaurant",
+        "reservation"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H089",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Tell restaurant staff about a food allergy.",
+      "target_concept": "allergy",
+      "direct_requirements": [
+        "allergy"
+      ],
+      "paraphrase_paths": [
+        [
+          "allergy"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H090",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Ask whether a dangerous ingredient is in food.",
+      "target_concept": "ingredient",
+      "direct_requirements": [
+        "ingredient"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "in",
+          "food"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H091",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Explain that you are vegetarian.",
+      "target_concept": "vegetarian",
+      "direct_requirements": [
+        "vegetarian"
+      ],
+      "paraphrase_paths": [
+        [
+          "not",
+          "eat",
+          "meat"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H092",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Ask whether food is spicy.",
+      "target_concept": "spicy",
+      "direct_requirements": [
+        "spicy"
+      ],
+      "paraphrase_paths": [
+        [
+          "food",
+          "hot",
+          "taste"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H093",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Explain leaving a tip.",
+      "target_concept": "tip",
+      "direct_requirements": [
+        "tip"
+      ],
+      "paraphrase_paths": [
+        [
+          "extra",
+          "money",
+          "service"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H094",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Ask for a fork.",
+      "target_concept": "fork",
+      "direct_requirements": [
+        "fork"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "eat"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H095",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Ask for a table knife.",
+      "target_concept": "knife",
+      "direct_requirements": [
+        "knife"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "cut"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H096",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "prompt": "Ask to take restaurant food home.",
+      "target_concept": "takeout",
+      "direct_requirements": [
+        "takeout"
+      ],
+      "paraphrase_paths": [
+        [
+          "food",
+          "take",
+          "home"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H097",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a light does not work.",
+      "direct_requirements": [
+        "light",
+        "not",
+        "work"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H098",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to open a window.",
+      "direct_requirements": [
+        "open",
+        "window"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H099",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say the kitchen is clean.",
+      "direct_requirements": [
+        "kitchen",
+        "clean"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H100",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that something needs maintenance.",
+      "direct_requirements": [
+        "maintenance",
+        "need"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H101",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask where the bathroom is.",
+      "direct_requirements": [
+        "where",
+        "bathroom"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H102",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a bedroom.",
+      "direct_requirements": [
+        "bedroom",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H103",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to wash a plate.",
+      "direct_requirements": [
+        "wash",
+        "plate"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H104",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a key is missing.",
+      "direct_requirements": [
+        "key",
+        "miss"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H105",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Report that the electricity is off.",
+      "target_concept": "electricity",
+      "direct_requirements": [
+        "electricity"
+      ],
+      "paraphrase_paths": [
+        [
+          "electricity"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H106",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Ask where the soap is.",
+      "target_concept": "soap",
+      "direct_requirements": [
+        "soap"
+      ],
+      "paraphrase_paths": [
+        [
+          "soap"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H107",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Describe a refrigerator problem.",
+      "target_concept": "refrigerator",
+      "direct_requirements": [
+        "refrigerator"
+      ],
+      "paraphrase_paths": [
+        [
+          "machine",
+          "cold",
+          "food"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H108",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Describe an oven.",
+      "target_concept": "oven",
+      "direct_requirements": [
+        "oven"
+      ],
+      "paraphrase_paths": [
+        [
+          "machine",
+          "cook",
+          "food"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H109",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Report a sink problem.",
+      "target_concept": "sink",
+      "direct_requirements": [
+        "sink"
+      ],
+      "paraphrase_paths": [
+        [
+          "place",
+          "wash",
+          "water"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H110",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Ask where to put trash.",
+      "target_concept": "trash",
+      "direct_requirements": [
+        "trash"
+      ],
+      "paraphrase_paths": [
+        [
+          "dirty",
+          "thing",
+          "remove"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H111",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Talk about doing laundry.",
+      "target_concept": "laundry",
+      "direct_requirements": [
+        "laundry"
+      ],
+      "paraphrase_paths": [
+        [
+          "wash",
+          "clothes"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H112",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "prompt": "Ask for a vacuum cleaner.",
+      "target_concept": "vacuum",
+      "direct_requirements": [
+        "vacuum"
+      ],
+      "paraphrase_paths": [
+        [
+          "machine",
+          "clean",
+          "floor"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H113",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that you rent an apartment.",
+      "direct_requirements": [
+        "rent",
+        "apartment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H114",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask about a lease.",
+      "direct_requirements": [
+        "lease",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H115",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that you paid a deposit.",
+      "direct_requirements": [
+        "deposit",
+        "pay"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H116",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Report a maintenance problem.",
+      "direct_requirements": [
+        "maintenance",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H117",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe your neighborhood.",
+      "direct_requirements": [
+        "neighborhood",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H118",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask who owns the property.",
+      "direct_requirements": [
+        "who",
+        "own",
+        "property"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H119",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a housing obligation.",
+      "direct_requirements": [
+        "obligation",
+        "house"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H120",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for permission to change something in the apartment.",
+      "direct_requirements": [
+        "permission",
+        "change",
+        "apartment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H121",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Identify the landlord.",
+      "target_concept": "landlord",
+      "direct_requirements": [
+        "landlord"
+      ],
+      "paraphrase_paths": [
+        [
+          "owner",
+          "apartment"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H122",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Identify the tenant.",
+      "target_concept": "tenant",
+      "direct_requirements": [
+        "tenant"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "rent",
+          "apartment"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H123",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Describe a roommate.",
+      "target_concept": "roommate",
+      "direct_requirements": [
+        "roommate"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "live",
+          "together"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H124",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Explain that a tenant is being evicted.",
+      "target_concept": "eviction",
+      "direct_requirements": [
+        "eviction"
+      ],
+      "paraphrase_paths": [
+        [
+          "must",
+          "leave",
+          "home"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H125",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Discuss a mortgage.",
+      "target_concept": "mortgage",
+      "direct_requirements": [
+        "mortgage"
+      ],
+      "paraphrase_paths": [
+        [
+          "loan",
+          "house"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H126",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Ask whether utilities are included.",
+      "target_concept": "utilities",
+      "direct_requirements": [
+        "utilities"
+      ],
+      "paraphrase_paths": [
+        [
+          "utility"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H127",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Ask whether an apartment is furnished.",
+      "target_concept": "furnished",
+      "direct_requirements": [
+        "furnished"
+      ],
+      "paraphrase_paths": [
+        [
+          "room",
+          "have",
+          "table",
+          "chair",
+          "bed"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H128",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "prompt": "Make a repair request.",
+      "target_concept": "repair_request",
+      "direct_requirements": [
+        "repair_request"
+      ],
+      "paraphrase_paths": [
+        [
+          "ask",
+          "repair"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H129",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe your job.",
+      "direct_requirements": [
+        "job",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H130",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask a manager a question.",
+      "direct_requirements": [
+        "manager",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H131",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a work deadline.",
+      "direct_requirements": [
+        "work",
+        "deadline"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H132",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Report progress on a project.",
+      "direct_requirements": [
+        "progress",
+        "project"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H133",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for feedback.",
+      "direct_requirements": [
+        "feedback",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H134",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain your salary.",
+      "direct_requirements": [
+        "salary",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H135",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Apply for a job.",
+      "direct_requirements": [
+        "apply",
+        "job"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H136",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Prepare for an interview.",
+      "direct_requirements": [
+        "prepare",
+        "interview"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H137",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Explain what a resume is.",
+      "target_concept": "resume",
+      "direct_requirements": [
+        "resume"
+      ],
+      "paraphrase_paths": [
+        [
+          "document",
+          "work",
+          "experience"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H138",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask about your work shift.",
+      "target_concept": "shift",
+      "direct_requirements": [
+        "shift"
+      ],
+      "paraphrase_paths": [
+        [
+          "work",
+          "period"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H139",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask about overtime.",
+      "target_concept": "overtime",
+      "direct_requirements": [
+        "overtime"
+      ],
+      "paraphrase_paths": [
+        [
+          "work",
+          "extra",
+          "time"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H140",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Discuss a promotion.",
+      "target_concept": "promotion",
+      "direct_requirements": [
+        "promotion"
+      ],
+      "paraphrase_paths": [
+        [
+          "job",
+          "higher",
+          "role"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H141",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Explain that you plan to resign.",
+      "target_concept": "resign",
+      "direct_requirements": [
+        "resign"
+      ],
+      "paraphrase_paths": [
+        [
+          "quit",
+          "job"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H142",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Identify a supervisor.",
+      "target_concept": "supervisor",
+      "direct_requirements": [
+        "supervisor"
+      ],
+      "paraphrase_paths": [
+        [
+          "manager"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H143",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask about employee benefits.",
+      "target_concept": "benefits",
+      "direct_requirements": [
+        "benefits"
+      ],
+      "paraphrase_paths": [
+        [
+          "job",
+          "benefit"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H144",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "prompt": "Ask about a paycheck.",
+      "target_concept": "paycheck",
+      "direct_requirements": [
+        "paycheck"
+      ],
+      "paraphrase_paths": [
+        [
+          "salary",
+          "payment"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H145",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask a teacher a question.",
+      "direct_requirements": [
+        "teacher",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H146",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain your homework.",
+      "direct_requirements": [
+        "homework",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H147",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Prepare for a test.",
+      "direct_requirements": [
+        "prepare",
+        "test"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H148",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a school project.",
+      "direct_requirements": [
+        "school",
+        "project"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H149",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask about your grade.",
+      "direct_requirements": [
+        "grade",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H150",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Practice a language.",
+      "direct_requirements": [
+        "practice",
+        "language"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H151",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Read a book for class.",
+      "direct_requirements": [
+        "read",
+        "book",
+        "class"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H152",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Submit an assignment.",
+      "direct_requirements": [
+        "submit",
+        "assignment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H153",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Ask about a quiz.",
+      "target_concept": "quiz",
+      "direct_requirements": [
+        "quiz"
+      ],
+      "paraphrase_paths": [
+        [
+          "short",
+          "test"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H154",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Ask for a textbook.",
+      "target_concept": "textbook",
+      "direct_requirements": [
+        "textbook"
+      ],
+      "paraphrase_paths": [
+        [
+          "book",
+          "class"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H155",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Ask about tuition.",
+      "target_concept": "tuition",
+      "direct_requirements": [
+        "tuition"
+      ],
+      "paraphrase_paths": [
+        [
+          "money",
+          "school"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H156",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Ask about a scholarship.",
+      "target_concept": "scholarship",
+      "direct_requirements": [
+        "scholarship"
+      ],
+      "paraphrase_paths": [
+        [
+          "money",
+          "school",
+          "help"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H157",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Ask for directions on a campus.",
+      "target_concept": "campus",
+      "direct_requirements": [
+        "campus"
+      ],
+      "paraphrase_paths": [
+        [
+          "school",
+          "place"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H158",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Discuss a semester.",
+      "target_concept": "semester",
+      "direct_requirements": [
+        "semester"
+      ],
+      "paraphrase_paths": [
+        [
+          "school",
+          "period"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H159",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Ask about a certificate.",
+      "target_concept": "certificate",
+      "direct_requirements": [
+        "certificate"
+      ],
+      "paraphrase_paths": [
+        [
+          "document",
+          "complete",
+          "study"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H160",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "prompt": "Ask for a tutor.",
+      "target_concept": "tutor",
+      "direct_requirements": [
+        "tutor"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "help",
+          "study"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H161",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say what you will do tomorrow.",
+      "direct_requirements": [
+        "will",
+        "tomorrow"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H162",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain what happened yesterday using ago.",
+      "direct_requirements": [
+        "happen",
+        "day",
+        "ago"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H163",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Schedule an appointment.",
+      "direct_requirements": [
+        "schedule",
+        "appointment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H164",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask what time something starts.",
+      "direct_requirements": [
+        "what",
+        "time",
+        "start"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H165",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that you will arrive late.",
+      "direct_requirements": [
+        "arrive",
+        "late"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H166",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone to come early.",
+      "direct_requirements": [
+        "come",
+        "early"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H167",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a weekly routine.",
+      "direct_requirements": [
+        "weekly",
+        "routine"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H168",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a future plan.",
+      "direct_requirements": [
+        "future",
+        "plan"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H169",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Refer specifically to yesterday.",
+      "target_concept": "yesterday",
+      "direct_requirements": [
+        "yesterday"
+      ],
+      "paraphrase_paths": [
+        [
+          "day",
+          "ago"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H170",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Set a meeting for noon.",
+      "target_concept": "noon",
+      "direct_requirements": [
+        "noon"
+      ],
+      "paraphrase_paths": [
+        [
+          "middle",
+          "day"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H171",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Describe something happening at midnight.",
+      "target_concept": "midnight",
+      "direct_requirements": [
+        "midnight"
+      ],
+      "paraphrase_paths": [
+        [
+          "middle",
+          "night"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H172",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Express a quarter hour using numeration.",
+      "target_concept": "quarter_hour",
+      "direct_requirements": [
+        "quarter_hour"
+      ],
+      "paraphrase_paths": [
+        [
+          "15",
+          "minute"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H173",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Ask about duration.",
+      "target_concept": "duration",
+      "direct_requirements": [
+        "duration"
+      ],
+      "paraphrase_paths": [
+        [
+          "period",
+          "time"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H174",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Postpone an appointment.",
+      "target_concept": "postpone",
+      "direct_requirements": [
+        "postpone"
+      ],
+      "paraphrase_paths": [
+        [
+          "delay",
+          "later"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H175",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Reschedule a meeting.",
+      "target_concept": "reschedule",
+      "direct_requirements": [
+        "reschedule"
+      ],
+      "paraphrase_paths": [
+        [
+          "change",
+          "schedule"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H176",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "prompt": "Describe an anniversary.",
+      "target_concept": "anniversary",
+      "direct_requirements": [
+        "anniversary"
+      ],
+      "paraphrase_paths": [
+        [
+          "yearly",
+          "date"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H177",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask about a flight.",
+      "direct_requirements": [
+        "flight",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H178",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Show a passport.",
+      "direct_requirements": [
+        "passport",
+        "show"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H179",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask where the hotel is.",
+      "direct_requirements": [
+        "where",
+        "hotel"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H180",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that luggage is missing.",
+      "direct_requirements": [
+        "luggage",
+        "miss"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H181",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Buy a plane ticket.",
+      "direct_requirements": [
+        "buy",
+        "plane",
+        "ticket"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H182",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Make a hotel reservation.",
+      "direct_requirements": [
+        "hotel",
+        "reservation"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H183",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask when a train arrives.",
+      "direct_requirements": [
+        "when",
+        "train",
+        "arrive"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H184",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a trip.",
+      "direct_requirements": [
+        "trip",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H185",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Ask for a boarding pass.",
+      "target_concept": "boarding_pass",
+      "direct_requirements": [
+        "boarding_pass"
+      ],
+      "paraphrase_paths": [
+        [
+          "ticket",
+          "plane"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H186",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Ask for the departure gate.",
+      "target_concept": "gate_airport",
+      "direct_requirements": [
+        "gate_airport"
+      ],
+      "paraphrase_paths": [
+        [
+          "airport",
+          "place",
+          "plane"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H187",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Ask where customs is.",
+      "target_concept": "customs",
+      "direct_requirements": [
+        "customs"
+      ],
+      "paraphrase_paths": [
+        [
+          "airport",
+          "government",
+          "check"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H188",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Explain a travel visa.",
+      "target_concept": "visa",
+      "direct_requirements": [
+        "visa"
+      ],
+      "paraphrase_paths": [
+        [
+          "permission",
+          "country",
+          "travel"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H189",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Describe an itinerary.",
+      "target_concept": "itinerary",
+      "direct_requirements": [
+        "itinerary"
+      ],
+      "paraphrase_paths": [
+        [
+          "travel",
+          "plan"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H190",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Check in at a hotel.",
+      "target_concept": "check_in",
+      "direct_requirements": [
+        "check_in"
+      ],
+      "paraphrase_paths": [
+        [
+          "hotel",
+          "arrive",
+          "register"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H191",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Check out of a hotel.",
+      "target_concept": "checkout_hotel",
+      "direct_requirements": [
+        "checkout_hotel"
+      ],
+      "paraphrase_paths": [
+        [
+          "hotel",
+          "leave",
+          "pay"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H192",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "prompt": "Report lost luggage.",
+      "target_concept": "lost_luggage",
+      "direct_requirements": [
+        "lost_luggage"
+      ],
+      "paraphrase_paths": [
+        [
+          "luggage",
+          "cannot",
+          "find"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H193",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Send an email.",
+      "direct_requirements": [
+        "send",
+        "email"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H194",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Reply to a message.",
+      "direct_requirements": [
+        "reply",
+        "message"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H195",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a password problem.",
+      "direct_requirements": [
+        "password",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H196",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for internet access.",
+      "direct_requirements": [
+        "internet",
+        "access"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H197",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Upload a file.",
+      "direct_requirements": [
+        "upload",
+        "file"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H198",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Download a document.",
+      "direct_requirements": [
+        "download",
+        "document"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H199",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a privacy concern.",
+      "direct_requirements": [
+        "privacy",
+        "concern"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H200",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a website.",
+      "direct_requirements": [
+        "website",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H201",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Ask for the Wi-Fi connection.",
+      "target_concept": "Wi-Fi",
+      "direct_requirements": [
+        "Wi-Fi"
+      ],
+      "paraphrase_paths": [
+        [
+          "internet",
+          "connect"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H202",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Ask someone to open an app.",
+      "target_concept": "app",
+      "direct_requirements": [
+        "app"
+      ],
+      "paraphrase_paths": [
+        [
+          "phone",
+          "program"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H203",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Ask for a username.",
+      "target_concept": "username",
+      "direct_requirements": [
+        "username"
+      ],
+      "paraphrase_paths": [
+        [
+          "name",
+          "account"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H204",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Describe a web browser.",
+      "target_concept": "browser",
+      "direct_requirements": [
+        "browser"
+      ],
+      "paraphrase_paths": [
+        [
+          "program",
+          "website"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H205",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Describe a notification.",
+      "target_concept": "notification",
+      "direct_requirements": [
+        "notification"
+      ],
+      "paraphrase_paths": [
+        [
+          "phone",
+          "message"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H206",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Ask someone to send a screenshot.",
+      "target_concept": "screenshot",
+      "direct_requirements": [
+        "screenshot"
+      ],
+      "paraphrase_paths": [
+        [
+          "screen",
+          "photo"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H207",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Explain an email attachment.",
+      "target_concept": "attachment",
+      "direct_requirements": [
+        "attachment"
+      ],
+      "paraphrase_paths": [
+        [
+          "file",
+          "email"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H208",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "prompt": "Ask whether software needs an update.",
+      "target_concept": "update_software",
+      "direct_requirements": [
+        "update_software"
+      ],
+      "paraphrase_paths": [
+        [
+          "change",
+          "program",
+          "new"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H209",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell a doctor where you feel pain.",
+      "direct_requirements": [
+        "doctor",
+        "pain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H210",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that you have a fever.",
+      "direct_requirements": [
+        "fever",
+        "have"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H211",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a cough.",
+      "direct_requirements": [
+        "cough",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H212",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for medicine.",
+      "direct_requirements": [
+        "medicine",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H213",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain an injury.",
+      "direct_requirements": [
+        "injury",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H214",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask where the clinic is.",
+      "direct_requirements": [
+        "where",
+        "clinic"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H215",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a symptom.",
+      "direct_requirements": [
+        "symptom",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H216",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask a nurse for help.",
+      "direct_requirements": [
+        "nurse",
+        "help"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H217",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Tell a clinician about a medication allergy.",
+      "target_concept": "allergy",
+      "direct_requirements": [
+        "allergy"
+      ],
+      "paraphrase_paths": [
+        [
+          "allergy"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H218",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Report visible blood after an injury.",
+      "target_concept": "blood",
+      "direct_requirements": [
+        "blood"
+      ],
+      "paraphrase_paths": [
+        [
+          "blood"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H219",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Identify stomach pain precisely.",
+      "target_concept": "stomach",
+      "direct_requirements": [
+        "stomach"
+      ],
+      "paraphrase_paths": [
+        [
+          "stomach"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H220",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Identify tooth pain.",
+      "target_concept": "tooth",
+      "direct_requirements": [
+        "tooth"
+      ],
+      "paraphrase_paths": [
+        [
+          "tooth"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H221",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Describe a headache.",
+      "target_concept": "headache",
+      "direct_requirements": [
+        "headache"
+      ],
+      "paraphrase_paths": [
+        [
+          "head",
+          "pain"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H222",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Report dizziness.",
+      "target_concept": "dizzy",
+      "direct_requirements": [
+        "dizzy"
+      ],
+      "paraphrase_paths": [
+        [
+          "feel",
+          "not",
+          "steady"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H223",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Report nausea.",
+      "target_concept": "nausea",
+      "direct_requirements": [
+        "nausea"
+      ],
+      "paraphrase_paths": [
+        [
+          "feel",
+          "sick",
+          "stomach"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H224",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "prompt": "Ask about a prescription.",
+      "target_concept": "prescription",
+      "direct_requirements": [
+        "prescription"
+      ],
+      "paraphrase_paths": [
+        [
+          "doctor",
+          "document",
+          "medicine"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H225",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Call an ambulance.",
+      "direct_requirements": [
+        "call",
+        "ambulance"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H226",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Warn someone about danger.",
+      "direct_requirements": [
+        "danger",
+        "careful"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H227",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone to stop because something is unsafe.",
+      "direct_requirements": [
+        "stop",
+        "unsafe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H228",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for police help.",
+      "direct_requirements": [
+        "police",
+        "help"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H229",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe an emergency.",
+      "direct_requirements": [
+        "emergency",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H230",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that a person is hurt.",
+      "direct_requirements": [
+        "person",
+        "hurt"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H231",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask where the hospital is.",
+      "direct_requirements": [
+        "where",
+        "hospital"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H232",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone to leave a dangerous place.",
+      "direct_requirements": [
+        "leave",
+        "danger",
+        "place"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H233",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Report a fire alarm.",
+      "target_concept": "fire_alarm",
+      "direct_requirements": [
+        "fire_alarm"
+      ],
+      "paraphrase_paths": [
+        [
+          "fire",
+          "warning"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H234",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Report possible poisoning.",
+      "target_concept": "poison",
+      "direct_requirements": [
+        "poison"
+      ],
+      "paraphrase_paths": [
+        [
+          "danger",
+          "thing",
+          "eat"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H235",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Report that a person is unconscious.",
+      "target_concept": "unconscious",
+      "direct_requirements": [
+        "unconscious"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "not",
+          "wake"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H236",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Report active bleeding.",
+      "target_concept": "bleeding",
+      "direct_requirements": [
+        "bleeding"
+      ],
+      "paraphrase_paths": [
+        [
+          "blood",
+          "injury"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H237",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Report choking.",
+      "target_concept": "choking",
+      "direct_requirements": [
+        "choking"
+      ],
+      "paraphrase_paths": [
+        [
+          "cannot",
+          "air"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H238",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Report a burn injury.",
+      "target_concept": "burn",
+      "direct_requirements": [
+        "burn"
+      ],
+      "paraphrase_paths": [
+        [
+          "fire",
+          "hurt",
+          "skin"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H239",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Report a possible fracture.",
+      "target_concept": "fracture",
+      "direct_requirements": [
+        "fracture"
+      ],
+      "paraphrase_paths": [
+        [
+          "bone",
+          "break"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H240",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Direct someone to an emergency exit.",
+      "target_concept": "emergency_exit",
+      "direct_requirements": [
+        "emergency_exit"
+      ],
+      "paraphrase_paths": [
+        [
+          "emergency",
+          "door",
+          "leave"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H241",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for your account balance.",
+      "direct_requirements": [
+        "account",
+        "balance"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H242",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Deposit money.",
+      "direct_requirements": [
+        "deposit",
+        "money"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H243",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Withdraw cash.",
+      "direct_requirements": [
+        "withdraw",
+        "cash"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H244",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Transfer money.",
+      "direct_requirements": [
+        "transfer",
+        "money"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H245",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask about a bank fee.",
+      "direct_requirements": [
+        "bank",
+        "fee"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H246",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a loan.",
+      "direct_requirements": [
+        "loan",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H247",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe an expense.",
+      "direct_requirements": [
+        "expense",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H248",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask about a tax.",
+      "direct_requirements": [
+        "tax",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H249",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Ask about loan interest.",
+      "target_concept": "interest_money",
+      "direct_requirements": [
+        "interest_money"
+      ],
+      "paraphrase_paths": [
+        [
+          "money",
+          "increase",
+          "loan"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H250",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Explain debt.",
+      "target_concept": "debt",
+      "direct_requirements": [
+        "debt"
+      ],
+      "paraphrase_paths": [
+        [
+          "money",
+          "owe"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H251",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Ask about a credit score.",
+      "target_concept": "credit_score",
+      "direct_requirements": [
+        "credit_score"
+      ],
+      "paraphrase_paths": [
+        [
+          "credit",
+          "score"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H252",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Report suspected financial fraud.",
+      "target_concept": "fraud",
+      "direct_requirements": [
+        "fraud"
+      ],
+      "paraphrase_paths": [
+        [
+          "money",
+          "crime"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H253",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Explain an overdraft.",
+      "target_concept": "overdraft",
+      "direct_requirements": [
+        "overdraft"
+      ],
+      "paraphrase_paths": [
+        [
+          "account",
+          "less",
+          "than",
+          "zero"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H254",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Ask about an invoice.",
+      "target_concept": "invoice",
+      "direct_requirements": [
+        "invoice"
+      ],
+      "paraphrase_paths": [
+        [
+          "bill",
+          "document"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H255",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Explain a budget limit.",
+      "target_concept": "budget_limit",
+      "direct_requirements": [
+        "budget_limit"
+      ],
+      "paraphrase_paths": [
+        [
+          "budget",
+          "limit"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H256",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "prompt": "Explain installment payments.",
+      "target_concept": "installment",
+      "direct_requirements": [
+        "installment"
+      ],
+      "paraphrase_paths": [
+        [
+          "payment",
+          "part",
+          "period"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H257",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a rule.",
+      "direct_requirements": [
+        "rule",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H258",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that something is required.",
+      "direct_requirements": [
+        "require"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H259",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for permission.",
+      "direct_requirements": [
+        "permission",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H260",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a responsibility.",
+      "direct_requirements": [
+        "responsibility",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H261",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe an obligation.",
+      "direct_requirements": [
+        "obligation",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H262",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a law.",
+      "direct_requirements": [
+        "law",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H263",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask who manages an office.",
+      "direct_requirements": [
+        "who",
+        "manage",
+        "office"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H264",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a public service.",
+      "direct_requirements": [
+        "public",
+        "service"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H265",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain a policy.",
+      "target_concept": "policy",
+      "direct_requirements": [
+        "policy"
+      ],
+      "paraphrase_paths": [
+        [
+          "rule",
+          "organization"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H266",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain a procedure.",
+      "target_concept": "procedure",
+      "direct_requirements": [
+        "procedure"
+      ],
+      "paraphrase_paths": [
+        [
+          "process",
+          "step"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H267",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain a regulation.",
+      "target_concept": "regulation",
+      "direct_requirements": [
+        "regulation"
+      ],
+      "paraphrase_paths": [
+        [
+          "government",
+          "rule"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H268",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain a penalty.",
+      "target_concept": "penalty",
+      "direct_requirements": [
+        "penalty"
+      ],
+      "paraphrase_paths": [
+        [
+          "result",
+          "break",
+          "rule"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H269",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain a deadline requirement.",
+      "target_concept": "deadline_rule",
+      "direct_requirements": [
+        "deadline_rule"
+      ],
+      "paraphrase_paths": [
+        [
+          "must",
+          "complete",
+          "before",
+          "time"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H270",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain eligibility.",
+      "target_concept": "eligibility",
+      "direct_requirements": [
+        "eligibility"
+      ],
+      "paraphrase_paths": [
+        [
+          "allow",
+          "if",
+          "condition"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H271",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain someone's authority.",
+      "target_concept": "authority",
+      "direct_requirements": [
+        "authority"
+      ],
+      "paraphrase_paths": [
+        [
+          "role",
+          "allow",
+          "decide"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H272",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "prompt": "Explain an appeal.",
+      "target_concept": "appeal",
+      "direct_requirements": [
+        "appeal"
+      ],
+      "paraphrase_paths": [
+        [
+          "ask",
+          "decision",
+          "review"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H273",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a cause and effect.",
+      "direct_requirements": [
+        "cause",
+        "effect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H274",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Give a reason for a decision.",
+      "direct_requirements": [
+        "reason",
+        "decision"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H275",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a consequence.",
+      "direct_requirements": [
+        "consequence",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H276",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Compare evidence for two claims.",
+      "direct_requirements": [
+        "compare",
+        "evidence",
+        "claim"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H277",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that a result depends on a condition.",
+      "direct_requirements": [
+        "result",
+        "depend",
+        "condition"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H278",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that something is likely.",
+      "direct_requirements": [
+        "likely"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H279",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain why an outcome changed.",
+      "direct_requirements": [
+        "why",
+        "outcome",
+        "change"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H280",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a tradeoff.",
+      "direct_requirements": [
+        "tradeoff",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H281",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "Describe correlation without claiming causation.",
+      "target_concept": "correlation",
+      "direct_requirements": [
+        "correlation"
+      ],
+      "paraphrase_paths": [
+        [
+          "two",
+          "thing",
+          "change",
+          "together"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H282",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "State an assumption.",
+      "target_concept": "assumption",
+      "direct_requirements": [
+        "assumption"
+      ],
+      "paraphrase_paths": [
+        [
+          "assume"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H283",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "Explain an exception.",
+      "target_concept": "exception",
+      "direct_requirements": [
+        "exception"
+      ],
+      "paraphrase_paths": [
+        [
+          "rule",
+          "not",
+          "apply"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H284",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "Describe a pattern.",
+      "target_concept": "pattern",
+      "direct_requirements": [
+        "pattern"
+      ],
+      "paraphrase_paths": [
+        [
+          "same",
+          "way",
+          "repeat"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H285",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "Explain that evidence is insufficient.",
+      "target_concept": "evidence_limit",
+      "direct_requirements": [
+        "evidence_limit"
+      ],
+      "paraphrase_paths": [
+        [
+          "evidence",
+          "not",
+          "enough"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H286",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "Describe uncertainty.",
+      "target_concept": "uncertainty",
+      "direct_requirements": [
+        "uncertainty"
+      ],
+      "paraphrase_paths": [
+        [
+          "uncertain"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H287",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "Discuss probability.",
+      "target_concept": "probability",
+      "direct_requirements": [
+        "probability"
+      ],
+      "paraphrase_paths": [
+        [
+          "chance",
+          "likely"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H288",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "prompt": "Present an alternative.",
+      "target_concept": "alternative",
+      "direct_requirements": [
+        "alternative"
+      ],
+      "paraphrase_paths": [
+        [
+          "other",
+          "choice"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H289",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "State an opinion.",
+      "direct_requirements": [
+        "opinion"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H290",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that you are uncertain.",
+      "direct_requirements": [
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H291",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that you doubt a claim.",
+      "direct_requirements": [
+        "doubt",
+        "claim"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H292",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say what you believe.",
+      "direct_requirements": [
+        "believe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H293",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask whether something is true.",
+      "direct_requirements": [
+        "whether",
+        "true"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H294",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that something may be possible.",
+      "direct_requirements": [
+        "may",
+        "possible"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H295",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that something seems unlikely.",
+      "direct_requirements": [
+        "seem",
+        "unlikely"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H296",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask someone for their view.",
+      "direct_requirements": [
+        "ask",
+        "view"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H297",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Make a guess.",
+      "target_concept": "guess",
+      "direct_requirements": [
+        "guess"
+      ],
+      "paraphrase_paths": [
+        [
+          "think",
+          "maybe"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H298",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Describe confidence in an answer.",
+      "target_concept": "confidence",
+      "direct_requirements": [
+        "confidence"
+      ],
+      "paraphrase_paths": [
+        [
+          "sure"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H299",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Describe a rumor.",
+      "target_concept": "rumor",
+      "direct_requirements": [
+        "rumor"
+      ],
+      "paraphrase_paths": [
+        [
+          "claim",
+          "not",
+          "prove"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H300",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Describe speculation.",
+      "target_concept": "speculation",
+      "direct_requirements": [
+        "speculation"
+      ],
+      "paraphrase_paths": [
+        [
+          "imagine",
+          "uncertain"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H301",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Describe possible bias.",
+      "target_concept": "bias",
+      "direct_requirements": [
+        "bias"
+      ],
+      "paraphrase_paths": [
+        [
+          "view",
+          "unfair"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H302",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Distinguish an objective statement.",
+      "target_concept": "objective",
+      "direct_requirements": [
+        "objective"
+      ],
+      "paraphrase_paths": [
+        [
+          "fact",
+          "not",
+          "opinion"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H303",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Distinguish a subjective statement.",
+      "target_concept": "subjective",
+      "direct_requirements": [
+        "subjective"
+      ],
+      "paraphrase_paths": [
+        [
+          "personal",
+          "opinion"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H304",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "prompt": "Ask someone to verify information.",
+      "target_concept": "verify",
+      "direct_requirements": [
+        "verify"
+      ],
+      "paraphrase_paths": [
+        [
+          "check",
+          "true"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H305",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that you are happy.",
+      "direct_requirements": [
+        "happy"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H306",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that you feel worried.",
+      "direct_requirements": [
+        "feel",
+        "worried"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H307",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone you are grateful.",
+      "direct_requirements": [
+        "grateful"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H308",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe feeling lonely.",
+      "direct_requirements": [
+        "lonely"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H309",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that you trust a friend.",
+      "direct_requirements": [
+        "trust",
+        "friend"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H310",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Apologize after hurting someone.",
+      "direct_requirements": [
+        "sorry",
+        "hurt"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H311",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a relationship problem.",
+      "direct_requirements": [
+        "relationship",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H312",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Invite someone to visit.",
+      "direct_requirements": [
+        "invite",
+        "visit"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H313",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Describe feeling frustrated.",
+      "target_concept": "frustrated",
+      "direct_requirements": [
+        "frustrated"
+      ],
+      "paraphrase_paths": [
+        [
+          "annoyed",
+          "because",
+          "problem"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H314",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Describe anxiety in ordinary language.",
+      "target_concept": "anxious",
+      "direct_requirements": [
+        "anxious"
+      ],
+      "paraphrase_paths": [
+        [
+          "nervous",
+          "worried"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H315",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Describe feeling confident.",
+      "target_concept": "confident",
+      "direct_requirements": [
+        "confident"
+      ],
+      "paraphrase_paths": [
+        [
+          "sure",
+          "capable"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H316",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Express affection.",
+      "target_concept": "affection",
+      "direct_requirements": [
+        "affection"
+      ],
+      "paraphrase_paths": [
+        [
+          "love",
+          "care"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H317",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Describe jealousy.",
+      "target_concept": "jealousy",
+      "direct_requirements": [
+        "jealousy"
+      ],
+      "paraphrase_paths": [
+        [
+          "jealous"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H318",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Explain that trust was broken.",
+      "target_concept": "trust_broken",
+      "direct_requirements": [
+        "trust_broken"
+      ],
+      "paraphrase_paths": [
+        [
+          "trust",
+          "break"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H319",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Talk about reconciling after conflict.",
+      "target_concept": "reconcile",
+      "direct_requirements": [
+        "reconcile"
+      ],
+      "paraphrase_paths": [
+        [
+          "repair",
+          "relationship"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H320",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "prompt": "Explain relationship boundaries.",
+      "target_concept": "boundaries",
+      "direct_requirements": [
+        "boundaries"
+      ],
+      "paraphrase_paths": [
+        [
+          "relationship",
+          "limit"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H321",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Compare two options.",
+      "direct_requirements": [
+        "compare",
+        "option"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H322",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Choose the cheaper item.",
+      "direct_requirements": [
+        "choose",
+        "cheap"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H323",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain which choice is better for you.",
+      "direct_requirements": [
+        "which",
+        "choice",
+        "good"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H324",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe two things as similar.",
+      "direct_requirements": [
+        "similar"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H325",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that two things are opposite.",
+      "direct_requirements": [
+        "opposite"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H326",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Choose between high and low cost.",
+      "direct_requirements": [
+        "choose",
+        "high",
+        "low",
+        "cost"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H327",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a benefit and a risk.",
+      "direct_requirements": [
+        "benefit",
+        "risk"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H328",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "prompt": "State a preference.",
+      "direct_requirements": [
+        "prefer"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H329",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Explain an advantage.",
+      "target_concept": "advantage",
+      "direct_requirements": [
+        "advantage"
+      ],
+      "paraphrase_paths": [
+        [
+          "benefit"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H330",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Explain a disadvantage.",
+      "target_concept": "disadvantage",
+      "direct_requirements": [
+        "disadvantage"
+      ],
+      "paraphrase_paths": [
+        [
+          "bad",
+          "part"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H331",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Choose based on priority.",
+      "target_concept": "priority_choice",
+      "direct_requirements": [
+        "priority_choice"
+      ],
+      "paraphrase_paths": [
+        [
+          "priority",
+          "choice"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H332",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Compare value for money.",
+      "target_concept": "value_for_money",
+      "direct_requirements": [
+        "value_for_money"
+      ],
+      "paraphrase_paths": [
+        [
+          "quality",
+          "price"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H333",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Explain trading in an old item.",
+      "target_concept": "trade_in",
+      "direct_requirements": [
+        "trade_in"
+      ],
+      "paraphrase_paths": [
+        [
+          "give",
+          "old",
+          "get",
+          "new"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H334",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Choose the best fit.",
+      "target_concept": "best_fit",
+      "direct_requirements": [
+        "best_fit"
+      ],
+      "paraphrase_paths": [
+        [
+          "best",
+          "for",
+          "need"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H335",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Say whether something is worth the cost.",
+      "target_concept": "worth",
+      "direct_requirements": [
+        "worth"
+      ],
+      "paraphrase_paths": [
+        [
+          "value",
+          "enough"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H336",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "prompt": "Explain that two options are equivalent.",
+      "target_concept": "equivalent",
+      "direct_requirements": [
+        "equivalent"
+      ],
+      "paraphrase_paths": [
+        [
+          "same",
+          "value"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H337",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe rainy weather.",
+      "direct_requirements": [
+        "rain",
+        "weather"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H338",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Warn someone about a storm.",
+      "direct_requirements": [
+        "storm",
+        "warn"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H339",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that it is very hot.",
+      "direct_requirements": [
+        "hot",
+        "very"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H340",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe snow.",
+      "direct_requirements": [
+        "snow",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H341",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Talk about the climate.",
+      "direct_requirements": [
+        "climate"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H342",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a river.",
+      "direct_requirements": [
+        "river",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H343",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Talk about a forest.",
+      "direct_requirements": [
+        "forest"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H344",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain an environmental problem.",
+      "direct_requirements": [
+        "environment",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H345",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "Report flooding.",
+      "target_concept": "flood",
+      "direct_requirements": [
+        "flood"
+      ],
+      "paraphrase_paths": [
+        [
+          "water",
+          "over",
+          "land"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H346",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "Warn about a tornado.",
+      "target_concept": "tornado",
+      "direct_requirements": [
+        "tornado"
+      ],
+      "paraphrase_paths": [
+        [
+          "storm",
+          "wind",
+          "danger"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H347",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "Warn about a hurricane.",
+      "target_concept": "hurricane",
+      "direct_requirements": [
+        "hurricane"
+      ],
+      "paraphrase_paths": [
+        [
+          "big",
+          "storm",
+          "wind"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H348",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "Describe a drought.",
+      "target_concept": "drought",
+      "direct_requirements": [
+        "drought"
+      ],
+      "paraphrase_paths": [
+        [
+          "long",
+          "period",
+          "no",
+          "rain"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H349",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "Describe pollution.",
+      "target_concept": "pollution",
+      "direct_requirements": [
+        "pollution"
+      ],
+      "paraphrase_paths": [
+        [
+          "dirty",
+          "air"
+        ],
+        [
+          "dirty",
+          "water"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H350",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "Explain recycling.",
+      "target_concept": "recycle",
+      "direct_requirements": [
+        "recycle"
+      ],
+      "paraphrase_paths": [
+        [
+          "use",
+          "again",
+          "material"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H351",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "State the temperature.",
+      "target_concept": "temperature",
+      "direct_requirements": [
+        "temperature"
+      ],
+      "paraphrase_paths": [
+        [
+          "hot",
+          "cold",
+          "number"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H352",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "prompt": "Ask about the weather forecast.",
+      "target_concept": "forecast",
+      "direct_requirements": [
+        "forecast"
+      ],
+      "paraphrase_paths": [
+        [
+          "future",
+          "weather"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H353",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask where the hospital is.",
+      "direct_requirements": [
+        "where",
+        "hospital"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H354",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for police help.",
+      "direct_requirements": [
+        "police",
+        "help"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H355",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask where the library is.",
+      "direct_requirements": [
+        "where",
+        "library"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H356",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a government service.",
+      "direct_requirements": [
+        "government",
+        "service"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H357",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask about a license.",
+      "direct_requirements": [
+        "license",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H358",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Register for a public service.",
+      "direct_requirements": [
+        "register",
+        "public",
+        "service"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H359",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask what proof is required.",
+      "direct_requirements": [
+        "proof",
+        "require"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H360",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask for an official record.",
+      "direct_requirements": [
+        "record",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H361",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask where the courthouse is.",
+      "target_concept": "courthouse",
+      "direct_requirements": [
+        "courthouse"
+      ],
+      "paraphrase_paths": [
+        [
+          "government",
+          "building",
+          "law"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H362",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask where the post office is.",
+      "target_concept": "post_office",
+      "direct_requirements": [
+        "post_office"
+      ],
+      "paraphrase_paths": [
+        [
+          "mail",
+          "office"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H363",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask for the fire department.",
+      "target_concept": "fire_department",
+      "direct_requirements": [
+        "fire_department"
+      ],
+      "paraphrase_paths": [
+        [
+          "fire",
+          "emergency",
+          "service"
+        ]
+      ],
+      "safety_critical": true
+    },
+    {
+      "id": "H364",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask about a permit.",
+      "target_concept": "permit",
+      "direct_requirements": [
+        "permit"
+      ],
+      "paraphrase_paths": [
+        [
+          "permission",
+          "document"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H365",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask what identification is accepted.",
+      "target_concept": "identification",
+      "direct_requirements": [
+        "identification"
+      ],
+      "paraphrase_paths": [
+        [
+          "identity",
+          "document"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H366",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask whether an appointment is required.",
+      "target_concept": "appointment_required",
+      "direct_requirements": [
+        "appointment_required"
+      ],
+      "paraphrase_paths": [
+        [
+          "appointment",
+          "require"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H367",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask about public transportation.",
+      "target_concept": "public_transport",
+      "direct_requirements": [
+        "public_transport"
+      ],
+      "paraphrase_paths": [
+        [
+          "public",
+          "bus",
+          "train"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H368",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "prompt": "Ask how to file a complaint.",
+      "target_concept": "complaint_process",
+      "direct_requirements": [
+        "complaint_process"
+      ],
+      "paraphrase_paths": [
+        [
+          "complaint",
+          "process"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H369",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell a short story about yesterday.",
+      "direct_requirements": [
+        "story",
+        "ago",
+        "day"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H370",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe what happened first and next.",
+      "direct_requirements": [
+        "happen",
+        "first",
+        "next"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H371",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain the main idea of an article.",
+      "direct_requirements": [
+        "idea",
+        "article"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H372",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Summarize a news report.",
+      "direct_requirements": [
+        "news",
+        "report"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H373",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Describe a photo.",
+      "direct_requirements": [
+        "photo",
+        "describe"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H374",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain what you learned from a discussion.",
+      "direct_requirements": [
+        "learn",
+        "discussion"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H375",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone what you noticed.",
+      "direct_requirements": [
+        "notice",
+        "tell"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H376",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain a historical event.",
+      "direct_requirements": [
+        "history",
+        "event"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "H377",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Give a summary.",
+      "target_concept": "summary",
+      "direct_requirements": [
+        "summary"
+      ],
+      "paraphrase_paths": [
+        [
+          "short",
+          "report"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H378",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Explain a headline.",
+      "target_concept": "headline",
+      "direct_requirements": [
+        "headline"
+      ],
+      "paraphrase_paths": [
+        [
+          "news",
+          "title"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H379",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Identify an information source.",
+      "target_concept": "source",
+      "direct_requirements": [
+        "source"
+      ],
+      "paraphrase_paths": [
+        [
+          "where",
+          "information",
+          "from"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H380",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Explain a quotation.",
+      "target_concept": "quote",
+      "direct_requirements": [
+        "quote"
+      ],
+      "paraphrase_paths": [
+        [
+          "exact",
+          "word",
+          "person",
+          "say"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H381",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Describe a timeline.",
+      "target_concept": "timeline",
+      "direct_requirements": [
+        "timeline"
+      ],
+      "paraphrase_paths": [
+        [
+          "event",
+          "time",
+          "order"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H382",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Explain context.",
+      "target_concept": "context",
+      "direct_requirements": [
+        "context"
+      ],
+      "paraphrase_paths": [
+        [
+          "information",
+          "around",
+          "event"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H383",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Say that a detail is missing.",
+      "target_concept": "detail_missing",
+      "direct_requirements": [
+        "detail_missing"
+      ],
+      "paraphrase_paths": [
+        [
+          "detail",
+          "not",
+          "know"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "H384",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "prompt": "Correct an earlier statement.",
+      "target_concept": "correction",
+      "direct_requirements": [
+        "correction"
+      ],
+      "paraphrase_paths": [
+        [
+          "correct",
+          "information"
+        ]
+      ],
+      "safety_critical": false
+    }
+  ]
+}

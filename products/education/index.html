@@ -283,11 +283,29 @@ function submitAnswer(){
  finishProbe();
 }
 function finishProbe(){
- const score=currentSetScore/currentSet.length;
- probeHistory.push({stage:probeStage,score:Number(score.toFixed(2)),correct:currentSetScore,total:currentSet.length});
+ const score=Number((currentSetScore/currentSet.length).toFixed(2));
+ probeHistory.push({stage:probeStage,score,correct:currentSetScore,total:currentSet.length});
  if(score>=.84 && probeStage<8){startProbe(probeStage+1);return}
  if(score<=.34 && probeStage>2){startProbe(probeStage-1);return}
- resolvePlacement(score);
+
+ // A mixed first probe is not a stable boundary. Test one adjacent
+ // stage before resolving placement, as required by the placement law.
+ if(probeHistory.length===1 && score>.34 && score<.84){
+   if(score>=.67 && probeStage<8){startProbe(probeStage+1);return}
+   if(score<.67 && probeStage>2){startProbe(probeStage-1);return}
+ }
+
+ // If an adjacent probe was required and the learner fell below the
+ // competency threshold there, resolve to the prior stronger stage.
+ if(probeHistory.length>=2){
+   const previous=probeHistory[probeHistory.length-2];
+   const current=probeHistory[probeHistory.length-1];
+   if(current.score<.5 && previous.score>=.5){
+     resolvePlacement(previous.score,previous.stage);
+     return;
+   }
+ }
+ resolvePlacement(score,probeStage);
 }
 function supportCycle(score){
  if(score>=.9 && hintsUsed===0 && learner.translation_use==="never")return "TARGET_ONLY";
@@ -295,9 +313,10 @@ function supportCycle(score){
  if(score>=.5)return "BILINGUAL_BRIDGED";
  return "NATIVE_SUPPORTED";
 }
-function resolvePlacement(lastScore){
- const top=probeHistory.reduce((a,b)=>b.stage>a.stage&&b.score>=.5?b:a,{stage:2,score:0});
- const current=probeHistory[probeHistory.length-1];
+function resolvePlacement(lastScore,resolvedStageOverride=null){
+ const current=resolvedStageOverride===null
+   ? probeHistory[probeHistory.length-1]
+   : [...probeHistory].reverse().find(x=>x.stage===resolvedStageOverride) || probeHistory[probeHistory.length-1];
  const above=current.stage===8 && current.score>=.84;
  const verifiedStage=above?"ABOVE_PHASE_1":current.stage;
  const mastered=Math.round(current.score*3), unresolved=Math.max(0,3-mastered);
@@ -328,7 +347,8 @@ function renderPlacement(){
  setStage("result");
  const p=finalPlacement, above=p.verified_placement==="ABOVE_PHASE_1";
  const resolvedStageNumber=above?8:Number(String(p.verified_stage||"P1S2").replace("P1S",""));
- const map=STAGES.map((s,i)=>{const n=i+1;const mastered=!above&&n<resolvedStageNumber;const current=!above&&n===resolvedStageNumber;return '<article class="stage-card" data-mastered="'+mastered+'" data-current="'+current+'"><b>'+s.id+'</b><strong>'+s.name+'</strong><span>'+(above?(n>=7?"Advanced demo range":"Placement surpassed this stage"):current?"Placement boundary":mastered?"Demonstrated below boundary":"Not established by this placement")+'</span></article>'}).join("");
+ const testedStages=new Set(p.probe_history.map(x=>x.stage));
+ const map=STAGES.map((s,i)=>{const n=i+1;const below=!above&&n<resolvedStageNumber;const current=!above&&n===resolvedStageNumber;const tested=testedStages.has(n);return '<article class="stage-card" data-mastered="'+(below&&tested)+'" data-current="'+current+'"><b>'+s.id+'</b><strong>'+s.name+'</strong><span>'+(above?(tested?"Tested during placement":"Below verified range"):current?"Placement boundary":tested?(below?"Demonstrated below boundary":"Tested during placement"):below?"Inferred below placement boundary":"Not established by this placement")+'</span></article>'}).join("");
  qs("#placement-result").innerHTML=
  '<div class="result-grid">'+
  '<article class="result-hero"><span class="eyebrow">Verified Placement</span><strong>'+(above?"Above Phase 1":p.verified_stage+" · "+p.verified_competency_position+"%")+'</strong><span class="result-note">'+(above?"Your demonstrated performance exceeded the current demo range.":"Within-stage position is derived from the competency nodes tested in the resolved boundary set.")+'</span></article>'+

@@ -2,7 +2,7 @@
   "object": "MAJOR_LEVEL_4_BAND_B_50_GEOMETRIC_RECONSTRUCTION",
   "version": "v1",
   "owner": "Sean",
-  "status": "FROZEN_CANDIDATE_BAND",
+  "status": "FROZEN_CANONICAL_REPAIRED_BAND",
   "parent_authorities": [
     "/products/education/authority/major-level-1-250-geometry.v1.json",
     "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
@@ -68,8 +68,8 @@
     "global",
     "author",
     "reader",
-    "poem",
-    "novel",
+    "stomach",
+    "tooth",
     "information",
     "knowledge",
     "topic",
@@ -123,8 +123,8 @@
       "global",
       "author",
       "reader",
-      "poem",
-      "novel",
+      "stomach",
+      "tooth",
       "information",
       "knowledge",
       "topic",
@@ -150,5 +150,20 @@
     "ACTION_PERFORMED": "Second 50-word Level 4 band derived from the 800-word transfer frontier.",
     "ENGINE_RESPONSE": "Band expands idiomatic action flexibility and broad general-knowledge conversation with zero overlap; cumulative unique vocabulary reaches 850.",
     "NEXT_REQUIRED_INPUT": "LEVEL_1_TO_LEVEL_4AB_850_WORD_STRESS_TEST"
+  },
+  "canonical_substitution_adoption": {
+    "operation_id": "EDUCATION_SEVEN_SWAP_CANONICAL_ADOPTION_20260920_001",
+    "substitutions": [
+      {
+        "out": "poem",
+        "in": "stomach"
+      },
+      {
+        "out": "novel",
+        "in": "tooth"
+      }
+    ],
+    "evidence_authority": "/products/education/authority/1001-seven-swap-cumulative-regression-256.v1.json",
+    "lexical_count_preserved": true
   }
 }

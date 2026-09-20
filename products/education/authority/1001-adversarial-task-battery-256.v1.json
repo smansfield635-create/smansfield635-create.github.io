@@ -1,0 +1,3528 @@
+{
+  "object": "EDUCATION_1001_ADVERSARIAL_TASK_BATTERY_256",
+  "version": "v1",
+  "status": "FROZEN_RECONSTRUCTED_BATTERY",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_256_TASK_PAIRED_SUBSTITUTION_REGRESSION_20260920_001",
+  "base_candidate": "57969a8695aa163346d66043906b570c904b3faf",
+  "methodology": {
+    "type": "AGGREGATE_CONSTRAINED_RECONSTRUCTION",
+    "original_task_records_recovered": false,
+    "preserved_prior_aggregate": {
+      "A": 217,
+      "B": 35,
+      "C": 4,
+      "practical": 252
+    },
+    "honesty_boundary": "This is a newly materialized task-level benchmark constrained to reproduce the preserved aggregate baseline. It is not represented as the lost original battery.",
+    "structure": {
+      "generic_direct": 196,
+      "outgoing_edge": 21,
+      "incoming_edge": 30,
+      "controlled_paraphrase_only": 9,
+      "total": 256
+    },
+    "scoring": "A when all direct requirements are present; otherwise B when any complete authorized paraphrase path is present; otherwise C.",
+    "productive_systems": [
+      "grammar",
+      "morphology",
+      "numeration"
+    ],
+    "lexical_leakage_allowed": false,
+    "safety_rule": "Safety-critical tasks have no approximate paraphrase path unless semantic equivalence is explicitly encoded."
+  },
+  "tasks": [
+    {
+      "id": "T001",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, introduce yourself and state who you are.",
+      "direct_requirements": [
+        "name",
+        "say"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T002",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, introduce yourself and state who you are.",
+      "direct_requirements": [
+        "name",
+        "say"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T003",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, introduce yourself and state who you are.",
+      "direct_requirements": [
+        "name",
+        "say"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T004",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, introduce yourself and state who you are.",
+      "direct_requirements": [
+        "name",
+        "say"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T005",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, request help politely.",
+      "direct_requirements": [
+        "help",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T006",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, request help politely.",
+      "direct_requirements": [
+        "help",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T007",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, request help politely.",
+      "direct_requirements": [
+        "help",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T008",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, request help politely.",
+      "direct_requirements": [
+        "help",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T009",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe a problem and ask for an answer.",
+      "direct_requirements": [
+        "problem",
+        "ask",
+        "answer"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T010",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe a problem and ask for an answer.",
+      "direct_requirements": [
+        "problem",
+        "ask",
+        "answer"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T011",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe a problem and ask for an answer.",
+      "direct_requirements": [
+        "problem",
+        "ask",
+        "answer"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T012",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe a problem and ask for an answer.",
+      "direct_requirements": [
+        "problem",
+        "ask",
+        "answer"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T013",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, disagree politely while showing respect.",
+      "direct_requirements": [
+        "disagree",
+        "respect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T014",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, disagree politely while showing respect.",
+      "direct_requirements": [
+        "disagree",
+        "respect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T015",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, disagree politely while showing respect.",
+      "direct_requirements": [
+        "disagree",
+        "respect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T016",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, disagree politely while showing respect.",
+      "direct_requirements": [
+        "disagree",
+        "respect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T017",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, give a simple street direction.",
+      "direct_requirements": [
+        "direction",
+        "street",
+        "turn"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T018",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, give a simple street direction.",
+      "direct_requirements": [
+        "direction",
+        "street",
+        "turn"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T019",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, give a simple street direction.",
+      "direct_requirements": [
+        "direction",
+        "street",
+        "turn"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T020",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, give a simple street direction.",
+      "direct_requirements": [
+        "direction",
+        "street",
+        "turn"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T021",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask where a place is and how to reach it.",
+      "direct_requirements": [
+        "where",
+        "place",
+        "reach"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T022",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask where a place is and how to reach it.",
+      "direct_requirements": [
+        "where",
+        "place",
+        "reach"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T023",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask where a place is and how to reach it.",
+      "direct_requirements": [
+        "where",
+        "place",
+        "reach"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T024",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask where a place is and how to reach it.",
+      "direct_requirements": [
+        "where",
+        "place",
+        "reach"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T025",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, make a purchase and ask the price.",
+      "direct_requirements": [
+        "buy",
+        "price"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T026",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, make a purchase and ask the price.",
+      "direct_requirements": [
+        "buy",
+        "price"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T027",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, make a purchase and ask the price.",
+      "direct_requirements": [
+        "buy",
+        "price"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T028",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, make a purchase and ask the price.",
+      "direct_requirements": [
+        "buy",
+        "price"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T029",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, explain that something costs too much.",
+      "direct_requirements": [
+        "cost",
+        "expensive"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T030",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, explain that something costs too much.",
+      "direct_requirements": [
+        "cost",
+        "expensive"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T031",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, explain that something costs too much.",
+      "direct_requirements": [
+        "cost",
+        "expensive"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T032",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, explain that something costs too much.",
+      "direct_requirements": [
+        "cost",
+        "expensive"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T033",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, report a non-specific injury and ask for a doctor.",
+      "direct_requirements": [
+        "injury",
+        "doctor"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T034",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, report a non-specific injury and ask for a doctor.",
+      "direct_requirements": [
+        "injury",
+        "doctor"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T035",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, report a non-specific injury and ask for a doctor.",
+      "direct_requirements": [
+        "injury",
+        "doctor"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T036",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, report a non-specific injury and ask for a doctor.",
+      "direct_requirements": [
+        "injury",
+        "doctor"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T037",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe pain and say where it hurts generally.",
+      "direct_requirements": [
+        "pain",
+        "body"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T038",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe pain and say where it hurts generally.",
+      "direct_requirements": [
+        "pain",
+        "body"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T039",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe pain and say where it hurts generally.",
+      "direct_requirements": [
+        "pain",
+        "body"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T040",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe pain and say where it hurts generally.",
+      "direct_requirements": [
+        "pain",
+        "body"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T041",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe feeling sad.",
+      "direct_requirements": [
+        "feel",
+        "sad"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T042",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe feeling sad.",
+      "direct_requirements": [
+        "feel",
+        "sad"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T043",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe feeling sad.",
+      "direct_requirements": [
+        "feel",
+        "sad"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T044",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe feeling sad.",
+      "direct_requirements": [
+        "feel",
+        "sad"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T045",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe feeling worried and uncertain.",
+      "direct_requirements": [
+        "worried",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T046",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe feeling worried and uncertain.",
+      "direct_requirements": [
+        "worried",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T047",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe feeling worried and uncertain.",
+      "direct_requirements": [
+        "worried",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T048",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe feeling worried and uncertain.",
+      "direct_requirements": [
+        "worried",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T049",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, compare two options.",
+      "direct_requirements": [
+        "compare",
+        "option"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T050",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, compare two options.",
+      "direct_requirements": [
+        "compare",
+        "option"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T051",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, compare two options.",
+      "direct_requirements": [
+        "compare",
+        "option"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T052",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, compare two options.",
+      "direct_requirements": [
+        "compare",
+        "option"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T053",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, state a preference between alternatives.",
+      "direct_requirements": [
+        "prefer",
+        "rather"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T054",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, state a preference between alternatives.",
+      "direct_requirements": [
+        "prefer",
+        "rather"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T055",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, state a preference between alternatives.",
+      "direct_requirements": [
+        "prefer",
+        "rather"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T056",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, state a preference between alternatives.",
+      "direct_requirements": [
+        "prefer",
+        "rather"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T057",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, narrate something that happened one day ago.",
+      "direct_requirements": [
+        "happen",
+        "day",
+        "ago"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T058",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, narrate something that happened one day ago.",
+      "direct_requirements": [
+        "happen",
+        "day",
+        "ago"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T059",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, narrate something that happened one day ago.",
+      "direct_requirements": [
+        "happen",
+        "day",
+        "ago"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T060",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, narrate something that happened one day ago.",
+      "direct_requirements": [
+        "happen",
+        "day",
+        "ago"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T061",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe a past experience.",
+      "direct_requirements": [
+        "past",
+        "experience"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T062",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe a past experience.",
+      "direct_requirements": [
+        "past",
+        "experience"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T063",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe a past experience.",
+      "direct_requirements": [
+        "past",
+        "experience"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T064",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe a past experience.",
+      "direct_requirements": [
+        "past",
+        "experience"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T065",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, state a plan for tomorrow.",
+      "direct_requirements": [
+        "plan",
+        "tomorrow"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T066",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, state a plan for tomorrow.",
+      "direct_requirements": [
+        "plan",
+        "tomorrow"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T067",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, state a plan for tomorrow.",
+      "direct_requirements": [
+        "plan",
+        "tomorrow"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T068",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, state a plan for tomorrow.",
+      "direct_requirements": [
+        "plan",
+        "tomorrow"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T069",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, schedule an appointment.",
+      "direct_requirements": [
+        "schedule",
+        "appointment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T070",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, schedule an appointment.",
+      "direct_requirements": [
+        "schedule",
+        "appointment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T071",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, schedule an appointment.",
+      "direct_requirements": [
+        "schedule",
+        "appointment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T072",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, schedule an appointment.",
+      "direct_requirements": [
+        "schedule",
+        "appointment"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T073",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, explain a rule using must.",
+      "direct_requirements": [
+        "rule",
+        "must"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T074",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, explain a rule using must.",
+      "direct_requirements": [
+        "rule",
+        "must"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T075",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, explain a rule using must.",
+      "direct_requirements": [
+        "rule",
+        "must"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T076",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, explain a rule using must.",
+      "direct_requirements": [
+        "rule",
+        "must"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T077",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, explain why something happened.",
+      "direct_requirements": [
+        "why",
+        "because"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T078",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, explain why something happened.",
+      "direct_requirements": [
+        "why",
+        "because"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T079",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, explain why something happened.",
+      "direct_requirements": [
+        "why",
+        "because"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T080",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, explain why something happened.",
+      "direct_requirements": [
+        "why",
+        "because"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T081",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, express uncertainty using maybe.",
+      "direct_requirements": [
+        "maybe",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T082",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, express uncertainty using maybe.",
+      "direct_requirements": [
+        "maybe",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T083",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, express uncertainty using maybe.",
+      "direct_requirements": [
+        "maybe",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T084",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, express uncertainty using maybe.",
+      "direct_requirements": [
+        "maybe",
+        "uncertain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T085",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask for clarification.",
+      "direct_requirements": [
+        "clarify",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T086",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask for clarification.",
+      "direct_requirements": [
+        "clarify",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T087",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask for clarification.",
+      "direct_requirements": [
+        "clarify",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T088",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask for clarification.",
+      "direct_requirements": [
+        "clarify",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T089",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, negotiate a price or payment.",
+      "direct_requirements": [
+        "price",
+        "payment",
+        "settle"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T090",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, negotiate a price or payment.",
+      "direct_requirements": [
+        "price",
+        "payment",
+        "settle"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T091",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, negotiate a price or payment.",
+      "direct_requirements": [
+        "price",
+        "payment",
+        "settle"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T092",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, negotiate a price or payment.",
+      "direct_requirements": [
+        "price",
+        "payment",
+        "settle"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T093",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, apologize for a mistake.",
+      "direct_requirements": [
+        "sorry",
+        "mistake"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T094",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, apologize for a mistake.",
+      "direct_requirements": [
+        "sorry",
+        "mistake"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T095",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, apologize for a mistake.",
+      "direct_requirements": [
+        "sorry",
+        "mistake"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T096",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, apologize for a mistake.",
+      "direct_requirements": [
+        "sorry",
+        "mistake"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T097",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, warn someone about danger.",
+      "direct_requirements": [
+        "danger",
+        "careful"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T098",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, warn someone about danger.",
+      "direct_requirements": [
+        "danger",
+        "careful"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T099",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, warn someone about danger.",
+      "direct_requirements": [
+        "danger",
+        "careful"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T100",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, warn someone about danger.",
+      "direct_requirements": [
+        "danger",
+        "careful"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T101",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask permission.",
+      "direct_requirements": [
+        "permission",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T102",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask permission.",
+      "direct_requirements": [
+        "permission",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T103",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask permission.",
+      "direct_requirements": [
+        "permission",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T104",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask permission.",
+      "direct_requirements": [
+        "permission",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T105",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, refuse politely.",
+      "direct_requirements": [
+        "refuse",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T106",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, refuse politely.",
+      "direct_requirements": [
+        "refuse",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T107",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, refuse politely.",
+      "direct_requirements": [
+        "refuse",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T108",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, refuse politely.",
+      "direct_requirements": [
+        "refuse",
+        "please"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T109",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, give an instruction with a sequence.",
+      "direct_requirements": [
+        "instruction",
+        "first",
+        "next"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T110",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, give an instruction with a sequence.",
+      "direct_requirements": [
+        "instruction",
+        "first",
+        "next"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T111",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, give an instruction with a sequence.",
+      "direct_requirements": [
+        "instruction",
+        "first",
+        "next"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T112",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, give an instruction with a sequence.",
+      "direct_requirements": [
+        "instruction",
+        "first",
+        "next"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T113",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe cause and effect.",
+      "direct_requirements": [
+        "cause",
+        "effect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T114",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe cause and effect.",
+      "direct_requirements": [
+        "cause",
+        "effect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T115",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe cause and effect.",
+      "direct_requirements": [
+        "cause",
+        "effect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T116",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe cause and effect.",
+      "direct_requirements": [
+        "cause",
+        "effect"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T117",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, explain a consequence.",
+      "direct_requirements": [
+        "consequence",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T118",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, explain a consequence.",
+      "direct_requirements": [
+        "consequence",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T119",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, explain a consequence.",
+      "direct_requirements": [
+        "consequence",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T120",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, explain a consequence.",
+      "direct_requirements": [
+        "consequence",
+        "explain"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T121",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask someone to wait and continue later.",
+      "direct_requirements": [
+        "wait",
+        "continue",
+        "later"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T122",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask someone to wait and continue later.",
+      "direct_requirements": [
+        "wait",
+        "continue",
+        "later"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T123",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask someone to wait and continue later.",
+      "direct_requirements": [
+        "wait",
+        "continue",
+        "later"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T124",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask someone to wait and continue later.",
+      "direct_requirements": [
+        "wait",
+        "continue",
+        "later"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T125",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe a change over time.",
+      "direct_requirements": [
+        "change",
+        "time"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T126",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe a change over time.",
+      "direct_requirements": [
+        "change",
+        "time"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T127",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe a change over time.",
+      "direct_requirements": [
+        "change",
+        "time"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T128",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe a change over time.",
+      "direct_requirements": [
+        "change",
+        "time"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T129",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, report a delay.",
+      "direct_requirements": [
+        "delay",
+        "late"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T130",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, report a delay.",
+      "direct_requirements": [
+        "delay",
+        "late"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T131",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, report a delay.",
+      "direct_requirements": [
+        "delay",
+        "late"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T132",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, report a delay.",
+      "direct_requirements": [
+        "delay",
+        "late"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T133",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask whether something is available.",
+      "direct_requirements": [
+        "available",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T134",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask whether something is available.",
+      "direct_requirements": [
+        "available",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T135",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask whether something is available.",
+      "direct_requirements": [
+        "available",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T136",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask whether something is available.",
+      "direct_requirements": [
+        "available",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T137",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe a crowded public place.",
+      "direct_requirements": [
+        "crowded",
+        "public",
+        "place"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T138",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe a crowded public place.",
+      "direct_requirements": [
+        "crowded",
+        "public",
+        "place"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T139",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe a crowded public place.",
+      "direct_requirements": [
+        "crowded",
+        "public",
+        "place"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T140",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe a crowded public place.",
+      "direct_requirements": [
+        "crowded",
+        "public",
+        "place"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T141",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, make a reservation.",
+      "direct_requirements": [
+        "reservation",
+        "make"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T142",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, make a reservation.",
+      "direct_requirements": [
+        "reservation",
+        "make"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T143",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, make a reservation.",
+      "direct_requirements": [
+        "reservation",
+        "make"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T144",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, make a reservation.",
+      "direct_requirements": [
+        "reservation",
+        "make"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T145",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, cancel an order.",
+      "direct_requirements": [
+        "cancel",
+        "order"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T146",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, cancel an order.",
+      "direct_requirements": [
+        "cancel",
+        "order"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T147",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, cancel an order.",
+      "direct_requirements": [
+        "cancel",
+        "order"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T148",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, cancel an order.",
+      "direct_requirements": [
+        "cancel",
+        "order"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T149",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask for a refund.",
+      "direct_requirements": [
+        "refund",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T150",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask for a refund.",
+      "direct_requirements": [
+        "refund",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T151",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask for a refund.",
+      "direct_requirements": [
+        "refund",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T152",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask for a refund.",
+      "direct_requirements": [
+        "refund",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T153",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, report an emergency.",
+      "direct_requirements": [
+        "emergency",
+        "urgent"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T154",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, report an emergency.",
+      "direct_requirements": [
+        "emergency",
+        "urgent"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T155",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, report an emergency.",
+      "direct_requirements": [
+        "emergency",
+        "urgent"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T156",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, report an emergency.",
+      "direct_requirements": [
+        "emergency",
+        "urgent"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T157",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask for an ambulance.",
+      "direct_requirements": [
+        "ambulance",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T158",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask for an ambulance.",
+      "direct_requirements": [
+        "ambulance",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T159",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask for an ambulance.",
+      "direct_requirements": [
+        "ambulance",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T160",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask for an ambulance.",
+      "direct_requirements": [
+        "ambulance",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T161",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe a weather problem.",
+      "direct_requirements": [
+        "weather",
+        "storm"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T162",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe a weather problem.",
+      "direct_requirements": [
+        "weather",
+        "storm"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T163",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe a weather problem.",
+      "direct_requirements": [
+        "weather",
+        "storm"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T164",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe a weather problem.",
+      "direct_requirements": [
+        "weather",
+        "storm"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T165",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, discuss a flight and luggage.",
+      "direct_requirements": [
+        "flight",
+        "luggage"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T166",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, discuss a flight and luggage.",
+      "direct_requirements": [
+        "flight",
+        "luggage"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T167",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, discuss a flight and luggage.",
+      "direct_requirements": [
+        "flight",
+        "luggage"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T168",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, discuss a flight and luggage.",
+      "direct_requirements": [
+        "flight",
+        "luggage"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T169",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, ask about a hotel.",
+      "direct_requirements": [
+        "hotel",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T170",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, ask about a hotel.",
+      "direct_requirements": [
+        "hotel",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T171",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, ask about a hotel.",
+      "direct_requirements": [
+        "hotel",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T172",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, ask about a hotel.",
+      "direct_requirements": [
+        "hotel",
+        "ask"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T173",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe an internet problem.",
+      "direct_requirements": [
+        "internet",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T174",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe an internet problem.",
+      "direct_requirements": [
+        "internet",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T175",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe an internet problem.",
+      "direct_requirements": [
+        "internet",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T176",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe an internet problem.",
+      "direct_requirements": [
+        "internet",
+        "problem"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T177",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, send or reply to a message.",
+      "direct_requirements": [
+        "message",
+        "reply"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T178",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, send or reply to a message.",
+      "direct_requirements": [
+        "message",
+        "reply"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T179",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, send or reply to a message.",
+      "direct_requirements": [
+        "message",
+        "reply"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T180",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, send or reply to a message.",
+      "direct_requirements": [
+        "message",
+        "reply"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T181",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, explain a privacy or security concern.",
+      "direct_requirements": [
+        "privacy",
+        "security"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T182",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, explain a privacy or security concern.",
+      "direct_requirements": [
+        "privacy",
+        "security"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T183",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, explain a privacy or security concern.",
+      "direct_requirements": [
+        "privacy",
+        "security"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T184",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, explain a privacy or security concern.",
+      "direct_requirements": [
+        "privacy",
+        "security"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T185",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, describe a job interview.",
+      "direct_requirements": [
+        "job",
+        "interview"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T186",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, describe a job interview.",
+      "direct_requirements": [
+        "job",
+        "interview"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T187",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, describe a job interview.",
+      "direct_requirements": [
+        "job",
+        "interview"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T188",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, describe a job interview.",
+      "direct_requirements": [
+        "job",
+        "interview"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T189",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, explain a tradeoff and make a decision.",
+      "direct_requirements": [
+        "tradeoff",
+        "decision"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T190",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, explain a tradeoff and make a decision.",
+      "direct_requirements": [
+        "tradeoff",
+        "decision"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T191",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, explain a tradeoff and make a decision.",
+      "direct_requirements": [
+        "tradeoff",
+        "decision"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T192",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, explain a tradeoff and make a decision.",
+      "direct_requirements": [
+        "tradeoff",
+        "decision"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T193",
+      "class": "GENERIC_DIRECT",
+      "context": "ordinary personal conversation",
+      "prompt": "In ordinary personal conversation, give feedback about progress.",
+      "direct_requirements": [
+        "feedback",
+        "progress"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T194",
+      "class": "GENERIC_DIRECT",
+      "context": "work or school interaction",
+      "prompt": "In work or school interaction, give feedback about progress.",
+      "direct_requirements": [
+        "feedback",
+        "progress"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T195",
+      "class": "GENERIC_DIRECT",
+      "context": "travel or public-place interaction",
+      "prompt": "In travel or public-place interaction, give feedback about progress.",
+      "direct_requirements": [
+        "feedback",
+        "progress"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T196",
+      "class": "GENERIC_DIRECT",
+      "context": "home, shopping, or service interaction",
+      "prompt": "In home, shopping, or service interaction, give feedback about progress.",
+      "direct_requirements": [
+        "feedback",
+        "progress"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": false
+    },
+    {
+      "id": "T197",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"radio\" naturally in a real-world sentence (1/1).",
+      "direct_requirements": [
+        "radio"
+      ],
+      "paraphrase_paths": [
+        [
+          "media",
+          "device"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "radio"
+      }
+    },
+    {
+      "id": "T198",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"festival\" naturally in a real-world sentence (1/1).",
+      "direct_requirements": [
+        "festival"
+      ],
+      "paraphrase_paths": [
+        [
+          "event",
+          "celebrate"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "festival"
+      }
+    },
+    {
+      "id": "T199",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"poem\" naturally in a real-world sentence (1/1).",
+      "direct_requirements": [
+        "poem"
+      ],
+      "paraphrase_paths": [
+        [
+          "literature",
+          "write"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "poem"
+      }
+    },
+    {
+      "id": "T200",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"novel\" naturally in a real-world sentence (1/2).",
+      "direct_requirements": [
+        "novel"
+      ],
+      "paraphrase_paths": [
+        [
+          "book",
+          "story"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "novel"
+      }
+    },
+    {
+      "id": "T201",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"novel\" naturally in a real-world sentence (2/2).",
+      "direct_requirements": [
+        "novel"
+      ],
+      "paraphrase_paths": [
+        [
+          "book",
+          "story"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "novel"
+      }
+    },
+    {
+      "id": "T202",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"pale\" naturally in a real-world sentence (1/2).",
+      "direct_requirements": [
+        "pale"
+      ],
+      "paraphrase_paths": [
+        [
+          "light",
+          "color"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "pale"
+      }
+    },
+    {
+      "id": "T203",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"pale\" naturally in a real-world sentence (2/2).",
+      "direct_requirements": [
+        "pale"
+      ],
+      "paraphrase_paths": [
+        [
+          "light",
+          "color"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "pale"
+      }
+    },
+    {
+      "id": "T204",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"stale\" naturally in a real-world sentence (1/2).",
+      "direct_requirements": [
+        "stale"
+      ],
+      "paraphrase_paths": [
+        [
+          "old",
+          "food"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "stale"
+      }
+    },
+    {
+      "id": "T205",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"stale\" naturally in a real-world sentence (2/2).",
+      "direct_requirements": [
+        "stale"
+      ],
+      "paraphrase_paths": [
+        [
+          "old",
+          "food"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "stale"
+      }
+    },
+    {
+      "id": "T206",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"couple\" naturally in a real-world sentence (1/3).",
+      "direct_requirements": [
+        "couple"
+      ],
+      "paraphrase_paths": [
+        [
+          "two",
+          "people"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "couple"
+      }
+    },
+    {
+      "id": "T207",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"couple\" naturally in a real-world sentence (2/3).",
+      "direct_requirements": [
+        "couple"
+      ],
+      "paraphrase_paths": [
+        [
+          "two",
+          "people"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "couple"
+      }
+    },
+    {
+      "id": "T208",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"couple\" naturally in a real-world sentence (3/3).",
+      "direct_requirements": [
+        "couple"
+      ],
+      "paraphrase_paths": [
+        [
+          "two",
+          "people"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "couple"
+      }
+    },
+    {
+      "id": "T209",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"betrayal\" naturally in a real-world sentence (1/2).",
+      "direct_requirements": [
+        "betrayal"
+      ],
+      "paraphrase_paths": [
+        [
+          "betray"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "betrayal"
+      }
+    },
+    {
+      "id": "T210",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"betrayal\" naturally in a real-world sentence (2/2).",
+      "direct_requirements": [
+        "betrayal"
+      ],
+      "paraphrase_paths": [
+        [
+          "betray"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "betrayal"
+      }
+    },
+    {
+      "id": "T211",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"unfairly\" naturally in a real-world sentence (1/3).",
+      "direct_requirements": [
+        "unfairly"
+      ],
+      "paraphrase_paths": [
+        [
+          "unfair",
+          "way"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "unfairly"
+      }
+    },
+    {
+      "id": "T212",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"unfairly\" naturally in a real-world sentence (2/3).",
+      "direct_requirements": [
+        "unfairly"
+      ],
+      "paraphrase_paths": [
+        [
+          "unfair",
+          "way"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "unfairly"
+      }
+    },
+    {
+      "id": "T213",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"unfairly\" naturally in a real-world sentence (3/3).",
+      "direct_requirements": [
+        "unfairly"
+      ],
+      "paraphrase_paths": [
+        [
+          "unfair",
+          "way"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "unfairly"
+      }
+    },
+    {
+      "id": "T214",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"exactly\" naturally in a real-world sentence (1/4).",
+      "direct_requirements": [
+        "exactly"
+      ],
+      "paraphrase_paths": [
+        [
+          "exact"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "exactly"
+      }
+    },
+    {
+      "id": "T215",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"exactly\" naturally in a real-world sentence (2/4).",
+      "direct_requirements": [
+        "exactly"
+      ],
+      "paraphrase_paths": [
+        [
+          "exact"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "exactly"
+      }
+    },
+    {
+      "id": "T216",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"exactly\" naturally in a real-world sentence (3/4).",
+      "direct_requirements": [
+        "exactly"
+      ],
+      "paraphrase_paths": [
+        [
+          "exact"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "exactly"
+      }
+    },
+    {
+      "id": "T217",
+      "class": "OUTGOING_EDGE",
+      "context": "lexical precision regression",
+      "prompt": "Use the ordinary concept \"exactly\" naturally in a real-world sentence (4/4).",
+      "direct_requirements": [
+        "exactly"
+      ],
+      "paraphrase_paths": [
+        [
+          "exact"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "outgoing": "exactly"
+      }
+    },
+    {
+      "id": "T218",
+      "class": "INCOMING_EDGE",
+      "context": "safety-critical precision",
+      "prompt": "Communicate the exact safety-critical concept \"allergy\" without substituting a broader meaning (1/3).",
+      "direct_requirements": [
+        "allergy"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": true,
+      "swap_relevance": {
+        "incoming": "allergy"
+      }
+    },
+    {
+      "id": "T219",
+      "class": "INCOMING_EDGE",
+      "context": "safety-critical precision",
+      "prompt": "Communicate the exact safety-critical concept \"allergy\" without substituting a broader meaning (2/3).",
+      "direct_requirements": [
+        "allergy"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": true,
+      "swap_relevance": {
+        "incoming": "allergy"
+      }
+    },
+    {
+      "id": "T220",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"allergy\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "allergy"
+      ],
+      "paraphrase_paths": [
+        [
+          "medicine",
+          "sick"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "allergy"
+      }
+    },
+    {
+      "id": "T221",
+      "class": "INCOMING_EDGE",
+      "context": "safety-critical precision",
+      "prompt": "Communicate the exact safety-critical concept \"blood\" without substituting a broader meaning (1/3).",
+      "direct_requirements": [
+        "blood"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": true,
+      "swap_relevance": {
+        "incoming": "blood"
+      }
+    },
+    {
+      "id": "T222",
+      "class": "INCOMING_EDGE",
+      "context": "safety-critical precision",
+      "prompt": "Communicate the exact safety-critical concept \"blood\" without substituting a broader meaning (2/3).",
+      "direct_requirements": [
+        "blood"
+      ],
+      "paraphrase_paths": [],
+      "safety_critical": true,
+      "swap_relevance": {
+        "incoming": "blood"
+      }
+    },
+    {
+      "id": "T223",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"blood\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "blood"
+      ],
+      "paraphrase_paths": [
+        [
+          "injury",
+          "red"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "blood"
+      }
+    },
+    {
+      "id": "T224",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"stomach\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "stomach"
+      ],
+      "paraphrase_paths": [
+        [
+          "body",
+          "pain",
+          "eat"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "stomach"
+      }
+    },
+    {
+      "id": "T225",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"stomach\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "stomach"
+      ],
+      "paraphrase_paths": [
+        [
+          "body",
+          "pain",
+          "eat"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "stomach"
+      }
+    },
+    {
+      "id": "T226",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"stomach\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "stomach"
+      ],
+      "paraphrase_paths": [
+        [
+          "body",
+          "pain",
+          "eat"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "stomach"
+      }
+    },
+    {
+      "id": "T227",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"tooth\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "tooth"
+      ],
+      "paraphrase_paths": [
+        [
+          "hard",
+          "white",
+          "thing",
+          "mouth"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "tooth"
+      }
+    },
+    {
+      "id": "T228",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"tooth\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "tooth"
+      ],
+      "paraphrase_paths": [
+        [
+          "hard",
+          "white",
+          "thing",
+          "mouth"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "tooth"
+      }
+    },
+    {
+      "id": "T229",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"tooth\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "tooth"
+      ],
+      "paraphrase_paths": [
+        [
+          "hard",
+          "white",
+          "thing",
+          "mouth"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "tooth"
+      }
+    },
+    {
+      "id": "T230",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"electricity\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "electricity"
+      ],
+      "paraphrase_paths": [
+        [
+          "energy",
+          "house",
+          "light"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "electricity"
+      }
+    },
+    {
+      "id": "T231",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"electricity\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "electricity"
+      ],
+      "paraphrase_paths": [
+        [
+          "energy",
+          "house",
+          "light"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "electricity"
+      }
+    },
+    {
+      "id": "T232",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"electricity\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "electricity"
+      ],
+      "paraphrase_paths": [
+        [
+          "energy",
+          "house",
+          "light"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "electricity"
+      }
+    },
+    {
+      "id": "T233",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"soap\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "soap"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "wash",
+          "hand"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "soap"
+      }
+    },
+    {
+      "id": "T234",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"soap\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "soap"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "wash",
+          "hand"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "soap"
+      }
+    },
+    {
+      "id": "T235",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"soap\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "soap"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "wash",
+          "hand"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "soap"
+      }
+    },
+    {
+      "id": "T236",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"contract\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "contract"
+      ],
+      "paraphrase_paths": [
+        [
+          "document",
+          "promise"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "contract"
+      }
+    },
+    {
+      "id": "T237",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"contract\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "contract"
+      ],
+      "paraphrase_paths": [
+        [
+          "document",
+          "promise"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "contract"
+      }
+    },
+    {
+      "id": "T238",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"contract\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "contract"
+      ],
+      "paraphrase_paths": [
+        [
+          "document",
+          "promise"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "contract"
+      }
+    },
+    {
+      "id": "T239",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"discount\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "discount"
+      ],
+      "paraphrase_paths": [
+        [
+          "price",
+          "less"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "discount"
+      }
+    },
+    {
+      "id": "T240",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"discount\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "discount"
+      ],
+      "paraphrase_paths": [
+        [
+          "price",
+          "less"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "discount"
+      }
+    },
+    {
+      "id": "T241",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"discount\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "discount"
+      ],
+      "paraphrase_paths": [
+        [
+          "price",
+          "less"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "discount"
+      }
+    },
+    {
+      "id": "T242",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"Wi-Fi\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "Wi-Fi"
+      ],
+      "paraphrase_paths": [
+        [
+          "internet",
+          "connect"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "Wi-Fi"
+      }
+    },
+    {
+      "id": "T243",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"Wi-Fi\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "Wi-Fi"
+      ],
+      "paraphrase_paths": [
+        [
+          "internet",
+          "connect"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "Wi-Fi"
+      }
+    },
+    {
+      "id": "T244",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"Wi-Fi\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "Wi-Fi"
+      ],
+      "paraphrase_paths": [
+        [
+          "internet",
+          "connect"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "Wi-Fi"
+      }
+    },
+    {
+      "id": "T245",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"app\" naturally in an ordinary real-world situation (1/3).",
+      "direct_requirements": [
+        "app"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "phone",
+          "use"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "app"
+      }
+    },
+    {
+      "id": "T246",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"app\" naturally in an ordinary real-world situation (2/3).",
+      "direct_requirements": [
+        "app"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "phone",
+          "use"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "app"
+      }
+    },
+    {
+      "id": "T247",
+      "class": "INCOMING_EDGE",
+      "context": "ordinary practical precision",
+      "prompt": "Communicate the practical concept \"app\" naturally in an ordinary real-world situation (3/3).",
+      "direct_requirements": [
+        "app"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "phone",
+          "use"
+        ]
+      ],
+      "safety_critical": false,
+      "swap_relevance": {
+        "incoming": "app"
+      }
+    },
+    {
+      "id": "T248",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"landlord\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "landlord"
+      ],
+      "paraphrase_paths": [
+        [
+          "owner",
+          "apartment"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T249",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"tenant\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "tenant"
+      ],
+      "paraphrase_paths": [
+        [
+          "person",
+          "rent",
+          "apartment"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T250",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"agreement\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "agreement"
+      ],
+      "paraphrase_paths": [
+        [
+          "agree",
+          "document"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T251",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"fork\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "fork"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "eat"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T252",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"knife\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "knife"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "cut"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T253",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"charger\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "charger"
+      ],
+      "paraphrase_paths": [
+        [
+          "device",
+          "phone",
+          "energy"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T254",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"elevator\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "elevator"
+      ],
+      "paraphrase_paths": [
+        [
+          "machine",
+          "up",
+          "down"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T255",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"umbrella\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "umbrella"
+      ],
+      "paraphrase_paths": [
+        [
+          "thing",
+          "rain"
+        ]
+      ],
+      "safety_critical": false
+    },
+    {
+      "id": "T256",
+      "class": "CONTROLLED_PARAPHRASE_ONLY",
+      "context": "reconstruction challenge",
+      "prompt": "Communicate \"toilet\" without using that unavailable compressed label.",
+      "direct_requirements": [
+        "toilet"
+      ],
+      "paraphrase_paths": [
+        [
+          "bathroom",
+          "thing"
+        ]
+      ],
+      "safety_critical": false
+    }
+  ]
+}

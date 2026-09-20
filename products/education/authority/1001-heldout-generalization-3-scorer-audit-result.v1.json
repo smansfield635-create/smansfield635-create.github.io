@@ -1,0 +1,175 @@
+{
+  "object": "EDUCATION_THIRD_HELDOUT_SCORER_AUDIT_RESULT",
+  "version": "v1",
+  "status": "PASS_CORRECTED_768_OF_768_WITH_HISTORICAL_RESULT_PRESERVED",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_THIRD_HELDOUT_SCORER_CORRECTION_AUDIT_20260920_001",
+  "lock_generation": 2466,
+  "source_candidate": "3db1478aaecf56b2fc237621faa5b1e1a523ac18",
+  "preserved_evidence": {
+    "battery_path": "/products/education/authority/1001-heldout-generalization-3-battery.v1.json",
+    "battery_blob": "97b26b63903706ef583ba25e95e89c0fb1fcf3bd",
+    "historical_result_path": "/products/education/authority/1001-heldout-generalization-3-result.v1.json",
+    "historical_result_blob": "250f5efd81f8ffb76634fe703ead80c1c386e4bf",
+    "historical_scoring": {
+      "direct": 528,
+      "controlled_productive_composition": 224,
+      "genuine_failure": 16,
+      "practical": 752,
+      "practical_rate_percent": 97.9,
+      "safety_critical_failures": 0
+    },
+    "historical_result_rewritten": false
+  },
+  "corrected_audit": {
+    "task_total": 768,
+    "direct": 528,
+    "controlled_productive_composition": 240,
+    "genuine_failure": 0,
+    "practical": 768,
+    "practical_rate_percent": 100,
+    "safety_critical_failures": 0,
+    "lexical_leakage": 0
+  },
+  "morphology_correction": {
+    "governing_authority": "/products/education/authority/vocabulary-morphological-normalization.v1.json",
+    "governing_rule": "A predictable grammatical form created from an admitted word does not consume another vocabulary slot.",
+    "corrected_case": "feel -> feeling",
+    "new_lexical_slots": 0,
+    "new_productive_rules": 0,
+    "vocabulary_mutations": 0,
+    "productive_rule_mutations": 0
+  },
+  "task_level_diff": [
+    {
+      "id": "K369",
+      "domain": "STRESS_EMOTION",
+      "operation": "ASK_INFORMATION",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K370",
+      "domain": "STRESS_EMOTION",
+      "operation": "REPORT_PROBLEM",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K371",
+      "domain": "STRESS_EMOTION",
+      "operation": "REQUEST_HELP",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K372",
+      "domain": "STRESS_EMOTION",
+      "operation": "DESCRIBE_NOW",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K373",
+      "domain": "STRESS_EMOTION",
+      "operation": "EXPLAIN_PAST",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K374",
+      "domain": "STRESS_EMOTION",
+      "operation": "PLAN_FUTURE",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K375",
+      "domain": "STRESS_EMOTION",
+      "operation": "COMPARE_OPTIONS",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K376",
+      "domain": "STRESS_EMOTION",
+      "operation": "GIVE_REASON",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K377",
+      "domain": "STRESS_EMOTION",
+      "operation": "EXPRESS_UNCERTAINTY",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K378",
+      "domain": "STRESS_EMOTION",
+      "operation": "STATE_PREFERENCE",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K379",
+      "domain": "STRESS_EMOTION",
+      "operation": "WARN_DANGER",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K380",
+      "domain": "STRESS_EMOTION",
+      "operation": "EXPLAIN_RULE",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K381",
+      "domain": "STRESS_EMOTION",
+      "operation": "NEGOTIATE_CHANGE",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K382",
+      "domain": "STRESS_EMOTION",
+      "operation": "ASK_COST",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K383",
+      "domain": "STRESS_EMOTION",
+      "operation": "ASK_LOCATION",
+      "historical": "C",
+      "corrected": "B"
+    },
+    {
+      "id": "K384",
+      "domain": "STRESS_EMOTION",
+      "operation": "APOLOGIZE_REPAIR",
+      "historical": "C",
+      "corrected": "B"
+    }
+  ],
+  "audit_integrity": {
+    "changed_task_count": 16,
+    "all_changes": "C_TO_B",
+    "historical_A_or_B_to_corrected_C": 0,
+    "false_positive_regressions": 0,
+    "other_score_changes": 0,
+    "battery_bytes_changed": false,
+    "historical_result_bytes_changed": false,
+    "architecture_mutations": 0
+  },
+  "interpretation": [
+    "The historical 97.9% third prospective output remains preserved as the original scorer output.",
+    "A full 768-task scorer-correction audit under the morphology law already in force changes exactly 16 tasks, all in STRESS_EMOTION, from C to B.",
+    "No historically credited A or B task becomes C under the corrected scorer.",
+    "The corrected analytical interpretation is 768/768 practical completion on the frozen third prospective battery without adding vocabulary or productive rules.",
+    "This audit corrects scoring interpretation; it does not retroactively rewrite historical evidence."
+  ],
+  "next_gate": "INTEGRATION_OR_FURTHER_INDEPENDENT_VALIDATION_AS_SEPARATE_OPERATION"
+}

@@ -1011,14 +1011,38 @@ async function sendMessage(text) {
     }
 
     const personaSystemMessage = personaAnchor.composeSystemMessage(SYSTEM_MESSAGE);
+    recordDiagnostic("CANON_QUERY_CLASSIFIED", {
+      backend: activeBackend || "none",
+      result: "PASS"
+    });
+    const canonicalContext = personaAnchor.composeCanonicalContext(clean, messages.slice(1));
+    recordDiagnostic("CANON_SOURCES_SELECTED", {
+      backend: activeBackend || "none",
+      result: "PASS",
+      details: { sourceIds: canonicalContext.sourceIds, selectedIds: canonicalContext.selectedIds }
+    });
+    const canonicalContextMessage = canonicalContext.text
+      ? { role: "system", content: canonicalContext.text }
+      : null;
+    recordDiagnostic("CANON_CONTEXT_ASSEMBLED", {
+      backend: activeBackend || "none",
+      result: "PASS",
+      details: { sourceCount: canonicalContext.sourceIds.length, bytes: new TextEncoder().encode(canonicalContext.text || "").byteLength }
+    });
     const evidenceMessage = evidenceAck
       ? { role: "system", content: searchClient.buildEvidenceContext(evidenceAck) }
       : null;
     const requestMessages = [
       { role: "system", content: personaSystemMessage },
+      ...(canonicalContextMessage ? [canonicalContextMessage] : []),
       ...(evidenceMessage ? [evidenceMessage] : []),
       ...messages.slice(1).slice(-10)
     ];
+    recordDiagnostic("CANON_CONTEXT_INJECTED", {
+      backend: activeBackend || "none",
+      result: "PASS",
+      details: { sourceCount: canonicalContext.sourceIds.length }
+    });
     recordDiagnostic("INFERENCE_REQUEST_SENT", {
       backend: activeBackend || "none",
       result: "PASS",

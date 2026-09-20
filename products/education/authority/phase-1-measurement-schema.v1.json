@@ -1,0 +1,112 @@
+{
+  "object": "EDUCATION_PHASE1_MEASUREMENT_SCHEMA",
+  "version": "v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
+  "lock_generation": 2467,
+  "purpose": "Generate learner-facing progress data and internal instructional-validation evidence from the same Phase 1 activities.",
+  "claim_boundary": {
+    "measured": [
+      "WRITTEN_READING_COMPREHENSION",
+      "WRITTEN_OR_CONSTRUCTED_EXPRESSION",
+      "DIRECT_LEXICAL_RETRIEVAL",
+      "PRODUCTIVE_GENERATION",
+      "CONTROLLED_COMPOSITION",
+      "WRITTEN_TRANSFER",
+      "RESPONSE_EFFICIENCY",
+      "HINT_DEPENDENCE",
+      "ERROR_AND_RETRY_PATTERN"
+    ],
+    "not_measured": [
+      "SPEAKING",
+      "PRONUNCIATION",
+      "LISTENING_COMPREHENSION",
+      "ORAL_RETRIEVAL",
+      "ORAL_CONVERSATIONAL_FLUENCY"
+    ]
+  },
+  "event_required_fields": [
+    "event_id",
+    "learner_progress_key",
+    "curriculum_version",
+    "phase_id",
+    "stage_id",
+    "activity_id",
+    "competency_id",
+    "presented_at",
+    "responded_at",
+    "response_mode",
+    "exposure_class",
+    "attempt_number",
+    "hint_level",
+    "classification",
+    "direct_or_productive_path",
+    "checkpoint_context"
+  ],
+  "response_modes": [
+    "CHOOSE",
+    "ARRANGE",
+    "COMPLETE",
+    "REWRITE",
+    "CONSTRUCT",
+    "FREE_WRITTEN_RESPONSE"
+  ],
+  "exposure_classes": [
+    "TRAINED",
+    "PRACTICED",
+    "FIRST_EXPOSURE_TRANSFER",
+    "REASSESSMENT"
+  ],
+  "classification_values": [
+    "PASS",
+    "PARTIAL",
+    "RETRY",
+    "HINT",
+    "REPAIR"
+  ],
+  "productive_path_values": [
+    "DIRECT_LEXICAL",
+    "GRAMMAR",
+    "MORPHOLOGY",
+    "NUMERATION",
+    "CONTROLLED_COMPOSITION",
+    "SEMANTIC_PARAPHRASE",
+    "MIXED"
+  ],
+  "derived_metrics": {
+    "lexical_mastery": "Direct command of canonical concepts demonstrated without productive substitution.",
+    "traversal_mastery": "Successful written communication using the complete authorized architecture, including productive systems.",
+    "transfer_score": "Performance on first-exposure tasks not previously used in that learner's training or practice history.",
+    "first_attempt_accuracy": "Share of scored activities passed on attempt 1.",
+    "hint_dependence": "Distribution of successful responses by highest hint level used.",
+    "retry_burden": "Attempts required before competency pass.",
+    "response_latency": "Elapsed time from presentation to submitted response, interpreted only as a performance signal and not as an intelligence measure.",
+    "retention_signal": "Performance on later reassessment of previously demonstrated competencies."
+  },
+  "aggregation_levels": [
+    "ACTIVITY",
+    "COMPETENCY",
+    "STAGE",
+    "PHASE1",
+    "LEARNER_LONGITUDINAL"
+  ],
+  "evidence_separation": {
+    "trained_vs_transfer_must_remain_separate": true,
+    "direct_vs_productive_must_remain_separate": true,
+    "first_attempt_vs_assisted_success_must_remain_separate": true,
+    "historical_events_must_not_be_reclassified_after_curriculum_change": true
+  },
+  "privacy_minimum": {
+    "research_record_requires_real_name": false,
+    "learner_progress_key_may_be_pseudonymous": true,
+    "collect_only_fields_material_to_progress_or_validation": true
+  },
+  "phase1_completion_summary_required": [
+    "LEXICAL_MASTERY_SUMMARY",
+    "TRAVERSAL_MASTERY_SUMMARY",
+    "TRANSFER_SUMMARY",
+    "HINT_AND_RETRY_SUMMARY",
+    "STAGE_CHECKPOINT_HISTORY"
+  ]
+}

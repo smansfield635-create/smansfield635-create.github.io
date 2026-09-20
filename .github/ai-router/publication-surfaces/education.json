@@ -1,33 +1,38 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "education",
-  "description": "Existing Diamond Gate Bridge Education module at /products/education/: public and technical standards faces plus the English adaptive-placement demo entry flow.",
+  "description": "Existing Diamond Gate Bridge Education module at /products/education/: layered standards carousel plus the English adaptive-placement demo flow.",
   "checks": [
     {
       "path": "/products/education/index.html",
       "includes": [
         "EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1",
         "English Fluency Accelerator",
-        "Learn from where you actually are.",
-        "Public Face",
-        "Technical Face",
+        "Start where your ability actually is.",
+        "Six standards. One learning system.",
+        "Foundation",
+        "Productive Language",
+        "Progression",
+        "Support",
+        "Placement",
+        "Evidence",
+        "Reading",
+        "Engineering",
+        "Evidence standing",
+        "Return to Carousel",
         "Start the Demo",
-        "1,001 canonical concepts",
         "NATIVE_SUPPORTED",
         "BILINGUAL_BRIDGED",
         "TARGET_DOMINANT",
         "TARGET_ONLY",
-        "Adaptive Placement",
-        "English",
-        "Spanish",
-        "Chinese",
-        "Coming Soon",
         "ABOVE_PHASE_1",
         "demo_entry_point",
         "data-no-backend=\"true\"",
         "data-no-persistence=\"true\""
       ],
       "excludes": [
+        "Public Face",
+        "Technical Face",
         "data-demo-language-spanish=\"available\"",
         "data-demo-language-chinese=\"available\"",
         "data-speech-measurement=\"true\"",
@@ -49,39 +54,83 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Technical face opens on existing Education page",
+        "name": "Outer carousel advances to Productive Language",
         "action": {
           "type": "click",
-          "selector": "[data-open-face=\"technical\"]"
+          "selector": "[data-edu-index=\"1\"]"
         },
         "assertions": [
           {
-            "type": "exists",
-            "selector": "#technical-face:not([hidden])"
+            "type": "textContains",
+            "selector": "[data-edu-live]",
+            "value": "Productive Language"
           },
           {
             "type": "textContains",
-            "selector": "#technical-face",
-            "value": "Technical construction and evidence boundaries"
+            "selector": ".edu-standard-card[data-active=\"true\"] .edu-standard-title",
+            "value": "Build More Than You Memorize"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Public face returns on same Education route",
+        "name": "Selected standard opens in shared carousel field",
         "action": {
           "type": "click",
-          "selector": "[data-open-face=\"public\"]"
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-inspect]"
         },
         "assertions": [
           {
+            "type": "attributeEquals",
+            "selector": "[data-edu-carousel]",
+            "name": "data-inspecting",
+            "value": "true"
+          },
+          {
             "type": "exists",
-            "selector": "#public-face:not([hidden])"
+            "selector": ".edu-standard-card[data-active=\"true\"][data-inspecting=\"true\"]"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Engineering lens changes independently",
+        "action": {
+          "type": "click",
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-lens=\"engineering\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-lens=\"engineering\"]",
+            "name": "aria-selected",
+            "value": "true"
           },
           {
             "type": "textContains",
-            "selector": "#public-face",
-            "value": "Learn from where you actually are."
+            "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-cell]",
+            "value": "Engineering detail"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Return to carousel preserves selected outer standard",
+        "action": {
+          "type": "click",
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-return]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-edu-carousel]",
+            "name": "data-inspecting",
+            "value": "false"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-edu-live]",
+            "value": "Productive Language"
           }
         ],
         "timeoutMs": 5000
@@ -106,7 +155,7 @@
         "timeoutMs": 5000
       },
       {
-        "name": "English enters learner intake on same module",
+        "name": "English enters learner intake on same live module",
         "action": {
           "type": "click",
           "selector": "[data-language=\"English\"]"

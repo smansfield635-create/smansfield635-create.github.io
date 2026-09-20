@@ -1,11 +1,11 @@
 /* /products/index.crystals.js
    PRODUCTS
-   Primary Products star and six-product cluster renderer.
+   Primary Products star and five-product cluster renderer.
 
    New-file construction scope:
    - Consume DGB_PRODUCTS_CONTROLLER exactly.
    - Publish DGB_PRODUCTS_CRYSTALS and DGB_PRODUCTS_CRYSTALS_RECEIPT.
-   - Render only one primary Products star in PRIMARY_ENTRY and one six-product
+   - Render only one primary Products star in PRIMARY_ENTRY and one five-product
      spherical cluster in CLUSTER_OPEN / PRODUCT_SELECTED.
    - Preserve spherical behavior, quaternion-backed orientation, pointer drag,
      pointer capture, preview during drag, settle on release, quick-flick return
@@ -131,13 +131,6 @@
       color: Object.freeze([0.50, 0.90, 0.96])
     }),
     Object.freeze({
-      id: "aai",
-      label: "AAI",
-      shortLabel: "SUPPORT",
-      route: "/products/on-your-side-ai/",
-      color: Object.freeze([0.72, 0.86, 1.0])
-    }),
-    Object.freeze({
       id: "education",
       label: "EDUCATION",
       shortLabel: "LEARNING",
@@ -165,7 +158,7 @@
   const PRIMARY_ENTRY = Object.freeze({
     id: "products",
     label: "PRODUCTS",
-    shortLabel: "OPEN SIX PRODUCTS",
+    shortLabel: "OPEN FIVE PRODUCTS",
     color: Object.freeze([0.90, 0.84, 0.72])
   });
 

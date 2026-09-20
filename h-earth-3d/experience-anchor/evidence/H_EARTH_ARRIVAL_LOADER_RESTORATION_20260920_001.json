@@ -1,0 +1,83 @@
+{
+  "schema": "H_EARTH_ARRIVAL_LOADER_RESTORATION_EVIDENCE_v1",
+  "operationId": "H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001",
+  "result": "PASS",
+  "governingHead": "adee0b1ef693beeb231a79eb2f163aea62e6eda7",
+  "authority": {
+    "issue": 3947,
+    "canonicalIntakeResult": "ADMITTED_AND_LOCKED",
+    "lockGeneration": 2445,
+    "allowedPathCount": 4,
+    "scopeExpansion": false
+  },
+  "regressionFinding": {
+    "result": "CONTINUITY_OMISSION_CONFIRMED",
+    "historicalPublicRoutingCommit": "0498be96aeadbdc83396e3aa441280937ab99dcf",
+    "historicalLoaderSuccessorCommit": "6d18e158171a31b296a787202ac731a5c0513e37",
+    "directRouteRestorationCommit": "3b1a77b65ef06bc682c50726091cad7226c917e9",
+    "finding": "The public route formerly reached the loader-bearing successor through a raw.githack redirect. Direct-route restoration recovered the H-Earth page but did not carry forward arrival-loader.js or its pre-render import.",
+    "intentionalRemovalEvidenceFound": false
+  },
+  "recoveredIdentity": {
+    "loaderId": "H_EARTH_ARRIVAL_LOADER_23949_v1",
+    "sourceCommit": "6d18e158171a31b296a787202ac731a5c0513e37",
+    "sourcePath": "showroom/globe/h-earth/arrival-loader.js",
+    "sourceGitBlob": "3c591feaadddf0739c81b5d31005632624ed44af",
+    "sourceSha256": "edadd01fbd9949f00cde824db402c2cdec7209aa8f89bf5089a7a3709f265e7d",
+    "candidateSha256": "edadd01fbd9949f00cde824db402c2cdec7209aa8f89bf5089a7a3709f265e7d",
+    "byteIdentity": "EXACT_MATCH"
+  },
+  "visualReview": {
+    "anchorManifest": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "anchorVisualProxy": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "anchorVisualProxySha256": "1b63b7f83ab5bd399f1210051474179182d2c10dedf1f4d4860198e1c6d7b07b",
+    "reviewMethod": "Exact recovered source identity plus source-level visual comparison against the repository visual proxy",
+    "observations": [
+      "The loader is a temporary full-viewport maritime-dark arrival surface labeled H-Earth live world initialization and Entering the coast.",
+      "Its single-card composition remains visually subordinate to the canonical world and introduces no dashboard, map, parallel world, or duplicate product.",
+      "The loader fades and removes itself only after READY_PUBLISHED, revealing the unchanged H-Earth ground world.",
+      "Reduced-motion users retain the same semantic startup information without animated transitions."
+    ],
+    "result": "PASS"
+  },
+  "runtimeProof": {
+    "environment": "NODE_24_DOM_EVENT_CONTRACT_HARNESS",
+    "loaderMountedBeforeRendererReady": true,
+    "initialVerifiedProgress": 8,
+    "boundedProgressBeforeNextVerifiedStage": 10,
+    "prematureDismissalPrevented": true,
+    "readyProgress": 100,
+    "dismissedAfterReady": true,
+    "headline": "Entering the coast.",
+    "startupEvent": "h-earth-renderer-startup-receipt",
+    "physicalDeviceAcceptanceClaimed": false,
+    "browserPreviewDisposition": "LOCAL_BROWSER_BINARY_UNAVAILABLE_NONPROPAGATING"
+  },
+  "continuityProof": {
+    "wrapperBaseSha256": "9cf8a5e020527fd88b96fec5f0f1ed1f0d21e0208c2e7d49b49ec6f4fb2091ab",
+    "wrapperCandidateSha256": "e3c0cbc1a926a6e21ade9c0c2ac32452d2fa9cca46464a915f436a3b99b7101a",
+    "wrapperDelta": "One import: await import('../arrival-loader.js'); immediately after renderer-startup-observer.v1.js and before public-live-gpu-integration.run8e-r3e.js.",
+    "unchangedCurrentIndexSha256": "1586d5b8c79a978151df3cd79dab0def246a3ac8427e5483bb0903debfc02cb6",
+    "unchangedRendererIntegrationSha256": "a86dd790f1aeb609a450b9719d8983a36cb942caeb98df950768d1877bb196b6",
+    "unchangedStartupObserverSha256": "0a2a752df10677a1570ab41a639b718dc2430fcab024a6f3bdcf1950b1c388b3",
+    "rendererChanged": false,
+    "terrainChanged": false,
+    "navigationChanged": false,
+    "audioChanged": false,
+    "worldContentChanged": false
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "authorityEffect": "EVIDENCE_ONLY_NO_NEW_PRODUCT_MERGE_DEPLOYMENT_PUBLICATION_OR_CLAIM_AUTHORITY"
+}

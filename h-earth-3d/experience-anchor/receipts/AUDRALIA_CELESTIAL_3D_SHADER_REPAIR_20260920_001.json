@@ -30,11 +30,7 @@
     {
       "path": "showroom/globe/audralia/index.html",
       "sha256": "5ff910cbff45d2a9b24343dd1999f45aba336cb46ba183f2a23a30aa1241a8ae"
-    },
-    {
-      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
-      "sha256": "5d295051438b281fca50bbf5a52cb0821775793382e4834a9273ab85aff833e0"
     }
   ],
-  "notes": "PASS is limited to preservation of the frozen H-Earth experience invariants while correcting the solar-direction uniform declaration scope and rebinding the existing page to that shader-valid renderer. It does not assert physical-device visual acceptance or celestial appearance/fidelity acceptance."
+  "notes": "PASS is limited to preservation of the frozen H-Earth experience invariants while rebinding the existing page to the already-qualified shader-valid celestial renderer now present on main. It does not assert physical-device visual acceptance or celestial appearance/fidelity acceptance."
 }

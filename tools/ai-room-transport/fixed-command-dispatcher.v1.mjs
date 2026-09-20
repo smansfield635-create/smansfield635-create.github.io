@@ -57,6 +57,50 @@ function safeEnvironment() {
   return Object.fromEntries(keys.filter(key => process.env[key] != null).map(key => [key, process.env[key]]));
 }
 
+function buildPreAdmissionCompilerCommand(descriptor, inputs, worktreeParent) {
+  const requestPath = path.join(worktreeParent, 'canonical-operation-request.input.json');
+  const procedurePath = path.join(worktreeParent, 'canonical-construction-procedure.input.json');
+  const outputDir = path.join(worktreeParent, 'canonical-packet-output');
+  let requestText, procedureText;
+  try {
+    requestText = Buffer.from(inputs.requestBase64, 'base64').toString('utf8');
+    procedureText = Buffer.from(inputs.procedureBase64, 'base64').toString('utf8');
+    JSON.parse(requestText); JSON.parse(procedureText);
+  } catch { fail('PRE_ADMISSION_COMPILER_INPUT_DECODE_FAILED'); }
+  fs.writeFileSync(requestPath, requestText);
+  fs.writeFileSync(procedurePath, procedureText);
+  return {
+    executable: 'node',
+    args: [descriptor.commandSpecification.scriptPath, '--request', requestPath, '--procedure', procedurePath, '--output-dir', outputDir],
+    digest: commandDigest('node', [descriptor.commandSpecification.scriptPath, '--request', requestPath, '--procedure', procedurePath, '--output-dir', outputDir]),
+    outputDir
+  };
+}
+function materializePreAdmissionCompilerPayload(outputDir, payloadReceiptPath) {
+  const names=['canonical-operation-request.json','canonical-construction-procedure.json','canonical-intake-envelope.json','canonical-intake-comment.txt','canonical-packet-receipt.json'];
+  for(const name of names) if(!fs.existsSync(path.join(outputDir,name))) fail('PRE_ADMISSION_COMPILER_ARTIFACT_MISSING',name);
+  const packetReadyReceipt=JSON.parse(fs.readFileSync(path.join(outputDir,'canonical-packet-receipt.json'),'utf8'));
+  if(packetReadyReceipt.schema!=='CANONICAL_PACKET_READY_RECEIPT_v1'||packetReadyReceipt.result!=='PACKET_READY'||packetReadyReceipt.authorityEffect!=='NONE_PACKET_COMPILATION_ONLY') fail('PRE_ADMISSION_COMPILER_RECEIPT_INVALID');
+  const payload=stable({
+    schema:'CANONICAL_PACKET_COMPILER_EXECUTION_RECEIPT_v1',
+    result:'PACKET_READY',
+    packetReadyReceipt,
+    canonicalOperationRequest:JSON.parse(fs.readFileSync(path.join(outputDir,'canonical-operation-request.json'),'utf8')),
+    canonicalConstructionProcedure:JSON.parse(fs.readFileSync(path.join(outputDir,'canonical-construction-procedure.json'),'utf8')),
+    canonicalIntakeEnvelope:JSON.parse(fs.readFileSync(path.join(outputDir,'canonical-intake-envelope.json'),'utf8')),
+    canonicalIntakeComment:fs.readFileSync(path.join(outputDir,'canonical-intake-comment.txt'),'utf8'),
+    repositoryMutationPerformed:false,
+    admissionAuthorityCreated:false,
+    mutationAuthorityCreated:false,
+    mergeAuthorityCreated:false,
+    deploymentAuthorityCreated:false,
+    releaseAuthorityCreated:false,
+    publicationAuthorityCreated:false,
+    arbitraryCommandAuthorityCreated:false,
+    authorityEffect:'NONE_PACKET_COMPILATION_ONLY'
+  });
+  fs.writeFileSync(payloadReceiptPath,JSON.stringify(payload,null,2)+'\n');
+}
 export function buildFixedCommand(descriptor, inputs, payloadReceiptPath) {
   const specification = assertObject(descriptor.commandSpecification, 'COMMAND_SPECIFICATION_INVALID');
   if (specification.shell !== false) fail('SHELL_EXECUTION_PROHIBITED');
@@ -285,13 +329,14 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
     if (actualHead !== descriptor.exactToolingHead) fail('EXACT_TOOLING_HEAD_MISMATCH', `${descriptor.exactToolingHead}:${actualHead}`);
     if (changedPaths(toolRoot).length !== 0) fail('TOOLING_WORKTREE_NOT_CLEAN_BEFORE_EXECUTION');
     const payloadReceiptPath = path.join(worktreeParent, 'command-payload-receipt.json');
-    const fixed = buildFixedCommand(descriptor, resolution.validatedInputs, payloadReceiptPath);
+    const fixed = descriptor.descriptorId === 'CANONICAL_PACKET_COMPILER_PRE_ADMISSION_V1' ? buildPreAdmissionCompilerCommand(descriptor, resolution.validatedInputs, worktreeParent) : buildFixedCommand(descriptor, resolution.validatedInputs, payloadReceiptPath);
     const streamOutput = descriptor.commandSpecification?.streamOutput === true;
     if (streamOutput) console.log('AI_TOOLING_PHASE REGISTERED_COMMAND_START');
     const execution = run(fixed.executable, fixed.args, { cwd: toolRoot, env: safeEnvironment(), visible: streamOutput });
     if (streamOutput) console.log(`AI_TOOLING_PHASE REGISTERED_COMMAND_END status=${execution.status}`);
     const afterPaths = changedPaths(toolRoot);
     validateChangedPaths(descriptor, afterPaths);
+    if (descriptor.descriptorId === 'CANONICAL_PACKET_COMPILER_PRE_ADMISSION_V1' && execution.status === 0 && execution.error == null) materializePreAdmissionCompilerPayload(fixed.outputDir, payloadReceiptPath);
 
     if (!fs.existsSync(payloadReceiptPath)) {
       const structuredFailurePayload = extractRegisteredStructuredFailurePayload(descriptor, execution);

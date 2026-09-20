@@ -51,11 +51,20 @@ function createState(gl){
     in vec3 a_position;
     in float a_size;
     uniform mat3 u_camera;
+    uniform vec3 u_eye;
+    uniform vec3 u_planet_center;
+    uniform float u_planet_radius;
     uniform float u_visibility;
     uniform float u_aspect;
     void main(){
-      vec3 q=u_camera*a_position;
-      if(q.z<=0.02){gl_Position=vec4(2.0,2.0,1.0,1.0);gl_PointSize=0.0;return;}
+      vec3 direction=normalize(a_position);
+      vec3 oc=u_eye-u_planet_center;
+      float b=dot(oc,direction);
+      float cc=dot(oc,oc)-u_planet_radius*u_planet_radius;
+      float disc=b*b-cc;
+      bool planetOccluded=disc>=0.0&&(-b-sqrt(max(disc,0.0)))>0.0;
+      vec3 q=u_camera*direction;
+      if(planetOccluded||q.z<=0.02){gl_Position=vec4(2.0,2.0,1.0,1.0);gl_PointSize=0.0;return;}
       float f=1.0/tan(radians(55.0)*0.5);
       gl_Position=vec4((q.x*f/max(u_aspect,1.0))/q.z,(q.y*f)/q.z,0.999,1.0);
       gl_PointSize=a_size*(0.45+0.55*u_visibility);
@@ -126,7 +135,7 @@ function createState(gl){
       float radius2=dot(p,p);
       if(radius2>1.22)discard;
       float z=sqrt(max(0.0,1.0-radius2));
-      vec3 normal=normalize(vec3(p,z));
+      vec3 normal=normalize(vec3(p,-z));
 
       if(u_kind==0){
         float granule=noise(p*13.0+vec2(1.3,-0.7));
@@ -204,6 +213,9 @@ function createState(gl){
     starVisibility:gl.getUniformLocation(starProgram,'u_visibility'),
     starAspect:gl.getUniformLocation(starProgram,'u_aspect'),
     starCamera:gl.getUniformLocation(starProgram,'u_camera'),
+    starEye:gl.getUniformLocation(starProgram,'u_eye'),
+    starPlanetCenter:gl.getUniformLocation(starProgram,'u_planet_center'),
+    starPlanetRadius:gl.getUniformLocation(starProgram,'u_planet_radius'),
     bodyProgram,
     bodyVao,
     direction:gl.getUniformLocation(bodyProgram,'u_direction'),
@@ -246,7 +258,7 @@ function restoreState(gl,prior){
 
 const vdot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],vsub=(a,b)=>a.map((v,i)=>v-b[i]),vlen=a=>Math.hypot(...a),vnorm=a=>{const l=vlen(a)||1;return a.map(v=>v/l);};
 function raySphereOccluded(eye,dir,center,radius){const oc=vsub(eye,center),b=vdot(oc,dir),cc=vdot(oc,oc)-radius*radius,disc=b*b-cc;if(disc<0)return false;const t=-b-Math.sqrt(disc);return t>0;}
-export const AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY=Object.freeze({schema:'AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY_v1',sunDirection:Object.freeze(vnorm([0.42,0.78,0.46])),moonPosition:Object.freeze([-22000,9800,25200]),stars:'FIBONACCI_UNIT_SPHERE_256',screenSpacePositionAuthority:false,moonFiniteDistance:true});
+export const AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY=Object.freeze({schema:'AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY_v1',sunDirection:Object.freeze(vnorm([0.42,0.78,0.46])),moonPosition:Object.freeze([-22000,9800,25200]),moonRadius:1900,stars:'FIBONACCI_UNIT_SPHERE_256',screenSpacePositionAuthority:false,moonFiniteDistance:true});
 
 export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunDirection=AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.sunDirection}={}){
   const visibility=visibilityForScale(viewScale);
@@ -265,9 +277,17 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunD
   const prior=captureState(gl);
   const aspect=Math.max(1,gl.drawingBufferWidth/Math.max(1,gl.drawingBufferHeight));
   const frame=cameraFrame||{right:[1,0,0],up:[0,1,0],forward:[0,0,1]};
-  const cameraMatrix=new Float32Array([...frame.right,...frame.up,...frame.forward]);
+  const cameraMatrix=new Float32Array([
+    frame.right[0],frame.up[0],frame.forward[0],
+    frame.right[1],frame.up[1],frame.forward[1],
+    frame.right[2],frame.up[2],frame.forward[2]
+  ]);
   const eye=frame.eye||[0,0,0],planetCenter=frame.planetCenter||[0,-6200,0],planetRadius=Number(frame.planetRadius)||6200;
-  const moonDirection=vnorm(vsub(AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.moonPosition,eye));
+  const moonDelta=vsub(AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.moonPosition,eye);
+  const moonDistance=vlen(moonDelta),moonDirection=vnorm(moonDelta),moonRadius=AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.moonRadius;
+  const projectionScale=1/Math.tan(55*Math.PI/360);
+  const moonAngularRadius=Math.asin(Math.min(0.999,moonRadius/Math.max(moonRadius+1,moonDistance)));
+  const moonProjectedRadius=Math.tan(moonAngularRadius)*projectionScale;
   const sunDir=vnorm(sunDirection),sunCamera=[vdot(frame.right,sunDir),vdot(frame.up,sunDir),vdot(frame.forward,sunDir)];
   let draws=0;
   try{
@@ -282,6 +302,9 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunD
     gl.uniform1f(state.starVisibility,visibility);
     gl.uniform1f(state.starAspect,aspect);
     gl.uniformMatrix3fv(state.starCamera,false,cameraMatrix);
+    gl.uniform3fv(state.starEye,eye);
+    gl.uniform3fv(state.starPlanetCenter,planetCenter);
+    gl.uniform1f(state.starPlanetRadius,planetRadius);
     gl.drawArrays(gl.POINTS,0,256);
     draws++;
 
@@ -302,7 +325,7 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunD
     gl.uniform1i(state.kind,1);
     gl.uniform3fv(state.direction,moonDirection);
     gl.uniform1f(state.occluded,raySphereOccluded(eye,moonDirection,planetCenter,planetRadius)?1:0);
-    gl.uniform1f(state.radius,0.115);
+    gl.uniform1f(state.radius,moonProjectedRadius);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     draws++;
   }finally{

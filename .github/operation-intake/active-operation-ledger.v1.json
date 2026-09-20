@@ -1516,6 +1516,49 @@
       "scopeHash": "1e15c6ce4033764ff21796dd1618918d575702bd56793bad4606f01a7258099e",
       "state": "ADMITTED_LOCKED"
     },
+    "1e26b694cba17e8df8deea24cfc0a8d75c213ad2ce4e337f670ade3efa27374b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "650689982ab33cfe763a8c458c716b3264400258",
+          "lockGeneration": 2457,
+          "lockScope": "EDUCATION:1001:SEVEN_SWAP_CUMULATIVE_REGRESSION:V1",
+          "operationId": "EDUCATION_SEVEN_SWAP_CUMULATIVE_REGRESSION_20260920_001",
+          "procedureLocatorDigest": "ae3b9b6ee731d036169a94372d2dbd98abb6de17df0d778cfaf89f9c625db62b",
+          "requestDigest": "f6360b41dcb50428b63a4fe7feea1e8ed5eaeb5da4663d56022ec2baeac11451",
+          "scopeHash": "1e26b694cba17e8df8deea24cfc0a8d75c213ad2ce4e337f670ade3efa27374b"
+        },
+        "bindingDigest": "cb2f61c1b50cc69d5afb67d73bec13f17075be7e6a7ef363271bc6614868d420",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0b4a116670b9ba1052b2db7b02f86961f3220de51491821b90f7fcadc5d17431",
+          "commentId": 5752740858,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3982,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35538397465,
+          "workflowSha": "650689982ab33cfe763a8c458c716b3264400258"
+        },
+        "lineageAnchorCommitSha": "3c8436775fed1ad8efa3379fbfbfca9f7c5578c7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "650689982ab33cfe763a8c458c716b3264400258",
+      "lockGeneration": 2457,
+      "lockScope": "EDUCATION:1001:SEVEN_SWAP_CUMULATIVE_REGRESSION:V1",
+      "operationId": "EDUCATION_SEVEN_SWAP_CUMULATIVE_REGRESSION_20260920_001",
+      "procedureLocatorDigest": "ae3b9b6ee731d036169a94372d2dbd98abb6de17df0d778cfaf89f9c625db62b",
+      "released": false,
+      "requestDigest": "f6360b41dcb50428b63a4fe7feea1e8ed5eaeb5da4663d56022ec2baeac11451",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1e26b694cba17e8df8deea24cfc0a8d75c213ad2ce4e337f670ade3efa27374b",
+      "state": "ADMITTED_LOCKED"
+    },
     "1f09a3d75fd0ef401b128d5c65772b9b10878c5d0f196cf1f06989888f70440e": {
       "governingHead": "d19405d327585850ac095f236820f7b3072edc1c",
       "lockGeneration": 1532,
@@ -13071,7 +13114,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2456,
+  "lockGeneration": 2457,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

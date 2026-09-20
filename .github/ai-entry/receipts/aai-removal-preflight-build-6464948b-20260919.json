@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "aai-removal-preflight-build-6464948b-20260919",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3921,
+  "requestBranch": "ai-dispatch-request-aai-removal-preflight-build",
+  "requestCommit": "a4b352b400dcea9bc2b9bc677dd58e4a0a5f9d0d",
+  "requestCommitParent": "6464948bbb3fdbd523a4bf3d9b966a2a2a12fbbf",
+  "currentMainSha": "6464948bbb3fdbd523a4bf3d9b966a2a2a12fbbf",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "6464948bbb3fdbd523a4bf3d9b966a2a2a12fbbf",
+    "surface_id": "build"
+  },
+  "bridgeRunId": "35481790852",
+  "dispatchedRunId": 35481797952,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35481797952",
+  "dispatchedRunHeadSha": "6464948bbb3fdbd523a4bf3d9b966a2a2a12fbbf",
+  "dispatchedAt": "2026-09-20T01:35:45.533Z",
+  "resolvedAt": "2026-09-20T01:35:49.183Z"
+}

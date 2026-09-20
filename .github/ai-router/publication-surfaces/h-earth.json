@@ -1,0 +1,65 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "h-earth",
+  "description": "Canonical H-Earth live interactive world root route, including the exact restored arrival loader, its pre-render integration, and Run 8E renderer-ready publication contract.",
+  "checks": [
+    {
+      "path": "/showroom/globe/h-earth/index.html",
+      "includes": [
+        "<title>H-Earth · Live Interactive World</title>",
+        "id=\"h-earth-functional-landscape-route\"",
+        "data-h-earth-public-route=\"functional-landscape\"",
+        "data-run8e-ready=\"false\"",
+        "id=\"h-earth-current-run8e-module\"",
+        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=renderer-startup-receipt-v1&cb=1529becde512ce95"
+      ],
+      "excludes": [
+        "raw.githack.com",
+        "h-earth-live-6d18e158"
+      ]
+    },
+    {
+      "path": "/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "includes": [
+        "import '../diagnostic/renderer-startup-observer.v1.js';",
+        "await import('../arrival-loader.js');",
+        "await import('./public-live-gpu-integration.run8e-r3e.js');",
+        "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"
+      ],
+      "excludes": [
+        "window.location.replace",
+        "raw.githack.com"
+      ]
+    },
+    {
+      "path": "/showroom/globe/h-earth/arrival-loader.js",
+      "includes": [
+        "H_EARTH_ARRIVAL_LOADER_23949_v1",
+        "H-Earth · live world initialization",
+        "Entering the coast.",
+        "h-earth-renderer-startup-receipt",
+        "READY_PUBLISHED",
+        "verifiedMilestoneProgress:true",
+        "boundedStageActivity:true"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/h-earth/",
+    "timeoutMs": 120000,
+    "readyAttribute": {
+      "selector": "#h-earth-functional-landscape-route",
+      "name": "data-run8e-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/h-earth/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": []
+  }
+}

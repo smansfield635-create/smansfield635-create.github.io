@@ -19,6 +19,7 @@ import {
 } from './lib.v1.mjs';
 import { resolveToolset } from './toolset-resolver.v1.mjs';
 import { selectBackend } from './backend-selector.v1.mjs';
+const PRE_ADMISSION_PACKET_COMPILER_DESCRIPTOR='CANONICAL_PACKET_COMPILER_EXECUTION_V1';
 
 function run(command, args, options = {}) {
   const visible = options.visible === true;
@@ -359,6 +360,9 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
 }
 
 export function dispatchFromIdentities({ request, registry, root, allowCandidate = false }) {
+  if (request?.descriptorId === PRE_ADMISSION_PACKET_COMPILER_DESCRIPTOR) {
+    return dispatchLoaded({ request, registry, admissionReceipt: null, admissionReceiptIdentity: null, routerReceipt: null, root, allowCandidate });
+  }
   const admission = loadJsonAtIdentity(root, request.admissionReceiptIdentity);
   const router = loadJsonAtIdentity(root, request.routerReceiptIdentity);
   return dispatchLoaded({

@@ -67,7 +67,7 @@
     "cost",
     "price",
     "mine",
-    "yours",
+    "whose",
     "land",
     "farm",
     "neighbor",
@@ -117,7 +117,7 @@
       "cost",
       "price",
       "mine",
-      "yours",
+      "whose",
       "land",
       "farm"
     ],
@@ -139,12 +139,17 @@
     "specialization_exclusion_pass": true,
     "specialized_science_added": false,
     "legal_jargon_added": false,
-    "note": "law and government are admitted as ordinary civic words, not technical legal vocabulary."
+    "note": "law and government are admitted as ordinary civic words, not technical legal vocabulary.",
+    "normalization_repair": {
+      "removed_counted_variant": "yours",
+      "replacement_unique_concept": "whose",
+      "note": "yours remains teachable as a possessive form; whose occupies the lexical slot as a distinct interrogative concept."
+    }
   },
   "traversal_state": {
-    "CURRENT_STATE": "MAJOR_LEVEL_2_BAND_B_50_FROZEN",
-    "ACTION_PERFORMED": "Second 50-word Level 2 band derived from transfer failures and nearest semantic neighbors.",
-    "ENGINE_RESPONSE": "Band closes the remaining measured frontier with zero overlap against the first 300 words.",
-    "NEXT_REQUIRED_INPUT": "LEVEL_1_PLUS_LEVEL_2AB_350_WORD_STRESS_TEST"
+    "CURRENT_STATE": "MAJOR_LEVEL_2_250_NORMALIZED_AND_REPAIRED",
+    "ACTION_PERFORMED": "One redundant possessive-form slot replaced with one unique conversational concept.",
+    "ENGINE_RESPONSE": "Major Level 2 restored to 250 unique lexical concepts.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_3_SIX_SLOT_NORMALIZATION_REPAIR"
   }
 }

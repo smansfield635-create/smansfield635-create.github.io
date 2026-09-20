@@ -1,0 +1,187 @@
+{
+  "object": "MAJOR_LEVEL_2_BAND_A_50_GEOMETRIC_RECONSTRUCTION",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "FROZEN_CANDIDATE_BAND",
+  "parent_authority": "/products/education/authority/major-level-1-250-geometry.v1.json",
+  "source_test": "/products/education/authority/major-level-1-250-stress-test.v1.json",
+  "design_law": {
+    "target_count": 50,
+    "admission_order": [
+      "close measured Level 1 failures",
+      "expand to nearest empty semantic neighbors",
+      "prefer plain K-12 conversational utility",
+      "reject redundancy with Level 1",
+      "reject technical, legal, and specialized scientific vocabulary"
+    ],
+    "geometry": "4x4x4x4",
+    "axes": {
+      "function": [
+        "COMMUNICATION",
+        "CONDUCT",
+        "JUDGMENT",
+        "INSTITUTION"
+      ],
+      "direction": [
+        "NORTH_DEFINE_ORIENT",
+        "EAST_USE_EXECUTE",
+        "SOUTH_SUSTAIN_CONNECT",
+        "WEST_CORRECT_LIMIT"
+      ],
+      "scope": [
+        "SELF",
+        "OTHER",
+        "GROUP",
+        "WORLD"
+      ],
+      "expression": [
+        "ENTITY",
+        "ACTION",
+        "RELATION",
+        "STATE"
+      ]
+    }
+  },
+  "measured_frontier_closed": [
+    "explicit rule",
+    "explicit permission",
+    "explicit obligation",
+    "sharing/cooperation",
+    "role/responsibility",
+    "accountability",
+    "organization",
+    "leadership/authority",
+    "public services",
+    "system/structure",
+    "probability beyond maybe/sure"
+  ],
+  "words": [
+    "rule",
+    "must",
+    "may",
+    "allow",
+    "share",
+    "join",
+    "follow",
+    "lead",
+    "leader",
+    "team",
+    "group",
+    "role",
+    "duty",
+    "responsibility",
+    "responsible",
+    "account",
+    "system",
+    "structure",
+    "organize",
+    "organization",
+    "community",
+    "public",
+    "service",
+    "office",
+    "company",
+    "business",
+    "worker",
+    "manager",
+    "customer",
+    "member",
+    "explain",
+    "show",
+    "example",
+    "true",
+    "false",
+    "fact",
+    "likely",
+    "probably",
+    "chance",
+    "safe",
+    "danger",
+    "protect",
+    "support",
+    "care",
+    "respect",
+    "trust",
+    "promise",
+    "decide",
+    "decision",
+    "return"
+  ],
+  "clusters": {
+    "conduct_and_obligation": [
+      "rule",
+      "must",
+      "may",
+      "allow",
+      "share",
+      "join",
+      "follow",
+      "promise"
+    ],
+    "leadership_and_group": [
+      "lead",
+      "leader",
+      "team",
+      "group",
+      "member",
+      "manager",
+      "worker",
+      "community"
+    ],
+    "responsibility_and_systems": [
+      "role",
+      "duty",
+      "responsibility",
+      "responsible",
+      "account",
+      "system",
+      "structure",
+      "organize",
+      "organization"
+    ],
+    "everyday_institutions": [
+      "public",
+      "service",
+      "office",
+      "company",
+      "business",
+      "customer"
+    ],
+    "reasoning_and_explanation": [
+      "explain",
+      "show",
+      "example",
+      "true",
+      "false",
+      "fact",
+      "likely",
+      "probably",
+      "chance",
+      "decide",
+      "decision"
+    ],
+    "safety_and_social_stability": [
+      "safe",
+      "danger",
+      "protect",
+      "support",
+      "care",
+      "respect",
+      "trust",
+      "return"
+    ]
+  },
+  "validation": {
+    "unique_word_count": 50,
+    "overlap_with_major_level_1": 0,
+    "specialization_exclusion_pass": true,
+    "legal_jargon_added": false,
+    "specialized_science_added": false
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "MAJOR_LEVEL_2_BAND_A_50_FROZEN",
+    "ACTION_PERFORMED": "First 50 Level 2 words derived deterministically from Level 1 failures and nearest empty semantic neighbors.",
+    "ENGINE_RESPONSE": "Band closes measured frontier without duplicating Level 1.",
+    "NEXT_REQUIRED_INPUT": "LEVEL_1_PLUS_LEVEL_2A_300_WORD_STRESS_TEST"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "object": "EDUCATION_1001_HELDOUT_GENERALIZATION_3_STRESS_DECOMPOSITION",
+  "version": "v1",
+  "status": "PASS_ALREADY_DERIVABLE_SCORER_UNDERAPPLIED_EXISTING_MORPHOLOGY",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_STRESS_RESIDUAL_DECOMPOSITION_20260920_001",
+  "lock_generation": 2465,
+  "source_candidate": "10aa8e9a4e10c7d97a8c9bb9d6b5de2619e4a5f2",
+  "preserved_evidence": {
+    "third_battery_path": "/products/education/authority/1001-heldout-generalization-3-battery.v1.json",
+    "third_battery_blob": "97b26b63903706ef583ba25e95e89c0fb1fcf3bd",
+    "third_result_path": "/products/education/authority/1001-heldout-generalization-3-result.v1.json",
+    "third_result_blob": "250f5efd81f8ffb76634fe703ead80c1c386e4bf",
+    "prospective_result_preserved": "528 direct / 224 B / 16 C / 752 practical = 97.9%",
+    "retroactive_mutation": false
+  },
+  "residual_observation": {
+    "failed_task_ids": [
+      "K369",
+      "K370",
+      "K371",
+      "K372",
+      "K373",
+      "K374",
+      "K375",
+      "K376",
+      "K377",
+      "K378",
+      "K379",
+      "K380",
+      "K381",
+      "K382",
+      "K383",
+      "K384"
+    ],
+    "failure_count": 16,
+    "sole_unresolved_anchor": "stress",
+    "safety_critical_failures": 0
+  },
+  "preexisting_frozen_route": {
+    "source": "THIRD_PROSPECTIVE_BATTERY_FROZEN_BEFORE_SCORING",
+    "concept": "stress",
+    "components": [
+      "worried",
+      "feeling"
+    ],
+    "present_on_all_16_tasks": true,
+    "route_was_added_after_scoring": false
+  },
+  "authority_check": {
+    "worried": {
+      "status": "CANONICAL_LEXICAL_CONCEPT",
+      "available": true
+    },
+    "feel": {
+      "status": "CANONICAL_LEXICAL_CONCEPT",
+      "available": true
+    },
+    "feeling": {
+      "status": "PREDICTABLE_GRAMMATICAL_ING_FORM_OF_FEEL",
+      "independent_lexical_slot_required": false,
+      "authority": "/products/education/authority/vocabulary-morphological-normalization.v1.json",
+      "governing_law": "A predictable grammatical form created from an admitted word does not consume another vocabulary slot."
+    }
+  },
+  "derivation": {
+    "classification": "ALREADY_DERIVABLE",
+    "frozen_semantic_route": "stress -> worried + feeling",
+    "grammatical_realization_examples": [
+      "feeling worried",
+      "I feel worried"
+    ],
+    "lexical_slots_added": 0,
+    "vocabulary_mutations": 0,
+    "productive_rule_mutations": 0,
+    "new_composition_rule_added": false,
+    "reason": "The semantic route was frozen before scoring, and each component is available under the pre-existing lexical plus morphology authority. The observed C classification resulted from the scorer treating 'feeling' as an unresolved lexical item instead of applying ordinary -ing morphology to canonical 'feel'."
+  },
+  "task_adequacy": [
+    {
+      "id": "K369",
+      "adequate": true
+    },
+    {
+      "id": "K370",
+      "adequate": true
+    },
+    {
+      "id": "K371",
+      "adequate": true
+    },
+    {
+      "id": "K372",
+      "adequate": true
+    },
+    {
+      "id": "K373",
+      "adequate": true
+    },
+    {
+      "id": "K374",
+      "adequate": true
+    },
+    {
+      "id": "K375",
+      "adequate": true
+    },
+    {
+      "id": "K376",
+      "adequate": true
+    },
+    {
+      "id": "K377",
+      "adequate": true
+    },
+    {
+      "id": "K378",
+      "adequate": true
+    },
+    {
+      "id": "K379",
+      "adequate": true
+    },
+    {
+      "id": "K380",
+      "adequate": true
+    },
+    {
+      "id": "K381",
+      "adequate": true
+    },
+    {
+      "id": "K382",
+      "adequate": true
+    },
+    {
+      "id": "K383",
+      "adequate": true
+    },
+    {
+      "id": "K384",
+      "adequate": true
+    }
+  ],
+  "interpretation": [
+    "No new lexical concept is required to traverse the observed stress frontier.",
+    "No new productive rule is required; ordinary morphology was already authorized.",
+    "The third prospective result remains preserved as the historical output of its scorer and is not rewritten by this decomposition.",
+    "A separate audit operation may recompute the third battery under the already-declared scoring law with morphology correctly applied.",
+    "This decomposition does not itself authorize changing the prospective score, vocabulary, productive rules, battery, or result file."
+  ],
+  "next_gate": "SEPARATE_SCORER_CORRECTION_AUDIT_IF_OWNER_PROCEEDS"
+}

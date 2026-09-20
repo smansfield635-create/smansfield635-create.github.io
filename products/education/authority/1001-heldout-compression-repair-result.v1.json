@@ -15,6 +15,9 @@
     "lexical_leakage": 0
   },
   "baseline": {
+    "direct": 197,
+    "controlled_paraphrase": 157,
+    "genuine_failure": 30,
     "practical": 354,
     "practical_rate_percent": 92.2,
     "safety_failures": 5

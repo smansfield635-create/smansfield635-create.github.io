@@ -2,7 +2,7 @@
   "object": "MAJOR_LEVEL_4_BAND_A_50_GEOMETRIC_RECONSTRUCTION",
   "version": "v1",
   "owner": "Sean",
-  "status": "FROZEN_CANDIDATE_BAND",
+  "status": "FROZEN_CANONICAL_REPAIRED_BAND",
   "parent_authorities": [
     "/products/education/authority/major-level-1-250-geometry.v1.json",
     "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
@@ -75,10 +75,10 @@
     "win",
     "lose",
     "experience",
-    "festival",
+    "blood",
     "museum",
     "theater",
-    "radio",
+    "allergy",
     "online",
     "message"
   ],
@@ -98,7 +98,7 @@
       "hobby",
       "dance",
       "art",
-      "festival",
+      "blood",
       "museum",
       "theater"
     ],
@@ -119,7 +119,7 @@
       "screen",
       "video",
       "camera",
-      "radio",
+      "allergy",
       "online",
       "message"
     ],
@@ -154,5 +154,20 @@
     "ACTION_PERFORMED": "First 50-word Level 4 band derived from the final-program frontier.",
     "ENGINE_RESPONSE": "Band expands cultural participation, general knowledge, and flexible action expression with zero overlap; cumulative unique vocabulary reaches 800.",
     "NEXT_REQUIRED_INPUT": "LEVEL_1_TO_LEVEL_4A_800_WORD_STRESS_TEST"
+  },
+  "canonical_substitution_adoption": {
+    "operation_id": "EDUCATION_SEVEN_SWAP_CANONICAL_ADOPTION_20260920_001",
+    "substitutions": [
+      {
+        "out": "radio",
+        "in": "allergy"
+      },
+      {
+        "out": "festival",
+        "in": "blood"
+      }
+    ],
+    "evidence_authority": "/products/education/authority/1001-seven-swap-cumulative-regression-256.v1.json",
+    "lexical_count_preserved": true
   }
 }

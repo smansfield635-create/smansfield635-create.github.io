@@ -1,0 +1,85 @@
+{
+  "object": "EDUCATION_PRODUCTIVE_SYSTEMS_AUTHORITY",
+  "version": "v1",
+  "status": "CANDIDATE_BOUND_TO_ADMITTED_OPERATION",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_1001_COMPRESSION_REPAIR_FRONTIER_20260920_001",
+  "governing_head": "650689982ab33cfe763a8c458c716b3264400258",
+  "lexical_authority": {
+    "canonical_concept_total": 1001,
+    "count_effect_of_productive_systems": 0,
+    "rule": "Productive systems generate lawful surface forms and symbolic expressions without creating additional lexical-concept slots."
+  },
+  "productive_systems": [
+    {
+      "id": "GRAMMAR",
+      "role": "Generate ordinary sentence structure, function-word behavior, agreement, auxiliary behavior, and other grammatical transformations already permitted by the program.",
+      "lexical_slot_effect": 0
+    },
+    {
+      "id": "MORPHOLOGY",
+      "authority": "/products/education/authority/vocabulary-morphological-normalization.v1.json",
+      "role": "Generate predictable inflectional forms without counting them as independent lexical concepts.",
+      "lexical_slot_effect": 0
+    },
+    {
+      "id": "NUMERATION",
+      "role": "Generate number expressions by rule rather than treating every numeral as an independent lexical concept.",
+      "lexical_slot_effect": 0,
+      "allowed_generation": [
+        "cardinal numbers",
+        "ordinal numbers",
+        "multi-digit and large numbers",
+        "ages",
+        "addresses and street numbers",
+        "prices and currency quantities",
+        "dates and calendar numbers",
+        "clock times",
+        "phone numbers and other digit strings",
+        "decimals",
+        "percentages",
+        "fractions when their component numerical relation is constructible"
+      ],
+      "seed_preservation": [
+        "one",
+        "two",
+        "three",
+        "number"
+      ],
+      "examples": [
+        {
+          "intent": "state age",
+          "surface_example": "27 years old",
+          "new_lexical_slots": 0
+        },
+        {
+          "intent": "state address",
+          "surface_example": "418 Main Street",
+          "new_lexical_slots": 0
+        },
+        {
+          "intent": "state price",
+          "surface_example": "$47",
+          "new_lexical_slots": 0
+        }
+      ],
+      "limits": [
+        "Numeration may generate quantity expressions but may not introduce unrelated lexical meaning.",
+        "Units, currencies, measurements, institutions, objects, or technical concepts not otherwise authorized remain lexical questions.",
+        "A generated numeral does not authorize an absent safety, medical, legal, or transactional concept."
+      ]
+    }
+  ],
+  "semantic_safety_law": {
+    "rule": "Controlled paraphrase counts as successful only when it preserves the task-relevant proposition.",
+    "safety_critical_rule": "For medical, emergency, legal, financial, identity, or other safety-critical tasks, approximate wording must not be credited when it can materially change the meaning.",
+    "example": "A statement that medicine makes someone sick is not automatically equivalent to a medication allergy."
+  },
+  "invariants": [
+    "The canonical lexical authority remains exactly 1,001 concepts.",
+    "Grammar, morphology, and numeration are productive systems, not additional vocabulary banks.",
+    "Numeration consumes zero independent lexical slots.",
+    "Existing lexical entries one, two, three, and number remain canonical and are not removed by this authority.",
+    "No canonical vocabulary-band word is changed by this authority."
+  ]
+}

@@ -7292,49 +7292,6 @@
       "scopeHash": "921ae8ed25470bbd4e96cace0e352ef6be92ac50a35d13c3f566c809fc8df27a",
       "state": "ADMITTED_LOCKED"
     },
-    "92a35cda80d62a8df7f045dfa5a585192a44a774c895014cdb4934dcc687d720": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b7ae2fe511dba9489360a6ec28ca29c3e05a3800",
-          "lockGeneration": 2451,
-          "lockScope": "ARCHCOIN:WEBSITE:CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR",
-          "operationId": "ARCHCOIN_CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR_20260920_001",
-          "procedureLocatorDigest": "69f61ca1a20716a6f73b2417fa6344b0cd82d42bb1f79b0eb4ac7954f068f5b4",
-          "requestDigest": "ac5f3de18310776a038bd343d7e354dadab031abc00a54ae49d2fb3dc2d45fdc",
-          "scopeHash": "92a35cda80d62a8df7f045dfa5a585192a44a774c895014cdb4934dcc687d720"
-        },
-        "bindingDigest": "758a11750d046efe68608487d9650663bccc1faca7a6627218e9537de0399fca",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "109162ebd90560ce170d3904fa4105f67c801f1ca54e81e832545d887d5a49af",
-          "commentId": 5751546551,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3966,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35527193069,
-          "workflowSha": "b7ae2fe511dba9489360a6ec28ca29c3e05a3800"
-        },
-        "lineageAnchorCommitSha": "a525fc6eb88441c2fcd69a0244bb3b74ccdd7640",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "b7ae2fe511dba9489360a6ec28ca29c3e05a3800",
-      "lockGeneration": 2451,
-      "lockScope": "ARCHCOIN:WEBSITE:CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR",
-      "operationId": "ARCHCOIN_CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR_20260920_001",
-      "procedureLocatorDigest": "69f61ca1a20716a6f73b2417fa6344b0cd82d42bb1f79b0eb4ac7954f068f5b4",
-      "released": false,
-      "requestDigest": "ac5f3de18310776a038bd343d7e354dadab031abc00a54ae49d2fb3dc2d45fdc",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "92a35cda80d62a8df7f045dfa5a585192a44a774c895014cdb4934dcc687d720",
-      "state": "ADMITTED_LOCKED"
-    },
     "931dca0d9cc060b3166ac19ef348fb1f2ca2962b735996591b31756693863404": {
       "governingHead": "2c00dea965270821e159fa694e82a2501d35c1e7",
       "lockGeneration": 1481,
@@ -63989,6 +63946,50 @@
       "scopeHash": "04e471ea2362eeb9e016a54762a6de9ec358acf8f5d653443a3a6531c828b045",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b7ae2fe511dba9489360a6ec28ca29c3e05a3800",
+          "lockGeneration": 2451,
+          "lockScope": "ARCHCOIN:WEBSITE:CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR",
+          "operationId": "ARCHCOIN_CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR_20260920_001",
+          "procedureLocatorDigest": "69f61ca1a20716a6f73b2417fa6344b0cd82d42bb1f79b0eb4ac7954f068f5b4",
+          "requestDigest": "ac5f3de18310776a038bd343d7e354dadab031abc00a54ae49d2fb3dc2d45fdc",
+          "scopeHash": "92a35cda80d62a8df7f045dfa5a585192a44a774c895014cdb4934dcc687d720"
+        },
+        "bindingDigest": "758a11750d046efe68608487d9650663bccc1faca7a6627218e9537de0399fca",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "109162ebd90560ce170d3904fa4105f67c801f1ca54e81e832545d887d5a49af",
+          "commentId": 5751546551,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3966,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35527193069,
+          "workflowSha": "b7ae2fe511dba9489360a6ec28ca29c3e05a3800"
+        },
+        "lineageAnchorCommitSha": "a525fc6eb88441c2fcd69a0244bb3b74ccdd7640",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b7ae2fe511dba9489360a6ec28ca29c3e05a3800",
+      "lockGeneration": 2451,
+      "lockScope": "ARCHCOIN:WEBSITE:CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR",
+      "operationId": "ARCHCOIN_CONTEXTUAL_LABEL_AND_SPATIAL_CAROUSEL_REPAIR_20260920_001",
+      "procedureLocatorDigest": "69f61ca1a20716a6f73b2417fa6344b0cd82d42bb1f79b0eb4ac7954f068f5b4",
+      "released": true,
+      "requestDigest": "ac5f3de18310776a038bd343d7e354dadab031abc00a54ae49d2fb3dc2d45fdc",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "92a35cda80d62a8df7f045dfa5a585192a44a774c895014cdb4934dcc687d720",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

@@ -1,0 +1,120 @@
+{
+  "object": "LEVEL_1_TO_LEVEL_4AB_850_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-b-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 850,
+    "prior_battery_tasks": 332,
+    "fresh_transfer_tasks": 32,
+    "total_tasks": 364,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior demonstrated functions and test novel transfer in general knowledge, information/research, school-to-career discussion, and flexible action expression."
+  },
+  "results": {
+    "prior_332": {
+      "functionally_expressible": 332,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_32": {
+      "DIRECT": 23,
+      "COMPOSABLE": 6,
+      "MISSING": 3,
+      "functionally_expressible": 29,
+      "coverage_percent": 90.625
+    },
+    "overall_364": {
+      "functionally_expressible": 361,
+      "missing": 3,
+      "coverage_percent": 99.1758241758
+    }
+  },
+  "fresh_transfer_passed": [
+    "talk broadly about science without technical detail",
+    "talk about geography and regions",
+    "talk about the economy and market in plain language",
+    "discuss politics as a general topic without legal jargon",
+    "talk about literature, authors, readers, poems and novels",
+    "talk about nature, climate, forests, oceans and planets",
+    "discuss research, information, knowledge and data",
+    "describe education, college and career plans",
+    "discuss industry and population generally",
+    "describe a method or resource",
+    "compare local and global topics",
+    "participate in a discussion or debate",
+    "discover or search for information",
+    "figure out a simple problem compositionally",
+    "arrange or manage a task",
+    "handle a situation",
+    "remove or replace something",
+    "raise or collect something",
+    "connect two things",
+    "increase, decrease or reduce an amount",
+    "develop or create something",
+    "quit an activity",
+    "explain a research topic using evidence and opinion",
+    "discuss how education affects career",
+    "discuss how climate affects a region",
+    "compare two sources of information",
+    "discuss technology and society using general-knowledge vocabulary",
+    "combine data, opinion and uncertainty in one explanation",
+    "describe a debate about a public topic"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer everyday services and transactions",
+      "reason": "Money, price, buy/sell, store, office, service and customer exist, but banking, payment methods, repair/service appointments, mail/package and reservation language remain thin."
+    },
+    {
+      "function": "richer communication/media production",
+      "reason": "Message, email, phone, media, video, camera, website and online exist, but publish, post, upload, download, file, document, channel and audience-style language is incomplete."
+    },
+    {
+      "function": "richer personal development and life planning",
+      "reason": "Goal, career, education, progress, skill and plan exist, but habit, routine, challenge, opportunity, risk, benefit and achievement-style language remains sparse."
+    }
+  ],
+  "interpretation": [
+    "Band B materially expands high-school conversational breadth without requiring specialized subject vocabulary.",
+    "The remaining frontier has shifted to practical adult-transition language: services/transactions, digital communication production, and personal development/life planning.",
+    "No foundational capability reopened."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_4_band_b_status": "ADMITTED",
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_4_BAND_C_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "everyday services and transactions",
+      "communication/media production",
+      "personal development and life planning"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_850_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "332-function retention test plus 32-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 90.63% novel transfer; 99.18% overall across 364 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_4_BAND_C_GEOMETRIC_RECONSTRUCTION"
+  }
+}

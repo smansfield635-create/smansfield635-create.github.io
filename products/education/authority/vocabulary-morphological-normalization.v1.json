@@ -1,0 +1,130 @@
+{
+  "object": "VOCABULARY_MORPHOLOGICAL_NORMALIZATION_AUTHORITY",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "LOCKED_BEFORE_LEVEL_4",
+  "purpose": "Prevent grammatical or morphological variants from inflating the 1,001-word authority count.",
+  "governing_law": {
+    "unit_of_count": "UNIQUE_LEXICAL_CONCEPT",
+    "automatic_rule": "A predictable grammatical form created from an admitted word does not consume another vocabulary slot.",
+    "irregular_rule": "An irregular surface form may receive its own slot only when it must be learned independently and materially changes ordinary usage.",
+    "derivational_rule": "A derivative noun/adjective/verb is not automatically collapsed; it must add a distinct everyday concept or function to retain a slot.",
+    "examples": {
+      "reject": [
+        "focus/focused",
+        "organize/organized",
+        "high/higher",
+        "low/lower"
+      ],
+      "review": [
+        "meet/meeting",
+        "lead/leader",
+        "work/worker",
+        "own/owner"
+      ],
+      "irregular_possible": [
+        "be/am/is/are",
+        "do/did",
+        "good/better/best",
+        "bad/worse/worst",
+        "person/people"
+      ]
+    }
+  },
+  "detected_families": {
+    "automatic_duplicates": [
+      {
+        "base": "focus",
+        "variant": "focused",
+        "reason": "predictable participial/adjectival form"
+      },
+      {
+        "base": "organize",
+        "variant": "organized",
+        "reason": "predictable participial/adjectival form"
+      },
+      {
+        "base": "high",
+        "variant": "higher",
+        "reason": "predictable comparative form"
+      },
+      {
+        "base": "low",
+        "variant": "lower",
+        "reason": "predictable comparative form"
+      }
+    ],
+    "review_required": [
+      {
+        "base": "meet",
+        "variant": "meeting",
+        "reason": "-ing form may be lexicalized as an event noun"
+      },
+      {
+        "base": "lead",
+        "variant": "leader",
+        "reason": "derived role noun may be distinct"
+      },
+      {
+        "base": "work",
+        "variant": "worker",
+        "reason": "derived person-role noun may be distinct"
+      },
+      {
+        "base": "own",
+        "variant": "owner",
+        "reason": "derived person-role noun may be distinct"
+      },
+      {
+        "base": "your",
+        "variant": "yours",
+        "reason": "possessive-pronoun function may be distinct enough for learner utility"
+      }
+    ],
+    "irregular_surface_forms": [
+      {
+        "family": "do",
+        "forms": [
+          "do",
+          "does",
+          "did"
+        ]
+      },
+      {
+        "family": "person",
+        "forms": [
+          "person",
+          "people"
+        ]
+      },
+      {
+        "family": "good",
+        "forms": [
+          "good",
+          "better",
+          "best"
+        ]
+      },
+      {
+        "family": "bad",
+        "forms": [
+          "bad",
+          "worse",
+          "worst"
+        ]
+      }
+    ]
+  },
+  "execution_lock": {
+    "level_4_build": "PAUSED_UNTIL_NORMALIZATION_AUDIT_COMPLETE",
+    "cumulative_string_count": 750,
+    "cumulative_lexical_concept_count": "PENDING_AUDIT",
+    "requirement": "Replace every rejected redundant slot with a genuinely new geometric concept before resuming construction."
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "MORPHOLOGICAL_NORMALIZATION_REQUIRED",
+    "ACTION_PERFORMED": "Normalization law frozen and known variant families classified.",
+    "ENGINE_RESPONSE": "Level 4 construction paused; 750 string count is not yet accepted as 750 lexical concepts.",
+    "NEXT_REQUIRED_INPUT": "FULL_750_LEXICAL_FAMILY_AUDIT_AND_REDUNDANT_SLOT_REPLACEMENT"
+  }
+}

@@ -55,6 +55,57 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 @media(max-width:850px){.grid-4,.stage-map{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3,.language-grid,.result-grid{grid-template-columns:1fr}.topbar{align-items:flex-start}.routes{max-width:55%}}
 @media(max-width:620px){.shell{width:min(100% - 18px,var(--max))}.topbar{display:grid}.routes{max-width:none;justify-content:flex-start}.form-grid,.grid-4,.stage-map{grid-template-columns:1fr}.face-tabs{overflow:auto}.demo-head{display:grid}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Education layered-carousel successor — Methods reference architecture adapted to learning. */
+.edu-hero{margin-top:.6rem;padding:clamp(1.35rem,4vw,3rem);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(16rem,.6fr);gap:clamp(1rem,4vw,3rem);align-items:end;min-height:28rem;position:relative;overflow:hidden}
+.edu-hero::after{content:"";position:absolute;right:-8rem;top:-10rem;width:30rem;height:30rem;border-radius:50%;background:radial-gradient(circle,rgba(141,216,255,.13),rgba(185,160,255,.06) 42%,transparent 70%);pointer-events:none}
+.edu-hero__copy{position:relative;z-index:2;display:grid;gap:.9rem}.edu-hero__signal{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:.42rem;align-items:center;justify-content:flex-end;padding:1rem;border:1px solid var(--line);border-radius:1rem;background:rgba(255,255,255,.025)}
+.edu-hero__signal span{padding:.45rem .65rem;border-radius:999px;border:1px solid rgba(141,216,255,.24);color:var(--muted);font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.edu-hero__signal b{color:var(--gold)}
+
+.edu-carousel{--edu-accent:var(--gold);--edu-soft:rgba(244,207,131,.08);margin-top:1rem;padding:clamp(1rem,2.4vw,1.45rem);position:relative;overflow:hidden;min-height:46rem}
+.edu-carousel__header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:end;position:relative;z-index:5}.edu-carousel__live{color:var(--faint);font-size:.72rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.edu-carousel__tabs{display:flex;gap:.35rem;overflow-x:auto;padding:.85rem 0 .4rem;scrollbar-width:none;position:relative;z-index:6}.edu-carousel__tabs::-webkit-scrollbar{display:none}
+.edu-carousel__tab{flex:0 0 auto;min-height:2.45rem;padding:.5rem .72rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.025);color:var(--faint);font:inherit;font-size:.72rem;font-weight:850;cursor:pointer}
+.edu-carousel__tab[aria-selected="true"]{border-color:color-mix(in srgb,var(--edu-accent) 58%,transparent);background:var(--edu-soft);color:var(--text)}
+
+.edu-carousel__viewport{position:relative;height:31rem;overflow:hidden;perspective:2400px;perspective-origin:50% 42%;touch-action:pan-y;outline:none}.edu-carousel__viewport:focus-visible{outline:1px solid color-mix(in srgb,var(--edu-accent) 65%,transparent);outline-offset:-2px}
+.edu-carousel__track{position:absolute;inset:0;transform-style:preserve-3d}
+.edu-standard-card{--offset:0;--scale:1;--opacity:1;box-sizing:border-box;position:absolute;left:50%;top:2rem;width:clamp(19rem,34vw,30rem);max-width:calc(100vw - 2rem);height:25rem;overflow:hidden;transform:translateX(-50%) translateX(calc(var(--offset) * clamp(21rem,38vw,34rem))) translateZ(calc((1 - min(2,abs(var(--offset)))) * 2rem)) rotateY(calc(var(--offset) * -10deg)) scale(var(--scale));opacity:var(--opacity);border:1px solid rgba(255,255,255,.13);border-radius:1.2rem;background:radial-gradient(circle at 78% 0%,var(--edu-soft),transparent 38%),linear-gradient(150deg,rgba(19,28,45,.98),rgba(5,10,20,.99));box-shadow:0 28px 70px rgba(0,0,0,.38);transition:transform .55s cubic-bezier(.2,.78,.18,1),opacity .35s ease,border-color .35s ease;pointer-events:none}
+.edu-standard-card[data-active="true"]{z-index:6;--scale:1;--opacity:1;border-color:color-mix(in srgb,var(--edu-accent) 55%,transparent);pointer-events:auto}
+.edu-standard-card[data-adjacent="true"]{z-index:3;--scale:.78;--opacity:.26}.edu-standard-card[data-distant="true"]{visibility:hidden}
+.edu-standard-summary{height:100%;display:flex;flex-direction:column;padding:1.3rem 1.4rem}
+.edu-standard-count{color:var(--faint);font-size:.68rem;font-weight:800;letter-spacing:.14em}.edu-standard-kicker{margin:.55rem 0 0;color:var(--edu-accent);font-size:.67rem;font-weight:850;text-transform:uppercase;letter-spacing:.12em}
+.edu-standard-title{margin:.55rem 0 0;max-width:12ch;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.25rem,4vw,3.7rem);font-weight:500;line-height:.94;letter-spacing:-.04em}.edu-standard-copy{margin:.72rem 0 0;max-width:34rem;color:var(--muted);font-size:.95rem;line-height:1.5}
+.edu-story-preview{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:auto;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.07)}.edu-story-preview span{padding:.3rem .48rem;border-radius:999px;background:rgba(255,255,255,.035);color:var(--faint);font-size:.64rem}
+.edu-inspect,.edu-return{min-height:2.65rem;margin-top:.8rem;padding:.62rem .9rem;border:1px solid color-mix(in srgb,var(--edu-accent) 48%,transparent);border-radius:999px;background:var(--edu-soft);color:var(--text);font:inherit;font-size:.8rem;font-weight:850;cursor:pointer;align-self:flex-start}
+
+.edu-carousel[data-inspecting="true"] .edu-carousel__viewport{position:fixed;z-index:100000;inset:0;width:100vw;height:100dvh;padding:clamp(1rem,3vw,2.2rem);display:grid;place-items:center;background:rgba(2,5,11,.88);backdrop-filter:blur(14px)}
+.edu-carousel[data-inspecting="true"] .edu-standard-card{visibility:hidden;pointer-events:none}
+.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"][data-inspecting="true"]{visibility:visible;pointer-events:auto;top:50%;width:min(calc(100vw - 3rem),70rem);max-width:70rem;height:min(80dvh,46rem);transform:translate(-50%,-50%);overflow:auto;opacity:1}
+.edu-inspection{display:none;padding:1rem 1.15rem 1.35rem}.edu-standard-card[data-inspecting="true"] .edu-standard-summary{display:none}.edu-standard-card[data-inspecting="true"] .edu-inspection{display:block}
+.edu-inspection__top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.8rem;align-items:start;padding-bottom:.9rem;border-bottom:1px solid var(--line)}.edu-inspection__top h3{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:500;line-height:1}.edu-return{margin:0;position:sticky;top:0;z-index:9;background:#08101d}
+.edu-lenses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.25rem;margin:.8rem 0;padding:.28rem;border:1px solid var(--line);border-radius:999px;background:rgba(3,8,16,.95);position:sticky;top:0;z-index:8}.edu-lens{min-height:2.45rem;border:1px solid transparent;border-radius:999px;background:transparent;color:var(--faint);font:inherit;font-weight:850;cursor:pointer}.edu-lens[aria-selected="true"]{border-color:color-mix(in srgb,var(--edu-accent) 45%,transparent);background:var(--edu-soft);color:var(--text)}
+.edu-information-grid{display:grid;grid-template-columns:minmax(10rem,15rem) minmax(0,1fr);gap:.8rem 1rem}.edu-story-rail{display:grid;align-content:start;border-right:1px solid rgba(255,255,255,.08)}.edu-story-tab{display:grid;grid-template-columns:1.7rem minmax(0,1fr);gap:.5rem;padding:.7rem .65rem;border:0;border-bottom:1px solid rgba(255,255,255,.06);background:transparent;color:var(--faint);font:inherit;text-align:left;cursor:pointer}.edu-story-tab span{color:var(--edu-accent);font-size:.64rem}.edu-story-tab strong{font-size:.8rem;line-height:1.25}.edu-story-tab[aria-selected="true"]{color:var(--text);background:var(--edu-soft);box-shadow:inset 2px 0 0 var(--edu-accent)}
+.edu-reading-cell{min-height:18rem;padding:1rem 1.1rem;border:1px solid rgba(255,255,255,.08);border-radius:.85rem;background:rgba(255,255,255,.025)}.edu-reading-cell .eyebrow{margin-bottom:.5rem}.edu-reading-cell h4{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.65rem,3vw,2.5rem);font-weight:500;line-height:1.05;margin:0}.edu-reading-cell p{margin:.75rem 0 0;line-height:1.62}.edu-evidence-boundary{margin-top:1rem;padding:.8rem .9rem;border-left:2px solid var(--edu-accent);background:var(--edu-soft);color:var(--muted)}
+.edu-carousel__note{margin:.35rem auto 0;max-width:58rem;text-align:center;color:var(--faint);font-size:.78rem}
+.edu-demo-gateway{margin-top:1rem;padding:clamp(1rem,3vw,1.45rem);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:center}.edu-demo-gateway p{max-width:54rem}
+
+@media(max-width:780px){
+ .edu-hero{grid-template-columns:1fr;min-height:auto}.edu-hero__signal{justify-content:flex-start}
+ .edu-carousel{border-inline:0;border-radius:0;padding-inline:.55rem;min-height:39rem}.edu-carousel__header{grid-template-columns:1fr}.edu-carousel__live{justify-self:start}
+ .edu-carousel__viewport{height:28rem}.edu-standard-card{top:1.5rem;width:82vw;max-width:82vw;height:23.5rem;transform:translateX(-50%) translateX(calc(var(--offset) * 86vw)) rotateY(calc(var(--offset) * -7deg)) scale(var(--scale))}
+ .edu-carousel[data-inspecting="true"] .edu-carousel__viewport{padding:0}.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"][data-inspecting="true"]{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border:0;border-radius:0;padding:max(.65rem,env(safe-area-inset-top)) .65rem max(1rem,env(safe-area-inset-bottom))}
+ .edu-inspection{padding:.5rem}.edu-inspection__top{grid-template-columns:1fr}.edu-return{justify-self:end}
+ .edu-information-grid{grid-template-columns:minmax(7rem,33%) minmax(0,1fr);gap:.55rem}.edu-story-tab{grid-template-columns:1.3rem minmax(0,1fr);padding:.58rem .45rem}.edu-story-tab strong{font-size:.72rem}
+ .edu-reading-cell{padding:.85rem}.edu-lenses{top:.1rem}.edu-demo-gateway{grid-template-columns:1fr}.edu-demo-gateway .button{justify-self:start}
+}
+@media(max-width:480px){
+ .edu-information-grid{grid-template-columns:1fr}.edu-story-rail{grid-template-columns:repeat(3,minmax(9rem,1fr));overflow-x:auto;border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.edu-story-tab{border-bottom:0;border-right:1px solid rgba(255,255,255,.06)}
+}
+@media(prefers-reduced-motion:reduce){
+ .edu-standard-card{transition:none}.edu-carousel__viewport{scroll-behavior:auto}.edu-standard-card[data-adjacent="true"]{transform:translateX(-50%) translateX(calc(var(--offset) * 84vw)) scale(.86)}
+}
+
 </style>
 </head>
 <body>
@@ -66,57 +117,48 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 </header>
 
 <main id="education-main">
-<section class="panel" aria-label="Education product">
-  <div class="face-tabs" role="tablist" aria-label="Education explanation">
-    <button class="face-tab" id="public-tab" role="tab" aria-selected="true" aria-controls="public-face" data-face="public">Public Face</button>
-    <button class="face-tab" id="technical-tab" role="tab" aria-selected="false" aria-controls="technical-face" data-face="technical">Technical Face</button>
+<section class="edu-hero panel" aria-labelledby="education-title">
+  <div class="edu-hero__copy">
+    <p class="eyebrow">English Fluency Accelerator · Adaptive Learning Architecture</p>
+    <h1 id="education-title">Start where your ability actually is.</h1>
+    <p class="lead">A 1,001-concept language system that uses productive rules, performance-gated progression, adaptive placement, and target-language demonstration. Explore the architecture spatially, then enter the demo at your verified starting coordinate.</p>
+    <div class="actions">
+      <button class="button" type="button" data-start-demo>Start the Demo</button>
+      <button class="button-secondary" type="button" data-jump-standards>Explore the Architecture</button>
+    </div>
+    <p class="boundary">Phase 1 measures reading comprehension and written or constructed expression. Speaking, pronunciation, listening, and oral fluency are outside the current evidence boundary.</p>
+  </div>
+  <div class="edu-hero__signal" aria-label="Program path">
+    <span>Claim</span><b>→</b><span>Test</span><b>→</b><span>Place</span><b>→</b><span>Learn</span><b>→</b><span>Transfer</span>
+  </div>
+</section>
+
+<section class="edu-carousel panel" id="education-standards-carousel" data-edu-carousel data-inspecting="false" aria-labelledby="standards-title">
+  <header class="edu-carousel__header">
+    <div>
+      <p class="eyebrow">Educational Architecture</p>
+      <h2 id="standards-title">Six standards. One learning system.</h2>
+      <p class="lead">Move through the shared carousel. Bring one standard forward, inspect its stories, then switch independently between Reading, Engineering, and Evidence.</p>
+    </div>
+    <div class="edu-carousel__live" data-edu-live aria-live="polite">Foundation · 1 of 6</div>
+  </header>
+
+  <div class="edu-carousel__tabs" role="tablist" aria-label="Education architecture standards" data-edu-tabs></div>
+
+  <div class="edu-carousel__viewport" data-edu-viewport tabindex="0" aria-label="Education standards carousel. Swipe or use arrow keys to move between standards.">
+    <div class="edu-carousel__track" data-edu-track></div>
   </div>
 
-  <section class="face-panel" id="public-face" role="tabpanel" aria-labelledby="public-tab">
-    <div class="hero">
-      <p class="eyebrow">Performance-Gated Language Learning</p>
-      <h1>Learn from where you actually are.</h1>
-      <p class="lead">This program does not assume every learner starts at the beginning. It combines a canonical 1,001-concept foundation with productive language systems, adaptive placement, guided practice, and target-language-only demonstration.</p>
-      <div class="actions"><button class="button" data-start-demo>Start the Demo</button><button class="button-secondary" data-open-face="technical">See Technical Face</button></div>
-      <p class="boundary">Phase 1 currently measures reading comprehension and written or constructed expression. It does not claim to measure speaking, pronunciation, listening, or oral fluency.</p>
-    </div>
+  <p class="edu-carousel__note">The architecture is layered rather than stacked. The selected standard stays in the same shared field while its Reading, Engineering, and Evidence views change independently.</p>
+</section>
 
-    <div class="grid-3" aria-label="Program differences">
-      <article class="card"><b>1 · Foundation</b><strong>1,001 canonical concepts</strong><span>A fixed lexical architecture supplies the foundation without pretending every usable form requires another vocabulary slot.</span></article>
-      <article class="card"><b>2 · Productive language</b><strong>Build more than you memorize</strong><span>Grammar, morphology, numeration, controlled composition, and semantic paraphrase are first-class parts of the learning system.</span></article>
-      <article class="card"><b>3 · Placement</b><strong>Start at demonstrated ability</strong><span>Your claimed level chooses where testing begins. Your performance determines where the learning experience starts.</span></article>
-    </div>
-
-    <div class="grid-4" aria-label="Learning standards">
-      <article class="card"><b>Eight stages</b><strong>Competency progression</strong><span>Orientation, direct concepts, morphology, grammar and numeration, composition, practical response, unseen transfer, and completion.</span></article>
-      <article class="card"><b>Four cycles</b><strong>Support fades with independence</strong><span>Native-supported, bilingual-bridged, target-dominant, and target-only demonstration are recorded separately.</span></article>
-      <article class="card"><b>Performance gates</b><strong>Screens do not equal mastery</strong><span>Advancement is based on demonstrated competency, not time served or passive completion.</span></article>
-      <article class="card"><b>Transfer</b><strong>Learning has to travel</strong><span>Unseen tasks are separated from trained and practiced tasks so the program can distinguish practice from transfer.</span></article>
-    </div>
-
-    <details><summary>What does the benchmark evidence establish?</summary><div class="detail"><p>The canonical 1,001-concept architecture achieved 100% practical completion on the third prospective frozen 768-task benchmark when the productive morphology law already in force was scored correctly. That is internal architecture evidence. It is not a claim that a human learner becomes fluent after completing this demo.</p></div></details>
-    <details><summary>What happens after placement?</summary><div class="detail"><p>The verified placement becomes the learner's starting coordinate. A learner may begin inside a stage rather than replaying work they already demonstrated. If the learner tests above Phase 1, that result remains intact even though the current playable demo is limited to Phase 1.</p></div></details>
-    <details><summary>How is support treated?</summary><div class="detail"><p>Native-language help is legitimate during learning, but assistance is recorded. Final proficiency and final transfer evidence require target-language-only performance.</p></div></details>
-  </section>
-
-  <section class="face-panel" id="technical-face" role="tabpanel" aria-labelledby="technical-tab" hidden>
-    <div class="hero">
-      <p class="eyebrow">Educational Standards Authority</p>
-      <h2>Technical construction and evidence boundaries</h2>
-      <p class="lead">The public and technical faces describe one learning system. Switching views does not change the demo state or placement logic.</p>
-    </div>
-    <div class="grid-3">
-      <article class="card"><b>Lexical architecture</b><strong>1,001 concepts</strong><span>Canonical distribution remains 250 + 250 + 250 + 251. Predictable grammatical forms do not inflate lexical count.</span></article>
-      <article class="card"><b>Productive systems</b><strong>Zero additional lexical slots</strong><span>Grammar, morphology, and numeration generate lawful forms without changing the canonical concept total.</span></article>
-      <article class="card"><b>Practical expression</b><strong>Composition remains measurable</strong><span>Direct lexical success stays separate from productive/compositional success.</span></article>
-    </div>
-    <details open><summary>Eight-stage Phase 1 traversal</summary><div class="detail"><ol><li>Orientation and Baseline</li><li>Direct Concepts</li><li>Change the Word — morphology</li><li>Build the Sentence — grammar + numeration</li><li>Build the Meaning — controlled composition + paraphrase</li><li>Read and Respond — practical written scenarios</li><li>Unseen Transfer</li><li>Phase 1 Completion</li></ol></div></details>
-    <details><summary>Language-support cycles</summary><div class="detail"><p><strong>NATIVE_SUPPORTED → BILINGUAL_BRIDGED → TARGET_DOMINANT → TARGET_ONLY.</strong></p><p>Stages define what competency is being taught. Cycles define how much native-language scaffolding is available.</p></div></details>
-    <details><summary>Adaptive placement law</summary><div class="detail"><p><strong>SELF_REPORT → PROVISIONAL_TEST_ENTRY → ADAPTIVE_DIAGNOSTIC → VERIFIED_PLACEMENT → DEMO_ENTRY_INITIALIZATION.</strong></p><p>Strong performance probes upward. Weak performance probes downward. Within-stage position is derived from competency evidence, not screen count.</p></div></details>
-    <details><summary>Measurement separation</summary><div class="detail"><ul><li>Direct vs productive</li><li>Trained vs transfer</li><li>Assisted vs unassisted</li><li>Native-supported vs target-only</li><li>Claimed vs observed ability</li></ul></div></details>
-    <details><summary>Current vertical-slice boundary</summary><div class="detail"><p>This page runs entirely in the browser and does not claim durable server persistence. The production program's checkpoint authority requires server-side durable storage; that backend has not been selected in this slice.</p></div></details>
-    <div class="actions"><button class="button" data-start-demo>Start the Demo</button><button class="button-secondary" data-open-face="public">Return to Public Face</button></div>
-  </section>
+<section class="edu-demo-gateway panel" aria-label="Demo gateway">
+  <div>
+    <p class="eyebrow">From architecture to action</p>
+    <h2>Your assessment becomes your starting state.</h2>
+    <p>English is available now. Spanish and Chinese are coming soon. Self-report chooses where testing begins; demonstrated performance determines placement.</p>
+  </div>
+  <button class="button" type="button" data-start-demo>Start the Demo</button>
 </section>
 
 <section class="demo-shell" id="demo-shell" hidden aria-label="English Fluency Accelerator demo">
@@ -232,6 +274,87 @@ let learner={target_language:"English"}, probeStage=2, probeHistory=[], currentQ
 
 const qs=s=>document.querySelector(s);
 const qsa=s=>[...document.querySelectorAll(s)];
+
+const EDUCATION_ARCHITECTURE=[
+ {id:"foundation",label:"Foundation",title:"1,001 Concepts",question:"What is the fixed lexical foundation?",summary:"A canonical concept inventory supplies the base while productive rules generate lawful forms without pretending every form needs another vocabulary slot.",stories:[
+  {title:"What 1,001 means",reading:"The system starts from a fixed set of 1,001 ordinary concepts. The goal is usable coverage, not memorizing an endless dictionary.",engineering:"The canonical distribution remains 250 + 250 + 250 + 251. Concept identity is preserved while predictable forms are generated by productive systems.",evidence:"The architecture has frozen stress-test evidence. This establishes system coverage under the tested task framework, not human fluency.",boundary:"A concept inventory is a foundation, not a claim that 1,001 isolated words directly express everything."},
+  {title:"Lexical families",reading:"Related word forms should not force a learner to memorize each predictable variation as a separate core concept.",engineering:"Morphological normalization prevents crude stemming errors while preserving genuinely distinct derivational concepts where required.",evidence:"Lexical-family audits were used to distinguish false collisions from real concept distinctions.",boundary:"Normalization does not erase meaningful lexical distinctions."},
+  {title:"Coverage vs fluency",reading:"A compact language architecture can cover many tasks without proving that a person has learned it.",engineering:"Architecture coverage and learner mastery are separate evidence domains.",evidence:"The prospective frozen 768-task benchmark reached 100% practical completion under the productive laws already in force.",boundary:"Benchmark completion is internal architecture evidence, not certification of a learner."}
+ ]},
+ {id:"productive",label:"Productive Language",title:"Build More Than You Memorize",question:"How does the system create usable language beyond direct recall?",summary:"Grammar, morphology, numeration, controlled composition, and semantic paraphrase are first-class productive systems.",stories:[
+  {title:"Grammar and morphology",reading:"Learners should learn how language changes and combines, not just collect isolated words.",engineering:"Grammar and morphology transform canonical concepts into lawful constructions without consuming new lexical slots for predictable forms.",evidence:"Productive completion is recorded separately from direct lexical retrieval.",boundary:"Generated forms still have to preserve the intended meaning."},
+  {title:"Numeration",reading:"Numbers are treated as a rule system rather than thousands of separate vocabulary items.",engineering:"Numeration consumes zero canonical lexical slots and is modeled as a productive system.",evidence:"Numeration participates in sentence-building and practical-response tasks.",boundary:"Numeration does not replace the concepts needed to understand quantity and context."},
+  {title:"Composition and paraphrase",reading:"If a learner forgets one exact word, they should still be able to communicate the meaning.",engineering:"Controlled composition and semantic paraphrase are explicit paths in the measurement schema.",evidence:"Direct and productive paths remain separately measurable so paraphrase does not masquerade as direct retrieval.",boundary:"Paraphrase must remain semantically equivalent."}
+ ]},
+ {id:"progression",label:"Progression",title:"Eight Competency Stages",question:"What exactly advances as the learner moves?",summary:"Stages define what competency is being learned. Advancement is performance-gated, not screen-gated.",stories:[
+  {title:"Stages 1–3",reading:"The learner is oriented, establishes a baseline, learns direct concepts, then learns how words change.",engineering:"P1S1 Orientation and Baseline; P1S2 Direct Concepts; P1S3 Change the Word — morphology.",evidence:"Each stage has its own completion checkpoint and mastery evidence.",boundary:"Time spent in a stage does not create mastery."},
+  {title:"Stages 4–6",reading:"The learner builds sentences, builds meaning, then applies written English in practical situations.",engineering:"P1S4 Build the Sentence; P1S5 Build the Meaning; P1S6 Read and Respond.",evidence:"Grammar, numeration, composition, paraphrase, and practical response remain identifiable in event evidence.",boundary:"A practiced response is not automatically transfer evidence."},
+  {title:"Stages 7–8",reading:"The learner has to handle unseen tasks before Phase 1 can be considered complete.",engineering:"P1S7 Unseen Transfer; P1S8 Phase 1 Completion.",evidence:"Unseen transfer is separated from trained and practiced tasks.",boundary:"Phase 1 completion is limited to the skills actually measured in Phase 1."}
+ ]},
+ {id:"support",label:"Support",title:"Four Language-Support Cycles",question:"How does native-language help fade without corrupting proficiency evidence?",summary:"Cycles define how much native-language scaffolding is available while stages continue to define what competency is taught.",stories:[
+  {title:"Native Supported",reading:"At the beginning, the teacher can explain in the learner's native language so the learner can acquire the concept.",engineering:"CYCLE_1_SUPPORTED permits native-language explanation and translation.",evidence:"Supported success is valid learning evidence and records assistance use.",boundary:"Supported success is not final independent proficiency."},
+  {title:"Bridged to dominant",reading:"Support gradually recedes as the learner becomes able to operate directly in English.",engineering:"BILINGUAL_BRIDGED transitions to TARGET_DOMINANT through performance-gated evidence.",evidence:"Native-language dependence and support level remain explicit measurement fields.",boundary:"Dependence on native-language support blocks target-only promotion."},
+  {title:"Target Only",reading:"Final demonstration happens in the language being learned.",engineering:"TARGET_ONLY forbids native-language explanation, translation, and native-language hints for final demonstration.",evidence:"Final proficiency and final transfer evidence require TARGET_ONLY performance.",boundary:"Instruction may be bilingual. Demonstrated proficiency may not be."}
+ ]},
+ {id:"placement",label:"Placement",title:"Start at Demonstrated Ability",question:"How does the system decide where this learner begins?",summary:"Self-report chooses the initial test neighborhood. Demonstrated performance resolves the actual competency boundary and support state.",stories:[
+  {title:"Claim vs evidence",reading:"You tell the system where you think you are, but the test is allowed to disagree with you.",engineering:"SELF_REPORT → PROVISIONAL_TEST_ENTRY → ADAPTIVE_DIAGNOSTIC → VERIFIED_PLACEMENT.",evidence:"Claimed ability remains separate from observed performance.",boundary:"Self-report never becomes placement authority."},
+  {title:"Adaptive probing",reading:"If the first questions are too easy, the test moves up. If they are too hard, it moves down.",engineering:"Strong performance probes upward; weak performance probes downward; mixed evidence requires an adjacent probe before a stable boundary is resolved.",evidence:"Probe history, placement score, assistance, and confidence remain visible.",boundary:"Screen count and elapsed time cannot determine placement."},
+  {title:"Placement vs demo entry",reading:"If you test above what the demo can teach, the system should say so instead of pretending you belong at a lower level.",engineering:"VERIFIED_PLACEMENT and DEMO_ENTRY_POINT are distinct state fields. ABOVE_PHASE_1 is a valid verified result.",evidence:"The verified result survives entry into an advanced Phase 1 demonstration.",boundary:"Demo range may be narrower than verified placement range."}
+ ]},
+ {id:"evidence",label:"Evidence",title:"What the Program Can Claim",question:"What is measured, what is established, and what remains outside scope?",summary:"The evidence model separates trained from transfer, direct from productive, assisted from unassisted, and architecture evidence from human learning evidence.",stories:[
+  {title:"Measurement separation",reading:"The program should know the difference between getting help, recalling directly, constructing an answer, and transferring learning to something new.",engineering:"Event evidence preserves trained/transfer, direct/productive, assisted/unassisted, support level, retry burden, hint dependence, latency, and retention signals.",evidence:"The frozen measurement schema explicitly prohibits collapsing these categories.",boundary:"A high aggregate score cannot erase how the answer was produced."},
+  {title:"Architecture benchmark",reading:"The language architecture has been stress-tested, but that does not mean a human learner has been proven fluent.",engineering:"The third prospective 768-task frozen benchmark produced 768/768 practical completion after scorer correction for an already-frozen morphology law.",evidence:"Zero genuine failures remained in that benchmark; the historical scorer output and correction history are preserved separately.",boundary:"Architecture evidence is not a human efficacy trial."},
+  {title:"Current Phase 1 boundary",reading:"This first product phase focuses on what can be measured honestly in the current interface.",engineering:"Phase 1 measures written reading comprehension and written/constructed expression.",evidence:"Speech, pronunciation, listening comprehension, oral retrieval, and oral conversational fluency are explicitly excluded.",boundary:"The page must not imply measurement capability the current product does not possess."}
+ ]}
+];
+
+function mountEducationCarousel(){
+ const root=qs("[data-edu-carousel]"); if(!root) return;
+ const tabs=qs("[data-edu-tabs]"),track=qs("[data-edu-track]"),live=qs("[data-edu-live]");
+ let index=0,storyByCard=EDUCATION_ARCHITECTURE.map(()=>0),lensByCard=EDUCATION_ARCHITECTURE.map(()=>"reading"),dragStart=null;
+
+ const esc=v=>String(v).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+ function render(){
+  tabs.innerHTML=EDUCATION_ARCHITECTURE.map((c,i)=>'<button class="edu-carousel__tab" role="tab" aria-selected="'+(i===index)+'" data-edu-index="'+i+'">'+esc(c.label)+'</button>').join("");
+  track.innerHTML=EDUCATION_ARCHITECTURE.map((c,i)=>{
+    let d=i-index; if(d>3)d-=EDUCATION_ARCHITECTURE.length;if(d<-3)d+=EDUCATION_ARCHITECTURE.length;
+    const active=i===index,adj=Math.abs(d)===1,dist=Math.abs(d)>1;
+    const story=storyByCard[i],lens=lensByCard[i];
+    return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-inspecting="'+(active&&root.dataset.inspecting==="true")+'" style="--offset:'+d+'">'+
+      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker">'+esc(c.label)+'</p><h3 class="edu-standard-title">'+esc(c.title)+'</h3><p class="edu-standard-copy">'+esc(c.summary)+'</p><div class="edu-story-preview">'+c.stories.map(x=>'<span>'+esc(x.title)+'</span>').join("")+'</div><button class="edu-inspect" type="button" data-edu-inspect>Explore this standard</button></div>'+
+      '<div class="edu-inspection"><div class="edu-inspection__top"><div><p class="eyebrow">'+esc(c.label)+'</p><h3>'+esc(c.title)+'</h3><p>'+esc(c.question)+'</p></div><button class="edu-return" type="button" data-edu-return>Return to Carousel</button></div>'+
+      '<div class="edu-lenses" role="tablist" aria-label="Information lens">'+["reading","engineering","evidence"].map(x=>'<button class="edu-lens" role="tab" aria-selected="'+(x===lens)+'" data-edu-lens="'+x+'">'+({reading:"Reading",engineering:"Engineering",evidence:"Evidence"}[x])+'</button>').join("")+'</div>'+
+      '<div class="edu-information-grid"><div class="edu-story-rail" role="tablist" aria-label="'+esc(c.label)+' stories">'+c.stories.map((x,j)=>'<button class="edu-story-tab" role="tab" aria-selected="'+(j===story)+'" data-edu-story="'+j+'"><span>'+String(j+1).padStart(2,"0")+'</span><strong>'+esc(x.title)+'</strong></button>').join("")+'</div><div class="edu-reading-cell" data-edu-cell></div></div></div></article>';
+  }).join("");
+  live.textContent=EDUCATION_ARCHITECTURE[index].label+" · "+(index+1)+" of "+EDUCATION_ARCHITECTURE.length;
+  root.style.setProperty("--edu-accent",["#f4cf83","#8dd8ff","#b9a0ff","#a7f3c6","#f0b1ff","#ffcb91"][index]);
+  root.style.setProperty("--edu-soft",["rgba(244,207,131,.08)","rgba(141,216,255,.08)","rgba(185,160,255,.08)","rgba(167,243,198,.08)","rgba(240,177,255,.08)","rgba(255,203,145,.08)"][index]);
+  fillCell();
+ }
+ function fillCell(){
+  const card=track.querySelector('.edu-standard-card[data-active="true"]'); if(!card)return;
+  const c=EDUCATION_ARCHITECTURE[index],st=c.stories[storyByCard[index]],lens=lensByCard[index],cell=card.querySelector("[data-edu-cell]");
+  const title={reading:"Plain-language reading",engineering:"Engineering detail",evidence:"Evidence standing"}[lens];
+  const body=st[lens];
+  cell.innerHTML='<p class="eyebrow">'+title+'</p><h4>'+esc(st.title)+'</h4><p>'+esc(body)+'</p><div class="edu-evidence-boundary"><strong>Boundary</strong><p>'+esc(st.boundary)+'</p></div>';
+ }
+ function select(next){index=(next+EDUCATION_ARCHITECTURE.length)%EDUCATION_ARCHITECTURE.length;render()}
+ root.addEventListener("click",e=>{
+  const tab=e.target.closest("[data-edu-index]");if(tab){select(Number(tab.dataset.eduIndex));return}
+  if(e.target.closest("[data-edu-inspect]")){root.dataset.inspecting="true";document.documentElement.dataset.educationInspectionOpen="true";render();return}
+  if(e.target.closest("[data-edu-return]")){root.dataset.inspecting="false";delete document.documentElement.dataset.educationInspectionOpen;render();return}
+  const story=e.target.closest("[data-edu-story]");if(story){storyByCard[index]=Number(story.dataset.eduStory);render();return}
+  const lens=e.target.closest("[data-edu-lens]");if(lens){lensByCard[index]=lens.dataset.eduLens;render();return}
+ });
+ const viewport=qs("[data-edu-viewport]");
+ viewport.addEventListener("keydown",e=>{if(root.dataset.inspecting==="true")return;if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}})
+ viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;dragStart=e.clientX;viewport.setPointerCapture?.(e.pointerId)})
+ viewport.addEventListener("pointerup",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;if(Math.abs(dx)>42)select(index+(dx<0?1:-1))})
+ render();
+}
+mountEducationCarousel();
+qsa("[data-jump-standards]").forEach(b=>b.addEventListener("click",()=>qs("#education-standards-carousel")?.scrollIntoView({behavior:"smooth",block:"start"})));
+
 function activateFace(face){
  qsa("[data-face]").forEach(b=>{const on=b.dataset.face===face;b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1});
  qs("#public-face").hidden=face!=="public";qs("#technical-face").hidden=face!=="technical";

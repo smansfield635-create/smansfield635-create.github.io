@@ -2183,6 +2183,49 @@
       "scopeHash": "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095",
       "state": "ADMITTED_LOCKED"
     },
+    "32bc9eb354d1b501bedba3197eb60adaf96658dea623410be696da0db1f40559": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "532b7ad8d85887e41d24da9b8e387f2ee11e5ed3",
+          "lockGeneration": 2443,
+          "lockScope": "H_EARTH:AUDRALIA:CELESTIAL_3D_SPATIALIZATION:V1",
+          "operationId": "AUDRALIA_CELESTIAL_3D_SPATIALIZATION_20260920_001",
+          "procedureLocatorDigest": "158203a072d5774a232de58dca62a3e306be71b7def226f80f7586bd78518df1",
+          "requestDigest": "7ce2a2be2d6aa2d51451119ce52c80cb4cdc5c36e1677b07d07e6fa3471d4e23",
+          "scopeHash": "32bc9eb354d1b501bedba3197eb60adaf96658dea623410be696da0db1f40559"
+        },
+        "bindingDigest": "0e3d13832a2691cc3b6a84ec94e3731df4444fa2c811955ad6ed70218507ad72",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "43dff40ee96114b0f6ec41afc735f6fa4dce0d12279ca89365a576cb61fe17e8",
+          "commentId": 5746616484,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3917,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35480740460,
+          "workflowSha": "532b7ad8d85887e41d24da9b8e387f2ee11e5ed3"
+        },
+        "lineageAnchorCommitSha": "b7140f08a1314aae78b902790be109085b6bd587",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "532b7ad8d85887e41d24da9b8e387f2ee11e5ed3",
+      "lockGeneration": 2443,
+      "lockScope": "H_EARTH:AUDRALIA:CELESTIAL_3D_SPATIALIZATION:V1",
+      "operationId": "AUDRALIA_CELESTIAL_3D_SPATIALIZATION_20260920_001",
+      "procedureLocatorDigest": "158203a072d5774a232de58dca62a3e306be71b7def226f80f7586bd78518df1",
+      "released": false,
+      "requestDigest": "7ce2a2be2d6aa2d51451119ce52c80cb4cdc5c36e1677b07d07e6fa3471d4e23",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "32bc9eb354d1b501bedba3197eb60adaf96658dea623410be696da0db1f40559",
+      "state": "ADMITTED_LOCKED"
+    },
     "32de22e91d34a0d960bd86c088c7144ae0e448920a0727ab628e3f5e8b218990": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -12770,7 +12813,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2442,
+  "lockGeneration": 2443,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

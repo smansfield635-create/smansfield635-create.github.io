@@ -38,7 +38,22 @@
       "specialized science terminology",
       "abstruse academic vocabulary"
     ],
-    "target": 250
+    "target": 250,
+    "normalization_repair": {
+      "removed_counted_variants": [
+        "does",
+        "did",
+        "better",
+        "worse"
+      ],
+      "replacement_unique_concepts": [
+        "not",
+        "than",
+        "each",
+        "other"
+      ],
+      "note": "Removed forms remain teachable as grammatical forms of do/good/bad but no longer consume lexical slots."
+    }
   },
   "bands": [
     {
@@ -129,8 +144,8 @@
         "can",
         "cannot",
         "do",
-        "does",
-        "did",
+        "not",
+        "than",
         "will",
         "would",
         "should",
@@ -307,8 +322,8 @@
         "which",
         "much",
         "enough",
-        "better",
-        "worse",
+        "each",
+        "other",
         "important",
         "possible",
         "sure",
@@ -336,7 +351,8 @@
     "recovered": 50,
     "derived": 200,
     "total": 250,
-    "duplicate_count": 0
+    "duplicate_count": 0,
+    "normalized_unique_lexical_concepts": 250
   },
   "traversal_law": {
     "bands_are_checkpoints": true,
@@ -349,9 +365,9 @@
     "derived_bands": "Geometric reconstruction from seed neighbors under plain-language utility law"
   },
   "traversal_state": {
-    "CURRENT_STATE": "MAJOR_LEVEL_1_250_FROZEN",
-    "ACTION_PERFORMED": "Recovered seed preserved and expanded to 250 unique words by geometric nearest-neighbor reconstruction.",
-    "ENGINE_RESPONSE": "Major Level 1 is ready for performance stress testing.",
-    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_1_250_PERFORMANCE_STRESS_TEST"
+    "CURRENT_STATE": "MAJOR_LEVEL_1_250_NORMALIZED_AND_REPAIRED",
+    "ACTION_PERFORMED": "Four non-unique grammatical/comparative slots replaced with four unique foundational concepts.",
+    "ENGINE_RESPONSE": "Major Level 1 restored to 250 unique lexical concepts without losing grammatical teachability.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_1_POST_REPAIR_STRESS_CHECK"
   }
 }

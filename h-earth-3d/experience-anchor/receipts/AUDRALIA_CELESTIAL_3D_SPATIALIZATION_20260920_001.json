@@ -33,7 +33,7 @@
     },
     {
       "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
-      "sha256": "7b0e2d9a839a79ec6bf8cf2edfbdcb2366e5d3d97067bac54de5bc90471ceb0c"
+      "sha256": "4a582c61c66ac2ebbfd9a175de70cb7b88a98545e2c965a37085fd033b82af3f"
     }
   ],
   "notes": "PASS is limited to preservation of the frozen H-Earth experience invariants for the admitted celestial spatialization candidate. It does not assert physical-device visual acceptance or celestial appearance/fidelity acceptance."

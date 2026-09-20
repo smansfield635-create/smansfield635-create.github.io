@@ -99,6 +99,8 @@ function createState(gl){
     uniform float u_visibility;
     uniform float u_aspect;
     uniform int u_kind;
+    uniform vec3 u_sun_camera;
+    uniform float u_occluded;
     out vec4 outColor;
 
     float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
@@ -114,6 +116,7 @@ function createState(gl){
     }
 
     void main(){
+      if(u_occluded>0.5)discard;
       vec3 cq=u_camera*normalize(u_direction);
       if(cq.z<=0.02)discard;
       float f=1.0/tan(radians(55.0)*0.5);
@@ -167,7 +170,7 @@ function createState(gl){
       float bowlD=exp(-pow(dD/0.034,2.0));
       float relief=0.15*(rimA+rimB)+0.11*(rimC+rimD)-0.13*(bowlA+bowlB)-0.08*(bowlC+bowlD);
 
-      vec3 lightDir=normalize(vec3(-0.78,0.30,0.55));
+      vec3 lightDir=normalize(u_sun_camera);
       float ndl=dot(normal,lightDir);
       float terminator=smoothstep(-0.10,0.16,ndl);
       float grazing=pow(max(0.0,1.0-z),2.0);
@@ -208,7 +211,9 @@ function createState(gl){
     radius:gl.getUniformLocation(bodyProgram,'u_radius'),
     visibility:gl.getUniformLocation(bodyProgram,'u_visibility'),
     aspect:gl.getUniformLocation(bodyProgram,'u_aspect'),
-    kind:gl.getUniformLocation(bodyProgram,'u_kind')
+    kind:gl.getUniformLocation(bodyProgram,'u_kind'),
+    sunCamera:gl.getUniformLocation(bodyProgram,'u_sun_camera'),
+    occluded:gl.getUniformLocation(bodyProgram,'u_occluded')
   };
 }
 
@@ -239,7 +244,9 @@ function restoreState(gl,prior){
   gl.bindBuffer(gl.ARRAY_BUFFER,prior.arrayBuffer);
 }
 
-export const AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY=Object.freeze({schema:'AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY_v1',sunDirection:Object.freeze([0.42,0.78,0.46]),moonDirection:Object.freeze([-0.63,0.28,0.72]),stars:'FIBONACCI_UNIT_SPHERE_256',screenSpacePositionAuthority:false});
+const vdot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],vsub=(a,b)=>a.map((v,i)=>v-b[i]),vlen=a=>Math.hypot(...a),vnorm=a=>{const l=vlen(a)||1;return a.map(v=>v/l);};
+function raySphereOccluded(eye,dir,center,radius){const oc=vsub(eye,center),b=vdot(oc,dir),cc=vdot(oc,oc)-radius*radius,disc=b*b-cc;if(disc<0)return false;const t=-b-Math.sqrt(disc);return t>0;}
+export const AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY=Object.freeze({schema:'AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY_v1',sunDirection:Object.freeze(vnorm([0.42,0.78,0.46])),moonPosition:Object.freeze([-22000,9800,25200]),stars:'FIBONACCI_UNIT_SPHERE_256',screenSpacePositionAuthority:false,moonFiniteDistance:true});
 
 export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunDirection=AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.sunDirection}={}){
   const visibility=visibilityForScale(viewScale);
@@ -259,6 +266,9 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunD
   const aspect=Math.max(1,gl.drawingBufferWidth/Math.max(1,gl.drawingBufferHeight));
   const frame=cameraFrame||{right:[1,0,0],up:[0,1,0],forward:[0,0,1]};
   const cameraMatrix=new Float32Array([...frame.right,...frame.up,...frame.forward]);
+  const eye=frame.eye||[0,0,0],planetCenter=frame.planetCenter||[0,-6200,0],planetRadius=Number(frame.planetRadius)||6200;
+  const moonDirection=vnorm(vsub(AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.moonPosition,eye));
+  const sunDir=vnorm(sunDirection),sunCamera=[vdot(frame.right,sunDir),vdot(frame.up,sunDir),vdot(frame.forward,sunDir)];
   let draws=0;
   try{
     gl.disable(gl.DEPTH_TEST);
@@ -280,15 +290,18 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunD
     gl.uniform1f(state.visibility,visibility);
     gl.uniform1f(state.aspect,aspect);
     gl.uniformMatrix3fv(state.bodyCamera,false,cameraMatrix);
+    gl.uniform3fv(state.sunCamera,sunCamera);
 
     gl.uniform1i(state.kind,0);
-    gl.uniform3fv(state.direction,sunDirection);
+    gl.uniform3fv(state.direction,sunDir);
+    gl.uniform1f(state.occluded,raySphereOccluded(eye,sunDir,planetCenter,planetRadius)?1:0);
     gl.uniform1f(state.radius,0.18);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     draws++;
 
     gl.uniform1i(state.kind,1);
-    gl.uniform3fv(state.direction,AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.moonDirection);
+    gl.uniform3fv(state.direction,moonDirection);
+    gl.uniform1f(state.occluded,raySphereOccluded(eye,moonDirection,planetCenter,planetRadius)?1:0);
     gl.uniform1f(state.radius,0.115);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     draws++;

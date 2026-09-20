@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "ARCHCOIN_CONTEXTUAL_SPATIAL_PAGES_EXACT_HEAD_DEPLOY_20260920_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3969,
+  "requestBranch": "ai-dispatch-request-archcoin-pages-20260920-001",
+  "requestCommit": "7505c583f2081f3cfcf6dda724100f49a9cc2668",
+  "requestCommitParent": "83363b20e4ee2089d968cb4e96c29df159b12358",
+  "currentMainSha": "83363b20e4ee2089d968cb4e96c29df159b12358",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "83363b20e4ee2089d968cb4e96c29df159b12358",
+    "surface_id": "archcoin"
+  },
+  "bridgeRunId": "35529223652",
+  "dispatchedRunId": 35529232447,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35529232447",
+  "dispatchedRunHeadSha": "83363b20e4ee2089d968cb4e96c29df159b12358",
+  "dispatchedAt": "2026-09-20T18:29:39.187Z",
+  "resolvedAt": "2026-09-20T18:29:43.202Z"
+}

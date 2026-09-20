@@ -100,6 +100,39 @@
     "pairings_selected": 10,
     "pairings_applied_to_canonical_vocabulary": 0,
     "lexical_total_after_experiment_definition": 1001,
-    "disposition": "HOLD_FOR_TASK_LEVEL_REGRESSION"
+    "task_level_battery_frozen": true,
+    "single_swap_regression_complete": true,
+    "advancing_swap_count": 7,
+    "held_or_rejected_swap_count": 3,
+    "disposition": "EXPERIMENT_COMPLETE_CANONICAL_MUTATION_STILL_HELD"
+  },
+  "task_level_regression": {
+    "status": "FROZEN_AND_SCORED",
+    "battery_authority": "/products/education/authority/1001-adversarial-task-battery-256.v1.json",
+    "regression_authority": "/products/education/authority/1001-paired-substitution-regression-256.v1.json",
+    "benchmark_type": "AGGREGATE_CONSTRAINED_RECONSTRUCTION_NOT_RECOVERED_ORIGINAL",
+    "baseline": {
+      "direct": 217,
+      "controlled_paraphrase": 35,
+      "genuine_failure": 4,
+      "practical_completion": 252,
+      "practical_rate_percent": 98.4
+    },
+    "advancing_swaps": [
+      "radio->allergy",
+      "festival->blood",
+      "poem->stomach",
+      "novel->tooth",
+      "pale->electricity",
+      "stale->soap",
+      "betrayal->discount"
+    ],
+    "held_or_rejected_swaps": [
+      "couple->contract",
+      "unfairly->Wi-Fi",
+      "exactly->app"
+    ],
+    "canonical_mutation_authorized": false,
+    "next_required_gate": "SEPARATE_CANONICAL_ADMISSION_FOR_ADVANCING_SWAPS_WITH_CUMULATIVE_RERUN"
   }
 }

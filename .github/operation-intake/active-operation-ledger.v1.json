@@ -765,6 +765,49 @@
       "scopeHash": "0cbb894a22e576db5e8f30790ca5b753f50d8e73f0394804166ce80d919effd0",
       "state": "ADMITTED_LOCKED"
     },
+    "0cd9d48ddd81adc56552bd7b327050462b07f7515554536bdee52248bf191347": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f9016815118f24e8f0697581da7a9f6aed3bd043",
+          "lockGeneration": 2448,
+          "lockScope": "ARCHCOIN:WEBSITE:CAROUSEL_PRESENTATION",
+          "operationId": "ARCHCOIN_CAROUSEL_PRESENTATION_20260920_001",
+          "procedureLocatorDigest": "57c7d1898c0c7939e791ff42f0912df8f2fe138ebe82c148f7c45ec56af76f0f",
+          "requestDigest": "21c150a2a8fa278c8064b092492f27be37bc449409cc7b2118cf5160032305d2",
+          "scopeHash": "0cd9d48ddd81adc56552bd7b327050462b07f7515554536bdee52248bf191347"
+        },
+        "bindingDigest": "d2930b0c0ee7f60b1d3b21c904896257e05bb4bb1c0dca4e3731edf300c25d86",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "27e92f071656d77dc3eb97d83c6803a2c8bc7968fa9d7806b7f33ecca7fefda8",
+          "commentId": 5747649331,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3959,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35489525629,
+          "workflowSha": "f9016815118f24e8f0697581da7a9f6aed3bd043"
+        },
+        "lineageAnchorCommitSha": "66d9fce38ef65883bf17b737a3aaf02096316374",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f9016815118f24e8f0697581da7a9f6aed3bd043",
+      "lockGeneration": 2448,
+      "lockScope": "ARCHCOIN:WEBSITE:CAROUSEL_PRESENTATION",
+      "operationId": "ARCHCOIN_CAROUSEL_PRESENTATION_20260920_001",
+      "procedureLocatorDigest": "57c7d1898c0c7939e791ff42f0912df8f2fe138ebe82c148f7c45ec56af76f0f",
+      "released": false,
+      "requestDigest": "21c150a2a8fa278c8064b092492f27be37bc449409cc7b2118cf5160032305d2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0cd9d48ddd81adc56552bd7b327050462b07f7515554536bdee52248bf191347",
+      "state": "ADMITTED_LOCKED"
+    },
     "0dcc8c6fe47e54a4ffbfcbe02d932fab8cc9bdf2c332e3230270c857d80e29e9": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -12856,7 +12899,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2447,
+  "lockGeneration": 2448,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

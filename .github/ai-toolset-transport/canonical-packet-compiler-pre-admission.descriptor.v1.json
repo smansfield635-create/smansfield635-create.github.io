@@ -1,0 +1,111 @@
+{
+  "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+  "descriptorId": "CANONICAL_PACKET_COMPILER_PRE_ADMISSION_V1",
+  "operationId": "CANONICAL_PACKET_COMPILER_PRE_ADMISSION_V1",
+  "operationClass": "PRE_ADMISSION_CANONICAL_PACKET_COMPILATION",
+  "projectId": "REPOSITORY_OPERATION_INTAKE",
+  "authorizationMode": "PRE_ADMISSION_PACKET_COMPILATION_ONLY",
+  "authorityRouteIdentity": "NOT_APPLICABLE_PRE_ADMISSION_COMPILATION_ONLY",
+  "intakeAdmissionIdentity": "NOT_REQUIRED_PRE_ADMISSION_COMPILATION_ONLY",
+  "toolId": "CANONICAL_PACKET_COMPILER_EXECUTION_V1",
+  "exactToolingHead": "a89d71292f1ffd579f54dec9bb7feeb8370f91a1",
+  "commandSpecification": {
+    "executable": "node",
+    "scriptPath": "tools/operation-intake/canonical-packet-compiler.v1.mjs",
+    "fixedArguments": [],
+    "inputArgumentBindings": [],
+    "outputArgumentBindings": [],
+    "shell": false,
+    "extraArgumentsAllowed": false,
+    "environmentOverridesAllowed": false
+  },
+  "canonicalInputSchema": {
+    "schemaId": "CANONICAL_PACKET_COMPILER_EXECUTION_INPUT_v1",
+    "required": [
+      "requestBase64",
+      "procedureBase64"
+    ],
+    "allowed": [
+      "requestBase64",
+      "procedureBase64"
+    ],
+    "properties": {
+      "requestBase64": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9+/=]+$"
+      },
+      "procedureBase64": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9+/=]+$"
+      }
+    }
+  },
+  "canonicalOutputSchema": {
+    "schemaId": "CANONICAL_PACKET_COMPILER_EXECUTION_RECEIPT_v1",
+    "required": [
+      "schema",
+      "result",
+      "packetReadyReceipt",
+      "canonicalOperationRequest",
+      "canonicalConstructionProcedure",
+      "canonicalIntakeEnvelope",
+      "canonicalIntakeComment",
+      "repositoryMutationPerformed",
+      "admissionAuthorityCreated",
+      "mutationAuthorityCreated",
+      "mergeAuthorityCreated",
+      "deploymentAuthorityCreated",
+      "releaseAuthorityCreated",
+      "publicationAuthorityCreated",
+      "arbitraryCommandAuthorityCreated",
+      "authorityEffect"
+    ]
+  },
+  "allowedBackends": [
+    {
+      "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+      "priority": 100,
+      "requirements": [
+        "EXACT_TOOLING_HEAD_FETCHABLE",
+        "FULL_GIT_HISTORY",
+        "NODE_22_AVAILABLE",
+        "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+      ]
+    }
+  ],
+  "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+  "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+  "allowedMutationPaths": [],
+  "prohibitedPaths": [
+    "AI_ENTRYPOINT.json",
+    ".github/",
+    "assets/",
+    "campaigns/",
+    "laws/",
+    "showroom/",
+    "h-earth-3d/",
+    "characters/",
+    "products/"
+  ],
+  "prohibitedSideEffects": [
+    "REPOSITORY_MUTATION",
+    "ADMISSION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE",
+    "PUBLICATION",
+    "ARBITRARY_COMMAND",
+    "GENERALIZED_EXECUTION"
+  ],
+  "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+  "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
+  "successDisposition": "PACKET_READY_ONLY_CONTINUE_TO_EXISTING_AUTHENTICATED_CANONICAL_INTAKE_TRANSPORT",
+  "failureDispositions": {
+    "COMMAND_EXECUTED_AND_FAILED": "STOP_AND_RETURN_COMMAND_FAILURE_RECEIPT",
+    "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_AND_RETURN_NONEXECUTION_RECEIPT",
+    "MISSING_OR_INVALID_RECEIPT": "STOP"
+  },
+  "continuationRule": "CONTINUE_ONLY_WITH_EXACT_COMPILER_PRODUCED_CANONICAL_INTAKE_COMMENT",
+  "terminationRule": "COMPILATION_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN;NO_ADMISSION_MUTATION_MERGE_DEPLOYMENT_RELEASE_PUBLICATION_OR_GENERAL_EXECUTION_AUTHORITY",
+  "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+}

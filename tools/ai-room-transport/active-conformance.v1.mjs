@@ -17,6 +17,7 @@ const BASE = '.github/ai-toolset-transport';
 const REGISTRY_PATH = `${BASE}/authorized-toolset-registry.v1.json`;
 const MANIFEST_PATH = `${BASE}/changed-path-manifest.v1.json`;
 const RESUME_QUALIFIER_DESCRIPTOR = 'FIXED_EXACT_HEAD_QUALIFICATION_EXECUTION';
+const PRE_ADMISSION_PACKET_COMPILER_DESCRIPTOR = 'CANONICAL_PACKET_COMPILER_EXECUTION_V1';
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -209,6 +210,8 @@ export function runConformance({ root, expectedHead, holder }) {
     assert(receipt.result === 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED', 'DESCRIPTOR_RESOLUTION_FAILED', descriptor.descriptorId);
     if (descriptor.descriptorId === RESUME_QUALIFIER_DESCRIPTOR) {
       assert(receipt.authorizationMode === 'RESUME_OBJECT_EXACT_QUALIFICATION' && receipt.authorizedOperationId === fixture.request.operationId, 'RESUME_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
+    } else if (descriptor.descriptorId === PRE_ADMISSION_PACKET_COMPILER_DESCRIPTOR) {
+      assert(receipt.authorizationMode === 'PRE_ADMISSION_PACKET_COMPILATION_ONLY' && receipt.authorizedOperationId === descriptor.operationId && receipt.admissionLockGeneration === null, 'PRE_ADMISSION_COMPILER_AUTHORIZATION_CHANGED', descriptor.descriptorId);
     } else {
       assert(receipt.authorizationMode === 'EXACT_OPERATION_ID' && receipt.authorizedOperationId === descriptor.operationId, 'DIRECT_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
     }

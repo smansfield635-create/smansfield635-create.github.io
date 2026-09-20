@@ -16,6 +16,23 @@
     return PLANE_IDS.includes(candidate) ? candidate : "overview";
   };
 
+  const wrapIndex = index => (index + PLANE_IDS.length) % PLANE_IDS.length;
+
+  const inferDirection = (fromIndex, toIndex) => {
+    const forward = wrapIndex(toIndex - fromIndex);
+    const backward = wrapIndex(fromIndex - toIndex);
+    if (forward === 0) return 0;
+    return forward <= backward ? 1 : -1;
+  };
+
+  const spatialOffset = (planeIndex, activeIndex, direction) => {
+    const forward = wrapIndex(planeIndex - activeIndex);
+    if (forward === 0) return 0;
+    if (forward === 1) return 1;
+    if (forward === PLANE_IDS.length - 1) return -1;
+    return direction < 0 ? -2 : 2;
+  };
+
   const mount = root => {
     const tabs = [...root.querySelectorAll("[data-carousel-tab]")];
     const planes = [...root.querySelectorAll("[data-carousel-plane]")];
@@ -26,10 +43,20 @@
     let activeIndex = 0;
     let pointerStart = null;
 
-    if (tabs.length !== PLANE_IDS.length || planes.length !== PLANE_IDS.length) return;
+    const validStructure = tabs.length === PLANE_IDS.length
+      && planes.length === PLANE_IDS.length
+      && PLANE_IDS.every((id, index) => (
+        tabs[index].getAttribute("aria-controls") === `plane-${id}`
+        && planes[index].id === `plane-${id}`
+        && planes[index].dataset.carouselPlane === id
+      ));
+
+    if (!validStructure) return;
 
     const render = (index, options = {}) => {
-      activeIndex = (index + PLANE_IDS.length) % PLANE_IDS.length;
+      const nextIndex = wrapIndex(index);
+      const direction = options.direction ?? inferDirection(activeIndex, nextIndex);
+      activeIndex = nextIndex;
       const id = PLANE_IDS[activeIndex];
 
       tabs.forEach((tab, tabIndex) => {
@@ -40,13 +67,19 @@
 
       planes.forEach((plane, planeIndex) => {
         const active = planeIndex === activeIndex;
-        plane.hidden = !active;
+        const offset = spatialOffset(planeIndex, activeIndex, direction);
+        plane.hidden = false;
+        plane.dataset.spatialOffset = String(offset);
+        plane.dataset.spatialRole = active
+          ? "active"
+          : Math.abs(offset) === 1 ? "neighbor" : "far";
         plane.setAttribute("aria-hidden", active ? "false" : "true");
         plane.toggleAttribute("inert", !active);
       });
 
       if (ordinal) ordinal.textContent = `${String(activeIndex + 1).padStart(2, "0")} / 04 · ${id}`;
       root.dataset.activePlane = id;
+      root.dataset.carouselDirection = direction < 0 ? "backward" : direction > 0 ? "forward" : "settled";
 
       if (options.history === "push") {
         history.pushState({ archcoinPlane: id }, "", `#${id}`);
@@ -57,11 +90,19 @@
       if (options.focusTab) tabs[activeIndex].focus({ preventScroll: true });
     };
 
-    const goToId = (id, options) => render(PLANE_IDS.indexOf(normalizePlane(id)), options);
-    const go = (delta, options = { history: "push" }) => render(activeIndex + delta, options);
+    const goToId = (id, options = {}) => {
+      const targetIndex = PLANE_IDS.indexOf(normalizePlane(id));
+      render(targetIndex, { ...options, direction: inferDirection(activeIndex, targetIndex) });
+    };
+    const go = (delta, options = { history: "push" }) => (
+      render(activeIndex + delta, { ...options, direction: Math.sign(delta) })
+    );
 
     tabs.forEach((tab, index) => {
-      tab.addEventListener("click", () => render(index, { history: "push" }));
+      tab.addEventListener("click", () => render(index, {
+        history: "push",
+        direction: inferDirection(activeIndex, index)
+      }));
     });
 
     root.addEventListener("keydown", event => {
@@ -72,7 +113,13 @@
       if (event.key === "End") target = PLANE_IDS.length - 1;
       if (target === null) return;
       event.preventDefault();
-      render(target, { history: "push", focusTab: true });
+      render(target, {
+        history: "push",
+        focusTab: true,
+        direction: event.key === "ArrowLeft"
+          ? -1
+          : event.key === "ArrowRight" ? 1 : inferDirection(activeIndex, wrapIndex(target))
+      });
     });
 
     previous?.addEventListener("click", () => go(-1));
@@ -101,6 +148,9 @@
     syncFromLocation();
 
     root.dataset.carouselReady = "true";
+    requestAnimationFrame(() => {
+      root.dataset.carouselInteractive = "true";
+    });
     globalThis.__ARCHCOIN_CAROUSEL_PRESENTATION__ = Object.freeze({
       contract: "SITE_CONTINUITY_V3_ONE_STAGE_TABS_SWIPE_KEYBOARD",
       domain: document.body.dataset.domain || "",

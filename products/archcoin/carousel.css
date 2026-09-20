@@ -265,7 +265,10 @@ button:focus-visible, a:focus-visible {
 .carousel-tab[aria-selected="true"] { border-color: rgba(var(--accent-rgb), 0.64); color: var(--ink); background: rgba(var(--accent-rgb), 0.12); }
 .carousel-tab:hover { transform: translateY(-1px); }
 
-.carousel-viewport { position: relative; touch-action: pan-y; }
+.carousel-viewport {
+  position: relative;
+  touch-action: pan-y;
+}
 
 .carousel-plane {
   min-height: clamp(460px, 58vw, 650px);
@@ -276,14 +279,69 @@ button:focus-visible, a:focus-visible {
     radial-gradient(circle at 92% 6%, rgba(var(--accent-rgb), 0.12), transparent 28rem),
     linear-gradient(145deg, rgba(14, 30, 46, 0.97), rgba(5, 14, 24, 0.97));
   box-shadow: 0 28px 76px rgba(0, 0, 0, 0.34), inset 0 1px rgba(255, 255, 255, 0.055);
-  animation: plane-in 360ms var(--ease) both;
 }
 
 .carousel-plane[hidden] { display: none; }
 
-@keyframes plane-in {
-  from { opacity: 0; transform: translateX(20px) scale(0.992); }
-  to { opacity: 1; transform: none; }
+[data-carousel-ready="true"] .carousel-viewport {
+  --carousel-peek: clamp(18px, 4vw, 46px);
+  display: grid;
+  align-items: stretch;
+  overflow: hidden;
+  overflow: clip;
+  perspective: 1200px;
+  perspective-origin: 50% 44%;
+  isolation: isolate;
+}
+
+[data-carousel-ready="true"] .carousel-plane {
+  grid-area: 1 / 1;
+  width: calc(100% - (2 * var(--carousel-peek)));
+  justify-self: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+}
+
+[data-carousel-ready="true"][data-carousel-interactive="true"] .carousel-plane {
+  transition:
+    transform 420ms var(--ease),
+    opacity 280ms ease,
+    filter 420ms var(--ease);
+}
+
+[data-carousel-ready="true"] .carousel-plane[data-spatial-offset="0"] {
+  z-index: 3;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0) rotateY(0) scale(1);
+  filter: none;
+}
+
+[data-carousel-ready="true"] .carousel-plane[data-spatial-offset="-1"],
+[data-carousel-ready="true"] .carousel-plane[data-spatial-offset="1"] {
+  z-index: 2;
+  opacity: 0.34;
+  visibility: visible;
+  filter: saturate(0.7) brightness(0.72);
+}
+
+[data-carousel-ready="true"] .carousel-plane[data-spatial-offset="-1"] {
+  transform: translate3d(-94%, 0, -150px) rotateY(9deg) scale(0.86);
+}
+
+[data-carousel-ready="true"] .carousel-plane[data-spatial-offset="1"] {
+  transform: translate3d(94%, 0, -150px) rotateY(-9deg) scale(0.86);
+}
+
+[data-carousel-ready="true"] .carousel-plane[data-spatial-role="far"] {
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, 0, -260px) scale(0.74);
 }
 
 .plane-header {
@@ -380,7 +438,16 @@ button:focus-visible, a:focus-visible {
   .status-spine ol { grid-template-columns: 1fr; }
   .status-spine li { place-items: start; min-height: 0; padding: 9px 11px; text-align: left; }
   .carousel-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-carousel-ready="true"] .carousel-viewport { --carousel-peek: 14px; }
   .carousel-plane { min-height: 0; padding: 24px 18px; }
+  [data-carousel-ready="true"] .carousel-plane[data-spatial-offset="-1"] {
+    opacity: 0.24;
+    transform: translate3d(-96%, 0, -110px) rotateY(6deg) scale(0.9);
+  }
+  [data-carousel-ready="true"] .carousel-plane[data-spatial-offset="1"] {
+    opacity: 0.24;
+    transform: translate3d(96%, 0, -110px) rotateY(-6deg) scale(0.9);
+  }
   .plane-header { grid-template-columns: 1fr; }
   .plane-grid { grid-template-columns: 1fr; }
   .plane-block--wide { grid-column: auto; }
@@ -396,4 +463,5 @@ button:focus-visible, a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  [data-carousel-ready="true"] .carousel-plane { will-change: auto; }
 }

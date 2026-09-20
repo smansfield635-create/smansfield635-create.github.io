@@ -1,0 +1,227 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "archcoin",
+  "description": "ARCHCOIN exact-head publication verification for the four-domain carousel presentation. Static checks bind the canonical ARCHCOIN compass to four asset destinations, preserve sixteen semantic planes and sixteen legacy deep links, verify the local carousel runtime and responsive presentation, and retain the Sepolia-pending claim boundary. Runtime verification requires the ARCC carousel to initialize and proves click plus keyboard traversal before publication is accepted.",
+  "checks": [
+    {
+      "path": "/products/archcoin/index.html",
+      "includes": [
+        "domain now opens one four-plane carousel",
+        "/products/archcoin/contract/#overview",
+        "/products/archcoin/receivable/#engineering",
+        "/products/archcoin/payable/#platform",
+        "/products/archcoin/allocation/#governance"
+      ],
+      "excludes": [
+        "domain then opens four navigable rooms"
+      ]
+    },
+    {
+      "path": "/products/archcoin/index.controller.js",
+      "includes": [
+        "route: \"/products/archcoin/contract/#overview\"",
+        "route: \"/products/archcoin/receivable/#engineering\"",
+        "route: \"/products/archcoin/payable/#platform\"",
+        "route: \"/products/archcoin/allocation/#governance\"",
+        "ROOM_BY_ROUTE.size === 16"
+      ],
+      "excludes": [
+        "route: \"/products/archcoin/contract/overview/\""
+      ]
+    },
+    {
+      "path": "/products/archcoin/contract/index.html",
+      "includes": [
+        "data-domain=\"contract\"",
+        "ARCHCOIN Contract",
+        "ARCC",
+        "data-archcoin-carousel",
+        "Signed transaction qualified",
+        "Sepolia pending",
+        "Solidity 0.8.28",
+        "No post-deployment mint"
+      ],
+      "excludes": ["0x0000000000000000000000000000000000000000"]
+    },
+    {
+      "path": "/products/archcoin/receivable/index.html",
+      "includes": [
+        "data-domain=\"receivable\"",
+        "ARCHCOIN Receivable",
+        "ARCR",
+        "data-archcoin-carousel",
+        "Sepolia pending",
+        "does not create a debt"
+      ],
+      "excludes": ["0x0000000000000000000000000000000000000000"]
+    },
+    {
+      "path": "/products/archcoin/payable/index.html",
+      "includes": [
+        "data-domain=\"payable\"",
+        "ARCHCOIN Payable",
+        "ARCP",
+        "data-archcoin-carousel",
+        "Sepolia pending",
+        "creates no legal payment obligation"
+      ],
+      "excludes": ["0x0000000000000000000000000000000000000000"]
+    },
+    {
+      "path": "/products/archcoin/allocation/index.html",
+      "includes": [
+        "data-domain=\"allocation\"",
+        "ARCHCOIN Allocation",
+        "ARCA",
+        "data-archcoin-carousel",
+        "Sepolia pending",
+        "creates no entitlement to funds"
+      ],
+      "excludes": ["0x0000000000000000000000000000000000000000"]
+    },
+    {
+      "path": "/products/archcoin/carousel.js",
+      "includes": [
+        "SITE_CONTINUITY_V3_ONE_STAGE_TABS_SWIPE_KEYBOARD",
+        "ArrowLeft",
+        "ArrowRight",
+        "pointerdown",
+        "aria-selected",
+        "toggleAttribute(\"inert\"",
+        "root.dataset.carouselReady = \"true\""
+      ],
+      "excludes": ["compass.carousel.js"]
+    },
+    {
+      "path": "/products/archcoin/carousel.css",
+      "includes": [
+        "touch-action: pan-y",
+        "@media (max-width: 760px)",
+        "@media (prefers-reduced-motion: reduce)",
+        ".carousel-plane[hidden]"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/products/archcoin/contract/",
+    "timeoutMs": 15000,
+    "readySelector": "[data-archcoin-carousel][data-carousel-ready=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/products/archcoin/contract/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Open engineering plane",
+        "action": {"type": "click", "selector": "#tab-engineering"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "#tab-engineering", "name": "aria-selected", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-archcoin-carousel]", "name": "data-active-plane", "value": "engineering"},
+          {"type": "attributeEquals", "selector": "#plane-engineering", "name": "aria-hidden", "value": "false"}
+        ]
+      },
+      {
+        "name": "Traverse to governance with keyboard",
+        "action": {"type": "key", "selector": "#tab-engineering", "key": "End"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "#tab-governance", "name": "aria-selected", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-archcoin-carousel]", "name": "data-active-plane", "value": "governance"},
+          {"type": "textContains", "selector": "#plane-governance", "value": "No post-deployment mint"}
+        ]
+      },
+      {
+        "name": "Return to overview",
+        "action": {"type": "click", "selector": "#tab-overview"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "#tab-overview", "name": "aria-selected", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-archcoin-carousel]", "name": "data-active-plane", "value": "overview"}
+        ]
+      }
+    ]
+  }
+}

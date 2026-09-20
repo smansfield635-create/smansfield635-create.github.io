@@ -9,6 +9,26 @@ function bindVoiceIdentity(voiceUrl, expectedVoiceBlob) {
   return voiceUrl + separator + "v=" + expectedVoiceBlob;
 }
 
+function normalizeContextText(value) {
+  return String(value || "").replace(/\s+/g, " ").trim();
+}
+
+function classifyCanonicalContext(userTurn, conversationState = []) {
+  const recent = conversationState.slice(-6).map(item => item?.content || "").join(" ");
+  const text = normalizeContextText(userTurn + " " + recent).toLowerCase();
+  const ids = [];
+  const add = id => { if (!ids.includes(id)) ids.push(id); };
+  if (/\bjeeves\b/.test(text)) add("jeeves");
+  if (/\belara\b/.test(text)) add("elara");
+  if (/\bauren\b/.test(text)) add("auren");
+  if (/\bsoren\b/.test(text)) add("soren");
+  if (/\b(character|characters|team|people|who (?:is|are)|relationship|relationships)\b/.test(text)) {
+    ["jeeves", "elara", "auren", "soren"].forEach(add);
+  }
+  if (/\bmirrorland\b/.test(text)) add("elara");
+  return ids;
+}
+
 export function createPersonaAnchor({
   voiceUrl = DEFAULT_VOICE_URL,
   expectedVoiceBlob = EXPECTED_VOICE_BLOB
@@ -45,6 +65,44 @@ export function createPersonaAnchor({
     },
     async ensureReady() {
       return await ensureReady();
+    },
+    composeCanonicalContext(userTurn, conversationState = []) {
+      if (!voice) throw new Error("JEEVES_PERSONA_NOT_READY");
+      const selectedIds = classifyCanonicalContext(userTurn, conversationState);
+      const selected = selectedIds
+        .map(id => voice.getTeamMember?.(id))
+        .filter(Boolean)
+        .map(member => ({
+          id: member.id,
+          name: member.name,
+          role: member.role,
+          ownership: member.ownership,
+          route: member.route || null
+        }));
+      const mirrorlandRelevant = /\bmirrorland\b/i.test(normalizeContextText(userTurn + " " + conversationState.slice(-6).map(item => item?.content || "").join(" ")));
+      const pathways = mirrorlandRelevant
+        ? ["elara", "showroom"].map(id => voice.getPathway?.(id)).filter(Boolean).map(pathway => ({
+            id: pathway.id,
+            context: pathway.context,
+            title: pathway.title,
+            description: pathway.description,
+            voiceLine: pathway.voiceLine
+          }))
+        : [];
+      const context = {
+        authority: voice.contract,
+        selectionLaw: "Existing canon only. Do not invent missing characters, relationships, biography, roles, routes, or Mirrorland facts.",
+        team: selected,
+        pathways
+      };
+      return Object.freeze({
+        sourceIds: Object.freeze([
+          ...(selected.length ? ["JEEVES_VOICE.team"] : []),
+          ...(pathways.length ? ["JEEVES_VOICE.pathways"] : [])
+        ]),
+        selectedIds: Object.freeze(selectedIds.slice()),
+        text: "Canonical context: " + JSON.stringify(context)
+      });
     },
     composeSystemMessage(baseSystemMessage) {
       if (!voice) throw new Error("JEEVES_PERSONA_NOT_READY");

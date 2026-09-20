@@ -1,0 +1,72 @@
+{
+  "object": "LEVEL_1_TO_LEVEL_4ABCDE_1001_FINAL_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_FINAL_1001_AUTHORITY_CANDIDATE",
+  "governing_head": "c18e289b2835bb8031f52c1f50da747658b6dd54",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-e-51-geometry.v1.json"
+  ],
+  "test_law": {
+    "unit_of_count": "UNIQUE_LEXICAL_CONCEPT",
+    "target_total": 1001,
+    "rebuild_from_source_arrays": true,
+    "exact_duplicate_ceiling": 0,
+    "normalization_authority": "/products/education/authority/vocabulary-morphological-normalization.v1.json",
+    "specialist_drift_prohibited": true
+  },
+  "results": {
+    "major_level_1": 250,
+    "major_level_2": 250,
+    "major_level_3": 250,
+    "major_level_4": 251,
+    "total_surface_entries": 1001,
+    "total_exact_unique_entries": 1001,
+    "exact_duplicates": 0,
+    "final_band_overlap_with_prior_950": 0
+  },
+  "level_4_distribution": {
+    "band_a": 50,
+    "band_b": 50,
+    "band_c": 50,
+    "band_d": 50,
+    "band_e": 51,
+    "total": 251
+  },
+  "normalization_result": {
+    "predictable_inflection_inflation_added_by_final_band": 0,
+    "exact_duplicate_inflation": 0,
+    "governing_rule": "Predictable grammatical forms do not consume independent vocabulary slots; derivational forms require distinct everyday concept/function."
+  },
+  "interpretation": [
+    "The complete authority reaches the exact 1,001-concept target without exact duplicate inflation.",
+    "The final band closes practical everyday gaps rather than expanding into specialist legal, scientific, or academic terminology.",
+    "The four-major-level distribution is 250 + 250 + 250 + 251 = 1,001."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "vocabulary_authority_status": "FULL_1001_CANDIDATE",
+    "next_step": "FRESH_EXACT_CANDIDATE_QUALIFICATION_AND_REVIEW"
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "FULL_1001_WORD_AUTHORITY_CANDIDATE_COMPLETE",
+    "ACTION_PERFORMED": "Rebuilt the full vocabulary from all admitted authority arrays including the final 51-concept band.",
+    "ENGINE_RESPONSE": "1001 surface entries; 1001 exact unique concepts; zero exact duplicates.",
+    "NEXT_REQUIRED_INPUT": "QUALIFY_EXACT_THREE_PATH_CANDIDATE"
+  }
+}

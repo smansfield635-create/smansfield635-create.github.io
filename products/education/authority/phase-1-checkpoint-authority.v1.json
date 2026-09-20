@@ -3,8 +3,8 @@
   "version": "v1",
   "status": "FROZEN_PRE_IMPLEMENTATION",
   "owner": "Sean",
-  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
-  "lock_generation": 2467,
+  "operation_id": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_FREEZE_20260920_003",
+  "lock_generation": 2468,
   "governing_principle": "CLIENT_STATE_IS_DISPOSABLE_SERVER_CHECKPOINTS_ARE_AUTHORITATIVE",
   "identity_model": {
     "term": "LEARNER_PROGRESS_KEY",
@@ -37,6 +37,11 @@
     "receipt_id",
     "learner_progress_key",
     "language",
+    "native_language_support_used",
+    "support_level",
+    "support_cycle",
+    "target_language",
+    "native_language",
     "phase_id",
     "stage_id",
     "checkpoint_id",
@@ -84,5 +89,14 @@
     "ADVANCE_BEFORE_DURABLE_CONFIRMATION",
     "USE_CACHE_AS_SYSTEM_OF_RECORD",
     "REWRITE_OLD_CHECKPOINTS_TO_MATCH_NEW_CURRICULUM"
-  ]
+  ],
+  "language_support_checkpoint_law": {
+    "authority": "/products/education/authority/phase-1-language-support-cycle-authority.v1.json",
+    "record_support_cycle_on_every_completion_checkpoint": true,
+    "record_native_language_support_use": true,
+    "target_only_promotion_requires_independent_target_language_evidence": true,
+    "native_support_dependence_blocks_target_only_promotion": true,
+    "supported_success_remains_valid_learning_evidence": true,
+    "supported_success_is_final_proficiency_evidence": false
+  }
 }

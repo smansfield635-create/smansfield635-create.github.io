@@ -3,8 +3,8 @@
   "version": "v1",
   "status": "FROZEN_PRE_IMPLEMENTATION",
   "owner": "Sean",
-  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
-  "lock_generation": 2467,
+  "operation_id": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_FREEZE_20260920_003",
+  "lock_generation": 2468,
   "purpose": "Generate learner-facing progress data and internal instructional-validation evidence from the same Phase 1 activities.",
   "claim_boundary": {
     "measured": [
@@ -30,6 +30,11 @@
     "event_id",
     "learner_progress_key",
     "curriculum_version",
+    "native_language_support_used",
+    "support_level",
+    "support_cycle",
+    "target_language",
+    "native_language",
     "phase_id",
     "stage_id",
     "activity_id",
@@ -95,7 +100,8 @@
     "trained_vs_transfer_must_remain_separate": true,
     "direct_vs_productive_must_remain_separate": true,
     "first_attempt_vs_assisted_success_must_remain_separate": true,
-    "historical_events_must_not_be_reclassified_after_curriculum_change": true
+    "historical_events_must_not_be_reclassified_after_curriculum_change": true,
+    "support_level_must_remain_separate": true
   },
   "privacy_minimum": {
     "research_record_requires_real_name": false,
@@ -108,5 +114,21 @@
     "TRANSFER_SUMMARY",
     "HINT_AND_RETRY_SUMMARY",
     "STAGE_CHECKPOINT_HISTORY"
-  ]
+  ],
+  "language_support_levels": [
+    "NATIVE_SUPPORTED",
+    "BILINGUAL_BRIDGED",
+    "TARGET_DOMINANT",
+    "TARGET_ONLY"
+  ],
+  "language_support_evidence_law": {
+    "authority": "/products/education/authority/phase-1-language-support-cycle-authority.v1.json",
+    "support_level_must_be_recorded_for_every_attempt": true,
+    "native_language_support_use_must_be_recorded": true,
+    "supported_success_is_learning_evidence": true,
+    "supported_success_is_final_proficiency_evidence": false,
+    "final_proficiency_evidence_requires": "TARGET_ONLY",
+    "final_transfer_evidence_requires": "TARGET_ONLY",
+    "aggregation_must_not_collapse_supported_and_target_only_success": true
+  }
 }

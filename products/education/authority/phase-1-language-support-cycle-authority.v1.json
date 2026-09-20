@@ -1,0 +1,90 @@
+{
+  "object": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_AUTHORITY",
+  "version": "v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_FREEZE_20260920_003",
+  "lock_generation": 2468,
+  "governing_candidate": "6584788a0dce612c4eeba49856604941547e70ae",
+  "purpose": "Define the language-transition cycles that govern how much native-language scaffolding is available while the existing Phase 1 competency stages are taught and measured.",
+  "structural_law": {
+    "stages_define": "WHAT_COMPETENCY_IS_BEING_TAUGHT",
+    "cycles_define": "HOW_MUCH_NATIVE_LANGUAGE_SCAFFOLDING_IS_AVAILABLE",
+    "learner_state": "STAGE_X_SUPPORT_CYCLE",
+    "stages_and_cycles_are_orthogonal": true,
+    "eight_stage_track_mutated": false
+  },
+  "learner_language_state_required": [
+    "native_language",
+    "target_language",
+    "current_stage",
+    "current_support_cycle"
+  ],
+  "cycles": [
+    {
+      "id": "CYCLE_1_SUPPORTED",
+      "support_level": "NATIVE_SUPPORTED",
+      "teacher_language": "NATIVE_LANGUAGE_PLUS_TARGET_LANGUAGE",
+      "native_language_explanation": "PERMITTED",
+      "translation_help": "PERMITTED",
+      "purpose": "CONCEPT_ACQUISITION_AND_EARLY_PRACTICE"
+    },
+    {
+      "id": "CYCLE_2_BRIDGED",
+      "support_level": "BILINGUAL_BRIDGED",
+      "teacher_language": "TARGET_LANGUAGE_DOMINANT",
+      "native_language_explanation": "TARGETED",
+      "translation_help": "SELECTIVE",
+      "purpose": "REDUCE_DEPENDENCE_ON_NATIVE_LANGUAGE_MEDIATION"
+    },
+    {
+      "id": "CYCLE_3_INDEPENDENT",
+      "support_level": "TARGET_DOMINANT",
+      "teacher_language": "TARGET_LANGUAGE",
+      "native_language_explanation": "REPAIR_ONLY",
+      "translation_help": "ON_DIFFICULTY_OR_EXPLICIT_HELP",
+      "purpose": "INDEPENDENT_TARGET_LANGUAGE_OPERATION"
+    },
+    {
+      "id": "CYCLE_4_DEMONSTRATION",
+      "support_level": "TARGET_ONLY",
+      "teacher_language": "TARGET_LANGUAGE_ONLY",
+      "native_language_explanation": "FORBIDDEN",
+      "translation_help": "FORBIDDEN",
+      "native_language_hints": "FORBIDDEN",
+      "purpose": "FINAL_PROFICIENCY_AND_TRANSFER_EVIDENCE"
+    }
+  ],
+  "progression_law": {
+    "cycle_transition_trigger": "PERFORMANCE_GATED",
+    "screen_completion_alone_is_sufficient": false,
+    "time_in_cycle_alone_is_sufficient": false,
+    "dependence_on_native_support_blocks_target_only_promotion": true,
+    "teacher_may_hold_or_return_learner_for_repair": true
+  },
+  "evidence_law": {
+    "native_supported_success_is_valid_learning_evidence": true,
+    "bilingual_bridged_success_is_valid_learning_evidence": true,
+    "target_dominant_success_is_valid_learning_evidence": true,
+    "supported_success_is_final_proficiency_evidence": false,
+    "final_proficiency_evidence_requires": "TARGET_ONLY",
+    "final_transfer_evidence_requires": "TARGET_ONLY",
+    "native_language_assistance_must_be_recorded": true
+  },
+  "generalization_law": {
+    "engine_must_not_assume_one_native_language": true,
+    "target_curriculum_remains_language_specific": true,
+    "supported_examples": [
+      "SPANISH_TO_ENGLISH",
+      "ENGLISH_TO_SPANISH",
+      "ENGLISH_OR_SPANISH_OR_OTHER_TO_CHINESE"
+    ]
+  },
+  "invariants": [
+    "Instruction may use native-language scaffolding before demonstration.",
+    "Final proficiency and final transfer evidence must be target-language only.",
+    "A success with native-language assistance must not be reclassified as independent target-language performance.",
+    "Cycle progression is performance-gated and cannot be inferred from screen count or elapsed time.",
+    "The existing eight Phase 1 competency stages remain unchanged by this authority."
+  ]
+}

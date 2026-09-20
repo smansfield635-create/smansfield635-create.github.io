@@ -1,0 +1,110 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2_PLUS_LEVEL_3AB_600_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 600,
+    "prior_battery_tasks": 200,
+    "fresh_transfer_tasks": 24,
+    "total_tasks": 224,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior demonstrated functions and test novel transfer in personality, school/work process, feedback, goals and performance language."
+  },
+  "results": {
+    "prior_200": {
+      "functionally_expressible": 200,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_24": {
+      "DIRECT": 17,
+      "COMPOSABLE": 5,
+      "MISSING": 2,
+      "functionally_expressible": 22,
+      "coverage_percent": 91.6666666667
+    },
+    "overall_224": {
+      "functionally_expressible": 222,
+      "missing": 2,
+      "coverage_percent": 99.1071428571
+    }
+  },
+  "fresh_transfer_passed": [
+    "describe a person as kind, rude, quiet, loud, brave, shy or honest",
+    "compare personality traits in ordinary conversation",
+    "describe someone as strong or weak",
+    "describe someone as serious or funny",
+    "give or receive polite feedback",
+    "state a goal and describe progress toward it",
+    "describe effort and focus",
+    "describe success and mistakes",
+    "review and improve an assignment or project",
+    "prepare work before a deadline",
+    "submit an assignment or report",
+    "describe something as due",
+    "follow instructions and a checklist",
+    "describe a draft versus a final version",
+    "describe teamwork and partnership",
+    "describe a process in steps",
+    "set a priority",
+    "describe a task as complete",
+    "ask for detail or feedback",
+    "describe practice building a skill",
+    "correct a mistake",
+    "describe school/work readiness"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer nuanced emotion and social response",
+      "reason": "happy, sad, angry, afraid, love, hate, hope, fear and personality words exist, but embarrassed, proud, disappointed, excited, surprised and similar ordinary social-emotion terms remain sparse."
+    },
+    {
+      "function": "richer comparison and descriptive precision",
+      "reason": "many basic adjectives and comparison words exist, but size/quality/intensity nuance such as wide/narrow, heavy/light-weight, deep/shallow, smooth/rough remains limited."
+    }
+  ],
+  "marginal_gain": {
+    "cumulative_550_overall_coverage_percent": 99,
+    "cumulative_600_overall_coverage_percent": 99.1071428571,
+    "note": "The cumulative percentage changes little because the test frontier expanded again. The key result is 100% retention of all prior functions and 22 of 24 fresh functions transferred."
+  },
+  "interpretation": [
+    "Major Level 3 Band B successfully adds resolution rather than repairing basic communication.",
+    "The remaining gaps are now nuanced human-expression and descriptive-resolution gaps.",
+    "No foundational or previously closed frontier reopened.",
+    "This supports the expected convergence law: later bands add precision and expressive sophistication."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_3_band_b_status": "ADMITTED",
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_3_BAND_C_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "nuanced emotion and social response",
+      "descriptive precision and comparison",
+      "nearest empty everyday semantic neighbors"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_600_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "200-function retention test plus 24-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 91.67% novel transfer; 99.11% overall across 224 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_3_BAND_C_GEOMETRIC_RECONSTRUCTION"
+  }
+}

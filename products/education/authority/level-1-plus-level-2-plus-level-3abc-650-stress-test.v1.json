@@ -1,0 +1,111 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2_PLUS_LEVEL_3ABC_650_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 650,
+    "prior_battery_tasks": 224,
+    "fresh_transfer_tasks": 24,
+    "total_tasks": 248,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior demonstrated functions and test novel transfer in nuanced emotion/social response and descriptive precision."
+  },
+  "results": {
+    "prior_224": {
+      "functionally_expressible": 224,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_24": {
+      "DIRECT": 18,
+      "COMPOSABLE": 4,
+      "MISSING": 2,
+      "functionally_expressible": 22,
+      "coverage_percent": 91.6666666667
+    },
+    "overall_248": {
+      "functionally_expressible": 246,
+      "missing": 2,
+      "coverage_percent": 99.1935483871
+    }
+  },
+  "fresh_transfer_passed": [
+    "describe pride, embarrassment, disappointment and excitement",
+    "describe surprise, worry and nervousness",
+    "describe loneliness and comfort",
+    "describe boredom and interest",
+    "describe confusion and curiosity",
+    "express gratitude, jealousy and shame",
+    "describe feeling relaxed, upset or glad",
+    "compare wide and narrow objects",
+    "compare deep and shallow spaces",
+    "compare heavy, thin and thick objects",
+    "describe smooth and rough surfaces",
+    "describe soft and sharp objects",
+    "describe flat and curved shapes",
+    "describe something as empty, dry or wet",
+    "describe warm and cool conditions",
+    "compare tiny and huge objects",
+    "describe clear or pale appearance",
+    "describe solid, loose or tight objects",
+    "describe fresh versus stale food",
+    "describe sweet versus sour taste",
+    "describe a noisy environment",
+    "combine emotion and description in a multi-part explanation"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer interpersonal nuance",
+      "reason": "The system can describe many emotions and traits, but ordinary relationship-state words such as disappointed-with, annoyed, patient, jealous-of, trust/betrayal-style nuance remain uneven."
+    },
+    {
+      "function": "richer abstract degree/comparison",
+      "reason": "more/less, better/worse, big/small and many precise adjectives exist, but concepts such as enough/not enough degree, extremely/slightly, average, similar/opposite remain only partially expressible."
+    }
+  ],
+  "marginal_gain": {
+    "cumulative_600_overall_coverage_percent": 99.1071428571,
+    "cumulative_650_overall_coverage_percent": 99.1935483871,
+    "note": "The score remains near saturation while the test frontier expands. The significant result is 100% retention and 22 of 24 new transfer functions."
+  },
+  "interpretation": [
+    "Band C adds genuine expressive nuance rather than redundant labels.",
+    "The remaining gaps are now mostly relational and comparative refinement.",
+    "No earlier functional frontier reopened.",
+    "The reconstruction is converging toward higher-order conversational resolution."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_3_band_c_status": "ADMITTED",
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_3_BAND_D_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "interpersonal relationship nuance",
+      "abstract degree and comparison",
+      "nearest empty everyday semantic neighbors"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_650_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "224-function retention test plus 24-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 91.67% novel transfer; 99.19% overall across 248 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_3_BAND_D_GEOMETRIC_RECONSTRUCTION"
+  }
+}

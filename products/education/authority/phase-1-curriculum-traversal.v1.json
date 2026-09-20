@@ -3,8 +3,8 @@
   "version": "v1",
   "status": "FROZEN_PRE_CONTENT_BUILD",
   "owner": "Sean",
-  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
-  "lock_generation": 2467,
+  "operation_id": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_FREEZE_20260920_003",
+  "lock_generation": 2468,
   "traversal_law": [
     "DIAGNOSE",
     "PLACE",
@@ -127,5 +127,20 @@
   "architecture_ancestry": {
     "diagnostic_pattern": "ASSESS -> LOCATE -> GUIDE -> REPAIR -> REASSESS -> ADVANCE",
     "use": "Progression logic only; no requirement to copy Coheriscope visual presentation."
+  },
+  "language_support_cycle_binding": {
+    "authority": "/products/education/authority/phase-1-language-support-cycle-authority.v1.json",
+    "structural_relation": "CYCLES_SIT_ABOVE_AND_ARE_ORTHOGONAL_TO_THE_EIGHT_COMPETENCY_STAGES",
+    "learner_state_formula": "STAGE_X_SUPPORT_CYCLE",
+    "support_levels": [
+      "NATIVE_SUPPORTED",
+      "BILINGUAL_BRIDGED",
+      "TARGET_DOMINANT",
+      "TARGET_ONLY"
+    ],
+    "transition_basis": "PERFORMANCE_GATED",
+    "final_proficiency_evidence_requires": "TARGET_ONLY",
+    "final_transfer_evidence_requires": "TARGET_ONLY",
+    "eight_stage_sequence_preserved": true
   }
 }

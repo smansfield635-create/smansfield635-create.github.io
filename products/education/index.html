@@ -228,7 +228,7 @@ const BANK={
 ]
 };
 
-let learner={target_language:"English"}, probeStage=2, probeHistory=[], currentQuestionIndex=0, currentSet=[], currentSetScore=0, hintsUsed=0, finalPlacement=null;
+let learner={target_language:"English"}, probeStage=2, probeHistory=[], currentQuestionIndex=0, currentSet=[], currentSetScore=0, hintsUsed=0, finalPlacement=null, mixedAnchor=null;
 
 const qs=s=>document.querySelector(s);
 const qsa=s=>[...document.querySelectorAll(s)];
@@ -255,7 +255,7 @@ function beginPlacement(){
  if(!native||!claimed||!history||!translation){qs("#intake-validation").textContent="Complete the four required intake fields.";return}
  qs("#intake-validation").textContent="";
  learner={...learner,native_language:native,claimed_level:claimed,claimed_history:history,translation_use:translation,difficulty_note:qs("#hardest").value.trim()};
- probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];hintsUsed=0;
+ probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];hintsUsed=0;mixedAnchor=null;
  setStage("test");startProbe(probeStage);
 }
 qs("#begin-placement").addEventListener("click",beginPlacement);
@@ -285,26 +285,48 @@ function submitAnswer(){
 function finishProbe(){
  const score=Number((currentSetScore/currentSet.length).toFixed(2));
  probeHistory.push({stage:probeStage,score,correct:currentSetScore,total:currentSet.length});
- if(score>=.84 && probeStage<8){startProbe(probeStage+1);return}
- if(score<=.34 && probeStage>2){startProbe(probeStage-1);return}
 
- // A mixed first probe is not a stable boundary. Test one adjacent
- // stage before resolving placement, as required by the placement law.
- if(probeHistory.length===1 && score>.34 && score<.84){
-   if(score>=.67 && probeStage<8){startProbe(probeStage+1);return}
-   if(score<.67 && probeStage>2){startProbe(probeStage-1);return}
- }
+ // Reconcile an explicitly requested adjacent probe before applying
+ // ordinary upward/downward thresholds. This prevents probe loops.
+ if(mixedAnchor){
+   const anchor=mixedAnchor;
+   mixedAnchor=null;
 
- // If an adjacent probe was required and the learner fell below the
- // competency threshold there, resolve to the prior stronger stage.
- if(probeHistory.length>=2){
-   const previous=probeHistory[probeHistory.length-2];
-   const current=probeHistory[probeHistory.length-1];
-   if(current.score<.5 && previous.score>=.5){
-     resolvePlacement(previous.score,previous.stage);
+   if(probeStage>anchor.stage){
+     if(score>=.5){resolvePlacement(score,probeStage);return}
+     resolvePlacement(anchor.score,anchor.stage);
+     return;
+   }
+
+   if(probeStage<anchor.stage){
+     if(score>=.5){
+       if(anchor.score>=.5){resolvePlacement(anchor.score,anchor.stage);return}
+       resolvePlacement(score,probeStage);
+       return;
+     }
+     if(score<=.34 && probeStage>2){startProbe(probeStage-1);return}
+     resolvePlacement(score,probeStage);
      return;
    }
  }
+
+ if(score>=.84 && probeStage<8){startProbe(probeStage+1);return}
+ if(score<=.34 && probeStage>2){startProbe(probeStage-1);return}
+
+ // A mixed first boundary requires one adjacent probe before placement.
+ if(score>.34 && score<.84){
+   if(score>=.67 && probeStage<8){
+     mixedAnchor={stage:probeStage,score};
+     startProbe(probeStage+1);
+     return;
+   }
+   if(score<.67 && probeStage>2){
+     mixedAnchor={stage:probeStage,score};
+     startProbe(probeStage-1);
+     return;
+   }
+ }
+
  resolvePlacement(score,probeStage);
 }
 function supportCycle(score){
@@ -365,8 +387,8 @@ function enterDemo(){
  qs("#entry-state").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Verified Placement</span><strong>'+p.verified_placement+'</strong><span class="result-note">This record is not rewritten by demo limits.</span></article><article class="result-hero"><span class="eyebrow">Demo Entry</span><strong>'+p.demo_entry_point.stage+'</strong><span class="result-note">'+p.demo_entry_point.label+'</span></article><article class="result-hero"><span class="eyebrow">Support State</span><strong>'+p.support_cycle.replaceAll("_"," ")+'</strong><span class="result-note">'+p.support_dependence.replaceAll("_"," ")+'</span></article></div><p class="boundary">Runtime initialization would begin from unresolved competency evidence here. Already demonstrated nodes would not be replayed by default.</p>';
 }
 qs("#enter-demo").addEventListener("click",enterDemo);
-qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalPlacement=null;probeHistory=[];hintsUsed=0});
-qs("#restart-demo").addEventListener("click",()=>{learner={target_language:"English"};finalPlacement=null;probeHistory=[];hintsUsed=0;setStage("language")});
+qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalPlacement=null;probeHistory=[];hintsUsed=0;mixedAnchor=null});
+qs("#restart-demo").addEventListener("click",()=>{learner={target_language:"English"};finalPlacement=null;probeHistory=[];hintsUsed=0;mixedAnchor=null;setStage("language")});
 
 document.documentElement.dataset.educationDemoReady="true";
 })();

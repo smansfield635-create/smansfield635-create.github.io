@@ -17,6 +17,7 @@ const BASE = '.github/ai-toolset-transport';
 const REGISTRY_PATH = `${BASE}/authorized-toolset-registry.v1.json`;
 const MANIFEST_PATH = `${BASE}/changed-path-manifest.v1.json`;
 const RESUME_QUALIFIER_DESCRIPTOR = 'FIXED_EXACT_HEAD_QUALIFICATION_EXECUTION';
+const PRE_ADMISSION_PACKET_COMPILER_DESCRIPTOR = 'CANONICAL_PACKET_COMPILER_EXECUTION_V1';
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -48,6 +49,7 @@ function finitePatternAlternatives(pattern) {
 function expectedStringValue(name, schema, index) {
   const regex = typeof schema.pattern === 'string' ? new RegExp(schema.pattern) : null;
   const candidates = [];
+  if (/base64/i.test(name)) candidates.push(Buffer.from('{}','utf8').toString('base64'));
   if (/head/i.test(name)) candidates.push(`${(index % 8) + 1}`.repeat(40));
   if (/holder/i.test(name)) candidates.push(`ACTIVE_CONFORMANCE_${index}`);
   if (Array.isArray(schema.enum)) {
@@ -207,8 +209,11 @@ export function runConformance({ root, expectedHead, holder }) {
     const fixture = descriptor.descriptorId === RESUME_QUALIFIER_DESCRIPTOR ? resumeBoundResolutionFixture(descriptor, index + 1) : resolutionFixture(descriptor, index + 1);
     const receipt = resolveToolset({ ...fixture, registry, allowCandidate: false });
     assert(receipt.result === 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED', 'DESCRIPTOR_RESOLUTION_FAILED', descriptor.descriptorId);
+    process.stdout.write(`ACTIVE_CONFORMANCE_DESCRIPTOR_PASS ${descriptor.descriptorId} ${receipt.authorizationMode}\n`);
     if (descriptor.descriptorId === RESUME_QUALIFIER_DESCRIPTOR) {
       assert(receipt.authorizationMode === 'RESUME_OBJECT_EXACT_QUALIFICATION' && receipt.authorizedOperationId === fixture.request.operationId, 'RESUME_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
+    } else if (descriptor.descriptorId === PRE_ADMISSION_PACKET_COMPILER_DESCRIPTOR) {
+      assert(receipt.authorizationMode === 'PRE_ADMISSION_PACKET_COMPILATION_ONLY' && receipt.authorizedOperationId === descriptor.operationId && receipt.admissionLockGeneration === null, 'PRE_ADMISSION_COMPILER_AUTHORIZATION_CHANGED', descriptor.descriptorId);
     } else {
       assert(receipt.authorizationMode === 'EXACT_OPERATION_ID' && receipt.authorizedOperationId === descriptor.operationId, 'DIRECT_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
     }

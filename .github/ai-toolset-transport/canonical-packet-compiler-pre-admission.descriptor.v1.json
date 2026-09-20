@@ -8,7 +8,7 @@
   "authorityRouteIdentity": "NOT_APPLICABLE_PRE_ADMISSION_COMPILATION_ONLY",
   "intakeAdmissionIdentity": "NOT_REQUIRED_PRE_ADMISSION_COMPILATION_ONLY",
   "toolId": "CANONICAL_PACKET_COMPILER_EXECUTION_V1",
-  "exactToolingHead": "a89d71292f1ffd579f54dec9bb7feeb8370f91a1",
+  "exactToolingHead": "0a93eccf20139d8107dcbe264954f0a6744d5221",
   "commandSpecification": {
     "executable": "node",
     "scriptPath": "tools/operation-intake/canonical-packet-compiler.v1.mjs",

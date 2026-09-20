@@ -4016,6 +4016,49 @@
       "scopeHash": "5486754a5840916d35b367bd549d43ab762b6b08ce33b50bc6a484ac0af79c64",
       "state": "ADMITTED_LOCKED"
     },
+    "54bcf36eaf2e3997c99c829ccbdfb4c27d73f542bf5b574f0f7b13bed0613419": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "97e0602a2b6acec6fc2062ae6661daf829442277",
+          "lockGeneration": 2463,
+          "lockScope": "EDUCATION:SECOND_HELDOUT:COMPRESSION_REPAIR:V1",
+          "operationId": "EDUCATION_SECOND_HELDOUT_COMPRESSION_REPAIR_20260920_001",
+          "procedureLocatorDigest": "0405b91a3d270d9c3b9dca2a28eb2a0b43a86dd49eca8119a195692af2dd3152",
+          "requestDigest": "dc0d10deff84500639b267b062dab17e47d6fcd1d1f8f4243dfc8a56d607d80f",
+          "scopeHash": "54bcf36eaf2e3997c99c829ccbdfb4c27d73f542bf5b574f0f7b13bed0613419"
+        },
+        "bindingDigest": "97910a4340a223605f29ccb5bdbb6b3fcb98b6d209b7fd4db9e857dd27cfc9dd",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f16d2ba1d56f077a92c86375d3c84b3f0a71e92241108e28953fc843ea7be72a",
+          "commentId": 5753080647,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3995,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35541282492,
+          "workflowSha": "97e0602a2b6acec6fc2062ae6661daf829442277"
+        },
+        "lineageAnchorCommitSha": "a64e444a43c2b08b6099bc4b098844a7a520ddb3",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "97e0602a2b6acec6fc2062ae6661daf829442277",
+      "lockGeneration": 2463,
+      "lockScope": "EDUCATION:SECOND_HELDOUT:COMPRESSION_REPAIR:V1",
+      "operationId": "EDUCATION_SECOND_HELDOUT_COMPRESSION_REPAIR_20260920_001",
+      "procedureLocatorDigest": "0405b91a3d270d9c3b9dca2a28eb2a0b43a86dd49eca8119a195692af2dd3152",
+      "released": false,
+      "requestDigest": "dc0d10deff84500639b267b062dab17e47d6fcd1d1f8f4243dfc8a56d607d80f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "54bcf36eaf2e3997c99c829ccbdfb4c27d73f542bf5b574f0f7b13bed0613419",
+      "state": "ADMITTED_LOCKED"
+    },
     "55eb0061b59c172bdb7c2c98c7a7d460ac0ff698ce2a2394b6fd0e0d53be6e7b": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -13329,7 +13372,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2462,
+  "lockGeneration": 2463,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

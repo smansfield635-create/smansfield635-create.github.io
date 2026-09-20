@@ -2823,6 +2823,49 @@
       "scopeHash": "3b9a7ecafa05327dcee5cb824779d9526fce76b980f37d09476885f0f83b389a",
       "state": "ADMITTED_LOCKED"
     },
+    "3c38781b87f34c7c783b8bcc0e51746b4397c5dc79adbf8d8faf4ec830b4d676": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "068e4e21c4702b37c61187308b60882fafe50bbe",
+          "lockGeneration": 2444,
+          "lockScope": "H_EARTH:AUDRALIA:ALTITUDE_DAYLIGHT_SKY:V1",
+          "operationId": "AUDRALIA_ALTITUDE_DAYLIGHT_SKY_20260920_001",
+          "procedureLocatorDigest": "228eed998fb159f422729a67cbf7ee5483a8b4c77eb16a818c57c659323fe2dc",
+          "requestDigest": "177a7e15878044bebf3bf257d521b41da3c8488f27e23183b44e3a3a8b82c611",
+          "scopeHash": "3c38781b87f34c7c783b8bcc0e51746b4397c5dc79adbf8d8faf4ec830b4d676"
+        },
+        "bindingDigest": "cac2816ac6a1454de9388b07a5554eb49e5edb19902d16ffc44fcdc401e01711",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "dc592fe3d95cca16986923f82fbea5a161f9e6f1d1bfff038df0a11c10d2e558",
+          "commentId": 5747049719,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3941,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35484116006,
+          "workflowSha": "068e4e21c4702b37c61187308b60882fafe50bbe"
+        },
+        "lineageAnchorCommitSha": "ab26d474b163bee07df49e62f574a3f23ae5ca04",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "068e4e21c4702b37c61187308b60882fafe50bbe",
+      "lockGeneration": 2444,
+      "lockScope": "H_EARTH:AUDRALIA:ALTITUDE_DAYLIGHT_SKY:V1",
+      "operationId": "AUDRALIA_ALTITUDE_DAYLIGHT_SKY_20260920_001",
+      "procedureLocatorDigest": "228eed998fb159f422729a67cbf7ee5483a8b4c77eb16a818c57c659323fe2dc",
+      "released": false,
+      "requestDigest": "177a7e15878044bebf3bf257d521b41da3c8488f27e23183b44e3a3a8b82c611",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3c38781b87f34c7c783b8bcc0e51746b4397c5dc79adbf8d8faf4ec830b4d676",
+      "state": "ADMITTED_LOCKED"
+    },
     "3ca05f8a89b5caf0137a1a389bd84cca4972eba3d67ad2589e9138c05ecd87ba": {
       "governingHead": "67c03ff5072ab35da1713d6ddef197078b7e7bbc",
       "lockGeneration": 263,
@@ -12813,7 +12856,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2443,
+  "lockGeneration": 2444,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

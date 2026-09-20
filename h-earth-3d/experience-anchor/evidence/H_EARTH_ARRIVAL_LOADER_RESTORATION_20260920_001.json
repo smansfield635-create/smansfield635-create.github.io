@@ -35,7 +35,7 @@
     "observations": [
       "The loader is a temporary full-viewport maritime-dark arrival surface labeled H-Earth live world initialization and Entering the coast.",
       "Its single-card composition remains visually subordinate to the canonical world and introduces no dashboard, map, parallel world, or duplicate product.",
-      "The loader fades and removes itself only after READY_PUBLISHED, revealing the unchanged H-Earth ground world.",
+      "The loader remains present through verified startup and the integration releases its compositing surface immediately at READY_PUBLISHED, revealing the unchanged H-Earth ground world without competing with ready-state touch motion.",
       "Reduced-motion users retain the same semantic startup information without animated transitions."
     ],
     "result": "PASS"
@@ -48,6 +48,7 @@
     "prematureDismissalPrevented": true,
     "readyProgress": 100,
     "dismissedAfterReady": true,
+    "immediateReadyStateCompositingRelease": true,
     "headline": "Entering the coast.",
     "startupEvent": "h-earth-renderer-startup-receipt",
     "physicalDeviceAcceptanceClaimed": false,
@@ -55,8 +56,9 @@
   },
   "continuityProof": {
     "wrapperBaseSha256": "9cf8a5e020527fd88b96fec5f0f1ed1f0d21e0208c2e7d49b49ec6f4fb2091ab",
-    "wrapperCandidateSha256": "e3c0cbc1a926a6e21ade9c0c2ac32452d2fa9cca46464a915f436a3b99b7101a",
-    "wrapperDelta": "One import: await import('../arrival-loader.js'); immediately after renderer-startup-observer.v1.js and before public-live-gpu-integration.run8e-r3e.js.",
+    "wrapperCandidateSha256": "b95307b871aadb366eb411ab50e5b1a0e36641c8d22e5fa220e6ad9278479b9c",
+    "wrapperDelta": "Import the exact recovered loader immediately after renderer-startup-observer.v1.js, then release the loader's compositing surface at READY_PUBLISHED before the unchanged public-live-gpu-integration.run8e-r3e.js continues ready-state interaction.",
+    "readyHandoffReason": "The first exact-head CP3D probe proved renderer startup and READY_PUBLISHED but reported a sustained-motion count failure while the historical blurred fade still overlapped ready-state mobile motion. The bounded handoff changes no loader source bytes and removes that post-ready compositing overlap.",
     "unchangedCurrentIndexSha256": "1586d5b8c79a978151df3cd79dab0def246a3ac8427e5483bb0903debfc02cb6",
     "unchangedRendererIntegrationSha256": "a86dd790f1aeb609a450b9719d8983a36cb942caeb98df950768d1877bb196b6",
     "unchangedStartupObserverSha256": "0a2a752df10677a1570ab41a639b718dc2430fcab024a6f3bdcf1950b1c388b3",

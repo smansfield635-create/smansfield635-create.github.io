@@ -1,0 +1,41 @@
+{
+  "object": "EDUCATION_THIRD_HELDOUT_SCORER_AUDIT_PROCEDURE",
+  "version": "v1",
+  "status": "FROZEN_BEFORE_AUDIT_RESCORE",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_THIRD_HELDOUT_SCORER_CORRECTION_AUDIT_20260920_001",
+  "lock_generation": 2466,
+  "source_candidate": "3db1478aaecf56b2fc237621faa5b1e1a523ac18",
+  "frozen_evidence": {
+    "battery_path": "/products/education/authority/1001-heldout-generalization-3-battery.v1.json",
+    "battery_blob": "97b26b63903706ef583ba25e95e89c0fb1fcf3bd",
+    "historical_result_path": "/products/education/authority/1001-heldout-generalization-3-result.v1.json",
+    "historical_result_blob": "250f5efd81f8ffb76634fe703ead80c1c386e4bf",
+    "morphology_authority": "/products/education/authority/vocabulary-morphological-normalization.v1.json"
+  },
+  "audit_law": {
+    "task_total": 768,
+    "historical_result_must_remain_unchanged": true,
+    "battery_must_remain_unchanged": true,
+    "architecture_mutation_allowed": false,
+    "scoring_rule": "Recompute each task using the same frozen direct requirements, task routes, and pre-existing repaired architecture; predictable grammatical morphology must be applied before declaring a lexical component unavailable.",
+    "morphology_rule": "A predictable grammatical form created from an admitted word does not consume another vocabulary slot.",
+    "comparison_rule": "Record every historical→corrected score change and every case where a historically credited A/B would become C under the corrected scorer."
+  },
+  "expected_known_case": {
+    "domain": "STRESS_EMOTION",
+    "frozen_route": [
+      "worried",
+      "feeling"
+    ],
+    "canonical_base_for_feeling": "feel",
+    "expected_morphology": "feel -> feeling",
+    "expected_changed_tasks": 16
+  },
+  "stop_conditions": [
+    "Stop if battery blob differs.",
+    "Stop if historical result blob differs.",
+    "Stop if corrected scoring requires a new lexical concept or productive rule.",
+    "Stop before rewriting historical evidence."
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2AB_350_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 350,
+    "prior_battery_tasks": 80,
+    "fresh_transfer_tasks": 20,
+    "total_tasks": 100,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Measure retained closure plus novel conversational transfer without adding words outside the frozen 350."
+  },
+  "results": {
+    "prior_80": {
+      "functionally_expressible": 80,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_20": {
+      "DIRECT": 13,
+      "COMPOSABLE": 4,
+      "MISSING": 3,
+      "functionally_expressible": 17,
+      "coverage_percent": 85
+    },
+    "overall_100": {
+      "functionally_expressible": 97,
+      "missing": 3,
+      "coverage_percent": 97
+    }
+  },
+  "fresh_transfer_passed": [
+    "resolve an argument and suggest a solution",
+    "describe peace versus conflict",
+    "describe ownership and borrowing",
+    "describe buying, selling, cost, and price",
+    "describe local town/city life",
+    "name government as a civic system",
+    "describe voting and citizenship simply",
+    "describe police, hospital, and library as public services",
+    "explain cause and effect",
+    "describe fairness and equality",
+    "describe neighbors and strangers",
+    "describe land and farm ownership/use",
+    "state that something belongs to someone",
+    "describe returning borrowed property",
+    "describe careful behavior around danger",
+    "describe a rule or law in plain language",
+    "repair a social conflict using forgive/settle/calm"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer body/health description",
+      "reason": "sick, hurt, hospital and care exist, but body-part and symptom language remains sparse."
+    },
+    {
+      "function": "weather and natural-environment description",
+      "reason": "world, land, water, hot and cold exist, but weather/nature vocabulary is still thin."
+    },
+    {
+      "function": "richer household/daily-object description",
+      "reason": "home, house, room, clothes, phone, car and book exist, but common household object coverage is still limited."
+    }
+  ],
+  "marginal_gain": {
+    "cumulative_300_overall_transfer_coverage_percent": 96.25,
+    "cumulative_350_overall_coverage_percent": 97,
+    "note": "The overall percentage moves only slightly because the test frontier was expanded. The important gain is that all prior gaps remain closed while 17 of 20 new functions transfer."
+  },
+  "interpretation": [
+    "The 350-word system preserves all previously demonstrated capabilities.",
+    "Band B generalizes beyond its three source failures into civic, economic, conflict-repair, and ownership language.",
+    "The new frontier has shifted away from structural/institutional gaps toward ordinary world-detail gaps.",
+    "This is a healthy progression signal: the architecture is broadening rather than repeatedly reopening old failures."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_2_band_b_status": "ADMITTED",
+    "next_step": "CONSTRUCT_LEVEL_2_BAND_C_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "body and health",
+      "weather and nature",
+      "household and everyday objects"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_350_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "Prior 80-task battery plus 20-task fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention of prior capability; 85% novel transfer; 97% overall across 100 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_2_BAND_C_GEOMETRIC_RECONSTRUCTION"
+  }
+}

@@ -1,0 +1,6575 @@
+{
+  "object": "EDUCATION_1001_HELDOUT_GENERALIZATION_2_RESULT",
+  "version": "v1",
+  "status": "PROSPECTIVE_RESULT_PRESERVED_NO_POST_SCORE_TUNING",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_SECOND_PROSPECTIVE_HELDOUT_20260920_001",
+  "lock_generation": 2461,
+  "repaired_base_candidate": "863727257c9db53eee88f5925b96d601ef344b80",
+  "protocol_authority": "/products/education/authority/1001-heldout-generalization-2-protocol.v1.json",
+  "battery_authority": "/products/education/authority/1001-heldout-generalization-2-battery.v1.json",
+  "battery_freeze_commit": "7c1593661d9db7454c24cafb099b4c6c04d62288",
+  "battery_blob_sha": "3746effddf0ee5d0648accfa8043beccfd6436c4",
+  "methodology": {
+    "test_class": "SECOND_PROSPECTIVE_INTERNAL_HELD_OUT",
+    "battery_frozen_before_scoring": true,
+    "productive_routes_frozen_before_scoring": true,
+    "prior_384_task_records_reused": false,
+    "vocabulary_mutations_during_test": 0,
+    "productive_rule_mutations_during_test": 0,
+    "lexical_leakage": 0,
+    "post_score_battery_edits": 0
+  },
+  "scoring": {
+    "task_total": 512,
+    "domain_total": 32,
+    "A_direct": 233,
+    "B_controlled_paraphrase": 174,
+    "C_failure": 105,
+    "direct_rate_percent": 45.5,
+    "practical_completion": 407,
+    "practical_rate_percent": 79.5,
+    "safety_critical_task_total": 44,
+    "safety_critical_failures": 16,
+    "lexical_leakage": 0
+  },
+  "by_domain": {
+    "SOCIAL_COORDINATION": {
+      "direct": 9,
+      "controlled_paraphrase": 3,
+      "genuine_failure": 4,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "WORKPLACE_OPERATIONS": {
+      "direct": 9,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 1,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "EDUCATION_CLASSROOM": {
+      "direct": 9,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 1,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "HOME_MAINTENANCE": {
+      "direct": 5,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "SHOPPING_RETURNS": {
+      "direct": 7,
+      "controlled_paraphrase": 4,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "PERSONAL_FINANCE": {
+      "direct": 9,
+      "controlled_paraphrase": 7,
+      "genuine_failure": 0,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "BANKING_SECURITY": {
+      "direct": 8,
+      "controlled_paraphrase": 7,
+      "genuine_failure": 1,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "HEALTHCARE_ACCESS": {
+      "direct": 8,
+      "controlled_paraphrase": 3,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 2
+    },
+    "SYMPTOMS_BODY": {
+      "direct": 7,
+      "controlled_paraphrase": 4,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 1
+    },
+    "MEDICATION_CARE": {
+      "direct": 5,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 4
+    },
+    "EMERGENCY_RESPONSE": {
+      "direct": 6,
+      "controlled_paraphrase": 7,
+      "genuine_failure": 3,
+      "total": 16,
+      "safety_failures": 3
+    },
+    "FIRE_SAFETY": {
+      "direct": 3,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 7,
+      "total": 16,
+      "safety_failures": 5
+    },
+    "DRIVING_ROADS": {
+      "direct": 4,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 6,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "PUBLIC_TRANSIT": {
+      "direct": 10,
+      "controlled_paraphrase": 3,
+      "genuine_failure": 3,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "AIR_TRAVEL": {
+      "direct": 7,
+      "controlled_paraphrase": 7,
+      "genuine_failure": 2,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "HOTEL_LODGING": {
+      "direct": 8,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 2,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "FOOD_ORDERING": {
+      "direct": 7,
+      "controlled_paraphrase": 7,
+      "genuine_failure": 2,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "GROCERY_FOOD": {
+      "direct": 8,
+      "controlled_paraphrase": 5,
+      "genuine_failure": 3,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "DIGITAL_DEVICES": {
+      "direct": 5,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "MESSAGING_EMAIL": {
+      "direct": 7,
+      "controlled_paraphrase": 4,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "ONLINE_ACCOUNTS": {
+      "direct": 5,
+      "controlled_paraphrase": 5,
+      "genuine_failure": 6,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "CYBERSECURITY": {
+      "direct": 6,
+      "controlled_paraphrase": 4,
+      "genuine_failure": 6,
+      "total": 16,
+      "safety_failures": 1
+    },
+    "GOVERNMENT_SERVICES": {
+      "direct": 7,
+      "controlled_paraphrase": 5,
+      "genuine_failure": 4,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "CIVIC_LEGAL": {
+      "direct": 8,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 2,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "WEATHER_ALERTS": {
+      "direct": 7,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 3,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "ENVIRONMENT_RECYCLING": {
+      "direct": 5,
+      "controlled_paraphrase": 7,
+      "genuine_failure": 4,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "FAMILY_CARE": {
+      "direct": 10,
+      "controlled_paraphrase": 6,
+      "genuine_failure": 0,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "CHILDCARE_SCHOOL": {
+      "direct": 6,
+      "controlled_paraphrase": 8,
+      "genuine_failure": 2,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "RELATIONSHIPS": {
+      "direct": 9,
+      "controlled_paraphrase": 5,
+      "genuine_failure": 2,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "SCHEDULING_TIME": {
+      "direct": 11,
+      "controlled_paraphrase": 5,
+      "genuine_failure": 0,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "NEWS_INFORMATION": {
+      "direct": 7,
+      "controlled_paraphrase": 4,
+      "genuine_failure": 5,
+      "total": 16,
+      "safety_failures": 0
+    },
+    "COMPARISON_DECISION": {
+      "direct": 11,
+      "controlled_paraphrase": 4,
+      "genuine_failure": 1,
+      "total": 16,
+      "safety_failures": 0
+    }
+  },
+  "failure_task_ids": [
+    "J001",
+    "J004",
+    "J008",
+    "J012",
+    "J021",
+    "J034",
+    "J049",
+    "J050",
+    "J054",
+    "J062",
+    "J063",
+    "J067",
+    "J068",
+    "J078",
+    "J079",
+    "J080",
+    "J103",
+    "J114",
+    "J118",
+    "J119",
+    "J120",
+    "J125",
+    "J133",
+    "J134",
+    "J135",
+    "J139",
+    "J140",
+    "J148",
+    "J149",
+    "J152",
+    "J153",
+    "J159",
+    "J162",
+    "J167",
+    "J173",
+    "J177",
+    "J178",
+    "J179",
+    "J182",
+    "J184",
+    "J185",
+    "J190",
+    "J194",
+    "J195",
+    "J196",
+    "J200",
+    "J202",
+    "J203",
+    "J214",
+    "J216",
+    "J223",
+    "J228",
+    "J238",
+    "J242",
+    "J245",
+    "J259",
+    "J264",
+    "J278",
+    "J280",
+    "J288",
+    "J292",
+    "J293",
+    "J296",
+    "J302",
+    "J304",
+    "J305",
+    "J308",
+    "J315",
+    "J316",
+    "J319",
+    "J323",
+    "J325",
+    "J326",
+    "J327",
+    "J328",
+    "J331",
+    "J341",
+    "J344",
+    "J346",
+    "J349",
+    "J350",
+    "J351",
+    "J356",
+    "J363",
+    "J364",
+    "J367",
+    "J374",
+    "J377",
+    "J385",
+    "J394",
+    "J396",
+    "J404",
+    "J405",
+    "J406",
+    "J416",
+    "J439",
+    "J440",
+    "J449",
+    "J450",
+    "J482",
+    "J484",
+    "J488",
+    "J493",
+    "J496",
+    "J504"
+  ],
+  "task_level_scores": [
+    {
+      "id": "J001",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J002",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J003",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J004",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J005",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J006",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J007",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J008",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J009",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "acquaintance",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "know"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J010",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "host",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J011",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "invitation",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "invite",
+          "message"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J012",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "reputation",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J013",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "privacy",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J014",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "consent",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "permission",
+          "agree"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J015",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "conflict",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J016",
+      "domain": "SOCIAL_COORDINATION",
+      "kind": "EDGE",
+      "target_concept": "introduction",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J017",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J018",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J019",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J020",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J021",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J022",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J023",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J024",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J025",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "supervisor",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "manager",
+          "work"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J026",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "promotion",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "job",
+          "role",
+          "high"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J027",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "overtime",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "work",
+          "extra",
+          "time"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J028",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "resignation",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "leave",
+          "job"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J029",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "paycheck",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "from",
+          "work"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J030",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "benefits",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J031",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "training",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J032",
+      "domain": "WORKPLACE_OPERATIONS",
+      "kind": "EDGE",
+      "target_concept": "shift",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "work",
+          "time"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J033",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J034",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J035",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J036",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J037",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J038",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J039",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J040",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J041",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "homework",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J042",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "grade",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J043",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "semester",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "school",
+          "time",
+          "period"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J044",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "principal",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "school",
+          "leader"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J045",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "curriculum",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "school",
+          "plan",
+          "learn"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J046",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "scholarship",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "for",
+          "school"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J047",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "diploma",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "school",
+          "document",
+          "finish"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J048",
+      "domain": "EDUCATION_CLASSROOM",
+      "kind": "EDGE",
+      "target_concept": "tutor",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "help",
+          "learn"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J049",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J050",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J051",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J052",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J053",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J054",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J055",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J056",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J057",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "vacuum",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "machine",
+          "clean",
+          "bottom",
+          "room",
+          "use",
+          "air"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J058",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "refrigerator",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "machine",
+          "keep",
+          "food",
+          "cold"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J059",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "oven",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "machine",
+          "cook",
+          "food"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J060",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "sink",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "wash",
+          "water"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J061",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "laundry",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "wash",
+          "clothes"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J062",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "faucet",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J063",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "thermostat",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J064",
+      "domain": "HOME_MAINTENANCE",
+      "kind": "EDGE",
+      "target_concept": "landlord",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "own",
+          "rent",
+          "home"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J065",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J066",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J067",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J068",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J069",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J070",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J071",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J072",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J073",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "coupon",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "paper",
+          "discount"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J074",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "refund",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J075",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "exchange",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "return",
+          "thing",
+          "get",
+          "other"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J076",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "checkout",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "pay"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J077",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "cashback",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "back",
+          "after",
+          "pay"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J078",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "sold_out",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J079",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "barcode",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J080",
+      "domain": "SHOPPING_RETURNS",
+      "kind": "EDGE",
+      "target_concept": "cart",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J081",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J082",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J083",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J084",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J085",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J086",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J087",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J088",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J089",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "interest",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "extra",
+          "money",
+          "loan"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J090",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "credit",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "borrow",
+          "money",
+          "record"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J091",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "debt",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "owe"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J092",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "investment",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "put",
+          "for",
+          "future"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J093",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "income_tax",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "tax",
+          "income"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J094",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "budget_limit",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "budget",
+          "no",
+          "more",
+          "than",
+          "number"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J095",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "deposit",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J096",
+      "domain": "PERSONAL_FINANCE",
+      "kind": "EDGE",
+      "target_concept": "withdrawal",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "take",
+          "bank"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J097",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J098",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J099",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J100",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J101",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J102",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J103",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J104",
+      "domain": "BANKING_SECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J105",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "fraud",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "take",
+          "money",
+          "with",
+          "false",
+          "information"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J106",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "credit_score",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "number",
+          "bank",
+          "use",
+          "for",
+          "borrow",
+          "money"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J107",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "pin",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "private",
+          "number",
+          "card"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J108",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "transaction",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "move",
+          "record"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J109",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "identity_theft",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "use",
+          "other",
+          "identity"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J110",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "freeze_account",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "stop",
+          "account",
+          "use"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J111",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "statement",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "bank",
+          "record",
+          "money"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J112",
+      "domain": "BANKING_SECURITY",
+      "kind": "EDGE",
+      "target_concept": "cashier",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J113",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J114",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J115",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J116",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J117",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J118",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J119",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J120",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J121",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "specialist",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "doctor",
+          "specific",
+          "health"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J122",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "prescription",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "doctor",
+          "medicine",
+          "document"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J123",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "appointment",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J124",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "diagnosis",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "doctor",
+          "say",
+          "health",
+          "problem"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J125",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "insurance_claim",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J126",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "clinic",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J127",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "pharmacy",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J128",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "EDGE",
+      "target_concept": "patient",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J129",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J130",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J131",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J132",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J133",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J134",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J135",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J136",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J137",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "nausea",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "feel",
+          "sick",
+          "stomach"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J138",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "dizziness",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "feel",
+          "like",
+          "room",
+          "move",
+          "around"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J139",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "swelling",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J140",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "rash",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J141",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "fever",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J142",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "fracture",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "hard",
+          "part",
+          "inside",
+          "body",
+          "break"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J143",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "burn",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "fire",
+          "hurt",
+          "outside",
+          "part",
+          "body"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J144",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "EDGE",
+      "target_concept": "cough",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J145",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J146",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J147",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J148",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J149",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J150",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J151",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J152",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J153",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "dose",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J154",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "side_effect",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "medicine",
+          "cause",
+          "problem"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J155",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "prescription",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "doctor",
+          "medicine",
+          "document"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J156",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "tablet",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "small",
+          "medicine",
+          "thing"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J157",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "capsule",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "medicine",
+          "thing"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J158",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "pharmacist",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "work",
+          "pharmacy"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J159",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "overdose",
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J160",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "target_concept": "refill",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "get",
+          "medicine",
+          "again"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J161",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J162",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J163",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J164",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J165",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J166",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J167",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J168",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J169",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "fire_alarm",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "tell",
+          "person",
+          "fire",
+          "danger"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J170",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "first_aid",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "first",
+          "help",
+          "injury"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J171",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "fracture",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "hard",
+          "part",
+          "inside",
+          "body",
+          "break"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J172",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "burn",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "fire",
+          "hurt",
+          "outside",
+          "part",
+          "body"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J173",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "unconscious",
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J174",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "evacuate",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "people",
+          "leave",
+          "danger",
+          "place"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J175",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "emergency_exit",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "door",
+          "leave",
+          "danger"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J176",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "target_concept": "rescue",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "help",
+          "person",
+          "danger"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J177",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J178",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J179",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J180",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J181",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J182",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J183",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J184",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J185",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "smoke_detector",
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J186",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "extinguisher",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "stop",
+          "fire"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J187",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "fire_alarm",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "tell",
+          "person",
+          "fire",
+          "danger"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J188",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "sprinkler",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "water",
+          "thing",
+          "stop",
+          "fire"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J189",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "evacuation",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "people",
+          "leave",
+          "danger"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J190",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "flammable",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J191",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "escape_route",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "way",
+          "leave",
+          "danger"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J192",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "firefighter",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "work",
+          "stop",
+          "fire"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J193",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J194",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J195",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J196",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J197",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J198",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J199",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J200",
+      "domain": "DRIVING_ROADS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J201",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "intersection",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "road",
+          "meet"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J202",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "highway",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J203",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "speed_limit",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J204",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "detour",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "other",
+          "road",
+          "because",
+          "closed"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J205",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "traffic_jam",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "many",
+          "car",
+          "not",
+          "move"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J206",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "lane",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "part",
+          "road",
+          "car"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J207",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "toll",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "road"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J208",
+      "domain": "DRIVING_ROADS",
+      "kind": "EDGE",
+      "target_concept": "license_plate",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "car",
+          "number"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J209",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J210",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J211",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J212",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J213",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J214",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J215",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J216",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J217",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "subway",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "train",
+          "under",
+          "city"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J218",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "platform",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "wait",
+          "train"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J219",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "fare",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "money",
+          "ride"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J220",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "route",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J221",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "transfer",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J222",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "pass",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J223",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "terminal",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J224",
+      "domain": "PUBLIC_TRANSIT",
+      "kind": "EDGE",
+      "target_concept": "schedule",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J225",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J226",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J227",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J228",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J229",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J230",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J231",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J232",
+      "domain": "AIR_TRAVEL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J233",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "customs",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "airport",
+          "government",
+          "person",
+          "look",
+          "at",
+          "luggage"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J234",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "boarding_pass",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "flight",
+          "ticket",
+          "document"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J235",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "departure",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "flight",
+          "leave",
+          "time"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J236",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "arrival",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "flight",
+          "come",
+          "time"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J237",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "baggage_claim",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "get",
+          "luggage"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J238",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "security_check",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J239",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "connection",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "change",
+          "flight"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J240",
+      "domain": "AIR_TRAVEL",
+      "kind": "EDGE",
+      "target_concept": "terminal",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "airport",
+          "building"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J241",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J242",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J243",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J244",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J245",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J246",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J247",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J248",
+      "domain": "HOTEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J249",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "front_desk",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "hotel",
+          "person",
+          "help"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J250",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "check_in",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "arrive",
+          "hotel",
+          "record"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J251",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "checkout",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "leave",
+          "hotel",
+          "pay"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J252",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "housekeeping",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "clean",
+          "hotel",
+          "room"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J253",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "reservation",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J254",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "guest",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J255",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "vacancy",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "room",
+          "available"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J256",
+      "domain": "HOTEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "key_card",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "card",
+          "open",
+          "room"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J257",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J258",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J259",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J260",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J261",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J262",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J263",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J264",
+      "domain": "FOOD_ORDERING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J265",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "ingredient",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "inside",
+          "food"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J266",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "takeout",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "food",
+          "take",
+          "home"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J267",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "tip",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "extra",
+          "money",
+          "service"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J268",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "reservation",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J269",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "server",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "bring",
+          "food"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J270",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "appetizer",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "small",
+          "food",
+          "before",
+          "meal"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J271",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "dessert",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "sweet",
+          "food",
+          "after",
+          "meal"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J272",
+      "domain": "FOOD_ORDERING",
+      "kind": "EDGE",
+      "target_concept": "allergen",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "cause",
+          "allergy"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J273",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J274",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J275",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J276",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J277",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J278",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J279",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J280",
+      "domain": "GROCERY_FOOD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J281",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "aisle",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "part",
+          "store",
+          "walk"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J282",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "receipt",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J283",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "checkout",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "pay"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J284",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "cashier",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J285",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "coupon",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "paper",
+          "discount"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J286",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "produce",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "fresh",
+          "fruit",
+          "vegetable"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J287",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "cart",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "carry",
+          "food"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J288",
+      "domain": "GROCERY_FOOD",
+      "kind": "EDGE",
+      "target_concept": "barcode",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J289",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J290",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J291",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J292",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J293",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J294",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J295",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J296",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J297",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "app",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "phone",
+          "open",
+          "use"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J298",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "browser",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "computer",
+          "system",
+          "website"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J299",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "charger",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "device",
+          "phone",
+          "energy"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J300",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "battery",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "hold",
+          "energy"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J301",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "software",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "computer",
+          "system"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J302",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "hardware",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J303",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "notification",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "message",
+          "device"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J304",
+      "domain": "DIGITAL_DEVICES",
+      "kind": "EDGE",
+      "target_concept": "settings",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J305",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J306",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J307",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J308",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J309",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J310",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J311",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J312",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J313",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "attachment",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "file",
+          "with",
+          "email"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J314",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "inbox",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "email",
+          "come"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J315",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "spam",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J316",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "forward",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J317",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "thread",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "group",
+          "message",
+          "same",
+          "topic"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J318",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "draft",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J319",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "subject_line",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J320",
+      "domain": "MESSAGING_EMAIL",
+      "kind": "EDGE",
+      "target_concept": "recipient",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "get",
+          "message"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J321",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J322",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J323",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J324",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J325",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J326",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J327",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J328",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J329",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "two_factor",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "two",
+          "step",
+          "security"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J330",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "username",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "account",
+          "name"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J331",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "login",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J332",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "logout",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "leave",
+          "account"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J333",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "verification_code",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "security",
+          "number",
+          "message"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J334",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "reset_password",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "change",
+          "password",
+          "again"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J335",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "profile",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J336",
+      "domain": "ONLINE_ACCOUNTS",
+      "kind": "EDGE",
+      "target_concept": "permission",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J337",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J338",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J339",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J340",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J341",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J342",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J343",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J344",
+      "domain": "CYBERSECURITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J345",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "phishing",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "false",
+          "message",
+          "take",
+          "information"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J346",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "malware",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J347",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "hack",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "get",
+          "access",
+          "without",
+          "permission"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J348",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "scam",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "false",
+          "offer",
+          "take",
+          "money"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J349",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "data_breach",
+      "safety_critical": true,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J350",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "encryption",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J351",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "firewall",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J352",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "target_concept": "identity_theft",
+      "safety_critical": true,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "use",
+          "other",
+          "identity"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J353",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J354",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J355",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J356",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J357",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J358",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J359",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J360",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J361",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "courthouse",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "government",
+          "place",
+          "law"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J362",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "permit",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "government",
+          "permission"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J363",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "certificate",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J364",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "registration",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J365",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "agency",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "government",
+          "organization"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J366",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "clerk",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "office",
+          "record"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J367",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "application",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J368",
+      "domain": "GOVERNMENT_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "identification",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "document",
+          "show",
+          "identity"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J369",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J370",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J371",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J372",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J373",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J374",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J375",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J376",
+      "domain": "CIVIC_LEGAL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J377",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "contract",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J378",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "court",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "government",
+          "place",
+          "law"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J379",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "lawyer",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "work",
+          "law"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J380",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "witness",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "see",
+          "event"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J381",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "appeal",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "ask",
+          "decision",
+          "change"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J382",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "penalty",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "bad",
+          "result",
+          "break",
+          "rule"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J383",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "rights",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J384",
+      "domain": "CIVIC_LEGAL",
+      "kind": "EDGE",
+      "target_concept": "regulation",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "government",
+          "rule"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J385",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J386",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J387",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J388",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J389",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J390",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J391",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J392",
+      "domain": "WEATHER_ALERTS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J393",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "forecast",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "weather",
+          "future"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J394",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "thunderstorm",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J395",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "lightning",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "sky",
+          "electricity",
+          "storm"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J396",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "flood",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J397",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "tornado",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "strong",
+          "wind",
+          "turn"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J398",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "heatwave",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "very",
+          "hot",
+          "many",
+          "day"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J399",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "freeze",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "very",
+          "cold",
+          "water",
+          "hard"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J400",
+      "domain": "WEATHER_ALERTS",
+      "kind": "EDGE",
+      "target_concept": "warning",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "message",
+          "danger"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J401",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J402",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J403",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J404",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J405",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J406",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J407",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J408",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J409",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "recycle",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "make",
+          "new",
+          "thing",
+          "from",
+          "old"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J410",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "pollution",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "dirty",
+          "air",
+          "water"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J411",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "waste",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "not",
+          "use"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J412",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "renewable",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "energy",
+          "use",
+          "again"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J413",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "solar",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "energy",
+          "sun"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J414",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "habitat",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "animal",
+          "live"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J415",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "conservation",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "protect",
+          "nature"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J416",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "kind": "EDGE",
+      "target_concept": "landfill",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J417",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J418",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J419",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J420",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J421",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J422",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J423",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J424",
+      "domain": "FAMILY_CARE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J425",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "relative",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "family",
+          "person"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J426",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "guardian",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "adult",
+          "responsibility",
+          "child"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J427",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "babysitter",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "care",
+          "child"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J428",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "parent",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J429",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "sibling",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "family",
+          "child",
+          "same",
+          "parent"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J430",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "caregiver",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "care",
+          "other"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J431",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "household",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J432",
+      "domain": "FAMILY_CARE",
+      "kind": "EDGE",
+      "target_concept": "emergency_contact",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "call",
+          "emergency"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J433",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J434",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J435",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J436",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J437",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J438",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J439",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J440",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J441",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "daycare",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "care",
+          "child"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J442",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "guardian",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "adult",
+          "responsibility",
+          "child"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J443",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "pickup",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "get",
+          "child",
+          "school"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J444",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "dropoff",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "bring",
+          "child",
+          "school"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J445",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "permission_slip",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "school",
+          "permission",
+          "paper"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J446",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "report_card",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "school",
+          "score",
+          "document"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J447",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "classmate",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "same",
+          "class"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J448",
+      "domain": "CHILDCARE_SCHOOL",
+      "kind": "EDGE",
+      "target_concept": "playground",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "child",
+          "play"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J449",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J450",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J451",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J452",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J453",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J454",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J455",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J456",
+      "domain": "RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J457",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "boundary",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "what",
+          "person",
+          "will",
+          "not",
+          "accept",
+          "relationship"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J458",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "compromise",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "both",
+          "person",
+          "change",
+          "some"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J459",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "forgiveness",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "accept",
+          "sorry"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J460",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "trust",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J461",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "breakup",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "relationship",
+          "end"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J462",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "partner",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J463",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "jealousy",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "jealous",
+          "feeling"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J464",
+      "domain": "RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "support",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J465",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J466",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J467",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J468",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J469",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J470",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J471",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J472",
+      "domain": "SCHEDULING_TIME",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J473",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "reschedule",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "change",
+          "appointment",
+          "time"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J474",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "deadline",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J475",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "duration",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "how",
+          "long",
+          "time"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J476",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "calendar",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J477",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "availability",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "time",
+          "can",
+          "meet"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J478",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "postpone",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "move",
+          "event",
+          "later"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J479",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "cancel",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J480",
+      "domain": "SCHEDULING_TIME",
+      "kind": "EDGE",
+      "target_concept": "reminder",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "message",
+          "remember"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J481",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J482",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J483",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J484",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J485",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J486",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J487",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J488",
+      "domain": "NEWS_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J489",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "headline",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "name",
+          "news",
+          "article"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J490",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "source",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "place",
+          "information",
+          "come"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J491",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "fact",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J492",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "rumor",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "information",
+          "not",
+          "sure",
+          "true"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J493",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "bias",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J494",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "journalist",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "person",
+          "work",
+          "news"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J495",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "interview",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J496",
+      "domain": "NEWS_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "broadcast",
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J497",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J498",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J499",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J500",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J501",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J502",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J503",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J504",
+      "domain": "COMPARISON_DECISION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "C",
+      "credited_route": null
+    },
+    {
+      "id": "J505",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "best_fit",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "right",
+          "for",
+          "need"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J506",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "tradeoff",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J507",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "priority",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J508",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "alternative",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "other",
+          "option"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J509",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "criteria",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "thing",
+          "use",
+          "choose"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J510",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "consequence",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    },
+    {
+      "id": "J511",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "preference",
+      "safety_critical": false,
+      "score": "B",
+      "credited_route": {
+        "mechanism": "FROZEN_COMPOSITION",
+        "components": [
+          "what",
+          "person",
+          "like",
+          "more"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J512",
+      "domain": "COMPARISON_DECISION",
+      "kind": "EDGE",
+      "target_concept": "decision",
+      "safety_critical": false,
+      "score": "A",
+      "credited_route": null
+    }
+  ],
+  "interpretation": [
+    "The repaired productive architecture did not reproduce full practical closure on a new 512-task battery frozen before scoring.",
+    "This second prospective result is stronger evidence against universal functional closure than the failure-driven 384-task optimization result.",
+    "The architecture still provides substantial direct and compositional coverage across 32 domains, but measurable generalization gaps remain.",
+    "No battery, vocabulary, or productive-rule repair is permitted inside this result."
+  ],
+  "next_gate": "DECOMPOSE_SECOND_PROSPECTIVE_FAILURES_ONLY_AFTER_PRESERVING_THIS_RESULT"
+}

@@ -208,6 +208,7 @@ export function runConformance({ root, expectedHead, holder }) {
     const fixture = descriptor.descriptorId === RESUME_QUALIFIER_DESCRIPTOR ? resumeBoundResolutionFixture(descriptor, index + 1) : resolutionFixture(descriptor, index + 1);
     const receipt = resolveToolset({ ...fixture, registry, allowCandidate: false });
     assert(receipt.result === 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED', 'DESCRIPTOR_RESOLUTION_FAILED', descriptor.descriptorId);
+    process.stdout.write(`ACTIVE_CONFORMANCE_DESCRIPTOR_PASS ${descriptor.descriptorId} ${receipt.authorizationMode}\n`);
     if (descriptor.descriptorId === RESUME_QUALIFIER_DESCRIPTOR) {
       assert(receipt.authorizationMode === 'RESUME_OBJECT_EXACT_QUALIFICATION' && receipt.authorizedOperationId === fixture.request.operationId, 'RESUME_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
     } else if (descriptor.descriptorId === PRE_ADMISSION_PACKET_COMPILER_DESCRIPTOR) {

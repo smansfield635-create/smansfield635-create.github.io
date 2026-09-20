@@ -1,0 +1,94 @@
+{
+  "schema": "ARCHCOIN_FOUR_ASSET_TOKEN_LAW_v1",
+  "status": "FROZEN_PRE_CONTRACT",
+  "purpose": "Define the minimum non-hallucinatory technical law required before ARCHCOIN may represent four genuine fungible cryptographic assets.",
+  "chainProfile": {
+    "family": "EVM",
+    "standard": "ERC-20",
+    "network": "UNSELECTED_ESTABLISHED_EVM_CHAIN",
+    "mainnetDeploymentAuthorized": false,
+    "testnetDeploymentAuthorized": false
+  },
+  "invariants": [
+    "NO_CRYPTOCURRENCY_CLAIM_BEFORE_DEPLOYED_CONTRACT_ADDRESS_AND_VERIFIABLE_ON_CHAIN_STATE",
+    "FOUR_ASSETS_ONLY",
+    "ONE_ASSET_PER_EXISTING_ARCHCOIN_DOMAIN",
+    "NO_HIDDEN_MINT_AUTHORITY",
+    "NO_UNDEFINED_HOLDER_RIGHTS",
+    "NO_MAINNET_DEPLOYMENT_BEFORE_TESTNET_QUALIFICATION"
+  ],
+  "assets": [
+    {
+      "domain": "contract",
+      "workingName": "ARCHCOIN Contract",
+      "symbol": "UNFROZEN",
+      "unitMeaning": "UNFROZEN",
+      "supplyModel": "UNFROZEN",
+      "initialSupply": "UNFROZEN",
+      "initialRecipient": "UNFROZEN",
+      "transferability": "UNFROZEN",
+      "burnability": "UNFROZEN",
+      "mintAuthority": "UNFROZEN",
+      "adminAuthority": "UNFROZEN",
+      "holderRights": "UNFROZEN"
+    },
+    {
+      "domain": "receivable",
+      "workingName": "ARCHCOIN Receivable",
+      "symbol": "UNFROZEN",
+      "unitMeaning": "UNFROZEN",
+      "supplyModel": "UNFROZEN",
+      "initialSupply": "UNFROZEN",
+      "initialRecipient": "UNFROZEN",
+      "transferability": "UNFROZEN",
+      "burnability": "UNFROZEN",
+      "mintAuthority": "UNFROZEN",
+      "adminAuthority": "UNFROZEN",
+      "holderRights": "UNFROZEN"
+    },
+    {
+      "domain": "payable",
+      "workingName": "ARCHCOIN Payable",
+      "symbol": "UNFROZEN",
+      "unitMeaning": "UNFROZEN",
+      "supplyModel": "UNFROZEN",
+      "initialSupply": "UNFROZEN",
+      "initialRecipient": "UNFROZEN",
+      "transferability": "UNFROZEN",
+      "burnability": "UNFROZEN",
+      "mintAuthority": "UNFROZEN",
+      "adminAuthority": "UNFROZEN",
+      "holderRights": "UNFROZEN"
+    },
+    {
+      "domain": "allocation",
+      "workingName": "ARCHCOIN Allocation",
+      "symbol": "UNFROZEN",
+      "unitMeaning": "UNFROZEN",
+      "supplyModel": "UNFROZEN",
+      "initialSupply": "UNFROZEN",
+      "initialRecipient": "UNFROZEN",
+      "transferability": "UNFROZEN",
+      "burnability": "UNFROZEN",
+      "mintAuthority": "UNFROZEN",
+      "adminAuthority": "UNFROZEN",
+      "holderRights": "UNFROZEN"
+    }
+  ],
+  "qualificationGate": {
+    "contractConstructionAllowedWhen": [
+      "network selected",
+      "all four symbols frozen",
+      "unit meaning frozen for all four",
+      "supply and authority rules frozen",
+      "holder-rights representation frozen"
+    ],
+    "cryptocurrencyClaimAllowedWhen": [
+      "contract deployed",
+      "contract address recorded",
+      "deployment transaction recorded",
+      "on-chain bytecode independently retrievable",
+      "ERC-20 behavior qualified"
+    ]
+  }
+}

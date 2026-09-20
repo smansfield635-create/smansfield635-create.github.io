@@ -1,0 +1,105 @@
+{
+  "object": "EDUCATION_1001_PAIRED_SUBSTITUTION_EXPERIMENT",
+  "version": "v1",
+  "status": "EXPERIMENT_DEFINED_CANONICAL_MUTATION_HELD",
+  "owner": "Sean",
+  "base_candidate": "759854a9e8daa05714fc6d9771358e6e6bf0c980",
+  "baseline": {
+    "task_total": 256,
+    "direct": 217,
+    "controlled_paraphrase": 35,
+    "genuine_failure": 4,
+    "practical_completion": 252,
+    "practical_rate_percent": 98.4,
+    "lexical_leakage": 0,
+    "evidence_class": "AGGREGATE_ONLY",
+    "limitation": "The original 256 individual task records were not persisted. Exact same-battery regression cannot be truthfully reproduced from aggregate counts alone."
+  },
+  "invariants": {
+    "lexical_concept_total": 1001,
+    "distribution": "250+250+250+251",
+    "expansion_allowed": false,
+    "practical_completion_floor_percent": 98,
+    "direct_coverage_must_improve": true,
+    "safety_critical_semantic_equivalence_required": true,
+    "canonical_band_mutation_authorized": false
+  },
+  "proposed_pairings": [
+    {
+      "out": "radio",
+      "in": "allergy",
+      "rationale": "Trade a narrow reconstructable media label for a safety-critical medical distinction."
+    },
+    {
+      "out": "festival",
+      "in": "blood",
+      "rationale": "Trade a lower-frequency cultural event label for a high-utility injury/emergency concept."
+    },
+    {
+      "out": "poem",
+      "in": "stomach",
+      "rationale": "Trade a narrow literary label for a common symptom-location concept."
+    },
+    {
+      "out": "novel",
+      "in": "tooth",
+      "rationale": "Trade a narrow literary label for a common pain/care body-location concept."
+    },
+    {
+      "out": "pale",
+      "in": "electricity",
+      "rationale": "Trade a fine-grained descriptive adjective for household/infrastructure utility."
+    },
+    {
+      "out": "stale",
+      "in": "soap",
+      "rationale": "Trade a fine-grained food-state adjective for high-frequency hygiene utility."
+    },
+    {
+      "out": "couple",
+      "in": "contract",
+      "rationale": "Trade a reconstructable social label for a high-precision transaction/document concept."
+    },
+    {
+      "out": "betrayal",
+      "in": "discount",
+      "rationale": "Trade a derivational noun with betray retained for a common purchase/negotiation concept; requires regression proof."
+    },
+    {
+      "out": "unfairly",
+      "in": "Wi-Fi",
+      "rationale": "Trade an adverbial derivative with unfair retained for a common connectivity concept; requires morphology-law regression proof."
+    },
+    {
+      "out": "exactly",
+      "in": "app",
+      "rationale": "Trade an adverbial derivative with exact retained for a common modern software object; requires naturalness regression proof."
+    }
+  ],
+  "reserve_incoming": [
+    "landlord",
+    "tenant",
+    "agreement",
+    "fork",
+    "knife"
+  ],
+  "reserve_outgoing": [
+    "personally",
+    "respectful",
+    "disrespectful"
+  ],
+  "acceptance_law": [
+    "Materialize and freeze a task-level 256-item adversarial battery before scoring substitutions.",
+    "Score baseline and every proposed swap against the identical frozen battery.",
+    "A swap may be accepted only if direct natural-expression coverage improves and practical completion remains at or above 98 percent.",
+    "No accepted swap may create a new safety-critical failure.",
+    "After each accepted swap, rerun uniqueness and morphological-normalization checks.",
+    "Only a separately admitted canonical mutation may edit vocabulary-band authorities."
+  ],
+  "current_result": {
+    "pairings_selected": 10,
+    "pairings_applied_to_canonical_vocabulary": 0,
+    "lexical_total_after_experiment_definition": 1001,
+    "disposition": "HOLD_FOR_TASK_LEVEL_REGRESSION"
+  }
+}

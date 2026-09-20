@@ -1,0 +1,420 @@
+{
+  "object": "EDUCATION_HELDOUT_COMPRESSION_REPAIR_ROUTES",
+  "version": "v1",
+  "status": "EXPERIMENTAL_PRODUCTIVE_ROUTES_FROZEN",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_HELDOUT_COMPRESSION_REPAIR_20260920_001",
+  "lock_generation": 2460,
+  "governing_main": "97e0602a2b6acec6fc2062ae6661daf829442277",
+  "heldout_source_candidate": "8571565fd02b02e259e7133865a98c6de815cb22",
+  "battery_authority": "/products/education/authority/1001-heldout-generalization-battery.v1.json",
+  "battery_blob_sha": "e7fc329f93927706f7a40916e6c4ce95c2468404",
+  "methodological_boundary": {
+    "prospective_status_before_repair": "VALID_HELD_OUT",
+    "status_after_failure_driven_repair_design": "OPTIMIZATION_BATTERY_NOT_FRESH_HELD_OUT",
+    "new_generalization_claim_requires_new_prospective_battery": true,
+    "canonical_vocabulary_mutations": 0
+  },
+  "productive_law": {
+    "lexical_slots_consumed": 0,
+    "allowed_mechanisms": [
+      "GRAMMAR",
+      "MORPHOLOGY",
+      "FUNCTIONAL_DESCRIPTION",
+      "RELATIONAL_COMPOSITION",
+      "ROLE_COMPOSITION",
+      "PROCESS_DESCRIPTION",
+      "EVENT_DESCRIPTION",
+      "SYMPTOM_DESCRIPTION",
+      "INJURY_DESCRIPTION"
+    ],
+    "rule": "A repair may use only canonical lexical concepts plus already-authorized productive grammar/morphology. It may not smuggle an absent lexical concept into a surface form.",
+    "safety_rule": "Safety-critical repairs count only where the descriptive route preserves the task-relevant proposition without a materially broader or weaker meaning."
+  },
+  "repairs": [
+    {
+      "id": "H022",
+      "mechanism": "COMPOSITION",
+      "surface": "speak with more time between words",
+      "lex": [
+        "speak",
+        "with",
+        "more",
+        "time",
+        "between",
+        "word"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H038",
+      "mechanism": "COMPOSITION",
+      "surface": "what happened is unfair",
+      "lex": [
+        "what",
+        "happen",
+        "unfair"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H048",
+      "mechanism": "COMPOSITION",
+      "surface": "what I will not accept in a relationship",
+      "lex": [
+        "relationship",
+        "what",
+        "I",
+        "will",
+        "not",
+        "accept"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H070",
+      "mechanism": "COMPOSITION",
+      "surface": "a thing a company makes or sells",
+      "lex": [
+        "thing",
+        "company",
+        "make",
+        "sell"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H077",
+      "mechanism": "COMPOSITION",
+      "surface": "does the price include tax",
+      "lex": [
+        "price",
+        "include",
+        "tax"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H078",
+      "mechanism": "COMPOSITION",
+      "surface": "return this thing and get another",
+      "lex": [
+        "return",
+        "thing",
+        "get",
+        "other"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H112",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "a machine that cleans the bottom of a room using air",
+      "lex": [
+        "machine",
+        "clean",
+        "bottom",
+        "room",
+        "use",
+        "air"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H140",
+      "mechanism": "MORPHOLOGY_PLUS_COMPOSITION",
+      "surface": "a higher job role",
+      "lex": [
+        "job",
+        "role",
+        "high"
+      ],
+      "generated": [
+        "higher"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H145",
+      "mechanism": "ROLE_COMPOSITION",
+      "surface": "a person who teaches",
+      "lex": [
+        "person",
+        "who",
+        "teach"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H187",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "the airport government people who look at luggage",
+      "lex": [
+        "airport",
+        "government",
+        "person",
+        "look",
+        "at",
+        "luggage"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H193",
+      "mechanism": "ACTION_COMPOSITION",
+      "surface": "give the email to the person",
+      "lex": [
+        "give",
+        "email",
+        "to",
+        "person"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H199",
+      "mechanism": "COMPOSITION",
+      "surface": "a privacy problem",
+      "lex": [
+        "privacy",
+        "problem"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H202",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "a thing on the phone that you open and use",
+      "lex": [
+        "thing",
+        "on",
+        "phone",
+        "open",
+        "use"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H204",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "a computer system for websites",
+      "lex": [
+        "computer",
+        "system",
+        "for",
+        "website"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H208",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "change the computer system to the new one",
+      "lex": [
+        "change",
+        "computer",
+        "system",
+        "to",
+        "new"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H222",
+      "mechanism": "SYMPTOM_DESCRIPTION",
+      "surface": "I feel like the room moves around",
+      "lex": [
+        "feel",
+        "like",
+        "room",
+        "move",
+        "around"
+      ],
+      "safety": true,
+      "semantic_equivalence": "ACCEPTED_FOR_DIZZINESS_REPORTING"
+    },
+    {
+      "id": "H227",
+      "mechanism": "GRAMMATICAL_NEGATION",
+      "surface": "not safe",
+      "lex": [
+        "not",
+        "safe"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H233",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "the thing telling people there is fire danger",
+      "lex": [
+        "thing",
+        "tell",
+        "person",
+        "fire",
+        "danger"
+      ],
+      "safety": true,
+      "semantic_equivalence": "ACCEPTED_AS_FIRE_ALARM_WARNING_FUNCTION"
+    },
+    {
+      "id": "H238",
+      "mechanism": "INJURY_DESCRIPTION",
+      "surface": "fire hurt the outside part of my body",
+      "lex": [
+        "fire",
+        "hurt",
+        "outside",
+        "part",
+        "body"
+      ],
+      "safety": true,
+      "semantic_equivalence": "ACCEPTED_AS_BURN_INJURY_DESCRIPTION"
+    },
+    {
+      "id": "H239",
+      "mechanism": "BODY_PART_DEFINITION_PLUS_EVENT",
+      "surface": "a hard part inside the body may be broken",
+      "lex": [
+        "hard",
+        "part",
+        "inside",
+        "body",
+        "break"
+      ],
+      "safety": true,
+      "semantic_equivalence": "ACCEPTED_AS_BONE_FRACTURE_DESCRIPTION"
+    },
+    {
+      "id": "H251",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "the number a bank uses for borrowing money",
+      "lex": [
+        "number",
+        "bank",
+        "use",
+        "for",
+        "borrow",
+        "money"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H252",
+      "mechanism": "EVENT_DESCRIPTION",
+      "surface": "a person takes money using false information",
+      "lex": [
+        "person",
+        "take",
+        "money",
+        "with",
+        "false",
+        "information"
+      ],
+      "safety": true,
+      "semantic_equivalence": "ACCEPTED_AS_FINANCIAL_FRAUD_DESCRIPTION"
+    },
+    {
+      "id": "H255",
+      "mechanism": "RELATIONAL_COMPOSITION",
+      "surface": "the budget says no more than this number",
+      "lex": [
+        "budget",
+        "no",
+        "more",
+        "than",
+        "number"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H304",
+      "mechanism": "PROCESS_DESCRIPTION",
+      "surface": "look at the information and make sure it is true",
+      "lex": [
+        "look",
+        "at",
+        "information",
+        "and",
+        "make",
+        "sure",
+        "true"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H320",
+      "mechanism": "COMPOSITION",
+      "surface": "what a person will not accept in a relationship",
+      "lex": [
+        "relationship",
+        "what",
+        "person",
+        "will",
+        "not",
+        "accept"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H334",
+      "mechanism": "COMPOSITION",
+      "surface": "the right one for the need",
+      "lex": [
+        "right",
+        "for",
+        "need"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H338",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "tell the person the storm is dangerous",
+      "lex": [
+        "tell",
+        "person",
+        "storm",
+        "danger"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H350",
+      "mechanism": "PROCESS_DESCRIPTION",
+      "surface": "make a new thing from an old thing",
+      "lex": [
+        "make",
+        "new",
+        "thing",
+        "from",
+        "old"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H361",
+      "mechanism": "FUNCTIONAL_DESCRIPTION",
+      "surface": "the government place for law",
+      "lex": [
+        "government",
+        "place",
+        "for",
+        "law"
+      ],
+      "safety": false
+    },
+    {
+      "id": "H378",
+      "mechanism": "RELATIONAL_COMPOSITION",
+      "surface": "the name of a news article",
+      "lex": [
+        "name",
+        "of",
+        "news",
+        "article"
+      ],
+      "safety": false
+    }
+  ]
+}

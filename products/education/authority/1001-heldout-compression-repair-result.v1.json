@@ -1,0 +1,3194 @@
+{
+  "object": "EDUCATION_HELDOUT_COMPRESSION_REPAIR_RESULT",
+  "version": "v1",
+  "status": "PASS_OPTIMIZATION_BATTERY_FULL_PRACTICAL_CLOSURE",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_HELDOUT_COMPRESSION_REPAIR_20260920_001",
+  "lock_generation": 2460,
+  "heldout_source_candidate": "8571565fd02b02e259e7133865a98c6de815cb22",
+  "battery_blob_sha_before": "e7fc329f93927706f7a40916e6c4ce95c2468404",
+  "battery_blob_sha_after": "e7fc329f93927706f7a40916e6c4ce95c2468404",
+  "battery_bytes_changed": false,
+  "canonical_vocabulary": {
+    "lexical_total": 1001,
+    "mutations": 0,
+    "lexical_leakage": 0
+  },
+  "baseline": {
+    "direct": 197,
+    "controlled_paraphrase": 157,
+    "genuine_failure": 30,
+    "practical": 354,
+    "practical_rate_percent": 92.2,
+    "safety_failures": 5
+  },
+  "repaired": {
+    "direct": 197,
+    "controlled_paraphrase": 187,
+    "genuine_failure": 0,
+    "practical": 384,
+    "practical_rate_percent": 100,
+    "safety_failures": 0,
+    "recovered_failures": 30
+  },
+  "decomposition": {
+    "original_failure_count": 30,
+    "direct_only_failures": 8,
+    "blocked_paraphrase_failures": 22,
+    "repaired_by_productive_composition": 30,
+    "residual_failure_count": 0,
+    "residual_task_ids": []
+  },
+  "safety_critical": {
+    "original_failures": 5,
+    "repaired_task_ids": [
+      "H222",
+      "H233",
+      "H238",
+      "H239",
+      "H252"
+    ],
+    "residual_failures": 0
+  },
+  "interpretation": [
+    "All 30 observed failures can be represented by controlled productive descriptions using only the existing 1,001 lexical concepts plus authorized grammar/morphology.",
+    "This is a failure-driven optimization result, not a new held-out generalization estimate.",
+    "The 384-task battery remains byte-identical but is no longer fresh after repair routes were designed from its failures.",
+    "A new prospective battery is required to determine whether the repaired productive architecture generalizes."
+  ],
+  "task_level_scores": [
+    {
+      "id": "H001",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H002",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H003",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H004",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H005",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H006",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H007",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H008",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H009",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "nickname",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H010",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "relative",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H011",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "roommate",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H012",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "coworker",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H013",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "citizenship",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H014",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "married",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H015",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "single",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H016",
+      "domain": "SOCIAL_IDENTITY",
+      "kind": "EDGE",
+      "target_concept": "pronunciation",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H017",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H018",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H019",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H020",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H021",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H022",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H023",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H024",
+      "domain": "REQUESTS_HELP",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H025",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "favor",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H026",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "assist",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H027",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "borrower",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H028",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "lender",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H029",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "urgent",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H030",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "deadline",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H031",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "extension",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H032",
+      "domain": "REQUESTS_HELP",
+      "kind": "EDGE",
+      "target_concept": "translation",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H033",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H034",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H035",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H036",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H037",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H038",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H039",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H040",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H041",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "misunderstanding",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H042",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "compromise",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H043",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "insult",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H044",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "interrupt",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H045",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "blame",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H046",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "forgive",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H047",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "argument",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H048",
+      "domain": "DISAGREEMENT_REPAIR",
+      "kind": "EDGE",
+      "target_concept": "boundary",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H049",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H050",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H051",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H052",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H053",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H054",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H055",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H056",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H057",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "intersection",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H058",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "traffic",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H059",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "subway",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H060",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "platform",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H061",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "highway",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H062",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "parking",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H063",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "fare",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H064",
+      "domain": "DIRECTIONS_TRANSPORT",
+      "kind": "EDGE",
+      "target_concept": "transfer",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H065",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H066",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H067",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H068",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H069",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H070",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H071",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H072",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H073",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "discount",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H074",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "coupon",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H075",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "change_money",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H076",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "cashback",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H077",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "tax_total",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H078",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "exchange_item",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H079",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "sold_out",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H080",
+      "domain": "SHOPPING_PAYMENT",
+      "kind": "EDGE",
+      "target_concept": "checkout",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H081",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H082",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H083",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H084",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H085",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H086",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H087",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H088",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H089",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "allergy",
+      "safety_critical": true,
+      "score": "A"
+    },
+    {
+      "id": "H090",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "ingredient",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H091",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "vegetarian",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H092",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "spicy",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H093",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "tip",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H094",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "fork",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H095",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "knife",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H096",
+      "domain": "FOOD_RESTAURANT",
+      "kind": "EDGE",
+      "target_concept": "takeout",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H097",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H098",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H099",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H100",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H101",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H102",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H103",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H104",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H105",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "electricity",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H106",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "soap",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H107",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "refrigerator",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H108",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "oven",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H109",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "sink",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H110",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "trash",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H111",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "laundry",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H112",
+      "domain": "HOME_HOUSEHOLD",
+      "kind": "EDGE",
+      "target_concept": "vacuum",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H113",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H114",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H115",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H116",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H117",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H118",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H119",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H120",
+      "domain": "HOUSING_RENTING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H121",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "landlord",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H122",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "tenant",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H123",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "roommate",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H124",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "eviction",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H125",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "mortgage",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H126",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "utilities",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H127",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "furnished",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H128",
+      "domain": "HOUSING_RENTING",
+      "kind": "EDGE",
+      "target_concept": "repair_request",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H129",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H130",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H131",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H132",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H133",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H134",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H135",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H136",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H137",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "resume",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H138",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "shift",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H139",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "overtime",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H140",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "promotion",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "MORPHOLOGY_PLUS_COMPOSITION"
+    },
+    {
+      "id": "H141",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "resign",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H142",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "supervisor",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H143",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "benefits",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H144",
+      "domain": "WORK_EMPLOYMENT",
+      "kind": "EDGE",
+      "target_concept": "paycheck",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H145",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "ROLE_COMPOSITION"
+    },
+    {
+      "id": "H146",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H147",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H148",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H149",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H150",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H151",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H152",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H153",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "quiz",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H154",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "textbook",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H155",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "tuition",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H156",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "scholarship",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H157",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "campus",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H158",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "semester",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H159",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "certificate",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H160",
+      "domain": "SCHOOL_LEARNING",
+      "kind": "EDGE",
+      "target_concept": "tutor",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H161",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H162",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H163",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H164",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H165",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H166",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H167",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H168",
+      "domain": "TIME_PLANNING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H169",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "yesterday",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H170",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "noon",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H171",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "midnight",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H172",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "quarter_hour",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H173",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "duration",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H174",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "postpone",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H175",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "reschedule",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H176",
+      "domain": "TIME_PLANNING",
+      "kind": "EDGE",
+      "target_concept": "anniversary",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H177",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H178",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H179",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H180",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H181",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H182",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H183",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H184",
+      "domain": "TRAVEL_LODGING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H185",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "boarding_pass",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H186",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "gate_airport",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H187",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "customs",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H188",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "visa",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H189",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "itinerary",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H190",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "check_in",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H191",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "checkout_hotel",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H192",
+      "domain": "TRAVEL_LODGING",
+      "kind": "EDGE",
+      "target_concept": "lost_luggage",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H193",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "ACTION_COMPOSITION"
+    },
+    {
+      "id": "H194",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H195",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H196",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H197",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H198",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H199",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H200",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H201",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "Wi-Fi",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H202",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "app",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H203",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "username",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H204",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "browser",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H205",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "notification",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H206",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "screenshot",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H207",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "attachment",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H208",
+      "domain": "DIGITAL_COMMUNICATION",
+      "kind": "EDGE",
+      "target_concept": "update_software",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H209",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H210",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H211",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H212",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H213",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H214",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H215",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H216",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H217",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "allergy",
+      "safety_critical": true,
+      "score": "A"
+    },
+    {
+      "id": "H218",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "blood",
+      "safety_critical": true,
+      "score": "A"
+    },
+    {
+      "id": "H219",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "stomach",
+      "safety_critical": true,
+      "score": "A"
+    },
+    {
+      "id": "H220",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "tooth",
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H221",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "headache",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H222",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "dizzy",
+      "safety_critical": true,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "SYMPTOM_DESCRIPTION"
+    },
+    {
+      "id": "H223",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "nausea",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H224",
+      "domain": "HEALTH_SYMPTOMS",
+      "kind": "EDGE",
+      "target_concept": "prescription",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H225",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H226",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H227",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "GRAMMATICAL_NEGATION"
+    },
+    {
+      "id": "H228",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H229",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H230",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H231",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H232",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H233",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "fire_alarm",
+      "safety_critical": true,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H234",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "poison",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H235",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "unconscious",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H236",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "bleeding",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H237",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "choking",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H238",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "burn",
+      "safety_critical": true,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "INJURY_DESCRIPTION"
+    },
+    {
+      "id": "H239",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "fracture",
+      "safety_critical": true,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "BODY_PART_DEFINITION_PLUS_EVENT"
+    },
+    {
+      "id": "H240",
+      "domain": "EMERGENCY_SAFETY",
+      "kind": "EDGE",
+      "target_concept": "emergency_exit",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H241",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H242",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H243",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H244",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H245",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H246",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H247",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H248",
+      "domain": "FINANCE_BANKING",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H249",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "interest_money",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H250",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "debt",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H251",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "credit_score",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H252",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "fraud",
+      "safety_critical": true,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "EVENT_DESCRIPTION"
+    },
+    {
+      "id": "H253",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "overdraft",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H254",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "invoice",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H255",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "budget_limit",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "RELATIONAL_COMPOSITION"
+    },
+    {
+      "id": "H256",
+      "domain": "FINANCE_BANKING",
+      "kind": "EDGE",
+      "target_concept": "installment",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H257",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H258",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H259",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H260",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H261",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H262",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H263",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H264",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H265",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "policy",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H266",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "procedure",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H267",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "regulation",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H268",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "penalty",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H269",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "deadline_rule",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H270",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "eligibility",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H271",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "authority",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H272",
+      "domain": "RULES_INSTITUTIONS",
+      "kind": "EDGE",
+      "target_concept": "appeal",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H273",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H274",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H275",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H276",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H277",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H278",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H279",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H280",
+      "domain": "REASONING_CAUSE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H281",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "correlation",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H282",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "assumption",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H283",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "exception",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H284",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "pattern",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H285",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "evidence_limit",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H286",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "uncertainty",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H287",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "probability",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H288",
+      "domain": "REASONING_CAUSE",
+      "kind": "EDGE",
+      "target_concept": "alternative",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H289",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H290",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H291",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H292",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H293",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H294",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H295",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H296",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H297",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "guess",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H298",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "confidence",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H299",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "rumor",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H300",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "speculation",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H301",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "bias",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H302",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "objective",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H303",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "subjective",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H304",
+      "domain": "UNCERTAINTY_OPINION",
+      "kind": "EDGE",
+      "target_concept": "verify",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "PROCESS_DESCRIPTION"
+    },
+    {
+      "id": "H305",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H306",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H307",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H308",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H309",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H310",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H311",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H312",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H313",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "frustrated",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H314",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "anxious",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H315",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "confident",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H316",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "affection",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H317",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "jealousy",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H318",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "trust_broken",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H319",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "reconcile",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H320",
+      "domain": "EMOTIONS_RELATIONSHIPS",
+      "kind": "EDGE",
+      "target_concept": "boundaries",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H321",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H322",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H323",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H324",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H325",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H326",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H327",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H328",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H329",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "advantage",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H330",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "disadvantage",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H331",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "priority_choice",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H332",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "value_for_money",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H333",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "trade_in",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H334",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "best_fit",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "COMPOSITION"
+    },
+    {
+      "id": "H335",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "worth",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H336",
+      "domain": "COMPARISON_CHOICE",
+      "kind": "EDGE",
+      "target_concept": "equivalent",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H337",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H338",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H339",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H340",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H341",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H342",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H343",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H344",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H345",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "flood",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H346",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "tornado",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H347",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "hurricane",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H348",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "drought",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H349",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "pollution",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H350",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "recycle",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "PROCESS_DESCRIPTION"
+    },
+    {
+      "id": "H351",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "temperature",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H352",
+      "domain": "WEATHER_ENVIRONMENT",
+      "kind": "EDGE",
+      "target_concept": "forecast",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H353",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H354",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H355",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H356",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H357",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H358",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H359",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H360",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H361",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "courthouse",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "FUNCTIONAL_DESCRIPTION"
+    },
+    {
+      "id": "H362",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "post_office",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H363",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "fire_department",
+      "safety_critical": true,
+      "score": "B"
+    },
+    {
+      "id": "H364",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "permit",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H365",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "identification",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H366",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "appointment_required",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H367",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "public_transport",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H368",
+      "domain": "PUBLIC_SERVICES",
+      "kind": "EDGE",
+      "target_concept": "complaint_process",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H369",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H370",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H371",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H372",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H373",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H374",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H375",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H376",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "FUNCTIONAL",
+      "target_concept": null,
+      "safety_critical": false,
+      "score": "A"
+    },
+    {
+      "id": "H377",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "summary",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H378",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "headline",
+      "safety_critical": false,
+      "score": "B",
+      "repair_applied": true,
+      "repair_mechanism": "RELATIONAL_COMPOSITION"
+    },
+    {
+      "id": "H379",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "source",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H380",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "quote",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H381",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "timeline",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H382",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "context",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H383",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "detail_missing",
+      "safety_critical": false,
+      "score": "B"
+    },
+    {
+      "id": "H384",
+      "domain": "NARRATIVE_INFORMATION",
+      "kind": "EDGE",
+      "target_concept": "correction",
+      "safety_critical": false,
+      "score": "B"
+    }
+  ],
+  "next_gate": "FREEZE_NEW_PROSPECTIVE_BATTERY_BEFORE_SCORING_REPAIRED_PRODUCTIVE_ARCHITECTURE"
+}

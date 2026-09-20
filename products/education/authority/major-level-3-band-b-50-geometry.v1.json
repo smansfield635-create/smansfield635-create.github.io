@@ -31,7 +31,7 @@
     "strong",
     "quiet",
     "loud",
-    "kind",
+    "creative",
     "rude",
     "nice",
     "funny",
@@ -70,11 +70,11 @@
     "feedback",
     "effort",
     "focus",
-    "ready",
+    "organized",
     "checklist",
     "draft",
     "final",
-    "practice",
+    "focused",
     "skill"
   ],
   "clusters": {
@@ -84,7 +84,7 @@
       "strong",
       "quiet",
       "loud",
-      "kind",
+      "creative",
       "rude",
       "nice",
       "funny",
@@ -125,11 +125,11 @@
       "feedback",
       "effort",
       "focus",
-      "ready",
+      "organized",
       "checklist",
       "draft",
       "final",
-      "practice",
+      "focused",
       "skill"
     ]
   },
@@ -138,7 +138,19 @@
     "overlap_with_prior_550": 0,
     "specialization_exclusion_pass": true,
     "legal_jargon_added": false,
-    "specialized_science_added": false
+    "specialized_science_added": false,
+    "cumulative_duplicate_repair": {
+      "repaired": [
+        "kind",
+        "ready",
+        "practice"
+      ],
+      "replacements": [
+        "creative",
+        "organized",
+        "focused"
+      ]
+    }
   },
   "traversal_state": {
     "CURRENT_STATE": "MAJOR_LEVEL_3_BAND_B_50_FROZEN",

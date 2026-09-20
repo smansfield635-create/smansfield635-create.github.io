@@ -1,4 +1,4 @@
-import { renderAudraliaTabletCelestialLite } from './audralia-tablet-celestial-lite.mjs';
+import { renderAudraliaTabletCelestialLite } from 'https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@f41137891ef4f5506c76bfa7598c1505b4814cbd/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-celestial-lite.mjs';
 import {
   H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE as TERRAIN,
   H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY as HYDRO,

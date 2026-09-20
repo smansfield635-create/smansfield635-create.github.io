@@ -1,0 +1,92 @@
+{
+  "object": "MAJOR_LEVEL_1_250_PERFORMANCE_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_WITH_EXPECTED_FRONTIER",
+  "authority_source": "/products/education/authority/major-level-1-250-geometry.v1.json",
+  "test_law": {
+    "closed_vocabulary": true,
+    "vocabulary_count": 250,
+    "standard": "Broad plain conversational foundation, not full 1,001-word completion.",
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "total_tasks": 64
+  },
+  "results": {
+    "total": {
+      "DIRECT": 42,
+      "COMPOSABLE": 10,
+      "MISSING": 12,
+      "functionally_expressible": 52,
+      "functional_coverage_percent": 81.25
+    },
+    "by_domain": {
+      "COMMUNICATION": {
+        "DIRECT": 16,
+        "COMPOSABLE": 0,
+        "MISSING": 0,
+        "coverage_percent": 100
+      },
+      "CONDUCT": {
+        "DIRECT": 10,
+        "COMPOSABLE": 2,
+        "MISSING": 4,
+        "coverage_percent": 75
+      },
+      "JUDGMENT": {
+        "DIRECT": 11,
+        "COMPOSABLE": 4,
+        "MISSING": 1,
+        "coverage_percent": 93.75
+      },
+      "INSTITUTION": {
+        "DIRECT": 5,
+        "COMPOSABLE": 4,
+        "MISSING": 7,
+        "coverage_percent": 56.25
+      }
+    }
+  },
+  "missing_frontier": {
+    "conduct": [
+      "explicit rule",
+      "explicit permission",
+      "explicit obligation/must",
+      "explicit sharing/cooperation"
+    ],
+    "judgment": [
+      "probability beyond maybe/sure"
+    ],
+    "institution": [
+      "role/responsibility",
+      "rules",
+      "accountability",
+      "organization/institution",
+      "leadership/authority",
+      "public services/government",
+      "system/structure"
+    ]
+  },
+  "interpretation": [
+    "Major Level 1 provides complete tested coverage for basic communication.",
+    "Reasoning emerges strongly before specialized institutional vocabulary.",
+    "Conduct is broadly operational but lacks several explicit norm/obligation terms.",
+    "Institutional gaps are concentrated and form a coherent frontier for later levels.",
+    "The 250-word set behaves as a first-quarter traversal layer rather than a random vocabulary collection."
+  ],
+  "decision": {
+    "major_level_1_gate": "PASS",
+    "build_next_major_level": true,
+    "constraint": "Do not backfill institutional jargon into Level 1 merely to raise the score.",
+    "next_design_law": "Use the missing frontier plus nearest-empty geometric neighbors to construct Major Level 2 while preserving plain conversational language."
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "MAJOR_LEVEL_1_250_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "64-function closed-vocabulary performance stress test executed.",
+    "ENGINE_RESPONSE": "81.25% functional coverage; Level 1 passes as broad conversational foundation with expected institutional frontier.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_2_GEOMETRIC_RECONSTRUCTION"
+  }
+}

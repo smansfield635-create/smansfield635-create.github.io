@@ -29,11 +29,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-celestial-lite.mjs",
-      "sha256": "292dcf67a7dbe02b27fff8c3248c509de1cc0d241049d165a1b772e22b678561"
+      "sha256": "dc769eb2d05f5b0291e04bbb2bda9f081130999e19798ec0c3ed27fae18395a8"
     },
     {
       "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs",
-      "sha256": "4a582c61c66ac2ebbfd9a175de70cb7b88a98545e2c965a37085fd033b82af3f"
+      "sha256": "6ac4aa2e0a24d5df609b36fa05835d775866d5daa942699193a2e72f2fbd9eab"
     }
   ],
   "notes": "PASS is limited to preservation of the frozen H-Earth experience invariants for the admitted celestial spatialization candidate. It does not assert physical-device visual acceptance or celestial appearance/fidelity acceptance."

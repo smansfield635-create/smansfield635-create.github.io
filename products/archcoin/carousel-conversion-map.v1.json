@@ -1,0 +1,322 @@
+{
+  "schema": "ARCHCOIN_CAROUSEL_CONVERSION_MAP_v1",
+  "status": "FROZEN_PRECONSTRUCTION",
+  "operation": {
+    "operationId": "ARCHCOIN_CAROUSEL_SOURCE_BINDING_20260920_001",
+    "issueNumber": 3957,
+    "canonicalSourceCommentId": 5747588172,
+    "lockGeneration": 2447,
+    "lockScope": "ARCHCOIN:WEBSITE:CAROUSEL_SOURCE_BINDING",
+    "governingHead": "226c31e40d5eb323cd8c016fa1f3c7936cb75d49",
+    "allowedPaths": [
+      "products/archcoin/carousel-conversion-map.v1.json",
+      "products/archcoin/verify-carousel-conversion-map.v1.mjs"
+    ]
+  },
+  "sourceAuthority": {
+    "canonicalSurface": "products/archcoin",
+    "canonicalRoute": "/products/archcoin/",
+    "canonicalRouteBlob": "fc1c0872fee5d0fc0caae5767cc9fb72e6850d8f",
+    "firstCompleteSixteenChamberGeneration": "a550aa1471971c1e9d9acd9e009b23293091cb70",
+    "completeGenerationMatch": "16_OF_16",
+    "recoveryCopyRoot": "h-earth-live-6d18e158/products/archcoin",
+    "recoveryCopyMatch": "16_OF_16",
+    "recoveryCopyRole": "CORROBORATING_RECOVERY_EVIDENCE_NOT_COMPETING_AUTHORITY",
+    "selectionLaw": "CURRENT_CANONICAL_CHAMBER_BLOBS_ARE_AUTHORITATIVE_BECAUSE_THEY_MATCH_THE_FIRST_COMPLETE_GENERATION_AND_RECOVERY_COPY_EXACTLY"
+  },
+  "semanticPreservation": {
+    "equation": "4_DOMAINS_X_4_CHAMBERS_EQUALS_4_DOMAIN_DESTINATIONS_X_4_CAROUSEL_PLANES",
+    "existingChamberCount": 16,
+    "targetPlaneCount": 16,
+    "domainCount": 4,
+    "planesPerDomain": 4,
+    "planeOrder": [
+      "overview",
+      "engineering",
+      "platform",
+      "governance"
+    ],
+    "laws": [
+      "NO_CHAMBER_DELETION",
+      "NO_CHAMBER_COLLAPSE_INTO_GENERIC_COPY",
+      "ONE_DOMAIN_PER_ASSET",
+      "ONE_EXISTING_CHAMBER_PER_CAROUSEL_PLANE",
+      "EXISTING_DEEP_LINKS_REMAIN_ADDRESSABLE",
+      "DEEP_LINKS_RESOLVE_TO_THE_EQUIVALENT_DOMAIN_AND_PLANE",
+      "ONLY_TRAVERSAL_CHANGES_IN_THE_LATER_PRESENTATION_OPERATION"
+    ]
+  },
+  "presentationPrecedent": {
+    "selected": {
+      "path": "assets/compass/compass.presentation-convergence.js",
+      "blob": "027ca126792e081d1ab05ed09fb8a107f053c49d",
+      "contract": "SITE_CONTINUITY_V3_ONE_STAGE_TABS_SWIPE_KEYBOARD",
+      "behaviorToAdapt": [
+        "ONE_ACTIVE_PLANE",
+        "NUMBERED_TABS",
+        "POINTER_SWIPE",
+        "ARROW_LEFT_RIGHT",
+        "HOME_END",
+        "ARIA_TABLIST_AND_LIVE_ORDINAL",
+        "INERT_NONACTIVE_PLANES",
+        "REDUCED_MOTION_WITHOUT_SEMANTIC_LOSS"
+      ],
+      "reuseLaw": "ADAPT_THE_PROVEN_BEHAVIORAL_CONTRACT_WITH_ARCHCOIN_LOCAL_OWNERSHIP_AND_NO_NEW_GLOBAL_COMPASS_OWNER"
+    },
+    "excluded": {
+      "path": "assets/compass/compass.carousel.js",
+      "blob": "746fa31bb6199ff0ad3f8d8ee34328c4173cce06",
+      "reason": "EXPLICITLY_RETIRED_NON_AUTHORITATIVE_GENERIC_CAROUSEL"
+    }
+  },
+  "fourAssetEvmBinding": {
+    "adoptionHead": "226c31e40d5eb323cd8c016fa1f3c7936cb75d49",
+    "chainFamily": "EVM",
+    "standard": "ERC-20",
+    "testNetwork": "Ethereum Sepolia",
+    "testNetworkChainId": 11155111,
+    "productionNetwork": "Ethereum Mainnet",
+    "productionNetworkChainId": 1,
+    "decimals": 18,
+    "dependencies": {
+      "openzeppelinContracts": "5.4.0",
+      "hardhat": "2.28.0",
+      "hardhatToolbox": "6.1.0"
+    },
+    "sourceBlobs": {
+      "tokenLaw": {
+        "path": "economy/archcoin/token-law.v1.json",
+        "blob": "587ff38e66704c783a638e1869d4f87c9626d9a8"
+      },
+      "contract": {
+        "path": "economy/archcoin/evm/contracts/ArchcoinFixedSupply.sol",
+        "blob": "38e2b1b2c764511285a71797bf8b459a580d47df"
+      },
+      "hardhatConfig": {
+        "path": "economy/archcoin/evm/hardhat.config.js",
+        "blob": "726f643e8742ef8b8a13c679875a920b94c66eb8"
+      },
+      "package": {
+        "path": "economy/archcoin/evm/package.json",
+        "blob": "60e2430d45c1a66b2f8212fd9de9df0e221c77b8"
+      },
+      "localQualification": {
+        "path": "economy/archcoin/evm/scripts/qualify-local.js",
+        "blob": "29a5e56ae1abd415969c7dd63eede71202ed97b1"
+      },
+      "tests": {
+        "path": "economy/archcoin/evm/test/four-assets.test.js",
+        "blob": "be6a8a878b29f50bd7ea3193240f150ae500fb79"
+      }
+    },
+    "websiteStatusSpine": {
+      "orderedStates": [
+        "CONCEPT",
+        "CONTRACT_CONSTRUCTED",
+        "COMPILED",
+        "TESTED",
+        "LOCAL_EVM_DEPLOYED",
+        "SIGNED_TRANSACTION_QUALIFIED",
+        "SEPOLIA_PENDING"
+      ],
+      "attainedThrough": "SIGNED_TRANSACTION_QUALIFIED",
+      "currentBoundary": "SEPOLIA_PENDING",
+      "attainmentEvidenceClass": "PRIOR_PROJECT_COMPLETION_PLUS_BOUND_REPOSITORY_IMPLEMENTATION_AND_QUALIFICATION_HARNESS",
+      "sepoliaContractAddresses": [],
+      "sepoliaTransactionHashes": [],
+      "mainnetContractAddresses": [],
+      "testnetDeploymentAuthorized": false,
+      "mainnetDeploymentAuthorized": false,
+      "cryptocurrencyClaimAllowed": false,
+      "claimBoundary": "NO_CRYPTOCURRENCY_CLAIM_BEFORE_DEPLOYED_CONTRACT_ADDRESS_AND_VERIFIABLE_ON_CHAIN_STATE"
+    },
+    "governanceConstraints": [
+      "NO_POST_DEPLOYMENT_MINT",
+      "NO_PUBLIC_BURN",
+      "NO_PRIVILEGED_TOKEN_MUTATION",
+      "NO_UNSUPPORTED_HOLDER_RIGHTS_CLAIMS",
+      "NO_MAINNET_DEPLOYMENT_BEFORE_TESTNET_QUALIFICATION"
+    ]
+  },
+  "carousels": [
+    {
+      "domain": "contract",
+      "asset": "ARCHCOIN Contract",
+      "symbol": "ARCC",
+      "role": "AGREEMENT_LAYER_PROTOCOL_UNIT",
+      "destinationRoute": "/products/archcoin/contract/",
+      "legacyRoutePolicy": "PRESERVE_AND_DEEP_LINK_TO_EQUIVALENT_PLANE",
+      "planes": [
+        {
+          "id": "overview",
+          "ordinal": 1,
+          "sourcePath": "products/archcoin/contract/overview/index.html",
+          "sourceRoute": "/products/archcoin/contract/overview/",
+          "sourceBlob": "c3236bf7b7bdc97ef436df4df78e2e10d0ae283f",
+          "contentIntent": "IDENTIFY_ARCC_AND_ITS_AGREEMENT_LAYER_ROLE"
+        },
+        {
+          "id": "engineering",
+          "ordinal": 2,
+          "sourcePath": "products/archcoin/contract/engineering/index.html",
+          "sourceRoute": "/products/archcoin/contract/engineering/",
+          "sourceBlob": "ecaea639feba8801ce21e5ba3ecc24c61d210180",
+          "contentIntent": "EXPLAIN_THE_SHARED_SOLIDITY_OPENZEPPELIN_ERC20_EVM_FIXED_SUPPLY_AND_LOCAL_QUALIFICATION_IMPLEMENTATION"
+        },
+        {
+          "id": "platform",
+          "ordinal": 3,
+          "sourcePath": "products/archcoin/contract/platform/index.html",
+          "sourceRoute": "/products/archcoin/contract/platform/",
+          "sourceBlob": "ec365c3afe84dcf24d86207a9054c56b48aa150c",
+          "contentIntent": "SHOW_THE_TRAVERSAL_FROM_LOCAL_QUALIFICATION_TO_SEPOLIA_AND_LATER_MAINNET_WITHOUT_OVERCLAIM"
+        },
+        {
+          "id": "governance",
+          "ordinal": 4,
+          "sourcePath": "products/archcoin/contract/governance/index.html",
+          "sourceRoute": "/products/archcoin/contract/governance/",
+          "sourceBlob": "f055b54778b77f8ad60775166a43745b62d5e28b",
+          "contentIntent": "STATE_IMMUTABLE_TOKEN_CONSTRAINTS_AND_NO_EXTERNAL_HOLDER_RIGHTS_CLAIM"
+        }
+      ]
+    },
+    {
+      "domain": "receivable",
+      "asset": "ARCHCOIN Receivable",
+      "symbol": "ARCR",
+      "role": "INCOMING_VALUE_PROTOCOL_UNIT",
+      "destinationRoute": "/products/archcoin/receivable/",
+      "legacyRoutePolicy": "PRESERVE_AND_DEEP_LINK_TO_EQUIVALENT_PLANE",
+      "planes": [
+        {
+          "id": "overview",
+          "ordinal": 1,
+          "sourcePath": "products/archcoin/receivable/overview/index.html",
+          "sourceRoute": "/products/archcoin/receivable/overview/",
+          "sourceBlob": "73688d54a4283ac53f684089adca41e3178d7994",
+          "contentIntent": "IDENTIFY_ARCR_AND_ITS_INCOMING_VALUE_ROLE"
+        },
+        {
+          "id": "engineering",
+          "ordinal": 2,
+          "sourcePath": "products/archcoin/receivable/engineering/index.html",
+          "sourceRoute": "/products/archcoin/receivable/engineering/",
+          "sourceBlob": "eb730c2bdbdb3f13d5de969a1d8b89f7b375a65b",
+          "contentIntent": "EXPLAIN_THE_SHARED_SOLIDITY_OPENZEPPELIN_ERC20_EVM_FIXED_SUPPLY_AND_LOCAL_QUALIFICATION_IMPLEMENTATION"
+        },
+        {
+          "id": "platform",
+          "ordinal": 3,
+          "sourcePath": "products/archcoin/receivable/platform/index.html",
+          "sourceRoute": "/products/archcoin/receivable/platform/",
+          "sourceBlob": "480db40eb92477b0a4a391d35751620373c21d58",
+          "contentIntent": "SHOW_THE_TRAVERSAL_FROM_LOCAL_QUALIFICATION_TO_SEPOLIA_AND_LATER_MAINNET_WITHOUT_OVERCLAIM"
+        },
+        {
+          "id": "governance",
+          "ordinal": 4,
+          "sourcePath": "products/archcoin/receivable/governance/index.html",
+          "sourceRoute": "/products/archcoin/receivable/governance/",
+          "sourceBlob": "5aa84d4144829f399a2bd0a61dfc31ac3f12d29e",
+          "contentIntent": "STATE_IMMUTABLE_TOKEN_CONSTRAINTS_AND_NO_EXTERNAL_HOLDER_RIGHTS_CLAIM"
+        }
+      ]
+    },
+    {
+      "domain": "payable",
+      "asset": "ARCHCOIN Payable",
+      "symbol": "ARCP",
+      "role": "OUTGOING_OBLIGATION_PROTOCOL_UNIT",
+      "destinationRoute": "/products/archcoin/payable/",
+      "legacyRoutePolicy": "PRESERVE_AND_DEEP_LINK_TO_EQUIVALENT_PLANE",
+      "planes": [
+        {
+          "id": "overview",
+          "ordinal": 1,
+          "sourcePath": "products/archcoin/payable/overview/index.html",
+          "sourceRoute": "/products/archcoin/payable/overview/",
+          "sourceBlob": "953ca8bf688beb5983099c5e0f219a7bb4bc8dce",
+          "contentIntent": "IDENTIFY_ARCP_AND_ITS_OUTGOING_OBLIGATION_ROLE"
+        },
+        {
+          "id": "engineering",
+          "ordinal": 2,
+          "sourcePath": "products/archcoin/payable/engineering/index.html",
+          "sourceRoute": "/products/archcoin/payable/engineering/",
+          "sourceBlob": "2c81763bdf792a4599c9b8600110ea6094a51dad",
+          "contentIntent": "EXPLAIN_THE_SHARED_SOLIDITY_OPENZEPPELIN_ERC20_EVM_FIXED_SUPPLY_AND_LOCAL_QUALIFICATION_IMPLEMENTATION"
+        },
+        {
+          "id": "platform",
+          "ordinal": 3,
+          "sourcePath": "products/archcoin/payable/platform/index.html",
+          "sourceRoute": "/products/archcoin/payable/platform/",
+          "sourceBlob": "5d703da2ce24d4e3b2c9b8c9f584b24613c4e3d0",
+          "contentIntent": "SHOW_THE_TRAVERSAL_FROM_LOCAL_QUALIFICATION_TO_SEPOLIA_AND_LATER_MAINNET_WITHOUT_OVERCLAIM"
+        },
+        {
+          "id": "governance",
+          "ordinal": 4,
+          "sourcePath": "products/archcoin/payable/governance/index.html",
+          "sourceRoute": "/products/archcoin/payable/governance/",
+          "sourceBlob": "45d58319b159334b5fb08125b8711af35736cde0",
+          "contentIntent": "STATE_IMMUTABLE_TOKEN_CONSTRAINTS_AND_NO_EXTERNAL_HOLDER_RIGHTS_CLAIM"
+        }
+      ]
+    },
+    {
+      "domain": "allocation",
+      "asset": "ARCHCOIN Allocation",
+      "symbol": "ARCA",
+      "role": "DISTRIBUTION_PROTOCOL_UNIT",
+      "destinationRoute": "/products/archcoin/allocation/",
+      "legacyRoutePolicy": "PRESERVE_AND_DEEP_LINK_TO_EQUIVALENT_PLANE",
+      "planes": [
+        {
+          "id": "overview",
+          "ordinal": 1,
+          "sourcePath": "products/archcoin/allocation/overview/index.html",
+          "sourceRoute": "/products/archcoin/allocation/overview/",
+          "sourceBlob": "7c1f4833142c70a638940c171744052d21f34c95",
+          "contentIntent": "IDENTIFY_ARCA_AND_ITS_DISTRIBUTION_ROLE"
+        },
+        {
+          "id": "engineering",
+          "ordinal": 2,
+          "sourcePath": "products/archcoin/allocation/engineering/index.html",
+          "sourceRoute": "/products/archcoin/allocation/engineering/",
+          "sourceBlob": "177e387b83778bcbef7203880fef5595e3bc2bbd",
+          "contentIntent": "EXPLAIN_THE_SHARED_SOLIDITY_OPENZEPPELIN_ERC20_EVM_FIXED_SUPPLY_AND_LOCAL_QUALIFICATION_IMPLEMENTATION"
+        },
+        {
+          "id": "platform",
+          "ordinal": 3,
+          "sourcePath": "products/archcoin/allocation/platform/index.html",
+          "sourceRoute": "/products/archcoin/allocation/platform/",
+          "sourceBlob": "aeeab53443185daddfb93c990b85aaf0cc11c520",
+          "contentIntent": "SHOW_THE_TRAVERSAL_FROM_LOCAL_QUALIFICATION_TO_SEPOLIA_AND_LATER_MAINNET_WITHOUT_OVERCLAIM"
+        },
+        {
+          "id": "governance",
+          "ordinal": 4,
+          "sourcePath": "products/archcoin/allocation/governance/index.html",
+          "sourceRoute": "/products/archcoin/allocation/governance/",
+          "sourceBlob": "f8035dd8dcebc32709dcb2996c44a78af5de18dd",
+          "contentIntent": "STATE_IMMUTABLE_TOKEN_CONSTRAINTS_AND_NO_EXTERNAL_HOLDER_RIGHTS_CLAIM"
+        }
+      ]
+    }
+  ],
+  "constructionBoundary": {
+    "sourceBindingComplete": true,
+    "conversionMapFrozen": true,
+    "publicPresentationMutationIncluded": false,
+    "carouselRuntimeConstructed": false,
+    "publicRoutesChanged": false,
+    "merged": false,
+    "deployed": false,
+    "published": false,
+    "nextOperation": "CONSTRUCT_FOUR_DOMAIN_CAROUSELS_FROM_THIS_EXACT_MAP"
+  }
+}

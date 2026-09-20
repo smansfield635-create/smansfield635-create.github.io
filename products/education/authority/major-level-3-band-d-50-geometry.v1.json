@@ -72,10 +72,10 @@
     "edge",
     "top",
     "bottom",
-    "best",
-    "worst",
-    "higher",
-    "lower",
+    "specific",
+    "general",
+    "efficient",
+    "complex",
     "compare",
     "include"
   ],
@@ -128,10 +128,10 @@
       "edge",
       "top",
       "bottom",
-      "best",
-      "worst",
-      "higher",
-      "lower",
+      "specific",
+      "general",
+      "efficient",
+      "complex",
       "compare"
     ]
   },
@@ -140,7 +140,21 @@
     "overlap_with_prior_650": 0,
     "specialization_exclusion_pass": true,
     "legal_jargon_added": false,
-    "specialized_science_added": false
+    "specialized_science_added": false,
+    "normalization_repair_final": {
+      "removed": [
+        "higher",
+        "lower",
+        "best",
+        "worst"
+      ],
+      "replacements": [
+        "efficient",
+        "complex",
+        "specific",
+        "general"
+      ]
+    }
   },
   "traversal_state": {
     "CURRENT_STATE": "MAJOR_LEVEL_3_BAND_D_50_FROZEN",

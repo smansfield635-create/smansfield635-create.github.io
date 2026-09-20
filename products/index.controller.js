@@ -87,7 +87,7 @@
   const PRIMARY_ENTRY = Object.freeze({
     id: "products",
     label: "PRODUCTS",
-    shortLabel: "OPEN SIX PRODUCTS",
+    shortLabel: "OPEN FIVE PRODUCTS",
     destinationType: "cluster-entry",
     route: ""
   });
@@ -117,19 +117,6 @@
       relationshipCopy:
         "Enter when the need is public signal, positioning, or visible game logic.",
       accessibleLabel: "Open FIVE FLAGS product preview."
-    }),
-
-    Object.freeze({
-      id: "aai",
-      label: "AAI",
-      shortLabel: "SUPPORT",
-      route: "/products/on-your-side-ai/",
-      previewTitle: "AAI",
-      previewSummary:
-        "Open the support-facing product branch.",
-      relationshipCopy:
-        "Enter when the need is guided help, support structure, or assisted movement.",
-      accessibleLabel: "Open AAI product preview."
     }),
 
     Object.freeze({

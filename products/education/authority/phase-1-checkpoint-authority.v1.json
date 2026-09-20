@@ -1,0 +1,88 @@
+{
+  "object": "EDUCATION_PHASE1_CHECKPOINT_AUTHORITY",
+  "version": "v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
+  "lock_generation": 2467,
+  "governing_principle": "CLIENT_STATE_IS_DISPOSABLE_SERVER_CHECKPOINTS_ARE_AUTHORITATIVE",
+  "identity_model": {
+    "term": "LEARNER_PROGRESS_KEY",
+    "purpose": "Recognize the same learner progress record across sessions and devices.",
+    "not_required": "A fictional character, avatar, or simulated identity.",
+    "implementation_options": [
+      "AUTHENTICATED_ACCOUNT",
+      "DURABLE_LEARNER_CODE",
+      "OTHER_SERVER_RESOLVABLE_KEY"
+    ],
+    "vendor_selection": "UNBOUND"
+  },
+  "save_classes": [
+    {
+      "id": "RESUME_STATE",
+      "authority": "NON_ADVANCEMENT",
+      "purpose": "Restore an unfinished activity/session.",
+      "mutable": true,
+      "may_unlock_next_stage": false
+    },
+    {
+      "id": "COMPLETION_CHECKPOINT",
+      "authority": "ADVANCEMENT_AUTHORITY",
+      "purpose": "Durable evidence that a stage competency requirement was satisfied.",
+      "append_only": true,
+      "may_unlock_next_stage": true
+    }
+  ],
+  "checkpoint_receipt_required_fields": [
+    "receipt_id",
+    "learner_progress_key",
+    "language",
+    "phase_id",
+    "stage_id",
+    "checkpoint_id",
+    "curriculum_version",
+    "instruction_contract_version",
+    "measurement_schema_version",
+    "completion_status",
+    "completed_at",
+    "attempt_summary",
+    "mastery_summary",
+    "transfer_status",
+    "server_commit_confirmation"
+  ],
+  "persistence_law": {
+    "authoritative_storage": "SERVER_SIDE_DURABLE_STORAGE",
+    "browser_cache_authority": false,
+    "local_storage_authority": false,
+    "session_storage_authority": false,
+    "cookie_authority_for_mastery": false,
+    "cache_clear_must_not_erase_completed_progress": true,
+    "cross_device_restore_required_for_authoritative_checkpoint": true,
+    "next_stage_unlock_condition": "SERVER_COMMIT_CONFIRMATION_TRUE",
+    "failed_save_behavior": "DO_NOT_ADVANCE; RETRY CHECKPOINT SAVE WITHOUT REQUIRING THE LEARNER TO REPEAT AN ALREADY_VALID_COMPLETION UNLESS THE COMPLETION EVIDENCE ITSELF WAS NOT DURABLY RECEIVED"
+  },
+  "event_model": {
+    "completion_receipts": "APPEND_ONLY",
+    "current_progress": "DERIVED_FROM_VALID_DURABLE_RECEIPTS_PLUS_OPTIONAL_RESUME_STATE",
+    "destructive_overwrite_of_prior_checkpoint_evidence": false,
+    "idempotency_required": true,
+    "duplicate_submission_rule": "The same logical checkpoint submission must not create multiple advancement events."
+  },
+  "version_binding": {
+    "required": true,
+    "rule": "Every checkpoint is bound to the exact curriculum/instruction/measurement versions used for the attempt so later curriculum changes do not rewrite historical learner evidence."
+  },
+  "advancement_sequence": [
+    "ACTIVITY_PASS",
+    "CHECKPOINT_REQUEST",
+    "SERVER_DURABLE_COMMIT",
+    "CHECKPOINT_CONFIRMATION",
+    "NEXT_STAGE_UNLOCK"
+  ],
+  "prohibited_patterns": [
+    "ADVANCE_FROM_BROWSER_ONLY_FLAG",
+    "ADVANCE_BEFORE_DURABLE_CONFIRMATION",
+    "USE_CACHE_AS_SYSTEM_OF_RECORD",
+    "REWRITE_OLD_CHECKPOINTS_TO_MATCH_NEW_CURRICULUM"
+  ]
+}

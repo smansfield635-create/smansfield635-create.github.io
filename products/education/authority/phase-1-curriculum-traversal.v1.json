@@ -3,8 +3,8 @@
   "version": "v1",
   "status": "FROZEN_PRE_CONTENT_BUILD",
   "owner": "Sean",
-  "operation_id": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_FREEZE_20260920_003",
-  "lock_generation": 2468,
+  "operation_id": "EDUCATION_PHASE1_ADAPTIVE_PLACEMENT_FREEZE_20260920_001",
+  "lock_generation": 2469,
   "traversal_law": [
     "DIAGNOSE",
     "PLACE",
@@ -142,5 +142,28 @@
     "final_proficiency_evidence_requires": "TARGET_ONLY",
     "final_transfer_evidence_requires": "TARGET_ONLY",
     "eight_stage_sequence_preserved": true
+  },
+  "adaptive_placement_binding": {
+    "authority": "/products/education/authority/phase-1-adaptive-placement-authority.v1.json",
+    "pre_instruction_sequence": [
+      "SELF_REPORT",
+      "PROVISIONAL_TEST_ENTRY",
+      "ADAPTIVE_DIAGNOSTIC",
+      "VERIFIED_PLACEMENT",
+      "DEMO_ENTRY_INITIALIZATION"
+    ],
+    "placement_authority": "DEMONSTRATED_PERFORMANCE",
+    "self_report_role": "ORIENTATION_ONLY",
+    "within_stage_placement": "COMPETENCY_NODE_DERIVED",
+    "vertical_probing": "UP_ON_STRONG_DOWN_ON_WEAK_UNTIL_STABLE_BOUNDARY",
+    "placement_resolves": [
+      "COMPETENCY_POSITION",
+      "SUPPORT_CYCLE"
+    ],
+    "verified_placement_separate_from_demo_entry": true,
+    "above_phase1_allowed": true,
+    "placement_initializes_runtime": true,
+    "eight_stage_sequence_preserved": true,
+    "language_support_cycles_preserved": true
   }
 }

@@ -185,13 +185,15 @@
     "Students may fast-pass sections they can already perform.",
     "The canonical vocabulary authority contains exactly 1,001 unique lexical concepts.",
     "Predictable grammatical forms do not inflate the lexical-concept count.",
-    "Assessment and guided progression use the same four-section performance structure."
+    "Assessment and guided progression use the same four-section performance structure.",
+    "Productive systems are grammar + morphology + numeration and consume zero additional lexical-concept slots.",
+    "Vocabulary substitutions require separate admission and regression proof; this master binding does not alter any canonical band word."
   ],
   "traversal_state": {
-    "CURRENT_STATE": "FULL_1001_VOCABULARY_AUTHORITY_DURABLE",
-    "ACTION_PERFORMED": "Master four-section Education authority reconciled to the merged 1,001-concept vocabulary chain.",
-    "ENGINE_RESPONSE": "Vocabulary authority is complete: 1,001 exact unique concepts across Major Levels 1–4, with the final cumulative stress test bound.",
-    "NEXT_REQUIRED_INPUT": "NONE_VOCABULARY_AUTHORITY_COMPLETE"
+    "CURRENT_STATE": "FULL_1001_AUTHORITY_WITH_PRODUCTIVE_SYSTEMS_AND_COMPRESSION_FRONTIER_BOUND",
+    "ACTION_PERFORMED": "Bound productive numeration and the fixed-count compression-optimization frontier without changing canonical vocabulary-band entries.",
+    "ENGINE_RESPONSE": "Lexical authority remains exactly 1,001; numeration is separated as a productive system; substitution candidates remain review-only pending separate regression-qualified admission.",
+    "NEXT_REQUIRED_INPUT": "PAIRED_SUBSTITUTION_PROPOSAL_AFTER_FRONTIER_QUALIFICATION"
   },
   "vocabulary_distribution": {
     "major_level_1": 250,
@@ -199,5 +201,26 @@
     "major_level_3": 250,
     "major_level_4": 251,
     "total": 1001
+  },
+  "productive_systems_binding": {
+    "authority": "/products/education/authority/vocabulary-productive-systems.v1.json",
+    "systems": [
+      "GRAMMAR",
+      "MORPHOLOGY",
+      "NUMERATION"
+    ],
+    "lexical_slot_effect": 0,
+    "rule": "Productive systems generate lawful forms and number expressions without increasing the canonical 1,001 lexical-concept total."
+  },
+  "compression_optimization_binding": {
+    "authority": "/products/education/authority/1001-compression-optimization-frontier.v1.json",
+    "baseline_256_task_result": {
+      "direct": 217,
+      "controlled_paraphrase": 35,
+      "genuine_failure": 4,
+      "practical_completion": 252
+    },
+    "substitution_status": "NOT_AUTHORIZED_BY_THIS_BINDING",
+    "target": "Increase direct natural-expression coverage while preserving practical completion >=98% and lexical total exactly 1,001."
   }
 }

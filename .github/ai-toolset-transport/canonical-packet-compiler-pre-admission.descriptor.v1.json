@@ -32,11 +32,11 @@
     "properties": {
       "requestBase64": {
         "type": "string",
-        "pattern": "^[A-Za-z0-9+/=]+$"
+        "pattern": "^[A-Za-z0-9_+/=-]+$"
       },
       "procedureBase64": {
         "type": "string",
-        "pattern": "^[A-Za-z0-9+/=]+$"
+        "pattern": "^[A-Za-z0-9_+/=-]+$"
       }
     }
   },

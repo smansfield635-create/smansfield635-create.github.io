@@ -379,112 +379,112 @@
       wing: "north",
       coin: "contract",
       roomId: "contract-overview",
-      route: "/products/archcoin/contract/overview/"
+      route: "/products/archcoin/contract/#overview"
     }),
 
     Object.freeze({
       wing: "north",
       coin: "contract",
       roomId: "contract-engineering",
-      route: "/products/archcoin/contract/engineering/"
+      route: "/products/archcoin/contract/#engineering"
     }),
 
     Object.freeze({
       wing: "north",
       coin: "contract",
       roomId: "contract-platform",
-      route: "/products/archcoin/contract/platform/"
+      route: "/products/archcoin/contract/#platform"
     }),
 
     Object.freeze({
       wing: "north",
       coin: "contract",
       roomId: "contract-governance",
-      route: "/products/archcoin/contract/governance/"
+      route: "/products/archcoin/contract/#governance"
     }),
 
     Object.freeze({
       wing: "east",
       coin: "receivable",
       roomId: "receivable-overview",
-      route: "/products/archcoin/receivable/overview/"
+      route: "/products/archcoin/receivable/#overview"
     }),
 
     Object.freeze({
       wing: "east",
       coin: "receivable",
       roomId: "receivable-engineering",
-      route: "/products/archcoin/receivable/engineering/"
+      route: "/products/archcoin/receivable/#engineering"
     }),
 
     Object.freeze({
       wing: "east",
       coin: "receivable",
       roomId: "receivable-platform",
-      route: "/products/archcoin/receivable/platform/"
+      route: "/products/archcoin/receivable/#platform"
     }),
 
     Object.freeze({
       wing: "east",
       coin: "receivable",
       roomId: "receivable-governance",
-      route: "/products/archcoin/receivable/governance/"
+      route: "/products/archcoin/receivable/#governance"
     }),
 
     Object.freeze({
       wing: "south",
       coin: "payable",
       roomId: "payable-overview",
-      route: "/products/archcoin/payable/overview/"
+      route: "/products/archcoin/payable/#overview"
     }),
 
     Object.freeze({
       wing: "south",
       coin: "payable",
       roomId: "payable-engineering",
-      route: "/products/archcoin/payable/engineering/"
+      route: "/products/archcoin/payable/#engineering"
     }),
 
     Object.freeze({
       wing: "south",
       coin: "payable",
       roomId: "payable-platform",
-      route: "/products/archcoin/payable/platform/"
+      route: "/products/archcoin/payable/#platform"
     }),
 
     Object.freeze({
       wing: "south",
       coin: "payable",
       roomId: "payable-governance",
-      route: "/products/archcoin/payable/governance/"
+      route: "/products/archcoin/payable/#governance"
     }),
 
     Object.freeze({
       wing: "west",
       coin: "allocation",
       roomId: "allocation-overview",
-      route: "/products/archcoin/allocation/overview/"
+      route: "/products/archcoin/allocation/#overview"
     }),
 
     Object.freeze({
       wing: "west",
       coin: "allocation",
       roomId: "allocation-engineering",
-      route: "/products/archcoin/allocation/engineering/"
+      route: "/products/archcoin/allocation/#engineering"
     }),
 
     Object.freeze({
       wing: "west",
       coin: "allocation",
       roomId: "allocation-platform",
-      route: "/products/archcoin/allocation/platform/"
+      route: "/products/archcoin/allocation/#platform"
     }),
 
     Object.freeze({
       wing: "west",
       coin: "allocation",
       roomId: "allocation-governance",
-      route: "/products/archcoin/allocation/governance/"
+      route: "/products/archcoin/allocation/#governance"
     })
   ]);
 

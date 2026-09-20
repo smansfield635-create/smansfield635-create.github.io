@@ -1,0 +1,47 @@
+{
+  "object": "EDUCATION_1001_HELDOUT_GENERALIZATION_3_PROTOCOL",
+  "version": "v1",
+  "status": "FROZEN_BEFORE_BATTERY_AND_SCORING",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_THIRD_PROSPECTIVE_HELDOUT_20260920_001",
+  "lock_generation": 2464,
+  "repaired_base_candidate": "350ee543e14a204189b2ec2c501f2db07448fcf4",
+  "test_design": {
+    "class": "THIRD_PROSPECTIVE_INTERNAL_HELD_OUT",
+    "planned_task_total": 768,
+    "planned_domain_total": 48,
+    "tasks_per_domain": 16,
+    "reuse_prior_task_records": false,
+    "vocabulary_tuning_during_test": false,
+    "productive_rule_tuning_during_test": false,
+    "battery_edit_after_scoring": false,
+    "score_must_follow_immutable_battery_commit": true
+  },
+  "scoring": {
+    "A": "Direct natural expression using the canonical 1,001 concepts plus ordinary grammar, morphology, and numeration.",
+    "B": "Successful pre-frozen productive composition using only canonical concepts and already-authorized productive mechanisms, with explicit semantic equivalence required where safety-critical.",
+    "C": "Genuine failure: neither direct expression nor a frozen admissible productive route completes the task.",
+    "lexical_leakage_allowed": false
+  },
+  "allowed_productive_mechanisms": [
+    "GRAMMAR",
+    "MORPHOLOGY",
+    "NUMERATION",
+    "FUNCTIONAL_DESCRIPTION",
+    "RELATIONAL_COMPOSITION",
+    "ROLE_COMPOSITION",
+    "PROCESS_DESCRIPTION",
+    "EVENT_DESCRIPTION",
+    "SYMPTOM_DESCRIPTION",
+    "INJURY_DESCRIPTION"
+  ],
+  "evidence_sequence": [
+    "Freeze this protocol.",
+    "Materialize and freeze the new 768-task battery plus every creditable productive route with no score.",
+    "Record exact battery freeze commit and blob.",
+    "Score candidate 350ee543e14a204189b2ec2c501f2db07448fcf4 unchanged.",
+    "Write task-level results without editing battery or productive rules.",
+    "Verify byte identity and stop before any failure-driven repair."
+  ],
+  "scientific_boundary": "Internal prospective benchmark only; not third-party learner validation."
+}

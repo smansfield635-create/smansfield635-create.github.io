@@ -1,0 +1,773 @@
+{
+  "object": "EDUCATION_SECOND_HELDOUT_COMPRESSION_REPAIR_ROUTES",
+  "version": "v1",
+  "status": "EXPERIMENTAL_GENERALIZED_COMPOSITION_ROUTES_FROZEN",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_SECOND_HELDOUT_COMPRESSION_REPAIR_20260920_001",
+  "lock_generation": 2463,
+  "governing_main": "97e0602a2b6acec6fc2062ae6661daf829442277",
+  "decomposition_candidate": "b744ce70ddbcc200ad776035b627178bd0e97de7",
+  "battery_authority": "/products/education/authority/1001-heldout-generalization-2-battery.v1.json",
+  "battery_blob_sha": "3746effddf0ee5d0648accfa8043beccfd6436c4",
+  "canonical_lexical_total": 1001,
+  "lexical_slots_added": 0,
+  "canonical_vocabulary_mutations": 0,
+  "productive_rule_mutations": 0,
+  "methodological_boundary": "Failure-driven optimization on the second prospective battery; not a fresh held-out generalization result.",
+  "repair_law": {
+    "rule": "Missing concepts may be expressed only through canonical lexical concepts plus already-authorized grammar, morphology, and numeration. Definitions may compose recursively but cannot introduce unlisted lexical material.",
+    "safety_rule": "Safety-critical concepts require explicit semantic-equivalence justification."
+  },
+  "concept_compositions": [
+    {
+      "concept": "about",
+      "components": [
+        "of"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "activity",
+      "components": [
+        "thing",
+        "person",
+        "do"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "affect",
+      "components": [
+        "change"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "agreement",
+      "components": [
+        "plan",
+        "people",
+        "agree"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "alarm",
+      "components": [
+        "thing",
+        "tell",
+        "danger"
+      ],
+      "safety_equivalence": "THING TELL DANGER preserves the alarm function for the tested safety question."
+    },
+    {
+      "concept": "amount",
+      "components": [
+        "how",
+        "much"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "argument",
+      "components": [
+        "disagree",
+        "talk"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "awake",
+      "components": [
+        "not",
+        "sleep"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "blocked",
+      "components": [
+        "cannot",
+        "go",
+        "through"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "boundary",
+      "components": [
+        "what",
+        "person",
+        "will",
+        "not",
+        "accept"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "breathe",
+      "components": [
+        "get",
+        "air"
+      ],
+      "safety_equivalence": "GET AIR is an accepted functional description of breathing for the tested emergency statements."
+    },
+    {
+      "concept": "broken",
+      "components": [
+        "not",
+        "work"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "burn",
+      "components": [
+        "fire",
+        "hurt",
+        "body"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "charger",
+      "components": [
+        "device",
+        "give",
+        "energy",
+        "phone"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "check",
+      "components": [
+        "look",
+        "make",
+        "sure"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "checkout",
+      "components": [
+        "place",
+        "pay"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "code",
+      "components": [
+        "number"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "concern",
+      "components": [
+        "problem"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "control",
+      "components": [
+        "manage"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "damage",
+      "components": [
+        "hurt",
+        "thing"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "difficult",
+      "components": [
+        "hard"
+      ],
+      "safety_equivalence": "HARD preserves the degree-of-difficulty proposition."
+    },
+    {
+      "concept": "dizzy",
+      "components": [
+        "feel",
+        "room",
+        "move",
+        "around"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "elevator",
+      "components": [
+        "machine",
+        "go",
+        "up",
+        "down"
+      ],
+      "safety_equivalence": "MACHINE GO UP DOWN is an accepted functional description of an elevator in the fire context."
+    },
+    {
+      "concept": "enter",
+      "components": [
+        "go",
+        "in"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "exist",
+      "components": [
+        "is",
+        "there"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "exit",
+      "components": [
+        "door",
+        "go",
+        "outside"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "fail",
+      "components": [
+        "not",
+        "work"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "fast",
+      "components": [
+        "with",
+        "less",
+        "time"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "form",
+      "components": [
+        "document"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "fuel",
+      "components": [
+        "thing",
+        "car",
+        "use",
+        "for",
+        "energy"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "gate",
+      "components": [
+        "door",
+        "airport"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "headline",
+      "components": [
+        "name",
+        "news",
+        "article"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "heat",
+      "components": [
+        "hot"
+      ],
+      "safety_equivalence": "HOT preserves hazardous heat in the tested statement."
+    },
+    {
+      "concept": "introduce",
+      "components": [
+        "tell",
+        "name",
+        "of",
+        "person",
+        "to",
+        "other",
+        "person"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "item",
+      "components": [
+        "thing"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "large",
+      "components": [
+        "big"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "leak",
+      "components": [
+        "water",
+        "come",
+        "through"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "limit",
+      "components": [
+        "no",
+        "more",
+        "than"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "login",
+      "components": [
+        "go",
+        "in",
+        "account"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "medical",
+      "components": [
+        "health"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "mix",
+      "components": [
+        "put",
+        "together"
+      ],
+      "safety_equivalence": "PUT TOGETHER preserves the instruction not to combine medicines."
+    },
+    {
+      "concept": "off",
+      "components": [
+        "not",
+        "on"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "official",
+      "components": [
+        "government"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "out",
+      "components": [
+        "outside"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "parking",
+      "components": [
+        "place",
+        "car",
+        "stay"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "physical",
+      "components": [
+        "computer",
+        "part",
+        "see"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "platform",
+      "components": [
+        "place",
+        "wait",
+        "train"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "point",
+      "components": [
+        "idea"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "pollution",
+      "components": [
+        "dirty",
+        "air",
+        "water"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "product",
+      "components": [
+        "thing",
+        "company",
+        "make",
+        "sell"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "program",
+      "components": [
+        "computer",
+        "system"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "recycle",
+      "components": [
+        "make",
+        "new",
+        "thing",
+        "from",
+        "old"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "request",
+      "components": [
+        "ask"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "restart",
+      "components": [
+        "stop",
+        "start",
+        "again"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "secret",
+      "components": [
+        "private"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "send",
+      "components": [
+        "give",
+        "message",
+        "to"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "sign",
+      "components": [
+        "write",
+        "name"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "skin",
+      "components": [
+        "outside",
+        "body"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "slow",
+      "components": [
+        "with",
+        "more",
+        "time"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "smoke",
+      "components": [
+        "dark",
+        "air",
+        "from",
+        "fire"
+      ],
+      "safety_equivalence": "DARK AIR FROM FIRE preserves the fire-smoke hazard distinction for warning tasks."
+    },
+    {
+      "concept": "sound",
+      "components": [
+        "what",
+        "hear"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "source",
+      "components": [
+        "place",
+        "information",
+        "come",
+        "from"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "spicy",
+      "components": [
+        "food",
+        "hot"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "stale",
+      "components": [
+        "old",
+        "food",
+        "not",
+        "fresh"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "stolen",
+      "components": [
+        "person",
+        "take",
+        "thing",
+        "without",
+        "permission"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "term",
+      "components": [
+        "time",
+        "period"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "thank",
+      "components": [
+        "thank you"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "title",
+      "components": [
+        "name"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "too",
+      "components": [
+        "more",
+        "than",
+        "enough"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "traffic",
+      "components": [
+        "many",
+        "car",
+        "road"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "transport",
+      "components": [
+        "bus",
+        "train",
+        "car"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "trash",
+      "components": [
+        "thing",
+        "not",
+        "use"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "treatment",
+      "components": [
+        "health",
+        "care"
+      ],
+      "safety_equivalence": "HEALTH CARE preserves the treatment proposition at the functional level used by these tasks."
+    },
+    {
+      "concept": "unsafe",
+      "components": [
+        "not",
+        "safe"
+      ],
+      "safety_equivalence": "NOT SAFE is semantically equivalent."
+    },
+    {
+      "concept": "unwanted",
+      "components": [
+        "not",
+        "want"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "update",
+      "components": [
+        "change",
+        "to",
+        "new"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "username",
+      "components": [
+        "account",
+        "name"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "vegetarian",
+      "components": [
+        "person",
+        "not",
+        "eat",
+        "meat"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "verify",
+      "components": [
+        "make",
+        "sure",
+        "true"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "wall",
+      "components": [
+        "side",
+        "room"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "warn",
+      "components": [
+        "tell",
+        "danger"
+      ],
+      "safety_equivalence": "TELL DANGER preserves warning intent."
+    },
+    {
+      "concept": "workplace",
+      "components": [
+        "place",
+        "work"
+      ],
+      "safety_equivalence": null
+    },
+    {
+      "concept": "overdose",
+      "components": [
+        "medicine",
+        "more",
+        "than",
+        "safe"
+      ],
+      "safety_equivalence": "MEDICINE MORE THAN SAFE preserves overdose severity."
+    },
+    {
+      "concept": "unconscious",
+      "components": [
+        "person",
+        "not",
+        "wake"
+      ],
+      "safety_equivalence": "PERSON NOT WAKE preserves unconscious/nonresponsive state for this benchmark."
+    },
+    {
+      "concept": "smoke_detector",
+      "components": [
+        "thing",
+        "find",
+        "smoke"
+      ],
+      "safety_equivalence": "THING FIND SMOKE preserves smoke-detector function."
+    },
+    {
+      "concept": "data_breach",
+      "components": [
+        "private",
+        "information",
+        "get",
+        "outside"
+      ],
+      "safety_equivalence": "PRIVATE INFORMATION GET OUTSIDE preserves unauthorized exposure of private information."
+    }
+  ],
+  "safety_equivalence_authority": {
+    "treatment": "HEALTH CARE preserves the treatment proposition at the functional level used by these tasks.",
+    "breathe": "GET AIR is an accepted functional description of breathing for the tested emergency statements.",
+    "difficult": "HARD preserves the degree-of-difficulty proposition.",
+    "mix": "PUT TOGETHER preserves the instruction not to combine medicines.",
+    "unsafe": "NOT SAFE is semantically equivalent.",
+    "warn": "TELL DANGER preserves warning intent.",
+    "smoke": "DARK AIR FROM FIRE preserves the fire-smoke hazard distinction for warning tasks.",
+    "elevator": "MACHINE GO UP DOWN is an accepted functional description of an elevator in the fire context.",
+    "alarm": "THING TELL DANGER preserves the alarm function for the tested safety question.",
+    "heat": "HOT preserves hazardous heat in the tested statement.",
+    "overdose": "MEDICINE MORE THAN SAFE preserves overdose severity.",
+    "unconscious": "PERSON NOT WAKE preserves unconscious/nonresponsive state for this benchmark.",
+    "smoke_detector": "THING FIND SMOKE preserves smoke-detector function.",
+    "data_breach": "PRIVATE INFORMATION GET OUTSIDE preserves unauthorized exposure of private information."
+  }
+}

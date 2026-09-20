@@ -1,0 +1,131 @@
+{
+  "object": "EDUCATION_PHASE1_CURRICULUM_TRAVERSAL",
+  "version": "v1",
+  "status": "FROZEN_PRE_CONTENT_BUILD",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
+  "lock_generation": 2467,
+  "traversal_law": [
+    "DIAGNOSE",
+    "PLACE",
+    "TEACH",
+    "PRACTICE",
+    "CHECK",
+    "REPAIR_OR_PASS",
+    "DURABLE_CHECKPOINT",
+    "ADVANCE"
+  ],
+  "activity_progression": [
+    "CHOOSE",
+    "ARRANGE",
+    "COMPLETE",
+    "REWRITE",
+    "CONSTRUCT",
+    "FREE_WRITTEN_RESPONSE"
+  ],
+  "stages": [
+    {
+      "id": "P1S1",
+      "name": "Orientation and Baseline",
+      "objective": "Teach the teacher-student interaction pattern and establish a low-pressure reading/written-expression baseline.",
+      "emphasis": [
+        "READING_COMPREHENSION",
+        "DIRECT_MEANING"
+      ],
+      "checkpoint": "P1S1_COMPLETE"
+    },
+    {
+      "id": "P1S2",
+      "name": "Direct Concepts",
+      "objective": "Recognize, retrieve, and use representative canonical concepts directly.",
+      "emphasis": [
+        "LEXICAL_COMPREHENSION",
+        "WRITTEN_RETRIEVAL"
+      ],
+      "checkpoint": "P1S2_COMPLETE"
+    },
+    {
+      "id": "P1S3",
+      "name": "Change the Word",
+      "objective": "Use already-authorized predictable morphology to generate lawful forms without treating them as new lexical slots.",
+      "emphasis": [
+        "MORPHOLOGY",
+        "FORM_MEANING_LINK"
+      ],
+      "canonical_example": "feel -> feeling",
+      "checkpoint": "P1S3_COMPLETE"
+    },
+    {
+      "id": "P1S4",
+      "name": "Build the Sentence",
+      "objective": "Use grammar and numeration with known concepts to construct complete written meanings.",
+      "emphasis": [
+        "GRAMMAR",
+        "NUMERATION",
+        "SENTENCE_CONSTRUCTION"
+      ],
+      "checkpoint": "P1S4_COMPLETE"
+    },
+    {
+      "id": "P1S5",
+      "name": "Build the Meaning",
+      "objective": "Express an idea when the exact target word is unavailable by controlled composition and semantically equivalent paraphrase.",
+      "emphasis": [
+        "CONTROLLED_COMPOSITION",
+        "PARAPHRASE",
+        "SEMANTIC_EQUIVALENCE"
+      ],
+      "checkpoint": "P1S5_COMPLETE"
+    },
+    {
+      "id": "P1S6",
+      "name": "Read and Respond",
+      "objective": "Apply the architecture to practical written situations and produce context-appropriate written responses.",
+      "emphasis": [
+        "READING_TO_EXPRESSION",
+        "SCENARIO_TRAVERSAL",
+        "REPAIR"
+      ],
+      "checkpoint": "P1S6_COMPLETE"
+    },
+    {
+      "id": "P1S7",
+      "name": "Unseen Transfer",
+      "objective": "Measure transfer on written situations and combinations not previously presented in the learner's instructional history.",
+      "emphasis": [
+        "UNSEEN_TRANSFER",
+        "INDEPENDENT_TRAVERSAL"
+      ],
+      "training_content_allowed": false,
+      "evaluation_content_must_be_frozen_before_attempt": true,
+      "checkpoint": "P1S7_COMPLETE"
+    },
+    {
+      "id": "P1S8",
+      "name": "Phase 1 Completion",
+      "objective": "Reassess representative Phase 1 competencies, summarize evidence, and issue the durable Phase 1 completion checkpoint.",
+      "emphasis": [
+        "REASSESSMENT",
+        "RETENTION_SIGNAL",
+        "COMPLETION"
+      ],
+      "checkpoint": "PHASE1_COMPLETE"
+    }
+  ],
+  "completion_law": {
+    "sequence_required": true,
+    "fast_pass_within_stage_allowed": true,
+    "advancement_requires_confirmed_checkpoint": true,
+    "stage_pass_criteria_rule": "Each stage's exact competency criteria must be frozen with its content before a learner attempts that stage; criteria cannot be weakened after seeing the learner's response.",
+    "phase1_complete_when": "All required stage checkpoints through P1S8 are durably confirmed."
+  },
+  "unseen_transfer_separation": {
+    "rule": "Items used for P1S7 transfer measurement may not previously appear as instructional or practice items for that learner.",
+    "purpose": "Separate trained performance from transfer.",
+    "reuse_after_first_measurement": "Once exposed, an item may be used for later practice but no longer counts as first-exposure transfer evidence."
+  },
+  "architecture_ancestry": {
+    "diagnostic_pattern": "ASSESS -> LOCATE -> GUIDE -> REPAIR -> REASSESS -> ADVANCE",
+    "use": "Progression logic only; no requirement to copy Coheriscope visual presentation."
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "object": "EDUCATION_PHASE1_PRODUCT_INSTRUCTION_CONTRACT",
+  "version": "v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
+  "lock_generation": 2467,
+  "product": {
+    "name": "English Fluency Accelerator",
+    "language": "English",
+    "phase": "Phase 1",
+    "form": "TEACHER_GUIDED_PROGRESSIVE_LEARNING_TRACK",
+    "game_character": "FUN_AND_INTERACTIVE_WITHOUT_REQUIRING_A_FICTIONAL_GAME_WORLD",
+    "demo_boundary": "COMPLETE_END_TO_END_PHASE_1_DEMO"
+  },
+  "educational_scope": {
+    "measured_modalities": [
+      "READING_COMPREHENSION",
+      "WRITTEN_OR_CONSTRUCTED_EXPRESSION"
+    ],
+    "explicitly_not_measured": [
+      "SPEAKING",
+      "PRONUNCIATION",
+      "LISTENING",
+      "ORAL_FLUENCY"
+    ],
+    "lexical_foundation": "CANONICAL_1001_CONCEPT_ARCHITECTURE",
+    "productive_systems": [
+      "GRAMMAR",
+      "MORPHOLOGY",
+      "NUMERATION",
+      "CONTROLLED_COMPOSITION",
+      "SEMANTICALLY_EQUIVALENT_PARAPHRASE"
+    ],
+    "principle": "Productive systems are first-class curriculum content, not optional enrichment."
+  },
+  "learner_experience_contract": {
+    "recurring_loop": [
+      "TEACHER_PRESENTS",
+      "LEARNER_RESPONDS",
+      "SYSTEM_CLASSIFIES",
+      "TEACHER_FEEDBACK",
+      "RETRY_OR_ADVANCE",
+      "DURABLE_CHECKPOINT",
+      "NEXT_CHALLENGE"
+    ],
+    "response_progression": [
+      "CHOOSE",
+      "ARRANGE",
+      "COMPLETE",
+      "REWRITE",
+      "CONSTRUCT",
+      "FREE_WRITTEN_RESPONSE"
+    ],
+    "teacher_relationship": "The learner is continuously guided by a teacher voice that explains, encourages, corrects, gives bounded hints, requests retries, recognizes legitimate composition, and advances demonstrated mastery.",
+    "engagement_requirements": [
+      "VARIED_ACTIVITY_TYPES",
+      "VISIBLE_PROGRESS",
+      "MEANINGFUL_SUCCESS_FEEDBACK",
+      "INCREASING_CHALLENGE",
+      "DISCOVERY_THROUGH_COMPOSITION",
+      "UNSEEN_TRANSFER_CHALLENGES"
+    ],
+    "fast_pass_allowed": true
+  },
+  "measurement_distinction": {
+    "direct_lexical_coverage": "Measures direct command of canonical concepts.",
+    "practical_communicative_coverage": "Measures successful expression using canonical concepts plus authorized productive systems.",
+    "learner_metrics_must_keep_these_separate": true
+  },
+  "phase1_success_definition": [
+    "A learner can enter the English Phase 1 track and complete it end-to-end.",
+    "Every completed stage produces a durable authoritative checkpoint before advancement.",
+    "A learner can leave and later resume from the last confirmed durable checkpoint without relying on browser cache.",
+    "The track includes direct concept work, productive-system work, composition, applied written scenarios, and unseen transfer.",
+    "The system emits structured learner-performance evidence for every instructional attempt.",
+    "The final Phase 1 completion receipt is durable and version-bound."
+  ],
+  "non_goals": [
+    "FULL_1001_CONCEPT_CURRICULUM_DELIVERY_IN_PHASE1_DEMO",
+    "SPEECH_OR_LISTENING_ASSESSMENT",
+    "MICROPHONE_OR_CAMERA_REQUIREMENT",
+    "FICTIONAL_WORLD_OR_AVATAR_SYSTEM",
+    "LEADERBOARDS_OR_SOCIAL_NETWORK",
+    "PAYMENTS",
+    "FULL_TEACHER_ADMIN_DASHBOARD",
+    "BACKEND_VENDOR_SELECTION",
+    "PRODUCTION_SCALE_OPTIMIZATION"
+  ],
+  "scope_law": "No feature enters Phase 1 unless it materially helps teach, measure, checkpoint, or advance the learner."
+}

@@ -1,0 +1,57 @@
+name: ARCHCOIN Four Asset Qualification v1
+on:
+  pull_request:
+    paths:
+      - 'economy/archcoin/evm/**'
+      - '.github/workflows/archcoin-four-asset-qualification-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: economy/archcoin/evm
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: economy/archcoin/evm/package-lock.json
+
+      - name: Initialize durable qualification ledger
+        shell: bash
+        run: |
+          mkdir -p qualification
+          printf '{"schema":"ARCHCOIN_QUALIFICATION_v1","stages":[]}
+' > qualification/summary.json
+
+      - name: DEPENDENCY INSTALL
+        shell: bash
+        run: bash qualification/stage.sh DEPENDENCY_INSTALL npm ci
+
+      - name: SOLIDITY COMPILE
+        shell: bash
+        run: bash qualification/stage.sh SOLIDITY_COMPILE npx hardhat compile
+
+      - name: TEST SUITE
+        shell: bash
+        run: bash qualification/stage.sh TEST_SUITE npx hardhat test
+
+      - name: LOCAL DEPLOY + FOUR ASSET TRANSACTIONS + FINAL STATE INVARIANTS
+        shell: bash
+        run: bash qualification/stage.sh LOCAL_EVM_EXECUTION npx hardhat run scripts/qualify-local.js
+
+      - name: Upload qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archcoin-four-asset-qualification
+          path: economy/archcoin/evm/qualification/
+          if-no-files-found: error

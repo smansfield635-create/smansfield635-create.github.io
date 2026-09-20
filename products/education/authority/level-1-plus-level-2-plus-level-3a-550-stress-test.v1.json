@@ -1,0 +1,109 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2_PLUS_LEVEL_3A_550_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 550,
+    "prior_battery_tasks": 176,
+    "fresh_transfer_tasks": 24,
+    "total_tasks": 200,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior demonstrated functions and test novel transfer in visual description, family/social roles, and school/work coordination."
+  },
+  "results": {
+    "prior_176": {
+      "functionally_expressible": 176,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_24": {
+      "DIRECT": 16,
+      "COMPOSABLE": 6,
+      "MISSING": 2,
+      "functionally_expressible": 22,
+      "coverage_percent": 91.6666666667
+    },
+    "overall_200": {
+      "functionally_expressible": 198,
+      "missing": 2,
+      "coverage_percent": 99
+    }
+  },
+  "fresh_transfer_passed": [
+    "describe common colors",
+    "describe basic shapes",
+    "describe light versus dark appearance",
+    "describe clean versus dirty appearance",
+    "describe something as pretty or ugly",
+    "identify close family members",
+    "describe parent-child and sibling relationships",
+    "describe grandparents",
+    "describe husband/wife and son/daughter relationships",
+    "talk about a baby in the family",
+    "describe a class and school subject",
+    "talk about studying for a test",
+    "describe homework and grades",
+    "describe a school project and lesson",
+    "describe practice and study routines",
+    "describe a task at work",
+    "talk about a work meeting",
+    "describe a boss, coworker, or client",
+    "write or discuss a report or note",
+    "send or discuss an email",
+    "talk about using a computer",
+    "describe a desk or work area"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer personal appearance and personality",
+      "reason": "pretty/ugly, clean/dirty, color and shape are available, but ordinary descriptors like tall/short-person, strong/weak, kind/rude, quiet/loud are not yet explicit."
+    },
+    {
+      "function": "richer school/work process vocabulary",
+      "reason": "class, subject, test, project, task, meeting, report and email exist, but assignment, deadline, team-workflow and progress vocabulary remain sparse."
+    }
+  ],
+  "marginal_gain": {
+    "cumulative_500_overall_coverage_percent": 98.2954545455,
+    "cumulative_550_overall_coverage_percent": 99,
+    "note": "The cumulative score reaches 99% while the test frontier expands. More important, all 176 prior functions remain intact and 22 of 24 new functions transfer."
+  },
+  "interpretation": [
+    "Major Level 3 Band A generalizes cleanly beyond simple naming.",
+    "The system now supports richer family, visual, school, and workplace conversation.",
+    "The remaining frontier is refinement rather than foundational repair.",
+    "This confirms the expected convergence behavior: as vocabulary grows, new bands increasingly add resolution rather than basic capability."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_3_band_a_status": "ADMITTED",
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_3_BAND_B_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "personal appearance and personality",
+      "school/work process and progress",
+      "nearest empty everyday semantic neighbors"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_550_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "176-function retention test plus 24-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 91.67% novel transfer; 99% overall across 200 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_3_BAND_B_GEOMETRIC_RECONSTRUCTION"
+  }
+}

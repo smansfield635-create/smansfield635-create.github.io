@@ -1,0 +1,107 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2ABCD_450_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 450,
+    "prior_battery_tasks": 124,
+    "fresh_transfer_tasks": 24,
+    "total_tasks": 148,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all previously demonstrated functions and test novel transfer in travel, meals, and scheduling using only the frozen 450 words."
+  },
+  "results": {
+    "prior_124": {
+      "functionally_expressible": 124,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_24": {
+      "DIRECT": 16,
+      "COMPOSABLE": 6,
+      "MISSING": 2,
+      "functionally_expressible": 22,
+      "coverage_percent": 91.6666666667
+    },
+    "overall_148": {
+      "functionally_expressible": 146,
+      "missing": 2,
+      "coverage_percent": 98.6486486486
+    }
+  },
+  "fresh_transfer_passed": [
+    "plan a trip using bus, train, plane, bike or car",
+    "describe leaving and arriving",
+    "ask about a station or airport",
+    "use a map and ticket in a simple travel exchange",
+    "describe road travel and driving",
+    "talk about breakfast, lunch and dinner",
+    "state hunger and fullness",
+    "ask for common food and drinks",
+    "describe simple cooking, washing and cutting",
+    "state food preference using like/love/hate",
+    "compare meal choices using better/worse",
+    "talk about hour and minute",
+    "ask and answer simple clock-time questions",
+    "talk about dates using calendar/day/month/year",
+    "make a simple appointment",
+    "schedule an activity for a weekday",
+    "talk about this weekend",
+    "describe something happening soon or later",
+    "change a scheduled plan",
+    "explain why a schedule changed",
+    "coordinate travel time with another person",
+    "plan a meal around an appointment or trip"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer directional navigation",
+      "reason": "map, road, near, far, up/down/around/through exist, but left/right/turn/corner-style navigation remains limited."
+    },
+    {
+      "function": "richer duration and recurrence language",
+      "reason": "hour, minute, day, week, month, year, always/never/sometimes exist, but duration terms such as second, daily, weekly, every and until are not explicit."
+    }
+  ],
+  "marginal_gain": {
+    "cumulative_400_overall_coverage_percent": 97.5806451613,
+    "cumulative_450_overall_coverage_percent": 98.6486486486,
+    "note": "The higher score reflects both retention and stronger transfer. All prior 124 functions remain closed while 22 of 24 fresh functions are expressible."
+  },
+  "interpretation": [
+    "Band D successfully broadens the system into practical travel, meals, and time coordination.",
+    "The 450-word system now handles most ordinary daily-life planning scenarios.",
+    "The remaining frontier is narrow and spatial-temporal: detailed navigation and duration/recurrence.",
+    "No earlier frontier reopened, supporting the deterministic accumulation model."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_2_band_d_status": "ADMITTED",
+    "next_step": "CONSTRUCT_LEVEL_2_BAND_E_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "directional navigation",
+      "duration and recurrence",
+      "remaining nearest everyday semantic neighbors"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_450_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "Prior 124-task battery plus 24-task fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention of prior capability; 91.67% novel transfer; 98.65% overall across 148 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_2_BAND_E_GEOMETRIC_RECONSTRUCTION"
+  }
+}

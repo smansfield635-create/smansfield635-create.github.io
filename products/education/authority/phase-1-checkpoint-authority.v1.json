@@ -3,8 +3,8 @@
   "version": "v1",
   "status": "FROZEN_PRE_IMPLEMENTATION",
   "owner": "Sean",
-  "operation_id": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_FREEZE_20260920_003",
-  "lock_generation": 2468,
+  "operation_id": "EDUCATION_PHASE1_ADAPTIVE_PLACEMENT_FREEZE_20260920_001",
+  "lock_generation": 2469,
   "governing_principle": "CLIENT_STATE_IS_DISPOSABLE_SERVER_CHECKPOINTS_ARE_AUTHORITATIVE",
   "identity_model": {
     "term": "LEARNER_PROGRESS_KEY",
@@ -53,6 +53,13 @@
     "attempt_summary",
     "mastery_summary",
     "transfer_status",
+    "verified_placement",
+    "verified_competency_position",
+    "placement_score",
+    "placement_confidence",
+    "placement_range",
+    "demo_range",
+    "demo_entry_point",
     "server_commit_confirmation"
   ],
   "persistence_law": {
@@ -98,5 +105,15 @@
     "native_support_dependence_blocks_target_only_promotion": true,
     "supported_success_remains_valid_learning_evidence": true,
     "supported_success_is_final_proficiency_evidence": false
+  },
+  "placement_checkpoint_law": {
+    "authority": "/products/education/authority/phase-1-adaptive-placement-authority.v1.json",
+    "verified_placement_may_be_persisted_before_instruction": true,
+    "verified_placement_and_demo_entry_are_distinct_fields": true,
+    "above_phase1_verified_placement_must_survive_phase1_demo_entry": true,
+    "placement_state_is_runtime_initialization_authority": true,
+    "placement_checkpoint_may_not_be_derived_from_browser_only_state": true,
+    "placement_evidence_must_be_version_bound": true,
+    "placement_reassessment_creates_new_evidence_without_rewriting_prior_receipt": true
   }
 }

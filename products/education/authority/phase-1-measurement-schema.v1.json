@@ -3,8 +3,8 @@
   "version": "v1",
   "status": "FROZEN_PRE_IMPLEMENTATION",
   "owner": "Sean",
-  "operation_id": "EDUCATION_PHASE1_LANGUAGE_SUPPORT_CYCLE_FREEZE_20260920_003",
-  "lock_generation": 2468,
+  "operation_id": "EDUCATION_PHASE1_ADAPTIVE_PLACEMENT_FREEZE_20260920_001",
+  "lock_generation": 2469,
   "purpose": "Generate learner-facing progress data and internal instructional-validation evidence from the same Phase 1 activities.",
   "claim_boundary": {
     "measured": [
@@ -35,6 +35,11 @@
     "support_cycle",
     "target_language",
     "native_language",
+    "placement_confidence",
+    "probe_direction",
+    "claimed_history",
+    "claimed_level",
+    "placement_context",
     "phase_id",
     "stage_id",
     "activity_id",
@@ -130,5 +135,32 @@
     "final_proficiency_evidence_requires": "TARGET_ONLY",
     "final_transfer_evidence_requires": "TARGET_ONLY",
     "aggregation_must_not_collapse_supported_and_target_only_success": true
-  }
+  },
+  "placement_evidence_law": {
+    "authority": "/products/education/authority/phase-1-adaptive-placement-authority.v1.json",
+    "self_report_must_remain_separate_from_observed_performance": true,
+    "direct_vs_productive_must_remain_separate": true,
+    "trained_vs_transfer_must_remain_separate": true,
+    "assisted_vs_unassisted_must_remain_separate": true,
+    "support_level_must_remain_separate": true,
+    "placement_confidence_required": true,
+    "placement_score_required": true,
+    "within_stage_position_basis": "DEMONSTRATED_COMPETENCY_NODES",
+    "above_phase1_is_valid_placement": true,
+    "verified_placement_must_not_be_rewritten_to_match_demo_range": true
+  },
+  "placement_summary_required": [
+    "CLAIMED_LEVEL",
+    "VERIFIED_STAGE_OR_ABOVE_PHASE1",
+    "VERIFIED_COMPETENCY_POSITION",
+    "VERIFIED_MASTERY_NODES",
+    "UNRESOLVED_NODES",
+    "SUPPORT_CYCLE",
+    "SUPPORT_DEPENDENCE",
+    "PLACEMENT_SCORE",
+    "PLACEMENT_CONFIDENCE",
+    "PLACEMENT_RANGE",
+    "DEMO_RANGE",
+    "DEMO_ENTRY_POINT"
+  ]
 }

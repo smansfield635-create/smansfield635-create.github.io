@@ -49,6 +49,7 @@ function finitePatternAlternatives(pattern) {
 function expectedStringValue(name, schema, index) {
   const regex = typeof schema.pattern === 'string' ? new RegExp(schema.pattern) : null;
   const candidates = [];
+  if (/base64/i.test(name)) candidates.push(Buffer.from('{}','utf8').toString('base64'));
   if (/head/i.test(name)) candidates.push(`${(index % 8) + 1}`.repeat(40));
   if (/holder/i.test(name)) candidates.push(`ACTIVE_CONFORMANCE_${index}`);
   if (Array.isArray(schema.enum)) {

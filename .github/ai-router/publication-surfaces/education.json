@@ -1,0 +1,129 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "education",
+  "description": "Existing Diamond Gate Bridge Education module at /products/education/: public and technical standards faces plus the English adaptive-placement demo entry flow.",
+  "checks": [
+    {
+      "path": "/products/education/index.html",
+      "includes": [
+        "EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1",
+        "English Fluency Accelerator",
+        "Learn from where you actually are.",
+        "Public Face",
+        "Technical Face",
+        "Start the Demo",
+        "1,001 canonical concepts",
+        "NATIVE_SUPPORTED",
+        "BILINGUAL_BRIDGED",
+        "TARGET_DOMINANT",
+        "TARGET_ONLY",
+        "Adaptive Placement",
+        "English",
+        "Spanish",
+        "Chinese",
+        "Coming Soon",
+        "ABOVE_PHASE_1",
+        "demo_entry_point",
+        "data-no-backend=\"true\"",
+        "data-no-persistence=\"true\""
+      ],
+      "excludes": [
+        "data-demo-language-spanish=\"available\"",
+        "data-demo-language-chinese=\"available\"",
+        "data-speech-measurement=\"true\"",
+        "data-listening-measurement=\"true\""
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/products/education/",
+    "timeoutMs": 15000,
+    "readySelector": "html[data-education-demo-ready=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/products/education/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Technical face opens on existing Education page",
+        "action": {
+          "type": "click",
+          "selector": "[data-open-face=\"technical\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#technical-face:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#technical-face",
+            "value": "Technical construction and evidence boundaries"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Public face returns on same Education route",
+        "action": {
+          "type": "click",
+          "selector": "[data-open-face=\"public\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#public-face:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#public-face",
+            "value": "Learn from where you actually are."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Start Demo opens language selection",
+        "action": {
+          "type": "click",
+          "selector": "[data-start-demo]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#demo-shell:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#demo-title",
+            "value": "Choose a language"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "English enters learner intake on same module",
+        "action": {
+          "type": "click",
+          "selector": "[data-language=\"English\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-demo-stage=\"intake\"]:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-demo-stage=\"intake\"]",
+            "value": "Tell us where you think you are."
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

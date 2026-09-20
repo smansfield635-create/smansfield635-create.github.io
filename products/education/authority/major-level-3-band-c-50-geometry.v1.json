@@ -2,7 +2,7 @@
   "object": "MAJOR_LEVEL_3_BAND_C_50_GEOMETRIC_RECONSTRUCTION",
   "version": "v1",
   "owner": "Sean",
-  "status": "FROZEN_CANDIDATE_BAND",
+  "status": "FROZEN_CANONICAL_REPAIRED_BAND",
   "parent_authorities": [
     "/products/education/authority/major-level-1-250-geometry.v1.json",
     "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
@@ -68,12 +68,12 @@
     "tiny",
     "huge",
     "clear",
-    "pale",
+    "electricity",
     "solid",
     "loose",
     "tight",
     "fresh",
-    "stale",
+    "soap",
     "sweet",
     "sour",
     "noisy"
@@ -123,12 +123,12 @@
       "tiny",
       "huge",
       "clear",
-      "pale",
+      "electricity",
       "solid",
       "loose",
       "tight",
       "fresh",
-      "stale",
+      "soap",
       "sweet",
       "sour",
       "noisy"
@@ -146,5 +146,20 @@
     "ACTION_PERFORMED": "Third 50-word Level 3 band derived from the 600-word transfer frontier and nearest empty semantic neighbors.",
     "ENGINE_RESPONSE": "Band closes nuanced emotion/social response and descriptive-precision frontier with zero overlap.",
     "NEXT_REQUIRED_INPUT": "LEVEL_1_PLUS_LEVEL_2_PLUS_LEVEL_3ABC_650_WORD_STRESS_TEST"
+  },
+  "canonical_substitution_adoption": {
+    "operation_id": "EDUCATION_SEVEN_SWAP_CANONICAL_ADOPTION_20260920_001",
+    "substitutions": [
+      {
+        "out": "pale",
+        "in": "electricity"
+      },
+      {
+        "out": "stale",
+        "in": "soap"
+      }
+    ],
+    "evidence_authority": "/products/education/authority/1001-seven-swap-cumulative-regression-256.v1.json",
+    "lexical_count_preserved": true
   }
 }

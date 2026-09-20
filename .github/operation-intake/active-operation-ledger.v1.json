@@ -6974,6 +6974,49 @@
       "scopeHash": "879b4beef90a48982284956ac85aeda8c3ddcbfbdf49c607c13220c3cf3f823e",
       "state": "ADMITTED_LOCKED"
     },
+    "87b960099ffc42e7767cccfb553fde720f916102b23127fb168cfb3de10bc870": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "10aa8e9a4e10c7d97a8c9bb9d6b5de2619e4a5f2",
+          "lockGeneration": 2465,
+          "lockScope": "EDUCATION:VOCABULARY:1001:STRESS_RESIDUAL_DECOMPOSITION:V1",
+          "operationId": "EDUCATION_STRESS_RESIDUAL_DECOMPOSITION_20260920_001",
+          "procedureLocatorDigest": "7a254e371fd8ba441b03c0e208b2ae4ab2910d050cdebab3d8c3bdef08f35785",
+          "requestDigest": "99400a9ecfab7de575f50d4a31d4916e6c6ecb3cffed22fd73195605c3c8b694",
+          "scopeHash": "87b960099ffc42e7767cccfb553fde720f916102b23127fb168cfb3de10bc870"
+        },
+        "bindingDigest": "6c2b828b590c9e0a36287f0c85c43e6f446c3cb63f19c05db6bcee2a23764d20",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "3b2b813769d5aac33421b15296e0e15e51ab137298c4cbc75a2b9cf636f7e09d",
+          "commentId": 5753139300,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3999,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35541868155,
+          "workflowSha": "97e0602a2b6acec6fc2062ae6661daf829442277"
+        },
+        "lineageAnchorCommitSha": "ece0ec410640027ea8ee46b3d6e42fda1e8aa7c8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "10aa8e9a4e10c7d97a8c9bb9d6b5de2619e4a5f2",
+      "lockGeneration": 2465,
+      "lockScope": "EDUCATION:VOCABULARY:1001:STRESS_RESIDUAL_DECOMPOSITION:V1",
+      "operationId": "EDUCATION_STRESS_RESIDUAL_DECOMPOSITION_20260920_001",
+      "procedureLocatorDigest": "7a254e371fd8ba441b03c0e208b2ae4ab2910d050cdebab3d8c3bdef08f35785",
+      "released": false,
+      "requestDigest": "99400a9ecfab7de575f50d4a31d4916e6c6ecb3cffed22fd73195605c3c8b694",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "87b960099ffc42e7767cccfb553fde720f916102b23127fb168cfb3de10bc870",
+      "state": "ADMITTED_LOCKED"
+    },
     "87e619ea06ed160dd9bfd152c3c8c950ec895328892865981223283586c1c661": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -13415,7 +13458,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2464,
+  "lockGeneration": 2465,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

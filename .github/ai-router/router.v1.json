@@ -308,6 +308,14 @@
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/on-your-side-aai/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "EDUCATION",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["products/education/"],
+      "ownedExactPaths": [],
+      "entrypoint": ".github/ai-router/projects/education/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

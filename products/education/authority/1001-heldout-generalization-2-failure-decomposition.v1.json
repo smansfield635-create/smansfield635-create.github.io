@@ -1,0 +1,2398 @@
+{
+  "object": "EDUCATION_SECOND_HELDOUT_FAILURE_DECOMPOSITION",
+  "version": "v1",
+  "status": "FROZEN_DECOMPOSITION_NO_REPAIR",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_SECOND_HELDOUT_FAILURE_DECOMPOSITION_20260920_001",
+  "lock_generation": 2462,
+  "governing_main": "97e0602a2b6acec6fc2062ae6661daf829442277",
+  "source_result_candidate": "4ce69e57b7e8a0ec3b88ff2e6edae4f26f751cf1",
+  "source_pr": 3992,
+  "battery_authority": "/products/education/authority/1001-heldout-generalization-2-battery.v1.json",
+  "battery_blob_sha": "3746effddf0ee5d0648accfa8043beccfd6436c4",
+  "source_scoring": {
+    "task_total": 512,
+    "domain_total": 32,
+    "A_direct": 233,
+    "B_controlled_paraphrase": 174,
+    "C_failure": 105,
+    "direct_rate_percent": 45.5,
+    "practical_completion": 407,
+    "practical_rate_percent": 79.5,
+    "safety_critical_task_total": 44,
+    "safety_critical_failures": 16,
+    "lexical_leakage": 0
+  },
+  "decomposition": {
+    "total_failures": 105,
+    "direct_only_failures": 67,
+    "blocked_frozen_route_failures": 38,
+    "safety_critical_failures": 16,
+    "unique_direct_missing_concepts": 58,
+    "unique_blocked_route_missing_components": 31,
+    "union_missing_concepts": 82
+  },
+  "domain_failure_counts": {
+    "FIRE_SAFETY": 7,
+    "CYBERSECURITY": 6,
+    "DRIVING_ROADS": 6,
+    "ONLINE_ACCOUNTS": 6,
+    "DIGITAL_DEVICES": 5,
+    "HEALTHCARE_ACCESS": 5,
+    "HOME_MAINTENANCE": 5,
+    "MEDICATION_CARE": 5,
+    "MESSAGING_EMAIL": 5,
+    "NEWS_INFORMATION": 5,
+    "SHOPPING_RETURNS": 5,
+    "SYMPTOMS_BODY": 5,
+    "ENVIRONMENT_RECYCLING": 4,
+    "GOVERNMENT_SERVICES": 4,
+    "SOCIAL_COORDINATION": 4,
+    "EMERGENCY_RESPONSE": 3,
+    "GROCERY_FOOD": 3,
+    "PUBLIC_TRANSIT": 3,
+    "WEATHER_ALERTS": 3,
+    "AIR_TRAVEL": 2,
+    "CHILDCARE_SCHOOL": 2,
+    "CIVIC_LEGAL": 2,
+    "FOOD_ORDERING": 2,
+    "HOTEL_LODGING": 2,
+    "RELATIONSHIPS": 2,
+    "BANKING_SECURITY": 1,
+    "COMPARISON_DECISION": 1,
+    "EDUCATION_CLASSROOM": 1,
+    "WORKPLACE_OPERATIONS": 1
+  },
+  "direct_only_missing_frontier": [
+    {
+      "word": "treatment",
+      "count": 4,
+      "task_ids": [
+        "J114",
+        "J119",
+        "J148",
+        "J152"
+      ]
+    },
+    {
+      "word": "verify",
+      "count": 4,
+      "task_ids": [
+        "J103",
+        "J326",
+        "J344",
+        "J488"
+      ]
+    },
+    {
+      "word": "broken",
+      "count": 3,
+      "task_ids": [
+        "J050",
+        "J292",
+        "J308"
+      ]
+    },
+    {
+      "word": "concern",
+      "count": 3,
+      "task_ids": [
+        "J118",
+        "J323",
+        "J439"
+      ]
+    },
+    {
+      "word": "breathe",
+      "count": 2,
+      "task_ids": [
+        "J133",
+        "J167"
+      ]
+    },
+    {
+      "word": "difficult",
+      "count": 2,
+      "task_ids": [
+        "J034",
+        "J133"
+      ]
+    },
+    {
+      "word": "item",
+      "count": 2,
+      "task_ids": [
+        "J068",
+        "J278"
+      ]
+    },
+    {
+      "word": "warn",
+      "count": 2,
+      "task_ids": [
+        "J177",
+        "J385"
+      ]
+    },
+    {
+      "word": "activity",
+      "count": 1,
+      "task_ids": [
+        "J440"
+      ]
+    },
+    {
+      "word": "alarm",
+      "count": 1,
+      "task_ids": [
+        "J182"
+      ]
+    },
+    {
+      "word": "argument",
+      "count": 1,
+      "task_ids": [
+        "J450"
+      ]
+    },
+    {
+      "word": "blocked",
+      "count": 1,
+      "task_ids": [
+        "J179"
+      ]
+    },
+    {
+      "word": "boundary",
+      "count": 1,
+      "task_ids": [
+        "J449"
+      ]
+    },
+    {
+      "word": "charger",
+      "count": 1,
+      "task_ids": [
+        "J293"
+      ]
+    },
+    {
+      "word": "checkout",
+      "count": 1,
+      "task_ids": [
+        "J245"
+      ]
+    },
+    {
+      "word": "damage",
+      "count": 1,
+      "task_ids": [
+        "J067"
+      ]
+    },
+    {
+      "word": "dizzy",
+      "count": 1,
+      "task_ids": [
+        "J134"
+      ]
+    },
+    {
+      "word": "elevator",
+      "count": 1,
+      "task_ids": [
+        "J178"
+      ]
+    },
+    {
+      "word": "exist",
+      "count": 1,
+      "task_ids": [
+        "J242"
+      ]
+    },
+    {
+      "word": "exit",
+      "count": 1,
+      "task_ids": [
+        "J179"
+      ]
+    },
+    {
+      "word": "fail",
+      "count": 1,
+      "task_ids": [
+        "J328"
+      ]
+    },
+    {
+      "word": "form",
+      "count": 1,
+      "task_ids": [
+        "J356"
+      ]
+    },
+    {
+      "word": "fuel",
+      "count": 1,
+      "task_ids": [
+        "J200"
+      ]
+    },
+    {
+      "word": "gate",
+      "count": 1,
+      "task_ids": [
+        "J228"
+      ]
+    },
+    {
+      "word": "headline",
+      "count": 1,
+      "task_ids": [
+        "J482"
+      ]
+    },
+    {
+      "word": "heat",
+      "count": 1,
+      "task_ids": [
+        "J184"
+      ]
+    },
+    {
+      "word": "introduce",
+      "count": 1,
+      "task_ids": [
+        "J001"
+      ]
+    },
+    {
+      "word": "leak",
+      "count": 1,
+      "task_ids": [
+        "J054"
+      ]
+    },
+    {
+      "word": "login",
+      "count": 1,
+      "task_ids": [
+        "J328"
+      ]
+    },
+    {
+      "word": "medical",
+      "count": 1,
+      "task_ids": [
+        "J120"
+      ]
+    },
+    {
+      "word": "mix",
+      "count": 1,
+      "task_ids": [
+        "J149"
+      ]
+    },
+    {
+      "word": "off",
+      "count": 1,
+      "task_ids": [
+        "J049"
+      ]
+    },
+    {
+      "word": "parking",
+      "count": 1,
+      "task_ids": [
+        "J195"
+      ]
+    },
+    {
+      "word": "platform",
+      "count": 1,
+      "task_ids": [
+        "J214"
+      ]
+    },
+    {
+      "word": "point",
+      "count": 1,
+      "task_ids": [
+        "J004"
+      ]
+    },
+    {
+      "word": "pollution",
+      "count": 1,
+      "task_ids": [
+        "J404"
+      ]
+    },
+    {
+      "word": "product",
+      "count": 1,
+      "task_ids": [
+        "J067"
+      ]
+    },
+    {
+      "word": "recycle",
+      "count": 1,
+      "task_ids": [
+        "J406"
+      ]
+    },
+    {
+      "word": "restart",
+      "count": 1,
+      "task_ids": [
+        "J296"
+      ]
+    },
+    {
+      "word": "send",
+      "count": 1,
+      "task_ids": [
+        "J305"
+      ]
+    },
+    {
+      "word": "sign",
+      "count": 1,
+      "task_ids": [
+        "J374"
+      ]
+    },
+    {
+      "word": "skin",
+      "count": 1,
+      "task_ids": [
+        "J135"
+      ]
+    },
+    {
+      "word": "slow",
+      "count": 1,
+      "task_ids": [
+        "J196"
+      ]
+    },
+    {
+      "word": "smoke",
+      "count": 1,
+      "task_ids": [
+        "J177"
+      ]
+    },
+    {
+      "word": "source",
+      "count": 1,
+      "task_ids": [
+        "J484"
+      ]
+    },
+    {
+      "word": "spicy",
+      "count": 1,
+      "task_ids": [
+        "J259"
+      ]
+    },
+    {
+      "word": "stale",
+      "count": 1,
+      "task_ids": [
+        "J280"
+      ]
+    },
+    {
+      "word": "stolen",
+      "count": 1,
+      "task_ids": [
+        "J341"
+      ]
+    },
+    {
+      "word": "term",
+      "count": 1,
+      "task_ids": [
+        "J504"
+      ]
+    },
+    {
+      "word": "thank",
+      "count": 1,
+      "task_ids": [
+        "J008"
+      ]
+    },
+    {
+      "word": "traffic",
+      "count": 1,
+      "task_ids": [
+        "J194"
+      ]
+    },
+    {
+      "word": "transport",
+      "count": 1,
+      "task_ids": [
+        "J216"
+      ]
+    },
+    {
+      "word": "trash",
+      "count": 1,
+      "task_ids": [
+        "J405"
+      ]
+    },
+    {
+      "word": "unsafe",
+      "count": 1,
+      "task_ids": [
+        "J162"
+      ]
+    },
+    {
+      "word": "update",
+      "count": 1,
+      "task_ids": [
+        "J325"
+      ]
+    },
+    {
+      "word": "username",
+      "count": 1,
+      "task_ids": [
+        "J327"
+      ]
+    },
+    {
+      "word": "vegetarian",
+      "count": 1,
+      "task_ids": [
+        "J264"
+      ]
+    },
+    {
+      "word": "workplace",
+      "count": 1,
+      "task_ids": [
+        "J021"
+      ]
+    }
+  ],
+  "blocked_route_missing_frontier": [
+    {
+      "word": "product",
+      "count": 4,
+      "task_ids": [
+        "J078",
+        "J079",
+        "J080",
+        "J288"
+      ]
+    },
+    {
+      "word": "large",
+      "count": 3,
+      "task_ids": [
+        "J139",
+        "J202",
+        "J223"
+      ]
+    },
+    {
+      "word": "code",
+      "count": 2,
+      "task_ids": [
+        "J079",
+        "J288"
+      ]
+    },
+    {
+      "word": "control",
+      "count": 2,
+      "task_ids": [
+        "J063",
+        "J304"
+      ]
+    },
+    {
+      "word": "official",
+      "count": 2,
+      "task_ids": [
+        "J363",
+        "J364"
+      ]
+    },
+    {
+      "word": "out",
+      "count": 2,
+      "task_ids": [
+        "J062",
+        "J349"
+      ]
+    },
+    {
+      "word": "request",
+      "count": 2,
+      "task_ids": [
+        "J125",
+        "J367"
+      ]
+    },
+    {
+      "word": "send",
+      "count": 2,
+      "task_ids": [
+        "J316",
+        "J496"
+      ]
+    },
+    {
+      "word": "too",
+      "count": 2,
+      "task_ids": [
+        "J159",
+        "J396"
+      ]
+    },
+    {
+      "word": "about",
+      "count": 1,
+      "task_ids": [
+        "J012"
+      ]
+    },
+    {
+      "word": "affect",
+      "count": 1,
+      "task_ids": [
+        "J493"
+      ]
+    },
+    {
+      "word": "agreement",
+      "count": 1,
+      "task_ids": [
+        "J377"
+      ]
+    },
+    {
+      "word": "amount",
+      "count": 1,
+      "task_ids": [
+        "J153"
+      ]
+    },
+    {
+      "word": "awake",
+      "count": 1,
+      "task_ids": [
+        "J173"
+      ]
+    },
+    {
+      "word": "burn",
+      "count": 1,
+      "task_ids": [
+        "J190"
+      ]
+    },
+    {
+      "word": "check",
+      "count": 1,
+      "task_ids": [
+        "J238"
+      ]
+    },
+    {
+      "word": "enter",
+      "count": 1,
+      "task_ids": [
+        "J331"
+      ]
+    },
+    {
+      "word": "fast",
+      "count": 1,
+      "task_ids": [
+        "J203"
+      ]
+    },
+    {
+      "word": "form",
+      "count": 1,
+      "task_ids": [
+        "J367"
+      ]
+    },
+    {
+      "word": "heat",
+      "count": 1,
+      "task_ids": [
+        "J063"
+      ]
+    },
+    {
+      "word": "limit",
+      "count": 1,
+      "task_ids": [
+        "J203"
+      ]
+    },
+    {
+      "word": "physical",
+      "count": 1,
+      "task_ids": [
+        "J302"
+      ]
+    },
+    {
+      "word": "program",
+      "count": 1,
+      "task_ids": [
+        "J346"
+      ]
+    },
+    {
+      "word": "secret",
+      "count": 1,
+      "task_ids": [
+        "J350"
+      ]
+    },
+    {
+      "word": "skin",
+      "count": 1,
+      "task_ids": [
+        "J140"
+      ]
+    },
+    {
+      "word": "smoke",
+      "count": 1,
+      "task_ids": [
+        "J185"
+      ]
+    },
+    {
+      "word": "sound",
+      "count": 1,
+      "task_ids": [
+        "J394"
+      ]
+    },
+    {
+      "word": "title",
+      "count": 1,
+      "task_ids": [
+        "J319"
+      ]
+    },
+    {
+      "word": "trash",
+      "count": 1,
+      "task_ids": [
+        "J416"
+      ]
+    },
+    {
+      "word": "unwanted",
+      "count": 1,
+      "task_ids": [
+        "J315"
+      ]
+    },
+    {
+      "word": "wall",
+      "count": 1,
+      "task_ids": [
+        "J351"
+      ]
+    }
+  ],
+  "cross_class_leverage": [
+    {
+      "word": "product",
+      "count": 5,
+      "task_ids": [
+        "J067",
+        "J078",
+        "J079",
+        "J080",
+        "J288"
+      ]
+    },
+    {
+      "word": "treatment",
+      "count": 4,
+      "task_ids": [
+        "J114",
+        "J119",
+        "J148",
+        "J152"
+      ]
+    },
+    {
+      "word": "verify",
+      "count": 4,
+      "task_ids": [
+        "J103",
+        "J326",
+        "J344",
+        "J488"
+      ]
+    },
+    {
+      "word": "broken",
+      "count": 3,
+      "task_ids": [
+        "J050",
+        "J292",
+        "J308"
+      ]
+    },
+    {
+      "word": "concern",
+      "count": 3,
+      "task_ids": [
+        "J118",
+        "J323",
+        "J439"
+      ]
+    },
+    {
+      "word": "large",
+      "count": 3,
+      "task_ids": [
+        "J139",
+        "J202",
+        "J223"
+      ]
+    },
+    {
+      "word": "send",
+      "count": 3,
+      "task_ids": [
+        "J305",
+        "J316",
+        "J496"
+      ]
+    },
+    {
+      "word": "breathe",
+      "count": 2,
+      "task_ids": [
+        "J133",
+        "J167"
+      ]
+    },
+    {
+      "word": "code",
+      "count": 2,
+      "task_ids": [
+        "J079",
+        "J288"
+      ]
+    },
+    {
+      "word": "control",
+      "count": 2,
+      "task_ids": [
+        "J063",
+        "J304"
+      ]
+    },
+    {
+      "word": "difficult",
+      "count": 2,
+      "task_ids": [
+        "J034",
+        "J133"
+      ]
+    },
+    {
+      "word": "form",
+      "count": 2,
+      "task_ids": [
+        "J356",
+        "J367"
+      ]
+    },
+    {
+      "word": "heat",
+      "count": 2,
+      "task_ids": [
+        "J184",
+        "J063"
+      ]
+    },
+    {
+      "word": "item",
+      "count": 2,
+      "task_ids": [
+        "J068",
+        "J278"
+      ]
+    },
+    {
+      "word": "official",
+      "count": 2,
+      "task_ids": [
+        "J363",
+        "J364"
+      ]
+    },
+    {
+      "word": "out",
+      "count": 2,
+      "task_ids": [
+        "J062",
+        "J349"
+      ]
+    },
+    {
+      "word": "request",
+      "count": 2,
+      "task_ids": [
+        "J125",
+        "J367"
+      ]
+    },
+    {
+      "word": "skin",
+      "count": 2,
+      "task_ids": [
+        "J135",
+        "J140"
+      ]
+    },
+    {
+      "word": "smoke",
+      "count": 2,
+      "task_ids": [
+        "J177",
+        "J185"
+      ]
+    },
+    {
+      "word": "too",
+      "count": 2,
+      "task_ids": [
+        "J159",
+        "J396"
+      ]
+    },
+    {
+      "word": "trash",
+      "count": 2,
+      "task_ids": [
+        "J405",
+        "J416"
+      ]
+    },
+    {
+      "word": "warn",
+      "count": 2,
+      "task_ids": [
+        "J177",
+        "J385"
+      ]
+    },
+    {
+      "word": "about",
+      "count": 1,
+      "task_ids": [
+        "J012"
+      ]
+    },
+    {
+      "word": "activity",
+      "count": 1,
+      "task_ids": [
+        "J440"
+      ]
+    },
+    {
+      "word": "affect",
+      "count": 1,
+      "task_ids": [
+        "J493"
+      ]
+    },
+    {
+      "word": "agreement",
+      "count": 1,
+      "task_ids": [
+        "J377"
+      ]
+    },
+    {
+      "word": "alarm",
+      "count": 1,
+      "task_ids": [
+        "J182"
+      ]
+    },
+    {
+      "word": "amount",
+      "count": 1,
+      "task_ids": [
+        "J153"
+      ]
+    },
+    {
+      "word": "argument",
+      "count": 1,
+      "task_ids": [
+        "J450"
+      ]
+    },
+    {
+      "word": "awake",
+      "count": 1,
+      "task_ids": [
+        "J173"
+      ]
+    },
+    {
+      "word": "blocked",
+      "count": 1,
+      "task_ids": [
+        "J179"
+      ]
+    },
+    {
+      "word": "boundary",
+      "count": 1,
+      "task_ids": [
+        "J449"
+      ]
+    },
+    {
+      "word": "burn",
+      "count": 1,
+      "task_ids": [
+        "J190"
+      ]
+    },
+    {
+      "word": "charger",
+      "count": 1,
+      "task_ids": [
+        "J293"
+      ]
+    },
+    {
+      "word": "check",
+      "count": 1,
+      "task_ids": [
+        "J238"
+      ]
+    },
+    {
+      "word": "checkout",
+      "count": 1,
+      "task_ids": [
+        "J245"
+      ]
+    },
+    {
+      "word": "damage",
+      "count": 1,
+      "task_ids": [
+        "J067"
+      ]
+    },
+    {
+      "word": "dizzy",
+      "count": 1,
+      "task_ids": [
+        "J134"
+      ]
+    },
+    {
+      "word": "elevator",
+      "count": 1,
+      "task_ids": [
+        "J178"
+      ]
+    },
+    {
+      "word": "enter",
+      "count": 1,
+      "task_ids": [
+        "J331"
+      ]
+    },
+    {
+      "word": "exist",
+      "count": 1,
+      "task_ids": [
+        "J242"
+      ]
+    },
+    {
+      "word": "exit",
+      "count": 1,
+      "task_ids": [
+        "J179"
+      ]
+    },
+    {
+      "word": "fail",
+      "count": 1,
+      "task_ids": [
+        "J328"
+      ]
+    },
+    {
+      "word": "fast",
+      "count": 1,
+      "task_ids": [
+        "J203"
+      ]
+    },
+    {
+      "word": "fuel",
+      "count": 1,
+      "task_ids": [
+        "J200"
+      ]
+    },
+    {
+      "word": "gate",
+      "count": 1,
+      "task_ids": [
+        "J228"
+      ]
+    },
+    {
+      "word": "headline",
+      "count": 1,
+      "task_ids": [
+        "J482"
+      ]
+    },
+    {
+      "word": "introduce",
+      "count": 1,
+      "task_ids": [
+        "J001"
+      ]
+    },
+    {
+      "word": "leak",
+      "count": 1,
+      "task_ids": [
+        "J054"
+      ]
+    },
+    {
+      "word": "limit",
+      "count": 1,
+      "task_ids": [
+        "J203"
+      ]
+    },
+    {
+      "word": "login",
+      "count": 1,
+      "task_ids": [
+        "J328"
+      ]
+    },
+    {
+      "word": "medical",
+      "count": 1,
+      "task_ids": [
+        "J120"
+      ]
+    },
+    {
+      "word": "mix",
+      "count": 1,
+      "task_ids": [
+        "J149"
+      ]
+    },
+    {
+      "word": "off",
+      "count": 1,
+      "task_ids": [
+        "J049"
+      ]
+    },
+    {
+      "word": "parking",
+      "count": 1,
+      "task_ids": [
+        "J195"
+      ]
+    },
+    {
+      "word": "physical",
+      "count": 1,
+      "task_ids": [
+        "J302"
+      ]
+    },
+    {
+      "word": "platform",
+      "count": 1,
+      "task_ids": [
+        "J214"
+      ]
+    },
+    {
+      "word": "point",
+      "count": 1,
+      "task_ids": [
+        "J004"
+      ]
+    },
+    {
+      "word": "pollution",
+      "count": 1,
+      "task_ids": [
+        "J404"
+      ]
+    },
+    {
+      "word": "program",
+      "count": 1,
+      "task_ids": [
+        "J346"
+      ]
+    },
+    {
+      "word": "recycle",
+      "count": 1,
+      "task_ids": [
+        "J406"
+      ]
+    },
+    {
+      "word": "restart",
+      "count": 1,
+      "task_ids": [
+        "J296"
+      ]
+    },
+    {
+      "word": "secret",
+      "count": 1,
+      "task_ids": [
+        "J350"
+      ]
+    },
+    {
+      "word": "sign",
+      "count": 1,
+      "task_ids": [
+        "J374"
+      ]
+    },
+    {
+      "word": "slow",
+      "count": 1,
+      "task_ids": [
+        "J196"
+      ]
+    },
+    {
+      "word": "sound",
+      "count": 1,
+      "task_ids": [
+        "J394"
+      ]
+    },
+    {
+      "word": "source",
+      "count": 1,
+      "task_ids": [
+        "J484"
+      ]
+    },
+    {
+      "word": "spicy",
+      "count": 1,
+      "task_ids": [
+        "J259"
+      ]
+    },
+    {
+      "word": "stale",
+      "count": 1,
+      "task_ids": [
+        "J280"
+      ]
+    },
+    {
+      "word": "stolen",
+      "count": 1,
+      "task_ids": [
+        "J341"
+      ]
+    },
+    {
+      "word": "term",
+      "count": 1,
+      "task_ids": [
+        "J504"
+      ]
+    },
+    {
+      "word": "thank",
+      "count": 1,
+      "task_ids": [
+        "J008"
+      ]
+    },
+    {
+      "word": "title",
+      "count": 1,
+      "task_ids": [
+        "J319"
+      ]
+    },
+    {
+      "word": "traffic",
+      "count": 1,
+      "task_ids": [
+        "J194"
+      ]
+    },
+    {
+      "word": "transport",
+      "count": 1,
+      "task_ids": [
+        "J216"
+      ]
+    },
+    {
+      "word": "unsafe",
+      "count": 1,
+      "task_ids": [
+        "J162"
+      ]
+    },
+    {
+      "word": "unwanted",
+      "count": 1,
+      "task_ids": [
+        "J315"
+      ]
+    },
+    {
+      "word": "update",
+      "count": 1,
+      "task_ids": [
+        "J325"
+      ]
+    },
+    {
+      "word": "username",
+      "count": 1,
+      "task_ids": [
+        "J327"
+      ]
+    },
+    {
+      "word": "vegetarian",
+      "count": 1,
+      "task_ids": [
+        "J264"
+      ]
+    },
+    {
+      "word": "wall",
+      "count": 1,
+      "task_ids": [
+        "J351"
+      ]
+    },
+    {
+      "word": "workplace",
+      "count": 1,
+      "task_ids": [
+        "J021"
+      ]
+    }
+  ],
+  "safety_critical_failures": [
+    {
+      "id": "J114",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that insurance covers treatment.",
+      "target_concept": null,
+      "direct_missing": [
+        "treatment"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J119",
+      "domain": "HEALTHCARE_ACCESS",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask about treatment options.",
+      "target_concept": null,
+      "direct_missing": [
+        "treatment"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J133",
+      "domain": "SYMPTOMS_BODY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Say that breathing is difficult.",
+      "target_concept": null,
+      "direct_missing": [
+        "breathe",
+        "difficult"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J148",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask whether treatment is safe.",
+      "target_concept": null,
+      "direct_missing": [
+        "treatment"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J149",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone not to mix two medicines.",
+      "target_concept": null,
+      "direct_missing": [
+        "mix"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J152",
+      "domain": "MEDICATION_CARE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask when to stop treatment.",
+      "target_concept": null,
+      "direct_missing": [
+        "treatment"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J159",
+      "domain": "MEDICATION_CARE",
+      "kind": "EDGE",
+      "prompt": "Communicate the ordinary concept \"overdose\" in this domain.",
+      "target_concept": "overdose",
+      "direct_missing": [
+        "overdose"
+      ],
+      "blocked_routes": [
+        {
+          "components": [
+            "too",
+            "much",
+            "medicine"
+          ],
+          "missing": [
+            "too"
+          ],
+          "semantic_equivalence_required": true,
+          "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+        }
+      ]
+    },
+    {
+      "id": "J162",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone to stop because it is unsafe.",
+      "target_concept": null,
+      "direct_missing": [
+        "unsafe"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J167",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "FUNCTIONAL",
+      "prompt": "Report that someone cannot breathe.",
+      "target_concept": null,
+      "direct_missing": [
+        "breathe"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J173",
+      "domain": "EMERGENCY_RESPONSE",
+      "kind": "EDGE",
+      "prompt": "Communicate the ordinary concept \"unconscious\" in this domain.",
+      "target_concept": "unconscious",
+      "direct_missing": [
+        "unconscious"
+      ],
+      "blocked_routes": [
+        {
+          "components": [
+            "person",
+            "not",
+            "awake"
+          ],
+          "missing": [
+            "awake"
+          ],
+          "semantic_equivalence_required": true,
+          "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+        }
+      ]
+    },
+    {
+      "id": "J177",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Warn someone about smoke.",
+      "target_concept": null,
+      "direct_missing": [
+        "warn",
+        "smoke"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J178",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Tell someone not to use an elevator during a fire.",
+      "target_concept": null,
+      "direct_missing": [
+        "elevator"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J182",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Ask whether the alarm works.",
+      "target_concept": null,
+      "direct_missing": [
+        "alarm"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J184",
+      "domain": "FIRE_SAFETY",
+      "kind": "FUNCTIONAL",
+      "prompt": "Explain that heat is dangerous.",
+      "target_concept": null,
+      "direct_missing": [
+        "heat"
+      ],
+      "blocked_routes": []
+    },
+    {
+      "id": "J185",
+      "domain": "FIRE_SAFETY",
+      "kind": "EDGE",
+      "prompt": "Communicate the ordinary concept \"smoke detector\" in this domain.",
+      "target_concept": "smoke_detector",
+      "direct_missing": [
+        "smoke_detector"
+      ],
+      "blocked_routes": [
+        {
+          "components": [
+            "thing",
+            "find",
+            "smoke"
+          ],
+          "missing": [
+            "smoke"
+          ],
+          "semantic_equivalence_required": true,
+          "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+        }
+      ]
+    },
+    {
+      "id": "J349",
+      "domain": "CYBERSECURITY",
+      "kind": "EDGE",
+      "prompt": "Communicate the ordinary concept \"data breach\" in this domain.",
+      "target_concept": "data_breach",
+      "direct_missing": [
+        "data_breach"
+      ],
+      "blocked_routes": [
+        {
+          "components": [
+            "private",
+            "information",
+            "get",
+            "out"
+          ],
+          "missing": [
+            "out"
+          ],
+          "semantic_equivalence_required": true,
+          "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+        }
+      ]
+    }
+  ],
+  "blocked_routes": [
+    {
+      "id": "J012",
+      "domain": "SOCIAL_COORDINATION",
+      "target_concept": "reputation",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "what",
+          "people",
+          "think",
+          "about",
+          "person"
+        ],
+        "missing": [
+          "about"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J062",
+      "domain": "HOME_MAINTENANCE",
+      "target_concept": "faucet",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "thing",
+          "water",
+          "come",
+          "out"
+        ],
+        "missing": [
+          "out"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J063",
+      "domain": "HOME_MAINTENANCE",
+      "target_concept": "thermostat",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "thing",
+          "control",
+          "heat",
+          "cold"
+        ],
+        "missing": [
+          "control",
+          "heat"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J078",
+      "domain": "SHOPPING_RETURNS",
+      "target_concept": "sold_out",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "no",
+          "more",
+          "product"
+        ],
+        "missing": [
+          "product"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J079",
+      "domain": "SHOPPING_RETURNS",
+      "target_concept": "barcode",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "code",
+          "on",
+          "product"
+        ],
+        "missing": [
+          "code",
+          "product"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J080",
+      "domain": "SHOPPING_RETURNS",
+      "target_concept": "cart",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "thing",
+          "carry",
+          "product"
+        ],
+        "missing": [
+          "product"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J125",
+      "domain": "HEALTHCARE_ACCESS",
+      "target_concept": "insurance_claim",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "insurance",
+          "request",
+          "payment"
+        ],
+        "missing": [
+          "request"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J139",
+      "domain": "SYMPTOMS_BODY",
+      "target_concept": "swelling",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "body",
+          "part",
+          "grow",
+          "large"
+        ],
+        "missing": [
+          "large"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J140",
+      "domain": "SYMPTOMS_BODY",
+      "target_concept": "rash",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "red",
+          "skin",
+          "problem"
+        ],
+        "missing": [
+          "skin"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J153",
+      "domain": "MEDICATION_CARE",
+      "target_concept": "dose",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "amount",
+          "medicine"
+        ],
+        "missing": [
+          "amount"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J159",
+      "domain": "MEDICATION_CARE",
+      "target_concept": "overdose",
+      "safety_critical": true,
+      "best_frozen_route": {
+        "components": [
+          "too",
+          "much",
+          "medicine"
+        ],
+        "missing": [
+          "too"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J173",
+      "domain": "EMERGENCY_RESPONSE",
+      "target_concept": "unconscious",
+      "safety_critical": true,
+      "best_frozen_route": {
+        "components": [
+          "person",
+          "not",
+          "awake"
+        ],
+        "missing": [
+          "awake"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J185",
+      "domain": "FIRE_SAFETY",
+      "target_concept": "smoke_detector",
+      "safety_critical": true,
+      "best_frozen_route": {
+        "components": [
+          "thing",
+          "find",
+          "smoke"
+        ],
+        "missing": [
+          "smoke"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J190",
+      "domain": "FIRE_SAFETY",
+      "target_concept": "flammable",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "thing",
+          "can",
+          "burn",
+          "easy"
+        ],
+        "missing": [
+          "burn"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J202",
+      "domain": "DRIVING_ROADS",
+      "target_concept": "highway",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "large",
+          "road"
+        ],
+        "missing": [
+          "large"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J203",
+      "domain": "DRIVING_ROADS",
+      "target_concept": "speed_limit",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "fast",
+          "limit",
+          "road"
+        ],
+        "missing": [
+          "fast",
+          "limit"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J223",
+      "domain": "PUBLIC_TRANSIT",
+      "target_concept": "terminal",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "large",
+          "station"
+        ],
+        "missing": [
+          "large"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J238",
+      "domain": "AIR_TRAVEL",
+      "target_concept": "security_check",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "airport",
+          "security",
+          "check"
+        ],
+        "missing": [
+          "check"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J288",
+      "domain": "GROCERY_FOOD",
+      "target_concept": "barcode",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "code",
+          "product"
+        ],
+        "missing": [
+          "code",
+          "product"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J302",
+      "domain": "DIGITAL_DEVICES",
+      "target_concept": "hardware",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "physical",
+          "computer",
+          "part"
+        ],
+        "missing": [
+          "physical"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J304",
+      "domain": "DIGITAL_DEVICES",
+      "target_concept": "settings",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "device",
+          "control",
+          "option"
+        ],
+        "missing": [
+          "control"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J315",
+      "domain": "MESSAGING_EMAIL",
+      "target_concept": "spam",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "bad",
+          "unwanted",
+          "message"
+        ],
+        "missing": [
+          "unwanted"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J316",
+      "domain": "MESSAGING_EMAIL",
+      "target_concept": "forward",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "send",
+          "message",
+          "other",
+          "person"
+        ],
+        "missing": [
+          "send"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J319",
+      "domain": "MESSAGING_EMAIL",
+      "target_concept": "subject_line",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "email",
+          "title"
+        ],
+        "missing": [
+          "title"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J331",
+      "domain": "ONLINE_ACCOUNTS",
+      "target_concept": "login",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "enter",
+          "account"
+        ],
+        "missing": [
+          "enter"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J346",
+      "domain": "CYBERSECURITY",
+      "target_concept": "malware",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "bad",
+          "computer",
+          "program"
+        ],
+        "missing": [
+          "program"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J349",
+      "domain": "CYBERSECURITY",
+      "target_concept": "data_breach",
+      "safety_critical": true,
+      "best_frozen_route": {
+        "components": [
+          "private",
+          "information",
+          "get",
+          "out"
+        ],
+        "missing": [
+          "out"
+        ],
+        "semantic_equivalence_required": true,
+        "semantic_equivalence_status": "PRE_FROZEN_ACCEPTABLE_IF_COMPONENTS_AVAILABLE"
+      }
+    },
+    {
+      "id": "J350",
+      "domain": "CYBERSECURITY",
+      "target_concept": "encryption",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "make",
+          "information",
+          "secret"
+        ],
+        "missing": [
+          "secret"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J351",
+      "domain": "CYBERSECURITY",
+      "target_concept": "firewall",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "computer",
+          "security",
+          "wall"
+        ],
+        "missing": [
+          "wall"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J363",
+      "domain": "GOVERNMENT_SERVICES",
+      "target_concept": "certificate",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "official",
+          "document",
+          "proof"
+        ],
+        "missing": [
+          "official"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J364",
+      "domain": "GOVERNMENT_SERVICES",
+      "target_concept": "registration",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "official",
+          "record",
+          "name"
+        ],
+        "missing": [
+          "official"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J367",
+      "domain": "GOVERNMENT_SERVICES",
+      "target_concept": "application",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "form",
+          "request"
+        ],
+        "missing": [
+          "form",
+          "request"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J377",
+      "domain": "CIVIC_LEGAL",
+      "target_concept": "contract",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "formal",
+          "agreement",
+          "document"
+        ],
+        "missing": [
+          "agreement"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J394",
+      "domain": "WEATHER_ALERTS",
+      "target_concept": "thunderstorm",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "storm",
+          "rain",
+          "sound"
+        ],
+        "missing": [
+          "sound"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J396",
+      "domain": "WEATHER_ALERTS",
+      "target_concept": "flood",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "too",
+          "much",
+          "water",
+          "land"
+        ],
+        "missing": [
+          "too"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J416",
+      "domain": "ENVIRONMENT_RECYCLING",
+      "target_concept": "landfill",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "place",
+          "trash"
+        ],
+        "missing": [
+          "trash"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J493",
+      "domain": "NEWS_INFORMATION",
+      "target_concept": "bias",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "opinion",
+          "affect",
+          "information"
+        ],
+        "missing": [
+          "affect"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    },
+    {
+      "id": "J496",
+      "domain": "NEWS_INFORMATION",
+      "target_concept": "broadcast",
+      "safety_critical": false,
+      "best_frozen_route": {
+        "components": [
+          "send",
+          "news",
+          "many",
+          "people"
+        ],
+        "missing": [
+          "send"
+        ],
+        "semantic_equivalence_required": false,
+        "semantic_equivalence_status": "NOT_SAFETY_CRITICAL"
+      }
+    }
+  ],
+  "all_failure_ids": [
+    "J001",
+    "J004",
+    "J008",
+    "J012",
+    "J021",
+    "J034",
+    "J049",
+    "J050",
+    "J054",
+    "J062",
+    "J063",
+    "J067",
+    "J068",
+    "J078",
+    "J079",
+    "J080",
+    "J103",
+    "J114",
+    "J118",
+    "J119",
+    "J120",
+    "J125",
+    "J133",
+    "J134",
+    "J135",
+    "J139",
+    "J140",
+    "J148",
+    "J149",
+    "J152",
+    "J153",
+    "J159",
+    "J162",
+    "J167",
+    "J173",
+    "J177",
+    "J178",
+    "J179",
+    "J182",
+    "J184",
+    "J185",
+    "J190",
+    "J194",
+    "J195",
+    "J196",
+    "J200",
+    "J202",
+    "J203",
+    "J214",
+    "J216",
+    "J223",
+    "J228",
+    "J238",
+    "J242",
+    "J245",
+    "J259",
+    "J264",
+    "J278",
+    "J280",
+    "J288",
+    "J292",
+    "J293",
+    "J296",
+    "J302",
+    "J304",
+    "J305",
+    "J308",
+    "J315",
+    "J316",
+    "J319",
+    "J323",
+    "J325",
+    "J326",
+    "J327",
+    "J328",
+    "J331",
+    "J341",
+    "J344",
+    "J346",
+    "J349",
+    "J350",
+    "J351",
+    "J356",
+    "J363",
+    "J364",
+    "J367",
+    "J374",
+    "J377",
+    "J385",
+    "J394",
+    "J396",
+    "J404",
+    "J405",
+    "J406",
+    "J416",
+    "J439",
+    "J440",
+    "J449",
+    "J450",
+    "J482",
+    "J484",
+    "J488",
+    "J493",
+    "J496",
+    "J504"
+  ],
+  "interpretation": [
+    "The 105 failures are not 105 independent lexical deficits.",
+    "67 tasks have no pre-frozen productive route and therefore expose direct lexical or functional-expression gaps under this battery.",
+    "38 tasks have pre-frozen routes but those routes are blocked by missing components.",
+    "The combined missing frontier contains 82 distinct concepts/components, with repeated leverage concentrated in a small subset.",
+    "No repair, substitution, route addition, battery edit, vocabulary mutation, or productive-rule mutation is performed by this decomposition."
+  ],
+  "next_repair_priority": {
+    "safety_first": [
+      "treatment",
+      "breathe",
+      "smoke",
+      "unsafe",
+      "mix",
+      "awake",
+      "elevator",
+      "alarm",
+      "heat",
+      "too",
+      "out"
+    ],
+    "highest_cross_task_leverage": [
+      "product",
+      "treatment",
+      "verify",
+      "broken",
+      "concern",
+      "large",
+      "send",
+      "breathe",
+      "code",
+      "control",
+      "difficult",
+      "form"
+    ],
+    "next_gate": "SEPARATELY_ADMIT_SECOND_HELDOUT_COMPRESSION_REPAIR_WITH_NO_BATTERY_EDIT"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "object": "MAJOR_LEVEL_4_BAND_E_51_GEOMETRIC_RECONSTRUCTION",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "FROZEN_CANDIDATE_BAND",
+  "parent_authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-d-50-geometry.v1.json"
+  ],
+  "source_test": "/products/education/authority/level-1-to-level-4abcd-950-stress-test.v1.json",
+  "design_law": {
+    "target_count": 51,
+    "admission_order": [
+      "complete ordinary conversational utility rather than specialist breadth",
+      "add missing everyday social, service, health, travel, housing, weather, and practical-life concepts",
+      "reject exact overlap with prior 950",
+      "reject predictable inflection-only inflation",
+      "prefer independently learnable lexical concepts",
+      "preserve plain-language K-12-to-adult conversational usability"
+    ],
+    "geometry": "FINAL_51_TARGET_COMPLETION"
+  },
+  "words": [
+    "offer",
+    "earn",
+    "owe",
+    "afford",
+    "require",
+    "describe",
+    "mention",
+    "recognize",
+    "conversation",
+    "behavior",
+    "attitude",
+    "value",
+    "quality",
+    "delay",
+    "available",
+    "crowded",
+    "private",
+    "personal",
+    "guest",
+    "host",
+    "adult",
+    "teenager",
+    "couple",
+    "injury",
+    "nurse",
+    "clinic",
+    "pharmacy",
+    "symptom",
+    "bedroom",
+    "apartment",
+    "neighborhood",
+    "snack",
+    "menu",
+    "restaurant",
+    "grocery",
+    "cheap",
+    "expensive",
+    "storm",
+    "season",
+    "spring",
+    "summer",
+    "fall",
+    "winter",
+    "flight",
+    "hotel",
+    "luggage",
+    "passport",
+    "keyboard",
+    "photo",
+    "interview",
+    "ambulance"
+  ],
+  "clusters": {
+    "agency_and_exchange": [
+      "offer",
+      "earn",
+      "owe",
+      "afford",
+      "require",
+      "value",
+      "quality"
+    ],
+    "communication_and_social_reading": [
+      "describe",
+      "mention",
+      "recognize",
+      "conversation",
+      "behavior",
+      "attitude",
+      "private",
+      "personal",
+      "guest",
+      "host",
+      "couple"
+    ],
+    "people_and_life_stage": [
+      "adult",
+      "teenager"
+    ],
+    "health_and_care": [
+      "injury",
+      "nurse",
+      "clinic",
+      "pharmacy",
+      "symptom",
+      "ambulance"
+    ],
+    "housing_and_local_life": [
+      "bedroom",
+      "apartment",
+      "neighborhood"
+    ],
+    "food_and_consumer_life": [
+      "snack",
+      "menu",
+      "restaurant",
+      "grocery",
+      "cheap",
+      "expensive"
+    ],
+    "timing_and_conditions": [
+      "delay",
+      "available",
+      "crowded"
+    ],
+    "weather_and_seasons": [
+      "storm",
+      "season",
+      "spring",
+      "summer",
+      "fall",
+      "winter"
+    ],
+    "travel_and_mobility": [
+      "flight",
+      "hotel",
+      "luggage",
+      "passport"
+    ],
+    "digital_and_working_life": [
+      "keyboard",
+      "photo",
+      "interview"
+    ]
+  },
+  "validation": {
+    "unique_word_count": 51,
+    "overlap_with_prior_950": 0,
+    "exact_duplicates_within_band": 0,
+    "cumulative_unique_after_band": 1001,
+    "multiword_entries": 0,
+    "specialist_drift": false
+  },
+  "normalization_notes": [
+    "No predictable tense, plural, comparative, superlative, or participial form was admitted solely to consume a slot.",
+    "Derived forms are retained only when they function as independently useful everyday lexical concepts under the existing derivational rule."
+  ],
+  "traversal_state": {
+    "CURRENT_STATE": "MAJOR_LEVEL_4_BAND_E_51_FROZEN",
+    "ACTION_PERFORMED": "Final 51 concepts selected against the complete prior 950-word corpus.",
+    "ENGINE_RESPONSE": "51 new exact concepts with zero exact overlap; cumulative exact vocabulary reaches 1001.",
+    "NEXT_REQUIRED_INPUT": "LEVEL_1_TO_LEVEL_4ABCDE_1001_FINAL_STRESS_TEST"
+  }
+}

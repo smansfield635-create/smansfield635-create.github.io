@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "ARCHCOIN_CONTEXTUAL_SPATIAL_PUBLICATION_FAST_PREFLIGHT_20260920_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 3968,
+  "requestBranch": "ai-dispatch-request-archcoin-preflight-20260920-001",
+  "requestCommit": "d7417dfa48ce4a546dd8c6da53371a10a9b89ad4",
+  "requestCommitParent": "83363b20e4ee2089d968cb4e96c29df159b12358",
+  "currentMainSha": "83363b20e4ee2089d968cb4e96c29df159b12358",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "83363b20e4ee2089d968cb4e96c29df159b12358",
+    "surface_id": "archcoin"
+  },
+  "bridgeRunId": "35529031921",
+  "dispatchedRunId": 35529048345,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35529048345",
+  "dispatchedRunHeadSha": "83363b20e4ee2089d968cb4e96c29df159b12358",
+  "dispatchedAt": "2026-09-20T18:26:12.945Z",
+  "resolvedAt": "2026-09-20T18:26:16.720Z"
+}

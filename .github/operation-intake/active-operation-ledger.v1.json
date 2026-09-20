@@ -5351,49 +5351,6 @@
       "scopeHash": "6dfde5d0301924f8e09c401709b05f4dd78ad7caaa0bc4521574e4406084f2f8",
       "state": "ADMITTED_LOCKED"
     },
-    "704775547ad503d1e843361931491a3ea2b40e49fa9956b49bae7a1b2c6f170e": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "fba439581d8e4b7488ac06d059b71cfddd8554b1",
-          "lockGeneration": 2449,
-          "lockScope": "PUBLICATION_SURFACE:ARCHCOIN",
-          "operationId": "ARCHCOIN_PUBLICATION_SURFACE_REGISTRATION_20260920_001",
-          "procedureLocatorDigest": "2737deea2ae424f22766df0d8cf5c6aa1b5dc47f9aec3ff1ed781851cbf7d2b3",
-          "requestDigest": "e2f4602469fc181c11d1bb0e19ab15d2c4bbdb7d88fc9003df296f9e015d0b28",
-          "scopeHash": "704775547ad503d1e843361931491a3ea2b40e49fa9956b49bae7a1b2c6f170e"
-        },
-        "bindingDigest": "7905ba0edf776d7c4f879449ca690a6327e332fba89c1c88a68330159bb873ea",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "6ca86b763e56d0426942c36f719098a01eae8eb7c76f998e26ae891f114f5fe9",
-          "commentId": 5747728919,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 3961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 35490334111,
-          "workflowSha": "fba439581d8e4b7488ac06d059b71cfddd8554b1"
-        },
-        "lineageAnchorCommitSha": "3babd43361ac69057705d1972916aa21ed07722f",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "fba439581d8e4b7488ac06d059b71cfddd8554b1",
-      "lockGeneration": 2449,
-      "lockScope": "PUBLICATION_SURFACE:ARCHCOIN",
-      "operationId": "ARCHCOIN_PUBLICATION_SURFACE_REGISTRATION_20260920_001",
-      "procedureLocatorDigest": "2737deea2ae424f22766df0d8cf5c6aa1b5dc47f9aec3ff1ed781851cbf7d2b3",
-      "released": false,
-      "requestDigest": "e2f4602469fc181c11d1bb0e19ab15d2c4bbdb7d88fc9003df296f9e015d0b28",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "704775547ad503d1e843361931491a3ea2b40e49fa9956b49bae7a1b2c6f170e",
-      "state": "ADMITTED_LOCKED"
-    },
     "7088df63277b4abdca78102372c4acd29c5c585a618d311dc432354975fd2f38": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -63899,6 +63856,50 @@
       "requestDigest": "21c150a2a8fa278c8064b092492f27be37bc449409cc7b2118cf5160032305d2",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "0cd9d48ddd81adc56552bd7b327050462b07f7515554536bdee52248bf191347",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fba439581d8e4b7488ac06d059b71cfddd8554b1",
+          "lockGeneration": 2449,
+          "lockScope": "PUBLICATION_SURFACE:ARCHCOIN",
+          "operationId": "ARCHCOIN_PUBLICATION_SURFACE_REGISTRATION_20260920_001",
+          "procedureLocatorDigest": "2737deea2ae424f22766df0d8cf5c6aa1b5dc47f9aec3ff1ed781851cbf7d2b3",
+          "requestDigest": "e2f4602469fc181c11d1bb0e19ab15d2c4bbdb7d88fc9003df296f9e015d0b28",
+          "scopeHash": "704775547ad503d1e843361931491a3ea2b40e49fa9956b49bae7a1b2c6f170e"
+        },
+        "bindingDigest": "7905ba0edf776d7c4f879449ca690a6327e332fba89c1c88a68330159bb873ea",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6ca86b763e56d0426942c36f719098a01eae8eb7c76f998e26ae891f114f5fe9",
+          "commentId": 5747728919,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 3961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35490334111,
+          "workflowSha": "fba439581d8e4b7488ac06d059b71cfddd8554b1"
+        },
+        "lineageAnchorCommitSha": "3babd43361ac69057705d1972916aa21ed07722f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "fba439581d8e4b7488ac06d059b71cfddd8554b1",
+      "lockGeneration": 2449,
+      "lockScope": "PUBLICATION_SURFACE:ARCHCOIN",
+      "operationId": "ARCHCOIN_PUBLICATION_SURFACE_REGISTRATION_20260920_001",
+      "procedureLocatorDigest": "2737deea2ae424f22766df0d8cf5c6aa1b5dc47f9aec3ff1ed781851cbf7d2b3",
+      "released": true,
+      "requestDigest": "e2f4602469fc181c11d1bb0e19ab15d2c4bbdb7d88fc9003df296f9e015d0b28",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "704775547ad503d1e843361931491a3ea2b40e49fa9956b49bae7a1b2c6f170e",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

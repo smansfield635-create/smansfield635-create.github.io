@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARCP — ARCHCOIN Payable</title>
+  <meta name="description" content="ARCHCOIN Payable: the ARCP outgoing-obligation asset, its qualified ERC-20 implementation, deployment path, and immutable governance boundaries.">
+  <link rel="stylesheet" href="../carousel.css"><script src="../carousel.js" defer></script>
+</head>
+<body data-domain="payable">
+  <main class="asset-page">
+    <header class="asset-header">
+      <a class="asset-return" href="/products/archcoin/">Return to the ARCHCOIN Compass</a>
+      <nav class="asset-switcher" aria-label="ARCHCOIN assets">
+        <a href="/products/archcoin/contract/">ARCC · Contract</a><a href="/products/archcoin/receivable/">ARCR · Receivable</a><a href="/products/archcoin/payable/" aria-current="page">ARCP · Payable</a><a href="/products/archcoin/allocation/">ARCA · Allocation</a>
+      </nav>
+      <section class="asset-identity" aria-labelledby="asset-title">
+        <div><p class="asset-kicker">South · Outgoing-obligation protocol unit</p><h1 id="asset-title">ARCHCOIN Payable</h1><p class="asset-identity__lead">ARCP carries the payable domain: the bounded protocol unit for outgoing obligation, execution, settlement, and control. Four original chambers remain intact as four planes below.</p></div>
+        <div class="asset-symbol" aria-label="Symbol ARCP">ARCP</div>
+      </section>
+    </header>
+
+    <section class="status-spine" aria-labelledby="status-title">
+      <div class="status-spine__head"><strong id="status-title">Qualification status</strong><span>Sepolia pending</span></div>
+      <ol><li data-attained>Concept</li><li data-attained>Contract constructed</li><li data-attained>Compiled</li><li data-attained>Tested</li><li data-attained>Local EVM deployed</li><li data-attained>Signed transaction qualified</li><li aria-current="step">Sepolia pending</li></ol>
+    </section>
+
+    <section class="carousel-shell" data-archcoin-carousel data-active-plane="overview" aria-label="ARCP chamber carousel">
+      <div class="carousel-tabs" role="tablist" aria-label="ARCP planes">
+        <button class="carousel-tab" id="tab-overview" role="tab" aria-controls="plane-overview" aria-selected="true" data-carousel-tab><span>01</span>Overview</button>
+        <button class="carousel-tab" id="tab-engineering" role="tab" aria-controls="plane-engineering" aria-selected="false" tabindex="-1" data-carousel-tab><span>02</span>Engineering</button>
+        <button class="carousel-tab" id="tab-platform" role="tab" aria-controls="plane-platform" aria-selected="false" tabindex="-1" data-carousel-tab><span>03</span>Platform</button>
+        <button class="carousel-tab" id="tab-governance" role="tab" aria-controls="plane-governance" aria-selected="false" tabindex="-1" data-carousel-tab><span>04</span>Governance</button>
+      </div>
+      <div class="carousel-viewport" data-carousel-viewport>
+        <article class="carousel-plane" id="plane-overview" role="tabpanel" aria-labelledby="tab-overview" data-carousel-plane="overview">
+          <header class="plane-header"><div><p class="plane-kicker">Plane 01 · Identity</p><h2>Outgoing obligation becomes a bounded protocol unit.</h2></div><span class="plane-ordinal">ARCP / Overview</span></header>
+          <div class="plane-grid">
+            <section class="plane-block"><h3>Domain role</h3><p>ARCP identifies the Payable domain inside the four-asset architecture. It is associated with what must leave, how an obligation moves toward execution, and how settlement is constrained.</p></section>
+            <section class="plane-block"><h3>Asset identity</h3><p>Name: <strong>ARCHCOIN Payable</strong>. Symbol: <strong>ARCP</strong>. Standard: ERC-20 on the Ethereum EVM family, using 18 decimal places.</p></section>
+            <section class="plane-block plane-block--wide claim-boundary"><h3>Present claim boundary</h3><p>ARCP is implemented and locally qualified, but it is not a payment instrument, a settled payable, or a deployed cryptocurrency. No Sepolia contract address exists yet.</p></section>
+          </div>
+        </article>
+        <article class="carousel-plane" id="plane-engineering" role="tabpanel" aria-labelledby="tab-engineering" data-carousel-plane="engineering" hidden inert aria-hidden="true">
+          <header class="plane-header"><div><p class="plane-kicker">Plane 02 · Construction</p><h2>Transferable behavior without an administrative back door.</h2></div><span class="plane-ordinal">ARCP / Engineering</span></header>
+          <div class="plane-grid">
+            <section class="plane-block"><h3>Implementation</h3><p>ARCP is instantiated by the shared Solidity 0.8.28 <code>ArchcoinFixedSupply.sol</code> contract, built on OpenZeppelin Contracts 5.4.0 <code>ERC20</code>.</p></section>
+            <section class="plane-block"><h3>Fixed-supply behavior</h3><p>The constructor mints once to a nonzero recipient. No callable mint, public burn, ownership role, pause switch, or privileged mutation function survives deployment.</p></section>
+            <section class="plane-block"><h3>Qualification</h3><p>Hardhat 2.28.0 and Toolbox 6.1.0 compile and test ARCP. Local EVM qualification deploys the contract and signs a transfer while proving total supply remains fixed.</p></section>
+            <section class="plane-block claim-boundary"><h3>Supply boundary</h3><p>The 1,000,000-unit test fixture is engineering evidence, not an authorized issuance decision. Network supply and recipient wallet remain unfrozen.</p></section>
+          </div>
+        </article>
+        <article class="carousel-plane" id="plane-platform" role="tabpanel" aria-labelledby="tab-platform" data-carousel-plane="platform" hidden inert aria-hidden="true">
+          <header class="plane-header"><div><p class="plane-kicker">Plane 03 · Traversal</p><h2>Local settlement behavior precedes public-network evidence.</h2></div><span class="plane-ordinal">ARCP / Platform</span></header>
+          <div class="plane-grid">
+            <section class="plane-block"><h3>Current surface</h3><p>The repository contains ARCP’s shared source, compiler setup, tests, local deployment, and signed-transfer qualification. That establishes a working local implementation.</p></section>
+            <section class="plane-block"><h3>Next network</h3><p>Sepolia, chain ID 11155111, is the next threshold. The deployment needs a wallet, test ETH for gas, a frozen supply, a recipient, and explicit authority.</p></section>
+            <section class="plane-block"><h3>Evidence after deployment</h3><p>The platform will expose a contract address and transaction evidence only after on-chain bytecode and ERC-20 behavior can be independently retrieved and checked.</p></section>
+            <section class="plane-block claim-boundary"><h3>Mainnet remains later</h3><p>Ethereum mainnet is not authorized. Local transfer success does not establish a production payment asset or permission to settle real obligations.</p></section>
+          </div>
+        </article>
+        <article class="carousel-plane" id="plane-governance" role="tabpanel" aria-labelledby="tab-governance" data-carousel-plane="governance" hidden inert aria-hidden="true">
+          <header class="plane-header"><div><p class="plane-kicker">Plane 04 · Constraint</p><h2>A token name cannot authorize a payment.</h2></div><span class="plane-ordinal">ARCP / Governance</span></header>
+          <div class="plane-grid">
+            <section class="plane-block"><h3>Immutable token constraints</h3><ul><li>No post-deployment mint.</li><li>No public burn in version one.</li><li>No privileged token mutation.</li><li>No mainnet before testnet qualification.</li></ul></section>
+            <section class="plane-block"><h3>Holder-rights boundary</h3><p>ARCP creates no legal payment obligation, settlement guarantee, redemption right, creditor status, equity position, governance power, or ownership claim.</p></section>
+            <section class="plane-block plane-block--wide claim-boundary"><h3>Truthful public status</h3><p>ARCP may be described as locally constructed and transaction-qualified. It may not be described as a deployed payment cryptocurrency until network evidence exists.</p></section>
+          </div>
+        </article>
+      </div>
+      <div class="carousel-controls" aria-label="Carousel controls"><button type="button" data-carousel-previous>← Previous plane</button><span class="carousel-ordinal" aria-live="polite" data-carousel-ordinal>01 / 04 · overview</span><button type="button" data-carousel-next>Next plane →</button></div>
+    </section>
+    <footer class="asset-footer"><span>Four chambers preserved. Traversal compressed to one destination.</span><a href="/products/archcoin/allocation/">Continue west to ARCA →</a></footer>
+  </main>
+</body>
+</html>

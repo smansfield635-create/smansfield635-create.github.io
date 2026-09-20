@@ -40,39 +40,24 @@ function createProgram(gl,vertexSource,fragmentSource){
 }
 
 function fibonacciStars(){
-  const count=256;
-  const data=new Float32Array(count*3);
-  const goldenAngle=Math.PI*(3-Math.sqrt(5));
-  let seed=0x4d595df4;
-  const random=()=>{
-    seed=(Math.imul(seed,1664525)+1013904223)>>>0;
-    return seed/4294967296;
-  };
-  for(let i=0;i<count;i++){
-    const t=(i+0.5)/count;
-    const radius=Math.sqrt(t)*0.985;
-    const angle=i*goldenAngle+(random()-0.5)*0.065;
-    let x=Math.cos(angle)*radius*1.18;
-    let y=Math.sin(angle)*radius*0.84;
-    const deliberateVoid=Math.abs(x)<0.14&&y>0.08&&y<0.42;
-    if(deliberateVoid){x*=0.2;y*=0.2}
-    const magnitude=random();
-    const bright=magnitude>0.965?1.0:(magnitude>0.82?0.58:0.22);
-    data[i*3]=x;
-    data[i*3+1]=y;
-    data[i*3+2]=0.85+2.15*(1-t)+2.35*bright;
-  }
+  const count=256,data=new Float32Array(count*4),goldenAngle=Math.PI*(3-Math.sqrt(5));
+  let seed=0x4d595df4; const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+  for(let i=0;i<count;i++){const y=1-2*(i+0.5)/count,r=Math.sqrt(Math.max(0,1-y*y)),a=i*goldenAngle+(random()-0.5)*0.065,m=random(),bright=m>0.965?1:(m>0.82?0.58:0.22);data.set([Math.cos(a)*r,y,Math.sin(a)*r,0.85+2.15*(1-(i+0.5)/count)+2.35*bright],i*4);}
   return data;
 }
 
 function createState(gl){
   const starProgram=createProgram(gl,`#version 300 es
-    in vec2 a_position;
+    in vec3 a_position;
     in float a_size;
+    uniform mat3 u_camera;
     uniform float u_visibility;
     uniform float u_aspect;
     void main(){
-      gl_Position=vec4(a_position.x/max(u_aspect,1.0),a_position.y,0.0,1.0);
+      vec3 q=u_camera*a_position;
+      if(q.z<=0.02){gl_Position=vec4(2.0,2.0,1.0,1.0);gl_PointSize=0.0;return;}
+      float f=1.0/tan(radians(55.0)*0.5);
+      gl_Position=vec4((q.x*f/max(u_aspect,1.0))/q.z,(q.y*f)/q.z,0.999,1.0);
       gl_PointSize=a_size*(0.45+0.55*u_visibility);
     }`,`#version 300 es
     precision highp float;
@@ -93,9 +78,9 @@ function createState(gl){
   const positionLocation=gl.getAttribLocation(starProgram,'a_position');
   const sizeLocation=gl.getAttribLocation(starProgram,'a_size');
   gl.enableVertexAttribArray(positionLocation);
-  gl.vertexAttribPointer(positionLocation,2,gl.FLOAT,false,12,0);
+  gl.vertexAttribPointer(positionLocation,3,gl.FLOAT,false,16,0);
   gl.enableVertexAttribArray(sizeLocation);
-  gl.vertexAttribPointer(sizeLocation,1,gl.FLOAT,false,12,8);
+  gl.vertexAttribPointer(sizeLocation,1,gl.FLOAT,false,16,12);
 
   const bodyProgram=createProgram(gl,`#version 300 es
     const vec2 corners[4]=vec2[4](
@@ -108,7 +93,8 @@ function createState(gl){
     }`,`#version 300 es
     precision highp float;
     in vec2 v_uv;
-    uniform vec2 u_center;
+    uniform vec3 u_direction;
+    uniform mat3 u_camera;
     uniform float u_radius;
     uniform float u_visibility;
     uniform float u_aspect;
@@ -128,7 +114,11 @@ function createState(gl){
     }
 
     void main(){
-      vec2 p=(v_uv-u_center)/u_radius;
+      vec3 cq=u_camera*normalize(u_direction);
+      if(cq.z<=0.02)discard;
+      float f=1.0/tan(radians(55.0)*0.5);
+      vec2 center=vec2((cq.x*f/max(u_aspect,1.0))/cq.z,(cq.y*f)/cq.z);
+      vec2 p=(v_uv-center)/u_radius;
       p.x*=u_aspect;
       float radius2=dot(p,p);
       if(radius2>1.22)discard;
@@ -210,9 +200,11 @@ function createState(gl){
     starBuffer,
     starVisibility:gl.getUniformLocation(starProgram,'u_visibility'),
     starAspect:gl.getUniformLocation(starProgram,'u_aspect'),
+    starCamera:gl.getUniformLocation(starProgram,'u_camera'),
     bodyProgram,
     bodyVao,
-    center:gl.getUniformLocation(bodyProgram,'u_center'),
+    direction:gl.getUniformLocation(bodyProgram,'u_direction'),
+    bodyCamera:gl.getUniformLocation(bodyProgram,'u_camera'),
     radius:gl.getUniformLocation(bodyProgram,'u_radius'),
     visibility:gl.getUniformLocation(bodyProgram,'u_visibility'),
     aspect:gl.getUniformLocation(bodyProgram,'u_aspect'),
@@ -247,7 +239,9 @@ function restoreState(gl,prior){
   gl.bindBuffer(gl.ARRAY_BUFFER,prior.arrayBuffer);
 }
 
-export function renderAudraliaTabletCelestialLite(gl,{viewScale}={}){
+export const AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY=Object.freeze({schema:'AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY_v1',sunDirection:Object.freeze([0.42,0.78,0.46]),moonDirection:Object.freeze([-0.63,0.28,0.72]),stars:'FIBONACCI_UNIT_SPHERE_256',screenSpacePositionAuthority:false});
+
+export function renderAudraliaTabletCelestialLite(gl,{viewScale,cameraFrame,sunDirection=AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.sunDirection}={}){
   const visibility=visibilityForScale(viewScale);
   if(!gl||visibility<=0)return {draws:0,visibility};
 
@@ -263,6 +257,8 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale}={}){
 
   const prior=captureState(gl);
   const aspect=Math.max(1,gl.drawingBufferWidth/Math.max(1,gl.drawingBufferHeight));
+  const frame=cameraFrame||{right:[1,0,0],up:[0,1,0],forward:[0,0,1]};
+  const cameraMatrix=new Float32Array([...frame.right,...frame.up,...frame.forward]);
   let draws=0;
   try{
     gl.disable(gl.DEPTH_TEST);
@@ -275,6 +271,7 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale}={}){
     gl.bindVertexArray(state.starVao);
     gl.uniform1f(state.starVisibility,visibility);
     gl.uniform1f(state.starAspect,aspect);
+    gl.uniformMatrix3fv(state.starCamera,false,cameraMatrix);
     gl.drawArrays(gl.POINTS,0,256);
     draws++;
 
@@ -282,15 +279,16 @@ export function renderAudraliaTabletCelestialLite(gl,{viewScale}={}){
     gl.bindVertexArray(state.bodyVao);
     gl.uniform1f(state.visibility,visibility);
     gl.uniform1f(state.aspect,aspect);
+    gl.uniformMatrix3fv(state.bodyCamera,false,cameraMatrix);
 
     gl.uniform1i(state.kind,0);
-    gl.uniform2f(state.center,-0.58,0.52);
+    gl.uniform3fv(state.direction,sunDirection);
     gl.uniform1f(state.radius,0.18);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     draws++;
 
     gl.uniform1i(state.kind,1);
-    gl.uniform2f(state.center,0.56,0.42);
+    gl.uniform3fv(state.direction,AUDRALIA_CELESTIAL_3D_SPATIAL_AUTHORITY.moonDirection);
     gl.uniform1f(state.radius,0.115);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     draws++;

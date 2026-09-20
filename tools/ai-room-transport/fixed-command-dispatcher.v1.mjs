@@ -359,6 +359,17 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
 }
 
 export function dispatchFromIdentities({ request, registry, root, allowCandidate = false }) {
+  if (request?.descriptorId === 'CANONICAL_PACKET_COMPILER_PRE_ADMISSION_EXECUTION_V1') {
+    return dispatchLoaded({
+      request,
+      registry,
+      admissionReceipt: null,
+      admissionReceiptIdentity: null,
+      routerReceipt: null,
+      root,
+      allowCandidate
+    });
+  }
   const admission = loadJsonAtIdentity(root, request.admissionReceiptIdentity);
   const router = loadJsonAtIdentity(root, request.routerReceiptIdentity);
   return dispatchLoaded({

@@ -1,0 +1,187 @@
+{
+  "object": "EDUCATION_1001_VOCABULARY_FOUR_SECTION_PROGRAM",
+  "version": "v1",
+  "status": "STRUCTURE_LOCKED_VOCABULARY_PARTIAL",
+  "owner": "Sean",
+  "purpose": "Durable canonical authority for the 1,001-word education program and its four performance sections.",
+  "vocabulary_target_total": 1001,
+  "vocabulary_authority_status": "PARTIAL",
+  "verified_vocabulary": {
+    "source": "Level 1 – 50 Core Words",
+    "count": 50,
+    "words": [
+      "I",
+      "you",
+      "he",
+      "she",
+      "we",
+      "they",
+      "am",
+      "is",
+      "are",
+      "have",
+      "want",
+      "like",
+      "go",
+      "come",
+      "eat",
+      "drink",
+      "see",
+      "know",
+      "work",
+      "live",
+      "what",
+      "where",
+      "why",
+      "how",
+      "when",
+      "today",
+      "tomorrow",
+      "now",
+      "morning",
+      "night",
+      "home",
+      "school",
+      "food",
+      "water",
+      "money",
+      "time",
+      "friend",
+      "family",
+      "car",
+      "phone",
+      "yes",
+      "no",
+      "hello",
+      "goodbye",
+      "please",
+      "thank you",
+      "sorry",
+      "and",
+      "but",
+      "very"
+    ]
+  },
+  "four_section_structure": [
+    {
+      "id": 1,
+      "key": "COMMUNICATION",
+      "role": "Express and receive meaning.",
+      "performance_targets": [
+        "thoughts",
+        "feelings",
+        "wants",
+        "questions",
+        "agreement",
+        "disagreement",
+        "basic explanation"
+      ]
+    },
+    {
+      "id": 2,
+      "key": "CONDUCT",
+      "role": "Coordinate behavior with other people.",
+      "performance_targets": [
+        "instructions",
+        "expectations",
+        "rules",
+        "cooperation",
+        "respect",
+        "repair of misunderstanding"
+      ]
+    },
+    {
+      "id": 3,
+      "key": "JUDGMENT",
+      "role": "Reason, compare, evaluate, and choose.",
+      "performance_targets": [
+        "cause and effect",
+        "comparison",
+        "reasons",
+        "choices",
+        "tradeoffs",
+        "self-correction"
+      ]
+    },
+    {
+      "id": 4,
+      "key": "INSTITUTION",
+      "role": "Discuss roles, responsibilities, systems, and accountability.",
+      "performance_targets": [
+        "roles",
+        "duties",
+        "rules",
+        "systems",
+        "structure",
+        "responsibility",
+        "accountability"
+      ]
+    }
+  ],
+  "progression_law": {
+    "type": "PERFORMANCE_BASED",
+    "sequence": [
+      "diagnose",
+      "place",
+      "repair",
+      "reassess",
+      "advance"
+    ],
+    "section_behavior": "CHECKPOINT_NOT_MANDATORY_COURSE_BLOCK",
+    "fast_pass_allowed": true,
+    "advancement_basis": "OBSERVABLE_LANGUAGE_PERFORMANCE",
+    "forbidden_basis": [
+      "time_served",
+      "passive_lesson_completion",
+      "memorization_only"
+    ]
+  },
+  "diamond_execution": {
+    "directions": {
+      "NORTH": "define_orient",
+      "EAST": "use_execute",
+      "SOUTH": "sustain_retain",
+      "WEST": "correct_repair"
+    },
+    "node_total": 16,
+    "formula": "4 sections x 4 directions = 16 diagnostic nodes"
+  },
+  "assessment_model": {
+    "independent_assessment": true,
+    "guided_program": true,
+    "reassessment_supported": true,
+    "output_requirements": [
+      "current_position",
+      "strengths",
+      "weaknesses",
+      "recommended_start_point",
+      "reason_for_start_point",
+      "progress_comparison"
+    ]
+  },
+  "vocabulary_binding_law": {
+    "total_must_equal": 1001,
+    "section_word_counts": "UNFROZEN_UNTIL_FULL_AUTHORITY_LIST_IS_RECOVERED",
+    "duplicates": "MUST_BE_EXPLICITLY_GOVERNED_BEFORE_FINAL_BIND",
+    "rule": "Do not invent missing words or section counts. Bind only verified vocabulary."
+  },
+  "repository_integration": {
+    "public_surface": "/products/education/",
+    "current_public_claim": "1001-word traversal",
+    "authority_file": "/products/education/authority/1001-vocabulary-four-section-program.v1.json"
+  },
+  "invariants": [
+    "The program has four sections: Communication, Conduct, Judgment, Institution.",
+    "Sections are diagnostic/performance checkpoints, not mandatory time-based levels.",
+    "Students may fast-pass sections they can already perform.",
+    "The target vocabulary authority is 1,001 words.",
+    "Unverified vocabulary may not be fabricated to fill the target.",
+    "Assessment and guided progression use the same four-section performance structure."
+  ],
+  "traversal_state": {
+    "CURRENT_STATE": "FOUR_SECTION_1001_PROGRAM_STRUCTURE_DURABLE",
+    "ACTION_PERFORMED": "Canonical repository authority object created.",
+    "ENGINE_RESPONSE": "Structure locked; full 1,001-word vocabulary bank remains partially recovered.",
+    "NEXT_REQUIRED_INPUT": "REMAINING_951_VERIFIED_WORDS_OR_CANONICAL_FULL_LIST"
+  }
+}

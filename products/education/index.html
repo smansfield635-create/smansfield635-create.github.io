@@ -141,6 +141,26 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 .edu-custom-select{position:relative}.edu-custom-select>button{width:100%;min-height:3rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:.75rem;background:#08162d;color:var(--text);font:inherit;text-align:left;display:flex;justify-content:space-between}.edu-custom-select>button::after{content:"⌄";color:var(--gold)}.edu-custom-options{position:absolute;z-index:40;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55vh);overflow:auto;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}.edu-custom-options[hidden]{display:none}.edu-custom-options button{display:block;width:100%;padding:.72rem;border:0;border-radius:.55rem;background:transparent;color:var(--text);font:inherit;text-align:left}.edu-custom-options button:hover,.edu-custom-options button:focus-visible,.edu-custom-options button[aria-selected="true"]{background:rgba(141,216,255,.12)}.field select.edu-native-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
 @media(max-width:900px){.edu-carousel{--edu-orbit-width:min(70vw,25rem);--edu-orbit-height:20rem;min-height:28rem}.edu-carousel__viewport{height:23rem}}@media(max-width:599px){.edu-carousel{--edu-orbit-width:min(78vw,21rem);--edu-orbit-height:19rem;min-height:26rem;padding-inline:.45rem}.edu-carousel__viewport{height:21.5rem}.edu-standard-card{top:.8rem}.edu-standard-summary{padding:1rem}.edu-standard-title{font-size:clamp(1.8rem,8vw,2.45rem)}.edu-detail-top{display:grid}}
 
+
+/* Gate One — frozen interface integrity: viewport-derived orbit geometry. */
+.edu-carousel__viewport{height:clamp(25rem,min(72dvh,35rem),35rem)}
+.edu-standard-card{width:min(28rem,calc(100vw - 4rem));max-width:calc(100vw - 4rem);min-height:min(23rem,calc(100dvh - 9rem))}
+.edu-card-inner,.edu-card-front,.edu-card-back{min-height:min(23rem,calc(100dvh - 9rem))}
+.edu-card-face{overflow:auto;overscroll-behavior:contain}
+.edu-detail-surface{max-width:100vw}
+@media(max-width:780px){
+ .edu-carousel{min-height:0}.edu-carousel__viewport{height:min(31rem,72dvh);min-height:24rem}
+ .edu-standard-card{top:1rem;width:min(82vw,25rem);max-width:min(82vw,25rem);min-height:0;height:min(24rem,calc(72dvh - 2rem));overflow:hidden}
+ .edu-card-inner,.edu-card-front,.edu-card-back{min-height:100%;height:100%}.edu-card-face{padding:clamp(.9rem,3.5vw,1.2rem)}
+ .edu-card-front .edu-standard-title{font-size:clamp(1.9rem,8vw,3rem)}.edu-card-front .edu-standard-copy{font-size:clamp(.92rem,3.4vw,1.08rem)}
+}
+@media(max-width:520px){
+ .edu-carousel__viewport{height:min(29rem,70dvh);min-height:22rem}.edu-standard-card{width:min(84vw,22rem);max-width:min(84vw,22rem);height:min(22.5rem,calc(70dvh - 1.5rem))}
+ .edu-standard-card[data-adjacent="true"]{--spatial-scale:.82}.edu-card-face{padding:.85rem}.edu-card-front .edu-standard-title{font-size:clamp(1.72rem,9vw,2.45rem)}.edu-story-preview{padding-top:.55rem}
+}
+@media(max-height:600px) and (orientation:landscape){
+ .edu-carousel__viewport{height:calc(100dvh - 7rem);min-height:19rem}.edu-standard-card{top:.5rem;height:calc(100dvh - 8rem);min-height:18rem}.edu-card-inner,.edu-card-front,.edu-card-back{min-height:100%;height:100%}
+}
 </style>
 </head>
 <body>
@@ -534,20 +554,21 @@ qs("#begin-placement").addEventListener("click",beginIndependence);
 
 function startProbe(stage){
  probeStage=stage;currentSet=(BANK[stage]||BANK[8]).map(x=>({...x}));currentQuestionIndex=0;currentSetScore=0;
- qs("#placement-heading").textContent="Testing Stage "+stage+": "+STAGES[stage-1].name;
- qs("#placement-copy").textContent="Your claim chose the starting neighborhood. Performance controls whether the diagnostic moves higher, lower, or resolves here.";
+ const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;
+ qs("#placement-heading").textContent=gateT.testing+" "+stage+": "+STAGES[stage-1].name;
+ qs("#placement-copy").textContent=gateT.claimStart;
  renderQuestion();
 }
 function renderQuestion(){
  const item=currentSet[currentQuestionIndex];
  qs("#question-validation").textContent="";
- qs("#question-host").innerHTML='<article class="question-card"><div class="meta"><span class="pill">Stage '+probeStage+'</span><span class="pill">Question '+(currentQuestionIndex+1)+' of '+currentSet.length+'</span><span class="pill">'+item.node+'</span></div><h3>'+item.q+'</h3><div class="options">'+item.o.map((x,i)=>'<label class="option"><input type="radio" name="placement-answer" value="'+i+'"><span>'+x+'</span></label>').join("")+'</div><div id="placement-hint" class="hint" hidden>Read for the exact relationship, action, or meaning the prompt asks you to demonstrate. A hint counts as assisted evidence.</div><div class="button-row"><button class="button-secondary" type="button" id="show-hint">Show Hint</button><button class="button" type="button" id="submit-placement-answer">Continue</button></div></article>';
+ qs("#question-host").innerHTML='<article class="question-card"><div class="meta"><span class="pill">Stage '+probeStage+'</span><span class="pill">Question '+(currentQuestionIndex+1)+' of '+currentSet.length+'</span><span class="pill">'+item.node+'</span></div><h3>'+item.q+'</h3><div class="options">'+item.o.map((x,i)=>'<label class="option"><input type="radio" name="placement-answer" value="'+i+'"><span>'+x+'</span></label>').join("")+'</div><div id="placement-hint" class="hint" hidden>Read for the exact relationship, action, or meaning the prompt asks you to demonstrate. A hint counts as assisted evidence.</div><div class="button-row"><button class="button-secondary" type="button" id="show-hint">'+esc((GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).hint)+'</button><button class="button" type="button" id="submit-placement-answer">'+esc((GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).continue)+'</button></div></article>';
  qs("#show-hint").addEventListener("click",()=>{qs("#placement-hint").hidden=false;hintsUsed++;qs("#show-hint").disabled=true});
  qs("#submit-placement-answer").addEventListener("click",submitAnswer);
 }
 function submitAnswer(){
  const chosen=qs('input[name="placement-answer"]:checked');
- if(!chosen){qs("#question-validation").textContent="Choose one answer before continuing.";return}
+ if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
  const item=currentSet[currentQuestionIndex], correct=Number(chosen.value)===item.a;
  if(correct)currentSetScore++;
  currentQuestionIndex++;
@@ -662,6 +683,18 @@ qs("#enter-demo").addEventListener("click",enterDemo);
 qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];hintsUsed=0;mixedAnchor=null});
 qs("#restart-demo").addEventListener("click",()=>{learner={target_language:"English"};finalIndependence=null;probeHistory=[];hintsUsed=0;mixedAnchor=null;setStage("language")});
 
+
+/* Gate One — persistent help-language propagation outside target-English evidence. */
+const GATE_ONE_UI={
+ en:{testEye:"Adaptive Independence",testHeading:"A few questions help us find the right place to begin.",testCopy:"The diagnostic will move higher or lower as needed.",resultEye:"Independence Result",resultTitle:"Your starting point is ready.",retake:"Retake Independence",enter:"Enter Phase 1 Demo",entryEye:"Ready to Learn",restart:"Restart Demo",hint:"Show Hint",continue:"Continue",chooseAnswer:"Choose one answer before continuing.",testing:"Testing Stage",claimStart:"Your claim chose the starting neighborhood. Performance controls whether the diagnostic moves higher, lower, or resolves here."},
+ es:{testEye:"Independencia adaptativa",testHeading:"Unas preguntas nos ayudan a encontrar el lugar adecuado para comenzar.",testCopy:"El diagnóstico subirá o bajará según sea necesario.",resultEye:"Resultado de independencia",resultTitle:"Tu punto de partida está listo.",retake:"Repetir independencia",enter:"Entrar a la demostración de Fase 1",entryEye:"Listo para aprender",restart:"Reiniciar demostración",hint:"Mostrar ayuda",continue:"Continuar",chooseAnswer:"Elige una respuesta antes de continuar.",testing:"Evaluando etapa",claimStart:"Tu respuesta inicial eligió dónde comenzar. Tu desempeño decide si el diagnóstico sube, baja o se resuelve aquí."},
+ zh:{testEye:"自适应独立能力",testHeading:"几个问题帮助我们找到合适的起点。",testCopy:"诊断会根据需要向上或向下调整。",resultEye:"独立能力结果",resultTitle:"你的起点已经准备好。",retake:"重新测试独立能力",enter:"进入第一阶段演示",entryEye:"准备学习",restart:"重新开始演示",hint:"显示提示",continue:"继续",chooseAnswer:"继续之前请选择一个答案。",testing:"正在测试阶段",claimStart:"你的自我评估决定测试从哪里开始。实际表现决定诊断向上、向下或在这里确定结果。"}
+};
+function gateOneText(selector,value){const el=document.querySelector(selector);if(el&&value!==undefined)el.textContent=value}
+function applyGateOneLocale(){const t=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;gateOneText('[data-demo-stage="test"] .eyebrow',t.testEye);gateOneText("#placement-heading",t.testHeading);gateOneText("#placement-copy",t.testCopy);gateOneText('[data-demo-stage="result"] .eyebrow',t.resultEye);gateOneText('[data-demo-stage="result"] h2',t.resultTitle);gateOneText("#retake-placement",t.retake);gateOneText("#enter-demo",t.enter);gateOneText('[data-demo-stage="entry"] .eyebrow',t.entryEye);gateOneText("#restart-demo",t.restart)}
+document.addEventListener("education-help-language-change",applyGateOneLocale);
+
+applyGateOneLocale();
 document.documentElement.dataset.educationDemoReady="true";
 })();
 </script>

@@ -344,7 +344,8 @@ jobs:
             for file in "${files[@]}"; do
               cp "analytics-bridge/$file" ".analytics/cloudflare/$file"
             done
-            git add .analytics/cloudflare/
+            cp analytics-bridge/public-latest.json analytics/data/latest.json
+            git add .analytics/cloudflare/ analytics/data/latest.json
             if git diff --cached --quiet; then
               echo "ANALYTICS_SNAPSHOT_ALREADY_CURRENT attempt=$attempt"
               exit 0

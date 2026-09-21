@@ -370,7 +370,7 @@ function mountEducationCarousel(){
     let d=i-index;if(d>3)d-=EDUCATION_ARCHITECTURE.length;if(d<-3)d+=EDUCATION_ARCHITECTURE.length;
     const active=i===index,adj=Math.abs(d)===1,dist=Math.abs(d)>1,copy=chamberCopy(i);
     return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-face="front" style="--offset:'+d+'">'+
-      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker" data-chamber-title>'+esc(copy.title)+'</p><h3 class="edu-standard-title" data-chamber-front>'+esc(copy.front)+'</h3><p class="edu-standard-copy" data-chamber-support>'+esc(copy.support)+'</p><button class="edu-inspect" type="button" data-chamber-action>'+esc(copy.action)+'</button></div>'+
+      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker" data-chamber-title>'+esc(copy.title)+'</p><h3 class="edu-standard-title" data-chamber-front>'+esc(copy.front)+'</h3><p class="edu-standard-copy" data-chamber-support>'+esc(copy.support)+'</p><span class="edu-inspect" data-chamber-action>'+esc(copy.action)+'</button></div>'+
 '</article>';
   }).join("");
   track.querySelectorAll(".edu-standard-card").forEach((card,i)=>bindChamberCard(card,i));

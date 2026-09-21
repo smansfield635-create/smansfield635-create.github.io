@@ -1,1 +1,14 @@
-<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Development Device Registration</title><script>var q=new URLSearchParams(location.search),v=q.get("dgb_owner"),m={"s26":"OWNER_S26","a9-1":"OWNER_A9_1","a9-2":"OWNER_A9_2"};if(m[v]){localStorage.setItem("dgb_owner_device_v1",m[v]);document.cookie="dgb_owner_device="+m[v]+"; Path=/; Max-Age=31536000; SameSite=Lax";}document.documentElement.dataset.dgbOwnerDevice=localStorage.getItem("dgb_owner_device_v1")||"";</script><style>body{font:18px system-ui;max-width:42rem;margin:4rem auto;padding:1rem}code{word-break:break-all}</style><h1>Development device registered</h1><p>This Chrome browser is now marked locally as owner/development traffic for Diamond Gate Bridge analytics.</p><p>You can close this page.</p>
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Development Device Registration</title><script>var q=new URLSearchParams(location.search),v=q.get("dgb_owner"),m={"s26":"OWNER_S26","a9-1":"OWNER_A9_1","a9-2":"OWNER_A9_2"};if(m[v]){localStorage.setItem("dgb_owner_device_v1",m[v]);document.cookie="dgb_owner_device="+m[v]+"; Path=/; Max-Age=31536000; SameSite=Lax";}document.documentElement.dataset.dgbOwnerDevice=localStorage.getItem("dgb_owner_device_v1")||"";</script><script>
+(function(){
+  var id=localStorage.getItem("dgb_owner_device_v1")||"";
+  if(!id)return;
+  var slug={"OWNER_S26":"s26","OWNER_A9_1":"a9-1","OWNER_A9_2":"a9-2"}[id];
+  if(!slug)return;
+  var img=new Image();
+  img.width=1;img.height=1;img.alt="";
+  img.style.cssText="position:absolute;width:1px;height:1px;opacity:.001;pointer-events:none";
+  img.referrerPolicy="origin-when-cross-origin";
+  img.src="/analytics-owner-device/heartbeat/"+slug+"/?t="+Date.now();
+  document.documentElement.appendChild(img);
+})();
+</script><style>body{font:18px system-ui;max-width:42rem;margin:4rem auto;padding:1rem}code{word-break:break-all}</style><h1>Development device registered</h1><p>This Chrome browser is now marked locally as owner/development traffic for Diamond Gate Bridge analytics.</p><p>You can close this page.</p>

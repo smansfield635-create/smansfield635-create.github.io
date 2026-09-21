@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "education",
-  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: six learner-facing journey chapters plus the English adaptive-placement demo flow.",
+  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: continuous six-card spatial learner journey with EN/ES/ZH help-language support plus the English adaptive-placement demo flow.",
   "checks": [
     {
       "path": "/products/education/index.html",
@@ -14,11 +14,13 @@
         "Progress",
         "Independence",
         "Achievement",
-        "Learn",
-        "Practice",
-        "Check",
-        "Back to the Journey",
-        "Start the Demo",
+        "data-help-language=\"en\"",
+        "data-help-language=\"es\"",
+        "data-help-language=\"zh\"",
+        "data-chamber-action",
+        "data-chamber-practice-action",
+        "data-chamber-check-action",
+        "pointermove",
         "NATIVE_SUPPORTED",
         "BILINGUAL_BRIDGED",
         "TARGET_DOMINANT",
@@ -33,10 +35,10 @@
         "Technical Face",
         "Education architecture standards",
         "Engineering detail",
-        "data-demo-language-spanish=\"available\"",
-        "data-demo-language-chinese=\"available\"",
         "data-speech-measurement=\"true\"",
-        "data-listening-measurement=\"true\""
+        "data-listening-measurement=\"true\"",
+        "data-edu-tabs",
+        "The target-language curriculum is not yet available in this demo."
       ]
     }
   ],
@@ -54,83 +56,82 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Outer carousel advances to Understanding",
+        "name": "Neighboring card advances to Understanding",
         "action": {
           "type": "click",
-          "selector": "[data-edu-index=\"1\"]"
+          "selector": ".edu-standard-card[data-card-index=\"1\"]"
         },
         "assertions": [
           {
             "type": "textContains",
             "selector": "[data-edu-live]",
             "value": "Understanding"
-          },
-          {
-            "type": "textContains",
-            "selector": ".edu-standard-card[data-active=\"true\"] .edu-standard-title",
-            "value": "Build More Than You Memorize"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Selected chapter opens in shared learning field",
+        "name": "Selected card turns to learning back",
         "action": {
           "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-inspect]"
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-action]"
         },
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-edu-carousel]",
-            "name": "data-inspecting",
-            "value": "true"
+            "selector": ".edu-standard-card[data-active=\"true\"]",
+            "name": "data-face",
+            "value": "back"
           },
           {
             "type": "exists",
-            "selector": ".edu-standard-card[data-active=\"true\"][data-inspecting=\"true\"]"
+            "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-learn]"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Practice lens changes independently",
+        "name": "Practice records learner action",
         "action": {
           "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-lens=\"engineering\"]"
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-practice-action]"
         },
         "assertions": [
           {
-            "type": "attributeEquals",
-            "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-lens=\"engineering\"]",
-            "name": "aria-selected",
-            "value": "true"
-          },
-          {
             "type": "textContains",
-            "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-cell]",
-            "value": "See how it works"
+            "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-feedback]",
+            "value": "Correct"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Return to journey preserves selected chapter",
+        "name": "Check consumes learner action",
         "action": {
           "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-return]"
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-check-action]"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-feedback]",
+            "value": "Correct"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Back returns selected card to front",
+        "action": {
+          "type": "click",
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-back]"
         },
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-edu-carousel]",
-            "name": "data-inspecting",
-            "value": "false"
-          },
-          {
-            "type": "textContains",
-            "selector": "[data-edu-live]",
-            "value": "Understanding"
+            "selector": ".edu-standard-card[data-active=\"true\"]",
+            "name": "data-face",
+            "value": "front"
           }
         ],
         "timeoutMs": 5000
@@ -145,20 +146,15 @@
           {
             "type": "exists",
             "selector": "#demo-shell:not([hidden])"
-          },
-          {
-            "type": "textContains",
-            "selector": "#demo-title",
-            "value": "Choose a language"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "English enters learner intake on same live module",
+        "name": "Spanish help enters learner intake",
         "action": {
           "type": "click",
-          "selector": "[data-language=\"English\"]"
+          "selector": "[data-help-language=\"es\"]"
         },
         "assertions": [
           {
@@ -166,9 +162,10 @@
             "selector": "[data-demo-stage=\"intake\"]:not([hidden])"
           },
           {
-            "type": "textContains",
-            "selector": "[data-demo-stage=\"intake\"]",
-            "value": "Tell us where English feels comfortable today."
+            "type": "attributeEquals",
+            "selector": "html",
+            "name": "lang",
+            "value": "es"
           }
         ],
         "timeoutMs": 5000

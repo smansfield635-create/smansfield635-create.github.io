@@ -247,6 +247,12 @@ const HELP_LANGUAGES={
 let helpLanguage="en";
 function setHelpLanguage(code){if(!HELP_LANGUAGES[code])code="en";helpLanguage=code;document.documentElement.lang=code==="zh"?"zh-CN":code;document.documentElement.dataset.helpLanguage=code;document.dispatchEvent(new CustomEvent("education-help-language-change",{detail:{code,copy:HELP_LANGUAGES[code]}}));return HELP_LANGUAGES[code];}
 window.EDUCATION_HELP_LANGUAGES=HELP_LANGUAGES;window.setEducationHelpLanguage=setHelpLanguage;
+document.querySelectorAll("[data-help-language]").forEach(button=>button.addEventListener("click",()=>{
+  const code=button.dataset.helpLanguage;
+  setHelpLanguage(code);
+  document.querySelectorAll("[data-help-language]").forEach(peer=>peer.setAttribute("aria-pressed",peer===button?"true":"false"));
+  showStage("intake");
+}));
 
 const STAGES=[
  {id:"P1S1",name:"Orientation and Baseline"},

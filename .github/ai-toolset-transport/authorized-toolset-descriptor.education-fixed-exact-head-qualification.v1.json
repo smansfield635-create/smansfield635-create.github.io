@@ -7,7 +7,7 @@
   "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
   "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
   "toolId": "EDUCATION_FIXED_EXACT_HEAD_QUALIFICATION_ADAPTER_V1",
-  "exactToolingHead": "f8a4eadb77f259a36770231a6658cde709f510d5",
+  "exactToolingHead": "1a85ad723e7c512f62f70f1786a32bd8b0cfe79f",
   "commandSpecification": {
     "executable": "node",
     "scriptPath": "tools/ai-room-transport/education-fixed-exact-head-qualification.v1.mjs",
@@ -45,7 +45,7 @@
     "properties": {
       "candidateHead": {
         "type": "string",
-        "const": "f8a4eadb77f259a36770231a6658cde709f510d5"
+        "const": "1a85ad723e7c512f62f70f1786a32bd8b0cfe79f"
       },
       "executionHolder": {
         "type": "string",

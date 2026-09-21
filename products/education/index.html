@@ -134,32 +134,68 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 @media(max-width:480px){.edu-carousel__viewport{height:31rem}.edu-standard-card{width:82vw}.edu-card-face{padding:1rem}.edu-card-front .edu-standard-title{font-size:2.35rem}}
 
 
-/* #4124 Education recovery */
-.edu-carousel{--edu-orbit-width:min(44vw,30rem);--edu-orbit-height:21rem;min-height:31rem;overflow:hidden}.edu-carousel__viewport{height:24rem;overflow:hidden;touch-action:pan-y}
-.edu-standard-card{top:1.2rem;width:var(--edu-orbit-width);max-width:var(--edu-orbit-width);height:var(--edu-orbit-height);min-height:var(--edu-orbit-height);max-height:var(--edu-orbit-height);overflow:visible;transform:translateX(-50%) translate3d(var(--spatial-x,0),0,var(--spatial-z,0)) scale(var(--spatial-scale,1));opacity:var(--spatial-opacity,1)}.edu-card-inner,.edu-card-front{height:100%}.edu-card-back{display:none!important}
-.edu-detail-surface{position:fixed;z-index:100000;inset:0;overflow:auto;padding:clamp(1rem,3vw,2rem);background:linear-gradient(180deg,rgba(5,13,29,.99),rgba(2,6,16,.995));backdrop-filter:blur(14px)}.edu-detail-surface[hidden]{display:none}.edu-detail-panel{width:min(100%,70rem);margin:auto;padding:clamp(1rem,3vw,2rem);border:1px solid var(--line);border-radius:1.25rem;background:#081225}.edu-detail-top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:1rem}.edu-detail-top h3{font-family:Georgia,serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:500}.edu-detail-body{display:grid;gap:1rem;margin-top:1rem}.edu-detail-step{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:1rem;background:rgba(255,255,255,.025)}.edu-detail-step h4{margin:0 0 .45rem;color:var(--gold)}
-.edu-custom-select{position:relative}.edu-custom-select>button{width:100%;min-height:3rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:.75rem;background:#08162d;color:var(--text);font:inherit;text-align:left;display:flex;justify-content:space-between}.edu-custom-select>button::after{content:"⌄";color:var(--gold)}.edu-custom-options{position:absolute;z-index:40;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55vh);overflow:auto;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}.edu-custom-options[hidden]{display:none}.edu-custom-options button{display:block;width:100%;padding:.72rem;border:0;border-radius:.55rem;background:transparent;color:var(--text);font:inherit;text-align:left}.edu-custom-options button:hover,.edu-custom-options button:focus-visible,.edu-custom-options button[aria-selected="true"]{background:rgba(141,216,255,.12)}.field select.edu-native-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
-@media(max-width:900px){.edu-carousel{--edu-orbit-width:min(70vw,25rem);--edu-orbit-height:20rem;min-height:28rem}.edu-carousel__viewport{height:23rem}}@media(max-width:599px){.edu-carousel{--edu-orbit-width:min(78vw,21rem);--edu-orbit-height:19rem;min-height:26rem;padding-inline:.45rem}.edu-carousel__viewport{height:21.5rem}.edu-standard-card{top:.8rem}.edu-standard-summary{padding:1rem}.edu-standard-title{font-size:clamp(1.8rem,8vw,2.45rem)}.edu-detail-top{display:grid}}
 
-
-/* Gate One — frozen interface integrity: viewport-derived orbit geometry. */
-.edu-carousel__viewport{height:clamp(25rem,min(72dvh,35rem),35rem)}
-.edu-standard-card{width:min(28rem,calc(100vw - 4rem));max-width:calc(100vw - 4rem);min-height:min(23rem,calc(100dvh - 9rem))}
-.edu-card-inner,.edu-card-front,.edu-card-back{min-height:min(23rem,calc(100dvh - 9rem))}
-.edu-card-face{overflow:auto;overscroll-behavior:contain}
-.edu-detail-surface{max-width:100vw}
-@media(max-width:780px){
- .edu-carousel{min-height:0}.edu-carousel__viewport{height:min(31rem,72dvh);min-height:24rem}
- .edu-standard-card{top:1rem;width:min(82vw,25rem);max-width:min(82vw,25rem);min-height:0;height:min(24rem,calc(72dvh - 2rem));overflow:hidden}
- .edu-card-inner,.edu-card-front,.edu-card-back{min-height:100%;height:100%}.edu-card-face{padding:clamp(.9rem,3.5vw,1.2rem)}
- .edu-card-front .edu-standard-title{font-size:clamp(1.9rem,8vw,3rem)}.edu-card-front .edu-standard-copy{font-size:clamp(.92rem,3.4vw,1.08rem)}
+/* Education authoritative orbit geometry v1 — replaces #4124 + Gate One competing geometry. */
+.edu-carousel{
+ --edu-orbit-width:min(44vw,28rem);
+ --edu-orbit-height:23rem;
+ min-height:31rem;
+ overflow:hidden;
 }
-@media(max-width:520px){
- .edu-carousel__viewport{height:min(29rem,70dvh);min-height:22rem}.edu-standard-card{width:min(84vw,22rem);max-width:min(84vw,22rem);height:min(22.5rem,calc(70dvh - 1.5rem))}
- .edu-standard-card[data-adjacent="true"]{--spatial-scale:.82}.edu-card-face{padding:.85rem}.edu-card-front .edu-standard-title{font-size:clamp(1.72rem,9vw,2.45rem)}.edu-story-preview{padding-top:.55rem}
+.edu-carousel__viewport{
+ height:26rem;
+ min-height:0;
+ overflow:hidden;
+ touch-action:pan-y;
+ perspective:1800px;
+}
+.edu-standard-card{
+ top:1.2rem;
+ width:var(--edu-orbit-width);
+ max-width:var(--edu-orbit-width);
+ height:var(--edu-orbit-height);
+ min-height:var(--edu-orbit-height);
+ max-height:var(--edu-orbit-height);
+ overflow:hidden;
+ transform:translateX(-50%) translate3d(var(--spatial-x,0),0,var(--spatial-z,0)) scale(var(--spatial-scale,1));
+ opacity:var(--spatial-opacity,1);
+}
+.edu-card-inner,.edu-card-front,.edu-card-back{height:100%;min-height:100%}
+.edu-card-face{overflow:auto;overscroll-behavior:contain}
+.edu-card-back{display:none!important}
+.edu-detail-surface{position:fixed;z-index:100000;inset:0;max-width:100vw;overflow:auto;padding:clamp(1rem,3vw,2rem);background:linear-gradient(180deg,rgba(5,13,29,.99),rgba(2,6,16,.995));backdrop-filter:blur(14px)}
+.edu-detail-surface[hidden]{display:none}
+.edu-detail-panel{width:min(100%,70rem);margin:auto;padding:clamp(1rem,3vw,2rem);border:1px solid var(--line);border-radius:1.25rem;background:#081225}
+.edu-detail-top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:1rem}
+.edu-detail-top h3{font-family:Georgia,serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:500}
+.edu-detail-body{display:grid;gap:1rem;margin-top:1rem}
+.edu-detail-step{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:1rem;background:rgba(255,255,255,.025)}
+.edu-detail-step h4{margin:0 0 .45rem;color:var(--gold)}
+.edu-custom-select{position:relative}
+.edu-custom-select>button{width:100%;min-height:3rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:.75rem;background:#08162d;color:var(--text);font:inherit;text-align:left;display:flex;justify-content:space-between}
+.edu-custom-select>button::after{content:"⌄";color:var(--gold)}
+.edu-custom-options{position:absolute;z-index:40;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55vh);overflow:auto;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.edu-custom-options[hidden]{display:none}
+.edu-custom-options button{display:block;width:100%;padding:.72rem;border:0;border-radius:.55rem;background:transparent;color:var(--text);font:inherit;text-align:left}
+.edu-custom-options button:hover,.edu-custom-options button:focus-visible,.edu-custom-options button[aria-selected="true"]{background:rgba(141,216,255,.12)}
+.field select.edu-native-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+@media(max-width:900px){
+ .edu-carousel{--edu-orbit-width:min(70vw,25rem);--edu-orbit-height:22rem;min-height:29rem}
+ .edu-carousel__viewport{height:25rem}
+}
+@media(max-width:599px){
+ .edu-carousel{--edu-orbit-width:min(78vw,21rem);--edu-orbit-height:20rem;min-height:27rem;padding-inline:.45rem}
+ .edu-carousel__viewport{height:23rem}
+ .edu-standard-card{top:.8rem}
+ .edu-card-face{padding:1rem}
+ .edu-card-front .edu-standard-title{font-size:clamp(1.8rem,8vw,2.45rem)}
+ .edu-card-front .edu-standard-copy{font-size:clamp(.92rem,3.5vw,1.05rem)}
+ .edu-detail-top{display:grid}
 }
 @media(max-height:600px) and (orientation:landscape){
- .edu-carousel__viewport{height:calc(100dvh - 7rem);min-height:19rem}.edu-standard-card{top:.5rem;height:calc(100dvh - 8rem);min-height:18rem}.edu-card-inner,.edu-card-front,.edu-card-back{min-height:100%;height:100%}
+ .edu-carousel{--edu-orbit-height:min(19rem,calc(100dvh - 8rem));min-height:22rem}
+ .edu-carousel__viewport{height:min(21rem,calc(100dvh - 6rem))}
+ .edu-standard-card{top:.5rem}
 }
 </style>
 </head>

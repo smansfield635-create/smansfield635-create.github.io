@@ -60,7 +60,7 @@ jobs:
           probe = gql("""
           query AccountProbe {
             viewer {
-              accounts(filter: {}) { accountTag }
+              accounts(filter: {accountTag_gt: ""}, limit: 10) { accountTag }
             }
           }
           """)

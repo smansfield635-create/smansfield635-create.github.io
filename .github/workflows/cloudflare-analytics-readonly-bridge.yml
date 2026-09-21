@@ -322,6 +322,9 @@ jobs:
           }
           Path("analytics-bridge/public-latest.json").write_text(json.dumps(public,indent=2)+"\n")
 
+          Path("analytics/data").mkdir(parents=True,exist_ok=True)
+          Path("analytics/data/latest.json").write_text(json.dumps(public,indent=2)+"\n")
+
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
           print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")
 

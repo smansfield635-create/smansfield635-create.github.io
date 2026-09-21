@@ -56,10 +56,11 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Neighboring card advances to Understanding",
+        "name": "Keyboard advances to Understanding",
         "action": {
-          "type": "click",
-          "selector": ".edu-standard-card[data-card-index=\"1\"]"
+          "type": "key",
+          "selector": "[data-edu-viewport]",
+          "key": "ArrowRight"
         },
         "assertions": [
           {

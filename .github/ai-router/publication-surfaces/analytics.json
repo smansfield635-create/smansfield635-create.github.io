@@ -11,7 +11,10 @@
         "Current measurement boundary",
         "/analytics/data/latest.json",
         "/analytics/dashboard.js",
-        "/analytics/dashboard.css"
+        "/analytics/dashboard.css",
+        "/analytics/atmosphere.js",
+        "data-analytics-finale",
+        "data-effects-pause"
       ],
       "excludes": []
     },
@@ -31,6 +34,19 @@
         "prefers-reduced-motion"
       ],
       "excludes": []
+    },
+    {
+      "path": "/analytics/atmosphere.js",
+      "includes": [
+        "DGB_ANALYTICS_COSMOS",
+        "DGB_ANALYTICS_FIREWORKS",
+        "finalePlan",
+        "playGeneration"
+      ],
+      "excludes": [
+        "installCommercialTerms",
+        "integrateBuildNarrative"
+      ]
     },
     {
       "path": "/analytics/data/latest.json",
@@ -82,6 +98,34 @@
           }
         ],
         "timeoutMs": 15000
+      },
+      {
+        "name": "Effects can be paused independently of data",
+        "action": {
+          "type": "click",
+          "selector": "[data-effects-pause]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-effects-pause]",
+            "name": "aria-pressed",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-fireworks-sound]",
+            "name": "aria-pressed",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "#dashboard",
+            "name": "data-ready",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
       }
     ],
     "readyAttribute": {

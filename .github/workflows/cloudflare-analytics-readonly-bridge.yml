@@ -51,7 +51,7 @@ jobs:
                           doc = json.load(r)
                       transient = any(
                           e.get("extensions",{}).get("code") in {"serviceUnavailable","internal","rateLimit","timeout"}
-                          for e in doc.get("errors",[])
+                          for e in (doc.get("errors") or [])
                       )
                       if not transient:
                           return doc
@@ -69,18 +69,13 @@ jobs:
           # Web Analytics/RUM is account-scoped. Bind the known Cloudflare Account ID.
           accounts = [{"accountTag": "832a0c759fbdc46553494f572a0e534b"}]
 
-          # Schema probe: discover the exact RUM dimensions/measures Cloudflare exposes
-          # for this account before expanding the durable collector.
-          schema_query = """
-          query RUMSchema {
-            dims: __type(name: "AccountRumPageloadEventsAdaptiveGroupsDimensions") { fields { name } }
-            sums: __type(name: "AccountRumPageloadEventsAdaptiveGroupsSum") { fields { name } }
-            avgs: __type(name: "AccountRumPageloadEventsAdaptiveGroupsAvg") { fields { name } }
-          }
-          """
-          schema_res = gql(schema_query)
+          # Schema was already qualified and persisted on main; do not re-query it every run.
           Path("analytics-bridge").mkdir(exist_ok=True)
-          Path("analytics-bridge/rum-schema.json").write_text(json.dumps(schema_res,indent=2)+"\n")
+          durable_schema = Path(".analytics/cloudflare/rum-schema.json")
+          if durable_schema.exists():
+              Path("analytics-bridge/rum-schema.json").write_text(durable_schema.read_text())
+          else:
+              Path("analytics-bridge/rum-schema.json").write_text(json.dumps({"status":"schema-already-qualified"},indent=2)+"\n")
 
           query = """
           query RUMBridge($accountTag: string, $start: Time, $end: Time) {

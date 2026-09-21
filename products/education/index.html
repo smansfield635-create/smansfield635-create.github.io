@@ -106,6 +106,33 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
  .edu-standard-card{transition:none}.edu-carousel__viewport{scroll-behavior:auto}.edu-standard-card[data-adjacent="true"]{transform:translateX(-50%) translateX(calc(var(--offset) * 84vw)) scale(.86)}
 }
 
+
+/* #4053 frozen spatial learner chamber v2 */
+.edu-carousel__viewport{height:clamp(27rem,56vw,35rem);overflow:hidden;touch-action:pan-y;perspective:1800px}
+.edu-carousel__track{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.edu-standard-card{--spatial-x:0px;--spatial-z:0px;--spatial-scale:1;--spatial-opacity:1;top:1.4rem;width:min(76vw,28rem);height:auto;min-height:23rem;max-height:none;overflow:visible;transform:translateX(-50%) translate3d(var(--spatial-x),0,var(--spatial-z)) scale(var(--spatial-scale));opacity:var(--spatial-opacity);transition:transform .34s cubic-bezier(.2,.8,.2,1),opacity .25s ease,border-color .25s ease;transform-style:preserve-3d}
+.edu-standard-card[data-dragging="true"]{transition:none}
+.edu-standard-card[data-distant="true"]{visibility:visible;pointer-events:none}
+.edu-standard-card[data-active="true"]{z-index:10}.edu-standard-card[data-adjacent="true"]{z-index:6;pointer-events:auto}
+.edu-card-inner{display:grid;grid-template-areas:"face";min-height:23rem;transform-style:preserve-3d;transition:transform .48s cubic-bezier(.2,.8,.2,1)}
+.edu-standard-card[data-face="back"] .edu-card-inner{transform:rotateY(180deg)}
+.edu-card-face{grid-area:face;backface-visibility:hidden;border-radius:inherit;padding:1.35rem;display:flex;flex-direction:column}
+.edu-card-front{min-height:23rem}.edu-card-back{transform:rotateY(180deg);background:linear-gradient(155deg,rgba(17,29,47,.99),rgba(5,10,20,.99));min-height:23rem}
+.edu-card-front .edu-standard-title{max-width:14ch;font-size:clamp(2.1rem,4.5vw,3.65rem)}
+.edu-card-front .edu-standard-copy{font-size:clamp(1rem,2vw,1.18rem);max-width:28ch}
+.edu-card-action{margin-top:auto;align-self:flex-start}
+.edu-card-back-head{display:flex;justify-content:space-between;gap:.75rem;align-items:center}.edu-card-back-head strong{font-size:.78rem;color:var(--edu-accent);letter-spacing:.08em;text-transform:uppercase}
+.edu-card-back-body{display:grid;gap:.8rem;margin-top:.8rem}.edu-card-step{padding:.8rem;border:1px solid rgba(255,255,255,.09);border-radius:.8rem;background:rgba(255,255,255,.025)}
+.edu-card-step h4{margin:0 0 .35rem;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--edu-accent)}.edu-card-step p{margin:0;line-height:1.45}
+.edu-card-options{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.55rem}.edu-card-options button,.edu-card-check,.edu-card-help{min-height:2.55rem;padding:.55rem .8rem;border:1px solid rgba(255,255,255,.16);border-radius:.65rem;background:rgba(255,255,255,.06);color:var(--text);font:inherit;font-weight:750;cursor:pointer}
+.edu-card-options button[aria-pressed="true"]{border-color:var(--edu-accent);background:var(--edu-soft)}.edu-card-input{width:100%;margin-top:.55rem;padding:.7rem .75rem;border:1px solid rgba(255,255,255,.15);border-radius:.65rem;background:#07101d;color:var(--text);font:inherit}
+.edu-card-feedback{min-height:1.5rem;margin:.55rem 0 0;color:var(--muted);font-weight:750}.edu-card-feedback[data-state="success"]{color:#b9f7d1}.edu-card-feedback[data-state="retry"]{color:#ffd5a0}
+.edu-card-deep{margin-top:.35rem}.edu-card-deep summary{cursor:pointer;color:var(--faint);font-size:.76rem}.edu-card-deep p{font-size:.76rem;color:var(--faint)}
+.edu-carousel[data-inspecting="true"] .edu-carousel__viewport{position:relative;inset:auto;width:auto;height:clamp(27rem,56vw,35rem);padding:0;display:block;background:transparent;backdrop-filter:none}
+.edu-carousel[data-inspecting="true"] .edu-standard-card{visibility:visible}.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"]{width:min(76vw,28rem);height:auto;transform:translateX(-50%) translate3d(var(--spatial-x),0,var(--spatial-z)) scale(var(--spatial-scale));overflow:visible}
+@media(max-width:780px){.edu-carousel{min-height:0}.edu-carousel__viewport{height:30rem}.edu-standard-card{width:78vw;min-height:22rem}.edu-card-front,.edu-card-back,.edu-card-inner{min-height:22rem}}
+@media(max-width:480px){.edu-carousel__viewport{height:31rem}.edu-standard-card{width:82vw}.edu-card-face{padding:1rem}.edu-card-front .edu-standard-title{font-size:2.35rem}}
+
 </style>
 </head>
 <body>
@@ -360,33 +387,85 @@ const EDUCATION_ARCHITECTURE=[
 ];
 
 function mountEducationCarousel(){
- const root=qs("[data-edu-carousel]"); if(!root) return;
- const track=qs("[data-edu-track]"),live=qs("[data-edu-live]");
- let index=0,dragStart=null,dragCurrent=null;
-
- const esc=v=>String(v).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
- function render(){
-  track.innerHTML=EDUCATION_ARCHITECTURE.map((c,i)=>{
-    let d=i-index;if(d>3)d-=EDUCATION_ARCHITECTURE.length;if(d<-3)d+=EDUCATION_ARCHITECTURE.length;
-    const active=i===index,adj=Math.abs(d)===1,dist=Math.abs(d)>1,copy=chamberCopy(i);
-    return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-face="front" style="--offset:'+d+'">'+
-      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker" data-chamber-title>'+esc(copy.title)+'</p><h3 class="edu-standard-title" data-chamber-front>'+esc(copy.front)+'</h3><p class="edu-standard-copy" data-chamber-support>'+esc(copy.support)+'</p><span class="edu-inspect" data-chamber-action>'+esc(copy.action)+'</button></div>'+
-'</article>';
-  }).join("");
-  track.querySelectorAll(".edu-standard-card").forEach((card,i)=>bindChamberCard(card,i));
-  live.textContent=chamberCopy(index).title+" · "+(index+1)+" "+(LEARNER_SHELL[helpLanguage]?.countWord||"of")+" "+EDUCATION_ARCHITECTURE.length;
-  root.style.setProperty("--edu-accent",["#f4cf83","#8dd8ff","#b9a0ff","#a7f3c6","#f0b1ff","#ffcb91"][index]);
-  root.style.setProperty("--edu-soft",["rgba(244,207,131,.08)","rgba(141,216,255,.08)","rgba(185,160,255,.08)","rgba(167,243,198,.08)","rgba(240,177,255,.08)","rgba(255,203,145,.08)"][index]);
+ const root=qs("[data-edu-carousel]"),track=qs("[data-edu-track]"),viewport=qs("[data-edu-viewport]"),live=qs("[data-edu-live]");
+ if(!root||!track||!viewport)return;
+ let index=0,dragStart=null,dragDx=0;
+ const state=EDUCATION_ARCHITECTURE.map(()=>({choice:null,text:"",help:true,feedback:"",feedbackState:""}));
+ const deep=[
+  "Placement begins near demonstrated ability. Demo entry is not verified placement.",
+  "Productive-language authority remains governed. Not every English word follows one rule.",
+  "This action is practice inside this demo, not general fluency certification.",
+  "This is local learning feedback, not longitudinal outcome evidence.",
+  "Help may be restored at any time. Support is never forcibly removed.",
+  "This local check is not verified placement; placement remains a separate process."
+ ];
+ const tasks=[
+  {type:"choice",options:["I Sam","I am Sam","Am Sam I"],correct:1},
+  {type:"choice",options:["play","played"],correct:1},
+  {type:"text",placeholder:"music / dogs / pizza"},
+  {type:"choice",options:["She walk.","She walks."],correct:1},
+  {type:"choice",options:["It means hello.","It means goodbye."],correct:0,help:"hello = a greeting"},
+  {type:"choice",options:["played","play"],correct:0}
+ ];
+ const labels=()=>({en:{learn:"Learn",practice:"Practice",check:"Check",back:"Back",why:"Why this works",choose:"Choose an answer first.",write:"Write one word first.",hide:"Hide help",show:"Show help"},es:{learn:"Aprende",practice:"Practica",check:"Comprueba",back:"Volver",why:"Por qué funciona",choose:"Primero elige una respuesta.",write:"Primero escribe una palabra.",hide:"Ocultar ayuda",show:"Mostrar ayuda"},zh:{learn:"学习",practice:"练习",check:"检查",back:"返回",why:"为什么有效",choose:"请先选择一个答案。",write:"请先写一个词。",hide:"隐藏帮助",show:"显示帮助"}}[helpLanguage]||null)||{};
+ const feedback=(i,ok,val)=>{
+  const L=helpLanguage;
+  const good={
+   en:["Yes! “I am Sam.” is a complete sentence.","Yes! “played” means in the past here.",'You made an English sentence: “I like '+val+'.”',"Yes! With “she,” use “walks” here.","You did it with less help.","Ready for the next step."],
+   es:["¡Sí! “I am Sam.” es una oración completa.","¡Sí! Aquí, “played” indica el pasado.",'Hiciste una oración en inglés: “I like '+val+'.”',"¡Sí! Aquí, con “she” usamos “walks”.","Lo hiciste con menos ayuda.","Listo para el siguiente paso."],
+   zh:["答对了！“I am Sam.” 是完整的句子。","答对了！这里 “played” 表示过去。",'你完成了一个英语句子：“I like '+val+'.”',"答对了！这里和 “she” 一起用 “walks”。","你用更少的帮助完成了。","可以进入下一步。"]
+  };
+  const retry={en:["Almost. Try “I am Sam.”","Try again. Look at play → played.","Add one word. Example: music, dogs, or pizza.","Try again. With “she,” look for “walks.”","Try again. You can show help anytime.","Practice this once more."],es:["Casi. Prueba “I am Sam.”","Inténtalo otra vez. Mira play → played.","Añade una palabra. Por ejemplo: music, dogs o pizza.","Inténtalo otra vez. Con “she”, busca “walks”.","Inténtalo otra vez. Puedes mostrar la ayuda cuando quieras.","Practica esto una vez más."],zh:["快对了。试试 “I am Sam.”","再试一次。看看 play → played。","加一个词。例如：music、dogs 或 pizza。","再试一次。看到 “she” 时，找 “walks”。","再试一次。你随时可以显示帮助。","再练习一次。"]};
+  return (ok?good:retry)[L]?.[i]||(ok?good.en[i]:retry.en[i]);
+ };
+ const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+ function distance(i){let d=i-index;if(d>3)d-=6;if(d<-3)d+=6;return d}
+ function cardHTML(c,i){
+  const copy=chamberCopy(i),L=labels(),task=tasks[i],s=state[i];
+  let practice="";
+  if(task.type==="choice")practice='<div class="edu-card-options">'+task.options.map((o,j)=>'<button type="button" data-choice="'+j+'" aria-pressed="'+(s.choice===j)+'" lang="en">'+esc(o)+'</button>').join("")+'</div>';
+  else practice='<input class="edu-card-input" data-card-input lang="en" value="'+esc(s.text)+'" placeholder="'+esc(task.placeholder)+'">';
+  if(i===4)practice='<button type="button" class="edu-card-help" data-toggle-help>'+(s.help?L.hide:L.show)+'</button><p data-help-cue '+(s.help?"":'hidden')+'>'+esc(task.help)+'</p>'+practice;
+  return '<article class="edu-standard-card" data-card-index="'+i+'" data-face="front"><div class="edu-card-inner">'+
+   '<section class="edu-card-face edu-card-front"><span class="edu-standard-count">'+(i+1)+' / 6</span><p class="edu-standard-kicker">'+esc(copy.title)+'</p><h3 class="edu-standard-title">'+esc(copy.front)+'</h3><p class="edu-standard-copy">'+esc(copy.support)+'</p><button class="edu-inspect edu-card-action" type="button" data-flip>'+esc(copy.action)+'</button></section>'+
+   '<section class="edu-card-face edu-card-back"><div class="edu-card-back-head"><strong>'+esc(copy.title)+'</strong><button class="edu-return" type="button" data-flip>'+esc(L.back)+'</button></div><div class="edu-card-back-body">'+
+   '<div class="edu-card-step"><h4>'+esc(L.learn)+'</h4><p>'+esc(copy.learn)+'</p></div>'+
+   '<div class="edu-card-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</div>'+
+   '<div class="edu-card-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-feedback data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p></div>'+
+   '<details class="edu-card-deep"><summary>'+esc(L.why)+'</summary><p>'+esc(deep[i])+'</p></details></div></section></div></article>';
  }
- function select(next){index=(next+EDUCATION_ARCHITECTURE.length)%EDUCATION_ARCHITECTURE.length;render()}
- root.addEventListener("click",e=>{const card=e.target.closest(".edu-standard-card");if(card?.dataset.adjacent==="true"){e.preventDefault();select(Number(card.dataset.cardIndex));return}if(card&&!e.target.closest("button,input,textarea,select"))select(Number(card.dataset.cardIndex));});
- const viewport=qs("[data-edu-viewport]");
- viewport.addEventListener("keydown",e=>{if(root.dataset.inspecting==="true")return;if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}})
- viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.dataset.dragging="true";viewport.setPointerCapture?.(e.pointerId)})
- viewport.addEventListener("pointermove",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;track.style.transition="none";track.style.transform="translate3d("+dx+"px,0,0)"})
- viewport.addEventListener("pointerup",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;delete viewport.dataset.dragging;track.style.transition="transform .22s ease";track.style.transform="";if(Math.abs(dx)>42)select(index+(dx<0?1:-1));else render()})
- viewport.addEventListener("pointercancel",()=>{dragStart=null;delete viewport.dataset.dragging;track.style.transition="transform .22s ease";track.style.transform="";render()})
- render();
+ function build(){track.innerHTML=EDUCATION_ARCHITECTURE.map(cardHTML).join("");layout()}
+ function layout(){
+  const gap=Math.min(Math.max(viewport.clientWidth*.72,250),430);
+  track.querySelectorAll(".edu-standard-card").forEach((card,i)=>{
+   const d=distance(i),x=d*gap+dragDx,ad=Math.min(Math.abs(d+dragDx/gap),3);
+   card.style.setProperty("--spatial-x",x+"px");card.style.setProperty("--spatial-z",(-ad*120)+"px");card.style.setProperty("--spatial-scale",String(1-ad*.12));card.style.setProperty("--spatial-opacity",String(Math.max(.18,1-ad*.28)));
+   card.dataset.active=String(d===0);card.dataset.adjacent=String(Math.abs(d)===1);card.dataset.distant=String(Math.abs(d)>1);card.dataset.dragging=String(dragStart!==null);
+  });
+  live.textContent=chamberCopy(index).title+" · "+(index+1)+" / 6";
+ }
+ function select(n){index=(n+6)%6;dragDx=0;layout()}
+ root.addEventListener("click",e=>{
+  const card=e.target.closest(".edu-standard-card");if(!card)return;const i=Number(card.dataset.cardIndex);
+  if(e.target.closest("[data-flip]")){if(i!==index){select(i);return}card.dataset.face=card.dataset.face==="back"?"front":"back";root.dataset.inspecting=String(card.dataset.face==="back");return}
+  if(i!==index&&!e.target.closest("button,input")){select(i);return}
+  const choice=e.target.closest("[data-choice]");if(choice){state[i].choice=Number(choice.dataset.choice);card.querySelectorAll("[data-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)));return}
+  if(e.target.closest("[data-toggle-help]")){state[i].help=!state[i].help;build();track.querySelector('[data-card-index="'+i+'"]').dataset.face="back";return}
+  if(e.target.closest("[data-check]")){
+   const task=tasks[i],L=labels();let ok=false,val="";
+   if(task.type==="choice"){if(state[i].choice===null){state[i].feedback=L.choose;state[i].feedbackState="retry"}else{ok=state[i].choice===task.correct;state[i].feedback=feedback(i,ok,"");state[i].feedbackState=ok?"success":"retry"}}
+   else{const input=card.querySelector("[data-card-input]");val=input.value.trim();state[i].text=val;if(!val){state[i].feedback=L.write;state[i].feedbackState="retry"}else{ok=true;state[i].feedback=feedback(i,true,val);state[i].feedbackState="success"}}
+   const out=card.querySelector("[data-feedback]");out.textContent=state[i].feedback;out.dataset.state=state[i].feedbackState;return
+  }
+ });
+ track.addEventListener("input",e=>{if(e.target.matches("[data-card-input]"))state[Number(e.target.closest(".edu-standard-card").dataset.cardIndex)].text=e.target.value});
+ viewport.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}});
+ viewport.addEventListener("pointerdown",e=>{if(e.target.closest("button,input,textarea,select,summary"))return;dragStart=e.clientX;dragDx=0;viewport.setPointerCapture?.(e.pointerId);layout()});
+ viewport.addEventListener("pointermove",e=>{if(dragStart===null)return;dragDx=e.clientX-dragStart;layout()});
+ function endDrag(e){if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;const threshold=Math.min(90,viewport.clientWidth*.16);if(Math.abs(dx)>threshold)index=(index+(dx<0?1:-1)+6)%6;dragDx=0;layout()}
+ viewport.addEventListener("pointerup",endDrag);viewport.addEventListener("pointercancel",()=>{dragStart=null;dragDx=0;layout()});window.addEventListener("resize",layout);
+ document.addEventListener("education-help-language-change",()=>build());
+ build();
 }
 mountEducationCarousel();
 qsa("[data-jump-standards]").forEach(b=>b.addEventListener("click",()=>qs("#education-standards-carousel")?.scrollIntoView({behavior:"smooth",block:"start"})));

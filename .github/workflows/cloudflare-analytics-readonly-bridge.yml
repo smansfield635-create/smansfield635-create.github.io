@@ -296,6 +296,32 @@ jobs:
           }
           Path("analytics-bridge/reporting-methodology.json").write_text(json.dumps(methodology,indent=2)+"\n")
 
+          # Sanitized public dashboard payload. Aggregate evidence only.
+          def comp_map(dim):
+              return {str(x.get("value")):x for x in composition.get("dimensions",{}).get(dim,[])}
+          bot_rows=comp_map("bot")
+          total_30=sum(int(x.get("pageLoads",0)) for x in composition.get("dimensions",{}).get("bot",[]))
+          bot_30=sum(int(v.get("pageLoads",0)) for k,v in bot_rows.items() if k not in {"0","false","False","(none)"})
+          nonbot_30=max(0,total_30-bot_30)
+          refs=composition.get("dimensions",{}).get("refererHost",[])
+          paths=composition.get("dimensions",{}).get("requestPath",[])
+          public={
+            "schema":"DGB_PUBLIC_ANALYTICS_V1",
+            "generatedAt":out["generatedAt"],
+            "window30d":composition["window"],
+            "summary":{"pageLoads":total_30,"botPageLoads":bot_30,"nonBotPageLoads":nonbot_30},
+            "referrers":[{"host":x["value"],"pageLoads":x["pageLoads"],"visits":x["visits"]} for x in refs[:8]],
+            "topPages":[{"path":x["value"],"pageLoads":x["pageLoads"],"visits":x["visits"]} for x in paths[:10]
+                        if not str(x["value"]).startswith("/analytics-owner-device/")][:8],
+            "ownerMeasurement":{"qualified":heartbeat["result"]=="PASS",
+              "qualifiedDeviceCount":len(heartbeat.get("observed",{})),
+              "measuredSince":"2026-09-21T17:35:53Z"},
+            "methodology":{"visitsAreUniquePeople":False,
+              "historicalOwnerTraffic":"estimated-conservatively",
+              "forwardOwnerTraffic":"device-heartbeat-qualified"}
+          }
+          Path("analytics-bridge/public-latest.json").write_text(json.dumps(public,indent=2)+"\n")
+
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
           print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")
 

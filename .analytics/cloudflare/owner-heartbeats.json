@@ -1,0 +1,15 @@
+{
+  "schema": "DGB_OWNER_HEARTBEAT_QUALIFICATION_V1",
+  "generatedAt": "2026-09-21T16:57:51Z",
+  "window": {
+    "start": "2026-09-21T10:57:51Z",
+    "end": "2026-09-21T16:57:51Z"
+  },
+  "expected": [
+    "/analytics-owner-device/heartbeat/s26/",
+    "/analytics-owner-device/heartbeat/a9-1/",
+    "/analytics-owner-device/heartbeat/a9-2/"
+  ],
+  "observed": {},
+  "result": "PENDING"
+}

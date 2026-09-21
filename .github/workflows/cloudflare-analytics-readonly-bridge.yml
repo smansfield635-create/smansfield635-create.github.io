@@ -42,33 +42,8 @@ jobs:
               with urllib.request.urlopen(req, timeout=45) as r:
                   return json.load(r)
 
-          # Web Analytics/RUM is account-scoped. Introspection lets the API tell us
-          # the exact account filter and RUM field shapes instead of hard-coding a zone.
-          schema = gql("""
-          query BridgeSchema {
-            viewerType: __type(name: "Viewer") {
-              fields { name args { name type { kind name ofType { kind name } } } type { kind name ofType { kind name } } }
-            }
-          }
-          """)
-          if schema.get("errors"):
-              raise SystemExit("Cloudflare GraphQL introspection failed: " + json.dumps(schema["errors"]))
-
-          # Query all account-visible RUM page-load data and filter to the actual host.
-          # Cloudflare account filters accept accountTag; the token is account-owned,
-          # so discover the tag via a minimal account query using the known account owner scope.
-          probe = gql("""
-          query AccountProbe {
-            viewer {
-              accounts(filter: {accountTag_gt: ""}, limit: 10) { accountTag }
-            }
-          }
-          """)
-          if probe.get("errors"):
-              raise SystemExit("Account discovery failed: " + json.dumps(probe["errors"]))
-          accounts = probe.get("data", {}).get("viewer", {}).get("accounts", [])
-          if not accounts:
-              raise SystemExit("No Cloudflare account was visible to the analytics token.")
+          # Web Analytics/RUM is account-scoped. Bind the known Cloudflare Account ID.
+          accounts = [{"accountTag": "832a0c759fbdc46553494f572a0e534b"}]
 
           query = """
           query RUMBridge($accountTag: string, $start: Time, $end: Time) {

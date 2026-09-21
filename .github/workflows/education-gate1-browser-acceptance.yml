@@ -1,0 +1,80 @@
+name: Education Gate 1 Browser Acceptance\n# retrigger-final: 1c14f89f
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+    paths:
+      - products/education/index.html
+      - .github/workflows/education-gate1-browser-acceptance.yml
+
+permissions:
+  contents: read
+
+jobs:
+  browser-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - name: Install Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start candidate server
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/education-g1-http.log 2>&1 &
+      - name: Verify EN ES ZH EN and capture desktop/mobile
+        run: |
+          mkdir -p /tmp/education-gate1
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          const fs=require('fs');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const contexts=[
+              ['desktop',{viewport:{width:1440,height:1100}}],
+              ['mobile',{viewport:{width:390,height:844},isMobile:true,hasTouch:true}]
+            ];
+            const receipt={candidate:process.env.GITHUB_SHA,sequence:['en','es','zh','en'],surfaces:{}};
+            for(const [name,opts] of contexts){
+              const ctx=await browser.newContext(opts); const page=await ctx.newPage();
+              await page.goto('http://127.0.0.1:4173/products/education/',{waitUntil:'networkidle'});
+              const expected={
+                en:['You don’t need all of English to start living in English.','Your Learning Journey'],
+                es:['No necesitas dominar todo el inglés para empezar a vivir en inglés.','Tu recorrido de aprendizaje'],
+                zh:['不必掌握全部英语，也可以开始用英语生活。','你的学习旅程']
+              };
+              const states=[];
+              for(const code of ['en','es','zh','en']){
+                await page.locator('[data-shell-language="'+code+'"]').click();
+                await page.waitForFunction(c=>document.documentElement.dataset.helpLanguage===c,code);
+                const state=await page.evaluate(()=>({
+                  lang:document.documentElement.lang,
+                  help:document.documentElement.dataset.helpLanguage,
+                  title:document.querySelector('#education-title')?.textContent.trim(),
+                  journey:document.querySelector('.edu-carousel__header .eyebrow')?.textContent.trim(),
+                  nav:[...document.querySelectorAll('.routes a')].map(e=>e.textContent.trim()),
+                  footer:document.querySelector('footer')?.textContent.trim(),
+                  card:document.querySelector('.edu-standard-card[data-active="true"] [data-chamber-title]')?.textContent.trim()
+                }));
+                if(state.title!==expected[code][0]||state.journey!==expected[code][1]) throw Error(name+' '+code+' shell mismatch '+JSON.stringify(state));
+                states.push(state);
+                await page.screenshot({path:'/tmp/education-gate1/'+name+'-'+code+'.png',fullPage:true});
+              }
+              receipt.surfaces[name]=states;
+              await ctx.close();
+            }
+            fs.writeFileSync('/tmp/education-gate1/receipt.json',JSON.stringify(receipt,null,2));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: education-gate1-browser-evidence-${{ github.run_id }}
+          path: /tmp/education-gate1
+          if-no-files-found: error
+          retention-days: 30

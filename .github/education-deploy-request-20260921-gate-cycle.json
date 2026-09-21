@@ -1,6 +1,7 @@
 {
   "schema": "DGB_EDUCATION_DEPLOY_REQUEST_v1",
-  "target_sha": "161206c0657c382be30a1b37f92eba0a7ed5fee2",
+  "target_sha": "967c050e6cd68fcb121681adf1c50fb5be31eebc",
   "surface": "education",
-  "reason": "publish completed three-gate education construction cycle"
+  "reason": "publish completed three-gate education construction cycle",
+  "retrigger": "2026-09-21T16:45Z"
 }

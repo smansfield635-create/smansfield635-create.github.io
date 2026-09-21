@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "evan-job-stage",
-  "description": "Standalone contractor Job Stage utility dashboard.",
+  "description": "Persistent editable contractor Job Stage v3 utility dashboard.",
   "checks": [
     {
       "path": "/prototypes/evan-job-stage/index.html",
@@ -11,7 +11,11 @@
         "Needs attention",
         "Jobs",
         "dashboard-v2.css",
-        "dashboard-v2.js"
+        "dashboard-v2.js",
+        "job-db-v3.js",
+        "Backup",
+        "Restore",
+        "Saved on this device"
       ],
       "excludes": [
         "Evidence intake",
@@ -29,7 +33,23 @@
         "Job Files",
         "Closeout",
         "Remove job",
-        "Archive job"
+        "Archive job",
+        "JobDB.putJob",
+        "JobDB.putFile",
+        "JobDB.backup",
+        "JobDB.restore",
+        "Edit job",
+        "Update amounts"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/job-db-v3.js",
+      "includes": [
+        "indexedDB.open",
+        "createObjectStore('jobs'",
+        "createObjectStore('files'",
+        "JOB_STAGE_BACKUP_V1"
       ],
       "excludes": []
     }

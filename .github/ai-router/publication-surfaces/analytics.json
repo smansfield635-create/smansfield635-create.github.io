@@ -6,13 +6,11 @@
     {
       "path": "/analytics/index.html",
       "includes": [
-        "Public analytics · transparent measurement",
+        "LIVE ANALYTICS",
         "Measurable wake.",
-        "4,632",
-        "1,520",
-        "691",
         "How we count",
-        "Current measurement boundary"
+        "Current measurement boundary",
+        "/analytics/data/latest.json"
       ],
       "excludes": []
     }

@@ -348,42 +348,27 @@ const EDUCATION_ARCHITECTURE=[
 
 function mountEducationCarousel(){
  const root=qs("[data-edu-carousel]"); if(!root) return;
- const tabs=qs("[data-edu-tabs]"),track=qs("[data-edu-track]"),live=qs("[data-edu-live]");
- let index=0,storyByCard=EDUCATION_ARCHITECTURE.map(()=>0),lensByCard=EDUCATION_ARCHITECTURE.map(()=>"reading"),dragStart=null;
+ const track=qs("[data-edu-track]"),live=qs("[data-edu-live]");
+ let index=0,dragStart=null,dragCurrent=null;
 
  const esc=v=>String(v).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
  function render(){
-  tabs.innerHTML=EDUCATION_ARCHITECTURE.map((c,i)=>'<button class="edu-carousel__tab" role="tab" aria-selected="'+(i===index)+'" data-edu-index="'+i+'">'+esc(c.label)+'</button>').join("");
   track.innerHTML=EDUCATION_ARCHITECTURE.map((c,i)=>{
-    let d=i-index; if(d>3)d-=EDUCATION_ARCHITECTURE.length;if(d<-3)d+=EDUCATION_ARCHITECTURE.length;
-    const active=i===index,adj=Math.abs(d)===1,dist=Math.abs(d)>1;
-    const story=storyByCard[i],lens=lensByCard[i];
-    return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-inspecting="'+(active&&root.dataset.inspecting==="true")+'" style="--offset:'+d+'">'+
-      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker">'+esc(c.label)+'</p><h3 class="edu-standard-title">'+esc(c.title)+'</h3><p class="edu-standard-copy">'+esc(c.summary)+'</p><div class="edu-story-preview">'+c.stories.map(x=>'<span>'+esc(x.title)+'</span>').join("")+'</div><button class="edu-inspect" type="button" data-edu-inspect>Explore this step</button></div>'+
-      '<div class="edu-inspection"><div class="edu-inspection__top"><div><p class="eyebrow">'+esc(c.label)+'</p><h3>'+esc(c.title)+'</h3><p>'+esc(c.question)+'</p></div><button class="edu-return" type="button" data-edu-return>Back to the Journey</button></div>'+
-      '<div class="edu-lenses" role="tablist" aria-label="Information lens">'+["reading","engineering","evidence"].map(x=>'<button class="edu-lens" role="tab" aria-selected="'+(x===lens)+'" data-edu-lens="'+x+'">'+({reading:"Learn",engineering:"Practice",evidence:"Check"}[x])+'</button>').join("")+'</div>'+
-      '<div class="edu-information-grid"><div class="edu-story-rail" role="tablist" aria-label="'+esc(c.label)+' stories">'+c.stories.map((x,j)=>'<button class="edu-story-tab" role="tab" aria-selected="'+(j===story)+'" data-edu-story="'+j+'"><span>'+String(j+1).padStart(2,"0")+'</span><strong>'+esc(x.title)+'</strong></button>').join("")+'</div><div class="edu-reading-cell" data-edu-cell></div></div></div></article>';
+    let d=i-index;if(d>3)d-=EDUCATION_ARCHITECTURE.length;if(d<-3)d+=EDUCATION_ARCHITECTURE.length;
+    const active=i===index,adj=Math.abs(d)===1,dist=Math.abs(d)>1,copy=chamberCopy(i);
+    return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-face="front" style="--offset:'+d+'">'+
+      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker" data-chamber-title>'+esc(copy.title)+'</p><h3 class="edu-standard-title" data-chamber-front>'+esc(copy.front)+'</h3><p class="edu-standard-copy" data-chamber-support>'+esc(copy.support)+'</p><button class="edu-inspect" type="button" data-chamber-action>'+esc(copy.action)+'</button></div>'+
+      '<div class="edu-inspection"><div class="edu-inspection__top"><div><p class="eyebrow" data-chamber-title>'+esc(copy.title)+'</p><h3 data-chamber-front>'+esc(copy.front)+'</h3></div><button class="edu-return" type="button" data-chamber-back>'+esc(HELP_LANGUAGES[helpLanguage].back)+'</button></div>'+
+      '<div class="edu-lenses"><button class="edu-lens" type="button" aria-selected="true">'+esc(HELP_LANGUAGES[helpLanguage].learn)+'</button><button class="edu-lens" type="button">'+esc(HELP_LANGUAGES[helpLanguage].practice)+'</button><button class="edu-lens" type="button">'+esc(HELP_LANGUAGES[helpLanguage].check)+'</button></div>'+
+      '<div class="edu-reading-cell"><p class="eyebrow">'+esc(HELP_LANGUAGES[helpLanguage].learn)+'</p><p data-chamber-learn>'+esc(copy.learn)+'</p><p class="eyebrow">'+esc(HELP_LANGUAGES[helpLanguage].practice)+'</p><p data-chamber-practice>'+esc(copy.practice)+'</p><button class="button-secondary" type="button" data-chamber-practice-action>'+esc(HELP_LANGUAGES[helpLanguage].practice)+'</button><p class="eyebrow">'+esc(HELP_LANGUAGES[helpLanguage].check)+'</p><p data-chamber-check>'+esc(copy.check)+'</p><button class="button" type="button" data-chamber-check-action>'+esc(HELP_LANGUAGES[helpLanguage].check)+'</button><div class="edu-evidence-boundary" data-chamber-feedback aria-live="polite"></div></div></div></article>';
   }).join("");
-  live.textContent=EDUCATION_ARCHITECTURE[index].label+" · "+(index+1)+" of "+EDUCATION_ARCHITECTURE.length;
+  track.querySelectorAll(".edu-standard-card").forEach((card,i)=>bindChamberCard(card,i));
+  live.textContent=chamberCopy(index).title+" · "+(index+1)+" of "+EDUCATION_ARCHITECTURE.length;
   root.style.setProperty("--edu-accent",["#f4cf83","#8dd8ff","#b9a0ff","#a7f3c6","#f0b1ff","#ffcb91"][index]);
   root.style.setProperty("--edu-soft",["rgba(244,207,131,.08)","rgba(141,216,255,.08)","rgba(185,160,255,.08)","rgba(167,243,198,.08)","rgba(240,177,255,.08)","rgba(255,203,145,.08)"][index]);
-  fillCell();
- }
- function fillCell(){
-  const card=track.querySelector('.edu-standard-card[data-active="true"]'); if(!card)return;
-  const c=EDUCATION_ARCHITECTURE[index],st=c.stories[storyByCard[index]],lens=lensByCard[index],cell=card.querySelector("[data-edu-cell]");
-  const title={reading:"Learn the idea",engineering:"See how it works",evidence:"Check your progress"}[lens];
-  const body=st[lens];
-  cell.innerHTML='<p class="eyebrow">'+title+'</p><h4>'+esc(st.title)+'</h4><p>'+esc(body)+'</p><div class="edu-evidence-boundary"><strong>What this means</strong><p>'+esc(st.boundary)+'</p></div>';
  }
  function select(next){index=(next+EDUCATION_ARCHITECTURE.length)%EDUCATION_ARCHITECTURE.length;render()}
- root.addEventListener("click",e=>{
-  const tab=e.target.closest("[data-edu-index]");if(tab){select(Number(tab.dataset.eduIndex));return}
-  if(e.target.closest("[data-edu-inspect]")){root.dataset.inspecting="true";document.documentElement.dataset.educationInspectionOpen="true";render();return}
-  if(e.target.closest("[data-edu-return]")){root.dataset.inspecting="false";delete document.documentElement.dataset.educationInspectionOpen;render();return}
-  const story=e.target.closest("[data-edu-story]");if(story){storyByCard[index]=Number(story.dataset.eduStory);render();return}
-  const lens=e.target.closest("[data-edu-lens]");if(lens){lensByCard[index]=lens.dataset.eduLens;render();return}
- });
+ root.addEventListener("click",e=>{const card=e.target.closest(".edu-standard-card");if(card&&!e.target.closest("button,input,textarea,select"))select(Number(card.dataset.cardIndex));});
  const viewport=qs("[data-edu-viewport]");
  viewport.addEventListener("keydown",e=>{if(root.dataset.inspecting==="true")return;if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}})
  viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.setPointerCapture?.(e.pointerId)})

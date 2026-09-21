@@ -51,7 +51,9 @@ jobs:
           set -euo pipefail
           test -f products/education/index.html
           grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1' products/education/index.html
-          grep -Fq 'edu-detail-surface' products/education/index.html
+          grep -Fq 'edu-card-back' products/education/index.html
+          grep -Fq 'data-continue' products/education/index.html
+          grep -Fq 'function turnCard' products/education/index.html
           grep -Fq 'edu-custom-select' products/education/index.html
           grep -Fq 'data-help-language="es"' products/education/index.html
           grep -Fq 'data-help-language="zh"' products/education/index.html

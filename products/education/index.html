@@ -256,7 +256,7 @@ document.querySelectorAll("[data-help-language]").forEach(button=>button.addEven
   const code=button.dataset.helpLanguage;
   setHelpLanguage(code);
   document.querySelectorAll("[data-help-language]").forEach(peer=>peer.setAttribute("aria-pressed",peer===button?"true":"false"));
-  showStage("intake");
+  setStage("intake");
 }));
 
 const STAGES=[

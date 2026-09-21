@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-spatial-v2-production-deploy",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4114,
+  "requestBranch": "ai-dispatch-request-education-spatial-deploy-final",
+  "requestCommit": "934892ac79ed9791e4a4c58afc796bfd70e28caf",
+  "requestCommitParent": "bf9d78c284c9ad81a43d3845f99866b58040420e",
+  "currentMainSha": "bf9d78c284c9ad81a43d3845f99866b58040420e",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "bf9d78c284c9ad81a43d3845f99866b58040420e",
+    "surface_id": "education"
+  },
+  "bridgeRunId": "35615323930",
+  "dispatchedRunId": 35615345363,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35615345363",
+  "dispatchedRunHeadSha": "bf9d78c284c9ad81a43d3845f99866b58040420e",
+  "dispatchedAt": "2026-09-21T14:54:43.316Z",
+  "resolvedAt": "2026-09-21T14:54:47.457Z"
+}

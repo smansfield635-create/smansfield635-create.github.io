@@ -545,7 +545,8 @@ function mountEducationCarousel(){
   if(e.target.closest("[data-flip]")){if(i!==index){select(i);return}turnCard(card,card.dataset.face!=="back");return}
   if(i!==index&&!e.target.closest("button,input")){select(i);return}
   const choice=e.target.closest("[data-choice]");if(choice){state[i].choice=Number(choice.dataset.choice);card.querySelectorAll("[data-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)));return}
-  if(e.target.closest("[data-continue]")){if(state[i].feedbackState!=="success")return;turnCard(card,false);select(i+1);return}\n  if(e.target.closest("[data-toggle-help]")){state[i].help=!state[i].help;build();track.querySelector('[data-card-index="'+i+'"]').dataset.face="back";return}
+  if(e.target.closest("[data-continue]")){if(state[i].feedbackState!=="success")return;turnCard(card,false);select(i+1);return}
+  if(e.target.closest("[data-toggle-help]")){state[i].help=!state[i].help;build();track.querySelector('[data-card-index="'+i+'"]').dataset.face="back";return}
   if(e.target.closest("[data-check]")){
    const task=tasks[i],L=labels();let ok=false,val="";
    if(task.type==="choice"){if(state[i].choice===null){state[i].feedback=L.choose;state[i].feedbackState="retry"}else{ok=state[i].choice===task.correct;state[i].feedback=feedback(i,ok,"");state[i].feedbackState=ok?"success":"retry"}}

@@ -190,6 +190,44 @@ jobs:
               print("Completed composition dimension:", dim)
           Path("analytics-bridge/composition.json").write_text(json.dumps(composition,indent=2)+"\n")
 
+          # Owner-device heartbeat qualification: short-window exact-path query.
+          heartbeat_start = now - timedelta(hours=6)
+          heartbeat_query = """
+          query Heartbeats($accountTag: string, $start: Time, $end: Time) {
+            viewer {
+              accounts(filter: {accountTag: $accountTag}) {
+                rows: rumPageloadEventsAdaptiveGroups(
+                  limit: 1000
+                  orderBy: [count_DESC]
+                  filter: {datetime_geq: $start datetime_lt: $end}
+                ) {
+                  count
+                  sum { visits }
+                  dimensions { requestPath }
+                }
+              }
+            }
+          }
+          """
+          hb_res=gql(heartbeat_query,{"accountTag":accounts[0]["accountTag"],
+                    "start":heartbeat_start.isoformat().replace("+00:00","Z"),
+                    "end":now.isoformat().replace("+00:00","Z")})
+          if hb_res.get("errors"):
+              raise SystemExit("Heartbeat qualification query failed: "+json.dumps(hb_res["errors"]))
+          hb_accounts=hb_res.get("data",{}).get("viewer",{}).get("accounts",[])
+          wanted=["/analytics-owner-device/heartbeat/s26/","/analytics-owner-device/heartbeat/a9-1/","/analytics-owner-device/heartbeat/a9-2/"]
+          observed={}
+          for row in (hb_accounts[0].get("rows",[]) if hb_accounts else []):
+              p=row.get("dimensions",{}).get("requestPath")
+              if p in wanted:
+                  observed[p]={"pageLoads":int(row.get("count",0)),"visits":int(row.get("sum",{}).get("visits",0) or 0)}
+          heartbeat={"schema":"DGB_OWNER_HEARTBEAT_QUALIFICATION_V1","generatedAt":out["generatedAt"],
+                     "window":{"start":heartbeat_start.isoformat().replace("+00:00","Z"),"end":out["window"]["end"]},
+                     "expected":wanted,"observed":observed,
+                     "result":"PASS" if all(p in observed for p in wanted) else "PENDING"}
+          Path("analytics-bridge/owner-heartbeats.json").write_text(json.dumps(heartbeat,indent=2)+"\n")
+          print("OWNER_HEARTBEAT_QUALIFICATION="+heartbeat["result"])
+
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
           print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")
 
@@ -204,7 +242,8 @@ jobs:
           cp analytics-bridge/status.txt .analytics/cloudflare/status.txt
           cp analytics-bridge/rum-schema.json .analytics/cloudflare/rum-schema.json
           cp analytics-bridge/composition.json .analytics/cloudflare/composition.json
-          git add .analytics/cloudflare/latest.json .analytics/cloudflare/status.txt .analytics/cloudflare/rum-schema.json .analytics/cloudflare/composition.json
+          cp analytics-bridge/owner-heartbeats.json .analytics/cloudflare/owner-heartbeats.json
+          git add .analytics/cloudflare/latest.json .analytics/cloudflare/status.txt .analytics/cloudflare/rum-schema.json .analytics/cloudflare/composition.json .analytics/cloudflare/owner-heartbeats.json
           if git diff --cached --quiet; then
             echo "No analytics change to persist."
           else

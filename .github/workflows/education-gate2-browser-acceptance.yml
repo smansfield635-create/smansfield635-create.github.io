@@ -32,7 +32,7 @@ jobs:
             await viewport.focus(); const seen=[await active()];
             for(let i=0;i<5;i++){await page.keyboard.press('ArrowRight');await page.waitForTimeout(80);seen.push(await active())}
             if(new Set(seen).size!==6) throw Error(name+' keyboard reach '+seen);
-            const before=await active(); const adjacent=page.locator('.edu-standard-card[data-adjacent="true"]').last(); await adjacent.click(); await page.waitForTimeout(80); if(await active()===before) throw Error(name+' adjacent click');
+            const before=await active(); const adjacent=page.locator('.edu-standard-card[data-adjacent="true"]').last(); const target=Number(await adjacent.getAttribute('data-card-index')); await adjacent.click({position:{x:12,y:12}}); await page.waitForTimeout(80); if(await active()!==target) throw Error(name+' adjacent click target '+target+' active '+await active()+' before '+before);
             const box=await viewport.boundingBox(); if(!box)throw Error(name+' viewport');
             const dragBefore=await active(); await page.mouse.move(box.x+box.width*.72,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.25,box.y+box.height*.5,{steps:6});const during=await page.locator('[data-edu-track]').evaluate(n=>getComputedStyle(n).transform);if(during==='none')throw Error(name+' drag does not follow');await page.mouse.up();await page.waitForTimeout(150);if(await active()===dragBefore)throw Error(name+' release did not snap advance');
             const visibleAdj=await page.locator('.edu-standard-card[data-adjacent="true"]').evaluateAll(es=>es.filter(e=>{const s=getComputedStyle(e);return s.visibility!=='hidden'&&Number(s.opacity)>0}).length);if(visibleAdj<1)throw Error(name+' adjacent not visible');
@@ -44,4 +44,5 @@ jobs:
         if: always()
         with: {name: 'education-gate2-browser-${{ github.run_id }}', path: /tmp/education-gate2, if-no-files-found: error, retention-days: 30}
 
-# retrigger-after-contract-preservation
+
+# retrigger-whole-card-click

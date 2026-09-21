@@ -1,6 +1,11 @@
 name: Education Exact Head Deploy
 
 on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+    paths:
+      - '.github/education-deploy-request*.json'
   push:
     branches: [main]
     paths:\n      - '.github/education-deploy-request*.json'\n      - '.github/workflows/education-exact-head-deploy.yml'
@@ -23,6 +28,7 @@ concurrency:
 
 jobs:
   publish:
+    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment:
       name: github-pages

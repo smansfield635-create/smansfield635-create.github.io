@@ -1,0 +1,702 @@
+{
+  "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V1",
+  "generatedAt": "2026-09-21T15:29:26Z",
+  "window": {
+    "start": "2026-08-22T15:29:26Z",
+    "end": "2026-09-21T15:29:26Z"
+  },
+  "dimensions": {
+    "requestPath": [
+      {
+        "value": "/",
+        "pageLoads": 1808,
+        "visits": 1559
+      },
+      {
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 957,
+        "visits": 619
+      },
+      {
+        "value": "/showroom/globe/h-earth/awards/",
+        "pageLoads": 702,
+        "visits": 12
+      },
+      {
+        "value": "/mirror-manor-preview/",
+        "pageLoads": 639,
+        "visits": 639
+      },
+      {
+        "value": "/campaigns/consider-the-energy/",
+        "pageLoads": 250,
+        "visits": 66
+      },
+      {
+        "value": "/evidence/agentic-frontier/",
+        "pageLoads": 183,
+        "visits": 30
+      },
+      {
+        "value": "/index.html",
+        "pageLoads": 145,
+        "visits": 0
+      },
+      {
+        "value": "/products/on-your-side-ai/native-chat/",
+        "pageLoads": 112,
+        "visits": 94
+      },
+      {
+        "value": "/characters/",
+        "pageLoads": 111,
+        "visits": 70
+      },
+      {
+        "value": "/showroom/globe/h-earth/",
+        "pageLoads": 102,
+        "visits": 33
+      },
+      {
+        "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
+        "pageLoads": 77,
+        "visits": 40
+      },
+      {
+        "value": "/products/education/",
+        "pageLoads": 72,
+        "visits": 25
+      },
+      {
+        "value": "/about/",
+        "pageLoads": 70,
+        "visits": 11
+      },
+      {
+        "value": "/showroom/globe/h-earth/diagnostic/",
+        "pageLoads": 68,
+        "visits": 2
+      },
+      {
+        "value": "/evidence/",
+        "pageLoads": 64,
+        "visits": 15
+      },
+      {
+        "value": "/showroom/globe/hearth/diagnostic/",
+        "pageLoads": 63,
+        "visits": 0
+      },
+      {
+        "value": "/laws/categories/reality/",
+        "pageLoads": 60,
+        "visits": 0
+      },
+      {
+        "value": "/prototypes/evan-job-stage/",
+        "pageLoads": 54,
+        "visits": 54
+      },
+      {
+        "value": "/prelude/",
+        "pageLoads": 51,
+        "visits": 30
+      },
+      {
+        "value": "/products/",
+        "pageLoads": 47,
+        "visits": 8
+      },
+      {
+        "value": "/door/",
+        "pageLoads": 42,
+        "visits": 10
+      },
+      {
+        "value": "/showroom/",
+        "pageLoads": 41,
+        "visits": 0
+      },
+      {
+        "value": "/laws/",
+        "pageLoads": 41,
+        "visits": 0
+      },
+      {
+        "value": "/products/archcoin/contract/",
+        "pageLoads": 41,
+        "visits": 3
+      },
+      {
+        "value": "/laws/categories/structure/interfaces.html",
+        "pageLoads": 40,
+        "visits": 0
+      },
+      {
+        "value": "/laws/categories/structure/boundaries.html",
+        "pageLoads": 40,
+        "visits": 20
+      },
+      {
+        "value": "/laws/categories/integrity/accountability/",
+        "pageLoads": 40,
+        "visits": 0
+      },
+      {
+        "value": "/preview/compass/holographic-orientation-v1/full/",
+        "pageLoads": 40,
+        "visits": 0
+      },
+      {
+        "value": "/build/",
+        "pageLoads": 37,
+        "visits": 14
+      },
+      {
+        "value": "/instruments/",
+        "pageLoads": 35,
+        "visits": 0
+      },
+      {
+        "value": "/campaigns/consider-the-energy/jen-leney/",
+        "pageLoads": 32,
+        "visits": 10
+      },
+      {
+        "value": "/campaigns/rob/",
+        "pageLoads": 31,
+        "visits": 5
+      },
+      {
+        "value": "/products/on-your-side-ai/",
+        "pageLoads": 31,
+        "visits": 0
+      },
+      {
+        "value": "/compass-composite/",
+        "pageLoads": 30,
+        "visits": 30
+      },
+      {
+        "value": "/laws/categories/flow/cycles/",
+        "pageLoads": 30,
+        "visits": 10
+      },
+      {
+        "value": "/laws/categories/reality/measure.html",
+        "pageLoads": 30,
+        "visits": 0
+      },
+      {
+        "value": "/laws/test/reverse-audit/",
+        "pageLoads": 30,
+        "visits": 10
+      },
+      {
+        "value": "/laws/research/methods-and-models/",
+        "pageLoads": 30,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/globe/earth/",
+        "pageLoads": 29,
+        "visits": 10
+      },
+      {
+        "value": "/products/archcoin/receivable/",
+        "pageLoads": 26,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/globe/audralia/diagnostic/",
+        "pageLoads": 22,
+        "visits": 10
+      },
+      {
+        "value": "/governance/",
+        "pageLoads": 22,
+        "visits": 10
+      },
+      {
+        "value": "/evidence/readiness/bt4-site-governance/",
+        "pageLoads": 21,
+        "visits": 21
+      },
+      {
+        "value": "/home/",
+        "pageLoads": 21,
+        "visits": 1
+      },
+      {
+        "value": "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
+        "value": "/compass-isolated-clone/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
+        "value": "/laws/categories/flow/handoffs/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/laws/categories/structure/",
+        "pageLoads": 20,
+        "visits": 10
+      },
+      {
+        "value": "/laws/categories/integrity/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/laws/research/evidence-and-sources/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/explore/",
+        "pageLoads": 20,
+        "visits": 10
+      },
+      {
+        "value": "/door/canonical-object.html",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/story/invitation/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/campaigns/wave/",
+        "pageLoads": 17,
+        "visits": 0
+      },
+      {
+        "value": "/products/archcoin/",
+        "pageLoads": 13,
+        "visits": 1
+      },
+      {
+        "value": "/showroom/globe/audralia/disposition/",
+        "pageLoads": 11,
+        "visits": 0
+      },
+      {
+        "value": "/gauges/",
+        "pageLoads": 11,
+        "visits": 0
+      },
+      {
+        "value": "/products/archcoin/payable/",
+        "pageLoads": 11,
+        "visits": 0
+      },
+      {
+        "value": "/inspection/h-earth/stage1-cost-decoupling/showroom/globe/audralia/weather-presentation-reconciliation/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/compass-isolated-clone-gen345/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/preview/bt4/operational-release-v1/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/inspection/compass/brain-v9/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/inspection/compass/brain-v10-continuous/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/inspection/compass/brain-v10-g1-1/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/laws/categories/structure/constraints.html",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/laws/categories/flow/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/developer/",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/laws/categories/integrity/consistency/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/evidence/readiness/governance-gen3-entitlement/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/characters/legacy-dossiers.html",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/globe/hearth/jeeves/",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/explore/frontier/urban/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/showroom/story/timeline/",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/nine-summits-of-love/",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/globe/hearth/",
+        "pageLoads": 5,
+        "visits": 0
+      },
+      {
+        "value": "/products/archcoin/allocation/",
+        "pageLoads": 5,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/globe/",
+        "pageLoads": 2,
+        "visits": 0
+      },
+      {
+        "value": "/campaigns/wave/mr-lee/",
+        "pageLoads": 2,
+        "visits": 0
+      },
+      {
+        "value": "/elara/index.html",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
+        "value": "/philosophy/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/nine-summits/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/evidence/agentic-frontier/reproduction/same-state-different-future/",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
+        "value": "/campaigns/wave/thai-boxing/",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
+        "value": "/site-guide/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/products/nutrition/",
+        "pageLoads": 1,
+        "visits": 0
+      }
+    ],
+    "refererHost": [
+      {
+        "value": "diamondgatebridge.com",
+        "pageLoads": 3226,
+        "visits": 0
+      },
+      {
+        "value": "(none)",
+        "pageLoads": 2927,
+        "visits": 2927
+      },
+      {
+        "value": "www.google.com",
+        "pageLoads": 691,
+        "visits": 691
+      },
+      {
+        "value": "bing.com",
+        "pageLoads": 22,
+        "visits": 22
+      },
+      {
+        "value": "m.facebook.com",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
+        "value": "chatgpt.com",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "lm.facebook.com",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "l.instagram.com",
+        "pageLoads": 1,
+        "visits": 1
+      }
+    ],
+    "countryName": [
+      {
+        "value": "US",
+        "pageLoads": 6763,
+        "visits": 3557
+      },
+      {
+        "value": "JP",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
+        "value": "CA",
+        "pageLoads": 14,
+        "visits": 14
+      },
+      {
+        "value": "CL",
+        "pageLoads": 13,
+        "visits": 13
+      },
+      {
+        "value": "MX",
+        "pageLoads": 6,
+        "visits": 6
+      },
+      {
+        "value": "BR",
+        "pageLoads": 3,
+        "visits": 3
+      },
+      {
+        "value": "IL",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "NG",
+        "pageLoads": 1,
+        "visits": 1
+      }
+    ],
+    "deviceType": [
+      {
+        "value": "desktop",
+        "pageLoads": 2587,
+        "visits": 2432
+      },
+      {
+        "value": "tablet",
+        "pageLoads": 2485,
+        "visits": 524
+      },
+      {
+        "value": "mobile",
+        "pageLoads": 1678,
+        "visits": 610
+      }
+    ],
+    "userAgentBrowser": [
+      {
+        "value": "Chrome",
+        "pageLoads": 2824,
+        "visits": 820
+      },
+      {
+        "value": "ChromeHeadless",
+        "pageLoads": 2246,
+        "visits": 2125
+      },
+      {
+        "value": "ChromeMobile",
+        "pageLoads": 1607,
+        "visits": 536
+      },
+      {
+        "value": "MobileSafari",
+        "pageLoads": 72,
+        "visits": 52
+      },
+      {
+        "value": "Unknown",
+        "pageLoads": 49,
+        "visits": 49
+      },
+      {
+        "value": "Edge",
+        "pageLoads": 40,
+        "visits": 30
+      },
+      {
+        "value": "Firefox",
+        "pageLoads": 31,
+        "visits": 31
+      },
+      {
+        "value": "Safari",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "ChromeMobileWebview",
+        "pageLoads": 1,
+        "visits": 1
+      }
+    ],
+    "userAgentOS": [
+      {
+        "value": "Android",
+        "pageLoads": 4109,
+        "visits": 1058
+      },
+      {
+        "value": "Linux",
+        "pageLoads": 2284,
+        "visits": 2163
+      },
+      {
+        "value": "MacOSX",
+        "pageLoads": 209,
+        "visits": 199
+      },
+      {
+        "value": "Windows",
+        "pageLoads": 144,
+        "visits": 120
+      },
+      {
+        "value": "iOS",
+        "pageLoads": 76,
+        "visits": 56
+      },
+      {
+        "value": "Unknown",
+        "pageLoads": 49,
+        "visits": 49
+      }
+    ],
+    "bot": [
+      {
+        "value": "0",
+        "pageLoads": 4625,
+        "visits": 1520
+      },
+      {
+        "value": "1",
+        "pageLoads": 2246,
+        "visits": 2125
+      }
+    ],
+    "navigationType": [
+      {
+        "value": "navigate",
+        "pageLoads": 4852,
+        "visits": 3160
+      },
+      {
+        "value": "reload",
+        "pageLoads": 813,
+        "visits": 304
+      },
+      {
+        "value": "soft-navigation",
+        "pageLoads": 642,
+        "visits": 0
+      },
+      {
+        "value": "back-forward",
+        "pageLoads": 294,
+        "visits": 91
+      },
+      {
+        "value": "unknown",
+        "pageLoads": 30,
+        "visits": 0
+      },
+      {
+        "value": "routing-apis",
+        "pageLoads": 20,
+        "visits": 0
+      }
+    ],
+    "deliveryType": [
+      {
+        "value": "unknown",
+        "pageLoads": 5286,
+        "visits": 2977
+      },
+      {
+        "value": "cache",
+        "pageLoads": 1241,
+        "visits": 324
+      },
+      {
+        "value": "navigational-prefetch",
+        "pageLoads": 344,
+        "visits": 344
+      }
+    ],
+    "requestHost": [
+      {
+        "value": "diamondgatebridge.com",
+        "pageLoads": 6871,
+        "visits": 3645
+      }
+    ],
+    "siteTag": [
+      {
+        "value": "2599e14d0b404cc095e40d92300679b7",
+        "pageLoads": 6871,
+        "visits": 3645
+      }
+    ]
+  }
+}

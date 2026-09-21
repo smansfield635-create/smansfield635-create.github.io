@@ -1,5 +1,4 @@
 name: Education Gate 2 Browser Acceptance
-# retrigger: adjacent-selector-e8789b21
 
 on:
   pull_request:
@@ -44,3 +43,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: 'education-gate2-browser-${{ github.run_id }}', path: /tmp/education-gate2, if-no-files-found: error, retention-days: 30}
+
+# retrigger-after-contract-preservation

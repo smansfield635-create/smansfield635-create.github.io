@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-21T21:28:28Z",
+  "generatedAt": "2026-09-21T22:29:51Z",
   "window": {
-    "start": "2026-08-22T21:28:28Z",
-    "end": "2026-09-21T21:28:28Z"
+    "start": "2026-08-22T22:29:51Z",
+    "end": "2026-09-21T22:29:51Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1870,
-        "visits": 1618
+        "pageLoads": 1852,
+        "visits": 1600
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 956,
-        "visits": 621
+        "pageLoads": 948,
+        "visits": 613
       },
       {
         "value": "/mirror-manor-preview/",
-        "pageLoads": 738,
-        "visits": 738
+        "pageLoads": 720,
+        "visits": 720
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
@@ -33,19 +33,19 @@
         "visits": 63
       },
       {
-        "value": "/evidence/agentic-frontier/",
-        "pageLoads": 183,
-        "visits": 30
-      },
-      {
         "value": "/index.html",
         "pageLoads": 145,
         "visits": 0
       },
       {
+        "value": "/evidence/agentic-frontier/",
+        "pageLoads": 143,
+        "visits": 30
+      },
+      {
         "value": "/products/education/",
-        "pageLoads": 125,
-        "visits": 44
+        "pageLoads": 127,
+        "visits": 46
       },
       {
         "value": "/products/on-your-side-ai/native-chat/",
@@ -53,14 +53,14 @@
         "visits": 94
       },
       {
-        "value": "/characters/",
-        "pageLoads": 111,
-        "visits": 70
-      },
-      {
         "value": "/showroom/globe/h-earth/",
         "pageLoads": 101,
         "visits": 33
+      },
+      {
+        "value": "/characters/",
+        "pageLoads": 101,
+        "visits": 70
       },
       {
         "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
@@ -183,19 +183,24 @@
         "visits": 10
       },
       {
-        "value": "/laws/test/reverse-audit/",
-        "pageLoads": 30,
-        "visits": 10
-      },
-      {
         "value": "/laws/categories/reality/measure.html",
         "pageLoads": 30,
         "visits": 0
       },
       {
+        "value": "/laws/test/reverse-audit/",
+        "pageLoads": 30,
+        "visits": 10
+      },
+      {
         "value": "/laws/research/methods-and-models/",
         "pageLoads": 30,
         "visits": 0
+      },
+      {
+        "value": "/analytics/",
+        "pageLoads": 29,
+        "visits": 19
       },
       {
         "value": "/products/archcoin/receivable/",
@@ -211,11 +216,6 @@
         "value": "/governance/",
         "pageLoads": 22,
         "visits": 10
-      },
-      {
-        "value": "/analytics/",
-        "pageLoads": 22,
-        "visits": 12
       },
       {
         "value": "/evidence/readiness/bt4-site-governance/",
@@ -313,17 +313,12 @@
         "visits": 10
       },
       {
-        "value": "/compass-isolated-clone/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/preview/bt4/operational-release-v1/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/inspection/compass/brain-v10-continuous/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/compass-isolated-clone/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -333,9 +328,9 @@
         "visits": 10
       },
       {
-        "value": "/developer/",
+        "value": "/preview/bt4/operational-release-v1/",
         "pageLoads": 10,
-        "visits": 0
+        "visits": 10
       },
       {
         "value": "/laws/categories/structure/constraints.html",
@@ -346,6 +341,11 @@
         "value": "/laws/categories/flow/",
         "pageLoads": 10,
         "visits": 10
+      },
+      {
+        "value": "/developer/",
+        "pageLoads": 10,
+        "visits": 0
       },
       {
         "value": "/laws/categories/integrity/consistency/",
@@ -384,7 +384,7 @@
       },
       {
         "value": "/coherence-diagnostic/",
-        "pageLoads": 6,
+        "pageLoads": 7,
         "visits": 4
       },
       {
@@ -461,13 +461,13 @@
     "refererHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3265,
+        "pageLoads": 3266,
         "visits": 0
       },
       {
         "value": "(none)",
-        "pageLoads": 3105,
-        "visits": 3105
+        "pageLoads": 3119,
+        "visits": 3119
       },
       {
         "value": "www.google.com",
@@ -476,8 +476,8 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 22,
-        "visits": 22
+        "pageLoads": 23,
+        "visits": 23
       },
       {
         "value": "m.facebook.com",
@@ -503,8 +503,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 7009,
-        "visits": 3744
+        "pageLoads": 7025,
+        "visits": 3759
       },
       {
         "value": "JP",
@@ -545,35 +545,35 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2839,
-        "visits": 2684
+        "pageLoads": 2850,
+        "visits": 2695
       },
       {
         "value": "tablet",
-        "pageLoads": 2533,
-        "visits": 522
+        "pageLoads": 2536,
+        "visits": 524
       },
       {
         "value": "mobile",
-        "pageLoads": 1697,
-        "visits": 598
+        "pageLoads": 1699,
+        "visits": 600
       }
     ],
     "userAgentBrowser": [
       {
         "value": "Chrome",
-        "pageLoads": 2856,
-        "visits": 821
+        "pageLoads": 2861,
+        "visits": 825
       },
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2427,
-        "visits": 2306
+        "pageLoads": 2435,
+        "visits": 2314
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1589,
-        "visits": 510
+        "pageLoads": 1591,
+        "visits": 512
       },
       {
         "value": "MobileSafari",
@@ -587,8 +587,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 40,
-        "visits": 30
+        "pageLoads": 41,
+        "visits": 31
       },
       {
         "value": "Firefox",
@@ -609,13 +609,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4119,
-        "visits": 1029
+        "pageLoads": 4124,
+        "visits": 1033
       },
       {
         "value": "Linux",
-        "pageLoads": 2465,
-        "visits": 2344
+        "pageLoads": 2474,
+        "visits": 2353
       },
       {
         "value": "MacOSX",
@@ -624,8 +624,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 146,
-        "visits": 122
+        "pageLoads": 148,
+        "visits": 124
       },
       {
         "value": "iOS",
@@ -641,25 +641,25 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4642,
-        "visits": 1498
+        "pageLoads": 4650,
+        "visits": 1505
       },
       {
         "value": "1",
-        "pageLoads": 2427,
-        "visits": 2306
+        "pageLoads": 2435,
+        "visits": 2314
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 5206,
-        "visits": 3400
+        "pageLoads": 5219,
+        "visits": 3413
       },
       {
         "value": "reload",
-        "pageLoads": 860,
-        "visits": 308
+        "pageLoads": 862,
+        "visits": 310
       },
       {
         "value": "soft-navigation",
@@ -668,7 +668,7 @@
       },
       {
         "value": "back-forward",
-        "pageLoads": 311,
+        "pageLoads": 312,
         "visits": 96
       },
       {
@@ -685,12 +685,12 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5490,
-        "visits": 3161
+        "pageLoads": 5505,
+        "visits": 3176
       },
       {
         "value": "cache",
-        "pageLoads": 1245,
+        "pageLoads": 1246,
         "visits": 309
       },
       {
@@ -702,15 +702,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 7069,
-        "visits": 3804
+        "pageLoads": 7085,
+        "visits": 3819
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7069,
-        "visits": 3804
+        "pageLoads": 7085,
+        "visits": 3819
       }
     ]
   }

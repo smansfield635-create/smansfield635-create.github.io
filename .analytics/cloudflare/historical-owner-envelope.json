@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-21T21:28:28Z",
+  "generatedAt": "2026-09-21T22:29:51Z",
   "window": {
-    "start": "2026-06-23T21:28:28Z",
-    "end": "2026-09-21T21:28:28Z"
+    "start": "2026-06-23T22:29:51Z",
+    "end": "2026-09-21T22:29:51Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4652,
-    "visits": 1091,
+    "pageLoads": 4655,
+    "visits": 1093,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4652,
-        "visits": 1091
+        "pageLoads": 4655,
+        "visits": 1093
       }
     },
     "byPath": {
+      "/index.html": {
+        "pageLoads": 154,
+        "visits": 0
+      },
       "/": {
         "pageLoads": 1035,
         "visits": 709
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 196,
-        "visits": 0
-      },
-      "/index.html": {
-        "pageLoads": 154,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 12,
-        "visits": 0
-      },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 21,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 12,
         "visits": 0
       },
       "/showroom/": {
@@ -63,7 +63,7 @@
         "visits": 10
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 32,
+        "pageLoads": 33,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 119,
-        "visits": 28
+        "pageLoads": 121,
+        "visits": 30
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -210,20 +210,12 @@
         "pageLoads": 11,
         "visits": 0
       },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 14,
-        "visits": 0
-      },
       "/laws/categories/structure/interfaces.html": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -232,6 +224,14 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 14,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -368,13 +368,13 @@
       }
     },
     "byReferer": {
-      "(none)": {
-        "pageLoads": 338,
-        "visits": 338
-      },
       "diamondgatebridge.com": {
-        "pageLoads": 3561,
+        "pageLoads": 3562,
         "visits": 0
+      },
+      "(none)": {
+        "pageLoads": 340,
+        "visits": 340
       },
       "www.google.com": {
         "pageLoads": 743,

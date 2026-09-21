@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-21T21:28:28Z",
+  "generatedAt": "2026-09-21T22:29:51Z",
   "window30d": {
-    "start": "2026-08-22T21:28:28Z",
-    "end": "2026-09-21T21:28:28Z"
+    "start": "2026-08-22T22:29:51Z",
+    "end": "2026-09-21T22:29:51Z"
   },
   "daily": [
     {
@@ -124,24 +124,24 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 553
+      "pageLoads": 569
     }
   ],
   "summary": {
-    "pageLoads": 7069,
-    "botPageLoads": 2427,
-    "nonBotPageLoads": 4642
+    "pageLoads": 7085,
+    "botPageLoads": 2435,
+    "nonBotPageLoads": 4650
   },
   "referrers": [
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3265,
+      "pageLoads": 3266,
       "visits": 0
     },
     {
       "host": "(none)",
-      "pageLoads": 3105,
-      "visits": 3105
+      "pageLoads": 3119,
+      "visits": 3119
     },
     {
       "host": "www.google.com",
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 22,
-      "visits": 22
+      "pageLoads": 23,
+      "visits": 23
     },
     {
       "host": "m.facebook.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1870,
-      "visits": 1618
+      "pageLoads": 1852,
+      "visits": 1600
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 956,
-      "visits": 621
+      "pageLoads": 948,
+      "visits": 613
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 738,
-      "visits": 738
+      "pageLoads": 720,
+      "visits": 720
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -201,19 +201,19 @@
       "visits": 63
     },
     {
-      "path": "/evidence/agentic-frontier/",
-      "pageLoads": 183,
-      "visits": 30
-    },
-    {
       "path": "/index.html",
       "pageLoads": 145,
       "visits": 0
     },
     {
+      "path": "/evidence/agentic-frontier/",
+      "pageLoads": 143,
+      "visits": 30
+    },
+    {
       "path": "/products/education/",
-      "pageLoads": 125,
-      "visits": 44
+      "pageLoads": 127,
+      "visits": 46
     }
   ],
   "ownerMeasurement": {

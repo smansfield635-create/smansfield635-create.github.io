@@ -1,0 +1,90 @@
+name: Education Exact Head Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact current main SHA to deploy
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Require exact current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          current="$(curl --fail --silent --show-error -L -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r .sha)"
+          test "$TARGET_SHA" = "$current"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Validate Education source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f products/education/index.html
+          grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1' products/education/index.html
+          grep -Fq 'edu-detail-surface' products/education/index.html
+          grep -Fq 'edu-custom-select' products/education/index.html
+          grep -Fq 'data-help-language="es"' products/education/index.html
+          grep -Fq 'data-help-language="zh"' products/education/index.html
+
+      - name: Stage exact site
+        env:
+          STAGE: ${{ runner.temp }}/pages-site
+          TARGET_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$STAGE"
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='preview/' ./ "$STAGE/"
+          mkdir -p "$STAGE/.well-known"
+          jq -n --arg commit "$TARGET_SHA" '{schema:"DGB_PUBLIC_RELEASE_MARKER_v1",commit:$commit,qualificationProject:"education",surfaceId:"education"}' > "$STAGE/.well-known/dgb-release.json"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+      - name: Deploy Education exact head
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Verify Education release
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 24); do
+            marker="$(curl --fail --silent --show-error -L --max-time 20 "${PAGE_URL%/}/.well-known/dgb-release.json?attempt=$i" 2>/dev/null || true)"
+            commit="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            surface="$(printf '%s' "$marker" | jq -r '.surfaceId // empty' 2>/dev/null || true)"
+            page="$(curl --fail --silent --show-error -L --max-time 20 "${PAGE_URL%/}/products/education/?attempt=$i" 2>/dev/null || true)"
+            if [ "$commit" = "$TARGET_SHA" ] && [ "$surface" = "education" ] && printf '%s' "$page" | grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1'; then
+              echo "EDUCATION_RELEASE_VERIFIED=$TARGET_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1

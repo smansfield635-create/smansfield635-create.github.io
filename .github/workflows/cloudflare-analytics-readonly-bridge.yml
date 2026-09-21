@@ -54,11 +54,6 @@ jobs:
           if schema.get("errors"):
               raise SystemExit("Cloudflare GraphQL introspection failed: " + json.dumps(schema["errors"]))
 
-          fields = schema.get("data", {}).get("viewerType", {}).get("fields", [])
-          account_field = next((x for x in fields if x.get("name") == "accounts"), None)
-          if not account_field:
-              raise SystemExit("Cloudflare schema did not expose viewer.accounts.")
-
           # Query all account-visible RUM page-load data and filter to the actual host.
           # Cloudflare account filters accept accountTag; the token is account-owned,
           # so discover the tag via a minimal account query using the known account owner scope.

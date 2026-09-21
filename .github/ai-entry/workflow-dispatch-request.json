@@ -1,9 +1,11 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
+  "requestId": "education-deploy-55c39986",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
-  }
+    "surface_id": "education"
+  },
+  "requestedMainHead": "55c39986c7aeb1a3e4a417b52b065c6fb1a47519"
 }

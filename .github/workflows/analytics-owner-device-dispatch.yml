@@ -1,5 +1,6 @@
 name: Analytics Surface Publication Dispatch
 # fresh analytics publication recovery
+# dynamic dashboard publication recovery
 
 on:
   push:

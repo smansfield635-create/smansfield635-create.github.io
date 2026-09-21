@@ -14,7 +14,10 @@
         "/analytics/dashboard.css",
         "/analytics/atmosphere.js",
         "data-analytics-finale",
-        "data-effects-pause"
+        "data-effects-pause",
+        "day-picker",
+        "week-change",
+        "trend-scale"
       ],
       "excludes": []
     },
@@ -123,6 +126,33 @@
             "selector": "#dashboard",
             "name": "data-ready",
             "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Previous-day chart control updates selection",
+        "action": {
+          "type": "click",
+          "selector": "#day-previous"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#day-picker[aria-valuetext]"
+          },
+          {
+            "type": "exists",
+            "selector": "#day-next:not(:disabled)"
+          },
+          {
+            "type": "exists",
+            "selector": "#trend .bar.selected"
+          },
+          {
+            "type": "textContains",
+            "selector": "#week-periods",
+            "value": "Complete UTC days"
           }
         ],
         "timeoutMs": 5000

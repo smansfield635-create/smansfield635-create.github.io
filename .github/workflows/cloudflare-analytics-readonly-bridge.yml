@@ -238,32 +238,31 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          mkdir -p .analytics/cloudflare
-          cp analytics-bridge/latest.json .analytics/cloudflare/latest.json
-          cp analytics-bridge/status.txt .analytics/cloudflare/status.txt
-          cp analytics-bridge/rum-schema.json .analytics/cloudflare/rum-schema.json
-          cp analytics-bridge/composition.json .analytics/cloudflare/composition.json
-          cp analytics-bridge/owner-heartbeats.json .analytics/cloudflare/owner-heartbeats.json
-          git add .analytics/cloudflare/latest.json .analytics/cloudflare/status.txt .analytics/cloudflare/rum-schema.json .analytics/cloudflare/composition.json .analytics/cloudflare/owner-heartbeats.json
-          if git diff --cached --quiet; then
-            echo "No analytics change to persist."
-          else
-            git commit -m "Update Cloudflare analytics snapshot [skip ci]"
-            # main is highly concurrent. Retry generated-file replay instead of failing
-            # a successful analytics collection on a transient non-fast-forward race.
-            for attempt in 1 2 3 4 5 6; do
-              if git push origin HEAD:main; then
-                echo "ANALYTICS_SNAPSHOT_PERSISTED attempt=$attempt"
-                exit 0
-              fi
-              echo "Concurrent main update; replaying generated analytics commit (attempt $attempt/6)"
-              git fetch origin main
-              git rebase origin/main
-              sleep $((attempt * 2))
+          files=(latest.json status.txt rum-schema.json composition.json owner-heartbeats.json)
+          # Generated analytics files are authoritative snapshots. Never merge/rebase them.
+          # On each retry, reset to fresh main, copy the just-collected snapshots, commit, push.
+          for attempt in 1 2 3 4 5 6 7 8; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p .analytics/cloudflare
+            for file in "${files[@]}"; do
+              cp "analytics-bridge/$file" ".analytics/cloudflare/$file"
             done
-            echo "Analytics collection succeeded but snapshot persistence exhausted retries." >&2
-            exit 1
-          fi
+            git add .analytics/cloudflare/
+            if git diff --cached --quiet; then
+              echo "ANALYTICS_SNAPSHOT_ALREADY_CURRENT attempt=$attempt"
+              exit 0
+            fi
+            git commit -m "Update Cloudflare analytics snapshot [skip ci]"
+            if git push origin HEAD:main; then
+              echo "ANALYTICS_SNAPSHOT_PERSISTED attempt=$attempt"
+              exit 0
+            fi
+            echo "Concurrent main update; rebuilding snapshot commit from newest main (attempt $attempt/8)"
+            sleep $((attempt * 2))
+          done
+          echo "Analytics collection succeeded but snapshot persistence exhausted retries." >&2
+          exit 1
 
       - name: Upload private workflow artifact
         uses: actions/upload-artifact@v4

@@ -72,3 +72,21 @@ test('homepage aggregation conserves counts and original source paths',()=>{cons
 test('referrer grouping combines only exact platform domains and preserves reported contributions',()=>{const grouped=groupReferrers([{host:'m.facebook.com',visits:4},{host:'lm.facebook.com',visits:1},{host:'facebook.com.evil.example',visits:2},{host:'notfacebook.com',visits:3},{host:'(none)',visits:12}]);assert.equal(grouped.find(x=>x.label==='Facebook').value,5);assert.equal(grouped.find(x=>x.label==='Facebook').sources.length,2);assert.equal(grouped.length,4);assert.equal(grouped.reduce((n,x)=>n+x.value,0),22)});
 
 test('normalized dot segments cannot turn a local path into a foreign-origin link',()=>{for(const value of ['/a/..//evil.example','/%2e%2e//evil.example'])assert.equal(safeDestination(value),null)});
+
+const {reportingWindow}=require('./dashboard.js');
+test('rolling window labels preserve UTC timestamps across viewer timezones',()=>{
+ const {execFileSync}=require('node:child_process');
+ const window={start:'2026-08-23T00:15:00Z',end:'2026-09-22T00:15:00Z'};
+ const script='process.stdout.write(require('+JSON.stringify(__dirname+'/dashboard.js')+').reportingWindow('+JSON.stringify(window)+',"en-US"))';
+ for(const TZ of ['America/Chicago','Pacific/Honolulu','Asia/Tokyo']){
+  const label=execFileSync(process.execPath,['-e',script],{env:{...process.env,TZ},encoding:'utf8'});
+  assert.equal(label,'Aug 23, 2026, 00:15 – Sep 22, 2026, 00:15 UTC');
+ }
+});
+test('reporting labels retain year boundaries and do not substitute daily chart dates',()=>{
+ const window={start:'2025-12-15T20:46:00Z',end:'2026-01-14T20:46:00Z'};
+ assert.equal(reportingWindow(window,'en-US'),'Dec 15, 2025, 20:46 – Jan 14, 2026, 20:46 UTC');
+ const chartStart=new Date(Date.parse('2026-01-14T00:00:00Z')-29*86400000).toISOString().slice(0,10);
+ assert.equal(chartStart,'2025-12-16');
+ assert.equal(window.start,'2025-12-15T20:46:00Z');
+});

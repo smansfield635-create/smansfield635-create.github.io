@@ -1,0 +1,42 @@
+import fs from 'node:fs';
+import puppeteer from 'puppeteer-core';
+const base=(process.env.PUBLIC_BASE_URL||'https://diamondgatebridge.com').replace(/\/$/,'');
+const out=process.env.RUNTIME_RESULT_PATH||'/tmp/runtime-result.json';
+const chrome=process.env.CHROME_PATH;
+if(!chrome)throw new Error('CHROME_PATH is required');
+const browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--disable-dev-shm-usage']});
+const failures=[],checks=[];
+const add=(id,pass,evidence={})=>{checks.push({id,status:pass?'PASS':'FAIL',evidence});if(!pass)failures.push(id)};
+try{
+ const page=await browser.newPage();
+ await page.setViewport({width:390,height:844,deviceScaleFactor:1,isMobile:true,hasTouch:true});
+ const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+ const response=await page.goto(base+'/products/education/',{waitUntil:'networkidle0',timeout:60000});
+ add('EDUCATION_ROUTE_IDENTITY',response?.status()===200&&await page.evaluate(()=>document.documentElement.dataset.route==='/products/education/'),{status:response?.status(),url:page.url()});
+ const initial=await page.evaluate(()=>({tabs:document.querySelectorAll('[data-edu-index]').length,cards:document.querySelectorAll('.edu-standard-card').length,selected:document.querySelector('[data-edu-index][aria-selected="true"]')?.dataset.eduIndex,overflow:document.documentElement.scrollWidth-innerWidth}));
+ add('EDUCATION_CAROUSEL_SIX_STANDARDS',initial.tabs===6&&initial.cards===6,initial);
+ await page.click('[data-edu-index="1"]');
+ const nav=await page.evaluate(()=>document.querySelector('[data-edu-index][aria-selected="true"]')?.dataset.eduIndex);
+ add('EDUCATION_CAROUSEL_NAVIGATION',nav==='1',{selected:nav});
+ await page.click('[data-edu-inspect]');
+ const inspect=await page.evaluate(()=>({open:document.querySelector('[data-edu-carousel]')?.dataset.inspecting,lenses:document.querySelectorAll('[data-edu-lens]').length,stories:document.querySelectorAll('[data-edu-story]').length}));
+ add('EDUCATION_INSPECTION_LENSES',inspect.open==='true'&&inspect.lenses===3&&inspect.stories>0,inspect);
+ await page.click('[data-edu-lens="engineering"]');
+ const engineering=await page.evaluate(()=>({selected:document.querySelector('[data-edu-lens="engineering"]')?.getAttribute('aria-selected'),text:document.querySelector('[data-edu-cell]')?.textContent||''}));
+ add('EDUCATION_INTERACTIVE_POINTER_ISOLATION',engineering.selected==='true'&&engineering.text.length>0,engineering);
+ if(inspect.stories>1){await page.click('[data-edu-story="1"]');}
+ const story=await page.evaluate(()=>document.querySelector('[data-edu-story="1"]')?.getAttribute('aria-selected')||null);
+ add('EDUCATION_STORY_STATE',inspect.stories<2||story==='true',{selected:story});
+ await page.click('[data-edu-return]');
+ await page.click('[data-start-demo]');
+ const demo=await page.evaluate(()=>({hidden:document.querySelector('#demo-shell')?.hidden,english:!!document.querySelector('[data-language="English"]'),disabled:[...document.querySelectorAll('.language-card button[disabled]')].length}));
+ add('EDUCATION_DEMO_GATEWAY',demo.hidden===false,demo);
+ add('EDUCATION_LANGUAGE_AVAILABILITY',demo.english&&demo.disabled===2,demo);
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+ add('EDUCATION_NO_HORIZONTAL_OVERFLOW',Math.abs(overflow)<=1,{overflow});
+ add('EDUCATION_NO_PAGE_ERRORS',errors.length===0,{errors});
+}finally{await browser.close()}
+const result={status:failures.length?'FAIL':'PASS',checks,failures};
+fs.writeFileSync(out,JSON.stringify(result,null,2));
+console.log(JSON.stringify(result,null,2));
+if(failures.length)process.exitCode=1;

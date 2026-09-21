@@ -10,12 +10,13 @@
         "Job Stage",
         "Needs attention",
         "Jobs",
-        "dashboard-v2.css",
-        "dashboard-v2.js",
-        "job-db-v3.js",
+        "dashboard-v2.css?v=db8efef9",
+        "dashboard-v2.js?v=db8efef9",
+        "job-db-v3.js?v=db8efef9",
         "Backup",
         "Restore",
-        "Saved on this device"
+        "Saved on this device",
+        "BUILD DB8EFEF9"
       ],
       "excludes": [
         "Evidence intake",

@@ -1,0 +1,20 @@
+{
+  "schema":"PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId":"analytics",
+  "description":"Diamond Gate Bridge public analytics transparency surface.",
+  "checks":[{
+    "path":"/analytics/index.html",
+    "includes":["Public analytics · transparent measurement","Measurable wake.","4,632","1,520","691","How we count","Current measurement boundary"],
+    "excludes":["unique visitors","unique people"]
+  }],
+  "runtime":{
+    "enabled":true,
+    "path":"/analytics/",
+    "timeoutMs":15000,
+    "binding":{"mode":"direct-document","path":"/analytics/"},
+    "failOnConsoleErrors":true,
+    "failOnPageErrors":true,
+    "ignoreConsoleErrorIncludes":[],
+    "interactions":[]
+  }
+}

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ARCC — ARCHCOIN Contract</title>
-  <meta name="description" content="ARCHCOIN Contract: the ARCC agreement-layer asset, its qualified ERC-20 implementation, deployment path, and immutable governance boundaries.">
+  <meta name="description" content="ARCHCOIN Contract (ARCC): launched on Ethereum mainnet. Fixed supply of 1,000,000 tokens, 18 decimal places, contract address, and deployment evidence.">
   <link rel="stylesheet" href="../carousel.css">
   <script src="../carousel.js" defer></script>
 </head>
@@ -22,17 +22,15 @@
         <div>
           <p class="asset-kicker">North · Agreement-layer protocol unit</p>
           <h1 id="asset-title">ARCHCOIN Contract</h1>
-          <p class="asset-identity__lead">ARCC carries the contract domain: the bounded protocol unit for agreement meaning, structure, obligation, and control. Four original chambers remain intact as four planes below.</p>
+          <p class="asset-identity__lead">ARCC is the ARCHCOIN Contract token, launched on Ethereum mainnet with a fixed supply of 1,000,000 tokens. Its name identifies the commitment and agreement domain within ARCHCOIN.</p>
         </div>
         <div class="asset-symbol" aria-label="Symbol ARCC">ARCC</div>
       </section>
     </header>
 
     <section class="status-spine" aria-labelledby="status-title">
-      <div class="status-spine__head"><strong id="status-title">Qualification status</strong><span>Sepolia pending</span></div>
-      <ol>
-        <li data-attained>Concept</li><li data-attained>Contract constructed</li><li data-attained>Compiled</li><li data-attained>Tested</li><li data-attained>Local EVM deployed</li><li data-attained>Signed transaction qualified</li><li aria-current="step">Sepolia pending</li>
-      </ol>
+      <div class="status-spine__head"><strong id="status-title">Launch status</strong><span>Ethereum mainnet · Launched</span></div>
+      <ol><li data-attained>Concept</li><li data-attained>Constructed</li><li data-attained>Compiled</li><li data-attained>Tested</li><li data-attained>Release qualified</li><li data-attained>Ethereum mainnet deployed</li><li data-attained aria-current="step">Deployment verified</li></ol>
     </section>
 
     <section class="carousel-shell" data-archcoin-carousel data-active-plane="overview" aria-label="ARCC chamber carousel">
@@ -45,40 +43,40 @@
 
       <div class="carousel-viewport" data-carousel-viewport>
         <article class="carousel-plane" id="plane-overview" role="tabpanel" aria-labelledby="tab-overview" data-carousel-plane="overview">
-          <header class="plane-header"><div><p class="plane-kicker">Plane 01 · Identity</p><h2>Agreement becomes an addressable unit.</h2></div><span class="plane-ordinal">ARCC / Overview</span></header>
+          <header class="plane-header"><div><p class="plane-kicker">Plane 01 · Identity</p><h2>ARCHCOIN Contract, live on Ethereum.</h2></div><span class="plane-ordinal">ARCC / Overview</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Domain role</h3><p>ARCC identifies the Contract domain inside the four-asset ARCHCOIN architecture. It is the protocol unit associated with what is agreed, how the agreement is structured, and which obligations it carries.</p></section>
-            <section class="plane-block"><h3>Asset identity</h3><p>Name: <strong>ARCHCOIN Contract</strong>. Symbol: <strong>ARCC</strong>. Standard: ERC-20 on the Ethereum EVM family, using 18 decimal places.</p></section>
-            <section class="plane-block plane-block--wide claim-boundary"><h3>Present claim boundary</h3><p>ARCC is implemented and locally qualified, but it is not represented here as a deployed cryptocurrency. No Sepolia contract address or on-chain deployment transaction exists yet.</p></section>
+            <section class="plane-block"><h3>Token role</h3><p>ARCC represents the Contract concept within the four-token ARCHCOIN architecture. The deployed contract manages fungible tokens, balances, transfers, and allowances.</p></section>
+            <section class="plane-block"><h3>Asset identity</h3><p>Name: <strong>ARCHCOIN Contract</strong>. Symbol: <strong>ARCC</strong>. Standard: ERC-20. Network: <strong>Ethereum mainnet</strong>, chain ID 1. Precision: 18 decimal places.</p></section>
+            <section class="plane-block plane-block--wide claim-boundary"><h3>Launched on Ethereum</h3><p>Deployed on <strong>2026-09-20 UTC</strong>. The recorded deployment verification confirms a successful transaction, live runtime bytecode, and an exact match to the qualified release package.</p></section>
           </div>
         </article>
 
         <article class="carousel-plane" id="plane-engineering" role="tabpanel" aria-labelledby="tab-engineering" data-carousel-plane="engineering" hidden inert aria-hidden="true">
           <header class="plane-header"><div><p class="plane-kicker">Plane 02 · Construction</p><h2>One mint at construction. No hidden lever afterward.</h2></div><span class="plane-ordinal">ARCC / Engineering</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Implementation</h3><p><code>ArchcoinFixedSupply.sol</code> is written in Solidity 0.8.28 and extends OpenZeppelin Contracts 5.4.0 <code>ERC20</code>. The constructor receives the name, symbol, nonzero recipient, and positive supply.</p></section>
-            <section class="plane-block"><h3>Fixed-supply behavior</h3><p>The constructor mints the entire supply once. The contract exposes no external mint function, public burn function, ownership module, role manager, pause switch, or privileged token-mutation path.</p></section>
-            <section class="plane-block"><h3>Qualification</h3><p>Hardhat 2.28.0 with Toolbox 6.1.0 compiles and tests the shared implementation. ARCC deploys on the local EVM, preserves total supply, and completes a signed ERC-20 transfer.</p></section>
-            <section class="plane-block claim-boundary"><h3>Supply boundary</h3><p>The local harness uses 1,000,000 units as a qualification fixture. That number is not a frozen Sepolia or mainnet issuance quantity, and no recipient wallet has been selected.</p></section>
+            <section class="plane-block"><h3>ERC-20 behavior</h3><p>The deployed token supports balance queries, transfers, approvals, and delegated transfers.</p></section>
+            <section class="plane-block"><h3>Fixed-supply behavior</h3><p>The entire supply was minted once at construction. The contract exposes no public mint or burn function, pause switch, upgrade mechanism, or administrative supply control.</p></section>
+            <section class="plane-block"><h3>Recorded qualification</h3><p>The release passed its recorded 25-test qualification suite. Deployment verification compared the on-chain creation payload and runtime bytecode with the frozen release package and checked the result through independent Ethereum providers.</p></section>
+            <section class="plane-block claim-boundary"><h3>Deployed supply</h3><p>Fixed total supply: <strong>1,000,000 ARCC</strong>, using 18 decimal places. This is the deployed issuance quantity.</p></section>
           </div>
         </article>
 
         <article class="carousel-plane" id="plane-platform" role="tabpanel" aria-labelledby="tab-platform" data-carousel-plane="platform" hidden inert aria-hidden="true">
-          <header class="plane-header"><div><p class="plane-kicker">Plane 03 · Traversal</p><h2>Qualified locally. Testnet is the next threshold.</h2></div><span class="plane-ordinal">ARCC / Platform</span></header>
+          <header class="plane-header"><div><p class="plane-kicker">Plane 03 · Traversal</p><h2>Inspect the on-chain launch record.</h2></div><span class="plane-ordinal">ARCC / Platform</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Current surface</h3><p>The source, compiler configuration, automated tests, local deployment script, and signed-transaction qualification are present in the repository. ARCC shares one audited construction pattern with the other three assets.</p></section>
-            <section class="plane-block"><h3>Next network</h3><p>The next deployment environment is Ethereum Sepolia, chain ID 11155111. It requires an owner-controlled wallet, funded Sepolia gas, a frozen supply quantity, and explicit deployment authorization.</p></section>
-            <section class="plane-block"><h3>Evidence after deployment</h3><p>This plane advances only when the contract address, deployment transaction, retrievable bytecode, and ERC-20 behavior can be independently verified on-chain.</p></section>
-            <section class="plane-block claim-boundary"><h3>Mainnet remains later</h3><p>Ethereum mainnet, chain ID 1, is not authorized. Mainnet follows successful testnet deployment and qualification; it is not implied by local success.</p></section>
+            <section class="plane-block"><h3>Contract address</h3><p>Ethereum mainnet · chain ID 1</p><p><a href="https://etherscan.io/address/0xAA4eA6c3020795C2DA0Aa3bA478099bA1f5F1947" style="overflow-wrap:anywhere"><code>0xAA4eA6c3020795C2DA0Aa3bA478099bA1f5F1947</code></a></p></section>
+            <section class="plane-block"><h3>Deployment transaction</h3><p><a href="https://etherscan.io/tx/0xd932dceef5f3085f7d42e6ac25a44c6675364156261305b1fd650899c70a3ea0" style="overflow-wrap:anywhere"><code>0xd932dceef5f3085f7d42e6ac25a44c6675364156261305b1fd650899c70a3ea0</code></a></p><p>Block 26,021,585 · 2026-09-20 UTC.</p></section>
+            <section class="plane-block"><h3>Recorded verification</h3><p>The 2026-09-20 deployment record confirms the token name, symbol, 18 decimal places, fixed supply, and matching bytecode. The explorer links let visitors inspect the public contract and deployment transaction.</p></section>
+            <section class="plane-block claim-boundary"><h3>Launch scope</h3><p>Launched means the token contract is deployed on Ethereum mainnet. This page does not establish an exchange listing, available liquidity, a market price, or commercial adoption.</p></section>
           </div>
         </article>
 
         <article class="carousel-plane" id="plane-governance" role="tabpanel" aria-labelledby="tab-governance" data-carousel-plane="governance" hidden inert aria-hidden="true">
           <header class="plane-header"><div><p class="plane-kicker">Plane 04 · Constraint</p><h2>The boundary is part of the asset.</h2></div><span class="plane-ordinal">ARCC / Governance</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Immutable token constraints</h3><ul><li>No post-deployment mint path.</li><li>No public burn in version one.</li><li>No privileged token mutation.</li><li>No mainnet deployment before testnet qualification.</li></ul></section>
+            <section class="plane-block"><h3>Immutable token constraints</h3><ul><li>No post-deployment mint path.</li><li>No public burn function.</li><li>No pause or upgrade control.</li><li>No administrative supply controls.</li></ul></section>
             <section class="plane-block"><h3>Holder-rights boundary</h3><p>One ARCC is a fungible Contract protocol unit only. It does not imply a legal, debt, equity, payment, redemption, governance, or ownership right.</p></section>
-            <section class="plane-block plane-block--wide claim-boundary"><h3>Truthful public status</h3><p>Constructed, compiled, tested, locally deployed, and transaction-qualified are supported claims. “Deployed cryptocurrency” remains prohibited until a verifiable network address and on-chain state exist.</p></section>
+            <section class="plane-block plane-block--wide claim-boundary"><h3>Public launch status</h3><p>ARCC is a deployed, fixed-supply Ethereum token. Its domain name describes its intended place in ARCHCOIN; it does not by itself establish a legal agreement, receivable, or financial entitlement.</p></section>
           </div>
         </article>
       </div>

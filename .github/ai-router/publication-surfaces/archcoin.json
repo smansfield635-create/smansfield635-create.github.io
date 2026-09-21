@@ -1,16 +1,18 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "archcoin",
-  "description": "ARCHCOIN exact-head publication verification for the four-domain carousel presentation. Static checks bind the canonical ARCHCOIN compass to four asset destinations, preserve sixteen semantic planes and sixteen legacy deep links, verify the local carousel runtime and responsive presentation, and retain the Sepolia-pending claim boundary. Runtime verification requires the ARCC carousel to initialize and proves click plus keyboard traversal before publication is accepted.",
+  "description": "ARCHCOIN exact-head publication verification for the four-domain carousel presentation: ARCC and ARCR launched on Ethereum mainnet, with ARCP and ARCA prospective and not launched. Static checks bind verified mainnet identities, supply, decimals, and explorer links, preserve sixteen semantic planes and sixteen legacy deep links, and retain token-rights boundaries. Runtime verification requires the ARCC carousel to initialize and proves click plus keyboard traversal before publication is accepted.",
   "checks": [
     {
       "path": "/products/archcoin/index.html",
       "includes": [
-        "domain now opens one four-plane carousel",
+        "Each token page presents its Overview, Engineering, Platform, and Governance.",
         "/products/archcoin/contract/#overview",
         "/products/archcoin/receivable/#engineering",
         "/products/archcoin/payable/#platform",
-        "/products/archcoin/allocation/#governance"
+        "/products/archcoin/allocation/#governance",
+        "Two tokens launched. Two prospective.",
+        "Ethereum mainnet"
       ],
       "excludes": [
         "domain then opens four navigable rooms"
@@ -36,12 +38,23 @@
         "ARCHCOIN Contract",
         "ARCC",
         "data-archcoin-carousel",
-        "Signed transaction qualified",
-        "Sepolia pending",
-        "Solidity 0.8.28",
-        "No post-deployment mint"
+        "ERC-20 behavior",
+        "No post-deployment mint",
+        "Launch status",
+        "Ethereum mainnet · Launched",
+        "1,000,000 ARCC",
+        "18 decimal places",
+        "href=\"https://etherscan.io/address/0xAA4eA6c3020795C2DA0Aa3bA478099bA1f5F1947\"",
+        "href=\"https://etherscan.io/tx/0xd932dceef5f3085f7d42e6ac25a44c6675364156261305b1fd650899c70a3ea0\""
       ],
-      "excludes": ["0x0000000000000000000000000000000000000000"]
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "not represented here as a deployed cryptocurrency",
+        "Mainnet remains later",
+        "not a frozen Sepolia or mainnet issuance quantity",
+        "no recipient wallet has been selected"
+      ]
     },
     {
       "path": "/products/archcoin/receivable/index.html",
@@ -50,10 +63,22 @@
         "ARCHCOIN Receivable",
         "ARCR",
         "data-archcoin-carousel",
-        "Sepolia pending",
-        "does not create a debt"
+        "does not create a debt",
+        "Launch status",
+        "Ethereum mainnet · Launched",
+        "1,000,000 ARCR",
+        "18 decimal places",
+        "href=\"https://etherscan.io/address/0xebffa6543fa839fb3287867a18b536fd6c543c9f\"",
+        "href=\"https://etherscan.io/tx/0xceed44390a9e0456331569964d2fc4e39f6654707d34ff1f3d7c38eb928c732a\""
       ],
-      "excludes": ["0x0000000000000000000000000000000000000000"]
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "not represented here as a deployed cryptocurrency",
+        "Mainnet remains later",
+        "not a frozen Sepolia or mainnet issuance quantity",
+        "no recipient wallet has been selected"
+      ]
     },
     {
       "path": "/products/archcoin/payable/index.html",
@@ -62,10 +87,15 @@
         "ARCHCOIN Payable",
         "ARCP",
         "data-archcoin-carousel",
-        "Sepolia pending",
-        "creates no legal payment obligation"
+        "creates no legal payment obligation",
+        "Launch status",
+        "Prospective · Not launched"
       ],
-      "excludes": ["0x0000000000000000000000000000000000000000"]
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "Ethereum mainnet · Launched"
+      ]
     },
     {
       "path": "/products/archcoin/allocation/index.html",
@@ -74,10 +104,15 @@
         "ARCHCOIN Allocation",
         "ARCA",
         "data-archcoin-carousel",
-        "Sepolia pending",
-        "creates no entitlement to funds"
+        "creates no entitlement to funds",
+        "Launch status",
+        "Prospective · Not launched"
       ],
-      "excludes": ["0x0000000000000000000000000000000000000000"]
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "Ethereum mainnet · Launched"
+      ]
     },
     {
       "path": "/products/archcoin/carousel.js",

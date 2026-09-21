@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ARCR — ARCHCOIN Receivable</title>
-  <meta name="description" content="ARCHCOIN Receivable: the ARCR incoming-value asset, its qualified ERC-20 implementation, deployment path, and immutable governance boundaries.">
+  <meta name="description" content="ARCHCOIN Receivable (ARCR): launched on Ethereum mainnet. Fixed supply of 1,000,000 tokens, 18 decimal places, contract address, and deployment evidence.">
   <link rel="stylesheet" href="../carousel.css"><script src="../carousel.js" defer></script>
 </head>
 <body data-domain="receivable">
@@ -14,14 +14,14 @@
         <a href="/products/archcoin/contract/">ARCC · Contract</a><a href="/products/archcoin/receivable/" aria-current="page">ARCR · Receivable</a><a href="/products/archcoin/payable/">ARCP · Payable</a><a href="/products/archcoin/allocation/">ARCA · Allocation</a>
       </nav>
       <section class="asset-identity" aria-labelledby="asset-title">
-        <div><p class="asset-kicker">East · Incoming-value protocol unit</p><h1 id="asset-title">ARCHCOIN Receivable</h1><p class="asset-identity__lead">ARCR carries the receivable domain: the bounded protocol unit for incoming value, recognition, collection, and evidence. Four original chambers remain intact as four planes below.</p></div>
+        <div><p class="asset-kicker">East · Incoming-value protocol unit</p><h1 id="asset-title">ARCHCOIN Receivable</h1><p class="asset-identity__lead">ARCR is the ARCHCOIN Receivable token, launched on Ethereum mainnet with a fixed supply of 1,000,000 tokens. Its name identifies the receivables and incoming value domain within ARCHCOIN.</p></div>
         <div class="asset-symbol" aria-label="Symbol ARCR">ARCR</div>
       </section>
     </header>
 
     <section class="status-spine" aria-labelledby="status-title">
-      <div class="status-spine__head"><strong id="status-title">Qualification status</strong><span>Sepolia pending</span></div>
-      <ol><li data-attained>Concept</li><li data-attained>Contract constructed</li><li data-attained>Compiled</li><li data-attained>Tested</li><li data-attained>Local EVM deployed</li><li data-attained>Signed transaction qualified</li><li aria-current="step">Sepolia pending</li></ol>
+      <div class="status-spine__head"><strong id="status-title">Launch status</strong><span>Ethereum mainnet · Launched</span></div>
+      <ol><li data-attained>Concept</li><li data-attained>Constructed</li><li data-attained>Compiled</li><li data-attained>Tested</li><li data-attained>Release qualified</li><li data-attained>Ethereum mainnet deployed</li><li data-attained aria-current="step">Deployment verified</li></ol>
     </section>
 
     <section class="carousel-shell" data-archcoin-carousel data-active-plane="overview" aria-label="ARCR chamber carousel">
@@ -33,37 +33,37 @@
       </div>
       <div class="carousel-viewport" data-carousel-viewport>
         <article class="carousel-plane" id="plane-overview" role="tabpanel" aria-labelledby="tab-overview" data-carousel-plane="overview">
-          <header class="plane-header"><div><p class="plane-kicker">Plane 01 · Identity</p><h2>Incoming value gains a distinct protocol identity.</h2></div><span class="plane-ordinal">ARCR / Overview</span></header>
+          <header class="plane-header"><div><p class="plane-kicker">Plane 01 · Identity</p><h2>ARCHCOIN Receivable, live on Ethereum.</h2></div><span class="plane-ordinal">ARCR / Overview</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Domain role</h3><p>ARCR identifies the Receivable domain inside the four-asset architecture. It is associated with value expected to arrive, its recognition, its collection path, and the evidence that supports it.</p></section>
-            <section class="plane-block"><h3>Asset identity</h3><p>Name: <strong>ARCHCOIN Receivable</strong>. Symbol: <strong>ARCR</strong>. Standard: ERC-20 on the Ethereum EVM family, using 18 decimal places.</p></section>
-            <section class="plane-block plane-block--wide claim-boundary"><h3>Present claim boundary</h3><p>ARCR is implemented and locally qualified, but it is not represented here as a deployed cryptocurrency, a receivable, or a right to collect money. No Sepolia address exists yet.</p></section>
+            <section class="plane-block"><h3>Token role</h3><p>ARCR represents the Receivable concept within the four-token ARCHCOIN architecture. The deployed contract manages fungible tokens, balances, transfers, and allowances.</p></section>
+            <section class="plane-block"><h3>Asset identity</h3><p>Name: <strong>ARCHCOIN Receivable</strong>. Symbol: <strong>ARCR</strong>. Standard: ERC-20. Network: <strong>Ethereum mainnet</strong>, chain ID 1. Precision: 18 decimal places.</p></section>
+            <section class="plane-block plane-block--wide claim-boundary"><h3>Launched on Ethereum</h3><p>Deployed on <strong>2026-09-21 UTC</strong>. The recorded deployment verification confirms a successful transaction, live runtime bytecode, and an exact match to the qualified release package.</p></section>
           </div>
         </article>
         <article class="carousel-plane" id="plane-engineering" role="tabpanel" aria-labelledby="tab-engineering" data-carousel-plane="engineering" hidden inert aria-hidden="true">
           <header class="plane-header"><div><p class="plane-kicker">Plane 02 · Construction</p><h2>Incoming-value identity without hidden issuance authority.</h2></div><span class="plane-ordinal">ARCR / Engineering</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Implementation</h3><p>The shared <code>ArchcoinFixedSupply.sol</code> constructor instantiates ARCR through Solidity 0.8.28 and OpenZeppelin Contracts 5.4.0 <code>ERC20</code>, with a nonzero recipient and positive supply.</p></section>
-            <section class="plane-block"><h3>Fixed-supply behavior</h3><p>Supply is minted once during construction. There is no external mint, public burn, owner role, pause control, or privileged balance mutation after deployment.</p></section>
-            <section class="plane-block"><h3>Qualification</h3><p>Hardhat 2.28.0 and Toolbox 6.1.0 compile and test ARCR. The local EVM run deploys it, verifies its symbol and supply, signs a transfer, and confirms total supply remains unchanged.</p></section>
-            <section class="plane-block claim-boundary"><h3>Supply boundary</h3><p>The one-million-unit local fixture proves behavior only. It is not a frozen Sepolia issuance quantity, and the future recipient wallet remains undecided.</p></section>
+            <section class="plane-block"><h3>ERC-20 behavior</h3><p>The deployed token supports balance queries, transfers, approvals, and delegated transfers.</p></section>
+            <section class="plane-block"><h3>Fixed-supply behavior</h3><p>The entire supply was minted once at construction. The contract exposes no public mint or burn function, pause switch, upgrade mechanism, or administrative supply control.</p></section>
+            <section class="plane-block"><h3>Recorded qualification</h3><p>The release passed its recorded 25-test qualification suite. Deployment verification compared the on-chain creation payload and runtime bytecode with the frozen release package and checked the result through independent Ethereum providers.</p></section>
+            <section class="plane-block claim-boundary"><h3>Deployed supply</h3><p>Fixed total supply: <strong>1,000,000 ARCR</strong>, using 18 decimal places. This is the deployed issuance quantity.</p></section>
           </div>
         </article>
         <article class="carousel-plane" id="plane-platform" role="tabpanel" aria-labelledby="tab-platform" data-carousel-plane="platform" hidden inert aria-hidden="true">
-          <header class="plane-header"><div><p class="plane-kicker">Plane 03 · Traversal</p><h2>From local receipt proof toward public testnet evidence.</h2></div><span class="plane-ordinal">ARCR / Platform</span></header>
+          <header class="plane-header"><div><p class="plane-kicker">Plane 03 · Traversal</p><h2>Inspect the on-chain launch record.</h2></div><span class="plane-ordinal">ARCR / Platform</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Current surface</h3><p>ARCR has repository source, compiler configuration, tests, a local deployment harness, and signed-transfer evidence. The current result is locally qualified implementation.</p></section>
-            <section class="plane-block"><h3>Next network</h3><p>Ethereum Sepolia, chain ID 11155111, is next. A funded wallet, frozen supply, chosen recipient, and explicit deployment authority are still required.</p></section>
-            <section class="plane-block"><h3>Evidence after deployment</h3><p>The platform may display an address only after the deployment transaction and bytecode are retrievable and ERC-20 behavior has been independently qualified on-chain.</p></section>
-            <section class="plane-block claim-boundary"><h3>Mainnet remains later</h3><p>Mainnet is not authorized. A locally working receivable-domain token does not prove a production asset or any external right to payment.</p></section>
+            <section class="plane-block"><h3>Contract address</h3><p>Ethereum mainnet · chain ID 1</p><p><a href="https://etherscan.io/address/0xebffa6543fa839fb3287867a18b536fd6c543c9f" style="overflow-wrap:anywhere"><code>0xebffa6543fa839fb3287867a18b536fd6c543c9f</code></a></p></section>
+            <section class="plane-block"><h3>Deployment transaction</h3><p><a href="https://etherscan.io/tx/0xceed44390a9e0456331569964d2fc4e39f6654707d34ff1f3d7c38eb928c732a" style="overflow-wrap:anywhere"><code>0xceed44390a9e0456331569964d2fc4e39f6654707d34ff1f3d7c38eb928c732a</code></a></p><p>Block 26,022,544 · 2026-09-21 UTC.</p></section>
+            <section class="plane-block"><h3>Recorded verification</h3><p>The 2026-09-21 deployment record confirms the token name, symbol, 18 decimal places, fixed supply, and matching bytecode. The explorer links let visitors inspect the public contract and deployment transaction.</p></section>
+            <section class="plane-block claim-boundary"><h3>Launch scope</h3><p>Launched means the token contract is deployed on Ethereum mainnet. This page does not establish an exchange listing, available liquidity, a market price, or commercial adoption.</p></section>
           </div>
         </article>
         <article class="carousel-plane" id="plane-governance" role="tabpanel" aria-labelledby="tab-governance" data-carousel-plane="governance" hidden inert aria-hidden="true">
           <header class="plane-header"><div><p class="plane-kicker">Plane 04 · Constraint</p><h2>Protocol identity is not a claim on someone else.</h2></div><span class="plane-ordinal">ARCR / Governance</span></header>
           <div class="plane-grid">
-            <section class="plane-block"><h3>Immutable token constraints</h3><ul><li>No post-deployment mint.</li><li>No public burn in version one.</li><li>No privileged token mutation.</li><li>No mainnet before testnet qualification.</li></ul></section>
+            <section class="plane-block"><h3>Immutable token constraints</h3><ul><li>No post-deployment mint path.</li><li>No public burn function.</li><li>No pause or upgrade control.</li><li>No administrative supply controls.</li></ul></section>
             <section class="plane-block"><h3>Holder-rights boundary</h3><p>ARCR does not create a debt, collection right, payment entitlement, redemption promise, equity position, ownership interest, or claim against a receivable.</p></section>
-            <section class="plane-block plane-block--wide claim-boundary"><h3>Truthful public status</h3><p>The supported statement is that ARCR’s implementation and local transaction path are qualified. Network deployment and external economic meaning remain unclaimed.</p></section>
+            <section class="plane-block plane-block--wide claim-boundary"><h3>Public launch status</h3><p>ARCR is a deployed, fixed-supply Ethereum token. Its domain name describes its intended place in ARCHCOIN; it does not by itself establish a legal agreement, receivable, or financial entitlement.</p></section>
           </div>
         </article>
       </div>

@@ -1,4 +1,4 @@
-name: Education Gate 1 Browser Acceptance
+name: Education Gate 1 Browser Acceptance\n# retrigger-final: 1c14f89f
 
 on:
   pull_request:

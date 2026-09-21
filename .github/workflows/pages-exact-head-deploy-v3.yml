@@ -238,6 +238,7 @@ jobs:
           echo "PROTECTED_RUNTIME_SURFACE_CONTINUITY_VERIFIED"
 
       - name: Materialize public Audralia runtime publication receipt
+        if: ${{ inputs.surface_id == 'audralia' }}
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           SURFACE_ID: ${{ inputs.surface_id }}
@@ -265,18 +266,21 @@ jobs:
           echo "AUDRALIA_RUNTIME_PUBLICATION_RECEIPT_MATERIALIZED=$TARGET_SHA"
 
       - name: Upload exact-head artifact with runtime receipt
+        if: ${{ inputs.surface_id == 'audralia' }}
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/pages-site
 
       - name: Deploy exact-head artifact with runtime receipt
+        if: ${{ inputs.surface_id == 'audralia' }}
         id: deploy_final
         uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Verify final release marker and Audralia runtime receipt
+        if: ${{ inputs.surface_id == 'audralia' }}
         env:
           PAGE_URL: ${{ steps.deploy_final.outputs.page_url }}
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}

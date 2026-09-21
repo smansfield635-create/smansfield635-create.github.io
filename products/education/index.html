@@ -375,7 +375,7 @@ function mountEducationCarousel(){
   root.style.setProperty("--edu-soft",["rgba(244,207,131,.08)","rgba(141,216,255,.08)","rgba(185,160,255,.08)","rgba(167,243,198,.08)","rgba(240,177,255,.08)","rgba(255,203,145,.08)"][index]);
  }
  function select(next){index=(next+EDUCATION_ARCHITECTURE.length)%EDUCATION_ARCHITECTURE.length;render()}
- root.addEventListener("click",e=>{const card=e.target.closest(".edu-standard-card");if(card&&!e.target.closest("button,input,textarea,select"))select(Number(card.dataset.cardIndex));});
+ root.addEventListener("click",e=>{const card=e.target.closest(".edu-standard-card");if(card?.dataset.adjacent==="true"){e.preventDefault();select(Number(card.dataset.cardIndex));return}if(card&&!e.target.closest("button,input,textarea,select"))select(Number(card.dataset.cardIndex));});
  const viewport=qs("[data-edu-viewport]");
  viewport.addEventListener("keydown",e=>{if(root.dataset.inspecting==="true")return;if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}})
  viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.dataset.dragging="true";viewport.setPointerCapture?.(e.pointerId)})

@@ -1,6 +1,6 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "education-g2-preflight-20260921a",
+  "requestId": "education-g2-preflight-20260921b",
   "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "inputs": {
     "target_sha": "22920452f6dfe7015ff34eabbccfd37e13c9c70f",

@@ -371,8 +371,10 @@ function mountEducationCarousel(){
  root.addEventListener("click",e=>{const card=e.target.closest(".edu-standard-card");if(card&&!e.target.closest("button,input,textarea,select"))select(Number(card.dataset.cardIndex));});
  const viewport=qs("[data-edu-viewport]");
  viewport.addEventListener("keydown",e=>{if(root.dataset.inspecting==="true")return;if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}})
- viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.setPointerCapture?.(e.pointerId)})
- viewport.addEventListener("pointerup",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;if(Math.abs(dx)>42)select(index+(dx<0?1:-1))})
+ viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.dataset.dragging="true";viewport.setPointerCapture?.(e.pointerId)})
+ viewport.addEventListener("pointermove",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;track.style.transition="none";track.style.transform="translate3d("+dx+"px,0,0)"})
+ viewport.addEventListener("pointerup",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;delete viewport.dataset.dragging;track.style.transition="transform .22s ease";track.style.transform="";if(Math.abs(dx)>42)select(index+(dx<0?1:-1));else render()})
+ viewport.addEventListener("pointercancel",()=>{dragStart=null;delete viewport.dataset.dragging;track.style.transition="transform .22s ease";track.style.transform="";render()})
  render();
 }
 mountEducationCarousel();

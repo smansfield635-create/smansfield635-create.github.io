@@ -452,7 +452,7 @@ function mountEducationCarousel(){
  }
  function build(){track.innerHTML=EDUCATION_ARCHITECTURE.map(cardHTML).join("");layout()}
  function layout(){
-  const activeCard=track.querySelector(".edu-standard-card");const cardWidth=activeCard?.getBoundingClientRect().width||Math.min(viewport.clientWidth*.78,448);const gap=cardWidth*.82;
+  const activeCard=track.querySelector(".edu-standard-card");const cardWidth=activeCard?.getBoundingClientRect().width||Math.min(viewport.clientWidth*.78,448);const gap=Math.max(cardWidth*.98,viewport.clientWidth*.42);
   track.querySelectorAll(".edu-standard-card").forEach((card,i)=>{
    const d=distance(i),x=d*gap+dragDx,ad=Math.min(Math.abs(d+dragDx/gap),3);
    card.style.setProperty("--spatial-x",x+"px");card.style.setProperty("--spatial-z",(-ad*120)+"px");card.style.setProperty("--spatial-scale",String(1-ad*.12));card.style.setProperty("--spatial-opacity",String(Math.max(.18,1-ad*.28)));

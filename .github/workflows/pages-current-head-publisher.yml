@@ -33,5 +33,5 @@ jobs:
         run: |
           set -euo pipefail
           head="$(gh api "/repos/$REPO/commits/main" --jq .sha)"
-          gh api --method POST             "/repos/$REPO/actions/workflows/pages-direct-deploy.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$head"             -f inputs[surface_id]="$SURFACE_ID"
+          gh api --method POST             "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$head"             -f inputs[surface_id]="$SURFACE_ID"
           echo "CURRENT_HEAD_PUBLICATION_DISPATCHED=$head:$SURFACE_ID"

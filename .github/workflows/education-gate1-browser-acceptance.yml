@@ -49,13 +49,13 @@ jobs:
               };
               const states=[];
               for(const code of ['en','es','zh','en']){
-                await page.evaluate(c=>window.setEducationHelpLanguage(c),code);
+                await page.locator('[data-shell-language="'+code+'"]').click();
                 await page.waitForFunction(c=>document.documentElement.dataset.helpLanguage===c,code);
                 const state=await page.evaluate(()=>({
                   lang:document.documentElement.lang,
                   help:document.documentElement.dataset.helpLanguage,
                   title:document.querySelector('#education-title')?.textContent.trim(),
-                  journey:document.querySelector('.edu-carousel__header .eyebrow')?.textContent.trim(),
+                  journey:document.querySelector('.edu-carousel__header .eyebrow')?.textContent.trim(),\n                  nav:[...document.querySelectorAll('.routes a')].map(e=>e.textContent.trim()),\n                  footer:document.querySelector('footer')?.textContent.trim(),
                   card:document.querySelector('.edu-standard-card[data-active="true"] [data-chamber-title]')?.textContent.trim()
                 }));
                 if(state.title!==expected[code][0]||state.journey!==expected[code][1]) throw Error(name+' '+code+' shell mismatch '+JSON.stringify(state));

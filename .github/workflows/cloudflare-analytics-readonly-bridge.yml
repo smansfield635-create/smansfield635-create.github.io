@@ -58,7 +58,7 @@ jobs:
                   }
                 ) {
                   count
-                  dimensions { datetimeHour path }
+                  dimensions { datetimeHour }
                 }
               }
             }

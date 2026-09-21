@@ -106,7 +106,7 @@ jobs:
                   cursor=chunk_end
               pages=[{"count":merged[h],"dimensions":{"datetimeHour":h}} for h in sorted(merged)]
               out["accounts"].append({"accountTag":tag,"chunks":chunks,"pages":pages})
-          Path("analytics-bridge").mkdir()
+          Path("analytics-bridge").mkdir(exist_ok=True)
           Path("analytics-bridge/latest.json").write_text(json.dumps(out,indent=2)+"\n")
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
           print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")

@@ -1,4 +1,5 @@
 name: Education Gate 2 Browser Acceptance
+# retrigger: adjacent-selector-e8789b21
 
 on:
   pull_request:

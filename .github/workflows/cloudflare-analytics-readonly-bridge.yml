@@ -249,10 +249,20 @@ jobs:
             echo "No analytics change to persist."
           else
             git commit -m "Update Cloudflare analytics snapshot [skip ci]"
-            # main is active; replay only these generated files onto the freshest head.
-            git fetch origin main
-            git rebase origin/main
-            git push origin HEAD:main
+            # main is highly concurrent. Retry generated-file replay instead of failing
+            # a successful analytics collection on a transient non-fast-forward race.
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then
+                echo "ANALYTICS_SNAPSHOT_PERSISTED attempt=$attempt"
+                exit 0
+              fi
+              echo "Concurrent main update; replaying generated analytics commit (attempt $attempt/6)"
+              git fetch origin main
+              git rebase origin/main
+              sleep $((attempt * 2))
+            done
+            echo "Analytics collection succeeded but snapshot persistence exhausted retries." >&2
+            exit 1
           fi
 
       - name: Upload private workflow artifact

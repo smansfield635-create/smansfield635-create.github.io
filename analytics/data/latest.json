@@ -1,0 +1,107 @@
+{
+  "schema": "DGB_PUBLIC_ANALYTICS_V1",
+  "generatedAt": "2026-09-21T19:27:58Z",
+  "window30d": {
+    "start": "2026-08-22T19:27:58Z",
+    "end": "2026-09-21T19:27:58Z"
+  },
+  "summary": {
+    "pageLoads": 7051,
+    "botPageLoads": 2418,
+    "nonBotPageLoads": 4633
+  },
+  "referrers": [
+    {
+      "host": "diamondgatebridge.com",
+      "pageLoads": 3256,
+      "visits": 0
+    },
+    {
+      "host": "(none)",
+      "pageLoads": 3097,
+      "visits": 3097
+    },
+    {
+      "host": "www.google.com",
+      "pageLoads": 670,
+      "visits": 670
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 22,
+      "visits": 22
+    },
+    {
+      "host": "m.facebook.com",
+      "pageLoads": 2,
+      "visits": 2
+    },
+    {
+      "host": "l.instagram.com",
+      "pageLoads": 2,
+      "visits": 2
+    },
+    {
+      "host": "chatgpt.com",
+      "pageLoads": 1,
+      "visits": 1
+    },
+    {
+      "host": "lm.facebook.com",
+      "pageLoads": 1,
+      "visits": 1
+    }
+  ],
+  "topPages": [
+    {
+      "path": "/",
+      "pageLoads": 1867,
+      "visits": 1618
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 957,
+      "visits": 622
+    },
+    {
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 718,
+      "visits": 718
+    },
+    {
+      "path": "/showroom/globe/h-earth/awards/",
+      "pageLoads": 702,
+      "visits": 12
+    },
+    {
+      "path": "/campaigns/consider-the-energy/",
+      "pageLoads": 251,
+      "visits": 64
+    },
+    {
+      "path": "/evidence/agentic-frontier/",
+      "pageLoads": 183,
+      "visits": 30
+    },
+    {
+      "path": "/index.html",
+      "pageLoads": 145,
+      "visits": 0
+    },
+    {
+      "path": "/products/on-your-side-ai/native-chat/",
+      "pageLoads": 112,
+      "visits": 94
+    }
+  ],
+  "ownerMeasurement": {
+    "qualified": true,
+    "qualifiedDeviceCount": 3,
+    "measuredSince": "2026-09-21T17:35:53Z"
+  },
+  "methodology": {
+    "visitsAreUniquePeople": false,
+    "historicalOwnerTraffic": "estimated-conservatively",
+    "forwardOwnerTraffic": "device-heartbeat-qualified"
+  }
+}

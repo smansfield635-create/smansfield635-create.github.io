@@ -55,7 +55,6 @@ jobs:
                   filter: {
                     datetime_geq: $start
                     datetime_lt: $end
-                    host: "diamondgatebridge.com"
                   }
                 ) {
                   count
@@ -70,6 +69,8 @@ jobs:
           for a in accounts:
               tag=a["accountTag"]
               res=gql(query,{"accountTag":tag,"start":out["window"]["start"],"end":out["window"]["end"]})
+              if res.get("errors"):
+                  raise SystemExit("RUM analytics query failed: " + json.dumps(res["errors"]))
               out["accounts"].append({"accountTag":tag,"response":res})
           Path("analytics-bridge").mkdir()
           Path("analytics-bridge/latest.json").write_text(json.dumps(out,indent=2)+"\n")

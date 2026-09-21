@@ -1,25 +1,23 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "education",
-  "description": "Existing Diamond Gate Bridge Education module at /products/education/: layered standards carousel plus the English adaptive-placement demo flow.",
+  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: six learner-facing journey chapters plus the English adaptive-placement demo flow.",
   "checks": [
     {
       "path": "/products/education/index.html",
       "includes": [
         "EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1",
         "English Fluency Accelerator",
-        "Start where your ability actually is.",
-        "Six standards. One learning system.",
-        "Foundation",
-        "Productive Language",
-        "Progression",
-        "Support",
-        "Placement",
-        "Evidence",
-        "Reading",
-        "Engineering",
-        "Evidence standing",
-        "Return to Carousel",
+        "Possibility",
+        "Understanding",
+        "Action",
+        "Progress",
+        "Independence",
+        "Achievement",
+        "Learn",
+        "Practice",
+        "Check",
+        "Back to the Journey",
         "Start the Demo",
         "NATIVE_SUPPORTED",
         "BILINGUAL_BRIDGED",
@@ -33,6 +31,8 @@
       "excludes": [
         "Public Face",
         "Technical Face",
+        "Education architecture standards",
+        "Engineering detail",
         "data-demo-language-spanish=\"available\"",
         "data-demo-language-chinese=\"available\"",
         "data-speech-measurement=\"true\"",
@@ -54,7 +54,7 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Outer carousel advances to Productive Language",
+        "name": "Outer carousel advances to Understanding",
         "action": {
           "type": "click",
           "selector": "[data-edu-index=\"1\"]"
@@ -63,7 +63,7 @@
           {
             "type": "textContains",
             "selector": "[data-edu-live]",
-            "value": "Productive Language"
+            "value": "Understanding"
           },
           {
             "type": "textContains",
@@ -74,7 +74,7 @@
         "timeoutMs": 5000
       },
       {
-        "name": "Selected standard opens in shared carousel field",
+        "name": "Selected chapter opens in shared learning field",
         "action": {
           "type": "click",
           "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-inspect]"
@@ -94,7 +94,7 @@
         "timeoutMs": 5000
       },
       {
-        "name": "Engineering lens changes independently",
+        "name": "Practice lens changes independently",
         "action": {
           "type": "click",
           "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-lens=\"engineering\"]"
@@ -109,13 +109,13 @@
           {
             "type": "textContains",
             "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-cell]",
-            "value": "Engineering detail"
+            "value": "See how it works"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Return to carousel preserves selected outer standard",
+        "name": "Return to journey preserves selected chapter",
         "action": {
           "type": "click",
           "selector": ".edu-standard-card[data-active=\"true\"] [data-edu-return]"
@@ -130,7 +130,7 @@
           {
             "type": "textContains",
             "selector": "[data-edu-live]",
-            "value": "Productive Language"
+            "value": "Understanding"
           }
         ],
         "timeoutMs": 5000
@@ -168,7 +168,7 @@
           {
             "type": "textContains",
             "selector": "[data-demo-stage=\"intake\"]",
-            "value": "Tell us where you think you are."
+            "value": "Tell us where English feels comfortable today."
           }
         ],
         "timeoutMs": 5000

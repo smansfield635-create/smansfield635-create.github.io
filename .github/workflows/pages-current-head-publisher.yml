@@ -29,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          SURFACE_ID: ${{ inputs.surface_id }}
+          SURFACE_ID: ${{ inputs.surface_id || 'analytics' }}
         run: |
           set -euo pipefail
           head="$(gh api "/repos/$REPO/commits/main" --jq .sha)"

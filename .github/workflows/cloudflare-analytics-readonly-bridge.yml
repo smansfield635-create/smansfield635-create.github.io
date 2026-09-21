@@ -229,6 +229,73 @@ jobs:
           Path("analytics-bridge/owner-heartbeats.json").write_text(json.dumps(heartbeat,indent=2)+"\n")
           print("OWNER_HEARTBEAT_QUALIFICATION="+heartbeat["result"])
 
+          # Historical owner-footprint envelope. Known owner devices are US + Android +
+          # Chrome-family + mobile/tablet + non-bot. Query the intersection directly; never
+          # infer it by multiplying separate aggregate dimensions.
+          historical_start = history_start
+          owner_candidate = {"pageLoads":0,"visits":0,"byDevice":{},"byPath":{},"byReferer":{}}
+          for device in ["mobile","tablet"]:
+              cursor=historical_start
+              while cursor < now:
+                  chunk_end=min(cursor+timedelta(days=1),now)
+                  q = """
+                  query OwnerEnvelope($accountTag:string,$start:Time,$end:Time,$device:string) {
+                    viewer { accounts(filter:{accountTag:$accountTag}) {
+                      rows: rumPageloadEventsAdaptiveGroups(
+                        limit:5000
+                        orderBy:[count_DESC]
+                        filter:{
+                          datetime_geq:$start datetime_lt:$end
+                          countryName:"US" userAgentOS:"Android" userAgentBrowser:"Chrome"
+                          deviceType:$device bot:0
+                        }
+                      ) {
+                        count
+                        sum { visits }
+                        dimensions { deviceType requestPath refererHost }
+                      }
+                    }}
+                  }
+                  """
+                  res=gql(q,{"accountTag":accounts[0]["accountTag"],
+                            "start":cursor.isoformat().replace("+00:00","Z"),
+                            "end":chunk_end.isoformat().replace("+00:00","Z"),
+                            "device":device})
+                  if res.get("errors"):
+                      raise SystemExit("Historical owner-envelope query failed: "+json.dumps(res["errors"]))
+                  accts=res.get("data",{}).get("viewer",{}).get("accounts",[])
+                  for row in (accts[0].get("rows",[]) if accts else []):
+                      n=int(row.get("count",0)); v=int(row.get("sum",{}).get("visits",0) or 0)
+                      owner_candidate["pageLoads"]+=n; owner_candidate["visits"]+=v
+                      d=row.get("dimensions",{})
+                      dv=d.get("deviceType") or "(none)"; rp=d.get("requestPath") or "(none)"; rf=d.get("refererHost") or "(none)"
+                      for bucket,key in [(owner_candidate["byDevice"],dv),(owner_candidate["byPath"],rp),(owner_candidate["byReferer"],rf)]:
+                          cur=bucket.setdefault(key,{"pageLoads":0,"visits":0});cur["pageLoads"]+=n;cur["visits"]+=v
+                  cursor=chunk_end
+          historical_owner={
+            "schema":"DGB_HISTORICAL_OWNER_ENVELOPE_V1",
+            "generatedAt":out["generatedAt"],
+            "window":out["window"],
+            "knownOwnerFootprint":{"country":"US","os":"Android","browser":"Chrome","devices":["mobile","tablet"],"bot":0},
+            "interpretation":"Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
+            "candidate":owner_candidate
+          }
+          Path("analytics-bridge/historical-owner-envelope.json").write_text(json.dumps(historical_owner,indent=2)+"\n")
+
+          # Forward reporting methodology. Measured owner exclusion begins only after
+          # device heartbeat qualification; historical owner subtraction remains estimated.
+          methodology={
+            "schema":"DGB_ANALYTICS_REPORTING_METHODOLOGY_V1",
+            "generatedAt":out["generatedAt"],
+            "ownerMeasurement":{"qualification":heartbeat["result"],
+              "qualifiedPaths":wanted,
+              "measuredExclusionStart":"2026-09-21T17:35:53Z"},
+            "reportingOrder":["total","cloudflareClassifiedBots","ownerDevelopment","externalNonBot"],
+            "historicalRule":"Before measuredExclusionStart, owner traffic is not deterministically identifiable; report an owner-compatible envelope and a definitely-external lower bound.",
+            "forwardRule":"After measuredExclusionStart, report device-specific owner heartbeat activity separately from external non-bot traffic; do not relabel Cloudflare visits as unique people."
+          }
+          Path("analytics-bridge/reporting-methodology.json").write_text(json.dumps(methodology,indent=2)+"\n")
+
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
           print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")
 
@@ -238,7 +305,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          files=(latest.json status.txt rum-schema.json composition.json owner-heartbeats.json)
+          files=(latest.json status.txt rum-schema.json composition.json owner-heartbeats.json historical-owner-envelope.json reporting-methodology.json)
           # Generated analytics files are authoritative snapshots. Never merge/rebase them.
           # On each retry, reset to fresh main, copy the just-collected snapshots, commit, push.
           for attempt in 1 2 3 4 5 6 7 8; do

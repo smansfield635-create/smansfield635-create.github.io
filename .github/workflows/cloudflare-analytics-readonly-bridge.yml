@@ -108,6 +108,60 @@ jobs:
               out["accounts"].append({"accountTag":tag,"chunks":chunks,"pages":pages})
           Path("analytics-bridge").mkdir(exist_ok=True)
           Path("analytics-bridge/latest.json").write_text(json.dumps(out,indent=2)+"\n")
+          # Full-scope composition snapshot over the latest 30 days.
+          # Each dimension is queried separately to avoid combinatorial grouping and sampling.
+          composition_start = max(history_start, now - timedelta(days=30))
+          dimensions = [
+              "requestPath","refererHost","countryName","deviceType",
+              "userAgentBrowser","userAgentOS","bot","navigationType",
+              "deliveryType","requestHost","siteTag"
+          ]
+          composition = {
+              "schema":"DGB_CLOUDFLARE_RUM_COMPOSITION_V1",
+              "generatedAt":out["generatedAt"],
+              "window":{"start":composition_start.isoformat().replace("+00:00","Z"),"end":out["window"]["end"]},
+              "dimensions":{}
+          }
+          for dim in dimensions:
+              merged={}
+              cursor=composition_start
+              while cursor < now:
+                  chunk_end=min(cursor+timedelta(days=1), now)
+                  q = f"""
+                  query Composition($accountTag: string, $start: Time, $end: Time) {{
+                    viewer {{
+                      accounts(filter: {{accountTag: $accountTag}}) {{
+                        rows: rumPageloadEventsAdaptiveGroups(
+                          limit: 5000
+                          orderBy: [count_DESC]
+                          filter: {{datetime_geq: $start datetime_lt: $end}}
+                        ) {{
+                          count
+                          sum {{ visits }}
+                          dimensions {{ {dim} }}
+                        }}
+                      }}
+                    }}
+                  }}
+                  """
+                  res=gql(q,{"accountTag":accounts[0]["accountTag"],
+                            "start":cursor.isoformat().replace("+00:00","Z"),
+                            "end":chunk_end.isoformat().replace("+00:00","Z")})
+                  if res.get("errors"):
+                      raise SystemExit("Composition query failed for "+dim+": "+json.dumps(res["errors"]))
+                  accts=res.get("data",{}).get("viewer",{}).get("accounts",[])
+                  for row in (accts[0].get("rows",[]) if accts else []):
+                      key=row.get("dimensions",{}).get(dim)
+                      key="(none)" if key in (None,"") else str(key)
+                      cur=merged.setdefault(key,{"pageLoads":0,"visits":0})
+                      cur["pageLoads"] += int(row.get("count",0))
+                      cur["visits"] += int(row.get("sum",{}).get("visits",0) or 0)
+                  cursor=chunk_end
+              composition["dimensions"][dim]=[
+                  {"value":k,**v} for k,v in sorted(merged.items(),key=lambda kv:kv[1]["pageLoads"],reverse=True)
+              ]
+          Path("analytics-bridge/composition.json").write_text(json.dumps(composition,indent=2)+"\n")
+
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
           print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")
 
@@ -121,7 +175,8 @@ jobs:
           cp analytics-bridge/latest.json .analytics/cloudflare/latest.json
           cp analytics-bridge/status.txt .analytics/cloudflare/status.txt
           cp analytics-bridge/rum-schema.json .analytics/cloudflare/rum-schema.json
-          git add .analytics/cloudflare/latest.json .analytics/cloudflare/status.txt .analytics/cloudflare/rum-schema.json
+          cp analytics-bridge/composition.json .analytics/cloudflare/composition.json
+          git add .analytics/cloudflare/latest.json .analytics/cloudflare/status.txt .analytics/cloudflare/rum-schema.json .analytics/cloudflare/composition.json
           if git diff --cached --quiet; then
             echo "No analytics change to persist."
           else

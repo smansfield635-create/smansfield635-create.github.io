@@ -2,7 +2,7 @@ name: Education Exact Head Deploy
 
 on:
   pull_request:
-    paths: ['.github/education-deploy-request.json']
+    paths: ['.github/education-deploy-request*.json']
   workflow_dispatch:
     inputs:
       target_sha:

@@ -1,0 +1,6 @@
+{
+  "schema": "DGB_EDUCATION_DEPLOY_REQUEST_v1",
+  "target_sha": "161206c0657c382be30a1b37f92eba0a7ed5fee2",
+  "surface": "education",
+  "reason": "publish completed three-gate education construction cycle"
+}

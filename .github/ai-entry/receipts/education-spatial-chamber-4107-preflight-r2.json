@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-spatial-chamber-4107-preflight-r2",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4112,
+  "requestBranch": "ai-dispatch-request-education-spatial-preflight-4107-r2",
+  "requestCommit": "a9679555dd1d90e03760f60edb4f610a384cc8b3",
+  "requestCommitParent": "2aa8575040fcc8a7ad649aa728b09edd88b1ea07",
+  "currentMainSha": "2aa8575040fcc8a7ad649aa728b09edd88b1ea07",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9ba8cff1b418fb37317daa165cb735b4f70d5efb",
+    "surface_id": "education"
+  },
+  "bridgeRunId": "35614919945",
+  "dispatchedRunId": 35614979680,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35614979680",
+  "dispatchedRunHeadSha": "2aa8575040fcc8a7ad649aa728b09edd88b1ea07",
+  "dispatchedAt": "2026-09-21T14:51:31.186Z",
+  "resolvedAt": "2026-09-21T14:51:35.312Z"
+}

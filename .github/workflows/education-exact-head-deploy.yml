@@ -88,7 +88,7 @@ jobs:
             commit="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             surface="$(printf '%s' "$marker" | jq -r '.surfaceId // empty' 2>/dev/null || true)"
             page="$(curl --fail --silent --show-error -L --max-time 20 "${PAGE_URL%/}/products/education/?attempt=$i" 2>/dev/null || true)"
-            if [ "$commit" = "$TARGET_SHA" ] && [ "$surface" = "education" ] && printf '%s' "$page" | grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1'; then
+            if [ "$commit" = "$TARGET_SHA" ] && [ "$surface" = "education" ] && grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1' <<<"$page"; then
               echo "EDUCATION_RELEASE_VERIFIED=$TARGET_SHA"
               exit 0
             fi

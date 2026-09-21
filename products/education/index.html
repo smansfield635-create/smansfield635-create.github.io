@@ -134,27 +134,12 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 @media(max-width:480px){.edu-carousel__viewport{height:31rem}.edu-standard-card{width:82vw}.edu-card-face{padding:1rem}.edu-card-front .edu-standard-title{font-size:2.35rem}}
 
 
-/* #4115 authoritative responsive geometry — repaired final cascade */
-.edu-carousel{--edu-card-width:min(34vw,28rem);--edu-card-height:25rem;--edu-neighbor-step:calc(var(--edu-card-width) * .82)}
-.edu-carousel__viewport,.edu-carousel[data-inspecting="true"] .edu-carousel__viewport{height:29rem}
-.edu-standard-card,.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"],.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"][data-inspecting="true"]{top:1rem;width:var(--edu-card-width);max-width:var(--edu-card-width);height:var(--edu-card-height);min-height:var(--edu-card-height);max-height:var(--edu-card-height);overflow:hidden;border-radius:1.2rem;padding:0}
-.edu-card-inner,.edu-card-front,.edu-card-back{height:var(--edu-card-height);min-height:var(--edu-card-height);max-height:var(--edu-card-height)}
-.edu-card-face{overflow:auto}
-@media (min-width:600px) and (max-width:900px){
- .edu-carousel{--edu-card-width:min(68vw,24rem);--edu-card-height:23rem}
- .edu-carousel__viewport,.edu-carousel[data-inspecting="true"] .edu-carousel__viewport{height:26rem}
- .edu-standard-card,.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"],.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"][data-inspecting="true"]{top:1rem}
- .edu-card-face{padding:1.05rem}
- .edu-card-front .edu-standard-title{font-size:clamp(1.85rem,5vw,2.7rem)}
-}
-@media (max-width:599px){
- .edu-carousel{--edu-card-width:min(78vw,20.5rem);--edu-card-height:22rem;padding-inline:.45rem;min-height:0}
- .edu-carousel__viewport,.edu-carousel[data-inspecting="true"] .edu-carousel__viewport{height:24rem}
- .edu-standard-card,.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"],.edu-carousel[data-inspecting="true"] .edu-standard-card[data-active="true"][data-inspecting="true"]{top:.7rem;border:1px solid rgba(255,255,255,.13)}
- .edu-card-face{padding:.9rem}
- .edu-card-front .edu-standard-title{font-size:clamp(1.75rem,8vw,2.3rem)}
- .edu-card-front .edu-standard-copy{font-size:clamp(.9rem,3.5vw,1rem)}
-}
+/* #4124 Education recovery */
+.edu-carousel{--edu-orbit-width:min(44vw,30rem);--edu-orbit-height:21rem;min-height:31rem;overflow:hidden}.edu-carousel__viewport{height:24rem;overflow:hidden;touch-action:pan-y}
+.edu-standard-card{top:1.2rem;width:var(--edu-orbit-width);max-width:var(--edu-orbit-width);height:var(--edu-orbit-height);min-height:var(--edu-orbit-height);max-height:var(--edu-orbit-height);overflow:visible;transform:translateX(-50%) translate3d(var(--spatial-x,0),0,var(--spatial-z,0)) scale(var(--spatial-scale,1));opacity:var(--spatial-opacity,1)}.edu-card-inner,.edu-card-front{height:100%}.edu-card-back{display:none!important}
+.edu-detail-surface{position:fixed;z-index:100000;inset:0;overflow:auto;padding:clamp(1rem,3vw,2rem);background:linear-gradient(180deg,rgba(5,13,29,.99),rgba(2,6,16,.995));backdrop-filter:blur(14px)}.edu-detail-surface[hidden]{display:none}.edu-detail-panel{width:min(100%,70rem);margin:auto;padding:clamp(1rem,3vw,2rem);border:1px solid var(--line);border-radius:1.25rem;background:#081225}.edu-detail-top{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:1rem}.edu-detail-top h3{font-family:Georgia,serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:500}.edu-detail-body{display:grid;gap:1rem;margin-top:1rem}.edu-detail-step{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:1rem;background:rgba(255,255,255,.025)}.edu-detail-step h4{margin:0 0 .45rem;color:var(--gold)}
+.edu-custom-select{position:relative}.edu-custom-select>button{width:100%;min-height:3rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:.75rem;background:#08162d;color:var(--text);font:inherit;text-align:left;display:flex;justify-content:space-between}.edu-custom-select>button::after{content:"⌄";color:var(--gold)}.edu-custom-options{position:absolute;z-index:40;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55vh);overflow:auto;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}.edu-custom-options[hidden]{display:none}.edu-custom-options button{display:block;width:100%;padding:.72rem;border:0;border-radius:.55rem;background:transparent;color:var(--text);font:inherit;text-align:left}.edu-custom-options button:hover,.edu-custom-options button:focus-visible,.edu-custom-options button[aria-selected="true"]{background:rgba(141,216,255,.12)}.field select.edu-native-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+@media(max-width:900px){.edu-carousel{--edu-orbit-width:min(70vw,25rem);--edu-orbit-height:20rem;min-height:28rem}.edu-carousel__viewport{height:23rem}}@media(max-width:599px){.edu-carousel{--edu-orbit-width:min(78vw,21rem);--edu-orbit-height:19rem;min-height:26rem;padding-inline:.45rem}.edu-carousel__viewport{height:21.5rem}.edu-standard-card{top:.8rem}.edu-standard-summary{padding:1rem}.edu-standard-title{font-size:clamp(1.8rem,8vw,2.45rem)}.edu-detail-top{display:grid}}
 
 </style>
 </head>
@@ -203,6 +188,7 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
   <p class="edu-carousel__note">Six persistent cards share one continuous learning rail. Bring a card forward, turn it over, learn, practice, check, then return to the rail.</p>
 </section>
 
+<section class="edu-detail-surface" id="edu-detail-surface" hidden aria-modal="true" role="dialog"><article class="edu-detail-panel"><div class="edu-detail-top"><div><p class="eyebrow" id="edu-detail-kicker"></p><h3 id="edu-detail-title"></h3></div><button class="edu-return" type="button" id="edu-detail-return">Return to orbit</button></div><div class="edu-detail-body" id="edu-detail-body"></div></article></section>
 <section class="edu-demo-gateway panel" aria-label="Demo gateway">
   <div>
     <p class="eyebrow">From possibility to action</p>
@@ -474,11 +460,8 @@ function mountEducationCarousel(){
   if(i===4)practice='<button type="button" class="edu-card-help" data-toggle-help>'+(s.help?L.hide:L.show)+'</button><p data-help-cue '+(s.help?"":'hidden')+'>'+esc(task.help)+'</p>'+practice;
   return '<article class="edu-standard-card" data-card-index="'+i+'" data-face="front"><div class="edu-card-inner">'+
    '<section class="edu-card-face edu-card-front"><span class="edu-standard-count">'+(i+1)+' / 6</span><p class="edu-standard-kicker">'+esc(copy.title)+'</p><h3 class="edu-standard-title">'+esc(copy.front)+'</h3><p class="edu-standard-copy">'+esc(copy.support)+'</p><button class="edu-inspect edu-card-action" type="button" data-flip>'+esc(copy.action)+'</button></section>'+
-   '<section class="edu-card-face edu-card-back"><div class="edu-card-back-head"><strong>'+esc(copy.title)+'</strong><button class="edu-return" type="button" data-flip>'+esc(L.back)+'</button></div><div class="edu-card-back-body">'+
-   '<div class="edu-card-step"><h4>'+esc(L.learn)+'</h4><p>'+esc(copy.learn)+'</p></div>'+
-   '<div class="edu-card-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</div>'+
-   '<div class="edu-card-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-feedback data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p></div>'+
-   '<details class="edu-card-deep"><summary>'+esc(L.why)+'</summary><p>'+esc(deep[i])+'</p></details></div></section></div></article>';
+   '</div></article>';
+
  }
  function build(){track.innerHTML=EDUCATION_ARCHITECTURE.map(cardHTML).join("");layout()}
  function layout(){
@@ -491,9 +474,13 @@ function mountEducationCarousel(){
   live.textContent=chamberCopy(index).title+" · "+(index+1)+" / 6";
  }
  function select(n){index=(n+6)%6;dragDx=0;layout()}
+ const detailSurface=qs("#edu-detail-surface"),detailTitle=qs("#edu-detail-title"),detailKicker=qs("#edu-detail-kicker"),detailBody=qs("#edu-detail-body"),detailReturn=qs("#edu-detail-return");
+ function openDetail(i){const copy=chamberCopy(i),L=labels(),task=tasks[i],s=state[i];index=i;layout();detailKicker.textContent=(i+1)+" / 6 · "+copy.title;detailTitle.textContent=copy.front;let practice=task.type==="choice"?'<div class="edu-card-options">'+task.options.map((o,j)=>'<button type="button" data-detail-choice="'+j+'" aria-pressed="'+(s.choice===j)+'" lang="en">'+esc(o)+'</button>').join("")+'</div>':'<input class="edu-card-input" data-detail-input lang="en" value="'+esc(s.text)+'" placeholder="'+esc(task.placeholder)+'">';detailBody.innerHTML='<section class="edu-detail-step"><h4>'+esc(L.learn)+'</h4><p>'+esc(copy.learn)+'</p></section><section class="edu-detail-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</section><section class="edu-detail-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-detail-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-detail-feedback data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p></section><details class="edu-card-deep"><summary>'+esc(L.why)+'</summary><p>'+esc(deep[i])+'</p></details>';detailSurface.hidden=false;document.body.style.overflow="hidden";detailReturn.focus()}
+ function closeDetail(){detailSurface.hidden=true;document.body.style.overflow="";viewport.focus()} detailReturn.addEventListener("click",closeDetail);
+ detailSurface.addEventListener("click",e=>{const i=index,task=tasks[i],s=state[i],L=labels();const choice=e.target.closest("[data-detail-choice]");if(choice){s.choice=Number(choice.dataset.detailChoice);detailBody.querySelectorAll("[data-detail-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)));return}if(e.target.closest("[data-detail-check]")){let val="";if(task.type==="choice"){if(s.choice===null){s.feedback=L.choose;s.feedbackState="retry"}else{const ok=s.choice===task.correct;s.feedback=feedback(i,ok,"");s.feedbackState=ok?"success":"retry"}}else{const input=detailBody.querySelector("[data-detail-input]");val=input.value.trim();s.text=val;if(!val){s.feedback=L.write;s.feedbackState="retry"}else{s.feedback=feedback(i,true,val);s.feedbackState="success"}}const out=detailBody.querySelector("[data-detail-feedback]");out.textContent=s.feedback;out.dataset.state=s.feedbackState}});detailSurface.addEventListener("input",e=>{if(e.target.matches("[data-detail-input]"))state[index].text=e.target.value});
  root.addEventListener("click",e=>{
   const card=e.target.closest(".edu-standard-card");if(!card)return;const i=Number(card.dataset.cardIndex);
-  if(e.target.closest("[data-flip]")){if(i!==index){select(i);return}card.dataset.face=card.dataset.face==="back"?"front":"back";root.dataset.inspecting=String(card.dataset.face==="back");return}
+  if(e.target.closest("[data-flip]")){if(i!==index)select(i);openDetail(i);return}
   if(i!==index&&!e.target.closest("button,input")){select(i);return}
   const choice=e.target.closest("[data-choice]");if(choice){state[i].choice=Number(choice.dataset.choice);card.querySelectorAll("[data-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)));return}
   if(e.target.closest("[data-toggle-help]")){state[i].help=!state[i].help;build();track.querySelector('[data-card-index="'+i+'"]').dataset.face="back";return}
@@ -534,6 +521,7 @@ qsa("[data-start-demo]").forEach(b=>b.addEventListener("click",startDemo));
 qsa("[data-language]").forEach(b=>b.addEventListener("click",()=>{learner.target_language=b.dataset.language;setStage("intake")}));
 qsa("[data-back]").forEach(b=>b.addEventListener("click",()=>setStage(b.dataset.back)));
 
+function enhanceEducationSelect(select){if(!select||select.dataset.customized)return;select.dataset.customized="true";select.classList.add("edu-native-hidden");const wrap=document.createElement("div"),trigger=document.createElement("button"),list=document.createElement("div");wrap.className="edu-custom-select";trigger.type="button";trigger.setAttribute("aria-haspopup","listbox");list.className="edu-custom-options";list.hidden=true;select.after(wrap);wrap.append(trigger,list);const rebuild=()=>{trigger.textContent=select.selectedOptions[0]?.textContent||"Choose";list.innerHTML="";[...select.options].slice(1).forEach(opt=>{const b=document.createElement("button");b.type="button";b.textContent=opt.textContent;b.setAttribute("aria-selected",String(opt.value===select.value));b.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event("change",{bubbles:true}));list.hidden=true;trigger.setAttribute("aria-expanded","false");rebuild()};list.append(b)})};trigger.onclick=()=>{list.hidden=!list.hidden;trigger.setAttribute("aria-expanded",String(!list.hidden))};document.addEventListener("click",e=>{if(!wrap.contains(e.target))list.hidden=true});document.addEventListener("education-help-language-change",()=>queueMicrotask(rebuild));rebuild()}["native-language","claimed-level","study-history","translation-use"].forEach(id=>enhanceEducationSelect(qs("#"+id)));
 function beginIndependence(){
  const native=qs("#native-language").value, claimed=Number(qs("#claimed-level").value), history=qs("#study-history").value, translation=qs("#translation-use").value;
  if(!native||!claimed||!history||!translation){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}

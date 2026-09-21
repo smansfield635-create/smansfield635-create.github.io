@@ -6,11 +6,38 @@
     {
       "path": "/analytics/index.html",
       "includes": [
-        "LIVE ANALYTICS",
         "Measurable wake.",
         "How we count",
         "Current measurement boundary",
-        "/analytics/data/latest.json"
+        "/analytics/data/latest.json",
+        "/analytics/dashboard.js",
+        "/analytics/dashboard.css"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/analytics/dashboard.js",
+      "includes": [
+        "POLL_MS = 60000",
+        "visibilitychange",
+        "Last checked"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/analytics/dashboard.css",
+      "includes": [
+        "max-width:560px",
+        "prefers-reduced-motion"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/analytics/data/latest.json",
+      "includes": [
+        "DGB_PUBLIC_ANALYTICS_V1",
+        "generatedAt",
+        "nonBotPageLoads"
       ],
       "excludes": []
     }
@@ -26,6 +53,41 @@
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
     "ignoreConsoleErrorIncludes": [],
-    "interactions": []
+    "interactions": [
+      {
+        "name": "Refresh remains usable with qualified data",
+        "action": {
+          "type": "click",
+          "selector": "#refresh"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#dashboard",
+            "name": "data-ready",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "#data-through",
+            "value": "Data through"
+          },
+          {
+            "type": "exists",
+            "selector": "#refresh:not(:disabled)"
+          },
+          {
+            "type": "exists",
+            "selector": "#status[data-state=\"current\"], #status[data-state=\"delayed\"]"
+          }
+        ],
+        "timeoutMs": 15000
+      }
+    ],
+    "readyAttribute": {
+      "selector": "#dashboard",
+      "name": "data-ready",
+      "contains": "true"
+    }
   }
 }

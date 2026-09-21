@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   # qualification trigger
   push:
+    branches: [main]
     paths:
       - '.github/workflows/cloudflare-analytics-readonly-bridge.yml'
   schedule:
@@ -11,6 +12,11 @@ on:
 
 permissions:
   contents: write
+
+concurrency:
+  group: cloudflare-analytics-collection
+  queue: max
+  cancel-in-progress: false
 
 jobs:
   collect:
@@ -305,10 +311,19 @@ jobs:
           nonbot_30=max(0,total_30-bot_30)
           refs=composition.get("dimensions",{}).get("refererHost",[])
           paths=composition.get("dimensions",{}).get("requestPath",[])
+          # Reuse collected hourly counts; no extra Cloudflare queries or identifiers.
+          day_start = now.replace(hour=0, minute=0, second=0) - timedelta(days=29)
+          daily_counts = {(day_start + timedelta(days=i)).date().isoformat(): 0 for i in range(30)}
+          for account in out["accounts"]:
+              for row in account["pages"]:
+                  date = row["dimensions"]["datetimeHour"][:10]
+                  if date in daily_counts:
+                      daily_counts[date] += row["count"]
           public={
             "schema":"DGB_PUBLIC_ANALYTICS_V1",
             "generatedAt":out["generatedAt"],
             "window30d":composition["window"],
+            "daily":[{"date":date,"pageLoads":value} for date,value in sorted(daily_counts.items())],
             "summary":{"pageLoads":total_30,"botPageLoads":bot_30,"nonBotPageLoads":nonbot_30},
             "referrers":[{"host":x["value"],"pageLoads":x["pageLoads"],"visits":x["visits"]} for x in refs[:8]],
             "topPages":[{"path":x["value"],"pageLoads":x["pageLoads"],"visits":x["visits"]} for x in paths[:10]

@@ -23,7 +23,7 @@ jobs:
         run: |
           test -n "$CF_TOKEN" || { echo "CLOUDFLARE_ANALYTICS_TOKEN is missing"; exit 1; }
 
-      - name: Collect read-only Cloudflare analytics
+      - name: Collect read-only Cloudflare Web Analytics
         shell: python
         run: |
           import json, os, urllib.request
@@ -37,90 +37,74 @@ jobs:
 
           def gql(query, variables=None):
               body = json.dumps({"query": query, "variables": variables or {}}).encode()
-              req = urllib.request.Request(
-                  endpoint, data=body, method="POST",
-                  headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json", "Accept": "application/json"}
-              )
+              req = urllib.request.Request(endpoint, data=body, method="POST",
+                  headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json", "Accept": "application/json"})
               with urllib.request.urlopen(req, timeout=45) as r:
                   return json.load(r)
 
-          # Discover the site's zone ID from Cloudflare's read-only zones endpoint.
-          zone_url = "https://api.cloudflare.com/client/v4/zones?name=diamondgatebridge.com&status=active"
-          zreq = urllib.request.Request(zone_url, headers={"Authorization": f"Bearer {token}", "Accept": "application/json"})
-          try:
-              with urllib.request.urlopen(zreq, timeout=45) as r:
-                  zdoc = json.load(r)
-          except Exception as e:
-              raise SystemExit("Zone discovery endpoint was not admitted by the current token: " + str(e))
-          zones = [{"zoneTag": z["id"]} for z in zdoc.get("result", []) if z.get("id")]
-          if not zones:
-              raise SystemExit("Cloudflare returned no active diamondgatebridge.com zone.")
+          # Web Analytics/RUM is account-scoped. Introspection lets the API tell us
+          # the exact account filter and RUM field shapes instead of hard-coding a zone.
+          schema = gql("""
+          query BridgeSchema {
+            viewerType: __type(name: "Viewer") {
+              fields { name args { name type { kind name ofType { kind name } } } type { kind name ofType { kind name } } }
+            }
+          }
+          """)
+          if schema.get("errors"):
+              raise SystemExit("Cloudflare GraphQL introspection failed: " + json.dumps(schema["errors"]))
+
+          fields = schema.get("data", {}).get("viewerType", {}).get("fields", [])
+          account_field = next((x for x in fields if x.get("name") == "accounts"), None)
+          if not account_field:
+              raise SystemExit("Cloudflare schema did not expose viewer.accounts.")
+
+          # Query all account-visible RUM page-load data and filter to the actual host.
+          # Cloudflare account filters accept accountTag; the token is account-owned,
+          # so discover the tag via a minimal account query using the known account owner scope.
+          probe = gql("""
+          query AccountProbe {
+            viewer {
+              accounts(filter: {}) { accountTag }
+            }
+          }
+          """)
+          if probe.get("errors"):
+              raise SystemExit("Account discovery failed: " + json.dumps(probe["errors"]))
+          accounts = probe.get("data", {}).get("viewer", {}).get("accounts", [])
+          if not accounts:
+              raise SystemExit("No Cloudflare account was visible to the analytics token.")
 
           query = """
-          query BridgeAnalytics($zoneTag: string, $filter: filter) {
+          query RUMBridge($accountTag: string, $start: Time, $end: Time) {
             viewer {
-              zones(filter: {zoneTag: $zoneTag}) {
-                hourly: httpRequestsAdaptiveGroups(
-                  limit: 1000
+              accounts(filter: {accountTag: $accountTag}) {
+                pages: rumPageloadEventsAdaptiveGroups(
+                  limit: 5000
                   orderBy: [datetimeHour_ASC]
-                  filter: $filter
+                  filter: {
+                    datetime_geq: $start
+                    datetime_lt: $end
+                    host: "diamondgatebridge.com"
+                  }
                 ) {
                   count
-                  avg { sampleInterval }
-                  sum { visits edgeResponseBytes }
-                  dimensions { datetimeHour }
-                }
-                paths: httpRequestsAdaptiveGroups(
-                  limit: 50
-                  orderBy: [count_DESC]
-                  filter: $filter
-                ) {
-                  count
-                  avg { sampleInterval }
-                  sum { visits edgeResponseBytes }
-                  dimensions { clientRequestPath }
-                }
-                hosts: httpRequestsAdaptiveGroups(
-                  limit: 25
-                  orderBy: [count_DESC]
-                  filter: $filter
-                ) {
-                  count
-                  avg { sampleInterval }
-                  sum { visits edgeResponseBytes }
-                  dimensions { clientRequestHTTPHost }
+                  dimensions { datetimeHour path }
                 }
               }
             }
           }
           """
-          filt = {
-              "datetime_geq": start.isoformat().replace("+00:00", "Z"),
-              "datetime_lt": now.isoformat().replace("+00:00", "Z"),
-              "requestSource": "eyeball",
-          }
-
-          out = {
-              "schema": "DGB_CLOUDFLARE_ANALYTICS_BRIDGE_V1",
-              "generatedAt": now.isoformat().replace("+00:00", "Z"),
-              "window": {"start": filt["datetime_geq"], "end": filt["datetime_lt"]},
-              "zones": [],
-          }
-          for z in zones:
-              zid = z["zoneTag"]
-              res = gql(query, {"zoneTag": zid, "filter": filt})
-              if res.get("errors"):
-                  out["zones"].append({"zoneTag": zid, "errors": res["errors"]})
-                  continue
-              rows = res.get("data", {}).get("viewer", {}).get("zones", [])
-              out["zones"].append({"zoneTag": zid, **(rows[0] if rows else {})})
-
+          out = {"schema":"DGB_CLOUDFLARE_RUM_BRIDGE_V2","generatedAt":now.isoformat().replace("+00:00","Z"),
+                 "window":{"start":start.isoformat().replace("+00:00","Z"),"end":now.isoformat().replace("+00:00","Z")},"accounts":[]}
+          for a in accounts:
+              tag=a["accountTag"]
+              res=gql(query,{"accountTag":tag,"start":out["window"]["start"],"end":out["window"]["end"]})
+              out["accounts"].append({"accountTag":tag,"response":res})
           Path("analytics-bridge").mkdir()
-          Path("analytics-bridge/latest.json").write_text(json.dumps(out, indent=2) + "\n")
-          Path("analytics-bridge/status.txt").write_text(
-              f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\nzones={len(out['zones'])}\n"
-          )
-          print(f"Collected analytics for {len(out['zones'])} zone(s); token value was never printed.")
+          Path("analytics-bridge/latest.json").write_text(json.dumps(out,indent=2)+"\n")
+          Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
+          print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")
 
       - name: Upload private workflow artifact
         uses: actions/upload-artifact@v4

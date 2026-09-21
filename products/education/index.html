@@ -143,13 +143,13 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
     <div class="edu-carousel__live" data-edu-live aria-live="polite">Possibility · 1 of 6</div>
   </header>
 
-  <div class="edu-carousel__tabs" role="tablist" aria-label="Learning journey chapters" data-edu-tabs></div>
+  
 
-  <div class="edu-carousel__viewport" data-edu-viewport tabindex="0" aria-label="Education standards carousel. Swipe or use arrow keys to move between standards.">
+  <div class="edu-carousel__viewport" data-edu-viewport tabindex="0" aria-label="Six-card learning chamber. Drag, swipe, click a neighboring card, or use arrow keys.">
     <div class="edu-carousel__track" data-edu-track></div>
   </div>
 
-  <p class="edu-carousel__note">Each chapter stays in one shared learning space. Explore the idea, see how it works, and check what success looks like before moving forward.</p>
+  <p class="edu-carousel__note">Six persistent cards share one continuous learning rail. Bring a card forward, turn it over, learn, practice, check, then return to the rail.</p>
 </section>
 
 <section class="edu-demo-gateway panel" aria-label="Demo gateway">
@@ -245,8 +245,13 @@ const HELP_LANGUAGES={
  {title:"成就",front:"展示你能做到什么。",support:"下一步应该适合你。",action:"自我检查",learn:"一次检查可以显示现在什么很容易，以及下一步该练什么。",practice:"尝试一个你已经见过的英语规律。",check:"准备好进入下一步，或者再练一次。"}]}
 };
 let helpLanguage="en";
-function setHelpLanguage(code){if(!HELP_LANGUAGES[code])code="en";helpLanguage=code;document.documentElement.lang=code==="zh"?"zh-CN":code;document.documentElement.dataset.helpLanguage=code;document.dispatchEvent(new CustomEvent("education-help-language-change",{detail:{code,copy:HELP_LANGUAGES[code]}}));return HELP_LANGUAGES[code];}
+function setHelpLanguage(code){if(!HELP_LANGUAGES[code])code="en";helpLanguage=code;document.documentElement.lang=code==="zh"?"zh-CN":code;document.documentElement.dataset.helpLanguage=code;document.dispatchEvent(new CustomEvent("education-help-language-change",{detail:{code,copy:HELP_LANGUAGES[code]}}));document.querySelectorAll(".edu-standard-card").forEach((card,index)=>renderChamberCard(card,index));return HELP_LANGUAGES[code];}
 window.EDUCATION_HELP_LANGUAGES=HELP_LANGUAGES;window.setEducationHelpLanguage=setHelpLanguage;
+const CHAMBER_ACTIONS=new Map();
+function chamberCopy(index){return HELP_LANGUAGES[helpLanguage].cards[index]||HELP_LANGUAGES.en.cards[index]}
+function renderChamberCard(card,index){const copy=chamberCopy(index);const title=card.querySelector("[data-chamber-title]"),front=card.querySelector("[data-chamber-front]"),support=card.querySelector("[data-chamber-support]"),action=card.querySelector("[data-chamber-action]"),learn=card.querySelector("[data-chamber-learn]"),practice=card.querySelector("[data-chamber-practice]"),check=card.querySelector("[data-chamber-check]");if(title)title.textContent=copy.title;if(front)front.textContent=copy.front;if(support)support.textContent=copy.support;if(action)action.textContent=copy.action;if(learn)learn.textContent=copy.learn;if(practice)practice.textContent=copy.practice;if(check)check.textContent=copy.check;}
+function bindChamberCard(card,index){card.dataset.face=card.dataset.face||"front";card.addEventListener("click",e=>{if(e.target.closest("button,input,textarea,select"))return;document.querySelectorAll(".edu-standard-card").forEach((c,i)=>c.dataset.active=String(i===index));});card.querySelector("[data-chamber-action]")?.addEventListener("click",()=>{card.dataset.face="back";card.dataset.inspecting="true";});card.querySelector("[data-chamber-back]")?.addEventListener("click",()=>{card.dataset.face="front";card.dataset.inspecting="false";});card.querySelector("[data-chamber-practice-action]")?.addEventListener("click",()=>{CHAMBER_ACTIONS.set(index,true);const out=card.querySelector("[data-chamber-feedback]");if(out)out.textContent=HELP_LANGUAGES[helpLanguage].success;});card.querySelector("[data-chamber-check-action]")?.addEventListener("click",()=>{const out=card.querySelector("[data-chamber-feedback]");if(out)out.textContent=CHAMBER_ACTIONS.get(index)?HELP_LANGUAGES[helpLanguage].success:HELP_LANGUAGES[helpLanguage].retry;});renderChamberCard(card,index);}
+
 document.querySelectorAll("[data-help-language]").forEach(button=>button.addEventListener("click",()=>{
   const code=button.dataset.helpLanguage;
   setHelpLanguage(code);

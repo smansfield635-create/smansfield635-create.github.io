@@ -8,7 +8,8 @@ on:
     inputs:
       target_sha:
         description: Exact current main SHA to deploy
-        required: true
+        required: false
+        default: ''
         type: string
 
 permissions:

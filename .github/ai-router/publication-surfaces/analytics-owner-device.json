@@ -1,0 +1,22 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "analytics-owner-device",
+  "description": "Diamond Gate Bridge development-device registration surface for analytics measurement.",
+  "checks": [
+    {
+      "path": "/analytics-owner-device/index.html",
+      "includes": ["Development Device Registration", "Development device registered", "dgb_owner_device_v1"],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/analytics-owner-device/",
+    "timeoutMs": 15000,
+    "binding": {"mode": "direct-document", "path": "/analytics-owner-device/"},
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": []
+  }
+}

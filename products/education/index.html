@@ -138,18 +138,18 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
     <div>
       <p class="eyebrow">Your Learning Journey</p>
       <h2 id="standards-title">Six standards. One learning system.</h2>
-      <p class="lead">Move through the shared carousel. Bring one standard forward, inspect its stories, then switch independently between Reading, Engineering, and Achievement.</p>
+      <p class="lead">Move through the journey one step at a time. Bring a chapter forward, explore what it means, try the idea, and see what progress looks like.</p>
     </div>
     <div class="edu-carousel__live" data-edu-live aria-live="polite">Possibility · 1 of 6</div>
   </header>
 
-  <div class="edu-carousel__tabs" role="tablist" aria-label="Education architecture standards" data-edu-tabs></div>
+  <div class="edu-carousel__tabs" role="tablist" aria-label="Learning journey chapters" data-edu-tabs></div>
 
   <div class="edu-carousel__viewport" data-edu-viewport tabindex="0" aria-label="Education standards carousel. Swipe or use arrow keys to move between standards.">
     <div class="edu-carousel__track" data-edu-track></div>
   </div>
 
-  <p class="edu-carousel__note">The architecture is layered rather than stacked. The selected standard stays in the same shared field while its Reading, Engineering, and Achievement views change independently.</p>
+  <p class="edu-carousel__note">Each chapter stays in one shared learning space. Explore the idea, see how it works, and check what success looks like before moving forward.</p>
 </section>
 
 <section class="edu-demo-gateway panel" aria-label="Demo gateway">
@@ -323,7 +323,7 @@ function mountEducationCarousel(){
     return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-inspecting="'+(active&&root.dataset.inspecting==="true")+'" style="--offset:'+d+'">'+
       '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker">'+esc(c.label)+'</p><h3 class="edu-standard-title">'+esc(c.title)+'</h3><p class="edu-standard-copy">'+esc(c.summary)+'</p><div class="edu-story-preview">'+c.stories.map(x=>'<span>'+esc(x.title)+'</span>').join("")+'</div><button class="edu-inspect" type="button" data-edu-inspect>Explore this step</button></div>'+
       '<div class="edu-inspection"><div class="edu-inspection__top"><div><p class="eyebrow">'+esc(c.label)+'</p><h3>'+esc(c.title)+'</h3><p>'+esc(c.question)+'</p></div><button class="edu-return" type="button" data-edu-return>Back to the Journey</button></div>'+
-      '<div class="edu-lenses" role="tablist" aria-label="Information lens">'+["reading","engineering","evidence"].map(x=>'<button class="edu-lens" role="tab" aria-selected="'+(x===lens)+'" data-edu-lens="'+x+'">'+({reading:"Reading",engineering:"Engineering",evidence:"Achievement"}[x])+'</button>').join("")+'</div>'+
+      '<div class="edu-lenses" role="tablist" aria-label="Information lens">'+["reading","engineering","evidence"].map(x=>'<button class="edu-lens" role="tab" aria-selected="'+(x===lens)+'" data-edu-lens="'+x+'">'+({reading:"Learn",engineering:"Practice",evidence:"Check"}[x])+'</button>').join("")+'</div>'+
       '<div class="edu-information-grid"><div class="edu-story-rail" role="tablist" aria-label="'+esc(c.label)+' stories">'+c.stories.map((x,j)=>'<button class="edu-story-tab" role="tab" aria-selected="'+(j===story)+'" data-edu-story="'+j+'"><span>'+String(j+1).padStart(2,"0")+'</span><strong>'+esc(x.title)+'</strong></button>').join("")+'</div><div class="edu-reading-cell" data-edu-cell></div></div></div></article>';
   }).join("");
   live.textContent=EDUCATION_ARCHITECTURE[index].label+" · "+(index+1)+" of "+EDUCATION_ARCHITECTURE.length;
@@ -334,9 +334,9 @@ function mountEducationCarousel(){
  function fillCell(){
   const card=track.querySelector('.edu-standard-card[data-active="true"]'); if(!card)return;
   const c=EDUCATION_ARCHITECTURE[index],st=c.stories[storyByCard[index]],lens=lensByCard[index],cell=card.querySelector("[data-edu-cell]");
-  const title={reading:"Plain-language reading",engineering:"Engineering detail",evidence:"Achievement standing"}[lens];
+  const title={reading:"Learn the idea",engineering:"See how it works",evidence:"Check your progress"}[lens];
   const body=st[lens];
-  cell.innerHTML='<p class="eyebrow">'+title+'</p><h4>'+esc(st.title)+'</h4><p>'+esc(body)+'</p><div class="edu-evidence-boundary"><strong>Boundary</strong><p>'+esc(st.boundary)+'</p></div>';
+  cell.innerHTML='<p class="eyebrow">'+title+'</p><h4>'+esc(st.title)+'</h4><p>'+esc(body)+'</p><div class="edu-evidence-boundary"><strong>What this means</strong><p>'+esc(st.boundary)+'</p></div>';
  }
  function select(next){index=(next+EDUCATION_ARCHITECTURE.length)%EDUCATION_ARCHITECTURE.length;render()}
  root.addEventListener("click",e=>{

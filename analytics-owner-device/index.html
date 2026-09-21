@@ -4,11 +4,11 @@
   if(!id)return;
   var slug={"OWNER_S26":"s26","OWNER_A9_1":"a9-1","OWNER_A9_2":"a9-2"}[id];
   if(!slug)return;
-  var img=new Image();
-  img.width=1;img.height=1;img.alt="";
-  img.style.cssText="position:absolute;width:1px;height:1px;opacity:.001;pointer-events:none";
-  img.referrerPolicy="origin-when-cross-origin";
-  img.src="/analytics-owner-device/heartbeat/"+slug+"/?t="+Date.now();
-  document.documentElement.appendChild(img);
+  var frame=document.createElement("iframe");
+  frame.title="analytics heartbeat";
+  frame.setAttribute("aria-hidden","true");
+  frame.style.cssText="position:absolute;width:1px;height:1px;border:0;opacity:.001;pointer-events:none";
+  frame.src="/analytics-owner-device/heartbeat/"+slug+"/";
+  document.documentElement.appendChild(frame);
 })();
 </script><style>body{font:18px system-ui;max-width:42rem;margin:4rem auto;padding:1rem}code{word-break:break-all}</style><h1>Development device registered</h1><p>This Chrome browser is now marked locally as owner/development traffic for Diamond Gate Bridge analytics.</p><p>You can close this page.</p>

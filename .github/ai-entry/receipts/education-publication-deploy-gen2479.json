@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "education-publication-deploy-gen2479",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4041,
+  "requestBranch": "ai-dispatch-request-education-deploy-2479",
+  "requestCommit": "bd4e6488f59a8f714e99f08ced38060eed8656a3",
+  "currentMainSha": "331d209f7a8d8b9d3d8756c67afb1bcb31ae789c",
+  "bridgeRunId": "35549895845",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-09-21T01:08:20.786Z"
+}

@@ -403,7 +403,7 @@ const BANK={
 const EDUCATION_STATE_KEY="dgb.education.phase1.v1";
 let learner={target_language:"English"}, probeStage=2, probeHistory=[], currentQuestionIndex=0, currentSet=[], currentSetScore=0, hintsUsed=0, finalIndependence=null, mixedAnchor=null;
 function saveEducationState(extra={}){try{localStorage.setItem(EDUCATION_STATE_KEY,JSON.stringify({helpLanguage,learner,probeStage,probeHistory,currentQuestionIndex,currentSetScore,hintsUsed,finalIndependence,mixedAnchor,...extra}))}catch(e){}}
-function restoreEducationState(){try{const raw=localStorage.getItem(EDUCATION_STATE_KEY);if(!raw)return null;const s=JSON.parse(raw);if(s.helpLanguage&&HELP_LANGUAGES[s.helpLanguage])setHelpLanguage(s.helpLanguage);if(s.learner)learner=s.learner;if(Number.isInteger(s.probeStage))probeStage=s.probeStage;if(Array.isArray(s.probeHistory))probeHistory=s.probeHistory;if(Number.isInteger(s.currentQuestionIndex))currentQuestionIndex=s.currentQuestionIndex;if(Number.isFinite(s.currentSetScore))currentSetScore=s.currentSetScore;if(Number.isFinite(s.hintsUsed))hintsUsed=s.hintsUsed;if(s.finalIndependence)finalIndependence=s.finalIndependence;if(s.mixedAnchor!==undefined)mixedAnchor=s.mixedAnchor;return s}catch(e){return null}}
+function restoreEducationState(){try{const raw=localStorage.getItem(EDUCATION_STATE_KEY);if(!raw)return null;const s=JSON.parse(raw);if(s.learner)learner=s.learner;if(Number.isInteger(s.probeStage))probeStage=s.probeStage;if(Array.isArray(s.probeHistory))probeHistory=s.probeHistory;if(Number.isInteger(s.currentQuestionIndex))currentQuestionIndex=s.currentQuestionIndex;if(Number.isFinite(s.currentSetScore))currentSetScore=s.currentSetScore;if(Number.isFinite(s.hintsUsed))hintsUsed=s.hintsUsed;if(s.finalIndependence)finalIndependence=s.finalIndependence;if(s.mixedAnchor!==undefined)mixedAnchor=s.mixedAnchor;return s}catch(e){return null}}
 function clearEducationState(){try{localStorage.removeItem(EDUCATION_STATE_KEY)}catch(e){}}
 
 const qs=s=>document.querySelector(s);
@@ -700,6 +700,7 @@ document.addEventListener("education-help-language-change",applyGateOneLocale);
 
 applyGateOneLocale();
 const restoredEducation=restoreEducationState();
+if(restoredEducation?.helpLanguage&&HELP_LANGUAGES[restoredEducation.helpLanguage])setHelpLanguage(restoredEducation.helpLanguage);
 if(restoredEducation?.stage==="result"&&finalIndependence){renderIndependence()}
 else if(restoredEducation?.stage==="entry"&&finalIndependence){enterDemo()}
 else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");startProbe(probeStage)}

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "evan-job-stage",
-  "description": "Persistent editable contractor Job Stage v3 utility dashboard.",
+  "description": "Persistent contractor Job Stage V4 construction-record dashboard.",
   "checks": [
     {
       "path": "/prototypes/evan-job-stage/index.html",
@@ -51,6 +51,44 @@
         "createObjectStore('jobs'",
         "createObjectStore('files'",
         "JOB_STAGE_BACKUP_V1"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/records-v4.js",
+      "includes": [
+        "Contract",
+        "Change Order",
+        "Customer Invoice",
+        "Customer Payment",
+        "Subcontractor Bill",
+        "Supplier Bill",
+        "Insurance Record",
+        "Save record"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/calc-v4.js",
+      "includes": [
+        "unsignedChanges",
+        "tradePayables",
+        "Customer Invoice",
+        "Customer Payment",
+        "Insurance Record"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/test-kitchen-v4.mjs",
+      "includes": [
+        "JOB_STAGE_V4_TEST_KITCHEN_RECEIPT_v1",
+        "approved:44500",
+        "invoiced:37000",
+        "paid:30000",
+        "customerBalance:7000",
+        "unsignedChanges:2100",
+        "tradePayables:4800"
       ],
       "excludes": []
     }

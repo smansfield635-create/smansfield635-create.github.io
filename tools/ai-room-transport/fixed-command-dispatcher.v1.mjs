@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import cp from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { StateBoundAdmissibilityKernel, MemoryReplayStore } from '../../infrastructure/state-bound-admissibility-kernel-v1/src/kernel.mjs';
 import {
   stable,
   hashObject,
@@ -192,6 +193,17 @@ export function stageValidatedWritebackPaths({ descriptor, toolRoot, changed }) 
   return staged;
 }
 
+export function buildStateBoundWritebackContext({ descriptor, specification, candidateHead, changed, remoteHead }) {
+  return stable({ principal:{transportId:descriptor.transportId,toolId:descriptor.toolId}, operation:{operationId:descriptor.operationId,descriptorId:descriptor.descriptorId}, resource:{targetBranchRef:specification.targetBranchRef,changedPaths:[...changed].sort()}, state:{expectedBranchHead:specification.expectedBranchHead,observedRemoteHead:remoteHead,candidateHead}, authority:{authorizationMode:descriptor.authorizationMode??null,intakeAdmissionIdentity:descriptor.intakeAdmissionIdentity}, policy:{mode:specification.mode,fastForwardOnly:specification.fastForwardOnly,allowedMutationPaths:[...descriptor.allowedMutationPaths].sort()}, procedure:{commitMessage:specification.commitMessage,requireChangedPaths:specification.requireChangedPaths}, evidence:[{id:'candidate-head',digest:candidateHead},{id:'remote-head',digest:remoteHead}] });
+}
+export function enforceStateBoundWriteback({ descriptor, specification, candidateHead, changed, remoteImmediatelyBeforePush, capability=null, trustedPublicKeys=[], replayStore=new MemoryReplayStore() }) {
+  if(capability==null)return {result:'EXECUTE',enforcementMode:'LEGACY_DESCRIPTOR_BOUND_NO_CAPABILITY'};
+  const kernel=new StateBoundAdmissibilityKernel({replayStore,trustedPublicKeys});
+  const decision=kernel.enforce(capability,buildStateBoundWritebackContext({descriptor,specification,candidateHead,changed,remoteHead:remoteImmediatelyBeforePush}));
+  if(decision.result!=='EXECUTE')fail(decision.result,capability.capabilityId??null);
+  return decision;
+}
+
 function performRegisteredWriteback({ descriptor, selectedBackend, toolRoot, changed, payloadReceiptPath }) {
   const specification = validateWritebackSpecification(descriptor, selectedBackend);
   if (!specification) return null;
@@ -212,6 +224,7 @@ function performRegisteredWriteback({ descriptor, selectedBackend, toolRoot, cha
   if (!/^[0-9a-f]{40}$/.test(candidateHead) || candidateHead === specification.expectedBranchHead) fail('WRITEBACK_CANDIDATE_HEAD_INVALID', candidateHead);
   const remoteImmediatelyBeforePush = readRemoteHead(toolRoot, specification.targetBranchRef);
   if (remoteImmediatelyBeforePush !== specification.expectedBranchHead) fail('WRITEBACK_REMOTE_HEAD_MOVED', `${specification.expectedBranchHead}:${remoteImmediatelyBeforePush}`);
+  enforceStateBoundWriteback({ descriptor, specification, candidateHead, changed, remoteImmediatelyBeforePush });
   pushFastForwardWithToken(toolRoot, specification.targetBranchRef);
   const remoteAfter = readRemoteHead(toolRoot, specification.targetBranchRef);
   if (remoteAfter !== candidateHead) fail('WRITEBACK_REMOTE_READBACK_MISMATCH', `${candidateHead}:${remoteAfter}`);

@@ -50,6 +50,19 @@ jobs:
           # Web Analytics/RUM is account-scoped. Bind the known Cloudflare Account ID.
           accounts = [{"accountTag": "832a0c759fbdc46553494f572a0e534b"}]
 
+          # Schema probe: discover the exact RUM dimensions/measures Cloudflare exposes
+          # for this account before expanding the durable collector.
+          schema_query = """
+          query RUMSchema {
+            dims: __type(name: "AccountRumPageloadEventsAdaptiveGroupsDimensions") { fields { name } }
+            sums: __type(name: "AccountRumPageloadEventsAdaptiveGroupsSum") { fields { name } }
+            avgs: __type(name: "AccountRumPageloadEventsAdaptiveGroupsAvg") { fields { name } }
+          }
+          """
+          schema_res = gql(schema_query)
+          Path("analytics-bridge").mkdir(exist_ok=True)
+          Path("analytics-bridge/rum-schema.json").write_text(json.dumps(schema_res,indent=2)+"\n")
+
           query = """
           query RUMBridge($accountTag: string, $start: Time, $end: Time) {
             viewer {
@@ -107,7 +120,8 @@ jobs:
           mkdir -p .analytics/cloudflare
           cp analytics-bridge/latest.json .analytics/cloudflare/latest.json
           cp analytics-bridge/status.txt .analytics/cloudflare/status.txt
-          git add .analytics/cloudflare/latest.json .analytics/cloudflare/status.txt
+          cp analytics-bridge/rum-schema.json .analytics/cloudflare/rum-schema.json
+          git add .analytics/cloudflare/latest.json .analytics/cloudflare/status.txt .analytics/cloudflare/rum-schema.json
           if git diff --cached --quiet; then
             echo "No analytics change to persist."
           else

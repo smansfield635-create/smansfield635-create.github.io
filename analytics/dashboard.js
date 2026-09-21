@@ -44,6 +44,10 @@
     const sum=rows=>rows.reduce((n,x)=>n+x.pageLoads,0), total=sum(current), baseline=sum(previous), delta=total-baseline;
     return {total,baseline,delta,percent:baseline ? delta/baseline*100 : null,currentStart:current[0].date,currentEnd:current.at(-1).date,previousStart:previous[0].date,previousEnd:previous.at(-1).date};
   }
+  function reportingWindow(window, locale) {
+    const stamp = new Intl.DateTimeFormat(locale, {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZone:'UTC'});
+    return stamp.format(new Date(window.start))+' – '+stamp.format(new Date(window.end))+' UTC';
+  }
   function safeDestination(value) {
     if (typeof value!=='string' || !value.startsWith('/') || value.startsWith('//') || /[\\\x00-\x20]/.test(value)) return null;
     try {const url=new URL(value,'https://diamondgatebridge.com');return url.origin==='https://diamondgatebridge.com' && !url.pathname.startsWith('//') ? url.pathname+url.search+url.hash : null;} catch {return null;}
@@ -70,7 +74,7 @@
     }
     return [...groups.values()].sort((a,b)=>b.value-a.value);
   }
-  if (typeof module !== 'undefined' && module.exports) module.exports = {validate,freshness,createController,POLL_MS,STALE_MS,compareWeeks,safeDestination,groupPages,groupReferrers};
+  if (typeof module !== 'undefined' && module.exports) module.exports = {validate,freshness,createController,POLL_MS,STALE_MS,compareWeeks,safeDestination,groupPages,groupReferrers,reportingWindow};
   if (typeof document === 'undefined') return;
   const root = document.querySelector('#dashboard');
   if (!root) return;
@@ -107,7 +111,7 @@
     for (const [id,value] of [['nonbot',d.summary.nonBotPageLoads],['bots',d.summary.botPageLoads],['total',d.summary.pageLoads],['devices',d.ownerMeasurement.qualifiedDeviceCount],['google',d.referrers.filter(x => ['www.google.com','google.com'].includes(x.host)).reduce((n,x)=>n+x.visits,0)]]) el(id).textContent=fmt(value);
     if (!d.referrers.some(x => ['www.google.com','google.com'].includes(x.host))) el('google').textContent='—';
     el('data-through').textContent='Data through '+labelDate(d.window30d.end);
-    el('window').textContent=new Date(d.window30d.start).toLocaleDateString()+' – '+new Date(d.window30d.end).toLocaleDateString();
+    el('window').textContent=reportingWindow(d.window30d);
     ranking('top-pages',groupPages(d.topPages).slice(0,8));
     ranking('referrers',groupReferrers(d.referrers).slice(0,8));
     const daily=d.daily || [], peak=Math.max(1,...daily.map(x=>x.pageLoads)), step=Math.max(1,Math.ceil(peak/4/Math.pow(10,Math.floor(Math.log10(peak))))*Math.pow(10,Math.floor(Math.log10(peak)))), ceiling=step*4;
@@ -116,16 +120,16 @@
     if(week){
       const direction=week.delta>0?'Up':week.delta<0?'Down':'No change';
       el('week-change').textContent=week.baseline===0?(week.total===0?'No change · 0 page loads':'Up from 0 to '+fmt(week.total)+' page loads'):direction+(week.delta===0?'':' '+Math.abs(week.percent).toLocaleString([],{maximumFractionDigits:1})+'%')+' · '+fmt(week.total)+' page loads';
-      el('week-periods').textContent=labelDay(week.currentStart)+'–'+labelDay(week.currentEnd)+' ('+fmt(week.total)+') versus '+labelDay(week.previousStart)+'–'+labelDay(week.previousEnd)+' ('+fmt(week.baseline)+'). Complete UTC days; the snapshot’s partial final day is excluded.';
+      el('week-periods').textContent=labelDay(week.currentStart)+'–'+labelDay(week.currentEnd)+' ('+fmt(week.total)+') versus '+labelDay(week.previousStart)+'–'+labelDay(week.previousEnd)+' ('+fmt(week.baseline)+'). Complete UTC days.';
     }else{el('week-change').textContent='Comparison unavailable';el('week-periods').textContent='Waiting for enough daily history.';}
     el('trend-scale').replaceChildren(...[4,3,2,1,0].map(n=>{const span=document.createElement('span');span.textContent=fmt(step*n);return span;}));
-    el('trend').replaceChildren(...daily.map((x,i)=>{const bar=document.createElement('div');bar.className='bar';bar.style.setProperty('--height',(x.pageLoads/ceiling*100)+'%');bar.title=labelDay(x.date)+': '+fmt(x.pageLoads)+' page loads';bar.setAttribute('aria-hidden','true');bar.addEventListener('click',()=>selectDay(i));return bar;}));
+    el('trend').replaceChildren(...daily.map((x,i)=>{const bar=document.createElement('div');bar.className='bar'+(i===daily.length-1?' partial':'');bar.style.setProperty('--height',(x.pageLoads/ceiling*100)+'%');bar.title=labelDay(x.date)+': '+fmt(x.pageLoads)+' page loads';bar.setAttribute('aria-hidden','true');bar.addEventListener('click',()=>selectDay(i));return bar;}));
     el('trend-dates').replaceChildren(...(daily.length?[daily[0],daily[Math.floor((daily.length-1)/2)],daily.at(-1)]:[]).map(x=>{const span=document.createElement('span');span.textContent=labelDay(x.date);return span;}));
     el('chart-controls').hidden=!daily.length;
     if(daily.length){el('day-picker').max=String(daily.length-1);const selected=daily.findIndex(x=>x.date===selectedDate);selectDay(selected<0?daily.length-1:selected);}
     el('trend').setAttribute('aria-label',daily.length ? 'Daily page-load trend. Exact values are available in View daily values below.' : 'Daily history has not yet been published.');
     el('daily-values').replaceChildren(...daily.map(x=>{const tr=document.createElement('tr'),date=document.createElement('th'),value=document.createElement('td');date.scope='row';date.textContent=x.date;value.textContent=fmt(x.pageLoads);tr.append(date,value);return tr;}));
-    el('trend-note').textContent=daily.length ? labelDay(daily[0].date)+' – '+labelDay(daily.at(-1).date)+' · last day is partial' : 'Daily history will appear when the updated collector publishes its next snapshot.';
+    el('trend-note').textContent=daily.length ? labelDay(daily[0].date)+' – '+labelDay(daily.at(-1).date)+' UTC · striped day is partial' : 'Daily history will appear when the updated collector publishes its next snapshot.';
     root.dataset.ready='true'; root.dataset.generatedAt=d.generatedAt;
   }
   const controller=createController({fetchSnapshot:async()=>{

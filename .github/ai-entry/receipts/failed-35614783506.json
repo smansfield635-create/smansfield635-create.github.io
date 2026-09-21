@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": null,
+  "capabilityId": null,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4109,
+  "requestBranch": "ai-dispatch-request-education-spatial-preflight-4107",
+  "requestCommit": "b296f826c9442a83af461df3a1b1deadb67ff35a",
+  "currentMainSha": "1be29b1172eb80dc6fb59a225f24e34577833bfa",
+  "bridgeRunId": "35614783506",
+  "error": "Stale dispatch request: parent bdca84ba198f3ee6dd1308a6a71f9368210b2ced != current main 1be29b1172eb80dc6fb59a225f24e34577833bfa",
+  "failedAt": "2026-09-21T14:49:58.287Z"
+}

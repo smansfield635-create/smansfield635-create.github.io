@@ -1,0 +1,33 @@
+name: Shared Current-Head Pages Publisher
+
+on:
+  workflow_dispatch:
+    inputs:
+      surface_id:
+        description: Registered surface to verify after publishing current main
+        required: true
+        default: analytics
+        type: string
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: pages-publication-coordinator
+  cancel-in-progress: false
+
+jobs:
+  dispatch-current-head:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch sole normal production authority
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+        run: |
+          set -euo pipefail
+          head="$(gh api "/repos/$REPO/commits/main" --jq .sha)"
+          gh api --method POST             "/repos/$REPO/actions/workflows/pages-direct-deploy.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$head"             -f inputs[surface_id]="$SURFACE_ID"
+          echo "CURRENT_HEAD_PUBLICATION_DISPATCHED=$head:$SURFACE_ID"

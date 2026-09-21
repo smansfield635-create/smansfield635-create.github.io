@@ -5356,6 +5356,49 @@
       "scopeHash": "66c47668f469134eb3aedfa5b819a19e78394ca4a8d1bfc059d0ca25c587039e",
       "state": "ADMITTED_LOCKED"
     },
+    "689d447fabc190d684d0e159023c5dde25343a3fd1227a68df053e5100e00b61": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "7c904d52ec63db43d7b5cda28c1eb90d37cde00e",
+          "lockGeneration": 2474,
+          "lockScope": "EDUCATION:PAGE:CAROUSEL_POINTER_CAPTURE_REPAIR:V1",
+          "operationId": "EDUCATION_CAROUSEL_POINTER_CAPTURE_REPAIR_20260920_001",
+          "procedureLocatorDigest": "4b9a3d6da9362a12d809c426c0c3928c20e693af7dea579973857d0219bc5ad4",
+          "requestDigest": "6703c853b73021e8a6fb665e5d650c163910f78c469d0150d7b6a6dbf0277806",
+          "scopeHash": "689d447fabc190d684d0e159023c5dde25343a3fd1227a68df053e5100e00b61"
+        },
+        "bindingDigest": "f893ae664b8d43a5376dff1f04a9f9cbec9bcd0532948c52735f613488e34a1d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "5c03c4cf1aa366a10c273a20fd23875393cd9e5c4f951e5583c29eb7926c6e08",
+          "commentId": 5753689583,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 4029,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 35546279149,
+          "workflowSha": "7c904d52ec63db43d7b5cda28c1eb90d37cde00e"
+        },
+        "lineageAnchorCommitSha": "d7b2ee460e9726f95cc1cde9f7adf5b6c621ef32",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "7c904d52ec63db43d7b5cda28c1eb90d37cde00e",
+      "lockGeneration": 2474,
+      "lockScope": "EDUCATION:PAGE:CAROUSEL_POINTER_CAPTURE_REPAIR:V1",
+      "operationId": "EDUCATION_CAROUSEL_POINTER_CAPTURE_REPAIR_20260920_001",
+      "procedureLocatorDigest": "4b9a3d6da9362a12d809c426c0c3928c20e693af7dea579973857d0219bc5ad4",
+      "released": false,
+      "requestDigest": "6703c853b73021e8a6fb665e5d650c163910f78c469d0150d7b6a6dbf0277806",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "689d447fabc190d684d0e159023c5dde25343a3fd1227a68df053e5100e00b61",
+      "state": "ADMITTED_LOCKED"
+    },
     "68ac263182dcac32f11cb11d06d94a28100dc4537f69c8c986b68caca15e8582": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -13802,7 +13845,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2473,
+  "lockGeneration": 2474,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

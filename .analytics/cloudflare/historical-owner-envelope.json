@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-21T20:46:44Z",
+  "generatedAt": "2026-09-21T21:28:28Z",
   "window": {
-    "start": "2026-06-23T20:46:44Z",
-    "end": "2026-09-21T20:46:44Z"
+    "start": "2026-06-23T21:28:28Z",
+    "end": "2026-09-21T21:28:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4642,
-    "visits": 1088,
+    "pageLoads": 4652,
+    "visits": 1091,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4642,
-        "visits": 1088
+        "pageLoads": 4652,
+        "visits": 1091
       }
     },
     "byPath": {
@@ -63,7 +63,7 @@
         "visits": 10
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 31,
+        "pageLoads": 32,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 98,
+        "pageLoads": 99,
         "visits": 9
       },
       "/products/archcoin/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 167,
+        "pageLoads": 164,
         "visits": 9
       },
       "/gauges/h-earth/": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 108,
-        "visits": 25
+        "pageLoads": 119,
+        "visits": 28
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 21,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 21,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -326,6 +326,10 @@
         "pageLoads": 31,
         "visits": 0
       },
+      "/products/nutrition/": {
+        "pageLoads": 1,
+        "visits": 0
+      },
       "/products/archcoin/contract/": {
         "pageLoads": 35,
         "visits": 1
@@ -346,10 +350,6 @@
         "pageLoads": 1,
         "visits": 1
       },
-      "/products/nutrition/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/analytics-owner-device/": {
         "pageLoads": 7,
         "visits": 7
@@ -369,11 +369,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 335,
-        "visits": 335
+        "pageLoads": 338,
+        "visits": 338
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3554,
+        "pageLoads": 3561,
         "visits": 0
       },
       "www.google.com": {

@@ -96,6 +96,9 @@ jobs:
             echo "No analytics change to persist."
           else
             git commit -m "Update Cloudflare analytics snapshot [skip ci]"
+            # main is active; replay only these generated files onto the freshest head.
+            git fetch origin main
+            git rebase origin/main
             git push origin HEAD:main
           fi
 

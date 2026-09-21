@@ -39,8 +39,7 @@
         "JobDB.putFile",
         "JobDB.backup",
         "JobDB.restore",
-        "Edit job",
-        "Update amounts"
+        "Edit job"
       ],
       "excludes": []
     },

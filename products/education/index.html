@@ -8,8 +8,8 @@
   data-public-face-default="true"
   data-technical-face-available="true"
   data-demo-language-english="available"
-  data-demo-language-spanish="coming-soon"
-  data-demo-language-chinese="coming-soon"
+  data-demo-language-spanish="available"
+  data-demo-language-chinese="available"
   data-placement-authority="demonstrated-performance"
   data-self-report-authority="orientation-only"
   data-demo-range="phase-1-only"
@@ -143,20 +143,20 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
     <div class="edu-carousel__live" data-edu-live aria-live="polite">Possibility · 1 of 6</div>
   </header>
 
-  <div class="edu-carousel__tabs" role="tablist" aria-label="Learning journey chapters" data-edu-tabs></div>
+  
 
-  <div class="edu-carousel__viewport" data-edu-viewport tabindex="0" aria-label="Education standards carousel. Swipe or use arrow keys to move between standards.">
+  <div class="edu-carousel__viewport" data-edu-viewport tabindex="0" aria-label="Six-card learning chamber. Drag, swipe, click a neighboring card, or use arrow keys.">
     <div class="edu-carousel__track" data-edu-track></div>
   </div>
 
-  <p class="edu-carousel__note">Each chapter stays in one shared learning space. Explore the idea, see how it works, and check what success looks like before moving forward.</p>
+  <p class="edu-carousel__note">Six persistent cards share one continuous learning rail. Bring a card forward, turn it over, learn, practice, check, then return to the rail.</p>
 </section>
 
 <section class="edu-demo-gateway panel" aria-label="Demo gateway">
   <div>
     <p class="eyebrow">From possibility to action</p>
     <h2>Show what you can do. We’ll start from there.</h2>
-    <p>English is available now. Spanish and Chinese are coming soon. Self-report chooses where testing begins; demonstrated performance determines placement.</p>
+    <p>English learning is available now with help in English, Spanish, or Simplified Chinese. Self-report chooses where testing begins; demonstrated performance determines placement.</p>
   </div>
   <button class="button" type="button" data-start-demo>Start the Demo</button>
 </section>
@@ -174,11 +174,11 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
   </div>
 
   <section class="demo-stage" data-demo-stage="language">
-    <p>Choose the language you want to learn.</p>
+    <p>Choose your help language. The English being taught and checked stays in English.</p>
     <div class="language-grid">
-      <article class="language-card"><strong>English</strong><span>Phase 1 demo available now.</span><button class="button" type="button" data-language="English">Start English</button></article>
-      <article class="language-card"><span class="soon">Coming soon</span><strong>Spanish</strong><span>The target-language curriculum is not yet available in this demo.</span><button class="button-secondary" type="button" disabled>Coming Soon</button></article>
-      <article class="language-card"><span class="soon">Coming soon</span><strong>Chinese</strong><span>The target-language curriculum is not yet available in this demo.</span><button class="button-secondary" type="button" disabled>Coming Soon</button></article>
+      <article class="language-card"><strong>English</strong><span>English help. English learning content stays in English.</span><button class="button" type="button" data-help-language="en" aria-pressed="true">Use English help</button></article>
+      <article class="language-card"><strong>Español</strong><span>Ayuda en español. El contenido de inglés permanece en inglés.</span><button class="button" type="button" data-help-language="es" aria-pressed="false">Usar ayuda en español</button></article>
+      <article class="language-card"><strong>简体中文</strong><span>使用简体中文帮助。英语学习内容保持英语。</span><button class="button" type="button" data-help-language="zh" aria-pressed="false">使用中文帮助</button></article>
     </div>
   </section>
 
@@ -221,6 +221,44 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 <script>
 (() => {
 "use strict";
+const HELP_LANGUAGES={
+ en:{label:"English",journey:"Your Learning Journey",standards:"Six standards. One learning system.",demo:"Start the Demo",help:"Help",learn:"Learn",practice:"Practice",check:"Check",back:"Back",success:"Correct. Keep going.",retry:"Try again. Look at the pattern once more.",cards:[
+ {title:"Possibility",front:"You know more than you think.",support:"Let’s find your starting point.",action:"Try it",learn:"You can start with English you already know. Example: \"I am Sam.\"",practice:"Choose the complete English sentence.",check:"Check your choice."},
+ {title:"Understanding",front:"English has patterns.",support:"See one. Make another.",action:"Find the pattern",learn:"A small change can make a new English form. Examples: \"play → played\" and \"help → helpful\".",practice:"Choose which English word means in the past.",check:"Check the pattern."},
+ {title:"Action",front:"Use English now.",support:"One small answer is real practice.",action:"Your turn",learn:"Complete the English sentence with one idea. Prompt: \"I like ___.\" Examples: \"music / dogs / pizza.\"",practice:"Type or choose one completion.",check:"Check your answer."},
+ {title:"Progress",front:"Small wins add up.",support:"Try. Check. Try again.",action:"Make a win",learn:"Notice how the English sentence changes: \"She walk.\" → \"She walks.\"",practice:"Choose the better English sentence.",check:"Check and see one simple reason."},
+ {title:"Independence",front:"Need less help over time.",support:"Use help when you need it.",action:"Try with less help",learn:"You can hide the help cue and bring it back whenever you need it.",practice:"Answer the English task after hiding the cue.",check:"Check your answer. Help stays available."},
+ {title:"Achievement",front:"Show what you can do.",support:"Your next step should fit you.",action:"Check yourself",learn:"A check shows what is easy now and what to practice next.",practice:"Try one English pattern you have already seen.",check:"Ready for the next step, or practice this once more."}]},
+ es:{label:"Español",journey:"Tu recorrido de aprendizaje",standards:"Seis etapas. Un solo sistema de aprendizaje.",demo:"Comenzar la demostración",help:"Ayuda",learn:"Aprende",practice:"Practica",check:"Comprueba",back:"Atrás",success:"Correcto. Sigue adelante.",retry:"Inténtalo de nuevo. Mira el patrón una vez más.",cards:[
+ {title:"Posibilidad",front:"Sabes más de lo que crees.",support:"Encontremos tu punto de partida.",action:"Pruébalo",learn:"Puedes empezar con el inglés que ya conoces. Ejemplo: \"I am Sam.\"",practice:"Elige la oración completa en inglés.",check:"Comprueba tu elección."},
+ {title:"Comprensión",front:"El inglés tiene patrones.",support:"Observa uno. Crea otro.",action:"Encuentra el patrón",learn:"Un pequeño cambio puede crear una nueva forma en inglés. Ejemplos: \"play → played\" y \"help → helpful\".",practice:"Elige qué palabra en inglés significa que ocurrió en el pasado.",check:"Comprueba el patrón."},
+ {title:"Acción",front:"Usa el inglés ahora.",support:"Una respuesta pequeña ya es práctica real.",action:"Tu turno",learn:"Completa la oración en inglés con una idea. Consigna: \"I like ___.\" Ejemplos: \"music / dogs / pizza.\"",practice:"Escribe o elige una opción para completarla.",check:"Comprueba tu respuesta."},
+ {title:"Progreso",front:"Los pequeños logros se acumulan.",support:"Intenta. Comprueba. Intenta otra vez.",action:"Consigue un logro",learn:"Observa cómo cambia la oración en inglés: \"She walk.\" → \"She walks.\"",practice:"Elige la mejor oración en inglés.",check:"Comprueba y mira una razón sencilla."},
+ {title:"Independencia",front:"Necesita menos ayuda con el tiempo.",support:"Usa la ayuda cuando la necesites.",action:"Prueba con menos ayuda",learn:"Puedes ocultar la pista de ayuda y recuperarla cuando quieras.",practice:"Responde la tarea en inglés después de ocultar la pista.",check:"Comprueba tu respuesta. La ayuda sigue disponible."},
+ {title:"Logro",front:"Demuestra lo que puedes hacer.",support:"Tu siguiente paso debe adaptarse a ti.",action:"Compruébalo tú mismo",learn:"Una comprobación muestra qué es fácil ahora y qué conviene practicar.",practice:"Prueba un patrón de inglés que ya hayas visto.",check:"Listo para el siguiente paso, o practica esto una vez más."}]},
+ zh:{label:"简体中文",journey:"你的学习旅程",standards:"六个阶段，一个学习系统。",demo:"开始演示",help:"帮助",learn:"学习",practice:"练习",check:"检查",back:"返回",success:"正确。继续前进。",retry:"再试一次。再看一遍这个规律。",cards:[
+ {title:"可能性",front:"你知道的比自己想象的更多。",support:"让我们找到你的起点。",action:"试一试",learn:"你可以从已经会的英语开始。示例：\"I am Sam.\"",practice:"选择完整的英语句子。",check:"检查你的选择。"},
+ {title:"理解",front:"英语有规律。",support:"看一个，再做一个。",action:"找规律",learn:"一个小变化可以形成新的英语形式。示例：\"play → played\" 和 \"help → helpful\"。",practice:"选择哪个英语单词表示过去发生的事情。",check:"检查这个规律。"},
+ {title:"行动",front:"现在就使用英语。",support:"一个小回答也是真正的练习。",action:"轮到你了",learn:"用一个想法完成这句英语。提示：\"I like ___.\" 示例：\"music / dogs / pizza.\"",practice:"输入或选择一个内容来完成句子。",check:"检查你的回答。"},
+ {title:"进步",front:"小小的成功会不断积累。",support:"尝试。检查。再尝试。",action:"取得一次小成功",learn:"观察英语句子怎样变化：\"She walk.\" → \"She walks.\"",practice:"选择更好的英语句子。",check:"检查答案，并查看一个简单原因。"},
+ {title:"独立",front:"逐渐减少对帮助的需要。",support:"需要时就使用帮助。",action:"少一点帮助再试试",learn:"你可以隐藏帮助提示，也可以随时恢复。",practice:"隐藏提示后完成英语任务。",check:"检查你的回答。帮助仍然可以使用。"},
+ {title:"成就",front:"展示你能做到什么。",support:"下一步应该适合你。",action:"自我检查",learn:"一次检查可以显示现在什么很容易，以及下一步该练什么。",practice:"尝试一个你已经见过的英语规律。",check:"准备好进入下一步，或者再练一次。"}]}
+};
+let helpLanguage="en";
+function setHelpLanguage(code){if(!HELP_LANGUAGES[code])code="en";helpLanguage=code;document.documentElement.lang=code==="zh"?"zh-CN":code;document.documentElement.dataset.helpLanguage=code;document.dispatchEvent(new CustomEvent("education-help-language-change",{detail:{code,copy:HELP_LANGUAGES[code]}}));document.querySelectorAll(".edu-standard-card").forEach((card,index)=>renderChamberCard(card,index));return HELP_LANGUAGES[code];}
+window.EDUCATION_HELP_LANGUAGES=HELP_LANGUAGES;window.setEducationHelpLanguage=setHelpLanguage;
+const CHAMBER_ACTIONS=new Map();
+function chamberCopy(index){return HELP_LANGUAGES[helpLanguage].cards[index]||HELP_LANGUAGES.en.cards[index]}
+function renderChamberCard(card,index){const copy=chamberCopy(index);const title=card.querySelector("[data-chamber-title]"),front=card.querySelector("[data-chamber-front]"),support=card.querySelector("[data-chamber-support]"),action=card.querySelector("[data-chamber-action]"),learn=card.querySelector("[data-chamber-learn]"),practice=card.querySelector("[data-chamber-practice]"),check=card.querySelector("[data-chamber-check]");if(title)title.textContent=copy.title;if(front)front.textContent=copy.front;if(support)support.textContent=copy.support;if(action)action.textContent=copy.action;if(learn)learn.textContent=copy.learn;if(practice)practice.textContent=copy.practice;if(check)check.textContent=copy.check;}
+function bindChamberCard(card,index){card.dataset.face=card.dataset.face||"front";card.addEventListener("click",e=>{if(e.target.closest("button,input,textarea,select"))return;document.querySelectorAll(".edu-standard-card").forEach((c,i)=>c.dataset.active=String(i===index));});card.querySelector("[data-chamber-action]")?.addEventListener("click",()=>{card.dataset.face="back";card.dataset.inspecting="true";});card.querySelector("[data-chamber-back]")?.addEventListener("click",()=>{card.dataset.face="front";card.dataset.inspecting="false";});card.querySelector("[data-chamber-practice-action]")?.addEventListener("click",()=>{CHAMBER_ACTIONS.set(index,true);const out=card.querySelector("[data-chamber-feedback]");if(out)out.textContent=HELP_LANGUAGES[helpLanguage].success;});card.querySelector("[data-chamber-check-action]")?.addEventListener("click",()=>{const out=card.querySelector("[data-chamber-feedback]");if(out)out.textContent=CHAMBER_ACTIONS.get(index)?HELP_LANGUAGES[helpLanguage].success:HELP_LANGUAGES[helpLanguage].retry;});renderChamberCard(card,index);}
+
+document.querySelectorAll("[data-help-language]").forEach(button=>button.addEventListener("click",()=>{
+  const code=button.dataset.helpLanguage;
+  setHelpLanguage(code);
+  document.querySelectorAll("[data-help-language]").forEach(peer=>peer.setAttribute("aria-pressed",peer===button?"true":"false"));
+  showStage("intake");
+}));
+
 const STAGES=[
  {id:"P1S1",name:"Orientation and Baseline"},
  {id:"P1S2",name:"Direct Concepts"},
@@ -310,46 +348,33 @@ const EDUCATION_ARCHITECTURE=[
 
 function mountEducationCarousel(){
  const root=qs("[data-edu-carousel]"); if(!root) return;
- const tabs=qs("[data-edu-tabs]"),track=qs("[data-edu-track]"),live=qs("[data-edu-live]");
- let index=0,storyByCard=EDUCATION_ARCHITECTURE.map(()=>0),lensByCard=EDUCATION_ARCHITECTURE.map(()=>"reading"),dragStart=null;
+ const track=qs("[data-edu-track]"),live=qs("[data-edu-live]");
+ let index=0,dragStart=null,dragCurrent=null;
 
  const esc=v=>String(v).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
  function render(){
-  tabs.innerHTML=EDUCATION_ARCHITECTURE.map((c,i)=>'<button class="edu-carousel__tab" role="tab" aria-selected="'+(i===index)+'" data-edu-index="'+i+'">'+esc(c.label)+'</button>').join("");
   track.innerHTML=EDUCATION_ARCHITECTURE.map((c,i)=>{
-    let d=i-index; if(d>3)d-=EDUCATION_ARCHITECTURE.length;if(d<-3)d+=EDUCATION_ARCHITECTURE.length;
-    const active=i===index,adj=Math.abs(d)===1,dist=Math.abs(d)>1;
-    const story=storyByCard[i],lens=lensByCard[i];
-    return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-inspecting="'+(active&&root.dataset.inspecting==="true")+'" style="--offset:'+d+'">'+
-      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker">'+esc(c.label)+'</p><h3 class="edu-standard-title">'+esc(c.title)+'</h3><p class="edu-standard-copy">'+esc(c.summary)+'</p><div class="edu-story-preview">'+c.stories.map(x=>'<span>'+esc(x.title)+'</span>').join("")+'</div><button class="edu-inspect" type="button" data-edu-inspect>Explore this step</button></div>'+
-      '<div class="edu-inspection"><div class="edu-inspection__top"><div><p class="eyebrow">'+esc(c.label)+'</p><h3>'+esc(c.title)+'</h3><p>'+esc(c.question)+'</p></div><button class="edu-return" type="button" data-edu-return>Back to the Journey</button></div>'+
-      '<div class="edu-lenses" role="tablist" aria-label="Information lens">'+["reading","engineering","evidence"].map(x=>'<button class="edu-lens" role="tab" aria-selected="'+(x===lens)+'" data-edu-lens="'+x+'">'+({reading:"Learn",engineering:"Practice",evidence:"Check"}[x])+'</button>').join("")+'</div>'+
-      '<div class="edu-information-grid"><div class="edu-story-rail" role="tablist" aria-label="'+esc(c.label)+' stories">'+c.stories.map((x,j)=>'<button class="edu-story-tab" role="tab" aria-selected="'+(j===story)+'" data-edu-story="'+j+'"><span>'+String(j+1).padStart(2,"0")+'</span><strong>'+esc(x.title)+'</strong></button>').join("")+'</div><div class="edu-reading-cell" data-edu-cell></div></div></div></article>';
+    let d=i-index;if(d>3)d-=EDUCATION_ARCHITECTURE.length;if(d<-3)d+=EDUCATION_ARCHITECTURE.length;
+    const active=i===index,adj=Math.abs(d)===1,dist=Math.abs(d)>1,copy=chamberCopy(i);
+    return '<article class="edu-standard-card" data-card-index="'+i+'" data-active="'+active+'" data-adjacent="'+adj+'" data-distant="'+dist+'" data-face="front" style="--offset:'+d+'">'+
+      '<div class="edu-standard-summary"><span class="edu-standard-count">'+String(i+1).padStart(2,"0")+' / 06</span><p class="edu-standard-kicker" data-chamber-title>'+esc(copy.title)+'</p><h3 class="edu-standard-title" data-chamber-front>'+esc(copy.front)+'</h3><p class="edu-standard-copy" data-chamber-support>'+esc(copy.support)+'</p><button class="edu-inspect" type="button" data-chamber-action>'+esc(copy.action)+'</button></div>'+
+      '<div class="edu-inspection"><div class="edu-inspection__top"><div><p class="eyebrow" data-chamber-title>'+esc(copy.title)+'</p><h3 data-chamber-front>'+esc(copy.front)+'</h3></div><button class="edu-return" type="button" data-chamber-back>'+esc(HELP_LANGUAGES[helpLanguage].back)+'</button></div>'+
+      '<div class="edu-lenses"><button class="edu-lens" type="button" aria-selected="true">'+esc(HELP_LANGUAGES[helpLanguage].learn)+'</button><button class="edu-lens" type="button">'+esc(HELP_LANGUAGES[helpLanguage].practice)+'</button><button class="edu-lens" type="button">'+esc(HELP_LANGUAGES[helpLanguage].check)+'</button></div>'+
+      '<div class="edu-reading-cell"><p class="eyebrow">'+esc(HELP_LANGUAGES[helpLanguage].learn)+'</p><p data-chamber-learn>'+esc(copy.learn)+'</p><p class="eyebrow">'+esc(HELP_LANGUAGES[helpLanguage].practice)+'</p><p data-chamber-practice>'+esc(copy.practice)+'</p><button class="button-secondary" type="button" data-chamber-practice-action>'+esc(HELP_LANGUAGES[helpLanguage].practice)+'</button><p class="eyebrow">'+esc(HELP_LANGUAGES[helpLanguage].check)+'</p><p data-chamber-check>'+esc(copy.check)+'</p><button class="button" type="button" data-chamber-check-action>'+esc(HELP_LANGUAGES[helpLanguage].check)+'</button><div class="edu-evidence-boundary" data-chamber-feedback aria-live="polite"></div></div></div></article>';
   }).join("");
-  live.textContent=EDUCATION_ARCHITECTURE[index].label+" · "+(index+1)+" of "+EDUCATION_ARCHITECTURE.length;
+  track.querySelectorAll(".edu-standard-card").forEach((card,i)=>bindChamberCard(card,i));
+  live.textContent=chamberCopy(index).title+" · "+(index+1)+" of "+EDUCATION_ARCHITECTURE.length;
   root.style.setProperty("--edu-accent",["#f4cf83","#8dd8ff","#b9a0ff","#a7f3c6","#f0b1ff","#ffcb91"][index]);
   root.style.setProperty("--edu-soft",["rgba(244,207,131,.08)","rgba(141,216,255,.08)","rgba(185,160,255,.08)","rgba(167,243,198,.08)","rgba(240,177,255,.08)","rgba(255,203,145,.08)"][index]);
-  fillCell();
- }
- function fillCell(){
-  const card=track.querySelector('.edu-standard-card[data-active="true"]'); if(!card)return;
-  const c=EDUCATION_ARCHITECTURE[index],st=c.stories[storyByCard[index]],lens=lensByCard[index],cell=card.querySelector("[data-edu-cell]");
-  const title={reading:"Learn the idea",engineering:"See how it works",evidence:"Check your progress"}[lens];
-  const body=st[lens];
-  cell.innerHTML='<p class="eyebrow">'+title+'</p><h4>'+esc(st.title)+'</h4><p>'+esc(body)+'</p><div class="edu-evidence-boundary"><strong>What this means</strong><p>'+esc(st.boundary)+'</p></div>';
  }
  function select(next){index=(next+EDUCATION_ARCHITECTURE.length)%EDUCATION_ARCHITECTURE.length;render()}
- root.addEventListener("click",e=>{
-  const tab=e.target.closest("[data-edu-index]");if(tab){select(Number(tab.dataset.eduIndex));return}
-  if(e.target.closest("[data-edu-inspect]")){root.dataset.inspecting="true";document.documentElement.dataset.educationInspectionOpen="true";render();return}
-  if(e.target.closest("[data-edu-return]")){root.dataset.inspecting="false";delete document.documentElement.dataset.educationInspectionOpen;render();return}
-  const story=e.target.closest("[data-edu-story]");if(story){storyByCard[index]=Number(story.dataset.eduStory);render();return}
-  const lens=e.target.closest("[data-edu-lens]");if(lens){lensByCard[index]=lens.dataset.eduLens;render();return}
- });
+ root.addEventListener("click",e=>{const card=e.target.closest(".edu-standard-card");if(card&&!e.target.closest("button,input,textarea,select"))select(Number(card.dataset.cardIndex));});
  const viewport=qs("[data-edu-viewport]");
  viewport.addEventListener("keydown",e=>{if(root.dataset.inspecting==="true")return;if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}})
- viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.setPointerCapture?.(e.pointerId)})
- viewport.addEventListener("pointerup",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;if(Math.abs(dx)>42)select(index+(dx<0?1:-1))})
+ viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.dataset.dragging="true";viewport.setPointerCapture?.(e.pointerId)})
+ viewport.addEventListener("pointermove",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;track.style.transition="none";track.style.transform="translate3d("+dx+"px,0,0)"})
+ viewport.addEventListener("pointerup",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;delete viewport.dataset.dragging;track.style.transition="transform .22s ease";track.style.transform="";if(Math.abs(dx)>42)select(index+(dx<0?1:-1));else render()})
+ viewport.addEventListener("pointercancel",()=>{dragStart=null;delete viewport.dataset.dragging;track.style.transition="transform .22s ease";track.style.transform="";render()})
  render();
 }
 mountEducationCarousel();

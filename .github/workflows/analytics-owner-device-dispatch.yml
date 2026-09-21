@@ -1,36 +1,23 @@
-name: Analytics Surface Publication Dispatch
-# fresh analytics publication recovery
-# dynamic dashboard publication recovery
-# serialized recovery after education production owner
-# production slot clear dispatch
+name: Analytics Surface Qualification
 
 on:
   push:
     branches: [main]
     paths:
-      - .github/workflows/analytics-owner-device-dispatch.yml
-      - analytics-owner-device/**
-      - assets/dgb-owner-device.js
       - analytics/**
       - index.html
       - about/index.html
       - .github/ai-router/publication-surfaces/analytics.json
+      - .github/workflows/analytics-owner-device-dispatch.yml
 
 permissions:
-  actions: write
   contents: read
 
 jobs:
-  dispatch:
+  qualify:
     runs-on: ubuntu-latest
     steps:
-      - name: Dispatch fresh exact-head publication
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          TARGET_SHA: ${{ github.sha }}
-        shell: bash
+      - name: Record qualified Analytics head
         run: |
-          set -euo pipefail
-          gh api --method POST             -H "Accept: application/vnd.github+json"             "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$TARGET_SHA"             -f inputs[surface_id]="analytics"
-          echo "DISPATCHED_ANALYTICS_SURFACE=$TARGET_SHA"
+          echo "ANALYTICS_SURFACE_QUALIFIED=${GITHUB_SHA}"
+          echo "Publication is delegated to the shared current-head Pages publisher."

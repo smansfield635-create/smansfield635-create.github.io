@@ -31,7 +31,7 @@ jobs:
       - name: Collect read-only Cloudflare Web Analytics
         shell: python
         run: |
-          import json, os, urllib.request
+          import json, os, urllib.request, time, random
           from datetime import datetime, timedelta, timezone
           from pathlib import Path
 
@@ -40,12 +40,31 @@ jobs:
           now = datetime.now(timezone.utc).replace(microsecond=0)
           history_start = now - timedelta(days=90)
 
-          def gql(query, variables=None):
+          def gql(query, variables=None, attempts=6):
               body = json.dumps({"query": query, "variables": variables or {}}).encode()
-              req = urllib.request.Request(endpoint, data=body, method="POST",
-                  headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json", "Accept": "application/json"})
-              with urllib.request.urlopen(req, timeout=45) as r:
-                  return json.load(r)
+              last = None
+              for attempt in range(1, attempts + 1):
+                  try:
+                      req = urllib.request.Request(endpoint, data=body, method="POST",
+                          headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json", "Accept": "application/json"})
+                      with urllib.request.urlopen(req, timeout=60) as r:
+                          doc = json.load(r)
+                      transient = any(
+                          e.get("extensions",{}).get("code") in {"serviceUnavailable","internal","rateLimit","timeout"}
+                          for e in doc.get("errors",[])
+                      )
+                      if not transient:
+                          return doc
+                      last = doc
+                  except Exception as e:
+                      last = {"exception": repr(e)}
+                  if attempt < attempts:
+                      delay = min(30, 2 ** (attempt - 1)) + random.random()
+                      print(f"Transient Cloudflare failure; retry {attempt}/{attempts} after {delay:.1f}s")
+                      time.sleep(delay)
+              if isinstance(last, dict) and "errors" in last:
+                  return last
+              raise RuntimeError("Cloudflare request exhausted retries: " + json.dumps(last))
 
           # Web Analytics/RUM is account-scoped. Bind the known Cloudflare Account ID.
           accounts = [{"accountTag": "832a0c759fbdc46553494f572a0e534b"}]
@@ -117,12 +136,23 @@ jobs:
               "deliveryType","requestHost","siteTag"
           ]
           composition = {
-              "schema":"DGB_CLOUDFLARE_RUM_COMPOSITION_V1",
+              "schema":"DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
               "generatedAt":out["generatedAt"],
               "window":{"start":composition_start.isoformat().replace("+00:00","Z"),"end":out["window"]["end"]},
               "dimensions":{}
           }
+          checkpoint_path = Path(".analytics/cloudflare/composition.json")
+          if checkpoint_path.exists():
+              try:
+                  prior=json.loads(checkpoint_path.read_text())
+                  if prior.get("schema") == composition["schema"] and prior.get("window") == composition["window"]:
+                      composition["dimensions"].update(prior.get("dimensions",{}))
+              except Exception:
+                  pass
           for dim in dimensions:
+              if dim in composition["dimensions"]:
+                  print("Reusing completed dimension:", dim)
+                  continue
               merged={}
               cursor=composition_start
               while cursor < now:
@@ -160,6 +190,9 @@ jobs:
               composition["dimensions"][dim]=[
                   {"value":k,**v} for k,v in sorted(merged.items(),key=lambda kv:kv[1]["pageLoads"],reverse=True)
               ]
+              # Persist a local checkpoint immediately; later dimensions cannot erase completed work.
+              Path("analytics-bridge/composition.json").write_text(json.dumps(composition,indent=2)+"\n")
+              print("Completed composition dimension:", dim)
           Path("analytics-bridge/composition.json").write_text(json.dumps(composition,indent=2)+"\n")
 
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")

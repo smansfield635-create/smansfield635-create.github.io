@@ -1,0 +1,33 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "evan-job-stage",
+  "description": "Standalone contractor Job Stage business prototype.",
+  "checks": [
+    {
+      "path": "/prototypes/evan-job-stage/index.html",
+      "includes": [
+        "CONTRACTOR BUSINESS PROTOTYPE",
+        "Job Stage",
+        "Jane Doe",
+        "John Smith",
+        "Evidence intake",
+        "Still needed"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/prototypes/evan-job-stage/",
+    "timeoutMs": 15000,
+    "readySelector": "#detail",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/prototypes/evan-job-stage/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": []
+  }
+}

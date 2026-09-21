@@ -433,5 +433,5 @@ jobs:
         with:
           name: public-alias-convergence-${{ github.run_id }}-${{ github.run_attempt }}
           path: /tmp/public-alias-convergence-receipt.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 90

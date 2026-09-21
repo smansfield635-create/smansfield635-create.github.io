@@ -8,8 +8,8 @@
   data-public-face-default="true"
   data-technical-face-available="true"
   data-demo-language-english="available"
-  data-demo-language-spanish="coming-soon"
-  data-demo-language-chinese="coming-soon"
+  data-demo-language-spanish="available"
+  data-demo-language-chinese="available"
   data-placement-authority="demonstrated-performance"
   data-self-report-authority="orientation-only"
   data-demo-range="phase-1-only"
@@ -156,7 +156,7 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
   <div>
     <p class="eyebrow">From possibility to action</p>
     <h2>Show what you can do. We’ll start from there.</h2>
-    <p>English is available now. Spanish and Chinese are coming soon. Self-report chooses where testing begins; demonstrated performance determines placement.</p>
+    <p>English learning is available now with help in English, Spanish, or Simplified Chinese. Self-report chooses where testing begins; demonstrated performance determines placement.</p>
   </div>
   <button class="button" type="button" data-start-demo>Start the Demo</button>
 </section>
@@ -174,11 +174,11 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
   </div>
 
   <section class="demo-stage" data-demo-stage="language">
-    <p>Choose the language you want to learn.</p>
+    <p>Choose your help language. The English being taught and checked stays in English.</p>
     <div class="language-grid">
-      <article class="language-card"><strong>English</strong><span>Phase 1 demo available now.</span><button class="button" type="button" data-language="English">Start English</button></article>
-      <article class="language-card"><span class="soon">Coming soon</span><strong>Spanish</strong><span>The target-language curriculum is not yet available in this demo.</span><button class="button-secondary" type="button" disabled>Coming Soon</button></article>
-      <article class="language-card"><span class="soon">Coming soon</span><strong>Chinese</strong><span>The target-language curriculum is not yet available in this demo.</span><button class="button-secondary" type="button" disabled>Coming Soon</button></article>
+      <article class="language-card"><strong>English</strong><span>English help. English learning content stays in English.</span><button class="button" type="button" data-help-language="en" aria-pressed="true">Use English help</button></article>
+      <article class="language-card"><strong>Español</strong><span>Ayuda en español. El contenido de inglés permanece en inglés.</span><button class="button" type="button" data-help-language="es" aria-pressed="false">Usar ayuda en español</button></article>
+      <article class="language-card"><strong>简体中文</strong><span>使用简体中文帮助。英语学习内容保持英语。</span><button class="button" type="button" data-help-language="zh" aria-pressed="false">使用中文帮助</button></article>
     </div>
   </section>
 
@@ -221,6 +221,39 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 <script>
 (() => {
 "use strict";
+const HELP_LANGUAGES={
+ en:{label:"English",journey:"Your Learning Journey",standards:"Six standards. One learning system.",demo:"Start the Demo",help:"Help",learn:"Learn",practice:"Practice",check:"Check",back:"Back",success:"Correct. Keep going.",retry:"Try again. Look at the pattern once more.",cards:[
+ {title:"Possibility",front:"You know more than you think.",support:"Let’s find your starting point.",action:"Try it",learn:"You can start with English you already know. Example: \"I am Sam.\"",practice:"Choose the complete English sentence.",check:"Check your choice."},
+ {title:"Understanding",front:"English has patterns.",support:"See one. Make another.",action:"Find the pattern",learn:"A small change can make a new English form. Examples: \"play → played\" and \"help → helpful\".",practice:"Choose which English word means in the past.",check:"Check the pattern."},
+ {title:"Action",front:"Use English now.",support:"One small answer is real practice.",action:"Your turn",learn:"Complete the English sentence with one idea. Prompt: \"I like ___.\" Examples: \"music / dogs / pizza.\"",practice:"Type or choose one completion.",check:"Check your answer."},
+ {title:"Progress",front:"Small wins add up.",support:"Try. Check. Try again.",action:"Make a win",learn:"Notice how the English sentence changes: \"She walk.\" → \"She walks.\"",practice:"Choose the better English sentence.",check:"Check and see one simple reason."},
+ {title:"Independence",front:"Need less help over time.",support:"Use help when you need it.",action:"Try with less help",learn:"You can hide the help cue and bring it back whenever you need it.",practice:"Answer the English task after hiding the cue.",check:"Check your answer. Help stays available."},
+ {title:"Achievement",front:"Show what you can do.",support:"Your next step should fit you.",action:"Check yourself",learn:"A check shows what is easy now and what to practice next.",practice:"Try one English pattern you have already seen.",check:"Ready for the next step, or practice this once more."}]},
+ es:{label:"Español",journey:"Tu recorrido de aprendizaje",standards:"Seis etapas. Un solo sistema de aprendizaje.",demo:"Comenzar la demostración",help:"Ayuda",learn:"Aprende",practice:"Practica",check:"Comprueba",back:"Atrás",success:"Correcto. Sigue adelante.",retry:"Inténtalo de nuevo. Mira el patrón una vez más.",cards:[
+ {title:"Posibilidad",front:"Sabes más de lo que crees.",support:"Encontremos tu punto de partida.",action:"Pruébalo",learn:"Puedes empezar con el inglés que ya conoces. Ejemplo: \"I am Sam.\"",practice:"Elige la oración completa en inglés.",check:"Comprueba tu elección."},
+ {title:"Comprensión",front:"El inglés tiene patrones.",support:"Observa uno. Crea otro.",action:"Encuentra el patrón",learn:"Un pequeño cambio puede crear una nueva forma en inglés. Ejemplos: \"play → played\" y \"help → helpful\".",practice:"Elige qué palabra en inglés significa que ocurrió en el pasado.",check:"Comprueba el patrón."},
+ {title:"Acción",front:"Usa el inglés ahora.",support:"Una respuesta pequeña ya es práctica real.",action:"Tu turno",learn:"Completa la oración en inglés con una idea. Consigna: \"I like ___.\" Ejemplos: \"music / dogs / pizza.\"",practice:"Escribe o elige una opción para completarla.",check:"Comprueba tu respuesta."},
+ {title:"Progreso",front:"Los pequeños logros se acumulan.",support:"Intenta. Comprueba. Intenta otra vez.",action:"Consigue un logro",learn:"Observa cómo cambia la oración en inglés: \"She walk.\" → \"She walks.\"",practice:"Elige la mejor oración en inglés.",check:"Comprueba y mira una razón sencilla."},
+ {title:"Independencia",front:"Necesita menos ayuda con el tiempo.",support:"Usa la ayuda cuando la necesites.",action:"Prueba con menos ayuda",learn:"Puedes ocultar la pista de ayuda y recuperarla cuando quieras.",practice:"Responde la tarea en inglés después de ocultar la pista.",check:"Comprueba tu respuesta. La ayuda sigue disponible."},
+ {title:"Logro",front:"Demuestra lo que puedes hacer.",support:"Tu siguiente paso debe adaptarse a ti.",action:"Compruébalo tú mismo",learn:"Una comprobación muestra qué es fácil ahora y qué conviene practicar.",practice:"Prueba un patrón de inglés que ya hayas visto.",check:"Listo para el siguiente paso, o practica esto una vez más."}]},
+ zh:{label:"简体中文",journey:"你的学习旅程",standards:"六个阶段，一个学习系统。",demo:"开始演示",help:"帮助",learn:"学习",practice:"练习",check:"检查",back:"返回",success:"正确。继续前进。",retry:"再试一次。再看一遍这个规律。",cards:[
+ {title:"可能性",front:"你知道的比自己想象的更多。",support:"让我们找到你的起点。",action:"试一试",learn:"你可以从已经会的英语开始。示例：\"I am Sam.\"",practice:"选择完整的英语句子。",check:"检查你的选择。"},
+ {title:"理解",front:"英语有规律。",support:"看一个，再做一个。",action:"找规律",learn:"一个小变化可以形成新的英语形式。示例：\"play → played\" 和 \"help → helpful\"。",practice:"选择哪个英语单词表示过去发生的事情。",check:"检查这个规律。"},
+ {title:"行动",front:"现在就使用英语。",support:"一个小回答也是真正的练习。",action:"轮到你了",learn:"用一个想法完成这句英语。提示：\"I like ___.\" 示例：\"music / dogs / pizza.\"",practice:"输入或选择一个内容来完成句子。",check:"检查你的回答。"},
+ {title:"进步",front:"小小的成功会不断积累。",support:"尝试。检查。再尝试。",action:"取得一次小成功",learn:"观察英语句子怎样变化：\"She walk.\" → \"She walks.\"",practice:"选择更好的英语句子。",check:"检查答案，并查看一个简单原因。"},
+ {title:"独立",front:"逐渐减少对帮助的需要。",support:"需要时就使用帮助。",action:"少一点帮助再试试",learn:"你可以隐藏帮助提示，也可以随时恢复。",practice:"隐藏提示后完成英语任务。",check:"检查你的回答。帮助仍然可以使用。"},
+ {title:"成就",front:"展示你能做到什么。",support:"下一步应该适合你。",action:"自我检查",learn:"一次检查可以显示现在什么很容易，以及下一步该练什么。",practice:"尝试一个你已经见过的英语规律。",check:"准备好进入下一步，或者再练一次。"}]}
+};
+let helpLanguage="en";
+function setHelpLanguage(code){if(!HELP_LANGUAGES[code])code="en";helpLanguage=code;document.documentElement.lang=code==="zh"?"zh-CN":code;document.documentElement.dataset.helpLanguage=code;document.dispatchEvent(new CustomEvent("education-help-language-change",{detail:{code,copy:HELP_LANGUAGES[code]}}));return HELP_LANGUAGES[code];}
+window.EDUCATION_HELP_LANGUAGES=HELP_LANGUAGES;window.setEducationHelpLanguage=setHelpLanguage;
+document.querySelectorAll("[data-help-language]").forEach(button=>button.addEventListener("click",()=>{
+  const code=button.dataset.helpLanguage;
+  setHelpLanguage(code);
+  document.querySelectorAll("[data-help-language]").forEach(peer=>peer.setAttribute("aria-pressed",peer===button?"true":"false"));
+  showStage("intake");
+}));
+
 const STAGES=[
  {id:"P1S1",name:"Orientation and Baseline"},
  {id:"P1S2",name:"Direct Concepts"},

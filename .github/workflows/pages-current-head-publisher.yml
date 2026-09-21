@@ -1,6 +1,10 @@
 name: Shared Current-Head Pages Publisher
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pages-current-head-publisher.yml'
   workflow_dispatch:
     inputs:
       surface_id:

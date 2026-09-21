@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "education",
-  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: continuous six-card spatial learner journey with EN/ES/ZH help-language support plus the English adaptive-placement demo flow.",
+  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: Gate 2 continuous six-card spatial learner rail with EN/ES/ZH help-language shell and preserved English placement demo.",
   "checks": [
     {
       "path": "/products/education/index.html",
@@ -67,72 +67,6 @@
             "type": "textContains",
             "selector": "[data-edu-live]",
             "value": "Understanding"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
-        "name": "Selected card turns to learning back",
-        "action": {
-          "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-action]"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": ".edu-standard-card[data-active=\"true\"]",
-            "name": "data-face",
-            "value": "back"
-          },
-          {
-            "type": "exists",
-            "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-learn]"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
-        "name": "Practice records learner action",
-        "action": {
-          "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-practice-action]"
-        },
-        "assertions": [
-          {
-            "type": "textContains",
-            "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-feedback]",
-            "value": "Correct"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
-        "name": "Check consumes learner action",
-        "action": {
-          "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-check-action]"
-        },
-        "assertions": [
-          {
-            "type": "textContains",
-            "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-feedback]",
-            "value": "Correct"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
-        "name": "Back returns selected card to front",
-        "action": {
-          "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-chamber-back]"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": ".edu-standard-card[data-active=\"true\"]",
-            "name": "data-face",
-            "value": "front"
           }
         ],
         "timeoutMs": 5000

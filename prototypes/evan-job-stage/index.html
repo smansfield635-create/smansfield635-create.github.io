@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Job Stage Prototype</title>
+<style>
+:root{--bg:#f5f7f9;--card:#fff;--ink:#17202a;--muted:#66727f;--line:#dce2e7;--accent:#1f5f4a;--warn:#9a6700;--bad:#a33;--good:#26734d}
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+button,input{font:inherit}button{cursor:pointer}.wrap{max-width:1180px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+h1,h2,h3,p{margin-top:0}.muted{color:var(--muted)}.btn{border:1px solid var(--line);background:var(--card);padding:10px 14px;border-radius:9px}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.metric,.panel,.job{background:var(--card);border:1px solid var(--line);border-radius:12px}.metric{padding:16px}.metric b{display:block;font-size:22px;margin-top:4px}
+.layout{display:grid;grid-template-columns:320px 1fr;gap:16px}.panel{padding:16px}.jobs{display:grid;gap:10px}.job{padding:14px;text-align:left;width:100%}.job.active{outline:2px solid var(--accent)}.job strong{display:block}.pill{display:inline-block;border-radius:99px;padding:3px 8px;font-size:12px;background:#eef1f3;margin-top:7px}
+.jobhead{display:flex;justify-content:space-between;gap:12px;align-items:start}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.money{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.money div{background:#f7f8f9;padding:10px;border-radius:8px}.money b{display:block;font-size:17px}
+.row{border-top:1px solid var(--line);padding:10px 0;display:flex;justify-content:space-between;gap:12px}.state{font-weight:650}.answered{color:var(--good)}.uncertain{color:var(--warn)}.unanswered,.conflict{color:var(--bad)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:16px;text-align:center}.files{margin-top:10px}.file{padding:8px 0;border-top:1px solid var(--line);font-size:13px}.need{padding:9px 11px;background:#fff8e6;border-radius:8px;margin:7px 0}
+.hidden{display:none}.modal{margin-top:16px}.form{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}.form input{min-width:0;padding:10px;border:1px solid var(--line);border-radius:8px}
+@media(max-width:800px){.summary,.money{grid-template-columns:1fr 1fr}.layout,.grid2{grid-template-columns:1fr}.form{grid-template-columns:1fr}.wrap{padding:14px}}
+</style></head><body><main class="wrap">
+<div class="top"><div><div class="muted">CONTRACTOR BUSINESS PROTOTYPE</div><h1>Job Stage</h1><p class="muted">Know what each job proves, what it does not prove, and what is still needed.</p></div><button id="newBtn" class="btn primary">+ New job</button></div>
+<section id="newForm" class="panel modal hidden"><h3>Create job</h3><form class="form" id="jobForm"><input id="customer" required placeholder="Customer name"><input id="project" required placeholder="Project / job type"><button class="btn primary">Create</button></form></section>
+<section class="summary"><div class="metric"><span class="muted">Approved</span><b id="sApproved"></b></div><div class="metric"><span class="muted">Invoiced</span><b id="sInvoiced"></b></div><div class="metric"><span class="muted">Collected</span><b id="sPaid"></b></div><div class="metric"><span class="muted">Outstanding</span><b id="sOutstanding"></b></div></section>
+<div class="layout"><aside class="panel"><h2>Jobs</h2><div id="jobs" class="jobs"></div></aside><section id="detail" class="panel"></section></div>
+</main><script>
+const questions=[
+ ['approval','What work and amount are approved?','Signed contract / approved estimate'],
+ ['changes','Are additional changes approved?','Signed change order'],
+ ['invoice','How much has been invoiced?','Customer invoice'],
+ ['payment','How much has the customer paid?','Payment confirmation / receipt'],
+ ['subs','What subcontractor or supplier obligations exist?','Subcontractor invoice / supplier bill'],
+ ['insurance','Is insurance funding/status documented?','Insurance estimate, EOB, or carrier payment record'],
+ ['reconcile','Is the job financially reconciled?','Complete approval, invoice, payment, and obligation evidence']
+];
+let data=[
+ {id:'jane',customer:'Jane Doe',project:'Insurance restoration · Kitchen + water damage',demo:true,approved:28400,invoiced:28400,paid:24100,docs:['Insurance Estimate.pdf','Signed Contract.pdf','Change Order 1.pdf','Invoice 1048.pdf','Cabinet Sub Invoice.pdf'],states:{approval:'answered',changes:'answered',invoice:'answered',payment:'uncertain',subs:'answered',insurance:'answered',reconcile:'unanswered'}},
+ {id:'john',customer:'John Smith',project:'Residential remodel · Addition + interior',demo:true,approved:46200,invoiced:51400,paid:30000,docs:['Signed Contract.pdf','Unsigned Change Order.pdf','Invoice 2117.pdf','Customer Payment.pdf','Electrical Invoice.pdf'],states:{approval:'answered',changes:'conflict',invoice:'answered',payment:'answered',subs:'answered',insurance:'unanswered',reconcile:'conflict'}}
+];let selected='jane';
+const $=id=>document.getElementById(id), money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0);
+function current(){return data.find(j=>j.id===selected)}
+function missing(j){return questions.filter(q=>j.states[q[0]]!=='answered').map(q=>({q:q[1],doc:q[2],state:j.states[q[0]]}))}
+function renderSummary(){let a=data.reduce((s,j)=>s+j.approved,0),i=data.reduce((s,j)=>s+j.invoiced,0),p=data.reduce((s,j)=>s+j.paid,0);$('sApproved').textContent=money(a);$('sInvoiced').textContent=money(i);$('sPaid').textContent=money(p);$('sOutstanding').textContent=money(Math.max(0,i-p))}
+function renderJobs(){$('jobs').innerHTML=data.map(j=>'<button class="job '+(j.id===selected?'active':'')+'" data-id="'+j.id+'"><strong>'+esc(j.customer)+'</strong><span class="muted">'+esc(j.project)+'</span><br><span class="pill">'+(j.demo?'Demo · ':'')+(missing(j).length?missing(j).length+' evidence gaps':'Evaluation complete')+'</span></button>').join('');document.querySelectorAll('.job').forEach(b=>b.onclick=()=>{selected=b.dataset.id;render()})}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderDetail(){let j=current(), gaps=missing(j);$('detail').innerHTML='<div class="jobhead"><div><div class="muted">'+(j.demo?'DEMO JOB':'JOB')+'</div><h2>'+esc(j.customer)+'</h2><p class="muted">'+esc(j.project)+'</p></div><span class="pill">'+(gaps.length?gaps.length+' items need evidence':'Fully supported')+'</span></div>'+
+ '<div class="money"><div><span class="muted">Approved</span><b>'+money(j.approved)+'</b></div><div><span class="muted">Invoiced</span><b>'+money(j.invoiced)+'</b></div><div><span class="muted">Paid</span><b>'+money(j.paid)+'</b></div><div><span class="muted">Outstanding</span><b>'+money(Math.max(0,j.invoiced-j.paid))+'</b></div></div>'+
+ '<div class="grid2"><div><h3>Evaluation</h3>'+questions.map(q=>'<div class="row"><span>'+q[1]+'</span><span class="state '+j.states[q[0]]+'">'+cap(j.states[q[0]])+'</span></div>').join('')+'</div>'+
+ '<div><h3>Evidence intake</h3><div class="drop"><input id="upload" type="file" multiple><p class="muted">Files are inventoried in this browser prototype. Their contents are not uploaded to a server or semantically read yet.</p></div><div class="files"><b>Documents known to this job</b>'+j.docs.map(d=>'<div class="file">'+esc(d)+'</div>').join('')+'</div><h3 style="margin-top:18px">Still needed</h3>'+(gaps.length?gaps.map(g=>'<div class="need"><b>'+cap(g.state)+':</b> '+esc(g.q)+'<br><span class="muted">Evidence to resolve: '+esc(g.doc)+'</span></div>').join(''):'<p class="muted">No evidence gaps.</p>')+'</div></div>';
+ $('upload').onchange=e=>{[...e.target.files].forEach(f=>{if(!j.docs.includes(f.name))j.docs.push(f.name)});render()};
+}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function render(){renderSummary();renderJobs();renderDetail()}
+$('newBtn').onclick=()=>$('newForm').classList.toggle('hidden');
+$('jobForm').onsubmit=e=>{e.preventDefault();let id='job-'+Date.now();data.push({id,customer:$('customer').value.trim(),project:$('project').value.trim(),demo:false,approved:0,invoiced:0,paid:0,docs:[],states:Object.fromEntries(questions.map(q=>[q[0],'unanswered']))});selected=id;e.target.reset();$('newForm').classList.add('hidden');render()};
+render();
+</script></body></html>

@@ -11,6 +11,7 @@ on:
     branches: [main]
     paths:
       - '.github/education-deploy-request*.json'
+      - '.github/workflows/education-exact-head-deploy.yml'
   workflow_dispatch:
     inputs:
       target_sha:

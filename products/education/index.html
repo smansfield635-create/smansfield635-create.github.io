@@ -348,7 +348,7 @@ function mountEducationCarousel(){
  });
  const viewport=qs("[data-edu-viewport]");
  viewport.addEventListener("keydown",e=>{if(root.dataset.inspecting==="true")return;if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}})
- viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;dragStart=e.clientX;viewport.setPointerCapture?.(e.pointerId)})
+ viewport.addEventListener("pointerdown",e=>{if(root.dataset.inspecting==="true")return;if(e.target.closest?.("button,a,input,select,textarea,summary,label"))return;dragStart=e.clientX;viewport.setPointerCapture?.(e.pointerId)})
  viewport.addEventListener("pointerup",e=>{if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;if(Math.abs(dx)>42)select(index+(dx<0?1:-1))})
  render();
 }

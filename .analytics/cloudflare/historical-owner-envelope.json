@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-21T17:52:27Z",
+  "generatedAt": "2026-09-21T18:35:52Z",
   "window": {
-    "start": "2026-06-23T17:52:27Z",
-    "end": "2026-09-21T17:52:27Z"
+    "start": "2026-06-23T18:35:52Z",
+    "end": "2026-09-21T18:35:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,21 +17,21 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4579,
-    "visits": 1070,
+    "pageLoads": 4732,
+    "visits": 1104,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4579,
-        "visits": 1070
+        "pageLoads": 4732,
+        "visits": 1104
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1025,
-        "visits": 701
+        "pageLoads": 1029,
+        "visits": 704
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 186,
+        "pageLoads": 194,
         "visits": 0
       },
       "/index.html": {
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 61,
+        "pageLoads": 67,
         "visits": 0
       },
       "/characters/": {
@@ -51,7 +51,7 @@
         "visits": 30
       },
       "/showroom/globe/hearth/": {
-        "pageLoads": 10,
+        "pageLoads": 12,
         "visits": 0
       },
       "/showroom/globe/audralia/disposition/": {
@@ -91,11 +91,11 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 95,
+        "pageLoads": 93,
         "visits": 8
       },
       "/products/archcoin/": {
-        "pageLoads": 52,
+        "pageLoads": 48,
         "visits": 1
       },
       "/laws/": {
@@ -107,8 +107,8 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 157,
-        "visits": 7
+        "pageLoads": 169,
+        "visits": 9
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 99,
-        "visits": 23
+        "pageLoads": 170,
+        "visits": 30
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 153,
+        "pageLoads": 154,
         "visits": 7
       },
       "/governance/": {
@@ -231,7 +231,7 @@
         "visits": 0
       },
       "/instruments/": {
-        "pageLoads": 10,
+        "pageLoads": 14,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -271,7 +271,7 @@
         "visits": 0
       },
       "/door/": {
-        "pageLoads": 22,
+        "pageLoads": 21,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -327,11 +327,11 @@
         "visits": 0
       },
       "/products/archcoin/contract/": {
-        "pageLoads": 35,
+        "pageLoads": 62,
         "visits": 1
       },
       "/products/archcoin/receivable/": {
-        "pageLoads": 26,
+        "pageLoads": 41,
         "visits": 0
       },
       "/products/archcoin/allocation/": {
@@ -342,43 +342,23 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/products/archcoin/payable/": {
-        "pageLoads": 9,
-        "visits": 0
-      },
       "/analytics-owner-device/": {
-        "pageLoads": 7,
-        "visits": 7
-      },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
-      "/home/": {
-        "pageLoads": 1,
-        "visits": 1
-      },
-      "/analytics-owner-device/heartbeat/a9-2/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
-      "/analytics-owner-device/heartbeat/a9-1/": {
-        "pageLoads": 1,
-        "visits": 0
+        "pageLoads": 30,
+        "visits": 30
       }
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 324,
-        "visits": 324
+        "pageLoads": 356,
+        "visits": 356
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3509,
+        "pageLoads": 3628,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 736,
-        "visits": 736
+        "pageLoads": 738,
+        "visits": 738
       },
       "raw.githack.com": {
         "pageLoads": 10,

@@ -3,7 +3,7 @@ name: Education Exact Head Deploy
 on:
   push:
     branches: [main]
-    paths: ['.github/education-deploy-request*.json']
+    paths:\n      - '.github/education-deploy-request*.json'\n      - '.github/workflows/education-exact-head-deploy.yml'
   workflow_dispatch:
     inputs:
       target_sha:

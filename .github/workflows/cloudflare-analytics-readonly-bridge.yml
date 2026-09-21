@@ -2,6 +2,7 @@ name: Cloudflare Analytics Read-Only Bridge
 
 on:
   workflow_dispatch:
+  # qualification trigger
   push:
     paths:
       - '.github/workflows/cloudflare-analytics-readonly-bridge.yml'

@@ -44,20 +44,17 @@ jobs:
               with urllib.request.urlopen(req, timeout=45) as r:
                   return json.load(r)
 
-          # Discovery stays inside GraphQL so the token never needs DNS/zone edit access.
-          discovery = gql("""
-          query BridgeDiscovery {
-            viewer {
-              zones(filter: {}) { zoneTag }
-            }
-          }
-          """)
-          if discovery.get("errors"):
-              raise SystemExit("Cloudflare discovery failed: " + json.dumps(discovery["errors"]))
-
-          zones = discovery.get("data", {}).get("viewer", {}).get("zones", [])
+          # Discover the site's zone ID from Cloudflare's read-only zones endpoint.
+          zone_url = "https://api.cloudflare.com/client/v4/zones?name=diamondgatebridge.com&status=active"
+          zreq = urllib.request.Request(zone_url, headers={"Authorization": f"Bearer {token}", "Accept": "application/json"})
+          try:
+              with urllib.request.urlopen(zreq, timeout=45) as r:
+                  zdoc = json.load(r)
+          except Exception as e:
+              raise SystemExit("Zone discovery endpoint was not admitted by the current token: " + str(e))
+          zones = [{"zoneTag": z["id"]} for z in zdoc.get("result", []) if z.get("id")]
           if not zones:
-              raise SystemExit("Cloudflare returned no zones visible to this analytics token.")
+              raise SystemExit("Cloudflare returned no active diamondgatebridge.com zone.")
 
           query = """
           query BridgeAnalytics($zoneTag: string, $filter: filter) {

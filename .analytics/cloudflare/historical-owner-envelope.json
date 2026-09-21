@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-21T20:30:52Z",
+  "generatedAt": "2026-09-21T20:46:44Z",
   "window": {
-    "start": "2026-06-23T20:30:52Z",
-    "end": "2026-09-21T20:30:52Z"
+    "start": "2026-06-23T20:46:44Z",
+    "end": "2026-09-21T20:46:44Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4643,
+    "pageLoads": 4642,
     "visits": 1088,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4643,
+        "pageLoads": 4642,
         "visits": 1088
       }
     },
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 168,
+        "pageLoads": 167,
         "visits": 9
       },
       "/gauges/h-earth/": {
@@ -373,7 +373,7 @@
         "visits": 335
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3555,
+        "pageLoads": 3554,
         "visits": 0
       },
       "www.google.com": {

@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-21T17:26:33Z",
+  "generatedAt": "2026-09-21T17:35:53Z",
   "window": {
-    "start": "2026-08-22T17:26:33Z",
-    "end": "2026-09-21T17:26:33Z"
+    "start": "2026-08-22T17:35:53Z",
+    "end": "2026-09-21T17:35:53Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1845,
-        "visits": 1596
+        "pageLoads": 1849,
+        "visits": 1600
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -24,8 +24,8 @@
       },
       {
         "value": "/mirror-manor-preview/",
-        "pageLoads": 685,
-        "visits": 685
+        "pageLoads": 689,
+        "visits": 689
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -64,8 +64,8 @@
       },
       {
         "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
-        "pageLoads": 77,
-        "visits": 40
+        "pageLoads": 78,
+        "visits": 41
       },
       {
         "value": "/about/",
@@ -199,8 +199,8 @@
       },
       {
         "value": "/showroom/globe/earth/",
-        "pageLoads": 29,
-        "visits": 10
+        "pageLoads": 28,
+        "visits": 9
       },
       {
         "value": "/products/archcoin/receivable/",
@@ -466,8 +466,8 @@
       },
       {
         "value": "(none)",
-        "pageLoads": 3021,
-        "visits": 3021
+        "pageLoads": 3029,
+        "visits": 3029
       },
       {
         "value": "www.google.com",
@@ -503,8 +503,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6913,
-        "visits": 3672
+        "pageLoads": 6921,
+        "visits": 3680
       },
       {
         "value": "JP",
@@ -545,8 +545,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2751,
-        "visits": 2596
+        "pageLoads": 2760,
+        "visits": 2605
       },
       {
         "value": "tablet",
@@ -555,25 +555,25 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1711,
-        "visits": 619
+        "pageLoads": 1710,
+        "visits": 618
       }
     ],
     "userAgentBrowser": [
       {
         "value": "Chrome",
-        "pageLoads": 2827,
-        "visits": 809
+        "pageLoads": 2828,
+        "visits": 810
       },
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2344,
-        "visits": 2223
+        "pageLoads": 2352,
+        "visits": 2231
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1605,
-        "visits": 533
+        "pageLoads": 1604,
+        "visits": 532
       },
       {
         "value": "MobileSafari",
@@ -609,13 +609,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4111,
-        "visits": 1045
+        "pageLoads": 4110,
+        "visits": 1044
       },
       {
         "value": "Linux",
-        "pageLoads": 2382,
-        "visits": 2261
+        "pageLoads": 2390,
+        "visits": 2269
       },
       {
         "value": "MacOSX",
@@ -624,8 +624,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 144,
-        "visits": 120
+        "pageLoads": 145,
+        "visits": 121
       },
       {
         "value": "iOS",
@@ -646,15 +646,15 @@
       },
       {
         "value": "1",
-        "pageLoads": 2344,
-        "visits": 2223
+        "pageLoads": 2352,
+        "visits": 2231
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 5120,
-        "visits": 3325
+        "pageLoads": 5128,
+        "visits": 3333
       },
       {
         "value": "reload",
@@ -685,8 +685,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5387,
-        "visits": 3073
+        "pageLoads": 5395,
+        "visits": 3081
       },
       {
         "value": "cache",
@@ -702,15 +702,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6971,
-        "visits": 3730
+        "pageLoads": 6979,
+        "visits": 3738
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6971,
-        "visits": 3730
+        "pageLoads": 6979,
+        "visits": 3738
       }
     ]
   }

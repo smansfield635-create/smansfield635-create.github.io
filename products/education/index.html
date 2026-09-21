@@ -162,7 +162,7 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 }
 .edu-card-inner,.edu-card-front,.edu-card-back{height:100%;min-height:100%}
 .edu-card-face{overflow:auto;overscroll-behavior:contain}
-.edu-card-back{display:none!important}
+.edu-card-back{display:flex!important}
 .edu-detail-surface{position:fixed;z-index:100000;inset:0;max-width:100vw;overflow:auto;padding:clamp(1rem,3vw,2rem);background:linear-gradient(180deg,rgba(5,13,29,.99),rgba(2,6,16,.995));backdrop-filter:blur(14px)}
 .edu-detail-surface[hidden]{display:none}
 .edu-detail-panel{width:min(100%,70rem);margin:auto;padding:clamp(1rem,3vw,2rem);border:1px solid var(--line);border-radius:1.25rem;background:#081225}
@@ -481,7 +481,7 @@ const EDUCATION_ARCHITECTURE=[
 function mountEducationCarousel(){
  const root=qs("[data-edu-carousel]"),track=qs("[data-edu-track]"),viewport=qs("[data-edu-viewport]"),live=qs("[data-edu-live]");
  if(!root||!track||!viewport)return;
- let index=0,dragStart=null,dragDx=0;
+ let index=0,dragStart=null,dragDx=0,turning=false;
  const state=EDUCATION_ARCHITECTURE.map(()=>({choice:null,text:"",help:true,feedback:"",feedbackState:""}));
  const deep=[
   "Placement begins near demonstrated ability. Demo entry is not verified placement.",
@@ -520,6 +520,7 @@ function mountEducationCarousel(){
   if(i===4)practice='<button type="button" class="edu-card-help" data-toggle-help>'+(s.help?L.hide:L.show)+'</button><p data-help-cue '+(s.help?"":'hidden')+'>'+esc(task.help)+'</p>'+practice;
   return '<article class="edu-standard-card" data-card-index="'+i+'" data-face="front"><div class="edu-card-inner">'+
    '<section class="edu-card-face edu-card-front"><span class="edu-standard-count">'+(i+1)+' / 6</span><p class="edu-standard-kicker">'+esc(copy.title)+'</p><h3 class="edu-standard-title">'+esc(copy.front)+'</h3><p class="edu-standard-copy">'+esc(copy.support)+'</p><button class="edu-inspect edu-card-action" type="button" data-flip>'+esc(copy.action)+'</button></section>'+
+   '<section class="edu-card-face edu-card-back"><div class="edu-card-back-head"><strong>'+esc(copy.title)+'</strong><button class="edu-card-check" type="button" data-flip>'+esc(L.back)+'</button></div><div class="edu-card-back-body"><section class="edu-card-step"><h4>'+esc(L.learn)+'</h4><p>'+esc(copy.learn)+'</p></section><section class="edu-card-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</section><section class="edu-card-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-feedback data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p><button class="edu-card-check" type="button" data-continue '+(s.feedbackState==="success"?"":"disabled")+'>'+esc(L.continue)+'</button></section></div></section>'+
    '</div></article>';
 
  }
@@ -533,6 +534,7 @@ function mountEducationCarousel(){
   });
   live.textContent=chamberCopy(index).title+" · "+(index+1)+" / 6";
  }
+ function turnCard(card,toBack){if(turning)return;turning=true;const inner=card.querySelector(".edu-card-inner"),next=toBack?"back":"front",reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;if(reduced||typeof inner.animate!=="function"){card.dataset.face=next;inner.style.transform=toBack?"rotateY(180deg)":"rotateY(0deg)";turning=false;return}const from=card.dataset.face==="back"?180:0,to=toBack?180:0,d=to>from?1:-1;const out=inner.animate([{transform:"rotateY("+from+"deg)"},{transform:"rotateY("+(from+d*88)+"deg)"}],{duration:220,easing:"cubic-bezier(.45,0,.8,.35)",fill:"forwards"});out.finished.catch(()=>{}).then(()=>{card.dataset.face=next;inner.style.transform="rotateY("+(to-d*88)+"deg)";const inn=inner.animate([{transform:"rotateY("+(to-d*88)+"deg)"},{transform:"rotateY("+to+"deg)"}],{duration:280,easing:"cubic-bezier(.16,.78,.2,1)",fill:"forwards"});return inn.finished.catch(()=>{})}).then(()=>{inner.style.transform=toBack?"rotateY(180deg)":"rotateY(0deg)";turning=false})}
  function select(n){index=(n+6)%6;dragDx=0;layout()}
  const detailSurface=qs("#edu-detail-surface"),detailTitle=qs("#edu-detail-title"),detailKicker=qs("#edu-detail-kicker"),detailBody=qs("#edu-detail-body"),detailReturn=qs("#edu-detail-return");
  function openDetail(i){const copy=chamberCopy(i),L=labels(),task=tasks[i],s=state[i];index=i;layout();detailKicker.textContent=(i+1)+" / 6 · "+copy.title;detailTitle.textContent=copy.front;let practice=task.type==="choice"?'<div class="edu-card-options">'+task.options.map((o,j)=>'<button type="button" data-detail-choice="'+j+'" aria-pressed="'+(s.choice===j)+'" lang="en">'+esc(o)+'</button>').join("")+'</div>':'<input class="edu-card-input" data-detail-input lang="en" value="'+esc(s.text)+'" placeholder="'+esc(task.placeholder)+'">';detailBody.innerHTML='<section class="edu-detail-step"><h4>'+esc(L.learn)+'</h4><p>'+esc(copy.learn)+'</p></section><section class="edu-detail-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</section><section class="edu-detail-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-detail-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-detail-feedback data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p><button class="edu-card-check" type="button" data-detail-continue '+(s.feedbackState==="success"?"":"disabled")+'>'+esc(L.continue)+'</button></section><details class="edu-card-deep"><summary>'+esc(L.why)+'</summary><p>'+esc(deep[i])+'</p></details>';detailSurface.hidden=false;document.body.style.overflow="hidden";detailReturn.focus()}
@@ -540,15 +542,15 @@ function mountEducationCarousel(){
  detailSurface.addEventListener("click",e=>{const i=index,task=tasks[i],s=state[i],L=labels();const choice=e.target.closest("[data-detail-choice]");if(choice){s.choice=Number(choice.dataset.detailChoice);detailBody.querySelectorAll("[data-detail-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)));return}if(e.target.closest("[data-detail-continue]")){if(s.feedbackState!=="success")return;closeDetail();select(i+1);return}if(e.target.closest("[data-detail-check]")){let val="";if(task.type==="choice"){if(s.choice===null){s.feedback=L.choose;s.feedbackState="retry"}else{const ok=s.choice===task.correct;s.feedback=feedback(i,ok,"");s.feedbackState=ok?"success":"retry"}}else{const input=detailBody.querySelector("[data-detail-input]");val=input.value.trim();s.text=val;if(!val){s.feedback=L.write;s.feedbackState="retry"}else{s.feedback=feedback(i,true,val);s.feedbackState="success"}}const out=detailBody.querySelector("[data-detail-feedback]");out.textContent=s.feedback;out.dataset.state=s.feedbackState;const next=detailBody.querySelector("[data-detail-continue]");if(next)next.disabled=s.feedbackState!=="success"}});detailSurface.addEventListener("input",e=>{if(e.target.matches("[data-detail-input]"))state[index].text=e.target.value});
  root.addEventListener("click",e=>{
   const card=e.target.closest(".edu-standard-card");if(!card)return;const i=Number(card.dataset.cardIndex);
-  if(e.target.closest("[data-flip]")){if(i!==index)select(i);openDetail(i);return}
+  if(e.target.closest("[data-flip]")){if(i!==index){select(i);return}turnCard(card,card.dataset.face!=="back");return}
   if(i!==index&&!e.target.closest("button,input")){select(i);return}
   const choice=e.target.closest("[data-choice]");if(choice){state[i].choice=Number(choice.dataset.choice);card.querySelectorAll("[data-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)));return}
-  if(e.target.closest("[data-toggle-help]")){state[i].help=!state[i].help;build();track.querySelector('[data-card-index="'+i+'"]').dataset.face="back";return}
+  if(e.target.closest("[data-continue]")){if(state[i].feedbackState!=="success")return;turnCard(card,false);select(i+1);return}\n  if(e.target.closest("[data-toggle-help]")){state[i].help=!state[i].help;build();track.querySelector('[data-card-index="'+i+'"]').dataset.face="back";return}
   if(e.target.closest("[data-check]")){
    const task=tasks[i],L=labels();let ok=false,val="";
    if(task.type==="choice"){if(state[i].choice===null){state[i].feedback=L.choose;state[i].feedbackState="retry"}else{ok=state[i].choice===task.correct;state[i].feedback=feedback(i,ok,"");state[i].feedbackState=ok?"success":"retry"}}
    else{const input=card.querySelector("[data-card-input]");val=input.value.trim();state[i].text=val;if(!val){state[i].feedback=L.write;state[i].feedbackState="retry"}else{ok=true;state[i].feedback=feedback(i,true,val);state[i].feedbackState="success"}}
-   const out=card.querySelector("[data-feedback]");out.textContent=state[i].feedback;out.dataset.state=state[i].feedbackState;return
+   const out=card.querySelector("[data-feedback]");out.textContent=state[i].feedback;out.dataset.state=state[i].feedbackState;const next=card.querySelector("[data-continue]");if(next)next.disabled=state[i].feedbackState!=="success";return
   }
  });
  track.addEventListener("input",e=>{if(e.target.matches("[data-card-input]"))state[Number(e.target.closest(".edu-standard-card").dataset.cardIndex)].text=e.target.value});

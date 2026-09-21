@@ -316,6 +316,21 @@
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/education/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "ARCHCOIN_PUBLIC_PAGES",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "products/archcoin/index.html",
+        "products/archcoin/contract/index.html",
+        "products/archcoin/receivable/index.html",
+        "products/archcoin/payable/index.html",
+        "products/archcoin/allocation/index.html",
+        "products/archcoin/verify-launch-status.v1.mjs"
+      ],
+      "entrypoint": ".github/ai-router/projects/archcoin/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

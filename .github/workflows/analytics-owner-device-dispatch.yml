@@ -1,0 +1,26 @@
+name: Analytics Owner Device Publication Dispatch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/analytics-owner-device-dispatch.yml
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch fresh exact-head publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          TARGET_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST             -H "Accept: application/vnd.github+json"             "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$TARGET_SHA"             -f inputs[surface_id]="analytics-owner-device"
+          echo "DISPATCHED_ANALYTICS_OWNER_DEVICE=$TARGET_SHA"

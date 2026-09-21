@@ -1,8 +1,8 @@
 {
   "schema": "DGB_ANALYTICS_REPORTING_METHODOLOGY_V1",
-  "generatedAt": "2026-09-21T22:29:51Z",
+  "generatedAt": "2026-09-21T23:28:36Z",
   "ownerMeasurement": {
-    "qualification": "PASS",
+    "qualification": "PENDING",
     "qualifiedPaths": [
       "/analytics-owner-device/heartbeat/s26/",
       "/analytics-owner-device/heartbeat/a9-1/",

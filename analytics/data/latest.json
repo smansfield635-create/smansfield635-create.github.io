@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-21T22:29:51Z",
+  "generatedAt": "2026-09-21T23:28:36Z",
   "window30d": {
-    "start": "2026-08-22T22:29:51Z",
-    "end": "2026-09-21T22:29:51Z"
+    "start": "2026-08-22T23:28:36Z",
+    "end": "2026-09-21T23:28:36Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-14",
-      "pageLoads": 234
+      "pageLoads": 232
     },
     {
       "date": "2026-09-15",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 569
+      "pageLoads": 600
     }
   ],
   "summary": {
-    "pageLoads": 7085,
-    "botPageLoads": 2435,
-    "nonBotPageLoads": 4650
+    "pageLoads": 7104,
+    "botPageLoads": 2439,
+    "nonBotPageLoads": 4665
   },
   "referrers": [
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3266,
+      "pageLoads": 3283,
       "visits": 0
     },
     {
       "host": "(none)",
-      "pageLoads": 3119,
-      "visits": 3119
+      "pageLoads": 3120,
+      "visits": 3120
     },
     {
       "host": "www.google.com",
-      "pageLoads": 669,
-      "visits": 669
+      "pageLoads": 670,
+      "visits": 670
     },
     {
       "host": "bing.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1852,
-      "visits": 1600
+      "pageLoads": 1877,
+      "visits": 1623
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 948,
-      "visits": 613
+      "pageLoads": 959,
+      "visits": 624
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 720,
-      "visits": 720
+      "pageLoads": 741,
+      "visits": 741
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -201,24 +201,24 @@
       "visits": 63
     },
     {
+      "path": "/evidence/agentic-frontier/",
+      "pageLoads": 183,
+      "visits": 30
+    },
+    {
       "path": "/index.html",
       "pageLoads": 145,
       "visits": 0
     },
     {
-      "path": "/evidence/agentic-frontier/",
-      "pageLoads": 143,
-      "visits": 30
-    },
-    {
       "path": "/products/education/",
-      "pageLoads": 127,
-      "visits": 46
+      "pageLoads": 140,
+      "visits": 49
     }
   ],
   "ownerMeasurement": {
-    "qualified": true,
-    "qualifiedDeviceCount": 3,
+    "qualified": false,
+    "qualifiedDeviceCount": 0,
     "measuredSince": "2026-09-21T17:35:53Z"
   },
   "methodology": {

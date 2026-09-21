@@ -1,28 +1,15 @@
 {
   "schema": "DGB_OWNER_HEARTBEAT_QUALIFICATION_V1",
-  "generatedAt": "2026-09-21T22:29:51Z",
+  "generatedAt": "2026-09-21T23:28:36Z",
   "window": {
-    "start": "2026-09-21T16:29:51Z",
-    "end": "2026-09-21T22:29:51Z"
+    "start": "2026-09-21T17:28:36Z",
+    "end": "2026-09-21T23:28:36Z"
   },
   "expected": [
     "/analytics-owner-device/heartbeat/s26/",
     "/analytics-owner-device/heartbeat/a9-1/",
     "/analytics-owner-device/heartbeat/a9-2/"
   ],
-  "observed": {
-    "/analytics-owner-device/heartbeat/s26/": {
-      "pageLoads": 1,
-      "visits": 0
-    },
-    "/analytics-owner-device/heartbeat/a9-2/": {
-      "pageLoads": 1,
-      "visits": 0
-    },
-    "/analytics-owner-device/heartbeat/a9-1/": {
-      "pageLoads": 1,
-      "visits": 0
-    }
-  },
-  "result": "PASS"
+  "observed": {},
+  "result": "PENDING"
 }

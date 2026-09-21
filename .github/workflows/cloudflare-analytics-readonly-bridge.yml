@@ -38,7 +38,7 @@ jobs:
           endpoint = "https://api.cloudflare.com/client/v4/graphql"
           token = os.environ["CF_TOKEN"]
           now = datetime.now(timezone.utc).replace(microsecond=0)
-          start = now - timedelta(days=90)
+          history_start = now - timedelta(days=90)
 
           def gql(query, variables=None):
               body = json.dumps({"query": query, "variables": variables or {}}).encode()
@@ -69,14 +69,30 @@ jobs:
             }
           }
           """
-          out = {"schema":"DGB_CLOUDFLARE_RUM_BRIDGE_V2","generatedAt":now.isoformat().replace("+00:00","Z"),
-                 "window":{"start":start.isoformat().replace("+00:00","Z"),"end":now.isoformat().replace("+00:00","Z")},"accounts":[]}
+          out = {"schema":"DGB_CLOUDFLARE_RUM_BRIDGE_V3","generatedAt":now.isoformat().replace("+00:00","Z"),
+                 "window":{"start":history_start.isoformat().replace("+00:00","Z"),"end":now.isoformat().replace("+00:00","Z")},
+                 "chunkDays":1,"accounts":[]}
           for a in accounts:
               tag=a["accountTag"]
-              res=gql(query,{"accountTag":tag,"start":out["window"]["start"],"end":out["window"]["end"]})
-              if res.get("errors"):
-                  raise SystemExit("RUM analytics query failed: " + json.dumps(res["errors"]))
-              out["accounts"].append({"accountTag":tag,"response":res})
+              merged={}
+              cursor=history_start
+              chunks=0
+              while cursor < now:
+                  chunk_end=min(cursor+timedelta(days=1), now)
+                  s=cursor.isoformat().replace("+00:00","Z")
+                  e=chunk_end.isoformat().replace("+00:00","Z")
+                  res=gql(query,{"accountTag":tag,"start":s,"end":e})
+                  if res.get("errors"):
+                      raise SystemExit("RUM analytics query failed for "+s+".."+e+": "+json.dumps(res["errors"]))
+                  rows=res.get("data",{}).get("viewer",{}).get("accounts",[])
+                  for row in (rows[0].get("pages",[]) if rows else []):
+                      hour=row.get("dimensions",{}).get("datetimeHour")
+                      if hour:
+                          merged[hour]=merged.get(hour,0)+int(row.get("count",0))
+                  chunks+=1
+                  cursor=chunk_end
+              pages=[{"count":merged[h],"dimensions":{"datetimeHour":h}} for h in sorted(merged)]
+              out["accounts"].append({"accountTag":tag,"chunks":chunks,"pages":pages})
           Path("analytics-bridge").mkdir()
           Path("analytics-bridge/latest.json").write_text(json.dumps(out,indent=2)+"\n")
           Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")

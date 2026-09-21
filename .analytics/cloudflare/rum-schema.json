@@ -1,0 +1,86 @@
+{
+  "data": {
+    "avgs": {
+      "fields": [
+        {
+          "name": "sampleInterval"
+        }
+      ]
+    },
+    "dims": {
+      "fields": [
+        {
+          "name": "bot"
+        },
+        {
+          "name": "countryName"
+        },
+        {
+          "name": "customTagInternalSxg"
+        },
+        {
+          "name": "date"
+        },
+        {
+          "name": "datetimeFifteenMinutes"
+        },
+        {
+          "name": "datetimeFiveMinutes"
+        },
+        {
+          "name": "datetimeHalfOfHour"
+        },
+        {
+          "name": "datetimeHour"
+        },
+        {
+          "name": "datetimeMinute"
+        },
+        {
+          "name": "deliveryType"
+        },
+        {
+          "name": "deviceType"
+        },
+        {
+          "name": "navigationType"
+        },
+        {
+          "name": "refererHost"
+        },
+        {
+          "name": "refererPath"
+        },
+        {
+          "name": "refererScheme"
+        },
+        {
+          "name": "requestHost"
+        },
+        {
+          "name": "requestPath"
+        },
+        {
+          "name": "requestScheme"
+        },
+        {
+          "name": "siteTag"
+        },
+        {
+          "name": "userAgentBrowser"
+        },
+        {
+          "name": "userAgentOS"
+        }
+      ]
+    },
+    "sums": {
+      "fields": [
+        {
+          "name": "visits"
+        }
+      ]
+    }
+  },
+  "errors": null
+}

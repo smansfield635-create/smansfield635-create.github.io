@@ -38,7 +38,7 @@ jobs:
           endpoint = "https://api.cloudflare.com/client/v4/graphql"
           token = os.environ["CF_TOKEN"]
           now = datetime.now(timezone.utc).replace(microsecond=0)
-          start = now - timedelta(days=7)
+          start = now - timedelta(days=90)
 
           def gql(query, variables=None):
               body = json.dumps({"query": query, "variables": variables or {}}).encode()

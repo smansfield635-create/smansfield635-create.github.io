@@ -1,0 +1,21 @@
+{
+  "schema": "DGB_ANALYTICS_REPORTING_METHODOLOGY_V1",
+  "generatedAt": "2026-09-21T17:52:27Z",
+  "ownerMeasurement": {
+    "qualification": "PASS",
+    "qualifiedPaths": [
+      "/analytics-owner-device/heartbeat/s26/",
+      "/analytics-owner-device/heartbeat/a9-1/",
+      "/analytics-owner-device/heartbeat/a9-2/"
+    ],
+    "measuredExclusionStart": "2026-09-21T17:35:53Z"
+  },
+  "reportingOrder": [
+    "total",
+    "cloudflareClassifiedBots",
+    "ownerDevelopment",
+    "externalNonBot"
+  ],
+  "historicalRule": "Before measuredExclusionStart, owner traffic is not deterministically identifiable; report an owner-compatible envelope and a definitely-external lower bound.",
+  "forwardRule": "After measuredExclusionStart, report device-specific owner heartbeat activity separately from external non-bot traffic; do not relabel Cloudflare visits as unique people."
+}

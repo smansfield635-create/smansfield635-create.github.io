@@ -104,7 +104,7 @@
         "timeoutMs": 5000
       },
       {
-        "name": "Start Demo opens language selection",
+        "name": "Find starting point opens learner intake",
         "action": {
           "type": "click",
           "selector": "[data-start-demo]"
@@ -112,27 +112,27 @@
         "assertions": [
           {
             "type": "exists",
-            "selector": "#demo-shell:not([hidden])"
+            "selector": "[data-demo-stage=\"intake\"]:not([hidden])"
           }
         ],
         "timeoutMs": 5000
       },
       {
-        "name": "Spanish help enters learner intake",
+        "name": "Top Spanish selector controls learner interface",
         "action": {
           "type": "click",
-          "selector": "[data-help-language=\"es\"]"
+          "selector": "[data-shell-language=\"es\"]"
         },
         "assertions": [
-          {
-            "type": "exists",
-            "selector": "[data-demo-stage=\"intake\"]:not([hidden])"
-          },
           {
             "type": "attributeEquals",
             "selector": "html",
             "name": "lang",
             "value": "es"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-demo-stage=\"intake\"]:not([hidden])"
           }
         ],
         "timeoutMs": 5000

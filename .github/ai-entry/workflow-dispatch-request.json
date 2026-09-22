@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-adaptive-traversal-ff8aa18d-v3-20260922",
+  "capabilityId": "EDUCATION_CYCLE3_ADAPTIVE_TRAVERSAL_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "ff8aa18d054207fac84f00400f4367027fda964b",
+    "base_sha": "4ed8a0bbee6d589e4275de944c59e671028a9686"
   }
 }

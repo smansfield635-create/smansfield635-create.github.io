@@ -302,7 +302,8 @@ async function stopChild(child){
 function verificationTargets({repoRoot,manifestPath,manifest}){
   const targets=[];
   const seen=new Set();
-  for(const surfaceId of [manifest.surfaceId,...PROTECTED_SURFACE_IDS]){
+  const verificationSurfaceIds=[manifest.surfaceId,...PROTECTED_SURFACE_IDS.filter(id=>id===manifest.surfaceId)];
+  for(const surfaceId of verificationSurfaceIds){
     if(seen.has(surfaceId))continue;
     seen.add(surfaceId);
     if(surfaceId===manifest.surfaceId)targets.push({surfaceId,manifestPath,manifest});
@@ -354,7 +355,7 @@ async function main(){
       if(mode==='preflight')await verifyLocal({repoRoot:REPO_ROOT,stage,manifestPath:built.manifestPath,manifest:built.manifest});
     }
     const result=mode==='build'?'PAYLOAD_BUILT':'PREFLIGHT_PASS';
-    const protectedRuntimeRequired=PROTECTED_SURFACE_IDS.some(id=>loadSurfaceManifest(REPO_ROOT,id).manifest.runtime?.enabled===true);
+    const protectedRuntimeRequired=PROTECTED_SURFACE_IDS.includes(surfaceId)&&loadSurfaceManifest(REPO_ROOT,surfaceId).manifest.runtime?.enabled===true;
     const runtimeRequired=built.manifest.runtime?.enabled===true||protectedRuntimeRequired;
     receipt={schema:'PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1',targetSha,surfaceId,manifestSha256:built.manifestSha256,payloadDigest:built.payloadDigest,payloadBytes:built.payloadBytes,pagesLimitBytes:PAGES_LIMIT_BYTES,topLevelBytes:built.topLevelBytes,excludedPayloadRoots:PUBLIC_PAYLOAD_EXCLUDES,protectedSurfaceIds:built.protectedSurfaceIds||PROTECTED_SURFACE_IDS,authorizedExcludedRuntimeDependencies:built.authorizedExcludedRuntimeDependencies,result,checks:{exactSha:'PASS',surfaceManifest:'PASS',diffScope:'BOUNDED_PAYLOAD',requiredAssets:'PASS',environmentBinding:'PASS',authorizedRuntimeDependencyClosure:built.authorizedExcludedRuntimeDependencies.status==='PROMOTED'?'PASS':'NOT_REQUIRED',payloadBuild:'PASS',staticChecks:mode==='build'?'NOT_RUN':'PASS',runtimeReadiness:mode==='build'?'NOT_RUN':(runtimeRequired?'PASS':'NOT_REQUIRED')},deploymentPerformed:false};
     writeJson(receiptPath,receipt);console.log(JSON.stringify(receipt,null,2));

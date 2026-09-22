@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-cycle23-reconciliation-001030bb-20260922",
+  "capabilityId": "EDUCATION_CYCLE23_RECONCILIATION_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "001030bbe17f44782ebd9f978b6f85af53860da9",
+    "base_sha": "4e95e719cd18a24a7377556bd8781e0bcf536628"
   }
 }

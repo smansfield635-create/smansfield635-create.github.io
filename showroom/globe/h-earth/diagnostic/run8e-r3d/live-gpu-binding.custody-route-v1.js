@@ -3,7 +3,7 @@ import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-render
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
 const RENDERER_CUSTODY_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.renderer-selection-custody-v1.js';
+  '../../render/persistent-live-renderer.run8e-r3c.renderer-selection-custody-minimal-v1.js';
 const WATER_INDEX_SPAN_QUERY_KEY = 'water-index-span';
 const WATER_INDEX_SPAN_QUERY_VALUE = 'v1';
 const WATER_INDEX_SPAN_RENDERER_PATH =

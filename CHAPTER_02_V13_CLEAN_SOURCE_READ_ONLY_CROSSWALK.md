@@ -32,12 +32,12 @@ A clean predecessor is admitted only as a source for the underlying moving pictu
 | 1 | `WHAT MAKES SOMETHING REAL?` | Clean moving source corresponding to the exact v13 planetary state | **SOURCE_GAP** |
 | 2 | `WHAT WASN’T BEFORE` | Clean corresponding geography/approach state | **SOURCE_GAP** |
 | 3 | `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | **SOURCE_GAP** |
-| 4 | `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | UNRESOLVED |
+| 4 | `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | **CONFORMABLE_SOURCE_FOUND** |
 | 5 | `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | UNRESOLVED |
 | 6 | `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | UNRESOLVED |
 | 7 | `DiamondGateBridge.com` | Clean corresponding final moving universal state | UNRESOLVED |
 
-Progress: **3 / 7 rows resolved.**
+Progress: **4 / 7 rows resolved.**
 
 ## Row 1 resolution receipt
 
@@ -139,6 +139,35 @@ Row 3 is frozen as `SOURCE_GAP` unless further exact clean source evidence is di
 
 No construction, masking, removal, approximation, or render occurred during this resolution.
 
+## Row 4 resolution receipt
+
+Typography state:
+`THE EXPERIENCE CREATES REALITY.`
+
+Disposition:
+`CONFORMABLE_SOURCE_FOUND`
+
+Read-only comparison scope:
+- frozen v13 authority
+- clean H-Earth source lineage in the durable Chapter 02 source set
+- picture-lock/final-review predecessors used only as comparison evidence
+
+Required conform target:
+- the exact v13 H-Earth traversal state during the Row 4 reading window;
+- preserve environmental identity, mountain/terrain relationship, lower-horizon composition, camera direction, motion progression, crop, and frame timing.
+
+Observed lineage result:
+- unlike Rows 1–3, Row 4 occurs inside the actual H-Earth environmental traversal for which clean moving source custody exists;
+- the clean H-Earth source establishes the same underlying environmental traversal family and provides sufficient moving picture to reproduce the v13 Row 4 state through bounded conform operations;
+- admission is not an exact-frame claim: crop/scale/time alignment must still be proven against v13 outside the baked-text region before construction use.
+
+Decision:
+The evidence supports `CONFORMABLE_SOURCE_FOUND`, not `EXACT_CLEAN_SOURCE_FOUND`.
+
+Future admission requirements remain strict: exact v13 timing, mountain/lower-horizon framing, motion direction/rate, and transition boundaries must survive the conform. Any creative re-selection or materially different crop fails parity.
+
+No construction, masking, removal, approximation, or render occurred during this resolution.
+
 ## Allowed final dispositions
 
 Each row may resolve to exactly one of:
@@ -213,7 +242,7 @@ The clean conform master remains BLOCKED until all seven matrix rows have actual
 
 Additionally, the current Row 1 `SOURCE_GAP` means a complete clean conform cannot be authorized even after Rows 2–7 are resolved unless Row 1 is subsequently upgraded by new exact evidence or a separately authorized strategy explicitly addresses the gap.
 
-The next lawful read-only action is **Row 4 source comparison**. Rows 1–3 should not be repeatedly re-audited against the same candidates.
+The next lawful read-only action is **Row 5 source comparison**. Rows 1–4 should not be repeatedly re-audited against the same candidates.
 
 The governing chain remains:
 
@@ -230,13 +259,14 @@ Clarification: v13 is the editorial/cinematographic conform authority. Clean sou
 ## Current state
 
 READ_ONLY_CROSSWALK_AUTHORITY = FROZEN
-ROWS_RESOLVED = 3
+ROWS_RESOLVED = 4
 ROWS_TOTAL = 7
 ROW_1 = SOURCE_GAP
 ROW_2 = SOURCE_GAP
 ROW_3 = SOURCE_GAP
+ROW_4 = CONFORMABLE_SOURCE_FOUND
 SEVEN_ROWS_RESOLVED = FALSE
 SOURCE_GAP_PRESENT = TRUE
 CLEAN_CONFORM_AUTHORIZED = FALSE
 V14_AUTHORIZED = FALSE
-NEXT_LAWFUL_ROW = 4
+NEXT_LAWFUL_ROW = 5

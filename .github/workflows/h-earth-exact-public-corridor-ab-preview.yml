@@ -118,10 +118,16 @@ jobs:
               const readiness = await page.waitForFunction(() => {
                 const text = document.body?.innerText || '';
                 const failed = /Initialization failed\.|RENDERER_CONSTRUCTION_EXCEPTION/.test(text);
+                const initializationVisible =
+                  /H-EARTH · LIVE WORLD INITIALIZATION|Constructing world renderer|Entering the coast\./i.test(text);
+                const liveEnvironmentResolved =
+                  /LIVE ENVIRONMENT/i.test(text) &&
+                  /H_EARTH_GROUND_CELL_001:[A-Z0-9:]+/i.test(text);
                 const mounted =
                   window.H_EARTH_3D_RENDERER != null ||
                   window.H_EARTH_3D_RENDERER_CONTRACT != null ||
-                  /RENDERER_MOUNTED|Entering complete|World ready|Initialization complete/i.test(text);
+                  /RENDERER_MOUNTED|Entering complete|World ready|Initialization complete/i.test(text) ||
+                  (!initializationVisible && liveEnvironmentResolved);
                 return failed ? 'FAILED' : mounted ? 'READY' : false;
               }, null, { timeout: 120000 }).then(h => h.jsonValue()).catch(() => 'TIMEOUT');
               const state=await page.evaluate(() => ({

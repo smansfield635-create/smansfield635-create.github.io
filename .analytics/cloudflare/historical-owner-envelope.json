@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-22T13:32:02Z",
+  "generatedAt": "2026-09-22T14:32:39Z",
   "window": {
-    "start": "2026-06-24T13:32:02Z",
-    "end": "2026-09-22T13:32:02Z"
+    "start": "2026-06-24T14:32:39Z",
+    "end": "2026-09-22T14:32:39Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,21 +17,21 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4668,
-    "visits": 1100,
+    "pageLoads": 4538,
+    "visits": 1090,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4668,
-        "visits": 1100
+        "pageLoads": 4538,
+        "visits": 1090
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1040,
-        "visits": 711
+        "pageLoads": 1030,
+        "visits": 701
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 186,
+        "pageLoads": 196,
         "visits": 0
       },
       "/index.html": {
@@ -42,13 +42,13 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 67,
+        "visits": 0
+      },
       "/characters/": {
         "pageLoads": 70,
         "visits": 30
-      },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 57,
-        "visits": 0
       },
       "/showroom/globe/hearth/": {
         "pageLoads": 12,
@@ -111,7 +111,7 @@
         "visits": 9
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 499,
+        "pageLoads": 359,
         "visits": 0
       },
       "/gauges/h-earth/": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 15,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 22,
         "visits": 0
@@ -269,10 +273,6 @@
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 25,
         "visits": 3
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 15,
-        "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
@@ -377,12 +377,12 @@
         "visits": 345
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3568,
+        "pageLoads": 3448,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 745,
-        "visits": 745
+        "pageLoads": 735,
+        "visits": 735
       },
       "raw.githack.com": {
         "pageLoads": 10,

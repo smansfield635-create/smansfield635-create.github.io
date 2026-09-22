@@ -444,6 +444,7 @@ function clearEducationState(){try{localStorage.removeItem(EDUCATION_STATE_KEY)}
 
 const qs=s=>document.querySelector(s);
 const qsa=s=>[...document.querySelectorAll(s)];
+const escapeEducationHTML=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 
 const EDUCATION_ARCHITECTURE=[
  {id:"foundation",label:"Possibility",title:"1,001 Concepts",question:"What is the fixed lexical foundation?",summary:"A canonical concept inventory supplies the base while productive rules generate lawful forms without pretending every form needs another vocabulary slot.",stories:[
@@ -623,7 +624,7 @@ function startAdaptiveItem(stage,itemIndex=0){
 function renderQuestion(){
  const item=currentSet[0];
  qs("#question-validation").textContent="";
- const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;qs("#question-host").innerHTML='<article class="question-card"><div class="meta"><span class="pill">'+esc(gateT.stage)+' '+probeStage+'</span><span class="pill">'+esc(item.evidenceClass.replaceAll("_"," "))+'</span><span class="pill" lang="en">'+item.node+'</span></div><h3 lang="en">'+item.q+'</h3><div class="options">'+item.o.map((x,i)=>'<label class="option"><input type="radio" name="placement-answer" value="'+i+'"><span lang="en">'+x+'</span></label>').join("")+'</div><div id="placement-hint" class="hint" hidden>'+esc(gateT.hintBody)+'</div><div class="button-row"><button class="button-secondary" type="button" id="show-hint">'+esc(gateT.hint)+'</button><button class="button" type="button" id="submit-placement-answer">'+esc(gateT.continue)+'</button></div></article>';
+ const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;qs("#question-host").innerHTML='<article class="question-card"><div class="meta"><span class="pill">'+escapeEducationHTML(gateT.stage)+' '+probeStage+'</span><span class="pill">'+escapeEducationHTML(item.evidenceClass.replaceAll("_"," "))+'</span><span class="pill" lang="en">'+item.node+'</span></div><h3 lang="en">'+item.q+'</h3><div class="options">'+item.o.map((x,i)=>'<label class="option"><input type="radio" name="placement-answer" value="'+i+'"><span lang="en">'+x+'</span></label>').join("")+'</div><div id="placement-hint" class="hint" hidden>'+escapeEducationHTML(gateT.hintBody)+'</div><div class="button-row"><button class="button-secondary" type="button" id="show-hint">'+escapeEducationHTML(gateT.hint)+'</button><button class="button" type="button" id="submit-placement-answer">'+escapeEducationHTML(gateT.continue)+'</button></div></article>';
  qs("#show-hint").addEventListener("click",()=>{qs("#placement-hint").hidden=false;if(!currentItemAssisted){hintsUsed++;currentItemAssisted=true}qs("#show-hint").disabled=true});
  qs("#submit-placement-answer").addEventListener("click",submitAdaptiveAnswer);
 }

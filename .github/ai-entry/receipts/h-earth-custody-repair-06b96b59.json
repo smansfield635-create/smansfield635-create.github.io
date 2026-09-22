@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-custody-repair-06b96b59",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4220,
+  "requestBranch": "ai-dispatch-request-h-earth-custody-repair-06b96b59",
+  "requestCommit": "c153823424336b5ce27dcaa074b234e7ed75cd7b",
+  "requestCommitParent": "06b96b59f40d496fa15207178ef7016a46ef8365",
+  "currentMainSha": "06b96b59f40d496fa15207178ef7016a46ef8365",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "06b96b59f40d496fa15207178ef7016a46ef8365",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "35767393199",
+  "dispatchedRunId": 35767410669,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35767410669",
+  "dispatchedRunHeadSha": "06b96b59f40d496fa15207178ef7016a46ef8365",
+  "dispatchedAt": "2026-09-22T18:28:42.035Z",
+  "resolvedAt": "2026-09-22T18:28:46.480Z"
+}

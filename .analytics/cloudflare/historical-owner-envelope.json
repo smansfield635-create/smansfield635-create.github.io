@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-22T17:28:17Z",
+  "generatedAt": "2026-09-22T18:37:41Z",
   "window": {
-    "start": "2026-06-24T17:28:17Z",
-    "end": "2026-09-22T17:28:17Z"
+    "start": "2026-06-24T18:37:41Z",
+    "end": "2026-09-22T18:37:41Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4703,
+    "pageLoads": 4714,
     "visits": 1101,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4703,
+        "pageLoads": 4714,
         "visits": 1101
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1043,
+        "pageLoads": 1044,
         "visits": 713
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 196,
+        "pageLoads": 197,
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 154,
+        "pageLoads": 157,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 154,
+        "pageLoads": 157,
         "visits": 7
       },
       "/governance/": {
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 12,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -338,6 +338,10 @@
         "pageLoads": 2,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 1,
+        "visits": 1
+      },
       "/products/nutrition/": {
         "pageLoads": 1,
         "visits": 0
@@ -350,9 +354,9 @@
         "pageLoads": 7,
         "visits": 7
       },
-      "/home/": {
-        "pageLoads": 1,
-        "visits": 1
+      "/meet-sean-mansfield/": {
+        "pageLoads": 5,
+        "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
@@ -363,11 +367,7 @@
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 8,
-        "visits": 0
-      },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 5,
+        "pageLoads": 11,
         "visits": 0
       }
     },
@@ -377,7 +377,7 @@
         "visits": 344
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3602,
+        "pageLoads": 3613,
         "visits": 0
       },
       "www.google.com": {

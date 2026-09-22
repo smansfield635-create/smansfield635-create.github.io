@@ -1,0 +1,21 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "publication-surface-fanout-qualify-20260922",
+  "capabilityId": "PUBLICATION_SURFACE_FANOUT_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4251,
+  "requestBranch": "ai-dispatch-request-publication-fanout-qualify-v1",
+  "requestCommit": "5b9333d5d2ca3ecc7bde9e838e5141b09cc2c3aa",
+  "requestCommitParent": "5eeae0e4d762bef04e37353c359ac516f221ca7c",
+  "currentMainSha": "5eeae0e4d762bef04e37353c359ac516f221ca7c",
+  "workflow": "publication-surface-fanout-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "35777300558",
+  "dispatchedRunId": 35777316993,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35777316993",
+  "dispatchedRunHeadSha": "5eeae0e4d762bef04e37353c359ac516f221ca7c",
+  "dispatchedAt": "2026-09-22T19:59:23.462Z",
+  "resolvedAt": "2026-09-22T19:59:26.981Z"
+}

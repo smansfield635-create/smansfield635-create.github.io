@@ -1,5 +1,5 @@
 import { installHEarthRun8ER3D2PointerTouchIntake } from '../diagnostic/run8e-r3d/pointer-touch-intake.js';
-import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js';
+import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =

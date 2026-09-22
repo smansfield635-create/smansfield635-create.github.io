@@ -28,7 +28,9 @@
         "ABOVE_PHASE_1",
         "demo_entry_point",
         "data-no-backend=\"true\"",
-        "data-no-persistence=\"true\""
+        "data-no-persistence=\"true\"",
+        "edu-spatial-mini",
+        "data-flip"
       ],
       "excludes": [
         "Public Face",
@@ -67,6 +69,20 @@
             "type": "textContains",
             "selector": "[data-edu-live]",
             "value": "Understanding"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Active card Open enters Level 2",
+        "action": {
+          "type": "click",
+          "selector": ".edu-standard-card[data-active=\"true\"] [data-flip]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#edu-detail-surface:not([hidden])"
           }
         ],
         "timeoutMs": 5000

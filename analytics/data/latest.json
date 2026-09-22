@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-21T23:28:36Z",
+  "generatedAt": "2026-09-22T01:04:47Z",
   "window30d": {
-    "start": "2026-08-22T23:28:36Z",
-    "end": "2026-09-21T23:28:36Z"
+    "start": "2026-08-23T01:04:47Z",
+    "end": "2026-09-22T01:04:47Z"
   },
   "daily": [
-    {
-      "date": "2026-08-23",
-      "pageLoads": 180
-    },
     {
       "date": "2026-08-24",
       "pageLoads": 370
@@ -96,11 +92,11 @@
     },
     {
       "date": "2026-09-14",
-      "pageLoads": 232
+      "pageLoads": 230
     },
     {
       "date": "2026-09-15",
-      "pageLoads": 76
+      "pageLoads": 74
     },
     {
       "date": "2026-09-16",
@@ -124,24 +120,28 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 600
+      "pageLoads": 613
+    },
+    {
+      "date": "2026-09-22",
+      "pageLoads": 28
     }
   ],
   "summary": {
-    "pageLoads": 7104,
-    "botPageLoads": 2439,
-    "nonBotPageLoads": 4665
+    "pageLoads": 7111,
+    "botPageLoads": 2423,
+    "nonBotPageLoads": 4688
   },
   "referrers": [
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3283,
+      "pageLoads": 3307,
       "visits": 0
     },
     {
       "host": "(none)",
-      "pageLoads": 3120,
-      "visits": 3120
+      "pageLoads": 3103,
+      "visits": 3103
     },
     {
       "host": "www.google.com",
@@ -177,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1877,
-      "visits": 1623
+      "pageLoads": 1867,
+      "visits": 1613
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 959,
-      "visits": 624
+      "pageLoads": 961,
+      "visits": 626
     },
     {
       "path": "/mirror-manor-preview/",
@@ -197,7 +197,7 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 244,
+      "pageLoads": 246,
       "visits": 63
     },
     {
@@ -206,14 +206,14 @@
       "visits": 30
     },
     {
-      "path": "/index.html",
-      "pageLoads": 145,
-      "visits": 0
+      "path": "/products/education/",
+      "pageLoads": 147,
+      "visits": 54
     },
     {
-      "path": "/products/education/",
-      "pageLoads": 140,
-      "visits": 49
+      "path": "/index.html",
+      "pageLoads": 146,
+      "visits": 0
     }
   ],
   "ownerMeasurement": {

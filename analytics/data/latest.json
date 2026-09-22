@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-22T03:35:52Z",
+  "generatedAt": "2026-09-22T04:34:20Z",
   "window30d": {
-    "start": "2026-08-23T03:35:52Z",
-    "end": "2026-09-22T03:35:52Z"
+    "start": "2026-08-23T04:34:20Z",
+    "end": "2026-09-22T04:34:20Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-15",
-      "pageLoads": 80
+      "pageLoads": 79
     },
     {
       "date": "2026-09-16",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 54
+      "pageLoads": 56
     }
   ],
   "summary": {
-    "pageLoads": 7073,
-    "botPageLoads": 2411,
-    "nonBotPageLoads": 4662
+    "pageLoads": 7074,
+    "botPageLoads": 2413,
+    "nonBotPageLoads": 4661
   },
   "referrers": [
     {
@@ -140,8 +140,8 @@
     },
     {
       "host": "(none)",
-      "pageLoads": 3099,
-      "visits": 3099
+      "pageLoads": 3100,
+      "visits": 3100
     },
     {
       "host": "www.google.com",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 959,
-      "visits": 626
+      "pageLoads": 960,
+      "visits": 627
     },
     {
       "path": "/mirror-manor-preview/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 254,
-      "visits": 74
+      "pageLoads": 253,
+      "visits": 73
     },
     {
       "path": "/evidence/agentic-frontier/",

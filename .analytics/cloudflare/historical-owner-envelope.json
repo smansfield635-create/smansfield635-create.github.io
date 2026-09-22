@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-22T03:35:52Z",
+  "generatedAt": "2026-09-22T04:34:20Z",
   "window": {
-    "start": "2026-06-24T03:35:52Z",
-    "end": "2026-09-22T03:35:52Z"
+    "start": "2026-06-24T04:34:20Z",
+    "end": "2026-09-22T04:34:20Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,16 +26,16 @@
       }
     },
     "byPath": {
-      "/index.html": {
-        "pageLoads": 154,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1040,
         "visits": 711
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 196,
+        "visits": 0
+      },
+      "/index.html": {
+        "pageLoads": 154,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 21,
-        "visits": 0
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 12,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 21,
         "visits": 0
       },
       "/showroom/": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 22,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 11,
         "visits": 0
@@ -268,10 +272,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 15,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 22,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -298,13 +298,17 @@
         "pageLoads": 20,
         "visits": 1
       },
+      "/showroom/globe/earth/": {
+        "pageLoads": 5,
+        "visits": 0
+      },
       "/philosophy/": {
         "pageLoads": 1,
         "visits": 1
       },
-      "/showroom/globe/earth/": {
-        "pageLoads": 5,
-        "visits": 0
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 59,
+        "visits": 41
       },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
@@ -317,10 +321,6 @@
       "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
         "pageLoads": 1,
         "visits": 0
-      },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 59,
-        "visits": 41
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 31,
@@ -372,13 +372,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 3588,
-        "visits": 0
-      },
       "(none)": {
         "pageLoads": 345,
         "visits": 345
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 3588,
+        "visits": 0
       },
       "www.google.com": {
         "pageLoads": 745,

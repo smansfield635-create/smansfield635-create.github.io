@@ -84,12 +84,16 @@ const main = async () => {
   currentMainSha = (await gh(`/repos/${owner}/${name}/commits/main`)).sha;
   const requestCommitPayload = await gh(`/repos/${owner}/${name}/commits/${requestCommit}`);
   const parentSha = requestCommitPayload.parents?.[0]?.sha;
-  if (parentSha !== currentMainSha) throw new Error(`Stale dispatch request: parent ${parentSha} != current main ${currentMainSha}`);
 
   const requestPayload = await gh(`/repos/${owner}/${name}/contents/${contentPath(requestPath)}?ref=${encodeURIComponent(requestCommit)}`);
   request = JSON.parse(decodeContent(requestPayload));
   if (request.schema !== 'AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1') throw new Error('Request schema mismatch');
   if (!request.requestId || !request.capabilityId) throw new Error('requestId and capabilityId are required');
+
+  // Transport freshness is not execution authority. Main may advance after the
+  // request commit is created. Immutable REQUEST inputs remain exact; inputs
+  // declared CURRENT_MAIN_SHA are resolved from main at bridge execution time.
+  const requestParentWasCurrent = parentSha === currentMainSha;
 
   const capability = registry.capabilities?.[request.capabilityId];
   if (!capability) throw new Error(`Unknown capabilityId: ${request.capabilityId}`);
@@ -144,6 +148,7 @@ const main = async () => {
     requestBranch,
     requestCommit,
     requestCommitParent: parentSha,
+    requestParentWasCurrent,
     currentMainSha,
     workflow,
     ref,

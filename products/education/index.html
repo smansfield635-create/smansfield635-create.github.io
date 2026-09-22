@@ -367,7 +367,7 @@ const EDUCATION_ARCHITECTURE=[
  ]}
 ];
 
-function applyProductStory(){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en;document.querySelectorAll("[data-story]").forEach(el=>{const k=el.dataset.story;if(T[k]!==undefined)el.textContent=T[k]});const b=document.querySelector("[data-story-bridge]");if(b)b.innerHTML=T.verbs.map((v,i)=>'<div class="edu-story-node"><b>'+v+'</b><span>'+T.chapters[i]+'</span></div>').join("");const r=document.querySelector("[data-resolution-rail]");if(r)r.innerHTML=T.resolution.map(x=>'<span>'+x+'</span>').join("")}document.addEventListener("education-help-language-change",applyProductStory);applyProductStory();
+function applyProductStory(){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en;document.querySelectorAll("[data-story]").forEach(el=>{const k=el.dataset.story;if(T[k]!==undefined)el.textContent=T[k]});const b=document.querySelector("[data-story-bridge]");if(b)b.innerHTML=T.verbs.map((v,i)=>'<div class="edu-story-node"><b>'+v+'</b><span>'+T.chapters[i]+'</span></div>').join("");const r=document.querySelector("[data-resolution-rail]");if(r)r.innerHTML=T.resolution.map(x=>'<span>'+x+'</span>').join("")}document.addEventListener("education-help-language-change",applyProductStory);
 function mountEducationCarousel(){
  const root=qs("[data-edu-carousel]"),track=qs("[data-edu-track]"),viewport=qs("[data-edu-viewport]"),live=qs("[data-edu-live]");
  if(!root||!track||!viewport)return;
@@ -456,7 +456,7 @@ function mountEducationCarousel(){
  document.addEventListener("education-help-language-change",()=>build());
  build();
 }
-mountEducationCarousel();
+applyProductStory();\nmountEducationCarousel();
 qsa("[data-jump-standards]").forEach(b=>b.addEventListener("click",()=>qs("#education-standards-carousel")?.scrollIntoView({behavior:"smooth",block:"start"})));
 
 function activateFace(face){

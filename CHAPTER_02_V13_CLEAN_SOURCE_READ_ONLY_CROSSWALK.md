@@ -33,11 +33,11 @@ A clean predecessor is admitted only as a source for the underlying moving pictu
 | 2 | `WHAT WASN’T BEFORE` | Clean corresponding geography/approach state | **SOURCE_GAP** |
 | 3 | `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | **SOURCE_GAP** |
 | 4 | `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | **CONFORMABLE_SOURCE_FOUND** |
-| 5 | `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | UNRESOLVED |
+| 5 | `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | **CONFORMABLE_SOURCE_FOUND** |
 | 6 | `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | UNRESOLVED |
 | 7 | `DiamondGateBridge.com` | Clean corresponding final moving universal state | UNRESOLVED |
 
-Progress: **4 / 7 rows resolved.**
+Progress: **5 / 7 rows resolved.**
 
 ## Row 1 resolution receipt
 
@@ -168,6 +168,35 @@ Future admission requirements remain strict: exact v13 timing, mountain/lower-ho
 
 No construction, masking, removal, approximation, or render occurred during this resolution.
 
+## Row 5 resolution receipt
+
+Typography state:
+`SO WHERE DOES REALITY BEGIN?`
+
+Disposition:
+`CONFORMABLE_SOURCE_FOUND`
+
+Read-only comparison scope:
+- frozen v13 authority
+- clean Chapter 02 planetary/universal withdrawal lineage
+- final-review/picture-lock predecessors used as comparison evidence only
+
+Required conform target:
+- exact v13 withdrawal/universal state during the Row 5 reading window;
+- preserve hurricane/weather relationship, planetary scale, outward motion direction, crop, composition, transition phase, and frame timing.
+
+Observed lineage result:
+- clean moving source custody exists for the planetary/universal withdrawal family used by the v13 ending;
+- the available clean material establishes the same underlying withdrawal subject and sufficient motion coverage to support bounded conformance to the v13 Row 5 state;
+- exact frame identity is not established from the read-only evidence, so the source must later be aligned and parity-tested against v13 outside the baked typography region.
+
+Decision:
+The evidence supports `CONFORMABLE_SOURCE_FOUND`, not `EXACT_CLEAN_SOURCE_FOUND`.
+
+Future admission requires exact preservation of v13's outward trajectory, hurricane/weather placement, planetary scale progression, crop, and transition timing. Any creative replacement of the ending fails parity.
+
+No construction, masking, removal, approximation, or render occurred during this resolution.
+
 ## Allowed final dispositions
 
 Each row may resolve to exactly one of:
@@ -242,7 +271,7 @@ The clean conform master remains BLOCKED until all seven matrix rows have actual
 
 Additionally, the current Row 1 `SOURCE_GAP` means a complete clean conform cannot be authorized even after Rows 2–7 are resolved unless Row 1 is subsequently upgraded by new exact evidence or a separately authorized strategy explicitly addresses the gap.
 
-The next lawful read-only action is **Row 5 source comparison**. Rows 1–4 should not be repeatedly re-audited against the same candidates.
+The next lawful read-only action is **Row 6 source comparison**. Rows 1–5 should not be repeatedly re-audited against the same candidates.
 
 The governing chain remains:
 
@@ -259,14 +288,15 @@ Clarification: v13 is the editorial/cinematographic conform authority. Clean sou
 ## Current state
 
 READ_ONLY_CROSSWALK_AUTHORITY = FROZEN
-ROWS_RESOLVED = 4
+ROWS_RESOLVED = 5
 ROWS_TOTAL = 7
 ROW_1 = SOURCE_GAP
 ROW_2 = SOURCE_GAP
 ROW_3 = SOURCE_GAP
 ROW_4 = CONFORMABLE_SOURCE_FOUND
+ROW_5 = CONFORMABLE_SOURCE_FOUND
 SEVEN_ROWS_RESOLVED = FALSE
 SOURCE_GAP_PRESENT = TRUE
 CLEAN_CONFORM_AUTHORIZED = FALSE
 V14_AUTHORIZED = FALSE
-NEXT_LAWFUL_ROW = 5
+NEXT_LAWFUL_ROW = 6

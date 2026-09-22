@@ -45,7 +45,7 @@ a{color:inherit;text-decoration:none}.skip{position:absolute;left:-999px;top:8px
 .grid-3,.grid-4,.language-grid,.result-grid{display:grid;gap:.7rem}.grid-3,.language-grid,.result-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
 .card,.language-card,.metric,.stage-card,.question-card{border:1px solid var(--line);border-radius:1.1rem;background:rgba(255,255,255,.025);padding:1rem;display:grid;gap:.45rem}.card b,.metric b,.stage-card b{color:var(--gold);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}.card strong,.language-card strong,.metric strong{font-size:1rem}.card span,.language-card span,.metric span,.stage-card span{color:var(--muted);font-size:.84rem;line-height:1.45}
 details{border:1px solid var(--line);border-radius:1rem;background:rgba(255,255,255,.02)}summary{cursor:pointer;padding:.85rem 1rem;font-weight:850}.detail{padding:0 1rem 1rem;display:grid;gap:.5rem}.detail li,.detail p{color:var(--muted);font-size:.85rem}
-.demo-shell{margin-top:1rem;border:1px solid rgba(141,216,255,.24);border-radius:1.4rem;background:rgba(3,10,23,.9);overflow:hidden}.demo-head{padding:1rem 1.2rem;border-bottom:1px solid var(--line);display:flex;gap:1rem;align-items:center;justify-content:space-between}.demo-progress{display:flex;gap:.35rem;flex-wrap:wrap}.demo-step{padding:.35rem .55rem;border-radius:999px;border:1px solid var(--line);font-size:.67rem;color:var(--faint);font-weight:850}.demo-step[data-state="active"]{color:#07111d;background:var(--blue);border-color:var(--blue)}.demo-step[data-state="complete"]{color:var(--mint);border-color:rgba(167,243,198,.38)}
+.demo-shell{margin-top:1rem;border:1px solid rgba(141,216,255,.24);border-radius:1.4rem;background:rgba(3,10,23,.9);overflow:visible}.demo-head{padding:1rem 1.2rem;border-bottom:1px solid var(--line);display:flex;gap:1rem;align-items:center;justify-content:space-between}.demo-progress{display:flex;gap:.35rem;flex-wrap:wrap}.demo-step{padding:.35rem .55rem;border-radius:999px;border:1px solid var(--line);font-size:.67rem;color:var(--faint);font-weight:850}.demo-step[data-state="active"]{color:#07111d;background:var(--blue);border-color:var(--blue)}.demo-step[data-state="complete"]{color:var(--mint);border-color:rgba(167,243,198,.38)}
 .demo-stage{padding:clamp(1rem,4vw,1.6rem);display:grid;gap:1rem}.demo-stage[hidden]{display:none}.language-card{position:relative}.language-card button{justify-self:start}.soon{position:absolute;right:.8rem;top:.8rem;color:var(--violet);font-size:.67rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.field{display:grid;gap:.35rem}.field label{font-size:.78rem;font-weight:850;color:var(--muted)}select,input,textarea{width:100%;border:1px solid var(--line);border-radius:.8rem;background:#07101f;color:var(--text);padding:.72rem .8rem;font:inherit}textarea{min-height:5.5rem;resize:vertical}.validation{color:var(--danger);font-size:.8rem;min-height:1.2rem}
 .question-card{gap:.8rem}.question-card .meta{display:flex;gap:.4rem;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:.25rem .5rem;color:var(--faint);font-size:.66rem;font-weight:850}.options{display:grid;gap:.5rem}.option{display:grid;grid-template-columns:auto 1fr;gap:.6rem;align-items:start;border:1px solid var(--line);border-radius:.9rem;padding:.7rem;cursor:pointer}.option:has(input:checked){border-color:rgba(141,216,255,.6);background:rgba(141,216,255,.07)}.option input{width:auto;margin-top:.2rem}.hint{border-left:3px solid var(--violet);padding:.65rem .8rem;background:rgba(185,160,255,.06);color:var(--muted);font-size:.84rem}
@@ -66,8 +66,8 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 .edu-custom-select{position:relative}
 .edu-custom-select>button{width:100%;min-height:3rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:.75rem;background:#08162d;color:var(--text);font:inherit;text-align:left;display:flex;justify-content:space-between}
 .edu-custom-select>button::after{content:"⌄";color:var(--gold)}
-.edu-custom-options{position:absolute;z-index:40;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55vh);overflow:auto;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}
-.edu-custom-options[hidden]{display:none}
+.edu-custom-options{position:absolute;z-index:400;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55dvh);overflow:auto;overscroll-behavior:contain;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.edu-custom-options[data-direction="up"]{top:auto;bottom:calc(100% + .3rem)}\n.edu-custom-options[hidden]{display:none}
 .edu-custom-options button{display:block;width:100%;padding:.72rem;border:0;border-radius:.55rem;background:transparent;color:var(--text);font:inherit;text-align:left}
 .edu-custom-options button:hover,.edu-custom-options button:focus-visible,.edu-custom-options button[aria-selected="true"]{background:rgba(141,216,255,.12)}
 .field select.edu-native-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
@@ -585,14 +585,27 @@ qsa("[data-start-demo]").forEach(b=>b.addEventListener("click",startDemo));
 qsa("[data-language]").forEach(b=>b.addEventListener("click",()=>{learner.target_language=b.dataset.language;setStage("intake")}));
 qsa("[data-back]").forEach(b=>b.addEventListener("click",()=>setStage(b.dataset.back)));
 
-function enhanceEducationSelect(select){if(!select||select.dataset.customized)return;select.dataset.customized="true";select.classList.add("edu-native-hidden");const wrap=document.createElement("div"),trigger=document.createElement("button"),list=document.createElement("div");wrap.className="edu-custom-select";trigger.type="button";trigger.setAttribute("aria-haspopup","listbox");list.className="edu-custom-options";list.hidden=true;select.after(wrap);wrap.append(trigger,list);const rebuild=()=>{trigger.textContent=select.selectedOptions[0]?.textContent||"Choose";list.innerHTML="";[...select.options].slice(1).forEach(opt=>{const b=document.createElement("button");b.type="button";b.textContent=opt.textContent;b.setAttribute("aria-selected",String(opt.value===select.value));b.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event("change",{bubbles:true}));list.hidden=true;trigger.setAttribute("aria-expanded","false");rebuild()};list.append(b)})};trigger.onclick=()=>{list.hidden=!list.hidden;trigger.setAttribute("aria-expanded",String(!list.hidden))};document.addEventListener("click",e=>{if(!wrap.contains(e.target))list.hidden=true});document.addEventListener("education-help-language-change",()=>queueMicrotask(rebuild));rebuild()}["claimed-level"].forEach(id=>enhanceEducationSelect(qs("#"+id)));
+function enhanceEducationSelect(select){
+ if(!select||select.dataset.customized)return;
+ select.dataset.customized="true";select.classList.add("edu-native-hidden");
+ const wrap=document.createElement("div"),trigger=document.createElement("button"),list=document.createElement("div");
+ wrap.className="edu-custom-select";trigger.type="button";trigger.setAttribute("aria-haspopup","listbox");trigger.setAttribute("aria-expanded","false");list.className="edu-custom-options";list.hidden=true;
+ select.after(wrap);wrap.append(trigger,list);
+ const place=()=>{if(list.hidden)return;const r=trigger.getBoundingClientRect(),gap=10,below=window.innerHeight-r.bottom-gap,above=r.top-gap;const up=below<220&&above>below;list.dataset.direction=up?"up":"down";const available=Math.max(120,(up?above:below)-8);list.style.maxHeight=Math.min(320,available)+"px"};
+ const rebuild=()=>{trigger.textContent=select.selectedOptions[0]?.textContent||"Choose";list.innerHTML="";[...select.options].slice(1).forEach(opt=>{const b=document.createElement("button");b.type="button";b.textContent=opt.textContent;b.setAttribute("aria-selected",String(opt.value===select.value));b.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event("change",{bubbles:true}));list.hidden=true;trigger.setAttribute("aria-expanded","false");rebuild()};list.append(b)})};
+ trigger.onclick=()=>{list.hidden=!list.hidden;trigger.setAttribute("aria-expanded",String(!list.hidden));if(!list.hidden)requestAnimationFrame(place)};
+ document.addEventListener("click",e=>{if(!wrap.contains(e.target)){list.hidden=true;trigger.setAttribute("aria-expanded","false")}});
+ window.addEventListener("resize",place);window.addEventListener("scroll",place,{passive:true});
+ document.addEventListener("education-help-language-change",()=>queueMicrotask(rebuild));rebuild()
+}
+["claimed-level"].forEach(id=>enhanceEducationSelect(qs("#"+id)));
 function beginIndependence(){
  const claimed=Number(qs("#claimed-level").value);
  if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
  qs("#intake-validation").textContent="";
  learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
  probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;
- setStage("test");saveEducationState({stage:"test"});startProbe(probeStage);
+ setStage("test");saveEducationState({stage:"test"});startProbe(probeStage);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
 }
 qs("#begin-placement").addEventListener("click",beginIndependence);
 

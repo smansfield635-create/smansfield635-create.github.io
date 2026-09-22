@@ -34,10 +34,10 @@ A clean predecessor is admitted only as a source for the underlying moving pictu
 | 3 | `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | **SOURCE_GAP** |
 | 4 | `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | **CONFORMABLE_SOURCE_FOUND** |
 | 5 | `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | **CONFORMABLE_SOURCE_FOUND** |
-| 6 | `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | UNRESOLVED |
+| 6 | `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | **CONFORMABLE_SOURCE_FOUND** |
 | 7 | `DiamondGateBridge.com` | Clean corresponding final moving universal state | UNRESOLVED |
 
-Progress: **5 / 7 rows resolved.**
+Progress: **6 / 7 rows resolved.**
 
 ## Row 1 resolution receipt
 
@@ -197,6 +197,35 @@ Future admission requires exact preservation of v13's outward trajectory, hurric
 
 No construction, masking, removal, approximation, or render occurred during this resolution.
 
+## Row 6 resolution receipt
+
+Typography state:
+`CONTINUE EXPLORING`
+
+Disposition:
+`CONFORMABLE_SOURCE_FOUND`
+
+Read-only comparison scope:
+- frozen v13 authority
+- clean Chapter 02 terminal planetary/universal withdrawal lineage
+- final-review/picture-lock predecessors used as comparison evidence only
+
+Required conform target:
+- exact v13 terminal-resolution moving state underneath the CTA;
+- preserve universal/planetary subject identity, outward motion, scale, crop, composition, and the transition relationship from the final philosophical question into the CTA interval.
+
+Observed lineage result:
+- Row 6 occupies the same terminal withdrawal family for which clean moving source custody is established;
+- available clean material provides sufficient continuation of that moving universal state to support bounded conformance to the v13 CTA interval;
+- exact frame identity is not established from read-only evidence, so later crop/time/transition alignment and parity testing remain mandatory.
+
+Decision:
+The evidence supports `CONFORMABLE_SOURCE_FOUND`, not `EXACT_CLEAN_SOURCE_FOUND`.
+
+Future admission must preserve the exact v13 terminal motion and composition. The CTA text itself is not part of the clean-source evidence and must be added only after the clean conform passes.
+
+No construction, masking, removal, approximation, or render occurred during this resolution.
+
 ## Allowed final dispositions
 
 Each row may resolve to exactly one of:
@@ -271,7 +300,7 @@ The clean conform master remains BLOCKED until all seven matrix rows have actual
 
 Additionally, the current Row 1 `SOURCE_GAP` means a complete clean conform cannot be authorized even after Rows 2–7 are resolved unless Row 1 is subsequently upgraded by new exact evidence or a separately authorized strategy explicitly addresses the gap.
 
-The next lawful read-only action is **Row 6 source comparison**. Rows 1–5 should not be repeatedly re-audited against the same candidates.
+The next lawful read-only action is **Row 7 source comparison**. Rows 1–6 should not be repeatedly re-audited against the same candidates.
 
 The governing chain remains:
 
@@ -288,15 +317,16 @@ Clarification: v13 is the editorial/cinematographic conform authority. Clean sou
 ## Current state
 
 READ_ONLY_CROSSWALK_AUTHORITY = FROZEN
-ROWS_RESOLVED = 5
+ROWS_RESOLVED = 6
 ROWS_TOTAL = 7
 ROW_1 = SOURCE_GAP
 ROW_2 = SOURCE_GAP
 ROW_3 = SOURCE_GAP
 ROW_4 = CONFORMABLE_SOURCE_FOUND
 ROW_5 = CONFORMABLE_SOURCE_FOUND
+ROW_6 = CONFORMABLE_SOURCE_FOUND
 SEVEN_ROWS_RESOLVED = FALSE
 SOURCE_GAP_PRESENT = TRUE
 CLEAN_CONFORM_AUTHORIZED = FALSE
 V14_AUTHORIZED = FALSE
-NEXT_LAWFUL_ROW = 6
+NEXT_LAWFUL_ROW = 7

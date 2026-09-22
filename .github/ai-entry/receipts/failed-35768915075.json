@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": null,
+  "capabilityId": null,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4225,
+  "requestBranch": "ai-dispatch-request-h-earth-diagnostics-1fb0eb6e",
+  "requestCommit": "93c59e0ec0518c941bb54adc39ff37e350568752",
+  "currentMainSha": "aa296c1d7099ec03fed85c41db6f3e5d14d6c8b7",
+  "bridgeRunId": "35768915075",
+  "error": "Stale dispatch request: parent 1fb0eb6e86f4a878a7ede693ccd6f254bbdcbc8c != current main aa296c1d7099ec03fed85c41db6f3e5d14d6c8b7",
+  "failedAt": "2026-09-22T18:42:15.312Z"
+}

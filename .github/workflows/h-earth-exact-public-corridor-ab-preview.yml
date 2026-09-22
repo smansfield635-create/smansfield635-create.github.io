@@ -44,15 +44,10 @@ jobs:
           mkdir -p /tmp/hearth-ab/A/h-earth-3d /tmp/hearth-ab/B/h-earth-3d
           cp -a showroom/globe/h-earth /tmp/hearth-ab/A/showroom/globe/
           cp -a showroom/globe/h-earth /tmp/hearth-ab/B/showroom/globe/
-          cp -a h-earth-3d/integration /tmp/hearth-ab/A/h-earth-3d/
-          cp -a h-earth-3d/integration /tmp/hearth-ab/B/h-earth-3d/
-          cp -a h-earth-3d/runtime /tmp/hearth-ab/A/h-earth-3d/
-          cp -a h-earth-3d/runtime /tmp/hearth-ab/B/h-earth-3d/
-          cp -a h-earth-3d/terrain /tmp/hearth-ab/A/h-earth-3d/
-          cp -a h-earth-3d/terrain /tmp/hearth-ab/B/h-earth-3d/
-          mkdir -p /tmp/hearth-ab/A/h-earth-3d/control-plane/run-8 /tmp/hearth-ab/B/h-earth-3d/control-plane/run-8
-          cp -a h-earth-3d/control-plane/run-8/recovery /tmp/hearth-ab/A/h-earth-3d/control-plane/run-8/
-          cp -a h-earth-3d/control-plane/run-8/recovery /tmp/hearth-ab/B/h-earth-3d/control-plane/run-8/
+          # H-Earth's public module graph crosses multiple h-earth-3d domains.
+          # Materialize that bounded product root once rather than discovering leaves by repeated browser failure.
+          cp -a h-earth-3d /tmp/hearth-ab/A/
+          cp -a h-earth-3d /tmp/hearth-ab/B/
           test -f /tmp/hearth-ab/A/h-earth-3d/terrain/h-earth.terrain-field.js
           test -f /tmp/hearth-ab/B/h-earth-3d/terrain/h-earth.terrain-field.js
           test -f /tmp/hearth-ab/A/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js

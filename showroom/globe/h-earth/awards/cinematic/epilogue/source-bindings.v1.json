@@ -1,0 +1,134 @@
+{
+  "schema": "AWARDS_CINEMATIC_EPILOGUE_SOURCE_BINDINGS_v1",
+  "operationId": "AWARDS_CINEMATIC_EPILOGUE_FIRST_PICTURE_CONSTRUCTION_20260911_002",
+  "lockGeneration": 2128,
+  "governingHead": "ec39bc5ac6529e015f147433d9a39df05757fe65",
+  "constructionLaw": "CINEMATOGRAPHY_DONOR_PLUS_CANONICAL_GEOMETRY_RENDER",
+  "generatedImagery": "FORBIDDEN",
+  "genericSubstituteGeometry": "FORBIDDEN",
+  "rawScreenRecordingAsFinalPicture": "FORBIDDEN",
+  "canonicalSources": [
+    {
+      "id": "H_EARTH_AUDRALIA_WORLD_RENDERER",
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs",
+      "gitBlobSha": "872d20b17bb0cd89d9613ca0262b25350890a617",
+      "mode": "READ_ONLY_IMPORT",
+      "roles": ["T0", "T1", "T5", "T6", "T7"],
+      "authority": "H_EARTH_GRATITUDE_CANONICAL_SURFACE_FIELD_v1",
+      "api": ["createMapWideEnvironmentRenderer", "state", "render", "orbit", "zoomByFactor", "pan", "focusGratitude", "planetaryVantage"]
+    },
+    {
+      "id": "CHARACTERS_CARDINAL_SITE_GEOMETRY",
+      "path": "characters/cardinal-scene-geometry.mjs",
+      "gitBlobSha": "698dc392edd0b74547d76fb09a05bb3bb2437c15",
+      "mode": "READ_ONLY_IMPORT",
+      "roles": ["T2", "T3", "T4"],
+      "api": ["CARDINAL_SITE_GEOMETRY_AUTHORITY", "CARDINAL_GEOMETRY_MATERIALS", "buildCardinalSiteGeometry", "buildAllCardinalSiteGeometry"],
+      "sites": [
+        {"siteId":"WATCHFIRE_OVERLOOK","characterId":"ALARIC_AXION"},
+        {"siteId":"WATERLINE_STATION","characterId":"TARIAN_MERROW"},
+        {"siteId":"SIGNAL_LANTERN_FIELD","characterId":"ELARA_SYLENE"},
+        {"siteId":"RESTORATION_BOUNDARY","characterId":"SOREN_SEVRIN"}
+      ]
+    },
+    {
+      "id": "CHARACTERS_SCENE_STATE",
+      "path": "characters/cardinal-scene-state.mjs",
+      "gitBlobSha": "a7a60734529cfd6ebeea08e40f4722436689f5f3",
+      "mode": "READ_ONLY_IMPORT",
+      "roles": ["T2", "T3", "T4"]
+    },
+    {
+      "id": "CHARACTERS_SCENE_DATA",
+      "path": "characters/cardinal-scenes.data.mjs",
+      "gitBlobSha": "cef3edc7beb5fc39037e00d5ead360ef9db9cdd5",
+      "mode": "READ_ONLY_REFERENCE",
+      "roles": ["T2", "T3", "T4"]
+    },
+    {
+      "id": "COMPASS_GEOMETRY",
+      "path": "assets/compass/upstream-compass.geometry.js",
+      "gitBlobSha": "fe35d8d844859a6af810684ace53d2c65258522f",
+      "mode": "READ_ONLY_OPTIONAL_STORM_SOURCE",
+      "roles": ["T3"]
+    },
+    {
+      "id": "COMPASS_RENDERER",
+      "path": "assets/compass/upstream-compass.renderer.js",
+      "gitBlobSha": "965376dd8a92686bc7008d1fea4846b5f8300872",
+      "mode": "READ_ONLY_OPTIONAL_STORM_SOURCE",
+      "roles": ["T3"]
+    },
+    {
+      "id": "MIRRORLAND_WINDOW_GEOMETRY",
+      "path": "assets/shared/mirrorland-window.geometry.js",
+      "gitBlobSha": "fb3ee8ab92fa4b08e7708b83780de75d1a6f8595",
+      "mode": "READ_ONLY_OPTIONAL_STORM_SOURCE",
+      "roles": ["T3"],
+      "identity": "FROZEN_21_PANE_480x720"
+    }
+  ],
+  "donorClips": [
+    {
+      "id": "EPILOGUE-CLIP-001",
+      "fileName": "1423.mp4",
+      "sha256": "942a374aec8842c49a4895f7eb3964b4f4095281426dbf7d75cc0d6e6b45ef43",
+      "disposition": "CINEMATOGRAPHY_DONOR_ONLY",
+      "roles": [
+        {"phase":"T0","interval":"00:06-00:18","grammar":"COASTAL_EMERGENCE"},
+        {"phase":"T1","interval":"00:19-00:46","grammar":"GEOGRAPHIC_RESOLUTION_APPROACH"}
+      ]
+    },
+    {
+      "id": "EPILOGUE-CLIP-002",
+      "fileName": "25731.mp4",
+      "sha256": "15960d2efd251589d4d5560026ee0a287e4211e64caef504a99d1d0c79f88df5",
+      "disposition": "MUSIC_CARRIER_AND_CINEMATOGRAPHY_DONOR",
+      "roles": [
+        {"phase":"T5","interval":"00:38-00:46","grammar":"LOCAL_TO_PLANETARY_WITHDRAWAL"},
+        {"phase":"T6_T7","interval":"01:58-02:27","grammar":"RESTRAINED_GLOBAL_INVITATION"},
+        {"phase":"GLOBAL","interval":"01:28.770-02:27.544","grammar":"MUSIC_AUTHORITY"}
+      ]
+    },
+    {
+      "id": "EPILOGUE-CLIP-003",
+      "fileName": "1424.mp4",
+      "sha256": "6e1c3b0b5d1f01a34ffce86660deac72c0601c3cb8da2aba4207e7ab40c6ba9c",
+      "disposition": "CINEMATOGRAPHY_DONOR_ONLY_RAW_MOTION_REJECTED",
+      "roles": [
+        {"phase":"T0_T2","interval":"00:00-00:07.5","grammar":"LOW_COASTAL_WATER_SEABOARD"},
+        {"phase":"T2_T4","interval":"00:19-00:26.5","grammar":"LOW_WORLD_INHABITATION_DEPTH"}
+      ]
+    },
+    {
+      "id": "EPILOGUE-CLIP-004",
+      "fileName": "1000002020.mp4",
+      "sha256": "8653f6c56d58884d28f9330b39b64660e67331e3bf61b033b200df2b270f0c43",
+      "disposition": "CHARACTER_WORLD_MOTION_COMPOSITION_DONOR_ONLY_RAW_MOTION_REJECTED",
+      "roles": [
+        {"phase":"T2","interval":"00:09-00:13","grammar":"WATERLINE_LOCALITY_APPROACH"},
+        {"phase":"T2_T3","interval":"00:22-00:28","grammar":"SHARED_WORLD_SIGNAL_TRAVERSAL"},
+        {"phase":"T2_T3","interval":"00:35-00:41","grammar":"SIGNAL_LANTERN_LOCAL_WORLD_MOTION"}
+      ]
+    }
+  ],
+  "liveBoundary": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "governingHeadGitBlobSha": "c889e6c414d4b94807623481d1d0154fed66e557",
+    "mutation": "FORBIDDEN"
+  },
+  "registryProjection": {
+    "path": "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.awards-cinematic-epilogue-path-recognition.js",
+    "gitBlobSha": "b1fe33310f056befbcd2f0e2dc331030a6950e2e",
+    "generation": 2127,
+    "terminalDisposition": "PASS_CLOSED",
+    "exactRecognizedPathCount": 7,
+    "result": "PASS_READ_ONLY_EXACT_PATH_RESOLUTION"
+  },
+  "t4Landing": {
+    "authorityFamily": "CURRENT_QUALIFIED_CHARACTERS_LOCAL_ENVIRONMENT",
+    "lateBindable": true,
+    "boundedFields": ["siteId", "cameraFit"],
+    "frozenFields": ["timeIn", "timeOut", "textTiming", "stormTopology", "transitionCause", "musicLandmarks"]
+  }
+}

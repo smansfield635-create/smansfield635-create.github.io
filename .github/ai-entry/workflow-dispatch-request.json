@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-question-render-4fcccc77-20260922",
+  "capabilityId": "EDUCATION_QUESTION_RENDER_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "4fcccc771644f278b448e19895582efebe1a81d6",
+    "base_sha": "7a010073b09be4fde80b78e43fcfbfb72508f644"
   }
 }

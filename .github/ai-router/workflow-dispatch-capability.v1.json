@@ -284,6 +284,22 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_EXACT_PUBLIC_CORRIDOR_AB_PREVIEW": {
+      "workflow": "h-earth-exact-public-corridor-ab-preview.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "EXACT_PUBLIC_CORRIDOR_AB_EVIDENCE"
     }
   },
   "continuity": {

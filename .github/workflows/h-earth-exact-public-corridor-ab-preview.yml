@@ -48,6 +48,17 @@ jobs:
           cp -a h-earth-3d/integration /tmp/hearth-ab/B/h-earth-3d/
           cp -a h-earth-3d/runtime /tmp/hearth-ab/A/h-earth-3d/
           cp -a h-earth-3d/runtime /tmp/hearth-ab/B/h-earth-3d/
+          cp -a h-earth-3d/terrain /tmp/hearth-ab/A/h-earth-3d/
+          cp -a h-earth-3d/terrain /tmp/hearth-ab/B/h-earth-3d/
+          mkdir -p /tmp/hearth-ab/A/h-earth-3d/control-plane/run-8 /tmp/hearth-ab/B/h-earth-3d/control-plane/run-8
+          cp -a h-earth-3d/control-plane/run-8/recovery /tmp/hearth-ab/A/h-earth-3d/control-plane/run-8/
+          cp -a h-earth-3d/control-plane/run-8/recovery /tmp/hearth-ab/B/h-earth-3d/control-plane/run-8/
+          test -f /tmp/hearth-ab/A/h-earth-3d/terrain/h-earth.terrain-field.js
+          test -f /tmp/hearth-ab/B/h-earth-3d/terrain/h-earth.terrain-field.js
+          test -f /tmp/hearth-ab/A/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+          test -f /tmp/hearth-ab/B/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+          test -f /tmp/hearth-ab/A/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          test -f /tmp/hearth-ab/B/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
           test -f showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           test -f /tmp/hearth-ab/A/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           test -f /tmp/hearth-ab/B/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js

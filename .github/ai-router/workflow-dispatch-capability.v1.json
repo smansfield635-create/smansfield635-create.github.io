@@ -197,6 +197,25 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "NUMERICAL_TRANSFORM_CHAIN_ARTIFACT"
+    },
+    "EDUCATION_ACTION_CONSTRUCTION_QUALIFY": {
+      "workflow": "education-action-construction-qualification-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false
     }
   },
   "continuity": {

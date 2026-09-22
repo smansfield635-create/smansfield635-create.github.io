@@ -6,12 +6,15 @@ on:
     types: [completed]
 
 permissions:
+  actions: read
   contents: read
   issues: write
 
 jobs:
   verify-live:
     if: github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success'
+    outputs:
+      compass_relevant: ${{ steps.scope.outputs.compass_relevant }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -20,7 +23,26 @@ jobs:
       VERIFICATION_TRIGGER: ${{ github.event_name }}
       LIVE_ORIGIN: https://diamondgatebridge.com
     steps:
+      - name: Resolve publication surface scope
+        id: scope
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          jobs="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/runs/$UPSTREAM_RUN_ID/jobs")"
+          relevant="$(printf '%s' "$jobs" | jq -r '[.jobs[].steps[]? | select(.name=="Publish surface-aware deployment receipt" and .conclusion=="success")] | length')"
+          if [ "$relevant" -eq 0 ]; then
+            echo "compass_relevant=false" >> "$GITHUB_OUTPUT"
+            echo "COMPASS_VERIFICATION_SKIPPED_NO_SURFACE_RECEIPT"
+            exit 0
+          fi
+          echo "compass_relevant=false" >> "$GITHUB_OUTPUT"
+          echo "COMPASS_VERIFICATION_FAIL_CLOSED_UNTIL_COMPASS_SURFACE_RECEIPT_ROUTING_IS_REGISTERED"
+
       - name: Checkout exact observed main head
+        if: steps.scope.outputs.compass_relevant == 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ env.DEPLOYED_HEAD }}
@@ -43,6 +65,7 @@ jobs:
             assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs
 
       - name: Verify live bytes against exact observed source
+        if: steps.scope.outputs.compass_relevant == 'true'
         id: verify
         shell: bash
         run: |
@@ -92,6 +115,7 @@ jobs:
           cat /tmp/compass-live-byte-receipt.tsv
 
       - name: Install clean Chromium runtime
+        if: steps.scope.outputs.compass_relevant == 'true'
         run: |
           mkdir -p /tmp/manor-probe
           cd /tmp/manor-probe
@@ -100,6 +124,7 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null 2>&1
 
       - name: Verify rendered production House card
+        if: steps.scope.outputs.compass_relevant == 'true'
         id: runtime
         shell: bash
         run: |
@@ -144,6 +169,7 @@ jobs:
           echo "result=EXECUTED" >> "$GITHUB_OUTPUT"
 
       - name: Upload live evidence
+        if: steps.scope.outputs.compass_relevant == 'true'
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -155,6 +181,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Record live verification on reconciliation PR
+        if: steps.scope.outputs.compass_relevant == 'true'
         if: always()
         continue-on-error: true
         shell: bash

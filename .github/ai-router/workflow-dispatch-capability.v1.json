@@ -216,6 +216,16 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_GEN311_RELIEF_CORRESPONDENCE_AUDIT": {
+      "workflow": "h-earth-gen311-relief-correspondence-audit-v1.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "GEN311_RELIEF_CORRESPONDENCE_ARTIFACT"
     }
   },
   "continuity": {

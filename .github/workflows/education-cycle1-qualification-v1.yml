@@ -1,0 +1,56 @@
+name: Education Cycle-One Qualification v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Exact Education candidate SHA
+        required: true
+        type: string
+      admitted_base_sha:
+        description: Frozen admitted base SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout qualification authority
+        uses: actions/checkout@v4
+      - name: Qualify frozen Cycle-One candidate
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.admitted_base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=20 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "products/education/index.html"
+          git show "$CANDIDATE_SHA:products/education/index.html" > /tmp/education.html
+          f=/tmp/education.html
+          test "$(grep -o 'data-geometry="' "$f" | wc -l)" -ge 6
+          grep -q 'data-attempt=' "$f"
+          grep -q 'feedbackState' "$f"
+          grep -q 'data-help=' "$f"
+          grep -q 's.help' "$f"
+          grep -q 'data-learner-branch=' "$f"
+          grep -q 'data-result-node=' "$f"
+          grep -q 'data-result-link=' "$f"
+          grep -q 'data-motif=' "$f"
+          grep -q 'prefers-reduced-motion:reduce' "$f"
+          grep -q 'data-help-language="es"' "$f"
+          grep -q 'data-help-language="zh"' "$f"
+          grep -q 'data-flip' "$f"
+          grep -q 'edu-detail-return' "$f"
+          grep -q 'data-expanded-face="understand"' "$f"
+          grep -q 'data-expanded-face="exercise"' "$f"
+          grep -q '3–6' "$f" || grep -q '3-6' "$f"
+          ! grep -q '<canvas' "$f"
+          ! grep -q 'WebGL' "$f"
+          echo "EDUCATION_CYCLE_ONE_STATIC_QUALIFICATION=PASS"

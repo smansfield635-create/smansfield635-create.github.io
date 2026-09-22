@@ -679,17 +679,14 @@ function resolveIndependence(lastScore,resolvedStageOverride=null){
    : [...probeHistory].reverse().find(x=>x.stage===resolvedStageOverride) || probeHistory[probeHistory.length-1];
  const above=current.stage===8 && current.score>=.84;
  const verifiedStage=above?"ABOVE_PHASE_1":current.stage;
- const mastered=Math.round(current.score*3), unresolved=Math.max(0,3-mastered);
- const position=Math.round((mastered/3)*100);
- const consistency=probeHistory.length===1?70:Math.max(55,100-Math.round(Math.abs(probeHistory[probeHistory.length-1].score-probeHistory[0].score)*45));
- const confidence=Math.max(55,Math.min(96,consistency+(probeHistory.length>1?8:0)-(hintsUsed*3)));
+ const demonstrated=current.correct, unresolved=Math.max(0,current.total-current.correct);
  const cycle=supportCycle(current.score);
  const entry=above?{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"}:{stage:"P1S"+current.stage,label:STAGES[current.stage-1].name};
  finalIndependence={
   verified_placement:verifiedStage,
   verified_stage:above?null:"P1S"+current.stage,
-  verified_competency_position:above?"ABOVE_PHASE_1":position,
-  verified_mastery_nodes:mastered,
+  verified_competency_position:above?"ABOVE_PHASE_1":null,
+  demonstrated_nodes:demonstrated,
   unresolved_nodes:unresolved,
   support_cycle:cycle,
   support_dependence:hintsUsed===0?"UNASSISTED_IN_THIS_DEMO":"ASSISTED_HINT_USED",
@@ -727,7 +724,7 @@ function enterDemo(){
 }
 qs("#enter-demo").addEventListener("click",enterDemo);
 qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null});
-qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner={target_language:"English"};finalIndependence=null;probeHistory=[];hintsUsed=0;mixedAnchor=null;setStage("intake")});
+qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner={target_language:"English"};finalIndependence=null;probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;setStage("intake")});
 
 
 /* Gate One — persistent help-language propagation outside target-English evidence. */

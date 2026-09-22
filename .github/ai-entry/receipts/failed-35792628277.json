@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": null,
+  "capabilityId": null,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4335,
+  "requestBranch": "ai-dispatch-request-education-cycle3-rebased-v2-qualify",
+  "requestCommit": "ae9aee3b8a5666a245b147c830099483f5f15f0f",
+  "currentMainSha": "6f281dd8b5e92c3337f9971e2d4de6fbc28e99b6",
+  "bridgeRunId": "35792628277",
+  "error": "Stale dispatch request: parent b1acc05a77982bef11c9baa6a6afe496c004ee41 != current main 6f281dd8b5e92c3337f9971e2d4de6fbc28e99b6",
+  "failedAt": "2026-09-22T22:29:19.089Z"
+}

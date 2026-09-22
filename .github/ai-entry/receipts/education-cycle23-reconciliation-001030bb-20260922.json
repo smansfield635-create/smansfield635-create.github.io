@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-cycle23-reconciliation-001030bb-20260922",
+  "capabilityId": "EDUCATION_CYCLE23_RECONCILIATION_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4320,
+  "requestBranch": "ai-dispatch-request-education-cycle23-reconciliation",
+  "requestCommit": "5a934e7ae948472123eac48feb576af94bd01ea9",
+  "requestCommitParent": "23b3f02935b07a989d3dc89f9f72cdd8008e2fe8",
+  "currentMainSha": "23b3f02935b07a989d3dc89f9f72cdd8008e2fe8",
+  "workflow": "education-cycle23-reconciliation-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "001030bbe17f44782ebd9f978b6f85af53860da9",
+    "base_sha": "4e95e719cd18a24a7377556bd8781e0bcf536628"
+  },
+  "bridgeRunId": "35789676675",
+  "dispatchedRunId": 35789689738,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35789689738",
+  "dispatchedRunHeadSha": "23b3f02935b07a989d3dc89f9f72cdd8008e2fe8",
+  "dispatchedAt": "2026-09-22T21:57:44.021Z",
+  "resolvedAt": "2026-09-22T21:57:47.347Z"
+}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-22T04:34:20Z",
+  "generatedAt": "2026-09-22T05:32:53Z",
   "window": {
-    "start": "2026-08-23T04:34:20Z",
-    "end": "2026-09-22T04:34:20Z"
+    "start": "2026-08-23T05:32:53Z",
+    "end": "2026-09-22T05:32:53Z"
   },
   "dimensions": {
     "requestPath": [
@@ -14,8 +14,8 @@
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 960,
-        "visits": 627
+        "pageLoads": 961,
+        "visits": 628
       },
       {
         "value": "/mirror-manor-preview/",
@@ -29,8 +29,8 @@
       },
       {
         "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 253,
-        "visits": 73
+        "pageLoads": 251,
+        "visits": 71
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -123,6 +123,11 @@
         "visits": 0
       },
       {
+        "value": "/analytics/",
+        "pageLoads": 41,
+        "visits": 28
+      },
+      {
         "value": "/laws/categories/structure/interfaces.html",
         "pageLoads": 40,
         "visits": 0
@@ -141,11 +146,6 @@
         "value": "/preview/compass/holographic-orientation-v1/full/",
         "pageLoads": 40,
         "visits": 0
-      },
-      {
-        "value": "/analytics/",
-        "pageLoads": 40,
-        "visits": 27
       },
       {
         "value": "/build/",
@@ -535,8 +535,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2827,
-        "visits": 2672
+        "pageLoads": 2828,
+        "visits": 2673
       },
       {
         "value": "tablet",
@@ -545,25 +545,25 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1718,
-        "visits": 606
+        "pageLoads": 1717,
+        "visits": 605
       }
     ],
     "userAgentBrowser": [
       {
         "value": "Chrome",
-        "pageLoads": 2853,
-        "visits": 791
+        "pageLoads": 2852,
+        "visits": 790
       },
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2413,
-        "visits": 2292
+        "pageLoads": 2415,
+        "visits": 2294
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1610,
-        "visits": 518
+        "pageLoads": 1609,
+        "visits": 517
       },
       {
         "value": "MobileSafari",
@@ -599,13 +599,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4136,
-        "visits": 1006
+        "pageLoads": 4135,
+        "visits": 1005
       },
       {
         "value": "Linux",
-        "pageLoads": 2453,
-        "visits": 2332
+        "pageLoads": 2454,
+        "visits": 2333
       },
       {
         "value": "MacOSX",
@@ -631,13 +631,13 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4661,
-        "visits": 1477
+        "pageLoads": 4659,
+        "visits": 1475
       },
       {
         "value": "1",
-        "pageLoads": 2413,
-        "visits": 2292
+        "pageLoads": 2415,
+        "visits": 2294
       }
     ],
     "navigationType": [

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-22T04:34:20Z",
+  "generatedAt": "2026-09-22T05:32:53Z",
   "window30d": {
-    "start": "2026-08-23T04:34:20Z",
-    "end": "2026-09-22T04:34:20Z"
+    "start": "2026-08-23T05:32:53Z",
+    "end": "2026-09-22T05:32:53Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-15",
-      "pageLoads": 79
+      "pageLoads": 77
     },
     {
       "date": "2026-09-16",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 56
+      "pageLoads": 58
     }
   ],
   "summary": {
     "pageLoads": 7074,
-    "botPageLoads": 2413,
-    "nonBotPageLoads": 4661
+    "botPageLoads": 2415,
+    "nonBotPageLoads": 4659
   },
   "referrers": [
     {
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 960,
-      "visits": 627
+      "pageLoads": 961,
+      "visits": 628
     },
     {
       "path": "/mirror-manor-preview/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 253,
-      "visits": 73
+      "pageLoads": 251,
+      "visits": 71
     },
     {
       "path": "/evidence/agentic-frontier/",

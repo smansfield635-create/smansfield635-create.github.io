@@ -32,13 +32,13 @@ jobs:
 
           curl --fail-with-body --silent --show-error -L \
             -X POST "${headers[@]}" \
-            "${api}/actions/workflows/pages-direct-deploy.yml/dispatches" \
-            -d '{"ref":"main"}'
+            "${api}/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches" \
+            -d "$(jq -n --arg ref main --arg sha "$latest_head" '{ref:$ref,inputs:{target_sha:$sha,surface_id:"root"}}')"
 
-          body="PAGES_EMERGENCY_FLUSH_DISPATCHED\n\nEmergency run: \`${GITHUB_RUN_ID}\`\nLatest main at dispatch: \`${latest_head}\`\nDirect workflow: \`pages-direct-deploy.yml\`\nDispatch: \`accepted\`\nConcurrency: \`pages / cancel-in-progress=true\`"
+          body="PAGES_EMERGENCY_FLUSH_DISPATCHED\n\nEmergency run: \`${GITHUB_RUN_ID}\`\nLatest main at dispatch: \`${latest_head}\`\nCanonical workflow: \`pages-exact-head-deploy-v3.yml\`\nDispatch: \`accepted\`\nConcurrency: \`pages / cancel-in-progress=true\`"
           curl --fail-with-body --silent --show-error -L \
             -X POST "${headers[@]}" \
             "${api}/issues/1503/comments" \
             -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null
 
-          echo "Dispatched Direct GitHub Pages Deploy against latest main after cancelling stale pages-group work."
+          echo "Dispatched canonical Exact Head Pages Deploy v3 against latest main."

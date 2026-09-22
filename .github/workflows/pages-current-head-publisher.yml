@@ -39,5 +39,11 @@ jobs:
         run: |
           set -euo pipefail
           head="$(gh api "/repos/$REPO/commits/main" --jq .sha)"
-          gh api --method POST             "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$head"             -f inputs[surface_id]="$SURFACE_ID"
+          runs="$(gh api "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/runs?event=workflow_dispatch&per_page=100")"
+          equivalent="$(printf '%s' "$runs" | jq -r --arg sha "$head" '[.workflow_runs[] | select(.head_sha==$sha and (.status=="queued" or .status=="in_progress" or (.status=="completed" and .conclusion=="success")))] | length')"
+          if [ "$equivalent" -gt 0 ]; then
+            echo "CURRENT_HEAD_PUBLICATION_SUPPRESSED_EQUIVALENT_HEAD=$head count=$equivalent"
+            exit 0
+          fi
+          gh api --method POST "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches" -f ref=main -f inputs[target_sha]="$head" -f inputs[surface_id]="$SURFACE_ID"
           echo "CURRENT_HEAD_PUBLICATION_DISPATCHED=$head:$SURFACE_ID"

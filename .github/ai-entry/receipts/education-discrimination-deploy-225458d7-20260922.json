@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-discrimination-deploy-225458d7-20260922",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4290,
+  "requestBranch": "ai-dispatch-request-education-discrimination-deploy",
+  "requestCommit": "4b35d6f4c10a0e4bd714fe9f227913edab08abf0",
+  "requestCommitParent": "225458d766434ee877f1b1164ad7bd3f8f1fcaa0",
+  "currentMainSha": "225458d766434ee877f1b1164ad7bd3f8f1fcaa0",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "225458d766434ee877f1b1164ad7bd3f8f1fcaa0",
+    "surface_id": "education"
+  },
+  "bridgeRunId": "35784233515",
+  "dispatchedRunId": 35784249931,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35784249931",
+  "dispatchedRunHeadSha": "225458d766434ee877f1b1164ad7bd3f8f1fcaa0",
+  "dispatchedAt": "2026-09-22T21:03:34.433Z",
+  "resolvedAt": "2026-09-22T21:03:38.501Z"
+}

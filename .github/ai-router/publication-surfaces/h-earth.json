@@ -59,7 +59,8 @@
       "path": "/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.custody-route-v1.js",
       "includes": [
         "const rendererCustodyRequested = true;",
-        "const selectedRendererPath = RENDERER_CUSTODY_RENDERER_PATH;"
+        "const selectedRendererPath = RENDERER_CUSTODY_RENDERER_PATH;",
+        "persistent-live-renderer.run8e-r3c.renderer-selection-custody-minimal-v1.js"
       ],
       "excludes": [
         "new URLSearchParams(location.search)"

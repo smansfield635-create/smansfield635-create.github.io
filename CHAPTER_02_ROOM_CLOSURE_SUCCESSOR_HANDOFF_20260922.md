@@ -208,3 +208,41 @@ REPAIR_AUTHORIZED = TRUE
 REPAIR_RENDERED = FALSE
 NEXT_OPERATION = REPAIR_4_1S_DISCONTINUITY
 ROOM_SAFE_TO_ABANDON_AFTER_THIS_HANDOFF = TRUE
+
+## 12. Durable Google Drive media custody — 2026-09-22 closure amendment
+
+The physical media required to continue the authorized repair is now durably stored in the existing Chapter 2 Production Drive folder `1FzZitmZIt98i0WUYlcqM8Ijgpm7hda5R`.
+
+Canonical Drive objects:
+
+- V15 current working candidate: `CHAPTER02_43S_OPENING_REPAIR_CHAPTER02_REALITY_v15.mp4`
+  - Drive file ID: `12TietrulSXkk1JkfNzgNtgbBVj7sZMJn`
+  - frozen SHA-256 already recorded above: `7c4545a6c6bd2e1b4f0de15ac45c063a1a70abeff1eda5c3aab914c335a9a066`
+
+- V14 typography successor: `CHAPTER02_43S_TYPOGRAPHY_SUCCESSOR_v14.mp4`
+  - Drive file ID: `1XY56CtRbxeKSzC0i_PvewU3VuR5nzeVD`
+  - frozen SHA-256 already recorded above: `ed7cb9f220b9fd0106535a4dd994a8e6b414e7298f256c587774a1ca855714d7`
+
+- Clean conform foundation: `CHAPTER02_43S_CLEAN_CONFORM_PROOF_v1.mp4`
+  - Drive file ID: `1U3vKZ5KSVHhzdQMGg3yN_42duCcvUp5-`
+  - frozen SHA-256 already recorded above: `51e99a6f16c04ffc247168252c0944006cf78f519f4ef01aba8552afe107de9f`
+
+- Owner diagnostic clip: `CHAPTER02_V15_4P1S_DISCONTINUITY_DIAGNOSTIC_26866.mp4`
+  - Drive file ID: `1qgl7eyuRQk62pPUGXezMAZ9m0RFfqGJ3`
+  - interpretation: contains manual diagnostic rewinds; use it only to inspect the single ~4.1s discontinuity and do not treat rewinds as repeated film defects.
+
+V13 remains separately durable under Drive file ID `1FI47zOv6vErvc__lRNgQw_OOoD4grs5a` and SHA-256 `7033447f05a323b69cdf60ad11c1c25e089db4caea50e7070eea93eaad10c9ea`.
+
+### Successor recovery rule
+
+A successor room does not need access to the originating conversation's attachment surface.
+
+Recover in this order:
+1. read this repository handoff;
+2. fetch V15 from Drive ID `12TietrulSXkk1JkfNzgNtgbBVj7sZMJn`;
+3. verify its recorded SHA-256;
+4. fetch diagnostic clip `1qgl7eyuRQk62pPUGXezMAZ9m0RFfqGJ3` if visual confirmation of the defect is needed;
+5. perform only the authorized ~4.1s repair;
+6. preserve V14/Clean Conform/V13 as rollback authorities.
+
+This closes the prior durability gap between repository instructions and conversation-local media bytes.

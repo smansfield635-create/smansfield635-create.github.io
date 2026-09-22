@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "education-fanout-proof-deploy-20260922",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4252,
+  "requestBranch": "ai-dispatch-request-education-fanout-proof-deploy",
+  "requestCommit": "8970eaabfbb1b27bb6b0d428e27128dcdc3adf12",
+  "currentMainSha": "5eeae0e4d762bef04e37353c359ac516f221ca7c",
+  "bridgeRunId": "35777626752",
+  "error": "Native dispatch was accepted but run id was not resolved for pages-exact-head-deploy-v3.yml",
+  "failedAt": "2026-09-22T20:03:48.488Z"
+}

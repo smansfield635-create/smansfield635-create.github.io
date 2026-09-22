@@ -1,0 +1,21 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "canonical-morphology-audit-594b5fc69665",
+  "capabilityId": "H_EARTH_CANONICAL_TERRAIN_MORPHOLOGY_AUDIT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4294,
+  "requestBranch": "ai-dispatch-request-canonical-morphology-audit-594b5fc6",
+  "requestCommit": "92f184548f87ba63e6f5f7ffdb746f97e490331a",
+  "requestCommitParent": "594b5fc6966538edf0f6a75912128fb366f16a27",
+  "currentMainSha": "594b5fc6966538edf0f6a75912128fb366f16a27",
+  "workflow": "h-earth-canonical-terrain-morphology-audit-v1.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "35785048706",
+  "dispatchedRunId": 35785063824,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35785063824",
+  "dispatchedRunHeadSha": "594b5fc6966538edf0f6a75912128fb366f16a27",
+  "dispatchedAt": "2026-09-22T21:11:12.661Z",
+  "resolvedAt": "2026-09-22T21:11:16.032Z"
+}

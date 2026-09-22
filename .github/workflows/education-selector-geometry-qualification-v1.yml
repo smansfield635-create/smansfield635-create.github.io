@@ -1,0 +1,39 @@
+name: Education Selector Geometry Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify responsive selector geometry
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          grep -Fq '.demo-shell{margin-top:1rem' /tmp/e.html
+          grep -Fq 'overflow:visible' /tmp/e.html
+          grep -Fq '.edu-custom-options[data-direction="up"]' /tmp/e.html
+          grep -Fq 'const up=below<220&&above>below' /tmp/e.html
+          grep -Fq 'list.style.maxHeight=Math.min(320,available)+"px"' /tmp/e.html
+          grep -Fq 'overscroll-behavior:contain' /tmp/e.html
+          grep -Fq 'trigger.setAttribute("aria-expanded","false")' /tmp/e.html
+          grep -Fq 'scrollIntoView({behavior:"smooth",block:"start"})' /tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          console.log('JS_PARSE=PASS');
+          NODE
+          echo EDUCATION_SELECTOR_GEOMETRY_QUALIFICATION=PASS

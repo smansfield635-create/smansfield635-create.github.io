@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-22T16:32:59Z",
+  "generatedAt": "2026-09-22T17:28:17Z",
   "window": {
-    "start": "2026-06-24T16:32:59Z",
-    "end": "2026-09-22T16:32:59Z"
+    "start": "2026-06-24T17:28:17Z",
+    "end": "2026-09-22T17:28:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4702,
+    "pageLoads": 4703,
     "visits": 1101,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4702,
+        "pageLoads": 4703,
         "visits": 1101
       }
     },
@@ -58,13 +58,13 @@
         "pageLoads": 21,
         "visits": 0
       },
-      "/showroom/": {
-        "pageLoads": 140,
-        "visits": 10
-      },
       "/coherence-diagnostic/": {
         "pageLoads": 38,
         "visits": 0
+      },
+      "/showroom/": {
+        "pageLoads": 140,
+        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -74,8 +74,16 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/frontier/energy/battery-coherence-study/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/scientific-law/battery-heldout-study/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/battery-heldout-study/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/": {
@@ -86,17 +94,9 @@
         "pageLoads": 102,
         "visits": 9
       },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/archcoin/": {
         "pageLoads": 54,
         "visits": 3
-      },
-      "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/laws/": {
         "pageLoads": 301,
@@ -110,16 +110,16 @@
         "pageLoads": 160,
         "visits": 8
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 499,
-        "visits": 0
-      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 499,
+        "visits": 0
+      },
       "/products/education/": {
-        "pageLoads": 145,
+        "pageLoads": 146,
         "visits": 35
       },
       "/laws/research/methods-and-models/": {
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -181,10 +185,6 @@
       "/build/": {
         "pageLoads": 21,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -314,16 +314,16 @@
         "pageLoads": 1,
         "visits": 0
       },
+      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
+        "pageLoads": 1,
+        "visits": 0
+      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 59,
         "visits": 41
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 31,
-        "visits": 0
-      },
-      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
-        "pageLoads": 1,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -334,12 +334,12 @@
         "pageLoads": 26,
         "visits": 0
       },
-      "/products/nutrition/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/products/archcoin/allocation/": {
         "pageLoads": 2,
+        "visits": 0
+      },
+      "/products/nutrition/": {
+        "pageLoads": 1,
         "visits": 0
       },
       "/products/archcoin/payable/": {
@@ -354,20 +354,20 @@
         "pageLoads": 1,
         "visits": 1
       },
-      "/analytics/": {
-        "pageLoads": 8,
-        "visits": 0
-      },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 5,
-        "visits": 0
-      },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-1/": {
         "pageLoads": 1,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 8,
+        "visits": 0
+      },
+      "/meet-sean-mansfield/": {
+        "pageLoads": 5,
         "visits": 0
       }
     },
@@ -377,7 +377,7 @@
         "visits": 344
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3601,
+        "pageLoads": 3602,
         "visits": 0
       },
       "www.google.com": {

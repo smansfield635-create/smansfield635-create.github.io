@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-selector-geometry-ed4613c4-20260922",
+  "capabilityId": "EDUCATION_SELECTOR_GEOMETRY_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4352,
+  "requestBranch": "ai-dispatch-request-education-selector-geometry",
+  "requestCommit": "88fe7f4fb284c06b3f64daf3c421718fa9c76ec9",
+  "requestCommitParent": "da42d7507d17c64c86557fd84cded9e435534d65",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "da42d7507d17c64c86557fd84cded9e435534d65",
+  "workflow": "education-selector-geometry-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "ed4613c422ea3780b087bf6593110bd378daab8f",
+    "base_sha": "46f48def027d92d53d229e57debb966cf89164a6"
+  },
+  "bridgeRunId": "35794218689",
+  "dispatchedRunId": 35794230347,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35794230347",
+  "dispatchedRunHeadSha": "da42d7507d17c64c86557fd84cded9e435534d65",
+  "dispatchedAt": "2026-09-22T22:47:34.857Z",
+  "resolvedAt": "2026-09-22T22:47:38.165Z"
+}

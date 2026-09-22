@@ -604,8 +604,8 @@ function beginIndependence(){
  if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
  qs("#intake-validation").textContent="";
  learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
- probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;
- setStage("test");saveEducationState({stage:"test"});startProbe(probeStage);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
+ probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0};
+ setStage("test");saveEducationState({stage:"test"});startAdaptiveItem(probeStage,0);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
 }
 qs("#begin-placement").addEventListener("click",beginIndependence);
 

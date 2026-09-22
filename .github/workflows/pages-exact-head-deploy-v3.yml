@@ -212,14 +212,24 @@ jobs:
       - name: Publish surface-aware deployment receipt
         if: steps.dedupe.outputs.duplicate != 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
           SURFACE_ID: ${{ inputs.surface_id }}
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          RECEIPT: ${{ runner.temp }}/publication-surface-receipt.json
         shell: bash
         run: |
           set -euo pipefail
-          gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/4215/comments" \
-            -f body="PUBLICATION_SURFACE_RECEIPT_v1 surface_id=$SURFACE_ID target_sha=$TARGET_SHA run_id=$GITHUB_RUN_ID"
+          jq -n --arg surfaceId "$SURFACE_ID" --arg targetSha "$TARGET_SHA" --arg runId "$GITHUB_RUN_ID" \
+            '{schema:"PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1",surfaceId:$surfaceId,targetSha:$targetSha,runId:$runId}' > "$RECEIPT"
+          jq -e --arg surfaceId "$SURFACE_ID" --arg targetSha "$TARGET_SHA" '.schema=="PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1" and .surfaceId==$surfaceId and .targetSha==$targetSha' "$RECEIPT" >/dev/null
+
+      - name: Upload surface-aware deployment receipt
+        if: steps.dedupe.outputs.duplicate != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: publication-surface-receipt
+          path: ${{ runner.temp }}/publication-surface-receipt.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Verify static public surfaces
         if: steps.dedupe.outputs.duplicate != 'true'

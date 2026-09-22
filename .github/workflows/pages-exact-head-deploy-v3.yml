@@ -209,6 +209,18 @@ jobs:
         id: deploy
         uses: actions/deploy-pages@v4
 
+      - name: Publish surface-aware deployment receipt
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/4215/comments" \
+            -f body="PUBLICATION_SURFACE_RECEIPT_v1 surface_id=$SURFACE_ID target_sha=$TARGET_SHA run_id=$GITHUB_RUN_ID"
+
       - name: Verify static public surfaces
         if: steps.dedupe.outputs.duplicate != 'true'
         env:

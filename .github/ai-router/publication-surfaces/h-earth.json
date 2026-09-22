@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "h-earth",
-  "description": "Canonical H-Earth live interactive world root route, including the exact restored arrival loader, its pre-render integration, and Run 8E renderer-ready publication contract.",
+  "description": "Canonical H-Earth live interactive world root route, current Run 8E cache-coherent boot chain, and temporary dedicated renderer-custody route used to prove production delivery and renderer execution.",
   "checks": [
     {
       "path": "/showroom/globe/h-earth/index.html",
@@ -11,7 +11,7 @@
         "data-h-earth-public-route=\"functional-landscape\"",
         "data-run8e-ready=\"false\"",
         "id=\"h-earth-current-run8e-module\"",
-        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=renderer-startup-receipt-v1&cb=1529becde512ce95"
+        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=e67ee51f9a34a053"
       ],
       "excludes": [
         "raw.githack.com",
@@ -23,7 +23,7 @@
       "includes": [
         "import '../diagnostic/renderer-startup-observer.v1.js';",
         "await import('../arrival-loader.js');",
-        "await import('./public-live-gpu-integration.run8e-r3e.js');",
+        "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1');",
         "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"
       ],
       "excludes": [
@@ -43,6 +43,27 @@
         "boundedStageActivity:true"
       ],
       "excludes": []
+    },
+    {
+      "path": "/showroom/globe/h-earth/custody/index.html",
+      "includes": [
+        "<title>H-Earth · Renderer Custody Route</title>",
+        "CUSTODY ROUTE ACTIVE",
+        "public-live-gpu-integration.run8e-r3e.custody-route.js?v=dedicated-custody-v1"
+      ],
+      "excludes": [
+        "raw.githack.com"
+      ]
+    },
+    {
+      "path": "/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.custody-route-v1.js",
+      "includes": [
+        "const rendererCustodyRequested = true;",
+        "const selectedRendererPath = RENDERER_CUSTODY_RENDERER_PATH;"
+      ],
+      "excludes": [
+        "new URLSearchParams(location.search)"
+      ]
     }
   ],
   "runtime": {

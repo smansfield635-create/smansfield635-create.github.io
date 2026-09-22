@@ -1,5 +1,9 @@
 import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
 
+const OCEAN_PROOF_QUERY_KEY = 'ocean-proof';
+const OCEAN_PROOF_QUERY_VALUE = 'v1';
+const OCEAN_PROOF_RENDERER_PATH =
+  '../../render/persistent-live-renderer.run8e-r3c.ocean-expression-proof-v1.js';
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
@@ -18,13 +22,17 @@ const locationSearch =
     ? globalThis.location.search
     : '';
 const queryParameters = new URLSearchParams(locationSearch);
+const oceanProofRequested =
+  queryParameters.get(OCEAN_PROOF_QUERY_KEY) === OCEAN_PROOF_QUERY_VALUE;
 const additiveVisualRequested =
   queryParameters.get(ADDITIVE_VISUAL_QUERY_KEY) ===
   ADDITIVE_VISUAL_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const selectedRendererPath = additiveVisualRequested
+const selectedRendererPath = oceanProofRequested
+  ? OCEAN_PROOF_RENDERER_PATH
+  : additiveVisualRequested
   ? ADDITIVE_VISUAL_RENDERER_PATH
   : cp2LiveDifferentialRequested
     ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH
@@ -35,6 +43,9 @@ const { createHEarthRun8ER3CPersistentRenderer } = selectedRendererModule;
 export const H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID =
   'H_EARTH_RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_BINDING_v1';
 export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
+  oceanProofRequested,
+  oceanProofQueryKey: OCEAN_PROOF_QUERY_KEY,
+  oceanProofQueryValue: OCEAN_PROOF_QUERY_VALUE,
   additiveVisualRequested,
   additiveVisualQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
   additiveVisualQueryValue: ADDITIVE_VISUAL_QUERY_VALUE,
@@ -47,7 +58,7 @@ export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
     : null,
   rendererPath: selectedRendererPath,
   acceptedBaselineRendererSelected:
-    !additiveVisualRequested && !cp2LiveDifferentialRequested
+    !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested
 });
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -239,6 +250,9 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       eligible: true,
       status: 'RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE',
       bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,
+      oceanProofRequested,
+      oceanProofQueryKey: OCEAN_PROOF_QUERY_KEY,
+      oceanProofQueryValue: OCEAN_PROOF_QUERY_VALUE,
       additiveVisualRequested,
       additiveVisualQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
       additiveVisualQueryValue: ADDITIVE_VISUAL_QUERY_VALUE,
@@ -281,10 +295,11 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         rendererIdentityMutated: false,
         renderPackageMutated: false,
         deploymentPerformed: false,
+        oceanProofCandidateRequested: oceanProofRequested,
         additiveVisualCandidateRequested: additiveVisualRequested,
         cp2DifferentialCandidateRequested: cp2LiveDifferentialRequested,
         acceptedBaselineRendererSelected:
-          !additiveVisualRequested && !cp2LiveDifferentialRequested,
+          !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested,
         r3D4WorkStarted: false,
         run8EPassClosed: false
       },

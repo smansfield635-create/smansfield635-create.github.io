@@ -226,6 +226,16 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "GEN311_RELIEF_CORRESPONDENCE_ARTIFACT"
+    },
+    "H_EARTH_CAMERA_TERRAIN_SCALE_AUDIT": {
+      "workflow": "h-earth-camera-terrain-scale-audit-v1.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "CAMERA_TERRAIN_SCALE_ARTIFACT"
     }
   },
   "continuity": {

@@ -1,10 +1,6 @@
 name: Shared Current-Head Pages Publisher
 
 on:
-  workflow_run:
-    workflows: ['Cloudflare Analytics Read-Only Bridge']
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
     inputs:
       surface_id:
@@ -24,11 +20,6 @@ concurrency:
 
 jobs:
   dispatch-current-head:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.head_branch == 'main' &&
-       github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     steps:
       - name: Dispatch sole normal production authority

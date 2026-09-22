@@ -400,46 +400,46 @@ const STAGES=[
 
 const BANK={
 2:[
- {id:"s2a",q:"Choose the best meaning of “borrow.”",o:["Give something away forever","Use something and return it","Buy something cheaply","Break something"],a:1,node:"everyday concept"},
- {id:"s2b",q:"Which sentence uses “before” correctly?",o:["I before dinner ate.","Wash your hands before dinner.","Before means after.","Dinner before because."],a:1,node:"time relation"},
- {id:"s2c",q:"A form asks for your address. What information belongs there?",o:["Where you live","Your favorite food","Your job title only","A password"],a:0,node:"practical concept"}
+ {evidenceClass:"DIRECT_RECOGNITION",id:"s2a",q:"Choose the best meaning of “borrow.”",o:["Give something away forever","Use something and return it","Buy something cheaply","Break something"],a:1,node:"everyday concept"},
+ {evidenceClass:"DIRECT_RECOGNITION",id:"s2b",q:"Which sentence uses “before” correctly?",o:["I before dinner ate.","Wash your hands before dinner.","Before means after.","Dinner before because."],a:1,node:"time relation"},
+ {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s2c",q:"A form asks for your address. What information belongs there?",o:["Where you live","Your favorite food","Your job title only","A password"],a:0,node:"practical concept"}
 ],
 3:[
- {id:"s3a",q:"Choose the correct form: “I am ___ tired today.”",o:["feel","feels","feeling","felted"],a:2,node:"predictable morphology"},
- {id:"s3b",q:"Which word correctly describes a person who works?",o:["worker","workedly","workness","workful"],a:0,node:"derivational form"},
- {id:"s3c",q:"Complete: “She is ___ the message now.”",o:["read","reads","reading","reader"],a:2,node:"-ing form"}
+ {evidenceClass:"PRODUCTIVE_FORM",id:"s3a",q:"Choose the correct form: “I am ___ tired today.”",o:["feel","feels","feeling","felted"],a:2,node:"progressive form in context"},
+ {evidenceClass:"PRODUCTIVE_FORM",id:"s3b",q:"Which word correctly describes a person who works?",o:["worker","workedly","workness","workful"],a:0,node:"derivational form"},
+ {evidenceClass:"PRODUCTIVE_FORM",id:"s3c",q:"Complete: “She is ___ the message now.”",o:["read","reads","reading","reader"],a:2,node:"-ing form"}
 ],
 4:[
- {id:"s4a",q:"Choose the clearest sentence.",o:["Tomorrow I go school.","I will go to school tomorrow.","School tomorrow go I.","I tomorrow school is."],a:1,node:"sentence order"},
- {id:"s4b",q:"Which sentence expresses quantity correctly?",o:["I need three bottle water.","I need three bottles of water.","I need third water bottle.","I water three."],a:1,node:"grammar + numeration"},
- {id:"s4c",q:"Choose the sentence that clearly asks for help.",o:["Can you help me with this form?","You help form this can.","Form help maybe.","This form are help."],a:0,node:"functional sentence"}
+ {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4a",q:"Choose the clearest sentence.",o:["Tomorrow I go school.","I will go to school tomorrow.","School tomorrow go I.","I tomorrow school is."],a:1,node:"sentence order"},
+ {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4b",q:"Which sentence expresses quantity correctly?",o:["I need three bottle water.","I need three bottles of water.","I need third water bottle.","I water three."],a:1,node:"grammar + numeration"},
+ {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4c",q:"Choose the sentence that clearly asks for help.",o:["Can you help me with this form?","You help form this can.","Form help maybe.","This form are help."],a:0,node:"functional sentence"}
 ],
 5:[
- {id:"s5a",q:"You do not know the word “umbrella.” Which explanation best builds the meaning?",o:["A thing you hold over your head when it rains","A thing for eating soup","A place where cars sleep","A person who teaches math"],a:0,node:"controlled composition"},
- {id:"s5b",q:"Which sentence best paraphrases “The meeting was postponed”?",o:["The meeting was moved to a later time.","The meeting became louder.","The meeting was very short.","The meeting happened twice."],a:0,node:"semantic paraphrase"},
- {id:"s5c",q:"You forget the word “pharmacy.” Which description communicates the idea?",o:["A place where you get medicine","A place where you repair shoes","A person who drives a bus","A type of weather"],a:0,node:"meaning construction"}
+ {evidenceClass:"MEANING_CONSTRUCTION",id:"s5a",q:"You do not know the word “umbrella.” Which explanation best builds the meaning?",o:["A thing you hold over your head when it rains","A thing for eating soup","A place where cars sleep","A person who teaches math"],a:0,node:"controlled composition"},
+ {evidenceClass:"MEANING_CONSTRUCTION",id:"s5b",q:"Which sentence best paraphrases “The meeting was postponed”?",o:["The meeting was moved to a later time.","The meeting became louder.","The meeting was very short.","The meeting happened twice."],a:0,node:"semantic paraphrase"},
+ {evidenceClass:"MEANING_CONSTRUCTION",id:"s5c",q:"You forget the word “pharmacy.” Which description communicates the idea?",o:["A place where you get medicine","A place where you repair shoes","A person who drives a bus","A type of weather"],a:0,node:"meaning construction"}
 ],
 6:[
- {id:"s6a",q:"A notice says: “Payment is due Friday. A late fee begins Saturday.” What should you do to avoid the fee?",o:["Pay by Friday","Wait until Saturday","Ignore the notice","Pay next month"],a:0,node:"practical reading"},
- {id:"s6b",q:"Your manager writes: “Please send the revised file before 2 PM.” What is the required action?",o:["Delete the file","Send the revised file before 2 PM","Call after 2 PM","Wait for another message"],a:1,node:"instruction response"},
- {id:"s6c",q:"A sign says: “Entrance closed. Use the west door.” What should you do?",o:["Wait at the closed entrance","Use the west door","Go home immediately","Call the police"],a:1,node:"context response"}
+ {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6a",q:"A notice says: “Payment is due Friday. A late fee begins Saturday.” What should you do to avoid the fee?",o:["Pay by Friday","Wait until Saturday","Ignore the notice","Pay next month"],a:0,node:"practical reading"},
+ {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6b",q:"Your manager writes: “Please send the revised file before 2 PM.” What is the required action?",o:["Delete the file","Send the revised file before 2 PM","Call after 2 PM","Wait for another message"],a:1,node:"instruction response"},
+ {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6c",q:"A sign says: “Entrance closed. Use the west door.” What should you do?",o:["Wait at the closed entrance","Use the west door","Go home immediately","Call the police"],a:1,node:"context response"}
 ],
 7:[
- {id:"s7a",q:"You have never seen this notice before: “Visitors must check in before entering secured areas.” What does it require?",o:["Visitors may enter anywhere","Visitors must check in first","Only employees may check in","Visitors should leave bags outside"],a:1,node:"unseen transfer"},
- {id:"s7b",q:"A customer writes: “The package arrived damaged, but the item still works.” Which reply best addresses both facts?",o:["Glad it works. Goodbye.","Sorry about the damage. Please send a photo so we can help with replacement or another solution.","Packages are sometimes damaged.","Buy another one."],a:1,node:"unseen practical response"},
- {id:"s7c",q:"A policy says: “Requests received after 5 PM are processed the next business day.” A request arrives at 6 PM Monday. When should processing begin?",o:["Monday morning","Immediately before 5 PM","Tuesday, if it is a business day","Next month"],a:2,node:"unseen rule application"}
+ {evidenceClass:"UNSEEN_TRANSFER",id:"s7a",q:"You have never seen this notice before: “Visitors must check in before entering secured areas.” What does it require?",o:["Visitors may enter anywhere","Visitors must check in first","Only employees may check in","Visitors should leave bags outside"],a:1,node:"unseen transfer"},
+ {evidenceClass:"UNSEEN_TRANSFER",id:"s7b",q:"A customer writes: “The package arrived damaged, but the item still works.” Which reply best addresses both facts?",o:["Glad it works. Goodbye.","Sorry about the damage. Please send a photo so we can help with replacement or another solution.","Packages are sometimes damaged.","Buy another one."],a:1,node:"unseen practical response"},
+ {evidenceClass:"UNSEEN_TRANSFER",id:"s7c",q:"A policy says: “Requests received after 5 PM are processed the next business day.” A request arrives at 6 PM Monday. When should processing begin?",o:["Monday morning","Immediately before 5 PM","Tuesday, if it is a business day","Next month"],a:2,node:"unseen rule application"}
 ],
 8:[
- {id:"s8a",q:"Which response best combines clear meaning, grammar, and practical action?",o:["I not understand form.","I do not understand this section of the form. Could you explain what information it requires?","Form bad explain.","You form me."],a:1,node:"integrated reassessment"},
- {id:"s8b",q:"Choose the strongest paraphrase of “We need evidence before making a final decision.”",o:["We should decide first and look for proof later.","We should verify the facts before deciding.","Achievement is the same as opinion.","A decision never needs information."],a:1,node:"integrated paraphrase"},
- {id:"s8c",q:"A new instruction conflicts with an older instruction. What is the clearest written response?",o:["Ignore both.","Which instruction should I follow? The new message conflicts with the earlier one.","Do whatever.","Old new conflict yes."],a:1,node:"integrated transfer"}
+ {evidenceClass:"INTEGRATED_TRANSFER",id:"s8a",q:"Which response best combines clear meaning, grammar, and practical action?",o:["I not understand form.","I do not understand this section of the form. Could you explain what information it requires?","Form bad explain.","You form me."],a:1,node:"integrated reassessment"},
+ {evidenceClass:"INTEGRATED_TRANSFER",id:"s8b",q:"Choose the strongest paraphrase of “We need evidence before making a final decision.”",o:["We should decide first and look for proof later.","We should verify the facts before deciding.","Achievement is the same as opinion.","A decision never needs information."],a:1,node:"integrated paraphrase"},
+ {evidenceClass:"INTEGRATED_TRANSFER",id:"s8c",q:"A new instruction conflicts with an older instruction. What is the clearest written response?",o:["Ignore both.","Which instruction should I follow? The new message conflicts with the earlier one.","Do whatever.","Old new conflict yes."],a:1,node:"integrated transfer"}
 ]
 };
 
 const EDUCATION_STATE_KEY="dgb.education.phase1.v1";
-let learner={target_language:"English"}, probeStage=2, probeHistory=[], currentQuestionIndex=0, currentSet=[], currentSetScore=0, hintsUsed=0, finalIndependence=null, mixedAnchor=null;
-function saveEducationState(extra={}){try{localStorage.setItem(EDUCATION_STATE_KEY,JSON.stringify({helpLanguage,learner,probeStage,probeHistory,currentQuestionIndex,currentSetScore,hintsUsed,finalIndependence,mixedAnchor,...extra}))}catch(e){}}
-function restoreEducationState(){try{const raw=localStorage.getItem(EDUCATION_STATE_KEY);if(!raw)return null;const s=JSON.parse(raw);if(s.learner)learner=s.learner;if(Number.isInteger(s.probeStage))probeStage=s.probeStage;if(Array.isArray(s.probeHistory))probeHistory=s.probeHistory;if(Number.isInteger(s.currentQuestionIndex))currentQuestionIndex=s.currentQuestionIndex;if(Number.isFinite(s.currentSetScore))currentSetScore=s.currentSetScore;if(Number.isFinite(s.hintsUsed))hintsUsed=s.hintsUsed;if(s.finalIndependence)finalIndependence=s.finalIndependence;if(s.mixedAnchor!==undefined)mixedAnchor=s.mixedAnchor;return s}catch(e){return null}}
+let learner={target_language:"English"}, probeStage=2, probeHistory=[], placementEvidence=[], currentQuestionIndex=0, currentSet=[], currentSetScore=0, currentItemAssisted=false, hintsUsed=0, finalIndependence=null, mixedAnchor=null;
+function saveEducationState(extra={}){try{localStorage.setItem(EDUCATION_STATE_KEY,JSON.stringify({helpLanguage,learner,probeStage,probeHistory,placementEvidence,currentQuestionIndex,currentSetScore,currentItemAssisted,hintsUsed,finalIndependence,mixedAnchor,...extra}))}catch(e){}}
+function restoreEducationState(){try{const raw=localStorage.getItem(EDUCATION_STATE_KEY);if(!raw)return null;const s=JSON.parse(raw);if(s.learner)learner=s.learner;if(Number.isInteger(s.probeStage))probeStage=s.probeStage;if(Array.isArray(s.probeHistory))probeHistory=s.probeHistory;if(Array.isArray(s.placementEvidence))placementEvidence=s.placementEvidence;if(Number.isInteger(s.currentQuestionIndex))currentQuestionIndex=s.currentQuestionIndex;if(Number.isFinite(s.currentSetScore))currentSetScore=s.currentSetScore;if(typeof s.currentItemAssisted==="boolean")currentItemAssisted=s.currentItemAssisted;if(Number.isFinite(s.hintsUsed))hintsUsed=s.hintsUsed;if(s.finalIndependence)finalIndependence=s.finalIndependence;if(s.mixedAnchor!==undefined)mixedAnchor=s.mixedAnchor;return s}catch(e){return null}}
 function clearEducationState(){try{localStorage.removeItem(EDUCATION_STATE_KEY)}catch(e){}}
 
 const qs=s=>document.querySelector(s);
@@ -591,13 +591,13 @@ function beginIndependence(){
  if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
  qs("#intake-validation").textContent="";
  learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
- probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];hintsUsed=0;mixedAnchor=null;
+ probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;
  setStage("test");saveEducationState({stage:"test"});startProbe(probeStage);
 }
 qs("#begin-placement").addEventListener("click",beginIndependence);
 
 function startProbe(stage){
- probeStage=stage;currentSet=(BANK[stage]||BANK[8]).map(x=>({...x}));currentQuestionIndex=0;currentSetScore=0;saveEducationState({stage:"test"});
+ probeStage=stage;currentSet=(BANK[stage]||BANK[8]).map(x=>({...x}));currentQuestionIndex=0;currentSetScore=0;currentItemAssisted=false;saveEducationState({stage:"test"});
  const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;
  qs("#placement-heading").textContent=gateT.testing+" "+stage+": "+STAGES[stage-1].name;
  qs("#placement-copy").textContent=gateT.claimStart;
@@ -607,15 +607,16 @@ function renderQuestion(){
  const item=currentSet[currentQuestionIndex];
  qs("#question-validation").textContent="";
  const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;qs("#question-host").innerHTML='<article class="question-card"><div class="meta"><span class="pill">'+esc(gateT.stage)+' '+probeStage+'</span><span class="pill">'+esc(gateT.question)+' '+(currentQuestionIndex+1)+' '+esc(gateT.of)+' '+currentSet.length+'</span><span class="pill" lang="en">'+item.node+'</span></div><h3 lang="en">'+item.q+'</h3><div class="options">'+item.o.map((x,i)=>'<label class="option"><input type="radio" name="placement-answer" value="'+i+'"><span lang="en">'+x+'</span></label>').join("")+'</div><div id="placement-hint" class="hint" hidden>'+esc(gateT.hintBody)+'</div><div class="button-row"><button class="button-secondary" type="button" id="show-hint">'+esc(gateT.hint)+'</button><button class="button" type="button" id="submit-placement-answer">'+esc(gateT.continue)+'</button></div></article>';
- qs("#show-hint").addEventListener("click",()=>{qs("#placement-hint").hidden=false;hintsUsed++;qs("#show-hint").disabled=true});
+ qs("#show-hint").addEventListener("click",()=>{qs("#placement-hint").hidden=false;if(!currentItemAssisted){hintsUsed++;currentItemAssisted=true}qs("#show-hint").disabled=true});
  qs("#submit-placement-answer").addEventListener("click",submitAnswer);
 }
 function submitAnswer(){
  const chosen=qs('input[name="placement-answer"]:checked');
  if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
  const item=currentSet[currentQuestionIndex], correct=Number(chosen.value)===item.a;
+ placementEvidence.push({stage:probeStage,itemId:item.id,node:item.node,evidenceClass:item.evidenceClass,correct,assisted:currentItemAssisted});
  if(correct)currentSetScore++;
- currentQuestionIndex++;saveEducationState({stage:"test"});
+ currentQuestionIndex++;currentItemAssisted=false;saveEducationState({stage:"test"});
  if(currentQuestionIndex<currentSet.length){renderQuestion();return}
  finishProbe();
 }
@@ -678,26 +679,24 @@ function resolveIndependence(lastScore,resolvedStageOverride=null){
    : [...probeHistory].reverse().find(x=>x.stage===resolvedStageOverride) || probeHistory[probeHistory.length-1];
  const above=current.stage===8 && current.score>=.84;
  const verifiedStage=above?"ABOVE_PHASE_1":current.stage;
- const mastered=Math.round(current.score*3), unresolved=Math.max(0,3-mastered);
- const position=Math.round((mastered/3)*100);
- const consistency=probeHistory.length===1?70:Math.max(55,100-Math.round(Math.abs(probeHistory[probeHistory.length-1].score-probeHistory[0].score)*45));
- const confidence=Math.max(55,Math.min(96,consistency+(probeHistory.length>1?8:0)-(hintsUsed*3)));
+ const demonstrated=current.correct, unresolved=Math.max(0,current.total-current.correct);
  const cycle=supportCycle(current.score);
- const entry=above?{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"}:{stage:"P1S"+current.stage,label:STAGES[current.stage-1].name+" · "+position+"% competency evidence"};
+ const entry=above?{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"}:{stage:"P1S"+current.stage,label:STAGES[current.stage-1].name};
  finalIndependence={
   verified_placement:verifiedStage,
   verified_stage:above?null:"P1S"+current.stage,
-  verified_competency_position:above?"ABOVE_PHASE_1":position,
-  verified_mastery_nodes:mastered,
+  verified_competency_position:above?"ABOVE_PHASE_1":null,
+  demonstrated_nodes:demonstrated,
   unresolved_nodes:unresolved,
   support_cycle:cycle,
   support_dependence:hintsUsed===0?"UNASSISTED_IN_THIS_DEMO":"ASSISTED_HINT_USED",
   placement_score:Math.round(current.score*100),
-  placement_confidence:confidence,
+  placement_confidence:null,
   placement_range:above?"ABOVE_PHASE_1":"PHASE_1",
   demo_range:"PHASE_1_ONLY",
   demo_entry_point:entry,
   probe_history:probeHistory,
+  placement_evidence:placementEvidence,
   claimed_level:learner.claimed_level
  };
  saveEducationState({stage:"result"});renderIndependence();
@@ -706,17 +705,18 @@ function renderIndependence(){
  setStage("result");
  const p=finalIndependence, above=p.verified_placement==="ABOVE_PHASE_1";
  const resolvedStageNumber=above?8:Number(String(p.verified_stage||"P1S2").replace("P1S",""));
- const testedStages=new Set(p.probe_history.map(x=>x.stage));
- const map=STAGES.map((s,i)=>{const n=i+1;const below=!above&&n<resolvedStageNumber;const current=!above&&n===resolvedStageNumber;const tested=testedStages.has(n);return '<article class="stage-card" data-mastered="'+(below&&tested)+'" data-current="'+current+'"><b>'+s.id+'</b><strong>'+s.name+'</strong><span>'+(above?(tested?"Tested during placement":"Below verified range"):current?"Independence boundary":tested?(below?"Demonstrated below boundary":"Tested during placement"):below?"Inferred below placement boundary":"Not established by this placement")+'</span></article>'}).join("");
+ const startName=above?"Advanced Phase 1":STAGES[resolvedStageNumber-1].name;
+ const demonstratedStages=[...new Set(p.probe_history.filter(x=>x.stage<resolvedStageNumber&&x.score>=.5).map(x=>STAGES[x.stage-1].name))];
+ const demonstratedText=above?"The placement evidence exceeded the current Phase 1 range.":demonstratedStages.length?demonstratedStages.join(" · ")+" demonstrated below this boundary.":"No lower stage was directly demonstrated in this traversal.";
+ const assistance=p.placement_evidence.some(x=>x.assisted)?"Some placement evidence used a hint.":"Placement evidence was unassisted.";
+ const traversal=p.probe_history.map(x=>"Stage "+x.stage+": "+x.correct+"/"+x.total).join(" → ");
  qs("#placement-result").innerHTML=
  '<div class="result-grid">'+
- '<article class="result-hero"><span class="eyebrow">Verified Independence</span><strong>'+(above?"Above Phase 1":p.verified_stage+" · "+p.verified_competency_position+"%")+'</strong><span class="result-note">'+(above?"Your demonstrated performance exceeded the current demo range.":"Within-stage position is derived from the competency nodes tested in the resolved boundary set.")+'</span></article>'+
- '<article class="result-hero"><span class="eyebrow">Progress Cycle</span><strong>'+p.support_cycle.replaceAll("_"," ")+'</strong><span class="result-note">This demo estimate uses independent performance, hint use, and reported translation dependence. Final target-only evidence still requires target-only testing.</span></article>'+
- '<article class="result-hero"><span class="eyebrow">Independence Confidence</span><strong>'+p.placement_confidence+'%</strong><span class="result-note">Confidence is a demo signal, not certification.</span></article></div>'+
- (above?'<div class="warning"><strong>Your verified placement remains ABOVE_PHASE_1.</strong> The playable demonstration is still Phase 1, so the demo entry point is an advanced Phase 1 experience rather than a lowered placement.</div>':'')+
- '<div class="grid-3"><article class="metric"><b>Claimed level</b><strong>'+learner.claimed_level+'</strong><span>Orientation only</span></article><article class="metric"><b>Independence score</b><strong>'+p.placement_score+'%</strong><span>Resolved boundary set</span></article><article class="metric"><b>Hint use</b><strong>'+hintsUsed+'</strong><span>'+(hintsUsed?"Assisted evidence recorded":"No hint assistance used")+'</span></article></div>'+
- '<div><p class="eyebrow">Stage Map</p><div class="stage-map">'+map+'</div></div>'+
- '<details><summary>See placement traversal</summary><div class="detail"><p>'+p.probe_history.map(x=>"Stage "+x.stage+": "+x.correct+"/"+x.total).join(" → ")+'</p></div></details>';
+ '<article class="result-hero"><span class="eyebrow">Recommended starting stage</span><strong>'+startName+'</strong><span class="result-note">'+demonstratedText+'</span></article>'+
+ '<article class="result-hero"><span class="eyebrow">Boundary</span><strong>'+(above?"Above Phase 1":STAGES[resolvedStageNumber-1].name)+'</strong><span class="result-note">'+(above?"Continue with advanced evidence rather than lowering the learner.":"This is the first competency boundary not sufficiently demonstrated by the placement traversal.")+'</span></article>'+
+ '<article class="result-hero"><span class="eyebrow">Assistance</span><strong>'+(p.placement_evidence.some(x=>x.assisted)?"ASSISTED":"UNASSISTED")+'</strong><span class="result-note">'+assistance+'</span></article></div>'+
+ '<div class="grid-3"><article class="metric"><b>Self-assessment start</b><strong>Stage '+learner.claimed_level+'</strong><span>Provisional entry only</span></article><article class="metric"><b>Resolved evidence</b><strong>'+p.demonstrated_nodes+'/'+(p.demonstrated_nodes+p.unresolved_nodes)+'</strong><span>Boundary probe items</span></article><article class="metric"><b>Hint use</b><strong>'+hintsUsed+'</strong><span>Recorded per item</span></article></div>'+
+ '<details><summary>See placement traversal</summary><div class="detail"><p>'+traversal+'</p></div></details>';
 }
 function enterDemo(){
  setStage("entry");saveEducationState({stage:"entry"});const p=finalIndependence, above=p.verified_placement==="ABOVE_PHASE_1";
@@ -724,8 +724,8 @@ function enterDemo(){
  qs("#entry-state").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Verified Independence</span><strong>'+p.verified_placement+'</strong><span class="result-note">This record is not rewritten by demo limits.</span></article><article class="result-hero"><span class="eyebrow">Demo Entry</span><strong>'+p.demo_entry_point.stage+'</strong><span class="result-note">'+p.demo_entry_point.label+'</span></article><article class="result-hero"><span class="eyebrow">Progress State</span><strong>'+p.support_cycle.replaceAll("_"," ")+'</strong><span class="result-note">'+p.support_dependence.replaceAll("_"," ")+'</span></article></div><p class="boundary">Runtime initialization would begin from unresolved competency evidence here. Already demonstrated nodes would not be replayed by default.</p>';
 }
 qs("#enter-demo").addEventListener("click",enterDemo);
-qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];hintsUsed=0;mixedAnchor=null});
-qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner={target_language:"English"};finalIndependence=null;probeHistory=[];hintsUsed=0;mixedAnchor=null;setStage("intake")});
+qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null});
+qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner={target_language:"English"};finalIndependence=null;probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;setStage("intake")});
 
 
 /* Gate One — persistent help-language propagation outside target-English evidence. */

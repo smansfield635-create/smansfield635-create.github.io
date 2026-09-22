@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-selector-geometry-ed4613c4-20260922",
+  "capabilityId": "EDUCATION_SELECTOR_GEOMETRY_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "ed4613c422ea3780b087bf6593110bd378daab8f",
+    "base_sha": "46f48def027d92d53d229e57debb966cf89164a6"
   }
 }

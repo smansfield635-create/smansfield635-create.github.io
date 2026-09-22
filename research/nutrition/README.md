@@ -21,6 +21,7 @@ They may share scientific, safety, engineering, governance, manufacturing, and c
 - `MASTER_NUTRITION_RESEARCH_ENGINEERING_PROGRAM_v1.md` — master architecture and recovered program state.
 - `EVIDENCE_STATE_AND_CONSTRUCTION_GATE_v1.md` — evidence-state rules, build gates, and non-drift controls.
 - `program.manifest.v1.json` — machine-readable project identity, objects, matrices, and status.
+- `NUTRITION_DETERMINISTIC_EXECUTION_ROADMAP_v1.md` — locked dependency order, construction gates, and immediate execution sequence.
 
 ## Core program law
 
@@ -34,9 +35,15 @@ They may share scientific, safety, engineering, governance, manufacturing, and c
 
 No breakthrough claim is established by this repository anchor. Human validation, comparator testing, biomarker validation, exact formulation lock, safety reconciliation, mass-volume feasibility, interaction/timing validation, and manufacturing-scale validation remain open where marked.
 
-## Next deterministic artifact
+## Execution roadmap
 
-**MASTER RESEARCH + ENGINEERING DOSSIER**, containing at minimum:
+The durable construction sequence is defined in `NUTRITION_DETERMINISTIC_EXECUTION_ROADMAP_v1.md`.
+
+Current next gate:
+
+**NUTRITION_RESOURCE_ACCESS_RECEIPT_v1**
+
+After access verification, construction proceeds into the Master Research + Engineering Dossier, containing at minimum:
 
 1. Formulation Matrix
 2. Safety + Evidence Matrix

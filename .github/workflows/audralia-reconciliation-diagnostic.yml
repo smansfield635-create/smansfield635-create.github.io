@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'showroom/globe/audralia/**'
+      - 'scripts/audralia-reconciliation-diagnostic.mjs'
+      - '.github/workflows/audralia-reconciliation-diagnostic.yml'
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-action-semantic-qualify-3510f5e5-20260922",
+  "capabilityId": "EDUCATION_ACTION_SEMANTIC_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4237,
+  "requestBranch": "ai-dispatch-request-education-action-semantic-qualify",
+  "requestCommit": "4c763c0eb73abe66c62e87ff81c6e5e47cd982e7",
+  "requestCommitParent": "68974bd8848e9a67fc359990129680d6226017e5",
+  "currentMainSha": "68974bd8848e9a67fc359990129680d6226017e5",
+  "workflow": "education-action-semantic-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "3510f5e52897f713771ab09acc8a0f4e6403cda1",
+    "base_sha": "64ef76376d3abf4e00b45c2193b9deccd19f4809"
+  },
+  "bridgeRunId": "35773118196",
+  "dispatchedRunId": 35773137064,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35773137064",
+  "dispatchedRunHeadSha": "68974bd8848e9a67fc359990129680d6226017e5",
+  "dispatchedAt": "2026-09-22T19:20:19.112Z",
+  "resolvedAt": "2026-09-22T19:20:22.901Z"
+}

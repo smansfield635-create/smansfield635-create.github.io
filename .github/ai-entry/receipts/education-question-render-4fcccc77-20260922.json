@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-question-render-4fcccc77-20260922",
+  "capabilityId": "EDUCATION_QUESTION_RENDER_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4378,
+  "requestBranch": "ai-dispatch-request-education-question-render",
+  "requestCommit": "76e25bcaf164352990034c14eaa94643bc355a85",
+  "requestCommitParent": "7405047fa6096395b00cab159cac47fe712a363d",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7405047fa6096395b00cab159cac47fe712a363d",
+  "workflow": "education-question-render-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "4fcccc771644f278b448e19895582efebe1a81d6",
+    "base_sha": "7a010073b09be4fde80b78e43fcfbfb72508f644"
+  },
+  "bridgeRunId": "35798332636",
+  "dispatchedRunId": 35798358060,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35798358060",
+  "dispatchedRunHeadSha": "7405047fa6096395b00cab159cac47fe712a363d",
+  "dispatchedAt": "2026-09-22T23:38:10.416Z",
+  "resolvedAt": "2026-09-22T23:38:13.631Z"
+}

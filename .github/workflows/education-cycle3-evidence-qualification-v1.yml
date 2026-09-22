@@ -1,0 +1,41 @@
+name: Education Cycle Three Evidence Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify Cycle Three evidence boundary
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          test "$(grep -o 'evidenceClass:' /tmp/e.html | wc -l)" -eq 21
+          for c in DIRECT_RECOGNITION PRODUCTIVE_FORM SENTENCE_CONSTRUCTION MEANING_CONSTRUCTION PRACTICAL_COMPREHENSION UNSEEN_TRANSFER INTEGRATED_TRANSFER; do grep -Fq "$c" /tmp/e.html; done
+          grep -Fq 'placementEvidence.push({stage:probeStage,itemId:item.id,node:item.node,evidenceClass:item.evidenceClass,correct,assisted:currentItemAssisted})' /tmp/e.html
+          grep -Fq 'placement_evidence:placementEvidence' /tmp/e.html
+          grep -Fq 'Recommended starting stage' /tmp/e.html
+          grep -Fq 'first competency boundary not sufficiently demonstrated' /tmp/e.html
+          ! grep -Fq '% competency evidence' /tmp/e.html
+          ! grep -Fq 'reported translation dependence' /tmp/e.html
+          ! grep -Eq '[0-9]+ / 1,001' /tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          const scripts=[...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
+          for(const src of scripts)new Function(src);
+          console.log('JS_PARSE=PASS');
+          NODE
+          echo EDUCATION_CYCLE3_EVIDENCE_QUALIFICATION=PASS

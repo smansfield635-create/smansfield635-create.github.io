@@ -73,7 +73,7 @@ jobs:
             done
           done
           mkdir -p /tmp/hearth-ab-evidence
-          cat > /tmp/hearth-ab-run.mjs <<'NODE'
+          cat > h-earth-ab-run.mjs <<'NODE'
           import fs from 'node:fs/promises';
           import crypto from 'node:crypto';
           import { chromium } from 'playwright';
@@ -124,9 +124,10 @@ jobs:
           await fs.writeFile(`${out}/receipt.json`,JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           NODE
-          node /tmp/hearth-ab-run.mjs
+          node h-earth-ab-run.mjs
 
       - name: Upload physical-inspection evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-exact-public-corridor-ab-${{ inputs.target_sha }}

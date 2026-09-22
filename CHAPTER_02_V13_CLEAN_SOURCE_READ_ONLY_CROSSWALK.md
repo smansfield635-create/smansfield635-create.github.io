@@ -27,15 +27,52 @@ A clean predecessor is admitted only as a source for the underlying moving pictu
 
 ## Read-only acceptance matrix
 
-| v13 typography state | Required result | Disposition |
-| --- | --- | --- |
-| `WHAT MAKES SOMETHING REAL?` | Clean moving source corresponding to the exact v13 planetary state | UNRESOLVED |
-| `WHAT WASN’T BEFORE` | Clean corresponding geography/approach state | UNRESOLVED |
-| `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | UNRESOLVED |
-| `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | UNRESOLVED |
-| `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | UNRESOLVED |
-| `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | UNRESOLVED |
-| `DiamondGateBridge.com` | Clean corresponding final moving universal state | UNRESOLVED |
+| Row | v13 typography state | Required result | Disposition |
+| ---: | --- | --- | --- |
+| 1 | `WHAT MAKES SOMETHING REAL?` | Clean moving source corresponding to the exact v13 planetary state | **SOURCE_GAP** |
+| 2 | `WHAT WASN’T BEFORE` | Clean corresponding geography/approach state | UNRESOLVED |
+| 3 | `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | UNRESOLVED |
+| 4 | `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | UNRESOLVED |
+| 5 | `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | UNRESOLVED |
+| 6 | `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | UNRESOLVED |
+| 7 | `DiamondGateBridge.com` | Clean corresponding final moving universal state | UNRESOLVED |
+
+Progress: **1 / 7 rows resolved.**
+
+## Row 1 resolution receipt
+
+Typography state:
+`WHAT MAKES SOMETHING REAL?`
+
+Disposition:
+`SOURCE_GAP`
+
+Audit scope included the recovered clean lineage identified as:
+- picture-lock v5
+- picture-lock v8
+- final 42-second review v1
+- Cycle-B owner review
+- final review v4
+- spatial-typography predecessor
+
+Observed v13 authority state:
+- dark-space planetary approach
+- curved atmospheric limb occupies the lower frame
+- exact v13 composition is the required conform target
+
+Observed lineage mismatch:
+- available clean picture-lock lineage at comparable early positions contains the later bright-sky/ocean/horizon approach rather than the v13 dark-space planetary state;
+- final review v4 contains a dark planetary state, but planet scale, position, lighting, camera composition, and surrounding field do not reproduce the v13 authority state;
+- remaining candidates either already contain typography or correspond to the wrong underlying composition.
+
+Decision:
+No inspected clean candidate can currently reproduce the v13 Row 1 underlying moving picture without approximation or shot substitution.
+
+Therefore `EXACT_CLEAN_SOURCE_FOUND` is unsupported and `CONFORMABLE_SOURCE_FOUND` is unsupported.
+
+Row 1 is frozen as `SOURCE_GAP` unless a further clean source for the exact v13 opening state is discovered elsewhere in the Chapter 02 source lineage.
+
+No construction occurred during this resolution.
 
 ## Allowed final dispositions
 
@@ -109,9 +146,13 @@ Old baked typography must not remain underneath replacement typography.
 
 The clean conform master remains BLOCKED until all seven matrix rows have actual evidence-backed dispositions.
 
-The next lawful chain is:
+Additionally, the current Row 1 `SOURCE_GAP` means a complete clean conform cannot be authorized even after Rows 2–7 are resolved unless Row 1 is subsequently upgraded by new exact evidence or a separately authorized strategy explicitly addresses the gap.
 
-`V13 EXACT HASH -> READ-ONLY TEXT-INTERVAL MAP -> CLEAN-SOURCE CROSSWALK -> ALL SEVEN DISPOSITIONS RESOLVED -> CLEAN V13 PICTURE CONFORM -> FRAME/PERCEPTUAL PARITY AUDIT -> FREEZE CLEAN CONFORM -> NEW TYPOGRAPHY -> V14`
+The next lawful read-only action is **Row 2 source comparison**. Row 1 should not be repeatedly re-audited against the same candidates.
+
+The governing chain remains:
+
+`V13 EXACT HASH -> READ-ONLY TEXT-INTERVAL MAP -> CLEAN-SOURCE CROSSWALK -> ALL SEVEN DISPOSITIONS RESOLVED -> GAP DISPOSITION IF ANY -> CLEAN V13 PICTURE CONFORM -> FRAME/PERCEPTUAL PARITY AUDIT -> FREEZE CLEAN CONFORM -> NEW TYPOGRAPHY -> V14`
 
 No downstream stage may be inferred complete from this document.
 
@@ -124,6 +165,11 @@ Clarification: v13 is the editorial/cinematographic conform authority. Clean sou
 ## Current state
 
 READ_ONLY_CROSSWALK_AUTHORITY = FROZEN
+ROWS_RESOLVED = 1
+ROWS_TOTAL = 7
+ROW_1 = SOURCE_GAP
 SEVEN_ROWS_RESOLVED = FALSE
+SOURCE_GAP_PRESENT = TRUE
 CLEAN_CONFORM_AUTHORIZED = FALSE
 V14_AUTHORIZED = FALSE
+NEXT_LAWFUL_ROW = 2

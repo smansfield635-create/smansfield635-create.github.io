@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-22T05:32:53Z",
+  "generatedAt": "2026-09-22T06:46:34Z",
   "window": {
-    "start": "2026-06-24T05:32:53Z",
-    "end": "2026-09-22T05:32:53Z"
+    "start": "2026-06-24T06:46:34Z",
+    "end": "2026-09-22T06:46:34Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -70,19 +70,23 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/products/": {
-        "pageLoads": 102,
-        "visits": 9
-      },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/frontier/energy/battery-coherence-study/": {
+      "/laws/scientific-law/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/scientific-law/battery-heldout-study/": {
+      "/laws/categories/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/products/": {
+        "pageLoads": 102,
+        "visits": 9
+      },
+      "/frontier/energy/battery-coherence-study/": {
         "pageLoads": 20,
         "visits": 0
       },
@@ -91,10 +95,6 @@
         "visits": 3
       },
       "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -110,6 +110,10 @@
         "pageLoads": 161,
         "visits": 9
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 499,
+        "visits": 0
+      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
@@ -118,12 +122,12 @@
         "pageLoads": 141,
         "visits": 35
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 499,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -132,10 +136,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -234,13 +234,13 @@
         "pageLoads": 14,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,

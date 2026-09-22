@@ -30,14 +30,14 @@ A clean predecessor is admitted only as a source for the underlying moving pictu
 | Row | v13 typography state | Required result | Disposition |
 | ---: | --- | --- | --- |
 | 1 | `WHAT MAKES SOMETHING REAL?` | Clean moving source corresponding to the exact v13 planetary state | **SOURCE_GAP** |
-| 2 | `WHAT WASN’T BEFORE` | Clean corresponding geography/approach state | UNRESOLVED |
+| 2 | `WHAT WASN’T BEFORE` | Clean corresponding geography/approach state | **SOURCE_GAP** |
 | 3 | `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | UNRESOLVED |
 | 4 | `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | UNRESOLVED |
 | 5 | `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | UNRESOLVED |
 | 6 | `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | UNRESOLVED |
 | 7 | `DiamondGateBridge.com` | Clean corresponding final moving universal state | UNRESOLVED |
 
-Progress: **1 / 7 rows resolved.**
+Progress: **2 / 7 rows resolved.**
 
 ## Row 1 resolution receipt
 
@@ -71,6 +71,38 @@ No inspected clean candidate can currently reproduce the v13 Row 1 underlying mo
 Therefore `EXACT_CLEAN_SOURCE_FOUND` is unsupported and `CONFORMABLE_SOURCE_FOUND` is unsupported.
 
 Row 1 is frozen as `SOURCE_GAP` unless a further clean source for the exact v13 opening state is discovered elsewhere in the Chapter 02 source lineage.
+
+No construction occurred during this resolution.
+
+## Row 2 resolution receipt
+
+Typography state:
+`WHAT WASN’T BEFORE`
+
+Disposition:
+`SOURCE_GAP`
+
+Read-only comparison scope:
+- frozen v13 authority
+- picture-lock v5
+- picture-lock v8
+- final 42-second review v1
+- final review v4
+- clean source `chapter02-source-25937.mp4`
+
+Observed v13 authority state:
+- the Row 2 text window occurs in the reconstructed planetary/geographic approach immediately before the 16-second H-Earth environmental gate;
+- the conform target therefore requires the same geographic identity, scale progression, crop, motion, and incoming/outgoing composition as v13.
+
+Observed lineage result:
+- the inspected picture-lock/final-review predecessors do not reproduce the same v13 Row 2 underlying geography/approach composition at the required state;
+- the raw clean source provides related Chapter 02 geography but does not establish exact correspondence to the v13 Row 2 edit without creative re-selection/re-timing;
+- no inspected candidate establishes sufficient evidence for exact or bounded deterministic conform while preserving v13 cinematography.
+
+Decision:
+Similarity or thematic continuity is insufficient under the frozen evidence law. `EXACT_CLEAN_SOURCE_FOUND` and `CONFORMABLE_SOURCE_FOUND` are not justified by the currently inspected lineage.
+
+Row 2 is therefore frozen as `SOURCE_GAP` unless further exact clean source evidence is discovered.
 
 No construction occurred during this resolution.
 
@@ -148,7 +180,7 @@ The clean conform master remains BLOCKED until all seven matrix rows have actual
 
 Additionally, the current Row 1 `SOURCE_GAP` means a complete clean conform cannot be authorized even after Rows 2–7 are resolved unless Row 1 is subsequently upgraded by new exact evidence or a separately authorized strategy explicitly addresses the gap.
 
-The next lawful read-only action is **Row 2 source comparison**. Row 1 should not be repeatedly re-audited against the same candidates.
+The next lawful read-only action is **Row 3 source comparison**. Rows 1–2 should not be repeatedly re-audited against the same candidates.
 
 The governing chain remains:
 
@@ -165,11 +197,12 @@ Clarification: v13 is the editorial/cinematographic conform authority. Clean sou
 ## Current state
 
 READ_ONLY_CROSSWALK_AUTHORITY = FROZEN
-ROWS_RESOLVED = 1
+ROWS_RESOLVED = 2
 ROWS_TOTAL = 7
 ROW_1 = SOURCE_GAP
+ROW_2 = SOURCE_GAP
 SEVEN_ROWS_RESOLVED = FALSE
 SOURCE_GAP_PRESENT = TRUE
 CLEAN_CONFORM_AUTHORIZED = FALSE
 V14_AUTHORIZED = FALSE
-NEXT_LAWFUL_ROW = 2
+NEXT_LAWFUL_ROW = 3

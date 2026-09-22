@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-22T02:40:11Z",
+  "generatedAt": "2026-09-22T03:35:52Z",
   "window30d": {
-    "start": "2026-08-23T02:40:11Z",
-    "end": "2026-09-22T02:40:11Z"
+    "start": "2026-08-23T03:35:52Z",
+    "end": "2026-09-22T03:35:52Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-15",
-      "pageLoads": 68
+      "pageLoads": 80
     },
     {
       "date": "2026-09-16",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 50
+      "pageLoads": 54
     }
   ],
   "summary": {
-    "pageLoads": 7077,
-    "botPageLoads": 2423,
-    "nonBotPageLoads": 4654
+    "pageLoads": 7073,
+    "botPageLoads": 2411,
+    "nonBotPageLoads": 4662
   },
   "referrers": [
     {
@@ -140,8 +140,8 @@
     },
     {
       "host": "(none)",
-      "pageLoads": 3102,
-      "visits": 3102
+      "pageLoads": 3099,
+      "visits": 3099
     },
     {
       "host": "www.google.com",
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 23,
-      "visits": 23
+      "pageLoads": 22,
+      "visits": 22
     },
     {
       "host": "m.facebook.com",
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1838,
-      "visits": 1582
+      "pageLoads": 1827,
+      "visits": 1571
     },
     {
       "path": "/showroom/globe/audralia/",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 741,
-      "visits": 741
+      "pageLoads": 740,
+      "visits": 740
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 249,
-      "visits": 69
+      "pageLoads": 254,
+      "visits": 74
     },
     {
       "path": "/evidence/agentic-frontier/",

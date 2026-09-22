@@ -88,6 +88,22 @@
         "timeoutMs": 5000
       },
       {
+        "name": "Return to orbit closes Level 2",
+        "action": {
+          "type": "click",
+          "selector": "#edu-detail-return"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#edu-detail-surface",
+            "name": "hidden",
+            "value": ""
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
         "name": "Start Demo opens language selection",
         "action": {
           "type": "click",

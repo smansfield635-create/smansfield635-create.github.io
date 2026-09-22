@@ -40,9 +40,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/hearth-ab/A /tmp/hearth-ab/B
-          rsync -a --exclude='.git/' ./ /tmp/hearth-ab/A/
-          rsync -a --exclude='.git/' ./ /tmp/hearth-ab/B/
+          mkdir -p /tmp/hearth-ab/A/showroom/globe /tmp/hearth-ab/B/showroom/globe
+          mkdir -p /tmp/hearth-ab/A/h-earth-3d /tmp/hearth-ab/B/h-earth-3d
+          cp -a showroom/globe/h-earth /tmp/hearth-ab/A/showroom/globe/
+          cp -a showroom/globe/h-earth /tmp/hearth-ab/B/showroom/globe/
+          cp -a h-earth-3d/integration /tmp/hearth-ab/A/h-earth-3d/
+          cp -a h-earth-3d/integration /tmp/hearth-ab/B/h-earth-3d/
+          cp -a h-earth-3d/runtime /tmp/hearth-ab/A/h-earth-3d/
+          cp -a h-earth-3d/runtime /tmp/hearth-ab/B/h-earth-3d/
           cp h-earth-3d/inspection/public-corridor-ab/current/compositor.js /tmp/hearth-ab/A/showroom/globe/h-earth/compositor.js
           cp h-earth-3d/inspection/public-corridor-ab/live-target-y/compositor.js /tmp/hearth-ab/B/showroom/globe/h-earth/compositor.js
           cmp --silent /tmp/hearth-ab/A/showroom/globe/h-earth/renderer.js /tmp/hearth-ab/B/showroom/globe/h-earth/renderer.js

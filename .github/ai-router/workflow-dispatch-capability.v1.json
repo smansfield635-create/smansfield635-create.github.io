@@ -158,6 +158,16 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_TERRAIN_SPAN_MEASURE": {
+      "workflow": "h-earth-terrain-span-measurement-v1.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "TERRAIN_SPAN_MEASUREMENT_ARTIFACT"
     }
   },
   "continuity": {

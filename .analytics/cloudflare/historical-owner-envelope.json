@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-22T01:39:34Z",
+  "generatedAt": "2026-09-22T02:40:11Z",
   "window": {
-    "start": "2026-06-24T01:39:34Z",
-    "end": "2026-09-22T01:39:34Z"
+    "start": "2026-06-24T02:40:11Z",
+    "end": "2026-09-22T02:40:11Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4675,
+    "pageLoads": 4688,
     "visits": 1100,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4675,
+        "pageLoads": 4688,
         "visits": 1100
       }
     },
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1038,
+        "pageLoads": 1040,
         "visits": 711
       },
       "/showroom/globe/h-earth/": {
@@ -63,7 +63,7 @@
         "visits": 10
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 33,
+        "pageLoads": 38,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -71,7 +71,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 101,
+        "pageLoads": 102,
         "visits": 9
       },
       "/laws/categories/reality/battery-heldout-study/": {
@@ -115,7 +115,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 138,
+        "pageLoads": 141,
         "visits": 35
       },
       "/showroom/globe/h-earth/awards/": {
@@ -186,13 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -211,7 +211,7 @@
         "visits": 0
       },
       "/gauges/": {
-        "pageLoads": 11,
+        "pageLoads": 12,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -298,13 +298,13 @@
         "pageLoads": 20,
         "visits": 1
       },
-      "/showroom/globe/earth/": {
-        "pageLoads": 5,
-        "visits": 0
-      },
       "/philosophy/": {
         "pageLoads": 1,
         "visits": 1
+      },
+      "/showroom/globe/earth/": {
+        "pageLoads": 5,
+        "visits": 0
       },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
@@ -355,7 +355,7 @@
         "visits": 7
       },
       "/meet-sean-mansfield/": {
-        "pageLoads": 3,
+        "pageLoads": 4,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
@@ -373,7 +373,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3575,
+        "pageLoads": 3588,
         "visits": 0
       },
       "(none)": {

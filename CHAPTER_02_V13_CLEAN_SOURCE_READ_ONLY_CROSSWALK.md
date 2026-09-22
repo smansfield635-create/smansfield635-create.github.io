@@ -255,6 +255,43 @@ Future admission must preserve v13's final moving composition and terminal traje
 
 No construction, masking, removal, approximation, or render occurred during this resolution.
 
+## Gap-disposition audit — upstream custody expansion
+
+Status: ACTIVE / READ-ONLY / MATERIAL NEW EVIDENCE
+
+The completed 7/7 row disposition is retained as the result of the previously inspected lineage, but Rows 1–3 `SOURCE_GAP` dispositions are **not terminal** because additional upstream durable custody has now been discovered outside the previously exhausted production folder.
+
+Newly admitted read-only comparison tier:
+- `chapter02-review-v3-sun-continuity-43s.mp4`
+- `chapter02-review-v2-one-shot-43s.mp4`
+- `diamond-gate-h-earth-audralia-chapter02-successor.mp4`
+- `chapter02-successor-picture-master-40.2s.mp4`
+- segmented `chapter02-planetary-audralia-source-25731` custody set
+
+The first four physical videos are available for read-only comparison. The 25731 set is upstream planetary/Audralia source custody split across five durable binary segments totaling roughly 307 MB and is specifically relevant to the missing opening/geographic states.
+
+### Effect on Rows 1–3
+
+Rows 1–3 remain recorded as `SOURCE_GAP` **against the lineage previously inspected**, but they are reopened for evidence-only reassessment against this newly discovered upstream tier.
+
+This reopening does not authorize construction and does not weaken the evidence law. A row may be upgraded only by evidence establishing exact or deterministically conformable correspondence to v13 outside the baked typography region.
+
+### Lawful next operation
+
+`ROWS 1–3 SOURCE_GAP -> NEW UPSTREAM CUSTODY DISCOVERED -> INSPECT REVIEW v2/v3 + SUCCESSOR/PICTURE MASTER -> RECONSTITUTE/INSPECT 25731 IF NECESSARY -> REASSESS ONLY ROWS 1–3`
+
+No editorial-amendment decision is authorized yet.
+
+Still prohibited:
+- render
+- clean-conform construction
+- v14 construction
+- masking/removal/inpainting/blur/clone
+- approximation
+- shot substitution
+
+The 25731 segmented custody should be reconstituted only if the four newly available physical videos do not resolve the relevant row(s), or if direct inspection of 25731 is required to establish source correspondence.
+
 ## Allowed final dispositions
 
 Each row may resolve to exactly one of:
@@ -329,7 +366,7 @@ The clean conform master remains BLOCKED until all seven matrix rows have actual
 
 Additionally, the current Row 1 `SOURCE_GAP` means a complete clean conform cannot be authorized even after Rows 2–7 are resolved unless Row 1 is subsequently upgraded by new exact evidence or a separately authorized strategy explicitly addresses the gap.
 
-All seven rows are now dispositioned. The next lawful action is a **gap-disposition audit for Rows 1–3** before any clean conform construction. Rows 1–7 should not be repeatedly re-audited against the same candidates.
+All seven rows are dispositioned against the previously inspected lineage. Material new upstream custody has reopened **Rows 1–3 only** for evidence-only reassessment. The next lawful action is inspection of the newly discovered upstream tier, escalating to reconstitution/inspection of 25731 only if necessary.
 
 The governing chain remains:
 
@@ -359,4 +396,6 @@ SEVEN_ROWS_RESOLVED = TRUE
 SOURCE_GAP_PRESENT = TRUE
 CLEAN_CONFORM_AUTHORIZED = FALSE
 V14_AUTHORIZED = FALSE
-NEXT_LAWFUL_ACTION = GAP_DISPOSITION_AUDIT_ROWS_1_3
+NEW_UPSTREAM_CUSTODY_DISCOVERED = TRUE
+ROWS_1_3_TERMINAL_GAPS = FALSE
+NEXT_LAWFUL_ACTION = INSPECT_UPSTREAM_REVIEW_V2_V3_SUCCESSOR_PICTURE_MASTER_THEN_25731_IF_NECESSARY

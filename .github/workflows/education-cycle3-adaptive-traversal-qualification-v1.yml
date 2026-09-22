@@ -1,0 +1,41 @@
+name: Education Cycle Three Adaptive Traversal Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify item-adaptive traversal
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          grep -Fq 'startAdaptiveItem(probeStage,0)' /tmp/e.html
+          grep -Fq 'placementEvidence.push({stage:probeStage,itemId:item.id,node:item.node,evidenceClass:item.evidenceClass,correct,assisted})' /tmp/e.html
+          grep -Fq 'if(confirms)' /tmp/e.html
+          grep -Fq 'startAdaptiveItem(probeStage+1,0)' /tmp/e.html
+          grep -Fq 'startAdaptiveItem(probeStage-1,0)' /tmp/e.html
+          grep -Fq 'adaptiveState.pending={stage:probeStage,correct,assisted,itemId:item.id}' /tmp/e.html
+          grep -Fq 'if(probeStage===8){resolveAdaptiveBoundary("ABOVE");return}' /tmp/e.html
+          grep -Fq 'if(probeStage===2){resolveAdaptiveBoundary(2);return}' /tmp/e.html
+          ! grep -Fq 'if(currentQuestionIndex<currentSet.length){renderQuestion();return}' /tmp/e.html
+          ! grep -Fq 'if(score>=.84 && probeStage<8)' /tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          console.log('JS_PARSE=PASS');
+          NODE
+          echo EDUCATION_CYCLE3_ADAPTIVE_TRAVERSAL_QUALIFICATION=PASS

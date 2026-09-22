@@ -1,8 +1,6 @@
 name: AI Room Authorized Toolset Execution Transport
 
 on:
-  issue_comment:
-    types: [created]
   workflow_dispatch:
     inputs:
       request_json:
@@ -20,8 +18,7 @@ jobs:
   execute-authorized-descriptor:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'issue_comment' &&
-       contains(github.event.comment.body, 'AI_ROOM_EXECUTION_REQUEST_V1') &&
+      (contains(github.event.comment.body, 'AI_ROOM_EXECUTION_REQUEST_V1') &&
        (github.event.comment.author_association == 'OWNER' ||
         github.event.comment.author_association == 'MEMBER' ||
         github.event.comment.author_association == 'COLLABORATOR'))

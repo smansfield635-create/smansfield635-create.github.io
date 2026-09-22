@@ -1,8 +1,12 @@
 name: Public → Private Terminal Closure Carrier v1
 
 on:
-  issue_comment:
-    types: [created]
+  workflow_dispatch:
+    inputs:
+      request_json:
+        description: Closed request routed by Central Issue Comment Router v1
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -25,7 +29,7 @@ jobs:
         id: request
         shell: bash
         env:
-          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_BODY: ${{ inputs.request_json }}
         run: |
           set -euo pipefail
           work="$RUNNER_TEMP/private-terminal-closure"

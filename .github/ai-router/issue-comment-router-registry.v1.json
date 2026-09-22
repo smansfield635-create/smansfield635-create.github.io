@@ -1,6 +1,6 @@
 {
   "schema": "ISSUE_COMMENT_ROUTER_REGISTRY_v1",
-  "status": "PROPOSED_FAIL_CLOSED",
+  "status": "ACTIVE_FAIL_CLOSED",
   "singleGlobalListenerRequired": true,
   "unknownMarkerDisposition": "IGNORE_NO_DISPATCH",
   "routes": [

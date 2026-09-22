@@ -1,5 +1,11 @@
 name: Remote Operation Terminal Closure v1
 on:
+  workflow_dispatch:
+    inputs:
+      request_json:
+        description: Closed request routed by Central Issue Comment Router v1
+        required: true
+        type: string
   pull_request:
     branches: [main]
     paths:
@@ -9,8 +15,6 @@ on:
       - 'tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs'
       - 'tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs'
       - 'tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs'
-  issue_comment:
-    types: [created]
 permissions: {}
 env:
   ROUTE_ID: REMOTE_OPERATION_TERMINAL_CLOSURE_v1
@@ -76,7 +80,6 @@ jobs:
           retention-days: 90
   execute-closure:
     if: >-
-      github.event_name == 'issue_comment' &&
       startsWith(github.event.comment.body, 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1') &&
       (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR')
     runs-on: ubuntu-24.04
@@ -114,7 +117,7 @@ jobs:
       - name: Extract exact closure request
         id: parse
         env:
-          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_BODY: ${{ inputs.request_json }}
         shell: bash
         run: |
           set +e

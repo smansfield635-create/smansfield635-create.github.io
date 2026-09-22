@@ -695,7 +695,8 @@ function resolveIndependence(lastScore,resolvedStageOverride=null){
   placement_range:above?"ABOVE_PHASE_1":"PHASE_1",
   demo_range:"PHASE_1_ONLY",
   demo_entry_point:entry,
-  probe_history:probeHistory,\n  placement_evidence:placementEvidence,
+  probe_history:probeHistory,
+  placement_evidence:placementEvidence,
   claimed_level:learner.claimed_level
  };
  saveEducationState({stage:"result"});renderIndependence();

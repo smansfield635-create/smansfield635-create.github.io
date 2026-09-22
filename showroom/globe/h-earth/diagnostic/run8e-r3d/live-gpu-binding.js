@@ -1,5 +1,9 @@
 import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
 
+const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
+const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
+const RENDERER_CUSTODY_RENDERER_PATH =
+  '../../render/persistent-live-renderer.run8e-r3c.renderer-selection-custody-v1.js';
 const WATER_INDEX_SPAN_QUERY_KEY = 'water-index-span';
 const WATER_INDEX_SPAN_QUERY_VALUE = 'v1';
 const WATER_INDEX_SPAN_RENDERER_PATH =
@@ -30,6 +34,8 @@ const locationSearch =
     ? globalThis.location.search
     : '';
 const queryParameters = new URLSearchParams(locationSearch);
+const rendererCustodyRequested =
+  queryParameters.get(RENDERER_CUSTODY_QUERY_KEY) === RENDERER_CUSTODY_QUERY_VALUE;
 const waterIndexSpanRequested =
   queryParameters.get(WATER_INDEX_SPAN_QUERY_KEY) === WATER_INDEX_SPAN_QUERY_VALUE;
 const waterAttributionRequested =
@@ -42,7 +48,9 @@ const additiveVisualRequested =
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const selectedRendererPath = waterIndexSpanRequested
+const selectedRendererPath = rendererCustodyRequested
+  ? RENDERER_CUSTODY_RENDERER_PATH
+  : waterIndexSpanRequested
   ? WATER_INDEX_SPAN_RENDERER_PATH
   : waterAttributionRequested
   ? WATER_ATTRIBUTION_RENDERER_PATH
@@ -59,6 +67,9 @@ const { createHEarthRun8ER3CPersistentRenderer } = selectedRendererModule;
 export const H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID =
   'H_EARTH_RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_BINDING_v1';
 export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
+  rendererCustodyRequested,
+  rendererCustodyQueryKey: RENDERER_CUSTODY_QUERY_KEY,
+  rendererCustodyQueryValue: RENDERER_CUSTODY_QUERY_VALUE,
   waterIndexSpanRequested,
   waterIndexSpanQueryKey: WATER_INDEX_SPAN_QUERY_KEY,
   waterIndexSpanQueryValue: WATER_INDEX_SPAN_QUERY_VALUE,
@@ -80,7 +91,7 @@ export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
     : null,
   rendererPath: selectedRendererPath,
   acceptedBaselineRendererSelected:
-    !waterIndexSpanRequested && !waterAttributionRequested && !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested
+    !rendererCustodyRequested && !waterIndexSpanRequested && !waterAttributionRequested && !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested
 });
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -272,6 +283,9 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       eligible: true,
       status: 'RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE',
       bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,
+      rendererCustodyRequested,
+      rendererCustodyQueryKey: RENDERER_CUSTODY_QUERY_KEY,
+      rendererCustodyQueryValue: RENDERER_CUSTODY_QUERY_VALUE,
       waterIndexSpanRequested,
       waterIndexSpanQueryKey: WATER_INDEX_SPAN_QUERY_KEY,
       waterIndexSpanQueryValue: WATER_INDEX_SPAN_QUERY_VALUE,
@@ -323,13 +337,14 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         rendererIdentityMutated: false,
         renderPackageMutated: false,
         deploymentPerformed: false,
+        rendererCustodyCandidateRequested: rendererCustodyRequested,
         waterIndexSpanCandidateRequested: waterIndexSpanRequested,
         waterAttributionCandidateRequested: waterAttributionRequested,
         oceanProofCandidateRequested: oceanProofRequested,
         additiveVisualCandidateRequested: additiveVisualRequested,
         cp2DifferentialCandidateRequested: cp2LiveDifferentialRequested,
         acceptedBaselineRendererSelected:
-          !waterIndexSpanRequested && !waterAttributionRequested && !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested,
+          !rendererCustodyRequested && !waterIndexSpanRequested && !waterAttributionRequested && !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested,
         r3D4WorkStarted: false,
         run8EPassClosed: false
       },

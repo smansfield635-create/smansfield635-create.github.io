@@ -66,7 +66,7 @@ void main(){vWorldPosition=aPosition;vNormal=aNormal;vBaseColor=aBaseColorLinear
 const FS = `#version 300 es
 precision highp float;precision highp int;
 in vec3 vWorldPosition;in vec3 vNormal;in vec4 vBaseColor;in vec4 vMaterialParameters;flat in uint vMaterialModelCode;flat in uint vSurfaceClassCode;flat in uint vPrimitiveIndex;flat in uint vRoleCode;
-uniform vec3 uCameraPosition;uniform vec3 uSunDirection;uniform float uSunIntensity;uniform vec3 uSunColor;uniform vec3 uSkyZenithColor;uniform vec3 uSkyHorizonColor;uniform vec3 uGroundHazeColor;uniform float uFogStartDistance;uniform float uFogFalloff;uniform float uMaximumFogFactor;uniform float uDistanceDesaturationStrength;uniform uint uRendererSelectionCustody;out vec4 outColor;
+uniform vec3 uCameraPosition;uniform vec3 uSunDirection;uniform float uSunIntensity;uniform vec3 uSunColor;uniform vec3 uSkyZenithColor;uniform vec3 uSkyHorizonColor;uniform vec3 uGroundHazeColor;uniform float uFogStartDistance;uniform float uFogFalloff;uniform float uMaximumFogFactor;uniform float uDistanceDesaturationStrength;out vec4 outColor;
 float hash21(vec2 p){p=fract(p*vec2(.1031,.11369));p+=dot(p,p.yx+19.19);return fract((p.x+p.y)*p.x);}
 float fbm2(vec2 p){float a=.5,s=0.;for(int i=0;i<4;i++){s+=a*hash21(floor(p));p=p*2.03+vec2(17.1,9.2);a*=.5;}return s;}
 void main(){
@@ -361,7 +361,6 @@ export function createHEarthRun8ER3CPersistentRenderer({
         resources.geometryProgram,
         'uDistanceDesaturationStrength'
       ),
-      rendererSelectionCustody: uniform(resources.geometryProgram, 'uRendererSelectionCustody'),
       depth: uniform(resources.depthProgram, 'uDepth'),
       presentationColor: uniform(resources.presentationProgram, 'uColor')
     };
@@ -388,8 +387,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
       resources.uniforms.distanceDesaturationStrength,
       environment.distanceDesaturationStrength
     );
-    gl.uniform1ui(resources.uniforms.rendererSelectionCustody, 1);
-    counters.staticUniformUpdateCount = 11;
+    counters.staticUniformUpdateCount = 10;
     initialized = true;
     return getResourceReceipt();
   }

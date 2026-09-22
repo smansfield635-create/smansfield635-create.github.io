@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-22T10:32:01Z",
+  "generatedAt": "2026-09-22T11:30:08Z",
   "window30d": {
-    "start": "2026-08-23T10:32:01Z",
-    "end": "2026-09-22T10:32:01Z"
+    "start": "2026-08-23T11:30:08Z",
+    "end": "2026-09-22T11:30:08Z"
   },
   "daily": [
     {
@@ -124,12 +124,12 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 68
+      "pageLoads": 70
     }
   ],
   "summary": {
-    "pageLoads": 7084,
-    "botPageLoads": 2425,
+    "pageLoads": 7086,
+    "botPageLoads": 2427,
     "nonBotPageLoads": 4659
   },
   "referrers": [
@@ -140,8 +140,8 @@
     },
     {
       "host": "(none)",
-      "pageLoads": 3110,
-      "visits": 3110
+      "pageLoads": 3112,
+      "visits": 3112
     },
     {
       "host": "www.google.com",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 966,
-      "visits": 633
+      "pageLoads": 967,
+      "visits": 634
     },
     {
       "path": "/mirror-manor-preview/",

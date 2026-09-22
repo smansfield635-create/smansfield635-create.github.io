@@ -456,7 +456,8 @@ function mountEducationCarousel(){
  document.addEventListener("education-help-language-change",()=>build());
  build();
 }
-applyProductStory();\nmountEducationCarousel();
+applyProductStory();
+mountEducationCarousel();
 qsa("[data-jump-standards]").forEach(b=>b.addEventListener("click",()=>qs("#education-standards-carousel")?.scrollIntoView({behavior:"smooth",block:"start"})));
 
 function activateFace(face){

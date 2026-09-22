@@ -1,0 +1,21 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-terrain-span-f75d87c43302",
+  "capabilityId": "H_EARTH_TERRAIN_SPAN_MEASURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4257,
+  "requestBranch": "ai-dispatch-request-h-earth-terrain-span-f75d87c4",
+  "requestCommit": "23672e767715b6bf23738d2e9dccaf0641c06eb9",
+  "requestCommitParent": "f75d87c43302d58c244045e64200b3b928aded06",
+  "currentMainSha": "f75d87c43302d58c244045e64200b3b928aded06",
+  "workflow": "h-earth-terrain-span-measurement-v1.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "35778923499",
+  "dispatchedRunId": 35778948916,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35778948916",
+  "dispatchedRunHeadSha": "f75d87c43302d58c244045e64200b3b928aded06",
+  "dispatchedAt": "2026-09-22T20:14:13.699Z",
+  "resolvedAt": "2026-09-22T20:14:17.485Z"
+}

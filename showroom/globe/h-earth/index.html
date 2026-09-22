@@ -106,6 +106,19 @@
     </div>
   </main>
 
+  <script id="h-earth-html-deployment-receipt">
+    (() => {
+      const parameters = new URLSearchParams(location.search);
+      if (parameters.get('renderer-custody') !== 'v1') return;
+      const receipt = document.createElement('div');
+      receipt.id = 'h-earth-deployment-receipt';
+      receipt.textContent = 'BUILD: RUN8E-CACHE-COHERENCE-V1';
+      receipt.setAttribute('role', 'status');
+      receipt.style.cssText = 'position:fixed;top:8px;left:8px;z-index:2147483647;padding:8px 10px;background:#ff00c8;color:#000;font:800 12px/1.2 monospace;border:3px solid #ffff00;border-radius:4px;pointer-events:none;';
+      document.documentElement.appendChild(receipt);
+      document.documentElement.dataset.hEarthDeploymentReceipt = 'RUN8E-CACHE-COHERENCE-V1';
+    })();
+  </script>
   <script id="h-earth-presentation-candidate-gates">
     (() => {
       const parameters = new URLSearchParams(location.search);

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-22T06:46:34Z",
+  "generatedAt": "2026-09-22T07:35:38Z",
   "window30d": {
-    "start": "2026-08-23T06:46:34Z",
-    "end": "2026-09-22T06:46:34Z"
+    "start": "2026-08-23T07:35:38Z",
+    "end": "2026-09-22T07:35:38Z"
   },
   "daily": [
     {
@@ -124,12 +124,12 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 60
+      "pageLoads": 62
     }
   ],
   "summary": {
-    "pageLoads": 7076,
-    "botPageLoads": 2417,
+    "pageLoads": 7078,
+    "botPageLoads": 2419,
     "nonBotPageLoads": 4659
   },
   "referrers": [
@@ -140,8 +140,8 @@
     },
     {
       "host": "(none)",
-      "pageLoads": 3102,
-      "visits": 3102
+      "pageLoads": 3104,
+      "visits": 3104
     },
     {
       "host": "www.google.com",
@@ -177,32 +177,32 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1773,
-      "visits": 1526
+      "pageLoads": 1827,
+      "visits": 1571
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 951,
-      "visits": 620
+      "pageLoads": 963,
+      "visits": 630
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 729,
-      "visits": 729
+      "pageLoads": 740,
+      "visits": 740
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 716,
-      "visits": 20
+      "pageLoads": 702,
+      "visits": 12
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 292,
-      "visits": 85
+      "pageLoads": 251,
+      "visits": 71
     },
     {
       "path": "/evidence/agentic-frontier/",
-      "pageLoads": 181,
+      "pageLoads": 183,
       "visits": 30
     },
     {
@@ -212,7 +212,7 @@
     },
     {
       "path": "/index.html",
-      "pageLoads": 145,
+      "pageLoads": 146,
       "visits": 0
     }
   ],

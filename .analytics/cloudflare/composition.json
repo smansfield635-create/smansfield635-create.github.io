@@ -1,40 +1,40 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-22T06:46:34Z",
+  "generatedAt": "2026-09-22T07:35:38Z",
   "window": {
-    "start": "2026-08-23T06:46:34Z",
-    "end": "2026-09-22T06:46:34Z"
+    "start": "2026-08-23T07:35:38Z",
+    "end": "2026-09-22T07:35:38Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1773,
-        "visits": 1526
+        "pageLoads": 1827,
+        "visits": 1571
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 951,
-        "visits": 620
+        "pageLoads": 963,
+        "visits": 630
       },
       {
         "value": "/mirror-manor-preview/",
-        "pageLoads": 729,
-        "visits": 729
+        "pageLoads": 740,
+        "visits": 740
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
-        "pageLoads": 716,
-        "visits": 20
+        "pageLoads": 702,
+        "visits": 12
       },
       {
         "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 292,
-        "visits": 85
+        "pageLoads": 251,
+        "visits": 71
       },
       {
         "value": "/evidence/agentic-frontier/",
-        "pageLoads": 181,
+        "pageLoads": 183,
         "visits": 30
       },
       {
@@ -44,7 +44,7 @@
       },
       {
         "value": "/index.html",
-        "pageLoads": 145,
+        "pageLoads": 146,
         "visits": 0
       },
       {
@@ -54,37 +54,37 @@
       },
       {
         "value": "/characters/",
-        "pageLoads": 110,
+        "pageLoads": 111,
         "visits": 70
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 100,
+        "pageLoads": 101,
         "visits": 33
       },
       {
         "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
-        "pageLoads": 91,
+        "pageLoads": 81,
         "visits": 44
       },
       {
         "value": "/about/",
-        "pageLoads": 73,
-        "visits": 10
+        "pageLoads": 70,
+        "visits": 11
       },
       {
         "value": "/showroom/globe/h-earth/diagnostic/",
-        "pageLoads": 67,
+        "pageLoads": 68,
         "visits": 2
       },
       {
         "value": "/evidence/",
-        "pageLoads": 63,
+        "pageLoads": 64,
         "visits": 15
       },
       {
         "value": "/showroom/globe/hearth/diagnostic/",
-        "pageLoads": 61,
+        "pageLoads": 63,
         "visits": 0
       },
       {
@@ -113,14 +113,14 @@
         "visits": 30
       },
       {
+        "value": "/analytics/",
+        "pageLoads": 43,
+        "visits": 30
+      },
+      {
         "value": "/door/",
         "pageLoads": 42,
         "visits": 10
-      },
-      {
-        "value": "/analytics/",
-        "pageLoads": 42,
-        "visits": 29
       },
       {
         "value": "/laws/",
@@ -149,13 +149,23 @@
       },
       {
         "value": "/build/",
-        "pageLoads": 36,
+        "pageLoads": 37,
         "visits": 14
       },
       {
         "value": "/instruments/",
-        "pageLoads": 34,
+        "pageLoads": 36,
         "visits": 1
+      },
+      {
+        "value": "/campaigns/consider-the-energy/jen-leney/",
+        "pageLoads": 32,
+        "visits": 10
+      },
+      {
+        "value": "/campaigns/rob/",
+        "pageLoads": 31,
+        "visits": 5
       },
       {
         "value": "/products/on-your-side-ai/",
@@ -183,14 +193,14 @@
         "visits": 0
       },
       {
-        "value": "/campaigns/consider-the-energy/jen-leney/",
-        "pageLoads": 30,
-        "visits": 10
-      },
-      {
         "value": "/products/archcoin/receivable/",
         "pageLoads": 28,
         "visits": 0
+      },
+      {
+        "value": "/showroom/globe/audralia/diagnostic/",
+        "pageLoads": 22,
+        "visits": 10
       },
       {
         "value": "/governance/",
@@ -203,24 +213,14 @@
         "visits": 21
       },
       {
-        "value": "/showroom/globe/audralia/diagnostic/",
+        "value": "/showroom/",
         "pageLoads": 21,
-        "visits": 10
+        "visits": 0
       },
       {
         "value": "/home/",
         "pageLoads": 21,
         "visits": 1
-      },
-      {
-        "value": "/campaigns/rob/",
-        "pageLoads": 21,
-        "visits": 10
-      },
-      {
-        "value": "/showroom/",
-        "pageLoads": 20,
-        "visits": 0
       },
       {
         "value": "/laws/categories/flow/handoffs/",
@@ -268,24 +268,24 @@
         "visits": 6
       },
       {
+        "value": "/campaigns/wave/",
+        "pageLoads": 17,
+        "visits": 0
+      },
+      {
         "value": "/analytics-owner-device/",
         "pageLoads": 17,
         "visits": 17
       },
       {
+        "value": "/showroom/globe/earth/",
+        "pageLoads": 16,
+        "visits": 1
+      },
+      {
         "value": "/meet-sean-mansfield/",
         "pageLoads": 15,
         "visits": 0
-      },
-      {
-        "value": "/campaigns/wave/",
-        "pageLoads": 14,
-        "visits": 0
-      },
-      {
-        "value": "/showroom/globe/earth/",
-        "pageLoads": 14,
-        "visits": 1
       },
       {
         "value": "/gauges/",
@@ -299,6 +299,11 @@
       },
       {
         "value": "/showroom/globe/audralia/disposition/",
+        "pageLoads": 11,
+        "visits": 0
+      },
+      {
+        "value": "/nine-summits-of-love/",
         "pageLoads": 11,
         "visits": 0
       },
@@ -379,8 +384,23 @@
       },
       {
         "value": "/showroom/globe/hearth/",
-        "pageLoads": 3,
+        "pageLoads": 5,
         "visits": 0
+      },
+      {
+        "value": "/campaigns/wave/mr-lee/",
+        "pageLoads": 2,
+        "visits": 0
+      },
+      {
+        "value": "/elara/index.html",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
+        "value": "/philosophy/",
+        "pageLoads": 1,
+        "visits": 1
       },
       {
         "value": "/evidence/agentic-frontier/reproduction/same-state-different-future/",
@@ -389,11 +409,6 @@
       },
       {
         "value": "/campaigns/wave/thai-boxing/",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
-        "value": "/campaigns/wave/mr-lee/",
         "pageLoads": 1,
         "visits": 0
       },
@@ -416,11 +431,6 @@
         "value": "/showroom/globe/",
         "pageLoads": 1,
         "visits": 1
-      },
-      {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 1,
-        "visits": 0
       },
       {
         "value": "/analytics-owner-device/heartbeat/a9-1/",
@@ -446,8 +456,8 @@
       },
       {
         "value": "(none)",
-        "pageLoads": 3102,
-        "visits": 3102
+        "pageLoads": 3104,
+        "visits": 3104
       },
       {
         "value": "www.google.com",
@@ -483,8 +493,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 7016,
-        "visits": 3711
+        "pageLoads": 7018,
+        "visits": 3713
       },
       {
         "value": "JP",
@@ -525,8 +535,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2830,
-        "visits": 2675
+        "pageLoads": 2832,
+        "visits": 2677
       },
       {
         "value": "tablet",
@@ -547,8 +557,8 @@
       },
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2417,
-        "visits": 2296
+        "pageLoads": 2419,
+        "visits": 2298
       },
       {
         "value": "ChromeMobile",
@@ -594,8 +604,8 @@
       },
       {
         "value": "Linux",
-        "pageLoads": 2456,
-        "visits": 2335
+        "pageLoads": 2458,
+        "visits": 2337
       },
       {
         "value": "MacOSX",
@@ -626,15 +636,15 @@
       },
       {
         "value": "1",
-        "pageLoads": 2417,
-        "visits": 2296
+        "pageLoads": 2419,
+        "visits": 2298
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 5201,
-        "visits": 3380
+        "pageLoads": 5203,
+        "visits": 3382
       },
       {
         "value": "reload",
@@ -665,8 +675,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5490,
-        "visits": 3140
+        "pageLoads": 5492,
+        "visits": 3142
       },
       {
         "value": "cache",
@@ -682,15 +692,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 7076,
-        "visits": 3771
+        "pageLoads": 7078,
+        "visits": 3773
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7076,
-        "visits": 3771
+        "pageLoads": 7078,
+        "visits": 3773
       }
     ]
   }

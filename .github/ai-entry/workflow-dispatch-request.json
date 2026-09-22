@@ -1,9 +1,6 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-  "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
-  }
+  "requestId": "h-earth-transform-audit-c88278f1d1a5",
+  "capabilityId": "H_EARTH_NUMERICAL_TRANSFORM_CHAIN_AUDIT",
+  "inputs": {}
 }

@@ -31,13 +31,13 @@ A clean predecessor is admitted only as a source for the underlying moving pictu
 | ---: | --- | --- | --- |
 | 1 | `WHAT MAKES SOMETHING REAL?` | Clean moving source corresponding to the exact v13 planetary state | **SOURCE_GAP** |
 | 2 | `WHAT WASN’T BEFORE` | Clean corresponding geography/approach state | **SOURCE_GAP** |
-| 3 | `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | UNRESOLVED |
+| 3 | `DOESN’T DEFINE WHAT IS POSSIBLE.` | Clean corresponding coastline/environment-transition state | **SOURCE_GAP** |
 | 4 | `THE EXPERIENCE CREATES REALITY.` | Clean corresponding H-Earth traversal state | UNRESOLVED |
 | 5 | `SO WHERE DOES REALITY BEGIN?` | Clean corresponding withdrawal/universal state | UNRESOLVED |
 | 6 | `CONTINUE EXPLORING` | Clean corresponding terminal-resolution state | UNRESOLVED |
 | 7 | `DiamondGateBridge.com` | Clean corresponding final moving universal state | UNRESOLVED |
 
-Progress: **2 / 7 rows resolved.**
+Progress: **3 / 7 rows resolved.**
 
 ## Row 1 resolution receipt
 
@@ -105,6 +105,39 @@ Similarity or thematic continuity is insufficient under the frozen evidence law.
 Row 2 is therefore frozen as `SOURCE_GAP` unless further exact clean source evidence is discovered.
 
 No construction occurred during this resolution.
+
+## Row 3 resolution receipt
+
+Typography state:
+`DOESN’T DEFINE WHAT IS POSSIBLE.`
+
+Disposition:
+`SOURCE_GAP`
+
+Read-only comparison scope:
+- frozen v13 authority
+- picture-lock v5
+- picture-lock v8
+- final 42-second review v1
+- final review v4
+- Cycle-B owner review
+- clean source `chapter02-source-25937.mp4`
+
+Required conform target:
+- exact v13 coastline/environment-transition trajectory during the Row 3 reading window;
+- same coastline/geographic identity, approach direction, scale progression, horizon placement, crop, motion behavior, and transition relationship into the H-Earth environmental state.
+
+Observed lineage result:
+- inspected predecessors contain related coastline and H-Earth approach material but do not establish the same v13 Row 3 trajectory at the required composition and motion state;
+- the clean raw source contains relevant environmental/geographic material but does not establish the exact v13 edit trajectory without creative shot selection, retiming, or approximation;
+- no inspected candidate establishes a bounded deterministic conform provable against v13 outside the baked-text region.
+
+Decision:
+General environment identity is insufficient. Neither `EXACT_CLEAN_SOURCE_FOUND` nor `CONFORMABLE_SOURCE_FOUND` is supported by the available evidence.
+
+Row 3 is frozen as `SOURCE_GAP` unless further exact clean source evidence is discovered.
+
+No construction, masking, removal, approximation, or render occurred during this resolution.
 
 ## Allowed final dispositions
 
@@ -180,7 +213,7 @@ The clean conform master remains BLOCKED until all seven matrix rows have actual
 
 Additionally, the current Row 1 `SOURCE_GAP` means a complete clean conform cannot be authorized even after Rows 2–7 are resolved unless Row 1 is subsequently upgraded by new exact evidence or a separately authorized strategy explicitly addresses the gap.
 
-The next lawful read-only action is **Row 3 source comparison**. Rows 1–2 should not be repeatedly re-audited against the same candidates.
+The next lawful read-only action is **Row 4 source comparison**. Rows 1–3 should not be repeatedly re-audited against the same candidates.
 
 The governing chain remains:
 
@@ -197,12 +230,13 @@ Clarification: v13 is the editorial/cinematographic conform authority. Clean sou
 ## Current state
 
 READ_ONLY_CROSSWALK_AUTHORITY = FROZEN
-ROWS_RESOLVED = 2
+ROWS_RESOLVED = 3
 ROWS_TOTAL = 7
 ROW_1 = SOURCE_GAP
 ROW_2 = SOURCE_GAP
+ROW_3 = SOURCE_GAP
 SEVEN_ROWS_RESOLVED = FALSE
 SOURCE_GAP_PRESENT = TRUE
 CLEAN_CONFORM_AUTHORIZED = FALSE
 V14_AUTHORIZED = FALSE
-NEXT_LAWFUL_ROW = 3
+NEXT_LAWFUL_ROW = 4

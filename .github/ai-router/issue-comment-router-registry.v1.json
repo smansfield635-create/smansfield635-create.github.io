@@ -1,0 +1,68 @@
+{
+  "schema": "ISSUE_COMMENT_ROUTER_REGISTRY_v1",
+  "status": "PROPOSED_FAIL_CLOSED",
+  "singleGlobalListenerRequired": true,
+  "unknownMarkerDisposition": "IGNORE_NO_DISPATCH",
+  "routes": [
+    {
+      "marker": "AI_ROOM_EXECUTION_REQUEST_V1",
+      "workflow": "ai-room-execution-transport.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER",
+        "MEMBER",
+        "COLLABORATOR"
+      ]
+    },
+    {
+      "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+      "workflow": "canonical-operation-intake-transport-v1.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER",
+        "MEMBER",
+        "COLLABORATOR"
+      ],
+      "issueOnly": true
+    },
+    {
+      "marker": "PUBLIC_PRIVATE_SUCCESSOR_EXECUTION_REQUEST_V1",
+      "workflow": "public-private-successor-execution-v1.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER"
+      ]
+    },
+    {
+      "marker": "PRIVATE_TERMINAL_CLOSURE_REQUEST_V1",
+      "workflow": "public-private-terminal-closure-carrier-v1.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER",
+        "MEMBER",
+        "COLLABORATOR"
+      ]
+    },
+    {
+      "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+      "workflow": "remote-operation-terminal-closure-v1.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER",
+        "MEMBER",
+        "COLLABORATOR"
+      ]
+    }
+  ],
+  "invariants": [
+    "EXACTLY_ONE_GLOBAL_ISSUE_COMMENT_LISTENER",
+    "EXACT_MARKER_PREFIX_MATCH",
+    "AUTHENTICATE_BEFORE_DISPATCH",
+    "CLOSED_REGISTERED_WORKFLOW_ONLY",
+    "NO_ARBITRARY_WORKFLOW_PATH",
+    "NO_GENERIC_COMMAND_INPUT",
+    "HANDLER_REVALIDATES_PAYLOAD",
+    "AT_MOST_ONE_HANDLER_PER_COMMENT",
+    "UNKNOWN_MARKER_NO_DISPATCH"
+  ]
+}

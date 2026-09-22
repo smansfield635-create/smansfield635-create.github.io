@@ -1,0 +1,87 @@
+{
+  "program_id": "MASTER_NUTRITION_RESEARCH_ENGINEERING_PROGRAM_v1",
+  "status": "ARCHITECTURE_FORMALIZED_EMPIRICAL_VALIDATION_OPEN",
+  "repository_role": "durable_preconstruction_anchor",
+  "objects": {
+    "OBJECT_A_AMPM": {
+      "name": "AM/PM Personalized Micronutrient System",
+      "empirical_track": "separate",
+      "status": "architecture_developed_formulation_incomplete",
+      "frontier_questions": [
+        "Can useful micronutrient coverage be compressed into a lower-burden AM/PM architecture while preserving safety, tolerability, bioavailability and manufacturability?",
+        "Does deliberate temporal partitioning provide measurable advantage over conventional once-daily supplementation?",
+        "Does bounded personalization provide measurable incremental value beyond a strong common foundation?"
+      ]
+    },
+    "OBJECT_B_BASELINE": {
+      "name": "Baseline Pre-Meal System",
+      "empirical_track": "separate",
+      "status": "concept_developed_final_formulation_not_canonized",
+      "frontier_question": "Can a low-burden pre-meal intervention measurably improve defined meal-transition outcomes relative to appropriate controls?",
+      "historical_design_space": "256-state/recipe architecture preserved as historical design space; one tightly specified formulation must be validated first"
+    }
+  },
+  "required_matrices": [
+    "FORMULATION",
+    "SAFETY_EVIDENCE",
+    "PERSONALIZATION",
+    "MANUFACTURABILITY",
+    "PHYSICAL_DELIVERY_UNIT_BURDEN",
+    "INTERACTION_TIMING",
+    "OUTCOMES_INSTRUMENTS",
+    "VALIDATION_KILL_GATES",
+    "REGULATORY_CLAIMS"
+  ],
+  "manufacturing_transfer_package": [
+    "master_formula_specification",
+    "exact_nutrient_forms",
+    "target_elemental_doses",
+    "target_delivery_forms",
+    "BOM",
+    "supplier_requirements",
+    "COA_requirements",
+    "allergen_requirements",
+    "excipient_specification",
+    "process_constraints",
+    "pilot_batch_specification",
+    "finished_product_specifications",
+    "stability_protocol",
+    "packaging_requirements",
+    "RFQ_package"
+  ],
+  "evidence_states": [
+    "LOCKED",
+    "ENGINEERED",
+    "PROVISIONAL",
+    "REQUIRES_LITERATURE_VALIDATION",
+    "REQUIRES_BENCH_TEST",
+    "REQUIRES_HUMAN_VALIDATION"
+  ],
+  "program_laws": [
+    "ENGINEERING_LOCK_NOT_EQUAL_SCIENTIFIC_FINALITY",
+    "MERCHANDISING_DOES_NOT_GOVERN_SCIENCE",
+    "PROGRAM_MUST_BE_CAPABLE_OF_PROVING_ITSELF_WRONG",
+    "PEDIATRIC_TRACK_IS_SEPARATELY_GOVERNED",
+    "SAFETY_CONSTRAINTS_OUTRANK_PERSONALIZATION",
+    "NO_CROSS_OBJECT_EVIDENCE_TRANSFER_WITHOUT_JUSTIFICATION"
+  ],
+  "validation_ladder": [
+    "LITERATURE_RECONCILIATION",
+    "FORMULATION_ENGINEERING",
+    "EXACT_CHEMICAL_FORM_SELECTION",
+    "SUPPLIER_COA_VERIFICATION",
+    "PHYSICAL_MASS_VOLUME_FEASIBILITY",
+    "BENCH_FEASIBILITY",
+    "BLEND_CONTENT_UNIFORMITY",
+    "STABILITY",
+    "DISSOLUTION_DISINTEGRATION_WHERE_RELEVANT",
+    "FORMAL_SAFETY_REVIEW",
+    "PILOT_HUMAN_TOLERABILITY",
+    "CONTROLLED_HUMAN_VALIDATION",
+    "PERSONALIZATION_VALIDATION",
+    "MANUFACTURING_SCALE_VALIDATION"
+  ],
+  "next_deterministic_artifact": "MASTER_RESEARCH_ENGINEERING_DOSSIER",
+  "breakthrough_claim": "NOT_ESTABLISHED",
+  "construction_gate": "READY_FOR_MATRIX_BUILDING_NOT_SCIENTIFIC_FINALITY"
+}

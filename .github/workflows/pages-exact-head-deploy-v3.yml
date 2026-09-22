@@ -233,10 +233,14 @@ jobs:
           if [ "$REQUESTED_RUNTIME" = "true" ] && [ "$SURFACE_ID" != "audralia" ] && [ "$SURFACE_ID" != "evidence" ]; then
             node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
           fi
-          node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$AUDRALIA_MANIFEST" > "$AUDRALIA_RUNTIME_VERIFICATION"
-          cat "$AUDRALIA_RUNTIME_VERIFICATION"
-          jq -e '.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .surfaceId=="audralia" and .result=="PASS"' "$AUDRALIA_RUNTIME_VERIFICATION" >/dev/null
-          echo "PROTECTED_RUNTIME_SURFACE_CONTINUITY_VERIFIED"
+          if [ "$SURFACE_ID" = "audralia" ]; then
+            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$AUDRALIA_MANIFEST" > "$AUDRALIA_RUNTIME_VERIFICATION"
+            cat "$AUDRALIA_RUNTIME_VERIFICATION"
+            jq -e '.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .surfaceId=="audralia" and .result=="PASS"' "$AUDRALIA_RUNTIME_VERIFICATION" >/dev/null
+            echo "PROTECTED_RUNTIME_SURFACE_CONTINUITY_VERIFIED"
+          else
+            echo "AUDRALIA_RUNTIME_VERIFICATION_SKIPPED_FOR_UNRELATED_SURFACE=$SURFACE_ID"
+          fi
 
       - name: Materialize public Audralia runtime publication receipt
         if: ${{ inputs.surface_id == 'audralia' }}

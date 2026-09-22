@@ -67,7 +67,38 @@ const FS = `#version 300 es
 precision highp float;precision highp int;
 in vec3 vWorldPosition;in vec3 vNormal;in vec4 vBaseColor;in vec4 vMaterialParameters;flat in uint vMaterialModelCode;flat in uint vSurfaceClassCode;flat in uint vPrimitiveIndex;flat in uint vRoleCode;
 uniform vec3 uCameraPosition;uniform vec3 uSunDirection;uniform float uSunIntensity;uniform vec3 uSunColor;uniform vec3 uSkyZenithColor;uniform vec3 uSkyHorizonColor;uniform vec3 uGroundHazeColor;uniform float uFogStartDistance;uniform float uFogFalloff;uniform float uMaximumFogFactor;uniform float uDistanceDesaturationStrength;uniform uint uRendererSelectionCustody;out vec4 outColor;
-void main(){if(uRendererSelectionCustody==1u&&gl_FragCoord.x<72.0&&gl_FragCoord.y<72.0){float checker=mod(floor(gl_FragCoord.x/9.0)+floor(gl_FragCoord.y/9.0),2.0);outColor=vec4(mix(vec3(1.0,0.0,0.78),vec3(1.0,1.0,0.0),checker),1.0);return;}vec3 n=normalize(vNormal),ld=normalize(-uSunDirection);float d=max(dot(n,ld),0.0),a=.30+.08*max(n.y,0.0),rb=vRoleCode==1u?1.05:(vRoleCode==2u?1.15:.92);vec3 lit=max(vBaseColor.rgb,vec3(.004))*(a+d*uSunIntensity*.72)*uSunColor*rb;float dist=length(vWorldPosition-uCameraPosition),fog=clamp((dist-uFogStartDistance)*max(uFogFalloff,.00001),0.0,uMaximumFogFactor),lum=dot(lit,vec3(.2126,.7152,.0722));lit=mix(lit,vec3(lum),clamp(fog*uDistanceDesaturationStrength,0.0,1.0));vec3 atm=mix(uSkyHorizonColor,uSkyZenithColor,clamp(n.y*.5+.5,0.0,1.0));lit=mix(lit,atm,fog*.22);lit=mix(lit,uGroundHazeColor,fog*.78);outColor=vec4(pow(clamp(lit,0.0,1.0),vec3(1.0/2.2)),clamp(vBaseColor.a,.18,1.0));}`;
+float hash21(vec2 p){p=fract(p*vec2(.1031,.11369));p+=dot(p,p.yx+19.19);return fract((p.x+p.y)*p.x);}
+float fbm2(vec2 p){float a=.5,s=0.;for(int i=0;i<4;i++){s+=a*hash21(floor(p));p=p*2.03+vec2(17.1,9.2);a*=.5;}return s;}
+void main(){
+ vec3 n=normalize(vNormal),ld=normalize(-uSunDirection),vd=normalize(uCameraPosition-vWorldPosition);
+ float ndl=max(dot(n,ld),0.0),up=clamp(n.y,0.0,1.0),slope=1.0-up;
+ float rough=clamp(vMaterialParameters.x,0.0,1.0),metal=clamp(vMaterialParameters.y,0.0,1.0);
+ float variation=fbm2(vWorldPosition.xz*.0125);
+ vec3 base=max(vBaseColor.rgb,vec3(.004));
+ bool water=(vRoleCode==2u)||(vSurfaceClassCode==2u);
+ if(water){
+   float fres=pow(1.0-clamp(dot(n,vd),0.0,1.0),3.0);
+   float sparkle=pow(max(dot(normalize(ld+vd),n),0.0),48.0)*(1.0-rough);
+   vec3 deep=base*vec3(.48,.72,.88),sky=mix(uSkyHorizonColor,uSkyZenithColor,.58);
+   base=mix(deep,sky,.18+.42*fres)+uSunColor*sparkle*.34;
+ }else{
+   vec3 soil=base*vec3(.88,.82,.70),green=base*vec3(.72,1.08,.70),rock=base*vec3(.88,.86,.82);
+   base=mix(soil,green,smoothstep(.34,.68,variation));
+   base=mix(base,rock,smoothstep(.28,.72,slope)*(.38+.34*variation));
+   float heightCue=clamp((vWorldPosition.y+18.0)/90.0,0.0,1.0);
+   base=mix(base,base*vec3(.92,.96,1.03),heightCue*.22);
+ }
+ float ambient=.22+.16*up,wrap=clamp((dot(n,ld)+.24)/1.24,0.0,1.0);
+ float role=vRoleCode==1u?1.03:(vRoleCode==2u?1.08:.96);
+ vec3 lit=base*(ambient+wrap*uSunIntensity*.78)*uSunColor*role;
+ float rim=pow(1.0-clamp(dot(n,vd),0.0,1.0),2.0);
+ if(!water)lit+=base*rim*.045;
+ float dist=length(vWorldPosition-uCameraPosition),fog=clamp((dist-uFogStartDistance)*max(uFogFalloff,.00001),0.0,uMaximumFogFactor),lum=dot(lit,vec3(.2126,.7152,.0722));
+ lit=mix(lit,vec3(lum),clamp(fog*uDistanceDesaturationStrength*.72,0.0,1.0));
+ vec3 atm=mix(uSkyHorizonColor,uSkyZenithColor,clamp(n.y*.5+.5,0.0,1.0));
+ lit=mix(lit,atm,fog*.16);lit=mix(lit,uGroundHazeColor,fog*.62);
+ outColor=vec4(pow(clamp(lit,0.0,1.0),vec3(1.0/2.2)),clamp(vBaseColor.a,.22,1.0));
+}`
 const DVS = `#version 300 es
 precision highp float;const vec2 p[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));out vec2 vUv;void main(){vec2 q=p[gl_VertexID];vUv=q*.5+.5;gl_Position=vec4(q,0.,1.);}`;
 const DFS = `#version 300 es

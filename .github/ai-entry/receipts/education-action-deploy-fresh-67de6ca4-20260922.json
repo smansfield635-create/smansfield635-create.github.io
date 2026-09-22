@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "education-action-deploy-fresh-67de6ca4-20260922",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4243,
+  "requestBranch": "ai-dispatch-request-education-action-deploy-fresh-67de6ca4",
+  "requestCommit": "20399edefc588c21d62563b48a1838208a6e8d9a",
+  "currentMainSha": "67de6ca4c92ba82f71f0a97354e15fc50d3c3762",
+  "bridgeRunId": "35775135599",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches: {\"message\":\"Invalid Argument - failed to parse workflow: (Line: 284, Col: 9): 'if' is already defined, (Line: 313, Col: 9): 'if' is already defined, (Line: 321, Col: 9): 'if' is already defined, (Line: 329, Col: 9): 'if' is already defined\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-09-22T19:39:08.696Z"
+}

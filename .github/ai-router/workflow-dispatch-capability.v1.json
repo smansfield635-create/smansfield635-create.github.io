@@ -265,6 +265,25 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "CANONICAL_TERRAIN_MORPHOLOGY_ARTIFACT"
+    },
+    "EDUCATION_CYCLE2_BOUNDARY_QUALIFY": {
+      "workflow": "education-cycle2-boundary-qualification-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false
     }
   },
   "continuity": {

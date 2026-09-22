@@ -255,6 +255,16 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_CANONICAL_TERRAIN_MORPHOLOGY_AUDIT": {
+      "workflow": "h-earth-canonical-terrain-morphology-audit-v1.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "CANONICAL_TERRAIN_MORPHOLOGY_ARTIFACT"
     }
   },
   "continuity": {

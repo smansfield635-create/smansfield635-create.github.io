@@ -612,6 +612,7 @@
       width:100%;
       height:100%;
       object-fit:cover;
+      object-position:50% 24%;
       display:block;
     }
 
@@ -995,6 +996,10 @@
     }
 
     @media (max-width:980px){
+      .portrait{
+        min-height:clamp(28rem,72vw,40rem);
+      }
+
       .topbar{
         grid-template-columns:1fr;
         align-items:start;

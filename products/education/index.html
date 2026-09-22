@@ -126,6 +126,110 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 .edu-revelation{gap:.75rem}.edu-revelation>h4{display:none}.edu-teaching-object{display:none}
 @media(max-width:899px){.edu-spatial-mini{min-height:2.25rem;margin:.3rem 0}.edu-spatial-mini .edu-spatial-node{padding:.22rem .34rem;font-size:.58rem}.edu-spatial-mini .edu-spatial-row{gap:.25rem}}\n@media(max-width:700px){.edu-spatial-routes{grid-template-columns:repeat(2,1fr)}.edu-spatial-instrument[data-geometry="transfer"]{grid-template-columns:1fr;min-height:0}.edu-transfer-line{width:2px;height:3.5rem;background:linear-gradient(180deg,rgba(141,216,255,.25),var(--gold),rgba(167,243,198,.35))}.edu-transfer-line:after{right:auto;left:50%;top:auto;bottom:-.8rem;transform:translateX(-50%) rotate(90deg)}.edu-synthesis-path{grid-template-columns:1fr}.edu-synthesis-path:before{left:50%;right:auto;top:5%;bottom:5%;width:1px;height:auto}.edu-story-bridge__rail:before{display:none}.edu-spatial-instrument[data-geometry="branching"] .edu-spatial-branches{grid-template-columns:1fr}.edu-spatial-instrument[data-geometry="loop"] .edu-spatial-loop{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.edu-spatial-instrument *{animation:none!important;transition:none!important}}
+
+/* Cycle-One Finish v1 — frozen authority #4215 */\n.edu-spatial-instrument[data-attempt="success"][data-geometry="branching"] [data-example-branch="true"]{opacity:.5}
+.edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"]{opacity:.48;border-style:dashed}
+.edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.58;border-style:dashed}
+.edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.58);box-shadow:0 0 0 1px rgba(167,243,198,.12),0 0 1.1rem rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-attempt="success"] [data-result-link="true"]{opacity:1}
+.edu-spatial-instrument[data-attempt="idle"] [data-result-link="true"],.edu-spatial-instrument[data-attempt="retry"] [data-result-link="true"]{opacity:.3}
+.edu-spatial-instrument[data-geometry="branching"][data-attempt="success"] [data-example-branch="true"]{opacity:.45}
+.edu-spatial-instrument[data-geometry="branching"] [data-learner-branch="true"]{border-style:dashed}
+.edu-spatial-instrument[data-geometry="branching"][data-attempt="success"] [data-learner-branch="true"]{border-style:solid;opacity:1;border-color:rgba(167,243,198,.58);box-shadow:0 0 1rem rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="more"]{opacity:1;border-color:rgba(244,207,131,.5)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="independent"]{opacity:.45}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="more"]{opacity:.3}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="independent"]{opacity:1;border-color:rgba(167,243,198,.5)}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="idle"] .edu-transfer-line,.edu-spatial-instrument[data-geometry="transfer"][data-attempt="retry"] .edu-transfer-line{opacity:.3;background:repeating-linear-gradient(90deg,rgba(141,216,255,.38) 0 8px,transparent 8px 15px)}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="success"] .edu-transfer-line{opacity:1}
+.edu-detail-panel{padding:clamp(.8rem,2vw,1.15rem)}
+.edu-detail-top{margin-bottom:.55rem;padding-bottom:.55rem}
+.edu-detail-body{gap:.55rem}
+.edu-detail-step{gap:.6rem}
+.edu-expanded-orientation{margin-bottom:.55rem}
+.edu-revelation>p+ p{margin-top:.1rem}
+.edu-synthesis-path .edu-spatial-node:before{display:block;font-size:.72rem;color:var(--gold);margin-bottom:.18rem}
+.edu-synthesis-path .edu-spatial-node:nth-child(1):before{content:"●"}
+.edu-synthesis-path .edu-spatial-node:nth-child(2):before{content:"＋"}
+.edu-synthesis-path .edu-spatial-node:nth-child(3):before{content:"↗"}
+.edu-synthesis-path .edu-spatial-node:nth-child(4):before{content:"↻"}
+.edu-synthesis-path .edu-spatial-node:nth-child(5):before{content:"⇢"}
+.edu-synthesis-path .edu-spatial-node:nth-child(6):before{content:"⟶"}
+@media(min-width:900px){.edu-story-bridge__rail{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(min-width:600px) and (max-width:899px){
+ .edu-story-bridge__rail{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto auto;gap:1.2rem .4rem}
+ .edu-story-bridge__rail:before{left:16.5%;right:16.5%;top:0;height:calc(100% - .7rem);background:none;border-top:2px solid rgba(141,216,255,.4);border-right:2px solid rgba(141,216,255,.4);border-bottom:2px solid rgba(141,216,255,.4);border-radius:0 1rem 1rem 0}
+ .edu-story-node:nth-child(4){grid-column:3;grid-row:2}.edu-story-node:nth-child(5){grid-column:2;grid-row:2}.edu-story-node:nth-child(6){grid-column:1;grid-row:2}
+}
+@media(max-width:599px){
+ .edu-story-bridge__rail{grid-template-columns:1fr!important;gap:.25rem;padding-left:1.2rem}
+ .edu-story-bridge__rail:before{display:block;left:.3rem;right:auto;top:.35rem;bottom:.35rem;width:2px;height:auto;background:rgba(141,216,255,.4)}
+ .edu-story-node{padding:.55rem .5rem .55rem .8rem}
+ .edu-story-node:before{left:-.9rem;top:50%;transform:translateY(-50%)}
+}
+
+/* Cycle-One Finish v1 — frozen authority #4215 */
+.edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"]{opacity:.48;border-style:dashed}
+.edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.62;border-style:dashed}
+.edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.62);box-shadow:0 0 0 1px rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-attempt="success"] [data-learner-branch="true"]{border-color:rgba(244,207,131,.62);background:rgba(244,207,131,.1);transform:scale(1.035)}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="transformation"] [data-result-node="true"]{border-color:rgba(244,207,131,.62);opacity:1}
+.edu-spatial-instrument[data-attempt="retry"][data-geometry="loop"] .edu-spatial-loop:after{content:"↺";font-size:1.2rem;color:var(--gold);text-align:center;grid-column:1/-1}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="loop"] [data-result-node="true"]{transform:scale(1.035)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="more"]{opacity:1;border-color:rgba(244,207,131,.55)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="independent"]{opacity:.48}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="more"]{opacity:.32}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="independent"]{opacity:1;border-color:rgba(167,243,198,.55)}
+.edu-spatial-instrument[data-attempt="idle"][data-geometry="transfer"] .edu-transfer-line,.edu-spatial-instrument[data-attempt="retry"][data-geometry="transfer"] .edu-transfer-line{opacity:.32;background:repeating-linear-gradient(90deg,rgba(141,216,255,.4) 0 8px,transparent 8px 15px)}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="transfer"] .edu-transfer-line{opacity:1}
+.edu-detail-panel{padding:clamp(.8rem,2vw,1.2rem)}
+.edu-detail-top{margin-bottom:.55rem}
+.edu-detail-body{gap:.55rem}
+.edu-detail-step{gap:.55rem}
+.edu-expanded-orientation{margin-bottom:.55rem}
+.edu-revelation{gap:.55rem}
+.edu-revelation>p:first-of-type{margin-bottom:0}
+.edu-story-bridge__rail{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media(min-width:701px) and (max-width:899px){
+ .edu-story-bridge__rail{grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;row-gap:1.35rem}
+ .edu-story-bridge__rail:before{display:none}
+ .edu-story-node:nth-child(1){grid-column:1;grid-row:1}.edu-story-node:nth-child(2){grid-column:2;grid-row:1}.edu-story-node:nth-child(3){grid-column:3;grid-row:1}
+ .edu-story-node:nth-child(4){grid-column:3;grid-row:2}.edu-story-node:nth-child(5){grid-column:2;grid-row:2}.edu-story-node:nth-child(6){grid-column:1;grid-row:2}
+ .edu-story-node:after{content:"";position:absolute;top:0;left:50%;right:-50%;height:2px;background:rgba(141,216,255,.3);z-index:0}
+ .edu-story-node:nth-child(3):after{left:50%;right:auto;width:2px;height:calc(100% + 1.35rem)}
+ .edu-story-node:nth-child(4):after{left:auto;right:50%;width:50%;height:2px}
+ .edu-story-node:nth-child(6):after{display:none}
+}
+@media(max-width:700px){
+ .edu-story-bridge__rail{display:grid;grid-template-columns:1fr;gap:.2rem}
+ .edu-story-node{padding:.75rem .5rem .75rem 2rem}
+ .edu-story-node:before{left:.55rem;top:50%;transform:translateY(-50%)}
+ .edu-story-node:after{content:"";position:absolute;left:.85rem;top:50%;bottom:-50%;width:2px;background:rgba(141,216,255,.3)}
+ .edu-story-node:last-child:after{display:none}
+}
+.edu-synthesis-path .edu-spatial-node[data-motif="compression"]:before{content:"1,001";font-size:.55rem;color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="transformation"]:before{content:"→";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="branching"]:before{content:"↗";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="loop"]:before{content:"↺";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="support"]:before{content:"⇢";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="transfer"]:before{content:"⟶";color:var(--gold)}
+
+/* Cycle-One Finish v1 — frozen authority #4215 */
+.edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"],.edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.48;border-style:dashed}
+.edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.7);box-shadow:0 0 0 1px rgba(167,243,198,.15),0 0 1.4rem rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-attempt="retry"] [data-attempt-node="true"]{outline:1px dashed rgba(244,207,131,.48);outline-offset:3px}
+.edu-spatial-instrument[data-attempt="success"] [data-learner-node="true"]{border-color:rgba(167,243,198,.72);background:rgba(167,243,198,.09);transform:scale(1.035)}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="idle"] .edu-transfer-line,.edu-spatial-instrument[data-geometry="transfer"][data-attempt="retry"] .edu-transfer-line{opacity:.28}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="success"] .edu-transfer-line{opacity:1;box-shadow:0 0 .8rem rgba(167,243,198,.18)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="more"]{opacity:1;border-color:rgba(244,207,131,.55)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="independent"]{opacity:.45}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="more"]{opacity:.35}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="independent"]{opacity:1;border-color:rgba(167,243,198,.58)}
+.edu-detail-panel{padding:clamp(.85rem,2.2vw,1.35rem)}.edu-detail-top{margin-bottom:.45rem}.edu-detail-body,.edu-detail-step{gap:.55rem}
+@media (min-width:701px) and (max-width:899px){.edu-story-bridge__rail{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,auto);gap:1.1rem .45rem}.edu-story-bridge__rail:before{left:8%;right:8%;top:.05rem;height:calc(100% - .1rem);border-right:2px solid rgba(141,216,255,.34);border-radius:0 1rem 1rem 0}.edu-story-node:nth-child(4){grid-column:3;grid-row:2}.edu-story-node:nth-child(5){grid-column:2;grid-row:2}.edu-story-node:nth-child(6){grid-column:1;grid-row:2}}
+@media(max-width:700px){.edu-story-bridge__rail{grid-template-columns:1fr;gap:.35rem;padding-left:1rem}.edu-story-bridge__rail:before{display:block;left:.28rem;right:auto;top:.4rem;bottom:.4rem;width:2px;height:auto;background:linear-gradient(180deg,rgba(244,207,131,.25),rgba(141,216,255,.45),rgba(167,243,198,.3))}.edu-story-node{padding:.55rem .4rem .55rem 1rem}.edu-story-node:before{left:-.72rem;top:50%;transform:translateY(-50%)}}
+.edu-synthesis-path .edu-spatial-node:after{display:block;margin-top:.2rem;font-size:.5rem;letter-spacing:.04em;color:var(--faint)}.edu-synthesis-path .edu-spatial-node:nth-child(1):after{content:"BOUND"}.edu-synthesis-path .edu-spatial-node:nth-child(2):after{content:"MULTIPLY"}.edu-synthesis-path .edu-spatial-node:nth-child(3):after{content:"BUILD"}.edu-synthesis-path .edu-spatial-node:nth-child(4):after{content:"IMPROVE"}.edu-synthesis-path .edu-spatial-node:nth-child(5):after{content:"LESS HELP"}.edu-synthesis-path .edu-spatial-node:nth-child(6):after{content:"TRANSFER"}
+@media(prefers-reduced-motion:reduce){.edu-spatial-instrument[data-attempt] *{transition:none!important;transform:none!important}}
 </style>
 </head>
 <body>
@@ -389,7 +493,7 @@ const EDUCATION_ARCHITECTURE=[
 ];
 
 function spatialLexicon(){return ({en:{routes:['word changes','sentence patterns','numbers','combinations'],again:'AGAIN',earlier:'Earlier',now:'Now',more:'MORE HELP',less:'LESS HELP',independent:'INDEPENDENT TRY',returnHelp:'← help is still available'},es:{routes:['cambios de palabras','patrones de oraciones','números','combinaciones'],again:'DE NUEVO',earlier:'Antes',now:'Ahora',more:'MÁS AYUDA',less:'MENOS AYUDA',independent:'INTENTO INDEPENDIENTE',returnHelp:'← la ayuda sigue disponible'},zh:{routes:['词形变化','句子规律','数字','组合表达'],again:'再次尝试',earlier:'之前',now:'现在',more:'更多帮助',less:'更少帮助',independent:'独立尝试',returnHelp:'← 仍然可以使用帮助'}}[helpLanguage]||null)||{}}
-function applyProductStory(){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en,X=spatialLexicon();document.querySelectorAll("[data-story]").forEach(el=>{const k=el.dataset.story;if(T[k]!==undefined)el.textContent=T[k]});const hr=document.querySelector("[data-hero-routes]");if(hr)hr.innerHTML=X.routes.map(x=>'<span class="edu-spatial-route">'+x+'</span>').join("");const b=document.querySelector("[data-story-bridge]");if(b)b.innerHTML=T.verbs.map((v,i)=>'<div class="edu-story-node" data-story-index="'+i+'"><b>'+v+'</b><span>'+T.chapters[i]+'</span></div>').join("");const r=document.querySelector("[data-resolution-rail]");if(r)r.innerHTML=T.resolution.map(x=>'<span class="edu-spatial-node">'+x+'</span>').join("")}document.addEventListener("education-help-language-change",applyProductStory);
+function applyProductStory(){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en,X=spatialLexicon();document.querySelectorAll("[data-story]").forEach(el=>{const k=el.dataset.story;if(T[k]!==undefined)el.textContent=T[k]});const hr=document.querySelector("[data-hero-routes]");if(hr)hr.innerHTML=X.routes.map(x=>'<span class="edu-spatial-route">'+x+'</span>').join("");const b=document.querySelector("[data-story-bridge]");if(b)b.innerHTML=T.verbs.map((v,i)=>'<div class="edu-story-node" data-story-index="'+i+'"><b>'+v+'</b><span>'+T.chapters[i]+'</span></div>').join("");const r=document.querySelector("[data-resolution-rail]");if(r){const motifs=["compression","transformation","branching","loop","support","transfer"];r.innerHTML=T.resolution.map((x,i)=>'<span class="edu-spatial-node" data-motif="'+motifs[i]+'">'+x+'</span>').join("")}}document.addEventListener("education-help-language-change",applyProductStory);
 function mountEducationCarousel(){
  const root=qs("[data-edu-carousel]"),track=qs("[data-edu-track]"),viewport=qs("[data-edu-viewport]"),live=qs("[data-edu-live]");
  if(!root||!track||!viewport)return;
@@ -424,7 +528,7 @@ function mountEducationCarousel(){
  };
  const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
  function mini(i){const X=spatialLexicon(),A=x=>'<span class="edu-spatial-node">'+esc(x)+'</span>',L='<span class="edu-spatial-link">→</span>';const rows=[["···","1,001"],["play","-ed","played"],["I like ____","music · dogs · pizza"],["TRY","CHECK","CHANGE",X.again],[X.more,X.less,X.independent],[X.earlier+': play → played',X.now]];return '<div class="edu-spatial-mini" aria-hidden="true"><div class="edu-spatial-row">'+rows[i].map(A).join(L)+'</div></div>'}
- function instrument(i,s){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en,X=spatialLexicon(),A=(x,p)=>'<span class="edu-spatial-node"'+(p?' data-primary="true"':'')+'>'+esc(x)+'</span>',L='<span class="edu-spatial-link" aria-hidden="true">→</span>';if(i===0)return '<div class="edu-spatial-instrument" data-geometry="compression"><div class="edu-spatial-field" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="edu-spatial-row"><span class="edu-spatial-label">'+esc(T.flows[0][0])+'</span>'+L+A('1,001',true)+L+A('I am Sam.')+'</div><p class="edu-revelation__qualifier">'+esc(T.qual[0])+'</p></div>';if(i===1)return '<div class="edu-spatial-instrument" data-geometry="transformation"><div class="edu-spatial-row">'+A('play',true)+L+A('-ed')+L+A('played',true)+'</div><div class="edu-spatial-label">KNOWN WORD + PATTERN = NEW USE</div><div class="edu-spatial-routes">'+X.routes.map(x=>'<span class="edu-spatial-route">'+esc(x)+'</span>').join('')+'</div></div>';if(i===2)return '<div class="edu-spatial-instrument" data-geometry="branching"><div class="edu-spatial-stack">'+A('I like _____.',true)+'<span class="edu-spatial-link">↓</span><div class="edu-spatial-branches">'+['music','dogs','pizza'].map(x=>A(x)).join('')+(s.text?A('I like '+s.text+'.'):'')+'</div></div></div>';if(i===3)return '<div class="edu-spatial-instrument" data-geometry="loop"><div class="edu-spatial-loop">'+A('TRY · She walk.')+A('CHECK')+A('CHANGE · +s')+A('AGAIN · She walks.',true)+'</div><div class="edu-spatial-label">↺</div></div>';if(i===4)return '<div class="edu-spatial-instrument" data-geometry="support" data-help="'+String(s.help)+'"><div class="edu-spatial-row">'+A(X.more)+L+A(X.less)+L+A(X.independent)+'</div><div class="edu-spatial-node" lang="en">hello = a greeting</div><div class="edu-spatial-return">'+esc(X.returnHelp)+'</div></div>';return '<div class="edu-spatial-instrument" data-geometry="transfer"><div class="edu-spatial-stack"><span class="edu-spatial-label">'+esc(X.earlier)+'</span>'+A('play → played',true)+'</div><div class="edu-transfer-line" aria-hidden="true"></div><div class="edu-spatial-stack"><span class="edu-spatial-label">'+esc(X.now)+'</span>'+A(T.flows[5][1],true)+'</div></div>'}
+ function instrument(i,s){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en,X=spatialLexicon(),attempt=s.feedbackState||"idle",A=(x,p,attrs="")=>'<span class="edu-spatial-node"'+(p?' data-primary="true"':'')+(attrs?' '+attrs:'')+'>'+esc(x)+'</span>',L=(result=false)=>'<span class="edu-spatial-link" aria-hidden="true"'+(result?' data-result-link="true"':'')+'>→</span>';if(i===0)return '<div class="edu-spatial-instrument" data-geometry="compression" data-attempt="'+attempt+'"><div class="edu-spatial-field" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="edu-spatial-row"><span class="edu-spatial-label">'+esc(T.flows[0][0])+'</span>'+L()+A("1,001",true)+L(true)+A("I am Sam.",false,'data-result-node="true"')+'</div><p class="edu-revelation__qualifier">'+esc(T.qual[0])+'</p></div>';if(i===1)return '<div class="edu-spatial-instrument" data-geometry="transformation" data-attempt="'+attempt+'"><div class="edu-spatial-row">'+A("play",true)+L()+A("-ed",false,'data-result-node="true"')+L(true)+A("played",true,'data-result-node="true"')+'</div><div class="edu-spatial-label">KNOWN WORD + PATTERN = NEW USE</div><div class="edu-spatial-routes">'+X.routes.map(x=>'<span class="edu-spatial-route">'+esc(x)+'</span>').join("")+'</div></div>';if(i===2)return '<div class="edu-spatial-instrument" data-geometry="branching" data-attempt="'+attempt+'"><div class="edu-spatial-stack">'+A("I like _____.",true)+'<span class="edu-spatial-link">↓</span><div class="edu-spatial-branches">'+["music","dogs","pizza"].map(x=>A(x,false,'data-example-branch="true"')).join("")+(s.text?A("I like "+s.text+".",false,'data-learner-branch="true" data-result-node="true"'):"")+'</div></div></div>';if(i===3)return '<div class="edu-spatial-instrument" data-geometry="loop" data-attempt="'+attempt+'"><div class="edu-spatial-loop">'+A("TRY · She walk.")+A("CHECK")+A("CHANGE · +s")+A("AGAIN · She walks.",true,'data-result-node="true"')+'</div><div class="edu-spatial-label">↺</div></div>';if(i===4)return '<div class="edu-spatial-instrument" data-geometry="support" data-attempt="'+attempt+'" data-help="'+String(s.help)+'"><div class="edu-spatial-row">'+A(X.more,false,'data-support="more"')+L()+A(X.less,false,'data-support="less"')+L()+A(X.independent,false,'data-support="independent" data-result-node="true"')+'</div><div class="edu-spatial-node" lang="en">hello = a greeting</div><div class="edu-spatial-return">'+esc(X.returnHelp)+'</div></div>';return '<div class="edu-spatial-instrument" data-geometry="transfer" data-attempt="'+attempt+'"><div class="edu-spatial-stack"><span class="edu-spatial-label">'+esc(X.earlier)+'</span>'+A("play → played",true)+'</div><div class="edu-transfer-line" data-result-link="true" aria-hidden="true"></div><div class="edu-spatial-stack"><span class="edu-spatial-label">'+esc(X.now)+'</span>'+A(T.flows[5][1],true,'data-result-node="true"')+'</div></div>'}
  function distance(i){let d=i-index;if(d>3)d-=6;if(d<-3)d+=6;return d}
  function cardHTML(c,i){
   const copy=chamberCopy(i),L=labels(),task=tasks[i],s=state[i];
@@ -453,7 +557,7 @@ function mountEducationCarousel(){
   const copy=chamberCopy(i),L=labels(),task=tasks[i],s=state[i];index=i;layout();detailKicker.textContent=(i+1)+" / 6 · "+copy.title;detailTitle.textContent=copy.front;
   let practice=task.type==="choice"?'<div class="edu-card-options">'+task.options.map((o,j)=>'<button type="button" data-detail-choice="'+j+'" aria-pressed="'+(s.choice===j)+'" lang="en">'+esc(o)+'</button>').join("")+'</div>':'<input class="edu-card-input" data-detail-input lang="en" value="'+esc(s.text)+'" placeholder="'+esc(task.placeholder)+'">';
   if(i===4)practice='<button type="button" class="edu-card-help" data-toggle-help>'+esc(s.help?L.hide:L.show)+'</button><p data-help-cue '+(s.help?'':'hidden')+'>'+esc(task.help)+'</p>'+practice;
-  detailReturn.textContent=(HELP_LANGUAGES[helpLanguage]||HELP_LANGUAGES.en).returnOrbit;detailBody.innerHTML='<div class="edu-expanded-card" data-expanded-card data-face="understand"><div class="edu-expanded-orientation" role="tablist" aria-label="'+esc(L.learn)+' / '+esc(L.practice)+'"><button type="button" role="tab" data-show-face="understand" aria-selected="true">'+esc(L.learn)+'</button><span aria-hidden="true">↔</span><button type="button" role="tab" data-show-face="exercise" aria-selected="false">'+esc(L.practice)+'</button></div><div class="edu-expanded-card__inner" data-expanded-inner><section class="edu-expanded-face edu-expanded-face--understand" data-expanded-face="understand" aria-hidden="false"><section class="edu-detail-step edu-revelation"><h3>'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).headlines[i])+'</h3>'+instrument(i,s)+'<p>'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).explain[i])+'</p><p>'+esc(copy.learn)+'</p></section><details class="edu-card-deep"><summary>'+esc(L.why)+'</summary><p>'+esc(deep[i])+'</p></details><div class="edu-expanded-face-switch"><button type="button" data-show-face="exercise">'+esc(L.swipeTry||L.practice+' →')+'</button></div></section><section class="edu-expanded-face edu-expanded-face--exercise" data-expanded-face="exercise" aria-hidden="true"><div data-exercise-spatial>'+instrument(i,s)+'</div><section class="edu-detail-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</section><section class="edu-detail-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-detail-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-detail-feedback role="status" aria-live="polite" data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p></section><div class="edu-expanded-face-switch"><button type="button" data-show-face="understand">← '+esc(L.learn)+'</button></div></section></div></div>';
+  detailReturn.textContent=(HELP_LANGUAGES[helpLanguage]||HELP_LANGUAGES.en).returnOrbit;detailBody.innerHTML='<div class="edu-expanded-card" data-expanded-card data-face="understand"><div class="edu-expanded-orientation" role="tablist" aria-label="'+esc(L.learn)+' / '+esc(L.practice)+'"><button type="button" role="tab" data-show-face="understand" aria-selected="true">'+esc(L.learn)+'</button><span aria-hidden="true">↔</span><button type="button" role="tab" data-show-face="exercise" aria-selected="false">'+esc(L.practice)+'</button></div><div class="edu-expanded-card__inner" data-expanded-inner><section class="edu-expanded-face edu-expanded-face--understand" data-expanded-face="understand" aria-hidden="false"><section class="edu-detail-step edu-revelation"><h3>'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).headlines[i])+'</h3>'+instrument(i,s)+'<p>'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).explain[i])+'</p></section><details class="edu-card-deep"><summary>'+esc(L.why)+'</summary><p>'+esc(deep[i])+'</p></details><div class="edu-expanded-face-switch"><button type="button" data-show-face="exercise">'+esc(L.swipeTry||L.practice+' →')+'</button></div></section><section class="edu-expanded-face edu-expanded-face--exercise" data-expanded-face="exercise" aria-hidden="true"><div data-exercise-spatial>'+instrument(i,s)+'</div><section class="edu-detail-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</section><section class="edu-detail-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-detail-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-detail-feedback role="status" aria-live="polite" data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p></section><div class="edu-expanded-face-switch"><button type="button" data-show-face="understand">← '+esc(L.learn)+'</button></div></section></div></div>';
   detailSurface.hidden=false;document.body.style.overflow="hidden";setExpandedFace("understand",false);detailReturn.focus()
  }
  let expandedFace="understand",expandedDrag=null;

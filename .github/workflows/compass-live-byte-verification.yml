@@ -31,15 +31,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          jobs="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/runs/$UPSTREAM_RUN_ID/jobs")"
-          relevant="$(printf '%s' "$jobs" | jq -r '[.jobs[].steps[]? | select(.name=="Publish surface-aware deployment receipt" and .conclusion=="success")] | length')"
-          if [ "$relevant" -eq 0 ]; then
+          artifacts="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/runs/$UPSTREAM_RUN_ID/artifacts")"
+          receipt_id="$(printf '%s' "$artifacts" | jq -r '[.artifacts[] | select(.name=="publication-surface-receipt" and .expired==false)] | if length==1 then .[0].id else empty end')"
+          if [ -z "$receipt_id" ]; then
             echo "compass_relevant=false" >> "$GITHUB_OUTPUT"
-            echo "COMPASS_VERIFICATION_SKIPPED_NO_SURFACE_RECEIPT"
+            echo "COMPASS_VERIFICATION_SKIPPED_NO_UNIQUE_SURFACE_RECEIPT"
             exit 0
           fi
-          echo "compass_relevant=false" >> "$GITHUB_OUTPUT"
-          echo "COMPASS_VERIFICATION_FAIL_CLOSED_UNTIL_COMPASS_SURFACE_RECEIPT_ROUTING_IS_REGISTERED"
+          mkdir -p /tmp/publication-surface-receipt
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/$receipt_id/zip" > /tmp/publication-surface-receipt.zip
+          unzip -q /tmp/publication-surface-receipt.zip -d /tmp/publication-surface-receipt
+          receipt=/tmp/publication-surface-receipt/publication-surface-receipt.json
+          jq -e --arg runId "$UPSTREAM_RUN_ID" '.schema=="PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1" and .runId==$runId' "$receipt" >/dev/null
+          surface="$(jq -r '.surfaceId' "$receipt")"
+          case "$surface" in
+            compass|manor|brain-gen1-hra)
+              echo "compass_relevant=true" >> "$GITHUB_OUTPUT"
+              echo "COMPASS_VERIFICATION_ADMITTED_SURFACE=$surface"
+              ;;
+            *)
+              echo "compass_relevant=false" >> "$GITHUB_OUTPUT"
+              echo "COMPASS_VERIFICATION_SKIPPED_UNRELATED_SURFACE=$surface"
+              ;;
+          esac
 
       - name: Checkout exact observed main head
         if: steps.scope.outputs.compass_relevant == 'true'

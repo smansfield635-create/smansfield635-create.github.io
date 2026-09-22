@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-22T21:26:52Z",
+  "generatedAt": "2026-09-22T22:29:14Z",
   "window30d": {
-    "start": "2026-08-23T21:26:52Z",
-    "end": "2026-09-22T21:26:52Z"
+    "start": "2026-08-23T22:29:14Z",
+    "end": "2026-09-22T22:29:14Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-15",
-      "pageLoads": 69
+      "pageLoads": 96
     },
     {
       "date": "2026-09-16",
@@ -124,24 +124,24 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 249
+      "pageLoads": 260
     }
   ],
   "summary": {
-    "pageLoads": 7207,
-    "botPageLoads": 2530,
-    "nonBotPageLoads": 4677
+    "pageLoads": 7225,
+    "botPageLoads": 2541,
+    "nonBotPageLoads": 4684
   },
   "referrers": [
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3309,
+      "pageLoads": 3319,
       "visits": 0
     },
     {
       "host": "(none)",
-      "pageLoads": 3228,
-      "visits": 3228
+      "pageLoads": 3236,
+      "visits": 3236
     },
     {
       "host": "www.google.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1872,
-      "visits": 1612
+      "pageLoads": 1881,
+      "visits": 1618
     },
     {
       "path": "/showroom/globe/audralia/",
       "pageLoads": 969,
-      "visits": 634
+      "visits": 633
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 781,
-      "visits": 781
+      "pageLoads": 787,
+      "visits": 787
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 250,
-      "visits": 70
+      "pageLoads": 266,
+      "visits": 86
     },
     {
       "path": "/evidence/agentic-frontier/",
@@ -207,12 +207,12 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 176,
-      "visits": 69
+      "pageLoads": 178,
+      "visits": 70
     },
     {
       "path": "/index.html",
-      "pageLoads": 139,
+      "pageLoads": 140,
       "visits": 0
     }
   ],

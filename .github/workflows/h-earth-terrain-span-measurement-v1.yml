@@ -1,0 +1,22 @@
+name: H-Earth Terrain Span Measurement v1
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Measure canonical terrain span
+        run: node showroom/globe/h-earth/diagnostic/terrain-span-measurement.v1.mjs | tee terrain-span-measurement.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-terrain-span-measurement-${{ github.run_id }}
+          path: terrain-span-measurement.json

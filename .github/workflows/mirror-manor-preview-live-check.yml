@@ -2,6 +2,10 @@ name: Mirror Manor Preview Live Check
 on:
   push:
     branches: [main]
+    paths:
+      - 'mirror-manor-preview/**'
+      - 'assets/manor-blueprint/**'
+      - '.github/workflows/mirror-manor-preview-live-check.yml'
 permissions:
   contents: read
 jobs:

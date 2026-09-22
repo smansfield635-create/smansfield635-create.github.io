@@ -187,6 +187,16 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_NUMERICAL_TRANSFORM_CHAIN_AUDIT": {
+      "workflow": "h-earth-numerical-transform-chain-audit-v1.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "NUMERICAL_TRANSFORM_CHAIN_ARTIFACT"
     }
   },
   "continuity": {

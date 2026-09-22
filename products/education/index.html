@@ -484,13 +484,6 @@ applyProductStory();
 mountEducationCarousel();
 qsa("[data-jump-standards]").forEach(b=>b.addEventListener("click",()=>qs("#education-standards-carousel")?.scrollIntoView({behavior:"smooth",block:"start"})));
 
-function activateFace(face){
- qsa("[data-face]").forEach(b=>{const on=b.dataset.face===face;b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1});
- qs("#public-face").hidden=face!=="public";qs("#technical-face").hidden=face!=="technical";
-}
-qsa("[data-face]").forEach(b=>b.addEventListener("click",()=>activateFace(b.dataset.face)));
-qsa("[data-open-face]").forEach(b=>b.addEventListener("click",()=>activateFace(b.dataset.openFace)));
-
 function setStage(name){
  qsa("[data-demo-stage]").forEach(x=>x.hidden=x.dataset.demoStage!==name);
  const order=["language","intake","test","result","entry"], i=order.indexOf(name);

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-22T14:32:39Z",
+  "generatedAt": "2026-09-22T15:29:51Z",
   "window": {
-    "start": "2026-06-24T14:32:39Z",
-    "end": "2026-09-22T14:32:39Z"
+    "start": "2026-06-24T15:29:51Z",
+    "end": "2026-09-22T15:29:51Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4538,
-    "visits": 1090,
+    "pageLoads": 4697,
+    "visits": 1101,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4538,
-        "visits": 1090
+        "pageLoads": 4697,
+        "visits": 1101
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1030,
-        "visits": 701
+        "pageLoads": 1042,
+        "visits": 713
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 196,
@@ -107,11 +107,11 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 161,
-        "visits": 9
+        "pageLoads": 160,
+        "visits": 8
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 359,
+        "pageLoads": 499,
         "visits": 0
       },
       "/gauges/h-earth/": {
@@ -119,7 +119,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 141,
+        "pageLoads": 143,
         "visits": 35
       },
       "/laws/research/methods-and-models/": {
@@ -258,16 +258,16 @@
         "pageLoads": 15,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 39,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 22,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 11,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 39,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -354,15 +354,15 @@
         "pageLoads": 7,
         "visits": 7
       },
+      "/analytics/": {
+        "pageLoads": 7,
+        "visits": 0
+      },
       "/meet-sean-mansfield/": {
         "pageLoads": 4,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
-      "/analytics/": {
         "pageLoads": 1,
         "visits": 0
       },
@@ -373,16 +373,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 345,
-        "visits": 345
+        "pageLoads": 344,
+        "visits": 344
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3448,
+        "pageLoads": 3596,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 735,
-        "visits": 735
+        "pageLoads": 747,
+        "visits": 747
       },
       "raw.githack.com": {
         "pageLoads": 10,

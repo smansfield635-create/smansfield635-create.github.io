@@ -216,6 +216,16 @@ export function getHEarthCanonicalShorelineZ(worldX) {
     + nestedCoastalRhythm;
 }
 
+function articulatedRidge(worldX,worldZ,cx,cz,rx,rz,amplitude,phase=0){
+  const broad=gaussian(worldX,worldZ,cx,cz,rx,rz,amplitude*0.62);
+  const spineZ=cz+Math.sin((worldX-cx)/Math.max(18,rx*.42)+phase)*Math.max(2.5,rz*.13);
+  const spine=gaussian(worldX,worldZ,cx,spineZ,rx*.78,Math.max(9,rz*.34),amplitude*0.31);
+  const spurA=gaussian(worldX,worldZ,cx-rx*.28,cz+rz*.28,rx*.30,Math.max(8,rz*.28),amplitude*.15);
+  const spurB=gaussian(worldX,worldZ,cx+rx*.32,cz-rz*.22,rx*.34,Math.max(8,rz*.26),amplitude*.13);
+  const drainage=gaussian(worldX,worldZ,cx+rx*.05,cz+rz*.12,Math.max(12,rx*.18),Math.max(7,rz*.20),-amplitude*.11);
+  return broad+spine+spurA+spurB+drainage;
+}
+
 function evaluateRawElevation(worldX, worldZ) {
   const shorelineZ = getHEarthCanonicalShorelineZ(worldX);
   const inlandDistance = shorelineZ - worldZ;
@@ -230,12 +240,12 @@ function evaluateRawElevation(worldX, worldZ) {
   const dune = gaussian(worldX, worldZ, 6, shorelineZ - 34, 190, 22, 5.8);
   const rolling = 1.7 * Math.sin((worldX + 22) / 48) * smoothstep(55, 180, inlandDistance)
     + 1.2 * Math.sin((worldZ + 140) / 29) * smoothstep(70, 200, inlandDistance);
-  const hill = gaussian(worldX, worldZ, 72, -172, 62, 50, 27);
+  const hill = articulatedRidge(worldX, worldZ, 72, -172, 58, 44, 25, 0.4);
 
-  const ridgeEast = gaussian(worldX, worldZ, 148, -224, 66, 34, 38);
-  const ridgeCentral = gaussian(worldX, worldZ, 86, -235, 68, 37, 34);
-  const ridgeWest = gaussian(worldX, worldZ, 18, -226, 76, 43, 29);
-  const ridgeShoulder = gaussian(worldX, worldZ, -52, -208, 82, 52, 21);
+  const ridgeEast = articulatedRidge(worldX, worldZ, 148, -224, 58, 31, 36, 0.2);
+  const ridgeCentral = articulatedRidge(worldX, worldZ, 86, -235, 60, 33, 33, 1.1);
+  const ridgeWest = articulatedRidge(worldX, worldZ, 18, -226, 66, 38, 28, 2.0);
+  const ridgeShoulder = articulatedRidge(worldX, worldZ, -52, -208, 70, 44, 20, 2.7);
   const passEast = gaussian(worldX, worldZ, 119, -226, 19, 23, -14);
   const passCentral = gaussian(worldX, worldZ, 52, -230, 20, 25, -12);
   const receivingBasin = gaussian(worldX, worldZ, 18, -192, 66, 46, -7.5);

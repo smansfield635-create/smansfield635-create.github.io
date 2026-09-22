@@ -1,0 +1,28 @@
+name: Publication Surface Fanout Qualification v1
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Qualify surface routing contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          p=.github/workflows/pages-exact-head-deploy-v3.yml
+          c=.github/workflows/compass-live-byte-verification.yml
+          grep -Fq 'name: publication-surface-receipt' "$p"
+          grep -Fq 'PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1' "$p"
+          grep -Fq 'actions/runs/$UPSTREAM_RUN_ID/artifacts' "$c"
+          grep -Fq 'COMPASS_VERIFICATION_SKIPPED_UNRELATED_SURFACE' "$c"
+          grep -Fq 'compass|manor|brain-gen1-hra)' "$c"
+          python3 - <<'PY'
+          import pathlib
+          c=pathlib.Path('.github/workflows/compass-live-byte-verification.yml').read_text()
+          assert "education" not in c.split('case "$surface" in',1)[1].split('esac',1)[0]
+          print("EDUCATION_EXCLUDED_FROM_COMPASS_FANOUT=PASS")
+          PY
+          echo PUBLICATION_SURFACE_FANOUT_QUALIFICATION=PASS

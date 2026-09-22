@@ -101,10 +101,12 @@ jobs:
               const errors=[];
               page.on('pageerror',e=>errors.push(e.message));
               page.on('console',m=>{if(m.type()==='error') errors.push(m.text())});
+              const requestsFailed=[];
               const responses=[];
+              page.on('requestfailed',request=>requestsFailed.push({url:request.url(),failure:request.failure()}));
               page.on('response',response=>{
                 const u=response.url();
-                if (u.includes('/showroom/globe/h-earth/')) responses.push({url:u,status:response.status(),contentType:response.headers()['content-type']||null});
+                responses.push({url:u,status:response.status(),contentType:response.headers()['content-type']||null});
               });
               await page.goto(c.url,{waitUntil:'networkidle',timeout:180000});
               await page.waitForTimeout(3000);
@@ -119,7 +121,7 @@ jobs:
               const screenshot=`${out}/${c.id}.png`;
               await page.screenshot({path:screenshot,fullPage:true});
               const bytes=await fs.readFile(screenshot);
-              results.push({...c,state,errors,responses,screenshot:`${c.id}.png`,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex')});
+              results.push({...c,state,errors,requestsFailed,responses,screenshot:`${c.id}.png`,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex')});
               await context.close();
             }
           } finally { await browser.close(); }

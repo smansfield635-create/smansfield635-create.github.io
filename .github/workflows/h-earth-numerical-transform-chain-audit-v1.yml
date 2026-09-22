@@ -1,0 +1,15 @@
+name: H-Earth Numerical Transform Chain Audit v1
+on: workflow_dispatch
+permissions: {contents: read}
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/audits/h-earth-numerical-transform-chain-audit.v1.mjs | tee h-earth-transform-chain.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-transform-chain-${{ github.run_id }}
+          path: h-earth-transform-chain.json

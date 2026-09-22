@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-adaptive-traversal-f6987079-v2-20260922",
+  "capabilityId": "EDUCATION_CYCLE3_ADAPTIVE_TRAVERSAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4365,
+  "requestBranch": "ai-dispatch-request-education-adaptive-traversal-v2",
+  "requestCommit": "fd3acce9014157d4bf98f1c74ef72ba3f02aeef2",
+  "requestCommitParent": "98fcdef5e434cfb6256d0fd7f2732092e93d31fc",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "98fcdef5e434cfb6256d0fd7f2732092e93d31fc",
+  "workflow": "education-cycle3-adaptive-traversal-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "f6987079fd13fb8dc7d318f844d3b937b7229563",
+    "base_sha": "4ed8a0bbee6d589e4275de944c59e671028a9686"
+  },
+  "bridgeRunId": "35796491618",
+  "dispatchedRunId": 35796508149,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35796508149",
+  "dispatchedRunHeadSha": "98fcdef5e434cfb6256d0fd7f2732092e93d31fc",
+  "dispatchedAt": "2026-09-22T23:15:09.026Z",
+  "resolvedAt": "2026-09-22T23:15:12.773Z"
+}

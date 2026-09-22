@@ -2,7 +2,7 @@ name: Compass Live Byte Verification
 
 on:
   workflow_run:
-    workflows: ["Direct GitHub Pages Deploy"]
+    workflows: ["Exact Head Pages Deploy v3"]
     types: [completed]
 
 permissions:

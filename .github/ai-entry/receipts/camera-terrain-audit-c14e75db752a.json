@@ -1,0 +1,21 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "camera-terrain-audit-c14e75db752a",
+  "capabilityId": "H_EARTH_CAMERA_TERRAIN_SCALE_AUDIT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4285,
+  "requestBranch": "ai-dispatch-request-camera-terrain-audit-c14e75db",
+  "requestCommit": "e4bbf73e6bb4f6804e89fdb1c5a16d2849595fc5",
+  "requestCommitParent": "c14e75db752a28db7280e9d0c3c1a2528ca8fd32",
+  "currentMainSha": "c14e75db752a28db7280e9d0c3c1a2528ca8fd32",
+  "workflow": "h-earth-camera-terrain-scale-audit-v1.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "35783712632",
+  "dispatchedRunId": 35783729648,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35783729648",
+  "dispatchedRunHeadSha": "c14e75db752a28db7280e9d0c3c1a2528ca8fd32",
+  "dispatchedAt": "2026-09-22T20:58:39.426Z",
+  "resolvedAt": "2026-09-22T20:58:43.032Z"
+}

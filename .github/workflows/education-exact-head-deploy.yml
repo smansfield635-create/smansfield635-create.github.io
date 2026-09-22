@@ -77,7 +77,7 @@ jobs:
           grep -Fq 'data-flip' "$tmp"
           echo "CURRENT_EDUCATION_SOURCE_VALIDATED=$CURRENT_SHA"
 
-      - name: Dispatch shared current-head production publisher
+      - name: Dispatch shared current-head production publisher once
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -85,5 +85,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gh api --method POST             "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$CURRENT_SHA"             -f inputs[surface_id]="education"
+          runs="$(gh api "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/runs?event=workflow_dispatch&per_page=100")"
+          equivalent="$(printf '%s' "$runs" | jq -r --arg sha "$CURRENT_SHA" '[.workflow_runs[] | select(.head_sha==$sha and (.status=="queued" or .status=="in_progress" or (.status=="completed" and .conclusion=="success")))] | length')"
+          if [ "$equivalent" -gt 0 ]; then
+            echo "EDUCATION_PUBLICATION_SUPPRESSED_EQUIVALENT_HEAD=$CURRENT_SHA count=$equivalent"
+            exit 0
+          fi
+          gh api --method POST "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches" -f ref=main -f inputs[target_sha]="$CURRENT_SHA" -f inputs[surface_id]="education"
           echo "EDUCATION_CURRENT_HEAD_PUBLICATION_DISPATCHED=$CURRENT_SHA"

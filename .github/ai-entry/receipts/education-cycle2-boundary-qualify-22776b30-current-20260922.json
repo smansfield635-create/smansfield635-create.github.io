@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-cycle2-boundary-qualify-22776b30-current-20260922",
+  "capabilityId": "EDUCATION_CYCLE2_BOUNDARY_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4301,
+  "requestBranch": "ai-dispatch-request-education-cycle2-boundary-current",
+  "requestCommit": "1a35a7270d777e918391bd988ee60289e7c31dce",
+  "requestCommitParent": "d8d0335536b8c6588d5feb35b79a3907056a3329",
+  "currentMainSha": "d8d0335536b8c6588d5feb35b79a3907056a3329",
+  "workflow": "education-cycle2-boundary-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "22776b300a07ced345c51d4abcb9afc16b19856c",
+    "base_sha": "594b5fc6966538edf0f6a75912128fb366f16a27"
+  },
+  "bridgeRunId": "35786358948",
+  "dispatchedRunId": 35786381609,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35786381609",
+  "dispatchedRunHeadSha": "d8d0335536b8c6588d5feb35b79a3907056a3329",
+  "dispatchedAt": "2026-09-22T21:23:46.240Z",
+  "resolvedAt": "2026-09-22T21:23:50.023Z"
+}

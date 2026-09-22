@@ -524,7 +524,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
         shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
       },
       package: {
-        logicalPromotedIdentity: LOGICAL_ID,
+        logicalPromotedIdentity: renderPackage.packageOccurrenceId,
         runtimeIdentity: renderPackage.packageIdentity,
         runtimeContentDigest: renderPackage.contentDigest,
         primitiveCount: renderPackage.primitiveCount,

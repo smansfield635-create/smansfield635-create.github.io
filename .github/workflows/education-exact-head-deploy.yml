@@ -1,97 +1,89 @@
-name: Education Exact Head Deploy
+name: Education Publication Coordinator
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'products/education/**'
+      - '.github/ai-router/publication-surfaces/education.json'
+      - 'tools/publication-preflight.v1.mjs'
+      - 'tools/publication-live-verify.mjs'
+      - '.github/workflows/education-exact-head-deploy.yml'
+      - '.github/workflows/pages-exact-head-deploy-v3.yml'
   workflow_dispatch:
     inputs:
-      target_sha:
-        description: Exact current main SHA to deploy
+      qualified_education_sha:
+        description: Education-qualified commit whose Education bytes must still exist on current main
         required: false
         default: ''
         type: string
 
 permissions:
+  actions: write
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages-production
-  queue: max
+  group: education-publication-coordinator
   cancel-in-progress: false
 
 jobs:
-  publish:
-    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
+  reconcile-and-dispatch:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
-      - name: Require exact current main
+      - name: Resolve current main and qualified Education source
+        id: resolve
         env:
           GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ inputs.target_sha || github.sha }}
+          REPO: ${{ github.repository }}
+          EVENT_SHA: ${{ github.sha }}
+          REQUESTED_SHA: ${{ inputs.qualified_education_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          current="$(curl --fail --silent --show-error -L -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/main" | jq -r .sha)"
-          test "$TARGET_SHA" = "$current"
+          current="$(gh api "/repos/$REPO/commits/main" --jq .sha)"
+          qualified="${REQUESTED_SHA:-}"
+          if [ -z "$qualified" ]; then
+            qualified="$EVENT_SHA"
+          fi
 
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.target_sha || github.sha }}
-          fetch-depth: 1
+          qualified_blob="$(gh api "/repos/$REPO/contents/products/education/index.html?ref=$qualified" --jq .sha)"
+          current_blob="$(gh api "/repos/$REPO/contents/products/education/index.html?ref=$current" --jq .sha)"
 
-      - name: Validate Education source
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -f products/education/index.html
-          grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1' products/education/index.html
-          grep -Fq 'edu-detail-surface' products/education/index.html
-          grep -Fq 'data-detail-continue' products/education/index.html
-          grep -Fq 'function openDetail' products/education/index.html
-          grep -Fq 'edu-custom-select' products/education/index.html
-          grep -Fq 'data-help-language="es"' products/education/index.html
-          grep -Fq 'data-help-language="zh"' products/education/index.html
+          if [ "$qualified_blob" != "$current_blob" ]; then
+            echo "EDUCATION_RECONCILIATION_REQUIRED qualified=$qualified:$qualified_blob current=$current:$current_blob" >&2
+            exit 1
+          fi
 
-      - name: Stage exact site
+          echo "current_sha=$current" >> "$GITHUB_OUTPUT"
+          echo "education_blob=$current_blob" >> "$GITHUB_OUTPUT"
+          echo "EDUCATION_BYTES_RECONCILED_ON_CURRENT_MAIN=$current:$current_blob"
+
+      - name: Validate current Education source
         env:
-          STAGE: ${{ runner.temp }}/pages-site
-          TARGET_SHA: ${{ inputs.target_sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CURRENT_SHA: ${{ steps.resolve.outputs.current_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$STAGE"
-          rsync -a --exclude='.git/' --exclude='.github/' --exclude='preview/' ./ "$STAGE/"
-          mkdir -p "$STAGE/.well-known"
-          jq -n --arg commit "$TARGET_SHA" '{schema:"DGB_PUBLIC_RELEASE_MARKER_v1",commit:$commit,qualificationProject:"education",surfaceId:"education"}' > "$STAGE/.well-known/dgb-release.json"
+          tmp="$(mktemp)"
+          gh api -H 'Accept: application/vnd.github.raw+json'             "/repos/$REPO/contents/products/education/index.html?ref=$CURRENT_SHA" > "$tmp"
+          grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1' "$tmp"
+          grep -Fq 'edu-detail-surface' "$tmp"
+          grep -Fq 'function openDetail' "$tmp"
+          grep -Fq 'data-help-language="es"' "$tmp"
+          grep -Fq 'data-help-language="zh"' "$tmp"
+          grep -Fq 'edu-spatial-mini' "$tmp"
+          grep -Fq 'data-flip' "$tmp"
+          echo "CURRENT_EDUCATION_SOURCE_VALIDATED=$CURRENT_SHA"
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: ${{ runner.temp }}/pages-site
-      - name: Deploy Education exact head
-        id: deploy
-        uses: actions/deploy-pages@v4
-
-      - name: Verify Education release
+      - name: Dispatch shared current-head production publisher
         env:
-          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
-          TARGET_SHA: ${{ inputs.target_sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CURRENT_SHA: ${{ steps.resolve.outputs.current_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          for i in $(seq 1 24); do
-            marker="$(curl --fail --silent --show-error -L --max-time 20 "${PAGE_URL%/}/.well-known/dgb-release.json?attempt=$i" 2>/dev/null || true)"
-            commit="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
-            surface="$(printf '%s' "$marker" | jq -r '.surfaceId // empty' 2>/dev/null || true)"
-            page="$(curl --fail --silent --show-error -L --max-time 20 "${PAGE_URL%/}/products/education/?attempt=$i" 2>/dev/null || true)"
-            if [ "$commit" = "$TARGET_SHA" ] && [ "$surface" = "education" ] && grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1' <<<"$page"; then
-              echo "EDUCATION_RELEASE_VERIFIED=$TARGET_SHA"
-              exit 0
-            fi
-            sleep 10
-          done
-          exit 1
+          gh api --method POST             "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches"             -f ref=main             -f inputs[target_sha]="$CURRENT_SHA"             -f inputs[surface_id]="education"
+          echo "EDUCATION_CURRENT_HEAD_PUBLICATION_DISPATCHED=$CURRENT_SHA"

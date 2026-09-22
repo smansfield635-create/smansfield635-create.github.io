@@ -190,6 +190,39 @@ function projectRecoveredWaterBaseColors(rawViews, packageRecord) {
   };
 }
 
+function deriveSmoothNormals(positions, indices) {
+  const sums = new Float64Array(positions.length);
+  for (let i=0;i<indices.length;i+=3) {
+    const ia=indices[i],ib=indices[i+1],ic=indices[i+2],a=ia*3,b=ib*3,c=ic*3;
+    const abx=positions[b]-positions[a],aby=positions[b+1]-positions[a+1],abz=positions[b+2]-positions[a+2];
+    const acx=positions[c]-positions[a],acy=positions[c+1]-positions[a+1],acz=positions[c+2]-positions[a+2];
+    const nx=aby*acz-abz*acy,ny=abz*acx-abx*acz,nz=abx*acy-aby*acx;
+    for(const v of [ia,ib,ic]){const o=v*3;sums[o]+=nx;sums[o+1]+=ny;sums[o+2]+=nz;}
+  }
+  const out=new Float32Array(positions.length);
+  for(let i=0;i<out.length;i+=3){const m=Math.hypot(sums[i],sums[i+1],sums[i+2])||1;out[i]=sums[i]/m;out[i+1]=sums[i+1]/m;out[i+2]=sums[i+2]/m;}
+  return out;
+}
+function refineTerrainPresentation(views, packageRecord) {
+  const span=(packageRecord.primitiveSpans??[]).find(s=>String(s.primitiveId??'').includes('TERRAIN'));
+  if(!span)return null;
+  const srcI=views.indices, srcP=views.positions;
+  const positions=Array.from(srcP), colors=Array.from(views.baseColorsLinear), params=Array.from(views.materialParameters);
+  const mm=Array.from(views.materialModelCodes),sc=Array.from(views.surfaceClassCodes),pi=Array.from(views.primitiveIndices),roles=Array.from(views.roleCodes);
+  const indices=[]; const edgeMap=new Map();
+  const midpoint=(a,b)=>{const lo=Math.min(a,b),hi=Math.max(a,b),key=lo+':'+hi;if(edgeMap.has(key))return edgeMap.get(key);const n=positions.length/3;
+    for(let k=0;k<3;k++)positions.push((srcP[a*3+k]+srcP[b*3+k])*.5);
+    for(let k=0;k<4;k++)colors.push((views.baseColorsLinear[a*4+k]+views.baseColorsLinear[b*4+k])*.5);
+    for(let k=0;k<4;k++)params.push((views.materialParameters[a*4+k]+views.materialParameters[b*4+k])*.5);
+    mm.push(views.materialModelCodes[a]);sc.push(views.surfaceClassCodes[a]);pi.push(views.primitiveIndices[a]);roles.push(views.roleCodes[a]);edgeMap.set(key,n);return n;};
+  const start=span.indexStart,end=start+span.indexCount;
+  indices.push(...Array.from(srcI.slice(0,start)));
+  for(let i=start;i<end;i+=3){const a=srcI[i],b=srcI[i+1],c=srcI[i+2],ab=midpoint(a,b),bc=midpoint(b,c),ca=midpoint(c,a);indices.push(a,ab,ca,ab,b,bc,ca,bc,c,ab,bc,ca);}
+  indices.push(...Array.from(srcI.slice(end)));
+  const p32=new Float32Array(positions),i32=new Uint32Array(indices);
+  return {positions:p32,normals:deriveSmoothNormals(p32,i32),baseColorsLinear:new Float32Array(colors),materialParameters:new Float32Array(params),materialModelCodes:new Uint8Array(mm),surfaceClassCodes:new Uint8Array(sc),primitiveIndices:new Uint16Array(pi),roleCodes:new Uint8Array(roles),indices:i32,receipt:freezeRecord({mode:'TERRAIN_PRESENTATION_MIDPOINT_1_TO_4',sourceTerrainTriangles:span.indexCount/3,presentationTerrainTriangles:(span.indexCount/3)*4,addedVertices:edgeMap.size,sourcePackageMutated:false})};
+}
+
 export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()
 ) {
@@ -202,16 +235,18 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
   const projectedWaterColors = projectRecoveredWaterBaseColors(rawViews, packageRecord);
 
+  const baseViews={positions:new Float32Array(rawViews.positions),normals:canonicalNormals.view,baseColorsLinear:projectedWaterColors.view,materialParameters:canonicalMaterialParameters.view,materialModelCodes:new Uint8Array(rawViews.materialModelCodes),surfaceClassCodes:new Uint8Array(rawViews.surfaceClassCodes),primitiveIndices:new Uint16Array(rawViews.primitiveIndices),roleCodes:projectedRoleCodes.view,indices:new Uint32Array(rawViews.indices)};
+  const refined=refineTerrainPresentation(baseViews, packageRecord);
   return freezeRecord({
-    positions: new Float32Array(rawViews.positions),
-    normals: canonicalNormals.view,
-    baseColorsLinear: projectedWaterColors.view,
-    materialParameters: canonicalMaterialParameters.view,
-    materialModelCodes: new Uint8Array(rawViews.materialModelCodes),
-    surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
-    primitiveIndices: new Uint16Array(rawViews.primitiveIndices),
-    roleCodes: projectedRoleCodes.view,
-    indices: new Uint32Array(rawViews.indices),
+    positions: refined?.positions ?? baseViews.positions,
+    normals: refined?.normals ?? baseViews.normals,
+    baseColorsLinear: refined?.baseColorsLinear ?? baseViews.baseColorsLinear,
+    materialParameters: refined?.materialParameters ?? baseViews.materialParameters,
+    materialModelCodes: refined?.materialModelCodes ?? baseViews.materialModelCodes,
+    surfaceClassCodes: refined?.surfaceClassCodes ?? baseViews.surfaceClassCodes,
+    primitiveIndices: refined?.primitiveIndices ?? baseViews.primitiveIndices,
+    roleCodes: refined?.roleCodes ?? baseViews.roleCodes,
+    indices: refined?.indices ?? baseViews.indices,
     canonicalizationReceipt: freezeRecord({
       contractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
       packageIdentityAtSource: packageRecord.packageIdentity,
@@ -220,6 +255,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       materialParameterBuffer: canonicalMaterialParameters.receipt,
       gpuRoleProjection: projectedRoleCodes.receipt,
       gpuWaterOpticalProjection: projectedWaterColors.receipt,
+      terrainPresentationRefinement: refined?.receipt ?? null,
       sourcePackageMutated: false,
       transportEncodingOnly: true
     }),

@@ -741,7 +741,7 @@ if(restoredEducation?.helpLanguage&&HELP_LANGUAGES[restoredEducation.helpLanguag
 if(restoredEducation?.stage==="language"){setStage("intake")}
 else if(restoredEducation?.stage==="result"&&finalIndependence){renderIndependence()}
 else if(restoredEducation?.stage==="entry"&&finalIndependence){enterDemo()}
-else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");startProbe(probeStage)}
+else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");if(!adaptiveState)adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0};startAdaptiveItem(adaptiveState.stage||probeStage,adaptiveState.itemIndex||0)}
 document.documentElement.dataset.educationDemoReady="true";
 })();
 </script>

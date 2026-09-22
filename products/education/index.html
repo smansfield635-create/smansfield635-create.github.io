@@ -167,6 +167,52 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
  .edu-story-node{padding:.55rem .5rem .55rem .8rem}
  .edu-story-node:before{left:-.9rem;top:50%;transform:translateY(-50%)}
 }
+
+/* Cycle-One Finish v1 — frozen authority #4215 */
+.edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"]{opacity:.48;border-style:dashed}
+.edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.62;border-style:dashed}
+.edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.62);box-shadow:0 0 0 1px rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-attempt="success"] [data-learner-node="true"]{border-color:rgba(244,207,131,.62);background:rgba(244,207,131,.1);transform:scale(1.035)}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="transformation"] [data-operator-node="true"]{border-color:rgba(244,207,131,.62);opacity:1}
+.edu-spatial-instrument[data-attempt="retry"][data-geometry="loop"] .edu-spatial-loop:after{content:"↺";font-size:1.2rem;color:var(--gold);text-align:center;grid-column:1/-1}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="loop"] [data-result-node="true"]{transform:scale(1.035)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="more"]{opacity:1;border-color:rgba(244,207,131,.55)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="independent"]{opacity:.48}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="more"]{opacity:.32}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="independent"]{opacity:1;border-color:rgba(167,243,198,.55)}
+.edu-spatial-instrument[data-attempt="idle"][data-geometry="transfer"] .edu-transfer-line,.edu-spatial-instrument[data-attempt="retry"][data-geometry="transfer"] .edu-transfer-line{opacity:.32;background:repeating-linear-gradient(90deg,rgba(141,216,255,.4) 0 8px,transparent 8px 15px)}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="transfer"] .edu-transfer-line{opacity:1}
+.edu-detail-panel{padding:clamp(.8rem,2vw,1.2rem)}
+.edu-detail-top{margin-bottom:.55rem}
+.edu-detail-body{gap:.55rem}
+.edu-detail-step{gap:.55rem}
+.edu-expanded-orientation{margin-bottom:.55rem}
+.edu-revelation{gap:.55rem}
+.edu-revelation>p:first-of-type{margin-bottom:0}
+.edu-story-bridge__rail{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media(min-width:701px) and (max-width:899px){
+ .edu-story-bridge__rail{grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;row-gap:1.35rem}
+ .edu-story-bridge__rail:before{display:none}
+ .edu-story-node:nth-child(1){grid-column:1;grid-row:1}.edu-story-node:nth-child(2){grid-column:2;grid-row:1}.edu-story-node:nth-child(3){grid-column:3;grid-row:1}
+ .edu-story-node:nth-child(4){grid-column:3;grid-row:2}.edu-story-node:nth-child(5){grid-column:2;grid-row:2}.edu-story-node:nth-child(6){grid-column:1;grid-row:2}
+ .edu-story-node:after{content:"";position:absolute;top:0;left:50%;right:-50%;height:2px;background:rgba(141,216,255,.3);z-index:0}
+ .edu-story-node:nth-child(3):after{left:50%;right:auto;width:2px;height:calc(100% + 1.35rem)}
+ .edu-story-node:nth-child(4):after{left:auto;right:50%;width:50%;height:2px}
+ .edu-story-node:nth-child(6):after{display:none}
+}
+@media(max-width:700px){
+ .edu-story-bridge__rail{display:grid;grid-template-columns:1fr;gap:.2rem}
+ .edu-story-node{padding:.75rem .5rem .75rem 2rem}
+ .edu-story-node:before{left:.55rem;top:50%;transform:translateY(-50%)}
+ .edu-story-node:after{content:"";position:absolute;left:.85rem;top:50%;bottom:-50%;width:2px;background:rgba(141,216,255,.3)}
+ .edu-story-node:last-child:after{display:none}
+}
+.edu-synthesis-path .edu-spatial-node[data-motif="compression"]:before{content:"1,001";font-size:.55rem;color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="transformation"]:before{content:"→";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="branching"]:before{content:"↗";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="loop"]:before{content:"↺";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="support"]:before{content:"⇢";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="transfer"]:before{content:"⟶";color:var(--gold)}
 </style>
 </head>
 <body>

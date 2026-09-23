@@ -1,0 +1,47 @@
+name: Education Structural Placement Reset Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify structural placement reset
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          for token in placement-hint show-hint hintBody hintsUsed currentItemAssisted ASSISTED_HINT_USED; do
+            ! grep -Fq "$token" /tmp/e.html
+          done
+          ! grep -Fq "item.evidenceClass.replaceAll" /tmp/e.html
+          ! grep -Fq "item.node+'</span>" /tmp/e.html
+          ! grep -Fq 'gateT.testing+" "+probeStage' /tmp/e.html
+          grep -Fq 'stableOptionRank' /tmp/e.html
+          grep -Fq 'testEye:"Ubicación"' /tmp/e.html
+          grep -Fq 'testEye:"分级"' /tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const a=s.indexOf('const BANK='),b=s.indexOf('const EDUCATION_STATE_KEY=',a),BANK=Function(s.slice(a,b)+';return BANK')();
+          const flat=Object.values(BANK).flat();if(flat.length!==64)throw Error('bank cardinality');
+          for(let d=1;d<=8;d++)if(BANK[d]?.length!==8)throw Error('D'+d);
+          const rank=(id,index)=>{let h=2166136261,t=id+":"+index;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
+          const displayedKeyPositions=flat.map(x=>[0,1,2,3].sort((a,b)=>rank(x.id,a)-rank(x.id,b)).indexOf(x.a));
+          const c=[0,0,0,0];displayedKeyPositions.forEach(i=>c[i]++);
+          if(Math.max(...c)>24||Math.min(...c)<8)throw Error('answer position imbalance '+JSON.stringify(c));
+          console.log(JSON.stringify({result:'PASS',displayedKeyPositions:c}));
+          NODE
+          echo EDUCATION_STRUCTURAL_RESET_QUALIFICATION=PASS

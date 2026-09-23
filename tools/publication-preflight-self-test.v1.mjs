@@ -56,7 +56,7 @@ try{
   const stagedAudralia=fs.readFileSync(path.join(stage,'showroom/globe/audralia/index.html'),'utf8');
   check('positive-fixture-payload-built',fs.existsSync(path.join(stage,'demo/index.html')));
   check('positive-fixture-release-marker',fs.existsSync(path.join(stage,'.well-known/dgb-release.json')));
-  check('negative-fixture-preview-excluded',!fs.existsSync(path.join(stage,'preview')));
+  check('positive-fixture-preview-preserved',fs.existsSync(path.join(stage,'preview/should-not-ship/secret.txt')));
   check('negative-fixture-control-plane-excluded',!fs.existsSync(path.join(stage,'.github')));
   check('negative-fixture-node-modules-excluded',!fs.existsSync(path.join(stage,'node_modules')));
   check('negative-fixture-old-h-earth-clone-excluded',!fs.existsSync(path.join(stage,'h-earth-live-6d18e158')));

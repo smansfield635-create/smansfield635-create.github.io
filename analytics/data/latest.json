@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-23T07:36:57Z",
+  "generatedAt": "2026-09-23T08:38:30Z",
   "window30d": {
-    "start": "2026-08-24T07:36:57Z",
-    "end": "2026-09-23T07:36:57Z"
+    "start": "2026-08-24T08:38:30Z",
+    "end": "2026-09-23T08:38:30Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-16",
-      "pageLoads": 221
+      "pageLoads": 220
     },
     {
       "date": "2026-09-17",
@@ -128,9 +128,9 @@
     }
   ],
   "summary": {
-    "pageLoads": 7091,
+    "pageLoads": 7090,
     "botPageLoads": 2457,
-    "nonBotPageLoads": 4634
+    "nonBotPageLoads": 4633
   },
   "referrers": [
     {
@@ -140,8 +140,8 @@
     },
     {
       "host": "(none)",
-      "pageLoads": 3227,
-      "visits": 3227
+      "pageLoads": 3226,
+      "visits": 3226
     },
     {
       "host": "www.google.com",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 272,
-      "visits": 93
+      "pageLoads": 271,
+      "visits": 92
     },
     {
       "path": "/products/education/",

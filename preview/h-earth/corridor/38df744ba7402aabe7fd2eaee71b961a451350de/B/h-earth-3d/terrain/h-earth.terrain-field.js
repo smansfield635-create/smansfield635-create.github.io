@@ -150,7 +150,7 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
   rearBoundaryLaw: 'NO_RIDGE_OR_BLUFF_MAY_EXIST_SOLELY_AS_A_REAR_WORLD_BOX_TERMINUS',
   foothillLaw: 'PRIMARY_RELIEF_TAPERS_CONTINUOUSLY_INTO_NAVIGABLE_SURROUNDING_TERRAIN',
   mesoMorphology: {
-    identity: 'B2_1_CONNECTED_RIDGE_SPUR_DRAINAGE_SYSTEM_v1',
+    identity: 'B2_2_HIERARCHICAL_RELIEF_RECONCILIATION_v1',
     parentRange: 'GRATITUDE_PRIMARY_INLAND_RANGE',
     ridgeBranchingRequired: true,
     connectedRidgeCarrierRequired: true,
@@ -168,7 +168,7 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 5,
+  generationRevision: 6,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
   worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
@@ -196,7 +196,7 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     basin: 'GRATITUDE_RECEIVING_BASIN_PROFILE_v1',
     foothill: 'GRATITUDE_FOOTHILL_TAPER_PROFILE_v1',
     valley: 'DRAINAGE_VALLEY_PROFILE_v1',
-    mesoMorphology: 'B2_1_CONNECTED_RIDGE_SPUR_DRAINAGE_SYSTEM_v1',
+    mesoMorphology: 'B2_2_HIERARCHICAL_RELIEF_RECONCILIATION_v1',
     positiveReliefComposition: 'STRONGEST_LOCAL_FEATURE_PLUS_ATTENUATED_SECONDARY_OVERLAP_v1',
     water: 'COASTAL_WATER_DEPTH_PROFILE_v1'
   },
@@ -269,23 +269,28 @@ function evaluateRawElevation(worldX, worldZ) {
   const receivingBasin = gaussian(worldX, worldZ, 18, -192, 66, 46, -7.5);
   const foothillTaper = gaussian(worldX, worldZ, -12, -176, 126, 62, 8.5);
 
-  // B2.1 connected morphology: ridge carriers establish the structural spine;
-  // tapered spurs inherit from that spine; drainage occupies inter-spur lows.
-  const carrierEast = segmentField(worldX, worldZ, 158, -238, 104, -252, 31, 12.0, 0.86, 1.0);
-  const carrierCentral = segmentField(worldX, worldZ, 104, -252, 48, -247, 33, 10.5, 1.0, 0.88);
-  const carrierWest = segmentField(worldX, worldZ, 48, -247, -28, -222, 37, 8.0, 0.88, 0.62);
+  // B2.2 hierarchical relief: broad low-amplitude bases carry the mountain
+  // volume; connected carriers guide narrower secondary ridges rather than
+  // becoming the mountain walls themselves. Spurs and drainage remain coupled.
+  const mountainBaseEast = segmentField(worldX, worldZ, 170, -226, 94, -245, 82, 6.0, 0.82, 1.0);
+  const mountainBaseCentral = segmentField(worldX, worldZ, 104, -244, 30, -238, 88, 5.4, 1.0, 0.82);
+  const mountainBaseWest = segmentField(worldX, worldZ, 42, -236, -54, -205, 94, 4.2, 0.86, 0.50);
 
-  const spurEast = segmentField(worldX, worldZ, 142, -236, 151, -176, 18, 6.2, 1.0, 0.18);
-  const spurCentralEast = segmentField(worldX, worldZ, 108, -248, 104, -174, 17, 5.7, 1.0, 0.16);
-  const spurCentralWest = segmentField(worldX, worldZ, 70, -247, 54, -170, 18, 5.1, 1.0, 0.14);
-  const spurWest = segmentField(worldX, worldZ, 28, -239, -2, -166, 20, 4.4, 1.0, 0.12);
+  const carrierEast = segmentField(worldX, worldZ, 158, -238, 104, -252, 38, 4.8, 0.86, 1.0);
+  const carrierCentral = segmentField(worldX, worldZ, 104, -252, 48, -247, 40, 4.3, 1.0, 0.88);
+  const carrierWest = segmentField(worldX, worldZ, 48, -247, -28, -222, 44, 3.4, 0.88, 0.58);
 
-  const drainageEast = segmentField(worldX, worldZ, 125, -236, 126, -163, 10, -4.4, 0.55, 1.0);
-  const drainageCentral = segmentField(worldX, worldZ, 88, -242, 79, -158, 11, -4.8, 0.52, 1.0);
-  const drainageWest = segmentField(worldX, worldZ, 48, -234, 28, -154, 12, -4.2, 0.50, 1.0);
+  const spurEast = segmentField(worldX, worldZ, 142, -236, 151, -176, 25, 3.0, 1.0, 0.12);
+  const spurCentralEast = segmentField(worldX, worldZ, 108, -248, 104, -174, 24, 2.7, 1.0, 0.11);
+  const spurCentralWest = segmentField(worldX, worldZ, 70, -247, 54, -170, 25, 2.4, 1.0, 0.10);
+  const spurWest = segmentField(worldX, worldZ, 28, -239, -2, -166, 27, 2.0, 1.0, 0.08);
 
-  const mesoSaddleEast = gaussian(worldX, worldZ, 112, -248, 18, 15, -3.2);
-  const mesoSaddleWest = gaussian(worldX, worldZ, 55, -244, 19, 16, -2.8);
+  const drainageEast = segmentField(worldX, worldZ, 125, -236, 126, -163, 17, -2.8, 0.35, 1.0);
+  const drainageCentral = segmentField(worldX, worldZ, 88, -242, 79, -158, 18, -3.0, 0.34, 1.0);
+  const drainageWest = segmentField(worldX, worldZ, 48, -234, 28, -154, 19, -2.6, 0.32, 1.0);
+
+  const mesoSaddleEast = gaussian(worldX, worldZ, 112, -248, 24, 20, -1.8);
+  const mesoSaddleWest = gaussian(worldX, worldZ, 55, -244, 25, 21, -1.6);
 
   const positiveReliefComponents = [
     hill,
@@ -294,6 +299,9 @@ function evaluateRawElevation(worldX, worldZ) {
     ridgeWest,
     ridgeShoulder,
     foothillTaper,
+    mountainBaseEast,
+    mountainBaseCentral,
+    mountainBaseWest,
     carrierEast,
     carrierCentral,
     carrierWest,
@@ -305,7 +313,7 @@ function evaluateRawElevation(worldX, worldZ) {
   const strongestPositiveRelief = Math.max(...positiveReliefComponents);
   const totalPositiveRelief = positiveReliefComponents.reduce((sum, value) => sum + value, 0);
   const secondaryPositiveRelief = Math.max(0, totalPositiveRelief - strongestPositiveRelief);
-  const articulatedPositiveRelief = strongestPositiveRelief + secondaryPositiveRelief * 0.14;
+  const articulatedPositiveRelief = strongestPositiveRelief + secondaryPositiveRelief * 0.10;
 
   const lowland = gaussian(worldX, worldZ, -92, -152, 70, 58, -6.5);
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);

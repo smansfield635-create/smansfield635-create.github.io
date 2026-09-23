@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-compression-qualify-6321c313",
+  "capabilityId": "EDUCATION_PAGE_COMPRESSION_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4561,
+  "requestBranch": "ai-dispatch-request-education-compression-6321c313",
+  "requestCommit": "168a5657a2661169e0b34d385d91fbcfac8ed483",
+  "requestCommitParent": "5f3b5095e868541ab71c36430af3c67163aef81c",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "5f3b5095e868541ab71c36430af3c67163aef81c",
+  "workflow": "education-page-compression-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "6321c313619f5e025ed94c719f446173728fbf1a",
+    "base_sha": "7fede86446a20e21675242d3045a15ea7876ea22"
+  },
+  "bridgeRunId": "35877891930",
+  "dispatchedRunId": 35877919094,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35877919094",
+  "dispatchedRunHeadSha": "5f3b5095e868541ab71c36430af3c67163aef81c",
+  "dispatchedAt": "2026-09-23T14:56:49.805Z",
+  "resolvedAt": "2026-09-23T14:56:53.674Z"
+}

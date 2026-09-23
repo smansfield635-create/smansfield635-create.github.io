@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T01:39:19Z",
+  "generatedAt": "2026-09-23T02:39:55Z",
   "window": {
-    "start": "2026-06-25T01:39:19Z",
-    "end": "2026-09-23T01:39:19Z"
+    "start": "2026-06-25T02:39:55Z",
+    "end": "2026-09-23T02:39:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4742,
+    "pageLoads": 4746,
     "visits": 1110,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4742,
+        "pageLoads": 4746,
         "visits": 1110
       }
     },
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1044,
+        "pageLoads": 1045,
         "visits": 713
       },
       "/showroom/globe/h-earth/": {
@@ -71,7 +71,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 103,
+        "pageLoads": 104,
         "visits": 9
       },
       "/laws/categories/reality/battery-heldout-study/": {
@@ -115,7 +115,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 160,
+        "pageLoads": 162,
         "visits": 36
       },
       "/showroom/globe/h-earth/awards/": {
@@ -186,13 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -298,13 +298,13 @@
         "pageLoads": 20,
         "visits": 1
       },
-      "/showroom/globe/earth/": {
-        "pageLoads": 5,
-        "visits": 0
-      },
       "/philosophy/": {
         "pageLoads": 1,
         "visits": 1
+      },
+      "/showroom/globe/earth/": {
+        "pageLoads": 5,
+        "visits": 0
       },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
@@ -373,7 +373,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3632,
+        "pageLoads": 3636,
         "visits": 0
       },
       "(none)": {

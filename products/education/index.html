@@ -67,7 +67,8 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 .edu-custom-select>button{width:100%;min-height:3rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:.75rem;background:#08162d;color:var(--text);font:inherit;text-align:left;display:flex;justify-content:space-between}
 .edu-custom-select>button::after{content:"⌄";color:var(--gold)}
 .edu-custom-options{position:absolute;z-index:400;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55dvh);overflow:auto;overscroll-behavior:contain;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}
-.edu-custom-options[data-direction="up"]{top:auto;bottom:calc(100% + .3rem)}\n.edu-custom-options[hidden]{display:none}
+.edu-custom-options[data-direction="up"]{top:auto;bottom:calc(100% + .3rem)}
+.edu-custom-options[hidden]{display:none}
 .edu-custom-options button{display:block;width:100%;padding:.72rem;border:0;border-radius:.55rem;background:transparent;color:var(--text);font:inherit;text-align:left}
 .edu-custom-options button:hover,.edu-custom-options button:focus-visible,.edu-custom-options button[aria-selected="true"]{background:rgba(141,216,255,.12)}
 .field select.edu-native-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
@@ -124,10 +125,12 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
 .edu-synthesis{display:grid;gap:1rem}.edu-synthesis-path{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.35rem;position:relative}.edu-synthesis-path:before{content:"";position:absolute;left:5%;right:5%;top:50%;height:1px;background:rgba(141,216,255,.3)}.edu-synthesis-path .edu-spatial-node{font-size:.62rem;min-width:0}.edu-time-band{display:grid;grid-template-columns:auto 1fr auto;gap:.6rem;align-items:center;padding:.7rem 0}.edu-time-band__line{height:.5rem;border-radius:999px;background:linear-gradient(90deg,rgba(244,207,131,.5),rgba(141,216,255,.38));position:relative}.edu-time-band__line:before,.edu-time-band__line:after{content:"";position:absolute;top:50%;width:.8rem;height:.8rem;border:2px solid var(--gold);border-radius:50%;background:#081225;transform:translateY(-50%)}.edu-time-band__line:before{left:0}.edu-time-band__line:after{right:0}
 .edu-placement-path{position:relative!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:0!important;margin:1.2rem 0!important}.edu-placement-path:before{content:"";position:absolute;left:5%;right:5%;top:50%;height:2px;background:rgba(141,216,255,.28)}.edu-placement-path span{width:1rem!important;height:1rem!important;justify-self:center;border:2px solid var(--blue);border-radius:50%!important;background:#081225!important;z-index:2}.edu-placement-path span:after{display:none!important}
 .edu-revelation{gap:.75rem}.edu-revelation>h4{display:none}.edu-teaching-object{display:none}
-@media(max-width:899px){.edu-spatial-mini{min-height:2.25rem;margin:.3rem 0}.edu-spatial-mini .edu-spatial-node{padding:.22rem .34rem;font-size:.58rem}.edu-spatial-mini .edu-spatial-row{gap:.25rem}}\n@media(max-width:700px){.edu-spatial-routes{grid-template-columns:repeat(2,1fr)}.edu-spatial-instrument[data-geometry="transfer"]{grid-template-columns:1fr;min-height:0}.edu-transfer-line{width:2px;height:3.5rem;background:linear-gradient(180deg,rgba(141,216,255,.25),var(--gold),rgba(167,243,198,.35))}.edu-transfer-line:after{right:auto;left:50%;top:auto;bottom:-.8rem;transform:translateX(-50%) rotate(90deg)}.edu-synthesis-path{grid-template-columns:1fr}.edu-synthesis-path:before{left:50%;right:auto;top:5%;bottom:5%;width:1px;height:auto}.edu-story-bridge__rail:before{display:none}.edu-spatial-instrument[data-geometry="branching"] .edu-spatial-branches{grid-template-columns:1fr}.edu-spatial-instrument[data-geometry="loop"] .edu-spatial-loop{grid-template-columns:1fr}}
+@media(max-width:899px){.edu-spatial-mini{min-height:2.25rem;margin:.3rem 0}.edu-spatial-mini .edu-spatial-node{padding:.22rem .34rem;font-size:.58rem}.edu-spatial-mini .edu-spatial-row{gap:.25rem}}
+@media(max-width:700px){.edu-spatial-routes{grid-template-columns:repeat(2,1fr)}.edu-spatial-instrument[data-geometry="transfer"]{grid-template-columns:1fr;min-height:0}.edu-transfer-line{width:2px;height:3.5rem;background:linear-gradient(180deg,rgba(141,216,255,.25),var(--gold),rgba(167,243,198,.35))}.edu-transfer-line:after{right:auto;left:50%;top:auto;bottom:-.8rem;transform:translateX(-50%) rotate(90deg)}.edu-synthesis-path{grid-template-columns:1fr}.edu-synthesis-path:before{left:50%;right:auto;top:5%;bottom:5%;width:1px;height:auto}.edu-story-bridge__rail:before{display:none}.edu-spatial-instrument[data-geometry="branching"] .edu-spatial-branches{grid-template-columns:1fr}.edu-spatial-instrument[data-geometry="loop"] .edu-spatial-loop{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.edu-spatial-instrument *{animation:none!important;transition:none!important}}
 
-/* Cycle-One Finish v1 — frozen authority #4215 */\n.edu-spatial-instrument[data-attempt="success"][data-geometry="branching"] [data-example-branch="true"]{opacity:.5}
+/* Cycle-One Finish v1 — frozen authority #4215 */
+.edu-spatial-instrument[data-attempt="success"][data-geometry="branching"] [data-example-branch="true"]{opacity:.5}
 .edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"]{opacity:.48;border-style:dashed}
 .edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.58;border-style:dashed}
 .edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.58);box-shadow:0 0 0 1px rgba(167,243,198,.12),0 0 1.1rem rgba(167,243,198,.12)}
@@ -650,14 +653,18 @@ function beginIndependence(){
  if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
  qs("#intake-validation").textContent="";
  learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
- probeStage=Math.max(2,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0};
+ probeStage=Math.max(1,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{}};
  setStage("test");saveEducationState({stage:"test"});startAdaptiveItem(probeStage,0);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
 }
 qs("#begin-placement").addEventListener("click",beginIndependence);
 
 function startAdaptiveItem(stage,itemIndex=0){
- probeStage=Math.max(2,Math.min(8,stage));
- const bank=BANK[probeStage]||BANK[8], index=((itemIndex%bank.length)+bank.length)%bank.length;
+ probeStage=Math.max(1,Math.min(8,stage));
+ const bank=BANK[probeStage]||BANK[8];
+ adaptiveState.usedItems=adaptiveState.usedItems||[];
+ let index=bank.findIndex((x,i)=>i>=itemIndex&&!adaptiveState.usedItems.includes(x.id));
+ if(index<0)index=bank.findIndex(x=>!adaptiveState.usedItems.includes(x.id));
+ if(index<0){resolveAdaptiveBoundary(probeStage);return}
  currentSet=[{...bank[index]}];currentQuestionIndex=0;currentSetScore=0;currentItemAssisted=false;
  adaptiveState={...(adaptiveState||{}),stage:probeStage,itemIndex:index,steps:(adaptiveState?.steps||0)};
  saveEducationState({stage:"test"});
@@ -677,34 +684,40 @@ function submitAdaptiveAnswer(){
  const chosen=qs('input[name="placement-answer"]:checked');
  if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
  const item=currentSet[0],correct=Number(chosen.value)===item.a,assisted=currentItemAssisted;
- placementEvidence.push({stage:probeStage,itemId:item.id,node:item.node,evidenceClass:item.evidenceClass,correct,assisted});
+ const fresh=!adaptiveState.usedItems.includes(item.id);
+ if(fresh)adaptiveState.usedItems.push(item.id);
+ placementEvidence.push({stage:probeStage,itemId:item.id,node:item.node,evidenceClass:item.evidenceClass,correct,assisted,fresh});
  adaptiveState.steps++;
- probeHistory.push({stage:probeStage,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,assisted});
- const pending=adaptiveState.pending;
- if(pending&&pending.stage===probeStage){
-   const confirms=pending.correct===correct;
-   if(confirms){
-     adaptiveState.pending=null;
-     if(correct){
-       adaptiveState.confirmedHigh=probeStage;
-       if(probeStage===8){resolveAdaptiveBoundary("ABOVE");return}
-       startAdaptiveItem(probeStage+1,0);return;
-     }
-     adaptiveState.confirmedLow=probeStage;
-     if(probeStage===2){resolveAdaptiveBoundary(2);return}
+ if(fresh){
+   const bucket=adaptiveState.stageEvidence[probeStage]||(adaptiveState.stageEvidence[probeStage]={unique:0,correct:0,unassistedCorrect:0,incorrect:0,assisted:0});
+   bucket.unique++;if(correct){bucket.correct++;if(!assisted)bucket.unassistedCorrect++}else bucket.incorrect++;if(assisted)bucket.assisted++;
+ }
+ probeHistory.push({stage:probeStage,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,assisted,fresh});
+ const bucket=adaptiveState.stageEvidence[probeStage], unique=bucket?.unique||0;
+ const ratio=unique?bucket.correct/unique:0;
+ // Strong directional evidence may leave an obviously wrong neighborhood after two unique items.
+ if(unique===2&&ratio===1&&probeStage<8){startAdaptiveItem(probeStage+1,0);return}
+ if(unique===2&&ratio===0&&probeStage>1){startAdaptiveItem(probeStage-1,0);return}
+ // A resolved candidate boundary requires at least five unique observations.
+ if(unique>=5){
+   if(ratio>=.8&&bucket.unassistedCorrect>=4){
+     if(probeStage===8){resolveAdaptiveBoundary("ABOVE");return}
+     startAdaptiveItem(probeStage+1,0);return;
+   }
+   if(ratio<=.4){
+     if(probeStage===1){resolveAdaptiveBoundary(1);return}
      startAdaptiveItem(probeStage-1,0);return;
    }
-   adaptiveState.pending={stage:probeStage,correct,assisted,itemId:item.id};
-   startAdaptiveItem(probeStage,(adaptiveState.itemIndex+1)%3);return;
+   // Mixed or assisted evidence extends through unused items, up to the 8-item bank.
+   if(unique>=8){resolveAdaptiveBoundary(probeStage);return}
  }
- adaptiveState.pending={stage:probeStage,correct,assisted,itemId:item.id};
- startAdaptiveItem(probeStage,(adaptiveState.itemIndex+1)%3);
+ startAdaptiveItem(probeStage,(adaptiveState.itemIndex+1)%BANK[probeStage].length);
 }
 function resolveAdaptiveBoundary(result){
  if(result==="ABOVE"){
    finalIndependence={verified_placement:"ABOVE_PHASE_1",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:supportCycle(1),support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"ABOVE_PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
  }else{
-   const stage=Math.max(2,Math.min(8,Number(result)||probeStage));
+   const stage=Math.max(1,Math.min(8,Number(result)||probeStage));
    const stageEvidence=placementEvidence.filter(x=>x.stage===stage), correct=stageEvidence.filter(x=>x.correct).length;
    finalIndependence={verified_placement:stage,verified_stage:"P1S"+stage,verified_competency_position:null,demonstrated_nodes:correct,unresolved_nodes:stageEvidence.length-correct,support_cycle:supportCycle(stageEvidence.length?correct/stageEvidence.length:0),support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S"+stage,label:STAGES[stage-1].name},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
  }
@@ -787,7 +800,7 @@ if(restoredEducation?.helpLanguage&&HELP_LANGUAGES[restoredEducation.helpLanguag
 if(restoredEducation?.stage==="language"){setStage("intake")}
 else if(restoredEducation?.stage==="result"&&finalIndependence){renderIndependence()}
 else if(restoredEducation?.stage==="entry"&&finalIndependence){enterDemo()}
-else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");if(!adaptiveState)adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0};startAdaptiveItem(adaptiveState.stage||probeStage,adaptiveState.itemIndex||0)}
+else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");if(!adaptiveState)adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{}};startAdaptiveItem(adaptiveState.stage||probeStage,adaptiveState.itemIndex||0)}
 document.documentElement.dataset.educationDemoReady="true";
 })();
 </script>

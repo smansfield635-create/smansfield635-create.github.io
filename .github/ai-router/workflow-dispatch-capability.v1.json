@@ -528,6 +528,22 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_GEN2_VISUAL_QUALIFY": {
+      "workflow": "h-earth-gen2-visual-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "H_EARTH_GEN2_VISUAL_EVIDENCE"
     }
   },
   "continuity": {

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-english-bank-integration-1abf5c8b-20260922",
+  "capabilityId": "EDUCATION_CALIBRATED_BANK_INTEGRATION_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4455,
+  "requestBranch": "ai-dispatch-request-education-english-bank-integration",
+  "requestCommit": "75c7864155c54d5f38d79d647e1da727d068895c",
+  "requestCommitParent": "862ef77a209dcac407178166577ea342f9553e09",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "862ef77a209dcac407178166577ea342f9553e09",
+  "workflow": "education-calibrated-bank-integration-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "1abf5c8be377603e54f35b861e6c573244cad488",
+    "base_sha": "862ef77a209dcac407178166577ea342f9553e09"
+  },
+  "bridgeRunId": "35809524484",
+  "dispatchedRunId": 35809534263,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35809534263",
+  "dispatchedRunHeadSha": "862ef77a209dcac407178166577ea342f9553e09",
+  "dispatchedAt": "2026-09-23T02:14:04.445Z",
+  "resolvedAt": "2026-09-23T02:14:08.113Z"
+}

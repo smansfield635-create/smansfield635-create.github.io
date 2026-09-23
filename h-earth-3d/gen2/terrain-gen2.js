@@ -15,11 +15,13 @@ float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix
 void main(){
  vec3 p=aPosition;
  float mountain=smoothstep(5.0,34.0,p.y);
- float n1=noise2(p.xz*.030)*2.0-1.0;
- float n2=noise2(p.xz*.072)*2.0-1.0;
- float ridge=1.0-abs(n1);
- float erosion=(ridge*.68+n2*.32-.34)*mountain;
- p.y+=erosion*7.5;
+ float n1=noise2(p.xz*.024)*2.0-1.0;
+ float n2=noise2(p.xz*.061)*2.0-1.0;
+ float n3=noise2(p.xz*.135)*2.0-1.0;
+ float ridge=pow(1.0-abs(n1),1.65);
+ float channels=pow(abs(n2),1.25);
+ float erosion=(ridge*.88+n2*.22+n3*.10-channels*.24-.27)*mountain;
+ p.y+=erosion*9.5;
  vMacro=erosion;vP=p;vN=aNormal;gl_Position=uVP*vec4(p,1.0);
 }`;
 const FS=`#version 300 es
@@ -35,9 +37,11 @@ void main(){
  vec3 base=mix(grass,soil,smoothstep(.18,.52,slope));
  base=mix(base,rock,clamp(smoothstep(.42,.82,slope)+h*.42,0.0,1.0));
  base*=.92+.10*clamp(vMacro,-1.0,1.0);
- float hemi=.16+.20*max(n.y,0.0);
- float crevice=1.0-.24*smoothstep(.32,.88,slope)*(1.0-smoothstep(.1,.7,ndl));
- vec3 lit=base*(hemi+ndl*1.12)*crevice;
+ float hemi=.13+.20*max(n.y,0.0);
+ float horizonShadow=smoothstep(-.12,.24,dot(normalize(vec3(dFdx(vP.y),1.0,dFdy(vP.y))),sun));
+ float crevice=1.0-.31*smoothstep(.25,.90,slope)*(1.0-smoothstep(.08,.72,ndl));
+ float ridgeLight=.08*pow(max(dot(n,normalize(vec3(-.72,.48,.18))),0.0),3.0);
+ vec3 lit=base*(hemi+ndl*1.18)*crevice*(.86+.14*horizonShadow)+base*ridgeLight;
  float d=length(uEye-vP),fog=1.0-exp(-max(0.0,d-190.0)*.0027);
  vec3 haze=vec3(.58,.67,.71);
  outColor=vec4(mix(lit,haze,clamp(fog,0.0,.78)),1.0);
@@ -45,7 +49,7 @@ void main(){
 function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
 
-const xmin=-256,xmax=256,zmin=-430,zmax=40,step=4;
+const xmin=-256,xmax=256,zmin=-430,zmax=40,step=2;
 const cols=Math.round((xmax-xmin)/step)+1,rows=Math.round((zmax-zmin)/step)+1;
 const positions=[],normals=[],indices=[];
 for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){

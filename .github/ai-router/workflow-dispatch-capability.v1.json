@@ -731,6 +731,22 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_PHASE3_NATIVE_RESIDUAL_PROOF": {
+      "workflow": "h-earth-phase3-native-residual-proof-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PHASE3_NATIVE_RESIDUAL_PROOF_RECEIPT"
     }
   },
   "continuity": {

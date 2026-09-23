@@ -1,0 +1,45 @@
+name: H-Earth Phase 3 Native Residual Proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact proof candidate SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  native-residual-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact proof candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Require exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+
+      - name: Execute bounded residual proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-residual-proof
+          node research/h-earth/H_EARTH_PHASE3_NATIVE_RESIDUAL_EXECUTABLE_PROOF_RUNNER_v1.mjs | tee /tmp/h-earth-residual-proof/receipt.json
+
+      - name: Upload deterministic receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-phase3-native-residual-proof-${{ inputs.target_sha }}
+          path: /tmp/h-earth-residual-proof/receipt.json
+          if-no-files-found: error
+          retention-days: 30

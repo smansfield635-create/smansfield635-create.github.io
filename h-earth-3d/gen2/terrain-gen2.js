@@ -59,7 +59,7 @@ void main(){
 function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
 
-const xmin=-640,xmax=640,zmin=-760,zmax=420,step=4;
+const xmin=-480,xmax=480,zmin=-620,zmax=260,step=2;
 const cols=Math.round((xmax-xmin)/step)+1,rows=Math.round((zmax-zmin)/step)+1;
 const positions=[],normals=[],indices=[];
 for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
@@ -67,9 +67,22 @@ for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
  positions.push(x,s.elevation,z);normals.push(s.normal.x,s.normal.y,s.normal.z);
 }
 for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,e=(r+1)*cols+c,d=e+1;indices.push(a,e,b,b,e,d)}
+const terrainIndexCount=indices.length;
 const vao=gl.createVertexArray();gl.bindVertexArray(vao);
 function attr(loc,data){const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,3,gl.FLOAT,false,0,0)}
 attr(0,positions);attr(1,normals);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(indices),gl.STATIC_DRAW);
+
+const WVS=`#version 300 es
+precision highp float;
+layout(location=0)in vec3 aPosition;uniform mat4 uVP;out vec3 vP;
+void main(){vP=aPosition;gl_Position=uVP*vec4(aPosition,1.0);}`;
+const WFS=`#version 300 es
+precision highp float;
+in vec3 vP;out vec4 outColor;uniform vec3 uEye;
+void main(){float d=length(uEye-vP);float ripple=.5+.5*sin(vP.x*.055+vP.z*.041);vec3 deep=vec3(.025,.16,.19),shallow=vec3(.035,.30,.31);float fres=pow(1.0-clamp(normalize(uEye-vP).y,0.0,1.0),3.0);vec3 c=mix(shallow,deep,smoothstep(80.0,520.0,d));c+=ripple*.012;c=mix(c,vec3(.55,.68,.72),fres*.28);outColor=vec4(c,.90);}`;
+const waterProgram=gl.createProgram();gl.attachShader(waterProgram,shader(gl.VERTEX_SHADER,WVS));gl.attachShader(waterProgram,shader(gl.FRAGMENT_SHADER,WFS));gl.linkProgram(waterProgram);if(!gl.getProgramParameter(waterProgram,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(waterProgram));
+const waterVerts=[xmin,0,zmin,xmax,0,zmin,xmin,0,zmax,xmax,0,zmax],waterIdx=[0,2,1,1,2,3];
+const waterVao=gl.createVertexArray();gl.bindVertexArray(waterVao);attr(0,waterVerts);const wib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,wib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(waterIdx),gl.STATIC_DRAW);
 
 const m4={
  perspective(fovy,aspect,n,f){const t=1/Math.tan(fovy/2),nf=1/(n-f);return[t/aspect,0,0,0,0,t,0,0,0,0,(f+n)*nf,-1,0,0,2*f*n*nf,0]},
@@ -86,6 +99,7 @@ function frame(){
  gl.viewport(0,0,w,h);gl.enable(gl.DEPTH_TEST);gl.clearColor(.61,.70,.75,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  const cp=Math.cos(pitch),eye=[target[0]+Math.sin(yaw)*cp*dist,target[1]+Math.sin(pitch)*dist,target[2]+Math.cos(yaw)*cp*dist];
  const vp=m4.mul(m4.perspective(Math.PI/3,w/h,.5,1800),m4.look(eye,target));
- gl.useProgram(program);gl.uniformMatrix4fv(gl.getUniformLocation(program,'uVP'),false,new Float32Array(vp));gl.uniform3fv(gl.getUniformLocation(program,'uEye'),new Float32Array(eye));gl.bindVertexArray(vao);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);requestAnimationFrame(frame)
+ gl.useProgram(program);gl.uniformMatrix4fv(gl.getUniformLocation(program,'uVP'),false,new Float32Array(vp));gl.uniform3fv(gl.getUniformLocation(program,'uEye'),new Float32Array(eye));gl.bindVertexArray(vao);gl.drawElements(gl.TRIANGLES,terrainIndexCount,gl.UNSIGNED_INT,0);
+ gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(waterProgram);gl.uniformMatrix4fv(gl.getUniformLocation(waterProgram,'uVP'),false,new Float32Array(vp));gl.uniform3fv(gl.getUniformLocation(waterProgram,'uEye'),new Float32Array(eye));gl.bindVertexArray(waterVao);gl.drawElements(gl.TRIANGLES,6,gl.UNSIGNED_INT,0);gl.disable(gl.BLEND);requestAnimationFrame(frame)
 }
 document.getElementById('hud').textContent+=` · ${H_EARTH_TERRAIN_FIELD_CONTRACT_ID}`;frame();

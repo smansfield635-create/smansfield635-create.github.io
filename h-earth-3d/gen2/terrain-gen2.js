@@ -15,13 +15,17 @@ float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix
 void main(){
  vec3 p=aPosition;
  float mountain=smoothstep(5.0,34.0,p.y);
- float n1=noise2(p.xz*.024)*2.0-1.0;
- float n2=noise2(p.xz*.061)*2.0-1.0;
- float n3=noise2(p.xz*.135)*2.0-1.0;
- float ridge=pow(1.0-abs(n1),1.65);
- float channels=pow(abs(n2),1.25);
- float erosion=(ridge*.88+n2*.22+n3*.10-channels*.24-.27)*mountain;
- p.y+=erosion*9.5;
+ vec2 q=p.xz;
+ float warpX=(noise2(q*.006+vec2(3.1,8.7))*2.0-1.0)*34.0;
+ float warpZ=(noise2(q*.007+vec2(9.4,1.8))*2.0-1.0)*26.0;
+ vec2 wq=q+vec2(warpX,warpZ);
+ float macro=noise2(wq*.010)*2.0-1.0;
+ float fold=noise2(vec2(wq.x*.018+wq.y*.006,wq.y*.012))*2.0-1.0;
+ float detail=noise2(wq*.055)*2.0-1.0;
+ float ridge=pow(1.0-abs(macro),2.25);
+ float drainage=pow(1.0-abs(fold),4.0);
+ float erosion=(ridge*.95+fold*.24+detail*.08-drainage*.34-.22)*mountain;
+ p.y+=erosion*12.0;
  vMacro=erosion;vP=p;vN=aNormal;gl_Position=uVP*vec4(p,1.0);
 }`;
 const FS=`#version 300 es
@@ -49,7 +53,7 @@ void main(){
 function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
 
-const xmin=-256,xmax=256,zmin=-430,zmax=40,step=2;
+const xmin=-640,xmax=640,zmin=-760,zmax=420,step=4;
 const cols=Math.round((xmax-xmin)/step)+1,rows=Math.round((zmax-zmin)/step)+1;
 const positions=[],normals=[],indices=[];
 for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
@@ -69,7 +73,8 @@ const m4={
 let yaw=.12,pitch=.24,dist=360,target=[0,18,-215],drag=null;
 canvas.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];canvas.setPointerCapture(e.pointerId)});
 canvas.addEventListener('pointermove',e=>{if(!drag)return;yaw+=(e.clientX-drag[0])*.005;pitch=Math.max(-.05,Math.min(1.15,pitch+(e.clientY-drag[1])*.004));drag=[e.clientX,e.clientY]});
-canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('wheel',e=>{e.preventDefault();dist=Math.max(90,Math.min(720,dist*Math.exp(e.deltaY*.001)))},{passive:false});
+canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('wheel',e=>{e.preventDefault();dist=Math.max(90,Math.min(900,dist*Math.exp(e.deltaY*.001)))},{passive:false});
+canvas.addEventListener('dblclick',()=>{yaw=.12;pitch=.24;dist=360;target=[0,18,-215]});
 function frame(){
  const dpr=Math.min(devicePixelRatio||1,2),w=Math.max(1,innerWidth*dpr|0),h=Math.max(1,innerHeight*dpr|0);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
  gl.viewport(0,0,w,h);gl.enable(gl.DEPTH_TEST);gl.clearColor(.61,.70,.75,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);

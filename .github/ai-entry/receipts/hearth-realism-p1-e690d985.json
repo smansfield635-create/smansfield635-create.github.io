@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-realism-p1-e690d985",
+  "capabilityId": "H_EARTH_EXACT_PUBLIC_CORRIDOR_AB_PREVIEW",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4520,
+  "requestBranch": "ai-dispatch-request-hearth-realism-p1-e690d985",
+  "requestCommit": "1f304cc600db03316420bd0c08360adb1fdc553b",
+  "requestCommitParent": "80487637d25b9bf9049900d61f45aa1a935775ae",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "80487637d25b9bf9049900d61f45aa1a935775ae",
+  "workflow": "h-earth-exact-public-corridor-ab-preview.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "e690d985c097960bae62cb0de5791158e91477ce"
+  },
+  "bridgeRunId": "35817194218",
+  "dispatchedRunId": 35817207066,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35817207066",
+  "dispatchedRunHeadSha": "80487637d25b9bf9049900d61f45aa1a935775ae",
+  "dispatchedAt": "2026-09-23T04:09:53.751Z",
+  "resolvedAt": "2026-09-23T04:09:57.838Z"
+}

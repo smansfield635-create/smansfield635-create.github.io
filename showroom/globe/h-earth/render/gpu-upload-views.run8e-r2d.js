@@ -204,7 +204,6 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
 
   return freezeRecord({
     positions: new Float32Array(rawViews.positions),
-    localAuthoringXZ: new Float32Array(rawViews.localAuthoringXZ),
     normals: canonicalNormals.view,
     baseColorsLinear: projectedWaterColors.view,
     materialParameters: canonicalMaterialParameters.view,
@@ -234,7 +233,6 @@ export function evaluateHEarthRun8ER2DCanonicalGPUUploadViews(views) {
   const issues = [];
   const expected = {
     positions: Float32Array,
-    localAuthoringXZ: Float32Array,
     normals: Float32Array,
     baseColorsLinear: Float32Array,
     materialParameters: Float32Array,

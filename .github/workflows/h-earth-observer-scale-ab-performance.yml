@@ -1,0 +1,29 @@
+name: H-Earth Observer-Scale A-B Performance
+on:
+  push:
+    branches:
+      - h-earth-observer-scale-geometry-ab-construction-v1
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: h-earth-observer-scale-geometry-ab-construction-v1, path: B, fetch-depth: 1}
+      - uses: actions/checkout@v4
+        with: {ref: 1851c48c87956c50f4bd67946a32c555857c3e62, path: A, fetch-depth: 1}
+      - name: Require exact identities
+        run: |
+          test "$(git -C A rev-parse HEAD)" = "1851c48c87956c50f4bd67946a32c555857c3e62"
+          test "$(git -C B rev-parse HEAD)" = "$GITHUB_SHA"
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Measure static construction and transport performance
+        run: node B/h-earth-3d/validation/observer-scale-ab.performance.mjs "$PWD/A" "$PWD/B" | tee observer-scale-ab-performance.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-observer-scale-ab-performance-${{ github.sha }}
+          path: observer-scale-ab-performance.json
+          retention-days: 90

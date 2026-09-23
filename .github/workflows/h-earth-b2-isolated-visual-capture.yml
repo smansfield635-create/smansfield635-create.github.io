@@ -1,5 +1,5 @@
 name: H-Earth B2 Isolated Visual Capture
-on: workflow_dispatch
+on:\n  workflow_dispatch:\n  push:\n    branches:\n      - h-earth/b2-meso-morphology-v1
 permissions: {contents: read}
 jobs:
   capture:

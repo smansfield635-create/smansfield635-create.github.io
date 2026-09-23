@@ -236,9 +236,9 @@ void main(){
     float microMedium=noise2(world*0.47+vec2(-23.1,31.9));
     float microFine=noise2(world*1.13+vec2(47.2,-19.6));
     float microReliefHeight=
-      (microCoarse-0.5)*0.34+
-      (microMedium-0.5)*0.16+
-      (microFine-0.5)*0.055;
+      (microCoarse-0.5)*0.42+
+      (microMedium-0.5)*0.21+
+      (microFine-0.5)*0.085;
     float microFootprint=max(
       max(length(fwidth(world*0.19)),length(fwidth(world*0.47))),
       length(fwidth(world*1.13))
@@ -284,11 +284,20 @@ void main(){
       0.0,1.0
     );
     float rockExposure=clamp(
-      slopeResponse*0.68+curvatureResponse*0.20+elevationMix*0.12,
+      smoothstep(0.16,0.68,slope)*0.72+
+      curvatureResponse*0.18+
+      elevationMix*0.10,
       0.0,1.0
     );
-    palette=mix(palette,rock,rockExposure*0.46);
-    palette*=mix(0.90,1.10,materialVariation);
+    float shelteredSoil=clamp(
+      (1.0-rockExposure)*(0.58+0.42*(1.0-slopeResponse))*
+      (0.78+0.22*materialVariation),
+      0.0,1.0
+    );
+    vec3 soilTone=mix(lowland,upland,elevationMix);
+    palette=mix(palette,soilTone,shelteredSoil*0.34);
+    palette=mix(palette,rock,rockExposure*0.58);
+    palette*=mix(0.88,1.12,materialVariation);
     palette=mix(palette,base,0.34);
 
     float terrainRoughness=clamp(vMaterialParameters.x,0.04,1.0);
@@ -298,8 +307,9 @@ void main(){
     float terrainWetness=clamp(vMaterialParameters.z,0.0,1.0);
     terrainWetnessForLighting=terrainWetness;
     float terrainCurvature=clamp(vMaterialParameters.w,0.0,1.0);
-    specularScale=mix(0.34,1.18,terrainReflectance);
-    specularScale*=mix(0.82,1.34,terrainWetness);
+    specularScale=mix(0.28,1.24,terrainReflectance);
+    specularScale*=mix(0.78,1.38,terrainWetness);
+    specularScale*=mix(0.92,1.10,rockExposure);
     presentationContact=max(
       presentationContact,
       clamp(terrainCurvature*0.10+rockExposure*0.035,0.0,0.16)
@@ -392,8 +402,8 @@ void main(){
     );
     diffuse=clamp(
       diffuse,
-      max(0.0,geometricDiffuse-0.28),
-      min(1.0,geometricDiffuse+0.28)
+      max(0.0,geometricDiffuse-0.34),
+      min(1.0,geometricDiffuse+0.34)
     );
   }
 
@@ -430,9 +440,9 @@ void main(){
   float directional=
     diffuse*
     uSunIntensity*
-    (vRoleCode==1u?0.90:(vRoleCode==2u?0.74:0.82));
+    (vRoleCode==1u?0.96:(vRoleCode==2u?0.74:0.82));
   vec3 lit=base*(ambient+directional)*uSunColor;
-  lit+=base*rim*(vRoleCode==1u?0.18:0.10);
+  lit+=base*rim*(vRoleCode==1u?0.14:0.10);
   lit+=uSunColor*specular*specularLightingGain;
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);

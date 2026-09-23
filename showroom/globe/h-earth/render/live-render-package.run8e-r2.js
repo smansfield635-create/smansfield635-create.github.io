@@ -314,7 +314,6 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   const terrainPrimitiveId = neutralPackage.primitives[0]?.primitiveId;
   const positions = [];
   const normals = [];
-  const localAuthoringXZ = [];
   const baseColorsLinear = [];
   const materialParameters = [];
   const materialModelCodes = [];
@@ -364,16 +363,6 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       }
       positions.push(vertex.x, vertex.y, vertex.z);
       normals.push(normal.x, normal.y, normal.z);
-      // Preserve source/local-authoring XZ once at canonical package construction.
-      // Terrain vertices are already projected for presentation here, so recover
-      // authoritative authoring coordinates from the primitive's preserved source
-      // attributes when available; projected x/z remain valid for non-terrain roles.
-      const sourceXValues=geometry?.attributes?.xValues;
-      const sourceZValues=geometry?.attributes?.zValues;
-      if(role==='TERRAIN'&&Array.isArray(sourceXValues)&&Array.isArray(sourceZValues)){
-        const cols=sourceXValues.length,row=Math.floor(localVertexIndex/cols),col=localVertexIndex%cols;
-        localAuthoringXZ.push(sourceXValues[col]??vertex.x,sourceZValues[row]??vertex.z);
-      }else localAuthoringXZ.push(vertex.x,vertex.z);
       primitiveIndices.push(primitiveIndex);
       roleCodes.push(H_EARTH_RUN_8E_R2_ROLE_CODE[role]);
       materialModelCodes.push(materialModelCode);
@@ -453,7 +442,6 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   const immutableBuffers = freezeRecord({
     positions: freezeArray(positions),
     normals: freezeArray(normals),
-    localAuthoringXZ: freezeArray(localAuthoringXZ),
     baseColorsLinear: freezeArray(baseColorsLinear),
     materialParameters: freezeArray(materialParameters),
     materialModelCodes: freezeArray(materialModelCodes),
@@ -472,7 +460,6 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   primitives.forEach((primitive) => hash.string(primitive.primitiveId));
   hash.numbers(immutableBuffers.positions);
   hash.numbers(immutableBuffers.normals);
-  hash.numbers(immutableBuffers.localAuthoringXZ);
   hash.numbers(immutableBuffers.baseColorsLinear);
   hash.numbers(immutableBuffers.materialParameters);
   hash.numbers(immutableBuffers.materialModelCodes);
@@ -584,7 +571,6 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
   const expectedLengths = {
     positions: vertexCount * 3,
     normals: vertexCount * 3,
-    localAuthoringXZ: vertexCount * 2,
     baseColorsLinear: vertexCount * 4,
     materialParameters: vertexCount * 4,
     materialModelCodes: vertexCount,
@@ -639,7 +625,6 @@ export function createHEarthRun8ER2GPUBufferViews(packageRecord = getHEarthRun8E
   return freezeRecord({
     positions: new Float32Array(packageRecord.buffers.positions),
     normals: new Float32Array(packageRecord.buffers.normals),
-    localAuthoringXZ: new Float32Array(packageRecord.buffers.localAuthoringXZ),
     baseColorsLinear: new Float32Array(packageRecord.buffers.baseColorsLinear),
     materialParameters: new Float32Array(packageRecord.buffers.materialParameters),
     materialModelCodes: new Uint8Array(packageRecord.buffers.materialModelCodes),

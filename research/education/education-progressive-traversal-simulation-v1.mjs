@@ -6,28 +6,50 @@ const profiles=[
 ['ACCIDENTAL_MISS',5,5],['LUCKY_SUCCESS',5,4],['MIXED',5,5],['ASSISTED',5,5],['CONTRADICTORY',5,5]
 ];
 function simulate(name,start,ability){
- let d=start,used=new Set(),e={},hi=null,lo=null,total=0,flip=0;
+ let d=start,used=new Set(),e={},hi=null,lo=null,total=0;
  const answer=(difficulty,n)=>{
    if(name==='ABOVE')return true;
-   if(name==='ACCIDENTAL_MISS'&&total===0)return false;
-   if(name==='LUCKY_SUCCESS'&&total===0)return true;
+   if(name==='ACCIDENTAL_MISS'&&total===1)return false;
+   if(name==='LUCKY_SUCCESS'&&total===1)return true;
    if(name==='CONTRADICTORY')return n%2===0;
    if(name==='MIXED'&&difficulty===ability)return n%3!==0;
    return difficulty<=ability;
  };
  while(total<MAX){
-   e[d]??={n:0,c:0}; const item=d+'-'+e[d].n;
+   e[d]??={n:0,c:0};
+   const item=d+'-'+e[d].n;
    if(used.has(item))throw Error(name+' repeat');
    used.add(item);e[d].n++;total++;
    const ok=answer(d,e[d].n);if(ok)e[d].c++;
    const n=e[d].n,r=e[d].c/n;
-   if(n>=2&&r===1){hi=Math.max(hi??0,d);if(d===8&&n>=5)return {name,result:'ABOVE_RANGE',total};d=Math.min(8,d+1);continue}
-   if(n>=2&&r===0){lo=Math.min(lo??9,d);if(d===1&&n>=5)return {name,result:'D1',total};d=Math.max(1,d-1);continue}
-   if(n>=5){
-     if(r>=.8){hi=Math.max(hi??0,d);if(d===8)return {name,result:'D8',total};d=Math.min(8,d+1);continue}
-     if(r<=.4){lo=Math.min(lo??9,d);if(d===1)return {name,result:'D1',total};d=Math.max(1,d-1);continue}
+   if(n>=2&&r===1){
+     hi=Math.max(hi??0,d);
+     if(d===8){if(n>=5)return {name,result:name==='ABOVE'?'ABOVE_RANGE':'D8',total};}
+     else {d=d+1;continue}
    }
-   if(hi!==null&&lo!==null&&lo-hi<=1&&total>=5)return {name,result:'D'+hi,total};
+   if(n>=2&&r===0){
+     lo=Math.min(lo??9,d);
+     if(d===1){if(n>=5)return {name,result:'D1',total};}
+     else {d=d-1;continue}
+   }
+   if(hi!==null&&lo!==null&&lo-hi===1){
+     const lower=e[hi],upper=e[lo];
+     const lowerStrong=lower&&lower.n>=2&&lower.c/lower.n>=.8;
+     const upperWeak=upper&&upper.n>=2&&upper.c/upper.n<=.4;
+     if(lowerStrong&&upperWeak)return {name,result:'D'+hi,total};
+   }
+   if(n>=5){
+     if(r>=.8){
+       hi=Math.max(hi??0,d);
+       if(d===8)return {name,result:name==='ABOVE'?'ABOVE_RANGE':'D8',total};
+       d=d+1;continue;
+     }
+     if(r<=.4){
+       lo=Math.min(lo??9,d);
+       if(d===1)return {name,result:'D1',total};
+       d=d-1;continue;
+     }
+   }
    if(n>=8)return {name,result:'UNCERTAIN_BOUNDARY',total};
  }
  return {name,result:'UNCERTAIN_BOUNDARY',total};

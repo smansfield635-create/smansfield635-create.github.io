@@ -30,7 +30,9 @@ jobs:
           set -euo pipefail
           git init .
           git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "+${GITHUB_REF}:refs/remotes/origin/verification"
+          verification_sha="${{ github.event.pull_request.head.sha || github.sha }}"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$verification_sha"
+          git update-ref refs/remotes/origin/verification FETCH_HEAD
           git sparse-checkout init --cone --sparse-index
           git sparse-checkout set .github/ai-router .github/workflows tools
           git checkout --detach refs/remotes/origin/verification

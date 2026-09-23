@@ -29,11 +29,13 @@ function simulate(name,start,ability){
    const n=e[d].n,r=e[d].c/n;
    if(n>=2&&r===1){
      hi=Math.max(hi??0,d);
+     if(lo!==null&&lo-hi===1)return {name,result:'D'+hi,total};
      if(d===8){if(n>=5)return {name,result:name==='ABOVE'?'ABOVE_RANGE':'D8',total};}
      else {d=d+1;continue}
    }
    if(n>=2&&r===0){
      lo=Math.min(lo??9,d);
+     if(hi!==null&&lo-hi===1)return {name,result:'D'+hi,total};
      if(d===1){if(n>=5)return {name,result:'D1',total};}
      else {d=d-1;continue}
    }

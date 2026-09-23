@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-23T02:39:55Z",
+  "generatedAt": "2026-09-23T03:36:13Z",
   "window30d": {
-    "start": "2026-08-24T02:39:55Z",
-    "end": "2026-09-23T02:39:55Z"
+    "start": "2026-08-24T03:36:13Z",
+    "end": "2026-09-23T03:36:13Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-16",
-      "pageLoads": 197
+      "pageLoads": 203
     },
     {
       "date": "2026-09-17",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 12
+      "pageLoads": 21
     }
   ],
   "summary": {
-    "pageLoads": 7205,
-    "botPageLoads": 2509,
-    "nonBotPageLoads": 4696
+    "pageLoads": 7170,
+    "botPageLoads": 2480,
+    "nonBotPageLoads": 4690
   },
   "referrers": [
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3311,
+      "pageLoads": 3273,
       "visits": 0
     },
     {
       "host": "(none)",
-      "pageLoads": 3234,
-      "visits": 3234
+      "pageLoads": 3236,
+      "visits": 3236
     },
     {
       "host": "www.google.com",
-      "pageLoads": 630,
-      "visits": 630
+      "pageLoads": 631,
+      "visits": 631
     },
     {
       "host": "bing.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1875,
+      "pageLoads": 1876,
       "visits": 1609
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 939,
+      "pageLoads": 899,
       "visits": 632
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 788,
-      "visits": 788
+      "pageLoads": 787,
+      "visits": 787
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,13 +197,13 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 276,
+      "pageLoads": 272,
       "visits": 93
     },
     {
       "path": "/products/education/",
-      "pageLoads": 196,
-      "visits": 80
+      "pageLoads": 200,
+      "visits": 84
     },
     {
       "path": "/evidence/agentic-frontier/",

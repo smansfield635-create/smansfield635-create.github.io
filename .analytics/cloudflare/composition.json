@@ -1,15 +1,15 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-23T05:31:06Z",
+  "generatedAt": "2026-09-23T06:47:05Z",
   "window": {
-    "start": "2026-08-24T05:31:06Z",
-    "end": "2026-09-23T05:31:06Z"
+    "start": "2026-08-24T06:47:05Z",
+    "end": "2026-09-23T06:47:05Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1840,
+        "pageLoads": 1842,
         "visits": 1573
       },
       {
@@ -44,7 +44,7 @@
       },
       {
         "value": "/index.html",
-        "pageLoads": 143,
+        "pageLoads": 133,
         "visits": 0
       },
       {
@@ -73,6 +73,11 @@
         "visits": 2
       },
       {
+        "value": "/analytics/",
+        "pageLoads": 73,
+        "visits": 41
+      },
+      {
         "value": "/showroom/globe/hearth/diagnostic/",
         "pageLoads": 72,
         "visits": 0
@@ -81,11 +86,6 @@
         "value": "/about/",
         "pageLoads": 70,
         "visits": 11
-      },
-      {
-        "value": "/analytics/",
-        "pageLoads": 70,
-        "visits": 41
       },
       {
         "value": "/laws/categories/reality/",
@@ -203,6 +203,11 @@
         "visits": 10
       },
       {
+        "value": "/home/",
+        "pageLoads": 22,
+        "visits": 2
+      },
+      {
         "value": "/showroom/globe/hearth/",
         "pageLoads": 22,
         "visits": 0
@@ -211,11 +216,6 @@
         "value": "/showroom/globe/audralia/diagnostic/",
         "pageLoads": 21,
         "visits": 10
-      },
-      {
-        "value": "/home/",
-        "pageLoads": 21,
-        "visits": 1
       },
       {
         "value": "/laws/categories/flow/handoffs/",
@@ -373,6 +373,11 @@
         "visits": 0
       },
       {
+        "value": "/elara/index.html",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
         "value": "/philosophy/",
         "pageLoads": 1,
         "visits": 1
@@ -384,11 +389,6 @@
       },
       {
         "value": "/campaigns/wave/thai-boxing/",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
-        "value": "/elara/index.html",
         "pageLoads": 1,
         "visits": 0
       },
@@ -436,7 +436,7 @@
     "refererHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3240,
+        "pageLoads": 3235,
         "visits": 0
       },
       {
@@ -473,13 +473,18 @@
         "value": "lm.facebook.com",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "search.google.com",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 7035,
-        "visits": 3795
+        "pageLoads": 7031,
+        "visits": 3796
       },
       {
         "value": "JP",
@@ -530,8 +535,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1707,
-        "visits": 586
+        "pageLoads": 1703,
+        "visits": 587
       }
     ],
     "userAgentBrowser": [
@@ -547,8 +552,8 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1599,
-        "visits": 498
+        "pageLoads": 1595,
+        "visits": 499
       },
       {
         "value": "MobileSafari",
@@ -584,8 +589,8 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4105,
-        "visits": 980
+        "pageLoads": 4101,
+        "visits": 981
       },
       {
         "value": "Linux",
@@ -616,8 +621,8 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4638,
-        "visits": 1459
+        "pageLoads": 4634,
+        "visits": 1460
       },
       {
         "value": "1",
@@ -628,12 +633,12 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 5208,
-        "visits": 3470
+        "pageLoads": 5202,
+        "visits": 3471
       },
       {
         "value": "reload",
-        "pageLoads": 900,
+        "pageLoads": 901,
         "visits": 316
       },
       {
@@ -643,7 +648,7 @@
       },
       {
         "value": "back-forward",
-        "pageLoads": 285,
+        "pageLoads": 286,
         "visits": 69
       },
       {
@@ -660,12 +665,12 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5494,
-        "visits": 3220
+        "pageLoads": 5497,
+        "visits": 3221
       },
       {
         "value": "cache",
-        "pageLoads": 1287,
+        "pageLoads": 1280,
         "visits": 321
       },
       {
@@ -677,15 +682,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 7095,
-        "visits": 3855
+        "pageLoads": 7091,
+        "visits": 3856
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7095,
-        "visits": 3855
+        "pageLoads": 7091,
+        "visits": 3856
       }
     ]
   }

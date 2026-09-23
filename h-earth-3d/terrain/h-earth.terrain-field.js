@@ -130,7 +130,7 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
   overlapLaw: {
     identity: 'GRATITUDE_ARTICULATED_POSITIVE_RELIEF_OVERLAP_v1',
     strongestLocalPositiveReliefRetention: 1,
-    secondaryOverlappingPositiveReliefRetention: 0.22,
+    secondaryOverlappingPositiveReliefRetention: 1,
     namedReliefComponentsPreserved: true,
     passesBasinsAndValleysExcludedFromCompression: true,
     purpose: 'PREVENT_MULTIPLE_VALID_RELIEF_FEATURES_FROM_SUMMING_INTO_AN_ENCLOSING_NEAR_FIELD_SCREEN'
@@ -169,7 +169,7 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     basin: 'GRATITUDE_RECEIVING_BASIN_PROFILE_v1',
     foothill: 'GRATITUDE_FOOTHILL_TAPER_PROFILE_v1',
     valley: 'DRAINAGE_VALLEY_PROFILE_v1',
-    positiveReliefComposition: 'STRONGEST_LOCAL_FEATURE_PLUS_ATTENUATED_SECONDARY_OVERLAP_v1',
+    positiveReliefComposition: 'OW02_FULL_ADDITIVE_POSITIVE_RELIEF_RECOVERY_PREVIEW_v1',
     water: 'COASTAL_WATER_DEPTH_PROFILE_v1'
   },
   coastalSystem: H_EARTH_GRATITUDE_COASTAL_SYSTEM,
@@ -252,7 +252,7 @@ function evaluateRawElevation(worldX, worldZ) {
   const strongestPositiveRelief = Math.max(...positiveReliefComponents);
   const totalPositiveRelief = positiveReliefComponents.reduce((sum, value) => sum + value, 0);
   const secondaryPositiveRelief = Math.max(0, totalPositiveRelief - strongestPositiveRelief);
-  const articulatedPositiveRelief = strongestPositiveRelief + secondaryPositiveRelief * 0.22;
+  const articulatedPositiveRelief = strongestPositiveRelief + secondaryPositiveRelief;
 
   const lowland = gaussian(worldX, worldZ, -92, -152, 70, 58, -6.5);
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);

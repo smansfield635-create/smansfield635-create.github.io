@@ -1,0 +1,65 @@
+name: About Audralia Blob Repair Carrier
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'qualification/about-audralia-repair-20260902'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout About construction branch
+        uses: actions/checkout@v4
+        with:
+          ref: about/corrective-successor-reconstruction
+          fetch-depth: 1
+          sparse-checkout: |
+            about
+          sparse-checkout-cone-mode: true
+
+      - name: Verify expected predecessor
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "8eaded636ec11fb24105492b7d5342a96f387a1f"
+
+      - name: Convert data URI media source to Blob-backed runtime source
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('about/index.html')
+          s=p.read_text()
+          old='<source type="video/mp4" src="data:video/mp4;base64,'
+          new='<source type="video/mp4" data-base64="'
+          if s.count(old) != 1:
+              raise SystemExit(f'expected exactly one embedded Audralia source; found {s.count(old)}')
+          s=s.replace(old,new,1)
+          s=s.replace('==\"></video><span class="audralia-label">','==\"></source></video><span class="audralia-label">',1)
+          anchor="(()=>{const root=document.documentElement,skip=document.querySelector('[data-skip]'),film=document.querySelector('[data-film]'),footage=document.querySelector('[data-audralia-footage]');let timer;"
+          insert="(()=>{const root=document.documentElement,skip=document.querySelector('[data-skip]'),film=document.querySelector('[data-film]'),footage=document.querySelector('[data-audralia-footage]');let footageUrl=null;if(footage){const source=footage.querySelector('source[data-base64]');if(source){const raw=atob(source.dataset.base64);const bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);footageUrl=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));source.src=footageUrl;footage.load();}}let timer;"
+          if anchor not in s:
+              raise SystemExit('runtime anchor not found')
+          s=s.replace(anchor,insert,1)
+          p.write_text(s)
+          PY
+          grep -q 'source type="video/mp4" data-base64' about/index.html
+          grep -q 'URL.createObjectURL' about/index.html
+          ! grep -q '<source type="video/mp4" src="data:video/mp4;base64,' about/index.html
+
+      - name: Commit exact bounded product repair
+        shell: bash
+        run: |
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          git add about/index.html
+          git diff --cached --quiet && { echo 'No product change produced'; exit 1; }
+          git commit -m "Repair Audralia footage loading with Blob-backed source"
+          git push origin HEAD:about/corrective-successor-reconstruction
+          echo "NEW_CANDIDATE=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Report successor
+        run: echo "About successor candidate $NEW_CANDIDATE"

@@ -90,10 +90,10 @@ const main = async () => {
   if (request.schema !== 'AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1') throw new Error('Request schema mismatch');
   if (!request.requestId || !request.capabilityId) throw new Error('requestId and capabilityId are required');
 
-  // Transport freshness is not execution authority. Main may advance after the
-  // request commit is created. Immutable REQUEST inputs remain exact; inputs
-  // declared CURRENT_MAIN_SHA are resolved from main at bridge execution time.
+  // Preserve receipt telemetry, but enforce the active fail-closed continuity
+  // contract before capability resolution or native workflow dispatch.
   const requestParentWasCurrent = parentSha === currentMainSha;
+  if (!requestParentWasCurrent) throw new Error(`Stale dispatch request: parent ${parentSha} != current main ${currentMainSha}`);
 
   const capability = registry.capabilities?.[request.capabilityId];
   if (!capability) throw new Error(`Unknown capabilityId: ${request.capabilityId}`);

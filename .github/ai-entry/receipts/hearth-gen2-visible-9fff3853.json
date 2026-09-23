@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2-visible-9fff3853",
+  "capabilityId": "H_EARTH_GEN2_LIVE_BRIDGE_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4499,
+  "requestBranch": "ai-dispatch-request-hearth-gen2-visible-9fff3853",
+  "requestCommit": "bfbd22199f6bfbf95d6929c241f9a69574d6b80e",
+  "requestCommitParent": "042248340200e4013b106bc2befac3c3e6c273f8",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "042248340200e4013b106bc2befac3c3e6c273f8",
+  "workflow": "h-earth-gen2-live-bridge-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9fff3853157b3eb94c93a473de963b8851e50ffc"
+  },
+  "bridgeRunId": "35814201287",
+  "dispatchedRunId": 35814210375,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35814210375",
+  "dispatchedRunHeadSha": "042248340200e4013b106bc2befac3c3e6c273f8",
+  "dispatchedAt": "2026-09-23T03:24:39.349Z",
+  "resolvedAt": "2026-09-23T03:24:42.707Z"
+}

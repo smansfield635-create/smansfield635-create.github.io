@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T01:03:36Z",
+  "generatedAt": "2026-09-23T01:39:19Z",
   "window": {
-    "start": "2026-06-25T01:03:36Z",
-    "end": "2026-09-23T01:03:36Z"
+    "start": "2026-06-25T01:39:19Z",
+    "end": "2026-09-23T01:39:19Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -70,6 +70,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 103,
+        "visits": 9
+      },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
@@ -82,6 +86,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/archcoin/": {
+        "pageLoads": 54,
+        "visits": 3
+      },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
         "visits": 0
@@ -89,14 +97,6 @@
       "/laws/categories/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 103,
-        "visits": 9
-      },
-      "/products/archcoin/": {
-        "pageLoads": 54,
-        "visits": 3
       },
       "/laws/": {
         "pageLoads": 301,
@@ -114,13 +114,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 499,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 160,
         "visits": 36
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 499,
+        "visits": 0
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/build/": {
+        "pageLoads": 21,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -185,10 +189,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/build/": {
-        "pageLoads": 21,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,

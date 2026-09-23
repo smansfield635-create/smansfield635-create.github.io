@@ -1,7 +1,7 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { sampleHEarthRun8CSuccessorSurfaceMaterial } from '../../../../h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
 import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
-import { regionalReliefDelta, previewHEarthFunctionalLandscape } from './landscape-preview.js';
+import { regionalReliefDelta } from './landscape-preview.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
@@ -611,16 +611,6 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     resources.vertexArray = gl.createVertexArray();
     if (!resources.vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
     gl.bindVertexArray(resources.vertexArray);
-    const localAuthoringXZ=new Float32Array(uploadViews.positions.length/3*2);
-    // Canonical terrain package positions are planetary. Recover explicit local XZ
-    // from the terrain primitive's preserved authoring vertices for mask authority.
-    const terrainPrimitive=renderPackage.primitiveSpans?.find(span=>span.role==='TERRAIN');
-    const sourceTerrain=getHEarthOW01CanonicalLiveRenderPackageOccurrence();
-    // Non-terrain entries remain outside refinement role and need no local mask coordinates.
-    if(terrainPrimitive){
-      const baseTerrain=previewHEarthFunctionalLandscape().componentResults.terrain.primitive.geometry.vertices;
-      for(let i=0;i<Math.min(baseTerrain.length,terrainPrimitive.vertexCount);i++){localAuthoringXZ[(terrainPrimitive.vertexStart+i)*2]=baseTerrain[i].x;localAuthoringXZ[(terrainPrimitive.vertexStart+i)*2+1]=baseTerrain[i].z;}
-    }
     const specifications = [
       ['positions', uploadViews.positions, 0, 3, gl.FLOAT, false],
       ['normals', uploadViews.normals, 1, 3, gl.FLOAT, false],
@@ -630,7 +620,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
       ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
       ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true],
-      ['localAuthoringXZ', localAuthoringXZ, 8, 2, gl.FLOAT, false]
+      ['localAuthoringXZ', uploadViews.localAuthoringXZ, 8, 2, gl.FLOAT, false]
     ];
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {

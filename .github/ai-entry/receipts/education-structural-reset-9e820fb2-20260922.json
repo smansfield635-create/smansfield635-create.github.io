@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-structural-reset-9e820fb2-20260922",
+  "capabilityId": "EDUCATION_STRUCTURAL_RESET_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4510,
+  "requestBranch": "ai-dispatch-request-education-structural-reset",
+  "requestCommit": "566a2c1f4d0f625034a17e01d8e603e9e8138171",
+  "requestCommitParent": "07834fd2728ca5bbe78a3d608db7d0841d92d1a9",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "07834fd2728ca5bbe78a3d608db7d0841d92d1a9",
+  "workflow": "education-structural-placement-reset-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "9e820fb25baf222515cf62a6e236e0d8620c06e4",
+    "base_sha": "600989bed20abe0b0d96897ffa383937af68dab8"
+  },
+  "bridgeRunId": "35815871934",
+  "dispatchedRunId": 35815882135,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35815882135",
+  "dispatchedRunHeadSha": "07834fd2728ca5bbe78a3d608db7d0841d92d1a9",
+  "dispatchedAt": "2026-09-23T03:49:51.147Z",
+  "resolvedAt": "2026-09-23T03:49:54.514Z"
+}

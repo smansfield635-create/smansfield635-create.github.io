@@ -13,10 +13,17 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
 jobs:
   exact-public-corridor-ab:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@v4

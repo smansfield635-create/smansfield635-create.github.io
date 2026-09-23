@@ -17,7 +17,12 @@ function simulate(name,start,ability){
  };
  while(total<MAX){
    e[d]??={n:0,c:0};
-   const item=d+'-'+e[d].n;
+   if(e[d].n>=8){
+     if(hi!==null&&lo!==null&&lo-hi===1)return {name,result:'D'+hi,total};
+     return {name,result:'UNCERTAIN_BOUNDARY',total};
+   }
+   const ordinal=e[d].n;
+   const item=d+'-'+ordinal;
    if(used.has(item))throw Error(name+' repeat');
    used.add(item);e[d].n++;total++;
    const ok=answer(d,e[d].n);if(ok)e[d].c++;

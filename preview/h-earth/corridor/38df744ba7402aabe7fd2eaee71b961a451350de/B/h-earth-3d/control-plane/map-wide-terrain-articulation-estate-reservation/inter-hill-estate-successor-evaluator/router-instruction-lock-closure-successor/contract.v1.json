@@ -1,0 +1,163 @@
+{
+  "schema": "H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONTRACT_v1",
+  "status": "ROLE_4_ADMITTED_CONSTRUCTION_CONTRACT_SINGLE_OWNER_AND_LOCK_TOKEN_REPAIRED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "operation": {
+    "operationId": "H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001",
+    "operationClass": "NONPRODUCT_REPOSITORY_GOVERNANCE_SUCCESSOR_CONSTRUCTION",
+    "exactGoverningMainHead": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f",
+    "constructionLockScope": "H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_EXACT_9_PATH_SCOPE",
+    "constructionLockGeneration": 280,
+    "constructionLockAcquisitionCommit": "ef966ee8bd99570ba7bb6fe912945a50a1e975ac",
+    "canonicalIntakeReceiptSha256": "1914e006f3da1a21bae4930ca6d3ef4dca5f06c359612e66532b65b375ccc1a8"
+  },
+  "sourceBindings": {
+    "router": {
+      "path": ".github/ai-router/router.v1.json",
+      "predecessorBlob": "b6e1b23b6b0aac424b90e1414c6e047134c98f8a"
+    },
+    "nestedInstruction": {
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md",
+      "predecessorBlob": "f5d8215e180fa84ad4f23ee3eea57aa41abbcef0"
+    },
+    "lockManager": {
+      "path": "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+      "blob": "6fc0199c9dc943b8cdf3efe7c789f0e1888774b8"
+    },
+    "executionBackendRegistry": {
+      "path": ".github/ai-router/execution-backends.v1.json",
+      "blob": "ea512cbe700c90052d7507105516ee6fe3f3f899"
+    },
+    "bridge": {
+      "candidateHead": "9c3daa91a3624632a488853d029dabb25c5ce048",
+      "activationFingerprint": "e16f80bf0d0e7f5b5354194c8cde180dbf726d385c2f96b5425780f32591c31d",
+      "implementationBlob": "eb08a49ec8e101a5953612e582004aeb10e2449a",
+      "workflowBlob": "8aa6ebcfb18dff66db32275e5644fea2d599830e",
+      "contractBlob": "6f730a6cb9ad516016ce02e7f6f4ff2ff99633f8",
+      "canonicalGateBlob": "f0b22e6b9574507632f1ad07647710971a4d63de"
+    }
+  },
+  "pathBoundary": {
+    "exactChangedPathCount": 9,
+    "pathStatus": "2_MODIFIED_7_ADDED",
+    "authorizedPaths": [
+      ".github/ai-router/router.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md",
+      ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/changed-path-manifest.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/closure-request.lock-279.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/negative-fixtures.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/rollback.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs"
+    ],
+    "commitAExactPathCount": 8,
+    "commitBAdditionalPathCount": 1
+  },
+  "routerRegistration": {
+    "projectId": "H_EARTH",
+    "addedExactPaths": [
+      ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2.yml",
+      "tools/h-earth-map-wide-terrain/inter-hill-estate/bm2-census-adapter.v2.mjs",
+      "tools/h-earth-map-wide-terrain/inter-hill-estate/real-terrain-partition.v2.mjs",
+      "tools/h-earth-map-wide-terrain/inter-hill-estate/estate-multizone-search.v2.mjs",
+      "tools/h-earth-map-wide-terrain/inter-hill-estate/view-approach-evaluator.v2.mjs",
+      "tools/h-earth-map-wide-terrain/inter-hill-estate/successor-evaluator.v2.mjs",
+      "tools/h-earth-map-wide-terrain/inter-hill-estate/self-test.v2.mjs",
+      ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml"
+    ],
+    "newPrefixOwnership": false,
+    "pathRemoval": false,
+    "pathReassignment": false,
+    "equalPrioritySecondOwner": false
+  },
+  "v1Boundary": {
+    "evaluatorHead": "b935c204da2904e86f9c9c566bed0ac9b0de4193",
+    "mergeCommit": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f",
+    "mutationAuthorized": false,
+    "zeroResultTerrainInfeasibilityEvidence": false
+  },
+  "prospectiveV2": {
+    "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002",
+    "implementationAuthorized": false,
+    "hardGateWeakening": false
+  },
+  "workflow": {
+    "class": "PROCEDURE_SPECIFIC_GOVERNANCE_LIFECYCLE_WORKFLOW",
+    "generalCommandTransport": false,
+    "modes": [
+      "GOVERNANCE_GATE_REPAIR_PULL_REQUEST_VERIFICATION",
+      "LOCK_279_FAIL_CLOSED_EXECUTION_REQUEST_V2",
+      "GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V2"
+    ],
+    "eventTarget": "EXACT_GOVERNANCE_SUCCESSOR_PULL_REQUEST_636",
+    "actorAssociations": [
+      "OWNER",
+      "MEMBER",
+      "COLLABORATOR"
+    ],
+    "singleOwnerRepositorySupported": true,
+    "thirdPartyApprovalReviewRequired": false,
+    "role4AuthorizationEvidence": "EXACT_PR_COMMENT",
+    "role4AuthorizationMarker": "ROLE_4_AUTHORIZATION_COMMENT",
+    "role4AuthorizationRequiredAssociation": "OWNER",
+    "role4AuthorizationRequiredBindings": [
+      "EXACT_CANDIDATE_HEAD",
+      "EXACT_MERGE_COMMIT"
+    ],
+    "role3PostCommandEvidenceRequiredForLock279": false,
+    "role3PostCommandEvidenceRequiredForLock280": true,
+    "currentMainRule": "WORKFLOW_EVENT_HEAD_MUST_EQUAL_CURRENT_MAIN_AND_AUTHORIZED_MERGE_MUST_BE_ANCESTOR",
+    "lockManagerCredentialEnvironment": "GITHUB_TOKEN",
+    "lockManagerCredentialBindingScope": "EXECUTE_AUTHORIZED_CLOSURE_JOB",
+    "requestSuppliedCommentIdentifierIsProof": false,
+    "commentIdentifierMustResolveThroughGitHubApi": true
+  },
+  "governanceRepair": {
+    "repairClass": "SINGLE_OWNER_IMPOSSIBLE_APPROVAL_GATE_AND_LOCK_MANAGER_CREDENTIAL_REPAIR",
+    "repairScope": [
+      ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json"
+    ],
+    "rootCauses": [
+      "GITHUB_PROHIBITS_PULL_REQUEST_AUTHORS_FROM_APPROVING_THEIR_OWN_PULL_REQUEST_AND_THE_REPOSITORY_HAS_ONE_AUTHORIZED_OWNER",
+      "EXACT_LOCK_COMMAND_STEPS_DID_NOT_RECEIVE_THE_GITHUB_TOKEN_REQUIRED_BY_THE_BOUND_LOCK_MANAGER"
+    ],
+    "technicalVerificationWeakened": false,
+    "mergeValidityAffected": false,
+    "syntheticEvidenceAllowed": false,
+    "newExternalCollaboratorRequired": false,
+    "lockCommandLiteralChanged": false
+  },
+  "commands": {
+    "lock279FailClosed": "node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001 --lock-scope H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE --lock-generation 279 --terminal-disposition FAIL_CLOSED --output \"$RUNNER_TEMP/h-earth-lock-279-fail-closed-command-receipt.json\"",
+    "constructionLockPassClosed": "node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001 --lock-scope H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_EXACT_9_PATH_SCOPE --lock-generation 280 --terminal-disposition PASS_CLOSED --output \"$RUNNER_TEMP/h-earth-governance-successor-construction-lock-pass-closed-receipt.json\"",
+    "requestSuppliedCommandParts": false,
+    "extraArgumentsAllowed": false,
+    "lockManagerReimplementation": false
+  },
+  "directLedgerBoundary": {
+    "authorizedRoute": [
+      "NODE_PROCESS",
+      "EXACT_BOUND_LOCK_MANAGER",
+      "REMOTE_COMPARE_AND_SWAP",
+      "FIXED_LEDGER_PATH",
+      "FIXED_LOCK_REF"
+    ],
+    "prohibited": [
+      "DIRECT_CONTENTS_API_LEDGER_PUT",
+      "GIT_COMMIT_OF_LEDGER",
+      "GIT_PUSH_TO_LOCK_REF",
+      "SED_OR_JQ_LEDGER_REWRITE",
+      "INLINE_CLOSELOCAL_REIMPLEMENTATION",
+      "MANUAL_TERMINAL_HISTORY_APPEND",
+      "MANUAL_ACTIVE_SCOPE_REMOVAL"
+    ]
+  },
+  "mergeBoundary": {
+    "role1MayMerge": false,
+    "role3PassGrantsMerge": false,
+    "role4MergeDecisionRequired": true,
+    "premergeClosureExecution": false
+  }
+}

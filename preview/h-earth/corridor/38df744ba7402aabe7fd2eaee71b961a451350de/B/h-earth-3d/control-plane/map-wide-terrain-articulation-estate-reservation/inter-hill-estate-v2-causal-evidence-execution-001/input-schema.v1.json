@@ -1,0 +1,55 @@
+{
+  "$id": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_INPUT_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidateHead": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "eligibleSeedListDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "operationId": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001"
+    },
+    "schema": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_V2_SHARD_INPUT_v1"
+    },
+    "seedIndexEnd": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "seedIndexStart": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "shardIndex": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "sourceMode": {
+      "enum": [
+        "CURRENT_MAIN_BASELINE",
+        "CURRENT_MAIN_PLUS_ACCEPTED_R06_C10_ANALYSIS_COMPOSITE"
+      ]
+    },
+    "terrainPartitionDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "operationId",
+    "sourceMode",
+    "candidateHead",
+    "terrainPartitionDigest",
+    "eligibleSeedListDigest",
+    "shardIndex",
+    "seedIndexStart",
+    "seedIndexEnd"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CHANGED_PATH_MANIFEST_v1",
+  "baseHead": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f",
+  "branch": "agent/h-earth-v2-governance-successor-001",
+  "exactChangedPathCount": 9,
+  "pathStatus": "2_MODIFIED_7_ADDED",
+  "authorizedPaths": [
+    ".github/ai-router/router.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md",
+    ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/closure-request.lock-279.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/negative-fixtures.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/rollback.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs"
+  ],
+  "commitA": {
+    "exactPathCount": 8,
+    "paths": [
+      ".github/ai-router/router.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/changed-path-manifest.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/closure-request.lock-279.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/negative-fixtures.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/rollback.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs"
+    ],
+    "requiredBeforeCommitB": true
+  },
+  "commitB": {
+    "additionalPathCount": 1,
+    "paths": [
+      ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml"
+    ],
+    "entryCondition": "COMMIT_A_ROUTER_EIGHT_ROUTE_PASS"
+  },
+  "productPathCount": 0,
+  "terrainPathCount": 0,
+  "v1AnalyticalImplementationPathCount": 0,
+  "pathOutsideAuthorizedNine": "PROHIBITED"
+}

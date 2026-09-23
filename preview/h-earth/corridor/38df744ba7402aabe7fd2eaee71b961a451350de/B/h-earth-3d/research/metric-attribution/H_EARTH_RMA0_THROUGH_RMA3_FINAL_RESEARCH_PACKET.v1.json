@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "H_EARTH_RMA0_THROUGH_RMA3_FINAL_RESEARCH_PACKET_v1",
+  "packetClass": "REPOSITORY_BACKED_FINAL_RESEARCH_DISPOSITION",
+  "program": "H_EARTH_ACCEPTED_CP2_MATERIAL_SUBSIGNAL_ATTRIBUTION_RESEARCH_v1",
+  "checkpointRange": "RMA0_THROUGH_RMA3",
+  "acceptedLiveProduct": "CP2",
+  "liveStateChanged": false,
+  "productMutationPerformed": false,
+  "userDifferentialRequiredDuringResearch": false,
+  "controllingMA6": {
+    "mergeCommit": "d7dab9b1416162688c097d290b461474c3c0e603",
+    "result": "MA6_CAUSAL_CLASSIFICATION_AND_RESEARCH_HANDOFF_PASS_CLOSED",
+    "receiptSha256": "904d976c72c6f52d93814dc6c4ce584caf47ca349f90d9f324709c04071c060f",
+    "primaryMetricCause": "MATERIAL_CAUSE_ESTABLISHED_FOR_CURRENT_METRIC",
+    "secondaryMetricCause": "GEOMETRY_LIGHTING_INTERACTION_ESTABLISHED_FOR_CURRENT_METRIC",
+    "humanVisibleDefectCause": "NOT_FULLY_ESTABLISHED"
+  },
+  "checkpointLedger": [
+    {
+      "checkpoint": "RMA0",
+      "mergeCommit": "a929ffdd7a2bd64524965af7213655035e0bbf0e",
+      "result": "RMA0_MATERIAL_FAMILY_FREEZE_PASS_CLOSED",
+      "workflowRunId": 30570356130,
+      "jobId": 90965216383,
+      "receiptSha256": "29b257be7bddfed573a7c4db99f6e152258a4a04cf05e4ac7572909441eb323e",
+      "artifactId": 8770531965,
+      "artifactSha256": "c193f75085a307cf8d6276538ed01ff691a88ed88f3c0a54d5f588795d654387"
+    },
+    {
+      "checkpoint": "RMA1",
+      "mergeCommit": "7d2d7cc7d4a396d503be1897236e935030743dc5",
+      "result": "RMA1_SINGLE_FAMILY_ABLATION_MATRIX_PASS_CLOSED",
+      "workflowRunId": 30571156576,
+      "jobId": 90967940540,
+      "receiptSha256": "46da9584383cbcf2bbd543e65f3ba4280e11be6cc5e8e64a7e96bedc4f65a7c3",
+      "artifactId": 8770862745,
+      "artifactSha256": "faf7283a97b2f457dbcddf5d2752399e5b32c87e462b153d4314e1deda7767d8",
+      "singleFamilyPassKeys": [],
+      "rankedFamilyKeys": ["FAMILY_5", "FAMILY_4", "FAMILY_2", "FAMILY_6", "FAMILY_7", "FAMILY_3", "FAMILY_1"]
+    },
+    {
+      "checkpoint": "RMA2",
+      "mergeCommit": "eb6da2910c6895f4a2f3f64a72823cb286e70231",
+      "result": "RMA2_BOUNDED_COMBINATION_CLASSIFICATION_PASS_CLOSED",
+      "workflowRunId": 30571817149,
+      "jobId": 90970148057,
+      "receiptSha256": "25b82751239ae5127a8e1dc4cd6ca69763b1f37f1c95e318d4a21e41e54230bc",
+      "artifactId": 8771113889,
+      "artifactSha256": "3752738a4cf15607ff4a717c0fdedab00917d6124e46bc19035c464cb03e284a",
+      "combination": ["FAMILY_5", "FAMILY_4"],
+      "classification": "NO_SINGLE_OR_BOUNDED_COMBINATION_PASSES_CAUSAL_GATE"
+    }
+  ],
+  "materialFamilyRegistry": [
+    "BROAD_MEDIUM_GRAIN_MACRO_MESO_DETAIL_FIELDS",
+    "STRATA_CROSS_GRAIN_FACE_BANDS",
+    "CREST_TERRACE_CONTACT_SIGNALS",
+    "CONTOUR_AND_SLOPE_RAKE",
+    "MANOR_LOCAL_MATERIAL_AND_CONTACT_CUES",
+    "CAVERN_LOCAL_MATERIAL_AND_CONTACT_CUES",
+    "BASE_COLOR_AND_ROLE_BLEND"
+  ],
+  "rma1Disposition": {
+    "singleFamilyCausalPassCount": 0,
+    "highestImpactFamily": "MANOR_LOCAL_MATERIAL_AND_CONTACT_CUES",
+    "highestImpactComposite": 0.2243737767049496,
+    "secondImpactFamily": "CONTOUR_AND_SLOPE_RAKE",
+    "secondImpactComposite": 0.1779670254235749,
+    "interpretation": "NO_SINGLE_FAMILY_SATISFIED_ALL_FROZEN_CAUSAL_TERMS"
+  },
+  "rma2Disposition": {
+    "authorizedCombinationCount": 1,
+    "combinationMembers": [
+      "MANOR_LOCAL_MATERIAL_AND_CONTACT_CUES",
+      "CONTOUR_AND_SLOPE_RAKE"
+    ],
+    "combinationAggregateScore": 0.8081925288265571,
+    "passGAggregateScore": 0.8037068451607313,
+    "aggregateRepetitionReductionFromG": -0.005581243575110675,
+    "meanBandGridPearsonDropFromG": 0.05940233104831438,
+    "exactBandMatchDropFromG": 2,
+    "sceneScoreReductionCount": 6,
+    "causalImpactComposite": 0.22318391609541194,
+    "gateTerms": {
+      "aggregateRepetitionReduction": false,
+      "meanBandGridPearsonDropFromG": false,
+      "exactBandMatchDropFromG": false,
+      "sceneScoreReductionCount": true,
+      "causalImpactComposite": true
+    },
+    "classification": "NO_SINGLE_OR_BOUNDED_COMBINATION_PASSES_CAUSAL_GATE"
+  },
+  "finalOutcome": {
+    "resultNumber": 3,
+    "result": "NO_MATERIAL_FAMILY_EXPLAINS_THE_VISIBLE_COMPLAINT_UNDER_CURRENT_METRIC",
+    "metricSubsignalCause": "NOT_IDENTIFIED_BY_FROZEN_CAUSAL_GATE",
+    "humanVisibleDefectCorrespondence": "NOT_ESTABLISHED",
+    "usefulCueRetentionStatus": "NOT_APPLICABLE_NO_CAUSAL_SUPPRESSION_IDENTIFIED",
+    "scalarMetricMayGovernAnotherImplementation": false,
+    "minimalProductCandidateAuthorized": false,
+    "signalSeparationImplementationAuthorized": false,
+    "liveCandidateAuthorized": false,
+    "acceptedLiveProductRemains": "CP2"
+  },
+  "established": [
+    "THE_CURRENT_SCALAR_METRIC_IS_MATERIAL_DOMINANT_AT_THE_WHOLE_PASS_LEVEL",
+    "NO_FROZEN_SINGLE_CP2_MATERIAL_FAMILY_PASSES_THE_SUBSIGNAL_CAUSAL_GATE",
+    "THE_ONLY_AUTHORIZED_TOP_TWO_COMBINATION_DOES_NOT_PASS_THE_SUBSIGNAL_CAUSAL_GATE",
+    "THE_COMBINATION_INCREASED_AGGREGATE_REPETITION_BY_APPROXIMATELY_0_5581_PERCENT",
+    "NO_METRIC_GOVERNED_PRODUCT_CHANGE_IS_AUTHORIZED"
+  ],
+  "notEstablished": [
+    "THE_MEASURED_CP2_MATERIAL_SIGNATURE_IS_THE_SAME_PATTERN_THE_USER_OBJECTS_TO",
+    "ONE_CP2_MATERIAL_FAMILY_CAN_BE_REMOVED_WHILE_RETAINING_USEFUL_CUES",
+    "USEFUL_MANOR_CAVERN_CONTACT_OR_SLOPE_CUES_REQUIRE_SIGNAL_SEPARATION",
+    "ANOTHER_RENDERER_MATERIAL_MAP_SHADER_OR_MORPHOLOGY_CHANGE_WILL_IMPROVE_THE_LIVE_PRODUCT"
+  ],
+  "nextAuthorizedOperation": {
+    "operationId": "H_EARTH_CP2_MEASURED_SIGNATURE_PERCEPTUAL_CORRESPONDENCE_TEST_v1",
+    "class": "LIMITED_DIAGNOSTIC_USER_PERCEPTUAL_COMPARISON_NO_PRODUCT_MUTATION",
+    "question": "IS_THE_CP2_MATERIAL_SIGNATURE_MEASURED_BY_THE_SCALAR_METRIC_THE_SAME_REPETITION_PATTERN_THE_USER_OBJECTS_TO",
+    "comparisonAuthority": [
+      "ACCEPTED_CP2_PASS_H",
+      "ACCEPTED_MATERIAL_FLAT_LIGHTING_PASS_G",
+      "BOUNDED_DIAGNOSTIC_VISUALIZATIONS_OF_THE_MEASURED_ORIENTATION_AND_LAG_SIGNATURE"
+    ],
+    "productImplementationAuthorized": false,
+    "liveAdmissionAuthorized": false,
+    "userInputRequired": true
+  },
+  "prohibitedDirections": [
+    "ANOTHER_MORPHOLOGY_PROBE",
+    "ANOTHER_WHOLE_BAKED_MAP",
+    "ANOTHER_GENERAL_SHADER",
+    "ANOTHER_METRIC_DRIVEN_PRODUCT_CANDIDATE",
+    "LIVE_ADMISSION_BEFORE_PERCEPTUAL_CORRESPONDENCE"
+  ],
+  "rma3Closure": {
+    "resultRequired": "RMA3_FINAL_RESEARCH_DISPOSITION_PASS_CLOSED",
+    "usefulCueRetentionExecutionPerformed": false,
+    "usefulCueRetentionNonexecutionReason": "NO_CAUSAL_SUPPRESSION_IDENTIFIED",
+    "executionEvidenceLocation": "ACCOMPANYING_RMA3_WORKFLOW_RECEIPT_AND_MERGED_PULL_REQUEST"
+  }
+}

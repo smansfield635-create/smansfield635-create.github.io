@@ -1,0 +1,139 @@
+{
+  "receiptType": "H_EARTH_C0_REPRODUCIBILITY_RECEIPT_v1",
+  "operation": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
+  "result": "PASS_CLOSED",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "inputBranchHead": "28f1f69ea2c505967dcd241af9f5d366d037df64",
+  "mainHeadAtExecution": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "mergeBase": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "repositoryRollbackBranch": "rollback/h-earth-c0-exact-live-coastal-baseline-freeze-001",
+  "repositoryRollbackHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "exactMainTree": "4a4149edb3e48c8d91e0b8538983a6cf5894c42c",
+  "rollbackTree": "4a4149edb3e48c8d91e0b8538983a6cf5894c42c",
+  "rollbackVerified": true,
+  "deterministicDigestScopePathCount": 23,
+  "deterministicDigestPassCount": 2,
+  "deterministicDigestPassesIdentical": true,
+  "performanceBaselineExecuted": true,
+  "physicalMobileDisposition": "DEFERRED_NONBLOCKING_REFERENCE_VALIDATION",
+  "measurementsRerun": false,
+  "productMutation": false,
+  "unauthorizedChangedPaths": 0,
+  "digestPass": [
+    {
+      "path": ".github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml",
+      "sha256": "2861660b4652d00a79d16086f2c0ef157922806e645f53496bf7978cda62be0a",
+      "gitBlobSha": "6215416ac5494c6c9616f5190f8bd0f96a0c5414"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.allowed-path-manifest.json",
+      "sha256": "f155282059ec07fb615b08090d6f1215166f126fdf00f86d6fe763629a9405c4",
+      "gitBlobSha": "28db2ad28fd2b103cada8cb800af97201dde674e"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.capture.mjs",
+      "sha256": "21274a1b2e8155f69f949c21df18025653eba7ccee3c9c5731d8124d61dbd4c3",
+      "gitBlobSha": "d4dfe9db18283980a0e686d88291c3b3be03aa43"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.fixed-scenes.json",
+      "sha256": "47b26c325b266475263a5ddbeb54868a33f366c702d8b4e738fc02c4c74cb1b7",
+      "gitBlobSha": "0f256e077cd464a3ad7dd70ea020b3c7dc6f3cdb"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.receipt.schema.json",
+      "sha256": "4c13adc234e040704f334ce027ae6e60eb7b0829841f0aa8a37096e039b525f4",
+      "gitBlobSha": "c07e652af406cec4e70521b22dad73db7a4edb77"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.preflight-receipt.json",
+      "sha256": "71d18e637059dde514eb7e6737528b8e880fd6a201682a1f3829b8e3867b6dbe",
+      "gitBlobSha": "892d9b54fe851eff4f54ca865f461eab8d84b119"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence.json",
+      "sha256": "d0531f62c5c332957a047c914bc1996d5f7ec391436e94a91be0841ecb3d2b36",
+      "gitBlobSha": "a76d0d6d0f83ebf5e49bf0f3381ce94654002f61"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.source-custody.json",
+      "sha256": "38ba9fc1e4701ea00b1891bec4b30f287bbf8cfbbc4bc24a4bfa6b1a0ffd68c3",
+      "gitBlobSha": "6bcfd2ffc7800acf3ec11ef5403dae3dc0a5c111"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.authority-dependency-graph.json",
+      "sha256": "412e0c3eea39068b54fcefa94a72c33afb6ccf88ac7e54a20b79311cf766718c",
+      "gitBlobSha": "5478f84b7bceff6e9ecaca25e4888ef2672d9a30"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.shoreline-samples.json",
+      "sha256": "581922250c54024aeb174b9efe28b39e310c2c740d8cb9761d2f9ae193bca620",
+      "gitBlobSha": "c63945aae42cff7ec2b92b66d7011d67b03841d8"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.performance-baseline.json",
+      "sha256": "7484a82b356af870422e6a0b61cc0c437cef82ce082e6628387ec72b995aa038",
+      "gitBlobSha": "e2e24b894dc96119aefd8018a917207bf19d3341"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.runtime-receipts.json",
+      "sha256": "f6b4701ab5bd706133d86f0ea01fe7c7ff0fd29dc2354346acce232c85d4212a",
+      "gitBlobSha": "6349eb60e13983fd5822e3ad131586762f7b6193"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.fixed-scenes-receipt.json",
+      "sha256": "35501dae06512231445b31870f492c692471545cc0cd44f1ed047770e0976d9b",
+      "gitBlobSha": "d40e527cecc20a36a0d44d1b9377a8d98d2c99f1"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.content-history-reconciliation.json",
+      "sha256": "bf4eddc2b25d4a66ca4e8d4d49e89739e66187e5d8c489d4c5330cdebe449251",
+      "gitBlobSha": "e5d08537fc15b115519866f7006b293603791006"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence-bodies.tar.gz",
+      "sha256": "505ce86e95a66fa32b2600f2226dc6226943008d787742649d69b77046f547f1",
+      "gitBlobSha": "92401233f7f374d71d4ea70869b019927f6d3d7a"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.source-tree.txt",
+      "sha256": "06bcdc59defa3e65c8b0432c7ca22b67570aab1eaced302863cdde36716583aa",
+      "gitBlobSha": "073732e79d4fd37deb573eb4ba0a3d875de5188c"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.network-log.json",
+      "sha256": "16f3a2ed31efbb5389a7ae10fd684fb2bacdf5d1e12e282e0c2d34e81b78d686",
+      "gitBlobSha": "3703e305df2279818af7e629fdcc0141d28bc4d1"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shoreline-approach.png",
+      "sha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+      "gitBlobSha": "fbd1d355c4f912d1d92d4ae06cc1471315e59ef9"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/lateral-beach.png",
+      "sha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+      "gitBlobSha": "fbd1d355c4f912d1d92d4ae06cc1471315e59ef9"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/inland-to-open-water.png",
+      "sha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+      "gitBlobSha": "fbd1d355c4f912d1d92d4ae06cc1471315e59ef9"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shallow-water.png",
+      "sha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+      "gitBlobSha": "fbd1d355c4f912d1d92d4ae06cc1471315e59ef9"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/dark-terrain-transition.png",
+      "sha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+      "gitBlobSha": "fbd1d355c4f912d1d92d4ae06cc1471315e59ef9"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c0/evidence/traversal-through-coast.png",
+      "sha256": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+      "gitBlobSha": "fbd1d355c4f912d1d92d4ae06cc1471315e59ef9"
+    }
+  ]
+}

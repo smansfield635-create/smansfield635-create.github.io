@@ -1,0 +1,52 @@
+{
+  "schema": "H_EARTH_AWARDS_COMPASS_V26_EVIDENCE_v1",
+  "operationId": "AWARDS_COMPASS_V26_LIVE_REPLACEMENT_20260816_002",
+  "governingMain": "abc57b30d074970cb0ef00974beba05414edfc25",
+  "canonicalIntakeIssue": 1200,
+  "canonicalLockGeneration": 1500,
+  "route": "showroom/globe/h-earth/awards/",
+  "ownerDecision": "APPROVED_WINNER_FOR_LIVE_REPLACEMENT",
+  "masterSha256": "a26f11781745365a0701e88e82b43035f31f826b4ee5820e571ad972962bbfd6",
+  "governingBaseline": {
+    "classification": "V22_IMMUTABLE_CINEMATIC_FLOOR",
+    "sha256": "c5a8359dba70ff604394d3724f3ab562f7b9c6c80efbe4a606ad95c95a71f9e4",
+    "acceptanceLaw": "NO_FORWARD_ARTIFACT_MAY_REGRESS_THE_V22_STANDARD"
+  },
+  "presentation": {
+    "installedFileName": "diamond-gate-compass-mirrorland-36s.mp4",
+    "sourceArtifact": "chapter01-compass-v26-FINAL-OWNER-CANDIDATE.mp4",
+    "masterSha256": "a26f11781745365a0701e88e82b43035f31f826b4ee5820e571ad972962bbfd6",
+    "sizeBytes": 24686831,
+    "durationSeconds": 57.583333,
+    "geometry": "NATIVE_1920_BY_1080_LANDSCAPE",
+    "video": "H264_HIGH_BT709_24_FPS",
+    "audio": "AAC_STEREO_CONTINUOUS_V22_STREAM",
+    "embeddedText": true,
+    "externalCompassCaptionMapDisabled": true
+  },
+  "authorizedRepairs": {
+    "diamondGateLanguage": "DEFINE_NOT_ASSESS",
+    "compassHold": "EXTENDED",
+    "firstTypography": "FULLY_VISIBLE",
+    "lawsChamberEvidence": "ACTUAL_COMPASS_INTERACTION_AND_CAROUSEL"
+  },
+  "qualification": {
+    "ownerApprovalGate": "PASS",
+    "v22CinematicFloorGate": "PASS",
+    "experientialEvidenceGate": "PASS",
+    "presentationGeometryGate": "PASS",
+    "technicalDeliveryGate": "PASS",
+    "decodeErrors": 0
+  },
+  "candidatePage": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "f03e02c4b2f0198379fc7eff188fe12c43e09b7967d0c28687a6b56db0d1e33d"
+  },
+  "continuityAssessment": {
+    "presentationOnlyAwardsSurface": true,
+    "worldRuntimeMutated": false,
+    "terrainMutated": false,
+    "environmentRuntimeMutated": false,
+    "sameCanonicalWorld": true
+  }
+}

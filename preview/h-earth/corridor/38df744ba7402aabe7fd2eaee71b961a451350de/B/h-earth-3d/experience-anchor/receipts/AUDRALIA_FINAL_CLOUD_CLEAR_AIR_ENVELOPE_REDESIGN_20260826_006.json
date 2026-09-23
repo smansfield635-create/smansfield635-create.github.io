@@ -1,0 +1,40 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDESIGN_20260826_006.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDESIGN_20260826_006.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDESIGN_20260826_006.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs",
+      "sha256": "cf805d9028f2a513f571f030915b80fea72dd63927b26a965782430a0cb3a5cc"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "e6a9a00852eaa328ef0f7aedbfcccbe3ad3cb0d5",
+    "qualificationOperation": "AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDESIGN_20260826_006",
+    "finding": "The qualified mutation changes only six geographic centers inside the existing single-pass final cloud expansion. The exact frozen 88-view, 16,200-cell verifier passes at 23.779338307249132% saturation suppression with six separated material components, complete causality and coverage, preserved V6 behavior, exact source identity, and unchanged renderer, camera, navigation, terrain, coast, water, loader, density, optics, and performance authority."
+  }
+}

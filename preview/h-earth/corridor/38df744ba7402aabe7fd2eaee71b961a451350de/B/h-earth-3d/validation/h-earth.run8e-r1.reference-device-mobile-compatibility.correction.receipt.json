@@ -1,0 +1,66 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_MOBILE_COMPATIBILITY_CORRECTION_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R1_REFERENCE_DEVICE_AND_MOBILE_COMPATIBILITY_CORRECTION_PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-reference-device-mobile-compatibility-001",
+  "baseMainHead": "045c01edbfbc9e36588688f2129c322e06b1a455",
+  "validatedHead": "49bb5096731b42d2683838638daaaac6462fc669",
+  "verifiedOn": "2026-07-27",
+  "workflowEvidence": {
+    "runId": 30231121889,
+    "jobId": 89870091381,
+    "conclusion": "success",
+    "artifactId": 8640124721,
+    "artifactName": "h-earth-run8e-r1-reference-device-mobile-compatibility-evidence",
+    "artifactDigest": "sha256:070387f5b13ca4a07690d862cdef5a5b2beb8db6bf11f076456151002b8c8f92",
+    "automaticRegistryPreflightRunId": 30231121890,
+    "automaticRegistryPreflightConclusion": "success"
+  },
+  "correction": {
+    "productTarget": "ALL_SUPPORTED_MOBILE_DEVICES",
+    "referenceValidationDevice": "CURRENT_OFFICIAL_SAMSUNG_PHONE",
+    "samsungOnlyImplementation": "PROHIBITED",
+    "samsungOnlyCompatibilityClaim": "PROHIBITED",
+    "backendSelection": "CAPABILITY_BASED_NOT_DEVICE_BRAND_BASED",
+    "universalMobileInteractionContract": "REQUIRED"
+  },
+  "historicalEvidence": {
+    "preserved": true,
+    "receiptBodiesRewritten": false,
+    "historicalIdentifiersRetained": true,
+    "physicalSamsungTerminologyForwardReclassifiedAs": "REFERENCE_DEVICE_PHYSICAL_PROFILING"
+  },
+  "validationMatrix": {
+    "referenceAndroid": "CURRENT_OFFICIAL_SAMSUNG_PHONE",
+    "secondAndroidDifferentGpuAndScreenClassRequired": true,
+    "iosMobileSafariClassRequired": true,
+    "lowerPerformanceMobileClassRequired": true,
+    "portraitAndLandscapeRequired": true,
+    "orientationTransitionRequired": true,
+    "backgroundReturnRequired": true,
+    "contextLossOrRestorationRequired": true,
+    "thermalAndMemoryMeasurementRequired": true
+  },
+  "scope": {
+    "changedPathCount": 6,
+    "controlOrGovernanceOnly": true,
+    "productRouteMutated": false,
+    "rendererImplemented": false,
+    "worldAuthorityMutated": false,
+    "cameraAuthorityMutated": false,
+    "navigationAuthorityMutated": false,
+    "terrainMaterialLightOrVegetationMutated": false
+  },
+  "boundaries": {
+    "referenceDevicePhysicalInteractionReceiptCaptured": false,
+    "referenceDeviceAcceptancePassClaimed": false,
+    "broadAndroidCompatibilityPassClaimed": false,
+    "allSupportedMobileCompatibilityPassClaimed": false,
+    "run8ER2ProductMutationAuthorized": false,
+    "run8ER1PassClosed": false,
+    "run8EPassClosed": false
+  },
+  "nextRequiredEvidence": "REFERENCE_DEVICE_PHYSICAL_INTERACTION_RECEIPT",
+  "issues": []
+}

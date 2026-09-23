@@ -1,0 +1,74 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP1_REAL_PIPELINE_TRACE_v1",
+  "program": "H_EARTH_TOUCH_MOTION_CALIBRATION_AND_FLUIDITY",
+  "checkpoint": "CP1_REAL_PIPELINE_TRACE",
+  "authorityQuestion": "WHERE_DOES_RAW_TOUCH_BECOME_AUTHORITATIVE_CAMERA_MOTION_IN_THE_REAL_IMPLEMENTATION?",
+  "repository": {
+    "fullName": "smansfield635-create/smansfield635-create.github.io",
+    "baselineHead": "27514bfe1c3ace69597af5eb5fd3ae830658765f",
+    "parentCheckpointHead": "7454b1963cc2e81c29a8ef33035f1137c7093722",
+    "branch": "agent/h-earth-touch-motion-calibration-cp1-real-pipeline-trace-001",
+    "productionRoute": "/showroom/globe/h-earth/"
+  },
+  "producerConsumerTrace": [
+    {"order":1,"producer":"browser PointerEvent stream","consumer":"installHEarthRun8ER3D2PointerTouchIntake","path":"showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js","blobSha":"f9689f0accd1fe0067c36bc0d1e4b199cf6c9fe5","functions":["onPointerDown","onPointerMove","releasePointer"]},
+    {"order":2,"producer":"pointer map plus previous-event baselines","consumer":"gesture classification branch","path":"showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js","functions":["resetBaselines","centroid","distance","onPointerMove"]},
+    {"order":3,"producer":"gesture classification branch","consumer":"emitProposal","path":"showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js","functions":["emitProposal"]},
+    {"order":4,"producer":"emitProposal","consumer":"proposeHEarthFunctionalLandscapeNavigation","path":"showroom/globe/h-earth/functional-landscape/navigation.js","blobSha":"8ab3446c536fc24423d5601acce232b19fa71c91","functions":["proposeHEarthFunctionalLandscapeNavigation","translationForAction","createState"]},
+    {"order":5,"producer":"accepted navigation state","consumer":"public live GPU integration onProposal callback","path":"showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js","blobSha":"98c768be0cfb2ec4bc82e2b634913d91cc73a32f"},
+    {"order":6,"producer":"binding.acceptNavigationState","consumer":"presentNavigationState","path":"showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js","blobSha":"5017bbaf857a644287cb829037b0fde4646f270d","functions":["acceptNavigationState","presentNavigationState"]},
+    {"order":7,"producer":"R3A frame uniform packet","consumer":"persistent WebGL2 renderer","path":"showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js"}
+  ],
+  "resolvedQuestions": {
+    "oneFingerVersusTwoFinger":"pointers.size and active.length",
+    "pinchVersusTranslation":"abs(distanceDelta) > max(3, abs(centerDeltaY) * 0.65); pinch threshold 5px; travel threshold 8px",
+    "deltaBasis":"previous pointer event",
+    "viewportNormalization":false,
+    "devicePixelRatioInGestureScaling":false,
+    "frameTimeBasedMotion":false,
+    "smoothing":false,
+    "inputBacklog":"no explicit motion queue; one-microtask proposal deferral; synchronous render and framebuffer capture per accepted proposal",
+    "forwardBackwardSymmetry":"mirrored classification and magnitude law",
+    "zoomInOutSymmetry":"mirrored FOV delta law",
+    "pitchYawScaling":"shared pointer divisor and clamp",
+    "gestureOwnershipLock":false,
+    "releaseDecay":false,
+    "orientationNormalization":false,
+    "physicalDistanceNormalization":false
+  },
+  "constantsAndThresholds": {
+    "oneFingerDeadZonePixels":3,"oneFingerDegreesDivisor":9,"oneFingerDegreesClamp":[0.5,8],
+    "pinchDominanceAbsoluteFloorPixels":3,"pinchDominanceTravelRatio":0.65,"pinchActivationPixels":5,"pinchDegreesDivisor":12,"pinchDegreesClamp":[1,6],
+    "travelActivationPixels":8,"travelMagnitudeDivisor":10,"travelMagnitudeClamp":[1,10],
+    "navigationMaximumMovementIntentWorldUnits":12,"navigationTurnClampDegrees":[0,8],"navigationPitchClampDegrees":[0,8],"navigationZoomClampDegrees":[0,6],
+    "pitchBoundsDegrees":[-42,32],"proposalHistoryLimit":64,"frameRecordHistoryLimit":64,"publicViewportMaximumPixels":518400,"publicViewportPixelRatio":1
+  },
+  "executionEvidence": {
+    "existingExecutableHarnessPath":"h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.harness.mjs",
+    "existingExecutableHarnessBlobSha":"d4b60457ad68ad0da3e4ced5eecf9a5265add520",
+    "historicalReceiptStatus":"RUN_8E_MOBILE_NAVIGATION_CORRECTION_PASS",
+    "historicalPhysicalSamsungExecution":"NOT_EXECUTED_AFTER_CORRECTION",
+    "currentCheckpointExecutionDisposition":"SOURCE_AND_EXISTING_EXECUTABLE_EVIDENCE_TRACED; NO_NEW_BROWSER_EXECUTION_PERFORMED_BY_CONNECTOR"
+  },
+  "causalFindings": [
+    "CURRENT_TOUCH_CORRIDOR_IS_EVENT_STEP_BASED_NOT_FRAME_TIME_BASED",
+    "SENSITIVITY_IS_PIXEL_BASED_NOT_VIEWPORT_NORMALIZED",
+    "GESTURE_CLASSIFICATION_HAS_NO_PERSISTENT_OWNERSHIP_LOCK",
+    "TWO_FINGER_CLASSIFICATION_REEVALUATES_PINCH_VERSUS_TRAVEL_ON_EVERY_POINTERMOVE",
+    "EACH_ACCEPTED_PROPOSAL_SYNCHRONOUSLY_RENDERS_AND_READS_BACK_THE_FRAMEBUFFER",
+    "MICROTASK_DEFERRAL_IS_NOT_A_FRAME_SCHEDULER",
+    "SLOW_SYNCHRONOUS_PRESENTATION_CAN_THROTTLE_EVENT_PROCESSING_AND_CREATE_PERCEIVED_LAG"
+  ],
+  "sourceMutation":{"performed":false,"productionFilesChanged":0,"allowedMutationClass":"CONTROL_EVIDENCE_ONLY"},
+  "exitEvidence": {
+    "rawInputProducer":"IDENTIFIED","gestureClassifier":"IDENTIFIED","motionProposalProducer":"IDENTIFIED","cameraConsumer":"IDENTIFIED",
+    "frameIntegrationLaw":"IDENTIFIED_AS_ABSENT_FOR_MOTION_AND_SYNCHRONOUS_PER_PROPOSAL_FOR_PRESENTATION",
+    "allConstantsAndThresholds":"RECORDED","unresolvedPipelineEdges":0,"checkpointDisposition":"PASS_CLOSED_WITH_NO_NEW_BROWSER_EXECUTION"
+  },
+  "externalEvidenceDisposition": {
+    "packageName":"H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_a2507ce5-f588-4a99-b03c-55de1bbe8578.json",
+    "exactDriveSearch":"NO_EXACT_MATCH","broadenedDriveSearch":"RELATED_FD05_ARTIFACTS_FOUND_NOT_NAMED_PACKAGE",
+    "disposition":"NONBLOCKING_FOR_CP1_SOURCE_TRACE; HELD_FOR_CP2_PHYSICAL_BASELINE_CUSTODY"
+  },
+  "stoppingBoundary":"STOP_BEFORE_CP2_MEASUREMENT_OR_ANY_LATTICE_OR_MOTION_IMPLEMENTATION"
+}

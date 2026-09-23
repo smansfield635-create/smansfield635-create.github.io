@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth B4 Morphology Leverage Classification</title>
+  <style>
+    html,body{margin:0;background:#080b0d;color:#d8e1e5;font:14px system-ui,sans-serif}
+    main{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    figure{margin:0;border:1px solid #26323a;background:#10161a;padding:6px}
+    figcaption{padding:4px 0 7px}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    #status{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "/h-earth-3d/analysis/morphology/h-earth.b3-two-fixed-morphology-probes.v1.mjs": "/h-earth-3d/validation/morphology/h-earth.b4-b3-compatibility-wrapper.mjs"
+      }
+    }
+  </script>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Accepted CP2 renderer</figcaption><canvas id="accepted"></canvas></figure>
+    <figure><figcaption>Diagnostic baseline equivalence</figcaption><canvas id="baseline"></canvas></figure>
+    <figure><figcaption>Probe A — 4%</figcaption><canvas id="probe-a"></canvas></figure>
+    <figure><figcaption>Probe B — 8%</figcaption><canvas id="probe-b"></canvas></figure>
+    <div id="status">INITIALIZING_B4</div>
+  </main>
+  <script type="module">
+    import { createB4MorphologyLeverageSuite } from './h-earth.b4-morphology-leverage-browser.mjs';
+    const status = document.querySelector('#status');
+    try {
+      const suite = await createB4MorphologyLeverageSuite({
+        acceptedCanvas: document.querySelector('#accepted'),
+        baselineCanvas: document.querySelector('#baseline'),
+        probeACanvas: document.querySelector('#probe-a'),
+        probeBCanvas: document.querySelector('#probe-b')
+      });
+      window.H_EARTH_B4_MORPHOLOGY = suite;
+      document.documentElement.dataset.b4Ready = 'true';
+      status.textContent = 'B4_READY';
+    } catch (error) {
+      document.documentElement.dataset.b4Error = 'true';
+      status.textContent = String(error?.stack || error);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

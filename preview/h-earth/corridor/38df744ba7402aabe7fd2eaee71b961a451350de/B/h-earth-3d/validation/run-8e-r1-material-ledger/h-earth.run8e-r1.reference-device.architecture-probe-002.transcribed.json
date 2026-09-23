@@ -1,0 +1,170 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R1_ARCHITECTURE_PROBE_RECEIPT",
+  "generatedAt": "2026-07-27T01:45:56.518Z",
+  "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36",
+  "viewport": {
+    "width": 384,
+    "height": 690,
+    "devicePixelRatio": 2.8125
+  },
+  "fixedCameraStateCount": 5,
+  "staticPipeline": {
+    "worldPackageConstructionMilliseconds": 1429.8,
+    "westAdmissionMilliseconds": 1310,
+    "packet002TransferMilliseconds": 0.4,
+    "primitiveCount": 35,
+    "heapDeltaBytes": 0
+  },
+  "candidateA": {
+    "candidateId": "CANDIDATE_A_INSTRUMENTED_CURRENT_MAIN_THREAD_CPU_RENDERER",
+    "publicSuitabilityAlreadyFailedPhysicalEvidence": true,
+    "results": [
+      {
+        "cameraStateId": "COASTAL_ENTRY",
+        "materialAndLightProjectionMilliseconds": 1561.2,
+        "fullWorldFrameConstructionMilliseconds": 4705.8,
+        "cameraTransformAndClippingMilliseconds": 59.8,
+        "baseRasterizationMilliseconds": 12.7,
+        "fullRun8ERasterMilliseconds": 22.7,
+        "secondDepthTraversalCompositeMilliseconds": 10,
+        "putImageDataMilliseconds": 0.1,
+        "projectedTriangleCount": 12702,
+        "admittedPrimitiveCount": 35
+      },
+      {
+        "cameraStateId": "INLAND_HILL",
+        "materialAndLightProjectionMilliseconds": 1747.1,
+        "fullWorldFrameConstructionMilliseconds": 8975.2,
+        "cameraTransformAndClippingMilliseconds": 48.2,
+        "baseRasterizationMilliseconds": 11.9,
+        "fullRun8ERasterMilliseconds": 19.9,
+        "secondDepthTraversalCompositeMilliseconds": 8,
+        "putImageDataMilliseconds": 0.2,
+        "projectedTriangleCount": 5559,
+        "admittedPrimitiveCount": 35
+      },
+      {
+        "cameraStateId": "MOUNTAIN_FACING",
+        "materialAndLightProjectionMilliseconds": 2128,
+        "fullWorldFrameConstructionMilliseconds": 5557.2,
+        "cameraTransformAndClippingMilliseconds": 54.1,
+        "baseRasterizationMilliseconds": 8,
+        "fullRun8ERasterMilliseconds": 21.6,
+        "secondDepthTraversalCompositeMilliseconds": 13.6,
+        "putImageDataMilliseconds": 0.1,
+        "projectedTriangleCount": 4499,
+        "admittedPrimitiveCount": 35
+      },
+      {
+        "cameraStateId": "OVERHEAD_OBLIQUE",
+        "materialAndLightProjectionMilliseconds": 2210.5,
+        "fullWorldFrameConstructionMilliseconds": 5952.8,
+        "cameraTransformAndClippingMilliseconds": 62.8,
+        "baseRasterizationMilliseconds": 10.1,
+        "fullRun8ERasterMilliseconds": 19,
+        "secondDepthTraversalCompositeMilliseconds": 8.9,
+        "putImageDataMilliseconds": 0.1,
+        "projectedTriangleCount": 9890,
+        "admittedPrimitiveCount": 35
+      },
+      {
+        "cameraStateId": "SHORELINE_RETURN",
+        "materialAndLightProjectionMilliseconds": 2094.2,
+        "fullWorldFrameConstructionMilliseconds": 5794.6,
+        "cameraTransformAndClippingMilliseconds": 66.1,
+        "baseRasterizationMilliseconds": 7.6,
+        "fullRun8ERasterMilliseconds": 16.3,
+        "secondDepthTraversalCompositeMilliseconds": 8.7,
+        "putImageDataMilliseconds": 0.5,
+        "projectedTriangleCount": 8494,
+        "admittedPrimitiveCount": 35
+      }
+    ]
+  },
+  "candidateB": {
+    "candidateId": "CANDIDATE_B_CACHED_WORLD_WORKER_CPU_PROBE",
+    "results": [
+      {
+        "cameraStateId": "COASTAL_ENTRY",
+        "durationMilliseconds": 25.399999976158142,
+        "submittedTriangleCount": 49040,
+        "visibleTriangleCount": 32354,
+        "offscreenCanvas2D": true
+      },
+      {
+        "cameraStateId": "INLAND_HILL",
+        "durationMilliseconds": 13.600000023841858,
+        "submittedTriangleCount": 49040,
+        "visibleTriangleCount": 19608,
+        "offscreenCanvas2D": true
+      },
+      {
+        "cameraStateId": "MOUNTAIN_FACING",
+        "durationMilliseconds": 19.599999964237213,
+        "submittedTriangleCount": 49040,
+        "visibleTriangleCount": 22559,
+        "offscreenCanvas2D": true
+      },
+      {
+        "cameraStateId": "OVERHEAD_OBLIQUE",
+        "durationMilliseconds": 11.300000011920929,
+        "submittedTriangleCount": 49040,
+        "visibleTriangleCount": 34119,
+        "offscreenCanvas2D": true
+      },
+      {
+        "cameraStateId": "SHORELINE_RETURN",
+        "durationMilliseconds": 8.300000011920929,
+        "submittedTriangleCount": 49040,
+        "visibleTriangleCount": 21283,
+        "offscreenCanvas2D": true
+      }
+    ],
+    "available": true
+  },
+  "candidateC": {
+    "candidateId": "CANDIDATE_C_CACHED_WORLD_WEBGL_2_GPU_PROBE",
+    "available": true,
+    "renderer": "WebKit WebGL",
+    "vendor": "WebKit",
+    "results": [
+      {
+        "cameraStateId": "COASTAL_ENTRY",
+        "durationMilliseconds": 0.1,
+        "indexCount": 147120,
+        "drawCalls": 1
+      },
+      {
+        "cameraStateId": "INLAND_HILL",
+        "durationMilliseconds": 0.1,
+        "indexCount": 147120,
+        "drawCalls": 1
+      },
+      {
+        "cameraStateId": "MOUNTAIN_FACING",
+        "durationMilliseconds": 0.2,
+        "indexCount": 147120,
+        "drawCalls": 1
+      },
+      {
+        "cameraStateId": "OVERHEAD_OBLIQUE",
+        "durationMilliseconds": 0.1,
+        "indexCount": 147120,
+        "drawCalls": 1
+      },
+      {
+        "cameraStateId": "SHORELINE_RETURN",
+        "durationMilliseconds": 0.2,
+        "indexCount": 147120,
+        "drawCalls": 1
+      }
+    ]
+  },
+  "architectureDisposition": {
+    "deterministicCpuReferenceRenderer": "PRESERVE_REFERENCE_ONLY",
+    "realtimeLiveRendererPrimaryCandidate": "WEBGL_2",
+    "workerCpuDisposition": "FALLBACK_REFERENCE_ACCELERATION_OR_DIAGNOSTIC_OPTION",
+    "pixelIdentityRequired": false,
+    "geometricAndAuthorityCorrespondenceRequired": true
+  }
+}

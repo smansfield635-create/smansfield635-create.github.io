@@ -1,0 +1,18 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_INSTRUMENT_BOOTSTRAP_TERMINATION_POLICY_v1",
+  "requiredBuilderResult": "PASS_CLOSED",
+  "requiredVerifierResult": "PASS_CLOSED",
+  "requireDistinctHolders": true,
+  "requireEqualPackageFingerprint": true,
+  "terminalReceiptResult": "PASS_CLOSED_BOOTSTRAP_AUTHORITY_TERMINATED",
+  "terminalValues": {
+    "builderAuthorityActive": false,
+    "verifierAuthorityActive": false,
+    "residualBootstrapAuthority": false,
+    "actualTerrainMutationPerformed": false,
+    "manorConstructionPerformed": false,
+    "permanentInstrumentActive": false,
+    "mergePerformed": false,
+    "separateRatificationRequired": true
+  }
+}

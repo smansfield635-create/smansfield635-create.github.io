@@ -1,0 +1,103 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "evidenceId": "AUDRALIA_TABLET_INTERACTION_FRAME_BUDGET_RECOVERY_20260913_001",
+  "governingHead": "d219fec83e571ad22a36f1752089723105a1a35e",
+  "operationId": "AUDRALIA_TABLET_INTERACTION_FRAME_BUDGET_RECOVERY_20260913_001",
+  "lockGeneration": 2205,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "ownerObservation": {
+    "source": "OWNER_PROVIDED_TABLET_RECORDING_AND_FRESH_REBOOT_CONTROL_IN_ACTIVE_SESSION",
+    "deviceClass": "TABLET",
+    "preAudraliaDgbRendering": "NORMAL_AFTER_FRESH_REBOOT",
+    "audraliaInitialization": "PASS",
+    "audraliaInteraction": "FAIL_PHYSICAL_DEVICE_SESSION_STABILITY",
+    "postAudraliaDgbRendering": "WHITE_OR_WASHED_OUT_UNTIL_REBOOT",
+    "unrelatedBrowserRendering": "NORMAL",
+    "gen2204Disposition": "FAIL_CLOSED",
+    "ownerAcceptanceOfGen2205Candidate": false
+  },
+  "precedent": {
+    "gen2182Candidate": "094e7b75c5268260046d05cf767fb999c8f2a31b",
+    "gen2182QualificationRun": 34730730395,
+    "preservedContract": "WORLD_FIRST_SINGLE_CONTEXT_CLOUDS_ACTIVE_WITH_8_REST_6_INTERACTION_AND_921600_PIXEL_CEILING",
+    "authorityEffect": "PRECEDENT_ONLY_NO_INHERITED_AUTHORITY"
+  },
+  "sourceDiagnosis": {
+    "result": "RAW_INPUT_EVENT_RENDER_AMPLIFICATION_ON_CONSTRAINED_TABLET",
+    "preRepairInteractionPath": [
+      "RAW_POINTER_OR_WHEEL_EVENT",
+      "SYNCHRONOUS_RENDERER_CAMERA_MUTATION_AND_WORLD_RENDER",
+      "CLOUD_RENDER",
+      "CELESTIAL_RENDER"
+    ],
+    "risk": "HIGH_FREQUENCY_TOUCH_EVENTS_CAN_FORCE_MULTIPLE_FULL_SAME_CONTEXT_COMPOSITES_PER_DISPLAY_FRAME_AND_DESTABILIZE_THE_TABLET_RENDERING_SESSION"
+  },
+  "candidateRepair": {
+    "changedRuntimePath": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
+    "changedRuntimeSha256": "21094306225519160922b5cd701b224ba7cc84bd960c9cb0f81986a1dadb475d",
+    "changedRuntimeGitBlob": "016c98cc76b248cc70be033d792125ddcfa53d04",
+    "rawPointerMoveDirectRender": false,
+    "rawWheelDirectRender": false,
+    "cameraIntentCoalescedByRequestAnimationFrame": true,
+    "maximumInteractionWorldCloudCompositePerRaf": 1,
+    "cloudsRemainActiveDuringInteraction": true,
+    "celestialDeferredDuringActiveInteraction": true,
+    "fullWorldCloudCelestialCompositeAfterSettle": true,
+    "newCanvasCreated": false,
+    "newWebGLContextRequested": false,
+    "phoneOrDesktopPathMutated": false,
+    "rendererPrecomputedMutated": false,
+    "cloudPassMutated": false,
+    "morphologyAtlasMutated": false,
+    "cameraSemanticsMutated": false,
+    "loaderMutated": false,
+    "audioMutated": false,
+    "geographyMutated": false,
+    "protected24057Mutated": false
+  },
+  "budgetContinuity": {
+    "renderPixelCeiling": 921600,
+    "restRaymarchSteps": 8,
+    "interactionRaymarchSteps": 6,
+    "budgetExpansion": false,
+    "assessment": "PRESERVED"
+  },
+  "visualContinuity": {
+    "cloudShaderChanged": false,
+    "morphologyAtlasChanged": false,
+    "celestialShaderChanged": false,
+    "terrainOrGeographyChanged": false,
+    "worldIdentityChanged": false,
+    "assessment": "PRESERVED"
+  },
+  "interactionContinuity": {
+    "gestureVocabularyChanged": false,
+    "cameraMethodsChanged": false,
+    "cameraSemanticMappingChanged": false,
+    "schedulingChanged": true,
+    "change": "RAW_GESTURE_EVENTS_ACCUMULATE_CAMERA_INTENT_AND_A_SINGLE_RAF_FLUSH_APPLIES_AT_MOST_ONE_CAMERA_MUTATION_WORLD_RENDER_AND_ONE_CLOUD_PASS; CELESTIAL_RETURNS_ONLY_AFTER_SETTLE",
+    "assessment": "SEMANTICS_PRESERVED_RENDER_FREQUENCY_BOUNDED"
+  },
+  "continuityBoundary": {
+    "sameCanonicalWorld": true,
+    "cloudsRetained": true,
+    "parallelProductCreated": false,
+    "secondRendererCreated": false,
+    "secondCanvasCreated": false,
+    "secondWebGLContextCreated": false,
+    "ownerVisibleCandidateAcceptancePending": true
+  },
+  "candidateExperienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
+      "sha256": "21094306225519160922b5cd701b224ba7cc84bd960c9cb0f81986a1dadb475d"
+    }
+  ],
+  "authority": {
+    "createsOwnerAcceptance": false,
+    "createsPhysicalDeviceStabilityProof": false,
+    "createsProductClosure": false,
+    "createsScopeExpansion": false
+  }
+}

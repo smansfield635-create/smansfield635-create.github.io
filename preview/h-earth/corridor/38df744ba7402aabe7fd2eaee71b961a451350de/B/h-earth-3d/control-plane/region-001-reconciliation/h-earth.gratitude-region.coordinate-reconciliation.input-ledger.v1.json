@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_INPUT_LEDGER_v1",
+  "checkpointId": "GR-CR-00",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "workingBranch": "agent/h-earth-gratitude-region-coordinate-reconciliation-001",
+  "exactBaseCommit": "f24294725991be3f6e3f202cf275de52fb6065b5",
+  "authority": {
+    "controllingManifest": {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json",
+      "gitBlob": "1702d62036a6b241fdadddfabc304a5288f38652",
+      "authorization": "AUTHORIZED_BOUNDED_READ_ONLY_EXISTING_WORLD_COORDINATE_RECONCILIATION",
+      "authorizedTargets": [
+        "ENTRY_ZONE",
+        "MIRROR_MANOR_PRECINCT",
+        "CAVERN_PRECINCT",
+        "FRONTIER_PLAINS"
+      ],
+      "resultsClass": "MEASURED_OR_DERIVED_CANDIDATES_PENDING_LATER_MANIFEST_ACCEPTANCE"
+    },
+    "neighboringSpatialArtifact": {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json",
+      "gitBlob": "ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d",
+      "role": "DETAILED_SPATIAL_EVIDENCE_AND_NONFINAL_CANDIDATE_DEVELOPMENT"
+    }
+  },
+  "lockedSources": [
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "gitBlob": "bf0dfcc0166fd1e677529ff46b91d943f7eae7c8",
+      "role": "PRESERVED_RUN_6_BASE_TERRAIN_ELEVATION_LAW"
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "gitBlob": "3f0a833cc32106029318eee460d9ca15cf841959",
+      "role": "SUCCESSOR_WORLD_DOMAIN_MOUNTAIN_SURFACE_AND_SAMPLING_LAW"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "gitBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "role": "CONTROLLING_READ_ONLY_SUCCESSOR_TERRAIN_SAMPLER"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "gitBlob": "98f8131dab38973f0f30165967443e0057f7615f",
+      "role": "FORMATION_IDENTITY_AND_ENVELOPE_AUTHORITY"
+    },
+    {
+      "path": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "gitBlob": "ed9ff1f7d3c139a1cba7df169f278336342339f4",
+      "role": "DESCRIPTOR_ONLY_256_ADDRESS_SEMANTIC_LATTICE"
+    },
+    {
+      "path": "h-earth-3d/zones/ground-cell-001.zones.js",
+      "gitBlob": "2d21f90e6eda8b0885ce4815b352335827a38522",
+      "role": "FIVE_ZONE_COMPOSITION_AUTHORITY"
+    },
+    {
+      "path": "h-earth-3d/objects/ground-cell-001.objects.js",
+      "gitBlob": "1d791ee32d07a16f687c0e40b9e25b3c8074b880",
+      "role": "SOURCE_OBJECT_IDENTITY_AND_ZONE_RELATION_AUTHORITY"
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "gitBlob": "8f20a80ce5797b3616bee64a53d95911c641e46b",
+      "role": "SEMANTIC_ADDRESS_TO_PHYSICAL_CHUNK_PROJECTION_AUTHORITY"
+    },
+    {
+      "path": "showroom/globe/h-earth/capacity.js",
+      "gitBlob": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8",
+      "role": "CAMERA_AND_NAVIGATION_CAPACITY_DEPENDENCY"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "gitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+      "role": "CURRENT_WAYPOINT_INITIAL_FACING_AND_TERRAIN_CLEARANCE_PROPOSAL_AUTHORITY"
+    }
+  ],
+  "resolvedAuthorityRelations": {
+    "successorCoordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+    "successorWorldDomain": {
+      "xMinimum": -256,
+      "xMaximum": 256,
+      "zMinimum": -320,
+      "zMaximum": 64,
+      "seaLevelY": 0
+    },
+    "predecessorDomainPreserved": true,
+    "semanticRowsAreLiteralWorldZCoordinates": false,
+    "semanticAddressProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+    "navigationWaypointsOwnTerrainSampling": false,
+    "navigationWaypointsMaySupplyExistingAnchorsAndFacing": true,
+    "successorSamplerOwnsReadOnlyMeasurementSurface": true,
+    "terrainMeasurementMayMutateTerrain": false,
+    "candidateResultsBecomeFinalAutomatically": false
+  },
+  "frontierCorrection": {
+    "precinctModel": "ONE_INTEGRATED_CLOSED_SYSTEM_PRECINCT",
+    "capacityModel": "ELEVEN_INTERDEPENDENT_FUNCTIONAL_CELLS_WITH_SHARED_FLOWS_INFRASTRUCTURE_FEEDBACK_TRANSFER_MAINTENANCE_AND_EXPANSION",
+    "elevenIndependentLaneZonesRejected": true,
+    "exactLaneToCellMappingDeferred": true
+  },
+  "hardStops": [
+    "SOURCE_BLOB_MISMATCH",
+    "BASE_COMMIT_MISMATCH",
+    "CONTRADICTORY_WORLD_DOMAIN",
+    "UNRESOLVED_SAMPLING_AUTHORITY",
+    "PRODUCT_SOURCE_MUTATION",
+    "TERRAIN_MUTATION",
+    "FINAL_COORDINATE_ACCEPTANCE",
+    "GEOMETRY_CONSTRUCTION",
+    "RUNTIME_GAMEPLAY_ROUTE_OR_PRODUCTION_CHANGE",
+    "CONTROLLING_MANIFEST_MUTATION"
+  ],
+  "repositoryMutationPerformedByThisCheckpoint": true,
+  "mutationClass": "CONTROL_PLANE_INPUT_LEDGER_ONLY",
+  "measurementExecuted": false,
+  "candidateCoordinatesDerived": false
+}

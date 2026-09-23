@@ -1,0 +1,16 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_OPERATOR_FAMILY_REGISTRY_v1",
+  "status": "INACTIVE_CANDIDATE",
+  "closedWorld": true,
+  "families": [
+    {"familyId": "SUMMIT_SPLIT_OFFSET", "familyVersion": "1.0.0", "parameterBounds": {"amplitude": {"min": 0.12, "max": 0.38}, "spacing": {"min": 8, "max": 42}, "rotationDeg": {"min": -180, "max": 180}}, "requiresSupportMask": true, "requiresSmoothBlend": true, "estateMaskPolicy": "ZERO_INTRUSION"},
+    {"familyId": "SECONDARY_PEAK_SHOULDER", "familyVersion": "1.0.0", "parameterBounds": {"amplitude": {"min": 0.08, "max": 0.32}, "spacing": {"min": 10, "max": 48}, "rotationDeg": {"min": -180, "max": 180}}, "requiresSupportMask": true, "requiresSmoothBlend": true, "estateMaskPolicy": "ZERO_INTRUSION"},
+    {"familyId": "SADDLE_AND_PASS", "familyVersion": "1.0.0", "parameterBounds": {"amplitude": {"min": -0.18, "max": 0.16}, "spacing": {"min": 12, "max": 56}, "rotationDeg": {"min": -180, "max": 180}}, "requiresSupportMask": true, "requiresSmoothBlend": true, "estateMaskPolicy": "ZERO_INTRUSION"},
+    {"familyId": "RIDGE_BREAK_SPUR", "familyVersion": "1.0.0", "parameterBounds": {"amplitude": {"min": 0.06, "max": 0.29}, "spacing": {"min": 14, "max": 60}, "rotationDeg": {"min": -180, "max": 180}}, "requiresSupportMask": true, "requiresSmoothBlend": true, "estateMaskPolicy": "ZERO_INTRUSION"},
+    {"familyId": "SLOPE_TERRACE_VALLEY", "familyVersion": "1.0.0", "parameterBounds": {"amplitude": {"min": -0.14, "max": 0.18}, "spacing": {"min": 16, "max": 64}, "rotationDeg": {"min": -180, "max": 180}}, "requiresSupportMask": true, "requiresSmoothBlend": true, "estateMaskPolicy": "ZERO_INTRUSION"},
+    {"familyId": "MULTI_PEAK_RIDGE_DEPTH", "familyVersion": "1.0.0", "parameterBounds": {"amplitude": {"min": 0.10, "max": 0.36}, "spacing": {"min": 18, "max": 72}, "rotationDeg": {"min": -180, "max": 180}}, "requiresSupportMask": true, "requiresSmoothBlend": true, "estateMaskPolicy": "ZERO_INTRUSION"}
+  ],
+  "selectionLaw": "ZONE_PLAN_MUST_BIND_REGISTERED_FAMILY_AND_BOUNDED_PARAMETERS",
+  "varianceLaw": "NO_UNIFORM_STAMPING_AND_STRUCTURAL_SIGNATURE_REPETITION_MUST_REMAIN_WITHIN_THRESHOLD",
+  "prohibitedEffects": ["DISCONNECTED_CELL_MODEL", "VISIBLE_GRID_EDGE", "UNIFORM_STAMPING"]
+}

@@ -1,0 +1,20 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6D_RECEIPT",
+  "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_SUCCESSOR_RUN_6D_v1",
+  "eligible": true,
+  "status": "RENDERER_SUCCESSOR_FIXTURE_MATRIX_PASS",
+  "acceptedTriangleCount": 11,
+  "rejectedFixtureCount": 2,
+  "opaqueTriangleCount": 7,
+  "translucentTriangleCount": 4,
+  "writtenPixelCount": 4606,
+  "physicalDepthDomainCount": 1,
+  "semanticStackingControlsPhysicalDepth": false,
+  "issues": [],
+  "execution": {
+    "runtime": "node --experimental-default-type=module",
+    "fixtureMatrix": "OVERLAPPING_TERRAIN_WATER_RIDGE_FOAM_PROXY_NEAR_CLIP_REVERSED_DEGENERATE_NONFINITE",
+    "browserMountExecuted": false,
+    "productPromotionClaim": false
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_AUTHORITY_AND_LINEAGE_v1",
+  "instrumentId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "userAuthority": {
+    "authorityIssue": 719,
+    "openWorldPreflightComment": 5220803833,
+    "mandate": "CREATE_OFFICIAL_DURABLE_CROSS_ROOM_INSTRUMENTATION_FOR_OPEN_WORLD_SPATIAL_MIGRATION_AND_SUBSEQUENT_CHECKPOINT_CONTINUITY"
+  },
+  "construction": {
+    "operationId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENTATION_v2",
+    "governingHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+    "governingTree": "602378bd8eae82c202de73d56ee74f67a7210625",
+    "lockGeneration": 462,
+    "scopeHash": "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e",
+    "exactPathCount": 14,
+    "status": "PASS_CONSTRUCTED"
+  },
+  "routerPrerequisite": {
+    "pr": 739,
+    "candidateHead": "8dd94f446900cdd34541f35ee978b9c6afa8aeb2",
+    "mergeCommit": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+    "validationRun": 31210011756,
+    "result": "PASS_MERGED"
+  },
+  "permanentActivation": {
+    "status": "PASS_CLOSED",
+    "pullRequest": 740,
+    "immutablePackageCommit": "ae65d17ce1019831a7e9ea27af9441fb5686887a",
+    "immutablePackageTree": "0c5fdf5692f8c256b97354f95359f60d5dae9cd0",
+    "packageFingerprint": "124fae0a63ef90edb0e8988ab5c65cc6692772b192baeefa00a8c9c55773097a",
+    "continuityVerificationRun": 31211470016,
+    "registryActivationCandidateHead": "fbfe1ada4ff676f264c94952eebf746e643c7dbe",
+    "registryActivationLockGeneration": 464,
+    "registryPreflightRun": 31212406841,
+    "ratificationMergeLockGeneration": 467,
+    "mergeCommit": "c961469d366f39422e143a2c6156e79b1c991735",
+    "mergeTree": "b06352cfe65f0b96bb60c5fb545cb9ccf8c44458",
+    "result": "ACTIVE_ON_MAIN"
+  },
+  "sourceRevision10": {
+    "commit": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
+    "tree": "d630fed42bcf19a65129afbe97c1134d1d632422",
+    "userDisposition": "CONCEPTUAL_DIRECTION_APPROVED_WITH_MATERIAL_GEOGRAPHIC_DEFECTS",
+    "knownDefects": [
+      "GRATITUDE_HARBOR_EMBEDDED_NEAR_CONTINENT_CENTER",
+      "CONTINENTS_READ_AS_RADIAL_CIRCULAR_BLOBS",
+      "MOUNTAIN_SYSTEM_REMAINS_CONSTRAINED_BY_OLD_AUTHORING_BOX"
+    ]
+  },
+  "predecessor": {
+    "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+    "constructionLockGeneration": 422,
+    "oldWorldAssumption": "CONTINUOUS_512_BY_512_FIELD",
+    "disposition": "SPATIAL_PREMISE_SUPERSEDED_BY_OPEN_WORLD_MIGRATION;PRESERVE_VALID_LOCAL_GEOGRAPHY_AND_EVIDENCE"
+  },
+  "checkpointTransition": {
+    "stateReconciliationLockGeneration": 469,
+    "ow00": "PASS_CLOSED",
+    "nextCheckpoint": "OW01",
+    "nextCheckpointName": "GRATITUDE_CONTINENTAL_SKELETON_AND_TRUE_COASTAL_ENTRY_BINDING",
+    "productMutationAuthorizedByThisReconciliation": false
+  },
+  "historicalLocks": [
+    {
+      "generation": 457,
+      "status": "STALE_PRE_ROUTER_INSTRUMENT_ADMISSION_NOT_CURRENT_AUTHORITY"
+    },
+    {
+      "generation": 458,
+      "status": "ROUTER_CONSTRUCTION_EXECUTED_AND_MERGED"
+    },
+    {
+      "generation": 460,
+      "status": "ROUTER_EXACT_HEAD_MERGE_AUTHORITY_EXECUTED"
+    },
+    {
+      "generation": 462,
+      "status": "INSTRUMENT_CONSTRUCTION_EXECUTED"
+    },
+    {
+      "generation": 464,
+      "status": "H_EARTH_EXACT_OCCURRENCE_REGISTRY_ACTIVATION_EXECUTED"
+    },
+    {
+      "generation": 467,
+      "status": "INSTRUMENT_EXACT_HEAD_RATIFICATION_AND_MERGE_EXECUTED"
+    },
+    {
+      "generation": 469,
+      "status": "OW00_CLOSURE_AND_OW01_HANDOFF_RECONCILIATION_ACTIVE"
+    }
+  ],
+  "authorityLimits": [
+    "NO_TERRAIN_MUTATION",
+    "NO_RUNTIME_MUTATION",
+    "NO_LIVE_TRAVERSAL_MUTATION",
+    "NO_SHOWROOM_PRODUCT_MUTATION",
+    "NO_MANOR_GEOMETRY",
+    "NO_DEPLOYMENT",
+    "NO_RELEASE",
+    "NO_AUTOMATIC_PRODUCT_MERGE",
+    "NO_INHERITED_PRODUCT_AUTHORITY"
+  ]
+}

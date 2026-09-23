@@ -1,0 +1,55 @@
+{
+  "reclassificationId": "H_EARTH_SUCCESSOR_REGISTRY_EVIDENCE_LANE_RECLASSIFICATION_v1",
+  "operation": "POST_MERGE_42_FILE_SCOPE_DISPOSITION",
+  "disposition": "RECLASSIFY",
+  "classification": "NONACTIVE_NONACCEPTED_NONCANONICAL_SUCCESSOR_REGISTRY_EVIDENCE_LANE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "sourceMergeCommit": "ee7324734bb687e71ebb3ee93ff23e6353feb5fe",
+  "paths": [
+    {
+      "path": "/h-earth-3d/registry/candidates/h-earth.repository-registry.compositor-and-route-entry-amendment.candidate.js",
+      "gitBlobSha": "6ad9e0fab4a42bbe897a71c02fdb3c11c1dac1c4",
+      "role": "SUCCESSOR_REGISTRY_AMENDMENT_CANDIDATE"
+    },
+    {
+      "path": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+      "gitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+      "role": "SUCCESSOR_REGISTRY_CANDIDATE"
+    },
+    {
+      "path": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json",
+      "gitBlobSha": "a5d6ae2f64c7f8ac868aef70aa895bf9979be202",
+      "role": "SUCCESSOR_REGISTRY_IDENTITY"
+    },
+    {
+      "path": "/tools/h-earth-registry-successor-build.mjs",
+      "gitBlobSha": "28ee7c36b8cff0fbf86dde6c6c52bf4a1bba31b7",
+      "role": "DETERMINISTIC_SUCCESSOR_BUILDER"
+    },
+    {
+      "path": "/tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs",
+      "gitBlobSha": "4d9c2166b89ae0f6d6d4bdc9912f3887bd5ac7dc",
+      "role": "AMENDMENT_CANDIDATE_AUDIT"
+    },
+    {
+      "path": "/tools/h-earth-repository-registry-successor-v2-audit.mjs",
+      "gitBlobSha": "42e987c7679c75b604b783d2accccc54306cd27c",
+      "role": "SUCCESSOR_REGISTRY_AUDIT"
+    }
+  ],
+  "successorIdentity": {
+    "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+    "registryVersion": "1.0.0-candidate.2",
+    "contentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8"
+  },
+  "boundaries": {
+    "successorAccepted": false,
+    "successorActivated": false,
+    "canonical": false,
+    "bootstrapChanged": false,
+    "actorBindingsEstablished": false,
+    "transitionExecutionAuthorityEstablished": false,
+    "step2ImplementationAuthorityEstablished": false
+  },
+  "closureStatus": "RECLASSIFICATION_APPLIED_PENDING_AUDIT"
+}

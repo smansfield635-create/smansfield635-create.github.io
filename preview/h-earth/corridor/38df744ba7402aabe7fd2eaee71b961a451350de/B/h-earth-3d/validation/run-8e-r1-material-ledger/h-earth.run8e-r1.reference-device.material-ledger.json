@@ -1,0 +1,112 @@
+{
+  "ledgerId": "H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_MATERIAL_LEDGER_v1",
+  "ledgerClass": "DURABLE_REFERENCE_DEVICE_ARCHITECTURE_AND_PHYSICAL_INTERACTION_EVIDENCE_LEDGER",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r1-material-ledger-preservation-001",
+  "baseMainHead": "d73b241006c1cf43e8a6ad220fd192d55f51c6e8",
+  "generatedOn": "2026-07-27",
+  "sourceCustody": {
+    "sourceOccurrenceClass": "CONVERSATION_TRANSCRIBED_JSON",
+    "normalization": "JSON_VALUES_PRESERVED_AND_SERIALIZED_WITH_TWO_SPACE_INDENT_AND_TRAILING_NEWLINE",
+    "originalBrowserDownloadFilesUploaded": false,
+    "originalBrowserDownloadByteIdentityEstablished": false,
+    "repositoryTranscriptionByteIdentityEstablished": true,
+    "screenRecordingReceived": false
+  },
+  "materials": [
+    {
+      "materialId": "RUN_8E_R1_REFERENCE_DEVICE_ARCHITECTURE_PROBE_001",
+      "receiptType": "H_EARTH_RUN_8E_R1_ARCHITECTURE_PROBE_RECEIPT",
+      "generatedAt": "2026-07-27T01:44:07.416Z",
+      "path": "/h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-001.transcribed.json",
+      "gitBlobSha": "1ed92708f944eaf6df7208ad4412ca675306947b",
+      "contentSha256": "984872d3940c6deca2f6284eb9d2d15c9e69aa1f812a278767c27a5212fafea6",
+      "byteCount": 5781,
+      "fixedCameraStateCount": 5,
+      "candidateCWebgl2Available": true,
+      "custodyStatus": "REPOSITORY_TRANSCRIPTION_VERIFIED"
+    },
+    {
+      "materialId": "RUN_8E_R1_REFERENCE_DEVICE_ARCHITECTURE_PROBE_002",
+      "receiptType": "H_EARTH_RUN_8E_R1_ARCHITECTURE_PROBE_RECEIPT",
+      "generatedAt": "2026-07-27T01:45:56.518Z",
+      "path": "/h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-002.transcribed.json",
+      "gitBlobSha": "1435919811a962c1a869c443662b9b4a3a2e52fe",
+      "contentSha256": "5eb25e3b96ee0781f88c5b81a5e341f1b508dfe0ee0838e95835ccf55b2ad0ac",
+      "byteCount": 5786,
+      "fixedCameraStateCount": 5,
+      "candidateCWebgl2Available": true,
+      "custodyStatus": "REPOSITORY_TRANSCRIPTION_VERIFIED"
+    },
+    {
+      "materialId": "RUN_8E_R1_REFERENCE_DEVICE_PHYSICAL_INTERACTION_001",
+      "receiptType": "H_EARTH_RUN_8E_R1_PHYSICAL_SAMSUNG_PROFILING_RECEIPT",
+      "forwardTerminology": "REFERENCE_DEVICE_PHYSICAL_INTERACTION_RECEIPT",
+      "generatedAt": "2026-07-27T02:19:27.378Z",
+      "path": "/h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.physical-interaction.transcribed.json",
+      "gitBlobSha": "a419ef0026de7053bc7ff4f44d2b316b18b17c5c",
+      "contentSha256": "84d1fef931b9936fc2f558b5863cfa086e357d599bca4217bb4a9f8cb014406b",
+      "byteCount": 13475,
+      "pointerEventReceiptCount": 190,
+      "pointerMoveCount": 190,
+      "navigationIntentCount": 14,
+      "previewFrameCount": 190,
+      "previewTransformMutationCount": 21,
+      "committedRenderCount": 7,
+      "lastRenderDurationMilliseconds": 7558.900000035763,
+      "longTaskCount": 18,
+      "longestMainThreadTaskMilliseconds": 7421,
+      "baselineNavigationSequence": 1,
+      "finalNavigationSequence": 15,
+      "baselineRenderedNavigationStateId": "H_EARTH_NAVIGATION_STATE_0001",
+      "finalRenderedNavigationStateId": "H_EARTH_NAVIGATION_STATE_0015",
+      "custodyStatus": "REPOSITORY_TRANSCRIPTION_VERIFIED"
+    }
+  ],
+  "aggregateFindings": {
+    "referenceDeviceWebgl2FunctionalViability": "ESTABLISHED",
+    "referenceDeviceWorkerAndOffscreenCanvasViability": "ESTABLISHED",
+    "currentCpuFullWorldFrameConstructionRangeMilliseconds": {
+      "minimum": 4609,
+      "maximum": 8975.2
+    },
+    "cachedWorkerProbeRangeMilliseconds": {
+      "minimum": 7.800000011920929,
+      "maximum": 25.799999952316284
+    },
+    "cachedWebgl2ProbeRangeMilliseconds": {
+      "minimum": 0.1,
+      "maximum": 0.3,
+      "timingAuthority": "BOUNDED_FUNCTIONAL_PROBE_NOT_END_TO_END_PRESENTATION_LATENCY"
+    },
+    "touchInputReceived": true,
+    "navigationAuthorityFunctioning": true,
+    "cameraStateMutationFunctioning": true,
+    "truthfulContinuousRealtimeInteractionEstablished": false,
+    "currentCpuPublicRendererSuitability": "FAILED_PHYSICAL_EVIDENCE",
+    "flatBitmapPreviewObserved": true,
+    "primaryLiveRendererCandidate": "WEBGL_2",
+    "deterministicCpuRendererDisposition": "PRESERVE_REFERENCE_ONLY",
+    "workerCpuDisposition": "FALLBACK_REFERENCE_ACCELERATION_OR_DIAGNOSTIC_OPTION"
+  },
+  "measurementCaveats": [
+    "EMPTY_POINTER_TO_NAVIGATION_ARRAY_MEANS_NOT_CAPTURED_NOT_ZERO_LATENCY",
+    "EMPTY_RELEASE_TO_SETTLED_FRAME_ARRAY_MEANS_NOT_CAPTURED_NOT_ZERO_LATENCY",
+    "ZERO_LONG_ANIMATION_FRAME_GC_OR_HEAP_DELTA_VALUES_DO_NOT_PROVE_ABSENCE",
+    "NESTED_PUBLIC_ROUTE_PHYSICAL_SAMSUNG_EXECUTION_FALSE_IS_RETAINED_ROUTE_METADATA_NOT_A_DENIAL_OF_THE_ENCLOSING_REFERENCE_DEVICE_SESSION",
+    "WEBGL_PROBE_DURATION_IS_NOT_A_COMPLETE_POINTER_TO_PRESENT_MEASUREMENT",
+    "ORIGINAL_BROWSER_DOWNLOAD_FILE_BYTES_NOT_AVAILABLE_FOR_IDENTITY_COMPARISON"
+  ],
+  "checkpointDisposition": {
+    "run8ER1ProfilingObjective": "COMPLETE",
+    "run8ER1ArchitectureDisposition": "ESTABLISHED",
+    "run8ER1DiagnosticCheckpoint": "PASS_CLOSED",
+    "referenceDeviceInteractionUsability": "FAIL",
+    "run8E": "FAIL_OPEN",
+    "run8EPassClosed": false,
+    "run8ER2AuthorizedAfterPreservation": true,
+    "run8ER2Started": false
+  },
+  "stoppingBoundary": "STOP_BEFORE_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_CONSTRUCTION",
+  "issues": []
+}

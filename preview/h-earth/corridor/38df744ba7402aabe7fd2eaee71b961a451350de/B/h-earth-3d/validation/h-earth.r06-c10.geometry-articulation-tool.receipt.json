@@ -1,0 +1,655 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_1_C4_PORTABLE_HARNESS_CONSTRUCTION_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_1_C4_PORTABLE_HARNESS_CONSTRUCTION_RECEIPT_v1",
+  "result": "R06_C10_ROLE_1_C4_PASS_CLOSED",
+  "status": "PASS_CLOSED",
+  "checkpoint": "R1_C4_HARNESS_AND_FAIL_CLOSED_RECEIPT",
+  "operationId": "H_EARTH_R06_C10_ROLE_1_C4_PORTABLE_VERIFICATION_HARNESS_001",
+  "exactStartingMainHead": "1b211e2e72487ce7ff6c272e5c20569f9cc8db22",
+  "workflowRunId": "30861407585",
+  "harness": {
+    "path": "h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs",
+    "gitBlob": "b50b8959208cf8cead0f1b9392d039e27257608c",
+    "sha256": "6c07b19dc224790cb3f209b935e1d32bee9cb20df4d60e6e8f2ee5631ce6631a",
+    "roleNeutral": true,
+    "conversationMemoryAuthority": false,
+    "missingInputInference": false
+  },
+  "workflow": {
+    "path": ".github/workflows/h-earth-r06-c10-geometry-articulation-tool-validation.yml",
+    "gitBlob": "ae4ca58bb29ce242c3c9d932433f1f13b33e25f5",
+    "sha256": "1cb1c8044d1e548651c37ab290abbc29a8d7b69bc18d2709bb9be5f9ae4c8b8b",
+    "nonproductValidationOnly": true,
+    "deployment": false,
+    "preview": false,
+    "promotion": false,
+    "productMutation": false
+  },
+  "execution": {
+    "classification": "HARNESS_CONSTRUCTION_PASS_CANDIDATE_ADMISSION_FAIL_CLOSED",
+    "assertionImplementationCount": 28,
+    "assertionExecutionCount": 28,
+    "passAssertionIds": [
+      "01_EXACT_BASELINE_COMMIT_AND_ALL_REQUIRED_BLOBS_MATCH",
+      "02_ROLE_6_PACKAGE_AND_MEMBER_SHA256_VALUES_MATCH",
+      "03_REQUEST_SCHEMA_VALID_AND_NO_UNKNOWN_KEYS",
+      "04_ALL_PARAMETERS_INSIDE_SAFE_BOUNDS",
+      "05_CONFORMANCE_OUTPUT_SHA256_MATCHES_EXPECTED_FIXTURE",
+      "06_CANDIDATE_FIELD_DETERMINISTIC_REPEAT_EXECUTION",
+      "07_CANDIDATE_FIELD_FINITE_AT_ALL_RUN_8B_AXIS_POINTS",
+      "08_DELTA_EXACT_ZERO_OUTSIDE_BLEND_SUPPORT",
+      "09_SUPPORT_OUTER_EDGE_DELTA_EXACT_ZERO",
+      "10_SUPPORT_OUTER_EDGE_GRADIENT_WITHIN_1E_MINUS_8",
+      "11_RUN_8B_X_AND_Z_AXES_BYTE_EQUIVALENT",
+      "12_RUN_8B_INDEX_ARRAY_BYTE_EQUIVALENT",
+      "13_VERTEX_TRIANGLE_ROW_COLUMN_COUNTS_MATCH",
+      "14_NONDEGENERATE_TRIANGLES_MINIMUM_DOUBLE_AREA_AT_LEAST_4",
+      "15_FACE_AND_VERTEX_NORMALS_FINITE_AND_UNIT_BOUNDED",
+      "16_ALL_VIRTUAL_SHARED_EDGE_PAIRS_PASS",
+      "17_FORMER_BOUNDARY_CONTINUITY_REMAINS_PASS",
+      "18_COASTLINE_AND_WATER_MEMBERSHIP_UNCHANGED",
+      "21_CLEARANCE_USES_CANDIDATE_FIELD_NOT_RUN_6_FIELD",
+      "22_AT_LEAST_ONE_CAVERN_COMPATIBLE_FACE_PATCH_REPORTED",
+      "24_ACCEPTED_V2_PRODUCT_BLOBS_UNCHANGED",
+      "25_NO_NEW_SHADER_TEXTURE_BUFFER_DRAW_CALL_OR_WATER_PRIMITIVE",
+      "26_MATCHED_CAMERA_MANIFEST_HAS_AT_LEAST_THREE_NORMAL_VIEWS",
+      "27_ROLLBACK_AND_RECOVERY_OUTPUTS_COMPLETE",
+      "28_PACKAGE_MEMBER_HASHES_AND_ARCHIVE_READBACK_PASS"
+    ],
+    "failAssertionIds": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "candidateAdmissionResult": "FAIL_CLOSED",
+    "conformanceCandidateRejectedFailClosed": true,
+    "deterministicReceiptDigest": "c97ae78e5b723b0bf7943fb1b200846f0d5225b118321d039f55d0dac8c17e32",
+    "repeatedReceiptDigest": true,
+    "role1InvocationPass": true,
+    "role3InvocationPass": true,
+    "failoverInvocationPass": true,
+    "roleNeutralInvocationPass": true,
+    "missingInputFailClosedPass": true
+  },
+  "exactAssertions": [
+    {
+      "id": "01_EXACT_BASELINE_COMMIT_AND_ALL_REQUIRED_BLOBS_MATCH",
+      "result": "PASS",
+      "evidence": {
+        "baselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+        "baselineAncestor": true,
+        "currentHead": "b55082e641688122baf2768f59461628c0ea5a8a",
+        "requiredBlobCount": 18,
+        "mismatches": []
+      }
+    },
+    {
+      "id": "02_ROLE_6_PACKAGE_AND_MEMBER_SHA256_VALUES_MATCH",
+      "result": "PASS",
+      "evidence": {
+        "mode": "RECEIPT_BACKED_PORTABLE_AUTHORITY",
+        "sourceOuter": {
+          "sha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+          "byteCount": 179997,
+          "memberCount": 39,
+          "readbackVerifiedByReceipt": true
+        },
+        "correctionOuter": {
+          "sha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8",
+          "memberIntegrityVerifiedByReceipt": true
+        },
+        "erratumOuter": {
+          "sha256": "9b2f06af3387823dd48b1a7a13ab8c83d6e936b2510a9b5fa4ed5247fb758b50",
+          "memberIntegrityVerifiedByReceipt": true
+        },
+        "originalCoreCount": 35,
+        "originalCoreAllPass": true,
+        "detachedCount": 39,
+        "detachedAllPass": true,
+        "correctionAllPass": true,
+        "erratumAllPass": true,
+        "detachedManifestSha256": "129466ffc161a25e9c9b1e7d2d6594b92408fee6a9f36155c75111ece7f186db",
+        "replacementSchemaSha256": "8bc185349c6f0cf260a4288fb3dc0873eb424a1d16059c98d9907cb8951a3982",
+        "portableBundleMemberCount": 8,
+        "portableBundleAllPass": true,
+        "portableBundleMemberEvidence": [
+          {
+            "path": "records/02_EXACT_ACCEPTED_BASELINE_LEDGER_v1.json",
+            "authorityClass": "SOURCE_ROLE_6_PACKAGE",
+            "expectedSha256": "c5a7c5eb7fe261c8b7c385e8ba6605bd33fa1bd6b88f9c24f749d914b024bf3c",
+            "actualSha256": "c5a7c5eb7fe261c8b7c385e8ba6605bd33fa1bd6b88f9c24f749d914b024bf3c",
+            "pass": true
+          },
+          {
+            "path": "records/13_BOUNDARY_CONTINUITY_AND_SHARED_EDGE_REQUIREMENTS_v1.json",
+            "authorityClass": "SOURCE_ROLE_6_PACKAGE",
+            "expectedSha256": "4c8b12413da1d410cef4d595edbf16664c790b0ea2e7dade6ddd247f79071c8a",
+            "actualSha256": "4c8b12413da1d410cef4d595edbf16664c790b0ea2e7dade6ddd247f79071c8a",
+            "pass": true
+          },
+          {
+            "path": "records/14_SAFE_ARTICULATION_PARAMETER_BOUNDS_v1.json",
+            "authorityClass": "SOURCE_ROLE_6_PACKAGE",
+            "expectedSha256": "d62166be7c51451672f5a56c3f128abd69e647cab7035d1ffc7bb54ed98690cd",
+            "actualSha256": "d62166be7c51451672f5a56c3f128abd69e647cab7035d1ffc7bb54ed98690cd",
+            "pass": true
+          },
+          {
+            "path": "records/21_REQUIRED_BASELINE_AND_CANDIDATE_FIXTURES_v1.json",
+            "authorityClass": "SOURCE_ROLE_6_PACKAGE",
+            "expectedSha256": "c98d8f21058e77fb1f6fd48751f770c5552d149250c862f8745c2cca3506b034",
+            "actualSha256": "c98d8f21058e77fb1f6fd48751f770c5552d149250c862f8745c2cca3506b034",
+            "pass": true
+          },
+          {
+            "path": "records/22_REQUIRED_VERIFICATION_HARNESS_SPECIFICATION_v1.json",
+            "authorityClass": "SOURCE_ROLE_6_PACKAGE",
+            "expectedSha256": "0e2105fb576e90d9cb491245873a374ca30b8d0b48aa1ee6b8d440fb90de4c28",
+            "actualSha256": "0e2105fb576e90d9cb491245873a374ca30b8d0b48aa1ee6b8d440fb90de4c28",
+            "pass": true
+          },
+          {
+            "path": "records/23_REQUIRED_ROLLBACK_AND_RECOVERY_OUTPUTS_v1.json",
+            "authorityClass": "SOURCE_ROLE_6_PACKAGE",
+            "expectedSha256": "79ab9f1838ad2b789350d4331b3ec56197e8ed5ca2447b64b2f1569809db327d",
+            "actualSha256": "79ab9f1838ad2b789350d4331b3ec56197e8ed5ca2447b64b2f1569809db327d",
+            "pass": true
+          },
+          {
+            "path": "fixtures/H_EARTH_R06_C10_TOOL_CONFORMANCE_REQUEST_v1.json",
+            "authorityClass": "SOURCE_ROLE_6_PACKAGE",
+            "expectedSha256": "8b1ea49a6ced90e308fa38f3fec0b214d485c638c8f1a85b42e5a31768185ba2",
+            "actualSha256": "8b1ea49a6ced90e308fa38f3fec0b214d485c638c8f1a85b42e5a31768185ba2",
+            "pass": true
+          },
+          {
+            "path": "schemas/H_EARTH_R06_C10_ARTICULATION_REQUEST_SCHEMA_v1.json",
+            "authorityClass": "ROLE_4_SCHEMA_ERRATUM",
+            "expectedSha256": "8bc185349c6f0cf260a4288fb3dc0873eb424a1d16059c98d9907cb8951a3982",
+            "actualSha256": "8bc185349c6f0cf260a4288fb3dc0873eb424a1d16059c98d9907cb8951a3982",
+            "pass": true
+          }
+        ],
+        "packageMemberHashesPass": true,
+        "archiveReadbackPass": true,
+        "receiptAndLocatorBlobChecks": [
+          {
+            "file": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.package-assumption-receipt.v1.json",
+            "expected": "099348e58d93259129c05c6cad7fbea92635fc2f",
+            "actual": "099348e58d93259129c05c6cad7fbea92635fc2f"
+          },
+          {
+            "file": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c2.contracts-static-fixture.receipt.v1.json",
+            "expected": "b8d23a9bf7eb4f96934d8416500aa00f37b3b523",
+            "actual": "b8d23a9bf7eb4f96934d8416500aa00f37b3b523"
+          },
+          {
+            "file": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+            "expected": "f046e7223cfb8291a5620143a58201a02e307865",
+            "actual": "f046e7223cfb8291a5620143a58201a02e307865"
+          },
+          {
+            "file": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.schema-erratum-001.locator.v1.json",
+            "expected": "860312e013361dc521c8993018252eb7c5558f73",
+            "actual": "860312e013361dc521c8993018252eb7c5558f73"
+          }
+        ]
+      }
+    },
+    {
+      "id": "03_REQUEST_SCHEMA_VALID_AND_NO_UNKNOWN_KEYS",
+      "result": "PASS",
+      "evidence": {
+        "validatorStatus": "R06_C10_ARTICULATION_REQUEST_VALID",
+        "normalizationDrift": false,
+        "replacementSchemaSha256": "8bc185349c6f0cf260a4288fb3dc0873eb424a1d16059c98d9907cb8951a3982",
+        "unknownKeys": []
+      }
+    },
+    {
+      "id": "04_ALL_PARAMETERS_INSIDE_SAFE_BOUNDS",
+      "result": "PASS",
+      "evidence": {
+        "validatorStatus": "R06_C10_ARTICULATION_REQUEST_VALID",
+        "issues": [],
+        "operationCount": 8,
+        "safeBoundsRecordId": "SAFE_ARTICULATION_PARAMETER_BOUNDS_v1"
+      }
+    },
+    {
+      "id": "05_CONFORMANCE_OUTPUT_SHA256_MATCHES_EXPECTED_FIXTURE",
+      "result": "PASS",
+      "evidence": {
+        "sampleCount": 1023,
+        "expectedSampleCount": 1023,
+        "actualSha256": "d4bb9d94f052d6b43a6408e72bff874afe8d386809a8b2073093c86f9805f662",
+        "expectedSha256": "d4bb9d94f052d6b43a6408e72bff874afe8d386809a8b2073093c86f9805f662"
+      }
+    },
+    {
+      "id": "06_CANDIDATE_FIELD_DETERMINISTIC_REPEAT_EXECUTION",
+      "result": "PASS",
+      "evidence": {
+        "firstDigest": "4f8717c8ae297f02f62ec920880253f45d414a497ca46cad1c899ec83adf6f37",
+        "secondDigest": "4f8717c8ae297f02f62ec920880253f45d414a497ca46cad1c899ec83adf6f37",
+        "toolReportedDeterministic": true
+      }
+    },
+    {
+      "id": "07_CANDIDATE_FIELD_FINITE_AT_ALL_RUN_8B_AXIS_POINTS",
+      "result": "PASS",
+      "evidence": {
+        "sampledAxisPointCount": 24360,
+        "expectedVertexCount": 24360,
+        "allFinite": true
+      }
+    },
+    {
+      "id": "08_DELTA_EXACT_ZERO_OUTSIDE_BLEND_SUPPORT",
+      "result": "PASS",
+      "evidence": {
+        "outsideAxisPointCount": 24108,
+        "nonzeroDeltaCount": 0,
+        "firstNonzero": null
+      }
+    },
+    {
+      "id": "09_SUPPORT_OUTER_EDGE_DELTA_EXACT_ZERO",
+      "result": "PASS",
+      "evidence": {
+        "edgeSampleCount": 372,
+        "exactNonzeroCount": 0
+      }
+    },
+    {
+      "id": "10_SUPPORT_OUTER_EDGE_GRADIENT_WITHIN_1E_MINUS_8",
+      "result": "PASS",
+      "evidence": {
+        "maximumOuterEdgeDeltaOrAnalyticGradient": 0,
+        "tolerance": 1e-8
+      }
+    },
+    {
+      "id": "11_RUN_8B_X_AND_Z_AXES_BYTE_EQUIVALENT",
+      "result": "PASS",
+      "evidence": {
+        "xActual": "4ad2c78e1b27ce507c3c253fd26fffae3cb477901f272ea7761c66146752eea3",
+        "xExpected": "4ad2c78e1b27ce507c3c253fd26fffae3cb477901f272ea7761c66146752eea3",
+        "zActual": "b261d507e9bbb4ac99fcfadc865445c82eb09f6299419feb9c02bedf86606043",
+        "zExpected": "b261d507e9bbb4ac99fcfadc865445c82eb09f6299419feb9c02bedf86606043"
+      }
+    },
+    {
+      "id": "12_RUN_8B_INDEX_ARRAY_BYTE_EQUIVALENT",
+      "result": "PASS",
+      "evidence": {
+        "actual": "05f029961e6b7d6d8d24a282960d027563be7675df6d8809b158d96c0602d489",
+        "expected": "05f029961e6b7d6d8d24a282960d027563be7675df6d8809b158d96c0602d489"
+      }
+    },
+    {
+      "id": "13_VERTEX_TRIANGLE_ROW_COLUMN_COUNTS_MATCH",
+      "result": "PASS",
+      "evidence": {
+        "actual": {
+          "rowCount": 120,
+          "columnCount": 203,
+          "vertexCount": 24360,
+          "indexCount": 144228,
+          "triangleCount": 48076,
+          "primitiveId": "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001"
+        },
+        "expected": {
+          "rowCount": 120,
+          "columnCount": 203,
+          "vertexCount": 24360,
+          "indexCount": 144228,
+          "triangleCount": 48076,
+          "primitiveId": "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001"
+        }
+      }
+    },
+    {
+      "id": "14_NONDEGENERATE_TRIANGLES_MINIMUM_DOUBLE_AREA_AT_LEAST_4",
+      "result": "PASS",
+      "evidence": {
+        "minimumTriangleDoubleArea": 4.000314971616015,
+        "requiredMinimum": 4,
+        "triangleCount": 48076
+      }
+    },
+    {
+      "id": "15_FACE_AND_VERTEX_NORMALS_FINITE_AND_UNIT_BOUNDED",
+      "result": "PASS",
+      "evidence": {
+        "faceNormalCount": 48076,
+        "vertexNormalCount": 24360,
+        "minimumLength": 0.9999999999999997,
+        "maximumLength": 1.0000000000000002,
+        "tolerance": 0.000001
+      }
+    },
+    {
+      "id": "16_ALL_VIRTUAL_SHARED_EDGE_PAIRS_PASS",
+      "result": "PASS",
+      "evidence": {
+        "eligible": true,
+        "sharedEdgePairCount": 2045,
+        "issues": []
+      }
+    },
+    {
+      "id": "17_FORMER_BOUNDARY_CONTINUITY_REMAINS_PASS",
+      "result": "PASS",
+      "evidence": {
+        "eligible": true,
+        "status": "RUN_8B_FORMER_BOUNDARY_CONTINUITY_PASS",
+        "formerBoundaryZ": -256,
+        "c0Tolerance": 0.05,
+        "c1Tolerance": 0.5,
+        "maximumHeightDiscontinuity": 0.000015001141818515862,
+        "maximumGradientDiscontinuity": 0.003000228365124258,
+        "samples": [
+          {
+            "worldX": -224,
+            "center": 49.4815092109842,
+            "north": 49.463699144667885,
+            "south": 49.4993146659105,
+            "heightDiscontinuity": 0.000002305695005588859,
+            "gradientDiscontinuity": 0.0004611390018283146
+          },
+          {
+            "worldX": -192,
+            "center": 55.01486035832493,
+            "north": 54.99013004152568,
+            "south": 55.0395918069616,
+            "heightDiscontinuity": 5.659187110040875e-7,
+            "gradientDiscontinuity": 0.0001131837422008175
+          },
+          {
+            "worldX": -160,
+            "center": 47.82694604018433,
+            "north": 47.80270389667294,
+            "south": 47.85119414645121,
+            "heightDiscontinuity": 0.000002981377740240987,
+            "gradientDiscontinuity": 0.0005962755487587401
+          },
+          {
+            "worldX": -128,
+            "center": 62.86129342082834,
+            "north": 62.83157326923885,
+            "south": 62.89101252243357,
+            "heightDiscontinuity": 5.249921244399047e-7,
+            "gradientDiscontinuity": 0.00010499842559852368
+          },
+          {
+            "worldX": -96,
+            "center": 86.32268493254371,
+            "north": 86.29500970994197,
+            "south": 86.35034518424692,
+            "heightDiscontinuity": 0.000007485449273758604,
+            "gradientDiscontinuity": 0.0014970898533306354
+          },
+          {
+            "worldX": -64,
+            "center": 79.77354916708245,
+            "north": 79.75773268199084,
+            "south": 79.78935472304445,
+            "heightDiscontinuity": 0.000005464564793555837,
+            "gradientDiscontinuity": 0.001092912960132253
+          },
+          {
+            "worldX": -32,
+            "center": 81.37660733966024,
+            "north": 81.36571290170838,
+            "south": 81.38748673615888,
+            "heightDiscontinuity": 0.0000075207266121424254,
+            "gradientDiscontinuity": 0.001504145322428485
+          },
+          {
+            "worldX": 0,
+            "center": 93.90132810532633,
+            "north": 93.89355069054828,
+            "south": 93.90907551782072,
+            "heightDiscontinuity": 0.000015001141818515862,
+            "gradientDiscontinuity": 0.003000228365124258
+          },
+          {
+            "worldX": 32,
+            "center": 91.07397344103786,
+            "north": 91.06831828040787,
+            "south": 91.0795995856001,
+            "heightDiscontinuity": 0.000014508033885363147,
+            "gradientDiscontinuity": 0.002901606775651544
+          }
+        ],
+        "successorTerrainFieldContractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+        "predecessorTerrainFieldContractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+        "predecessorMutated": false
+      }
+    },
+    {
+      "id": "18_COASTLINE_AND_WATER_MEMBERSHIP_UNCHANGED",
+      "result": "PASS",
+      "evidence": {
+        "protectedBlobs": [
+          {
+            "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+            "expected": "bf0dfcc0166fd1e677529ff46b91d943f7eae7c8",
+            "actual": "bf0dfcc0166fd1e677529ff46b91d943f7eae7c8"
+          },
+          {
+            "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+            "expected": "98f8131dab38973f0f30165967443e0057f7615f",
+            "actual": "98f8131dab38973f0f30165967443e0057f7615f"
+          }
+        ],
+        "coastlineRecord": {
+          "pilotIntersectsCanonicalShoreline": false,
+          "proof": "DELTA_ZERO_OUTSIDE_BLEND_SUPPORT_AND_SUPPORT_IS_INLAND_OF_Z_MINUS_156",
+          "shorelineAndWaterMembershipChange": "PROHIBITED"
+        },
+        "blendSupportZMaximum": -156
+      }
+    },
+    {
+      "id": "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "result": "FAIL",
+      "evidence": {
+        "maximumGeneralSlope": 5.874269078477317,
+        "maximumSpecialSlope": 1.6724874316930014,
+        "maximumGeneralTwoUnitEdgeRise": 10.5161052942276,
+        "maximumSpecialTwoUnitEdgeRise": 3.107665717601776,
+        "maximumGeneralAdjacentNormalAngleDegrees": 40.60469806585478,
+        "maximumSpecialAdjacentNormalAngleDegrees": 46.68943585373736,
+        "bounds": {
+          "canonicalElevationGridDenominator": 16777216,
+          "maximumAdjacentVertexNormalAngularDifferenceFallOrCavernFaceDegrees": 50,
+          "maximumAdjacentVertexNormalAngularDifferenceGeneralDegrees": 35,
+          "maximumDeltaWorldUnits": 18,
+          "maximumTotalSlopeFallOrCavernFace": 2,
+          "maximumTotalSlopeGeneral": 1.25,
+          "maximumTwoUnitEdgeRiseFallOrCavernFaceWorldUnits": 4,
+          "maximumTwoUnitEdgeRiseGeneralWorldUnits": 2.5,
+          "minimumDeltaWorldUnits": -12,
+          "minimumTriangleDoubleArea": 4,
+          "outerSupportBoundaryDeltaTolerance": 0,
+          "outerSupportBoundaryGradientTolerance": 1e-8,
+          "outsideBlendSupportDelta": 0
+        }
+      }
+    },
+    {
+      "id": "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "result": "FAIL",
+      "evidence": {
+        "status": "TRAVERSAL_CLEARANCE_FAIL_CLOSED",
+        "eligible": false,
+        "declaredWidthWorldUnits": 8,
+        "declaredLengthWorldUnits": 28.844410203711917,
+        "continuousPassLengthWorldUnits": 0,
+        "hardSlopeMaximum": 0.48,
+        "minimumTerrainClearanceWorldUnits": 1.6
+      }
+    },
+    {
+      "id": "21_CLEARANCE_USES_CANDIDATE_FIELD_NOT_RUN_6_FIELD",
+      "result": "PASS",
+      "evidence": {
+        "candidateFieldUsed": true,
+        "traversalCandidateFieldUsed": true,
+        "run6NavigationFieldUsed": false
+      }
+    },
+    {
+      "id": "22_AT_LEAST_ONE_CAVERN_COMPATIBLE_FACE_PATCH_REPORTED",
+      "result": "PASS",
+      "evidence": {
+        "status": "CAVERN_COMPATIBILITY_ANALYSIS_COMPLETE",
+        "eligiblePatchCount": 1,
+        "cavernExcavationPerformed": false
+      }
+    },
+    {
+      "id": "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS",
+      "result": "FAIL",
+      "evidence": {
+        "status": "WATERFALL_READINESS_DRY_GEOMETRY_REPORTED",
+        "dryGeometryPresent": true,
+        "requiredOutputsPresent": true,
+        "continuousDownhillPath": false,
+        "waterImplementation": false
+      }
+    },
+    {
+      "id": "24_ACCEPTED_V2_PRODUCT_BLOBS_UNCHANGED",
+      "result": "PASS",
+      "evidence": {
+        "productChecks": [
+          {
+            "path": "showroom/globe/h-earth/index.html",
+            "expected": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+            "actual": "bc868995d9065ce03a5948bcf9f27804b178bc0b"
+          },
+          {
+            "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "expected": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "actual": "98c6e1f9b9fe4510157367600b85b9d31228056b"
+          },
+          {
+            "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+            "expected": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+            "actual": "16bc8c45fb5c2363326d05f7610e11387b3a4e38"
+          },
+          {
+            "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+            "expected": "8ab3446c536fc24423d5601acce232b19fa71c91",
+            "actual": "8ab3446c536fc24423d5601acce232b19fa71c91"
+          }
+        ]
+      }
+    },
+    {
+      "id": "25_NO_NEW_SHADER_TEXTURE_BUFFER_DRAW_CALL_OR_WATER_PRIMITIVE",
+      "result": "PASS",
+      "evidence": {
+        "changedPathCountSinceBaseline": 11,
+        "forbiddenRuntimeChangedPaths": [],
+        "waterPrimitiveConstructed": false,
+        "waterImplementation": false,
+        "newShaderPass": false,
+        "newTexture": false,
+        "newBuffer": false,
+        "newDrawCall": false
+      }
+    },
+    {
+      "id": "26_MATCHED_CAMERA_MANIFEST_HAS_AT_LEAST_THREE_NORMAL_VIEWS",
+      "result": "PASS",
+      "evidence": {
+        "normalViewCount": 4,
+        "sceneIds": [
+          "SCENE_01_HILL_FIELD_FILL",
+          "SCENE_02_ASCENDING_TOWARD_CREST",
+          "SCENE_04_LATERAL_SLOPE_TRAVEL",
+          "SCENE_06_COAST_TO_INLAND_TRANSITION"
+        ],
+        "registryBlobActual": "ab30137698716b6674e295dfb537fa04ffef4d46",
+        "registryBlobExpected": "ab30137698716b6674e295dfb537fa04ffef4d46"
+      }
+    },
+    {
+      "id": "27_ROLLBACK_AND_RECOVERY_OUTPUTS_COMPLETE",
+      "result": "PASS",
+      "evidence": {
+        "requiredOutputCount": 6,
+        "outputs": [
+          {
+            "name": "baseline-custody.json",
+            "present": true,
+            "sha256": "5c1319734490f9408d184e36a2cda94c204afeeda9c41de8b6481209338e52db"
+          },
+          {
+            "name": "candidate-member-list.json",
+            "present": true,
+            "sha256": "3e5e023e235d61a7a00c78a58da4ef455bed13b63fd0b49e6b863ff0edbdaba9"
+          },
+          {
+            "name": "candidate-sha256sums.txt",
+            "present": true,
+            "sha256": "aee15935bd91da638d07aeb4a0af4142d11bce1da9dec573ea84ed2ed5761681"
+          },
+          {
+            "name": "candidate-to-baseline-diff-paths.json",
+            "present": true,
+            "sha256": "a1be9fd90e25997c4ec5bb51c2e274da13863f90a5e3ed07ff7c499961e260c2"
+          },
+          {
+            "name": "rollback-steps.json",
+            "present": true,
+            "sha256": "2d5196fb098e726b517ca02fe6034da694557d3dd55e77e95b376893621a7ad7"
+          },
+          {
+            "name": "role-assumption-bootstrap.json",
+            "present": true,
+            "sha256": "b2ff7f9bce04db247230f00b06a33bf0615c5449234e044c433cf0bb6003e251"
+          }
+        ],
+        "noMissingParameterInference": true
+      }
+    },
+    {
+      "id": "28_PACKAGE_MEMBER_HASHES_AND_ARCHIVE_READBACK_PASS",
+      "result": "PASS",
+      "evidence": {
+        "archiveReadback": {
+          "sha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+          "byteCount": 179997,
+          "memberCount": 39,
+          "readbackVerifiedByReceipt": true
+        },
+        "originalCoreManifestVerified": true,
+        "detachedCompleteManifestVerified": true,
+        "replacementSchemaVerified": true
+      }
+    }
+  ],
+  "boundary": {
+    "authorizedChangedPathCount": 3,
+    "exactChangedPaths": [
+      "h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs",
+      "h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.receipt.json",
+      ".github/workflows/h-earth-r06-c10-geometry-articulation-tool-validation.yml"
+    ],
+    "productMutation": false,
+    "officialGeometryArticulationRound": "NOT_STARTED",
+    "visualImprovementClaimed": false,
+    "productAdmissionClaimed": false,
+    "r1C5Started": false
+  },
+  "closure": {
+    "checkpointClosed": true,
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "stopAfterClosure": true
+  }
+}

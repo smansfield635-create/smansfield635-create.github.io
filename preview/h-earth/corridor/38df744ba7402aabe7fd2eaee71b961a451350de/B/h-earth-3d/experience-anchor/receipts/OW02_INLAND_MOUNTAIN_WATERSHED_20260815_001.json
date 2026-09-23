@@ -1,0 +1,51 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.base.png",
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.candidate.png",
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "617b5c57b3ce78a5041dee671fcc4dcfac85489e72b606f85154a325c13a9a27"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "sha256": "c65e8d890a97effe45611c61ed6b0d17f2344990530f17669192f958ca4ed67b"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "ee88405c2296dc02661eaa998a7264ebf8adf5ce",
+    "qualificationHead": "3854d5994ef40d91f05d239c1119d8d83017fb50",
+    "browserQualificationRun": 31897500919,
+    "browserQualificationJob": 95042974708,
+    "artifactId": 9250203836,
+    "artifactSha256": "b512c4295ebb308b588b59f05b057e72224748f6839e964351ab18cc26b53286",
+    "finding": "OW02 preserves the same H-Earth live ground product, embodied first-person ground experience, direct manipulation, coastal/world continuity, and navigable terrain/horizon expression while replacing the old rear-edge termination with a continuous inland mountain and watershed continuation."
+  }
+}

@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import registryFacade,{verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition} from '../accepted-amendments/h-earth.repository-registry.audralia-cloud-globalization-experience-receipt-path-recognition.js';
+import {loadHEarthRepositoryRegistryValidatorDependencies} from '../h-earth.repository-registry.validator-engine.loader.js';
+
+const TARGET='/h-earth-3d/experience-anchor/receipts/AUDRALIA_ADVANCED_CLOUD_GLOBALIZATION_V1_20260912_v1.json';
+const verification=verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition();
+assert.equal(verification.eligible,true,'PATH_RECOGNITION_NOT_ELIGIBLE');
+assert.equal(verification.governingMain,'55ed031d1ae967a59589c969ed20d56c8f9b8cea','GOVERNING_MAIN_MISMATCH');
+assert.equal(verification.frozenCandidate,'91e5fcecf291d419ffedad75ce9d885e07d69ca6','FROZEN_CANDIDATE_MISMATCH');
+assert.equal(verification.candidateBlob,'98a468a8960e86801da0670b23b4bf4159af23fa','CANDIDATE_BLOB_MISMATCH');
+assert.ok(Object.values(verification.checks).every(Boolean),'RECOGNITION_CHECK_FAILURE');
+const resolution=registryFacade.resolveHEarthRepositoryRegistryPath(TARGET);
+assert.equal(resolution.resolved,true,'TARGET_PATH_UNRESOLVED');
+assert.ok(resolution.nodes.some(node=>node.nodeId==='H_EARTH_AUDRALIA_CLOUD_GLOBALIZATION_EXPERIENCE_RECEIPT_EXACT_PATH_RECOGNITION_SCOPE'),'TARGET_NODE_MISSING');
+assert.ok(resolution.occurrences.some(entry=>entry.path===TARGET&&entry.commitSha==='55ed031d1ae967a59589c969ed20d56c8f9b8cea'&&entry.existenceStatus==='ABSENT'&&entry.gitBlobSha===null),'TRUTHFUL_ABSENT_OCCURRENCE_MISSING');
+assert.equal(registryFacade.resolveHEarthRepositoryRegistryPath('/h-earth-3d/experience-anchor/receipts/').nodes?.some(node=>node.nodeId==='H_EARTH_AUDRALIA_CLOUD_GLOBALIZATION_EXPERIENCE_RECEIPT_EXACT_PATH_RECOGNITION_SCOPE')??false,false,'PREFIX_WIDE_REGISTRATION_DETECTED');
+const loaded=loadHEarthRepositoryRegistryValidatorDependencies();
+assert.equal(loaded.loaderId,'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v30_AUDRALIA_CLOUD_GLOBALIZATION_EXPERIENCE_RECEIPT_EXACT_PATH_RECOGNITION_SUCCESSOR','LOADER_ID_MISMATCH');
+assert.equal(loaded.successorIntegrityVerified,true,'LOADER_SUCCESSOR_INTEGRITY_FAILURE');
+assert.equal(loaded.audraliaCloudGlobalizationExperienceReceiptPathRecognitionVerification.eligible,true,'LOADER_RECOGNITION_NOT_ELIGIBLE');
+assert.equal(loaded.boundary.audraliaCloudGlobalizationExperienceReceiptProductMutationAuthorityCreated,false,'PRODUCT_AUTHORITY_LEAK');
+assert.equal(loaded.boundary.audraliaCloudGlobalizationExperienceReceiptGeneration2161Expanded,false,'GENERATION_EXPANSION_DETECTED');
+const receipt={schema:'H_EARTH_AUDRALIA_CLOUD_GLOBALIZATION_EXPERIENCE_RECEIPT_PATH_RECOGNITION_VERIFICATION_RECEIPT_v1',result:'PASS',operationId:'H_EARTH_AUDRALIA_CLOUD_GLOBALIZATION_EXPERIENCE_RECEIPT_PATH_RECOGNITION_V1_20260912_001',generation:2168,governingMain:verification.governingMain,frozenCandidate:verification.frozenCandidate,candidateBlob:verification.candidateBlob,targetPath:TARGET,checks:{exactPathResolved:true,truthfulAbsentAtMain:true,frozenCandidateAndBlobBound:true,noPrefixRegistration:true,inheritedRegistryPreserved:true,validatorLoaderIntegrated:true,productRuntimeMutationAuthorityCreated:false,generation2161Expanded:false,workflowMutationAuthorityCreated:false,deploymentPublicationAuthorityCreated:false}};
+process.stdout.write(`${JSON.stringify(receipt,null,2)}\n`);

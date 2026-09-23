@@ -1,0 +1,83 @@
+{
+  "manifestId": "H_EARTH_STEP_2_CURRENT_STATE_MANIFEST_v1",
+  "manifestVersion": 1,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "checkpoint": "STEP_2_1_CURRENT_STATE_LOCK",
+  "observedAt": "2026-07-24T03:20:00Z",
+  "expectedBaseCommit": "08cf54db77dc48e23de8874953561bc2964551ba",
+  "repositoryStabilization": {
+    "completeOnMain": true,
+    "pr87MergeCommit": "08cf54db77dc48e23de8874953561bc2964551ba",
+    "scopeDiscrepancyClosed": true,
+    "dispositionTablePath": "/h-earth-3d/control-plane/post-merge-disposition/h-earth.pr79-42-file-scope-disposition.table.json",
+    "dispositionTableGitBlobSha": "307d67d1ada449fc8bcfc641d4d4a67c8bd6cbba"
+  },
+  "currentSelectionChain": {
+    "bootstrap": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "gitBlobSha": "e422e814a29e024df91e8410687ab29ffe63c382",
+      "bootstrapId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_BOOTSTRAP_v1",
+      "status": "COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL",
+      "accepted": true,
+      "canonical": false,
+      "controlsRepositoryScope": false
+    },
+    "stableRegistrySource": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+      "gitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911",
+      "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+      "registryVersion": "1.0.0-candidate.1",
+      "contentSha256": "5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe"
+    },
+    "consumerFacade": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.js",
+      "gitBlobSha": "e1894f4d6510fe2df8d0fe21943dfd0238263051"
+    },
+    "validatorIdentity": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.identity.js",
+      "gitBlobSha": "62ca170428a5de0920e8d198df59b89385ea129e"
+    },
+    "validatorLoader": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+      "gitBlobSha": "efa6e09512f57936c45764f65cc8219bb4a0374d",
+      "activeFacadeImport": "./accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js"
+    },
+    "postMergeOverlay": {
+      "path": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js",
+      "gitBlobSha": "f2d854b28d39878d514567c6cdea4ac8ab26c18f"
+    }
+  },
+  "candidateSuccessorEvidence": {
+    "candidatePath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+    "candidateGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+    "identityPath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json",
+    "identityGitBlobSha": "a5d6ae2f64c7f8ac868aef70aa895bf9979be202",
+    "amendmentPath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.compositor-and-route-entry-amendment.candidate.js",
+    "amendmentGitBlobSha": "6ad9e0fab4a42bbe897a71c02fdb3c11c1dac1c4",
+    "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+    "registryVersion": "1.0.0-candidate.2",
+    "instanceContentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
+    "sourceStatus": "COMPLETE_CANDIDATE_NOT_ACCEPTED_NOT_CANONICAL_NOT_ACTIVE"
+  },
+  "mergeReadinessB": {
+    "legacyAuditPath": "/tools/h-earth-post-merge-scope-disposition-audit.mjs",
+    "legacyAuditGitBlobSha": "d04280a3f2f38ed59260b3092c3b83f14d311e2b",
+    "stabilizationMergeCommit": "08cf54db77dc48e23de8874953561bc2964551ba",
+    "continuityRule": "OBSERVED_MAIN_MUST_DESCEND_FROM_STABILIZATION_MERGE",
+    "obsoleteMainEqualityAssertionRetired": true
+  },
+  "currentStateConclusion": {
+    "activeBootstrapIdentified": true,
+    "activeRegistrySourceIdentified": true,
+    "selectionPathIdentified": true,
+    "competingActiveSuccessorCount": 0,
+    "blockingAmbiguities": []
+  },
+  "boundary": {
+    "repositoryMutationPerformedByThisManifest": false,
+    "successorActivated": false,
+    "bootstrapReplaced": false,
+    "step3ExecutorCreated": false
+  },
+  "manifestDigest": "d83aaef84ce9c90ef9ae38c37b1d0dc5c19e7ec3956f628a7a5f647edfcfb81d"
+}

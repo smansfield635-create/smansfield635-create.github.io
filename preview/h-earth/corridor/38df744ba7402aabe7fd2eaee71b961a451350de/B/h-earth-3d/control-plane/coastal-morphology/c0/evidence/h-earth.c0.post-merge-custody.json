@@ -1,0 +1,19 @@
+{
+  "receiptType": "H_EARTH_C0_POST_MERGE_PUBLIC_BYTE_CONFIRMATION_v1",
+  "operation": "C0_CUSTODY_FINALIZATION_POST_MERGE_PUBLIC_BYTE_CONFIRMATION",
+  "result": "OPEN_BLOCKED",
+  "firstBlocker": "PUBLIC_HTML_BODY_SHA256_MISMATCH",
+  "c0EvidenceMergeHead": "d3f53591fd040bc76ec4b6c604570298c67b346d",
+  "c0ProductBaselineHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "requestedUrlClass": "CACHE_BUSTED_PUBLIC_H_EARTH_ROUTE",
+  "httpStatus": 200,
+  "observedBodySha256": "b875cd6243b4531b92cdf0f381f0b99b47e1bc5bc693059ebba11bf562499038",
+  "expectedBodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+  "exactByteMatch": false,
+  "retrievalCount": 1,
+  "retrievalRepeated": false,
+  "c0Rerun": false,
+  "deploymentAdministrationMetadataRequired": false,
+  "productMutation": false,
+  "disposition": "STOP_AND_REPORT_MANAGEMENT_RECONCILIATION_REQUIRED"
+}

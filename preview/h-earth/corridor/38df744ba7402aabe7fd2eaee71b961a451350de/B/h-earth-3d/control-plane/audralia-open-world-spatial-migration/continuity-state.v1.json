@@ -1,0 +1,77 @@
+{
+  "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_CONTINUITY_STATE_v1",
+  "instrumentId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
+  "stateVersion": 2,
+  "authoritativeStateClass": "REPOSITORY_DURABLE_STATE",
+  "roomPrivateStateAuthoritative": false,
+  "governingHeadAtStateConstruction": "c961469d366f39422e143a2c6156e79b1c991735",
+  "instrumentConstructionLockGeneration": 462,
+  "stateReconciliationLockGeneration": 469,
+  "currentCheckpoint": {
+    "id": "OW01",
+    "name": "GRATITUDE_CONTINENTAL_SKELETON_AND_TRUE_COASTAL_ENTRY_BINDING",
+    "status": "NEXT_NOT_STARTED_REQUIRES_FRESH_ADMITTED_PRODUCT_OPERATION"
+  },
+  "closedCheckpoints": [
+    {
+      "id": "OW00",
+      "name": "OFFICIAL_CONTINUITY_INSTRUMENTATION",
+      "status": "PASS_CLOSED",
+      "pullRequest": 740,
+      "immutablePackageCommit": "ae65d17ce1019831a7e9ea27af9441fb5686887a",
+      "registryActivationHead": "fbfe1ada4ff676f264c94952eebf746e643c7dbe",
+      "mergeCommit": "c961469d366f39422e143a2c6156e79b1c991735",
+      "mergeTree": "b06352cfe65f0b96bb60c5fb545cb9ccf8c44458"
+    }
+  ],
+  "latestDurableAuthoringSource": {
+    "revision": "REVISION_10_CONTINUOUS_MULTISCALE_WORLD_MODEL",
+    "head": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
+    "tree": "d630fed42bcf19a65129afbe97c1134d1d632422",
+    "classification": "IMMUTABLE_MIGRATION_SOURCE",
+    "productMergedToMain": false
+  },
+  "userSpatialDisposition": {
+    "status": "CONCEPTUAL_DIRECTION_APPROVED_WITH_MATERIAL_GEOGRAPHIC_DEFECTS",
+    "positive": "CONTINUOUS_MULTISCALE_DIRECTION_MUCH_CLOSER_TO_TARGET",
+    "defects": [
+      "HARBOR_NOT_ON_TRUE_CONTINENTAL_EDGE",
+      "CONTINENTS_TOO_CIRCULAR_BLOB_LIKE",
+      "MOUNTAINS_ARTIFICIALLY_CONSTRAINED_BY_OLD_BOX"
+    ]
+  },
+  "constructionProgress": {
+    "openWorldGeographyProductMutationStarted": false,
+    "continuityInstrumentationCandidateBuilt": true,
+    "continuityInstrumentationPermanentlyActivated": true,
+    "rootRouterPrerequisiteMerged": true,
+    "exactOccurrenceRegistryActivationComplete": true,
+    "ow00Closed": true,
+    "ow01ProductConstructionStarted": false,
+    "liveIntegrationStarted": false,
+    "liveTraversalExpansionStarted": false
+  },
+  "requiredFutureOutcome": {
+    "startingPointTraversalRangeExpansion": "REQUIRED",
+    "newDevelopedRegionsJoinSameTraversalWorld": "REQUIRED",
+    "temporaryDevelopmentFrontiersAllowed": true,
+    "permanentRectangularWorldBoundaryAllowed": false
+  },
+  "ow01RequiredDeliverables": [
+    "TRUE_COASTAL_HARBOR_BINDING",
+    "FULL_SCALE_LOCAL_GRATITUDE_PRESERVED",
+    "ASYMMETRIC_GRATITUDE_CONTINENTAL_SKELETON",
+    "PRIMARY_INLAND_MOUNTAIN_AND_WATERSHED_AXES"
+  ],
+  "nextLawfulAction": "ACQUIRE_FRESH_OW01_PRODUCT_OPERATION_ADMITTED_AND_LOCKED_THEN_CONSTRUCT_GRATITUDE_CONTINENTAL_SKELETON_AND_TRUE_COASTAL_ENTRY_BINDING_WITHOUT_INHERITING_PRODUCT_AUTHORITY_FROM_THIS_INSTRUMENT",
+  "recoveryPointer": "successor-room-recovery.v1.json",
+  "checkpointRegistryPointer": "checkpoint-registry.v1.json",
+  "knownPendingGovernanceReconciliation": [
+    {"lockGeneration": 457, "reason": "PRE_ROUTER_PARENT_INSTRUMENT_ADMISSION_STALE"},
+    {"lockGeneration": 458, "reason": "ROUTER_CONSTRUCTION_COMPLETED_AND_MERGED"},
+    {"lockGeneration": 460, "reason": "ROUTER_MERGE_AUTHORITY_EXECUTED"},
+    {"lockGeneration": 462, "reason": "INSTRUMENT_CONSTRUCTION_EXECUTED"},
+    {"lockGeneration": 464, "reason": "EXACT_OCCURRENCE_REGISTRY_ACTIVATION_EXECUTED"},
+    {"lockGeneration": 467, "reason": "INSTRUMENT_RATIFICATION_AND_MERGE_EXECUTED"}
+  ]
+}

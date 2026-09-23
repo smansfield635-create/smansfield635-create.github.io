@@ -1,0 +1,76 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.json",
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.json",
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.json",
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "sha256": "3c525d2635f47f2e26801aa4c7e4c56b354cac7a530d6809c17531b2594108c0"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "sha256": "9666b2f89b3a3939c1b6499d821784d65f26a39fdf54e50f4e9b35c674b9cefa"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "8785ed578a9250701721d55b1bc4652d143c8d26f9f1c81d646c67531f0514f5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "sha256": "59308bfa8a1f1694d8d8ad5a607b173e9a9963ea1c537963f09917281e0c113f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/functional-landscape-frame.js",
+      "sha256": "f65ffd85d3d9d7d5c13b7e62e7d2a68e6faf1632284aa17861681f0b3c6b5edd"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "sha256": "3263dc5cdb69b4f6b615fe4f2d3a627fac3dc42bf67b9a15ee730a670a1f7050"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "sha256": "8ee1e308cea6a271fd0ede1de6a6566f1c9110e1a2d1d468f4d834183413c925"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "sha256": "2c4722cc0ebbbef772609db7f2752aea0b4e1d9a36623420475f3ee63db1fde2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+      "sha256": "f376d79fc30326c373ed328d336ec86f943e89c9ac9eaa0f4e5a6f3457a0ad5b"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "2bb383b404026f668679f9624024f6ca96d6b5d3",
+    "qualificationOperation": "H_EARTH_OW03_OW04_CUMULATIVE_PARENT_PROMOTION_ANCHOR_RECONCILIATION_20260816_001",
+    "finding": "Cumulative parent-promotion custody combines the previously accepted OW03 shoreline/continental evidence with the exact-head OW04 desktop, mobile, interaction, reach, atmosphere, and articulated-relief evidence. The nine-file main-to-candidate experience surface preserves one canonical H-Earth world, direct manipulation, the qualified coastal arrival, open-ocean law, frozen accessible extent, and non-navigable surrounding-world continuation.",
+    "normalPrPathReassertedFromReceiptHead": "bba6d39dd47729cc3c49b6dcd697f67ac9051395"
+  }
+}

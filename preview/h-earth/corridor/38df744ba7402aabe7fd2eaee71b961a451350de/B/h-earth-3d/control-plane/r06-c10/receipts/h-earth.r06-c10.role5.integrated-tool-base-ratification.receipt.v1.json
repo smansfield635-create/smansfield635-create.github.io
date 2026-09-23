@@ -1,0 +1,144 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_5_INTEGRATED_TOOL_BASE_RATIFICATION_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_5_INTEGRATED_TOOL_BASE_RATIFICATION_RECEIPT_v1",
+  "operationId": "H_EARTH_R06_C10_ROLE_5_INTEGRATED_TOOL_BASE_RATIFICATION_001",
+  "executionAttempt": "2_C5B_RECOVERY_CORRECTION_RESUMPTION",
+  "exactSuccessToken": "R06_C10_ROLE_5_INTEGRATED_TOOL_BASE_RATIFICATION_PASS_CLOSED",
+  "status": "PASS_CLOSED",
+  "activeMainHead": "0873196bc81e73faf037c6107c14042223278d4a",
+  "package": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED.zip",
+    "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+    "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+    "archiveByteCount": 13364458,
+    "archiveMemberCount": 167,
+    "internalSha256SumsCoverage": "166_OF_166_PASS",
+    "completeMemberManifestSha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+    "completeMemberManifestGitBlob": "edbb27881533dd3c891234ccaabed623b46b2d2f",
+    "completeMemberManifestCoverage": "167_OF_167_PASS"
+  },
+  "priorBlocker": {
+    "id": "PACKAGE_AND_RECOVERY_EMITTER_SUCCESSOR_ARCHIVE_ROOT_IDENTITY_MISMATCH",
+    "disposition": "RESOLVED_BY_C5B",
+    "remedyResult": "C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_PASS_CLOSED"
+  },
+  "receipts": {
+    "role1C5B": {
+      "path": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5b.recovery-root-generalization.receipt.v1.json",
+      "gitBlob": "7aa5a2fb7aa23c509b996c7ecc4e9b5c7f01e33e",
+      "result": "R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_PASS_CLOSED"
+    },
+    "role3C5B": {
+      "path": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role3.c5b-independent-toolchain-execution.receipt.v1.json",
+      "gitBlob": "aa7edfd0fcbb5f186fb43f830e47fc3871ccd429",
+      "sha256": "c740cb18ebc334cc74911ba0f9bd74128d7354d90f0d42db64ea757d8b30ac5f",
+      "status": "PASS_CLOSED"
+    },
+    "priorRole3ReceiptPreserved": {
+      "path": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role3.independent-toolchain-execution.receipt.v1.json",
+      "gitBlob": "b0967eadb4470d68b12ed8aaf97ece59f07d4b0a",
+      "unchanged": true
+    }
+  },
+  "ratification": {
+    "completeMemberCustodyResult": "COHERENT_PASS",
+    "eightToolIntegrationResult": "8_OF_8_COHERENT_PASS",
+    "roleTransitionContinuityResult": "COHERENT_PASS",
+    "recoveryAndSuccessionResult": "COHERENT_PASS",
+    "failClosedSemanticResult": "COHERENT_PASS",
+    "protectedProductCustodyResult": "UNCHANGED_PASS",
+    "conversationMemoryDependence": false,
+    "toolchainVerification": "PASS",
+    "candidateAdmission": "FAIL_CLOSED_AS_EXPECTED",
+    "role2HandoffReadiness": "PASS"
+  },
+  "recoveryRootVerification": {
+    "singleVerifiedRootDiscovery": "PASS",
+    "zeroRootDisposition": "FAIL_CLOSED_ZERO_ARCHIVE_ROOTS",
+    "zeroRootExitStatus": 2,
+    "multipleRootDisposition": "FAIL_CLOSED_MULTIPLE_ARCHIVE_ROOTS",
+    "multipleRootExitStatus": 2,
+    "hardCoded031RecoveryRoot": false,
+    "recoveredIdentityAuthority": "PACKAGE_BUILD_RECEIPT_JSON"
+  },
+  "recoveryContinuity": [
+    {
+      "packageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
+      "archiveSha256": "577de36ebe8909b14c34670b266414ac9d6f305737dac8fde8c2e05b5ea87e9d",
+      "archiveMemberCount": 163,
+      "rootDiscovery": "PASS",
+      "packageAndManifestIdentity": "PASS",
+      "eightToolHashes": "PASS",
+      "independentRole3Execution": "PASS"
+    },
+    {
+      "packageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED",
+      "archiveSha256": "9b6a3765550c6fe37b59452018ecc660cf709629b4b3661862a1f224ea1cba1e",
+      "archiveMemberCount": 165,
+      "rootDiscovery": "PASS",
+      "packageAndManifestIdentity": "PASS",
+      "eightToolHashes": "PASS",
+      "independentRole3Execution": "PASS"
+    },
+    {
+      "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+      "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+      "archiveMemberCount": 167,
+      "rootDiscovery": "PASS",
+      "packageAndManifestIdentity": "PASS",
+      "eightToolHashes": "PASS",
+      "role1DeterministicRepeat": "PASS_BYTES_IDENTICAL",
+      "independentRole3Execution": "PASS",
+      "role6FailoverExecution": "PASS",
+      "missingAuthority": "HARNESS_INPUT_REJECTED_FAIL_CLOSED",
+      "cleanRecoveryReplayReceiptSha256": "12edfb9c403d222de33f8636d87e8952c2a1cd4afc2dadc2dd00e2c628ccb7e0"
+    }
+  ],
+  "assertions": {
+    "implemented": 28,
+    "executed": 28,
+    "pass": 25,
+    "fail": 3,
+    "exactFailAssertionIds": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "failedAssertionConversionToPass": false
+  },
+  "protectedProductBlobs": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "gitBlob": "bc868995d9065ce03a5948bcf9f27804b178bc0b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "gitBlob": "98c6e1f9b9fe4510157367600b85b9d31228056b"
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "gitBlob": "16bc8c45fb5c2363326d05f7610e11387b3a4e38"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "gitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91"
+    }
+  ],
+  "boundary": {
+    "productMutation": false,
+    "repositoryMutationDuringRatification": false,
+    "toolSourceMutationDuringRatification": false,
+    "packageOrManifestMutationDuringRatification": false,
+    "officialGeometryArticulationRound": "NOT_STARTED",
+    "role2WorkPerformed": false,
+    "userReviewRequested": false,
+    "mainBranchUpdateDuringRatification": false
+  },
+  "return": {
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "stopAfterReturn": true,
+    "waitForUserDirection": false
+  }
+}

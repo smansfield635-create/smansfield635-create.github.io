@@ -1,0 +1,152 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_COMPLETION_RECEIPT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4F-12",
+  "result": "PASS",
+  "status": "COMPLETE_VERIFIED_CANDIDATE_NOT_ACCEPTED",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "completionCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
+  "finalizationArtifacts": {
+    "identityBoundary": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.identity-boundary.json",
+      "gitBlobSha": "6e142ea3cd3ccdcccddcad4f89963b57ac6f20e0"
+    },
+    "targetLedger": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.target-ledger.json",
+      "gitBlobSha": "68e51c986854bd2268038232314fdcf6c90ac72c"
+    },
+    "protectedIdentityManifest": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.protected-identity-manifest.json",
+      "gitBlobSha": "89d032d68593f765486a3b29ce99b0b862121d72"
+    },
+    "auditContract": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.audit-contract.json",
+      "gitBlobSha": "7270db1012a45d01416d115d50b3ced5d0f4a2cb"
+    },
+    "auditHarness": {
+      "path": "/tools/h-earth-repository-registry-target-4f-audit.mjs",
+      "gitBlobSha": "f4269e9f9d299584ed8e1c919f52c304df97234d"
+    },
+    "executionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4f-receipt.json",
+      "gitBlobSha": "6b677b5cdc1ad64e971ce9c3646fa19e4a966e26"
+    },
+    "finalBootstrap": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "gitBlobSha": "3bad5a83bd83f063a4c5593fca5c66d264b4c745"
+    }
+  },
+  "finalAudit": {
+    "runId": 30047183041,
+    "jobId": 89340971609,
+    "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
+    "executedCommit": "42481a04663f820b490e3796c96223111b747b25",
+    "result": "PASS",
+    "totalChecks": 53,
+    "passedChecks": 53,
+    "failedChecks": 0,
+    "regressions": {
+      "target2InstallationAudit": "25_OF_25_PASS",
+      "target3InstructionAudit": "24_OF_24_PASS",
+      "target4AContractAudit": "33_OF_33_PASS",
+      "target4BEngineAudit": "34_OF_34_PASS",
+      "target4CStaticAudit": "37_OF_37_PASS",
+      "target4CFixtureExecution": "33_OF_33_PASS",
+      "target4EStaticActivationAudit": "47_OF_47_PASS",
+      "target4ESystemicScenarioExecution": "8_OF_8_PASS"
+    },
+    "activationIntegrity": {
+      "registeredHEarthPath": "PASS",
+      "registeredAffectedNodeCount": 15,
+      "unregisteredHEarthPath": "STOP",
+      "outsideHEarthPath": "NOT_APPLICABLE",
+      "mutationIntentMayProceed": false,
+      "receiptsDeterministic": true
+    }
+  },
+  "targetStatus": {
+    "target2Complete": true,
+    "target3Complete": true,
+    "target4AComplete": true,
+    "target4BComplete": true,
+    "target4CComplete": true,
+    "target4DStatus": "OPTIONAL_DEFERRED_GENERALIZATION_LANE",
+    "target4DFindingPreserved": true,
+    "target4DRequiredForHEarth": false,
+    "target4EComplete": true,
+    "target4FComplete": true,
+    "candidatePackageComplete": true
+  },
+  "awarenessAndGovernanceStatus": {
+    "machineReadableHEarthAwareness": "ACHIEVED",
+    "executableHEarthComprehension": "ACHIEVED",
+    "automaticCompatibleAgentPreflight": "ACHIEVED",
+    "automaticGitHubChangePreflightCandidate": "INSTALLED_AND_EXECUTED_ON_CANDIDATE_BRANCH",
+    "unpromptedSystemicComprehension": "ACHIEVED",
+    "failClosedPremutationBehavior": "ACHIEVED",
+    "deterministicReceipts": "ACHIEVED"
+  },
+  "executionLaneCleanup": {
+    "temporaryWorkflowAbsent": true,
+    "failedExecutionPr68Closed": true,
+    "failedExecutionPr68Merged": false,
+    "failedExecutionBranchNeutralizedToMain": true,
+    "diagnosticPr69Closed": true,
+    "diagnosticPr69Merged": false,
+    "diagnosticBranchNeutralizedToMain": true,
+    "finalExecutionPr71Closed": true,
+    "finalExecutionPr71Merged": false,
+    "finalExecutionBranchNeutralizedToMain": true,
+    "temporaryBranchesDeleted": false,
+    "verifiedReceiptsDiscarded": 0
+  },
+  "repositoryStateBeforeCompletionReceiptPublication": {
+    "mainCommit": "3890dfc7165ae3481cd119d1f9c935e93c336f17",
+    "mainChanged": false,
+    "installationBranchPreCompletionHead": "13039816d8af53249f6e390ae18023435a973496",
+    "installationBranchAheadBy": 107,
+    "installationBranchBehindBy": 0,
+    "candidatePrNumber": 61,
+    "candidatePrOpen": true,
+    "candidatePrDraft": true,
+    "candidatePrMerged": false
+  },
+  "acceptanceBoundary": {
+    "userAcceptanceEstablished": false,
+    "mergeAuthorityEstablished": false,
+    "canonicalizationAuthorityEstablished": false,
+    "activeOnMain": false,
+    "branchProtectionCreated": false,
+    "allExternalToolsControlled": false,
+    "crossPackagePortabilityClaimed": false,
+    "separateExplicitUserAcceptanceRequired": true,
+    "separateExplicitMergeAuthorizationRequired": true
+  },
+  "boundaries": {
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "runtimeAuthorityCreated": false,
+    "rendererAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionAuthorityCreated": false,
+    "mainChanged": false
+  },
+  "terminalFetchBack": {
+    "completionReceiptGitBlobSha": "VERIFY_AFTER_PUBLICATION",
+    "bootstrapGitBlobSha": "3bad5a83bd83f063a4c5593fca5c66d264b4c745",
+    "protectedManifestGitBlobSha": "89d032d68593f765486a3b29ce99b0b862121d72",
+    "executionReceiptGitBlobSha": "6b677b5cdc1ad64e971ce9c3646fa19e4a966e26",
+    "permanentWorkflowPresenceRequired": true,
+    "temporaryWorkflowAbsenceRequired": true,
+    "pr61OpenDraftUnmergedRequired": true,
+    "mainUnchangedRequired": true
+  },
+  "stoppingCondition": {
+    "target4FComplete": true,
+    "candidatePackageComplete": true,
+    "advanceBeyondTarget4F": false,
+    "nextAuthorizedSubtarget": "USER_ACCEPTANCE_BOUNDARY"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "H_EARTH_LOCK_279_FAIL_CLOSED_REQUEST_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001",
+  "lockScope": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE",
+  "scopeHash": "4d1298d5fa9c94fd3ef50abaad57a8e953a3332074e09d7c07046f3ee18b9b5f",
+  "lockGeneration": 279,
+  "observedLockRefHead": "a88b489e7ce4d67794be80e049962ee3b4c0e257",
+  "requiredCurrentState": "ADMITTED_LOCKED",
+  "terminalDisposition": "FAIL_CLOSED",
+  "exactCommand": "node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001 --lock-scope H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE --lock-generation 279 --terminal-disposition FAIL_CLOSED --output \"$RUNNER_TEMP/h-earth-lock-279-fail-closed-command-receipt.json\"",
+  "executionAuthority": "POST_MERGE_EXACT_PR_BOUND_WORKFLOW_ONLY",
+  "premergeExecution": false,
+  "directLedgerEditing": false
+}

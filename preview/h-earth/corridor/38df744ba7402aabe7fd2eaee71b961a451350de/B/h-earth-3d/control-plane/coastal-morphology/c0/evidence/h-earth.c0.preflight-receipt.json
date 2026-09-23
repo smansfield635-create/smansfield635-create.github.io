@@ -1,0 +1,26 @@
+{
+  "receiptType": "H_EARTH_C0_PREFLIGHT_RECONCILIATION_RECEIPT_v1",
+  "checkpointBlock": "C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "managementAuthority": "C0_DEPLOYMENT_AUTHORITY_AND_SOURCE_OCCURRENCE_RECONCILIATION_001",
+  "newEvidencePathRegistryDisposition": "STOP",
+  "newEvidencePathFailureCodes": [
+    "OPERATION_SCOPE_UNRESOLVED",
+    "REQUESTED_PATH_UNRESOLVED"
+  ],
+  "newEvidencePathClassification": "EXPECTED_UNREGISTERED_NEW_EVIDENCE_PATH_CONTROL_LIMITATION",
+  "productReadOnlyRegistryDisposition": "STOP",
+  "productReadOnlyFailureCodes": [
+    "REQUESTED_PATH_UNRESOLVED"
+  ],
+  "continuationBasis": [
+    "EXACT_26_PATH_MANIFEST_ALREADY_DURABLE",
+    "NEW_PATHS_ONLY",
+    "EXISTING_PRODUCT_SOURCE_READ_ONLY",
+    "PRODUCT_MUTATION_FALSE",
+    "CONTROL_CONFIGURATION_LIMITATION_NOT_SAFE_EVIDENCE_BLOCKER"
+  ],
+  "productMutation": false,
+  "c1DiagnosisAuthorized": false,
+  "timestamp": "2026-07-31T04:31:00.188Z"
+}

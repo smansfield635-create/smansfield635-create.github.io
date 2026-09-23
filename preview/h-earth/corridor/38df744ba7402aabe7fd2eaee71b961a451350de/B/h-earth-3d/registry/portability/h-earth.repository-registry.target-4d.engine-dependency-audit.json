@@ -1,0 +1,132 @@
+{
+  "auditId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4D_ENGINE_PORTABILITY_DEPENDENCY_AUDIT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4D-3",
+  "result": "BLOCKED",
+  "portabilityLane": "LANE_B_ENGINE_HARDWIRED_TO_H_EARTH",
+  "protectedEngineIdentity": {
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.js",
+    "gitBlobSha": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759",
+    "changed": false
+  },
+  "inspectedSources": [
+    {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+      "gitBlobSha": "d996b2143dbf4aa37f25b97191c432b6cd21bd99",
+      "classification": "PORTABILITY_BLOCKER",
+      "findings": [
+        "DIRECT_IMPORT_OF_H_EARTH_REGISTRY_FACADE",
+        "EXACT_H_EARTH_REGISTRY_IDENTITY_REQUIRED",
+        "EXACT_H_EARTH_CANDIDATE_BLOB_REQUIRED",
+        "NO_PACKAGE_PROVIDER_PARAMETER"
+      ]
+    },
+    {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.js",
+      "gitBlobSha": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759",
+      "classification": "PORTABILITY_BLOCKER",
+      "findings": [
+        "ORCHESTRATOR_CALLS_H_EARTH_LOADER_INTERNALLY",
+        "PREVIEW_API_HAS_NO_PROVIDER_PARAMETER",
+        "VALIDATION_API_HAS_NO_PROVIDER_PARAMETER",
+        "RECEIPT_CONTRACT_IDENTITY_REFERENCES_H_EARTH_ENGINE_IDENTITY",
+        "NO_SHARED_PACKAGE_PARAMETRIC_KERNEL"
+      ]
+    },
+    {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.occurrences.js",
+      "gitBlobSha": "f8f8ea5bd3e024014f57800dc9d001bb0d7fe608",
+      "classification": "PACKAGE_PROVIDER_RESPONSIBILITY_NOT_ABSTRACTED",
+      "findings": [
+        "CALLS_H_EARTH_NAMED_PATH_RESOLVER",
+        "CALLS_H_EARTH_NAMED_OCCURRENCE_RESOLVER"
+      ]
+    },
+    {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.scope.js",
+      "gitBlobSha": "2a4774a6346b60ad8d360cb736a3ca5d92b740d8",
+      "classification": "PACKAGE_PROVIDER_RESPONSIBILITY_NOT_ABSTRACTED",
+      "findings": [
+        "CALLS_H_EARTH_NAMED_NODE_RESOLVER",
+        "CALLS_H_EARTH_NAMED_RELATION_RESOLVER",
+        "CALLS_H_EARTH_NAMED_DEPENDENCY_CLOSURE"
+      ]
+    },
+    {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.cardinals.js",
+      "gitBlobSha": "82b4bcd3ce59f86f913bc7b6ea4bbc5fae52af8c",
+      "classification": "PORTABILITY_BLOCKER",
+      "findings": [
+        "FIXED_NORTH_EAST_SOUTH_WEST_KERNEL_ROLES",
+        "H_EARTH_CARDINAL_UNIT_SUBTYPE_ASSUMPTION",
+        "H_EARTH_FUNCTIONAL_CONTINUITY_UNIT_ASSUMPTION",
+        "GATE_B_CANDIDATE_CHECK_SEMANTICS_EMBEDDED_IN_ENGINE_STAGE"
+      ]
+    },
+    {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.governance.js",
+      "gitBlobSha": "6e5a6b1dbc94d2bc636a6045691842cea1ecc12d",
+      "classification": "PORTABILITY_BLOCKER",
+      "findings": [
+        "ORCHESTRATION_ONLY_TO_ADMISSION_AUTHORITY_RULE_EMBEDDED",
+        "FACADE_SUBTYPE_RULE_EMBEDDED",
+        "CANDIDATE_TO_ACCEPTED_OR_CANONICAL_RULE_EMBEDDED",
+        "PACKAGE_GOVERNANCE_POLICY_NOT_INJECTED"
+      ]
+    },
+    {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.boundaries.js",
+      "gitBlobSha": "ec8a6a2b890e05f612df436a47b4f23daffeb8d6",
+      "classification": "PORTABILITY_BLOCKER",
+      "findings": [
+        "H_EARTH_INSTRUCTION_PATH_HARDCODED",
+        "H_EARTH_STOPPING_BOUNDARY_STRING_ASSUMPTIONS",
+        "PACKAGE_INSTRUCTION_IDENTITY_NOT_PROVIDER_SUPPLIED"
+      ]
+    }
+  ],
+  "dependencyClassifications": {
+    "genericEngineLogicPresent": true,
+    "packageProviderResponsibilitiesIdentified": true,
+    "hEarthAdapterResponsibilitiesIdentified": true,
+    "existingPackageInjectionSeamAvailable": false,
+    "protectedEngineCanValidateReferencePackageWithoutModification": false
+  },
+  "gateDecision": {
+    "decision": "STOP_TARGET_4D",
+    "reason": "SAME_EXECUTABLE_VALIDATION_PATH_CANNOT_BE_PROVEN_WITH_THE_CURRENT_PROTECTED_ENGINE_IDENTITY",
+    "silentTarget4BRewritePermitted": false,
+    "parallelReferenceValidatorPermitted": false,
+    "referenceFixtureConstructionPermittedBeforeRefactor": false
+  },
+  "requiredSeparateRevision": {
+    "revisionId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4B_PORTABILITY_REFACTOR_REVISION_v1",
+    "status": "REQUIRED_NOT_AUTHORIZED_NOT_STARTED",
+    "requiredWork": [
+      "CREATE_GENERIC_PACKAGE_PROVIDER_CONTRACT",
+      "EXTRACT_PACKAGE_PARAMETRIC_FOURTEEN_STEP_VALIDATION_KERNEL",
+      "CREATE_H_EARTH_PROVIDER_ADAPTER",
+      "MOVE_CARDINAL_AND_GATE_B_POLICY_TO_H_EARTH_POLICY_PROVIDER",
+      "MOVE_AUTHORITY_AND_LIFECYCLE_POLICY_TO_PACKAGE_POLICY_PROVIDER",
+      "MOVE_INSTRUCTION_IDENTITY_AND_PATH_TO_PROVIDER_CONFIGURATION",
+      "PRESERVE_PUBLIC_H_EARTH_VALIDATOR_API_THROUGH_THIN_ADAPTER",
+      "ASSIGN_NEW_EXPLICIT_ENGINE_REVISION_IDENTITY_AND_GIT_BLOB",
+      "RERUN_TARGET_4B_ENGINE_AUDIT",
+      "RERUN_TARGET_4C_STATIC_AUDIT_AND_ALL_33_FIXTURES",
+      "ONLY_THEN_RESUME_TARGET_4D_AT_4D_4"
+    ]
+  },
+  "claims": {
+    "referencePackagePortability": "NOT_PROVEN",
+    "sharedExecutableValidationPath": "NOT_PROVEN",
+    "crossRepositoryPortability": "NOT_ESTABLISHED",
+    "generalPlatformValidity": "NOT_ESTABLISHED"
+  },
+  "stoppingCondition": {
+    "portabilityPathEstablished": false,
+    "exactPortabilityBlockerReported": true,
+    "target4DBlockedAt": "4D-3",
+    "advanceBeyondTarget4D3": false,
+    "resumeCondition": "SEPARATELY_AUTHORIZED_TARGET_4B_PORTABILITY_REFACTOR_REVISION_PASSES_ALL_4B_AND_4C_REGRESSIONS"
+  }
+}

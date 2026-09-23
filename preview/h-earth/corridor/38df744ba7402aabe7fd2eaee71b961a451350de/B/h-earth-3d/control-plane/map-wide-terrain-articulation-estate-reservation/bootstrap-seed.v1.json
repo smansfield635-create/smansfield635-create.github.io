@@ -1,0 +1,61 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_BOOTSTRAP_SEED_v1",
+  "operationId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENTATION_EXTENSION_v1",
+  "status": "USER_ORIGIN_GENESIS_AUTHORIZED_CONSTRUCTION_ONLY",
+  "originAuthority": "USER",
+  "authorityDirection": "Proceed to build the instrument.",
+  "issueSeed": 569,
+  "exactStartingHead": "3ac9279dc82e56f7b0d67972ce56048d07e5ecfa",
+  "genesisBranch": "bootstrap/h-earth-map-wide-terrain-estate-instrument-v1-001",
+  "transportCoverageGap": {
+    "activeTransport": true,
+    "registeredExecutorForOperation": false,
+    "ordinaryTransportInvocationAvailable": false,
+    "fakeAdmissionProhibited": true,
+    "closureClass": "ONE_TIME_BOUNDED_INSTRUMENT_BOOTSTRAP"
+  },
+  "worldModel": {
+    "sourceClass": "USER_ORIGIN_ARCHITECTURE_ASSERTION",
+    "width": 512,
+    "depth": 512,
+    "latticeRows": 16,
+    "latticeColumns": 16,
+    "addressableCells": 256,
+    "continuousFieldRequired": true
+  },
+  "acceptedLocalProof": {
+    "pr": 566,
+    "exactCandidateHead": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+    "terrainPath": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js",
+    "terrainBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+    "successorFieldPath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "successorFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+    "status": "IMMUTABLE_ACCEPTED_LOCAL_REFERENCE_NOT_MERGED_MAIN"
+  },
+  "estateEvidence": {
+    "sourcePr": 328,
+    "candidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+    "originalDisposition": "ADMISSIBLE_WITHOUT_GLOBAL_AUTHORITY",
+    "constructionAuthorized": false
+  },
+  "pathManifest": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/changed-path-manifest.v1.json",
+  "prohibitedSideEffects": [
+    "ACTUAL_TERRAIN_MUTATION",
+    "MANOR_GEOMETRY_CONSTRUCTION",
+    "PRODUCT_MUTATION",
+    "ROLE_ACTIVATION",
+    "MAP_WIDE_CANDIDATE_EXECUTION",
+    "PROMOTION",
+    "DEPLOYMENT",
+    "RELEASE",
+    "MERGE",
+    "RESIDUAL_BOOTSTRAP_AUTHORITY"
+  ],
+  "terminalState": {
+    "builderAuthorityActive": false,
+    "verifierAuthorityActive": false,
+    "residualBootstrapAuthority": false,
+    "permanentInstrumentActive": false,
+    "separateRatificationRequired": true
+  }
+}

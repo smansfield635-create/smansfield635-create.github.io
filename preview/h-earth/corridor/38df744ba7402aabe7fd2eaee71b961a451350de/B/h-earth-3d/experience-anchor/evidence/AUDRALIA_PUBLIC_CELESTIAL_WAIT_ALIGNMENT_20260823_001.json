@@ -1,0 +1,42 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_BOUNDED_PRESENTATION_EVIDENCE_v1",
+  "candidateHeadBeforeEvidence": "32c819f3eb7fcd4018d43da5ea536f9e37cfb5d4",
+  "changeClass": "AUDRALIA_PUBLIC_CELESTIAL_BOOTSTRAP_WAIT_ALIGNMENT",
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
+      "sha256": "457e47979de2aa0f9c205f295360fff5ee02a6d6cdf8bb25311c87171d830392"
+    }
+  ],
+  "anchorReview": {
+    "visual": "No world, terrain, weather, loader artwork, celestial rendering, camera, or navigation presentation is changed. The already-qualified COLOR ARRIVAL v4 loader remains the visible public arrival treatment.",
+    "interaction": "No interaction semantics are changed. The bootstrap continues to wait for the same canonical renderer authority and still fails visibly if that authority never becomes available; only the bounded wait window is aligned with the public exact-head verification envelope.",
+    "continuity": "Public exact-head run 32659895979 proved deployed static bytes and runtime identity, while its reconciliation failed only because the 90-second celestial bootstrap timer expired before the otherwise passing renderer/reconciliation runtime became available. The repair preserves the same renderer predicate and extends its bounded wait to 210 seconds, below the 240-second public verification ceiling."
+  },
+  "scopeAssertions": {
+    "worldGeometryMutated": false,
+    "terrainMutated": false,
+    "weatherAuthorityMutated": false,
+    "cameraSemanticsMutated": false,
+    "navigationMutated": false,
+    "loaderProgressSemanticsMutated": false,
+    "loaderReadinessPredicatesMutated": false,
+    "celestialRenderingMutated": false,
+    "celestialStartupSequencingMutated": true,
+    "parallelProductCreated": false,
+    "hEarthPublicExperienceMutated": false
+  },
+  "supportingRepositoryEvidence": [
+    "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
+    "showroom/globe/audralia/celestial-checkpoint-1.mjs",
+    "showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
+    "tools/audralia-weather-presentation-reconciliation-ci.mjs"
+  ],
+  "publicFailureRun": {
+    "workflowRunId": 32659895979,
+    "failedInvariant": "CELESTIAL_CONTEXT_MISSING",
+    "bootstrapFailure": "AUDRALIA_CELESTIAL_RENDERER_AUTHORITY_TIMEOUT",
+    "coreReconciliationOtherwisePassing": true
+  },
+  "disposition": "PASS"
+}

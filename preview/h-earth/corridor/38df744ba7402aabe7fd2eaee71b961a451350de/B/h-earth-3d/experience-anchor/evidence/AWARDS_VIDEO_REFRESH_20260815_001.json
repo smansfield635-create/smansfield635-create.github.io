@@ -1,0 +1,84 @@
+{
+  "schema": "H_EARTH_AWARDS_VIDEO_REFRESH_EVIDENCE_v1",
+  "operationId": "AWARDS_COMPASS_HEARTH_VIDEO_REFRESH_20260815_001",
+  "governingMain": "0f20e83e3ac726db02af6d54ea62b29298375577",
+  "route": "showroom/globe/h-earth/awards/",
+  "ownerReview": {
+    "compassDisposition": "APPROVED_AFTER_GROOMING",
+    "worldPictureDisposition": "APPROVED_LOCKED_NO_RECUT",
+    "soundtrackDisposition": "CONTINUOUS_AUDIO_REQUESTED_FOR_BOTH_PRESENTATIONS",
+    "textOverlayDisposition": "OWNER_APPROVED_SEVEN_BEAT_COMPASS_AND_SHARED_CINEMATIC_READABILITY",
+    "chapterSequenceDisposition": "OWNER_APPROVED_SIX_CHAPTER_STORY_SEQUENCE"
+  },
+  "compassPresentation": {
+    "driveFileId": "1C4bnM7USwBITlHHNbphl22de15YC8shO",
+    "installedFileName": "diamond-gate-compass-mirrorland-36s.mp4",
+    "approvedLocalMasterSha256": "06989808f33f4b7d5e5a587d560f20fa97ee8cc846b7f7af49beee8200a6a084",
+    "visualTreatment": "GROOMED_SMOOTH_MOTION_16_BY_9",
+    "audioTreatment": "EMBEDDED_CONTINUOUS_AUDIO_THROUGH_END",
+    "timedTextOverlays": [
+      {"start": 0.8, "end": 4.2, "text": "Navigation requires orientation.", "position": "upper"},
+      {"start": 5.05, "end": 8.65, "text": "Without orientation, there is no navigation.", "position": "middle"},
+      {"start": 9.55, "end": 15.75, "text": "Here at Diamond Gate Bridge, we define our questions through their connections.", "position": "lower", "kind": "long"},
+      {"start": 16.65, "end": 20.35, "text": "And the stars provide the answers.", "position": "upper"},
+      {"start": 21.25, "end": 25.45, "text": "Reality relies on their existence.", "position": "middle"},
+      {"start": 27, "end": 29.15, "text": "Therefore.", "position": "middle", "kind": "inference"},
+      {"start": 30.25, "end": 36.05, "text": "Nothing navigates better than a compass.", "position": "lower", "kind": "conclusion"}
+    ]
+  },
+  "worldPresentation": {
+    "driveFileId": "1SQXPKeI7uPdAF2DpZavcezYibVhgLDlG",
+    "installedFileName": "diamond-gate-h-earth-awards-30s.mp4",
+    "approvedLocalMasterSha256": "eace70e3d56a1ba2f7e69ef895d3a094250b4b302fc35b273a89449f5224e450",
+    "pictureLaw": "APPROVED_PICTURE_MASTER_PRESERVED_NO_RECUT",
+    "soundtrack": {
+      "work": "Antonio Vivaldi — Summer, I. Allegro non molto, RV 315",
+      "performers": "John Harrison, violin; Robert Turizziani, conductor; Wichita State University Chamber Players",
+      "source": "Wikimedia Commons",
+      "license": "CC BY-SA 4.0",
+      "startElapsedSeconds": 167,
+      "startClock": "2:47",
+      "continuity": "SYNCHRONIZED_CONTINUOUS_SCORE_FOR_WORLD_REEL"
+    },
+    "timedTextOverlays": [
+      {"start": 0.8, "end": 4.1, "text": "What makes something real?", "position": "upper"},
+      {"start": 6.6, "end": 10.4, "text": "What wasn't before doesn't define what is possible.", "position": "middle"},
+      {"start": 17.8, "end": 21.8, "text": "The experience creates reality.", "position": "lower"},
+      {"start": 27.5, "end": 30.2, "text": "So where does reality begin?", "position": "horizon", "holdThroughFinalFrame": true}
+    ]
+  },
+  "overlayImplementation": {
+    "compassCaptionCount": 7,
+    "worldCaptionCount": 4,
+    "totalCaptionCount": 11,
+    "synchronization": "VIDEO_CURRENT_TIME",
+    "boundToVisibleMediaFrame": true,
+    "presentationStyle": "OFF_WHITE_KEYLINE_SHADOW_RESTRAINED_GLOW_WITH_LOCAL_ATMOSPHERIC_FIELD",
+    "pictureMutated": false,
+    "audioMutated": false,
+    "cropGeometryMutated": false,
+    "playControlMutated": false
+  },
+  "chapterSequence": {
+    "order": ["compass", "world", "ip", "ai", "diagnostic", "independent"],
+    "conceptualOrder": ["ORIENTATION", "WORLD", "IDENTITY", "INTELLIGENCE", "REASONING", "CONSTRUCTION"],
+    "manualNonlinearAccessPreserved": true,
+    "videoEndMarksCurrentChapterComplete": true,
+    "nextChapterHandoffPresent": true,
+    "nextChapterAutoplay": false,
+    "futureVideoSlotsRemainChapterBound": true
+  },
+  "continuityAssessment": {
+    "sameCanonicalWorld": true,
+    "worldRuntimeMutated": false,
+    "terrainMutated": false,
+    "environmentRuntimeMutated": false,
+    "presentationOnlyAwardsSurface": true,
+    "globeAndGroundReadAsScaleChangesWithinSameWorld": true,
+    "differentProductSubstitution": false
+  },
+  "candidatePage": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "d2a7899e77757dcb3e5cbe87af11b6764d0269bbed06cff37f17e40e54cd5c78"
+  }
+}

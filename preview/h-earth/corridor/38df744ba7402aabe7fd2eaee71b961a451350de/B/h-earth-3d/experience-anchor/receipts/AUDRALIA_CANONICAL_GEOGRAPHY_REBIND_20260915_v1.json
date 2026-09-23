@@ -1,0 +1,50 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
+  "status": "STATIC_PRESERVATION_PASS_PHYSICAL_PREVIEW_PENDING",
+  "controllingAnchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "environmentBinding": "IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993",
+  "staticPreservation": {
+    "environment24057Unchanged": true,
+    "cloudWeatherStormAtmosphereCelestialCameraNavigationUnchanged": true,
+    "snapshotTreeMutationPerformed": false,
+    "geographyAuthorityReboundToExactSnapshot": true,
+    "terrainAuthorityReboundToExactSnapshot": true,
+    "meshRepresentationRegeneratedFromThoseExactAuthorities": true
+  },
+  "sourceIdentity": {
+    "geographyBlob": "50991dd777ccd015fd8a6d8eae7b4d02b4a8450c",
+    "terrainBlob": "f4f65b05ab303a11fb1d9c4e25de211fde73722a",
+    "snapshotRendererBlob": "872d20b17bb0cd89d9613ca0262b25350890a617",
+    "meshPayloadSha256": "f8dd85dca58c88df5fe71fc9fd6d10d4859744d5e03322e6c8a1700afccd8569"
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": "PENDING_PHYSICAL_PREVIEW",
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": "PENDING_PHYSICAL_PREVIEW",
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": "PENDING_PHYSICAL_PREVIEW",
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "physicalPreview": {
+    "required": true,
+    "disposition": "PENDING",
+    "productionDeploymentAsPreviewWorkaroundAllowed": false,
+    "allowedDispositions": [
+      "KEEP",
+      "ONE_REPAIR",
+      "REJECT"
+    ]
+  },
+  "authority": {
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "publicationAuthorityCreated": false,
+    "physicalAcceptanceClaimed": false
+  }
+}

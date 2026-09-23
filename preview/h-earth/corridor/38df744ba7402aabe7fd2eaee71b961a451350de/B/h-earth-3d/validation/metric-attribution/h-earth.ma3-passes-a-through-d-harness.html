@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth MA3 Passes A Through D</title>
+  <style>
+    html,body{margin:0;background:#080b0d;color:#d8e1e5;font:13px system-ui,sans-serif}
+    main{padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    figure{margin:0;border:1px solid #26323a;background:#10161a;padding:5px}
+    figcaption{padding:3px 0 5px}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    #status{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Pass A — elevation</figcaption><canvas id="pass-a"></canvas></figure>
+    <figure><figcaption>Pass B — slope</figcaption><canvas id="pass-b"></canvas></figure>
+    <figure><figcaption>Pass C — normals</figcaption><canvas id="pass-c"></canvas></figure>
+    <figure><figcaption>Pass D — depth</figcaption><canvas id="pass-d"></canvas></figure>
+    <div id="status">INITIALIZING_MA3</div>
+  </main>
+  <script type="module">
+    import { createMA3PassesAThroughDSuite } from './h-earth.ma3-passes-a-through-d-browser.mjs';
+    const status = document.querySelector('#status');
+    try {
+      const suite = await createMA3PassesAThroughDSuite({
+        passCanvases: {
+          A: document.querySelector('#pass-a'),
+          B: document.querySelector('#pass-b'),
+          C: document.querySelector('#pass-c'),
+          D: document.querySelector('#pass-d')
+        }
+      });
+      window.H_EARTH_MA3 = suite;
+      document.documentElement.dataset.ma3Ready = 'true';
+      status.textContent = 'MA3_READY';
+    } catch (error) {
+      document.documentElement.dataset.ma3Error = 'true';
+      status.textContent = String(error?.stack || error);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

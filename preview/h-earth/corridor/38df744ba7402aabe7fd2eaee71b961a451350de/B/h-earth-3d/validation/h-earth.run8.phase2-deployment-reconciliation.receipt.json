@@ -1,0 +1,97 @@
+{
+  "receiptType": "H_EARTH_RUN_8_PHASE_2_DEPLOYMENT_RECONCILIATION_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8_PHASE_2_DEPLOYMENT_RECONCILIATION_PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "verifiedOn": "2026-07-26",
+  "expectedPromotedMainHead": "0ae82d417dd7868f0546891d4e720abdb294d466",
+  "liveOrigin": "https://smansfield635-create.github.io",
+  "pages": {
+    "htmlUrl": "http://diamondgatebridge.com/",
+    "sourceBranch": "main",
+    "sourcePath": "/",
+    "siteStatus": "built",
+    "buildType": "legacy",
+    "latestBuildCommit": "0ae82d417dd7868f0546891d4e720abdb294d466",
+    "latestBuildStatus": "built",
+    "latestBuildCommitMatchesExpectedMain": true,
+    "matchingGithubPagesDeploymentPresent": true
+  },
+  "publicRoute": {
+    "routeReferencesEnvironmentIntegration": true,
+    "environmentIntegrationIsRun8E": true,
+    "environmentImportsRun8ERenderer": true,
+    "rendererIsRun8E": true,
+    "packet002TransferIsRun8E": true,
+    "controlRecordsPhase1PromotionPass": true,
+    "phase1PromotionReceiptValid": true
+  },
+  "deployedFileIdentity": [
+    {
+      "path": "/showroom/globe/h-earth/index.html",
+      "sourceStatus": 200,
+      "liveStatus": 200,
+      "sourceByteCount": 18616,
+      "liveByteCount": 18616,
+      "sourceSha256": "ee17779c466e8df712c53388df8a07dad2786b90d7dccf12332aa7459dab145c",
+      "liveSha256": "ee17779c466e8df712c53388df8a07dad2786b90d7dccf12332aa7459dab145c",
+      "exactByteIdentity": true
+    },
+    {
+      "path": "/showroom/globe/h-earth/functional-landscape/environment-integration.js",
+      "sourceStatus": 200,
+      "liveStatus": 200,
+      "sourceByteCount": 12903,
+      "liveByteCount": 12903,
+      "sourceSha256": "7d8f316205f81c93e823cbf4c078a1583f97f8fad1d38d2ead447438a10e5d41",
+      "liveSha256": "7d8f316205f81c93e823cbf4c078a1583f97f8fad1d38d2ead447438a10e5d41",
+      "exactByteIdentity": true
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sourceStatus": 200,
+      "liveStatus": 200,
+      "sourceByteCount": 20969,
+      "liveByteCount": 20969,
+      "sourceSha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4",
+      "liveSha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4",
+      "exactByteIdentity": true
+    },
+    {
+      "path": "/h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "sourceStatus": 200,
+      "liveStatus": 200,
+      "sourceByteCount": 5784,
+      "liveByteCount": 5784,
+      "sourceSha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85",
+      "liveSha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85",
+      "exactByteIdentity": true
+    },
+    {
+      "path": "/h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+      "sourceStatus": 200,
+      "liveStatus": 200,
+      "sourceByteCount": 6700,
+      "liveByteCount": 6700,
+      "sourceSha256": "c6f3ea6fd185aeb476723c177076911a1402627f9cc5d66c2bb6e83986693d51",
+      "liveSha256": "c6f3ea6fd185aeb476723c177076911a1402627f9cc5d66c2bb6e83986693d51",
+      "exactByteIdentity": true
+    },
+    {
+      "path": "/h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json",
+      "sourceStatus": 200,
+      "liveStatus": 200,
+      "sourceByteCount": 1946,
+      "liveByteCount": 1946,
+      "sourceSha256": "c0b9aefc85df0da0a3ab85043261e8fca055e837de1e843a4f4d75bdd9e83968",
+      "liveSha256": "c0b9aefc85df0da0a3ab85043261e8fca055e837de1e843a4f4d75bdd9e83968",
+      "exactByteIdentity": true
+    }
+  ],
+  "remainingRun8EClosure": {
+    "liveIdentityAndBrowserProof": "NOT_EXECUTED_IN_PHASE_2",
+    "physicalSamsungExecution": "NOT_EXECUTED",
+    "run8EPassClosed": false
+  },
+  "issues": []
+}

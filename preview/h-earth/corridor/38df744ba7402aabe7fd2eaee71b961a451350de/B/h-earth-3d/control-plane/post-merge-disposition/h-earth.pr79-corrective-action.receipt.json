@@ -1,0 +1,59 @@
+{
+  "receiptId": "H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_CORRECTIVE_ACTION_RECEIPT_v1",
+  "operation": "POST_MERGE_42_FILE_SCOPE_DISPOSITION",
+  "checkpoint": "DISPOSITION_4_APPLY_CORRECTIONS",
+  "result": "PASS_PENDING_RETAINED_STATE_AUDIT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "stabilizationBranch": "agent/h-earth-post-merge-scope-disposition-001",
+  "archiveBranch": "archive/h-earth-pr79-42-file-delta-20260723",
+  "archiveBranchCommit": "ee7324734bb687e71ebb3ee93ff23e6353feb5fe",
+  "isolatedPathCount": 18,
+  "revertedPathCount": 1,
+  "reclassifiedPathCount": 6,
+  "retainedPathCount": 17,
+  "batches": {
+    "gateBEvaluationIsolation": {
+      "firstCommit": "7245a518a5b974517b7b031bd8da4f8b1aff8f3e",
+      "finalCommit": "bded0cf373006fa5d2b3421913406ef59fabca98",
+      "pathCount": 9,
+      "complete": true
+    },
+    "temporaryWorkflowAndResidueIsolation": {
+      "firstCommit": "56eb2de9eafac01158c605c96e14fc70a7c81fa9",
+      "finalCommit": "50aca9447b32c791e81c2825539178f61ed0a501",
+      "pathCount": 9,
+      "complete": true
+    },
+    "legacyTarget4FRevert": {
+      "commit": "d677caf2560af6183808cb31f137c9e903787f48",
+      "path": "/tools/h-earth-repository-registry-target-4f-audit.mjs",
+      "postActionGitBlobSha": "f4269e9f9d299584ed8e1c919f52c304df97234d",
+      "complete": true
+    },
+    "successorEvidenceReclassification": {
+      "commit": "5b6594d426850d3049ee05e34c37bd24746d1981",
+      "pathCount": 6,
+      "complete": true
+    },
+    "retainedIdentityManifest": {
+      "commit": "70534c35c2e63f0c6f4f7f316d8fde208509de6c",
+      "retainedStep1PathCount": 17,
+      "complete": true
+    }
+  },
+  "boundaries": {
+    "mainChanged": false,
+    "bootstrapChanged": false,
+    "baseRegistryCandidateChanged": false,
+    "successorAccepted": false,
+    "successorActivated": false,
+    "canonicalizationAuthorityEstablished": false,
+    "step2ImplementationAuthorityEstablished": false
+  },
+  "exitState": {
+    "allCorrectiveActionsComplete": true,
+    "mainChanged": false,
+    "retainedStateAuditRequired": true,
+    "result": "PASS"
+  }
+}

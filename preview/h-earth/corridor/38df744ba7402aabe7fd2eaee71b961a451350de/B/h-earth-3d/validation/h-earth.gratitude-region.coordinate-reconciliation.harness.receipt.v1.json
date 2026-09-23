@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_DURABLE_RECEIPT_v1",
+  "sectionId": "GR-CR-01_ANALYSIS_HARNESS",
+  "checkpointId": "GR-CR-01L",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "workingBranch": "agent/h-earth-gratitude-region-coordinate-reconciliation-001",
+  "draftPullRequest": 311,
+  "temporaryValidationBase": "agent/h-earth-gratitude-region-coordinate-reconciliation-validation-base-001",
+  "executionCustody": {
+    "executedHead": "3be1fb080c71b72a020a0073ccdafa15db458f5b",
+    "harnessPath": "h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs",
+    "harnessGitBlob": "530bd9953b5767e253858116c6abeff7fc5a62f4",
+    "workflowPath": ".github/workflows/h-earth-gratitude-region-coordinate-reconciliation.yml",
+    "workflowGitBlob": "ce43612b2ace3dac965d9bd1318eade592bc92fd",
+    "workflowRunId": 30464660244,
+    "workflowJobId": 90619273838,
+    "workflowConclusion": "success",
+    "artifactId": 8729067698,
+    "artifactDigest": "sha256:1f13564a708ad4ddf988fa6862f5d2f615bcc241c05a301f3890b4616682f21f",
+    "executionReceiptSha256": "3a2940d15f3216ab388db2709c6a3a5f389910d15651c0ea9c6ab8915a407e9d",
+    "executionLogSha256": "634ea66912f20e378644ee71d249e4d3aeff073ff2cc5dbc7fbbe81f595bc96c"
+  },
+  "completedMicroCheckpoints": [
+    "GR-CR-01A",
+    "GR-CR-01B",
+    "GR-CR-01C",
+    "GR-CR-01D",
+    "GR-CR-01E",
+    "GR-CR-01F",
+    "GR-CR-01G",
+    "GR-CR-01H",
+    "GR-CR-01I",
+    "GR-CR-01J",
+    "GR-CR-01K",
+    "GR-CR-01L"
+  ],
+  "executionReceipt": {
+    "schemaVersion": "H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_RECEIPT_v1",
+    "checkpointId": "GR-CR-01L",
+    "sectionId": "GR-CR-01_ANALYSIS_HARNESS",
+    "eligible": true,
+    "status": "GR_CR_01L_INTEGRATED_HARNESS_PASS",
+    "sectionStatus": "PASS_CLOSED",
+    "firstExecutionDigest": "2d84234cb9951cb02b6bbb0d328d0db38680eb7a4ab1293b63577318beb43433",
+    "secondExecutionDigest": "2d84234cb9951cb02b6bbb0d328d0db38680eb7a4ab1293b63577318beb43433",
+    "deterministicRepeatExecution": true,
+    "importedContractIds": {
+      "successorTerrain": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+      "formations": "H_EARTH_TERRAIN_FORMATIONS_RUN_6B_v2_LATTICE_SEMANTIC_ALIGNMENT",
+      "realizationPlanner": "H_EARTH_LANDSCAPE_REALIZATION_PLANNER_RUN_6B_v2_SEMANTIC_PHYSICAL_SEPARATION",
+      "successorMountain": "H_EARTH_CONTINUOUS_HIGHLAND_MOUNTAIN_DIMENSIONAL_SURFACE_RUN_8A_v1"
+    },
+    "witness": {
+      "coordinate": { "x": 0, "z": -256 },
+      "elevation": 93.90132808685303,
+      "sampleDigest": "2e3a6373479ff1c1bbfe6c1c3f1536000a60b4cbb848f0f1542d00353215a692"
+    },
+    "terrainMetrics": {
+      "elevation": 93.90132808685303,
+      "gradient": { "x": 0.08511231735279523, "z": -0.7763258401391795 },
+      "slope": 0.7809775391347473,
+      "curvature": -0.07889620528708008
+    },
+    "formationWitness": {
+      "coordinate": { "x": 72, "z": -172 },
+      "formationIds": ["H_EARTH_NAVIGABLE_HILL_001"],
+      "mountainContribution": 0
+    },
+    "semanticProjectionWitness": {
+      "coordinate": { "x": 72, "z": -172 },
+      "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+      "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C11",
+      "targetSemanticCoordinate": { "row": 6, "column": 11 },
+      "projectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER"
+    },
+    "connectedSurfaceWitness": {
+      "coordinate": { "x": 72, "z": -172 },
+      "sampleCount": 13,
+      "digest": "07a83e07e232b4ad5d99e0d89da05b00e19e9ba405e4801edc10a7f4a2c295c2"
+    },
+    "sightlineWitness": {
+      "from": { "x": 72, "z": -172 },
+      "to": { "x": 72, "z": -180 },
+      "clear": true,
+      "blockedSampleCount": 0,
+      "maximumObstruction": -1.8616505622863784,
+      "digest": "ea8b0db8577fff3301c15e202a7cd7ca1ffecc3e18d8a576fd280c0622df8417"
+    },
+    "envelopeWitness": {
+      "envelopeId": "GR_CR_SELF_TEST_ENVELOPE",
+      "selfTestOnly": true,
+      "accepted": false,
+      "bounds": { "xMinimum": 64, "xMaximum": 80, "zMinimum": -180, "zMaximum": -164 },
+      "elevationRange": { "minimum": 28.16584438085556, "maximum": 29.543441355228424 },
+      "slopeRange": { "minimum": 0.04806739259546734, "maximum": 0.2996775266543288 },
+      "connectedSampleCount": 13,
+      "envelopeDigest": "457a00cc2a400a735ef82abe7a2a91c2c4bf487e7f0ed44759935b44122cb44f"
+    },
+    "areaCandidateCoordinatesDerived": false,
+    "selfTestEnvelopeDerived": true,
+    "entryZoneMeasurementExecuted": false,
+    "nextSection": "GR-CR-02_ENTRY_ZONE",
+    "terrainMutation": false,
+    "geometryConstruction": false,
+    "runtimeMutation": false,
+    "gameplayMutation": false,
+    "publicRouteMutation": false,
+    "productionMutation": false,
+    "controllingManifestMutation": false,
+    "issues": []
+  },
+  "stoppingBoundary": {
+    "entryZoneMeasurementExecuted": false,
+    "areaCandidateCoordinatesDerived": false,
+    "finalCoordinatesAssigned": false,
+    "terrainMutation": false,
+    "geometryConstruction": false,
+    "runtimeGameplayRouteOrProductionChange": false,
+    "controllingManifestMutation": false
+  },
+  "nextSection": "GR-CR-02_ENTRY_ZONE"
+}

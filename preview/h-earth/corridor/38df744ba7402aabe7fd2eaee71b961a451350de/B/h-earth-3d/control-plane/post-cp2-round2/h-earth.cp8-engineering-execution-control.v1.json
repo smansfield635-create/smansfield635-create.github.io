@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "H_EARTH_CP8_ENGINEERING_EXECUTION_CONTROL_v1",
+  "checkpoint": 8,
+  "status": "FIXED_GATE_ENGINEERING_EXECUTION",
+  "constructionClosureMerge": "695c1ee789db2f2c3080f4ebe1536efbebde53a6",
+  "acceptedCp2RendererPath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+  "acceptedCp2RendererBlob": "de55609b0b0bd66601445a369c727ff7a6d7065d",
+  "candidateRendererPath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round2-control-field-candidate.js",
+  "candidateRendererBlob": "021efe3d1d6d8b825b0474940166f47e499188e9",
+  "candidateSourceSha256": "902e0f017ccfc8f5b5b01393f6b54eef36916b23d4764ea36a83afc9131f1965",
+  "candidateProfile": "H_EARTH_GRATITUDE_REGION_CP7E_BOUNDED_CONTROL_FIELD_MATERIAL_SYNTHESIS_PROFILE_v1",
+  "controlFieldSha256": "177ec368222fccc9d5ccdd11702f9ac96602dcfd76728c63a43694d298e8a456",
+  "viewport": { "width": 960, "height": 540, "pixelRatio": 1 },
+  "mobileViewport": { "width": 412, "height": 732, "pixelRatio": 1 },
+  "normalizedAnalysisSize": [256, 256],
+  "fullFrameMetric": {
+    "gaussianSigmasPixels": [2, 8, 24],
+    "orientationsDegrees": [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5],
+    "lagsPixels": [4, 8, 12, 16, 24, 32, 48, 64]
+  },
+  "materialMetric": {
+    "carrierSigmaPixels": 24,
+    "residualSigmasPixels": [2, 8, 18],
+    "bandWeights": { "micro": 0.30, "meso": 0.45, "broadMaterial": 0.25 },
+    "orientationsDegrees": [0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5],
+    "lagsPixels": [4, 8, 12, 16, 24, 32, 48],
+    "depthGradientMaximum": 0.02,
+    "depthExclusionDilationPixels": 2,
+    "minimumEligiblePixelFraction": 0.18
+  },
+  "scenes": [
+    { "id": "SCENE_01_HILL_FIELD_FILL", "camera": { "x": 32, "z": -172, "verticalFovDegrees": 44 }, "target": { "x": 80, "z": -172 } },
+    { "id": "SCENE_02_ASCENDING_TOWARD_CREST", "camera": { "x": 56, "z": -184, "verticalFovDegrees": 50 }, "target": { "x": 80, "z": -172 } },
+    { "id": "SCENE_03_DESCENDING_WITHOUT_HORIZON", "camera": { "x": 80, "z": -172, "verticalFovDegrees": 52 }, "target": { "x": 56, "z": -184 } },
+    { "id": "SCENE_04_LATERAL_SLOPE_TRAVEL", "camera": { "x": 68, "z": -156, "verticalFovDegrees": 56 }, "target": { "x": 92, "z": -156 } },
+    { "id": "SCENE_05_RAVINE_APPROACH", "camera": { "x": 40, "z": -248, "verticalFovDegrees": 52 }, "target": { "x": 40, "z": -284 } },
+    { "id": "SCENE_06_COAST_TO_INLAND_TRANSITION", "camera": { "x": 0, "z": -96, "verticalFovDegrees": 56 }, "target": { "x": 0, "z": -172 } },
+    { "id": "SCENE_07_MANOR_SITE_APPROACH", "camera": { "x": 48, "z": -172, "verticalFovDegrees": 48 }, "target": { "x": 80, "z": -172 } },
+    { "id": "SCENE_08_CAVERN_RELATION_APPROACH", "camera": { "x": 40, "z": -248, "verticalFovDegrees": 48 }, "target": { "x": 40, "z": -284 } }
+  ],
+  "regressionWitnesses": ["SCENE_03_DESCENDING_WITHOUT_HORIZON", "SCENE_04_LATERAL_SLOPE_TRAVEL", "SCENE_06_COAST_TO_INLAND_TRANSITION"],
+  "gates": {
+    "maximumLowDifferentiationScenes": 2,
+    "minimumAggregateColorRatioVersusCp1": 1.782301,
+    "minimumAggregateEdgeRatioVersusCp1": 2.902555,
+    "minimumAcceptedCp2PerSceneRetention": 0.90,
+    "scene07MinimumColorBuckets": 14,
+    "scene07MinimumEdgeSignal": 0.12563,
+    "scene08MinimumEdgeSignal": 0.20,
+    "cp4FullFrameAggregateReportedOnly": true,
+    "cp4FullFramePerSceneMaximumRelativeToCp2": 1.05,
+    "materialRepetitionAggregateMaximumRelativeToCp2": 0.85,
+    "materialRepetitionPerSceneMaximumRelativeToCp2": 1.05,
+    "candidateP95PresentationResponseMaximumRelativeToCp2": 1.20,
+    "candidateMedianPresentationResponseMaximumRelativeToCp2": 1.15,
+    "mobileP95PresentationResponseMaximumRelativeToCp2": 1.20,
+    "mobileMedianPresentationResponseMaximumRelativeToCp2": 1.15,
+    "browserConsoleErrors": 0,
+    "pageErrors": 0,
+    "webglContextLossCount": 0
+  },
+  "motion": {
+    "frameCount": 24,
+    "replayCount": 2,
+    "startScene": "SCENE_06_COAST_TO_INLAND_TRANSITION",
+    "endScene": "SCENE_01_HILL_FIELD_FILL"
+  },
+  "liveCandidateAuthorized": false,
+  "liveDefaultPromotionAuthorized": false
+}

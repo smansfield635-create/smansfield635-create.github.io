@@ -1,0 +1,58 @@
+{
+  "schema": "H_EARTH_R06_C10_INTER_ROLE_CANDIDATE_ADMISSION_GATE_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "scope": "ALL_R06_C10_PRODUCT_CANDIDATES_AND_SUCCESSOR_ROOM_HANDOFFS",
+  "discoveredGap": "INTER_ROLE_CANDIDATE_ADMISSION_AND_REPRODUCIBILITY_CONTRACT",
+  "separationOfModes": {
+    "modeA": {
+      "id": "FROZEN_TOOL_CONFORMANCE",
+      "purpose": "Prove the certified tool package and fixed fixture have not drifted.",
+      "candidateAdmissionAuthority": false
+    },
+    "modeB": {
+      "id": "EXACT_COMMITTED_CANDIDATE_ADMISSION",
+      "purpose": "Evaluate one exact committed candidate in a detached clean checkout and produce a reproducible candidate-bound receipt.",
+      "candidateAdmissionAuthority": true
+    }
+  },
+  "role1PassPreconditions": [
+    "EXACT_CANDIDATE_HEAD_IS_COMMITTED",
+    "CANDIDATE_PARENT_IS_COMMITTED",
+    "AUTHORITY_GATE_ADAPTER_LOCATOR_CONTRACT_AND_SCHEMA_BLOBS_EQUAL_PARENT_AND_EXECUTING_CHECKOUT",
+    "CANDIDATE_MANIFEST_IS_COMMITTED",
+    "CANDIDATE_EVALUATOR_IS_COMMITTED",
+    "DETACHED_CANDIDATE_WORKTREE_IS_CLEAN",
+    "ONE_DECLARED_COMMAND_EXECUTES",
+    "EXACTLY_28_UNIQUE_ASSERTION_RECORDS_ARE_PRODUCED",
+    "RAW_MEASUREMENTS_ARE_PRESENT",
+    "CHANGED_PATHS_AND_BLOBS_MATCH_INDEPENDENT_GIT_RESOLUTION",
+    "PRIVATE_STATE_USED_IS_FALSE",
+    "ALL_28_ASSERTIONS_PASS"
+  ],
+  "role4RoutingGate": {
+    "acceptRole1PassByMessage": false,
+    "requireGateReceipt": true,
+    "requireGateResult": "PASS_EXACT_COMMITTED_CANDIDATE_ADMISSION",
+    "requireReproductionFingerprint": true,
+    "requireFreshIndependentRoomFingerprintMatch": true,
+    "permitRole5OrRole2HandoffBeforeMatch": false
+  },
+  "failureLaw": {
+    "missingManifest": "FAIL_CLOSED",
+    "missingEvaluator": "FAIL_CLOSED",
+    "dirtyWorktree": "FAIL_CLOSED",
+    "authorityBlobChangedInCandidate": "FAIL_CLOSED",
+    "receiptBindingMismatch": "FAIL_CLOSED",
+    "assertionFailure": "FAIL_CLOSED",
+    "fingerprintDivergence": "FAIL_CLOSED",
+    "conversationOnlyEvidence": "NONAUTHORITATIVE"
+  },
+  "currentCandidateDisposition": {
+    "candidateHead": "95504c9927922318225da1d61fa303cec70497f9",
+    "admitted": false,
+    "reason": "PREDATES_THIS_GATE_AND_INDEPENDENT_ROLE_3_REPLAY_FAILED_23_OF_28"
+  },
+  "productMutation": false,
+  "assertionWeakening": false,
+  "conversationMemoryRequired": false
+}

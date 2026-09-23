@@ -1,0 +1,96 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_DIRECT_INSPECTION_RESTORATION_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_DIRECT_INSPECTION_RESTORATION_PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baseMainHead": "43cf9be1397a756a3620166e498db10cc9d754b4",
+  "branch": "agent/h-earth-run8e-direct-inspection-restoration-001",
+  "verifiedOn": "2026-07-26",
+  "staticChecks": {
+    "controllerFileRemoved": true,
+    "controllerImportRemoved": true,
+    "stageDeclaresNoControls": true,
+    "directGuidanceRestored": true,
+    "directAriaRestored": true,
+    "directModuleLoaded": true,
+    "cacheIdentityUpdated": true,
+    "navigationOnlyStateMutation": true,
+    "deferredInitialSuccessorRender": true,
+    "renderRequestsCoalesced": true,
+    "browserYieldStagesPresent": true,
+    "fullRenderCommittedAfterGesture": true,
+    "visibleControllerAbsentByContract": true
+  },
+  "interactionAuthority": {
+    "oneFingerContinuousLook": "RESTORED",
+    "twoFingerContinuousTravel": "RESTORED",
+    "pinchZoom": "RESTORED",
+    "unobstructedInspection": "RESTORED",
+    "visibleDirectionalController": "REMOVED",
+    "coastControllerPanel": "REMOVED",
+    "pressAndHoldControllerModel": "REMOVED"
+  },
+  "renderScheduling": {
+    "navigationStateMutationDuringGesture": true,
+    "lightweightCanvasPreviewDuringGesture": true,
+    "fullSuccessorRenderDuringActiveGesture": false,
+    "fullSuccessorRenderAfterGestureSettles": true,
+    "requestsCoalescedToLatestState": true,
+    "deferredInitialSuccessorRender": true,
+    "browserYieldStagesPresent": true
+  },
+  "preservedAuthorities": {
+    "navigationAuthorityPreserved": true,
+    "cameraAuthorityPreserved": true,
+    "run8RendererPreserved": true,
+    "terrainGeometryMutated": false,
+    "lightingLawMutated": false,
+    "zDepthLawMutated": false
+  },
+  "configurationCount": 2,
+  "samsungPortraitEmulation": "PASS",
+  "samsungLandscapeEmulation": "PASS",
+  "physicalSamsungExecution": "NOT_EXECUTED_AFTER_RESTORATION",
+  "run8EPassClosed": false,
+  "results": [
+    {
+      "configurationId": "samsung-galaxy-portrait-emulation",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "oneFingerLookStateChanged": true,
+      "twoFingerTravelStateChanged": true,
+      "pinchZoomStateChanged": true,
+      "fullRenderSuppressedDuringActiveGestures": true,
+      "successorRenderCommittedAfterEachGesture": true,
+      "visibleControllerPresent": false,
+      "navigationIntentCount": 5,
+      "completedSuccessorRenderCount": 4,
+      "coalescedRenderRequestCount": 0,
+      "maximumNavigationLatencyMilliseconds": 0.5999999999912689,
+      "zeroBrowserErrors": true,
+      "screenshot": "samsung-galaxy-portrait-emulation.png"
+    },
+    {
+      "configurationId": "samsung-galaxy-landscape-emulation",
+      "viewport": {
+        "width": 915,
+        "height": 412
+      },
+      "oneFingerLookStateChanged": true,
+      "twoFingerTravelStateChanged": true,
+      "pinchZoomStateChanged": true,
+      "fullRenderSuppressedDuringActiveGestures": true,
+      "successorRenderCommittedAfterEachGesture": true,
+      "visibleControllerPresent": false,
+      "navigationIntentCount": 6,
+      "completedSuccessorRenderCount": 4,
+      "coalescedRenderRequestCount": 0,
+      "maximumNavigationLatencyMilliseconds": 0.6000000000058208,
+      "zeroBrowserErrors": true,
+      "screenshot": "samsung-galaxy-landscape-emulation.png"
+    }
+  ],
+  "issues": []
+}

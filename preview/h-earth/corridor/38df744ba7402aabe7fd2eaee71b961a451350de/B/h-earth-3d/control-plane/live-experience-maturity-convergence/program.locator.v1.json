@@ -1,0 +1,23 @@
+{
+  "schema": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_LOCATOR_v1",
+  "programId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_v1",
+  "status": "CANDIDATE_NOT_ACTIVE_UNTIL_SEPARATE_RATIFICATION",
+  "startingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "authorityIssue": 781,
+  "readOrder": [
+    "authority-and-lineage.v1.json",
+    "strategy-contract.v1.json",
+    "protected-runtime-manifest.v1.json",
+    "page-excellence-binding.v1.json",
+    "shell-runtime-classification.schema.v1.json",
+    "checkpoint-registry.v1.json",
+    "current-state.v1.json",
+    "verification-contract.v1.json",
+    "successor-room-recovery.v1.json"
+  ],
+  "currentState": "current-state.v1.json",
+  "checkpointRegistry": "checkpoint-registry.v1.json",
+  "recoveryProtocol": "successor-room-recovery.v1.json",
+  "verificationCommand": "node h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs --verify-static",
+  "futureProductAuthorityCreated": false
+}

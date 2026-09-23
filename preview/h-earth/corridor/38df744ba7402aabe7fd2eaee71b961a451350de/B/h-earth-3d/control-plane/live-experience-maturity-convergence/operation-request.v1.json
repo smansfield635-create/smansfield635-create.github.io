@@ -1,0 +1,119 @@
+{
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "operationId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_CONTROL_PACKAGE_v1",
+  "projectId": "H_EARTH",
+  "lockScope": "H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:CONTROL_PACKAGE:V1:EXACT_15_PATH_SCOPE",
+  "exactGoverningHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "subjectIdentity": {
+    "authorityIssue": 781,
+    "programId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_v1",
+    "currentLiveRoute": "showroom/globe/h-earth/",
+    "currentMain": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+    "operationPurpose": "MATERIALIZE_NONPRODUCT_TOOL_RECOGNIZABLE_CONVERGENCE_CONTROL_PACKAGE",
+    "productMutation": false
+  },
+  "requestingAuthority": {
+    "role": "USER_DIRECTED_H_EARTH_LIVE_EXPERIENCE_CONVERGENCE_CONTROL_PACKAGE_AUTHORITY",
+    "source": "CURRENT_USER_INSTRUCTION_AND_ISSUE_781",
+    "effect": "CONSTRUCT_NONPRODUCT_DURABLE_STRATEGY_AND_RECOVERY_PACKAGE_ONLY",
+    "mergeAuthority": false,
+    "deploymentAuthority": false
+  },
+  "executingRole": {
+    "role": "ROLE_1_H_EARTH_LIVE_EXPERIENCE_CONVERGENCE_CONTROL_PACKAGE_CONSTRUCTION_AUTHORITY",
+    "mutationClass": "EXACT_15_PATH_NONPRODUCT_H_EARTH_CONTROL_PACKAGE",
+    "branchAuthorizedAfterAdmission": true,
+    "productMutationAuthority": false,
+    "mergeAuthority": false
+  },
+  "independentVerifier": {
+    "role": "FRESH_INDEPENDENT_H_EARTH_LIVE_EXPERIENCE_CONVERGENCE_CONTROL_PACKAGE_VERIFIER",
+    "freshCheckoutRequired": true,
+    "repairAuthority": false
+  },
+  "constructionProcedureLocator": "h-earth-3d/control-plane/live-experience-maturity-convergence/construction-procedure.v1.json",
+  "requiredInputs": [
+    {"id":"CURRENT_MAIN_9EB636D3_VERIFIED","resolved":true},
+    {"id":"USER_DIRECTS_REPOSITORY_DURABLE_LIVE_EXPERIENCE_CONVERGENCE_STRATEGY","resolved":true},
+    {"id":"ROOT_AI_ENTRYPOINT_ACTIVE_FAIL_CLOSED","resolved":true},
+    {"id":"H_EARTH_REGISTERED_PROJECT_OWNS_H_EARTH_3D_PREFIX","resolved":true},
+    {"id":"H_EARTH_REGISTRY_AUTOMATIC_PREFLIGHT_REQUIRED","resolved":true},
+    {"id":"MANDATORY_PAGE_EXCELLENCE_TOOLCHAIN_1_1_ACTIVE","resolved":true},
+    {"id":"CURRENT_LIVE_H_EARTH_ROUTE_AND_CORE_RUNTIME_IDENTITIES_INSPECTED","resolved":true},
+    {"id":"CONTROL_PACKAGE_IS_NONPRODUCT_AND_MUTATES_NO_SHOWROOM_RUNTIME_TERRAIN_ENVIRONMENT_OR_REGISTRY_PATH","resolved":true},
+    {"id":"FRESH_ROOM_RECOVERY_MUST_PREFER_CURRENT_MAIN_OVER_ROOM_PRIVATE_CONTEXT","resolved":true},
+    {"id":"FUTURE_PUBLIC_UNBOXING_REQUIRES_SEPARATE_ADMITTED_PRODUCT_OPERATION","resolved":true}
+  ],
+  "allowedPaths": [
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/AGENTS.md",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/authority-and-lineage.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/checkpoint-registry.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/current-state.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/operation-request.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/page-excellence-binding.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/program.locator.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/protected-runtime-manifest.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/shell-runtime-classification.schema.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/strategy-contract.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/successor-room-recovery.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/verification-contract.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs"
+  ],
+  "prohibitedPaths": [
+    "ALL_PATHS_NOT_EXACTLY_LISTED_AS_ALLOWED",
+    "refs/heads/main",
+    "showroom/globe/h-earth/",
+    "h-earth-3d/terrain/",
+    "h-earth-3d/environment/",
+    "h-earth-3d/runtime/",
+    "h-earth-3d/registry/",
+    ".github/ai-router/",
+    ".github/ai-toolset-transport/"
+  ],
+  "requiredOutputs": [
+    "EXACT_15_PATH_H_EARTH_LIVE_EXPERIENCE_CONVERGENCE_CONTROL_PACKAGE",
+    "CURRENT_HEAD_BOUND_STRATEGY_CONTRACT",
+    "PROTECTED_RUNTIME_BASELINE_MANIFEST",
+    "SHELL_RUNTIME_CLASSIFICATION_SCHEMA",
+    "PAGE_EXCELLENCE_IMPLEMENTATION_CLASS_AND_ADOPTION_BINDING",
+    "ORDERED_CONVERGENCE_CHECKPOINT_REGISTRY",
+    "SINGLE_CURRENT_CONVERGENCE_STATE",
+    "SUCCESSOR_ROOM_RECOVERY_PROTOCOL",
+    "STATIC_VERIFICATION_CONTRACT_AND_VERIFIER",
+    "STOP_BEFORE_PRODUCT_MUTATION_REGISTRY_ACTIVATION_AI_ROOM_DESCRIPTOR_REGISTRATION_OR_MERGE"
+  ],
+  "exactTestCommand": "node h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs --verify-static",
+  "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml",
+  "artifactPaths": ["h-earth-live-experience-maturity-convergence-control-package/**"],
+  "fingerprintDomain": {
+    "algorithm": "SHA-256",
+    "includes": "EXACT_15_CONTROL_PACKAGE_FILES",
+    "exactPathCount": 15,
+    "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+    "excludes": ["TIMESTAMPS","WORKFLOW_RUN_IDS","ARTIFACT_IDS","GITHUB_EPHEMERAL_METADATA"]
+  },
+  "errorPrecedence": [
+    "GOVERNING_MAIN_MISMATCH",
+    "PATH_BOUNDARY_MISMATCH",
+    "STRATEGY_INVARIANT_MISSING",
+    "CHECKPOINT_SEQUENCE_INVALID",
+    "PROTECTED_RUNTIME_IDENTITY_MISMATCH",
+    "PAGE_EXCELLENCE_BINDING_INVALID",
+    "CURRENT_STATE_POINTER_INVALID",
+    "RECOVERY_PROTOCOL_INVALID",
+    "PRODUCT_AUTHORITY_LEAK",
+    "FINGERPRINT_MISMATCH",
+    "UNEXPECTED_ERROR"
+  ],
+  "stopConditions": [
+    "STOP_ON_MAIN_DRIFT_BEFORE_ADMISSION",
+    "STOP_ON_ANY_PATH_OUTSIDE_EXACT_15",
+    "STOP_ON_ANY_PRODUCT_SHOWROOM_RUNTIME_TERRAIN_ENVIRONMENT_OR_REGISTRY_MUTATION",
+    "STOP_IF_PROTECTED_RUNTIME_IS_RECLASSIFIED_AS_PRESENTATION",
+    "STOP_IF_FUTURE_SHOWROOM_MUTATION_BYPASSES_MANDATORY_PAGE_EXCELLENCE",
+    "STOP_BEFORE_H_EARTH_REGISTRY_ACTIVATION_AI_ROOM_DESCRIPTOR_REGISTRATION_PRODUCT_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE"
+  ],
+  "terminalDispositions": ["PASS_CLOSED","FAIL_CLOSED","SUPERSEDED","VOIDED"]
+}

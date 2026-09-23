@@ -1,0 +1,29 @@
+{
+  "schema": "H_EARTH_C2_R1_REGISTRY_BASE_NODE_LINEAGE_REPAIR_NEGATIVE_FIXTURES_v1",
+  "fixtures": [
+    {
+      "id": "MISSING_PREDECESSOR_NODE",
+      "expectedError": "C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE"
+    },
+    {
+      "id": "WRONG_PREDECESSOR_BLOB",
+      "expectedError": "HISTORICAL_PREDECESSOR_BLOB_MISMATCH"
+    },
+    {
+      "id": "EXACT_HEAD_OCCURRENCE_COUNT_DRIFT",
+      "expectedError": "EXACT_HEAD_OCCURRENCE_COUNT_MISMATCH"
+    },
+    {
+      "id": "AUTHORITY_LIMITATION_REMOVED",
+      "expectedError": "AUTHORITY_LIMITATION_MISSING"
+    },
+    {
+      "id": "PR570_HEAD_DRIFT",
+      "expectedError": "PRESERVED_INSTRUMENT_HEAD_MISMATCH"
+    },
+    {
+      "id": "REPAIR_HOLDER_REUSE",
+      "expectedError": "BUILDER_VERIFIER_HOLDER_NOT_DISTINCT"
+    }
+  ]
+}

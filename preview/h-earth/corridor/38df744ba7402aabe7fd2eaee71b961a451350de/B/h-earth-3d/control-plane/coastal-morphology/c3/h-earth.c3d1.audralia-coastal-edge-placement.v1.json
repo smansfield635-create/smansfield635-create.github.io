@@ -1,0 +1,114 @@
+{
+  "schema": "H_EARTH_C3D1_AUDRALIA_COASTAL_EDGE_PLACEMENT_DERIVATION_v1",
+  "operationId": "C3D1_AUDRALIA_COASTAL_EDGE_PLACEMENT_DERIVATION_20260816_001",
+  "status": "DERIVED_FROZEN_NO_PRODUCT_MUTATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingAuthority": "/h-earth-3d/control-plane/coastal-morphology/c3/h-earth.c3.coastal-reconstruction-authority.v1.json",
+  "governingMainHead": "3e11c9737c028e0249962e20ffd5eb3ba93545f8",
+  "coordinateEvidence": {
+    "frame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+    "axisMeaning": {
+      "x": "WEST_EAST",
+      "z": "SOUTH_NORTH"
+    },
+    "canonicalWaterwardDirection": "+Z_NORTH",
+    "canonicalInlandDirection": "-Z_SOUTH",
+    "gratitudeBayCenterX": 118,
+    "gratitudeHarborMouthCenterX": 132,
+    "easternHeadlandCenterX": 198,
+    "easternPeninsulaCenterX": 232,
+    "accessibleEastBoundaryX": 256,
+    "easternPeninsulaCanonicalShorelineZApprox": -64.475,
+    "derivationRule": "USE_EXISTING_EAST_WEIGHTED_HARBOR_AND_EASTERN_PENINSULA_AS_THE_MINIMUM_CHANGE_CONTINENTAL_CORNER_BINDING"
+  },
+  "exactPlacement": {
+    "continentalCornerOrientation": "NORTHEAST_COASTAL_CORNER",
+    "audraliaPresentationPlacement": "NORTHEAST_EDGE_OF_GRATITUDE_CONTINENT_IN_PERSPECTIVE",
+    "primaryOceanExposureDirection": "+Z_NORTH",
+    "secondaryOceanExposureDirection": "+X_EAST",
+    "primaryInlandContinuationDirection": "-Z_SOUTH",
+    "secondaryInlandContinuationDirection": "-X_WEST",
+    "landAcrossPrimaryOceanViewAllowed": false,
+    "landAcrossSecondaryOceanViewAllowed": false,
+    "centeredContinentalPresentationAllowed": false
+  },
+  "coastlineEnvelope": {
+    "class": "COMPOUND_NORTH_TO_EAST_CONTINENTAL_CORNER_ENVELOPE",
+    "preservedNorthernCoastSegment": {
+      "rule": "PRESERVE_EXISTING_CANONICAL_COAST_WEST_OF_EASTERN_HEADLAND_SEAM_WHERE_COMPATIBLE_WITH_CORNER_CONTINUITY",
+      "easternSeamX": 198
+    },
+    "cornerTransition": {
+      "startAnchor": "GRATITUDE_EASTERN_HEADLAND",
+      "startAnchorX": 198,
+      "cornerApex": "GRATITUDE_EASTERN_PENINSULA",
+      "cornerApexX": 232,
+      "cornerApexZApprox": -64.475,
+      "accessibleEastBoundaryX": 256,
+      "turnLaw": "COAST_TURNS_FROM_NORTH_FACING_TO_EAST_FACING_WITHIN_THE_EXISTING_EASTERN_HEADLAND_PENINSULA_CORRIDOR",
+      "rectilinearCornerAllowed": false,
+      "smoothOrganicTransitionRequired": true
+    },
+    "eastFacingContinuation": {
+      "rule": "AFTER_THE_EASTERN_PENINSULA_APEX_THE_CONTINENTAL_EDGE_CONTINUES_SOUTHWARD_OUTSIDE_PRESERVED_INLAND_RELIEF_WHILE_OPEN_OCEAN_REMAINS_TO_THE_EAST",
+      "accessibleRegionExpansionAuthorized": false,
+      "visibleSurroundingWorldContinuationRequired": true
+    },
+    "preservedInlandSide": "SOUTHWEST_OF_COMPOUND_COASTAL_EDGE",
+    "inlandReliefMutationAuthorized": false,
+    "inlandWatershedMutationAuthorized": false,
+    "inlandBasinMutationAuthorized": false
+  },
+  "startingRegionDerivation": {
+    "harborRelationship": "HARBOR_REMAINS_NESTED_IN_GRATITUDE_BAY_BUT_NOW_READS_NEAR_THE_NORTHEAST_CONTINENTAL_CORNER",
+    "regionIsSampleOfDefinedContinent": true,
+    "regionMayDefineMacroGeography": false,
+    "oceanProvidesNaturalWorld_TERMINATION": false,
+    "oceanProvidesNaturalOpenWorldContext": true,
+    "requiredVisibleContext": [
+      "OPEN_NORTH_OCEAN",
+      "OPEN_EAST_OCEAN",
+      "PRESERVED_SOUTH_INLAND_CONTINUATION",
+      "PRESERVED_WEST_CONTINENTAL_CONTINUATION"
+    ]
+  },
+  "inspectionSurfaceContract": {
+    "surfaceClass": "IMMUTABLE_SELF_CONTAINED_INTERACTIVE_H_EARTH_PREVIEW_SNAPSHOT",
+    "existingPattern": "/preview/h-earth/c2-r1/<candidate-sha>/",
+    "requiredFuturePattern": "/preview/h-earth/c3/<candidate-sha>/",
+    "productionRoute": "/showroom/globe/h-earth/",
+    "productionRouteMutationBeforeUserApprovalAllowed": false,
+    "candidatePreviewMustBeInteractive": true,
+    "candidatePreviewMustContainExactCandidateProductBytes": true,
+    "candidatePreviewMayBePublishedAsIsolatedPreviewFilesWithoutPromotingProductionRoute": true,
+    "automatedCaptureCanSupplementUserInspection": true,
+    "automatedCaptureCanReplaceUserInspection": false,
+    "userApprovalRequiredBeforeProductionMerge": true,
+    "repairRequiredDispositionKeepsProductionUnchanged": true,
+    "inspectionURLMustBeProvidedToUserBeforeAnyProductionPromotion": true
+  },
+  "constructionBoundary": {
+    "productMutationAuthorizedByThisDerivation": false,
+    "nextConstructionMayMutate": [
+      "COASTLINE_TOPOLOGY_WITHIN_DERIVED_COASTAL_ENVELOPE",
+      "OCEAN_FACING_VISIBLE_CONTEXT",
+      "AUDRALIA_COASTAL_PLACEMENT_EXPRESSION",
+      "STARTING_REGION_DERIVATION_FROM_THE_FROZEN_COASTAL_STATE"
+    ],
+    "nextConstructionMayNotMutate": [
+      "PRESERVED_INLAND_RELIEF",
+      "PRESERVED_INLAND_WATERSHEDS",
+      "PRESERVED_INLAND_BASINS",
+      "UNRELATED_RUNTIME",
+      "UNRELATED_RENDERER",
+      "PRODUCTION_ROUTE_BEFORE_USER_APPROVAL"
+    ],
+    "completionCriterion": "NORTHEAST_CORNER_PLACEMENT_AND_PRELIVE_INTERACTIVE_INSPECTION_CUSTODY_ARE_FIXED_BEFORE_COASTAL_GEOMETRY_AUTHORING"
+  },
+  "nextLawfulOperation": {
+    "id": "C3C1_NORTHEAST_COASTAL_RECONSTRUCTION_CANDIDATE",
+    "mode": "CANDIDATE_ONLY_NOT_PRODUCTION",
+    "firstRequiredMaterialization": "SEPARATE_INTERACTIVE_PREVIEW_SNAPSHOT",
+    "promotionGate": "DIRECT_USER_INTERACTIVE_APPROVAL"
+  }
+}

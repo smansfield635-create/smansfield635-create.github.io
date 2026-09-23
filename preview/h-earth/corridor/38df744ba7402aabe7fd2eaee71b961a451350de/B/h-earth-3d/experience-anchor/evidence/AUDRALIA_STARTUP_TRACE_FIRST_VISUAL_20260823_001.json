@@ -1,0 +1,34 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "operation": "AUDRALIA_STARTUP_TRACE_FIRST_VISUAL_20260823_001",
+  "candidatePurpose": "Expose the existing Audralia world sooner, preserve a visible startup trace, and emit deterministic stall/error boundaries without changing world, weather, camera, navigation, or interaction semantics.",
+  "anchorReview": {
+    "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+    "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+    "reviewedAgainstAnchor": true,
+    "sameProductFinding": true,
+    "sameCanonicalWorldFinding": true
+  },
+  "qualificationEvidence": {
+    "audraliaWeatherPresentationReconciliationRun": 32678909418,
+    "audraliaWeatherPresentationReconciliation": "PASS",
+    "staticAssetIdentityRun": 32678909479,
+    "staticAssetIdentity": "PASS",
+    "showroomLabelConformanceRun": 32678909447,
+    "showroomLabelConformance": "PASS",
+    "showroomFourCompassRegressionRun": 32678909384,
+    "showroomFourCompassRegression": "PASS",
+    "runtimeFindings": {
+      "authoritativeRuntimePresent": true,
+      "runtimeInvariantPass": true,
+      "loaderReachedStage5": true,
+      "loaderStage": "Audralia ready",
+      "cameraSemanticsMutated": false,
+      "zoomSemanticsMutated": false,
+      "travelSemanticsMutated": false,
+      "pageErrors": 0
+    }
+  },
+  "experienceFinding": "The candidate changes startup sequencing and diagnostics only. It preserves the established Audralia world, direct look/travel controls, planetary-regional-local continuity, canonical terrain/weather authority, and navigation. The two-frame shell release and startup telemetry do not substitute a new product or interface for the world experience.",
+  "disposition": "PASS"
+}

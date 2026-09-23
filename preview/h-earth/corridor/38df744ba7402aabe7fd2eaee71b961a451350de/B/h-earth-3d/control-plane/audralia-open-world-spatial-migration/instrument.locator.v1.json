@@ -1,0 +1,54 @@
+{
+  "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_LOCATOR_v1",
+  "instrumentId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
+  "status": "ACTIVE_PERMANENT_CROSS_ROOM_CONTINUITY_INSTRUMENT",
+  "project": "H_EARTH",
+  "planetIdentity": "AUDRALIA",
+  "playerExperienceIdentity": "H_EARTH",
+  "governingHeadAtConstruction": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+  "governingTreeAtConstruction": "602378bd8eae82c202de73d56ee74f67a7210625",
+  "constructionLockGeneration": 462,
+  "constructionScopeHash": "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e",
+  "sourceRevision10": {
+    "commit": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
+    "tree": "d630fed42bcf19a65129afbe97c1134d1d632422",
+    "classification": "IMMUTABLE_MIGRATION_SOURCE_NOT_PLANETARY_FINAL_GEOGRAPHY"
+  },
+  "authorityIssue": 719,
+  "preflightComment": 5220803833,
+  "parentPermanentInstrument": {
+    "instrumentId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENT_v1",
+    "locator": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/instrument.locator.v1.json",
+    "relationship": "PARENT_METHOD_AND_EVIDENCE_PRECEDENT_NOT_OPEN_WORLD_AUTHORITY"
+  },
+  "readOrder": [
+    "authority-and-lineage.v1.json",
+    "spatial-invariants.v1.json",
+    "checkpoint-registry.v1.json",
+    "continuity-state.v1.json",
+    "successor-room-recovery.v1.json",
+    "verification-contract.v1.json"
+  ],
+  "currentStatePointer": "continuity-state.v1.json",
+  "checkpointRegistryPointer": "checkpoint-registry.v1.json",
+  "recoveryPointer": "successor-room-recovery.v1.json",
+  "verificationPointer": "verification-contract.v1.json",
+  "permanentActivation": {
+    "required": true,
+    "status": "PASS_ACTIVE",
+    "immutablePackageCommit": "ae65d17ce1019831a7e9ea27af9441fb5686887a",
+    "immutablePackageTree": "0c5fdf5692f8c256b97354f95359f60d5dae9cd0",
+    "packageFingerprint": "124fae0a63ef90edb0e8988ab5c65cc6692772b192baeefa00a8c9c55773097a",
+    "registryActivationCandidateHead": "fbfe1ada4ff676f264c94952eebf746e643c7dbe",
+    "registryActivationLockGeneration": 464,
+    "ratificationMergeLockGeneration": 467,
+    "mergeCommit": "c961469d366f39422e143a2c6156e79b1c991735",
+    "mergeTree": "b06352cfe65f0b96bb60c5fb545cb9ccf8c44458",
+    "pullRequest": 740,
+    "method": "EXACT_HEAD_H_EARTH_REGISTRY_ACCEPTED_OCCURRENCE_REGISTRATION_AND_EXACT_HEAD_MERGE"
+  },
+  "productMutationAuthority": false,
+  "liveIntegrationAuthority": false,
+  "deploymentAuthority": false,
+  "releaseAuthority": false
+}

@@ -1,0 +1,211 @@
+{
+  "schema": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
+  "locatorId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
+  "status": "PASS_CLOSED_C5B_RECOVERY_ROOT_GENERALIZED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "locatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
+  "package": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED.zip",
+    "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+    "archiveByteCount": 13364458,
+    "archiveMemberCount": 167,
+    "internalSha256SumsCoverageCount": 166,
+    "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+    "driveMimeType": "application/zip",
+    "metadataReadback": "PASS",
+    "rawByteReadback": "PASS",
+    "completeMemberManifestPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
+    "completeMemberManifestSha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+    "completeMemberManifestGitBlob": "edbb27881533dd3c891234ccaabed623b46b2d2f",
+    "completeMemberManifestCoverage": "167_OF_167",
+    "tool8GitBlob": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+    "tool8Sha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243"
+  },
+  "driveCustody": {
+    "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+    "rawByteReadback": "PASS",
+    "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+    "archiveByteCount": 13364458,
+    "archiveMemberCount": 167,
+    "completeMemberManifestSha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+    "completeMemberManifestGitBlob": "edbb27881533dd3c891234ccaabed623b46b2d2f"
+  },
+  "exactBaseline": {
+    "acceptedLiveBaselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+    "reviewedCandidateHead": "97003e9de386a8962fb46d0b370005b900a167d6",
+    "promotionPr": 532,
+    "userDifferential": "PASS_MATERIAL_SIGNIFICANT_IMPROVEMENT"
+  },
+  "region": {
+    "semanticAddress": "H_EARTH_GROUND_CELL_001:R06:C10",
+    "physicalOwnerChunk": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+    "chunkWorldBounds": {
+      "xMinimum": 0,
+      "xMaximum": 128,
+      "zMinimum": -210,
+      "zMaximum": -125
+    },
+    "authoredCore": {
+      "xMinimum": 32,
+      "xMaximum": 64,
+      "zMinimum": -192,
+      "zMaximum": -164
+    },
+    "blendSupport": {
+      "xMinimum": 24,
+      "xMaximum": 72,
+      "zMinimum": -200,
+      "zMaximum": -156
+    },
+    "verificationHalo": {
+      "xMinimum": 16,
+      "xMaximum": 80,
+      "zMinimum": -208,
+      "zMaximum": -148
+    }
+  },
+  "implementationArchitecture": {
+    "fieldLaw": "BOUNDED_SUCCESSOR_TERRAIN_FIELD_LAW",
+    "geometryConstruction": "UNCHANGED_RUN_8B_AXIS_INDEX_AND_SOUTH_NEUTRAL_GEOMETRY_CONSTRUCTION",
+    "directPostConstructionVertexEditing": "PROHIBITED"
+  },
+  "controllingPackageMembers": {
+    "role6Return": "records/25_ROLE_6_CAUSAL_MODEL_AND_TOOL_REQUIREMENTS_RETURN_v1.json",
+    "regionResolution": "records/09_EXACT_R06_C10_REGION_RESOLUTION_v1.json",
+    "causalModel": "records/10_CURRENT_TERRAIN_CAUSAL_MODEL_v1.json",
+    "safeParameterBounds": "records/14_SAFE_ARTICULATION_PARAMETER_BOUNDS_v1.json",
+    "toolSpecification": "records/19_BOUNDED_AUTHORING_TOOL_FUNCTIONAL_SPECIFICATION_v1.json",
+    "verificationHarnessSpecification": "records/22_REQUIRED_VERIFICATION_HARNESS_SPECIFICATION_v1.json",
+    "role1Boundary": "records/24_EXACT_ROLE_1_TOOL_CONSTRUCTION_BOUNDARY_v1.json",
+    "toolManifest": "records/26_TOOL_MANIFEST_v1.json",
+    "failoverGuide": "27_ROLE_6_FAILOVER_OPERATING_GUIDE_v1.md",
+    "sha256Manifest": "SHA256SUMS.txt"
+  },
+  "custodyCorrection": {
+    "status": "PASS_CLOSED_HISTORICAL_CORRECTION_APPLIED",
+    "operationId": "H_EARTH_R06_C10_ROLE_1_C1_CUSTODY_CORRECTION_001",
+    "locatorPath": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+    "locatorCommit": "e7402f9ffd3f1733723de844d9a21f1d873eff8c",
+    "locatorBlob": "f046e7223cfb8291a5620143a58201a02e307865",
+    "correctionArchiveDriveFileId": "1NNNCT8liggR4MAtYvLr7zM12QMdlxUGl",
+    "correctionArchiveSha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8",
+    "correctionArchiveByteCount": 5637,
+    "correctionArchiveMemberCount": 4,
+    "detachedCompleteManifestSha256": "129466ffc161a25e9c9b1e7d2d6594b92408fee6a9f36155c75111ece7f186db",
+    "detachedManifestCoverageCount": 39,
+    "authoritativeCustodyLaw": [
+      "VERIFY_35_CORE_MEMBERS_AGAINST_THE_SOURCE_ARCHIVE_INTERNAL_SHA256SUMS_TXT",
+      "VERIFY_ALL_39_SOURCE_ARCHIVE_MEMBERS_AGAINST_THE_ROLE_4_DETACHED_COMPLETE_MEMBER_MANIFEST"
+    ],
+    "previouslyPassedC1ChecksReusable": true,
+    "currentAuthorityEffect": "PRESERVED_IN_COMPLETED_0_3_0_SUBSTRATE"
+  },
+  "activeHandoff": {
+    "sourceRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
+    "destinationRole": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "result": "R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_PASS_CLOSED",
+    "receiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5b.recovery-root-generalization.receipt.v1.json",
+    "role3ReactivationStatus": "PREPARED_NOT_ACTIVE"
+  },
+  "recoveryInstructions": [
+    "VERIFY_OUTER_ARCHIVE_IDENTITY",
+    "DERIVE_EXACTLY_ONE_ARCHIVE_ROOT_FROM_VERIFIED_CONTENT",
+    "VALIDATE_PACKAGE_BUILD_RECEIPT_IDENTITY",
+    "VERIFY_COMPLETE_MEMBER_MANIFEST_AND_INTERNAL_SHA256SUMS",
+    "VERIFY_EIGHT_TOOL_IDENTITIES_AND_ENTRY_POINTS",
+    "EXECUTE_HARNESS",
+    "FAIL_CLOSED_ON_ZERO_OR_MULTIPLE_ROOTS_OR_MISSING_AUTHORITY"
+  ],
+  "searchAliases": [
+    "H-Earth geometry articulation",
+    "H Earth geometry tool base",
+    "Role 6 geometry tool base",
+    "Role 6 causal model terrain",
+    "Role 6 to Role 1 handoff",
+    "H-Earth R06 C10 Role 1",
+    "R06 C10",
+    "ground cell 001 R06 C10",
+    "saddle valley basin",
+    "coastal to inland transition terrain",
+    "bounded successor terrain field",
+    "terrain authoring harness",
+    "pre-round geometry tool",
+    "cavern compatible adjacent face",
+    "future waterfall readiness geometry",
+    "R06 C10 custody correction",
+    "detached complete member manifest"
+  ],
+  "routing": {
+    "sourceRoom": "ROLE_6_INDEPENDENT_RESEARCH_CHAMBER_AND_CROSS_SYSTEM_TROUBLESHOOTING_AUTHORITY",
+    "role6Result": "R06_C10_CAUSAL_MODEL_AND_TOOL_REQUIREMENTS_COMPLETE",
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "nextOperation": "H_EARTH_R06_C10_PRE_ROUND_NONPRODUCT_TOOL_CONSTRUCTION_001",
+    "activeHandoffLocator": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
+    "custodyCorrectionLocator": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+    "role1Status": "COMPLETE_AWAITING_ROLE_4_ADMISSION_TO_ROLE_3",
+    "currentAuthorizedCheckpoint": "R1_C5_PASS_CLOSED",
+    "currentRequiredResult": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
+    "requiredRole1FinalResult": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
+    "requiredRole1PackageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
+    "role1SuccessorLocator": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json",
+    "roleAfterRole1": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
+    "officialGeometryArticulationRound": "NOT_YET_STARTED",
+    "productMutationAuthorized": false,
+    "role3Authority": "HELD_PENDING_ROLE_4_C5_VALIDATION",
+    "role3Status": "PREPARED_NOT_ACTIVE"
+  },
+  "supersession": {
+    "historicalPackagesPreserved": [
+      "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
+      "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED"
+    ],
+    "currentPackageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "c5bReceiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5b.recovery-root-generalization.receipt.v1.json"
+  },
+  "role1CompletedSubstrate": {
+    "result": "R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_PASS_CLOSED",
+    "package": {
+      "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+      "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+      "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED.zip",
+      "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+      "archiveByteCount": 13364458,
+      "archiveMemberCount": 167,
+      "internalSha256SumsCoverageCount": 166,
+      "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+      "driveMimeType": "application/zip",
+      "metadataReadback": "PASS",
+      "rawByteReadback": "PASS",
+      "completeMemberManifestPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
+      "completeMemberManifestSha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+      "completeMemberManifestGitBlob": "edbb27881533dd3c891234ccaabed623b46b2d2f",
+      "completeMemberManifestCoverage": "167_OF_167"
+    },
+    "tool8": {
+      "gitBlob": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+      "sha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243"
+    },
+    "rootDiscoveryLaw": {
+      "lawId": "R06_C10_TOOL_8_SINGLE_VERIFIED_ARCHIVE_ROOT_AND_RECOVERED_IDENTITY_v1",
+      "archiveRootSource": "VERIFIED_ARCHIVE_CONTENT",
+      "requiredRootCount": 1,
+      "zeroRootDisposition": "FAIL_CLOSED_ZERO_ARCHIVE_ROOTS",
+      "multipleRootDisposition": "FAIL_CLOSED_MULTIPLE_ARCHIVE_ROOTS",
+      "packageIdentityMember": "PACKAGE_BUILD_RECEIPT.json",
+      "requiredIdentityChecks": [
+        "SCHEMA_MATCH",
+        "PACKAGE_ID_MATCH",
+        "PACKAGE_VERSION_NONEMPTY",
+        "ARCHIVE_NAME_EQUALS_DISCOVERED_ROOT_PLUS_DOT_ZIP",
+        "MANIFEST_PACKAGE_ID_MATCH",
+        "MANIFEST_PACKAGE_VERSION_MATCH"
+      ],
+      "hardCodedSuccessorRoot": false,
+      "hardCoded031Root": false
+    },
+    "cleanRecoveryReplay": "PASS",
+    "productMutation": false
+  }
+}

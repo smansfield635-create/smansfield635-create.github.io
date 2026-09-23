@@ -1,0 +1,189 @@
+{
+  "authoringTool": {
+    "canonicalConformanceRecomputation": {
+      "class": "NUMERIC_RECOMPUTATION_FROM_FROZEN_FORMULAS_AND_READ_ONLY_RUN_8B_BASELINE_SAMPLES",
+      "expectedFixtureBytesLoadedAsComputationInput": false,
+      "hardcodedCandidateSampleValues": false,
+      "randomnessUsed": false,
+      "runtime": "PYTHON_3_STANDARD_LIBRARY_INVOKED_BY_NODE_MJS"
+    },
+    "exports": [
+      "H_EARTH_R06_C10_CANDIDATE_FIELD_COMPILER_ID",
+      "H_EARTH_R06_C10_EXPECTED_FIELD_CANONICAL_SHA256",
+      "H_EARTH_R06_C10_EXPECTED_FIELD_SAMPLE_COUNT",
+      "H_EARTH_R06_C10_RUN8B_GEOMETRY_ADAPTER_ID",
+      "compileR06C10CandidateField",
+      "constructR06C10CandidateRun8BGeometry",
+      "evaluateR06C10OperationDelta",
+      "evaluateR06C10SupportMask",
+      "executeR06C10FieldGeometryConformance",
+      "sampleR06C10CandidateHalo"
+    ],
+    "gitBlob": "fca63387cf1599e12f97e75e16f9e33f92880896",
+    "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-authoring-tool.v1.mjs",
+    "sha256": "a7e290d3d48167abf6526b54f1d880f7db7f49bf151cbec8047a70ae12a58fc8",
+    "syntaxParse": "PASS"
+  },
+  "boundary": {
+    "authorizedChangedPathCount": 3,
+    "contractModuleMutation": false,
+    "exactChangedPaths": [
+      "h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-authoring-tool.v1.mjs",
+      "h-earth-3d/tools/r06-c10/h-earth.r06-c10.candidate-clearance-adapter.v1.mjs",
+      "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c3.field-geometry-clearance.receipt.v1.json"
+    ],
+    "generatedCandidateFieldGeometryOrFixtureCommitted": false,
+    "officialGeometryArticulationRound": "NOT_STARTED",
+    "productMutation": false,
+    "r1C4Started": false,
+    "rendererBindingIndexOrNavigationMutation": false,
+    "requestSchemaOrFixtureMutation": false,
+    "run8AOrRun8BAuthorityMutation": false,
+    "visualImprovementClaimed": false,
+    "waterImplementation": false,
+    "workflowOrFullHarnessConstruction": false
+  },
+  "c2Predecessor": {
+    "contractModuleBlob": "569553d2d08e954c0459db98770faaf1c210230c",
+    "contractModulePath": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-contracts.v1.mjs",
+    "contractModuleSha256": "8f35deb6555d16b01abce9790c9292578d7d7e1e8305cf383fb8f0c27e0a9583",
+    "receiptBlob": "b8d23a9bf7eb4f96934d8416500aa00f37b3b523",
+    "result": "R06_C10_ROLE_1_C2_PASS_CLOSED"
+  },
+  "checkpoint": "R1_C3_FIELD_GEOMETRY_AND_CLEARANCE_TOOL_CONSTRUCTION",
+  "clearanceAdapter": {
+    "exports": [
+      "H_EARTH_R06_C10_CANDIDATE_CLEARANCE_ADAPTER_ID",
+      "evaluateR06C10CandidateClearance",
+      "evaluateR06C10CavernCompatibility",
+      "evaluateR06C10TraversalClearance",
+      "evaluateR06C10WaterfallReadinessGeometry"
+    ],
+    "gitBlob": "53ad54911e7108f1bdbfbef39cb59b814ae76785",
+    "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.candidate-clearance-adapter.v1.mjs",
+    "sha256": "08ad06cf05eae5135626cb412a51643091e965d2f47cae3a8d9a84e635a98da8",
+    "syntaxParse": "PASS"
+  },
+  "clearanceExecution": {
+    "candidateFieldUsed": true,
+    "cavernCompatibility": {
+      "canonicalSha256": "fe97483ba65729d3d5216f74779886b5d4f0cacd6a595fd1b667c8e5cb771549",
+      "cavernExcavationPerformed": false,
+      "eligiblePatchCount": 1,
+      "geometricReservationOnly": true,
+      "receiptEmitted": true,
+      "status": "CAVERN_COMPATIBILITY_ANALYSIS_COMPLETE"
+    },
+    "run6NavigationFieldUsed": false,
+    "traversal": {
+      "canonicalSha256": "4df1796be1f6a1f77b12c458a2ee17f52f2b1e49272b93cd5d5c749f0cb4f846",
+      "continuousPassLengthWorldUnits": 0,
+      "disconnectedPassableIslands": false,
+      "eligible": false,
+      "receiptEmitted": true,
+      "sampleStationCount": 30,
+      "sampledFieldPointCount": 90,
+      "samplingSpacingWorldUnits": 1,
+      "status": "TRAVERSAL_CLEARANCE_FAIL_CLOSED"
+    },
+    "waterfallReadinessGeometry": {
+      "canonicalSha256": "a15c287d1facc0916d099e7c22dc5f0efdc7a1cf970f23eb28e7ae91cba5a90d",
+      "continuousDownhillPath": false,
+      "dryGeometryPresent": true,
+      "receiptEmitted": true,
+      "status": "WATERFALL_READINESS_DRY_GEOMETRY_REPORTED",
+      "waterImplementation": false,
+      "waterPrimitiveConstructed": false
+    }
+  },
+  "closure": {
+    "checkpointClosed": true,
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "stopAfterClosure": true
+  },
+  "conformanceExecution": {
+    "candidateElevationLaw": "canonicalizeHEarthRun8BElevation(baselineElevation+supportMask*clamp(sumOperationDeltasInDeclaredArrayOrder,-12,+18))",
+    "candidateHaloCanonicalSha256": "d4bb9d94f052d6b43a6408e72bff874afe8d386809a8b2073093c86f9805f662",
+    "candidateHaloSampleCount": 1023,
+    "derivativeStepWorldUnits": 0.5,
+    "directPostconstructionVertexEditing": false,
+    "expectedCandidateHaloCanonicalSha256": "d4bb9d94f052d6b43a6408e72bff874afe8d386809a8b2073093c86f9805f662",
+    "normalizationDrift": false,
+    "numericRecomputationPass": true,
+    "randomnessUsed": false,
+    "repeatedFieldCompilationDigestEquality": true,
+    "requestOperationId": "H_EARTH_R06_C10_TOOL_CONFORMANCE_FIXTURE_001",
+    "requestValidationUsingC2Validator": "PASS",
+    "supportMaskLaw": "EXACT_QUINTIC_PRODUCT_WINDOW"
+  },
+  "constructedCapabilities": [
+    "H_EARTH_R06_C10_CANDIDATE_FIELD_COMPILER_v1",
+    "H_EARTH_R06_C10_RUN8B_GEOMETRY_ADAPTER_v1",
+    "H_EARTH_R06_C10_CANDIDATE_CLEARANCE_ADAPTER_v1"
+  ],
+  "exactStartingMainHead": "c1e9acb09207720cff7ebf9db54227cb00b0692b",
+  "executionEnvironment": {
+    "architecture": "x86_64",
+    "node": "v22.16.0",
+    "python": "3.13.5"
+  },
+  "geometryExecution": {
+    "axisArrayByteEquivalence": "PASS",
+    "candidateFieldSamplingAtAxisCoordinates": true,
+    "columnCount": 203,
+    "faceNormalCount": 48076,
+    "geometryCountsAndPrimitiveIdentity": "PASS",
+    "indexArrayByteEquivalence": "PASS",
+    "indexArraySha256": "05f029961e6b7d6d8d24a282960d027563be7675df6d8809b158d96c0602d489",
+    "indexCount": 144228,
+    "primitiveId": "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001",
+    "productAdmissionExecuted": false,
+    "rowCount": 120,
+    "sharedEdgePairCount": 2045,
+    "southNeutralPrimitiveConstruction": "PASS",
+    "triangleCount": 48076,
+    "vertexCount": 24360,
+    "vertexNormalCount": 24360,
+    "xAxisSha256": "4ad2c78e1b27ce507c3c253fd26fffae3cb477901f272ea7761c66146752eea3",
+    "zAxisSha256": "b261d507e9bbb4ac99fcfadc865445c82eb09f6299419feb9c02bedf86606043"
+  },
+  "operationId": "H_EARTH_R06_C10_ROLE_1_C3_FIELD_GEOMETRY_CLEARANCE_TOOLS_001",
+  "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "receiptId": "H_EARTH_R06_C10_ROLE_1_C3_FIELD_GEOMETRY_CLEARANCE_RECEIPT_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "result": "R06_C10_ROLE_1_C3_PASS_CLOSED",
+  "schema": "H_EARTH_R06_C10_ROLE_1_C3_FIELD_GEOMETRY_CLEARANCE_RECEIPT_v1",
+  "status": "PASS_CLOSED",
+  "temporaryWorkspaceOutputs": [
+    {
+      "committed": false,
+      "name": "candidate-field-halo-grid.json",
+      "sha256": "2ff078c689b7f7c8665619d19c006d7f926d35a042ad4e473ada9d6c56d36152"
+    },
+    {
+      "committed": false,
+      "name": "geometry-receipt.json",
+      "sha256": "1382c45c12000b6ff5f771d81d6d588fdab58f85abaa4847916ea1626b355b8c"
+    },
+    {
+      "committed": false,
+      "name": "traversal-clearance-receipt.json",
+      "sha256": "09dcf4fcd81d3f66fb9e0a27a7532c800bfa8e87d3670d7516df5b88fe390556"
+    },
+    {
+      "committed": false,
+      "name": "cavern-compatibility-receipt.json",
+      "sha256": "dfcf7cad69ab661966c17aaf4119a7645a01cc1f5254c363443b24797dde281c"
+    },
+    {
+      "committed": false,
+      "name": "waterfall-readiness-geometry-receipt.json",
+      "sha256": "76fa4089ee954a271799842a8dd4a23dca8a7a82f1740917984a4ead56532713"
+    },
+    {
+      "committed": false,
+      "name": "c3-execution-summary.json",
+      "sha256": "04bdcd32e797cd8a8b37081a3860b70fadf317170152d00720b571cf89da7093"
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-english-bank-integration-1abf5c8b-20260922",
+  "capabilityId": "EDUCATION_CALIBRATED_BANK_INTEGRATION_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "1abf5c8be377603e54f35b861e6c573244cad488",
+    "base_sha": "862ef77a209dcac407178166577ea342f9553e09"
   }
 }

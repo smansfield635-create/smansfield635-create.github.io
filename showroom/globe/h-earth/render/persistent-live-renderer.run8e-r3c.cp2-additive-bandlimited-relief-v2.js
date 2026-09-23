@@ -238,7 +238,8 @@ void main(){
     float microReliefHeight=
       (microCoarse-0.5)*0.42+
       (microMedium-0.5)*0.21+
-      (microFine-0.5)*0.085;
+      (microFine-0.5)*0.085+
+      (noise2(world*2.35+vec2(91.7,-64.2))-0.5)*0.032*nearDetail;
     float microFootprint=max(
       max(length(fwidth(world*0.19)),length(fwidth(world*0.47))),
       length(fwidth(world*1.13))
@@ -294,7 +295,12 @@ void main(){
       noise2(triX*3.35+vec2(-41.2,17.4))*triWeight.x+
       noise2(triY*3.35+vec2(29.6,-37.1))*triWeight.y+
       noise2(triZ*3.35+vec2(7.8,43.6))*triWeight.z;
-    float triMaterial=clamp(triCoarse*0.68+triFine*0.32,0.0,1.0);
+    float triMicro=
+      noise2(triX*9.7+vec2(73.4,-51.2))*triWeight.x+
+      noise2(triY*9.7+vec2(-67.8,89.1))*triWeight.y+
+      noise2(triZ*9.7+vec2(101.3,37.6))*triWeight.z;
+    float nearMaterial=1.0-smoothstep(55.0,220.0,distanceToCamera);
+    float triMaterial=clamp(triCoarse*0.56+triFine*0.31+triMicro*0.13*nearMaterial,0.0,1.0);
     float materialVariation=clamp(
       broad*0.24+medium*0.16+grain*0.04+macroField*0.08+triMaterial*0.48,
       0.0,1.0
@@ -311,11 +317,20 @@ void main(){
       0.0,1.0
     );
     vec3 soilTone=mix(lowland,upland,elevationMix);
-    vec3 exposedRock=mix(vec3(0.205,0.215,0.205),vec3(0.315,0.305,0.275),triMaterial);
-    vec3 groundedSoil=mix(soilTone,vec3(0.255,0.245,0.175),triCoarse*0.22);
-    palette=mix(palette,groundedSoil,shelteredSoil*0.40);
-    palette=mix(palette,exposedRock,rockExposure*(0.54+0.18*triFine));
-    palette*=mix(0.91,1.09,materialVariation);
+    float weathering=clamp(
+      noise2(world*0.061+vec2(57.0,-83.0))*0.52+
+      triCoarse*0.30+triFine*0.18,
+      0.0,1.0
+    );
+    float fracture=clamp(abs(triFine-triCoarse)*1.75+abs(triMicro-0.5)*0.38*nearMaterial,0.0,1.0);
+    vec3 exposedRock=mix(vec3(0.175,0.185,0.178),vec3(0.355,0.335,0.285),weathering);
+    exposedRock*=mix(0.82,1.13,fracture);
+    vec3 groundedSoil=mix(soilTone,vec3(0.285,0.255,0.165),triCoarse*0.30);
+    groundedSoil=mix(groundedSoil,vec3(0.205,0.235,0.135),shelteredSoil*(1.0-weathering)*0.22);
+    palette=mix(palette,groundedSoil,shelteredSoil*0.46);
+    palette=mix(palette,exposedRock,rockExposure*(0.62+0.20*fracture));
+    palette*=mix(0.89,1.11,materialVariation);
+    palette*=mix(0.94,1.06,triMicro*nearMaterial);
     palette=mix(palette,base,0.34);
 
     float terrainRoughness=clamp(vMaterialParameters.x,0.04,1.0);

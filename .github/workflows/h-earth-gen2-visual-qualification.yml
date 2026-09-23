@@ -28,10 +28,10 @@ jobs:
           CONTROL_PLANE_SHA: ${{ github.sha }}
         run: |
           git fetch --no-tags --depth=1 origin "$CONTROL_PLANE_SHA"
-          git show "$CONTROL_PLANE_SHA:tools/h-earth-gen2-visual-qualify.mjs" > /tmp/h-earth-gen2-visual-qualify.mjs
-          test -s /tmp/h-earth-gen2-visual-qualify.mjs
+          git show "$CONTROL_PLANE_SHA:tools/h-earth-gen2-visual-qualify.mjs" > .gen2-visual-qualify.control-plane.mjs
+          test -s .gen2-visual-qualify.control-plane.mjs
       - name: Capture Gen2
-        run: node /tmp/h-earth-gen2-visual-qualify.mjs
+        run: node .gen2-visual-qualify.control-plane.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

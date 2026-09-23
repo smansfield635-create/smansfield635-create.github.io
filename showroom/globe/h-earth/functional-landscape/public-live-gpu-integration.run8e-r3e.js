@@ -280,6 +280,18 @@ const readyDetail = {
 };
 window.dispatchEvent(new CustomEvent('h-earth-run8e-ready', { detail: readyDetail }));
 emitDiagnosticStage('READY_EVENT_EMITTED', 'PASS', readyDetail);
+// Phase 3 proof: refinement work is explicitly outside startup/READY.
+setTimeout(() => {
+  try {
+    const refinement = binding.activateInitialRefinement?.();
+    if (refinement) {
+      lastPresentedFrame = binding.presentRefinedState?.() ?? lastPresentedFrame;
+      emitDiagnosticStage('POST_READY_REFINEMENT_ACTIVE','PASS',refinement);
+    }
+  } catch (error) {
+    emitDiagnosticStage('POST_READY_REFINEMENT_ACTIVE','FAIL',{name:error?.name,message:error?.message});
+  }
+},0);
 
 if (window.parent === window) {
   emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');

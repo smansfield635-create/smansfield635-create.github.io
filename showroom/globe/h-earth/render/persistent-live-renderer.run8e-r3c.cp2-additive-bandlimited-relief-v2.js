@@ -116,6 +116,7 @@ uniform float uFogStartDistance;
 uniform float uFogFalloff;
 uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
+uniform vec4 uRefinementMask;
 out vec4 outColor;
 
 float hash21(vec2 p){
@@ -202,6 +203,10 @@ vec3 limitTerrainNormalDeviation(
   );
 }
 void main(){
+  if(vRoleCode==1u && uRefinementMask.z>0.5){
+    vec2 localXZ=vWorldPosition.xz;
+    if(localXZ.x>=uRefinementMask.x-uRefinementMask.w && localXZ.x<=uRefinementMask.x+uRefinementMask.w && localXZ.y>=uRefinementMask.y-uRefinementMask.w && localXZ.y<=uRefinementMask.y+uRefinementMask.w) discard;
+  }
   vec3 geometricNormal=normalize(vNormal);
   vec3 shadingNormal=geometricNormal;
   vec3 lightDirection=normalize(-uSunDirection);
@@ -649,7 +654,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), depth: uniform(resources.depthProgram, 'uDepth')
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), refinementMask: uniform(resources.geometryProgram, 'uRefinementMask'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
     resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
@@ -660,7 +665,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3fv(resources.uniforms.skyZenithColor, color3(environment.skyZenithColor)); gl.uniform3fv(resources.uniforms.skyHorizonColor, resources.skyColor);
     gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
-    gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
+    gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength); gl.uniform4f(resources.uniforms.refinementMask,0,0,0,0);
     counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
   }
 
@@ -682,7 +687,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     bind(2,colors,4);bind(3,mats,4);
     const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);bind(5,surfaceCodes,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);
     const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
-    resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},fallbackAvailable:true};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
+    resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},radius,fallbackAvailable:true,baseSuppression:'FRAGMENT_MASK_EXACT_PATCH_BOUNDS'};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
   }
   function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
 
@@ -696,6 +701,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     counters.cameraUniformUpdateCount += 2;
+    if(resources.refinement?.created)gl.uniform4f(resources.uniforms.refinementMask,resources.refinement.anchor.x,resources.refinement.anchor.z,1,resources.refinement.radius);else gl.uniform4f(resources.uniforms.refinementMask,0,0,0,0);
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {
         gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
@@ -703,7 +709,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
-    if(resources.refinement?.created){gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
+    if(resources.refinement?.created){gl.uniform4f(resources.uniforms.refinementMask,0,0,0,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
@@ -774,7 +780,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       refinementResourceAuthorized:true, refinementResourceCreated:resources.refinement?.created===true,
       refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
-      refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
+      refinementAnchor:resources.refinement?.anchor??null, refinementBaseSuppression:resources.refinement?.baseSuppression??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       canonicalPackageMutated:false
     };
   }

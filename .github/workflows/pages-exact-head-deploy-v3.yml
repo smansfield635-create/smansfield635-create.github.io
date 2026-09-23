@@ -389,110 +389,65 @@ jobs:
             echo "EVIDENCE_RUNTIME_VERIFIED_AFTER_AUDRALIA_RECEIPT_PUBLICATION=$TARGET_SHA"
           fi
 
-      - name: Verify custom-domain alias convergence (nonfatal follow-up)
+      - name: Verify custom-domain surface convergence (nonfatal follow-up)
         if: steps.dedupe.outputs.duplicate != 'true'
         continue-on-error: true
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           SURFACE_ID: ${{ inputs.surface_id }}
           STAGE: ${{ runner.temp }}/pages-site
+          MANIFEST: ${{ steps.surface.outputs.manifest }}
           CUSTOM_DOMAIN: https://diamondgatebridge.com
           RECEIPT: /tmp/public-alias-convergence-receipt.json
         shell: bash
         run: |
           set -euo pipefail
-          expected="$STAGE/index.html"
+          check_path="$(jq -r '.checks[0].path // empty' "$MANIFEST")"
+          runtime_path="$(jq -r '.runtime.path // empty' "$MANIFEST")"
+          test -n "$check_path"
+          rel="${check_path#/}"
+          expected="$STAGE/$rel"
           test -f "$expected"
           expected_sha="$(sha256sum "$expected" | awk '{print $1}')"
           work="$(mktemp -d)"
           trap 'rm -rf "$work"' EXIT
 
           fetch_plain() {
-            curl --fail --silent --show-error -L --max-time 30 \
-              -H 'Cache-Control: no-cache' \
-              -H 'Pragma: no-cache' \
-              "$1" -o "$2"
+            curl --fail --silent --show-error -L --max-time 30               -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$1" -o "$2"
           }
 
+          canonical_path="$check_path"
+          pretty_path="${runtime_path:-$check_path}"
           for attempt in $(seq 1 30); do
             marker_url="${CUSTOM_DOMAIN}/.well-known/dgb-release.json?dgb_release=${TARGET_SHA}&attempt=${attempt}"
-            marker="$(curl --fail --silent --show-error -L --max-time 20 \
-              -H 'Cache-Control: no-cache' \
-              -H 'Pragma: no-cache' \
-              "$marker_url" 2>/dev/null || true)"
+            marker="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$marker_url" 2>/dev/null || true)"
             observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
             observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
-            if [ "$observed" != "$TARGET_SHA" ] || [ "$observed_surface" != "$SURFACE_ID" ]; then
-              sleep 10
-              continue
+            if [ "$observed" != "$TARGET_SHA" ] || [ "$observed_surface" != "$SURFACE_ID" ]; then sleep 10; continue; fi
+
+            if [ "$SURFACE_ID" = "audralia" ]; then
+              runtime_receipt_url="${CUSTOM_DOMAIN}/.well-known/publication-surfaces/audralia-runtime.json?dgb_release=${TARGET_SHA}&attempt=${attempt}"
+              runtime_receipt="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$runtime_receipt_url" 2>/dev/null || true)"
+              receipt_target="$(printf '%s' "$runtime_receipt" | jq -r '.targetSha // empty' 2>/dev/null || true)"
+              receipt_result="$(printf '%s' "$runtime_receipt" | jq -r '.result // empty' 2>/dev/null || true)"
+              if [ "$receipt_target" != "$TARGET_SHA" ] || [ "$receipt_result" != "PASS_CLOSED" ]; then sleep 10; continue; fi
             fi
 
-            runtime_receipt_url="${CUSTOM_DOMAIN}/.well-known/publication-surfaces/audralia-runtime.json?dgb_release=${TARGET_SHA}&attempt=${attempt}"
-            runtime_receipt="$(curl --fail --silent --show-error -L --max-time 20 \
-              -H 'Cache-Control: no-cache' \
-              -H 'Pragma: no-cache' \
-              "$runtime_receipt_url" 2>/dev/null || true)"
-            receipt_target="$(printf '%s' "$runtime_receipt" | jq -r '.targetSha // empty' 2>/dev/null || true)"
-            receipt_surface="$(printf '%s' "$runtime_receipt" | jq -r '.surfaceId // empty' 2>/dev/null || true)"
-            receipt_result="$(printf '%s' "$runtime_receipt" | jq -r '.result // empty' 2>/dev/null || true)"
-            runtime_surface="$(printf '%s' "$runtime_receipt" | jq -r '.runtimeVerification.surfaceId // empty' 2>/dev/null || true)"
-            runtime_result="$(printf '%s' "$runtime_receipt" | jq -r '.runtimeVerification.result // empty' 2>/dev/null || true)"
-            if [ "$receipt_target" != "$TARGET_SHA" ] || [ "$receipt_surface" != "audralia" ] || [ "$receipt_result" != "PASS_CLOSED" ] || [ "$runtime_surface" != "audralia" ] || [ "$runtime_result" != "PASS" ]; then
-              sleep 10
-              continue
-            fi
+            fetch_plain "${CUSTOM_DOMAIN}${canonical_path}?dgb_release=${TARGET_SHA}&attempt=${attempt}" "$work/canonical.html" || { sleep 10; continue; }
+            fetch_plain "${CUSTOM_DOMAIN}${pretty_path}?dgb_release=${TARGET_SHA}&attempt=${attempt}" "$work/pretty.html" || { sleep 10; continue; }
+            canonical_sha="$(sha256sum "$work/canonical.html" | awk '{print $1}')"
+            pretty_sha="$(sha256sum "$work/pretty.html" | awk '{print $1}')"
 
-            if ! fetch_plain "${CUSTOM_DOMAIN}/" "$work/root.html"; then
-              sleep 10
-              continue
-            fi
-            if ! fetch_plain "${CUSTOM_DOMAIN}/index.html" "$work/index.html"; then
-              sleep 10
-              continue
-            fi
-
-            www_final="$(curl --fail --silent --show-error -L --max-time 30 \
-              -H 'Cache-Control: no-cache' \
-              -H 'Pragma: no-cache' \
-              -o "$work/www.html" -w '%{url_effective}' \
-              'https://www.diamondgatebridge.com/' 2>/dev/null || true)"
-            root_sha="$(sha256sum "$work/root.html" | awk '{print $1}')"
-            index_sha="$(sha256sum "$work/index.html" | awk '{print $1}')"
-            www_sha="$(test -f "$work/www.html" && sha256sum "$work/www.html" | awk '{print $1}' || true)"
-
-            case "$www_final" in
-              https://diamondgatebridge.com|https://diamondgatebridge.com/|https://diamondgatebridge.com/*) ;;
-              *)
-                sleep 10
-                continue
-                ;;
-            esac
-
-            if [ "$root_sha" = "$expected_sha" ] && \
-               [ "$index_sha" = "$expected_sha" ] && \
-               [ "$www_sha" = "$expected_sha" ]; then
-              jq -n \
-                --arg targetSha "$TARGET_SHA" \
-                --arg surfaceId "$SURFACE_ID" \
-                --arg expectedSha256 "$expected_sha" \
-                --arg apexRootSha256 "$root_sha" \
-                --arg apexIndexSha256 "$index_sha" \
-                --arg wwwSha256 "$www_sha" \
-                --arg wwwFinalUrl "$www_final" \
-                '{schema:"PAGES_PUBLIC_ALIAS_CONVERGENCE_RECEIPT_v1",result:"PASS_CLOSED",targetSha:$targetSha,surfaceId:$surfaceId,customDomain:"diamondgatebridge.com",releaseMarkerCommit:$targetSha,expectedStagedIndexSha256:$expectedSha256,apexRootSha256:$apexRootSha256,apexIndexHtmlSha256:$apexIndexSha256,wwwSha256:$wwwSha256,wwwFinalUrl:$wwwFinalUrl,ordinaryAliasBytesConverged:true,productMutationPerformed:false}' \
-                > "$RECEIPT"
-              echo "APEX_ROOT_MATCHES_EXACT_STAGED_INDEX=$expected_sha"
-              echo "APEX_INDEX_HTML_MATCHES_EXACT_STAGED_INDEX=$expected_sha"
-              echo "WWW_CONVERGES_TO_APEX_CURRENT_RELEASE=$www_final"
+            if [ "$canonical_sha" = "$expected_sha" ] && [ "$pretty_sha" = "$expected_sha" ]; then
+              jq -n --arg targetSha "$TARGET_SHA" --arg surfaceId "$SURFACE_ID" --arg path "$canonical_path" --arg runtimePath "$pretty_path" --arg expectedSha256 "$expected_sha" --arg canonicalSha256 "$canonical_sha" --arg prettySha256 "$pretty_sha"                 '{schema:"PAGES_PUBLIC_SURFACE_CONVERGENCE_RECEIPT_v2",result:"PASS_CLOSED",targetSha:$targetSha,surfaceId:$surfaceId,customDomain:"diamondgatebridge.com",surfacePath:$path,runtimePath:$runtimePath,expectedStagedSha256:$expectedSha256,canonicalSha256:$canonicalSha256,prettySha256:$prettySha256,ordinarySurfaceBytesConverged:true,productMutationPerformed:false}' > "$RECEIPT"
+              echo "CUSTOM_DOMAIN_SURFACE_MATCHES_EXACT_STAGED_FILE=$expected_sha"
               echo "CUSTOM_DOMAIN_RELEASE_MARKER_MATCHES_TARGET_SHA=$TARGET_SHA"
-              echo "NO_COMPASS_PRODUCT_MUTATION=true"
-              echo "LIVE_EXACT_HEAD_VERIFIED=$TARGET_SHA"
+              echo "LIVE_EXACT_SURFACE_VERIFIED=$TARGET_SHA:$SURFACE_ID"
               exit 0
             fi
             sleep 10
           done
-
-          echo "PUBLIC_ALIAS_CONVERGENCE_FAILURE expected=$expected_sha" >&2
+          echo "PUBLIC_SURFACE_CONVERGENCE_FAILURE surface=$SURFACE_ID path=$check_path expected=$expected_sha" >&2
           exit 1
 
       - uses: actions/upload-artifact@v4

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "education",
-  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: Gate 2 continuous six-card spatial learner rail with EN/ES/ZH help-language shell and preserved English placement demo.",
+  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: program-wide D1-D7 adaptive placement with separate Capstone Integration Gate, four-phase mapping, EN/ES/ZH help-language shell, and independent curriculum availability/access routing.",
   "checks": [
     {
       "path": "/products/education/index.html",
@@ -25,12 +25,24 @@
         "BILINGUAL_BRIDGED",
         "TARGET_DOMINANT",
         "TARGET_ONLY",
-        "ABOVE_PHASE_1",
         "demo_entry_point",
         "data-no-backend=\"true\"",
         "data-no-persistence=\"true\"",
         "edu-spatial-mini",
-        "data-flip"
+        "data-flip",
+        "data-placement-range=\"program-wide\"",
+        "data-client-local-persistence=\"true\"",
+        "data-server-persistence=\"false\"",
+        "const DIAGNOSTIC_BANDS=",
+        "const PROGRAM_PHASES=",
+        "const CAPSTONE_BANK=",
+        "CAPSTONE_PASS",
+        "CAPSTONE_NOT_ESTABLISHED",
+        "UPPER_PROGRAM_PLACEMENT_BOUNDARY_EXCEEDED",
+        "PUBLIC_AVAILABLE",
+        "NOT_CURRENTLY_AVAILABLE",
+        "FREE_PUBLIC",
+        "NOT_AVAILABLE"
       ],
       "excludes": [
         "Public Face",
@@ -40,7 +52,10 @@
         "data-speech-measurement=\"true\"",
         "data-listening-measurement=\"true\"",
         "data-edu-tabs",
-        "The target-language curriculum is not yet available in this demo."
+        "The target-language curriculum is not yet available in this demo.",
+        "ABOVE_PHASE_1",
+        "PHASE_1_ONLY",
+        "P1S8"
       ]
     }
   ],

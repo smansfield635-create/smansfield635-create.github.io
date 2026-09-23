@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-six-card-qualify-633567e4",
+  "capabilityId": "EDUCATION_SIX_CARD_CLOSURE_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4582,
+  "requestBranch": "ai-dispatch-request-education-six-card-633567e4",
+  "requestCommit": "c06a94850f9a97253a46b62530c27684d691f128",
+  "requestCommitParent": "6249a943aeb1ea8c1a023b7e5a39cd5336985852",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "6249a943aeb1ea8c1a023b7e5a39cd5336985852",
+  "workflow": "education-six-card-closure-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "633567e4143046f7088a68cbea750444a6a32413",
+    "base_sha": "485959984715967d7549d89bd31b643502a1fb70"
+  },
+  "bridgeRunId": "35905765144",
+  "dispatchedRunId": 35905784677,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35905784677",
+  "dispatchedRunHeadSha": "6249a943aeb1ea8c1a023b7e5a39cd5336985852",
+  "dispatchedAt": "2026-09-23T18:55:11.171Z",
+  "resolvedAt": "2026-09-23T18:55:15.226Z"
+}

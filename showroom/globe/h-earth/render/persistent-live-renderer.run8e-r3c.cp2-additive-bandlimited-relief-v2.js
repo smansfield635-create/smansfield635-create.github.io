@@ -1,4 +1,5 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import { sampleHEarthRun8CSuccessorSurfaceMaterial } from '../../../../h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
 import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
@@ -670,12 +671,16 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     for(let x=x0-radius;x<=x0+radius;x+=spacing)xs.push(x);for(let z=z0-radius;z<=z0+radius;z+=spacing)zs.push(z);
     const vertexCount=xs.length*zs.length,triangleCount=(xs.length-1)*(zs.length-1)*2;if(vertexCount>4096||triangleCount>8192)throw new Error('R3C_REFINEMENT_CEILING_EXCEEDED');
     const positions=new Float32Array(vertexCount*3),normals=new Float32Array(vertexCount*3);let vi=0;
-    for(const z of zs)for(const x of xs){const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_TERRAIN_SAMPLE_INVALID');const q=regionToHEarthPlanetPoint({x,y:t.elevation,z});positions.set([q.x,q.y+0.035,q.z],vi*3);normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);vi++;}
+    for(const z of zs)for(const x of xs){const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_TERRAIN_SAMPLE_INVALID');const q=regionToHEarthPlanetPoint({x,y:t.elevation,z});positions.set([q.x,q.y,q.z],vi*3);normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);vi++;}
     const indices=new Uint32Array(triangleCount*3);let ii=0,cols=xs.length;for(let r=0;r<zs.length-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.set([a,e,b,b,e,d],ii);ii+=6;}
     const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];
     const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.refinementBufferUploadCount++;};
-    bind(0,positions,3);bind(1,normals,3);const colors=new Float32Array(vertexCount*4),mats=new Float32Array(vertexCount*4);for(let i=0;i<vertexCount;i++){colors.set([.22,.24,.16,1],i*4);mats.set([.72,.18,.05,.12],i*4)}bind(2,colors,4);bind(3,mats,4);
-    const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);const sc=new Uint8Array(vertexCount);sc.fill(4);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);
+    bind(0,positions,3);bind(1,normals,3);
+    const colors=new Float32Array(vertexCount*4),mats=new Float32Array(vertexCount*4),surfaceCodes=new Uint8Array(vertexCount);
+    const surfaceCodeMap=new Map();let nextSurfaceCode=0,mi=0;
+    for(const z of zs)for(const x of xs){const m=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);if(m?.valid!==true)throw new Error('R3C_REFINEMENT_MATERIAL_SAMPLE_INVALID');colors.set([m.baseColorProfile.linearR,m.baseColorProfile.linearG,m.baseColorProfile.linearB,m.baseColorProfile.alpha],mi*4);mats.set([m.roughness,m.reflectance,m.wetness,m.curvaturePressure],mi*4);if(!surfaceCodeMap.has(m.surfaceClass))surfaceCodeMap.set(m.surfaceClass,nextSurfaceCode++);surfaceCodes[mi]=surfaceCodeMap.get(m.surfaceClass);mi++;}
+    bind(2,colors,4);bind(3,mats,4);
+    const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);bind(5,surfaceCodes,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);
     const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
     resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},fallbackAvailable:true};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
   }

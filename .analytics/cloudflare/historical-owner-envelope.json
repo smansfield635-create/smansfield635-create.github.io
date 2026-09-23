@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T21:29:03Z",
+  "generatedAt": "2026-09-23T22:28:13Z",
   "window": {
-    "start": "2026-06-25T21:29:03Z",
-    "end": "2026-09-23T21:29:03Z"
+    "start": "2026-06-25T22:28:13Z",
+    "end": "2026-09-23T22:28:13Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4781,
-    "visits": 1124,
+    "pageLoads": 4786,
+    "visits": 1123,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4781,
-        "visits": 1124
+        "pageLoads": 4786,
+        "visits": 1123
       }
     },
     "byPath": {
+      "/index.html": {
+        "pageLoads": 157,
+        "visits": 0
+      },
       "/": {
-        "pageLoads": 1038,
-        "visits": 707
+        "pageLoads": 1036,
+        "visits": 706
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
-        "visits": 0
-      },
-      "/index.html": {
-        "pageLoads": 158,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 21,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 184,
+        "pageLoads": 193,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 150,
+        "pageLoads": 149,
         "visits": 7
       },
       "/build/intake/": {
@@ -210,20 +210,12 @@
         "pageLoads": 12,
         "visits": 0
       },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/categories/structure/interfaces.html": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -232,6 +224,14 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -372,17 +372,17 @@
       }
     },
     "byReferer": {
+      "diamondgatebridge.com": {
+        "pageLoads": 3663,
+        "visits": 0
+      },
       "(none)": {
         "pageLoads": 365,
         "visits": 365
       },
-      "diamondgatebridge.com": {
-        "pageLoads": 3657,
-        "visits": 0
-      },
       "www.google.com": {
-        "pageLoads": 749,
-        "visits": 749
+        "pageLoads": 748,
+        "visits": 748
       },
       "raw.githack.com": {
         "pageLoads": 10,

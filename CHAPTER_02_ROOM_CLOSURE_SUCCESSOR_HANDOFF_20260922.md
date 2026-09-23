@@ -246,3 +246,129 @@ Recover in this order:
 6. preserve V14/Clean Conform/V13 as rollback authorities.
 
 This closes the prior durability gap between repository instructions and conversation-local media bytes.
+
+
+## 13. 2026-09-22 late-session transition-rebuild authority
+
+This section supersedes Section 5/11 as the CURRENT execution state. Earlier sections remain lineage/history only.
+
+### Accepted current construction master
+
+Current construction authority before the remaining transition rebuild:
+`CHAPTER02_43S_V16_TRANSITION_WINDOW_REBUILT_v15.mp4`
+
+Conversation artifact identity:
+`file_00000000c78c81f590d3d7960b7d55be`
+
+This master already preserves the accepted Chapter 02 opening work, removal of the opening impostor, delayed/faded `WHAT MAKES SOMETHING REAL?`, and the accepted 12–13s smoothing work. It is NOT final because one additional legacy impostor remains around 12 seconds.
+
+### Sole replacement footage
+
+Owner-supplied transition source:
+`2065.mp4`
+
+Conversation artifact identity:
+`file_00000000413c81f5a3ed6099c961e45f`
+
+Owner law:
+- ignore the very beginning;
+- ignore native clip length;
+- use only necessary footage;
+- crop away player/browser/UI material;
+- internally retime source footage as required;
+- this is the sole replacement-transition footage.
+
+### Positively localized remaining impostor
+
+Frame-level read-only localization against the current master established:
+
+`FIRST_IMPOSTOR_FRAME = 352`
+`FIRST_IMPOSTOR_TIME = 11.7333s`
+
+`LAST_IMPOSTOR_FRAME = 381`
+`LAST_IMPOSTOR_TIME = 12.7000s`
+
+`SCENE_A_LAST_CLEAN_FRAME = 351`
+`SCENE_A_LAST_CLEAN_TIME = 11.7000s`
+
+Frame 351 is the last accepted uncontaminated Scene A frame.
+
+The clean right authority remains:
+
+`H_EARTH_FRAME = 480`
+`H_EARTH_TIME = 16.0000s`
+
+The screenshot-matched remaining impostor is the large/high green-landmass composition around 12 seconds. The earlier prohibited flat/elongated coastline legacy composition is also forbidden. Neither may survive even partially in a dissolve.
+
+### Frozen wholesale replacement window
+
+`REPLACEMENT_WINDOW = FRAMES 352–479 INCLUSIVE`
+`REPLACEMENT_TIME = 11.7333s–15.9667s`
+
+ALL legacy picture material from the current master inside frames 352–479 is retired wholesale.
+
+Do not perform additional surgical cleanup inside this interval.
+Do not preserve legacy transition frames.
+Do not use any prohibited legacy shot as blend material.
+
+Frames 0–351 are frozen picture authority.
+Frames 480–1289 are frozen picture authority.
+The soundtrack and synchronization remain current-master authority.
+
+### Frozen construction law
+
+Construct the replacement window from exactly three authorities:
+
+`SCENE A -> SHORT SMOOTH DISSOLVE -> USABLE 2065 TRAVERSAL -> SHORT SMOOTH DISSOLVE -> H-EARTH FRAME 480 / 16.000s`
+
+Retiming is permitted ONLY inside the usable `2065.mp4` source range.
+
+The master timeline must remain:
+- 43.000 seconds;
+- 30 fps CFR;
+- 1,290 frames;
+- 1280x720;
+- H.264 High / yuv420p;
+- AAC-LC 48 kHz stereo.
+
+### Remaining deterministic cycle
+
+1. Lock exact usable `2065.mp4` `SOURCE_IN` and `SOURCE_OUT` after excluding the unwanted beginning and before any unusable end material.
+2. Freeze those source boundaries.
+3. Construct only frames 352–479 using Scene A + usable 2065 + H-Earth.
+4. Render one candidate while preserving frames 0–351, frames 480–1289, soundtrack, synchronization, runtime and frame clock.
+5. Negative-audit EVERY frame from before frame 352 through at least frame 486.
+6. Require ZERO frames matching either prohibited impostor composition, including partially blended frames.
+7. Positive-audit the sequence. The only permitted visual states are:
+   `Scene A -> dissolve -> 2065 -> dissolve -> H-Earth`.
+   No fourth visual state is permitted.
+8. Full-film non-regression audit:
+   - legitimate Chapter 02 opening;
+   - opening impostor remains absent;
+   - delayed/faded `WHAT MAKES SOMETHING REAL?`;
+   - accepted earlier transition work;
+   - H-Earth at frame 480 / 16.000s;
+   - H-Earth traversal;
+   - 32-second withdrawal;
+   - final universal sequence;
+   - CTA;
+   - soundtrack synchronization;
+   - 43.000s / 1,290-frame clock.
+9. Surface the MP4 ONLY after every gate passes.
+
+### Current execution status at durability freeze
+
+`IMPOSTOR_EXACTLY_LOCALIZED = TRUE`
+`SCENE_A_LEFT_BOUNDARY_LOCKED = TRUE`
+`H_EARTH_RIGHT_BOUNDARY_LOCKED = TRUE`
+`WHOLESALE_REPLACEMENT_WINDOW_LOCKED = TRUE`
+`SOLE_REPLACEMENT_SOURCE_LOCKED = TRUE`
+`SOURCE_IN_LOCKED = FALSE`
+`SOURCE_OUT_LOCKED = FALSE`
+`FRAMES_352_479_CONSTRUCTED = FALSE`
+`QUALIFIED_SUCCESSOR_RENDERED = FALSE`
+
+NEXT_LAWFUL_OPERATION =
+`LOCK_2065_SOURCE_IN_OUT -> CONSTRUCT_FRAMES_352_479 -> RENDER -> NEGATIVE_IMPOSTOR_AUDIT -> POSITIVE_TRANSITION_AUDIT -> FULL_NON_REGRESSION -> OWNER_REVIEW`
+
+Execution discipline: do not answer owner authorization with status-only prose. Execute through qualification unless a concrete predicate fails.

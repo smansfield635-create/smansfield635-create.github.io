@@ -1,0 +1,17 @@
+name: H-Earth B2 Meso Morphology Qualification v1
+on: workflow_dispatch
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/audits/h-earth-b2-meso-morphology-qualification.v1.mjs | tee h-earth-b2-meso-morphology.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-b2-meso-morphology-${{ github.run_id }}
+          path: h-earth-b2-meso-morphology.json

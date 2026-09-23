@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-learner-handoff-6fde75f8-20260922",
+  "capabilityId": "EDUCATION_LEARNER_HANDOFF_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4492,
+  "requestBranch": "ai-dispatch-request-education-learner-handoff",
+  "requestCommit": "254407699f0ad7806d824d8fe5a4c0e6822e7ff4",
+  "requestCommitParent": "1dd1ed4a3ac74f5cf7c7984fe6052d9523e3df7e",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "1dd1ed4a3ac74f5cf7c7984fe6052d9523e3df7e",
+  "workflow": "education-learner-handoff-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "6fde75f85c5a7481ec880cca5d8145e47305ac08",
+    "base_sha": "1ffe50701be18963612aaf14f93bd54be05e8f90"
+  },
+  "bridgeRunId": "35812933269",
+  "dispatchedRunId": 35812950341,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35812950341",
+  "dispatchedRunHeadSha": "1dd1ed4a3ac74f5cf7c7984fe6052d9523e3df7e",
+  "dispatchedAt": "2026-09-23T03:05:21.924Z",
+  "resolvedAt": "2026-09-23T03:05:26.002Z"
+}

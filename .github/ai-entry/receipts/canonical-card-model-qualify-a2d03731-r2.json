@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "canonical-card-model-qualify-a2d03731-r2",
+  "capabilityId": "EDUCATION_CANONICAL_CARD_MODEL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4608,
+  "requestBranch": "ai-dispatch-request-canonical-model-a2d03731-r2",
+  "requestCommit": "00690795fa41a08f3bd8de4ff326b0796f28538c",
+  "requestCommitParent": "57f0797c6445437e4df04c1d5b85920f618891d4",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "57f0797c6445437e4df04c1d5b85920f618891d4",
+  "workflow": "education-canonical-card-model-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "a2d03731a1d347c77321259d69b51fb94bdb2332",
+    "base_sha": "11a539cda921ee4b0d679d69eccb9bbfa4de289a"
+  },
+  "bridgeRunId": "35913954525",
+  "dispatchedRunId": 35913971303,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35913971303",
+  "dispatchedRunHeadSha": "57f0797c6445437e4df04c1d5b85920f618891d4",
+  "dispatchedAt": "2026-09-23T20:08:39.348Z",
+  "resolvedAt": "2026-09-23T20:08:42.968Z"
+}

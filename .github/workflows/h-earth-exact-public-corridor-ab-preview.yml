@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 jobs:
   exact-public-corridor-ab:
@@ -165,6 +167,28 @@ jobs:
           }
           NODE
           node h-earth-ab-run.mjs
+
+      - name: Build owner-inspection Pages payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/A
+          mkdir -p /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/B
+          cp -a /tmp/hearth-ab/A/. /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/A/
+          cp -a /tmp/hearth-ab/B/. /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/B/
+          touch /tmp/hearth-pages/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload owner-inspection Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/hearth-pages
+
+      - name: Deploy owner-inspection Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Upload physical-inspection evidence
         if: always()

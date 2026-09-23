@@ -1629,7 +1629,9 @@ function submitAdaptiveAnswer(){
  startAdaptiveItem(probeStage,(adaptiveState.itemIndex+1)%BANK[probeStage].length);
 }
 function resolveAdaptiveBoundary(result){
- if(result==="UNCERTAIN"){\n   finalIndependence={verified_placement:"UNCERTAIN_BOUNDARY",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:"BOUNDARY_REVIEW",support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:null,label:"Boundary needs more evidence"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};\n }else if(result==="ABOVE"){
+ if(result==="UNCERTAIN"){
+   finalIndependence={verified_placement:"UNCERTAIN_BOUNDARY",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:"BOUNDARY_REVIEW",support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:null,label:"Boundary needs more evidence"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
+ }else if(result==="ABOVE"){
    finalIndependence={verified_placement:"ABOVE_PHASE_1",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:supportCycle(1),support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"ABOVE_PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
  }else{
    const stage=Math.max(1,Math.min(8,Number(result)||probeStage));

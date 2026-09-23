@@ -279,8 +279,24 @@ void main(){
     palette=mix(palette,rock,clamp(slope*1.35,0.0,0.72));
 
     // Preserve broad material identity; retire painted contour/stripe dominance.
+    // Phase 2: procedural triplanar material-space projection using the
+    // existing world position and shading normal. No geometry or asset layer.
+    vec3 triWeight=pow(abs(shadingNormal),vec3(4.0));
+    triWeight/=max(triWeight.x+triWeight.y+triWeight.z,0.00001);
+    vec2 triX=vWorldPosition.zy*0.115;
+    vec2 triY=vWorldPosition.xz*0.115;
+    vec2 triZ=vWorldPosition.xy*0.115;
+    float triCoarse=
+      noise2(triX+vec2(13.1,-7.7))*triWeight.x+
+      noise2(triY+vec2(-19.3,11.9))*triWeight.y+
+      noise2(triZ+vec2(31.7,23.5))*triWeight.z;
+    float triFine=
+      noise2(triX*3.35+vec2(-41.2,17.4))*triWeight.x+
+      noise2(triY*3.35+vec2(29.6,-37.1))*triWeight.y+
+      noise2(triZ*3.35+vec2(7.8,43.6))*triWeight.z;
+    float triMaterial=clamp(triCoarse*0.68+triFine*0.32,0.0,1.0);
     float materialVariation=clamp(
-      broad*0.46+medium*0.31+grain*0.08+macroField*0.15,
+      broad*0.24+medium*0.16+grain*0.04+macroField*0.08+triMaterial*0.48,
       0.0,1.0
     );
     float rockExposure=clamp(
@@ -295,9 +311,11 @@ void main(){
       0.0,1.0
     );
     vec3 soilTone=mix(lowland,upland,elevationMix);
-    palette=mix(palette,soilTone,shelteredSoil*0.34);
-    palette=mix(palette,rock,rockExposure*0.58);
-    palette*=mix(0.88,1.12,materialVariation);
+    vec3 exposedRock=mix(vec3(0.205,0.215,0.205),vec3(0.315,0.305,0.275),triMaterial);
+    vec3 groundedSoil=mix(soilTone,vec3(0.255,0.245,0.175),triCoarse*0.22);
+    palette=mix(palette,groundedSoil,shelteredSoil*0.40);
+    palette=mix(palette,exposedRock,rockExposure*(0.54+0.18*triFine));
+    palette*=mix(0.91,1.09,materialVariation);
     palette=mix(palette,base,0.34);
 
     float terrainRoughness=clamp(vMaterialParameters.x,0.04,1.0);

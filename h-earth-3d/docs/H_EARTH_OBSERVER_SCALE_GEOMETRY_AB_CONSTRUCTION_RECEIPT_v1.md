@@ -27,3 +27,39 @@ The next execution must measure A and B over the fixed 0..18 observer envelope a
 - exact equality of shared 8-unit parent elevations.
 
 No merge, deployment, publication or morphology escalation is authorized by construction alone.
+
+## Deterministic module provenance
+
+Repository: `smansfield635-create/smansfield635-create.github.io`
+
+A authority:
+- commit: `1851c48c87956c50f4bd67946a32c555857c3e62`
+- product path: `showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js`
+- product blob: `ec11e15611bea52dc1202e11d3b94a9503f1298f`
+- exported constructor: `constructHEarthRun8BSuccessorTerrainAndMountain`
+- exported sampling-axis function: `getHEarthRun8BSuccessorSamplingAxes`
+
+B authority:
+- branch: `h-earth-observer-scale-geometry-ab-construction-v1`
+- product mutation commit: `3cee6115801476a72e0b2319daf446e08d8e5054`
+- product path: `showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js`
+- product blob after mutation: `56475897bfbf57a3fd3335db0d849e1d576ec97b`
+- exported constructor: `constructHEarthRun8BSuccessorTerrainAndMountain`
+- exported sampling-axis function: `getHEarthRun8BSuccessorSamplingAxes`
+- PR: `#4622`
+
+Terrain-field dependency held invariant:
+- path: `h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js`
+- main blob observed during construction: `4f929cd467edb447e2116de745d9b02c28daf219`
+- sampling export: `sampleHEarthRun8BSuccessorTerrainField`
+
+GPU-binding dependency held invariant:
+- path: `showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js`
+- main blob observed during construction: `21f7427cecb68547bf6697e841202e0ab0e4c371`
+- binding export: `createHEarthRun8ER3D3LiveGpuBinding`
+
+Qualification import law:
+- A must import the product module from exact commit `1851c48c87956c50f4bd67946a32c555857c3e62`.
+- B must import the same product path from PR #4622 head.
+- The runner must not infer or search for an alternate Run8B geometry module.
+- If either exact path/blob/export identity fails to resolve, qualification is FAIL-CLOSED.

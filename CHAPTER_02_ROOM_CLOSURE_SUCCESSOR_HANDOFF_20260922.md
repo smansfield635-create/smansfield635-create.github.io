@@ -372,3 +372,72 @@ NEXT_LAWFUL_OPERATION =
 `LOCK_2065_SOURCE_IN_OUT -> CONSTRUCT_FRAMES_352_479 -> RENDER -> NEGATIVE_IMPOSTOR_AUDIT -> POSITIVE_TRANSITION_AUDIT -> FULL_NON_REGRESSION -> OWNER_REVIEW`
 
 Execution discipline: do not answer owner authorization with status-only prose. Execute through qualification unless a concrete predicate fails.
+
+
+## 14. Execution blocker freeze — exact 2065 source materialization required
+
+Status: FAIL-CLOSED EXECUTION BLOCKER
+Date: 2026-09-22
+
+This section supersedes any implication that the next action is further planning or editorial analysis.
+
+Repository authority commit `bc9ae4e8cd043ace0c1ee348ed051eced9ea7aa9` was re-verified. The frozen contract remains:
+
+`LOCK 2065 SOURCE_IN/SOURCE_OUT -> CONSTRUCT FRAMES 352–479 -> RENDER -> NEGATIVE IMPOSTOR AUDIT -> POSITIVE TRANSITION AUDIT -> FULL NON-REGRESSION -> OWNER REVIEW`
+
+### Concrete blocker discovered during execution
+
+The AI execution surface exposes a remote video-conform renderer, but that renderer accepts only registered/remotely fetchable source media.
+
+The exact owner-authorized source `2065.mp4` is not presently registered/materialized on that remote execution surface.
+
+Because the repository contract names `2065.mp4` exactly, substitution of any other source is prohibited.
+
+Therefore execution stopped fail-closed BEFORE:
+- SOURCE_IN/SOURCE_OUT qualification;
+- construction of frames 352–479;
+- candidate render;
+- qualification audits.
+
+No replacement source was manufactured.
+No invalid render was dispatched.
+No frozen editorial authority was changed.
+
+### Exact immediate blocker
+
+`2065.mp4 -> EXECUTION-READY SOURCE MATERIALIZATION`
+
+### Recovery law
+
+The next execution room/surface must first make the EXACT `2065.mp4` binary available to the AI entry / remote conform renderer as a registered, remotely fetchable source.
+
+After exact-binary materialization succeeds, DO NOT create another plan and DO NOT reopen editorial decisions.
+
+Resume immediately at:
+
+1. verify exact `2065.mp4` source identity;
+2. lock `SOURCE_IN` / `SOURCE_OUT`;
+3. construct frames 352–479 only;
+4. render;
+5. negative audit for both prohibited impostors;
+6. positive audit: `Scene A -> dissolve -> 2065 -> dissolve -> H-Earth`;
+7. full-film non-regression;
+8. owner review.
+
+All previously frozen boundaries remain authoritative:
+- `SCENE_A_LAST_CLEAN_FRAME = 351 / 11.7000s`;
+- `FIRST_IMPOSTOR_FRAME = 352 / 11.7333s`;
+- `LAST_IMPOSTOR_FRAME = 381 / 12.7000s`;
+- `REPLACEMENT_WINDOW = 352–479 inclusive`;
+- `H_EARTH_FRAME = 480 / 16.0000s`;
+- frames 0–351 frozen;
+- frames 480–1289 frozen;
+- all legacy picture inside 352–479 retired;
+- `2065.mp4` remains the sole authorized replacement footage.
+
+CURRENT_BLOCKER = EXACT_2065_REMOTE_MATERIALIZATION
+PLANNING_COMPLETE = TRUE
+EDITORIAL_DECISIONS_FROZEN = TRUE
+SOURCE_SUBSTITUTION_ALLOWED = FALSE
+RENDER_DISPATCHED = FALSE
+NEXT_LAWFUL_ACTION = MATERIALIZE_EXACT_2065_FOR_REMOTE_RENDERER

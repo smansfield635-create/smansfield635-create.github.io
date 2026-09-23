@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-calibrated-bank-2d31114c-v2-20260922",
+  "capabilityId": "EDUCATION_CALIBRATED_BANK_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4418,
+  "requestBranch": "ai-dispatch-request-education-calibrated-bank-v2",
+  "requestCommit": "39e5c078625b25eb866b2a4f892892b9efff3a91",
+  "requestCommitParent": "06d007060d01ebfb3ac3d4f7f1709019db6a1d24",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "06d007060d01ebfb3ac3d4f7f1709019db6a1d24",
+  "workflow": "education-calibrated-bank-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "2d31114c02ea27a0af9e4f2bb263b9d7cd04e496",
+    "base_sha": "4bbf7f72b15102e44a6642d6eda35d4e87c26497"
+  },
+  "bridgeRunId": "35804803743",
+  "dispatchedRunId": 35804813278,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35804813278",
+  "dispatchedRunHeadSha": "06d007060d01ebfb3ac3d4f7f1709019db6a1d24",
+  "dispatchedAt": "2026-09-23T01:04:57.898Z",
+  "resolvedAt": "2026-09-23T01:05:01.097Z"
+}

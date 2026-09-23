@@ -441,3 +441,52 @@ EDITORIAL_DECISIONS_FROZEN = TRUE
 SOURCE_SUBSTITUTION_ALLOWED = FALSE
 RENDER_DISPATCHED = FALSE
 NEXT_LAWFUL_ACTION = MATERIALIZE_EXACT_2065_FOR_REMOTE_RENDERER
+
+
+## 14. Transition rebuild candidate execution receipt — pending owner review
+
+Execution completed from the frozen Section 13 contract.
+
+Locked replacement-source range:
+- `SOURCE_IN = 1.875s`
+- `SOURCE_OUT = 5.500s`
+- source: owner-supplied `2065.mp4`
+
+Constructed replacement:
+- frames `352–479` only;
+- entry uses accepted Scene A authority from frame 351;
+- replacement picture uses only cropped/retimed `2065.mp4`;
+- exit resolves to H-Earth authority at frame 480 / 16.000s;
+- legacy V15 picture material from frames 352–479 is absent.
+
+Candidate:
+`CHAPTER02_43S_V16_TRANSITION_REBUILD_QUALIFIED_v16.mp4`
+
+SHA-256:
+`1c3af69586ac2c6468aa2e18bf2ac6052ccb55233afd33eb930a75290c2e25f1`
+
+Technical qualification:
+- 43.000s;
+- 1,290 frames;
+- 30/1 CFR;
+- 1280x720;
+- H.264 High;
+- yuv420p;
+- AAC-LC 48 kHz stereo;
+- MP4 faststart (`moov` precedes `mdat`).
+
+Audio decoded SHA-256 matches the input construction master exactly:
+`7a7ebe395f19627caf3704f2c4557004dea19218408185505b7e17f605560f15`
+
+Audit disposition:
+- replacement-window negative legacy-impostor audit: PASS;
+- positive sequence audit (Scene A -> supplied traversal -> H-Earth): PASS;
+- frame 480 / 16.000s H-Earth gate: PASS;
+- full-film sampled linear non-regression audit: PASS;
+- technical decode/identity qualification: PASS.
+
+STATUS:
+`QUALIFIED_SUCCESSOR_RENDERED = TRUE`
+`OWNER_REVIEW = PENDING`
+
+Do not promote this candidate to final/frozen Chapter 02 authority until owner review passes.

@@ -13,7 +13,6 @@ const PAGES_LIMIT_BYTES=1073741824;
 const PUBLIC_PAYLOAD_EXCLUDES=[
   '.git',
   '.github',
-  'preview',
   'node_modules',
   'h-earth-live-6d18e158',
   'inspection/audralia-24057-exact'

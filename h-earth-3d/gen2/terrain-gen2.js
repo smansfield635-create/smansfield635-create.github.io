@@ -9,27 +9,38 @@ precision highp float;
 layout(location=0)in vec3 aPosition;
 layout(location=1)in vec3 aNormal;
 uniform mat4 uVP;
-out vec3 vP;out vec3 vN;
-void main(){vP=aPosition;vN=aNormal;gl_Position=uVP*vec4(aPosition,1.0);}`;
+out vec3 vP;out vec3 vN;out float vMacro;
+float hash21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash21(i),hash21(i+vec2(1,0)),f.x),mix(hash21(i+vec2(0,1)),hash21(i+vec2(1,1)),f.x),f.y);}
+void main(){
+ vec3 p=aPosition;
+ float mountain=smoothstep(5.0,34.0,p.y);
+ float n1=noise2(p.xz*.030)*2.0-1.0;
+ float n2=noise2(p.xz*.072)*2.0-1.0;
+ float ridge=1.0-abs(n1);
+ float erosion=(ridge*.68+n2*.32-.34)*mountain;
+ p.y+=erosion*7.5;
+ vMacro=erosion;vP=p;vN=aNormal;gl_Position=uVP*vec4(p,1.0);
+}`;
 const FS=`#version 300 es
 precision highp float;
-in vec3 vP;in vec3 vN;out vec4 outColor;
+in vec3 vP;in vec3 vN;in float vMacro;out vec4 outColor;
 uniform vec3 uEye;
 void main(){
- vec3 n=normalize(vN),sun=normalize(vec3(-.55,.72,.42));
- float ndl=max(dot(n,sun),0.0);
- float slope=1.0-clamp(n.y,0.0,1.0);
- float h=smoothstep(2.0,72.0,vP.y);
- vec3 soil=mix(vec3(.23,.29,.17),vec3(.34,.31,.24),slope);
- vec3 rock=mix(vec3(.31,.30,.28),vec3(.48,.46,.42),h);
- vec3 base=mix(soil,rock,clamp(slope*.72+h*.45,0.0,1.0));
- float sky=.20+.18*max(n.y,0.0);
- float contact=1.0-.18*smoothstep(.18,.82,slope);
- vec3 lit=base*(sky+ndl*.94)*contact;
- float d=length(uEye-vP);
- float fog=1.0-exp(-max(0.0,d-250.0)*.0021);
- vec3 haze=vec3(.62,.70,.73);
- outColor=vec4(mix(lit,haze,clamp(fog,0.0,.72)),1.0);
+ vec3 dx=dFdx(vP),dy=dFdy(vP),gn=normalize(cross(dx,dy));if(gn.y<0.0)gn=-gn;
+ vec3 n=normalize(mix(normalize(vN),gn,.78));
+ vec3 sun=normalize(vec3(-.62,.70,.35));
+ float ndl=max(dot(n,sun),0.0),slope=1.0-clamp(n.y,0.0,1.0),h=smoothstep(8.0,68.0,vP.y);
+ vec3 grass=vec3(.18,.24,.12),soil=vec3(.31,.25,.17),rock=vec3(.36,.35,.32);
+ vec3 base=mix(grass,soil,smoothstep(.18,.52,slope));
+ base=mix(base,rock,clamp(smoothstep(.42,.82,slope)+h*.42,0.0,1.0));
+ base*=.92+.10*clamp(vMacro,-1.0,1.0);
+ float hemi=.16+.20*max(n.y,0.0);
+ float crevice=1.0-.24*smoothstep(.32,.88,slope)*(1.0-smoothstep(.1,.7,ndl));
+ vec3 lit=base*(hemi+ndl*1.12)*crevice;
+ float d=length(uEye-vP),fog=1.0-exp(-max(0.0,d-190.0)*.0027);
+ vec3 haze=vec3(.58,.67,.71);
+ outColor=vec4(mix(lit,haze,clamp(fog,0.0,.78)),1.0);
 }`;
 function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s}
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));

@@ -6,9 +6,9 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 4517,
   "requestBranch": "ai-dispatch-request-education-publication-80487637",
-  "requestCommit": "8fe1f2a9fd3ae5222a844cde722c44155f3ff700",
+  "requestCommit": "0bba4196caab57869c075c8cc48403e46420d456",
   "currentMainSha": "80487637d25b9bf9049900d61f45aa1a935775ae",
-  "bridgeRunId": "35816725801",
+  "bridgeRunId": "35816820570",
   "error": "Input may not be user supplied: target_sha",
-  "failedAt": "2026-09-23T04:02:53.241Z"
+  "failedAt": "2026-09-23T04:04:15.109Z"
 }

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-localization-qualify-392d00c7",
+  "capabilityId": "EDUCATION_COMPRESSION_LOCALIZATION_PARITY_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4566,
+  "requestBranch": "ai-dispatch-request-education-localization-392d00c7",
+  "requestCommit": "fa06a3a9229a5caf9dc0f725093e57526ef47496",
+  "requestCommitParent": "9d4b8026287ccc7067979f62b8f0430885da73e0",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "9d4b8026287ccc7067979f62b8f0430885da73e0",
+  "workflow": "education-compression-localization-parity-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "392d00c7a8051666b5c8b0624ebd1c3ac78bf93c",
+    "base_sha": "d035a61c0a2c8ec7ad38a3beb37cd60914f6906c"
+  },
+  "bridgeRunId": "35880962760",
+  "dispatchedRunId": 35880989333,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35880989333",
+  "dispatchedRunHeadSha": "9d4b8026287ccc7067979f62b8f0430885da73e0",
+  "dispatchedAt": "2026-09-23T15:21:48.235Z",
+  "resolvedAt": "2026-09-23T15:21:51.904Z"
+}

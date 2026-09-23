@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-quality-integration-1c8084e3-20260922",
+  "capabilityId": "EDUCATION_CALIBRATED_BANK_INTEGRATION_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "1c8084e3afadb190291999f9d294c1a2116fec70",
+    "base_sha": "cafb60bcf257acd3243f48e24962ce25bfd48437"
   }
 }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-23T09:33:02Z",
+  "generatedAt": "2026-09-23T10:31:25Z",
   "window": {
-    "start": "2026-08-24T09:33:02Z",
-    "end": "2026-09-23T09:33:02Z"
+    "start": "2026-08-24T10:31:25Z",
+    "end": "2026-09-23T10:31:25Z"
   },
   "dimensions": {
     "requestPath": [
@@ -383,6 +383,11 @@
         "visits": 1
       },
       {
+        "value": "/nine-summits/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/evidence/agentic-frontier/reproduction/same-state-different-future/",
         "pageLoads": 1,
         "visits": 0
@@ -393,12 +398,12 @@
         "visits": 0
       },
       {
-        "value": "/site-guide/",
+        "value": "/evidence/readiness/bt4-site-governance/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/nine-summits/",
+        "value": "/site-guide/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -406,11 +411,6 @@
         "value": "/products/nutrition/",
         "pageLoads": 1,
         "visits": 0
-      },
-      {
-        "value": "/evidence/readiness/bt4-site-governance/",
-        "pageLoads": 1,
-        "visits": 1
       },
       {
         "value": "/showroom/globe/",

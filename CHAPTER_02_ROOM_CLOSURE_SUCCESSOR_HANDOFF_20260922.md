@@ -619,3 +619,48 @@ STATUS:
 `V18_CONTIGUOUS_2065_REPAIR = QUALIFIED_CANDIDATE`
 `12_TO_13_SECOND_INTRUDER = ABSENT_IN_V18`
 `OWNER_REVIEW = PENDING`
+
+
+## 18. V19 bounded refinement qualification
+
+Owner-authorized successor mutations from V18 were executed as one bounded pass.
+
+Opening timing mutation:
+- `WHAT MAKES SOMETHING REAL?` shifted exactly +30 frames / +1.000 second relative to V18.
+- No downstream cinematography was retimed.
+- Chapter 02 opening therefore sustains longer before the first philosophical statement.
+
+Scene A -> 2065 boundary mutation:
+- left authority remains frame 351 / 11.700s;
+- H-Earth authority remains frame 480 / 16.000s;
+- transition uses only Scene A and the exact contiguous 2065 traversal;
+- dissolve length increased to 30 frames / 1.000 second;
+- opacity uses a smooth cosine ease rather than a linear/rapid resolve;
+- longer boundary consumes the beginning of the existing 2065 screen interval; downstream H-Earth timing does not move.
+
+Candidate:
+`CHAPTER02_43S_V19_LONG_RESOLVE_OPENING_HOLD.mp4`
+
+Qualification:
+- duration `43.000000s`
+- `30 fps CFR`
+- `1,290 frames`
+- `1280x720`
+- H.264 High / yuv420p
+- original V18/V15 AAC soundtrack copied without re-encoding
+- decoded soundtrack MD5: `96d86d1cfd6e0f95d6ce03aaaa2b6267`
+- output SHA-256: `3bfe616e0f8600e97b006f1d493a4625eb7b77009dcdce3d2019b83c20e228b1`
+
+Frame audit results:
+- first philosophical sentence delayed by exactly 30 frames;
+- frames 352–381 form the lengthened Scene A/2065 resolve;
+- no fourth visual state introduced;
+- contiguous 2065 traversal retained after the dissolve;
+- both prohibited legacy impostors remain absent;
+- H-Earth remains fixed at frame 480;
+- runtime/frame/audio invariants pass.
+
+STATUS:
+`V18 = SUPERSEDED_BY_BOUNDED_SUCCESSOR`
+`V19 = QUALIFIED_CANDIDATE`
+`OWNER_REVIEW = PENDING`

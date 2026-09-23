@@ -1586,7 +1586,7 @@ function submitAdaptiveAnswer(){
  placementEvidence.push({stage:probeStage,difficulty:item.difficulty,itemId:item.id,node:item.node,competency:item.competency,evidenceClass:item.evidenceClass,correct,fresh});
  adaptiveState.steps++;
  if(fresh){
-   const bucket=adaptiveState.stageEvidence[probeStage]||(adaptiveState.stageEvidence[probeStage]={unique:0,correct:0,unassistedCorrect:0,incorrect:0:0});
+   const bucket=adaptiveState.stageEvidence[probeStage]||(adaptiveState.stageEvidence[probeStage]={unique:0,correct:0,unassistedCorrect:0,incorrect:0});
    bucket.unique++;if(correct){bucket.correct++;bucket.unassistedCorrect++}else bucket.incorrect++;
  }
  probeHistory.push({stage:probeStage,difficulty:item.difficulty,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,fresh});

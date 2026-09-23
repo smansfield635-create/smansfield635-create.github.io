@@ -223,8 +223,10 @@
       }
     })();
   </script>
+  <div id="h-earth-gen2-static-boot" data-stage="HTML_LOADED" style="position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:#061418;color:#dbe8e5;font:600 14px system-ui;letter-spacing:.08em">Loading H-Earth environment…<small id="h-earth-gen2-static-stage" style="display:block;margin-top:10px;opacity:.7">HTML loaded · requesting renderer</small></div>
+  <script>window.H_EARTH_GEN2_BOOT_STAGE='HTML_LOADED';</script>
   <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"}}</script>
-  <script id="h-earth-gen2-live-bridge" type="module" src="./gen2-live-terrain-bridge.js?v=bridge-proof-v1"></script>
+  <script id="h-earth-gen2-live-bridge" type="module" src="./gen2-live-terrain-bridge.9fff3853.js"></script>
   <script>document.getElementById('h-earth-gen2-live-bridge').addEventListener('error',()=>{window.H_EARTH_RUNTIME_DIAGNOSTICS?.mark('BOOT_STARTED','FAIL','Gen2 live terrain bridge module failed to load.');});</script>
 </body>
 </html>

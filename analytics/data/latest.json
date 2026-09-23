@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-23T04:35:14Z",
+  "generatedAt": "2026-09-23T05:31:06Z",
   "window30d": {
-    "start": "2026-08-24T04:35:14Z",
-    "end": "2026-09-23T04:35:14Z"
+    "start": "2026-08-24T05:31:06Z",
+    "end": "2026-09-23T05:31:06Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-16",
-      "pageLoads": 215
+      "pageLoads": 221
     },
     {
       "date": "2026-09-17",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 24
+      "pageLoads": 28
     }
   ],
   "summary": {
-    "pageLoads": 7125,
-    "botPageLoads": 2449,
-    "nonBotPageLoads": 4676
+    "pageLoads": 7095,
+    "botPageLoads": 2457,
+    "nonBotPageLoads": 4638
   },
   "referrers": [
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3250,
+      "pageLoads": 3240,
       "visits": 0
     },
     {
       "host": "(none)",
-      "pageLoads": 3217,
-      "visits": 3217
+      "pageLoads": 3227,
+      "visits": 3227
     },
     {
       "host": "www.google.com",
-      "pageLoads": 628,
-      "visits": 628
+      "pageLoads": 598,
+      "visits": 598
     },
     {
       "host": "bing.com",
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1872,
-      "visits": 1605
+      "pageLoads": 1840,
+      "visits": 1573
     },
     {
       "path": "/showroom/globe/audralia/",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 786,
-      "visits": 786
+      "pageLoads": 794,
+      "visits": 794
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 203,
-      "visits": 87
+      "pageLoads": 207,
+      "visits": 91
     },
     {
       "path": "/evidence/agentic-frontier/",

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T04:35:14Z",
+  "generatedAt": "2026-09-23T05:31:06Z",
   "window": {
-    "start": "2026-06-25T04:35:14Z",
-    "end": "2026-09-23T04:35:14Z"
+    "start": "2026-06-25T05:31:06Z",
+    "end": "2026-09-23T05:31:06Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4766,
-    "visits": 1112,
+    "pageLoads": 4768,
+    "visits": 1114,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4766,
-        "visits": 1112
+        "pageLoads": 4768,
+        "visits": 1114
       }
     },
     "byPath": {
@@ -115,8 +115,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 165,
-        "visits": 39
+        "pageLoads": 167,
+        "visits": 41
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 499,
@@ -326,10 +326,6 @@
         "pageLoads": 31,
         "visits": 0
       },
-      "/products/nutrition/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/products/archcoin/contract/": {
         "pageLoads": 35,
         "visits": 1
@@ -338,12 +334,16 @@
         "pageLoads": 26,
         "visits": 0
       },
-      "/products/archcoin/payable/": {
-        "pageLoads": 9,
+      "/products/nutrition/": {
+        "pageLoads": 1,
         "visits": 0
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 2,
+        "visits": 0
+      },
+      "/products/archcoin/payable/": {
+        "pageLoads": 9,
         "visits": 0
       },
       "/home/": {
@@ -373,8 +373,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 356,
-        "visits": 356
+        "pageLoads": 358,
+        "visits": 358
       },
       "diamondgatebridge.com": {
         "pageLoads": 3654,

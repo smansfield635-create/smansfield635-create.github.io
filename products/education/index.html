@@ -12,9 +12,9 @@
   data-demo-language-chinese="available"
   data-placement-authority="demonstrated-performance"
   data-self-report-authority="orientation-only"
-  data-demo-range="phase-1-only"
+  data-placement-range="program-wide"
   data-no-backend="true"
-  data-no-persistence="true"
+  data-client-local-persistence="true" data-server-persistence="false"
   data-speech-measurement="false"
   data-listening-measurement="false">
 <head>
@@ -390,17 +390,25 @@ document.querySelectorAll("[data-help-language]").forEach(button=>button.addEven
   setStage("intake");
 }));
 
-const STAGES=[
- {id:"P1S1",name:"Orientation and Baseline"},
- {id:"P1S2",name:"Direct Concepts"},
- {id:"P1S3",name:"Change the Word"},
- {id:"P1S4",name:"Build the Sentence"},
- {id:"P1S5",name:"Build the Meaning"},
- {id:"P1S6",name:"Read and Respond"},
- {id:"P1S7",name:"Unseen Transfer"},
- {id:"P1S8",name:"Phase 1 Completion"}
+const DIAGNOSTIC_BANDS=[
+ {id:"D1",name:"Foundational Recognition"},
+ {id:"D2",name:"Receive → Place"},
+ {id:"D3",name:"Relational Forms"},
+ {id:"D4",name:"Place → Use"},
+ {id:"D5",name:"Applied Use"},
+ {id:"D6",name:"Use → Own"},
+ {id:"D7",name:"Independent Transfer"}
 ];
-
+const PROGRAM_PHASES={
+ 1:{id:"PHASE_1_RECEIVE",name:"Phase 1 · Receive",availability:"PUBLIC_AVAILABLE",access:"FREE_PUBLIC"},
+ 2:{id:"PHASE_2_PLACE",name:"Phase 2 · Place",availability:"NOT_CURRENTLY_AVAILABLE",access:"NOT_AVAILABLE"},
+ 3:{id:"PHASE_3_USE",name:"Phase 3 · Use",availability:"NOT_CURRENTLY_AVAILABLE",access:"NOT_AVAILABLE"},
+ 4:{id:"PHASE_4_OWN",name:"Phase 4 · Own",availability:"NOT_CURRENTLY_AVAILABLE",access:"NOT_AVAILABLE"}
+};
+function placementCoordinate(band){
+ const map={1:{phase:1,position:"ESTABLISHED"},2:{phase:1,transitionTo:2,position:"TRANSITION"},3:{phase:2,position:"ESTABLISHED"},4:{phase:2,transitionTo:3,position:"TRANSITION"},5:{phase:3,position:"ESTABLISHED"},6:{phase:3,transitionTo:4,position:"TRANSITION"},7:{phase:4,position:"ESTABLISHED"}};
+ return map[band]||null;
+}
 const BANK={
  "1": [
   {
@@ -1013,250 +1021,29 @@ const BANK={
   }
  ],
  "6": [
-  {
-   "evidenceClass": "MEANING_CONSTRUCTION",
-   "id": "s5d",
-   "q": "Which means the same? “Because the material is exceptionally fragile, even minor pressure may damage it.”",
-   "o": [
-    "The material can be damaged by very little pressure.",
-    "The material becomes stronger when pressure is applied.",
-    "Only extreme pressure can damage the material.",
-    "The material is fragile only after it is damaged."
-   ],
-   "a": 0,
-   "node": "degree and modal consequence",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 6
-  },
-  {
-   "evidenceClass": "MEANING_CONSTRUCTION",
-   "id": "s5f",
-   "q": "Which means the same? “I was unable to attend because the appointment had been moved without my knowledge.”",
-   "o": [
-    "I missed it because I did not know its scheduled time had changed.",
-    "I changed the appointment because I could not attend.",
-    "I knew about the change but decided to arrive at the old time.",
-    "The appointment was canceled because nobody attended."
-   ],
-   "a": 0,
-   "node": "past perfect causal paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 6
-  },
-  {
-   "evidenceClass": "MEANING_CONSTRUCTION",
-   "id": "s5h",
-   "q": "Which means the same? “The refund will be issued once the returned item has been inspected.”",
-   "o": [
-    "The money will be returned after the item is checked.",
-    "The item will be inspected only after the money is returned.",
-    "The refund replaces the need to return the item.",
-    "The inspection and refund have both already happened."
-   ],
-   "a": 0,
-   "node": "future passive temporal dependency",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 6
-  },
-  {
-   "evidenceClass": "PRACTICAL_COMPREHENSION",
-   "id": "s6a",
-   "q": "What does this mean? “Although the payment is due Friday, no late fee will be charged until Saturday.”",
-   "o": [
-    "Friday is the last day to pay without a late fee.",
-    "Payment is not accepted on Friday.",
-    "The late fee starts on Friday morning.",
-    "Payment is optional until Saturday."
-   ],
-   "a": 0,
-   "node": "concessive temporal meaning",
-   "competency": "PRACTICAL_COMPREHENSION",
-   "difficulty": 6
-  },
-  {
-   "evidenceClass": "PRACTICAL_COMPREHENSION",
-   "id": "s6b",
-   "q": "Which means the same? “The revised file must be submitted no later than 2 PM.”",
-   "o": [
-    "The changed file must be sent by 2 PM at the latest.",
-    "The original file may be sent any time after 2 PM.",
-    "The file cannot be changed before 2 PM.",
-    "The changed file should be submitted only if 2 PM has passed."
-   ],
-   "a": 0,
-   "node": "formal deadline paraphrase",
-   "competency": "PRACTICAL_COMPREHENSION",
-   "difficulty": 6
-  },
-  {
-   "evidenceClass": "UNSEEN_TRANSFER",
-   "id": "s7a",
-   "q": "What does this mean? “Visitors are required to check in before entering secured areas.”",
-   "o": [
-    "Visitors must check in first.",
-    "Visitors may enter before checking in.",
-    "Only employees can enter secured areas.",
-    "Checking in is optional."
-   ],
-   "a": 0,
-   "node": "formal obligation meaning",
-   "competency": "READING_COMPREHENSION",
-   "difficulty": 6
-  },
-  {
-   "evidenceClass": "UNSEEN_TRANSFER",
-   "id": "s7e",
-   "q": "Which means the same? “Service operates at twenty-minute intervals throughout the morning.”",
-   "o": [
-    "Service runs every twenty minutes during the morning.",
-    "Each service lasts exactly twenty minutes and then stops.",
-    "Service begins twenty minutes after the morning ends.",
-    "Only one service runs during the entire morning."
-   ],
-   "a": 0,
-   "node": "formal interval scope paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 6
-  },
-  {
-   "evidenceClass": "UNSEEN_TRANSFER",
-   "id": "s7f",
-   "q": "What does this mean? “Remote work is permitted only with prior supervisor approval.”",
-   "o": [
-    "You need approval before working remotely.",
-    "Approval can be requested after remote work.",
-    "All employees automatically have approval.",
-    "Remote work is never permitted."
-   ],
-   "a": 0,
-   "node": "restriction and prior condition",
-   "competency": "READING_COMPREHENSION",
-   "difficulty": 6
-  }
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6a","q":"A notice says: “Although payment is due Friday, no late fee will be charged until Saturday.” Which action avoids a late fee?","o":["Pay no later than Friday","Pay any time Saturday","Wait until Sunday","Payment timing does not matter"],"a":0,"node":"concessive temporal condition","competency":"PRACTICAL_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6b","q":"“The revised file must be submitted no later than 2 PM.” What is the latest acceptable submission time?","o":["2 PM","After 2 PM","Only before noon","Any time today"],"a":0,"node":"formal deadline scope","competency":"PRACTICAL_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6c","q":"“The refund will be issued once the returned item has been inspected.” What must happen first?","o":["The returned item must be inspected","The refund must be issued","A replacement must be shipped","The customer must place another order"],"a":0,"node":"temporal dependency","competency":"MEANING_CONSTRUCTION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6d","q":"“Remote work is permitted only with prior supervisor approval.” Which employee may work remotely?","o":["An employee whose supervisor approved it beforehand","Any employee who asks afterward","Every employee automatically","No employee under any circumstance"],"a":0,"node":"restriction and prior condition","competency":"READING_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6e","q":"“Because the material is exceptionally fragile, even minor pressure may damage it.” Which handling instruction follows from this?","o":["Handle it with very little pressure","Press firmly before moving it","Pressure cannot affect it","Only extreme force matters"],"a":0,"node":"degree and modal consequence","competency":"MEANING_CONSTRUCTION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6f","q":"“Service operates at twenty-minute intervals throughout the morning.” A bus leaves at 8:00 AM. If the schedule continues normally, which departure best fits the notice?","o":["8:20 AM","8:05 AM","8:45 AM","9:30 AM only"],"a":0,"node":"interval application","competency":"PRACTICAL_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6g","q":"“Visitors are required to check in before entering secured areas.” A visitor has not checked in yet. What should happen next?","o":["The visitor should check in before entering","The visitor should enter and check in later","The visitor may ignore the rule","The visitor must leave permanently"],"a":0,"node":"formal obligation application","competency":"READING_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6h","q":"“I was unable to attend because the appointment had been moved without my knowledge.” What caused the missed appointment?","o":["The schedule changed and the speaker did not know","The speaker canceled it personally","The appointment never changed","The speaker knew the new time and attended"],"a":0,"node":"past-perfect causal relation","competency":"MEANING_CONSTRUCTION","difficulty":6}
  ],
  "7": [
-  {
-   "evidenceClass": "MEANING_CONSTRUCTION",
-   "id": "s5b",
-   "q": "Which means the same? “The meeting was postponed because the director, who had been expected to attend, became unavailable.”",
-   "o": [
-    "The meeting was moved later because the expected director could not attend.",
-    "The meeting happened earlier because the director unexpectedly arrived.",
-    "The director canceled all future meetings before becoming available.",
-    "The meeting continued as planned despite the director's absence."
-   ],
-   "a": 0,
-   "node": "embedded relative causal paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 7
-  },
-  {
-   "evidenceClass": "MEANING_CONSTRUCTION",
-   "id": "s5e",
-   "q": "Which means the same? “She declined the invitation, although she appreciated being asked.”",
-   "o": [
-    "She was grateful for the invitation but chose not to attend.",
-    "She accepted because she appreciated the invitation.",
-    "She did not receive an invitation.",
-    "She attended without answering the invitation."
-   ],
-   "a": 0,
-   "node": "concessive paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 7
-  },
-  {
-   "evidenceClass": "MEANING_CONSTRUCTION",
-   "id": "s5g",
-   "q": "Which means the same? “The store is temporarily closed while repairs are being completed.”",
-   "o": [
-    "The store is closed for a limited time during repairs.",
-    "The store has closed permanently because repairs failed.",
-    "The store is open only to repair workers forever.",
-    "The repairs were completed before the store closed."
-   ],
-   "a": 0,
-   "node": "temporal passive paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 7
-  },
-  {
-   "evidenceClass": "UNSEEN_TRANSFER",
-   "id": "s7b",
-   "q": "Which means the same? “Although the packaging had been damaged in transit, the item itself appeared to be functioning normally.”",
-   "o": [
-    "The package was damaged during delivery, but the item seemed to work normally.",
-    "The item failed because its packaging looked undamaged.",
-    "Both the package and the item were confirmed to be defective.",
-    "The item worked only after the damaged package was repaired."
-   ],
-   "a": 0,
-   "node": "perfect passive concessive paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 7
-  },
-  {
-   "evidenceClass": "UNSEEN_TRANSFER",
-   "id": "s7c",
-   "q": "Which means the same? “Requests received after 5 PM will not be processed until the following business day.”",
-   "o": [
-    "Late requests are processed on the next business day.",
-    "Every request is processed before 5 PM.",
-    "Requests after 5 PM are rejected.",
-    "Business-day requests are processed immediately."
-   ],
-   "a": 0,
-   "node": "temporal paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 7
-  },
-  {
-   "evidenceClass": "UNSEEN_TRANSFER",
-   "id": "s7g",
-   "q": "Which means the same? “Contact support if the light remains solid rather than flashing.”",
-   "o": [
-    "Call support when the light stays solid.",
-    "Call support whenever the light flashes.",
-    "Restart only when the light is solid.",
-    "A solid light means the device is off."
-   ],
-   "a": 0,
-   "node": "conditional contrast paraphrase",
-   "competency": "MEANING_CONSTRUCTION",
-   "difficulty": 7
-  },
-  {
-   "evidenceClass": "UNSEEN_TRANSFER",
-   "id": "s7h",
-   "q": "Which means the same? “The deadline has been extended to accommodate applicants who were unable to respond within the original timeframe.”",
-   "o": [
-    "Applicants who could not meet the first deadline have been given more time.",
-    "Only applicants who answered early may use the new deadline.",
-    "The original deadline was shortened because applicants responded late.",
-    "Applicants must now respond before the original deadline."
-   ],
-   "a": 0,
-   "node": "formal purpose and relative-clause paraphrase",
-   "competency": "LEXICAL_MEANING",
-   "difficulty": 7
-  },
-  {
-   "evidenceClass": "INTEGRATED_TRANSFER",
-   "id": "s8a",
-   "q": "Which response is grammatically correct and appropriately clear?",
-   "o": [
-    "I do not understand this section of the form. Could you explain what information it requires?",
-    "I do not understand this section of the form. Could you explain what information does it require?",
-    "I am not understanding this section; explain me what requires it.",
-    "I do not understand this section, could you explaining its information?"
-   ],
-   "a": 0,
-   "node": "advanced embedded-question form",
-   "competency": "SENTENCE_FORM",
-   "difficulty": 7
-  }
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7a","q":"A rule says, “Requests received after 5 PM are processed the following business day.” A request arrives at 5:20 PM Monday. When should it normally be processed?","o":["Tuesday","Monday before 5 PM","Immediately at 5:20 PM","The following weekend"],"a":0,"node":"temporal rule transfer","competency":"PRACTICAL_APPLICATION","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7b","q":"A device guide says, “Contact support if the light remains solid rather than flashing.” The light flashes for a minute and then stays solid. What should the user do?","o":["Contact support","Ignore the solid light","Contact support only while it flashes","Assume the device is off"],"a":0,"node":"conditional contrast transfer","competency":"PRACTICAL_APPLICATION","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7c","q":"The deadline was extended for applicants who could not respond in the original timeframe. Which new situation follows the same principle?","o":["A school gives extra time to students affected by a system outage","A store closes early because sales are high","A meeting begins sooner because everyone arrived","A fee increases for people who paid early"],"a":0,"node":"purpose relation transfer","competency":"MEANING_TRANSFER","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7d","q":"Choose the clearest repair: “Could you explain what information does this section require?”","o":["Could you explain what information this section requires?","Could you explain what does require this section?","Explain me what information requires this section.","Could you explaining this section requires what?"],"a":0,"node":"embedded-question repair","competency":"SENTENCE_FORM","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7e","q":"A package was damaged during delivery, but the product appears to work normally. Which response preserves both facts without claiming more evidence than you have?","o":["The package was damaged, but the product appears to be working normally.","The product is definitely undamaged because it turned on.","Both the package and product are defective.","The delivery caused no damage of any kind."],"a":0,"node":"evidence-bounded concessive transfer","competency":"MEANING_TRANSFER","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7f","q":"A notice says a store is temporarily closed while repairs are completed. Which customer message applies that information accurately?","o":["The store is closed for now and should reopen after the repairs.","The store has permanently closed.","The store is open to everyone during repairs.","The repairs were canceled because the store reopened."],"a":0,"node":"temporary-state application","competency":"PRACTICAL_APPLICATION","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7g","q":"“She declined the invitation, although she appreciated being asked.” Which new sentence uses the same contrast relationship?","o":["He rejected the offer, even though he was grateful to receive it.","He accepted the offer because he wanted it.","He never received the offer.","He rejected the offer before anyone made it."],"a":0,"node":"concessive relation transfer","competency":"MEANING_TRANSFER","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7h","q":"A meeting was postponed because an expected director became unavailable. Which message communicates the same causal structure in a new situation?","o":["The inspection was delayed because the specialist who was expected to attend became unavailable.","The inspection happened early because the specialist arrived.","The specialist attended after the completed inspection.","The inspection and specialist were unrelated."],"a":0,"node":"embedded causal transfer","competency":"MEANING_TRANSFER","difficulty":7}
  ],
- "8": [
+
+};
+
+const CAPSTONE_BANK=[
   {
    "evidenceClass": "UNSEEN_TRANSFER",
    "id": "s7d",
@@ -1377,8 +1164,7 @@ const BANK={
    "competency": "MEANING_CONSTRUCTION",
    "difficulty": 8
   }
- ]
-};
+];
 
 const EDUCATION_STATE_KEY="dgb.education.phase1.v1";
 let learner={target_language:"English"}, probeStage=2, probeHistory=[], placementEvidence=[], currentQuestionIndex=0, currentSet=[], currentSetScore=0, finalIndependence=null, mixedAnchor=null, adaptiveState=null, teachingState=null;
@@ -1414,7 +1200,7 @@ const EDUCATION_ARCHITECTURE=[
  {id:"placement",label:"Independence",title:"Start at Demonstrated Ability",question:"How does the system decide where this learner begins?",summary:"Self-report chooses the initial test neighborhood. Demonstrated performance resolves the actual competency boundary and support state.",stories:[
   {title:"Claim vs evidence",reading:"You tell the system where you think you are, but the test is allowed to disagree with you.",engineering:"SELF_REPORT → PROVISIONAL_TEST_ENTRY → ADAPTIVE_DIAGNOSTIC → VERIFIED_PLACEMENT.",evidence:"Claimed ability remains separate from observed performance.",boundary:"Self-report never becomes placement authority."},
   {title:"Adaptive probing",reading:"If the first questions are too easy, the test moves up. If they are too hard, it moves down.",engineering:"Strong performance probes upward; weak performance probes downward; mixed evidence requires an adjacent probe before a stable boundary is resolved.",evidence:"Probe history, placement score, assistance, and confidence remain visible.",boundary:"Screen count and elapsed time cannot determine placement."},
-  {title:"Independence vs demo entry",reading:"If you test above what the demo can teach, the system should say so instead of pretending you belong at a lower level.",engineering:"VERIFIED_PLACEMENT and DEMO_ENTRY_POINT are distinct state fields. ABOVE_PHASE_1 is a valid verified result.",evidence:"The verified result survives entry into an advanced Phase 1 demonstration.",boundary:"Demo range may be narrower than verified placement range."}
+  {title:"Independence vs demo entry",reading:"If you test above what the demo can teach, the system should say so instead of pretending you belong at a lower level.",engineering:"VERIFIED_PLACEMENT and DEMO_ENTRY_POINT are distinct state fields. UPPER_PROGRAM_PLACEMENT_BOUNDARY_EXCEEDED is a valid verified result.",evidence:"The verified result survives entry into an advanced Phase 1 demonstration.",boundary:"Demo range may be narrower than verified placement range."}
  ]},
  {id:"evidence",label:"Achievement",title:"What the Program Can Claim",question:"What is measured, what is established, and what remains outside scope?",summary:"The evidence model separates trained from transfer, direct from productive, assisted from unassisted, and architecture evidence from human learning evidence.",stories:[
   {title:"Measurement separation",reading:"The program should know the difference between getting help, recalling directly, constructing an answer, and transferring learning to something new.",engineering:"Event evidence preserves trained/transfer, direct/productive, assisted/unassisted, support level, retry burden, hint dependence, latency, and retention signals.",evidence:"Progress checks keep these different kinds of performance separate so one score does not hide how learning happened.",boundary:"A high aggregate score cannot erase how the answer was produced."},
@@ -1549,14 +1335,14 @@ function beginIndependence(){
  if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
  qs("#intake-validation").textContent="";
  learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
- probeStage=Math.max(1,Math.min(8,claimed));probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};
+ probeStage=Math.max(1,Math.min(7,claimed));probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};
  setStage("test");saveEducationState({stage:"test"});startAdaptiveItem(probeStage,0);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
 }
 qs("#begin-placement").addEventListener("click",beginIndependence);
 
 function startAdaptiveItem(stage,itemIndex=0){
- probeStage=Math.max(1,Math.min(8,stage));
- const bank=BANK[probeStage]||BANK[8];
+ probeStage=Math.max(1,Math.min(7,stage));
+ const bank=BANK[probeStage]||BANK[7];
  adaptiveState.usedItems=adaptiveState.usedItems||[];
  let index=bank.findIndex((x,i)=>i>=itemIndex&&!adaptiveState.usedItems.includes(x.id));
  if(index<0)index=bank.findIndex(x=>!adaptiveState.usedItems.includes(x.id));
@@ -1607,7 +1393,7 @@ function submitAdaptiveAnswer(){
  if(unique>=2&&ratio===1){
    adaptiveState.highestSustainableDifficulty=Math.max(adaptiveState.highestSustainableDifficulty??0,probeStage);
    if(resolveBracket())return;
-   if(probeStage===8){if(unique>=5){resolveAdaptiveBoundary("ABOVE");return}}
+   if(probeStage===7){if(unique>=5){startCapstone();return}}
    else {startAdaptiveItem(probeStage+1,0);return}
  }
  if(unique>=2&&ratio===0){
@@ -1620,7 +1406,7 @@ function submitAdaptiveAnswer(){
    if(ratio>=.8&&bucket.unassistedCorrect>=4){
      adaptiveState.highestSustainableDifficulty=Math.max(adaptiveState.highestSustainableDifficulty??0,probeStage);
      if(resolveBracket())return;
-     if(probeStage===8){resolveAdaptiveBoundary("ABOVE");return}
+     if(probeStage===7){startCapstone();return}
      startAdaptiveItem(probeStage+1,0);return;
    }
    if(ratio<=.4){
@@ -1634,17 +1420,31 @@ function submitAdaptiveAnswer(){
  if(unique>=8){resolveAdaptiveBoundary("UNCERTAIN");return}
  startAdaptiveItem(probeStage,(adaptiveState.itemIndex+1)%BANK[probeStage].length);
 }
+function buildPlacementResult(band,kind="RESOLVED"){
+ const coord=placementCoordinate(band),phase=coord?PROGRAM_PHASES[coord.phase]:null;
+ return {result_kind:kind,diagnostic_position:band?"D"+band:null,diagnostic_band:band||null,program_phase:phase?.id||null,program_phase_name:phase?.name||null,phase_position:coord?.position||null,transition_to:coord?.transitionTo?PROGRAM_PHASES[coord.transitionTo].id:null,entry_position:band?"D"+band:null,placement_confidence:null,curriculum_availability:phase?.availability||"NOT_CURRENTLY_AVAILABLE",access_status:phase?.access||"NOT_AVAILABLE",support_state:band?supportCycle(1):"BOUNDARY_REVIEW",demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
+}
 function resolveAdaptiveBoundary(result){
- if(result==="UNCERTAIN"){
-   finalIndependence={verified_placement:"UNCERTAIN_BOUNDARY",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:"BOUNDARY_REVIEW",support_dependence:"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:null,label:"Boundary needs more evidence"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
- }else if(result==="ABOVE"){
-   finalIndependence={verified_placement:"ABOVE_PHASE_1",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:supportCycle(1),support_dependence:"UNASSISTED_IN_THIS_DEMO",placement_range:"ABOVE_PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
- }else{
-   const stage=Math.max(1,Math.min(8,Number(result)||probeStage));
-   const stageEvidence=placementEvidence.filter(x=>x.stage===stage), correct=stageEvidence.filter(x=>x.correct).length;
-   finalIndependence={verified_placement:stage,verified_stage:"P1S"+stage,verified_competency_position:null,demonstrated_nodes:correct,unresolved_nodes:stageEvidence.length-correct,support_cycle:supportCycle(stageEvidence.length?correct/stageEvidence.length:0),support_dependence:"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S"+stage,label:STAGES[stage-1].name},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
- }
+ if(result==="UNCERTAIN") finalIndependence=buildPlacementResult(null,"UNCERTAIN_BOUNDARY");
+ else finalIndependence=buildPlacementResult(Math.max(1,Math.min(7,Number(result)||probeStage)));
  saveEducationState({stage:"result"});renderIndependence();
+}
+function startCapstone(){
+ adaptiveState.capstone={itemIndex:0,correct:0,total:0};saveEducationState({stage:"test"});renderCapstoneItem();
+}
+function renderCapstoneItem(){
+ const c=adaptiveState.capstone,item=CAPSTONE_BANK[c.itemIndex],gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;
+ qs("#placement-heading").textContent="Capstone integration check";
+ qs("#placement-copy").textContent="You established the upper ordinary placement boundary. These final questions check integrated written English.";
+ const order=[0,1,2,3].sort((a,b)=>stableOptionRank("capstone-"+item.id,a)-stableOptionRank("capstone-"+item.id,b));
+ qs("#question-host").innerHTML='<article class="question-card"><h3 lang="en">'+item.q+'</h3><div class="options">'+order.map(i=>'<label class="option"><input type="radio" name="capstone-answer" value="'+i+'"><span lang="en">'+item.o[i]+'</span></label>').join("")+'</div><div class="button-row"><button class="button" type="button" id="submit-capstone">'+escapeEducationHTML(gateT.continue)+'</button></div></article>';
+ qs("#submit-capstone").addEventListener("click",submitCapstoneAnswer);
+}
+function submitCapstoneAnswer(){
+ const chosen=qs('input[name="capstone-answer"]:checked');if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
+ const c=adaptiveState.capstone,item=CAPSTONE_BANK[c.itemIndex];c.total++;if(Number(chosen.value)===item.a)c.correct++;placementEvidence.push({stage:"CAPSTONE",difficulty:"CAPSTONE",itemId:item.id,node:item.node,competency:item.competency,evidenceClass:item.evidenceClass,correct:Number(chosen.value)===item.a,fresh:true});
+ c.itemIndex++;if(c.itemIndex<5){saveEducationState({stage:"test"});renderCapstoneItem();return}
+ const pass=c.correct>=4;finalIndependence=buildPlacementResult(7,pass?"CAPSTONE_PASS":"CAPSTONE_NOT_ESTABLISHED");if(pass){finalIndependence.program_phase="UPPER_PROGRAM_PLACEMENT_BOUNDARY_EXCEEDED";finalIndependence.program_phase_name="Upper program placement boundary exceeded";finalIndependence.phase_position="UPPER_BOUNDARY";finalIndependence.curriculum_availability="NOT_CURRENTLY_AVAILABLE";finalIndependence.access_status="NOT_AVAILABLE";finalIndependence.entry_position=null}saveEducationState({stage:"result"});renderIndependence();
 }
 function supportCycle(score){
  if(score>=.9)return "TARGET_ONLY";
@@ -1652,44 +1452,13 @@ function supportCycle(score){
  if(score>=.5)return "BILINGUAL_BRIDGED";
  return "NATIVE_SUPPORTED";
 }
-function resolveIndependence(lastScore,resolvedStageOverride=null){
- const current=resolvedStageOverride===null
-   ? probeHistory[probeHistory.length-1]
-   : [...probeHistory].reverse().find(x=>x.stage===resolvedStageOverride) || probeHistory[probeHistory.length-1];
- const above=current.stage===8 && current.score>=.84;
- const verifiedStage=above?"ABOVE_PHASE_1":current.stage;
- const demonstrated=current.correct, unresolved=Math.max(0,current.total-current.correct);
- const cycle=supportCycle(current.score);
- const entry=above?{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"}:{stage:"P1S"+current.stage,label:STAGES[current.stage-1].name};
- finalIndependence={
-  verified_placement:verifiedStage,
-  verified_stage:above?null:"P1S"+current.stage,
-  verified_competency_position:above?"ABOVE_PHASE_1":null,
-  demonstrated_nodes:demonstrated,
-  unresolved_nodes:unresolved,
-  support_cycle:cycle,
-  support_dependence:"UNASSISTED_IN_THIS_DEMO",
-  placement_score:Math.round(current.score*100),
-  placement_confidence:null,
-  placement_range:above?"ABOVE_PHASE_1":"PHASE_1",
-  demo_range:"PHASE_1_ONLY",
-  demo_entry_point:entry,
-  probe_history:probeHistory,
-  placement_evidence:placementEvidence,
-  claimed_level:learner.claimed_level
- };
- saveEducationState({stage:"result"});renderIndependence();
-}
 function renderIndependence(){
- setStage("result");
- const p=finalIndependence,above=p.verified_placement==="ABOVE_PHASE_1",uncertain=p.verified_placement==="UNCERTAIN_BOUNDARY";
- const resolvedStageNumber=above?8:uncertain?null:Number(String(p.verified_stage||"P1S1").replace("P1S",""));
- const startName=above?"Advanced English":uncertain?"We need a little more information":STAGES[resolvedStageNumber-1].name;
- const message=above?"You completed the hardest questions in this placement.":uncertain?"Your answers were mixed near the boundary. A short follow-up check will give you a better starting point.":"This is the level where your learning path should begin.";
- qs("#placement-result").innerHTML=
- '<div class="result-grid">'+
- '<article class="result-hero"><span class="eyebrow">Your starting point</span><strong>'+startName+'</strong><span class="result-note">'+message+'</span></article>'+
- '<article class="result-hero"><span class="eyebrow">What happens next</span><strong>'+(uncertain?"Check a few more answers":"Start learning")+'</strong><span class="result-note">'+(uncertain?"We will stay near this level instead of guessing.":"You will begin with English matched to this level and move forward as you demonstrate it.")+'</span></article></div>';
+ setStage("result");const p=finalIndependence,uncertain=p.result_kind==="UNCERTAIN_BOUNDARY",cap=p.result_kind==="CAPSTONE_PASS";
+ const title=uncertain?"We need a little more information":cap?"Upper placement boundary exceeded":p.program_phase_name+(p.phase_position==="TRANSITION"?" · transition":"");
+ const message=uncertain?"Your answers were mixed near the boundary. Continue placement so we do not guess.":cap?"You demonstrated integrated written English beyond the ordinary D1–D7 placement range.":p.phase_position==="TRANSITION"?"Your demonstrated position sits between two program phases.":"Your demonstrated placement maps here in the four-phase program.";
+ const availability=uncertain?"Placement is not resolved yet.":p.curriculum_availability==="PUBLIC_AVAILABLE"?"This curriculum is currently public and available.":"Your placement is preserved, but this curriculum is not currently available.";
+ qs("#placement-result").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Your placement</span><strong>'+escapeEducationHTML(title)+'</strong><span class="result-note">'+escapeEducationHTML(message)+'</span></article><article class="result-hero"><span class="eyebrow">Availability</span><strong>'+escapeEducationHTML(p.curriculum_availability||"PENDING")+'</strong><span class="result-note">'+escapeEducationHTML(availability)+'</span></article></div>';
+ qs("#enter-demo").hidden=uncertain||cap||p.curriculum_availability!=="PUBLIC_AVAILABLE"||p.access_status!=="FREE_PUBLIC";
 }
 const TEACHING_UNITS=[
  {target:"Use am with I.",example:"I am ready.",prompt:"Choose the correct sentence.",options:["I ready.","I am ready.","Am I ready."],answer:1,remediation:"With I, use am before the describing word.",next:"Build another simple sentence."},
@@ -1703,7 +1472,7 @@ const TEACHING_UNITS=[
 ];
 function teachingLocale(){return ({en:{learn:"Learn",practice:"Practice",check:"Check",retry:"Try again",correct:"Correct. Continue.",next:"Next lesson"},es:{learn:"Aprende",practice:"Practica",check:"Comprobar",retry:"Inténtalo de nuevo",correct:"Correcto. Continúa.",next:"Siguiente lección"},zh:{learn:"学习",practice:"练习",check:"检查",retry:"再试一次",correct:"正确。继续。",next:"下一课"}}[helpLanguage]||null)||{learn:"Learn",practice:"Practice",check:"Check",retry:"Try again",correct:"Correct. Continue.",next:"Next lesson"}}
 function renderTeaching(){
- const host=qs("#entry-state"),t=teachingLocale(),u=TEACHING_UNITS[teachingState.level-1],name=STAGES[teachingState.level-1].name;
+ const host=qs("#entry-state"),t=teachingLocale(),u=TEACHING_UNITS[teachingState.level-1],name="Phase 1 · Receive";
  host.innerHTML='<article class="question-card" data-teaching-runtime><span class="eyebrow">'+escapeEducationHTML(name)+'</span><h3>'+escapeEducationHTML(t.learn)+'</h3><p lang="en"><strong>'+escapeEducationHTML(u.target)+'</strong> '+escapeEducationHTML(u.example)+'</p><h3>'+escapeEducationHTML(t.practice)+'</h3><p lang="en">'+escapeEducationHTML(u.prompt)+'</p><div class="options">'+u.options.map((x,i)=>'<label class="option"><input type="radio" name="teaching-answer" value="'+i+'"><span lang="en">'+escapeEducationHTML(x)+'</span></label>').join("")+'</div><div class="button-row"><button class="button" id="check-teaching" type="button">'+escapeEducationHTML(t.check)+'</button></div><div id="teaching-feedback" class="result-note" aria-live="polite"></div></article>';
  qs("#check-teaching").addEventListener("click",checkTeaching);
  saveEducationState({stage:"entry"});
@@ -1714,13 +1483,14 @@ function checkTeaching(){
  if(Number(chosen.value)!==u.answer){teachingState.attempts++;teachingState.remediationShown=true;feedback.innerHTML='<strong>'+escapeEducationHTML(t.retry)+'</strong> '+escapeEducationHTML(u.remediation);saveEducationState({stage:"entry"});return}
  teachingState.completed=teachingState.completed||[];if(!teachingState.completed.includes(teachingState.level))teachingState.completed.push(teachingState.level);
  feedback.innerHTML='<strong>'+escapeEducationHTML(t.correct)+'</strong> '+escapeEducationHTML(u.next)+' <button class="button-secondary" type="button" id="next-teaching">'+escapeEducationHTML(t.next)+'</button>';
- qs("#next-teaching").addEventListener("click",()=>{teachingState.level=Math.min(8,teachingState.level+1);teachingState.attempts=0;teachingState.remediationShown=false;renderTeaching()});saveEducationState({stage:"entry"});
+ qs("#next-teaching").addEventListener("click",()=>{teachingState.level=Math.min(TEACHING_UNITS.length,teachingState.level+1);teachingState.attempts=0;teachingState.remediationShown=false;renderTeaching()});saveEducationState({stage:"entry"});
 }
 function enterDemo(){
- setStage("entry");const p=finalIndependence,above=p.verified_placement==="ABOVE_PHASE_1",uncertain=p.verified_placement==="UNCERTAIN_BOUNDARY";
- if(uncertain){qs("#entry-title").textContent="Confirm your starting point";qs("#entry-state").innerHTML='<article class="result-hero"><strong>Continue placement</strong><span class="result-note">Your answers were mixed. Continue near this level so we can place you without guessing.</span><button class="button" type="button" id="continue-boundary">Continue placement</button></article>';qs("#continue-boundary").addEventListener("click",()=>{setStage("test");startAdaptiveItem(probeStage,adaptiveState?.itemIndex||0)});saveEducationState({stage:"entry"});return}
- const stage=above?8:Number(String(p.verified_stage||"P1S1").replace("P1S",""));if(!teachingState||!Number.isInteger(teachingState.level))teachingState={level:stage,attempts:0,remediationShown:false,completed:[]};
- qs("#entry-title").textContent="Your learning path starts here";renderTeaching();
+ setStage("entry");const p=finalIndependence;
+ if(p.result_kind==="UNCERTAIN_BOUNDARY"){qs("#entry-title").textContent="Confirm your starting point";qs("#entry-state").innerHTML='<article class="result-hero"><strong>Continue placement</strong><button class="button" type="button" id="continue-boundary">Continue placement</button></article>';qs("#continue-boundary").addEventListener("click",()=>{setStage("test");startAdaptiveItem(probeStage,adaptiveState?.itemIndex||0)});return}
+ if(p.curriculum_availability!=="PUBLIC_AVAILABLE"||p.access_status!=="FREE_PUBLIC"){qs("#entry-title").textContent="Your placement is preserved";qs("#entry-state").innerHTML='<article class="result-hero"><strong>'+escapeEducationHTML(p.program_phase_name||"Placement complete")+'</strong><span class="result-note">This curriculum is not currently available. Your placement has not been lowered.</span></article>';return}
+ if(!teachingState||!Number.isInteger(teachingState.level))teachingState={level:1,attempts:0,remediationShown:false,completed:[]};
+ qs("#entry-title").textContent="Phase 1 · Receive";renderTeaching();
 }
 qs("#enter-demo").addEventListener("click",enterDemo);
 qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState=null});

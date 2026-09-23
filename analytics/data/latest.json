@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-22T23:27:09Z",
+  "generatedAt": "2026-09-23T01:03:36Z",
   "window30d": {
-    "start": "2026-08-23T23:27:09Z",
-    "end": "2026-09-22T23:27:09Z"
+    "start": "2026-08-24T01:03:36Z",
+    "end": "2026-09-23T01:03:36Z"
   },
   "daily": [
-    {
-      "date": "2026-08-24",
-      "pageLoads": 370
-    },
     {
       "date": "2026-08-25",
       "pageLoads": 290
@@ -100,7 +96,7 @@
     },
     {
       "date": "2026-09-16",
-      "pageLoads": 191
+      "pageLoads": 189
     },
     {
       "date": "2026-09-17",
@@ -124,13 +120,17 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 271
+      "pageLoads": 278
+    },
+    {
+      "date": "2026-09-23",
+      "pageLoads": 5
     }
   ],
   "summary": {
-    "pageLoads": 7230,
-    "botPageLoads": 2530,
-    "nonBotPageLoads": 4700
+    "pageLoads": 7220,
+    "botPageLoads": 2529,
+    "nonBotPageLoads": 4691
   },
   "referrers": [
     {
@@ -145,8 +145,8 @@
     },
     {
       "host": "www.google.com",
-      "pageLoads": 640,
-      "visits": 640
+      "pageLoads": 630,
+      "visits": 630
     },
     {
       "host": "bing.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1881,
-      "visits": 1616
+      "pageLoads": 1865,
+      "visits": 1600
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 969,
-      "visits": 633
+      "pageLoads": 959,
+      "visits": 632
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 785,
-      "visits": 785
+      "pageLoads": 789,
+      "visits": 789
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,8 +197,13 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 274,
-      "visits": 94
+      "pageLoads": 276,
+      "visits": 93
+    },
+    {
+      "path": "/products/education/",
+      "pageLoads": 191,
+      "visits": 77
     },
     {
       "path": "/evidence/agentic-frontier/",
@@ -206,13 +211,8 @@
       "visits": 30
     },
     {
-      "path": "/products/education/",
-      "pageLoads": 183,
-      "visits": 73
-    },
-    {
       "path": "/index.html",
-      "pageLoads": 142,
+      "pageLoads": 143,
       "visits": 0
     }
   ],

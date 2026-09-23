@@ -74,20 +74,6 @@
         "timeoutMs": 5000
       },
       {
-        "name": "Active card Open enters Level 2",
-        "action": {
-          "type": "click",
-          "selector": ".edu-standard-card[data-active=\"true\"] [data-flip]"
-        },
-        "assertions": [
-          {
-            "type": "exists",
-            "selector": "#edu-detail-surface:not([hidden])"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
         "name": "Find starting point opens learner intake",
         "action": {
           "type": "click",

@@ -1,0 +1,44 @@
+name: Education Program-Wide Placement Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify program-wide placement ontology
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const a=s.indexOf('const BANK='),b=s.indexOf('const CAPSTONE_BANK=',a),BANK=Function(s.slice(a,b)+';return BANK')();
+          const ca=s.indexOf('const CAPSTONE_BANK='),cb=s.indexOf('const EDUCATION_STATE_KEY=',ca),CAPSTONE_BANK=Function(s.slice(ca,cb)+';return CAPSTONE_BANK')();
+          const flat=Object.values(BANK).flat();
+          if(flat.length!==56)throw Error('ordinary bank cardinality '+flat.length);
+          for(let d=1;d<=7;d++)if(BANK[d]?.length!==8||BANK[d].some(x=>x.difficulty!==d))throw Error('diagnostic bank '+d);
+          if(BANK[8])throw Error('scalar D8 still present');
+          if(!Array.isArray(CAPSTONE_BANK)||CAPSTONE_BANK.length!==8)throw Error('capstone cardinality');
+          for(const bad of ['P1S1','P1S8','PHASE_1_ONLY','ABOVE_PHASE_1'])if(s.includes(bad))throw Error('legacy ontology '+bad);
+          for(const good of ['const DIAGNOSTIC_BANDS=','const PROGRAM_PHASES=','function placementCoordinate','function startCapstone','CAPSTONE_PASS','CAPSTONE_NOT_ESTABLISHED','UPPER_PROGRAM_PLACEMENT_BOUNDARY_EXCEEDED','PUBLIC_AVAILABLE','NOT_CURRENTLY_AVAILABLE','FREE_PUBLIC','NOT_AVAILABLE','data-placement-range="program-wide"','data-client-local-persistence="true"','data-server-persistence="false"'])if(!s.includes(good))throw Error('missing '+good);
+          if(!s.includes('if(probeStage===7){if(unique>=5){startCapstone();return}}'))throw Error('D7 capstone admission missing');
+          if(!s.includes('finalIndependence=buildPlacementResult(7,pass?"CAPSTONE_PASS":"CAPSTONE_NOT_ESTABLISHED")'))throw Error('capstone preserves D7');
+          const expected={1:[1,'ESTABLISHED'],2:[1,'TRANSITION'],3:[2,'ESTABLISHED'],4:[2,'TRANSITION'],5:[3,'ESTABLISHED'],6:[3,'TRANSITION'],7:[4,'ESTABLISHED']};
+          const p0=s.indexOf('function placementCoordinate'),p1=s.indexOf('const BANK=',p0),placementCoordinate=Function(s.slice(p0,p1)+';return placementCoordinate')();
+          for(const [d,[phase,pos]] of Object.entries(expected)){const x=placementCoordinate(+d);if(x.phase!==phase||x.position!==pos)throw Error('crosswalk D'+d)}
+          console.log('EDUCATION_PROGRAM_WIDE_PLACEMENT_QUALIFICATION=PASS');
+          NODE

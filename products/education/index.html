@@ -402,86 +402,982 @@ const STAGES=[
 ];
 
 const BANK={
-1:[
- {evidenceClass:"DIRECT_RECOGNITION",id:"s1a",q:"Which word names a person?",o:["table","teacher","blue","quickly"],a:1,node:"elementary noun meaning"},
- {evidenceClass:"DIRECT_RECOGNITION",id:"s1b",q:"Choose the word for a place where you live.",o:["home","eat","red","slow"],a:0,node:"basic place concept"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s1c",q:"A sign says “STOP.” What should you do?",o:["Keep going","Stop","Run","Sleep"],a:1,node:"basic sign meaning"},
- {evidenceClass:"DIRECT_RECOGNITION",id:"s1d",q:"Which word means the opposite of “yes”?",o:["no","day","big","go"],a:0,node:"elementary contrast"},
- {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s1e",q:"Which is a complete simple sentence?",o:["I am Sam.","Am Sam I.","I Sam am?","Sam I."],a:0,node:"simple sentence recognition"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s1f",q:"Someone asks “What is your name?” What information should you give?",o:["Your name","Your age only","The weather","A color"],a:0,node:"basic personal response"},
- {evidenceClass:"DIRECT_RECOGNITION",id:"s1g",q:"Which word is a number?",o:["three","tree","free","green"],a:0,node:"elementary numeration"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s1h",q:"A door says “OPEN.” What does that tell you?",o:["The door can be opened","It is a phone","It is food","It gives your age"],a:0,node:"basic functional word"}
-],
-2:[
-{evidenceClass:"DIRECT_RECOGNITION",id:"s2a",q:"Choose the best meaning of “borrow.”",o:["Give something away forever","Use something and return it","Buy something cheaply","Break something"],a:1,node:"everyday concept"},
-{evidenceClass:"DIRECT_RECOGNITION",id:"s2b",q:"Which sentence uses “before” correctly?",o:["I before dinner ate.","Wash your hands before dinner.","Before means after.","Dinner before because."],a:1,node:"time relation"},
-{evidenceClass:"PRACTICAL_COMPREHENSION",id:"s2c",q:"A form asks for your address. What information belongs there?",o:["Where you live","Your favorite food","Your job title only","A password"],a:0,node:"practical concept"},
- {evidenceClass:"DIRECT_RECOGNITION",id:"s2d",q:"What does “empty” mean?",o:["Containing nothing","Very loud","Moving fast","Very expensive"],a:0,node:"everyday adjective"},
- {evidenceClass:"DIRECT_RECOGNITION",id:"s2e",q:"Which word best matches “begin”?",o:["start","finish","lose","sleep"],a:0,node:"common synonym"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s2f",q:"A label says “Keep dry.” What should you avoid?",o:["Water","Light","A chair","A number"],a:0,node:"simple instruction"},
- {evidenceClass:"DIRECT_RECOGNITION",id:"s2g",q:"Which sentence correctly shows “after”?",o:["We ate after the movie.","After means before.","We after ate movie.","Movie ate after."],a:0,node:"time relation transfer"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s2h",q:"A message says “Call me tonight.” What action is requested?",o:["Make a phone call tonight","Send food","Visit yesterday","Write an address"],a:0,node:"everyday instruction"}
-],
-3:[
-{evidenceClass:"PRODUCTIVE_FORM",id:"s3a",q:"Choose the correct form: “I am ___ tired today.”",o:["feel","feels","feeling","felted"],a:2,node:"progressive form in context"},
-{evidenceClass:"PRODUCTIVE_FORM",id:"s3b",q:"Which word correctly describes a person who works?",o:["worker","workedly","workness","workful"],a:0,node:"derivational form"},
-{evidenceClass:"PRODUCTIVE_FORM",id:"s3c",q:"Complete: “She is ___ the message now.”",o:["read","reads","reading","reader"],a:2,node:"-ing form"},
- {evidenceClass:"PRODUCTIVE_FORM",id:"s3d",q:"Complete: “Yesterday we ___ home.”",o:["walk","walked","walking","walker"],a:1,node:"regular past form"},
- {evidenceClass:"PRODUCTIVE_FORM",id:"s3e",q:"Choose the correct form: “He ___ every morning.”",o:["run","runs","running","runner"],a:1,node:"third-person present"},
- {evidenceClass:"PRODUCTIVE_FORM",id:"s3f",q:"Which word names a person who teaches?",o:["teacher","teachingly","teachness","teached"],a:0,node:"agent noun"},
- {evidenceClass:"PRODUCTIVE_FORM",id:"s3g",q:"Complete: “They are ___ dinner.”",o:["cook","cooks","cooking","cookedly"],a:2,node:"progressive verb"},
- {evidenceClass:"PRODUCTIVE_FORM",id:"s3h",q:"Complete: “We ___ the game last night.”",o:["played","play","playing","player"],a:0,node:"past tense context"}
-],
-4:[
-{evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4a",q:"Choose the clearest sentence.",o:["Tomorrow I go school.","I will go to school tomorrow.","School tomorrow go I.","I tomorrow school is."],a:1,node:"sentence order"},
-{evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4b",q:"Which sentence expresses quantity correctly?",o:["I need three bottle water.","I need three bottles of water.","I need third water bottle.","I water three."],a:1,node:"grammar + numeration"},
-{evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4c",q:"Choose the sentence that clearly asks for help.",o:["Can you help me with this form?","You help form this can.","Form help maybe.","This form are help."],a:0,node:"functional sentence"},
- {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4d",q:"Choose the clearest question.",o:["Where is the station?","Station where the is?","Where station is the.","The station where?"],a:0,node:"question order"},
- {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4e",q:"Which sentence correctly describes yesterday?",o:["I visited my friend yesterday.","Yesterday I visit my friend tomorrow.","I friend yesterday visiting.","Visited yesterday friend I."],a:0,node:"time + sentence structure"},
- {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4f",q:"Choose the sentence with a clear reason.",o:["I stayed home because I was sick.","Because sick home I.","I because stayed sick.","Home was because."],a:0,node:"cause construction"},
- {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4g",q:"Which sentence makes a polite request?",o:["Could you open the window, please?","Window open you.","You window now.","Opening could window."],a:0,node:"polite request"},
- {evidenceClass:"SENTENCE_CONSTRUCTION",id:"s4h",q:"Choose the sentence that clearly compares two things.",o:["This bag is heavier than that one.","This bag heavy that.","Heavier bag than is.","That one this heavier."],a:0,node:"comparison construction"}
-],
-5:[
-{evidenceClass:"MEANING_CONSTRUCTION",id:"s5a",q:"You do not know the word “umbrella.” Which explanation best builds the meaning?",o:["A thing you hold over your head when it rains","A thing for eating soup","A place where cars sleep","A person who teaches math"],a:0,node:"controlled composition"},
-{evidenceClass:"MEANING_CONSTRUCTION",id:"s5b",q:"Which sentence best paraphrases “The meeting was postponed”?",o:["The meeting was moved to a later time.","The meeting became louder.","The meeting was very short.","The meeting happened twice."],a:0,node:"semantic paraphrase"},
-{evidenceClass:"MEANING_CONSTRUCTION",id:"s5c",q:"You forget the word “pharmacy.” Which description communicates the idea?",o:["A place where you get medicine","A place where you repair shoes","A person who drives a bus","A type of weather"],a:0,node:"meaning construction"},
- {evidenceClass:"MEANING_CONSTRUCTION",id:"s5d",q:"Which best explains “fragile” without using that word?",o:["Easy to break","Easy to hear","Full of water","Very old"],a:0,node:"descriptive paraphrase"},
- {evidenceClass:"MEANING_CONSTRUCTION",id:"s5e",q:"Paraphrase “She declined the invitation.”",o:["She said she would not attend.","She sent two invitations.","She arrived early.","She forgot the date."],a:0,node:"meaning-preserving paraphrase"},
- {evidenceClass:"MEANING_CONSTRUCTION",id:"s5f",q:"You forget “appointment.” Which explanation communicates it?",o:["A planned time to meet someone","A kind of sandwich","A road sign","A payment card"],a:0,node:"concept construction"},
- {evidenceClass:"MEANING_CONSTRUCTION",id:"s5g",q:"Which preserves “The store is temporarily closed”?",o:["The store is closed for a limited time.","The store will never open again.","The store moved yesterday.","The store is crowded."],a:0,node:"semantic equivalence"},
- {evidenceClass:"MEANING_CONSTRUCTION",id:"s5h",q:"Which explanation best communicates “refund”?",o:["Money returned after a purchase","A price increase","A store entrance","A written greeting"],a:0,node:"functional concept construction"}
-],
-6:[
-{evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6a",q:"A notice says: “Payment is due Friday. A late fee begins Saturday.” What should you do to avoid the fee?",o:["Pay by Friday","Wait until Saturday","Ignore the notice","Pay next month"],a:0,node:"practical reading"},
-{evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6b",q:"Your manager writes: “Please send the revised file before 2 PM.” What is the required action?",o:["Delete the file","Send the revised file before 2 PM","Call after 2 PM","Wait for another message"],a:1,node:"instruction response"},
-{evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6c",q:"A sign says: “Entrance closed. Use the west door.” What should you do?",o:["Wait at the closed entrance","Use the west door","Go home immediately","Call the police"],a:1,node:"context response"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6d",q:"An email says: “Bring photo ID to your appointment.” What should you bring?",o:["Photo identification","Cash only","A meal","A book"],a:0,node:"appointment instruction"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6e",q:"A notice says: “No parking 7–9 AM.” When is parking prohibited?",o:["Between 7 and 9 AM","After noon only","All day","Only at night"],a:0,node:"time restriction"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6f",q:"A package says: “Refrigerate after opening.” What should happen after it is opened?",o:["Put it in a refrigerator","Leave it in the sun","Throw it away immediately","Freeze it before opening"],a:0,node:"product instruction"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6g",q:"A message says: “Your appointment was moved from Tuesday to Thursday.” When should you go?",o:["Thursday","Tuesday","Monday","Any day"],a:0,node:"schedule change"},
- {evidenceClass:"PRACTICAL_COMPREHENSION",id:"s6h",q:"A form says: “Signature required.” What must you provide?",o:["Your signature","Your height","A photograph only","A password"],a:0,node:"form instruction"}
-],
-7:[
-{evidenceClass:"UNSEEN_TRANSFER",id:"s7a",q:"You have never seen this notice before: “Visitors must check in before entering secured areas.” What does it require?",o:["Visitors may enter anywhere","Visitors must check in first","Only employees may check in","Visitors should leave bags outside"],a:1,node:"unseen transfer"},
-{evidenceClass:"UNSEEN_TRANSFER",id:"s7b",q:"A customer writes: “The package arrived damaged, but the item still works.” Which reply best addresses both facts?",o:["Glad it works. Goodbye.","Sorry about the damage. Please send a photo so we can help with replacement or another solution.","Packages are sometimes damaged.","Buy another one."],a:1,node:"unseen practical response"},
-{evidenceClass:"UNSEEN_TRANSFER",id:"s7c",q:"A policy says: “Requests received after 5 PM are processed the next business day.” A request arrives at 6 PM Monday. When should processing begin?",o:["Monday morning","Immediately before 5 PM","Tuesday, if it is a business day","Next month"],a:2,node:"unseen rule application"},
- {evidenceClass:"UNSEEN_TRANSFER",id:"s7d",q:"A policy says refunds require proof of purchase unless the item is defective. The item is defective but the receipt is lost. What does the rule imply?",o:["A refund may still be possible","A refund is always impossible","The item must be kept forever","Proof of purchase is never needed"],a:0,node:"exception handling"},
- {evidenceClass:"UNSEEN_TRANSFER",id:"s7e",q:"Service runs every 20 minutes beginning at 8:10. Which is a possible later departure?",o:["8:30","8:25","8:35","8:45"],a:0,node:"rule transfer"},
- {evidenceClass:"UNSEEN_TRANSFER",id:"s7f",q:"Employees may work remotely only with supervisor approval. What is required first?",o:["Supervisor approval","A new computer","A customer complaint","A vacation request"],a:0,node:"policy inference"},
- {evidenceClass:"UNSEEN_TRANSFER",id:"s7g",q:"If a blue light flashes, restart the device; if it stays solid, contact support. It stays solid. What should you do?",o:["Contact support","Restart repeatedly","Turn off the building","Ignore it"],a:0,node:"conditional instruction"},
- {evidenceClass:"UNSEEN_TRANSFER",id:"s7h",q:"A deadline is extended by two business days from Friday. Monday and Tuesday are business days. What is the new deadline?",o:["Tuesday","Saturday","Sunday","Monday"],a:0,node:"novel temporal transfer"}
-],
-8:[
-{evidenceClass:"INTEGRATED_TRANSFER",id:"s8a",q:"Which response best combines clear meaning, grammar, and practical action?",o:["I not understand form.","I do not understand this section of the form. Could you explain what information it requires?","Form bad explain.","You form me."],a:1,node:"integrated reassessment"},
-{evidenceClass:"INTEGRATED_TRANSFER",id:"s8b",q:"Choose the strongest paraphrase of “We need evidence before making a final decision.”",o:["We should decide first and look for proof later.","We should verify the facts before deciding.","Achievement is the same as opinion.","A decision never needs information."],a:1,node:"integrated paraphrase"},
-{evidenceClass:"INTEGRATED_TRANSFER",id:"s8c",q:"A new instruction conflicts with an older instruction. What is the clearest written response?",o:["Ignore both.","Which instruction should I follow? The new message conflicts with the earlier one.","Do whatever.","Old new conflict yes."],a:1,node:"integrated transfer"},
- {evidenceClass:"INTEGRATED_TRANSFER",id:"s8d",q:"A client asks for a change that conflicts with the written agreement. Which response best combines comprehension and action?",o:["Yes, anything.","I can review the requested change against the agreement and confirm what can be revised before we proceed.","Agreement no.","Ignore the request."],a:1,node:"constraint-aware response"},
- {evidenceClass:"INTEGRATED_TRANSFER",id:"s8e",q:"Which best summarizes: “Sales rose in May, fell slightly in June, and remained above April levels”?",o:["Sales changed but stayed above April after May's rise.","Sales fell every month.","April had the highest sales.","Nothing changed."],a:0,node:"integrated summary"},
- {evidenceClass:"INTEGRATED_TRANSFER",id:"s8f",q:"A procedure has three steps, but step 2 cannot be completed. What is the clearest response?",o:["I cannot complete step 2 because the required file is missing; should I pause or use an alternative?","I did everything.","Step no.","Skip it silently."],a:0,node:"exception communication"},
- {evidenceClass:"INTEGRATED_TRANSFER",id:"s8g",q:"Which response best distinguishes fact from uncertainty?",o:["The shipment is delayed; the new arrival time has not yet been confirmed.","The shipment will definitely arrive tomorrow because I think so.","Maybe everything is fine.","Delay means canceled."],a:0,node:"epistemic clarity"},
- {evidenceClass:"INTEGRATED_TRANSFER",id:"s8h",q:"A report gives two conflicting totals. What is the strongest next action?",o:["Verify the source data and reconcile the totals before reporting a conclusion.","Choose the larger number.","Average them without checking.","Ignore both totals."],a:0,node:"integrated verification"}
-]
+ "1": [
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1a",
+   "q": "Which word names a person?",
+   "o": [
+    "table",
+    "teacher",
+    "blue",
+    "quickly"
+   ],
+   "a": 1,
+   "node": "elementary noun meaning",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1b",
+   "q": "Choose the word for a place where you live.",
+   "o": [
+    "home",
+    "eat",
+    "red",
+    "slow"
+   ],
+   "a": 0,
+   "node": "basic place concept",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s1c",
+   "q": "A sign says “STOP.” What should you do?",
+   "o": [
+    "Keep going",
+    "Stop",
+    "Run",
+    "Sleep"
+   ],
+   "a": 1,
+   "node": "basic sign meaning",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1d",
+   "q": "Which word means the opposite of “yes”?",
+   "o": [
+    "no",
+    "day",
+    "big",
+    "go"
+   ],
+   "a": 0,
+   "node": "elementary contrast",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s1f",
+   "q": "Someone asks “What is your name?” What information should you give?",
+   "o": [
+    "Your name",
+    "Your age only",
+    "The weather",
+    "A color"
+   ],
+   "a": 0,
+   "node": "basic personal response",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1g",
+   "q": "Which word is a number?",
+   "o": [
+    "three",
+    "tree",
+    "free",
+    "green"
+   ],
+   "a": 0,
+   "node": "elementary numeration",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s1h",
+   "q": "A door says “OPEN.” What does that tell you?",
+   "o": [
+    "The door can be opened",
+    "It is a phone",
+    "It is food",
+    "It gives your age"
+   ],
+   "a": 0,
+   "node": "basic functional word",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6h",
+   "q": "A form says: “Signature required.” What must you provide?",
+   "o": [
+    "Your signature",
+    "Your height",
+    "A photograph only",
+    "A password"
+   ],
+   "a": 0,
+   "node": "form instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  }
+ ],
+ "2": [
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s1e",
+   "q": "Which is a complete simple sentence?",
+   "o": [
+    "I am Sam.",
+    "Am Sam I.",
+    "I Sam am?",
+    "Sam I."
+   ],
+   "a": 0,
+   "node": "simple sentence recognition",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s2c",
+   "q": "What is your address?",
+   "o": [
+    "Where you live",
+    "Your favorite food",
+    "Your job title only",
+    "A password"
+   ],
+   "a": 0,
+   "node": "practical concept",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2d",
+   "q": "What does “empty” mean?",
+   "o": [
+    "Containing nothing",
+    "Very loud",
+    "Moving fast",
+    "Very expensive"
+   ],
+   "a": 0,
+   "node": "everyday adjective",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2e",
+   "q": "Which word best matches “begin”?",
+   "o": [
+    "start",
+    "finish",
+    "lose",
+    "sleep"
+   ],
+   "a": 0,
+   "node": "common synonym",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s2f",
+   "q": "A label says “Keep dry.” What should you avoid?",
+   "o": [
+    "Water",
+    "Light",
+    "A chair",
+    "A number"
+   ],
+   "a": 0,
+   "node": "simple instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s2h",
+   "q": "A message says “Call me tonight.” What should you do?",
+   "o": [
+    "Make a phone call tonight",
+    "Send food",
+    "Visit yesterday",
+    "Write an address"
+   ],
+   "a": 0,
+   "node": "everyday instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3f",
+   "q": "Which word names a person who teaches?",
+   "o": [
+    "teacher",
+    "teachingly",
+    "teachness",
+    "teached"
+   ],
+   "a": 0,
+   "node": "agent noun",
+   "competency": "MORPHOLOGY",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6d",
+   "q": "“Bring photo ID to your appointment.” What should you bring?",
+   "o": [
+    "Photo identification",
+    "Cash only",
+    "A meal",
+    "A book"
+   ],
+   "a": 0,
+   "node": "appointment instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  }
+ ],
+ "3": [
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2a",
+   "q": "What does “borrow” mean?",
+   "o": [
+    "Give something away forever",
+    "Use something and return it",
+    "Buy something cheaply",
+    "Break something"
+   ],
+   "a": 1,
+   "node": "everyday concept",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2b",
+   "q": "Which sentence uses “before” correctly?",
+   "o": [
+    "I before dinner ate.",
+    "Wash your hands before dinner.",
+    "Before means after.",
+    "Dinner before because."
+   ],
+   "a": 1,
+   "node": "time relation",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2g",
+   "q": "Which sentence correctly shows “after”?",
+   "o": [
+    "We ate after the movie.",
+    "After means before.",
+    "We after ate movie.",
+    "Movie ate after."
+   ],
+   "a": 0,
+   "node": "time relation transfer",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3a",
+   "q": "Complete the sentence: “I am ___ tired today.”",
+   "o": [
+    "feel",
+    "feels",
+    "feeling",
+    "felted"
+   ],
+   "a": 2,
+   "node": "progressive form in context",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3c",
+   "q": "Complete: “She is ___ the message now.”",
+   "o": [
+    "read",
+    "reads",
+    "reading",
+    "reader"
+   ],
+   "a": 2,
+   "node": "-ing form",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3d",
+   "q": "Complete: “Yesterday we ___ home.”",
+   "o": [
+    "walk",
+    "walked",
+    "walking",
+    "walker"
+   ],
+   "a": 1,
+   "node": "regular past form",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3e",
+   "q": "Complete the sentence: “He ___ every morning.”",
+   "o": [
+    "run",
+    "runs",
+    "running",
+    "runner"
+   ],
+   "a": 1,
+   "node": "third-person present",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3g",
+   "q": "Complete: “They are ___ dinner.”",
+   "o": [
+    "cook",
+    "cooks",
+    "cooking",
+    "cookedly"
+   ],
+   "a": 2,
+   "node": "progressive verb",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  }
+ ],
+ "4": [
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3b",
+   "q": "What do you call a person who works?",
+   "o": [
+    "worker",
+    "workedly",
+    "workness",
+    "workful"
+   ],
+   "a": 0,
+   "node": "derivational form",
+   "competency": "MORPHOLOGY",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3h",
+   "q": "Complete: “We ___ the game last night.”",
+   "o": [
+    "played",
+    "play",
+    "playing",
+    "player"
+   ],
+   "a": 0,
+   "node": "past tense context",
+   "competency": "MORPHOLOGY",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4a",
+   "q": "Choose the clearest sentence.",
+   "o": [
+    "Tomorrow I go school.",
+    "I will go to school tomorrow.",
+    "School tomorrow go I.",
+    "I tomorrow school is."
+   ],
+   "a": 1,
+   "node": "sentence order",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4c",
+   "q": "Which asks for help?",
+   "o": [
+    "Can you help me with this form?",
+    "You help form this can.",
+    "Form help maybe.",
+    "This form are help."
+   ],
+   "a": 0,
+   "node": "functional sentence",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4d",
+   "q": "Choose the clearest question.",
+   "o": [
+    "Where is the station?",
+    "Station where the is?",
+    "Where station is the.",
+    "The station where?"
+   ],
+   "a": 0,
+   "node": "question order",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4e",
+   "q": "Which sentence about yesterday is correct?",
+   "o": [
+    "I visited my friend yesterday.",
+    "Yesterday I visit my friend tomorrow.",
+    "I friend yesterday visiting.",
+    "Visited yesterday friend I."
+   ],
+   "a": 0,
+   "node": "time + sentence structure",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6c",
+   "q": "A sign says: “Entrance closed. Use the west door.” What should you do?",
+   "o": [
+    "Wait at the closed entrance",
+    "Use the west door",
+    "Go home immediately",
+    "Call the police"
+   ],
+   "a": 1,
+   "node": "context response",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6e",
+   "q": "A notice says: “No parking 7–9 AM.” When is parking prohibited?",
+   "o": [
+    "Between 7 and 9 AM",
+    "After noon only",
+    "All day",
+    "Only at night"
+   ],
+   "a": 0,
+   "node": "time restriction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 4
+  }
+ ],
+ "5": [
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4b",
+   "q": "Which quantity sentence is correct?",
+   "o": [
+    "I need three bottle water.",
+    "I need three bottles of water.",
+    "I need third water bottle.",
+    "I water three."
+   ],
+   "a": 1,
+   "node": "grammar + numeration",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4f",
+   "q": "Choose the sentence with a clear reason.",
+   "o": [
+    "I stayed home because I was sick.",
+    "Because sick home I.",
+    "I because stayed sick.",
+    "Home was because."
+   ],
+   "a": 0,
+   "node": "cause construction",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4g",
+   "q": "Which sentence makes a polite request?",
+   "o": [
+    "Could you open the window, please?",
+    "Window open you.",
+    "You window now.",
+    "Opening could window."
+   ],
+   "a": 0,
+   "node": "polite request",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4h",
+   "q": "Which comparison is correct?",
+   "o": [
+    "This bag is heavier than that one.",
+    "This bag heavy that.",
+    "Heavier bag than is.",
+    "That one this heavier."
+   ],
+   "a": 0,
+   "node": "comparison construction",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5a",
+   "q": "What does “umbrella” mean?",
+   "o": [
+    "A thing you hold over your head when it rains",
+    "A thing for eating soup",
+    "A place where cars sleep",
+    "A person who teaches math"
+   ],
+   "a": 0,
+   "node": "controlled composition",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5c",
+   "q": "What does “pharmacy” mean?",
+   "o": [
+    "A place where you get medicine",
+    "A place where you repair shoes",
+    "A person who drives a bus",
+    "A type of weather"
+   ],
+   "a": 0,
+   "node": "meaning construction",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6f",
+   "q": "“Refrigerate after opening.” What should you do?",
+   "o": [
+    "Put it in a refrigerator",
+    "Leave it in the sun",
+    "Throw it away immediately",
+    "Freeze it before opening"
+   ],
+   "a": 0,
+   "node": "product instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6g",
+   "q": "A message says: “Your appointment was moved from Tuesday to Thursday.” When should you go?",
+   "o": [
+    "Thursday",
+    "Tuesday",
+    "Monday",
+    "Any day"
+   ],
+   "a": 0,
+   "node": "schedule change",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 5
+  }
+ ],
+ "6": [
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5d",
+   "q": "What does “fragile” mean?",
+   "o": [
+    "Easy to break",
+    "Easy to hear",
+    "Full of water",
+    "Very old"
+   ],
+   "a": 0,
+   "node": "descriptive paraphrase",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 6
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5f",
+   "q": "What does “appointment” mean?",
+   "o": [
+    "A planned time to meet someone",
+    "A kind of sandwich",
+    "A road sign",
+    "A payment card"
+   ],
+   "a": 0,
+   "node": "concept construction",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 6
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5h",
+   "q": "What does “refund” mean?",
+   "o": [
+    "Money returned after a purchase",
+    "A price increase",
+    "A store entrance",
+    "A written greeting"
+   ],
+   "a": 0,
+   "node": "functional concept construction",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 6
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6a",
+   "q": "“Payment is due Friday. A late fee begins Saturday.” What should you do?",
+   "o": [
+    "Pay by Friday",
+    "Wait until Saturday",
+    "Ignore the notice",
+    "Pay next month"
+   ],
+   "a": 0,
+   "node": "practical reading",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 6
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6b",
+   "q": "“Please send the revised file before 2 PM.” What should you do?",
+   "o": [
+    "Delete the file",
+    "Send the revised file before 2 PM",
+    "Call after 2 PM",
+    "Wait for another message"
+   ],
+   "a": 1,
+   "node": "instruction response",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 6
+  },
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7a",
+   "q": "“Visitors must check in before entering secured areas.” What should visitors do?",
+   "o": [
+    "Visitors may enter anywhere",
+    "Visitors must check in first",
+    "Only employees may check in",
+    "Visitors should leave bags outside"
+   ],
+   "a": 1,
+   "node": "unseen transfer",
+   "competency": "TRANSFER",
+   "difficulty": 6
+  },
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7e",
+   "q": "Service begins at 8:10 and runs every 20 minutes. Which time is possible?",
+   "o": [
+    "8:30",
+    "8:25",
+    "8:35",
+    "8:45"
+   ],
+   "a": 0,
+   "node": "rule transfer",
+   "competency": "TRANSFER",
+   "difficulty": 6
+  },
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7f",
+   "q": "Remote work requires supervisor approval. What is required first?",
+   "o": [
+    "Supervisor approval",
+    "A new computer",
+    "A customer complaint",
+    "A vacation request"
+   ],
+   "a": 0,
+   "node": "policy inference",
+   "competency": "TRANSFER",
+   "difficulty": 6
+  }
+ ],
+ "7": [
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5b",
+   "q": "Which means the same as “The meeting was postponed”?",
+   "o": [
+    "The meeting was moved to a later time.",
+    "The meeting became louder.",
+    "The meeting was very short.",
+    "The meeting happened twice."
+   ],
+   "a": 0,
+   "node": "semantic paraphrase",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 7
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5e",
+   "q": "Paraphrase “She declined the invitation.”",
+   "o": [
+    "She said she would not attend.",
+    "She sent two invitations.",
+    "She arrived early.",
+    "She forgot the date."
+   ],
+   "a": 0,
+   "node": "meaning-preserving paraphrase",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 7
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5g",
+   "q": "Which means the same as “The store is temporarily closed”?",
+   "o": [
+    "The store is closed for a limited time.",
+    "The store will never open again.",
+    "The store moved yesterday.",
+    "The store is crowded."
+   ],
+   "a": 0,
+   "node": "semantic equivalence",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 7
+  },
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7b",
+   "q": "“The package arrived damaged, but the item still works.” Which response is best?",
+   "o": [
+    "Glad it works. Goodbye.",
+    "Sorry about the damage. Please send a photo so we can help with replacement or another solution.",
+    "Packages are sometimes damaged.",
+    "Buy another one."
+   ],
+   "a": 1,
+   "node": "unseen practical response",
+   "competency": "TRANSFER",
+   "difficulty": 7
+  },
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7c",
+   "q": "“Requests received after 5 PM are processed the next business day.” A request arrives at 6 PM Monday. When should processing begin?",
+   "o": [
+    "Monday morning",
+    "Immediately before 5 PM",
+    "Tuesday, if it is a business day",
+    "Next month"
+   ],
+   "a": 2,
+   "node": "unseen rule application",
+   "competency": "TRANSFER",
+   "difficulty": 7
+  },
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7g",
+   "q": "If the blue light flashes, restart; if it stays solid, contact support. It stays solid. What should you do?",
+   "o": [
+    "Contact support",
+    "Restart repeatedly",
+    "Turn off the building",
+    "Ignore it"
+   ],
+   "a": 0,
+   "node": "conditional instruction",
+   "competency": "TRANSFER",
+   "difficulty": 7
+  },
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7h",
+   "q": "A deadline moves two business days after Friday. Monday and Tuesday are business days. What is the deadline?",
+   "o": [
+    "Tuesday",
+    "Saturday",
+    "Sunday",
+    "Monday"
+   ],
+   "a": 0,
+   "node": "novel temporal transfer",
+   "competency": "TRANSFER",
+   "difficulty": 7
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8a",
+   "q": "Which response is best?",
+   "o": [
+    "I not understand form.",
+    "I do not understand this section of the form. Could you explain what information it requires?",
+    "Form bad explain.",
+    "You form me."
+   ],
+   "a": 1,
+   "node": "integrated reassessment",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 7
+  }
+ ],
+ "8": [
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7d",
+   "q": "Refunds require proof of purchase unless the item is defective. The item is defective and the receipt is lost. What does the rule allow?",
+   "o": [
+    "A refund may still be possible",
+    "A refund is always impossible",
+    "The item must be kept forever",
+    "Proof of purchase is never needed"
+   ],
+   "a": 0,
+   "node": "exception handling",
+   "competency": "TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8b",
+   "q": "Which means the same as “We need evidence before making a final decision.”",
+   "o": [
+    "We should decide first and look for proof later.",
+    "We should verify the facts before deciding.",
+    "Achievement is the same as opinion.",
+    "A decision never needs information."
+   ],
+   "a": 1,
+   "node": "integrated paraphrase",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8c",
+   "q": "Two instructions conflict. Which response is best?",
+   "o": [
+    "Ignore both.",
+    "Which instruction should I follow? The new message conflicts with the earlier one.",
+    "Do whatever.",
+    "Old new conflict yes."
+   ],
+   "a": 1,
+   "node": "integrated transfer",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8d",
+   "q": "A requested change conflicts with the written agreement. Which response is best?",
+   "o": [
+    "Yes, anything.",
+    "I can review the requested change against the agreement and confirm what can be revised before we proceed.",
+    "Agreement no.",
+    "Ignore the request."
+   ],
+   "a": 1,
+   "node": "constraint-aware response",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8e",
+   "q": "Which best summarizes: “Sales rose in May, fell slightly in June, and remained above April levels”?",
+   "o": [
+    "Sales changed but stayed above April after May's rise.",
+    "Sales fell every month.",
+    "April had the highest sales.",
+    "Nothing changed."
+   ],
+   "a": 0,
+   "node": "integrated summary",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8f",
+   "q": "Step 2 cannot be completed because a required file is missing. Which response is best?",
+   "o": [
+    "I cannot complete step 2 because the required file is missing; should I pause or use an alternative?",
+    "I did everything.",
+    "Step no.",
+    "Skip it silently."
+   ],
+   "a": 0,
+   "node": "exception communication",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8g",
+   "q": "Which response separates fact from uncertainty?",
+   "o": [
+    "The shipment is delayed; the new arrival time has not yet been confirmed.",
+    "The shipment will definitely arrive tomorrow because I think so.",
+    "Maybe everything is fine.",
+    "Delay means canceled."
+   ],
+   "a": 0,
+   "node": "epistemic clarity",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8h",
+   "q": "A report has two conflicting totals. What should you do?",
+   "o": [
+    "Verify the source data and reconcile the totals before reporting a conclusion.",
+    "Choose the larger number.",
+    "Average them without checking.",
+    "Ignore both totals."
+   ],
+   "a": 0,
+   "node": "integrated verification",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  }
+ ]
 };
 
 const EDUCATION_STATE_KEY="dgb.education.phase1.v1";

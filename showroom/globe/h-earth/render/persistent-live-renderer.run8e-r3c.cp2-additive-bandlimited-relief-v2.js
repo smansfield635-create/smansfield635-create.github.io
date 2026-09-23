@@ -503,7 +503,9 @@ void main(){
   vec3 lit=base*(ambient+directional)*uSunColor;
   if(vRoleCode==1u){
     float facingContrast=smoothstep(0.08,0.86,geometricDiffuse);
-    float valleyOcclusion=clamp(curvatureResponse*(0.20+0.34*slopeResponse),0.0,0.46);
+    float commonSlopeResponse=clamp(1.0-geometricNormal.y,0.0,1.0);
+    float commonCurvatureProxy=clamp(abs(dFdx(geometricNormal.y))+abs(dFdy(geometricNormal.y)),0.0,1.0);
+    float valleyOcclusion=clamp(commonCurvatureProxy*(0.20+0.34*commonSlopeResponse),0.0,0.46);
     float formSeparation=mix(0.76,1.16,facingContrast);
     lit*=formSeparation;
     lit*=1.0-valleyOcclusion;

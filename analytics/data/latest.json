@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-23T12:43:08Z",
+  "generatedAt": "2026-09-23T13:31:00Z",
   "window30d": {
-    "start": "2026-08-24T12:43:08Z",
-    "end": "2026-09-23T12:43:08Z"
+    "start": "2026-08-24T13:31:00Z",
+    "end": "2026-09-23T13:31:00Z"
   },
   "daily": [
     {
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1842,
-      "visits": 1573
+      "pageLoads": 1692,
+      "visits": 1433
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 868,
-      "visits": 632
+      "pageLoads": 818,
+      "visits": 592
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 794,
-      "visits": 794
+      "pageLoads": 714,
+      "visits": 714
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -211,9 +211,9 @@
       "visits": 30
     },
     {
-      "path": "/index.html",
-      "pageLoads": 133,
-      "visits": 0
+      "path": "/products/on-your-side-ai/native-chat/",
+      "pageLoads": 112,
+      "visits": 94
     }
   ],
   "ownerMeasurement": {

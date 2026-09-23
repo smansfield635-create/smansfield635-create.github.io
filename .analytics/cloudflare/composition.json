@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-23T12:43:08Z",
+  "generatedAt": "2026-09-23T13:31:00Z",
   "window": {
-    "start": "2026-08-24T12:43:08Z",
-    "end": "2026-09-23T12:43:08Z"
+    "start": "2026-08-24T13:31:00Z",
+    "end": "2026-09-23T13:31:00Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1842,
-        "visits": 1573
+        "pageLoads": 1692,
+        "visits": 1433
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 868,
-        "visits": 632
+        "pageLoads": 818,
+        "visits": 592
       },
       {
         "value": "/mirror-manor-preview/",
-        "pageLoads": 794,
-        "visits": 794
+        "pageLoads": 714,
+        "visits": 714
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
@@ -43,24 +43,24 @@
         "visits": 30
       },
       {
+        "value": "/products/on-your-side-ai/native-chat/",
+        "pageLoads": 112,
+        "visits": 94
+      },
+      {
         "value": "/index.html",
-        "pageLoads": 133,
+        "pageLoads": 103,
         "visits": 0
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 113,
+        "pageLoads": 103,
         "visits": 51
       },
       {
         "value": "/characters/",
-        "pageLoads": 112,
-        "visits": 70
-      },
-      {
-        "value": "/products/on-your-side-ai/native-chat/",
-        "pageLoads": 112,
-        "visits": 94
+        "pageLoads": 82,
+        "visits": 50
       },
       {
         "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
@@ -83,14 +83,14 @@
         "visits": 0
       },
       {
-        "value": "/about/",
-        "pageLoads": 70,
-        "visits": 11
-      },
-      {
         "value": "/laws/categories/reality/",
         "pageLoads": 60,
         "visits": 0
+      },
+      {
+        "value": "/about/",
+        "pageLoads": 60,
+        "visits": 11
       },
       {
         "value": "/prototypes/evan-job-stage/",
@@ -238,11 +238,6 @@
         "visits": 0
       },
       {
-        "value": "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html",
-        "pageLoads": 20,
-        "visits": 0
-      },
-      {
         "value": "/explore/",
         "pageLoads": 20,
         "visits": 10
@@ -273,11 +268,6 @@
         "visits": 17
       },
       {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 16,
-        "visits": 0
-      },
-      {
         "value": "/showroom/globe/earth/",
         "pageLoads": 16,
         "visits": 1
@@ -294,11 +284,6 @@
       },
       {
         "value": "/showroom/globe/audralia/disposition/",
-        "pageLoads": 11,
-        "visits": 0
-      },
-      {
-        "value": "/showroom/",
         "pageLoads": 11,
         "visits": 0
       },
@@ -363,6 +348,11 @@
         "visits": 0
       },
       {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 6,
+        "visits": 0
+      },
+      {
         "value": "/showroom/globe/h-earth/custody/",
         "pageLoads": 6,
         "visits": 6
@@ -374,6 +364,11 @@
       },
       {
         "value": "/elara/index.html",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/",
         "pageLoads": 1,
         "visits": 0
       },

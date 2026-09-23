@@ -1,0 +1,43 @@
+name: Education Construct Validity Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify English-dominant placement bank
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json
+          git show "$CANDIDATE_SHA:research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json" >/tmp/bank.json
+          node - <<'NODE'
+          const fs=require('fs'),j=JSON.parse(fs.readFileSync('/tmp/bank.json','utf8'));
+          if(j.items.length!==64)throw Error('cardinality');
+          const ids=j.items.map(x=>x.id),prompts=j.items.map(x=>x.q.toLowerCase().trim());
+          if(new Set(ids).size!==64||new Set(prompts).size!==64)throw Error('uniqueness');
+          const counts={};for(const x of j.items){
+            counts[x.difficulty]=(counts[x.difficulty]||0)+1;
+            if(x.instructionBurden!=='BASIC'&&x.instructionBurden!=='NONE')throw Error(x.id+' burden');
+            if(!String(x.constructValidity||'').startsWith('ENGLISH_DOMINANT'))throw Error(x.id+' construct');
+            if(!Array.isArray(x.o)||x.o.length!==4||!Number.isInteger(x.a)||x.a<0||x.a>3)throw Error(x.id+' response');
+          }
+          for(let d=1;d<=8;d++)if(counts[d]!==8)throw Error('D'+d);
+          const forbidden=/what should (you|we) do|what is the strongest next action|when should processing begin|new deadline/i;
+          const contaminated=j.items.filter(x=>x.difficulty>=7&&forbidden.test(x.q));
+          if(contaminated.length)throw Error('problem-solving contamination '+contaminated.map(x=>x.id));
+          console.log(JSON.stringify({result:'PASS',counts}));
+          NODE
+          echo EDUCATION_CONSTRUCT_VALIDITY_QUALIFICATION=PASS

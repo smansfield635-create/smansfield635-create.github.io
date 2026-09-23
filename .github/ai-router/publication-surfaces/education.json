@@ -26,7 +26,6 @@
         "TARGET_DOMINANT",
         "TARGET_ONLY",
         "data-no-backend=\"true\"",
-        "data-no-persistence=\"true\"",
         "edu-spatial-mini",
         "data-flip",
         "data-placement-range=\"program-wide\"",
@@ -59,7 +58,8 @@
         "ABOVE_PHASE_1",
         "PHASE_1_ONLY",
         "P1S8",
-        "demo_entry_point"
+        "demo_entry_point",
+        "data-no-persistence=\"true\""
       ]
     }
   ],

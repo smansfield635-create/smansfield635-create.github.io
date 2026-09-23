@@ -25,7 +25,6 @@
         "BILINGUAL_BRIDGED",
         "TARGET_DOMINANT",
         "TARGET_ONLY",
-        "demo_entry_point",
         "data-no-backend=\"true\"",
         "data-no-persistence=\"true\"",
         "edu-spatial-mini",
@@ -42,7 +41,11 @@
         "PUBLIC_AVAILABLE",
         "NOT_CURRENTLY_AVAILABLE",
         "FREE_PUBLIC",
-        "NOT_AVAILABLE"
+        "NOT_AVAILABLE",
+        "entry_position",
+        "curriculum_availability",
+        "access_status",
+        "program_phase"
       ],
       "excludes": [
         "Public Face",
@@ -55,7 +58,8 @@
         "The target-language curriculum is not yet available in this demo.",
         "ABOVE_PHASE_1",
         "PHASE_1_ONLY",
-        "P1S8"
+        "P1S8",
+        "demo_entry_point"
       ]
     }
   ],

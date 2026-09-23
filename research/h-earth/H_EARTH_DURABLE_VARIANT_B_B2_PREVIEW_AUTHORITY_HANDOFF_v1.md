@@ -23,9 +23,9 @@ This artifact exists so a new room does not reconstruct the H-Earth preview prob
 
 ## Critical correction: hosting
 
-VERCEL IS EXPLICITLY OUT OF SCOPE.
+VERCEL IS EXPLICITLY OUT OF SCOPE AND PROHIBITED FOR THIS RECOVERY PATH.
 
-Do not reconnect Vercel. Do not add a Vercel dependency. Do not infer that a non-production browser URL requires Vercel.
+Do not reconnect Vercel. Do not create a Vercel project. Do not add Vercel credentials or a Vercel dependency. Do not infer that a non-production browser URL requires Vercel. Any handoff interpretation that recommends Vercel merely because a preview host is required is incorrect.
 
 The required capability is provider-neutral:
 

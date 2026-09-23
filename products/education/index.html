@@ -288,15 +288,15 @@ footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
   </section>
 
   <section class="demo-stage" data-demo-stage="test" hidden>
-    <div><p class="eyebrow">Adaptive Independence</p><h2 id="placement-heading">A few questions help us find the right place to begin.</h2><p id="placement-copy">The diagnostic will move higher or lower as needed.</p></div>
+    <div><p class="eyebrow">Placement</p><h2 id="placement-heading">A few questions help us find the right place to begin.</h2><p id="placement-copy">The diagnostic will move higher or lower as needed.</p></div>
     <div id="question-host"></div>
     <div class="validation" id="question-validation" role="alert"></div>
   </section>
 
   <section class="demo-stage" data-demo-stage="result" hidden>
-    <div><p class="eyebrow">Independence Result</p><h2>Your starting point is ready.</h2></div>
+    <div><p class="eyebrow">Placement Result</p><h2>Your starting point is ready.</h2></div>
     <div id="placement-result"></div>
-    <div class="button-row"><button class="button-secondary" type="button" id="retake-placement">Retake Independence</button><button class="button" type="button" id="enter-demo">Enter Phase 1 Demo</button></div>
+    <div class="button-row"><button class="button-secondary" type="button" id="retake-placement">Retake Placement</button><button class="button" type="button" id="enter-demo">Enter Phase 1 Demo</button></div>
   </section>
 
   <section class="demo-stage" data-demo-stage="entry" hidden>
@@ -1676,25 +1676,26 @@ function resolveIndependence(lastScore,resolvedStageOverride=null){
 }
 function renderIndependence(){
  setStage("result");
- const p=finalIndependence, above=p.verified_placement==="ABOVE_PHASE_1";
- const resolvedStageNumber=above?8:Number(String(p.verified_stage||"P1S2").replace("P1S",""));
- const startName=above?"Advanced Phase 1":STAGES[resolvedStageNumber-1].name;
- const demonstratedStages=[...new Set(p.probe_history.filter(x=>x.stage<resolvedStageNumber&&x.score>=.5).map(x=>STAGES[x.stage-1].name))];
- const demonstratedText=above?"The placement evidence exceeded the current Phase 1 range.":demonstratedStages.length?demonstratedStages.join(" · ")+" demonstrated below this boundary.":"No lower stage was directly demonstrated in this traversal.";
- const assistance=p.placement_evidence.some(x=>x.assisted)?"Some placement evidence used a hint.":"Placement evidence was unassisted.";
- const traversal=p.probe_history.map(x=>"Stage "+x.stage+": "+x.correct+"/"+x.total).join(" → ");
+ const p=finalIndependence,above=p.verified_placement==="ABOVE_PHASE_1",uncertain=p.verified_placement==="UNCERTAIN_BOUNDARY";
+ const resolvedStageNumber=above?8:uncertain?null:Number(String(p.verified_stage||"P1S1").replace("P1S",""));
+ const startName=above?"Advanced English":uncertain?"We need a little more information":STAGES[resolvedStageNumber-1].name;
+ const message=above?"You completed the hardest questions in this placement.":uncertain?"Your answers were mixed near the boundary. A short follow-up check will give you a better starting point.":"This is the level where your learning path should begin.";
  qs("#placement-result").innerHTML=
  '<div class="result-grid">'+
- '<article class="result-hero"><span class="eyebrow">Recommended starting stage</span><strong>'+startName+'</strong><span class="result-note">'+demonstratedText+'</span></article>'+
- '<article class="result-hero"><span class="eyebrow">Boundary</span><strong>'+(above?"Above Phase 1":STAGES[resolvedStageNumber-1].name)+'</strong><span class="result-note">'+(above?"Continue with advanced evidence rather than lowering the learner.":"This is the first competency boundary not sufficiently demonstrated by the placement traversal.")+'</span></article>'+
- '<article class="result-hero"><span class="eyebrow">Assistance</span><strong>'+(p.placement_evidence.some(x=>x.assisted)?"ASSISTED":"UNASSISTED")+'</strong><span class="result-note">'+assistance+'</span></article></div>'+
- '<div class="grid-3"><article class="metric"><b>Self-assessment start</b><strong>Stage '+learner.claimed_level+'</strong><span>Provisional entry only</span></article><article class="metric"><b>Resolved evidence</b><strong>'+p.demonstrated_nodes+'/'+(p.demonstrated_nodes+p.unresolved_nodes)+'</strong><span>Boundary probe items</span></article></div>'+
- '<details><summary>See placement traversal</summary><div class="detail"><p>'+traversal+'</p></div></details>';
+ '<article class="result-hero"><span class="eyebrow">Your starting point</span><strong>'+startName+'</strong><span class="result-note">'+message+'</span></article>'+
+ '<article class="result-hero"><span class="eyebrow">What happens next</span><strong>'+(uncertain?"Check a few more answers":"Start learning")+'</strong><span class="result-note">'+(uncertain?"We will stay near this level instead of guessing.":"You will begin with English matched to this level and move forward as you demonstrate it.")+'</span></article></div>';
 }
 function enterDemo(){
- setStage("entry");saveEducationState({stage:"entry"});const p=finalIndependence, above=p.verified_placement==="ABOVE_PHASE_1";
- qs("#entry-title").textContent=above?"Advanced Phase 1 demonstration":"Start at your verified boundary";
- qs("#entry-state").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Verified Independence</span><strong>'+p.verified_placement+'</strong><span class="result-note">This record is not rewritten by demo limits.</span></article><article class="result-hero"><span class="eyebrow">Demo Entry</span><strong>'+p.demo_entry_point.stage+'</strong><span class="result-note">'+p.demo_entry_point.label+'</span></article><article class="result-hero"><span class="eyebrow">Progress State</span><strong>'+p.support_cycle.replaceAll("_"," ")+'</strong><span class="result-note">'+p.support_dependence.replaceAll("_"," ")+'</span></article></div><p class="boundary">Runtime initialization would begin from unresolved competency evidence here. Already demonstrated nodes would not be replayed by default.</p>';
+ setStage("entry");saveEducationState({stage:"entry"});const p=finalIndependence,above=p.verified_placement==="ABOVE_PHASE_1",uncertain=p.verified_placement==="UNCERTAIN_BOUNDARY";
+ if(uncertain){
+   qs("#entry-title").textContent="Confirm your starting point";
+   qs("#entry-state").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Next step</span><strong>Continue placement</strong><span class="result-note">Your answers were mixed. Continue near the current level so we can place you without guessing.</span></article></div>';
+   return;
+ }
+ const stage=above?8:Number(String(p.verified_stage||"P1S1").replace("P1S",""));
+ const name=above?"Advanced English":STAGES[stage-1].name;
+ qs("#entry-title").textContent="Your learning path starts here";
+ qs("#entry-state").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Start here</span><strong>'+name+'</strong><span class="result-note">Begin with English at this level.</span></article><article class="result-hero"><span class="eyebrow">How you move forward</span><strong>Learn → Practice → Check</strong><span class="result-note">Demonstrate what you know, then continue to harder English.</span></article></div><p class="boundary">Your placement sets the starting point. Your performance determines what comes next.</p>';
 }
 qs("#enter-demo").addEventListener("click",enterDemo);
 qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState=null});
@@ -1703,7 +1704,7 @@ qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner=
 
 /* Gate One — persistent help-language propagation outside target-English evidence. */
 const GATE_ONE_UI={
- en:{testEye:"Adaptive Independence",testHeading:"A few questions help us find the right place to begin.",testCopy:"The diagnostic will move higher or lower as needed.",resultEye:"Independence Result",resultTitle:"Your starting point is ready.",retake:"Retake Independence",enter:"Enter Phase 1 Demo",entryEye:"Ready to Learn",restart:"Restart Demo",hint:"Show Hint",continue:"Continue",chooseAnswer:"Choose one answer before continuing.",testing:"Testing Stage",claimStart:"Your claim chose the starting neighborhood. Performance controls whether the diagnostic moves higher, lower, or resolves here.",stage:"Stage",question:"Question",of:"of",hintBody:"Read for the exact relationship, action, or meaning the prompt asks you to demonstrate. A hint counts as assisted evidence."},
+ en:{testEye:"Placement",testHeading:"A few questions help us find the right place to begin.",testCopy:"The diagnostic will move higher or lower as needed.",resultEye:"Placement Result",resultTitle:"Your starting point is ready.",retake:"Retake Placement",enter:"Enter Phase 1 Demo",entryEye:"Ready to Learn",restart:"Restart Demo",hint:"Show Hint",continue:"Continue",chooseAnswer:"Choose one answer before continuing.",testing:"Testing Stage",claimStart:"Your claim chose the starting neighborhood. Performance controls whether the diagnostic moves higher, lower, or resolves here.",stage:"Stage",question:"Question",of:"of",hintBody:"Read for the exact relationship, action, or meaning the prompt asks you to demonstrate. A hint counts as assisted evidence."},
  es:{testEye:"Independencia adaptativa",testHeading:"Unas preguntas nos ayudan a encontrar el lugar adecuado para comenzar.",testCopy:"El diagnóstico subirá o bajará según sea necesario.",resultEye:"Resultado de independencia",resultTitle:"Tu punto de partida está listo.",retake:"Repetir independencia",enter:"Entrar a la demostración de Fase 1",entryEye:"Listo para aprender",restart:"Reiniciar demostración",hint:"Mostrar ayuda",continue:"Continuar",chooseAnswer:"Elige una respuesta antes de continuar.",testing:"Evaluando etapa",claimStart:"Tu respuesta inicial eligió dónde comenzar. Tu desempeño decide si el diagnóstico sube, baja o se resuelve aquí.",stage:"Etapa",question:"Pregunta",of:"de",hintBody:"Lee la relación, acción o significado exacto que debes demostrar. Usar una ayuda cuenta como evidencia asistida."},
  zh:{testEye:"自适应独立能力",testHeading:"几个问题帮助我们找到合适的起点。",testCopy:"诊断会根据需要向上或向下调整。",resultEye:"独立能力结果",resultTitle:"你的起点已经准备好。",retake:"重新测试独立能力",enter:"进入第一阶段演示",entryEye:"准备学习",restart:"重新开始演示",hint:"显示提示",continue:"继续",chooseAnswer:"继续之前请选择一个答案。",testing:"正在测试阶段",claimStart:"你的自我评估决定测试从哪里开始。实际表现决定诊断向上、向下或在这里确定结果。",stage:"阶段",question:"问题",of:"共",hintBody:"请根据题目要求，找出准确的关系、动作或意思。使用提示会记录为辅助完成。"}
 };

@@ -490,3 +490,56 @@ STATUS:
 `OWNER_REVIEW = PENDING`
 
 Do not promote this candidate to final/frozen Chapter 02 authority until owner review passes.
+
+
+## 15. Google Drive physical-media durability completion — 2026-09-22
+
+The exact conversation-local binaries required to reconstruct and continue the late-session Chapter 02 work have now been uploaded into the existing Chapter 2 Production Drive folder `1FzZitmZIt98i0WUYlcqM8Ijgpm7hda5R`.
+
+New durable Drive identities:
+
+- exact owner-supplied replacement source `2065.mp4`
+  - Drive ID: `1rMBd73ozOT99SVjb_2N3BGX_xJj0L3Eo`
+  - ROLE: SOLE AUTHORIZED REPLACEMENT SOURCE FOR FRAMES 352–479
+
+- current late-session construction authority `CHAPTER02_43S_V16_TRANSITION_WINDOW_REBUILT_v15.mp4`
+  - Drive ID: `1dhr3ZLkxQmfJTvV8evVxxhO2ITad64HQ`
+
+- accepted prior transition authority `CHAPTER02_43S_V16_V10_12S13S_TRANSITION_SMOOTH_v11.mp4`
+  - Drive ID: `1O02VIMN9bDKETQHcqhS_UP6GUKweZIbb`
+
+- accepted typography/picture authority `CHAPTER02_43S_V16_V7_LOCKED_TEXT_DELAY_FADE_v10.mp4`
+  - Drive ID: `1tRpY8WqIFOvBBaUhZfBafOdsruqgEv5X`
+
+- accepted impostor-excised authority `CHAPTER02_43S_V16_IMPOSTOR_POSITIVE_EXCISION_v7.mp4`
+  - Drive ID: `1VWlSfDGIdOGcGnrx2BPfE7yZVldY8P_P`
+
+- intermediate `CHAPTER02_43S_V16_V11_16S_GATE_REPAIR_v12.mp4`
+  - Drive ID: `1uSIwp6OdbuCIOJ-sqZndcvQojotV-euX`
+
+- intermediate `CHAPTER02_43S_V16_V11_COASTLINE_EXTRA_CLIP_EXCISED_v13.mp4`
+  - Drive ID: `1ffdNEdkvpTnGV44iXufKrO0V9GNDurKu`
+
+- intermediate `CHAPTER02_43S_V16_V11_SUPPLIED_TRANSITION_REPLACEMENT_v14_final.mp4`
+  - Drive ID: `19SUKQ0ucU6TN-r3F628SP0M1FMAtKHL_`
+
+Existing durable Drive lineage remains:
+- original V15 opening candidate: `12TietrulSXkk1JkfNzgNtgbBVj7sZMJn`
+- V14 typography successor: `1XY56CtRbxeKSzC0i_PvewU3VuR5nzeVD`
+- clean conform: `1U3vKZ5KSVHhzdQMGg3yN_42duCcvUp5-`
+- diagnostic 26866: `1qgl7eyuRQk62pPUGXezMAZ9m0RFfqGJ3`
+- V13 frozen authority: `1FI47zOv6vErvc__lRNgQw_OOoD4grs5a`
+
+CRITICAL BLOCKER UPDATE:
+
+`EXACT_2065_REMOTE_MATERIALIZATION` is no longer a physical-custody blocker.
+
+The exact `2065.mp4` binary is now durable in Google Drive at:
+`1rMBd73ozOT99SVjb_2N3BGX_xJj0L3Eo`
+
+A successor/execution surface must fetch THAT EXACT Drive object. Source substitution remains prohibited.
+
+CURRENT_BLOCKER = NONE_AT_DRIVE_CUSTODY_LAYER
+NEXT_LAWFUL_ACTION = FETCH_EXACT_2065_DRIVE_ID_1rMBd73ozOT99SVjb_2N3BGX_xJj0L3Eo -> REGISTER/MATERIALIZE_FOR_REMOTE_RENDERER -> LOCK_SOURCE_IN_OUT -> EXECUTE_EXISTING_CONTRACT
+
+No conversational attachment is required to recover the physical production lineage listed above.

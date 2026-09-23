@@ -1,6 +1,6 @@
 {
   "schema": "EDUCATION_PLACEMENT_CALIBRATED_BANK_v1",
-  "status": "ITEM_QUALITY_REPAIR_CANDIDATE_NO_RUNTIME_AUTHORITY",
+  "status": "DEEP_MATRIX_BOUNDED_REPAIR_CANDIDATE_NO_RUNTIME_AUTHORITY",
   "cardinality": 64,
   "difficultyDistribution": {
     "1": 8,
@@ -164,20 +164,21 @@
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
       "id": "s1e",
-      "q": "Which is a complete simple sentence?",
+      "q": "Which sentence is complete?",
       "o": [
         "I am Sam.",
-        "Am Sam I.",
-        "I Sam am?",
-        "Sam I."
+        "I Sam.",
+        "Am I Sam.",
+        "Sam am."
       ],
       "a": 0,
-      "node": "simple sentence recognition",
+      "node": "simple clause completeness",
       "sourceStage": 1,
       "competency": "SENTENCE_FORM",
       "difficulty": 2,
       "instructionBurden": "BASIC",
-      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRACTICAL_COMPREHENSION",
@@ -328,40 +329,42 @@
     {
       "evidenceClass": "DIRECT_RECOGNITION",
       "id": "s2b",
-      "q": "Which sentence uses “before” correctly?",
+      "q": "Complete: “Wash your hands ___ dinner.”",
       "o": [
-        "Wash your hands before dinner.",
-        "Wash your hands after dinner begins if you mean earlier.",
-        "Before dinner means later than dinner.",
-        "I before wash dinner hands."
+        "before",
+        "after",
+        "during",
+        "because"
       ],
       "a": 0,
-      "node": "time relation",
+      "node": "basic temporal preposition",
       "sourceStage": 2,
       "competency": "LEXICAL_MEANING",
       "difficulty": 3,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "DIRECT_RECOGNITION",
       "id": "s2g",
-      "q": "Which sentence uses “after” correctly?",
+      "q": "Complete: “We went home ___ the movie ended.”",
       "o": [
-        "We ate after the movie.",
-        "We ate before the movie ended, so it was after.",
-        "After the movie means before the movie.",
-        "We after the movie ate yesterday tomorrow."
+        "after",
+        "before",
+        "because of",
+        "until"
       ],
       "a": 0,
-      "node": "time relation transfer",
+      "node": "basic temporal conjunction",
       "sourceStage": 2,
       "competency": "LEXICAL_MEANING",
       "difficulty": 3,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRODUCTIVE_FORM",
@@ -388,9 +391,9 @@
       "q": "Complete: “She is ___ the message now.”",
       "o": [
         "reading",
+        "read",
         "reads",
-        "read every day",
-        "reader"
+        "to read"
       ],
       "a": 0,
       "node": "-ing form",
@@ -399,7 +402,8 @@
       "difficulty": 3,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRODUCTIVE_FORM",
@@ -443,9 +447,9 @@
       "q": "Complete: “They are ___ dinner now.”",
       "o": [
         "cooking",
-        "cook every day",
-        "cooked yesterday",
-        "cooks"
+        "cook",
+        "cooked",
+        "to cook"
       ],
       "a": 0,
       "node": "progressive verb",
@@ -454,43 +458,46 @@
       "difficulty": 3,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRODUCTIVE_FORM",
       "id": "s3b",
-      "q": "What do you call a person who works?",
+      "q": "Complete: “She works at the hospital. She is a hospital ___.”",
       "o": [
         "worker",
-        "workedly",
-        "workness",
-        "workful"
+        "working",
+        "worked",
+        "works"
       ],
       "a": 0,
-      "node": "derivational form",
+      "node": "agent noun derivation",
       "sourceStage": 3,
       "competency": "MORPHOLOGY",
       "difficulty": 4,
       "instructionBurden": "BASIC",
-      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRODUCTIVE_FORM",
       "id": "s3h",
-      "q": "Complete: “We ___ the game last night.”",
+      "q": "Complete: “By the time we arrived, the game ___.”",
       "o": [
-        "played",
-        "play",
-        "playing",
-        "player"
+        "had started",
+        "starts",
+        "has start",
+        "starting"
       ],
       "a": 0,
-      "node": "past tense context",
+      "node": "past perfect sequence",
       "sourceStage": 3,
       "competency": "MORPHOLOGY",
       "difficulty": 4,
       "instructionBurden": "BASIC",
-      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
@@ -514,12 +521,12 @@
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
       "id": "s4c",
-      "q": "Which sentence asks for help?",
+      "q": "Which sentence politely asks for help?",
       "o": [
-        "Can you help me with this form?",
-        "Can you helped me with this form?",
+        "Could you help me with this form?",
         "You can help me with this form.",
-        "Do you help this form me?"
+        "You helped me with this form.",
+        "You should help me with this form."
       ],
       "a": 0,
       "node": "functional sentence",
@@ -528,7 +535,8 @@
       "difficulty": 4,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
@@ -629,9 +637,9 @@
       "q": "Which sentence gives a reason correctly?",
       "o": [
         "I stayed home because I was sick.",
-        "I stayed home because of I was sick.",
-        "I stayed because home I was sick.",
-        "Because I was sick, so I stayed home because."
+        "I stayed home although I was sick.",
+        "I stayed home unless I was sick.",
+        "I stayed home before I was sick."
       ],
       "a": 0,
       "node": "cause construction",
@@ -640,7 +648,8 @@
       "difficulty": 5,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
@@ -683,134 +692,141 @@
     {
       "evidenceClass": "MEANING_CONSTRUCTION",
       "id": "s5a",
-      "q": "What does this mean? “I forgot my umbrella, so I got wet.”",
+      "q": "Which means the same? “I would have brought an umbrella if I had known it was going to rain.”",
       "o": [
-        "I had nothing to protect me from the rain.",
-        "I forgot where I parked.",
-        "My umbrella was already wet.",
-        "I stayed inside because of the rain."
+        "I did not know it would rain, so I did not bring an umbrella.",
+        "I knew it would rain, but I refused to bring an umbrella.",
+        "I brought an umbrella because I knew it would rain.",
+        "It did not rain, although I brought an umbrella."
       ],
       "a": 0,
-      "node": "meaning from context",
+      "node": "counterfactual conditional meaning",
       "sourceStage": 5,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 5,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "MEANING_CONSTRUCTION",
       "id": "s5c",
-      "q": "What does this mean? “The pharmacy closes at six, so I need to get my medicine first.”",
+      "q": "Which means the same? “I had already left the pharmacy when I realized I had forgotten one of my prescriptions.”",
       "o": [
-        "I need to get medicine before six.",
-        "I need to repair my shoes before six.",
-        "The pharmacy opens after six.",
-        "I already have all my medicine."
+        "I noticed the missing prescription after leaving the pharmacy.",
+        "I remembered the prescription before I left the pharmacy.",
+        "The pharmacy forgot to give me every prescription.",
+        "I returned the prescription before leaving."
       ],
       "a": 0,
-      "node": "contextual place meaning",
+      "node": "past perfect temporal comprehension",
       "sourceStage": 5,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 5,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRACTICAL_COMPREHENSION",
       "id": "s6f",
-      "q": "What does this mean? “Refrigerate after opening.”",
+      "q": "Which means the same? “Once opened, the product must remain refrigerated.”",
       "o": [
-        "Keep it cold after you open it.",
-        "Freeze it before you open it.",
-        "Leave it warm after opening.",
-        "Throw it away before opening."
+        "After it is opened, it must be kept cold.",
+        "It must be frozen before it is opened.",
+        "It can be kept warm after opening.",
+        "Opening it removes the need for refrigeration."
       ],
       "a": 0,
-      "node": "instruction meaning",
+      "node": "reduced clause instruction paraphrase",
       "sourceStage": 6,
       "competency": "PRACTICAL_COMPREHENSION",
       "difficulty": 5,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRACTICAL_COMPREHENSION",
       "id": "s6g",
-      "q": "A message says: “Your appointment was moved from Tuesday to Thursday.” When should you go?",
+      "q": "Which means the same? “The appointment originally scheduled for Tuesday has been rescheduled for Thursday.”",
       "o": [
-        "Thursday",
-        "Tuesday",
-        "Monday",
-        "Any day"
+        "The appointment will now happen Thursday instead of Tuesday.",
+        "The appointment will happen on both Tuesday and Thursday.",
+        "Thursday's appointment was moved to Tuesday.",
+        "The appointment was canceled on Thursday."
       ],
       "a": 0,
-      "node": "schedule change",
+      "node": "formal schedule-change paraphrase",
       "sourceStage": 6,
       "competency": "PRACTICAL_COMPREHENSION",
       "difficulty": 5,
       "instructionBurden": "BASIC",
-      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "MEANING_CONSTRUCTION",
       "id": "s5d",
-      "q": "Which means the same? “The glass is fragile, so handle it carefully.”",
+      "q": "Which means the same? “Because the material is exceptionally fragile, even minor pressure may damage it.”",
       "o": [
-        "The glass can break easily.",
-        "The glass is difficult to see.",
-        "The glass is very heavy.",
-        "The glass cannot be moved."
+        "The material can be damaged by very little pressure.",
+        "The material becomes stronger when pressure is applied.",
+        "Only extreme pressure can damage the material.",
+        "The material is fragile only after it is damaged."
       ],
       "a": 0,
-      "node": "contextual adjective meaning",
+      "node": "degree and modal consequence",
       "sourceStage": 5,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 6,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "MEANING_CONSTRUCTION",
       "id": "s5f",
-      "q": "Which means the same? “I have an appointment at 3:00.”",
+      "q": "Which means the same? “I was unable to attend because the appointment had been moved without my knowledge.”",
       "o": [
-        "I have a planned meeting at 3:00.",
-        "I will arrive sometime after 3:00.",
-        "I have a payment due at 3:00.",
-        "I need to make a phone call at 3:00."
+        "I missed it because I did not know its scheduled time had changed.",
+        "I changed the appointment because I could not attend.",
+        "I knew about the change but decided to arrive at the old time.",
+        "The appointment was canceled because nobody attended."
       ],
       "a": 0,
-      "node": "contextual concept meaning",
+      "node": "past perfect causal paraphrase",
       "sourceStage": 5,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 6,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "MEANING_CONSTRUCTION",
       "id": "s5h",
-      "q": "Which means the same? “The store gave me a refund.”",
+      "q": "Which means the same? “The refund will be issued once the returned item has been inspected.”",
       "o": [
-        "The store returned my money.",
-        "The store raised the price.",
-        "The store gave me store hours.",
-        "The store charged me twice."
+        "The money will be returned after the item is checked.",
+        "The item will be inspected only after the money is returned.",
+        "The refund replaces the need to return the item.",
+        "The inspection and refund have both already happened."
       ],
       "a": 0,
-      "node": "contextual transaction meaning",
+      "node": "future passive temporal dependency",
       "sourceStage": 5,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 6,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "PRACTICAL_COMPREHENSION",
@@ -833,21 +849,22 @@
     {
       "evidenceClass": "PRACTICAL_COMPREHENSION",
       "id": "s6b",
-      "q": "Which means the same? “Please send the revised file before 2 PM.”",
+      "q": "Which means the same? “The revised file must be submitted no later than 2 PM.”",
       "o": [
-        "Send the changed file earlier than 2 PM.",
-        "Change the file after 2 PM.",
-        "Send the original file at exactly 2 PM.",
-        "Do not send the file today."
+        "The changed file must be sent by 2 PM at the latest.",
+        "The original file may be sent any time after 2 PM.",
+        "The file cannot be changed before 2 PM.",
+        "The changed file should be submitted only if 2 PM has passed."
       ],
       "a": 0,
-      "node": "temporal instruction paraphrase",
+      "node": "formal deadline paraphrase",
       "sourceStage": 6,
       "competency": "PRACTICAL_COMPREHENSION",
       "difficulty": 6,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "UNSEEN_TRANSFER",
@@ -870,20 +887,21 @@
     {
       "evidenceClass": "UNSEEN_TRANSFER",
       "id": "s7e",
-      "q": "Which means the same? “Service operates at twenty-minute intervals.”",
+      "q": "Which means the same? “Service operates at twenty-minute intervals throughout the morning.”",
       "o": [
-        "Service runs every twenty minutes.",
-        "Service lasts for only twenty minutes.",
-        "Service begins twenty minutes late.",
-        "Service stops after twenty minutes."
+        "Service runs every twenty minutes during the morning.",
+        "Each service lasts exactly twenty minutes and then stops.",
+        "Service begins twenty minutes after the morning ends.",
+        "Only one service runs during the entire morning."
       ],
       "a": 0,
-      "node": "interval paraphrase",
+      "node": "formal interval scope paraphrase",
       "sourceStage": 7,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 6,
       "instructionBurden": "BASIC",
-      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "UNSEEN_TRANSFER",
@@ -906,21 +924,22 @@
     {
       "evidenceClass": "MEANING_CONSTRUCTION",
       "id": "s5b",
-      "q": "Which means the same? “The meeting was postponed because the director was unavailable.”",
+      "q": "Which means the same? “The meeting was postponed because the director, who had been expected to attend, became unavailable.”",
       "o": [
-        "The meeting was moved to a later time because the director could not attend.",
-        "The meeting ended early because the director arrived.",
-        "The meeting was canceled permanently by the director.",
-        "The meeting started earlier because the director was free."
+        "The meeting was moved later because the expected director could not attend.",
+        "The meeting happened earlier because the director unexpectedly arrived.",
+        "The director canceled all future meetings before becoming available.",
+        "The meeting continued as planned despite the director's absence."
       ],
       "a": 0,
-      "node": "causal paraphrase",
+      "node": "embedded relative causal paraphrase",
       "sourceStage": 5,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 7,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_KEEP",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "MEANING_CONSTRUCTION",
@@ -963,20 +982,21 @@
     {
       "evidenceClass": "UNSEEN_TRANSFER",
       "id": "s7b",
-      "q": "Which means the same? “The package arrived damaged, although the item itself still works.”",
+      "q": "Which means the same? “Although the packaging had been damaged in transit, the item itself appeared to be functioning normally.”",
       "o": [
-        "The package was damaged, but the item still functions.",
-        "The item stopped working because the package was damaged.",
-        "The package and the item are both undamaged.",
-        "The item works only when it is inside the package."
+        "The package was damaged during delivery, but the item seemed to work normally.",
+        "The item failed because its packaging looked undamaged.",
+        "Both the package and the item were confirmed to be defective.",
+        "The item worked only after the damaged package was repaired."
       ],
       "a": 0,
-      "node": "concessive paraphrase",
+      "node": "perfect passive concessive paraphrase",
       "sourceStage": 7,
       "competency": "MEANING_CONSTRUCTION",
       "difficulty": 7,
       "instructionBurden": "BASIC",
-      "constructValidity": "ENGLISH_DOMINANT_REVIEW_REWRITE"
+      "constructValidity": "ENGLISH_DOMINANT_REVIEW_REWRITE",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "UNSEEN_TRANSFER",
@@ -1017,21 +1037,22 @@
     {
       "evidenceClass": "UNSEEN_TRANSFER",
       "id": "s7h",
-      "q": "Which means the same? “The deadline has been extended, giving applicants additional time to respond.”",
+      "q": "Which means the same? “The deadline has been extended to accommodate applicants who were unable to respond within the original timeframe.”",
       "o": [
-        "Applicants now have more time before the deadline.",
-        "Applicants must respond earlier than before.",
-        "The deadline was removed completely.",
-        "Applications received earlier will be rejected."
+        "Applicants who could not meet the first deadline have been given more time.",
+        "Only applicants who answered early may use the new deadline.",
+        "The original deadline was shortened because applicants responded late.",
+        "Applicants must now respond before the original deadline."
       ],
       "a": 0,
-      "node": "contextual formal paraphrase",
+      "node": "formal purpose and relative-clause paraphrase",
       "sourceStage": 7,
       "competency": "LEXICAL_MEANING",
       "difficulty": 7,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_REWRITE",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "INTEGRATED_TRANSFER",
@@ -1055,21 +1076,22 @@
     {
       "evidenceClass": "UNSEEN_TRANSFER",
       "id": "s7d",
-      "q": "Which means the same? “A receipt is required unless the item is defective.”",
+      "q": "Which means the same? “Unless explicitly exempted, applicants are expected to comply with all of the requirements outlined above.”",
       "o": [
-        "A receipt is required except when the item is defective.",
-        "A receipt is required even when the item is defective.",
-        "A defective item always requires two receipts.",
-        "A receipt is optional for every item."
+        "Applicants must follow all the stated requirements unless they are specifically excused.",
+        "Applicants may ignore any requirement that is not explained twice.",
+        "Only exempt applicants are required to follow the stated requirements.",
+        "Applicants are exempt whenever a requirement seems difficult."
       ],
       "a": 0,
-      "node": "exception-clause paraphrase",
+      "node": "advanced exception and passive obligation",
       "sourceStage": 7,
       "competency": "READING_COMPREHENSION",
       "difficulty": 8,
       "instructionBurden": "BASIC",
       "constructValidity": "ENGLISH_DOMINANT_REWRITE",
-      "itemQualityRepair": "v1"
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
     },
     {
       "evidenceClass": "INTEGRATED_TRANSFER",

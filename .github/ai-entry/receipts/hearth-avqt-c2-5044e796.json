@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-avqt-c2-5044e796",
+  "capabilityId": "H_EARTH_EXACT_PUBLIC_CORRIDOR_AB_PREVIEW",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4412,
+  "requestBranch": "ai-dispatch-request-hearth-avqt-c2-5044e796",
+  "requestCommit": "7ac5c71f7c69dfb12636b644f5408aa8b3720db7",
+  "requestCommitParent": "1f8ecce229d29360c19382fb116fcfced09e1e93",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "1f8ecce229d29360c19382fb116fcfced09e1e93",
+  "workflow": "h-earth-exact-public-corridor-ab-preview.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "5044e796f72ef360107dc731c18e6f89093bca07"
+  },
+  "bridgeRunId": "35803912344",
+  "dispatchedRunId": 35803922971,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35803922971",
+  "dispatchedRunHeadSha": "1f8ecce229d29360c19382fb116fcfced09e1e93",
+  "dispatchedAt": "2026-09-23T00:52:27.641Z",
+  "resolvedAt": "2026-09-23T00:52:31.895Z"
+}

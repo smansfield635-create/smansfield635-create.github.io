@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-cycle2-boundary-qualify-22776b30-20260922",
+  "capabilityId": "EDUCATION_CYCLE2_BOUNDARY_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "22776b300a07ced345c51d4abcb9afc16b19856c",
+    "base_sha": "594b5fc6966538edf0f6a75912128fb366f16a27"
   }
 }

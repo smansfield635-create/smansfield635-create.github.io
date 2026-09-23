@@ -21,7 +21,7 @@ for(let i=0;i<pos.count;i++){const x=pos.getX(i),z=pos.getZ(i)-170;const s=sampl
 geo.computeVertexNormals();
 const terrainMat=new THREE.MeshStandardMaterial({color:0x536342,roughness:.92,metalness:0,vertexColors:false});
 terrainMat.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
-float slope=1.0-clamp(normal.y,0.0,1.0);float elev=smoothstep(8.0,70.0,vViewPosition.y*-1.0);
+float slope=1.0-clamp(normalize(vNormal).y,0.0,1.0);float elev=smoothstep(8.0,70.0,vViewPosition.y*-1.0);
 vec3 grass=vec3(.16,.23,.105),soil=vec3(.34,.27,.17),rock=vec3(.34,.34,.32),sand=vec3(.62,.53,.37);
 diffuseColor.rgb=mix(grass,soil,smoothstep(.25,.58,slope));diffuseColor.rgb=mix(diffuseColor.rgb,rock,smoothstep(.52,.82,slope));`)}; 
 const terrain=new THREE.Mesh(geo,terrainMat);terrain.receiveShadow=true;terrain.castShadow=true;scene.add(terrain);

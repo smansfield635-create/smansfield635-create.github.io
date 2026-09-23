@@ -328,7 +328,7 @@
     {
       "evidenceClass": "DIRECT_RECOGNITION",
       "id": "s2b",
-      "q": "Which is correct?",
+      "q": "Which sentence uses “before” correctly?",
       "o": [
         "Wash your hands before dinner.",
         "Wash your hands after dinner begins if you mean earlier.",
@@ -347,7 +347,7 @@
     {
       "evidenceClass": "DIRECT_RECOGNITION",
       "id": "s2g",
-      "q": "Which is correct?",
+      "q": "Which sentence uses “after” correctly?",
       "o": [
         "We ate after the movie.",
         "We ate before the movie ended, so it was after.",
@@ -495,7 +495,7 @@
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
       "id": "s4a",
-      "q": "Which sentence is correct?",
+      "q": "Which sentence about tomorrow is correct?",
       "o": [
         "I will go to school tomorrow.",
         "I will go school tomorrow.",
@@ -607,7 +607,7 @@
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
       "id": "s4b",
-      "q": "Which sentence is correct?",
+      "q": "Which sentence about quantity is correct?",
       "o": [
         "I need three bottles of water.",
         "I need three bottle of water.",

@@ -1,7 +1,7 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { sampleHEarthRun8CSuccessorSurfaceMaterial } from '../../../../h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
 import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
-import { regionalReliefDelta } from './landscape-preview.js';
+import { regionalReliefDelta, previewHEarthFunctionalLandscape } from './landscape-preview.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
@@ -74,6 +74,7 @@ layout(location=4) in uint aMaterialModelCode;
 layout(location=5) in uint aSurfaceClassCode;
 layout(location=6) in uint aPrimitiveIndex;
 layout(location=7) in uint aRoleCode;
+layout(location=8) in vec2 aLocalAuthoringXZ;
 uniform mat4 uViewProjection;
 out vec3 vWorldPosition;
 out vec3 vNormal;
@@ -83,6 +84,7 @@ flat out uint vMaterialModelCode;
 flat out uint vSurfaceClassCode;
 flat out uint vPrimitiveIndex;
 flat out uint vRoleCode;
+out vec2 vLocalAuthoringXZ;
 void main(){
   vWorldPosition=aPosition;
   vNormal=aNormal;
@@ -92,6 +94,7 @@ void main(){
   vSurfaceClassCode=aSurfaceClassCode;
   vPrimitiveIndex=aPrimitiveIndex;
   vRoleCode=aRoleCode;
+  vLocalAuthoringXZ=aLocalAuthoringXZ;
   gl_Position=uViewProjection*vec4(aPosition,1.0);
 }`;
 
@@ -106,6 +109,7 @@ flat in uint vMaterialModelCode;
 flat in uint vSurfaceClassCode;
 flat in uint vPrimitiveIndex;
 flat in uint vRoleCode;
+in vec2 vLocalAuthoringXZ;
 uniform vec3 uCameraPosition;
 uniform vec3 uSunDirection;
 uniform float uSunIntensity;
@@ -607,6 +611,16 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     resources.vertexArray = gl.createVertexArray();
     if (!resources.vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
     gl.bindVertexArray(resources.vertexArray);
+    const localAuthoringXZ=new Float32Array(uploadViews.positions.length/3*2);
+    // Canonical terrain package positions are planetary. Recover explicit local XZ
+    // from the terrain primitive's preserved authoring vertices for mask authority.
+    const terrainPrimitive=renderPackage.primitiveSpans?.find(span=>span.role==='TERRAIN');
+    const sourceTerrain=getHEarthOW01CanonicalLiveRenderPackageOccurrence();
+    // Non-terrain entries remain outside refinement role and need no local mask coordinates.
+    if(terrainPrimitive){
+      const baseTerrain=previewHEarthFunctionalLandscape().componentResults.terrain.primitive.geometry.vertices;
+      for(let i=0;i<Math.min(baseTerrain.length,terrainPrimitive.vertexCount);i++){localAuthoringXZ[(terrainPrimitive.vertexStart+i)*2]=baseTerrain[i].x;localAuthoringXZ[(terrainPrimitive.vertexStart+i)*2+1]=baseTerrain[i].z;}
+    }
     const specifications = [
       ['positions', uploadViews.positions, 0, 3, gl.FLOAT, false],
       ['normals', uploadViews.normals, 1, 3, gl.FLOAT, false],
@@ -615,7 +629,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       ['materialModelCodes', uploadViews.materialModelCodes, 4, 1, gl.UNSIGNED_BYTE, true],
       ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
       ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
-      ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true]
+      ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true],
+      ['localAuthoringXZ', localAuthoringXZ, 8, 2, gl.FLOAT, false]
     ];
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {
@@ -682,8 +697,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     let coincident=0,maxDelta=0,perimeter=0,maxPerimeterDelta=0;for(let i=0;i<localPositions.length;i++){const v=localPositions[i];if(v.x%8===0&&v.z%8===0){coincident++;const t=sampleHEarthRun8BSuccessorTerrainField(v.x,v.z),bv={x:v.x,y:t.elevation,z:v.z};bv.y+=regionalReliefDelta(bv);const q=regionToHEarthPlanetPoint(bv),d=Math.hypot(q.x-projected[i].x,q.y-projected[i].y,q.z-projected[i].z);maxDelta=Math.max(maxDelta,d);const edge=Math.abs(v.x-(x0-radius))<1e-9||Math.abs(v.x-(x0+radius))<1e-9||Math.abs(v.z-(z0-radius))<1e-9||Math.abs(v.z-(z0+radius))<1e-9;if(edge){perimeter++;maxPerimeterDelta=Math.max(maxPerimeterDelta,d)}}}
     if(maxDelta>1e-5||maxPerimeterDelta>1e-5||degenerate!==0)throw new Error('R3C_REFINEMENT_PARITY_GATE_FAILED');
     const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.refinementBufferUploadCount++;};
-    bind(0,positions,3);bind(1,normals,3);bind(2,colors,4);bind(3,mats,4);const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
-    resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},radius,parity:{coincidentVertexCount:coincident,maxCoincidentPositionDelta:maxDelta,perimeterVertexCount:perimeter,maxPerimeterPositionDelta:maxPerimeterDelta,degenerateTriangleCount:degenerate,suppressionCoordinateSpace:'LOCAL_AUTHORING_XZ_REQUIRED'}};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
+    bind(0,positions,3);bind(1,normals,3);bind(2,colors,4);bind(3,mats,4);const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);const localXZ=new Float32Array(vertexCount*2);localPositions.forEach((v,i)=>localXZ.set([v.x,v.z],i*2));bind(8,localXZ,2);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
+    resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},radius,parity:{coincidentVertexCount:coincident,maxCoincidentPositionDelta:maxDelta,perimeterVertexCount:perimeter,maxPerimeterPositionDelta:maxPerimeterDelta,degenerateTriangleCount:degenerate,suppressionCoordinateSpace:'EXPLICIT_LOCAL_AUTHORING_XZ'}};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
   }
   function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
 

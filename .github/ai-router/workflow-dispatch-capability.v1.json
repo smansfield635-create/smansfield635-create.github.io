@@ -712,6 +712,25 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "EDUCATION_COMPRESSION_LOCALIZATION_PARITY_QUALIFY": {
+      "workflow": "education-compression-localization-parity-qualification-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false
     }
   },
   "continuity": {

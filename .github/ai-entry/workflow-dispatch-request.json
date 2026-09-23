@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "canonical-card-model-qualify-a2d03731",
+  "capabilityId": "EDUCATION_CANONICAL_CARD_MODEL_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "a2d03731a1d347c77321259d69b51fb94bdb2332",
+    "base_sha": "11a539cda921ee4b0d679d69eccb9bbfa4de289a"
   }
 }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T22:28:13Z",
+  "generatedAt": "2026-09-23T23:25:24Z",
   "window": {
-    "start": "2026-06-25T22:28:13Z",
-    "end": "2026-09-23T22:28:13Z"
+    "start": "2026-06-25T23:25:24Z",
+    "end": "2026-09-23T23:25:24Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4786,
+    "pageLoads": 4783,
     "visits": 1123,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4786,
+        "pageLoads": 4783,
         "visits": 1123
       }
     },
@@ -32,7 +32,7 @@
       },
       "/": {
         "pageLoads": 1036,
-        "visits": 706
+        "visits": 705
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 193,
+        "pageLoads": 188,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -177,10 +181,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -250,12 +250,12 @@
         "pageLoads": 71,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 11,
-        "visits": 0
-      },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 11,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -310,11 +310,11 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/campaigns/wave/thai-boxing/": {
+      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
         "pageLoads": 1,
         "visits": 0
       },
-      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
+      "/campaigns/wave/thai-boxing/": {
         "pageLoads": 1,
         "visits": 0
       },
@@ -347,8 +347,8 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 4,
-        "visits": 4
+        "pageLoads": 5,
+        "visits": 5
       },
       "/analytics-owner-device/": {
         "pageLoads": 7,
@@ -362,18 +362,18 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/analytics-owner-device/heartbeat/a9-1/": {
-        "pageLoads": 1,
+      "/analytics/": {
+        "pageLoads": 12,
         "visits": 0
       },
-      "/analytics/": {
-        "pageLoads": 11,
+      "/analytics-owner-device/heartbeat/a9-1/": {
+        "pageLoads": 1,
         "visits": 0
       }
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3663,
+        "pageLoads": 3660,
         "visits": 0
       },
       "(none)": {

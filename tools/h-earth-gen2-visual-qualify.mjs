@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+import { spawn } from 'node:child_process';
+import fs from 'node:fs/promises';
+const server=spawn('python3',['-m','http.server','4173','--directory','.'],{stdio:'ignore'});
+await new Promise(r=>setTimeout(r,1500));
+await fs.mkdir('/tmp/gen2-evidence',{recursive:true});
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage({viewport:{width:1440,height:900}});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await page.goto('http://127.0.0.1:4173/h-earth-3d/gen2/',{waitUntil:'networkidle',timeout:180000});
+await page.waitForTimeout(8000);
+const state=await page.evaluate(()=>({title:document.title,hud:document.querySelector('#hud')?.textContent||'',canvas:{w:document.querySelector('canvas')?.width||0,h:document.querySelector('canvas')?.height||0}}));
+await page.screenshot({path:'/tmp/gen2-evidence/ground-level.png',fullPage:true});
+await fs.writeFile('/tmp/gen2-evidence/receipt.json',JSON.stringify({schema:'H_EARTH_GEN2_VISUAL_QUALIFICATION_v1',state,errors},null,2));
+await browser.close();server.kill();
+if(errors.length||state.canvas.w<100||state.canvas.h<100||!state.hud.includes('PBR REALISM SUCCESSOR'))process.exit(1);

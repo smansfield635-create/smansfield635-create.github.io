@@ -766,6 +766,26 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "PUBLICATION_SURFACE_ALIAS_VERIFIER_QUALIFY": {
+      "workflow": "publication-surface-alias-verifier-qualification-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false
     }
   },
   "continuity": {

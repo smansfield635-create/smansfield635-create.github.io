@@ -1,0 +1,35 @@
+name: Publication Surface Alias Verifier Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify surface-aware alias verifier
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = ".github/workflows/pages-exact-head-deploy-v3.yml"
+          git show "$CANDIDATE_SHA:.github/workflows/pages-exact-head-deploy-v3.yml" >/tmp/w.yml
+          grep -Fq 'Verify custom-domain surface convergence' /tmp/w.yml
+          grep -Fq 'check_path="$(jq -r '\''.checks[0].path // empty'\'' "$MANIFEST")"' /tmp/w.yml
+          grep -Fq 'expected="$STAGE/$rel"' /tmp/w.yml
+          grep -Fq 'canonical_path="$check_path"' /tmp/w.yml
+          grep -Fq 'pretty_path="${runtime_path:-$check_path}"' /tmp/w.yml
+          grep -Fq 'if [ "$SURFACE_ID" = "audralia" ]; then' /tmp/w.yml
+          grep -Fq 'PAGES_PUBLIC_SURFACE_CONVERGENCE_RECEIPT_v2' /tmp/w.yml
+          grep -Fq 'ordinarySurfaceBytesConverged:true' /tmp/w.yml
+          if grep -Fq 'expected="$STAGE/index.html"' /tmp/w.yml; then echo stale-root-verifier >&2; exit 1; fi
+          echo PUBLICATION_SURFACE_ALIAS_VERIFIER_QUALIFICATION=PASS

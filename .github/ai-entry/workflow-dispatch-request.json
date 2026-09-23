@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-six-card-qualify-1fa8cdb6",
+  "capabilityId": "EDUCATION_SIX_CARD_CLOSURE_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "1fa8cdb66f80bc015e5d7d074d8cca3b56979f78",
+    "base_sha": "485959984715967d7549d89bd31b643502a1fb70"
   }
 }

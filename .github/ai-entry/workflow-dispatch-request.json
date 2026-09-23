@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "hearth-gen2-bridgeq-7259d7bb",
+  "capabilityId": "H_EARTH_GEN2_LIVE_BRIDGE_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "7259d7bbf8de531c5a918b300230066fa25856d8"
   }
 }

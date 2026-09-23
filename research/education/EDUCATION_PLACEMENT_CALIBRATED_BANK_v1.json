@@ -1185,20 +1185,21 @@
     {
       "evidenceClass": "INTEGRATED_TRANSFER",
       "id": "s8h",
-      "q": "What does this mean? “The two reported totals cannot both be accurate.”",
+      "q": "Which means the same? “The figures are mutually incompatible, so at least one must be inaccurate.”",
       "o": [
-        "At least one of the totals must be wrong.",
-        "Both totals are certainly correct.",
-        "The totals are approximately equal.",
-        "Neither total was reported."
+        "The figures cannot both be correct.",
+        "The figures are different but both certainly correct.",
+        "The figures are approximate versions of the same confirmed value.",
+        "Neither figure can be evaluated."
       ],
       "a": 0,
-      "node": "modal precision comprehension",
+      "node": "formal incompatibility paraphrase",
       "sourceStage": 8,
-      "competency": "READING_COMPREHENSION",
+      "competency": "MEANING_CONSTRUCTION",
       "difficulty": 8,
       "instructionBurden": "BASIC",
-      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE",
+      "itemQualityRepair": "v1"
     }
   ]
 }

@@ -8,9 +8,22 @@ const renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixe
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x8faab7);scene.fog=new THREE.FogExp2(0x8faab7,.0014);
 const camera=new THREE.PerspectiveCamera(54,1,.2,1800);camera.position.set(0,42,82);
 const target=new THREE.Vector3(0,12,-190);scene.add(new THREE.HemisphereLight(0xbfd8e5,0x28341f,1.1));const sun=new THREE.DirectionalLight(0xffe1b7,3.3);sun.position.set(-180,280,100);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-360;sun.shadow.camera.right=360;sun.shadow.camera.top=360;sun.shadow.camera.bottom=-360;scene.add(sun);
-const geo=new THREE.PlaneGeometry(620,620,310,310);geo.rotateX(-Math.PI/2);const p=geo.attributes.position;
-for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i)-210,s=sampleHEarthTerrainField(x,z);let y=s.elevation;const m=THREE.MathUtils.smoothstep(y,5,42),ridge=Math.pow(Math.abs(Math.sin(x*.015+z*.009)),2.5),drain=Math.pow(Math.abs(Math.sin(x*.032-z*.018)),6);y+=m*(ridge*8-drain*5+Math.sin(x*.08+z*.05)*1.1);p.setXYZ(i,x,y,z)}geo.computeVertexNormals();
-const mat=new THREE.MeshStandardMaterial({color:0x536543,roughness:.9,metalness:0});const terrain=new THREE.Mesh(geo,mat);terrain.castShadow=true;terrain.receiveShadow=true;scene.add(terrain);
+const geo=new THREE.PlaneGeometry(620,620,420,420);geo.rotateX(-Math.PI/2);const p=geo.attributes.position;
+for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i)-210,s=sampleHEarthTerrainField(x,z);let y=s.elevation;const m=THREE.MathUtils.smoothstep(y,5,42);
+ const warpX=Math.sin(z*.010+Math.sin(x*.006)*1.7)*24,warpZ=Math.sin(x*.009-Math.sin(z*.005)*1.5)*20;
+ const qx=x+warpX,qz=z+warpZ;
+ const ridge=Math.pow(1-Math.abs(Math.sin(qx*.013+qz*.007)),3.2);
+ const secondary=Math.pow(1-Math.abs(Math.sin(qx*.028-qz*.012)),4.6);
+ const drain=Math.pow(1-Math.abs(Math.sin(qx*.020+qz*.031)),7.5);
+ const escarp=THREE.MathUtils.smoothstep(ridge,.48,.82)*THREE.MathUtils.smoothstep(Math.sin(qx*.009-qz*.005),-.05,.55);
+ const micro=Math.sin(qx*.075+qz*.041)*.55+Math.sin(qx*.14-qz*.09)*.22;
+ y+=m*(ridge*12+secondary*3.4-drain*7+escarp*4.2+micro);p.setXYZ(i,x,y,z)}geo.computeVertexNormals();
+const mat=new THREE.MeshStandardMaterial({color:0x59634b,roughness:.94,metalness:0});
+mat.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+float slope=1.0-clamp(normalize(vNormal).y,0.0,1.0);
+vec3 low=vec3(.22,.27,.15),soil=vec3(.31,.27,.20),rock=vec3(.36,.35,.32);
+diffuseColor.rgb=mix(low,soil,smoothstep(.20,.48,slope));
+diffuseColor.rgb=mix(diffuseColor.rgb,rock,smoothstep(.46,.78,slope));`)};const terrain=new THREE.Mesh(geo,mat);terrain.castShadow=true;terrain.receiveShadow=true;scene.add(terrain);
 const water=new THREE.Mesh(new THREE.PlaneGeometry(900,900,1,1).rotateX(-Math.PI/2),new THREE.MeshPhysicalMaterial({color:0x0a6572,roughness:.2,transparent:true,opacity:.86,clearcoat:.7}));water.position.set(0,-.3,-190);scene.add(water);
 let yaw=0,pitch=.14,dist=290,drag=null;canvas.style.touchAction='none';
 canvas.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];canvas.setPointerCapture(e.pointerId)});

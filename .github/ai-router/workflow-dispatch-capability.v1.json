@@ -693,6 +693,25 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "EDUCATION_PAGE_COMPRESSION_QUALIFY": {
+      "workflow": "education-page-compression-qualification-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false
     }
   },
   "continuity": {

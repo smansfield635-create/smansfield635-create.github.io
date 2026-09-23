@@ -1,0 +1,40 @@
+name: Education Page Compression Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify compressed Education first-use path
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/c.html
+          git show "$BASE_SHA:products/education/index.html" >/tmp/b.html
+          node - <<'NODE'
+          const fs=require('fs'),c=fs.readFileSync('/tmp/c.html','utf8'),b=fs.readFileSync('/tmp/b.html','utf8');
+          for(const src of [...c.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const block=(s,a,z)=>s.slice(s.indexOf(a),s.indexOf(z,s.indexOf(a)));
+          for(const [a,z,n] of [['const BANK=','const CAPSTONE_BANK=','BANK'],['const CAPSTONE_BANK=','const EDUCATION_STATE_KEY=','CAPSTONE'],['function placementCoordinate','const BANK=','CROSSWALK'],['function submitAdaptiveAnswer','function resolveAdaptiveBoundary','ADAPTIVE']])if(block(c,a,z)!==block(b,a,z))throw Error('frozen '+n+' changed');
+          const body=c.slice(c.indexOf('<body'),c.indexOf('<script>'));
+          const seq=['edu-hero-v2','edu-carousel panel','edu-demo-gateway panel','demo-shell','edu-journey-resolution','edu-evidence'].map(x=>body.indexOf(x));
+          if(seq.some(x=>x<0)||seq.some((x,i)=>i&&x<=seq[i-1]))throw Error('target order');
+          if(body.includes('edu-story-bridge'))throw Error('story bridge remains visible');
+          if(body.includes('I may be beyond this demo'))throw Error('stale intake option');
+          if(!body.includes('Advanced English; start with the highest challenge'))throw Error('advanced intake orientation missing');
+          const gs=body.indexOf('<section class="edu-demo-gateway'),ge=body.indexOf('</section>',gs),g=body.slice(gs,ge);
+          if(g.includes('placementStatement')||(g.match(/placementExplanation/g)||[]).length!==1||(g.match(/placementBoundary/g)||[]).length!==1)throw Error('gateway not compact');
+          for(const token of ['See how the system works, one step at a time.','Drag, swipe, tap a neighboring card, or use the arrow keys.','DESIGNED AS A 3–6 MONTH LEARNING JOURNEY'])if(!c.includes(token))throw Error('missing '+token);
+          for(const token of ['pointermove','data-flip','CAPSTONE_PASS','PUBLIC_AVAILABLE','NOT_CURRENTLY_AVAILABLE','data-shell-language="es"','data-shell-language="zh"'])if(!c.includes(token))throw Error('regression '+token);
+          console.log('EDUCATION_PAGE_COMPRESSION_QUALIFICATION=PASS');
+          NODE

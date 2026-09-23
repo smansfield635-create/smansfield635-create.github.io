@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-residual-ab625a96",
+  "capabilityId": "H_EARTH_PHASE3_NATIVE_RESIDUAL_PROOF",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4569,
+  "requestBranch": "ai-dispatch-request-hearth-residual-ab625a96",
+  "requestCommit": "079e9005b5f9412c706bdddd24a595e4deff2454",
+  "requestCommitParent": "68a5addfb2079cbcb3f81a93fe42afa2e73ad4db",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "68a5addfb2079cbcb3f81a93fe42afa2e73ad4db",
+  "workflow": "h-earth-phase3-native-residual-proof-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ab625a966b41cd4cab019a2fef7a6e78bf21a432"
+  },
+  "bridgeRunId": "35881850849",
+  "dispatchedRunId": 35881873205,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35881873205",
+  "dispatchedRunHeadSha": "68a5addfb2079cbcb3f81a93fe42afa2e73ad4db",
+  "dispatchedAt": "2026-09-23T15:28:56.280Z",
+  "resolvedAt": "2026-09-23T15:28:59.791Z"
+}

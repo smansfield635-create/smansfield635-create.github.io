@@ -1,0 +1,21 @@
+name: H-Earth Adaptive 2-to-1 Transition Proof
+on:
+  push:
+    branches:
+      - h-earth/adaptive-2to1-transition-topology-v1
+permissions:
+  contents: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node h-earth-3d/validation/adaptive-2to1-transition-topology.proof.mjs | tee adaptive-transition-proof.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-adaptive-2to1-transition-proof
+          path: adaptive-transition-proof.json
+          retention-days: 90

@@ -1,0 +1,9 @@
+import {chromium} from 'playwright';import{spawn}from'node:child_process';import fs from'node:fs/promises';
+const out='/tmp/gen2-bridge-evidence';await fs.mkdir(out,{recursive:true});const server=spawn('python3',['-m','http.server','4173','--directory','.'],{stdio:'ignore'});await new Promise(r=>setTimeout(r,1200));
+const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/',{waitUntil:'networkidle',timeout:120000});await page.waitForTimeout(5000);
+const before=await page.evaluate(()=>{const c=document.querySelector('#h-earth-functional-landscape-canvas');return{bridge:window.H_EARTH_GEN2_LIVE_BRIDGE??null,canvas:c?{w:c.width,h:c.height}:null}});
+await page.mouse.move(700,450);await page.mouse.down();await page.mouse.move(820,500,{steps:8});await page.mouse.up();await page.waitForTimeout(500);await page.screenshot({path:out+'/bridge-ground-level.png',fullPage:true});
+const pixels=await page.evaluate(()=>{const c=document.querySelector('#h-earth-functional-landscape-canvas');if(!c)return null;const gl=c.getContext('webgl2')||c.getContext('webgl');if(!gl)return null;const p=new Uint8Array(4);gl.readPixels(Math.floor(c.width/2),Math.floor(c.height/2),1,1,gl.RGBA,gl.UNSIGNED_BYTE,p);return [...p]});
+const receipt={schema:'H_EARTH_GEN2_LIVE_BRIDGE_QUALIFICATION_v1',before,pixels,errors};await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2));await browser.close();server.kill();
+const ok=before.bridge?.active===true&&before.bridge?.oldTerrainMasked===true&&before.canvas?.w>100&&before.canvas?.h>100&&pixels&&pixels[3]>0&&errors.length===0;if(!ok)process.exit(1);

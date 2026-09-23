@@ -1,0 +1,33 @@
+name: H-Earth Gen2 Visual Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+      - name: Require exact candidate
+        run: test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+      - name: Install browser
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Capture Gen2
+        run: node tools/h-earth-gen2-visual-qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-gen2-visual-${{ inputs.target_sha }}
+          path: /tmp/gen2-evidence
+          if-no-files-found: error
+          retention-days: 30

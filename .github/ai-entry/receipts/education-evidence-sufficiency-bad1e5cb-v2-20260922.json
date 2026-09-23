@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-evidence-sufficiency-bad1e5cb-v2-20260922",
+  "capabilityId": "EDUCATION_EVIDENCE_SUFFICIENCY_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4395,
+  "requestBranch": "ai-dispatch-request-education-evidence-sufficiency-v2",
+  "requestCommit": "de1287ae13dcfc77cd19993accdcb306ba9f6786",
+  "requestCommitParent": "26cbea460f705ef0b09ddeb11eef78e9b022f53c",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "26cbea460f705ef0b09ddeb11eef78e9b022f53c",
+  "workflow": "education-evidence-sufficiency-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "bad1e5cbfaff59b911403424ff1a043fbdac62f3",
+    "base_sha": "514cfb0a7c68a3191f965a57ebe5f844bb32b645"
+  },
+  "bridgeRunId": "35801010412",
+  "dispatchedRunId": 35801022849,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35801022849",
+  "dispatchedRunHeadSha": "26cbea460f705ef0b09ddeb11eef78e9b022f53c",
+  "dispatchedAt": "2026-09-23T00:12:29.828Z",
+  "resolvedAt": "2026-09-23T00:12:33.918Z"
+}

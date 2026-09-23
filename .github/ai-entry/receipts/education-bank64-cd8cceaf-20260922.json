@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-bank64-cd8cceaf-20260922",
+  "capabilityId": "EDUCATION_PLACEMENT_BANK_64_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4390,
+  "requestBranch": "ai-dispatch-request-education-bank64",
+  "requestCommit": "6b749d2b284eed875ac844f1d9b50671795299b2",
+  "requestCommitParent": "e61cb8e3ccf63f0df42409e03cdc48bb5c7bc8ae",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e61cb8e3ccf63f0df42409e03cdc48bb5c7bc8ae",
+  "workflow": "education-placement-bank-64-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "cd8cceaf0bb5c364ff71057e4e10df1eae010982",
+    "base_sha": "9744bb149b9db59cf21f21636ae78702fa12efaf"
+  },
+  "bridgeRunId": "35800660120",
+  "dispatchedRunId": 35800693966,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35800693966",
+  "dispatchedRunHeadSha": "e61cb8e3ccf63f0df42409e03cdc48bb5c7bc8ae",
+  "dispatchedAt": "2026-09-23T00:08:15.742Z",
+  "resolvedAt": "2026-09-23T00:08:18.944Z"
+}

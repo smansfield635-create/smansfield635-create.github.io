@@ -1,0 +1,41 @@
+name: ARCHCOIN Sepolia Deployment v1
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment: archcoin-sepolia
+    defaults:
+      run:
+        working-directory: economy/archcoin/evm
+    env:
+      SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+      SEPOLIA_DEPLOYER_PRIVATE_KEY: ${{ secrets.SEPOLIA_DEPLOYER_PRIVATE_KEY }}
+      ARCHCOIN_INITIAL_RECIPIENT: ${{ vars.ARCHCOIN_INITIAL_RECIPIENT }}
+      ARCC_INITIAL_SUPPLY: '1000000'
+      ARCR_INITIAL_SUPPLY: '1000000'
+      ARCP_INITIAL_SUPPLY: '1000000'
+      ARCA_INITIAL_SUPPLY: '1000000'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Compile
+        run: npx hardhat compile
+      - name: Deploy four assets to Sepolia
+        run: npx hardhat run scripts/deploy-sepolia.js --network sepolia
+      - name: Upload deployment receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archcoin-sepolia-deployment-receipt
+          path: economy/archcoin/evm/qualification/sepolia-deployment.json
+          if-no-files-found: warn

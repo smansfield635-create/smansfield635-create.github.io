@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T17:30:39Z",
+  "generatedAt": "2026-09-23T18:37:25Z",
   "window": {
-    "start": "2026-06-25T17:30:39Z",
-    "end": "2026-09-23T17:30:39Z"
+    "start": "2026-06-25T18:37:25Z",
+    "end": "2026-09-23T18:37:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4770,
-    "visits": 1117,
+    "pageLoads": 4760,
+    "visits": 1114,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4770,
-        "visits": 1117
+        "pageLoads": 4760,
+        "visits": 1114
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1045,
-        "visits": 712
+        "pageLoads": 1041,
+        "visits": 709
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 72,
+        "pageLoads": 71,
         "visits": 0
       },
       "/characters/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 167,
+        "pageLoads": 166,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 158,
+        "pageLoads": 155,
         "visits": 7
       },
       "/governance/": {
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 12,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -231,7 +231,7 @@
         "visits": 0
       },
       "/instruments/": {
-        "pageLoads": 11,
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -338,6 +338,10 @@
         "pageLoads": 2,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 1,
+        "visits": 1
+      },
       "/products/nutrition/": {
         "pageLoads": 1,
         "visits": 0
@@ -350,9 +354,9 @@
         "pageLoads": 7,
         "visits": 7
       },
-      "/home/": {
-        "pageLoads": 1,
-        "visits": 1
+      "/meet-sean-mansfield/": {
+        "pageLoads": 5,
+        "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
@@ -365,10 +369,6 @@
       "/analytics/": {
         "pageLoads": 11,
         "visits": 0
-      },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 5,
-        "visits": 0
       }
     },
     "byReferer": {
@@ -377,12 +377,12 @@
         "visits": 361
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3653,
+        "pageLoads": 3646,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 746,
-        "visits": 746
+        "pageLoads": 743,
+        "visits": 743
       },
       "raw.githack.com": {
         "pageLoads": 10,

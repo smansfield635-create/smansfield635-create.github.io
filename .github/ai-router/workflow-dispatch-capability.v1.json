@@ -582,6 +582,22 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
+    },
+    "H_EARTH_GEN2_LIVE_BRIDGE_QUALIFY": {
+      "workflow": "h-earth-gen2-live-bridge-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "H_EARTH_GEN2_LIVE_BRIDGE_EVIDENCE"
     }
   },
   "continuity": {

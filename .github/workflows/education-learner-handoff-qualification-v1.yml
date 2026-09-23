@@ -1,0 +1,38 @@
+name: Education Learner Handoff Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify learner-facing handoff
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          grep -Fq 'Your starting point' /tmp/e.html
+          grep -Fq 'Start learning' /tmp/e.html
+          grep -Fq 'Learn → Practice → Check' /tmp/e.html
+          grep -Fq 'Your placement sets the starting point. Your performance determines what comes next.' /tmp/e.html
+          ! grep -Fq 'Runtime initialization would begin from unresolved competency evidence here.' /tmp/e.html
+          ! grep -Fq 'Verified Independence' /tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const a=s.indexOf('const BANK='),b=s.indexOf('const EDUCATION_STATE_KEY=',a),BANK=Function(s.slice(a,b)+';return BANK')();
+          if(Object.values(BANK).flat().length!==64)throw Error('bank regression');
+          console.log('EDUCATION_LEARNER_HANDOFF_QUALIFICATION=PASS');
+          NODE

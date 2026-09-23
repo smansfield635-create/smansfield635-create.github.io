@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-final-preflight-1ffe5070-20260922",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4484,
+  "requestBranch": "ai-dispatch-request-education-final-preflight",
+  "requestCommit": "6611539c6dc9986b6f492282e56010e6a9c396ec",
+  "requestCommitParent": "1ffe50701be18963612aaf14f93bd54be05e8f90",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "1ffe50701be18963612aaf14f93bd54be05e8f90",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "1ffe50701be18963612aaf14f93bd54be05e8f90",
+    "surface_id": "education"
+  },
+  "bridgeRunId": "35812550920",
+  "dispatchedRunId": 35812566989,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35812566989",
+  "dispatchedRunHeadSha": "1ffe50701be18963612aaf14f93bd54be05e8f90",
+  "dispatchedAt": "2026-09-23T02:59:59.225Z",
+  "resolvedAt": "2026-09-23T03:00:03.066Z"
+}

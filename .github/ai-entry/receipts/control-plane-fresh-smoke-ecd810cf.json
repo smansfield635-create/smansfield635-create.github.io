@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "control-plane-fresh-smoke-ecd810cf",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4573,
+  "requestBranch": "ai-dispatch-request-control-plane-fresh-smoke-ecd810cf",
+  "requestCommit": "fd308ef22a1963c047575050a9bae995029b6e77",
+  "currentMainSha": "10f9b47b241e2a6197e2acd36c4fe7ca4338fa60",
+  "bridgeRunId": "35897093649",
+  "error": "Stale dispatch request: parent ecd810cf99c54ac349f59b961e3741c8bce0150a != current main 10f9b47b241e2a6197e2acd36c4fe7ca4338fa60",
+  "failedAt": "2026-09-23T17:39:34.396Z"
+}

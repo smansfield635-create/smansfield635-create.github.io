@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T18:37:25Z",
+  "generatedAt": "2026-09-23T19:28:07Z",
   "window": {
-    "start": "2026-06-25T18:37:25Z",
-    "end": "2026-09-23T18:37:25Z"
+    "start": "2026-06-25T19:28:07Z",
+    "end": "2026-09-23T19:28:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4760,
-    "visits": 1114,
+    "pageLoads": 4764,
+    "visits": 1122,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4760,
-        "visits": 1114
+        "pageLoads": 4764,
+        "visits": 1122
       }
     },
     "byPath": {
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 71,
+        "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 166,
+        "pageLoads": 165,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 170,
-        "visits": 44
+        "pageLoads": 177,
+        "visits": 51
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 155,
+        "pageLoads": 153,
         "visits": 7
       },
       "/governance/": {
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 12,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,8 +218,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
-        "pageLoads": 12,
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -319,8 +319,8 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 59,
-        "visits": 41
+        "pageLoads": 60,
+        "visits": 42
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 31,
@@ -334,6 +334,10 @@
         "pageLoads": 26,
         "visits": 0
       },
+      "/products/archcoin/payable/": {
+        "pageLoads": 9,
+        "visits": 0
+      },
       "/products/archcoin/allocation/": {
         "pageLoads": 2,
         "visits": 0
@@ -344,10 +348,6 @@
       },
       "/products/nutrition/": {
         "pageLoads": 1,
-        "visits": 0
-      },
-      "/products/archcoin/payable/": {
-        "pageLoads": 9,
         "visits": 0
       },
       "/analytics-owner-device/": {
@@ -373,16 +373,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 361,
-        "visits": 361
+        "pageLoads": 363,
+        "visits": 363
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3646,
+        "pageLoads": 3642,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 743,
-        "visits": 743
+        "pageLoads": 749,
+        "visits": 749
       },
       "raw.githack.com": {
         "pageLoads": 10,

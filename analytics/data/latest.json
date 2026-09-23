@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-23T18:37:25Z",
+  "generatedAt": "2026-09-23T19:28:07Z",
   "window30d": {
-    "start": "2026-08-24T18:37:25Z",
-    "end": "2026-09-23T18:37:25Z"
+    "start": "2026-08-24T19:28:07Z",
+    "end": "2026-09-23T19:28:07Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-16",
-      "pageLoads": 201
+      "pageLoads": 193
     },
     {
       "date": "2026-09-17",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 47
+      "pageLoads": 65
     }
   ],
   "summary": {
-    "pageLoads": 7064,
-    "botPageLoads": 2455,
-    "nonBotPageLoads": 4609
+    "pageLoads": 7054,
+    "botPageLoads": 2456,
+    "nonBotPageLoads": 4598
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3224,
-      "visits": 3224
+      "pageLoads": 3234,
+      "visits": 3234
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3212,
+      "pageLoads": 3186,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 597,
-      "visits": 597
+      "pageLoads": 603,
+      "visits": 603
     },
     {
       "host": "bing.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1832,
-      "visits": 1563
+      "pageLoads": 1826,
+      "visits": 1558
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 857,
-      "visits": 624
+      "pageLoads": 853,
+      "visits": 623
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 804,
-      "visits": 804
+      "pageLoads": 809,
+      "visits": 809
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,13 +197,13 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 269,
+      "pageLoads": 268,
       "visits": 91
     },
     {
       "path": "/products/education/",
-      "pageLoads": 213,
-      "visits": 96
+      "pageLoads": 222,
+      "visits": 105
     },
     {
       "path": "/evidence/agentic-frontier/",

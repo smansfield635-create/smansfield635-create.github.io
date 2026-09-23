@@ -543,3 +543,49 @@ CURRENT_BLOCKER = NONE_AT_DRIVE_CUSTODY_LAYER
 NEXT_LAWFUL_ACTION = FETCH_EXACT_2065_DRIVE_ID_1rMBd73ozOT99SVjb_2N3BGX_xJj0L3Eo -> REGISTER/MATERIALIZE_FOR_REMOTE_RENDERER -> LOCK_SOURCE_IN_OUT -> EXECUTE_EXISTING_CONTRACT
 
 No conversational attachment is required to recover the physical production lineage listed above.
+
+
+## 16. 2065 execution completed — qualified local successor
+
+Exact Drive source fetched: `2065.mp4`, Drive ID `1rMBd73ozOT99SVjb_2N3BGX_xJj0L3Eo`.
+
+Verified fetched source identity:
+- bytes: `5,369,293`
+- SHA-256: `f886293f226e7d961cc895599a694f30141397127cf1a4a102d91816d941eef4`
+- duration: `5.626750s`
+- video: H.264, 1080x1728
+
+Locked source interval used for the wholesale replacement:
+- source start frame: `4` (~0.534s)
+- source end boundary: `41` (~5.478s)
+- source substitution: NONE
+- browser/player chrome removed by bounded crop before landscape conform.
+
+Constructed output:
+`CHAPTER02_43S_V17_2065_TRANSITION_QUALIFIED.mp4`
+
+Output qualification:
+- duration: `43.000000s`
+- CFR: `30 fps`
+- frames: `1,290`
+- raster: `1280x720`
+- video: H.264 High / yuv420p
+- audio: original V15 AAC stream copied without re-encoding
+- decoded soundtrack MD5 before/after: `96d86d1cfd6e0f95d6ce03aaaa2b6267`
+- output SHA-256: `e24c52fb9e65f151c6db8cfd2d938b75758e609696b6ebe1b2c264dec311a034`
+
+Replacement construction is exactly frames 352–479. Frames 0–351 and 480–1289 retain V15 picture authority. Transition audit confirms the permitted state sequence only:
+`Scene A -> short dissolve -> 2065 traversal -> short dissolve -> H-Earth`.
+
+The two prohibited legacy impostor compositions are absent from the reconstructed 352–479 interval. H-Earth resumes at frame 480 / 16.000s. Runtime/frame-clock/audio gates pass.
+
+STATUS:
+`SOURCE_IN_OUT_LOCKED = TRUE`
+`FRAMES_352_479_CONSTRUCTED = TRUE`
+`NEGATIVE_IMPOSTOR_AUDIT = PASS`
+`POSITIVE_TRANSITION_AUDIT = PASS`
+`RUNTIME_FRAME_AUDIO_QUALIFICATION = PASS`
+`QUALIFIED_SUCCESSOR_RENDERED = TRUE`
+`OWNER_REVIEW = PENDING`
+
+The rendered successor exists on the execution surface and is ready for owner review. It must not be promoted to final Chapter 02 authority until owner review passes.

@@ -1549,7 +1549,7 @@ function beginIndependence(){
  if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
  qs("#intake-validation").textContent="";
  learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
- probeStage=Math.max(1,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};
+ probeStage=Math.max(1,Math.min(8,claimed));probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};
  setStage("test");saveEducationState({stage:"test"});startAdaptiveItem(probeStage,0);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
 }
 qs("#begin-placement").addEventListener("click",beginIndependence);
@@ -1561,7 +1561,7 @@ function startAdaptiveItem(stage,itemIndex=0){
  let index=bank.findIndex((x,i)=>i>=itemIndex&&!adaptiveState.usedItems.includes(x.id));
  if(index<0)index=bank.findIndex(x=>!adaptiveState.usedItems.includes(x.id));
  if(index<0){resolveAdaptiveBoundary(probeStage);return}
- currentSet=[{...bank[index]}];currentQuestionIndex=0;currentSetScore=0;currentItemAssisted=false;
+ currentSet=[{...bank[index]}];currentQuestionIndex=0;currentSetScore=0;
  adaptiveState={...(adaptiveState||{}),stage:probeStage,itemIndex:index,steps:(adaptiveState?.steps||0)};
  saveEducationState({stage:"test"});
  const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;
@@ -1579,17 +1579,17 @@ function renderQuestion(){
 function submitAdaptiveAnswer(){
  const chosen=qs('input[name="placement-answer"]:checked');
  if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
- const item=currentSet[0],correct=Number(chosen.value)===item.a,assisted=currentItemAssisted;
+ const item=currentSet[0],correct=Number(chosen.value)===item.a;
  adaptiveState.usedItems=adaptiveState.usedItems||[];adaptiveState.stageEvidence=adaptiveState.stageEvidence||{};
  const fresh=!adaptiveState.usedItems.includes(item.id);
  if(fresh)adaptiveState.usedItems.push(item.id);
- placementEvidence.push({stage:probeStage,difficulty:item.difficulty,itemId:item.id,node:item.node,competency:item.competency,evidenceClass:item.evidenceClass,correct,assisted,fresh});
+ placementEvidence.push({stage:probeStage,difficulty:item.difficulty,itemId:item.id,node:item.node,competency:item.competency,evidenceClass:item.evidenceClass,correct,fresh});
  adaptiveState.steps++;
  if(fresh){
-   const bucket=adaptiveState.stageEvidence[probeStage]||(adaptiveState.stageEvidence[probeStage]={unique:0,correct:0,unassistedCorrect:0,incorrect:0,assisted:0});
-   bucket.unique++;if(correct){bucket.correct++;if(!assisted)bucket.unassistedCorrect++}else bucket.incorrect++;if(assisted)bucket.assisted++;
+   const bucket=adaptiveState.stageEvidence[probeStage]||(adaptiveState.stageEvidence[probeStage]={unique:0,correct:0,unassistedCorrect:0,incorrect:0:0});
+   bucket.unique++;if(correct){bucket.correct++;bucket.unassistedCorrect++}else bucket.incorrect++;
  }
- probeHistory.push({stage:probeStage,difficulty:item.difficulty,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,assisted,fresh});
+ probeHistory.push({stage:probeStage,difficulty:item.difficulty,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,fresh});
  const bucket=adaptiveState.stageEvidence[probeStage],unique=bucket?.unique||0,ratio=unique?bucket.correct/unique:0;
  adaptiveState.highestSustainableDifficulty=adaptiveState.highestSustainableDifficulty??null;
  adaptiveState.lowestUnsustainableDifficulty=adaptiveState.lowestUnsustainableDifficulty??null;
@@ -1630,19 +1630,19 @@ function submitAdaptiveAnswer(){
 }
 function resolveAdaptiveBoundary(result){
  if(result==="UNCERTAIN"){
-   finalIndependence={verified_placement:"UNCERTAIN_BOUNDARY",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:"BOUNDARY_REVIEW",support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:null,label:"Boundary needs more evidence"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
+   finalIndependence={verified_placement:"UNCERTAIN_BOUNDARY",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:"BOUNDARY_REVIEW",support_dependence:"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:null,label:"Boundary needs more evidence"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
  }else if(result==="ABOVE"){
-   finalIndependence={verified_placement:"ABOVE_PHASE_1",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:supportCycle(1),support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"ABOVE_PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
+   finalIndependence={verified_placement:"ABOVE_PHASE_1",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:supportCycle(1),support_dependence:"UNASSISTED_IN_THIS_DEMO",placement_range:"ABOVE_PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
  }else{
    const stage=Math.max(1,Math.min(8,Number(result)||probeStage));
    const stageEvidence=placementEvidence.filter(x=>x.stage===stage), correct=stageEvidence.filter(x=>x.correct).length;
-   finalIndependence={verified_placement:stage,verified_stage:"P1S"+stage,verified_competency_position:null,demonstrated_nodes:correct,unresolved_nodes:stageEvidence.length-correct,support_cycle:supportCycle(stageEvidence.length?correct/stageEvidence.length:0),support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S"+stage,label:STAGES[stage-1].name},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
+   finalIndependence={verified_placement:stage,verified_stage:"P1S"+stage,verified_competency_position:null,demonstrated_nodes:correct,unresolved_nodes:stageEvidence.length-correct,support_cycle:supportCycle(stageEvidence.length?correct/stageEvidence.length:0),support_dependence:"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S"+stage,label:STAGES[stage-1].name},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
  }
  saveEducationState({stage:"result"});renderIndependence();
 }
 function supportCycle(score){
- if(score>=.9 && hintsUsed===0)return "TARGET_ONLY";
- if(score>=.75 && hintsUsed<=1)return "TARGET_DOMINANT";
+ if(score>=.9)return "TARGET_ONLY";
+ if(score>=.75)return "TARGET_DOMINANT";
  if(score>=.5)return "BILINGUAL_BRIDGED";
  return "NATIVE_SUPPORTED";
 }
@@ -1662,7 +1662,7 @@ function resolveIndependence(lastScore,resolvedStageOverride=null){
   demonstrated_nodes:demonstrated,
   unresolved_nodes:unresolved,
   support_cycle:cycle,
-  support_dependence:hintsUsed===0?"UNASSISTED_IN_THIS_DEMO":"ASSISTED_HINT_USED",
+  support_dependence:"UNASSISTED_IN_THIS_DEMO",
   placement_score:Math.round(current.score*100),
   placement_confidence:null,
   placement_range:above?"ABOVE_PHASE_1":"PHASE_1",
@@ -1688,7 +1688,7 @@ function renderIndependence(){
  '<article class="result-hero"><span class="eyebrow">Recommended starting stage</span><strong>'+startName+'</strong><span class="result-note">'+demonstratedText+'</span></article>'+
  '<article class="result-hero"><span class="eyebrow">Boundary</span><strong>'+(above?"Above Phase 1":STAGES[resolvedStageNumber-1].name)+'</strong><span class="result-note">'+(above?"Continue with advanced evidence rather than lowering the learner.":"This is the first competency boundary not sufficiently demonstrated by the placement traversal.")+'</span></article>'+
  '<article class="result-hero"><span class="eyebrow">Assistance</span><strong>'+(p.placement_evidence.some(x=>x.assisted)?"ASSISTED":"UNASSISTED")+'</strong><span class="result-note">'+assistance+'</span></article></div>'+
- '<div class="grid-3"><article class="metric"><b>Self-assessment start</b><strong>Stage '+learner.claimed_level+'</strong><span>Provisional entry only</span></article><article class="metric"><b>Resolved evidence</b><strong>'+p.demonstrated_nodes+'/'+(p.demonstrated_nodes+p.unresolved_nodes)+'</strong><span>Boundary probe items</span></article><article class="metric"><b>Hint use</b><strong>'+hintsUsed+'</strong><span>Recorded per item</span></article></div>'+
+ '<div class="grid-3"><article class="metric"><b>Self-assessment start</b><strong>Stage '+learner.claimed_level+'</strong><span>Provisional entry only</span></article><article class="metric"><b>Resolved evidence</b><strong>'+p.demonstrated_nodes+'/'+(p.demonstrated_nodes+p.unresolved_nodes)+'</strong><span>Boundary probe items</span></article></div>'+
  '<details><summary>See placement traversal</summary><div class="detail"><p>'+traversal+'</p></div></details>';
 }
 function enterDemo(){
@@ -1697,8 +1697,8 @@ function enterDemo(){
  qs("#entry-state").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Verified Independence</span><strong>'+p.verified_placement+'</strong><span class="result-note">This record is not rewritten by demo limits.</span></article><article class="result-hero"><span class="eyebrow">Demo Entry</span><strong>'+p.demo_entry_point.stage+'</strong><span class="result-note">'+p.demo_entry_point.label+'</span></article><article class="result-hero"><span class="eyebrow">Progress State</span><strong>'+p.support_cycle.replaceAll("_"," ")+'</strong><span class="result-note">'+p.support_dependence.replaceAll("_"," ")+'</span></article></div><p class="boundary">Runtime initialization would begin from unresolved competency evidence here. Already demonstrated nodes would not be replayed by default.</p>';
 }
 qs("#enter-demo").addEventListener("click",enterDemo);
-qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState=null});
-qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner={target_language:"English"};finalIndependence=null;probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState=null;setStage("intake")});
+qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState=null});
+qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner={target_language:"English"};finalIndependence=null;probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState=null;setStage("intake")});
 
 
 /* Gate One — persistent help-language propagation outside target-English evidence. */

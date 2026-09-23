@@ -31,13 +31,19 @@ const waterMat=new THREE.MeshPhysicalMaterial({color:0x0b6570,roughness:.18,meta
 const water=new THREE.Mesh(waterGeo,waterMat);water.position.set(0,-.35,-150);water.receiveShadow=true;scene.add(water);
 
 const sandMat=new THREE.MeshStandardMaterial({color:0xb39a69,roughness:1});
+const beachGeo=new THREE.PlaneGeometry(620,150,160,40);beachGeo.rotateX(-Math.PI/2);const bp=beachGeo.attributes.position;for(let i=0;i<bp.count;i++){const x=bp.getX(i),z=bp.getZ(i)-72;const shoreNoise=Math.sin(x*.026)*5+Math.sin(x*.071)*2.2;bp.setXYZ(i,x,.18+Math.sin(x*.19+z*.11)*.08,z+shoreNoise)}beachGeo.computeVertexNormals();const beach=new THREE.Mesh(beachGeo,sandMat);beach.receiveShadow=true;scene.add(beach);
+const foamMat=new THREE.MeshBasicMaterial({color:0xe7eee8,transparent:true,opacity:.68,depthWrite:false});const foamGeo=new THREE.PlaneGeometry(620,10,160,3);foamGeo.rotateX(-Math.PI/2);const fp=foamGeo.attributes.position;for(let i=0;i<fp.count;i++){const x=fp.getX(i);fp.setXYZ(i,x,.32,fp.getZ(i)-72+Math.sin(x*.026)*5+Math.sin(x*.071)*2.2)}const foam=new THREE.Mesh(foamGeo,foamMat);scene.add(foam);
 const rockMat=new THREE.MeshStandardMaterial({color:0x4c4a43,roughness:.96});
 function rock(x,y,z,s){const g=new THREE.IcosahedronGeometry(s,2);const a=g.attributes.position;for(let i=0;i<a.count;i++){const px=a.getX(i),py=a.getY(i),pz=a.getZ(i),r=1+.12*Math.sin(px*.8+py*1.3+pz*.7);a.setXYZ(i,px*r,py*r*.82,pz*r*1.08)}g.computeVertexNormals();const m=new THREE.Mesh(g,rockMat);m.position.set(x,y,z);m.rotation.set(.2*Math.sin(x),.5*Math.sin(z),.12);m.castShadow=true;m.receiveShadow=true;scene.add(m)}
 [[-190,4,-62,12],[-160,3,-76,8],[-118,3,-58,7],[92,4,-68,10],[142,5,-82,13],[205,4,-70,9],[-270,15,-130,20],[275,13,-115,18]].forEach(r=>rock(...r));
 
+// Integrated rock cavern: arch assembled from irregular geology, with a dark recessed interior.
+const caveRockMat=new THREE.MeshStandardMaterial({color:0x3d3b36,roughness:1});
+for(let a=-1.35;a<=1.35;a+=.27){const x=-82+Math.cos(a)*24,z=-205,y=11+Math.sin(a)*18;rock(x,y,z,7+2*Math.cos(a));}
+const caveDark=new THREE.Mesh(new THREE.CircleGeometry(15,32),new THREE.MeshBasicMaterial({color:0x070909,side:THREE.DoubleSide}));caveDark.position.set(-82,12,-207);scene.add(caveDark);
 const trunkMat=new THREE.MeshStandardMaterial({color:0x4a3424,roughness:1}),leafMat=new THREE.MeshStandardMaterial({color:0x254526,roughness:.95});
 const trunkGeo=new THREE.CylinderGeometry(.45,.7,7,7),crownGeo=new THREE.ConeGeometry(3.3,10,8);
-for(let x=-300;x<=300;x+=18)for(let z=-330;z<=70;z+=22){const s=sampleHEarthTerrainField(x,z);if(s.elevation<4||s.elevation>48||Math.sin(x*.17+z*.11)<-.15)continue;const t=new THREE.Mesh(trunkGeo,trunkMat),c=new THREE.Mesh(crownGeo,leafMat);t.position.set(x,s.elevation+3.5,z);c.position.set(x,s.elevation+10,z);t.castShadow=c.castShadow=true;scene.add(t,c)}
+for(let x=-300;x<=300;x+=14)for(let z=-350;z<=90;z+=18){const s=sampleHEarthTerrainField(x,z);if(s.elevation<4||s.elevation>48||Math.sin(x*.17+z*.11)<-.15)continue;const t=new THREE.Mesh(trunkGeo,trunkMat),c=new THREE.Mesh(crownGeo,leafMat);t.position.set(x,s.elevation+3.5,z);c.position.set(x,s.elevation+10,z);t.castShadow=c.castShadow=true;scene.add(t,c)}
 
 document.getElementById('hud').textContent='H-EARTH GEN 2 · PBR REALISM SUCCESSOR · '+H_EARTH_TERRAIN_FIELD_CONTRACT_ID;
 function animate(t){const p=waterGeo.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i);p.setY(i,Math.sin(x*.035+t*.0014)*.18+Math.sin(z*.051-t*.0011)*.12)}p.needsUpdate=true;waterGeo.computeVertexNormals();controls.update();renderer.render(scene,camera);requestAnimationFrame(animate)}

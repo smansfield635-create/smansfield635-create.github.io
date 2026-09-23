@@ -1,0 +1,23 @@
+name: H-Earth Adaptive C Topology Qualification
+on:
+  push:
+    branches:
+      - h-earth/adaptive-c-4u8u-v1
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node h-earth-3d/validation/adaptive-c-topology.qualify.mjs "$PWD" | tee adaptive-c-topology.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-adaptive-c-topology
+          path: adaptive-c-topology.json
+          retention-days: 90

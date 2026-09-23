@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-deep-matrix-67bb0a29-20260922",
+  "capabilityId": "EDUCATION_DEEP_MATRIX_MONOTONICITY_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4502,
+  "requestBranch": "ai-dispatch-request-education-deep-matrix",
+  "requestCommit": "539eb0bf4ba2eca83478ba82d97dec5bbba0417b",
+  "requestCommitParent": "7da17fb683d3562e9333d034a664aadb8d197b0f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7da17fb683d3562e9333d034a664aadb8d197b0f",
+  "workflow": "education-deep-matrix-monotonicity-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "67bb0a295ac8080378f9a659d855f70f69ca90d5",
+    "base_sha": "96d419fa09f110c736fde873fff56ee479e4abf4"
+  },
+  "bridgeRunId": "35814300257",
+  "dispatchedRunId": 35814311293,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35814311293",
+  "dispatchedRunHeadSha": "7da17fb683d3562e9333d034a664aadb8d197b0f",
+  "dispatchedAt": "2026-09-23T03:26:10.394Z",
+  "resolvedAt": "2026-09-23T03:26:14.047Z"
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "hearth-gen2-visual-e854dc5d",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4448,
+  "requestBranch": "ai-dispatch-request-hearth-gen2-visual-e854dc5d",
+  "requestCommit": "ec53193e381c1aa5a4dd0b0e8161f269e0fd99fa",
+  "currentMainSha": "c7cbcc59b5037545db1ae5395f2b7197e6052e38",
+  "bridgeRunId": "35809311837",
+  "error": "Unknown capabilityId: H_EARTH_GEN2_VISUAL_QUALIFY",
+  "failedAt": "2026-09-23T02:10:53.547Z"
+}

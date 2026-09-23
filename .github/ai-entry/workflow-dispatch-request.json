@@ -1,9 +1,10 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-cycle-contract-bind-cebb9698-20260922",
+  "capabilityId": "AI_ENTRY_CONTRACT_BIND",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "contract_path": "research/education/EDUCATION_ENTRY_LEVEL_CYCLE_COMPLETION_CONTRACT_v1.md",
+    "contract_sha": "cebb96983e52127676a2484fb7976d803d8d0919",
+    "repository_full_name": "smansfield635-create/smansfield635-create.github.io"
   }
 }

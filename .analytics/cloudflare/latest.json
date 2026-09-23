@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-09-23T15:32:46Z",
+  "generatedAt": "2026-09-23T16:35:19Z",
   "window": {
-    "start": "2026-06-25T15:32:46Z",
-    "end": "2026-09-23T15:32:46Z"
+    "start": "2026-06-25T16:35:19Z",
+    "end": "2026-09-23T16:35:19Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -1710,15 +1710,63 @@
           }
         },
         {
-          "count": 100,
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-08-14T16:00:00Z"
+          }
+        },
+        {
+          "count": 30,
+          "dimensions": {
+            "datetimeHour": "2026-08-14T21:00:00Z"
+          }
+        },
+        {
+          "count": 40,
           "dimensions": {
             "datetimeHour": "2026-08-14T22:00:00Z"
           }
         },
         {
-          "count": 100,
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-08-14T23:00:00Z"
+          }
+        },
+        {
+          "count": 30,
+          "dimensions": {
+            "datetimeHour": "2026-08-15T00:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-08-15T01:00:00Z"
+          }
+        },
+        {
+          "count": 40,
           "dimensions": {
             "datetimeHour": "2026-08-15T02:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-08-15T03:00:00Z"
+          }
+        },
+        {
+          "count": 20,
+          "dimensions": {
+            "datetimeHour": "2026-08-15T05:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-08-15T06:00:00Z"
           }
         },
         {
@@ -3438,12 +3486,6 @@
           }
         },
         {
-          "count": 3,
-          "dimensions": {
-            "datetimeHour": "2026-09-16T16:00:00Z"
-          }
-        },
-        {
           "count": 14,
           "dimensions": {
             "datetimeHour": "2026-09-16T17:00:00Z"
@@ -4170,7 +4212,7 @@
           }
         },
         {
-          "count": 3,
+          "count": 5,
           "dimensions": {
             "datetimeHour": "2026-09-23T15:00:00Z"
           }

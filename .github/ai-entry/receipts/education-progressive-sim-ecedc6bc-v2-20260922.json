@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-progressive-sim-ecedc6bc-v2-20260922",
+  "capabilityId": "EDUCATION_PROGRESSIVE_TRAVERSAL_SIM_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4431,
+  "requestBranch": "ai-dispatch-request-education-progressive-sim-v2",
+  "requestCommit": "4e60636fdd7178305bf3153a18bdf2b47cc2419a",
+  "requestCommitParent": "7c692cef3888d065f856b2a8a8c001cfa1679f2a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7c692cef3888d065f856b2a8a8c001cfa1679f2a",
+  "workflow": "education-progressive-traversal-simulation-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "ecedc6bc41fd430c58edf1f13f232e485524e603",
+    "base_sha": "d376eaca162cee39d8d9dc4fbecaf89c5f10adfe"
+  },
+  "bridgeRunId": "35806222752",
+  "dispatchedRunId": 35806232415,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35806232415",
+  "dispatchedRunHeadSha": "7c692cef3888d065f856b2a8a8c001cfa1679f2a",
+  "dispatchedAt": "2026-09-23T01:25:34.820Z",
+  "resolvedAt": "2026-09-23T01:25:38.132Z"
+}

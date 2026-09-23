@@ -1,0 +1,33 @@
+name: Education Progressive Traversal Simulation Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run progressive traversal simulation
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 2
+          printf '%s\n' "${changed[@]}" | grep -Fxq research/education/EDUCATION_PLACEMENT_PROGRESSIVE_TRAVERSAL_SPEC_v1.md
+          printf '%s\n' "${changed[@]}" | grep -Fxq research/education/education-progressive-traversal-simulation-v1.mjs
+          git show "$CANDIDATE_SHA:research/education/education-progressive-traversal-simulation-v1.mjs" >/tmp/sim.mjs
+          node /tmp/sim.mjs | tee /tmp/result.json
+          grep -Fq '"result": "PASS"' /tmp/result.json
+          grep -Fq '"name": "ABOVE"' /tmp/result.json
+          grep -Fq '"name": "OVERESTIMATE"' /tmp/result.json
+          grep -Fq '"name": "UNDERESTIMATE"' /tmp/result.json
+          grep -Fq '"name": "CONTRADICTORY"' /tmp/result.json
+          echo EDUCATION_PROGRESSIVE_TRAVERSAL_SIMULATION_QUALIFICATION=PASS

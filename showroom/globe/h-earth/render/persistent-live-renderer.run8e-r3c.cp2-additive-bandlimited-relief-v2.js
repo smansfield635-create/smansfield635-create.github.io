@@ -1,3 +1,7 @@
+import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import { sampleHEarthRun8CSuccessorSurfaceMaterial } from '../../../../h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
+import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
+import { regionalReliefDelta } from './landscape-preview.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
@@ -525,7 +529,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     depthReadbackCount: 0, pngEncodingCount: 0, gpuFinishCount: 0,
     cameraUniformUpdateCount: 0, staticUniformUpdateCount: 0,
     geometryDrawCallCount: 0, totalDrawnIndexCount: 0,
-    depthVisualizationDrawCallCount: 0
+    depthVisualizationDrawCallCount: 0,
+    refinementResourceCreateCount:0,refinementBufferUploadCount:0,refinementDrawCallCount:0
   };
   const resources = {};
   const markPostInitializationCreation = () => {
@@ -660,6 +665,28 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
   }
 
+  function buildInitialRefinementPatch(packet){
+    if(resources.refinement?.created)return resources.refinement;
+    const local=packet?.camera?.localAuthoringPosition;if(!local)return null;
+    const spacing=4,radius=64,x0=Math.round(local.x/8)*8,z0=Math.round(local.z/8)*8,xs=[],zs=[];
+    for(let x=x0-radius;x<=x0+radius;x+=spacing)xs.push(x);for(let z=z0-radius;z<=z0+radius;z+=spacing)zs.push(z);
+    const vertexCount=xs.length*zs.length,triangleCount=(xs.length-1)*(zs.length-1)*2;if(vertexCount>4096||triangleCount>8192)throw new Error('R3C_REFINEMENT_CEILING_EXCEEDED');
+    const localPositions=[],projected=[];for(const z of zs)for(const x of xs){const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_SAMPLE_INVALID');const v={x,y:t.elevation,z};v.y+=regionalReliefDelta(v);localPositions.push(v);projected.push(regionToHEarthPlanetPoint(v));}
+    const positions=new Float32Array(vertexCount*3);projected.forEach((q,i)=>positions.set([q.x,q.y,q.z],i*3));
+    const indices=new Uint32Array(triangleCount*3);let ii=0,cols=xs.length;for(let r=0;r<zs.length-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.set([a,e,b,b,e,d],ii);ii+=6;}
+    const normals=new Float32Array(vertexCount*3),acc=Array.from({length:vertexCount},()=>[0,0,0]);let degenerate=0;
+    for(let k=0;k<indices.length;k+=3){const a=indices[k],b=indices[k+1],c=indices[k+2],A=projected[a],B=projected[b],C=projected[c],ux=B.x-A.x,uy=B.y-A.y,uz=B.z-A.z,vx=C.x-A.x,vy=C.y-A.y,vz=C.z-A.z,n=[uy*vz-uz*vy,uz*vx-ux*vz,ux*vy-uy*vx],len=Math.hypot(...n);if(len<1e-10){degenerate++;continue}n=n.map(v=>v/len);for(const j of[a,b,c]){acc[j][0]+=n[0];acc[j][1]+=n[1];acc[j][2]+=n[2];}}
+    acc.forEach((n,i)=>{const l=Math.hypot(...n)||1;normals.set(n.map(v=>v/l),i*3)});
+    const colors=new Float32Array(vertexCount*4),mats=new Float32Array(vertexCount*4),sc=new Uint8Array(vertexCount),classMap=new Map();let next=0;
+    localPositions.forEach((v,i)=>{const m=sampleHEarthRun8CSuccessorSurfaceMaterial(v.x,v.z);if(m?.valid!==true)throw new Error('R3C_REFINEMENT_MATERIAL_INVALID');colors.set([m.baseColorProfile.linearR,m.baseColorProfile.linearG,m.baseColorProfile.linearB,m.baseColorProfile.alpha],i*4);mats.set([m.roughness,m.reflectance,m.wetness,m.curvaturePressure],i*4);if(!classMap.has(m.surfaceClass))classMap.set(m.surfaceClass,next++);sc[i]=classMap.get(m.surfaceClass)});
+    let coincident=0,maxDelta=0,perimeter=0,maxPerimeterDelta=0;for(let i=0;i<localPositions.length;i++){const v=localPositions[i];if(v.x%8===0&&v.z%8===0){coincident++;const t=sampleHEarthRun8BSuccessorTerrainField(v.x,v.z),bv={x:v.x,y:t.elevation,z:v.z};bv.y+=regionalReliefDelta(bv);const q=regionToHEarthPlanetPoint(bv),d=Math.hypot(q.x-projected[i].x,q.y-projected[i].y,q.z-projected[i].z);maxDelta=Math.max(maxDelta,d);const edge=Math.abs(v.x-(x0-radius))<1e-9||Math.abs(v.x-(x0+radius))<1e-9||Math.abs(v.z-(z0-radius))<1e-9||Math.abs(v.z-(z0+radius))<1e-9;if(edge){perimeter++;maxPerimeterDelta=Math.max(maxPerimeterDelta,d)}}}
+    if(maxDelta>1e-5||maxPerimeterDelta>1e-5||degenerate!==0)throw new Error('R3C_REFINEMENT_PARITY_GATE_FAILED');
+    const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.refinementBufferUploadCount++;};
+    bind(0,positions,3);bind(1,normals,3);bind(2,colors,4);bind(3,mats,4);const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
+    resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},radius,parity:{coincidentVertexCount:coincident,maxCoincidentPositionDelta:maxDelta,perimeterVertexCount:perimeter,maxPerimeterPositionDelta:maxPerimeterDelta,degenerateTriangleCount:degenerate,suppressionCoordinateSpace:'LOCAL_AUTHORING_XZ_REQUIRED'}};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
+  }
+  function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
+
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
@@ -677,6 +704,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
+    if(resources.refinement?.created){gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
@@ -749,7 +777,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

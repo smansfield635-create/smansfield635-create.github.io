@@ -22,8 +22,13 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright
           npx playwright install --with-deps chromium
+      - name: Materialize verifier from control-plane main
+        shell: bash
+        run: |
+          git show origin/main:tools/h-earth-gen2-visual-qualify.mjs > /tmp/h-earth-gen2-visual-qualify.mjs
+          test -s /tmp/h-earth-gen2-visual-qualify.mjs
       - name: Capture Gen2
-        run: node tools/h-earth-gen2-visual-qualify.mjs
+        run: node /tmp/h-earth-gen2-visual-qualify.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

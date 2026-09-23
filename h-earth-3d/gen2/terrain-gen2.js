@@ -30,9 +30,10 @@ void main(){
  p.y+=erosion*14.0;
  p.y+=escarpment*mountain*4.8;
  p.y+=terrace*mountain*escarpment*.12;
- float shore=1.0-smoothstep(0.0,8.0,abs(p.y));
- float beachShelf=smoothstep(-3.0,1.5,p.y)*(1.0-smoothstep(1.5,7.5,p.y));
- p.y=mix(p.y,mix(-.7,2.1,smoothstep(-3.0,7.5,p.y)),beachShelf*.62);
+ float shore=1.0-smoothstep(0.0,9.0,abs(p.y));
+ float beachShelf=smoothstep(-4.0,1.2,p.y)*(1.0-smoothstep(1.2,9.0,p.y));
+ float coastWarp=(noise2(vec2(p.x*.012,p.z*.009)+vec2(4.7,1.3))*2.0-1.0);
+ p.y=mix(p.y,mix(-1.1,2.5,smoothstep(-4.0,9.0,p.y))+coastWarp*.8,beachShelf*.72);
  vMacro=erosion;vP=p;vN=aNormal;gl_Position=uVP*vec4(p,1.0);
 }`;
 const FS=`#version 300 es
@@ -73,21 +74,25 @@ for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
 }
 for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,e=(r+1)*cols+c,d=e+1;indices.push(a,e,b,b,e,d)}
 
-// Gen-2 cavern landmark: independent geometry because a height field cannot represent an overhang.
-function addBox(outP,outN,outI,cx,cy,cz,sx,sy,sz){
- const base=outP.length/3,vs=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
- for(const v of vs){outP.push(cx+v[0]*sx,cy+v[1]*sy,cz+v[2]*sz);outN.push(0,1,0)}
- const q=[0,1,2,0,2,3,4,6,5,4,7,6,0,4,5,0,5,1,3,2,6,3,6,7,1,5,6,1,6,2,0,3,7,0,7,4];for(const i of q)outI.push(base+i);
-}
 
-const cavernP=[],cavernN=[],cavernI=[];
-addBox(cavernP,cavernN,cavernI,-118,24,-205,34,8,25);
-addBox(cavernP,cavernN,cavernI,-146,14,-205,8,16,25);
-addBox(cavernP,cavernN,cavernI,-90,14,-205,8,16,25);
 const terrainIndexCount=indices.length;
 const vao=gl.createVertexArray();gl.bindVertexArray(vao);
 function attr(loc,data){const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,3,gl.FLOAT,false,0,0)}
 attr(0,positions);attr(1,normals);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(indices),gl.STATIC_DRAW);
+
+const RVS=`#version 300 es
+precision highp float;layout(location=0)in vec3 aPosition;layout(location=1)in vec3 aNormal;uniform mat4 uVP;out vec3 vP;out vec3 vN;void main(){vP=aPosition;vN=aNormal;gl_Position=uVP*vec4(aPosition,1.0);}`;
+const RFS=`#version 300 es
+precision highp float;in vec3 vP;in vec3 vN;out vec4 outColor;uniform vec3 uEye;void main(){vec3 n=normalize(vN),sun=normalize(vec3(-.62,.70,.35));float l=max(dot(n,sun),0.0);float mott=.5+.5*sin(vP.x*.17+vP.y*.11+vP.z*.13);vec3 base=mix(vec3(.20,.19,.17),vec3(.34,.32,.28),mott*.35);outColor=vec4(base*(.18+l*.98),1.0);}`;
+const rockProgram=gl.createProgram();gl.attachShader(rockProgram,shader(gl.VERTEX_SHADER,RVS));gl.attachShader(rockProgram,shader(gl.FRAGMENT_SHADER,RFS));gl.linkProgram(rockProgram);
+function addRock(P,N,I,cx,cy,cz,rx,ry,rz,seg=12,rings=7){
+ const base=P.length/3;
+ for(let j=0;j<=rings;j++){const v=j/rings,ph=v*Math.PI;for(let i=0;i<seg;i++){const u=i/seg,th=u*Math.PI*2;const rough=1+.14*Math.sin(th*3+ph*5)+.07*Math.sin(th*7-ph*2);const x=Math.sin(ph)*Math.cos(th),y=Math.cos(ph),z=Math.sin(ph)*Math.sin(th);P.push(cx+x*rx*rough,cy+y*ry*rough,cz+z*rz*rough);N.push(x,y,z)}}
+ for(let j=0;j<rings;j++)for(let i=0;i<seg;i++){const a=base+j*seg+i,b=base+j*seg+(i+1)%seg,c=base+(j+1)*seg+i,d=base+(j+1)*seg+(i+1)%seg;I.push(a,c,b,b,c,d)}
+}
+const rockP=[],rockN=[],rockI=[];
+[[-205,4,-80,11,8,9],[-174,3,-91,7,5,6],[-132,3,-69,8,6,7],[92,4,-73,10,7,8],[148,5,-91,13,9,10],[205,3,-62,8,5,7],[-286,17,-142,17,30,15],[286,13,-128,14,24,13]].forEach(r=>addRock(rockP,rockN,rockI,...r));
+const rockVao=gl.createVertexArray();gl.bindVertexArray(rockVao);attr(0,rockP);attr(1,rockN);const rib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,rib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(rockI),gl.STATIC_DRAW);
 
 const WVS=`#version 300 es
 precision highp float;
@@ -99,7 +104,6 @@ in vec3 vP;out vec4 outColor;uniform vec3 uEye;
 void main(){float d=length(uEye-vP);float ripple=.5+.5*sin(vP.x*.055+vP.z*.041);vec3 deep=vec3(.025,.16,.19),shallow=vec3(.035,.30,.31);float fres=pow(1.0-clamp(normalize(uEye-vP).y,0.0,1.0),3.0);vec3 c=mix(shallow,deep,smoothstep(80.0,520.0,d));c+=ripple*.012;c=mix(c,vec3(.55,.68,.72),fres*.28);outColor=vec4(c,.90);}`;
 const waterProgram=gl.createProgram();gl.attachShader(waterProgram,shader(gl.VERTEX_SHADER,WVS));gl.attachShader(waterProgram,shader(gl.FRAGMENT_SHADER,WFS));gl.linkProgram(waterProgram);if(!gl.getProgramParameter(waterProgram,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(waterProgram));
 const waterVerts=[xmin,0,zmin,xmax,0,zmin,xmin,0,zmax,xmax,0,zmax],waterIdx=[0,2,1,1,2,3];
-const cavernVao=gl.createVertexArray();gl.bindVertexArray(cavernVao);attr(0,cavernP);attr(1,cavernN);const cib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,cib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(cavernI),gl.STATIC_DRAW);
 const waterVao=gl.createVertexArray();gl.bindVertexArray(waterVao);attr(0,waterVerts);const wib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,wib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(waterIdx),gl.STATIC_DRAW);
 
 const m4={
@@ -118,7 +122,7 @@ function frame(){
  const cp=Math.cos(pitch),eye=[target[0]+Math.sin(yaw)*cp*dist,target[1]+Math.sin(pitch)*dist,target[2]+Math.cos(yaw)*cp*dist];
  const vp=m4.mul(m4.perspective(Math.PI/3,w/h,.5,1800),m4.look(eye,target));
  gl.useProgram(program);gl.uniformMatrix4fv(gl.getUniformLocation(program,'uVP'),false,new Float32Array(vp));gl.uniform3fv(gl.getUniformLocation(program,'uEye'),new Float32Array(eye));gl.bindVertexArray(vao);gl.drawElements(gl.TRIANGLES,terrainIndexCount,gl.UNSIGNED_INT,0);
- gl.bindVertexArray(cavernVao);gl.drawElements(gl.TRIANGLES,cavernI.length,gl.UNSIGNED_INT,0);
+ gl.useProgram(rockProgram);gl.uniformMatrix4fv(gl.getUniformLocation(rockProgram,'uVP'),false,new Float32Array(vp));gl.uniform3fv(gl.getUniformLocation(rockProgram,'uEye'),new Float32Array(eye));gl.bindVertexArray(rockVao);gl.drawElements(gl.TRIANGLES,rockI.length,gl.UNSIGNED_INT,0);
  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(waterProgram);gl.uniformMatrix4fv(gl.getUniformLocation(waterProgram,'uVP'),false,new Float32Array(vp));gl.uniform3fv(gl.getUniformLocation(waterProgram,'uEye'),new Float32Array(eye));gl.bindVertexArray(waterVao);gl.drawElements(gl.TRIANGLES,6,gl.UNSIGNED_INT,0);gl.disable(gl.BLEND);requestAnimationFrame(frame)
 }
 document.getElementById('hud').textContent+=` · ${H_EARTH_TERRAIN_FIELD_CONTRACT_ID}`;frame();

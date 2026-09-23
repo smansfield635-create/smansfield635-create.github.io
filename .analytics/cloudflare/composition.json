@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-23T10:31:25Z",
+  "generatedAt": "2026-09-23T11:31:03Z",
   "window": {
-    "start": "2026-08-24T10:31:25Z",
-    "end": "2026-09-23T10:31:25Z"
+    "start": "2026-08-24T11:31:03Z",
+    "end": "2026-09-23T11:31:03Z"
   },
   "dimensions": {
     "requestPath": [
@@ -665,12 +665,12 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5496,
-        "visits": 3220
+        "pageLoads": 5296,
+        "visits": 3100
       },
       {
         "value": "cache",
-        "pageLoads": 1280,
+        "pageLoads": 1250,
         "visits": 321
       },
       {

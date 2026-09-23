@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-no-hint-633a55a5-v2-20260922",
+  "capabilityId": "EDUCATION_NO_HINT_PLACEMENT_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4481,
+  "requestBranch": "ai-dispatch-request-education-no-hint-v2",
+  "requestCommit": "b929c930ae90eb25281874558e5001a5392ba88e",
+  "requestCommitParent": "4b509ba460716e142840583f1efeb593507d467a",
+  "requestParentWasCurrent": false,
+  "currentMainSha": "a2c493da849609d5132794e8e1ccbde1af588faf",
+  "workflow": "education-no-hint-placement-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "633a55a5cad4fe0e02fbab74b91c71f37a03aaaf",
+    "base_sha": "08d306ce6dc56b8c6843e9051850f850ddbd9e07"
+  },
+  "bridgeRunId": "35812428795",
+  "dispatchedRunId": 35812475498,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35812475498",
+  "dispatchedRunHeadSha": "a2c493da849609d5132794e8e1ccbde1af588faf",
+  "dispatchedAt": "2026-09-23T02:58:27.182Z",
+  "resolvedAt": "2026-09-23T02:58:31.172Z"
+}

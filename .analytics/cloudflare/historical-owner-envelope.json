@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T14:32:54Z",
+  "generatedAt": "2026-09-23T15:32:46Z",
   "window": {
-    "start": "2026-06-25T14:32:54Z",
-    "end": "2026-09-23T14:32:54Z"
+    "start": "2026-06-25T15:32:46Z",
+    "end": "2026-09-23T15:32:46Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4768,
-    "visits": 1114,
+    "pageLoads": 4769,
+    "visits": 1115,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4768,
-        "visits": 1114
+        "pageLoads": 4769,
+        "visits": 1115
       }
     },
     "byPath": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 167,
-        "visits": 41
+        "pageLoads": 168,
+        "visits": 42
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -258,16 +258,16 @@
         "pageLoads": 15,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 39,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 22,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 11,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 39,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -354,16 +354,16 @@
         "pageLoads": 7,
         "visits": 7
       },
+      "/analytics/": {
+        "pageLoads": 11,
+        "visits": 0
+      },
       "/meet-sean-mansfield/": {
         "pageLoads": 5,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
-        "visits": 0
-      },
-      "/analytics/": {
-        "pageLoads": 11,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-1/": {
@@ -373,8 +373,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 358,
-        "visits": 358
+        "pageLoads": 359,
+        "visits": 359
       },
       "diamondgatebridge.com": {
         "pageLoads": 3654,

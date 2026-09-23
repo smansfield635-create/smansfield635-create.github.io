@@ -223,7 +223,8 @@
       }
     })();
   </script>
-  <script id="h-earth-current-run8e-module" type="module" src="./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=e67ee51f9a34a053"></script>
-  <script>document.getElementById('h-earth-current-run8e-module').addEventListener('error',()=>{window.H_EARTH_RUNTIME_DIAGNOSTICS?.mark('BOOT_STARTED','FAIL','Current Run 8E module graph failed to load.');});</script>
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"}}</script>
+  <script id="h-earth-gen2-live-bridge" type="module" src="./gen2-live-terrain-bridge.js?v=bridge-proof-v1"></script>
+  <script>document.getElementById('h-earth-gen2-live-bridge').addEventListener('error',()=>{window.H_EARTH_RUNTIME_DIAGNOSTICS?.mark('BOOT_STARTED','FAIL','Gen2 live terrain bridge module failed to load.');});</script>
 </body>
 </html>

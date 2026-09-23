@@ -441,7 +441,7 @@
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
       "id": "s4b",
-      "q": "Which is correct?",
+      "q": "Which quantity sentence is correct?",
       "o": [
         "I need three bottle water.",
         "I need three bottles of water.",
@@ -492,7 +492,7 @@
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
       "id": "s4e",
-      "q": "Which is correct?",
+      "q": "Which sentence about yesterday is correct?",
       "o": [
         "I visited my friend yesterday.",
         "Yesterday I visit my friend tomorrow.",
@@ -543,7 +543,7 @@
     {
       "evidenceClass": "SENTENCE_CONSTRUCTION",
       "id": "s4h",
-      "q": "Which is correct?",
+      "q": "Which comparison is correct?",
       "o": [
         "This bag is heavier than that one.",
         "This bag heavy that.",

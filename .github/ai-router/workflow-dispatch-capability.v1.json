@@ -598,6 +598,25 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "H_EARTH_GEN2_LIVE_BRIDGE_EVIDENCE"
+    },
+    "EDUCATION_LEARNER_HANDOFF_QUALIFY": {
+      "workflow": "education-learner-handoff-qualification-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false
     }
   },
   "continuity": {

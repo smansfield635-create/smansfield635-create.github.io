@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "education-evidence-sufficiency-bad1e5cb-v2-20260922",
+  "capabilityId": "EDUCATION_EVIDENCE_SUFFICIENCY_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "bad1e5cbfaff59b911403424ff1a043fbdac62f3",
+    "base_sha": "514cfb0a7c68a3191f965a57ebe5f844bb32b645"
   }
 }

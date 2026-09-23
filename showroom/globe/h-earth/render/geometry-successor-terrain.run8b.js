@@ -72,8 +72,25 @@ export const H_EARTH_RUN_8B_Z_BANDS=freeze([
 ]);
 
 function axis(min,max,spacing){const out=[];for(let v=min;v<=max+1e-9;v+=spacing)out.push(Math.min(v,max));return [...new Set(out)];}
+function adaptiveAxis(baseValues,axisName){
+  const out=new Set(baseValues);
+  const spacing=H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits;
+  for(let i=0;i<baseValues.length-1;i++){
+    const a=baseValues[i],b=baseValues[i+1],mid=(a+b)/2;
+    const probes=axisName==='x'
+      ? [sampleHEarthRun8BSuccessorTerrainField(mid,-284),sampleHEarthRun8BSuccessorTerrainField(mid,-220),sampleHEarthRun8BSuccessorTerrainField(mid,-420)]
+      : [sampleHEarthRun8BSuccessorTerrainField(-160,mid),sampleHEarthRun8BSuccessorTerrainField(0,mid),sampleHEarthRun8BSuccessorTerrainField(160,mid)];
+    const refine=probes.some(q=>q?.valid===true&&(Math.abs(q.curvature)>0.04||q.slope>0.22||q.mountainContribution>8));
+    if(refine&&b-a>=spacing)out.add(mid);
+  }
+  return [...out].sort((a,b)=>a-b);
+}
 export function getHEarthRun8BSuccessorSamplingAxes(){
-  return freeze({xValues:axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits),zValues:axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits)});
+  const spacing=H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits;
+  return freeze({
+    xValues:adaptiveAxis(axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,spacing),'x'),
+    zValues:adaptiveAxis(axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,spacing),'z')
+  });
 }
 function classifyZBand(z){return H_EARTH_RUN_8B_Z_BANDS.find((b,i)=>z>=b.zMinimum&&(i===H_EARTH_RUN_8B_Z_BANDS.length-1?z<=b.zMaximum:z<b.zMaximum))?.bandId??null;}
 function buildTopology(){

@@ -1549,7 +1549,7 @@ function beginIndependence(){
  if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
  qs("#intake-validation").textContent="";
  learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
- probeStage=Math.max(1,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{}};
+ probeStage=Math.max(1,Math.min(8,claimed));probeHistory=[];placementEvidence=[];hintsUsed=0;currentItemAssisted=false;mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};
  setStage("test");saveEducationState({stage:"test"});startAdaptiveItem(probeStage,0);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
 }
 qs("#begin-placement").addEventListener("click",beginIndependence);
@@ -1580,37 +1580,56 @@ function submitAdaptiveAnswer(){
  const chosen=qs('input[name="placement-answer"]:checked');
  if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
  const item=currentSet[0],correct=Number(chosen.value)===item.a,assisted=currentItemAssisted;
+ adaptiveState.usedItems=adaptiveState.usedItems||[];adaptiveState.stageEvidence=adaptiveState.stageEvidence||{};
  const fresh=!adaptiveState.usedItems.includes(item.id);
  if(fresh)adaptiveState.usedItems.push(item.id);
- placementEvidence.push({stage:probeStage,itemId:item.id,node:item.node,evidenceClass:item.evidenceClass,correct,assisted,fresh});
+ placementEvidence.push({stage:probeStage,difficulty:item.difficulty,itemId:item.id,node:item.node,competency:item.competency,evidenceClass:item.evidenceClass,correct,assisted,fresh});
  adaptiveState.steps++;
  if(fresh){
    const bucket=adaptiveState.stageEvidence[probeStage]||(adaptiveState.stageEvidence[probeStage]={unique:0,correct:0,unassistedCorrect:0,incorrect:0,assisted:0});
    bucket.unique++;if(correct){bucket.correct++;if(!assisted)bucket.unassistedCorrect++}else bucket.incorrect++;if(assisted)bucket.assisted++;
  }
- probeHistory.push({stage:probeStage,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,assisted,fresh});
- const bucket=adaptiveState.stageEvidence[probeStage], unique=bucket?.unique||0;
- const ratio=unique?bucket.correct/unique:0;
- // Strong directional evidence may leave an obviously wrong neighborhood after two unique items.
- if(unique===2&&ratio===1&&probeStage<8){startAdaptiveItem(probeStage+1,0);return}
- if(unique===2&&ratio===0&&probeStage>1){startAdaptiveItem(probeStage-1,0);return}
- // A resolved candidate boundary requires at least five unique observations.
+ probeHistory.push({stage:probeStage,difficulty:item.difficulty,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,assisted,fresh});
+ const bucket=adaptiveState.stageEvidence[probeStage],unique=bucket?.unique||0,ratio=unique?bucket.correct/unique:0;
+ adaptiveState.highestSustainableDifficulty=adaptiveState.highestSustainableDifficulty??null;
+ adaptiveState.lowestUnsustainableDifficulty=adaptiveState.lowestUnsustainableDifficulty??null;
+ const resolveBracket=()=>{
+   const hi=adaptiveState.highestSustainableDifficulty,lo=adaptiveState.lowestUnsustainableDifficulty;
+   if(hi!==null&&lo!==null&&lo-hi===1){resolveAdaptiveBoundary(hi);return true}
+   return false;
+ };
+ if(unique>=2&&ratio===1){
+   adaptiveState.highestSustainableDifficulty=Math.max(adaptiveState.highestSustainableDifficulty??0,probeStage);
+   if(resolveBracket())return;
+   if(probeStage===8){if(unique>=5){resolveAdaptiveBoundary("ABOVE");return}}
+   else {startAdaptiveItem(probeStage+1,0);return}
+ }
+ if(unique>=2&&ratio===0){
+   adaptiveState.lowestUnsustainableDifficulty=Math.min(adaptiveState.lowestUnsustainableDifficulty??9,probeStage);
+   if(resolveBracket())return;
+   if(probeStage===1){if(unique>=5){resolveAdaptiveBoundary(1);return}}
+   else {startAdaptiveItem(probeStage-1,0);return}
+ }
  if(unique>=5){
    if(ratio>=.8&&bucket.unassistedCorrect>=4){
+     adaptiveState.highestSustainableDifficulty=Math.max(adaptiveState.highestSustainableDifficulty??0,probeStage);
+     if(resolveBracket())return;
      if(probeStage===8){resolveAdaptiveBoundary("ABOVE");return}
      startAdaptiveItem(probeStage+1,0);return;
    }
    if(ratio<=.4){
+     adaptiveState.lowestUnsustainableDifficulty=Math.min(adaptiveState.lowestUnsustainableDifficulty??9,probeStage);
+     if(resolveBracket())return;
      if(probeStage===1){resolveAdaptiveBoundary(1);return}
      startAdaptiveItem(probeStage-1,0);return;
    }
-   // Mixed or assisted evidence extends through unused items, up to the 8-item bank.
-   if(unique>=8){resolveAdaptiveBoundary(probeStage);return}
  }
+ if(adaptiveState.steps>=24){resolveAdaptiveBoundary("UNCERTAIN");return}
+ if(unique>=8){resolveAdaptiveBoundary("UNCERTAIN");return}
  startAdaptiveItem(probeStage,(adaptiveState.itemIndex+1)%BANK[probeStage].length);
 }
 function resolveAdaptiveBoundary(result){
- if(result==="ABOVE"){
+ if(result==="UNCERTAIN"){\n   finalIndependence={verified_placement:"UNCERTAIN_BOUNDARY",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:"BOUNDARY_REVIEW",support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:null,label:"Boundary needs more evidence"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};\n }else if(result==="ABOVE"){
    finalIndependence={verified_placement:"ABOVE_PHASE_1",verified_stage:null,demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,support_cycle:supportCycle(1),support_dependence:placementEvidence.some(x=>x.assisted)?"ASSISTED_HINT_USED":"UNASSISTED_IN_THIS_DEMO",placement_range:"ABOVE_PHASE_1",demo_range:"PHASE_1_ONLY",demo_entry_point:{stage:"P1S7/P1S8",label:"Advanced Phase 1 demonstration"},probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
  }else{
    const stage=Math.max(1,Math.min(8,Number(result)||probeStage));
@@ -1696,7 +1715,7 @@ if(restoredEducation?.helpLanguage&&HELP_LANGUAGES[restoredEducation.helpLanguag
 if(restoredEducation?.stage==="language"){setStage("intake")}
 else if(restoredEducation?.stage==="result"&&finalIndependence){renderIndependence()}
 else if(restoredEducation?.stage==="entry"&&finalIndependence){enterDemo()}
-else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");if(!adaptiveState)adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{}};startAdaptiveItem(adaptiveState.stage||probeStage,adaptiveState.itemIndex||0)}
+else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");if(!adaptiveState)adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};startAdaptiveItem(adaptiveState.stage||probeStage,adaptiveState.itemIndex||0)}
 document.documentElement.dataset.educationDemoReady="true";
 })();
 </script>

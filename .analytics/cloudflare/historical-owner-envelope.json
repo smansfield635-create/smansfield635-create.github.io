@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T13:31:00Z",
+  "generatedAt": "2026-09-23T14:32:54Z",
   "window": {
-    "start": "2026-06-25T13:31:00Z",
-    "end": "2026-09-23T13:31:00Z"
+    "start": "2026-06-25T14:32:54Z",
+    "end": "2026-09-23T14:32:54Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 15,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 22,
         "visits": 0
@@ -269,10 +273,6 @@
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 25,
         "visits": 3
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 15,
-        "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,

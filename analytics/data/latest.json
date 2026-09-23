@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-23T13:31:00Z",
+  "generatedAt": "2026-09-23T14:32:54Z",
   "window30d": {
-    "start": "2026-08-24T13:31:00Z",
-    "end": "2026-09-23T13:31:00Z"
+    "start": "2026-08-24T14:32:54Z",
+    "end": "2026-09-23T14:32:54Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-16",
-      "pageLoads": 220
+      "pageLoads": 226
     },
     {
       "date": "2026-09-17",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 34
+      "pageLoads": 42
     }
   ],
   "summary": {
-    "pageLoads": 7090,
-    "botPageLoads": 2457,
-    "nonBotPageLoads": 4633
+    "pageLoads": 7104,
+    "botPageLoads": 2463,
+    "nonBotPageLoads": 4641
   },
   "referrers": [
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3235,
+      "pageLoads": 3240,
       "visits": 0
     },
     {
       "host": "(none)",
-      "pageLoads": 3226,
-      "visits": 3226
+      "pageLoads": 3233,
+      "visits": 3233
     },
     {
       "host": "www.google.com",
-      "pageLoads": 598,
-      "visits": 598
+      "pageLoads": 600,
+      "visits": 600
     },
     {
       "host": "bing.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1692,
-      "visits": 1433
+      "pageLoads": 1843,
+      "visits": 1573
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 818,
-      "visits": 592
+      "pageLoads": 868,
+      "visits": 632
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 714,
-      "visits": 714
+      "pageLoads": 802,
+      "visits": 802
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -202,7 +202,7 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 207,
+      "pageLoads": 208,
       "visits": 91
     },
     {
@@ -211,9 +211,9 @@
       "visits": 30
     },
     {
-      "path": "/products/on-your-side-ai/native-chat/",
-      "pageLoads": 112,
-      "visits": 94
+      "path": "/index.html",
+      "pageLoads": 133,
+      "visits": 0
     }
   ],
   "ownerMeasurement": {

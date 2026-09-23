@@ -57,6 +57,7 @@ export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE=freeze({
   topology:'ONE_CONNECTED_INDEXED_XZ_HEIGHT_FIELD_TRIANGLE_MESH_SAMPLED_FROM_G_WORLD',
   baseSpacingWorldUnits:Math.max(8,FULL_DETAIL.baseSpacingWorldUnits),
   refinementSpacingWorldUnits:Math.max(4,FULL_DETAIL.refinementSpacingWorldUnits),
+  activeSamplingSpacingClass:'DECLARED_REFINEMENT_SPACING_FULL_CONNECTED_REPRESENTATION',
   worldDomain:{...NEAR_TO_MID_DOMAIN},
   atmosphericOverlap:ATMOSPHERIC_OVERLAP,
   independentGeographyAuthority:false,
@@ -73,7 +74,14 @@ export const H_EARTH_RUN_8B_Z_BANDS=freeze([
 
 function axis(min,max,spacing){const out=[];for(let v=min;v<=max+1e-9;v+=spacing)out.push(Math.min(v,max));return [...new Set(out)];}
 export function getHEarthRun8BSuccessorSamplingAxes(){
-  return freeze({xValues:axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits),zValues:axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits)});
+  // Phase 3 representation refinement: activate the already-declared refinement
+  // spacing for the full connected representation. Canonical terrain truth and
+  // topology semantics remain unchanged; only sampling density increases.
+  const spacing=H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.refinementSpacingWorldUnits;
+  return freeze({
+    xValues:axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,spacing),
+    zValues:axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,spacing)
+  });
 }
 function classifyZBand(z){return H_EARTH_RUN_8B_Z_BANDS.find((b,i)=>z>=b.zMinimum&&(i===H_EARTH_RUN_8B_Z_BANDS.length-1?z<=b.zMaximum:z<b.zMaximum))?.bandId??null;}
 function buildTopology(){

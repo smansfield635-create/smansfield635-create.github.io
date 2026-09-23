@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T19:28:07Z",
+  "generatedAt": "2026-09-23T21:29:03Z",
   "window": {
-    "start": "2026-06-25T19:28:07Z",
-    "end": "2026-09-23T19:28:07Z"
+    "start": "2026-06-25T21:29:03Z",
+    "end": "2026-09-23T21:29:03Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4764,
-    "visits": 1122,
+    "pageLoads": 4781,
+    "visits": 1124,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4764,
-        "visits": 1122
+        "pageLoads": 4781,
+        "visits": 1124
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1041,
-        "visits": 709
+        "pageLoads": 1038,
+        "visits": 707
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -58,13 +58,13 @@
         "pageLoads": 21,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 38,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 38,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 165,
+        "pageLoads": 184,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 177,
-        "visits": 51
+        "pageLoads": 178,
+        "visits": 52
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -143,16 +143,8 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 153,
+        "pageLoads": 150,
         "visits": 7
-      },
-      "/governance/": {
-        "pageLoads": 62,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/build/intake/": {
         "pageLoads": 10,
@@ -161,6 +153,14 @@
       "/evidence/": {
         "pageLoads": 88,
         "visits": 1
+      },
+      "/governance/": {
+        "pageLoads": 62,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -173,6 +173,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -189,10 +193,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 21,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 21,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -326,6 +326,10 @@
         "pageLoads": 31,
         "visits": 0
       },
+      "/products/nutrition/": {
+        "pageLoads": 1,
+        "visits": 0
+      },
       "/products/archcoin/contract/": {
         "pageLoads": 35,
         "visits": 1
@@ -343,12 +347,8 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 1,
-        "visits": 1
-      },
-      "/products/nutrition/": {
-        "pageLoads": 1,
-        "visits": 0
+        "pageLoads": 4,
+        "visits": 4
       },
       "/analytics-owner-device/": {
         "pageLoads": 7,
@@ -373,11 +373,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 363,
-        "visits": 363
+        "pageLoads": 365,
+        "visits": 365
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3642,
+        "pageLoads": 3657,
         "visits": 0
       },
       "www.google.com": {

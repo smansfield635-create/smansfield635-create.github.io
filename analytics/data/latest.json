@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-23T19:28:07Z",
+  "generatedAt": "2026-09-23T21:29:03Z",
   "window30d": {
-    "start": "2026-08-24T19:28:07Z",
-    "end": "2026-09-23T19:28:07Z"
+    "start": "2026-08-24T21:29:03Z",
+    "end": "2026-09-23T21:29:03Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-16",
-      "pageLoads": 193
+      "pageLoads": 184
     },
     {
       "date": "2026-09-17",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 65
+      "pageLoads": 86
     }
   ],
   "summary": {
-    "pageLoads": 7054,
-    "botPageLoads": 2456,
-    "nonBotPageLoads": 4598
+    "pageLoads": 7056,
+    "botPageLoads": 2423,
+    "nonBotPageLoads": 4633
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3234,
-      "visits": 3234
+      "pageLoads": 3211,
+      "visits": 3211
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3186,
+      "pageLoads": 3209,
       "visits": 0
     },
     {
@@ -164,12 +164,12 @@
       "visits": 2
     },
     {
-      "host": "chatgpt.com",
-      "pageLoads": 1,
-      "visits": 1
+      "host": "com.google.android.googlequicksearchbox",
+      "pageLoads": 2,
+      "visits": 2
     },
     {
-      "host": "lm.facebook.com",
+      "host": "chatgpt.com",
       "pageLoads": 1,
       "visits": 1
     }
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1826,
-      "visits": 1558
+      "pageLoads": 1815,
+      "visits": 1549
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 853,
-      "visits": 623
+      "pageLoads": 835,
+      "visits": 609
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 809,
-      "visits": 809
+      "pageLoads": 800,
+      "visits": 800
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,13 +197,13 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 268,
-      "visits": 91
+      "pageLoads": 290,
+      "visits": 88
     },
     {
       "path": "/products/education/",
-      "pageLoads": 222,
-      "visits": 105
+      "pageLoads": 225,
+      "visits": 107
     },
     {
       "path": "/evidence/agentic-frontier/",
@@ -212,8 +212,8 @@
     },
     {
       "path": "/index.html",
-      "pageLoads": 133,
-      "visits": 0
+      "pageLoads": 135,
+      "visits": 1
     }
   ],
   "ownerMeasurement": {

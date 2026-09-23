@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "education-item-quality-025ef99f-20260922",
+  "capabilityId": "EDUCATION_ITEM_QUALITY_REPAIR_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4469,
+  "requestBranch": "ai-dispatch-request-education-item-quality",
+  "requestCommit": "f0ab1d648b392838a43f164009092d0eb1052b25",
+  "requestCommitParent": "51f5fc3e5ee649538443b6de7f5a2c3cd20bf8b4",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "51f5fc3e5ee649538443b6de7f5a2c3cd20bf8b4",
+  "workflow": "education-item-quality-repair-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "025ef99f8edb931b7778108075de22d3a0ec8681",
+    "base_sha": "8c556cd6ccbd37a1cf090ca0ead5349f193bf3de"
+  },
+  "bridgeRunId": "35811321282",
+  "dispatchedRunId": 35811331482,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/35811331482",
+  "dispatchedRunHeadSha": "51f5fc3e5ee649538443b6de7f5a2c3cd20bf8b4",
+  "dispatchedAt": "2026-09-23T02:41:02.561Z",
+  "resolvedAt": "2026-09-23T02:41:05.783Z"
+}

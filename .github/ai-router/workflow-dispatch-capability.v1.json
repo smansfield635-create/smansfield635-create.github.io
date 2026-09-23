@@ -805,22 +805,6 @@
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false
-    },
-    "H_EARTH_B2_MESO_MORPHOLOGY_QUALIFY": {
-      "workflow": "h-earth-b2-meso-morphology-qualification-v1.yml",
-      "ref": "main",
-      "inputPolicy": {
-        "candidate_sha": {
-          "source": "REQUEST",
-          "required": true,
-          "userOverrideAllowed": true
-        }
-      },
-      "workflowDispatchRegistrationRequired": true,
-      "deploymentAuthority": false,
-      "productMutationAuthority": false,
-      "controlPlaneSemanticAuthority": false,
-      "successResult": "H_EARTH_B2_MESO_MORPHOLOGY_QUALIFICATION_v1"
     }
   },
   "continuity": {

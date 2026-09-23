@@ -1,0 +1,43 @@
+name: AI Video Review Carrier 20260823
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  materialize-proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install media tooling
+        run: |
+          python -m pip install --quiet gdown
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - name: Download source from owner-provided Drive link
+        run: |
+          set -euo pipefail
+          gdown --fuzzy 'https://drive.google.com/file/d/1JmBeYxcjnq8v-fwkSnPXqfbiEEvgjAP8/view?usp=drivesdk' -O source.mp4
+          stat -c '%s' source.mp4 | tee source-bytes.txt
+          sha256sum source.mp4 | tee source-sha256.txt
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of json source.mp4 > probe.json
+      - name: Build review proxy and visual samples
+        run: |
+          set -euo pipefail
+          mkdir -p review/frames
+          ffmpeg -hide_banner -loglevel error -i source.mp4 -vf "scale=-2:540,fps=24" -c:v libx264 -preset veryfast -crf 29 -c:a aac -b:a 64k -movflags +faststart review/proxy-540p.mp4
+          ffmpeg -hide_banner -loglevel error -i source.mp4 -vf "fps=1/10,scale=-2:720" -q:v 3 review/frames/frame-%04d.jpg
+          ffmpeg -hide_banner -loglevel error -i source.mp4 -vn -c:a libmp3lame -b:a 64k review/audio.mp3
+          cp probe.json source-bytes.txt source-sha256.txt review/
+      - name: Upload review artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: diamond-gate-seven-minute-review-proxy
+          path: review/
+          if-no-files-found: error
+          retention-days: 7

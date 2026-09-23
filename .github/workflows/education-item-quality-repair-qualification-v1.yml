@@ -1,0 +1,45 @@
+name: Education Item Quality Repair Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify repaired 64-item bank
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json
+          git show "$CANDIDATE_SHA:research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json" >/tmp/bank.json
+          node - <<'NODE'
+          const fs=require('fs'),j=JSON.parse(fs.readFileSync('/tmp/bank.json','utf8')),xs=j.items;
+          if(xs.length!==64)throw Error('cardinality');
+          const ids=xs.map(x=>x.id),qs=xs.map(x=>x.q.trim().toLowerCase());
+          if(new Set(ids).size!==64||new Set(qs).size!==64)throw Error('uniqueness');
+          const counts={};
+          for(const x of xs){
+            counts[x.difficulty]=(counts[x.difficulty]||0)+1;
+            if(!Array.isArray(x.o)||x.o.length!==4||!Number.isInteger(x.a)||x.a<0||x.a>3)throw Error(x.id+' response');
+            if(!x.q||!x.node||!x.competency||!x.evidenceClass)throw Error(x.id+' metadata');
+            if(new Set(x.o.map(v=>v.trim().toLowerCase())).size!==4)throw Error(x.id+' duplicate options');
+          }
+          for(let d=1;d<=8;d++)if(counts[d]!==8)throw Error('D'+d+'='+counts[d]);
+          const banned=[/teachness/i,/cookedly/i,/I am ___ tired today/i,/strongest next action/i,/two reported totals/i,/sales rose in may/i];
+          for(const r of banned)if(xs.some(x=>r.test(x.q)||x.o.some(o=>r.test(o))))throw Error('banned legacy defect '+r);
+          const repaired=['s1b','s1f','s1h','s6h','s2c','s3f','s2b','s2g','s3a','s3c','s3g','s4a','s4c','s4d','s4e','s4b','s4f','s4g','s4h','s5a','s5c','s6f','s5d','s5f','s5h','s6b','s5b','s5e','s5g','s7h','s8a','s7d','s8b','s8e','s8g'];
+          for(const id of repaired)if(!xs.find(x=>x.id===id)?.itemQualityRepair)throw Error(id+' repair marker');
+          console.log(JSON.stringify({result:'PASS',counts,repaired:repaired.length}));
+          NODE
+          echo EDUCATION_ITEM_QUALITY_REPAIR_QUALIFICATION=PASS

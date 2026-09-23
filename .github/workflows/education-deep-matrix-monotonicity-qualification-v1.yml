@@ -1,0 +1,41 @@
+name: Education Deep Matrix Monotonicity Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify bounded repair and adjacent-band monotonicity
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json
+          git show "$CANDIDATE_SHA:research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json" >/tmp/bank.json
+          node - <<'NODE'
+          const fs=require('fs'),j=JSON.parse(fs.readFileSync('/tmp/bank.json','utf8')),xs=j.items;
+          if(xs.length!==64)throw Error('cardinality');
+          const counts={};for(const x of xs){counts[x.difficulty]=(counts[x.difficulty]||0)+1;if(!x.q||!Array.isArray(x.o)||x.o.length!==4)throw Error(x.id+' shape');if(new Set(x.o.map(v=>v.toLowerCase().trim())).size!==4)throw Error(x.id+' duplicate options')}
+          for(let d=1;d<=8;d++)if(counts[d]!==8)throw Error('D'+d);
+          const repaired=['s1e','s2b','s2g','s3c','s3g','s3b','s3h','s4c','s4f','s5a','s5c','s6f','s6g','s5d','s5f','s5h','s6b','s7e','s5b','s7b','s7h','s7d'];
+          for(const id of repaired)if(xs.find(x=>x.id===id)?.deepAuditRepair!=='v2')throw Error(id+' repair marker');
+          const banned=/workedly|workness|workful|yesterday tomorrow|what is the strongest next action/i;
+          for(const x of xs)if(banned.test(x.q+' '+x.o.join(' ')))throw Error(x.id+' legacy defect');
+          // Expert monotonicity proxies: minimum source-text complexity rises at upper bands.
+          const words=t=>t.replace(/[“”"'.,?!:;()]/g,' ').trim().split(/\s+/).filter(Boolean).length;
+          const lens={};for(let d=1;d<=8;d++){const a=xs.filter(x=>x.difficulty===d).map(x=>words(x.q));lens[d]=a.reduce((p,c)=>p+c,0)/a.length}
+          if(!(lens[6]>lens[3]&&lens[7]>lens[4]&&lens[8]>lens[5]))throw Error('upper-band complexity proxy '+JSON.stringify(lens));
+          console.log(JSON.stringify({result:'PASS',counts,meanPromptWords:lens}));
+          NODE
+          echo EDUCATION_DEEP_MATRIX_MONOTONICITY_QUALIFICATION=PASS

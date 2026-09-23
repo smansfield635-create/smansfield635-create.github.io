@@ -589,3 +589,33 @@ STATUS:
 `OWNER_REVIEW = PENDING`
 
 The rendered successor exists on the execution surface and is ready for owner review. It must not be promoted to final Chapter 02 authority until owner review passes.
+
+
+## 17. V17 disqualification and contiguous-source V18 repair
+
+Owner review identified a surviving visual intruder between 12–13 seconds in V17. Frame-by-frame re-audit confirmed V17 was falsely qualified. The prior `NEGATIVE_IMPOSTOR_AUDIT = PASS` recorded for V17 is RETRACTED. V17 is rejected and may not be promoted.
+
+Root cause: the V17 replacement construction sampled the VFR `2065.mp4` source incorrectly, producing discontinuous/alternating source states inside the replacement rather than a single continuous traversal.
+
+Repair: rebuild frames 352–479 from one contiguous usable 2065 source run only. The exact Drive binary remains the sole source. Browser/player UI is excluded by cropping to the world viewport before 1280x720 conform. Short endpoint dissolves use only Scene A frame 351 and H-Earth frame 480.
+
+Qualified repair candidate:
+`CHAPTER02_43S_V18_2065_CONTIGUOUS_REPAIR.mp4`
+
+V18 technical qualification:
+- 43.000000 seconds
+- 30 fps CFR
+- 1,290 decoded frames
+- 1280x720
+- H.264 High / yuv420p
+- original V15 AAC audio stream preserved
+- decoded audio MD5 before/after: `96d86d1cfd6e0f95d6ce03aaaa2b6267`
+- SHA-256: `fa0edfae06ec9e3886f4c2a5072e1ab8849f529174e2155eeb8adc482feb950a`
+
+Frame-by-frame audit of the repaired 12–13 second region confirms a monotonically continuous 2065 traversal with no alternating legacy state and no browser/player chrome. The inspected frames progress continuously through the same coastline/terrain approach.
+
+STATUS:
+`V17 = DISQUALIFIED`
+`V18_CONTIGUOUS_2065_REPAIR = QUALIFIED_CANDIDATE`
+`12_TO_13_SECOND_INTRUDER = ABSENT_IN_V18`
+`OWNER_REVIEW = PENDING`

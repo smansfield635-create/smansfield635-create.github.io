@@ -664,3 +664,34 @@ STATUS:
 `V18 = SUPERSEDED_BY_BOUNDED_SUCCESSOR`
 `V19 = QUALIFIED_CANDIDATE`
 `OWNER_REVIEW = PENDING`
+
+
+## 19. V22 physical-authority correction
+
+A direct recovery of the conversation-generated V22 artifact established that the previously recorded V22 technical qualification was incorrect. The physical artifact itself is now controlling authority.
+
+Authoritative artifact:
+`CHAPTER02_43S_V22_FULL_RESOLVES_19_30.mp4`
+Conversation artifact ID: `file_00000000e07c81f6bd645df70020891e`
+
+Correct physical identity:
+- SHA-256: `91f68ace6a0363f117010d5307b66011e04fa47a4a56869233b3dd43e86a548b`
+- duration: `41.109s`
+- decoded video frames: `1,230`
+- frame rate: `30 fps`
+- raster: `1280x720`
+- video: H.264 High
+- audio: AAC-LC 48 kHz stereo
+
+RETRACTION:
+The prior V22 record claiming `43.000s / 1,290 frames / SHA-256 47dd1774b3dc08baeab5a876da826246590df557bf7716956d5b258349037100` is false and MUST NOT be used for reconstruction, qualification, or successor work.
+
+Authority law:
+`V22_PHYSICAL_BINARY_OVERRIDES_PRIOR_FALSE_RECEIPT = TRUE`
+`V22_SHA256 = 91f68ace6a0363f117010d5307b66011e04fa47a4a56869233b3dd43e86a548b`
+`V22_DURATION = 41.109s`
+`V22_FRAME_COUNT = 1230`
+
+V23 opening creative authority remains frozen as previously specified. The successor must be constructed over this corrected physical V22 authority. No attempt may pad, stretch, or silently restore the false 43-second qualification unless separately authorized.
+
+NEXT_LAWFUL_ACTION = DECODE_CORRECTED_V22_OPENING -> CONSTRUCT_FROZEN_V23_TYPOGRAPHY_CHOREOGRAPHY -> RENDER -> ENCODED_OUTPUT_AUDIT -> OWNER_REVIEW

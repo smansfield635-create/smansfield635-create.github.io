@@ -1,0 +1,51 @@
+name: H-Earth T4 First-Frame Browser Qualification v1
+on:
+  push:
+    branches: [h-earth/t4-lifecycle-integration-v1]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-first-frame:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser harness
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve immutable checkout
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-http.log 2>&1 &
+          echo $! > /tmp/h-earth-http.pid
+      - name: Qualify first-frame presentation
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
+            const page=await browser.newPage({viewport:{width:412,height:915}});
+            const evidence={events:[],console:[],pageErrors:[]};
+            page.on('console',m=>evidence.console.push({type:m.type(),text:m.text()}));
+            page.on('pageerror',e=>evidence.pageErrors.push({name:e.name,message:e.message,stack:e.stack}));
+            await page.addInitScript(()=>{
+              window.__H_EARTH_FIRST_FRAME_EVIDENCE__=[];
+              for(const name of ['h-earth-runtime-diagnostic-stage','h-earth-renderer-startup-receipt','h-earth-run8e-ready']){
+                window.addEventListener(name,e=>window.__H_EARTH_FIRST_FRAME_EVIDENCE__.push({name,detail:e.detail??null,at:performance.now()}));
+              }
+            });
+            const url='http://127.0.0.1:4173/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/index.html?t4=instancing-v1';
+            await page.goto(url,{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForFunction(()=>window.__H_EARTH_FIRST_FRAME_EVIDENCE__?.some(x=>x.name==='h-earth-runtime-diagnostic-stage'&&x.detail?.stage==='FIRST_FRAME_DRAWN'&&x.detail?.status==='PASS'),null,{timeout:45000});
+            evidence.events=await page.evaluate(()=>window.__H_EARTH_FIRST_FRAME_EVIDENCE__);
+            const receipt=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null);
+            const route=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()??null);
+            const first=evidence.events.find(x=>x.name==='h-earth-runtime-diagnostic-stage'&&x.detail?.stage==='FIRST_FRAME_DRAWN'&&x.detail?.status==='PASS');
+            if(!first) throw new Error('FIRST_FRAME_DRAWN_PASS_NOT_OBSERVED');
+            if(receipt?.stages?.FIRST_FRAME_PRESENTED!=='PASS') throw new Error('FIRST_FRAME_PRESENTED_NOT_PASS:'+JSON.stringify(receipt));
+            if(!route?.liveGpu?.counters?.gpuFramebufferPresentationCount) throw new Error('PRESENTATION_COUNTER_ZERO');
+            console.log(JSON.stringify({result:'PASS',firstFrame:first,receipt,presentationCount:route.liveGpu.counters.gpuFramebufferPresentationCount},null,2));
+            await browser.close();
+          })().catch(e=>{console.error(e.stack||e);process.exit(1)});
+          NODE

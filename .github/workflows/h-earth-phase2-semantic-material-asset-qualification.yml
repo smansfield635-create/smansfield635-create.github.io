@@ -1,0 +1,31 @@
+name: H-Earth Phase2 Semantic Material Asset Qualification
+on:
+  workflow_run:
+    workflows: ["H-Earth Phase2 Semantic Material Bake"]
+    types: [completed]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  qualify:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: h-earth/phase2-semantic-material-classifier-v1
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase2-semantic-material-v2
+          path: artifact
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+      - run: node h-earth-3d/validation/phase2-semantic-material-asset.qualify.mjs "$PWD" artifact/semantic-material-v2.rgba | tee semantic-material-v2-qualification.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-phase2-semantic-material-v2-qualification
+          path: semantic-material-v2-qualification.json
+          retention-days: 90

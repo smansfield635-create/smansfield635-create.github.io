@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canonical, sha } from './repository-operation-lock-manager.v1.mjs';
+import { canonical, sha, verifyCanonicalLockRefLineage } from './repository-operation-lock-manager.v1.mjs';
 import { materializeLineageCheckpoint, verifyLineageCheckpoint } from './repository-operation-lock-lineage.v2.mjs';
 
 const base={
@@ -57,4 +57,24 @@ test('materializer binds checkpoint only to verified lineage head, blob, and anc
   assert.equal(checkpoint.checkpoint.checkpointLedgerBlobSha,verifiedLineageReceipt.ledgerBlobSha);
   assert.equal(checkpoint.checkpoint.verifiedFromAnchorCommitSha,verifiedLineageReceipt.anchorCommitSha);
   assert.equal(verifyLineageCheckpoint(checkpoint).result,'LINEAGE_CHECKPOINT_VERIFIED');
+});
+
+const response=(status,value)=>({status,async text(){return JSON.stringify(value)}});
+
+test('bounded lineage begins strictly at verified checkpoint and applies canonical mutation rules after it',async()=>{
+  const checkpoint={...base,checkpoint:{...base.checkpoint,checkpointCommitSha:'4'.repeat(40),checkpointLedgerBlobSha:'5'.repeat(40),verifiedFromAnchorCommitSha:'6'.repeat(40),verificationReceiptSha256:'7'.repeat(64)}};
+  const head='8'.repeat(40),originalFetch=globalThis.fetch,calls=[];
+  globalThis.fetch=async url=>{const value=String(url);calls.push(value);if(value.includes(`/compare/${'4'.repeat(40)}...${head}`))return response(200,{status:'ahead',total_commits:1,files:[{filename:'.github/operation-intake/active-operation-ledger.v1.json'}],commits:[{sha:head,author:{login:'github-actions[bot]'},commit:{message:'Close operation lock 9: TEST PASS_CLOSED',verification:{verified:true}}}]});throw new Error(`UNEXPECTED_URL:${value}`)};
+  try{const r=await verifyCanonicalLockRefLineage({repository:'example/repository',token:'test-token',branchHead:head,lineageCheckpoint:checkpoint});assert.equal(r.result,'CANONICAL_LOCK_REF_LINEAGE_VERIFIED');assert.equal(r.anchorCommitSha,'4'.repeat(40));assert.equal(r.commitCount,1);assert.equal(calls.length,1)}finally{globalThis.fetch=originalFetch}
+});
+
+test('invalid checkpoint fails before any remote lineage request',async()=>{
+  const originalFetch=globalThis.fetch;let calls=0;globalThis.fetch=async()=>{calls++;throw new Error('SHOULD_NOT_FETCH')};
+  try{await assert.rejects(()=>verifyCanonicalLockRefLineage({repository:'example/repository',token:'test-token',branchHead:'8'.repeat(40),lineageCheckpoint:{...base,status:'CANDIDATE_UNMATERIALIZED',checkpoint:null}}),e=>e.code==='LINEAGE_CHECKPOINT_NOT_ACTIVE_VERIFIED');assert.equal(calls,0)}finally{globalThis.fetch=originalFetch}
+});
+
+test('bounded lineage still rejects a non-ledger mutation after checkpoint',async()=>{
+  const checkpoint={...base,checkpoint:{...base.checkpoint,checkpointCommitSha:'4'.repeat(40),checkpointLedgerBlobSha:'5'.repeat(40),verifiedFromAnchorCommitSha:'6'.repeat(40),verificationReceiptSha256:'7'.repeat(64)}},head='8'.repeat(40),originalFetch=globalThis.fetch;
+  globalThis.fetch=async url=>response(200,{status:'ahead',total_commits:1,files:[{filename:'README.md'}],commits:[{sha:head,author:{login:'github-actions[bot]'},commit:{message:'Close operation lock 9: TEST PASS_CLOSED',verification:{verified:true}}}]});
+  try{await assert.rejects(()=>verifyCanonicalLockRefLineage({repository:'example/repository',token:'test-token',branchHead:head,lineageCheckpoint:checkpoint}),e=>e.code==='AUTHORITY_LEDGER_LINEAGE_UNTRUSTED')}finally{globalThis.fetch=originalFetch}
 });

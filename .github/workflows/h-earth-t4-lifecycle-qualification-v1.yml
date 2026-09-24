@@ -1,0 +1,51 @@
+name: H-Earth T4 Lifecycle Qualification v1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - h-earth/t4-lifecycle-integration-v1
+    paths:
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js'
+      - '.github/workflows/h-earth-t4-lifecycle-qualification-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Qualify immutable T4 lifecycle correspondence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth';
+          const binding=fs.readFileSync(root+'/diagnostic/run8e-r3d/live-gpu-binding.js','utf8');
+          const renderer=fs.readFileSync(root+'/render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js','utf8');
+          const must=(ok,label)=>{if(!ok)throw new Error('QUALIFICATION_FAIL:'+label);console.log('PASS',label)};
+          must(binding.includes("const T4_QUERY_KEY = 't4'"),'T4_QUERY_KEY');
+          must(binding.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_QUERY_VALUE');
+          must(binding.includes("persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js"),'SELECTOR_RENDERER_PATH');
+          must(binding.includes('const selectedRendererPath = t4Requested'),'T4_SELECTOR_PRECEDENCE');
+          must(renderer.includes('"placementSha":"50136ded9837ffe05a058d8187fc2bf0e8af95f9d9ce42644894b881a2b407f1"'),'PLACEMENT_SHA');
+          must(renderer.includes('"total":647'),'TOTAL_647');
+          must(renderer.includes('"counts":{"TUFT":617,"ROCK":30}'),'COUNTS_617_30');
+          must(renderer.includes('H_EARTH_T4_INSTANCE_BUDGET=2048'),'INSTANCE_BUDGET_2048');
+          must(renderer.includes('H_EARTH_T4_ADDED_DRAW_CALL_BUDGET=2'),'DRAW_BUDGET_2');
+          must(renderer.includes('instancePackage=createHEarthT4StaticInstancePackage(gl)'),'PACKAGE_CREATED_IN_INITIALIZE');
+          must(renderer.includes('lastAddedDrawCalls=drawHEarthT4StaticInstances(gl,instancePackage,bindClass)'),'DRAW_IN_RENDER_FRAME');
+          must(renderer.includes('gl.vertexAttribDivisor(8+i,1)'),'VERTEX_ATTRIB_DIVISOR');
+          must(renderer.includes('gl.drawArraysInstanced(gl.TRIANGLES'),'DRAW_ARRAYS_INSTANCED');
+          must(renderer.includes('postInitializationResourceCreation:postInitializationResourceCreation'),'POST_INIT_RESOURCE_RECEIPT');
+          must(renderer.includes('postInitializationBufferUpload:postInitializationBufferUpload'),'POST_INIT_UPLOAD_RECEIPT');
+          must(renderer.includes('noPostInitializationResourceCreation:postInitializationResourceCreation===0'),'NO_POST_INIT_RESOURCE_CREATION');
+          must(renderer.includes('noPostInitializationBufferUpload:postInitializationBufferUpload===0'),'NO_POST_INIT_BUFFER_UPLOAD');
+          must(renderer.includes('maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,lastAddedDrawCalls)'),'MAX_DRAW_TRACKING');
+          console.log('T4_LIFECYCLE_QUALIFICATION=PASS');
+          NODE

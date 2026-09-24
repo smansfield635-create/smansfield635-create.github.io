@@ -1,0 +1,27 @@
+name: H-Earth Adaptive C Clearance Regression
+on:
+  push:
+    branches:
+      - h-earth/adaptive-c-4u8u-v1
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: 1851c48c87956c50f4bd67946a32c555857c3e62, path: A, fetch-depth: 1}
+      - uses: actions/checkout@v4
+        with: {ref: 7ab2e9634dcfe475cb0816d7d4d1a7926a0c63b7, path: B, fetch-depth: 1}
+      - uses: actions/checkout@v4
+        with: {ref: h-earth/adaptive-c-4u8u-v1, path: C, fetch-depth: 1}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node C/h-earth-3d/validation/adaptive-c-clearance-regression.mjs "$PWD/A" "$PWD/B" "$PWD/C" | tee adaptive-c-clearance.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-adaptive-c-clearance-regression
+          path: adaptive-c-clearance.json
+          retention-days: 90

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-24T11:30:15Z",
+  "generatedAt": "2026-09-24T12:44:22Z",
   "window30d": {
-    "start": "2026-08-25T11:30:15Z",
-    "end": "2026-09-24T11:30:15Z"
+    "start": "2026-08-25T12:44:22Z",
+    "end": "2026-09-24T12:44:22Z"
   },
   "daily": [
     {

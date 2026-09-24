@@ -4,7 +4,7 @@
   "description": "Direct-access Governance Bridge prospective-client demonstration. Separate from ordinary website navigation.",
   "checks": [
     {
-      "path": "/preview/governance-bridge/index.html",
+      "path": "/governance-bridge/index.html",
       "includes": [
         "<meta name=\"robots\" content=\"noindex,nofollow\">",
         "Governance Bridge",

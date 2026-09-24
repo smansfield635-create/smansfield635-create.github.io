@@ -53,6 +53,13 @@ export const EXACT_CORRUPTED_LEDGER_SPAN_RECOVERY = stable({
   restorationMessage: 'Restore complete operation ledger after transport truncation'
 });
 
+export const EXACT_POST_1894_LEDGER_MATERIALIZATION_RECOVERIES = [
+  stable({corruptCommitSha:'c074a0e0bc1ded191319b5761c924afaf5a6fd7d',corruptLedgerBlobSha:'28f9f1f98ff9856a39f2ab33ab6e3bc9dc82712e',restorationCommitSha:'9f4360feadcf60c908ebb5968091a650f7d87b52',restorationLedgerBlobSha:'29d2900f9504c3e3378e8ae2418aeb6a95273006',restorationMessage:'Repair lock 1908 ledger transport truncation'}),
+  stable({corruptCommitSha:'ab35fb81b15b9a27bbc5e5af00cad8aadbabcd8a',corruptLedgerBlobSha:'1f9ce3ba858d1712e5413cf68b3913bdc0141572',restorationCommitSha:'10865af816362992612b2fbd249aa7eff402c563',restorationLedgerBlobSha:'2de9310ebf4b194ed0e80497a4a8db6b1ad86e23',restorationMessage:'Repair lock 1910 ledger transport truncation'}),
+  stable({corruptCommitSha:'648458b3452c1e45ab679721752da097f0789036',corruptLedgerBlobSha:'8b88b0c9aa099f2424bbe4e54857802e40dd6782',restorationCommitSha:'55ae6d0613353836ab4494dc2e3f012d4148619f',restorationLedgerBlobSha:'449f58b33670a8f1ac4383d0b7d7b947611ff591',restorationMessage:'Repair terminal closure ledger materialization for generation 1920'}),
+  stable({corruptCommitSha:'f0fe17741354b03824d1f185796edc00c32d1459',corruptLedgerBlobSha:'2b6526c081872af9dd676fb9a77747e43802820c',restorationCommitSha:'fe8b97d079f0a42d5f21b71571c7d8c8343259c8',restorationLedgerBlobSha:'20e7bee551fcf4f39070153cd781914d27f3d661',restorationMessage:'Repair operation lock 1924 ledger materialization'})
+];
+
 export const EXACT_LEDGER_RESTORATION_RECOVERY = stable({
   commitSha: 'eaec93ba84a747e4710f6c65e49c5163e5f68f4f',
   parentSha: '38fade1c33e705497f2984072dece377ad480aa0',
@@ -280,6 +287,15 @@ async function verifyExactLockRefLineageRecovery({repository,token,summary,recov
   return true;
 }
 
+async function verifyExactPost1894MaterializationRecovery({repository,token,summary}){
+  const r=EXACT_POST_1894_LEDGER_MATERIALIZATION_RECOVERIES.find(value=>value.corruptCommitSha===summary?.sha||value.restorationCommitSha===summary?.sha);if(!r)return false;
+  const corrupt=await req(`${base(repository)}/commits/${r.corruptCommitSha}`,{headers:H(token)},[200],'AUTHORITY_POST1894_CORRUPT_DETAIL'),cf=Array.isArray(corrupt?.files)?corrupt.files:[];
+  if(cf.length!==1||cf[0]?.filename!==LEDGER_PATH||cf[0]?.sha!==r.corruptLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','post1894-materialization','authority-lineage','CORRUPT_IDENTITY_MISMATCH');
+  const restoration=await req(`${base(repository)}/commits/${r.restorationCommitSha}`,{headers:H(token)},[200],'AUTHORITY_POST1894_RESTORATION_DETAIL'),rf=Array.isArray(restoration?.files)?restoration.files:[],parents=Array.isArray(restoration?.parents)?restoration.parents:[];
+  if(parents.length!==1||parents[0]?.sha!==r.corruptCommitSha||restoration?.author?.login!=='smansfield635-create'||restoration?.committer?.login!=='smansfield635-create'||restoration?.commit?.message!==r.restorationMessage||rf.length!==1||rf[0]?.filename!==LEDGER_PATH||rf[0]?.sha!==r.restorationLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','post1894-materialization','authority-lineage','RESTORATION_IDENTITY_MISMATCH');
+  await readGitLedgerBlob({repository,token,blobSha:r.restorationLedgerBlobSha,source:'exact-post1894-restoration',commitSha:r.restorationCommitSha});return true;
+}
+
 async function verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification}) {
   const r=EXACT_CORRUPTED_LEDGER_SPAN_RECOVERY;
   if(!checkpointVerification||anchor!==r.anchorCommitSha)return null;
@@ -324,6 +340,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
   const verificationSet=spanRecovery?seen.slice(spanRecovery.nextIndex):seen;
   for(const c of verificationSet){
     if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;
+    if(await verifyExactPost1894MaterializationRecovery({repository,token,summary:c}))continue;
     if(c?.localGit&&c?.author?.login==='github-actions[bot]'&&canonicalMutationMessage(c?.commit?.message))continue;
     if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
     const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);

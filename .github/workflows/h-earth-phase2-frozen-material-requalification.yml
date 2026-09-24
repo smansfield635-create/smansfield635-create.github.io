@@ -8,7 +8,6 @@ permissions:
   actions: read
 jobs:
   qualify-frozen:
-    if: ${{ !contains(github.event.head_commit.message, '[frozen-requal-only]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

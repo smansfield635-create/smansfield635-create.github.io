@@ -1,0 +1,21 @@
+name: H-Earth Phase1 Gen311 Reconciliation Measurement
+on:
+  push:
+    branches:
+      - h-earth/phase1-gen311-ownership-reconciliation-v1
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node h-earth-3d/validation/phase1-five-class-relief.measure.mjs "$PWD" | tee phase1-gen311-reconciliation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-phase1-gen311-reconciliation
+          path: phase1-gen311-reconciliation.json
+          retention-days: 90

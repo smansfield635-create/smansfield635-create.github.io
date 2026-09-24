@@ -268,3 +268,14 @@ export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingL
 
   reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'OWNER_TRANSPORT_MUTATION_NOT_AUTHORIZED');
 }
+
+export function materializeLineageCheckpoint({candidate,verifiedLineageReceipt}) {
+  if (!candidate || candidate.schema !== LINEAGE_CHECKPOINT_SCHEMA || candidate.status !== 'CANDIDATE_UNMATERIALIZED' || candidate.checkpoint !== null) reject('LINEAGE_CHECKPOINT_CANDIDATE_INVALID');
+  if (!verifiedLineageReceipt || verifiedLineageReceipt.result !== 'CANONICAL_LOCK_REF_LINEAGE_VERIFIED') reject('LINEAGE_CHECKPOINT_VERIFIED_LINEAGE_RECEIPT_REQUIRED');
+  const checkpointCommitSha=verifiedLineageReceipt.branchHead;
+  const checkpointLedgerBlobSha=verifiedLineageReceipt.ledgerBlobSha;
+  const verifiedFromAnchorCommitSha=verifiedLineageReceipt.anchorCommitSha;
+  if (!/^[0-9a-f]{40}$/.test(checkpointCommitSha||'') || !/^[0-9a-f]{40}$/.test(checkpointLedgerBlobSha||'') || !/^[0-9a-f]{40}$/.test(verifiedFromAnchorCommitSha||'')) reject('LINEAGE_CHECKPOINT_VERIFIED_LINEAGE_RECEIPT_INVALID');
+  const receiptCore=stable({result:verifiedLineageReceipt.result,anchorCommitSha:verifiedFromAnchorCommitSha,branchHead:checkpointCommitSha,ledgerBlobSha:checkpointLedgerBlobSha,commitCount:verifiedLineageReceipt.commitCount});
+  return stable({...candidate,status:'ACTIVE_VERIFIED',checkpoint:{checkpointCommitSha,checkpointLedgerBlobSha,verifiedFromAnchorCommitSha,verificationReceiptSha256:sha(canonical(receiptCore))}});
+}

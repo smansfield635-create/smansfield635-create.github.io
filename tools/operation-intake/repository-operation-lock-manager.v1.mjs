@@ -45,11 +45,14 @@ export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   workflowRunId: 32931494268
 })];
 
-export const EXACT_GEN1915_LEDGER_RECOVERY_HELD = stable({
+export const EXACT_GEN1915_HISTORICAL_MATERIALIZATION_RECOVERY = stable({
   commitSha:'82d8b69e63783c7357c242f0b42ebb820138fafd',
   parentSha:'cb473e7c1d1b504038034effd6ca16c9960b681d',
+  historicalStateCommitSha:'9cf64161dfc647021ff3f3871d6655ac5400ae12',
+  historicalStateTreeSha:'ae5593abe89444061c26e964b30f2e6e1575a005',
   message:'Acquire operation lock 1915: CHARACTERS_TASK19_INTEGRATED_SUCCESSOR_REPAIR_20260901_001',
-  ledgerBlobSha:'b70e7560809dcb6648c78bd9355fcea26f1a60a8'
+  ledgerBlobSha:'b70e7560809dcb6648c78bd9355fcea26f1a60a8',
+  historicalLedgerBlobSha:'553d4e96cf3b1a76c4fb23cb69768b3e34ae2304'
 });
 export const EXACT_CORRUPTED_LEDGER_SPAN_RECOVERY = stable({
   anchorCommitSha: 'f5d12ff2795aa91d77ae4aa6436946ed4904307d',
@@ -303,18 +306,21 @@ async function verifyExactPost1894MaterializationRecovery({repository,token,summ
 }
 
 async function verifyExactGen1915LedgerRecovery({repository,token,summary}) {
-  const r=EXACT_GEN1915_LEDGER_RECOVERY_HELD;if(summary?.sha!==r.commitSha)return false;
-  throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.recovery','authority-lineage','RECOVERY_HELD_NON_LEDGER_MUTATION_PROVEN');
+  const r=EXACT_GEN1915_HISTORICAL_MATERIALIZATION_RECOVERY;if(summary?.sha!==r.commitSha)return false;
   if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_LINEAGE!=='1')return false;
   const parent=execFileSync('git',['rev-parse',r.commitSha+'^'],{encoding:'utf8'}).trim();
   if(parent!==r.parentSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.parent','authority-lineage',parent);
-  const ledgerChanged=execFileSync('git',['diff','--name-only',r.parentSha,r.commitSha,'--',LEDGER_PATH],{encoding:'utf8'}).trim()===LEDGER_PATH;
-  const nonLedger=execFileSync('git',['diff','--quiet',r.parentSha,r.commitSha,'--','.',':(exclude)'+LEDGER_PATH],{stdio:'ignore'}).status;
-  if(!ledgerChanged||nonLedger!==0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.paths','authority-lineage',`ledgerChanged=${ledgerChanged}:nonLedgerStatus=${nonLedger}`);
+  const historicalTree=execFileSync('git',['rev-parse',r.historicalStateCommitSha+'^{tree}'],{encoding:'utf8'}).trim();
+  if(historicalTree!==r.historicalStateTreeSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.historical-tree','authority-lineage',historicalTree);
+  const materializedTree=execFileSync('git',['rev-parse',r.commitSha+'^{tree}'],{encoding:'utf8'}).trim();
+  const historicalLedger=execFileSync('git',['rev-parse',r.historicalStateCommitSha+':'+LEDGER_PATH],{encoding:'utf8'}).trim();
+  if(historicalLedger!==r.historicalLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.historical-ledger','authority-lineage',historicalLedger);
+  const nonLedger=execFileSync('git',['diff','--quiet',r.historicalStateCommitSha,r.commitSha,'--','.',':(exclude)'+LEDGER_PATH],{stdio:'ignore'}).status;
+  if(nonLedger!==0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.materialization','authority-lineage',`tree=${materializedTree}:nonLedgerStatus=${nonLedger}`);
   const blob=execFileSync('git',['rev-parse',r.commitSha+':'+LEDGER_PATH],{encoding:'utf8'}).trim();
   const msg=execFileSync('git',['show','-s','--format=%B',r.commitSha],{encoding:'utf8'}).trimEnd();
-  if(blob!==r.ledgerBlobSha||msg!==r.message)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.identity','authority-lineage',`blob=${blob}`);
-  await readGitLedgerBlob({repository,token,blobSha:r.ledgerBlobSha,source:'exact-gen1915-ledger-recovery'});
+  if(blob!==r.ledgerBlobSha||blob===historicalLedger||msg!==r.message)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.identity','authority-lineage',`blob=${blob}`);
+  await readGitLedgerBlob({repository,token,blobSha:r.ledgerBlobSha,source:'exact-gen1915-historical-materialization-recovery'});
   return true;
 }
 async function verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification}) {

@@ -1,0 +1,36 @@
+name: H-Earth T4 Autonomous Renderer
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+jobs:
+  construct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Internalize T4 primitive program and class binding
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: 12e90ecb90b81746440da6f7bb0308d5ff877d85
+        run: |
+          node - <<'NODE'
+          const cp=require('child_process');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'})),get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/',src=root+'render/persistent-live-renderer.run8e-r3c.t4-runtime-integrated-v1.js';
+          let r=Buffer.from(get('repos/'+process.env.REPO+'/contents/'+src+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          r+=`
+export function createHEarthT4PrimitiveBinding(gl,viewProjectionProvider){
+  const VS='#version 300 es\\nlayout(location=0) in vec3 aPosition;layout(location=8) in float iX;layout(location=9) in float iY;layout(location=10) in float iZ;layout(location=11) in float iRotation;layout(location=12) in float iScale;uniform mat4 uViewProjection;void main(){float c=cos(iRotation),s=sin(iRotation);vec3 p=aPosition*iScale;vec3 q=vec3(p.x*c-p.z*s,p.y,p.x*s+p.z*c)+vec3(iX,iY,iZ);gl_Position=uViewProjection*vec4(q,1.0);}';
+  const FS='#version 300 es\\nprecision highp float;uniform vec3 uClassColor;out vec4 outColor;void main(){outColor=vec4(uClassColor,1.0);}';
+  const shader=(type,src)=>{const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error('T4_SHADER:'+gl.getShaderInfoLog(sh));return sh;};
+  const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('T4_LINK');
+  const vp=gl.getUniformLocation(program,'uViewProjection'),color=gl.getUniformLocation(program,'uClassColor');
+  return(kind,c)=>{gl.useProgram(program);gl.uniformMatrix4fv(vp,false,new Float32Array(viewProjectionProvider()));gl.uniform3f(color,...(kind==='TUFT'?[0.20,0.34,0.14]:[0.34,0.31,0.27]));gl.bindBuffer(gl.ARRAY_BUFFER,c.vertexBuffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);};
+}
+`;
+          const path=root+'render/persistent-live-renderer.run8e-r3c.t4-autonomous-v1.js',blob=api('POST','repos/'+process.env.REPO+'/git/blobs',{content:r,encoding:'utf-8'}),tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:[{path,mode:'100644',type:'blob',sha:blob.sha}]}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth T4: internalize primitive shader and class binding',tree:tree.sha,parents:[process.env.BASE]});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,primitiveProgram:'internal',classes:['TUFT','ROCK'],publication:'HELD'}));
+          NODE

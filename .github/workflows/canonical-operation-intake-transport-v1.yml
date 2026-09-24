@@ -7,13 +7,21 @@ on:
         description: Closed request routed by Central Issue Comment Router v1
         required: true
         type: string
+      router_callback_issue:
+        description: Authenticated callback issue supplied by Central Router
+        required: true
+        type: string
+      router_callback_repository:
+        description: Authenticated callback repository supplied by Central Router
+        required: true
+        type: string
 
 permissions:
   contents: write
   issues: write
 
 concurrency:
-  group: canonical-operation-intake-transport-${{ github.event.issue.number || github.run_id }}
+  group: canonical-operation-intake-transport-${{ inputs.router_callback_issue || github.run_id }}
   cancel-in-progress: false
 
 jobs:
@@ -37,8 +45,7 @@ jobs:
       - run: node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test
 
   admit:
-    if: >-
-      startsWith(github.event.comment.body, 'CANONICAL_OPERATION_INTAKE_REQUEST_V1')
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout canonical intake working set
@@ -101,13 +108,18 @@ jobs:
         if: always()
         uses: actions/github-script@v7
         with:
+          env:
+            CALLBACK_ISSUE: ${{ inputs.router_callback_issue }}
+            CALLBACK_REPOSITORY: ${{ inputs.router_callback_repository }}
           script: |
             const fs=require('fs');
             const p=process.env.RUNNER_TEMP+'/canonical-intake-transport-receipt.json';
             let r={};try{r=JSON.parse(fs.readFileSync(p,'utf8'));}catch{}
             const c=r.canonicalReceiptJson||{};
             const body=['CANONICAL_OPERATION_INTAKE_RETURN_V1','',`transportResult = ${r.result||'UNKNOWN'}`,`canonicalResult = ${c.result||'UNKNOWN'}`,`operationId = ${c.operationId||'UNKNOWN'}`,`lockGeneration = ${c.lock?.lockGeneration ?? c.lockGeneration ?? 'UNKNOWN'}`,`workflowRun = ${context.runId}`].join('\n');
-            await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'```text\n'+body+'\n```'});
+            const [owner,repo]=process.env.CALLBACK_REPOSITORY.split('/');
+            if(!owner||!repo||!/^\d+$/.test(process.env.CALLBACK_ISSUE)) throw new Error('ROUTER_CALLBACK_CONTEXT_INVALID');
+            await github.rest.issues.createComment({owner,repo,issue_number:Number(process.env.CALLBACK_ISSUE),body:'```text\n'+body+'\n```'});
       - name: Require canonical admission success
         if: always()
         shell: bash

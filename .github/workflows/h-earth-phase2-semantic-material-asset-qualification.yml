@@ -1,27 +1,35 @@
 name: H-Earth Phase2 Semantic Material Asset Qualification
 on:
-  workflow_run:
-    workflows: ["H-Earth Phase2 Semantic Material Bake"]
-    types: [completed]
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
 permissions:
   contents: read
   actions: read
 jobs:
   qualify:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: h-earth/phase2-semantic-material-classifier-v1
       - uses: actions/setup-node@v4
-        with: {node-version: 22}
+        with:
+          node-version: 22
+      - name: Locate exact successful bake run for current head
+        id: bake
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          RUN_ID=$(gh api "repos/$REPO/actions/workflows/h-earth-phase2-semantic-material-bake.yml/runs?branch=h-earth/phase2-semantic-material-classifier-v1&status=success&per_page=20" --jq ".workflow_runs[] | select(.head_sha==\"$SHA\") | .id" | head -1)
+          test -n "$RUN_ID"
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
         with:
           name: h-earth-phase2-semantic-material-v2
           path: artifact
           github-token: ${{ github.token }}
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ steps.bake.outputs.run_id }}
       - run: node h-earth-3d/validation/phase2-semantic-material-asset.qualify.mjs "$PWD" artifact/semantic-material-v2.rgba | tee semantic-material-v2-qualification.json
       - uses: actions/upload-artifact@v4
         if: always()

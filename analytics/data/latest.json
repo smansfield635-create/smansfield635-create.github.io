@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-24T16:33:58Z",
+  "generatedAt": "2026-09-24T17:32:29Z",
   "window30d": {
-    "start": "2026-08-25T16:33:58Z",
-    "end": "2026-09-24T16:33:58Z"
+    "start": "2026-08-25T17:32:29Z",
+    "end": "2026-09-24T17:32:29Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-17",
-      "pageLoads": 250
+      "pageLoads": 249
     },
     {
       "date": "2026-09-18",
@@ -128,19 +128,19 @@
     }
   ],
   "summary": {
-    "pageLoads": 7061,
+    "pageLoads": 7050,
     "botPageLoads": 2445,
-    "nonBotPageLoads": 4616
+    "nonBotPageLoads": 4605
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3248,
-      "visits": 3248
+      "pageLoads": 3247,
+      "visits": 3247
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3171,
+      "pageLoads": 3161,
       "visits": 0
     },
     {
@@ -187,7 +187,7 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 803,
+      "pageLoads": 793,
       "visits": 598
     },
     {
@@ -197,8 +197,8 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 305,
-      "visits": 85
+      "pageLoads": 304,
+      "visits": 84
     },
     {
       "path": "/products/education/",

@@ -259,8 +259,8 @@ function evaluateRawElevation(worldX, worldZ) {
     return amplitude*cross*along;
   };
   const drainageUpper = drainageSegment(18,-192,-18,-174,18,-3.2,0.75,1);
-  const drainageMiddle = drainageSegment(-18,-174,-48,-150,20,-2.8,1,0.9);
-  const drainageLower = drainageSegment(-48,-150,-58,-122,24,-2.1,0.9,0.55);
+  const drainageMiddle = drainageSegment(-18,-174,-48,-150,20,-4.6,1,1.0);
+  const drainageLower = drainageSegment(-48,-150,-58,-122,24,-6.8,1.0,0.9);
   const drainageBankWest = drainageSegment(18,-192,-58,-122,34,1.25,0.65,0.4);
   const drainageBankEast = drainageSegment(18,-192,-58,-122,46,0.8,0.55,0.3);
 

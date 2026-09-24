@@ -1,0 +1,26 @@
+name: H-Earth Phase3 Terrain Sun Visibility Qualification
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: read
+  actions: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase3-terrain-sun-visibility-v1
+          path: field
+          github-token: ${{ github.token }}
+          run-id: 36020621711
+      - run: node h-earth-3d/validation/phase3-terrain-sun-visibility.qualify.mjs field/terrain-sun-visibility-v1.r8 | tee terrain-sun-visibility-qualification.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-phase3-terrain-sun-visibility-qualification
+          path: terrain-sun-visibility-qualification.json
+          retention-days: 90

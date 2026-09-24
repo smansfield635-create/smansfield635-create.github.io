@@ -1,0 +1,23 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "h-earth-t4-3-inspection",
+  "description": "Nonproduction immutable owner-inspection carrier for exact H-Earth T4.3 candidate d8fca3163396a93026a1a8827a09196c39f26bef.",
+  "checks": [
+    {
+      "path": "/inspection/h-earth-t4-3-d8fca316/",
+      "includes": [
+        "NONPRODUCTION · T4.3 IMMUTABLE INSPECTION",
+        "d8fca3163396a93026a1a8827a09196c39f26bef",
+        "TRANSPORT: PENDING",
+        "t4=additive-v1"
+      ],
+      "excludes": [
+        "T4.2R",
+        "Math.hypot(p.x,p.z)"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": false
+  }
+}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-24T13:32:34Z",
+  "generatedAt": "2026-09-24T14:33:27Z",
   "window30d": {
-    "start": "2026-08-25T13:32:34Z",
-    "end": "2026-09-24T13:32:34Z"
+    "start": "2026-08-25T14:33:27Z",
+    "end": "2026-09-24T14:33:27Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-17",
-      "pageLoads": 241
+      "pageLoads": 249
     },
     {
       "date": "2026-09-18",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 62
+      "pageLoads": 67
     }
   ],
   "summary": {
-    "pageLoads": 7058,
+    "pageLoads": 7071,
     "botPageLoads": 2449,
-    "nonBotPageLoads": 4609
+    "nonBotPageLoads": 4622
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3245,
-      "visits": 3245
+      "pageLoads": 3248,
+      "visits": 3248
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3168,
+      "pageLoads": 3179,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 608,
-      "visits": 608
+      "pageLoads": 607,
+      "visits": 607
     },
     {
       "host": "bing.com",
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1834,
-      "visits": 1564
+      "pageLoads": 1836,
+      "visits": 1566
     },
     {
       "path": "/mirror-manor-preview/",
@@ -197,7 +197,7 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 288,
+      "pageLoads": 297,
       "visits": 85
     },
     {

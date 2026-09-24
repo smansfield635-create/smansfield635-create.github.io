@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-24T13:32:34Z",
+  "generatedAt": "2026-09-24T14:33:27Z",
   "window": {
-    "start": "2026-06-26T13:32:34Z",
-    "end": "2026-09-24T13:32:34Z"
+    "start": "2026-06-26T14:33:27Z",
+    "end": "2026-09-24T14:33:27Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4816,
-    "visits": 1159,
+    "pageLoads": 4824,
+    "visits": 1158,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4816,
-        "visits": 1159
+        "pageLoads": 4824,
+        "visits": 1158
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1061,
-        "visits": 729
+        "pageLoads": 1060,
+        "visits": 728
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 185,
+        "pageLoads": 194,
         "visits": 16
       },
       "/showroom/globe/h-earth/awards/": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 15,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 22,
         "visits": 0
@@ -269,10 +273,6 @@
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 25,
         "visits": 3
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 15,
-        "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
@@ -385,12 +385,12 @@
         "visits": 379
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3657,
+        "pageLoads": 3666,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 769,
-        "visits": 769
+        "pageLoads": 768,
+        "visits": 768
       },
       "raw.githack.com": {
         "pageLoads": 10,

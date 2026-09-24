@@ -38,6 +38,13 @@ jobs:
           must(bindingSource.includes('const presentationReceipt = renderer.presentColorFrame()'),'PRESENTATION_RETURN_OBSERVED');
           must(observer.includes('PRESENTATION_CALLBACK_TIMEOUT'),'CALLBACK_TIMEOUT_DISTINCT_CLASS');
           must(observer.includes('presentationCallbackObserved'),'PRESENTATION_CALLBACK_STATE');
+          must(observer.includes('renderFrameReturnedAt'),'RENDER_RETURN_TIMESTAMP');
+          must(observer.includes('presentColorFrameEnteredAt'),'PRESENTATION_ENTER_TIMESTAMP');
+          must(observer.includes('presentationCallReturnedAt'),'PRESENTATION_RETURN_TIMESTAMP');
+          must(observer.includes('presentationCallbackObservedAt'),'PRESENTATION_CALLBACK_TIMESTAMP');
+          must(observer.includes('presentationTimeoutElapsedAt'),'PRESENTATION_TIMEOUT_TIMESTAMP');
+          must(bindingSource.includes('presentColorFrameEntered?.()'),'PRESENTATION_ENTER_INSTRUMENTED');
+          must(bindingSource.includes('presentColorFrameReturned?.()'),'PRESENTATION_RETURN_INSTRUMENTED');
           must(renderer.includes("from './persistent-live-renderer.run8e-r3c.js'"),'PHASE5_BASE_LINEAGE');
           must(!renderer.includes("from './persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'"),'NO_CP2_R2_BASE_LINEAGE');
           must(renderer.includes('"placementSha":"50136ded9837ffe05a058d8187fc2bf0e8af95f9d9ce42644894b881a2b407f1"'),'PLACEMENT_SHA');

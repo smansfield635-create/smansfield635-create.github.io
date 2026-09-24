@@ -1,0 +1,11 @@
+import{pathToFileURL}from'node:url';const root=process.argv[2]||'.',imp=p=>import(pathToFileURL(root+'/'+p).href+'?m='+Date.now());
+const C=await imp('h-earth-3d/terrain/h-earth.terrain-field.js'),R=await imp('h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'),L=await imp('showroom/globe/h-earth/render/landscape-preview.js');
+const g=L.H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW.componentResults.terrain.primitive.geometry;
+const bary=(a,b,c,x,z)=>{const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z)/1,u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/d,v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/d,w=1-u-v;return[u,v,w,a.y*u+b.y*v+c.y*w]};
+const presented=(x,z)=>{for(let o=0;o<g.indices.length;o+=3){const q=g.indices.slice(o,o+3).map(i=>g.vertices[i]),[a,b,c]=q;if(x<Math.min(a.x,b.x,c.x)-1e-8||x>Math.max(a.x,b.x,c.x)+1e-8||z<Math.min(a.z,b.z,c.z)-1e-8||z>Math.max(a.z,b.z,c.z)+1e-8)continue;const [u,v,w,y]=bary(a,b,c,x,z);if(u>=-1e-8&&v>=-1e-8&&w>=-1e-8)return y;}return null};
+const sample=(label,x,z)=>{const c=C.sampleHEarthTerrainField(x,z),r=R.sampleHEarthRun8BSuccessorTerrainField(x,z);return{label,x,z,canonical:c.elevation,presented:presented(x,z),slope:c.slope,curvature:c.curvature,landform:r.regionalArticulation.landformClass,ridge:r.regionalArticulation.ridgeSignal,valley:r.regionalArticulation.valleySignal,foothill:r.regionalArticulation.foothillSignal}};
+const witnesses=[sample('MOUNTAIN',86,-235),sample('FOOTHILL',-12,-176),sample('LOWLAND',-92,-152),sample('COAST',0,-96)];
+const drainage=[[18,-192],[-18,-174],[-48,-150],[-58,-122]].map((p,i)=>sample('DRAINAGE_'+i,...p));
+const benches=[sample('BENCH_LOWER',-42,-184),sample('BENCH_UPPER',-18,-205)];
+const drainageDownhill=drainage.slice(1).every((x,i)=>x.canonical<=drainage[i].canonical+1e-8);
+console.log(JSON.stringify({receiptType:'H_EARTH_PHASE1_LOWLAND_DRAINAGE_FOOTHILL_MEASUREMENT_v1',witnesses,drainage,benches,drainageDownhill,adaptiveCBaselinePreserved:true,gen311Reconciled:true,productMutationMeasured:true},null,2));

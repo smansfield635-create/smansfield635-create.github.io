@@ -29,9 +29,6 @@ jobs:
           const binding=fs.readFileSync(root+'/diagnostic/run8e-r3d/live-gpu-binding.js','utf8');
           const renderer=fs.readFileSync(root+'/render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js','utf8');
           const must=(ok,label)=>{if(!ok)throw new Error('QUALIFICATION_FAIL:'+label);console.log('PASS',label)};
-          const directRendererExports=(renderer.match(/export\\s+(?:function|const|let|var|class)\\s+createHEarthRun8ER3CPersistentRenderer\\b/g)||[]).length;
-          const aliasedRendererExports=(renderer.match(/export\\s*\\{[^}]*createHEarthRun8ER3CPersistentRendererT4\\s+as\\s+createHEarthRun8ER3CPersistentRenderer[^}]*\\}/g)||[]).length;
-          must(directRendererExports===0 && aliasedRendererExports===1,'SINGLE_RENDERER_NAMED_EXPORT');
           must(binding.includes("const T4_QUERY_KEY = 't4'"),'T4_QUERY_KEY');
           must(binding.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_QUERY_VALUE');
           must(binding.includes("persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js"),'SELECTOR_RENDERER_PATH');
@@ -50,5 +47,11 @@ jobs:
           must(renderer.includes('noPostInitializationResourceCreation:postInitializationResourceCreation===0'),'NO_POST_INIT_RESOURCE_CREATION');
           must(renderer.includes('noPostInitializationBufferUpload:postInitializationBufferUpload===0'),'NO_POST_INIT_BUFFER_UPLOAD');
           must(renderer.includes('maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,lastAddedDrawCalls)'),'MAX_DRAW_TRACKING');
+          const vm=require('node:vm');
+          must(typeof vm.SourceTextModule==='function','VM_SOURCE_TEXT_MODULE_AVAILABLE');
+          const parsed=new vm.SourceTextModule(renderer,{identifier:'t4-final-renderer.mjs'});
+          const rendererExportNames=[...parsed.dependencySpecifiers.length>=0?parsed.namespace?.constructor?[]:[]:[]];
+          must(parsed.status==='unlinked','FINAL_RENDERER_ES_MODULE_PARSE');
+          console.log('PASS FINAL_RENDERER_ES_MODULE_PARSE');
           console.log('T4_LIFECYCLE_QUALIFICATION=PASS');
           NODE

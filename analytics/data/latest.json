@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-24T03:36:01Z",
+  "generatedAt": "2026-09-24T04:35:11Z",
   "window30d": {
-    "start": "2026-08-25T03:36:01Z",
-    "end": "2026-09-24T03:36:01Z"
+    "start": "2026-08-25T04:35:11Z",
+    "end": "2026-09-24T04:35:11Z"
   },
   "daily": [
     {
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 18
+      "pageLoads": 61
     }
   ],
   "summary": {
-    "pageLoads": 7016,
-    "botPageLoads": 2452,
-    "nonBotPageLoads": 4564
+    "pageLoads": 7059,
+    "botPageLoads": 2449,
+    "nonBotPageLoads": 4610
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3242,
-      "visits": 3242
+      "pageLoads": 3245,
+      "visits": 3245
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3140,
+      "pageLoads": 3168,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 599,
-      "visits": 599
+      "pageLoads": 608,
+      "visits": 608
     },
     {
       "host": "bing.com",
@@ -155,16 +155,16 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 4,
-      "visits": 4
-    },
-    {
-      "host": "l.instagram.com",
-      "pageLoads": 2,
-      "visits": 2
+      "pageLoads": 6,
+      "visits": 6
     },
     {
       "host": "com.google.android.googlequicksearchbox",
+      "pageLoads": 3,
+      "visits": 3
+    },
+    {
+      "host": "l.instagram.com",
       "pageLoads": 2,
       "visits": 2
     },
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1830,
-      "visits": 1564
+      "pageLoads": 1836,
+      "visits": 1566
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 826,
-      "visits": 826
+      "pageLoads": 825,
+      "visits": 825
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 804,
-      "visits": 599
+      "pageLoads": 803,
+      "visits": 598
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -202,12 +202,12 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 225,
-      "visits": 107
+      "pageLoads": 226,
+      "visits": 108
     },
     {
       "path": "/evidence/agentic-frontier/",
-      "pageLoads": 187,
+      "pageLoads": 191,
       "visits": 30
     },
     {

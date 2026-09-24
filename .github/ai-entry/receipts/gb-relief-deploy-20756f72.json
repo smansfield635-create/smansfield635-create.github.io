@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "gb-relief-deploy-20756f72",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4766,
+  "requestBranch": "ai-dispatch-request-gb-relief-deploy-20756f72",
+  "requestCommit": "5183dd6e53fd63e13cd65057e83d299849e78d06",
+  "currentMainSha": "46588fd6079c8f3327d5499e01f24e17fd8a30c0",
+  "bridgeRunId": "36065756766",
+  "error": "Stale dispatch request: parent 20756f726c35fc342fc45fd608ec3ff33c59a1c6 != current main 46588fd6079c8f3327d5499e01f24e17fd8a30c0",
+  "failedAt": "2026-09-24T22:09:00.259Z"
+}

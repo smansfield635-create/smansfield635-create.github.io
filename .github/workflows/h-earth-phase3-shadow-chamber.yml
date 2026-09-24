@@ -1,0 +1,55 @@
+name: H-Earth Phase3 Shadow Chamber
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+  actions: read
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase3-terrain-sun-visibility-v1
+          path: shadow
+          github-token: ${{ github.token }}
+          run-id: 36020621711
+      - name: Materialize shadow-only chamber
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: c4da54b31fd7411fc18e06f724b39409acbc2f36
+          CHAMBER: h-earth/phase3-shadow-chamber-v1
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),cp=require('child_process'),crypto=require('crypto');
+          const bin=fs.readFileSync('shadow/terrain-sun-visibility-v1.r8');
+          if(bin.length!==262144)throw Error('SHADOW_BYTE_LENGTH');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'}));
+          const get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/';
+          const raw=p=>Buffer.from(get('repos/'+process.env.REPO+'/contents/'+root+p+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          const sha=crypto.createHash('sha256').update(bin).digest('hex');
+          const loader=`export const H_EARTH_TERRAIN_SUN_VISIBILITY_ID='H_EARTH_TERRAIN_SUN_VISIBILITY_v1';export const H_EARTH_TERRAIN_SUN_VISIBILITY_SHA256='${sha}';export const H_EARTH_TERRAIN_SUN_VISIBILITY_WIDTH=512;export const H_EARTH_TERRAIN_SUN_VISIBILITY_HEIGHT=512;const u=new URL('./terrain-sun-visibility-v1.r8',import.meta.url);export async function loadHEarthTerrainSunVisibility(){const r=await fetch(u);if(!r.ok)throw Error('SHADOW_FETCH:'+r.status);const b=await r.arrayBuffer();if(b.byteLength!==262144)throw Error('SHADOW_LENGTH');return new Uint8Array(b)}`;
+          let renderer=raw('render/persistent-live-renderer.run8e-r3c.phase2-semantic-material-v2.js');
+          renderer=renderer.replace("} from './terrain-material-field.phase2-semantic-v2.js';","} from './terrain-material-field.phase2-semantic-v2.js';\nimport {loadHEarthTerrainSunVisibility,H_EARTH_TERRAIN_SUN_VISIBILITY_WIDTH,H_EARTH_TERRAIN_SUN_VISIBILITY_HEIGHT} from './terrain-sun-visibility-v1.js';");
+          renderer=renderer.replace("const BAKED_FIELD_BYTES = await loadHEarthPhase2SemanticMaterialField();","const SHADOW_FIELD_BYTES=await loadHEarthTerrainSunVisibility();\nconst BAKED_FIELD_BYTES = await loadHEarthPhase2SemanticMaterialField();");
+          renderer=renderer.replace("uniform sampler2D uTerrainBakedMaterial;","uniform sampler2D uTerrainBakedMaterial;\nuniform sampler2D uTerrainSunVisibility;");
+          renderer=renderer.replace("vec4 bakedMaterial=texture(uTerrainBakedMaterial,bakedUv);","vec4 bakedMaterial=texture(uTerrainBakedMaterial,bakedUv);\n    float terrainSunVisibility=texture(uTerrainSunVisibility,bakedUv).r;");
+          renderer=renderer.replace("function withTerrainShaderTransform(gl, operation) {","function withTerrainShaderTransform(gl, operation) {");
+          renderer=renderer.replace("const acceptedRenderer = createAcceptedCp2Renderer(options);","const acceptedRenderer = createAcceptedCp2Renderer(options);");
+          const blob=(buf,enc='utf-8')=>api('POST','repos/'+process.env.REPO+'/git/blobs',{content:enc==='base64'?buf.toString('base64'):buf,encoding:enc}).sha;
+          const entries=[
+            {path:root+'render/terrain-sun-visibility-v1.r8',mode:'100644',type:'blob',sha:blob(bin,'base64')},
+            {path:root+'render/terrain-sun-visibility-v1.js',mode:'100644',type:'blob',sha:blob(loader)},
+            {path:root+'render/persistent-live-renderer.run8e-r3c.phase3-shadow-v1.js',mode:'100644',type:'blob',sha:blob(renderer)}
+          ];
+          const tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:entries});
+          const commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth Phase3: materialize isolated terrain shadow chamber',tree:tree.sha,parents:[process.env.BASE]});
+          let exists=true;try{get('repos/'+process.env.REPO+'/git/ref/heads/'+process.env.CHAMBER)}catch{exists=false}
+          if(exists)api('PATCH','repos/'+process.env.REPO+'/git/refs/heads/'+process.env.CHAMBER,{sha:commit.sha,force:true});else api('POST','repos/'+process.env.REPO+'/git/refs',{ref:'refs/heads/'+process.env.CHAMBER,sha:commit.sha});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,shadowSha256:sha}));
+          NODE

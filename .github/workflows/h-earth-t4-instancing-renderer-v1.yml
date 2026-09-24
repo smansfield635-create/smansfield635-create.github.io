@@ -50,5 +50,5 @@ export function drawHEarthT4StaticInstances(gl,pkg,bindClass){
 `;
           r+=block;
           const path=root+'render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v1.js',blob=api('POST','repos/'+process.env.REPO+'/git/blobs',{content:r,encoding:'utf-8'}),tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:[{path,mode:'100644',type:'blob',sha:blob.sha}]}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth T4: construct static two-class instancing renderer',tree:tree.sha,parents:[process.env.BASE]});
-          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,total:H=647,tufts:617,rocks:30,addedDrawCallBudget:2,publication:'HELD'}));
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,total:647,tufts:617,rocks:30,addedDrawCallBudget:2,publication:'HELD'}));
           NODE

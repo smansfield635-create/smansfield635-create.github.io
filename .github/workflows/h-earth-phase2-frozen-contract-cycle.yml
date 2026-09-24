@@ -1,0 +1,49 @@
+name: H-Earth Phase2 Frozen Contract Cycle
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: read
+jobs:
+  frozen-cycle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Freeze qualifier identity
+        id: freeze
+        run: |
+          QSHA=$(sha256sum h-earth-3d/validation/phase2-semantic-material-asset.qualify.mjs | awk '{print $1}')
+          CSHA=$(sha256sum h-earth-3d/environment/h-earth.semantic-material-field.phase2.js | awk '{print $1}')
+          echo "qualifier_sha=$QSHA" >> "$GITHUB_OUTPUT"
+          echo "classifier_sha=$CSHA" >> "$GITHUB_OUTPUT"
+      - name: Generate one candidate
+        run: node h-earth-3d/validation/phase2-semantic-material-bake.mjs "$PWD" frozen-cycle-material.rgba > frozen-cycle-bake.json
+      - name: Qualify once under frozen contract
+        run: |
+          set +e
+          node h-earth-3d/validation/phase2-semantic-material-asset.qualify.mjs "$PWD" frozen-cycle-material.rgba > frozen-cycle-qualification.json
+          CODE=$?
+          set -e
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const q=JSON.parse(fs.readFileSync('frozen-cycle-qualification.json'));
+          const asset=fs.readFileSync('frozen-cycle-material.rgba');
+          const sha=crypto.createHash('sha256').update(asset).digest('hex');
+          if(sha!==q.sha256)throw Error('ASSET_RECEIPT_SHA_MISMATCH');
+          console.log(JSON.stringify({eligible:q.eligible,issues:q.issues,assetSha256:sha,minimumWitnessRgbSeparation:q.minimumWitnessRgbSeparation}));
+          NODE
+          exit "$CODE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-phase2-frozen-contract-cycle
+          path: |
+            frozen-cycle-material.rgba
+            frozen-cycle-bake.json
+            frozen-cycle-qualification.json
+            h-earth-3d/validation/phase2-semantic-material-asset.qualify.mjs
+            h-earth-3d/environment/h-earth.semantic-material-field.phase2.js
+          retention-days: 90

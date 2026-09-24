@@ -274,7 +274,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
       const resultingLedger=await readLedgerBlob({repository,token,blobSha:files[0].sha});
       try{
         const {verifyCanonicalLedgerCommitV2}=await import('./repository-operation-lock-lineage.v2.mjs');
-        verifyCanonicalLedgerCommitV2({commit:detail,changedPaths:files.map(file=>file.filename),resultingLedger});
+        verifyCanonicalLedgerCommitV2({commit:detail,changedPaths:files.map(file=>file.filename),resultingLedger,checkpointVerification});
         continue;
       }catch(error){
         throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',`${c.sha}:${error?.code||error?.message||'OWNER_CERTIFICATION_FAILED'}`);

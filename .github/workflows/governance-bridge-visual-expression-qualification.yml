@@ -1,0 +1,37 @@
+name: Governance Bridge Visual Expression Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {description: Exact candidate SHA, required: true, type: string}
+      base_sha: {description: Exact comparison base SHA, required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ inputs.candidate_sha }}', fetch-depth: 1}
+      - name: Prove exact one-path scope
+        env: {BASE_SHA: '${{ inputs.base_sha }}'}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
+          git diff --name-only "$BASE_SHA" HEAD >/tmp/files
+          test "$(wc -l </tmp/files)" -eq 1
+          grep -Fxq governance-bridge/index.html /tmp/files
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gb-http.log 2>&1 &
+      - name: Render and inspect
+        run: |
+          mkdir -p .qualification/governance-bridge-visual
+          cat >.qualification/governance-bridge-visual/inspect.mjs <<'NODE'
+          import{chromium}from'playwright';import fs from'node:fs';
+          const browser=await chromium.launch({headless:true}),vps={desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:390,height:844}},results={};
+          for(const[name,viewport]of Object.entries(vps)){const page=await browser.newPage({viewport}),errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto('http://127.0.0.1:4173/governance-bridge/',{waitUntil:'networkidle'});if(await page.locator('#topRail .card').count()!=6)throw Error(name+': six industries required');results[name]=[];
+          for(let i=0;i<6;i++){if(i){await page.locator('#topRail').focus();await page.keyboard.press('ArrowRight');await page.waitForTimeout(500)}await page.locator('#topRail .card[aria-current=true]').click();await page.waitForTimeout(150);const fail=m=>{throw Error(name+' industry '+i+': '+m)},p=page.locator('.readerFace.practical'),tabs=p.locator('.infoTabs [role=tab]');if(await tabs.count()!=5)fail('five Understanding tabs required');if(await p.locator('.infoStage[role=tabpanel]').count()!=1)fail('one Understanding panel required');if(await p.locator('.relationship').count()!=1)fail('relationship geometry missing');const active=tabs.locator('[aria-selected=true]');if(await active.count()!=1)fail('one active Understanding tab required');const styles=await Promise.all([tabs.nth(0),tabs.nth(1)].map(x=>x.evaluate(el=>{let s=getComputedStyle(el);return[s.color,s.borderColor,s.backgroundColor]})));if(JSON.stringify(styles[0])===JSON.stringify(styles[1]))fail('active tab contrast absent');const rb=await p.locator('.relationship').boundingBox();if(!rb||rb.width<180||rb.height<120)fail('relationship collapsed');const ov=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);if(ov>2)fail('horizontal overflow '+ov);await p.screenshot({path:'.qualification/governance-bridge-visual/'+name+'-'+i+'-understanding.png'});await tabs.nth(3).click();if((await p.locator('.infoStage').getAttribute('data-role'))!=='boundary'&&i!==4)fail('boundary semantic role missing');await p.locator('.flipFace').click();await page.waitForTimeout(100);const t=page.locator('.readerFace.technical'),tt=t.locator('.infoTabs [role=tab]');if(await tt.count()!=5)fail('five Technical tabs required');await tt.nth(1).click();const sub=t.locator('.subTabs [role=tab]');if(await sub.count()<6||await t.locator('.instrumentOutput').count()!=1)fail('focused instrumentation missing');await t.screenshot({path:'.qualification/governance-bridge-visual/'+name+'-'+i+'-instruments.png'});await tt.nth(4).click();if(!(await t.locator('.stateTitle').innerText()).includes('intelligence'))fail('Why Us reveal missing');await t.screenshot({path:'.qualification/governance-bridge-visual/'+name+'-'+i+'-why.png'});await t.locator('.bridgeBtn').click();const b=page.locator('#readerBridge');if(await b.isHidden()||await b.locator('.infoTabs [role=tab]').count()<5||await b.locator('.bridgeFocus').count()!=1)fail('focused Bridge tabs missing');await b.screenshot({path:'.qualification/governance-bridge-visual/'+name+'-'+i+'-bridge.png'});await page.locator('#closeReaderBridge').click();await t.locator('.closeReader').click();results[name].push({industry:i,overflow:ov,instruments:await sub.count()})}if(errors.length)throw Error(name+': '+errors.join('|'));await page.close()}await browser.close();fs.writeFileSync('.qualification/governance-bridge-visual/receipt.json',JSON.stringify({result:'PASS',contract:'#4696',results},null,2));
+          NODE
+          node .qualification/governance-bridge-visual/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'governance-bridge-visual-${{ github.run_id }}-${{ github.run_attempt }}', path: .qualification/governance-bridge-visual, retention-days: 30}

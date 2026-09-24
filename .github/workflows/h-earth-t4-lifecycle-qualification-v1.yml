@@ -29,26 +29,27 @@ jobs:
           const binding=fs.readFileSync(root+'/diagnostic/run8e-r3d/live-gpu-binding.js','utf8');
           const renderer=fs.readFileSync(root+'/render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js','utf8');
           const bindingSource=fs.readFileSync(root+'/diagnostic/run8e-r3d/live-gpu-binding.js','utf8');
-          const observer=fs.readFileSync(root+'/diagnostic/renderer-startup-observer.v1.js','utf8');
-          const shell=fs.readFileSync(root+'/index.html','utf8');
           const must=(ok,label)=>{if(!ok)throw new Error('QUALIFICATION_FAIL:'+label);console.log('PASS',label)};
           must(binding.includes("const T4_QUERY_KEY = 't4'"),'T4_QUERY_KEY');
           must(binding.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_QUERY_VALUE');
           must(binding.includes("persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js"),'SELECTOR_RENDERER_PATH');
           must(binding.includes('const selectedRendererPath = t4Requested'),'T4_SELECTOR_PRECEDENCE');
-          must(bindingSource.includes('const presentationReceipt = renderer.presentColorFrame()'),'PRESENTATION_RETURN_OBSERVED');
-          must(observer.includes('PRESENTATION_CALLBACK_TIMEOUT'),'CALLBACK_TIMEOUT_DISTINCT_CLASS');
-          must(observer.includes('presentationCallbackObserved'),'PRESENTATION_CALLBACK_STATE');
-          must(observer.includes('renderFrameReturnedAt'),'RENDER_RETURN_TIMESTAMP');
-          must(observer.includes('presentColorFrameEnteredAt'),'PRESENTATION_ENTER_TIMESTAMP');
-          must(observer.includes('presentationCallReturnedAt'),'PRESENTATION_RETURN_TIMESTAMP');
-          must(observer.includes('presentationCallbackObservedAt'),'PRESENTATION_CALLBACK_TIMESTAMP');
-          must(observer.includes('presentationTimeoutElapsedAt'),'PRESENTATION_TIMEOUT_TIMESTAMP');
-          must(bindingSource.includes('presentColorFrameEntered?.()'),'PRESENTATION_ENTER_INSTRUMENTED');
-          must(bindingSource.includes('presentColorFrameReturned?.()'),'PRESENTATION_RETURN_INSTRUMENTED');
-          must(shell.includes("const milestoneKeys=['renderFrameReturned','presentColorFrameEntered','presentationCallReturned','presentationCallbackObserved','presentationTimeoutElapsed']"),'VISIBLE_PRESENTATION_MILESTONES');
-          must(shell.includes('presentationMilestones:milestoneView'),'VISIBLE_MILESTONE_RECEIPT');
-          must(shell.includes('receiptObservedElapsedMs'),'VISIBLE_ELAPSED_TIME');
+          const crypto=require('node:crypto');
+          const sha1=text=>crypto.createHash('sha1').update(Buffer.from(text)).digest('hex');
+          const phase5Parity={
+            'index.html':'12c2cb4507dd61271274bbe3382570e4d34188e1',
+            'arrival-loader.js':'01353cca7acc042b161f09592f1d9870841ff17a',
+            'functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js':'f1de492a66756de67c46667b53d9ee4acbe590e9',
+            'functional-landscape/public-live-gpu-integration.run8e-r3e.js':'f22c59957409321f7e61f9563b4f60d36965006d',
+            'diagnostic/renderer-startup-observer.v1.js':'20947f46a754f0730aa69c44d0fd699788c5a8d2',
+            'diagnostic/run8e-r3d/pointer-touch-intake.js':'7b2238fdba6d02fdb7e367752fe66a61e7e214e2'
+          };
+          for(const [relative,expected] of Object.entries(phase5Parity)){
+            must(sha1(fs.readFileSync(root+'/'+relative,'utf8'))===expected,'PHASE5_RUNTIME_BYTE_PARITY:'+relative);
+          }
+          must(bindingSource.includes("const T4_QUERY_KEY = 't4'"),'T4_MINIMAL_SELECTOR_KEY');
+          must(bindingSource.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_MINIMAL_SELECTOR_VALUE');
+          must(bindingSource.includes("const T4_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js'"),'T4_MINIMAL_SELECTOR_PATH');
           must(renderer.includes("from './persistent-live-renderer.run8e-r3c.js'"),'PHASE5_BASE_LINEAGE');
           must(!renderer.includes("from './persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'"),'NO_CP2_R2_BASE_LINEAGE');
           must(renderer.includes('"placementSha":"50136ded9837ffe05a058d8187fc2bf0e8af95f9d9ce42644894b881a2b407f1"'),'PLACEMENT_SHA');

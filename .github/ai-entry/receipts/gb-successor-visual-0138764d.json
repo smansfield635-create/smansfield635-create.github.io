@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "gb-successor-visual-0138764d",
+  "capabilityId": "GOVERNANCE_BRIDGE_VISUAL_EXPRESSION_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4752,
+  "requestBranch": "ai-dispatch-request-gb-successor-visual-0138764d",
+  "requestCommit": "a7089312b2bf0afb6899cb6f8e05594a9d5fa24c",
+  "currentMainSha": "b0bbb619ee7e24b768ad8f8e0147737f5bd270f3",
+  "bridgeRunId": "36060375635",
+  "error": "Stale dispatch request: parent dee1b4a144a8b8753198d3960bf81946deb6c669 != current main b0bbb619ee7e24b768ad8f8e0147737f5bd270f3",
+  "failedAt": "2026-09-24T21:16:24.023Z"
+}

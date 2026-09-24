@@ -48,6 +48,18 @@ jobs:
             gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,H_EARTH_TERRAIN_SUN_VISIBILITY_WIDTH,H_EARTH_TERRAIN_SUN_VISIBILITY_HEIGHT,0,gl.RED,gl.UNSIGNED_BYTE,SHADOW_FIELD_BYTES);
             gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);`);
+          const stateNeedle="    fieldReceipt: BAKED_FIELD_RECEIPT\n  };";
+          if(!renderer.includes(stateNeedle))throw Error('SHADOW_STATE_ANCHOR');
+          renderer=renderer.replace(stateNeedle,"    fieldReceipt: BAKED_FIELD_RECEIPT,\n    shadowTexture: null,\n    shadowSampler: null,\n    shadowTextureUnit: 8,\n    shadowUploadCount: 0\n  };");
+          const initNeedle="    state.texture = gl.createTexture();";
+          if(!renderer.includes(initNeedle))throw Error('SHADOW_INIT_ANCHOR');
+          renderer=renderer.replace(initNeedle,"    state.shadowTexture = gl.createTexture();\n    if (!state.shadowTexture) throw new Error('SHADOW_TEXTURE_CREATE_FAILED');\n    gl.activeTexture(gl.TEXTURE0 + state.shadowTextureUnit);\n    gl.bindTexture(gl.TEXTURE_2D, state.shadowTexture);\n    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);\n    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, H_EARTH_TERRAIN_SUN_VISIBILITY_WIDTH, H_EARTH_TERRAIN_SUN_VISIBILITY_HEIGHT, 0, gl.RED, gl.UNSIGNED_BYTE, SHADOW_FIELD_BYTES);\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);\n    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);\n    state.shadowUploadCount += 1;\n    state.texture = gl.createTexture();");
+          const samplerNeedle="    state.sampler = gl.getUniformLocation(state.geometryProgram, 'uTerrainBakedMaterial');";
+          if(!renderer.includes(samplerNeedle))throw Error('SHADOW_SAMPLER_ANCHOR');
+          renderer=renderer.replace(samplerNeedle,samplerNeedle+"\n    state.shadowSampler = gl.getUniformLocation(state.geometryProgram, 'uTerrainSunVisibility');\n    if (state.shadowSampler === null) throw new Error('SHADOW_SAMPLER_UNAVAILABLE');");
+          const bindNeedle="    gl.uniform1i(state.sampler, state.textureUnit);";
+          if(!renderer.includes(bindNeedle))throw Error('SHADOW_BIND_ANCHOR');
+          renderer=renderer.replace(bindNeedle,bindNeedle+"\n    gl.activeTexture(gl.TEXTURE0 + state.shadowTextureUnit);\n    gl.bindTexture(gl.TEXTURE_2D, state.shadowTexture);\n    gl.uniform1i(state.shadowSampler, state.shadowTextureUnit);");
           const blob=(buf,enc='utf-8')=>api('POST','repos/'+process.env.REPO+'/git/blobs',{content:enc==='base64'?buf.toString('base64'):buf,encoding:enc}).sha;
           const entries=[
             {path:root+'render/terrain-sun-visibility-v1.r8',mode:'100644',type:'blob',sha:blob(bin,'base64')},

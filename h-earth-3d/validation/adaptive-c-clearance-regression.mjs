@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';import{pathToFileURL}from'node:url';
+const [aRoot,bRoot,cRoot]=process.argv.slice(2);if(!aRoot||!bRoot||!cRoot)throw new Error('A B C roots required');
+const imp=(r,p)=>import(pathToFileURL(r+'/'+p).href+'?r='+Date.now()+Math.random());
+const nav='showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js';
+const preview='showroom/globe/h-earth/render/landscape-preview.js';
+const bary=(a,b,c,x,z)=>{const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z),u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/d,v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/d,w=1-u-v;return a.y*u+b.y*v+c.y*w};
+const direct=(g,x,z)=>{for(let o=0;o<g.indices.length;o+=3){const q=g.indices.slice(o,o+3).map(i=>g.vertices[i]),[a,b,c]=q;if(x<Math.min(a.x,b.x,c.x)-1e-8||x>Math.max(a.x,b.x,c.x)+1e-8||z<Math.min(a.z,b.z,c.z)-1e-8||z>Math.max(a.z,b.z,c.z)+1e-8)continue;const den=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z),u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/den,v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/den,w=1-u-v;if(u>=-1e-8&&v>=-1e-8&&w>=-1e-8)return bary(a,b,c,x,z);}return null};
+async function check(root,label,points){const N=await imp(root,nav),L=await imp(root,preview),g=L.H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW.componentResults.terrain.primitive.geometry;let max=0;const rows=[];for(const [x,z,role]of points){const s=N.sampleHEarthVisibleTerrainClearanceSurface(x,z),y=direct(g,x,z);assert.equal(s.valid,true);assert.ok(Number.isFinite(y));const d=Math.abs(s.visibleElevation-y);max=Math.max(max,d);rows.push({x,z,role,sampled:s.visibleElevation,direct:y,delta:d,law:s.samplingLaw??'LEGACY'});}return{label,maxDelta:max,points:rows};}
+const common=[[0,-96,'COAST'],[72,-172,'HILL'],[88,-88,'NEAR_INTERIOR']];
+const boundary=[[96,-80,'C_4U_8U_BOUNDARY_X'],[80,-96,'C_4U_8U_BOUNDARY_Z'],[104,-80,'C_OUTER_8U'],[80,-104,'C_OUTER_8U_Z']];
+const receipt={receiptType:'H_EARTH_ADAPTIVE_C_CLEARANCE_REGRESSION_v1',A:await check(aRoot,'A_8U',common),B:await check(bRoot,'B_4U',common),C:await check(cRoot,'C_ADAPTIVE',[...common,...boundary]),issues:[]};receipt.eligible=[receipt.A,receipt.B,receipt.C].every(x=>x.maxDelta<=1e-9);if(!receipt.eligible)receipt.issues.push('PRESENTED_TRIANGLE_CLEARANCE_CORRESPONDENCE_FAILED');console.log(JSON.stringify(receipt,null,2));if(!receipt.eligible)process.exitCode=1;

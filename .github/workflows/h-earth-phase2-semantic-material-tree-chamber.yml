@@ -15,40 +15,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Bind exact artifact authority
-        id: ev
+      - name: Download immutable qualified package
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
-          echo "candidate=48a7c9a76fd354226e611c463850706cad9f5e99" >> "$GITHUB_OUTPUT"
-          echo "bake=35961125601" >> "$GITHUB_OUTPUT"
-          echo "qual=35961125639" >> "$GITHUB_OUTPUT"
-      - uses: actions/download-artifact@v4
-        with:
-          name: h-earth-phase2-semantic-material-v2
-          path: /tmp/bake
-          github-token: ${{ github.token }}
-          run-id: ${{ steps.ev.outputs.bake }}
-      - uses: actions/download-artifact@v4
-        with:
-          name: h-earth-phase2-semantic-material-v2-qualification
-          path: /tmp/qual
-          github-token: ${{ github.token }}
-          run-id: ${{ steps.ev.outputs.qual }}
+          mkdir -p /tmp/package
+          gh api "repos/$REPO/actions/artifacts/10813999840/zip" > /tmp/package/package.zip
+          echo "dc40d846b4ee15e41dafb00f92f465a3a117bdd44f6eb850e2e39d4d32c058e3  /tmp/package/package.zip" | sha256sum -c -
+          unzip -qq -o /tmp/package/package.zip -d /tmp/package/content
       - name: Build chamber as Git tree
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           BASE: 2582dda13038c05fe9279177d5a737eb4e7eef73
           CHAMBER: h-earth/phase2-semantic-material-tree-chamber-v1
-          MATERIAL_CANDIDATE: 48a7c9a76fd354226e611c463850706cad9f5e99
-          MATERIAL_BAKE_RUN: 35961125601
-          MATERIAL_QUAL_RUN: 35961125639
-        run: |
+          MATERIAL_CANDIDATE: ca341f03492c1887f656dc8a52b7f7b29abe7d92
+                            run: |
           node - <<'NODE'
           const fs=require('fs'),cp=require('child_process');
-          const q=JSON.parse(fs.readFileSync('/tmp/qual/semantic-material-v2-qualification.json'));
+          const q=JSON.parse(fs.readFileSync('/tmp/package/content/frozen-cycle-qualification.json'));
           if(q.eligible!==true)throw Error('QUAL_NOT_ELIGIBLE');
-          if(process.env.MATERIAL_CANDIDATE!=='48a7c9a76fd354226e611c463850706cad9f5e99')throw Error('CANDIDATE_IDENTITY_INVALID');
-          const bin=fs.readFileSync('/tmp/bake/semantic-material-v2.rgba');
+          if(process.env.MATERIAL_CANDIDATE!=='ca341f03492c1887f656dc8a52b7f7b29abe7d92')throw Error('CANDIDATE_IDENTITY_INVALID');
+          const bin=fs.readFileSync('/tmp/package/content/frozen-cycle-material.rgba');
           const sha=require('crypto').createHash('sha256').update(bin).digest('hex');
           if(sha!==q.sha256)throw Error('QUAL_SHA_MISMATCH');
           const api=(method,path,input)=>JSON.parse(cp.execFileSync('gh',['api','--method',method,path,'--input','-'],{input:JSON.stringify(input),encoding:'utf8'}));

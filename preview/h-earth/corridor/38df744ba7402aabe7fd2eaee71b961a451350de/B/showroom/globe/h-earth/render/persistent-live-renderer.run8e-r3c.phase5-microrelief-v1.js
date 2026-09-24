@@ -160,7 +160,9 @@ const cloneReceipt = (receipt, state) => ({
 });
 
 export function createHEarthRun8ER3CPersistentRenderer(options = {}) {
-  const acceptedRenderer = createAcceptedCp2Renderer(options);
+  const postTerrainDraw = options.postTerrainDraw ?? null;
+  if (postTerrainDraw !== null && typeof postTerrainDraw !== 'function') throw new Error('BM4_POST_TERRAIN_DRAW_INVALID');
+  const acceptedRenderer = createAcceptedCp2Renderer({ ...options, postTerrainDraw });
   const gl = options.canvas?.getContext?.('webgl2');
   if (!gl) throw new Error('BM4_WEBGL2_CONTEXT_UNAVAILABLE');
   const state = {

@@ -35,7 +35,7 @@ jobs:
           must(binding.includes("persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js"),'SELECTOR_RENDERER_PATH');
           must(binding.includes('const selectedRendererPath = t4Requested'),'T4_SELECTOR_PRECEDENCE');
           const crypto=require('node:crypto');
-          const sha1=text=>crypto.createHash('sha1').update(Buffer.from(text)).digest('hex');
+          const gitBlobSha1=text=>{const bytes=Buffer.from(text);return crypto.createHash('sha1').update(Buffer.from(`blob ${bytes.length}\\0`)).update(bytes).digest('hex');};
           const phase5Parity={
             'index.html':'12c2cb4507dd61271274bbe3382570e4d34188e1',
             'arrival-loader.js':'01353cca7acc042b161f09592f1d9870841ff17a',
@@ -45,7 +45,7 @@ jobs:
             'diagnostic/run8e-r3d/pointer-touch-intake.js':'7b2238fdba6d02fdb7e367752fe66a61e7e214e2'
           };
           for(const [relative,expected] of Object.entries(phase5Parity)){
-            must(sha1(fs.readFileSync(root+'/'+relative,'utf8'))===expected,'PHASE5_RUNTIME_BYTE_PARITY:'+relative);
+            must(gitBlobSha1(fs.readFileSync(root+'/'+relative,'utf8'))===expected,'PHASE5_RUNTIME_BYTE_PARITY:'+relative);
           }
           must(bindingSource.includes("const T4_QUERY_KEY = 't4'"),'T4_MINIMAL_SELECTOR_KEY');
           must(bindingSource.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_MINIMAL_SELECTOR_VALUE');

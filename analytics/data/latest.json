@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-24T04:35:11Z",
+  "generatedAt": "2026-09-24T05:31:35Z",
   "window30d": {
-    "start": "2026-08-25T04:35:11Z",
-    "end": "2026-09-24T04:35:11Z"
+    "start": "2026-08-25T05:31:35Z",
+    "end": "2026-09-24T05:31:35Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-17",
-      "pageLoads": 243
+      "pageLoads": 241
     },
     {
       "date": "2026-09-18",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 61
+      "pageLoads": 62
     }
   ],
   "summary": {
-    "pageLoads": 7059,
+    "pageLoads": 7058,
     "botPageLoads": 2449,
-    "nonBotPageLoads": 4610
+    "nonBotPageLoads": 4609
   },
   "referrers": [
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 22,
-      "visits": 22
+      "pageLoads": 21,
+      "visits": 21
     },
     {
       "host": "m.facebook.com",
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1836,
-      "visits": 1566
+      "pageLoads": 1834,
+      "visits": 1564
     },
     {
       "path": "/mirror-manor-preview/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 226,
-      "visits": 108
+      "pageLoads": 227,
+      "visits": 109
     },
     {
       "path": "/evidence/agentic-frontier/",

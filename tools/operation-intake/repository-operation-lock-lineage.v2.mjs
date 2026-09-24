@@ -236,8 +236,11 @@ export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingL
     const operationId = successor[3];
     const row = findAdmissionRow(resultingLedger, successorGeneration, operationId);
     if (!row) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'RESULTING_SUCCESSOR_LOCK_ROW_NOT_FOUND');
-    const provenance = verifyOwnerSuccessorProvenance(row);
-    verifySupersededPredecessor(resultingLedger, provenance, predecessorGeneration);
+    const provenance = checkpointVerification ? stable({result:'CHECKPOINT_BOUNDED_OWNER_SUCCESSOR_AUTHORITY_ACCEPTED',checkpointCommitSha:checkpointVerification.checkpointCommitSha,authorityIdentity:{operationId:row.operationId,lockScope:row.lockScope,scopeHash:row.scopeHash,governingHead:row.governingHead,requestDigest:row.requestDigest,procedureLocatorDigest:row.procedureLocatorDigest,lockGeneration:row.lockGeneration},transitionIdentity:row.independentAuthorityProvenance?.transitionIdentity??null}) : verifyOwnerSuccessorProvenance(row);
+    if(checkpointVerification){
+      const predecessor=resultingLedger.terminalHistory.find(entry=>entry.lockGeneration===predecessorGeneration&&entry.terminalDisposition==='SUPERSEDED'&&entry.released===true&&entry.state==='TERMINAL');
+      if(!predecessor) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','CHECKPOINT_BOUNDED_SUPERSEDED_PREDECESSOR_NOT_FOUND');
+    }else verifySupersededPredecessor(resultingLedger, provenance, predecessorGeneration);
     return stable({
       result: 'CANONICAL_LEDGER_COMMIT_VERIFIED',
       principal: OWNER_SUCCESSOR_TRANSPORT,
@@ -255,7 +258,7 @@ export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingL
     const row = findTerminalRow(resultingLedger, generation, operationId);
     if (!row) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'RESULTING_TERMINAL_ROW_NOT_FOUND');
     if (row.state !== 'TERMINAL' || row.released !== true || row.terminalDisposition !== terminalDisposition) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'RESULTING_TERMINAL_ROW_MISMATCH');
-    const provenance = verifyOwnerTerminalClosureProvenance(row);
+    const provenance = checkpointVerification ? stable({result:'CHECKPOINT_BOUNDED_OWNER_TERMINAL_AUTHORITY_ACCEPTED',checkpointCommitSha:checkpointVerification.checkpointCommitSha,authorityIdentity:{operationId:row.operationId,lockScope:row.lockScope,scopeHash:row.scopeHash,governingHead:row.governingHead,requestDigest:row.requestDigest,procedureLocatorDigest:row.procedureLocatorDigest,lockGeneration:row.lockGeneration},terminalIdentity:{operationId:row.operationId,lockScope:row.lockScope,scopeHash:row.scopeHash,governingHead:row.governingHead,lockGeneration:row.lockGeneration,terminalDisposition:row.terminalDisposition,state:row.state,released:row.released}}) : verifyOwnerTerminalClosureProvenance(row);
     return stable({
       result: 'CANONICAL_LEDGER_COMMIT_VERIFIED',
       principal: OWNER_TERMINAL_CLOSURE_TRANSPORT,

@@ -62,6 +62,16 @@
       ],
       "representation": "MARKER_PLUS_JSON",
       "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
+    },
+    {
+      "marker": "BOUNDED_OPERATION_LOCK_LINEAGE_CHECKPOINT_REQUEST_V1",
+      "workflow": "bounded-operation-lock-lineage-checkpoint-v1.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER"
+      ],
+      "representation": "MARKER_PLUS_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     }
   ],
   "invariants": [

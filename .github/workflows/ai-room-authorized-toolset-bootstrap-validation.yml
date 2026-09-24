@@ -23,7 +23,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: 22}
       - run: |
-          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          OBSERVED_HEAD="$(git rev-parse HEAD^{commit})"
+          printf 'EXPECTED_HEAD=%s\nOBSERVED_HEAD=%s\nGITHUB_SHA=%s\n' "$EXPECTED_HEAD" "$OBSERVED_HEAD" "$GITHUB_SHA"
+          test "$OBSERVED_HEAD" = "$EXPECTED_HEAD"
           node tools/ai-room-transport/active-conformance.v1.mjs --root . --expected-head "$EXPECTED_HEAD" --holder "ACTIVE_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output /tmp/builder.json
           node -e "const r=require('/tmp/builder.json');if(r.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||r.descriptorsResolved!==r.descriptorCount)process.exit(1)"
       - uses: actions/upload-artifact@v4

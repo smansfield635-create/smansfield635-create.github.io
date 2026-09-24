@@ -367,16 +367,25 @@ export function verifyExactGen2021HistoricalState({commitSha,parentSha,parentLed
   return stable({result:'EXACT_GEN2021_LEDGER_COUNTER_RECOVERED',commitSha:r.commitSha,parentSha:r.parentSha,parentLedgerBlobSha:r.parentLedgerBlobSha,resultingLedgerBlobSha:r.resultingLedgerBlobSha,scopeHash:r.scopeHash,operationId:r.operationId,lockGeneration:r.lockGeneration});
 }
 
+function historicalLedgerDiagnostic({source,objectSha,transport,encoding,rawBytes,decodedBytes}) {
+  const bounded=bytes=>bytes.subarray(0,64).toString('hex');
+  return stable({source,objectSha,transport,encoding,rawByteLength:rawBytes.length,rawSha256:createHash('sha256').update(rawBytes).digest('hex'),rawFirst64Hex:bounded(rawBytes),decodedByteLength:decodedBytes.length,decodedSha256:createHash('sha256').update(decodedBytes).digest('hex'),decodedFirst64Hex:bounded(decodedBytes)});
+}
 async function readRawHistoricalLedger({repository,token,blobSha,source}) {
   const objectSha=dig(blobSha,40,'ledgerBlobSha',source);
   if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_BLOB_READ==='1'){
-    try{return JSON.parse(execFileSync('git',['cat-file','blob',objectSha],{encoding:'utf8',maxBuffer:64*1024*1024}))}
-    catch(e){throw err('LEDGER_JSON_DECODE_FAILURE','content',source,e.message)}
+    const rawBytes=execFileSync('git',['cat-file','blob',objectSha],{maxBuffer:64*1024*1024});
+    const diagnostic=historicalLedgerDiagnostic({source,objectSha,transport:'LOCAL_GIT_CAT_FILE',encoding:'raw',rawBytes,decodedBytes:rawBytes});
+    try{return JSON.parse(rawBytes.toString('utf8'))}
+    catch(e){throw err('LEDGER_JSON_DECODE_FAILURE','content',source,JSON.stringify({...diagnostic,parseError:e.message}))}
   }
   const g=await req(`${base(repository)}/git/blobs/${objectSha}`,{headers:H(token)},[200],'GEN2021_HISTORICAL_LEDGER_BLOB_READ');
-  if(g.encoding!=='base64')throw err('LEDGER_BLOB_ENCODING_UNSUPPORTED','encoding',source,String(g.encoding));
-  try{return JSON.parse(Buffer.from(String(g.content||'').replace(/\s/g,''),'base64').toString('utf8'))}
-  catch(e){throw err('LEDGER_JSON_DECODE_FAILURE','content',source,e.message)}
+  const rawBytes=Buffer.from(String(g.content||''),'utf8');
+  if(g.encoding!=='base64')throw err('LEDGER_BLOB_ENCODING_UNSUPPORTED','encoding',source,JSON.stringify(historicalLedgerDiagnostic({source,objectSha,transport:'GITHUB_GIT_BLOB_API',encoding:String(g.encoding),rawBytes,decodedBytes:Buffer.alloc(0)})));
+  const decodedBytes=Buffer.from(String(g.content||'').replace(/\s/g,''),'base64');
+  const diagnostic=historicalLedgerDiagnostic({source,objectSha,transport:'GITHUB_GIT_BLOB_API',encoding:g.encoding,rawBytes,decodedBytes});
+  try{return JSON.parse(decodedBytes.toString('utf8'))}
+  catch(e){throw err('LEDGER_JSON_DECODE_FAILURE','content',source,JSON.stringify({...diagnostic,parseError:e.message}))}
 }
 
 async function verifyExactGen2021LedgerCounterRecovery({repository,token,summary}) {

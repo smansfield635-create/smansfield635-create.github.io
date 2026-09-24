@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "governance-bridge-successor-runtime-qualification-20260924-006",
+  "capabilityId": "GOVERNANCE_BRIDGE_CANDIDATE_RUNTIME_QUALIFICATION",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "4b4413cb0a890153b1bf54d42ce67b5d15000963",
+    "base_sha": "53f94f709339e5a481fdf2bba5dfc484ecb1060a"
   }
 }

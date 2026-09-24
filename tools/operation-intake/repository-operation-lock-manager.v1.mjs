@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 export const LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
 export const LOCK_REF = 'refs/heads/operation-locks/repository-operation-intake-v1';
+export const LINEAGE_CHECKPOINT_PATH = '.github/operation-intake/lock-lineage-checkpoint.v1.json';
 export const AUTHORITY_PROVENANCE_SCHEMA = 'REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1';
 export const AUTHORITY_INVOCATION_SCHEMA = 'REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1';
 export const LEGACY_AUTHORITY_SNAPSHOT_BLOBS = ['f9c84e0a56b3b566f9da8eced8abc9348eb32ef5'];
@@ -250,8 +251,14 @@ async function verifyExactLockRefLineageRecovery({repository,token,summary,recov
   if(detail?.sha!==recovery.commitSha||detail?.author?.login!==recovery.authorLogin||detail?.committer?.login!==recovery.committerLogin||detail?.commit?.message!==recovery.message||detail?.commit?.verification?.verified!==false||parents.length!==1||parents[0]?.sha!==recovery.parentSha||files.length!==1||files[0]?.filename!==LEDGER_PATH||files[0]?.sha!==recovery.ledgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',recovery.commitSha);
   return true;
 }
-export async function verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha=LEGACY_AUTHORITY_CUTOVER_COMMIT}) {
-  const head=dig(branchHead,40,'branchHead','authority-lineage'),anchor=dig(anchorCommitSha,40,'anchorCommitSha','authority-lineage');
+export async function verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha=LEGACY_AUTHORITY_CUTOVER_COMMIT,lineageCheckpoint=null}) {
+  const head=dig(branchHead,40,'branchHead','authority-lineage');
+  let anchor=dig(anchorCommitSha,40,'anchorCommitSha','authority-lineage'),checkpointVerification=null;
+  if(lineageCheckpoint){
+    const {verifyLineageCheckpoint}=await import('./repository-operation-lock-lineage.v2.mjs');
+    checkpointVerification=verifyLineageCheckpoint(lineageCheckpoint);
+    anchor=dig(checkpointVerification.checkpointCommitSha,40,'checkpointCommitSha','authority-lineage');
+  }
   if(head===anchor)return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:0});
   const u=base(repository);let page=1,total=null,seen=[];
   while(page<=64){const c=await req(`${u}/compare/${anchor}...${head}?per_page=100&page=${page}`,{headers:H(token)},[200],'AUTHORITY_LINEAGE_COMPARE');if(!['ahead','identical'].includes(c?.status))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.status','authority-lineage',String(c?.status));if(page===1){total=Number(c?.total_commits);if(!Number.isInteger(total)||total<0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.total_commits','authority-lineage');const files=Array.isArray(c?.files)?c.files:[];if(files.some(f=>f?.filename!==LEDGER_PATH))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.files','authority-lineage','NON_LEDGER_PATH_MUTATION')}const commits=Array.isArray(c?.commits)?c.commits:[];seen.push(...commits);if(seen.length>=total||commits.length<100)break;page++}
@@ -274,7 +281,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
     }
     throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',String(c?.sha||'UNKNOWN_COMMIT'));
   }
-  return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:seen.length});
+  return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:seen.length,checkpointVerification});
 }
 
 async function fetchComment(repository,token,commentId){return req(`${base(repository)}/issues/comments/${commentId}`,{headers:H(token)},[200],'AUTHORITY_SOURCE_COMMENT')}

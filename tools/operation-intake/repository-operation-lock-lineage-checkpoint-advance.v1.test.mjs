@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { advanceCheckpoint } from './repository-operation-lock-lineage-checkpoint-advance.v1.mjs';
+
+const candidate={schema:'REPOSITORY_OPERATION_LOCK_LINEAGE_CHECKPOINT_v1',status:'CANDIDATE_UNMATERIALIZED',authorityEffect:'NONE',checkpoint:null,materializationRule:{currentUnverifiedHeadMayNotSeedCheckpoint:true}};
+const receipt=(anchor,head,count=10)=>({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:count});
+
+test('initial checkpoint requires canonical verified-lineage receipt',()=>assert.throws(()=>advanceCheckpoint({candidateCheckpoint:candidate,verifiedLineageReceipt:{result:'UNVERIFIED'},endpointLedgerBlobSha:'b'.repeat(40)}),e=>e.code==='VERIFIED_LINEAGE_RECEIPT_REQUIRED'));
+test('verified initial segment materializes a non-authority checkpoint',()=>{const x=advanceCheckpoint({candidateCheckpoint:candidate,verifiedLineageReceipt:receipt('a'.repeat(40),'b'.repeat(40)),endpointLedgerBlobSha:'c'.repeat(40)});assert.equal(x.status,'ACTIVE_VERIFIED');assert.equal(x.authorityEffect,'NONE');assert.equal(x.checkpoint.checkpointCommitSha,'b'.repeat(40));});
+test('advancement must be contiguous with prior checkpoint',()=>{const active=advanceCheckpoint({candidateCheckpoint:candidate,verifiedLineageReceipt:receipt('a'.repeat(40),'b'.repeat(40)),endpointLedgerBlobSha:'c'.repeat(40)});assert.throws(()=>advanceCheckpoint({candidateCheckpoint:active,verifiedLineageReceipt:receipt('d'.repeat(40),'e'.repeat(40)),endpointLedgerBlobSha:'f'.repeat(40)}),e=>e.code==='CHECKPOINT_SEGMENT_NOT_CONTIGUOUS')});
+test('checkpoint cannot advance to itself',()=>{const active=advanceCheckpoint({candidateCheckpoint:candidate,verifiedLineageReceipt:receipt('a'.repeat(40),'b'.repeat(40)),endpointLedgerBlobSha:'c'.repeat(40)});assert.throws(()=>advanceCheckpoint({candidateCheckpoint:active,verifiedLineageReceipt:receipt('b'.repeat(40),'b'.repeat(40),0),endpointLedgerBlobSha:'c'.repeat(40)}),e=>e.code==='CHECKPOINT_DID_NOT_ADVANCE')});
+test('failed segment cannot advance checkpoint',()=>{const active=advanceCheckpoint({candidateCheckpoint:candidate,verifiedLineageReceipt:receipt('a'.repeat(40),'b'.repeat(40)),endpointLedgerBlobSha:'c'.repeat(40)});assert.throws(()=>advanceCheckpoint({candidateCheckpoint:active,verifiedLineageReceipt:{result:'AUTHORITY_LEDGER_LINEAGE_UNTRUSTED',anchorCommitSha:'b'.repeat(40),branchHead:'d'.repeat(40)},endpointLedgerBlobSha:'e'.repeat(40)}),e=>e.code==='VERIFIED_LINEAGE_RECEIPT_REQUIRED')});

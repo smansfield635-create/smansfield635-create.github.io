@@ -1,0 +1,26 @@
+{
+  "schema": "REPOSITORY_OPERATION_LOCK_LINEAGE_CHECKPOINT_v1",
+  "status": "CANDIDATE_UNMATERIALIZED",
+  "authorityEffect": "NONE",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+  "checkpoint": null,
+  "materializationRule": {
+    "source": "ALREADY_VERIFIED_CANONICAL_LINEAGE_ONLY",
+    "requiredBindings": [
+      "checkpointCommitSha",
+      "checkpointLedgerBlobSha",
+      "verifiedFromAnchorCommitSha",
+      "verificationReceiptSha256"
+    ],
+    "currentUnverifiedHeadMayNotSeedCheckpoint": true
+  },
+  "verificationRule": {
+    "range": "CHECKPOINT_EXCLUSIVE_TO_CURRENT_HEAD_INCLUSIVE",
+    "everyMutationMustChangeOnlyLedgerPath": true,
+    "everyMutationMustPassCanonicalLedgerCommitV2": true,
+    "checkpointCreatesOperationAuthority": false,
+    "checkpointPermitsTerminalClosure": false,
+    "failClosedOnMissingOrInvalidCheckpoint": true
+  }
+}

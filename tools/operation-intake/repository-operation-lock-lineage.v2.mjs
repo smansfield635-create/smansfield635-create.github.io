@@ -14,6 +14,19 @@ export const OWNER_SUCCESSOR_PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_
 export const OWNER_TERMINAL_CLOSURE_TRANSPORT = 'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1';
 export const OWNER_TERMINAL_CLOSURE_PROVENANCE_SCHEMA = 'OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1';
 export const LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
+export const LINEAGE_CHECKPOINT_SCHEMA = 'REPOSITORY_OPERATION_LOCK_LINEAGE_CHECKPOINT_v1';
+export function verifyLineageCheckpoint(checkpoint) {
+  if (!checkpoint || checkpoint.schema !== LINEAGE_CHECKPOINT_SCHEMA) reject('LINEAGE_CHECKPOINT_SCHEMA_INVALID');
+  if (checkpoint.status !== 'ACTIVE_VERIFIED') reject('LINEAGE_CHECKPOINT_NOT_ACTIVE_VERIFIED');
+  if (checkpoint.authorityEffect !== 'NONE') reject('LINEAGE_CHECKPOINT_AUTHORITY_EFFECT_INVALID');
+  const c = checkpoint.checkpoint;
+  if (!c || !/^[0-9a-f]{40}$/.test(c.checkpointCommitSha || '')) reject('LINEAGE_CHECKPOINT_COMMIT_INVALID');
+  if (!/^[0-9a-f]{40}$/.test(c.checkpointLedgerBlobSha || '')) reject('LINEAGE_CHECKPOINT_LEDGER_BLOB_INVALID');
+  if (!/^[0-9a-f]{40}$/.test(c.verifiedFromAnchorCommitSha || '')) reject('LINEAGE_CHECKPOINT_ANCHOR_INVALID');
+  if (!/^[0-9a-f]{64}$/.test(c.verificationReceiptSha256 || '')) reject('LINEAGE_CHECKPOINT_RECEIPT_DIGEST_INVALID');
+  return stable({result:'LINEAGE_CHECKPOINT_VERIFIED',checkpointCommitSha:c.checkpointCommitSha,checkpointLedgerBlobSha:c.checkpointLedgerBlobSha,verifiedFromAnchorCommitSha:c.verifiedFromAnchorCommitSha,verificationReceiptSha256:c.verificationReceiptSha256});
+}
+
 export const GEN1767_EXACT_OWNER_INTAKE_RECOVERY = Object.freeze({
   operationId: 'AUDRALIA_WORK_EXECUTOR_PORTABLE_BOOTSTRAP_20260827_001',
   lockGeneration: 1767,
@@ -254,4 +267,15 @@ export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingL
   }
 
   reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'OWNER_TRANSPORT_MUTATION_NOT_AUTHORIZED');
+}
+
+export function materializeLineageCheckpoint({candidate,verifiedLineageReceipt}) {
+  if (!candidate || candidate.schema !== LINEAGE_CHECKPOINT_SCHEMA || candidate.status !== 'CANDIDATE_UNMATERIALIZED' || candidate.checkpoint !== null) reject('LINEAGE_CHECKPOINT_CANDIDATE_INVALID');
+  if (!verifiedLineageReceipt || verifiedLineageReceipt.result !== 'CANONICAL_LOCK_REF_LINEAGE_VERIFIED') reject('LINEAGE_CHECKPOINT_VERIFIED_LINEAGE_RECEIPT_REQUIRED');
+  const checkpointCommitSha=verifiedLineageReceipt.branchHead;
+  const checkpointLedgerBlobSha=verifiedLineageReceipt.ledgerBlobSha;
+  const verifiedFromAnchorCommitSha=verifiedLineageReceipt.anchorCommitSha;
+  if (!/^[0-9a-f]{40}$/.test(checkpointCommitSha||'') || !/^[0-9a-f]{40}$/.test(checkpointLedgerBlobSha||'') || !/^[0-9a-f]{40}$/.test(verifiedFromAnchorCommitSha||'')) reject('LINEAGE_CHECKPOINT_VERIFIED_LINEAGE_RECEIPT_INVALID');
+  const receiptCore=stable({result:verifiedLineageReceipt.result,anchorCommitSha:verifiedFromAnchorCommitSha,branchHead:checkpointCommitSha,ledgerBlobSha:checkpointLedgerBlobSha,commitCount:verifiedLineageReceipt.commitCount});
+  return stable({...candidate,status:'ACTIVE_VERIFIED',checkpoint:{checkpointCommitSha,checkpointLedgerBlobSha,verifiedFromAnchorCommitSha,verificationReceiptSha256:sha(canonical(receiptCore))}});
 }

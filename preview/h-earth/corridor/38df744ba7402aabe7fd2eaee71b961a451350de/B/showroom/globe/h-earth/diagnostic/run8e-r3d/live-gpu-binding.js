@@ -20,6 +20,10 @@ const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+const BAKED_ISOLATION_QUERY_KEY = 'material-isolation';
+const BAKED_ISOLATION_QUERY_VALUE = 'v1';
+const BAKED_ISOLATION_RENDERER_PATH =
+  '../../render/persistent-live-renderer.run8e-r3c.phase2-baked-expression-isolation-v1.js';
 const BAKED_MATERIAL_QUERY_KEY = 'material';
 const BAKED_MATERIAL_QUERY_VALUE = 'baked-v1';
 const BAKED_MATERIAL_RENDERER_PATH =
@@ -49,6 +53,8 @@ const oceanProofRequested =
 const additiveVisualRequested =
   queryParameters.get(ADDITIVE_VISUAL_QUERY_KEY) ===
   ADDITIVE_VISUAL_QUERY_VALUE;
+const bakedIsolationRequested =
+  queryParameters.get(BAKED_ISOLATION_QUERY_KEY) === BAKED_ISOLATION_QUERY_VALUE;
 const bakedMaterialRequested =
   queryParameters.get(BAKED_MATERIAL_QUERY_KEY) === BAKED_MATERIAL_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
@@ -64,6 +70,8 @@ const selectedRendererPath = rendererCustodyRequested
   ? OCEAN_PROOF_RENDERER_PATH
   : additiveVisualRequested
   ? ADDITIVE_VISUAL_RENDERER_PATH
+  : bakedIsolationRequested
+    ? BAKED_ISOLATION_RENDERER_PATH
   : bakedMaterialRequested
     ? BAKED_MATERIAL_RENDERER_PATH
   : cp2LiveDifferentialRequested

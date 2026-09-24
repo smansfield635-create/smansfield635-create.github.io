@@ -1,0 +1,22 @@
+name: H-Earth Phase4 Terrain Microstructure Bake
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: read
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/validation/phase4-terrain-microstructure-bake.mjs terrain-microstructure-v1.rg | tee terrain-microstructure-v1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-phase4-terrain-microstructure-v1
+          path: |
+            terrain-microstructure-v1.rg
+            terrain-microstructure-v1.json
+          retention-days: 90

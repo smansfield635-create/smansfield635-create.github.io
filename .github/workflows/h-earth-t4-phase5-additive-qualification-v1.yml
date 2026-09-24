@@ -33,6 +33,33 @@ jobs:
           grep -q '"total":647' "$DATA"
           grep -q '"TUFT":617' "$DATA"
           grep -q '"ROCK":30' "$DATA"
+      - name: T4.2R camera-relative distance qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth"
+          DRAW="$BASE/render/t4-post-terrain-draw-v1.js"
+          BATCH="$BASE/render/t4-static-gpu-batches-v1.js"
+          DATA="$BASE/render/t4-frozen-placement-v1.js"
+          grep -q '"total":647' "$DATA"
+          grep -q '"TUFT":617' "$DATA"
+          grep -q '"ROCK":30' "$DATA"
+          grep -q "instance.x-camera.x" "$DRAW"
+          grep -q "instance.elevation-camera.y" "$DRAW"
+          grep -q "instance.z-camera.z" "$DRAW"
+          grep -q "nearMaximum:95" "$DRAW"
+          grep -q "midMaximum:190" "$DRAW"
+          grep -q "farMode:'OFF'" "$DRAW"
+          grep -q "(index&1)===0" "$DRAW"
+          ! grep -q "Math.hypot(p.x,p.z)" "$DRAW"
+          ! grep -q "classifyDistanceBand" "$DRAW"
+          for file in "$DRAW" "$BATCH"; do
+            ! grep -q "bindFramebuffer" "$file"
+            ! grep -q "createFramebuffer" "$file"
+            ! grep -q "presentColorFrame" "$file"
+          done
+          grep -q "gl.drawArraysInstanced" "$BATCH"
+          grep -q "drawCalls>2" "$BATCH"
       - name: Module syntax qualification
         run: |
           node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-static-gpu-batches-v1.js"

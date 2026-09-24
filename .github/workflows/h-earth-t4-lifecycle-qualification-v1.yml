@@ -50,8 +50,7 @@ jobs:
           must(bindingSource.includes("const T4_QUERY_KEY = 't4'"),'T4_MINIMAL_SELECTOR_KEY');
           must(bindingSource.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_MINIMAL_SELECTOR_VALUE');
           must(bindingSource.includes("const T4_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js'"),'T4_MINIMAL_SELECTOR_PATH');
-          must(renderer.includes("from './persistent-live-renderer.run8e-r3c.js'"),'PHASE5_BASE_LINEAGE');
-          must(!renderer.includes("from './persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'"),'NO_CP2_R2_BASE_LINEAGE');
+          must(renderer.includes("from './persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js'"),'PHASE5_MICRORELIEF_BASE_LINEAGE');
           must(renderer.includes('"placementSha":"50136ded9837ffe05a058d8187fc2bf0e8af95f9d9ce42644894b881a2b407f1"'),'PLACEMENT_SHA');
           must(renderer.includes('"total":647'),'TOTAL_647');
           must(renderer.includes('"counts":{"TUFT":617,"ROCK":30}'),'COUNTS_617_30');

@@ -54,6 +54,11 @@ jobs:
           must(bindingSource.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_MINIMAL_SELECTOR_VALUE');
           must(bindingSource.includes("const T4_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js'"),'T4_MINIMAL_SELECTOR_PATH');
           must(renderer.includes("from './persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js'"),'PHASE5_MICRORELIEF_BASE_LINEAGE');
+          const elevationDeclaration=phase5Renderer.indexOf('float elevationMix=smoothstep');
+          const slopeDeclaration=phase5Renderer.indexOf('float slopeResponse=smoothstep');
+          const nearDeclaration=phase5Renderer.indexOf('float nearDetail=1.0-smoothstep');
+          const reliefUse=phase5Renderer.indexOf('float reliefStrength=mix');
+          must(elevationDeclaration>=0&&slopeDeclaration>=0&&nearDeclaration>=0&&reliefUse>=0&&elevationDeclaration<reliefUse&&slopeDeclaration<reliefUse&&nearDeclaration<reliefUse,'MICRORELIEF_GLSL_DECLARATION_ORDER');
           must(phase5Renderer.includes("from './persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'"),'PHASE5_CURRENT_CP2_LINEAGE');
           must(r2Package.includes("packageOccurrenceId = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_CURRENT'"),'CURRENT_R2_DEFAULT_OCCURRENCE');
           must(r2Package.includes("H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID =\n  'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001'"),'HISTORICAL_R2_OCCURRENCE_PRESERVED');

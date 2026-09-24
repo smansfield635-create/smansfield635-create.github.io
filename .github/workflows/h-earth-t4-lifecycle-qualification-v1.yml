@@ -28,6 +28,8 @@ jobs:
           const root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth';
           const binding=fs.readFileSync(root+'/diagnostic/run8e-r3d/live-gpu-binding.js','utf8');
           const renderer=fs.readFileSync(root+'/render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js','utf8');
+          const phase5Renderer=fs.readFileSync(root+'/render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js','utf8');
+          const ow01Cp2=fs.readFileSync(root+'/render/persistent-live-renderer.run8e-r3c.cp2-round1-ow01-t4.js','utf8');
           const bindingSource=fs.readFileSync(root+'/diagnostic/run8e-r3d/live-gpu-binding.js','utf8');
           const must=(ok,label)=>{if(!ok)throw new Error('QUALIFICATION_FAIL:'+label);console.log('PASS',label)};
           must(binding.includes("const T4_QUERY_KEY = 't4'"),'T4_QUERY_KEY');
@@ -51,6 +53,10 @@ jobs:
           must(bindingSource.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_MINIMAL_SELECTOR_VALUE');
           must(bindingSource.includes("const T4_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js'"),'T4_MINIMAL_SELECTOR_PATH');
           must(renderer.includes("from './persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js'"),'PHASE5_MICRORELIEF_BASE_LINEAGE');
+          must(phase5Renderer.includes("from './persistent-live-renderer.run8e-r3c.cp2-round1-ow01-t4.js'"),'PHASE5_T4_OW01_CP2_LINEAGE');
+          must(ow01Cp2.includes('getHEarthOW01CanonicalLiveRenderPackageOccurrence'),'OW01_PACKAGE_PROVIDER');
+          must(ow01Cp2.includes('const renderPackage = getHEarthOW01CanonicalLiveRenderPackageOccurrence();'),'OW01_PACKAGE_BOUND');
+          must(!ow01Cp2.includes('const renderPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();'),'GENERIC_R2_PACKAGE_NOT_BOUND');
           must(renderer.includes('"placementSha":"50136ded9837ffe05a058d8187fc2bf0e8af95f9d9ce42644894b881a2b407f1"'),'PLACEMENT_SHA');
           must(renderer.includes('"total":647'),'TOTAL_647');
           must(renderer.includes('"counts":{"TUFT":617,"ROCK":30}'),'COUNTS_617_30');

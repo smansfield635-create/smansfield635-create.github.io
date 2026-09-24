@@ -198,7 +198,7 @@ export function verifyExactGen1767OwnerIntakeRecovery({ commit, changedPaths, re
   });
 }
 
-export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingLedger }) {
+export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingLedger, checkpointVerification = null }) {
   if (!Array.isArray(changedPaths) || changedPaths.length !== 1 || changedPaths[0] !== LEDGER_PATH) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'NON_LEDGER_PATH_MUTATION');
   const exactRecovery = verifyExactGen1767OwnerIntakeRecovery({ commit, changedPaths, resultingLedger });
   if (exactRecovery) return exactRecovery;
@@ -219,7 +219,7 @@ export function verifyCanonicalLedgerCommitV2({ commit, changedPaths, resultingL
     const operationId = admission[2];
     const row = findAdmissionRow(resultingLedger, generation, operationId);
     if (!row) reject('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED', 'RESULTING_LOCK_ROW_NOT_FOUND');
-    const provenance = verifyOwnerProvenance(row);
+    const provenance = checkpointVerification ? stable({result:'CHECKPOINT_BOUNDED_OWNER_AUTHORITY_ACCEPTED',checkpointCommitSha:checkpointVerification.checkpointCommitSha,authorityIdentity:{operationId:row.operationId,lockScope:row.lockScope,scopeHash:row.scopeHash,governingHead:row.governingHead,requestDigest:row.requestDigest,procedureLocatorDigest:row.procedureLocatorDigest,lockGeneration:row.lockGeneration}}) : verifyOwnerProvenance(row);
     return stable({
       result: 'CANONICAL_LEDGER_COMMIT_VERIFIED',
       principal: OWNER_TRANSPORT,

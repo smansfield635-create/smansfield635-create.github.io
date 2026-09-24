@@ -1,4 +1,5 @@
 import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
+import { createHEarthT4PostTerrainDraw } from '../../render/t4-post-terrain-draw-v1.js';
 
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
@@ -26,6 +27,8 @@ const SEMANTIC_MATERIAL_RENDERER_PATH = '../../render/persistent-live-renderer.r
 const MICRORELIEF_QUERY_KEY = 'microrelief';
 const MICRORELIEF_QUERY_VALUE = 'v1';
 const MICRORELIEF_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js';
+const T4_QUERY_KEY = 't4';
+const T4_QUERY_VALUE = 'additive-v1';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -53,10 +56,13 @@ const additiveVisualRequested =
   ADDITIVE_VISUAL_QUERY_VALUE;
 const semanticMaterialRequested = queryParameters.get(SEMANTIC_MATERIAL_QUERY_KEY) === SEMANTIC_MATERIAL_QUERY_VALUE;
 const microreliefRequested = queryParameters.get(MICRORELIEF_QUERY_KEY) === MICRORELIEF_QUERY_VALUE;
+const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const selectedRendererPath = rendererCustodyRequested
+const selectedRendererPath = t4Requested
+  ? MICRORELIEF_RENDERER_PATH
+  : rendererCustodyRequested
   ? RENDERER_CUSTODY_RENDERER_PATH
   : waterIndexSpanRequested
   ? WATER_INDEX_SPAN_RENDERER_PATH
@@ -161,7 +167,11 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height });
+  const t4Extension = t4Requested ? createHEarthT4PostTerrainDraw(canvas.getContext('webgl2')) : null;
+  const renderer = createHEarthRun8ER3CPersistentRenderer({
+    canvas, width, height,
+    postTerrainDraw: t4Extension?.drawAfterTerrain ?? null
+  });
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();

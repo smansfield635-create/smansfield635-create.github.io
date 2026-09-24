@@ -1,0 +1,37 @@
+name: H-Earth T4 Instancing Chamber
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+  actions: read
+jobs:
+  construct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-t4-mesostructure-placement
+          path: placement
+          github-token: ${{ github.token }}
+          run-id: 36034202611
+      - name: Construct two-draw static instancing derivative
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: ebdb03f026c930fa83fee77d040faf19be95f879
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),cp=require('child_process'),crypto=require('crypto');
+          const receipt=JSON.parse(fs.readFileSync('placement/t4-mesostructure-placement.json'));if(receipt.eligible!==true||receipt.total>2048)throw Error('PLACEMENT_NOT_ELIGIBLE');
+          const payload=JSON.stringify(receipt.instances),placementSha=crypto.createHash('sha256').update(payload).digest('hex');if(placementSha!==receipt.sha256)throw Error('PLACEMENT_SHA_MISMATCH');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'})),get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/',src=root+'render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js';
+          let r=Buffer.from(get('repos/'+process.env.REPO+'/contents/'+src+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          const frozen=JSON.stringify({placementSha,total:receipt.total,counts:receipt.counts,instances:receipt.instances});
+          r+="\nexport const H_EARTH_T4_FROZEN_PLACEMENT="+frozen+";\nexport const H_EARTH_T4_INSTANCE_BUDGET=2048;\nexport const H_EARTH_T4_ADDED_DRAW_CALL_BUDGET=2;\n";
+          const blob=api('POST','repos/'+process.env.REPO+'/git/blobs',{content:r,encoding:'utf-8'}),path=root+'render/persistent-live-renderer.run8e-r3c.t4-instancing-v1.js',tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:[{path,mode:'100644',type:'blob',sha:blob.sha}]}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth T4: bind frozen placement into instancing derivative',tree:tree.sha,parents:[process.env.BASE]});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,placementSha,total:receipt.total,counts:receipt.counts,drawCallBudget:2,publication:'HELD'}));
+          NODE

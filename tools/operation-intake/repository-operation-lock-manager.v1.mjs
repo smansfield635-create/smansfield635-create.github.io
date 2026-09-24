@@ -45,6 +45,14 @@ export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   workflowRunId: 32931494268
 })];
 
+export const EXACT_CORRUPTED_LEDGER_SPAN_RECOVERY = stable({
+  anchorCommitSha: 'f5d12ff2795aa91d77ae4aa6436946ed4904307d',
+  lastCorruptedCommitSha: '38fade1c33e705497f2984072dece377ad480aa0',
+  restorationCommitSha: 'eaec93ba84a747e4710f6c65e49c5163e5f68f4f',
+  restorationLedgerBlobSha: '94eeaefbe68201d86989119c15a882fb97c3f3aa',
+  restorationMessage: 'Restore complete operation ledger after transport truncation'
+});
+
 export const EXACT_LEDGER_RESTORATION_RECOVERY = stable({
   commitSha: 'eaec93ba84a747e4710f6c65e49c5163e5f68f4f',
   parentSha: '38fade1c33e705497f2984072dece377ad480aa0',
@@ -272,6 +280,20 @@ async function verifyExactLockRefLineageRecovery({repository,token,summary,recov
   return true;
 }
 
+async function verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification}) {
+  const r=EXACT_CORRUPTED_LEDGER_SPAN_RECOVERY;
+  if(!checkpointVerification||anchor!==r.anchorCommitSha)return null;
+  const restorationIndex=seen.findIndex(value=>value?.sha===r.restorationCommitSha);
+  if(restorationIndex<0)return null;
+  const span=seen.slice(0,restorationIndex+1);
+  if(span.at(-2)?.sha!==r.lastCorruptedCommitSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','corruption-span','authority-lineage','RESTORATION_PARENT_POSITION_MISMATCH');
+  for(const summary of span){const detail=await req(`${base(repository)}/commits/${summary.sha}`,{headers:H(token)},[200],'AUTHORITY_CORRUPTION_SPAN_DETAIL'),files=Array.isArray(detail?.files)?detail.files:[];if(files.length!==1||files[0]?.filename!==LEDGER_PATH)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','corruption-span','authority-lineage',`NON_LEDGER_MUTATION:${summary.sha}`)}
+  const restoration=await req(`${base(repository)}/commits/${r.restorationCommitSha}`,{headers:H(token)},[200],'AUTHORITY_CORRUPTION_RESTORATION_DETAIL'),files=Array.isArray(restoration?.files)?restoration.files:[],parents=Array.isArray(restoration?.parents)?restoration.parents:[];
+  if(parents.length!==1||parents[0]?.sha!==r.lastCorruptedCommitSha||restoration?.author?.login!=='smansfield635-create'||restoration?.committer?.login!=='smansfield635-create'||restoration?.commit?.message!==r.restorationMessage||files.length!==1||files[0]?.filename!==LEDGER_PATH||files[0]?.sha!==r.restorationLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','corruption-span','authority-lineage','RESTORATION_IDENTITY_MISMATCH');
+  await readGitLedgerBlob({repository,token,blobSha:r.restorationLedgerBlobSha,source:'exact-corruption-span-restoration'});
+  return stable({result:'EXACT_CORRUPTED_LEDGER_SPAN_RECOVERED',anchorCommitSha:anchor,restorationCommitSha:r.restorationCommitSha,recoveredCommitCount:span.length,nextIndex:restorationIndex+1});
+}
+
 export async function verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha=LEGACY_AUTHORITY_CUTOVER_COMMIT,lineageCheckpoint=null}) {
   const head=dig(branchHead,40,'branchHead','authority-lineage');
   let anchor=dig(anchorCommitSha,40,'anchorCommitSha','authority-lineage'),checkpointVerification=null;
@@ -284,7 +306,9 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
   const u=base(repository);let page=1,total=null,seen=[];
   while(page<=64){const c=await req(`${u}/compare/${anchor}...${head}?per_page=100&page=${page}`,{headers:H(token)},[200],'AUTHORITY_LINEAGE_COMPARE');if(!['ahead','identical'].includes(c?.status))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.status','authority-lineage',String(c?.status));if(page===1){total=Number(c?.total_commits);if(!Number.isInteger(total)||total<0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.total_commits','authority-lineage');const files=Array.isArray(c?.files)?c.files:[];if(files.some(f=>f?.filename!==LEDGER_PATH))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.files','authority-lineage','NON_LEDGER_PATH_MUTATION')}const commits=Array.isArray(c?.commits)?c.commits:[];seen.push(...commits);if(seen.length>=total||commits.length<100)break;page++}
   if(seen.length!==total)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',`expected=${total}:observed=${seen.length}`);
-  for(const c of seen){
+  const spanRecovery=await verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification});
+  const verificationSet=spanRecovery?seen.slice(spanRecovery.nextIndex):seen;
+  for(const c of verificationSet){
     if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;
     if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
     const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);
@@ -303,7 +327,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
     }
     throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',String(c?.sha||'UNKNOWN_COMMIT'));
   }
-  return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:seen.length,checkpointVerification});
+  return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:seen.length,checkpointVerification,spanRecovery});
 }
 
 async function fetchComment(repository,token,commentId){return req(`${base(repository)}/issues/comments/${commentId}`,{headers:H(token)},[200],'AUTHORITY_SOURCE_COMMENT')}

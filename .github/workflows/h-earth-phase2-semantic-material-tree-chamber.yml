@@ -15,12 +15,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Bind frozen qualified material evidence
+      - name: Bind exact artifact authority
         id: ev
         run: |
-          echo "candidate=88e89f6717d93e2e2c4e58032e4b12c3dd182c3d" >> "$GITHUB_OUTPUT"
-          echo "bake=35955614940" >> "$GITHUB_OUTPUT"
-          echo "qual=35955615051" >> "$GITHUB_OUTPUT"
+          echo "candidate=48a7c9a76fd354226e611c463850706cad9f5e99" >> "$GITHUB_OUTPUT"
+          echo "bake=35961125601" >> "$GITHUB_OUTPUT"
+          echo "qual=35961125639" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
         with:
           name: h-earth-phase2-semantic-material-v2
@@ -39,15 +39,15 @@ jobs:
           REPO: ${{ github.repository }}
           BASE: 2582dda13038c05fe9279177d5a737eb4e7eef73
           CHAMBER: h-earth/phase2-semantic-material-tree-chamber-v1
-          MATERIAL_CANDIDATE: 88e89f6717d93e2e2c4e58032e4b12c3dd182c3d
-          MATERIAL_BAKE_RUN: 35955614940
-          MATERIAL_QUAL_RUN: 35955615051
+          MATERIAL_CANDIDATE: 48a7c9a76fd354226e611c463850706cad9f5e99
+          MATERIAL_BAKE_RUN: 35961125601
+          MATERIAL_QUAL_RUN: 35961125639
         run: |
           node - <<'NODE'
           const fs=require('fs'),cp=require('child_process');
           const q=JSON.parse(fs.readFileSync('/tmp/qual/semantic-material-v2-qualification.json'));
           if(q.eligible!==true)throw Error('QUAL_NOT_ELIGIBLE');
-          if(process.env.MATERIAL_CANDIDATE!=='88e89f6717d93e2e2c4e58032e4b12c3dd182c3d')throw Error('CANDIDATE_IDENTITY_INVALID');
+          if(process.env.MATERIAL_CANDIDATE!=='48a7c9a76fd354226e611c463850706cad9f5e99')throw Error('CANDIDATE_IDENTITY_INVALID');
           const bin=fs.readFileSync('/tmp/bake/semantic-material-v2.rgba');
           const sha=require('crypto').createHash('sha256').update(bin).digest('hex');
           if(sha!==q.sha256)throw Error('QUAL_SHA_MISMATCH');

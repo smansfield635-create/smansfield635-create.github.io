@@ -1,0 +1,38 @@
+name: H-Earth Meso M1 Additive Authority Qualification v1
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove T4 is additive only
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth"
+          BIND="$BASE/diagnostic/run8e-r3d/live-gpu-binding.js"
+          DRAW="$BASE/render/t4-post-terrain-draw-v1.js"
+          BATCH="$BASE/render/t4-static-gpu-batches-v1.js"
+          DATA="$BASE/render/t4-frozen-placement-v1.js"
+          node --check "$BIND"
+          node --check "$DRAW"
+          node --check "$BATCH"
+          grep -q "const selectedRendererPath = rendererCustodyRequested" "$BIND"
+          ! grep -q "const selectedRendererPath = t4Requested" "$BIND"
+          grep -q "t4Requested ? createHEarthT4PostTerrainDraw" "$BIND"
+          grep -q "postTerrainDraw: t4Extension?.drawAfterTerrain" "$BIND"
+          grep -q '"total":647' "$DATA"
+          grep -q '"TUFT":617' "$DATA"
+          grep -q '"ROCK":30' "$DATA"
+          grep -q "gl.drawArraysInstanced" "$BATCH"
+          grep -q "drawCalls>2" "$BATCH"
+          for file in "$DRAW" "$BATCH"; do
+            ! grep -q "bindFramebuffer" "$file"
+            ! grep -q "presentColorFrame" "$file"
+          done

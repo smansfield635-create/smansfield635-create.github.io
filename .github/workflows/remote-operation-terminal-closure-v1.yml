@@ -6,6 +6,14 @@ on:
         description: Closed request routed by Central Issue Comment Router v1
         required: true
         type: string
+      router_callback_issue:
+        description: Authenticated callback issue supplied by Central Router
+        required: true
+        type: string
+      router_callback_repository:
+        description: Authenticated callback repository supplied by Central Router
+        required: true
+        type: string
   pull_request:
     branches: [main]
     paths:
@@ -79,9 +87,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
   execute-closure:
-    if: >-
-      startsWith(github.event.comment.body, 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1') &&
-      (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR')
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -164,7 +170,7 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_NUMBER: ${{ inputs.router_callback_issue }}
           REPOSITORY: ${{ github.repository }}
         shell: bash
         run: |

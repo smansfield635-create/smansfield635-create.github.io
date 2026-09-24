@@ -37,7 +37,16 @@ jobs:
           if(matches.length>1) throw new Error('AMBIGUOUS_COMMENT_ROUTE');
           if(matches.length===0){console.log(JSON.stringify({dispatch:false}));process.exit(0);}
           const r=matches[0];
-          console.log(JSON.stringify({dispatch:true,workflow:r.workflow,input:r.input,payload:body,marker:r.marker}));
+          if(!['RAW_JSON','MARKER_PLUS_JSON'].includes(r.representation)) throw new Error('UNREGISTERED_TRANSPORT_REPRESENTATION');
+          if(r.callbackContext!=='ROUTER_AUTHENTICATED_ISSUE_COMMENT') throw new Error('UNREGISTERED_CALLBACK_CONTEXT');
+          let payload=body;
+          if(r.representation==='RAW_JSON'){
+            const raw=body.slice(r.marker.length).trim();
+            if(!raw) throw new Error('EMPTY_ROUTED_PAYLOAD');
+            JSON.parse(raw);
+            payload=raw;
+          }
+          console.log(JSON.stringify({dispatch:true,workflow:r.workflow,input:r.input,payload,marker:r.marker,representation:r.representation}));
           NODE
           dispatch="$(jq -r '.dispatch' "$RUNNER_TEMP/route.json")"
           [ "$dispatch" = true ] || { echo "COMMENT_ROUTE_NO_DISPATCH"; exit 0; }
@@ -48,6 +57,7 @@ jobs:
             ai-room-execution-transport.yml|canonical-operation-intake-transport-v1.yml|public-private-successor-execution-v1.yml|public-private-terminal-closure-carrier-v1.yml|remote-operation-terminal-closure-v1.yml) ;;
             *) echo "UNREGISTERED_HANDLER" >&2; exit 1;;
           esac
-          jq -n --arg ref main --arg key "$input" --arg payload "$payload" '{ref:$ref,inputs:{($key):$payload}}' > "$RUNNER_TEMP/dispatch.json"
+          jq -n --arg ref main --arg key "$input" --arg payload "$payload" --arg issue "$ISSUE_NUMBER" --arg repo "$REPO" \
+            '{ref:$ref,inputs:{($key):$payload,router_callback_issue:$issue,router_callback_repository:$repo}}' > "$RUNNER_TEMP/dispatch.json"
           gh api --method POST "/repos/$REPO/actions/workflows/$workflow/dispatches" --input "$RUNNER_TEMP/dispatch.json"
           echo "COMMENT_ROUTE_DISPATCHED=$workflow"

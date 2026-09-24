@@ -12,7 +12,7 @@ const state = {
   exceptionMessage:null, stack:null, webglError:null, shaderLog:null, programLinkLog:null,
   framebufferStatus:null, contextLost:false, canvasWidth:null, canvasHeight:null,
   pixelRatio:window.devicePixelRatio||1, webglVendor:null, webglRenderer:null,
-  presentationCallReturned:false, presentationCallbackObserved:false, presentationTimeoutElapsed:false, timestamp:new Date().toISOString(), device:navigator.userAgent
+  renderFrameReturned:false, renderFrameReturnedAt:null, presentColorFrameEntered:false, presentColorFrameEnteredAt:null, presentationCallReturned:false, presentationCallReturnedAt:null, presentationCallbackObserved:false, presentationCallbackObservedAt:null, presentationTimeoutElapsed:false, presentationTimeoutElapsedAt:null, timestamp:new Date().toISOString(), device:navigator.userAgent
 };
 let gl=null, firstFailureLocked=false, presented=false, originalGetContext=null;
 const clone=()=>JSON.parse(JSON.stringify(state));
@@ -48,11 +48,11 @@ export function installRendererStartupObserver(){
   originalGetContext=HTMLCanvasElement.prototype.getContext;
   HTMLCanvasElement.prototype.getContext=function(type,...args){if(this===canvas&&type==='webgl2'){mark('WEBGL2_CONTEXT_REQUESTED','PASS');const context=originalGetContext.call(this,type,...args);if(!context){mark('WEBGL2_CONTEXT_ACQUIRED','FAIL','WebGL2 context unavailable.');return context;}instrumentContext(context,this);return context;}return originalGetContext.call(this,type,...args);};
   mark('RENDERER_CONSTRUCTOR_ENTERED','PASS');
-  window.addEventListener('h-earth-runtime-diagnostic-stage',event=>{const {stage,status,detail}=event.detail||{};if(stage==='RENDERER_CONSTRUCTED'){status==='FAIL'?fail('RENDERER_CONSTRUCTOR_RETURNED',new Error(detail?.message||String(detail))):mark('RENDERER_CONSTRUCTOR_RETURNED','PASS');if(status!=='FAIL')mark('INITIALIZATION_ENTERED','PASS');}if(stage==='FIRST_FRAME_DRAWN'&&status==='PASS'){presented=true;state.presentationCallbackObserved=true;mark('FIRST_FRAME_PRESENTED','PASS');}if(stage==='READY_EVENT_EMITTED'&&status==='PASS')mark('READY_PUBLISHED','PASS');});
+  window.addEventListener('h-earth-runtime-diagnostic-stage',event=>{const {stage,status,detail}=event.detail||{};if(stage==='RENDERER_CONSTRUCTED'){status==='FAIL'?fail('RENDERER_CONSTRUCTOR_RETURNED',new Error(detail?.message||String(detail))):mark('RENDERER_CONSTRUCTOR_RETURNED','PASS');if(status!=='FAIL')mark('INITIALIZATION_ENTERED','PASS');}if(stage==='FIRST_FRAME_DRAWN'&&status==='PASS'){presented=true;state.presentationCallbackObserved=true;state.presentationCallbackObservedAt=new Date().toISOString();mark('FIRST_FRAME_PRESENTED','PASS');}if(stage==='READY_EVENT_EMITTED'&&status==='PASS')mark('READY_PUBLISHED','PASS');});
   window.addEventListener('error',event=>{if(!firstFailureLocked)fail(state.stages.RENDERER_CONSTRUCTOR_RETURNED==='NOT_REACHED'?'RENDERER_CONSTRUCTOR_RETURNED':'INITIAL_DRAW_RETURNED',event.error||new Error(event.message));});
   window.addEventListener('unhandledrejection',event=>{if(!firstFailureLocked)fail(state.stages.RENDERER_CONSTRUCTOR_RETURNED==='NOT_REACHED'?'RENDERER_CONSTRUCTOR_RETURNED':'INITIAL_DRAW_RETURNED',event.reason);});
-  window.setTimeout(()=>{state.presentationTimeoutElapsed=true;if(!presented&&!firstFailureLocked)mark('FIRST_FRAME_PRESENTED','FAIL','No first-frame presentation callback observed within 12 seconds.');else publish();},12000);
-  window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=Object.freeze({version:state.version,getReceipt:clone,mark,fail,constructorReturned:()=>mark('RENDERER_CONSTRUCTOR_RETURNED','PASS'),initializationEntered:()=>mark('INITIALIZATION_ENTERED','PASS')});
+  window.setTimeout(()=>{state.presentationTimeoutElapsed=true;state.presentationTimeoutElapsedAt=new Date().toISOString();if(!presented&&!firstFailureLocked)mark('FIRST_FRAME_PRESENTED','FAIL','No first-frame presentation callback observed within 12 seconds.');else publish();},12000);
+  window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=Object.freeze({version:state.version,getReceipt:clone,mark,fail,constructorReturned:()=>mark('RENDERER_CONSTRUCTOR_RETURNED','PASS'),initializationEntered:()=>mark('INITIALIZATION_ENTERED','PASS'),renderFrameReturned:()=>{state.renderFrameReturned=true;state.renderFrameReturnedAt=new Date().toISOString();publish();},presentColorFrameEntered:()=>{state.presentColorFrameEntered=true;state.presentColorFrameEnteredAt=new Date().toISOString();publish();},presentColorFrameReturned:()=>{state.presentationCallReturned=true;state.presentationCallReturnedAt=new Date().toISOString();publish();}});
   publish();return window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
 }
 installRendererStartupObserver();

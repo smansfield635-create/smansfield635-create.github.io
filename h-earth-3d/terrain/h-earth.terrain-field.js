@@ -141,7 +141,7 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 3,
+  generationRevision: 4,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
   worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
@@ -241,6 +241,29 @@ function evaluateRawElevation(worldX, worldZ) {
   const receivingBasin = gaussian(worldX, worldZ, 18, -192, 66, 46, -7.5);
   const foothillTaper = gaussian(worldX, worldZ, -12, -176, 126, 62, 8.5);
 
+  // Phase-1 meso continuity: subtle lowland relief feeds a routed drainage
+  // corridor and stepped foothill transition. These are canonical physical
+  // landforms; Gen311 remains a modest derived articulation layer.
+  const lowlandBroadRise = gaussian(worldX, worldZ, -132, -150, 92, 66, 2.6);
+  const lowlandSwale = gaussian(worldX, worldZ, -72, -164, 74, 48, -2.2);
+  const foothillBenchLower = gaussian(worldX, worldZ, -42, -184, 96, 34, 3.0);
+  const foothillBenchUpper = gaussian(worldX, worldZ, -18, -205, 78, 28, 2.4);
+
+  // Routed drainage follows the existing receiving basin toward lower coastal
+  // terrain. Segment fields provide continuity rather than isolated pits.
+  const drainageSegment = (x0,z0,x1,z1,width,amplitude,taperStart=1,taperEnd=1) => {
+    const dx=x1-x0,dz=z1-z0,len2=dx*dx+dz*dz;
+    const t=clamp(((worldX-x0)*dx+(worldZ-z0)*dz)/Math.max(len2,1e-9),0,1);
+    const px=x0+dx*t,pz=z0+dz*t,dist=Math.hypot(worldX-px,worldZ-pz);
+    const cross=bell(dist,0,width),along=taperStart+(taperEnd-taperStart)*t;
+    return amplitude*cross*along;
+  };
+  const drainageUpper = drainageSegment(18,-192,-18,-174,18,-3.2,0.75,1);
+  const drainageMiddle = drainageSegment(-18,-174,-48,-150,20,-2.8,1,0.9);
+  const drainageLower = drainageSegment(-48,-150,-58,-122,24,-2.1,0.9,0.55);
+  const drainageBankWest = drainageSegment(18,-192,-58,-122,34,1.25,0.65,0.4);
+  const drainageBankEast = drainageSegment(18,-192,-58,-122,46,0.8,0.55,0.3);
+
   const positiveReliefComponents = [
     hill,
     ridgeEast,
@@ -258,7 +281,11 @@ function evaluateRawElevation(worldX, worldZ) {
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);
   return coastRise + wetSandCompression + dune + rolling + articulatedPositiveRelief
     + passEast + passCentral + receivingBasin
-    + lowland + valley;
+    + lowland + valley
+    + lowlandBroadRise + lowlandSwale
+    + foothillBenchLower + foothillBenchUpper
+    + drainageUpper + drainageMiddle + drainageLower
+    + drainageBankWest + drainageBankEast;
 }
 
 function classifySlope(slope) {

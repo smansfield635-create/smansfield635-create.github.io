@@ -23,16 +23,18 @@ const ADDITIVE_VISUAL_RENDERER_PATH =
 const SEMANTIC_MATERIAL_QUERY_KEY = 'semantic-material';
 const SEMANTIC_MATERIAL_QUERY_VALUE = 'v2';
 const SEMANTIC_MATERIAL_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase2-semantic-material-v2.js';
+const MICRORELIEF_QUERY_KEY = 'microrelief';
+const MICRORELIEF_QUERY_VALUE = 'v1';
+const MICRORELIEF_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js';
+const T4_QUERY_KEY = 't4';
+const T4_QUERY_VALUE = 'instancing-v1';
+const T4_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
   '1f52080969034c55855a70834cc0294791254c80';
 const CP2_LIVE_DIFFERENTIAL_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js';
-const T4_QUERY_KEY = 't4';
-const T4_QUERY_VALUE = 'instancing-v1';
-const T4_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js';
 const ACCEPTED_BASELINE_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.js';
 
@@ -53,10 +55,11 @@ const additiveVisualRequested =
   queryParameters.get(ADDITIVE_VISUAL_QUERY_KEY) ===
   ADDITIVE_VISUAL_QUERY_VALUE;
 const semanticMaterialRequested = queryParameters.get(SEMANTIC_MATERIAL_QUERY_KEY) === SEMANTIC_MATERIAL_QUERY_VALUE;
+const microreliefRequested = queryParameters.get(MICRORELIEF_QUERY_KEY) === MICRORELIEF_QUERY_VALUE;
+const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE;
 const selectedRendererPath = t4Requested
   ? T4_RENDERER_PATH
   : rendererCustodyRequested
@@ -69,6 +72,8 @@ const selectedRendererPath = t4Requested
   ? OCEAN_PROOF_RENDERER_PATH
   : additiveVisualRequested
   ? ADDITIVE_VISUAL_RENDERER_PATH
+  : microreliefRequested
+    ? MICRORELIEF_RENDERER_PATH
   : semanticMaterialRequested
     ? SEMANTIC_MATERIAL_RENDERER_PATH
   : cp2LiveDifferentialRequested
@@ -80,10 +85,6 @@ const { createHEarthRun8ER3CPersistentRenderer } = selectedRendererModule;
 export const H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID =
   'H_EARTH_RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_BINDING_v1';
 export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
-  t4Requested,
-  t4QueryKey: T4_QUERY_KEY,
-  t4QueryValue: T4_QUERY_VALUE,
-  t4RendererPath: T4_RENDERER_PATH,
   rendererCustodyRequested,
   rendererCustodyQueryKey: RENDERER_CUSTODY_QUERY_KEY,
   rendererCustodyQueryValue: RENDERER_CUSTODY_QUERY_VALUE,
@@ -206,20 +207,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     counters.r3AFramePacketCount += 1;
     renderer.renderFrame(packet);
     counters.renderFrameCallCount += 1;
-    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.renderFrameReturned?.();
-    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.presentColorFrameEntered?.();
-    const presentationReceipt = renderer.presentColorFrame();
-    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.presentColorFrameReturned?.();
+    renderer.presentColorFrame();
     counters.gpuFramebufferPresentationCount += 1;
-    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.mark?.(
-      'FIRST_FRAME_PRESENTED',
-      'PASS',
-      {
-        source: 'presentColorFrame-return',
-        frameSequence,
-        presentationReceipt
-      }
-    );
 
     const responseMs = performance.now() - startedAt;
     counters.maximumSynchronousResponseMs = Math.max(

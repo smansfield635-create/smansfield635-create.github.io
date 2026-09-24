@@ -14,7 +14,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          BASE: 686d5ec0cdfe7e55153f5fc730be69dcbb655ee9
+          BASE: 5914a4c0f6a6b5eb511ba08c44639bdeea05a507
         run: |
           node - <<'NODE'
           const cp=require('child_process');

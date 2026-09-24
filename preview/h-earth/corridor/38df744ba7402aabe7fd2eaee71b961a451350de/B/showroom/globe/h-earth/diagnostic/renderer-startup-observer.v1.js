@@ -12,7 +12,7 @@ const state = {
   exceptionMessage:null, stack:null, webglError:null, shaderLog:null, programLinkLog:null,
   framebufferStatus:null, contextLost:false, canvasWidth:null, canvasHeight:null,
   pixelRatio:window.devicePixelRatio||1, webglVendor:null, webglRenderer:null,
-  timestamp:new Date().toISOString(), device:navigator.userAgent
+  presentationCallReturned:false, presentationCallbackObserved:false, presentationTimeoutElapsed:false, timestamp:new Date().toISOString(), device:navigator.userAgent
 };
 let gl=null, firstFailureLocked=false, presented=false, originalGetContext=null;
 const clone=()=>JSON.parse(JSON.stringify(state));
@@ -26,7 +26,7 @@ const classify=(stage,message='')=>{
   if(stage==='GPU_RESOURCES_CREATED')return['GPU_BUFFER_OR_TEXTURE_FAILURE','WebGL2 started, but a required GPU buffer, texture, vertex array, or framebuffer object could not be created.'];
   if(stage==='FRAMEBUFFER_VALIDATED')return['FRAMEBUFFER_FAILURE','The renderer created its GPU resources, but the framebuffer was incomplete on this device.'];
   if(stage==='INITIAL_DRAW_RETURNED')return['INITIAL_DRAW_EXCEPTION','The renderer failed while issuing its first draw.'];
-  if(stage==='FIRST_FRAME_PRESENTED')return['DRAW_COMPLETED_NO_PRESENTATION','The first draw returned, but no visible frame was presented to the canvas.'];
+  if(stage==='FIRST_FRAME_PRESENTED')return['PRESENTATION_CALLBACK_TIMEOUT','The startup observer did not receive the first-frame presentation callback before its timeout. This does not by itself prove that the canvas failed to present pixels.'];
   if(stage==='READY_PUBLISHED')return['READY_PUBLICATION_FAILURE','A first frame was presented, but the route did not publish its ready state.'];
   return['UNKNOWN_STARTUP_FAILURE',message||'The renderer failed during startup at an unclassified stage.'];
 };
@@ -48,10 +48,10 @@ export function installRendererStartupObserver(){
   originalGetContext=HTMLCanvasElement.prototype.getContext;
   HTMLCanvasElement.prototype.getContext=function(type,...args){if(this===canvas&&type==='webgl2'){mark('WEBGL2_CONTEXT_REQUESTED','PASS');const context=originalGetContext.call(this,type,...args);if(!context){mark('WEBGL2_CONTEXT_ACQUIRED','FAIL','WebGL2 context unavailable.');return context;}instrumentContext(context,this);return context;}return originalGetContext.call(this,type,...args);};
   mark('RENDERER_CONSTRUCTOR_ENTERED','PASS');
-  window.addEventListener('h-earth-runtime-diagnostic-stage',event=>{const {stage,status,detail}=event.detail||{};if(stage==='RENDERER_CONSTRUCTED'){status==='FAIL'?fail('RENDERER_CONSTRUCTOR_RETURNED',new Error(detail?.message||String(detail))):mark('RENDERER_CONSTRUCTOR_RETURNED','PASS');if(status!=='FAIL')mark('INITIALIZATION_ENTERED','PASS');}if(stage==='FIRST_FRAME_DRAWN'&&status==='PASS'){presented=true;mark('FIRST_FRAME_PRESENTED','PASS');}if(stage==='READY_EVENT_EMITTED'&&status==='PASS')mark('READY_PUBLISHED','PASS');});
+  window.addEventListener('h-earth-runtime-diagnostic-stage',event=>{const {stage,status,detail}=event.detail||{};if(stage==='RENDERER_CONSTRUCTED'){status==='FAIL'?fail('RENDERER_CONSTRUCTOR_RETURNED',new Error(detail?.message||String(detail))):mark('RENDERER_CONSTRUCTOR_RETURNED','PASS');if(status!=='FAIL')mark('INITIALIZATION_ENTERED','PASS');}if(stage==='FIRST_FRAME_DRAWN'&&status==='PASS'){presented=true;state.presentationCallbackObserved=true;mark('FIRST_FRAME_PRESENTED','PASS');}if(stage==='READY_EVENT_EMITTED'&&status==='PASS')mark('READY_PUBLISHED','PASS');});
   window.addEventListener('error',event=>{if(!firstFailureLocked)fail(state.stages.RENDERER_CONSTRUCTOR_RETURNED==='NOT_REACHED'?'RENDERER_CONSTRUCTOR_RETURNED':'INITIAL_DRAW_RETURNED',event.error||new Error(event.message));});
   window.addEventListener('unhandledrejection',event=>{if(!firstFailureLocked)fail(state.stages.RENDERER_CONSTRUCTOR_RETURNED==='NOT_REACHED'?'RENDERER_CONSTRUCTOR_RETURNED':'INITIAL_DRAW_RETURNED',event.reason);});
-  window.setTimeout(()=>{if(!presented&&!firstFailureLocked)mark('FIRST_FRAME_PRESENTED','FAIL','No first-frame event within 12 seconds.');},12000);
+  window.setTimeout(()=>{state.presentationTimeoutElapsed=true;if(!presented&&!firstFailureLocked)mark('FIRST_FRAME_PRESENTED','FAIL','No first-frame presentation callback observed within 12 seconds.');else publish();},12000);
   window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=Object.freeze({version:state.version,getReceipt:clone,mark,fail,constructorReturned:()=>mark('RENDERER_CONSTRUCTOR_RETURNED','PASS'),initializationEntered:()=>mark('INITIALIZATION_ENTERED','PASS')});
   publish();return window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
 }

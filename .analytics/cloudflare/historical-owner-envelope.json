@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-23T23:25:24Z",
+  "generatedAt": "2026-09-24T01:03:50Z",
   "window": {
-    "start": "2026-06-25T23:25:24Z",
-    "end": "2026-09-23T23:25:24Z"
+    "start": "2026-06-26T01:03:50Z",
+    "end": "2026-09-24T01:03:50Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4783,
-    "visits": 1123,
+    "pageLoads": 4791,
+    "visits": 1132,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4783,
-        "visits": 1123
+        "pageLoads": 4791,
+        "visits": 1132
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1036,
-        "visits": 705
+        "pageLoads": 1047,
+        "visits": 714
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 188,
+        "pageLoads": 183,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -130,12 +130,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -181,10 +185,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/build/": {
         "pageLoads": 21,
@@ -204,6 +204,10 @@
       },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
@@ -226,10 +230,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/instruments/": {
         "pageLoads": 10,
         "visits": 0
@@ -247,7 +247,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 71,
+        "pageLoads": 72,
         "visits": 0
       },
       "/characters/legacy-dossiers.html": {
@@ -258,16 +258,16 @@
         "pageLoads": 11,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 39,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 25,
         "visits": 3
       },
       "/campaigns/wave/": {
         "pageLoads": 15,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 39,
         "visits": 0
       },
       "/door/": {
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 21,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -310,11 +310,11 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
+      "/campaigns/wave/thai-boxing/": {
         "pageLoads": 1,
         "visits": 0
       },
-      "/campaigns/wave/thai-boxing/": {
+      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
         "pageLoads": 1,
         "visits": 0
       },
@@ -363,7 +363,7 @@
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 12,
+        "pageLoads": 13,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-1/": {
@@ -373,7 +373,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3660,
+        "pageLoads": 3659,
         "visits": 0
       },
       "(none)": {
@@ -381,8 +381,8 @@
         "visits": 365
       },
       "www.google.com": {
-        "pageLoads": 748,
-        "visits": 748
+        "pageLoads": 757,
+        "visits": 757
       },
       "raw.githack.com": {
         "pageLoads": 10,

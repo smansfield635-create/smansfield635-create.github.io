@@ -1,0 +1,20 @@
+name: H-Earth Adaptive C Clearance Hotpath
+on:
+  push:
+    branches:
+      - h-earth/adaptive-c-4u8u-v1
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/validation/adaptive-c-clearance-hotpath.measure.mjs "$PWD" | tee clearance-hotpath.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-adaptive-c-clearance-hotpath
+          path: clearance-hotpath.json
+          retention-days: 90

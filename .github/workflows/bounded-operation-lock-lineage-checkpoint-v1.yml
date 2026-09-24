@@ -2,8 +2,16 @@ name: Bounded Operation Lock Lineage Checkpoint Execution v1
 on:
   workflow_dispatch:
     inputs:
-      segment_head:
-        description: Exact historical lock-ref segment endpoint commit SHA
+      request_json:
+        description: Closed request routed by Central Issue Comment Router v1
+        required: true
+        type: string
+      router_callback_issue:
+        description: Authenticated callback issue supplied by Central Router
+        required: true
+        type: string
+      router_callback_repository:
+        description: Authenticated callback repository supplied by Central Router
         required: true
         type: string
 permissions:
@@ -31,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
-          SEGMENT_HEAD: ${{ inputs.segment_head }}
+          REQUEST_JSON: ${{ inputs.request_json }}
         shell: bash
         run: |
           set -euo pipefail
@@ -40,7 +48,11 @@ jobs:
           import { verifyCanonicalLockRefLineage } from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
           import { advanceCheckpoint } from './tools/operation-intake/repository-operation-lock-lineage-checkpoint-advance.v1.mjs';
           const checkpoint=JSON.parse(fs.readFileSync(process.env.CHECKPOINT_PATH,'utf8'));
-          const head=String(process.env.SEGMENT_HEAD||'').trim();
+          const marker='BOUNDED_OPERATION_LOCK_LINEAGE_CHECKPOINT_REQUEST_V1';
+          const body=String(process.env.REQUEST_JSON||'').trim();
+          if(!body.startsWith(marker)) throw Error('REQUEST_MARKER_MISSING');
+          const request=JSON.parse(body.slice(marker.length).trim());
+          const head=String(request.segmentHead||'').trim();
           if(!/^[0-9a-f]{40}$/.test(head)) throw Error('SEGMENT_HEAD_INVALID');
           const anchor=checkpoint.status==='ACTIVE_VERIFIED' ? checkpoint.checkpoint?.checkpointCommitSha : undefined;
           const receipt=await verifyCanonicalLockRefLineage({

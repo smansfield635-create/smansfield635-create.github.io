@@ -1,0 +1,23 @@
+name: H-Earth Phase3 Terrain Sun Visibility Bake
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: read
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/validation/phase3-terrain-sun-visibility-bake.mjs "$PWD" terrain-sun-visibility-v1.r8 | tee terrain-sun-visibility-v1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-phase3-terrain-sun-visibility-v1
+          path: |
+            terrain-sun-visibility-v1.r8
+            terrain-sun-visibility-v1.json
+          retention-days: 90

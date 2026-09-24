@@ -1,0 +1,82 @@
+name: H-Earth Phase2 Semantic Material Tree Chamber
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+  actions: read
+jobs:
+  materialize:
+    if: ${{ !contains(github.event.head_commit.message, '[tree-chamber-only]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Resolve exact qualified material artifacts
+        id: ev
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          find_run(){ WF="$1"; for i in $(seq 1 60); do ID=$(gh api "repos/$REPO/actions/workflows/$WF/runs?branch=h-earth/phase2-semantic-material-classifier-v1&per_page=30" --jq ".workflow_runs[]|select(.head_sha==\"$SHA\" and .conclusion==\"success\")|.id"|head -1); [ -n "$ID" ]&&{ echo "$ID";return 0;};sleep 10;done;return 1;}
+          echo "bake=$(find_run h-earth-phase2-semantic-material-bake.yml)" >> "$GITHUB_OUTPUT"
+          echo "qual=$(find_run h-earth-phase2-semantic-material-asset-qualification.yml)" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase2-semantic-material-v2
+          path: /tmp/bake
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.ev.outputs.bake }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase2-semantic-material-v2-qualification
+          path: /tmp/qual
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.ev.outputs.qual }}
+      - name: Build chamber as Git tree
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: 2582dda13038c05fe9279177d5a737eb4e7eef73
+          CHAMBER: h-earth/phase2-semantic-material-tree-chamber-v1
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),cp=require('child_process');
+          const q=JSON.parse(fs.readFileSync('/tmp/qual/semantic-material-v2-qualification.json'));
+          if(q.eligible!==true)throw Error('QUAL_NOT_ELIGIBLE');
+          const bin=fs.readFileSync('/tmp/bake/semantic-material-v2.rgba');
+          const sha=require('crypto').createHash('sha256').update(bin).digest('hex');
+          if(sha!==q.sha256)throw Error('QUAL_SHA_MISMATCH');
+          const api=(method,path,input)=>JSON.parse(cp.execFileSync('gh',['api','--method',method,path,'--input','-'],{input:JSON.stringify(input),encoding:'utf8'}));
+          const get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE);
+          const root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/';
+          const raw=p=>Buffer.from(get('repos/'+process.env.REPO+'/contents/'+root+p+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          let loader=raw('render/terrain-material-field.round2-baked.v1.js')
+            .replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_ID','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_ID').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_WIDTH','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_WIDTH').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_HEIGHT','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_HEIGHT').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_BYTE_LENGTH','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_BYTE_LENGTH').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_SHA256','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_SHA256').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_DOMAIN','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_DOMAIN').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_v1','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_v2').replaceAll('terrain-material-field.round2-baked.v1.rgba','terrain-material-field.phase2-semantic-v2.rgba').replace(/28f801f8e5f7b82433f3e0f742cb8292d918ff33b1696c524d0762830c42e15f/g,sha).replaceAll('loadHEarthRound2BakedMaterialField','loadHEarthPhase2SemanticMaterialField').replaceAll('getHEarthRound2BakedMaterialFieldReceipt','getHEarthPhase2SemanticMaterialFieldReceipt');
+          let renderer=raw('render/persistent-live-renderer.run8e-r3c.cp2-round2-baked-material-candidate.js').replaceAll('./terrain-material-field.round2-baked.v1.js','./terrain-material-field.phase2-semantic-v2.js').replaceAll('loadHEarthRound2BakedMaterialField','loadHEarthPhase2SemanticMaterialField').replaceAll('getHEarthRound2BakedMaterialFieldReceipt','getHEarthPhase2SemanticMaterialFieldReceipt').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_ID','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_ID').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_WIDTH','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_WIDTH').replaceAll('H_EARTH_BAKED_MATERIAL_FIELD_HEIGHT','H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_HEIGHT');
+          let binding=raw('diagnostic/run8e-r3d/live-gpu-binding.js');
+          const cp2="const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';";
+          binding=binding.replace(cp2,"const SEMANTIC_MATERIAL_QUERY_KEY = 'semantic-material';\nconst SEMANTIC_MATERIAL_QUERY_VALUE = 'v2';\nconst SEMANTIC_MATERIAL_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase2-semantic-material-v2.js';\n"+cp2);
+          const req="const cp2LiveDifferentialRequested =\n  queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===\n  CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;";
+          binding=binding.replace(req,"const semanticMaterialRequested = queryParameters.get(SEMANTIC_MATERIAL_QUERY_KEY) === SEMANTIC_MATERIAL_QUERY_VALUE;\n"+req);
+          const st=binding.indexOf('const selectedRendererPath ='),en=binding.indexOf('const selectedRendererModule',st);if(st<0||en<0)throw Error('SELECTOR_BOUNDS');
+          let block=binding.slice(st,en),needle="  : cp2LiveDifferentialRequested\n    ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH";if(!block.includes(needle))throw Error('CP2_BOUNDARY');
+          block=block.replace(needle,"  : semanticMaterialRequested\n    ? SEMANTIC_MATERIAL_RENDERER_PATH\n  : cp2LiveDifferentialRequested\n    ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH");binding=binding.slice(0,st)+block+binding.slice(en);
+          const blob=(buf,encoding='utf-8')=>api('POST','repos/'+process.env.REPO+'/git/blobs',{content:encoding==='base64'?buf.toString('base64'):buf,encoding}).sha;
+          const entries=[
+            {path:root+'render/terrain-material-field.phase2-semantic-v2.rgba',mode:'100644',type:'blob',sha:blob(bin,'base64')},
+            {path:root+'render/terrain-material-field.phase2-semantic-v2.js',mode:'100644',type:'blob',sha:blob(loader)},
+            {path:root+'render/persistent-live-renderer.run8e-r3c.phase2-semantic-material-v2.js',mode:'100644',type:'blob',sha:blob(renderer)},
+            {path:root+'diagnostic/run8e-r3d/live-gpu-binding.js',mode:'100644',type:'blob',sha:blob(binding)}
+          ];
+          const tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:entries});
+          const commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth Phase2: materialize semantic material tree chamber [tree-chamber-only]',tree:tree.sha,parents:[process.env.BASE]});
+          let exists=true;try{get('repos/'+process.env.REPO+'/git/ref/heads/'+process.env.CHAMBER)}catch{exists=false}
+          if(exists)api('PATCH','repos/'+process.env.REPO+'/git/refs/heads/'+process.env.CHAMBER,{sha:commit.sha,force:true});else api('POST','repos/'+process.env.REPO+'/git/refs',{ref:'refs/heads/'+process.env.CHAMBER,sha:commit.sha});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,assetSha256:sha,qualificationRun:process.env.GITHUB_RUN_ID}));
+          NODE

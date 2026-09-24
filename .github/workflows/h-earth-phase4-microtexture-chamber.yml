@@ -1,0 +1,47 @@
+name: H-Earth Phase4 Microtexture Chamber
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+  actions: read
+jobs:
+  construct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase4-terrain-microstructure-v1
+          path: micro
+          github-token: ${{ github.token }}
+          run-id: 36028808509
+      - name: Construct immutable microtexture candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: c4da54b31fd7411fc18e06f724b39409acbc2f36
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),cp=require('child_process'),crypto=require('crypto');
+          const bin=fs.readFileSync('micro/terrain-microstructure-v1.rg');if(bin.length!==2097152)throw Error('MICRO_BYTE_LENGTH');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'})),get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/',raw=p=>Buffer.from(get('repos/'+process.env.REPO+'/contents/'+root+p+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          const sha=crypto.createHash('sha256').update(bin).digest('hex');
+          const loader=`export const H_EARTH_MICROSTRUCTURE_SHA256='${sha}';export const H_EARTH_MICROSTRUCTURE_WIDTH=1024;export const H_EARTH_MICROSTRUCTURE_HEIGHT=1024;const u=new URL('./terrain-microstructure-v1.rg',import.meta.url);export async function loadHEarthMicrostructure(){const r=await fetch(u);if(!r.ok)throw Error('MICRO_FETCH:'+r.status);const b=await r.arrayBuffer();if(b.byteLength!==2097152)throw Error('MICRO_LENGTH');return new Uint8Array(b)}`;
+          let r=raw('render/persistent-live-renderer.run8e-r3c.phase2-semantic-material-v2.js');
+          r=r.replace("} from './terrain-material-field.phase2-semantic-v2.js';","} from './terrain-material-field.phase2-semantic-v2.js';\nimport {loadHEarthMicrostructure,H_EARTH_MICROSTRUCTURE_WIDTH,H_EARTH_MICROSTRUCTURE_HEIGHT} from './terrain-microstructure-v1.js';");
+          r=r.replace("const BAKED_FIELD_BYTES = await loadHEarthPhase2SemanticMaterialField();","const MICRO_FIELD_BYTES=await loadHEarthMicrostructure();\nconst BAKED_FIELD_BYTES = await loadHEarthPhase2SemanticMaterialField();");
+          r=r.replace("uniform sampler2D uTerrainBakedMaterial;","uniform sampler2D uTerrainBakedMaterial;\nuniform sampler2D uTerrainMicrostructure;");
+          r=r.replace("vec4 bakedMaterial=texture(uTerrainBakedMaterial,bakedUv);","vec4 bakedMaterial=texture(uTerrainBakedMaterial,bakedUv);\n    vec2 microstructure=texture(uTerrainMicrostructure,bakedUv).rg;");
+          r=r.replace("palette*=mix(0.91,1.09,clamp(bakedMaterial.a*0.72+elevationMix*0.12+slopeResponse*0.16,0.0,1.0));","float fineMicro=(microstructure.r-0.5)*2.0*nearDetail;\n    float mesoMicro=(microstructure.g-0.5)*2.0*(0.35+0.65*nearDetail);\n    float familyMicro=mix(0.035,0.115,clamp(slopeResponse*0.45+elevationMix*0.35+bakedMaterial.a*0.20,0.0,1.0));\n    palette*=1.0+fineMicro*familyMicro+mesoMicro*(familyMicro*0.72);\n    palette*=mix(0.91,1.09,clamp(bakedMaterial.a*0.72+elevationMix*0.12+slopeResponse*0.16,0.0,1.0));");
+          const state="    fieldReceipt: BAKED_FIELD_RECEIPT\n  };";if(!r.includes(state))throw Error('MICRO_STATE_ANCHOR');r=r.replace(state,"    fieldReceipt: BAKED_FIELD_RECEIPT,\n    microTexture:null,microSampler:null,microTextureUnit:8,microUploadCount:0\n  };");
+          const init="    state.texture = gl.createTexture();";if(!r.includes(init))throw Error('MICRO_INIT_ANCHOR');r=r.replace(init,"    state.microTexture=gl.createTexture();if(!state.microTexture)throw Error('MICRO_TEXTURE_CREATE_FAILED');\n    gl.activeTexture(gl.TEXTURE0+state.microTextureUnit);gl.bindTexture(gl.TEXTURE_2D,state.microTexture);gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);\n    gl.texImage2D(gl.TEXTURE_2D,0,gl.RG8,H_EARTH_MICROSTRUCTURE_WIDTH,H_EARTH_MICROSTRUCTURE_HEIGHT,0,gl.RG,gl.UNSIGNED_BYTE,MICRO_FIELD_BYTES);gl.generateMipmap(gl.TEXTURE_2D);\n    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);state.microUploadCount++;\n    state.texture = gl.createTexture();");
+          const samp="    state.sampler = gl.getUniformLocation(state.geometryProgram, 'uTerrainBakedMaterial');";if(!r.includes(samp))throw Error('MICRO_SAMPLER_ANCHOR');r=r.replace(samp,samp+"\n    state.microSampler=gl.getUniformLocation(state.geometryProgram,'uTerrainMicrostructure');if(state.microSampler===null)throw Error('MICRO_SAMPLER_UNAVAILABLE');");
+          const bind="    gl.uniform1i(state.sampler, state.textureUnit);";if(!r.includes(bind))throw Error('MICRO_BIND_ANCHOR');r=r.replace(bind,bind+"\n    gl.activeTexture(gl.TEXTURE0+state.microTextureUnit);gl.bindTexture(gl.TEXTURE_2D,state.microTexture);gl.uniform1i(state.microSampler,state.microTextureUnit);");
+          const blob=(b,e='utf-8')=>api('POST','repos/'+process.env.REPO+'/git/blobs',{content:e==='base64'?b.toString('base64'):b,encoding:e}).sha;
+          const entries=[{path:root+'render/terrain-microstructure-v1.rg',mode:'100644',type:'blob',sha:blob(bin,'base64')},{path:root+'render/terrain-microstructure-v1.js',mode:'100644',type:'blob',sha:blob(loader)},{path:root+'render/persistent-live-renderer.run8e-r3c.phase4-microtexture-v1.js',mode:'100644',type:'blob',sha:blob(r)}];
+          const tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:entries}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth Phase4: materialize isolated microtexture chamber',tree:tree.sha,parents:[process.env.BASE]});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,microstructureSha256:sha,publication:'HELD'}));
+          NODE

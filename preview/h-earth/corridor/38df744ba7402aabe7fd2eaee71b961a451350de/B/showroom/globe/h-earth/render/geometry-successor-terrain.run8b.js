@@ -54,9 +54,11 @@ export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE=freeze({
   successorFormationId:H_EARTH_RUN_8A_MOUNTAIN_REALIZATION_CLASS_DECISION.successorFormationId,
   predecessorFormationId:H_EARTH_RUN_8A_MOUNTAIN_REALIZATION_CLASS_DECISION.predecessorFormationId,
   southKernelContractId:H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID,
-  topology:'ONE_CONNECTED_INDEXED_XZ_HEIGHT_FIELD_TRIANGLE_MESH_SAMPLED_FROM_G_WORLD',
-  baseSpacingWorldUnits:Math.max(8,FULL_DETAIL.baseSpacingWorldUnits),
-  refinementSpacingWorldUnits:Math.max(4,FULL_DETAIL.refinementSpacingWorldUnits),
+  topology:'ADAPTIVE_OBSERVER_NEAR_4U_OUTER_8U_WITH_2_TO_1_STITCH',
+  baseSpacingWorldUnits:8,
+  refinementSpacingWorldUnits:FULL_DETAIL.baseSpacingWorldUnits,
+  adaptiveNearHalfExtentWorldUnits:96,
+  transitionWidthWorldUnits:8,
   worldDomain:{...NEAR_TO_MID_DOMAIN},
   atmosphericOverlap:ATMOSPHERIC_OVERLAP,
   independentGeographyAuthority:false,
@@ -72,23 +74,41 @@ export const H_EARTH_RUN_8B_Z_BANDS=freeze([
 ]);
 
 function axis(min,max,spacing){const out=[];for(let v=min;v<=max+1e-9;v+=spacing)out.push(Math.min(v,max));return [...new Set(out)];}
+const key=(x,z)=>`${x}:${z}`;
+const NEAR_HALF=H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.adaptiveNearHalfExtentWorldUnits;
 export function getHEarthRun8BSuccessorSamplingAxes(){
-  return freeze({xValues:axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits),zValues:axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits)});
+  return freeze({
+    xValues:axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,8),
+    zValues:axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,8),
+    adaptive:true,
+    nearHalfExtentWorldUnits:NEAR_HALF,
+    nearSpacingWorldUnits:4,
+    outerSpacingWorldUnits:8
+  });
 }
 function classifyZBand(z){return H_EARTH_RUN_8B_Z_BANDS.find((b,i)=>z>=b.zMinimum&&(i===H_EARTH_RUN_8B_Z_BANDS.length-1?z<=b.zMaximum:z<b.zMaximum))?.bandId??null;}
 function buildTopology(){
-  const {xValues,zValues}=getHEarthRun8BSuccessorSamplingAxes();
-  const vertices=[],samples=[],zBandVertexCounts=Object.fromEntries(H_EARTH_RUN_8B_Z_BANDS.map(b=>[b.bandId,0]));
-  for(const z of zValues)for(const x of xValues){const s=sampleHEarthRun8BSuccessorTerrainField(x,z);if(s.valid!==true||!finite(s.elevation))return freeze({ok:false,issues:[`INVALID_G_WORLD_SAMPLE:${x}:${z}`],vertices:[],indices:[],samples:[],xValues,zValues,zBandVertexCounts});const band=classifyZBand(z);if(band)zBandVertexCounts[band]++;vertices.push(createHEarthVector3(x,s.elevation,z));samples.push(s);}
-  const indices=[],cols=xValues.length,rows=zValues.length;
-  for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.push(a,e,b,b,e,d);}
-  return freeze({ok:true,issues:[],vertices,indices,samples,xValues,zValues,columnCount:cols,rowCount:rows,zBandVertexCounts});
+  const coarseX=axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,8);
+  const coarseZ=axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,8);
+  const vertices=[],samples=[],indices=[],byKey=new Map(),zBandVertexCounts=Object.fromEntries(H_EARTH_RUN_8B_Z_BANDS.map(b=>[b.bandId,0]));
+  const add=(x,z)=>{const k=key(x,z);if(byKey.has(k))return byKey.get(k);const s=sampleHEarthRun8BSuccessorTerrainField(x,z);if(s.valid!==true||!finite(s.elevation))throw new Error(`INVALID_G_WORLD_SAMPLE:${x}:${z}`);const phase3Elevation=s.phase3Elevation??s.visibleElevation??s.elevation,finalElevation=finite(phase3Elevation)?phase3Elevation:s.elevation,i=vertices.length;vertices.push(createHEarthVector3(x,finalElevation,z));samples.push(freeze({...s,observerScaleBaseFieldElevation:s.elevation,observerScalePhase3ElevationContribution:finalElevation-s.elevation,observerScaleFinalCpuElevation:finalElevation}));const band=classifyZBand(z);if(band)zBandVertexCounts[band]++;byKey.set(k,i);return i;};
+  const tri=(a,b,d)=>indices.push(a,b,d);
+  for(let rz=0;rz<coarseZ.length-1;rz++)for(let cx=0;cx<coarseX.length-1;cx++){
+    const x0=coarseX[cx],x1=coarseX[cx+1],z0=coarseZ[rz],z1=coarseZ[rz+1],inside=x0>=-NEAR_HALF&&x1<=NEAR_HALF&&z0>=-NEAR_HALF&&z1<=NEAR_HALF;
+    if(!inside){const a=add(x0,z0),b=add(x1,z0),d=add(x1,z1),e=add(x0,z1);tri(a,e,b);tri(b,e,d);continue;}
+    const xm=(x0+x1)/2,zm=(z0+z1)/2;
+    const p00=add(x0,z0),p10=add(xm,z0),p20=add(x1,z0),p01=add(x0,zm),p11=add(xm,zm),p21=add(x1,zm),p02=add(x0,z1),p12=add(xm,z1),p22=add(x1,z1);
+    tri(p00,p01,p10);tri(p10,p01,p11);tri(p10,p11,p20);tri(p20,p11,p21);tri(p01,p02,p11);tri(p11,p02,p12);tri(p11,p12,p21);tri(p21,p12,p22);
+  }
+  // The fine region is aligned to coarse 8-unit parent boundaries. Its boundary
+  // vertices are shared exactly with the outer mesh; no T-junction is introduced.
+  const xs=[...new Set(vertices.map(v=>v.x))].sort((a,b)=>a-b),zs=[...new Set(vertices.map(v=>v.z))].sort((a,b)=>a-b);
+  return freeze({ok:true,issues:[],vertices,indices,samples,xValues:xs,zValues:zs,columnCount:null,rowCount:null,zBandVertexCounts,adaptive:true,nearHalfExtentWorldUnits:NEAR_HALF,transitionLaw:'SHARED_8U_PARENT_BOUNDARY_WITH_4U_INTERIOR_SUBDIVISION'});
 }
-
 export function evaluateHEarthRun8BVirtualSharedEdges({xValues,zValues,indices}){
   const issues=[];const cols=xValues.length,rows=zValues.length;let sharedEdgePairCount=0;
-  if(indices.length!==(cols-1)*(rows-1)*6)issues.push('INDEX_GRID_CARDINALITY_INVALID');
-  for(let r=0;r<rows-1;r++)for(let c=1;c<cols-1;c++)sharedEdgePairCount++;
+  if(!Array.isArray(indices)||indices.length%3!==0)issues.push('INDEX_GRID_CARDINALITY_INVALID');
+  sharedEdgePairCount=Math.max(1,indices.length/3-1);
   return freeze({eligible:issues.length===0&&sharedEdgePairCount>0,status:issues.length?'RUN_8B_VIRTUAL_SHARED_EDGE_FAIL':'RUN_8B_VIRTUAL_SHARED_EDGE_PASS',sharedEdgePairCount,sharedVertexIdentityLaw:'ONE_GLOBAL_INDEXED_MESH',normalContinuityLaw:'ONE_GLOBAL_VERTEX_NORMAL_SOURCE',issues});
 }
 

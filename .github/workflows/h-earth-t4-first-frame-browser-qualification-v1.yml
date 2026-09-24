@@ -37,10 +37,25 @@ jobs:
             });
             const url='http://127.0.0.1:4173/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/index.html?t4=instancing-v1';
             await page.goto(url,{waitUntil:'domcontentloaded',timeout:120000});
-            await page.waitForFunction(()=>window.__H_EARTH_FIRST_FRAME_EVIDENCE__?.some(x=>x.name==='h-earth-runtime-diagnostic-stage'&&x.detail?.stage==='FIRST_FRAME_DRAWN'&&x.detail?.status==='PASS'),null,{timeout:45000});
-            evidence.events=await page.evaluate(()=>window.__H_EARTH_FIRST_FRAME_EVIDENCE__);
+            let waitError=null;
+            try {
+              await page.waitForFunction(()=>window.__H_EARTH_FIRST_FRAME_EVIDENCE__?.some(x=>x.name==='h-earth-runtime-diagnostic-stage'&&x.detail?.stage==='FIRST_FRAME_DRAWN'&&x.detail?.status==='PASS'),null,{timeout:45000});
+            } catch (error) {
+              waitError={name:error.name,message:error.message,stack:error.stack};
+            }
+            evidence.events=await page.evaluate(()=>window.__H_EARTH_FIRST_FRAME_EVIDENCE__??[]);
             const receipt=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null);
             const route=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()??null);
+            if(waitError){
+              const browserState=await page.evaluate(()=>({
+                readyState:document.readyState,
+                routeDataset:document.getElementById('h-earth-functional-landscape-route')?.dataset??null,
+                canvas:{width:document.getElementById('h-earth-functional-landscape-canvas')?.width??null,height:document.getElementById('h-earth-functional-landscape-canvas')?.height??null},
+                runtime:window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.()??null
+              }));
+              console.error('H_EARTH_FIRST_FRAME_FAILURE_EVIDENCE='+JSON.stringify({waitError,receipt,route,browserState,evidence},null,2));
+              throw new Error('FIRST_FRAME_BROWSER_TIMEOUT_WITH_EVIDENCE');
+            }
             const first=evidence.events.find(x=>x.name==='h-earth-runtime-diagnostic-stage'&&x.detail?.stage==='FIRST_FRAME_DRAWN'&&x.detail?.status==='PASS');
             if(!first) throw new Error('FIRST_FRAME_DRAWN_PASS_NOT_OBSERVED');
             if(receipt?.stages?.FIRST_FRAME_PRESENTED!=='PASS') throw new Error('FIRST_FRAME_PRESENTED_NOT_PASS:'+JSON.stringify(receipt));

@@ -107,10 +107,10 @@ jobs:
       - name: Return compact canonical receipt
         if: always()
         uses: actions/github-script@v7
+        env:
+          CALLBACK_ISSUE: ${{ inputs.router_callback_issue }}
+          CALLBACK_REPOSITORY: ${{ inputs.router_callback_repository }}
         with:
-          env:
-            CALLBACK_ISSUE: ${{ inputs.router_callback_issue }}
-            CALLBACK_REPOSITORY: ${{ inputs.router_callback_repository }}
           script: |
             const fs=require('fs');
             const p=process.env.RUNNER_TEMP+'/canonical-intake-transport-receipt.json';

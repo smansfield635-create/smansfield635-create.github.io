@@ -1,0 +1,23 @@
+name: H-Earth Phase2 Semantic Material Bake
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: read
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/validation/phase2-semantic-material-bake.mjs "$PWD" semantic-material-v2.rgba | tee semantic-material-v2.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-phase2-semantic-material-v2
+          path: |
+            semantic-material-v2.rgba
+            semantic-material-v2.json
+          retention-days: 90

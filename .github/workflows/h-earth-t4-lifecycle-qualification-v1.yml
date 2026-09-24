@@ -49,6 +49,10 @@ jobs:
           must(renderer.includes('noPostInitializationResourceCreation:postInitializationResourceCreation===0'),'NO_POST_INIT_RESOURCE_CREATION');
           must(renderer.includes('noPostInitializationBufferUpload:postInitializationBufferUpload===0'),'NO_POST_INIT_BUFFER_UPLOAD');
           must(renderer.includes('maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,lastAddedDrawCalls)'),'MAX_DRAW_TRACKING');
+          must(renderer.includes('const phase5Framebuffer=gl.getParameter(gl.FRAMEBUFFER_BINDING)'),'PHASE5_FRAMEBUFFER_CAPTURE');
+          must(renderer.includes('gl.bindFramebuffer(gl.FRAMEBUFFER,phase5Framebuffer)'),'PHASE5_FRAMEBUFFER_RESTORE');
+          must(renderer.includes('const phase5Viewport=gl.getParameter(gl.VIEWPORT)'),'PHASE5_VIEWPORT_CAPTURE');
+          must(renderer.includes('gl.viewport(phase5Viewport[0],phase5Viewport[1],phase5Viewport[2],phase5Viewport[3])'),'PHASE5_VIEWPORT_RESTORE');
           const cp=require('node:child_process');
           const os=require('node:os');
           const path=require('node:path');

@@ -141,7 +141,7 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 4,
+  generationRevision: 5,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
   worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
@@ -228,6 +228,20 @@ function evaluateRawElevation(worldX, worldZ) {
   const coastRise = 0.025 * Math.max(0, inlandDistance);
   const wetSandCompression = -0.22 * Math.exp(-Math.max(0, inlandDistance) / 16);
   const dune = gaussian(worldX, worldZ, 6, shorelineZ - 34, 190, 22, 5.8);
+
+  // Phase-1 coastal meso cross-section. These bands follow the canonical
+  // shoreline through inlandDistance so they enrich the coast without
+  // changing its established planform.
+  const shoreBand = (center,width,amplitude) => amplitude * bell(inlandDistance,center,width);
+  const upperBeachBerm = shoreBand(18,14,1.35);
+  const backshoreShelf = shoreBand(38,22,0.95);
+  const inlandCoastalBank = shoreBand(62,28,1.65);
+  const bankToeSwale = shoreBand(49,13,-0.85);
+  const coastalCrossSectionRhythm = (
+    0.45 * Math.sin((worldX + 11) / 23) +
+    0.28 * Math.sin((worldX - 7) / 11)
+  ) * smoothstep(7,20,inlandDistance) * (1-smoothstep(82,112,inlandDistance));
+
   const rolling = 1.7 * Math.sin((worldX + 22) / 48) * smoothstep(55, 180, inlandDistance)
     + 1.2 * Math.sin((worldZ + 140) / 29) * smoothstep(70, 200, inlandDistance);
   const hill = gaussian(worldX, worldZ, 72, -172, 62, 50, 27);
@@ -279,7 +293,9 @@ function evaluateRawElevation(worldX, worldZ) {
 
   const lowland = gaussian(worldX, worldZ, -92, -152, 70, 58, -6.5);
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);
-  return coastRise + wetSandCompression + dune + rolling + articulatedPositiveRelief
+  return coastRise + wetSandCompression + dune
+    + upperBeachBerm + backshoreShelf + inlandCoastalBank + bankToeSwale + coastalCrossSectionRhythm
+    + rolling + articulatedPositiveRelief
     + passEast + passCentral + receivingBasin
     + lowland + valley
     + lowlandBroadRise + lowlandSwale

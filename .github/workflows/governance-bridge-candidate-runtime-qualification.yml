@@ -20,7 +20,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.candidate_sha }}
-          fetch-depth: 2
+          fetch-depth: 1
+      - name: Fetch exact comparison base
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

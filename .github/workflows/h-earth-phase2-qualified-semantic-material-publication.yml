@@ -5,6 +5,7 @@ on:
       - h-earth/phase2-semantic-material-classifier-v1
 permissions:
   contents: write
+  actions: read
 jobs:
   publish:
     if: ${{ !contains(github.event.head_commit.message, '[semantic-material-v2-published]') }}
@@ -12,20 +13,47 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Bake exact-head semantic asset
-        run: node h-earth-3d/validation/phase2-semantic-material-bake.mjs "$PWD" semantic-material-v2.rgba > semantic-material-v2.json
-      - name: Qualify exact bytes
-        run: node h-earth-3d/validation/phase2-semantic-material-asset.qualify.mjs "$PWD" semantic-material-v2.rgba > semantic-material-v2-qualification.json
-      - name: Publish versioned asset and loader
+      - name: Resolve exact-head qualified artifacts
+        id: evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
         run: |
+          find_run () {
+            WF="$1"
+            for attempt in $(seq 1 60); do
+              ID=$(gh api "repos/$REPO/actions/workflows/$WF/runs?branch=h-earth/phase2-semantic-material-classifier-v1&per_page=30" --jq ".workflow_runs[] | select(.head_sha==\"$SHA\" and .conclusion==\"success\") | .id" | head -1)
+              if [ -n "$ID" ]; then echo "$ID"; return 0; fi
+              sleep 10
+            done
+            return 1
+          }
+          BAKE=$(find_run h-earth-phase2-semantic-material-bake.yml)
+          QUAL=$(find_run h-earth-phase2-semantic-material-asset-qualification.yml)
+          test -n "$BAKE" && test -n "$QUAL"
+          echo "bake=$BAKE" >> "$GITHUB_OUTPUT"
+          echo "qual=$QUAL" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase2-semantic-material-v2
+          path: bake
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.evidence.outputs.bake }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase2-semantic-material-v2-qualification
+          path: qualification
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.evidence.outputs.qual }}
+      - name: Verify qualification receipt and publish exact baked bytes
+        run: |
+          node -e "const fs=require('fs');const q=JSON.parse(fs.readFileSync('qualification/semantic-material-v2-qualification.json'));if(q.eligible!==true)process.exit(1);"
           DEST="showroom/globe/h-earth/render"
-          cp semantic-material-v2.rgba "$DEST/terrain-material-field.phase2-semantic-v2.rgba"
-          SHA=$(sha256sum semantic-material-v2.rgba | awk '{print $1}')
+          cp bake/semantic-material-v2.rgba "$DEST/terrain-material-field.phase2-semantic-v2.rgba"
+          SHA=$(sha256sum bake/semantic-material-v2.rgba | awk '{print $1}')
+          QSHA=$(node -e "const q=require('./qualification/semantic-material-v2-qualification.json');process.stdout.write(q.sha256)")
+          test "$SHA" = "$QSHA"
           cat > "$DEST/terrain-material-field.phase2-semantic-v2.js" <<EOF
           /** H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_v2 */
           export const H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_ID='H_EARTH_PHASE2_SEMANTIC_MATERIAL_FIELD_v2';

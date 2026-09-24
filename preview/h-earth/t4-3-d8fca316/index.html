@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>H-Earth T4.3 Immutable Inspection</title>
+<style>
+html,body{margin:0;height:100%;background:#05090b;color:#eef8f6;font:14px/1.4 system-ui,sans-serif}
+body{display:grid;grid-template-rows:auto 1fr}
+header{padding:9px 12px;background:#0b1215;border-bottom:1px solid #314047;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+strong{letter-spacing:.04em} code{font:12px ui-monospace,monospace;color:#cce7df}
+#state[data-state="PASS"]{color:#9de5bd}#state[data-state="FAIL"]{color:#ff9f9f}
+iframe{width:100%;height:100%;border:0;background:#000}
+</style>
+</head>
+<body>
+<header>
+<strong>NONPRODUCTION · T4.3 IMMUTABLE INSPECTION</strong>
+<span id="state" data-state="PENDING">TRANSPORT: PENDING</span>
+<code>d8fca3163396a93026a1a8827a09196c39f26bef</code>
+</header>
+<iframe id="candidate" title="H-Earth T4.3 candidate" allow="fullscreen; gamepad"></iframe>
+<script>
+(() => {
+  const candidateSha='d8fca3163396a93026a1a8827a09196c39f26bef';
+  const root='https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/'+candidateSha+'/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/';
+  const target=root+'index.html?microrelief=v1&t4=additive-v1';
+  const probes=[
+    ['index.html','12c2cb4507dd61271274bbe3382570e4d34188e1'],
+    ['functional-landscape/public-live-gpu-integration.run8e-r3e.custody-route.js','0d4ddcd73736682977579c1c5c931cdf8d8d107d'],
+    ['diagnostic/run8e-r3d/live-gpu-binding.js','cd279c58c1dfd6ae9965c2d599f1df72b85ce442'],
+    ['render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js','c509c18ab240844e9c8053084ff95f55639a027c'],
+    ['render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js','f955ea3ad994ede577edc67022592bbea5d42651'],
+    ['render/live-render-package.run8e-r2.canonical.js','74d53736d37754c609fbe8109be432b210ae5a1c'],
+    ['render/gpu-upload-views.run8e-r2d.js','977cb398d2a49e95787bc1845b892e9d1cd9c57e'],
+    ['render/live-renderer-contract.run8e-r3a.js','a7a3af32eb82e8ea74102d3b912a1a7b719caf3a']
+  ];
+  const state=document.getElementById('state');
+  window.H_EARTH_T43_TRANSPORT_RECEIPT=Object.freeze({candidateSha,target,expectedGitBlobs:Object.freeze(probes.map(([path,blob])=>Object.freeze({path,blob})))});
+  state.textContent='TRANSPORT: IMMUTABLE SHA BOUND';
+  state.dataset.state='PASS';
+  document.getElementById('candidate').src=target;
+})();
+</script>
+</body>
+</html>

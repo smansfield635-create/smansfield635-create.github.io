@@ -22,7 +22,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           BASE: c4da54b31fd7411fc18e06f724b39409acbc2f36
-          CHAMBER: h-earth/phase3-shadow-chamber-v1
+          CHAMBER: h-earth/phase2-semantic-material-classifier-v1
         run: |
           node - <<'NODE'
           const fs=require('fs'),cp=require('child_process'),crypto=require('crypto');
@@ -49,8 +49,6 @@ jobs:
           ];
           const tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:entries});
           const commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth Phase3: materialize isolated terrain shadow chamber',tree:tree.sha,parents:[process.env.BASE]});
-          const encoded=process.env.CHAMBER.split('/').map(encodeURIComponent).join('%2F');
-          let exists=true;try{get('repos/'+process.env.REPO+'/git/ref/heads/'+encoded)}catch{exists=false}
-          if(exists)api('PATCH','repos/'+process.env.REPO+'/git/refs/heads/'+encoded,{sha:commit.sha,force:true});else api('POST','repos/'+process.env.REPO+'/git/refs',{ref:'refs/heads/'+process.env.CHAMBER,sha:commit.sha});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,shadowSha256:sha,publication:'HELD'}));
           console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,shadowSha256:sha}));
           NODE

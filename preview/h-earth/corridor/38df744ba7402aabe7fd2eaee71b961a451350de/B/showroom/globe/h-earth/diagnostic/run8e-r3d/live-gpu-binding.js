@@ -206,7 +206,10 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     counters.r3AFramePacketCount += 1;
     renderer.renderFrame(packet);
     counters.renderFrameCallCount += 1;
+    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.renderFrameReturned?.();
+    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.presentColorFrameEntered?.();
     const presentationReceipt = renderer.presentColorFrame();
+    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.presentColorFrameReturned?.();
     counters.gpuFramebufferPresentationCount += 1;
     window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.mark?.(
       'FIRST_FRAME_PRESENTED',

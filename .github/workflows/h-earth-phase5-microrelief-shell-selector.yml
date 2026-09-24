@@ -1,0 +1,33 @@
+name: H-Earth Phase5 Microrelief Shell Selector
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+jobs:
+  construct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construct immutable microrelief shell selector
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: ebdb03f026c930fa83fee77d040faf19be95f879
+        run: |
+          node - <<'NODE'
+          const cp=require('child_process');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'})),get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/',path=root+'diagnostic/run8e-r3d/live-gpu-binding.js';
+          let s=Buffer.from(get('repos/'+process.env.REPO+'/contents/'+path+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          const cp2="const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';";if(!s.includes(cp2))throw Error('CP2_KEY_ANCHOR');
+          s=s.replace(cp2,"const MICRORELIEF_QUERY_KEY = 'microrelief';\nconst MICRORELIEF_QUERY_VALUE = 'v1';\nconst MICRORELIEF_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js';\n"+cp2);
+          const req="const cp2LiveDifferentialRequested =\n  queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===\n  CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;";if(!s.includes(req))throw Error('CP2_REQUEST_ANCHOR');
+          s=s.replace(req,"const microreliefRequested = queryParameters.get(MICRORELIEF_QUERY_KEY) === MICRORELIEF_QUERY_VALUE;\n"+req);
+          const st=s.indexOf('const selectedRendererPath ='),en=s.indexOf('const selectedRendererModule',st);if(st<0||en<0)throw Error('SELECTOR_BOUNDS');
+          let b=s.slice(st,en),needle="  : semanticMaterialRequested\n    ? SEMANTIC_MATERIAL_RENDERER_PATH";if(!b.includes(needle))throw Error('SEMANTIC_SELECTOR_ANCHOR');
+          b=b.replace(needle,"  : microreliefRequested\n    ? MICRORELIEF_RENDERER_PATH\n  : semanticMaterialRequested\n    ? SEMANTIC_MATERIAL_RENDERER_PATH");s=s.slice(0,st)+b+s.slice(en);
+          const blob=api('POST','repos/'+process.env.REPO+'/git/blobs',{content:s,encoding:'utf-8'}),tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:[{path,mode:'100644',type:'blob',sha:blob.sha}]}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth Phase5: bind microrelief renderer into immutable inspection shell',tree:tree.sha,parents:[process.env.BASE]});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,selector:'?microrelief=v1',publication:'HELD'}));
+          NODE

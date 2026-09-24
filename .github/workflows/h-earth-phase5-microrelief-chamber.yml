@@ -1,0 +1,30 @@
+name: H-Earth Phase5 Microrelief Chamber
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+jobs:
+  construct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construct bounded microrelief derivative
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: 10290358fbab4447b80b7bfa26e61474c814fc48
+        run: |
+          node - <<'NODE'
+          const cp=require('child_process');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'})),get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/',src=root+'render/persistent-live-renderer.run8e-r3c.phase4-microtexture-v1.js';
+          let r=Buffer.from(get('repos/'+process.env.REPO+'/contents/'+src+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          const sample="    vec2 microstructure=texture(uTerrainMicrostructure,bakedUv).rg;";if(!r.includes(sample))throw Error('RELIEF_SAMPLE_ANCHOR');
+          r=r.replace(sample,sample+"\n    vec2 microDx=dFdx(microstructure);\n    vec2 microDy=dFdy(microstructure);\n    float microGradient=(microDx.x+microDx.y)-(microDy.x+microDy.y);\n    float reliefStrength=mix(0.035,0.14,clamp(slopeResponse*0.55+elevationMix*0.45,0.0,1.0))*nearDetail;\n    float microReliefLight=clamp(microGradient*reliefStrength*7.0,-0.16,0.16);");
+          const palette="    palette*=1.0+fineMicro*familyMicro+mesoMicro*(familyMicro*0.72);";if(!r.includes(palette))throw Error('RELIEF_PALETTE_ANCHOR');
+          r=r.replace(palette,palette+"\n    palette*=1.0+microReliefLight;");
+          const blob=api('POST','repos/'+process.env.REPO+'/git/blobs',{content:r,encoding:'utf-8'}),path=root+'render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js',tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:[{path,mode:'100644',type:'blob',sha:blob.sha}]}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth Phase5: materialize bounded microrelief derivative',tree:tree.sha,parents:[process.env.BASE]});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,base:process.env.BASE,additionalTextureSamples:0,additionalGeometryPasses:0,publication:'HELD'}));
+          NODE

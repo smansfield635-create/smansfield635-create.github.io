@@ -22,9 +22,20 @@ jobs:
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
         run: |
-          find_run(){ WF="$1"; for i in $(seq 1 60); do ID=$(gh api "repos/$REPO/actions/workflows/$WF/runs?branch=h-earth/phase2-semantic-material-classifier-v1&per_page=30" --jq ".workflow_runs[]|select(.head_sha==\"$SHA\" and .conclusion==\"success\")|.id"|head -1); [ -n "$ID" ]&&{ echo "$ID";return 0;};sleep 10;done;return 1;}
-          echo "bake=$(find_run h-earth-phase2-semantic-material-bake.yml)" >> "$GITHUB_OUTPUT"
-          echo "qual=$(find_run h-earth-phase2-semantic-material-asset-qualification.yml)" >> "$GITHUB_OUTPUT"
+          find_bake(){ for i in $(seq 1 60); do ID=$(gh api "repos/$REPO/actions/workflows/h-earth-phase2-semantic-material-bake.yml/runs?branch=h-earth/phase2-semantic-material-classifier-v1&per_page=30" --jq ".workflow_runs[]|select(.head_sha==\"$SHA\" and .conclusion==\"success\")|.id"|head -1); [ -n "$ID" ]&&{ echo "$ID";return 0;};sleep 10;done;return 1;}
+          find_eligible_qual(){ for i in $(seq 1 60); do
+            for ID in $(gh api "repos/$REPO/actions/workflows/h-earth-phase2-semantic-material-asset-qualification.yml/runs?branch=h-earth/phase2-semantic-material-classifier-v1&per_page=30" --jq ".workflow_runs[]|select(.head_sha==\"$SHA\" and .conclusion==\"success\")|.id"); do
+              AID=$(gh api "repos/$REPO/actions/runs/$ID/artifacts" --jq '.artifacts[]|select(.name=="h-earth-phase2-semantic-material-v2-qualification")|.id'|head -1)
+              [ -z "$AID" ] && continue
+              rm -rf /tmp/qprobe && mkdir -p /tmp/qprobe
+              gh api "repos/$REPO/actions/artifacts/$AID/zip" > /tmp/qprobe/q.zip
+              unzip -qq -o /tmp/qprobe/q.zip -d /tmp/qprobe/out
+              if node -e "const q=require('/tmp/qprobe/out/semantic-material-v2-qualification.json');process.exit(q.eligible===true?0:1)"; then echo "$ID"; return 0; fi
+            done
+            sleep 10
+          done;return 1;}
+          echo "bake=$(find_bake)" >> "$GITHUB_OUTPUT"
+          echo "qual=$(find_eligible_qual)" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
         with:
           name: h-earth-phase2-semantic-material-v2

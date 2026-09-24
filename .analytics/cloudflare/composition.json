@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-24T12:44:22Z",
+  "generatedAt": "2026-09-24T13:32:34Z",
   "window": {
-    "start": "2026-08-25T12:44:22Z",
-    "end": "2026-09-24T12:44:22Z"
+    "start": "2026-08-25T13:32:34Z",
+    "end": "2026-09-24T13:32:34Z"
   },
   "dimensions": {
     "requestPath": [
@@ -639,33 +639,33 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4077,
-        "visits": 1024
+        "pageLoads": 4228,
+        "visits": 1101
       },
       {
         "value": "Linux",
-        "pageLoads": 2486,
-        "visits": 2425
+        "pageLoads": 2495,
+        "visits": 2434
       },
       {
         "value": "MacOSX",
-        "pageLoads": 221,
-        "visits": 211
+        "pageLoads": 218,
+        "visits": 208
       },
       {
         "value": "Windows",
-        "pageLoads": 146,
-        "visits": 122
+        "pageLoads": 135,
+        "visits": 111
       },
       {
         "value": "iOS",
-        "pageLoads": 78,
-        "visits": 58
+        "pageLoads": 85,
+        "visits": 65
       },
       {
         "value": "Unknown",
-        "pageLoads": 50,
-        "visits": 50
+        "pageLoads": 49,
+        "visits": 49
       }
     ],
     "bot": [
@@ -739,8 +739,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7058,
-        "visits": 3890
+        "pageLoads": 6728,
+        "visits": 3670
       }
     ]
   }

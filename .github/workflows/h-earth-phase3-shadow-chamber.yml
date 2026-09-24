@@ -39,8 +39,16 @@ jobs:
           renderer=renderer.replace("const BAKED_FIELD_BYTES = await loadHEarthPhase2SemanticMaterialField();","const SHADOW_FIELD_BYTES=await loadHEarthTerrainSunVisibility();\nconst BAKED_FIELD_BYTES = await loadHEarthPhase2SemanticMaterialField();");
           renderer=renderer.replace("uniform sampler2D uTerrainBakedMaterial;","uniform sampler2D uTerrainBakedMaterial;\nuniform sampler2D uTerrainSunVisibility;");
           renderer=renderer.replace("vec4 bakedMaterial=texture(uTerrainBakedMaterial,bakedUv);","vec4 bakedMaterial=texture(uTerrainBakedMaterial,bakedUv);\n    float terrainSunVisibility=texture(uTerrainSunVisibility,bakedUv).r;");
+          renderer=renderer.replace("float directional=diffuse*uSunIntensity*(vRoleCode==1u?0.90:(vRoleCode==2u?0.74:0.82));","float directional=diffuse*uSunIntensity*(vRoleCode==1u?0.90:(vRoleCode==2u?0.74:0.82));\n  if(vRoleCode==1u) directional*=terrainSunVisibility;");
           renderer=renderer.replace("function withTerrainShaderTransform(gl, operation) {","function withTerrainShaderTransform(gl, operation) {");
-          renderer=renderer.replace("const acceptedRenderer = createAcceptedCp2Renderer(options);","const acceptedRenderer = createAcceptedCp2Renderer(options);");
+          renderer=renderer.replace("const acceptedRenderer = createAcceptedCp2Renderer(options);",`const acceptedRenderer = createAcceptedCp2Renderer(options);
+  const shadowTexture=gl.createTexture();
+  if(!shadowTexture)throw new Error('SHADOW_TEXTURE_CREATE_FAILED');
+  gl.activeTexture(gl.TEXTURE7);gl.bindTexture(gl.TEXTURE_2D,shadowTexture);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,H_EARTH_TERRAIN_SUN_VISIBILITY_WIDTH,H_EARTH_TERRAIN_SUN_VISIBILITY_HEIGHT,0,gl.RED,gl.UNSIGNED_BYTE,SHADOW_FIELD_BYTES);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);`);
           const blob=(buf,enc='utf-8')=>api('POST','repos/'+process.env.REPO+'/git/blobs',{content:enc==='base64'?buf.toString('base64'):buf,encoding:enc}).sha;
           const entries=[
             {path:root+'render/terrain-sun-visibility-v1.r8',mode:'100644',type:'blob',sha:blob(bin,'base64')},

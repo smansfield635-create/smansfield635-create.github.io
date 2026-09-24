@@ -9,6 +9,8 @@ on:
       - '.github/ai-router/differential-continuity/**'
       - '.github/ai-router/system-continuity/gap-registry.v1.json'
       - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/bounded-operation-lock-lineage-checkpoint-v1.yml'
+      - '.github/workflows/bounded-operation-lock-lineage-checkpoint-v1.yml'
       - '.github/workflows/canonical-operation-intake-transport-v1.yml'
       - '.github/workflows/differential-continuity-v1.yml'
       - 'tools/repository-ai-entry-router.mjs'

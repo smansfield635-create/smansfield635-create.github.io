@@ -12,7 +12,9 @@
         "OWNER",
         "MEMBER",
         "COLLABORATOR"
-      ]
+      ],
+      "representation": "RAW_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     },
     {
       "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
@@ -23,7 +25,9 @@
         "MEMBER",
         "COLLABORATOR"
       ],
-      "issueOnly": true
+      "issueOnly": true,
+      "representation": "MARKER_PLUS_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     },
     {
       "marker": "PUBLIC_PRIVATE_SUCCESSOR_EXECUTION_REQUEST_V1",
@@ -31,7 +35,9 @@
       "input": "request_json",
       "associations": [
         "OWNER"
-      ]
+      ],
+      "representation": "MARKER_PLUS_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     },
     {
       "marker": "PRIVATE_TERMINAL_CLOSURE_REQUEST_V1",
@@ -41,7 +47,9 @@
         "OWNER",
         "MEMBER",
         "COLLABORATOR"
-      ]
+      ],
+      "representation": "MARKER_PLUS_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     },
     {
       "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
@@ -51,7 +59,9 @@
         "OWNER",
         "MEMBER",
         "COLLABORATOR"
-      ]
+      ],
+      "representation": "MARKER_PLUS_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     }
   ],
   "invariants": [
@@ -63,6 +73,8 @@
     "NO_GENERIC_COMMAND_INPUT",
     "HANDLER_REVALIDATES_PAYLOAD",
     "AT_MOST_ONE_HANDLER_PER_COMMENT",
-    "UNKNOWN_MARKER_NO_DISPATCH"
+    "UNKNOWN_MARKER_NO_DISPATCH",
+    "ROUTER_NORMALIZES_REGISTERED_TRANSPORT_REPRESENTATION",
+    "CALLBACK_CONTEXT_ROUTER_AUTHENTICATED_NOT_CALLER_SELECTABLE"
   ]
 }

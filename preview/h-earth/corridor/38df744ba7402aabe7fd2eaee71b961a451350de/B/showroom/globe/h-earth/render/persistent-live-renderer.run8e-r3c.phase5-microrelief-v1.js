@@ -65,12 +65,12 @@ out vec4 outColor;`,
     vec2 microDx=dFdx(microstructure);
     vec2 microDy=dFdy(microstructure);
     float microGradient=(microDx.x+microDx.y)-(microDy.x+microDy.y);
-    float reliefStrength=mix(0.035,0.14,clamp(slopeResponse*0.55+elevationMix*0.45,0.0,1.0))*nearDetail;
-    float microReliefLight=clamp(microGradient*reliefStrength*7.0,-0.16,0.16);
     float elevationMix=smoothstep(-1.0,34.0,vWorldPosition.y);
     float slopeResponse=smoothstep(0.025,0.58,slope);
     float curvatureResponse=clamp(length(fwidth(n))*3.25,0.0,1.0);
     float nearDetail=1.0-smoothstep(72.0,250.0,distanceToCamera);
+    float reliefStrength=mix(0.035,0.14,clamp(slopeResponse*0.55+elevationMix*0.45,0.0,1.0))*nearDetail;
+    float microReliefLight=clamp(microGradient*reliefStrength*7.0,-0.16,0.16);
     float mesoField=bakedMaterial.a;
     vec3 palette=max(bakedMaterial.rgb,vec3(0.008));
     palette=mix(palette,base,0.16);

@@ -1,0 +1,20 @@
+name: H-Earth Phase2 Baked Material Field Measurement
+on:
+  push:
+    branches:
+      - h-earth/phase2-baked-material-ab-inspection-v1
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/validation/phase2-baked-material-field.measure.mjs preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.rgba | tee phase2-baked-field.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-phase2-baked-material-field
+          path: phase2-baked-field.json
+          retention-days: 90

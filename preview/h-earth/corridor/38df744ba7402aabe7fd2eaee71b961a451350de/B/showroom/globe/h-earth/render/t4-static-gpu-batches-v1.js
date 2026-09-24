@@ -20,16 +20,20 @@ export function createHEarthT4StaticGpuBatches(gl) {
   return Object.freeze({tuft:make(TUFT_VERTICES,tufts),rock:make(ROCK_VERTICES,rocks),placementSha:H_EARTH_T4_FROZEN_PLACEMENT.placementSha});
 }
 
-export function drawHEarthT4StaticGpuBatches(gl,batches,bindClass) {
+export function drawHEarthT4StaticGpuBatches(gl,batches,bindClass,{instanceStride=1}={}) {
   if(typeof bindClass!=='function') throw new Error('T4_BIND_CLASS_REQUIRED');
-  let drawCalls=0;
+  if(!Number.isInteger(instanceStride)||instanceStride<1)throw new Error('T4_INSTANCE_STRIDE_INVALID');
+  let drawCalls=0,tufts=0,rocks=0;
   for(const [kind,batch] of [['TUFT',batches.tuft],['ROCK',batches.rock]]) {
     bindClass(kind,batch);
     gl.bindBuffer(gl.ARRAY_BUFFER,batch.instanceBuffer);
-    for(let i=0;i<5;i++){gl.enableVertexAttribArray(8+i);gl.vertexAttribPointer(8+i,1,gl.FLOAT,false,20,i*4);gl.vertexAttribDivisor(8+i,1);}
-    gl.drawArraysInstanced(gl.TRIANGLES,0,batch.vertexCount,batch.instanceCount);
+    const strideBytes=20*instanceStride;
+    for(let i=0;i<5;i++){gl.enableVertexAttribArray(8+i);gl.vertexAttribPointer(8+i,1,gl.FLOAT,false,strideBytes,i*4);gl.vertexAttribDivisor(8+i,1);}
+    const instanceCount=Math.ceil(batch.instanceCount/instanceStride);
+    gl.drawArraysInstanced(gl.TRIANGLES,0,batch.vertexCount,instanceCount);
+    if(kind==='TUFT')tufts=instanceCount;else rocks=instanceCount;
     drawCalls++;
   }
   if(drawCalls>2) throw new Error('T4_DRAW_BUDGET_EXCEEDED');
-  return Object.freeze({drawCalls,tufts:batches.tuft.instanceCount,rocks:batches.rock.instanceCount,total:batches.tuft.instanceCount+batches.rock.instanceCount});
+  return Object.freeze({drawCalls,tufts,rocks,total:tufts+rocks,instanceStride});
 }

@@ -1,0 +1,21 @@
+name: H-Earth T4 Mesostructure Placement
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: read
+jobs:
+  place:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - run: node h-earth-3d/validation/t4-mesostructure-placement.mjs "$PWD" > t4-mesostructure-placement.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-t4-mesostructure-placement
+          path: t4-mesostructure-placement.json
+          retention-days: 90

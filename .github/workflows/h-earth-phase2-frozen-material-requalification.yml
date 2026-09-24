@@ -1,0 +1,29 @@
+name: H-Earth Phase2 Frozen Material Requalification
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: read
+  actions: read
+jobs:
+  qualify-frozen:
+    if: ${{ !contains(github.event.head_commit.message, '[frozen-requal-only]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: h-earth-phase2-semantic-material-v2
+          path: frozen
+          github-token: ${{ github.token }}
+          run-id: 35955614940
+      - name: Qualify frozen bake with corrected instrument
+        run: |
+          node h-earth-3d/validation/phase2-semantic-material-asset.qualify.mjs "$PWD" frozen/semantic-material-v2.rgba > frozen-qualified.json
+          node -e "const q=require('./frozen-qualified.json');if(q.eligible!==true||q.issues.length!==0)process.exit(1);console.log(JSON.stringify({eligible:q.eligible,sha256:q.sha256,issues:q.issues,minimumWitnessRgbSeparation:q.minimumWitnessRgbSeparation}))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-phase2-frozen-semantic-material-qualified-receipt
+          path: frozen-qualified.json
+          retention-days: 90

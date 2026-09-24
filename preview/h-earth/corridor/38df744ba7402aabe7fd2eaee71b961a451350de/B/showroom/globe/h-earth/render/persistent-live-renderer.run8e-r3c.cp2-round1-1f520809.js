@@ -8,8 +8,7 @@ export const H_EARTH_RUN_8E_R3C_RENDERER_ID =
 export const H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID =
   'H_EARTH_GRATITUDE_REGION_CP2_ROUND_1_PRESENTATION_PROFILE_v1';
 
-const LOGICAL_ID = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898';
-const RUNTIME_ID = LOGICAL_ID;
+const LOGICAL_ID = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_CONTENT_ADDRESSED';
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const color3 = (value) => {
   const array = Array.isArray(value) ? value : [0, 0, 0];
@@ -415,7 +414,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   const renderPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
   const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
-  if (renderPackage.packageIdentity !== RUNTIME_ID) throw new Error(`R3C_RUNTIME_PACKAGE_IDENTITY_MISMATCH:${renderPackage.packageIdentity}`);
+  if (typeof renderPackage.packageIdentity !== 'string' || !renderPackage.packageIdentity.startsWith('H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_')) throw new Error(`R3C_RUNTIME_PACKAGE_IDENTITY_INVALID:${renderPackage.packageIdentity}`);
+  if (typeof renderPackage.contentDigest !== 'string' || renderPackage.contentDigest.length === 0) throw new Error('R3C_RUNTIME_PACKAGE_DIGEST_MISSING');
   if (uploadViews.deterministicTransportEncoding !== true) throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
 
   function initialize(packet) {

@@ -1,8 +1,21 @@
 /** H-Earth T4 static GPU batches v1. No renderer/framebuffer/presentation ownership. */
 import { H_EARTH_T4_FROZEN_PLACEMENT } from './t4-frozen-placement-v1.js';
 
-const TUFT_VERTICES = new Float32Array([-.10,0,0, .10,0,0, 0,.70,0, 0,0,-.10, 0,0,.10, 0,.70,0]);
-const ROCK_VERTICES = new Float32Array([-.28,0,-.20, .30,0,-.18, .22,0,.25, -.20,0,.28, 0,.34,0]);
+// T4.3 primitive-quality geometry. Placement and draw-class budgets remain frozen.
+const TUFT_VERTICES = new Float32Array([
+  -.13,0,0, .13,0,0, 0,.78,0,
+  0,0,-.13, 0,0,.13, 0,.78,0,
+  -.09,0,-.09, .09,0,.09, 0,.70,0,
+  -.09,0,.09, .09,0,-.09, 0,.70,0
+]);
+const ROCK_VERTICES = new Float32Array([
+  -.34,0,-.24, .30,0,-.22, .25,.22,.24,
+  -.34,0,-.24, .25,.22,.24, -.24,.08,.30,
+  -.34,0,-.24, .08,.34,-.03, .30,0,-.22,
+  .30,0,-.22, .08,.34,-.03, .25,.22,.24,
+  .25,.22,.24, .08,.34,-.03, -.24,.08,.30,
+  -.24,.08,.30, .08,.34,-.03, -.34,0,-.24
+]);
 
 const pack = instances => new Float32Array(instances.flatMap(v => [v.x,v.elevation,v.z,v.rotation,v.scale]));
 

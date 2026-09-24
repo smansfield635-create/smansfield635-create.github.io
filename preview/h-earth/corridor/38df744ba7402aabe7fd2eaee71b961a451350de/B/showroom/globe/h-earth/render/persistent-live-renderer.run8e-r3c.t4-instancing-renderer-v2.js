@@ -159,7 +159,7 @@ const cloneReceipt = (receipt, state) => ({
     receipt.noPostInitializationBufferUpload === true && state.postInitializationUploadCount === 0
 });
 
-export function createHEarthRun8ER3CPersistentRenderer(options = {}) {
+function createHEarthRun8ER3CPersistentRenderer(options = {}) {
   const acceptedRenderer = createAcceptedCp2Renderer(options);
   const gl = options.canvas?.getContext?.('webgl2');
   if (!gl) throw new Error('BM4_WEBGL2_CONTEXT_UNAVAILABLE');

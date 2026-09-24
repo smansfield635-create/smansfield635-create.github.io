@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "governance-bridge-successor-runtime-qualification-20260924-001",
+  "capabilityId": "GOVERNANCE_BRIDGE_CANDIDATE_RUNTIME_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4681,
+  "requestBranch": "ai-dispatch-request-governance-bridge-qualify-6d4cafc",
+  "requestCommit": "bf74b9b0c46d9c19671813610986172d158aa38c",
+  "currentMainSha": "811ea7808d54cd5f4afc8a8ddeb50bdae6451ea1",
+  "bridgeRunId": "36031380698",
+  "error": "Unknown capabilityId: GOVERNANCE_BRIDGE_CANDIDATE_RUNTIME_QUALIFICATION",
+  "failedAt": "2026-09-24T17:01:29.598Z"
+}

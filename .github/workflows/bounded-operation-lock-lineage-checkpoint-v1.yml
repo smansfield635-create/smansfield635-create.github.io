@@ -41,6 +41,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           REQUEST_JSON: ${{ inputs.request_json }}
           REPOSITORY_OPERATION_LOCAL_GIT_BLOB_READ: '1'
+          REPOSITORY_OPERATION_LOCAL_GIT_LINEAGE: '1'
         shell: bash
         run: |
           set -euo pipefail

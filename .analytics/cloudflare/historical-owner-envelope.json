@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-24T22:30:27Z",
+  "generatedAt": "2026-09-24T23:28:49Z",
   "window": {
-    "start": "2026-06-26T22:30:27Z",
-    "end": "2026-09-24T22:30:27Z"
+    "start": "2026-06-26T23:28:49Z",
+    "end": "2026-09-24T23:28:49Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4846,
-    "visits": 1172,
+    "pageLoads": 4863,
+    "visits": 1182,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4846,
-        "visits": 1172
+        "pageLoads": 4863,
+        "visits": 1182
       }
     },
     "byPath": {
@@ -107,8 +107,8 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 194,
-        "visits": 16
+        "pageLoads": 212,
+        "visits": 25
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -177,10 +181,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/gauges/": {
         "pageLoads": 12,
         "visits": 0
@@ -224,10 +228,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -250,11 +250,11 @@
         "pageLoads": 73,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 11,
+      "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -295,7 +295,7 @@
         "visits": 0
       },
       "/campaigns/rob/": {
-        "pageLoads": 18,
+        "pageLoads": 17,
         "visits": 1
       },
       "/showroom/globe/earth/": {
@@ -310,11 +310,11 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/campaigns/wave/thai-boxing/": {
+      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
         "pageLoads": 1,
         "visits": 0
       },
-      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
+      "/campaigns/wave/thai-boxing/": {
         "pageLoads": 1,
         "visits": 0
       },
@@ -362,17 +362,17 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/analytics-owner-device/heartbeat/a9-1/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/analytics/": {
         "pageLoads": 13,
         "visits": 0
       },
+      "/analytics-owner-device/heartbeat/a9-1/": {
+        "pageLoads": 1,
+        "visits": 0
+      },
       "/governance-bridge/": {
-        "pageLoads": 25,
-        "visits": 25
+        "pageLoads": 26,
+        "visits": 26
       },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
@@ -381,12 +381,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3674,
+        "pageLoads": 3681,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 398,
-        "visits": 398
+        "pageLoads": 408,
+        "visits": 408
       },
       "www.google.com": {
         "pageLoads": 763,

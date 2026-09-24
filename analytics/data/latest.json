@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-24T01:03:50Z",
+  "generatedAt": "2026-09-24T01:40:26Z",
   "window30d": {
-    "start": "2026-08-25T01:03:50Z",
-    "end": "2026-09-24T01:03:50Z"
+    "start": "2026-08-25T01:40:26Z",
+    "end": "2026-09-24T01:40:26Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-17",
-      "pageLoads": 219
+      "pageLoads": 225
     },
     {
       "date": "2026-09-18",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 11
+      "pageLoads": 18
     }
   ],
   "summary": {
-    "pageLoads": 6986,
-    "botPageLoads": 2424,
-    "nonBotPageLoads": 4562
+    "pageLoads": 6998,
+    "botPageLoads": 2432,
+    "nonBotPageLoads": 4566
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3212,
-      "visits": 3212
+      "pageLoads": 3220,
+      "visits": 3220
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3135,
+      "pageLoads": 3141,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 603,
-      "visits": 603
+      "pageLoads": 602,
+      "visits": 602
     },
     {
       "host": "bing.com",
@@ -177,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1824,
-      "visits": 1560
+      "pageLoads": 1825,
+      "visits": 1558
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 809,
-      "visits": 809
+      "pageLoads": 818,
+      "visits": 818
     },
     {
       "path": "/showroom/globe/audralia/",
@@ -207,7 +207,7 @@
     },
     {
       "path": "/evidence/agentic-frontier/",
-      "pageLoads": 186,
+      "pageLoads": 187,
       "visits": 30
     },
     {

@@ -310,8 +310,11 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
     total=shas.length;
     for(const commitSha of shas){
       const message=execFileSync('git',['show','-s','--format=%B',commitSha],{encoding:'utf8',maxBuffer:1024*1024}).trimEnd();
-      const names=execFileSync('git',['diff-tree','--no-commit-id','--name-only','-r',commitSha],{encoding:'utf8',maxBuffer:1024*1024}).trim().split(/\n/).filter(Boolean);
-      if(names.length!==1||names[0]!==LEDGER_PATH)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','local-git.paths','authority-lineage',commitSha);
+      const parent=execFileSync('git',['rev-parse',`${commitSha}^`],{encoding:'utf8',maxBuffer:1024}).trim();
+      let ledgerChanged=false,nonLedgerChanged=false;
+      try{execFileSync('git',['diff','--quiet',parent,commitSha,'--',LEDGER_PATH],{stdio:'ignore'});}catch(error){if(error?.status===1)ledgerChanged=true;else throw error;}
+      try{execFileSync('git',['diff','--quiet',parent,commitSha,'--',`.:(exclude)${LEDGER_PATH}`],{stdio:'ignore'});}catch(error){if(error?.status===1)nonLedgerChanged=true;else throw error;}
+      if(!ledgerChanged||nonLedgerChanged)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','local-git.paths','authority-lineage',commitSha);
       const author=execFileSync('git',['show','-s','--format=%an <%ae>',commitSha],{encoding:'utf8'}).trim();
       seen.push({sha:commitSha,commit:{message,verification:{verified:false}},author:{login:author.includes('github-actions[bot]')?'github-actions[bot]':author.includes('smansfield635-create')?'smansfield635-create':null},committer:{login:author.includes('smansfield635-create')?'smansfield635-create':null},localGit:true});
     }

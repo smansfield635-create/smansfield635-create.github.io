@@ -17,7 +17,7 @@ export function createHEarthT4StaticGpuBatches(gl) {
     gl.bindBuffer(gl.ARRAY_BUFFER,instanceBuffer); gl.bufferData(gl.ARRAY_BUFFER,pack(instances),gl.STATIC_DRAW);
     return Object.freeze({vertexBuffer,instanceBuffer,vertexCount:vertices.length/3,instanceCount:instances.length});
   };
-  return Object.freeze({tuft:make(TUFT_VERTICES,tufts),rock:make(ROCK_VERTICES,rocks),placementSha:H_EARTH_T4_FROZEN_PLACEMENT.placementSha});
+  return Object.freeze({tuft:make(TUFT_VERTICES,tufts),rock:make(ROCK_VERTICES,rocks),tuftInstances:Object.freeze(tufts),rockInstances:Object.freeze(rocks),placementSha:H_EARTH_T4_FROZEN_PLACEMENT.placementSha});
 }
 
 export function drawHEarthT4StaticGpuBatches(gl,batches,bindClass) {

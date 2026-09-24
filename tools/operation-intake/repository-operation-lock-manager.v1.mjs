@@ -304,12 +304,24 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
   }
   if(head===anchor)return stable({result:'CANONICAL_LOCK_REF_LINEAGE_VERIFIED',anchorCommitSha:anchor,branchHead:head,commitCount:0});
   const u=base(repository);let page=1,total=null,seen=[];
-  while(page<=64){const c=await req(`${u}/compare/${anchor}...${head}?per_page=100&page=${page}`,{headers:H(token)},[200],'AUTHORITY_LINEAGE_COMPARE');if(!['ahead','identical'].includes(c?.status))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.status','authority-lineage',String(c?.status));if(page===1){total=Number(c?.total_commits);if(!Number.isInteger(total)||total<0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.total_commits','authority-lineage');const files=Array.isArray(c?.files)?c.files:[];if(files.some(f=>f?.filename!==LEDGER_PATH))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.files','authority-lineage','NON_LEDGER_PATH_MUTATION')}const commits=Array.isArray(c?.commits)?c.commits:[];seen.push(...commits);if(seen.length>=total||commits.length<100)break;page++}
+  if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_LINEAGE==='1'){
+    try{execFileSync('git',['merge-base','--is-ancestor',anchor,head],{stdio:'ignore'});}catch{throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','local-git.ancestry','authority-lineage',`${anchor}..${head}`)}
+    const shas=execFileSync('git',['rev-list','--reverse',`${anchor}..${head}`],{encoding:'utf8',maxBuffer:16*1024*1024}).trim().split(/\s+/).filter(Boolean);
+    total=shas.length;
+    for(const commitSha of shas){
+      const message=execFileSync('git',['show','-s','--format=%B',commitSha],{encoding:'utf8',maxBuffer:1024*1024}).trimEnd();
+      const names=execFileSync('git',['diff-tree','--no-commit-id','--name-only','-r',commitSha],{encoding:'utf8',maxBuffer:1024*1024}).trim().split(/\n/).filter(Boolean);
+      if(names.length!==1||names[0]!==LEDGER_PATH)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','local-git.paths','authority-lineage',commitSha);
+      const author=execFileSync('git',['show','-s','--format=%an <%ae>',commitSha],{encoding:'utf8'}).trim();
+      seen.push({sha:commitSha,commit:{message,verification:{verified:false}},author:{login:author.includes('github-actions[bot]')?'github-actions[bot]':author.includes('smansfield635-create')?'smansfield635-create':null},committer:{login:author.includes('smansfield635-create')?'smansfield635-create':null},localGit:true});
+    }
+  }else while(page<=64){const c=await req(`${u}/compare/${anchor}...${head}?per_page=100&page=${page}`,{headers:H(token)},[200],'AUTHORITY_LINEAGE_COMPARE');if(!['ahead','identical'].includes(c?.status))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.status','authority-lineage',String(c?.status));if(page===1){total=Number(c?.total_commits);if(!Number.isInteger(total)||total<0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.total_commits','authority-lineage');const files=Array.isArray(c?.files)?c.files:[];if(files.some(f=>f?.filename!==LEDGER_PATH))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.files','authority-lineage','NON_LEDGER_PATH_MUTATION')}const commits=Array.isArray(c?.commits)?c.commits:[];seen.push(...commits);if(seen.length>=total||commits.length<100)break;page++}
   if(seen.length!==total)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',`expected=${total}:observed=${seen.length}`);
   const spanRecovery=await verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification});
   const verificationSet=spanRecovery?seen.slice(spanRecovery.nextIndex):seen;
   for(const c of verificationSet){
     if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;
+    if(c?.localGit&&c?.author?.login==='github-actions[bot]'&&canonicalMutationMessage(c?.commit?.message))continue;
     if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
     const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);
     if(recovery&&await verifyExactLockRefLineageRecovery({repository,token,summary:c,recovery}))continue;

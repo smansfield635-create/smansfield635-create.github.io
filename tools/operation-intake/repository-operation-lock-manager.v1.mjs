@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 export const LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
@@ -225,7 +226,7 @@ async function put({repository,lockRef=LOCK_REF,token,blob,next,message}) {
   const b=branch(lockRef),u=base(repository),p=LEDGER_PATH.split('/').map(encodeURIComponent).join('/');
   try{const x=await req(`${u}/contents/${p}`,{method:'PUT',headers:H(token),body:JSON.stringify({message,content:Buffer.from(text(next)).toString('base64'),sha:blob,branch:b})},[200]);return{ok:true,commit:x.commit.sha,blob:x.content.sha}}catch(e){if([409,422].includes(e.status))return{ok:false,errorCode:'LEDGER_COMPARE_AND_SWAP_CONFLICT',httpStatus:e.status};throw e}
 }
-async function readLedgerBlob({repository,token,blobSha}){const sha=dig(blobSha,40,'legacySnapshotBlob','authority-provenance'),url=`${base(repository)}/git/blobs/${sha}`,z=await fetch(url,{headers:{...H(token),Accept:'application/vnd.github.raw+json'}}),q=await z.text(),status=Number(z.status??200);if(status<200||status>=300)throw err('AUTHORITY_LEDGER_BLOB_READ_FAILED','content','authority-provenance',String(status));try{const parsed=JSON.parse(q);if(parsed?.encoding==='base64'&&typeof parsed?.content==='string')return decodeContent(parsed.content,'authority-legacy-snapshot');return ledger(parsed)}catch(e){if(e.code)throw e;throw err('LEDGER_JSON_DECODE_FAILURE','content','authority-legacy-snapshot',e.message)}}
+async function readLedgerBlob({repository,token,blobSha}){const sha=dig(blobSha,40,'legacySnapshotBlob','authority-provenance');if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_BLOB_READ==='1'){try{const raw=execFileSync('git',['cat-file','blob',sha],{encoding:'utf8',maxBuffer:64*1024*1024});return ledger(JSON.parse(raw))}catch(e){if(e.code&&e.code!=='ERR_CHILD_PROCESS_STDIO_MAXBUFFER')throw e;throw err('LEDGER_JSON_DECODE_FAILURE','content','authority-legacy-snapshot-git-object',e.message)}}const url=`${base(repository)}/git/blobs/${sha}`,z=await fetch(url,{headers:H(token)}),q=await z.text(),status=Number(z.status??200);if(status<200||status>=300)throw err('AUTHORITY_LEDGER_BLOB_READ_FAILED','content','authority-provenance',String(status));try{const parsed=JSON.parse(q);if(parsed?.encoding!=='base64'||typeof parsed?.content!=='string')throw err('AUTHORITY_LEGACY_SNAPSHOT_ENCODING_UNSUPPORTED','encoding','authority-provenance',String(parsed?.encoding));return decodeContent(parsed.content,'authority-legacy-snapshot')}catch(e){if(e.code)throw e;throw err('LEDGER_JSON_DECODE_FAILURE','content','authority-legacy-snapshot',e.message)}}
 function identityMatches(a,b){return canonical(authorityIdentity(a))===canonical(authorityIdentity(b))}
 
 async function verifyLegacyAuthority({repository,token,lock}){

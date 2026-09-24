@@ -5,10 +5,10 @@
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
   "checkpoint": {
-    "checkpointCommitSha": "fb5f94964702d9442867cad240fdccd975caf79c",
-    "checkpointLedgerBlobSha": "9c5f694c649292323fc7504cffd4acea661fe6be",
-    "verifiedFromAnchorCommitSha": "f5d12ff2795aa91d77ae4aa6436946ed4904307d",
-    "verificationReceiptSha256": "d18d14d8f08f51641c525b0de74867dfad19deccad0e8f2fda9065c98f78afa3"
+    "checkpointCommitSha": "6ec3c35be04fe7e6d9a170a74958754cf7b8568c",
+    "checkpointLedgerBlobSha": "5203a20ea0fe14d29503413c5dff31487302e2b8",
+    "verifiedFromAnchorCommitSha": "fb5f94964702d9442867cad240fdccd975caf79c",
+    "verificationReceiptSha256": "bdfe64befdc2b96c0bc586de49b7a22167739376144414f4169755a9729e179d"
   },
   "materializationRule": {
     "source": "ALREADY_VERIFIED_CANONICAL_LINEAGE_ONLY",

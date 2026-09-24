@@ -308,7 +308,7 @@ export async function acquireRemote(a) {
 
 export async function closeRemote(a) {
   const o=await readRemote(a),h=scopeHash(a.lockScope),active=o.ledger.activeScopes[h];if(!active)throw err('ACTIVE_LOCK_NOT_FOUND','lockScope','ledger');
-  const verifier=a.authorityVerifier||verifyRemoteAuthorityProvenance,authorityVerification=await verifier({repository:a.repository,token:a.token,lock:active,branchHead:o.head}),x=closeLocal(o.ledger,a),u=await put({...a,blob:o.blob,next:x.ledger,message:`Close operation lock ${a.lockGeneration}: ${a.operationId} ${a.terminalDisposition}`});
+  const x=closeLocal(o.ledger,a),verifier=a.authorityVerifier||verifyRemoteAuthorityProvenance,authorityVerification=await verifier({repository:a.repository,token:a.token,lock:active,branchHead:o.head}),u=await put({...a,blob:o.blob,next:x.ledger,message:`Close operation lock ${a.lockGeneration}: ${a.operationId} ${a.terminalDisposition}`});
   return stable(u.ok?{...x.receipt,schema:'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1',result:'TERMINAL_CLOSURE_COMMITTED',authorityVerification,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,committedLedgerBlobSha:u.blob,closureCommitSha:u.commit,contentTransport:o.contentTransport}:{schema:'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1',result:'LOCK_NOT_CLOSED',errorCode:u.errorCode,httpStatus:u.httpStatus,operationId:a.operationId,lockScope:canonScope(a.lockScope),lockGeneration:Number(a.lockGeneration),contentTransport:o.contentTransport,lockReleased:false});
 }
 

@@ -54,6 +54,22 @@ export const EXACT_GEN1915_HISTORICAL_MATERIALIZATION_RECOVERY = stable({
   ledgerBlobSha:'b70e7560809dcb6648c78bd9355fcea26f1a60a8',
   historicalLedgerBlobSha:'553d4e96cf3b1a76c4fb23cb69768b3e34ae2304'
 });
+export const EXACT_GEN2021_LEDGER_COUNTER_RECOVERY = stable({
+  commitSha:'f529d7aaf2184e82a824c419671f7ee029374fb2',
+  parentSha:'35bee492cd50690c0829355b518579f85b6fc80a',
+  parentLedgerBlobSha:'61968ce53eb32627fc9a48e2d60f6b63b6c8d8b2',
+  resultingLedgerBlobSha:'dc811935842200badd40652cca67609d4d428040',
+  scopeHash:'1397301660e51f2f55e5076b4ebc1d84cf3e077f9c9956191dc62ba90fe92eb4',
+  operationId:'AUDRALIA_TABLET_IMMERSIVE_STARTUP_STABILITY_20260908_001',
+  lockScope:'H_EARTH:AUDRALIA:TABLET_IMMERSIVE_STARTUP_STABILITY:V1',
+  governingHead:'3d034773e189d5c8f8fa72bb53457518c1e876de',
+  requestDigest:'75f434042d7597a98e5f2c23f02b20416521e3d075e6acf17513c4823c793bb2',
+  procedureLocatorDigest:'ccebcdd3201ab797aa123dc46f84fbdcc8f8567d745690b6663653721d9021d1',
+  lockGeneration:2021,
+  parentLedgerGeneration:2020,
+  resultingLedgerGeneration:2020
+});
+
 export const EXACT_CORRUPTED_LEDGER_SPAN_RECOVERY = stable({
   anchorCommitSha: 'f5d12ff2795aa91d77ae4aa6436946ed4904307d',
   lastCorruptedCommitSha: '38fade1c33e705497f2984072dece377ad480aa0',
@@ -326,6 +342,64 @@ async function verifyExactGen1915LedgerRecovery({repository,token,summary}) {
   await readGitLedgerBlob({repository,token,blobSha:r.ledgerBlobSha,source:'exact-gen1915-historical-materialization-recovery'});
   return true;
 }
+export function verifyExactGen2021HistoricalState({commitSha,parentSha,parentLedgerBlobSha,resultingLedgerBlobSha,parentLedger,resultingLedger}) {
+  const r=EXACT_GEN2021_LEDGER_COUNTER_RECOVERY;
+  const fail=detail=>{throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen2021-ledger-counter','authority-lineage',detail)};
+  if(commitSha!==r.commitSha)fail('COMMIT_SHA_MISMATCH');
+  if(parentSha!==r.parentSha)fail('PARENT_SHA_MISMATCH');
+  if(parentLedgerBlobSha!==r.parentLedgerBlobSha)fail('PARENT_LEDGER_BLOB_MISMATCH');
+  if(resultingLedgerBlobSha!==r.resultingLedgerBlobSha)fail('RESULTING_LEDGER_BLOB_MISMATCH');
+  if(!parentLedger||parentLedger.lockGeneration!==r.parentLedgerGeneration)fail('PARENT_LEDGER_GENERATION_MISMATCH');
+  if(parentLedger.activeScopes?.[r.scopeHash]!==undefined)fail('PARENT_ROW_UNEXPECTEDLY_PRESENT');
+  if(!resultingLedger||resultingLedger.lockGeneration!==r.resultingLedgerGeneration)fail('RESULTING_LEDGER_GENERATION_MISMATCH');
+  const row=resultingLedger.activeScopes?.[r.scopeHash];
+  if(!row)fail('RESULTING_ROW_MISSING');
+  if(row.scopeHash!==r.scopeHash)fail('SCOPE_HASH_MISMATCH');
+  if(row.operationId!==r.operationId)fail('OPERATION_ID_MISMATCH');
+  if(row.lockScope!==r.lockScope)fail('LOCK_SCOPE_MISMATCH');
+  if(row.lockGeneration!==r.lockGeneration)fail('ROW_GENERATION_MISMATCH');
+  if(row.governingHead!==r.governingHead)fail('GOVERNING_HEAD_MISMATCH');
+  if(row.requestDigest!==r.requestDigest)fail('REQUEST_DIGEST_MISMATCH');
+  if(row.procedureLocatorDigest!==r.procedureLocatorDigest)fail('PROCEDURE_LOCATOR_DIGEST_MISMATCH');
+  if(row.independentAuthorityProvenance?.compareAndSwap?.observedLockRefHead!==r.parentSha)fail('CAS_PARENT_COMMIT_MISMATCH');
+  if(row.independentAuthorityProvenance?.compareAndSwap?.observedLedgerBlobSha!==r.parentLedgerBlobSha)fail('CAS_PARENT_BLOB_MISMATCH');
+  if(row.independentAuthorityProvenance?.authorityIdentity?.scopeHash!==r.scopeHash||row.independentAuthorityProvenance?.authorityIdentity?.operationId!==r.operationId||row.independentAuthorityProvenance?.authorityIdentity?.lockGeneration!==r.lockGeneration)fail('PROVENANCE_AUTHORITY_IDENTITY_MISMATCH');
+  return stable({result:'EXACT_GEN2021_LEDGER_COUNTER_RECOVERED',commitSha:r.commitSha,parentSha:r.parentSha,parentLedgerBlobSha:r.parentLedgerBlobSha,resultingLedgerBlobSha:r.resultingLedgerBlobSha,scopeHash:r.scopeHash,operationId:r.operationId,lockGeneration:r.lockGeneration});
+}
+
+async function readRawHistoricalLedger({repository,token,blobSha,source}) {
+  const objectSha=dig(blobSha,40,'ledgerBlobSha',source);
+  if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_BLOB_READ==='1'){
+    try{return JSON.parse(execFileSync('git',['cat-file','blob',objectSha],{encoding:'utf8',maxBuffer:64*1024*1024}))}
+    catch(e){throw err('LEDGER_JSON_DECODE_FAILURE','content',source,e.message)}
+  }
+  const g=await req(`${base(repository)}/git/blobs/${objectSha}`,{headers:H(token)},[200],'GEN2021_HISTORICAL_LEDGER_BLOB_READ');
+  if(g.encoding!=='base64')throw err('LEDGER_BLOB_ENCODING_UNSUPPORTED','encoding',source,String(g.encoding));
+  try{return JSON.parse(Buffer.from(String(g.content||'').replace(/\\s/g,''),'base64').toString('utf8'))}
+  catch(e){throw err('LEDGER_JSON_DECODE_FAILURE','content',source,e.message)}
+}
+
+async function verifyExactGen2021LedgerCounterRecovery({repository,token,summary}) {
+  const r=EXACT_GEN2021_LEDGER_COUNTER_RECOVERY;
+  if(summary?.sha!==r.commitSha)return false;
+  let parentSha,resultingBlob;
+  if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_LINEAGE==='1'){
+    parentSha=execFileSync('git',['rev-parse',r.commitSha+'^'],{encoding:'utf8'}).trim();
+    resultingBlob=execFileSync('git',['rev-parse',r.commitSha+':'+LEDGER_PATH],{encoding:'utf8'}).trim();
+    const message=execFileSync('git',['show','-s','--format=%B',r.commitSha],{encoding:'utf8'}).trimEnd();
+    if(message!==`Acquire operation lock 2021: ${r.operationId}`)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen2021-ledger-counter','authority-lineage','MESSAGE_MISMATCH');
+  }else{
+    const detail=await req(`${base(repository)}/commits/${r.commitSha}`,{headers:H(token)},[200],'AUTHORITY_GEN2021_COUNTER_DETAIL');
+    const files=Array.isArray(detail?.files)?detail.files:[],parents=Array.isArray(detail?.parents)?detail.parents:[];
+    if(detail?.sha!==r.commitSha||detail?.author?.login!=='smansfield635-create'||detail?.committer?.login!=='smansfield635-create'||detail?.commit?.message!==`Acquire operation lock 2021: ${r.operationId}`||parents.length!==1||files.length!==1||files[0]?.filename!==LEDGER_PATH)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen2021-ledger-counter','authority-lineage','COMMIT_IDENTITY_MISMATCH');
+    parentSha=parents[0]?.sha; resultingBlob=files[0]?.sha;
+  }
+  const parentLedger=await readRawHistoricalLedger({repository,token,blobSha:r.parentLedgerBlobSha,source:'exact-gen2021-parent-ledger'});
+  const resultingLedger=await readRawHistoricalLedger({repository,token,blobSha:r.resultingLedgerBlobSha,source:'exact-gen2021-resulting-ledger'});
+  verifyExactGen2021HistoricalState({commitSha:r.commitSha,parentSha,parentLedgerBlobSha:r.parentLedgerBlobSha,resultingLedgerBlobSha:resultingBlob,parentLedger,resultingLedger});
+  return true;
+}
+
 async function verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification}) {
   const r=EXACT_CORRUPTED_LEDGER_SPAN_RECOVERY;
   if(!checkpointVerification||anchor!==r.anchorCommitSha)return null;
@@ -369,6 +443,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
   const spanRecovery=await verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification});
   const verificationSet=spanRecovery?seen.slice(spanRecovery.nextIndex):seen;
   for(const c of verificationSet){
+    if(await verifyExactGen2021LedgerCounterRecovery({repository,token,summary:c}))continue;
     if(await verifyExactGen1915LedgerRecovery({repository,token,summary:c}))continue;
     if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;
     if(await verifyExactPost1894MaterializationRecovery({repository,token,summary:c}))continue;

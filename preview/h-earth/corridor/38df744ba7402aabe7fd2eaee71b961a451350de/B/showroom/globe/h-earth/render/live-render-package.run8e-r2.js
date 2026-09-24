@@ -257,7 +257,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   timeOfDayHours = 15.25,
   defaultObserverElevation = 2.25,
   defaultViewDistance = 512,
-  packageOccurrenceId = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001'
+  packageOccurrenceId = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_CURRENT'
 } = {}) {
   const startedAt = now();
   const issues = [];

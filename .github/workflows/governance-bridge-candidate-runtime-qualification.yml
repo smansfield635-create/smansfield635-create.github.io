@@ -1,0 +1,85 @@
+name: Governance Bridge Candidate Runtime Qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+      base_sha:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Prove exact one-path candidate
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" > /tmp/files
+          test "$(wc -l < /tmp/files)" -eq 1
+          grep -Fxq 'governance-bridge/index.html' /tmp/files
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/gb-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/governance-bridge/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/gb-http.log; exit 1
+      - name: Run 24-case rendered matrix
+        run: |
+          mkdir -p .qualification/governance-bridge
+          cat > .qualification/governance-bridge/inspect.mjs <<'NODE'
+          import { chromium } from 'playwright'; import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true}); const results={};
+          const viewports={phone320:{width:320,height:760},phone390:{width:390,height:844},tablet:{width:900,height:1000},desktop:{width:1440,height:1000}};
+          for(const [name,viewport] of Object.entries(viewports)){
+            const page=await browser.newPage({viewport}); const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/governance-bridge/',{waitUntil:'networkidle'});
+            const fail=m=>{throw new Error(name+': '+m)};
+            if(await page.locator('#topRail .card').count()!==6)fail('top cardinality');
+            if(await page.locator('#pitchRail .card').count()!==6)fail('pitch cardinality');
+            let overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth); if(overflow>2)fail('horizontal overflow '+overflow);
+            await page.locator('#topRail .card').nth(1).click(); if((await page.locator('#topRail .card').nth(1).getAttribute('aria-current'))!=='true')fail('neighbor select');
+            await page.locator('#topRail .card').nth(1).click(); if(await page.locator('#reader').isHidden())fail('active open');
+            if((await page.locator('#reader').getAttribute('data-face'))!=='practical')fail('initial practical');
+            if(!(await page.locator('#topRail').evaluate(el=>el.inert)))fail('carousel not inert');
+            await page.locator('.readerFace.practical .flipFace').click(); if((await page.locator('#reader').getAttribute('data-face'))!=='technical')fail('explicit technical');
+            await page.locator('.readerFace.technical .bridgeBtn').click(); if(await page.locator('#readerBridge').isHidden())fail('bridge technical open');
+            await page.locator('#closeReaderBridge').click(); if((await page.locator('#reader').getAttribute('data-face'))!=='technical')fail('bridge return technical');
+            await page.locator('.readerFace.technical .flipFace').click(); if((await page.locator('#reader').getAttribute('data-face'))!=='practical')fail('explicit practical');
+            await page.locator('.readerFace.practical .bridgeBtn').click(); await page.locator('#closeReaderBridge').click(); if((await page.locator('#reader').getAttribute('data-face'))!=='practical')fail('bridge return practical');
+            await page.locator('.readerFace.practical .bridgeBtn').click(); await page.keyboard.press('Escape'); if(!(await page.locator('#readerBridge').isHidden())||await page.locator('#reader').isHidden())fail('escape bridge first');
+            const face=page.locator('.readerFace.practical'); const box=await face.boundingBox(); if(!box)fail('face geometry');
+            await page.mouse.move(box.x+box.width*.75,box.y+box.height*.5); await page.mouse.down(); await page.mouse.move(box.x+box.width*.2,box.y+box.height*.5,{steps:6}); await page.mouse.up();
+            if((await page.locator('#reader').getAttribute('data-face'))!=='technical')fail('swipe to technical');
+            const tface=page.locator('.readerFace.technical'); const tb=await tface.boundingBox(); await page.mouse.move(tb.x+tb.width*.2,tb.y+tb.height*.5); await page.mouse.down(); await page.mouse.move(tb.x+tb.width*.8,tb.y+tb.height*.5,{steps:6}); await page.mouse.up();
+            if((await page.locator('#reader').getAttribute('data-face'))!=='practical')fail('swipe to practical');
+            await page.locator('.readerFace.practical .closeReader').click(); if(!(await page.locator('#reader').isHidden()))fail('reader close'); if((await page.locator('#topRail .card').nth(1).getAttribute('aria-current'))!=='true')fail('same card return');
+            if(errors.length)fail('page errors '+errors.join('|'));
+            results[name]={overflow,errors};
+            await page.screenshot({path:'.qualification/governance-bridge/'+name+'.png',fullPage:true}); await page.close();
+          }
+          await browser.close(); fs.writeFileSync('.qualification/governance-bridge/receipt.json',JSON.stringify({result:'PASS',cases:24,results},null,2));
+          NODE
+          node .qualification/governance-bridge/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: governance-bridge-runtime-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/governance-bridge
+          retention-days: 30

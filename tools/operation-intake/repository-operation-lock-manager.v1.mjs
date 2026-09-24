@@ -45,6 +45,16 @@ export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   workflowRunId: 32931494268
 })];
 
+export const EXACT_LEDGER_RESTORATION_RECOVERY = stable({
+  commitSha: 'eaec93ba84a747e4710f6c65e49c5163e5f68f4f',
+  parentSha: '38fade1c33e705497f2984072dece377ad480aa0',
+  authorLogin: 'smansfield635-create',
+  committerLogin: 'smansfield635-create',
+  message: 'Restore complete operation ledger after transport truncation',
+  ledgerBlobSha: '94eeaefbe68201d86989119c15a882fb97c3f3aa',
+  changedPath: LEDGER_PATH
+});
+
 export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [
   stable({
     commitSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
@@ -252,7 +262,16 @@ async function verifyExactLockRefLineageRecovery({repository,token,summary,recov
   const files=Array.isArray(detail?.files)?detail.files:[],parents=Array.isArray(detail?.parents)?detail.parents:[];
   if(detail?.sha!==recovery.commitSha||detail?.author?.login!==recovery.authorLogin||detail?.committer?.login!==recovery.committerLogin||detail?.commit?.message!==recovery.message||detail?.commit?.verification?.verified!==false||parents.length!==1||parents[0]?.sha!==recovery.parentSha||files.length!==1||files[0]?.filename!==LEDGER_PATH||files[0]?.sha!==recovery.ledgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',recovery.commitSha);
   return true;
+}async function verifyExactLedgerRestorationRecovery({repository,token,summary}) {
+  const recovery=EXACT_LEDGER_RESTORATION_RECOVERY;
+  if(summary?.sha!==recovery.commitSha)return false;
+  const detail=await req(`${base(repository)}/commits/${recovery.commitSha}`,{headers:H(token)},[200],'AUTHORITY_LEDGER_RESTORATION_DETAIL');
+  const files=Array.isArray(detail?.files)?detail.files:[],parents=Array.isArray(detail?.parents)?detail.parents:[];
+  if(parents.length!==1||parents[0]?.sha!==recovery.parentSha||detail?.author?.login!==recovery.authorLogin||detail?.committer?.login!==recovery.committerLogin||detail?.commit?.message!==recovery.message||files.length!==1||files[0]?.filename!==recovery.changedPath||files[0]?.sha!==recovery.ledgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','restoration-recovery','authority-lineage','EXACT_RESTORATION_IDENTITY_MISMATCH');
+  await readGitLedgerBlob({repository,token,blobSha:recovery.ledgerBlobSha,source:'exact-ledger-restoration-recovery'});
+  return true;
 }
+
 export async function verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha=LEGACY_AUTHORITY_CUTOVER_COMMIT,lineageCheckpoint=null}) {
   const head=dig(branchHead,40,'branchHead','authority-lineage');
   let anchor=dig(anchorCommitSha,40,'anchorCommitSha','authority-lineage'),checkpointVerification=null;
@@ -266,6 +285,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
   while(page<=64){const c=await req(`${u}/compare/${anchor}...${head}?per_page=100&page=${page}`,{headers:H(token)},[200],'AUTHORITY_LINEAGE_COMPARE');if(!['ahead','identical'].includes(c?.status))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.status','authority-lineage',String(c?.status));if(page===1){total=Number(c?.total_commits);if(!Number.isInteger(total)||total<0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.total_commits','authority-lineage');const files=Array.isArray(c?.files)?c.files:[];if(files.some(f=>f?.filename!==LEDGER_PATH))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.files','authority-lineage','NON_LEDGER_PATH_MUTATION')}const commits=Array.isArray(c?.commits)?c.commits:[];seen.push(...commits);if(seen.length>=total||commits.length<100)break;page++}
   if(seen.length!==total)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',`expected=${total}:observed=${seen.length}`);
   for(const c of seen){
+    if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;
     if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
     const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);
     if(recovery&&await verifyExactLockRefLineageRecovery({repository,token,summary:c,recovery}))continue;

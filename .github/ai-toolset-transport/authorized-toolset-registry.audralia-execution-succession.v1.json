@@ -157,6 +157,62 @@
       "continuationRule": "CONTINUE_ONLY_FROM_COMMAND_EXECUTED_AND_PASSED_WITH_WRITEBACK_PERFORMED_TRUE_AND_NEW_EXACT_CANDIDATE_HEAD",
       "terminationRule": "WRITEBACK_AUTHORITY_TERMINATES_AFTER_ONE_FAST_FORWARD_COMMIT;NO_MAIN_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "CINEMATIC_P01_P09_CROSS_RUNTIME_PROOF_DESCRIPTOR_V1",
+      "operationId": "CINEMATIC_PHYSICAL_SEAM_PROOF_ADMISSION_20260916_001",
+      "operationClass": "RUNTIME_OR_AUTHORITY",
+      "projectId": "CINEMATIC",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "CINEMATIC_CROSS_RUNTIME_PROOF_V1",
+      "exactToolingHead": "98966068c6a33b851b153fd5a6d8222dfde596e1",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": ["tools/cinematic-seam-proof"],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/cinematic-seam-proof/cinematic-cross-runtime-proof.v1.mjs",
+        "fixedArguments": ["--self-test"],
+        "inputArgumentBindings": [],
+        "outputArgumentBindings": [],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": true
+      },
+      "canonicalInputSchema": {
+        "schemaId": "CINEMATIC_P01_P09_CROSS_RUNTIME_PROOF_INPUT_v1",
+        "required": ["executionHolder"],
+        "allowed": ["executionHolder"],
+        "properties": {
+          "executionHolder": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"}
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "CINEMATIC_CROSS_RUNTIME_PROOF_HARNESS_SELF_TEST_RECEIPT_v1",
+        "required": ["schema", "harnessId", "operationId", "lockGeneration", "result", "proofSet", "proofCount", "pairedSeamFrame", "continuityDimensionCount", "adoptedMain", "hEarthBlob", "audraliaBlob", "preproofManifestSha256", "arbitraryCommandSurface", "denseCameraAuthority", "fullRenderAuthority", "deploymentAuthority", "publicationAuthority"]
+      },
+      "allowedBackends": [{"backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION", "priority": 100, "requirements": ["EXACT_TOOLING_HEAD_FETCHABLE", "NODE_22_AVAILABLE", "COMMAND_RECEIPT_ARTIFACT_UPLOAD"]}],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": ["showroom/", "h-earth-3d/", "docs/cinematic/", "assets/", "campaigns/", "characters/", ".github/workflows/"],
+      "prohibitedSideEffects": ["ARBITRARY_COMMAND", "PRODUCT_MUTATION", "RUNTIME_MUTATION", "CANDIDATE_MUTATION", "DENSE_CAMERA_COMPILATION", "FULL_RENDER", "MERGE", "DEPLOYMENT", "RELEASE", "PUBLICATION"],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
+      "successDisposition": "RETURN_GEN2307_FIXED_HARNESS_SELF_TEST_PASS_FOR_REGISTRATION_CANDIDATE_QUALIFICATION",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "PRESERVE_GEN2307_AND_RETURN_EXACT_FAILED_ASSERTION",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "PRESERVE_GEN2307_AND_STOP",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "CONTINUE_ONLY_FROM_FIXED_HARNESS_SELF_TEST_PASS_AND_EXACT_TWO_PATH_QUALIFICATION",
+      "terminationRule": "REGISTRATION_DESCRIPTOR_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN;NO_PRODUCT_RUNTIME_DENSE_CAMERA_FULL_RENDER_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

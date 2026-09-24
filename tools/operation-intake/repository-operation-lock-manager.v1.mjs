@@ -375,7 +375,7 @@ async function readRawHistoricalLedger({repository,token,blobSha,source}) {
   }
   const g=await req(`${base(repository)}/git/blobs/${objectSha}`,{headers:H(token)},[200],'GEN2021_HISTORICAL_LEDGER_BLOB_READ');
   if(g.encoding!=='base64')throw err('LEDGER_BLOB_ENCODING_UNSUPPORTED','encoding',source,String(g.encoding));
-  try{return JSON.parse(Buffer.from(String(g.content||'').replace(/\\s/g,''),'base64').toString('utf8'))}
+  try{return JSON.parse(Buffer.from(String(g.content||'').replace(/\s/g,''),'base64').toString('utf8'))}
   catch(e){throw err('LEDGER_JSON_DECODE_FAILURE','content',source,e.message)}
 }
 

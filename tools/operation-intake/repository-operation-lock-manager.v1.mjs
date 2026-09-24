@@ -45,7 +45,7 @@ export const LEGACY_EXACT_ISSUANCE_RECOVERIES = [stable({
   workflowRunId: 32931494268
 })];
 
-export const EXACT_GEN1915_LEDGER_RECOVERY = stable({
+export const EXACT_GEN1915_LEDGER_RECOVERY_HELD = stable({
   commitSha:'82d8b69e63783c7357c242f0b42ebb820138fafd',
   parentSha:'cb473e7c1d1b504038034effd6ca16c9960b681d',
   message:'Acquire operation lock 1915: CHARACTERS_TASK19_INTEGRATED_SUCCESSOR_REPAIR_20260901_001',
@@ -303,7 +303,8 @@ async function verifyExactPost1894MaterializationRecovery({repository,token,summ
 }
 
 async function verifyExactGen1915LedgerRecovery({repository,token,summary}) {
-  const r=EXACT_GEN1915_LEDGER_RECOVERY;if(summary?.sha!==r.commitSha)return false;
+  const r=EXACT_GEN1915_LEDGER_RECOVERY_HELD;if(summary?.sha!==r.commitSha)return false;
+  throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.recovery','authority-lineage','RECOVERY_HELD_NON_LEDGER_MUTATION_PROVEN');
   if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_LINEAGE!=='1')return false;
   const parent=execFileSync('git',['rev-parse',r.commitSha+'^'],{encoding:'utf8'}).trim();
   if(parent!==r.parentSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.parent','authority-lineage',parent);

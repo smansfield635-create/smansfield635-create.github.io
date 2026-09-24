@@ -1,0 +1,90 @@
+name: Bounded Operation Lock Lineage Checkpoint Execution v1
+on:
+  workflow_dispatch:
+    inputs:
+      segment_head:
+        description: Exact historical lock-ref segment endpoint commit SHA
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: bounded-operation-lock-lineage-checkpoint
+  cancel-in-progress: false
+env:
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  CHECKPOINT_PATH: .github/operation-intake/lock-lineage-checkpoint.v1.json
+  LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+jobs:
+  verify-and-advance:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify bounded segment and construct checkpoint
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          SEGMENT_HEAD: ${{ inputs.segment_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { verifyCanonicalLockRefLineage } from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+          import { advanceCheckpoint } from './tools/operation-intake/repository-operation-lock-lineage-checkpoint-advance.v1.mjs';
+          const checkpoint=JSON.parse(fs.readFileSync(process.env.CHECKPOINT_PATH,'utf8'));
+          const head=String(process.env.SEGMENT_HEAD||'').trim();
+          if(!/^[0-9a-f]{40}$/.test(head)) throw Error('SEGMENT_HEAD_INVALID');
+          const anchor=checkpoint.status==='ACTIVE_VERIFIED' ? checkpoint.checkpoint?.checkpointCommitSha : undefined;
+          const receipt=await verifyCanonicalLockRefLineage({
+            repository:process.env.REPOSITORY,
+            token:process.env.GITHUB_TOKEN,
+            branchHead:head,
+            ...(anchor?{anchorCommitSha:anchor}:{})
+          });
+          if(receipt.result!=='CANONICAL_LOCK_REF_LINEAGE_VERIFIED'||receipt.commitCount<1) throw Error('BOUNDED_SEGMENT_NOT_ADVANCING');
+          const ledgerResponse=await fetch(`https://api.github.com/repos/${process.env.REPOSITORY}/contents/${process.env.LEDGER_PATH}?ref=${head}`,{headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'}});
+          if(!ledgerResponse.ok) throw Error(`ENDPOINT_LEDGER_READ_FAILED:${ledgerResponse.status}`);
+          const ledgerFile=await ledgerResponse.json();
+          if(!/^[0-9a-f]{40}$/.test(ledgerFile.sha||'')) throw Error('ENDPOINT_LEDGER_BLOB_INVALID');
+          const next=advanceCheckpoint({candidateCheckpoint:checkpoint,verifiedLineageReceipt:receipt,endpointLedgerBlobSha:ledgerFile.sha});
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/verified-lineage-receipt.json`,JSON.stringify(receipt,null,2)+'\n');
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/next-checkpoint.json`,JSON.stringify(next,null,2)+'\n');
+          NODE
+      - name: Compare-and-swap checkpoint on main
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
+          const url=`https://api.github.com/repos/${process.env.REPOSITORY}/contents/${process.env.CHECKPOINT_PATH}`;
+          const observed=await fetch(`${url}?ref=main`,{headers});
+          if(!observed.ok) throw Error(`CHECKPOINT_READ_FAILED:${observed.status}`);
+          const current=await observed.json();
+          const next=fs.readFileSync(`${process.env.RUNNER_TEMP}/next-checkpoint.json`,'utf8');
+          const put=await fetch(url,{method:'PUT',headers,body:JSON.stringify({message:'Advance verified operation-lock lineage checkpoint',content:Buffer.from(next).toString('base64'),sha:current.sha,branch:'main'})});
+          if(!put.ok) throw Error(`CHECKPOINT_COMPARE_AND_SWAP_FAILED:${put.status}`);
+          const result=await put.json();
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/checkpoint-write-receipt.json`,JSON.stringify({schema:'BOUNDED_OPERATION_LOCK_LINEAGE_CHECKPOINT_EXECUTION_RECEIPT_v1',result:'CHECKPOINT_ADVANCED',checkpointCommitSha:JSON.parse(next).checkpoint.checkpointCommitSha,checkpointLedgerBlobSha:JSON.parse(next).checkpoint.checkpointLedgerBlobSha,mainCommitSha:result.commit.sha,checkpointBlobSha:result.content.sha},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bounded-lineage-checkpoint-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/verified-lineage-receipt.json
+            ${{ runner.temp }}/next-checkpoint.json
+            ${{ runner.temp }}/checkpoint-write-receipt.json
+          if-no-files-found: warn
+          retention-days: 90

@@ -70,10 +70,14 @@ jobs:
           s=s.replace(anchor,"const SEMANTIC_MATERIAL_QUERY_KEY = 'semantic-material';\nconst SEMANTIC_MATERIAL_QUERY_VALUE = 'v2';\nconst SEMANTIC_MATERIAL_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase2-semantic-material-v2.js';\n"+anchor)
           anchor2="const cp2LiveDifferentialRequested =\n  queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===\n  CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;"
           s=s.replace(anchor2,"const semanticMaterialRequested = queryParameters.get(SEMANTIC_MATERIAL_QUERY_KEY) === SEMANTIC_MATERIAL_QUERY_VALUE;\n"+anchor2)
-          old="  : additiveVisualRequested\n  ? ADDITIVE_VISUAL_RENDERER_PATH\n  : cp2LiveDifferentialRequested\n    ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH\n    : ACCEPTED_BASELINE_RENDERER_PATH;"
-          new="  : additiveVisualRequested\n  ? ADDITIVE_VISUAL_RENDERER_PATH\n  : semanticMaterialRequested\n    ? SEMANTIC_MATERIAL_RENDERER_PATH\n  : cp2LiveDifferentialRequested\n    ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH\n    : ACCEPTED_BASELINE_RENDERER_PATH;"
-          if old not in s: raise SystemExit("selector anchor missing")
-          open(p,"w").write(s.replace(old,new))
+          start=s.index("const selectedRendererPath =")
+          end=s.index("const selectedRendererModule",start)
+          if start < 0 or end < 0: raise SystemExit("selector boundaries missing")
+          block=s[start:end]
+          needle="  : cp2LiveDifferentialRequested\n    ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH"
+          if needle not in block: raise SystemExit("cp2 selector boundary missing")
+          block=block.replace(needle,"  : semanticMaterialRequested\n    ? SEMANTIC_MATERIAL_RENDERER_PATH\n  : cp2LiveDifferentialRequested\n    ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH",1)
+          open(p,"w").write(s[:start]+block+s[end:])
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -1,0 +1,22 @@
+name: H-Earth Phase1 Lowland Drainage Foothill Measurement
+on:
+  push:
+    branches:
+      - h-earth/phase1-lowland-drainage-foothill-v1
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node h-earth-3d/validation/phase1-lowland-drainage-foothill.measure.mjs "$PWD" | tee phase1-ldf.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-phase1-lowland-drainage-foothill
+          path: phase1-ldf.json
+          retention-days: 90

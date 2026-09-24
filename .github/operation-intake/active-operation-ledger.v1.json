@@ -6650,6 +6650,18 @@
       "scopeHash": "7ae778c43286c49a7af5cc4416b2628b50d405f3982de523985e301d40ad955e",
       "state": "ADMITTED_LOCKED"
     },
+    "7aed71ed492ffe5eb54d87d3338e4b55229d84897894ef885614fa0472a6f158": {
+      "governingHead": "3fd451df07cbc7e54651ee2acef986ad43aa4827",
+      "lockGeneration": 2491,
+      "lockScope": "PUBLIC_LEGITIMACY:GOVERNANCE_BRIDGE_PREVIEW:V1",
+      "operationId": "GOVERNANCE_BRIDGE_CLIENT_DEMO_CONSTRUCTION_20260923_001",
+      "procedureLocatorDigest": "637780cd5cf71fd265f6c92c572cd544592f628430266a979f29e0cbe48e8bca",
+      "released": false,
+      "requestDigest": "5e3d5d30e20dda316032d639bebb5ecd7c9c97c112db3cbaa77f5d6ef227e702",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7aed71ed492ffe5eb54d87d3338e4b55229d84897894ef885614fa0472a6f158",
+      "state": "ADMITTED_LOCKED"
+    },
     "7bbff05fdadc2d17328198a61b882e5d2a470c8968663a71d8fa67f74c6cd6a4": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -14142,7 +14154,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2490,
+  "lockGeneration": 2491,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

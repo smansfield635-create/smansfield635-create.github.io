@@ -1,0 +1,6 @@
+import{writeFile}from'node:fs/promises';import{createHash}from'node:crypto';
+const W=1024,H=1024,D={xmin:-256,xmax:256,zmin:-320,zmax:64},out=process.argv[2]||'terrain-microstructure-v1.rg';
+const hash=(x,y,s)=>{let n=(x*374761393+y*668265263+s*1442695041)>>>0;n=(n^(n>>>13))*1274126177>>>0;return((n^(n>>>16))>>>0)/4294967295};
+const smooth=(x,y,scale,s)=>{const fx=x/scale,fy=y/scale,ix=Math.floor(fx),iy=Math.floor(fy),tx=fx-ix,ty=fy-iy,u=tx*tx*(3-2*tx),v=ty*ty*(3-2*ty),a=hash(ix,iy,s),b=hash(ix+1,iy,s),c=hash(ix,iy+1,s),d=hash(ix+1,iy+1,s);return(a*(1-u)+b*u)*(1-v)+(c*(1-u)+d*u)*v};
+const b=new Uint8Array(W*H*2);for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=(y*W+x)*2;const fine=.58*smooth(x,y,3,11)+.27*smooth(x,y,9,17)+.15*smooth(x,y,27,23);const meso=.62*smooth(x,y,24,31)+.38*smooth(x,y,72,37);b[i]=Math.round(fine*255);b[i+1]=Math.round(meso*255)}
+await writeFile(out,b);const stats=c=>{let s=0,s2=0,mn=255,mx=0;for(let i=c;i<b.length;i+=2){const v=b[i];s+=v;s2+=v*v;mn=Math.min(mn,v);mx=Math.max(mx,v)}const n=W*H,mean=s/n;return{min:mn,max:mx,mean,stddev:Math.sqrt(s2/n-mean*mean)}};console.log(JSON.stringify({receiptType:'H_EARTH_TERRAIN_MICROSTRUCTURE_BAKE_v1',width:W,height:H,channels:'RG8',byteLength:b.length,domain:D,sha256:createHash('sha256').update(b).digest('hex'),fine:stats(0),meso:stats(1)},null,2));

@@ -31,7 +31,7 @@ jobs:
           BASE: 2582dda13038c05fe9279177d5a737eb4e7eef73
           CHAMBER: h-earth/phase2-semantic-material-tree-chamber-v1
           MATERIAL_CANDIDATE: ca341f03492c1887f656dc8a52b7f7b29abe7d92
-                            run: |
+        run: |
           node - <<'NODE'
           const fs=require('fs'),cp=require('child_process');
           const q=JSON.parse(fs.readFileSync('/tmp/package/content/frozen-cycle-qualification.json'));

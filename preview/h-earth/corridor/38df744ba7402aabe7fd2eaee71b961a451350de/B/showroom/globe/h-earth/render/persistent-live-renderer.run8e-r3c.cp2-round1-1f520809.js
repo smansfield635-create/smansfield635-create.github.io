@@ -515,8 +515,13 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST);
+    const presentationError = gl.getError();
+    if (presentationError !== gl.NO_ERROR) throw new Error(`R3C_PRESENTATION_BLIT_ERROR:${presentationError}`);
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+    gl.viewport(0,0,canvas.width,canvas.height);
+    gl.flush();
+    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height, canvasWidth: canvas.width, canvasHeight: canvas.height });
   }
   function captureColorFrame(label, { includePng = true } = {}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');

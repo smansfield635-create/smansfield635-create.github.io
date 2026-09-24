@@ -48,6 +48,7 @@ jobs:
             /.github/operation-intake/locator.v1.json
             /.github/workflows/remote-operation-terminal-closure-v1.yml
             /tools/operation-intake/repository-operation-lock-manager.v1.mjs
+            /tools/operation-intake/repository-operation-lock-lineage.v2.mjs
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
             /tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
@@ -104,6 +105,7 @@ jobs:
             /.github/operation-intake/locator.v1.json
             /.github/workflows/remote-operation-terminal-closure-v1.yml
             /tools/operation-intake/repository-operation-lock-manager.v1.mjs
+            /tools/operation-intake/repository-operation-lock-lineage.v2.mjs
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
             /tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs

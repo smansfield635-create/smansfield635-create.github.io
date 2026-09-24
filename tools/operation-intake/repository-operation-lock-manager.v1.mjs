@@ -399,9 +399,9 @@ function verifyCanonicalSourceComment(lock,body){const envelope=parseMarkedJson(
 function parseSuccessorReceiptComment(body){if(typeof body!=='string'||!body.startsWith('REMOTE_OPERATION_SUCCESSOR_RECEIPT_V1'))return null;const match=body.match(/```json\s*([\s\S]*?)\s*```/);if(!match)return null;try{return JSON.parse(match[1])}catch{return null}}
 function botReceiptMatches(lock,comments,origin,runId){if(origin==='CANONICAL_INTAKE'){const op=`operationId = ${lock.operationId}`,gen=`lockGeneration = ${lock.lockGeneration}`,run=`workflowRun = ${runId}`;return comments.some(c=>c?.user?.login==='github-actions[bot]'&&typeof c.body==='string'&&c.body.includes('CANONICAL_OPERATION_INTAKE_RETURN_V1')&&c.body.includes('canonicalResult = ADMITTED_AND_LOCKED')&&c.body.includes(op)&&c.body.includes(gen)&&c.body.includes(run))}return comments.some(c=>{if(c?.user?.login!=='github-actions[bot]')return false;const r=parseSuccessorReceiptComment(c.body);if(!r||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED')return false;const s=r.successor||{};return s.operationId===lock.operationId&&canonScope(s.lockScope)===canonScope(lock.lockScope)&&s.lockGeneration===lock.lockGeneration&&s.governingHead===lock.governingHead&&s.requestDigest===lock.requestDigest&&s.procedureLocatorDigest===lock.procedureLocatorDigest})}
 
-export async function verifyRemoteAuthorityProvenance({repository,token,lock,branchHead}) {
+export async function verifyRemoteAuthorityProvenance({repository,token,lock,branchHead,lineageCheckpoint=null}) {
   validateActiveLock(lock,lock.scopeHash);
-  const anchor=lock.authorityProvenance?.lineageAnchorCommitSha||LEGACY_AUTHORITY_CUTOVER_COMMIT,lineage=await verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha:anchor});
+  const anchor=lineageCheckpoint?.status==='ACTIVE_VERIFIED' ? lineageCheckpoint.checkpoint?.checkpointCommitSha : (lock.authorityProvenance?.lineageAnchorCommitSha||LEGACY_AUTHORITY_CUTOVER_COMMIT),lineage=await verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha:anchor,...(lineageCheckpoint?{lineageCheckpoint}:{})});
   if(!lock.authorityProvenance){const legacy=await verifyLegacyAuthority({repository,token,lock});return stable({...legacy,lineage})}
   const bound=verifyAuthorityProvenanceBinding(lock),p=lock.authorityProvenance,inv=p.invocation;
   if(inv.repository!==repository||inv.eventName!=='issue_comment'||!TRUSTED_ASSOCIATIONS.has(inv.commentAuthorAssociation))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','invocation','authority-provenance');
@@ -422,9 +422,17 @@ export async function acquireRemote(a) {
   return stable(u.ok?{schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:'ADMITTED_AND_LOCKED',operationId:a.operationId,lockScope:x.lock.lockScope,scopeHash:x.lock.scopeHash,lockGeneration:x.lock.lockGeneration,authorityProvenanceBound:!!x.lock.authorityProvenance,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,committedLedgerBlobSha:u.blob,acquisitionCommitSha:u.commit,contentTransport:o.contentTransport,lockAcquired:true}:{schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:'LOCK_NOT_ACQUIRED',errorCode:u.errorCode,httpStatus:u.httpStatus,operationId:a.operationId,lockScope:x.lock.lockScope,scopeHash:x.lock.scopeHash,lockGeneration:x.lock.lockGeneration,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,contentTransport:o.contentTransport,lockAcquired:false});
 }
 
+async function readCanonicalLineageCheckpoint({repository,token}) {
+  const checkpointFile=await req(`${base(repository)}/contents/${LINEAGE_CHECKPOINT_PATH}?ref=main`,{headers:H(token)},[200],'AUTHORITY_LINEAGE_CHECKPOINT_READ');
+  if(typeof checkpointFile?.content!=='string')throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','lineageCheckpoint.content','authority-lineage','CANONICAL_CHECKPOINT_CONTENT_MISSING');
+  try { return JSON.parse(Buffer.from(checkpointFile.content,'base64').toString('utf8')); } catch(e) { throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','lineageCheckpoint','authority-lineage',e.message); }
+}
+
 export async function closeRemote(a) {
   const o=await readRemote(a),h=scopeHash(a.lockScope),active=o.ledger.activeScopes[h];if(!active)throw err('ACTIVE_LOCK_NOT_FOUND','lockScope','ledger');
-  const x=closeLocal(o.ledger,a),verifier=a.authorityVerifier||verifyRemoteAuthorityProvenance,authorityVerification=await verifier({repository:a.repository,token:a.token,lock:active,branchHead:o.head}),u=await put({...a,blob:o.blob,next:x.ledger,message:`Close operation lock ${a.lockGeneration}: ${a.operationId} ${a.terminalDisposition}`});
+  const checkpointProvider=a.lineageCheckpointProvider||readCanonicalLineageCheckpoint;
+  const lineageCheckpoint=await checkpointProvider({repository:a.repository,token:a.token});
+  const x=closeLocal(o.ledger,a),verifier=a.authorityVerifier||verifyRemoteAuthorityProvenance,authorityVerification=await verifier({repository:a.repository,token:a.token,lock:active,branchHead:o.head,lineageCheckpoint}),u=await put({...a,blob:o.blob,next:x.ledger,message:`Close operation lock ${a.lockGeneration}: ${a.operationId} ${a.terminalDisposition}`});
   return stable(u.ok?{...x.receipt,schema:'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1',result:'TERMINAL_CLOSURE_COMMITTED',authorityVerification,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,committedLedgerBlobSha:u.blob,closureCommitSha:u.commit,contentTransport:o.contentTransport}:{schema:'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1',result:'LOCK_NOT_CLOSED',errorCode:u.errorCode,httpStatus:u.httpStatus,operationId:a.operationId,lockScope:canonScope(a.lockScope),lockGeneration:Number(a.lockGeneration),contentTransport:o.contentTransport,lockReleased:false});
 }
 

@@ -1,0 +1,22 @@
+name: H-Earth Phase2 Local Relief Measurement
+on:
+  push:
+    branches:
+      - h-earth/phase2-local-relief-v1
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node h-earth-3d/validation/phase2-local-relief.measure.mjs "$PWD" | tee phase2-local-relief.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-phase2-local-relief
+          path: phase2-local-relief.json
+          retention-days: 90

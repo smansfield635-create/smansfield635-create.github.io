@@ -315,8 +315,11 @@ async function verifyExactGen1915LedgerRecovery({repository,token,summary}) {
   const materializedTree=execFileSync('git',['rev-parse',r.commitSha+'^{tree}'],{encoding:'utf8'}).trim();
   const historicalLedger=execFileSync('git',['rev-parse',r.historicalStateCommitSha+':'+LEDGER_PATH],{encoding:'utf8'}).trim();
   if(historicalLedger!==r.historicalLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.historical-ledger','authority-lineage',historicalLedger);
-  const nonLedger=execFileSync('git',['diff','--quiet',r.historicalStateCommitSha,r.commitSha,'--','.',':(exclude)'+LEDGER_PATH],{stdio:'ignore'}).status;
-  if(nonLedger!==0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.materialization','authority-lineage',`tree=${materializedTree}:nonLedgerStatus=${nonLedger}`);
+  let nonLedger=0;
+  try { execFileSync('git',['diff','--quiet',r.historicalStateCommitSha,r.commitSha,'--','.',':(exclude)'+LEDGER_PATH],{stdio:'ignore'}); }
+  catch (e) { nonLedger=Number.isInteger(e?.status)?e.status:-1; }
+  if(nonLedger===1)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.materialization','authority-lineage',`tree=${materializedTree}:nonLedgerStatus=1`);
+  if(nonLedger!==0)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.materialization-execution','authority-lineage',`tree=${materializedTree}:nonLedgerStatus=${nonLedger}`);
   const blob=execFileSync('git',['rev-parse',r.commitSha+':'+LEDGER_PATH],{encoding:'utf8'}).trim();
   const msg=execFileSync('git',['show','-s','--format=%B',r.commitSha],{encoding:'utf8'}).trimEnd();
   if(blob!==r.ledgerBlobSha||blob===historicalLedger||msg!==r.message)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen1915.identity','authority-lineage',`blob=${blob}`);

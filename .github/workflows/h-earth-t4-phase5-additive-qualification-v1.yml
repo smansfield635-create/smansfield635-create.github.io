@@ -33,6 +33,35 @@ jobs:
           grep -q '"total":647' "$DATA"
           grep -q '"TUFT":617' "$DATA"
           grep -q '"ROCK":30' "$DATA"
+      - name: T4.3 primitive-quality invariant
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth"
+          PRIM="$BASE/render/t4-static-gpu-batches-v1.js"
+          DRAW="$BASE/render/t4-post-terrain-draw-v1.js"
+          DATA="$BASE/render/t4-frozen-placement-v1.js"
+
+          # Frozen placement and draw budget remain authoritative.
+          grep -q '"total":647' "$DATA"
+          grep -q '"TUFT":617' "$DATA"
+          grep -q '"ROCK":30' "$DATA"
+          grep -q "gl.drawArraysInstanced" "$PRIM"
+          grep -q "drawCalls>2" "$PRIM"
+
+          # T4.3 changes primitive geometry only.
+          grep -q "T4.3 primitive-quality geometry" "$PRIM"
+          grep -q "const TUFT_VERTICES" "$PRIM"
+          grep -q "const ROCK_VERTICES" "$PRIM"
+
+          # Ownership invariant remains closed.
+          for file in "$PRIM" "$DRAW"; do
+            ! grep -q "bindFramebuffer" "$file"
+            ! grep -q "createFramebuffer" "$file"
+            ! grep -q "presentColorFrame" "$file"
+            ! grep -q "createHEarthRun8ER3CPersistentRendererT4" "$file"
+            ! grep -q "OW01" "$file"
+          done
       - name: Module syntax qualification
         run: |
           node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-static-gpu-batches-v1.js"

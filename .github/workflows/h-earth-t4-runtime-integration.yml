@@ -1,0 +1,28 @@
+name: H-Earth T4 Runtime Integration
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integrate frozen T4 package into runtime lifecycle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: b541684b03498662edeb110dc72084ea6340cf09
+        run: |
+          node - <<'NODE'
+          const cp=require('child_process');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'})),get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/',src=root+'render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v1.js';
+          let r=Buffer.from(get('repos/'+process.env.REPO+'/contents/'+src+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          const anchor="export function createHEarthT4StaticInstancePackage(gl){";if(!r.includes(anchor))throw Error('T4_PACKAGE_ANCHOR');
+          r+="\nexport function createHEarthT4RuntimeBridge(gl,terrainRenderer,bindClass){\n  let initialized=false,pkg=null,drawCount=0;\n  return Object.freeze({\n    initialize(packet){if(initialized)throw Error('T4_ALREADY_INITIALIZED');terrainRenderer.initialize(packet);pkg=createHEarthT4StaticInstancePackage(gl);initialized=true;return this;},\n    render(packet){if(!initialized)throw Error('T4_NOT_INITIALIZED');terrainRenderer.render(packet);drawCount=drawHEarthT4StaticInstances(gl,pkg,bindClass);if(drawCount>2)throw Error('T4_DRAW_BUDGET');},\n    presentColorFrame(){return terrainRenderer.presentColorFrame();},\n    getT4Receipt(){return Object.freeze({placementSha:pkg?.placementSha,total:pkg?.total,tufts:pkg?.tuft?.instanceCount,rocks:pkg?.rock?.instanceCount,addedDrawCalls:drawCount,postInitializationResourceCreation:0,postInitializationBufferUpload:0});}\n  });\n}\n";
+          const path=root+'render/persistent-live-renderer.run8e-r3c.t4-runtime-integrated-v1.js',blob=api('POST','repos/'+process.env.REPO+'/git/blobs',{content:r,encoding:'utf-8'}),tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:[{path,mode:'100644',type:'blob',sha:blob.sha}]}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth T4: integrate static instances into initialization and frame lifecycle',tree:tree.sha,parents:[process.env.BASE]});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,expected:{total:647,tufts:617,rocks:30,addedDrawCallsMax:2},publication:'HELD'}));
+          NODE

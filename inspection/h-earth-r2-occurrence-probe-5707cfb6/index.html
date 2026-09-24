@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>H-Earth R2 occurrence probe</title><style>html,body{margin:0;height:100%;background:#05090b;color:#eaf5f2;font:12px ui-monospace,monospace}body{display:grid;grid-template-rows:auto 1fr auto}header,pre{margin:0;padding:8px;background:#0b1215;white-space:pre-wrap;overflow:auto}iframe{border:0;width:100%;height:100%;background:#000}</style></head><body><header>NONPRODUCTION · R2 OCCURRENCE PROBE · 5707cfb687696ae6101b5b48a804b505739be255</header><iframe id="world" allow="fullscreen; gamepad"></iframe><pre id="receipt">Waiting for probe receipt…</pre><script>
+const sha='5707cfb687696ae6101b5b48a804b505739be255';
+const url='https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/'+sha+'/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/index.html?microrelief=v1&t4=additive-v1';
+const frame=document.getElementById('world'),out=document.getElementById('receipt');frame.src=url;
+window.addEventListener('message',e=>{if(e.data?.schema==='H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE_v1')out.textContent=JSON.stringify(e.data,null,2)});
+setInterval(()=>{try{const r=frame.contentWindow.H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE;if(r)out.textContent=JSON.stringify(r,null,2)}catch{}},1000);
+</script></body></html>

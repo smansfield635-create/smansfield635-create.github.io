@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-24T02:39:28Z",
+  "generatedAt": "2026-09-24T03:36:01Z",
   "window": {
-    "start": "2026-06-26T02:39:28Z",
-    "end": "2026-09-24T02:39:28Z"
+    "start": "2026-06-26T03:36:01Z",
+    "end": "2026-09-24T03:36:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4786,
-    "visits": 1131,
+    "pageLoads": 4791,
+    "visits": 1134,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4786,
-        "visits": 1131
+        "pageLoads": 4791,
+        "visits": 1134
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1046,
-        "visits": 713
+        "pageLoads": 1048,
+        "visits": 716
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 181,
+        "pageLoads": 185,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -146,14 +146,6 @@
         "pageLoads": 149,
         "visits": 7
       },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 88,
-        "visits": 1
-      },
       "/governance/": {
         "pageLoads": 62,
         "visits": 10
@@ -161,6 +153,14 @@
       "/evidence/readiness/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 88,
+        "visits": 1
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -295,7 +295,7 @@
         "visits": 0
       },
       "/campaigns/rob/": {
-        "pageLoads": 19,
+        "pageLoads": 18,
         "visits": 1
       },
       "/philosophy/": {
@@ -305,6 +305,10 @@
       "/showroom/globe/earth/": {
         "pageLoads": 5,
         "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 60,
+        "visits": 42
       },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
@@ -317,10 +321,6 @@
       "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
         "pageLoads": 1,
         "visits": 0
-      },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 60,
-        "visits": 42
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 31,
@@ -373,16 +373,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3655,
+        "pageLoads": 3657,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 365,
-        "visits": 365
+        "pageLoads": 370,
+        "visits": 370
       },
       "www.google.com": {
-        "pageLoads": 756,
-        "visits": 756
+        "pageLoads": 754,
+        "visits": 754
       },
       "raw.githack.com": {
         "pageLoads": 10,

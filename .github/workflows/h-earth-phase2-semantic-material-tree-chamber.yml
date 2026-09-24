@@ -35,7 +35,9 @@ jobs:
             sleep 10
           done;return 1;}
           echo "bake=$(find_bake)" >> "$GITHUB_OUTPUT"
-          echo "qual=$(find_eligible_qual)" >> "$GITHUB_OUTPUT"
+          QUAL=$(find_eligible_qual)
+          test -n "$QUAL"
+          echo "qual=$QUAL" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
         with:
           name: h-earth-phase2-semantic-material-v2

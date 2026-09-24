@@ -845,6 +845,26 @@
       "deploymentAuthority": false,
       "productMutationAuthority": false,
       "successResult": "PASS"
+    },
+    "GOVERNANCE_BRIDGE_BOTTOM_PITCH_QUALIFICATION": {
+      "workflow": "governance-bridge-bottom-pitch-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "successResult": "PASS"
     }
   },
   "continuity": {

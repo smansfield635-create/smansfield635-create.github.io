@@ -141,7 +141,7 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 5,
+  generationRevision: 6,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
   worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
@@ -278,6 +278,31 @@ function evaluateRawElevation(worldX, worldZ) {
   const drainageBankWest = drainageSegment(18,-192,-58,-122,34,1.25,0.65,0.4);
   const drainageBankEast = drainageSegment(18,-192,-58,-122,46,0.8,0.55,0.3);
 
+  // Phase-2 bounded local terrain relief. Frequencies are intentionally
+  // resolvable by the accepted 4-unit near-field mesh and are masked away
+  // from shoreline and primary mountain relief.
+  const inlandLocalMask = smoothstep(48,82,inlandDistance);
+  const lowlandLocalMask = bell(worldX,-92,105) * bell(worldZ,-152,78) * inlandLocalMask;
+  const lowlandLocalRelief = lowlandLocalMask * (
+    0.58*Math.sin((worldX+13)/9.5)*Math.sin((worldZ-7)/12.5) +
+    0.24*Math.sin((worldX+worldZ)/7.5)
+  );
+
+  const drainageLocalMask = Math.max(
+    bell(Math.hypot(worldX-(-18),worldZ-(-174)),0,58),
+    bell(Math.hypot(worldX-(-48),worldZ-(-150)),0,54)
+  ) * inlandLocalMask;
+  const drainageRills = drainageLocalMask * (
+    -0.72*Math.pow(Math.max(0,Math.sin((worldX*0.46-worldZ*0.23)+0.8)),3) +
+    0.18*Math.sin((worldX+2*worldZ)/8.5)
+  );
+
+  const foothillLocalMask = bell(worldX,-28,118) * bell(worldZ,-194,74) * inlandLocalMask;
+  const foothillLocalRelief = foothillLocalMask * (
+    0.62*Math.sin((worldX-5)/11.5)*Math.sin((worldZ+9)/9.0) +
+    0.22*Math.sin((2*worldX-worldZ)/10.5)
+  );
+
   const positiveReliefComponents = [
     hill,
     ridgeEast,
@@ -301,7 +326,8 @@ function evaluateRawElevation(worldX, worldZ) {
     + lowlandBroadRise + lowlandSwale
     + foothillBenchLower + foothillBenchUpper
     + drainageUpper + drainageMiddle + drainageLower
-    + drainageBankWest + drainageBankEast;
+    + drainageBankWest + drainageBankEast
+    + lowlandLocalRelief + drainageRills + foothillLocalRelief;
 }
 
 function classifySlope(slope) {

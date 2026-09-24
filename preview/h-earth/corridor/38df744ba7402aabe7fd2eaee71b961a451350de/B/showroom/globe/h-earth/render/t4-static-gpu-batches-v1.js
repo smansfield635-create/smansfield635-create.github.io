@@ -27,6 +27,13 @@ export function drawHEarthT4StaticGpuBatches(gl,batches,bindClass) {
     bindClass(kind,batch);
     gl.bindBuffer(gl.ARRAY_BUFFER,batch.instanceBuffer);
     for(let i=0;i<5;i++){gl.enableVertexAttribArray(8+i);gl.vertexAttribPointer(8+i,1,gl.FLOAT,false,20,i*4);gl.vertexAttribDivisor(8+i,1);}
+    // WebGL2 validates every enabled attribute in the bound VAO at draw time.
+    // The terrain renderer may leave higher locations enabled; T4 owns only 0 and 8..12.
+    // Disable all non-T4 locations so stale terrain attribute state cannot invalidate this draw.
+    const maxAttribs=gl.getParameter(gl.MAX_VERTEX_ATTRIBS);
+    for(let location=0;location<maxAttribs;location++){
+      if(location!==0 && (location<8 || location>12)) gl.disableVertexAttribArray(location);
+    }
     gl.drawArraysInstanced(gl.TRIANGLES,0,batch.vertexCount,batch.instanceCount);
     drawCalls++;
   }

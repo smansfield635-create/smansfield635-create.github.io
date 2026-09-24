@@ -2,7 +2,7 @@
 import {
   createHEarthRun8ER3CPersistentRenderer as createAcceptedCp2Renderer,
   H_EARTH_RUN_8E_R3C_RENDERER_ID
-} from './persistent-live-renderer.run8e-r3c.js';
+} from './persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js';
 import {
   loadHEarthPhase2SemanticMaterialField,
   getHEarthPhase2SemanticMaterialFieldReceipt,

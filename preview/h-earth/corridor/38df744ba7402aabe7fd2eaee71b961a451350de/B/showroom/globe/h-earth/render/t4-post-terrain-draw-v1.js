@@ -29,18 +29,39 @@ export function createHEarthT4PostTerrainDraw(gl){
   if(viewProjection===null||classColor===null)throw Error('T4_UNIFORM_MISSING');
   const vao=gl.createVertexArray();if(!vao)throw Error('T4_VAO_CREATE');
   const batches=createHEarthT4StaticGpuBatches(gl);
+  const DISTANCE_BANDS=Object.freeze({nearMaximum:95,midMaximum:190,farMode:'OFF'});
   let frames=0,maximumAddedDrawCalls=0;
+  const pack=instances=>new Float32Array(instances.flatMap(v=>[v.x,v.elevation,v.z,v.rotation,v.scale]));
+  const select=(instances,camera)=>{
+    const selected=[];
+    let near=0,mid=0,far=0;
+    for(let index=0;index<instances.length;index++){
+      const instance=instances[index];
+      const distance=Math.hypot(instance.x-camera.x,instance.elevation-camera.y,instance.z-camera.z);
+      if(distance<=DISTANCE_BANDS.nearMaximum){selected.push(instance);near++;continue;}
+      if(distance<=DISTANCE_BANDS.midMaximum){if((index&1)===0)selected.push(instance);mid++;continue;}
+      far++;
+    }
+    return Object.freeze({selected,near,mid,far});
+  };
   const drawAfterTerrain=({packet})=>{
+    const tuftSelection=select(batches.tuftInstances,packet.camera.position);
+    const rockSelection=select(batches.rockInstances,packet.camera.position);
     gl.useProgram(program);gl.bindVertexArray(vao);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
     gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
     const bindClass=(kind,batch)=>{
+      const selection=kind==='TUFT'?tuftSelection:rockSelection;
       gl.bindBuffer(gl.ARRAY_BUFFER,batch.vertexBuffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER,batch.instanceBuffer);gl.bufferData(gl.ARRAY_BUFFER,pack(selection.selected),gl.DYNAMIC_DRAW);
       gl.uniform3fv(classColor,kind==='TUFT'?new Float32Array([0.22,0.36,0.12]):new Float32Array([0.31,0.29,0.27]));
     };
-    const receipt=drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
+    const dynamicBatches=Object.freeze({
+      tuft:Object.freeze({...batches.tuft,instanceCount:tuftSelection.selected.length}),
+      rock:Object.freeze({...batches.rock,instanceCount:rockSelection.selected.length})
+    });
+    const receipt=drawHEarthT4StaticGpuBatches(gl,dynamicBatches,bindClass);
     frames++;maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,receipt.drawCalls);
-    if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
-    return receipt;
+    return Object.freeze({...receipt,distanceBands:DISTANCE_BANDS,near:tuftSelection.near+rockSelection.near,mid:tuftSelection.mid+rockSelection.mid,far:tuftSelection.far+rockSelection.far});
   };
-  return Object.freeze({drawAfterTerrain,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647})});
+  return Object.freeze({drawAfterTerrain,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,distanceBands:DISTANCE_BANDS})});
 }

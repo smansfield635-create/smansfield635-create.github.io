@@ -1,0 +1,27 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "governance-bridge",
+  "description": "Direct-access Governance Bridge prospective-client demonstration. Separate from ordinary website navigation.",
+  "checks": [
+    {
+      "path": "/preview/governance-bridge/index.html",
+      "includes": [
+        "<meta name=\"robots\" content=\"noindex,nofollow\">",
+        "Governance Bridge",
+        "Different businesses. The same management question.",
+        "What this means in your world.",
+        "Oil & cattle",
+        "Multi-location franchises",
+        "Fuel / convenience",
+        "Trucking / fleet",
+        "Venture capital / investment",
+        "Multi-location theaters",
+        "The Bridge"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": false
+  }
+}

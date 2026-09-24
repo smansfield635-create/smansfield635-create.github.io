@@ -14,14 +14,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Locate exact successful bake run for current head
+      - name: Wait for exact bake run for current head
         id: bake
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
         run: |
-          RUN_ID=$(gh api "repos/$REPO/actions/workflows/h-earth-phase2-semantic-material-bake.yml/runs?branch=h-earth/phase2-semantic-material-classifier-v1&status=success&per_page=20" --jq ".workflow_runs[] | select(.head_sha==\"$SHA\") | .id" | head -1)
+          RUN_ID=""
+          for attempt in $(seq 1 60); do
+            RUN_ID=$(gh api "repos/$REPO/actions/workflows/h-earth-phase2-semantic-material-bake.yml/runs?branch=h-earth/phase2-semantic-material-classifier-v1&per_page=20" --jq ".workflow_runs[] | select(.head_sha==\"$SHA\" and .conclusion==\"success\") | .id" | head -1)
+            if [ -n "$RUN_ID" ]; then break; fi
+            sleep 10
+          done
           test -n "$RUN_ID"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4

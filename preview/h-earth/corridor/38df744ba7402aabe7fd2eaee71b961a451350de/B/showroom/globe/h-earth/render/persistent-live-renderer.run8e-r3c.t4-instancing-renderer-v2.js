@@ -372,12 +372,23 @@ void main(){outColor=vec4(uClassColor,1.0);}`;
   const renderFrame = (packet) => {
     if(!initialized||!instancePackage||!program) throw new Error('T4_RENDERER_NOT_INITIALIZED');
     baseRenderer.renderFrame(packet);
+    const phase5Framebuffer=gl.getParameter(gl.FRAMEBUFFER_BINDING);
+    const phase5Viewport=gl.getParameter(gl.VIEWPORT);
+    const phase5DepthTest=gl.isEnabled(gl.DEPTH_TEST);
+    const phase5Blend=gl.isEnabled(gl.BLEND);
+    const phase5DepthMask=gl.getParameter(gl.DEPTH_WRITEMASK);
     gl.useProgram(program);
     gl.uniformMatrix4fv(viewProjectionLocation,false,new Float32Array(packet.camera.viewProjectionMatrix));
     lastAddedDrawCalls=drawHEarthT4StaticInstances(gl,instancePackage,bindClass);
     maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,lastAddedDrawCalls);
     framesWithT4++;
     if(lastAddedDrawCalls>H_EARTH_T4_ADDED_DRAW_CALL_BUDGET) throw new Error('T4_DRAW_BUDGET_RUNTIME');
+    gl.bindFramebuffer(gl.FRAMEBUFFER,phase5Framebuffer);
+    gl.viewport(phase5Viewport[0],phase5Viewport[1],phase5Viewport[2],phase5Viewport[3]);
+    phase5DepthTest?gl.enable(gl.DEPTH_TEST):gl.disable(gl.DEPTH_TEST);
+    phase5Blend?gl.enable(gl.BLEND):gl.disable(gl.BLEND);
+    gl.depthMask(phase5DepthMask);
+    gl.bindVertexArray(null);
   };
 
   const getT4Receipt = () => Object.freeze({

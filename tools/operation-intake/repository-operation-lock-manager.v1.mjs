@@ -226,12 +226,13 @@ async function put({repository,lockRef=LOCK_REF,token,blob,next,message}) {
   const b=branch(lockRef),u=base(repository),p=LEDGER_PATH.split('/').map(encodeURIComponent).join('/');
   try{const x=await req(`${u}/contents/${p}`,{method:'PUT',headers:H(token),body:JSON.stringify({message,content:Buffer.from(text(next)).toString('base64'),sha:blob,branch:b})},[200]);return{ok:true,commit:x.commit.sha,blob:x.content.sha}}catch(e){if([409,422].includes(e.status))return{ok:false,errorCode:'LEDGER_COMPARE_AND_SWAP_CONFLICT',httpStatus:e.status};throw e}
 }
-async function readLedgerBlob({repository,token,blobSha}){const sha=dig(blobSha,40,'legacySnapshotBlob','authority-provenance');if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_BLOB_READ==='1'){try{const raw=execFileSync('git',['cat-file','blob',sha],{encoding:'utf8',maxBuffer:64*1024*1024});return ledger(JSON.parse(raw))}catch(e){if(e.code&&e.code!=='ERR_CHILD_PROCESS_STDIO_MAXBUFFER')throw e;throw err('LEDGER_JSON_DECODE_FAILURE','content','authority-legacy-snapshot-git-object',e.message)}}const url=`${base(repository)}/git/blobs/${sha}`,z=await fetch(url,{headers:H(token)}),q=await z.text(),status=Number(z.status??200);if(status<200||status>=300)throw err('AUTHORITY_LEDGER_BLOB_READ_FAILED','content','authority-provenance',String(status));try{const parsed=JSON.parse(q);if(parsed?.encoding!=='base64'||typeof parsed?.content!=='string')throw err('AUTHORITY_LEGACY_SNAPSHOT_ENCODING_UNSUPPORTED','encoding','authority-provenance',String(parsed?.encoding));return decodeContent(parsed.content,'authority-legacy-snapshot')}catch(e){if(e.code)throw e;throw err('LEDGER_JSON_DECODE_FAILURE','content','authority-legacy-snapshot',e.message)}}
+async function readGitLedgerBlob({repository,token,blobSha,source='resulting-ledger'}){const sha=dig(blobSha,40,'ledgerBlobSha',source);if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_BLOB_READ==='1'){try{const raw=execFileSync('git',['cat-file','blob',sha],{encoding:'utf8',maxBuffer:64*1024*1024});return ledger(JSON.parse(raw))}catch(e){if(e.code&&e.code!=='ERR_CHILD_PROCESS_STDIO_MAXBUFFER')throw e;throw err('LEDGER_JSON_DECODE_FAILURE','content',source+'-git-object',e.message)}}const g=await req(`${base(repository)}/git/blobs/${sha}`,{headers:H(token)},[200],'LEDGER_BLOB_READ');if(g.encoding!=='base64')throw err('LEDGER_BLOB_ENCODING_UNSUPPORTED','encoding',source,String(g.encoding));return decodeContent(g.content,source)}
+async function readLegacyAuthoritySnapshot(a){return readGitLedgerBlob({...a,source:'authority-legacy-snapshot'})}
 function identityMatches(a,b){return canonical(authorityIdentity(a))===canonical(authorityIdentity(b))}
 
 async function verifyLegacyAuthority({repository,token,lock}){
   for(const blobSha of LEGACY_AUTHORITY_SNAPSHOT_BLOBS){
-    const frozen=await readLedgerBlob({repository,token,blobSha}),anchored=frozen.activeScopes?.[lock.scopeHash];
+    const frozen=await readLegacyAuthoritySnapshot({repository,token,blobSha}),anchored=frozen.activeScopes?.[lock.scopeHash];
     if(anchored&&identityMatches(anchored,lock))return stable({result:'LEGACY_AUTHORITY_SNAPSHOT_ANCHORED',snapshotBlobSha:blobSha,authorityIdentity:authorityIdentity(lock)});
   }
   const recovery=LEGACY_EXACT_ISSUANCE_RECOVERIES.find(value=>canonical(value.authorityIdentity)===canonical(authorityIdentity(lock)));
@@ -271,7 +272,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
     if(c?.author?.login==='smansfield635-create'&&c?.committer?.login==='smansfield635-create'){
       const detail=await req(`${u}/commits/${c.sha}`,{headers:H(token)},[200],'AUTHORITY_OWNER_COMMIT_DETAIL'),files=Array.isArray(detail?.files)?detail.files:[];
       if(files.length!==1||files[0]?.filename!==LEDGER_PATH||!/^[0-9a-f]{40}$/.test(files[0]?.sha||''))throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','compare.commits','authority-lineage',String(c?.sha||'UNKNOWN_COMMIT'));
-      const resultingLedger=await readLedgerBlob({repository,token,blobSha:files[0].sha});
+      const resultingLedger=await readGitLedgerBlob({repository,token,blobSha:files[0].sha,source:'checkpoint-exclusive-resulting-ledger'});
       try{
         const {verifyCanonicalLedgerCommitV2}=await import('./repository-operation-lock-lineage.v2.mjs');
         verifyCanonicalLedgerCommitV2({commit:detail,changedPaths:files.map(file=>file.filename),resultingLedger,checkpointVerification});

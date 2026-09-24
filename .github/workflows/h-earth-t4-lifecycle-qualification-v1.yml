@@ -29,6 +29,9 @@ jobs:
           const binding=fs.readFileSync(root+'/diagnostic/run8e-r3d/live-gpu-binding.js','utf8');
           const renderer=fs.readFileSync(root+'/render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js','utf8');
           const must=(ok,label)=>{if(!ok)throw new Error('QUALIFICATION_FAIL:'+label);console.log('PASS',label)};
+          const namedExport=(renderer.match(/export\\s+(?:function|const|let|var|class)\\s+createHEarthRun8ER3CPersistentRenderer\\b/g)||[]).length+
+            (renderer.match(/export\\s*\\{[^}]*\\bcreateHEarthRun8ER3CPersistentRendererT4\\s+as\\s+createHEarthRun8ER3CPersistentRenderer\\b[^}]*\\}/g)||[]).length;
+          must(namedExport===1,'SINGLE_RENDERER_NAMED_EXPORT');
           must(binding.includes("const T4_QUERY_KEY = 't4'"),'T4_QUERY_KEY');
           must(binding.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_QUERY_VALUE');
           must(binding.includes("persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js"),'SELECTOR_RENDERER_PATH');

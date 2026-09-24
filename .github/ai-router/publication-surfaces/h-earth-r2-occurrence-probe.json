@@ -1,0 +1,18 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "h-earth-r2-occurrence-probe",
+  "description": "Nonproduction owner-inspection carrier for exact qualified H-Earth R2 runtime occurrence probe 5707cfb687696ae6101b5b48a804b505739be255.",
+  "checks": [
+    {
+      "path": "/inspection/h-earth-r2-occurrence-probe-5707cfb6/",
+      "includes": [
+        "NONPRODUCTION · R2 OCCURRENCE PROBE",
+        "5707cfb687696ae6101b5b48a804b505739be255",
+        "Waiting for probe receipt",
+        "H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE_v1"
+      ],
+      "excludes": ["T4.2R"]
+    }
+  ],
+  "runtime": {"enabled": false}
+}

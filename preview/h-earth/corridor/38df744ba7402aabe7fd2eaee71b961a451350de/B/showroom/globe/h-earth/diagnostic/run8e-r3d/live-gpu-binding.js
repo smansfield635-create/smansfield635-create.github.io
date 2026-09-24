@@ -23,6 +23,9 @@ const ADDITIVE_VISUAL_RENDERER_PATH =
 const SEMANTIC_MATERIAL_QUERY_KEY = 'semantic-material';
 const SEMANTIC_MATERIAL_QUERY_VALUE = 'v2';
 const SEMANTIC_MATERIAL_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase2-semantic-material-v2.js';
+const MICRORELIEF_QUERY_KEY = 'microrelief';
+const MICRORELIEF_QUERY_VALUE = 'v1';
+const MICRORELIEF_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -49,6 +52,7 @@ const additiveVisualRequested =
   queryParameters.get(ADDITIVE_VISUAL_QUERY_KEY) ===
   ADDITIVE_VISUAL_QUERY_VALUE;
 const semanticMaterialRequested = queryParameters.get(SEMANTIC_MATERIAL_QUERY_KEY) === SEMANTIC_MATERIAL_QUERY_VALUE;
+const microreliefRequested = queryParameters.get(MICRORELIEF_QUERY_KEY) === MICRORELIEF_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
@@ -62,6 +66,8 @@ const selectedRendererPath = rendererCustodyRequested
   ? OCEAN_PROOF_RENDERER_PATH
   : additiveVisualRequested
   ? ADDITIVE_VISUAL_RENDERER_PATH
+  : microreliefRequested
+    ? MICRORELIEF_RENDERER_PATH
   : semanticMaterialRequested
     ? SEMANTIC_MATERIAL_RENDERER_PATH
   : cp2LiveDifferentialRequested

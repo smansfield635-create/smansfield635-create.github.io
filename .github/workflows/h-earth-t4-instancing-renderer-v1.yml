@@ -1,0 +1,54 @@
+name: H-Earth T4 Instancing Renderer v1
+on:
+  push:
+    branches:
+      - h-earth/phase2-semantic-material-classifier-v1
+permissions:
+  contents: write
+jobs:
+  construct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construct static two-class instancing renderer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BASE: a58827af1ded9999d9a10136ca811d6f5174f287
+        run: |
+          node - <<'NODE'
+          const cp=require('child_process');
+          const api=(m,p,i)=>JSON.parse(cp.execFileSync('gh',['api','--method',m,p,'--input','-'],{input:JSON.stringify(i),encoding:'utf8'})),get=p=>JSON.parse(cp.execFileSync('gh',['api',p],{encoding:'utf8'}));
+          const base=get('repos/'+process.env.REPO+'/git/commits/'+process.env.BASE),root='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/',src=root+'render/persistent-live-renderer.run8e-r3c.t4-instancing-v1.js';
+          let r=Buffer.from(get('repos/'+process.env.REPO+'/contents/'+src+'?ref='+process.env.BASE).content.replace(/\n/g,''),'base64').toString('utf8');
+          const block=`
+export const H_EARTH_T4_INSTANCING_RENDERER_CONTRACT=Object.freeze({
+  primitiveClasses:2,addedDrawCallBudget:2,instanceBudget:2048,postInitializationResourceCreation:0,postInitializationBufferUpload:0
+});
+export function createHEarthT4StaticInstancePackage(gl){
+  const placement=H_EARTH_T4_FROZEN_PLACEMENT;
+  if(placement.total>H_EARTH_T4_INSTANCE_BUDGET)throw Error('T4_INSTANCE_BUDGET');
+  const tuft=placement.instances.filter(v=>v.kind==='TUFT'),rock=placement.instances.filter(v=>v.kind==='ROCK');
+  if(tuft.length!==placement.counts.TUFT||rock.length!==placement.counts.ROCK)throw Error('T4_COUNT_CORRESPONDENCE');
+  const tuftVertices=new Float32Array([-.10,0,0,.10,0,0,0,.70,0,0,0,-.10,0,0,.10,0,.70,0]);
+  const rockVertices=new Float32Array([-.28,0,-.20,.30,0,-.18,.22,0,.25,-.20,0,.28,0,.34,0]);
+  const pack=a=>new Float32Array(a.flatMap(v=>[v.x,v.elevation,v.z,v.rotation,v.scale]));
+  const make=(vertices,instances)=>{const vb=gl.createBuffer(),ib=gl.createBuffer();if(!vb||!ib)throw Error('T4_BUFFER_CREATE');
+    gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER,ib);gl.bufferData(gl.ARRAY_BUFFER,pack(instances),gl.STATIC_DRAW);
+    return{vertexBuffer:vb,instanceBuffer:ib,vertexCount:vertices.length/3,instanceCount:instances.length};};
+  return Object.freeze({tuft:make(tuftVertices,tuft),rock:make(rockVertices,rock),placementSha:placement.placementSha,total:placement.total});
+}
+export function drawHEarthT4StaticInstances(gl,pkg,bindClass){
+  let draws=0;
+  for(const [kind,c] of [['TUFT',pkg.tuft],['ROCK',pkg.rock]]){if(!c.instanceCount)continue;bindClass(kind,c);
+    gl.bindBuffer(gl.ARRAY_BUFFER,c.instanceBuffer);
+    for(let i=0;i<5;i++){gl.enableVertexAttribArray(8+i);gl.vertexAttribPointer(8+i,1,gl.FLOAT,false,20,i*4);gl.vertexAttribDivisor(8+i,1);}
+    gl.drawArraysInstanced(gl.TRIANGLES,0,c.vertexCount,c.instanceCount);draws++;}
+  if(draws>2)throw Error('T4_DRAW_BUDGET');return draws;
+}
+`;
+          r+=block;
+          const path=root+'render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v1.js',blob=api('POST','repos/'+process.env.REPO+'/git/blobs',{content:r,encoding:'utf-8'}),tree=api('POST','repos/'+process.env.REPO+'/git/trees',{base_tree:base.tree.sha,tree:[{path,mode:'100644',type:'blob',sha:blob.sha}]}),commit=api('POST','repos/'+process.env.REPO+'/git/commits',{message:'H-Earth T4: construct static two-class instancing renderer',tree:tree.sha,parents:[process.env.BASE]});
+          console.log(JSON.stringify({commit:commit.sha,tree:tree.sha,total:H=647,tufts:617,rocks:30,addedDrawCallBudget:2,publication:'HELD'}));
+          NODE

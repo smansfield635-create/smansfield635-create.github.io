@@ -35,6 +35,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Prove historical blob transport fixture
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          const sha='0872a4f6239bb991b0fdf8c62b86abc05f19eaa6';
+          const response=await fetch('https://api.github.com/repos/'+process.env.REPOSITORY+'/git/blobs/'+sha,{headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+process.env.GITHUB_TOKEN,'X-GitHub-Api-Version':'2022-11-28'}});
+          if(response.status!==200) throw Error('FIXTURE_BLOB_READ_FAILED:'+response.status);
+          const g=await response.json();
+          if(g.sha!==sha||g.encoding!=='base64'||typeof g.content!=='string') throw Error('FIXTURE_BLOB_RESPONSE_INVALID');
+          const raw=Buffer.from(g.content.replace(/\s/g,''),'base64');
+          const actual=crypto.createHash('sha1').update(Buffer.concat([Buffer.from('blob '+raw.length+'\0'),raw])).digest('hex');
+          if(raw.length!==2274632||actual!==sha) throw Error('FIXTURE_BLOB_CORRESPONDENCE_FAILURE:expected='+sha+':actual='+actual+':bytes='+raw.length);
+          console.log('FIXTURE_BLOB_CORRESPONDENCE_PASS sha='+actual+' bytes='+raw.length);
+          NODE
+
       - name: Verify bounded segment and construct checkpoint
         env:
           GITHUB_TOKEN: ${{ github.token }}

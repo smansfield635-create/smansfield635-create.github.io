@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "gb-bottom-pitch-84196f67-20260924-004",
+  "capabilityId": "GOVERNANCE_BRIDGE_BOTTOM_PITCH_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4738,
+  "requestBranch": "ai-dispatch-request-gb-bottom-pitch-84196f67-v4",
+  "requestCommit": "8d500a0b04f4fb142abcc54f610df93ba0d66aa0",
+  "requestCommitParent": "13f1ec596243919ef17768dc3290052b1f97d341",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "13f1ec596243919ef17768dc3290052b1f97d341",
+  "workflow": "governance-bridge-bottom-pitch-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "84196f67e3ea4e06da1f248534eed44bb4a46f8a",
+    "base_sha": "edd51932c325a58ffd5ff96a12320b4bc0a231f7"
+  },
+  "bridgeRunId": "36054981142",
+  "dispatchedRunId": 36054998465,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36054998465",
+  "dispatchedRunHeadSha": "13f1ec596243919ef17768dc3290052b1f97d341",
+  "dispatchedAt": "2026-09-24T20:27:33.162Z",
+  "resolvedAt": "2026-09-24T20:27:37.102Z"
+}

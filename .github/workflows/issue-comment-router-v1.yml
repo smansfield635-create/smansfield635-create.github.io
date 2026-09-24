@@ -54,7 +54,7 @@ jobs:
           input="$(jq -r '.input' "$RUNNER_TEMP/route.json")"
           payload="$(jq -r '.payload' "$RUNNER_TEMP/route.json")"
           case "$workflow" in
-            ai-room-execution-transport.yml|canonical-operation-intake-transport-v1.yml|public-private-successor-execution-v1.yml|public-private-terminal-closure-carrier-v1.yml|remote-operation-terminal-closure-v1.yml) ;;
+            ai-room-execution-transport.yml|canonical-operation-intake-transport-v1.yml|public-private-successor-execution-v1.yml|public-private-terminal-closure-carrier-v1.yml|remote-operation-terminal-closure-v1.yml|bounded-operation-lock-lineage-checkpoint-v1.yml) ;;
             *) echo "UNREGISTERED_HANDLER" >&2; exit 1;;
           esac
           jq -n --arg ref main --arg key "$input" --arg payload "$payload" --arg issue "$ISSUE_NUMBER" --arg repo "$REPO" \

@@ -38,7 +38,6 @@ jobs:
           must(binding.includes("persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js"),'SELECTOR_RENDERER_PATH');
           must(binding.includes('const selectedRendererPath = t4Requested'),'T4_SELECTOR_PRECEDENCE');
           const phase5Parity={
-            'index.html':'12c2cb4507dd61271274bbe3382570e4d34188e1',
             'arrival-loader.js':'01353cca7acc042b161f09592f1d9870841ff17a',
             'functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js':'f1de492a66756de67c46667b53d9ee4acbe590e9',
             'functional-landscape/public-live-gpu-integration.run8e-r3e.js':'f22c59957409321f7e61f9563b4f60d36965006d',
@@ -53,6 +52,9 @@ jobs:
           must(bindingSource.includes("const T4_QUERY_KEY = 't4'"),'T4_MINIMAL_SELECTOR_KEY');
           must(bindingSource.includes("const T4_QUERY_VALUE = 'instancing-v1'"),'T4_MINIMAL_SELECTOR_VALUE');
           must(bindingSource.includes("const T4_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js'"),'T4_MINIMAL_SELECTOR_PATH');
+          const shell=fs.readFileSync(root+'/index.html','utf8');
+          must(!shell.includes('id="h-earth-b10-lenses"'),'T4_INSPECTION_NO_EDITORIAL_LENSES');
+          must(shell.includes('data-h-earth-t4-inspection'),'T4_WORLD_ONLY_INSPECTION_MODE');
           must(renderer.includes("from './persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js'"),'PHASE5_MICRORELIEF_BASE_LINEAGE');
           const elevationDeclaration=phase5Renderer.indexOf('float elevationMix=smoothstep');
           const slopeDeclaration=phase5Renderer.indexOf('float slopeResponse=smoothstep');

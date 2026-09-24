@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-24T01:40:26Z",
+  "generatedAt": "2026-09-24T02:39:28Z",
   "window": {
-    "start": "2026-06-26T01:40:26Z",
-    "end": "2026-09-24T01:40:26Z"
+    "start": "2026-06-26T02:39:28Z",
+    "end": "2026-09-24T02:39:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4789,
+    "pageLoads": 4786,
     "visits": 1131,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4789,
+        "pageLoads": 4786,
         "visits": 1131
       }
     },
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 183,
+        "pageLoads": 181,
         "visits": 16
       },
       "/gauges/h-earth/": {
@@ -186,13 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -295,16 +295,16 @@
         "visits": 0
       },
       "/campaigns/rob/": {
-        "pageLoads": 20,
+        "pageLoads": 19,
+        "visits": 1
+      },
+      "/philosophy/": {
+        "pageLoads": 1,
         "visits": 1
       },
       "/showroom/globe/earth/": {
         "pageLoads": 5,
         "visits": 0
-      },
-      "/philosophy/": {
-        "pageLoads": 1,
-        "visits": 1
       },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
@@ -373,7 +373,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3658,
+        "pageLoads": 3655,
         "visits": 0
       },
       "(none)": {

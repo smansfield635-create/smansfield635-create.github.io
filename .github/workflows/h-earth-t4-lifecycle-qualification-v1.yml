@@ -47,11 +47,13 @@ jobs:
           must(renderer.includes('noPostInitializationResourceCreation:postInitializationResourceCreation===0'),'NO_POST_INIT_RESOURCE_CREATION');
           must(renderer.includes('noPostInitializationBufferUpload:postInitializationBufferUpload===0'),'NO_POST_INIT_BUFFER_UPLOAD');
           must(renderer.includes('maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,lastAddedDrawCalls)'),'MAX_DRAW_TRACKING');
-          const vm=require('node:vm');
-          must(typeof vm.SourceTextModule==='function','VM_SOURCE_TEXT_MODULE_AVAILABLE');
-          const parsed=new vm.SourceTextModule(renderer,{identifier:'t4-final-renderer.mjs'});
-          const rendererExportNames=[...parsed.dependencySpecifiers.length>=0?parsed.namespace?.constructor?[]:[]:[]];
-          must(parsed.status==='unlinked','FINAL_RENDERER_ES_MODULE_PARSE');
+          const cp=require('node:child_process');
+          const os=require('node:os');
+          const path=require('node:path');
+          const parsePath=path.join(os.tmpdir(),'h-earth-t4-final-renderer.mjs');
+          fs.writeFileSync(parsePath,renderer);
+          const syntax=cp.spawnSync(process.execPath,['--check',parsePath],{encoding:'utf8'});
+          if(syntax.status!==0) throw new Error('QUALIFICATION_FAIL:FINAL_RENDERER_ES_MODULE_PARSE\\n'+syntax.stderr);
           console.log('PASS FINAL_RENDERER_ES_MODULE_PARSE');
           console.log('T4_LIFECYCLE_QUALIFICATION=PASS');
           NODE

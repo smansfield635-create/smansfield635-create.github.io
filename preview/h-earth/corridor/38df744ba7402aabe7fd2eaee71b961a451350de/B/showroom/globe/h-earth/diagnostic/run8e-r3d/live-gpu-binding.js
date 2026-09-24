@@ -29,6 +29,10 @@ const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
   '1f52080969034c55855a70834cc0294791254c80';
 const CP2_LIVE_DIFFERENTIAL_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js';
+const T4_QUERY_KEY = 't4';
+const T4_QUERY_VALUE = 'instancing-v1';
+const T4_RENDERER_PATH =
+  '../../render/persistent-live-renderer.run8e-r3c.t4-instancing-renderer-v2.js';
 const ACCEPTED_BASELINE_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.js';
 
@@ -52,7 +56,10 @@ const semanticMaterialRequested = queryParameters.get(SEMANTIC_MATERIAL_QUERY_KE
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const selectedRendererPath = rendererCustodyRequested
+const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE;
+const selectedRendererPath = t4Requested
+  ? T4_RENDERER_PATH
+  : rendererCustodyRequested
   ? RENDERER_CUSTODY_RENDERER_PATH
   : waterIndexSpanRequested
   ? WATER_INDEX_SPAN_RENDERER_PATH
@@ -73,6 +80,10 @@ const { createHEarthRun8ER3CPersistentRenderer } = selectedRendererModule;
 export const H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID =
   'H_EARTH_RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_BINDING_v1';
 export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
+  t4Requested,
+  t4QueryKey: T4_QUERY_KEY,
+  t4QueryValue: T4_QUERY_VALUE,
+  t4RendererPath: T4_RENDERER_PATH,
   rendererCustodyRequested,
   rendererCustodyQueryKey: RENDERER_CUSTODY_QUERY_KEY,
   rendererCustodyQueryValue: RENDERER_CUSTODY_QUERY_VALUE,

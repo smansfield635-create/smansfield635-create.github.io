@@ -58,6 +58,45 @@ jobs:
           grep -q "postTerrainDraw: t4Extension?.drawAfterTerrain" "$BIND"
           ! grep -q "T4_RENDERER_PATH" "$BIND"
 
+      - name: T4.2 distance-band invariant
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth"
+          DRAW="$BASE/render/t4-post-terrain-draw-v1.js"
+          BATCH="$BASE/render/t4-static-gpu-batches-v1.js"
+          DATA="$BASE/render/t4-frozen-placement-v1.js"
+
+          # Frozen placement remains authority.
+          grep -q '"total":647' "$DATA"
+          grep -q '"TUFT":617' "$DATA"
+          grep -q '"ROCK":30' "$DATA"
+
+          # Representation bands are explicit and bounded.
+          grep -q "nearMaximum:95" "$DRAW"
+          grep -q "midMaximum:190" "$DRAW"
+          grep -q "farMode:'OFF'" "$DRAW"
+          grep -q "'NEAR_FULL'" "$DRAW"
+          grep -q "'MID_REDUCED'" "$DRAW"
+          grep -q "'FAR_OFF'" "$DRAW"
+          grep -q "instanceStride:2" "$DRAW"
+          grep -q "drawCalls:0,tufts:0,rocks:0,total:0" "$DRAW"
+
+          # Reduction changes representation, never placement authority.
+          grep -q "Math.ceil(batch.instanceCount/instanceStride)" "$BATCH"
+          grep -q "strideBytes=20\*instanceStride" "$BATCH"
+          ! grep -q "splice(" "$DRAW"
+          ! grep -q "splice(" "$BATCH"
+          ! grep -q "Math.random" "$DRAW"
+          ! grep -q "Math.random" "$BATCH"
+
+          # T4.1 ownership invariant remains true under T4.2.
+          ! grep -q "bindFramebuffer" "$DRAW"
+          ! grep -q "createFramebuffer" "$DRAW"
+          ! grep -q "presentColorFrame" "$DRAW"
+          ! grep -q "bindFramebuffer" "$BATCH"
+          ! grep -q "createFramebuffer" "$BATCH"
+          ! grep -q "presentColorFrame" "$BATCH"
       - name: T4.1 module syntax
         run: |
           node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-static-gpu-batches-v1.js"

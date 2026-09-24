@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-09-24T18:36:05Z",
+  "generatedAt": "2026-09-24T19:27:22Z",
   "window": {
-    "start": "2026-06-26T18:36:05Z",
-    "end": "2026-09-24T18:36:05Z"
+    "start": "2026-06-26T19:27:22Z",
+    "end": "2026-09-24T19:27:22Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -11,12 +11,6 @@
       "accountTag": "832a0c759fbdc46553494f572a0e534b",
       "chunks": 90,
       "pages": [
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-06-26T19:00:00Z"
-          }
-        },
         {
           "count": 10,
           "dimensions": {
@@ -3498,15 +3492,9 @@
           }
         },
         {
-          "count": 12,
+          "count": 10,
           "dimensions": {
             "datetimeHour": "2026-09-17T18:00:00Z"
-          }
-        },
-        {
-          "count": 6,
-          "dimensions": {
-            "datetimeHour": "2026-09-17T19:00:00Z"
           }
         },
         {

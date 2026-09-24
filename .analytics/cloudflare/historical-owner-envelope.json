@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-24T18:36:05Z",
+  "generatedAt": "2026-09-24T19:27:22Z",
   "window": {
-    "start": "2026-06-26T18:36:05Z",
-    "end": "2026-09-24T18:36:05Z"
+    "start": "2026-06-26T19:27:22Z",
+    "end": "2026-09-24T19:27:22Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 12,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,8 +218,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
-        "pageLoads": 12,
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -334,16 +334,20 @@
         "pageLoads": 26,
         "visits": 0
       },
+      "/products/archcoin/payable/": {
+        "pageLoads": 9,
+        "visits": 0
+      },
       "/products/archcoin/allocation/": {
         "pageLoads": 2,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 5,
+        "visits": 5
+      },
       "/products/nutrition/": {
         "pageLoads": 1,
-        "visits": 0
-      },
-      "/products/archcoin/payable/": {
-        "pageLoads": 9,
         "visits": 0
       },
       "/analytics-owner-device/": {
@@ -353,10 +357,6 @@
       "/meet-sean-mansfield/": {
         "pageLoads": 5,
         "visits": 0
-      },
-      "/home/": {
-        "pageLoads": 5,
-        "visits": 5
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,

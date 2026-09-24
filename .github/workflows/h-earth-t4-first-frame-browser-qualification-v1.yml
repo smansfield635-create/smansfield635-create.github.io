@@ -19,6 +19,25 @@ jobs:
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-http.log 2>&1 &
           echo $! > /tmp/h-earth-http.pid
+      - name: Diagnose current R2 package authority
+        run: |
+          node --input-type=module <<'NODE'
+          const root='./preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render';
+          const mod=await import(root+'/live-render-package.run8e-r2.js');
+          const pkg=mod.getHEarthRun8ER2ImmutableLiveRenderPackage();
+          console.log('H_EARTH_CURRENT_R2_PACKAGE_DIAGNOSTIC='+JSON.stringify({
+            eligible:pkg?.eligible??null,
+            status:pkg?.status??null,
+            issues:pkg?.issues??null,
+            packageOccurrenceId:pkg?.packageOccurrenceId??null,
+            packageIdentity:pkg?.packageIdentity??null,
+            primitiveCount:pkg?.primitiveCount??null,
+            triangleCount:pkg?.triangleCount??null,
+            indexCount:pkg?.indexCount??null,
+            roleCounts:pkg?.roleCounts??null,
+            sourceAuthorities:pkg?.sourceAuthorities??null
+          },null,2));
+          NODE
       - name: Qualify first-frame presentation
         run: |
           node <<'NODE'

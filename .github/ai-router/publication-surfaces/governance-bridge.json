@@ -40,6 +40,62 @@
         "type": "selectorExists",
         "selector": "[data-governance-mode=\"failure-response\"]"
       }
+    ],
+    "interactions": [
+      {
+        "name": "open-governance-panel",
+        "action": {
+          "type": "click",
+          "selector": "[data-governance-panel-trigger]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-governance-panel-trigger]",
+            "name": "aria-expanded",
+            "value": "true"
+          },
+          {
+            "type": "attributeContains",
+            "selector": ".governance-panel",
+            "name": "class",
+            "value": "is-open"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": ".governance-panel",
+            "name": "aria-hidden",
+            "value": "false"
+          },
+          {
+            "type": "exists",
+            "selector": ".governance-panel.is-open [data-governance-mode=\"failure-response\"]"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "select-failure-response",
+        "action": {
+          "type": "click",
+          "selector": ".governance-panel.is-open [data-governance-mode=\"failure-response\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-governance-mode=\"failure-response\"]",
+            "name": "aria-selected",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": ".governance-failures",
+            "name": "hidden",
+            "value": ""
+          }
+        ],
+        "timeoutMs": 5000
+      }
     ]
   }
 }

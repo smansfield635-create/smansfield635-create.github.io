@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-water-w0c-visual-qualify-fresh-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4818,
+  "requestBranch": "ai-dispatch-request-water-w0c-visual-qualify-fresh",
+  "requestCommit": "bd238fdf83708d7479c278978a77a9f9bd594e21",
+  "requestCommitParent": "6143f9f6b5ade1135ceb2a0a8a9d6af65bda73ca",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "6143f9f6b5ade1135ceb2a0a8a9d6af65bda73ca",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "01337ea467b3824bdb774e9f2f66a8c1988896e3"
+  },
+  "bridgeRunId": "36095386065",
+  "dispatchedRunId": 36095398635,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36095398635",
+  "dispatchedRunHeadSha": "6143f9f6b5ade1135ceb2a0a8a9d6af65bda73ca",
+  "dispatchedAt": "2026-09-25T04:40:34.386Z",
+  "resolvedAt": "2026-09-25T04:40:38.690Z"
+}

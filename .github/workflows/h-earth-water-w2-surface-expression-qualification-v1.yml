@@ -1,0 +1,28 @@
+name: H-Earth Water W2 Surface Expression Qualification v1
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove water-only animation boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+          node --check "$FILE"
+          grep -q "uniform float uWaterTime;" "$FILE"
+          grep -q "vRoleCode==2u" "$FILE"
+          grep -q "W2: animate water appearance only" "$FILE"
+          grep -q "performance.now()\*0.001" "$FILE"
+          grep -q "resources.uniforms.waterTime" "$FILE"
+          grep -q "waveA" "$FILE"
+          grep -q "waveB" "$FILE"
+          grep -q "waveC" "$FILE"
+          ! grep -q "W2.*gl_Position" "$FILE"

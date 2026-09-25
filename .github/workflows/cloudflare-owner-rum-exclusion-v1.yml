@@ -14,7 +14,6 @@ concurrency:
 jobs:
   install:
     runs-on: ubuntu-latest
-    environment: h-earth-run8e-r3f2-preview-publication
     env:
       TARGET_HOST: diamondgatebridge.com
       RULE_REF: dgb_owner_rum_exclusion_v1

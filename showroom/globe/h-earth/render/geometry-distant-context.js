@@ -1,6 +1,7 @@
 /** H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_DISTANT_CONTEXT_v6_COAST_DISTANCE_OPTICS_UNDERLAY */
 import {H_EARTH_3D_GEOMETRY_SOUTH_ENUMS,createHEarthVector3,constructHEarthTriangleMesh,isHEarthNeutralPrimitiveRecord} from './geometry-kernel.js';
 import {evaluateHEarthRecoveredWaterRgbaAtWorldPoint} from './geometry-shoreline.js';
+import {getHEarthCanonicalShorelineZ} from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 import {H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sampleHEarthWorldManifold} from '../../../../h-earth-3d/terrain/h-earth.world-manifold-domain.js';
 import {H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID,buildHEarthWorldManifoldRepresentationPlan} from '../../../../h-earth-3d/integration/h-earth.world-representation-plan.js';
 import {H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,regionToHEarthPlanetPoint,getHEarthDerivedHorizonDistance} from './planetary-world-frame.js';
@@ -50,12 +51,15 @@ function buildContinuousOceanField(){
   for(let zi=0;zi<height-1;zi++)for(let xi=0;xi<width-1;xi++){
     const a=zi*width+xi,b=a+1,e=(zi+1)*width+xi,d=e+1;
     const cell=[samples[a],samples[b],samples[d],samples[e]],waterVotes=cell.filter(s=>s?.surfaceClass==='WATER').length;
-    if(waterVotes===0)landUnderlayCellCount++;
+    if(waterVotes===0){landUnderlayCellCount++;continue}
     else if(waterVotes<4)mixedCoastCellCount++;
+    const corners=[[OCEAN_X[xi],OCEAN_Z[zi]],[OCEAN_X[xi+1],OCEAN_Z[zi]],[OCEAN_X[xi+1],OCEAN_Z[zi+1]],[OCEAN_X[xi],OCEAN_Z[zi+1]]];
+    const beyondNearMid=corners.every(([x,z])=>z<=getHEarthCanonicalShorelineZ(x)-320);
+    if(!beyondNearMid)continue;
     indices.push(a,e,b,b,e,d);retainedCellCount++;
   }
   const maximumRadius=Math.max(...vertices.map(v=>Math.hypot(v.x,v.z)));
-  return compact(vertices,indices,{retainedCellCount,landUnderlayCellCount,mixedCoastCellCount,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',oceanUnderlayClosesRepresentationGaps:true,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true},vertexRgba);
+  return compact(vertices,indices,{retainedCellCount,landUnderlayCellCount,mixedCoastCellCount,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',oceanUnderlayClosesRepresentationGaps:false,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true},vertexRgba);
 }
 
 function primitive(mesh,surfaceClass,plan=null){

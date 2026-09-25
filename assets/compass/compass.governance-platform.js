@@ -3,12 +3,18 @@
 const CATALOG_URL='/assets/compass/governance-panel.catalog.v1.json';
 let CATALOG=null;
 async function loadCatalog(){
- const source=await fetch(CATALOG_URL,{cache:'no-store'});
- if(!source.ok)throw new Error('Governance catalog fetch failed: HTTP '+source.status);
- const raw=await source.json();
- if(raw?.catalogId!=='GOVERNANCE_PANEL_CATALOG_V1'||raw?.generatedFor!=='GOVERNANCE_PANEL_V2'||raw?.catalogRevision!=='1.0.2')throw new Error('Governance catalog identity mismatch');
- if(!Array.isArray(raw.nodes)||raw.nodes.length!==14||!Array.isArray(raw.edges)||raw.edges.length!==21)throw new Error('Governance catalog topology mismatch');
- if(!raw.operations||Object.keys(raw.operations).length!==8)throw new Error('Governance catalog operation model mismatch');
+ const source=new URL(CATALOG_URL,document.baseURI).href;
+ let response;
+ try{response=await fetch(source,{cache:'no-store',credentials:'same-origin'});}
+ catch(error){throw new Error('GOVERNANCE_CATALOG_TRANSPORT_FAILURE url='+source+' cause='+(error?.message||error));}
+ if(!response.ok)throw new Error('GOVERNANCE_CATALOG_HTTP_FAILURE url='+response.url+' status='+response.status);
+ const contentType=response.headers.get('content-type')||'';
+ let raw;
+ try{raw=await response.json();}
+ catch(error){throw new Error('GOVERNANCE_CATALOG_JSON_FAILURE url='+response.url+' contentType='+contentType+' cause='+(error?.message||error));}
+ if(raw?.catalogId!=='GOVERNANCE_PANEL_CATALOG_V1'||raw?.generatedFor!=='GOVERNANCE_PANEL_V2'||raw?.catalogRevision!=='1.0.2')throw new Error('GOVERNANCE_CATALOG_IDENTITY_FAILURE catalogId='+String(raw?.catalogId)+' generatedFor='+String(raw?.generatedFor)+' revision='+String(raw?.catalogRevision));
+ if(!Array.isArray(raw.nodes)||raw.nodes.length!==14||!Array.isArray(raw.edges)||raw.edges.length!==21)throw new Error('GOVERNANCE_CATALOG_TOPOLOGY_FAILURE nodes='+String(raw?.nodes?.length)+' edges='+String(raw?.edges?.length));
+ if(!raw.operations||Object.keys(raw.operations).length!==8)throw new Error('GOVERNANCE_CATALOG_OPERATION_FAILURE operations='+String(raw?.operations?Object.keys(raw.operations).length:null));
  CATALOG=Object.freeze({
   version:raw.catalogId,
   substrate:raw.substrate,
@@ -73,7 +79,7 @@ const F={admit:'admission',change:'execution',qualify:'qualification',execute:'e
  setOp(op);instance={api:Object.freeze({version:'GOVERNANCE_PANEL_V2',catalog:CATALOG,mount:()=>instance.api,open,close,toggle,setMode,setFailure}),trigger,panel};
  return instance.api;
 }
-async function autoMount(){try{await loadCatalog();const host=q('[data-governance-panel-host]')||document.body;build(host);}catch(error){console.error('[Governance Panel] catalog load failed',error);}}
+async function autoMount(){try{await loadCatalog();const host=q('[data-governance-panel-host]')||document.body;build(host);}catch(error){console.error('[Governance Panel] catalog load failed: '+String(error?.message||error));}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',autoMount,{once:true});else autoMount();
 globalThis.DGBGovernancePanel=Object.freeze({version:'GOVERNANCE_PANEL_V2',get catalog(){return CATALOG;},mount:(options={})=>{if(!instance)throw new Error('Governance catalog is still loading');return instance.api;},open:()=>instance?.api.open(),close:()=>instance?.api.close(),toggle:()=>instance?.api.toggle()});
 })();

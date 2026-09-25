@@ -67,8 +67,34 @@
             "value": "true"
           },
           {
-            "type": "selectorExists",
-            "selector": "[data-governance-failure]"
+            "type": "textContains",
+            "selector": "[data-governance-face-label]",
+            "value": "Back · Failure Response"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-governance-failure=\"admission_refused\"]"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "flip-to-governed-operation",
+        "action": {
+          "type": "click",
+          "selector": "[data-governance-flip]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-governance-flip]",
+            "name": "aria-pressed",
+            "value": "false"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-governance-face-label]",
+            "value": "Front · Governed Operation"
           }
         ],
         "timeoutMs": 5000

@@ -1,0 +1,30 @@
+name: H-Earth Water W0C Identity Transport Qualification v1
+on:
+  workflow_dispatch:
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Prove explicit water identity transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render"
+          R2="$ROOT/live-render-package.run8e-r2.js"
+          R2D="$ROOT/gpu-upload-views.run8e-r2d.js"
+          RENDER="$ROOT/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+          node --check "$R2"; node --check "$R2D"; node --check "$RENDER"
+          grep -q "waterClassCodes.push(waterClassForPrimitive(primitive))" "$R2"
+          grep -q "waterClassCodes: new Uint8Array(packageRecord.buffers.waterClassCodes)" "$R2"
+          grep -q "waterClassCodes: new Uint8Array(rawViews.waterClassCodes)" "$R2D"
+          grep -q "waterClassCodes: Uint8Array" "$R2D"
+          grep -q "layout(location=8) in uint aWaterClassCode;" "$RENDER"
+          grep -q "flat out uint vWaterClassCode;" "$RENDER"
+          grep -q "flat in uint vWaterClassCode;" "$RENDER"
+          grep -q "vWaterClassCode=aWaterClassCode;" "$RENDER"
+          grep -q "vWaterClassCode>0u" "$RENDER"
+          grep -q "\['waterClassCodes', uploadViews.waterClassCodes, 8, 1, gl.UNSIGNED_BYTE, true\]" "$RENDER"
+          ! grep -q "else if(vRoleCode==2u)" "$RENDER"

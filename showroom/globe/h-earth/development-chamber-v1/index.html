@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H-Earth Development Chamber · Meso v1</title>
+<style>
+html,body{margin:0;height:100%;background:#071015;color:#e3edf1;font:16px system-ui,sans-serif;display:grid;place-items:center}
+main{max-width:680px;padding:28px;border:1px solid #263943;border-radius:12px;background:#0d1920}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+</style>
+</head>
+<body>
+<main>
+<h1>H-Earth Development Chamber · Meso v1</h1>
+<p>Forward-only development environment. Live/public H-Earth is not modified by this chamber.</p>
+<p id="status">Launching the chamber from the accepted functional baseline…</p>
+<script>
+const target=new URL('../../../../preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/index.html',import.meta.url);
+target.searchParams.set('meso','development-v1');
+document.getElementById('status').innerHTML='Launching <code>?meso=development-v1</code> from the functional baseline.';
+location.replace(target.href);
+</script>
+</main>
+</body>
+</html>

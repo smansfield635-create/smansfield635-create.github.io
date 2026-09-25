@@ -17,8 +17,8 @@ const OUTER_Z=freeze([-6800,-5600,-4600,-3800,-3100,-2500,-2000,-1600,-1250,-980
 
 function range(min,max,step){const out=[];for(let value=min;value<=max+step*0.25;value+=step)out.push(Math.round(value*1e6)/1e6);return out}
 function orderedAxis(core,outer){return freeze([...new Set([...core,...outer])].sort((a,b)=>a-b))}
-const OCEAN_X=orderedAxis(range(-1920,1920,40),OUTER_X);
-const OCEAN_Z=orderedAxis(range(-440,920,24),OUTER_Z);
+const OCEAN_X=orderedAxis(range(-1920,1920,20),OUTER_X);
+const OCEAN_Z=orderedAxis(range(-440,920,12),OUTER_Z);
 
 function compact(vertices,indices,diagnostics={},vertexRgba=null){
   const referenced=[...new Set(indices)].sort((a,b)=>a-b);

@@ -57,8 +57,15 @@ jobs:
           const record=(v,o,a,e,x)=>{const pass=JSON.stringify(e)===JSON.stringify(x);(pass?observations:errors).push({viewport:v,operation:o,assertion:a,expected:e,observed:x,disposition:pass?'PASS':'FAIL'})};
           for(const [vn,viewport] of Object.entries(viewports)){
             const page=await browser.newPage({viewport}); const pageErrors=[]; page.on('pageerror',e=>pageErrors.push(String(e)));
+            const consoleErrors=[]; page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
             await page.goto('http://127.0.0.1:4173/governance-bridge/',{waitUntil:'networkidle'});
-            await page.locator('[data-governance-panel-trigger]').click(); await page.locator('#governance-panel.is-open').waitFor();
+            const before=await page.evaluate(()=>({trigger:!!document.querySelector('[data-governance-panel-trigger]'),panel:!!document.querySelector('#governance-panel'),api:!!globalThis.DGBGovernancePanel,expanded:document.querySelector('[data-governance-panel-trigger]')?.getAttribute('aria-expanded')}));
+            record(vn,'mount','trigger-present',true,before.trigger);record(vn,'mount','panel-present-before-click',true,before.panel);record(vn,'mount','api-present',true,before.api);
+            await page.locator('[data-governance-panel-trigger]').click();
+            await page.waitForTimeout(250);
+            const after=await page.evaluate(()=>({panel:!!document.querySelector('#governance-panel'),cls:document.querySelector('#governance-panel')?.className||null,hidden:document.querySelector('#governance-panel')?.getAttribute('aria-hidden')||null,expanded:document.querySelector('[data-governance-panel-trigger]')?.getAttribute('aria-expanded')||null}));
+            record(vn,'mount','panel-open',true,after.cls?.split(/\\s+/).includes('is-open')||false);
+            if(!(after.cls?.split(/\\s+/).includes('is-open'))){errors.push({viewport:vn,operation:'mount',assertion:'initialization-diagnostic',expected:'panel is-open',observed:{before,after,pageErrors,consoleErrors},disposition:'FAIL'});continue;}
             record(vn,'initial','node-count',14,await page.locator('.governance-node').count());
             record(vn,'initial','edge-count',21,await page.locator('.governance-edge').count());
             for(const op of ops){

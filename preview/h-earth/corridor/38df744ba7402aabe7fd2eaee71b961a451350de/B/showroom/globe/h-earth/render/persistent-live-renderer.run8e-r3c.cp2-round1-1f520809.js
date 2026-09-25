@@ -516,7 +516,15 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
     gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
-    counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
+    const canonicalWaterState = sampleHEarthWaterState(0, 300);
+    if (canonicalWaterState?.valid !== true || canonicalWaterState.waterPresent !== true) {
+      throw new Error('R3C_CANONICAL_WATER_STATE_NOT_ELIGIBLE');
+    }
+    gl.uniform2f(resources.uniforms.waterWaveDirection, canonicalWaterState.waveDirection.x, canonicalWaterState.waveDirection.z);
+    gl.uniform1f(resources.uniforms.waterWaveFrequency, canonicalWaterState.waveFrequency);
+    gl.uniform1f(resources.uniforms.waterWaveAmplitude, canonicalWaterState.waveAmplitude);
+    gl.uniform1f(resources.uniforms.waterWavePhase, 0);
+    counters.staticUniformUpdateCount = 14; initialized = true; return getResourceReceipt();
   }
 
   function renderFrame(packet) {
@@ -528,6 +536,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
+    gl.uniform1f(resources.uniforms.waterWavePhase, counters.frameCount * 0.075);
     counters.cameraUniformUpdateCount += 2;
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {

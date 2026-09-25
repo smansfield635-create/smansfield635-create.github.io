@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "governance-3d-runtime-002",
+  "capabilityId": "GOVERNANCE_CONTROL_PLANE_3D_RUNTIME_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4830,
+  "requestBranch": "ai-dispatch-request-governance-3d-runtime-002",
+  "requestCommit": "aee7798da6c5f2667db1b0bbb234ed4f89d22e6d",
+  "currentMainSha": "374b68787f3ca9033dd2a8cbcbd7e18061668175",
+  "bridgeRunId": "36097351357",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/governance-control-plane-3d-runtime-qualification.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-09-25T05:09:14.307Z"
+}

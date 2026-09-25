@@ -4,18 +4,22 @@ import { H_EARTH_T4_FROZEN_PLACEMENT } from './t4-frozen-placement-v1.js';
 // T4.3 primitive-quality geometry. Placement and draw-class budgets remain frozen.
 // Follow-on: fuller multi-plane tuft cluster so each instance reads as volume, not a flat cross.
 const TUFT_VERTICES = new Float32Array([
-  // Primary X plane.
-  -.13,0,0, .13,0,0, 0,.78,0,
-  // Primary Z plane.
-  0,0,-.13, 0,0,.13, 0,.78,0,
-  // Diagonal plane A.
-  -.09,0,-.09, .09,0,.09, 0,.70,0,
-  // Diagonal plane B.
-  -.09,0,.09, .09,0,-.09, 0,.70,0,
-  // Offset plane A: fills the center from a second vertical angle.
-  -.08,0,.045, .08,0,-.045, .018,.66,.018,
-  // Offset plane B: fills the opposing vertical angle.
-  -.055,0,-.075, .055,0,.075, -.02,.63,-.012
+  // Primary X plane: tall central blade.
+  -.13,0,0, .13,0,0, .018,.78,.008,
+  // Primary Z plane: tall blade from the opposing angle.
+  0,0,-.13, 0,0,.13, -.012,.75,-.018,
+  // Diagonal plane A: shorter shoulder.
+  -.10,0,-.08, .10,0,.08, .030,.66,.020,
+  // Diagonal plane B: shorter opposing shoulder.
+  -.10,0,.08, .10,0,-.08, -.028,.69,-.018,
+  // Offset plane A: fills the center with a staggered crown.
+  -.075,0,.045, .075,0,-.045, .045,.60,.030,
+  // Offset plane B: fills the opposing center angle.
+  -.065,0,-.065, .065,0,.065, -.038,.57,-.030,
+  // Crown plane A: adds a compact intermediate blade.
+  -.055,0,.010, .055,0,-.010, .008,.52,.045,
+  // Crown plane B: closes the remaining center gap.
+  -.045,0,-.018, .045,0,.018, -.010,.49,-.040
 ]);
 const ROCK_VERTICES = new Float32Array([
   -.34,0,-.24, .30,0,-.22, .25,.22,.24,

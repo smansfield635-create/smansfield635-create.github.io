@@ -40,8 +40,8 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
   ]),
   presentationRoleProjection: freezeRecord({
     sourceShorelineRoleCode: 2,
-    gpuDepthColorPreservingRoleCode: 4,
-    purpose: 'BYPASS_CP2_HARDCODED_TEAL_WATER_OVERRIDE',
+    gpuWaterPresentationRoleCode: 4,
+    purpose: 'DEDICATED_CP2_WATER_PRESENTATION_SEMANTIC',
     semanticPackageRoleMutation: false,
     materialBufferMutation: false,
     geometryMutation: false
@@ -127,7 +127,7 @@ function projectGpuRoleCodes(source) {
     view: result,
     receipt: freezeRecord({
       sourceShorelineRoleCode: 2,
-      gpuDepthColorPreservingRoleCode: 4,
+      gpuWaterPresentationRoleCode: 4,
       remappedElementCount,
       semanticPackageRoleMutation: false,
       materialBufferMutation: false

@@ -404,11 +404,20 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
           surfaceClassCodes.push(SURFACE_CLASS_CODES[material.surfaceClass]);
         }
       } else {
+        // Preserve continuous per-vertex optical color when the source primitive
+        // supplies it (notably the one continuous ocean field). Fall back to the
+        // primitive-level material only when no corresponding vertex color exists.
+        const vertexRgba = primitive?.renderMaterial?.vertexRgba;
+        const opticalRgba = Array.isArray(vertexRgba?.[localVertexIndex]) &&
+          vertexRgba[localVertexIndex].length === 4 &&
+          vertexRgba[localVertexIndex].every(finite)
+          ? vertexRgba[localVertexIndex]
+          : rgba;
         baseColorsLinear.push(
-          srgb8ToLinear(rgba[0]),
-          srgb8ToLinear(rgba[1]),
-          srgb8ToLinear(rgba[2]),
-          clamp01(rgba[3] / 255)
+          srgb8ToLinear(opticalRgba[0]),
+          srgb8ToLinear(opticalRgba[1]),
+          srgb8ToLinear(opticalRgba[2]),
+          clamp01(opticalRgba[3] / 255)
         );
         materialParameters.push(0, 0, 0, 0);
         surfaceClassCodes.push(NON_TERRAIN_SURFACE_CLASS_CODE);

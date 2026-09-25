@@ -37,7 +37,7 @@ export const H_EARTH_RECOVERED_WATER_OPTICAL_ANCHORS=freeze({
   shelf:[31,116,154,255],
   deep:[15,57,96,255]
 });
-const INVISIBLE_WATER=freeze({rgba:[0,0,0,0],transparencyClass:'TRANSLUCENT'});
+const WATER_MATERIALS=freeze({SHALLOW_WATER:{rgba:[58,168,181,218],transparencyClass:'TRANSLUCENT'},NEARSHORE_WATER:{rgba:[31,116,154,224],transparencyClass:'TRANSLUCENT'},OPEN_WATER:{rgba:[15,57,96,236],transparencyClass:'TRANSLUCENT'}});
 
 export function evaluateHEarthRecoveredWaterRgbaFromCoastDistance(distance,{opaque=true}={}){
   const d=Math.max(0,Number.isFinite(distance)?distance:0);
@@ -89,7 +89,7 @@ function constructBand(band){
     metadata:freeze({providerContractId:H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,bandId:band.bandId,representationClass:band.bandId==='OPEN_WATER'?'MID':'NEAR',worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sourceSampleIds,sampleCount,shorelineXMinimum,shorelineXMaximum,waterPresentationDelegatedToContinuousOcean:isWater,finiteWaterRibbonVisible:false,historical23923ColorAnchorsPreserved:true,independentGeographyAuthority:false,hardWorldTerminalAuthority:false,navigationAddressIds:[],navigable:false,collisionAuthority:false,accessibleRegionExpansion:false,oceanFacingLandmassCreated:false,admitted:false,aggregateFrameAuthority:false})
   });
   const basePrimitive=construction?.primitiveRecord??null;
-  const primitive=basePrimitive&&isWater?freeze({...basePrimitive,renderMaterial:INVISIBLE_WATER}):basePrimitive;
+  const primitive=basePrimitive&&isWater?freeze({...basePrimitive,renderMaterial:freeze(WATER_MATERIALS[band.bandId])}):basePrimitive;
   return freeze({ok:construction?.valid===true&&isHEarthNeutralPrimitiveRecord(basePrimitive),bandId:band.bandId,primitive,issues:construction?.issues??[]});
 }
 

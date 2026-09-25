@@ -167,11 +167,11 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const t4Extension = t4Requested ? createHEarthT4PostTerrainDraw(canvas.getContext('webgl2')) : null;
-  const renderer = createHEarthRun8ER3CPersistentRenderer({
-    canvas, width, height,
-    postTerrainDraw: t4Extension?.drawAfterTerrain ?? null
-  });
+  // Meso is deliberately excluded from renderer construction and first-frame authority.
+  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height });
+  let t4Extension = null;
+  let t4Enabled = false;
+  let t4Failure = null;
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -213,6 +213,19 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     counters.renderFrameCallCount += 1;
     renderer.presentColorFrame();
     counters.gpuFramebufferPresentationCount += 1;
+
+    // Meso may run only after the accepted world has already presented.
+    // Failure is fail-open: preserve the world and permanently disable meso for this session.
+    if (t4Enabled && t4Extension) {
+      try {
+        t4Extension.drawAfterTerrain({ packet });
+        renderer.presentColorFrame();
+        counters.gpuFramebufferPresentationCount += 1;
+      } catch (error) {
+        t4Failure = String(error?.message ?? error);
+        t4Enabled = false;
+      }
+    }
 
     const responseMs = performance.now() - startedAt;
     counters.maximumSynchronousResponseMs = Math.max(
@@ -269,6 +282,18 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     label: 'initial',
     captureEvidence: true
   });
+
+  // Arm meso only after the first accepted world frame has completed presentation.
+  if (t4Requested) {
+    try {
+      t4Extension = createHEarthT4PostTerrainDraw(canvas.getContext('webgl2'));
+      t4Enabled = true;
+    } catch (error) {
+      t4Failure = String(error?.message ?? error);
+      t4Extension = null;
+      t4Enabled = false;
+    }
+  }
 
   const acceptNavigationState = (proposalRecord, navigationState) => {
     if (proposalRecord?.accepted !== true) {

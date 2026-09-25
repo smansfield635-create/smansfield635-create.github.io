@@ -27,7 +27,7 @@
       "includes": [
         "Governance Substrate",
         "Return to Governance Bridge",
-        "compass.governance-platform.js?v=governance-panel-v9"
+        "compass.governance-platform.js?v=governance-panel-v10"
       ],
       "excludes": [
         "governance-page-back"
@@ -49,22 +49,26 @@
       },
       {
         "type": "selectorExists",
-        "selector": "[data-governance-mode=\"failure-response\"]"
+        "selector": "[data-governance-flip]"
       }
     ],
     "interactions": [
       {
-        "name": "select-failure-response",
+        "name": "flip-to-failure-response",
         "action": {
           "type": "click",
-          "selector": "[data-governance-mode=\"failure-response\"]"
+          "selector": "[data-governance-flip]"
         },
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-governance-mode=\"failure-response\"]",
-            "name": "aria-selected",
+            "selector": "[data-governance-flip]",
+            "name": "aria-pressed",
             "value": "true"
+          },
+          {
+            "type": "selectorExists",
+            "selector": "[data-governance-failure]"
           }
         ],
         "timeoutMs": 5000

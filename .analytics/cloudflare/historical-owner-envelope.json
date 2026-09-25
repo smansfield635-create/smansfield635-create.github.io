@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T22:29:32Z",
+  "generatedAt": "2026-09-25T23:27:21Z",
   "window": {
-    "start": "2026-06-27T22:29:32Z",
-    "end": "2026-09-25T22:29:32Z"
+    "start": "2026-06-27T23:27:21Z",
+    "end": "2026-09-25T23:27:21Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,21 +17,21 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4943,
+    "pageLoads": 4953,
     "visits": 1243,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4943,
+        "pageLoads": 4953,
         "visits": 1243
       }
     },
     "byPath": {
       "/index.html": {
-        "pageLoads": 157,
+        "pageLoads": 156,
         "visits": 0
       },
       "/": {
-        "pageLoads": 1069,
+        "pageLoads": 1071,
         "visits": 729
       },
       "/showroom/globe/h-earth/": {
@@ -51,7 +51,7 @@
         "visits": 30
       },
       "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 21,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/": {
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 104,
+        "pageLoads": 103,
         "visits": 9
       },
       "/products/archcoin/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 210,
+        "pageLoads": 226,
         "visits": 22
       },
       "/gauges/h-earth/": {
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 149,
+        "pageLoads": 148,
         "visits": 7
       },
       "/build/intake/": {
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -177,10 +181,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -207,7 +207,7 @@
         "visits": 0
       },
       "/gauges/": {
-        "pageLoads": 12,
+        "pageLoads": 11,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -250,16 +250,16 @@
         "pageLoads": 73,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 15,
+        "pageLoads": 13,
         "visits": 3
       },
       "/campaigns/wave/": {
@@ -267,11 +267,11 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 42,
+        "pageLoads": 41,
         "visits": 0
       },
       "/door/": {
-        "pageLoads": 22,
+        "pageLoads": 21,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -283,7 +283,7 @@
         "visits": 0
       },
       "/prelude/": {
-        "pageLoads": 21,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/story/timeline/": {
@@ -295,7 +295,7 @@
         "visits": 0
       },
       "/campaigns/rob/": {
-        "pageLoads": 13,
+        "pageLoads": 12,
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
@@ -342,12 +342,12 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/analytics-owner-device/heartbeat/a9-1/": {
-        "pageLoads": 1,
+      "/analytics/": {
+        "pageLoads": 27,
         "visits": 0
       },
-      "/analytics/": {
-        "pageLoads": 24,
+      "/analytics-owner-device/heartbeat/a9-1/": {
+        "pageLoads": 1,
         "visits": 0
       },
       "/governance-bridge/": {
@@ -369,7 +369,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3700,
+        "pageLoads": 3710,
         "visits": 0
       },
       "(none)": {

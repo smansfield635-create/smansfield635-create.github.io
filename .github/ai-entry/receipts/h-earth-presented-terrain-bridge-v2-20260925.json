@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-presented-terrain-bridge-v2-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4876,
+  "requestBranch": "ai-dispatch-request-presented-terrain-bridge-v2",
+  "requestCommit": "922d1684c1129afbb16809d4e07ed7ac37f208ef",
+  "requestCommitParent": "3473d6d156cc8355ea9892b6b541699404ee3722",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3473d6d156cc8355ea9892b6b541699404ee3722",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d7174c473124b8bf7d5a4c7135562b1b3d5a7273"
+  },
+  "bridgeRunId": "36171534176",
+  "dispatchedRunId": 36171611787,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36171611787",
+  "dispatchedRunHeadSha": "3473d6d156cc8355ea9892b6b541699404ee3722",
+  "dispatchedAt": "2026-09-25T18:09:19.479Z",
+  "resolvedAt": "2026-09-25T18:09:23.427Z"
+}

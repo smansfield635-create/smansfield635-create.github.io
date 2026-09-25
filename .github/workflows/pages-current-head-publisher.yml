@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/pages-current-head-publisher.yml'
       - 'governance-bridge/index.html'
+      - '.github/ai-router/publication-surfaces/governance-bridge.json'
   workflow_dispatch:
     inputs:
       surface_id:

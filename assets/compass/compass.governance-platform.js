@@ -1,6 +1,6 @@
 /* GOVERNANCE PANEL — portable substrate catalog + host adapter */
 (()=>{'use strict';
-const CATALOG_URL='https://raw.githubusercontent.com/smansfield635-create/geodiametrics1/e01b4bce9d2c6b9188e9c2a203fd35dc2bf7ca7c/control-plane/governance-panel/GOVERNANCE_PANEL_CATALOG_v1.json';
+const CATALOG_URL='https://raw.githubusercontent.com/smansfield635-create/geodiametrics1/3fbbe363777398cc29040ae258ebab5eec9ced48/control-plane/governance-panel/GOVERNANCE_PANEL_CATALOG_v1.json';
 let CATALOG=null;
 async function loadCatalog(){
  const source=await fetch(CATALOG_URL,{cache:'no-store'});

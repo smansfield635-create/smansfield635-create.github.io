@@ -2,11 +2,7 @@ name: Cloudflare Owner RUM Exclusion v1
 # bounded owner-analytics exclusion installer
 
 on:
-  push:
-    branches:
-      - agent/cloudflare-owner-rum-exclusion-20260925
-    paths:
-      - '.github/workflows/cloudflare-owner-rum-exclusion-v1.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

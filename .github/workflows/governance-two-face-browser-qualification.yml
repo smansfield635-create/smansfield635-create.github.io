@@ -27,7 +27,8 @@ jobs:
           exit 1
       - name: Exercise Governance two-face contract
         run: |
-          cat > /tmp/governance-two-face.mjs <<'NODE'
+          mkdir -p .qualification/governance-two-face
+          cat > .qualification/governance-two-face/qualify.mjs <<'NODE'
           import { chromium } from 'playwright';
           const browser=await chromium.launch({headless:true});
           const failures=[];
@@ -82,4 +83,4 @@ jobs:
           if(failures.length){console.error(JSON.stringify({result:'FAIL_CLOSED',failures},null,2));process.exit(1)}
           console.log(JSON.stringify({result:'GOVERNANCE_TWO_FACE_BROWSER_QUALIFICATION_PASS',gates:[7,8,9,10,11,16,17,20]},null,2));
           NODE
-          node /tmp/governance-two-face.mjs
+          node .qualification/governance-two-face/qualify.mjs

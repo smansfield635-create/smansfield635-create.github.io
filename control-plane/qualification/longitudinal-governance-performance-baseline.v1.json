@@ -1,0 +1,605 @@
+{
+  "schema": "LONGITUDINAL_GOVERNANCE_PERFORMANCE_BASELINE_v1",
+  "status": "BOUNDED_LONGITUDINAL_MEASUREMENTS_FINAL",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "extraction": {
+    "source": "GitHub Actions repository workflow-runs collection",
+    "frozenRawPageRecords": 5000,
+    "uniqueRuns": 4994,
+    "duplicateRawPageRecords": 6,
+    "windowStart": "2026-09-23T04:31:47Z",
+    "windowStartRunIdInclusive": 35818701597,
+    "windowEnd": "2026-09-25T00:38:38Z",
+    "historyExhausted": false,
+    "reconstruction": "Created-time subranges were used only as a stable transport reconstruction of the frozen pages 1-50 population; same-timestamp runs older than the frozen oldest run ID were excluded."
+  },
+  "normalization": {
+    "rules": [
+      "Deduplicate globally by workflow_run.id.",
+      "Treat skipped runs separately from attempted success/failure.",
+      "Do not combine diagnostic/product workflows with canonical governance reliability.",
+      "Normalize only the ten previously bound canonical governance workflow families."
+    ],
+    "canonicalFamilies": [
+      {
+        "family": "STATIC_ASSET_IDENTITY",
+        "workflow": "Static Asset Identity Gate",
+        "runs": 317,
+        "success": 317,
+        "failure": 0,
+        "skipped": 0,
+        "attempts": 317,
+        "attemptSuccessRate": 100,
+        "durationSeconds": {
+          "p50": 9,
+          "p90": 13,
+          "p95": 27
+        },
+        "failureRecoveryMinutes": {
+          "count": 0,
+          "p50": null,
+          "p90": null,
+          "p95": null
+        },
+        "failureStreaks": {
+          "count": 0,
+          "max": 0,
+          "maxShareOfFailuresPct": 0
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 59,
+            "success": 59,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 81,
+            "success": 81,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 27,
+            "success": 27,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 150,
+            "success": 150,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          }
+        ]
+      },
+      {
+        "family": "CENTRAL_ISSUE_COMMENT_ROUTER",
+        "workflow": "Central Issue Comment Router v1",
+        "runs": 170,
+        "success": 79,
+        "failure": 1,
+        "skipped": 90,
+        "attempts": 80,
+        "attemptSuccessRate": 98.75,
+        "durationSeconds": {
+          "p50": 9,
+          "p90": 15,
+          "p95": 19
+        },
+        "failureRecoveryMinutes": {
+          "count": 1,
+          "p50": 13.4,
+          "p90": 13.4,
+          "p95": 13.4
+        },
+        "failureStreaks": {
+          "count": 1,
+          "max": 1,
+          "maxShareOfFailuresPct": 100
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 47,
+            "success": 0,
+            "failure": 0,
+            "skipped": 47,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 47,
+            "success": 5,
+            "failure": 0,
+            "skipped": 42,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 27,
+            "success": 25,
+            "failure": 1,
+            "skipped": 1,
+            "attemptSuccessRate": 96.15
+          },
+          {
+            "runs": 49,
+            "success": 49,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          }
+        ]
+      },
+      {
+        "family": "REPOSITORY_OPERATION_INTAKE_VALIDATION",
+        "workflow": "Repository Operation Intake Validation",
+        "runs": 95,
+        "success": 83,
+        "failure": 12,
+        "skipped": 0,
+        "attempts": 95,
+        "attemptSuccessRate": 87.37,
+        "durationSeconds": {
+          "p50": 137,
+          "p90": 207.2,
+          "p95": 214.5
+        },
+        "failureRecoveryMinutes": {
+          "count": 12,
+          "p50": 11.77,
+          "p90": 19.61,
+          "p95": 21.64
+        },
+        "failureStreaks": {
+          "count": 5,
+          "max": 4,
+          "maxShareOfFailuresPct": 33.33
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 0,
+            "success": 0,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 4,
+            "success": 4,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 23,
+            "success": 21,
+            "failure": 2,
+            "skipped": 0,
+            "attemptSuccessRate": 91.3
+          },
+          {
+            "runs": 68,
+            "success": 58,
+            "failure": 10,
+            "skipped": 0,
+            "attemptSuccessRate": 85.29
+          }
+        ]
+      },
+      {
+        "family": "REMOTE_OPERATION_SUCCESSOR",
+        "workflow": "Remote Operation Successor v1",
+        "runs": 250,
+        "success": 68,
+        "failure": 12,
+        "skipped": 170,
+        "attempts": 80,
+        "attemptSuccessRate": 85,
+        "durationSeconds": {
+          "p50": 6,
+          "p90": 17,
+          "p95": 20
+        },
+        "failureRecoveryMinutes": {
+          "count": 12,
+          "p50": 11.77,
+          "p90": 19.61,
+          "p95": 21.64
+        },
+        "failureStreaks": {
+          "count": 5,
+          "max": 4,
+          "maxShareOfFailuresPct": 33.33
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 47,
+            "success": 0,
+            "failure": 0,
+            "skipped": 47,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 47,
+            "success": 0,
+            "failure": 0,
+            "skipped": 47,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 40,
+            "success": 11,
+            "failure": 2,
+            "skipped": 27,
+            "attemptSuccessRate": 84.62
+          },
+          {
+            "runs": 116,
+            "success": 57,
+            "failure": 10,
+            "skipped": 49,
+            "attemptSuccessRate": 85.07
+          }
+        ]
+      },
+      {
+        "family": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+        "workflow": "Remote Operation Terminal Closure v1",
+        "runs": 68,
+        "success": 40,
+        "failure": 27,
+        "skipped": 1,
+        "attempts": 67,
+        "attemptSuccessRate": 59.7,
+        "durationSeconds": {
+          "p50": 14,
+          "p90": 34.9,
+          "p95": 46.65
+        },
+        "failureRecoveryMinutes": {
+          "count": 26,
+          "p50": 11.77,
+          "p90": 21.95,
+          "p95": 25.78
+        },
+        "failureStreaks": {
+          "count": 14,
+          "max": 5,
+          "maxShareOfFailuresPct": 18.52
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 0,
+            "success": 0,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 5,
+            "success": 4,
+            "failure": 0,
+            "skipped": 1,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 15,
+            "success": 7,
+            "failure": 8,
+            "skipped": 0,
+            "attemptSuccessRate": 46.67
+          },
+          {
+            "runs": 48,
+            "success": 29,
+            "failure": 19,
+            "skipped": 0,
+            "attemptSuccessRate": 60.42
+          }
+        ]
+      },
+      {
+        "family": "AI_ENTRY_DISPATCH_BRIDGE",
+        "workflow": "AI Entry Workflow Dispatch Bridge",
+        "runs": 304,
+        "success": 89,
+        "failure": 5,
+        "skipped": 210,
+        "attempts": 94,
+        "attemptSuccessRate": 94.68,
+        "durationSeconds": {
+          "p50": 2,
+          "p90": 21,
+          "p95": 24
+        },
+        "failureRecoveryMinutes": {
+          "count": 5,
+          "p50": 1.38,
+          "p90": 6.39,
+          "p95": 7.52
+        },
+        "failureStreaks": {
+          "count": 5,
+          "max": 1,
+          "maxShareOfFailuresPct": 20
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 55,
+            "success": 23,
+            "failure": 0,
+            "skipped": 32,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 77,
+            "success": 19,
+            "failure": 1,
+            "skipped": 57,
+            "attemptSuccessRate": 95
+          },
+          {
+            "runs": 26,
+            "success": 4,
+            "failure": 0,
+            "skipped": 22,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 146,
+            "success": 43,
+            "failure": 4,
+            "skipped": 99,
+            "attemptSuccessRate": 91.49
+          }
+        ]
+      },
+      {
+        "family": "REPOSITORY_AI_ENTRY_ROUTER_VALIDATION",
+        "workflow": "Repository AI Entry Router Validation",
+        "runs": 226,
+        "success": 56,
+        "failure": 1,
+        "skipped": 169,
+        "attempts": 57,
+        "attemptSuccessRate": 98.25,
+        "durationSeconds": {
+          "p50": 2,
+          "p90": 32,
+          "p95": 33.75
+        },
+        "failureRecoveryMinutes": {
+          "count": 1,
+          "p50": 1.92,
+          "p90": 1.92,
+          "p95": 1.92
+        },
+        "failureStreaks": {
+          "count": 1,
+          "max": 1,
+          "maxShareOfFailuresPct": 100
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 62,
+            "success": 16,
+            "failure": 0,
+            "skipped": 46,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 64,
+            "success": 16,
+            "failure": 1,
+            "skipped": 47,
+            "attemptSuccessRate": 94.12
+          },
+          {
+            "runs": 39,
+            "success": 12,
+            "failure": 0,
+            "skipped": 27,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 61,
+            "success": 12,
+            "failure": 0,
+            "skipped": 49,
+            "attemptSuccessRate": 100
+          }
+        ]
+      },
+      {
+        "family": "BOUNDED_LOCK_LINEAGE_CHECKPOINT",
+        "workflow": "Bounded Operation Lock Lineage Checkpoint Execution v1",
+        "runs": 32,
+        "success": 6,
+        "failure": 26,
+        "skipped": 0,
+        "attempts": 32,
+        "attemptSuccessRate": 18.75,
+        "durationSeconds": {
+          "p50": 144.5,
+          "p90": 218.8,
+          "p95": 227.45
+        },
+        "failureRecoveryMinutes": {
+          "count": 17,
+          "p50": 115.25,
+          "p90": 333.74,
+          "p95": 600.3
+        },
+        "failureStreaks": {
+          "count": 3,
+          "max": 10,
+          "maxShareOfFailuresPct": 38.46
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 0,
+            "success": 0,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 0,
+            "success": 0,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 6,
+            "success": 4,
+            "failure": 2,
+            "skipped": 0,
+            "attemptSuccessRate": 66.67
+          },
+          {
+            "runs": 26,
+            "success": 2,
+            "failure": 24,
+            "skipped": 0,
+            "attemptSuccessRate": 7.69
+          }
+        ]
+      },
+      {
+        "family": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER",
+        "workflow": "Bounded Exact-Head Execution Carrier v1",
+        "runs": 23,
+        "success": 23,
+        "failure": 0,
+        "skipped": 0,
+        "attempts": 23,
+        "attemptSuccessRate": 100,
+        "durationSeconds": {
+          "p50": 137,
+          "p90": 209.6,
+          "p95": 215.4
+        },
+        "failureRecoveryMinutes": {
+          "count": 0,
+          "p50": null,
+          "p90": null,
+          "p95": null
+        },
+        "failureStreaks": {
+          "count": 0,
+          "max": 0,
+          "maxShareOfFailuresPct": 0
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 10,
+            "success": 10,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 7,
+            "success": 7,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 0,
+            "success": 0,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 6,
+            "success": 6,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          }
+        ]
+      },
+      {
+        "family": "AI_ENTRY_DISPATCH_CAPABILITY_VALIDATION",
+        "workflow": "AI Entry Workflow Dispatch Capability Validation",
+        "runs": 25,
+        "success": 25,
+        "failure": 0,
+        "skipped": 0,
+        "attempts": 25,
+        "attemptSuccessRate": 100,
+        "durationSeconds": {
+          "p50": 116,
+          "p90": 191.2,
+          "p95": 214.4
+        },
+        "failureRecoveryMinutes": {
+          "count": 0,
+          "p50": null,
+          "p90": null,
+          "p95": null
+        },
+        "failureStreaks": {
+          "count": 0,
+          "max": 0,
+          "maxShareOfFailuresPct": 0
+        },
+        "temporalQuartiles": [
+          {
+            "runs": 10,
+            "success": 10,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 9,
+            "success": 9,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          },
+          {
+            "runs": 0,
+            "success": 0,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": null
+          },
+          {
+            "runs": 6,
+            "success": 6,
+            "failure": 0,
+            "skipped": 0,
+            "attemptSuccessRate": 100
+          }
+        ]
+      }
+    ]
+  },
+  "observations": {
+    "stable100PctAttemptSurfaces": [
+      "STATIC_ASSET_IDENTITY",
+      "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER",
+      "AI_ENTRY_DISPATCH_CAPABILITY_VALIDATION"
+    ],
+    "lowestAttemptSuccessFamily": "BOUNDED_LOCK_LINEAGE_CHECKPOINT",
+    "lowestAttemptSuccessRate": 18.75,
+    "terminalClosureAttemptSuccessRate": 59.7,
+    "checkpointMaxFailureStreak": 10,
+    "interpretation": "Reliability is capability-specific. The frozen window contains stable 100% attempted-success surfaces alongside concentrated failures in bounded lineage checkpoint and terminal-closure paths; repository-wide failure rate is not an authorized governance reliability metric."
+  },
+  "claims": {
+    "FULL_HISTORY_EXHAUSTED": false,
+    "BOUNDED_LONGITUDINAL_WINDOW_FROZEN": true,
+    "MEASUREMENTS_FINAL": true,
+    "RAW_5000_USED_AS_UNIQUE_DENOMINATOR": false,
+    "UNIQUE_RUN_DENOMINATOR": 4994
+  }
+}

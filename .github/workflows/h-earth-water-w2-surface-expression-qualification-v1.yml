@@ -1,5 +1,8 @@
 name: H-Earth Water W2 Surface Expression Qualification v1
 on:
+  push:
+    branches:
+      - h-earth/water-w2-surface-expression-v1
   pull_request:
     branches: [ main ]
   workflow_dispatch:

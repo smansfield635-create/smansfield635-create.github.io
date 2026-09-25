@@ -12,7 +12,7 @@ async function loadCatalog(){
  let raw;
  try{raw=await response.json();}
  catch(error){throw new Error('GOVERNANCE_CATALOG_JSON_FAILURE url='+response.url+' contentType='+contentType+' cause='+(error?.message||error));}
- if(raw?.catalogId!=='GOVERNANCE_PANEL_CATALOG_V1'||raw?.generatedFor!=='GOVERNANCE_PANEL_V2'||raw?.catalogRevision!=='1.0.2')throw new Error('GOVERNANCE_CATALOG_IDENTITY_FAILURE catalogId='+String(raw?.catalogId)+' generatedFor='+String(raw?.generatedFor)+' revision='+String(raw?.catalogRevision));
+ if(raw?.catalogId!=='GOVERNANCE_PANEL_PUBLIC_CATALOG_V1'||raw?.generatedFor!=='GOVERNANCE_PANEL_V2'||raw?.catalogRevision!=='1.0.2')throw new Error('GOVERNANCE_CATALOG_IDENTITY_FAILURE catalogId='+String(raw?.catalogId)+' generatedFor='+String(raw?.generatedFor)+' revision='+String(raw?.catalogRevision));
  if(!Array.isArray(raw.nodes)||raw.nodes.length!==14||!Array.isArray(raw.edges)||raw.edges.length!==21)throw new Error('GOVERNANCE_CATALOG_TOPOLOGY_FAILURE nodes='+String(raw?.nodes?.length)+' edges='+String(raw?.edges?.length));
  if(!raw.operations||Object.keys(raw.operations).length!==8)throw new Error('GOVERNANCE_CATALOG_OPERATION_FAILURE operations='+String(raw?.operations?Object.keys(raw.operations).length:null));
  CATALOG=Object.freeze({

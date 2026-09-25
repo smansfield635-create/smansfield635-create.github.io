@@ -24,6 +24,22 @@
     }
   ],
   "runtime": {
-    "enabled": false
+    "enabled": true,
+    "path": "/governance-bridge/",
+    "waitMs": 1500,
+    "assertions": [
+      {
+        "type": "selectorExists",
+        "selector": "[data-governance-panel-trigger]"
+      },
+      {
+        "type": "selectorExists",
+        "selector": ".governance-panel"
+      },
+      {
+        "type": "selectorExists",
+        "selector": "[data-governance-mode=\"failure-response\"]"
+      }
+    ]
   }
 }

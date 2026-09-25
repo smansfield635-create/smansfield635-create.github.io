@@ -1,0 +1,132 @@
+{
+  "schema": "LONGITUDINAL_GOVERNANCE_PERFORMANCE_BASELINE_v1",
+  "status": "READ_ONLY_EVIDENCE_BOUND_PARTIAL_HISTORY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "extraction": {
+    "source": "GitHub Actions repository history",
+    "recordsRetrieved": 2000,
+    "completedRecords": 2000,
+    "windowStart": "2026-09-24T15:52:47Z",
+    "windowEnd": "2026-09-25T00:38:38Z",
+    "paginationPages": 20,
+    "historyExhausted": false,
+    "reasonNotExhausted": "20 pages returned full 100-record pages; older history remains and must be paged before final baseline."
+  },
+  "normalization": {
+    "rules": [
+      "Treat skipped runs separately from attempted success/failure.",
+      "Do not combine diagnostic/product workflows with canonical governance reliability.",
+      "Normalize predecessor/successor workflow generations only after repository evidence proves semantic equivalence."
+    ],
+    "canonicalFamilies": [
+      {
+        "family": "STATIC_ASSET_IDENTITY",
+        "workflow": "Static Asset Identity Gate",
+        "attempts": 140,
+        "success": 140,
+        "failure": 0,
+        "medianSeconds": 9
+      },
+      {
+        "family": "CENTRAL_ISSUE_COMMENT_ROUTER",
+        "workflow": "Central Issue Comment Router v1",
+        "attempts": 27,
+        "success": 27,
+        "failure": 0,
+        "medianSeconds": 13
+      },
+      {
+        "family": "REPOSITORY_OPERATION_INTAKE_VALIDATION",
+        "workflow": "Repository Operation Intake Validation",
+        "attempts": 54,
+        "success": 44,
+        "failure": 10,
+        "medianSeconds": 160
+      },
+      {
+        "family": "REMOTE_OPERATION_SUCCESSOR",
+        "workflow": "Remote Operation Successor v1",
+        "runs": 80,
+        "success": 43,
+        "failure": 10,
+        "skipped": 27,
+        "medianSeconds": 14
+      },
+      {
+        "family": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+        "workflow": "Remote Operation Terminal Closure v1",
+        "attempts": 42,
+        "success": 23,
+        "failure": 19,
+        "medianSeconds": 14
+      },
+      {
+        "family": "AI_ENTRY_DISPATCH_BRIDGE",
+        "workflow": "AI Entry Workflow Dispatch Bridge",
+        "runs": 136,
+        "success": 42,
+        "failure": 4,
+        "skipped": 90,
+        "medianSeconds": 2
+      },
+      {
+        "family": "REPOSITORY_AI_ENTRY_ROUTER_VALIDATION",
+        "workflow": "Repository AI Entry Router Validation",
+        "runs": 39,
+        "success": 12,
+        "failure": 0,
+        "skipped": 27,
+        "medianSeconds": 6
+      },
+      {
+        "family": "BOUNDED_LOCK_LINEAGE_CHECKPOINT",
+        "workflow": "Bounded Operation Lock Lineage Checkpoint Execution v1",
+        "attempts": 16,
+        "success": 1,
+        "failure": 15,
+        "medianSeconds": 173
+      },
+      {
+        "family": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER",
+        "workflow": "Bounded Exact-Head Execution Carrier v1",
+        "attempts": 6,
+        "success": 6,
+        "failure": 0,
+        "medianSeconds": 136
+      },
+      {
+        "family": "AI_ENTRY_DISPATCH_CAPABILITY_VALIDATION",
+        "workflow": "AI Entry Workflow Dispatch Capability Validation",
+        "attempts": 6,
+        "success": 6,
+        "failure": 0,
+        "medianSeconds": 180
+      }
+    ]
+  },
+  "observations": {
+    "failureConcentration": "Failures are strongly capability-specific; repository-wide failure rate is not a valid governance reliability metric.",
+    "checkpointOutlier": "Bounded lineage checkpoint is a clear reliability outlier in this observation window.",
+    "stableSurfaces": [
+      "Static Asset Identity Gate",
+      "Central Issue Comment Router v1",
+      "Bounded Exact-Head Execution Carrier v1",
+      "AI Entry Workflow Dispatch Capability Validation"
+    ]
+  },
+  "durability": {
+    "finalizationRequired": [
+      "Continue pagination until an incomplete/empty page proves history exhaustion.",
+      "Build immutable raw-run manifest with run IDs, workflow names, events, conclusions, timestamps and head SHAs.",
+      "Derive latency percentiles and failure-to-recovery intervals by normalized capability family.",
+      "Crosswalk observable measures to DORA/CMMI/TRL evidence classes.",
+      "Bind final aggregates to source-manifest digest and exact repository head."
+    ],
+    "claimsNotYetAuthorized": [
+      "FULL_HISTORY_EXHAUSTED",
+      "LONGITUDINAL_BASELINE_FINAL",
+      "CMMI_LEVEL_4",
+      "TRL_8"
+    ]
+  }
+}

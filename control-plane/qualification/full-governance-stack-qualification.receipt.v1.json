@@ -1,0 +1,94 @@
+{
+  "schema": "FULL_GOVERNANCE_STACK_QUALIFICATION_RECEIPT_v1",
+  "status": "PASS_CLOSED_COLLECTIVE_EVIDENCE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "qualificationBasis": "COLLECTIVE_IMMUTABLE_REPOSITORY_EVIDENCE",
+  "singleOperationTraversedEveryListedPlane": false,
+  "gen2490RequiredForQualification": false,
+  "evidence": [
+    {
+      "path": ".github/ai-router/receipts/repository-ai-entry-router-v1.installation.receipt.json",
+      "blobSha": "9f69f6297c5c7cd887d29bf3f0f3f1bd471d4f5b"
+    },
+    {
+      "path": ".github/ai-router/receipts/repository-ai-entry-router-v1.github-actions-validation.receipt.json",
+      "blobSha": "2e7b6fc7f6041546958924d0e9f57fc072333940"
+    },
+    {
+      "path": ".github/operation-intake/evidence/repository-operation-intake.bootstrap-activation.receipt.v1.json",
+      "blobSha": "030b2f9833b82ffdfe90af5a8f8a5d5a49dd7018"
+    },
+    {
+      "path": ".github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json",
+      "blobSha": "8d2c6815e0dcb499d07251fa7f6f8b1d9adf45bb"
+    },
+    {
+      "path": "control-plane/audralia/gen1754/execution-succession/router-receipt.v1.json",
+      "blobSha": "7c9f393939d818a32c6a877d7880ad1614dbda4f"
+    },
+    {
+      "path": "control-plane/audralia/gen1754/execution-succession/admission-receipt.v1.json",
+      "blobSha": "dffe6a6893cce1752bdc08d1228f9a66332feb0b"
+    },
+    {
+      "path": "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/builder.receipt.v1.json",
+      "blobSha": "7537efd0002000c2442e77a66fed183fd9651c70"
+    },
+    {
+      "path": "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/fresh-verifier.receipt.v1.json",
+      "blobSha": "c8a1f1d1d2cdfaf7a313b212470af4d507501b0c"
+    },
+    {
+      "path": "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/independent-equality.receipt.v1.json",
+      "blobSha": "a995dce69c69a6b08ce64ffb87d706f94346b5df"
+    },
+    {
+      "path": "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/operation-closure.receipt.v1.json",
+      "blobSha": "3b803739a6ff8086a00e313f6e890ec774b4b67b"
+    },
+    {
+      "path": ".github/ai-router/automatic-release-binding.v1.json",
+      "blobSha": "3218a0537e9d75fe4e3f649b9c5e395e696ad78b"
+    },
+    {
+      "path": ".github/ai-router/workflow-lifecycle-continuity/ratification-record.v1.json",
+      "blobSha": "c64b6daa5a4581a4a29d324258a07ddb3a53c374"
+    },
+    {
+      "path": ".github/ai-router/proportional-execution-short-circuit.receipt.v1.json",
+      "blobSha": "cca2f826f69fe57cf492ca5ffe9cbdcad235ae56"
+    }
+  ],
+  "predicates": {
+    "aiEntryRoutingProven": true,
+    "failClosedRoutingProven": true,
+    "canonicalIntakeProven": true,
+    "remoteCasAcquisitionProven": true,
+    "realOperationAdmissionProven": true,
+    "governedExecutionProven": true,
+    "independentVerificationProven": true,
+    "exactReproducibilityProven": true,
+    "canonicalCasTerminalClosureProven": true,
+    "passClosedProven": true,
+    "lockReleaseProven": true,
+    "terminalHistoryPreservationProven": true,
+    "postClosureValidationProven": true,
+    "failClosedLifecycleGovernanceProven": true,
+    "fullGovernanceStackCapabilitySetCollectivelyProven": true
+  },
+  "methodsOperationBinding": {
+    "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_v1",
+    "fingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+    "closureCommitSha": "d8ffe5d3d10b3df4c099d7f898a08009f83b0151",
+    "terminalDisposition": "PASS_CLOSED",
+    "lockReleased": true,
+    "terminalHistoryPreserved": true,
+    "postClosureValidationRun": 31063336741,
+    "postClosureValidationResult": "SUCCESS"
+  },
+  "limitations": [
+    "COLLECTIVE_CAPABILITY_QUALIFICATION_NOT_SINGLE_OPERATION_FULL_PATH_CLAIM",
+    "DOES_NOT_RECLASSIFY_GEN2490_FAILURE_AS_SUCCESS",
+    "DOES_NOT_ASSERT_UNIVERSAL_CORRECTNESS_FOR_ALL_OPERATIONS_OR_HISTORICAL_OBJECTS"
+  ]
+}

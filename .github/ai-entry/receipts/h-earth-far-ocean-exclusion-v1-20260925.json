@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-far-ocean-exclusion-v1-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4850,
+  "requestBranch": "ai-dispatch-request-far-ocean-exclusion-v1",
+  "requestCommit": "099ae1d7dfabca86390b888ffc41604f07c7a1e5",
+  "requestCommitParent": "e0b14142f1610cf34c7bd354fce65f19c3ac3b15",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e0b14142f1610cf34c7bd354fce65f19c3ac3b15",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "dee6ab9f45990279770b4e4b9e08d81082584386"
+  },
+  "bridgeRunId": "36156109637",
+  "dispatchedRunId": 36156128300,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36156128300",
+  "dispatchedRunHeadSha": "e0b14142f1610cf34c7bd354fce65f19c3ac3b15",
+  "dispatchedAt": "2026-09-25T15:43:46.964Z",
+  "resolvedAt": "2026-09-25T15:43:50.834Z"
+}

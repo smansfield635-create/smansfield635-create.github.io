@@ -66,8 +66,33 @@ void main(){vWorldPosition=aPosition;vNormal=aNormal;vBaseColor=aBaseColorLinear
 const FS = `#version 300 es
 precision highp float;precision highp int;
 in vec3 vWorldPosition;in vec3 vNormal;in vec4 vBaseColor;in vec4 vMaterialParameters;flat in uint vMaterialModelCode;flat in uint vSurfaceClassCode;flat in uint vPrimitiveIndex;flat in uint vRoleCode;
-uniform vec3 uCameraPosition;uniform vec3 uSunDirection;uniform float uSunIntensity;uniform vec3 uSunColor;uniform vec3 uSkyZenithColor;uniform vec3 uSkyHorizonColor;uniform vec3 uGroundHazeColor;uniform float uFogStartDistance;uniform float uFogFalloff;uniform float uMaximumFogFactor;uniform float uDistanceDesaturationStrength;out vec4 outColor;
-void main(){vec3 n=normalize(vNormal),ld=normalize(-uSunDirection);float d=max(dot(n,ld),0.0),a=.30+.08*max(n.y,0.0),rb=vRoleCode==1u?1.05:(vRoleCode==2u?1.15:.92);vec3 lit=max(vBaseColor.rgb,vec3(.004))*(a+d*uSunIntensity*.72)*uSunColor*rb;float dist=length(vWorldPosition-uCameraPosition),fog=clamp((dist-uFogStartDistance)*max(uFogFalloff,.00001),0.0,uMaximumFogFactor),lum=dot(lit,vec3(.2126,.7152,.0722));lit=mix(lit,vec3(lum),clamp(fog*uDistanceDesaturationStrength,0.0,1.0));vec3 atm=mix(uSkyHorizonColor,uSkyZenithColor,clamp(n.y*.5+.5,0.0,1.0));lit=mix(lit,atm,fog*.22);lit=mix(lit,uGroundHazeColor,fog*.78);outColor=vec4(pow(clamp(lit,0.0,1.0),vec3(1.0/2.2)),clamp(vBaseColor.a,.18,1.0));}`;
+uniform vec3 uCameraPosition;uniform vec3 uSunDirection;uniform float uSunIntensity;uniform vec3 uSunColor;uniform vec3 uSkyZenithColor;uniform vec3 uSkyHorizonColor;uniform vec3 uGroundHazeColor;uniform float uFogStartDistance;uniform float uFogFalloff;uniform float uMaximumFogFactor;uniform float uDistanceDesaturationStrength;uniform float uOceanProofPhase;out vec4 outColor;
+void main(){
+  vec3 n=normalize(vNormal),ld=normalize(-uSunDirection);
+  float waterMotion=0.0;
+  if(vRoleCode==2u){
+    vec2 w=vWorldPosition.xz;
+    float pA=dot(w,vec2(0.052,0.031))+uOceanProofPhase*0.72;
+    float pB=dot(w,vec2(-0.087,0.063))-uOceanProofPhase*0.49+1.7;
+    float pC=dot(w,vec2(0.19,-0.14))+uOceanProofPhase*0.31+4.2;
+    float a=sin(pA),b=sin(pB),c=sin(pC);
+    vec2 gradient=vec2(
+      0.052*a*0.46-0.087*b*0.31+0.19*c*0.11,
+      0.031*a*0.46+0.063*b*0.31-0.14*c*0.11
+    );
+    vec3 animatedNormal=normalize(vec3(-gradient.x*0.72,1.0,-gradient.y*0.72));
+    n=normalize(mix(n,animatedNormal,0.58));
+    waterMotion=(a*0.46+b*0.31+c*0.11)*0.055;
+  }
+  float d=max(dot(n,ld),0.0),a=.30+.08*max(n.y,0.0),rb=vRoleCode==1u?1.05:(vRoleCode==2u?1.15:.92);
+  vec3 lit=max(vBaseColor.rgb,vec3(.004))*(a+d*uSunIntensity*.72)*uSunColor*rb;
+  if(vRoleCode==2u) lit*=1.0+waterMotion;
+  float dist=length(vWorldPosition-uCameraPosition),fog=clamp((dist-uFogStartDistance)*max(uFogFalloff,.00001),0.0,uMaximumFogFactor),lum=dot(lit,vec3(.2126,.7152,.0722));
+  lit=mix(lit,vec3(lum),clamp(fog*uDistanceDesaturationStrength,0.0,1.0));
+  vec3 atm=mix(uSkyHorizonColor,uSkyZenithColor,clamp(n.y*.5+.5,0.0,1.0));
+  lit=mix(lit,atm,fog*.22);lit=mix(lit,uGroundHazeColor,fog*.78);
+  outColor=vec4(pow(clamp(lit,0.0,1.0),vec3(1.0/2.2)),clamp(vBaseColor.a,.18,1.0));
+}`;
 const DVS = `#version 300 es
 precision highp float;const vec2 p[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));out vec2 vUv;void main(){vec2 q=p[gl_VertexID];vUv=q*.5+.5;gl_Position=vec4(q,0.,1.);}`;
 const DFS = `#version 300 es
@@ -356,7 +381,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
       resources.uniforms.distanceDesaturationStrength,
       environment.distanceDesaturationStrength
     );
-    counters.staticUniformUpdateCount = 10;
+    gl.uniform1f(resources.uniforms.oceanProofPhase, 0);\n    counters.staticUniformUpdateCount = 11;
     initialized = true;
     return getResourceReceipt();
   }
@@ -400,7 +425,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
       packet.camera.position.y,
       packet.camera.position.z
     );
-    counters.cameraUniformUpdateCount += 2;
+    const deterministicOceanPhase = Number.isFinite(packet.frameSequence)\n      ? packet.frameSequence * 0.075\n      : 0;\n    gl.uniform1f(resources.uniforms.oceanProofPhase, deterministicOceanPhase);\n    counters.cameraUniformUpdateCount += 3;
 
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {

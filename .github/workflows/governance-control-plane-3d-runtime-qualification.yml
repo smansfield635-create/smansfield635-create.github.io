@@ -1,10 +1,14 @@
 name: Governance Control Plane 3D Runtime Qualification
 
-'on':
+on:
   workflow_dispatch:
     inputs:
-      candidate_sha: {required: true, type: string}
-      base_sha: {required: true, type: string}
+      candidate_sha:
+        required: true
+        type: string
+      base_sha:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -14,12 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: {ref: ${{ inputs.candidate_sha }}, fetch-depth: 1}
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
       - name: Fetch exact comparison base
-        env: {BASE_SHA: ${{ inputs.base_sha }}}
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
         run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
       - uses: actions/setup-node@v4
-        with: {node-version: '22'}
+        with:
+          node-version: '22'
       - run: npm install --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
       - name: Prove bounded 3D candidate

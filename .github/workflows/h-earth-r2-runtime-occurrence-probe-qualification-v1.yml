@@ -1,0 +1,29 @@
+name: H-Earth R2 Runtime Occurrence Probe Qualification v1
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Qualify diagnostic-only R2 occurrence probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
+          node --check "$FILE"
+          grep -q "H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE_v1" "$FILE"
+          grep -q "RAW_PACKAGE_RETURNED" "$FILE"
+          grep -q "CANONICAL_PACKAGE_EVALUATED" "$FILE"
+          grep -q "globalThis.H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE" "$FILE"
+          grep -q "bufferLengths" "$FILE"
+          grep -q "bufferFrozen" "$FILE"
+          grep -q "sourceAuthorities" "$FILE"
+          ! grep -q "bindFramebuffer" "$FILE"
+          ! grep -q "presentColorFrame" "$FILE"
+          ! grep -q "drawArraysInstanced" "$FILE"

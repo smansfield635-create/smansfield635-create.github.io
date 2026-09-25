@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T18:34:53Z",
+  "generatedAt": "2026-09-25T19:27:01Z",
   "window": {
-    "start": "2026-06-27T18:34:53Z",
-    "end": "2026-09-25T18:34:53Z"
+    "start": "2026-06-27T19:27:01Z",
+    "end": "2026-09-25T19:27:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4922,
+    "pageLoads": 4924,
     "visits": 1237,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4922,
+        "pageLoads": 4924,
         "visits": 1237
       }
     },
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 12,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,8 +218,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
-        "pageLoads": 12,
+      "/instruments/": {
+        "pageLoads": 11,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 11,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -314,16 +314,20 @@
         "pageLoads": 26,
         "visits": 0
       },
+      "/products/archcoin/payable/": {
+        "pageLoads": 9,
+        "visits": 0
+      },
       "/products/archcoin/allocation/": {
         "pageLoads": 2,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 5,
+        "visits": 5
+      },
       "/products/nutrition/": {
         "pageLoads": 1,
-        "visits": 0
-      },
-      "/products/archcoin/payable/": {
-        "pageLoads": 9,
         "visits": 0
       },
       "/analytics-owner-device/": {
@@ -333,10 +337,6 @@
       "/meet-sean-mansfield/": {
         "pageLoads": 5,
         "visits": 0
-      },
-      "/home/": {
-        "pageLoads": 5,
-        "visits": 5
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
@@ -351,7 +351,7 @@
         "visits": 0
       },
       "/governance-bridge/": {
-        "pageLoads": 92,
+        "pageLoads": 93,
         "visits": 80
       },
       "/preview/governance-bridge/": {
@@ -359,7 +359,7 @@
         "visits": 5
       },
       "/governance-bridge/governance/": {
-        "pageLoads": 15,
+        "pageLoads": 16,
         "visits": 1
       },
       "/preview/governance-bridge/index.html": {
@@ -373,7 +373,7 @@
         "visits": 465
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3685,
+        "pageLoads": 3687,
         "visits": 0
       },
       "www.google.com": {

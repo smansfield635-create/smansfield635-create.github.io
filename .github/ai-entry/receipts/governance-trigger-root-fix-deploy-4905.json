@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "governance-trigger-root-fix-deploy-4905",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4906,
+  "requestBranch": "ai-dispatch-request-governance-trigger-root-fix-deploy-4905",
+  "requestCommit": "2e5da2a1ac656dcb278779b290451c904728d247",
+  "requestCommitParent": "eb695c93ab4fe4b9ee8354997b5ca6661e2bc61e",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "eb695c93ab4fe4b9ee8354997b5ca6661e2bc61e",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "eb695c93ab4fe4b9ee8354997b5ca6661e2bc61e",
+    "surface_id": "governance-bridge"
+  },
+  "bridgeRunId": "36186960643",
+  "dispatchedRunId": 36186980491,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36186980491",
+  "dispatchedRunHeadSha": "eb695c93ab4fe4b9ee8354997b5ca6661e2bc61e",
+  "dispatchedAt": "2026-09-25T20:38:33.173Z",
+  "resolvedAt": "2026-09-25T20:38:37.183Z"
+}

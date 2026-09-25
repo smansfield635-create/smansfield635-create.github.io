@@ -121,6 +121,50 @@ uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
 out vec4 outColor;
 
+const float H_EARTH_PLANET_RADIUS=420000.0;
+float waterBell(float value,float center,float radius){
+  float d=abs(value-center)/max(radius,0.000001);
+  if(d>=1.0)return 0.0;
+  float retained=1.0-d*d;
+  return retained*retained;
+}
+vec2 invertWaterPresentationPoint(vec3 p){
+  float horizontal=length(p.xz);
+  if(horizontal<=0.000001)return vec2(0.0);
+  float angularDistance=atan(horizontal,p.y+H_EARTH_PLANET_RADIUS);
+  float radialDistance=angularDistance*H_EARTH_PLANET_RADIUS;
+  return p.xz*(radialDistance/horizontal);
+}
+float canonicalWaterShorelineZ(float x){
+  float z=-82.0
+    +7.5*sin(x/58.0)
+    +2.75*sin((x+31.0)/19.0);
+  z+=25.0*waterBell(x,-220.0,30.0);
+  z-=28.0*waterBell(x,-170.0,30.0);
+  z+=20.0*waterBell(x,-125.0,24.0);
+  z-=20.0*waterBell(x,-82.0,24.0);
+  z-=48.0*waterBell(x,118.0,82.0);
+  z-=9.0*waterBell(x,140.0,44.0);
+  z+=10.5*waterBell(x,48.0,42.0);
+  z+=7.5*waterBell(x,198.0,46.0);
+  z+=20.0*waterBell(x,232.0,24.0);
+  float rhythmWindow=max(waterBell(x,-166.0,118.0),waterBell(x,220.0,62.0));
+  z+=(2.2*sin((x+17.0)/11.0)+1.1*sin((x-9.0)/6.5))*rhythmWindow;
+  return z;
+}
+vec3 canonicalWaterRgb(vec3 sphericalPosition){
+  vec2 local=invertWaterPresentationPoint(sphericalPosition);
+  float distance=max(0.0,local.y-canonicalWaterShorelineZ(local.x));
+  float shallowToShelf=smoothstep(6.0,86.0,distance);
+  float shelfToDeep=smoothstep(54.0,360.0,distance);
+  vec3 shallow=vec3(58.0,168.0,181.0)/255.0;
+  vec3 shelf=vec3(31.0,116.0,154.0)/255.0;
+  vec3 deep=vec3(15.0,57.0,96.0)/255.0;
+  vec3 srgb=mix(mix(shallow,shelf,shallowToShelf),deep,shelfToDeep);
+  vec3 low=srgb/12.92;
+  vec3 high=pow((srgb+0.055)/1.055,vec3(2.4));
+  return mix(low,high,step(vec3(0.04045),srgb));
+}
 float hash21(vec2 p){
   p=fract(p*vec2(123.34,456.21));
   p+=dot(p,p+45.32);
@@ -419,11 +463,10 @@ void main(){
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
     base=palette;
   }else if(vWaterClassCode>0u){
-    float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
-    float foam=pow(clamp(1.0-geometricNormal.y,0.0,1.0),1.7);
-    base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),wave*0.45+0.25);
-    base+=vec3(0.26,0.34,0.31)*foam;
-    specularScale=1.8;
+    // W0C static seam repair: evaluate canonical coast-distance optics per fragment.
+    // No animation and no geometry/tessellation mutation.
+    base=canonicalWaterRgb(vWorldPosition);
+    specularScale=1.0;
   }else{
     float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
     base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);

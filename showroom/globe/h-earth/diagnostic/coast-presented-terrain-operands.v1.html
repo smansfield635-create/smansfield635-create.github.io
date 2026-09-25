@@ -1,0 +1,10 @@
+<!doctype html><meta charset="utf-8"><title>H-Earth COAST terrain operand diagnostic</title><pre id="out"></pre><script type="module">
+import {sampleHEarthTerrainField} from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
+import {sampleHEarthVisibleTerrainClearanceSurface} from '../functional-landscape/visible-terrain-clearance.js';
+const worldX=0,worldZ=-96;
+const canonical=sampleHEarthTerrainField(worldX,worldZ);
+const presented=sampleHEarthVisibleTerrainClearanceSurface(worldX,worldZ);
+const receipt={schema:'H_EARTH_COAST_PRESENTED_TERRAIN_OPERAND_DIAGNOSTIC_v1',worldX,worldZ,canonical,presented,canonicalValid:canonical?.valid===true,presentedValid:presented?.valid===true,combinedEligible:canonical?.valid===true&&presented?.valid===true};
+document.querySelector('#out').textContent=JSON.stringify(receipt,null,2);
+globalThis.__H_EARTH_COAST_TERRAIN_OPERAND_RECEIPT__=receipt;
+</script>

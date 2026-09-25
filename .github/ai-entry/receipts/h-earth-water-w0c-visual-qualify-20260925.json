@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-water-w0c-visual-qualify-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4817,
+  "requestBranch": "ai-dispatch-request-water-w0c-visual-qualify",
+  "requestCommit": "19172805448ec29f59aed7b911104266ff421a8b",
+  "currentMainSha": "6143f9f6b5ade1135ceb2a0a8a9d6af65bda73ca",
+  "bridgeRunId": "36095337262",
+  "error": "Stale dispatch request: parent 6dcd20f94b18f5e85348494af04b72a98951552a != current main 6143f9f6b5ade1135ceb2a0a8a9d6af65bda73ca",
+  "failedAt": "2026-09-25T04:39:48.656Z"
+}

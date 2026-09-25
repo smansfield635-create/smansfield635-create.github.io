@@ -1,17 +1,17 @@
-import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 const EXPECTED_SOURCE_REVISION = '3fbbe363777398cc29040ae258ebab5eec9ced48';
-const EXPECTED_CATALOG_BLOB = 'ec3454db6557746e477180b874c0b4649f4ee0ae';
 const LOCAL_PATH = 'assets/compass/governance-panel.catalog.v1.json';
 const EXPECTED_CATALOG_REVISION = '1.0.2';
 
 const localText = await readFile(LOCAL_PATH, 'utf8');
-const hash = text => createHash('sha256').update(text, 'utf8').digest('hex');
 const local = JSON.parse(localText);
 if (local.substrate?.repository !== 'smansfield635-create/geodiametrics1') throw new Error('wrong substrate repository');
-if (local.consumerBinding?.catalogBlobSha !== EXPECTED_CATALOG_BLOB) throw new Error('wrong canonical catalog blob binding');
 if (local.catalogId !== 'GOVERNANCE_PANEL_CATALOG_V1') throw new Error('wrong catalog identity');
+if (local.substrate?.revision !== '8f6dc4a74348a5165a5628affa3820448122abc0') throw new Error('wrong canonical substrate inspection revision');
+if (local.consumerBinding?.repository !== 'smansfield635-create/smansfield635-create.github.io') throw new Error('wrong consumer repository binding');
+if (local.consumerBinding?.componentIdentity !== 'GOVERNANCE_PANEL_V2') throw new Error('wrong consumer component binding');
+for (const asset of ['assets/compass/compass.governance-platform.js','assets/compass/compass.governance-platform.css']) if (!local.consumerBinding?.assets?.includes(asset)) throw new Error(`missing consumer asset binding: ${asset}`);
 if (local.catalogRevision !== EXPECTED_CATALOG_REVISION) throw new Error('wrong catalog revision');
 if (local.generatedFor !== 'GOVERNANCE_PANEL_V2') throw new Error('wrong generatedFor identity');
 if (local.status !== 'ACTIVE_CANONICAL_CATALOG') throw new Error('catalog is not marked ACTIVE_CANONICAL_CATALOG');

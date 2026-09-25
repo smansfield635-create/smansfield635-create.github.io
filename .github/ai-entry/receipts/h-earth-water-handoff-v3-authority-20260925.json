@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-water-handoff-v3-authority-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4869,
+  "requestBranch": "ai-dispatch-request-water-handoff-v3-authority",
+  "requestCommit": "598661e531cab8a43f1484bac815a36d1ad74066",
+  "requestCommitParent": "7e320ac1f5f4991ceaa5d2c93cf8fc7c71d58c1e",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7e320ac1f5f4991ceaa5d2c93cf8fc7c71d58c1e",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "8a729a2f7b5ff7ac87fb738d551edc49fd4e927f"
+  },
+  "bridgeRunId": "36167278681",
+  "dispatchedRunId": 36167297255,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36167297255",
+  "dispatchedRunHeadSha": "7e320ac1f5f4991ceaa5d2c93cf8fc7c71d58c1e",
+  "dispatchedAt": "2026-09-25T17:28:01.987Z",
+  "resolvedAt": "2026-09-25T17:28:06.027Z"
+}

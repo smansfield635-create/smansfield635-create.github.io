@@ -1,0 +1,123 @@
+name: Cloudflare Owner RUM Exclusion v1
+
+on:
+  push:
+    branches:
+      - agent/cloudflare-owner-rum-exclusion-20260925
+    paths:
+      - '.github/workflows/cloudflare-owner-rum-exclusion-v1.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-owner-rum-exclusion-v1
+  cancel-in-progress: false
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    environment: h-earth-run8e-r3f2-preview-publication
+    env:
+      TARGET_HOST: diamondgatebridge.com
+      RULE_REF: dgb_owner_rum_exclusion_v1
+      COOKIE_NAME: __Host-dgb_owner
+    steps:
+      - name: Validate existing Cloudflare credential custody
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          echo "::add-mask::$CLOUDFLARE_API_TOKEN"
+          echo "::add-mask::$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Resolve zone and install owner RUM exclusion without replacing peer rules
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          api='https://api.cloudflare.com/client/v4'
+          auth=(-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H 'Content-Type: application/json')
+
+          zone_json="$(curl -fsS "${auth[@]}" "$api/zones?name=$TARGET_HOST&status=active")"
+          zone_id="$(jq -er '.result | map(select(.name==env.TARGET_HOST)) | if length==1 then .[0].id else error("zone resolution failed") end' <<<"$zone_json")"
+          echo "::add-mask::$zone_id"
+
+          # Derive a private browser credential from the already-private Cloudflare token.
+          # The token itself and the derived value never enter repository bytes or logs.
+          owner_value="$(printf '%s' "$CLOUDFLARE_API_TOKEN|DGB_OWNER_RUM_V1" | sha256sum | cut -d' ' -f1)"
+          echo "::add-mask::$owner_value"
+
+          rulesets="$(curl -fsS "${auth[@]}" "$api/zones/$zone_id/rulesets")"
+          ruleset_id="$(jq -r '.result[] | select(.kind=="zone" and .phase=="http_config_settings") | .id' <<<"$rulesets" | head -1)"
+
+          if [ -z "$ruleset_id" ]; then
+            created="$(jq -nc '{name:"DGB zone configuration",kind:"zone",phase:"http_config_settings",rules:[]}' |
+              curl -fsS "${auth[@]}" -X POST --data-binary @- "$api/zones/$zone_id/rulesets")"
+            ruleset_id="$(jq -er '.result.id' <<<"$created")"
+          fi
+          echo "::add-mask::$ruleset_id"
+
+          current="$(curl -fsS "${auth[@]}" "$api/zones/$zone_id/rulesets/$ruleset_id")"
+          expression="http.host eq \"$TARGET_HOST\" and http.cookie contains \"$COOKIE_NAME=$owner_value\""
+          new_rule="$(jq -nc --arg ref "$RULE_REF" --arg expression "$expression" '{
+            ref:$ref,
+            description:"Exclude registered owner development browser from Cloudflare RUM",
+            expression:$expression,
+            action:"set_config",
+            action_parameters:{disable_rum:true},
+            enabled:true
+          }')"
+
+          updated_rules="$(jq -c --arg ref "$RULE_REF" --argjson rule "$new_rule" '
+            .result.rules as $rules |
+            (($rules // []) | map(select(.ref != $ref))) + [$rule]
+          ' <<<"$current")"
+
+          payload="$(jq -nc --argjson rules "$updated_rules" '{
+            name:"DGB zone configuration",
+            kind:"zone",
+            phase:"http_config_settings",
+            rules:$rules
+          }')"
+
+          result="$(curl -fsS "${auth[@]}" -X PUT --data-binary "$payload" "$api/zones/$zone_id/rulesets/$ruleset_id")"
+          jq -e --arg ref "$RULE_REF" '
+            .success == true and
+            ([.result.rules[] | select(.ref==$ref and .action=="set_config" and .action_parameters.disable_rum==true and .enabled==true)] | length == 1)
+          ' <<<"$result" >/dev/null
+
+          # Store only the browser-registration command as a restricted Actions artifact.
+          # It contains the derived cookie value, so it must never be committed or logged.
+          umask 077
+          printf '%s\n' "document.cookie='$COOKIE_NAME=$owner_value; Path=/; Secure; SameSite=Strict; Max-Age=31536000'" > /tmp/register-owner-browser.txt
+
+          jq -n --arg host "$TARGET_HOST" --arg ref "$RULE_REF" '{
+            status:"INSTALLED",
+            host:$host,
+            ruleRef:$ref,
+            phase:"http_config_settings",
+            disableRum:true,
+            peerRulesPreserved:true,
+            credentialLogged:false,
+            credentialCommitted:false
+          }' > /tmp/owner-rum-exclusion-receipt.json
+
+      - name: Upload private browser registration material
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgb-owner-browser-registration
+          path: /tmp/register-owner-browser.txt
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload non-secret installation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgb-owner-rum-exclusion-receipt
+          path: /tmp/owner-rum-exclusion-receipt.json
+          if-no-files-found: error
+          retention-days: 30

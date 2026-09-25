@@ -1,4 +1,5 @@
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
+import { sampleHEarthWaterState } from '../../../../../../../../../h-earth-3d/environment/h-earth.water-state.js';
 import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
@@ -113,6 +114,10 @@ uniform float uFogStartDistance;
 uniform float uFogFalloff;
 uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
+uniform vec2 uWaterWaveDirection;
+uniform float uWaterWaveFrequency;
+uniform float uWaterWaveAmplitude;
+uniform float uWaterWavePhase;
 out vec4 outColor;
 
 float hash21(vec2 p){
@@ -297,6 +302,25 @@ void main(){
     base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),wave*0.45+0.25);
     base+=vec3(0.26,0.34,0.31)*foam;
     specular*=1.8;
+  }else if(vRoleCode==4u){
+    vec2 w=vWorldPosition.xz;
+    vec2 d=normalize(uWaterWaveDirection);
+    vec2 dA=normalize(d);
+    vec2 dB=normalize(vec2(d.x*0.84-d.y*0.54,d.x*0.54+d.y*0.84));
+    vec2 dC=normalize(vec2(d.x*0.93+d.y*0.37,-d.x*0.37+d.y*0.93));
+    float f=uWaterWaveFrequency;
+    float a=uWaterWaveAmplitude;
+    float phaseA=dot(w,dA)*f+uWaterWavePhase*1.00;
+    float phaseB=dot(w,dB)*(f*1.73)-uWaterWavePhase*0.73+1.9;
+    float phaseC=dot(w,dC)*(f*0.57)+uWaterWavePhase*0.41-2.7;
+    float waveA=sin(phaseA);
+    float waveB=sin(phaseB);
+    float waveC=sin(phaseC);
+    float gradientX=f*(dA.x*0.56*cos(phaseA)+dB.x*1.73*0.29*cos(phaseB)+dC.x*0.57*0.15*cos(phaseC));
+    float gradientZ=f*(dA.y*0.56*cos(phaseA)+dB.y*1.73*0.29*cos(phaseB)+dC.y*0.57*0.15*cos(phaseC));
+    vec3 animatedNormal=normalize(vec3(-gradientX*a*0.22,1.0,-gradientZ*a*0.22));
+    n=normalize(mix(n,animatedNormal,0.34));
+    specular*=1.55;
   }else{
     float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
     base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
@@ -476,7 +500,11 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), depth: uniform(resources.depthProgram, 'uDepth')
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'),
+      waterWaveDirection: uniform(resources.geometryProgram, 'uWaterWaveDirection'),
+      waterWaveFrequency: uniform(resources.geometryProgram, 'uWaterWaveFrequency'),
+      waterWaveAmplitude: uniform(resources.geometryProgram, 'uWaterWaveAmplitude'),
+      waterWavePhase: uniform(resources.geometryProgram, 'uWaterWavePhase'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
     resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
@@ -488,7 +516,15 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
     gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
-    counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
+    const canonicalWaterState = sampleHEarthWaterState(0, 300);
+    if (canonicalWaterState?.valid !== true || canonicalWaterState.waterPresent !== true) {
+      throw new Error('R3C_CANONICAL_WATER_STATE_NOT_ELIGIBLE');
+    }
+    gl.uniform2f(resources.uniforms.waterWaveDirection, canonicalWaterState.waveDirection.x, canonicalWaterState.waveDirection.z);
+    gl.uniform1f(resources.uniforms.waterWaveFrequency, canonicalWaterState.waveFrequency);
+    gl.uniform1f(resources.uniforms.waterWaveAmplitude, canonicalWaterState.waveAmplitude);
+    gl.uniform1f(resources.uniforms.waterWavePhase, 0);
+    counters.staticUniformUpdateCount = 14; initialized = true; return getResourceReceipt();
   }
 
   function renderFrame(packet) {
@@ -500,6 +536,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
+    gl.uniform1f(resources.uniforms.waterWavePhase, counters.frameCount * 0.075);
     counters.cameraUniformUpdateCount += 2;
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {

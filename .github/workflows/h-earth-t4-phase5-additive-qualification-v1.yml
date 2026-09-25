@@ -1,4 +1,4 @@
-name: H-Earth T4 Phase5 Additive Qualification v1
+name: H-Earth T4.1 Additive Ownership Qualification
 on:
   pull_request:
     branches: [ main ]
@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Static additive-contract qualification
+      - name: T4.1 ownership invariant
         shell: bash
         run: |
           set -euo pipefail
@@ -19,22 +19,87 @@ jobs:
           BIND="$BASE/diagnostic/run8e-r3d/live-gpu-binding.js"
           CP2="$BASE/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js"
           P5="$BASE/render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js"
-          T4="$BASE/render/t4-post-terrain-draw-v1.js"
+          DRAW="$BASE/render/t4-post-terrain-draw-v1.js"
+          BATCH="$BASE/render/t4-static-gpu-batches-v1.js"
+          CONTRACT="$BASE/render/t4-additive-extension-contract-v1.js"
           DATA="$BASE/render/t4-frozen-placement-v1.js"
-          grep -q "t4Requested.*?" "$BIND" || true
-          grep -q "postTerrainDraw: t4Extension?.drawAfterTerrain" "$BIND"
-          grep -q "postTerrainDraw(Object.freeze({ gl, packet, width, height }))" "$CP2"
-          grep -q "createAcceptedCp2Renderer({ ...options, postTerrainDraw })" "$P5"
-          ! grep -q "presentColorFrame" "$T4"
-          ! grep -q "bindFramebuffer" "$T4"
-          ! grep -q "createHEarthRun8ER3CPersistentRendererT4" "$T4"
-          grep -q "gl.drawArraysInstanced" "$BASE/render/t4-static-gpu-batches-v1.js"
-          grep -q "drawCalls>2" "$BASE/render/t4-static-gpu-batches-v1.js"
+
+          # T4 MAY ADD DRAWS.
+          grep -q "gl.drawArraysInstanced" "$BATCH"
+          grep -q "drawCalls>2" "$BATCH"
+          grep -q "drawAfterTerrain" "$DRAW"
           grep -q '"total":647' "$DATA"
           grep -q '"TUFT":617' "$DATA"
           grep -q '"ROCK":30' "$DATA"
-      - name: Module syntax qualification
+
+          # T4 MAY NOT OWN PRESENTATION OR RENDERER LIFECYCLE.
+          for file in "$DRAW" "$BATCH" "$CONTRACT" "$DATA"; do
+            ! grep -q "bindFramebuffer" "$file"
+            ! grep -q "createFramebuffer" "$file"
+            ! grep -q "presentColorFrame" "$file"
+            ! grep -q "createHEarthRun8ER3CPersistentRendererT4" "$file"
+            ! grep -q "OW01" "$file"
+            ! grep -q "live-render-package.run8e-r2" "$file"
+          done
+          ! grep -Eq "(^|[^A-Za-z])initialize[[:space:]]*[:=(]" "$DRAW"
+          ! grep -Eq "(^|[^A-Za-z])renderFrame[[:space:]]*[:=(]" "$DRAW"
+
+          # Phase 5 remains lifecycle/presentation authority.
+          grep -q "acceptedRenderer.initialize(packet)" "$P5"
+          grep -q "acceptedRenderer.renderFrame(packet)" "$P5"
+          grep -q "presentColorFrame: acceptedRenderer.presentColorFrame" "$P5"
+          grep -q "gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer)" "$CP2"
+          grep -q "function presentColorFrame()" "$CP2"
+
+          # T4 enters only through the bounded post-terrain seam.
+          grep -q "postTerrainDraw(Object.freeze({ gl, packet, width, height }))" "$CP2"
+          grep -q "createAcceptedCp2Renderer({ ...options, postTerrainDraw })" "$P5"
+          grep -q "t4Requested ? createHEarthT4PostTerrainDraw" "$BIND"
+          grep -q "postTerrainDraw: t4Extension?.drawAfterTerrain" "$BIND"
+          ! grep -q "T4_RENDERER_PATH" "$BIND"
+
+      - name: T4.2 distance-band invariant
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth"
+          DRAW="$BASE/render/t4-post-terrain-draw-v1.js"
+          BATCH="$BASE/render/t4-static-gpu-batches-v1.js"
+          DATA="$BASE/render/t4-frozen-placement-v1.js"
+
+          # Frozen placement remains authority.
+          grep -q '"total":647' "$DATA"
+          grep -q '"TUFT":617' "$DATA"
+          grep -q '"ROCK":30' "$DATA"
+
+          # Representation bands are explicit and bounded.
+          grep -q "nearMaximum:95" "$DRAW"
+          grep -q "midMaximum:190" "$DRAW"
+          grep -q "farMode:'OFF'" "$DRAW"
+          grep -q "'NEAR_FULL'" "$DRAW"
+          grep -q "'MID_REDUCED'" "$DRAW"
+          grep -q "'FAR_OFF'" "$DRAW"
+          grep -q "instanceStride:2" "$DRAW"
+          grep -q "drawCalls:0,tufts:0,rocks:0,total:0" "$DRAW"
+
+          # Reduction changes representation, never placement authority.
+          grep -q "Math.ceil(batch.instanceCount/instanceStride)" "$BATCH"
+          grep -q "strideBytes=20\*instanceStride" "$BATCH"
+          ! grep -q "splice(" "$DRAW"
+          ! grep -q "splice(" "$BATCH"
+          ! grep -q "Math.random" "$DRAW"
+          ! grep -q "Math.random" "$BATCH"
+
+          # T4.1 ownership invariant remains true under T4.2.
+          ! grep -q "bindFramebuffer" "$DRAW"
+          ! grep -q "createFramebuffer" "$DRAW"
+          ! grep -q "presentColorFrame" "$DRAW"
+          ! grep -q "bindFramebuffer" "$BATCH"
+          ! grep -q "createFramebuffer" "$BATCH"
+          ! grep -q "presentColorFrame" "$BATCH"
+      - name: T4.1 module syntax
         run: |
           node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-static-gpu-batches-v1.js"
           node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-post-terrain-draw-v1.js"
           node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-additive-extension-contract-v1.js"
+          node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-frozen-placement-v1.js"

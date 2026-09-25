@@ -1,7 +1,8 @@
-/* GOVERNANCE PLATFORM MAP — asset catalog + operational crosswalk */
-(()=>{
- const root=document.querySelector('[data-governance-platform]'); if(!root)return;
- const nodes=[
+/* GOVERNANCE PANEL — portable substrate catalog + host adapter */
+(()=>{'use strict';
+const CATALOG=Object.freeze({
+ version:'GOVERNANCE_PANEL_CATALOG_V2',
+ nodes:Object.freeze([
   {id:'authority',name:'Authority',className:'authority constitution',layer:'authority',x:50,y:9,desc:'Defines who or what may exercise authority and the boundaries that authority cannot cross.',source:'tools/authority/*; .github/ai-router/shared-procedures.v1.json',status:'ACTIVE / HARDENED'},
   {id:'admission',name:'Admission',className:'operation intake',layer:'control',x:18,y:25,desc:'Turns a requested governed operation into a bounded, exact-head, lockable operation identity.',source:'tools/operation-intake/*; repository-operation-intake-gate.v1.mjs',status:'ACTIVE / CANONICAL'},
   {id:'policy',name:'Policy',className:'policy-as-code',layer:'control',x:50,y:25,desc:'Applies deterministic development and authority-boundary decisions before protected work can proceed.',source:'.github/ai-router/development-pipeline/policy-registry.v1.json',status:'ACTIVE / FAIL-CLOSED'},
@@ -16,29 +17,49 @@
   {id:'continuity',name:'Continuity',className:'successor + recovery',layer:'closure',x:24,y:84,desc:'Carries governed work forward through successor, recovery, and cross-operation continuity without silently inheriting stale authority.',source:'.github/ai-router/project-continuation/*; successor procedures',status:'ACTIVE / GOVERNED'},
   {id:'closure',name:'Closure',className:'terminal state',layer:'closure',x:50,y:84,desc:'Terminates the governed operation with an explicit terminal disposition and preserved evidence lineage.',source:'tools/operation-intake/*; terminal-closure transport',status:'ACTIVE / CANONICAL'},
   {id:'boundary',name:'Boundary',className:'publication + estate',layer:'boundary',x:76,y:84,desc:'Separates canonical governance from publication, historical surfaces, and project-specific domains.',source:'cross-repository authority estate specification and implementation',status:'ACTIVE / GOVERNED'}
- ];
- const edges=[['authority','admission'],['authority','policy'],['authority','routing'],['admission','policy'],['admission','routing'],['policy','qualification'],['routing','execution'],['lifecycle','qualification'],['qualification','execution'],['execution','materialization'],['qualification','provenance'],['execution','provenance'],['materialization','provenance'],['provenance','telemetry'],['provenance','reconciliation'],['telemetry','reconciliation'],['reconciliation','continuity'],['continuity','closure'],['reconciliation','closure'],['closure','boundary'],['materialization','boundary']];
- const ops={
-  admit:['authority','admission','policy','routing','provenance','closure'],
-  change:['authority','admission','policy','lifecycle','qualification','execution','provenance','reconciliation','closure'],
-  qualify:['authority','admission','policy','routing','qualification','provenance','closure'],
-  execute:['authority','admission','policy','routing','qualification','execution','provenance','telemetry','reconciliation','closure'],
-  materialize:['authority','admission','routing','qualification','execution','materialization','provenance','boundary','closure'],
-  reconcile:['authority','provenance','telemetry','reconciliation','continuity','closure'],
-  recover:['authority','provenance','reconciliation','continuity','admission','qualification','execution','closure'],
-  close:['authority','provenance','reconciliation','closure','boundary']
- };
- const labels={admit:'Admit',change:'Change',qualify:'Qualify',execute:'Execute',materialize:'Materialize',reconcile:'Reconcile',recover:'Recover',close:'Close'};
- const canvas=root.querySelector('[data-governance-canvas]'), detail=root.querySelector('[data-governance-detail]'), track=root.querySelector('[data-governance-track]');
- const nodeMap=new Map(nodes.map(n=>[n.id,n]));
- canvas.innerHTML='<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+edges.map(([a,b],i)=>{const x1=nodeMap.get(a).x,y1=nodeMap.get(a).y,x2=nodeMap.get(b).x,y2=nodeMap.get(b).y;return '<path class="governance-edge" data-edge="'+a+' '+b+'" d="M '+x1+' '+y1+' L '+x2+' '+y2+'"/>';}).join('')+'</svg>'+nodes.map(n=>'<button type="button" class="governance-node" data-node="'+n.id+'" data-layer="'+n.layer+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-pressed="false"><span class="governance-node__name">'+n.name+'</span><span class="governance-node__class">'+n.className+'</span></button>').join('');
- const nodeEls=[...canvas.querySelectorAll('[data-node]')], edgeEls=[...canvas.querySelectorAll('[data-edge]')];
- const neighbors=id=>new Set(edges.flatMap(([a,b])=>a===id?[b]:b===id?[a]:[]));
- let op='execute', selected='execution';
- function renderDetail(id){const n=nodeMap.get(id);if(!n)return;detail.querySelector('[data-detail-kicker]').textContent=n.className;detail.querySelector('[data-detail-title]').textContent=n.name;detail.querySelector('[data-detail-description]').textContent=n.desc;detail.querySelector('[data-detail-source]').textContent=n.source;detail.querySelector('[data-detail-status]').textContent=n.status;detail.querySelector('[data-detail-role]').textContent='Participates in '+labels[op]+' operations.';}
- function render(){const active=new Set(ops[op]), near=neighbors(selected);nodeEls.forEach(el=>{const id=el.dataset.node;el.classList.toggle('is-active',id===selected);el.classList.toggle('is-connected',id!==selected&&(active.has(id)||near.has(id)));el.classList.toggle('is-dimmed',!active.has(id)&&id!==selected);el.setAttribute('aria-pressed',id===selected?'true':'false');});edgeEls.forEach(el=>{const [a,b]=el.dataset.edge.split(' ');const live=active.has(a)&&active.has(b);const connected=a===selected||b===selected;el.classList.toggle('is-active',live);el.classList.toggle('is-connected',connected&&!live);});track.innerHTML='<strong>'+labels[op]+'</strong>'+ops[op].map(id=>'<span class="governance-track__sep">→</span><span>'+nodeMap.get(id).name+'</span>').join('');renderDetail(selected);}
- root.querySelectorAll('[data-governance-op]').forEach(btn=>btn.addEventListener('click',()=>{op=btn.dataset.governanceOp;root.querySelectorAll('[data-governance-op]').forEach(b=>b.setAttribute('aria-selected',b===btn?'true':'false'));selected=ops[op].includes(selected)?selected:ops[op][Math.min(1,ops[op].length-1)];render();}));
- nodeEls.forEach(btn=>btn.addEventListener('click',()=>{selected=btn.dataset.node;render();}));
- root.addEventListener('keydown',e=>{if(!['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key))return;const current=nodeEls.findIndex(n=>n.dataset.node===selected);if(current<0)return;e.preventDefault();let next=current+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:e.key==='ArrowDown'?4:-4);next=Math.max(0,Math.min(nodeEls.length-1,next));selected=nodeEls[next].dataset.node;nodeEls[next].focus();render();});
- render();
+ ]),
+ edges:Object.freeze([['authority','admission'],['authority','policy'],['authority','routing'],['admission','policy'],['admission','routing'],['policy','qualification'],['routing','execution'],['lifecycle','qualification'],['qualification','execution'],['execution','materialization'],['qualification','provenance'],['execution','provenance'],['materialization','provenance'],['provenance','telemetry'],['provenance','reconciliation'],['telemetry','reconciliation'],['reconciliation','continuity'],['continuity','closure'],['reconciliation','closure'],['closure','boundary'],['materialization','boundary']]),
+ operations:Object.freeze({
+  admit:Object.freeze(['authority','admission','policy','routing','provenance','closure']),
+  change:Object.freeze(['authority','admission','policy','lifecycle','qualification','execution','provenance','reconciliation','closure']),
+  qualify:Object.freeze(['authority','admission','policy','routing','qualification','provenance','closure']),
+  execute:Object.freeze(['authority','admission','policy','routing','qualification','execution','provenance','telemetry','reconciliation','closure']),
+  materialize:Object.freeze(['authority','admission','routing','qualification','execution','materialization','provenance','boundary','closure']),
+  reconcile:Object.freeze(['authority','provenance','telemetry','reconciliation','continuity','closure']),
+  recover:Object.freeze(['authority','provenance','reconciliation','continuity','admission','qualification','execution','closure']),
+  close:Object.freeze(['authority','provenance','reconciliation','closure','boundary'])
+ }),
+ labels:Object.freeze({admit:'Admit',change:'Change',qualify:'Qualify',execute:'Execute',materialize:'Materialize',reconcile:'Reconcile',recover:'Recover',close:'Close'})
+});
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const q=(s,r=document)=>r.querySelector(s);
+let instance=null;
+function build(host,options={}){
+ if(instance){return instance.api;}
+ const trigger=document.createElement('button');trigger.type='button';trigger.className='governance-panel-trigger';trigger.textContent=options.label||'Governance Panel';trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls','governance-panel');
+ const panel=document.createElement('section');panel.className='governance-panel';panel.id='governance-panel';panel.setAttribute('aria-hidden','true');panel.setAttribute('aria-label','Governance Panel');
+ panel.innerHTML='<div class="governance-panel__sheet" role="dialog" aria-modal="true" aria-labelledby="governance-panel-title"><header class="governance-panel__top"><div><p class="governance-panel__eyebrow">Governance substrate</p><h2 class="governance-panel__title" id="governance-panel-title">See the substrate. Trace the operation.</h2><p class="governance-panel__subtitle">Inspect the reusable control substrate and the standard operational tracks that traverse it.</p></div><button class="governance-panel__close" type="button" aria-label="Close Governance Panel">×</button></header><div class="governance-panel__body"><div class="governance-ops" role="tablist" aria-label="Standard governance operations">'+Object.entries(CATALOG.labels).map(([id,label])=>'<button class="governance-op" type="button" role="tab" aria-selected="false" data-governance-op="'+id+'">'+label+'</button>').join('')+'</div><div class="governance-track" data-governance-track aria-live="polite"></div><div class="governance-map"><div class="governance-canvas" data-governance-canvas role="group" aria-label="Interactive governance substrate map"></div><aside class="governance-detail" data-governance-detail aria-live="polite"><p class="governance-detail__kicker" data-detail-kicker></p><h3 data-detail-title></h3><p class="governance-detail__description" data-detail-description></p><span class="governance-detail__status" data-detail-status></span><div class="governance-detail__section"><strong>Operational role</strong><p data-detail-role></p></div><div class="governance-detail__section"><strong>Canonical implementation</strong><code data-detail-source></code></div><div class="governance-legend"><span><i class="authority"></i> authority</span><span><i></i> control / execution</span><span><i class="evidence"></i> evidence</span><span><i class="boundary"></i> boundary</span></div></aside></div></div></div>';
+ host.append(trigger);document.body.append(panel);
+ const canvas=q('[data-governance-canvas]',panel),detail=q('[data-governance-detail]',panel),track=q('[data-governance-track]',panel);
+ const nodes=CATALOG.nodes,nodeMap=new Map(nodes.map(n=>[n.id,n]));
+ canvas.innerHTML='<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+CATALOG.edges.map(([a,b])=>{const A=nodeMap.get(a),B=nodeMap.get(b);return '<path class="governance-edge" data-edge="'+a+' '+b+'" d="M '+A.x+' '+A.y+' L '+B.x+' '+B.y+'"></path>';}).join('')+'</svg>'+nodes.map(n=>'<button type="button" class="governance-node" data-node="'+n.id+'" data-layer="'+n.layer+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-pressed="false"><span class="governance-node__name">'+esc(n.name)+'</span><span class="governance-node__class">'+esc(n.className)+'</span></button>').join('');
+ const nodeEls=[...canvas.querySelectorAll('[data-node]')],edgeEls=[...canvas.querySelectorAll('[data-edge]')];
+ const neighbors=id=>new Set(CATALOG.edges.flatMap(([a,b])=>a===id?[b]:b===id?[a]:[]));
+ let op='execute',selected='execution',previousFocus=null,closingTimer=0;
+ const renderDetail=()=>{const n=nodeMap.get(selected);detail.querySelector('[data-detail-kicker]').textContent=n.className;detail.querySelector('[data-detail-title]').textContent=n.name;detail.querySelector('[data-detail-description]').textContent=n.desc;detail.querySelector('[data-detail-source]').textContent=n.source;detail.querySelector('[data-detail-status]').textContent=n.status;detail.querySelector('[data-detail-role]').textContent='Participates in '+CATALOG.labels[op]+' operations.';};
+ const render=()=>{const active=new Set(CATALOG.operations[op]),near=neighbors(selected);nodeEls.forEach(el=>{const id=el.dataset.node;el.classList.toggle('is-active',id===selected);el.classList.toggle('is-connected',id!==selected&&(active.has(id)||near.has(id)));el.classList.toggle('is-dimmed',!active.has(id)&&id!==selected);el.setAttribute('aria-pressed',id===selected?'true':'false');});edgeEls.forEach(el=>{const [a,b]=el.dataset.edge.split(' ');const live=active.has(a)&&active.has(b),connected=a===selected||b===selected;el.classList.toggle('is-active',live);el.classList.toggle('is-connected',connected&&!live);});track.innerHTML='<strong>'+CATALOG.labels[op]+'</strong>'+CATALOG.operations[op].map(id=>'<span class="governance-track__sep">→</span><span>'+esc(nodeMap.get(id).name)+'</span>').join('');renderDetail();};
+ const setOp=id=>{if(!CATALOG.operations[id])return;op=id;if(!CATALOG.operations[op].includes(selected))selected=CATALOG.operations[op][Math.min(1,CATALOG.operations[op].length-1)];panel.querySelectorAll('[data-governance-op]').forEach(b=>b.setAttribute('aria-selected',b.dataset.governanceOp===op?'true':'false'));render();};
+ const open=()=>{if(panel.classList.contains('is-open'))return;previousFocus=document.activeElement;clearTimeout(closingTimer);panel.classList.remove('is-closing');panel.classList.add('is-open');panel.setAttribute('aria-hidden','false');trigger.setAttribute('aria-expanded','true');document.documentElement.style.overflow='hidden';requestAnimationFrame(()=>panel.querySelector('.governance-op[aria-selected=true]')?.focus());};
+ const close=()=>{if(!panel.classList.contains('is-open'))return;panel.classList.add('is-closing');panel.classList.remove('is-open');panel.setAttribute('aria-hidden','true');trigger.setAttribute('aria-expanded','false');document.documentElement.style.overflow='';clearTimeout(closingTimer);closingTimer=setTimeout(()=>panel.classList.remove('is-closing'),500);previousFocus?.focus?.({preventScroll:true});};
+ const toggle=()=>panel.classList.contains('is-open')?close():open();
+ trigger.addEventListener('click',toggle);q('.governance-panel__close',panel).addEventListener('click',close);panel.addEventListener('click',e=>{if(e.target===panel)close();});
+ panel.querySelectorAll('[data-governance-op]').forEach(b=>b.addEventListener('click',()=>setOp(b.dataset.governanceOp)));
+ nodeEls.forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.node;render();}));
+ panel.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close();return;}if(!['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(e.key))return;const i=nodeEls.findIndex(n=>n.dataset.node===selected);if(i<0)return;e.preventDefault();const next=Math.max(0,Math.min(nodeEls.length-1,i+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:e.key==='ArrowDown'?4:-4)));selected=nodeEls[next].dataset.node;nodeEls[next].focus();render();});
+ setOp(op);instance={api:Object.freeze({version:'GOVERNANCE_PANEL_V2',catalog:CATALOG,mount:()=>instance.api,open,close,toggle}),trigger,panel};
+ return instance.api;
+}
+function autoMount(){const host=q('[data-governance-panel-host]')||document.body;build(host);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',autoMount,{once:true});else autoMount();
+globalThis.DGBGovernancePanel=Object.freeze({version:'GOVERNANCE_PANEL_V2',catalog:CATALOG,mount:(options={})=>{if(!instance)build(options.host||q('[data-governance-panel-host]')||document.body,options);return instance.api;},open:()=>instance?.api.open(),close:()=>instance?.api.close(),toggle:()=>instance?.api.toggle()});
 })();

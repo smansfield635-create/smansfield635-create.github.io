@@ -1,6 +1,6 @@
 name: Governance Control Plane 3D Runtime Qualification
 
-on:
+'on':
   workflow_dispatch:
     inputs:
       candidate_sha: {required: true, type: string}

@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Validate existing Cloudflare credential custody
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ANALYTICS_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -euo pipefail
           test -n "$CLOUDFLARE_API_TOKEN"
@@ -33,7 +33,7 @@ jobs:
 
       - name: Resolve zone and install owner RUM exclusion without replacing peer rules
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ANALYTICS_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -euo pipefail
           api='https://api.cloudflare.com/client/v4'

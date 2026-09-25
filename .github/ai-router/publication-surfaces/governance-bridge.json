@@ -27,7 +27,7 @@
       "includes": [
         "Governance Substrate",
         "Return to Governance Bridge",
-        "compass.governance-platform.js?v=governance-panel-v9"
+        "compass.governance-platform.js?v=governance-panel-v10"
       ],
       "excludes": [
         "governance-page-back"
@@ -49,22 +49,52 @@
       },
       {
         "type": "selectorExists",
-        "selector": "[data-governance-mode=\"failure-response\"]"
+        "selector": "[data-governance-flip]"
       }
     ],
     "interactions": [
       {
-        "name": "select-failure-response",
+        "name": "flip-to-failure-response",
         "action": {
           "type": "click",
-          "selector": "[data-governance-mode=\"failure-response\"]"
+          "selector": "[data-governance-flip]"
         },
         "assertions": [
           {
             "type": "attributeEquals",
-            "selector": "[data-governance-mode=\"failure-response\"]",
-            "name": "aria-selected",
+            "selector": "[data-governance-flip]",
+            "name": "aria-pressed",
             "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-governance-face-label]",
+            "value": "Back · Failure Response"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-governance-failure=\"admission_refused\"]"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "flip-to-governed-operation",
+        "action": {
+          "type": "click",
+          "selector": "[data-governance-flip]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-governance-flip]",
+            "name": "aria-pressed",
+            "value": "false"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-governance-face-label]",
+            "value": "Front · Governed Operation"
           }
         ],
         "timeoutMs": 5000

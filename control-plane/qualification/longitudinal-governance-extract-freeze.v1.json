@@ -1,6 +1,6 @@
 {
   "schema": "LONGITUDINAL_GOVERNANCE_EXTRACT_FREEZE_v1",
-  "status": "BOUNDED_OBSERVATION_WINDOW_FROZEN",
+  "status": "BOUNDED_OBSERVATION_WINDOW_RECONSTRUCTED_AND_MEASURED",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "boundToPullRequest": 4790,
   "boundToCandidate": "589f103d258225c83830875b8e70dcac35ed5c7e",
@@ -37,6 +37,16 @@
   "claims": {
     "FULL_HISTORY_EXHAUSTED": false,
     "BOUNDED_LONGITUDINAL_WINDOW_FROZEN": true,
-    "MEASUREMENTS_FINAL": false
+    "MEASUREMENTS_FINAL": true,
+    "UNIQUE_RUN_DENOMINATOR": 4994,
+    "RAW_5000_USED_AS_UNIQUE_DENOMINATOR": false
+  },
+  "reconstruction": {
+    "method": "Created-time subranges bounded by the frozen newest/oldest coordinates, with global workflow_run.id deduplication and exact oldest-run-ID cutoff for the shared boundary second.",
+    "transportRecords": 4997,
+    "excludedSameTimestampRunsOlderThanFrozenBoundary": 3,
+    "uniqueFrozenRuns": 4994,
+    "rawPaginationOverlapRecords": 6,
+    "rawPageRecordCount": 5000
   }
 }

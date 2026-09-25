@@ -1,0 +1,81 @@
+name: Governance Control Plane 3D Runtime Qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: ${{ inputs.candidate_sha }}, fetch-depth: 1}
+      - name: Fetch exact comparison base
+        env: {BASE_SHA: ${{ inputs.base_sha }}}
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Prove bounded 3D candidate
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort > /tmp/files
+          printf '%s\n' assets/compass/compass.governance-platform.css assets/compass/compass.governance-platform.js | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/files
+          test "$(git show "$BASE_SHA":assets/compass/governance-panel.catalog.v1.json | git hash-object --stdin)" = "$(git show "$CANDIDATE_SHA":assets/compass/governance-panel.catalog.v1.json | git hash-object --stdin)"
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/g3d-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/governance-bridge/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/g3d-http.log; exit 1
+      - name: Run collect-all 3D runtime matrix
+        run: |
+          mkdir -p .qualification/governance-3d
+          cat > .qualification/governance-3d/inspect.mjs <<'NODE'
+          import {chromium} from 'playwright'; import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true}), errors=[], observations=[];
+          const viewports={phone320:{width:320,height:760},phone390:{width:390,height:844},tablet:{width:900,height:1000},desktop:{width:1440,height:1100}};
+          const ops=['admit','change','qualify','execute','materialize','reconcile','recover','close'];
+          const focal={admit:'admission',change:'execution',qualify:'qualification',execute:'execution',materialize:'materialization',reconcile:'reconciliation',recover:'continuity',close:'closure'};
+          const record=(v,o,a,e,x)=>{const pass=JSON.stringify(e)===JSON.stringify(x);(pass?observations:errors).push({viewport:v,operation:o,assertion:a,expected:e,observed:x,disposition:pass?'PASS':'FAIL'})};
+          for(const [vn,viewport] of Object.entries(viewports)){
+            const page=await browser.newPage({viewport}); const pageErrors=[]; page.on('pageerror',e=>pageErrors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/governance-bridge/',{waitUntil:'networkidle'});
+            await page.locator('[data-governance-panel-trigger]').click(); await page.locator('#governance-panel.is-open').waitFor();
+            record(vn,'initial','node-count',14,await page.locator('.governance-node').count());
+            record(vn,'initial','edge-count',21,await page.locator('.governance-edge').count());
+            for(const op of ops){
+              await page.locator('[data-governance-op="'+op+'"]').click();
+              record(vn,op,'selected-op','true',await page.locator('[data-governance-op="'+op+'"]').getAttribute('aria-selected'));
+              record(vn,op,'focal-node','true',await page.locator('[data-node="'+focal[op]+'"]').getAttribute('aria-pressed'));
+              const detail=page.locator('[data-governance-detail]');
+              for(const label of ['What it does','Why it exists','Role in this operation','Produces','Canonical implementation']) record(vn,op,'detail-'+label,true,(await detail.innerText()).includes(label));
+              await page.screenshot({path:'.qualification/governance-3d/'+vn+'-'+op+'.png',fullPage:true});
+            }
+            record(vn,'recover','false-continuity-admission-edge',0,await page.locator('[data-edge="continuity admission"]').count());
+            const canvas=page.locator('[data-governance-canvas]'),box=await canvas.boundingBox();
+            if(box){await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.85,box.y+box.height*.25,{steps:6});await page.mouse.up();await page.screenshot({path:'.qualification/governance-3d/'+vn+'-rotated.png',fullPage:true});}
+            await page.locator('.governance-reset').click();
+            record(vn,'lifecycle','page-errors',0,pageErrors.length);
+            await page.locator('.governance-panel__close').click(); record(vn,'lifecycle','return-hidden',true,await page.locator('#governance-panel').getAttribute('aria-hidden')==='true');
+            await page.close();
+          }
+          const receipt={result:errors.length?'FAIL':'PASS',errors,observations}; fs.writeFileSync('.qualification/governance-3d/receipt.json',JSON.stringify(receipt,null,2));
+          await browser.close(); if(errors.length){console.error(JSON.stringify(errors,null,2));process.exit(1)}
+          NODE
+          node .qualification/governance-3d/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: governance-control-plane-3d-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/governance-3d
+          retention-days: 30

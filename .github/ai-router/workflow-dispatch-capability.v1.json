@@ -865,6 +865,27 @@
       "deploymentAuthority": false,
       "productMutationAuthority": false,
       "successResult": "PASS"
+    },
+    "GOVERNANCE_CONTROL_PLANE_3D_RUNTIME_QUALIFICATION": {
+      "workflow": "governance-control-plane-3d-runtime-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PASS"
     }
   },
   "continuity": {

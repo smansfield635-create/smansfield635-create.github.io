@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T11:30:56Z",
+  "generatedAt": "2026-09-25T12:43:21Z",
   "window": {
-    "start": "2026-06-27T11:30:56Z",
-    "end": "2026-09-25T11:30:56Z"
+    "start": "2026-06-27T12:43:21Z",
+    "end": "2026-09-25T12:43:21Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4881,
+    "pageLoads": 4971,
     "visits": 1207,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4881,
+        "pageLoads": 4971,
         "visits": 1207
       }
     },
@@ -70,33 +70,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/categories/reality/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/scientific-law/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/": {
-        "pageLoads": 104,
+        "pageLoads": 184,
         "visits": 9
       },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/archcoin/": {
-        "pageLoads": 54,
+        "pageLoads": 144,
         "visits": 3
-      },
-      "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/laws/": {
         "pageLoads": 302,
@@ -385,7 +365,7 @@
         "visits": 436
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3674,
+        "pageLoads": 3764,
         "visits": 0
       },
       "www.google.com": {

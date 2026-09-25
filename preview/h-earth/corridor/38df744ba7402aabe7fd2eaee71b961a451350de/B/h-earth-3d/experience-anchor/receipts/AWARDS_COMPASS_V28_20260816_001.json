@@ -1,0 +1,42 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "AWARDS_COMPASS_V28_65_SECOND_HOMECOMING_LIVE_REPLACEMENT_20260816_002",
+  "subjectSha256": "42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AWARDS_COMPASS_V28_20260816_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AWARDS_COMPASS_V28_20260816_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AWARDS_COMPASS_V28_20260816_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/awards/index.html",
+      "sha256": "e35c2d0965ec69bb9e0dec2c54245d9b340e1d268d75241a0f5aac98ff5a69ec"
+    },
+    {
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4",
+      "sha256": "42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "instructions": "V28 is the owner-approved exact 65-second Chapter 01 homecoming master. It preserves the V22 immutable cinematic floor, shows the full Methods carousel composition without the V27 zoom crop, restores 'No matter how far from home, you're never lost.' between 'Therefore—' and 'Nothing navigates better than a compass.', keeps DiamondGateBridge.com directly beneath the Compass conclusion, and finishes with a separate glowing DIAMOND GATE BRIDGE brand-only closure. Chapter 02 and H-Earth world/runtime files remain untouched."
+}

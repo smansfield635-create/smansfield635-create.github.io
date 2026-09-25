@@ -1,0 +1,43 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT_LOCATOR_v1",
+  "instrumentId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENT_v1",
+  "status": "PERMANENT_INSTRUMENT_ACTIVE_BY_SEPARATE_RATIFICATION",
+  "controlRoot": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation",
+  "toolRoot": "tools/h-earth-map-wide-terrain",
+  "components": {
+    "terrainCensus": "tools/h-earth-map-wide-terrain/terrain-census.v1.mjs",
+    "estateReservationValidator": "tools/h-earth-map-wide-terrain/estate-reservation-validator.v1.mjs",
+    "zonePlanCompiler": "tools/h-earth-map-wide-terrain/zone-articulation-plan-compiler.v1.mjs",
+    "continuousOrchestrationCompiler": "tools/h-earth-map-wide-terrain/continuous-map-orchestration-compiler.v1.mjs",
+    "cumulativeConstraintEvaluator": "tools/h-earth-map-wide-terrain/cumulative-constraint-evaluator.v1.mjs",
+    "varianceRepetitionDetector": "tools/h-earth-map-wide-terrain/variance-repetition-detector.v1.mjs",
+    "previewPackagePlanner": "tools/h-earth-map-wide-terrain/preview-package-planner.v1.mjs"
+  },
+  "bootstrapCertificationWorkflow": ".github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml",
+  "permanentRatificationWorkflow": ".github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml",
+  "immutableBootstrapSource": {
+    "pr": 570,
+    "exactHead": "7c0b8871928b21cd9b2806f058bce34eed11f2ba",
+    "packageFingerprint": "3f1024c9dc2fed15d3a8a7a25387066a48f5a8ffddf2e3cfd00b96dd95e45f28",
+    "status": "CERTIFIED_INACTIVE_BOOTSTRAP_SOURCE"
+  },
+  "ratification": {
+    "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_PERMANENT_RATIFICATION_AND_ACTIVATION_v3",
+    "lockGeneration": 150,
+    "exactGoverningMain": "a4ba663dbff1d780cf80e8e40ecaa396c2ee85c7",
+    "activationCommit": "RESOLVED_BY_POST_ACTIVATION_RECEIPT",
+    "activationCondition": "EXACT_CERTIFIED_SUCCESSOR_MERGED_TO_MAIN_AND_POST_MERGE_VERIFICATION_PASS",
+    "separateRatificationRequired": true,
+    "separateRatificationSatisfied": true,
+    "postActivationVerificationRequired": true,
+    "temporaryAuthorityInheritance": "PROHIBITED"
+  },
+  "operationalBoundary": {
+    "planningAndEvaluationAvailable": true,
+    "actualTerrainMutationRequiresSeparateAdmission": true,
+    "manorConstructionRequiresSeparateAdmission": true,
+    "candidatePreviewRequiresSeparateOperation": true,
+    "automaticMergeAuthority": false,
+    "productRuntimeDeploymentAuthority": false
+  }
+}

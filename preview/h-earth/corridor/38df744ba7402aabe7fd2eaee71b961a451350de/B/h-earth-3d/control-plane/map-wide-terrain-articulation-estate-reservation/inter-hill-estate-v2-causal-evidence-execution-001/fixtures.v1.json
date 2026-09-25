@@ -1,0 +1,54 @@
+{
+  "negativeCases": [
+    "GAP",
+    "OVERLAP",
+    "DUPLICATE",
+    "MISSING_SHARD",
+    "CAPACITY_FAILURE",
+    "TRACE_INCOMPLETE",
+    "ZERO_PASS_INFERENCE"
+  ],
+  "plannerCases": [
+    {
+      "eligibleSeedCount": 0,
+      "expectedShards": 0,
+      "expectedWaves": 0
+    },
+    {
+      "eligibleSeedCount": 1,
+      "expectedShards": 1,
+      "expectedWaves": 1
+    },
+    {
+      "eligibleSeedCount": 64,
+      "expectedShards": 1,
+      "expectedWaves": 1
+    },
+    {
+      "eligibleSeedCount": 65,
+      "expectedShards": 2,
+      "expectedWaves": 1
+    },
+    {
+      "eligibleSeedCount": 8192,
+      "expectedShards": 128,
+      "expectedWaves": 1
+    },
+    {
+      "eligibleSeedCount": 8193,
+      "expectedShards": 129,
+      "expectedWaves": 2
+    },
+    {
+      "eligibleSeedCount": 21561,
+      "expectedShards": 337,
+      "expectedWaves": 3
+    }
+  ],
+  "schema": "H_EARTH_INTER_HILL_ESTATE_V2_FIXTURES_v1",
+  "syntheticRerun": {
+    "expectedConfigurationCount": 108,
+    "orientationsPerSeed": 36,
+    "seedCount": 3
+  }
+}

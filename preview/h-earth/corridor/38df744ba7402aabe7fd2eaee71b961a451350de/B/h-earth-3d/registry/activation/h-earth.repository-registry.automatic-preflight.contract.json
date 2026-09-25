@@ -1,0 +1,64 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_CONTRACT_v1",
+  "contractVersion": 1,
+  "targetNumber": 4,
+  "targetSubtarget": "4E-3",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "scopeRoots": [
+    "/h-earth-3d/",
+    "/showroom/globe/h-earth/"
+  ],
+  "activationTriggers": [
+    "COMPATIBLE_REPOSITORY_AGENT_DISCOVERS_ROOT_AGENTS_ENTRYPOINT",
+    "H_EARTH_PATH_IS_PRESENT_IN_PROPOSED_OPERATION",
+    "H_EARTH_PATH_IS_CHANGED_IN_PULL_REQUEST_OR_PUSH",
+    "TARGET_4E_SYSTEMIC_AUDIT_SCENARIO_IS_EXECUTED"
+  ],
+  "automaticSequence": [
+    "NORMALIZE_AND_CLASSIFY_PATHS",
+    "LOCATE_BOOTSTRAP",
+    "VERIFY_PROTECTED_IDENTITIES",
+    "CONSTRUCT_READ_ONLY_PREFLIGHT_OPERATION",
+    "DERIVE_COMPLETE_AFFECTED_SCOPE",
+    "EXECUTE_INSTALLED_VALIDATOR",
+    "EMIT_DETERMINISTIC_PREFLIGHT_RECEIPT",
+    "RETURN_PASS_REVIEW_REQUIRED_BLOCK_STOP_OR_NOT_APPLICABLE"
+  ],
+  "defaultOperation": {
+    "operationClass": "READ_ONLY_INSPECTION",
+    "requestedAction": "AUTOMATIC_H_EARTH_PREFLIGHT",
+    "requestedMutation": false,
+    "allowReviewRequired": true,
+    "requireExactOccurrenceForReadOnly": false,
+    "separateAuthorityAvailable": false
+  },
+  "dispositionLaw": {
+    "PASS": "H_EARTH_SCOPE_COMPREHENDED_WITHOUT_BLOCKING_FAILURE",
+    "REVIEW_REQUIRED": "H_EARTH_SCOPE_COMPREHENDED_WITH_NONCRITICAL_LIMITATION",
+    "BLOCK": "PROPOSED_OPERATION_VIOLATES_REGISTERED_H_EARTH_GOVERNANCE",
+    "STOP": "H_EARTH_SCOPE_OR_CRITICAL_IDENTITY_CANNOT_BE_RESOLVED",
+    "NOT_APPLICABLE": "NO_H_EARTH_SCOPED_PATH_DETECTED"
+  },
+  "coverage": {
+    "compatibleRepositoryAgents": "AUTOMATIC_BY_ROOT_ENTRYPOINT",
+    "githubPullRequestAndPushChecks": "AUTOMATIC_AFTER_WORKFLOW_IS_PRESENT_ON_ACTIVE_BRANCH",
+    "manualCli": "AVAILABLE_FOR_OTHER_TOOLS",
+    "allExternalTools": "NOT_CLAIMED"
+  },
+  "boundaries": {
+    "preflightAuthorizesMutation": false,
+    "preflightAuthorizesMerge": false,
+    "preflightAuthorizesCanonicalization": false,
+    "workflowCreatesBranchProtection": false,
+    "workflowBecomesActiveOnMainBeforeMerge": false,
+    "toolInferenceIsEvidence": false,
+    "unresolvedFieldsMayBeInvented": false
+  },
+  "stoppingCondition": {
+    "automaticActivationContractComplete": true,
+    "advanceBeyondTarget4E3": false,
+    "nextAuthorizedSubtarget": "4E-4"
+  }
+}

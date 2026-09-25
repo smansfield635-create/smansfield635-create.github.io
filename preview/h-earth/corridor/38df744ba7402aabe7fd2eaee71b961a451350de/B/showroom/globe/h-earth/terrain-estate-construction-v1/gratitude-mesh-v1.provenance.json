@@ -1,0 +1,153 @@
+{
+  "schema": "AUDRALIA_PRECOMPUTED_GEOGRAPHY_PROVENANCE_v1",
+  "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
+  "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+  "canonicalGeography": {
+    "path": "inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
+    "gitBlobSha": "50991dd777ccd015fd8a6d8eae7b4d02b4a8450c",
+    "sha256": "fbdfcdfcfbf004a0839240e49b9108bcab5db7d5851c93599e8b6ff1a0067abf",
+    "contractId": "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1",
+    "reconstructionRevision": 5
+  },
+  "canonicalTerrain": {
+    "path": "inspection/audralia-24057-exact/snapshot/h-earth-3d/terrain/h-earth.terrain-field.js",
+    "gitBlobSha": "f4f65b05ab303a11fb1d9c4e25de211fde73722a",
+    "sha256": "8785ed578a9250701721d55b1bc4652d143c8d26f9f1c81d646c67531f0514f5"
+  },
+  "rendererGenerationSource": {
+    "path": "inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs",
+    "gitBlobSha": "872d20b17bb0cd89d9613ca0262b25350890a617",
+    "geographyImportResolvedToCanonicalSnapshot": true
+  },
+  "hydrology": {
+    "derivationLaw": "CHRONOLOGY_TO_RELIEF_TO_DENDRITIC_DRAINAGE",
+    "riverIds": [
+      "GRATITUDE_MAJOR_THROUGH_RIVER",
+      "WEST_FORK",
+      "WEST_TRIBUTARY_A",
+      "WEST_TRIBUTARY_B",
+      "WEST_TRIBUTARY_C",
+      "CENTRAL_HEADWATERS",
+      "CENTRAL_TRIBUTARY_A",
+      "CENTRAL_TRIBUTARY_B",
+      "LAKE_OVERFLOW",
+      "EASTERN_RIVER",
+      "EAST_TRIBUTARY_A",
+      "EAST_TRIBUTARY_B",
+      "DELTA_BRANCH_WEST",
+      "DELTA_BRANCH_CENTRAL",
+      "DELTA_BRANCH_EAST"
+    ],
+    "lakeIds": [
+      "GREAT_INTERIOR_LAKE",
+      "SHIELD_LAKE",
+      "EASTERN_CIRQUE_LAKE"
+    ],
+    "prohibitedLegacyRiverIds": [
+      "GRATITUDE_RIVER_WEST",
+      "GRATITUDE_RIVER_CENTRAL",
+      "GRATITUDE_RIVER_EAST"
+    ],
+    "prohibitedLegacyRiverIdsReachable": false
+  },
+  "generator": {
+    "path": "tools/audralia-canonical-geography-rebind/generate-precomputed-gratitude-mesh-v1.mjs",
+    "sha256": "640698cabfd6c01c92761ebbcc27dc5dadf57563d59e016a2aa114fabfdfb9dc",
+    "deterministicGzipMtime": 0,
+    "targetExpandedPartBytes": 1200000
+  },
+  "loader": {
+    "path": "showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs",
+    "gitBlobShaBeforeFinalCommit": "1000c4a56837f5ec8a06abfb51cdb3246780be77",
+    "provenanceVerificationRequired": true
+  },
+  "mesh": {
+    "format": "AUDGMV1",
+    "version": 1,
+    "payloadBytes": 9169742,
+    "payloadSha256": "f8dd85dca58c88df5fe71fc9fd6d10d4859744d5e03322e6c8a1700afccd8569",
+    "fullGzipPath": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.bin.gz",
+    "fullGzipBytes": 2802972,
+    "fullGzipSha256": "669c13d9f269b98f97b234025ec94cd542650dc967adc1a3aeb31d4774d9a8de",
+    "partCount": 8,
+    "parts": [
+      {
+        "index": 0,
+        "file": "gratitude-mesh-v1.part-00.gz",
+        "expandedBytes": 1200000,
+        "compressedBytes": 399560,
+        "expandedSha256": "e7f7b4b468e256f55af11d557b2bbce483a470b4175b32285d55d9a269e1e4b3",
+        "compressedSha256": "5b6d3b0dbfdc3b42578c21b5dad93c073a805265cbed1a494e49b9dd656caf81"
+      },
+      {
+        "index": 1,
+        "file": "gratitude-mesh-v1.part-01.gz",
+        "expandedBytes": 1200000,
+        "compressedBytes": 430472,
+        "expandedSha256": "fe6081d520ad4f3212af46ff9e3c5ffcab44ca7d5094919c71307ba4377e77bc",
+        "compressedSha256": "83ccbbde79bcce9bb7b545bd0412830f9dc9f352ded9b3b9079f379931fc55d3"
+      },
+      {
+        "index": 2,
+        "file": "gratitude-mesh-v1.part-02.gz",
+        "expandedBytes": 1200000,
+        "compressedBytes": 445642,
+        "expandedSha256": "8af552720c68d7a2825db98404fdc1651b0dc1fe86ba94e379cd793ec7786f34",
+        "compressedSha256": "fd2e03e67afd33d55dd621678fd2353eedb83ae72c0506db0b8b2bc5c568cb5c"
+      },
+      {
+        "index": 3,
+        "file": "gratitude-mesh-v1.part-03.gz",
+        "expandedBytes": 1200000,
+        "compressedBytes": 294338,
+        "expandedSha256": "9ddfc54767cdfd48075fd3e4536544528a7a0311c3d9c5a58e974b1c213dc386",
+        "compressedSha256": "673ac70aa2312a93e4ada1ae9498ec9e61fa0bdb9b3f3589271cc8fe38431a8a"
+      },
+      {
+        "index": 4,
+        "file": "gratitude-mesh-v1.part-04.gz",
+        "expandedBytes": 1200000,
+        "compressedBytes": 412605,
+        "expandedSha256": "d5ae96cbfb00348eb56970c34d23857799052e738fc9361ca5778a551d773ff5",
+        "compressedSha256": "3795dc46520b395c49f060638fec304597f5f3b76780a08583920439c5974798"
+      },
+      {
+        "index": 5,
+        "file": "gratitude-mesh-v1.part-05.gz",
+        "expandedBytes": 1200000,
+        "compressedBytes": 289178,
+        "expandedSha256": "6976a22bbd95be16fb73da296dadcfa501c30ef3eb9ee4a15a7a3cf83098f921",
+        "compressedSha256": "0031e02e2884342bc3b6ef4786a1016f7010a3eb693f61c15883ed7ded5a63cf"
+      },
+      {
+        "index": 6,
+        "file": "gratitude-mesh-v1.part-06.gz",
+        "expandedBytes": 1200000,
+        "compressedBytes": 280356,
+        "expandedSha256": "29d09a8d6b75ad20284b2d8d157fa9e370452c5bab92404a6c598328cfd7aa0f",
+        "compressedSha256": "bbb6f1225c33236543e839a3666b4fc97495f86308ce771b5f06a5d21b363a6a"
+      },
+      {
+        "index": 7,
+        "file": "gratitude-mesh-v1.part-07.gz",
+        "expandedBytes": 769742,
+        "compressedBytes": 268572,
+        "expandedSha256": "08b0f2765f6b6c2ff53427e759f567eccddb13f9752383a23d3d8493d1ca730a",
+        "compressedSha256": "f7ce16aea4d9ad6853c3a2e2fe0995333b17dd6312437f919650e9a00878c7e4"
+      }
+    ],
+    "landVertexLength": 1284360,
+    "landIndexLength": 192624,
+    "waterVertexLength": 671188,
+    "waterIndexLength": 143856,
+    "statisticsSha256": "8b694961b618d72e7501d30693ce2c2e6eee166e0b914769579973c279c0f9c6"
+  },
+  "authority": {
+    "singleGeography": true,
+    "singleTerrain": true,
+    "precomputationIsPerformanceOnly": true,
+    "deviceMayChangePerformanceBudgetOnly": true,
+    "retiredRev3Reachable": false,
+    "importMapMayChangeGeographicTruth": false
+  }
+}

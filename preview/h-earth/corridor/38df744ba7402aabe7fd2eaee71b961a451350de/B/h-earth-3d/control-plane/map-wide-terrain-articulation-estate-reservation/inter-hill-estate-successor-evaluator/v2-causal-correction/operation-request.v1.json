@@ -1,0 +1,169 @@
+{
+  "allowedPaths": [
+    ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/AGENTS.md",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/operation-request.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/causal-rules.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/fixtures.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/rollback.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs",
+    "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator-v2.mjs"
+  ],
+  "artifactPaths": [
+    "/tmp/h-earth-v2-causal-correction/verification-receipt.json",
+    "/tmp/h-earth-v2-causal-correction/fixture-results.json",
+    "/tmp/h-earth-v2-causal-correction/determinism-receipt.json",
+    "/tmp/h-earth-v2-causal-correction/path-boundary-receipt.json",
+    "/tmp/h-earth-v2-causal-correction/v1-preservation-receipt.json"
+  ],
+  "constructionProcedureLocator": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json",
+  "errorPrecedence": [
+    "INVALID_INPUT",
+    "UNEVALUABLE_MISSING_OR_UNKNOWN_EVIDENCE",
+    "EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY",
+    "DECLARED_HARD_CONSTRAINT_REJECTION",
+    "EXPLICIT_INFEASIBILITY_PROOF",
+    "FEASIBLE_ARRANGEMENT_FOUND"
+  ],
+  "exactGoverningHead": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+  "exactTestCommand": "node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs",
+  "executingRole": {
+    "lockClosureAuthority": false,
+    "mergeAuthority": false,
+    "role": "ROLE_1_ENGINEERING_AND_REPOSITORY_CONSTRUCTION_AUTHORITY"
+  },
+  "fingerprintDomain": {
+    "algorithm": "SHA-256",
+    "domain": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002",
+    "orderedComponents": [
+      "exactGoverningHead",
+      "operationId",
+      "lockScope",
+      "allowedPaths",
+      "causalRulesDigest",
+      "fixtureResultsDigest",
+      "deterministicRerunDigest",
+      "v1PreservationDigest",
+      "candidateHead"
+    ]
+  },
+  "independentVerifier": {
+    "candidateBound": true,
+    "freshCheckoutRequired": true,
+    "role": "ROLE_3_FRESH_INDEPENDENT_VERIFICATION_AUTHORITY"
+  },
+  "lockScope": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_EXACT_13_PATH_SCOPE",
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002",
+  "prohibitedPaths": [
+    "h-earth-3d/terrain/",
+    "showroom/globe/h-earth/",
+    "h-earth-3d/runtime/",
+    "h-earth-3d/h-earth.camera.js",
+    "h-earth-3d/h-earth.navigation.js",
+    "h-earth-3d/h-earth.water.js",
+    "h-earth-3d/h-earth.placement.js",
+    "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+    ".github/operation-intake/active-operation-ledger.v1.json",
+    "ALL_V1_EVALUATOR_PATHS",
+    "ALL_MANOR_AND_ESTATE_CONSTRUCTION_PATHS"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "disposition": "AUTHORIZED_FOR_FRESH_CANONICAL_INTAKE_AND_BOUNDED_ROLE_1_CONSTRUCTION",
+    "handoff": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_ROLE_4_TO_ROLE_1_CANONICAL_INTAKE_AND_CONSTRUCTION_HANDOFF_v1",
+    "role": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY"
+  },
+  "requiredInputs": [
+    {
+      "id": "ROLE_4_CANONICAL_HANDOFF_v1",
+      "resolved": true
+    },
+    {
+      "id": "FRESH_CURRENT_MAIN:6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+      "resolved": true
+    },
+    {
+      "id": "PR_636_MERGE_ANCESTRY_CONFIRMED",
+      "resolved": true
+    },
+    {
+      "id": "PR_645_MERGE_ANCESTRY_CONFIRMED",
+      "resolved": true
+    },
+    {
+      "id": "PR_647_MERGE_ANCESTRY_CONFIRMED",
+      "resolved": true
+    },
+    {
+      "id": "LOCK_279_TERMINAL_RELEASED_FAIL_CLOSED",
+      "resolved": true
+    },
+    {
+      "id": "LOCK_280_TERMINAL_RELEASED_PASS_CLOSED",
+      "resolved": true
+    },
+    {
+      "id": "V1_FROZEN_BASELINE_IDENTIFIED",
+      "resolved": true
+    },
+    {
+      "id": "H_EARTH_ROUTER_AND_INSTRUCTIONS_INSPECTED",
+      "resolved": true
+    },
+    {
+      "id": "NO_EXISTING_002_OPERATION_OR_SCOPE",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_13_PATH_ADDITIVE_BOUNDARY_DECLARED",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "DETERMINISTIC_MACHINE_READABLE_CAUSAL_TRACE_PER_REJECTED_CANDIDATE",
+    "EIGHT_REQUIRED_CAUSAL_RESULT_CLASSES",
+    "ZERO_PASS_NON_INFERENCE_GUARD",
+    "SEPARATE_TERRAIN_AND_ESTATE_INFEASIBILITY_PROOFS",
+    "UNEVALUABLE_FAIL_CLOSED_STATE",
+    "DETERMINISTIC_RERUN_RECEIPT",
+    "V1_PRESERVATION_RECEIPT",
+    "EXACT_PATH_BOUNDARY_RECEIPT",
+    "ROLE_1_VERIFICATION_ARTIFACT"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "CURRENT_MAIN_MOVED_BEFORE_ADMISSION",
+    "CONTROLLING_MERGE_ANCESTRY_NOT_PRESERVED",
+    "LOCK_279_OR_280_NOT_TERMINAL_AND_RELEASED",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "PATH_BOUNDARY_MISMATCH",
+    "V1_PATH_MUTATION",
+    "PRODUCT_TERRAIN_LIVE_OR_MANOR_PATH_MUTATION",
+    "DIRECT_LEDGER_MUTATION",
+    "LOCK_MANAGER_REIMPLEMENTATION",
+    "UNSUPPORTED_INFEASIBILITY_INFERENCE",
+    "DETERMINISM_FAILURE"
+  ],
+  "subjectIdentity": {
+    "predecessorOperation": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001",
+    "requiredResultClasses": 8,
+    "subject": "INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION",
+    "v1EvaluatorHead": "b935c204da2904e86f9c9c566bed0ac9b0de4193",
+    "v1MergeCommit": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f"
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED",
+    "VOIDED",
+    "EXPIRED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml"
+}

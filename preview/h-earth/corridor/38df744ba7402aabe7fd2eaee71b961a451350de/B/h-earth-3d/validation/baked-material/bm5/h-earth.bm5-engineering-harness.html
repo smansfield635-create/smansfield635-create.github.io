@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth BM5 Baked Material Engineering</title>
+  <style>
+    html,body{margin:0;background:#101214;color:#e8edf2;font-family:monospace}main{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px}canvas{width:100%;height:auto;background:#000}.mobile{display:none}pre{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round2-control-field-candidate.js": "/h-earth-3d/validation/baked-material/bm5/h-earth.bm5-candidate-shim.mjs"
+    }
+  }
+  </script>
+</head>
+<body>
+<main>
+  <canvas id="cp2-canvas"></canvas>
+  <canvas id="candidate-canvas"></canvas>
+  <canvas id="cp2-mobile-canvas" class="mobile"></canvas>
+  <canvas id="candidate-mobile-canvas" class="mobile"></canvas>
+  <pre id="status">BM5_RUNNING</pre>
+</main>
+<script type="module">
+  const status = document.querySelector('#status');
+  try {
+    const [controlResponse, browserModule] = await Promise.all([
+      fetch('../../../control-plane/post-cp2-round2/baked-material/h-earth.bm5-engineering-control.v1.json'),
+      import('../../cp8/h-earth.cp8-engineering-browser.mjs')
+    ]);
+    if (!controlResponse.ok) throw new Error(`BM5_CONTROL_FETCH_FAILED:${controlResponse.status}`);
+    const control = await controlResponse.json();
+    const suite = await browserModule.createCp8EngineeringSuite({
+      cp2Canvas: document.querySelector('#cp2-canvas'),
+      candidateCanvas: document.querySelector('#candidate-canvas'),
+      cp2MobileCanvas: document.querySelector('#cp2-mobile-canvas'),
+      candidateMobileCanvas: document.querySelector('#candidate-mobile-canvas'),
+      control
+    });
+    window.H_EARTH_BM5_ENGINEERING = suite;
+    status.textContent = JSON.stringify(suite.getIdentity(), null, 2);
+    document.documentElement.dataset.bm5Ready = 'true';
+  } catch (error) {
+    status.textContent = error?.stack || String(error);
+    document.documentElement.dataset.bm5Error = 'true';
+  }
+</script>
+</body>
+</html>

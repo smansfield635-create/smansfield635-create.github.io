@@ -1,0 +1,49 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP3C_PREDEPLOYMENT_EXECUTABLE_VERIFICATION_v1",
+  "checkpoint": "CP3C_PREDEPLOYMENT_EXECUTABLE_VERIFICATION",
+  "parentHead": "e4f51ae55764601440a007fdb2c9af248e9ed46e",
+  "execution": {
+    "environment": "NODE_BROWSER_CONTRACT_SIMULATION",
+    "physicalBrowserEngine": false,
+    "physicalDevice": false,
+    "command": "node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3c-predeployment-browser-contract.harness.mjs",
+    "status": "PASS",
+    "results": {
+      "allEightGesturesEmitCorrectIntent": true,
+      "forwardBackwardOppositeTravel": true,
+      "frameRateVariationMateriallyStable": true,
+      "frameRateTravel": {
+        "hz30": -7.5,
+        "hz60": -7.499999999999999,
+        "hz120": -7.5
+      },
+      "pinchTravelLockStable": true,
+      "noUnboundedInputBacklog": true,
+      "releaseTermination": true,
+      "proposalToPresentationCorrespondence": true,
+      "cp2bObservableWitnesses": [
+        "continuousIntent",
+        "intent",
+        "beforeState",
+        "afterState"
+      ]
+    }
+  },
+  "preserved": {
+    "worldGeometry": true,
+    "webGLRenderer": true,
+    "cameraCoordinateConvention": true,
+    "publicNavigationState": true,
+    "frameReceipts": true,
+    "cp2bDiagnosticObservation": true
+  },
+  "boundaries": {
+    "deploymentPerformed": false,
+    "physicalAllEightAcceptancePerformed": false,
+    "realBrowserEngineExecutionClaimed": false,
+    "productionMutationAddedByCP3C": false
+  },
+  "status": "PASS_BOUNDED_PREDEPLOYMENT_VERIFICATION",
+  "nextCheckpoint": "CP4_PHYSICAL_ALL_EIGHT_ACCEPTANCE",
+  "stoppingBoundary": "STOP_BEFORE_MERGE_DEPLOYMENT_OR_PHYSICAL_ACCEPTANCE"
+}

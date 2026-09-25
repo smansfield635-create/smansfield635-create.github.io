@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "H_EARTH_REGION_001_GRATITUDE_REGION_COORDINATE_RECONCILIATION_ACTIVE_MAIN_REFERENCE_AMENDMENT_v1",
+  "artifactIdentity": {
+    "artifactId": "H_EARTH_REGION_001_GRATITUDE_REGION_COORDINATE_RECONCILIATION_ACTIVE_MAIN_REFERENCE_AMENDMENT_v1",
+    "artifactClass": "CONTROLLING_ARTIFACT_REFERENCE_UPDATE_CANDIDATE",
+    "status": "CANDIDATE_PENDING_VALIDATION_AND_SEPARATE_MERGE_DECISION",
+    "canonical": false,
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "branch": "agent/h-earth-gratitude-region-controlling-artifact-reference-update-001",
+    "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-coordinate-reconciliation.active-main-reference-amendment.v1.json",
+    "technicalRegionId": "REGION_001",
+    "worldFacingRegionName": "GRATITUDE_REGION"
+  },
+  "authorityQuestion": "WHAT_EXACT_ACTIVE_MAIN_PACKAGE_NOW_CUSTODIES_THE_COMPLETED_NONFINAL_GRATITUDE_REGION_COORDINATE_RECONCILIATION_RESULTS?",
+  "amendmentClass": "REFERENCE_CUSTODY_ONLY",
+  "amendedControllingArtifacts": [
+    {
+      "artifactId": "H_EARTH_REGION_001_GRATITUDE_REGION_SPATIAL_INTERACTION_AREA_DEVELOPMENT_v1",
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json",
+      "historicalGitBlob": "ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d",
+      "role": "DETAILED_SPATIAL_EVIDENCE_AND_NONFINAL_CANDIDATE_DEVELOPMENT",
+      "contentMutationPerformed": false,
+      "historicalBlobSuperseded": false
+    },
+    {
+      "artifactId": "H_EARTH_REGION_001_MIRRORLAND_NARRATIVE_CHARACTER_AND_TEMPORAL_RECONCILIATION_BRIEF_v1",
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json",
+      "historicalGitBlob": "1702d62036a6b241fdadddfabc304a5288f38652",
+      "role": "AUTHORIZATION_DISPOSITION_AND_CONTROLLING_ARTIFACT_REFERENCE_AUTHORITY",
+      "contentMutationPerformed": false,
+      "historicalBlobSuperseded": false
+    }
+  ],
+  "activeMainPackageReference": {
+    "pullRequest": 311,
+    "authorizedPackageHead": "a0cadd1e5ce70d98c34f11ddacb063c91816bd93",
+    "baseAtMerge": "8ed5faaffb3ce62190e5268a2538b3d4c6e4ea2f",
+    "activeMainMergeCommit": "d30bb105762b4205df90c3450de6c13076ef072e",
+    "activePackagePathCount": 16,
+    "additions": 3856,
+    "deletions": 0,
+    "packageDeltaClass": "EXACT_SIXTEEN_PATH_ADDITIONS_ONLY_ANALYTICAL_PACKAGE",
+    "packageContentClasses": [
+      "ANALYTICAL_SOURCE",
+      "VALIDATION_HARNESS",
+      "RUNNER",
+      "DURABLE_RECEIPT",
+      "INPUT_LEDGER",
+      "WORKFLOW"
+    ]
+  },
+  "registryCustody": {
+    "activeRegistryResolution": "PASS_CLOSED",
+    "exactPackageBlobMatches": true,
+    "exactPackagePathCount": 16,
+    "governedPathCount": 15,
+    "preflightDisposition": "PASS",
+    "preflightFailureCodes": [],
+    "requestedPathUnresolvedClosed": true,
+    "operationScopeUnresolvedClosed": true
+  },
+  "postMergeExecutionCustody": {
+    "status": "PASS_CLOSED",
+    "workflowRun": 30481132636,
+    "workflowJob": 90675213287,
+    "evidenceArtifact": 8735677584,
+    "artifactDigest": "sha256:50114608d8061dc63c35862969eb7544247e001c8d772acc4d05769378bd9364",
+    "firstExecutionDigest": "c77bec499d0748384eef19666b502f8d8e13375a463d7aac824136addbeb1f9f",
+    "secondExecutionDigest": "c77bec499d0748384eef19666b502f8d8e13375a463d7aac824136addbeb1f9f",
+    "deterministicRepeatExecution": true,
+    "issues": []
+  },
+  "preservedAnalyticalDisposition": {
+    "GR_CR_01_ANALYSIS_HARNESS": "PASS_CLOSED_DO_NOT_REOPEN",
+    "GR_CR_02_ENTRY_ZONE": "PASS_CLOSED_DO_NOT_REOPEN",
+    "GR_CR_03_MIRROR_MANOR": "PASS_CLOSED_DO_NOT_REOPEN",
+    "GR_CR_04_CAVERN_PRECINCT": "PASS_CLOSED_DO_NOT_REOPEN",
+    "FRONTIER_PLAINS_CAPACITY_AND_RELATIONSHIP_ANALYSIS": "PASS_CLOSED",
+    "REGIONAL_CANDIDATE_SET_COMPLETENESS_AND_CLOSURE_AUDIT": "PASS_CLOSED",
+    "requiredAreaCount": 4,
+    "candidateCount": 4,
+    "relationshipMatrixCount": 6,
+    "allCandidatesEligible": true,
+    "candidateAcceptance": false,
+    "finalRegionalPlacementAccepted": false,
+    "finalCoordinatesAssigned": false
+  },
+  "authorityBoundary": {
+    "referenceUpdateCandidateConstructed": true,
+    "referenceUpdateActiveOnMain": false,
+    "mergeAuthorityCreated": false,
+    "candidateAcceptance": false,
+    "finalCoordinatesAssigned": false,
+    "canonicalization": false,
+    "terrainMutation": false,
+    "geometryConstruction": false,
+    "runtimeMutation": false,
+    "gameplayMutation": false,
+    "publicRouteMutation": false,
+    "livePageChange": false,
+    "productConstruction": false
+  },
+  "supersession": {
+    "supersedesArtifactContent": false,
+    "supersedesHistoricalGitBlobs": false,
+    "closesLifecycleGapOnlyAfterMerge": "CONTROLLING_ARTIFACT_REFERENCE_UPDATE",
+    "preservesOriginalPackageInputs": true,
+    "preservesOriginalClosureWorkflowExecutability": true
+  },
+  "nextSeparateAuthorities": [
+    "REFERENCE_UPDATE_CANDIDATE_MERGE_DECISION",
+    "FINAL_CANDIDATE_PLACEMENT_DISPOSITION",
+    "LATER_CONTROLLING_MANIFEST_ACCEPTANCE_AMENDMENT",
+    "LATER_TERRAIN_GEOMETRY_RUNTIME_OR_PRODUCT_CONSTRUCTION_AUTHORITY"
+  ],
+  "stoppingBoundary": "STOP_AFTER_REFERENCE_UPDATE_CANDIDATE_VALIDATION_BEFORE_MERGE_OR_FINAL_CANDIDATE_PLACEMENT_DISPOSITION"
+}

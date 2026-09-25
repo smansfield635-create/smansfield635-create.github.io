@@ -1,0 +1,64 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_PRESERVATION_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R1_MATERIAL_LEDGER_PRESERVATION_PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r1-material-ledger-preservation-001",
+  "baseMainHead": "d73b241006c1cf43e8a6ad220fd192d55f51c6e8",
+  "validatedCoreHead": "799b3429259e08ac6afb687a50fdcf52e6d418a9",
+  "verifiedOn": "2026-07-27",
+  "workflowEvidence": {
+    "runId": 30232602384,
+    "jobId": 89874157308,
+    "conclusion": "success",
+    "artifactId": 8640568574,
+    "artifactName": "h-earth-run8e-r1-material-ledger-evidence",
+    "artifactDigest": "sha256:e5044d0c88fede5d2ce6114b7dc80466371435a69b16d33e0d53aeefd39859ba",
+    "automaticRegistryPreflightRunId": 30232602326,
+    "automaticRegistryPreflightJobId": 89874157263,
+    "automaticRegistryPreflightConclusion": "success"
+  },
+  "materials": {
+    "architectureProbe001": {
+      "gitBlobSha": "1ed92708f944eaf6df7208ad4412ca675306947b",
+      "contentSha256": "984872d3940c6deca2f6284eb9d2d15c9e69aa1f812a278767c27a5212fafea6",
+      "byteCount": 5781
+    },
+    "architectureProbe002": {
+      "gitBlobSha": "1435919811a962c1a869c443662b9b4a3a2e52fe",
+      "contentSha256": "5eb25e3b96ee0781f88c5b81a5e341f1b508dfe0ee0838e95835ccf55b2ad0ac",
+      "byteCount": 5786
+    },
+    "physicalInteraction": {
+      "gitBlobSha": "a419ef0026de7053bc7ff4f44d2b316b18b17c5c",
+      "contentSha256": "84d1fef931b9936fc2f558b5863cfa086e357d599bca4217bb4a9f8cb014406b",
+      "byteCount": 13475
+    }
+  },
+  "custodyBoundary": {
+    "sourceOccurrenceClass": "CONVERSATION_TRANSCRIBED_JSON",
+    "originalBrowserDownloadFilesUploaded": false,
+    "originalBrowserDownloadByteIdentityEstablished": false,
+    "repositoryTranscriptionByteIdentityEstablished": true,
+    "screenRecordingReceived": false
+  },
+  "disposition": {
+    "run8ER1ProfilingObjective": "COMPLETE",
+    "run8ER1ArchitectureDisposition": "ESTABLISHED",
+    "run8ER1DiagnosticCheckpoint": "PASS_CLOSED",
+    "referenceDeviceInteractionUsability": "FAIL",
+    "run8E": "FAIL_OPEN",
+    "run8EPassClosed": false,
+    "run8ER2AuthorizedAfterPreservation": true,
+    "run8ER2Started": false
+  },
+  "scope": {
+    "productMutationPerformed": false,
+    "publicRouteMutated": false,
+    "rendererImplemented": false,
+    "worldCameraOrNavigationAuthorityMutated": false,
+    "run8ER2SourceCreated": false
+  },
+  "stoppingBoundary": "STOP_BEFORE_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_CONSTRUCTION",
+  "issues": []
+}

@@ -1,0 +1,231 @@
+{
+  "manifestId": "H_EARTH_STEP_2_AUTHORIZED_CHANGESET_MANIFEST_v1",
+  "manifestVersion": 1,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "checkpoint": "STEP_2_3_EXACT_CHANGESET_LOCK",
+  "expectedParentPolicy": {
+    "policyId": "H_EARTH_STEP_2_ADMITTED_PACKAGE_PARENT_POLICY_v1",
+    "baseCommit": "08cf54db77dc48e23de8874953561bc2964551ba",
+    "currentHeadMustDescendFromBase": true,
+    "compareBaseToCurrentHeadMayContainOnlyStep2AdmissionPaths": true,
+    "allowedAdmissionPaths": [
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.current-state.manifest.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.successor-target.manifest.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.authorized-changeset.manifest.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.fixtures.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.validator.mjs",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.audit-receipt.json",
+      "/.github/workflows/h-earth-step-2-decision-accountability-audit.yml"
+    ],
+    "decisionBlobMustMatchAdmittedDecisionBlob": true,
+    "noUnrelatedInterveningChanges": true,
+    "resolvedParentCommitRecordedAtStep3Preflight": true
+  },
+  "canonicalizationDecision": "PROMOTE_EXISTING_SUCCESSOR_BYTES_TO_STABLE_REGISTRY_PATH",
+  "authorizedOperations": [
+    {
+      "operationId": "OP_01_PROMOTE_SUCCESSOR_BYTES",
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+      "operationType": "REPLACE_WITH_EXISTING_REPOSITORY_BLOB",
+      "beforeGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911",
+      "sourcePath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+      "sourceGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+      "afterGitBlobShaRule": "EQUALS_SOURCE_GIT_BLOB_SHA"
+    },
+    {
+      "operationId": "OP_02_REPLACE_BOOTSTRAP_BINDING",
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "operationType": "DETERMINISTIC_JSON_POINTER_PATCH",
+      "beforeGitBlobSha": "e422e814a29e024df91e8410687ab29ffe63c382",
+      "patches": [
+        {
+          "pointer": "/bootstrapId",
+          "value": "H_EARTH_REPOSITORY_REGISTRY_CANONICAL_BOOTSTRAP_v2"
+        },
+        {
+          "pointer": "/bootstrapVersion",
+          "value": 2
+        },
+        {
+          "pointer": "/status",
+          "value": "COMPLETE_VERIFIED_ACCEPTED_CANONICAL_ACTIVE"
+        },
+        {
+          "pointer": "/accepted",
+          "value": true
+        },
+        {
+          "pointer": "/canonical",
+          "value": true
+        },
+        {
+          "pointer": "/controlsRepositoryScope",
+          "value": true
+        },
+        {
+          "pointer": "/candidate/artifactId",
+          "value": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2"
+        },
+        {
+          "pointer": "/candidate/registryVersion",
+          "value": "1.0.0-candidate.2"
+        },
+        {
+          "pointer": "/candidate/byteCount",
+          "derive": "SUCCESSOR_SOURCE_BYTE_COUNT"
+        },
+        {
+          "pointer": "/candidate/contentSha256",
+          "derive": "SUCCESSOR_SOURCE_SHA256"
+        },
+        {
+          "pointer": "/candidate/gitBlobSha",
+          "value": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308"
+        },
+        {
+          "pointer": "/activeTransition",
+          "value": {
+            "decisionId": "H_EARTH_STEP_2_TRANSITION_DECISION_2026_07_24_001",
+            "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+            "sourcePath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+            "sourceGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+            "stableRegistryPath": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+            "canonicalizationMode": "PROMOTE_EXISTING_SUCCESSOR_BYTES_TO_STABLE_REGISTRY_PATH",
+            "accepted": true,
+            "canonical": true,
+            "active": true,
+            "decisionConsumed": true
+          }
+        }
+      ],
+      "serialization": "JSON_PRETTY_2_SPACE_TRAILING_NEWLINE"
+    },
+    {
+      "operationId": "OP_03_RENEW_DISCOVERY_BINDING",
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.js",
+      "operationType": "EXACT_TEXT_REPLACEMENT_SEQUENCE",
+      "beforeGitBlobSha": "e1894f4d6510fe2df8d0fe21943dfd0238263051",
+      "replacements": [
+        {
+          "from": "  candidateAccepted: false,\n  canonicalRegistryCreated: false,\n  acceptedRegistryOccurrenceCreated: false,",
+          "to": "  candidateAccepted: true,\n  canonicalRegistryCreated: true,\n  acceptedRegistryOccurrenceCreated: true,"
+        },
+        {
+          "from": "  explicitOptInRequiredWhileCandidate: true",
+          "to": "  explicitOptInRequiredWhileCandidate: false"
+        },
+        {
+          "from": "  descriptorId: 'H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_DISCOVERY_DESCRIPTOR_v1',",
+          "to": "  descriptorId: 'H_EARTH_REPOSITORY_REGISTRY_CANONICAL_DISCOVERY_DESCRIPTOR_v2',"
+        },
+        {
+          "from": "  status: 'INSTALLED_CANDIDATE_NOT_ACCEPTED',\n  accepted: false,\n  canonical: false,\n  controlsRepositoryScope: false,",
+          "to": "  status: 'ACTIVE_ACCEPTED_CANONICAL_REGISTRY',\n  accepted: true,\n  canonical: true,\n  controlsRepositoryScope: true,"
+        },
+        {
+          "from": "  candidateByteCount: 140320,",
+          "toDerived": "SUCCESSOR_SOURCE_BYTE_COUNT_LINE"
+        },
+        {
+          "from": "    '5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe',",
+          "toDerived": "SUCCESSOR_SOURCE_SHA256_LITERAL_LINE"
+        },
+        {
+          "from": "  candidateGitBlobSha: '10ab7b203e03fde419e526d0cce2c0af42860911',",
+          "to": "  candidateGitBlobSha: '8cf7a1cce76c4381f9c5f017cc3a132d8ecea308',"
+        },
+        {
+          "from": "  toolUseMode: 'EXPLICIT_OPT_IN_READ_ONLY',",
+          "to": "  toolUseMode: 'AUTOMATIC_H_EARTH_SCOPED_READ_ONLY',"
+        }
+      ],
+      "replacementCountRule": "EACH_EXACTLY_ONCE"
+    },
+    {
+      "operationId": "OP_04_REBIND_VALIDATOR_IDENTITY",
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.identity.js",
+      "operationType": "EXACT_TEXT_REPLACEMENT_SEQUENCE",
+      "beforeGitBlobSha": "62ca170428a5de0920e8d198df59b89385ea129e",
+      "replacements": [
+        {
+          "from": "    registryVersion: '1.0.0-candidate.1',",
+          "to": "    registryVersion: '1.0.0-candidate.2',"
+        },
+        {
+          "from": "    candidateGitBlobSha: '10ab7b203e03fde419e526d0cce2c0af42860911'",
+          "to": "    candidateGitBlobSha: '8cf7a1cce76c4381f9c5f017cc3a132d8ecea308'"
+        }
+      ],
+      "replacementCountRule": "EACH_EXACTLY_ONCE"
+    },
+    {
+      "operationId": "OP_05_RENEW_LOADER_IDENTITY_CHECKS",
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+      "operationType": "EXACT_TEXT_REPLACEMENT_SEQUENCE",
+      "beforeGitBlobSha": "efa6e09512f57936c45764f65cc8219bb4a0374d",
+      "replacements": [
+        {
+          "from": "    candidateNotAccepted: registryInstance.accepted === false,\n    candidateNotCanonical: discovery.canonical === false",
+          "to": "    sourceInstanceRemainsCandidate: registryInstance.accepted === false,\n    acceptedDiscovery: discovery.accepted === true,\n    canonicalDiscoveryActive: discovery.canonical === true,\n    controlsRepositoryScope: discovery.controlsRepositoryScope === true"
+        }
+      ],
+      "replacementCountRule": "EACH_EXACTLY_ONCE"
+    },
+    {
+      "operationId": "OP_06_CONSUME_DECISION",
+      "path": "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.json",
+      "operationType": "DETERMINISTIC_JSON_POINTER_PATCH",
+      "patches": [
+        {
+          "pointer": "/status",
+          "value": "CONSUMED"
+        },
+        {
+          "pointer": "/replayProtection/remainingUseCount",
+          "value": 0
+        },
+        {
+          "pointer": "/replayProtection/consumed",
+          "value": true
+        },
+        {
+          "pointer": "/decisionDigest",
+          "derive": "RECOMPUTED_DECISION_DIGEST_AFTER_PATCHES"
+        }
+      ],
+      "serialization": "JSON_PRETTY_2_SPACE_TRAILING_NEWLINE",
+      "beforeGitBlobShaRule": "RESOLVE_FROM_ADMITTED_DECISION_PATH_AT_STEP3_PREFLIGHT"
+    }
+  ],
+  "authorizedPaths": [
+    "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+    "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+    "/h-earth-3d/registry/h-earth.repository-registry.js",
+    "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.identity.js",
+    "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+    "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.json"
+  ],
+  "authorizedPathCount": 6,
+  "forbiddenPathRule": "ALL_REPOSITORY_PATHS_NOT_EXACTLY_LISTED_IN_AUTHORIZED_PATHS",
+  "resultingStateRequirements": {
+    "stableRegistryBlobEqualsSuccessorBlob": true,
+    "bootstrapAccepted": true,
+    "bootstrapCanonical": true,
+    "bootstrapActive": true,
+    "discoveryAccepted": true,
+    "discoveryCanonical": true,
+    "discoveryControlsRepositoryScope": true,
+    "validatorIdentityBoundToSuccessor": true,
+    "loaderIdentityVerified": true,
+    "decisionConsumed": true,
+    "unauthorizedChangedPathCount": 0
+  },
+  "boundary": {
+    "mutationExecutedByThisManifest": false,
+    "step3ExecutorCreated": false,
+    "deploymentAuthorized": false,
+    "productionAuthorized": false
+  },
+  "authorizedChangesetDigest": "17ba01a3ca973658fa5e833ee79d65daafccbe26d84303f552686e650979ecab"
+}

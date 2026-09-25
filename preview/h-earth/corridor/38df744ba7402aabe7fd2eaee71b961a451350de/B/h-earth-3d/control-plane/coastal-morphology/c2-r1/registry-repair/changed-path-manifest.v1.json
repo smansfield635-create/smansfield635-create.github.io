@@ -1,0 +1,32 @@
+{
+  "schema": "H_EARTH_C2_R1_REGISTRY_BASE_NODE_LINEAGE_REPAIR_CHANGED_PATH_MANIFEST_v1",
+  "operationId": "H_EARTH_C2_R1_REGISTRY_BASE_NODE_LINEAGE_REPAIR_v1",
+  "baseHead": "3ac9279dc82e56f7b0d67972ce56048d07e5ecfa",
+  "expectedChangedPaths": [
+    ".github/workflows/h-earth-c2-r1-registry-base-node-lineage-repair-validation.yml",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/AGENTS.md",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/h-earth.c2-r1.registry-base-node-lineage-repair.test.mjs",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/negative-fixtures.v1.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/operation-request.v1.json",
+    "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
+    "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js"
+  ],
+  "expectedStatusByPath": {
+    "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js": "M",
+    "defaultForAllOtherPaths": "A"
+  },
+  "historicalBlobBinding": {
+    "path": "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
+    "gitBlob": "a195eea704df0a3f754f626817181b63114178fd"
+  },
+  "prohibitedPrefixes": [
+    "h-earth-3d/terrain/",
+    "h-earth-3d/environment/",
+    "showroom/globe/h-earth/",
+    "runtime/",
+    "assets/"
+  ],
+  "exactPathCount": 9
+}

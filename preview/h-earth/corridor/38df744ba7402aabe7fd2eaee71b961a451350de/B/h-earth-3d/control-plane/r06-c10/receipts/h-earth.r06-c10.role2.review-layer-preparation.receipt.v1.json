@@ -1,0 +1,89 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_2_REVIEW_LAYER_PREPARATION_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_2_REVIEW_LAYER_PREPARATION_RECEIPT_v1",
+  "operationId": "H_EARTH_R06_C10_ROLE_2_REVIEW_LAYER_PREPARATION_001",
+  "sourceResult": "R06_C10_ROLE_2_REVIEW_LAYER_PREPARATION_PASS_CLOSED",
+  "status": "PASS_CLOSED",
+  "exactStartingMainHead": "b73cf400fb3ca01af7bdca48f70a6e3d36015119",
+  "package": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "role5Result": "R06_C10_ROLE_5_INTEGRATED_TOOL_BASE_RATIFICATION_PASS_CLOSED",
+    "role5ReceiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role5.integrated-tool-base-ratification.receipt.v1.json",
+    "role5ReceiptGitBlob": "f2b7ff67ea77841d306717a65005c6aa582f5c40"
+  },
+  "reviewLayer": {
+    "matchedCameraReadiness": {
+      "result": "PASS_FOUR_NORMAL_TRAVERSAL_VIEWS",
+      "minimumRequiredViewCount": 3,
+      "readyViewCount": 4,
+      "sceneIdentityAuthority": "H_EARTH_PERMANENT_SCENE_REGISTRY_v1"
+    },
+    "baselineCandidateLabelingReadiness": {
+      "result": "PASS",
+      "baselineIdentity": "ACCEPTED_LIVE_V2_BASELINE",
+      "candidateIdentity": "FUTURE_ADMITTED_GEOMETRY_CANDIDATE",
+      "identitiesDistinct": true
+    },
+    "reproducibilityReadiness": {
+      "result": "PASS",
+      "exactSceneIdentityRequired": true,
+      "exactPackageIdentityRequired": true,
+      "exactHashIdentityRequired": true
+    }
+  },
+  "failClosedUserReviewGate": {
+    "result": "PASS",
+    "nonBypassableAssertions": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "failedAssertionConversionToPassProhibited": true,
+    "candidateAdmissionFailClosedProhibitsUserReview": true
+  },
+  "userDifferentialProtocol": {
+    "result": "PASS",
+    "comparisonBaseline": "ACCEPTED_LIVE_V2_BASELINE",
+    "comparisonCandidateRequirement": "ADMITTED_CANDIDATE_ONLY",
+    "allowedUserResults": [
+      "MATERIAL_IMPROVEMENT",
+      "NO_MATERIAL_IMPROVEMENT",
+      "REGRESSION",
+      "UNABLE_TO_DETERMINE"
+    ],
+    "automatedEvidenceSubstitutionProhibited": true
+  },
+  "currentFixture": {
+    "currentProductCandidate": "NONE",
+    "isProductCandidate": false,
+    "screenshotCreated": false,
+    "reviewUrlCreated": false,
+    "userReviewRequested": false
+  },
+  "successorRecovery": {
+    "result": "PASS",
+    "rollbackCustodySufficient": true,
+    "evidenceCustodySufficient": true,
+    "conversationMemoryDependence": false
+  },
+  "boundary": {
+    "productMutation": false,
+    "repositoryMutationDuringPreparation": false,
+    "toolMutation": false,
+    "packageMutation": false,
+    "officialGeometryArticulationRound": "NOT_STARTED",
+    "mainUpdatedDuringPreparation": false
+  },
+  "publication": {
+    "authorizedChangedPathCount": 1,
+    "authorizedPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role2.review-layer-preparation.receipt.v1.json",
+    "branch": "role2/r06-c10-review-layer-preparation-receipt-001",
+    "commitMessage": "Record R06 C10 Role 2 review-layer preparation receipt"
+  },
+  "return": {
+    "successToken": "R06_C10_ROLE_2_REVIEW_LAYER_RECEIPT_PUBLICATION_PASS_CLOSED",
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "stopAfterPublication": true
+  }
+}

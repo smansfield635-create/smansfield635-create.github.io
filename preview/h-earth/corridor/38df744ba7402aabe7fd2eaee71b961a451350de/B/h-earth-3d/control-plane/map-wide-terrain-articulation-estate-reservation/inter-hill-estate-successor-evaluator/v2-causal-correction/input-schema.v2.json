@@ -1,0 +1,225 @@
+{
+  "$id": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_INPUT_v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "candidateId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "constraintEvaluations": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "evidenceRefs": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "ruleId": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "PASS",
+                    "FAIL",
+                    "UNKNOWN"
+                  ]
+                }
+              },
+              "required": [
+                "ruleId",
+                "status",
+                "evidenceRefs"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidenceRefs": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "finalDisposition": {
+            "enum": [
+              "PASS",
+              "REJECTED_HARD_CONSTRAINT",
+              "REJECTED_OTHER",
+              "UNEVALUABLE"
+            ]
+          },
+          "generated": {
+            "const": true
+          }
+        },
+        "required": [
+          "candidateId",
+          "generated",
+          "finalDisposition",
+          "constraintEvaluations",
+          "evidenceRefs"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "caseId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "evaluator": {
+      "additionalProperties": false,
+      "properties": {
+        "executed": {
+          "type": "boolean"
+        },
+        "failureCode": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "measurementSufficient": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "executed",
+        "measurementSufficient",
+        "failureCode"
+      ],
+      "type": "object"
+    },
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "attempted": {
+          "type": "boolean"
+        },
+        "candidateCount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "searchDomainCoverage": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "attempted",
+        "complete",
+        "candidateCount",
+        "searchDomainCoverage"
+      ],
+      "type": "object"
+    },
+    "observability": {
+      "additionalProperties": false,
+      "properties": {
+        "candidateTraceComplete": {
+          "type": "boolean"
+        },
+        "hardConstraintEvidenceComplete": {
+          "type": "boolean"
+        },
+        "inputsComplete": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "inputsComplete",
+        "candidateTraceComplete",
+        "hardConstraintEvidenceComplete"
+      ],
+      "type": "object"
+    },
+    "passingArrangementCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "proofs": {
+      "additionalProperties": false,
+      "properties": {
+        "estateInfeasibility": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "terrainInfeasibility": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "required": [
+        "terrainInfeasibility",
+        "estateInfeasibility"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_INPUT_INSTANCE_v2"
+    }
+  },
+  "required": [
+    "schema",
+    "caseId",
+    "generation",
+    "observability",
+    "evaluator",
+    "candidates",
+    "passingArrangementCount",
+    "proofs"
+  ],
+  "type": "object"
+}

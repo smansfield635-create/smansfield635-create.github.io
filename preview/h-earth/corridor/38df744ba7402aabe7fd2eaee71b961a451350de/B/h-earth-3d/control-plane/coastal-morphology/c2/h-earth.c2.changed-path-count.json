@@ -1,0 +1,7 @@
+{
+  "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "candidateBranch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
+  "exactChangedPathCountBeforeVerification": 16,
+  "publicDefaultMutated": false,
+  "protectedPublicPathsChanged": 0
+}

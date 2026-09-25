@@ -1,0 +1,44 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_BOUNDED_PRESENTATION_EVIDENCE_v1",
+  "candidateHeadBeforeEvidence": "2f8b1a8c2caeb449938b96a296fe77fee6248916",
+  "changeClass": "AUDRALIA_RENDERER_FIRST_PROGRESSIVE_ENRICHMENT_STARTUP_RESTORATION",
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/index.html",
+      "sha256": "368f1e9946ac629db5c63986393af0e94a0656ba64c1a7d387f9252e8b830204"
+    },
+    {
+      "path": "showroom/globe/audralia/progressive-enrichment-bootstrap-v1.mjs",
+      "sha256": "1985c770a1b7c7dc283d71116499d7caef985bb41461ff1fde7de98980eb365b"
+    }
+  ],
+  "anchorReview": {
+    "visual": "The established COLOR ARRIVAL v4 loader and canonical Audralia world remain visually unchanged. The repair changes startup ownership only: the canonical renderer/reconciliation now executes before optional atmospheric, celestial, and composition enrichment.",
+    "interaction": "Camera, look, travel, zoom, world navigation, terrain, coastline, and canonical weather interaction semantics are unchanged. The world becomes interactive as soon as the already-qualified canonical renderer is viable; optional enrichment attaches afterward.",
+    "continuity": "This restores the renderer-first behavior of the previously successful Audralia promotion lineage while retaining the newer dense ACF1/FAP1 cloud, volumetric depth, orbital support, organized weather, celestial, and composition modules. Optional enrichment may report its own failure but cannot hold world entry hostage."
+  },
+  "scopeAssertions": {
+    "worldGeometryMutated": false,
+    "terrainMutated": false,
+    "weatherAuthorityMutated": false,
+    "cameraSemanticsMutated": false,
+    "navigationMutated": false,
+    "loaderVisualPresentationMutated": false,
+    "startupOrderingMutated": true,
+    "optionalEnrichmentMadeNonBlocking": true,
+    "cloudModelBytesMutated": false,
+    "celestialRenderingMutated": false,
+    "parallelProductCreated": false,
+    "hEarthPublicExperienceMutated": false
+  },
+  "supportingRepositoryEvidence": [
+    "showroom/globe/audralia/index.html",
+    "showroom/globe/audralia/progressive-enrichment-bootstrap-v1.mjs",
+    "showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
+    "showroom/globe/audralia/acf1-cloud-presentation-v1.mjs",
+    "showroom/globe/audralia/fap1-xyz-volumetric-depth-v1.mjs",
+    "showroom/globe/audralia/fap1-orbital-support-tuning-v1.mjs",
+    "showroom/globe/audralia/fap1-weather-presentation-v1.mjs"
+  ],
+  "disposition": "PASS"
+}

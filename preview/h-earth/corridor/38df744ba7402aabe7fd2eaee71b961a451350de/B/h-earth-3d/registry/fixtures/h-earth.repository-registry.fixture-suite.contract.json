@@ -1,0 +1,71 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_FIXTURE_CONTRACT_v1",
+  "contractVersion": 1,
+  "targetNumber": 4,
+  "targetSubtarget": "4C-2",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "fixtureClasses": ["POSITIVE", "NEGATIVE", "DRIFT", "ADVERSARIAL"],
+  "fixtureCategories": [
+    "READ_ONLY_COMPREHENSION",
+    "PACKAGE_DERIVATION",
+    "OCCURRENCE",
+    "CARDINAL",
+    "AUTHORITY",
+    "LIFECYCLE",
+    "SCOPE",
+    "COMPOSITE",
+    "EVIDENCE",
+    "MUTATION",
+    "STOPPING_BOUNDARY",
+    "INSTRUCTION_CONFLICT",
+    "DERIVATION_INTEGRITY",
+    "INPUT_INTEGRITY"
+  ],
+  "dispositions": ["PASS", "REVIEW_REQUIRED", "BLOCK", "STOP"],
+  "occurrenceResults": ["RESOLVED", "UNRESOLVED", "DRIFT", "NOT_APPLICABLE"],
+  "requiredFields": [
+    "fixtureId",
+    "fixtureClass",
+    "fixtureCategory",
+    "description",
+    "sourceOperationId",
+    "operationInput",
+    "expectedDisposition",
+    "requiredFailureCodes",
+    "prohibitedFailureCodes",
+    "expectedTraceLength",
+    "expectedMutationMayProceed",
+    "expectedAuthorityPreservation",
+    "expectedCardinalPreservation",
+    "expectedOccurrenceResult",
+    "criticalAssertions"
+  ],
+  "fieldRules": {
+    "additionalProperties": false,
+    "nullValuesPermitted": false,
+    "fixtureIdsUnique": true,
+    "operationIdsUnique": true,
+    "duplicateArrayValuesPermitted": false,
+    "unknownFailureCodesPermitted": false,
+    "expectationsMayBeDerivedFromActualResults": false,
+    "expectedTraceLength": 14,
+    "expectedMutationMayProceed": false
+  },
+  "manifestRules": {
+    "minimumFixtureCount": 33,
+    "minimumPositiveFixtures": 6,
+    "minimumNegativeFixtures": 13,
+    "minimumDriftFixtures": 6,
+    "minimumAdversarialFixtures": 8,
+    "everyFixtureHasExactlyOnePrimaryClass": true,
+    "everyFixtureHasExactlyOneOracleEntry": true,
+    "fixtureOrder": "LEXICOGRAPHIC_BY_FIXTURE_ID"
+  },
+  "stoppingCondition": {
+    "fixtureSchemaClosed": true,
+    "advanceBeyondTarget4C2": false,
+    "nextAuthorizedSubtarget": "4C-3"
+  }
+}

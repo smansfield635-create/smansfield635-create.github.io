@@ -1,0 +1,15 @@
+{
+  "sequenceId": "H_EARTH_C2_BOUNDED_PASS_SEQUENCE_v1",
+  "passes": [
+    {"id":"C2.0","name":"WORKSPACE_AND_ROLLBACK","status":"PASS_CLOSED"},
+    {"id":"C2.1","name":"VISIBLE_BEACH_AND_SANDBAR","status":"IMPLEMENTED_PENDING_EXECUTION"},
+    {"id":"C2.2","name":"COASTAL_MEMBERSHIPS","status":"IMPLEMENTED_PENDING_EXECUTION"},
+    {"id":"C2.3","name":"DEPTH_RESPONSIVE_WATER","status":"IMPLEMENTED_PENDING_EXECUTION"},
+    {"id":"C2.4","name":"OCEAN_MOTION_SWASH_FOAM","status":"IMPLEMENTED_PENDING_EXECUTION"},
+    {"id":"C2.5","name":"MACRO_TERRAIN_DEFINITION","status":"IMPLEMENTED_PENDING_EXECUTION"},
+    {"id":"C2.6","name":"FUNCTIONAL_VERIFICATION","status":"QUEUED"},
+    {"id":"C2.7","name":"ISOLATED_LIVE_USER_REVIEW","status":"NOT_STARTED"}
+  ],
+  "stoppingRule": "STOP_ONLY_FOR_HARD_FUNCTIONAL_OR_ENVIRONMENTAL_DAMAGE",
+  "publicDefaultMutated": false
+}

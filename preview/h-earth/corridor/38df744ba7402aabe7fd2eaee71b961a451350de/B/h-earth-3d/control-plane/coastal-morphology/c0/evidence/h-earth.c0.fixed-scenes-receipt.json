@@ -1,0 +1,56 @@
+{
+  "receiptType": "H_EARTH_C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES_RECEIPT_v1",
+  "operation": "C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES",
+  "result": "PASS_CLOSED",
+  "c0Overall": "OPEN_IN_PROGRESS",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "corridorId": "H_EARTH_C0_C_ACCEPTED_COASTAL_CORRIDOR_001",
+  "corridorBounds": {
+    "xMinimum": -160,
+    "xMaximum": 160,
+    "yMinimum": -4,
+    "yMaximum": 16,
+    "zMinimum": -165.49265495,
+    "zMaximum": 2.42720326
+  },
+  "transectCount": 3,
+  "shorelineSampleCount": 57,
+  "fixedSceneCount": 6,
+  "fixedScenesReproducible": true,
+  "screenshotDigestCount": 6,
+  "screenshotDigests": {
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shoreline-approach.png": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/lateral-beach.png": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/inland-to-open-water.png": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/shallow-water.png": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/dark-terrain-transition.png": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/traversal-through-coast.png": "542458ed11039deac3d034552fb664d5ce0b1c368750c274d6ac46a792b01718"
+  },
+  "waterLevel": 0,
+  "shorelineIntersectionSampleCount": 3,
+  "beachWidthRange": {
+    "minimum": 34,
+    "maximum": 34
+  },
+  "submergedSlopeRange": {
+    "minimum": 0.01464234,
+    "maximum": 0.01464234
+  },
+  "darkTerrainTransitionRange": {
+    "minimum": 42,
+    "maximum": 42
+  },
+  "sandbarState": "PRESENT_AND_STRUCTURALLY_MEASURABLE",
+  "representativeCorridorFrozen": true,
+  "sixFixedScenesCaptured": true,
+  "allSceneTransformsRecorded": true,
+  "shorelineSampleSetComplete": true,
+  "waterDepthProfileRecorded": true,
+  "currentSandbarStateRecorded": true,
+  "boundedSceneRepeatabilityExecuted": true,
+  "productMutation": false,
+  "unauthorizedChangedPaths": 0,
+  "firstBlocker": null,
+  "nextAuthorizedC0Block": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
+  "c1Authorized": false
+}

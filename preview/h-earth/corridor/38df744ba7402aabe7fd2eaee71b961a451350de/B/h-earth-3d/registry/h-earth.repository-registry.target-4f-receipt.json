@@ -1,0 +1,228 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_EXECUTION_RECEIPT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4F-7",
+  "result": "PASS",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "executedCommit": "42481a04663f820b490e3796c96223111b747b25",
+  "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
+  "audit": {
+    "auditId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_AUDIT_v1",
+    "checks": {
+      "identityExact": true,
+      "identityCandidateOnly": true,
+      "identityWithholdsAcceptance": true,
+      "identityWithholdsMerge": true,
+      "ledgerIdentityExact": true,
+      "ledgerHasSevenEntries": true,
+      "ledgerTargetOrderExact": true,
+      "ledger4DDeferredNonblocking": true,
+      "ledgerWithholdsAcceptance": true,
+      "manifestIdentityExact": true,
+      "manifestProtectedIdentitiesExact": true,
+      "manifestIdentityBoundaryExact": true,
+      "manifestTargetLedgerExact": true,
+      "manifestBootstrapBaselineExact": true,
+      "auditContractIdentityExact": true,
+      "auditContractWithholdsAuthority": true,
+      "bootstrapCandidateOnly": true,
+      "bootstrapAutomaticModeExact": true,
+      "bootstrap4DDeferred": true,
+      "bootstrap4EComplete": true,
+      "bootstrapNext4F1": true,
+      "deferralExact": true,
+      "target4ECompletionExact": true,
+      "target2Pass": true,
+      "target3Pass": true,
+      "target4APass": true,
+      "target4BPass": true,
+      "target4EPass": true,
+      "target4EStaticPass": true,
+      "target4CStaticRegressionPass": true,
+      "target4CFixtureRegressionPass": true,
+      "target4ESystemicPass": true,
+      "target4EUnprompted": true,
+      "target4EDeterministic": true,
+      "rootAgentEntrypointPresent": true,
+      "scopedAgentEntrypointsPreserved": true,
+      "permanentWorkflowPresent": true,
+      "permanentWorkflowReadOnly": true,
+      "permanentWorkflowPullAndPush": true,
+      "registeredPathActivates": true,
+      "registeredPathCompleteTrace": true,
+      "unregisteredPathStops": true,
+      "unregisteredPathUnresolvedCodes": true,
+      "outsidePathNotApplicable": true,
+      "mutationIntentNeverAuthorized": true,
+      "activationReceiptsDeterministic": true,
+      "oldTarget4BWorkflowAbsent": true,
+      "oldTarget4CWorkflowAbsent": true,
+      "oldTarget4EBoundedWorkflowAbsent": true,
+      "temporaryTriggerResidueAbsent": true,
+      "mainCommitUnchanged": true,
+      "executionBranchExact": true,
+      "executionEnvironmentBounded": true
+    },
+    "totalChecks": 53,
+    "passedChecks": 53,
+    "failedChecks": []
+  },
+  "regressions": {
+    "target2": {
+      "result": "PASS",
+      "passedChecks": 25,
+      "failedChecks": 0
+    },
+    "target3": {
+      "result": "PASS",
+      "passedChecks": 24,
+      "failedChecks": 0
+    },
+    "target4A": {
+      "result": "PASS",
+      "passedChecks": 33,
+      "failedChecks": 0
+    },
+    "target4B": {
+      "result": "PASS",
+      "passedChecks": 34,
+      "failedChecks": 0
+    },
+    "target4C": {
+      "staticResult": "PASS",
+      "staticPassedChecks": 37,
+      "fixtureResult": "PASS",
+      "passedFixtureCount": 33,
+      "failedFixtureCount": 0
+    },
+    "target4E": {
+      "result": "PASS",
+      "staticPassedChecks": 47,
+      "passedScenarioCount": 8,
+      "failedScenarioCount": 0,
+      "allTasksUnprompted": true,
+      "allReceiptsDeterministic": true
+    }
+  },
+  "activationIntegrity": {
+    "registeredDisposition": "PASS",
+    "registeredAffectedNodeCount": 15,
+    "unregisteredDisposition": "STOP",
+    "unregisteredFailureCodes": [
+      "OPERATION_SCOPE_UNRESOLVED",
+      "REQUESTED_PATH_UNRESOLVED"
+    ],
+    "outsideDisposition": "NOT_APPLICABLE",
+    "mutationIntentDisposition": "PASS",
+    "mutationMayProceed": false,
+    "deterministic": true
+  },
+  "protectedIdentities": {
+    "target2Registry": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+      "expectedGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911",
+      "actualGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911",
+      "exact": true
+    },
+    "target3Instruction": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
+      "expectedGitBlobSha": "de421803f21808ce27b2ffff349af8756c4d9929",
+      "actualGitBlobSha": "de421803f21808ce27b2ffff349af8756c4d9929",
+      "exact": true
+    },
+    "target4AContract": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-contract.json",
+      "expectedGitBlobSha": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+      "actualGitBlobSha": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+      "exact": true
+    },
+    "target4BEngine": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.js",
+      "expectedGitBlobSha": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759",
+      "actualGitBlobSha": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759",
+      "exact": true
+    },
+    "target4CCompletionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4c-completion-receipt.json",
+      "expectedGitBlobSha": "fc137bb499cd51b4031f671b071c835e6a0cff42",
+      "actualGitBlobSha": "fc137bb499cd51b4031f671b071c835e6a0cff42",
+      "exact": true
+    },
+    "target4DBlockerReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4d-blocker-receipt.json",
+      "expectedGitBlobSha": "49e24b382a192b486f1d5cc5f4ed91f3378748ca",
+      "actualGitBlobSha": "49e24b382a192b486f1d5cc5f4ed91f3378748ca",
+      "exact": true
+    },
+    "target4DDeferral": {
+      "path": "/h-earth-3d/registry/portability/h-earth.repository-registry.target-4d.deferral-and-critical-path-reclassification.json",
+      "expectedGitBlobSha": "0b4a842c275368b50d96aecfb510c516641ebfe0",
+      "actualGitBlobSha": "0b4a842c275368b50d96aecfb510c516641ebfe0",
+      "exact": true
+    },
+    "target4EExecutionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4e-receipt.json",
+      "expectedGitBlobSha": "e58f660bee60833579a47157383b21a71baf0d62",
+      "actualGitBlobSha": "e58f660bee60833579a47157383b21a71baf0d62",
+      "exact": true
+    },
+    "target4ECompletionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4e-completion-receipt.json",
+      "expectedGitBlobSha": "4135e46e85c85b8b0cadb4a98b7f986d82838fdd",
+      "actualGitBlobSha": "4135e46e85c85b8b0cadb4a98b7f986d82838fdd",
+      "exact": true
+    },
+    "rootAgentEntrypoint": {
+      "path": "/AGENTS.md",
+      "expectedGitBlobSha": "4e9bfb218afb7dde9a68be893100e4f4ebef93f5",
+      "actualGitBlobSha": "4e9bfb218afb7dde9a68be893100e4f4ebef93f5",
+      "exact": true
+    },
+    "automaticActivationContract": {
+      "path": "/h-earth-3d/registry/activation/h-earth.repository-registry.automatic-preflight.contract.json",
+      "expectedGitBlobSha": "56e749d139a0fd587ee284fad2f5f6204d639981",
+      "actualGitBlobSha": "56e749d139a0fd587ee284fad2f5f6204d639981",
+      "exact": true
+    },
+    "automaticActivationModule": {
+      "path": "/h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js",
+      "expectedGitBlobSha": "b3c51381af190b6aab296db222296dc851cb7e9a",
+      "actualGitBlobSha": "b3c51381af190b6aab296db222296dc851cb7e9a",
+      "exact": true
+    },
+    "automaticPreflightCli": {
+      "path": "/tools/h-earth-repository-registry-auto-preflight.mjs",
+      "expectedGitBlobSha": "6d4af698ca75b96aaa660033e9ae24c704673eb7",
+      "actualGitBlobSha": "6d4af698ca75b96aaa660033e9ae24c704673eb7",
+      "exact": true
+    },
+    "permanentAutomaticWorkflow": {
+      "path": "/.github/workflows/h-earth-repository-registry-preflight.yml",
+      "expectedGitBlobSha": "b230e688c2778f6b5acf5567d1cf32ac2450de25",
+      "actualGitBlobSha": "b230e688c2778f6b5acf5567d1cf32ac2450de25",
+      "exact": true
+    }
+  },
+  "repositoryState": {
+    "installationBranch": "agent/h-earth-repository-registry-installation-001",
+    "expectedMainCommit": "3890dfc7165ae3481cd119d1f9c935e93c336f17",
+    "observedMainCommit": "3890dfc7165ae3481cd119d1f9c935e93c336f17",
+    "permanentAutomaticWorkflowPresent": true,
+    "oldTemporaryWorkflowsAbsent": true,
+    "temporaryTriggerResidueAbsent": true
+  },
+  "boundaries": {
+    "candidatePackageCompleteAfterFinalization": true,
+    "userAcceptanceEstablished": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "mainActivationCreated": false,
+    "allExternalToolsControlled": false,
+    "portabilityClaimCreated": false
+  },
+  "stoppingCondition": {
+    "finalIntegratedAuditPass": true,
+    "advanceBeyondTarget4F7": false,
+    "nextAuthorizedSubtarget": "4F-8"
+  }
+}

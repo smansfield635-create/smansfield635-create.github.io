@@ -1,0 +1,53 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "evidenceId": "AWARDS_COMPASS_VIDEO_20260815_001",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "candidateHeadReviewed": "90ef2b7f22622c617f23565092e659750d52f14c",
+  "comparisonBase": "1ab62af682b18061ceb710237464c17647b5080e",
+  "experienceChange": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "9c6b16607ad87ae6e76411c08bb7863bc338d3e0abb0d938bb6ae42fcaa29e27",
+    "classification": "AWARDS_PRESENTATION_ONLY",
+    "worldRuntimeGeometryTerrainCameraMutation": false
+  },
+  "visualEvidence": {
+    "hEarthPublicFaceTrophyStandard": "PASS_CLOSED",
+    "staticAssertions": 33,
+    "staticFailures": 0,
+    "browserFailures": 0,
+    "baselinePublicDefaultUnchanged": true,
+    "awardsRouteIdentityPreserved": true,
+    "candidateScopeBoundedToAwardsExperienceFile": true,
+    "compassMediaPreservedSeparately": true,
+    "hEarthEditedReelCoverCropPreserved": true,
+    "hEarthFourShotSequencePreserved": true
+  },
+  "interactionEvidence": {
+    "desktopPointerDragLook": true,
+    "desktopWheelTravel": true,
+    "desktopCtrlWheelZoom": true,
+    "mobileOneFingerLook": true,
+    "mobileTwoFingerTravel": true,
+    "mobilePinchZoom": true,
+    "hEarthReelTapPlayPause": true,
+    "vivaldiScoreBoundToHEarthReelOnly": true,
+    "vivaldiScorePausesWithHEarthReel": true,
+    "pageErrors": 0,
+    "consoleErrors": 0,
+    "ownedHttpErrors": 0
+  },
+  "continuityEvidence": {
+    "run8eRuntimeModulePreserved": true,
+    "canvasIdentityPreserved": true,
+    "gestureMountIdentityPreserved": true,
+    "promotedPublicFaceActive": true,
+    "promotedPublicFaceDefault": true,
+    "awardsReturnToPromotedHEarthPresent": true,
+    "sameCanonicalWorldExperienceUnaffectedByAwardsPresentationChange": true,
+    "compassAndHEarthMediaRemainIndependent": true,
+    "musicAttributionRetained": true
+  },
+  "assessment": "PASS",
+  "basis": "The exact Awards product candidate changes only the Awards presentation route. The Compass recording remains a separate Compass-lens exhibit. The H-Earth lens presents the existing source recording as the bounded four-shot 16:9 cover-style reel and synchronizes only that reel with the identified public-domain Vivaldi Summer, I. Allegro non molto recording, with attribution retained. Exact-head H-Earth Public Face Trophy Standard verification passed while the canonical H-Earth world, renderer, terrain, geometry, camera, runtime and world interaction remain unmodified."
+}

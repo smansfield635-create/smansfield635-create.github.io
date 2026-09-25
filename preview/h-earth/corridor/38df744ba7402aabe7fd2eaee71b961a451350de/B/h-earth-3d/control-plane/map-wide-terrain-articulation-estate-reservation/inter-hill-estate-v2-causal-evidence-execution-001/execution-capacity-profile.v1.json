@@ -1,0 +1,28 @@
+{
+  "adaptivePostOutcomeChangeProhibited": true,
+  "cpuMinimum": 4,
+  "failFast": false,
+  "hardLimits": {
+    "localStorageBytes": 10737418240,
+    "peakMemoryBytes": 12884901888,
+    "reducerArtifactBytes": 67108864,
+    "shardArtifactBytes": 268435456,
+    "traceSegmentBytes": 33554432
+  },
+  "maximumParallelShards": 8,
+  "maximumSeedsPerShard": 64,
+  "maximumShardsPerWave": 128,
+  "memoryBytes": 17179869184,
+  "nodeVersion": "22.23.1",
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001",
+  "runner": "ubuntu-24.04",
+  "schema": "H_EARTH_INTER_HILL_ESTATE_V2_EXECUTION_CAPACITY_PROFILE_v1",
+  "storageBytes": 15032385536,
+  "timeoutMinutes": {
+    "comparator": 10,
+    "planner": 10,
+    "preflight": 20,
+    "reducer": 30,
+    "shard": 45
+  }
+}

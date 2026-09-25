@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth MA1 Existing Metric Reproduction</title>
+  <style>
+    html,body{margin:0;background:#080b0d;color:#d8e1e5;font:14px system-ui,sans-serif}
+    main{padding:12px}
+    canvas{display:block;width:960px;height:540px;max-width:100%;background:#000}
+    #status{white-space:pre-wrap;padding-top:8px}
+  </style>
+</head>
+<body>
+  <main>
+    <canvas id="accepted"></canvas>
+    <div id="status">INITIALIZING_MA1</div>
+  </main>
+  <script type="module">
+    import { createMA1MetricReproductionSuite } from './h-earth.ma1-existing-metric-reproduction-browser.mjs';
+    const status = document.querySelector('#status');
+    try {
+      const suite = await createMA1MetricReproductionSuite({ canvas: document.querySelector('#accepted') });
+      window.H_EARTH_MA1 = suite;
+      document.documentElement.dataset.ma1Ready = 'true';
+      status.textContent = 'MA1_READY';
+    } catch (error) {
+      document.documentElement.dataset.ma1Error = 'true';
+      status.textContent = String(error?.stack || error);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

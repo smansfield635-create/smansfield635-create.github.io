@@ -72,6 +72,17 @@
       ],
       "representation": "MARKER_PLUS_JSON",
       "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
+    },
+    {
+      "marker": "CLOUDFLARE_OWNER_RUM_EXCLUSION_REQUEST_V1",
+      "workflow": "cloudflare-owner-rum-dispatch-bridge-v1.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER"
+      ],
+      "issueOnly": true,
+      "representation": "MARKER_PLUS_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     }
   ],
   "invariants": [

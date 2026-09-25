@@ -1,5 +1,6 @@
 import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
 import { createHEarthT4PostTerrainDraw } from '../../render/t4-post-terrain-draw-v1.js';
+import { createHEarthMesoDevelopmentPostTerrainDraw } from '../../render/meso-development-post-terrain-draw-v1.js';
 
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
@@ -29,6 +30,8 @@ const MICRORELIEF_QUERY_VALUE = 'v1';
 const MICRORELIEF_RENDERER_PATH = '../../render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js';
 const T4_QUERY_KEY = 't4';
 const T4_QUERY_VALUE = 'additive-v1';
+const MESO_QUERY_KEY = 'meso';
+const MESO_QUERY_VALUE = 'development-v1';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -57,10 +60,13 @@ const additiveVisualRequested =
 const semanticMaterialRequested = queryParameters.get(SEMANTIC_MATERIAL_QUERY_KEY) === SEMANTIC_MATERIAL_QUERY_VALUE;
 const microreliefRequested = queryParameters.get(MICRORELIEF_QUERY_KEY) === MICRORELIEF_QUERY_VALUE;
 const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE;
+const mesoRequested = queryParameters.get(MESO_QUERY_KEY) === MESO_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const selectedRendererPath = t4Requested
+const selectedRendererPath = mesoRequested
+  ? ACCEPTED_BASELINE_RENDERER_PATH
+  : t4Requested
   ? MICRORELIEF_RENDERER_PATH
   : rendererCustodyRequested
   ? RENDERER_CUSTODY_RENDERER_PATH
@@ -172,6 +178,9 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   let t4Extension = null;
   let t4Enabled = false;
   let t4Failure = null;
+  let mesoExtension = null;
+  let mesoEnabled = false;
+  let mesoFailure = null;
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -214,9 +223,18 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     renderer.presentColorFrame();
     counters.gpuFramebufferPresentationCount += 1;
 
-    // Meso may run only after the accepted world has already presented.
+    // Post-ready development meso may run only after the accepted world has already presented.
     // Failure is fail-open: preserve the world and permanently disable meso for this session.
-    if (t4Enabled && t4Extension) {
+    if (mesoEnabled && mesoExtension) {
+      try {
+        mesoExtension.drawAfterTerrain({ packet });
+        renderer.presentColorFrame();
+        counters.gpuFramebufferPresentationCount += 1;
+      } catch (error) {
+        mesoFailure = String(error?.message ?? error);
+        mesoEnabled = false;
+      }
+    } else if (t4Enabled && t4Extension) {
       try {
         t4Extension.drawAfterTerrain({ packet });
         renderer.presentColorFrame();
@@ -283,8 +301,18 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     captureEvidence: true
   });
 
-  // Arm meso only after the first accepted world frame has completed presentation.
-  if (t4Requested) {
+  // Development-chamber meso is armed only after the first accepted world frame.
+  // It is mutually exclusive with the older T4 diagnostic candidate.
+  if (mesoRequested) {
+    try {
+      mesoExtension = createHEarthMesoDevelopmentPostTerrainDraw(canvas.getContext('webgl2'));
+      mesoEnabled = true;
+    } catch (error) {
+      mesoFailure = String(error?.message ?? error);
+      mesoExtension = null;
+      mesoEnabled = false;
+    }
+  } else if (t4Requested) {
     try {
       t4Extension = createHEarthT4PostTerrainDraw(canvas.getContext('webgl2'));
       t4Enabled = true;
@@ -395,7 +423,11 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         waterAttributionCandidateRequested: waterAttributionRequested,
         oceanProofCandidateRequested: oceanProofRequested,
         additiveVisualCandidateRequested: additiveVisualRequested,
+       mesoDevelopmentCandidateRequested: mesoRequested,
         cp2DifferentialCandidateRequested: cp2LiveDifferentialRequested,
+       mesoDevelopmentCandidateRequested: mesoRequested,
+       mesoEnabled,
+       mesoFailure,
         acceptedBaselineRendererSelected:
           !rendererCustodyRequested && !waterIndexSpanRequested && !waterAttributionRequested && !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested,
         r3D4WorkStarted: false,

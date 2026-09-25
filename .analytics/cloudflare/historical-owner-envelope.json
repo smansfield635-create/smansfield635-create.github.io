@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T03:35:59Z",
+  "generatedAt": "2026-09-25T04:36:57Z",
   "window": {
-    "start": "2026-06-27T03:35:59Z",
-    "end": "2026-09-25T03:35:59Z"
+    "start": "2026-06-27T04:36:57Z",
+    "end": "2026-09-25T04:36:57Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,29 +17,29 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4871,
-    "visits": 1178,
+    "pageLoads": 4882,
+    "visits": 1201,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4871,
-        "visits": 1178
+        "pageLoads": 4882,
+        "visits": 1201
       }
     },
     "byPath": {
-      "/index.html": {
-        "pageLoads": 157,
-        "visits": 0
-      },
       "/": {
-        "pageLoads": 1056,
-        "visits": 721
+        "pageLoads": 1059,
+        "visits": 722
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
         "visits": 0
       },
+      "/index.html": {
+        "pageLoads": 157,
+        "visits": 0
+      },
       "/nine-summits-of-love/": {
-        "pageLoads": 11,
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 21,
-        "visits": 0
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 21,
         "visits": 0
       },
       "/showroom/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 228,
+        "pageLoads": 225,
         "visits": 22
       },
       "/gauges/h-earth/": {
@@ -115,8 +115,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 179,
-        "visits": 53
+        "pageLoads": 181,
+        "visits": 55
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 499,
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 22,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -263,15 +267,11 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 24,
+        "pageLoads": 19,
         "visits": 3
       },
       "/campaigns/wave/": {
         "pageLoads": 15,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 22,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -295,16 +295,16 @@
         "visits": 0
       },
       "/campaigns/rob/": {
-        "pageLoads": 16,
-        "visits": 0
-      },
-      "/showroom/globe/earth/": {
-        "pageLoads": 5,
+        "pageLoads": 12,
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 60,
         "visits": 42
+      },
+      "/showroom/globe/earth/": {
+        "pageLoads": 3,
+        "visits": 0
       },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
@@ -359,7 +359,7 @@
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 14,
+        "pageLoads": 15,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-1/": {
@@ -367,22 +367,26 @@
         "visits": 0
       },
       "/governance-bridge/": {
-        "pageLoads": 28,
-        "visits": 28
+        "pageLoads": 47,
+        "visits": 47
       },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
         "visits": 5
+      },
+      "/preview/governance-bridge/index.html": {
+        "pageLoads": 1,
+        "visits": 1
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 3693,
-        "visits": 0
-      },
       "(none)": {
-        "pageLoads": 407,
-        "visits": 407
+        "pageLoads": 430,
+        "visits": 430
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 3681,
+        "visits": 0
       },
       "www.google.com": {
         "pageLoads": 760,

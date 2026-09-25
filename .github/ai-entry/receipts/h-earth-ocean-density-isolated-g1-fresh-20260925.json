@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-ocean-density-isolated-g1-fresh-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4833,
+  "requestBranch": "ai-dispatch-request-ocean-density-isolated-g1-fresh",
+  "requestCommit": "be5e8d09e84f627161a32cd089f68680628f1e8b",
+  "requestCommitParent": "20b1ef49d15435b3fb7d7dfb9019b6f5f81f35e1",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "20b1ef49d15435b3fb7d7dfb9019b6f5f81f35e1",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "27022b4383cd7cd1d54e895dab3ea5b1b88708cb"
+  },
+  "bridgeRunId": "36097748892",
+  "dispatchedRunId": 36097762294,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36097762294",
+  "dispatchedRunHeadSha": "20b1ef49d15435b3fb7d7dfb9019b6f5f81f35e1",
+  "dispatchedAt": "2026-09-25T05:15:00.248Z",
+  "resolvedAt": "2026-09-25T05:15:04.120Z"
+}

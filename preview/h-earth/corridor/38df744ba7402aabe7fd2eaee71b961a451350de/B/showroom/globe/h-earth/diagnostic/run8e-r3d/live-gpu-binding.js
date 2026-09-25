@@ -115,7 +115,7 @@ export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
     : null,
   rendererPath: selectedRendererPath,
   acceptedBaselineRendererSelected:
-    !rendererCustodyRequested && !waterIndexSpanRequested && !waterAttributionRequested && !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested
+    !mesoRequested && !t4Requested && !rendererCustodyRequested && !waterIndexSpanRequested && !waterAttributionRequested && !oceanProofRequested && !additiveVisualRequested && !cp2LiveDifferentialRequested
 });
 
 const clone = (value) => JSON.parse(JSON.stringify(value));

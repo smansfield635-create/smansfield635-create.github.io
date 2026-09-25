@@ -6,7 +6,7 @@ async function loadCatalog(){
  const source=await fetch(CATALOG_URL,{cache:'no-store'});
  if(!source.ok)throw new Error('Governance catalog fetch failed: HTTP '+source.status);
  const raw=await source.json();
- if(raw?.catalogId!=='GOVERNANCE_PANEL_CATALOG_V1'||raw?.generatedFor!=='GOVERNANCE_PANEL_V2')throw new Error('Governance catalog identity mismatch');
+ if(raw?.catalogId!=='GOVERNANCE_PANEL_CATALOG_V1'||raw?.generatedFor!=='GOVERNANCE_PANEL_V2'||raw?.catalogRevision!=='1.0.2')throw new Error('Governance catalog identity mismatch');
  if(!Array.isArray(raw.nodes)||raw.nodes.length!==14||!Array.isArray(raw.edges)||raw.edges.length!==21)throw new Error('Governance catalog topology mismatch');
  if(!raw.operations||Object.keys(raw.operations).length!==8)throw new Error('Governance catalog operation model mismatch');
  CATALOG=Object.freeze({

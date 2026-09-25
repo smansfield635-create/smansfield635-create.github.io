@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T19:27:01Z",
+  "generatedAt": "2026-09-25T20:29:37Z",
   "window": {
-    "start": "2026-06-27T19:27:01Z",
-    "end": "2026-09-25T19:27:01Z"
+    "start": "2026-06-27T20:29:37Z",
+    "end": "2026-09-25T20:29:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4924,
+    "pageLoads": 4921,
     "visits": 1237,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4924,
+        "pageLoads": 4921,
         "visits": 1237
       }
     },
@@ -58,13 +58,13 @@
         "pageLoads": 21,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 38,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 38,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 215,
+        "pageLoads": 212,
         "visits": 22
       },
       "/gauges/h-earth/": {
@@ -146,14 +146,6 @@
         "pageLoads": 149,
         "visits": 7
       },
-      "/governance/": {
-        "pageLoads": 62,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
@@ -161,6 +153,14 @@
       "/evidence/": {
         "pageLoads": 89,
         "visits": 1
+      },
+      "/governance/": {
+        "pageLoads": 62,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -173,6 +173,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -189,10 +193,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -373,7 +373,7 @@
         "visits": 465
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3687,
+        "pageLoads": 3684,
         "visits": 0
       },
       "www.google.com": {

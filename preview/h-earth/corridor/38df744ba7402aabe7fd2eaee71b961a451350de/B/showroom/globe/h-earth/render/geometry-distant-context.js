@@ -18,7 +18,7 @@ const OUTER_Z=freeze([-6800,-5600,-4600,-3800,-3100,-2500,-2000,-1600,-1250,-980
 function range(min,max,step){const out=[];for(let value=min;value<=max+step*0.25;value+=step)out.push(Math.round(value*1e6)/1e6);return out}
 function orderedAxis(core,outer){return freeze([...new Set([...core,...outer])].sort((a,b)=>a-b))}
 const OCEAN_X=orderedAxis(range(-1920,1920,40),OUTER_X);
-const OCEAN_Z=orderedAxis(range(-440,920,24),OUTER_Z);
+const OCEAN_Z=orderedAxis(range(-440,920,32),OUTER_Z);
 
 function compact(vertices,indices,diagnostics={},vertexRgba=null){
   const referenced=[...new Set(indices)].sort((a,b)=>a-b);
@@ -37,11 +37,20 @@ function buildLandMesh(plan,rings,sectorCount){
   return compact(vertices,indices,{retainedCellCount,suppressedCellCount,mixedTransitionCellCount});
 }
 
+function deterministicOceanJitter(xi,zi){
+  const p=xi*127.1+zi*311.7;
+  return {x:(Math.sin(p)*0.5+0.5)*6-3,z:(Math.sin(p*0.713+2.1)*0.5+0.5)*4-2};
+}
+
 function buildContinuousOceanField(){
   const width=OCEAN_X.length,height=OCEAN_Z.length;
   const vertices=[],vertexRgba=[],samples=[];
   for(let zi=0;zi<height;zi++)for(let xi=0;xi<width;xi++){
-    const x=OCEAN_X[xi],z=OCEAN_Z[zi],sample=sampleHEarthWorldManifold(x,z),q=regionToHEarthPlanetPoint({x,y:0.015,z});
+    const boundary=zi===0||zi===height-1||xi===0||xi===width-1;
+    const jitter=boundary?{x:0,z:0}:deterministicOceanJitter(xi,zi);
+    const x=OCEAN_X[xi]+(zi&1?20:0)+jitter.x;
+    const z=OCEAN_Z[zi]+jitter.z;
+    const sample=sampleHEarthWorldManifold(x,z),q=regionToHEarthPlanetPoint({x,y:0.015,z});
     vertices.push(createHEarthVector3(q.x,q.y,q.z));
     vertexRgba.push(evaluateHEarthRecoveredWaterRgbaAtWorldPoint(x,z,{opaque:true}));
     samples.push(sample);
@@ -52,10 +61,12 @@ function buildContinuousOceanField(){
     const cell=[samples[a],samples[b],samples[d],samples[e]],waterVotes=cell.filter(s=>s?.surfaceClass==='WATER').length;
     if(waterVotes===0)landUnderlayCellCount++;
     else if(waterVotes<4)mixedCoastCellCount++;
-    indices.push(a,e,b,b,e,d);retainedCellCount++;
+    if(zi&1)indices.push(a,e,d,a,d,b);
+    else indices.push(a,e,b,b,e,d);
+    retainedCellCount++;
   }
   const maximumRadius=Math.max(...vertices.map(v=>Math.hypot(v.x,v.z)));
-  return compact(vertices,indices,{retainedCellCount,landUnderlayCellCount,mixedCoastCellCount,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',oceanUnderlayClosesRepresentationGaps:true,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true},vertexRgba);
+  return compact(vertices,indices,{retainedCellCount,landUnderlayCellCount,mixedCoastCellCount,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_STAGGERED_TRIANGULAR_FIELD',oceanUnderlayClosesRepresentationGaps:true,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true},vertexRgba);
 }
 
 function primitive(mesh,surfaceClass,plan=null){

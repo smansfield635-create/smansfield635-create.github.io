@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "governance-verifier-repair-preflight-4887",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4888,
+  "requestBranch": "ai-dispatch-request-governance-verifier-repair-preflight-4887",
+  "requestCommit": "441c41ab99a0ffcb6b3a2b50b1db7c4578b9a700",
+  "requestCommitParent": "a31d93d611e839fa5ca92906a4d8fa5c7cc2c132",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a31d93d611e839fa5ca92906a4d8fa5c7cc2c132",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "4be413e9082216a5237e5472e09fff6a51b58f49",
+    "surface_id": "governance-bridge"
+  },
+  "bridgeRunId": "36179453002",
+  "dispatchedRunId": 36179470652,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36179470652",
+  "dispatchedRunHeadSha": "a31d93d611e839fa5ca92906a4d8fa5c7cc2c132",
+  "dispatchedAt": "2026-09-25T19:24:22.138Z",
+  "resolvedAt": "2026-09-25T19:24:26.285Z"
+}

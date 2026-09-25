@@ -417,9 +417,12 @@ void main(){
     base=palette;
   }else if(vRoleCode==2u){
     // W2: animate water appearance only. Geometry and shoreline remain unchanged.
-    float waveA=sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19+uWaterTime*0.72);
-    float waveB=sin(vWorldPosition.x*-0.17+vWorldPosition.z*0.31-uWaterTime*0.47+1.7);
-    float waveC=sin(vWorldPosition.x*0.11+vWorldPosition.z*-0.23+uWaterTime*0.29+4.1);
+    // Use fragment coordinates rather than flat per-primitive world position so
+    // adjacent water triangles cannot expose their tessellation as square patches.
+    vec2 waterP=gl_FragCoord.xy;
+    float waveA=sin(waterP.x*0.031+waterP.y*0.017+uWaterTime*0.72);
+    float waveB=sin(waterP.x*-0.014+waterP.y*0.027-uWaterTime*0.47+1.7);
+    float waveC=sin(waterP.x*0.009+waterP.y*-0.021+uWaterTime*0.29+4.1);
     float wave=clamp(0.5+0.18*waveA+0.12*waveB+0.07*waveC,0.0,1.0);
     float shimmer=pow(clamp(0.5+0.5*(waveA*0.55+waveB*0.30+waveC*0.15),0.0,1.0),5.0);
     float foam=pow(clamp(1.0-geometricNormal.y,0.0,1.0),1.7);

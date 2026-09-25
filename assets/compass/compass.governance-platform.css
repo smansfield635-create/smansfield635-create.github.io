@@ -17,7 +17,6 @@
 .governance-panel-trigger:hover,.governance-panel-trigger:focus-visible{transform:translateY(-50%) translateX(-3px)}
 .governance-panel-trigger[aria-expanded=true]{transform:translateY(-50%) translateX(3px)}
 
-
 /* GOVERNANCE_PANEL_3D_V1 — #4819/#4821/#4822/#4823/#4824 */
 .governance-track{white-space:normal;align-items:flex-start}.governance-thesis{max-width:86ch;font-size:.78rem;line-height:1.45}
 .governance-canvas{min-height:640px;touch-action:pan-y;cursor:grab;perspective:1400px}.governance-canvas:active{cursor:grabbing}.governance-canvas svg{z-index:2;overflow:visible}.governance-edge{marker-end:url(#gpArrow)}#gpArrow path{fill:rgba(137,227,255,.32)}.governance-edge.is-active{filter:drop-shadow(0 0 5px rgba(242,213,138,.38))}

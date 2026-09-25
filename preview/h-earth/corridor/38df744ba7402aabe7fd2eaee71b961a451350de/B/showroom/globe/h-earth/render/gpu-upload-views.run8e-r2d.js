@@ -211,6 +211,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
     primitiveIndices: new Uint16Array(rawViews.primitiveIndices),
     roleCodes: projectedRoleCodes.view,
+    waterClassCodes: new Uint8Array(rawViews.waterClassCodes),
     indices: new Uint32Array(rawViews.indices),
     canonicalizationReceipt: freezeRecord({
       contractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
@@ -240,6 +241,7 @@ export function evaluateHEarthRun8ER2DCanonicalGPUUploadViews(views) {
     surfaceClassCodes: Uint8Array,
     primitiveIndices: Uint16Array,
     roleCodes: Uint8Array,
+    waterClassCodes: Uint8Array,
     indices: Uint32Array
   };
   for (const [key, Constructor] of Object.entries(expected)) {

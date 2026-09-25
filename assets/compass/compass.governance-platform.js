@@ -22,7 +22,8 @@ async function loadCatalog(){
 const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const q=(s,r=document)=>r.querySelector(s);
 let instance=null;
-function build(host,options={}){\n if(!CATALOG)throw new Error('Governance catalog is not loaded');
+function build(host,options={}){
+ if(!CATALOG)throw new Error('Governance catalog is not loaded');
  if(instance){return instance.api;}
  const trigger=document.createElement('button');trigger.type='button';trigger.className='governance-panel-trigger';trigger.textContent=options.label||'Governance Panel';trigger.setAttribute('title','Open Governance Panel');trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls','governance-panel');
  const panel=document.createElement('section');panel.className='governance-panel';panel.id='governance-panel';panel.setAttribute('aria-hidden','true');panel.setAttribute('aria-label','Governance Panel');

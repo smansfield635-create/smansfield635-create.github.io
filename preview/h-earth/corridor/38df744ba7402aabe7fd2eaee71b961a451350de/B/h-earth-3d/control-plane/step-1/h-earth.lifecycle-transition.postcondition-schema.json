@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smansfield635-create.github.io/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.postcondition-schema.json",
+  "title": "H-Earth Repository Lifecycle Transition Postcondition Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "transitionId",
+    "resultCommit",
+    "resultParentCommit",
+    "resultState",
+    "authorizedPathsOnly",
+    "resultBlobSet",
+    "historicalPredecessorPreserved",
+    "supersessionRelationRecorded",
+    "receiptRecorded",
+    "recoveryCheckpointRecorded",
+    "decisionConsumed",
+    "replayNonceConsumed",
+    "postconditionResult",
+    "failureDisposition"
+  ],
+  "properties": {
+    "transitionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resultCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "resultParentCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "resultState": {
+      "enum": [
+        "CANDIDATE",
+        "VALIDATED",
+        "ACCEPTED",
+        "ACTIVE",
+        "SUPERSEDED",
+        "RETIRED"
+      ]
+    },
+    "authorizedPathsOnly": {
+      "const": true
+    },
+    "resultBlobSet": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "gitBlobSha"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "gitBlobSha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          }
+        }
+      }
+    },
+    "historicalPredecessorPreserved": {
+      "const": true
+    },
+    "supersessionRelationRecorded": {
+      "const": true
+    },
+    "receiptRecorded": {
+      "const": true
+    },
+    "recoveryCheckpointRecorded": {
+      "const": true
+    },
+    "decisionConsumed": {
+      "const": true
+    },
+    "replayNonceConsumed": {
+      "const": true
+    },
+    "postconditionResult": {
+      "enum": [
+        "PASS",
+        "REVIEW_REQUIRED",
+        "BLOCK",
+        "STOP",
+        "SUSPEND_RESULT",
+        "ROLLBACK_REQUIRED"
+      ]
+    },
+    "failureDisposition": {
+      "enum": [
+        "NONE",
+        "STOP_WITHOUT_MUTATION",
+        "WITHDRAW_PENDING_AUTHORITY",
+        "SUSPEND_RESULT",
+        "ROLLBACK_TO_CHECKPOINT",
+        "RETIRE_IDENTITY_PRESERVE_HISTORY"
+      ]
+    },
+    "verificationReceiptPath": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^/"
+    },
+    "unresolvedFields": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "x-h-earth-boundaries": {
+    "schemaMayDescribeResult": true,
+    "schemaMayDeclareUnverifiedResultValid": false,
+    "schemaMayApplyRollback": false,
+    "schemaMayCreateCanonicalAuthority": false
+  }
+}

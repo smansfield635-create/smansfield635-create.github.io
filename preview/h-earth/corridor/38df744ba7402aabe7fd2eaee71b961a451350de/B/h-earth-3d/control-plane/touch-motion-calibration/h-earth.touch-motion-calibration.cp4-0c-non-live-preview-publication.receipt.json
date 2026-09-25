@@ -1,0 +1,109 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP4_0C_NON_LIVE_PREVIEW_PUBLICATION_RECEIPT_v1",
+  "checkpoint": "CP4_0C_NON_LIVE_PREVIEW_PUBLICATION",
+  "status": "PASS_CLOSED",
+  "sourceHead": "9ce2b2ef9078d99c93f847957479e37c41f83a53",
+  "materializationHead": "83e15166dafcab2b3718e4f2069c87d2afa11a59",
+  "publicationModel": "COMMIT_PINNED_ISOLATED_STATIC_PREVIEW",
+  "previewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+  "previewPath": "h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview",
+  "provider": {
+    "name": "rawgit.hack",
+    "endpoint": "rawcdn.githack.com",
+    "repositoryAffiliation": "THIRD_PARTY_NOT_GITHUB",
+    "immutableCommitPinnedCache": true,
+    "formalUptimeGuarantee": false
+  },
+  "remoteValidation": {
+    "executed": true,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "finalUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+    "consoleErrorCount": 0,
+    "pageErrorCount": 0,
+    "failedRequestCount": 0,
+    "browserRequestHosts": [
+      "rawcdn.githack.com"
+    ],
+    "resourceUrls": [
+      "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/preview.css",
+      "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/preview.js"
+    ],
+    "canvasCount": 1,
+    "webgl2ContextCount": 1,
+    "screenshotSha256": "4a76e14dd628ad24315b6c8fb546e57ea1bb6f580bc9e01c583ed2acf64104da",
+    "runtimeSnapshot": {
+      "title": "H-Earth · CP4 Sealed Physical Preview",
+      "readyState": "complete",
+      "locationHref": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+      "rootDataset": {},
+      "bodyDataset": {},
+      "matchingGlobals": [
+        "H_EARTH_INTERACTION_ACCEPTANCE",
+        "H_EARTH_RENDERER_STARTUP_DIAGNOSTICS",
+        "H_EARTH_RUN8E_PUBLIC_ROUTE",
+        "H_EARTH_RUN8E_R3E2_PUBLIC_INTEGRATION",
+        "H_EARTH_RUNTIME_DIAGNOSTICS"
+      ],
+      "resources": [
+        {
+          "name": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/preview.css",
+          "initiatorType": "link",
+          "transferSize": 15500,
+          "decodedBodySize": 69862
+        },
+        {
+          "name": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/preview.js",
+          "initiatorType": "script",
+          "transferSize": 256653,
+          "decodedBodySize": 1507640
+        }
+      ],
+      "canvasRecords": [
+        {
+          "index": 0,
+          "width": 374,
+          "height": 604,
+          "clientWidth": 374,
+          "clientHeight": 604,
+          "webgl2": true,
+          "centerPixel": [
+            124,
+            105,
+            70,
+            255
+          ]
+        }
+      ],
+      "webgl2ContextCount": 1,
+      "navigator": {
+        "userAgent": "Mozilla/5.0 (Linux; Android 16; SM-S948U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36",
+        "maxTouchPoints": 1,
+        "platform": "Linux x86_64"
+      },
+      "media": {
+        "coarsePointer": true,
+        "portrait": true
+      }
+    }
+  },
+  "physicalTestAuthority": {
+    "physicalReferenceDevice": "SAMSUNG_GALAXY_PHONE",
+    "allSupportedTouchDevicesRemainTarget": true,
+    "physicalTestingMayBegin": true,
+    "physicalTestingPerformedByThisCheckpoint": false,
+    "cp4AcceptanceAuthorized": false,
+    "cp4MergeAuthorized": false
+  },
+  "mutationBoundary": {
+    "livePagesDeploymentChanged": false,
+    "productionRouteChanged": false,
+    "rendererChanged": false,
+    "renderPackageChanged": false,
+    "sourceOccurrenceChanged": false,
+    "previewFilesChanged": false,
+    "onlyDurableOutput": "h-earth-3d/control-plane/touch-motion-calibration/h-earth.touch-motion-calibration.cp4-0c-non-live-preview-publication.receipt.json"
+  },
+  "nextCheckpoint": "CP4_0D_PHYSICAL_ALL_EIGHT_TOUCH_EXECUTION",
+  "stoppingBoundary": "STOP_BEFORE_CP4_ACCEPTANCE_OR_MERGE"
+}

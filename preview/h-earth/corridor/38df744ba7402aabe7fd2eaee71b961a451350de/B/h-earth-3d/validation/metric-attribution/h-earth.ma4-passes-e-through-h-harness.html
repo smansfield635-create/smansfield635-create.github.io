@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth MA4 Passes E Through H</title>
+  <style>
+    html,body{margin:0;background:#080b0d;color:#d8e1e5;font:13px system-ui,sans-serif}
+    main{padding:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    figure{margin:0;border:1px solid #26323a;background:#10161a;padding:5px}
+    figcaption{padding:3px 0 5px}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    #status{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Official accepted CP2</figcaption><canvas id="official"></canvas></figure>
+    <figure><figcaption>Pass E — silhouette and major edges</figcaption><canvas id="pass-e"></canvas></figure>
+    <figure><figcaption>Pass F — constant material, accepted lighting</figcaption><canvas id="pass-f"></canvas></figure>
+    <figure><figcaption>Pass G — accepted material, flat lighting</figcaption><canvas id="pass-g"></canvas></figure>
+    <figure><figcaption>Pass H — accepted CP2 final frame</figcaption><canvas id="pass-h"></canvas></figure>
+    <div id="status">INITIALIZING_MA4</div>
+  </main>
+  <script type="module">
+    import { createMA4PassesEThroughHSuite } from './h-earth.ma4-passes-e-through-h-browser.mjs';
+    const status = document.querySelector('#status');
+    try {
+      const suite = await createMA4PassesEThroughHSuite({
+        officialCanvas: document.querySelector('#official'),
+        passCanvases: {
+          E: document.querySelector('#pass-e'),
+          F: document.querySelector('#pass-f'),
+          G: document.querySelector('#pass-g'),
+          H: document.querySelector('#pass-h')
+        }
+      });
+      window.H_EARTH_MA4 = suite;
+      document.documentElement.dataset.ma4Ready = 'true';
+      status.textContent = 'MA4_READY';
+    } catch (error) {
+      document.documentElement.dataset.ma4Error = 'true';
+      status.textContent = String(error?.stack || error);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,591 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4C_FIXTURE_EXECUTION_RECEIPT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4C-13",
+  "result": "PASS",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "executedCommit": "719d20ae464e1f7d969dd789824fb6902321acff",
+  "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
+  "staticAudit": {
+    "auditId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4C_STATIC_FIXTURE_SUITE_AUDIT_v1",
+    "targetNumber": 4,
+    "targetSubtarget": "4C-12",
+    "result": "PASS",
+    "checks": {
+      "dependenciesVerified": true,
+      "fixtureContractIdentityExact": true,
+      "fixtureContractClosed": true,
+      "fixtureCountExact": true,
+      "positiveFixtureCountExact": true,
+      "negativeFixtureCountExact": true,
+      "driftFixtureCountExact": true,
+      "adversarialFixtureCountExact": true,
+      "fixtureIdsUnique": true,
+      "operationIdsUnique": true,
+      "fixtureOrderLexicographic": true,
+      "fixtureRecordsClosed": true,
+      "fixtureRecordsContainNoNull": true,
+      "fixtureClassesValid": true,
+      "fixtureCategoriesValid": true,
+      "expectedDispositionsValid": true,
+      "expectedTraceLengthExact": true,
+      "expectedMutationAlwaysFalse": true,
+      "fixtureFailureArraysUnique": true,
+      "referencedFailureCodesValid": true,
+      "oracleIdentityExact": true,
+      "oracleIndependent": true,
+      "oracleIdsUnique": true,
+      "oracleCoverageExact": true,
+      "fixtureExpectationsMatchOracle": true,
+      "allFourFixtureClassesPresent": true,
+      "suiteCandidateOnly": true,
+      "noEngineRewriteAuthority": true,
+      "noExpectationWeakeningAuthority": true,
+      "noPortabilityClaim": true,
+      "noSystemicComprehensionClaim": true,
+      "noWorkflowEnforcement": true,
+      "noMutationAuthority": true,
+      "target2RegistryExact": true,
+      "target3InstructionExact": true,
+      "target4AContractExact": true,
+      "target4BEngineExact": true
+    },
+    "totalChecks": 37,
+    "passedChecks": 37,
+    "failedChecks": [],
+    "fixtureCounts": {
+      "total": 33,
+      "positive": 6,
+      "negative": 13,
+      "drift": 6,
+      "adversarial": 8
+    },
+    "protectedIdentities": {
+      "target2RegistryGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+      "target3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929",
+      "target4AContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+      "target4BEngineGitBlob": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759"
+    },
+    "stoppingCondition": {
+      "staticFixtureSuiteAuditPass": true,
+      "advanceBeyondTarget4C12": false,
+      "nextAuthorizedSubtarget": "4C-13"
+    }
+  },
+  "fixtureExecution": {
+    "suiteId": "H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_FIXTURE_SUITE_v1",
+    "suiteVersion": 1,
+    "targetNumber": 4,
+    "targetSubtarget": "4C-10",
+    "executedFixtureCount": 33,
+    "passedFixtureCount": 33,
+    "failedFixtureCount": 0,
+    "fixtureClassCounts": {
+      "POSITIVE": 6,
+      "NEGATIVE": 13,
+      "DRIFT": 6,
+      "ADVERSARIAL": 8
+    },
+    "dispositionCounts": {
+      "PASS": 5,
+      "REVIEW_REQUIRED": 2,
+      "BLOCK": 16,
+      "STOP": 10
+    },
+    "failureCodeCoverage": [
+      "AUTHORITY_COLLAPSE_OR_TRANSFER",
+      "CANDIDATE_CARDINAL_ROLE_PROMOTED",
+      "CANDIDATE_PROMOTED_TO_CANONICAL",
+      "CARDINAL_ROLE_COLLAPSE",
+      "DECLARED_AFFECTED_NODE_SET_INCOMPLETE",
+      "EXACT_OCCURRENCE_UNRESOLVED",
+      "FACADE_PROMOTED_TO_MEMBER_AUTHORITY",
+      "INSTRUCTION_CONTRADICTS_REGISTRY",
+      "INSTRUCTION_IDENTITY_MISMATCH",
+      "LIFECYCLE_TRANSITION_UNRESOLVED",
+      "MUTATION_AUTHORITY_NOT_ESTABLISHED",
+      "MUTATION_SCOPE_EXCEEDS_AUTHORITY",
+      "OCCURRENCE_IDENTITY_DRIFT",
+      "OPERATION_SCOPE_UNRESOLVED",
+      "OPTIONAL_EVIDENCE_LIMITATION",
+      "ORCHESTRATION_PROMOTED_TO_ADMISSION_AUTHORITY",
+      "ORDER_INFERRED_FROM_ARRAY_POSITION",
+      "REQUESTED_PATH_UNRESOLVED",
+      "REQUIRED_COMPOSITE_MEMBER_MISSING",
+      "REQUIRED_EVIDENCE_UNRESOLVED",
+      "STOPPING_BOUNDARY_BYPASSED"
+    ],
+    "individualResults": [
+      {
+        "fixtureId": "A01_REGISTRY_CONTRADICTING_INSTRUCTION",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "INSTRUCTION_CONFLICT",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "INSTRUCTION_CONTRADICTS_REGISTRY"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "A02_MISSING_CONTROLLING_INSTRUCTION",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "INSTRUCTION_CONFLICT",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "INSTRUCTION_IDENTITY_MISMATCH"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "A03_ARRAY_POSITION_USED_AS_OPERATIONAL_ORDER",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "DERIVATION_INTEGRITY",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "ORDER_INFERRED_FROM_ARRAY_POSITION"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "A04_DIRECTORY_POSITION_USED_AS_AUTHORITY",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "DERIVATION_INTEGRITY",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "ORDER_INFERRED_FROM_ARRAY_POSITION"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "A05_EXPLICIT_STOPPING_BOUNDARY_BYPASS",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "STOPPING_BOUNDARY",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "STOPPING_BOUNDARY_BYPASSED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "A06_MUTATION_BEYOND_REGISTERED_AUTHORITY",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "MUTATION",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "MUTATION_AUTHORITY_NOT_ESTABLISHED",
+          "MUTATION_SCOPE_EXCEEDS_AUTHORITY",
+          "STOPPING_BOUNDARY_BYPASSED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "A07_UNRECOGNIZED_INPUT_FIELD_INJECTION",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "INPUT_INTEGRITY",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "OPERATION_SCOPE_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "A08_DUPLICATE_SCOPE_ASSERTION_INJECTION",
+        "fixtureClass": "ADVERSARIAL",
+        "fixtureCategory": "INPUT_INTEGRITY",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "OPERATION_SCOPE_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "D01_UNKNOWN_REPOSITORY_PATH",
+        "fixtureClass": "DRIFT",
+        "fixtureCategory": "OCCURRENCE",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "REQUESTED_PATH_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "D02_KNOWN_PATH_WRONG_COMMIT",
+        "fixtureClass": "DRIFT",
+        "fixtureCategory": "OCCURRENCE",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "OCCURRENCE_IDENTITY_DRIFT"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "D03_KNOWN_PATH_WRONG_GIT_BLOB",
+        "fixtureClass": "DRIFT",
+        "fixtureCategory": "OCCURRENCE",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "OCCURRENCE_IDENTITY_DRIFT"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "D04_REQUIRED_EXACT_OCCURRENCE_MISSING",
+        "fixtureClass": "DRIFT",
+        "fixtureCategory": "OCCURRENCE",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "EXACT_OCCURRENCE_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "D05_MUTATION_WITHOUT_EXACT_OCCURRENCE",
+        "fixtureClass": "DRIFT",
+        "fixtureCategory": "OCCURRENCE",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "EXACT_OCCURRENCE_UNRESOLVED",
+          "MUTATION_AUTHORITY_NOT_ESTABLISHED",
+          "MUTATION_SCOPE_EXCEEDS_AUTHORITY",
+          "STOPPING_BOUNDARY_BYPASSED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "D06_UNKNOWN_EVIDENCE_REFERENCE",
+        "fixtureClass": "DRIFT",
+        "fixtureCategory": "EVIDENCE",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "REQUIRED_EVIDENCE_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N01_INCOMPLETE_AFFECTED_NODE_SET",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "SCOPE",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "DECLARED_AFFECTED_NODE_SET_INCOMPLETE"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N02_INCOMPLETE_AFFECTED_RELATION_SET",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "SCOPE",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "DECLARED_AFFECTED_NODE_SET_INCOMPLETE"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N03_MISSING_DECLARED_COMPOSITE_UNIT",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "COMPOSITE",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "REQUIRED_COMPOSITE_MEMBER_MISSING"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N04_UNKNOWN_DECLARED_NODE",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "SCOPE",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "OPERATION_SCOPE_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N05_UNKNOWN_DECLARED_RELATION",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "SCOPE",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "OPERATION_SCOPE_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N06_EMPTY_OPERATION_SCOPE",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "SCOPE",
+        "expectedDisposition": "STOP",
+        "actualDisposition": "STOP",
+        "actualFailureCodes": [
+          "OPERATION_SCOPE_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N07_CARDINAL_ROLE_COLLAPSE",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "CARDINAL",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "CARDINAL_ROLE_COLLAPSE"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N08_GATE_B_CANDIDATE_ROLE_PROMOTION",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "CARDINAL",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "CANDIDATE_CARDINAL_ROLE_PROMOTED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N09_ADAPTER_PROMOTED_TO_ADMISSION_AUTHORITY",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "AUTHORITY",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "ORCHESTRATION_PROMOTED_TO_ADMISSION_AUTHORITY"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N10_FACADE_PROMOTED_TO_MEMBER_AUTHORITY",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "AUTHORITY",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "FACADE_PROMOTED_TO_MEMBER_AUTHORITY"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N11_GENERIC_AUTHORITY_TRANSFER",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "AUTHORITY",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "AUTHORITY_COLLAPSE_OR_TRANSFER"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N12_CANDIDATE_PROMOTED_TO_CANONICAL",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "LIFECYCLE",
+        "expectedDisposition": "BLOCK",
+        "actualDisposition": "BLOCK",
+        "actualFailureCodes": [
+          "CANDIDATE_PROMOTED_TO_CANONICAL",
+          "STOPPING_BOUNDARY_BYPASSED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "N13_UNRESOLVED_LIFECYCLE_TRANSITION",
+        "fixtureClass": "NEGATIVE",
+        "fixtureCategory": "LIFECYCLE",
+        "expectedDisposition": "REVIEW_REQUIRED",
+        "actualDisposition": "REVIEW_REQUIRED",
+        "actualFailureCodes": [
+          "LIFECYCLE_TRANSITION_UNRESOLVED"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "P01_COMPLETE_READ_ONLY_KERNEL_INSPECTION",
+        "fixtureClass": "POSITIVE",
+        "fixtureCategory": "READ_ONLY_COMPREHENSION",
+        "expectedDisposition": "PASS",
+        "actualDisposition": "PASS",
+        "actualFailureCodes": [],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "P02_COMPLETE_GATE_B_PACKAGE_DERIVATION",
+        "fixtureClass": "POSITIVE",
+        "fixtureCategory": "PACKAGE_DERIVATION",
+        "expectedDisposition": "PASS",
+        "actualDisposition": "PASS",
+        "actualFailureCodes": [],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "P03_EXACT_READ_ONLY_OCCURRENCE_RESOLUTION",
+        "fixtureClass": "POSITIVE",
+        "fixtureCategory": "OCCURRENCE",
+        "expectedDisposition": "PASS",
+        "actualDisposition": "PASS",
+        "actualFailureCodes": [],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "P04_COMPLETE_CARDINAL_KERNEL_PROJECTION",
+        "fixtureClass": "POSITIVE",
+        "fixtureCategory": "CARDINAL",
+        "expectedDisposition": "PASS",
+        "actualDisposition": "PASS",
+        "actualFailureCodes": [],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "P05_DETERMINISTIC_REPEAT_EXECUTION",
+        "fixtureClass": "POSITIVE",
+        "fixtureCategory": "DERIVATION_INTEGRITY",
+        "expectedDisposition": "PASS",
+        "actualDisposition": "PASS",
+        "actualFailureCodes": [],
+        "result": "PASS",
+        "failedChecks": []
+      },
+      {
+        "fixtureId": "P06_NONCRITICAL_EVIDENCE_LIMITATION",
+        "fixtureClass": "POSITIVE",
+        "fixtureCategory": "EVIDENCE",
+        "expectedDisposition": "REVIEW_REQUIRED",
+        "actualDisposition": "REVIEW_REQUIRED",
+        "actualFailureCodes": [
+          "OPTIONAL_EVIDENCE_LIMITATION"
+        ],
+        "result": "PASS",
+        "failedChecks": []
+      }
+    ],
+    "failedFixtureIds": [],
+    "engineIdentity": {
+      "engineId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_ENGINE_v1",
+      "engineVersion": 1,
+      "targetNumber": 4,
+      "targetSubtarget": "4B-1",
+      "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+      "accepted": false,
+      "canonical": false,
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "branch": "agent/h-earth-repository-registry-installation-001",
+      "contract": {
+        "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+        "contractVersion": 1,
+        "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-contract.json",
+        "gitBlobSha": "a6733c868cfee1abce172c0ac901fecf3dd209b2"
+      },
+      "registry": {
+        "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+        "registryVersion": "1.0.0-candidate.1",
+        "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+        "schemaVersion": 1,
+        "candidatePath": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+        "candidateGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+      },
+      "instruction": {
+        "instructionId": "H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1",
+        "instructionVersion": 1,
+        "path": "/h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
+        "gitBlobSha": "de421803f21808ce27b2ffff349af8756c4d9929"
+      }
+    },
+    "protectedIdentities": {
+      "target2RegistryGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+      "target3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929",
+      "target4AContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+      "target4BEngineGitBlob": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759"
+    },
+    "finalResult": "PASS",
+    "receiptDeterminism": {
+      "fixtureOrder": "LEXICOGRAPHIC_BY_FIXTURE_ID",
+      "failureCodeOrder": "LEXICOGRAPHIC",
+      "timestampsPermitted": false,
+      "randomIdentifiersPermitted": false,
+      "repeatedExecutionReceiptsByteEquivalent": true
+    },
+    "stoppingCondition": {
+      "fixtureRunnerComplete": true,
+      "receiptAndDeterminismContractComplete": true,
+      "advanceBeyondTarget4C11": false,
+      "nextAuthorizedSubtarget": "4C-12"
+    }
+  },
+  "gitBlobs": {
+    "suiteIdentity": "b3c02d8bc1f60bfec2eb5ac049359acf0042cebc",
+    "fixtureContract": "7721809a7b28a99e67aa7fdbbb5c0760907aff4c",
+    "completeOperationBuilder": "7028bc73ebabf55e22a9432665b07c40ba15f3c0",
+    "fixtureManifest": "1f23cca60f9a2c234929bae5b82cd3f3f06bfaf9",
+    "expectedOutcomeOracle": "d6887147daf8841f501e47a3780d7a5b80855cdc",
+    "fixtureRunner": "94deac991f7d70a783411bc683ce3afce2e9bc22",
+    "staticAudit": "c10af832938f7e16f38398a586c084f850ef2218",
+    "executionHarness": "707abacd9a1cbe6a53b77b0a6cc7aa0b8ee812f1"
+  },
+  "protectedIdentities": {
+    "target2RegistryGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+    "target3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929",
+    "target4AContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+    "target4BEngineGitBlob": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759"
+  },
+  "boundaries": {
+    "fixtureSuiteExecuted": true,
+    "portabilityReferencePackageInstalled": false,
+    "systemicComprehensionAuditExecuted": false,
+    "workflowEnforcementInstalled": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "mainChanged": false
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "manifestId": "H_EARTH_PR79_POST_MERGE_RETAINED_STATE_IDENTITY_MANIFEST_v1",
+  "operation": "POST_MERGE_42_FILE_SCOPE_DISPOSITION",
+  "sourceMergeCommit": "ee7324734bb687e71ebb3ee93ff23e6353feb5fe",
+  "stabilizationBranch": "agent/h-earth-post-merge-scope-disposition-001",
+  "retainedStep1Paths": {
+    "/.github/workflows/h-earth-lifecycle-control-plane-step-1-audit.yml": "2f8933b25113da2dc3978e08f3057e79eaf24f55",
+    "/.h-earth-evaluation/h-earth-lifecycle-control-plane-step-1.merge-authorization.json": "d5947209fbb93f39c0a7ffcd19d7073531a8fe33",
+    "/.h-earth-evaluation/h-earth-lifecycle-control-plane-step-1.repository-scope-reconciliation.receipt.json": "689c934ef84f22d2263327344091f44e43a7eac6",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.acceptance-custody-receipt.json": "5538eb929f2ff50943568cdf856f19b051e2961a",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.completion-receipt.json": "0b682b5445b3fa5c2eb7f8019294964608551596",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.execution-trigger.json": "5594f2bfb44fd037c1079db2201815b01ecce22e",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.identity-and-boundary.json": "fb984ce1e7b34dc05dad89ec50fd142030b4573a",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.user-acceptance-declaration.json": "af7acc0e8c57faaf2f95cbc9c35f9c6fcc24169e",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.fixtures.json": "9e1018f58d75b4b4d026f3c68aa61bbe67ba7ff1",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.postcondition-schema.json": "56d7be6cc7922162002b5a0e8e761b0e98d7e250",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.precondition-schema.json": "754cfb7335f4515ec53a89aa91d39c141fe391d8",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.state-machine.js": "f954ec84c9758122908d3e579c4bc3f5301a1560",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.state-schema.json": "2f8cb2b31538525e69b6d3e263cea457af9820f6",
+    "/h-earth-3d/control-plane/step-1/h-earth.successor-activation.transition-contract.json": "12e7e4359cb14ad8184d21609376bbc37ff6b9a6",
+    "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.step-1-scope-reconciliation.js": "cae2438721f4b2853bdb669704f4befd2107deaf",
+    "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js": "efa6e09512f57936c45764f65cc8219bb4a0374d",
+    "/tools/h-earth-lifecycle-control-plane-step-1-audit.mjs": "153b6d0401495bfee9e2aab0e239ae79032dcdba"
+  },
+  "reclassifiedSuccessorEvidencePaths": {
+    "/h-earth-3d/registry/candidates/h-earth.repository-registry.compositor-and-route-entry-amendment.candidate.js": "6ad9e0fab4a42bbe897a71c02fdb3c11c1dac1c4",
+    "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+    "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json": "a5d6ae2f64c7f8ac868aef70aa895bf9979be202",
+    "/tools/h-earth-registry-successor-build.mjs": "28ee7c36b8cff0fbf86dde6c6c52bf4a1bba31b7",
+    "/tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs": "4d9c2166b89ae0f6d6d4bdc9912f3887bd5ac7dc",
+    "/tools/h-earth-repository-registry-successor-v2-audit.mjs": "42e987c7679c75b604b783d2accccc54306cd27c"
+  },
+  "dispositionScopeArtifacts": {
+    "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js": "f7dbe4e9b4fd5feef677fdc8c42a65ab4bb322de"
+  },
+  "revertedLegacyPath": {
+    "path": "/tools/h-earth-repository-registry-target-4f-audit.mjs",
+    "preMergeGitBlobSha": "f4269e9f9d299584ed8e1c919f52c304df97234d"
+  },
+  "protectedUnchangedIdentities": {
+    "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json": "e422e814a29e024df91e8410687ab29ffe63c382",
+    "/h-earth-3d/registry/h-earth.repository-registry.candidate.js": "10ab7b203e03fde419e526d0cce2c0af42860911"
+  },
+  "status": "EXPECTED_POST_ACTION_IDENTITY_PENDING_EXECUTED_AUDIT"
+}

@@ -1,0 +1,26 @@
+name: H-Earth Meso Post-Ready Fail-Open Qualification v1
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove world-first meso boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+          node --check "$FILE"
+          grep -q "createHEarthRun8ER3CPersistentRenderer({ canvas, width, height })" "$FILE"
+          ! grep -q "postTerrainDraw: t4Extension" "$FILE"
+          grep -q "Arm meso only after the first accepted world frame" "$FILE"
+          grep -q "t4Extension = createHEarthT4PostTerrainDraw" "$FILE"
+          grep -q "if (t4Enabled && t4Extension)" "$FILE"
+          grep -q "t4Enabled = false" "$FILE"
+          grep -q "renderer.presentColorFrame()" "$FILE"

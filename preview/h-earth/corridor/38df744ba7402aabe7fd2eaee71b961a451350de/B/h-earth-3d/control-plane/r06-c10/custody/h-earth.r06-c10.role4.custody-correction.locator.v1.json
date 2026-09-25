@@ -1,0 +1,97 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_4_CUSTODY_CORRECTION_LOCATOR_v1",
+  "locatorId": "H_EARTH_R06_C10_ROLE_4_CUSTODY_CORRECTION_LOCATOR_v1",
+  "status": "ACTIVE_CORRECTION_READY_FOR_ROLE_1_C1_RESUMPTION",
+  "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "locatorPath": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+  "initialLocatorIdentity": {
+    "creationCommit": "03a450e2ed2d1de9b2d1eb0936c7a659bc8cbf17",
+    "creationBlob": "86c402fef889ab7cab1b846eb8ce6a28f333a52f"
+  },
+  "operationId": "H_EARTH_R06_C10_ROLE_1_C1_CUSTODY_CORRECTION_001",
+  "blockedCheckpoint": {
+    "checkpoint": "R1_C1_CUSTODY_AND_BASELINE_ADMISSION",
+    "result": "R06_C10_ROLE_1_C1_BLOCKED_WITH_ONE_EXACT_CUSTODY_CONTRADICTION",
+    "productMutation": false,
+    "toolConstructionStarted": false,
+    "officialGeometryArticulationRound": "NOT_STARTED"
+  },
+  "contradiction": {
+    "cause": "ROLE_4_FROZE_VERIFY_ALL_ARCHIVE_MEMBERS_AGAINST_INTERNAL_SHA256SUMS_WHILE_THE_INTERNAL_MANIFEST_COVERED_ONLY_35_CORE_MEMBERS",
+    "sourceArchiveMemberCount": 39,
+    "originalCoreManifestMemberCount": 35,
+    "unhashedByOriginalCoreManifest": [
+      "PACKAGE_INTEGRITY_RECEIPT.json",
+      "SHA256SUMS.txt",
+      "records/28_CUMULATIVE_HANDOFF_ENVELOPE_v1.json",
+      "records/32_BOUNDED_CHECKPOINT_LEDGER_v1.json"
+    ]
+  },
+  "sourceRole6Archive": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.2.0_ROLE_6_REQUIREMENTS_COMPLETE",
+    "archiveFileName": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1_0_2_0_ROLE_6_REQUIREMENTS_COMPLETE.zip",
+    "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+    "archiveByteCount": 179997,
+    "archiveMemberCount": 39,
+    "driveFileId": "1bp5gDl41Oje87AlwjKmyhgm_TBgli_wR",
+    "originalCoreManifestMemberCount": 35
+  },
+  "correctionArchive": {
+    "fileName": "H_EARTH_R06_C10_ROLE_4_CUSTODY_CORRECTION_v1.zip",
+    "archiveSha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8",
+    "archiveByteCount": 5637,
+    "archiveMemberCount": 4,
+    "driveFileId": "1NNNCT8liggR4MAtYvLr7zM12QMdlxUGl",
+    "driveFileUrl": "https://drive.google.com/file/d/1NNNCT8liggR4MAtYvLr7zM12QMdlxUGl/view?usp=drivesdk",
+    "mimeType": "application/zip",
+    "driveReadbackByteCount": 5637,
+    "driveReadbackSha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8",
+    "driveReadbackMatch": true,
+    "zipIntegrity": "PASS",
+    "detachedCompleteManifestPath": "H_EARTH_R06_C10_ROLE_4_CUSTODY_CORRECTION_v1/DETACHED_COMPLETE_MEMBER_MANIFEST_v1.json",
+    "detachedCompleteManifestSha256": "129466ffc161a25e9c9b1e7d2d6594b92408fee6a9f36155c75111ece7f186db",
+    "detachedManifestCoverageCount": 39,
+    "correctionReceiptPath": "H_EARTH_R06_C10_ROLE_4_CUSTODY_CORRECTION_v1/CUSTODY_CORRECTION_RECEIPT_v1.json",
+    "correctionReceiptSha256": "d2c726479900d07b7ade3e6c0f0f84362386d2f311c7903c6930f6abeea9227a",
+    "readmeSha256": "d7e3401498061f5e488330255ab76efaa7a27389562e77b3ee676ad33e053c4c",
+    "internalManifestSha256": "6923635ae821a274e2e16a7ae4f25579125a148afe30b971c3cef29ac0c13ea4"
+  },
+  "authoritativeCustodyLaw": [
+    "VERIFY_SOURCE_ARCHIVE_DRIVE_ID_FILENAME_MIME_TYPE_BYTE_COUNT_MEMBER_COUNT_AND_SHA256",
+    "VERIFY_35_CORE_MEMBERS_AGAINST_THE_SOURCE_ARCHIVE_INTERNAL_SHA256SUMS_TXT",
+    "VERIFY_ALL_39_SOURCE_ARCHIVE_MEMBERS_AGAINST_DETACHED_COMPLETE_MEMBER_MANIFEST_V1_JSON",
+    "VERIFY_CORRECTION_ARCHIVE_DRIVE_READBACK_BYTE_COUNT_MEMBER_COUNT_SHA256_AND_ZIP_INTEGRITY",
+    "TREAT_SOURCE_PACKAGE_INTEGRITY_RECEIPT_ARCHIVE_SHA256_ARCHIVE_BYTE_COUNT_AND_DRIVE_PENDING_FIELDS_AS_PREFINALIZATION_TRACE_ONLY",
+    "DO_NOT_REINTERPRET_OR_MUTATE_ANY_ROLE_6_SUBSTANTIVE_REQUIREMENT"
+  ],
+  "supersession": {
+    "supersededInstruction": "VERIFY_ALL_ARCHIVE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT",
+    "replacementInstruction": "VERIFY_35_CORE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT_AND_VERIFY_ALL_39_MEMBERS_AGAINST_THE_DETACHED_COMPLETE_MEMBER_MANIFEST"
+  },
+  "role1Resumption": {
+    "resumeCheckpoint": "R1_C1_CUSTODY_AND_BASELINE_ADMISSION",
+    "reusePreviouslyPassedChecks": true,
+    "repeatAlreadyPassedDownloadsOrHashChecks": "NOT_REQUIRED_UNLESS_LOCAL_CUSTODY_WAS_DISCARDED",
+    "requiredNewChecks": [
+      "CORRECTION_ARCHIVE_CUSTODY_PASS",
+      "DETACHED_COMPLETE_MANIFEST_SHA256_PASS",
+      "ALL_39_SOURCE_ARCHIVE_MEMBER_HASHES_PASS"
+    ],
+    "thenComplete": [
+      "BASELINE_COMMIT_AND_PROTECTED_BLOBS_VERIFIED",
+      "ROLE_1_ASSUMPTION_RECEIPT_WRITTEN",
+      "R1_C1_PASS_CLOSED"
+    ],
+    "stopAfterClosure": true,
+    "toolConstructionAfterC1": "NOT_AUTHORIZED_BY_THIS_CORRECTION"
+  },
+  "searchAliases": [
+    "H-Earth R06 C10 custody correction",
+    "Role 1 C1 member hash correction",
+    "detached complete member manifest",
+    "39 member Role 6 archive manifest",
+    "R06 C10 Role 4 correction"
+  ]
+}

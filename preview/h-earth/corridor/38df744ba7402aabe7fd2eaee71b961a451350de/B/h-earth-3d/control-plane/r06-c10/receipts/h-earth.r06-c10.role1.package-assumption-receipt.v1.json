@@ -1,0 +1,104 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_1_PACKAGE_ASSUMPTION_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_1_PACKAGE_ASSUMPTION_RECEIPT_v1",
+  "status": "PASS_CLOSED",
+  "result": "R06_C10_ROLE_1_C1_PASS_CLOSED",
+  "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "operationId": "H_EARTH_R06_C10_ROLE_1_C1_CUSTODY_CORRECTION_001",
+  "checkpoint": "R1_C1_CUSTODY_AND_BASELINE_ADMISSION",
+  "checkpointAdmissionMainHead": "0ac8613b21b35844111af65d727cbb2dfc4988b0",
+  "exactAcceptedBaselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+  "sourceRole6Package": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.2.0_ROLE_6_REQUIREMENTS_COMPLETE",
+    "driveFileId": "1bp5gDl41Oje87AlwjKmyhgm_TBgli_wR",
+    "archiveFileName": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1_0_2_0_ROLE_6_REQUIREMENTS_COMPLETE.zip",
+    "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+    "archiveByteCount": 179997,
+    "archiveMemberCount": 39,
+    "archiveIdentityVerified": true,
+    "zipIntegrityVerified": true,
+    "originalCoreManifestMemberCount": 35,
+    "originalCoreManifestVerified": true,
+    "detachedCompleteManifestMemberCount": 39,
+    "allSourceArchiveMembersVerified": true
+  },
+  "role6ToRole1Handoff": {
+    "handoffId": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_HANDOFF_v1",
+    "driveFileId": "1q2TbJS6tIY_AeYdGL23f2TIUEwnDhBz5",
+    "archiveSha256": "4b073253f2a196a4729c5545b48db52b0f17a54829bb4015be035cd4ce81d95e",
+    "archiveByteCount": 8557,
+    "archiveMemberCount": 8,
+    "archiveAndMemberIntegrityVerified": true,
+    "locator": {
+      "path": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
+      "commit": "e4e8307bfa0750dbe98ffca521f69f695f557ad9",
+      "blob": "8a324ca03865ded62f141caeb5214608f85ea346"
+    }
+  },
+  "role4CustodyCorrection": {
+    "driveFileId": "1NNNCT8liggR4MAtYvLr7zM12QMdlxUGl",
+    "archiveFileName": "H_EARTH_R06_C10_ROLE_4_CUSTODY_CORRECTION_v1.zip",
+    "archiveSha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8",
+    "archiveByteCount": 5637,
+    "archiveMemberCount": 4,
+    "archiveAndMemberIntegrityVerified": true,
+    "detachedCompleteMemberManifestSha256": "129466ffc161a25e9c9b1e7d2d6594b92408fee6a9f36155c75111ece7f186db",
+    "detachedManifestCoverage": "39_OF_39_SOURCE_ARCHIVE_MEMBERS",
+    "detachedManifestVerified": true,
+    "locator": {
+      "path": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+      "commit": "e7402f9ffd3f1733723de844d9a21f1d873eff8c",
+      "blob": "f046e7223cfb8291a5620143a58201a02e307865"
+    }
+  },
+  "predecessorDiscovery": {
+    "path": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
+    "commit": "0ac8613b21b35844111af65d727cbb2dfc4988b0",
+    "blob": "1e31036797fa7cc4ac1c34014d831482120668a6",
+    "correctionCrossLinkVerified": true
+  },
+  "baselineAdmission": {
+    "acceptedBaselineVerified": true,
+    "currentMainIsDescendantOfAcceptedBaseline": true,
+    "changesAfterAcceptedBaselineBeforeThisReceipt": "NONPRODUCT_R06_C10_CONTROL_PLANE_LOCATORS_ONLY",
+    "productPathMutationObserved": false,
+    "protectedBlobs": [
+      {
+        "path": "showroom/globe/h-earth/index.html",
+        "gitBlob": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+        "verified": true
+      },
+      {
+        "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "gitBlob": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+        "verified": true
+      },
+      {
+        "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "gitBlob": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+        "verified": true
+      }
+    ]
+  },
+  "authorityBoundary": {
+    "productMutation": false,
+    "toolConstructionStarted": false,
+    "officialGeometryArticulationRound": "NOT_STARTED",
+    "role6RequirementsChanged": false,
+    "visualImprovementClaimed": false,
+    "selfRatificationPerformed": false,
+    "r1C2Authorized": false
+  },
+  "closure": {
+    "locatorVerified": true,
+    "archiveSha256Verified": true,
+    "memberHashesVerified": true,
+    "baselineCommitAndProtectedBlobsVerified": true,
+    "role1AssumptionReceiptWritten": true,
+    "checkpointClosed": true,
+    "stopAfterClosure": true,
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY"
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_1_C5B_RECOVERY_ROOT_GENERALIZATION_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_1_C5B_RECOVERY_ROOT_GENERALIZATION_RECEIPT_v1",
+  "result": "R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_PASS_CLOSED",
+  "status": "PASS_CLOSED",
+  "operationId": "H_EARTH_R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_001",
+  "sourceRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
+  "returnRole": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "exactStartingMainHead": "3e7a15a73c3faa5833c300ff13a10821bf50aa3d",
+  "role5Blocker": "PACKAGE_AND_RECOVERY_EMITTER_SUCCESSOR_ARCHIVE_ROOT_IDENTITY_MISMATCH",
+  "role5StopBehavior": "ACCEPTED_VALID",
+  "tool8": {
+    "toolId": "H_EARTH_R06_C10_PACKAGE_AND_RECOVERY_EMITTER_v1",
+    "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.package-and-recovery-emitter.v1.mjs",
+    "predecessorGitBlob": "27f4ea03b612037035707035405597d821029cb9",
+    "predecessorSha256": "e1b818bd081c063e7d9d4b96043276f2f3e0c32dfd8286b87d4952f94f2e7846",
+    "successorGitBlob": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+    "successorSha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243",
+    "sourceMutationClass": "BOUNDED_RECOVERY_ORCHESTRATION_ONLY"
+  },
+  "rootDiscoveryLaw": {
+    "lawId": "R06_C10_TOOL_8_SINGLE_VERIFIED_ARCHIVE_ROOT_AND_RECOVERED_IDENTITY_v1",
+    "archiveRootSource": "VERIFIED_ARCHIVE_CONTENT",
+    "requiredRootCount": 1,
+    "zeroRootDisposition": "FAIL_CLOSED_ZERO_ARCHIVE_ROOTS",
+    "multipleRootDisposition": "FAIL_CLOSED_MULTIPLE_ARCHIVE_ROOTS",
+    "packageIdentityMember": "PACKAGE_BUILD_RECEIPT.json",
+    "requiredIdentityChecks": [
+      "SCHEMA_MATCH",
+      "PACKAGE_ID_MATCH",
+      "PACKAGE_VERSION_NONEMPTY",
+      "ARCHIVE_NAME_EQUALS_DISCOVERED_ROOT_PLUS_DOT_ZIP",
+      "MANIFEST_PACKAGE_ID_MATCH",
+      "MANIFEST_PACKAGE_VERSION_MATCH"
+    ],
+    "hardCodedSuccessorRoot": false,
+    "hardCoded031Root": false
+  },
+  "rootTests": {
+    "zeroRootFailClosed": true,
+    "multipleRootsFailClosed": true,
+    "arbitraryRootIdentityPass": true,
+    "resultsSha256": "8dc9b89c51acc4288fde66feefaaadef97d564f6d6e08d1d0afc14a0614e9c62"
+  },
+  "replayVerification": {
+    "predecessor030": {
+      "packageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
+      "archiveRoot": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1",
+      "archiveSha256": "577de36ebe8909b14c34670b266414ac9d6f305737dac8fde8c2e05b5ea87e9d",
+      "result": "PASS",
+      "cleanReplayReceiptSha256": "94b2531c1a6d15acca1d1e5a6c72392a8a27abef4385e487d5710bde69f568af"
+    },
+    "successor031": {
+      "packageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED",
+      "archiveRoot": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_1_ENTRY_POINT_IDENTITY_CORRECTED",
+      "archiveSha256": "9b6a3765550c6fe37b59452018ecc660cf709629b4b3661862a1f224ea1cba1e",
+      "result": "PASS",
+      "cleanReplayReceiptSha256": "e71099fdc868be3cd16bb785766d901401690ae51286c5fc1c7b48c4f4d9c2ee"
+    },
+    "successor032": {
+      "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+      "archiveRoot": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED",
+      "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+      "result": "PASS",
+      "cleanReplayReceiptSha256": "12edfb9c403d222de33f8636d87e8952c2a1cd4afc2dadc2dd00e2c628ccb7e0"
+    }
+  },
+  "eightToolAudit": {
+    "result": "PASS",
+    "toolCount": 8,
+    "passCount": 8,
+    "failCount": 0,
+    "tools1Through7Unchanged": true,
+    "auditSha256": "b451e032a17f193ce87b07c141f8f82d0422a3582f8d8d208c44c54e9a5041e3"
+  },
+  "package": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED.zip",
+    "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+    "archiveByteCount": 13364458,
+    "archiveMemberCount": 167,
+    "internalSha256SumsCoverageCount": 166,
+    "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+    "driveMimeType": "application/zip",
+    "metadataReadback": "PASS",
+    "rawByteReadback": "PASS",
+    "completeMemberManifestPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
+    "completeMemberManifestSha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+    "completeMemberManifestGitBlob": "edbb27881533dd3c891234ccaabed623b46b2d2f",
+    "completeMemberManifestCoverage": "167_OF_167"
+  },
+  "completeMemberManifest": {
+    "path": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
+    "sha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+    "gitBlob": "edbb27881533dd3c891234ccaabed623b46b2d2f",
+    "coverage": "167_OF_167",
+    "source": "RAW_DRIVE_READBACK"
+  },
+  "assertions": {
+    "assertionImplementationCount": 28,
+    "assertionExecutionCount": 28,
+    "passAssertionCount": 25,
+    "failAssertionCount": 3,
+    "exactFailAssertionIds": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "candidateAdmission": "FAIL_CLOSED",
+    "harnessConstruction": "PASS",
+    "deterministicRole1ReceiptDigest": "3ddf83abcef0a2f5cfa8aa61d314dd6935d655506505fda8386b9b5d3817a4a4",
+    "missingAuthority": "HARNESS_INPUT_REJECTED_FAIL_CLOSED"
+  },
+  "historicalEvidencePreserved": {
+    "c5Receipt": {
+      "path": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5.cumulative-return-custody.receipt.v1.json",
+      "gitBlob": "8562593eec1a8cebbac6862b177a7654f257fbf5",
+      "sha256": "e41200bcc156ad35806487568673e4d3e77df01ed00d8511a151531dc2c300f0"
+    },
+    "c5aReceipt": {
+      "path": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5a.entry-point-identity-correction.receipt.v1.json",
+      "gitBlob": "aef8bd4017978f0528c2f78e63110daf0efd4509",
+      "sha256": "16b2d7b7d40ecff7d33b4168fc78fcb0f705f5fdcf3f47f7600d7d4a169ad440"
+    },
+    "role3IndependentReceipt": {
+      "path": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role3.independent-toolchain-execution.receipt.v1.json",
+      "gitBlob": "b0967eadb4470d68b12ed8aaf97ece59f07d4b0a",
+      "preservedUnchanged": true
+    },
+    "archive030DriveFileId": "1iHbJ5CWEPcVku3HZWQi7bGp1xHFxfKXr",
+    "archive031DriveFileId": "1j1VFxYBD6Wv3DqH1TMH6Imy6dJIn6Hu-"
+  },
+  "boundary": {
+    "authorizedChangedPathCount": 7,
+    "tools1Through7Changed": false,
+    "terrainFormulaMutation": false,
+    "fixtureSchemaRegionOrBoundMutation": false,
+    "assertionSemanticMutation": false,
+    "acceptedV2ProductBlobMutation": false,
+    "productMutation": false,
+    "officialGeometryArticulationRound": "NOT_STARTED"
+  },
+  "role3ReactivationStatus": "PREPARED_NOT_ACTIVE",
+  "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "stopAfterC5B": true
+}

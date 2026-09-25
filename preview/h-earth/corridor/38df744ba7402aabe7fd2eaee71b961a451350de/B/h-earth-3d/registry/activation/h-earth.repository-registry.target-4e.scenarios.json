@@ -1,0 +1,107 @@
+{
+  "scenarioManifestId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4E_UNPROMPTED_SYSTEMIC_SCENARIOS_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4E-9",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "explicitRegistryInstructionPresent": false,
+  "scenarios": [
+    {
+      "scenarioId": "E01_NORTH_GEOMETRY_READ_ONLY_REVIEW",
+      "taskText": "Inspect the north geometry source before reviewing its behavior.",
+      "paths": ["/showroom/globe/h-earth/render/geometry-kernel.north.js"],
+      "mutationIntent": false,
+      "expectedActivationStatus": "ACTIVATED",
+      "expectedDisposition": "PASS",
+      "expectedContinuation": "READ_ONLY_CONTINUATION_PERMITTED",
+      "minimumAffectedNodes": 1,
+      "deterministicRepeatRequired": true
+    },
+    {
+      "scenarioId": "E02_GATE_B_ENVIRONMENT_CHANGE_PREPARATION",
+      "taskText": "Assess the environment package before changing shoreline behavior.",
+      "paths": ["/showroom/globe/h-earth/environment.js"],
+      "mutationIntent": true,
+      "expectedActivationStatus": "ACTIVATED",
+      "expectedDisposition": "PASS",
+      "expectedContinuation": "SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE",
+      "minimumAffectedNodes": 1,
+      "deterministicRepeatRequired": true
+    },
+    {
+      "scenarioId": "E03_MULTI_ENTRY_PACKAGE_REVIEW",
+      "taskText": "Review how the environment and admitted frame participate in the same governed package.",
+      "paths": [
+        "/showroom/globe/h-earth/environment.js",
+        "/showroom/globe/h-earth/admitted-geometry-frame.js"
+      ],
+      "mutationIntent": false,
+      "expectedActivationStatus": "ACTIVATED",
+      "expectedDisposition": "PASS",
+      "expectedContinuation": "READ_ONLY_CONTINUATION_PERMITTED",
+      "minimumAffectedNodes": 2,
+      "deterministicRepeatRequired": true
+    },
+    {
+      "scenarioId": "E04_NORTH_GEOMETRY_MUTATION_INTENT",
+      "taskText": "Prepare to edit the north geometry source.",
+      "paths": ["/showroom/globe/h-earth/render/geometry-kernel.north.js"],
+      "mutationIntent": true,
+      "expectedActivationStatus": "ACTIVATED",
+      "expectedDisposition": "PASS",
+      "expectedContinuation": "SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE",
+      "minimumAffectedNodes": 1,
+      "deterministicRepeatRequired": true
+    },
+    {
+      "scenarioId": "E05_UNREGISTERED_H_EARTH_SOURCE_PATH",
+      "taskText": "Add a new shoreline module to the H-Earth renderer.",
+      "paths": ["/showroom/globe/h-earth/render/new-shoreline-module.js"],
+      "mutationIntent": true,
+      "expectedActivationStatus": "ACTIVATED",
+      "expectedDisposition": "STOP",
+      "expectedContinuation": "RESOLVE_SCOPE_OR_IDENTITY_BEFORE_CONTINUING",
+      "minimumAffectedNodes": 0,
+      "deterministicRepeatRequired": true
+    },
+    {
+      "scenarioId": "E06_OUTSIDE_H_EARTH_SCOPE",
+      "taskText": "Review the repository readme.",
+      "paths": ["/README.md"],
+      "mutationIntent": false,
+      "expectedActivationStatus": "NOT_APPLICABLE",
+      "expectedDisposition": "NOT_APPLICABLE",
+      "expectedContinuation": "H_EARTH_PREFLIGHT_NOT_APPLICABLE",
+      "minimumAffectedNodes": 0,
+      "deterministicRepeatRequired": true
+    },
+    {
+      "scenarioId": "E07_MIXED_SCOPE_OPERATION",
+      "taskText": "Review the north geometry source together with the repository notes.",
+      "paths": [
+        "/showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "/README.md"
+      ],
+      "mutationIntent": false,
+      "expectedActivationStatus": "ACTIVATED",
+      "expectedDisposition": "PASS",
+      "expectedContinuation": "READ_ONLY_CONTINUATION_PERMITTED",
+      "minimumAffectedNodes": 1,
+      "deterministicRepeatRequired": true
+    },
+    {
+      "scenarioId": "E08_REPEATED_GATE_B_SCOPE_DERIVATION",
+      "taskText": "Trace the environment package and report the affected architectural set.",
+      "paths": ["/showroom/globe/h-earth/environment.js"],
+      "mutationIntent": false,
+      "expectedActivationStatus": "ACTIVATED",
+      "expectedDisposition": "PASS",
+      "expectedContinuation": "READ_ONLY_CONTINUATION_PERMITTED",
+      "minimumAffectedNodes": 1,
+      "deterministicRepeatRequired": true
+    }
+  ],
+  "stoppingCondition": {
+    "unpromptedScenarioManifestComplete": true,
+    "nextAuthorizedSubtarget": "4E-10"
+  }
+}

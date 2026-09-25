@@ -1,0 +1,242 @@
+{
+  "receiptType": "H_EARTH_C0_D_RUNTIME_RECEIPTS_v2",
+  "managementCorrection": "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001",
+  "withdrawnRequirement": "DISTINCT_SCENE_CANVAS_HASH_COUNT_MUST_EQUAL_6",
+  "operation": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
+  "result": "PASS_CLOSED",
+  "c0Overall": "OPEN_IN_PROGRESS",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "captureObservability": "VERIFIED",
+  "cameraToPresentedFrameCausality": "VERIFIED",
+  "sceneIdCount": 6,
+  "uniqueCameraStateCount": 4,
+  "allSixEvidencePurposesRepresented": true,
+  "sceneAliasMappingRecorded": true,
+  "sceneAliasMapping": [
+    {
+      "sceneId": "SHORELINE_APPROACH_VIEW",
+      "cameraStateId": "CAMERA_STATE_001",
+      "evidencePurpose": "SHORELINE_APPROACH_VIEW",
+      "sharedWithSceneIds": [],
+      "cameraPosition": {
+        "x": 0,
+        "y": 3.776628584078394,
+        "z": -96
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "LATERAL_BEACH_VIEW",
+      "cameraStateId": "CAMERA_STATE_002",
+      "evidencePurpose": "LATERAL_BEACH_VIEW",
+      "sharedWithSceneIds": [
+        "SHALLOW_WATER_VIEW",
+        "TRAVERSAL_THROUGH_COAST_VIEW"
+      ],
+      "cameraPosition": {
+        "x": 0,
+        "y": 2.1676559232966333,
+        "z": -86
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "INLAND_TO_OPEN_WATER_VIEW",
+      "cameraStateId": "CAMERA_STATE_003",
+      "evidencePurpose": "INLAND_TO_OPEN_WATER_VIEW",
+      "sharedWithSceneIds": [],
+      "cameraPosition": {
+        "x": 0,
+        "y": 6.678759970430365,
+        "z": -116
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "SHALLOW_WATER_VIEW",
+      "cameraStateId": "CAMERA_STATE_002",
+      "evidencePurpose": "SHALLOW_WATER_VIEW",
+      "sharedWithSceneIds": [
+        "LATERAL_BEACH_VIEW",
+        "TRAVERSAL_THROUGH_COAST_VIEW"
+      ],
+      "cameraPosition": {
+        "x": 0,
+        "y": 2.1676559232966333,
+        "z": -86
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
+      "cameraStateId": "CAMERA_STATE_004",
+      "evidencePurpose": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
+      "sharedWithSceneIds": [],
+      "cameraPosition": {
+        "x": 0,
+        "y": 3.9616255734540466,
+        "z": -126
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "TRAVERSAL_THROUGH_COAST_VIEW",
+      "cameraStateId": "CAMERA_STATE_002",
+      "evidencePurpose": "TRAVERSAL_THROUGH_COAST_VIEW",
+      "sharedWithSceneIds": [
+        "LATERAL_BEACH_VIEW",
+        "SHALLOW_WATER_VIEW"
+      ],
+      "cameraPosition": {
+        "x": 0,
+        "y": 2.1676559232966333,
+        "z": -86
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    }
+  ],
+  "causalityTest": {
+    "startCamera": {
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+      "stateId": "H_EARTH_NAVIGATION_STATE_0001",
+      "sequence": 1,
+      "action": "GOTO_WAYPOINT:COAST",
+      "accepted": true,
+      "recovered": false,
+      "rejectionReason": null,
+      "position": {
+        "x": 0,
+        "y": 3.776628584078394,
+        "z": -96
+      },
+      "yawDegrees": 0,
+      "pitchDegrees": -8,
+      "verticalFovDegrees": 56,
+      "terrainElevation": 1.526628584078394,
+      "minimumCameraY": 3.126628584078394,
+      "clearance": 2.25,
+      "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+      "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+      "formationIds": [],
+      "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+      "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+      "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0001",
+      "canonicalCameraStateAuthority": false,
+      "collisionOrPhysicsClaim": false
+    },
+    "finalCamera": {
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+      "stateId": "H_EARTH_NAVIGATION_STATE_0002",
+      "sequence": 2,
+      "action": "MOVE_BACKWARD",
+      "accepted": true,
+      "recovered": false,
+      "rejectionReason": null,
+      "position": {
+        "x": 0,
+        "y": 2.1676559232966333,
+        "z": -86
+      },
+      "yawDegrees": 0,
+      "pitchDegrees": -8,
+      "verticalFovDegrees": 56,
+      "terrainElevation": -0.08234407670336674,
+      "minimumCameraY": 1.5176559232966333,
+      "clearance": 2.25,
+      "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+      "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+      "formationIds": [],
+      "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R04:C08",
+      "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+      "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0002",
+      "canonicalCameraStateAuthority": false,
+      "collisionOrPhysicsClaim": false
+    },
+    "cameraStateChanged": true,
+    "renderedCanvasBodyChanged": true,
+    "presentedScreenRegionChanged": true,
+    "startCanvasHash": "8369eb0d916d8786ccb4e00f5f9a34f237ea309d67839e1ef9ac82b15f1b865f",
+    "finalCanvasHash": "1ed9849a8c03b4dba1038d1f9f4d9348e7f07d310fd77de93310acf470d80aae",
+    "startFullPageHash": "32baf81987bb3357862a78b364752c84f578abc9e6e5884ec161126da2416364",
+    "finalFullPageHash": "7c706b6087134d1fee8836319c96d7d6bf5d7825a5313d03e0ca3f11fcd28ae4"
+  },
+  "physicalMobileBaselineExecuted": false,
+  "runtimeStateCount": 3,
+  "allThreeRuntimeStatesMeasured": true,
+  "frameTimePercentilesRecorded": true,
+  "memoryFieldsRecordedOrExplicitlyUnavailable": true,
+  "downloadCostRecorded": true,
+  "errorBaselineRecorded": true,
+  "productMutation": false,
+  "unauthorizedChangedPaths": 0,
+  "firstBlocker": null,
+  "nextAuthorizedC0Block": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
+  "c0EAuthorized": true,
+  "c1Authorized": false,
+  "phaseT": "INACCESSIBLE",
+  "managementCorrectionHistory": [
+    "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
+    "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001"
+  ],
+  "previousRequirement": "PHYSICAL_MOBILE_BASELINE_EXECUTED_MUST_EQUAL_TRUE",
+  "disposition": "WITHDRAWN_AS_UNAUTHORIZED_OVERCONSTRAINT",
+  "correctionReason": "C0_REQUIRES_AN_EXECUTED_AND_REPRODUCIBLE_PERFORMANCE_BASELINE_NOT_MANDATORY_PHYSICAL_DEVICE_EXECUTION",
+  "performanceBaselineExecuted": true,
+  "frameTimeBaselineRecorded": true,
+  "memoryBaselineRecordedOrExplicitlyUnavailable": true,
+  "physicalMobileDisposition": "DEFERRED_NONBLOCKING_REFERENCE_VALIDATION"
+}

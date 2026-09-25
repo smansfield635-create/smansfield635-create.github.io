@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_FIXTURES_v2",
+  "fixtureCount": 16,
+  "fixtures": [
+    {"fixtureId":"F01_NO_CANDIDATE_ARRANGEMENTS_GENERATED","scenario":"NO_CANDIDATES","expectedResultClass":"NO_CANDIDATE_ARRANGEMENTS_GENERATED","assertions":{"noInfeasibilityClaim":true}},
+    {"fixtureId":"F02_GENERATED_BUT_REJECTED","scenario":"REJECTED_OTHER","expectedResultClass":"CANDIDATE_ARRANGEMENTS_GENERATED_BUT_REJECTED","assertions":{"traceCount":1}},
+    {"fixtureId":"F03_HARD_CONSTRAINT_REJECTION","scenario":"HARD_REJECTION","expectedResultClass":"REJECTION_CAUSED_BY_DECLARED_HARD_CONSTRAINTS","assertions":{"traceCount":1}},
+    {"fixtureId":"F04_INPUT_OBSERVABILITY_LIMITATION","scenario":"INPUT_LIMIT","expectedResultClass":"REJECTION_CAUSED_BY_INPUT_OR_OBSERVABILITY_LIMITATION","assertions":{"inferenceState":"UNEVALUABLE"}},
+    {"fixtureId":"F05_MEASUREMENT_INSUFFICIENCY","scenario":"MEASUREMENT_LIMIT","expectedResultClass":"REJECTION_CAUSED_BY_EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY","assertions":{"inferenceState":"UNEVALUABLE"}},
+    {"fixtureId":"F06_TERRAIN_INFEASIBILITY","scenario":"TERRAIN_PROOF","expectedResultClass":"EVIDENCE_SUPPORTING_TERRAIN_INFEASIBILITY","assertions":{"terrainClaim":true}},
+    {"fixtureId":"F07_ESTATE_INFEASIBILITY","scenario":"ESTATE_PROOF","expectedResultClass":"EVIDENCE_SUPPORTING_ESTATE_INFEASIBILITY","assertions":{"estateClaim":true}},
+    {"fixtureId":"F08_FEASIBLE_ARRANGEMENT","scenario":"FEASIBLE","expectedResultClass":"FEASIBLE_ARRANGEMENT_FOUND","assertions":{}},
+    {"fixtureId":"F09_ZERO_PASS_NON_INFERENCE","scenario":"HARD_REJECTION","expectedResultClass":"REJECTION_CAUSED_BY_DECLARED_HARD_CONSTRAINTS","assertions":{"noInfeasibilityClaim":true}},
+    {"fixtureId":"F10_INCOMPLETE_GENERATION","scenario":"GENERATION_INCOMPLETE","expectedResultClass":"REJECTION_CAUSED_BY_INPUT_OR_OBSERVABILITY_LIMITATION","assertions":{"inferenceState":"UNEVALUABLE"}},
+    {"fixtureId":"F11_INCOMPLETE_TERRAIN_PROOF","scenario":"TERRAIN_PROOF_INCOMPLETE","expectedResultClass":"REJECTION_CAUSED_BY_INPUT_OR_OBSERVABILITY_LIMITATION","assertions":{"terrainClaim":false}},
+    {"fixtureId":"F12_INCOMPLETE_ESTATE_PROOF","scenario":"ESTATE_PROOF_INCOMPLETE","expectedResultClass":"REJECTION_CAUSED_BY_INPUT_OR_OBSERVABILITY_LIMITATION","assertions":{"estateClaim":false}},
+    {"fixtureId":"F13_UNKNOWN_CONSTRAINT","scenario":"UNKNOWN_CONSTRAINT","expectedResultClass":"REJECTION_CAUSED_BY_INPUT_OR_OBSERVABILITY_LIMITATION","assertions":{"inferenceState":"UNEVALUABLE","traceCount":1}},
+    {"fixtureId":"F14_EVALUATOR_NOT_EXECUTED","scenario":"EVALUATOR_NOT_EXECUTED","expectedResultClass":"REJECTION_CAUSED_BY_EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY","assertions":{"inferenceState":"UNEVALUABLE"}},
+    {"fixtureId":"F15_PASS_WITH_REJECTED_CANDIDATE","scenario":"FEASIBLE_WITH_REJECT","expectedResultClass":"FEASIBLE_ARRANGEMENT_FOUND","assertions":{"traceCount":1}},
+    {"fixtureId":"F16_V1_ZERO_PASS_CAUSAL_LIMIT","scenario":"V1_ZERO_PASS_LIMIT","expectedResultClass":"REJECTION_CAUSED_BY_EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY","assertions":{"noInfeasibilityClaim":true,"inferenceState":"UNEVALUABLE"}}
+  ]
+}

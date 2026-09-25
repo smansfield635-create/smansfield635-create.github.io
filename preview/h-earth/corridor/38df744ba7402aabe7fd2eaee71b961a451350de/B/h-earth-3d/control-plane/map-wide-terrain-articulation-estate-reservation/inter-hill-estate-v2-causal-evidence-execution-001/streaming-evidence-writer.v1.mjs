@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {canonical,sha256,stable,assert,writeCanonicalJson} from './causal-evidence-adapter.v1.mjs';
+export class SegmentedEvidenceWriter{
+  constructor({outputDir,maxRecords=2048,maxBytes=33554432}){this.outputDir=outputDir;this.maxRecords=maxRecords;this.maxBytes=maxBytes;this.segmentIndex=0;this.records=[];this.bytes=0;this.segments=[];this.predecessorSegmentDigest=null;fs.mkdirSync(outputDir,{recursive:true})}
+  append(record){const line=Buffer.from(`${canonical(record)}
+`);assert(line.length<=this.maxBytes,'UNEVALUABLE_SHARD_ARTIFACT_LIMIT','SINGLE_TRACE_TOO_LARGE');if(this.records.length&&(this.records.length>=this.maxRecords||this.bytes+line.length>this.maxBytes))this.flush();this.records.push(line);this.bytes+=line.length}
+  flush(){if(!this.records.length)return;const bytes=Buffer.concat(this.records),name=`causal-trace-segment-${String(this.segmentIndex).padStart(5,'0')}.ndjson`,file=path.join(this.outputDir,name),digest=sha256(bytes);fs.writeFileSync(file,bytes);this.segments.push(stable({segmentIndex:this.segmentIndex,file:name,recordCount:this.records.length,byteCount:bytes.length,sha256:digest,predecessorSegmentDigest:this.predecessorSegmentDigest}));this.predecessorSegmentDigest=digest;this.segmentIndex++;this.records=[];this.bytes=0}
+  close(){this.flush();const index=stable({schema:'H_EARTH_INTER_HILL_ESTATE_V2_TRACE_SEGMENT_INDEX_v1',segmentCount:this.segments.length,totalRecordCount:this.segments.reduce((s,x)=>s+x.recordCount,0),totalBytes:this.segments.reduce((s,x)=>s+x.byteCount,0),segments:this.segments,terminalSegmentDigest:this.predecessorSegmentDigest});index.indexDigest=sha256(index);writeCanonicalJson(path.join(this.outputDir,'causal-trace-segment-index.json'),index);return index}
+}
+export function verifySegmentedEvidence(outputDir,index){let predecessor=null,total=0;for(const segment of index.segments){const bytes=fs.readFileSync(path.join(outputDir,segment.file));assert(sha256(bytes)===segment.sha256,'TRACE_SEGMENT_DIGEST_MISMATCH');assert(segment.predecessorSegmentDigest===predecessor,'TRACE_SEGMENT_CHAIN_MISMATCH');const lines=bytes.toString('utf8').trimEnd().split('\n').filter(Boolean);assert(lines.length===segment.recordCount,'TRACE_SEGMENT_RECORD_COUNT_MISMATCH');for(const line of lines)JSON.parse(line);total+=lines.length;predecessor=segment.sha256}assert(total===index.totalRecordCount,'UNEVALUABLE_TRACE_INCOMPLETE');return true}

@@ -1,0 +1,82 @@
+{
+  "schema": "H_EARTH_C3_COASTAL_RECONSTRUCTION_AUTHORITY_v1",
+  "operationId": "H_EARTH_C3_COASTAL_RECONSTRUCTION_AUTHORITY_20260816_001",
+  "status": "FROZEN_AUTHORITY_NO_PRODUCT_MUTATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingBaseHead": "f988ff162f52d474144e938c36832456676ab5c1",
+  "purpose": "MAKE_THE_STARTING_COASTAL_REGION_DETERMINISTIC_BY_RECONSTRUCTING_THE_CONTINENTAL_EDGE_AND_AUDRALIA_PLACEMENT_WHILE_PRESERVING_INLAND_TERRAIN_AS_INPUT",
+  "lineage": {
+    "openWorldInstrument": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
+    "inheritedGeographicDefect": "HARBOR_NOT_ON_TRUE_CONTINENTAL_EDGE",
+    "inheritedCheckpoint": "OW01_GRATITUDE_CONTINENTAL_SKELETON_AND_TRUE_COASTAL_ENTRY_BINDING",
+    "c2Disposition": "C2_BOUNDED_COASTAL_VISUAL_SUCCESSOR_AUTHORIZATION_001",
+    "liveInspectionDisposition": "REPAIR_REQUIRED_COASTAL_WORLD_CONTINUITY_NOT_EXPERIENTIALLY_RESOLVED"
+  },
+  "deterministicLaw": {
+    "equation": "COASTAL_STATE = F(INLAND_FREEZE, CONTINENTAL_EDGE, OCEAN_EXPOSURE, AUDRALIA_PLACEMENT)",
+    "inlandRole": "IMMUTABLE_INPUT_NOT_DESIGN_VARIABLE",
+    "coastalRole": "ONLY_OPEN_GEOGRAPHIC_RECONSTRUCTION_DOMAIN",
+    "startingRegionRole": "DERIVED_FROM_DEFINED_COASTAL_STATE_NOT_USED_TO_INVENT_CONTINENT"
+  },
+  "frozenInputs": {
+    "inlandTerrain": "PRESERVE_EXISTING_INLAND_RELIEF_WATERSHEDS_BASINS_AND_VALID_LOCAL_GEOGRAPHY",
+    "inlandMutationAuthorized": false,
+    "existingUsefulLocalCoastalDetail": "PRESERVE_WHERE_COMPATIBLE_WITH_TRUE_CONTINENTAL_EDGE_BINDING",
+    "navigationSemantics": "PRESERVE_UNLESS_A_LATER_EXPLICIT_ADMITTED_OPERATION_PROVES_CHANGE_REQUIRED",
+    "runtimeAndRenderer": "OUT_OF_SCOPE_FOR_THIS_AUTHORITY_FREEZE"
+  },
+  "openCoastalVariables": {
+    "continentalEdge": "RECONSTRUCT_ALLOWED",
+    "coastlineEnvelope": "RECONSTRUCT_ALLOWED",
+    "oceanFacingExposure": "RECONSTRUCT_ALLOWED",
+    "audraliaPlacementRelativeToContinentalEdge": "REPOSITION_ALLOWED",
+    "coastalStartingRegionDerivation": "REGENERATE_FROM_FROZEN_MACRO_GEOGRAPHY_ALLOWED",
+    "inlandTerrain": "LOCKED"
+  },
+  "placementLaw": {
+    "audraliaMustNotBeCenteredInContinentalPresentation": true,
+    "audraliaMustReadAsCoastalEdgeCondition": true,
+    "preferredTopologicalClass": "CONTINENTAL_CORNER_OR_EDGE_IN_PERSPECTIVE",
+    "requiredOceanSidesMinimum": 1,
+    "requiredInlandContinuationSidesMinimum": 1,
+    "opposingLandAcrossPrimaryOceanViewAllowed": false,
+    "exactCornerOrientation": "NEXT_DERIVATION_REQUIRED_BEFORE_GEOMETRY_MUTATION"
+  },
+  "coastlineLaw": {
+    "primaryCoastMustTerminateIntoOpenOcean": true,
+    "visibleWorldExtentMustExceedAccessibleRegionExtent": true,
+    "developmentFrontierMayBeInaccessibleButMustRemainVisiblyWorldLike": true,
+    "permanentRectangularWorldBoundaryAllowed": false,
+    "coastMayMoveRelativeToPreservedInland": true,
+    "inlandMayNotBeRedesignedToHideCoastalDefects": true
+  },
+  "inspectionCustody": {
+    "separateInteractiveInspectionSurfaceRequiredBeforeMain": true,
+    "automatedScreenshotOrAnchorEvidenceMaySupplementButNotReplaceUserInspection": true,
+    "userInteractiveInspectionRequiredBeforePromotion": true,
+    "directPromotionFromAutomatedEvidenceToMainAllowed": false,
+    "liveWebsiteMayNotServeAsFirstUserInspectionSurface": true
+  },
+  "hardProhibitions": [
+    "NO_INLAND_TERRAIN_REDESIGN",
+    "NO_PRODUCT_GEOMETRY_MUTATION_UNDER_THIS_AUTHORITY_FREEZE",
+    "NO_RUNTIME_MUTATION",
+    "NO_RENDERER_MUTATION",
+    "NO_ATMOSPHERE_MUTATION",
+    "NO_LIVE_DEPLOYMENT",
+    "NO_MAIN_PROMOTION_OF_FUTURE_COASTAL_CANDIDATE_BEFORE_DIRECT_USER_INSPECTION",
+    "NO_USING_STARTING_REGION_TO_INVENT_UNDEFINED_MACRO_GEOGRAPHY"
+  ],
+  "nextLawfulDerivation": {
+    "id": "C3D1_AUDRALIA_COASTAL_EDGE_PLACEMENT_DERIVATION",
+    "productMutationAuthorized": false,
+    "requiredOutput": [
+      "ONE_EXACT_CONTINENTAL_EDGE_OR_CORNER_ORIENTATION",
+      "ONE_PRIMARY_OCEAN_EXPOSURE_DIRECTION",
+      "ONE_INLAND_CONTINUATION_DIRECTION",
+      "ONE_COASTLINE_ENVELOPE_BOUND_TO_PRESERVED_INLAND",
+      "ONE_SEPARATE_INTERACTIVE_INSPECTION_SURFACE_CONTRACT"
+    ],
+    "completionCriterion": "MACRO_COASTAL_GEOGRAPHY_IS_FULLY_SPECIFIED_BEFORE_ANY_TERRAIN_BYTES_CHANGE"
+  }
+}

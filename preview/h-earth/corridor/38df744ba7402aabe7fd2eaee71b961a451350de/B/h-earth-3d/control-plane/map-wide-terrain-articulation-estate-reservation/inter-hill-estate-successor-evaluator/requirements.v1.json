@@ -1,0 +1,294 @@
+{
+  "schema": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_REQUIREMENTS_v1",
+  "status": "ROLE_4_ADMITTED_EXACT_BOUNDED_NONPRODUCT_IMPLEMENTATION",
+  "controllingTechnicalSpecification": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_ROLE_6_CAUSAL_DESIGN_RETURN_v1",
+  "technicalSpecificationHandling": [
+    "PRESERVE_VERBATIM",
+    "NO_PARAPHRASE_SUBSTITUTION",
+    "NO_SILENT_CORRECTION",
+    "NO_REQUIREMENT_REINTERPRETATION"
+  ],
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_ROLE_1_IMPLEMENTATION_001",
+  "governingMainIdentity": "0d88fe21aba99c97b73fcdc68d44af57d55b68be",
+  "sourceIdentities": {
+    "currentTerrain": {
+      "head": "0d88fe21aba99c97b73fcdc68d44af57d55b68be",
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "blob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "generationRevision": 2
+    },
+    "acceptedLocalReference": {
+      "head": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+      "deltaPath": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js",
+      "deltaBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+      "successorFieldPath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "successorFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+      "mergedMain": false
+    }
+  },
+  "sourceModes": [
+    "CURRENT_MAIN_BASELINE",
+    "CURRENT_MAIN_PLUS_ACCEPTED_R06_C10_ANALYSIS_COMPOSITE"
+  ],
+  "estateIdentityCorrection": {
+    "lineageCenter": {
+      "x": 80,
+      "z": -172
+    },
+    "startingEvidenceEnvelope": {
+      "xMinimum": 64,
+      "xMaximum": 96,
+      "zMinimum": -188,
+      "zMaximum": -156
+    },
+    "semanticReference": "H_EARTH_GROUND_CELL_001:R06:C11",
+    "formationReference": "H_EARTH_NAVIGABLE_HILL_001",
+    "rejectedReservation": {
+      "x": 67.25,
+      "z": -16.85,
+      "rejectionClass": "ERRONEOUS_ESTATE_SPATIAL_IDENTITY",
+      "silentSubstitution": false
+    }
+  },
+  "witnesses": {
+    "firstHill": {
+      "x": 76,
+      "y": 29.00972193479538,
+      "z": -168
+    },
+    "secondHill": {
+      "x": 152,
+      "y": 42.73941022157669,
+      "z": -224
+    },
+    "interHillSaddle": {
+      "x": 112.41666666666667,
+      "y": 18.47178679704666,
+      "z": -194.83333333333334
+    },
+    "hillSeparation": 94.40338976964756,
+    "lowCorridorNoBuildHalfWidth": 6
+  },
+  "terrainDomain": {
+    "xMinimum": -256,
+    "xMaximum": 256,
+    "zMinimum": -320,
+    "zMaximum": 64,
+    "rows": 256,
+    "columns": 256,
+    "nodeCount": 65536,
+    "xSampleInterval": 2.007843137254902,
+    "zSampleInterval": 1.5058823529411764,
+    "fourNeighborEdgeCount": 130560,
+    "eightNeighborEdgeCount": 260610
+  },
+  "search": {
+    "geodesicCap": 144,
+    "orientationsDegrees": [
+      0,
+      5,
+      10,
+      15,
+      20,
+      25,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55,
+      60,
+      65,
+      70,
+      75,
+      80,
+      85,
+      90,
+      95,
+      100,
+      105,
+      110,
+      115,
+      120,
+      125,
+      130,
+      135,
+      140,
+      145,
+      150,
+      155,
+      160,
+      165,
+      170,
+      175
+    ],
+    "historicalFootprint": {
+      "width": 28,
+      "depth": 20,
+      "area": 560
+    }
+  },
+  "requiredEstateSubzones": [
+    "PRINCIPAL_MANOR_ZONE",
+    "INTER_HILL_COMPOSITIONAL_AXIS",
+    "FIRST_HILL_ESTATE_ZONE",
+    "SECOND_HILL_ESTATE_ZONE",
+    "HILL_SHOULDER_AND_TERRACE_ZONES",
+    "FORMAL_GROUNDS",
+    "GARDENS",
+    "COURTYARDS",
+    "OUTBUILDING_AND_SERVICE_ZONE",
+    "PRIMARY_ARRIVAL_ROUTE",
+    "SERVICE_ROUTE",
+    "FUTURE_EXPANSION_ZONE",
+    "MOUNTAINWARD_VIEW_CORRIDOR",
+    "OCEANWARD_VIEW_CORRIDOR",
+    "TERRAIN_GRADING_AND_TRANSITION_BUFFERS"
+  ],
+  "hardFeasibilityGates": [
+    "ESTATE_GRAPH_DISCONNECTED",
+    "PRINCIPAL_MANOR_CAPACITY_BELOW_HISTORICAL_NONREGRESSION",
+    "FIRST_HILL_NOT_INCLUDED",
+    "SECOND_HILL_NOT_INCLUDED",
+    "INTER_HILL_AXIS_NOT_PRESERVED",
+    "LOW_CORRIDOR_BLOCKED",
+    "PRIMARY_ROUTE_MISSING",
+    "SERVICE_ROUTE_MISSING",
+    "MOUNTAIN_VIEW_GATE_FAILED",
+    "OCEAN_VIEW_GATE_FAILED",
+    "R06_C10_INTRUSION",
+    "CAVERN_RELATION_INTRUSION",
+    "WATER_INTRUSION",
+    "FUTURE_EXPANSION_DISCONNECTED"
+  ],
+  "rankingWeights": {
+    "MOUNTAIN_VIEW_QUALITY": 0.2,
+    "CONNECTED_USABLE_AREA": 0.15,
+    "FOUNDATION_AND_GRADING_FEASIBILITY": 0.12,
+    "MANOR_AND_GROUNDS_CAPACITY": 0.12,
+    "PRIMARY_APPROACH_QUALITY": 0.1,
+    "SERVICE_APPROACH_QUALITY": 0.08,
+    "OCEAN_VIEW_QUALITY": 0.1,
+    "HILL_INTEGRATION": 0.08,
+    "OUTBUILDING_CAPACITY": 0.05,
+    "FUTURE_EXPANSION_CAPACITY": 0.07,
+    "TERRAIN_EXCLUSION_EFFICIENCY": 0.03
+  },
+  "rankingWeightSum": 1.1,
+  "rankingWeightHandling": "APPLY_LITERAL_ROLE_6_FORMULA_WITHOUT_NORMALIZATION",
+  "viewObjectives": {
+    "mountain": {
+      "rearMountainCore": {
+        "xMinimum": -224,
+        "xMaximum": 32,
+        "zMinimum": -292,
+        "zMaximum": -236
+      },
+      "topElevationFraction": 0.1,
+      "eyeHeight": 2.25,
+      "fanHalfAngleDegrees": 10,
+      "rayIntervalDegrees": 1,
+      "clearRayFractionMinimum": 0.85,
+      "continuousClearSectorDegreesMinimum": 16,
+      "maximumPositiveObstruction": 0.15
+    },
+    "ocean": {
+      "fanHalfAngleDegrees": 15,
+      "rayIntervalDegrees": 1,
+      "clearRayFractionMinimum": 0.7,
+      "continuousClearSectorDegreesMinimum": 10
+    }
+  },
+  "routeBudgets": {
+    "primary": {
+      "p95GradeDegreesMaximum": 8,
+      "maximumGradeDegrees": 12,
+      "minimumWidth": 6
+    },
+    "service": {
+      "p95GradeDegreesMaximum": 10,
+      "maximumGradeDegrees": 15,
+      "minimumWidth": 4,
+      "postGateOverlapMaximum": 0.25
+    }
+  },
+  "r06c10PreservationBounds": {
+    "core": {
+      "xMinimum": 32,
+      "xMaximum": 64,
+      "zMinimum": -192,
+      "zMaximum": -164
+    },
+    "blendSupport": {
+      "xMinimum": 24,
+      "xMaximum": 72,
+      "zMinimum": -200,
+      "zMaximum": -156
+    },
+    "verificationHalo": {
+      "xMinimum": 16,
+      "xMaximum": 80,
+      "zMinimum": -208,
+      "zMaximum": -148
+    }
+  },
+  "budgets": {
+    "slope": {
+      "principal": {
+        "maximum": 8,
+        "p95": 5
+      },
+      "formalGrounds": {
+        "maximum": 10
+      },
+      "primaryRoute": {
+        "maximum": 12,
+        "p95": 8
+      },
+      "serviceRoute": {
+        "maximum": 15,
+        "p95": 10
+      },
+      "gardensTerraces": {
+        "maximum": 18
+      },
+      "generalPedestrian": {
+        "maximum": 25
+      },
+      "scenic": {
+        "deltaMaximum": 6,
+        "absoluteMaximum": 38
+      }
+    },
+    "displacement": {
+      "globalNegative": -12,
+      "globalPositive": 18,
+      "meanAbsoluteMaximum": 3,
+      "p95AbsoluteMaximum": 8
+    },
+    "continuity": {
+      "c0Shared": 1e-06,
+      "formerBoundary": 0.05,
+      "c1EstateRoute": 0.25,
+      "c1General": 0.5,
+      "normalFullDetail": 6,
+      "normalReducedDetail": 14
+    },
+    "performance": {
+      "nodeVersion": 22,
+      "maximumExecutionSeconds": 180,
+      "maximumPeakRssBytes": 1610612736
+    }
+  },
+  "prohibitedActions": [
+    "TERRAIN_CONSTRUCTION",
+    "MANOR_CONSTRUCTION",
+    "PRODUCT_FILE_MUTATION",
+    "TERRAIN_FILE_MUTATION",
+    "RUNTIME_IMPORT_OF_ANALYSIS_COMPOSITE",
+    "PREVIEW_PUBLICATION",
+    "MERGE",
+    "DEPLOYMENT",
+    "CLAIM_R06_C10_MERGED_MAIN"
+  ]
+}

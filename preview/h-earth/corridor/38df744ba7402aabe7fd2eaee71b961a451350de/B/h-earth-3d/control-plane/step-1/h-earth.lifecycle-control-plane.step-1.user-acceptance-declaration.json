@@ -1,0 +1,61 @@
+{
+  "declarationId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_STEP_1_USER_ACCEPTANCE_DECLARATION_v1",
+  "programId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_v1",
+  "step": 1,
+  "artifactId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_SUCCESSOR_ACTIVATION_TRANSITION_CONTRACT_CANDIDATE_v1",
+  "status": "COMPLETE_VERIFIED_ACCEPTED_NOT_ACTIVE_REPOSITORY_ADMISSION_WITHHELD",
+  "accepted": true,
+  "acceptanceStatement": "I accept step one.",
+  "acceptanceScope": "COMPLETED_STEP_1_CANDIDATE_ONLY",
+  "acceptedCandidate": {
+    "branch": "agent/h-earth-lifecycle-control-plane-step-1-001",
+    "headBeforeAcceptanceRecording": "8e85871c5a4000e0290c2b3cfc1365e625d5d034",
+    "pullRequestNumber": 79,
+    "completionReceiptPath": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.completion-receipt.json",
+    "completionReceiptGitBlobSha": "0b682b5445b3fa5c2eb7f8019294964608551596",
+    "executedAudit": {
+      "workflowName": "H-Earth Lifecycle Control Plane Step 1 Audit",
+      "runId": 30058227660,
+      "jobId": 89374317168,
+      "result": "PASS",
+      "totalChecks": 82,
+      "passedChecks": 82,
+      "failedChecks": 0,
+      "fixtureCount": 19,
+      "passedFixtures": 19,
+      "failedFixtures": 0,
+      "artifactId": 8583556169,
+      "artifactDigest": "sha256:d2e2eb3b0ce0cc2ec3a1a636d8f908398e75710ce6bb4d93f86bfa010db954d0"
+    }
+  },
+  "acceptanceEffects": {
+    "userAcceptanceEstablished": true,
+    "step1CandidateAccepted": true,
+    "approvalDecisionIssuedForStep1Candidate": true
+  },
+  "boundaries": {
+    "successorRegistryAccepted": false,
+    "successorActivated": false,
+    "mergeAuthorityEstablished": false,
+    "repositoryAdmissionEstablished": false,
+    "registryScopeReconciliationAuthorized": false,
+    "bootstrapChanged": false,
+    "activeRegistryChanged": false,
+    "canonicalizationAuthorityEstablished": false,
+    "actualActorBindingsEstablished": false,
+    "transitionExecutionAuthorityEstablished": false,
+    "step2Authorized": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "runtimeAuthorityCreated": false,
+    "rendererAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionAuthorityCreated": false,
+    "mainChanged": false
+  },
+  "stoppingCondition": {
+    "step1Accepted": true,
+    "advanceBeyondStep1": false,
+    "nextAuthorizedBoundary": "SEPARATE_REPOSITORY_ADMISSION_OR_STEP_2_AUTHORIZATION_REQUIRED"
+  }
+}

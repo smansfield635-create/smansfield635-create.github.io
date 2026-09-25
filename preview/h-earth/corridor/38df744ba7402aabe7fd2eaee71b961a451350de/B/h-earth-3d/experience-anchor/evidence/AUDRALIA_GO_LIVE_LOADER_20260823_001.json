@@ -1,0 +1,28 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_BOUNDED_PRESENTATION_EVIDENCE_v1",
+  "candidateHeadBeforeReceipt": "0fac23c46ce13158a6205eb1207fe2185a5be264",
+  "changeClass": "AUDRALIA_LOADING_PRESENTATION_ONLY",
+  "experienceFile": "showroom/globe/audralia/loading-continuity-v3.css",
+  "experienceFileSha256": "710c831611eda0b3b794f58794b2191d8cfd74b75107262c7b37769d88b43415",
+  "anchorReview": {
+    "visual": "The loader remains a temporary entry overlay and moves toward the established H-Earth blue/teal world-initialization language rather than creating a separate product identity.",
+    "interaction": "No camera, travel, look, gesture, navigation, renderer, or world interaction code is changed by this experience file.",
+    "continuity": "The existing Audralia five-stage runtime instrumentation is preserved unchanged; only its CSS presentation changes. The loader disappears into the same canonical Audralia world when runtime readiness completes."
+  },
+  "scopeAssertions": {
+    "worldGeometryMutated": false,
+    "terrainMutated": false,
+    "weatherAuthorityMutated": false,
+    "cameraSemanticsMutated": false,
+    "navigationMutated": false,
+    "loaderProgressSemanticsMutated": false,
+    "parallelProductCreated": false,
+    "hEarthPublicExperienceMutated": false
+  },
+  "supportingRepositoryEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs",
+    "h-earth-live-6d18e158/showroom/globe/h-earth/experience-layer.js"
+  ],
+  "disposition": "PASS"
+}

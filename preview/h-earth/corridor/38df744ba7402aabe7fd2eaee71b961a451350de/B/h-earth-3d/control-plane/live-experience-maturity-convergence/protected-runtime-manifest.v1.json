@@ -1,0 +1,25 @@
+{
+  "schema": "H_EARTH_LIVE_EXPERIENCE_PROTECTED_RUNTIME_BASELINE_MANIFEST_v1",
+  "baselineCommit": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "principle": "RUNTIME_PRESERVATION_NOT_EQUAL_PRESENTATION_PRESERVATION",
+  "protectedRuntimeCore": [
+    {"path":"showroom/globe/h-earth/index.js","gitBlobSha":"b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c","class":"R","disposition":"PROTECTED_RUNTIME_CORE"},
+    {"path":"showroom/globe/h-earth/compositor.js","gitBlobSha":"3764f0d53b0564de7a5e983bd339dda75017bc82","class":"R","disposition":"PROTECTED_RUNTIME_CORE"},
+    {"path":"showroom/globe/h-earth/renderer.js","gitBlobSha":"799d37cec5244e6aa19b7d94dffe37e182b85884","class":"R","disposition":"PROTECTED_RUNTIME_CORE"},
+    {"path":"showroom/globe/h-earth/controller.js","gitBlobSha":"6720240473626f6589e1964b247436d46d5f6fb8","class":"R","disposition":"PROTECTED_RUNTIME_CORE"},
+    {"path":"showroom/globe/h-earth/environment.js","gitBlobSha":"3f3bc750b0e1a87531e0ea425dc0ac343fb18381","class":"R","disposition":"PROTECTED_RUNTIME_CORE"}
+  ],
+  "presentationBaseline": [
+    {"path":"showroom/globe/h-earth/index.html","gitBlobSha":"bc868995d9065ce03a5948bcf9f27804b178bc0b","class":"UNCLASSIFIED_BASELINE","disposition":"FUTURE_CLASSIFICATION_AND_PRESENTATION_ADAPTATION_CANDIDATE"},
+    {"path":"showroom/globe/h-earth/index.css","gitBlobSha":"f208b7f11096a7bf5da282226903ac634c1eab01","class":"UNCLASSIFIED_BASELINE","disposition":"FUTURE_CLASSIFICATION_AND_PRESENTATION_ADAPTATION_CANDIDATE"}
+  ],
+  "referenceConstructs": [
+    {"path":"showroom/globe/audralia/index.html","commitSha":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc","gitBlobSha":"5a34e86e17b037788bcfdb21928490da56ca3eba","sourceConstructId":"AUDRALIA_WORLD_DOMINANT_VIEWPORT_CURRENT","disposition":"REFERENCE_FOR_VIEWPORT_AUTHORITY_CAPABILITY_ONLY"}
+  ],
+  "rules": [
+    "HC01_CLASSIFICATION_MAY_NOT_CHANGE_ANY_LISTED_BLOB",
+    "HC02_UNBOXING_MUST_DEFAULT_TO_PRESERVING_ALL_R_CLASS_BLOBS_UNLESS_SEPARATE_EXACT_AUTHORITY_EXPANDS_SCOPE",
+    "PRESENTATION_BASELINE_BYTES_ARE_EVIDENCE_NOT_PERMANENT_PRESENTATION_AUTHORITY",
+    "BLOB_DRIFT_BEFORE_A_SUCCESSOR_OPERATION_REQUIRES_REBASELINE_NOT_INHERITANCE"
+  ]
+}

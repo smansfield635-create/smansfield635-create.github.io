@@ -1,0 +1,24 @@
+{
+  "schema": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_CHANGED_PATH_MANIFEST_v1",
+  "operationId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_CONTROL_PACKAGE_v1",
+  "exactPathCount": 15,
+  "paths": [
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/AGENTS.md",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/authority-and-lineage.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/checkpoint-registry.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/current-state.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/operation-request.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/page-excellence-binding.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/program.locator.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/protected-runtime-manifest.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/shell-runtime-classification.schema.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/strategy-contract.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/successor-room-recovery.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/verification-contract.v1.json",
+    "h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs"
+  ],
+  "outsidePathMutationAllowed": false,
+  "productPathMutationAllowed": false
+}

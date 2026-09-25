@@ -1,0 +1,114 @@
+{
+  "receiptType": "H_EARTH_C0_CONTENT_HISTORY_RECONCILIATION_v1",
+  "operation": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
+  "result": "PASS_CLOSED",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "inputBranchHead": "28f1f69ea2c505967dcd241af9f5d366d037df64",
+  "chronologicalCommitCount": 25,
+  "chronologicalCommits": [
+    {
+      "commit": "b1aecf6b3329ea470381a9d165856913289bc7c3",
+      "subject": "C0: freeze exact evidence-only path manifest"
+    },
+    {
+      "commit": "a219fad6ccc493dfc2c051a14c35367632be3ec8",
+      "subject": "C0-A: add bounded public occurrence capture"
+    },
+    {
+      "commit": "4b8345d55b82b9432d1ce264a0e6172c83acba0a",
+      "subject": "C0-A: add bounded public occurrence workflow"
+    },
+    {
+      "commit": "cf804b5f522987be6df0d4ee50ac22665133f005",
+      "subject": "C0-A: preserve blocking registry preflight"
+    },
+    {
+      "commit": "eb3f5bf1202e1dbcfa813d2abdaeda210f5db457",
+      "subject": "C0-A: classify new-path preflight as control limitation"
+    },
+    {
+      "commit": "fd0f9b1512c24139ab3b8dc90e676bd82d7ef708",
+      "subject": "C0-A: freeze public occurrence and source linkage"
+    },
+    {
+      "commit": "bfeab7283d3a0c0c80114bdf1c868437b15d44b1",
+      "subject": "C0-A: correct route mapping and prevent evidence loops"
+    },
+    {
+      "commit": "f5754a8ef5fd5accb8ff13bf7bc83dea0427e393",
+      "subject": "C0-A: map directory routes to index HTML"
+    },
+    {
+      "commit": "0c526f40da04b3fe53adba7b976da9f43c3d7161",
+      "subject": "C0-A: freeze public occurrence and source linkage"
+    },
+    {
+      "commit": "b4cd0918b3269c25170a414e5cea384c3c8994cb",
+      "subject": "C0-B: execute bounded repository authority custody"
+    },
+    {
+      "commit": "e6e1de6079002b121e53cbb7ce210fab71bd1b26",
+      "subject": "C0-B: freeze repository source and authority custody"
+    },
+    {
+      "commit": "d5be1af6aee9f4eab2a90779af78fa3a6f3a8fc4",
+      "subject": "C0-C: execute fixed coastal scenes and shoreline samples"
+    },
+    {
+      "commit": "5accf46e88fa1f256fc96e9d5db2d44eb0217bbe",
+      "subject": "C0-C: correct bounded browser script resolution"
+    },
+    {
+      "commit": "bbf28c6f217e77fb3ddfdce96714af4259cf427d",
+      "subject": "C0-C: bound offshore samples to valid terrain domain"
+    },
+    {
+      "commit": "b0a305006e9265af01e21ea9b6b0c6524fbecfd8",
+      "subject": "C0-C: execute bounded corrected capture body"
+    },
+    {
+      "commit": "3ccf2e66ae07372049a453f998aa12db24e22894",
+      "subject": "C0-C: bound all transects within valid terrain domain"
+    },
+    {
+      "commit": "b25e8fceb334124ba2e8ad47a63e5ee0628a6251",
+      "subject": "C0-C: use stable accepted camera orientation"
+    },
+    {
+      "commit": "c0fb4e892a23bc1ab7edb117871d59df8b30eff0",
+      "subject": "C0-C: freeze coastal scenes and shoreline samples"
+    },
+    {
+      "commit": "7d24052a5419a4ef2be2c5bdd4d734b70163d924",
+      "subject": "C0-D: execute capture observability and runtime baseline"
+    },
+    {
+      "commit": "0a77b2e6cdf585a8096746b8ac4a292475c2238e",
+      "subject": "C0-D: correct bounded executor module resolution"
+    },
+    {
+      "commit": "043e5d5c074f403f7906aced99a5c81ae06de800",
+      "subject": "C0-D: record capture observability and runtime baseline"
+    },
+    {
+      "commit": "5847b0030817c31444a35544550a041c2624af2b",
+      "subject": "C0-D: withdraw scene uniqueness gate and resume runtime baseline"
+    },
+    {
+      "commit": "7071ce1ac948aa8bfa940e5d45d5b9db6a893623",
+      "subject": "C0-D: record corrected runtime baseline and physical blocker"
+    },
+    {
+      "commit": "630a2aa863ace95906ae8ce391603c9f0b1d545b",
+      "subject": "C0-E: authorize closure and withdraw physical mobile gate"
+    },
+    {
+      "commit": "28f1f69ea2c505967dcd241af9f5d366d037df64",
+      "subject": "C0-E: correct closure harness ordering"
+    }
+  ],
+  "earlierReceiptsReopened": false,
+  "measurementsRerun": false,
+  "fixedScenesChanged": false,
+  "contentHistoryReconciled": true
+}

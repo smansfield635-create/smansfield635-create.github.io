@@ -136,12 +136,23 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
     purpose: 'PREVENT_MULTIPLE_VALID_RELIEF_FEATURES_FROM_SUMMING_INTO_AN_ENCLOSING_NEAR_FIELD_SCREEN'
   },
   rearBoundaryLaw: 'NO_RIDGE_OR_BLUFF_MAY_EXIST_SOLELY_AS_A_REAR_WORLD_BOX_TERMINUS',
-  foothillLaw: 'PRIMARY_RELIEF_TAPERS_CONTINUOUSLY_INTO_NAVIGABLE_SURROUNDING_TERRAIN'
+  foothillLaw: 'PRIMARY_RELIEF_TAPERS_CONTINUOUSLY_INTO_NAVIGABLE_SURROUNDING_TERRAIN',
+  mesoMorphology: {
+    identity: 'B2_RIDGE_SPUR_DRAINAGE_SADDLE_SYSTEM_v1',
+    parentRange: 'GRATITUDE_PRIMARY_INLAND_RANGE',
+    ridgeBranchingRequired: true,
+    descendingSpurCount: 4,
+    convergentDrainageCutCount: 3,
+    saddleCount: 2,
+    macroSilhouettePreserved: true,
+    coastlinePreserved: true,
+    observerBaselinePreserved: true
+  }
 });
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 3,
+  generationRevision: 4,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
   worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
@@ -169,6 +180,7 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     basin: 'GRATITUDE_RECEIVING_BASIN_PROFILE_v1',
     foothill: 'GRATITUDE_FOOTHILL_TAPER_PROFILE_v1',
     valley: 'DRAINAGE_VALLEY_PROFILE_v1',
+    mesoMorphology: 'B2_RIDGE_SPUR_DRAINAGE_SADDLE_SYSTEM_v1',
     positiveReliefComposition: 'STRONGEST_LOCAL_FEATURE_PLUS_ATTENUATED_SECONDARY_OVERLAP_v1',
     water: 'COASTAL_WATER_DEPTH_PROFILE_v1'
   },
@@ -241,13 +253,34 @@ function evaluateRawElevation(worldX, worldZ) {
   const receivingBasin = gaussian(worldX, worldZ, 18, -192, 66, 46, -7.5);
   const foothillTaper = gaussian(worldX, worldZ, -12, -176, 126, 62, 8.5);
 
+  // B2 meso morphology: bounded secondary landforms carried by the canonical
+  // macro range. These features articulate ridge branching, descending spurs,
+  // convergent drainage and saddles without changing coastline or observer law.
+  const mesoRidgeNorthEast = gaussian(worldX, worldZ, 126, -251, 42, 17, 9.0);
+  const mesoRidgeCentral = gaussian(worldX, worldZ, 74, -263, 46, 18, 8.2);
+  const spurEast = gaussian(worldX, worldZ, 142, -194, 18, 49, 7.0);
+  const spurCentralEast = gaussian(worldX, worldZ, 94, -191, 17, 54, 6.4);
+  const spurCentralWest = gaussian(worldX, worldZ, 45, -187, 18, 51, 5.8);
+  const spurWest = gaussian(worldX, worldZ, -8, -181, 20, 48, 5.0);
+  const drainageEast = gaussian(worldX, worldZ, 116, -190, 12, 57, -5.2);
+  const drainageCentral = gaussian(worldX, worldZ, 69, -184, 12, 62, -5.6);
+  const drainageWest = gaussian(worldX, worldZ, 20, -179, 13, 58, -4.8);
+  const mesoSaddleEast = gaussian(worldX, worldZ, 109, -245, 14, 13, -4.4);
+  const mesoSaddleWest = gaussian(worldX, worldZ, 58, -248, 15, 14, -4.0);
+
   const positiveReliefComponents = [
     hill,
     ridgeEast,
     ridgeCentral,
     ridgeWest,
     ridgeShoulder,
-    foothillTaper
+    foothillTaper,
+    mesoRidgeNorthEast,
+    mesoRidgeCentral,
+    spurEast,
+    spurCentralEast,
+    spurCentralWest,
+    spurWest
   ];
   const strongestPositiveRelief = Math.max(...positiveReliefComponents);
   const totalPositiveRelief = positiveReliefComponents.reduce((sum, value) => sum + value, 0);
@@ -258,6 +291,8 @@ function evaluateRawElevation(worldX, worldZ) {
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);
   return coastRise + wetSandCompression + dune + rolling + articulatedPositiveRelief
     + passEast + passCentral + receivingBasin
+    + drainageEast + drainageCentral + drainageWest
+    + mesoSaddleEast + mesoSaddleWest
     + lowland + valley;
 }
 

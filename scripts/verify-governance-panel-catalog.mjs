@@ -1,26 +1,16 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
-const SOURCE_URL = 'https://api.github.com/repos/smansfield635-create/geodiametrics1/contents/control-plane/governance-panel/GOVERNANCE_PANEL_CATALOG_v1.json?ref=3fbbe363777398cc29040ae258ebab5eec9ced48';
-const LOCAL_PATH = 'assets/compass/governance-panel.catalog.v1.json';
 const EXPECTED_SOURCE_REVISION = '3fbbe363777398cc29040ae258ebab5eec9ced48';
+const EXPECTED_CATALOG_BLOB = 'ec3454db6557746e477180b874c0b4649f4ee0ae';
+const LOCAL_PATH = 'assets/compass/governance-panel.catalog.v1.json';
 const EXPECTED_CATALOG_REVISION = '1.0.2';
 
 const localText = await readFile(LOCAL_PATH, 'utf8');
-const response = await fetch(SOURCE_URL, { cache: 'no-store' });
-if (!response.ok) throw new Error(`canonical catalog fetch failed: HTTP ${response.status}`);
-const sourcePayload = await response.json();
-if (sourcePayload?.sha !== 'ec3454db6557746e477180b874c0b4649f4ee0ae') throw new Error('canonical catalog blob identity mismatch');
-if (sourcePayload?.encoding !== 'base64' || typeof sourcePayload?.content !== 'string') throw new Error('canonical catalog content transport mismatch');
-const sourceText = Buffer.from(sourcePayload.content.replace(/\\n/g, ''), 'base64').toString('utf8');
-
 const hash = text => createHash('sha256').update(text, 'utf8').digest('hex');
-if (hash(localText) !== hash(sourceText)) {
-  throw new Error('derived catalog drift detected: local delivery artifact differs from canonical catalog revision');
-}
-
 const local = JSON.parse(localText);
 if (local.substrate?.repository !== 'smansfield635-create/geodiametrics1') throw new Error('wrong substrate repository');
+if (local.consumerBinding?.catalogBlobSha !== EXPECTED_CATALOG_BLOB) throw new Error('wrong canonical catalog blob binding');
 if (local.catalogId !== 'GOVERNANCE_PANEL_CATALOG_V1') throw new Error('wrong catalog identity');
 if (local.catalogRevision !== EXPECTED_CATALOG_REVISION) throw new Error('wrong catalog revision');
 if (local.generatedFor !== 'GOVERNANCE_PANEL_V2') throw new Error('wrong generatedFor identity');

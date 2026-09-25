@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-24T23:28:49Z",
+  "generatedAt": "2026-09-25T01:05:21Z",
   "window": {
-    "start": "2026-06-26T23:28:49Z",
-    "end": "2026-09-24T23:28:49Z"
+    "start": "2026-06-27T01:05:21Z",
+    "end": "2026-09-25T01:05:21Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4863,
-    "visits": 1182,
+    "pageLoads": 4876,
+    "visits": 1180,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4863,
-        "visits": 1182
+        "pageLoads": 4876,
+        "visits": 1180
       }
     },
     "byPath": {
@@ -107,8 +107,8 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 212,
-        "visits": 25
+        "pageLoads": 225,
+        "visits": 23
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
@@ -130,12 +130,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 21,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -181,10 +185,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/build/": {
         "pageLoads": 20,
@@ -258,16 +258,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 43,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 25,
         "visits": 3
       },
       "/campaigns/wave/": {
         "pageLoads": 15,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 43,
         "visits": 0
       },
       "/door/": {
@@ -278,25 +278,25 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 21,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/rob/": {
-        "pageLoads": 17,
-        "visits": 1
+        "pageLoads": 16,
+        "visits": 0
       },
       "/showroom/globe/earth/": {
         "pageLoads": 5,
@@ -310,11 +310,11 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
+      "/campaigns/wave/thai-boxing/": {
         "pageLoads": 1,
         "visits": 0
       },
-      "/campaigns/wave/thai-boxing/": {
+      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
         "pageLoads": 1,
         "visits": 0
       },
@@ -371,8 +371,8 @@
         "visits": 0
       },
       "/governance-bridge/": {
-        "pageLoads": 26,
-        "visits": 26
+        "pageLoads": 27,
+        "visits": 27
       },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
@@ -381,16 +381,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3681,
+        "pageLoads": 3696,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 408,
-        "visits": 408
+        "pageLoads": 407,
+        "visits": 407
       },
       "www.google.com": {
-        "pageLoads": 763,
-        "visits": 763
+        "pageLoads": 762,
+        "visits": 762
       },
       "raw.githack.com": {
         "pageLoads": 10,

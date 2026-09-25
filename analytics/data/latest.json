@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-25T05:31:35Z",
+  "generatedAt": "2026-09-25T06:49:15Z",
   "window30d": {
-    "start": "2026-08-26T05:31:35Z",
-    "end": "2026-09-25T05:31:35Z"
+    "start": "2026-08-26T06:49:15Z",
+    "end": "2026-09-25T06:49:15Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-18",
-      "pageLoads": 319
+      "pageLoads": 293
     },
     {
       "date": "2026-09-19",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 44
+      "pageLoads": 52
     }
   ],
   "summary": {
-    "pageLoads": 6777,
+    "pageLoads": 6759,
     "botPageLoads": 2415,
-    "nonBotPageLoads": 4362
+    "nonBotPageLoads": 4344
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3197,
-      "visits": 3197
+      "pageLoads": 3204,
+      "visits": 3204
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2944,
+      "pageLoads": 2920,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 599,
-      "visits": 599
+      "pageLoads": 598,
+      "visits": 598
     },
     {
       "host": "bing.com",
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1761,
-      "visits": 1520
+      "pageLoads": 1756,
+      "visits": 1519
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,7 +187,7 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 744,
+      "pageLoads": 742,
       "visits": 589
     },
     {
@@ -197,7 +197,7 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 330,
+      "pageLoads": 329,
       "visits": 99
     },
     {
@@ -207,12 +207,12 @@
     },
     {
       "path": "/evidence/agentic-frontier/",
-      "pageLoads": 190,
+      "pageLoads": 191,
       "visits": 30
     },
     {
       "path": "/index.html",
-      "pageLoads": 134,
+      "pageLoads": 133,
       "visits": 1
     }
   ],

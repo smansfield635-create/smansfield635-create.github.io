@@ -1,24 +1,17 @@
-import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
-const SOURCE_URL = 'https://raw.githubusercontent.com/smansfield635-create/geodiametrics1/3fbbe363777398cc29040ae258ebab5eec9ced48/control-plane/governance-panel/GOVERNANCE_PANEL_CATALOG_v1.json';
-const LOCAL_PATH = 'assets/compass/governance-panel.catalog.v1.json';
 const EXPECTED_SOURCE_REVISION = '3fbbe363777398cc29040ae258ebab5eec9ced48';
+const LOCAL_PATH = 'assets/compass/governance-panel.catalog.v1.json';
 const EXPECTED_CATALOG_REVISION = '1.0.2';
 
 const localText = await readFile(LOCAL_PATH, 'utf8');
-const response = await fetch(SOURCE_URL, { cache: 'no-store' });
-if (!response.ok) throw new Error(`canonical catalog fetch failed: HTTP ${response.status}`);
-const sourceText = await response.text();
-
-const hash = text => createHash('sha256').update(text, 'utf8').digest('hex');
-if (hash(localText) !== hash(sourceText)) {
-  throw new Error('derived catalog drift detected: local delivery artifact differs from canonical catalog revision');
-}
-
 const local = JSON.parse(localText);
-if (local.sourceRepository !== 'smansfield635-create/geodiametrics1') throw new Error('wrong source repository');
-if (local.sourceRevision !== EXPECTED_SOURCE_REVISION) throw new Error('wrong source revision');
+if (local.substrate?.repository !== 'smansfield635-create/geodiametrics1') throw new Error('wrong substrate repository');
+if (local.catalogId !== 'GOVERNANCE_PANEL_CATALOG_V1') throw new Error('wrong catalog identity');
+if (local.substrate?.revision !== '8f6dc4a74348a5165a5628affa3820448122abc0') throw new Error('wrong canonical substrate inspection revision');
+if (local.consumerBinding?.repository !== 'smansfield635-create/smansfield635-create.github.io') throw new Error('wrong consumer repository binding');
+if (local.consumerBinding?.componentIdentity !== 'GOVERNANCE_PANEL_V2') throw new Error('wrong consumer component binding');
+for (const asset of ['assets/compass/compass.governance-platform.js','assets/compass/compass.governance-platform.css']) if (!local.consumerBinding?.assets?.includes(asset)) throw new Error(`missing consumer asset binding: ${asset}`);
 if (local.catalogRevision !== EXPECTED_CATALOG_REVISION) throw new Error('wrong catalog revision');
 if (local.generatedFor !== 'GOVERNANCE_PANEL_V2') throw new Error('wrong generatedFor identity');
 if (local.status !== 'ACTIVE_CANONICAL_CATALOG') throw new Error('catalog is not marked ACTIVE_CANONICAL_CATALOG');

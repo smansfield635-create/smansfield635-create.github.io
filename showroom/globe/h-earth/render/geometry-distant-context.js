@@ -50,12 +50,14 @@ function buildContinuousOceanField(){
   for(let zi=0;zi<height-1;zi++)for(let xi=0;xi<width-1;xi++){
     const a=zi*width+xi,b=a+1,e=(zi+1)*width+xi,d=e+1;
     const cell=[samples[a],samples[b],samples[d],samples[e]],waterVotes=cell.filter(s=>s?.surfaceClass==='WATER').length;
-    if(waterVotes===0)landUnderlayCellCount++;
+    const cellZMax=Math.max(OCEAN_Z[zi],OCEAN_Z[zi+1]);
+    if(waterVotes===0){landUnderlayCellCount++;continue}
     else if(waterVotes<4)mixedCoastCellCount++;
+    if(cellZMax>-320)continue;
     indices.push(a,e,b,b,e,d);retainedCellCount++;
   }
   const maximumRadius=Math.max(...vertices.map(v=>Math.hypot(v.x,v.z)));
-  return compact(vertices,indices,{retainedCellCount,landUnderlayCellCount,mixedCoastCellCount,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',oceanUnderlayClosesRepresentationGaps:true,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true},vertexRgba);
+  return compact(vertices,indices,{retainedCellCount,landUnderlayCellCount,mixedCoastCellCount,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',oceanUnderlayClosesRepresentationGaps:false,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true},vertexRgba);
 }
 
 function primitive(mesh,surfaceClass,plan=null){

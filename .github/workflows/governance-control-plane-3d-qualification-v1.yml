@@ -1,0 +1,57 @@
+name: Governance Control Plane 3D Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: ${{ inputs.candidate_sha }}, fetch-depth: 1}
+      - name: Fetch exact comparison base
+        env: {BASE_SHA: ${{ inputs.base_sha }}}
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Prove bounded 3D candidate scope and topology
+        env: {BASE_SHA: ${{ inputs.base_sha }}, CANDIDATE_SHA: ${{ inputs.candidate_sha }}}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort > /tmp/files
+          printf '%s\n' assets/compass/compass.governance-platform.css assets/compass/compass.governance-platform.js | sort > /tmp/allowed
+          diff -u /tmp/allowed /tmp/files
+          node - <<'NODE'
+          const fs=require('fs'),c=JSON.parse(fs.readFileSync('assets/compass/governance-panel.catalog.v1.json','utf8')),s=fs.readFileSync('assets/compass/compass.governance-platform.js','utf8');
+          if(c.catalogRevision!=='1.0.2'||c.nodes.length!==14||c.edges.length!==21||Object.keys(c.operations).length!==8)throw Error('catalog correspondence');
+          if(s.includes('continuity admission'))throw Error('false Recover edge');
+          if(!s.includes('Math.max(-26,Math.min(26')||!s.includes('Math.max(-14,Math.min(14'))throw Error('orbit clamps');
+          NODE
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/gp-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/governance-bridge/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/gp-http.log; exit 1
+      - name: Collect-all runtime matrix
+        run: |
+          mkdir -p .qualification/governance-control-plane-3d
+          cat > .qualification/governance-control-plane-3d/inspect.mjs <<'NODE'
+          import {chromium} from 'playwright';import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true}),errors=[],obs=[];
+          const views={phone320:{width:320,height:760},phone390:{width:390,height:844},tablet:{width:900,height:1000},desktop:{width:1440,height:1100}};
+          const ops=['admit','change','qualify','execute','materialize','reconcile','recover','close'];
+          for(const [view,viewport] of Object.entries(views)){const page=await browser.newPage({viewport});const pe=[];page.on('pageerror',e=>pe.push(String(e)));await page.goto('http://127.0.0.1:4173/governance-bridge/',{waitUntil:'networkidle'});await page.locator('[data-governance-panel-trigger]').click();await page.waitForSelector('.governance-panel.is-open');for(const op of ops){try{await page.locator('[data-governance-op="'+op+'"]').click();const nodes=await page.locator('.governance-node').count(),edges=await page.locator('.governance-edge').count(),active=await page.locator('.governance-node:not(.is-dimmed)').count(),thesis=(await page.locator('.governance-thesis').textContent())||'';const detail=(await page.locator('.governance-detail').textContent())||'';const pass=nodes===14&&edges===21&&active>0&&thesis.length>20&&/What it does/i.test(detail)&&/Why it exists/i.test(detail)&&/Produces/i.test(detail)&&/Canonical implementation/i.test(detail);obs.push({view,op,nodes,edges,active,pass});if(!pass)errors.push({view,op,stage:'runtime',assertion:'model correspondence',observed:{nodes,edges,active,thesis:thesis.length}});await page.screenshot({path:'.qualification/governance-control-plane-3d/'+view+'-'+op+'.png'});}catch(e){errors.push({view,op,stage:'runtime',assertion:'operable traversal',observed:String(e)})}}try{const c=page.locator('.governance-canvas'),b=await c.boundingBox();if(b){await page.mouse.move(b.x+b.width*.5,b.y+b.height*.5);await page.mouse.down();await page.mouse.move(b.x+b.width*.95,b.y+b.height*.2,{steps:8});await page.mouse.up();await page.locator('.governance-reset').click();}}catch(e){errors.push({view,stage:'orbit',assertion:'drag/reset',observed:String(e)})}if(pe.length)errors.push({view,stage:'page',assertion:'no page errors',observed:pe});await page.close()}
+          await browser.close();fs.writeFileSync('.qualification/governance-control-plane-3d/receipt.json',JSON.stringify({result:errors.length?'FAIL':'PASS',errors,observations:obs},null,2));if(errors.length){console.error(JSON.stringify(errors,null,2));process.exit(1)}
+          NODE
+          node .qualification/governance-control-plane-3d/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: governance-control-plane-3d-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/governance-control-plane-3d
+          retention-days: 30

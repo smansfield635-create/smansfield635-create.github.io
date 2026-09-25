@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-ocean-density-isolated-g1-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4832,
+  "requestBranch": "ai-dispatch-request-ocean-density-isolated-g1",
+  "requestCommit": "aef3ef1e5904388576c5e636a00a7c2e4be908de",
+  "currentMainSha": "20b1ef49d15435b3fb7d7dfb9019b6f5f81f35e1",
+  "bridgeRunId": "36097626537",
+  "error": "Stale dispatch request: parent 374b68787f3ca9033dd2a8cbcbd7e18061668175 != current main 20b1ef49d15435b3fb7d7dfb9019b6f5f81f35e1",
+  "failedAt": "2026-09-25T05:13:10.666Z"
+}

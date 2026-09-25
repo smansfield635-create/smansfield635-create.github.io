@@ -1,0 +1,27 @@
+name: Governance Panel Catalog Integrity
+
+on:
+  push:
+    paths:
+      - 'assets/compass/governance-panel.catalog.v1.json'
+      - 'assets/compass/compass.governance-platform.js'
+      - 'scripts/verify-governance-panel-catalog.mjs'
+      - '.github/workflows/governance-panel-catalog-integrity.yml'
+  pull_request:
+    paths:
+      - 'assets/compass/governance-panel.catalog.v1.json'
+      - 'assets/compass/compass.governance-platform.js'
+      - 'scripts/verify-governance-panel-catalog.mjs'
+      - '.github/workflows/governance-panel-catalog-integrity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout website
+        uses: actions/checkout@v4
+      - name: Verify catalog derivation and runtime binding
+        run: node scripts/verify-governance-panel-catalog.mjs

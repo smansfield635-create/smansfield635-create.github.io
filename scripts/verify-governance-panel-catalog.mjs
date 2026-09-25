@@ -17,8 +17,8 @@ if (hash(localText) !== hash(sourceText)) {
 }
 
 const local = JSON.parse(localText);
-if (local.sourceRepository !== 'smansfield635-create/geodiametrics1') throw new Error('wrong source repository');
-if (local.sourceRevision !== EXPECTED_SOURCE_REVISION) throw new Error('wrong source revision');
+if (local.substrate?.repository !== 'smansfield635-create/geodiametrics1') throw new Error('wrong substrate repository');
+if (local.catalogId !== 'GOVERNANCE_PANEL_CATALOG_V1') throw new Error('wrong catalog identity');
 if (local.catalogRevision !== EXPECTED_CATALOG_REVISION) throw new Error('wrong catalog revision');
 if (local.generatedFor !== 'GOVERNANCE_PANEL_V2') throw new Error('wrong generatedFor identity');
 if (local.status !== 'ACTIVE_CANONICAL_CATALOG') throw new Error('catalog is not marked ACTIVE_CANONICAL_CATALOG');

@@ -1,4 +1,5 @@
 name: Cloudflare Owner RUM Exclusion v1
+# bounded owner-analytics exclusion installer
 
 on:
   push:

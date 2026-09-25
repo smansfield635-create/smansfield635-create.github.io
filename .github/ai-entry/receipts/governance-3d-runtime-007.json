@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "governance-3d-runtime-007",
+  "capabilityId": "GOVERNANCE_CONTROL_PLANE_3D_RUNTIME_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4841,
+  "requestBranch": "ai-dispatch-request-governance-3d-runtime-007",
+  "requestCommit": "f689960e37e01e7c0ff4583e94303edc835966e9",
+  "requestCommitParent": "f3878434e502ced45cf5f181639d185a8d21ca11",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "f3878434e502ced45cf5f181639d185a8d21ca11",
+  "workflow": "governance-control-plane-3d-runtime-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "5af793d27f4e10f44966ca8efa09d1bf40972278",
+    "base_sha": "6143f9f6b5ade1135ceb2a0a8a9d6af65bda73ca"
+  },
+  "bridgeRunId": "36100081652",
+  "dispatchedRunId": 36100092250,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36100092250",
+  "dispatchedRunHeadSha": "f3878434e502ced45cf5f181639d185a8d21ca11",
+  "dispatchedAt": "2026-09-25T05:48:10.714Z",
+  "resolvedAt": "2026-09-25T05:48:14.096Z"
+}

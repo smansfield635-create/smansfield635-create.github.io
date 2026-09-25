@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T01:39:50Z",
+  "generatedAt": "2026-09-25T02:38:07Z",
   "window": {
-    "start": "2026-06-27T01:39:50Z",
-    "end": "2026-09-25T01:39:50Z"
+    "start": "2026-06-27T02:38:07Z",
+    "end": "2026-09-25T02:38:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4883,
-    "visits": 1180,
+    "pageLoads": 4873,
+    "visits": 1178,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4883,
-        "visits": 1180
+        "pageLoads": 4873,
+        "visits": 1178
       }
     },
     "byPath": {
@@ -32,14 +32,14 @@
       },
       "/": {
         "pageLoads": 1056,
-        "visits": 722
+        "visits": 721
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
         "visits": 0
       },
       "/nine-summits-of-love/": {
-        "pageLoads": 20,
+        "pageLoads": 11,
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 230,
+        "pageLoads": 229,
         "visits": 22
       },
       "/gauges/h-earth/": {
@@ -186,13 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -302,10 +302,6 @@
         "pageLoads": 5,
         "visits": 0
       },
-      "/philosophy/": {
-        "pageLoads": 1,
-        "visits": 1
-      },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
         "visits": 0
@@ -363,7 +359,7 @@
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 13,
+        "pageLoads": 14,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-1/": {
@@ -381,7 +377,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3703,
+        "pageLoads": 3695,
         "visits": 0
       },
       "(none)": {
@@ -389,8 +385,8 @@
         "visits": 407
       },
       "www.google.com": {
-        "pageLoads": 762,
-        "visits": 762
+        "pageLoads": 760,
+        "visits": 760
       },
       "raw.githack.com": {
         "pageLoads": 10,

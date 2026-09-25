@@ -113,6 +113,7 @@ uniform float uFogStartDistance;
 uniform float uFogFalloff;
 uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
+  uniform float uOceanProofPhase;
 out vec4 outColor;
 
 float hash21(vec2 p){
@@ -297,6 +298,21 @@ void main(){
     base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),wave*0.45+0.25);
     base+=vec3(0.26,0.34,0.31)*foam;
     specular*=1.8;
+  }else if(vRoleCode==4u){
+    float phaseA=vWorldPosition.x*0.115+vWorldPosition.z*0.067+uOceanProofPhase*0.42;
+    float phaseB=vWorldPosition.x*-0.073+vWorldPosition.z*0.129-uOceanProofPhase*0.31+1.4;
+    float phaseC=vWorldPosition.x*0.211+vWorldPosition.z*-0.163+uOceanProofPhase*0.58+3.1;
+    float waveA=sin(phaseA);
+    float waveB=sin(phaseB);
+    float waveC=sin(phaseC);
+    float wave=0.58*waveA+0.30*waveB+0.12*waveC;
+    float gradientX=0.115*0.58*cos(phaseA)-0.073*0.30*cos(phaseB)+0.211*0.12*cos(phaseC);
+    float gradientZ=0.067*0.58*cos(phaseA)+0.129*0.30*cos(phaseB)-0.163*0.12*cos(phaseC);
+    vec3 animatedNormal=normalize(vec3(-gradientX*0.95,1.0,-gradientZ*0.95));
+    n=normalize(mix(n,animatedNormal,0.62));
+    float crest=0.5+0.5*wave;
+    base+=vec3(0.028*crest);
+    specular*=2.05;
   }else{
     float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
     base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
@@ -476,7 +492,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), depth: uniform(resources.depthProgram, 'uDepth')
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'),
+    oceanProofPhase: uniform(resources.geometryProgram, 'uOceanProofPhase'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
     resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
@@ -488,6 +505,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
     gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
+    gl.uniform1f(resources.uniforms.oceanProofPhase, 0);
     counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
   }
 
@@ -500,6 +518,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
+    gl.uniform1f(resources.uniforms.oceanProofPhase, counters.frameCount * 0.075);
     counters.cameraUniformUpdateCount += 2;
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {

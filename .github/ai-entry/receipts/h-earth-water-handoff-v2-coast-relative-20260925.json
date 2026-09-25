@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-water-handoff-v2-coast-relative-20260925",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4862,
+  "requestBranch": "ai-dispatch-request-water-handoff-v2-coast-relative",
+  "requestCommit": "5daaad811940d009c2ee0b2ee397550927cf6e5c",
+  "requestCommitParent": "f86ba88dd9431564c36552280058479b49de2932",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "f86ba88dd9431564c36552280058479b49de2932",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9153e6e35646cba5371bfa82c10fefe13935fe79"
+  },
+  "bridgeRunId": "36164757120",
+  "dispatchedRunId": 36164777959,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36164777959",
+  "dispatchedRunHeadSha": "f86ba88dd9431564c36552280058479b49de2932",
+  "dispatchedAt": "2026-09-25T17:04:10.491Z",
+  "resolvedAt": "2026-09-25T17:04:17.111Z"
+}

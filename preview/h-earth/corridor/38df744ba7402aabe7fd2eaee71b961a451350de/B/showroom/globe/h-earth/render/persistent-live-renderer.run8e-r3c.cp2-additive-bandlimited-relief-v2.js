@@ -174,6 +174,16 @@ vec3 perturbTerrainNormal(
     orientation * surfaceGradient
   );
 }
+vec3 limitWaterNormalDeviation(vec3 geometricNormal,vec3 candidateNormal){
+  const float COSINE_10_DEGREES=0.984807753012208;
+  const float SINE_10_DEGREES=0.173648177666930;
+  float correspondence=clamp(dot(geometricNormal,candidateNormal),-1.0,1.0);
+  if(correspondence>=COSINE_10_DEGREES)return candidateNormal;
+  vec3 tangent=candidateNormal-geometricNormal*correspondence;
+  float tangentLength=length(tangent);
+  if(tangentLength<0.00001)return geometricNormal;
+  return normalize(geometricNormal*COSINE_10_DEGREES+tangent/tangentLength*SINE_10_DEGREES);
+}
 vec3 limitTerrainNormalDeviation(
   vec3 geometricNormal,
   vec3 candidateNormal
@@ -415,11 +425,27 @@ void main(){
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
     base=palette;
   }else if(vRoleCode==2u){
-    float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
+    // Water Phase 2B: static, continuous, band-limited surface presentation.
+    // Geometry, topology, coastline and draw count remain unchanged.
+    vec2 waterWorld=vWorldPosition.xz;
+    float waterDistanceEnvelope=1.0-smoothstep(180.0,720.0,distanceToCamera);
+    float waterBandA=stableWave(dot(waterWorld,normalize(vec2(1.0,0.37)))*0.105+0.8);
+    float waterBandB=stableWave(dot(waterWorld,normalize(vec2(-0.42,1.0)))*0.245+2.1);
+    float waterBandC=stableWave(dot(waterWorld,normalize(vec2(0.73,1.0)))*0.57+4.3);
+    float waterBandD=stableWave(dot(waterWorld,normalize(vec2(-1.0,0.18)))*1.21+1.4);
+    float waterReliefHeight=
+      (waterBandA-0.5)*0.30+
+      (waterBandB-0.5)*0.14+
+      (waterBandC-0.5)*0.055*waterDistanceEnvelope+
+      (waterBandD-0.5)*0.018*waterDistanceEnvelope;
+    vec3 waterCandidateNormal=perturbTerrainNormal(geometricNormal,vWorldPosition,waterReliefHeight);
+    vec3 waterShadingNormal=limitWaterNormalDeviation(geometricNormal,waterCandidateNormal);
+    shadingNormal=normalize(mix(geometricNormal,waterShadingNormal,0.88));
+    float waterOpticalSignal=clamp(waterBandA*0.46+waterBandB*0.29+waterBandC*0.17+waterBandD*0.08*waterDistanceEnvelope,0.0,1.0);
     float foam=pow(clamp(1.0-geometricNormal.y,0.0,1.0),1.7);
-    base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),wave*0.45+0.25);
+    base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),waterOpticalSignal*0.34+0.28);
     base+=vec3(0.26,0.34,0.31)*foam;
-    specularScale=1.8;
+    specularScale=1.55;
   }else{
     float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
     base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
@@ -428,7 +454,7 @@ void main(){
 
   float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
   float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
-  float diffuse=geometricDiffuse;
+  float diffuse=vRoleCode==2u?reliefDiffuse:geometricDiffuse;
   if(vRoleCode==1u){
     diffuse=mix(
       geometricDiffuse,
@@ -456,7 +482,7 @@ void main(){
       reliefRim,
       0.85*terrainReliefEnvelope
     )
-    :geometricRim;
+    :(vRoleCode==2u?reliefRim:geometricRim);
 
   float specularExponent=vRoleCode==1u?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
   float specular=pow(

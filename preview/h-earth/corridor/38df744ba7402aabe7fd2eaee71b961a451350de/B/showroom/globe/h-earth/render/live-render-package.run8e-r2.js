@@ -654,6 +654,7 @@ export function createHEarthRun8ER2GPUBufferViews(packageRecord = getHEarthRun8E
     surfaceClassCodes: new Uint8Array(packageRecord.buffers.surfaceClassCodes),
     primitiveIndices: new Uint16Array(packageRecord.buffers.primitiveIndices),
     roleCodes: new Uint8Array(packageRecord.buffers.roleCodes),
+    waterClassCodes: new Uint8Array(packageRecord.buffers.waterClassCodes),
     indices: new Uint32Array(packageRecord.buffers.indices),
     copyOnRequest: true,
     packageIdentity: packageRecord.packageIdentity

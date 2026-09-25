@@ -1,40 +1,28 @@
 /* GOVERNANCE PANEL — portable substrate catalog + host adapter */
 (()=>{'use strict';
-const CATALOG=Object.freeze({
- version:'GOVERNANCE_PANEL_CATALOG_V2',
- nodes:Object.freeze([
-  {id:'authority',name:'Authority',className:'authority constitution',layer:'authority',x:50,y:9,desc:'Defines who or what may exercise authority and the boundaries that authority cannot cross.',source:'tools/authority/*; .github/ai-router/shared-procedures.v1.json',status:'ACTIVE / HARDENED'},
-  {id:'admission',name:'Admission',className:'operation intake',layer:'control',x:18,y:25,desc:'Turns a requested governed operation into a bounded, exact-head, lockable operation identity.',source:'tools/operation-intake/*; repository-operation-intake-gate.v1.mjs',status:'ACTIVE / CANONICAL'},
-  {id:'policy',name:'Policy',className:'policy-as-code',layer:'control',x:50,y:25,desc:'Applies deterministic development and authority-boundary decisions before protected work can proceed.',source:'.github/ai-router/development-pipeline/policy-registry.v1.json',status:'ACTIVE / FAIL-CLOSED'},
-  {id:'routing',name:'Routing',className:'backend selection',layer:'control',x:82,y:25,desc:'Selects registered execution and transport backends without granting callers backend or command authority.',source:'.github/ai-router/router.v1.json; backend-resolution.v1.json',status:'ACTIVE / FAIL-CLOSED'},
-  {id:'lifecycle',name:'Lifecycle',className:'instrument governance',layer:'control',x:18,y:44,desc:'Tracks instruments as active, observation-only, candidate, compatibility, or historical states.',source:'.github/ai-router/instrument-lifecycle/instrument-lifecycle-registry.v1.json',status:'ACTIVE / OBSERVATION-ONLY'},
-  {id:'qualification',name:'Qualification',className:'evidence gate',layer:'execution',x:40,y:44,desc:'Determines whether an admitted operation and its frozen subject satisfy the required evidence and procedure conditions.',source:'tools/ai-entry/*; .github/ai-router/canonical-execution-substrate/*',status:'ACTIVE / CANONICAL'},
-  {id:'execution',name:'Execution',className:'bounded runtime',layer:'execution',x:60,y:44,desc:'Runs a registered, bounded execution path while preserving exact-head and native-receipt constraints.',source:'tools/ai-room-transport/*; tools/ai-entry/canonical-execution-substrate.v1.mjs',status:'ACTIVE / BOUNDED'},
-  {id:'materialization',name:'Materialization',className:'artifact production',layer:'execution',x:82,y:44,desc:'Carries approved bytes or artifacts into their governed destination without expanding semantic authority.',source:'canonical execution substrate; exact-byte transport procedures',status:'ACTIVE / BOUNDED'},
-  {id:'provenance',name:'Provenance',className:'lineage + receipts',layer:'evidence',x:24,y:65,desc:'Binds outcomes to governing head, operation identity, evidence, and native receipts.',source:'tools/authority/authority-provenance.v1.mjs; receipt protocols',status:'ACTIVE / CANONICAL'},
-  {id:'telemetry',name:'Telemetry',className:'observation',layer:'evidence',x:50,y:65,desc:'Records deterministic control-plane events without becoming an authorization or mutation authority.',source:'tools/telemetry/operation-telemetry.v1.mjs; docs/audits/control-plane-telemetry-v1-spec-2026-09-23.md',status:'ACTIVE / OBSERVATION'},
-  {id:'reconciliation',name:'Reconciliation',className:'state comparison',layer:'evidence',x:76,y:65,desc:'Compares expected and observed state and keeps contradiction, mismatch, and held states explicit.',source:'shared procedures; continuity and reconciliation instrumentation',status:'ACTIVE / GOVERNED'},
-  {id:'continuity',name:'Continuity',className:'successor + recovery',layer:'closure',x:24,y:84,desc:'Carries governed work forward through successor, recovery, and cross-operation continuity without silently inheriting stale authority.',source:'.github/ai-router/project-continuation/*; successor procedures',status:'ACTIVE / GOVERNED'},
-  {id:'closure',name:'Closure',className:'terminal state',layer:'closure',x:50,y:84,desc:'Terminates the governed operation with an explicit terminal disposition and preserved evidence lineage.',source:'tools/operation-intake/*; terminal-closure transport',status:'ACTIVE / CANONICAL'},
-  {id:'boundary',name:'Boundary',className:'publication + estate',layer:'boundary',x:76,y:84,desc:'Separates canonical governance from publication, historical surfaces, and project-specific domains.',source:'cross-repository authority estate specification and implementation',status:'ACTIVE / GOVERNED'}
- ]),
- edges:Object.freeze([['authority','admission'],['authority','policy'],['authority','routing'],['admission','policy'],['admission','routing'],['policy','qualification'],['routing','execution'],['lifecycle','qualification'],['qualification','execution'],['execution','materialization'],['qualification','provenance'],['execution','provenance'],['materialization','provenance'],['provenance','telemetry'],['provenance','reconciliation'],['telemetry','reconciliation'],['reconciliation','continuity'],['continuity','closure'],['reconciliation','closure'],['closure','boundary'],['materialization','boundary']]),
- operations:Object.freeze({
-  admit:Object.freeze(['authority','admission','policy','routing','provenance','closure']),
-  change:Object.freeze(['authority','admission','policy','lifecycle','qualification','execution','provenance','reconciliation','closure']),
-  qualify:Object.freeze(['authority','admission','policy','routing','qualification','provenance','closure']),
-  execute:Object.freeze(['authority','admission','policy','routing','qualification','execution','provenance','telemetry','reconciliation','closure']),
-  materialize:Object.freeze(['authority','admission','routing','qualification','execution','materialization','provenance','boundary','closure']),
-  reconcile:Object.freeze(['authority','provenance','telemetry','reconciliation','continuity','closure']),
-  recover:Object.freeze(['authority','provenance','reconciliation','continuity','admission','qualification','execution','closure']),
-  close:Object.freeze(['authority','provenance','reconciliation','closure','boundary'])
- }),
- labels:Object.freeze({admit:'Admit',change:'Change',qualify:'Qualify',execute:'Execute',materialize:'Materialize',reconcile:'Reconcile',recover:'Recover',close:'Close'})
-});
+const CATALOG_URL='https://raw.githubusercontent.com/smansfield635-create/geodiametrics1/e01b4bce9d2c6b9188e9c2a203fd35dc2bf7ca7c/control-plane/governance-panel/GOVERNANCE_PANEL_CATALOG_v1.json';
+let CATALOG=null;
+async function loadCatalog(){
+ const source=await fetch(CATALOG_URL,{cache:'no-store'});
+ if(!source.ok)throw new Error('Governance catalog fetch failed: HTTP '+source.status);
+ const raw=await source.json();
+ if(raw?.catalogId!=='GOVERNANCE_PANEL_CATALOG_V1'||raw?.generatedFor!=='GOVERNANCE_PANEL_V2')throw new Error('Governance catalog identity mismatch');
+ if(!Array.isArray(raw.nodes)||raw.nodes.length!==14||!Array.isArray(raw.edges)||raw.edges.length!==21)throw new Error('Governance catalog topology mismatch');
+ if(!raw.operations||Object.keys(raw.operations).length!==8)throw new Error('Governance catalog operation model mismatch');
+ CATALOG=Object.freeze({
+  version:raw.catalogId,
+  substrate:raw.substrate,
+  nodes:Object.freeze(raw.nodes.map((n,i)=>Object.freeze({...n,x:[50,18,50,82,18,40,60,82,24,50,76,24,50,76][i],y:[9,25,25,25,44,44,44,44,65,65,65,84,84,84][i],className:n.className||n.layer,desc:n.desc||'Governed substrate node.',source:n.canonicalSource?.path||'UNRESOLVED',status:n.status}))),
+  edges:Object.freeze(raw.edges.map(e=>Object.freeze(e))),
+  operations:Object.freeze(Object.fromEntries(Object.entries(raw.operations).map(([k,v])=>[k,Object.freeze(v)]))),
+  labels:Object.freeze(raw.labels)
+ });
+ return CATALOG;
+}
 const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const q=(s,r=document)=>r.querySelector(s);
 let instance=null;
-function build(host,options={}){
+function build(host,options={}){\n if(!CATALOG)throw new Error('Governance catalog is not loaded');
  if(instance){return instance.api;}
  const trigger=document.createElement('button');trigger.type='button';trigger.className='governance-panel-trigger';trigger.textContent=options.label||'Governance Panel';trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls','governance-panel');
  const panel=document.createElement('section');panel.className='governance-panel';panel.id='governance-panel';panel.setAttribute('aria-hidden','true');panel.setAttribute('aria-label','Governance Panel');
@@ -59,7 +47,7 @@ function build(host,options={}){
  setOp(op);instance={api:Object.freeze({version:'GOVERNANCE_PANEL_V2',catalog:CATALOG,mount:()=>instance.api,open,close,toggle}),trigger,panel};
  return instance.api;
 }
-function autoMount(){const host=q('[data-governance-panel-host]')||document.body;build(host);}
+async function autoMount(){try{await loadCatalog();const host=q('[data-governance-panel-host]')||document.body;build(host);}catch(error){console.error('[Governance Panel] catalog load failed',error);}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',autoMount,{once:true});else autoMount();
-globalThis.DGBGovernancePanel=Object.freeze({version:'GOVERNANCE_PANEL_V2',catalog:CATALOG,mount:(options={})=>{if(!instance)build(options.host||q('[data-governance-panel-host]')||document.body,options);return instance.api;},open:()=>instance?.api.open(),close:()=>instance?.api.close(),toggle:()=>instance?.api.toggle()});
+globalThis.DGBGovernancePanel=Object.freeze({version:'GOVERNANCE_PANEL_V2',get catalog(){return CATALOG;},mount:(options={})=>{if(!instance)throw new Error('Governance catalog is still loading');return instance.api;},open:()=>instance?.api.open(),close:()=>instance?.api.close(),toggle:()=>instance?.api.toggle()});
 })();

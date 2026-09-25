@@ -1,0 +1,46 @@
+{
+  "schema": "GOVERNANCE_PANEL_ACCESS_RUNTIME_INCIDENT_RECORD_v1",
+  "recordedAt": "2026-09-24",
+  "scope": "governance-bridge public consumer",
+  "observation": {
+    "source": "user-supplied mobile screenshot",
+    "finding": "No visible governance-panel trigger was present on the rendered page; the panel was not inspectable through the intended access affordance."
+  },
+  "rootCause": {
+    "finding": "The published governance-panel runtime contained one literal backslash-n sequence inside executable JavaScript, producing a parse failure before panel initialization.",
+    "evidence": "Repository fetch of assets/compass/compass.governance-platform.js on main showed the literal sequence; local syntax validation after correction passed."
+  },
+  "remediation": {
+    "runtimeCommit": "c3e4f04cc2b2d71cd17d6976e96c3c448d30cd27",
+    "runtimeBlob": "269c50542ae3b3d3237f4580fbfb51837009300c",
+    "cacheBustCommit": "124763a95055b444ca227997be8ff3ef945a8e28",
+    "cacheBustVersion": "governance-panel-v3",
+    "accessControls": [
+      "visible right-edge vertical trigger",
+      "tap/click trigger opens panel",
+      "edge swipe opens panel from either screen edge"
+    ]
+  },
+  "verification": {
+    "javascriptSyntax": "PASS",
+    "literalBackslashN": "ABSENT",
+    "triggerImplementation": "PRESENT",
+    "edgeSwipeImplementation": "PRESENT",
+    "sameOriginCatalog": "PRESENT",
+    "hostElement": "PRESENT",
+    "canonicalCatalog": {
+      "catalogId": "GOVERNANCE_PANEL_CATALOG_V1",
+      "generatedFor": "GOVERNANCE_PANEL_V2",
+      "status": "ACTIVE_CANONICAL_CATALOG",
+      "nodes": 14,
+      "edges": 21,
+      "operations": 8,
+      "blob": "ec3454db6557746e477180b874c0b4649f4ee0ae"
+    }
+  },
+  "deploymentQualification": {
+    "repositoryState": "VERIFIED",
+    "livePublicPropagation": "NOT_CERTIFIED_BY_REPOSITORY_AUDIT",
+    "reason": "Live-domain fetch was unavailable to the audit environment; repository state and syntax were verified independently."
+  }
+}

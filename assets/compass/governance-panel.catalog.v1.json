@@ -1,0 +1,30 @@
+{
+  "$schema":"GOVERNANCE_PANEL_CATALOG_V1",
+  "schemaVersion":"1.0.0",
+  "catalogId":"GOVERNANCE_PANEL_CATALOG_V1",
+  "sourceRepository":"smansfield635-create/geodiametrics1",
+  "sourceRevision":"3fbbe363777398cc29040ae258ebab5eec9ced48",
+  "sourcePath":"control-plane/governance-panel/GOVERNANCE_PANEL_CATALOG_v1.json",
+  "derivedArtifact":true,
+  "derivationPolicy":"Generated from the canonical catalog revision above; this file is a same-origin delivery artifact and is not an independent governance source.",
+  "catalogRevision":"1.0.2",
+  "nodes":[
+    {"id":"authority","name":"Authority","layer":"authority","status":"ACTIVE / GOVERNED","canonicalSource":{"path":"control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/authority-and-ownership-matrix.v1.json","blobSha":"c24c86b89d0650dd597988d4b3148bec41304b4a"}},
+    {"id":"admission","name":"Admission","layer":"control","status":"ACTIVE / CANONICAL","canonicalSource":{"path":"tools/operation-intake/repository-operation-intake-gate.v1.mjs","blobSha":"614b9d2b1273a77169b2e83f1d39ba1102d983f5"}},
+    {"id":"policy","name":"Policy","layer":"control","status":"ACTIVE / FAIL-CLOSED","canonicalSource":{"path":".github/ai-router/development-pipeline/policy-registry.v1.json","blobSha":"5c28949f15b49aec7805aaa8a00ac152771c0700"}},
+    {"id":"routing","name":"Routing","layer":"control","status":"ACTIVE / FAIL-CLOSED","canonicalSource":{"path":".github/ai-router/router.v1.json","blobSha":"edc1eeee1ceedba0dccf1cdc89646fa4785337b3"}},
+    {"id":"lifecycle","name":"Lifecycle","layer":"control","status":"ACTIVE / GOVERNED","canonicalSource":{"path":".github/ai-router/instrument-lifecycle/instrument-lifecycle-registry.v1.json","blobSha":"9f9541a4479b4e5e2d6465fb6a676d77924c7dda"}},
+    {"id":"qualification","name":"Qualification","layer":"execution","status":"ACTIVE / CANONICAL","canonicalSource":{"path":"tools/ai-entry/canonical-execution-substrate.v1.mjs","blobSha":"e9fcbfab52f69d7a43f349a326bcc3a69ebc3f98"}},
+    {"id":"execution","name":"Execution","layer":"execution","status":"ACTIVE / BOUNDED","canonicalSource":{"path":"tools/ai-entry/canonical-execution-substrate.v1.mjs","blobSha":"e9fcbfab52f69d7a43f349a326bcc3a69ebc3f98"}},
+    {"id":"materialization","name":"Materialization","layer":"execution","status":"ACTIVE / BOUNDED","canonicalSource":{"path":".github/ai-router/canonical-execution-substrate/protocol.v1.json"}},
+    {"id":"provenance","name":"Provenance","layer":"evidence","status":"ACTIVE / CANONICAL","canonicalSource":{"path":"tools/operation-intake/repository-operation-lock-lineage.v2.mjs"}},
+    {"id":"telemetry","name":"Telemetry","layer":"evidence","status":"ACTIVE / OBSERVATION-ONLY","canonicalSource":{"path":".github/ai-router/platform-control-plane/observability/observability-protocol.v1.json","blobSha":"95f1d1ce8766b5b1bc3145845beba64cce57e9a7"}},
+    {"id":"reconciliation","name":"Reconciliation","layer":"evidence","status":"ACTIVE / GOVERNED","canonicalSource":{"path":".github/ai-router/system-continuity/gap-registry.v1.json","blobSha":"e2043a7a42c82d8ac0df0ded9efa6f62ce1d1227"}},
+    {"id":"continuity","name":"Continuity","layer":"closure","status":"ACTIVE / GOVERNED","canonicalSource":{"path":".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs","blobSha":"1b3b6d349c7903cb4b9ea1543a23a957d3370c0f"}},
+    {"id":"closure","name":"Closure","layer":"closure","status":"ACTIVE / CANONICAL","canonicalSource":{"path":"tools/operation-intake/repository-operation-lock-lineage.v2.mjs"}},
+    {"id":"boundary","name":"Boundary","layer":"boundary","status":"ACTIVE / GOVERNED","canonicalSource":{"path":"control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/authority-and-ownership-matrix.v1.json","blobSha":"c24c86b89d0650dd597988d4b3148bec41304b4a"}}
+  ],
+  "edges":[["authority","admission"],["authority","policy"],["authority","routing"],["admission","policy"],["admission","routing"],["policy","qualification"],["routing","execution"],["lifecycle","qualification"],["qualification","execution"],["execution","materialization"],["qualification","provenance"],["execution","provenance"],["materialization","provenance"],["provenance","telemetry"],["provenance","reconciliation"],["telemetry","reconciliation"],["reconciliation","continuity"],["continuity","closure"],["reconciliation","closure"],["closure","boundary"],["materialization","boundary"]],
+  "operations":{"admit":["authority","admission","policy","routing","provenance","closure"],"change":["authority","admission","policy","lifecycle","qualification","execution","provenance","reconciliation","closure"],"qualify":["authority","admission","policy","routing","qualification","provenance","closure"],"execute":["authority","admission","policy","routing","qualification","execution","provenance","telemetry","reconciliation","closure"],"materialize":["authority","admission","routing","qualification","execution","materialization","provenance","boundary","closure"],"reconcile":["authority","provenance","telemetry","reconciliation","continuity","closure"],"recover":["authority","provenance","reconciliation","continuity","admission","qualification","execution","closure"],"close":["authority","provenance","reconciliation","closure","boundary"]},
+  "labels":{"admit":"Admit","change":"Change","qualify":"Qualify","execute":"Execute","materialize":"Materialize","reconcile":"Reconcile","recover":"Recover","close":"Close"}
+}

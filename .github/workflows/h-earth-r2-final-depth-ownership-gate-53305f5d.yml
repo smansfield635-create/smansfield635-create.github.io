@@ -1,0 +1,25 @@
+name: H-Earth R2 Final Depth Ownership Gate 53305f5d
+on:
+  push:
+    branches:
+      - h-earth/r2-final-depth-ownership-gate-53305f5d
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Execute immutable depth ownership gate
+        run: node showroom/globe/h-earth/diagnostic/r2-final-depth-ownership-gate-53305f5d.v1.mjs | tee r2-final-depth-ownership-gate-53305f5d.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r2-final-depth-ownership-gate-53305f5d-${{ github.run_id }}
+          path: r2-final-depth-ownership-gate-53305f5d.json

@@ -81,8 +81,9 @@
       {
         "name": "flip-to-governed-operation",
         "action": {
-          "type": "click",
-          "selector": "[data-governance-flip]"
+          "type": "key",
+          "selector": "[data-governance-flip]",
+          "key": "Enter"
         },
         "assertions": [
           {

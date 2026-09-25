@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T14:34:51Z",
+  "generatedAt": "2026-09-25T15:31:13Z",
   "window": {
-    "start": "2026-06-27T14:34:51Z",
-    "end": "2026-09-25T14:34:51Z"
+    "start": "2026-06-27T15:31:13Z",
+    "end": "2026-09-25T15:31:13Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4881,
-    "visits": 1207,
+    "pageLoads": 4884,
+    "visits": 1210,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4881,
-        "visits": 1207
+        "pageLoads": 4884,
+        "visits": 1210
       }
     },
     "byPath": {
@@ -258,16 +258,16 @@
         "pageLoads": 14,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 43,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 22,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 43,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -350,6 +350,10 @@
         "pageLoads": 7,
         "visits": 7
       },
+      "/analytics/": {
+        "pageLoads": 15,
+        "visits": 0
+      },
       "/meet-sean-mansfield/": {
         "pageLoads": 5,
         "visits": 0
@@ -358,17 +362,13 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/analytics/": {
-        "pageLoads": 15,
-        "visits": 0
-      },
       "/analytics-owner-device/heartbeat/a9-1/": {
         "pageLoads": 1,
         "visits": 0
       },
       "/governance-bridge/": {
-        "pageLoads": 53,
-        "visits": 53
+        "pageLoads": 56,
+        "visits": 56
       },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
@@ -381,8 +381,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 436,
-        "visits": 436
+        "pageLoads": 439,
+        "visits": 439
       },
       "diamondgatebridge.com": {
         "pageLoads": 3674,

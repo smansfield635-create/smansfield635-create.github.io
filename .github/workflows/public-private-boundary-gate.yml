@@ -1,0 +1,30 @@
+name: Public Private Boundary Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  public-private-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reject private implementation metadata in public changes
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git diff --unified=0 "$BASE_SHA" "$HEAD_SHA" -- . ':(exclude).github/workflows/public-private-boundary-gate.yml' > /tmp/public-boundary.diff
+          additions="$(grep -E '^\+' /tmp/public-boundary.diff | grep -Ev '^\+\+\+' || true)"
+          if printf '%s\n' "$additions" | grep -Ei 'canonicalSource|blobSha|tools/operation-intake/|tools/ai-entry/|\.github/ai-router/|control-plane/|instrument-lifecycle-registry|canonical-execution-substrate|platform-control-plane|authority-and-ownership-matrix'; then
+            echo 'PUBLIC_PRIVATE_BOUNDARY_VIOLATION'
+            exit 1
+          fi
+          echo 'PUBLIC_PRIVATE_BOUNDARY_PASS'

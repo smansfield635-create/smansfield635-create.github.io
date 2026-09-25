@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T02:38:07Z",
+  "generatedAt": "2026-09-25T03:35:59Z",
   "window": {
-    "start": "2026-06-27T02:38:07Z",
-    "end": "2026-09-25T02:38:07Z"
+    "start": "2026-06-27T03:35:59Z",
+    "end": "2026-09-25T03:35:59Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4873,
+    "pageLoads": 4871,
     "visits": 1178,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4873,
+        "pageLoads": 4871,
         "visits": 1178
       }
     },
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 229,
+        "pageLoads": 228,
         "visits": 22
       },
       "/gauges/h-earth/": {
@@ -146,14 +146,6 @@
         "pageLoads": 149,
         "visits": 7
       },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 88,
-        "visits": 1
-      },
       "/governance/": {
         "pageLoads": 62,
         "visits": 10
@@ -161,6 +153,14 @@
       "/evidence/readiness/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 88,
+        "visits": 1
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -263,7 +263,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 25,
+        "pageLoads": 24,
         "visits": 3
       },
       "/campaigns/wave/": {
@@ -302,6 +302,10 @@
         "pageLoads": 5,
         "visits": 0
       },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 60,
+        "visits": 42
+      },
       "/campaigns/wave/mr-lee/": {
         "pageLoads": 1,
         "visits": 0
@@ -313,10 +317,6 @@
       "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
         "pageLoads": 1,
         "visits": 0
-      },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 60,
-        "visits": 42
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 31,
@@ -377,7 +377,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3695,
+        "pageLoads": 3693,
         "visits": 0
       },
       "(none)": {

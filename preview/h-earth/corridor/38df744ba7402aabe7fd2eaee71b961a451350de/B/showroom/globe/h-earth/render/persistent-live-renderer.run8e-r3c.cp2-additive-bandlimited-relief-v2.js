@@ -72,6 +72,7 @@ layout(location=4) in uint aMaterialModelCode;
 layout(location=5) in uint aSurfaceClassCode;
 layout(location=6) in uint aPrimitiveIndex;
 layout(location=7) in uint aRoleCode;
+layout(location=8) in uint aWaterClassCode;
 uniform mat4 uViewProjection;
 out vec3 vWorldPosition;
 out vec3 vNormal;
@@ -81,6 +82,7 @@ flat out uint vMaterialModelCode;
 flat out uint vSurfaceClassCode;
 flat out uint vPrimitiveIndex;
 flat out uint vRoleCode;
+flat out uint vWaterClassCode;
 void main(){
   vWorldPosition=aPosition;
   vNormal=aNormal;
@@ -90,6 +92,7 @@ void main(){
   vSurfaceClassCode=aSurfaceClassCode;
   vPrimitiveIndex=aPrimitiveIndex;
   vRoleCode=aRoleCode;
+  vWaterClassCode=aWaterClassCode;
   gl_Position=uViewProjection*vec4(aPosition,1.0);
 }`;
 
@@ -104,6 +107,7 @@ flat in uint vMaterialModelCode;
 flat in uint vSurfaceClassCode;
 flat in uint vPrimitiveIndex;
 flat in uint vRoleCode;
+flat in uint vWaterClassCode;
 uniform vec3 uCameraPosition;
 uniform vec3 uSunDirection;
 uniform float uSunIntensity;
@@ -414,7 +418,7 @@ void main(){
     palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
     base=palette;
-  }else if(vRoleCode==2u){
+  }else if(vWaterClassCode>0u){
     float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
     float foam=pow(clamp(1.0-geometricNormal.y,0.0,1.0),1.7);
     base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),wave*0.45+0.25);
@@ -613,7 +617,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       ['materialModelCodes', uploadViews.materialModelCodes, 4, 1, gl.UNSIGNED_BYTE, true],
       ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
       ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
-      ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true]
+      ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true],
+      ['waterClassCodes', uploadViews.waterClassCodes, 8, 1, gl.UNSIGNED_BYTE, true]
     ];
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {

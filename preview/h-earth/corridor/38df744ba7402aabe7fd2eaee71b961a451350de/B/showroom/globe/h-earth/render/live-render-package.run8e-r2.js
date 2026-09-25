@@ -111,6 +111,17 @@ function roleForPrimitive(primitive, terrainPrimitiveId) {
   return 'SHORELINE';
 }
 
+function waterClassForPrimitive(primitive) {
+  const intent = String(primitive?.materialHint?.materialIntent ?? '');
+  const reference = String(primitive?.materialHint?.materialReference ?? '');
+  const farOcean = primitive?.metadata?.farSurfaceClass === 'OCEAN' ||
+    primitive?.metadata?.visibleWaterAuthority === 'ONE_CONTINUOUS_OCEAN_SURFACE';
+  if (farOcean || intent.includes('OPEN_OCEAN') || intent.includes('OPEN_WATER')) return 3;
+  if (intent.includes('NEARSHORE_WATER')) return 2;
+  if (intent.includes('SHALLOW_WATER') || reference.includes('NEARSHORE_WATER')) return 1;
+  return 0;
+}
+
 function vegetationRgba(primitive) {
   const intent = String(primitive?.materialHint?.materialIntent ?? '');
   if (intent.includes('TRUNK') || intent.includes('WOODY')) return [89, 63, 39, 255];
@@ -320,6 +331,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   const surfaceClassCodes = [];
   const primitiveIndices = [];
   const roleCodes = [];
+  const waterClassCodes = [];
   const indices = [];
   const primitiveSpans = [];
   const drawRanges = [];
@@ -365,6 +377,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       normals.push(normal.x, normal.y, normal.z);
       primitiveIndices.push(primitiveIndex);
       roleCodes.push(H_EARTH_RUN_8E_R2_ROLE_CODE[role]);
+      waterClassCodes.push(waterClassForPrimitive(primitive));
       materialModelCodes.push(materialModelCode);
 
       if (role === 'TERRAIN') {
@@ -448,6 +461,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     surfaceClassCodes: freezeArray(surfaceClassCodes),
     primitiveIndices: freezeArray(primitiveIndices),
     roleCodes: freezeArray(roleCodes),
+    waterClassCodes: freezeArray(waterClassCodes),
     indices: freezeArray(indices)
   });
   const frozenPrimitiveSpans = freezeArray(primitiveSpans);

@@ -1,0 +1,36 @@
+name: Cloudflare Owner RUM Dispatch Bridge v1
+on:
+  workflow_dispatch:
+    inputs:
+      request_json:
+        required: true
+        type: string
+      router_callback_issue:
+        required: true
+        type: string
+      router_callback_repository:
+        required: true
+        type: string
+permissions:
+  actions: write
+  contents: read
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate closed owner request
+        env:
+          REQUEST_JSON: ${{ inputs.request_json }}
+        run: |
+          set -euo pipefail
+          marker='CLOUDFLARE_OWNER_RUM_EXCLUSION_REQUEST_V1'
+          body="$REQUEST_JSON"
+          test "${body#"$marker"}" != "$body"
+          json="${body#"$marker"}"
+          echo "$json" | jq -e '.schema=="CLOUDFLARE_OWNER_RUM_EXCLUSION_REQUEST_V1" and .host=="diamondgatebridge.com" and (keys|sort)==["host","schema"]' >/dev/null
+      - name: Dispatch trusted main installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api --method POST "/repos/${GITHUB_REPOSITORY}/actions/workflows/cloudflare-owner-rum-exclusion-v1.yml/dispatches" -f ref=main

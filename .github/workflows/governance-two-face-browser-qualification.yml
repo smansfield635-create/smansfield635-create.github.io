@@ -1,0 +1,86 @@
+name: Governance Two-Face Browser Qualification
+on:
+  pull_request:
+    paths:
+      - 'assets/compass/compass.governance-platform.js'
+      - 'assets/compass/compass.governance-platform.css'
+      - 'governance-bridge/governance/index.html'
+      - '.github/workflows/governance-two-face-browser-qualification.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/governance-two-face-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/governance-bridge/governance/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/governance-two-face-http.log || true
+          exit 1
+      - name: Exercise Governance two-face contract
+        run: |
+          mkdir -p .qualification/governance-two-face
+          cat > .qualification/governance-two-face/qualify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const failures=[];
+          const assert=(v,m)=>{if(!v)failures.push(m)};
+          async function inspect(viewport,reducedMotion='no-preference'){
+            const page=await browser.newPage({viewportSize:viewport,reducedMotion});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/governance-bridge/governance/',{waitUntil:'networkidle'});
+            await page.waitForSelector('.governance-panel.is-open');
+            const count=async s=>page.locator(s).count();
+            assert(await count('[data-node]')===14,'14 nodes');
+            assert(await count('[data-edge]')===21,'21 edges');
+            assert(await count('[data-governance-op]')===8,'8 procedures');
+            assert(await count('[data-governance-failure]')===8,'8 failures');
+            assert(await count('.governance-boundary-shell')===0,'unsupported shell absent');
+            assert(await count('.governance-plane-label')===0,'macro planes absent');
+            assert(await count('[data-governance-mode]')===0,'legacy mode control absent');
+            const flip=page.locator('[data-governance-flip]');
+            assert(await flip.isVisible(),'flip visible');
+            assert((await flip.getAttribute('aria-pressed'))==='false','front initial');
+            const beforeEdges=await page.locator('[data-edge]').evaluateAll(es=>es.map(e=>e.dataset.edge));
+            await flip.click(); await page.waitForTimeout(450);
+            assert((await flip.getAttribute('aria-pressed'))==='true','back selected');
+            assert(await page.locator('.governance-failures').isVisible(),'failures visible');
+            assert(!(await page.locator('.governance-ops').isVisible()),'procedures hidden on back');
+            const afterEdges=await page.locator('[data-edge]').evaluateAll(es=>es.map(e=>e.dataset.edge));
+            assert(JSON.stringify(beforeEdges)===JSON.stringify(afterEdges),'topology stable on flip');
+            for(const button of await page.locator('[data-governance-failure]').all()){
+              await button.click(); await page.waitForTimeout(30);
+              assert(await page.locator('.governance-detail__section').count()===6,'six-part grammar rendered');
+              assert(await page.locator('.governance-node.is-failure').count()===1,'single selected failure locus');
+            }
+            assert(await page.locator('.governance-edge.is-failure').count()<=21,'failure edges bounded');
+            const close=page.locator('.governance-panel__close');
+            assert(await close.isVisible(),'close independent');
+            const returnLink=page.locator('.governance-standalone-return');
+            assert(await returnLink.isVisible(),'return visible');
+            assert((await returnLink.getAttribute('href'))==='/governance-bridge/','return target');
+            await flip.click(); await page.waitForTimeout(450);
+            assert((await flip.getAttribute('aria-pressed'))==='false','front restored');
+            assert(await page.locator('.governance-ops').isVisible(),'procedures restored');
+            const finalEdges=await page.locator('[data-edge]').evaluateAll(es=>es.map(e=>e.dataset.edge));
+            assert(JSON.stringify(beforeEdges)===JSON.stringify(finalEdges),'topology stable after roundtrip');
+            await flip.focus(); assert((await page.evaluate(()=>document.activeElement?.matches('[data-governance-flip]')))===true,'flip keyboard focus');
+            assert(errors.length===0,'no page errors '+errors.join('|'));
+            await page.close();
+          }
+          await inspect({width:1440,height:1000});
+          await inspect({width:390,height:844});
+          await inspect({width:390,height:844},'reduce');
+          await browser.close();
+          if(failures.length){console.error(JSON.stringify({result:'FAIL_CLOSED',failures},null,2));process.exit(1)}
+          console.log(JSON.stringify({result:'GOVERNANCE_TWO_FACE_BROWSER_QUALIFICATION_PASS',gates:[7,8,9,10,11,16,17,20]},null,2));
+          NODE
+          node .qualification/governance-two-face/qualify.mjs

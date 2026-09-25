@@ -1,3 +1,6 @@
+import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import { sampleHEarthRun8CSuccessorSurfaceMaterial } from '../../../../h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
+import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
@@ -113,6 +116,7 @@ uniform float uFogStartDistance;
 uniform float uFogFalloff;
 uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
+uniform vec4 uRefinementMask;
 out vec4 outColor;
 
 float hash21(vec2 p){
@@ -199,6 +203,10 @@ vec3 limitTerrainNormalDeviation(
   );
 }
 void main(){
+  if(vRoleCode==1u && uRefinementMask.z>0.5){
+    vec2 localXZ=vWorldPosition.xz;
+    if(localXZ.x>=uRefinementMask.x-uRefinementMask.w && localXZ.x<=uRefinementMask.x+uRefinementMask.w && localXZ.y>=uRefinementMask.y-uRefinementMask.w && localXZ.y<=uRefinementMask.y+uRefinementMask.w) discard;
+  }
   vec3 geometricNormal=normalize(vNormal);
   vec3 shadingNormal=geometricNormal;
   vec3 lightDirection=normalize(-uSunDirection);
@@ -212,6 +220,9 @@ void main(){
   float distanceToCamera=length(vWorldPosition-uCameraPosition);
   float presentationContact=0.0;
   float presentationHighlight=0.0;
+  float terrainRoughnessForLighting=0.72;
+  float terrainReflectanceForLighting=0.18;
+  float terrainWetnessForLighting=0.0;
   vec3 base=max(vBaseColor.rgb,vec3(0.004));
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
 
@@ -228,81 +239,25 @@ void main(){
     float curvatureResponse=clamp(length(fwidth(geometricNormal))*3.25,0.0,1.0);
     float nearDetail=1.0-smoothstep(72.0,250.0,distanceToCamera);
 
-    const vec3 MICRO_DIRECTION_A=vec3(
-      0.8164965809277260,
-      0.4082482904638630,
-      0.4082482904638630
-    );
-    const vec3 MICRO_DIRECTION_B=vec3(
-      -0.4082482904638630,
-      0.8164965809277260,
-      0.4082482904638630
-    );
-    const vec3 MICRO_DIRECTION_C=vec3(
-      0.4082482904638630,
-      -0.4082482904638630,
-      0.8164965809277260
-    );
-
-    float microPhaseA=
-      dot(vWorldPosition,MICRO_DIRECTION_A)*
-      3.306939635357677+
-      0.3700000000000000;
-    float microPhaseB=
-      dot(vWorldPosition,MICRO_DIRECTION_B)*
-      2.7318196987737333+
-      2.1700000000000000;
-    float microPhaseC=
-      dot(vWorldPosition,MICRO_DIRECTION_C)*
-      2.243994752564138+
-      4.1100000000000000;
-
-    float microPhaseFootprintA=max(fwidth(microPhaseA),0.00001);
-    float microPhaseFootprintB=max(fwidth(microPhaseB),0.00001);
-    float microPhaseFootprintC=max(fwidth(microPhaseC),0.00001);
-    float maximumMicroPhaseFootprint=max(
-      microPhaseFootprintA,
-      max(microPhaseFootprintB,microPhaseFootprintC)
-    );
-
-    float microAntialiasEnvelope=
-      1.0-smoothstep(
-        0.45,
-        0.95,
-        maximumMicroPhaseFootprint
-      );
-
-    float microReliefSignal=
-      sin(microPhaseA)*0.50+
-      sin(microPhaseB)*0.30+
-      sin(microPhaseC)*0.20;
-
+    // Phase 1 realism: nonperiodic multiscale shading relief. Geometry remains frozen.
+    float microCoarse=noise2(world*0.19+vec2(11.7,-7.3));
+    float microMedium=noise2(world*0.47+vec2(-23.1,31.9));
+    float microFine=noise2(world*1.13+vec2(47.2,-19.6));
     float microReliefHeight=
-      microReliefSignal*0.22;
-
-    float microDistanceEnvelope=
-      1.0-smoothstep(
-        120.0,
-        300.0,
-        distanceToCamera
-      );
-
-    float microSlopeEnvelope=mix(
-      0.82,
-      1.0,
-      smoothstep(
-        0.05,
-        0.55,
-        slope
-      )
+      (microCoarse-0.5)*0.42+
+      (microMedium-0.5)*0.21+
+      (microFine-0.5)*0.085+
+      (noise2(world*2.35+vec2(91.7,-64.2))-0.5)*0.032*nearDetail;
+    float microFootprint=max(
+      max(length(fwidth(world*0.19)),length(fwidth(world*0.47))),
+      length(fwidth(world*1.13))
     );
-
+    float microAntialiasEnvelope=1.0-smoothstep(0.72,1.45,microFootprint);
+    float microDistanceEnvelope=1.0-smoothstep(105.0,285.0,distanceToCamera);
+    float microSlopeEnvelope=mix(0.72,1.0,smoothstep(0.04,0.58,slope));
     terrainReliefEnvelope=clamp(
-      microDistanceEnvelope*
-      microSlopeEnvelope*
-      microAntialiasEnvelope,
-      0.0,
-      1.0
+      microDistanceEnvelope*microSlopeEnvelope*microAntialiasEnvelope,
+      0.0,1.0
     );
 
     vec3 rawMicroreliefNormal=
@@ -332,51 +287,79 @@ void main(){
     vec3 palette=mix(lowland,upland,elevationMix);
     palette=mix(palette,rock,clamp(slope*1.35,0.0,0.72));
 
-    float strata=stableWave(world.x*0.47+world.y*0.33+vWorldPosition.y*0.79+medium*3.2);
-    float crossGrain=stableWave(world.x*0.83-world.y*0.61+broad*4.8);
-    float faceBandA=stableWave(world.x*0.61+world.y*0.39+vWorldPosition.y*0.57+mesoField*4.1);
-    float faceBandB=stableWave(world.x*1.07-world.y*0.73+vWorldPosition.y*0.31+macroField*5.3);
-    float faceBandC=stableWave(world.x*1.71+world.y*1.23+vWorldPosition.y*0.18+detailField*2.7);
-    float crestSignal=stableWave(world.x*0.22-world.y*0.16+vWorldPosition.y*0.88+macroField*2.1);
-    float terraceSignal=stableWave(world.x*0.13+world.y*0.19+vWorldPosition.y*1.18+mesoField*1.6);
-    float crestContact=transitionBand(crestSignal,0.075);
-    float terraceContact=transitionBand(terraceSignal,0.070);
-    float sharedFaceContact=clamp(
-      max(crestContact,terraceContact)*(0.32+0.68*mix(0.45,1.0,slopeResponse)),
-      0.0,
-      1.0
+    // Preserve broad material identity; retire painted contour/stripe dominance.
+    // Phase 2: procedural triplanar material-space projection using the
+    // existing world position and shading normal. No geometry or asset layer.
+    vec3 triWeight=pow(abs(shadingNormal),vec3(4.0));
+    triWeight/=max(triWeight.x+triWeight.y+triWeight.z,0.00001);
+    vec2 triX=vWorldPosition.zy*0.115;
+    vec2 triY=vWorldPosition.xz*0.115;
+    vec2 triZ=vWorldPosition.xy*0.115;
+    float triCoarse=
+      noise2(triX+vec2(13.1,-7.7))*triWeight.x+
+      noise2(triY+vec2(-19.3,11.9))*triWeight.y+
+      noise2(triZ+vec2(31.7,23.5))*triWeight.z;
+    float triFine=
+      noise2(triX*3.35+vec2(-41.2,17.4))*triWeight.x+
+      noise2(triY*3.35+vec2(29.6,-37.1))*triWeight.y+
+      noise2(triZ*3.35+vec2(7.8,43.6))*triWeight.z;
+    float triMicro=
+      noise2(triX*9.7+vec2(73.4,-51.2))*triWeight.x+
+      noise2(triY*9.7+vec2(-67.8,89.1))*triWeight.y+
+      noise2(triZ*9.7+vec2(101.3,37.6))*triWeight.z;
+    float nearMaterial=1.0-smoothstep(55.0,220.0,distanceToCamera);
+    float triMaterial=clamp(triCoarse*0.56+triFine*0.31+triMicro*0.13*nearMaterial,0.0,1.0);
+    float materialVariation=clamp(
+      broad*0.24+medium*0.16+grain*0.04+macroField*0.08+triMaterial*0.48,
+      0.0,1.0
     );
-    float faceBreak=clamp(
-      macroField*0.22+
-      mesoField*0.25+
-      detailField*0.15+
-      faceBandA*0.18+
-      faceBandB*0.13+
-      faceBandC*0.07,
-      0.0,
-      1.0
+    float rockExposure=clamp(
+      smoothstep(0.16,0.68,slope)*0.72+
+      curvatureResponse*0.18+
+      elevationMix*0.10,
+      0.0,1.0
     );
-    float directionalBreak=mix(faceBandA,faceBandB,0.35+0.45*slopeResponse);
-    float fineBreak=mix(0.5,faceBandC,nearDetail);
+    float shelteredSoil=clamp(
+      (1.0-rockExposure)*(0.58+0.42*(1.0-slopeResponse))*
+      (0.78+0.22*materialVariation),
+      0.0,1.0
+    );
+    vec3 soilTone=mix(lowland,upland,elevationMix);
+    float weathering=clamp(
+      noise2(world*0.061+vec2(57.0,-83.0))*0.52+
+      triCoarse*0.30+triFine*0.18,
+      0.0,1.0
+    );
+    float fracture=clamp(abs(triFine-triCoarse)*1.75+abs(triMicro-0.5)*0.38*nearMaterial,0.0,1.0);
+    vec3 exposedRock=mix(vec3(0.175,0.185,0.178),vec3(0.355,0.335,0.285),weathering);
+    exposedRock*=mix(0.82,1.13,fracture);
+    vec3 groundedSoil=mix(soilTone,vec3(0.285,0.255,0.165),triCoarse*0.30);
+    groundedSoil=mix(groundedSoil,vec3(0.205,0.235,0.135),shelteredSoil*(1.0-weathering)*0.22);
+    palette=mix(palette,groundedSoil,shelteredSoil*0.46);
+    palette=mix(palette,exposedRock,rockExposure*(0.62+0.20*fracture));
+    palette*=mix(0.89,1.11,materialVariation);
+    palette*=mix(0.94,1.06,triMicro*nearMaterial);
+    palette=mix(palette,base,0.34);
 
-    palette*=0.62+0.46*broad+0.24*medium+0.14*grain;
-    palette*=mix(0.70,1.30,strata*0.68+crossGrain*0.32);
-    palette*=mix(0.71,1.34,faceBreak);
-    palette*=mix(0.86,1.15,directionalBreak);
-    palette*=mix(0.93,1.08,fineBreak);
-    palette*=mix(1.0,0.72,sharedFaceContact*(0.30+0.24*nearDetail));
-    palette+=vec3(0.026,0.021,0.014)*(faceBandA-faceBandB);
-    palette+=vec3(0.030,0.023,0.014)*(crestSignal-terraceSignal)*(0.30+0.45*slopeResponse);
-    palette=mix(palette,palette*vec3(0.79,0.85,0.88),curvatureResponse*(0.18+0.26*slopeResponse));
-    palette=mix(palette,base,0.27);
-    presentationContact=max(presentationContact,sharedFaceContact*0.24);
-    presentationHighlight=max(presentationHighlight,(1.0-sharedFaceContact)*abs(crestSignal-terraceSignal)*0.16);
-
-    float contourLine=contour(vWorldPosition.y);
-    palette*=mix(1.0,0.56,contourLine*(0.30+0.47*slopeResponse));
-    float slopeRake=stableWave(vWorldPosition.x*0.31+vWorldPosition.z*0.22+vWorldPosition.y*0.58);
-    palette*=mix(0.84,1.16,slopeRake*(0.26+0.74*slopeResponse));
-    palette+=vec3(0.020,0.018,0.014)*curvatureResponse*(0.35+0.65*slopeResponse);
+    float terrainRoughness=clamp(vMaterialParameters.x,0.04,1.0);
+    terrainRoughnessForLighting=terrainRoughness;
+    float terrainReflectance=clamp(vMaterialParameters.y,0.0,1.0);
+    terrainReflectanceForLighting=terrainReflectance;
+    float terrainWetness=clamp(vMaterialParameters.z,0.0,1.0);
+    terrainWetnessForLighting=terrainWetness;
+    float terrainCurvature=clamp(vMaterialParameters.w,0.0,1.0);
+    specularScale=mix(0.28,1.24,terrainReflectance);
+    specularScale*=mix(0.78,1.38,terrainWetness);
+    specularScale*=mix(0.92,1.10,rockExposure);
+    presentationContact=max(
+      presentationContact,
+      clamp(terrainCurvature*0.10+rockExposure*0.035,0.0,0.16)
+    );
+    presentationHighlight=max(
+      presentationHighlight,
+      (1.0-terrainRoughness)*0.12+terrainWetness*0.06
+    );
+    base=palette;
 
     vec2 manorCenter=vec2(80.0,-172.0);
     float manorRadius=distance(world,manorCenter);
@@ -460,8 +443,8 @@ void main(){
     );
     diffuse=clamp(
       diffuse,
-      max(0.0,geometricDiffuse-0.28),
-      min(1.0,geometricDiffuse+0.28)
+      max(0.0,geometricDiffuse-0.34),
+      min(1.0,geometricDiffuse+0.34)
     );
   }
 
@@ -481,14 +464,14 @@ void main(){
     )
     :geometricRim;
 
-  float specularExponent=vRoleCode==1u?18.0:24.0;
+  float specularExponent=vRoleCode==1u?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
   float specular=pow(
     max(dot(shadingNormal,halfDirection),0.0),
     specularExponent
   )*specularScale;
 
   float specularLightingGain=vRoleCode==1u
-    ?mix(0.07,0.14,terrainReliefEnvelope)
+    ?mix(0.035,0.22,clamp(terrainReflectanceForLighting*0.72+terrainWetnessForLighting*0.28,0.0,1.0))
     :(vRoleCode==2u?0.36:0.07);
 
   float ambient=
@@ -498,9 +481,9 @@ void main(){
   float directional=
     diffuse*
     uSunIntensity*
-    (vRoleCode==1u?0.90:(vRoleCode==2u?0.74:0.82));
+    (vRoleCode==1u?0.96:(vRoleCode==2u?0.74:0.82));
   vec3 lit=base*(ambient+directional)*uSunColor;
-  lit+=base*rim*(vRoleCode==1u?0.18:0.10);
+  lit+=base*rim*(vRoleCode==1u?0.14:0.10);
   lit+=uSunColor*specular*specularLightingGain;
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);
@@ -550,7 +533,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     depthReadbackCount: 0, pngEncodingCount: 0, gpuFinishCount: 0,
     cameraUniformUpdateCount: 0, staticUniformUpdateCount: 0,
     geometryDrawCallCount: 0, totalDrawnIndexCount: 0,
-    depthVisualizationDrawCallCount: 0
+    depthVisualizationDrawCallCount: 0,
+    refinementResourceCreateCount: 0, refinementBufferUploadCount: 0, refinementDrawCallCount: 0
   };
   const resources = {};
   const markPostInitializationCreation = () => {
@@ -670,7 +654,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), depth: uniform(resources.depthProgram, 'uDepth')
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), refinementMask: uniform(resources.geometryProgram, 'uRefinementMask'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
     resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
@@ -681,9 +665,31 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3fv(resources.uniforms.skyZenithColor, color3(environment.skyZenithColor)); gl.uniform3fv(resources.uniforms.skyHorizonColor, resources.skyColor);
     gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
-    gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
+    gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength); gl.uniform4f(resources.uniforms.refinementMask,0,0,0,0);
     counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
   }
+
+  function buildInitialRefinementPatch(packet) {
+    if (resources.refinement?.created) return resources.refinement;
+    const local=packet?.camera?.localAuthoringPosition;if(!local)return null;
+    const spacing=4,radius=64,x0=Math.round(local.x/spacing)*spacing,z0=Math.round(local.z/spacing)*spacing,xs=[],zs=[];
+    for(let x=x0-radius;x<=x0+radius;x+=spacing)xs.push(x);for(let z=z0-radius;z<=z0+radius;z+=spacing)zs.push(z);
+    const vertexCount=xs.length*zs.length,triangleCount=(xs.length-1)*(zs.length-1)*2;if(vertexCount>4096||triangleCount>8192)throw new Error('R3C_REFINEMENT_CEILING_EXCEEDED');
+    const positions=new Float32Array(vertexCount*3),normals=new Float32Array(vertexCount*3);let vi=0;
+    for(const z of zs)for(const x of xs){const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_TERRAIN_SAMPLE_INVALID');const q=regionToHEarthPlanetPoint({x,y:t.elevation,z});positions.set([q.x,q.y,q.z],vi*3);normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);vi++;}
+    const indices=new Uint32Array(triangleCount*3);let ii=0,cols=xs.length;for(let r=0;r<zs.length-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.set([a,e,b,b,e,d],ii);ii+=6;}
+    const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];
+    const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.refinementBufferUploadCount++;};
+    bind(0,positions,3);bind(1,normals,3);
+    const colors=new Float32Array(vertexCount*4),mats=new Float32Array(vertexCount*4),surfaceCodes=new Uint8Array(vertexCount);
+    const surfaceCodeMap=new Map();let nextSurfaceCode=0,mi=0;
+    for(const z of zs)for(const x of xs){const m=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);if(m?.valid!==true)throw new Error('R3C_REFINEMENT_MATERIAL_SAMPLE_INVALID');colors.set([m.baseColorProfile.linearR,m.baseColorProfile.linearG,m.baseColorProfile.linearB,m.baseColorProfile.alpha],mi*4);mats.set([m.roughness,m.reflectance,m.wetness,m.curvaturePressure],mi*4);if(!surfaceCodeMap.has(m.surfaceClass))surfaceCodeMap.set(m.surfaceClass,nextSurfaceCode++);surfaceCodes[mi]=surfaceCodeMap.get(m.surfaceClass);mi++;}
+    bind(2,colors,4);bind(3,mats,4);
+    const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);bind(5,surfaceCodes,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);
+    const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
+    resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},radius,fallbackAvailable:true,baseSuppression:'FRAGMENT_MASK_EXACT_PATCH_BOUNDS'};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
+  }
+  function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
 
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
@@ -695,6 +701,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     counters.cameraUniformUpdateCount += 2;
+    if(resources.refinement?.created)gl.uniform4f(resources.uniforms.refinementMask,resources.refinement.anchor.x,resources.refinement.anchor.z,1,resources.refinement.radius);else gl.uniform4f(resources.uniforms.refinementMask,0,0,0,0);
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {
         gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
@@ -702,6 +709,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
+    if(resources.refinement?.created){gl.uniform4f(resources.uniforms.refinementMask,0,0,0,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
@@ -768,13 +776,18 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       resourceIdentityStable: initialized && resources.buffers?.length === 9 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
       packageUploadedOnce: counters.bufferUploadCount === 9 && counters.postInitializationBufferUploadCount === 0,
       noPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,
-      noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0
+      noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0,
+      refinementResourceAuthorized:true, refinementResourceCreated:resources.refinement?.created===true,
+      refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,
+      refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
+      refinementAnchor:resources.refinement?.anchor??null, refinementBaseSuppression:resources.refinement?.baseSuppression??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
+      canonicalPackageMutated:false
     };
   }
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

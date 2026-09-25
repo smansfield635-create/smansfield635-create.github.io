@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T17:29:02Z",
+  "generatedAt": "2026-09-25T18:34:53Z",
   "window": {
-    "start": "2026-06-27T17:29:02Z",
-    "end": "2026-09-25T17:29:02Z"
+    "start": "2026-06-27T18:34:53Z",
+    "end": "2026-09-25T18:34:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4896,
-    "visits": 1234,
+    "pageLoads": 4922,
+    "visits": 1237,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4896,
-        "visits": 1234
+        "pageLoads": 4922,
+        "visits": 1237
       }
     },
     "byPath": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 217,
+        "pageLoads": 215,
         "visits": 22
       },
       "/gauges/h-earth/": {
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 12,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -295,7 +295,7 @@
         "visits": 0
       },
       "/campaigns/rob/": {
-        "pageLoads": 16,
+        "pageLoads": 15,
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
@@ -330,6 +330,10 @@
         "pageLoads": 7,
         "visits": 7
       },
+      "/meet-sean-mansfield/": {
+        "pageLoads": 5,
+        "visits": 0
+      },
       "/home/": {
         "pageLoads": 5,
         "visits": 5
@@ -346,17 +350,17 @@
         "pageLoads": 16,
         "visits": 0
       },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 5,
-        "visits": 0
-      },
       "/governance-bridge/": {
-        "pageLoads": 78,
-        "visits": 78
+        "pageLoads": 92,
+        "visits": 80
       },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
         "visits": 5
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 15,
+        "visits": 1
       },
       "/preview/governance-bridge/index.html": {
         "pageLoads": 1,
@@ -365,11 +369,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 462,
-        "visits": 462
+        "pageLoads": 465,
+        "visits": 465
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3662,
+        "pageLoads": 3685,
         "visits": 0
       },
       "www.google.com": {

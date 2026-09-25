@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-25T16:34:29Z",
+  "generatedAt": "2026-09-25T17:29:02Z",
   "window30d": {
-    "start": "2026-08-26T16:34:29Z",
-    "end": "2026-09-25T16:34:29Z"
+    "start": "2026-08-26T17:29:02Z",
+    "end": "2026-09-25T17:29:02Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-18",
-      "pageLoads": 289
+      "pageLoads": 275
     },
     {
       "date": "2026-09-19",
@@ -124,34 +124,34 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 77
+      "pageLoads": 89
     }
   ],
   "summary": {
-    "pageLoads": 6760,
-    "botPageLoads": 2415,
-    "nonBotPageLoads": 4345
+    "pageLoads": 6758,
+    "botPageLoads": 2417,
+    "nonBotPageLoads": 4341
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3201,
-      "visits": 3201
+      "pageLoads": 3122,
+      "visits": 3122
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2922,
+      "pageLoads": 2779,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 600,
-      "visits": 600
+      "pageLoads": 540,
+      "visits": 540
     },
     {
       "host": "bing.com",
-      "pageLoads": 21,
-      "visits": 21
+      "pageLoads": 11,
+      "visits": 11
     },
     {
       "host": "m.facebook.com",
@@ -177,7 +177,7 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1756,
+      "pageLoads": 1755,
       "visits": 1521
     },
     {
@@ -192,22 +192,22 @@
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 725,
+      "pageLoads": 717,
       "visits": 20
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 324,
+      "pageLoads": 323,
       "visits": 99
     },
     {
       "path": "/products/education/",
-      "pageLoads": 229,
-      "visits": 111
+      "pageLoads": 230,
+      "visits": 112
     },
     {
       "path": "/evidence/agentic-frontier/",
-      "pageLoads": 191,
+      "pageLoads": 190,
       "visits": 30
     },
     {

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-25T16:34:29Z",
+  "generatedAt": "2026-09-25T17:29:02Z",
   "window": {
-    "start": "2026-06-27T16:34:29Z",
-    "end": "2026-09-25T16:34:29Z"
+    "start": "2026-06-27T17:29:02Z",
+    "end": "2026-09-25T17:29:02Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4886,
-    "visits": 1224,
+    "pageLoads": 4896,
+    "visits": 1234,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4886,
-        "visits": 1224
+        "pageLoads": 4896,
+        "visits": 1234
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1051,
-        "visits": 721
+        "pageLoads": 1055,
+        "visits": 723
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 196,
+        "pageLoads": 197,
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 153,
+        "pageLoads": 157,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -58,13 +58,13 @@
         "pageLoads": 21,
         "visits": 0
       },
-      "/showroom/": {
-        "pageLoads": 140,
-        "visits": 10
-      },
       "/coherence-diagnostic/": {
         "pageLoads": 38,
         "visits": 0
+      },
+      "/showroom/": {
+        "pageLoads": 140,
+        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -74,8 +74,16 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/frontier/energy/battery-coherence-study/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/scientific-law/battery-heldout-study/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/battery-heldout-study/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/": {
@@ -83,20 +91,12 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 102,
+        "pageLoads": 104,
         "visits": 9
-      },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/products/archcoin/": {
         "pageLoads": 54,
         "visits": 3
-      },
-      "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/laws/": {
         "pageLoads": 302,
@@ -107,19 +107,19 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 218,
+        "pageLoads": 217,
         "visits": 22
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 508,
-        "visits": 0
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
+      },
       "/products/education/": {
-        "pageLoads": 166,
+        "pageLoads": 182,
         "visits": 56
       },
       "/laws/research/methods-and-models/": {
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 165,
+        "pageLoads": 149,
         "visits": 7
       },
       "/governance/": {
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -181,10 +185,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -247,7 +247,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 74,
+        "pageLoads": 73,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -267,7 +267,7 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 43,
+        "pageLoads": 42,
         "visits": 0
       },
       "/door/": {
@@ -306,10 +306,6 @@
         "pageLoads": 31,
         "visits": 0
       },
-      "/evidence/agentic-frontier/reproduction/same-state-different-future/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/products/archcoin/contract/": {
         "pageLoads": 35,
         "visits": 1
@@ -318,12 +314,12 @@
         "pageLoads": 26,
         "visits": 0
       },
-      "/products/nutrition/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/products/archcoin/allocation/": {
         "pageLoads": 2,
+        "visits": 0
+      },
+      "/products/nutrition/": {
+        "pageLoads": 1,
         "visits": 0
       },
       "/products/archcoin/payable/": {
@@ -338,14 +334,6 @@
         "pageLoads": 5,
         "visits": 5
       },
-      "/analytics/": {
-        "pageLoads": 13,
-        "visits": 0
-      },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 5,
-        "visits": 0
-      },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
         "visits": 0
@@ -354,9 +342,17 @@
         "pageLoads": 1,
         "visits": 0
       },
+      "/analytics/": {
+        "pageLoads": 16,
+        "visits": 0
+      },
+      "/meet-sean-mansfield/": {
+        "pageLoads": 5,
+        "visits": 0
+      },
       "/governance-bridge/": {
-        "pageLoads": 70,
-        "visits": 70
+        "pageLoads": 78,
+        "visits": 78
       },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
@@ -369,16 +365,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 454,
-        "visits": 454
+        "pageLoads": 462,
+        "visits": 462
       },
       "diamondgatebridge.com": {
         "pageLoads": 3662,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 759,
-        "visits": 759
+        "pageLoads": 761,
+        "visits": 761
       },
       "raw.githack.com": {
         "pageLoads": 10,

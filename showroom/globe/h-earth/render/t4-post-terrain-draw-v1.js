@@ -78,7 +78,7 @@ export function createHEarthT4PostTerrainDraw(gl){
     }
     return Object.freeze({total:647,inside,positiveW,byKind});
   };
-  const drawAfterTerrain=({packet,depthTexture})=>{
+  const drawAfterTerrain=({packet,depthTexture,width,height})=>{
     gl.useProgram(program);gl.bindVertexArray(vao);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
     gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
     const bindClass=(kind,batch)=>{

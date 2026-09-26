@@ -9,8 +9,18 @@ layout(location=9) in float iY;
 layout(location=10) in float iZ;
 layout(location=11) in float iRotation;
 layout(location=12) in float iScale;
+layout(location=13) in vec3 iEast;
+layout(location=14) in vec3 iUp;
+layout(location=15) in vec3 iNorth;
 uniform mat4 uViewProjection;
-void main(){float c=cos(iRotation),s=sin(iRotation);vec3 p=aPosition*iScale;vec3 r=vec3(p.x*c-p.z*s,p.y,p.x*s+p.z*c);gl_Position=uViewProjection*vec4(r+vec3(iX,iY,iZ),1.0);}`;
+void main(){
+  float c=cos(iRotation),s=sin(iRotation);
+  vec3 p=aPosition*iScale;
+  float localEast=p.x*c-p.z*s;
+  float localNorth=p.x*s+p.z*c;
+  vec3 tangentOffset=iEast*localEast+iUp*p.y+iNorth*localNorth;
+  gl_Position=uViewProjection*vec4(vec3(iX,iY,iZ)+tangentOffset,1.0);
+}`;
 const FS=`#version 300 es
 precision highp float;
 uniform vec3 uClassColor;

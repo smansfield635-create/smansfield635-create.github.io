@@ -52,7 +52,7 @@ export function createHEarthT4PostTerrainDraw(gl){
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('T4_DIAGNOSTIC_TARGET_INCOMPLETE');
   gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   let frames=0,maximumAddedDrawCalls=0;
-  let latestClipDiagnostic=null,latestFragmentDiagnostic=null;
+  let latestClipDiagnostic=null,latestFragmentDiagnostic=null,latestDepthDiagnostic=null;
   const multiplyPoint=(m,p)=>{
     const x=p.x,y=p.y,z=p.z,w=1;
     return {
@@ -77,7 +77,7 @@ export function createHEarthT4PostTerrainDraw(gl){
     }
     return Object.freeze({total:647,inside,positiveW,byKind});
   };
-  const drawAfterTerrain=({packet})=>{
+  const drawAfterTerrain=({packet,depthTexture})=>{
     gl.useProgram(program);gl.bindVertexArray(vao);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
     gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
     const bindClass=(kind,batch)=>{
@@ -85,6 +85,35 @@ export function createHEarthT4PostTerrainDraw(gl){
       gl.uniform3fv(classColor,kind==='TUFT'?new Float32Array([0.22,0.36,0.12]):new Float32Array([0.31,0.29,0.27]));
     };
     latestClipDiagnostic=clipDiagnostic(packet);
+    if(depthTexture){
+      const admitted=[];
+      for(const [kind,batch] of [['TUFT',batches.tuft],['ROCK',batches.rock]]){
+        for(const instance of batch.instances){
+          const point=regionToHEarthPlanetPoint({x:instance.x,y:instance.elevation,z:instance.z});
+          const clip=multiplyPoint(packet.camera.viewProjectionMatrix,point);
+          if(!(clip.w>0&&Math.abs(clip.x)<=clip.w&&Math.abs(clip.y)<=clip.w&&clip.z>=-clip.w&&clip.z<=clip.w))continue;
+          const ndcX=clip.x/clip.w,ndcY=clip.y/clip.w,ndcZ=clip.z/clip.w;
+          const px=Math.min(width-1,Math.max(0,Math.floor((ndcX*.5+.5)*width)));
+          const py=Math.min(height-1,Math.max(0,Math.floor((ndcY*.5+.5)*height)));
+          admitted.push({kind,projectedDepth:ndcZ*.5+.5,px,py});
+        }
+      }
+      const priorFramebuffer=gl.getParameter(gl.FRAMEBUFFER_BINDING);
+      const sampleFramebuffer=gl.createFramebuffer();
+      if(!sampleFramebuffer)throw Error('T4_DEPTH_SAMPLE_FRAMEBUFFER_CREATE');
+      gl.bindFramebuffer(gl.FRAMEBUFFER,sampleFramebuffer);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.TEXTURE_2D,depthTexture,0);
+      const deltas=[];
+      for(const item of admitted){
+        const value=new Float32Array(1);
+        gl.readPixels(item.px,item.py,1,1,gl.DEPTH_COMPONENT,gl.FLOAT,value);
+        if(Number.isFinite(value[0]))deltas.push(item.projectedDepth-value[0]);
+      }
+      gl.bindFramebuffer(gl.FRAMEBUFFER,priorFramebuffer);gl.deleteFramebuffer(sampleFramebuffer);
+      deltas.sort((a,b)=>a-b);
+      const q=p=>deltas[Math.min(deltas.length-1,Math.max(0,Math.round((deltas.length-1)*p)))];
+      latestDepthDiagnostic=Object.freeze({sampleCount:deltas.length,minimum:Math.min(...deltas),maximum:Math.max(...deltas),mean:deltas.reduce((a,b)=>a+b,0)/deltas.length,p10:q(.1),p25:q(.25),p50:q(.5),p75:q(.75),p90:q(.9),behindTerrain:deltas.filter(v=>v>0).length,inFrontOfTerrain:deltas.filter(v=>v<=0).length});
+    }
     const receipt=drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
     gl.bindFramebuffer(gl.FRAMEBUFFER,probeFramebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,probeTexture,0);
@@ -106,5 +135,5 @@ export function createHEarthT4PostTerrainDraw(gl){
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
     return receipt;
   };
-  return Object.freeze({drawAfterTerrain,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestClipDiagnostic,latestFragmentDiagnostic,terrainElevationCorrespondence})});
+  return Object.freeze({drawAfterTerrain,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestClipDiagnostic,latestFragmentDiagnostic,latestDepthDiagnostic,terrainElevationCorrespondence})});
 }

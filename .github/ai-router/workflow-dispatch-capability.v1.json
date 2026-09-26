@@ -886,6 +886,22 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PASS"
+    },
+    "H_EARTH_COAST_OPERAND_DIAGNOSTIC": {
+      "workflow": "h-earth-coast-operand-exact-candidate-diagnostic.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "H_EARTH_COAST_PRESENTED_TERRAIN_OPERAND_DIAGNOSTIC_v1"
     }
   },
   "continuity": {

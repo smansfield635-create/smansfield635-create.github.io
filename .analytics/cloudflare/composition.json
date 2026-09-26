@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-26T07:31:52Z",
+  "generatedAt": "2026-09-26T08:36:14Z",
   "window": {
-    "start": "2026-08-27T07:31:52Z",
-    "end": "2026-09-26T07:31:52Z"
+    "start": "2026-08-27T08:36:14Z",
+    "end": "2026-09-26T08:36:14Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 2055,
-        "visits": 1590
+        "pageLoads": 2054,
+        "visits": 1589
       },
       {
         "value": "/mirror-manor-preview/",
-        "pageLoads": 811,
-        "visits": 811
+        "pageLoads": 810,
+        "visits": 810
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 747,
-        "visits": 595
+        "pageLoads": 746,
+        "visits": 594
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
@@ -49,7 +49,7 @@
       },
       {
         "value": "/index.html",
-        "pageLoads": 132,
+        "pageLoads": 122,
         "visits": 1
       },
       {
@@ -69,8 +69,8 @@
       },
       {
         "value": "/products/on-your-side-ai/native-chat/",
-        "pageLoads": 88,
-        "visits": 70
+        "pageLoads": 87,
+        "visits": 69
       },
       {
         "value": "/about/",
@@ -421,13 +421,13 @@
     "refererHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3224,
+        "pageLoads": 3214,
         "visits": 0
       },
       {
         "value": "(none)",
-        "pageLoads": 3204,
-        "visits": 3204
+        "pageLoads": 3200,
+        "visits": 3200
       },
       {
         "value": "www.google.com",
@@ -478,8 +478,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 7064,
-        "visits": 3840
+        "pageLoads": 7050,
+        "visits": 3836
       },
       {
         "value": "BR",
@@ -520,8 +520,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2743,
-        "visits": 2662
+        "pageLoads": 2739,
+        "visits": 2658
       },
       {
         "value": "tablet",
@@ -530,7 +530,7 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 2009,
+        "pageLoads": 1999,
         "visits": 622
       }
     ],
@@ -542,12 +542,12 @@
       },
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2438,
-        "visits": 2377
+        "pageLoads": 2434,
+        "visits": 2373
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1896,
+        "pageLoads": 1886,
         "visits": 529
       },
       {
@@ -584,13 +584,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4277,
+        "pageLoads": 4267,
         "visits": 1144
       },
       {
         "value": "Linux",
-        "pageLoads": 2452,
-        "visits": 2391
+        "pageLoads": 2448,
+        "visits": 2387
       },
       {
         "value": "MacOSX",
@@ -616,20 +616,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4685,
+        "pageLoads": 4675,
         "visits": 1522
       },
       {
         "value": "1",
-        "pageLoads": 2438,
-        "visits": 2377
+        "pageLoads": 2434,
+        "visits": 2373
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4915,
-        "visits": 3419
+        "pageLoads": 4901,
+        "visits": 3415
       },
       {
         "value": "reload",
@@ -660,8 +660,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5276,
-        "visits": 3180
+        "pageLoads": 5262,
+        "visits": 3176
       },
       {
         "value": "cache",
@@ -677,15 +677,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 7123,
-        "visits": 3899
+        "pageLoads": 7109,
+        "visits": 3895
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7123,
-        "visits": 3899
+        "pageLoads": 7109,
+        "visits": 3895
       }
     ]
   }

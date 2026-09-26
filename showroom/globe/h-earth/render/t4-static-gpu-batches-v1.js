@@ -1,5 +1,6 @@
 /** H-Earth T4 static GPU batches v1. No renderer/framebuffer/presentation ownership. */
 import { H_EARTH_T4_FROZEN_PLACEMENT } from './t4-frozen-placement-v1.js';
+import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
 
 // T4.3 primitive-quality geometry. Placement and draw-class budgets remain frozen.
 const TUFT_VERTICES = new Float32Array([
@@ -17,7 +18,10 @@ const ROCK_VERTICES = new Float32Array([
   -.24,.08,.30, .08,.34,-.03, -.34,0,-.24
 ]);
 
-const pack = instances => new Float32Array(instances.flatMap(v => [v.x,v.elevation,v.z,v.rotation,v.scale]));
+const pack = instances => new Float32Array(instances.flatMap(v => {
+  const planetary = regionToHEarthPlanetPoint({ x: v.x, y: v.elevation, z: v.z });
+  return [planetary.x, planetary.y, planetary.z, v.rotation, v.scale];
+}));
 
 export function createHEarthT4StaticGpuBatches(gl) {
   const tufts=H_EARTH_T4_FROZEN_PLACEMENT.instances.filter(v=>v.kind==='TUFT');

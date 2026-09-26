@@ -46,6 +46,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js')
+          s=p.read_text()
+          needle="  return Object.freeze({\n    bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,"
+          replacement="  const publicBinding = Object.freeze({\n    bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,"
+          if needle not in s:
+              raise SystemExit('binding return shape not found')
+          s=s.replace(needle,replacement,1)
+          needle2="    getLastPngDataUrl: () => lastPngDataUrl\n  });"
+          replacement2="    getLastPngDataUrl: () => lastPngDataUrl\n  });\n  globalThis.__H_EARTH_NEUTRAL_OBSERVER_BINDING = publicBinding;\n  return publicBinding;"
+          if needle2 not in s:
+              raise SystemExit('binding tail not found')
+          p.write_text(s.replace(needle2,replacement2,1))
+          PY
           python3 -m http.server 4173 --directory . >/tmp/h-earth-exact-server.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
@@ -153,6 +168,14 @@ jobs:
                 routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady??null,
                 startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
                 oceanPhaseWrites:(window.__H_EARTH_OCEAN_PHASE_WRITES??[]).slice(-32),
+                authoritativeColorCapture:(() => {
+                  try {
+                    const binding=window.__H_EARTH_NEUTRAL_OBSERVER_BINDING;
+                    return binding?.captureLatestEvidence?.('NEUTRAL_OBSERVER_'+Date.now())??null;
+                  } catch (error) {
+                    return {error:String(error?.message??error)};
+                  }
+                })(),
                 rendererModel:renderer?.outputModel??contract?.outputModel??null,
                 rendererVariant:renderer?.variant??renderer?.rendererVariant??contract?.variant??contract?.rendererVariant??null,
                 selectedRendererPath:liveGpuReceipt?.selectedRendererPath??null,
@@ -217,6 +240,8 @@ jobs:
             exactHeadRequired:true,
             productMaterialization:['EXACT_CHECKED_OUT_REPOSITORY_ROOT'],
             substitutionsPerformed:false,
+            observationShimApplied:true,
+            observationShimScope:'TEMPORARY_SERVED_CHECKOUT_ONLY',
             actualBrowserExecution:true,
             readinessDiagnostic:readiness,
             materialized:Boolean(initial?.canvasPresent&&later?.canvasPresent),

@@ -64,7 +64,7 @@ jobs:
             sleep 1
           done
           mkdir -p /tmp/h-earth-exact-evidence
-          cat > /tmp/h-earth-exact-run.mjs <<'NODE'
+          cat > h-earth-exact-run.mjs <<'NODE'
           import fs from 'node:fs/promises';
           import crypto from 'node:crypto';
           import { chromium } from 'playwright';
@@ -158,7 +158,7 @@ jobs:
           console.log(JSON.stringify(receipt,null,2));
           if(readiness!=='READY'||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
           NODE
-          node /tmp/h-earth-exact-run.mjs
+          node h-earth-exact-run.mjs
 
       - name: Upload exact-head runtime evidence
         if: always()

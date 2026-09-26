@@ -1,0 +1,39 @@
+name: H-Earth COAST Operand Exact Candidate Diagnostic
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+      - name: Require exact candidate
+        run: test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Evaluate fixed COAST terrain operands
+        run: |
+          node --input-type=module <<'NODE' | tee coast-presented-terrain-operands.json
+          import {sampleHEarthTerrainField} from './h-earth-3d/terrain/h-earth.terrain-field.js';
+          import {sampleHEarthVisibleTerrainClearanceSurface} from './showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js';
+          const worldX=0,worldZ=-96;
+          const canonical=sampleHEarthTerrainField(worldX,worldZ);
+          const presented=sampleHEarthVisibleTerrainClearanceSurface(worldX,worldZ);
+          const receipt={schema:'H_EARTH_COAST_PRESENTED_TERRAIN_OPERAND_DIAGNOSTIC_v1',worldX,worldZ,canonical,presented,canonicalValid:canonical?.valid===true,presentedValid:presented?.valid===true,combinedEligible:canonical?.valid===true&&presented?.valid===true};
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-coast-operands-${{ inputs.target_sha }}
+          path: coast-presented-terrain-operands.json
+          if-no-files-found: error
+          retention-days: 30

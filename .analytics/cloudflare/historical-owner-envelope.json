@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-26T20:30:10Z",
+  "generatedAt": "2026-09-26T21:28:09Z",
   "window": {
-    "start": "2026-06-28T20:30:10Z",
-    "end": "2026-09-26T20:30:10Z"
+    "start": "2026-06-28T21:28:09Z",
+    "end": "2026-09-26T21:28:09Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5003,
-    "visits": 1250,
+    "pageLoads": 4987,
+    "visits": 1238,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5003,
-        "visits": 1250
+        "pageLoads": 4987,
+        "visits": 1238
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1083,
-        "visits": 737
+        "pageLoads": 1082,
+        "visits": 736
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 108,
+        "pageLoads": 107,
         "visits": 8
       },
       "/products/archcoin/": {
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -299,11 +299,11 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 67,
-        "visits": 47
+        "pageLoads": 55,
+        "visits": 36
       },
       "/products/on-your-side-ai/": {
-        "pageLoads": 35,
+        "pageLoads": 34,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -325,10 +325,6 @@
       "/home/": {
         "pageLoads": 5,
         "visits": 5
-      },
-      "/products/nutrition/": {
-        "pageLoads": 1,
-        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 7,
@@ -369,16 +365,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 464,
-        "visits": 464
+        "pageLoads": 453,
+        "visits": 453
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3753,
+        "pageLoads": 3749,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 775,
-        "visits": 775
+        "pageLoads": 774,
+        "visits": 774
       },
       "raw.githack.com": {
         "pageLoads": 10,

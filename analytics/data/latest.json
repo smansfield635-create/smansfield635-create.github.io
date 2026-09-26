@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-25T23:27:21Z",
+  "generatedAt": "2026-09-26T01:03:54Z",
   "window30d": {
-    "start": "2026-08-26T23:27:21Z",
-    "end": "2026-09-25T23:27:21Z"
+    "start": "2026-08-27T01:03:54Z",
+    "end": "2026-09-26T01:03:54Z"
   },
   "daily": [
-    {
-      "date": "2026-08-27",
-      "pageLoads": 60
-    },
     {
       "date": "2026-08-28",
       "pageLoads": 110
@@ -100,7 +96,7 @@
     },
     {
       "date": "2026-09-19",
-      "pageLoads": 379
+      "pageLoads": 376
     },
     {
       "date": "2026-09-20",
@@ -124,29 +120,33 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 526
+      "pageLoads": 528
+    },
+    {
+      "date": "2026-09-26",
+      "pageLoads": 12
     }
   ],
   "summary": {
-    "pageLoads": 7150,
-    "botPageLoads": 2446,
-    "nonBotPageLoads": 4704
+    "pageLoads": 7161,
+    "botPageLoads": 2444,
+    "nonBotPageLoads": 4717
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3249,
-      "visits": 3249
+      "pageLoads": 3247,
+      "visits": 3247
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3214,
+      "pageLoads": 3223,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 649,
-      "visits": 649
+      "pageLoads": 653,
+      "visits": 653
     },
     {
       "host": "bing.com",
@@ -177,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 2049,
-      "visits": 1597
+      "pageLoads": 2052,
+      "visits": 1600
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 807,
-      "visits": 807
+      "pageLoads": 806,
+      "visits": 806
     },
     {
       "path": "/showroom/globe/audralia/",

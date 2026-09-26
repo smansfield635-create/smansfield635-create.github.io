@@ -1,0 +1,186 @@
+{
+  "schema": "H_EARTH_OCEAN_PRESENTATION_RECOVERY_STATE_v1",
+  "status": "ACTIVE_RECOVERY_STATE_DURABLE",
+  "recordedAt": "2026-09-26",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "purpose": "Durably preserve the H-Earth ocean-presentation recovery state, evidence coordinates, supersession, boundaries, and deterministic continuation sequence independently of ephemeral Actions history.",
+  "coordinates": {
+    "preservedRepairedBase": {
+      "sha": "533714a3a8e3995ed67ea07c99a56a698946c105",
+      "role": "PRESERVED_REPAIRED_PRODUCT_BASE"
+    },
+    "defectiveOceanMotionCandidate": {
+      "sha": "5f61189148538de6e92839c9c04c4a3e07ca21fe",
+      "role": "SUPERSEDED_DEFECTIVE_CANDIDATE",
+      "defect": "DUPLICATE_OCEAN_PRESENTATION_BINDING_DECLARATIONS"
+    },
+    "recoveredOceanMotionCandidate": {
+      "sha": "8a2fed2f70ea2b2ef0b55df96dc4edc1c410cbd4",
+      "role": "RECOVERED_OCEAN_PRESENTATION_CONTINUOUS_MOTION_CANDIDATE",
+      "derivedFrom": "5f61189148538de6e92839c9c04c4a3e07ca21fe",
+      "repair": "ONE_FILE_ZERO_ADDITIONS_TWELVE_DELETIONS_DUPLICATE_BINDING_REMOVAL"
+    }
+  },
+  "historicalTerrainTrack": {
+    "targetSha": "921f969ba2d909ec0f83adc63ca8bfcb1d280477",
+    "coordinate": [
+      0,
+      -96
+    ],
+    "diagnosticRunId": 36251705045,
+    "canonical": {
+      "valid": true,
+      "elevation": 2.0466813574490637
+    },
+    "presented": {
+      "valid": false,
+      "reason": "PROTECTED_GEN311_VISIBLE_TERRAIN_CORRESPONDENCE_INVALID"
+    },
+    "correspondence": {
+      "projectedAuthoringMaterialization": true,
+      "primitiveIdsMatch": true,
+      "vertexCount": 10573
+    },
+    "previewFailure": [
+      "COMPONENT_INVALID:distantContext",
+      "RECIPROCAL_FAR_SURFACE_CLASSES_INVALID"
+    ],
+    "disposition": "HISTORICAL_QUESTION_CLOSED_NONPROPAGATING"
+  },
+  "executionPrimitive": {
+    "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+    "workflow": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "registry": ".github/ai-router/workflow-dispatch-capability.v1.json",
+    "semantics": [
+      "CHECKOUT_EXACT_TARGET_SHA",
+      "ASSERT_HEAD_EQUALITY",
+      "SERVE_EXACT_CHECKED_OUT_REPOSITORY_ROOT_UNCHANGED",
+      "OPEN_ACTUAL_H_EARTH_ROUTE_IN_CHROMIUM",
+      "NO_AB_SUBSTITUTION",
+      "NO_COMPOSITOR_SUBSTITUTION",
+      "NO_FIXED_RENDERER_HASH",
+      "NO_OW01_R2_ASSUMPTION",
+      "NO_PRODUCT_OR_QUALIFICATION_AUTHORITY"
+    ]
+  },
+  "evidence": {
+    "control": {
+      "targetSha": "533714a3a8e3995ed67ea07c99a56a698946c105",
+      "runId": 36252596932,
+      "result": "PASS",
+      "readiness": "READY",
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "requestsFailed": 0,
+      "initialLaterScreenshotRelation": "STABLE_AS_EXPECTED"
+    },
+    "defectiveCandidate": {
+      "targetSha": "5f61189148538de6e92839c9c04c4a3e07ca21fe",
+      "runId": 36252858724,
+      "result": "FAIL",
+      "failureStage": "RENDERER_CONSTRUCTOR_RETURNED",
+      "failureClass": "RENDERER_CONSTRUCTION_EXCEPTION",
+      "exception": "SyntaxError: Identifier 'OCEAN_PRESENTATION_QUERY_KEY' has already been declared"
+    },
+    "repairedBoot": {
+      "targetSha": "8a2fed2f70ea2b2ef0b55df96dc4edc1c410cbd4",
+      "runId": 36253263302,
+      "result": "PASS",
+      "readiness": "READY",
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "requestsFailed": 0,
+      "limitation": "PRE_OBSERVABILITY_RUNNER_DID_NOT_EXTRACT_EXISTING_LIVE_GPU_RECEIPT"
+    },
+    "repairedMotionExtraction": {
+      "targetSha": "8a2fed2f70ea2b2ef0b55df96dc4edc1c410cbd4",
+      "runId": 36253807467,
+      "githubJobConclusion": "FAIL_DUE_TO_STALE_STARTUP_READINESS_INTERPRETATION",
+      "productRuntimeEvidence": {
+        "selectedRendererPath": "../../render/persistent-live-renderer.run8e-r3c.ocean-presentation-v1.js",
+        "oceanPresentationRequested": true,
+        "animationRunning": true,
+        "animationFrameCount": {
+          "initial": 12,
+          "later": 25,
+          "advanced": true
+        },
+        "renderFrameCallCount": {
+          "initial": 13,
+          "later": 26,
+          "advanced": true
+        },
+        "gpuFramebufferPresentationCount": {
+          "initial": 13,
+          "later": 26,
+          "advanced": true
+        },
+        "worldRebuildCount": {
+          "initial": 0,
+          "later": 0,
+          "stayedZero": true
+        },
+        "screenshotChanged": true,
+        "pageErrors": 0,
+        "consoleErrors": 0,
+        "requestsFailed": 0
+      },
+      "disposition": "PRODUCT_CONTINUOUS_MOTION_PROVEN_RUNNER_READINESS_CLASSIFICATION_STALE"
+    }
+  },
+  "provenFacts": [
+    "EXACT_HEAD_NEUTRAL_RUNNER_EXECUTION_PROVEN_BY_CONTROL",
+    "OCEAN_PRESENTATION_RENDERER_SELECTION_PROVEN",
+    "OCEAN_PRESENTATION_REQUEST_PROVEN",
+    "CONTINUOUS_ANIMATION_FRAME_ADVANCEMENT_PROVEN",
+    "RENDER_AND_FRAMEBUFFER_PRESENTATION_ADVANCEMENT_PROVEN",
+    "WORLD_REBUILD_DURING_PRESENTATION_ANIMATION_ZERO_PROVEN",
+    "VISIBLE_FRAME_CHANGE_WITHOUT_USER_NAVIGATION_PROVEN",
+    "DUPLICATE_BINDING_BOOT_DEFECT_REPAIRED"
+  ],
+  "currentBoundary": {
+    "productMutationRequiredNow": false,
+    "immediateIssue": "NEUTRAL_RUNNER_READINESS_MUST_PREFER_ACTIVE_PUBLIC_RUNTIME_API_OVER_STALE_STARTUP_OVERLAY_TEXT",
+    "historicalCandidateMergeProhibited": true,
+    "historicalRepairPr": 4973,
+    "reasonHistoricalRepairPrNotForMerge": "HISTORICALLY_ROOTED_NON_MERGEABLE_CARRY_FORWARD_MUST_BE_FRESH_CURRENT_MAIN_MATERIALIZATION"
+  },
+  "deterministicContinuation": [
+    "REPAIR_NEUTRAL_RUNNER_READINESS_INTERPRETATION_ONLY",
+    "RERUN_EXACT_8a2fed2f_WITH_ocean-presentation=v1_AND_REQUIRE_CLEAN_GREEN_RECEIPT",
+    "FREEZE_8a2fed2f_AS_RECOVERED_OCEAN_PRESENTATION_CONTINUOUS_MOTION_CANDIDATE",
+    "CREATE_FRESH_BRANCH_FROM_THEN_CURRENT_MAIN",
+    "TRANSPLANT_ONLY_PROVEN_PRODUCT_DELTA_FROM_533714a3_TO_8a2fed2f",
+    "INSPECT_PRODUCT_ONLY_DIFF_AND_EXCLUDE_RECOVERY_OR_PREVIEW_BAGGAGE",
+    "RUN_MATERIALIZED_EXACT_HEAD_CANDIDATE_WITH_IDENTICAL_MOTION_INVARIANTS",
+    "IF_PASS_PROCEED_TO_SEPARATE_MERGE_PUBLICATION_AUTHORITY_AND_FINAL_REQUIRED_VERIFICATION",
+    "THEN_RESUME_VISUAL_REFINEMENT_AND_QUALIFICATION"
+  ],
+  "requiredCleanReceipt": {
+    "readiness": "READY",
+    "oceanPresentationRequested": true,
+    "selectedRenderer": "ocean-presentation-v1",
+    "animationRunning": true,
+    "animationFrameAdvanced": true,
+    "renderFrameCallCountAdvanced": true,
+    "gpuFramebufferPresentationCountAdvanced": true,
+    "worldRebuildStayedZero": true,
+    "screenshotChanged": true,
+    "pageErrors": 0,
+    "consoleErrors": 0,
+    "requestsFailed": 0
+  },
+  "boundaries": {
+    "createsProductAuthority": false,
+    "createsMergeAuthority": false,
+    "createsDeploymentAuthority": false,
+    "createsPublicationAuthority": false,
+    "createsCanonicalizationAuthority": false,
+    "createsPhysicalDeviceAcceptance": false,
+    "genericHeadlessIsPhysicalDeviceAcceptance": false,
+    "productionDeploymentAsPreviewWorkaroundAllowed": false,
+    "toolInferenceIsEvidence": false,
+    "unresolvedFieldsMayBeInvented": false
+  },
+  "stoppingCondition": "PRESERVE_THIS_LEDGER_AS_RECOVERY_HANDOFF_AUTHORITY_FOR_STATE_ONLY; DO_NOT TREAT IT AS PRODUCT_OR_RELEASE AUTHORITY"
+}

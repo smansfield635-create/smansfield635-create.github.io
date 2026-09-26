@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-26T12:38:30Z",
+  "generatedAt": "2026-09-26T13:28:15Z",
   "window": {
-    "start": "2026-08-27T12:38:30Z",
-    "end": "2026-09-26T12:38:30Z"
+    "start": "2026-08-27T13:28:15Z",
+    "end": "2026-09-26T13:28:15Z"
   },
   "dimensions": {
     "requestPath": [
@@ -79,8 +79,8 @@
       },
       {
         "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
-        "pageLoads": 69,
-        "visits": 38
+        "pageLoads": 66,
+        "visits": 35
       },
       {
         "value": "/evidence/",
@@ -421,8 +421,8 @@
       },
       {
         "value": "(none)",
-        "pageLoads": 3200,
-        "visits": 3200
+        "pageLoads": 3201,
+        "visits": 3201
       },
       {
         "value": "www.google.com",
@@ -431,8 +431,8 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 16,
+        "visits": 16
       },
       {
         "value": "m.facebook.com",
@@ -473,8 +473,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 7050,
-        "visits": 3836
+        "pageLoads": 7047,
+        "visits": 3833
       },
       {
         "value": "BR",
@@ -510,8 +510,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2738,
-        "visits": 2657
+        "pageLoads": 2729,
+        "visits": 2648
       },
       {
         "value": "tablet",
@@ -520,15 +520,15 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1999,
-        "visits": 622
+        "pageLoads": 2005,
+        "visits": 628
       }
     ],
     "userAgentBrowser": [
       {
         "value": "Chrome",
-        "pageLoads": 2620,
-        "visits": 844
+        "pageLoads": 2616,
+        "visits": 840
       },
       {
         "value": "ChromeHeadless",
@@ -537,18 +537,18 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1886,
-        "visits": 529
+        "pageLoads": 1884,
+        "visits": 527
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 67,
-        "visits": 57
+        "pageLoads": 66,
+        "visits": 56
       },
       {
         "value": "Unknown",
-        "pageLoads": 48,
-        "visits": 48
+        "pageLoads": 53,
+        "visits": 53
       },
       {
         "value": "Firefox",
@@ -557,8 +557,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 13,
-        "visits": 13
+        "pageLoads": 12,
+        "visits": 12
       },
       {
         "value": "Facebook",
@@ -574,8 +574,8 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4267,
-        "visits": 1144
+        "pageLoads": 4266,
+        "visits": 1143
       },
       {
         "value": "Linux",
@@ -589,25 +589,25 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 128,
-        "visits": 118
+        "pageLoads": 123,
+        "visits": 113
       },
       {
         "value": "iOS",
-        "pageLoads": 70,
-        "visits": 60
+        "pageLoads": 68,
+        "visits": 58
       },
       {
         "value": "Unknown",
-        "pageLoads": 48,
-        "visits": 48
+        "pageLoads": 53,
+        "visits": 53
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4674,
-        "visits": 1521
+        "pageLoads": 4671,
+        "visits": 1518
       },
       {
         "value": "1",
@@ -618,8 +618,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4900,
-        "visits": 3414
+        "pageLoads": 4897,
+        "visits": 3411
       },
       {
         "value": "reload",
@@ -650,8 +650,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5261,
-        "visits": 3175
+        "pageLoads": 5258,
+        "visits": 3172
       },
       {
         "value": "cache",
@@ -667,15 +667,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 7108,
-        "visits": 3894
+        "pageLoads": 7105,
+        "visits": 3891
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7108,
-        "visits": 3894
+        "pageLoads": 7105,
+        "visits": 3891
       }
     ]
   }

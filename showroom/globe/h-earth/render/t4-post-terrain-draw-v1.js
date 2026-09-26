@@ -45,7 +45,7 @@ export function createHEarthT4PostTerrainDraw(gl){
   gl.bindRenderbuffer(gl.RENDERBUFFER,diagnosticDepth);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT24,640,360);
   gl.bindFramebuffer(gl.FRAMEBUFFER,diagnosticFramebuffer);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,diagnosticColor,0);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,diagnosticDepth);
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('T4_AB_TARGET_INCOMPLETE');gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-  let frames=0,maximumAddedDrawCalls=0,latestDepthAB=null,preT4SnapshotReady=false;
+  let frames=0,maximumAddedDrawCalls=0,latestDepthAB=null,preT4SnapshotReady=false,productionChangedPixelIndices=[];
   const capturePreT4Diagnostic=({width,height,sourceFramebuffer})=>{
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER,sourceFramebuffer);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,diagnosticFramebuffer);
     gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT,gl.NEAREST);
@@ -83,14 +83,23 @@ export function createHEarthT4PostTerrainDraw(gl){
     const productionBindClass=(kind,batch)=>{gl.bindBuffer(gl.ARRAY_BUFFER,batch.vertexBuffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);gl.uniform3fv(classColor,kind==='TUFT'?new Float32Array([0.22,0.36,0.12]):new Float32Array([0.31,0.29,0.27]));};
     drawHEarthT4StaticGpuBatches(gl,batches,productionBindClass);
     const composedPixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,composedPixels);
-    const deltas=[];let changedProductionPixels=0;
+    const deltas=[];let changedProductionPixels=0;productionChangedPixelIndices=[];
     for(let i=0;i<terrainPixels.length;i+=4){
       const dr=Math.abs(composedPixels[i]-terrainPixels[i]),dg=Math.abs(composedPixels[i+1]-terrainPixels[i+1]),db=Math.abs(composedPixels[i+2]-terrainPixels[i+2]);
-      if(dr||dg||db){changedProductionPixels++;deltas.push(Math.sqrt(dr*dr+dg*dg+db*db));}
+      if(dr||dg||db){changedProductionPixels++;productionChangedPixelIndices.push(i>>2);deltas.push(Math.sqrt(dr*dr+dg*dg+db*db));}
     }
     deltas.sort((a,b)=>a-b);const q=p=>deltas.length?deltas[Math.min(deltas.length-1,Math.max(0,Math.round((deltas.length-1)*p)))]:0;
     latestDepthAB=Object.freeze({depthOnPixels,depthOffPixels,ratio:depthOffPixels?depthOnPixels/depthOffPixels:null,productionColorDelta:Object.freeze({changedPixels:changedProductionPixels,minimum:q(0),p10:q(.1),p25:q(.25),p50:q(.5),p75:q(.75),p90:q(.9),maximum:q(1),mean:deltas.length?deltas.reduce((a,b)=>a+b,0)/deltas.length:0})});
     gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   };
-  return Object.freeze({capturePreT4Diagnostic,drawAfterTerrain,runPostRenderDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB})});
+  const runPostPresentationDiagnostic=({width,height,sourceFramebuffer})=>{
+    const sourcePixels=new Uint8Array(width*height*4),presentedPixels=new Uint8Array(width*height*4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,sourceFramebuffer);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,sourcePixels);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,presentedPixels);
+    let exactMatches=0,mismatches=0,maximumChannelDelta=0;
+    for(const pixelIndex of productionChangedPixelIndices){const i=pixelIndex*4;let same=true;for(let c=0;c<4;c++){const d=Math.abs(sourcePixels[i+c]-presentedPixels[i+c]);if(d){same=false;maximumChannelDelta=Math.max(maximumChannelDelta,d);}}if(same)exactMatches++;else mismatches++;}
+    if(latestDepthAB)latestDepthAB=Object.freeze({...latestDepthAB,presentationParity:Object.freeze({testedPixels:productionChangedPixelIndices.length,exactMatches,mismatches,maximumChannelDelta})});
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  };
+  return Object.freeze({capturePreT4Diagnostic,drawAfterTerrain,runPostRenderDiagnostic,runPostPresentationDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB})});
 }

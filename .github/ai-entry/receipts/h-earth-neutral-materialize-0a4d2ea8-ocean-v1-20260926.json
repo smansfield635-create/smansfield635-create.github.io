@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-neutral-materialize-0a4d2ea8-ocean-v1-20260926",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4999,
+  "requestBranch": "ai-dispatch-request-h-earth-neutral-materialize-0a4d2ea8-20260926",
+  "requestCommit": "2156d85f50b826ef03058adaad04283cf0eeb5c9",
+  "requestCommitParent": "ad805fa2703c60e6d6a43290da152958ae06c274",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "ad805fa2703c60e6d6a43290da152958ae06c274",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "0a4d2ea86ccb9340a66a68d68d3300d1a0d37d6e",
+    "route_query": "ocean-presentation=v1"
+  },
+  "bridgeRunId": "36260205094",
+  "dispatchedRunId": 36260215014,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36260215014",
+  "dispatchedRunHeadSha": "ad805fa2703c60e6d6a43290da152958ae06c274",
+  "dispatchedAt": "2026-09-26T17:46:31.694Z",
+  "resolvedAt": "2026-09-26T17:46:35.510Z"
+}

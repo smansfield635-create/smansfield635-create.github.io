@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-26T03:35:59Z",
+  "generatedAt": "2026-09-26T04:33:49Z",
   "window": {
-    "start": "2026-06-28T03:35:59Z",
-    "end": "2026-09-26T03:35:59Z"
+    "start": "2026-06-28T04:33:49Z",
+    "end": "2026-09-26T04:33:49Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5009,
-    "visits": 1262,
+    "pageLoads": 5004,
+    "visits": 1258,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5009,
-        "visits": 1262
+        "pageLoads": 5004,
+        "visits": 1258
       }
     },
     "byPath": {
-      "/index.html": {
-        "pageLoads": 156,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1087,
         "visits": 740
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
+        "visits": 0
+      },
+      "/index.html": {
+        "pageLoads": 156,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -71,8 +71,8 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 103,
-        "visits": 9
+        "pageLoads": 102,
+        "visits": 8
       },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
@@ -254,12 +254,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 21,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 41,
+        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -268,10 +272,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 21,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -299,8 +299,8 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 68,
-        "visits": 50
+        "pageLoads": 65,
+        "visits": 47
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 31,
@@ -358,23 +358,23 @@
         "pageLoads": 5,
         "visits": 5
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 16,
-        "visits": 1
-      },
       "/preview/governance-bridge/index.html": {
         "pageLoads": 1,
+        "visits": 1
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 16,
         "visits": 1
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 3747,
-        "visits": 0
-      },
       "(none)": {
-        "pageLoads": 473,
-        "visits": 473
+        "pageLoads": 469,
+        "visits": 469
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 3746,
+        "visits": 0
       },
       "www.google.com": {
         "pageLoads": 778,

@@ -40,6 +40,16 @@ export function createHEarthT4PostTerrainDraw(gl){
   if(viewProjection===null||classColor===null)throw Error('T4_UNIFORM_MISSING');
   const vao=gl.createVertexArray();if(!vao)throw Error('T4_VAO_CREATE');
   const batches=createHEarthT4StaticGpuBatches(gl);
+  const probeWidth=160,probeHeight=90;
+  const probeTexture=gl.createTexture(),probeFramebuffer=gl.createFramebuffer();
+  if(!probeTexture||!probeFramebuffer)throw Error('T4_DIAGNOSTIC_TARGET_CREATE');
+  gl.bindTexture(gl.TEXTURE_2D,probeTexture);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,probeWidth,probeHeight,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+  gl.bindFramebuffer(gl.FRAMEBUFFER,probeFramebuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,probeTexture,0);
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('T4_DIAGNOSTIC_TARGET_INCOMPLETE');
+  gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   let frames=0,maximumAddedDrawCalls=0;
   let latestClipDiagnostic=null,latestFragmentDiagnostic=null;
   const multiplyPoint=(m,p)=>{
@@ -75,12 +85,6 @@ export function createHEarthT4PostTerrainDraw(gl){
     };
     latestClipDiagnostic=clipDiagnostic(packet);
     const receipt=drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
-    const probeWidth=Math.min(160,width),probeHeight=Math.min(90,height);
-    const probeTexture=gl.createTexture(),probeFramebuffer=gl.createFramebuffer();
-    if(!probeTexture||!probeFramebuffer)throw Error('T4_DIAGNOSTIC_TARGET_CREATE');
-    gl.bindTexture(gl.TEXTURE_2D,probeTexture);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
-    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,probeWidth,probeHeight,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
     gl.bindFramebuffer(gl.FRAMEBUFFER,probeFramebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,probeTexture,0);
     if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('T4_DIAGNOSTIC_TARGET_INCOMPLETE');
@@ -96,7 +100,6 @@ export function createHEarthT4PostTerrainDraw(gl){
     let changedPixels=0;
     for(let i=0;i<probePixels.length;i+=4)if(probePixels[i]||probePixels[i+1]||probePixels[i+2])changedPixels++;
     latestFragmentDiagnostic=Object.freeze({probeWidth,probeHeight,changedPixels,noDepthRasterContribution:changedPixels>0});
-    gl.deleteFramebuffer(probeFramebuffer);gl.deleteTexture(probeTexture);
     gl.bindFramebuffer(gl.FRAMEBUFFER,null);
     frames++;maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,receipt.drawCalls);
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');

@@ -1,6 +1,6 @@
 /** H-Earth T4 static GPU batches v1. No renderer/framebuffer/presentation ownership. */
 import { H_EARTH_T4_FROZEN_PLACEMENT } from './t4-frozen-placement-v1.js';
-import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
+import { regionToHEarthPlanetPoint, getHEarthRegionTangentBasis } from './planetary-world-frame.js';
 
 // T4.3 primitive-quality geometry. Placement and draw-class budgets remain frozen.
 const TUFT_VERTICES = new Float32Array([
@@ -19,8 +19,15 @@ const ROCK_VERTICES = new Float32Array([
 ]);
 
 const pack = instances => new Float32Array(instances.flatMap(v => {
-  const planetary = regionToHEarthPlanetPoint({ x: v.x, y: v.elevation, z: v.z });
-  return [planetary.x, planetary.y, planetary.z, v.rotation, v.scale];
+  const local = { x: v.x, y: v.elevation, z: v.z };
+  const planetary = regionToHEarthPlanetPoint(local);
+  const basis = getHEarthRegionTangentBasis(local);
+  return [
+    planetary.x, planetary.y, planetary.z, v.rotation, v.scale,
+    basis.east.x, basis.east.y, basis.east.z,
+    basis.up.x, basis.up.y, basis.up.z,
+    basis.north.x, basis.north.y, basis.north.z
+  ];
 }));
 
 export function createHEarthT4StaticGpuBatches(gl) {
@@ -43,7 +50,9 @@ export function drawHEarthT4StaticGpuBatches(gl,batches,bindClass) {
   for(const [kind,batch] of [['TUFT',batches.tuft],['ROCK',batches.rock]]) {
     bindClass(kind,batch);
     gl.bindBuffer(gl.ARRAY_BUFFER,batch.instanceBuffer);
-    for(let i=0;i<5;i++){gl.enableVertexAttribArray(8+i);gl.vertexAttribPointer(8+i,1,gl.FLOAT,false,20,i*4);gl.vertexAttribDivisor(8+i,1);}
+    const stride=56;
+    for(let i=0;i<5;i++){gl.enableVertexAttribArray(8+i);gl.vertexAttribPointer(8+i,1,gl.FLOAT,false,stride,i*4);gl.vertexAttribDivisor(8+i,1);}
+    for(let i=0;i<3;i++){gl.enableVertexAttribArray(13+i);gl.vertexAttribPointer(13+i,3,gl.FLOAT,false,stride,20+i*12);gl.vertexAttribDivisor(13+i,1);}
     gl.drawArraysInstanced(gl.TRIANGLES,0,batch.vertexCount,batch.instanceCount);
     drawCalls++;
   }

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-ocean-motion-preflight-021af759-20260926",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5013,
+  "requestBranch": "ai-dispatch-request-h-earth-ocean-motion-preflight-021af759-20260926",
+  "requestCommit": "63577ca6630b134dd1616d97293642adea1e8b6e",
+  "requestCommitParent": "021af759894f681f0512794f911cf4b3422db105",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "021af759894f681f0512794f911cf4b3422db105",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "021af759894f681f0512794f911cf4b3422db105",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "36262920746",
+  "dispatchedRunId": 36262932349,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36262932349",
+  "dispatchedRunHeadSha": "021af759894f681f0512794f911cf4b3422db105",
+  "dispatchedAt": "2026-09-26T18:32:53.907Z",
+  "resolvedAt": "2026-09-26T18:32:58.071Z"
+}

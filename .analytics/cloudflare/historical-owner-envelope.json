@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-26T13:28:15Z",
+  "generatedAt": "2026-09-26T14:26:10Z",
   "window": {
-    "start": "2026-06-28T13:28:15Z",
-    "end": "2026-09-26T13:28:15Z"
+    "start": "2026-06-28T14:26:10Z",
+    "end": "2026-09-26T14:26:10Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5009,
-    "visits": 1263,
+    "pageLoads": 5006,
+    "visits": 1260,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5009,
-        "visits": 1263
+        "pageLoads": 5006,
+        "visits": 1260
       }
     },
     "byPath": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 21,
         "visits": 0
@@ -269,10 +273,6 @@
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 13,
         "visits": 3
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
@@ -295,8 +295,8 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 70,
-        "visits": 52
+        "pageLoads": 67,
+        "visits": 49
       },
       "/campaigns/rob/": {
         "pageLoads": 12,
@@ -369,8 +369,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 474,
-        "visits": 474
+        "pageLoads": 471,
+        "visits": 471
       },
       "diamondgatebridge.com": {
         "pageLoads": 3746,

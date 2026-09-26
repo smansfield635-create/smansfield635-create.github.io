@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-26T18:34:22Z",
+  "generatedAt": "2026-09-26T19:26:02Z",
   "window": {
-    "start": "2026-06-28T18:34:22Z",
-    "end": "2026-09-26T18:34:22Z"
+    "start": "2026-06-28T19:26:02Z",
+    "end": "2026-09-26T19:26:02Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4991,
-    "visits": 1251,
+    "pageLoads": 4993,
+    "visits": 1253,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4991,
-        "visits": 1251
+        "pageLoads": 4993,
+        "visits": 1253
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1086,
-        "visits": 739
+        "pageLoads": 1085,
+        "visits": 738
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 156,
+        "pageLoads": 154,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 100,
+        "pageLoads": 109,
         "visits": 8
       },
       "/products/archcoin/": {
@@ -107,8 +107,8 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 224,
-        "visits": 22
+        "pageLoads": 222,
+        "visits": 20
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
@@ -143,8 +143,8 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 148,
-        "visits": 7
+        "pageLoads": 144,
+        "visits": 5
       },
       "/governance/": {
         "pageLoads": 62,
@@ -202,6 +202,10 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/gauges/": {
+        "pageLoads": 11,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,7 +218,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 11,
         "visits": 0
       },
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 11,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -299,11 +299,11 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 55,
-        "visits": 41
+        "pageLoads": 60,
+        "visits": 48
       },
       "/products/on-your-side-ai/": {
-        "pageLoads": 39,
+        "pageLoads": 36,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -314,16 +314,20 @@
         "pageLoads": 26,
         "visits": 0
       },
+      "/products/archcoin/payable/": {
+        "pageLoads": 9,
+        "visits": 0
+      },
       "/products/archcoin/allocation/": {
         "pageLoads": 2,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 5,
+        "visits": 5
+      },
       "/products/nutrition/": {
         "pageLoads": 1,
-        "visits": 0
-      },
-      "/products/archcoin/payable/": {
-        "pageLoads": 9,
         "visits": 0
       },
       "/analytics-owner-device/": {
@@ -333,10 +337,6 @@
       "/meet-sean-mansfield/": {
         "pageLoads": 5,
         "visits": 0
-      },
-      "/home/": {
-        "pageLoads": 5,
-        "visits": 5
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
@@ -369,16 +369,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 463,
-        "visits": 463
+        "pageLoads": 466,
+        "visits": 466
       },
       "diamondgatebridge.com": {
         "pageLoads": 3740,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 777,
-        "visits": 777
+        "pageLoads": 776,
+        "visits": 776
       },
       "raw.githack.com": {
         "pageLoads": 10,

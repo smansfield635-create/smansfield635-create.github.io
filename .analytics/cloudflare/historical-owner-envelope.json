@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-26T17:27:36Z",
+  "generatedAt": "2026-09-26T18:34:22Z",
   "window": {
-    "start": "2026-06-28T17:27:36Z",
-    "end": "2026-09-26T17:27:36Z"
+    "start": "2026-06-28T18:34:22Z",
+    "end": "2026-09-26T18:34:22Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5000,
-    "visits": 1253,
+    "pageLoads": 4991,
+    "visits": 1251,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5000,
-        "visits": 1253
+        "pageLoads": 4991,
+        "visits": 1251
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1087,
-        "visits": 740
+        "pageLoads": 1086,
+        "visits": 739
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -147,7 +147,7 @@
         "visits": 7
       },
       "/governance/": {
-        "pageLoads": 64,
+        "pageLoads": 62,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -159,7 +159,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 92,
+        "pageLoads": 87,
         "visits": 1
       },
       "/preview/compass-brain-v1/": {
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 11,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -299,8 +299,8 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 56,
-        "visits": 42
+        "pageLoads": 55,
+        "visits": 41
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 39,
@@ -330,6 +330,10 @@
         "pageLoads": 7,
         "visits": 7
       },
+      "/meet-sean-mansfield/": {
+        "pageLoads": 5,
+        "visits": 0
+      },
       "/home/": {
         "pageLoads": 5,
         "visits": 5
@@ -346,10 +350,6 @@
         "pageLoads": 62,
         "visits": 0
       },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 5,
-        "visits": 0
-      },
       "/governance-bridge/": {
         "pageLoads": 93,
         "visits": 80
@@ -358,27 +358,27 @@
         "pageLoads": 5,
         "visits": 5
       },
-      "/preview/governance-bridge/index.html": {
-        "pageLoads": 1,
-        "visits": 1
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
+        "visits": 1
+      },
+      "/preview/governance-bridge/index.html": {
+        "pageLoads": 1,
         "visits": 1
       }
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 464,
-        "visits": 464
+        "pageLoads": 463,
+        "visits": 463
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3747,
+        "pageLoads": 3740,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 778,
-        "visits": 778
+        "pageLoads": 777,
+        "visits": 777
       },
       "raw.githack.com": {
         "pageLoads": 10,

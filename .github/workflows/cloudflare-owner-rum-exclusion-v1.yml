@@ -3,6 +3,11 @@ name: Cloudflare Owner RUM Exclusion v1
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cloudflare-owner-rum-exclusion-v1.yml'
 
 permissions:
   contents: read

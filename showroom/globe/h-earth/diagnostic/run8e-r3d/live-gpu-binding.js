@@ -16,6 +16,10 @@ const OCEAN_PRESENTATION_QUERY_KEY = 'ocean';
 const OCEAN_PRESENTATION_QUERY_VALUE = 'v1';
 const OCEAN_PRESENTATION_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.ocean-presentation-v1.js';
+const OCEAN_PRESENTATION_QUERY_KEY = 'ocean-presentation';
+const OCEAN_PRESENTATION_QUERY_VALUE = 'v1';
+const OCEAN_PRESENTATION_RENDERER_PATH =
+  '../../render/persistent-live-renderer.run8e-r3c.ocean-presentation-v1.js';
 const OCEAN_PROOF_QUERY_KEY = 'ocean-proof';
 const OCEAN_PROOF_QUERY_VALUE = 'v1';
 const OCEAN_PROOF_RENDERER_PATH =
@@ -46,6 +50,8 @@ const waterAttributionRequested =
   queryParameters.get(WATER_ATTRIBUTION_QUERY_KEY) === WATER_ATTRIBUTION_QUERY_VALUE;
 const oceanPresentationRequested =
   queryParameters.get(OCEAN_PRESENTATION_QUERY_KEY) === OCEAN_PRESENTATION_QUERY_VALUE;
+const oceanPresentationRequested =
+  queryParameters.get(OCEAN_PRESENTATION_QUERY_KEY) === OCEAN_PRESENTATION_QUERY_VALUE;
 const oceanProofRequested =
   queryParameters.get(OCEAN_PROOF_QUERY_KEY) === OCEAN_PROOF_QUERY_VALUE;
 const additiveVisualRequested =
@@ -60,6 +66,8 @@ const selectedRendererPath = rendererCustodyRequested
   ? WATER_INDEX_SPAN_RENDERER_PATH
   : waterAttributionRequested
   ? WATER_ATTRIBUTION_RENDERER_PATH
+  : oceanPresentationRequested
+  ? OCEAN_PRESENTATION_RENDERER_PATH
   : oceanPresentationRequested
   ? OCEAN_PRESENTATION_RENDERER_PATH
   : oceanProofRequested
@@ -84,6 +92,9 @@ export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
   waterAttributionRequested,
   waterAttributionQueryKey: WATER_ATTRIBUTION_QUERY_KEY,
   waterAttributionQueryValue: WATER_ATTRIBUTION_QUERY_VALUE,
+  oceanPresentationRequested,
+  oceanPresentationQueryKey: OCEAN_PRESENTATION_QUERY_KEY,
+  oceanPresentationQueryValue: OCEAN_PRESENTATION_QUERY_VALUE,
   oceanPresentationRequested,
   oceanPresentationQueryKey: OCEAN_PRESENTATION_QUERY_KEY,
   oceanPresentationQueryValue: OCEAN_PRESENTATION_QUERY_VALUE,
@@ -306,6 +317,9 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       oceanPresentationRequested,
       oceanPresentationQueryKey: OCEAN_PRESENTATION_QUERY_KEY,
       oceanPresentationQueryValue: OCEAN_PRESENTATION_QUERY_VALUE,
+      oceanPresentationRequested,
+      oceanPresentationQueryKey: OCEAN_PRESENTATION_QUERY_KEY,
+      oceanPresentationQueryValue: OCEAN_PRESENTATION_QUERY_VALUE,
       oceanProofRequested,
       oceanProofQueryKey: OCEAN_PROOF_QUERY_KEY,
       oceanProofQueryValue: OCEAN_PROOF_QUERY_VALUE,
@@ -354,6 +368,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         rendererCustodyCandidateRequested: rendererCustodyRequested,
         waterIndexSpanCandidateRequested: waterIndexSpanRequested,
         waterAttributionCandidateRequested: waterAttributionRequested,
+        oceanPresentationCandidateRequested: oceanPresentationRequested,
         oceanPresentationCandidateRequested: oceanPresentationRequested,
         oceanProofCandidateRequested: oceanProofRequested,
         additiveVisualCandidateRequested: additiveVisualRequested,

@@ -366,6 +366,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       t4Requested,
       t4QueryKey: T4_QUERY_KEY,
       t4QueryValue: T4_QUERY_VALUE,
+      t4Receipt: t4Extension?.getReceipt?.() ?? null,
       additiveVisualRequested,
       additiveVisualQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
       additiveVisualQueryValue: ADDITIVE_VISUAL_QUERY_VALUE,

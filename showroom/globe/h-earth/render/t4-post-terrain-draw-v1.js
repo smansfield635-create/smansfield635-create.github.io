@@ -41,7 +41,7 @@ export function createHEarthT4PostTerrainDraw(gl){
   const vao=gl.createVertexArray();if(!vao)throw Error('T4_VAO_CREATE');
   const batches=createHEarthT4StaticGpuBatches(gl);
   let frames=0,maximumAddedDrawCalls=0;
-  let latestClipDiagnostic=null,latestFragmentDiagnostic=null;
+  let latestClipDiagnostic=null,latestFragmentDiagnostic=null,pendingFragmentQuery=null;
   const multiplyPoint=(m,p)=>{
     const x=p.x,y=p.y,z=p.z,w=1;
     return {
@@ -74,16 +74,24 @@ export function createHEarthT4PostTerrainDraw(gl){
       gl.uniform3fv(classColor,kind==='TUFT'?new Float32Array([0.22,0.36,0.12]):new Float32Array([0.31,0.29,0.27]));
     };
     latestClipDiagnostic=clipDiagnostic(packet);
+    if(pendingFragmentQuery){
+      const available=gl.getQueryParameter(pendingFragmentQuery,gl.QUERY_RESULT_AVAILABLE);
+      if(available){
+        const anySamples=Boolean(gl.getQueryParameter(pendingFragmentQuery,gl.QUERY_RESULT));
+        gl.deleteQuery(pendingFragmentQuery);
+        pendingFragmentQuery=null;
+        latestFragmentDiagnostic=Object.freeze({available:true,anySamples,resolvedFrame:frames+1});
+      }else{
+        latestFragmentDiagnostic=Object.freeze({available:false,anySamples:null,pending:true});
+      }
+    }
     const query=gl.createQuery();
     if(!query)throw Error('T4_OCCLUSION_QUERY_CREATE');
     gl.beginQuery(gl.ANY_SAMPLES_PASSED,query);
     const receipt=drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
     gl.endQuery(gl.ANY_SAMPLES_PASSED);
-    gl.finish();
-    const available=gl.getQueryParameter(query,gl.QUERY_RESULT_AVAILABLE);
-    const anySamples=available?Boolean(gl.getQueryParameter(query,gl.QUERY_RESULT)):null;
-    gl.deleteQuery(query);
-    latestFragmentDiagnostic=Object.freeze({available,anySamples});
+    if(!pendingFragmentQuery) pendingFragmentQuery=query;
+    else gl.deleteQuery(query);
     frames++;maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,receipt.drawCalls);
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
     return receipt;

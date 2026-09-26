@@ -7,6 +7,7 @@ on:
       - '.github/workflows/pages-current-head-publisher.yml'
       - 'governance-bridge/index.html'
       - 'governance-bridge/governance/index.html'
+      - 'governance-bridge/portability/index.html'
       - '.github/ai-router/publication-surfaces/governance-bridge.json'
   workflow_dispatch:
     inputs:

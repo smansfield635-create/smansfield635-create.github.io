@@ -54,7 +54,7 @@ function buildContinuousOceanField(){
     if(waterVotes===0){landUnderlayCellCount++;continue}
     else if(waterVotes<4)mixedCoastCellCount++;
     const corners=[[OCEAN_X[xi],OCEAN_Z[zi]],[OCEAN_X[xi+1],OCEAN_Z[zi]],[OCEAN_X[xi+1],OCEAN_Z[zi+1]],[OCEAN_X[xi],OCEAN_Z[zi+1]]];
-    if(!corners.every(([x,z])=>z<=getHEarthCanonicalShorelineZ(x)-320))continue;
+    if(!corners.every(([x,z])=>z>=getHEarthCanonicalShorelineZ(x)+320))continue;
     indices.push(a,e,b,b,e,d);retainedCellCount++;
   }
   const maximumRadius=Math.max(...vertices.map(v=>Math.hypot(v.x,v.z)));

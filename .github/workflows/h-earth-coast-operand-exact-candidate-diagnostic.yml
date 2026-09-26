@@ -25,10 +25,34 @@ jobs:
           node --input-type=module <<'NODE' | tee coast-presented-terrain-operands.json
           import {sampleHEarthTerrainField} from './h-earth-3d/terrain/h-earth.terrain-field.js';
           import {sampleHEarthVisibleTerrainClearanceSurface} from './showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js';
+          import {H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW as preview} from './showroom/globe/h-earth/render/landscape-preview.js';
           const worldX=0,worldZ=-96;
           const canonical=sampleHEarthTerrainField(worldX,worldZ);
           const presented=sampleHEarthVisibleTerrainClearanceSurface(worldX,worldZ);
-          const receipt={schema:'H_EARTH_COAST_PRESENTED_TERRAIN_OPERAND_DIAGNOSTIC_v1',worldX,worldZ,canonical,presented,canonicalValid:canonical?.valid===true,presentedValid:presented?.valid===true,combinedEligible:canonical?.valid===true&&presented?.valid===true};
+          const projected=preview?.componentResults?.terrain?.primitive??null;
+          const authoring=preview?.componentResults?.terrain?.authoringPrimitive??preview?.regionalRelief?.authoringPrimitive??null;
+          const relief=preview?.regionalRelief??null;
+          const projectedVertices=projected?.geometry?.vertices??[];
+          const authoringVertices=authoring?.geometry?.vertices??[];
+          const correspondencePredicates={
+            previewOk:preview?.ok===true,
+            reliefOk:relief?.ok===true,
+            reliefPrimitiveEqualsProjected:relief?.primitive===projected,
+            projectedGen311Materialized:projected?.metadata?.gen311RegionalReliefMaterialized===true,
+            authoringGen311Materialized:authoring?.metadata?.gen311RegionalReliefMaterialized===true,
+            vertexCountsEqualNonzero:projectedVertices.length===authoringVertices.length&&projectedVertices.length>0
+          };
+          const correspondenceEvidence={
+            previewStatus:preview?.status??null,
+            previewIssues:preview?.issues??[],
+            reliefIssues:relief?.issues??[],
+            projectedPrimitiveId:projected?.primitiveId??null,
+            reliefPrimitiveId:relief?.primitive?.primitiveId??null,
+            authoringPrimitiveId:authoring?.primitiveId??null,
+            projectedVertexCount:projectedVertices.length,
+            authoringVertexCount:authoringVertices.length
+          };
+          const receipt={schema:'H_EARTH_COAST_PRESENTED_TERRAIN_OPERAND_DIAGNOSTIC_v2',worldX,worldZ,canonical,presented,canonicalValid:canonical?.valid===true,presentedValid:presented?.valid===true,combinedEligible:canonical?.valid===true&&presented?.valid===true,correspondencePredicates,correspondenceEvidence};
           console.log(JSON.stringify(receipt,null,2));
           NODE
       - uses: actions/upload-artifact@v4

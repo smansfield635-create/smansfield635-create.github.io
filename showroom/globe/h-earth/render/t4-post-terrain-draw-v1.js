@@ -51,6 +51,7 @@ export function createHEarthT4PostTerrainDraw(gl){
   gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,probeTexture,0);
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('T4_DIAGNOSTIC_TARGET_INCOMPLETE');
   gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+  const depthSampleFramebuffer=gl.createFramebuffer();if(!depthSampleFramebuffer)throw Error('T4_DEPTH_SAMPLE_FRAMEBUFFER_CREATE');
   let frames=0,maximumAddedDrawCalls=0;
   let latestClipDiagnostic=null,latestFragmentDiagnostic=null,latestDepthDiagnostic=null;
   const multiplyPoint=(m,p)=>{
@@ -99,9 +100,7 @@ export function createHEarthT4PostTerrainDraw(gl){
         }
       }
       const priorFramebuffer=gl.getParameter(gl.FRAMEBUFFER_BINDING);
-      const sampleFramebuffer=gl.createFramebuffer();
-      if(!sampleFramebuffer)throw Error('T4_DEPTH_SAMPLE_FRAMEBUFFER_CREATE');
-      gl.bindFramebuffer(gl.FRAMEBUFFER,sampleFramebuffer);
+      gl.bindFramebuffer(gl.FRAMEBUFFER,depthSampleFramebuffer);
       gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.TEXTURE_2D,depthTexture,0);
       const deltas=[];
       for(const item of admitted){
@@ -109,7 +108,7 @@ export function createHEarthT4PostTerrainDraw(gl){
         gl.readPixels(item.px,item.py,1,1,gl.DEPTH_COMPONENT,gl.FLOAT,value);
         if(Number.isFinite(value[0]))deltas.push(item.projectedDepth-value[0]);
       }
-      gl.bindFramebuffer(gl.FRAMEBUFFER,priorFramebuffer);gl.deleteFramebuffer(sampleFramebuffer);
+      gl.bindFramebuffer(gl.FRAMEBUFFER,priorFramebuffer);
       deltas.sort((a,b)=>a-b);
       const q=p=>deltas[Math.min(deltas.length-1,Math.max(0,Math.round((deltas.length-1)*p)))];
       latestDepthDiagnostic=Object.freeze({sampleCount:deltas.length,minimum:Math.min(...deltas),maximum:Math.max(...deltas),mean:deltas.reduce((a,b)=>a+b,0)/deltas.length,p10:q(.1),p25:q(.25),p50:q(.5),p75:q(.75),p90:q(.9),behindTerrain:deltas.filter(v=>v>0).length,inFrontOfTerrain:deltas.filter(v=>v<=0).length});

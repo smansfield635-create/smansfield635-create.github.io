@@ -438,7 +438,7 @@ void main(){
     palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
     base=palette;
-  }else if(vRoleCode==2u){
+  }else if(vRoleCode==4u){
     vec2 waterWorld=vWorldPosition.xz;
     float broadWave=stableWave(dot(waterWorld,vec2(0.052,0.031))+uOceanPresentationPhase*0.72);
     float crossWave=stableWave(dot(waterWorld,vec2(-0.087,0.063))-uOceanPresentationPhase*0.49+1.7);
@@ -504,7 +504,7 @@ void main(){
 
   float specularLightingGain=vRoleCode==1u
     ?mix(0.07,0.14,terrainReliefEnvelope)
-    :(vRoleCode==2u?0.36:0.07);
+    :(vRoleCode==4u?0.36:0.07);
 
   float ambient=
     0.26+
@@ -513,7 +513,7 @@ void main(){
   float directional=
     diffuse*
     uSunIntensity*
-    (vRoleCode==1u?0.90:(vRoleCode==2u?0.74:0.82));
+    (vRoleCode==1u?0.90:(vRoleCode==4u?0.74:0.82));
   vec3 lit=base*(ambient+directional)*uSunColor;
   lit+=base*rim*(vRoleCode==1u?0.18:0.10);
   lit+=uSunColor*specular*specularLightingGain;

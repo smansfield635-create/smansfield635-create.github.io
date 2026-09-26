@@ -724,11 +724,19 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }
+  let firstFramePresentationPublished = false;
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
     gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
+    counters.visiblePresentationCount += 1;
+    if (!firstFramePresentationPublished) {
+      firstFramePresentationPublished = true;
+      globalThis.dispatchEvent?.(new CustomEvent('h-earth-runtime-diagnostic-stage', {
+        detail: { stage: 'FIRST_FRAME_DRAWN', status: 'PASS' }
+      }));
+    }
+    return Object.freeze({ frameNumber: counters.frameCount, width, height });
   }
   function captureColorFrame(label, { includePng = true } = {}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');

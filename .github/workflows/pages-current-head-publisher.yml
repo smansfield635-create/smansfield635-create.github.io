@@ -11,7 +11,6 @@ on:
       - 'governance-bridge/index.html'
       - 'governance-bridge/governance/index.html'
       - 'governance-bridge/portability/index.html'
-      - 'governance-bridge/collaboration/index.html'
       - '.github/ai-router/publication-surfaces/governance-bridge.json'
   workflow_dispatch:
     inputs:

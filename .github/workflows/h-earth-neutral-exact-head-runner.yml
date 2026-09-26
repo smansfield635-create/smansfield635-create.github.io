@@ -92,6 +92,10 @@ jobs:
               return {
                 title:document.title,
                 bodyText:text.slice(0,3000),
+                finalUrl:location.href,
+                canvasPresent:document.getElementById('h-earth-functional-landscape-canvas') instanceof HTMLCanvasElement,
+                routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady??null,
+                startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
                 rendererModel:renderer?.outputModel??contract?.outputModel??null,
                 rendererVariant:renderer?.variant??renderer?.rendererVariant??contract?.variant??contract?.rendererVariant??null,
                 selectedRendererPath:liveGpuReceipt?.selectedRendererPath??null,
@@ -147,7 +151,8 @@ jobs:
             productMaterialization:['EXACT_CHECKED_OUT_REPOSITORY_ROOT'],
             substitutionsPerformed:false,
             actualBrowserExecution:true,
-            readiness,
+            readinessDiagnostic:readiness,
+            materialized:Boolean(initial?.canvasPresent&&later?.canvasPresent),
             pageErrors,
             consoleErrors,
             requestsFailed,
@@ -160,7 +165,7 @@ jobs:
           };
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
-          if(readiness!=='READY'||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
+          if(!receipt.materialized||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
           NODE
           node h-earth-exact-run.mjs
 

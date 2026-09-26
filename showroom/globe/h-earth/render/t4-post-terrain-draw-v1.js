@@ -41,7 +41,7 @@ export function createHEarthT4PostTerrainDraw(gl){
   const vao=gl.createVertexArray();if(!vao)throw Error('T4_VAO_CREATE');
   const batches=createHEarthT4StaticGpuBatches(gl);
   let frames=0,maximumAddedDrawCalls=0;
-  let latestClipDiagnostic=null,latestFragmentDiagnostic=null,pendingFragmentQuery=null;
+  let latestClipDiagnostic=null,latestFragmentDiagnostic=null;
   const multiplyPoint=(m,p)=>{
     const x=p.x,y=p.y,z=p.z,w=1;
     return {
@@ -74,24 +74,33 @@ export function createHEarthT4PostTerrainDraw(gl){
       gl.uniform3fv(classColor,kind==='TUFT'?new Float32Array([0.22,0.36,0.12]):new Float32Array([0.31,0.29,0.27]));
     };
     latestClipDiagnostic=clipDiagnostic(packet);
-    if(pendingFragmentQuery){
-      const available=gl.getQueryParameter(pendingFragmentQuery,gl.QUERY_RESULT_AVAILABLE);
-      if(available){
-        const anySamples=Boolean(gl.getQueryParameter(pendingFragmentQuery,gl.QUERY_RESULT));
-        gl.deleteQuery(pendingFragmentQuery);
-        pendingFragmentQuery=null;
-        latestFragmentDiagnostic=Object.freeze({available:true,anySamples,resolvedFrame:frames+1});
-      }else{
-        latestFragmentDiagnostic=Object.freeze({available:false,anySamples:null,pending:true});
-      }
-    }
-    const query=gl.createQuery();
-    if(!query)throw Error('T4_OCCLUSION_QUERY_CREATE');
-    gl.beginQuery(gl.ANY_SAMPLES_PASSED,query);
     const receipt=drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
-    gl.endQuery(gl.ANY_SAMPLES_PASSED);
-    if(!pendingFragmentQuery) pendingFragmentQuery=query;
-    else gl.deleteQuery(query);
+    const probeWidth=Math.min(160,width),probeHeight=Math.min(90,height);
+    const probeX=Math.max(0,Math.floor((width-probeWidth)/2)),probeY=Math.max(0,Math.floor((height-probeHeight)/2));
+    const normalPixels=new Uint8Array(probeWidth*probeHeight*4);
+    gl.readPixels(probeX,probeY,probeWidth,probeHeight,gl.RGBA,gl.UNSIGNED_BYTE,normalPixels);
+    const normalHash=(()=>{let h=0x811c9dc5;for(const byte of normalPixels){h^=byte;h=Math.imul(h,0x01000193)>>>0;}return 'fnv1a32:'+h.toString(16).padStart(8,'0');})();
+    const depthWasEnabled=gl.isEnabled(gl.DEPTH_TEST);
+    const depthMask=gl.getParameter(gl.DEPTH_WRITEMASK);
+    gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
+    const diagnosticBindClass=(kind,batch)=>{
+      gl.bindBuffer(gl.ARRAY_BUFFER,batch.vertexBuffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);
+      gl.uniform3fv(classColor,new Float32Array(kind==='TUFT'?[1,0,1]:[0,1,1]));
+    };
+    drawHEarthT4StaticGpuBatches(gl,batches,diagnosticBindClass);
+    const noDepthPixels=new Uint8Array(probeWidth*probeHeight*4);
+    gl.readPixels(probeX,probeY,probeWidth,probeHeight,gl.RGBA,gl.UNSIGNED_BYTE,noDepthPixels);
+    const noDepthHash=(()=>{let h=0x811c9dc5;for(const byte of noDepthPixels){h^=byte;h=Math.imul(h,0x01000193)>>>0;}return 'fnv1a32:'+h.toString(16).padStart(8,'0');})();
+    let changedPixels=0;
+    for(let i=0;i<normalPixels.length;i+=4){
+      if(normalPixels[i]!==noDepthPixels[i]||normalPixels[i+1]!==noDepthPixels[i+1]||normalPixels[i+2]!==noDepthPixels[i+2]||normalPixels[i+3]!==noDepthPixels[i+3]) changedPixels++;
+    }
+    latestFragmentDiagnostic=Object.freeze({probeWidth,probeHeight,normalHash,noDepthHash,changedPixels,noDepthRasterContribution:changedPixels>0});
+    if(depthWasEnabled)gl.enable(gl.DEPTH_TEST);else gl.disable(gl.DEPTH_TEST);gl.depthMask(depthMask);
+    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(program);gl.bindVertexArray(vao);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
+    gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
+    drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
     frames++;maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,receipt.drawCalls);
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
     return receipt;

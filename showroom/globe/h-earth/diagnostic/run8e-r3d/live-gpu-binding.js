@@ -168,7 +168,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   };
 
   const t4Extension = t4Requested ? createHEarthT4PostTerrainDraw(canvas.getContext('webgl2')) : null;
-  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, postTerrainDraw: t4Extension?.drawAfterTerrain ?? null });
+  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, postTerrainDraw: t4Extension?.drawAfterTerrain ?? null, postRenderDiagnostic: t4Extension?.runPostRenderDiagnostic ?? null });
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();

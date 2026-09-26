@@ -45,7 +45,13 @@ export function createHEarthT4PostTerrainDraw(gl){
   gl.bindRenderbuffer(gl.RENDERBUFFER,diagnosticDepth);gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT24,640,360);
   gl.bindFramebuffer(gl.FRAMEBUFFER,diagnosticFramebuffer);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,diagnosticColor,0);gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,diagnosticDepth);
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('T4_AB_TARGET_INCOMPLETE');gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-  let frames=0,maximumAddedDrawCalls=0,latestDepthAB=null;
+  let frames=0,maximumAddedDrawCalls=0,latestDepthAB=null,preT4SnapshotReady=false;
+  const capturePreT4Diagnostic=({width,height,sourceFramebuffer})=>{
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER,sourceFramebuffer);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,diagnosticFramebuffer);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT,gl.NEAREST);
+    preT4SnapshotReady=true;
+    gl.bindFramebuffer(gl.FRAMEBUFFER,sourceFramebuffer);
+  };
   const drawAfterTerrain=({packet})=>{
     gl.useProgram(program);gl.bindVertexArray(vao);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
     gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
@@ -59,6 +65,7 @@ export function createHEarthT4PostTerrainDraw(gl){
     return receipt;
   };
   const runPostRenderDiagnostic=({packet,width,height,sourceFramebuffer})=>{
+    if(!preT4SnapshotReady)throw Error('T4_PRE_SNAPSHOT_MISSING');
     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,diagnosticFramebuffer);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,sourceFramebuffer);
     gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.DEPTH_BUFFER_BIT,gl.NEAREST);
     const run=depthEnabled=>{
@@ -70,8 +77,6 @@ export function createHEarthT4PostTerrainDraw(gl){
       const pixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);let count=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]||pixels[i+1]||pixels[i+2])count++;return count;
     };
     const depthOnPixels=run(true),depthOffPixels=run(false);
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER,sourceFramebuffer);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,diagnosticFramebuffer);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT,gl.NEAREST);
     gl.bindFramebuffer(gl.FRAMEBUFFER,diagnosticFramebuffer);
     const terrainPixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,terrainPixels);
     gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(false);gl.disable(gl.BLEND);gl.useProgram(program);gl.bindVertexArray(vao);gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
@@ -87,5 +92,5 @@ export function createHEarthT4PostTerrainDraw(gl){
     latestDepthAB=Object.freeze({depthOnPixels,depthOffPixels,ratio:depthOffPixels?depthOnPixels/depthOffPixels:null,productionColorDelta:Object.freeze({changedPixels:changedProductionPixels,minimum:q(0),p10:q(.1),p25:q(.25),p50:q(.5),p75:q(.75),p90:q(.9),maximum:q(1),mean:deltas.length?deltas.reduce((a,b)=>a+b,0)/deltas.length:0})});
     gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   };
-  return Object.freeze({drawAfterTerrain,runPostRenderDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB})});
+  return Object.freeze({capturePreT4Diagnostic,drawAfterTerrain,runPostRenderDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB})});
 }

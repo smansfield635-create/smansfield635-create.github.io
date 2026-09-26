@@ -103,6 +103,8 @@ jobs:
                 bodyText:text.slice(0,3000),
                 rendererModel:renderer?.outputModel??contract?.outputModel??null,
                 rendererVariant:renderer?.variant??renderer?.rendererVariant??contract?.variant??contract?.rendererVariant??null,
+                animationFrame: renderer?.animationFrame ?? renderer?.frameCount ?? contract?.animationFrame ?? contract?.frameCount ?? globals.H_EARTH_ANIMATION_FRAME ?? globals.H_EARTH_FRAME_COUNT ?? null,
+                worldRebuildCount: renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
                 globals
               };
             });
@@ -148,7 +150,9 @@ jobs:
             responses,
             initial,
             later,
-            screenshotChanged:Boolean(initial&&later&&initial.screenshotSha256!==later.screenshotSha256)
+            screenshotChanged:Boolean(initial&&later&&initial.screenshotSha256!==later.screenshotSha256),
+            animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
+            worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false)
           };
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));

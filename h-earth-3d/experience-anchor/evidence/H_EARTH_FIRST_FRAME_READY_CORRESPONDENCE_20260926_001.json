@@ -1,0 +1,40 @@
+{
+  "schema": "H_EARTH_FIRST_FRAME_READY_CORRESPONDENCE_EVIDENCE_v1",
+  "candidateSha": "addbd5ba883b171c637990dd1fd537b34e763bd8",
+  "workflowRunId": 36266947992,
+  "workflowArtifactId": 10914014223,
+  "workflowArtifactDigest": "sha256:fe9be74d2ad0f72553cbd894cd3318de89d468fe0a149c61e4e82c83cf8dd956",
+  "neutralRunnerReceiptSha256": "7a678325a93a78c73099055455c80f800f5c271758f5947f984c11147518c3a3",
+  "execution": {
+    "materialized": true,
+    "readinessDiagnostic": "READY",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "requestsFailed": [],
+    "routeReady": "true",
+    "firstFramePresented": "PASS",
+    "readyPublished": "PASS",
+    "firstFailureStage": null,
+    "failureClass": null,
+    "webglError": 0,
+    "framebufferStatus": 36053,
+    "worldRebuildCount": 0,
+    "worldRebuildStayedZero": true
+  },
+  "visualEvidence": {
+    "initialScreenshotSha256": "4d1a5d89b1495192451134ab504225f6d0dd5af26ef0bea41d28e629da14ca94",
+    "laterScreenshotSha256": "4d1a5d89b1495192451134ab504225f6d0dd5af26ef0bea41d28e629da14ca94",
+    "initialCanvasSha256": "f5513716678aa4a055304e964f5395ccc79d0329b99f70cd22a2a7d93b4e8104",
+    "laterCanvasSha256": "f5513716678aa4a055304e964f5395ccc79d0329b99f70cd22a2a7d93b4e8104",
+    "interpretation": "The same live H-Earth coastal environment remained visibly present after READY publication."
+  },
+  "interactionEvidence": {
+    "liveGpuStatus": "RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE",
+    "navigationAuthorityMutated": false
+  },
+  "continuityEvidence": {
+    "selectedRendererPath": "../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "sameWorldRoute": "/showroom/globe/h-earth/",
+    "worldRebuildCount": 0
+  }
+}

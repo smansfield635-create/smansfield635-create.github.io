@@ -1,0 +1,172 @@
+name: H-Earth Neutral Exact Head Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact candidate SHA to execute unchanged
+        required: true
+        type: string
+      route_query:
+        description: Optional query string without leading question mark
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Require exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+
+      - name: Materialize unchanged H-Earth product roots
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-exact/showroom/globe
+          cp -a showroom/globe/h-earth /tmp/h-earth-exact/showroom/globe/
+          cp -a h-earth-3d /tmp/h-earth-exact/
+          test -f /tmp/h-earth-exact/showroom/globe/h-earth/index.html
+          test -d /tmp/h-earth-exact/h-earth-3d
+
+      - name: Install bounded Chromium
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute actual H-Earth route unchanged
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          ROUTE_QUERY: ${{ inputs.route_query }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory /tmp/h-earth-exact >/tmp/h-earth-exact-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          for i in $(seq 1 40); do
+            curl --fail --silent "http://127.0.0.1:4173/showroom/globe/h-earth/" >/dev/null && break
+            sleep 1
+          done
+          mkdir -p /tmp/h-earth-exact-evidence
+          cat > /tmp/h-earth-exact-run.mjs <<'NODE'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+
+          const out='/tmp/h-earth-exact-evidence';
+          const targetSha=process.env.TARGET_SHA;
+          const query=String(process.env.ROUTE_QUERY||'').replace(/^\?/, '');
+          const route='/showroom/globe/h-earth/'+(query?'?'+query:'');
+          const url='http://127.0.0.1:4173'+route;
+          const browser=await chromium.launch({headless:true});
+          const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});
+          const page=await context.newPage();
+          const pageErrors=[];
+          const consoleErrors=[];
+          const requestsFailed=[];
+          const responses=[];
+          page.on('pageerror',e=>pageErrors.push(e.message));
+          page.on('console',m=>{if(m.type()==='error') consoleErrors.push(m.text())});
+          page.on('requestfailed',r=>requestsFailed.push({url:r.url(),failure:r.failure()}));
+          page.on('response',r=>responses.push({url:r.url(),status:r.status(),contentType:r.headers()['content-type']||null}));
+
+          const sample=async label => {
+            const state=await page.evaluate(() => {
+              const text=document.body?.innerText||'';
+              const renderer=window.H_EARTH_3D_RENDERER??null;
+              const contract=window.H_EARTH_3D_RENDERER_CONTRACT??null;
+              const globals={};
+              for(const key of Object.keys(window)){
+                if(/H_EARTH/i.test(key)&&/(FRAME|ANIM|REBUILD|RENDERER|WORLD)/i.test(key)){
+                  const value=window[key];
+                  if(['string','number','boolean'].includes(typeof value)||value===null) globals[key]=value;
+                }
+              }
+              return {
+                title:document.title,
+                bodyText:text.slice(0,3000),
+                rendererModel:renderer?.outputModel??contract?.outputModel??null,
+                rendererVariant:renderer?.variant??renderer?.rendererVariant??contract?.variant??contract?.rendererVariant??null,
+                animationFrame: renderer?.animationFrame ?? renderer?.frameCount ?? contract?.animationFrame ?? contract?.frameCount ?? globals.H_EARTH_ANIMATION_FRAME ?? globals.H_EARTH_FRAME_COUNT ?? null,
+                worldRebuildCount: renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
+                globals
+              };
+            });
+            const screenshot=label+'.png';
+            await page.screenshot({path:out+'/'+screenshot,fullPage:true});
+            const bytes=await fs.readFile(out+'/'+screenshot);
+            return {...state,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex')};
+          };
+
+          let readiness='TIMEOUT';
+          let initial=null;
+          let later=null;
+          try {
+            await page.goto(url,{waitUntil:'networkidle',timeout:180000});
+            readiness=await page.waitForFunction(() => {
+              const text=document.body?.innerText||'';
+              if(/Initialization failed\.|RENDERER_CONSTRUCTION_EXCEPTION/.test(text)) return 'FAILED';
+              const initializing=/H-EARTH · LIVE WORLD INITIALIZATION|Constructing world renderer|Entering the coast\./i.test(text);
+              const live=/LIVE ENVIRONMENT/i.test(text)&&/H_EARTH_GROUND_CELL_001:[A-Z0-9:]+/i.test(text);
+              const mounted=window.H_EARTH_3D_RENDERER!=null||window.H_EARTH_3D_RENDERER_CONTRACT!=null||/RENDERER_MOUNTED|Entering complete|World ready|Initialization complete/i.test(text)||(!initializing&&live);
+              return mounted?'READY':false;
+            },null,{timeout:120000}).then(h=>h.jsonValue()).catch(()=> 'TIMEOUT');
+            initial=await sample('initial');
+            await page.waitForTimeout(3000);
+            later=await sample('later');
+          } finally {
+            await context.close();
+            await browser.close();
+          }
+          const receipt={
+            schema:'H_EARTH_NEUTRAL_EXACT_HEAD_RUNNER_v1',
+            targetSha,
+            route,
+            url,
+            exactHeadRequired:true,
+            productMaterialization:['showroom/globe/h-earth/','h-earth-3d/'],
+            substitutionsPerformed:false,
+            actualBrowserExecution:true,
+            readiness,
+            pageErrors,
+            consoleErrors,
+            requestsFailed,
+            responses,
+            initial,
+            later,
+            screenshotChanged:Boolean(initial&&later&&initial.screenshotSha256!==later.screenshotSha256),
+            animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
+            worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false)
+          };
+          await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(readiness!=='READY'||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
+          NODE
+          node /tmp/h-earth-exact-run.mjs
+
+      - name: Upload exact-head runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-neutral-exact-head-${{ inputs.target_sha }}
+          path: |
+            /tmp/h-earth-exact-evidence
+            /tmp/h-earth-exact-server.log
+          if-no-files-found: error
+          retention-days: 30

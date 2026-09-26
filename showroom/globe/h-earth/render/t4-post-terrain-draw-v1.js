@@ -70,7 +70,21 @@ export function createHEarthT4PostTerrainDraw(gl){
       const pixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);let count=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]||pixels[i+1]||pixels[i+2])count++;return count;
     };
     const depthOnPixels=run(true),depthOffPixels=run(false);
-    latestDepthAB=Object.freeze({depthOnPixels,depthOffPixels,ratio:depthOffPixels?depthOnPixels/depthOffPixels:null});
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER,sourceFramebuffer);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,diagnosticFramebuffer);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT,gl.NEAREST);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,diagnosticFramebuffer);
+    const terrainPixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,terrainPixels);
+    gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(false);gl.disable(gl.BLEND);gl.useProgram(program);gl.bindVertexArray(vao);gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
+    const productionBindClass=(kind,batch)=>{gl.bindBuffer(gl.ARRAY_BUFFER,batch.vertexBuffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);gl.uniform3fv(classColor,kind==='TUFT'?new Float32Array([0.22,0.36,0.12]):new Float32Array([0.31,0.29,0.27]));};
+    drawHEarthT4StaticGpuBatches(gl,batches,productionBindClass);
+    const composedPixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,composedPixels);
+    const deltas=[];let changedProductionPixels=0;
+    for(let i=0;i<terrainPixels.length;i+=4){
+      const dr=Math.abs(composedPixels[i]-terrainPixels[i]),dg=Math.abs(composedPixels[i+1]-terrainPixels[i+1]),db=Math.abs(composedPixels[i+2]-terrainPixels[i+2]);
+      if(dr||dg||db){changedProductionPixels++;deltas.push(Math.sqrt(dr*dr+dg*dg+db*db));}
+    }
+    deltas.sort((a,b)=>a-b);const q=p=>deltas.length?deltas[Math.min(deltas.length-1,Math.max(0,Math.round((deltas.length-1)*p)))]:0;
+    latestDepthAB=Object.freeze({depthOnPixels,depthOffPixels,ratio:depthOffPixels?depthOnPixels/depthOffPixels:null,productionColorDelta:Object.freeze({changedPixels:changedProductionPixels,minimum:q(0),p10:q(.1),p25:q(.25),p50:q(.5),p75:q(.75),p90:q(.9),maximum:q(1),mean:deltas.length?deltas.reduce((a,b)=>a+b,0)/deltas.length:0})});
     gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   };
   return Object.freeze({drawAfterTerrain,runPostRenderDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB})});

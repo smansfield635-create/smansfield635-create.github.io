@@ -33,16 +33,6 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
 
-      - name: Materialize unchanged H-Earth product roots
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/h-earth-exact/showroom/globe
-          cp -a showroom/globe/h-earth /tmp/h-earth-exact/showroom/globe/
-          cp -a h-earth-3d /tmp/h-earth-exact/
-          test -f /tmp/h-earth-exact/showroom/globe/h-earth/index.html
-          test -d /tmp/h-earth-exact/h-earth-3d
-
       - name: Install bounded Chromium
         shell: bash
         run: |
@@ -56,7 +46,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --directory /tmp/h-earth-exact >/tmp/h-earth-exact-server.log 2>&1 &
+          python3 -m http.server 4173 --directory . >/tmp/h-earth-exact-server.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
           for i in $(seq 1 40); do
@@ -140,7 +130,7 @@ jobs:
             route,
             url,
             exactHeadRequired:true,
-            productMaterialization:['showroom/globe/h-earth/','h-earth-3d/'],
+            productMaterialization:['EXACT_CHECKED_OUT_REPOSITORY_ROOT'],
             substitutionsPerformed:false,
             actualBrowserExecution:true,
             readiness,

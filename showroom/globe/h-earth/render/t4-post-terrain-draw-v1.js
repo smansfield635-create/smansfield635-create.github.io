@@ -58,8 +58,8 @@ export function createHEarthT4PostTerrainDraw(gl){
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
     return receipt;
   };
-  const runPostRenderDiagnostic=({packet,width,height})=>{
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,diagnosticFramebuffer);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER);
+  const runPostRenderDiagnostic=({packet,width,height,sourceFramebuffer})=>{
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,diagnosticFramebuffer);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,sourceFramebuffer);
     gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.DEPTH_BUFFER_BIT,gl.NEAREST);
     const run=depthEnabled=>{
       gl.bindFramebuffer(gl.FRAMEBUFFER,diagnosticFramebuffer);gl.viewport(0,0,width,height);gl.colorMask(true,true,true,true);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);

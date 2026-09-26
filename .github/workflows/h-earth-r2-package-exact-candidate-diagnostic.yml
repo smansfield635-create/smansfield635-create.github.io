@@ -1,0 +1,36 @@
+name: H-Earth R2 Package Exact Candidate Diagnostic
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+      - name: Require exact candidate
+        run: test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Evaluate raw R2 package
+        run: |
+          node --input-type=module <<'NODE' | tee h-earth-r2-package-diagnostic.json
+          import {getHEarthRun8ER2ImmutableLiveRenderPackage} from './showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
+          const packageRecord=getHEarthRun8ER2ImmutableLiveRenderPackage();
+          const receipt={schema:'H_EARTH_R2_PACKAGE_EXACT_CANDIDATE_DIAGNOSTIC_v1',eligible:packageRecord?.eligible===true,status:packageRecord?.status??null,contractId:packageRecord?.contractId??null,issues:packageRecord?.issues??[],packageOccurrenceId:packageRecord?.packageOccurrenceId??null,primitiveCount:packageRecord?.primitiveCount??null,vertexCount:packageRecord?.vertexCount??null,triangleCount:packageRecord?.triangleCount??null,indexCount:packageRecord?.indexCount??null,roleCounts:packageRecord?.roleCounts??null};
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r2-package-${{ inputs.target_sha }}
+          path: h-earth-r2-package-diagnostic.json
+          if-no-files-found: error
+          retention-days: 30

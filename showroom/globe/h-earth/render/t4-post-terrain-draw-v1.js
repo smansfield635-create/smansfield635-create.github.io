@@ -96,9 +96,18 @@ export function createHEarthT4PostTerrainDraw(gl){
     const sourcePixels=new Uint8Array(width*height*4),presentedPixels=new Uint8Array(width*height*4);
     gl.bindFramebuffer(gl.FRAMEBUFFER,sourceFramebuffer);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,sourcePixels);
     gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,presentedPixels);
-    let exactMatches=0,mismatches=0,maximumChannelDelta=0;
-    for(const pixelIndex of productionChangedPixelIndices){const i=pixelIndex*4;let same=true;for(let c=0;c<4;c++){const d=Math.abs(sourcePixels[i+c]-presentedPixels[i+c]);if(d){same=false;maximumChannelDelta=Math.max(maximumChannelDelta,d);}}if(same)exactMatches++;else mismatches++;}
-    if(latestDepthAB)latestDepthAB=Object.freeze({...latestDepthAB,presentationParity:Object.freeze({testedPixels:productionChangedPixelIndices.length,exactMatches,mismatches,maximumChannelDelta})});
+    let exactMatches=0,mismatches=0,maximumChannelDelta=0,flippedYExactMatches=0,sourceRgbFoundAnywhere=0;
+    const presentedRgb=new Set();for(let i=0;i<presentedPixels.length;i+=4)presentedRgb.add(presentedPixels[i]+','+presentedPixels[i+1]+','+presentedPixels[i+2]);
+    const samples=[];
+    for(const pixelIndex of productionChangedPixelIndices){
+      const i=pixelIndex*4,x=pixelIndex%width,y=Math.floor(pixelIndex/width),fi=((height-1-y)*width+x)*4;
+      let same=true,flipSame=true;
+      for(let c=0;c<4;c++){const d=Math.abs(sourcePixels[i+c]-presentedPixels[i+c]);if(d){same=false;maximumChannelDelta=Math.max(maximumChannelDelta,d);}if(sourcePixels[i+c]!==presentedPixels[fi+c])flipSame=false;}
+      if(same)exactMatches++;else mismatches++;if(flipSame)flippedYExactMatches++;
+      const key=sourcePixels[i]+','+sourcePixels[i+1]+','+sourcePixels[i+2];if(presentedRgb.has(key))sourceRgbFoundAnywhere++;
+      if(samples.length<12)samples.push(Object.freeze({x,y,source:[sourcePixels[i],sourcePixels[i+1],sourcePixels[i+2],sourcePixels[i+3]],sameCoordinate:[presentedPixels[i],presentedPixels[i+1],presentedPixels[i+2],presentedPixels[i+3]],flippedY:[presentedPixels[fi],presentedPixels[fi+1],presentedPixels[fi+2],presentedPixels[fi+3]]}));
+    }
+    if(latestDepthAB)latestDepthAB=Object.freeze({...latestDepthAB,presentationParity:Object.freeze({testedPixels:productionChangedPixelIndices.length,exactMatches,mismatches,maximumChannelDelta,flippedYExactMatches,sourceRgbFoundAnywhere,samples:Object.freeze(samples)})});
     gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   };
   return Object.freeze({capturePreT4Diagnostic,drawAfterTerrain,runPostRenderDiagnostic,runPostPresentationDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB})});

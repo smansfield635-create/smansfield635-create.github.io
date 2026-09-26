@@ -67,6 +67,25 @@ jobs:
           const browser=await chromium.launch({headless:true});
           const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});
           const page=await context.newPage();
+          await page.addInitScript(() => {
+            const proto=WebGL2RenderingContext.prototype;
+            const originalGetUniformLocation=proto.getUniformLocation;
+            const originalUniform1f=proto.uniform1f;
+            const oceanLocations=new WeakSet();
+            window.__H_EARTH_OCEAN_PHASE_WRITES=[];
+            proto.getUniformLocation=function(program,name){
+              const location=originalGetUniformLocation.call(this,program,name);
+              if(name==='uOceanPresentationPhase'&&location) oceanLocations.add(location);
+              return location;
+            };
+            proto.uniform1f=function(location,value){
+              if(location&&oceanLocations.has(location)){
+                window.__H_EARTH_OCEAN_PHASE_WRITES.push(Number(value));
+                if(window.__H_EARTH_OCEAN_PHASE_WRITES.length>256) window.__H_EARTH_OCEAN_PHASE_WRITES.shift();
+              }
+              return originalUniform1f.call(this,location,value);
+            };
+          });
           const pageErrors=[];
           const consoleErrors=[];
           const requestsFailed=[];
@@ -114,6 +133,7 @@ jobs:
                 })(),
                 routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady??null,
                 startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
+                oceanPhaseWrites:(window.__H_EARTH_OCEAN_PHASE_WRITES??[]).slice(-32),
                 rendererModel:renderer?.outputModel??contract?.outputModel??null,
                 rendererVariant:renderer?.variant??renderer?.rendererVariant??contract?.variant??contract?.rendererVariant??null,
                 selectedRendererPath:liveGpuReceipt?.selectedRendererPath??null,

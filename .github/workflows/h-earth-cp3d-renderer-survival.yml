@@ -4,7 +4,11 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'showroom/globe/h-earth/**'
+      - 'showroom/globe/h-earth/index.html'
+      - 'showroom/globe/h-earth/render/**'
+      - 'showroom/globe/h-earth/diagnostic/run8e-r3d/**'
+      - 'showroom/globe/h-earth/diagnostic/touch-motion-cp2b/**'
+      - 'showroom/globe/h-earth/functional-landscape/**'
       - 'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'
       - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-**'
       - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1**'

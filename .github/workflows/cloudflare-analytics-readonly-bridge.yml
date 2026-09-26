@@ -11,6 +11,7 @@ on:
     - cron: '17 * * * *'
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -375,6 +376,17 @@ jobs:
           done
           echo "Analytics collection succeeded but snapshot persistence exhausted retries." >&2
           exit 1
+
+      - name: Publish current analytics snapshot
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api --method POST "/repos/$GITHUB_REPOSITORY/actions/workflows/pages-current-head-publisher.yml/dispatches" \
+            -f ref=main \
+            -f inputs[surface_id]=analytics
+          echo "ANALYTICS_PUBLICATION_DISPATCHED=analytics"
 
       - name: Upload private workflow artifact
         uses: actions/upload-artifact@v4

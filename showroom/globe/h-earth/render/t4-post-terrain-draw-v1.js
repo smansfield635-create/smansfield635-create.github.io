@@ -97,7 +97,7 @@ export function createHEarthT4PostTerrainDraw(gl){
     }
     return Object.freeze({total:647,inside,positiveW,byKind});
   };
-  const drawAfterTerrain=({packet,depthTexture,width,height})=>{
+  const drawAfterTerrain=({packet})=>{
     gl.useProgram(program);gl.bindVertexArray(vao);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
     gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
     const bindClass=(kind,batch)=>{
@@ -105,27 +105,6 @@ export function createHEarthT4PostTerrainDraw(gl){
       gl.uniform3fv(classColor,kind==='TUFT'?new Float32Array([0.22,0.36,0.12]):new Float32Array([0.31,0.29,0.27]));
     };
     latestClipDiagnostic=clipDiagnostic(packet);
-    if(depthTexture){
-      const admitted=[];
-      for(const [kind,batch] of [['TUFT',batches.tuft],['ROCK',batches.rock]]){
-        for(const instance of batch.instances){
-          const point=regionToHEarthPlanetPoint({x:instance.x,y:instance.elevation,z:instance.z});
-          const clip=multiplyPoint(packet.camera.viewProjectionMatrix,point);
-          if(!(clip.w>0&&Math.abs(clip.x)<=clip.w&&Math.abs(clip.y)<=clip.w&&clip.z>=-clip.w&&clip.z<=clip.w))continue;
-          const ndcX=clip.x/clip.w,ndcY=clip.y/clip.w,ndcZ=clip.z/clip.w;
-          admitted.push({kind,projectedDepth:ndcZ*.5+.5,px:Math.min(width-1,Math.max(0,Math.floor((ndcX*.5+.5)*width))),py:Math.min(height-1,Math.max(0,Math.floor((ndcY*.5+.5)*height)))});
-        }
-      }
-      const priorFramebuffer=gl.getParameter(gl.FRAMEBUFFER_BINDING),priorViewport=gl.getParameter(gl.VIEWPORT);
-      gl.bindFramebuffer(gl.FRAMEBUFFER,depthSampleFramebuffer);gl.viewport(0,0,width,height);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
-      gl.useProgram(depthProgram);gl.bindVertexArray(depthVao);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,depthTexture);gl.uniform1i(depthSampler,0);gl.drawArrays(gl.TRIANGLES,0,3);
-      const pixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-      const deltas=[];
-      for(const item of admitted){const terrainDepth=pixels[(item.py*width+item.px)*4]/255;if(Number.isFinite(terrainDepth))deltas.push(item.projectedDepth-terrainDepth);}
-      gl.bindFramebuffer(gl.FRAMEBUFFER,priorFramebuffer);gl.viewport(priorViewport[0],priorViewport[1],priorViewport[2],priorViewport[3]);
-      deltas.sort((a,b)=>a-b);const q=p=>deltas[Math.min(deltas.length-1,Math.max(0,Math.round((deltas.length-1)*p)))];
-      latestDepthDiagnostic=Object.freeze({sampleCount:deltas.length,encoding:'DEPTH_TEXTURE_TO_RGBA8_LINEAR',quantization:1/255,minimum:Math.min(...deltas),maximum:Math.max(...deltas),mean:deltas.reduce((a,b)=>a+b,0)/deltas.length,p10:q(.1),p25:q(.25),p50:q(.5),p75:q(.75),p90:q(.9),behindTerrain:deltas.filter(v=>v>1/255).length,inFrontOfOrWithinQuantization:deltas.filter(v=>v<=1/255).length});
-    }
     const receipt=drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
     gl.bindFramebuffer(gl.FRAMEBUFFER,probeFramebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,probeTexture,0);
@@ -147,5 +126,29 @@ export function createHEarthT4PostTerrainDraw(gl){
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
     return receipt;
   };
-  return Object.freeze({drawAfterTerrain,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestClipDiagnostic,latestFragmentDiagnostic,latestDepthDiagnostic,terrainElevationCorrespondence})});
+  const runPostRenderDiagnostic=({packet,depthTexture,width,height})=>{
+    if(depthTexture){
+      const admitted=[];
+      for(const [kind,batch] of [['TUFT',batches.tuft],['ROCK',batches.rock]]){
+        for(const instance of batch.instances){
+          const point=regionToHEarthPlanetPoint({x:instance.x,y:instance.elevation,z:instance.z});
+          const clip=multiplyPoint(packet.camera.viewProjectionMatrix,point);
+          if(!(clip.w>0&&Math.abs(clip.x)<=clip.w&&Math.abs(clip.y)<=clip.w&&clip.z>=-clip.w&&clip.z<=clip.w))continue;
+          const ndcX=clip.x/clip.w,ndcY=clip.y/clip.w,ndcZ=clip.z/clip.w;
+          admitted.push({kind,projectedDepth:ndcZ*.5+.5,px:Math.min(width-1,Math.max(0,Math.floor((ndcX*.5+.5)*width))),py:Math.min(height-1,Math.max(0,Math.floor((ndcY*.5+.5)*height)))});
+        }
+      }
+      const priorFramebuffer=gl.getParameter(gl.FRAMEBUFFER_BINDING),priorViewport=gl.getParameter(gl.VIEWPORT);
+      gl.bindFramebuffer(gl.FRAMEBUFFER,depthSampleFramebuffer);gl.viewport(0,0,width,height);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
+      gl.useProgram(depthProgram);gl.bindVertexArray(depthVao);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,depthTexture);gl.uniform1i(depthSampler,0);gl.drawArrays(gl.TRIANGLES,0,3);
+      const pixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+      const deltas=[];
+      for(const item of admitted){const terrainDepth=pixels[(item.py*width+item.px)*4]/255;if(Number.isFinite(terrainDepth))deltas.push(item.projectedDepth-terrainDepth);}
+      gl.bindFramebuffer(gl.FRAMEBUFFER,priorFramebuffer);gl.viewport(priorViewport[0],priorViewport[1],priorViewport[2],priorViewport[3]);
+      deltas.sort((a,b)=>a-b);const q=p=>deltas[Math.min(deltas.length-1,Math.max(0,Math.round((deltas.length-1)*p)))];
+      latestDepthDiagnostic=Object.freeze({sampleCount:deltas.length,encoding:'DEPTH_TEXTURE_TO_RGBA8_LINEAR',quantization:1/255,minimum:Math.min(...deltas),maximum:Math.max(...deltas),mean:deltas.reduce((a,b)=>a+b,0)/deltas.length,p10:q(.1),p25:q(.25),p50:q(.5),p75:q(.75),p90:q(.9),behindTerrain:deltas.filter(v=>v>1/255).length,inFrontOfOrWithinQuantization:deltas.filter(v=>v<=1/255).length});
+    }
+
+  };
+  return Object.freeze({drawAfterTerrain,runPostRenderDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestClipDiagnostic,latestFragmentDiagnostic,latestDepthDiagnostic,terrainElevationCorrespondence})});
 }

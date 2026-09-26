@@ -140,11 +140,15 @@
 
       if (!publicFaceActive) return;
 
+      const oceanPresentationActive = parameters.get('ocean-presentation') === 'v1';
       document.getElementById('h-earth-brand-context').textContent = 'Live interactive game platform';
-      document.getElementById('h-earth-b10-hero').hidden = false;
-      document.getElementById('h-earth-b10-world-heading').hidden = false;
-      document.getElementById('h-earth-b10-lenses').hidden = false;
+      document.getElementById('h-earth-b10-hero').hidden = oceanPresentationActive;
+      document.getElementById('h-earth-b10-world-heading').hidden = oceanPresentationActive;
+      document.getElementById('h-earth-b10-lenses').hidden = oceanPresentationActive;
       document.getElementById('h-earth-baseline-arrival').hidden = true;
+      if (oceanPresentationActive) {
+        document.documentElement.dataset.hEarthOceanWorldFirst = 'active';
+      }
 
       const runtimeDiagnostics = document.querySelector('.h-earth-runtime-diagnostics');
       const startupReceipt = document.querySelector('.h-earth-startup-receipt');

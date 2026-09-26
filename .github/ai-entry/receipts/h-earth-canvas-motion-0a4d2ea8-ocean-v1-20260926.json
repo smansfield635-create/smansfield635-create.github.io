@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-canvas-motion-0a4d2ea8-ocean-v1-20260926",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5001,
+  "requestBranch": "ai-dispatch-request-h-earth-canvas-motion-0a4d2ea8-20260926",
+  "requestCommit": "2f53dbc9bd875933fe2eafa4d0f1317e6e5ef8d0",
+  "requestCommitParent": "fa7e45be2f83fa17c8841764541781bf04793b46",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "fa7e45be2f83fa17c8841764541781bf04793b46",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "0a4d2ea86ccb9340a66a68d68d3300d1a0d37d6e",
+    "route_query": "ocean-presentation=v1"
+  },
+  "bridgeRunId": "36260510388",
+  "dispatchedRunId": 36260519240,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36260519240",
+  "dispatchedRunHeadSha": "fa7e45be2f83fa17c8841764541781bf04793b46",
+  "dispatchedAt": "2026-09-26T17:51:39.395Z",
+  "resolvedAt": "2026-09-26T17:51:43.271Z"
+}

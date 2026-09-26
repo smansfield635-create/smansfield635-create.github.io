@@ -704,7 +704,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
     gl.depthMask(true); gl.disable(gl.BLEND);
-    if (postTerrainDraw !== null) postTerrainDraw(Object.freeze({ gl, packet, width, height }));
+    if (postTerrainDraw !== null) postTerrainDraw(Object.freeze({ gl, packet, width, height, depthTexture: resources.depthTexture }));
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }

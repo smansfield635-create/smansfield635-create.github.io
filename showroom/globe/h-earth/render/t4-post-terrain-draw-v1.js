@@ -76,31 +76,28 @@ export function createHEarthT4PostTerrainDraw(gl){
     latestClipDiagnostic=clipDiagnostic(packet);
     const receipt=drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
     const probeWidth=Math.min(160,width),probeHeight=Math.min(90,height);
-    const probeX=Math.max(0,Math.floor((width-probeWidth)/2)),probeY=Math.max(0,Math.floor((height-probeHeight)/2));
-    const normalPixels=new Uint8Array(probeWidth*probeHeight*4);
-    gl.readPixels(probeX,probeY,probeWidth,probeHeight,gl.RGBA,gl.UNSIGNED_BYTE,normalPixels);
-    const normalHash=(()=>{let h=0x811c9dc5;for(const byte of normalPixels){h^=byte;h=Math.imul(h,0x01000193)>>>0;}return 'fnv1a32:'+h.toString(16).padStart(8,'0');})();
-    const depthWasEnabled=gl.isEnabled(gl.DEPTH_TEST);
-    const depthMask=gl.getParameter(gl.DEPTH_WRITEMASK);
-    gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
+    const probeTexture=gl.createTexture(),probeFramebuffer=gl.createFramebuffer();
+    if(!probeTexture||!probeFramebuffer)throw Error('T4_DIAGNOSTIC_TARGET_CREATE');
+    gl.bindTexture(gl.TEXTURE_2D,probeTexture);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,probeWidth,probeHeight,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,probeFramebuffer);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,probeTexture,0);
+    if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('T4_DIAGNOSTIC_TARGET_INCOMPLETE');
+    gl.viewport(0,0,probeWidth,probeHeight);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(program);gl.bindVertexArray(vao);gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
     const diagnosticBindClass=(kind,batch)=>{
       gl.bindBuffer(gl.ARRAY_BUFFER,batch.vertexBuffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);
       gl.uniform3fv(classColor,new Float32Array(kind==='TUFT'?[1,0,1]:[0,1,1]));
     };
     drawHEarthT4StaticGpuBatches(gl,batches,diagnosticBindClass);
-    const noDepthPixels=new Uint8Array(probeWidth*probeHeight*4);
-    gl.readPixels(probeX,probeY,probeWidth,probeHeight,gl.RGBA,gl.UNSIGNED_BYTE,noDepthPixels);
-    const noDepthHash=(()=>{let h=0x811c9dc5;for(const byte of noDepthPixels){h^=byte;h=Math.imul(h,0x01000193)>>>0;}return 'fnv1a32:'+h.toString(16).padStart(8,'0');})();
+    const probePixels=new Uint8Array(probeWidth*probeHeight*4);
+    gl.readPixels(0,0,probeWidth,probeHeight,gl.RGBA,gl.UNSIGNED_BYTE,probePixels);
     let changedPixels=0;
-    for(let i=0;i<normalPixels.length;i+=4){
-      if(normalPixels[i]!==noDepthPixels[i]||normalPixels[i+1]!==noDepthPixels[i+1]||normalPixels[i+2]!==noDepthPixels[i+2]||normalPixels[i+3]!==noDepthPixels[i+3]) changedPixels++;
-    }
-    latestFragmentDiagnostic=Object.freeze({probeWidth,probeHeight,normalHash,noDepthHash,changedPixels,noDepthRasterContribution:changedPixels>0});
-    if(depthWasEnabled)gl.enable(gl.DEPTH_TEST);else gl.disable(gl.DEPTH_TEST);gl.depthMask(depthMask);
-    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-    gl.useProgram(program);gl.bindVertexArray(vao);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
-    gl.uniformMatrix4fv(viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
-    drawHEarthT4StaticGpuBatches(gl,batches,bindClass);
+    for(let i=0;i<probePixels.length;i+=4)if(probePixels[i]||probePixels[i+1]||probePixels[i+2])changedPixels++;
+    latestFragmentDiagnostic=Object.freeze({probeWidth,probeHeight,changedPixels,noDepthRasterContribution:changedPixels>0});
+    gl.deleteFramebuffer(probeFramebuffer);gl.deleteTexture(probeTexture);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
     frames++;maximumAddedDrawCalls=Math.max(maximumAddedDrawCalls,receipt.drawCalls);
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
     return receipt;

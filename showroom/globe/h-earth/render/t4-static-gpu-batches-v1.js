@@ -1,7 +1,7 @@
 /** H-Earth T4 static GPU batches v1. No renderer/framebuffer/presentation ownership. */
 import { H_EARTH_T4_FROZEN_PLACEMENT } from './t4-frozen-placement-v1.js';
 import { regionToHEarthPlanetPoint, getHEarthRegionTangentBasis } from './planetary-world-frame.js';
-import { sampleHEarthRun8BSuccessorTerrainElevation , sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 
 // T4.3 primitive-quality geometry. Placement and draw-class budgets remain frozen.
 const TUFT_VERTICES = new Float32Array([

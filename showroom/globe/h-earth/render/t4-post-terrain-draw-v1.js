@@ -110,5 +110,5 @@ export function createHEarthT4PostTerrainDraw(gl){
     if(latestDepthAB)latestDepthAB=Object.freeze({...latestDepthAB,presentationParity:Object.freeze({testedPixels:productionChangedPixelIndices.length,exactMatches,mismatches,maximumChannelDelta,flippedYExactMatches,sourceRgbFoundAnywhere,samples:Object.freeze(samples)})});
     gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   };
-  return Object.freeze({capturePreT4Diagnostic,drawAfterTerrain,runPostRenderDiagnostic,runPostPresentationDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB})});
+  return Object.freeze({capturePreT4Diagnostic,drawAfterTerrain,runPostRenderDiagnostic,runPostPresentationDiagnostic,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestDepthAB,productionChangedPixelIndices:Object.freeze([...productionChangedPixelIndices])})});
 }

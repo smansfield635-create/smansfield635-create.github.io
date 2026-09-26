@@ -147,6 +147,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   let frameSequence = 0;
   let latestNavigationState = initialNavigationState;
   let lastPngDataUrl = null;
+  let animationFrameHandle = null;
+  let animationRunning = false;
   let latestColorSummary = null;
   const frameRecords = [];
   const evidenceRecords = [];
@@ -166,6 +168,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     cssTransformPreviewCount: 0,
     deferredRenderCommitCount: 0,
     queuedFrameChainCount: 0,
+    animationFrameCount: 0,
     maximumSynchronousResponseMs: 0,
     maximumPresentationOnlyResponseMs: 0,
     maximumEvidenceCaptureResponseMs: 0
@@ -270,6 +273,47 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     captureEvidence: true
   });
 
+  const scheduleAnimationFrame = () => {
+    if (!oceanPresentationRequested || !animationRunning || animationFrameHandle !== null) return;
+    const callback = () => {
+      animationFrameHandle = null;
+      if (!animationRunning) return;
+      counters.animationFrameCount += 1;
+      presentNavigationState(latestNavigationState, {
+        kind: 'OCEAN_PRESENTATION_ANIMATION_FRAME',
+        sequence: counters.animationFrameCount,
+        inputClass: 'PRESENTATION_ONLY',
+        label: `ocean-animation-${counters.animationFrameCount}`,
+        captureEvidence: false
+      });
+      scheduleAnimationFrame();
+    };
+    animationFrameHandle =
+      typeof globalThis.requestAnimationFrame === 'function'
+        ? globalThis.requestAnimationFrame(callback)
+        : globalThis.setTimeout(callback, 16);
+  };
+
+  const startPresentationAnimation = () => {
+    if (!oceanPresentationRequested || animationRunning) return false;
+    animationRunning = true;
+    scheduleAnimationFrame();
+    return true;
+  };
+
+  const stopPresentationAnimation = () => {
+    animationRunning = false;
+    if (animationFrameHandle !== null) {
+      if (typeof globalThis.cancelAnimationFrame === 'function') {
+        globalThis.cancelAnimationFrame(animationFrameHandle);
+      } else {
+        globalThis.clearTimeout(animationFrameHandle);
+      }
+      animationFrameHandle = null;
+    }
+    return true;
+  };
+
   const acceptNavigationState = (proposalRecord, navigationState) => {
     if (proposalRecord?.accepted !== true) {
       counters.rejectedProposalCount += 1;
@@ -287,6 +331,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       captureEvidence: false
     });
   };
+
+  if (oceanPresentationRequested) startPresentationAnimation();
 
   const captureLatestEvidence = (label = `explicit-${frameSequence}`) => {
     counters.explicitEvidenceCaptureCount += 1;
@@ -337,6 +383,13 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       latestColorSummary,
       distinctFrameHashCount,
       counters,
+      animation: {
+        requested: oceanPresentationRequested,
+        running: animationRunning,
+        presentationOnly: true,
+        navigationAuthorityMutated: false,
+        worldGeometryRebuiltPerAnimationFrame: false
+      },
       correspondence: {
         acceptedNavigationProposalToR3APacket: true,
         r3APacketToPersistentRenderer: true,
@@ -388,6 +441,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
     acceptNavigationState,
     captureLatestEvidence,
+    startPresentationAnimation,
+    stopPresentationAnimation,
     getReceipt,
     getLastPngDataUrl: () => lastPngDataUrl
   });

@@ -1,5 +1,5 @@
 /** H-Earth T4 post-terrain draw v1. Additive only; no framebuffer or presentation ownership. */
-import { createHEarthT4StaticGpuBatches, drawHEarthT4StaticGpuBatches } from './t4-static-gpu-batches-v1.js';
+import { createHEarthT4StaticGpuBatches, drawHEarthT4StaticGpuBatches, getHEarthT4TerrainElevationCorrespondence } from './t4-static-gpu-batches-v1.js';
 import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
 
 const VS=`#version 300 es
@@ -40,6 +40,7 @@ export function createHEarthT4PostTerrainDraw(gl){
   if(viewProjection===null||classColor===null)throw Error('T4_UNIFORM_MISSING');
   const vao=gl.createVertexArray();if(!vao)throw Error('T4_VAO_CREATE');
   const batches=createHEarthT4StaticGpuBatches(gl);
+  const terrainElevationCorrespondence=getHEarthT4TerrainElevationCorrespondence();
   const probeWidth=160,probeHeight=90;
   const probeTexture=gl.createTexture(),probeFramebuffer=gl.createFramebuffer();
   if(!probeTexture||!probeFramebuffer)throw Error('T4_DIAGNOSTIC_TARGET_CREATE');
@@ -105,5 +106,5 @@ export function createHEarthT4PostTerrainDraw(gl){
     if(receipt.drawCalls!==2||receipt.total!==647)throw Error('T4_DRAW_CORRESPONDENCE_FAILURE');
     return receipt;
   };
-  return Object.freeze({drawAfterTerrain,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestClipDiagnostic,latestFragmentDiagnostic})});
+  return Object.freeze({drawAfterTerrain,getReceipt:()=>Object.freeze({placementSha:batches.placementSha,frames,maximumAddedDrawCalls,tufts:617,rocks:30,total:647,latestClipDiagnostic,latestFragmentDiagnostic,terrainElevationCorrespondence})});
 }

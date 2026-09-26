@@ -12,5 +12,6 @@ await page.waitForTimeout(8000);
 const state=await page.evaluate(()=>({title:document.title,hud:document.querySelector('#hud')?.textContent||'',canvas:{w:document.querySelector('canvas')?.width||0,h:document.querySelector('canvas')?.height||0}}));
 await page.screenshot({path:'/tmp/gen2-evidence/ground-level.png',fullPage:true});
 await fs.writeFile('/tmp/gen2-evidence/receipt.json',JSON.stringify({schema:'H_EARTH_GEN2_VISUAL_QUALIFICATION_v1',state,errors},null,2));
+console.log('H_EARTH_GEN2_VISUAL_QUALIFICATION_EVIDENCE',JSON.stringify({state,errors},null,2));
 await browser.close();server.kill();
 if(errors.length||state.canvas.w<100||state.canvas.h<100)process.exit(1);

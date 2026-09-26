@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-world-first-470d52c3-ocean-v1-20260926",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5002,
+  "requestBranch": "ai-dispatch-request-h-earth-world-first-470d52c3-20260926",
+  "requestCommit": "2787dea28191a5951c26dd4e20dc1bc4b2f53d32",
+  "requestCommitParent": "fa7e45be2f83fa17c8841764541781bf04793b46",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "fa7e45be2f83fa17c8841764541781bf04793b46",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "470d52c346354a47b92787633d7cdd3007f5ca9f",
+    "route_query": "ocean-presentation=v1"
+  },
+  "bridgeRunId": "36260817630",
+  "dispatchedRunId": 36260827333,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36260827333",
+  "dispatchedRunHeadSha": "fa7e45be2f83fa17c8841764541781bf04793b46",
+  "dispatchedAt": "2026-09-26T17:57:06.477Z",
+  "resolvedAt": "2026-09-26T17:57:10.661Z"
+}

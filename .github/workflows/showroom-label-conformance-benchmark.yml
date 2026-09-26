@@ -5,7 +5,11 @@ on:
     branches:
       - main
     paths:
-      - "showroom/**"
+      - "showroom/index.html"
+      - "showroom/index.css"
+      - "showroom/index.interactions.js"
+      - "showroom/index.interaction.gestures.js"
+      - "showroom/index.controller.js"
       - "verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs"
       - ".github/workflows/showroom-label-conformance-benchmark.yml"
   workflow_dispatch:

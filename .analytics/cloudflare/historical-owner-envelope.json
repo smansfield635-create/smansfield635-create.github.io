@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-26T02:37:11Z",
+  "generatedAt": "2026-09-26T03:35:59Z",
   "window": {
-    "start": "2026-06-28T02:37:11Z",
-    "end": "2026-09-26T02:37:11Z"
+    "start": "2026-06-28T03:35:59Z",
+    "end": "2026-09-26T03:35:59Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4987,
-    "visits": 1251,
+    "pageLoads": 5009,
+    "visits": 1262,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4987,
-        "visits": 1251
+        "pageLoads": 5009,
+        "visits": 1262
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1082,
-        "visits": 737
+        "pageLoads": 1087,
+        "visits": 740
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -146,14 +146,6 @@
         "pageLoads": 148,
         "visits": 7
       },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 92,
-        "visits": 1
-      },
       "/governance/": {
         "pageLoads": 64,
         "visits": 10
@@ -161,6 +153,14 @@
       "/evidence/readiness/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 92,
+        "visits": 1
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -299,8 +299,8 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 60,
-        "visits": 42
+        "pageLoads": 68,
+        "visits": 50
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 31,
@@ -343,7 +343,7 @@
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 50,
+        "pageLoads": 59,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-1/": {
@@ -369,16 +369,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3736,
+        "pageLoads": 3747,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 465,
-        "visits": 465
+        "pageLoads": 473,
+        "visits": 473
       },
       "www.google.com": {
-        "pageLoads": 775,
-        "visits": 775
+        "pageLoads": 778,
+        "visits": 778
       },
       "raw.githack.com": {
         "pageLoads": 10,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-26T02:37:11Z",
+  "generatedAt": "2026-09-26T03:35:59Z",
   "window30d": {
-    "start": "2026-08-27T02:37:11Z",
-    "end": "2026-09-26T02:37:11Z"
+    "start": "2026-08-27T03:35:59Z",
+    "end": "2026-09-26T03:35:59Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-19",
-      "pageLoads": 376
+      "pageLoads": 380
     },
     {
       "date": "2026-09-20",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 32
+      "pageLoads": 46
     }
   ],
   "summary": {
-    "pageLoads": 7181,
+    "pageLoads": 7199,
     "botPageLoads": 2448,
-    "nonBotPageLoads": 4733
+    "nonBotPageLoads": 4751
   },
   "referrers": [
     {
-      "host": "(none)",
-      "pageLoads": 3247,
-      "visits": 3247
-    },
-    {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3239,
+      "pageLoads": 3253,
       "visits": 0
     },
     {
+      "host": "(none)",
+      "pageLoads": 3250,
+      "visits": 3250
+    },
+    {
       "host": "www.google.com",
-      "pageLoads": 657,
-      "visits": 657
+      "pageLoads": 660,
+      "visits": 660
     },
     {
       "host": "bing.com",
@@ -155,8 +155,8 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 7,
-      "visits": 7
+      "pageLoads": 5,
+      "visits": 5
     },
     {
       "host": "com.google.android.googlequicksearchbox",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 2055,
-      "visits": 1601
+      "pageLoads": 2064,
+      "visits": 1599
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 813,
-      "visits": 813
+      "pageLoads": 810,
+      "visits": 810
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 735,
-      "visits": 583
+      "pageLoads": 743,
+      "visits": 591
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,7 +197,7 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 344,
+      "pageLoads": 343,
       "visits": 93
     },
     {
@@ -211,9 +211,9 @@
       "visits": 30
     },
     {
-      "path": "/index.html",
-      "pageLoads": 132,
-      "visits": 1
+      "path": "/analytics/",
+      "pageLoads": 139,
+      "visits": 42
     }
   ],
   "ownerMeasurement": {

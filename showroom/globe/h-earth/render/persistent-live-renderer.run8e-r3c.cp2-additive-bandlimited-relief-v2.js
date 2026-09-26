@@ -530,10 +530,11 @@ uniform sampler2D uDepth;
 out vec4 outColor;
 void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
 
-export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, preTerrainExtensionDiagnostic = null, postTerrainDraw = null, postRenderDiagnostic = null } = {}) {
+export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, preTerrainExtensionDiagnostic = null, postTerrainDraw = null, postRenderDiagnostic = null, postPresentationDiagnostic = null } = {}) {
   if (preTerrainExtensionDiagnostic !== null && typeof preTerrainExtensionDiagnostic !== 'function') throw new Error('R3C_PRE_TERRAIN_EXTENSION_DIAGNOSTIC_INVALID');
   if (postTerrainDraw !== null && typeof postTerrainDraw !== 'function') throw new Error('R3C_POST_TERRAIN_DRAW_INVALID');
   if (postRenderDiagnostic !== null && typeof postRenderDiagnostic !== 'function') throw new Error('R3C_POST_RENDER_DIAGNOSTIC_INVALID');
+  if (postPresentationDiagnostic !== null && typeof postPresentationDiagnostic !== 'function') throw new Error('R3C_POST_PRESENTATION_DIAGNOSTIC_INVALID');
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
   canvas.height = height;
@@ -719,6 +720,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
     gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    if (postPresentationDiagnostic !== null) postPresentationDiagnostic(Object.freeze({ gl, width, height, sourceFramebuffer: resources.geometryFramebuffer }));
     counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
   }
   function captureColorFrame(label, { includePng = true } = {}) {

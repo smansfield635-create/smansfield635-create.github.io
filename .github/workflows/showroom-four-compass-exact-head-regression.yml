@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "showroom/**"
+      - "showroom/index*"
       - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs"
       - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs"
       - ".github/workflows/showroom-four-compass-exact-head-regression.yml"

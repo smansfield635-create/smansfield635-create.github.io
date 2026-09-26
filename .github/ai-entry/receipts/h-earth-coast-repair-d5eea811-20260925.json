@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-coast-repair-d5eea811-20260925",
+  "capabilityId": "H_EARTH_COAST_OPERAND_DIAGNOSTIC",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 4952,
+  "requestBranch": "ai-dispatch-request-h-earth-coast-repair-d5eea811",
+  "requestCommit": "beb85e2319ea252be64ec3cc2cec95dd9dec2d1e",
+  "requestCommitParent": "635a8b017ba1b753b6b5331dc82c83dded1a550a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "635a8b017ba1b753b6b5331dc82c83dded1a550a",
+  "workflow": "h-earth-coast-operand-exact-candidate-diagnostic.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d5eea81166fad265f3b17b1e0ffffb5883a11356"
+  },
+  "bridgeRunId": "36212804811",
+  "dispatchedRunId": 36212814031,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36212814031",
+  "dispatchedRunHeadSha": "635a8b017ba1b753b6b5331dc82c83dded1a550a",
+  "dispatchedAt": "2026-09-26T02:47:58.244Z",
+  "resolvedAt": "2026-09-26T02:48:01.700Z"
+}

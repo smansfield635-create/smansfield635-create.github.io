@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-26T22:29:17Z",
+  "generatedAt": "2026-09-26T23:27:12Z",
   "window": {
-    "start": "2026-06-28T22:29:17Z",
-    "end": "2026-09-26T22:29:17Z"
+    "start": "2026-06-28T23:27:12Z",
+    "end": "2026-09-26T23:27:12Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4980,
+    "pageLoads": 4987,
     "visits": 1233,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4980,
+        "pageLoads": 4987,
         "visits": 1233
       }
     },
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1079,
-        "visits": 733
+        "pageLoads": 1078,
+        "visits": 732
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 71,
+        "pageLoads": 72,
         "visits": 0
       },
       "/characters/": {
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 105,
+        "pageLoads": 104,
         "visits": 8
       },
       "/products/archcoin/": {
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -177,10 +181,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -250,11 +250,11 @@
         "pageLoads": 73,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -299,11 +299,11 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 50,
-        "visits": 35
+        "pageLoads": 47,
+        "visits": 34
       },
       "/products/on-your-side-ai/": {
-        "pageLoads": 41,
+        "pageLoads": 50,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -338,17 +338,17 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/analytics-owner-device/heartbeat/a9-1/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/analytics/": {
         "pageLoads": 62,
         "visits": 0
       },
+      "/analytics-owner-device/heartbeat/a9-1/": {
+        "pageLoads": 1,
+        "visits": 0
+      },
       "/governance-bridge/": {
-        "pageLoads": 93,
-        "visits": 80
+        "pageLoads": 95,
+        "visits": 82
       },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
@@ -365,16 +365,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3747,
+        "pageLoads": 3754,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 451,
-        "visits": 451
+        "pageLoads": 452,
+        "visits": 452
       },
       "www.google.com": {
-        "pageLoads": 771,
-        "visits": 771
+        "pageLoads": 770,
+        "visits": 770
       },
       "raw.githack.com": {
         "pageLoads": 10,

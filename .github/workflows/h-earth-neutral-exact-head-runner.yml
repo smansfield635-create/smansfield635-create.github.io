@@ -112,7 +112,17 @@ jobs:
             const screenshot=label+'.png';
             await page.screenshot({path:out+'/'+screenshot,fullPage:true});
             const bytes=await fs.readFile(out+'/'+screenshot);
-            return {...state,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex')};
+            const canvas=page.locator('#h-earth-functional-landscape-canvas');
+            const canvasScreenshot=label+'-canvas.png';
+            let canvasScreenshotSha256=null;
+            let canvasBox=null;
+            if(await canvas.count()){
+              canvasBox=await canvas.boundingBox();
+              await canvas.screenshot({path:out+'/'+canvasScreenshot});
+              const canvasBytes=await fs.readFile(out+'/'+canvasScreenshot);
+              canvasScreenshotSha256=crypto.createHash('sha256').update(canvasBytes).digest('hex');
+            }
+            return {...state,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex'),canvasScreenshot,canvasScreenshotSha256,canvasBox};
           };
 
           let readiness='TIMEOUT';
@@ -160,6 +170,7 @@ jobs:
             initial,
             later,
             screenshotChanged:Boolean(initial&&later&&initial.screenshotSha256!==later.screenshotSha256),
+            canvasScreenshotChanged:Boolean(initial?.canvasScreenshotSha256&&later?.canvasScreenshotSha256&&initial.canvasScreenshotSha256!==later.canvasScreenshotSha256),
             animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
             worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false)
           };

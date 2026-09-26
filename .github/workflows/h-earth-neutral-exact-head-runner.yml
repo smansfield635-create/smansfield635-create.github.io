@@ -73,6 +73,12 @@ jobs:
             const originalUniform1f=proto.uniform1f;
             const oceanLocations=new WeakSet();
             window.__H_EARTH_OCEAN_PHASE_WRITES=[];
+            window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER=null;
+            const originalBindFramebuffer=proto.bindFramebuffer;
+            proto.bindFramebuffer=function(target,framebuffer){
+              if(framebuffer&&target===this.FRAMEBUFFER) window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER=framebuffer;
+              return originalBindFramebuffer.call(this,target,framebuffer);
+            };
             proto.getUniformLocation=function(program,name){
               const location=originalGetUniformLocation.call(this,program,name);
               if(name==='uOceanPresentationPhase'&&location) oceanLocations.add(location);
@@ -129,7 +135,20 @@ jobs:
                     for(const byte of pixels){hash^=byte;hash=Math.imul(hash,16777619)>>>0;}
                     framebufferPixelHash='fnv1a32:'+hash.toString(16).padStart(8,'0');
                   }
-                  return {display:style.display,visibility:style.visibility,opacity:style.opacity,zIndex:style.zIndex,width:rect.width,height:rect.height,top:rect.top,left:rect.left,connected:canvas.isConnected,framebufferPixelHash};
+                  let rendererFramebufferPixelHash=null;
+                  const owned=window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER;
+                  if(gl&&owned&&canvas.width>0&&canvas.height>0){
+                    const width=Math.min(canvas.width,256),height=Math.min(canvas.height,256);
+                    const pixels=new Uint8Array(width*height*4);
+                    gl.bindFramebuffer(gl.FRAMEBUFFER,owned);
+                    gl.finish();
+                    gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+                    let hash=2166136261;
+                    for(const byte of pixels){hash^=byte;hash=Math.imul(hash,16777619)>>>0;}
+                    rendererFramebufferPixelHash='fnv1a32:'+hash.toString(16).padStart(8,'0');
+                    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+                  }
+                  return {display:style.display,visibility:style.visibility,opacity:style.opacity,zIndex:style.zIndex,width:rect.width,height:rect.height,top:rect.top,left:rect.left,connected:canvas.isConnected,framebufferPixelHash,rendererFramebufferPixelHash};
                 })(),
                 routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady??null,
                 startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
@@ -210,6 +229,7 @@ jobs:
             screenshotChanged:Boolean(initial&&later&&initial.screenshotSha256!==later.screenshotSha256),
             canvasScreenshotChanged:Boolean(initial?.canvasScreenshotSha256&&later?.canvasScreenshotSha256&&initial.canvasScreenshotSha256!==later.canvasScreenshotSha256),
             framebufferPixelChanged:Boolean(initial?.canvasPresentation?.framebufferPixelHash&&later?.canvasPresentation?.framebufferPixelHash&&initial.canvasPresentation.framebufferPixelHash!==later.canvasPresentation.framebufferPixelHash),
+            rendererFramebufferPixelChanged:Boolean(initial?.canvasPresentation?.rendererFramebufferPixelHash&&later?.canvasPresentation?.rendererFramebufferPixelHash&&initial.canvasPresentation.rendererFramebufferPixelHash!==later.canvasPresentation.rendererFramebufferPixelHash),
             animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
             worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false)
           };

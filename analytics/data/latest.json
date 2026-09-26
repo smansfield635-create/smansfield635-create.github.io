@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-26T14:32:25Z",
+  "generatedAt": "2026-09-26T15:29:49Z",
   "window30d": {
-    "start": "2026-08-27T14:32:25Z",
-    "end": "2026-09-26T14:32:25Z"
+    "start": "2026-08-27T15:29:49Z",
+    "end": "2026-09-26T15:29:49Z"
   },
   "daily": [
     {
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 60
+      "pageLoads": 62
     }
   ],
   "summary": {
-    "pageLoads": 7108,
-    "botPageLoads": 2429,
-    "nonBotPageLoads": 4679
+    "pageLoads": 7109,
+    "botPageLoads": 2434,
+    "nonBotPageLoads": 4675
   },
   "referrers": [
     {
@@ -140,8 +140,8 @@
     },
     {
       "host": "(none)",
-      "pageLoads": 3193,
-      "visits": 3193
+      "pageLoads": 3194,
+      "visits": 3194
     },
     {
       "host": "www.google.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 2055,
-      "visits": 1589
+      "pageLoads": 2053,
+      "visits": 1587
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 808,
-      "visits": 808
+      "pageLoads": 816,
+      "visits": 816
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 745,
-      "visits": 593
+      "pageLoads": 744,
+      "visits": 592
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -212,8 +212,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 151,
-      "visits": 43
+      "pageLoads": 152,
+      "visits": 44
     }
   ],
   "ownerMeasurement": {

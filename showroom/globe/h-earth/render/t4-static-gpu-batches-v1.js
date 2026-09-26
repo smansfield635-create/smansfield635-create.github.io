@@ -1,7 +1,7 @@
 /** H-Earth T4 static GPU batches v1. No renderer/framebuffer/presentation ownership. */
 import { H_EARTH_T4_FROZEN_PLACEMENT } from './t4-frozen-placement-v1.js';
 import { regionToHEarthPlanetPoint, getHEarthRegionTangentBasis } from './planetary-world-frame.js';
-import { sampleHEarthRun8BSuccessorTerrainElevation } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import { sampleHEarthRun8BSuccessorTerrainElevation, sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 
 // T4.3 primitive-quality geometry. Placement and draw-class budgets remain frozen.
 const TUFT_VERTICES = new Float32Array([
@@ -33,8 +33,12 @@ export function getHEarthT4TerrainElevationCorrespondence(){
   return Object.freeze({total:records.length,overall:summarize(null),tuft:summarize('TUFT'),rock:summarize('ROCK'),quantiles:Object.freeze({p00:quantile(0),p10:quantile(.1),p25:quantile(.25),p50:quantile(.5),p75:quantile(.75),p90:quantile(.9),p100:quantile(1)}),records:Object.freeze(records)});
 }
 
+const T4_SURFACE_CLEARANCE = Object.freeze({ TUFT: 0.08, ROCK: 0.12 });
 const pack = instances => new Float32Array(instances.flatMap(v => {
-  const local = { x: v.x, y: v.elevation, z: v.z };
+  const terrain = sampleHEarthRun8BSuccessorTerrainField(v.x,v.z);
+  if(terrain?.valid!==true)throw new Error('T4_CURRENT_TERRAIN_SAMPLE_INVALID');
+  const clearance=T4_SURFACE_CLEARANCE[v.kind];
+  const local = { x: v.x, y: terrain.elevation + clearance, z: v.z };
   const planetary = regionToHEarthPlanetPoint(local);
   const basis = getHEarthRegionTangentBasis(local);
   return [

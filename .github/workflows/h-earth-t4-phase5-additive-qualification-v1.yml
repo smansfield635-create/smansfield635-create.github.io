@@ -2,6 +2,15 @@ name: H-Earth T4 Phase5 Additive Qualification v1
 on:
   pull_request:
     branches: [ main ]
+    paths:
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js'
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-post-terrain-draw-v1.js'
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-frozen-placement-v1.js'
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-static-gpu-batches-v1.js'
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-additive-extension-contract-v1.js'
+      - '.github/workflows/h-earth-t4-phase5-additive-qualification-v1.yml'
   workflow_dispatch:
 jobs:
   qualify:

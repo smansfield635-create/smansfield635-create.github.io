@@ -2,6 +2,9 @@ name: H-Earth Meso Post-Ready Fail-Open Qualification v1
 on:
   pull_request:
     branches: [ main ]
+    paths:
+      - 'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'
+      - '.github/workflows/h-earth-meso-post-ready-fail-open-qualification-v1.yml'
   workflow_dispatch:
 jobs:
   qualify:

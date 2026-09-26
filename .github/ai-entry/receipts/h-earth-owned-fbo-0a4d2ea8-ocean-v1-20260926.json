@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-owned-fbo-0a4d2ea8-ocean-v1-20260926",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5008,
+  "requestBranch": "ai-dispatch-request-h-earth-owned-fbo-0a4d2ea8-20260926",
+  "requestCommit": "53a62aa93a486338fab1c27233c0986e6dfdf5d3",
+  "requestCommitParent": "a31d668b713f539957864875a8f006bde1b1b430",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a31d668b713f539957864875a8f006bde1b1b430",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "0a4d2ea86ccb9340a66a68d68d3300d1a0d37d6e",
+    "route_query": "ocean-presentation=v1"
+  },
+  "bridgeRunId": "36261864617",
+  "dispatchedRunId": 36261876922,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36261876922",
+  "dispatchedRunHeadSha": "a31d668b713f539957864875a8f006bde1b1b430",
+  "dispatchedAt": "2026-09-26T18:15:10.752Z",
+  "resolvedAt": "2026-09-26T18:15:14.786Z"
+}

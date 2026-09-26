@@ -88,13 +88,20 @@ jobs:
                   if(['string','number','boolean'].includes(typeof value)||value===null) globals[key]=value;
                 }
               }
+              const liveGpuReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
               return {
                 title:document.title,
                 bodyText:text.slice(0,3000),
                 rendererModel:renderer?.outputModel??contract?.outputModel??null,
                 rendererVariant:renderer?.variant??renderer?.rendererVariant??contract?.variant??contract?.rendererVariant??null,
-                animationFrame: renderer?.animationFrame ?? renderer?.frameCount ?? contract?.animationFrame ?? contract?.frameCount ?? globals.H_EARTH_ANIMATION_FRAME ?? globals.H_EARTH_FRAME_COUNT ?? null,
-                worldRebuildCount: renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
+                selectedRendererPath:liveGpuReceipt?.selectedRendererPath??null,
+                oceanPresentationRequested:liveGpuReceipt?.oceanPresentationRequested??null,
+                animationRunning:liveGpuReceipt?.animation?.running??null,
+                animationFrame:liveGpuReceipt?.counters?.animationFrameCount ?? renderer?.animationFrame ?? renderer?.frameCount ?? contract?.animationFrame ?? contract?.frameCount ?? globals.H_EARTH_ANIMATION_FRAME ?? globals.H_EARTH_FRAME_COUNT ?? null,
+                renderFrameCallCount:liveGpuReceipt?.counters?.renderFrameCallCount??null,
+                gpuFramebufferPresentationCount:liveGpuReceipt?.counters?.gpuFramebufferPresentationCount??null,
+                worldRebuildCount:liveGpuReceipt?.counters?.worldRebuildCount ?? renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
+                liveGpuReceipt,
                 globals
               };
             });

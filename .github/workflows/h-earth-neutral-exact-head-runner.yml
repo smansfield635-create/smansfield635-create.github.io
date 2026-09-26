@@ -118,6 +118,13 @@ jobs:
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
               const text=document.body?.innerText||'';
+              const liveGpuReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
+              const activeLiveGpu=Boolean(
+                liveGpuReceipt?.selectedRendererPath &&
+                liveGpuReceipt?.animation?.running===true &&
+                Number(liveGpuReceipt?.counters?.gpuFramebufferPresentationCount)>0
+              );
+              if(activeLiveGpu) return 'READY';
               if(/Initialization failed\.|RENDERER_CONSTRUCTION_EXCEPTION/.test(text)) return 'FAILED';
               const initializing=/H-EARTH · LIVE WORLD INITIALIZATION|Constructing world renderer|Entering the coast\./i.test(text);
               const live=/LIVE ENVIRONMENT/i.test(text)&&/H_EARTH_GROUND_CELL_001:[A-Z0-9:]+/i.test(text);

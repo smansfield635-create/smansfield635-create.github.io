@@ -46,21 +46,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js')
-          s=p.read_text()
-          needle="  return Object.freeze({\n    bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,"
-          replacement="  const publicBinding = Object.freeze({\n    bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,"
-          if needle not in s:
-              raise SystemExit('binding return shape not found')
-          s=s.replace(needle,replacement,1)
-          needle2="    getLastPngDataUrl: () => lastPngDataUrl\n  });"
-          replacement2="    getLastPngDataUrl: () => lastPngDataUrl\n  });\n  globalThis.__H_EARTH_NEUTRAL_OBSERVER_BINDING = publicBinding;\n  return publicBinding;"
-          if needle2 not in s:
-              raise SystemExit('binding tail not found')
-          p.write_text(s.replace(needle2,replacement2,1))
-          PY
           python3 -m http.server 4173 --directory . >/tmp/h-earth-exact-server.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
@@ -82,31 +67,6 @@ jobs:
           const browser=await chromium.launch({headless:true});
           const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});
           const page=await context.newPage();
-          await page.addInitScript(() => {
-            const proto=WebGL2RenderingContext.prototype;
-            const originalGetUniformLocation=proto.getUniformLocation;
-            const originalUniform1f=proto.uniform1f;
-            const oceanLocations=new WeakSet();
-            window.__H_EARTH_OCEAN_PHASE_WRITES=[];
-            window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER=null;
-            const originalBindFramebuffer=proto.bindFramebuffer;
-            proto.bindFramebuffer=function(target,framebuffer){
-              if(framebuffer&&target===this.FRAMEBUFFER) window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER=framebuffer;
-              return originalBindFramebuffer.call(this,target,framebuffer);
-            };
-            proto.getUniformLocation=function(program,name){
-              const location=originalGetUniformLocation.call(this,program,name);
-              if(name==='uOceanPresentationPhase'&&location) oceanLocations.add(location);
-              return location;
-            };
-            proto.uniform1f=function(location,value){
-              if(location&&oceanLocations.has(location)){
-                window.__H_EARTH_OCEAN_PHASE_WRITES.push(Number(value));
-                if(window.__H_EARTH_OCEAN_PHASE_WRITES.length>256) window.__H_EARTH_OCEAN_PHASE_WRITES.shift();
-              }
-              return originalUniform1f.call(this,location,value);
-            };
-          });
           const pageErrors=[];
           const consoleErrors=[];
           const requestsFailed=[];
@@ -139,43 +99,10 @@ jobs:
                   if(!(canvas instanceof HTMLCanvasElement)) return null;
                   const style=getComputedStyle(canvas);
                   const rect=canvas.getBoundingClientRect();
-                  const gl=canvas.getContext('webgl2');
-                  let framebufferPixelHash=null;
-                  if(gl&&canvas.width>0&&canvas.height>0){
-                    const width=Math.min(canvas.width,256),height=Math.min(canvas.height,256);
-                    const pixels=new Uint8Array(width*height*4);
-                    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-                    gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-                    let hash=2166136261;
-                    for(const byte of pixels){hash^=byte;hash=Math.imul(hash,16777619)>>>0;}
-                    framebufferPixelHash='fnv1a32:'+hash.toString(16).padStart(8,'0');
-                  }
-                  let rendererFramebufferPixelHash=null;
-                  const owned=window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER;
-                  if(gl&&owned&&canvas.width>0&&canvas.height>0){
-                    const width=Math.min(canvas.width,256),height=Math.min(canvas.height,256);
-                    const pixels=new Uint8Array(width*height*4);
-                    gl.bindFramebuffer(gl.FRAMEBUFFER,owned);
-                    gl.finish();
-                    gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-                    let hash=2166136261;
-                    for(const byte of pixels){hash^=byte;hash=Math.imul(hash,16777619)>>>0;}
-                    rendererFramebufferPixelHash='fnv1a32:'+hash.toString(16).padStart(8,'0');
-                    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-                  }
-                  return {display:style.display,visibility:style.visibility,opacity:style.opacity,zIndex:style.zIndex,width:rect.width,height:rect.height,top:rect.top,left:rect.left,connected:canvas.isConnected,framebufferPixelHash,rendererFramebufferPixelHash};
+                      return {display:style.display,visibility:style.visibility,opacity:style.opacity,zIndex:style.zIndex,width:rect.width,height:rect.height,top:rect.top,left:rect.left,connected:canvas.isConnected};
                 })(),
                 routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady??null,
                 startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
-                oceanPhaseWrites:(window.__H_EARTH_OCEAN_PHASE_WRITES??[]).slice(-32),
-                authoritativeColorCapture:(() => {
-                  try {
-                    const binding=window.__H_EARTH_NEUTRAL_OBSERVER_BINDING;
-                    return binding?.captureLatestEvidence?.('NEUTRAL_OBSERVER_'+Date.now())??null;
-                  } catch (error) {
-                    return {error:String(error?.message??error)};
-                  }
-                })(),
                 rendererModel:renderer?.outputModel??contract?.outputModel??null,
                 rendererVariant:renderer?.variant??renderer?.rendererVariant??contract?.variant??contract?.rendererVariant??null,
                 selectedRendererPath:liveGpuReceipt?.selectedRendererPath??null,
@@ -185,29 +112,6 @@ jobs:
                 renderFrameCallCount:liveGpuReceipt?.counters?.renderFrameCallCount??null,
                 gpuFramebufferPresentationCount:liveGpuReceipt?.counters?.gpuFramebufferPresentationCount??null,
                 worldRebuildCount:liveGpuReceipt?.counters?.worldRebuildCount ?? renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
-                t4DelayedPresentationObservation:(() => {
-                  try {
-                    const indices=liveGpuReceipt?.t4Receipt?.productionChangedPixelIndices??[];
-                    const canvas=document.getElementById('h-earth-functional-landscape-canvas');
-                    const gl=canvas?.getContext?.('webgl2');
-                    const owned=window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER;
-                    if(!gl||!owned||!indices.length) return null;
-                    const width=canvas.width,height=canvas.height;
-                    const source=new Uint8Array(width*height*4),presented=new Uint8Array(width*height*4);
-                    gl.bindFramebuffer(gl.FRAMEBUFFER,owned);gl.finish();gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,source);
-                    gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.finish();gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,presented);
-                    let exactMatches=0,mismatches=0,maximumChannelDelta=0,presentedNonZero=0;
-                    const samples=[];
-                    for(const pixelIndex of indices){
-                      const i=pixelIndex*4;let same=true;
-                      for(let c=0;c<4;c++){const d=Math.abs(source[i+c]-presented[i+c]);if(d){same=false;maximumChannelDelta=Math.max(maximumChannelDelta,d);}}
-                      if(same)exactMatches++;else mismatches++;
-                      if(presented[i]||presented[i+1]||presented[i+2]||presented[i+3])presentedNonZero++;
-                      if(samples.length<12)samples.push({x:pixelIndex%width,y:Math.floor(pixelIndex/width),source:[...source.slice(i,i+4)],presented:[...presented.slice(i,i+4)]});
-                    }
-                    return {testedPixels:indices.length,exactMatches,mismatches,maximumChannelDelta,presentedNonZero,samples};
-                  } catch(error){return {error:String(error?.message??error)};}
-                })(),
                 blitStateDiagnostic:window.__H_EARTH_BLIT_STATE_DIAGNOSTIC__??null,
                 liveGpuReceipt,
                 globals
@@ -264,8 +168,8 @@ jobs:
             exactHeadRequired:true,
             productMaterialization:['EXACT_CHECKED_OUT_REPOSITORY_ROOT'],
             substitutionsPerformed:false,
-            observationShimApplied:true,
-            observationShimScope:'TEMPORARY_SERVED_CHECKOUT_ONLY',
+            observationShimApplied:false,
+            observationShimScope:'NONE',
             actualBrowserExecution:true,
             readinessDiagnostic:readiness,
             materialized:Boolean(initial?.canvasPresent&&later?.canvasPresent),
@@ -277,8 +181,9 @@ jobs:
             later,
             screenshotChanged:Boolean(initial&&later&&initial.screenshotSha256!==later.screenshotSha256),
             canvasScreenshotChanged:Boolean(initial?.canvasScreenshotSha256&&later?.canvasScreenshotSha256&&initial.canvasScreenshotSha256!==later.canvasScreenshotSha256),
-            framebufferPixelChanged:Boolean(initial?.canvasPresentation?.framebufferPixelHash&&later?.canvasPresentation?.framebufferPixelHash&&initial.canvasPresentation.framebufferPixelHash!==later.canvasPresentation.framebufferPixelHash),
-            rendererFramebufferPixelChanged:Boolean(initial?.canvasPresentation?.rendererFramebufferPixelHash&&later?.canvasPresentation?.rendererFramebufferPixelHash&&initial.canvasPresentation.rendererFramebufferPixelHash!==later.canvasPresentation.rendererFramebufferPixelHash),
+            rendererDefaultFramebufferReadbackInitial:initial?.liveGpuReceipt?.resources?.latestDefaultFramebufferT4Readback??null,
+            rendererDefaultFramebufferReadbackLater:later?.liveGpuReceipt?.resources?.latestDefaultFramebufferT4Readback??null,
+            rendererDefaultFramebufferChanged:Boolean(initial?.liveGpuReceipt?.resources?.latestDefaultFramebufferT4Readback?.byteHash&&later?.liveGpuReceipt?.resources?.latestDefaultFramebufferT4Readback?.byteHash&&initial.liveGpuReceipt.resources.latestDefaultFramebufferT4Readback.byteHash!==later.liveGpuReceipt.resources.latestDefaultFramebufferT4Readback.byteHash),
             animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
             worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false)
           };

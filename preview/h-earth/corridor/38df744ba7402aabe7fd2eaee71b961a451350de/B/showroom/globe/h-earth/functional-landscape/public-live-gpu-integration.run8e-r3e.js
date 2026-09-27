@@ -298,7 +298,9 @@ setTimeout(() => {
 let lastOceanPresentationAt = 0;
 const oceanAnimationIntervalMs = 1000 / 24;
 function requestOceanFrame(now) {
-  if (document.visibilityState === 'visible' && now - lastOceanPresentationAt >= oceanAnimationIntervalMs) {
+  const startupLoader = document.querySelector('.h-earth-experience-loader');
+  const startupComplete = !startupLoader || startupLoader.dataset.ready === 'true';
+  if (startupComplete && document.visibilityState === 'visible' && now - lastOceanPresentationAt >= oceanAnimationIntervalMs) {
     lastOceanPresentationAt = now;
     try {
       binding.presentOceanAnimationFrame();

@@ -61,7 +61,13 @@ jobs:
           s=s.replace('    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt','    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt, getNeutralTimingReceipt:()=>Object.freeze({...__neutralTiming})');
           if(!s.includes('getNeutralTimingReceipt')) throw new Error('TIMING_SHIM_APPLY_FAILED');
           fs.writeFileSync(path,s);
+          const bindingPath='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js';
+          let b=fs.readFileSync(bindingPath,'utf8');
+          b=b.replace('      counters,\\n      correspondence:', '      counters,\\n      neutralRendererTiming: renderer.getNeutralTimingReceipt?.()??null,\\n      correspondence:');
+          if(!b.includes('neutralRendererTiming')) throw new Error('TIMING_RECEIPT_WIRE_FAILED');
+          fs.writeFileSync(bindingPath,b);
           NODE
+          node --check preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
           node --check preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
 
       - name: Execute actual H-Earth route unchanged

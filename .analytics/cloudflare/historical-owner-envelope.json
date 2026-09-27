@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-27T14:28:50Z",
+  "generatedAt": "2026-09-27T15:29:55Z",
   "window": {
-    "start": "2026-06-29T14:28:50Z",
-    "end": "2026-09-27T14:28:50Z"
+    "start": "2026-06-29T15:29:55Z",
+    "end": "2026-09-27T15:29:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -258,16 +258,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 21,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -330,16 +330,16 @@
         "pageLoads": 7,
         "visits": 7
       },
+      "/analytics/": {
+        "pageLoads": 62,
+        "visits": 0
+      },
       "/meet-sean-mansfield/": {
         "pageLoads": 5,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-2/": {
         "pageLoads": 1,
-        "visits": 0
-      },
-      "/analytics/": {
-        "pageLoads": 62,
         "visits": 0
       },
       "/analytics-owner-device/heartbeat/a9-1/": {

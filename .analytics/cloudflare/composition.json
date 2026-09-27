@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-27T14:28:50Z",
+  "generatedAt": "2026-09-27T15:29:55Z",
   "window": {
-    "start": "2026-08-28T14:28:50Z",
-    "end": "2026-09-27T14:28:50Z"
+    "start": "2026-08-28T15:29:55Z",
+    "end": "2026-09-27T15:29:55Z"
   },
   "dimensions": {
     "requestPath": [
@@ -29,8 +29,8 @@
       },
       {
         "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 339,
-        "visits": 92
+        "pageLoads": 338,
+        "visits": 91
       },
       {
         "value": "/products/education/",
@@ -44,8 +44,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 177,
-        "visits": 66
+        "pageLoads": 178,
+        "visits": 67
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -502,13 +502,13 @@
     "userAgentBrowser": [
       {
         "value": "Chrome",
-        "pageLoads": 2583,
-        "visits": 831
+        "pageLoads": 2582,
+        "visits": 830
       },
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2483,
-        "visits": 2423
+        "pageLoads": 2484,
+        "visits": 2424
       },
       {
         "value": "ChromeMobile",
@@ -554,8 +554,8 @@
       },
       {
         "value": "Linux",
-        "pageLoads": 2497,
-        "visits": 2437
+        "pageLoads": 2498,
+        "visits": 2438
       },
       {
         "value": "MacOSX",
@@ -564,8 +564,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 118,
-        "visits": 108
+        "pageLoads": 117,
+        "visits": 107
       },
       {
         "value": "iOS",
@@ -581,13 +581,13 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4630,
-        "visits": 1507
+        "pageLoads": 4629,
+        "visits": 1506
       },
       {
         "value": "1",
-        "pageLoads": 2483,
-        "visits": 2423
+        "pageLoads": 2484,
+        "visits": 2424
       }
     ],
     "navigationType": [

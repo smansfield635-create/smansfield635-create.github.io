@@ -949,6 +949,16 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PASS"
+    },
+    "COLLABORATION_HANDOFF_EXACT_HEAD_QUALIFICATION": {
+      "workflow": "collaboration-handoff-exact-head-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PASS"
     }
   },
   "continuity": {

@@ -89,6 +89,7 @@ jobs:
                 }
               }
               const liveGpuReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
+              const waveAnimationReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getWaveAnimationReceipt?.()??null;
               return {
                 title:document.title,
                 bodyText:text.slice(0,3000),
@@ -114,6 +115,7 @@ jobs:
                 worldRebuildCount:liveGpuReceipt?.counters?.worldRebuildCount ?? renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
                 blitStateDiagnostic:window.__H_EARTH_BLIT_STATE_DIAGNOSTIC__??null,
                 liveGpuReceipt,
+                waveAnimationReceipt,
                 globals
               };
             });

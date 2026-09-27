@@ -730,6 +730,30 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       destinationDimensions: Object.freeze({ width: gl.drawingBufferWidth, height: gl.drawingBufferHeight }),
       readFramebufferStatus: gl.checkFramebufferStatus(gl.READ_FRAMEBUFFER),
       drawFramebufferStatus: gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER),
+      contextAttributes: gl.getContextAttributes(),
+      readSamples: gl.getParameter(gl.SAMPLES),
+      sourceColorAttachment: (() => {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
+        const value = Object.freeze({
+          objectType: gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE),
+          componentType: gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE),
+          colorEncoding: gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING),
+          redSize: gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_RED_SIZE),
+          greenSize: gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_GREEN_SIZE),
+          blueSize: gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_BLUE_SIZE),
+          alphaSize: gl.getFramebufferAttachmentParameter(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE)
+        });
+        gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+        return value;
+      })(),
+      defaultSamples: (() => {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        const samples = gl.getParameter(gl.SAMPLES);
+        gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+        return samples;
+      })(),
       preBlitError: gl.getError(),
       sourceRect: Object.freeze([0, 0, width, height]),
       destinationRect: Object.freeze([0, 0, width, height])

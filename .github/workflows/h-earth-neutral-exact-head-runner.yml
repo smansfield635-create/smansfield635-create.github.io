@@ -208,6 +208,7 @@ jobs:
                     return {testedPixels:indices.length,exactMatches,mismatches,maximumChannelDelta,presentedNonZero,samples};
                   } catch(error){return {error:String(error?.message??error)};}
                 })(),
+                blitStateDiagnostic:window.__H_EARTH_BLIT_STATE_DIAGNOSTIC__??null,
                 liveGpuReceipt,
                 globals
               };

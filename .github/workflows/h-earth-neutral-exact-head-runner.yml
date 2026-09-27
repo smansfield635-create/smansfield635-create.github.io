@@ -70,8 +70,11 @@ jobs:
           const findUnique=(text)=>{const hits=callerLines.map((line,index)=>index>=functionStart&&index<=functionEnd&&line===text?index:-1).filter(index=>index>=0);if(hits.length!==1)throw new Error(`CALLER_TIMING_SCOPED_ANCHOR_COUNT:${text}:${hits.length}`);return hits[0];};
           let line=findUnique('  const presentNavigationState = (navigationState, source) => {');
           callerLines.splice(line,0,'  const __neutralCallerTiming={packetMs:null,renderFrameCallMs:null,presentColorFrameCallMs:null,bookkeepingMs:null,totalMs:null};');
-          line=findUnique('    const packet = createHEarthRun8ER3AFrameUniformPacket({'); callerLines.splice(line,0,'    const __packetStart=performance.now();');
-          line=findUnique('    counters.r3AFramePacketCount += 1;'); callerLines.splice(line,0,'    __neutralCallerTiming.packetMs=performance.now()-__packetStart;');
+          const directPacketLine=callerLines.findIndex((text,index)=>index>=functionStart&&index<=functionEnd&&text==='    const packet = createHEarthRun8ER3AFrameUniformPacket({');
+          const conditionalPacketLine=callerLines.findIndex((text,index)=>index>=functionStart&&index<=functionEnd&&text==='    const reuseWaterPacket = source.kind === \'WATER_ANIMATION_FRAME\' && latestFramePacket !== null;');
+          if((directPacketLine>=0)===(conditionalPacketLine>=0)) throw new Error('CALLER_TIMING_PACKET_PATH_AMBIGUOUS');
+          line=directPacketLine>=0?directPacketLine:conditionalPacketLine; callerLines.splice(line,0,'    const __packetStart=performance.now();');
+          const renderLine=findUnique('    renderer.renderFrame(packet);'); callerLines.splice(renderLine,0,'    __neutralCallerTiming.packetMs=performance.now()-__packetStart;');
           line=findUnique('    renderer.renderFrame(packet);'); callerLines.splice(line,0,'    const __renderCallStart=performance.now();'); callerLines.splice(line+2,0,'    __neutralCallerTiming.renderFrameCallMs=performance.now()-__renderCallStart;');
           line=findUnique('    renderer.presentColorFrame();'); callerLines.splice(line,0,'    const __presentCallStart=performance.now();'); callerLines.splice(line+2,0,'    __neutralCallerTiming.presentColorFrameCallMs=performance.now()-__presentCallStart;');
           line=findUnique('    const responseMs = performance.now() - startedAt;'); callerLines.splice(line,0,'    const __bookkeepingStart=performance.now();'); callerLines.splice(line+2,0,'    __neutralCallerTiming.totalMs=responseMs;');

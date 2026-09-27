@@ -704,7 +704,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   }
   function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
 
+  const timing={packetToDrawStartMs:null,drawSubmissionMs:null,getErrorMs:null,presentationMs:null,lastFrameStartMs:null};
   function renderFrame(packet) {
+    const frameStart=performance.now(); timing.lastFrameStartMs=frameStart;
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
     if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
@@ -715,6 +717,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform1f(resources.uniforms.waveTime,Math.max(0,(performance.now()-resources.waveEpochMs)/1000));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     counters.cameraUniformUpdateCount += 3;
+    const drawStart=performance.now();
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {
         gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
@@ -723,14 +726,18 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
     gl.depthMask(true); gl.disable(gl.BLEND);
-    const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
+    timing.drawSubmissionMs=performance.now()-drawStart;
+    const errorStart=performance.now();
+    const error = gl.getError();
+    timing.getErrorMs=performance.now()-errorStart; if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }
   function presentColorFrame() {
+    const presentationStart=performance.now();
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
     gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
+    counters.visiblePresentationCount += 1; timing.presentationMs=performance.now()-presentationStart; return Object.freeze({ frameNumber: counters.frameCount, width, height, timing:Object.freeze({...timing}) });
   }
   function captureColorFrame(label, { includePng = true } = {}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
@@ -799,7 +806,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt, getTimingReceipt:()=>Object.freeze({...timing})
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

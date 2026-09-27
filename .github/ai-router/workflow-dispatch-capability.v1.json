@@ -939,6 +939,16 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "H_EARTH_NEUTRAL_EXACT_HEAD_RUNTIME_EVIDENCE"
+    },
+    "GOVERNANCE_THREE_SURFACE_CROSSWALK_QUALIFICATION": {
+      "workflow": "governance-three-surface-crosswalk-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PASS"
     }
   },
   "continuity": {

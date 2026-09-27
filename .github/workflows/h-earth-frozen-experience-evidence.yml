@@ -41,7 +41,7 @@ jobs:
             sleep 1
           done
           mkdir -p /tmp/h-earth-anchor-evidence
-          cat > /tmp/h-earth-anchor-capture.mjs <<'NODE'
+          cat > h-earth-anchor-capture.mjs <<'NODE'
           import fs from 'node:fs/promises';
           import crypto from 'node:crypto';
           import {chromium} from 'playwright';
@@ -118,7 +118,7 @@ jobs:
           console.log(JSON.stringify(receipt,null,2));
           if(before?.ready!=='true'||after?.ready!=='true'||pageErrors.length||consoleErrors.length||requestFailures.length)process.exitCode=1;
           NODE
-          node /tmp/h-earth-anchor-capture.mjs
+          node h-earth-anchor-capture.mjs
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4

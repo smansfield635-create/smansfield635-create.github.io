@@ -82,7 +82,10 @@ export const EXACT_POST_1894_LEDGER_MATERIALIZATION_RECOVERIES = [
   stable({corruptCommitSha:'c074a0e0bc1ded191319b5761c924afaf5a6fd7d',corruptLedgerBlobSha:'28f9f1f98ff9856a39f2ab33ab6e3bc9dc82712e',restorationCommitSha:'9f4360feadcf60c908ebb5968091a650f7d87b52',restorationLedgerBlobSha:'29d2900f9504c3e3378e8ae2418aeb6a95273006',restorationMessage:'Repair lock 1908 ledger transport truncation'}),
   stable({corruptCommitSha:'ab35fb81b15b9a27bbc5e5af00cad8aadbabcd8a',corruptLedgerBlobSha:'1f9ce3ba858d1712e5413cf68b3913bdc0141572',restorationCommitSha:'10865af816362992612b2fbd249aa7eff402c563',restorationLedgerBlobSha:'2de9310ebf4b194ed0e80497a4a8db6b1ad86e23',restorationMessage:'Repair lock 1910 ledger transport truncation'}),
   stable({corruptCommitSha:'648458b3452c1e45ab679721752da097f0789036',corruptLedgerBlobSha:'8b88b0c9aa099f2424bbe4e54857802e40dd6782',restorationCommitSha:'55ae6d0613353836ab4494dc2e3f012d4148619f',restorationLedgerBlobSha:'449f58b33670a8f1ac4383d0b7d7b947611ff591',restorationMessage:'Repair terminal closure ledger materialization for generation 1920'}),
-  stable({corruptCommitSha:'f0fe17741354b03824d1f185796edc00c32d1459',corruptLedgerBlobSha:'2b6526c081872af9dd676fb9a77747e43802820c',restorationCommitSha:'fe8b97d079f0a42d5f21b71571c7d8c8343259c8',restorationLedgerBlobSha:'20e7bee551fcf4f39070153cd781914d27f3d661',restorationMessage:'Repair operation lock 1924 ledger materialization'})
+  stable({corruptCommitSha:'f0fe17741354b03824d1f185796edc00c32d1459',corruptLedgerBlobSha:'2b6526c081872af9dd676fb9a77747e43802820c',restorationCommitSha:'fe8b97d079f0a42d5f21b71571c7d8c8343259c8',restorationLedgerBlobSha:'20e7bee551fcf4f39070153cd781914d27f3d661',restorationMessage:'Repair operation lock 1924 ledger materialization'}),
+  // Exact Gen2051 transport truncation; the immediate restoration replays the
+  // authenticated intake against its immutable parent, including provenance.
+  stable({corruptCommitSha:'3f70dc2bdf1f943cc35c9eb43f61226f4a96af89',corruptParentSha:'5bcdf83310bd501e61344342bc172fb34e1d60f3',parentLedgerBlobSha:'4bcd01272a9f91038d150dc7cf8dc55c15ab3973',corruptLedgerBlobSha:'dc7ec0004cc7e3022577fe17e09c41d8c4edae91',restorationCommitSha:'f122f528a95276b992ace2d751148caca7ed7f3f',restorationLedgerBlobSha:'58626cb84d0ad298e6400fec5b65e0cd30a9ca9f',restorationMessage:'Acquire operation lock 2051: COMPASS_AUDRALIA_IMMERSION_HOLD_FINAL_TOUCH_20260910_001',scopeHash:'694704e90da4e85004e5b450a5af786e66f1d6bd565e0529f831d02e558d6d6a',restoredRowSha256:'b44193d5326d40c162a4116ead9886bb0692dc4e2954da4c03b6dc3e6c3ef370',sourceCommentId:5611432187,sourceIssueNumber:2955,sourceBodySha256:'16ce26496c9ac8dbe977a2e23e4d5f64e486bccef62f8149ce710ee8e2ac9557'})
 ];
 
 export const EXACT_LEDGER_RESTORATION_RECOVERY = stable({
@@ -312,13 +315,43 @@ async function verifyExactLockRefLineageRecovery({repository,token,summary,recov
   return true;
 }
 
-async function verifyExactPost1894MaterializationRecovery({repository,token,summary}){
+// Trusted inputs: production supplies Git-hash-verified ledger objects from
+// readGitLedgerBlob and the complete verified anchor..head commit traversal.
+export function verifyExactGen2051HistoricalState({corruptCommit,restorationCommit,parentCommit,parentLedger,restoredLedger,sourceComment,branchHead,lineageCommitShas}) {
+  const r=EXACT_POST_1894_LEDGER_MATERIALIZATION_RECOVERIES.find(value=>value.sourceCommentId===5611432187);
+  const fail=detail=>{throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen2051-materialization','authority-lineage',detail)};
+  const owner='smansfield635-create';
+  const exactCommit=(commit,commitSha,parentSha,blobSha)=>commit?.sha===commitSha&&commit?.author?.login===owner&&commit?.committer?.login===owner&&commit?.commit?.message===r.restorationMessage&&commit?.parents?.length===1&&commit.parents[0]?.sha===parentSha&&commit?.files?.length===1&&commit.files[0]?.filename===LEDGER_PATH&&commit.files[0]?.sha===blobSha;
+  if(!exactCommit(corruptCommit,r.corruptCommitSha,r.corruptParentSha,r.corruptLedgerBlobSha))fail('CORRUPT_IDENTITY_MISMATCH');
+  if(!exactCommit(restorationCommit,r.restorationCommitSha,r.corruptCommitSha,r.restorationLedgerBlobSha))fail('RESTORATION_IDENTITY_MISMATCH');
+  // The complete verified anchor..head traversal supplies this ancestry set.
+  // Fetching a known restoration elsewhere must never bless a corrupt tip.
+  if(branchHead===r.corruptCommitSha||!Array.isArray(lineageCommitShas)||!lineageCommitShas.includes(branchHead)||!lineageCommitShas.includes(r.restorationCommitSha))fail('RESTORATION_NOT_IN_TARGET_LINEAGE');
+  if(parentCommit?.sha!==r.corruptParentSha||parentCommit?.files?.length!==1||parentCommit.files[0]?.filename!==LEDGER_PATH||parentCommit.files[0]?.sha!==r.parentLedgerBlobSha)fail('PARENT_LEDGER_IDENTITY_MISMATCH');
+  if(sourceComment?.id!==r.sourceCommentId||sourceComment?.issue_url!==`https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/issues/${r.sourceIssueNumber}`||sourceComment?.user?.login!==owner||sourceComment?.author_association!=='OWNER'||typeof sourceComment?.body!=='string'||sha(sourceComment.body)!==r.sourceBodySha256)fail('AUTHENTICATED_SOURCE_MISMATCH');
+  if(parentLedger?.lockGeneration!==2050||parentLedger?.activeScopes?.[r.scopeHash]!==undefined)fail('PARENT_AUTHORITY_STATE_MISMATCH');
+  const row=restoredLedger?.activeScopes?.[r.scopeHash];
+  if(!row||sha(canonical(row))!==r.restoredRowSha256)fail('RESTORED_AUTHORITY_ROW_MISMATCH');
+  try{verifyCanonicalSourceComment(row,sourceComment.body)}catch{fail('RESTORED_SOURCE_BINDING_MISMATCH')}
+  const expected={...parentLedger,lockGeneration:2051,activeScopes:{...parentLedger.activeScopes,[r.scopeHash]:row}};
+  if(canonical(restoredLedger)!==canonical(expected))fail('RESTORED_LEDGER_TRANSITION_MISMATCH');
+  return stable({result:'EXACT_GEN2051_MATERIALIZATION_RECOVERED',corruptCommitSha:r.corruptCommitSha,parentCommitSha:r.corruptParentSha,restorationCommitSha:r.restorationCommitSha,restorationLedgerBlobSha:r.restorationLedgerBlobSha,sourceCommentId:r.sourceCommentId});
+}
+
+async function verifyExactPost1894MaterializationRecovery({repository,token,summary,branchHead,seen}){
   const r=EXACT_POST_1894_LEDGER_MATERIALIZATION_RECOVERIES.find(value=>value.corruptCommitSha===summary?.sha||value.restorationCommitSha===summary?.sha);if(!r)return false;
   const corrupt=await req(`${base(repository)}/commits/${r.corruptCommitSha}`,{headers:H(token)},[200],'AUTHORITY_POST1894_CORRUPT_DETAIL'),cf=Array.isArray(corrupt?.files)?corrupt.files:[];
   if(cf.length!==1||cf[0]?.filename!==LEDGER_PATH||cf[0]?.sha!==r.corruptLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','post1894-materialization','authority-lineage','CORRUPT_IDENTITY_MISMATCH');
   const restoration=await req(`${base(repository)}/commits/${r.restorationCommitSha}`,{headers:H(token)},[200],'AUTHORITY_POST1894_RESTORATION_DETAIL'),rf=Array.isArray(restoration?.files)?restoration.files:[],parents=Array.isArray(restoration?.parents)?restoration.parents:[];
   if(parents.length!==1||parents[0]?.sha!==r.corruptCommitSha||restoration?.author?.login!=='smansfield635-create'||restoration?.committer?.login!=='smansfield635-create'||restoration?.commit?.message!==r.restorationMessage||rf.length!==1||rf[0]?.filename!==LEDGER_PATH||rf[0]?.sha!==r.restorationLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','post1894-materialization','authority-lineage','RESTORATION_IDENTITY_MISMATCH');
-  await readGitLedgerBlob({repository,token,blobSha:r.restorationLedgerBlobSha,source:'exact-post1894-restoration',commitSha:r.restorationCommitSha});return true;
+  const restoredLedger=await readGitLedgerBlob({repository,token,blobSha:r.restorationLedgerBlobSha,source:'exact-post1894-restoration',commitSha:r.restorationCommitSha});
+  if(r.sourceCommentId===5611432187){
+    const parentCommit=await req(`${base(repository)}/commits/${r.corruptParentSha}`,{headers:H(token)},[200],'AUTHORITY_GEN2051_PARENT_DETAIL');
+    const parentLedger=await readGitLedgerBlob({repository,token,blobSha:r.parentLedgerBlobSha,source:'exact-gen2051-parent',commitSha:r.corruptParentSha});
+    const sourceComment=await fetchComment(repository,token,r.sourceCommentId);
+    verifyExactGen2051HistoricalState({corruptCommit:corrupt,restorationCommit:restoration,parentCommit,parentLedger,restoredLedger,sourceComment,branchHead,lineageCommitShas:seen.map(value=>value.sha)});
+  }
+  return true;
 }
 
 async function verifyExactGen1915LedgerRecovery({repository,token,summary}) {
@@ -455,7 +488,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
     if(await verifyExactGen2021LedgerCounterRecovery({repository,token,summary:c}))continue;
     if(await verifyExactGen1915LedgerRecovery({repository,token,summary:c}))continue;
     if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;
-    if(await verifyExactPost1894MaterializationRecovery({repository,token,summary:c}))continue;
+    if(await verifyExactPost1894MaterializationRecovery({repository,token,summary:c,branchHead:head,seen}))continue;
     if(c?.localGit&&c?.author?.login==='github-actions[bot]'&&canonicalMutationMessage(c?.commit?.message))continue;
     if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
     const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);

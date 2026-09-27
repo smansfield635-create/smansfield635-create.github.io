@@ -185,6 +185,29 @@ jobs:
                 renderFrameCallCount:liveGpuReceipt?.counters?.renderFrameCallCount??null,
                 gpuFramebufferPresentationCount:liveGpuReceipt?.counters?.gpuFramebufferPresentationCount??null,
                 worldRebuildCount:liveGpuReceipt?.counters?.worldRebuildCount ?? renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
+                t4DelayedPresentationObservation:(() => {
+                  try {
+                    const indices=liveGpuReceipt?.t4Receipt?.productionChangedPixelIndices??[];
+                    const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+                    const gl=canvas?.getContext?.('webgl2');
+                    const owned=window.__H_EARTH_LAST_NON_NULL_FRAMEBUFFER;
+                    if(!gl||!owned||!indices.length) return null;
+                    const width=canvas.width,height=canvas.height;
+                    const source=new Uint8Array(width*height*4),presented=new Uint8Array(width*height*4);
+                    gl.bindFramebuffer(gl.FRAMEBUFFER,owned);gl.finish();gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,source);
+                    gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.finish();gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,presented);
+                    let exactMatches=0,mismatches=0,maximumChannelDelta=0,presentedNonZero=0;
+                    const samples=[];
+                    for(const pixelIndex of indices){
+                      const i=pixelIndex*4;let same=true;
+                      for(let c=0;c<4;c++){const d=Math.abs(source[i+c]-presented[i+c]);if(d){same=false;maximumChannelDelta=Math.max(maximumChannelDelta,d);}}
+                      if(same)exactMatches++;else mismatches++;
+                      if(presented[i]||presented[i+1]||presented[i+2]||presented[i+3])presentedNonZero++;
+                      if(samples.length<12)samples.push({x:pixelIndex%width,y:Math.floor(pixelIndex/width),source:[...source.slice(i,i+4)],presented:[...presented.slice(i,i+4)]});
+                    }
+                    return {testedPixels:indices.length,exactMatches,mismatches,maximumChannelDelta,presentedNonZero,samples};
+                  } catch(error){return {error:String(error?.message??error)};}
+                })(),
                 liveGpuReceipt,
                 globals
               };

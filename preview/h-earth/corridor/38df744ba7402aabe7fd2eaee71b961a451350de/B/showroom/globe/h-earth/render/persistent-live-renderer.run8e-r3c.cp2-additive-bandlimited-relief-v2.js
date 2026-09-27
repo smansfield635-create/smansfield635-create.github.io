@@ -1,4 +1,5 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
@@ -72,7 +73,9 @@ layout(location=4) in uint aMaterialModelCode;
 layout(location=5) in uint aSurfaceClassCode;
 layout(location=6) in uint aPrimitiveIndex;
 layout(location=7) in uint aRoleCode;
+layout(location=8) in vec2 aWaveCoordinate;
 uniform mat4 uViewProjection;
+uniform float uWaveTimeSeconds;
 out vec3 vWorldPosition;
 out vec3 vNormal;
 out vec4 vBaseColor;
@@ -82,7 +85,11 @@ flat out uint vSurfaceClassCode;
 flat out uint vPrimitiveIndex;
 flat out uint vRoleCode;
 void main(){
-  vWorldPosition=aPosition;
+  vec3 world=aPosition;
+  if(aRoleCode==4u && aWaveCoordinate.y>0.0){
+    world.y+=0.25*aWaveCoordinate.y*sin(0.3141592653589793*aWaveCoordinate.x-1.2566370614359172*uWaveTimeSeconds);
+  }
+  vWorldPosition=world;
   vNormal=aNormal;
   vBaseColor=aBaseColorLinear;
   vMaterialParameters=aMaterialParameters;
@@ -90,7 +97,7 @@ void main(){
   vSurfaceClassCode=aSurfaceClassCode;
   vPrimitiveIndex=aPrimitiveIndex;
   vRoleCode=aRoleCode;
-  gl_Position=uViewProjection*vec4(aPosition,1.0);
+  gl_Position=uViewProjection*vec4(world,1.0);
 }`;
 
 const FS = `#version 300 es
@@ -422,8 +429,10 @@ void main(){
     float cross=dot(waterWorld,vec2(-0.083,0.061))+1.4;
     float slopeX=0.020*cos(broad)-0.012*cos(cross);
     float slopeZ=0.010*cos(broad)+0.009*cos(cross);
-    geometricNormal=vec3(0.0,1.0,0.0);
-    shadingNormal=normalize(vec3(-slopeX,1.0,-slopeZ));
+    vec3 displacedNormal=normalize(cross(dFdx(vWorldPosition),dFdy(vWorldPosition)));
+    if(displacedNormal.y<0.0) displacedNormal=-displacedNormal;
+    geometricNormal=displacedNormal;
+    shadingNormal=normalize(displacedNormal+vec3(-slopeX,0.0,-slopeZ));
   }else{
     float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
     base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
@@ -626,6 +635,16 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       if (integer) gl.vertexAttribIPointer(location, size, type, 0, 0);
       else gl.vertexAttribPointer(location, size, type, false, 0, 0);
     }
+    const waveCoordinate=new Float32Array((uploadViews.positions.length/3)*2);
+    const smooth=(a,b,value)=>{const t=Math.max(0,Math.min(1,(value-a)/(b-a)));return t*t*(3-2*t)};
+    for(let i=0;i<uploadViews.roleCodes.length;i++){
+      if(uploadViews.roleCodes[i]!==4)continue;
+      const x=uploadViews.positions[i*3],z=uploadViews.positions[i*3+2],d=z-getHEarthCanonicalShorelineZ(x);
+      waveCoordinate[i*2]=d;
+      waveCoordinate[i*2+1]=smooth(4,12,d)*(1-smooth(120,160,d))*(1-smooth(220,260,Math.abs(x)));
+    }
+    const waveBuffer=createBuffer();resources.buffers.push({name:'waveCoordinate',buffer:waveBuffer,byteLength:waveCoordinate.byteLength});
+    gl.bindBuffer(gl.ARRAY_BUFFER,waveBuffer);upload(gl.ARRAY_BUFFER,waveCoordinate);gl.enableVertexAttribArray(8);gl.vertexAttribPointer(8,2,gl.FLOAT,false,0,0);
     resources.indexBuffer = createBuffer();
     resources.buffers.push({ name: 'indices', buffer: resources.indexBuffer, byteLength: uploadViews.indices.byteLength });
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
@@ -646,7 +665,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, resources.depthColorTexture, 0);
     requireCompleteFramebuffer('DEPTH');
     resources.uniforms = {
-      viewProjection: uniform(resources.geometryProgram, 'uViewProjection'), cameraPosition: uniform(resources.geometryProgram, 'uCameraPosition'),
+      viewProjection: uniform(resources.geometryProgram, 'uViewProjection'), waveTime: uniform(resources.geometryProgram, 'uWaveTimeSeconds'), cameraPosition: uniform(resources.geometryProgram, 'uCameraPosition'),
       sunDirection: uniform(resources.geometryProgram, 'uSunDirection'), sunIntensity: uniform(resources.geometryProgram, 'uSunIntensity'),
       sunColor: uniform(resources.geometryProgram, 'uSunColor'), skyZenithColor: uniform(resources.geometryProgram, 'uSkyZenithColor'),
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
@@ -664,7 +683,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
     gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
-    counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
+    counters.staticUniformUpdateCount = 10; resources.waveEpochMs=performance.now(); initialized = true; return getResourceReceipt();
   }
 
   function buildInitialRefinementPatch(packet) {
@@ -693,8 +712,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
+    gl.uniform1f(resources.uniforms.waveTime,Math.max(0,(performance.now()-resources.waveEpochMs)/1000));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
-    counters.cameraUniformUpdateCount += 2;
+    counters.cameraUniformUpdateCount += 3;
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {
         gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
@@ -702,7 +722,6 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
-    if(resources.refinement?.created){gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;

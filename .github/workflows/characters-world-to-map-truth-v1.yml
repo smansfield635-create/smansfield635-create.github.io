@@ -1,0 +1,35 @@
+name: Characters World-to-Map Truth v1
+
+on:
+  pull_request:
+    paths:
+      - 'characters/world-to-map-truth-diagnostic.html'
+      - 'characters/world-to-map-truth-diagnostic.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/world-to-map-truth-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-world-to-map-truth.v1.mjs'
+      - '.github/workflows/characters-world-to-map-truth-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-world-to-map-truth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify candidate path scope and canonical projection truth
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-world-to-map-truth.v1.mjs
+      - name: Upload machine-readable proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-to-map-truth-receipt
+          path: world-to-map-truth-receipt.json
+          if-no-files-found: error

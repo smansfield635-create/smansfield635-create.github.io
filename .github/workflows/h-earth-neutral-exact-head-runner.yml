@@ -144,7 +144,7 @@ jobs:
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
               const text=document.body?.innerText||'';
-              const liveGpuReceipt=owningRoute?.getLiveGpuReceipt?.()??null;
+              const liveGpuReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
               const activeLiveGpu=Boolean(
                 liveGpuReceipt?.selectedRendererPath &&
                 liveGpuReceipt?.animation?.running===true &&

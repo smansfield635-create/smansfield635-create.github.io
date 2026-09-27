@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-27T04:36:28Z",
+  "generatedAt": "2026-09-27T05:30:40Z",
   "window": {
-    "start": "2026-06-29T04:36:28Z",
-    "end": "2026-09-27T04:36:28Z"
+    "start": "2026-06-29T05:30:40Z",
+    "end": "2026-09-27T05:30:40Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4968,
-    "visits": 1251,
+    "pageLoads": 4972,
+    "visits": 1250,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4968,
-        "visits": 1251
+        "pageLoads": 4972,
+        "visits": 1250
       }
     },
     "byPath": {
@@ -87,8 +87,8 @@
         "visits": 0
       },
       "/products/archcoin/": {
-        "pageLoads": 54,
-        "visits": 3
+        "pageLoads": 53,
+        "visits": 2
       },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
@@ -306,25 +306,25 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/products/archcoin/contract/": {
-        "pageLoads": 35,
-        "visits": 1
-      },
       "/products/archcoin/receivable/": {
-        "pageLoads": 26,
+        "pageLoads": 42,
         "visits": 0
+      },
+      "/products/archcoin/contract/": {
+        "pageLoads": 25,
+        "visits": 1
       },
       "/products/archcoin/payable/": {
         "pageLoads": 9,
         "visits": 0
       },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 2,
-        "visits": 0
-      },
       "/home/": {
         "pageLoads": 5,
         "visits": 5
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 1,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 7,
@@ -365,11 +365,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 458,
-        "visits": 458
+        "pageLoads": 457,
+        "visits": 457
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3717,
+        "pageLoads": 3722,
         "visits": 0
       },
       "www.google.com": {

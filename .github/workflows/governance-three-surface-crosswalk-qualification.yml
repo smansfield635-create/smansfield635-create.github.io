@@ -1,0 +1,97 @@
+name: Governance Three-Surface Crosswalk Qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 548442c748aa6495a844a02a025b737c183f52bf
+          fetch-depth: 1
+      - name: Prove immutable candidate
+        run: test "$(git rev-parse HEAD)" = "548442c748aa6495a844a02a025b737c183f52bf"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Serve immutable candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/crosswalk-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/governance-bridge/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/crosswalk-http.log; exit 1
+      - name: Exercise three-surface crosswalk
+        run: |
+          mkdir -p .qualification/governance-crosswalk
+          cat > .qualification/governance-crosswalk/qualify.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true});
+          const origin='http://127.0.0.1:4173';
+          const vps={desktop:{width:1440,height:1000},tablet:{width:900,height:1000},mobile:{width:390,height:844}};
+          const authoritative=['/governance-bridge/','/governance-bridge/portability/','/governance-bridge/governance/'];
+          const receipt={candidate:'548442c748aa6495a844a02a025b737c183f52bf',result:'PASS',viewports:{}};
+          const fail=(n,m)=>{throw new Error(n+': '+m)};
+          for(const [name,viewport] of Object.entries(vps)){
+            const page=await browser.newPage({viewport});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            async function load(path){
+              const r=await page.goto(origin+path,{waitUntil:'networkidle'});
+              if(!r||!r.ok()) fail(name,'dead target '+path+' status '+(r?.status()));
+              const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+              if(overflow>2) fail(name,'horizontal overflow '+path+' '+overflow);
+              const links=await page.locator('a[href]').evaluateAll(as=>as.map(a=>({href:a.getAttribute('href'),text:(a.textContent||'').replace(/\s+/g,' ').trim()})));
+              if(links.some(x=>(x.href||'').includes('/collaboration/'))) fail(name,'obsolete collaboration link on '+path);
+              for(const x of links){
+                const h=x.href||'';
+                if(/^https?:\/\//i.test(h) && !h.startsWith(origin)) fail(name,'external/production escape '+h+' on '+path);
+                if(h.startsWith('/') && !h.startsWith('/assets/')){
+                  const target=new URL(h,origin);
+                  const rr=await page.request.get(target.href);
+                  if(!rr.ok()) fail(name,'dead href '+h+' on '+path+' status '+rr.status());
+                }
+              }
+              return {overflow,links};
+            }
+            const bridge=await load('/governance-bridge/');
+            const explore=page.getByRole('link',{name:'Explore the collaboration →',exact:true});
+            if(await explore.count()!==1) fail(name,'Explore collaboration crosswalk cardinality');
+            if(await explore.getAttribute('href')!=='/governance-bridge/portability/') fail(name,'Explore collaboration target');
+            await explore.click(); await page.waitForLoadState('networkidle');
+            if(new URL(page.url()).pathname!=='/governance-bridge/portability/') fail(name,'collaboration navigation');
+            const port=await load('/governance-bridge/portability/');
+            const returns=page.getByRole('link',{name:/Governance Bridge/});
+            if(await returns.count()!==2) fail(name,'two collaboration returns required');
+            for(let i=0;i<2;i++) if(await returns.nth(i).getAttribute('href')!=='/governance-bridge/') fail(name,'collaboration return target '+i);
+            const inspect=page.getByRole('link',{name:'Inspect the governance model →',exact:true});
+            if(await inspect.count()!==1) fail(name,'Inspect model crosswalk cardinality');
+            if(await inspect.getAttribute('href')!=='/governance-bridge/governance/') fail(name,'Inspect model target');
+            await inspect.click(); await page.waitForLoadState('networkidle');
+            if(new URL(page.url()).pathname!=='/governance-bridge/governance/') fail(name,'governance navigation');
+            const gov=await load('/governance-bridge/governance/');
+            const back=page.getByRole('link',{name:'Return to Governance Bridge',exact:true});
+            if(await back.count()!==1) fail(name,'governance bounded return cardinality');
+            if(await back.getAttribute('href')!=='/governance-bridge/') fail(name,'governance bounded return target');
+            await back.click(); await page.waitForLoadState('networkidle');
+            if(new URL(page.url()).pathname!=='/governance-bridge/') fail(name,'bounded return navigation');
+            for(const p of authoritative) await load(p);
+            if(errors.length) fail(name,'page errors '+errors.join('|'));
+            receipt.viewports[name]={bridgeLinks:bridge.links.length,collaborationLinks:port.links.length,governanceLinks:gov.links.length,returns:2,composition:'RECOGNIZE→COLLABORATE→INSPECT→RECOGNIZE'};
+            await page.close();
+          }
+          await browser.close();
+          fs.writeFileSync('.qualification/governance-crosswalk/receipt.json',JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+          node .qualification/governance-crosswalk/qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: governance-three-surface-crosswalk-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/governance-crosswalk
+          retention-days: 30

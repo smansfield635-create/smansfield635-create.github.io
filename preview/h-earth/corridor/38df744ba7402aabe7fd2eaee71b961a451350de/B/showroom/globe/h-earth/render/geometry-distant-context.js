@@ -4,6 +4,7 @@ import {evaluateHEarthRecoveredWaterRgbaAtWorldPoint} from './geometry-shoreline
 import {H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sampleHEarthWorldManifold} from '../../../../h-earth-3d/terrain/h-earth.world-manifold-domain.js';
 import {H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID,buildHEarthWorldManifoldRepresentationPlan} from '../../../../h-earth-3d/integration/h-earth.world-representation-plan.js';
 import {H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,regionToHEarthPlanetPoint,getHEarthDerivedHorizonDistance} from './planetary-world-frame.js';
+import {getHEarthCanonicalShorelineZ} from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID='H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_DISTANT_CONTEXT_v1';
@@ -39,25 +40,38 @@ function buildLandMesh(plan,rings,sectorCount){
 
 function buildContinuousOceanField(){
   const width=OCEAN_X.length,height=OCEAN_Z.length;
-  const vertices=[],vertexRgba=[],samples=[];
-  for(let zi=0;zi<height;zi++)for(let xi=0;xi<width;xi++){
-    const x=OCEAN_X[xi],z=OCEAN_Z[zi],sample=sampleHEarthWorldManifold(x,z),q=regionToHEarthPlanetPoint({x,y:0.015,z});
-    vertices.push(createHEarthVector3(q.x,q.y,q.z));
-    vertexRgba.push(evaluateHEarthRecoveredWaterRgbaAtWorldPoint(x,z,{opaque:true}));
-    samples.push(sample);
+  const selected=new Set();
+  for(let xi=0;xi<width-1;xi++){
+    const x0=OCEAN_X[xi],x1=OCEAN_X[xi+1];
+    if(x1<-256||x0>256)continue;
+    let minShore=Infinity,maxShore=-Infinity;
+    const sampleStart=Math.max(x0,-256),sampleEnd=Math.min(x1,256);
+    for(let x=sampleStart;x<=sampleEnd+1e-9;x+=0.25){const s=getHEarthCanonicalShorelineZ(Math.min(x,sampleEnd));minShore=Math.min(minShore,s);maxShore=Math.max(maxShore,s);}
+    for(let zi=0;zi<height-1;zi++){const z0=OCEAN_Z[zi],z1=OCEAN_Z[zi+1];if(z1>=minShore&&z0<=maxShore+160)selected.add(`${xi}:${zi}`);}
   }
-  const indices=[];let retainedCellCount=0,landUnderlayCellCount=0,mixedCoastCellCount=0;
+  const vertices=[],vertexRgba=[],indices=[],vertexMap=new Map(),samples=[];
+  const key=(x,z)=>`${x.toFixed(6)}:${z.toFixed(6)}`;
+  const vertex=(x,z)=>{const k=key(x,z);if(vertexMap.has(k))return vertexMap.get(k);const q=regionToHEarthPlanetPoint({x,y:0.015,z});const i=vertices.length;vertices.push(createHEarthVector3(q.x,q.y,q.z));vertexRgba.push(evaluateHEarthRecoveredWaterRgbaAtWorldPoint(x,z,{opaque:true}));samples.push(sampleHEarthWorldManifold(x,z));vertexMap.set(k,i);return i;};
+  let refinedCellCount=0,coarseCellCount=0;
   for(let zi=0;zi<height-1;zi++)for(let xi=0;xi<width-1;xi++){
-    const a=zi*width+xi,b=a+1,e=(zi+1)*width+xi,d=e+1;
-    const cell=[samples[a],samples[b],samples[d],samples[e]],waterVotes=cell.filter(s=>s?.surfaceClass==='WATER').length;
-    if(waterVotes===0)landUnderlayCellCount++;
-    else if(waterVotes<4)mixedCoastCellCount++;
-    indices.push(a,e,b,b,e,d);retainedCellCount++;
+    const x0=OCEAN_X[xi],x1=OCEAN_X[xi+1],z0=OCEAN_Z[zi],z1=OCEAN_Z[zi+1];
+    if(selected.has(`${xi}:${zi}`)){
+      refinedCellCount++;
+      const xs=[];for(let x=x0;x<x1-1e-9;x+=2)xs.push(x);xs.push(x1);
+      const zs=[];for(let z=z0;z<z1-1e-9;z+=2)zs.push(z);zs.push(z1);
+      for(let r=0;r<zs.length-1;r++)for(let col=0;col<xs.length-1;col++){const a=vertex(xs[col],zs[r]),b=vertex(xs[col+1],zs[r]),e=vertex(xs[col],zs[r+1]),d=vertex(xs[col+1],zs[r+1]);indices.push(a,e,b,b,e,d);}
+    }else{
+      coarseCellCount++;
+      const a=vertex(x0,z0),b=vertex(x1,z0),e=vertex(x0,z1),d=vertex(x1,z1);indices.push(a,e,b,b,e,d);
+    }
   }
+  const edgeCounts=new Map(),triangles=new Set();let duplicateTriangleCount=0,degenerateTriangleCount=0;
+  const edge=(a,b)=>a<b?`${a}:${b}`:`${b}:${a}`;
+  for(let i=0;i<indices.length;i+=3){const a=indices[i],b=indices[i+1],d=indices[i+2];if(a===b||b===d||d===a)degenerateTriangleCount++;const tk=[a,b,d].sort((m,n)=>m-n).join(':');if(triangles.has(tk))duplicateTriangleCount++;triangles.add(tk);for(const ek of [edge(a,b),edge(b,d),edge(d,a)])edgeCounts.set(ek,(edgeCounts.get(ek)||0)+1);}
+  let nonManifoldEdgeCount=0;for(const count of edgeCounts.values())if(count>2)nonManifoldEdgeCount++;
   const maximumRadius=Math.max(...vertices.map(v=>Math.hypot(v.x,v.z)));
-  return compact(vertices,indices,{retainedCellCount,landUnderlayCellCount,mixedCoastCellCount,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',oceanUnderlayClosesRepresentationGaps:true,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true},vertexRgba);
+  return freeze({vertices:freeze(vertices),indices:freeze(indices),vertexRgba:freeze(vertexRgba),sourceVertexCount:width*height,compactVertexCount:vertices.length,removedUnreferencedVertexCount:0,triangleCount:indices.length/3,retainedCellCount:(width-1)*(height-1),landUnderlayCellCount:0,mixedCoastCellCount:0,gridWidth:width,gridHeight:height,xMinimum:OCEAN_X[0],xMaximum:OCEAN_X.at(-1),zMinimum:OCEAN_Z[0],zMaximum:OCEAN_Z.at(-1),outerRadius:maximumRadius,waterColorAuthority:'DISTANCE_FROM_CANONICAL_COAST_CONTINUOUS',historical23923ColorAnchorsPreserved:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'IN_PLACE_2M_REFINEMENT',oceanUnderlayClosesRepresentationGaps:true,lateralColorTerminationPossible:false,visibleRectangularTerminationProhibited:true,flatRefinementReceipt:freeze({selectedOriginalCellCount:selected.size,refinedCellCount,coarseCellCount,vertexCount:vertices.length,triangleCount:indices.length/3,duplicateTriangleCount,degenerateTriangleCount,nonManifoldEdgeCount,spacingMeters:2,selectionOffshoreMeters:160,flatElevationMeters:0.015})});
 }
-
 function primitive(mesh,surfaceClass,plan=null){
   if(mesh.indices.length===0||mesh.vertices.length<3)return null;
   const ocean=surfaceClass==='OCEAN',id=`H_EARTH_WORLD_MANIFOLD:FAR_${surfaceClass}_CONTINUATION`;

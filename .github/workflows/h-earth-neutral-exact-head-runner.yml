@@ -104,6 +104,13 @@ jobs:
                   rows.push({url,sha256:[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join(''),length:text.length,hasWaveExport:text.includes('getWaveAnimationReceipt')});
                 }catch(error){rows.push({url,error:error?.message??String(error)})}
               }
+              const integrationUrl=new URL('./functional-landscape/public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1',location.href).href;
+              try{
+                const text=await fetch(integrationUrl,{cache:'no-store'}).then(response=>response.text());
+                const bytes=new TextEncoder().encode(text);
+                const digest=await crypto.subtle.digest('SHA-256',bytes);
+                rows.push({url:integrationUrl,kind:'IMPORTED_INTEGRATION_MODULE',sha256:[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join(''),length:text.length,hasWaveExport:text.includes('getWaveAnimationReceipt'),assignmentMentions:(text.match(/H_EARTH_RUN8E_PUBLIC_ROUTE/g)||[]).length});
+              }catch(error){rows.push({url:integrationUrl,kind:'IMPORTED_INTEGRATION_MODULE',error:error?.message??String(error)})}
               return rows;
             });
             const state=await page.evaluate(() => {

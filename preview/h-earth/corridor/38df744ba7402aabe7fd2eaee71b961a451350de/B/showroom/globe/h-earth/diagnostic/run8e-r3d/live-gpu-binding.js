@@ -261,6 +261,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   });
   counters.r3AFramePacketCount += 1;
   const initialization = renderer.initialize(initialPacket);
+  renderer.activateStationaryWavePatch(initialPacket);
   counters.rendererInitializationCount += 1;
   frameSequence = 0;
   presentNavigationState(initialNavigationState, {

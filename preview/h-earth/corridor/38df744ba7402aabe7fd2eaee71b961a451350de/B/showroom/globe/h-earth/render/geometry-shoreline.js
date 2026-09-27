@@ -14,6 +14,30 @@ import {
 import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
+// Authored X/Z units are meters. The coast itself is the immutable zero contour.
+// Sample its canonical curve once; each query finds the closest point on that
+// polyline. A 1 m chord limits curvature approximation without per-frame work.
+const COAST_MIN_X=-7200,COAST_MAX_X=7200,COAST_STEP_METERS=1;
+const coastSamples=Array.from({length:COAST_MAX_X-COAST_MIN_X+1},(_,i)=>getHEarthCanonicalShorelineZ(COAST_MIN_X+i));
+export function getHEarthSignedCoastDistanceMeters(worldX,worldZ){
+  if(!Number.isFinite(worldX)||!Number.isFinite(worldZ))return Number.NaN;
+  const localCoast=getHEarthCanonicalShorelineZ(worldX);
+  const delta=worldZ-localCoast;
+  // Beyond this distance every coastal color/material transition is saturated.
+  // The canonical coast varies by far less than 260 m across this domain.
+  if(Math.abs(delta)>620)return delta>0?-620:620;
+  const reach=Math.abs(delta)+COAST_STEP_METERS;
+  const first=Math.max(0,Math.floor(worldX-reach-COAST_MIN_X));
+  const last=Math.min(coastSamples.length-2,Math.ceil(worldX+reach-COAST_MIN_X));
+  let best=delta*delta;
+  for(let i=first;i<=last;i++){
+    const ax=COAST_MIN_X+i,az=coastSamples[i],vx=COAST_STEP_METERS,vz=coastSamples[i+1]-az;
+    const t=Math.min(1,Math.max(0,((worldX-ax)*vx+(worldZ-az)*vz)/(vx*vx+vz*vz)));
+    const dx=worldX-ax-t*vx,dz=worldZ-az-t*vz;
+    best=Math.min(best,dx*dx+dz*dz);
+  }
+  return delta>0?-Math.sqrt(best):Math.sqrt(best);
+}
 const SCALE=2**24;
 const canonical=v=>{const x=Math.round(v*SCALE)/SCALE;return Object.is(x,-0)?0:x};
 const clamp01=v=>Math.min(1,Math.max(0,v));
@@ -50,7 +74,7 @@ export function evaluateHEarthRecoveredWaterRgbaFromCoastDistance(distance,{opaq
 
 export function evaluateHEarthRecoveredWaterRgbaAtWorldPoint(x,z,{opaque=true}={}){
   const shorelineZ=getHEarthCanonicalShorelineZ(x);
-  const waterwardDistance=Number.isFinite(shorelineZ)&&Number.isFinite(z)?z-shorelineZ:0;
+  const waterwardDistance=Number.isFinite(shorelineZ)&&Number.isFinite(z)?-getHEarthSignedCoastDistanceMeters(x,z):0;
   return evaluateHEarthRecoveredWaterRgbaFromCoastDistance(waterwardDistance,{opaque});
 }
 
@@ -63,9 +87,29 @@ export function evaluateHEarthRecoveredWaterRgbaFromElevation(elevation,{opaque=
 
 const sampleCount=257,shorelineXMinimum=-1024,shorelineXMaximum=1024;
 const xAt=i=>shorelineXMinimum+(i/(sampleCount-1))*(shorelineXMaximum-shorelineXMinimum);
+function metricBoundaryZ(x,offset){
+  const shore=getHEarthCanonicalShorelineZ(x);
+  if(offset===0||Math.abs(offset)>58)return shore-offset; // invisible open-water ribbon
+  const direction=offset>0?-1:1,target=Math.abs(offset);
+  let previous=shore;
+  // Choose the first metric crossing on this X ray. This retains ribbon order
+  // when a distant bay segment creates multiple closest-point candidates.
+  for(let step=1;step<=Math.ceil(target*4+200);step++){
+    const next=shore+direction*step*.5;
+    if(Math.abs(getHEarthSignedCoastDistanceMeters(x,next))>=target){
+      let a=previous,b=next;
+      for(let k=0;k<18;k++){
+        const mid=(a+b)*.5;
+        if(Math.abs(getHEarthSignedCoastDistanceMeters(x,mid))>=target)b=mid;else a=mid;
+      }
+      return (a+b)*.5;
+    }
+    previous=next;
+  }
+  throw new Error('METRIC_SHORELINE_BOUNDARY_UNREACHABLE');
+}
 function pointAtOffset(x,offset){
-  const shorelineZ=getHEarthCanonicalShorelineZ(x);
-  const z=shorelineZ-offset;
+  const z=metricBoundaryZ(x,offset);
   const sample=sampleHEarthWorldManifold(x,z);
   const waterward=offset<=0;
   return {x,y:waterward?0.02:sample.elevation,z,sample};

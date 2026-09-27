@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-27T15:29:55Z",
+  "generatedAt": "2026-09-27T16:31:44Z",
   "window": {
-    "start": "2026-06-29T15:29:55Z",
-    "end": "2026-09-27T15:29:55Z"
+    "start": "2026-06-29T16:31:44Z",
+    "end": "2026-09-27T16:31:44Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -126,12 +126,12 @@
         "pageLoads": 111,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/test/reverse-audit/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -179,10 +183,6 @@
         "visits": 0
       },
       "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
       },
@@ -214,12 +214,12 @@
         "pageLoads": 11,
         "visits": 0
       },
-      "/laws/categories/structure/interfaces.html": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/structure/interfaces.html": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -234,13 +234,13 @@
         "pageLoads": 11,
         "visits": 0
       },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
         "visits": 10
+      },
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -250,9 +250,17 @@
         "pageLoads": 73,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
+        "pageLoads": 13,
+        "visits": 3
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
@@ -265,14 +273,6 @@
       "/door/": {
         "pageLoads": 21,
         "visits": 0
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 13,
-        "visits": 3
       },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
@@ -294,13 +294,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 41,
-        "visits": 31
-      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 41,
+        "visits": 31
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -318,6 +318,10 @@
         "pageLoads": 9,
         "visits": 0
       },
+      "/analytics-owner-device/": {
+        "pageLoads": 7,
+        "visits": 7
+      },
       "/home/": {
         "pageLoads": 5,
         "visits": 5
@@ -325,10 +329,6 @@
       "/products/archcoin/allocation/": {
         "pageLoads": 1,
         "visits": 0
-      },
-      "/analytics-owner-device/": {
-        "pageLoads": 7,
-        "visits": 7
       },
       "/analytics/": {
         "pageLoads": 62,

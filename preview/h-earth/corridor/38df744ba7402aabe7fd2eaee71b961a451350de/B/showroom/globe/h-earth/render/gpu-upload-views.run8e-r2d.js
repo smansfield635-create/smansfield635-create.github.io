@@ -4,6 +4,7 @@ import {
   createHEarthRun8ER2GPUBufferViews
 } from './live-render-package.run8e-r2.js';
 import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
+import { H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS } from './geometry-shoreline.js';
 
 // Authored X/Z units are meters. The coast itself is the immutable zero contour.
 // Sample its canonical curve once; each query finds the closest point on that
@@ -213,6 +214,29 @@ function projectRecoveredWaterBaseColors(rawViews, packageRecord) {
   };
 }
 
+function projectShorelineSandColors(waterProjectedColors, packageRecord){
+  const result=new Float32Array(waterProjectedColors);
+  const projectedPrimitiveIds=[];
+  let projectedVertexCount=0;
+  for(const span of packageRecord?.primitiveSpans??[]){
+    const bandId=String(span?.primitiveId??'').split(':').at(-1);
+    const material=H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS[bandId];
+    if(!material||span?.primitiveId!==`H_EARTH_FUNCTIONAL_SHORELINE:${bandId}`)continue;
+    projectedPrimitiveIds.push(span.primitiveId);
+    const start=Number(span.vertexStart)||0,count=Number(span.vertexCount)||0;
+    for(let local=0;local<count;local++){
+      const c=(start+local)*4;
+      result[c]=srgb8ToLinear(material.rgba[0]);
+      result[c+1]=srgb8ToLinear(material.rgba[1]);
+      result[c+2]=srgb8ToLinear(material.rgba[2]);
+      result[c+3]=1;
+      projectedVertexCount++;
+    }
+  }
+  if(projectedPrimitiveIds.length!==3)throw new Error('SHORELINE_SAND_GPU_SPAN_COUNT_INVALID');
+  return {view:result,receipt:freezeRecord({projectedVertexCount,projectedPrimitiveIds:Object.freeze(projectedPrimitiveIds),sourcePackageMutated:false,activeWebglBaseColorProjection:true})};
+}
+
 export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()
 ) {
@@ -224,11 +248,12 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   );
   const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
   const projectedWaterColors = projectRecoveredWaterBaseColors(rawViews, packageRecord);
+  const projectedSandColors = projectShorelineSandColors(projectedWaterColors.view, packageRecord);
 
   return freezeRecord({
     positions: new Float32Array(rawViews.positions),
     normals: canonicalNormals.view,
-    baseColorsLinear: projectedWaterColors.view,
+    baseColorsLinear: projectedSandColors.view,
     materialParameters: canonicalMaterialParameters.view,
     materialModelCodes: new Uint8Array(rawViews.materialModelCodes),
     surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
@@ -243,6 +268,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       materialParameterBuffer: canonicalMaterialParameters.receipt,
       gpuRoleProjection: projectedRoleCodes.receipt,
       gpuWaterOpticalProjection: projectedWaterColors.receipt,
+      gpuShorelineSandProjection: projectedSandColors.receipt,
       sourcePackageMutated: false,
       transportEncodingOnly: true
     }),

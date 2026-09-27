@@ -81,6 +81,9 @@ jobs:
               return await frame.evaluate(({index,url,name}) => ({
                 index,url,name,title:document.title,
                 hasRun8ePublicRoute:Boolean(window.H_EARTH_RUN8E_PUBLIC_ROUTE),
+                run8ePublicRouteKeys:window.H_EARTH_RUN8E_PUBLIC_ROUTE?Object.keys(window.H_EARTH_RUN8E_PUBLIC_ROUTE).sort():[],
+                run8ePublicRouteIntegrationId:window.H_EARTH_RUN8E_PUBLIC_ROUTE?.integrationId??null,
+                moduleScriptUrls:[...document.querySelectorAll('script[type="module"][src]')].map(script=>script.src),
                 hasWaveReceipt:Boolean(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getWaveAnimationReceipt),
                 hasLiveGpuReceipt:Boolean(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt),
                 canvasPresent:document.getElementById('h-earth-functional-landscape-canvas') instanceof HTMLCanvasElement,
@@ -90,6 +93,19 @@ jobs:
           }));
           const sample=async label => {
             const runtimeTopology=await inspectRuntimeTopology();
+            const moduleContentIdentity=await page.evaluate(async () => {
+              const urls=[...document.querySelectorAll('script[type="module"][src]')].map(script=>script.src).filter(url=>/public-live-gpu-integration\.run8e-r3e(?:\.receipt)?\.js/.test(url));
+              const rows=[];
+              for(const url of urls){
+                try{
+                  const text=await fetch(url,{cache:'no-store'}).then(response=>response.text());
+                  const bytes=new TextEncoder().encode(text);
+                  const digest=await crypto.subtle.digest('SHA-256',bytes);
+                  rows.push({url,sha256:[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join(''),length:text.length,hasWaveExport:text.includes('getWaveAnimationReceipt')});
+                }catch(error){rows.push({url,error:error?.message??String(error)})}
+              }
+              return rows;
+            });
             const state=await page.evaluate(() => {
               const text=document.body?.innerText||'';
               const owningWindow=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)].find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getWaveAnimationReceipt);
@@ -147,7 +163,7 @@ jobs:
               const canvasBytes=await fs.readFile(out+'/'+canvasScreenshot);
               canvasScreenshotSha256=crypto.createHash('sha256').update(canvasBytes).digest('hex');
             }
-            return {...state,runtimeTopology,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex'),canvasScreenshot,canvasScreenshotSha256,canvasBox};
+            return {...state,runtimeTopology,moduleContentIdentity,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex'),canvasScreenshot,canvasScreenshotSha256,canvasBox};
           };
 
           let readiness='TIMEOUT';

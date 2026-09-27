@@ -64,7 +64,10 @@ jobs:
           const bindingPath='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js';
           let b=fs.readFileSync(bindingPath,'utf8');
           const callerLines=b.split('\n');
-          const findUnique=(text)=>{const hits=callerLines.map((line,index)=>line===text?index:-1).filter(index=>index>=0);if(hits.length!==1)throw new Error(`CALLER_TIMING_ANCHOR_COUNT:${text}:${hits.length}`);return hits[0];};
+          const functionStart=callerLines.findIndex(line=>line==='  const presentNavigationState = (navigationState, source) => {');
+          const functionEnd=callerLines.findIndex((line,index)=>index>functionStart&&line==='  };');
+          if(functionStart<0||functionEnd<0) throw new Error('CALLER_TIMING_FUNCTION_SCOPE_NOT_FOUND');
+          const findUnique=(text)=>{const hits=callerLines.map((line,index)=>index>=functionStart&&index<=functionEnd&&line===text?index:-1).filter(index=>index>=0);if(hits.length!==1)throw new Error(`CALLER_TIMING_SCOPED_ANCHOR_COUNT:${text}:${hits.length}`);return hits[0];};
           let line=findUnique('  const presentNavigationState = (navigationState, source) => {');
           callerLines.splice(line,0,'  const __neutralCallerTiming={packetMs:null,renderFrameCallMs:null,presentColorFrameCallMs:null,bookkeepingMs:null,totalMs:null};');
           line=findUnique('    const packet = createHEarthRun8ER3AFrameUniformPacket({'); callerLines.splice(line,0,'    const __packetStart=performance.now();');

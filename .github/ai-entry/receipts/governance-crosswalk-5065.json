@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "governance-crosswalk-5065",
+  "capabilityId": "GOVERNANCE_THREE_SURFACE_CROSSWALK_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5071,
+  "requestBranch": "ai-dispatch-request-governance-crosswalk-5065",
+  "requestCommit": "db9927e81fa10602329482d4d0a13106957dcdbf",
+  "requestCommitParent": "7f6d25014b75ac1be73e7df6f7ca026f5f8eb7fd",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7f6d25014b75ac1be73e7df6f7ca026f5f8eb7fd",
+  "workflow": "governance-three-surface-crosswalk-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "36282333713",
+  "dispatchedRunId": 36282342573,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36282342573",
+  "dispatchedRunHeadSha": "7f6d25014b75ac1be73e7df6f7ca026f5f8eb7fd",
+  "dispatchedAt": "2026-09-27T00:23:17.329Z",
+  "resolvedAt": "2026-09-27T00:23:20.664Z"
+}

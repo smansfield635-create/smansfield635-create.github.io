@@ -80,6 +80,11 @@ let binding = null;
 let representationTransitionSurface = null;
 let lastPresentedFrame = null;
 let firstFramePublished = false;
+const waveAnimation = { presentedFrameCount: 0, lastTickMs: null, intervalsMs: [], lastSynchronousResponseMs: null, stoppedByError: null };
+const waveAnimationReceipt = () => {
+  const values=waveAnimation.intervalsMs;
+  return Object.freeze({frameCapFps:15,presentedFrameCount:waveAnimation.presentedFrameCount,lastIntervalMs:values.at(-1)??null,meanIntervalMs:values.length?values.reduce((sum,v)=>sum+v,0)/values.length:null,maximumIntervalMs:values.length?Math.max(...values):null,lastSynchronousResponseMs:waveAnimation.lastSynchronousResponseMs,stoppedByError:waveAnimation.stoppedByError,worldRebuildCount:binding?.getReceipt()?.counters?.worldRebuildCount??null});
+};
 
 function updateHud() {
   if (!intake || !binding) return;
@@ -143,6 +148,7 @@ function buildPublicReceipt() {
     moduleSources,
     intake: intakeReceipt,
     liveGpu: bindingReceipt,
+    waveAnimation: waveAnimationReceipt(),
     representationTransition: representationTransitionSurface.getCapabilityDescriptor(),
     runtimeExclusivity: {
       activePublicModuleScriptCount: moduleSources.length,
@@ -267,6 +273,7 @@ export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   getSnapshot: () => buildPublicReceipt(),
   getIntakeReceipt: () => intake.getReceipt(),
   getLiveGpuReceipt: () => binding.getReceipt(),
+  getWaveAnimationReceipt: waveAnimationReceipt,
   getRepresentationTransitionSurface: () => representationTransitionSurface
 });
 
@@ -292,6 +299,30 @@ setTimeout(() => {
     emitDiagnosticStage('POST_READY_REFINEMENT_ACTIVE','FAIL',{name:error?.name,message:error?.message});
   }
 },0);
+
+// Present the resident ocean field when the camera is still. Navigation retains
+// its synchronous presentation path; this loop has no readback or buffer upload.
+const waveFramePeriodMs=1000/15;
+const presentWaveFrame=(timestamp)=>{
+  if(!canvas.isConnected||waveAnimation.stoppedByError)return;
+  if(document.visibilityState==='visible' && (waveAnimation.lastTickMs===null||timestamp-waveAnimation.lastTickMs>=waveFramePeriodMs)){
+    const prior=waveAnimation.lastTickMs;
+    waveAnimation.lastTickMs=timestamp;
+    if(prior!==null && timestamp-prior<1000){waveAnimation.intervalsMs.push(timestamp-prior);if(waveAnimation.intervalsMs.length>60)waveAnimation.intervalsMs.shift();}
+    try{
+      lastPresentedFrame=binding.presentWaveAnimationFrame();
+      waveAnimation.presentedFrameCount++;
+      waveAnimation.lastSynchronousResponseMs=lastPresentedFrame.responseMs;
+      if(waveAnimation.presentedFrameCount%30===0)updateHud();
+    }catch(error){
+      waveAnimation.stoppedByError={name:error?.name??'Error',message:error?.message??String(error)};
+      emitDiagnosticStage('WATER_ANIMATION_FRAME','FAIL',waveAnimation.stoppedByError);
+      return;
+    }
+  }
+  requestAnimationFrame(presentWaveFrame);
+};
+requestAnimationFrame(presentWaveFrame);
 
 if (window.parent === window) {
   emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');

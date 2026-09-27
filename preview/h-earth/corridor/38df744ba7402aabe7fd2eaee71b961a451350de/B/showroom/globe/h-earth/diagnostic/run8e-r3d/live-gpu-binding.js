@@ -167,11 +167,9 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const t4Extension = t4Requested ? createHEarthT4PostTerrainDraw(canvas.getContext('webgl2')) : null;
-  const renderer = createHEarthRun8ER3CPersistentRenderer({
-    canvas, width, height,
-    postTerrainDraw: t4Extension?.drawAfterTerrain ?? null
-  });
+  let t4Extension = null;
+  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height });
+  if (t4Requested) t4Extension = createHEarthT4PostTerrainDraw(renderer.getOwnedWebGL2Context());
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -206,10 +204,12 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     const packet = createHEarthRun8ER3AFrameUniformPacket({
       navigationState,
       viewport: { width, height, pixelRatio },
-      frameSequence
+      frameSequence,
+      waterPhase: frameSequence * 0.018
     });
     counters.r3AFramePacketCount += 1;
     renderer.renderFrame(packet);
+    if (t4Extension) t4Extension.drawAfterTerrain({ gl: renderer.getOwnedWebGL2Context(), packet, width, height });
     counters.renderFrameCallCount += 1;
     renderer.presentColorFrame();
     counters.gpuFramebufferPresentationCount += 1;
@@ -257,7 +257,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   const initialPacket = createHEarthRun8ER3AFrameUniformPacket({
     navigationState: initialNavigationState,
     viewport: { width, height, pixelRatio },
-    frameSequence: 1
+    frameSequence: 1,
+    waterPhase: 0.018
   });
   counters.r3AFramePacketCount += 1;
   const initialization = renderer.initialize(initialPacket);

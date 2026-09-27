@@ -73,7 +73,14 @@ jobs:
           old=r'/acceptedBaselineRendererSelected\s*:\s*!additiveVisualRequested\s*&&\s*!cp2LiveDifferentialRequested/'
           new=r'/acceptedBaselineRendererSelected\s*:\s*(?:![A-Za-z]+\s*&&\s*)*!additiveVisualRequested\s*&&\s*!cp2LiveDifferentialRequested/'
           if s.count(old)!=1: raise SystemExit('CP3D_OLD_ASSERTION_SHAPE_MISMATCH')
-          p.write_text(s.replace(old,new))
+          s=s.replace(old,new)
+          for old_import,new_import in (
+            (r"""live-gpu-binding\.js['"]""", r"""live-gpu-binding\.js(?:\?[^'"]*)?['"]"""),
+            (r"""public-live-gpu-integration\.run8e-r3e\.js['"]""", r"""public-live-gpu-integration\.run8e-r3e\.js(?:\?[^'"]*)?['"]"""),
+          ):
+            if s.count(old_import)!=1: raise SystemExit('CP3D_STALE_IMPORT_ASSERTION_SHAPE_MISMATCH')
+            s=s.replace(old_import,new_import)
+          p.write_text(s)
           PY
           test "$(git diff --name-only)" = "h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs"
 

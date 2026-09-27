@@ -1,0 +1,14 @@
+{
+  "schema": "COMPASS_ADVERSARIAL_HOLDOUT_KEY_COMMITMENT_v1_1",
+  "status": "FROZEN_UNREVEALED",
+  "publicCorpusCanonicalSha256": "6b237426c06518daa2fe7e274ae3901af2d450a9131bab0e64cfd8b19fd7df67",
+  "sealedKeyCanonicalSha256": "c76c578e9d07f66036c901ad563a7f84ef53ce516b4d2c55aec4dbb326299add",
+  "canonicalization": "RECURSIVELY_KEY_SORTED_WHITESPACE_FREE_UTF8_JSON",
+  "caseCount": 28,
+  "directBearingCount": 16,
+  "classifierCountRequiredBeforeReveal": 3,
+  "revealBoundary": "THREE_INDEPENDENT_CLASSIFIER_SUBMISSIONS_AND_THEIR_SHA256_DIGESTS_MUST_BE_FROZEN_BEFORE_KEY_REVEAL",
+  "sourceIssue": 2996,
+  "sourceFreezeComment": 5622756543,
+  "keyMaterialPresent": false
+}

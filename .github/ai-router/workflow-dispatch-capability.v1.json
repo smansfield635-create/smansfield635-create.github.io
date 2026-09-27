@@ -932,6 +932,11 @@
           "source": "REQUEST",
           "required": false,
           "userOverrideAllowed": true
+        },
+        "route_path": {
+          "source": "REQUEST",
+          "required": false,
+          "userOverrideAllowed": true
         }
       },
       "workflowDispatchRegistrationRequired": true,

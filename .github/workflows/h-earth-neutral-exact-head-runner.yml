@@ -7,6 +7,11 @@ on:
         description: Exact candidate SHA to execute unchanged
         required: true
         type: string
+      route_path:
+        description: Optional repository route path; defaults to root H-Earth route
+        required: false
+        default: '/showroom/globe/h-earth/'
+        type: string
       route_query:
         description: Optional query string without leading question mark
         required: false
@@ -42,6 +47,7 @@ jobs:
       - name: Execute actual H-Earth route unchanged
         env:
           TARGET_SHA: ${{ inputs.target_sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
           ROUTE_QUERY: ${{ inputs.route_query }}
         shell: bash
         run: |
@@ -62,7 +68,9 @@ jobs:
           const out='/tmp/h-earth-exact-evidence';
           const targetSha=process.env.TARGET_SHA;
           const query=String(process.env.ROUTE_QUERY||'').replace(/^\?/, '');
-          const route='/showroom/globe/h-earth/'+(query?'?'+query:'');
+          const requestedPath=String(process.env.ROUTE_PATH||'/showroom/globe/h-earth/');
+          if(!requestedPath.startsWith('/')||requestedPath.includes('..')||requestedPath.includes('?')||requestedPath.includes('#')) throw new Error('Invalid governed route path');
+          const route=requestedPath+(query?'?'+query:'');
           const url='http://127.0.0.1:4173'+route;
           const browser=await chromium.launch({headless:true});
           const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});

@@ -702,7 +702,6 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
-    if(resources.refinement?.created){gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;

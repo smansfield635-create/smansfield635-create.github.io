@@ -63,14 +63,21 @@ jobs:
           fs.writeFileSync(path,s);
           const bindingPath='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js';
           let b=fs.readFileSync(bindingPath,'utf8');
+          b=b.replace('  const presentNavigationState = (navigationState, source) => {','  const __neutralCallerTiming={packetMs:null,renderFrameCallMs:null,presentColorFrameCallMs:null,bookkeepingMs:null,totalMs:null};\\n  const presentNavigationState = (navigationState, source) => {');
+          b=b.replace('    const packet = createHEarthRun8ER3AFrameUniformPacket({','    const __packetStart=performance.now();\\n    const packet = createHEarthRun8ER3AFrameUniformPacket({');
+          b=b.replace('    counters.r3AFramePacketCount += 1;\\n    renderer.renderFrame(packet);','    __neutralCallerTiming.packetMs=performance.now()-__packetStart;\\n    counters.r3AFramePacketCount += 1;\\n    const __renderCallStart=performance.now();\\n    renderer.renderFrame(packet);\\n    __neutralCallerTiming.renderFrameCallMs=performance.now()-__renderCallStart;');
+          b=b.replace('    counters.renderFrameCallCount += 1;\\n    renderer.presentColorFrame();','    counters.renderFrameCallCount += 1;\\n    const __presentCallStart=performance.now();\\n    renderer.presentColorFrame();\\n    __neutralCallerTiming.presentColorFrameCallMs=performance.now()-__presentCallStart;');
+          b=b.replace('    const responseMs = performance.now() - startedAt;','    const __bookkeepingStart=performance.now();\\n    const responseMs = performance.now() - startedAt;\\n    __neutralCallerTiming.totalMs=responseMs;');
+          b=b.replace('    latestNavigationState = navigationState;','    latestNavigationState = navigationState;\\n    __neutralCallerTiming.bookkeepingMs=performance.now()-__bookkeepingStart;');
+          if(!b.includes('__neutralCallerTiming')) throw new Error('CALLER_TIMING_SHIM_APPLY_FAILED');
           const bLines=b.split('\n');
           const counterLines=bLines.map((line,index)=>line.trim()==='counters,'?index:-1).filter(index=>index>=0);
           if(counterLines.length!==1) throw new Error(`TIMING_RECEIPT_COUNTER_ANCHOR_COUNT:${counterLines.length}`);
           const counterIndex=counterLines[0];
           const indent=bLines[counterIndex].match(/^\s*/)?.[0]??'';
-          bLines.splice(counterIndex+1,0,`${indent}neutralRendererTiming: renderer.getNeutralTimingReceipt?.()??null,`);
+          bLines.splice(counterIndex+1,0,`${indent}neutralRendererTiming: renderer.getNeutralTimingReceipt?.()??null,`,`${indent}neutralCallerTiming: Object.freeze({...__neutralCallerTiming}),`);
           b=bLines.join('\n');
-          if(!b.includes('neutralRendererTiming')) throw new Error('TIMING_RECEIPT_WIRE_FAILED');
+          if(!b.includes('neutralRendererTiming')||!b.includes('neutralCallerTiming')) throw new Error('TIMING_RECEIPT_WIRE_FAILED');
           fs.writeFileSync(bindingPath,b);
           NODE
           node --check preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js

@@ -339,6 +339,22 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     return clone(captureEvidence(label));
   };
 
+  const activateInitialRefinement = () => {
+    if (!oceanPresentationRequested || typeof renderer.activateInitialRefinement !== 'function') return null;
+    const packet = createHEarthRun8ER3AFrameUniformPacket({
+      navigationState: latestNavigationState,
+      viewport: { width, height, pixelRatio },
+      frameSequence: frameSequence + 1
+    });
+    return renderer.activateInitialRefinement(packet);
+  };
+  const presentRefinedState = () => presentNavigationState(latestNavigationState, {
+    kind: 'POST_READY_REFINEMENT',
+    sequence: latestNavigationState.sequence,
+    label: 'post-ready-refinement',
+    captureEvidence: false
+  });
+
   const getReceipt = () => {
     const resources = renderer.getResourceReceipt();
     const distinctFrameHashCount = new Set(
@@ -444,6 +460,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,
     liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
     acceptNavigationState,
+    activateInitialRefinement,
+    presentRefinedState,
     captureLatestEvidence,
     startPresentationAnimation,
     stopPresentationAnimation,

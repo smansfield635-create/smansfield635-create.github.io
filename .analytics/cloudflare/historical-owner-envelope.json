@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-27T01:45:57Z",
+  "generatedAt": "2026-09-27T02:43:30Z",
   "window": {
-    "start": "2026-06-29T01:45:57Z",
-    "end": "2026-09-27T01:45:57Z"
+    "start": "2026-06-29T02:43:30Z",
+    "end": "2026-09-27T02:43:30Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4961,
-    "visits": 1245,
+    "pageLoads": 4965,
+    "visits": 1254,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4961,
-        "visits": 1245
+        "pageLoads": 4965,
+        "visits": 1254
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1092,
-        "visits": 747
+        "pageLoads": 1090,
+        "visits": 745
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 197,
@@ -71,8 +71,8 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 93,
-        "visits": 8
+        "pageLoads": 91,
+        "visits": 11
       },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
@@ -143,8 +143,8 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 138,
-        "visits": 4
+        "pageLoads": 146,
+        "visits": 12
       },
       "/build/intake/": {
         "pageLoads": 10,
@@ -365,16 +365,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3716,
+        "pageLoads": 3711,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 449,
-        "visits": 449
+        "pageLoads": 460,
+        "visits": 460
       },
       "www.google.com": {
-        "pageLoads": 785,
-        "visits": 785
+        "pageLoads": 783,
+        "visits": 783
       },
       "raw.githack.com": {
         "pageLoads": 10,

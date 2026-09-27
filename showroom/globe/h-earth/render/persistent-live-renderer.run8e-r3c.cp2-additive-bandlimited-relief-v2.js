@@ -802,7 +802,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt,
+    getExtensionContext: () => gl
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

@@ -215,7 +215,7 @@ try {
         firstFramePublished = true;
         emitDiagnosticStage('FIRST_FRAME_DRAWN', 'PASS', frameRecord);
       }
-      updateHud();
+      if (frameRecord.sourceKind !== 'OCEAN_ANIMATION') updateHud();
     }
   });
 
@@ -292,6 +292,24 @@ setTimeout(() => {
     emitDiagnosticStage('POST_READY_REFINEMENT_ACTIVE','FAIL',{name:error?.name,message:error?.message});
   }
 },0);
+
+// The renderer owns GL. This loop only requests another presentation of the
+// current navigation state so the water phase advances while the camera rests.
+let lastOceanPresentationAt = 0;
+const oceanAnimationIntervalMs = 1000 / 24;
+function requestOceanFrame(now) {
+  if (document.visibilityState === 'visible' && now - lastOceanPresentationAt >= oceanAnimationIntervalMs) {
+    lastOceanPresentationAt = now;
+    try {
+      binding.presentOceanAnimationFrame();
+    } catch (error) {
+      emitDiagnosticStage('OCEAN_ANIMATION', 'FAIL', { name: error?.name, message: error?.message });
+      return;
+    }
+  }
+  requestAnimationFrame(requestOceanFrame);
+}
+requestAnimationFrame(requestOceanFrame);
 
 if (window.parent === window) {
   emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');

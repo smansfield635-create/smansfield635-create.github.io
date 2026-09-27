@@ -14022,6 +14022,18 @@
       "scopeHash": "fa7ed4cf2243f2ab1ef1fe1a927aab4672af0c5d0659c64c825b7dce0869d7c6",
       "state": "ADMITTED_LOCKED"
     },
+    "fb08a76f0c4591d7a00d01cb229442233008b11b2d21f3681b46cc6623b8fcad": {
+      "governingHead": "939e1a217cbc05a78944f967add3c21c067ead9b",
+      "lockGeneration": 2493,
+      "lockScope": "H_EARTH_NEUTRAL_EXACT_HEAD_RUNNER",
+      "operationId": "H_EARTH_NEUTRAL_COASTAL_CAMERA_RUNNER_20260927_001",
+      "procedureLocatorDigest": "b6d5af793fd0b1d47952eb2a9daaa032d1c15c9ca6de449cc07c6cc4e72db4c0",
+      "released": false,
+      "requestDigest": "13c2ff46caa24ef3086c5738229323583521535c4ce6aaca38d5ddf58a68c7d2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fb08a76f0c4591d7a00d01cb229442233008b11b2d21f3681b46cc6623b8fcad",
+      "state": "ADMITTED_LOCKED"
+    },
     "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e": {
       "governingHead": "2be9f181f626251e7611a877be013feff9c10b2a",
       "lockGeneration": 490,
@@ -14166,7 +14178,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2492,
+  "lockGeneration": 2493,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -70,8 +70,8 @@ jobs:
           from pathlib import Path
           p=Path('h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs')
           s=p.read_text()
-          old=r'/acceptedBaselineRendererSelected\\s*:\\s*!additiveVisualRequested\\s*&&\\s*!cp2LiveDifferentialRequested/'
-          new=r'/acceptedBaselineRendererSelected\\s*:\\s*(?:![A-Za-z]+\\s*&&\\s*)*!additiveVisualRequested\\s*&&\\s*!cp2LiveDifferentialRequested/'
+          old=r'/acceptedBaselineRendererSelected\s*:\s*!additiveVisualRequested\s*&&\s*!cp2LiveDifferentialRequested/'
+          new=r'/acceptedBaselineRendererSelected\s*:\s*(?:![A-Za-z]+\s*&&\s*)*!additiveVisualRequested\s*&&\s*!cp2LiveDifferentialRequested/'
           if s.count(old)!=1: raise SystemExit('CP3D_OLD_ASSERTION_SHAPE_MISMATCH')
           p.write_text(s.replace(old,new))
           PY

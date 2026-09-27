@@ -115,6 +115,7 @@ uniform float uFogStartDistance;
 uniform float uFogFalloff;
 uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
+uniform float uWaterPhase;
 out vec4 outColor;
 
 float hash21(vec2 p){
@@ -418,8 +419,8 @@ void main(){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.
     // A world-space normal is continuous across the coarse ocean triangles.
     vec2 waterWorld=vWorldPosition.xz;
-    float broad=dot(waterWorld,vec2(0.055,0.028));
-    float cross=dot(waterWorld,vec2(-0.083,0.061))+1.4;
+    float broad=dot(waterWorld,vec2(0.055,0.028))+uWaterPhase*0.42;
+    float cross=dot(waterWorld,vec2(-0.083,0.061))+1.4-uWaterPhase*0.31;
     float slopeX=0.020*cos(broad)-0.012*cos(cross);
     float slopeZ=0.010*cos(broad)+0.009*cos(cross);
     geometricNormal=vec3(0.0,1.0,0.0);
@@ -652,7 +653,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), depth: uniform(resources.depthProgram, 'uDepth')
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), waterPhase: uniform(resources.geometryProgram, 'uWaterPhase'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
     resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
@@ -694,6 +695,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
+    gl.uniform1f(resources.uniforms.waterPhase, Number(packet.waterPhase ?? 0));
     counters.cameraUniformUpdateCount += 2;
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {
@@ -780,7 +782,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt, getOwnedWebGL2Context: () => gl
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

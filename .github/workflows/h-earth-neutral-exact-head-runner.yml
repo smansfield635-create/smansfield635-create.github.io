@@ -79,6 +79,8 @@ jobs:
           const sample=async label => {
             const state=await page.evaluate(() => {
               const text=document.body?.innerText||'';
+              const owningWindow=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)].find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getWaveAnimationReceipt);
+              const owningRoute=owningWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE??null;
               const renderer=window.H_EARTH_3D_RENDERER??null;
               const contract=window.H_EARTH_3D_RENDERER_CONTRACT??null;
               const globals={};
@@ -88,8 +90,8 @@ jobs:
                   if(['string','number','boolean'].includes(typeof value)||value===null) globals[key]=value;
                 }
               }
-              const liveGpuReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
-              const waveAnimationReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getWaveAnimationReceipt?.()??null;
+              const liveGpuReceipt=owningRoute?.getLiveGpuReceipt?.()??null;
+              const waveAnimationReceipt=owningRoute?.getWaveAnimationReceipt?.()??null;
               return {
                 title:document.title,
                 bodyText:text.slice(0,3000),
@@ -142,7 +144,7 @@ jobs:
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
               const text=document.body?.innerText||'';
-              const liveGpuReceipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
+              const liveGpuReceipt=owningRoute?.getLiveGpuReceipt?.()??null;
               const activeLiveGpu=Boolean(
                 liveGpuReceipt?.selectedRendererPath &&
                 liveGpuReceipt?.animation?.running===true &&

@@ -250,7 +250,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       counters.navigationFramesPresentedWithoutReadbackCount += 1;
     }
 
-    onFramePresented?.(record);
+    if(source.kind!=='WATER_ANIMATION_FRAME')onFramePresented?.(record);
     return record;
   };
 
@@ -298,6 +298,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     return renderer.activateInitialRefinement(packet);
   };
   const presentRefinedState = () => presentNavigationState(latestNavigationState,{kind:'POST_READY_REFINEMENT',sequence:latestNavigationState.sequence,label:'post-ready-refinement',captureEvidence:false});
+  const presentWaveAnimationFrame = () => presentNavigationState(latestNavigationState,{kind:'WATER_ANIMATION_FRAME',sequence:latestNavigationState.sequence,label:'water-animation',captureEvidence:false});
 
   const getReceipt = () => {
     const resources = renderer.getResourceReceipt();
@@ -387,6 +388,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     acceptNavigationState,
     activateInitialRefinement,
     presentRefinedState,
+    presentWaveAnimationFrame,
     captureLatestEvidence,
     getReceipt,
     getLastPngDataUrl: () => lastPngDataUrl

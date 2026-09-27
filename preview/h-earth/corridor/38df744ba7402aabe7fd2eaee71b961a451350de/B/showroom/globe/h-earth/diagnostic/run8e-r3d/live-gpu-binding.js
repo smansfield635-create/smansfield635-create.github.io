@@ -298,6 +298,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     return renderer.activateInitialRefinement(packet);
   };
   const presentRefinedState = () => presentNavigationState(latestNavigationState,{kind:'POST_READY_REFINEMENT',sequence:latestNavigationState.sequence,label:'post-ready-refinement',captureEvidence:false});
+  const presentOceanAnimationFrame = () => presentNavigationState(latestNavigationState,{kind:'OCEAN_ANIMATION',sequence:latestNavigationState.sequence,label:'ocean-animation',captureEvidence:false});
 
   const getReceipt = () => {
     const resources = renderer.getResourceReceipt();
@@ -387,6 +388,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     acceptNavigationState,
     activateInitialRefinement,
     presentRefinedState,
+    presentOceanAnimationFrame,
     captureLatestEvidence,
     getReceipt,
     getLastPngDataUrl: () => lastPngDataUrl

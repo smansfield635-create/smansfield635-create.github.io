@@ -1,0 +1,112 @@
+{
+  "environment": {
+    "pandas": "2.2.3",
+    "python": "3.12.13"
+  },
+  "frozen_decision_rule": {
+    "route_beats_output_minimum": "2_of_3_systems",
+    "route_within_5_percent_of_black_box_minimum": "2_of_3_systems",
+    "terminal_dispositions": [
+      "BRIDGE_SURVIVES_EXTERNAL_DATA_TEST",
+      "BRIDGE_REDUNDANT_OR_INFERIOR",
+      "BRIDGE_MIXED",
+      "UNEVALUABLE_DATA_OR_EXECUTION_FAILURE"
+    ]
+  },
+  "operation": "EXTERNALLY_SOURCED_UCI_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "result_class": "PROSPECTIVE_EXACT_HEAD_EXTERNAL_DATA_BRIDGE",
+  "scientific_boundary": "Prospective exact-head analysis of third-party UCI datasets using theory-team-defined feature partitions and models. The datasets are externally authored, but the analysis is not independently conducted and does not establish a universal law.",
+  "summary": {
+    "claim_limit": "Prospective exact-head analysis of third-party UCI datasets using theory-team-defined feature partitions and models. The datasets are externally authored, but the analysis is not independently conducted and does not establish a universal law.",
+    "disposition": "BRIDGE_MIXED",
+    "route_beats_output": "1/3",
+    "route_within_5_percent_of_black_box": "1/3",
+    "systems": 3
+  },
+  "systems": [
+    {
+      "comparisons": {
+        "route_beats_output": false,
+        "route_minus_black_box_primary": -0.3445054646228113,
+        "route_minus_output_primary": -0.019413842806536352,
+        "route_within_5_percent_of_black_box": false
+      },
+      "models": {
+        "black_box_full": {
+          "average_precision": 0.711114894796124,
+          "balanced_accuracy": 0.753247731189933,
+          "test_positive_rate": 0.02033333333333333
+        },
+        "output_history": {
+          "average_precision": 0.38602327297984906,
+          "balanced_accuracy": 0.7558888659575299,
+          "test_positive_rate": 0.02033333333333333
+        },
+        "route_relational": {
+          "average_precision": 0.3666094301733127,
+          "balanced_accuracy": 0.8047317309891286,
+          "test_positive_rate": 0.02033333333333333
+        }
+      },
+      "primary_metric": "average_precision",
+      "rows": 10000,
+      "system_id": "UCI_AI4I_2020",
+      "target": "Machine failure"
+    },
+    {
+      "aggregated_features": 68,
+      "comparisons": {
+        "route_beats_output": false,
+        "route_minus_black_box_primary": -0.381449701847272,
+        "route_minus_output_primary": -0.36300560667627046,
+        "route_within_5_percent_of_black_box": false
+      },
+      "models": {
+        "black_box_full": {
+          "balanced_accuracy": 0.6768292682926829,
+          "macro_f1": 0.6050106121551703
+        },
+        "output_history": {
+          "balanced_accuracy": 0.6749793096733363,
+          "macro_f1": 0.5865665169841687
+        },
+        "route_relational": {
+          "balanced_accuracy": 0.3333333333333,
+          "macro_f1": 0.22356091030789826
+        }
+      },
+      "primary_metric": "macro_f1",
+      "retrieval": "official_uci_zip",
+      "rows": 2205,
+      "system_id": "UCI_HYDRAULIC_TEST_RIG",
+      "target": "internal_pump_leakage"
+    },
+    {
+      "comparisons": {
+        "route_beats_output": true,
+        "route_minus_black_box_primary": 0.03649960087010096,
+        "route_minus_output_primary": 1.001965902593012,
+        "route_within_5_percent_of_black_box": true
+      },
+      "models": {
+        "black_box_full": {
+          "normalized_rmse": 0.7483337941639205,
+          "r2": -5.448243565745765
+        },
+        "output_history": {
+          "normalized_rmse": 1.7138000958868318,
+          "r2": -32.81980061814375
+        },
+        "route_relational": {
+          "normalized_rmse": 0.7118341932938196,
+          "r2": -4.83456400975515
+        }
+      },
+      "primary_metric": "normalized_rmse_lower_is_better",
+      "retrieval": "official_uci_zip",
+      "rows": 11934,
+      "system_id": "UCI_NAVAL_PROPULSION_SIMULATOR",
+      "target": "gt_compressor_decay"
+    }
+  ]
+}

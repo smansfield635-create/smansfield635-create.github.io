@@ -142,6 +142,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
 
   let frameSequence = 0;
   let latestNavigationState = initialNavigationState;
+  let latestFramePacket = null;
   let lastPngDataUrl = null;
   let latestColorSummary = null;
   const frameRecords = [];
@@ -162,6 +163,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     cssTransformPreviewCount: 0,
     deferredRenderCommitCount: 0,
     queuedFrameChainCount: 0,
+    freshFramePacketConstructionCount: 0,
+    reusedWaterFramePacketCount: 0,
     maximumSynchronousResponseMs: 0,
     maximumPresentationOnlyResponseMs: 0,
     maximumEvidenceCaptureResponseMs: 0
@@ -203,12 +206,20 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   const presentNavigationState = (navigationState, source) => {
     const startedAt = performance.now();
     frameSequence += 1;
-    const packet = createHEarthRun8ER3AFrameUniformPacket({
-      navigationState,
-      viewport: { width, height, pixelRatio },
-      frameSequence
-    });
-    counters.r3AFramePacketCount += 1;
+    const reuseWaterPacket = source.kind === 'WATER_ANIMATION_FRAME' && latestFramePacket !== null;
+    const packet = reuseWaterPacket
+      ? Object.freeze({ ...latestFramePacket, frameSequence })
+      : createHEarthRun8ER3AFrameUniformPacket({
+          navigationState,
+          viewport: { width, height, pixelRatio },
+          frameSequence
+        });
+    if (reuseWaterPacket) counters.reusedWaterFramePacketCount += 1;
+    else {
+      counters.r3AFramePacketCount += 1;
+      counters.freshFramePacketConstructionCount += 1;
+      latestFramePacket = packet;
+    }
     renderer.renderFrame(packet);
     counters.renderFrameCallCount += 1;
     renderer.presentColorFrame();
@@ -260,6 +271,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     frameSequence: 1
   });
   counters.r3AFramePacketCount += 1;
+  latestFramePacket = initialPacket;
+  counters.freshFramePacketConstructionCount += 1;
   const initialization = renderer.initialize(initialPacket);
   counters.rendererInitializationCount += 1;
   frameSequence = 0;

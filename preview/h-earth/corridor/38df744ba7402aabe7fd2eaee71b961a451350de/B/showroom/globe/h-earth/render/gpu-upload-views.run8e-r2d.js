@@ -5,6 +5,30 @@ import {
 } from './live-render-package.run8e-r2.js';
 import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 
+// Authored X/Z units are meters. The coast itself is the immutable zero contour.
+// Sample its canonical curve once; each query finds the closest point on that
+// polyline. A 1 m chord limits curvature approximation without per-frame work.
+const COAST_MIN_X=-7200,COAST_MAX_X=7200,COAST_STEP_METERS=1;
+const coastSamples=Array.from({length:COAST_MAX_X-COAST_MIN_X+1},(_,i)=>getHEarthCanonicalShorelineZ(COAST_MIN_X+i));
+export function getHEarthSignedCoastDistanceMeters(worldX,worldZ){
+  if(!Number.isFinite(worldX)||!Number.isFinite(worldZ))return Number.NaN;
+  const localCoast=getHEarthCanonicalShorelineZ(worldX);
+  const delta=worldZ-localCoast;
+  // Beyond this distance every coastal color/material transition is saturated.
+  // The canonical coast varies by far less than 260 m across this domain.
+  if(Math.abs(delta)>620)return delta>0?-620:620;
+  const reach=Math.abs(delta)+COAST_STEP_METERS;
+  const first=Math.max(0,Math.floor(worldX-reach-COAST_MIN_X));
+  const last=Math.min(coastSamples.length-2,Math.ceil(worldX+reach-COAST_MIN_X));
+  let best=delta*delta;
+  for(let i=first;i<=last;i++){
+    const ax=COAST_MIN_X+i,az=coastSamples[i],vx=COAST_STEP_METERS,vz=coastSamples[i+1]-az;
+    const t=Math.min(1,Math.max(0,((worldX-ax)*vx+(worldZ-az)*vz)/(vx*vx+vz*vz)));
+    const dx=worldX-ax-t*vx,dz=worldZ-az-t*vz;
+    best=Math.min(best,dx*dx+dz*dz);
+  }
+  return delta>0?-Math.sqrt(best):Math.sqrt(best);
+}
 const freezeRecord = (value) => Object.freeze(value);
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
@@ -145,8 +169,7 @@ function invertSphericalPresentationPoint(x, y, z) {
 }
 
 function recoveredWaterRgb(worldX, worldZ) {
-  const shorelineZ = getHEarthCanonicalShorelineZ(worldX);
-  const distance = Math.max(0, worldZ - shorelineZ);
+  const distance = Math.max(0, -getHEarthSignedCoastDistanceMeters(worldX, worldZ));
   const shallowToShelf = smoothstep(6, 86, distance);
   const shelfToDeep = smoothstep(54, 360, distance);
   return mix3(mix3(SHALLOW, SHELF, shallowToShelf), DEEP, shelfToDeep);

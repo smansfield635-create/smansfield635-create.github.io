@@ -287,6 +287,28 @@ const publishExistingReadyFromFirstPresentedFrame = () => {
   };
   window.dispatchEvent(new CustomEvent('h-earth-run8e-ready', { detail: readyDetail }));
   emitDiagnosticStage('READY_EVENT_EMITTED', 'PASS', readyDetail);
+  // Restore the established post-READY terrain refinement on the ocean route.
+  // Startup and the frozen render package remain the same; this is an inspection candidate.
+  if (new URLSearchParams(window.location.search).get('ocean-presentation') === 'v1') {
+    setTimeout(() => {
+      try {
+        const refinement = binding.activateInitialRefinement?.();
+        if (refinement) {
+          lastPresentedFrame = binding.presentRefinedState?.() ?? lastPresentedFrame;
+          emitDiagnosticStage('POST_READY_REFINEMENT_ACTIVE', 'PASS', {
+            vertexCount: refinement.vertexCount,
+            triangleCount: refinement.triangleCount,
+            anchor: refinement.anchor
+          });
+        }
+      } catch (error) {
+        emitDiagnosticStage('POST_READY_REFINEMENT_ACTIVE', 'FAIL', {
+          name: error?.name,
+          message: error?.message
+        });
+      }
+    }, 0);
+  }
 
   if (window.parent === window) {
     emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');

@@ -1,0 +1,29 @@
+name: IMI structural-regime network diagnostic v1
+on:
+  pull_request:
+    paths:
+      - 'research/imi/imi_structural_regime_network_diagnostic_v1.py'
+      - '.github/workflows/imi-structural-regime-network-diagnostic-v1.yml'
+  workflow_dispatch:
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requests
+        run: pip install requests
+      - name: Probe frozen source endpoints only
+        run: python research/imi/imi_structural_regime_network_diagnostic_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: imi-structural-regime-network-diagnostic-v1
+          path: imi_structural_regime_network_diagnostic_v1.json

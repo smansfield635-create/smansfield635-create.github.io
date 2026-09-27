@@ -1,0 +1,33 @@
+name: IMI conditional path-dependence regime test v1
+on:
+  pull_request:
+    paths:
+      - 'research/imi/IMI_CONDITIONAL_PATH_DEPENDENCE_REGIME_TEST_PROTOCOL_v1.md'
+      - 'research/imi/imi_conditional_path_dependence_regime_test_v1.py'
+      - '.github/workflows/imi-conditional-path-dependence-regime-test-v1.yml'
+  workflow_dispatch:
+jobs:
+  regime-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas scikit-learn lightgbm requests
+      - name: Execute frozen conditional path-dependence regime test
+        run: python research/imi/imi_conditional_path_dependence_regime_test_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: imi-conditional-path-dependence-regime-test-v1
+          path: |
+            imi_conditional_path_dependence_regime_findings_v1.json
+            IMI_CONDITIONAL_PATH_DEPENDENCE_REGIME_VERDICT_v1.txt
+            imi_conditional_path_dependence_regime_predictions_v1.csv

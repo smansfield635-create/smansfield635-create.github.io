@@ -193,6 +193,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       navigationStateId: latestNavigationState.stateId,
       navigationSequence: latestNavigationState.sequence,
       responseMs,
+      rendererTiming: renderer.getTimingReceipt?.()??null,
       colorSummary: latestColorSummary
     });
     evidenceRecords.push(record);

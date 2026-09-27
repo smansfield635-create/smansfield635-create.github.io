@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-27T20:29:54Z",
+  "generatedAt": "2026-09-27T21:28:07Z",
   "window30d": {
-    "start": "2026-08-28T20:29:54Z",
-    "end": "2026-09-27T20:29:54Z"
+    "start": "2026-08-28T21:28:07Z",
+    "end": "2026-09-27T21:28:07Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-20",
-      "pageLoads": 390
+      "pageLoads": 392
     },
     {
       "date": "2026-09-21",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-09-27",
-      "pageLoads": 25
+      "pageLoads": 26
     }
   ],
   "summary": {
-    "pageLoads": 7076,
-    "botPageLoads": 2527,
+    "pageLoads": 7079,
+    "botPageLoads": 2530,
     "nonBotPageLoads": 4549
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3280,
-      "visits": 3280
+      "pageLoads": 3283,
+      "visits": 3283
     },
     {
       "host": "diamondgatebridge.com",
@@ -177,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 2071,
-      "visits": 1610
+      "pageLoads": 2067,
+      "visits": 1606
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 846,
-      "visits": 846
+      "pageLoads": 852,
+      "visits": 852
     },
     {
       "path": "/showroom/globe/audralia/",
@@ -212,8 +212,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 183,
-      "visits": 72
+      "pageLoads": 184,
+      "visits": 73
     }
   ],
   "ownerMeasurement": {

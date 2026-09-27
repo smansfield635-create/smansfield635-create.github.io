@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-27T20:29:54Z",
+  "generatedAt": "2026-09-27T21:28:07Z",
   "window": {
-    "start": "2026-06-29T20:29:54Z",
-    "end": "2026-09-27T20:29:54Z"
+    "start": "2026-06-29T21:28:07Z",
+    "end": "2026-09-27T21:28:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -338,6 +338,10 @@
         "pageLoads": 62,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 4,
+        "visits": 4
+      },
       "/governance-bridge/": {
         "pageLoads": 95,
         "visits": 82
@@ -345,10 +349,6 @@
       "/preview/governance-bridge/": {
         "pageLoads": 5,
         "visits": 5
-      },
-      "/home/": {
-        "pageLoads": 4,
-        "visits": 4
       },
       "/governance-bridge/governance/": {
         "pageLoads": 16,

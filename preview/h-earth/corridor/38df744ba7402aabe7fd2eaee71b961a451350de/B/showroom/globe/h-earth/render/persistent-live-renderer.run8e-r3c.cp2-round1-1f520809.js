@@ -291,12 +291,18 @@ void main(){
     palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
     base=palette;
-  }else if(vRoleCode==2u){
-    float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
-    float foam=pow(clamp(1.0-n.y,0.0,1.0),1.7);
-    base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),wave*0.45+0.25);
-    base+=vec3(0.26,0.34,0.31)*foam;
-    specular*=1.8;
+  }else if(vRoleCode==4u){
+    // Continuous water shading: world position, never primitive or cell identity.
+    // Uploaded coast-distance base color remains the sole water palette.
+    vec2 waterWorld=vWorldPosition.xz;
+    float broadX=0.020*cos(dot(waterWorld,vec2(0.055,0.028)));
+    float broadZ=0.010*cos(dot(waterWorld,vec2(0.055,0.028)));
+    float crossX=-0.012*cos(dot(waterWorld,vec2(-0.083,0.061))+1.4);
+    float crossZ=0.009*cos(dot(waterWorld,vec2(-0.083,0.061))+1.4);
+    n=normalize(vec3(-(broadX+crossX),1.0,-(broadZ+crossZ)));
+    diffuse=max(dot(n,lightDirection),0.0);
+    rim=pow(1.0-max(dot(n,viewDirection),0.0),2.2);
+    specular=pow(max(dot(n,halfDirection),0.0),48.0);
   }else{
     float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
     base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
@@ -304,10 +310,10 @@ void main(){
   }
 
   float ambient=0.26+0.16*clamp(n.y,0.0,1.0)+0.05*materialSignal;
-  float directional=diffuse*uSunIntensity*(vRoleCode==1u?0.90:(vRoleCode==2u?0.74:0.82));
+  float directional=diffuse*uSunIntensity*(vRoleCode==1u?0.90:(vRoleCode==4u?0.74:0.82));
   vec3 lit=base*(ambient+directional)*uSunColor;
   lit+=base*rim*(vRoleCode==1u?0.18:0.10);
-  lit+=uSunColor*specular*(vRoleCode==2u?0.36:0.07);
+  lit+=uSunColor*specular*(vRoleCode==4u?0.22:0.07);
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);
   float fog=rawFog*(vRoleCode==1u?0.54:0.68);

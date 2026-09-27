@@ -63,7 +63,13 @@ jobs:
           fs.writeFileSync(path,s);
           const bindingPath='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js';
           let b=fs.readFileSync(bindingPath,'utf8');
-          b=b.replace(/^(\s*)counters,\s*$/m, 'b=b.replace('      counters,\\n      correspondence:', '      counters,\\n      neutralRendererTiming: renderer.getNeutralTimingReceipt?.()??null,\\n      correspondence:');\\n$1neutralRendererTiming: renderer.getNeutralTimingReceipt?.()??null,');
+          const bLines=b.split('\n');
+          const counterLines=bLines.map((line,index)=>line.trim()==='counters,'?index:-1).filter(index=>index>=0);
+          if(counterLines.length!==1) throw new Error(`TIMING_RECEIPT_COUNTER_ANCHOR_COUNT:${counterLines.length}`);
+          const counterIndex=counterLines[0];
+          const indent=bLines[counterIndex].match(/^\s*/)?.[0]??'';
+          bLines.splice(counterIndex+1,0,`${indent}neutralRendererTiming: renderer.getNeutralTimingReceipt?.()??null,`);
+          b=bLines.join('\n');
           if(!b.includes('neutralRendererTiming')) throw new Error('TIMING_RECEIPT_WIRE_FAILED');
           fs.writeFileSync(bindingPath,b);
           NODE

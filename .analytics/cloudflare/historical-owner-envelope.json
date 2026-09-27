@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-27T17:27:07Z",
+  "generatedAt": "2026-09-27T18:34:56Z",
   "window": {
-    "start": "2026-06-29T17:27:07Z",
-    "end": "2026-09-27T17:27:07Z"
+    "start": "2026-06-29T18:34:56Z",
+    "end": "2026-09-27T18:34:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 11,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -326,6 +326,10 @@
         "pageLoads": 7,
         "visits": 7
       },
+      "/meet-sean-mansfield/": {
+        "pageLoads": 5,
+        "visits": 0
+      },
       "/home/": {
         "pageLoads": 5,
         "visits": 5
@@ -342,10 +346,6 @@
         "pageLoads": 62,
         "visits": 0
       },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 5,
-        "visits": 0
-      },
       "/governance-bridge/": {
         "pageLoads": 95,
         "visits": 82
@@ -354,12 +354,12 @@
         "pageLoads": 5,
         "visits": 5
       },
-      "/preview/governance-bridge/index.html": {
-        "pageLoads": 1,
-        "visits": 1
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
+        "visits": 1
+      },
+      "/preview/governance-bridge/index.html": {
+        "pageLoads": 1,
         "visits": 1
       }
     },

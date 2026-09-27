@@ -710,7 +710,6 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
     if (postTerrainDraw !== null) postTerrainDraw(Object.freeze({ gl, packet, width, height }));
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
-    if (postRenderDiagnostic !== null) postRenderDiagnostic(Object.freeze({ gl, packet, width, height, sourceFramebuffer: resources.geometryFramebuffer }));
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;

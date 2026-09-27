@@ -1,0 +1,42 @@
+name: IMI post-2020 maneuverability history extension v1
+on:
+  push:
+    branches:
+      - research/post2020-maneuverability-history-extension-v1
+    paths:
+      - 'research/imi/post2020_maneuverability_history_extension_v1.py'
+      - '.github/workflows/imi-post2020-history-extension-v1.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/imi/post2020_maneuverability_history_extension_v1.py'
+      - '.github/workflows/imi-post2020-history-extension-v1.yml'
+  workflow_dispatch:
+jobs:
+  replicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install analysis dependencies
+        run: pip install pandas numpy requests scikit-learn lightgbm lxml beautifulsoup4 'ffiec-data-collector==2.0.0rc2'
+      - name: Execute frozen history-extension replication
+        run: python research/imi/post2020_maneuverability_history_extension_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: imi-post2020-history-extension-v1
+          path: |
+            post2020_final_protocol.json
+            post2020_history_extension_protocol.json
+            post2020_final_findings.json
+            post2020_year_metrics.csv
+            post2020_predictions.csv
+            POST2020_FINAL_VERDICT.txt

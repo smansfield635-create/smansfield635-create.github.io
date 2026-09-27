@@ -1,0 +1,21 @@
+name: IMI post-2020 Call Report schema audit v1
+on:
+  push:
+    branches:
+      - research/post2020-maneuverability-independent-replication-v1
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pandas requests
+      - run: python research/imi/post2020_call_report_schema_audit_v1.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: imi-post2020-schema-audit-v1
+          path: post2020_schema_audit.json

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-27T02:43:30Z",
+  "generatedAt": "2026-09-27T03:37:55Z",
   "window": {
-    "start": "2026-06-29T02:43:30Z",
-    "end": "2026-09-27T02:43:30Z"
+    "start": "2026-06-29T03:37:55Z",
+    "end": "2026-09-27T03:37:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4965,
-    "visits": 1254,
+    "pageLoads": 4962,
+    "visits": 1252,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4965,
-        "visits": 1254
+        "pageLoads": 4962,
+        "visits": 1252
       }
     },
     "byPath": {
@@ -35,7 +35,7 @@
         "visits": 745
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 197,
+        "pageLoads": 196,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -143,16 +143,8 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 146,
-        "visits": 12
-      },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 94,
-        "visits": 0
+        "pageLoads": 144,
+        "visits": 10
       },
       "/governance/": {
         "pageLoads": 62,
@@ -160,6 +152,14 @@
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 94,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -346,13 +346,13 @@
         "pageLoads": 1,
         "visits": 0
       },
-      "/governance-bridge/": {
-        "pageLoads": 95,
-        "visits": 82
-      },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
         "visits": 5
+      },
+      "/governance-bridge/": {
+        "pageLoads": 95,
+        "visits": 82
       },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
@@ -365,12 +365,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3711,
+        "pageLoads": 3710,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 460,
-        "visits": 460
+        "pageLoads": 458,
+        "visits": 458
       },
       "www.google.com": {
         "pageLoads": 783,

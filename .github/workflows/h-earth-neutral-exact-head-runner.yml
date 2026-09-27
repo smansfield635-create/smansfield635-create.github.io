@@ -44,6 +44,25 @@ jobs:
           npm install --no-save --package-lock=false playwright
           npx playwright install --with-deps chromium
 
+      - name: Apply bounded Variant-B timing observation shim
+        if: ${{ inputs.route_path == '/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const path='preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+          let s=fs.readFileSync(path,'utf8');
+          s=s.replace('  function renderFrame(packet) {','  const __neutralTiming={drawSubmissionMs:null,getErrorMs:null,presentationMs:null};\\n  function renderFrame(packet) {');
+          s=s.replace('    for (const range of packet.drawRanges) {','    const __drawStart=performance.now();\\n    for (const range of packet.drawRanges) {');
+          s=s.replace('    gl.depthMask(true); gl.disable(gl.BLEND);\\n    const error = gl.getError();','    gl.depthMask(true); gl.disable(gl.BLEND);\\n    __neutralTiming.drawSubmissionMs=performance.now()-__drawStart;\\n    const __errorStart=performance.now();\\n    const error = gl.getError(); __neutralTiming.getErrorMs=performance.now()-__errorStart;');
+          s=s.replace('  function presentColorFrame() {','  function presentColorFrame() {\\n    const __presentationStart=performance.now();');
+          s=s.replace('    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });','    counters.visiblePresentationCount += 1; __neutralTiming.presentationMs=performance.now()-__presentationStart; return Object.freeze({ frameNumber: counters.frameCount, width, height });');
+          s=s.replace('    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt','    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt, getNeutralTimingReceipt:()=>Object.freeze({...__neutralTiming})');
+          if(!s.includes('getNeutralTimingReceipt')) throw new Error('TIMING_SHIM_APPLY_FAILED');
+          fs.writeFileSync(path,s);
+          NODE
+
       - name: Execute actual H-Earth route unchanged
         env:
           TARGET_SHA: ${{ inputs.target_sha }}

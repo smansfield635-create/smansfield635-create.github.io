@@ -87,7 +87,7 @@ flat out uint vRoleCode;
 void main(){
   vec3 world=aPosition;
   if(aRoleCode==4u && aWaveCoordinate.y>0.0){
-    world.y+=0.25*aWaveCoordinate.y*sin(0.3141592653589793*aWaveCoordinate.x-1.2566370614359172*uWaveTimeSeconds);
+    world.y+=0.25*aWaveCoordinate.y*sin(0.3141592653589793*aWaveCoordinate.x+1.2566370614359172*uWaveTimeSeconds);
   }
   vWorldPosition=world;
   vNormal=aNormal;

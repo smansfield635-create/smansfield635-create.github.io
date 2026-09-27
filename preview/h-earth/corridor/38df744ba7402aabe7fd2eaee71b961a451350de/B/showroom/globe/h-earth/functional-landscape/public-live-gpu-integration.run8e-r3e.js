@@ -80,10 +80,10 @@ let binding = null;
 let representationTransitionSurface = null;
 let lastPresentedFrame = null;
 let firstFramePublished = false;
-const waveAnimation = { presentedFrameCount: 0, lastTickMs: null, intervalsMs: [], lastSynchronousResponseMs: null, stoppedByError: null };
+const waveAnimation = { presentedFrameCount: 0, lastTickMs: null, lastNavigationMs: 0, intervalsMs: [], drawCostsMs: [], lastSynchronousResponseMs: null, stoppedByError: null };
 const waveAnimationReceipt = () => {
   const values=waveAnimation.intervalsMs;
-  return Object.freeze({frameCapFps:15,presentedFrameCount:waveAnimation.presentedFrameCount,lastIntervalMs:values.at(-1)??null,meanIntervalMs:values.length?values.reduce((sum,v)=>sum+v,0)/values.length:null,maximumIntervalMs:values.length?Math.max(...values):null,lastSynchronousResponseMs:waveAnimation.lastSynchronousResponseMs,stoppedByError:waveAnimation.stoppedByError,worldRebuildCount:binding?.getReceipt()?.counters?.worldRebuildCount??null});
+  return Object.freeze({frameCapFps:10,presentedFrameCount:waveAnimation.presentedFrameCount,lastIntervalMs:values.at(-1)??null,meanIntervalMs:values.length?values.reduce((sum,v)=>sum+v,0)/values.length:null,maximumIntervalMs:values.length?Math.max(...values):null,lastDrawCostMs:waveAnimation.drawCostsMs.at(-1)??null,maximumDrawCostMs:waveAnimation.drawCostsMs.length?Math.max(...waveAnimation.drawCostsMs):null,lastSynchronousResponseMs:waveAnimation.lastSynchronousResponseMs,stoppedByError:waveAnimation.stoppedByError,worldRebuildCount:binding?.getReceipt()?.counters?.worldRebuildCount??null});
 };
 
 function updateHud() {
@@ -190,6 +190,7 @@ try {
     onProposal: (proposalRecord, navigationState) => {
       if (!binding) throw new Error('R3E2_LIVE_GPU_BINDING_NOT_READY');
       lastPresentedFrame = binding.acceptNavigationState(proposalRecord, navigationState);
+      waveAnimation.lastNavigationMs=performance.now();
       root.dataset.gestureUsed = 'true';
       updateHud();
     }
@@ -302,15 +303,18 @@ setTimeout(() => {
 
 // Present the resident ocean field when the camera is still. Navigation retains
 // its synchronous presentation path; this loop has no readback or buffer upload.
-const waveFramePeriodMs=1000/15;
+const waveFramePeriodMs=1000/10;
 const presentWaveFrame=(timestamp)=>{
   if(!canvas.isConnected||waveAnimation.stoppedByError)return;
-  if(document.visibilityState==='visible' && (waveAnimation.lastTickMs===null||timestamp-waveAnimation.lastTickMs>=waveFramePeriodMs)){
+  if(document.visibilityState==='visible' && timestamp-waveAnimation.lastNavigationMs>=350 && (waveAnimation.lastTickMs===null||timestamp-waveAnimation.lastTickMs>=waveFramePeriodMs)){
     const prior=waveAnimation.lastTickMs;
     waveAnimation.lastTickMs=timestamp;
     if(prior!==null && timestamp-prior<1000){waveAnimation.intervalsMs.push(timestamp-prior);if(waveAnimation.intervalsMs.length>60)waveAnimation.intervalsMs.shift();}
     try{
+      const drawStart=performance.now();
       lastPresentedFrame=binding.presentWaveAnimationFrame();
+      waveAnimation.drawCostsMs.push(performance.now()-drawStart);
+      if(waveAnimation.drawCostsMs.length>60)waveAnimation.drawCostsMs.shift();
       waveAnimation.presentedFrameCount++;
       waveAnimation.lastSynchronousResponseMs=lastPresentedFrame.responseMs;
       if(waveAnimation.presentedFrameCount%30===0)updateHud();

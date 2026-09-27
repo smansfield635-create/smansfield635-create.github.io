@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "collaboration-handoff-5079",
+  "capabilityId": "COLLABORATION_HANDOFF_EXACT_HEAD_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5082,
+  "requestBranch": "ai-dispatch-request-collaboration-handoff-5079",
+  "requestCommit": "fa3f089bc222a4f16b93202fb3a3bd2e30a5db82",
+  "currentMainSha": "9d2bbe338a65e6b41a419ba27106d12223a71eb2",
+  "bridgeRunId": "36284386236",
+  "error": "Stale dispatch request: parent 14205994e1b19f512149e5fe78308f2be1229063 != current main 9d2bbe338a65e6b41a419ba27106d12223a71eb2",
+  "failedAt": "2026-09-27T01:03:55.485Z"
+}

@@ -414,12 +414,16 @@ void main(){
     palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
     base=palette;
-  }else if(vRoleCode==2u){
-    float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
-    float foam=pow(clamp(1.0-geometricNormal.y,0.0,1.0),1.7);
-    base=mix(vec3(0.035,0.19,0.28),vec3(0.10,0.43,0.53),wave*0.45+0.25);
-    base+=vec3(0.26,0.34,0.31)*foam;
-    specularScale=1.8;
+  }else if(vRoleCode==4u){
+    // Visible water arrives as GPU role 4. Keep the uploaded coast colors.
+    // A world-space normal is continuous across the coarse ocean triangles.
+    vec2 waterWorld=vWorldPosition.xz;
+    float broad=dot(waterWorld,vec2(0.055,0.028));
+    float cross=dot(waterWorld,vec2(-0.083,0.061))+1.4;
+    float slopeX=0.020*cos(broad)-0.012*cos(cross);
+    float slopeZ=0.010*cos(broad)+0.009*cos(cross);
+    geometricNormal=vec3(0.0,1.0,0.0);
+    shadingNormal=normalize(vec3(-slopeX,1.0,-slopeZ));
   }else{
     float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
     base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
@@ -428,7 +432,7 @@ void main(){
 
   float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
   float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
-  float diffuse=geometricDiffuse;
+  float diffuse=vRoleCode==4u?reliefDiffuse:geometricDiffuse;
   if(vRoleCode==1u){
     diffuse=mix(
       geometricDiffuse,
@@ -456,7 +460,7 @@ void main(){
       reliefRim,
       0.85*terrainReliefEnvelope
     )
-    :geometricRim;
+    :(vRoleCode==4u?reliefRim:geometricRim);
 
   float specularExponent=vRoleCode==1u?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
   float specular=pow(
@@ -466,7 +470,7 @@ void main(){
 
   float specularLightingGain=vRoleCode==1u
     ?mix(0.035,0.22,clamp(terrainReflectanceForLighting*0.72+terrainWetnessForLighting*0.28,0.0,1.0))
-    :(vRoleCode==2u?0.36:0.07);
+    :(vRoleCode==4u?0.22:0.07);
 
   float ambient=
     0.26+
@@ -475,7 +479,7 @@ void main(){
   float directional=
     diffuse*
     uSunIntensity*
-    (vRoleCode==1u?0.96:(vRoleCode==2u?0.74:0.82));
+    (vRoleCode==1u?0.96:(vRoleCode==4u?0.74:0.82));
   vec3 lit=base*(ambient+directional)*uSunColor;
   lit+=base*rim*(vRoleCode==1u?0.14:0.10);
   lit+=uSunColor*specular*specularLightingGain;

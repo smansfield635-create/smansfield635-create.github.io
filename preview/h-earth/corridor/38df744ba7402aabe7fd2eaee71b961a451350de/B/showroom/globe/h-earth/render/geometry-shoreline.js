@@ -62,7 +62,7 @@ export const H_EARTH_RECOVERED_WATER_OPTICAL_ANCHORS=freeze({
   deep:[15,57,96,255]
 });
 const INVISIBLE_WATER=freeze({rgba:[0,0,0,0],transparencyClass:'TRANSLUCENT'});
-const SAND_RENDER_MATERIALS=freeze({
+export const H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS=freeze({
   DRY_SAND_EDGE:{rgba:[200,183,145,255],transparencyClass:'OPAQUE'},
   DAMP_TRANSITION:{rgba:[187,169,133,255],transparencyClass:'OPAQUE'},
   WET_SAND:{rgba:[174,155,121,255],transparencyClass:'OPAQUE'}
@@ -138,7 +138,7 @@ function constructBand(band){
     metadata:freeze({providerContractId:H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,bandId:band.bandId,representationClass:band.bandId==='OPEN_WATER'?'MID':'NEAR',worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sourceSampleIds,sampleCount,shorelineXMinimum,shorelineXMaximum,waterPresentationDelegatedToContinuousOcean:isWater,finiteWaterRibbonVisible:false,historical23923ColorAnchorsPreserved:true,independentGeographyAuthority:false,hardWorldTerminalAuthority:false,navigationAddressIds:[],navigable:false,collisionAuthority:false,accessibleRegionExpansion:false,oceanFacingLandmassCreated:false,admitted:false,aggregateFrameAuthority:false})
   });
   const basePrimitive=construction?.primitiveRecord??null;
-  const visibleSand=SAND_RENDER_MATERIALS[band.bandId]??null;
+  const visibleSand=H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS[band.bandId]??null;
   const primitive=basePrimitive&&(isWater||visibleSand)?freeze({...basePrimitive,renderMaterial:isWater?INVISIBLE_WATER:visibleSand}):basePrimitive;
   return freeze({ok:construction?.valid===true&&isHEarthNeutralPrimitiveRecord(basePrimitive),bandId:band.bandId,primitive,issues:construction?.issues??[]});
 }

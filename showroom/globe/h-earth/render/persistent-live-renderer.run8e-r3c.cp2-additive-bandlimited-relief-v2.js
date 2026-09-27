@@ -542,6 +542,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     preserveDrawingBuffer: true, powerPreference: 'high-performance'
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
+  const actualContextAttributes = Object.freeze({ ...gl.getContextAttributes() });
+  let latestPostBlitGlError = null;
   let initialized = false;
   let latestDefaultFramebufferT4Readback = null;
   const counters = {
@@ -719,7 +721,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST);
+    latestPostBlitGlError = gl.getError();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     const defaultPixels = new Uint8Array(width * height * 4);
     gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,defaultPixels);
     let exactT4ProductionRgbPixelCount = 0;
@@ -785,6 +789,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         uniformCount: rendererInterface.frameUniformNames.length, drawRangeCount: rendererInterface.drawRanges.length
       },
       latestDefaultFramebufferT4Readback,
+      actualContextAttributes,
+      latestPostBlitGlError,
       counters: { ...counters },
       persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
       resourceIdentityStable: initialized && resources.buffers?.length === 9 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),

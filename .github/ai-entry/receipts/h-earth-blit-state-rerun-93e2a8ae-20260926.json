@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-blit-state-rerun-93e2a8ae-20260926",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5077,
+  "requestBranch": "ai-dispatch-request-h-earth-blit-state-rerun-93e2a8ae",
+  "requestCommit": "63eaeba04fff67e17e347ef2764c676f70f2388e",
+  "requestCommitParent": "fa58f804af9bd6f478c4fe0af5ea7ad6063e578e",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "fa58f804af9bd6f478c4fe0af5ea7ad6063e578e",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "93e2a8ae278f5ed847000fe865763d397f6d03f2",
+    "route_query": "t4=additive-v1"
+  },
+  "bridgeRunId": "36283579354",
+  "dispatchedRunId": 36283587932,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36283587932",
+  "dispatchedRunHeadSha": "fa58f804af9bd6f478c4fe0af5ea7ad6063e578e",
+  "dispatchedAt": "2026-09-27T00:48:00.944Z",
+  "resolvedAt": "2026-09-27T00:48:04.912Z"
+}

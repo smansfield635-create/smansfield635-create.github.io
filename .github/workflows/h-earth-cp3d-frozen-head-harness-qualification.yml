@@ -88,10 +88,10 @@ jobs:
           body=body.replace(old_window,'    await sleep(3500);')
           old_assert="  assert.ok(sustained.deltas.activePresentations >= 5, 'CP3D_GEN329_SUSTAINED_PRESENTATION_COUNT_TOO_LOW');"
           if body.count(old_assert)!=1: raise SystemExit('CP3D_SURVIVAL_ASSERTION_SHAPE_MISMATCH')
-          body=body.replace(old_assert,"  console.log('CP3D_SUSTAINED_COUNTERS', JSON.stringify(sustained));\\n"+old_assert)
+          body=body.replace(old_assert,"  console.log('CP3D_SUSTAINED_COUNTERS', JSON.stringify(sustained));\n"+old_assert)
           survival.write_text(body)
           PY
-          test "$(git diff --name-only)" = "$(printf '%s\\n' h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs)"
+          test "$(git diff --name-only)" = "$(printf '%s\n' h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs)"
 
       - name: Execute promoted renderer identity corridor
         run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs

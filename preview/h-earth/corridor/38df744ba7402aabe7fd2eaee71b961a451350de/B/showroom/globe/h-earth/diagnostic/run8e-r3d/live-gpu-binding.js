@@ -167,11 +167,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const t4Extension = t4Requested ? createHEarthT4PostTerrainDraw(canvas.getContext('webgl2')) : null;
-  const renderer = createHEarthRun8ER3CPersistentRenderer({
-    canvas, width, height,
-    postTerrainDraw: t4Extension?.drawAfterTerrain ?? null
-  });
+  let t4Extension = null;
+  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height });
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -208,6 +205,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       viewport: { width, height, pixelRatio },
       frameSequence
     });
+    packet.waterPhase = frameSequence * 0.018;
     counters.r3AFramePacketCount += 1;
     renderer.renderFrame(packet);
     counters.renderFrameCallCount += 1;

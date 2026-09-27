@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "collaboration-handoff-5079-r2",
+  "capabilityId": "COLLABORATION_HANDOFF_EXACT_HEAD_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5083,
+  "requestBranch": "ai-dispatch-request-collaboration-handoff-5079-r2",
+  "requestCommit": "94b1c3831e133646466c74ea75f90775fdd11b21",
+  "requestCommitParent": "9d2bbe338a65e6b41a419ba27106d12223a71eb2",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "9d2bbe338a65e6b41a419ba27106d12223a71eb2",
+  "workflow": "collaboration-handoff-exact-head-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "36284465892",
+  "dispatchedRunId": 36284472929,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36284472929",
+  "dispatchedRunHeadSha": "9d2bbe338a65e6b41a419ba27106d12223a71eb2",
+  "dispatchedAt": "2026-09-27T01:05:28.974Z",
+  "resolvedAt": "2026-09-27T01:05:32.469Z"
+}

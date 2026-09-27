@@ -1,0 +1,60 @@
+name: Collaboration Handoff Exact-Head Qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 521a0a3c045ef9e5bf0d6947de50ababa97594db
+          fetch-depth: 1
+      - name: Prove immutable candidate
+        run: test "$(git rev-parse HEAD)" = "521a0a3c045ef9e5bf0d6947de50ababa97594db"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/collab-http.log 2>&1 &
+      - name: Qualify collaboration handoff
+        run: |
+          mkdir -p .qualification/collaboration-handoff
+          cat > .qualification/collaboration-handoff/qualify.mjs <<'NODE'
+          import{chromium}from'playwright';import fs from'node:fs';
+          const browser=await chromium.launch({headless:true});
+          const vps={desktop:{width:1440,height:1000},tablet:{width:900,height:1000},mobile:{width:390,height:844}};
+          const receipt={candidate:'521a0a3c045ef9e5bf0d6947de50ababa97594db',result:'PASS',viewports:{}};
+          for(const[name,viewport]of Object.entries(vps)){
+            const page=await browser.newPage({viewport});const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            const r=await page.goto('http://127.0.0.1:4173/governance-bridge/portability/',{waitUntil:'networkidle'});
+            const fail=m=>{throw Error(name+': '+m)};
+            if(!r||!r.ok())fail('page load');
+            const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);if(overflow>2)fail('horizontal overflow '+overflow);
+            if(await page.locator('.stageSection').count()!==6)fail('six evidence stages required');
+            if(await page.getByText('22 / 22',{exact:true}).count()<1)fail('22/22 evidence absent');
+            if(await page.getByText(/determines what the combined evidence/i).count()!==1)fail('ROI determination framing');
+            if(await page.getByText(/The next test is operational value/i).count()!==1)fail('operational-value close');
+            if(await page.getByText(/If it creates operational value, we may have something worth building together/i).count()!==1)fail('collaboration handoff');
+            const links=await page.locator('a[href]').evaluateAll(as=>as.map(a=>a.getAttribute('href')));
+            if(links.some(h=>(h||'').includes('/collaboration/')))fail('obsolete collaboration route leaked');
+            if(links.filter(h=>h==='/governance-bridge/').length!==2)fail('two Bridge returns required');
+            if(links.filter(h=>h==='/governance-bridge/governance/').length!==1)fail('one Governance Panel crosswalk required');
+            for(const h of links.filter(h=>h?.startsWith('/'))){const rr=await page.request.get(new URL(h,'http://127.0.0.1:4173').href);if(!rr.ok())fail('dead target '+h)}
+            if(errors.length)fail('page errors '+errors.join('|'));
+            receipt.viewports[name]={overflow,stages:6,bridgeReturns:2,governanceCrosswalk:1};
+            await page.screenshot({path:'.qualification/collaboration-handoff/'+name+'.png',fullPage:true});await page.close();
+          }
+          await browser.close();fs.writeFileSync('.qualification/collaboration-handoff/receipt.json',JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt,null,2));
+          NODE
+          node .qualification/collaboration-handoff/qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: collaboration-handoff-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/collaboration-handoff
+          retention-days: 30

@@ -426,9 +426,9 @@ void main(){
     // A world-space normal is continuous across the coarse ocean triangles.
     vec2 waterWorld=vWorldPosition.xz;
     float broad=dot(waterWorld,vec2(0.055,0.028));
-    float cross=dot(waterWorld,vec2(-0.083,0.061))+1.4;
-    float slopeX=0.020*cos(broad)-0.012*cos(cross);
-    float slopeZ=0.010*cos(broad)+0.009*cos(cross);
+    float crossPhase=dot(waterWorld,vec2(-0.083,0.061))+1.4;
+    float slopeX=0.020*cos(broad)-0.012*cos(crossPhase);
+    float slopeZ=0.010*cos(broad)+0.009*cos(crossPhase);
     vec3 displacedNormal=normalize(cross(dFdx(vWorldPosition),dFdy(vWorldPosition)));
     if(displacedNormal.y<0.0) displacedNormal=-displacedNormal;
     geometricNormal=displacedNormal;

@@ -76,7 +76,20 @@ jobs:
           page.on('requestfailed',r=>requestsFailed.push({url:r.url(),failure:r.failure()}));
           page.on('response',r=>responses.push({url:r.url(),status:r.status(),contentType:r.headers()['content-type']||null}));
 
+          const inspectRuntimeTopology=async () => Promise.all(page.frames().map(async (frame,index) => {
+            try {
+              return await frame.evaluate(({index,url,name}) => ({
+                index,url,name,title:document.title,
+                hasRun8ePublicRoute:Boolean(window.H_EARTH_RUN8E_PUBLIC_ROUTE),
+                hasWaveReceipt:Boolean(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getWaveAnimationReceipt),
+                hasLiveGpuReceipt:Boolean(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt),
+                canvasPresent:document.getElementById('h-earth-functional-landscape-canvas') instanceof HTMLCanvasElement,
+                routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady??null
+              }),{index,url:frame.url(),name:frame.name()});
+            } catch(error) { return {index,url:frame.url(),name:frame.name(),evaluationError:error?.message??String(error)}; }
+          }));
           const sample=async label => {
+            const runtimeTopology=await inspectRuntimeTopology();
             const state=await page.evaluate(() => {
               const text=document.body?.innerText||'';
               const owningWindow=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)].find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getWaveAnimationReceipt);
@@ -134,7 +147,7 @@ jobs:
               const canvasBytes=await fs.readFile(out+'/'+canvasScreenshot);
               canvasScreenshotSha256=crypto.createHash('sha256').update(canvasBytes).digest('hex');
             }
-            return {...state,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex'),canvasScreenshot,canvasScreenshotSha256,canvasBox};
+            return {...state,runtimeTopology,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex'),canvasScreenshot,canvasScreenshotSha256,canvasBox};
           };
 
           let readiness='TIMEOUT';

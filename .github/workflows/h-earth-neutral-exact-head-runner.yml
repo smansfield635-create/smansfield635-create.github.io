@@ -1,6 +1,9 @@
 name: H-Earth Neutral Exact Head Runner
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
   workflow_dispatch:
     inputs:
       target_sha:
@@ -24,14 +27,16 @@ jobs:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_sha }}
+          ref: ${{ github.event_name == 'pull_request' && '5501a191d3fa0adf7531f7d15a1c422603391706' || inputs.target_sha }}
           fetch-depth: 1
 
       - name: Require exact checked-out SHA
+        env:
+          TARGET_SHA: ${{ github.event_name == 'pull_request' && '5501a191d3fa0adf7531f7d15a1c422603391706' || inputs.target_sha }}
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
 
       - name: Install bounded Chromium
         shell: bash
@@ -41,8 +46,11 @@ jobs:
 
       - name: Execute actual H-Earth route unchanged
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_QUERY: ${{ inputs.route_query }}
+          TARGET_SHA: ${{ github.event_name == 'pull_request' && '5501a191d3fa0adf7531f7d15a1c422603391706' || inputs.target_sha }}
+          ROUTE_QUERY: ${{ github.event_name == 'pull_request' && 'inspection=coastal-ocean-v1&microrelief=v1&visual=terrain-relief-v2' || inputs.route_query }}
+          TOOLING_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EXECUTED_WORKFLOW_SHA: ${{ github.workflow_sha }}
+          EVENT_SHA: ${{ github.sha }}
         shell: bash
         run: |
           set -euo pipefail
@@ -61,10 +69,19 @@ jobs:
 
           const out='/tmp/h-earth-exact-evidence';
           const targetSha=process.env.TARGET_SHA;
-          const query=String(process.env.ROUTE_QUERY||'').replace(/^\?/, '');
-          const route='/showroom/globe/h-earth/'+(query?'?'+query:'');
+          const rawQuery=String(process.env.ROUTE_QUERY||'').replace(/^\?/, '');
+          const params=new URLSearchParams(rawQuery);
+          const coastal=params.get('inspection')==='coastal-ocean-v1';
+          const coastalPath='/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/';
+          if(coastal && (targetSha!=='5501a191d3fa0adf7531f7d15a1c422603391706' ||
+             params.get('microrelief')!=='v1' || params.get('visual')!=='terrain-relief-v2' ||
+             [...params.keys()].some(k=>!['inspection','microrelief','visual'].includes(k)) ||
+             [...params.keys()].length!==3)) throw new Error('COASTAL_PROFILE_IDENTITY_MISMATCH');
+          params.delete('inspection');
+          const query=coastal?params.toString():rawQuery;
+          const route=(coastal?coastalPath:'/showroom/globe/h-earth/')+(query?'?'+query:'');
           const url='http://127.0.0.1:4173'+route;
-          const browser=await chromium.launch({headless:true});
+          const browser=await chromium.launch({headless:true,...(coastal?{args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']}: {})});
           const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});
           const page=await context.newPage();
           const pageErrors=[];
@@ -99,7 +116,7 @@ jobs:
                   if(!(canvas instanceof HTMLCanvasElement)) return null;
                   const style=getComputedStyle(canvas);
                   const rect=canvas.getBoundingClientRect();
-                      return {display:style.display,visibility:style.visibility,opacity:style.opacity,zIndex:style.zIndex,width:rect.width,height:rect.height,top:rect.top,left:rect.left,connected:canvas.isConnected};
+                      return {backingWidth:canvas.width,backingHeight:canvas.height,devicePixelRatio:window.devicePixelRatio,windowWidth:window.innerWidth,windowHeight:window.innerHeight,display:style.display,visibility:style.visibility,opacity:style.opacity,zIndex:style.zIndex,width:rect.width,height:rect.height,top:rect.top,left:rect.left,connected:canvas.isConnected};
                 })(),
                 routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady??null,
                 startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
@@ -113,6 +130,7 @@ jobs:
                 gpuFramebufferPresentationCount:liveGpuReceipt?.counters?.gpuFramebufferPresentationCount??null,
                 worldRebuildCount:liveGpuReceipt?.counters?.worldRebuildCount ?? renderer?.worldRebuildCount ?? contract?.worldRebuildCount ?? globals.H_EARTH_WORLD_REBUILD_COUNT ?? null,
                 blitStateDiagnostic:window.__H_EARTH_BLIT_STATE_DIAGNOSTIC__??null,
+                publicReceipt:window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()??null,
                 liveGpuReceipt,
                 globals
               };
@@ -133,9 +151,69 @@ jobs:
             return {...state,screenshot,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex'),canvasScreenshot,canvasScreenshotSha256,canvasBox};
           };
 
+          const inspectCoast=async initial => {
+            const read=()=>page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()??null);
+            const baseline=initial.publicReceipt;
+            const before=baseline?.intake?.currentNavigationState;
+            const expected='persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+            if(!before || !baseline.liveGpu.selectedRendererPath?.endsWith(expected)) throw new Error('COASTAL_RENDERER_OR_NAVIGATION_MISMATCH');
+            const canvas=page.locator('#h-earth-functional-landscape-canvas');
+            await canvas.scrollIntoViewIfNeeded();
+            const box=await canvas.boundingBox();
+            if(!box || box.width<100 || box.height<100) throw new Error('CANVAS_BOX_INVALID');
+            const x=box.x+box.width*.4,y=box.y+box.height*.5;
+            const samples=[];
+            const angularDistance=yaw=>Math.abs(((yaw-180+540)%360)-180);
+            let reached=false;
+            await page.mouse.move(x,y);
+            try {
+              await page.mouse.down();
+              await page.mouse.move(x+box.width*.15,y);
+              const deadline=Date.now()+90000;
+              while(Date.now()<deadline){
+                const r=await read();
+                const n=r?.intake?.currentNavigationState;
+                if(!n || !Number.isFinite(n.yawDegrees)) throw new Error('NAVIGATION_RECEIPT_MISSING');
+                samples.push({sequence:n.sequence,yawDegrees:n.yawDegrees,position:n.position});
+                if(angularDistance(n.yawDegrees)<=4){reached=true;break;}
+                await page.waitForTimeout(16);
+              }
+            } finally { await page.mouse.up(); }
+            await page.waitForFunction(()=>{
+              const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.();
+              return r?.intake?.activeIntent==='NONE' && r.intake.counters.deferredCommitCount===0 &&
+                r.liveGpu.counters.deferredRenderCommitCount===0 &&
+                r.intake.currentNavigationState.sequence===r.liveGpu.latestNavigationState.sequence;
+            },null,{timeout:15000});
+            const final=await read(),after=final.intake.currentNavigationState;
+            const frame=final.liveGpu.frameRecords.at(-1);
+            const close=(a,b)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<1e-8;
+            const checks={
+              targetReached:reached&&angularDistance(after.yawDegrees)<=8,
+              horizontalPositionUnchanged:close(before.position.x,after.position.x)&&close(before.position.z,after.position.z),
+              pitchUnchanged:close(before.pitchDegrees,after.pitchDegrees),
+              fovUnchanged:close(before.verticalFovDegrees,after.verticalFovDegrees),
+              released:final.intake.activeIntent==='NONE',
+              noTravelOrZoom:['twoFingerTravelProposalCount','pinchProposalCount','wheelProposalCount','representationRestoreProposalCount'].every(k=>final.intake.counters[k]===baseline.intake.counters[k]),
+              turnAccepted:final.intake.counters.acceptedNavigationProposalCount>baseline.intake.counters.acceptedNavigationProposalCount,
+              noRejectedProposals:final.intake.counters.rejectedNavigationProposalCount===baseline.intake.counters.rejectedNavigationProposalCount,
+              frameMatchesNavigation:frame?.navigationSequence===after.sequence,
+              matrixFinite:frame?.viewProjectionMatrix?.length===16&&frame.viewProjectionMatrix.every(Number.isFinite),
+              noWorldRebuild:final.liveGpu.counters.worldRebuildCount===baseline.liveGpu.counters.worldRebuildCount,
+              rendererUnchanged:final.liveGpu.selectedRendererPath===baseline.liveGpu.selectedRendererPath
+            };
+            return {result:Object.values(checks).every(Boolean)?'PASS':'FAIL',checks,before,after,frame,samples,
+              cameraHeightChange:after.position.y-before.position.y,
+              heightPolicy:'Observe lawful yaw-dependent terrain clearance; never force height',
+              visibilityClaim:'Camera and screenshot only; per-triangle depth survival not measured',
+              staleReadbackWarning:'Navigation frames skip readback; initial color summaries are not ocean-facing measurements'};
+          };
+
           let readiness='TIMEOUT';
           let initial=null;
           let later=null;
+          let coastalMeasurement=null;
+          let executionFailure=null;
           try {
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
@@ -153,9 +231,16 @@ jobs:
               const mounted=window.H_EARTH_3D_RENDERER!=null||window.H_EARTH_3D_RENDERER_CONTRACT!=null||/RENDERER_MOUNTED|Entering complete|World ready|Initialization complete/i.test(text)||(!initializing&&live);
               return mounted?'READY':false;
             },null,{timeout:120000}).then(h=>h.jsonValue()).catch(()=> 'TIMEOUT');
+            if(coastal){
+              await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.frameRecords?.some(f=>f.sourceKind==='POST_READY_REFINEMENT'),null,{timeout:180000});
+            }
             initial=await sample('initial');
-            await page.waitForTimeout(3000);
-            later=await sample('later');
+            if(coastal) coastalMeasurement=await inspectCoast(initial);
+            else await page.waitForTimeout(3000);
+            later=await sample(coastal?'ocean-facing':'later');
+          } catch(error) {
+            executionFailure={name:error.name,message:error.message};
+            try { later=await sample('failure'); } catch(captureError) { executionFailure.captureError=captureError.message; }
           } finally {
             await context.close();
             await browser.close();
@@ -163,6 +248,12 @@ jobs:
           const receipt={
             schema:'H_EARTH_NEUTRAL_EXACT_HEAD_RUNNER_v1',
             targetSha,
+            toolingCandidateSha:process.env.TOOLING_CANDIDATE_SHA,
+            executedWorkflowSha:process.env.EXECUTED_WORKFLOW_SHA,
+            eventSha:process.env.EVENT_SHA,
+            inspectionProfile:coastal?'coastal-ocean-v1':null,
+            coastalMeasurement,
+            executionFailure,
             route,
             url,
             exactHeadRequired:true,
@@ -189,7 +280,7 @@ jobs:
           };
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
-          if(!receipt.materialized||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
+          if(executionFailure||(coastal&&coastalMeasurement?.result!=='PASS')||!receipt.materialized||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
           NODE
           node h-earth-exact-run.mjs
 
@@ -197,9 +288,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-neutral-exact-head-${{ inputs.target_sha }}
+          name: h-earth-neutral-exact-head-${{ github.event_name == 'pull_request' && '5501a191d3fa0adf7531f7d15a1c422603391706' || inputs.target_sha }}
           path: |
             /tmp/h-earth-exact-evidence
             /tmp/h-earth-exact-server.log
           if-no-files-found: error
           retention-days: 30
+

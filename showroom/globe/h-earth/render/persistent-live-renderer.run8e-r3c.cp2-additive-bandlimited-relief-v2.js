@@ -717,7 +717,27 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const blitStateDiagnostic = Object.freeze({
+      readFramebufferIsGeometry: gl.getParameter(gl.READ_FRAMEBUFFER_BINDING) === resources.geometryFramebuffer,
+      drawFramebufferIsDefault: gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING) === null,
+      readBuffer: gl.getParameter(gl.READ_BUFFER),
+      drawBuffer0: gl.getParameter(gl.DRAW_BUFFER0),
+      colorWriteMask: Array.from(gl.getParameter(gl.COLOR_WRITEMASK)),
+      scissorEnabled: gl.isEnabled(gl.SCISSOR_TEST),
+      scissorBox: Array.from(gl.getParameter(gl.SCISSOR_BOX)),
+      viewport: Array.from(gl.getParameter(gl.VIEWPORT)),
+      sourceDimensions: Object.freeze({ width, height }),
+      destinationDimensions: Object.freeze({ width: gl.drawingBufferWidth, height: gl.drawingBufferHeight }),
+      readFramebufferStatus: gl.checkFramebufferStatus(gl.READ_FRAMEBUFFER),
+      drawFramebufferStatus: gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER),
+      preBlitError: gl.getError(),
+      sourceRect: Object.freeze([0, 0, width, height]),
+      destinationRect: Object.freeze([0, 0, width, height])
+    });
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST);
+    const postBlitError = gl.getError();
+    globalThis.__H_EARTH_BLIT_STATE_DIAGNOSTIC__ = Object.freeze({ ...blitStateDiagnostic, postBlitError });
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
   }
   function captureColorFrame(label, { includePng = true } = {}) {

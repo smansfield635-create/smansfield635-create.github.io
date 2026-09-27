@@ -543,6 +543,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
   let initialized = false;
+  let latestDefaultFramebufferT4Readback = null;
   const counters = {
     contextCreationCount: 1, shaderCreateCount: 0, shaderCompileCount: 0,
     programCreateCount: 0, programLinkCount: 0, vertexArrayCreateCount: 0,
@@ -719,6 +720,17 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
     gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const defaultPixels = new Uint8Array(width * height * 4);
+    gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,defaultPixels);
+    let exactT4ProductionRgbPixelCount = 0;
+    for (let offset = 0; offset < defaultPixels.length; offset += 4) {
+      if (defaultPixels[offset] === 56 && defaultPixels[offset + 1] === 92 && defaultPixels[offset + 2] === 31) exactT4ProductionRgbPixelCount += 1;
+    }
+    latestDefaultFramebufferT4Readback = Object.freeze({
+      pixelCount: width * height,
+      exactT4ProductionRgbPixelCount,
+      byteHash: hash(defaultPixels)
+    });
     counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
   }
   function captureColorFrame(label, { includePng = true } = {}) {
@@ -772,6 +784,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         contractId: rendererInterface.contractId, attributeCount: rendererInterface.attributeLayout.length,
         uniformCount: rendererInterface.frameUniformNames.length, drawRangeCount: rendererInterface.drawRanges.length
       },
+      latestDefaultFramebufferT4Readback,
       counters: { ...counters },
       persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
       resourceIdentityStable: initialized && resources.buffers?.length === 9 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),

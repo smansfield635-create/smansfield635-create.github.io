@@ -1,5 +1,6 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
+import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
@@ -532,6 +533,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     cameraUniformUpdateCount: 0, staticUniformUpdateCount: 0,
     geometryDrawCallCount: 0, totalDrawnIndexCount: 0,
     depthVisualizationDrawCallCount: 0,
+    wavePatchResourceCreateCount: 0, wavePatchBufferUploadCount: 0, wavePatchDrawCallCount: 0,
     refinementResourceCreateCount: 0, refinementBufferUploadCount: 0, refinementDrawCallCount: 0
   };
   const resources = {};
@@ -684,6 +686,55 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},fallbackAvailable:true};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
   }
   function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
+  function buildStationaryWavePatch(packet) {
+    if (resources.wavePatch?.created) return resources.wavePatch;
+    const local = packet?.camera?.localAuthoringPosition; if (!local) return null;
+    const spacing = 2, halfWidth = 48, nearOffset = 8, depth = 80;
+    const x0 = Math.round(local.x / spacing) * spacing;
+    const shorelineAtCamera = getHEarthCanonicalShorelineZ(x0);
+    const zStart = Math.ceil((shorelineAtCamera + nearOffset) / spacing) * spacing;
+    const xs = [], zs = [];
+    for (let x = x0 - halfWidth; x <= x0 + halfWidth; x += spacing) xs.push(x);
+    for (let z = zStart; z <= zStart + depth; z += spacing) zs.push(z);
+    const vertexCount = xs.length * zs.length;
+    const triangleCount = (xs.length - 1) * (zs.length - 1) * 2;
+    const positions = new Float32Array(vertexCount * 3), normals = new Float32Array(vertexCount * 3);
+    const amplitude = 0.25, wavelength = 20, k = 2 * Math.PI / wavelength;
+    let vi = 0;
+    for (const z of zs) for (const x of xs) {
+      const shoreZ = getHEarthCanonicalShorelineZ(x);
+      const offshore = Math.max(0, z - shoreZ);
+      const shoreGain = Math.min(1, Math.max(0, (offshore - 2) / 12));
+      const edgeX = Math.min(1, Math.max(0, (halfWidth - Math.abs(x - x0)) / 12));
+      const edgeZ = Math.min(1, Math.max(0, Math.min(z - zStart, zStart + depth - z) / 12));
+      const gain = shoreGain * edgeX * edgeZ;
+      const phase = k * (0.92 * x + 0.39 * z);
+      const y = amplitude * Math.sin(phase) * gain;
+      const dydx = amplitude * k * 0.92 * Math.cos(phase) * gain;
+      const dydz = amplitude * k * 0.39 * Math.cos(phase) * gain;
+      const q = regionToHEarthPlanetPoint({ x, y, z });
+      positions.set([q.x, q.y, q.z], vi * 3);
+      const n = Math.hypot(dydx, 1, dydz);
+      normals.set([-dydx / n, 1 / n, -dydz / n], vi * 3);
+      vi++;
+    }
+    const indices = new Uint32Array(triangleCount * 3); let ii = 0, cols = xs.length;
+    for (let r = 0; r < zs.length - 1; r++) for (let col = 0; col < cols - 1; col++) {
+      const a = r * cols + col, b = a + 1, d = (r + 1) * cols + col + 1, e = (r + 1) * cols + col;
+      indices.set([a, e, b, b, e, d], ii); ii += 6;
+    }
+    const vao = gl.createVertexArray(); gl.bindVertexArray(vao); const bufs = [];
+    const bind = (loc, data, size, integer = false, type = gl.FLOAT) => { const b = gl.createBuffer(); bufs.push(b); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW); gl.enableVertexAttribArray(loc); integer ? gl.vertexAttribIPointer(loc,size,type,0,0) : gl.vertexAttribPointer(loc,size,type,false,0,0); counters.wavePatchBufferUploadCount++; };
+    bind(0,positions,3); bind(1,normals,3);
+    const colors=new Float32Array(vertexCount*4),mats=new Float32Array(vertexCount*4);
+    for(let i=0;i<vertexCount;i++){colors.set([0.025,0.174,0.310,1],i*4);mats.set([0,0,0,0],i*4);}
+    bind(2,colors,4);bind(3,mats,4);bind(4,new Uint8Array(vertexCount),1,true,gl.UNSIGNED_BYTE);bind(5,new Uint8Array(vertexCount),1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);
+    const roles=new Uint8Array(vertexCount);roles.fill(4);bind(7,roles,1,true,gl.UNSIGNED_BYTE);
+    const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.wavePatchBufferUploadCount++;
+    resources.wavePatch={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,spacingMeters:spacing,troughToCrestMeters:0.5,wavelengthMeters:wavelength,phaseRadians:0,bounds:{xMin:xs[0],xMax:xs[xs.length-1],zMin:zs[0],zMax:zs[zs.length-1]}};
+    counters.wavePatchResourceCreateCount++; gl.bindVertexArray(resources.vertexArray); return resources.wavePatch;
+  }
+  function activateStationaryWavePatch(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildStationaryWavePatch(packet);}
 
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
@@ -703,6 +754,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
     if(resources.refinement?.created){gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
+    if(resources.wavePatch?.created){gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.wavePatch.vao);gl.drawElements(gl.TRIANGLES,resources.wavePatch.indexCount,gl.UNSIGNED_INT,0);counters.wavePatchDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
@@ -774,13 +826,14 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
+      stationaryWavePatch:resources.wavePatch?{vertexCount:resources.wavePatch.vertexCount,triangleCount:resources.wavePatch.triangleCount,spacingMeters:resources.wavePatch.spacingMeters,troughToCrestMeters:resources.wavePatch.troughToCrestMeters,wavelengthMeters:resources.wavePatch.wavelengthMeters,phaseRadians:resources.wavePatch.phaseRadians,bounds:resources.wavePatch.bounds}:null,
       canonicalPackageMutated:false
     };
   }
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, activateInitialRefinement, activateStationaryWavePatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

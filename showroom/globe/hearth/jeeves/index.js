@@ -3976,10 +3976,7 @@
 
     activateConversation:
       publicActivateConversation,
-
-    replayWelcome:
-      publicReplayWelcome
-  };
+};
 
   Object.freeze(
     API

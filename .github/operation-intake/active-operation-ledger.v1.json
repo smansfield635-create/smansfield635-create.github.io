@@ -11544,45 +11544,6 @@
       "scopeHash": "cc7f2010b670f8a055b366a9a2a512c1efb26612228b7a5e0bc8d9df9e6a2a44",
       "state": "ADMITTED_LOCKED"
     },
-    "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867": {
-      "governingHead": "51db1466e998806ca879e386f3cc5a017e93362c",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "51db1466e998806ca879e386f3cc5a017e93362c",
-          "lockGeneration": 2504,
-          "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
-          "operationId": "H_EARTH_TERRAIN_REGIME_MATERIAL_20260928_001",
-          "procedureLocatorDigest": "2cf306f6b15be77afc59184d1b0554a07609e1137c6981c05b1f9ec40409f64c",
-          "requestDigest": "0257ba965ae40d1edbcb4612e60db8d6b7b333b5025b42bc85041882053260da",
-          "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867"
-        },
-        "bindingDigest": "2f752b21d70d147b6c07348cc11c5ac5ef19f6fe0417e853758819afb948ba9b",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "42f0c37a3379f2d6f7c98b0d1ef3128407c23ed3",
-          "observedLockRefHead": "a3677b175bbd9a53db9cf17444856c0e18313d34"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "6a4033b639fcd29154705b2b618ad73acb2764e9ae990ce82eb921089521ac9f",
-          "commentId": 5872560487,
-          "issueNumber": 5086,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2504,
-      "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
-      "operationId": "H_EARTH_TERRAIN_REGIME_MATERIAL_20260928_001",
-      "procedureLocatorDigest": "2cf306f6b15be77afc59184d1b0554a07609e1137c6981c05b1f9ec40409f64c",
-      "released": false,
-      "requestDigest": "0257ba965ae40d1edbcb4612e60db8d6b7b333b5025b42bc85041882053260da",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867",
-      "state": "ADMITTED_LOCKED"
-    },
     "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27": {
       "governingHead": "6b2ff2e318ae434e05bb9f1b008a1ee756af0a78",
       "lockGeneration": 144,
@@ -66262,6 +66223,83 @@
       "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "governingHead": "51db1466e998806ca879e386f3cc5a017e93362c",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "51db1466e998806ca879e386f3cc5a017e93362c",
+          "lockGeneration": 2504,
+          "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
+          "operationId": "H_EARTH_TERRAIN_REGIME_MATERIAL_20260928_001",
+          "procedureLocatorDigest": "2cf306f6b15be77afc59184d1b0554a07609e1137c6981c05b1f9ec40409f64c",
+          "requestDigest": "0257ba965ae40d1edbcb4612e60db8d6b7b333b5025b42bc85041882053260da",
+          "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867"
+        },
+        "bindingDigest": "2f752b21d70d147b6c07348cc11c5ac5ef19f6fe0417e853758819afb948ba9b",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "42f0c37a3379f2d6f7c98b0d1ef3128407c23ed3",
+          "observedLockRefHead": "a3677b175bbd9a53db9cf17444856c0e18313d34"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "6a4033b639fcd29154705b2b618ad73acb2764e9ae990ce82eb921089521ac9f",
+          "commentId": 5872560487,
+          "issueNumber": 5086,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "51db1466e998806ca879e386f3cc5a017e93362c",
+          "lockGeneration": 2504,
+          "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
+          "operationId": "H_EARTH_TERRAIN_REGIME_MATERIAL_20260928_001",
+          "procedureLocatorDigest": "2cf306f6b15be77afc59184d1b0554a07609e1137c6981c05b1f9ec40409f64c",
+          "requestDigest": "0257ba965ae40d1edbcb4612e60db8d6b7b333b5025b42bc85041882053260da",
+          "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867"
+        },
+        "bindingDigest": "812101c39e1cb32f3ece7e33015f9e70a6d96e95c166ea38e3fa21118a011a9b",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "041b591f419383caeeb671f62f7a33736dad6679",
+          "observedLockRefHead": "93f20a9d0fa602dd9591f02aac4716a8821aa2b1"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "95dbabf77c2419ca49797614fb6a3dc024d4e1a2683879c45a5bee07abee5b81",
+          "commentId": 5874568170,
+          "issueNumber": 5086,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "51db1466e998806ca879e386f3cc5a017e93362c",
+          "lockGeneration": 2504,
+          "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
+          "operationId": "H_EARTH_TERRAIN_REGIME_MATERIAL_20260928_001",
+          "released": true,
+          "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2504,
+      "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
+      "operationId": "H_EARTH_TERRAIN_REGIME_MATERIAL_20260928_001",
+      "procedureLocatorDigest": "2cf306f6b15be77afc59184d1b0554a07609e1137c6981c05b1f9ec40409f64c",
+      "released": true,
+      "requestDigest": "0257ba965ae40d1edbcb4612e60db8d6b7b333b5025b42bc85041882053260da",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

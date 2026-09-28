@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-28T01:14:07Z",
+  "generatedAt": "2026-09-28T01:49:42Z",
   "window": {
-    "start": "2026-06-30T01:14:07Z",
-    "end": "2026-09-28T01:14:07Z"
+    "start": "2026-06-30T01:49:42Z",
+    "end": "2026-09-28T01:49:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4987,
+    "pageLoads": 4986,
     "visits": 1247,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4987,
+        "pageLoads": 4986,
         "visits": 1247
       }
     },
@@ -35,7 +35,7 @@
         "visits": 744
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 203,
+        "pageLoads": 202,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -70,6 +70,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 89,
+        "visits": 11
+      },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
@@ -82,6 +86,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/archcoin/": {
+        "pageLoads": 42,
+        "visits": 2
+      },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
         "visits": 0
@@ -89,14 +97,6 @@
       "/laws/categories/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 89,
-        "visits": 11
-      },
-      "/products/archcoin/": {
-        "pageLoads": 42,
-        "visits": 2
       },
       "/laws/": {
         "pageLoads": 301,
@@ -114,13 +114,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 189,
         "visits": 55
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -182,17 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -361,7 +361,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3740,
+        "pageLoads": 3739,
         "visits": 0
       },
       "(none)": {

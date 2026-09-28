@@ -11505,6 +11505,50 @@
       "scopeHash": "cc7f2010b670f8a055b366a9a2a512c1efb26612228b7a5e0bc8d9df9e6a2a44",
       "state": "ADMITTED_LOCKED"
     },
+    "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "89c66b33d77e5029bc4ae87d9026dd03953f8ea4",
+          "lockGeneration": 2501,
+          "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
+          "operationId": "H_EARTH_BEACH_SLOPE_BOUNDED_SAND_20260927_001",
+          "procedureLocatorDigest": "aa75411d48f6e67f1fb8c16b4286a8e6fed4cbbb784fd0b86053dbac7e597a63",
+          "requestDigest": "6f8a486ea05683011b9f9db8ef2961b03289aa10146ab01783ceac5e14101841",
+          "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867"
+        },
+        "bindingDigest": "b0802b78b888f6eec814ea44147f438e77934b3bbe520429849da975940c207e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fd1d6e77675f428c9f030302382b29377977d1f0bf3e02f385b9662d3cec5cfe",
+          "commentId": 5862136685,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5086,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 36369408058,
+          "workflowSha": "89c66b33d77e5029bc4ae87d9026dd03953f8ea4"
+        },
+        "lineageAnchorCommitSha": "fd81296ff972bfa90ccba9fbc02ce40037463ec9",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "89c66b33d77e5029bc4ae87d9026dd03953f8ea4",
+      "lockGeneration": 2501,
+      "lockScope": "H_EARTH:VARIANT_B_BEACH_FADE:EXACT_RENDERER_PATH",
+      "operationId": "H_EARTH_BEACH_SLOPE_BOUNDED_SAND_20260927_001",
+      "procedureLocatorDigest": "aa75411d48f6e67f1fb8c16b4286a8e6fed4cbbb784fd0b86053dbac7e597a63",
+      "released": false,
+      "requestDigest": "6f8a486ea05683011b9f9db8ef2961b03289aa10146ab01783ceac5e14101841",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867",
+      "state": "ADMITTED_LOCKED"
+    },
     "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27": {
       "governingHead": "6b2ff2e318ae434e05bb9f1b008a1ee756af0a78",
       "lockGeneration": 144,
@@ -14229,7 +14273,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2500,
+  "lockGeneration": 2501,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

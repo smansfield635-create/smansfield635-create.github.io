@@ -3,7 +3,7 @@
 // DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2_1
 //
 // Purpose:
-// - Consume /assets/hearth/jeeves/jeeves.voice.js through window.JEEVES_VOICE.
+// - Consume the versioned Jeeves voice authority through window.JEEVES_VOICE.
 // - Mount Jeeves's estate-host conversation surface.
 // - Coordinate conversation activation with the estate-threshold introduction.
 // - Deliver every ordinary response as a two-message elevator pitch aimed

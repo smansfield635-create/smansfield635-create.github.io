@@ -422,11 +422,19 @@ void main(){
       )
     );
 
-    vec3 lowland=vec3(0.29,0.27,0.19);
-    vec3 upland=vec3(0.34,0.36,0.31);
-    vec3 rock=vec3(0.25,0.27,0.26);
-    vec3 palette=mix(lowland,upland,elevationMix);
-    palette=mix(palette,rock,clamp(slope*1.35,0.0,0.72));
+    // Continuous landform regimes. Existing elevation/slope/curvature signals
+    // select the regime; procedural noise only varies material within it.
+    float lowlandWeight=(1.0-smoothstep(5.0,24.0,vWorldPosition.y))*(1.0-smoothstep(0.10,0.42,slope));
+    float risingWeight=smoothstep(3.0,30.0,vWorldPosition.y)*(1.0-smoothstep(0.34,0.66,slope));
+    float exposedWeight=clamp(smoothstep(0.18,0.62,slope)*0.82+curvatureResponse*0.18,0.0,1.0);
+    float regimeTotal=max(lowlandWeight+risingWeight+exposedWeight,0.00001);
+    lowlandWeight/=regimeTotal;
+    risingWeight/=regimeTotal;
+    exposedWeight/=regimeTotal;
+    vec3 lowland=vec3(0.27,0.30,0.18);
+    vec3 rising=vec3(0.34,0.32,0.20);
+    vec3 exposed=vec3(0.29,0.28,0.25);
+    vec3 palette=lowland*lowlandWeight+rising*risingWeight+exposed*exposedWeight;
 
     // Preserve broad material identity; retire painted contour/stripe dominance.
     // Phase 2: procedural triplanar material-space projection using the

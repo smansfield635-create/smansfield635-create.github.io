@@ -1,90 +1,18 @@
-<!-- TARGET FILE: /showroom/globe/hearth/jeeves/index.html -->
-<!-- TNT FULL-FILE REPLACEMENT -->
-<!-- DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16_1 -->
-<!--
-  Purpose:
-  - Present “Talk to the House” as an approach to the estate entrance.
-  - Introduce Jeeves as the host receiving the visitor at the front door.
-  - Reduce threshold onboarding to two deliberate stages.
-  - Begin with a compact stained-glass threshold.
-  - Grow the threshold to full presentation size after the first continuation.
-  - Open the page and begin Jeeves’s welcome after the second continuation.
-  - Mount the shared Mirrorland stained-glass geometry.
-  - Make the hosted conversation the primary page experience.
-  - Preserve deliberate typing, reading, and single-message rush surfaces.
-  - Keep supporting information compact through native disclosure panels.
-  - Reveal one contextual room, route, or specialist handoff at a time.
-  - Preserve real anchor navigation, accessibility, and non-JavaScript access.
-
-  Two-stage threshold path:
-  1. Arrival
-     - compact threshold Window
-     - entrance context
-     - Continue
-  2. Welcome
-     - full threshold Window
-     - Jeeves introduction and conversation instruction
-     - Enter the estate
-
-  Accessibility corrections:
-  - The threshold begins hidden and inert until its runtime activates it.
-  - The threshold declares modal-dialog semantics when activated.
-  - The threshold uses a permanent accessible label rather than references
-    to headings that become hidden between stages.
-  - The visible threshold skip control remains the single introduction-skip
-    control owned by the threshold runtime.
-  - The main page begins open so the non-JavaScript fallback remains usable.
-  - The threshold runtime changes the page to guided access when onboarding
-    actually begins.
-
-  Owns:
-  - Jeeves public page structure
-  - two-stage estate-threshold onboarding structure
-  - stained-glass threshold mount
-  - threshold copy and controls
-  - explicit Talk to the House handoff
-  - primary conversation mounts
-  - current-message rush target
-  - contextual handoff mount
-  - compact supporting disclosure structure
-  - replay-welcome controls
-  - non-JavaScript public fallback
-
-  Does not own:
-  - Mirrorland geometry definitions
-  - threshold canvas drawing
-  - onboarding state transitions
-  - Jeeves dialogue language
-  - dialogue registers
-  - conversation sequencing
-  - conversation timing calculations
-  - route execution
-  - visual styling
-  - specialist interpretation
-  - destination-page content
-  - diagnostic authority
-  - product authority
-  - protected architecture
--->
-
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/hearth/jeeves/"
-  data-page="jeeves-estate-threshold"
+  data-page="jeeves-character-chamber"
   data-contract="DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16_1"
   data-previous-contract="DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_HTML_TNT_v16"
   data-status="active"
   data-agent="jeeves"
   data-agent-name-lock="Jeeves"
-  data-agent-role="estate-threshold-host-and-routing-guide"
+  data-agent-role="estate-host-and-routing-guide"
   data-primary-quality="orientation"
   data-guide-law="receive-orient-handoff"
   data-arrival-metaphor="estate-front-door"
   data-entry-source="talk-to-the-house"
-  data-threshold-onboarding="true"
-  data-threshold-phase-count="2"
-  data-threshold-growth-path="compact-to-full"
   data-page-access="open"
   data-character-homepage="true"
   data-conversation-first="true"
@@ -98,7 +26,6 @@
   data-automatic-opening-message-limit="2"
   data-voice-authority="/assets/hearth/jeeves/jeeves.voice.js"
   data-runtime-authority="/showroom/globe/hearth/jeeves/index.js"
-  data-threshold-authority="/showroom/globe/hearth/jeeves/jeeves.threshold.js"
   data-geometry-authority="/assets/shared/mirrorland-window.geometry.js"
   data-css-authority="/showroom/globe/hearth/jeeves/index.css"
   data-no-inline-dialogue-engine="true"
@@ -584,7 +511,7 @@
                 </h3>
 
                 <p>
-                  Jeeves manages the public threshold: receiving the visitor,
+                  Jeeves receives the visitor and provides orientation,
                   clarifying intent, providing introductory orientation, and
                   transferring responsibility to the correct owner.
                 </p>

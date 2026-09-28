@@ -1,50 +1,42 @@
 {
-  "schema": "AUREN_EXECUTION_ROUTE_RECEIPT_v1",
-  "result": "PASS",
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "routerId": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
   "repository": "smansfield635-create/smansfield635-create.github.io",
-  "governingHead": "8b5d720104bce3ae3c8b20c8f246de09ee12dca6",
-  "surfaceId": "auren",
-  "candidateHead": "fc702a04a3002b471f369bf8757def4fba3763b7",
-  "route": {
-    "qualification": {
-      "capabilityId": "AUREN_SPATIAL_CHAMBER_PROOF1_QUALIFICATION",
-      "workflow": "auren-spatial-chamber-proof1-qualification.yml",
-      "ref": "main",
-      "successResult": "PASS",
-      "productMutationAuthority": false,
-      "controlPlaneSemanticAuthority": false
-    },
-    "publication": {
-      "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
-      "workflow": "pages-exact-head-deploy-v3.yml",
-      "ref": "main",
-      "surfaceId": "auren"
-    },
-    "publicationSurface": {
-      "path": ".github/ai-router/publication-surfaces/auren.json",
-      "blobSha": "e873907f133a70804a5f14d2be2d911e8255ab08"
+  "governingHead": "4182da70b96652b353b41ff3aab6a2129343bd94",
+  "task": "Execute registered Auren fixed exact-head live qualification against frozen candidate fc702a04a3002b471f369bf8757def4fba3763b7 using existing qualification and publication infrastructure.",
+  "mutationIntent": false,
+  "workingTreeClean": null,
+  "routes": [
+    {
+      "path": "tools/ai-room-transport/auren-fixed-exact-head-qualification.v1.mjs",
+      "routeClass": "REGISTERED_EXECUTION_CAPABILITY",
+      "projectId": "AUREN",
+      "entrypoint": ".github/ai-toolset-transport/authorized-toolset-registry.v1.json#AUREN_FIXED_EXACT_HEAD_QUALIFICATION_DESCRIPTOR_V1",
+      "disposition": "PASS",
+      "requiredInstructions": [
+        "AUREN_FIXED_EXACT_HEAD_QUALIFICATION_DESCRIPTOR_V1",
+        "AUREN_SPATIAL_CHAMBER_PROOF1_QUALIFICATION",
+        "PAGES_EXACT_HEAD_DEPLOY"
+      ],
+      "registries": [
+        ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
+        ".github/ai-router/workflow-dispatch-capability.v1.json",
+        ".github/ai-router/publication-surfaces/auren.json"
+      ],
+      "procedures": {
+        "qualificationCapability": "AUREN_SPATIAL_CHAMBER_PROOF1_QUALIFICATION",
+        "publicationCapability": "PAGES_EXACT_HEAD_DEPLOY",
+        "publicationSurface": "auren"
+      }
     }
-  },
-  "evidence": {
-    "qualificationCapabilityRegistrationPr": 5152,
-    "publicationSurfaceRegistrationPr": 5159,
-    "publicationSurfaceRepairPr": 5161,
-    "priorQualificationDispatchPrs": [
-      5153,
-      5156
-    ],
-    "priorPublicationDispatchPrs": [
-      5160,
-      5162
-    ]
-  },
-  "disposition": "PASS_EXISTING_AUREN_EXECUTION_AND_PUBLICATION_ROUTE",
-  "noNewChamberArchitecture": true,
-  "noNewProjectRegistration": true,
-  "productMutationPerformed": false,
-  "materializedBy": {
-    "operationId": "AUREN_EXECUTION_AUTHORITY_MATERIALIZATION_20260928_001",
-    "lockGeneration": 2513,
-    "authorityCeiling": "TWO_RECEIPT_PATHS_ONLY"
-  }
+  ],
+  "disposition": "PASS",
+  "reasonCodes": [
+    "EXISTING_AUREN_FIXED_EXACT_HEAD_DESCRIPTOR_ACTIVE_CERTIFIED",
+    "EXISTING_AUREN_QUALIFICATION_CAPABILITY_REGISTERED",
+    "EXISTING_AUREN_PUBLICATION_SURFACE_REGISTERED",
+    "NO_NEW_CHAMBER_ARCHITECTURE",
+    "NO_NEW_PROJECT_REGISTRATION"
+  ],
+  "conversationMemoryRequired": false
 }

@@ -199,7 +199,12 @@ vec3 limitTerrainNormalDeviation(
   );
 }
 void main(){
-  vec3 geometricNormal=normalize(vNormal);
+  vec3 interpolatedNormal=normalize(vNormal);
+  vec3 derivativeNormal=normalize(cross(dFdx(vWorldPosition),dFdy(vWorldPosition)));
+  if(dot(derivativeNormal,interpolatedNormal)<0.0)derivativeNormal=-derivativeNormal;
+  vec3 geometricNormal=vRoleCode==1u
+    ?normalize(mix(interpolatedNormal,derivativeNormal,0.72))
+    :interpolatedNormal;
   vec3 shadingNormal=geometricNormal;
   vec3 lightDirection=normalize(-uSunDirection);
   vec3 viewDirection=normalize(uCameraPosition-vWorldPosition);

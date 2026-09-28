@@ -1,0 +1,108 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "auren",
+  "description": "Auren Vale direct spatial Character Chamber publication contract.",
+  "checks": [
+    {
+      "path": "/products/auren/",
+      "includes": [
+        "data-page=\"auren-spatial-character-chamber\"",
+        "data-auren-chamber",
+        "data-custody-state=\"PROTECTED\"",
+        "data-auren-thread",
+        "data-auren-options",
+        "auren.voice.js",
+        "auren.room.geometry.js",
+        "auren.room.presentation.js",
+        "auren.room.environment.js",
+        "auren.chamber.js"
+      ],
+      "excludes": [
+        "On Your Side AI",
+        "Product Floor · Not His Room"
+      ]
+    },
+    {
+      "path": "/products/auren/auren.voice.js",
+      "includes": [
+        "AUREN_SPATIAL_CHAMBER_VOICE_PROOF1_v1",
+        "AUREN_VALE_SANCTUARY_BUILDER_V1",
+        "What are you protecting over there?",
+        "Show you more"
+      ],
+      "excludes": [
+        "On Your Side AI"
+      ]
+    },
+    {
+      "path": "/products/auren/auren.room.geometry.js",
+      "includes": [
+        "AUREN_SPATIAL_CHAMBER_GEOMETRY_PROOF1_v1",
+        "canonicalDimensions:false",
+        "custody-apse",
+        "rear-threshold"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/products/auren/auren.room.presentation.js",
+      "includes": [
+        "AUREN_SPATIAL_CHAMBER_PRESENTATION_PROOF1_v1",
+        "DOM_CSS_3D",
+        "webglContextCount:0",
+        "anchored:true"
+      ],
+      "excludes": [
+        "getContext("
+      ]
+    },
+    {
+      "path": "/products/auren/auren.room.environment.js",
+      "includes": [
+        "AUREN_SPATIAL_CHAMBER_ENVIRONMENT_PROOF1_v1",
+        "PROTECTED",
+        "REVEALED",
+        "custody-apse"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/products/auren/auren.chamber.js",
+      "includes": [
+        "AUREN_SPATIAL_CHAMBER_ORCHESTRATION_PROOF1_v1",
+        "env.reveal()",
+        "data-auren-ready",
+        "conversationPrimary:true"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/products/auren/index.css",
+      "includes": [
+        "[data-custody-state=\"REVEALED\"]",
+        "@media(max-width:700px)",
+        "@media(max-width:420px)",
+        "@media(prefers-reduced-motion:reduce)"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/products/auren/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-auren-chamber]",
+    "readyAttribute": {
+      "selector": "[data-auren-chamber]",
+      "name": "data-auren-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/products/auren/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": []
+  }
+}

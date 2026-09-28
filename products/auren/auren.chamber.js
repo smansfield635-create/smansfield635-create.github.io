@@ -35,6 +35,7 @@ async function boot(){
    if(busy)return;const node=voice.getNode(id);if(!node)return;
    busy=true;sequence++;const token=sequence;empty(options);root.setAttribute("data-auren-options-ready","false");
    thread.appendChild(bubble(node.prompt||id,"visitor"));scroll(thread);
+   if(node.effect==="revealProtected"&&env&&typeof env.reveal==="function")env.reveal();
    const ok=await speak(node.responses||[],token);if(!ok)return;
    if(node.route){const a=document.createElement("a");a.className="auren-option";a.href=node.route;a.textContent="Enter ARCHCOIN";options.appendChild(a);root.setAttribute("data-auren-options-ready","true");busy=false;return;}
    renderOptions(id);

@@ -1,0 +1,32 @@
+name: Auren Spatial Chamber Proof 1 Qualification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 559a8eff21d026ce48a3996eebef76676453cdd8
+          fetch-depth: 1
+      - name: Prove immutable candidate
+        run: test "$(git rev-parse HEAD)" = "559a8eff21d026ce48a3996eebef76676453cdd8"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Serve immutable candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/auren-proof1-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/products/auren/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/auren-proof1-http.log; exit 1
+      - name: Qualify exact Auren candidate
+        run: node .github/qualification/auren-spatial-chamber-proof1.qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auren-spatial-proof1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/auren-spatial-proof1
+          retention-days: 30

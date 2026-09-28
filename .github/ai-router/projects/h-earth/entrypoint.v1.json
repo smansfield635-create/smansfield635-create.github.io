@@ -36,7 +36,11 @@
       "H_EARTH_AWARDS_BROWSER_NATIVE_VISUAL_OR_CINEMATIC_ACCEPTANCE"
     ],
     "candidateFinalizationBeforeTerminalClosureWhenDeclared": true,
-    "dispositions": ["KEEP", "ONE_REPAIR", "REJECT"],
+    "dispositions": [
+      "KEEP",
+      "ONE_REPAIR",
+      "REJECT"
+    ],
     "oneRepairRequiresActiveOriginalScope": true,
     "productionDeploymentAsPreviewWorkaroundAllowed": false,
     "genericHeadlessCreatesPhysicalDeviceAcceptance": false,
@@ -148,6 +152,20 @@
       "githubActionsWorkflow": ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
       "receiptSchema": "h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.exact-candidate-admission.receipt.schema.v1.json",
       "manualMetadataReconstructionAllowed": false
+    },
+    "environmentalPlacementContinuation": {
+      "purpose": "Recover the H-Earth environmental placement-data workstream without conversation memory.",
+      "resumeObject": ".github/ai-router/continuation/h-earth-environmental-placement.resume.v1.json",
+      "schema": ".github/ai-router/continuation/resume-object.schema.v1.json",
+      "checkpointIssue": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086",
+      "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878291359",
+      "loadBefore": [
+        "H_EARTH_ENVIRONMENTAL_SUCCESSOR_CONTINUATION",
+        "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_CONSTRUCTION"
+      ],
+      "revalidation": "Resolve canonical lockRef from .github/operation-intake/locator.v1.json, pin its commit, read ledger by exact blob SHA if file content is omitted, and find operationId inside activeScopes. Top-level ledger generation is not the operation generation. Revalidate product head; preserve compatible advanced work. Resume metadata never creates authority.",
+      "checkpointMaintenance": "After each completed step, preserve exact candidate identity, evidence locations, authentic admission reference, completed result and one next action in this same continuation and issue checkpoint. Update only under applicable metadata authority; if unavailable, record the exact held binding in the existing issue instead of claiming the entrypoint is current.",
+      "authorityEffect": "NONE_ADMINISTRATIVE_CONTINUATION_DISCOVERY_ONLY"
     }
   },
   "localExecution": {

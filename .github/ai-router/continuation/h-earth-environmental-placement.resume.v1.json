@@ -1,0 +1,47 @@
+{
+  "schema": "CONTROL_PLANE_RESUME_OBJECT_v1",
+  "status": "ACTIVE_RESUMABLE",
+  "operationId": "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001",
+  "authorityGeneration": 2510,
+  "projectId": "H_EARTH",
+  "exactBranch": "refs/heads/inspection/h-earth-environmental-successor-20260928",
+  "exactHead": "be9ffea4fc2e2adb514ad2969b37078b51548ad6",
+  "allowedPaths": [
+    "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js"
+  ],
+  "completedCheckpoints": [
+    "ACCEPTED_TERRAIN_MATERIAL_FOUNDATION_PRESERVED_6d4648cde4e195a16ff203ab97fa33cb2328a69c",
+    "RESTORED_RUN8E_INTEGRATION_AND_LENS_REMOVAL_61f48bb5440feb551388e47c84e04a4693f9e89a",
+    "SUITABILITY_DIAGNOSTIC_EXECUTED_1097f932379a94348be1b019d1e1fc2220e79cfb",
+    "RARE_SIGNAL_DIAGNOSTIC_EXECUTED_49f31cbe33c564bb8363b883352231f6ecd50c76_WITH_MIXED_STENCIL_LIMITATION",
+    "HABITAT_DISPOSITION_DIAGNOSTIC_ADDED_be9ffea4fc2e2adb514ad2969b37078b51548ad6",
+    "PLACEMENT_SCOPE_CANONICALLY_ADMITTED_GEN2510_PREDECESSOR_GEN2506_SUPERSEDED"
+  ],
+  "preservedEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878315808",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878291359",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878284721",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878284532",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878172208",
+    "CANONICAL_TRANSITION_COMMIT:7c73566a703b40b6999d97461f0cae76b695fde4",
+    "H-Earth-Habitat-Diagnostic-1097f932.zip; baseline/receipt.json SHA256 3fc77c73b97ab50ed94ed3a2e51a37928caaf329ee0d730a626f3820b8ebe432; preserved attachment named by owner, not bundled in repository",
+    "H-Earth-Rare-Signal-Execution-49f31cbe.zip; preserved attachment named by owner, not bundled in repository",
+    "FIXED_STENCIL_CONTROL:8m derivative stencil; ridge areas at 8/4/2/1m sampling approximately 1728/1632/1640/1648 square metres; separate from unchanged candidate receipt; owner-supplied preserved evidence"
+  ],
+  "nextAction": {
+    "actionId": "CONSTRUCT_AND_EXECUTE_PLACEMENT_DATA_CANDIDATE",
+    "actionClass": "CONSTRUCTION",
+    "binding": "Revalidate current canonical operation 2510 and exact product branch; preserve compatible later work. Within the sole admitted vegetation module: valid terrain -> explicit habitat disposition and reason -> unchanged Gen311 response and independent continuous signals -> deterministic community/patch placement -> canonical terrain anchoring. Resolve protected-structure exclusions from existing world authority; recheck habitat at final offset coordinates; stable identities independent of camera and generation order; no legacy bounded population planner, old catalog constraint, traversal cutoff, 64-instance ceiling, visibility/LOD/render-budget population authority. Preserve unresolved habitats explicitly; no replacement geometry or protected foundation changes. Preserve completed diagnostics and fixed-stencil control; do not rerun mixed-stencil study as prerequisite.",
+    "expectedResult": "Reviewable immutable placement-data candidate; executed receipt and repeated/reverse-order comparison; world-domain map and community/disposition/exclusion counts; canonical attachment and structure-exclusion evidence; explicit unresolved assumptions and proposed ecological choices."
+  },
+  "requiredVerifier": {
+    "verifierId": "PLACEMENT_DATA_REPEATABILITY_AND_BOUNDARY_REVIEW",
+    "binding": "Independent exact-candidate review of admitted path delta, unchanged response equations and protected dependencies, repeated/reversed-order deterministic data, final-coordinate habitat, terrain and structure authority evidence. No ecological validity claim inferred from diagnostic PASS.",
+    "successResult": "PLACEMENT_DATA_EVIDENCE_COMPLETE_OR_EXACT_FAILED_ASSERTION"
+  },
+  "stopCondition": {
+    "conditionId": "PLACEMENT_DATA_CANDIDATE_AND_EVIDENCE_COMPLETE",
+    "disposition": "STOP_BEFORE_REPLACEMENT_GEOMETRY_MERGE_DEPLOYMENT_PUBLICATION; preserve unqualified assumptions explicitly; record exact failed binding if authority, structure source or repeatability cannot be proven."
+  },
+  "authorityEffect": "NONE_RESUME_OBJECT_ONLY"
+}

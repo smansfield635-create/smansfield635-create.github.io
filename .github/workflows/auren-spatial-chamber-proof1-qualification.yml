@@ -28,7 +28,9 @@ jobs:
           for i in {1..30}; do curl -fsS http://127.0.0.1:4173/products/auren/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/auren-proof1-http.log; exit 1
       - name: Qualify exact Auren candidate
-        run: node "$RUNNER_TEMP/auren-spatial-chamber-proof1.qualify.mjs"
+        run: |
+          cp "$RUNNER_TEMP/auren-spatial-chamber-proof1.qualify.mjs" ./.auren-spatial-chamber-proof1.qualify.mjs
+          node ./.auren-spatial-chamber-proof1.qualify.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

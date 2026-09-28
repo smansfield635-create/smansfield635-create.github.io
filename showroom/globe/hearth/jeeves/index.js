@@ -719,12 +719,12 @@
           false,
 
         signal:
-          "Host ready",
+          "Ready",
 
         promptStatus:
           state.options &&
           !state.options.hidden
-            ? "Choose the direction that best matches your visit."
+            ? "What would you like to ask next?"
             : "Jeeves is ready."
       }
     );
@@ -738,7 +738,7 @@
       state,
       {
         stage:
-          "Reception channel",
+          "With Jeeves",
 
         signal:
           "Host ready",
@@ -1982,28 +1982,6 @@
       description
     );
 
-    if (
-      normalize(
-        pathway.voiceLine
-      )
-    ) {
-      const voiceLine =
-        document.createElement(
-          "p"
-        );
-
-      voiceLine.className =
-        "jeeves-pathway-voice";
-
-      voiceLine.textContent =
-        normalize(
-          pathway.voiceLine
-        );
-
-      copy.appendChild(
-        voiceLine
-      );
-    }
 
     const action =
       document.createElement(
@@ -2189,6 +2167,10 @@
         .getFollowupOptions(
           dialogue.id,
           state.modeId
+        )
+        .slice(
+          0,
+          2
         );
 
     renderPromptOptions(
@@ -2688,7 +2670,7 @@
 
     setPromptStatus(
       state,
-      "The opening exchange will finish before choices appear."
+      "Jeeves will be with you in a moment."
     );
 
     const opening =

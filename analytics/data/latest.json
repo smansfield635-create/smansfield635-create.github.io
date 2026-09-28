@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-28T05:35:11Z",
+  "generatedAt": "2026-09-28T07:04:10Z",
   "window30d": {
-    "start": "2026-08-29T05:35:11Z",
-    "end": "2026-09-28T05:35:11Z"
+    "start": "2026-08-29T07:04:10Z",
+    "end": "2026-09-28T07:04:10Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 662
+      "pageLoads": 672
     },
     {
       "date": "2026-09-22",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 6
+      "pageLoads": 7
     }
   ],
   "summary": {
-    "pageLoads": 7065,
-    "botPageLoads": 2546,
-    "nonBotPageLoads": 4519
+    "pageLoads": 7006,
+    "botPageLoads": 2549,
+    "nonBotPageLoads": 4457
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3283,
-      "visits": 3283
+      "pageLoads": 3284,
+      "visits": 3284
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3091,
+      "pageLoads": 3031,
       "visits": 0
     },
     {
@@ -177,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 2081,
-      "visits": 1630
+      "pageLoads": 2068,
+      "visits": 1617
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 847,
-      "visits": 847
+      "pageLoads": 854,
+      "visits": 854
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 705,
-      "visits": 570
+      "pageLoads": 704,
+      "visits": 569
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -206,14 +206,14 @@
       "visits": 113
     },
     {
-      "path": "/evidence/agentic-frontier/",
-      "pageLoads": 192,
-      "visits": 30
+      "path": "/analytics/",
+      "pageLoads": 193,
+      "visits": 82
     },
     {
-      "path": "/analytics/",
-      "pageLoads": 192,
-      "visits": 81
+      "path": "/evidence/agentic-frontier/",
+      "pageLoads": 182,
+      "visits": 30
     }
   ],
   "ownerMeasurement": {

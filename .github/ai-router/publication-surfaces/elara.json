@@ -1,0 +1,48 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "elara",
+  "description": "Elara Signal Bearer contextual voice publication contract.",
+  "checks": [
+    {
+      "path": "/elara/",
+      "includes": [
+        "data-page=\"elara-agent\"",
+        "data-voice-authority=\"/elara/elara.voice.js\"",
+        "ELARA_SOURCE_AWARE_SEAN_AND_NINE_SUMMITS_VOICE_TNT_v3",
+        "Talk to Elara"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/elara/elara.voice.js",
+      "includes": [
+        "ELARA_SOURCE_AWARE_SEAN_AND_NINE_SUMMITS_VOICE_TNT_v3",
+        "barometer for Free Will",
+        "256 began with orientation",
+        "China was a catalyst for Consider the Energy"
+      ],
+      "excludes": [
+        "Self-Control develops Dignity",
+        "Pressure taught Sean to stop treating hardship as random"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/elara/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-elara-app]",
+    "readyAttribute": {
+      "selector": "[data-elara-app]",
+      "name": "data-elara-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/elara/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": []
+  }
+}

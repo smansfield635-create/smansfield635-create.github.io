@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-27T23:27:57Z",
+  "generatedAt": "2026-09-28T01:14:07Z",
   "window30d": {
-    "start": "2026-08-28T23:27:57Z",
-    "end": "2026-09-27T23:27:57Z"
+    "start": "2026-08-29T01:14:07Z",
+    "end": "2026-09-28T01:14:07Z"
   },
   "daily": [
-    {
-      "date": "2026-08-29",
-      "pageLoads": 180
-    },
     {
       "date": "2026-08-30",
       "pageLoads": 90
@@ -96,11 +92,11 @@
     },
     {
       "date": "2026-09-20",
-      "pageLoads": 386
+      "pageLoads": 370
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 613
+      "pageLoads": 637
     },
     {
       "date": "2026-09-22",
@@ -124,23 +120,27 @@
     },
     {
       "date": "2026-09-27",
-      "pageLoads": 28
+      "pageLoads": 29
+    },
+    {
+      "date": "2026-09-28",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 7075,
-    "botPageLoads": 2526,
-    "nonBotPageLoads": 4549
+    "pageLoads": 7084,
+    "botPageLoads": 2523,
+    "nonBotPageLoads": 4561
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3279,
-      "visits": 3279
+      "pageLoads": 3281,
+      "visits": 3281
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3105,
+      "pageLoads": 3113,
       "visits": 0
     },
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 12,
-      "visits": 12
+      "pageLoads": 11,
+      "visits": 11
     },
     {
       "host": "m.facebook.com",
@@ -177,18 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 2064,
-      "visits": 1603
+      "pageLoads": 2074,
+      "visits": 1613
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 849,
-      "visits": 849
+      "pageLoads": 839,
+      "visits": 839
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 716,
-      "visits": 581
+      "pageLoads": 714,
+      "visits": 579
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 230,
-      "visits": 112
+      "pageLoads": 240,
+      "visits": 114
     },
     {
       "path": "/evidence/agentic-frontier/",
@@ -212,8 +212,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 186,
-      "visits": 75
+      "pageLoads": 187,
+      "visits": 76
     }
   ],
   "ownerMeasurement": {

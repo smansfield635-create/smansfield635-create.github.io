@@ -10,7 +10,7 @@ import {
   sampleHEarthRun8BSuccessorTerrainField
 } from '../terrain/h-earth.successor-terrain-field.run8b.js';
 import { sampleHEarthSurfaceState } from './h-earth.surface-state-field.js';
-import { H_EARTH_256_LATTICE_REGION_PROFILES } from '../zones/ground-cell-001.landscape-lattice.js';
+import { getHEarthLandscapeAddress } from '../zones/ground-cell-001.landscape-lattice.js';
 import {
   H_EARTH_GEN311_REGIONAL_MATERIAL_RESPONSE_CONTRACT_ID,
   sampleHEarthRun8CSuccessorSurfaceMaterial,
@@ -269,8 +269,8 @@ const PLACEMENT_REGION_EXCLUSIONS=freeze(new Set(['ELEVATED_MANOR_CONTEXT','WATE
 function hash32(text){let h=0x811c9dc5;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,0x01000193)}return h>>>0}
 const hash01=text=>hash32(text)/0xffffffff;
 function regionForSemanticAddress(id){
-  const m=/:R(\d+):C(\d+)$/.exec(id??'');if(!m)return null;const row=Number(m[1]),column=Number(m[2]);
-  return Object.values(H_EARTH_256_LATTICE_REGION_PROFILES).find(r=>row>=r.rowRange.min&&row<=r.rowRange.max&&(!r.columnRange||(column>=r.columnRange.min&&column<=r.columnRange.max)))??null;
+  const record=getHEarthLandscapeAddress(id);if(!record)return null;
+  return freeze({regionId:record.regionId,primitiveIntent:record.primitiveIntent});
 }
 function structureCompatibilityAt(x,z){
   const surface=sampleHEarthSurfaceState(x,z);if(surface?.valid!==true)return freeze({status:'UNRESOLVED_STRUCTURE_COMPATIBILITY',reason:'CANONICAL_SURFACE_IDENTITY_UNAVAILABLE'});

@@ -119,6 +119,8 @@ uniform float uFogStartDistance;
 uniform float uFogFalloff;
 uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
+uniform vec4 uTerrainPatchClip;
+uniform int uClipBaseTerrain;
 out vec4 outColor;
 
 float hash21(vec2 p){
@@ -224,6 +226,9 @@ void main(){
   vec3 base=max(vBaseColor.rgb,vec3(0.004));
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
 
+  if(vRoleCode==1u && uClipBaseTerrain==1 &&
+     vWorldPosition.x>uTerrainPatchClip.x && vWorldPosition.x<uTerrainPatchClip.z &&
+     vWorldPosition.z>uTerrainPatchClip.y && vWorldPosition.z<uTerrainPatchClip.w) discard;
   if(vRoleCode==1u){
     vec2 world=vWorldPosition.xz;
     float broad=noise2(world*0.035);
@@ -683,7 +688,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), depth: uniform(resources.depthProgram, 'uDepth')
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), patchClip: uniform(resources.geometryProgram, 'uTerrainPatchClip'), clipBaseTerrain: uniform(resources.geometryProgram, 'uClipBaseTerrain'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
     resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
@@ -704,8 +709,53 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const spacing=4,radius=64,x0=Math.round(local.x/spacing)*spacing,z0=Math.round(local.z/spacing)*spacing,xs=[],zs=[];
     for(let x=x0-radius;x<=x0+radius;x+=spacing)xs.push(x);for(let z=z0-radius;z<=z0+radius;z+=spacing)zs.push(z);
     const vertexCount=xs.length*zs.length,triangleCount=(xs.length-1)*(zs.length-1)*2;if(vertexCount>4096||triangleCount>8192)throw new Error('R3C_REFINEMENT_CEILING_EXCEEDED');
+    // Match the immutable package terrain at the patch boundary. Inside it,
+    // retain only the additional 4 m field detail over the package surface.
+    const terrainSpan=renderPackage.primitiveSpans.find(span=>span.role==='TERRAIN');
+    if(!terrainSpan)throw new Error('R3C_REFINEMENT_PACKAGE_TERRAIN_MISSING');
+    const terrainPoints=new Array(terrainSpan.vertexCount),baseFieldByVertex=new Map();
+    for(let i=0;i<terrainPoints.length;i++){
+      const j=(terrainSpan.vertexStart+i)*3,px=uploadViews.positions[j],py=uploadViews.positions[j+1],pz=uploadViews.positions[j+2];
+      const h=Math.hypot(px,pz),radial=Math.atan2(h,py+planetRadius)*planetRadius,scale=h>Number.EPSILON?radial/h:0;
+      terrainPoints[i]=[px*scale,pz*scale,Math.hypot(h,py+planetRadius)-planetRadius];
+    }
+    const triangles=[];
+    for(let j=terrainSpan.indexStart;j<terrainSpan.indexStart+terrainSpan.indexCount;j+=3){
+      const ids=[uploadViews.indices[j],uploadViews.indices[j+1],uploadViews.indices[j+2]].map(i=>i-terrainSpan.vertexStart);
+      const [a,b,c]=ids.map(i=>terrainPoints[i]);
+      const minX=Math.min(a[0],b[0],c[0]),maxX=Math.max(a[0],b[0],c[0]),minZ=Math.min(a[1],b[1],c[1]),maxZ=Math.max(a[1],b[1],c[1]);
+      if(maxX<x0-radius-1||minX>x0+radius+1||maxZ<z0-radius-1||minZ>z0+radius+1)continue;
+      triangles.push({ids,a,b,c,minX,maxX,minZ,maxZ});
+    }
+    const packageSurface=(x,z)=>{
+      for(const t of triangles){
+        if(x<t.minX-0.0001||x>t.maxX+0.0001||z<t.minZ-0.0001||z>t.maxZ+0.0001)continue;
+        const {a,b,c}=t,den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]);
+        if(Math.abs(den)<1e-9)continue;
+        const wa=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(z-c[1]))/den;
+        const wb=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(z-c[1]))/den,wc=1-wa-wb;
+        if(wa<-.0001||wb<-.0001||wc<-.0001)continue;
+        const field=t.ids.map((id)=>{
+          if(!baseFieldByVertex.has(id)){
+            const p=terrainPoints[id],sample=sampleHEarthRun8BSuccessorTerrainField(p[0],p[1]);
+            if(sample?.valid!==true)throw new Error('R3C_REFINEMENT_BASE_FIELD_SAMPLE_INVALID');
+            baseFieldByVertex.set(id,sample.elevation);
+          }
+          return baseFieldByVertex.get(id);
+        });
+        return {height:wa*a[2]+wb*b[2]+wc*c[2],field:wa*field[0]+wb*field[1]+wc*field[2]};
+      }
+      throw new Error(`R3C_REFINEMENT_PACKAGE_SURFACE_MISSING:${x}:${z}`);
+    };
     const positions=new Float32Array(vertexCount*3),normals=new Float32Array(vertexCount*3),patchCoastDistances=new Float32Array(vertexCount);let vi=0;
-    for(const z of zs)for(const x of xs){const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_TERRAIN_SAMPLE_INVALID');const q=regionToHEarthPlanetPoint({x,y:t.elevation,z});positions.set([q.x,q.y+0.035,q.z],vi*3);normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);patchCoastDistances[vi]=getHEarthSignedCoastDistanceMeters(x,z);vi++;}
+    for(const z of zs)for(const x of xs){
+      const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_TERRAIN_SAMPLE_INVALID');
+      const surface=packageSurface(x,z),edge=Math.min(x-(x0-radius),(x0+radius)-x,z-(z0-radius),(z0+radius)-z);
+      const fade=Math.min(1,Math.max(0,edge/12));const smoothFade=fade*fade*(3-2*fade);
+      const elevation=surface.height+(t.elevation-surface.field)*smoothFade;
+      const q=regionToHEarthPlanetPoint({x,y:elevation,z});positions.set([q.x,q.y+0.012,q.z],vi*3);
+      normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);patchCoastDistances[vi]=getHEarthSignedCoastDistanceMeters(x,z);vi++;
+    }
     const indices=new Uint32Array(triangleCount*3);let ii=0,cols=xs.length;for(let r=0;r<zs.length-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.set([a,e,b,b,e,d],ii);ii+=6;}
     const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];
     const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.refinementBufferUploadCount++;};
@@ -725,7 +775,13 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
-    counters.cameraUniformUpdateCount += 2;
+    const patch=resources.refinement;
+    if(patch?.created){
+      const {x,z}=patch.anchor;
+      gl.uniform4f(resources.uniforms.patchClip,x-64+0.04,z-64+0.04,x+64-0.04,z+64-0.04);
+      gl.uniform1i(resources.uniforms.clipBaseTerrain,1);
+    }else gl.uniform1i(resources.uniforms.clipBaseTerrain,0);
+    counters.cameraUniformUpdateCount += patch?.created?4:3;
     for (const range of packet.drawRanges) {
       if (range.indexStart === sandRange.indexStart && range.indexCount === sandRange.indexCount) continue;
       if (range.transparencyClass === 'TRANSLUCENT') {
@@ -734,7 +790,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
-    if(resources.refinement?.created){gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
+    if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;

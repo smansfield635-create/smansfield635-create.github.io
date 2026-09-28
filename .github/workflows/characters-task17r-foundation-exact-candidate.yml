@@ -1,0 +1,38 @@
+name: Characters Task17R Foundation Exact Candidate
+
+on:
+  push:
+    branches:
+      - 'instrumentation/characters-task17r-foundation-evaluator-001'
+  pull_request:
+    paths:
+      - '.github/workflows/characters-task17r-foundation-exact-candidate.yml'
+      - 'tools/characters-task17r-foundation-evaluator.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Materialize exact candidate and evaluator without checkout
+        run: |
+          mkdir -p target/characters/spatial-field-foundation tools
+          base='https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/feb19ebcb9dd08f5585db337cb15bba8e6202a89/characters/spatial-field-foundation'
+          curl -fsSL "$base/index.html" -o target/characters/spatial-field-foundation/index.html
+          curl -fsSL "$base/spatial-field.css" -o target/characters/spatial-field-foundation/spatial-field.css
+          curl -fsSL "$base/spatial-field.js" -o target/characters/spatial-field-foundation/spatial-field.js
+          curl -fsSL 'https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/18912db03d7acc66368c8320b25f9043e7f35235/tools/characters-task17r-foundation-evaluator.mjs' -o tools/characters-task17r-foundation-evaluator.mjs
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@latest --no-save
+          npx playwright install --with-deps chromium
+      - name: Run exact-candidate browser qualification
+        run: node tools/characters-task17r-foundation-evaluator.mjs

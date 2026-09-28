@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-28T18:38:53Z",
+  "generatedAt": "2026-09-28T19:28:30Z",
   "window": {
-    "start": "2026-06-30T18:38:53Z",
-    "end": "2026-09-28T18:38:53Z"
+    "start": "2026-06-30T19:28:30Z",
+    "end": "2026-09-28T19:28:30Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5063,
-    "visits": 1273,
+    "pageLoads": 5068,
+    "visits": 1275,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5063,
-        "visits": 1273
+        "pageLoads": 5068,
+        "visits": 1275
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1087,
-        "visits": 742
+        "pageLoads": 1084,
+        "visits": 739
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 201,
@@ -91,12 +91,12 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 89,
-        "visits": 11
+        "pageLoads": 86,
+        "visits": 10
       },
       "/products/archcoin/": {
-        "pageLoads": 42,
-        "visits": 2
+        "pageLoads": 40,
+        "visits": 0
       },
       "/laws/": {
         "pageLoads": 301,
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 222,
+        "pageLoads": 230,
         "visits": 20
       },
       "/gauges/h-earth/": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 253,
-        "visits": 63
+        "pageLoads": 258,
+        "visits": 71
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 11,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,7 +218,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 11,
         "visits": 0
       },
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 11,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -353,16 +353,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 482,
-        "visits": 482
+        "pageLoads": 487,
+        "visits": 487
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3790,
+        "pageLoads": 3793,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 780,
-        "visits": 780
+        "pageLoads": 777,
+        "visits": 777
       },
       "raw.githack.com": {
         "pageLoads": 10,

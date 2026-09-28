@@ -1,0 +1,61 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "jeeves",
+  "description": "Jeeves direct Character Chamber publication contract.",
+  "checks": [
+    {
+      "path": "/showroom/globe/hearth/jeeves/",
+      "includes": [
+        "data-page=\"jeeves-character-chamber\"",
+        "data-jeeves-primary-stage",
+        "data-jeeves-app",
+        "Talk to the House",
+        "Tell me what brought you to the estate.",
+        "DIAMOND_GATE_BRIDGE_JEEVES_DIRECT_CHAMBER_RUNTIME_TNT_v3"
+      ],
+      "excludes": [
+        "data-jeeves-threshold",
+        "Skip introduction",
+        "Replay estate welcome",
+        "jeeves.threshold.js"
+      ]
+    },
+    {
+      "path": "/showroom/globe/hearth/jeeves/index.js",
+      "includes": [
+        "conversation-first-entry",
+        "activateConversation",
+        "data-jeeves-conversation-activated"
+      ],
+      "excludes": [
+        "replayWelcome:"
+      ]
+    },
+    {
+      "path": "/showroom/globe/hearth/jeeves/index.css",
+      "includes": [
+        "JEEVES DIRECT CHAMBER MOBILE HEADER REPAIR v1",
+        "@media (max-width: 900px)"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/hearth/jeeves/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-jeeves-app]",
+    "readyAttribute": {
+      "selector": "[data-jeeves-app]",
+      "name": "data-jeeves-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/hearth/jeeves/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": []
+  }
+}

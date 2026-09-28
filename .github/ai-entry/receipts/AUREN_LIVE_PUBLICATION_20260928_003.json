@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUREN_LIVE_PUBLICATION_20260928_003",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5170,
+  "requestBranch": "ai-dispatch-request-auren-publish-r3-1790637500000",
+  "requestCommit": "9556482557b3eb0e10cb8230289c0179cbbf524d",
+  "currentMainSha": "122fa9b1e0b3f4bb4c5d852e8db8311b2d05f8b4",
+  "bridgeRunId": "36497793179",
+  "error": "Stale dispatch request: parent 50ac16c07c64770c5fa7163e0f935a4f09f2ff36 != current main 122fa9b1e0b3f4bb4c5d852e8db8311b2d05f8b4",
+  "failedAt": "2026-09-28T23:24:11.213Z"
+}

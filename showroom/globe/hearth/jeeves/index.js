@@ -3220,79 +3220,14 @@
 
   const coordinateInitialActivation =
     state => {
-      if (
-        !state.threshold
-      ) {
-        activateConversation(
-          state,
-          {
-            source:
-              "threshold-absent"
-          }
-        );
-
-        return;
-      }
-
-      if (
-        thresholdIsOpen(
-          state
-        )
-      ) {
-        activateConversation(
-          state,
-          {
-            source:
-              "threshold-already-open"
-          }
-        );
-
-        return;
-      }
-
-      setPageAccess(
-        state,
-        THRESHOLD_STATES.GUIDED
-      );
-
-      state.root.setAttribute(
-        "data-jeeves-conversation-activated",
-        "false"
-      );
-
-      setStatus(
-        state,
-        "waiting",
-        "Jeeves is waiting at the front door."
-      );
-
-      setThreadTelemetry(
+      activateConversation(
         state,
         {
-          stage:
-            "Reception channel",
-
-          signal:
-            "Awaiting arrival",
-
-          threadState:
-            "waiting"
+          source:
+            state.threshold
+              ? "conversation-first-entry"
+              : "threshold-absent"
         }
-      );
-
-      setPromptStatus(
-        state,
-        "The conversation begins after the estate introduction."
-      );
-
-      setOptionsLocked(
-        state,
-        true
-      );
-
-      setOptionsVisibility(
-        state,
-        false
       );
     };
 

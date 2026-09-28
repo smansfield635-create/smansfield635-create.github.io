@@ -25,7 +25,8 @@
     "ESTATE_CONTAINMENT_WORLD_PROPOSALS_EXECUTED_54ba741179ca9f40f15fcde0361cd825a34c8d34",
     "FULL_57825_CELL_ACCOUNTING_27585_PROPOSALS_0_ADMITTED_PLANTS",
     "FORWARD_REVERSE_REPEAT_FULL_DATASET_EQUAL_b0f8f77c16bcee15dfd18e0bf24cda0e370562f28d4dbc3f286c684de457c579",
-    "INDEPENDENT_52425_FOOTPRINT_PROBES_PASS_CANONICAL_TERRAIN_Y_ERROR_ZERO"
+    "INDEPENDENT_52425_FOOTPRINT_PROBES_PASS_CANONICAL_TERRAIN_Y_ERROR_ZERO",
+    "READ_ONLY_WORLD_STRUCTURE_INVENTORY_QUALIFIED_ESTATE_ONLY_COMPLETENESS_DECLARATION_MISSING_20260928"
   ],
   "preservedEvidence": [
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5880099724",
@@ -42,13 +43,15 @@
     "CANONICAL_TRANSITION_COMMIT:7c73566a703b40b6999d97461f0cae76b695fde4",
     "H-Earth-Habitat-Diagnostic-1097f932.zip; baseline/receipt.json SHA256 3fc77c73b97ab50ed94ed3a2e51a37928caaf329ee0d730a626f3820b8ebe432; preserved attachment named by owner, not bundled in repository",
     "H-Earth-Rare-Signal-Execution-49f31cbe.zip; preserved attachment named by owner, not bundled in repository",
-    "FIXED_STENCIL_CONTROL:8m derivative stencil; ridge areas at 8/4/2/1m sampling approximately 1728/1632/1640/1648 square metres; separate from unchanged candidate receipt; owner-supplied preserved evidence"
+    "FIXED_STENCIL_CONTROL:8m derivative stencil; ridge areas at 8/4/2/1m sampling approximately 1728/1632/1640/1648 square metres; separate from unchanged candidate receipt; owner-supplied preserved evidence",
+    "Issue #5086 bounded read-only inventory: accepted estate reservation is the only discovered intentional physical structure/reservation with authoritative measured world-space containment; environmental/geographic features and descriptor/interface/scientific projection objects are not vegetation exclusions; no additional accepted building/road/constructed footprint discovered; no canonical constructed-world inventory completeness declaration found.",
+    "REGIONAL_LAW:NO_ROADS_NO_DRIVEWAY_NO_VEHICLE_CORRIDOR; qualified 8m approach remains careful foot access segment capsules only; estate reservation is vegetation/planning authority and does not constitute manor/building construction authority."
   ],
   "nextAction": {
-    "actionId": "QUALIFY_REMAINING_WORLD_STRUCTURE_INVENTORY_FOR_HELD_PROPOSALS",
-    "actionClass": "CONSTRUCTION",
-    "binding": "Continue active Gen2510 from54ba741179ca9f40f15fcde0361cd825a34c8d34. Estate core and exact8m foot capsules are implemented and independently checked; garden/outbuilding/expansion retain planning holds, view/buffer do not sterilize ground, current-material access hazards remain independent. Full57825-cell data integrity and repeatability passed;27585 proposals all planting-held for unresolved OTHER_WORLD_STRUCTURE_COVERAGE. Qualify remaining intentional-world-structure inventory against existing world authority and explicitly bound coverage before promoting any proposal. Do not recreate16chunk membership as population limit, infer missing identities mean safety, reopen foot access, alter ecological equations or create geometry. All execution dependencies are bundled in referenced artifact; local exact-head Node execution proven. Preserve compatible branch advances and revalidate2510 sole admitted module before writes.",
-    "expectedResult": "Exact bounded inventory evidence and candidate-specific planting disposition, or precise residual coverage hold, with complete repeatable world accounting. Update this same resume and issue5086. No replacement geometry, product merge, deployment or publication."
+    "actionId": "ESTABLISH_BOUNDED_CURRENT_CONSTRUCTED_WORLD_INVENTORY_COMPLETENESS_RECEIPT",
+    "actionClass": "AUTHORITY_COMPLETENESS",
+    "binding": "Preserve Gen2510 exact candidate 54ba741179ca9f40f15fcde0361cd825a34c8d34 and all executed placement evidence. The read-only inventory found the accepted estate reservation as the only discovered intentional physical structure/reservation with proven world-space containment. No additional accepted building, road, driveway, vehicle corridor or constructed footprint was discovered. Environmental/geographic features, legacy Ground Cell descriptors, and whole-estate interface/scientific object projections are not physical structure exclusions. Coverage remains held only because no canonical current constructed-world inventory completeness declaration establishes that the discovered set is exhaustive. Obtain or create a bounded inventory-completeness receipt from existing world authority; do not repeat structure search, reconstruct the retired 16-chunk lattice, alter placement coordinates/ecological equations, introduce roads, or infer absence means safety.",
+    "expectedResult": "Canonical bounded current constructed-world inventory completeness receipt. If it confirms the estate reservation is the complete intentional physical structure/reservation set for the Gen2510 world domain, promote only proposals already proven clear of qualified estate exclusions/planning holds to placement-data eligibility. Otherwise identify the exact additional authoritative footprint and test containment. No vegetation geometry, product merge, deployment or publication."
   },
   "requiredVerifier": {
     "verifierId": "PLACEMENT_DATA_REPEATABILITY_AND_BOUNDARY_REVIEW",

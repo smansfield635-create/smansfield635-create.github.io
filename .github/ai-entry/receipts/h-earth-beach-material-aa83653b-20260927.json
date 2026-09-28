@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-beach-material-aa83653b-20260927",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5130,
+  "requestBranch": "ai-dispatch-request-h-earth-beach-material-aa83653b",
+  "requestCommit": "09c193b1fd7635cbf8e3dff9395e911f7dea6f2f",
+  "requestCommitParent": "250a1f586c5f15bf46873b9b3497eea35d262eb5",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "250a1f586c5f15bf46873b9b3497eea35d262eb5",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "aa83653b4c7bde33f669b973a2a5a5974a4ac924",
+    "route_query": "",
+    "route_path": "/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/"
+  },
+  "bridgeRunId": "36374438798",
+  "dispatchedRunId": 36374450961,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36374450961",
+  "dispatchedRunHeadSha": "250a1f586c5f15bf46873b9b3497eea35d262eb5",
+  "dispatchedAt": "2026-09-28T03:37:33.456Z",
+  "resolvedAt": "2026-09-28T03:37:37.990Z"
+}

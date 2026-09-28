@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-28T16:35:52Z",
+  "generatedAt": "2026-09-28T17:31:45Z",
   "window": {
-    "start": "2026-06-30T16:35:52Z",
-    "end": "2026-09-28T16:35:52Z"
+    "start": "2026-06-30T17:31:45Z",
+    "end": "2026-09-28T17:31:45Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5044,
-    "visits": 1257,
+    "pageLoads": 5072,
+    "visits": 1279,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5044,
-        "visits": 1257
+        "pageLoads": 5072,
+        "visits": 1279
       }
     },
     "byPath": {
@@ -58,19 +58,23 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/": {
-        "pageLoads": 140,
-        "visits": 10
-      },
       "/coherence-diagnostic/": {
         "pageLoads": 38,
         "visits": 0
+      },
+      "/showroom/": {
+        "pageLoads": 140,
+        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/reality/battery-heldout-study/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/frontier/energy/battery-coherence-study/": {
         "pageLoads": 20,
         "visits": 0
       },
@@ -90,10 +94,6 @@
         "pageLoads": 89,
         "visits": 11
       },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/archcoin/": {
         "pageLoads": 42,
         "visits": 2
@@ -110,17 +110,17 @@
         "pageLoads": 222,
         "visits": 20
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
+      },
       "/products/education/": {
-        "pageLoads": 250,
-        "visits": 67
+        "pageLoads": 255,
+        "visits": 64
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -181,10 +185,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -318,24 +318,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/analytics-owner-device/": {
+        "pageLoads": 30,
+        "visits": 30
+      },
       "/analytics/": {
         "pageLoads": 62,
         "visits": 0
       },
       "/meet-sean-mansfield/": {
         "pageLoads": 5,
-        "visits": 0
-      },
-      "/analytics-owner-device/": {
-        "pageLoads": 5,
-        "visits": 5
-      },
-      "/analytics-owner-device/heartbeat/a9-2/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
-      "/analytics-owner-device/heartbeat/a9-1/": {
-        "pageLoads": 1,
         "visits": 0
       },
       "/governance-bridge/": {
@@ -361,11 +353,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 465,
-        "visits": 465
+        "pageLoads": 487,
+        "visits": 487
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3787,
+        "pageLoads": 3793,
         "visits": 0
       },
       "www.google.com": {

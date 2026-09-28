@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-28T16:35:52Z",
+  "generatedAt": "2026-09-28T17:31:45Z",
   "window30d": {
-    "start": "2026-08-29T16:35:52Z",
-    "end": "2026-09-28T16:35:52Z"
+    "start": "2026-08-29T17:31:45Z",
+    "end": "2026-09-28T17:31:45Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 691
+      "pageLoads": 759
     },
     {
       "date": "2026-09-22",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 19
+      "pageLoads": 21
     }
   ],
   "summary": {
-    "pageLoads": 7017,
-    "botPageLoads": 2512,
-    "nonBotPageLoads": 4505
+    "pageLoads": 6763,
+    "botPageLoads": 2534,
+    "nonBotPageLoads": 4229
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3256,
-      "visits": 3256
+      "pageLoads": 3322,
+      "visits": 3322
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3080,
+      "pageLoads": 3085,
       "visits": 0
     },
     {
@@ -164,26 +164,26 @@
       "visits": 3
     },
     {
-      "host": "l.instagram.com",
+      "host": "www.facebook.com",
       "pageLoads": 2,
       "visits": 2
     },
     {
-      "host": "www.facebook.com",
-      "pageLoads": 2,
-      "visits": 2
+      "host": "search.google.com",
+      "pageLoads": 1,
+      "visits": 1
     }
   ],
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 2035,
-      "visits": 1584
+      "pageLoads": 2023,
+      "visits": 1572
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 831,
-      "visits": 831
+      "pageLoads": 890,
+      "visits": 890
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 698,
-      "visits": 563
+      "pageLoads": 696,
+      "visits": 561
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -202,13 +202,13 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 302,
-      "visits": 127
+      "pageLoads": 307,
+      "visits": 124
     },
     {
       "path": "/analytics/",
-      "pageLoads": 203,
-      "visits": 92
+      "pageLoads": 204,
+      "visits": 93
     },
     {
       "path": "/evidence/agentic-frontier/",

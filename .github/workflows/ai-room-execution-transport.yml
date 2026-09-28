@@ -36,6 +36,7 @@ jobs:
           sparse-checkout: |
             tools/ai-room-transport
             .github/ai-toolset-transport
+            .github/live-qualification
           sparse-checkout-cone-mode: true
           persist-credentials: false
 

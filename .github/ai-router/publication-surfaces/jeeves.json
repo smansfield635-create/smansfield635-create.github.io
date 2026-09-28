@@ -11,7 +11,8 @@
         "data-jeeves-app",
         "Talk to the House",
         "Tell me what brought you to the estate.",
-        "DIAMOND_GATE_BRIDGE_JEEVES_DIRECT_CHAMBER_RUNTIME_TNT_v3"
+        "DIAMOND_GATE_BRIDGE_JEEVES_CHARACTER_COMPOSITION_RUNTIME_TNT_v4_1",
+        "DIAMOND_GATE_BRIDGE_JEEVES_CHARACTER_PRESENCE_VOICE_TNT_v3_1"
       ],
       "excludes": [
         "data-jeeves-threshold",

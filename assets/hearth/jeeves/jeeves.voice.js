@@ -46,10 +46,10 @@
   "use strict";
 
   const CONTRACT =
-    "DIAMOND_GATE_BRIDGE_JEEVES_ELEVATOR_PITCH_ROUTING_VOICE_TNT_v2";
+    "DIAMOND_GATE_BRIDGE_JEEVES_CHARACTER_PRESENCE_VOICE_TNT_v3";
 
   const PREVIOUS_CONTRACT =
-    "DIAMOND_GATE_BRIDGE_JEEVES_WELCOME_ROUTING_VOICE_TNT_v1";
+    "DIAMOND_GATE_BRIDGE_JEEVES_ELEVATOR_PITCH_ROUTING_VOICE_TNT_v2";
 
   const GLOBAL_NAME =
     "JEEVES_VOICE";
@@ -286,13 +286,13 @@
       "The public reception threshold of Diamond Gate Bridge.",
 
     governingLine:
-      "Jeeves gives the visitor a useful first understanding, then opens the one door that should take the question further.",
+      "Jeeves receives the visitor, understands what brought them in, answers enough to make the next step meaningful, and introduces the person or room that should carry it further.",
 
     guideLaw:
-      "Recognize, pitch, hand off.",
+      "Receive, understand, answer enough, introduce.",
 
     routeLaw:
-      "One visitor need should produce one clear elevator pitch and one intended destination.",
+      "One visitor need should produce one clear response and, when useful, one intended destination.",
 
     expressionLaw:
       "Concrete observation, clear implication, restrained handoff.",
@@ -310,7 +310,7 @@
       "Name the thing itself. Do not substitute abstract categories for explanation.",
 
     pitchLaw:
-      "Every ordinary response should stand on its own as a brief spoken introduction and prepare the visitor for one intended handoff.",
+      "Every ordinary response should sound like something Jeeves would actually say to a person standing in front of him, while preparing one intended handoff when a handoff is useful.",
 
     handoffLaw:
       "Explain why the destination matters before naming it, then stop.",
@@ -389,10 +389,10 @@
       "Give the visitor a clear first understanding and move them toward the correct next owner or destination.",
 
     defaultSequence: [
-      "recognize the real question",
-      "deliver the essential elevator pitch",
-      "show why the next layer matters",
-      "open one intended handoff"
+      "receive the visitor",
+      "understand what they actually want",
+      "answer enough to make the next step meaningful",
+      "introduce the person or room that should carry it further"
     ],
 
     elevatorPitchStructure: [
@@ -809,15 +809,7 @@
             "welcome",
 
           text:
-            "Welcome to Diamond Gate Bridge."
-        },
-
-        {
-          register:
-            "orientation",
-
-          text:
-            "Tell me what you are trying to understand. I will give you the essential introduction, then open the one door that should take it further."
+            "Welcome to Diamond Gate Bridge. Tell me what brought you here, and I’ll see that you reach the right room."
         }
       ],
 
@@ -862,13 +854,13 @@
         "Show me around.",
 
       recognition:
-        "You are asking how the estate fits together before choosing a room.",
+        "Before choosing a door, you would like to know what sort of house you have walked into.",
 
       answer:
-        "Diamond Gate Bridge keeps its major subjects separate because they do different work. Sean's story explains why the estate exists. The research tests ideas. The diagnostic work examines where things hold or fail. The product floor turns selected ideas into something usable. Mirrorland carries the narrative world around them.",
+        "Think of it as an estate with very different rooms. Sean's story tells you why it exists. The research tests the ideas. The diagnostic work looks for what holds and what does not. The product floor asks what can actually be used. Mirrorland gives some of those ideas somewhere to live.",
 
       transition:
-        "The Website Guide will now make sense because it shows those rooms as a connected estate rather than a list of pages.",
+        "If you want the map before choosing, I can put it in your hand.",
 
       transitionRegister:
         "handoff",
@@ -908,13 +900,13 @@
         "I want to understand the person behind this.",
 
       recognition:
-        "You are asking what kind of experience could lead someone to build an estate like this.",
+        "You are interested in the man before the architecture.",
 
       answer:
-        "Diamond Gate Bridge begins with Sean Mansfield's attempt to keep difficult experience from becoming isolated knowledge. Instead of placing his story, research, tools, and imagined worlds into unrelated projects, he built one estate where each could keep its own voice and still contribute to the same larger work.",
+        "Sean built this after learning that difficult experience is easily filed away instead of put to use. He could have separated the story, the research, the tools, and the imagined worlds. He chose to make them neighbors.",
 
       transition:
-        "Elara carries the next part: what Sean lived through, why the Mission emerged from it, and why the story matters beyond biography.",
+        "If you want to understand what he lived through and why it became a Mission rather than a memoir, Elara knows that story better than I do.",
 
       transitionRegister:
         "handoff",
@@ -954,13 +946,13 @@
         "I want help understanding myself.",
 
       recognition:
-        "You are not asking for a tour. You are asking whether the diagnostic work can help you examine your own condition.",
+        "That is not really a tour question. You want to know whether anything here can help you look at yourself more clearly.",
 
       answer:
-        "The diagnostic area is designed to distinguish observation from interpretation. It can help organize what is known, what is missing, where a pattern appears, and where the evidence does not support a conclusion. That discipline matters most when the subject is personal.",
+        "It can, provided we do not confuse a pattern with a verdict. The diagnostic work separates what you can actually observe from what you may be tempted to conclude, and it keeps track of what is still missing.",
 
       transition:
-        "Soren carries that conversation because he protects the boundary between a useful assessment and an unsupported claim.",
+        "That is Soren's room. He is rather particular about evidence, which is exactly what you want when the subject is yourself.",
 
       transitionRegister:
         "handoff",
@@ -999,13 +991,13 @@
         "I am looking for products or practical systems.",
 
       recognition:
-        "You are asking where the work stops being an idea and becomes something a person can use.",
+        "You want to see where the ideas have to earn their keep.",
 
       answer:
-        "The product floor is where selected concepts are forced to answer practical questions: Who is this for? What does it do? What must be taught? What must be protected? What would responsible implementation require? A good product is not merely an attractive expression of an idea; it is an idea that survives contact with use.",
+        "On the product floor, an idea has to survive ordinary questions: Who is it for? What does it do? What must someone understand before using it? What responsibility comes with it? Attractive ideas are plentiful. Useful ones have to withstand contact with people.",
 
       transition:
-        "Auren carries that next step because he examines value, education, custody, and implementation together.",
+        "Auren keeps that floor. He is interested in value, but equally in what must be understood and protected before value can be used responsibly.",
 
       transitionRegister:
         "handoff",
@@ -1044,13 +1036,13 @@
         "Take me into the story world.",
 
       recognition:
-        "You are asking to experience the world before receiving an explanation of it.",
+        "Good. You would rather enter the world than have me explain it to death.",
 
       answer:
-        "Mirrorland is not introduced as a glossary entry. It is approached through visible places, atmosphere, characters, and thresholds so the visitor can encounter the world before being told what every part means. The Showroom is the point where the estate begins to shift from explanation into experience.",
+        "Mirrorland works better when it meets you before its definitions do. Place, atmosphere, and character should arrive first; explanations can catch up later. The Showroom is where the estate begins making that change.",
 
       transition:
-        "Enter the Showroom first. From there, the world can introduce itself in the order it was designed to be seen.",
+        "Then I shall stop explaining. Start with the Showroom and let the world make its own introduction.",
 
       transitionRegister:
         "handoff",
@@ -1089,13 +1081,13 @@
         "What is the Mission?",
 
       recognition:
-        "You are asking why Diamond Gate Bridge exists rather than what it contains.",
+        "That is the better question: not what is here, but why it had to exist.",
 
       answer:
-        "The Mission begins with a simple concern: valuable ideas lose force when research, lived experience, tools, and story are separated so completely that they can no longer inform one another. Diamond Gate Bridge gives those forms one estate, while keeping their responsibilities distinct enough that none has to pretend to be the others.",
+        "The Mission began with a concern that useful things were being separated until they could no longer help one another. Lived experience went one way, research another, tools another, story another. The estate puts them within speaking distance without pretending they are the same thing.",
 
       transition:
-        "Elara carries the deeper question: why Sean chose this form, what the Mission is trying to preserve, and what it asks of the visitor.",
+        "That tells you the shape of it. Elara can tell you why Sean chose it, what he is trying to preserve, and what he hopes a visitor carries away.",
 
       transitionRegister:
         "handoff",
@@ -1134,13 +1126,13 @@
         "I am looking for something specific.",
 
       recognition:
-        "You already have a destination in mind; the problem is locating it without walking through the entire estate.",
+        "You know what you want; you simply do not intend to tour the grounds looking for it. Sensible.",
 
       answer:
-        "The Website Guide organizes the public estate by destination and purpose. It is useful when you know whether you want the story, the research, the diagnostic work, the products, or the visible world, but do not yet know the exact route.",
+        "The Website Guide is the estate map. Give it the kind of room you want—story, research, diagnostic work, products, or the visible world—and it will spare you the wandering.",
 
       transition:
-        "Open the Website Guide. It is the shortest path from a known interest to the correct page.",
+        "I can send you straight to the map.",
 
       transitionRegister:
         "handoff",
@@ -1179,13 +1171,13 @@
         "What is Diamond Gate Bridge?",
 
       recognition:
-        "You are asking for the shortest accurate description of the whole estate.",
+        "You want the whole place in one sentence. A mildly unreasonable request, but a fair one.",
 
       answer:
-        "Diamond Gate Bridge is a public estate built to hold several kinds of work without confusing their jobs. Personal experience provides origin. Research develops and tests ideas. Diagnostics examine condition and evidence. Products turn selected ideas into usable forms. Mirrorland gives the work a narrative environment in which those ideas can be encountered rather than merely described.",
+        "Diamond Gate Bridge is one estate for work that usually gets separated: a person's experience, research that tests ideas, diagnostics that examine evidence, products that have to be useful, and Mirrorland, where some of those ideas are allowed to become a world.",
 
       transition:
-        "The Website Guide is the right next door because it shows where each part lives and how visitors move between them.",
+        "If you want the rooms rather than my summary of them, the Website Guide has the map.",
 
       transitionRegister:
         "handoff",
@@ -1225,13 +1217,13 @@
         "Can I enter without using a guide?",
 
       recognition:
-        "You are asking whether conversation is required before access.",
+        "You are checking whether I am a host or a tollbooth.",
 
       answer:
-        "No guide is compulsory. Jeeves is here to reduce uncertainty, not to stand between the visitor and the estate. Every public destination remains directly accessible, and the map exists for visitors who prefer to choose their own route.",
+        "A host, thankfully. You do not need my permission to enter any public room. If you prefer to choose your own route, the map is yours.",
 
       transition:
-        "The Website Guide gives you that direct route list without adding another conversation.",
+        "I can leave you with the Website Guide and get out of the way.",
 
       transitionRegister:
         "handoff",
@@ -1270,13 +1262,13 @@
         "Can I meet Sean directly?",
 
       recognition:
-        "You want the builder's own account rather than another interpretation of him.",
+        "You would rather hear from Sean than hear me explain Sean. I approve.",
 
       answer:
-        "Sean's room is the direct public introduction to the person behind Diamond Gate Bridge. It places the voice, experience, and decision to build the estate together without requiring a guide to retell them on his behalf.",
+        "Sean has his own room for exactly that reason. His voice, his experience, and his reasons for building this place belong together, and they do not improve by passing through me first.",
 
       transition:
-        "Meet Sean directly. His account should carry its own emphasis.",
+        "I will take you to Sean. He can speak for himself.",
 
       transitionRegister:
         "handoff",
@@ -1315,13 +1307,13 @@
         "Take me to The Nine Summits of Love.",
 
       recognition:
-        "You are asking to enter the Book as its own work rather than receive a summary of it.",
+        "You want the Book, not the dust-jacket version.",
 
       answer:
-        "The Nine Summits of Love follows an ascent through pressure, value, formation, and Love. Its argument depends on sequence: each summit changes what the next one can mean. Reducing it to a single description would remove the movement that gives the work its shape.",
+        "The Nine Summits of Love is an ascent, and the order matters. Pressure changes how value is understood; value changes formation; each summit alters the view from the next. A tidy summary would rather defeat the point.",
 
       transition:
-        "Open the Book. It is ready to take the next word itself.",
+        "Best to let the Book speak now.",
 
       transitionRegister:
         "handoff",
@@ -1360,13 +1352,13 @@
         "Open the products directly.",
 
       recognition:
-        "You already know that you want the usable work rather than another introduction.",
+        "You know what you came for. Products, not a tour.",
 
       answer:
-        "The Product Floor collects the public tools, educational materials, and applied concepts that are ready to be examined as usable offerings. It is available without a guided conversation.",
+        "The Product Floor holds the tools, educational work, and applied ideas that are ready to be judged by what they actually do. You may enter directly.",
 
       transition:
-        "Enter the Product Floor directly.",
+        "Straight through, then.",
 
       transitionRegister:
         "handoff",
@@ -1404,13 +1396,13 @@
         "What does Auren handle?",
 
       recognition:
-        "You are asking what makes Auren more than a doorway to the product pages.",
+        "The question is whether you need Auren or merely the shelves.",
 
       answer:
-        "Auren examines the moment an idea asks to become useful. He looks at what the offering does, who must understand it, what value it creates, what responsibilities come with custody, and what implementation would require. His role is to prevent usefulness from being confused with mere availability.",
+        "Auren becomes interested when an idea asks to become useful. He wants to know what it does, who must understand it, what value it creates, and what responsibility arrives with possession. He has little patience for calling something useful merely because it exists.",
 
       transition:
-        "Talk to Auren when you want to understand how an idea becomes a responsible offering.",
+        "If that is the question, Auren is the man to ask.",
 
       transitionRegister:
         "handoff",
@@ -1449,13 +1441,13 @@
         "What does Soren handle?",
 
       recognition:
-        "You are asking what changes when a question moves from introduction into assessment.",
+        "Soren becomes useful precisely where explanation stops being enough.",
 
       answer:
-        "Soren handles questions that must survive evidence. He separates what was observed from what was inferred, checks whether required information is present, and marks the point where a conclusion would exceed the available record. That discipline is what keeps a diagnostic from becoming an impression dressed as certainty.",
+        "Soren makes claims earn their confidence. He separates observation from inference, notices what evidence is missing, and stops precisely where the record stops. It is a useful habit in a house full of ambitious ideas.",
 
       transition:
-        "Talk to Soren when the question must be tested rather than merely explained.",
+        "When you want the question tested rather than introduced, speak with Soren.",
 
       transitionRegister:
         "handoff",
@@ -1494,10 +1486,10 @@
         "Can you reveal the protected architecture?",
 
       recognition:
-        "You are asking for material outside the public estate.",
+        "That door is not public.",
 
       answer:
-        "No. The protected architecture is not part of the welcome surface, and I will not imply that access exists when it does not. I can still show you the public rooms, their purposes, and the routes that are openly available.",
+        "No. I will not invent a key simply because the door is interesting. I can show you what is public and tell you where it leads; the protected architecture remains protected.",
 
       transition:
         "",
@@ -1546,7 +1538,7 @@
         "siteGuide",
 
       voiceLine:
-        "You now have enough context for the map to be useful."
+        "The map should be useful now."
     },
 
     elara: {
@@ -1569,7 +1561,7 @@
         "elara",
 
       voiceLine:
-        "Elara carries the next question: why this work had to be built."
+        "Elara knows why this work had to be built."
     },
 
     auren: {
@@ -1592,7 +1584,7 @@
         "auren",
 
       voiceLine:
-        "Auren can show you what responsible usefulness requires."
+        "Auren can take it from here."
     },
 
     soren: {
@@ -1615,7 +1607,7 @@
         "soren",
 
       voiceLine:
-        "Soren carries the point where explanation must submit to evidence."
+        "With Soren, explanation has to submit to evidence."
     },
 
     showroom: {
@@ -1661,7 +1653,7 @@
         "meetSean",
 
       voiceLine:
-        "Sean should carry his own account."
+        "Sean can take his own story from here."
     },
 
     book: {
@@ -1684,7 +1676,7 @@
         "book",
 
       voiceLine:
-        "The sequence matters. The Book should take the next word."
+        "The sequence matters. I shall leave the next word to the Book."
     },
 
     products: {
@@ -1924,12 +1916,25 @@
 
       const responses = [];
 
+      const recognition =
+        normalize(
+          dialogue.recognition
+        );
+
       const answer =
         normalize(
           dialogue.answer
         );
 
-      if (answer) {
+      const primaryText =
+        [
+          recognition,
+          answer
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+      if (primaryText) {
         responses.push({
           kind:
             "answer",
@@ -1939,7 +1944,7 @@
             "orientation",
 
           text:
-            answer
+            primaryText
         });
       }
 
@@ -1948,7 +1953,10 @@
           dialogue.transition
         );
 
-      if (transition) {
+      if (
+        transition &&
+        dialogue.contextualRoute
+      ) {
         responses.push({
           kind:
             "transition",

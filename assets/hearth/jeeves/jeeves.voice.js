@@ -862,10 +862,10 @@
         "Show me around.",
 
       recognition:
-        "You would like the lay of the land before choosing a door.",
+        "Before choosing a door, you would like to know what sort of house you have walked into.",
 
       answer:
-        "There are several houses within the house, so to speak. Sean's story tells you why it exists; the research asks what holds up; the diagnostic work asks where something does not; the product floor asks what can actually be used; and Mirrorland lets the ideas live somewhere other than a page.",
+        "Think of it as an estate with very different rooms. Sean's story tells you why it exists. The research tests the ideas. The diagnostic work looks for what holds and what does not. The product floor asks what can actually be used. Mirrorland gives some of those ideas somewhere to live.",
 
       transition:
         "If you want the map before choosing, I can put it in your hand.",
@@ -1089,7 +1089,7 @@
         "What is the Mission?",
 
       recognition:
-        "You are asking the better question: not what is here, but why it had to exist.",
+        "That is the better question: not what is here, but why it had to exist.",
 
       answer:
         "The Mission began with a concern that useful things were being separated until they could no longer help one another. Lived experience went one way, research another, tools another, story another. The estate puts them within speaking distance without pretending they are the same thing.",
@@ -1404,7 +1404,7 @@
         "What does Auren handle?",
 
       recognition:
-        "You are asking why you would speak with Auren instead of simply browsing the shelves.",
+        "The question is whether you need Auren or merely the shelves.",
 
       answer:
         "Auren becomes interested when an idea asks to become useful. He wants to know what it does, who must understand it, what value it creates, and what responsibility arrives with possession. He has little patience for calling something useful merely because it exists.",
@@ -1449,7 +1449,7 @@
         "What does Soren handle?",
 
       recognition:
-        "You are asking what Soren does once explanation is no longer enough.",
+        "Soren becomes useful precisely where explanation stops being enough.",
 
       answer:
         "Soren makes claims earn their confidence. He separates observation from inference, notices what evidence is missing, and stops precisely where the record stops. It is a useful habit in a house full of ambitious ideas.",
@@ -1494,7 +1494,7 @@
         "Can you reveal the protected architecture?",
 
       recognition:
-        "You are asking for a door that is not public.",
+        "That door is not public.",
 
       answer:
         "No. I will not invent a key simply because the door is interesting. I can show you what is public and tell you where it leads; the protected architecture remains protected.",
@@ -1546,7 +1546,7 @@
         "siteGuide",
 
       voiceLine:
-        "You now have enough context for the map to be useful."
+        "The map should be useful now."
     },
 
     elara: {
@@ -1569,7 +1569,7 @@
         "elara",
 
       voiceLine:
-        "Elara carries the next question: why this work had to be built."
+        "Elara knows why this work had to be built."
     },
 
     auren: {
@@ -1592,7 +1592,7 @@
         "auren",
 
       voiceLine:
-        "Auren can show you what responsible usefulness requires."
+        "Auren can take it from here."
     },
 
     soren: {
@@ -1615,7 +1615,7 @@
         "soren",
 
       voiceLine:
-        "Soren carries the point where explanation must submit to evidence."
+        "With Soren, explanation has to submit to evidence."
     },
 
     showroom: {
@@ -1661,7 +1661,7 @@
         "meetSean",
 
       voiceLine:
-        "Sean should carry his own account."
+        "Sean can take his own story from here."
     },
 
     book: {
@@ -1684,7 +1684,7 @@
         "book",
 
       voiceLine:
-        "The sequence matters. The Book should take the next word."
+        "The sequence matters. I shall leave the next word to the Book."
     },
 
     products: {

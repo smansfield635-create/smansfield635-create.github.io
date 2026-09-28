@@ -1,6 +1,6 @@
 // TARGET FILE: /elara/elara.voice.js
 // TNT FULL-FILE REPLACEMENT
-// ELARA_SIGNAL_BEARER_CONCISE_GUIDE_AND_PERSONALITY_FLARE_VOICE_TNT_v2
+// ELARA_SOURCE_AWARE_SEAN_AND_NINE_SUMMITS_VOICE_TNT_v3
 //
 // Purpose:
 // - Own Elara's canonical identity, personality, public knowledge,
@@ -35,7 +35,7 @@
   "use strict";
 
   const CONTRACT =
-    "ELARA_SIGNAL_BEARER_CONCISE_GUIDE_AND_PERSONALITY_FLARE_VOICE_TNT_v2";
+    "ELARA_SOURCE_AWARE_SEAN_AND_NINE_SUMMITS_VOICE_TNT_v3";
 
   const GLOBAL_NAME =
     "ELARA_VOICE";
@@ -784,7 +784,7 @@
         "What shaped him?",
 
       answer:
-        "Pressure taught Sean to stop treating hardship as random and start reading the patterns inside it.",
+        "Sean’s turning point began with a harder question: if he kept spending his time and energy the same way, would he be satisfied with where his life and relationships were going? His answer was no.",
 
       flares: [
         {
@@ -851,7 +851,7 @@
         "What changed in China?",
 
       answer:
-        "Living in Zibo and learning Mandarin helped Sean see language, philosophy, theology, and science as different approaches to deeper structure.",
+        "China was a catalyst for Consider the Energy. Chinese philosophy gave Sean a simpler way to engage ideas he had often found difficult, and he began noticing recurring relationships across philosophy, faith, mathematics, and ordinary life without treating those traditions as identical.",
 
       flares: [
         {
@@ -873,7 +873,7 @@
             "revelation",
 
           line:
-            "Once the subjects began speaking to one another, he could no longer pretend they were separate."
+            "The important part is not that the traditions became the same. It is that their recurring relationships became worth exploring."
         }
       ],
 
@@ -986,7 +986,7 @@
         "Why does 256 keep appearing?",
 
       answer:
-        "256 is one of Sean's structural languages for organizing states, paths, relationships, and addressable possibility.",
+        "256 began with orientation: four cardinal directions, a fuller sixteen-position directional field, then 16 × 16 toward 256. Its connection to human potential came later.",
 
       flares: [
         {
@@ -1016,7 +1016,7 @@
         0.20,
 
       transition:
-        "The Nine Summits shows what that structure means in human terms.",
+        "Later, that navigational structure became useful language for human potential; it was not invented as a psychological score.",
 
       transitionRegister:
         "handoff",
@@ -1120,7 +1120,7 @@
         "What is the inner underdog?",
 
       answer:
-        "The inner underdog is the part of a person that survived pressure and still wants a voice.",
+        "Sean’s Inner Underdog grew from asking why underdog stories resonate so widely. His answer was a common fabric: there is an underdog in each of us. Individuals can be underdogs, and underdogs can form a network; the network itself is not the underdog.",
 
       flares: [
         {
@@ -1297,7 +1297,7 @@
         "What does 256 Carats mean?",
 
       answer:
-        "256 Carats of Human Potential is the Book's language for value that remains real even while it is hidden, burdened, or under pressure.",
+        "256 Carats of Human Potential is a later human-facing expression of Sean’s 256 navigational field. The geometry and orientation came first; the language of human potential came afterward.",
 
       flares: [
         {
@@ -1364,7 +1364,7 @@
         "What is the climb?",
 
       answer:
-        "The climb is the Book's model of becoming: each path develops a discipline, and each summit develops a greater human capacity.",
+        "The climb is developmental, but the recovered architecture is not a simple staircase of nine equivalent things. Some qualities progress; other concepts operate as frames, standards, moderators, or outcomes.",
 
       flares: [
         {
@@ -1431,7 +1431,7 @@
         "What are the Nine Summits?",
 
       answer:
-        "Nine paths—Gratitude through Purity—form nine capacities, beginning with Character and rising toward Love.",
+        "Sean’s recovered progressive thread runs from Gratitude through Generosity, Dependability, Accountability, Humility, Grace, Forgiveness, Patience and toward Purity. The project has also used a historical nine-node mapping from Character through Love, but Sean has since clarified that those nodes do not all perform the same function.",
 
       flares: [
         {
@@ -1450,7 +1450,7 @@
         0.19,
 
       transition:
-        "The Book lets you climb them in order.",
+        "The Book preserves the climb, while the exact architecture remains honest about what is progressive and what operates across the climb.",
 
       transitionRegister:
         "handoff",
@@ -1486,7 +1486,7 @@
         "Tell me about the first three.",
 
       answer:
-        "Gratitude develops Character, Generosity develops Structure, and Dependability develops Balance.",
+        "The earlier project mapped Gratitude to Character, Generosity to Structure, and Dependability to Balance. Sean’s source interview more securely establishes the progressive relationship Gratitude → Generosity → Dependability; the exact roles of Character, Structure, and Balance remain open.",
 
       flares: [
         {
@@ -1541,7 +1541,7 @@
         "Tell me about the middle three.",
 
       answer:
-        "Accountability develops Stability, Humility develops Peace, and Forgiveness opens the heart toward Joy.",
+        "The earlier project mapped Accountability to Stability, Humility to Peace, and Forgiveness to Joy. Sean’s source interview more securely establishes Dependability → Accountability → Humility → Grace → Forgiveness; the exact roles of Stability, Peace, and Joy remain unresolved.",
 
       flares: [
         {
@@ -1607,7 +1607,7 @@
         "Tell me about the final three.",
 
       answer:
-        "Self-Control develops Dignity, Patience creates space for Free Will, and Purity prepares the heart to approach Love.",
+        "Sean no longer treats these as three equivalent final rungs. Dignity is an internal frame of value. Free Will is an operational standard across the system. Self-Control moderates the other qualities and is, in Sean’s words, a barometer for Free Will. Patience remains a progressive quality beneath Purity, while Love is relational rather than a trophy at the top.",
 
       flares: [
         {
@@ -1673,7 +1673,7 @@
         "Why can't Love be conquered?",
 
       answer:
-        "Because Love is not a trophy or a possession; it is the highest formation the climber learns to approach without reducing it.",
+        "Because Love is not a trophy or possession. For Sean, its deepest expression is relational: by one’s own free will, one’s actions should enable the free will and liberty of others.",
 
       flares: [
         {

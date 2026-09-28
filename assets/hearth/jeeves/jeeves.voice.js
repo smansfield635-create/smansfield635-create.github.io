@@ -809,15 +809,7 @@
             "welcome",
 
           text:
-            "Welcome to Diamond Gate Bridge."
-        },
-
-        {
-          register:
-            "orientation",
-
-          text:
-            "Tell me what brought you here. I will see that you reach the right room."
+            "Welcome to Diamond Gate Bridge. Tell me what brought you here, and I’ll see that you reach the right room."
         }
       ],
 
@@ -1924,12 +1916,25 @@
 
       const responses = [];
 
+      const recognition =
+        normalize(
+          dialogue.recognition
+        );
+
       const answer =
         normalize(
           dialogue.answer
         );
 
-      if (answer) {
+      const primaryText =
+        [
+          recognition,
+          answer
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+      if (primaryText) {
         responses.push({
           kind:
             "answer",
@@ -1939,7 +1944,7 @@
             "orientation",
 
           text:
-            answer
+            primaryText
         });
       }
 
@@ -1948,7 +1953,10 @@
           dialogue.transition
         );
 
-      if (transition) {
+      if (
+        transition &&
+        dialogue.contextualRoute
+      ) {
         responses.push({
           kind:
             "transition",

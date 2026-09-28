@@ -633,7 +633,6 @@
 
       secondary: [
         "what_256_means",
-        "what_1001_traversal_is",
         "what_inner_underdog_means",
         "where_sean_path_leads"
       ],
@@ -888,7 +887,6 @@
 
       followups: [
         "what_256_means",
-        "what_1001_traversal_is",
         "why_house_exists",
         "where_sean_path_leads"
       ],
@@ -1022,7 +1020,6 @@
         "handoff",
 
       followups: [
-        "what_1001_traversal_is",
         "what_256_carats_means",
         "why_house_exists",
         "what_book_is"

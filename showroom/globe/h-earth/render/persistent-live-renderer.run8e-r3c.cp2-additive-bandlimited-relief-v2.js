@@ -359,24 +359,25 @@ void main(){
     float directionalBreak=mix(faceBandA,faceBandB,0.35+0.45*slopeResponse);
     float fineBreak=mix(0.5,faceBandC,nearDetail);
 
-    palette*=0.62+0.46*broad+0.24*medium+0.14*grain;
-    palette*=mix(0.70,1.30,strata*0.68+crossGrain*0.32);
-    palette*=mix(0.71,1.34,faceBreak);
-    palette*=mix(0.86,1.15,directionalBreak);
-    palette*=mix(0.93,1.08,fineBreak);
-    palette*=mix(1.0,0.72,sharedFaceContact*(0.30+0.24*nearDetail));
-    palette+=vec3(0.026,0.021,0.014)*(faceBandA-faceBandB);
-    palette+=vec3(0.030,0.023,0.014)*(crestSignal-terraceSignal)*(0.30+0.45*slopeResponse);
-    palette=mix(palette,palette*vec3(0.79,0.85,0.88),curvatureResponse*(0.18+0.26*slopeResponse));
-    palette=mix(palette,base,0.27);
-    presentationContact=max(presentationContact,sharedFaceContact*0.24);
-    presentationHighlight=max(presentationHighlight,(1.0-sharedFaceContact)*abs(crestSignal-terraceSignal)*0.16);
+    // Presentation successor: preserve broad material identity while suppressing
+    // painted procedural banding so geometric form and directional light dominate.
+    palette*=0.82+0.20*broad+0.08*medium+0.04*grain;
+    palette*=mix(0.92,1.08,strata*0.68+crossGrain*0.32);
+    palette*=mix(0.90,1.10,faceBreak);
+    palette*=mix(0.95,1.06,directionalBreak);
+    palette*=mix(0.97,1.03,fineBreak);
+    palette*=mix(1.0,0.91,sharedFaceContact*(0.30+0.24*nearDetail));
+    palette+=vec3(0.008,0.007,0.005)*(faceBandA-faceBandB);
+    palette=mix(palette,palette*vec3(0.86,0.90,0.92),curvatureResponse*(0.12+0.18*slopeResponse));
+    palette=mix(palette,base,0.46);
+    presentationContact=max(presentationContact,sharedFaceContact*0.10);
+    presentationHighlight=max(presentationHighlight,(1.0-sharedFaceContact)*abs(crestSignal-terraceSignal)*0.06);
 
     float contourLine=contour(vWorldPosition.y);
-    palette*=mix(1.0,0.56,contourLine*(0.30+0.47*slopeResponse));
+    palette*=mix(1.0,0.90,contourLine*(0.12+0.18*slopeResponse));
     float slopeRake=stableWave(vWorldPosition.x*0.31+vWorldPosition.z*0.22+vWorldPosition.y*0.58);
-    palette*=mix(0.84,1.16,slopeRake*(0.26+0.74*slopeResponse));
-    palette+=vec3(0.020,0.018,0.014)*curvatureResponse*(0.35+0.65*slopeResponse);
+    palette*=mix(0.96,1.04,slopeRake*(0.18+0.42*slopeResponse));
+    palette+=vec3(0.008,0.007,0.005)*curvatureResponse*(0.25+0.45*slopeResponse);
 
     vec2 manorCenter=vec2(80.0,-172.0);
     float manorRadius=distance(world,manorCenter);
@@ -456,12 +457,12 @@ void main(){
     diffuse=mix(
       geometricDiffuse,
       reliefDiffuse,
-      0.95*terrainReliefEnvelope
+      1.0*terrainReliefEnvelope
     );
     diffuse=clamp(
       diffuse,
-      max(0.0,geometricDiffuse-0.28),
-      min(1.0,geometricDiffuse+0.28)
+      max(0.0,geometricDiffuse-0.42),
+      min(1.0,geometricDiffuse+0.42)
     );
   }
 
@@ -492,15 +493,25 @@ void main(){
     :(vRoleCode==2u?0.36:0.07);
 
   float ambient=
-    0.26+
-    0.16*clamp(geometricNormal.y,0.0,1.0)+
-    0.05*materialSignal;
+    0.19+
+    0.11*clamp(geometricNormal.y,0.0,1.0)+
+    0.025*materialSignal;
   float directional=
     diffuse*
     uSunIntensity*
-    (vRoleCode==1u?0.90:(vRoleCode==2u?0.74:0.82));
+    (vRoleCode==1u?1.12:(vRoleCode==2u?0.74:0.82));
   vec3 lit=base*(ambient+directional)*uSunColor;
-  lit+=base*rim*(vRoleCode==1u?0.18:0.10);
+  if(vRoleCode==1u){
+    float facingContrast=smoothstep(0.08,0.86,geometricDiffuse);
+    float commonSlopeResponse=clamp(1.0-geometricNormal.y,0.0,1.0);
+    float commonCurvatureProxy=clamp(abs(dFdx(geometricNormal.y))+abs(dFdy(geometricNormal.y)),0.0,1.0);
+    float valleyOcclusion=clamp(commonCurvatureProxy*(0.20+0.34*commonSlopeResponse),0.0,0.46);
+    float formSeparation=mix(0.76,1.16,facingContrast);
+    lit*=formSeparation;
+    lit*=1.0-valleyOcclusion;
+    lit+=base*max(0.0,geometricNormal.y)*0.035;
+  }
+  lit+=base*rim*(vRoleCode==1u?0.055:0.10);
   lit+=uSunColor*specular*specularLightingGain;
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);

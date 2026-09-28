@@ -239,4 +239,27 @@ export function evaluateHEarthGen311RareSignalRefinementDiagnostic(result){
   const issues=[];if(result?.eligible!==true||result?.contractId!==H_EARTH_GEN311_RARE_SIGNAL_REFINEMENT_CONTRACT_ID)issues.push('GEN311_RARE_SIGNAL_DIAGNOSTIC_INVALID');for(const spacing of [8,4,2,1])if(!result?.levels?.[spacing])issues.push(`GEN311_RARE_SIGNAL_LEVEL_MISSING:${spacing}`);if(result?.classificationThresholdsMutated!==false||result?.terrainMutation!==false||result?.ecologyEquationMutation!==false||result?.geometryCreated!==false)issues.push('GEN311_RARE_SIGNAL_DIAGNOSTIC_BOUNDARY_VIOLATION');return freeze({eligible:issues.length===0,status:issues.length?'GEN311_RARE_SIGNAL_REFINEMENT_FAIL':'GEN311_RARE_SIGNAL_REFINEMENT_PASS',issues:freeze(issues)});
 }
 
+export const H_EARTH_GEN311_HABITAT_ADMISSION_DIAGNOSTIC_CONTRACT_ID='H_EARTH_GEN311_HABITAT_ADMISSION_DIAGNOSTIC_v1';
+function habitatDisposition(surfaceClass){
+  if(surfaceClass==='OPEN_WATER'||surfaceClass==='NEARSHORE_WATER')return'EXCLUDED_WATER';
+  if(surfaceClass==='WET_SAND')return'EXCLUDED_BARE_WET_BEACH';
+  if(surfaceClass==='DRY_SAND')return'HELD_DRY_SAND_COASTAL_HABITAT';
+  if(surfaceClass==='STONE_AND_SPARSE_SOIL')return'HELD_STONE_SPARSE_SOIL_ROOTING';
+  if(surfaceClass==='LOWLAND_SOIL'||surfaceClass==='COASTAL_SOIL')return'ADMITTED_SOIL_HABITAT_CANDIDATE';
+  return'HELD_UNKNOWN_SURFACE';
+}
+export function buildHEarthGen311HabitatAdmissionDiagnostic(){
+  const p=H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE,d=p.worldDomain,step=p.sampleStepWorldUnits,counts={},samples=[];let invalid=0;
+  for(let z=d.zMinimum;z<=d.zMaximum;z+=step)for(let x=d.xMinimum;x<=d.xMaximum;x+=step){
+    const terrain=sampleHEarthRun8BSuccessorTerrainField(x,z),material=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);
+    if(terrain?.valid!==true||evaluateHEarthRun8CSuccessorSurfaceMaterial(material).eligible!==true){invalid++;continue}
+    const disposition=habitatDisposition(material.surfaceClass),a=terrain.regionalArticulation;counts[disposition]=(counts[disposition]??0)+1;
+    samples.push(freeze({x,z,surfaceClass:material.surfaceClass,disposition,vegetationSupport:material.vegetationSupport,soilDepth:material.soilDepth,rockExposure:material.rockExposure,moistureAvailability:clamp01((material.shelterMoisture??0)*.45+(material.drainageRetention??0)*.35+(material.waterSaturation??0)*.2),windExposure:clamp01(material.orographicExposure??0),drainageRetention:material.drainageRetention,ridgeSignal:a.ridgeSignal,passSignal:a.passSignal,valleySignal:a.valleySignal,watershedSignal:a.watershedSignal,foothillSignal:a.foothillSignal,ecologicalZone:zoneFor(a.landformClass),zoneIsDescriptiveOnly:true,watershedPatchAuthority:false,passPatchAuthority:false}));
+  }
+  return freeze({eligible:invalid===0&&samples.length===p.sampleCount,status:invalid===0&&samples.length===p.sampleCount?'GEN311_HABITAT_ADMISSION_DIAGNOSTIC_COMPLETE':'GEN311_HABITAT_ADMISSION_DIAGNOSTIC_FAILED',contractId:H_EARTH_GEN311_HABITAT_ADMISSION_DIAGNOSTIC_CONTRACT_ID,measuredSampleCount:samples.length,invalidSampleCount:invalid,dispositionCounts:freeze(counts),samples:freeze(samples),plantGeometryCreated:false,populationMutation:false,terrainMutation:false,ecologyEquationMutation:false,classificationThresholdMutation:false});
+}
+export function evaluateHEarthGen311HabitatAdmissionDiagnostic(result){
+  const issues=[];if(result?.eligible!==true||result?.contractId!==H_EARTH_GEN311_HABITAT_ADMISSION_DIAGNOSTIC_CONTRACT_ID)issues.push('GEN311_HABITAT_ADMISSION_DIAGNOSTIC_INVALID');if(result?.measuredSampleCount!==H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE.sampleCount||result?.invalidSampleCount!==0)issues.push('GEN311_HABITAT_ADMISSION_SAMPLE_SET_INVALID');if(result?.plantGeometryCreated!==false||result?.populationMutation!==false||result?.terrainMutation!==false||result?.ecologyEquationMutation!==false||result?.classificationThresholdMutation!==false)issues.push('GEN311_HABITAT_ADMISSION_BOUNDARY_VIOLATION');return freeze({eligible:issues.length===0,status:issues.length?'GEN311_HABITAT_ADMISSION_DIAGNOSTIC_FAIL':'GEN311_HABITAT_ADMISSION_DIAGNOSTIC_PASS',issues:freeze(issues)});
+}
+
 export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;

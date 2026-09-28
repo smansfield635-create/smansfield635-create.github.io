@@ -559,8 +559,22 @@
     "wholeEstateExecutionDecisionControlsApplicability": true,
     "requiredBeforeEverySubstantiveRepositoryTask": false,
     "requiredForReadOnlyAndStaticTasks": false,
-    "exemptTaskClasses": ["READ_ONLY_ADMINISTRATIVE", "SOURCE_READBACK", "STATUS_INSPECTION", "STATIC_EDITORIAL_MICRO", "BOUNDED_PAGE_RELEASE", "DETERMINISTIC_REGISTRY_METADATA", "EXACT_IDENTITY_READBACK"],
-    "requiredTaskClasses": ["MATERIAL_GOVERNED_ENGINEERING", "CONTROL_PLANE", "SCIENTIFIC_OR_EMPIRICAL", "AUTHORITY_BOUNDARY_CHANGE", "DISPUTED_INDEPENDENT_QUALIFICATION"],
+    "exemptTaskClasses": [
+      "READ_ONLY_ADMINISTRATIVE",
+      "SOURCE_READBACK",
+      "STATUS_INSPECTION",
+      "STATIC_EDITORIAL_MICRO",
+      "BOUNDED_PAGE_RELEASE",
+      "DETERMINISTIC_REGISTRY_METADATA",
+      "EXACT_IDENTITY_READBACK"
+    ],
+    "requiredTaskClasses": [
+      "MATERIAL_GOVERNED_ENGINEERING",
+      "CONTROL_PLANE",
+      "SCIENTIFIC_OR_EMPIRICAL",
+      "AUTHORITY_BOUNDARY_CHANGE",
+      "DISPUTED_INDEPENDENT_QUALIFICATION"
+    ],
     "actualNativeInvocationRequiredWhenAgentModeRequired": true,
     "nativeToolAvailabilityMayBlockExemptWork": false,
     "routeReceiptIsExecutionProof": false,
@@ -573,5 +587,17 @@
     "startupDiscovery": ".github/ai-router/agent-invocation/contract.v1.json#startupDiscovery",
     "complementaryOfficeDiscovery": ".github/ai-router/agent-invocation/contract.v1.json#complementaryOfficeDiscovery",
     "emptyDeferredRegistryProvesNativeUnavailable": false
+  },
+  "characterRegistry": {
+    "schema": "AI_ENTRY_CHARACTER_REGISTRY_LOCATOR_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "registry": "control-plane/whole-estate/character-registry-v1/registry.v1.json",
+    "resolver": "control-plane/whole-estate/character-registry-v1/resolver.v1.mjs",
+    "profileSchema": "control-plane/whole-estate/character-registry-v1/schema.v1.json",
+    "invocation": "AI Entry -> characterRegistry -> characterId -> resolver -> instantiation result",
+    "readyResult": "CHARACTER_INSTANTIATION_READY",
+    "holdResult": "CHARACTER_PROFILE_INCOMPLETE_HOLD",
+    "authority": "issue:2378",
+    "law": "Repository profile truth only; incomplete characters fail closed rather than generic simulation."
   }
 }

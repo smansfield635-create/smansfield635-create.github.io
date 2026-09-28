@@ -3,7 +3,7 @@
 // DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2_1
 //
 // Purpose:
-// - Consume /assets/hearth/jeeves/jeeves.voice.js through window.JEEVES_VOICE.
+// - Consume the versioned Jeeves voice authority through window.JEEVES_VOICE.
 // - Mount Jeeves's estate-host conversation surface.
 // - Coordinate conversation activation with the estate-threshold introduction.
 // - Deliver every ordinary response as a two-message elevator pitch aimed
@@ -719,12 +719,12 @@
           false,
 
         signal:
-          "Host ready",
+          "Ready",
 
         promptStatus:
           state.options &&
           !state.options.hidden
-            ? "Choose the direction that best matches your visit."
+            ? "What would you like to ask next?"
             : "Jeeves is ready."
       }
     );
@@ -738,7 +738,7 @@
       state,
       {
         stage:
-          "Reception channel",
+          "With Jeeves",
 
         signal:
           "Host ready",
@@ -1982,28 +1982,6 @@
       description
     );
 
-    if (
-      normalize(
-        pathway.voiceLine
-      )
-    ) {
-      const voiceLine =
-        document.createElement(
-          "p"
-        );
-
-      voiceLine.className =
-        "jeeves-pathway-voice";
-
-      voiceLine.textContent =
-        normalize(
-          pathway.voiceLine
-        );
-
-      copy.appendChild(
-        voiceLine
-      );
-    }
 
     const action =
       document.createElement(
@@ -2189,6 +2167,10 @@
         .getFollowupOptions(
           dialogue.id,
           state.modeId
+        )
+        .slice(
+          0,
+          2
         );
 
     renderPromptOptions(
@@ -2688,7 +2670,7 @@
 
     setPromptStatus(
       state,
-      "The opening exchange will finish before choices appear."
+      "Jeeves will be with you in a moment."
     );
 
     const opening =

@@ -1,0 +1,183 @@
+name: Characters Task17R-D Exact Candidate Character Card Qualification
+
+on:
+  push:
+    branches:
+      - instrumentation/characters-task17r-d-character-card-qualification-001
+    paths:
+      - '.github/workflows/characters-task17r-d-character-card-qualification.yml'
+      - 'tools/characters-task17r-d-character-card-evaluator.mjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/characters-task17r-d-character-card-qualification.yml'
+      - 'tools/characters-task17r-d-character-card-evaluator.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CANDIDATE_SHA: 8a31c58902a3395f39a8236bdef1193e4c992788
+  FROZEN_INTERACTION_SHA: d48613af69a244a9e71e7220ab7410e166f9a420
+  CAROUSEL_CONTROL_SHA: feab9eef5beb2e1ce31bf2a0f19215bf2900942b
+  COMPASS_CONTROL_SHA: 0251792801761778b1492b2b97f60b4ebc6dbbb9
+  COMPASS_CONTROL_ARTIFACT_ID: 9695270364
+  TARGET_DIR: target/characters/spatial-field-foundation
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Materialize bounded qualification instrument sparse index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$GITHUB_SHA"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set tools
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          test -f tools/characters-task17r-d-character-card-evaluator.mjs
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize exact candidate bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$TARGET_DIR" frozen qualification-output
+          for f in README.md index.html spatial-field.css spatial-field.js carousel-geometry.css carousel-geometry.js character-cards.css character-cards.js character-cards.v1.json; do
+            curl -fsSL "https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/${CANDIDATE_SHA}/characters/spatial-field-foundation/${f}" -o "${TARGET_DIR}/${f}"
+            test -s "${TARGET_DIR}/${f}"
+          done
+          for f in README.md carousel-geometry.css spatial-field.css spatial-field.js; do
+            curl -fsSL "https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/${FROZEN_INTERACTION_SHA}/characters/spatial-field-foundation/${f}" -o "frozen/${f}"
+            cmp --silent "frozen/${f}" "${TARGET_DIR}/${f}"
+          done
+
+      - name: Materialize registered Mechanical positive controls from exact precedent carriers
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p control-carousel/evidence/agentic-frontier
+          curl -fsSL "https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/${CAROUSEL_CONTROL_SHA}/evidence/agentic-frontier/index.html" -o control-carousel/evidence/agentic-frontier/index.html
+          test -s control-carousel/evidence/agentic-frontier/index.html
+
+          curl -fL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/actions/artifacts/${COMPASS_CONTROL_ARTIFACT_ID}/zip" \
+            -o compass-control.zip
+          unzip -j compass-control.zip compass-02517928.bundle -d .
+          git init control-compass
+          git -C control-compass bundle unbundle ../compass-02517928.bundle >/dev/null
+          git -C control-compass reset --hard "$COMPASS_CONTROL_SHA"
+          test "$(git -C control-compass rev-parse HEAD^{commit})" = "$COMPASS_CONTROL_SHA"
+          test -f control-compass/index.html
+
+      - name: Repair carousel control harness without mutating control bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          p=Path('tools/characters-task17r-d-character-card-evaluator.mjs')
+          before=p.read_text()
+          old="await page.locator('[data-orbit-card]').nth(1).click();await page.waitForTimeout(650);"
+          new="await page.locator('[data-orbit-stage]').focus();await page.keyboard.press('ArrowRight');await page.waitForTimeout(650);"
+          if before.count(old) != 1:
+              raise SystemExit('CAROUSEL_CONTROL_HARNESS_TARGET_NOT_EXACTLY_ONCE')
+          after=before.replace(old,new)
+          p.write_text(after)
+          receipt={
+            'schema':'CHARACTERS_TASK17R_D_CAROUSEL_CONTROL_HARNESS_REPAIR_v1',
+            'result':'APPLIED_EXACTLY_ONCE',
+            'reason':'KNOWN_GOOD_CONTROL_CARD_CLICK_WAS_INTERCEPTED_BY_ORBIT_PRESENTATION_LAYER',
+            'replacement':'FOCUS_ORBIT_STAGE_AND_USE_DOCUMENTED_ARROW_RIGHT_KEYBOARD_CONTROL',
+            'controlBytesMutated':False,
+            'candidateBytesMutated':False,
+            'preRepairSha256':hashlib.sha256(before.encode()).hexdigest(),
+            'executedHarnessSha256':hashlib.sha256(after.encode()).hexdigest()
+          }
+          Path('qualification-output/carousel-control-harness-repair.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+
+      - name: Verify exact candidate static contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check "$TARGET_DIR/spatial-field.js"
+          node --check "$TARGET_DIR/carousel-geometry.js"
+          node --check "$TARGET_DIR/character-cards.js"
+          node --check tools/characters-task17r-d-character-card-evaluator.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const d=JSON.parse(fs.readFileSync(process.env.TARGET_DIR+'/character-cards.v1.json','utf8'));
+          assert.equal(d.schema,'CHARACTERS_TASK17R_D_PRODUCTION_CHARACTER_CARDS_v1');
+          assert.equal(d.sourceAssembly.issue,2378);
+          assert.deepEqual(d.sourceAssembly.sources.map(x=>[x.characterId,x.commentId]),[
+            ['ALARIC_AXION',5470618671],['ELARA_SYLENE',5470628682],['TARIAN_MERROW',5470642869],['SOREN_SEVRIN',5470634971]
+          ]);
+          const bound=d.slots.filter(x=>x.state==='SOURCE_BOUND_CARDINAL_CARD');
+          const holds=d.slots.filter(x=>x.state==='UNASSIGNED_SOURCE_HOLD');
+          assert.equal(bound.length,4); assert.equal(holds.length,4);
+          assert.deepEqual(bound.map(x=>x.characterId),['ALARIC_AXION','ELARA_SYLENE','TARIAN_MERROW','SOREN_SEVRIN']);
+          assert.deepEqual(bound.map(x=>x.anchor),['01','02','03','04']);
+          assert.deepEqual(holds.map(x=>x.anchor),['05','06','07','08']);
+          assert.ok(holds.every(x=>x.characterId===null));
+          assert.ok(bound.every(x=>Array.isArray(x.heldUnknownFields)&&x.heldUnknownFields.length>0));
+          assert.deepEqual(d.hardNegatives,{chronology:false,relationships:false,p12:false,legacyShell:false,dossierIframe:false,worldRuntime:false,freeCamera:false,publication:false});
+          NODE
+
+      - name: Install browser qualification dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute control-first Mechanical and exact-candidate qualification
+        shell: bash
+        run: |
+          set +e
+          node tools/characters-task17r-d-character-card-evaluator.mjs
+          status=$?
+          test -s qualification-output/task17r-d-character-card-qualification.json
+          test -s qualification-output/task17r-d-universal-mechanical.json
+          exit "$status"
+
+      - name: Upload exact qualification receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-task17r-d-character-card-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            qualification-output/task17r-d-character-card-qualification.json
+            qualification-output/task17r-d-universal-mechanical.json
+            qualification-output/carousel-control-harness-repair.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce fail-closed receipt presence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s qualification-output/task17r-d-character-card-qualification.json
+          test -s qualification-output/task17r-d-universal-mechanical.json
+          test -s qualification-output/carousel-control-harness-repair.json
+          jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_CHARACTER_CARD_QUALIFICATION_v1" and .candidate == $candidate' qualification-output/task17r-d-character-card-qualification.json >/dev/null
+          jq -e --arg candidate "$CANDIDATE_SHA" '.schema == "CHARACTERS_TASK17R_D_UNIVERSAL_MECHANICAL_RECEIPT_v1" and .candidate == $candidate and (.result == "PASS_CLOSED" or .result == "FAIL_CLOSED" or .result == "UNEVALUABLE")' qualification-output/task17r-d-universal-mechanical.json >/dev/null
+          jq -e '.schema == "CHARACTERS_TASK17R_D_CAROUSEL_CONTROL_HARNESS_REPAIR_v1" and .result == "APPLIED_EXACTLY_ONCE" and .controlBytesMutated == false and .candidateBytesMutated == false' qualification-output/carousel-control-harness-repair.json >/dev/null

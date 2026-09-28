@@ -17,6 +17,7 @@ const ACTIVE = new Set(['ADMITTED_LOCKED','EXECUTING','BLOCKED_OPEN']);
 const TRUSTED_ASSOCIATIONS = new Set(['OWNER','MEMBER','COLLABORATOR']);
 const CANONICAL_MARKER = 'CANONICAL_OPERATION_INTAKE_REQUEST_V1';
 const SUCCESSOR_MARKERS = new Set(['REMOTE_OPERATION_SUCCESSOR_REQUEST_V1','REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1']);
+const CANONICAL_DISPATCH_WORKFLOW = '.github/workflows/canonical-operation-intake-transport-v1.yml';
 
 export const stable = v => Array.isArray(v) ? v.map(stable) : v && typeof v === 'object' ? Object.fromEntries(Object.keys(v).sort().map(k => [k, stable(v[k])])) : v;
 export const canonical = v => JSON.stringify(stable(v));
@@ -98,6 +99,11 @@ export const EXACT_LEDGER_RESTORATION_RECOVERY = stable({
   changedPath: LEDGER_PATH
 });
 
+export const EXACT_DISPATCH_ISSUANCE_RECOVERIES = [
+  stable({operationId:'H_EARTH_METRIC_COAST_COLOR_CORRIDOR_20260927_001',lockScope:'H_EARTH:VARIANT_B_METRIC_COAST_COLOR:EXACT_3_PATH_SCOPE',scopeHash:'44af6877e082e1770de37c6b99f8c1d5b7c1afe00ddecc3897e4f6578fc16a0d',governingHead:'8a8b16137864c8f5ee97bb990868e21f810face2',requestDigest:'d580b1cc2d1eafdbf3833e05a1626f7dcbe05c09eb940fce80f14f346641880c',procedureLocatorDigest:'156e43032f13618651dd2a03e1b9a24e77df24d5c36fb7d7422b42cca63c906b',lockGeneration:2494,issueNumber:5086,sourceCommentId:5860136542,sourceBodySha256:'c7047606696e09b6b07a8bffd6d223d8b295cabe42f0e49dc04d99af4a1ba330',receiptCommentId:5860140317,workflowRunId:36353148976,issuanceCommitSha:'6c3441b6eb449289886e7ac616ed2d07e4051b8e',issuanceParentSha:'f58f0292c3d2c91a7b54d64d3d5e792acef72df7',issuanceLedgerBlobSha:'19843f64b84b6fad241513d205dea310a6888265'}),
+  stable({operationId:'CONTROL_PLANE_GEN2051_EXACT_LINEAGE_RECOVERY_20260927_001',lockScope:'CONTROL_PLANE:GEN2051_EXACT_LINEAGE_RECOVERY:VERIFIER_AND_TEST_ONLY',scopeHash:'b2d97cd4a6fbe67edc42753f5c6c4dc0ce957afbde2c6e9c498eeb515b58730d',governingHead:'f3ee162c440824f4047eb6abbbc2839da9a5102b',requestDigest:'627b8e3faa31d37d213797c7e6b322e3d15d6091db931a13f1e96b165b62e4c1',procedureLocatorDigest:'2a750b49bda4cc267715ca6d1159ef08bed237d44bdc4b3e16848b6de1315a80',lockGeneration:2495,issueNumber:5126,sourceCommentId:5860594838,sourceBodySha256:'8236a2fbd32042ad5a8ab43244943d45ba729840bacebb2cef2c0f994c657967',receiptCommentId:5860597625,workflowRunId:36356879371,issuanceCommitSha:'a538f9a9c7839f514f250e8176fe2b4a40d8554c',issuanceParentSha:'6c3441b6eb449289886e7ac616ed2d07e4051b8e',issuanceLedgerBlobSha:'f984da6fc59db3838c150bcb4e5e02636e9a5335'})
+];
+
 export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [
   stable({
     commitSha: 'e24fd158777c8df4000d6ae6c36f1ab1073c3222',
@@ -165,6 +171,13 @@ export const EXACT_LOCK_REF_LINEAGE_RECOVERIES = [
   })
 ];
 
+// These two transport-clipped acquisitions are paired with their immediate,
+// authenticated terminal restorations. No other malformed ledger is recoverable.
+export const EXACT_GEN2055_GEN2062_TERMINAL_RESTORATIONS = [
+  stable({generation:2055,corruptCommitSha:'9ccb123ea21327f37e2eb5f762488fe4cdb4a8f8',parentSha:'e0e12acae8272e03c903065e198ce2ce6d94091f',parentBlobSha:'ceb465e26b8fb618b0d4e7ce3aa1b26408f67495',corruptBlobSha:'5f2a9463aa0ce75a075c54bab64aef8489f9e618',restorationCommitSha:'1dab127388ebd61dd0a88998b230e0d75ab52120',restorationBlobSha:'0b5e28a1e0d19cb49bb2137f170005f1ad2af025',operationId:'CHARACTERS_GRATITUDE_CARDINAL_TRIAD_QUALIFICATION_20260909_001',lockScope:'CHARACTERS:GRATITUDE_COAST:CARDINAL_INTEGRATION:ELARA_TARIAN_SOREN_PROOF',scopeHash:'01fc485420baebe37a266814eb4ccf1b5f70f7cfdb50bebda59d6cc98d779354',terminalDisposition:'VOIDED',closureMainHead:'5be14428a659b287b52a3b7c0c8447461e610637',issueNumber:2961,intakeCommentId:5611785121,closureCommentId:5612506280,terminalRowSha256:'87cf95a5c822cb6f1149019d281296c1adce5f96c2aff7b8bc6af428c5c55115'}),
+  stable({generation:2062,corruptCommitSha:'9a1a78a130c3c62bdff6824195a9d342d50ca0ff',parentSha:'6341847209fcd4f3c35fe4d234d8c7600a7ceae3',parentBlobSha:'d548f5ad7f538567907d416a2a89dbb3b6c248d4',corruptBlobSha:'ee9fccbf73aa8245852f902e997e46903a6209d3',restorationCommitSha:'0770e3e91f213c7e378fbcae447f7d04389297c3',restorationBlobSha:'e092e81ddfae68d33bf4e40971e89ec794e3837c',operationId:'CHARACTERS_COMPASS_BENCHMARK_ROUTER_REGISTRATION_20260910_001',lockScope:'REPOSITORY_AI_ROUTER:CHARACTERS:COMPASS_FUNCTIONAL_COORDINATE_BENCHMARK_REGISTRATION:V1',scopeHash:'58c6fc094a89cd3dda577522144b56a7334b26b3b4bb1d89681bc1b456eb30d9',terminalDisposition:'FAIL_CLOSED',closureMainHead:'2de1d7340f9507703c95c2be74be84e5228d7f80',issueNumber:2976,intakeCommentId:5619367531,closureCommentId:5619437652,terminalRowSha256:'1656ec440d1a461ebbf2fb88c1fe72eb84c4e03d2613036daa1bd423e05af13c'})
+];
+
 function validateActiveLock(lock, key) {
   const source = 'active-operation-ledger';
   if (!lock || typeof lock !== 'object' || Array.isArray(lock)) throw err('INVALID_ACTIVE_LOCK', key, source);
@@ -211,6 +224,23 @@ export function captureAuthorityInvocationFromEnvironment({ allowedMarkers = [CA
   const workflowRunId = Number(process.env.GITHUB_RUN_ID), workflowRunAttempt = Number(process.env.GITHUB_RUN_ATTEMPT || 1);
   if (typeof repository !== 'string' || !Number.isInteger(issueNumber) || !Number.isInteger(commentId) || typeof authorLogin !== 'string' || !Number.isInteger(workflowRunId) || workflowRunId < 1 || !Number.isInteger(workflowRunAttempt) || workflowRunAttempt < 1) throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','github-event','environment','MISSING_EVENT_IDENTITY');
   return stable({schema:AUTHORITY_INVOCATION_SCHEMA,eventName:'issue_comment',eventAction:event?.action || 'created',repository,issueNumber,commentId,commentAuthorLogin:authorLogin,commentAuthorAssociation:association,commentBodySha256:sha(body),marker,workflowRunId,workflowRunAttempt,workflowRef:process.env.GITHUB_WORKFLOW_REF || null,workflowSha:process.env.GITHUB_SHA || null});
+}
+
+async function authenticateDispatchRun({repository,token,runId,runAttempt=null,workflowSha=null,sourceLogin=null}) {
+  const run=await req(`${base(repository)}/actions/runs/${pos(runId,'workflowRunId','dispatch-provenance')}`,{headers:H(token)},[200],'AUTHORITY_DISPATCH_RUN');
+  if(run?.id!==runId||run?.event!=='workflow_dispatch'||run?.path!==CANONICAL_DISPATCH_WORKFLOW||run?.repository?.full_name!==repository||!run?.actor?.login||sourceLogin&&run.actor.login!==sourceLogin||runAttempt!==null&&run.run_attempt!==runAttempt||workflowSha&&run.head_sha!==workflowSha)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','workflowRun','dispatch-provenance','DISPATCH_RUN_MISMATCH');
+  return run;
+}
+
+export async function captureDispatchAuthorityInvocation({repository,token,eventPath=process.env.GITHUB_EVENT_PATH,runId=Number(process.env.GITHUB_RUN_ID),runAttempt=Number(process.env.GITHUB_RUN_ATTEMPT||1),workflowSha=process.env.GITHUB_SHA}) {
+  if(!eventPath||!fs.existsSync(eventPath))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','GITHUB_EVENT_PATH','dispatch-provenance');
+  let event;try{event=JSON.parse(fs.readFileSync(eventPath,'utf8'))}catch(error){throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','GITHUB_EVENT_PATH','dispatch-provenance',error.message)}
+  const inputs=event?.inputs||{},issueNumber=Number(inputs.router_callback_issue),body=inputs.request_json;
+  if(event?.repository?.full_name!==repository||inputs.router_callback_repository!==repository||!Number.isInteger(issueNumber)||issueNumber<1||markerFromBody(body)!==CANONICAL_MARKER||typeof event?.sender?.login!=='string'||!event.sender.login)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','inputs','dispatch-provenance','DISPATCH_INPUT_MISMATCH');
+  const comments=await fetchIssueComments(repository,token,issueNumber),sources=comments.filter(c=>c?.body===body&&c?.issue_url?.split('/').pop()===String(issueNumber)&&TRUSTED_ASSOCIATIONS.has(c?.author_association)&&typeof c?.user?.login==='string'&&c.user.login);
+  if(sources.length!==1)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','dispatch-provenance',sources.length?'AMBIGUOUS_SOURCE_COMMENT':'SOURCE_COMMENT_MISSING');
+  const source=sources[0];await authenticateDispatchRun({repository,token,runId,runAttempt,workflowSha,sourceLogin:event?.sender?.login});
+  return stable({schema:AUTHORITY_INVOCATION_SCHEMA,eventName:'workflow_dispatch',eventAction:'dispatched',repository,issueNumber,commentId:source.id,commentAuthorLogin:source.user.login,dispatchActorLogin:event.sender.login,commentAuthorAssociation:source.author_association,commentBodySha256:sha(body),marker:CANONICAL_MARKER,workflowRunId:runId,workflowRunAttempt:runAttempt,workflowRef:process.env.GITHUB_WORKFLOW_REF||null,workflowSha:workflowSha||null});
 }
 
 export function authorityIdentity(lock) {
@@ -283,10 +313,28 @@ async function readGitLedgerBlob({repository,token,blobSha,source='resulting-led
 async function readLegacyAuthoritySnapshot(a){return readGitLedgerBlob({...a,source:'authority-legacy-snapshot'})}
 function identityMatches(a,b){return canonical(authorityIdentity(a))===canonical(authorityIdentity(b))}
 
+export function verifyExactDispatchIssuanceEvidence({repository,lock,recovery,source,receipt,run,commit}) {
+  const r=EXACT_DISPATCH_ISSUANCE_RECOVERIES.find(value=>value.lockGeneration===recovery?.lockGeneration);
+  if(!r||canonical(r)!==canonical(recovery)||canonical(authorityIdentity(r))!==canonical(authorityIdentity(lock)))throw err('AUTHORITY_PROVENANCE_MISSING','dispatchRecovery','dispatch-recovery','EXACT_IDENTITY_MISMATCH');
+  if(source?.id!==r.sourceCommentId||source?.issue_url!==`https://api.github.com/repos/${repository}/issues/${r.issueNumber}`||source?.user?.login!=='smansfield635-create'||source?.author_association!=='OWNER'||markerFromBody(source?.body)!==CANONICAL_MARKER||sha(source.body)!==r.sourceBodySha256)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','dispatch-recovery','SOURCE_MISMATCH');
+  verifyCanonicalSourceComment(lock,source.body);
+  if(receipt?.id!==r.receiptCommentId||receipt?.issue_url!==source.issue_url||receipt?.user?.login!=='github-actions[bot]'||!botReceiptMatches(lock,[receipt],'CANONICAL_INTAKE',r.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','receipt','dispatch-recovery');
+  if(run?.id!==r.workflowRunId||run?.event!=='workflow_dispatch'||run?.path!==CANONICAL_DISPATCH_WORKFLOW||run?.repository?.full_name!==repository||!run?.actor?.login)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','workflowRun','dispatch-recovery','RUN_MISMATCH');
+  if(commit?.sha!==r.issuanceCommitSha||commit?.commit?.message!==`Acquire operation lock ${r.lockGeneration}: ${r.operationId}`||commit?.parents?.length!==1||commit.parents[0]?.sha!==r.issuanceParentSha||commit?.files?.length!==1||commit.files[0]?.filename!==LEDGER_PATH||commit.files[0]?.sha!==r.issuanceLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','commit','dispatch-recovery','ISSUANCE_COMMIT_MISMATCH');
+  return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:'EXACT_WORKFLOW_DISPATCH_ISSUANCE_RECOVERY',authorityIdentity:authorityIdentity(lock),issueNumber:r.issueNumber,commentId:r.sourceCommentId,receiptCommentId:r.receiptCommentId,workflowRunId:r.workflowRunId,issuanceCommitSha:r.issuanceCommitSha});
+}
+
 async function verifyLegacyAuthority({repository,token,lock}){
   for(const blobSha of LEGACY_AUTHORITY_SNAPSHOT_BLOBS){
     const frozen=await readLegacyAuthoritySnapshot({repository,token,blobSha}),anchored=frozen.activeScopes?.[lock.scopeHash];
     if(anchored&&identityMatches(anchored,lock))return stable({result:'LEGACY_AUTHORITY_SNAPSHOT_ANCHORED',snapshotBlobSha:blobSha,authorityIdentity:authorityIdentity(lock)});
+  }
+  const dispatch=EXACT_DISPATCH_ISSUANCE_RECOVERIES.find(value=>canonical(authorityIdentity(value))===canonical(authorityIdentity(lock)));
+  if(dispatch){
+    const source=await fetchComment(repository,token,dispatch.sourceCommentId),receipt=await fetchComment(repository,token,dispatch.receiptCommentId);
+    const run=await authenticateDispatchRun({repository,token,runId:dispatch.workflowRunId});
+    const commit=await req(`${base(repository)}/commits/${dispatch.issuanceCommitSha}`,{headers:H(token)},[200],'AUTHORITY_DISPATCH_ISSUANCE_COMMIT');
+    return verifyExactDispatchIssuanceEvidence({repository,lock,recovery:dispatch,source,receipt,run,commit});
   }
   const recovery=LEGACY_EXACT_ISSUANCE_RECOVERIES.find(value=>canonical(value.authorityIdentity)===canonical(authorityIdentity(lock)));
   if(!recovery)throw err('AUTHORITY_PROVENANCE_MISSING','authorityProvenance','authority-provenance','NOT_IN_FROZEN_LEGACY_SNAPSHOT');
@@ -351,6 +399,51 @@ async function verifyExactPost1894MaterializationRecovery({repository,token,summ
     const sourceComment=await fetchComment(repository,token,r.sourceCommentId);
     verifyExactGen2051HistoricalState({corruptCommit:corrupt,restorationCommit:restoration,parentCommit,parentLedger,restoredLedger,sourceComment,branchHead,lineageCommitShas:seen.map(value=>value.sha)});
   }
+  return true;
+}
+
+// Pure transition verifier receives exact Git-object and GitHub-comment readbacks.
+// It never parses or repairs the corrupt blob: its Git identity is preserved.
+export function verifyExactGen2055Gen2062TerminalState({recovery,corruptCommit,restorationCommit,parentCommit,parentLedger,restoredLedger,intakeComment,closureComment,branchHead,lineageCommitShas}) {
+  const r=EXACT_GEN2055_GEN2062_TERMINAL_RESTORATIONS.find(value=>value.corruptCommitSha===recovery?.corruptCommitSha);
+  const fail=detail=>{throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','exact-terminal-restoration','authority-lineage',detail)};
+  if(!r||canonical(recovery)!==canonical(r))fail('RECOVERY_IDENTITY_MISMATCH');
+  const owner='smansfield635-create';
+  const exactCommit=(c,shaValue,parent,blob,message)=>c?.sha===shaValue&&c?.author?.login===owner&&c?.committer?.login===owner&&c?.commit?.message===message&&c?.parents?.length===1&&c.parents[0]?.sha===parent&&c?.files?.length===1&&c.files[0]?.filename===LEDGER_PATH&&c.files[0]?.sha===blob;
+  if(!exactCommit(corruptCommit,r.corruptCommitSha,r.parentSha,r.corruptBlobSha,`Acquire operation lock ${r.generation}: ${r.operationId}`))fail('CORRUPT_IDENTITY_MISMATCH');
+  if(!exactCommit(restorationCommit,r.restorationCommitSha,r.corruptCommitSha,r.restorationBlobSha,`Close operation lock ${r.generation}: ${r.operationId} ${r.terminalDisposition}`))fail('RESTORATION_IDENTITY_MISMATCH');
+  if(parentCommit?.sha!==r.parentSha||parentCommit?.files?.length!==1||parentCommit.files[0]?.filename!==LEDGER_PATH||parentCommit.files[0]?.sha!==r.parentBlobSha)fail('PARENT_IDENTITY_MISMATCH');
+  if(!Array.isArray(lineageCommitShas)||!lineageCommitShas.includes(branchHead)||!lineageCommitShas.includes(r.corruptCommitSha)||!lineageCommitShas.includes(r.restorationCommitSha)||branchHead===r.corruptCommitSha)fail('RESTORATION_NOT_IN_TARGET_LINEAGE');
+  if(parentLedger?.lockGeneration!==r.generation-1||restoredLedger?.lockGeneration!==r.generation||parentLedger?.activeScopes?.[r.scopeHash]!==undefined||restoredLedger?.activeScopes?.[r.scopeHash]!==undefined)fail('AUTHORITY_STATE_MISMATCH');
+  const tail=restoredLedger.terminalHistory?.at(-1);
+  if(!tail||tail.operationId!==r.operationId||tail.lockScope!==r.lockScope||tail.scopeHash!==r.scopeHash||tail.lockGeneration!==r.generation||tail.state!=='TERMINAL'||tail.released!==true||tail.terminalDisposition!==r.terminalDisposition||sha(canonical(tail))!==r.terminalRowSha256)fail('TERMINAL_ROW_IDENTITY_MISMATCH');
+  const expected={...parentLedger,lockGeneration:r.generation,terminalHistory:[...parentLedger.terminalHistory,tail]};
+  if(canonical(restoredLedger)!==canonical(expected))fail('UNRELATED_LEDGER_DATA_CHANGED');
+  const authority=authorityIdentity(tail), provenanceChecks=[['intake',tail.independentAuthorityProvenance,intakeComment,r.intakeCommentId,'CANONICAL_OPERATION_INTAKE_REQUEST_V1'],['closure',tail.independentClosureProvenance,closureComment,r.closureCommentId,'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1']];
+  for(const [kind,provenance,comment,id,marker] of provenanceChecks){
+    if(!provenance||canonical(provenance.authorityIdentity)!==canonical(authority)||provenance.source?.repository!=='smansfield635-create/smansfield635-create.github.io'||provenance.source?.issueNumber!==r.issueNumber||provenance.source?.commentId!==id||provenance.source?.marker!==marker||provenance.source?.authorLogin!==owner||provenance.source?.authorAssociation!=='OWNER')fail(`${kind.toUpperCase()}_PROVENANCE_IDENTITY_MISMATCH`);
+    const {bindingDigest,...core}=provenance;
+    if(sha(canonical(core))!==bindingDigest)fail(`${kind.toUpperCase()}_PROVENANCE_BINDING_MISMATCH`);
+    if(comment?.id!==id||comment?.issue_url!==`https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/issues/${r.issueNumber}`||comment?.user?.login!==owner||comment?.author_association!=='OWNER'||typeof comment?.body!=='string'||sha(comment.body)!==provenance.source.commentBodySha256||markerFromBody(comment.body)!==marker)fail(`${kind.toUpperCase()}_SOURCE_AUTHENTICATION_FAILED`);
+  }
+  try{verifyCanonicalSourceComment(tail,intakeComment.body)}catch{fail('INTAKE_REQUEST_PROCEDURE_MISMATCH')}
+  let closure;
+  try{closure=parseMarkedJson(closureComment.body,'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1')}catch{fail('CLOSURE_SOURCE_PAYLOAD_INVALID')}
+  const request=closure?.closureRequest||closure?.invocation?.closureRequest;
+  if(request?.operationId!==r.operationId||request?.lockScope!==r.lockScope||request?.lockGeneration!==r.generation||request?.terminalDisposition!==r.terminalDisposition||request?.repository!=='smansfield635-create/smansfield635-create.github.io'||closure?.expectedMainHead!==r.closureMainHead||closure?.repository!=='smansfield635-create/smansfield635-create.github.io')fail('CLOSURE_SOURCE_BINDING_MISMATCH');
+  const terminalIdentity=stable({governingHead:tail.governingHead,lockGeneration:r.generation,lockScope:r.lockScope,operationId:r.operationId,released:true,scopeHash:r.scopeHash,state:'TERMINAL',terminalDisposition:r.terminalDisposition});
+  if(canonical(tail.independentClosureProvenance.terminalIdentity)!==canonical(terminalIdentity)||tail.independentAuthorityProvenance.compareAndSwap?.observedLockRefHead!==r.parentSha||tail.independentAuthorityProvenance.compareAndSwap?.observedLedgerBlobSha!==r.parentBlobSha||tail.independentClosureProvenance.compareAndSwap?.observedLockRefHead!==r.corruptCommitSha||tail.independentClosureProvenance.compareAndSwap?.observedLedgerBlobSha!==r.corruptBlobSha)fail('CAS_OR_TERMINAL_BINDING_MISMATCH');
+  return stable({result:'EXACT_TERMINAL_RESTORATION_VERIFIED',generation:r.generation,corruptCommitSha:r.corruptCommitSha,restorationCommitSha:r.restorationCommitSha,terminalDisposition:r.terminalDisposition});
+}
+
+async function verifyExactGen2055Gen2062Recovery({repository,token,summary,branchHead,seen}) {
+  const r=EXACT_GEN2055_GEN2062_TERMINAL_RESTORATIONS.find(value=>value.corruptCommitSha===summary?.sha||value.restorationCommitSha===summary?.sha);if(!r)return false;
+  const u=base(repository),get=(commit,stage)=>req(`${u}/commits/${commit}`,{headers:H(token)},[200],stage);
+  const corrupt=await get(r.corruptCommitSha,'EXACT_TERMINAL_CORRUPT_DETAIL'),restoration=await get(r.restorationCommitSha,'EXACT_TERMINAL_RESTORATION_DETAIL'),parent=await get(r.parentSha,'EXACT_TERMINAL_PARENT_DETAIL');
+  const parentLedger=await readGitLedgerBlob({repository,token,blobSha:r.parentBlobSha,source:'exact-terminal-parent',commitSha:r.parentSha});
+  const restoredLedger=await readGitLedgerBlob({repository,token,blobSha:r.restorationBlobSha,source:'exact-terminal-restoration',commitSha:r.restorationCommitSha});
+  const intake=await fetchComment(repository,token,r.intakeCommentId),closure=await fetchComment(repository,token,r.closureCommentId);
+  verifyExactGen2055Gen2062TerminalState({recovery:r,corruptCommit:corrupt,restorationCommit:restoration,parentCommit:parent,parentLedger,restoredLedger,intakeComment:intake,closureComment:closure,branchHead,lineageCommitShas:seen.map(value=>value.sha)});
   return true;
 }
 
@@ -489,6 +582,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
     if(await verifyExactGen1915LedgerRecovery({repository,token,summary:c}))continue;
     if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;
     if(await verifyExactPost1894MaterializationRecovery({repository,token,summary:c,branchHead:head,seen}))continue;
+    if(await verifyExactGen2055Gen2062Recovery({repository,token,summary:c,branchHead:head,seen}))continue;
     if(c?.localGit&&c?.author?.login==='github-actions[bot]'&&canonicalMutationMessage(c?.commit?.message))continue;
     if(c?.author?.login==='github-actions[bot]'&&c?.commit?.verification?.verified===true&&canonicalMutationMessage(c?.commit?.message))continue;
     const recovery=EXACT_LOCK_REF_LINEAGE_RECOVERIES.find(value=>value.commitSha===c?.sha);
@@ -521,16 +615,20 @@ export async function verifyRemoteAuthorityProvenance({repository,token,lock,bra
   const anchor=lineageCheckpoint?.status==='ACTIVE_VERIFIED' ? lineageCheckpoint.checkpoint?.checkpointCommitSha : (lock.authorityProvenance?.lineageAnchorCommitSha||LEGACY_AUTHORITY_CUTOVER_COMMIT),lineage=await verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha:anchor,...(lineageCheckpoint?{lineageCheckpoint}:{})});
   if(!lock.authorityProvenance){const legacy=await verifyLegacyAuthority({repository,token,lock});return stable({...legacy,lineage})}
   const bound=verifyAuthorityProvenanceBinding(lock),p=lock.authorityProvenance,inv=p.invocation;
-  if(inv.repository!==repository||inv.eventName!=='issue_comment'||!TRUSTED_ASSOCIATIONS.has(inv.commentAuthorAssociation))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','invocation','authority-provenance');
+  if(inv.repository!==repository||!['issue_comment','workflow_dispatch'].includes(inv.eventName)||!TRUSTED_ASSOCIATIONS.has(inv.commentAuthorAssociation))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','invocation','authority-provenance');
   const comment=await fetchComment(repository,token,inv.commentId);
   if(comment?.id!==inv.commentId||comment?.issue_url?.split('/').pop()!==String(inv.issueNumber)||comment?.user?.login!==inv.commentAuthorLogin||comment?.author_association!==inv.commentAuthorAssociation||sha(comment?.body||'')!==inv.commentBodySha256||markerFromBody(comment?.body)!==inv.marker)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','authority-provenance','SOURCE_COMMENT_MISMATCH');
   if(p.origin==='CANONICAL_INTAKE'){if(inv.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');verifyCanonicalSourceComment(lock,comment.body)}else{if(!SUCCESSOR_MARKERS.has(inv.marker))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');for(const value of [lock.operationId,lock.lockScope,lock.governingHead])if(!comment.body.includes(value))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment.body','authority-provenance','SUCCESSOR_ROW_NOT_BOUND_TO_SOURCE')}
+  if(inv.eventName==='workflow_dispatch')await authenticateDispatchRun({repository,token,runId:inv.workflowRunId,runAttempt:inv.workflowRunAttempt,workflowSha:inv.workflowSha,sourceLogin:inv.dispatchActorLogin});
   const comments=await fetchIssueComments(repository,token,inv.issueNumber);if(!botReceiptMatches(lock,comments,p.origin,inv.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','issue.comments','authority-provenance');
   return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:p.origin,authorityIdentity:bound.authorityIdentity,issueNumber:inv.issueNumber,commentId:inv.commentId,workflowRunId:inv.workflowRunId,lineage});
 }
 
 export async function acquireRemote(a) {
-  const o=await readRemote(a),authorityInvocation=captureAuthorityInvocationFromEnvironment({allowedMarkers:[CANONICAL_MARKER]}),x=acquireLocal(o.ledger,{...a,authorityInvocation,authorityLineageAnchorCommitSha:o.head});
+  const o=await readRemote(a),authorityInvocation=process.env.GITHUB_EVENT_NAME==='workflow_dispatch'?await captureDispatchAuthorityInvocation(a):captureAuthorityInvocationFromEnvironment({allowedMarkers:[CANONICAL_MARKER]});
+  if(!authorityInvocation)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','authorityInvocation','remote-lock','MISSING_ISSUANCE_PROVENANCE');
+  const x=acquireLocal(o.ledger,{...a,authorityInvocation,authorityLineageAnchorCommitSha:o.head});
+  if(x.acquired)verifyCanonicalSourceComment(x.lock, (await fetchComment(a.repository,a.token,authorityInvocation.commentId)).body);
   if(!x.acquired)return stable({schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:x.result,errorCode:x.errorCode,operationId:a.operationId,lockScope:canonScope(a.lockScope),scopeHash:x.scopeHash,activeOperationId:x.activeOperationId,lockGeneration:x.lockGeneration,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,contentTransport:o.contentTransport,lockAcquired:false});
   if(a.readyFile){fs.mkdirSync(path.dirname(path.resolve(a.readyFile)),{recursive:true});fs.writeFileSync(path.resolve(a.readyFile),text({operationId:a.operationId,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,lockGeneration:x.lock.lockGeneration}))}
   if(a.barrierFile){const deadline=Date.now()+Number(a.barrierTimeoutMs||30000);while(!fs.existsSync(path.resolve(a.barrierFile))){if(Date.now()>deadline)throw err('CAS_BARRIER_TIMEOUT','barrierFile','remote-lock');await new Promise(r=>setTimeout(r,50))}}

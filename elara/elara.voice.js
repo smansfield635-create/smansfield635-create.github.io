@@ -1926,7 +1926,6 @@
         "handoff",
 
       followups: [
-        "what_1001_traversal_is",
         "where_sean_path_leads",
         "where_book_path_leads"
       ],

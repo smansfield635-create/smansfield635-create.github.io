@@ -473,7 +473,7 @@ void main(){
       (0.78+0.22*materialVariation),
       0.0,1.0
     );
-    vec3 soilTone=mix(lowland,upland,elevationMix);
+    vec3 soilTone=mix(lowland,rising,elevationMix);
     float weathering=clamp(
       noise2(world*0.061+vec2(57.0,-83.0))*0.52+
       triCoarse*0.30+triFine*0.18,

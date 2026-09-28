@@ -9,8 +9,6 @@ import {
   deriveHEarthGen311RegionalArticulation,
   sampleHEarthRun8BSuccessorTerrainField
 } from '../terrain/h-earth.successor-terrain-field.run8b.js';
-import { sampleHEarthSurfaceState } from './h-earth.surface-state-field.js';
-import { getHEarthLandscapeAddress } from '../zones/ground-cell-001.landscape-lattice.js';
 import {
   H_EARTH_GEN311_REGIONAL_MATERIAL_RESPONSE_CONTRACT_ID,
   sampleHEarthRun8CSuccessorSurfaceMaterial,
@@ -265,18 +263,42 @@ export function evaluateHEarthGen311HabitatAdmissionDiagnostic(result){
 }
 
 export const H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID='H_EARTH_GEN311_DETERMINISTIC_COMMUNITY_PLACEMENT_DATA_v1';
-const PLACEMENT_REGION_EXCLUSIONS=freeze(new Set(['ELEVATED_MANOR_CONTEXT','WATER_SURFACE_PLANE','NEARSHORE_WAVE_BAND','SHORELINE_CONTACT','AIR_HAZE_DISTANT_ATMOSPHERE','OFFSHORE_ROCK_STACKS_AND_ISLETS']));
+// Candidate planning evidence, not manor capacity, vehicle access or global structure admission.
+export const H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY=freeze({
+  sourceHead:'18166dd05ef00d54af85324ddc73caa1c13bc66d',
+  evidence:'https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5879759491',
+  reservationSha256:'a1680a13fed8b4d81e202785c021feca58c9049cac02071c222624bcb6baf674',
+  anchor:{x:80,z:-172},acceptedEnvelope:{minX:64,maxX:96,minZ:-188,maxZ:-156},
+  manorCore:{minX:77,maxX:83,minZ:-176,maxZ:-168},
+  gardens:{minX:70,maxX:74,minZ:-168,maxZ:-164},
+  outbuildingProposal:{minX:74,maxX:78,minZ:-168,maxZ:-164},
+  footRoute:[{x:80,z:-172},{x:64,z:-172},{x:48,z:-144},{x:0,z:-96}],footRouteRadius:4,
+  viewProposal:{minX:-4,maxX:84,minZ:-176,maxZ:-92},
+  terrainBufferProposal:{minX:56,maxX:104,minZ:-196,maxZ:-148},
+  accessMode:'SAMPLED_CAREFUL_FOOT_ACCESS_ONLY',vehicleAccessQualified:false,
+  accessHazard:'CURRENT_RUN8C_FRICTION_FOOTING_SLIP_UNQUALIFIED_273_MATERIAL_DIFFERENCES',
+  otherWorldStructureCoverage:'UNRESOLVED_OTHER_WORLD_STRUCTURE_COVERAGE',
+  treatments:{MANOR_CORE:'HARD_WILD_EXCLUSION_SLOPE_PATCH_NOT_MANOR_CAPACITY',COURTYARD_AND_GARDENS:'HOLD_WILD_POPULATION_FOR_INTENTIONAL_LANDSCAPING',DRIVE_AND_APPROACH:'HARD_WILD_EXCLUSION_SEGMENT_CAPSULES_ONLY',OUTBUILDING_SPACE:'HOLD_UNQUALIFIED_FOOTPRINT_PROPOSAL',FUTURE_EXPANSION:'TEMPORARY_PLANNING_HOLD_NOT_NATURALLY_BARE',COASTAL_VIEW_CORRIDOR:'UNRESOLVED_CANOPY_POLICY_NO_GROUND_EXCLUSION',BUILDABLE_SLOPE_LIMIT:'PLANNING_ONLY_NO_VEGETATION_EXCLUSION',TERRAIN_BUFFER:'ECOLOGICAL_RELATIONSHIP_NO_AUTOMATIC_EXCLUSION'}
+});
 function hash32(text){let h=0x811c9dc5;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,0x01000193)}return h>>>0}
 const hash01=text=>hash32(text)/0xffffffff;
-function regionForSemanticAddress(id){
-  const record=getHEarthLandscapeAddress(id);if(!record)return null;
-  return freeze({regionId:record.regionId,primitiveIntent:record.primitiveIntent});
+const insideBounds=(x,z,b)=>x>=b.minX&&x<=b.maxX&&z>=b.minZ&&z<=b.maxZ;
+function segmentDistanceSquared(x,z,a,b){
+  const dx=b.x-a.x,dz=b.z-a.z,l2=dx*dx+dz*dz,t=l2?Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/l2)):0;
+  return (x-a.x-t*dx)**2+(z-a.z-t*dz)**2;
 }
-function structureCompatibilityAt(x,z){
-  const surface=sampleHEarthSurfaceState(x,z);if(surface?.valid!==true)return freeze({status:'UNRESOLVED_STRUCTURE_COMPATIBILITY',reason:'CANONICAL_SURFACE_IDENTITY_UNAVAILABLE'});
-  const region=regionForSemanticAddress(surface.semanticAddressId);if(!region)return freeze({status:'UNRESOLVED_STRUCTURE_COMPATIBILITY',reason:'LATTICE_REGION_UNRESOLVED',semanticAddressId:surface.semanticAddressId,chunkId:surface.chunkId,formationIds:surface.formationIds});
-  const excluded=PLACEMENT_REGION_EXCLUSIONS.has(region.regionId);
-  return freeze({status:excluded?'EXCLUDED_EXISTING_WORLD_AUTHORITY':'COMPATIBLE_EXISTING_WORLD_AUTHORITY',reason:excluded?`REGION:${region.regionId}:PRIMITIVE:${region.primitiveIntent}`:'ORDINARY_TERRAIN_REGION',regionId:region.regionId,primitiveIntent:region.primitiveIntent,semanticAddressId:surface.semanticAddressId,chunkId:surface.chunkId,formationIds:surface.formationIds});
+export function sampleHEarthGen311PlacementStructureDisposition(x,z){
+  const p=H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,hard=[],holds=[],constraints=[];
+  if(!finite(x)||!finite(z))return freeze({status:'INVALID_COORDINATE',reason:'NONFINITE_COORDINATE',hardExclusions:[],planningHolds:[],constraints:[],inventoryCoverage:p.otherWorldStructureCoverage});
+  if(insideBounds(x,z,p.manorCore))hard.push('MANOR_CORE');
+  if(p.footRoute.slice(1).some((b,i)=>segmentDistanceSquared(x,z,p.footRoute[i],b)<=p.footRouteRadius**2))hard.push('DRIVE_AND_APPROACH_FOOT_CAPSULE');
+  if(insideBounds(x,z,p.gardens))holds.push('COURTYARD_AND_GARDENS_INTENTIONAL_LANDSCAPING');
+  if(insideBounds(x,z,p.outbuildingProposal))holds.push('OUTBUILDING_SPACE_UNQUALIFIED');
+  if(insideBounds(x,z,p.acceptedEnvelope))holds.push('FUTURE_EXPANSION_PLANNING');
+  if(insideBounds(x,z,p.viewProposal))constraints.push('CANOPY_POLICY_UNRESOLVED');
+  if(insideBounds(x,z,p.terrainBufferProposal))constraints.push('TERRAIN_ECOLOGICAL_BUFFER');
+  const status=hard.length?'EXCLUDED_QUALIFIED_ESTATE_FOOTPRINT':holds.length?'HELD_ESTATE_PLANNING':'NO_KNOWN_ESTATE_FOOTPRINT_OVERLAP';
+  return freeze({status,reason:hard[0]??holds[0]??'NO_KNOWN_ESTATE_FOOTPRINT_OVERLAP',hardExclusions:hard,planningHolds:holds,constraints,inventoryCoverage:p.otherWorldStructureCoverage,globalStructureAdmission:false});
 }
 function communityWeights(e){
   const ridge=clamp01(e.ridgeSignal??0),valley=clamp01(e.valleySignal??0),foothill=clamp01(e.foothillSignal??0),moisture=e.moistureAvailability,exposure=e.windExposure;
@@ -286,29 +308,73 @@ export function buildHEarthGen311PlacementData({reverseGenerationOrder=false}={}
   const p=H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE,d=p.worldDomain,step=p.sampleStepWorldUnits,cells=[];
   for(let z=d.zMinimum;z<=d.zMaximum;z+=step)for(let x=d.xMinimum;x<=d.xMaximum;x+=step)cells.push([x,z]);
   if(reverseGenerationOrder)cells.reverse();
-  const placements=[],counts={};let unresolvedStructure=0,finalHabitatRejected=0,structureExcluded=0;
+  const placements=[],samples=[],communityCounts={},habitatDispositionCounts={},outcomeCounts={},exclusionReasonCounts={},planningHoldCounts={};
+  const count=(o,k)=>{o[k]=(o[k]??0)+1};
   for(const [x,z] of cells){
-    const baseMaterial=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);if(evaluateHEarthRun8CSuccessorSurfaceMaterial(baseMaterial).eligible!==true)continue;
-    if(habitatDisposition(baseMaterial.surfaceClass)!=='ADMITTED_SOIL_HABITAT_CANDIDATE')continue;
-    const salt=`GEN311_PLACEMENT_V1|${x}|${z}`,offsetLimit=step*.375,fx=x+(hash01(salt+'|X')*2-1)*offsetLimit,fz=z+(hash01(salt+'|Z')*2-1)*offsetLimit;
-    const finalMaterial=sampleHEarthRun8CSuccessorSurfaceMaterial(fx,fz),finalDisposition=habitatDisposition(finalMaterial.surfaceClass);
-    if(evaluateHEarthRun8CSuccessorSurfaceMaterial(finalMaterial).eligible!==true||finalDisposition!=='ADMITTED_SOIL_HABITAT_CANDIDATE'){finalHabitatRejected++;continue}
-    const structure=structureCompatibilityAt(fx,fz);if(structure.status==='UNRESOLVED_STRUCTURE_COMPATIBILITY'){unresolvedStructure++;continue}if(structure.status==='EXCLUDED_EXISTING_WORLD_AUTHORITY'){structureExcluded++;continue}
-    const terrain=sampleHEarthRun8BSuccessorTerrainField(fx,fz),e=ecologicalResponseAt(fx,fz);if(terrain?.valid!==true||!e)continue;
-    const weights=communityWeights({...e,...terrain.regionalArticulation,densitySuitability:e.densityModifier,canopySuitability:e.canopyModifier,groundcoverSuitability:e.groundcoverModifier}),dominant=Object.entries(weights).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0][0];
-    const placementId=`H_EARTH_GEN311_PLACEMENT:${hash32(salt).toString(16).padStart(8,'0')}`;counts[dominant]=(counts[dominant]??0)+1;
-    placements.push(freeze({placementId,sourceCell:freeze({x,z}),world:freeze({x:fx,y:terrain.elevation,z:fz}),surfaceClass:finalMaterial.surfaceClass,habitatDisposition:finalDisposition,communityWeights:weights,dominantCommunity:dominant,densitySuitability:e.densityModifier,canopySuitability:e.canopyModifier,groundcoverSuitability:e.groundcoverModifier,scaleSuitability:e.scaleModifier,continuousSignals:freeze({ridge:terrain.regionalArticulation.ridgeSignal,pass:terrain.regionalArticulation.passSignal,valley:terrain.regionalArticulation.valleySignal,watershed:terrain.regionalArticulation.watershedSignal,foothill:terrain.regionalArticulation.foothillSignal}),structure,terrainAttachment:freeze({elevation:terrain.elevation,normal:terrain.normal,slope:terrain.slope}),cameraIndependent:true,renderBudgetIndependent:true}));
+    const salt=`GEN311_PLACEMENT_V1|${x}|${z}`,baseTerrain=sampleHEarthRun8BSuccessorTerrainField(x,z),baseMaterial=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);
+    const valid=baseTerrain?.valid===true&&evaluateHEarthRun8CSuccessorSurfaceMaterial(baseMaterial).eligible===true;
+    const baseDisposition=valid?habitatDisposition(baseMaterial.surfaceClass):'INVALID_TERRAIN_OR_MATERIAL';
+    count(habitatDispositionCounts,baseDisposition);
+    const row={sourceCell:{x,z},habitatDisposition:baseDisposition,outcome:baseDisposition,reason:baseDisposition};
+    // Keep structure/habitat dimensions independent even for sand, rock and water samples.
+    row.sourceStructure=sampleHEarthGen311PlacementStructureDisposition(x,z);
+    if(baseDisposition==='ADMITTED_SOIL_HABITAT_CANDIDATE'){
+      const offsetLimit=step*.375,fx=x+(hash01(salt+'|X')*2-1)*offsetLimit,fz=z+(hash01(salt+'|Z')*2-1)*offsetLimit;
+      row.finalCoordinate={x:fx,z:fz};
+      const structure=sampleHEarthGen311PlacementStructureDisposition(fx,fz);row.finalStructure=structure;
+      const terrain=sampleHEarthRun8BSuccessorTerrainField(fx,fz),material=sampleHEarthRun8CSuccessorSurfaceMaterial(fx,fz);
+      row.finalHabitatDisposition=habitatDisposition(material?.surfaceClass);
+      if(fx<d.xMinimum||fx>d.xMaximum||fz<d.zMinimum||fz>d.zMaximum){row.outcome='HELD_FINAL_COORDINATE_OUTSIDE_WORLD_DOMAIN';row.reason=row.outcome}
+      else if(terrain?.valid!==true||evaluateHEarthRun8CSuccessorSurfaceMaterial(material).eligible!==true){row.outcome='INVALID_FINAL_TERRAIN_OR_MATERIAL';row.reason=row.outcome}
+      else if(row.finalHabitatDisposition!=='ADMITTED_SOIL_HABITAT_CANDIDATE'){row.outcome='FINAL_HABITAT_REJECTED';row.reason=row.finalHabitatDisposition}
+      else if(structure.hardExclusions.length){row.outcome='EXCLUDED_QUALIFIED_ESTATE_FOOTPRINT';row.reason=structure.reason;for(const reason of structure.hardExclusions)count(exclusionReasonCounts,reason)}
+      else if(structure.planningHolds.length){row.outcome='HELD_ESTATE_PLANNING';row.reason=structure.reason;for(const reason of structure.planningHolds)count(planningHoldCounts,reason)}
+      else {
+        const e=ecologicalResponseAt(fx,fz);
+        if(!e){row.outcome='INVALID_ECOLOGICAL_RESPONSE';row.reason=row.outcome}
+        else {
+          const weights=communityWeights({...e,...terrain.regionalArticulation,densitySuitability:e.densityModifier,canopySuitability:e.canopyModifier,groundcoverSuitability:e.groundcoverModifier});
+          const dominant=Object.entries(weights).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0][0];
+          const placementId=`H_EARTH_GEN311_PLACEMENT:${hash32(salt).toString(16).padStart(8,'0')}`;
+          row.outcome='PROPOSED_HELD_OTHER_WORLD_STRUCTURE_COVERAGE';row.reason=structure.inventoryCoverage;row.placementId=placementId;count(communityCounts,dominant);
+          placements.push(freeze({placementId,sourceCell:{x,z},world:{x:fx,y:terrain.elevation,z:fz},surfaceClass:material.surfaceClass,habitatDisposition:row.finalHabitatDisposition,communityWeights:weights,dominantCommunity:dominant,densitySuitability:e.densityModifier,canopySuitability:e.canopyModifier,groundcoverSuitability:e.groundcoverModifier,scaleSuitability:e.scaleModifier,continuousSignals:{ridge:terrain.regionalArticulation.ridgeSignal,pass:terrain.regionalArticulation.passSignal,valley:terrain.regionalArticulation.valleySignal,watershed:terrain.regionalArticulation.watershedSignal,foothill:terrain.regionalArticulation.foothillSignal},structure,plantingAdmission:'HELD_OTHER_WORLD_STRUCTURE_COVERAGE',terrainAttachment:{elevation:terrain.elevation,normal:terrain.normal,slope:terrain.slope},cameraIndependent:true,renderBudgetIndependent:true}));
+        }
+      }
+    }
+    count(outcomeCounts,row.outcome);samples.push(freeze(row));
   }
-  placements.sort((a,b)=>a.placementId.localeCompare(b.placementId));
-  return freeze({eligible:unresolvedStructure===0,status:unresolvedStructure===0?'GEN311_PLACEMENT_DATA_COMPLETE':'GEN311_PLACEMENT_DATA_HELD_STRUCTURE_UNRESOLVED',contractId:H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID,worldDomain:d,sampleStepWorldUnits:step,placementCount:placements.length,communityCounts:freeze(counts),finalHabitatRejectedCount:finalHabitatRejected,structureExcludedCount:structureExcluded,unresolvedStructureCount:unresolvedStructure,placements:freeze(placements),reverseGenerationOrder,legacyPopulationPlannerUsed:false,legacyInstanceCeilingUsed:false,cameraAuthorityUsed:false,lodAuthorityUsed:false,renderBudgetAuthorityUsed:false,geometryCreated:false,terrainMutation:false,rendererMutation:false});
+  placements.sort((a,b)=>a.placementId.localeCompare(b.placementId));samples.sort((a,b)=>a.sourceCell.z-b.sourceCell.z||a.sourceCell.x-b.sourceCell.x);
+  const sorted=o=>freeze(Object.fromEntries(Object.entries(o).sort(([a],[b])=>a.localeCompare(b))));
+  const invalidSampleCount=Object.entries(outcomeCounts).filter(([k])=>k.startsWith('INVALID_')).reduce((n,[,v])=>n+v,0);
+  return freeze({eligible:false,constructionComplete:samples.length===p.sampleCount&&invalidSampleCount===0,status:'GEN311_PLACEMENT_PROPOSALS_COMPLETE_PLANTING_HELD',contractId:H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID,worldDomain:d,sampleStepWorldUnits:step,measuredSampleCount:samples.length,invalidSampleCount,placementCount:placements.length,admittedPlacementCount:0,communityCounts:sorted(communityCounts),habitatDispositionCounts:sorted(habitatDispositionCounts),outcomeCounts:sorted(outcomeCounts),exclusionReasonCounts:sorted(exclusionReasonCounts),planningHoldCounts:sorted(planningHoldCounts),finalHabitatRejectedCount:outcomeCounts.FINAL_HABITAT_REJECTED??0,structureExcludedCount:outcomeCounts.EXCLUDED_QUALIFIED_ESTATE_FOOTPRINT??0,unresolvedStructureCount:placements.length,structureInventoryCoverage:H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY.otherWorldStructureCoverage,estatePolicy:H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,placements,samples,reverseGenerationOrder,legacyPopulationPlannerUsed:false,legacyInstanceCeilingUsed:false,legacyChunkIdentityRequired:false,cameraAuthorityUsed:false,lodAuthorityUsed:false,renderBudgetAuthorityUsed:false,geometryCreated:false,terrainMutation:false,rendererMutation:false});
 }
 export function evaluateHEarthGen311PlacementData(result){
-  const issues=[];if(result?.eligible!==true)issues.push('GEN311_PLACEMENT_NOT_ELIGIBLE');if(result?.contractId!==H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID)issues.push('GEN311_PLACEMENT_CONTRACT_MISMATCH');if(result?.unresolvedStructureCount!==0)issues.push('GEN311_STRUCTURE_COMPATIBILITY_UNRESOLVED');if(result?.legacyPopulationPlannerUsed!==false||result?.legacyInstanceCeilingUsed!==false||result?.cameraAuthorityUsed!==false||result?.lodAuthorityUsed!==false||result?.renderBudgetAuthorityUsed!==false)issues.push('GEN311_PLACEMENT_FORBIDDEN_AUTHORITY_USED');if(result?.geometryCreated!==false||result?.terrainMutation!==false||result?.rendererMutation!==false)issues.push('GEN311_PLACEMENT_BOUNDARY_VIOLATION');const ids=new Set();for(const p of result?.placements??[]){if(ids.has(p.placementId))issues.push(`GEN311_PLACEMENT_ID_DUPLICATE:${p.placementId}`);ids.add(p.placementId);if(!Object.values(p.communityWeights??{}).every(finite))issues.push(`GEN311_COMMUNITY_WEIGHT_NONFINITE:${p.placementId}`);const t=sampleHEarthRun8BSuccessorTerrainField(p.world.x,p.world.z),m=sampleHEarthRun8CSuccessorSurfaceMaterial(p.world.x,p.world.z),sc=structureCompatibilityAt(p.world.x,p.world.z);if(t?.valid!==true||Math.abs(t.elevation-p.world.y)>1e-9)issues.push(`GEN311_TERRAIN_ATTACHMENT_MISMATCH:${p.placementId}`);if(habitatDisposition(m.surfaceClass)!=='ADMITTED_SOIL_HABITAT_CANDIDATE')issues.push(`GEN311_FINAL_HABITAT_REJECTED:${p.placementId}`);if(sc.status!=='COMPATIBLE_EXISTING_WORLD_AUTHORITY')issues.push(`GEN311_STRUCTURE_EXCLUSION_FAILED:${p.placementId}`)}
-  return freeze({eligible:issues.length===0,status:issues.length?'GEN311_PLACEMENT_DATA_FAIL':'GEN311_PLACEMENT_DATA_PASS',issues:freeze(issues)});
+  const issues=[];
+  if(result?.contractId!==H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID)issues.push('GEN311_PLACEMENT_CONTRACT_MISMATCH');
+  if(result?.constructionComplete!==true||result?.measuredSampleCount!==H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE.sampleCount||result?.invalidSampleCount!==0)issues.push('GEN311_WORLD_ACCOUNTING_INCOMPLETE');
+  if(Object.values(result?.outcomeCounts??{}).reduce((n,v)=>n+v,0)!==result?.measuredSampleCount)issues.push('GEN311_OUTCOME_ACCOUNTING_MISMATCH');
+  if(result?.legacyPopulationPlannerUsed!==false||result?.legacyInstanceCeilingUsed!==false||result?.legacyChunkIdentityRequired!==false||result?.cameraAuthorityUsed!==false||result?.lodAuthorityUsed!==false||result?.renderBudgetAuthorityUsed!==false)issues.push('GEN311_PLACEMENT_FORBIDDEN_AUTHORITY_USED');
+  if(result?.geometryCreated!==false||result?.terrainMutation!==false||result?.rendererMutation!==false)issues.push('GEN311_PLACEMENT_BOUNDARY_VIOLATION');
+  const ids=new Set(),d=H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE.worldDomain;
+  for(const p of result?.placements??[]){
+    if(ids.has(p.placementId))issues.push(`GEN311_PLACEMENT_ID_DUPLICATE:${p.placementId}`);ids.add(p.placementId);
+    if(!Object.values(p.communityWeights??{}).every(finite))issues.push(`GEN311_COMMUNITY_WEIGHT_NONFINITE:${p.placementId}`);
+    const t=sampleHEarthRun8BSuccessorTerrainField(p.world.x,p.world.z),m=sampleHEarthRun8CSuccessorSurfaceMaterial(p.world.x,p.world.z),sc=sampleHEarthGen311PlacementStructureDisposition(p.world.x,p.world.z);
+    if(t?.valid!==true||!finite(p.world.y)||Math.abs(t.elevation-p.world.y)>1e-9)issues.push(`GEN311_TERRAIN_ATTACHMENT_MISMATCH:${p.placementId}`);
+    if(p.world.x<d.xMinimum||p.world.x>d.xMaximum||p.world.z<d.zMinimum||p.world.z>d.zMaximum)issues.push(`GEN311_FINAL_COORDINATE_OUTSIDE_DOMAIN:${p.placementId}`);
+    if(habitatDisposition(m.surfaceClass)!=='ADMITTED_SOIL_HABITAT_CANDIDATE')issues.push(`GEN311_FINAL_HABITAT_REJECTED:${p.placementId}`);
+    if(sc.hardExclusions.length||sc.planningHolds.length)issues.push(`GEN311_ESTATE_CONTAINMENT_FAILED:${p.placementId}`);
+    if(p.plantingAdmission!=='HELD_OTHER_WORLD_STRUCTURE_COVERAGE')issues.push(`GEN311_UNQUALIFIED_PLANTING_ADMISSION:${p.placementId}`);
+  }
+  const dataIntegrityPassed=issues.length===0;
+  const qualificationHolds=['OTHER_WORLD_STRUCTURE_INVENTORY_NOT_QUALIFIED','PROPOSED_ESTATE_CAPACITY_AND_CANOPY_POLICY_UNRESOLVED'];
+  return freeze({eligible:false,dataIntegrityPassed,status:dataIntegrityPassed?'GEN311_PLACEMENT_DATA_INTEGRITY_PASS_PLANTING_HELD':'GEN311_PLACEMENT_DATA_FAIL',issues,qualificationHolds});
 }
 export function compareHEarthGen311PlacementRepeatability(){
-  const forward=buildHEarthGen311PlacementData(),reverse=buildHEarthGen311PlacementData({reverseGenerationOrder:true}),canon=r=>JSON.stringify(r.placements.map(p=>({id:p.placementId,world:p.world,community:p.dominantCommunity,weights:p.communityWeights,structure:p.structure.reason})));
-  return freeze({eligible:forward.eligible&&reverse.eligible&&canon(forward)===canon(reverse),status:forward.eligible&&reverse.eligible&&canon(forward)===canon(reverse)?'GEN311_PLACEMENT_REPEATABILITY_PASS':'GEN311_PLACEMENT_REPEATABILITY_FAIL',forwardCount:forward.placementCount,reverseCount:reverse.placementCount,canonicalDataEqual:canon(forward)===canon(reverse)});
+  const forward=buildHEarthGen311PlacementData(),reverse=buildHEarthGen311PlacementData({reverseGenerationOrder:true});
+  const canonicalDataEqual=JSON.stringify(forward.placements)===JSON.stringify(reverse.placements)&&JSON.stringify(forward.samples)===JSON.stringify(reverse.samples);
+  const repeatable=forward.constructionComplete&&reverse.constructionComplete&&canonicalDataEqual;
+  return freeze({eligible:false,repeatable,status:repeatable?'GEN311_PLACEMENT_REPEATABILITY_PASS_PLANTING_HELD':'GEN311_PLACEMENT_REPEATABILITY_FAIL',forwardCount:forward.placementCount,reverseCount:reverse.placementCount,canonicalDataEqual});
 }
 
 export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;

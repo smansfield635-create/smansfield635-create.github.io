@@ -425,11 +425,14 @@ void main(){
     // One signed, closest-point shoreline coordinate governs the sand color.
     // The uploaded terrain and the resident refinement patch share this field.
     float inlandMeters=vCoastDistanceMeters;
-    float sandCoverage=smoothstep(-1.0,0.0,inlandMeters)*(1.0-smoothstep(34.0,66.0,inlandMeters));
+    float beachSlopeSuitability=1.0-smoothstep(0.06,0.18,slope);
+    float slopeReturn=smoothstep(8.0,26.0,inlandMeters);
+    float sandCoverage=smoothstep(-1.0,0.0,inlandMeters)*(1.0-smoothstep(14.0,50.0,inlandMeters))*mix(1.0,beachSlopeSuitability,slopeReturn);
     vec3 wetSand=vec3(0.42326766,0.32777810,0.19120169);
     vec3 dampSand=vec3(0.49693298,0.39675522,0.23455058);
     vec3 drySand=vec3(0.57758045,0.47353148,0.28314874);
     vec3 sand=mix(mix(wetSand,dampSand,smoothstep(2.0,14.0,inlandMeters)),drySand,smoothstep(10.0,24.0,inlandMeters));
+    sand*=0.965+0.07*grain;
     palette=mix(palette,sand,sandCoverage);
     presentationContact*=1.0-0.85*sandCoverage;
     presentationHighlight*=1.0-0.70*sandCoverage;

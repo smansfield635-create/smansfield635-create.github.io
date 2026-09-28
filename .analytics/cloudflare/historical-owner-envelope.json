@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-28T17:31:45Z",
+  "generatedAt": "2026-09-28T18:38:53Z",
   "window": {
-    "start": "2026-06-30T17:31:45Z",
-    "end": "2026-09-28T17:31:45Z"
+    "start": "2026-06-30T18:38:53Z",
+    "end": "2026-09-28T18:38:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5072,
-    "visits": 1279,
+    "pageLoads": 5063,
+    "visits": 1273,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5072,
-        "visits": 1279
+        "pageLoads": 5063,
+        "visits": 1273
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1089,
-        "visits": 744
+        "pageLoads": 1087,
+        "visits": 742
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 201,
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 255,
-        "visits": 64
+        "pageLoads": 253,
+        "visits": 63
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 11,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -259,8 +259,8 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 13,
-        "visits": 3
+        "pageLoads": 10,
+        "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
@@ -327,7 +327,7 @@
         "visits": 0
       },
       "/meet-sean-mansfield/": {
-        "pageLoads": 5,
+        "pageLoads": 3,
         "visits": 0
       },
       "/governance-bridge/": {
@@ -342,27 +342,27 @@
         "pageLoads": 4,
         "visits": 4
       },
-      "/preview/governance-bridge/index.html": {
-        "pageLoads": 1,
-        "visits": 1
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
+        "visits": 1
+      },
+      "/preview/governance-bridge/index.html": {
+        "pageLoads": 1,
         "visits": 1
       }
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 487,
-        "visits": 487
+        "pageLoads": 482,
+        "visits": 482
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3793,
+        "pageLoads": 3790,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 781,
-        "visits": 781
+        "pageLoads": 780,
+        "visits": 780
       },
       "raw.githack.com": {
         "pageLoads": 10,

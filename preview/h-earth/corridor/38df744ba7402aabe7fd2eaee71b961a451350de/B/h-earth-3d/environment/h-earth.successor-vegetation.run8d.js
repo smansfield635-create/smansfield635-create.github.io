@@ -6,6 +6,7 @@ import {
 } from './h-earth.vegetation-resolution.run8d.js';
 import {
   H_EARTH_GEN311_REGIONAL_ARTICULATION_CONTRACT_ID,
+  deriveHEarthGen311RegionalArticulation,
   sampleHEarthRun8BSuccessorTerrainField
 } from '../terrain/h-earth.successor-terrain-field.run8b.js';
 import {
@@ -199,6 +200,43 @@ export function buildHEarthGen311VegetationSuitabilityMap(){
 }
 export function evaluateHEarthGen311VegetationSuitabilityMap(result){
   const issues=[];if(result?.eligible!==true)issues.push('GEN311_SUITABILITY_MAP_NOT_ELIGIBLE');if(result?.contractId!==H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_CONTRACT_ID)issues.push('GEN311_SUITABILITY_MAP_CONTRACT_MISMATCH');if(result?.measuredSampleCount!==H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE.sampleCount)issues.push('GEN311_SUITABILITY_SAMPLE_COUNT_MISMATCH');if(result?.invalidSampleCount!==0)issues.push('GEN311_SUITABILITY_INVALID_SAMPLES');if(result?.geometryCreated!==false||result?.rendererMutation!==false||result?.populationMutation!==false||result?.terrainMutation!==false)issues.push('GEN311_SUITABILITY_BOUNDARY_VIOLATION');return freeze({eligible:issues.length===0,status:issues.length?'GEN311_VEGETATION_SUITABILITY_MAP_FAIL':'GEN311_VEGETATION_SUITABILITY_MAP_PASS',issues:freeze(issues)});
+}
+
+export const H_EARTH_GEN311_RARE_SIGNAL_REFINEMENT_CONTRACT_ID='H_EARTH_GEN311_RARE_SIGNAL_REFINEMENT_DIAGNOSTIC_v1';
+const RARE_SIGNAL_RULES=freeze({
+  ridge:freeze({key:'ridgeSignal',threshold:.58,candidateFloor:.48,label:'RIDGELINE'}),
+  pass:freeze({key:'passSignal',threshold:.55,candidateFloor:.45,label:'PASS'}),
+  valley:freeze({key:'valleySignal',threshold:.52,candidateFloor:.42,label:'VALLEY'}),
+  watershed:freeze({key:'watershedSignal',threshold:.50,candidateFloor:.40,label:'WATERSHED'})
+});
+function connectedComponentSizes(points,spacing){
+  const keys=new Set(points.map(p=>`${p.x},${p.z}`)),seen=new Set(),sizes=[];
+  for(const key of keys){if(seen.has(key))continue;let count=0,stack=[key];seen.add(key);while(stack.length){const k=stack.pop(),[x,z]=k.split(',').map(Number);count++;for(const [nx,nz] of [[x+spacing,z],[x-spacing,z],[x,z+spacing],[x,z-spacing]]){const nk=`${nx},${nz}`;if(keys.has(nk)&&!seen.has(nk)){seen.add(nk);stack.push(nk)}}}sizes.push(count)}
+  return sizes.sort((a,b)=>b-a);
+}
+export function buildHEarthGen311RareSignalRefinementDiagnostic(){
+  const domain=H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE.worldDomain,coarse=8,candidates=[];
+  for(let z=domain.zMinimum;z<=domain.zMaximum;z+=coarse)for(let x=domain.xMinimum;x<=domain.xMaximum;x+=coarse){
+    const a=deriveHEarthGen311RegionalArticulation(x,z,{step:coarse});if(a?.valid!==true)continue;
+    const selected=Object.entries(RARE_SIGNAL_RULES).filter(([,r])=>(a[r.key]??0)>=r.candidateFloor).map(([name])=>name);
+    if(selected.length)candidates.push({x,z,selected});
+  }
+  const levels={};
+  for(const spacing of [8,4,2,1]){
+    const pointsBySignal=Object.fromEntries(Object.keys(RARE_SIGNAL_RULES).map(k=>[k,[]])),suppressed=Object.fromEntries(Object.keys(RARE_SIGNAL_RULES).map(k=>[k,0])),peaks=Object.fromEntries(Object.keys(RARE_SIGNAL_RULES).map(k=>[k,0]));
+    const visited=new Set();
+    for(const c of candidates)for(let z=c.z-coarse;z<=c.z+coarse;z+=spacing)for(let x=c.x-coarse;x<=c.x+coarse;x+=spacing){
+      const vk=`${x},${z}`;if(visited.has(vk))continue;visited.add(vk);
+      const a=deriveHEarthGen311RegionalArticulation(x,z,{step:spacing});if(a?.valid!==true)continue;
+      for(const [name,r] of Object.entries(RARE_SIGNAL_RULES)){const v=a[r.key]??0;peaks[name]=Math.max(peaks[name],v);if(v>=r.threshold){pointsBySignal[name].push({x,z,value:v,label:a.landformClass});if(a.landformClass!==r.label)suppressed[name]++;}}
+    }
+    const signals={};for(const [name,r] of Object.entries(RARE_SIGNAL_RULES)){const pts=pointsBySignal[name],components=connectedComponentSizes(pts,spacing);signals[name]=freeze({threshold:r.threshold,crossingPointCount:pts.length,approximateCrossingAreaSquareMeters:pts.length*spacing*spacing,componentCount:components.length,largestComponentPointCount:components[0]??0,approximateLargestComponentAreaSquareMeters:(components[0]??0)*spacing*spacing,peakSignal:peaks[name],labelSuppressedPointCount:suppressed[name]})}
+    levels[spacing]=freeze({spacingWorldUnits:spacing,uniqueSampleCount:visited.size,signals:freeze(signals)});
+  }
+  return freeze({eligible:true,status:'GEN311_RARE_SIGNAL_REFINEMENT_DIAGNOSTIC_COMPLETE',contractId:H_EARTH_GEN311_RARE_SIGNAL_REFINEMENT_CONTRACT_ID,candidateCoarseCellCount:candidates.length,candidateRule:RARE_SIGNAL_RULES,levels:freeze(levels),classificationThresholdsMutated:false,terrainMutation:false,ecologyEquationMutation:false,geometryCreated:false});
+}
+export function evaluateHEarthGen311RareSignalRefinementDiagnostic(result){
+  const issues=[];if(result?.eligible!==true||result?.contractId!==H_EARTH_GEN311_RARE_SIGNAL_REFINEMENT_CONTRACT_ID)issues.push('GEN311_RARE_SIGNAL_DIAGNOSTIC_INVALID');for(const spacing of [8,4,2,1])if(!result?.levels?.[spacing])issues.push(`GEN311_RARE_SIGNAL_LEVEL_MISSING:${spacing}`);if(result?.classificationThresholdsMutated!==false||result?.terrainMutation!==false||result?.ecologyEquationMutation!==false||result?.geometryCreated!==false)issues.push('GEN311_RARE_SIGNAL_DIAGNOSTIC_BOUNDARY_VIOLATION');return freeze({eligible:issues.length===0,status:issues.length?'GEN311_RARE_SIGNAL_REFINEMENT_FAIL':'GEN311_RARE_SIGNAL_REFINEMENT_PASS',issues:freeze(issues)});
 }
 
 export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;

@@ -9,6 +9,8 @@ import {
   deriveHEarthGen311RegionalArticulation,
   sampleHEarthRun8BSuccessorTerrainField
 } from '../terrain/h-earth.successor-terrain-field.run8b.js';
+import { sampleHEarthSurfaceState } from './h-earth.surface-state-field.js';
+import { H_EARTH_256_LATTICE_REGION_PROFILES } from '../zones/ground-cell-001.landscape-lattice.js';
 import {
   H_EARTH_GEN311_REGIONAL_MATERIAL_RESPONSE_CONTRACT_ID,
   sampleHEarthRun8CSuccessorSurfaceMaterial,
@@ -260,6 +262,53 @@ export function buildHEarthGen311HabitatAdmissionDiagnostic(){
 }
 export function evaluateHEarthGen311HabitatAdmissionDiagnostic(result){
   const issues=[];if(result?.eligible!==true||result?.contractId!==H_EARTH_GEN311_HABITAT_ADMISSION_DIAGNOSTIC_CONTRACT_ID)issues.push('GEN311_HABITAT_ADMISSION_DIAGNOSTIC_INVALID');if(result?.measuredSampleCount!==H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE.sampleCount||result?.invalidSampleCount!==0)issues.push('GEN311_HABITAT_ADMISSION_SAMPLE_SET_INVALID');if(result?.plantGeometryCreated!==false||result?.populationMutation!==false||result?.terrainMutation!==false||result?.ecologyEquationMutation!==false||result?.classificationThresholdMutation!==false)issues.push('GEN311_HABITAT_ADMISSION_BOUNDARY_VIOLATION');return freeze({eligible:issues.length===0,status:issues.length?'GEN311_HABITAT_ADMISSION_DIAGNOSTIC_FAIL':'GEN311_HABITAT_ADMISSION_DIAGNOSTIC_PASS',issues:freeze(issues)});
+}
+
+export const H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID='H_EARTH_GEN311_DETERMINISTIC_COMMUNITY_PLACEMENT_DATA_v1';
+const PLACEMENT_REGION_EXCLUSIONS=freeze(new Set(['ELEVATED_MANOR_CONTEXT','WATER_SURFACE_PLANE','NEARSHORE_WAVE_BAND','SHORELINE_CONTACT','AIR_HAZE_DISTANT_ATMOSPHERE','OFFSHORE_ROCK_STACKS_AND_ISLETS']));
+function hash32(text){let h=0x811c9dc5;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,0x01000193)}return h>>>0}
+const hash01=text=>hash32(text)/0xffffffff;
+function regionForSemanticAddress(id){
+  const m=/:R(\d+):C(\d+)$/.exec(id??'');if(!m)return null;const row=Number(m[1]),column=Number(m[2]);
+  return Object.values(H_EARTH_256_LATTICE_REGION_PROFILES).find(r=>row>=r.rowRange.min&&row<=r.rowRange.max&&(!r.columnRange||(column>=r.columnRange.min&&column<=r.columnRange.max)))??null;
+}
+function structureCompatibilityAt(x,z){
+  const surface=sampleHEarthSurfaceState(x,z);if(surface?.valid!==true)return freeze({status:'UNRESOLVED_STRUCTURE_COMPATIBILITY',reason:'CANONICAL_SURFACE_IDENTITY_UNAVAILABLE'});
+  const region=regionForSemanticAddress(surface.semanticAddressId);if(!region)return freeze({status:'UNRESOLVED_STRUCTURE_COMPATIBILITY',reason:'LATTICE_REGION_UNRESOLVED',semanticAddressId:surface.semanticAddressId,chunkId:surface.chunkId,formationIds:surface.formationIds});
+  const excluded=PLACEMENT_REGION_EXCLUSIONS.has(region.regionId);
+  return freeze({status:excluded?'EXCLUDED_EXISTING_WORLD_AUTHORITY':'COMPATIBLE_EXISTING_WORLD_AUTHORITY',reason:excluded?`REGION:${region.regionId}:PRIMITIVE:${region.primitiveIntent}`:'ORDINARY_TERRAIN_REGION',regionId:region.regionId,primitiveIntent:region.primitiveIntent,semanticAddressId:surface.semanticAddressId,chunkId:surface.chunkId,formationIds:surface.formationIds});
+}
+function communityWeights(e){
+  const ridge=clamp01(e.ridgeSignal??0),valley=clamp01(e.valleySignal??0),foothill=clamp01(e.foothillSignal??0),moisture=e.moistureAvailability,exposure=e.windExposure;
+  return freeze({groundcover:clamp01(e.groundcoverSuitability*(.72+moisture*.28)),shrub:clamp01(e.densitySuitability*(.56+foothill*.24+exposure*.2)),woodland:clamp01(e.canopySuitability*(.48+foothill*.3+valley*.22)*(1-ridge*.32)),ridgeLowGrowth:clamp01(e.groundcoverSuitability*ridge*(.62+exposure*.38)),valleyMoistGrowth:clamp01(e.densitySuitability*valley*(.58+moisture*.42))});
+}
+export function buildHEarthGen311PlacementData({reverseGenerationOrder=false}={}){
+  const p=H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE,d=p.worldDomain,step=p.sampleStepWorldUnits,cells=[];
+  for(let z=d.zMinimum;z<=d.zMaximum;z+=step)for(let x=d.xMinimum;x<=d.xMaximum;x+=step)cells.push([x,z]);
+  if(reverseGenerationOrder)cells.reverse();
+  const placements=[],counts={};let unresolvedStructure=0,finalHabitatRejected=0,structureExcluded=0;
+  for(const [x,z] of cells){
+    const baseMaterial=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);if(evaluateHEarthRun8CSuccessorSurfaceMaterial(baseMaterial).eligible!==true)continue;
+    if(habitatDisposition(baseMaterial.surfaceClass)!=='ADMITTED_SOIL_HABITAT_CANDIDATE')continue;
+    const salt=`GEN311_PLACEMENT_V1|${x}|${z}`,offsetLimit=step*.375,fx=x+(hash01(salt+'|X')*2-1)*offsetLimit,fz=z+(hash01(salt+'|Z')*2-1)*offsetLimit;
+    const finalMaterial=sampleHEarthRun8CSuccessorSurfaceMaterial(fx,fz),finalDisposition=habitatDisposition(finalMaterial.surfaceClass);
+    if(evaluateHEarthRun8CSuccessorSurfaceMaterial(finalMaterial).eligible!==true||finalDisposition!=='ADMITTED_SOIL_HABITAT_CANDIDATE'){finalHabitatRejected++;continue}
+    const structure=structureCompatibilityAt(fx,fz);if(structure.status==='UNRESOLVED_STRUCTURE_COMPATIBILITY'){unresolvedStructure++;continue}if(structure.status==='EXCLUDED_EXISTING_WORLD_AUTHORITY'){structureExcluded++;continue}
+    const terrain=sampleHEarthRun8BSuccessorTerrainField(fx,fz),e=ecologicalResponseAt(fx,fz);if(terrain?.valid!==true||!e)continue;
+    const weights=communityWeights({...e,...terrain.regionalArticulation}),dominant=Object.entries(weights).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0][0];
+    const placementId=`H_EARTH_GEN311_PLACEMENT:${hash32(salt).toString(16).padStart(8,'0')}`;counts[dominant]=(counts[dominant]??0)+1;
+    placements.push(freeze({placementId,sourceCell:freeze({x,z}),world:freeze({x:fx,y:terrain.elevation,z:fz}),surfaceClass:finalMaterial.surfaceClass,habitatDisposition:finalDisposition,communityWeights:weights,dominantCommunity:dominant,densitySuitability:e.densityModifier,canopySuitability:e.canopyModifier,groundcoverSuitability:e.groundcoverModifier,scaleSuitability:e.scaleModifier,continuousSignals:freeze({ridge:terrain.regionalArticulation.ridgeSignal,pass:terrain.regionalArticulation.passSignal,valley:terrain.regionalArticulation.valleySignal,watershed:terrain.regionalArticulation.watershedSignal,foothill:terrain.regionalArticulation.foothillSignal}),structure,terrainAttachment:freeze({elevation:terrain.elevation,normal:terrain.normal,slope:terrain.slope}),cameraIndependent:true,renderBudgetIndependent:true}));
+  }
+  placements.sort((a,b)=>a.placementId.localeCompare(b.placementId));
+  return freeze({eligible:unresolvedStructure===0,status:unresolvedStructure===0?'GEN311_PLACEMENT_DATA_COMPLETE':'GEN311_PLACEMENT_DATA_HELD_STRUCTURE_UNRESOLVED',contractId:H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID,worldDomain:d,sampleStepWorldUnits:step,placementCount:placements.length,communityCounts:freeze(counts),finalHabitatRejectedCount:finalHabitatRejected,structureExcludedCount:structureExcluded,unresolvedStructureCount:unresolvedStructure,placements:freeze(placements),reverseGenerationOrder,legacyPopulationPlannerUsed:false,legacyInstanceCeilingUsed:false,cameraAuthorityUsed:false,lodAuthorityUsed:false,renderBudgetAuthorityUsed:false,geometryCreated:false,terrainMutation:false,rendererMutation:false});
+}
+export function evaluateHEarthGen311PlacementData(result){
+  const issues=[];if(result?.eligible!==true)issues.push('GEN311_PLACEMENT_NOT_ELIGIBLE');if(result?.contractId!==H_EARTH_GEN311_PLACEMENT_DATA_CONTRACT_ID)issues.push('GEN311_PLACEMENT_CONTRACT_MISMATCH');if(result?.unresolvedStructureCount!==0)issues.push('GEN311_STRUCTURE_COMPATIBILITY_UNRESOLVED');if(result?.legacyPopulationPlannerUsed!==false||result?.legacyInstanceCeilingUsed!==false||result?.cameraAuthorityUsed!==false||result?.lodAuthorityUsed!==false||result?.renderBudgetAuthorityUsed!==false)issues.push('GEN311_PLACEMENT_FORBIDDEN_AUTHORITY_USED');if(result?.geometryCreated!==false||result?.terrainMutation!==false||result?.rendererMutation!==false)issues.push('GEN311_PLACEMENT_BOUNDARY_VIOLATION');const ids=new Set();for(const p of result?.placements??[]){if(ids.has(p.placementId))issues.push(`GEN311_PLACEMENT_ID_DUPLICATE:${p.placementId}`);ids.add(p.placementId);const t=sampleHEarthRun8BSuccessorTerrainField(p.world.x,p.world.z),m=sampleHEarthRun8CSuccessorSurfaceMaterial(p.world.x,p.world.z),sc=structureCompatibilityAt(p.world.x,p.world.z);if(t?.valid!==true||Math.abs(t.elevation-p.world.y)>1e-9)issues.push(`GEN311_TERRAIN_ATTACHMENT_MISMATCH:${p.placementId}`);if(habitatDisposition(m.surfaceClass)!=='ADMITTED_SOIL_HABITAT_CANDIDATE')issues.push(`GEN311_FINAL_HABITAT_REJECTED:${p.placementId}`);if(sc.status!=='COMPATIBLE_EXISTING_WORLD_AUTHORITY')issues.push(`GEN311_STRUCTURE_EXCLUSION_FAILED:${p.placementId}`)}
+  return freeze({eligible:issues.length===0,status:issues.length?'GEN311_PLACEMENT_DATA_FAIL':'GEN311_PLACEMENT_DATA_PASS',issues:freeze(issues)});
+}
+export function compareHEarthGen311PlacementRepeatability(){
+  const forward=buildHEarthGen311PlacementData(),reverse=buildHEarthGen311PlacementData({reverseGenerationOrder:true}),canon=r=>JSON.stringify(r.placements.map(p=>({id:p.placementId,world:p.world,community:p.dominantCommunity,weights:p.communityWeights,structure:p.structure.reason})));
+  return freeze({eligible:forward.eligible&&reverse.eligible&&canon(forward)===canon(reverse),status:forward.eligible&&reverse.eligible&&canon(forward)===canon(reverse)?'GEN311_PLACEMENT_REPEATABILITY_PASS':'GEN311_PLACEMENT_REPEATABILITY_FAIL',forwardCount:forward.placementCount,reverseCount:reverse.placementCount,canonicalDataEqual:canon(forward)===canon(reverse)});
 }
 
 export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-28T20:33:01Z",
+  "generatedAt": "2026-09-28T21:29:38Z",
   "window": {
-    "start": "2026-06-30T20:33:01Z",
-    "end": "2026-09-28T20:33:01Z"
+    "start": "2026-06-30T21:29:38Z",
+    "end": "2026-09-28T21:29:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5061,
-    "visits": 1275,
+    "pageLoads": 5048,
+    "visits": 1272,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5061,
-        "visits": 1275
+        "pageLoads": 5048,
+        "visits": 1272
       }
     },
     "byPath": {
@@ -63,7 +63,7 @@
         "visits": 10
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 37,
+        "pageLoads": 36,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 86,
+        "pageLoads": 85,
         "visits": 10
       },
       "/products/archcoin/": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 254,
-        "visits": 71
+        "pageLoads": 243,
+        "visits": 68
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -330,6 +330,10 @@
         "pageLoads": 2,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 4,
+        "visits": 4
+      },
       "/governance-bridge/": {
         "pageLoads": 95,
         "visits": 82
@@ -337,10 +341,6 @@
       "/preview/governance-bridge/": {
         "pageLoads": 5,
         "visits": 5
-      },
-      "/home/": {
-        "pageLoads": 4,
-        "visits": 4
       },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
@@ -353,11 +353,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 487,
-        "visits": 487
+        "pageLoads": 484,
+        "visits": 484
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3786,
+        "pageLoads": 3776,
         "visits": 0
       },
       "www.google.com": {

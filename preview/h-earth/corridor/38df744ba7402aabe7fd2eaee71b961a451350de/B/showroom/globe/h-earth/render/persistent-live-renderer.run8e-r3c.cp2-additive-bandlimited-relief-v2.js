@@ -5,6 +5,140 @@ import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
+// The CPU contour is derived from uploaded Float32 triangle planes in world x/z.
+// The GPU attribute is a sampled, linearly interpolated approximation, not an
+// exact fragment contact test. Distances saturate at 64 m (sand ends at 38 m).
+function createExposedWaterContactField(views, spans, patch = null) {
+  const started = performance.now(), limit = 64, eps = 1e-8;
+  const stats = { coordinateSpace: 'UPLOADED_WORLD_XZ_METERS', saturationMeters: limit,
+    interpolation: 'PER_VERTEX_LINEAR_APPROXIMATION', terrainTriangles: 0,
+    oceanTriangles: 0, overlapTests: 0, contactSegments: 0, maximumPlaneResidualMeters: 0 };
+  const bounds = points => [Math.min(...points.map(p=>p[0])),Math.min(...points.map(p=>p[1])),Math.max(...points.map(p=>p[0])),Math.max(...points.map(p=>p[1]))];
+  const overlap = (a,b) => a[0]<=b[2]+eps && a[2]>=b[0]-eps && a[1]<=b[3]+eps && a[3]>=b[1]-eps;
+  const cross = (a,b,p) => (b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);
+  const mix = (a,b,t) => [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+  function tree(items) {
+    if (!items.length) return null;
+    const box=[Math.min(...items.map(t=>t.box[0])),Math.min(...items.map(t=>t.box[1])),Math.max(...items.map(t=>t.box[2])),Math.max(...items.map(t=>t.box[3]))];
+    if(items.length<=12)return {box,items};
+    const axis=box[2]-box[0]>=box[3]-box[1]?0:1;
+    items.sort((a,b)=>(a.box[axis]+a.box[axis+2])-(b.box[axis]+b.box[axis+2]));
+    const mid=items.length>>1;return {box,left:tree(items.slice(0,mid)),right:tree(items.slice(mid))};
+  }
+  function query(node,box,out=[]) {
+    if(!node||!overlap(node.box,box))return out;
+    if(node.items){for(const t of node.items)if(overlap(t.box,box))out.push(t);}
+    else {query(node.left,box,out);query(node.right,box,out);}return out;
+  }
+  function triangles(positions,indices,start,count,owner) {
+    const out=[];
+    for(let i=start;i<start+count;i+=3){
+      const ids=[indices[i],indices[i+1],indices[i+2]];
+      const p=ids.map(id=>[positions[id*3],positions[id*3+2],positions[id*3+1]]);
+      const den=cross(p[0],p[1],p[2]);
+      if(Math.abs(den)<eps)throw new Error('R3C_CONTACT_DEGENERATE_PROJECTED_TRIANGLE');
+      const dx=((p[1][2]-p[0][2])*(p[2][1]-p[0][1])-(p[2][2]-p[0][2])*(p[1][1]-p[0][1]))/den;
+      const dz=((p[1][0]-p[0][0])*(p[2][2]-p[0][2])-(p[2][0]-p[0][0])*(p[1][2]-p[0][2]))/den;
+      out.push({ids,p,box:bounds(p),owner,den,height:q=>p[0][2]+dx*(q[0]-p[0][0])+dz*(q[1]-p[0][1])});
+    }return out;
+  }
+  function contains(t,p) {const s=Math.sign(t.den);return t.p.every((a,i)=>s*cross(a,t.p[(i+1)%3],p)>=-eps);}
+  function clip(poly,t) {
+    const s=Math.sign(t.den);
+    for(let i=0;i<3&&poly.length;i++){
+      const a=t.p[i],b=t.p[(i+1)%3],next=[];
+      for(let j=0;j<poly.length;j++){
+        const p=poly[j],q=poly[(j+1)%poly.length],dp=s*cross(a,b,p),dq=s*cross(a,b,q);
+        if(dp>=-eps)next.push(p);
+        if((dp>eps&&dq<-eps)||(dp<-eps&&dq>eps))next.push(mix(p,q,dp/(dp-dq)));
+      }poly=next;
+    }return poly;
+  }
+  const terrain=[],ocean=[];
+  for(const span of spans){
+    if(span.role==='TERRAIN')terrain.push(...triangles(views.positions,views.indices,span.indexStart,span.indexCount,'package'));
+    if(span.materialIntent==='ONE_CONTINUOUS_OPEN_OCEAN_TO_GEOMETRIC_HORIZON')ocean.push(...triangles(views.positions,views.indices,span.indexStart,span.indexCount,'ocean'));
+  }
+  if(!terrain.length||!ocean.length)throw new Error('R3C_CONTACT_SOURCE_MISSING');
+  const packageTree=tree(terrain.slice());
+  const patchTriangles=patch?triangles(patch.positions,patch.indices,0,patch.indices.length,'patch'):[];
+  const patchTree=tree(patchTriangles.slice()),waterTree=tree(ocean.slice());
+  const rectangle=patch?[patch.x-64+.04,patch.z-64+.04,patch.x+64-.04,patch.z+64-.04]:null;
+  const inRectangle=p=>rectangle&&p[0]>rectangle[0]&&p[0]<rectangle[2]&&p[1]>rectangle[1]&&p[1]<rectangle[3];
+  function exposedPieces(a,b,t,w) {
+    const cuts=[0,1],box=bounds([a,b]);
+    const other=query(t.owner==='package'?patchTree:packageTree,box);
+    const add=v=>{if(v>eps&&v<1-eps)cuts.push(v);};
+    if(rectangle)for(let axis=0;axis<2;axis++)for(const edge of [rectangle[axis],rectangle[axis+2]]){
+      if(Math.abs(b[axis]-a[axis])>eps)add((edge-a[axis])/(b[axis]-a[axis]));
+    }
+    for(const o of other){
+      for(let i=0;i<3;i++){const d0=cross(o.p[i],o.p[(i+1)%3],a),d1=cross(o.p[i],o.p[(i+1)%3],b);if(Math.abs(d0-d1)>eps)add(d0/(d0-d1));}
+      const d0=o.height(a)-w.height(a),d1=o.height(b)-w.height(b);if(Math.abs(d0-d1)>eps)add(d0/(d0-d1));
+    }
+    cuts.sort((a,b)=>a-b);const pieces=[];
+    for(let i=1;i<cuts.length;i++){
+      if(cuts[i]-cuts[i-1]<eps)continue;
+      const mid=mix(a,b,(cuts[i-1]+cuts[i])/2);
+      if(t.owner==='package'&&inRectangle(mid))continue;
+      if(other.some(o=>!(o.owner==='package'&&inRectangle(mid))&&contains(o,mid)&&o.height(mid)>w.height(mid)+eps))continue;
+      pieces.push([mix(a,b,cuts[i-1]),mix(a,b,cuts[i])]);
+    }return pieces;
+  }
+  const segments=[],seen=new Set();
+  for(const t of [...terrain,...patchTriangles])for(const w of query(waterTree,t.box)){
+    stats.overlapTests++;
+    const poly=clip(t.p.map(p=>p.slice(0,2)),w);if(poly.length<2)continue;
+    const heights=poly.map(p=>t.height(p)-w.height(p));
+    if(heights.every(h=>Math.abs(h)<eps))throw new Error('R3C_CONTACT_COPLANAR_OVERLAP');
+    const hits=[];
+    for(let i=0;i<poly.length;i++){
+      const j=(i+1)%poly.length,da=heights[i],db=heights[j];
+      if(Math.abs(da)<eps)hits.push(poly[i]);
+      if(da*db<0)hits.push(mix(poly[i],poly[j],da/(da-db)));
+    }
+    let pair=null,length2=eps*eps;
+    for(const a of hits)for(const b of hits){const d=(a[0]-b[0])**2+(a[1]-b[1])**2;if(d>length2){length2=d;pair=[a,b];}}
+    if(!pair)continue;
+    for(const [a,b] of exposedPieces(...pair,t,w)){
+      const key=[a,b].map(p=>p.map(v=>v.toFixed(7)).join(',')).sort().join('|');if(seen.has(key))continue;seen.add(key);
+      stats.maximumPlaneResidualMeters=Math.max(stats.maximumPlaneResidualMeters,Math.abs(t.height(a)-w.height(a)),Math.abs(t.height(b)-w.height(b)));
+      segments.push({a,b,box:bounds([a,b]),triangle:t});
+    }
+  }
+  const segmentTree=tree(segments.slice());
+  function sample(positions,ids) {
+    const distances=new Float32Array(positions.length/3);distances.fill(limit);
+    for(const id of ids){
+      const p=[positions[id*3],positions[id*3+2]],y=positions[id*3+1];let d2=limit*limit;
+      for(const s of query(segmentTree,[p[0]-limit,p[1]-limit,p[0]+limit,p[1]+limit])){
+        const dx=s.b[0]-s.a[0],dz=s.b[1]-s.a[1],den=dx*dx+dz*dz;
+        const u=Math.max(0,Math.min(1,((p[0]-s.a[0])*dx+(p[1]-s.a[1])*dz)/den));
+        d2=Math.min(d2,(p[0]-s.a[0]-u*dx)**2+(p[1]-s.a[1]-u*dz)**2);
+      }
+      const wet=query(waterTree,[p[0],p[1],p[0],p[1]]).some(w=>contains(w,p)&&y<w.height(p));
+      distances[id]=(wet?-1:1)*Math.sqrt(d2);
+    }return distances;
+  }
+  const packageIds=new Set(terrain.flatMap(t=>t.ids));
+  const packageDistances=sample(views.positions,packageIds);
+  const patchDistances=patch?sample(patch.positions,new Set(patchTriangles.flatMap(t=>t.ids))):null;
+  let interpolationResidual=0,missedTriangles=new Set();
+  for(const s of segments){
+    const t=s.triangle,d=t.owner==='patch'?patchDistances:packageDistances,v=t.ids.map(i=>d[i]);
+    if(v.every(x=>x>0)||v.every(x=>x<0))missedTriangles.add(t);
+    for(const p of [s.a,s.b,mix(s.a,s.b,.5)]){
+      const wa=cross(t.p[1],t.p[2],p)/t.den,wb=cross(t.p[2],t.p[0],p)/t.den;
+      interpolationResidual=Math.max(interpolationResidual,Math.abs(wa*v[0]+wb*v[1]+(1-wa-wb)*v[2]));
+    }
+  }
+  Object.assign(stats,{terrainTriangles:terrain.length,patchTriangles:patchTriangles.length,oceanTriangles:ocean.length,contactSegments:segments.length,
+    packageVertices:packageIds.size,patchVertices:patchDistances?.length??0,
+    maximumSampledZeroContourAttributeResidualMeters:interpolationResidual,contactTrianglesWithoutVertexSignChange:missedTriangles.size,
+    initializationMilliseconds:performance.now()-started});
+  return {packageDistances,patchDistances,stats};
+}
+
 export const H_EARTH_RUN_8E_R3C_RENDERER_ID =
   'H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1';
 export const H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID =
@@ -73,6 +207,7 @@ layout(location=5) in uint aSurfaceClassCode;
 layout(location=6) in uint aPrimitiveIndex;
 layout(location=7) in uint aRoleCode;
 layout(location=8) in float aCoastDistanceMeters;
+layout(location=9) in float aContactDistanceMeters;
 uniform mat4 uViewProjection;
 out vec3 vWorldPosition;
 out vec3 vNormal;
@@ -83,6 +218,7 @@ flat out uint vSurfaceClassCode;
 flat out uint vPrimitiveIndex;
 flat out uint vRoleCode;
 out float vCoastDistanceMeters;
+out float vContactDistanceMeters;
 void main(){
   vWorldPosition=aPosition;
   vNormal=aNormal;
@@ -93,6 +229,7 @@ void main(){
   vPrimitiveIndex=aPrimitiveIndex;
   vRoleCode=aRoleCode;
   vCoastDistanceMeters=aCoastDistanceMeters;
+  vContactDistanceMeters=aContactDistanceMeters;
   gl_Position=uViewProjection*vec4(aPosition,1.0);
 }`;
 
@@ -108,6 +245,7 @@ flat in uint vSurfaceClassCode;
 flat in uint vPrimitiveIndex;
 flat in uint vRoleCode;
 in float vCoastDistanceMeters;
+in float vContactDistanceMeters;
 uniform vec3 uCameraPosition;
 uniform vec3 uSunDirection;
 uniform float uSunIntensity;
@@ -422,13 +560,13 @@ void main(){
     palette*=mix(1.0,0.70,max(ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse),ravineWallContact*0.62));
     palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
-    // One signed, closest-point shoreline coordinate governs the sand color.
-    // The uploaded terrain and the resident refinement patch share this field.
-    float inlandMeters=vCoastDistanceMeters;
+    // Actual exposed mesh contacts drive proximity; canonical coast distance
+    // retains the existing transition to slope/elevation suitability inland.
+    float inlandMeters=vContactDistanceMeters;
     float beachSlopeSuitability=1.0-smoothstep(0.035,0.16,slope);
     float beachElevationSuitability=1.0-smoothstep(2.0,10.0,vWorldPosition.y);
     float coastalSuitability=clamp(beachSlopeSuitability*0.72+beachElevationSuitability*0.28,0.0,1.0);
-    float inlandReturn=smoothstep(4.0,28.0,inlandMeters);
+    float inlandReturn=smoothstep(4.0,28.0,vCoastDistanceMeters);
     float sandCoverage=smoothstep(-1.0,0.0,inlandMeters)*(1.0-smoothstep(10.0,38.0,inlandMeters))*mix(1.0,coastalSuitability,inlandReturn);
     vec3 wetSand=vec3(0.42326766,0.32777810,0.19120169);
     vec3 dampSand=vec3(0.49693298,0.39675522,0.23455058);
@@ -634,6 +772,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     }
   }
 
+  let contactField=createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans);
+  let contactFieldBuildCount=1,contactFieldTotalMilliseconds=contactField.stats.initializationMilliseconds;
+
   function initialize(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
     if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) {
@@ -658,7 +799,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
       ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
       ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true],
-      ['coastDistances', coastDistances, 8, 1, gl.FLOAT, false]
+      ['coastDistances', coastDistances, 8, 1, gl.FLOAT, false],
+      ['contactDistances', contactField.packageDistances, 9, 1, gl.FLOAT, false]
     ];
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {
@@ -762,10 +904,16 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);patchCoastDistances[vi]=getHEarthSignedCoastDistanceMeters(x,z);vi++;
     }
     const indices=new Uint32Array(triangleCount*3);let ii=0,cols=xs.length;for(let r=0;r<zs.length-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.set([a,e,b,b,e,d],ii);ii+=6;}
+    contactField=createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans,{positions,indices,x:x0,z:z0});
+    contactFieldBuildCount++;contactFieldTotalMilliseconds+=contactField.stats.initializationMilliseconds;
+    const contactBuffer=resources.buffers.find(entry=>entry.name==='contactDistances').buffer;
+    gl.bindBuffer(gl.ARRAY_BUFFER,contactBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER,0,contactField.packageDistances);
+    counters.contactOwnershipBufferUpdateCount=(counters.contactOwnershipBufferUpdateCount??0)+1;
     const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];
     const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.refinementBufferUploadCount++;};
     bind(0,positions,3);bind(1,normals,3);const colors=new Float32Array(vertexCount*4),mats=new Float32Array(vertexCount*4);for(let i=0;i<vertexCount;i++){colors.set([.22,.24,.16,1],i*4);mats.set([.72,.18,.05,.12],i*4)}bind(2,colors,4);bind(3,mats,4);
-    const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);const sc=new Uint8Array(vertexCount);sc.fill(4);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);bind(8,patchCoastDistances,1);
+    const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);const sc=new Uint8Array(vertexCount);sc.fill(4);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);bind(8,patchCoastDistances,1);bind(9,contactField.patchDistances,1);
     const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
     resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},fallbackAvailable:true};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
   }
@@ -859,14 +1007,15 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       },
       counters: { ...counters },
       persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
-      resourceIdentityStable: initialized && resources.buffers?.length === 10 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
-      packageUploadedOnce: counters.bufferUploadCount === 9 && counters.postInitializationBufferUploadCount === 0,
+      resourceIdentityStable: initialized && resources.buffers?.length === 11 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
+      packageUploadedOnce: counters.bufferUploadCount === 11 && counters.postInitializationBufferUploadCount === 0,
       noPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,
-      noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0,
+      noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0 && (counters.contactOwnershipBufferUpdateCount??0) === 0,
       refinementResourceAuthorized:true, refinementResourceCreated:resources.refinement?.created===true,
       refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
+      contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
       canonicalPackageMutated:false
     };
   }
@@ -877,3 +1026,4 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;
+

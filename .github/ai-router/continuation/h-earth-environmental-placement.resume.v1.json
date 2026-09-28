@@ -5,7 +5,7 @@
   "authorityGeneration": 2510,
   "projectId": "H_EARTH",
   "exactBranch": "refs/heads/inspection/h-earth-environmental-successor-20260928",
-  "exactHead": "be9ffea4fc2e2adb514ad2969b37078b51548ad6",
+  "exactHead": "18166dd05ef00d54af85324ddc73caa1c13bc66d",
   "allowedPaths": [
     "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js"
   ],
@@ -15,9 +15,16 @@
     "SUITABILITY_DIAGNOSTIC_EXECUTED_1097f932379a94348be1b019d1e1fc2220e79cfb",
     "RARE_SIGNAL_DIAGNOSTIC_EXECUTED_49f31cbe33c564bb8363b883352231f6ecd50c76_WITH_MIXED_STENCIL_LIMITATION",
     "HABITAT_DISPOSITION_DIAGNOSTIC_ADDED_be9ffea4fc2e2adb514ad2969b37078b51548ad6",
-    "PLACEMENT_SCOPE_CANONICALLY_ADMITTED_GEN2510_PREDECESSOR_GEN2506_SUPERSEDED"
+    "PLACEMENT_SCOPE_CANONICALLY_ADMITTED_GEN2510_PREDECESSOR_GEN2506_SUPERSEDED",
+    "PLACEMENT_CONSTRUCTED_09b5ead95d34b36bf3ea669aa298c97dfa116f99",
+    "COMMUNITY_FIELD_MAPPING_REPAIRED_18166dd05ef00d54af85324ddc73caa1c13bc66d",
+    "EXACT_32_DEPENDENCY_BLOBS_MATERIALIZED_AND_NODE_EXECUTION_COMPLETED",
+    "FORWARD_REVERSE_317_FULL_PLACEMENT_ARRAYS_EQUAL_SHA256_033d9cc422db849d97f2fe807fb28d4a73d08a024acf895de1932dd6b535e86d",
+    "EVALUATOR_FAIL_27069_UNRESOLVED_LEGACY_CHUNK_CONTEXT_CANDIDATE_NOT_QUALIFIED"
   ],
   "preservedEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5879270509",
+    "H-Earth-Placement-Execution-18166dd0.zip; /H-Earth/H-Earth-Placement-Execution-18166dd0.zip; library_file_id libfile_d188fc84b5bc8191a987c61eb2f793fc; file_id file_00000000729c81f68ba6eda85bd8a1c9; executed receipt, all32 source hashes, scripts, full placement/disposition data and world map",
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878315808",
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878291359",
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878284721",
@@ -29,10 +36,10 @@
     "FIXED_STENCIL_CONTROL:8m derivative stencil; ridge areas at 8/4/2/1m sampling approximately 1728/1632/1640/1648 square metres; separate from unchanged candidate receipt; owner-supplied preserved evidence"
   ],
   "nextAction": {
-    "actionId": "CONSTRUCT_AND_EXECUTE_PLACEMENT_DATA_CANDIDATE",
+    "actionId": "REPAIR_WORLD_DOMAIN_STRUCTURE_COMPATIBILITY_AND_REEXECUTE",
     "actionClass": "CONSTRUCTION",
-    "binding": "Revalidate current canonical operation 2510 and exact product branch; preserve compatible later work. Within the sole admitted vegetation module: valid terrain -> explicit habitat disposition and reason -> unchanged Gen311 response and independent continuous signals -> deterministic community/patch placement -> canonical terrain anchoring. Resolve protected-structure exclusions from existing world authority; recheck habitat at final offset coordinates; stable identities independent of camera and generation order; no legacy bounded population planner, old catalog constraint, traversal cutoff, 64-instance ceiling, visibility/LOD/render-budget population authority. Preserve unresolved habitats explicitly; no replacement geometry or protected foundation changes. Preserve completed diagnostics and fixed-stencil control; do not rerun mixed-stencil study as prerequisite.",
-    "expectedResult": "Reviewable immutable placement-data candidate; executed receipt and repeated/reverse-order comparison; world-domain map and community/disposition/exclusion counts; canonical attachment and structure-exclusion evidence; explicit unresolved assumptions and proposed ecological choices."
+    "binding": "Preserve executed18166dd0 evidence and current compatible branch work. Revalidate active2510 and sole vegetation module. Replace the unintended dependency on16 legacy physical chunks with final-coordinate containment against complete existing authoritative intentional-structure/reservation footprints. Establish inventory domain/completeness; do not infer outside-chunk safety or protection from names. Retain explicit unresolved coverage when unproven. Keep unchanged Gen311 response and continuous signals, explicit habitat reasons, canonical Run8B anchoring, stable identities and separate rendering budgets. Use available local exact-head Node execution with recursive GitHub file/blob materialization; all32 dependencies and executable import are proven, no new runner prerequisite. Test protected footprint interior/boundary/exterior and legacy-chunk-exterior coordinates, repeat/reverse full placement data, finite weights, final habitat, terrain Y and complete disposition accounting. Preserve no-geometry/product-merge/deployment/publication boundary.",
+    "expectedResult": "Exact repaired candidate and executed evidence demonstrating world-domain structure compatibility or precise remaining coverage failure. Update this same resume and issue5086 with exact candidate, evidence, admission, completed result and one next action; do not repeat completed transport investigations."
   },
   "requiredVerifier": {
     "verifierId": "PLACEMENT_DATA_REPEATABILITY_AND_BOUNDARY_REVIEW",

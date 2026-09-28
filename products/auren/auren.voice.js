@@ -1,29 +1,37 @@
-/* AUREN_SPATIAL_CHAMBER_VOICE_PROOF1_v1
-Owns Auren chamber dialogue only. Source-bound to AUREN_VALE_SANCTUARY_BUILDER_V1.
-Does not own geometry, presentation, environment state, product truth, or navigation execution. */
+/* TARGET FILE: /products/auren/auren.voice.js
+   TNT FULL-FILE REPLACEMENT
+   AUREN_PROGRESSIVE_CONVERSATION_VOICE_PROOF2_v1
+   Owns only the bounded proof topology and dialogue. */
 (()=>{"use strict";
-const CONTRACT="AUREN_SPATIAL_CHAMBER_VOICE_PROOF1_v1";
-const responses=Object.freeze({
-opening:["Come in.","I'm Auren Vale.","This room is meant to protect what matters without turning protection into a cage.","Ask me what you want to understand."],
-sanctuary:["A sanctuary has to do more than keep danger out.","If nobody inside can choose, leave, question, or grow, protection has crossed into control."],
-custody:["Custody means something has been placed in your care.","That gives you responsibility. It does not automatically give you ownership over the person or thing you are protecting."],
-room:["This is my room, not the old product floor.","The architecture is part of the conversation now. Some things are visible. Some things are protected. The difference should have a reason."],
-protected:["You noticed it.","I keep that part of the room protected because custody without boundaries is just display.","I can show you more without pretending that showing you means surrendering it."],
-reveal:["All right. Look again.","Protection can change its posture without disappearing.","That is the point of this first threshold."],
-archcoin:["ARCHCOIN intersects my work where value, custody, traceability, allocation, and protection meet.","Its official product truth still belongs to ARCHCOIN. I can discuss what those responsibilities mean from here."],
-language:["The 1,001 Language work matters here because access is part of sanctuary.","Something useful that nobody can understand is not fully accessible. Its official product truth remains with Education."],
-unveil:["'Auren Vale' sounding like 'our unveil' was an accident.","I like it as a resonance, not an origin story. A sanctuary can make revelation safer without forcing exposure."]
+const CONTRACT="AUREN_PROGRESSIVE_CONVERSATION_VOICE_PROOF2_v1";
+const nodes=Object.freeze({
+ root:{options:[["products","Products"],["about","About Auren"]]},
+ products:{prompt:"Products",responses:["I can take you through the things built here. Start with the one you want to understand."],options:[["archcoin","ARCHCOIN"],["fiveFlags","Five Flags"],["moreProducts","More products & community"]]},
+ moreProducts:{prompt:"More products & community",responses:["There are a few more doors from here."],options:[["education","Education"],["nutrition","Nutrition"],["community","Consider the Energy / Consider the Community"]]},
+ archcoin:{prompt:"ARCHCOIN",responses:["ARCHCOIN has four intended token domains: Contract, Receivable, Payable, and Allocation."],options:[["archcoinWhat","What is ARCHCOIN?"],["archcoinLive","Which tokens exist?"],["archcoinGo","Show me ARCHCOIN"]]},
+ archcoinWhat:{prompt:"What is ARCHCOIN?",responses:["ARCHCOIN is a four-domain token system organized around Contract, Receivable, Payable, and Allocation.","Two of those tokens are launched now; two remain prospective."],options:[["archcoinFour","What are the four tokens?"],["archcoinCapabilities","What can the launched tokens do?"],["archcoinLive","Which ones are actually live?"]]},
+ archcoinLive:{prompt:"Which ones are actually live?",responses:["ARCC · Contract and ARCR · Receivable are launched on Ethereum mainnet, each with a fixed supply of 1,000,000 tokens.","ARCP · Payable and ARCA · Allocation are prospective and are not launched."],options:[["archcoinContract","What does Contract mean?"],["archcoinReceivable","What does Receivable mean?"],["archcoinGo","Take me to ARCHCOIN"]]},
+ archcoinFour:{prompt:"What are the four tokens?",responses:["ARCC is Contract. ARCR is Receivable. ARCP is Payable. ARCA is Allocation.","The first two are launched. Payable and Allocation remain prospective."],options:[["archcoinLive","Which ones are actually live?"],["archcoinCapabilities","What can the launched tokens do?"],["archcoinGo","Take me to ARCHCOIN"]]},
+ archcoinCapabilities:{prompt:"What can the launched tokens do?",responses:["The launched ARCC and ARCR contracts provide ERC-20 balances, transfers, and approvals.","That launch does not by itself establish market value, liquidity, or adoption."],options:[["archcoinLive","Which ones are actually live?"],["archcoinGo","Take me to ARCHCOIN"]]},
+ archcoinContract:{prompt:"What does Contract mean?",responses:["Contract is the ARCC domain inside ARCHCOIN. Its official product page carries the engineering, platform, governance, and deployment evidence."],options:[["archcoinReceivable","What does Receivable mean?"],["archcoinGo","Take me to ARCHCOIN"]]},
+ archcoinReceivable:{prompt:"What does Receivable mean?",responses:["Receivable is the ARCR domain inside ARCHCOIN. Like ARCC, it is launched and has public deployment evidence on the official product surface."],options:[["archcoinContract","What does Contract mean?"],["archcoinGo","Take me to ARCHCOIN"]]},
+ archcoinGo:{prompt:"Take me to ARCHCOIN",route:"/products/archcoin/",responses:["That door belongs to ARCHCOIN itself. I’ll send you to the product authority."]},
+ about:{prompt:"About Auren",responses:["I'm Auren Vale. Around here, they call me the Sanctuary Builder."],options:[["who","Who are you?"],["manor","What is this manor?"],["mirrorland","What is Mirrorland?"]]},
+ who:{prompt:"Who are you?",responses:["I'm Auren Vale—the Sanctuary Builder.","My concern is what happens when something valuable is placed in your care: how you protect it without turning protection into possession."],options:[["sanctuaryBuilder","Why “Sanctuary Builder”?"],["protect","What do you protect?"],["mirrorlandArrival","How did you come to Mirrorland?"]]},
+ protect:{prompt:"What do you protect?",responses:["What is entrusted to a sanctuary should be protected without being stripped of its own agency.","That is why I keep returning to the line between custody and control."],options:[["custody","What does custody mean here?"],["control","Protection or control?"],["residents","Who else lives here?"]]},
+ sanctuaryBuilder:{prompt:"Why “Sanctuary Builder”?",responses:["Because I care about structures that can hold something safely without claiming it as property.","A sanctuary fails when protection becomes confinement."],options:[["protect","What do you protect?"],["control","Protection or control?"]]},
+ custody:{prompt:"What does custody mean here?",responses:["Custody means something has been placed in your care.","Responsibility follows from that. Ownership does not automatically follow."],options:[["control","Protection or control?"],["residents","Who else lives here?"]]},
+ control:{prompt:"Protection or control?",responses:["Protection preserves what it is responsible for. Control starts deciding that responsibility gives it the right to possess.","That distinction matters in this room."],options:[["custody","What does custody mean here?"],["residents","Who else lives here?"]]},
+ manor:{prompt:"What is this manor?",responses:["The manor is part of Mirrorland—a place where rooms, characters, and what they protect are connected rather than flattened into one page."],options:[["mirrorland","What is Mirrorland?"],["residents","Who else lives here?"]]},
+ mirrorland:{prompt:"What is Mirrorland?",responses:["Mirrorland is the larger world this chamber belongs to. My room is one part of it, not the whole story."],options:[["manor","What is this manor?"],["residents","Who else lives here?"]]},
+ mirrorlandArrival:{prompt:"How did you come to Mirrorland?",responses:["That story belongs to the character side of this chamber, not the product floor.","For this proof, the important part is that my role here is Sanctuary Builder."],options:[["mirrorland","What is Mirrorland?"],["protect","What do you protect?"]]},
+ residents:{prompt:"Who else lives here?",responses:["There are other residents and characters in Mirrorland, each with their own role and relationships.","We’ll open those relationships progressively rather than turn them into a roster dump."],options:[["mirrorland","What is Mirrorland?"],["who","Back to Auren"]]},
+ fiveFlags:{prompt:"Five Flags",responses:["Five Flags is a signal game. One Flag Master guides the room with a deliberately limited set of signals rather than explaining the answer."],options:[["products","Back to Products"]]},
+ education:{prompt:"Education",responses:["Education currently leads to the English Fluency Accelerator: a guided system built around 1,001 words and concepts, productive patterns, and adaptive placement."],options:[["products","Back to Products"]]},
+ nutrition:{prompt:"Nutrition",responses:["Nutrition is Baseline Nutrition Systems: practical support around water, fuel, timing, reset, and pantry fallback—baseline before optimization."],options:[["products","Back to Products"]]},
+ community:{prompt:"Consider the Energy / Consider the Community",responses:["This is a community destination rather than a commercial product. It connects the public community work from this side of the chamber."],options:[["products","Back to Products"]]}
 });
-const prompts=Object.freeze([
-{id:"sanctuary",label:"What makes a sanctuary?"},
-{id:"custody",label:"What does custody mean to you?"},
-{id:"room",label:"Tell me about this room."},
-{id:"protected",label:"What are you protecting over there?"},
-{id:"archcoin",label:"Where does ARCHCOIN fit?"},
-{id:"language",label:"Where do the 1,001 Languages fit?"},
-{id:"unveil",label:"What about “our unveil”?"}
-]);
-const api=Object.freeze({contract:CONTRACT,identity:"AUREN_VALE_SANCTUARY_BUILDER_V1",opening:responses.opening,prompts,response(id){return responses[id]||["Ask me another way."];},revealResponse:responses.reveal});
+const api=Object.freeze({contract:CONTRACT,identity:"AUREN_VALE_SANCTUARY_BUILDER_V1",opening:["Come in.","You can ask about the work built here, or about me and Mirrorland."],getNode(id){return nodes[id]||null;},getOptions(id="root"){const n=nodes[id]||nodes.root;return (n.options||[]).map(([key,label])=>Object.freeze({id:key,label}));}});
 Object.defineProperty(globalThis,"AUREN_CHAMBER_VOICE",{value:api,writable:false,configurable:false});
 globalThis.dispatchEvent(new CustomEvent("auren:voice-ready",{detail:{contract:CONTRACT}}));
 })();

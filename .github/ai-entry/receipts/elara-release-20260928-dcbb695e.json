@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "elara-release-20260928-dcbb695e",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5147,
+  "requestBranch": "ai-dispatch-request-elara-release-20260928-dcbb695e",
+  "requestCommit": "690da145956e094b24aa0554dfd37a16d41f7526",
+  "requestCommitParent": "dcbb695e229a5b9e6189af2912511ce389e5b9f1",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "dcbb695e229a5b9e6189af2912511ce389e5b9f1",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "dcbb695e229a5b9e6189af2912511ce389e5b9f1",
+    "surface_id": "elara"
+  },
+  "bridgeRunId": "36473785580",
+  "dispatchedRunId": 36473806471,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36473806471",
+  "dispatchedRunHeadSha": "dcbb695e229a5b9e6189af2912511ce389e5b9f1",
+  "dispatchedAt": "2026-09-28T19:40:00.227Z",
+  "resolvedAt": "2026-09-28T19:40:04.953Z"
+}

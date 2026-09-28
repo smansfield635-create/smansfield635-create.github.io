@@ -9766,50 +9766,6 @@
       "scopeHash": "af19794bc4d36d43759914d1108773b356a6deae5a4ba3aa638bca68bf690107",
       "state": "ADMITTED_LOCKED"
     },
-    "afa14578e5398c1a3e069d0ed6f077231f827975584419ed7cc952bc6c55c9d3": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "6e645800264d0195b84fd3149a246dc1ef78aed6",
-          "lockGeneration": 2497,
-          "lockScope": "H_EARTH:VARIANT_B_UNIFORM_TERRAIN_BEACH:EXACT_RENDERER_PATH",
-          "operationId": "H_EARTH_UNIFORM_TERRAIN_BEACH_20260927_001",
-          "procedureLocatorDigest": "7c99201921d81d2e72a6b7e2fd331fc81dfd6f37ec33e3ba0ca8a50f711361e6",
-          "requestDigest": "594edb02c02dc1d4f2f9b233433cf49e1c4c2fc340b2015e499f46440093019f",
-          "scopeHash": "afa14578e5398c1a3e069d0ed6f077231f827975584419ed7cc952bc6c55c9d3"
-        },
-        "bindingDigest": "f80fa125f4617e0d29e82fe503d960959c4bd0a908fe249629941e8687443a73",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "a70802597a99d784f9a0c48b8fc99716bae074a948a443bba2aa957c49861626",
-          "commentId": 5861171880,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 5086,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 36361699160,
-          "workflowSha": "6e645800264d0195b84fd3149a246dc1ef78aed6"
-        },
-        "lineageAnchorCommitSha": "01b485c4bdef4210628877837eae79d6fce74a2a",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "6e645800264d0195b84fd3149a246dc1ef78aed6",
-      "lockGeneration": 2497,
-      "lockScope": "H_EARTH:VARIANT_B_UNIFORM_TERRAIN_BEACH:EXACT_RENDERER_PATH",
-      "operationId": "H_EARTH_UNIFORM_TERRAIN_BEACH_20260927_001",
-      "procedureLocatorDigest": "7c99201921d81d2e72a6b7e2fd331fc81dfd6f37ec33e3ba0ca8a50f711361e6",
-      "released": false,
-      "requestDigest": "594edb02c02dc1d4f2f9b233433cf49e1c4c2fc340b2015e499f46440093019f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "afa14578e5398c1a3e069d0ed6f077231f827975584419ed7cc952bc6c55c9d3",
-      "state": "ADMITTED_LOCKED"
-    },
     "b005780502dd946f07165ee8dc69dabc7435554d107eb54a089ac8d16fdfed99": {
       "governingHead": "f1016a29d28b0790041567eae1c05dab572bb6ed",
       "lockGeneration": 156,
@@ -65849,6 +65805,51 @@
       "scopeHash": "44af6877e082e1770de37c6b99f8c1d5b7c1afe00ddecc3897e4f6578fc16a0d",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6e645800264d0195b84fd3149a246dc1ef78aed6",
+          "lockGeneration": 2497,
+          "lockScope": "H_EARTH:VARIANT_B_UNIFORM_TERRAIN_BEACH:EXACT_RENDERER_PATH",
+          "operationId": "H_EARTH_UNIFORM_TERRAIN_BEACH_20260927_001",
+          "procedureLocatorDigest": "7c99201921d81d2e72a6b7e2fd331fc81dfd6f37ec33e3ba0ca8a50f711361e6",
+          "requestDigest": "594edb02c02dc1d4f2f9b233433cf49e1c4c2fc340b2015e499f46440093019f",
+          "scopeHash": "afa14578e5398c1a3e069d0ed6f077231f827975584419ed7cc952bc6c55c9d3"
+        },
+        "bindingDigest": "f80fa125f4617e0d29e82fe503d960959c4bd0a908fe249629941e8687443a73",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a70802597a99d784f9a0c48b8fc99716bae074a948a443bba2aa957c49861626",
+          "commentId": 5861171880,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5086,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 36361699160,
+          "workflowSha": "6e645800264d0195b84fd3149a246dc1ef78aed6"
+        },
+        "lineageAnchorCommitSha": "01b485c4bdef4210628877837eae79d6fce74a2a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "6e645800264d0195b84fd3149a246dc1ef78aed6",
+      "lockGeneration": 2497,
+      "lockScope": "H_EARTH:VARIANT_B_UNIFORM_TERRAIN_BEACH:EXACT_RENDERER_PATH",
+      "operationId": "H_EARTH_UNIFORM_TERRAIN_BEACH_20260927_001",
+      "procedureLocatorDigest": "7c99201921d81d2e72a6b7e2fd331fc81dfd6f37ec33e3ba0ca8a50f711361e6",
+      "released": true,
+      "requestDigest": "594edb02c02dc1d4f2f9b233433cf49e1c4c2fc340b2015e499f46440093019f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "afa14578e5398c1a3e069d0ed6f077231f827975584419ed7cc952bc6c55c9d3",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "schema":"DGB_LIVE_QUALIFICATION_MANIFEST_v1",
+  "projectId":"auren-product",
+  "publicRoute":"/products/auren/",
+  "stage":{"mode":"default","adapter":null},
+  "publicByteAssertions":[
+    {"sourcePath":"products/auren/index.html","publicPath":"/products/auren/index.html"},
+    {"sourcePath":"products/auren/auren.voice.js","publicPath":"/products/auren/auren.voice.js"},
+    {"sourcePath":"products/auren/auren.chamber.js","publicPath":"/products/auren/auren.chamber.js"},
+    {"sourcePath":"products/auren/auren.room.environment.js","publicPath":"/products/auren/auren.room.environment.js"}
+  ],
+  "runtime":{"required":true,"verifier":".github/live-qualification/verifiers/auren-product.v1.mjs","criteria":[
+    "AUREN_ROUTE_READY","AUREN_OPENING_TWO_ENTRANCES","AUREN_ARCHCOIN_PROGRESSIVE_CORRIDOR","AUREN_ARCHCOIN_HANDOFF","AUREN_CHARACTER_PROGRESSIVE_CORRIDOR","AUREN_PROTECTED_REVEAL","AUREN_MAX_THREE_CONTEXTUAL_CHOICES","AUREN_NO_PAGE_ERRORS"
+  ]}
+}

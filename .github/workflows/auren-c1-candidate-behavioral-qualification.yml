@@ -1,0 +1,75 @@
+name: Auren C1 Candidate Behavioral Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+      base_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - name: Fetch exact comparison base
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+      - name: Prove C1 bounded diff
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort > /tmp/files
+          cat >/tmp/allowed <<'EOF'
+          .github/live-qualification/verifiers/auren-c1-progressive-conversation.v1.mjs
+          products/auren/auren.chamber.js
+          products/auren/auren.voice.js
+          products/auren/index.css
+          products/auren/index.html
+          EOF
+          sort -o /tmp/allowed /tmp/allowed
+          diff -u /tmp/allowed /tmp/files
+          ! git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | grep -E 'products/auren/auren\.room\.(geometry|presentation|environment)\.js'
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 18790 >/tmp/auren-c1-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:18790/products/auren/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/auren-c1-http.log; exit 1
+      - name: Execute C1 behavioral contract
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:18790
+          CHROME_PATH: ${{ env.CHROME_PATH }}
+          RUNTIME_RESULT_PATH: /tmp/auren-c1-result.json
+        run: node .github/live-qualification/verifiers/auren-c1-progressive-conversation.v1.mjs
+      - name: Capture owner-review mobile states
+        if: always()
+        env:
+          CHROME_PATH: ${{ env.CHROME_PATH }}
+        run: |
+          mkdir -p .qualification/auren-c1
+          cp /tmp/auren-c1-result.json .qualification/auren-c1/receipt.json 2>/dev/null || true
+          cat > /tmp/capture.mjs <<'NODE'
+          import puppeteer from 'puppeteer-core';const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox']});const p=await b.newPage();await p.setViewport({width:390,height:844,isMobile:true,hasTouch:true});const go=async()=>{await p.goto('http://127.0.0.1:18790/products/auren/',{waitUntil:'networkidle0'});await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-options-ready')==='true')};const click=async t=>{await p.evaluate(x=>[...document.querySelectorAll('.auren-option')].find(b=>b.textContent.trim()===x)?.click(),t);await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-options-ready')==='true')};await go();await p.screenshot({path:'.qualification/auren-c1/01-opening.png',fullPage:true});await click('Products');await click('ARCHCOIN');await click("What's live now?");await p.screenshot({path:'.qualification/auren-c1/02-products-depth3.png',fullPage:true});await go();await click('About Auren');await click('Who are you?');await click('What do you actually do?');await p.screenshot({path:'.qualification/auren-c1/03-about-depth3.png',fullPage:true});await b.close();
+          NODE
+          node /tmp/capture.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auren-c1-behavioral-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/auren-c1
+          retention-days: 30

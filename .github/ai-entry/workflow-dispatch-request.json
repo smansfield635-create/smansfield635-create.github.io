@@ -1,9 +1,12 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-terrain-regime-material-1e1b5f8c-20260928",
+  "capabilityId": "H_EARTH_CANONICAL_OPERATION_INTAKE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "project_id": "H_EARTH",
+    "operation_id": "H_EARTH_TERRAIN_REGIME_MATERIAL_20260928_001",
+    "source_sha": "1e1b5f8cae1ecbb2992d10d8e56e3881f8a4acc1",
+    "scope": "VARIANT_B_ONE_RENDERER_MATERIAL_ONLY",
+    "intent": "Create one material-only child using existing elevation, slope, and curvature to continuously blend lowland ground, rising terrain, and exposed steep terrain. Preserve contact-driven beach, water, geometry, camera, animation, and named manor/cavern/ravine terrain features byte-for-byte outside the general terrain regime palette block. Exact parent 1e1b5f8c. Verify protections and exact-head runtime before phone comparison of both recorded routes."
   }
 }

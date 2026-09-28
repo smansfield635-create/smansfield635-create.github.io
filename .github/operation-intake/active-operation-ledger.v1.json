@@ -2485,6 +2485,50 @@
       "scopeHash": "3322623dc7e8edc921d951fabc9c54da93640a67a6920e8d18172d7a1dae24ae",
       "state": "ADMITTED_LOCKED"
     },
+    "3338e9d7b1340348e84a47c8170eb9c12a57ed8d42d2fa320ed2dde5d5110a07": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9754e841bbd75447e6285ee743fe1ef38e1da33a",
+          "lockGeneration": 2509,
+          "lockScope": "QUALIFICATION:AUREN_VALE:SPATIAL_PROOF1:559A8EFF",
+          "operationId": "AUREN_SPATIAL_CHAMBER_PROOF1_BROWSER_QUALIFICATION_20260928_001",
+          "procedureLocatorDigest": "187ff3de565b5f3fc53fa9f665ac4b0dd2102aedc277a7fc3dcb594be0a03036",
+          "requestDigest": "5a153c44d25ece5ee5079ba4dde546b27b4e3addcc480292b7226cb5cff79bca",
+          "scopeHash": "3338e9d7b1340348e84a47c8170eb9c12a57ed8d42d2fa320ed2dde5d5110a07"
+        },
+        "bindingDigest": "2b054e345c90d4f698fa9b2ff01fca0bb09cb7fdf11ce05a4e3920469a6a15fb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a56501609cb8f0e160981153b8af9f366c5efdefd4a60b3424d412e446898cd9",
+          "commentId": 5878175772,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5149,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 36481359007,
+          "workflowSha": "9754e841bbd75447e6285ee743fe1ef38e1da33a"
+        },
+        "lineageAnchorCommitSha": "cae7cc665a7c0ecea65eaaf1f8aa572a3d65e17f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9754e841bbd75447e6285ee743fe1ef38e1da33a",
+      "lockGeneration": 2509,
+      "lockScope": "QUALIFICATION:AUREN_VALE:SPATIAL_PROOF1:559A8EFF",
+      "operationId": "AUREN_SPATIAL_CHAMBER_PROOF1_BROWSER_QUALIFICATION_20260928_001",
+      "procedureLocatorDigest": "187ff3de565b5f3fc53fa9f665ac4b0dd2102aedc277a7fc3dcb594be0a03036",
+      "released": false,
+      "requestDigest": "5a153c44d25ece5ee5079ba4dde546b27b4e3addcc480292b7226cb5cff79bca",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3338e9d7b1340348e84a47c8170eb9c12a57ed8d42d2fa320ed2dde5d5110a07",
+      "state": "ADMITTED_LOCKED"
+    },
     "3351fa3ef6fac7bd7187ecbd20f5b92c87a15c4d921e2bd82fb58f2bf9c4bb20": {
       "governingHead": "8a04a9f94a65e82c9ed3df50af999cfcb33d068b",
       "lockGeneration": 1371,
@@ -14400,7 +14444,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2508,
+  "lockGeneration": 2509,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

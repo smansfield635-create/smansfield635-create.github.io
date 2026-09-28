@@ -130,190 +130,12 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/globe/hearth/jeeves/index.css?v=DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_THRESHOLD_HOST_AND_ROUTING_SURFACE_CSS_TNT_v15"
+    href="/showroom/globe/hearth/jeeves/index.css?v=DIAMOND_GATE_BRIDGE_JEEVES_DIRECT_CHAMBER_CSS_TNT_v16"
     data-jeeves-css-authority="true"
   >
 </head>
 
 <body>
-  <!--
-    TWO-STAGE ESTATE-THRESHOLD INTRODUCTION
-
-    The threshold begins hidden so it cannot trap a visitor before the
-    geometry and threshold runtimes are ready.
-
-    The threshold runtime controls:
-    - activation
-    - active stage
-    - compact-to-full Window growth
-    - stained-glass reveal amount
-    - focus movement
-    - page scroll locking
-    - skip behavior
-    - completion and replay state
-
-    The HTML owns only the two public tutorial panels:
-    - arrival
-    - host
-
-    The runtime exposes the host panel publicly as the welcome stage.
-  -->
-
-  <section
-    class="jeeves-threshold"
-    data-jeeves-threshold
-    data-threshold-state="pending"
-    data-threshold-phase="arrival"
-    data-threshold-source-panel="arrival"
-    data-threshold-window-size="compact"
-    data-threshold-phase-index="1"
-    data-threshold-phase-total="2"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Diamond Gate Bridge estate entrance introduction"
-    aria-hidden="true"
-    inert
-    hidden
-  >
-    <div
-      class="jeeves-threshold-backdrop"
-      data-jeeves-threshold-backdrop
-      aria-hidden="true"
-    ></div>
-
-    <div class="jeeves-threshold-stage">
-      <header class="jeeves-threshold-toolbar">
-        <div
-          class="jeeves-threshold-progress"
-          aria-label="Introduction progress"
-        >
-          <span data-jeeves-threshold-progress-label>
-            Arrival · 1 of 2
-          </span>
-
-          <div
-            class="jeeves-threshold-progress-track"
-            aria-hidden="true"
-          >
-            <span
-              class="jeeves-threshold-progress-value"
-              data-jeeves-threshold-progress-value
-            ></span>
-          </div>
-        </div>
-
-        <button
-          id="jeeves-threshold-skip-control"
-          class="jeeves-threshold-skip"
-          type="button"
-          data-jeeves-threshold-skip
-        >
-          Skip introduction
-        </button>
-      </header>
-
-      <div class="jeeves-threshold-scene">
-        <div
-          class="jeeves-threshold-window-stage"
-          data-jeeves-threshold-window-stage
-        >
-          <div
-            class="jeeves-threshold-window"
-            data-jeeves-threshold-window-mount
-            aria-hidden="true"
-          ></div>
-
-          <div
-            class="jeeves-threshold-window-caption"
-            data-jeeves-threshold-window-caption
-            aria-hidden="true"
-          >
-            Mirrorland threshold
-          </div>
-        </div>
-
-        <div
-          class="jeeves-threshold-copy-stage"
-          data-jeeves-threshold-copy-stage
-        >
-          <div
-            class="jeeves-threshold-phase"
-            data-jeeves-threshold-panel="arrival"
-            data-threshold-panel-index="1"
-          >
-            <div class="jeeves-threshold-eyebrow">
-              You chose Talk to the House
-            </div>
-
-            <h1>
-              You have reached the entrance to the estate.
-            </h1>
-
-            <p>
-              This stained-glass threshold marks the approach to Mirrorland
-              and the public rooms of Diamond Gate Bridge.
-            </p>
-          </div>
-
-          <div
-            class="jeeves-threshold-phase"
-            data-jeeves-threshold-panel="host"
-            data-threshold-panel-index="2"
-            aria-hidden="true"
-            hidden
-          >
-            <div class="jeeves-threshold-eyebrow">
-              Your host at the front door
-            </div>
-
-            <h2>
-              Jeeves receives visitors here.
-            </h2>
-
-            <p>
-              Tell Jeeves what brought you to the estate. He will help you
-              understand where you are and introduce the correct room, path,
-              or specialist.
-            </p>
-
-            <p class="jeeves-threshold-instruction">
-              Jeeves responds one message at a time. While he is typing or
-              waiting, tap the conversation stage to advance only the current
-              message.
-            </p>
-          </div>
-
-          <div class="jeeves-threshold-actions">
-            <button
-              class="jeeves-threshold-advance"
-              type="button"
-              data-jeeves-threshold-advance
-              aria-describedby="jeeves-threshold-action-note"
-            >
-              Continue
-            </button>
-
-            <p
-              id="jeeves-threshold-action-note"
-              class="jeeves-threshold-action-note"
-              data-jeeves-threshold-action-note
-            >
-              Continue to meet the host at the estate entrance.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="jeeves-threshold-status"
-        data-jeeves-threshold-status
-        aria-live="polite"
-      >
-        The Mirrorland threshold is coming into view.
-      </div>
-    </div>
-  </section>
-
   <main
     id="jeeves-main"
     class="jeeves-page"
@@ -357,14 +179,6 @@
       </a>
 
       <div class="jeeves-header-tools">
-        <button
-          class="jeeves-replay-welcome"
-          type="button"
-          data-jeeves-replay-welcome
-          hidden
-        >
-          Replay welcome
-        </button>
 
         <a
           class="jeeves-compass-link"
@@ -1155,12 +969,6 @@
       </span>
 
       <div class="jeeves-footer-actions">
-        <button
-          type="button"
-          data-jeeves-replay-welcome
-        >
-          Replay estate welcome
-        </button>
 
         <a href="/">
           Return to Compass
@@ -1200,17 +1008,9 @@
     </section>
   </noscript>
 
-  <script
-    src="/assets/shared/mirrorland-window.geometry.js?v=DIAMOND_GATE_BRIDGE_SHARED_MIRRORLAND_WINDOW_GEOMETRY_TNT_v1"
-    defer
-    data-jeeves-child="mirrorland-geometry"
-  ></script>
+  
 
-  <script
-    src="/showroom/globe/hearth/jeeves/jeeves.threshold.js?v=DIAMOND_GATE_BRIDGE_JEEVES_TWO_STAGE_ESTATE_THRESHOLD_RENDERER_TNT_v2_1"
-    defer
-    data-jeeves-child="threshold"
-  ></script>
+  
 
   <script
     src="/assets/hearth/jeeves/jeeves.voice.js?v=DIAMOND_GATE_BRIDGE_JEEVES_WELCOME_ROUTING_VOICE_TNT_v1"
@@ -1219,7 +1019,7 @@
   ></script>
 
   <script
-    src="/showroom/globe/hearth/jeeves/index.js?v=DIAMOND_GATE_BRIDGE_JEEVES_ESTATE_HOST_CONVERSATION_RUNTIME_TNT_v2_2"
+    src="/showroom/globe/hearth/jeeves/index.js?v=DIAMOND_GATE_BRIDGE_JEEVES_DIRECT_CHAMBER_RUNTIME_TNT_v3"
     defer
     data-jeeves-child="runtime"
   ></script>

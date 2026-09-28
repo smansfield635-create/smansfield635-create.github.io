@@ -3936,3 +3936,38 @@ html[data-jeeves-runtime-ready="true"]
     box-shadow:none;
   }
 }
+
+
+/* JEEVES DIRECT CHAMBER MOBILE HEADER REPAIR v1 */
+@media (max-width: 900px){
+  .jeeves-console-heading{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    align-items:start;
+    gap:.8rem;
+  }
+  .jeeves-console-identity{
+    width:100%;
+    grid-template-columns:3rem minmax(0,1fr);
+  }
+  .jeeves-console-identity-copy{
+    min-width:0;
+  }
+  .jeeves-console-identity-copy span,
+  .jeeves-console-identity-copy small{
+    white-space:normal;
+    overflow:visible;
+    text-overflow:clip;
+    line-height:1.25;
+  }
+  .jeeves-session-indicator{
+    width:100%;
+    max-width:none;
+    justify-content:flex-start;
+  }
+  .jeeves-status{
+    min-width:0;
+    text-align:left;
+    line-height:1.35;
+  }
+}

@@ -3880,13 +3880,6 @@
     );
   };
 
-  const publicReplayWelcome =
-    () => {
-      requestThresholdReplay();
-
-      return true;
-    };
-
   const API = {
     contract:
       CONTRACT,
@@ -3976,10 +3969,7 @@
 
     activateConversation:
       publicActivateConversation,
-
-    replayWelcome:
-      publicReplayWelcome
-  };
+};
 
   Object.freeze(
     API

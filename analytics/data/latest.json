@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-28T07:50:37Z",
+  "generatedAt": "2026-09-28T08:49:19Z",
   "window30d": {
-    "start": "2026-08-29T07:50:37Z",
-    "end": "2026-09-28T07:50:37Z"
+    "start": "2026-08-29T08:49:19Z",
+    "end": "2026-09-28T08:49:19Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 672
+      "pageLoads": 681
     },
     {
       "date": "2026-09-22",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 8
+      "pageLoads": 9
     }
   ],
   "summary": {
-    "pageLoads": 6997,
-    "botPageLoads": 2550,
-    "nonBotPageLoads": 4447
+    "pageLoads": 7007,
+    "botPageLoads": 2551,
+    "nonBotPageLoads": 4456
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3275,
-      "visits": 3275
+      "pageLoads": 3285,
+      "visits": 3285
     },
     {
       "host": "diamondgatebridge.com",
@@ -202,13 +202,13 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 238,
-      "visits": 113
+      "pageLoads": 247,
+      "visits": 122
     },
     {
       "path": "/analytics/",
-      "pageLoads": 194,
-      "visits": 83
+      "pageLoads": 195,
+      "visits": 84
     },
     {
       "path": "/evidence/agentic-frontier/",

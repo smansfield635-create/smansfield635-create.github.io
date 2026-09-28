@@ -162,4 +162,43 @@ export function evaluateHEarthGen311SuccessorVegetation(result){
   return freeze({eligible:issues.length===0,status:issues.length?'GEN311_SUCCESSOR_VEGETATION_FAIL':'GEN311_SUCCESSOR_VEGETATION_PASS',issues:freeze(issues)});
 }
 
+export const H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_CONTRACT_ID='H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_v1';
+export const H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE=freeze({
+  contractId:H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_CONTRACT_ID,
+  worldDomain:freeze({xMinimum:-1024,xMaximum:1024,zMinimum:-1024,zMaximum:768}),
+  sampleStepWorldUnits:8,
+  sampleCount:57825,
+  sourceAuthority:'RUN8B_TERRAIN_PLUS_RUN8C_SURFACE_MATERIAL_PLUS_GEN311_ECOLOGICAL_RESPONSE',
+  geometry:false,renderer:false,populationMutation:false,terrainMutation:false
+});
+function ecologicalResponseAt(worldX,worldZ){
+  const terrain=sampleHEarthRun8BSuccessorTerrainField(worldX,worldZ),material=sampleHEarthRun8CSuccessorSurfaceMaterial(worldX,worldZ);
+  const materialEvaluation=evaluateHEarthRun8CSuccessorSurfaceMaterial(material);
+  if(terrain?.valid!==true||terrain?.regionalArticulation?.valid!==true||materialEvaluation.eligible!==true)return null;
+  const r=terrain.regionalArticulation,exposure=clamp01(material.orographicExposure??0);
+  const moisture=clamp01((material.shelterMoisture??0)*.45+(material.drainageRetention??0)*.35+(material.waterSaturation??0)*.2);
+  const ridge=clamp01(r.ridgeSignal??0),valley=clamp01(r.valleySignal??0),foothill=clamp01(r.foothillSignal??0),pass=clamp01(r.passSignal??0),watershed=clamp01(r.watershedSignal??0);
+  return freeze({ecologicalZone:zoneFor(r.landformClass),landformClass:r.landformClass,densityModifier:clamp01(.48+moisture*.42+valley*.18+foothill*.12+pass*.05-ridge*.28-exposure*.14),canopyModifier:clamp01(.44+moisture*.36+foothill*.18+valley*.14-watershed*.08-ridge*.24),groundcoverModifier:clamp01(.5+moisture*.26+pass*.18+valley*.12-ridge*.12),scaleModifier:.82+clamp01(.44+moisture*.36+foothill*.18+valley*.14-watershed*.08-ridge*.24)*.26-exposure*.08,moistureAvailability:moisture,windExposure:exposure,drainageRetention:material.drainageRetention,surfaceClass:material.surfaceClass??null});
+}
+export function buildHEarthGen311VegetationSuitabilityMap(){
+  const p=H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE,d=p.worldDomain,step=p.sampleStepWorldUnits,zoneCounts=Object.fromEntries(H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE.ecologicalZones.map(z=>[z,0]));
+  const ranges={density:[1,0],canopy:[1,0],groundcover:[1,0],scale:[Infinity,-Infinity],moisture:[1,0],exposure:[1,0]},surfaceCounts={},samples=[];let excludedWater=0,invalid=0,eligible=0;
+  const range=(k,v)=>{if(!finite(v))return;ranges[k][0]=Math.min(ranges[k][0],v);ranges[k][1]=Math.max(ranges[k][1],v);};
+  for(let z=d.zMinimum;z<=d.zMaximum;z+=step)for(let x=d.xMinimum;x<=d.xMaximum;x+=step){
+    const terrain=sampleHEarthRun8BSuccessorTerrainField(x,z);
+    if(terrain?.valid!==true){invalid++;continue;}
+    const material=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z),surface=material?.surfaceClass??(terrain.elevation<0?'WATER':'LAND');
+    surfaceCounts[surface]=(surfaceCounts[surface]??0)+1;
+    if(surface==='WATER'||terrain.elevation<0){excludedWater++;continue;}
+    const e=ecologicalResponseAt(x,z);if(!e){invalid++;continue;}eligible++;zoneCounts[e.ecologicalZone]=(zoneCounts[e.ecologicalZone]??0)+1;
+    range('density',e.densityModifier);range('canopy',e.canopyModifier);range('groundcover',e.groundcoverModifier);range('scale',e.scaleModifier);range('moisture',e.moistureAvailability);range('exposure',e.windExposure);
+    samples.push(freeze({x,z,elevation:terrain.elevation,slope:terrain.slope,normal:terrain.normal,landformClass:e.landformClass,ecologicalZone:e.ecologicalZone,densitySuitability:e.densityModifier,canopySuitability:e.canopyModifier,groundcoverSuitability:e.groundcoverModifier,scaleSuitability:e.scaleModifier,moistureAvailability:e.moistureAvailability,windExposure:e.windExposure,drainageRetention:e.drainageRetention,surfaceClass:surface,excluded:false}));
+  }
+  const measured=eligible+excludedWater+invalid;
+  return freeze({eligible:invalid===0&&measured===p.sampleCount,status:invalid===0&&measured===p.sampleCount?'GEN311_VEGETATION_SUITABILITY_MAP_COMPLETE':'GEN311_VEGETATION_SUITABILITY_MAP_FAILED',contractId:p.contractId,worldDomain:p.worldDomain,sampleStepWorldUnits:step,expectedSampleCount:p.sampleCount,measuredSampleCount:measured,vegetationEligibleSampleCount:eligible,excludedWaterSampleCount:excludedWater,invalidSampleCount:invalid,zoneCounts:freeze(zoneCounts),surfaceCounts:freeze(surfaceCounts),ranges:freeze(ranges),samples:freeze(samples),geometryCreated:false,rendererMutation:false,populationMutation:false,terrainMutation:false});
+}
+export function evaluateHEarthGen311VegetationSuitabilityMap(result){
+  const issues=[];if(result?.eligible!==true)issues.push('GEN311_SUITABILITY_MAP_NOT_ELIGIBLE');if(result?.contractId!==H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_CONTRACT_ID)issues.push('GEN311_SUITABILITY_MAP_CONTRACT_MISMATCH');if(result?.measuredSampleCount!==H_EARTH_GEN311_VEGETATION_SUITABILITY_MAP_PROFILE.sampleCount)issues.push('GEN311_SUITABILITY_SAMPLE_COUNT_MISMATCH');if(result?.invalidSampleCount!==0)issues.push('GEN311_SUITABILITY_INVALID_SAMPLES');if(result?.geometryCreated!==false||result?.rendererMutation!==false||result?.populationMutation!==false||result?.terrainMutation!==false)issues.push('GEN311_SUITABILITY_BOUNDARY_VIOLATION');return freeze({eligible:issues.length===0,status:issues.length?'GEN311_VEGETATION_SUITABILITY_MAP_FAIL':'GEN311_VEGETATION_SUITABILITY_MAP_PASS',issues:freeze(issues)});
+}
+
 export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;

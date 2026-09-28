@@ -1,8 +1,8 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
-import { regionToHEarthPlanetPoint } from './planetary-world-frame.js';
+import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
-import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
+import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
 export const H_EARTH_RUN_8E_R3C_RENDERER_ID =
@@ -72,6 +72,7 @@ layout(location=4) in uint aMaterialModelCode;
 layout(location=5) in uint aSurfaceClassCode;
 layout(location=6) in uint aPrimitiveIndex;
 layout(location=7) in uint aRoleCode;
+layout(location=8) in float aCoastDistanceMeters;
 uniform mat4 uViewProjection;
 out vec3 vWorldPosition;
 out vec3 vNormal;
@@ -81,6 +82,7 @@ flat out uint vMaterialModelCode;
 flat out uint vSurfaceClassCode;
 flat out uint vPrimitiveIndex;
 flat out uint vRoleCode;
+out float vCoastDistanceMeters;
 void main(){
   vWorldPosition=aPosition;
   vNormal=aNormal;
@@ -90,6 +92,7 @@ void main(){
   vSurfaceClassCode=aSurfaceClassCode;
   vPrimitiveIndex=aPrimitiveIndex;
   vRoleCode=aRoleCode;
+  vCoastDistanceMeters=aCoastDistanceMeters;
   gl_Position=uViewProjection*vec4(aPosition,1.0);
 }`;
 
@@ -104,6 +107,7 @@ flat in uint vMaterialModelCode;
 flat in uint vSurfaceClassCode;
 flat in uint vPrimitiveIndex;
 flat in uint vRoleCode;
+in float vCoastDistanceMeters;
 uniform vec3 uCameraPosition;
 uniform vec3 uSunDirection;
 uniform float uSunIntensity;
@@ -413,6 +417,17 @@ void main(){
     palette*=mix(1.0,0.70,max(ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse),ravineWallContact*0.62));
     palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
     presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
+    // One signed, closest-point shoreline coordinate governs the sand color.
+    // The uploaded terrain and the resident refinement patch share this field.
+    float inlandMeters=-vCoastDistanceMeters;
+    float sandCoverage=smoothstep(-1.0,0.0,inlandMeters)*(1.0-smoothstep(34.0,42.0,inlandMeters));
+    vec3 wetSand=vec3(0.42326766,0.32777810,0.19120169);
+    vec3 dampSand=vec3(0.49693298,0.39675522,0.23455058);
+    vec3 drySand=vec3(0.57758045,0.47353148,0.28314874);
+    vec3 sand=mix(mix(wetSand,dampSand,smoothstep(2.0,14.0,inlandMeters)),drySand,smoothstep(10.0,24.0,inlandMeters));
+    palette=mix(palette,sand,sandCoverage);
+    presentationContact*=1.0-0.85*sandCoverage;
+    presentationHighlight*=1.0-0.70*sandCoverage;
     base=palette;
   }else if(vRoleCode==4u){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.
@@ -593,6 +608,21 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
   if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
   if (uploadViews.deterministicTransportEncoding !== true) throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
+  const sandIds = new Set(['H_EARTH_FUNCTIONAL_SHORELINE:DRY_SAND_EDGE', 'H_EARTH_FUNCTIONAL_SHORELINE:DAMP_TRANSITION', 'H_EARTH_FUNCTIONAL_SHORELINE:WET_SAND']);
+  const sandRanges = renderPackage.drawRanges.filter((range) => range.primitiveIds?.some((id) => sandIds.has(id)));
+  if (sandRanges.length !== 1 || sandRanges[0].primitiveIds.length !== 3 || !sandRanges[0].primitiveIds.every((id) => sandIds.has(id))) throw new Error('R3C_SAND_DRAW_RANGE_NOT_ISOLATED');
+  const sandRange = sandRanges[0];
+  const coastDistances = new Float32Array(uploadViews.positions.length / 3);
+  const planetRadius = H_EARTH_PLANETARY_WORLD_FRAME.exactSphereRadius;
+  for (const span of renderPackage.primitiveSpans) {
+    if (span.role !== 'TERRAIN') continue;
+    for (let vertex = span.vertexStart; vertex < span.vertexStart + span.vertexCount; vertex++) {
+      const p = vertex * 3, px = uploadViews.positions[p], py = uploadViews.positions[p + 1], pz = uploadViews.positions[p + 2];
+      const horizontal = Math.hypot(px, pz);
+      const scale = horizontal > Number.EPSILON ? Math.atan2(horizontal, py + planetRadius) * planetRadius / horizontal : 0;
+      coastDistances[vertex] = getHEarthSignedCoastDistanceMeters(px * scale, pz * scale);
+    }
+  }
 
   function initialize(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
@@ -617,7 +647,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       ['materialModelCodes', uploadViews.materialModelCodes, 4, 1, gl.UNSIGNED_BYTE, true],
       ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
       ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
-      ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true]
+      ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true],
+      ['coastDistances', coastDistances, 8, 1, gl.FLOAT, false]
     ];
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {
@@ -673,13 +704,13 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const spacing=4,radius=64,x0=Math.round(local.x/spacing)*spacing,z0=Math.round(local.z/spacing)*spacing,xs=[],zs=[];
     for(let x=x0-radius;x<=x0+radius;x+=spacing)xs.push(x);for(let z=z0-radius;z<=z0+radius;z+=spacing)zs.push(z);
     const vertexCount=xs.length*zs.length,triangleCount=(xs.length-1)*(zs.length-1)*2;if(vertexCount>4096||triangleCount>8192)throw new Error('R3C_REFINEMENT_CEILING_EXCEEDED');
-    const positions=new Float32Array(vertexCount*3),normals=new Float32Array(vertexCount*3);let vi=0;
-    for(const z of zs)for(const x of xs){const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_TERRAIN_SAMPLE_INVALID');const q=regionToHEarthPlanetPoint({x,y:t.elevation,z});positions.set([q.x,q.y+0.035,q.z],vi*3);normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);vi++;}
+    const positions=new Float32Array(vertexCount*3),normals=new Float32Array(vertexCount*3),patchCoastDistances=new Float32Array(vertexCount);let vi=0;
+    for(const z of zs)for(const x of xs){const t=sampleHEarthRun8BSuccessorTerrainField(x,z);if(t?.valid!==true)throw new Error('R3C_REFINEMENT_TERRAIN_SAMPLE_INVALID');const q=regionToHEarthPlanetPoint({x,y:t.elevation,z});positions.set([q.x,q.y+0.035,q.z],vi*3);normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);patchCoastDistances[vi]=getHEarthSignedCoastDistanceMeters(x,z);vi++;}
     const indices=new Uint32Array(triangleCount*3);let ii=0,cols=xs.length;for(let r=0;r<zs.length-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.set([a,e,b,b,e,d],ii);ii+=6;}
     const vao=gl.createVertexArray();gl.bindVertexArray(vao);const bufs=[];
     const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.refinementBufferUploadCount++;};
     bind(0,positions,3);bind(1,normals,3);const colors=new Float32Array(vertexCount*4),mats=new Float32Array(vertexCount*4);for(let i=0;i<vertexCount;i++){colors.set([.22,.24,.16,1],i*4);mats.set([.72,.18,.05,.12],i*4)}bind(2,colors,4);bind(3,mats,4);
-    const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);const sc=new Uint8Array(vertexCount);sc.fill(4);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);
+    const mm=new Uint8Array(vertexCount);mm.fill(1);bind(4,mm,1,true,gl.UNSIGNED_BYTE);const sc=new Uint8Array(vertexCount);sc.fill(4);bind(5,sc,1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(vertexCount),1,true,gl.UNSIGNED_SHORT);const rc=new Uint8Array(vertexCount);rc.fill(1);bind(7,rc,1,true,gl.UNSIGNED_BYTE);bind(8,patchCoastDistances,1);
     const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.refinementBufferUploadCount++;
     resources.refinement={created:true,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length,vertexCount,triangleCount,anchor:{x:x0,z:z0},fallbackAvailable:true};counters.refinementResourceCreateCount++;gl.bindVertexArray(resources.vertexArray);return resources.refinement;
   }
@@ -696,6 +727,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     counters.cameraUniformUpdateCount += 2;
     for (const range of packet.drawRanges) {
+      if (range.indexStart === sandRange.indexStart && range.indexCount === sandRange.indexCount) continue;
       if (range.transparencyClass === 'TRANSLUCENT') {
         gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
       } else { gl.disable(gl.BLEND); gl.depthMask(true); }
@@ -766,7 +798,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       },
       counters: { ...counters },
       persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
-      resourceIdentityStable: initialized && resources.buffers?.length === 9 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
+      resourceIdentityStable: initialized && resources.buffers?.length === 10 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
       packageUploadedOnce: counters.bufferUploadCount === 9 && counters.postInitializationBufferUploadCount === 0,
       noPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,
       noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0,

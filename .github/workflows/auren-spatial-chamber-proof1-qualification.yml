@@ -9,10 +9,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 559a8eff21d026ce48a3996eebef76676453cdd8
+          ref: 1f6cc3ea551e307aade654941d7a36d8ba47739d
           fetch-depth: 1
-      - name: Prove immutable candidate
-        run: test "$(git rev-parse HEAD)" = "559a8eff21d026ce48a3996eebef76676453cdd8"
+      - name: Preserve admitted qualifier outside subject checkout
+        run: cp .github/qualification/auren-spatial-chamber-proof1.qualify.mjs "$RUNNER_TEMP/auren-spatial-chamber-proof1.qualify.mjs"
+      - name: Checkout immutable product candidate
+        run: |
+          git fetch --depth=1 origin 559a8eff21d026ce48a3996eebef76676453cdd8
+          git checkout --detach 559a8eff21d026ce48a3996eebef76676453cdd8
+          test "$(git rev-parse HEAD)" = "559a8eff21d026ce48a3996eebef76676453cdd8"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -23,7 +28,7 @@ jobs:
           for i in {1..30}; do curl -fsS http://127.0.0.1:4173/products/auren/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/auren-proof1-http.log; exit 1
       - name: Qualify exact Auren candidate
-        run: node .github/qualification/auren-spatial-chamber-proof1.qualify.mjs
+        run: node "$RUNNER_TEMP/auren-spatial-chamber-proof1.qualify.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

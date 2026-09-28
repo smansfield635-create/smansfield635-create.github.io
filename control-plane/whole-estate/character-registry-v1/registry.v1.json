@@ -1,0 +1,16 @@
+{
+  "schema": "CHARACTER_REGISTRY_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "sourceProgram": "issue:2378",
+  "resolver": "control-plane/whole-estate/character-registry-v1/resolver.v1.mjs",
+  "profiles": {
+    "AUREN_VALE": {"status":"READY","path":"control-plane/whole-estate/character-registry-v1/profiles/auren-vale.v1.json"},
+    "DEXTRION": {"status":"INCOMPLETE_HOLD","path":null},
+    "ALARIC_AXION": {"status":"INCOMPLETE_HOLD","path":null},
+    "TARIAN_MERROW": {"status":"INCOMPLETE_HOLD","path":null},
+    "ELARA_SYLENE": {"status":"INCOMPLETE_HOLD","path":null},
+    "SOREN_SEVRIN": {"status":"INCOMPLETE_HOLD","path":null},
+    "JEEVES": {"status":"INCOMPLETE_HOLD","path":null},
+    "REMOTE_TEAM": {"status":"INCOMPLETE_HOLD","path":null}
+  }
+}

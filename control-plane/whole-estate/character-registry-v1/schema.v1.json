@@ -1,0 +1,9 @@
+{
+  "schema": "CHARACTER_REGISTRY_SCHEMA_v1",
+  "profileSchema": "CHARACTER_PROFILE_v1",
+  "instantiationResultSchema": "CHARACTER_INSTANTIATION_RESULT_v1",
+  "requiredProfileFields": ["schema","characterId","displayName","status","canon","modes","developmentAuthority","forbiddenAuthority","provenance","knownNullFields","instantiationContract"],
+  "readyResult": "CHARACTER_INSTANTIATION_READY",
+  "holdResult": "CHARACTER_PROFILE_INCOMPLETE_HOLD",
+  "law": ["EXACT_SOURCE_ONLY","NO_GENERIC_PERSONALITY_SYNTHESIS","UNKNOWN_REMAINS_UNKNOWN","PLAY_CREATES_NO_REPOSITORY_OR_TECHNICAL_AUTHORITY","CHARACTER_MAY_NOT_REWRITE_ANOTHER_CHARACTER"]
+}

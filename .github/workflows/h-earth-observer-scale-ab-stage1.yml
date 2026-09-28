@@ -1,0 +1,47 @@
+name: H-Earth Observer-Scale Geometry A-B Stage 1
+on:
+  push:
+    branches:
+      - h-earth-observer-scale-geometry-ab-construction-v1
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout B candidate
+        uses: actions/checkout@v4
+        with:
+          ref: h-earth-observer-scale-geometry-ab-construction-v1
+          path: B
+          fetch-depth: 1
+      - name: Checkout exact A authority
+        uses: actions/checkout@v4
+        with:
+          ref: 1851c48c87956c50f4bd67946a32c555857c3e62
+          path: A
+          fetch-depth: 1
+      - name: Require exact A and B identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C A rev-parse HEAD)" = "1851c48c87956c50f4bd67946a32c555857c3e62"
+          test "$(git -C B rev-parse HEAD)" = "$GITHUB_SHA"
+          test -f B/h-earth-3d/validation/observer-scale-ab.measure.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Execute deterministic Stage-1 A-B measurement
+        shell: bash
+        run: |
+          set -euo pipefail
+          node B/h-earth-3d/validation/observer-scale-ab.measure.mjs "$PWD/A" "$PWD/B" | tee observer-scale-ab-stage1.json
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('observer-scale-ab-stage1.json'));if(r.eligible!==true)process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-observer-scale-ab-stage1-${{ github.sha }}
+          path: observer-scale-ab-stage1.json
+          if-no-files-found: error
+          retention-days: 90

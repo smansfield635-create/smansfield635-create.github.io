@@ -55,7 +55,7 @@ export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE=freeze({
   predecessorFormationId:H_EARTH_RUN_8A_MOUNTAIN_REALIZATION_CLASS_DECISION.predecessorFormationId,
   southKernelContractId:H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID,
   topology:'ONE_CONNECTED_INDEXED_XZ_HEIGHT_FIELD_TRIANGLE_MESH_SAMPLED_FROM_G_WORLD',
-  baseSpacingWorldUnits:Math.max(8,FULL_DETAIL.baseSpacingWorldUnits),
+  baseSpacingWorldUnits:FULL_DETAIL.baseSpacingWorldUnits,
   refinementSpacingWorldUnits:Math.max(4,FULL_DETAIL.refinementSpacingWorldUnits),
   worldDomain:{...NEAR_TO_MID_DOMAIN},
   atmosphericOverlap:ATMOSPHERIC_OVERLAP,
@@ -79,7 +79,7 @@ function classifyZBand(z){return H_EARTH_RUN_8B_Z_BANDS.find((b,i)=>z>=b.zMinimu
 function buildTopology(){
   const {xValues,zValues}=getHEarthRun8BSuccessorSamplingAxes();
   const vertices=[],samples=[],zBandVertexCounts=Object.fromEntries(H_EARTH_RUN_8B_Z_BANDS.map(b=>[b.bandId,0]));
-  for(const z of zValues)for(const x of xValues){const s=sampleHEarthRun8BSuccessorTerrainField(x,z);if(s.valid!==true||!finite(s.elevation))return freeze({ok:false,issues:[`INVALID_G_WORLD_SAMPLE:${x}:${z}`],vertices:[],indices:[],samples:[],xValues,zValues,zBandVertexCounts});const band=classifyZBand(z);if(band)zBandVertexCounts[band]++;vertices.push(createHEarthVector3(x,s.elevation,z));samples.push(s);}
+  for(const z of zValues)for(const x of xValues){const s=sampleHEarthRun8BSuccessorTerrainField(x,z);if(s.valid!==true||!finite(s.elevation))return freeze({ok:false,issues:[`INVALID_G_WORLD_SAMPLE:${x}:${z}`],vertices:[],indices:[],samples:[],xValues,zValues,zBandVertexCounts});const band=classifyZBand(z);if(band)zBandVertexCounts[band]++;const phase3Elevation=s.phase3Elevation??s.visibleElevation??s.elevation;const finalElevation=finite(phase3Elevation)?phase3Elevation:s.elevation;vertices.push(createHEarthVector3(x,finalElevation,z));samples.push(freeze({...s,observerScaleBaseFieldElevation:s.elevation,observerScalePhase3ElevationContribution:finalElevation-s.elevation,observerScaleFinalCpuElevation:finalElevation}));}
   const indices=[],cols=xValues.length,rows=zValues.length;
   for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.push(a,e,b,b,e,d);}
   return freeze({ok:true,issues:[],vertices,indices,samples,xValues,zValues,columnCount:cols,rowCount:rows,zBandVertexCounts});

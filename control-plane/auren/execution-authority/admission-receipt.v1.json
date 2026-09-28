@@ -1,0 +1,29 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "AUREN_FIXED_QUALIFICATION_20260928_001",
+  "projectId": "AUREN",
+  "lock": {
+    "lockGeneration": 2512,
+    "lockScope": "AUREN:FIXED_EXACT_HEAD_LIVE_QUALIFICATION:V1",
+    "state": "ADMITTED_LOCKED",
+    "released": false,
+    "scopeHash": "75508a963f93e61cfd2d9a19abb78f2137d2a3d7c6a56352d429c7dd1a5e8dde"
+  },
+  "governingHead": "e3dbda55cd8a7349e860c3732c4ebbc7e073bc0a",
+  "requestDigest": "f374064c4649e913ad2f605d8828d91178ff3a922df969214bd850ca535d05c1",
+  "procedureLocatorDigest": "8fe052fce7781672e1d301e7b3f1a78b30e62c3ecced0fb8c23a02e04d778bfe",
+  "authorityProvenance": {
+    "origin": "CANONICAL_INTAKE",
+    "lineageAnchorCommitSha": "1c1b21fe7dc6db232323ebf32547327a597e8572",
+    "lockCommitSha": "dba79ccdad30a22419c153589e178b3d7ec1e49a",
+    "workflowRunId": 36493104042,
+    "sourceCommentId": 5879943107,
+    "bindingDigest": "40b88458d2895a5b3f6ad93c885f1fd22c9f7a2043d5f64223ce325d51f8c919"
+  },
+  "materializedBy": {
+    "operationId": "AUREN_EXECUTION_AUTHORITY_MATERIALIZATION_20260928_001",
+    "lockGeneration": 2513,
+    "authorityCeiling": "TWO_RECEIPT_PATHS_ONLY"
+  }
+}

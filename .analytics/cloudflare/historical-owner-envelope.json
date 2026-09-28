@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-28T22:30:25Z",
+  "generatedAt": "2026-09-28T23:30:03Z",
   "window": {
-    "start": "2026-06-30T22:30:25Z",
-    "end": "2026-09-28T22:30:25Z"
+    "start": "2026-06-30T23:30:03Z",
+    "end": "2026-09-28T23:30:03Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5045,
-    "visits": 1270,
+    "pageLoads": 5096,
+    "visits": 1285,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5045,
-        "visits": 1270
+        "pageLoads": 5096,
+        "visits": 1285
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1083,
-        "visits": 739
+        "pageLoads": 1090,
+        "visits": 747
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 201,
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 85,
+        "pageLoads": 83,
         "visits": 10
       },
       "/products/archcoin/": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 241,
-        "visits": 66
+        "pageLoads": 288,
+        "visits": 73
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -177,10 +181,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/gauges/": {
         "pageLoads": 11,
         "visits": 0
@@ -224,10 +228,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -250,11 +250,11 @@
         "pageLoads": 73,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -323,7 +323,7 @@
         "visits": 30
       },
       "/analytics/": {
-        "pageLoads": 62,
+        "pageLoads": 61,
         "visits": 0
       },
       "/meet-sean-mansfield/": {
@@ -353,16 +353,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3775,
+        "pageLoads": 3811,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 482,
-        "visits": 482
+        "pageLoads": 489,
+        "visits": 489
       },
       "www.google.com": {
-        "pageLoads": 777,
-        "visits": 777
+        "pageLoads": 785,
+        "visits": 785
       },
       "raw.githack.com": {
         "pageLoads": 10,

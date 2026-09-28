@@ -227,11 +227,11 @@ export function buildHEarthGen311RareSignalRefinementDiagnostic(){
     const visited=new Set();
     for(const c of candidates)for(let z=c.z-coarse;z<=c.z+coarse;z+=spacing)for(let x=c.x-coarse;x<=c.x+coarse;x+=spacing){
       const vk=`${x},${z}`;if(visited.has(vk))continue;visited.add(vk);
-      const a=deriveHEarthGen311RegionalArticulation(x,z,{step:spacing});if(a?.valid!==true)continue;
+      const derivativeScaleWorldUnits=8,a=deriveHEarthGen311RegionalArticulation(x,z,{step:derivativeScaleWorldUnits});if(a?.valid!==true)continue;
       for(const [name,r] of Object.entries(RARE_SIGNAL_RULES)){const v=a[r.key]??0;peaks[name]=Math.max(peaks[name],v);if(v>=r.threshold){pointsBySignal[name].push({x,z,value:v,label:a.landformClass});if(a.landformClass!==r.label)suppressed[name]++;}}
     }
     const signals={};for(const [name,r] of Object.entries(RARE_SIGNAL_RULES)){const pts=pointsBySignal[name],components=connectedComponentSizes(pts,spacing);signals[name]=freeze({threshold:r.threshold,crossingPointCount:pts.length,approximateCrossingAreaSquareMeters:pts.length*spacing*spacing,componentCount:components.length,largestComponentPointCount:components[0]??0,approximateLargestComponentAreaSquareMeters:(components[0]??0)*spacing*spacing,peakSignal:peaks[name],labelSuppressedPointCount:suppressed[name]})}
-    levels[spacing]=freeze({spacingWorldUnits:spacing,uniqueSampleCount:visited.size,signals:freeze(signals)});
+    levels[spacing]=freeze({sampleSpacingWorldUnits:spacing,derivativeScaleWorldUnits:8,uniqueSampleCount:visited.size,signals:freeze(signals)});
   }
   return freeze({eligible:true,status:'GEN311_RARE_SIGNAL_REFINEMENT_DIAGNOSTIC_COMPLETE',contractId:H_EARTH_GEN311_RARE_SIGNAL_REFINEMENT_CONTRACT_ID,candidateCoarseCellCount:candidates.length,candidateRule:RARE_SIGNAL_RULES,levels:freeze(levels),classificationThresholdsMutated:false,terrainMutation:false,ecologyEquationMutation:false,geometryCreated:false});
 }

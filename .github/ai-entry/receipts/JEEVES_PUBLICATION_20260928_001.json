@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "JEEVES_PUBLICATION_20260928_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5142,
+  "requestBranch": "ai-dispatch-request-jeeves-publish-20260928",
+  "requestCommit": "d52075585eb8897ce6b250e6f808bbdaa001dab1",
+  "requestCommitParent": "19495c43b4e2ffa8003e08f20b08e58d94920e74",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "19495c43b4e2ffa8003e08f20b08e58d94920e74",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "19495c43b4e2ffa8003e08f20b08e58d94920e74",
+    "surface_id": "jeeves"
+  },
+  "bridgeRunId": "36449055781",
+  "dispatchedRunId": 36449081761,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36449081761",
+  "dispatchedRunHeadSha": "19495c43b4e2ffa8003e08f20b08e58d94920e74",
+  "dispatchedAt": "2026-09-28T16:10:15.498Z",
+  "resolvedAt": "2026-09-28T16:10:20.876Z"
+}

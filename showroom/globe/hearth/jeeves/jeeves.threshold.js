@@ -3468,10 +3468,53 @@
     state.phaseIndex =
       0;
 
-    showThreshold({
-      replay:
-        false
-    });
+    hideThresholdImmediately();
+
+    unlockPageScroll();
+
+    openPageAccess();
+
+    settleThresholdWindow();
+
+    setThresholdState(
+      "skipped"
+    );
+
+    state.lastAction =
+      "conversation-first-entry";
+
+    updateReceipt();
+
+    globalThis.setTimeout(
+      () => {
+        emit(
+          EVENTS.COMPLETE,
+          {
+            source:
+              "conversation-first-entry",
+
+            skipped:
+              true,
+
+            silentOpening:
+              false,
+
+            phase:
+              "arrival",
+
+            phaseIndex:
+              0,
+
+            phaseCount:
+              PHASES.length,
+
+            windowSize:
+              "compact"
+          }
+        );
+      },
+      0
+    );
   };
 
   const finishInitialization = () => {

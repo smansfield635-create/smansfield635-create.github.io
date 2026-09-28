@@ -3880,13 +3880,6 @@
     );
   };
 
-  const publicReplayWelcome =
-    () => {
-      requestThresholdReplay();
-
-      return true;
-    };
-
   const API = {
     contract:
       CONTRACT,

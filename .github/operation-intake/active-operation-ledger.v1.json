@@ -3515,43 +3515,61 @@
     "44cdf0de6f31e36f965150b0a5f252f54ae138a21e3b06aae50cbbc72b9f6069": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "1d5bf7ca7a6377b9bc5900be1e171dae42b0a843",
-          "lockGeneration": 2506,
+          "governingHead": "9754e841bbd75447e6285ee743fe1ef38e1da33a",
+          "lockGeneration": 2510,
           "lockScope": "H_EARTH:VARIANT_B:ENVIRONMENTAL_SUCCESSOR",
-          "operationId": "H_EARTH_ENVIRONMENTAL_SUCCESSOR_20260928_001",
-          "procedureLocatorDigest": "20837a1870879c3f93b339bb7e5406e7a9f4b84d2c2eed08d6b6e24873008ead",
-          "requestDigest": "cb1627d28af2daafeccfc3eb0c3f3b391c467aedfd8a40b39258a883cd6732fc",
+          "operationId": "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001",
+          "procedureLocatorDigest": "12c25352c0a5ac50e39d0e4c60c816de9f496aeb20fedfddf9b9ae5797aa2346",
+          "requestDigest": "e711df6b2dd734d21e4820a629f48bf3cf5ac3d9000ed719364a2a0fbc823091",
           "scopeHash": "44cdf0de6f31e36f965150b0a5f252f54ae138a21e3b06aae50cbbc72b9f6069"
         },
-        "bindingDigest": "becb347dab43875006bf686b189ba384e8e6cc8295062b375503edd8055dd707",
+        "bindingDigest": "5e95bd6afaae473c2faa84f49e5159297196b4ab31cd6ee2634164d000fbb2a6",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "1860458446ed53dadda2198de6d0219d8b9cf997e2cfdab29d097af401c59724",
-          "commentId": 5877029095,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
+          "commentBodySha256": "3d0f0047dac7458357a512681578ffaba5b73064d71c0b280eb7ca1d83f81c6d",
+          "commentId": 5878284721,
+          "eventAction": "created",
+          "eventName": "issue_comment",
           "issueNumber": 5086,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 36472994043,
-          "workflowSha": "4afe3f718b3443c65039ce99ae2e918c908bcdc6"
+          "workflowRunId": 36482074520,
+          "workflowSha": "9754e841bbd75447e6285ee743fe1ef38e1da33a"
         },
-        "lineageAnchorCommitSha": "7906a764d9bf97dea9e4aa01588568e99b933edb",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "c8ce492b83c825297d182f63313c2dfa85fc1ab6",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "1d5bf7ca7a6377b9bc5900be1e171dae42b0a843",
-      "lockGeneration": 2506,
+      "governingHead": "9754e841bbd75447e6285ee743fe1ef38e1da33a",
+      "lockGeneration": 2510,
       "lockScope": "H_EARTH:VARIANT_B:ENVIRONMENTAL_SUCCESSOR",
-      "operationId": "H_EARTH_ENVIRONMENTAL_SUCCESSOR_20260928_001",
-      "procedureLocatorDigest": "20837a1870879c3f93b339bb7e5406e7a9f4b84d2c2eed08d6b6e24873008ead",
+      "operationId": "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "1d5bf7ca7a6377b9bc5900be1e171dae42b0a843",
+        "lockGeneration": 2506,
+        "lockScope": "H_EARTH:VARIANT_B:ENVIRONMENTAL_SUCCESSOR",
+        "operationId": "H_EARTH_ENVIRONMENTAL_SUCCESSOR_20260928_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878172208",
+          "be9ffea4fc2e2adb514ad2969b37078b51548ad6",
+          "1097f932379a94348be1b019d1e1fc2220e79cfb",
+          "49f31cbe33c564bb8363b883352231f6ecd50c76",
+          "H-Earth-Habitat-Diagnostic-1097f932.zip",
+          "H-Earth-Rare-Signal-Execution-49f31cbe.zip"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001:FROM_2506"
+      },
+      "procedureLocatorDigest": "12c25352c0a5ac50e39d0e4c60c816de9f496aeb20fedfddf9b9ae5797aa2346",
       "released": false,
-      "requestDigest": "cb1627d28af2daafeccfc3eb0c3f3b391c467aedfd8a40b39258a883cd6732fc",
+      "requestDigest": "e711df6b2dd734d21e4820a629f48bf3cf5ac3d9000ed719364a2a0fbc823091",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "44cdf0de6f31e36f965150b0a5f252f54ae138a21e3b06aae50cbbc72b9f6069",
       "state": "ADMITTED_LOCKED"
@@ -14444,7 +14462,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2509,
+  "lockGeneration": 2510,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -66476,6 +66494,70 @@
       "scopeHash": "ccd4d402115ff55142e567f1fc7d044e5d77953dc9c4f8c9234d4d967a0da867",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1d5bf7ca7a6377b9bc5900be1e171dae42b0a843",
+          "lockGeneration": 2506,
+          "lockScope": "H_EARTH:VARIANT_B:ENVIRONMENTAL_SUCCESSOR",
+          "operationId": "H_EARTH_ENVIRONMENTAL_SUCCESSOR_20260928_001",
+          "procedureLocatorDigest": "20837a1870879c3f93b339bb7e5406e7a9f4b84d2c2eed08d6b6e24873008ead",
+          "requestDigest": "cb1627d28af2daafeccfc3eb0c3f3b391c467aedfd8a40b39258a883cd6732fc",
+          "scopeHash": "44cdf0de6f31e36f965150b0a5f252f54ae138a21e3b06aae50cbbc72b9f6069"
+        },
+        "bindingDigest": "becb347dab43875006bf686b189ba384e8e6cc8295062b375503edd8055dd707",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1860458446ed53dadda2198de6d0219d8b9cf997e2cfdab29d097af401c59724",
+          "commentId": 5877029095,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5086,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 36472994043,
+          "workflowSha": "4afe3f718b3443c65039ce99ae2e918c908bcdc6"
+        },
+        "lineageAnchorCommitSha": "7906a764d9bf97dea9e4aa01588568e99b933edb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1d5bf7ca7a6377b9bc5900be1e171dae42b0a843",
+      "lockGeneration": 2506,
+      "lockScope": "H_EARTH:VARIANT_B:ENVIRONMENTAL_SUCCESSOR",
+      "operationId": "H_EARTH_ENVIRONMENTAL_SUCCESSOR_20260928_001",
+      "procedureLocatorDigest": "20837a1870879c3f93b339bb7e5406e7a9f4b84d2c2eed08d6b6e24873008ead",
+      "released": true,
+      "requestDigest": "cb1627d28af2daafeccfc3eb0c3f3b391c467aedfd8a40b39258a883cd6732fc",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "44cdf0de6f31e36f965150b0a5f252f54ae138a21e3b06aae50cbbc72b9f6069",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878172208",
+          "be9ffea4fc2e2adb514ad2969b37078b51548ad6",
+          "1097f932379a94348be1b019d1e1fc2220e79cfb",
+          "49f31cbe33c564bb8363b883352231f6ecd50c76",
+          "H-Earth-Habitat-Diagnostic-1097f932.zip",
+          "H-Earth-Rare-Signal-Execution-49f31cbe.zip"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "9754e841bbd75447e6285ee743fe1ef38e1da33a",
+        "successorLockGeneration": 2510,
+        "successorLockScope": "H_EARTH:VARIANT_B:ENVIRONMENTAL_SUCCESSOR",
+        "successorOperationId": "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001",
+        "transitionId": "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001:FROM_2506"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

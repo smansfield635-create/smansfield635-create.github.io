@@ -3468,10 +3468,22 @@
     state.phaseIndex =
       0;
 
-    showThreshold({
-      replay:
-        false
-    });
+    hideThresholdImmediately();
+
+    openPageAccess();
+
+    unlockPageScroll();
+
+    settleThresholdWindow();
+
+    setThresholdState(
+      "available"
+    );
+
+    state.lastAction =
+      "threshold-available-on-request";
+
+    updateReceipt();
   };
 
   const finishInitialization = () => {

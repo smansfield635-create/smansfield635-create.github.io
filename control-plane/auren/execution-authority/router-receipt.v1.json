@@ -1,0 +1,50 @@
+{
+  "schema": "AUREN_EXECUTION_ROUTE_RECEIPT_v1",
+  "result": "PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingHead": "8b5d720104bce3ae3c8b20c8f246de09ee12dca6",
+  "surfaceId": "auren",
+  "candidateHead": "fc702a04a3002b471f369bf8757def4fba3763b7",
+  "route": {
+    "qualification": {
+      "capabilityId": "AUREN_SPATIAL_CHAMBER_PROOF1_QUALIFICATION",
+      "workflow": "auren-spatial-chamber-proof1-qualification.yml",
+      "ref": "main",
+      "successResult": "PASS",
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false
+    },
+    "publication": {
+      "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+      "workflow": "pages-exact-head-deploy-v3.yml",
+      "ref": "main",
+      "surfaceId": "auren"
+    },
+    "publicationSurface": {
+      "path": ".github/ai-router/publication-surfaces/auren.json",
+      "blobSha": "e873907f133a70804a5f14d2be2d911e8255ab08"
+    }
+  },
+  "evidence": {
+    "qualificationCapabilityRegistrationPr": 5152,
+    "publicationSurfaceRegistrationPr": 5159,
+    "publicationSurfaceRepairPr": 5161,
+    "priorQualificationDispatchPrs": [
+      5153,
+      5156
+    ],
+    "priorPublicationDispatchPrs": [
+      5160,
+      5162
+    ]
+  },
+  "disposition": "PASS_EXISTING_AUREN_EXECUTION_AND_PUBLICATION_ROUTE",
+  "noNewChamberArchitecture": true,
+  "noNewProjectRegistration": true,
+  "productMutationPerformed": false,
+  "materializedBy": {
+    "operationId": "AUREN_EXECUTION_AUTHORITY_MATERIALIZATION_20260928_001",
+    "lockGeneration": 2513,
+    "authorityCeiling": "TWO_RECEIPT_PATHS_ONLY"
+  }
+}

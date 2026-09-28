@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-28T19:28:30Z",
+  "generatedAt": "2026-09-28T20:33:01Z",
   "window30d": {
-    "start": "2026-08-29T19:28:30Z",
-    "end": "2026-09-28T19:28:30Z"
+    "start": "2026-08-29T20:33:01Z",
+    "end": "2026-09-28T20:33:01Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 785
+      "pageLoads": 793
     },
     {
       "date": "2026-09-22",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 24
+      "pageLoads": 26
     }
   ],
   "summary": {
-    "pageLoads": 7116,
-    "botPageLoads": 2568,
-    "nonBotPageLoads": 4548
+    "pageLoads": 7106,
+    "botPageLoads": 2572,
+    "nonBotPageLoads": 4534
   },
   "referrers": [
     {
@@ -140,23 +140,23 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3105,
+      "pageLoads": 3107,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 656,
-      "visits": 656
+      "pageLoads": 636,
+      "visits": 636
+    },
+    {
+      "host": "m.facebook.com",
+      "pageLoads": 16,
+      "visits": 16
     },
     {
       "host": "bing.com",
       "pageLoads": 11,
       "visits": 11
-    },
-    {
-      "host": "m.facebook.com",
-      "pageLoads": 8,
-      "visits": 8
     },
     {
       "host": "com.google.android.googlequicksearchbox",
@@ -177,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1998,
-      "visits": 1548
+      "pageLoads": 1969,
+      "visits": 1520
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 915,
-      "visits": 915
+      "pageLoads": 927,
+      "visits": 927
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 704,
-      "visits": 569
+      "pageLoads": 703,
+      "visits": 568
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -202,12 +202,12 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 310,
+      "pageLoads": 306,
       "visits": 131
     },
     {
       "path": "/analytics/",
-      "pageLoads": 218,
+      "pageLoads": 227,
       "visits": 92
     },
     {

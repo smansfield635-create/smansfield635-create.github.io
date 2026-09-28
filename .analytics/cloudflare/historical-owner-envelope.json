@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-28T19:28:30Z",
+  "generatedAt": "2026-09-28T20:33:01Z",
   "window": {
-    "start": "2026-06-30T19:28:30Z",
-    "end": "2026-09-28T19:28:30Z"
+    "start": "2026-06-30T20:33:01Z",
+    "end": "2026-09-28T20:33:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5068,
+    "pageLoads": 5061,
     "visits": 1275,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5068,
+        "pageLoads": 5061,
         "visits": 1275
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1084,
+        "pageLoads": 1083,
         "visits": 739
       },
       "/showroom/globe/h-earth/": {
@@ -58,13 +58,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 38,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 37,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -119,7 +119,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 258,
+        "pageLoads": 254,
         "visits": 71
       },
       "/laws/research/methods-and-models/": {
@@ -146,20 +146,20 @@
         "pageLoads": 144,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 62,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 94,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 62,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -173,6 +173,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -189,10 +193,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -327,7 +327,7 @@
         "visits": 0
       },
       "/meet-sean-mansfield/": {
-        "pageLoads": 3,
+        "pageLoads": 2,
         "visits": 0
       },
       "/governance-bridge/": {
@@ -357,7 +357,7 @@
         "visits": 487
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3793,
+        "pageLoads": 3786,
         "visits": 0
       },
       "www.google.com": {

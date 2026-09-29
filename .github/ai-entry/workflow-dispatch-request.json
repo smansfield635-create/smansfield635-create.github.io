@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "AUREN_C4_4B_RELATIONSHIP_MAPPING_QUALIFICATION_20260929_004",
+  "capabilityId": "AUREN_C4_4B_RELATIONSHIP_MAPPING_QUALIFICATION",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "d5f670dffc4cb229d07e8451651129b2804a67b0",
+    "base_sha": "f2906063993649f2e7e7a9278686a522bea94e77"
   }
 }

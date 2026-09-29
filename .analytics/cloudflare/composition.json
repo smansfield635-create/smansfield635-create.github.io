@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-29T01:11:24Z",
+  "generatedAt": "2026-09-29T01:45:23Z",
   "window": {
-    "start": "2026-08-30T01:11:24Z",
-    "end": "2026-09-29T01:11:24Z"
+    "start": "2026-08-30T01:45:23Z",
+    "end": "2026-09-29T01:45:23Z"
   },
   "dimensions": {
     "requestPath": [
@@ -39,8 +39,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 234,
-        "visits": 106
+        "pageLoads": 235,
+        "visits": 107
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -69,8 +69,8 @@
       },
       {
         "value": "/prototypes/evan-job-stage/",
-        "pageLoads": 73,
-        "visits": 73
+        "pageLoads": 72,
+        "visits": 72
       },
       {
         "value": "/products/archcoin/contract/",
@@ -460,8 +460,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2861,
-        "visits": 2781
+        "pageLoads": 2862,
+        "visits": 2782
       },
       {
         "value": "tablet",
@@ -470,15 +470,15 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1946,
-        "visits": 628
+        "pageLoads": 1945,
+        "visits": 627
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2580,
-        "visits": 2520
+        "pageLoads": 2581,
+        "visits": 2521
       },
       {
         "value": "Chrome",
@@ -487,8 +487,8 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1869,
-        "visits": 561
+        "pageLoads": 1868,
+        "visits": 560
       },
       {
         "value": "Unknown",
@@ -524,13 +524,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4198,
-        "visits": 1160
+        "pageLoads": 4197,
+        "visits": 1159
       },
       {
         "value": "Linux",
-        "pageLoads": 2590,
-        "visits": 2530
+        "pageLoads": 2591,
+        "visits": 2531
       },
       {
         "value": "MacOSX",
@@ -556,20 +556,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4543,
-        "visits": 1485
+        "pageLoads": 4542,
+        "visits": 1484
       },
       {
         "value": "1",
-        "pageLoads": 2580,
-        "visits": 2520
+        "pageLoads": 2581,
+        "visits": 2521
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4851,
-        "visits": 3544
+        "pageLoads": 4852,
+        "visits": 3545
       },
       {
         "value": "reload",
@@ -583,8 +583,8 @@
       },
       {
         "value": "back-forward",
-        "pageLoads": 334,
-        "visits": 78
+        "pageLoads": 333,
+        "visits": 77
       },
       {
         "value": "unknown",
@@ -600,13 +600,13 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5284,
-        "visits": 3286
+        "pageLoads": 5285,
+        "visits": 3287
       },
       {
         "value": "cache",
-        "pageLoads": 1523,
-        "visits": 403
+        "pageLoads": 1522,
+        "visits": 402
       },
       {
         "value": "navigational-prefetch",

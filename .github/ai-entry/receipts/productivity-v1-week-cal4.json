@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "productivity-v1-week-cal4",
+  "capabilityId": "DGB_PRODUCTIVITY_RECEIPT_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5304,
+  "requestBranch": "ai-dispatch-request-productivity-v1-week-cal4",
+  "requestCommit": "3aa93af0b8e6fe28ed583f8eb23115fa256e10a4",
+  "currentMainSha": "400af711f70d7c1a938d198346e646a3005993ef",
+  "bridgeRunId": "36637655484",
+  "error": "Stale dispatch request: parent a5bd5c2e9db367d45d52a88c8f0df3c89cc96adb != current main 400af711f70d7c1a938d198346e646a3005993ef",
+  "failedAt": "2026-09-29T22:07:43.770Z"
+}

@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/dgb-productivity-receipt-v1.yml'
+      - '.github/ai-router/workflow-dispatch-capability.v1.json'
       - 'tools/dgb-productivity-receipt-v1.mjs'
       - 'tools/verify-dgb-productivity-receipt-v1.mjs'
       - 'project-records/fixtures/dgb-productivity-receipt-v1.fixture.json'
@@ -48,7 +49,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
           changed="$(git diff --name-only "${{ github.event.pull_request.base.sha }" HEAD | sort)"
-          expected="$(printf '%s\n' '.github/workflows/dgb-productivity-receipt-v1.yml' 'project-records/fixtures/dgb-productivity-receipt-v1.fixture.json' 'tools/dgb-productivity-receipt-v1.mjs' 'tools/verify-dgb-productivity-receipt-v1.mjs' | sort)"
+          expected="$(printf '%s\n' '.github/workflows/dgb-productivity-receipt-v1.yml' '.github/ai-router/workflow-dispatch-capability.v1.json' 'project-records/fixtures/dgb-productivity-receipt-v1.fixture.json' 'tools/dgb-productivity-receipt-v1.mjs' 'tools/verify-dgb-productivity-receipt-v1.mjs' | sort)"
           test "$changed" = "$expected"
       - name: Verify deterministic fixture
         run: node tools/verify-dgb-productivity-receipt-v1.mjs project-records/fixtures/dgb-productivity-receipt-v1.fixture.json

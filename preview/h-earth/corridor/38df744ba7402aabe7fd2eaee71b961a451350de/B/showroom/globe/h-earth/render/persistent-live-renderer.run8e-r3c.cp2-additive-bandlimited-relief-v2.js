@@ -785,7 +785,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
 
   function initialize(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
-    if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) {
+    if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) {
       throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
     }
     resources.geometryVertexShader = createShader(gl.VERTEX_SHADER, VS, 'GV');
@@ -929,7 +929,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
 
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
+    if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
     if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);
     gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);

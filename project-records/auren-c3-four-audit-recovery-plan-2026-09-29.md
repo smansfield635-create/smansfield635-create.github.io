@@ -189,6 +189,31 @@ This section preserves the design direction discovered before the audits so it i
 
 ## Product utility layer
 
+### Provisional architecture clarification — 2026-09-29
+
+The two opening paths have different purposes but use the **same character**.
+
+**Products = full public/low-trust Auren conversation.**
+
+- Auren's personality remains fully present: young, highly intelligent, confident, and—where Audit 1 confirms it—his arrogant/entitled/privileged public-facing persona.
+- Product use does **not** activate relationship-game scoring merely because a visitor wants information.
+- All five legitimate product branches should be visible immediately. Do not hide three behind a generic More branch.
+- The current ARCHCOIN corridor is the provisional **minimum conversational-depth baseline** for every product branch, not an exception.
+- Each product should therefore support a developed progressive conversation: what it is, why/useful purpose where canon supports it, meaningful factual follow-ups, current/live status where applicable, distinctions/capabilities where supported, and a proper handoff to the proven destination.
+- A one- or two-sentence product stub followed by Back is below the target standard.
+- Handoffs must be proven by Step 4; missing destinations must not be invented.
+- Low trust affects tone/depth of Auren's public presentation, but must not artificially withhold public product facts or navigation.
+
+**Learn About Auren = relationship/game progression path.**
+
+- It begins with the same low-trust/public Auren rather than a second personality.
+- Choosing this path activates the provisional relationship mechanics: conversational transactions may raise/lower trust; archetype evidence may accumulate after Step 2 establishes canon; Auren may test his understanding of the visitor; his public mask may change with trust; deeper personal disclosure and eventual Mirrorland/scene access may become eligible.
+- Product discussion may naturally occur inside this relationship path, but entering Products itself does not conscript an informational visitor into relationship gameplay.
+- Trust should change Auren's tone, depth and voluntary disclosure before it changes available game access.
+
+This clarification is **provisional and subordinate to Steps 1–4**. The audits may refine or reject details, but the distinction and ARCHCOIN-depth requirement must be explicitly considered during re-solidification.
+
+
 Opening target:
 
 - Learn About Products

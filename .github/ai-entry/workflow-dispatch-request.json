@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "AUREN_C4_3A_ADMISSION_PRESSURE_QUALIFICATION_20260929_001",
+  "capabilityId": "AUREN_C4_3A_ADMISSION_PRESSURE_QUALIFICATION",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "0d84757532ab940eb53ae90de6bd6706fc33604e",
+    "base_sha": "0b62bc7355b9ea68342c9ae62cc0dca58e51b18f"
   }
 }

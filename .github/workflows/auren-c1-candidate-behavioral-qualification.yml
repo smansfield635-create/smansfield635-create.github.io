@@ -31,6 +31,7 @@ jobs:
           git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort > /tmp/files
           cat >/tmp/allowed <<'EOF'
           .github/live-qualification/verifiers/auren-c1-progressive-conversation.v1.mjs
+          .github/workflows/auren-c1-candidate-behavioral-qualification.yml
           products/auren/auren.chamber.js
           products/auren/auren.voice.js
           products/auren/index.css
@@ -57,7 +58,7 @@ jobs:
           RUNTIME_RESULT_PATH: /tmp/auren-c1-result.json
         run: node .github/live-qualification/verifiers/auren-c1-progressive-conversation.v1.mjs
       - name: Capture owner-review mobile states
-        if: always()
+        if: success()
         env:
           CHROME_PATH: ${{ env.CHROME_PATH }}
         run: |

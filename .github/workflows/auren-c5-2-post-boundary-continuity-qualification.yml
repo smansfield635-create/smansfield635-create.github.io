@@ -1,0 +1,68 @@
+name: Auren C5.2 Post-Boundary Continuity Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+      base_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - name: Fetch exact base
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+      - name: Prove C5.2 bounded diff
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort >/tmp/files
+          cat >/tmp/allowed <<'EOF'
+          .github/live-qualification/verifiers/auren-c5-2-post-boundary-continuity.v1.mjs
+          .github/workflows/auren-c5-2-post-boundary-continuity-qualification.yml
+          products/auren/auren.voice.js
+          EOF
+          sort -o /tmp/allowed /tmp/allowed
+          diff -u /tmp/allowed /tmp/files
+          test -z "$(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" -- products/auren/auren.chamber.js products/auren/auren.relationship.js products/auren/auren.archetype.js products/auren/auren.state-dependent.js products/auren/auren.privacy-relationship.js)"
+      - uses: browser-actions/setup-chrome@v1
+      - name: Resolve Chrome
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -x "$chrome"; echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 18803 >/tmp/c52-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:18803/products/auren/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/c52-http.log; exit 1
+      - name: Execute C5.2 contract
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:18803
+          CHROME_PATH: ${{ env.CHROME_PATH }}
+          RUNTIME_RESULT_PATH: /tmp/c52.json
+        run: node .github/live-qualification/verifiers/auren-c5-2-post-boundary-continuity.v1.mjs
+      - name: Preserve receipt
+        if: always()
+        run: mkdir -p .qualification/c52 && cp /tmp/c52.json .qualification/c52/receipt.json 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auren-c5-2-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/c52
+          retention-days: 30

@@ -1,0 +1,52 @@
+name: Auren Integrated Product Browser Acceptance
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - uses: browser-actions/setup-chrome@v1
+      - name: Resolve Chrome
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -x "$chrome"; echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Fetch acceptance verifier from main
+        env:
+          GH_TOKEN: \${{ github.token }}
+        run: |
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github.raw+json" "https://api.github.com/repos/\${{ github.repository }}/contents/.github/live-qualification/verifiers/auren-integrated-product-acceptance.v1.mjs?ref=main" -o /tmp/auren-integrated-product-acceptance.v1.mjs
+      - name: Serve exact product candidate
+        run: |
+          python3 -m http.server 18804 >/tmp/auren-accept-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:18804/products/auren/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/auren-accept-http.log; exit 1
+      - name: Execute integrated acceptance
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:18804
+          CHROME_PATH: ${{ env.CHROME_PATH }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          RUNTIME_RESULT_PATH: /tmp/auren-accept.json
+        run: node /tmp/auren-integrated-product-acceptance.v1.mjs
+      - name: Preserve receipt
+        if: always()
+        run: mkdir -p .qualification/auren-integrated && cp /tmp/auren-accept.json .qualification/auren-integrated/receipt.json 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auren-integrated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/auren-integrated
+          retention-days: 30

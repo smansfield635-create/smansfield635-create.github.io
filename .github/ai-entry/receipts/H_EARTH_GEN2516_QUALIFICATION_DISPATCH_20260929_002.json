@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GEN2516_QUALIFICATION_DISPATCH_20260929_002",
+  "capabilityId": "H_EARTH_GEN2515_AUTHORIZED_TOOLSET_EXECUTE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5244,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2516-qualification-20260929-002",
+  "requestCommit": "ca3594eefe32918598cdfe6c665d031f97b8e915",
+  "requestCommitParent": "e4a15c2074e749f6a71f2427efe2d5dba8b0f518",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e4a15c2074e749f6a71f2427efe2d5dba8b0f518",
+  "workflow": "ai-room-execution-transport.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H-EARTH-GEN2516-QUALIFICATION-20260929-002\",\"descriptorId\":\"H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_20260929_001\",\"admissionReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"e8a7a9581a183464c9e64b74f4a9f8db46a211a7\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2516-admission.minimal.v1.json\",\"sha256\":\"b0a6447b0e2b92800a596a7289cf6dab8497fe4c5cef93d69cd44742eddccde9\"},\"routerReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"e8a7a9581a183464c9e64b74f4a9f8db46a211a7\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2516-router.minimal.v1.json\",\"sha256\":\"7abf57a10f7b5d9ebc5e7e9a13300cb6cef2c267afa23930657503d4c2e18abf\"},\"inputs\":{\"candidateHead\":\"6fa5041082a1133accb2cabbd0072e193c181ea9\",\"executionHolder\":\"H_EARTH_GEN2516_QUALIFIER\"},\"availableCapabilities\":{\"schema\":\"AVAILABLE_CAPABILITY_RECEIPT_v1\",\"availableBackends\":[\"GITHUB_ACTIONS_CLEAN_EXECUTION\"],\"availableWorkflowPaths\":[\".github/workflows/ai-room-execution-transport.yml\"],\"availableToolingHeads\":[\"17c781fc2ff6d4157cffbe50cc712289afa8c839\"]},\"requestNonce\":\"2516000000000000000000000000000000000000000000000000000000000002\"}",
+    "router_callback_issue": "5086",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "36618224066",
+  "dispatchedRunId": 36618255652,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36618255652",
+  "dispatchedRunHeadSha": "e4a15c2074e749f6a71f2427efe2d5dba8b0f518",
+  "dispatchedAt": "2026-09-29T19:18:03.656Z",
+  "resolvedAt": "2026-09-29T19:18:08.244Z"
+}

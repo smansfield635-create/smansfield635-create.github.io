@@ -1,15 +1,15 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-29T21:31:14Z",
+  "generatedAt": "2026-09-29T22:31:37Z",
   "window": {
-    "start": "2026-08-30T21:31:14Z",
-    "end": "2026-09-29T21:31:14Z"
+    "start": "2026-08-30T22:31:37Z",
+    "end": "2026-09-29T22:31:37Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1939,
+        "pageLoads": 1936,
         "visits": 1500
       },
       {
@@ -19,7 +19,7 @@
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 712,
+        "pageLoads": 711,
         "visits": 570
       },
       {
@@ -34,13 +34,13 @@
       },
       {
         "value": "/products/education/",
-        "pageLoads": 314,
-        "visits": 113
+        "pageLoads": 312,
+        "visits": 112
       },
       {
         "value": "/analytics/",
         "pageLoads": 237,
-        "visits": 120
+        "visits": 121
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -49,13 +49,8 @@
       },
       {
         "value": "/index.html",
-        "pageLoads": 116,
+        "pageLoads": 115,
         "visits": 1
-      },
-      {
-        "value": "/characters/",
-        "pageLoads": 112,
-        "visits": 70
       },
       {
         "value": "/governance-bridge/",
@@ -63,8 +58,13 @@
         "visits": 90
       },
       {
+        "value": "/characters/",
+        "pageLoads": 111,
+        "visits": 70
+      },
+      {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 103,
+        "pageLoads": 101,
         "visits": 49
       },
       {
@@ -323,14 +323,14 @@
         "visits": 1
       },
       {
-        "value": "/laws/research/evidence-and-sources/",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
         "value": "/preview/h-earth/t4-3-d8fca316/",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/laws/research/evidence-and-sources/",
+        "pageLoads": 1,
+        "visits": 0
       },
       {
         "value": "/preview/governance-bridge/index.html",
@@ -376,7 +376,7 @@
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3090,
+        "pageLoads": 3080,
         "visits": 0
       },
       {
@@ -413,7 +413,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 7049,
+        "pageLoads": 7039,
         "visits": 3959
       },
       {
@@ -460,12 +460,12 @@
       },
       {
         "value": "tablet",
-        "pageLoads": 2300,
+        "pageLoads": 2299,
         "visits": 604
       },
       {
         "value": "mobile",
-        "pageLoads": 1916,
+        "pageLoads": 1907,
         "visits": 602
       }
     ],
@@ -477,12 +477,12 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 2505,
+        "pageLoads": 2504,
         "visits": 790
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1838,
+        "pageLoads": 1829,
         "visits": 534
       },
       {
@@ -519,7 +519,7 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4151,
+        "pageLoads": 4141,
         "visits": 1141
       },
       {
@@ -551,7 +551,7 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4487,
+        "pageLoads": 4477,
         "visits": 1457
       },
       {
@@ -563,12 +563,12 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4864,
+        "pageLoads": 4856,
         "visits": 3560
       },
       {
         "value": "reload",
-        "pageLoads": 1178,
+        "pageLoads": 1177,
         "visits": 361
       },
       {
@@ -578,7 +578,7 @@
       },
       {
         "value": "back-forward",
-        "pageLoads": 346,
+        "pageLoads": 345,
         "visits": 86
       },
       {
@@ -595,12 +595,12 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5274,
+        "pageLoads": 5266,
         "visits": 3306
       },
       {
         "value": "cache",
-        "pageLoads": 1519,
+        "pageLoads": 1517,
         "visits": 397
       },
       {
@@ -612,14 +612,14 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 7097,
+        "pageLoads": 7087,
         "visits": 4007
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7097,
+        "pageLoads": 7087,
         "visits": 4007
       }
     ]

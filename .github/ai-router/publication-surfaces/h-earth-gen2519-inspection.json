@@ -1,0 +1,23 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "h-earth-gen2519-inspection",
+  "description": "Nonproduction immutable owner-inspection carrier for exact H-Earth Gen2519 package-separation candidate 271e881272861547411ccd700ce1a3b310b4e4ac.",
+  "checks": [
+    {
+      "path": "/inspection/h-earth-gen2519-271e8812/",
+      "includes": [
+        "NONPRODUCTION · GEN2519 IMMUTABLE INSPECTION",
+        "271e881272861547411ccd700ce1a3b310b4e4ac",
+        "TRANSPORT: PENDING",
+        "rawcdn.githack.com"
+      ],
+      "excludes": [
+        "d8fca3163396a93026a1a8827a09196c39f26bef",
+        "5707cfb687696ae6101b5b48a804b505739be255"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": false
+  }
+}

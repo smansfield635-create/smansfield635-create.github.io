@@ -25,7 +25,7 @@
     {
       "path": "/products/auren/auren.voice.js",
       "includes": [
-        "AUREN_C1_PROGRESSIVE_CONVERSATION_RECOVERY_v1",
+        "AUREN_C2_PERSONALITY_PERFORMANCE_V1",
         "AUREN_VALE_SANCTUARY_BUILDER_V1",
         "Products",
         "About Auren",
@@ -70,11 +70,14 @@
     {
       "path": "/products/auren/auren.chamber.js",
       "includes": [
-        "AUREN_C1_BOUNDED_ACTIVE_CONVERSATION_RUNTIME_v1",
+        "AUREN_C2_TIMED_CONVERSATION_RUNTIME_V1",
         "data-auren-ready",
         "conversationPrimary:true",
         "boundedActiveStage:true",
-        "MEMORY_NOT_ACTIVE_TRANSCRIPT"
+        "MEMORY_NOT_ACTIVE_TRANSCRIPT",
+        "timedPerformance:true",
+        "typingIndicator:true",
+        "choicesDelayedUntilTurnComplete:true"
       ],
       "excludes": []
     },

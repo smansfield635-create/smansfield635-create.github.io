@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUREN_C3_3_VISITOR_ARCHETYPE_EVIDENCE_QUALIFICATION_20260929_001",
+  "capabilityId": "AUREN_C3_3_VISITOR_ARCHETYPE_EVIDENCE_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5257,
+  "requestBranch": "ai-dispatch-request-auren-c3-3-20260929-001",
+  "requestCommit": "1c2a83cef4e41be6513d135a128c71f3bdd54856",
+  "currentMainSha": "20a0eb46a54d5849b032460125279db9fa3d0387",
+  "bridgeRunId": "36625246134",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/auren-c3-3-archetype-evidence-qualification.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-09-29T20:17:09.572Z"
+}

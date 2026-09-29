@@ -338,3 +338,69 @@ The resulting historical question is therefore stronger than \"did commit volume
 > How much durable, qualified product breadth and closure was produced at each operating phase, and how much mechanical execution did the human principal have to perform to produce it?
 
 This correction is especially important because the verified Jan. 29–Feb. 9 tranche already contains 1,852 mainline commits. The early baseline is demonstrably high-volume. The post-August audit must therefore test **leverage transformation**, not manufacture a low-output pre-agentic baseline.
+
+
+## Pre-agentic reconstruction — authoritative continuation
+
+The next bounded reconstruction pass extended the verified mainline history substantially. Weekly ranges below terminated before the retrieval ceiling and are therefore complete unless explicitly marked as daily reconstruction.
+
+| UTC interval | Mainline commits |
+|---|---:|
+| Feb 9–15 | 19 |
+| Feb 16–22 | 396 |
+| Feb 23–Mar 1 | 600 |
+| Mar 2–8 | 693 |
+| Mar 9–15 | 546 |
+| Mar 16–22 | 374 |
+| Mar 23–29 | 145 |
+| Mar 30–Apr 5 | 100 |
+| Apr 6–12 | 209 |
+| Apr 13–19 | 0 |
+| Apr 20–26 | 696 |
+| May 4–10 | 732 |
+| May 11–17 | 667 |
+| May 18–24 | 540 |
+| May 25–31 | 381 |
+| Jun 1–7 | 304 |
+| Jun 8–14 | 343 |
+| Jun 15–21 | 65 |
+| Jun 22–28 | 304 |
+| Jun 29–Jul 5 | 310 |
+| Jul 6–12 | 334 |
+| Jul 13–19 | 99 |
+| Jul 20–26 | 755 |
+
+Two weekly intervals saturated and were reconstructed daily rather than reported from the capped weekly query.
+
+### Apr 27–May 3 daily reconstruction
+
+| UTC date | Mainline commits |
+|---|---:|
+| Apr 27 | 254 |
+| Apr 28 | 107 |
+| Apr 29 | 93 |
+| Apr 30 | 162 |
+| May 1 | 113 |
+| May 2 | 154 |
+| May 3 | 124 |
+| **Total** | **1,007** |
+
+### Jul 27–Aug 3 daily reconstruction
+
+| UTC date | Mainline commits |
+|---|---:|
+| Jul 27 | 88 |
+| Jul 28 | 202 |
+| Jul 29 | 234 |
+| Jul 30 | 334 |
+| Jul 31 | 193 |
+| Aug 1 | 183 |
+| Aug 2 | 358 |
+| Aug 3 | 122 |
+| **Total** | **1,714** |
+
+### Immediate historical finding
+
+The pre-agentic high-output regime is not a single launch-week anomaly. After the Feb. 9–15 trough, activity returns to hundreds of mainline commits per week, reaches 1,007 commits during Apr. 27–May 3, remains substantial through May and June, reaches 755 during Jul. 20–26, and then rises to 1,714 during the final eight pre-agentic days immediately before the Aug. 4 breakpoint.
+
+This materially strengthens the interpretation correction: Aug. 4 cannot be treated as the point where high repository throughput began. The agentic comparison must instead determine what changed in human execution burden, product/workstream breadth, qualification, reuse, closure, recoverability, and instruction abstraction when an already high-output manual/AI-assisted operation crossed into agentic operation.

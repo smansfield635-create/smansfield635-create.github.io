@@ -1319,6 +1319,27 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PASS"
+    },
+    "AUREN_C5_2_POST_BOUNDARY_CONTINUITY_QUALIFICATION": {
+      "workflow": "auren-c5-2-post-boundary-continuity-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "candidate_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "base_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PASS"
     }
   },
   "continuity": {

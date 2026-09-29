@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-29T04:38:11Z",
+  "generatedAt": "2026-09-29T05:33:53Z",
   "window30d": {
-    "start": "2026-08-30T04:38:11Z",
-    "end": "2026-09-29T04:38:11Z"
+    "start": "2026-08-30T05:33:53Z",
+    "end": "2026-09-29T05:33:53Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 272
+      "pageLoads": 280
     },
     {
       "date": "2026-09-23",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 9
+      "pageLoads": 10
     }
   ],
   "summary": {
-    "pageLoads": 7082,
-    "botPageLoads": 2565,
+    "pageLoads": 7091,
+    "botPageLoads": 2574,
     "nonBotPageLoads": 4517
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3330,
-      "visits": 3330
+      "pageLoads": 3339,
+      "visits": 3339
     },
     {
       "host": "diamondgatebridge.com",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 692,
-      "visits": 557
+      "pageLoads": 701,
+      "visits": 566
     },
     {
       "path": "/campaigns/consider-the-energy/",

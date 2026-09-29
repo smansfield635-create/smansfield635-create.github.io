@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUREN_INTEGRATED_PRODUCT_BROWSER_ACCEPTANCE_20260929_004B",
+  "capabilityId": "AUREN_INTEGRATED_PRODUCT_BROWSER_ACCEPTANCE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5395,
+  "requestBranch": "ai-dispatch-request-auren-integrated-acceptance-r4b-20260929",
+  "requestCommit": "8c158722af6f8fde865ce2b69df573955a352f21",
+  "currentMainSha": "88bca8a33053621ddc60dab771e5dba2a91b997a",
+  "bridgeRunId": "36647730169",
+  "error": "Stale dispatch request: parent 5dc90e06d395476bf45ed326943168ba80850772 != current main 88bca8a33053621ddc60dab771e5dba2a91b997a",
+  "failedAt": "2026-09-29T23:56:23.257Z"
+}

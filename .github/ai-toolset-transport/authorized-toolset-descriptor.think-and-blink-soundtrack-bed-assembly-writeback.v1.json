@@ -1,0 +1,143 @@
+{
+  "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+  "descriptorId": "THINK_AND_BLINK_SOUNDTRACK_BED_ASSEMBLY_WRITEBACK_DESCRIPTOR_V1",
+  "operationId": "THINK_AND_BLINK_SOUNDTRACK_BED_EXECUTION_20260919_003",
+  "operationClass": "ESTATE_SOUNDTRACK_SOUNDTRACK_BED_ASSEMBLY_WRITEBACK",
+  "projectId": "ESTATE_SOUNDTRACK",
+  "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+  "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+  "toolId": "THINK_AND_BLINK_SOUNDTRACK_BED_ASSEMBLER_V1",
+  "exactToolingHead": "3b653dd1fab8ab8a940319d99f4436f60a9bd45d",
+  "toolingMaterialization": {
+    "mode": "BOUNDED_SPARSE_INDEX",
+    "sparsePaths": [
+      "assets/audio/estate-soundtrack/tools",
+      "assets/audio/estate-soundtrack/think-and-blink"
+    ],
+    "sparseIndexEntryLimitExclusive": 2000
+  },
+  "commandSpecification": {
+    "executable": "node",
+    "scriptPath": "assets/audio/estate-soundtrack/tools/think-and-blink-soundtrack-bed-assembler.v1.mjs",
+    "fixedArguments": [
+      "--assemble",
+      "--audio",
+      "assets/audio/estate-soundtrack/think-and-blink/soundtrack-bed-v1.ogg",
+      "--receipt",
+      "assets/audio/estate-soundtrack/think-and-blink/soundtrack-bed-v1.receipt.json"
+    ],
+    "inputArgumentBindings": [
+      {
+        "inputField": "executionHolder",
+        "argument": "--execution-holder"
+      }
+    ],
+    "outputArgumentBindings": [
+      {
+        "argument": "--diagnostic-receipt",
+        "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+      }
+    ],
+    "shell": false,
+    "extraArgumentsAllowed": false,
+    "environmentOverridesAllowed": false,
+    "streamOutput": true
+  },
+  "canonicalInputSchema": {
+    "schemaId": "THINK_AND_BLINK_SOUNDTRACK_BED_ASSEMBLY_WRITEBACK_INPUT_v1",
+    "required": [
+      "executionHolder"
+    ],
+    "allowed": [
+      "executionHolder"
+    ],
+    "properties": {
+      "executionHolder": {
+        "type": "string",
+        "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+      }
+    }
+  },
+  "canonicalOutputSchema": {
+    "schemaId": "REGISTERED_GENERATOR_WRITEBACK_RECEIPT_v1",
+    "required": [
+      "schema",
+      "result",
+      "operationId",
+      "descriptorId",
+      "targetBranchRef",
+      "expectedBranchHead",
+      "candidateHead",
+      "changedPaths",
+      "fastForwardOnly",
+      "childCommandGitHubTokenExposed",
+      "mainMutationPerformed",
+      "mergePerformed",
+      "deploymentPerformed",
+      "releasePerformed"
+    ]
+  },
+  "allowedBackends": [
+    {
+      "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+      "priority": 100,
+      "requirements": [
+        "EXACT_TOOLING_HEAD_FETCHABLE",
+        "NODE_22_AVAILABLE",
+        "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+      ]
+    }
+  ],
+  "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+  "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+  "writebackSpecification": {
+    "mode": "FAST_FORWARD_EXACT_BRANCH",
+    "targetBranchRef": "refs/heads/estate-soundtrack/think-and-blink-bed-v1",
+    "expectedBranchHead": "3b653dd1fab8ab8a940319d99f4436f60a9bd45d",
+    "commitMessage": "Think & Blink: render soundtrack bed v1",
+    "fastForwardOnly": true,
+    "requireChangedPaths": true
+  },
+  "allowedMutationPaths": [
+    "assets/audio/estate-soundtrack/think-and-blink/soundtrack-bed-v1.ogg",
+    "assets/audio/estate-soundtrack/think-and-blink/soundtrack-bed-v1.receipt.json"
+  ],
+  "prohibitedPaths": [
+    "inspection/",
+    ".github/",
+    "AI_ENTRYPOINT.json",
+    "campaigns/",
+    "products/",
+    "showroom/",
+    "laws/",
+    "characters/",
+    "h-earth-3d/",
+    "tools/"
+  ],
+  "prohibitedSideEffects": [
+    "ARBITRARY_COMMAND",
+    "CALLER_SUPPLIED_BRANCH",
+    "CALLER_SUPPLIED_EXPECTED_HEAD",
+    "UNDECLARED_PATH_MUTATION",
+    "MAIN_MUTATION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE",
+    "PUBLICATION",
+    "SOURCE_SUBSTITUTION",
+    "THIRD_PARTY_EDITING_APPLICATION"
+  ],
+  "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+  "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
+  "successDisposition": "RETURN_EXACT_SOUNDTRACK_BED_CANDIDATE_FOR_WAVEFORM_DURATION_HANDOFF_VERIFICATION",
+  "failureDispositions": {
+    "WRITEBACK_REMOTE_HEAD_MISMATCH": "PRESERVE_CANDIDATE_BRANCH_AND_STOP_WITHOUT_PUSH",
+    "UNAUTHORIZED_PATH_MUTATED": "PRESERVE_CANDIDATE_BRANCH_AND_STOP_WITHOUT_PUSH",
+    "COMMAND_EXECUTED_AND_FAILED": "PRESERVE_CANDIDATE_BRANCH_AND_RETURN_FIRST_ASSERTION",
+    "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "PRESERVE_CANDIDATE_BRANCH_AND_STOP",
+    "MISSING_OR_INVALID_RECEIPT": "STOP"
+  },
+  "continuationRule": "CONTINUE_ONLY_FROM_COMMAND_EXECUTED_AND_PASSED_WITH_WRITEBACK_PERFORMED_TRUE_AND_NEW_EXACT_CANDIDATE_HEAD",
+  "terminationRule": "WRITEBACK_AUTHORITY_TERMINATES_AFTER_ONE_FAST_FORWARD_COMMIT;NO_MAIN_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
+  "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+}

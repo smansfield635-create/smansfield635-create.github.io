@@ -30,6 +30,12 @@ function fail(code, detail = null) { const error = new Error(code); error.code =
 function assert(condition, code, detail = null) { if (!condition) fail(code, detail); }
 function git(root, ...args) { return cp.execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim(); }
 function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+function ensureExactCommit(root, head) {
+  assert(/^[0-9a-f]{40}$/.test(head), 'TOOLING_HEAD_NOT_IMMUTABLE', head);
+  try { git(root, 'cat-file', '-e', `${head}^{commit}`); return; } catch {}
+  try { git(root, 'fetch', '--no-tags', 'origin', head); } catch { fail('EXACT_TOOLING_HEAD_UNAVAILABLE', head); }
+  try { git(root, 'cat-file', '-e', `${head}^{commit}`); } catch { fail('EXACT_TOOLING_HEAD_UNAVAILABLE', head); }
+}
 function parseArgs(argv) {
   const result = {};
   for (let i = 0; i < argv.length; i += 2) {
@@ -195,7 +201,7 @@ export function runConformance({ root, expectedHead, holder }) {
     assert(descriptor.schema === 'AUTHORIZED_TOOLSET_DESCRIPTOR_v1', 'DESCRIPTOR_SCHEMA_MISMATCH', descriptor.descriptorId);
     assert(descriptor.descriptorActivationStatus === 'ACTIVE_CERTIFIED', 'DESCRIPTOR_NOT_ACTIVE', descriptor.descriptorId);
     assert(/^[0-9a-f]{40}$/.test(descriptor.exactToolingHead ?? ''), 'TOOLING_HEAD_NOT_IMMUTABLE', descriptor.descriptorId);
-    git(root, 'cat-file', '-e', `${descriptor.exactToolingHead}^{commit}`);
+    ensureExactCommit(root, descriptor.exactToolingHead);
     assert(descriptor.commandSpecification?.shell === false, 'SHELL_EXECUTION_PROHIBITION_MISSING', descriptor.descriptorId);
     assert(descriptor.commandSpecification?.extraArgumentsAllowed === false, 'EXTRA_ARGUMENTS_PROHIBITION_MISSING', descriptor.descriptorId);
     assert(descriptor.commandSpecification?.environmentOverridesAllowed === false, 'ENVIRONMENT_OVERRIDE_PROHIBITION_MISSING', descriptor.descriptorId);

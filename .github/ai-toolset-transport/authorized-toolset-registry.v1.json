@@ -1574,7 +1574,7 @@
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "AUREN_C2_BROWSER_QUALIFICATION_DESCRIPTOR_V1",
-      "operationId": "AUREN_FIXED_QUALIFICATION_20260928_001",
+      "operationId": "AUREN_C2_STABLE_TRANSPORT_QUALIFICATION_20260928_001",
       "operationClass": "AUREN_C2_FIXED_EXACT_HEAD_QUALIFICATION",
       "projectId": "AUREN",
       "authorizationMode": "FIXED_EXACT_HEAD_READ_ONLY_QUALIFICATION",
@@ -1688,7 +1688,7 @@
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_DESCRIPTOR_V1",
-      "operationId": "H_EARTH_GEN2514_VEGETATION_RENDERER_INTEGRATION_20260929_001",
+      "operationId": "H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_20260929_001",
       "operationClass": "H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION",
       "projectId": "H_EARTH",
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
@@ -1705,7 +1705,9 @@
       "commandSpecification": {
         "executable": "node",
         "scriptPath": "tools/ai-room-transport/h-earth-gen2515-render-package-qualification.v1.mjs",
-        "fixedArguments": [],
+        "fixedArguments": [
+          "--max-old-space-size=12288"
+        ],
         "inputArgumentBindings": [
           {
             "argument": "--candidate-head",
@@ -1815,7 +1817,7 @@
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "AUREN_C2_OWNER_EVIDENCE_DESCRIPTOR_V1",
-      "operationId": "AUREN_FIXED_QUALIFICATION_20260928_001",
+      "operationId": "AUREN_C2_OWNER_EVIDENCE_20260929_001",
       "operationClass": "AUREN_C2_FIXED_EXACT_HEAD_QUALIFICATION",
       "projectId": "AUREN",
       "authorizationMode": "FIXED_EXACT_HEAD_READ_ONLY_QUALIFICATION",

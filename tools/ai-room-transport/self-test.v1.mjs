@@ -18,7 +18,7 @@ import {
 import { validateExecutionRequest, resolveToolset } from './toolset-resolver.v1.mjs';
 import { selectBackend } from './backend-selector.v1.mjs';
 import { parseTransportBody } from './transport-request-parser.v1.mjs';
-import { dispatchLoaded, stageValidatedWritebackPaths } from './fixed-command-dispatcher.v1.mjs';
+import { buildFixedCommand, dispatchLoaded, stageValidatedWritebackPaths } from './fixed-command-dispatcher.v1.mjs';
 import { validateCommandReceipt } from './command-receipt-validator.v1.mjs';
 import { applyContinuationGate } from './continuation-gate.v1.mjs';
 
@@ -98,6 +98,47 @@ function expected(id, code, fn) {
   } catch (error) {
     return { id, expectedErrorCode: code, observedErrorCode: error.code ?? error.message, pass: (error.code ?? error.message) === code };
   }
+}
+
+
+export function runFixedArgumentPlacementSelfTest() {
+  const payload = '/tmp/payload.json';
+  const before = buildFixedCommand({
+    commandSpecification: {
+      executable: 'node',
+      scriptPath: 'tools/example.mjs',
+      fixedArguments: ['--max-old-space-size=12288'],
+      fixedArgumentsPosition: 'BEFORE_SCRIPT',
+      inputArgumentBindings: [],
+      outputArgumentBindings: [],
+      shell: false,
+      extraArgumentsAllowed: false,
+      environmentOverridesAllowed: false
+    }
+  }, {}, payload);
+  if (canonical(before.args) !== canonical(['--max-old-space-size=12288', 'tools/example.mjs'])) fail('FIXED_ARGUMENTS_BEFORE_SCRIPT_REGRESSION', canonical(before.args));
+
+  const legacy = buildFixedCommand({
+    commandSpecification: {
+      executable: 'node',
+      scriptPath: 'tools/example.mjs',
+      fixedArguments: ['--script-option'],
+      inputArgumentBindings: [],
+      outputArgumentBindings: [],
+      shell: false,
+      extraArgumentsAllowed: false,
+      environmentOverridesAllowed: false
+    }
+  }, {}, payload);
+  if (canonical(legacy.args) !== canonical(['tools/example.mjs', '--script-option'])) fail('FIXED_ARGUMENTS_AFTER_SCRIPT_REGRESSION', canonical(legacy.args));
+
+  return stable({
+    schema: 'AI_ROOM_FIXED_ARGUMENT_PLACEMENT_SELF_TEST_RECEIPT_v1',
+    result: 'PASS_CLOSED',
+    beforeScriptOrderingPassed: true,
+    legacyAfterScriptOrderingPreserved: true,
+    productMutationPerformed: false
+  });
 }
 
 export function runAdmissionLockCompatibilitySelfTest({ root = '.', holder = 'ADMISSION_LOCK_COMPATIBILITY' } = {}) {
@@ -367,6 +408,10 @@ export function runSelfTest({ root, expectedHead, holder, outputDir }) {
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (args['fixed-argument-placement'] === 'true') {
+    process.stdout.write(`${JSON.stringify(runFixedArgumentPlacementSelfTest(), null, 2)}\n`);
+    return;
+  }
   if (!args['expected-head']) {
     const receipt = runAdmissionLockCompatibilitySelfTest({ root: path.resolve(args.root ?? '.'), holder: args.holder ?? 'ADMISSION_LOCK_COMPATIBILITY' });
     process.stdout.write(`${JSON.stringify(receipt, null, 2)}\n`);

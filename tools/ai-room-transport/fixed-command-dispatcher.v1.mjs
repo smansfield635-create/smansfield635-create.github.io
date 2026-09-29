@@ -65,7 +65,12 @@ export function buildFixedCommand(descriptor, inputs, payloadReceiptPath) {
   if (specification.environmentOverridesAllowed !== false) fail('ENVIRONMENT_OVERRIDE_PROHIBITION_MISSING');
   const executable = specification.executable;
   const scriptPath = assertRepositoryPath(specification.scriptPath, 'REGISTERED_SCRIPT_PATH_INVALID');
-  const args = [scriptPath, ...(specification.fixedArguments ?? [])];
+  const fixedArguments = specification.fixedArguments ?? [];
+  const fixedArgumentsPosition = specification.fixedArgumentsPosition ?? 'AFTER_SCRIPT';
+  if (!['BEFORE_SCRIPT', 'AFTER_SCRIPT'].includes(fixedArgumentsPosition)) fail('FIXED_ARGUMENTS_POSITION_INVALID', fixedArgumentsPosition);
+  const args = fixedArgumentsPosition === 'BEFORE_SCRIPT'
+    ? [...fixedArguments, scriptPath]
+    : [scriptPath, ...fixedArguments];
   for (const binding of specification.inputArgumentBindings ?? []) {
     if (!Object.hasOwn(inputs, binding.inputField)) fail('REGISTERED_INPUT_BINDING_MISSING', binding.inputField);
     args.push(binding.argument, String(inputs[binding.inputField]));

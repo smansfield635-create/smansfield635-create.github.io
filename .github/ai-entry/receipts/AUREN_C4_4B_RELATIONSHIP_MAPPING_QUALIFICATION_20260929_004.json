@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUREN_C4_4B_RELATIONSHIP_MAPPING_QUALIFICATION_20260929_004",
+  "capabilityId": "AUREN_C4_4B_RELATIONSHIP_MAPPING_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5327,
+  "requestBranch": "ai-dispatch-request-auren-c4-4b-r4-20260929",
+  "requestCommit": "c7c364b2c4a6551ca43f48e27f6f51d168c53ea9",
+  "requestCommitParent": "fc0619dd5bda676824f413bb8b56e721d6ef0a13",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "fc0619dd5bda676824f413bb8b56e721d6ef0a13",
+  "workflow": "auren-c4-4b-relationship-mapping-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "d5f670dffc4cb229d07e8451651129b2804a67b0",
+    "base_sha": "f2906063993649f2e7e7a9278686a522bea94e77"
+  },
+  "bridgeRunId": "36641437939",
+  "dispatchedRunId": 36641453490,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36641453490",
+  "dispatchedRunHeadSha": "fc0619dd5bda676824f413bb8b56e721d6ef0a13",
+  "dispatchedAt": "2026-09-29T22:45:40.771Z",
+  "resolvedAt": "2026-09-29T22:45:44.083Z"
+}

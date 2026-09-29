@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-29T22:31:37Z",
+  "generatedAt": "2026-09-29T23:29:19Z",
   "window30d": {
-    "start": "2026-08-30T22:31:37Z",
-    "end": "2026-09-29T22:31:37Z"
+    "start": "2026-08-30T23:29:19Z",
+    "end": "2026-09-29T23:29:19Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 268
+      "pageLoads": 257
     },
     {
       "date": "2026-09-23",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 38
+      "pageLoads": 44
     }
   ],
   "summary": {
-    "pageLoads": 7087,
-    "botPageLoads": 2610,
-    "nonBotPageLoads": 4477
+    "pageLoads": 7062,
+    "botPageLoads": 2608,
+    "nonBotPageLoads": 4454
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3373,
-      "visits": 3373
+      "pageLoads": 3366,
+      "visits": 3366
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3080,
+      "pageLoads": 3062,
       "visits": 0
     },
     {
@@ -177,7 +177,7 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1936,
+      "pageLoads": 1934,
       "visits": 1500
     },
     {
@@ -186,14 +186,14 @@
       "visits": 910
     },
     {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 711,
-      "visits": 570
-    },
-    {
       "path": "/showroom/globe/h-earth/awards/",
       "pageLoads": 710,
       "visits": 20
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 701,
+      "visits": 560
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -203,16 +203,16 @@
     {
       "path": "/products/education/",
       "pageLoads": 312,
-      "visits": 112
+      "visits": 114
     },
     {
       "path": "/analytics/",
-      "pageLoads": 237,
-      "visits": 121
+      "pageLoads": 236,
+      "visits": 122
     },
     {
       "path": "/evidence/agentic-frontier/",
-      "pageLoads": 172,
+      "pageLoads": 162,
       "visits": 30
     }
   ],

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUREN_C2_PROVEN_IDENTITY_R4",
+  "capabilityId": "GOVERNANCE_BRIDGE_CANDIDATE_RUNTIME_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5194,
+  "requestBranch": "ai-dispatch-request-auren-c2-proven-identity-r4",
+  "requestCommit": "5969b0a2600797bf51f90e19341854641f969337",
+  "currentMainSha": "929cc1a0a30bd1e7bd8fa81c63eac71aeee7447f",
+  "bridgeRunId": "36509238047",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/governance-bridge-candidate-runtime-qualification.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-09-29T01:43:37.012Z"
+}

@@ -1,6 +1,6 @@
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
-import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
+import { getHEarthRun8ER2CanonicalVegetationPresentationPlan } from './live-render-package.run8e-r2.canonical.js';
+import { createHEarthRun8ER2DVegetationBatchGPUViews } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
 export const H_EARTH_RUN_8E_R3C_RENDERER_ID =
@@ -195,21 +195,16 @@ export function createHEarthRun8ER3CPersistentRenderer({
     }
   };
 
-  const renderPackage = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
-  const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
+  const presentationPlan = getHEarthRun8ER2CanonicalVegetationPresentationPlan();
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
-  if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) {
-    throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
-  }
-  if (uploadViews.deterministicTransportEncoding !== true) {
-    throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
-  }
+  const residentBatches = [];
+  let nextBatchIndex = 0;
 
   function initialize(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
     if (
-      packet.packageIdentity !== renderPackage.packageIdentity ||
-      packet.packageContentDigest !== renderPackage.contentDigest
+      packet.packageIdentity !== rendererInterface.packageIdentity ||
+      packet.packageContentDigest !== rendererInterface.packageContentDigest
     ) {
       throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
     }
@@ -235,39 +230,41 @@ export function createHEarthRun8ER3CPersistentRenderer({
       'PP'
     );
 
-    markPostInitializationCreation();
-    counters.vertexArrayCreateCount += 1;
-    resources.vertexArray = gl.createVertexArray();
-    gl.bindVertexArray(resources.vertexArray);
-
-    const specifications = [
-      ['positions', uploadViews.positions, 0, 3, gl.FLOAT, false],
-      ['normals', uploadViews.normals, 1, 3, gl.FLOAT, false],
-      ['baseColorsLinear', uploadViews.baseColorsLinear, 2, 4, gl.FLOAT, false],
-      ['materialParameters', uploadViews.materialParameters, 3, 4, gl.FLOAT, false],
-      ['materialModelCodes', uploadViews.materialModelCodes, 4, 1, gl.UNSIGNED_BYTE, true],
-      ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
-      ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
-      ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true]
-    ];
-    resources.buffers = [];
-    for (const [name, data, location, size, type, integer] of specifications) {
-      const buffer = createBuffer();
-      resources.buffers.push({ name, buffer, byteLength: data.byteLength });
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      upload(gl.ARRAY_BUFFER, data);
-      gl.enableVertexAttribArray(location);
-      if (integer) gl.vertexAttribIPointer(location, size, type, 0, 0);
-      else gl.vertexAttribPointer(location, size, type, false, 0, 0);
+    const createResidentBatch = (descriptor) => {
+      const uploadViews = createHEarthRun8ER2DVegetationBatchGPUViews(descriptor.batchId);
+      if (uploadViews.deterministicTransportEncoding !== true) throw new Error('R3C_BOUNDED_GPU_TRANSPORT_MISSING');
+      counters.vertexArrayCreateCount += 1;
+      const vertexArray = gl.createVertexArray();
+      if (!vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
+      gl.bindVertexArray(vertexArray);
+      const specifications = [
+        ['positions', uploadViews.positions, 0, 3, gl.FLOAT, false],
+        ['normals', uploadViews.normals, 1, 3, gl.FLOAT, false],
+        ['baseColorsLinear', uploadViews.baseColorsLinear, 2, 4, gl.FLOAT, false],
+        ['materialParameters', uploadViews.materialParameters, 3, 4, gl.FLOAT, false],
+        ['materialModelCodes', uploadViews.materialModelCodes, 4, 1, gl.UNSIGNED_BYTE, true],
+        ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
+        ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
+        ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true]
+      ];
+      const buffers = [];
+      for (const [name, data, location, size, type, integer] of specifications) {
+        const buffer = createBuffer(); buffers.push({name,buffer,byteLength:data.byteLength});
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer); upload(gl.ARRAY_BUFFER, data);
+        gl.enableVertexAttribArray(location);
+        if (integer) gl.vertexAttribIPointer(location,size,type,0,0); else gl.vertexAttribPointer(location,size,type,false,0,0);
+      }
+      const indexBuffer=createBuffer(); buffers.push({name:'indices',buffer:indexBuffer,byteLength:uploadViews.indices.byteLength});
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer); upload(gl.ELEMENT_ARRAY_BUFFER,uploadViews.indices);
+      const resident=Object.freeze({batchId:descriptor.batchId,instanceCount:uploadViews.instanceCount,indexCount:uploadViews.indices.length,vertexArray,buffers});
+      residentBatches.push(resident); nextBatchIndex += 1; return resident;
+    };
+    resources.createResidentBatch=createResidentBatch;
+    resources.buffers=[];
+    if (presentationPlan.batches.length > 0) {
+      const first=createResidentBatch(presentationPlan.batches[0]);
+      resources.buffers.push(...first.buffers);
     }
-    resources.indexBuffer = createBuffer();
-    resources.buffers.push({
-      name: 'indices',
-      buffer: resources.indexBuffer,
-      byteLength: uploadViews.indices.byteLength
-    });
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer);
-    upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
 
     resources.colorTexture = createTexture();
     resources.depthTexture = createTexture();
@@ -364,8 +361,8 @@ export function createHEarthRun8ER3CPersistentRenderer({
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (
-      packet.packageIdentity !== renderPackage.packageIdentity ||
-      packet.packageContentDigest !== renderPackage.contentDigest
+      packet.packageIdentity !== rendererInterface.packageIdentity ||
+      packet.packageContentDigest !== rendererInterface.packageContentDigest
     ) {
       throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
     }
@@ -388,7 +385,6 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.depthFunc(gl.LEQUAL);
     gl.disable(gl.CULL_FACE);
     gl.useProgram(resources.geometryProgram);
-    gl.bindVertexArray(resources.vertexArray);
     gl.uniformMatrix4fv(
       resources.uniforms.viewProjection,
       false,
@@ -401,31 +397,22 @@ export function createHEarthRun8ER3CPersistentRenderer({
       packet.camera.position.z
     );
     counters.cameraUniformUpdateCount += 2;
-
-    for (const range of packet.drawRanges) {
-      if (range.transparencyClass === 'TRANSLUCENT') {
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        gl.depthMask(false);
-      } else {
-        gl.disable(gl.BLEND);
-        gl.depthMask(true);
-      }
-      gl.drawElements(
-        gl.TRIANGLES,
-        range.indexCount,
-        gl.UNSIGNED_INT,
-        range.indexStart * 4
-      );
+    gl.disable(gl.BLEND); gl.depthMask(true);
+    for (const resident of residentBatches) {
+      gl.bindVertexArray(resident.vertexArray);
+      gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);
       counters.geometryDrawCallCount += 1;
-      counters.totalDrawnIndexCount += range.indexCount;
+      counters.totalDrawnIndexCount += resident.indexCount;
     }
-
     gl.depthMask(true);
     gl.disable(gl.BLEND);
     const error = gl.getError();
     if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
+    if (nextBatchIndex < presentationPlan.batches.length) {
+      const resident=resources.createResidentBatch(presentationPlan.batches[nextBatchIndex]);
+      resources.buffers.push(...resident.buffers);
+    }
   }
 
   function presentColorFrame() {
@@ -522,49 +509,47 @@ export function createHEarthRun8ER3CPersistentRenderer({
         shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
       },
       package: {
-        logicalPromotedIdentity: renderPackage.packageOccurrenceId,
-        runtimeIdentity: renderPackage.packageIdentity,
-        runtimeContentDigest: renderPackage.contentDigest,
-        primitiveCount: renderPackage.primitiveCount,
-        vertexCount: renderPackage.vertexCount,
-        triangleCount: renderPackage.triangleCount,
-        indexCount: renderPackage.indexCount,
-        drawRangeCount: renderPackage.drawRanges.length,
-        canonicalGpuTransport: uploadViews.deterministicTransportEncoding === true
+        logicalPromotedIdentity: RUNTIME_OCCURRENCE_ID,
+        runtimeIdentity: rendererInterface.packageIdentity,
+        runtimeContentDigest: rendererInterface.packageContentDigest,
+        worldTruthInstanceCount: presentationPlan.instanceCount,
+        batchCount: presentationPlan.batches.length,
+        residentBatchCount: residentBatches.length,
+        residentInstanceCount: residentBatches.reduce((sum,batch)=>sum+batch.instanceCount,0),
+        completeResidency: nextBatchIndex >= presentationPlan.batches.length,
+        canonicalGpuTransport: true
       },
       rendererInterface: {
         contractId: rendererInterface.contractId,
         attributeCount: rendererInterface.attributeLayout.length,
         uniformCount: rendererInterface.frameUniformNames.length,
-        drawRangeCount: rendererInterface.drawRanges.length
+        drawRangeCount: rendererInterface.drawRanges.length,
+        vegetationBatchCount: rendererInterface.vegetationBatchCount
       },
       counters: { ...counters },
       persistentObjectCounts: {
         contexts: 1,
         programs: 2,
         shaders: 4,
-        vertexArrays: 1,
+        vertexArrays: residentBatches.length,
         gpuBuffers: resources.buffers?.length ?? 0,
         textures: 3,
         framebuffers: 2
       },
       resourceIdentityStable:
         initialized &&
-        resources.buffers?.length === 9 &&
+        residentBatches.length > 0 &&
         Boolean(
           resources.geometryProgram &&
           resources.depthProgram &&
-          resources.vertexArray &&
           resources.geometryFramebuffer &&
           resources.depthFramebuffer
         ),
-      packageUploadedOnce:
-        counters.bufferUploadCount === 9 &&
-        counters.postInitializationBufferUploadCount === 0,
-      noPostInitializationResourceCreation:
-        counters.postInitializationResourceCreationCount === 0,
-      noPostInitializationBufferUpload:
-        counters.postInitializationBufferUploadCount === 0
+      boundedResidency: true,
+      maximumInstancesPerBatch: presentationPlan.populationLimit,
+      residencyContinuesAfterInitialization: presentationPlan.batches.length > 1,
+      completeResidency: nextBatchIndex >= presentationPlan.batches.length,
+      noWorldRebuildForCameraMotion: true
     };
   }
 

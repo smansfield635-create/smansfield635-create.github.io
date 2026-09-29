@@ -1,0 +1,68 @@
+name: Auren C2 Personality Performance Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: ${{ inputs.candidate_sha }}, fetch-depth: 1}
+      - name: Fetch exact base
+        env: {BASE_SHA: ${{ inputs.base_sha }}}
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+      - name: Prove C2 bounded diff
+        env: {BASE_SHA: ${{ inputs.base_sha }}, CANDIDATE_SHA: ${{ inputs.candidate_sha }}}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort >/tmp/files
+          cat >/tmp/allowed <<'EOF'
+          .github/live-qualification/verifiers/auren-c2-personality-performance.v1.mjs
+          .github/workflows/auren-c2-personality-performance-qualification.yml
+          products/auren/auren.chamber.js
+          products/auren/auren.voice.js
+          products/auren/index.css
+          EOF
+          sort -o /tmp/allowed /tmp/allowed
+          diff -u /tmp/allowed /tmp/files
+          ! grep -E 'products/auren/auren\.room\.(geometry|presentation|environment)\.js' /tmp/files
+      - uses: browser-actions/setup-chrome@v1
+      - name: Resolve Chrome
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -x "$chrome"
+          echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 18791 >/tmp/auren-c2-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:18791/products/auren/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Execute C2 personality performance contract
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:18791
+          CHROME_PATH: ${{ env.CHROME_PATH }}
+          RUNTIME_RESULT_PATH: /tmp/auren-c2-result.json
+        run: node .github/live-qualification/verifiers/auren-c2-personality-performance.v1.mjs
+      - name: Capture timed mobile traversal
+        if: success()
+        env: {CHROME_PATH: ${{ env.CHROME_PATH }}}
+        run: |
+          mkdir -p .qualification/auren-c2
+          cp /tmp/auren-c2-result.json .qualification/auren-c2/receipt.json
+          cat > .qualification/auren-c2/capture.mjs <<'NODE'
+          import puppeteer from 'puppeteer-core';import fs from 'node:fs';const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox']});const p=await b.newPage();await p.setViewport({width:390,height:844,isMobile:true,hasTouch:true});await p.goto('http://127.0.0.1:18791/products/auren/',{waitUntil:'networkidle0'});await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-options-ready')==='true');const frames=[];let n=0;const shot=async label=>{const path='.qualification/auren-c2/frame-'+String(n++).padStart(3,'0')+'-'+label+'.png';await p.screenshot({path,fullPage:true});frames.push(path)};const click=async t=>{await shot('before');await p.evaluate(x=>[...document.querySelectorAll('.auren-option')].find(b=>b.textContent.trim()===x)?.click(),t);await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-performance')==='TYPING');await shot('typing');await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-performance')==='CHOICES',{timeout:15000});await shot('answered')};await shot('opening');await click('About Auren');await click('What does that mean?');await click('What do you actually do?');fs.writeFileSync('.qualification/auren-c2/traversal.json',JSON.stringify({frames},null,2));await b.close();
+          NODE
+          node .qualification/auren-c2/capture.mjs
+          ffmpeg -y -framerate 1.25 -pattern_type glob -i '.qualification/auren-c2/frame-*.png' -vf "scale=780:-2,format=yuv420p" -c:v libx264 .qualification/auren-c2/mobile-traversal.mp4
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auren-c2-personality-performance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/auren-c2
+          retention-days: 30

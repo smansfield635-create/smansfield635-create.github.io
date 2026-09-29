@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "AUREN_C4_1_MANOR_RETURN_RECEIPT_QUALIFICATION_20260929_001",
+  "capabilityId": "AUREN_C4_1_MANOR_RETURN_RECEIPT_QUALIFICATION",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "e233b27191e09d690ec89501ca77060589cf4c35",
+    "base_sha": "7011d4ca32b97d93d204309863b4beb897a8ceec"
   }
 }

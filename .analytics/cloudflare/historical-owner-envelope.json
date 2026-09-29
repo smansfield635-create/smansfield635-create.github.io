@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-29T09:36:51Z",
+  "generatedAt": "2026-09-29T10:34:24Z",
   "window": {
-    "start": "2026-07-01T09:36:51Z",
-    "end": "2026-09-29T09:36:51Z"
+    "start": "2026-07-01T10:34:24Z",
+    "end": "2026-09-29T10:34:24Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5179,
+    "pageLoads": 5089,
     "visits": 1283,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5179,
+        "pageLoads": 5089,
         "visits": 1283
       }
     },
@@ -31,7 +31,7 @@
         "visits": 747
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 291,
+        "pageLoads": 201,
         "visits": 0
       },
       "/index.html": {
@@ -357,7 +357,7 @@
         "visits": 487
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3896,
+        "pageLoads": 3806,
         "visits": 0
       },
       "www.google.com": {

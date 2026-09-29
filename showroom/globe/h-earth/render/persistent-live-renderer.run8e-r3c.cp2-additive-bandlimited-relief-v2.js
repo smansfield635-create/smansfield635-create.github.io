@@ -530,7 +530,10 @@ uniform sampler2D uDepth;
 out vec4 outColor;
 void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
 
-export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360 } = {}) {
+export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, preTerrainExtensionDiagnostic = null, postTerrainDraw = null, postRenderDiagnostic = null } = {}) {
+  if (preTerrainExtensionDiagnostic !== null && typeof preTerrainExtensionDiagnostic !== 'function') throw new Error('R3C_PRE_TERRAIN_EXTENSION_DIAGNOSTIC_INVALID');
+  if (postTerrainDraw !== null && typeof postTerrainDraw !== 'function') throw new Error('R3C_POST_TERRAIN_DRAW_INVALID');
+  if (postRenderDiagnostic !== null && typeof postRenderDiagnostic !== 'function') throw new Error('R3C_POST_RENDER_DIAGNOSTIC_INVALID');
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
   canvas.height = height;
@@ -703,6 +706,11 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
     gl.depthMask(true); gl.disable(gl.BLEND);
+    if (preTerrainExtensionDiagnostic !== null) preTerrainExtensionDiagnostic(Object.freeze({ gl, packet, width, height, sourceFramebuffer: resources.geometryFramebuffer }));
+    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
+    if (postTerrainDraw !== null) postTerrainDraw(Object.freeze({ gl, packet, width, height }));
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }

@@ -1,4 +1,5 @@
 import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
+import { createHEarthT4PostTerrainDraw } from '../../render/t4-post-terrain-draw-v1.js';
 
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
@@ -24,6 +25,8 @@ const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+const T4_QUERY_KEY = 't4';
+const T4_QUERY_VALUE = 'additive-v1';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -51,6 +54,7 @@ const oceanProofRequested =
 const additiveVisualRequested =
   queryParameters.get(ADDITIVE_VISUAL_QUERY_KEY) ===
   ADDITIVE_VISUAL_QUERY_VALUE;
+const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
@@ -163,7 +167,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height });
+  const t4Extension = t4Requested ? createHEarthT4PostTerrainDraw(canvas.getContext('webgl2')) : null;
+  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, preTerrainExtensionDiagnostic: t4Extension?.capturePreT4Diagnostic ?? null, postTerrainDraw: t4Extension?.drawAfterTerrain ?? null, postRenderDiagnostic: t4Extension?.runPostRenderDiagnostic ?? null });
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -358,6 +363,10 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       oceanProofRequested,
       oceanProofQueryKey: OCEAN_PROOF_QUERY_KEY,
       oceanProofQueryValue: OCEAN_PROOF_QUERY_VALUE,
+      t4Requested,
+      t4QueryKey: T4_QUERY_KEY,
+      t4QueryValue: T4_QUERY_VALUE,
+      t4Receipt: t4Extension?.getReceipt?.() ?? null,
       additiveVisualRequested,
       additiveVisualQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
       additiveVisualQueryValue: ADDITIVE_VISUAL_QUERY_VALUE,
@@ -412,6 +421,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         waterAttributionCandidateRequested: waterAttributionRequested,
         oceanPresentationCandidateRequested: oceanPresentationRequested,
         oceanProofCandidateRequested: oceanProofRequested,
+        t4CandidateRequested: t4Requested,
         additiveVisualCandidateRequested: additiveVisualRequested,
         cp2DifferentialCandidateRequested: cp2LiveDifferentialRequested,
         acceptedBaselineRendererSelected:

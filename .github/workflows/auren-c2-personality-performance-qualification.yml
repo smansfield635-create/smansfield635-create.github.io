@@ -2,8 +2,14 @@ name: Auren C2 Personality Performance Qualification
 on:
   workflow_dispatch:
     inputs:
-      candidate_sha: {required: true, type: string}
-      base_sha: {required: true, type: string}
+      candidate_sha:
+        description: Exact C2 candidate SHA
+        required: true
+        type: string
+      base_sha:
+        description: Exact comparison base SHA
+        required: true
+        type: string
 permissions: {contents: read}
 jobs:
   qualify:

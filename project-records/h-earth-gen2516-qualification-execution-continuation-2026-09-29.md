@@ -1,84 +1,141 @@
-# H-Earth Gen2516 qualification execution continuation — 2026-09-29
+# H-Earth Gen2516 / Gen2515 qualification continuation — 2026-09-29
 
 ## Status
 
-Gen2515 canonical intake is complete. Canonical generation **2516** is admitted for qualification only.
+Gen2515 render-package qualification is **PASS_CLOSED** under canonical generation **2516**.
 
-This record is the durable continuation pointer. New execution rooms must start here and must not reconstruct earlier intake history unless an identity below fails repository readback.
+This record is the durable continuation pointer. Gen2515 qualification is complete. Do not reconstruct or repeat intake, STALE_SCHEMA repair, carrier materialization, transport discovery, heap diagnosis, or Gen2515 qualification unless an identity below fails repository readback.
 
-## Immutable qualification identities
+## Immutable qualified subject
 
 - Operation: `H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_20260929_001`
 - Canonical generation: `2516`
 - Candidate: `6fa5041082a1133accb2cabbd0072e193c181ea9`
 - Candidate lineage: `976ec404adffab2d22d354aa04ba4a03b0f8f528 -> 6fa5041082a1133accb2cabbd0072e193c181ea9`
-- Registered verifier/tooling: `17c781fc2ff6d4157cffbe50cc712289afa8c839`
-- Authority: qualification only.
-- Product/source mutation: prohibited.
-- Merge, deployment, release, publication: prohibited.
-- Terminal behavior: return qualification receipt and stop.
+- Exact registered verifier/tooling: `17c781fc2ff6d4157cffbe50cc712289afa8c839`
+- Candidate qualification result: `GEN2515_RENDER_PACKAGE_CANDIDATE_PASS`
+- Product/source mutation during qualification: none.
+- Merge/deployment/release/publication: none.
+- Candidate remains unmerged and unpublished.
 
-## Canonical admission
+## Material execution evidence
+
+Successful execution transport run:
+
+`36618255652`
+
+Run head:
+
+`e4a15c2074e749f6a71f2427efe2d5dba8b0f518`
+
+Transport callback comment on Issue #5086:
+
+`5897153748`
+
+Execution disposition:
+
+`COMMAND_EXECUTED_AND_PASSED`
+
+Payload artifact:
+
+- name: `ai-room-command-payload-receipt-36618255652-1`
+- artifact ID: `11058336389`
+- artifact ZIP digest: `sha256:09b2a5e0b11e66faad08652d6ba4d515b990dc25a23b626ae08bbf22952d2a65`
+
+Command execution artifact:
+
+- name: `ai-room-command-execution-receipt-36618255652-1`
+- artifact ID: `11058266359`
+- artifact ZIP digest: `sha256:2f93383d5c95bce678b7a6c781051141cf75fc62beca89de387beeb51f0d6190`
+
+## Qualification checks
+
+All six registered Gen2515 package checks passed:
+
+1. Neutral package — PASS.
+2. Full vegetation count — PASS.
+3. Vegetation eligibility propagation — PASS.
+4. Regional ecology — PASS.
+5. Packet 002 — PASS.
+6. Downstream evaluator — PASS.
+
+`firstAssertion = null`.
+
+This is material execution evidence from the registered exact-head qualifier, not static inspection or inferred success.
+
+## Canonical admission and execution identities
 
 - Canonical acquisition commit: `83608eb22a67b6b6cfa9ce40ae9f8b80b45b617b`
-- Canonical generation-2516 ledger blob: `186a9f8410b93c87c63b71f4c7b43d6f59d42bcb`
+- Generation-2516 ledger blob: `186a9f8410b93c87c63b71f4c7b43d6f59d42bcb`
+- Carrier materialization merge: `e8a7a9581a183464c9e64b74f4a9f8db46a211a7`
+- Admission carrier blob: `b6c17914ddd818a9607fd1062000c248e4876b76`
+- Router carrier blob: `b268beb677e164ee0d1643aa6a20fff2cd03edc4`
 
-Do not reopen intake reconstruction, STALE_SCHEMA, generation 2515, or candidate construction.
+## Harness defect resolved
 
-## Repository-addressable execution identities
+The first genuine Gen2516 execution, run `36615912104`, reached the registered command but failed at the default approximately 4 GiB V8 heap ceiling.
 
-Materialized by merged PR #5236 at:
+Root cause: the fixed-command dispatcher placed the descriptor's Node runtime flag after `scriptPath`, causing `--max-old-space-size=12288` to be passed to the script instead of Node.
 
-`e8a7a9581a183464c9e64b74f4a9f8db46a211a7`
+Bounded repair merged through PR #5242 at:
 
-Admission carrier:
+`e4a15c2074e749f6a71f2427efe2d5dba8b0f518`
 
-`.github/ai-toolset-transport/evidence/h-earth-gen2516-admission.minimal.v1.json`
+Corrected dispatcher blob:
 
-Blob:
+`b3b371106532e2ba56202256cf90d639db58a4b2`
 
-`b6c17914ddd818a9607fd1062000c248e4876b76`
+Gen2515 now explicitly binds `fixedArgumentsPosition = BEFORE_SCRIPT`, producing the effective launch law:
 
-Router carrier:
+`node --max-old-space-size=12288 <Gen2515 qualifier> ...`
 
-`.github/ai-toolset-transport/evidence/h-earth-gen2516-router.minimal.v1.json`
+The successful qualification then completed without changing the H-Earth candidate.
 
-Blob:
+## Transport precedent
 
-`b268beb677e164ee0d1643aa6a20fff2cd03edc4`
+When direct `workflow_dispatch` is unavailable to a connected chamber, use the already-established repository capability:
 
-These carriers materialize existing canonical authority for execution transport. They create no new semantic or product authority.
+`SAME_REPOSITORY_PR_NATIVE_WORKFLOW_DISPATCH_BRIDGE`
+
+Registered Gen2515 capability:
+
+`H_EARTH_GEN2515_AUTHORIZED_TOOLSET_EXECUTE`
+
+The successful execution carrier was PR #5244. It closed automatically without merge after bridge run `36618224066` dispatched downstream run `36618255652`.
+
+Do not reinterpret absence of a direct connector mutation as absence of execution capability before checking this precedent.
+
+## Closed boundaries
+
+The following are complete and are not current work:
+
+- original intake-byte recovery;
+- owner-authorized administrative reconstruction;
+- STALE_SCHEMA repair;
+- canonical generation-2516 admission;
+- admission/router carrier materialization;
+- fresh workflow invocation discovery;
+- Node heap/argv harness repair;
+- Gen2515 exact qualification.
 
 ## Current boundary
 
-The remaining blocker is transport invocation capability, not missing H-Earth evidence.
+Gen2515 is a **qualified render-package candidate**.
 
-The existing AI-room qualification transport accepts a fresh execution through `workflow_dispatch`. The connected GitHub surface used by the prior chamber exposed Actions reads/reruns but did not expose a fresh workflow-dispatch mutation. No qualification run was falsely claimed.
+Qualification does not itself:
 
-Do not create substitute receipts, reuse generation-2515 authority, invent identities, alter the candidate/verifier, create another admission, or mutate H-Earth product code to bypass this boundary.
+- merge the candidate;
+- publish or deploy it;
+- constitute owner/device visual acceptance;
+- grant successor product authority;
+- authorize later-stage construction.
+
+The next product-standard boundary must be determined from the existing H-Earth successor architecture and durable project records. Do not infer that boundary from Gen2515 PASS alone.
 
 ## One next action
 
-From a chamber/capability that can lawfully initiate the existing AI-room execution transport, construct the qualification execution request from the existing Gen2515 descriptor and the exact generation-2516 admission/router carriers above, with verifier `17c781fc2ff6d4157cffbe50cc712289afa8c839`.
+Perform **read-only successor architecture resolution** from the current H-Earth durable architecture/continuation records, using this Gen2515 PASS as the completed predecessor boundary.
 
-Dispatch the existing transport once.
+Return the exact next product-standard successor checkpoint and the governing durable source(s).
 
-If the transport cannot be freshly dispatched in that chamber, stop specifically on the missing invocation capability. Do not reinterpret it as missing admission, missing receipts, or missing product development.
-
-## Next success boundary
-
-A fresh Gen2515 qualification execution request is accepted by the existing transport under:
-
-- canonical generation `2516`
-- candidate `6fa5041082a1133accb2cabbd0072e193c181ea9`
-- verifier `17c781fc2ff6d4157cffbe50cc712289afa8c839`
-
-Then consume the returned qualification receipt and stop on its exact result.
-
-## Historical administrative repairs already closed
-
-- Missing original Gen2515 intake bytes were exhaustively proven not durably preserved; owner-authorized administrative reconstruction was completed.
-- STALE_SCHEMA was repaired and merged in PR #5234 at `a883424a33f54d14ce52aca67a94a9308b33cc52`.
-- Generation-2516 admission/router materialization was merged in PR #5236 at `e8a7a9581a183464c9e64b74f4a9f8db46a211a7`.
-
-These are closed prerequisites, not current work.
+Do not mutate H-Earth, merge candidate `6fa5041082a1133accb2cabbd0072e193c181ea9`, deploy, release, or publish during successor discovery.

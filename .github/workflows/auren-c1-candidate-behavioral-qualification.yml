@@ -42,6 +42,13 @@ jobs:
           ! git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | grep -E 'products/auren/auren\.room\.(geometry|presentation|environment)\.js'
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@v1
+      - name: Resolve Chrome executable
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$chrome"
+          test -x "$chrome"
+          echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+          "$chrome" --version
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

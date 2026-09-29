@@ -25,10 +25,11 @@
     {
       "path": "/products/auren/auren.voice.js",
       "includes": [
-        "AUREN_PROGRESSIVE_CONVERSATION_VOICE_PROOF2_v1",
+        "AUREN_C1_PROGRESSIVE_CONVERSATION_RECOVERY_v1",
         "AUREN_VALE_SANCTUARY_BUILDER_V1",
-        "What are you protecting over there?",
-        "I can show you more"
+        "Products",
+        "About Auren",
+        "What's Mirrorland?"
       ],
       "excludes": [
         "On Your Side AI"
@@ -69,10 +70,11 @@
     {
       "path": "/products/auren/auren.chamber.js",
       "includes": [
-        "AUREN_PROGRESSIVE_CONVERSATION_RUNTIME_PROOF2_v1",
-        "env.reveal()",
+        "AUREN_C1_BOUNDED_ACTIVE_CONVERSATION_RUNTIME_v1",
         "data-auren-ready",
-        "conversationPrimary:true"
+        "conversationPrimary:true",
+        "boundedActiveStage:true",
+        "MEMORY_NOT_ACTIVE_TRANSCRIPT"
       ],
       "excludes": []
     },

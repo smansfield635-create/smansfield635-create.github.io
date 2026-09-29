@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUREN_C1_BEHAVIORAL_QUALIFICATION_20260928_002",
+  "capabilityId": "AUREN_C1_CANDIDATE_BEHAVIORAL_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5177,
+  "requestBranch": "ai-dispatch-request-auren-c1-qualify-r2-1790641000000",
+  "requestCommit": "46864409373c4a8f2f2a6597dd392c9a47c25104",
+  "requestCommitParent": "acfeceaf6b5b4240914527303f40575e52bf9f7c",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "acfeceaf6b5b4240914527303f40575e52bf9f7c",
+  "workflow": "auren-c1-candidate-behavioral-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "2f05bec7e581c512ca5c685b1c3e7f001397c52d",
+    "base_sha": "047659eb33f1810d25016db0d8b6a939ce180ad7"
+  },
+  "bridgeRunId": "36501532596",
+  "dispatchedRunId": 36501546472,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36501546472",
+  "dispatchedRunHeadSha": "acfeceaf6b5b4240914527303f40575e52bf9f7c",
+  "dispatchedAt": "2026-09-29T00:07:48.027Z",
+  "resolvedAt": "2026-09-29T00:07:51.729Z"
+}

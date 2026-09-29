@@ -404,3 +404,30 @@ Two weekly intervals saturated and were reconstructed daily rather than reported
 The pre-agentic high-output regime is not a single launch-week anomaly. After the Feb. 9–15 trough, activity returns to hundreds of mainline commits per week, reaches 1,007 commits during Apr. 27–May 3, remains substantial through May and June, reaches 755 during Jul. 20–26, and then rises to 1,714 during the final eight pre-agentic days immediately before the Aug. 4 breakpoint.
 
 This materially strengthens the interpretation correction: Aug. 4 cannot be treated as the point where high repository throughput began. The agentic comparison must instead determine what changed in human execution burden, product/workstream breadth, qualification, reuse, closure, recoverability, and instruction abstraction when an already high-output manual/AI-assisted operation crossed into agentic operation.
+
+
+## Breakpoint correction — agentic operation versus formal control-plane adoption
+
+The 2026-08-04 boundary must no longer be described as the assumed beginning of agentic repository operation. It remains a known **formalization/control-plane breakpoint**.
+
+Owner recollection identifies the actual operational distinction to recover: the point at which the human principal ceased routinely copy/pasting and publishing repository files one at a time and began delegating repository/file execution directly.
+
+Recovered historical operating evidence already proves that this transition occurred substantially before Aug. 4:
+
+- By **2026-04-26**, the operating workflow explicitly rejected a paste-files workflow in favor of direct inspection and operation against the live site and GitHub repository.
+- By **2026-05-02**, a coordinated **seven-file Generation 2 repository replacement** was executed as one bounded operation.
+- By **2026-05-03/04**, direct targeted full-file repository rewrites were an established operating pattern.
+- By **2026-05-09**, coordinated multi-file repository replacement/deploy ordering was routine enough to be used for Audralia runtime work.
+
+Therefore the longitudinal phase model is provisionally corrected to:
+
+1. **Manual / copy-paste AI-assisted operation** — early development, with the human principal materially transferring and publishing individual files.
+2. **Direct repository / proto-agentic operation** — begins at an exact date still to be recovered, but is proven active no later than 2026-04-26 and strongly established by early May.
+3. **Formal control-plane agentic operation** — 2026-08-04 remains the known formalization breakpoint.
+4. **Governed-agentic operation** — later control-plane/governance maturation, especially the September concentration already documented.
+
+### Breakpoint-recovery rule
+
+Do not assign an exact start date for Phase 2 from commit volume alone. Search backward from the late-April proof corridor for the earliest evidence of direct repository mutation or coordinated multi-file execution. Search forward from the last clearly manual copy/paste evidence. The defensible operational breakpoint is the narrowest corridor between those two observations; use an exact date only if evidence establishes one.
+
+This correction prevents the audit from misattributing pre-August repository leverage to the Aug. 4 control-plane formalization.

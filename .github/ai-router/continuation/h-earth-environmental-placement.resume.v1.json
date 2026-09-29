@@ -4,8 +4,8 @@
   "operationId": "H_EARTH_GEN2514_VEGETATION_RENDERER_INTEGRATION_20260929_001",
   "authorityGeneration": 2515,
   "projectId": "H_EARTH",
-  "exactBranch": "refs/heads/inspection/h-earth-gen2514-grounded-vegetation-20260928",
-  "exactHead": "5b5d07d2b1320b4e235de0aee0f526a0c206e63b",
+  "exactBranch": "refs/heads/inspection/h-earth-gen2514-renderer-integration-20260929",
+  "exactHead": "976ec404adffab2d22d354aa04ba4a03b0f8f528",
   "allowedPaths": [
     "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/run8e-successor-environment.js"
   ],
@@ -42,9 +42,12 @@
     "ZERO_TERRAIN_ROOT_ERROR_ZERO_FULL_GEOMETRY_RESERVATION_OVERLAPS_MIN_CLEARANCE_0_466107M",
     "GEN2514_PASS_CLOSED_d05736915eba5f0e75d383aaf489f8759a95a2bf",
     "EXACT_RENDERER_DEPENDENCY_GRAPH_RESOLVED_5881663872",
-    "GEN2515_RENDERER_INTEGRATION_ADMITTED_AND_LOCKED_5881736744"
+    "GEN2515_RENDERER_INTEGRATION_ADMITTED_AND_LOCKED_5881736744",
+    "GEN2515_INITIAL_INTEGRATION_17f47478ccf80b31d25c92c86b5618d3557fdd9d",
+    "GEN2515_WORK_SUCCESSOR_RECOVERED_976ec404adffab2d22d354aa04ba4a03b0f8f528"
   ],
   "preservedEvidence": [
+    "RECOVERED_WORK_SUCCESSOR:976ec404adffab2d22d354aa04ba4a03b0f8f528; parent17f47478ccf80b31d25c92c86b5618d3557fdd9d; sole admitted run8e-successor-environment.js delta +50/-1; blob e9e31b6741b1bf791ccf5d9e0eb249749d306458; terrain-derived Gen311 landform ecology mapping replaces incorrect hard-coded COASTAL_LOWLAND and failed geometry plans now reject explicitly; no placement/geometry source, terrain authority, roads, merge, deployment or publication.",
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881736744",
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881731283",
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881663872",
@@ -85,10 +88,10 @@
     "SUCCESSOR:28bc466fe029b449ce4edd27843c0457bfa3349d; PARENT:54ba741179ca9f40f15fcde0361cd825a34c8d34; SOURCE_BLOB:775f6b5a49266eebb0d06a0407e89c26e08134c9; exact one admitted path delta, 8 additions/8 deletions; disposition-only eligibility change."
   ],
   "nextAction": {
-    "actionId": "CONSTRUCT_GEN2515_RENDER_PACKAGE_INTEGRATION",
-    "actionClass": "CONSTRUCTION",
-    "binding": "Use authentic2515 request5881731283 and return5881736744. Explicit construction parent5b5d07d2b1320b4e235de0aee0f526a0c206e63b, not governing main. Create inspection/h-earth-gen2514-renderer-integration-20260929 from this exact parent; mutate only admitted run8e-successor-environment.js. Consume existing Gen2514 adapter/plan/batches and replace both legacy population calls; preserve ecology association and run8DInstanceId classification, all nonvegetation primitives and downstream West/Packet002/R2/GPU contracts; cache immutable vegetation independently of camera. Query microrelief=v1&visual=terrain-relief-v2 selects additive-bandlimited renderer blobafd9badec5fa56f08a9770fd426b8cc72ac23cec. Retain all27585 qualified placements. Existing local exact-head execution is available; no new runner prerequisite. Metadata maintenance remains separately governed2511. No product merge/deployment/publication.",
-    "expectedResult": "Single-path immutable renderer-package candidate with full population/geometry identity, nonvegetation preservation, package evaluator and resource-cost evidence; independent review; GPU/device/physical acceptance reported only if executed."
+    "actionId": "QUALIFY_RECOVERED_GEN2515_WORK_SUCCESSOR_976ec404",
+    "actionClass": "QUALIFICATION",
+    "binding": "Use exact candidate 976ec404adffab2d22d354aa04ba4a03b0f8f528 on refs/heads/inspection/h-earth-gen2514-renderer-integration-20260929. Do not rerun or restore 17f47478. Execute the admitted Gen2515 exact-candidate Node verification against the recovered successor: all 27,585 qualified IDs/roots/normals/scales and geometry match closed Gen2514; no legacy population source; terrain-derived descriptive ecology metadata complete without species/ecological-validity overclaim; unchanged nonvegetation primitives; West admission and Packet002/R2 package evaluators pass; vegetation cache camera-independent with no population cutoff; initialization and retained-memory evidence recorded. GPU/depth/device claims only if actually executed. Stop before merge/deploy/publication.",
+    "expectedResult": "GEN2515_RENDER_PACKAGE_CANDIDATE_PASS_OR_EXACT_FIRST_FAILED_ASSERTION"
   },
   "requiredVerifier": {
     "verifierId": "GEN2515_INDEPENDENT_RENDER_PACKAGE_AND_BOUNDARY_REVIEW",

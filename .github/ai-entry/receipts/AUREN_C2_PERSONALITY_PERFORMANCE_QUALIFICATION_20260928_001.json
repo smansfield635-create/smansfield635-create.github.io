@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUREN_C2_PERSONALITY_PERFORMANCE_QUALIFICATION_20260928_001",
+  "capabilityId": "AUREN_C2_PERSONALITY_PERFORMANCE_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5188,
+  "requestBranch": "ai-dispatch-request-auren-c2-qualify-1790646000000",
+  "requestCommit": "5cb62cb57f67577ef6e85931fa178a9188d10fb8",
+  "currentMainSha": "f729cdda88603a3cc0af35bffc2f5e7af5a066ea",
+  "bridgeRunId": "36508058182",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/auren-c2-personality-performance-qualification.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-09-29T01:28:34.001Z"
+}

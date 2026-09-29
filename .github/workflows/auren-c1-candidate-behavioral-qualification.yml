@@ -71,10 +71,10 @@ jobs:
         run: |
           mkdir -p .qualification/auren-c1
           cp /tmp/auren-c1-result.json .qualification/auren-c1/receipt.json 2>/dev/null || true
-          cat > /tmp/capture.mjs <<'NODE'
+          cat > .qualification/auren-c1/capture.mjs <<'NODE'
           import puppeteer from 'puppeteer-core';const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox']});const p=await b.newPage();await p.setViewport({width:390,height:844,isMobile:true,hasTouch:true});const go=async()=>{await p.goto('http://127.0.0.1:18790/products/auren/',{waitUntil:'networkidle0'});await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-options-ready')==='true')};const click=async t=>{await p.evaluate(x=>[...document.querySelectorAll('.auren-option')].find(b=>b.textContent.trim()===x)?.click(),t);await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-options-ready')==='true')};await go();await p.screenshot({path:'.qualification/auren-c1/01-opening.png',fullPage:true});await click('Products');await click('ARCHCOIN');await click("What's live now?");await p.screenshot({path:'.qualification/auren-c1/02-products-depth3.png',fullPage:true});await go();await click('About Auren');await click('Who are you?');await click('What do you actually do?');await p.screenshot({path:'.qualification/auren-c1/03-about-depth3.png',fullPage:true});await b.close();
           NODE
-          node /tmp/capture.mjs
+          node .qualification/auren-c1/capture.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -3,7 +3,7 @@ import {
   H_EARTH_RUN_8E_R2_CONTRACT_ID,
   evaluateHEarthRun8ER2Control
 } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
-import { buildHEarthRun8ENeutralPackage } from './run8e-successor-environment.js';
+import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch } from './run8e-successor-environment.js';
 import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
 import {
   H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,
@@ -650,4 +650,6 @@ export function getHEarthOW01LiveRenderPackageOccurrence() {
   return cachedOW01Package;
 }
 
+export function getHEarthRun8ER2VegetationWorldTruthPlan(){const truth=getHEarthGen2515VegetationWorldTruthPlan();if(truth?.eligible!==true)throw new Error('R2_VEGETATION_WORLD_TRUTH_INVALID');return truth;}
+export function createHEarthRun8ER2VegetationPresentationBatch(batchId){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=constructHEarthGen2515VegetationPresentationBatch(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');return freezeRecord({...materialized,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
 export default getHEarthRun8ER2ImmutableLiveRenderPackage;

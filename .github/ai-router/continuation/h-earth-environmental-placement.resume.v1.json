@@ -1,13 +1,14 @@
 {
   "schema": "CONTROL_PLANE_RESUME_OBJECT_v1",
-  "status": "TERMINAL_COMPLETE",
-  "operationId": "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001",
-  "authorityGeneration": 2510,
+  "status": "ACTIVE_RESUMABLE",
+  "operationId": "H_EARTH_GEN2510_GROUNDED_VEGETATION_REALIZATION_20260928_001",
+  "authorityGeneration": 2514,
   "projectId": "H_EARTH",
-  "exactBranch": "refs/heads/inspection/h-earth-environmental-successor-20260928",
-  "exactHead": "28bc466fe029b449ce4edd27843c0457bfa3349d",
+  "exactBranch": "refs/heads/inspection/h-earth-gen2514-grounded-vegetation-20260928",
+  "exactHead": "5b5d07d2b1320b4e235de0aee0f526a0c206e63b",
   "allowedPaths": [
-    "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js"
+    "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js",
+    "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js"
   ],
   "completedCheckpoints": [
     "ACCEPTED_TERRAIN_MATERIAL_FOUNDATION_PRESERVED_6d4648cde4e195a16ff203ab97fa33cb2328a69c",
@@ -33,9 +34,22 @@
     "UNCHANGED_EVALUATOR_GEN311_PLACEMENT_DATA_ELIGIBLE_57825_CELLS_27585_PROPOSALS",
     "FORWARD_REVERSE_REPEAT_HASH_ce4abefe840b4bc260c1b42a74aa8a02fca2188e94891d7a3eeb3a01c5a8a620",
     "INDEPENDENT_52425_BOUNDARY_PROBES_PASS_ZERO_TERRAIN_ATTACHMENT_ERROR_28bc466f",
-    "CANONICAL_TERMINAL_CLOSURE_PASS_CLOSED_GEN2510_727d0a99fc2e98191d91aee9858f15988edf6193"
+    "CANONICAL_TERMINAL_CLOSURE_PASS_CLOSED_GEN2510_727d0a99fc2e98191d91aee9858f15988edf6193",
+    "GEN2514_ADMITTED_AND_LOCKED_RETURN_5881122140_SOURCE_REQUEST_5881114954",
+    "GEN2514_CONSTRUCTION_PARENT_28bc466f_INDEPENDENTLY_VERIFIED_WITHOUT_NEW_INTAKE",
+    "GROUNDED_GEOMETRY_CONSTRUCTED_5b5d07d2b1320b4e235de0aee0f526a0c206e63b",
+    "FULL_27585_INSTANCES_662040_VERTICES_331020_TRIANGLES_108_BATCHES_EXECUTED",
+    "FULL_FORWARD_REVERSE_GEOMETRY_HASH_70e28daa4177b9d3bcdc643795d4d017e0c29bba625f8754552ab9390db0d639",
+    "ZERO_TERRAIN_ROOT_ERROR_ZERO_FULL_GEOMETRY_RESERVATION_OVERLAPS_MIN_CLEARANCE_0_466107M"
   ],
   "preservedEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881355389",
+    "H-Earth-Gen2514-Grounded-Geometry-5b5d07d2.zip; /H-Earth/H-Earth-Gen2514-Grounded-Geometry-5b5d07d2.zip; library_file_id libfile_aca3de0d7b9c81919452a879f39631ed; file_id file_00000000c6f481f6a813330d67bb67ed; complete PLY mesh, exact source/dependency bytes, input data, full execution/repeatability, independent review and static mesh inspection",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881306063",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881122140",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881114954",
+    "SOURCE_BLOBS:vegetation98197575337f5e4b5790514df8f56ef59575aeaa; geometryd54b31cf4f5031dcf741d25c4f31e232dd39f19f; original APIs preserved, only two admitted files appended.",
+    "PERFORMANCE:108 batches at most256instances each; no population cutoff;19861200 packed geometry bytes; full offline qualification324.615s; mean batch715.932ms in Node24.19; no device/frame-time claim.",
     "CANONICAL_TERMINAL_CLOSURE: commit 727d0a99fc2e98191d91aee9858f15988edf6193; ledger blob 642b1b9d413719a8ba5551e0e4c986d6302f7666; source owner comment 5880472624; operation H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_20260928_001 generation2510 PASS_CLOSED; active lock released.",
     "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5880404359",
     "H-Earth-Placement-Execution-28bc466f.zip; /H-Earth/H-Earth-Placement-Execution-28bc466f.zip; library_file_id libfile_788aeb67319c8191b14e7def99923749; file_id file_00000000b5b481f6b26da7b12e433210; complete source bytes, execution/repeatability receipts, data/maps, independent boundary review and continuity evidence",
@@ -62,19 +76,19 @@
     "SUCCESSOR:28bc466fe029b449ce4edd27843c0457bfa3349d; PARENT:54ba741179ca9f40f15fcde0361cd825a34c8d34; SOURCE_BLOB:775f6b5a49266eebb0d06a0407e89c26e08134c9; exact one admitted path delta, 8 additions/8 deletions; disposition-only eligibility change."
   ],
   "nextAction": {
-    "actionId": "NONE_OPERATION_TERMINALLY_CLOSED",
-    "actionClass": "TERMINAL",
-    "binding": "Generation2510 placement-data operation is canonically PASS_CLOSED at lock-ref commit 727d0a99fc2e98191d91aee9858f15988edf6193. Preserve exact qualified data candidate 28bc466fe029b449ce4edd27843c0457bfa3349d and checkpoint5880404359 with recorded qualification limits. Do not resume this operation or repeat execution/inventory/access investigations. Any vegetation geometry, manor construction, ecological-diversity development, merge, deployment or publication requires a separately authorized successor task.",
-    "expectedResult": "STOP_TERMINAL_COMPLETE"
+    "actionId": "CLOSE_COMPLETED_GEN2514_GEOMETRY_CANDIDATE_SCOPE",
+    "actionClass": "TERMINAL_CLOSE",
+    "binding": "Preserve exact geometry candidate5b5d07d2b1320b4e235de0aee0f526a0c206e63b and its mesh/evidence. Gen2514 bounded construction and full forward/reverse qualification are complete. Use existing canonical terminal-closure procedure with authentic2514 admission and explicit limits: no renderer integration, terrain occlusion execution, device performance or public visual claim; inherited inventory/ecological/capacity/canopy/access-hazard assumptions remain. Do not repeat baseline/admission/transport investigation, mutate qualified placement data or create roads/driveways/vehicle corridors. No product merge, deployment or publication. A later renderer integration is a separately scoped task.",
+    "expectedResult": "Canonical closure receipt for completed grounded-geometry candidate work, preserving exact mesh and execution evidence; stop before renderer integration."
   },
   "requiredVerifier": {
-    "verifierId": "PLACEMENT_DATA_REPEATABILITY_AND_BOUNDARY_REVIEW",
-    "binding": "Independent exact-candidate review of admitted path delta, unchanged response equations and protected dependencies, repeated/reversed-order deterministic data, final-coordinate habitat, terrain and structure authority evidence. No ecological validity claim inferred from diagnostic PASS.",
-    "successResult": "PLACEMENT_DATA_EVIDENCE_COMPLETE_OR_EXACT_FAILED_ASSERTION"
+    "verifierId": "GEN2514_INDEPENDENT_GEOMETRY_AND_BOUNDARY_REVIEW",
+    "binding": "Exact two-path append-only delta from28bc466f; qualified roots/normals/scales unchanged; complete batch coverage; independent vertex-transform checks plus full forward/reverse and conservative geometry-footprint clearance evidence. Review offline cost without claiming device performance.",
+    "successResult": "GROUNDED_GEOMETRY_CANDIDATE_BOUNDARY_PASS"
   },
   "stopCondition": {
-    "conditionId": "PLACEMENT_DATA_CANDIDATE_AND_EVIDENCE_COMPLETE",
-    "disposition": "STOP_BEFORE_REPLACEMENT_GEOMETRY_MERGE_DEPLOYMENT_PUBLICATION; preserve unqualified assumptions explicitly; record exact failed binding if authority, structure source or repeatability cannot be proven."
+    "conditionId": "GROUNDED_GEOMETRY_CANDIDATE_AND_EVIDENCE_COMPLETE",
+    "disposition": "STOP_BEFORE_RENDERER_INTEGRATION_ROADS_PRODUCT_MERGE_DEPLOYMENT_PUBLICATION; preserve explicit qualification limits."
   },
   "authorityEffect": "NONE_RESUME_OBJECT_ONLY"
 }

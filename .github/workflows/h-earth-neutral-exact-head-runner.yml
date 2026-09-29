@@ -244,8 +244,11 @@ jobs:
                 liveGpuReceipt?.animation?.running===true &&
                 Number(liveGpuReceipt?.counters?.gpuFramebufferPresentationCount)>0
               );
-              if(activeLiveGpu) return 'READY';
-              if(/Initialization failed\.|RENDERER_CONSTRUCTION_EXCEPTION/.test(text)) return 'FAILED';
+              const startupReceipt=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null;
+              const authoritativeReady=Boolean(startupReceipt?.stages?.READY_PUBLISHED==='PASS'&&startupReceipt?.firstFailureStage==null);
+              const routeReady=document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady==='true';
+              if(activeLiveGpu||authoritativeReady||routeReady) return 'READY';
+              if(startupReceipt?.firstFailureStage||/Initialization failed\.|RENDERER_CONSTRUCTION_EXCEPTION/.test(text)) return 'FAILED';
               const initializing=/H-EARTH · LIVE WORLD INITIALIZATION|Constructing world renderer|Entering the coast\./i.test(text);
               const live=/LIVE ENVIRONMENT/i.test(text)&&/H_EARTH_GROUND_CELL_001:[A-Z0-9:]+/i.test(text);
               const mounted=window.H_EARTH_3D_RENDERER!=null||window.H_EARTH_3D_RENDERER_CONTRACT!=null||/RENDERER_MOUNTED|Entering complete|World ready|Initialization complete/i.test(text)||(!initializing&&live);

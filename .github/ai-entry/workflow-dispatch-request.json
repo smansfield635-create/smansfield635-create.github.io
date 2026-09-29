@@ -1,9 +1,10 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "GEN2515_AUTHORIZED_EXECUTION_DISPATCH_20260929_003",
+  "capabilityId": "H_EARTH_GEN2515_AUTHORIZED_TOOLSET_EXECUTE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H_EARTH_GEN2515_RENDER_PACKAGE_EXEC_20260929_003\",\"descriptorId\":\"H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_GEN2514_VEGETATION_RENDERER_INTEGRATION_20260929_001\",\"admissionReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"31dc0ef8f03c1c5e6e77615c561ecad6a9ad30c7\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2515-admission.minimal.v1.json\",\"sha256\":\"950744c43d66fff4058998184c25c39702947d67770b858b21c33a7945de9485\"},\"routerReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"31dc0ef8f03c1c5e6e77615c561ecad6a9ad30c7\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2515-router.minimal.v1.json\",\"sha256\":\"f09addfb07b7a5ff6ea6b9207fe2c3187b37e098010495a4bc9349976c1b371a\"},\"inputs\":{\"candidateHead\":\"6fa5041082a1133accb2cabbd0072e193c181ea9\",\"executionHolder\":\"GEN2515_QUALIFICATION_20260929\"},\"availableCapabilities\":{\"schema\":\"AVAILABLE_CAPABILITY_RECEIPT_v1\",\"availableBackends\":[\"GITHUB_ACTIONS_CLEAN_EXECUTION\"],\"availableWorkflowPaths\":[\".github/workflows/ai-room-execution-transport.yml\"],\"availableToolingHeads\":[\"b68eb1214285bd4be09fca0f20ee958921320548\"]},\"requestNonce\":\"2515000000000000000000000000000000000000000000000000000000000012\"}",
+    "router_callback_issue": "5086",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
   }
 }

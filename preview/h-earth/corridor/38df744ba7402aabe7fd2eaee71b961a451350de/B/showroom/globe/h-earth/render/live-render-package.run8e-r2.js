@@ -310,8 +310,12 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     });
   }
 
-  const primitives = transfer.admittedPrimitives;
   const terrainPrimitiveId = neutralPackage.primitives[0]?.primitiveId;
+  // Gen2519 presentation separation: Packet002 remains complete world truth, while
+  // vegetation is materialized exclusively through the deterministic bounded batch path.
+  const primitives = freezeArray(transfer.admittedPrimitives.filter((primitive) =>
+    roleForPrimitive(primitive, terrainPrimitiveId) !== 'VEGETATION'
+  ));
   const positions = [];
   const normals = [];
   const baseColorsLinear = [];

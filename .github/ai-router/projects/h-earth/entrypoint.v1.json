@@ -158,7 +158,7 @@
       "resumeObject": ".github/ai-router/continuation/h-earth-environmental-placement.resume.v1.json",
       "schema": ".github/ai-router/continuation/resume-object.schema.v1.json",
       "checkpointIssue": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086",
-      "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5878291359",
+      "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5881122140",
       "loadBefore": [
         "H_EARTH_ENVIRONMENTAL_SUCCESSOR_CONTINUATION",
         "H_EARTH_ENVIRONMENTAL_PLACEMENT_DATA_CONSTRUCTION"

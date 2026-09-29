@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2519-cb6a05d-exact-head-20260929",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5378,
+  "requestBranch": "ai-dispatch-request-gen2519-cb6a05d-exact-head-20260929",
+  "requestCommit": "21a47ed61cf95219c7b4326c5124afa0034d8a90",
+  "requestCommitParent": "e3ab9e78e32c012edb5222bcf3a39b4556105702",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e3ab9e78e32c012edb5222bcf3a39b4556105702",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "cb6a05dec4ded5102514361e84686b658827cd68",
+    "route_query": "",
+    "route_path": "/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/"
+  },
+  "bridgeRunId": "36646573560",
+  "dispatchedRunId": 36646586729,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36646586729",
+  "dispatchedRunHeadSha": "e3ab9e78e32c012edb5222bcf3a39b4556105702",
+  "dispatchedAt": "2026-09-29T23:42:02.086Z",
+  "resolvedAt": "2026-09-29T23:42:06.027Z"
+}

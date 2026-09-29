@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "AUREN_C4_4B_RELATIONSHIP_MAPPING_QUALIFICATION_20260929_001",
+  "capabilityId": "AUREN_C4_4B_RELATIONSHIP_MAPPING_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5321,
+  "requestBranch": "ai-dispatch-request-auren-c4-4b-20260929",
+  "requestCommit": "2d41008e9f977982d0b57518f72455cb1127a31b",
+  "currentMainSha": "d7ff63e0bedd6f5ead986220c885591defcca0b8",
+  "bridgeRunId": "36639983210",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/auren-c4-4b-relationship-mapping-qualification.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-09-29T22:30:44.377Z"
+}

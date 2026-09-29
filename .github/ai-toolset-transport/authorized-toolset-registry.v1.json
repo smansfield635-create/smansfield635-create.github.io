@@ -1581,7 +1581,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "AUREN_C2_BROWSER_QUALIFICATION_ADAPTER_V1",
-      "exactToolingHead": "693026c6a07357045a4dba61272278f925eccca7",
+      "exactToolingHead": "677bbeb3a1843693bf905525f0b27bcf175c4f2f",
       "commandSpecification": {
         "executable": "node",
         "scriptPath": "tools/ai-room-transport/auren-c2-browser-qualification.v1.mjs",

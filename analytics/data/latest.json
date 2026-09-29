@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-29T16:37:32Z",
+  "generatedAt": "2026-09-29T17:30:55Z",
   "window30d": {
-    "start": "2026-08-30T16:37:32Z",
-    "end": "2026-09-29T16:37:32Z"
+    "start": "2026-08-30T17:30:55Z",
+    "end": "2026-09-29T17:30:55Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 279
+      "pageLoads": 286
     },
     {
       "date": "2026-09-23",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 22
+      "pageLoads": 23
     }
   ],
   "summary": {
-    "pageLoads": 7102,
-    "botPageLoads": 2581,
-    "nonBotPageLoads": 4521
+    "pageLoads": 7100,
+    "botPageLoads": 2596,
+    "nonBotPageLoads": 4504
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3347,
-      "visits": 3347
+      "pageLoads": 3359,
+      "visits": 3359
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3111,
+      "pageLoads": 3097,
       "visits": 0
     },
     {
@@ -177,23 +177,23 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1918,
-      "visits": 1476
+      "pageLoads": 1943,
+      "visits": 1503
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 917,
-      "visits": 917
-    },
-    {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 710,
-      "visits": 575
+      "pageLoads": 904,
+      "visits": 904
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
       "pageLoads": 710,
       "visits": 20
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 708,
+      "visits": 573
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 336,
-      "visits": 128
+      "pageLoads": 334,
+      "visits": 127
     },
     {
       "path": "/analytics/",
@@ -212,7 +212,7 @@
     },
     {
       "path": "/evidence/agentic-frontier/",
-      "pageLoads": 182,
+      "pageLoads": 172,
       "visits": 30
     }
   ],

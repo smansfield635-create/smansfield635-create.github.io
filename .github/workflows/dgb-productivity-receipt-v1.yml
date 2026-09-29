@@ -1,0 +1,79 @@
+name: DGB Productivity Receipt v1
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/dgb-productivity-receipt-v1.yml'
+      - '.github/ai-router/workflow-dispatch-capability.v1.json'
+      - 'tools/dgb-productivity-receipt-v1.mjs'
+      - 'tools/verify-dgb-productivity-receipt-v1.mjs'
+      - 'project-records/fixtures/dgb-productivity-receipt-v1.fixture.json'
+  workflow_dispatch:
+    inputs:
+      period_start:
+        description: UTC start date YYYY-MM-DD
+        required: true
+        type: string
+      period_end:
+        description: UTC end date YYYY-MM-DD
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      period_start:
+        required: true
+        type: string
+      period_end:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  candidate-self-test:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Require exact candidate and four-file scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          changed="$(git diff --name-only "${{ github.event.pull_request.base.sha }" HEAD | sort)"
+          expected="$(printf '%s\n' '.github/workflows/dgb-productivity-receipt-v1.yml' '.github/ai-router/workflow-dispatch-capability.v1.json' 'project-records/fixtures/dgb-productivity-receipt-v1.fixture.json' 'tools/dgb-productivity-receipt-v1.mjs' 'tools/verify-dgb-productivity-receipt-v1.mjs' | sort)"
+          test "$changed" = "$expected"
+      - name: Verify deterministic fixture
+        run: node tools/verify-dgb-productivity-receipt-v1.mjs project-records/fixtures/dgb-productivity-receipt-v1.fixture.json
+
+  measure:
+    if: ${{ github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify deterministic fixture
+        run: node tools/verify-dgb-productivity-receipt-v1.mjs project-records/fixtures/dgb-productivity-receipt-v1.fixture.json
+      - name: Measure bounded repository activity
+        run: node tools/dgb-productivity-receipt-v1.mjs --start "${{ inputs.period_start }}" --end "${{ inputs.period_end }}" --output productivity-receipt.json
+      - name: Verify receipt contract
+        run: node tools/verify-dgb-productivity-receipt-v1.mjs productivity-receipt.json
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgb-productivity-receipt-v1-${{ inputs.period_start }}-${{ inputs.period_end }}
+          path: productivity-receipt.json
+          if-no-files-found: error

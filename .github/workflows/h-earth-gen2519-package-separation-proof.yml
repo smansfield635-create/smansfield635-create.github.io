@@ -1,0 +1,37 @@
+name: H-Earth Gen2519 Package Separation Execution Proof
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact package-separation candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 271e881272861547411ccd700ce1a3b310b4e4ac
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Require exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "271e881272861547411ccd700ce1a3b310b4e4ac"
+      - name: Execute ordered package-separation assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/qualification/h-earth-gen2519-package-separation-proof.mjs | tee "$RUNNER_TEMP/package-separation-proof.json"
+      - name: Upload execution receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2519-package-separation-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/package-separation-proof.json
+          if-no-files-found: error
+          retention-days: 90

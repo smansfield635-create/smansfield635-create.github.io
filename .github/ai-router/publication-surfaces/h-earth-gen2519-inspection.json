@@ -4,7 +4,7 @@
   "description": "Nonproduction immutable owner-inspection carrier for exact H-Earth Gen2519 package-separation candidate 271e881272861547411ccd700ce1a3b310b4e4ac.",
   "checks": [
     {
-      "path": "/inspection/h-earth-gen2519-271e8812/",
+      "path": "/inspection/h-earth-gen2519-271e8812/index.html",
       "includes": [
         "NONPRODUCTION · GEN2519 IMMUTABLE INSPECTION",
         "271e881272861547411ccd700ce1a3b310b4e4ac",

@@ -412,22 +412,26 @@ The 2026-08-04 boundary must no longer be described as the assumed beginning of 
 
 Owner recollection identifies the actual operational distinction to recover: the point at which the human principal ceased routinely copy/pasting and publishing repository files one at a time and began delegating repository/file execution directly.
 
-Recovered historical operating evidence already proves that this transition occurred substantially before Aug. 4:
+Recovered historical evidence now narrows this transition much more precisely and corrects an earlier mistaken late-April inference:
 
-- By **2026-04-26**, the operating workflow explicitly rejected a paste-files workflow in favor of direct inspection and operation against the live site and GitHub repository.
-- By **2026-05-02**, a coordinated **seven-file Generation 2 repository replacement** was executed as one bounded operation.
-- By **2026-05-03/04**, direct targeted full-file repository rewrites were an established operating pattern.
-- By **2026-05-09**, coordinated multi-file repository replacement/deploy ordering was routine enough to be used for Audralia runtime work.
+- **2026-04-24**: the operating workflow still required ordered file-by-file commits for /index.html, /index.js, /gauges/index.html, and /gauges/index.js.
+- **2026-04-27**: the owner explicitly described himself as “the copy and paste guy”; the workflow still instructed him to upload/select files and click “Commit changes” directly to main.
+- **2026-04-30**: the assistant explicitly stated it could not commit to GitHub and supplied paste-ready replacement HTML for the owner to publish manually.
+- **May and early July**: recovered interactions continue to show complete file generation, “execute/deploy” instructions, and explicit receipts where repository mutation remained false; these are not counted as agent-performed writes.
+- **2026-07-22**: an attempted file-installation workflow was still blocked by the available GitHub blob transport and explicitly produced no repository mutation.
+- **2026-07-23**: the first recovered unambiguous agent-performed GitHub mutation is established. A reserved branch was reset/rebuilt, six governance files were published, commit **8e0ca748798c3a4d053f183a6fd8f1d66910b883** was created, and draft PR **#57** was opened without merging to main.
+
+Therefore the current evidence places the direct repository execution transition in a narrow **July 22–23 proof corridor**, subject to continued search for any earlier explicit agent-performed write. The prior claim that direct repository/proto-agentic operation was proven by Apr. 26/early May is withdrawn; those observations showed high-volume and coordinated development, not proven agent-side repository mutation.
 
 Therefore the longitudinal phase model is provisionally corrected to:
 
 1. **Manual / copy-paste AI-assisted operation** — early development, with the human principal materially transferring and publishing individual files.
-2. **Direct repository / proto-agentic operation** — begins at an exact date still to be recovered, but is proven active no later than 2026-04-26 and strongly established by early May.
+2. **Direct repository / proto-agentic operation** — first unambiguously proven on 2026-07-23 from currently recovered evidence; search remains open for an earlier proof.
 3. **Formal control-plane agentic operation** — 2026-08-04 remains the known formalization breakpoint.
 4. **Governed-agentic operation** — later control-plane/governance maturation, especially the September concentration already documented.
 
 ### Breakpoint-recovery rule
 
-Do not assign an exact start date for Phase 2 from commit volume alone. Search backward from the late-April proof corridor for the earliest evidence of direct repository mutation or coordinated multi-file execution. Search forward from the last clearly manual copy/paste evidence. The defensible operational breakpoint is the narrowest corridor between those two observations; use an exact date only if evidence establishes one.
+Do not assign an exact start date for Phase 2 from commit volume alone. Continue searching backward from 2026-07-23 for any earlier explicit agent-performed repository mutation. Do not classify generated code, “execute/deploy” instructions, repository audits, coordinated plans, or high commit volume as direct agentic mutation without evidence that the agent actually wrote/committed. Preserve 2026-07-22 as the latest recovered explicit no-mutation boundary unless later evidence supersedes it. Use an exact transition date only when the transport/execution evidence supports it.
 
 This correction prevents the audit from misattributing pre-August repository leverage to the Aug. 4 control-plane formalization.

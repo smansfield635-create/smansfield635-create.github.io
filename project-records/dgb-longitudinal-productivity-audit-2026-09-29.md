@@ -296,3 +296,45 @@ The first reconstruction also shows pronounced burst behavior. Jan. 29–Feb. 8 
 ### Next reconstruction boundary
 
 Continue daily authoritative counting through the remaining saturated pre-agentic periods, then aggregate into seven-day reporting buckets. After complete counts exist, classify the same buckets for product construction, qualification, repair, governance, publication/closure, workstream breadth, and reuse/leverage.
+
+
+## Human execution burden — interpretation correction
+
+Owner-supplied operating context establishes a material distinction that raw repository counts cannot express: during the early pre-agentic period, implementation and publication were performed file-by-file by the human principal. The principal was not merely specifying outcomes while an agentic repository pipeline executed the mechanical work; individual file implementation and publication remained part of the human operating loop.
+
+This context changes the longitudinal interpretation without changing any verified commit count.
+
+The audit must therefore keep **Human execution burden** separate from **Human abstraction level**:
+
+- **Human execution burden** asks how much mechanical repository/product execution remained with the human principal: individual-file implementation, publication, repetitive transfer, verification, and recovery actions.
+- **Human abstraction level** asks how technically specific the human's instructions had to be: low-level implementation direction versus higher-level intent, behavior, quality, acceptance, and governance direction.
+
+These dimensions can move independently. A period may have high commit volume and high human execution burden; another may have similar commit volume while the human operates at a higher abstraction level and reusable machinery performs more execution and qualification.
+
+### Longitudinal operating-model comparison
+
+The audit will test the following evidence model rather than assuming commit equivalence:
+
+| Phase | Human role to test from evidence | Repository output interpretation |
+|---|---|---|
+| Pre-agentic | file-level implementation and manual publication materially remain in the human loop | commit volume reflects high production but potentially high human execution burden |
+| Agentic | more repository execution can be delegated from owner intent | compare whether equivalent activity spans more files, products, closures, and concurrent workstreams per unit of human direction |
+| Governed-agentic | reusable authority, qualification, dispatch, receipts, and recovery increasingly mediate execution | compare qualified closure, reuse, recoverability, and breadth rather than treating additional governance commits as equivalent product output |
+
+### Measurement discipline
+
+No retrospective labor-hours multiplier will be invented. Human execution burden will instead use observable or owner-established proxies where available:
+
+- file-by-file versus multi-file operation;
+- manual versus workflow/agent publication;
+- repeated mechanical actions versus reusable capability consumption;
+- qualification performed manually versus automated verifier/receipt execution;
+- recovery requiring reconstruction versus deterministic continuation from durable evidence;
+- number of materially active workstreams supported concurrently;
+- degree of implementation specificity required from the human principal.
+
+The resulting historical question is therefore stronger than \"did commit volume rise?\":
+
+> How much durable, qualified product breadth and closure was produced at each operating phase, and how much mechanical execution did the human principal have to perform to produce it?
+
+This correction is especially important because the verified Jan. 29–Feb. 9 tranche already contains 1,852 mainline commits. The early baseline is demonstrably high-volume. The post-August audit must therefore test **leverage transformation**, not manufacture a low-output pre-agentic baseline.

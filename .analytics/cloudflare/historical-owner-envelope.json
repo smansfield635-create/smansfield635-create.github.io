@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-29T02:41:44Z",
+  "generatedAt": "2026-09-29T03:39:38Z",
   "window": {
-    "start": "2026-07-01T02:41:44Z",
-    "end": "2026-09-29T02:41:44Z"
+    "start": "2026-07-01T03:39:38Z",
+    "end": "2026-09-29T03:39:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -146,20 +146,20 @@
         "pageLoads": 144,
         "visits": 10
       },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 94,
-        "visits": 0
-      },
       "/governance/": {
         "pageLoads": 62,
         "visits": 10
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 94,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -330,6 +330,10 @@
         "pageLoads": 61,
         "visits": 0
       },
+      "/preview/governance-bridge/": {
+        "pageLoads": 5,
+        "visits": 5
+      },
       "/home/": {
         "pageLoads": 4,
         "visits": 4
@@ -337,10 +341,6 @@
       "/governance-bridge/": {
         "pageLoads": 95,
         "visits": 82
-      },
-      "/preview/governance-bridge/": {
-        "pageLoads": 5,
-        "visits": 5
       },
       "/governance-bridge/governance/": {
         "pageLoads": 16,

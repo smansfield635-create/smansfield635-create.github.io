@@ -11,14 +11,23 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
+      - name: Checkout registered proof control plane
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: control-plane
+          fetch-depth: 1
+          persist-credentials: false
       - name: Checkout exact package-separation candidate
         uses: actions/checkout@v4
         with:
           ref: 271e881272861547411ccd700ce1a3b310b4e4ac
+          path: candidate
           fetch-depth: 1
           persist-credentials: false
       - name: Require exact checked-out SHA
         shell: bash
+        working-directory: candidate
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "271e881272861547411ccd700ce1a3b310b4e4ac"
@@ -26,6 +35,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          cp control-plane/.github/qualification/h-earth-gen2519-package-separation-proof.mjs candidate/.github/qualification/h-earth-gen2519-package-separation-proof.mjs
+          cd candidate
           node .github/qualification/h-earth-gen2519-package-separation-proof.mjs | tee "$RUNNER_TEMP/package-separation-proof.json"
       - name: Upload execution receipt
         if: always()

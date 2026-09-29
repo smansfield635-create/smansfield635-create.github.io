@@ -1,0 +1,8 @@
+/* TARGET FILE: /products/auren/auren.return-context.js
+   AUREN_C4_2_VALIDATED_MANOR_RETURN_ACK_V1 */
+(()=>{"use strict";
+const CONTRACT="AUREN_C4_2_VALIDATED_MANOR_RETURN_ACK_V1",SCHEMA="AUREN_C4_1_MANOR_RETURN_RECEIPT_V1",MANOR="/characters/?scene=manor&entry=fade",AUREN="/characters/?scene=auren&entry=fade";
+function validate(r){return Boolean(r&&r.schema===SCHEMA&&r.destinationRegistryValidated===true&&r.destinationVisited===true&&r.visitedDestinationId==="manor"&&r.offeredRoute===MANOR&&r.returnDestinationId==="auren"&&r.returnRoute===AUREN&&r.returnRegistryValidated===true&&r.returned===true&&r.complete===true&&r.worldSignals?.physicalExpression==="manor-mass"&&r.worldSignals?.arrivalExpression==="architecture-emerges"&&Array.isArray(r.worldSignals?.worldEffects)&&r.worldSignals.worldEffects.includes("manor-horizon-legible")&&Array.isArray(r.worldSignals?.reveals)&&r.worldSignals.reveals.includes("auren")&&r.worldSignals.reveals.includes("jeeves")&&r.worldSignals?.sensoryState==="window-glow");}
+function consume(r,{relationshipRevision=null,archetypeRevision=null}={}){const ok=validate(r);return Object.freeze({contract:CONTRACT,c4_1ReceiptId:r?.receiptId||null,c4_1Validated:ok,acknowledged:ok,acknowledgmentNode:ok?"manorReturnAck":null,relationshipRevisionBefore:relationshipRevision,relationshipRevisionAfter:relationshipRevision,archetypeRevisionBefore:archetypeRevision,archetypeRevisionAfter:archetypeRevision,reason:ok?"VALIDATED_RETURN_ACKNOWLEDGED":"RETURN_RECEIPT_REJECTED"});}
+Object.defineProperty(globalThis,"AUREN_RETURN_CONTEXT",{value:Object.freeze({contract:CONTRACT,validate,consume}),writable:false,configurable:false});globalThis.dispatchEvent(new CustomEvent("auren:return-context-ready",{detail:{contract:CONTRACT}}));
+})();

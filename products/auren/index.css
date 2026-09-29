@@ -11,3 +11,11 @@
 @media(max-width:700px){.auren-chamber{width:min(100% - 16px,1180px);padding-top:8px}.auren-header{align-items:flex-start}.auren-header-actions{justify-content:flex-end}.auren-brand-copy span{display:none}.auren-room{height:430px;border-radius:20px}.room-wall-rear{left:7%;right:7%}.room-architecture{inset:9% 9% 20%}.auren-presence{left:16%;width:24%}.custody-apse{right:8%;width:27%;top:31%}.room-threshold{left:42%;width:16%}.auren-console-topline{align-items:flex-start}.auren-status{max-width:42%;text-align:right}.auren-bubble{max-width:94%}}
 @media(max-width:420px){.auren-header-actions a:first-child{display:none}.auren-room{height:390px}.room-caption strong{font-size:.86rem}.auren-status{display:none}.auren-options{display:grid;grid-template-columns:1fr}.auren-option{width:100%;text-align:left}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.custody-apse,.custody-light{transition:none!important}}
+
+/* AUREN_C2_CONVERSATIONAL_PERFORMANCE_CSS_v1 */
+.auren-typing{width:max-content;min-width:62px}
+.auren-typing-dots{display:flex;align-items:center;gap:5px;min-height:20px;padding:1px 2px}
+.auren-typing-dots i{display:block;width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.28;animation:aurenTyping 1.05s infinite ease-in-out}
+.auren-typing-dots i:nth-child(2){animation-delay:.14s}.auren-typing-dots i:nth-child(3){animation-delay:.28s}
+@keyframes aurenTyping{0%,60%,100%{opacity:.22;transform:translateY(0)}30%{opacity:.85;transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){.auren-typing-dots i{animation:none}.auren-typing-dots i:nth-child(2){opacity:.5}.auren-typing-dots i:nth-child(3){opacity:.8}}

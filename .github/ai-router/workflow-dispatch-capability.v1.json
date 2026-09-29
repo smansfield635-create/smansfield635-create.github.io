@@ -1249,7 +1249,7 @@
     },
     "DGB_PRODUCTIVITY_RECEIPT_V1": {
       "workflow": "dgb-productivity-receipt-v1.yml",
-      "ref": "productivity-receipt-v1-candidate-20260929",
+      "ref": "main",
       "inputPolicy": {
         "period_start": {
           "source": "REQUEST",

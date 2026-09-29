@@ -272,7 +272,8 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
 
   const historicalOccurrence = packageOccurrenceId.trim() === H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID;
   const neutralPackage = buildHEarthRun8ENeutralPackage({
-    compositionMode: historicalOccurrence ? 'HISTORICAL_R2_CLOSED' : 'CONTENT_ADDRESSED_CURRENT_TERRAIN'
+    compositionMode: historicalOccurrence ? 'HISTORICAL_R2_CLOSED' : 'CONTENT_ADDRESSED_CURRENT_TERRAIN',
+    presentationBaseOnly: !historicalOccurrence
   });
   if (neutralPackage?.ok !== true) issues.push(...(neutralPackage?.issues ?? ['R2_NEUTRAL_PACKAGE_FAILED']));
   const westAdmission = issues.length === 0
@@ -282,14 +283,14 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       })
     : null;
   if (westAdmission?.valid !== true) issues.push('R2_WEST_ADMISSION_FAILED');
-  const transfer = issues.length === 0
+  const transfer = historicalOccurrence && issues.length === 0
     ? buildHEarthRun8EPacket002SuccessorTransfer({
         neutralPackage,
         westBatchAdmissionResult: westAdmission,
         transferOccurrenceId: `${packageOccurrenceId}:PACKET_002_TRANSFER`
       })
     : null;
-  if (transfer?.ok !== true || transfer?.contractId !== H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID) {
+  if (historicalOccurrence && (transfer?.ok !== true || transfer?.contractId !== H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID)) {
     issues.push(...(transfer?.issues ?? ['R2_PACKET_002_TRANSFER_FAILED']));
   }
 
@@ -313,7 +314,10 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   const terrainPrimitiveId = neutralPackage.primitives[0]?.primitiveId;
   // Gen2519 presentation separation: Packet002 remains complete world truth, while
   // vegetation is materialized exclusively through the deterministic bounded batch path.
-  const primitives = freezeArray(transfer.admittedPrimitives.filter((primitive) =>
+  const presentationPrimitives = historicalOccurrence
+    ? transfer.admittedPrimitives
+    : (westAdmission?.primitiveAdmissions ?? []).map((admission) => admission.primitive).filter(Boolean);
+  const primitives = freezeArray(presentationPrimitives.filter((primitive) =>
     roleForPrimitive(primitive, terrainPrimitiveId) !== 'VEGETATION'
   ));
   const positions = [];
@@ -485,7 +489,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     viewportIndependent: true,
     worldBuiltOncePerPackageConstruction: true,
     westAdmissionPerformedOncePerPackageConstruction: true,
-    packet002TransferPerformedOncePerPackageConstruction: true,
+    packet002TransferPerformedOncePerPackageConstruction: historicalOccurrence,
     webglContextCreated: false,
     renderLoopCreated: false,
     cameraAuthorityCreated: false,
@@ -498,7 +502,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     indexCount,
     roleCounts: freezeRecord({ ...roleCounts }),
     normalSourceCounts: freezeRecord({ ...normalSourceCounts }),
-    bounds: transfer.bounds,
+    bounds: historicalOccurrence ? transfer.bounds : westAdmission.frame.bounds,
     primitiveIds: freezeArray(primitives.map((primitive) => primitive.primitiveId)),
     primitiveSpans: frozenPrimitiveSpans,
     drawRanges: frozenDrawRanges,
@@ -522,19 +526,19 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     sourceAuthorities: freezeRecord({
       run8ER2ContractId: H_EARTH_RUN_8E_R2_CONTRACT_ID,
       neutralPackageContractId: neutralPackage.contractId,
-      westAdmissionContractId: transfer.westContractId,
-      packet002TransferContractId: transfer.contractId,
+      westAdmissionContractId: westAdmission.contractId ?? 'H_EARTH_3D_GEOMETRY_KERNEL_WEST',
+      packet002TransferContractId: H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,
       run8CMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
       functionalLandscapeRendererContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
       atmosphereContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
-      semanticAddressCount: transfer.semanticAddressCount,
-      terrainAddressCount: transfer.terrainAddressCount,
-      shorelineWaterAddressCount: transfer.shorelineWaterAddressCount,
-      proxySummarizedAddressCount: transfer.proxySummarizedAddressCount,
-      formationIds: freezeArray(transfer.formationIds),
-      shorelineBandIds: freezeArray(transfer.shorelineBandIds),
-      legacyProxyIncluded: transfer.legacyProxyIncluded,
-      successorMountainIncluded: transfer.successorMountainIncluded
+      semanticAddressCount: neutralPackage.semanticAddressCount,
+      terrainAddressCount: neutralPackage.terrainAddressCount,
+      shorelineWaterAddressCount: neutralPackage.shorelineWaterAddressCount,
+      proxySummarizedAddressCount: neutralPackage.proxySummarizedAddressCount,
+      formationIds: freezeArray(neutralPackage.formationIds),
+      shorelineBandIds: freezeArray(neutralPackage.shorelineBandIds),
+      legacyProxyIncluded: neutralPackage.legacyProxyIncluded,
+      successorMountainIncluded: neutralPackage.successorMountainIncluded
     }),
     constructionMilliseconds: now() - startedAt,
     issues: freezeArray([])

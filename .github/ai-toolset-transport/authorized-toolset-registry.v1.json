@@ -1574,14 +1574,14 @@
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "AUREN_C2_STABLE_QUALIFICATION_DESCRIPTOR_V1",
-      "operationId": "AUREN_C2_STABLE_TRANSPORT_QUALIFICATION_20260928_001",
+      "operationId": "AUREN_FIXED_QUALIFICATION_20260928_001",
       "operationClass": "AUREN_C2_FIXED_EXACT_HEAD_QUALIFICATION",
       "projectId": "AUREN",
       "authorizationMode": "FIXED_EXACT_HEAD_READ_ONLY_QUALIFICATION",
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "AUREN_C2_STABLE_QUALIFICATION_ADAPTER_V1",
-      "exactToolingHead": "70c028b33949fe70645857c2edd241d73b2bd70c",
+      "exactToolingHead": "36add886ab198d58ad3a701f09e7f13811be9bf1",
       "commandSpecification": {
         "executable": "node",
         "scriptPath": "tools/ai-room-transport/auren-c2-stable-qualification.v1.mjs",

@@ -27,7 +27,7 @@ jobs:
       - name: Fetch acceptance verifier from main
         run: |
           git fetch --no-tags --depth=1 origin main:refs/remotes/origin/acceptance-main
-          git show refs/remotes/origin/acceptance-main:.github/live-qualification/verifiers/auren-integrated-product-acceptance.v1.mjs > /tmp/auren-integrated-product-acceptance.v1.mjs
+          git show refs/remotes/origin/acceptance-main:.github/live-qualification/verifiers/auren-integrated-product-acceptance.v1.mjs > ./.auren-integrated-product-acceptance.runtime.mjs
           test -s /tmp/auren-integrated-product-acceptance.v1.mjs
           test "$(git rev-parse HEAD)" = "${{ inputs.candidate_sha }}"
       - name: Serve exact product candidate

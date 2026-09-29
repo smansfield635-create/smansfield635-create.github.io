@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-29T01:45:23Z",
+  "generatedAt": "2026-09-29T02:41:44Z",
   "window": {
-    "start": "2026-07-01T01:45:23Z",
-    "end": "2026-09-29T01:45:23Z"
+    "start": "2026-07-01T02:41:44Z",
+    "end": "2026-09-29T02:41:44Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5092,
+    "pageLoads": 5089,
     "visits": 1283,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5092,
+        "pageLoads": 5089,
         "visits": 1283
       }
     },
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1090,
+        "pageLoads": 1088,
         "visits": 747
       },
       "/showroom/globe/h-earth/": {
@@ -63,7 +63,7 @@
         "visits": 10
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 35,
+        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -71,7 +71,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 83,
+        "pageLoads": 82,
         "visits": 10
       },
       "/laws/categories/reality/battery-heldout-study/": {
@@ -115,7 +115,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 284,
+        "pageLoads": 281,
         "visits": 71
       },
       "/showroom/globe/h-earth/awards/": {
@@ -211,7 +211,7 @@
         "visits": 0
       },
       "/gauges/": {
-        "pageLoads": 11,
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -322,12 +322,12 @@
         "pageLoads": 30,
         "visits": 30
       },
-      "/analytics/": {
-        "pageLoads": 61,
+      "/meet-sean-mansfield/": {
+        "pageLoads": 11,
         "visits": 0
       },
-      "/meet-sean-mansfield/": {
-        "pageLoads": 2,
+      "/analytics/": {
+        "pageLoads": 61,
         "visits": 0
       },
       "/home/": {
@@ -353,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3809,
+        "pageLoads": 3806,
         "visits": 0
       },
       "(none)": {

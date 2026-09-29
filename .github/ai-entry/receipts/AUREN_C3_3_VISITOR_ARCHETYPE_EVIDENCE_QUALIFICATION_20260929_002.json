@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUREN_C3_3_VISITOR_ARCHETYPE_EVIDENCE_QUALIFICATION_20260929_002",
+  "capabilityId": "AUREN_C3_3_VISITOR_ARCHETYPE_EVIDENCE_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5259,
+  "requestBranch": "ai-dispatch-request-auren-c3-3-r2-20260929",
+  "requestCommit": "515ed931953c2dc483ea0daefcaf7d23053c0f05",
+  "requestCommitParent": "32aad8d10d6c2c13261e2156e1a308974b9dec26",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "32aad8d10d6c2c13261e2156e1a308974b9dec26",
+  "workflow": "auren-c3-3-archetype-evidence-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "caba6c402e379901341a660d7ef64dce71d3837b",
+    "base_sha": "7da893ee3397781cd5d4ae1e5c893b80a14c64b7"
+  },
+  "bridgeRunId": "36625564474",
+  "dispatchedRunId": 36625583842,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36625583842",
+  "dispatchedRunHeadSha": "32aad8d10d6c2c13261e2156e1a308974b9dec26",
+  "dispatchedAt": "2026-09-29T20:19:52.901Z",
+  "resolvedAt": "2026-09-29T20:19:56.543Z"
+}

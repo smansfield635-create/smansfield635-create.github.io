@@ -1126,6 +1126,21 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PASS"
+    },
+    "AWARD_READINESS_BROWSER_QUALIFY": {
+      "workflow": "award-readiness-browser-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "CURRENT_MAIN_SHA",
+          "userOverrideAllowed": false
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PASS_BROWSER_BOUNDARY"
     }
   },
   "continuity": {

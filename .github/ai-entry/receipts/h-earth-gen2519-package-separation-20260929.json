@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2519-package-separation-20260929",
+  "capabilityId": "H_EARTH_GEN2519_PACKAGE_SEPARATION_EXECUTION_PROOF",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5307,
+  "requestBranch": "ai-dispatch-request-gen2519-package-separation-20260929",
+  "requestCommit": "1bf6823d0e1f6142fdd0790816331616d260a70d",
+  "requestCommitParent": "400af711f70d7c1a938d198346e646a3005993ef",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "400af711f70d7c1a938d198346e646a3005993ef",
+  "workflow": "h-earth-gen2519-package-separation-proof.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "36637293036",
+  "dispatchedRunId": 36637311258,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36637311258",
+  "dispatchedRunHeadSha": "400af711f70d7c1a938d198346e646a3005993ef",
+  "dispatchedAt": "2026-09-29T22:04:07.312Z",
+  "resolvedAt": "2026-09-29T22:04:11.183Z"
+}

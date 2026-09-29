@@ -1,0 +1,60 @@
+name: Award Readiness Browser Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact current main SHA to qualify
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Require exact current main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          main="$(gh api "/repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)"
+          test "$TARGET_SHA" = "$main"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify verifier syntax
+        run: node --check control-plane/award-readiness/verify-award-readiness.mjs
+      - name: Install Chromium qualification runtime
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve exact head
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/award-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/governance-bridge/collaboration/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/award-http.log || true
+          exit 1
+      - name: Execute award readiness browser qualification
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          AWARD_BASE_URL: http://127.0.0.1:4173
+          AWARD_EVIDENCE_DIR: /tmp/award-readiness
+        run: node control-plane/award-readiness/verify-award-readiness.mjs
+      - name: Upload qualification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: award-readiness-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/award-readiness
+          if-no-files-found: error
+          retention-days: 90

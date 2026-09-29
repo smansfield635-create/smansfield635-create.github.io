@@ -2,8 +2,12 @@ name: Auren C4.4B Relationship Mapping Qualification
 on:
   workflow_dispatch:
     inputs:
-      candidate_sha: {required: true, type: string}
-      base_sha: {required: true, type: string}
+      candidate_sha:
+        required: true
+        type: string
+      base_sha:
+        required: true
+        type: string
 permissions: {contents: read}
 jobs:
   qualify:

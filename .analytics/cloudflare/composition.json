@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-29T20:35:35Z",
+  "generatedAt": "2026-09-29T21:31:14Z",
   "window": {
-    "start": "2026-08-30T20:35:35Z",
-    "end": "2026-09-29T20:35:35Z"
+    "start": "2026-08-30T21:31:14Z",
+    "end": "2026-09-29T21:31:14Z"
   },
   "dimensions": {
     "requestPath": [
@@ -34,13 +34,13 @@
       },
       {
         "value": "/products/education/",
-        "pageLoads": 319,
-        "visits": 115
+        "pageLoads": 314,
+        "visits": 113
       },
       {
         "value": "/analytics/",
-        "pageLoads": 236,
-        "visits": 119
+        "pageLoads": 237,
+        "visits": 120
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -361,6 +361,11 @@
         "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/governance-bridge/fort-worth-job-fair/",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "refererHost": [
@@ -371,7 +376,7 @@
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3093,
+        "pageLoads": 3090,
         "visits": 0
       },
       {
@@ -408,7 +413,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 7052,
+        "pageLoads": 7049,
         "visits": 3959
       },
       {
@@ -450,29 +455,29 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2882,
-        "visits": 2802
+        "pageLoads": 2881,
+        "visits": 2801
       },
       {
         "value": "tablet",
-        "pageLoads": 2303,
+        "pageLoads": 2300,
         "visits": 604
       },
       {
         "value": "mobile",
-        "pageLoads": 1915,
-        "visits": 601
+        "pageLoads": 1916,
+        "visits": 602
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2611,
-        "visits": 2551
+        "pageLoads": 2610,
+        "visits": 2550
       },
       {
         "value": "Chrome",
-        "pageLoads": 2508,
+        "pageLoads": 2505,
         "visits": 790
       },
       {
@@ -492,8 +497,8 @@
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 23,
-        "visits": 23
+        "pageLoads": 24,
+        "visits": 24
       },
       {
         "value": "Edge",
@@ -514,13 +519,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4154,
+        "pageLoads": 4151,
         "visits": 1141
       },
       {
         "value": "Linux",
-        "pageLoads": 2621,
-        "visits": 2561
+        "pageLoads": 2620,
+        "visits": 2560
       },
       {
         "value": "MacOSX",
@@ -539,20 +544,20 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 23,
-        "visits": 23
+        "pageLoads": 24,
+        "visits": 24
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4489,
-        "visits": 1456
+        "pageLoads": 4487,
+        "visits": 1457
       },
       {
         "value": "1",
-        "pageLoads": 2611,
-        "visits": 2551
+        "pageLoads": 2610,
+        "visits": 2550
       }
     ],
     "navigationType": [
@@ -563,7 +568,7 @@
       },
       {
         "value": "reload",
-        "pageLoads": 1181,
+        "pageLoads": 1178,
         "visits": 361
       },
       {
@@ -590,7 +595,7 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5277,
+        "pageLoads": 5274,
         "visits": 3306
       },
       {
@@ -607,14 +612,14 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 7100,
+        "pageLoads": 7097,
         "visits": 4007
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 7100,
+        "pageLoads": 7097,
         "visits": 4007
       }
     ]

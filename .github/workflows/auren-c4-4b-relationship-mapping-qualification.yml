@@ -8,18 +8,24 @@ on:
       base_sha:
         required: true
         type: string
-permissions: {contents: read}
+permissions:
+  contents: read
 jobs:
   qualify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: {ref: ${{ inputs.candidate_sha }}, fetch-depth: 1}
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
       - name: Fetch exact base
-        env: {BASE_SHA: ${{ inputs.base_sha }}}
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
         run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
-      - name: Prove bounded diff
-        env: {BASE_SHA: ${{ inputs.base_sha }}, CANDIDATE_SHA: ${{ inputs.candidate_sha }}}
+      - name: Prove C4.4B bounded diff
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
           git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort >/tmp/files
@@ -35,18 +41,30 @@ jobs:
           test -z "$(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" -- products/auren/auren.relationship.js products/auren/auren.archetype.js characters/manor-privacy-state.mjs characters/manor-custody-state.mjs)"
       - uses: browser-actions/setup-chrome@v1
       - name: Resolve Chrome
-        run: chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"; test -x "$chrome"; echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -x "$chrome"; echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
       - uses: actions/setup-node@v4
-        with: {node-version: '22'}
+        with:
+          node-version: '22'
       - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-      - name: Serve
-        run: python3 -m http.server 18801 >/tmp/http.log 2>&1 & for i in {1..30}; do curl -fsS http://127.0.0.1:18801/products/auren/ >/dev/null && exit 0; sleep 1; done; exit 1
-      - name: Execute contract
-        env: {PUBLIC_BASE_URL: http://127.0.0.1:18801, CHROME_PATH: ${{ env.CHROME_PATH }}, RUNTIME_RESULT_PATH: /tmp/c44b.json}
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 18801 >/tmp/c44b-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:18801/products/auren/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/c44b-http.log; exit 1
+      - name: Execute C4.4B contract
+        env:
+          PUBLIC_BASE_URL: http://127.0.0.1:18801
+          CHROME_PATH: ${{ env.CHROME_PATH }}
+          RUNTIME_RESULT_PATH: /tmp/c44b.json
         run: node .github/live-qualification/verifiers/auren-c4-4b-relationship-mapping.v1.mjs
-      - name: Preserve
+      - name: Preserve receipt
         if: always()
         run: mkdir -p .qualification/c44b && cp /tmp/c44b.json .qualification/c44b/receipt.json 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: auren-c4-4b-${{ github.run_id }}-${{ github.run_attempt }}, path: .qualification/c44b, retention-days: 30}
+        with:
+          name: auren-c4-4b-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/c44b
+          retention-days: 30

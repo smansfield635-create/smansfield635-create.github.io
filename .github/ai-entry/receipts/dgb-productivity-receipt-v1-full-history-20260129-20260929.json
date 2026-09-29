@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "dgb-productivity-receipt-v1-full-history-20260129-20260929",
+  "capabilityId": "DGB_PRODUCTIVITY_RECEIPT_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5352,
+  "requestBranch": "ai-dispatch-request-productivity-receipt-v1-full-history-20260929",
+  "requestCommit": "ca5c7b23b4453c731b800ff0a8de080f68ff80f6",
+  "requestCommitParent": "ff49a862eec85f56861f6315b33fe3d8363fa761",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "ff49a862eec85f56861f6315b33fe3d8363fa761",
+  "workflow": "dgb-productivity-receipt-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "period_start": "2026-01-29",
+    "period_end": "2026-09-29"
+  },
+  "bridgeRunId": "36645022419",
+  "dispatchedRunId": 36645042288,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36645042288",
+  "dispatchedRunHeadSha": "ff49a862eec85f56861f6315b33fe3d8363fa761",
+  "dispatchedAt": "2026-09-29T23:24:34.559Z",
+  "resolvedAt": "2026-09-29T23:24:38.870Z"
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "dgb-prod-v1-aug16-31-20260929",
+  "capabilityId": "DGB_PRODUCTIVITY_RECEIPT_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5376,
+  "requestBranch": "ai-dispatch-request-prod-v1-aug16-31-20260929",
+  "requestCommit": "477dd707b84909a9e6a74ec5f94ce858ed9940cd",
+  "currentMainSha": "e3ab9e78e32c012edb5222bcf3a39b4556105702",
+  "bridgeRunId": "36646457112",
+  "error": "Stale dispatch request: parent 6d16c9816e4c101eca9a82f5c2818f60532ed511 != current main e3ab9e78e32c012edb5222bcf3a39b4556105702",
+  "failedAt": "2026-09-29T23:40:52.869Z"
+}

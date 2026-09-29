@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-gen2519-package-separation-import-retry-20260929",
+  "capabilityId": "H_EARTH_GEN2519_PACKAGE_SEPARATION_EXECUTION_PROOF",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5317,
+  "requestBranch": "ai-dispatch-request-gen2519-package-separation-import-retry-20260929",
+  "requestCommit": "a2775f6f1feae4198c4ad147a76f57bec923d616",
+  "currentMainSha": "6ad047c45082b3dc32bbd07e069545ad423d80c2",
+  "bridgeRunId": "36639250558",
+  "error": "Native dispatch was accepted but run id was not resolved for h-earth-gen2519-package-separation-proof.yml",
+  "failedAt": "2026-09-29T22:24:32.189Z"
+}

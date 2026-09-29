@@ -78,6 +78,7 @@
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": ["h-earth-3d/", "showroom/globe/h-earth/", "showroom/globe/audralia/audio/"],
       "ownedExactPaths": [
+        "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/run8e-successor-environment.js",
         ".github/workflows/h-earth-repository-registry-preflight.yml",
         ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
         ".github/workflows/audralia-weather-presentation-reconciliation.yml",

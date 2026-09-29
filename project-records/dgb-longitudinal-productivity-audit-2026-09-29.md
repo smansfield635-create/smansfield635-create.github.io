@@ -252,3 +252,47 @@ Potential future indicators:
 - Qualified output per unit of human direction
 
 The historical audit should define the baseline before those indicators become automated governance claims.
+
+## Longitudinal reconstruction execution — first measured tranche
+
+The reconstruction was started on 2026-09-29. Weekly buckets were attempted first and correctly rejected as authoritative when retrieval saturated.
+
+### Retrieval refinement
+
+Early DGB activity is dense enough that some seven-day buckets exceed 300 commits before three 100-result pages reach the beginning of the week. Therefore:
+
+- unsaturated seven-day buckets may be used directly;
+- saturated seven-day buckets must be decomposed into daily buckets;
+- a daily bucket is authoritative only when its final requested page is not full;
+- any saturated bucket is a lower bound, never a total.
+
+### Verified early daily counts
+
+The first daily tranche produced complete, unsaturated counts:
+
+| UTC date | Mainline commits |
+|---|---:|
+| 2026-01-29 | 153 |
+| 2026-01-30 | 214 |
+| 2026-01-31 | 146 |
+| 2026-02-01 | 228 |
+| 2026-02-02 | 75 |
+| 2026-02-03 | 192 |
+| 2026-02-04 | 162 |
+| 2026-02-05 | 58 |
+| 2026-02-06 | 210 |
+| 2026-02-07 | 208 |
+| 2026-02-08 | 190 |
+| 2026-02-09 | 16 |
+
+The twelve verified days above contain **1,852 mainline commits**.
+
+This is particularly important for interpretation: extremely high repository activity existed at the beginning of the website project, long before the 2026-08-04 agentic breakpoint. The longitudinal audit therefore must test changes in the *composition, breadth, qualification, governance, reuse, closure, and human direction* of work—not a simplistic hypothesis that agentic operation created high commit volume from a low-volume baseline.
+
+### Early burst/quiet behavior
+
+The first reconstruction also shows pronounced burst behavior. Jan. 29–Feb. 8 contains repeated 150–228 commit days, while Feb. 9 drops to 16 and the previously measured Feb. 9–15 week contains only 19 total commits. Weekly averages alone will therefore hide important operating patterns. Daily evidence should be retained underneath phase-level summaries.
+
+### Next reconstruction boundary
+
+Continue daily authoritative counting through the remaining saturated pre-agentic periods, then aggregate into seven-day reporting buckets. After complete counts exist, classify the same buckets for product construction, qualification, repair, governance, publication/closure, workstream breadth, and reuse/leverage.

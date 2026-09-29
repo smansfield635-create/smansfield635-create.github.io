@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "productivity-v1-govcal-3",
+  "capabilityId": "DGB_PRODUCTIVITY_RECEIPT_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5301,
+  "requestBranch": "ai-dispatch-request-productivity-v1-govcal-3",
+  "requestCommit": "a3549eb73614c36e8f596ad7552592f09b4dfc48",
+  "requestCommitParent": "1af00c24e8af9f133d934a43c7a2f5ff43bfbf18",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "1af00c24e8af9f133d934a43c7a2f5ff43bfbf18",
+  "workflow": "dgb-productivity-receipt-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "period_start": "2026-09-24",
+    "period_end": "2026-09-25"
+  },
+  "bridgeRunId": "36636306282",
+  "dispatchedRunId": 36636348422,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36636348422",
+  "dispatchedRunHeadSha": "1af00c24e8af9f133d934a43c7a2f5ff43bfbf18",
+  "dispatchedAt": "2026-09-29T21:54:48.018Z",
+  "resolvedAt": "2026-09-29T21:54:51.745Z"
+}

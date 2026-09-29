@@ -1,0 +1,25 @@
+import fs from 'node:fs';import puppeteer from 'puppeteer-core';
+const base=(process.env.PUBLIC_BASE_URL||'http://127.0.0.1:18793').replace(/\/$/,'');const out=process.env.RUNTIME_RESULT_PATH||'/tmp/auren-c3-1-result.json';const chrome=process.env.CHROME_PATH;if(!chrome)throw new Error('CHROME_PATH is required');
+const browser=await puppeteer.launch({executablePath:chrome,headless:'new',args:['--no-sandbox','--disable-dev-shm-usage']});const checks=[],failures=[];const add=(id,pass,evidence={})=>{checks.push({id,status:pass?'PASS':'FAIL',evidence});if(!pass)failures.push(id)};
+const ready=async p=>{await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-options-ready')==='true',{timeout:20000})};
+const labels=async p=>p.evaluate(()=>[...document.querySelectorAll('[data-auren-options] .auren-option')].map(x=>x.textContent.trim()));
+const click=async(p,t)=>{await ready(p);const before=await labels(p);add('MAX3_'+checks.length,before.length<=3,{options:before});await p.evaluate(x=>[...document.querySelectorAll('[data-auren-options] .auren-option')].find(b=>b.textContent.trim()===x)?.click(),t);await ready(p)};
+const open=async()=>{const p=await browser.newPage();await p.setViewport({width:390,height:844,isMobile:true,hasTouch:true});const errors=[];p.on('pageerror',e=>errors.push(String(e)));const res=await p.goto(base+'/products/auren/',{waitUntil:'networkidle0',timeout:60000});await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-ready')==='true',{timeout:20000});await ready(p);return{p,res,errors}};
+try{
+ let {p,res,errors}=await open();let o=await labels(p);add('ROUTE_READY',res?.status()===200,{status:res?.status()});add('OPENING_MODES',JSON.stringify(o)===JSON.stringify(['Products','Learn About Auren']),{options:o});add('OPENING_MAX3',o.length<=3,{count:o.length});
+ await click(p,'Products');o=await labels(p);add('PRODUCT_BANK_1',JSON.stringify(o)===JSON.stringify(['ARCHCOIN','Five Flags','More']),{options:o});await click(p,'More');o=await labels(p);add('PRODUCT_BANK_2',JSON.stringify(o)===JSON.stringify(['Education','Nutrition','Book / Nine Summits']),{options:o});await p.close();
+ const paths=[
+  ['ARCHCOIN',['Products','ARCHCOIN'],['What is it for?','Which two are live?','How do the four fit?']],
+  ['Five Flags',['Products','Five Flags'],['How does it work?','Why only five signals?','Show me Five Flags']],
+  ['Education',['Products','More','Education'],['How does placement work?','What is actually available?','Show me Education']],
+  ['Nutrition',['Products','More','Nutrition'],['What does baseline mean?','What is the prototype?','Show me Nutrition']],
+  ['Book',['Products','More','Book / Nine Summits'],['Why Elara?','Talk to Elara','Back to Products']]
+ ];
+ for(const [name,steps,expected] of paths){({p,errors}=await open());for(const s of steps)await click(p,s);o=await labels(p);add(name.toUpperCase().replace(/ /g,'_')+'_BANK',JSON.stringify(o)===JSON.stringify(expected),{options:o});add(name.toUpperCase().replace(/ /g,'_')+'_MAX3',o.length<=3,{count:o.length});add(name.toUpperCase().replace(/ /g,'_')+'_NO_ERRORS',errors.length===0,{errors});await p.close()}
+ ({p,errors}=await open());await click(p,'Products');await click(p,'Five Flags');await click(p,'Show me Five Flags');o=await labels(p);add('FIVE_FLAGS_HANDOFF',o.includes('Open Five Flags'),{options:o});const ff=await p.$eval('a.auren-option',a=>a.getAttribute('href'));add('FIVE_FLAGS_ROUTE',ff==='/products/five-flags/',{href:ff});await p.close();
+ ({p,errors}=await open());await click(p,'Products');await click(p,'More');await click(p,'Education');await click(p,'Show me Education');const ed=await p.$eval('a.auren-option',a=>a.getAttribute('href'));add('EDUCATION_ROUTE',ed==='/products/education/',{href:ed});await p.close();
+ ({p,errors}=await open());await click(p,'Products');await click(p,'More');await click(p,'Nutrition');await click(p,'Show me Nutrition');const nu=await p.$eval('a.auren-option',a=>a.getAttribute('href'));add('NUTRITION_ROUTE',nu==='/products/nutrition/',{href:nu});await p.close();
+ ({p,errors}=await open());await click(p,'Products');await click(p,'More');await click(p,'Book / Nine Summits');await click(p,'Talk to Elara');const el=await p.$eval('a.auren-option',a=>a.getAttribute('href'));add('BOOK_ELARA_ROUTE',el==='/characters/?scene=elara&entry=fade',{href:el});await p.close();
+ ({p,errors}=await open());const receipt=await p.evaluate(()=>globalThis.AUREN_CHAMBER_RECEIPT);add('C2_TIMING_RECEIPT',receipt?.timedPerformance===true&&receipt?.typingIndicator===true&&receipt?.choicesDelayedUntilTurnComplete===true&&receipt?.maxContextualChoices===3,{receipt});add('FINAL_NO_ERRORS',errors.length===0,{errors});await p.close();
+}finally{await browser.close()}
+const result={contract:'AUREN_C3_1_EXACT_HEAD_QUALIFICATION_V1',status:failures.length?'FAIL':'PASS',checks,failures};fs.writeFileSync(out,JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));if(failures.length)process.exitCode=1;

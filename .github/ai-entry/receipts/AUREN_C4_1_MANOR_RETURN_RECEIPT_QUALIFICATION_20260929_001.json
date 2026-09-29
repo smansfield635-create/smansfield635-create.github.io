@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUREN_C4_1_MANOR_RETURN_RECEIPT_QUALIFICATION_20260929_001",
+  "capabilityId": "AUREN_C4_1_MANOR_RETURN_RECEIPT_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5277,
+  "requestBranch": "ai-dispatch-request-auren-c4-1-20260929-001",
+  "requestCommit": "d8197b726229b4954f4fefad2ffa9eae908a6288",
+  "requestCommitParent": "771b7f1ce74b387b8c44f84b3c119c19adee63df",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "771b7f1ce74b387b8c44f84b3c119c19adee63df",
+  "workflow": "auren-c4-1-manor-return-receipt-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "e233b27191e09d690ec89501ca77060589cf4c35",
+    "base_sha": "7011d4ca32b97d93d204309863b4beb897a8ceec"
+  },
+  "bridgeRunId": "36631020879",
+  "dispatchedRunId": 36631037420,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36631037420",
+  "dispatchedRunHeadSha": "771b7f1ce74b387b8c44f84b3c119c19adee63df",
+  "dispatchedAt": "2026-09-29T21:06:28.162Z",
+  "resolvedAt": "2026-09-29T21:06:34.169Z"
+}

@@ -1,0 +1,254 @@
+# DGB Longitudinal Productivity Audit — Durable Plan and Established Evidence
+
+Date established: 2026-09-29
+
+## Purpose
+
+Measure the evolution of Diamond Gate Bridge as a one-human-principal AI-assisted software operation from the beginning of website development through current governed-agentic operation.
+
+This audit must not use raw commit volume as a productivity score. It must distinguish construction, qualification, repair, governance overhead, publication/closure, reuse/leverage, automation noise, and durable product capability.
+
+## Historical boundaries
+
+### Phase 1 — Pre-agentic DGB
+Website development began in late January 2026.
+
+Boundary ends: 2026-08-03.
+
+Question: what production rate, breadth, repair burden, qualification practice, and reuse existed before repository-resident agentic operation?
+
+### Phase 2 — Agentic transition
+Starts: **2026-08-04**.
+
+This date is treated as an explicit architectural breakpoint, not an arbitrary reporting date.
+
+Question: what changed in throughput, concurrency, qualification, recoverability, and required human technical direction after agentic operation began?
+
+### Phase 3 — Governed agentic operation
+September contains the clearest observed control-plane/governance operationalization period.
+
+A concentrated governance/control-plane construction phase is visible on 2026-09-24 and 2026-09-25.
+
+Question: after governance infrastructure matured, did activity shift toward more qualified product construction, reuse, closure, and higher-leverage human direction?
+
+## Required measurement method
+
+GitHub broad-range commit pagination is insufficient because historical activity exceeds the 1,000-result retrieval ceiling.
+
+Therefore:
+
+1. Reconstruct repository activity in **bounded seven-day buckets** from late January through 2026-09-29.
+2. Preserve **2026-08-04** as a hard breakpoint even when it splits a normal calendar week.
+3. Use daily or smaller bounded slices if any seven-day bucket approaches retrieval limits.
+4. Record raw commit evidence but do not equate commits with productivity.
+5. Classifications may overlap; category counts are signals, not mutually exclusive labor accounting.
+6. Automated activity must be identified and separated where possible.
+7. Historical conclusions must distinguish observed correlation from causal claims.
+
+## Core productivity dimensions
+
+### Product construction
+Activity materially advancing public products, worlds, characters, surfaces, instruments, or user-facing capabilities.
+
+### Qualification
+Tests, verifiers, proofs, browser qualification, exact-head qualification, validation, and evidence-generation work.
+
+### Repair / rework
+Repair, fix, restore, correct, reconcile, rollback, or equivalent corrective activity.
+
+### Governance overhead
+Control plane, governance, admission, authority, routing, dispatch, receipts, ledger, evidence-control, and related operating-system work.
+
+### Publication / closure
+Publication, deployment, route registration, qualified adoption, terminal closure, durable continuation, and other work that makes a result usable or establishes a closed state.
+
+### Reuse / leverage
+Evidence that an established capability, component, qualification mechanism, publication path, design pattern, or governance primitive is consumed by later work rather than recreated.
+
+### Concurrency
+Number and diversity of materially active product/workstream families during a period.
+
+### Human abstraction level
+Where evidence permits, distinguish low-level technical instruction from higher-level owner direction about intent, behavior, quality, product judgment, and acceptance.
+
+## Established September evidence
+
+### 2026-09-16 through 2026-09-29
+
+Observed mainline commits: **2,151**.
+
+This is activity evidence, not a productivity score.
+
+Phase comparison from the first productivity audit:
+
+| Period | Days | Non-analytics activity/day | Product signal share | Qualification signal share | Governance signal share | Repair signal share |
+|---|---:|---:|---:|---:|---:|---:|
+| Sep 16–23 | 8 | 154.8 | 45.6% | 21.7% | 9.0% | 16.2% |
+| Sep 24–25 | 2 | 169.5 | 28.0% | 28.6% | 62.2% | 21.5% |
+| Sep 26–29 | 4 | 92.3 | 72.1% | 35.8% | 14.6% | 17.9% |
+
+Interpretation boundary:
+
+- Sep 24–25 is an observable concentrated governance/control-plane investment period.
+- After that concentration, product-associated activity is a much larger share of meaningful repository activity while qualification-associated activity also rises.
+- Repair/rework does **not** disappear. Current evidence does not support a claim that governance eliminated failure or rework.
+- The observed pattern is consistent with governance infrastructure beginning to produce leverage, but the audit must not claim causality from these ratios alone.
+
+## Established four-week evidence
+
+Repository activity from 2026-09-02 through 2026-09-29:
+
+- Sep 2–8: **611** mainline commits.
+- Sep 9–15: **695** mainline commits.
+- Sep 16–29: **2,151** mainline commits.
+- Combined observed total: approximately **3,457** mainline commits.
+
+Again: this establishes operating scale, not equivalent human coding labor.
+
+Earlier-period signal samples:
+
+### Sep 2–8
+- commits: 611
+- product-associated signals: 182
+- qualification/test/proof signals: 111
+- repair signals: 127
+- governance/control-plane signals: 16
+- publication signals: 45
+
+### Sep 9–15
+- commits: 695
+- product-associated signals: 160
+- qualification/test/proof signals: 107
+- repair signals: 108
+- governance/control-plane signals: 68
+- publication signals: 79
+
+Interpretation:
+
+High repository activity clearly predates the later governance/control-plane concentration. Governance did not create the initial production volume; it appears as a later organizational response to already-high AI-assisted production.
+
+## Historical retrieval finding
+
+Broad historical queries are too large for reliable single-range pagination:
+
+- A Jan–May query exceeded 1,000 returned commits; the first 1,000 retrieved did not reach the beginning of that range.
+- A Jun–Aug 3 query exceeded 1,000 returned commits; the first 1,000 retrieved covered only approximately Jul 30–Aug 3.
+
+Therefore no historical total from those truncated broad queries may be represented as complete.
+
+This is the reason weekly bounded reconstruction is mandatory.
+
+## Recent reuse/leverage evidence
+
+The recent estate provides concrete examples of capability accumulation:
+
+- Governance Panel refactored into a portable hostable component.
+- Governance Panel/catalog architecture reused across multiple public surfaces.
+- Governance Model reused as a destination from audience-specific presentations.
+- Existing Fibonacci/phyllotaxis cosmos reused for new presentation surfaces.
+- Existing spacecraft presentation owner reused by LBS rather than recreated.
+- Existing fireworks engine extracted into a shared reusable asset.
+- Existing Playwright/browser-qualification precedent reused for Award Readiness qualification.
+- Existing AI-entry workflow-dispatch bridge reused for new qualification execution.
+- Existing current-head publication authority reused for newly registered surfaces.
+- Job Fair audience-question architecture transferred into LBS.
+- LBS extended the pattern with nested progressive evidence disclosure.
+
+## Award-readiness productivity evidence
+
+A bounded Award Readiness Browser Qualification was created after the relevant presentation surfaces already existed.
+
+Exact qualified source: `b386f5a211ba5b0b5489e7ec85897951c78090ec`
+
+Run: `36627001622`
+
+Result:
+
+- **PASS_BROWSER_BOUNDARY**
+- **158 checks**
+- **158 passes**
+- **0 failures**
+
+Qualified surfaces:
+
+1. Fort Worth Job Fair
+2. LBS Collaboration
+3. Governance Bridge
+4. Governance Model
+
+This is evidence that rapid composition did not require immediate product repair to pass the bounded Chromium qualification. It is not an official award certification and does not prove all browsers/accessibility/performance boundaries.
+
+## Current working hypothesis
+
+The repository may be transitioning through:
+
+**high-volume AI-assisted construction**
+→ **coordination pressure**
+→ **qualification expansion**
+→ **governance/control-plane investment**
+→ **greater reuse and recoverability**
+→ **higher share of qualified product construction**
+→ **higher-level human direction**
+
+This remains a hypothesis to be tested longitudinally.
+
+## Claims explicitly NOT established
+
+Do not claim from current evidence that:
+
+- DGB is the most productive solo software project historically.
+- Repository commits equal equivalent human engineering commits.
+- One human is doing the work of a specific number of engineers.
+- Governance caused all observed productivity gains.
+- Governance eliminated rework.
+- The system is autonomously self-improving.
+- Every DGB surface meets the Award Readiness browser boundary.
+- Agentic operation is responsible for all post-August growth.
+
+## Next deterministic audit step
+
+Reconstruct weekly repository activity from late January 2026 through 2026-09-29.
+
+For every bucket record:
+
+- exact date range;
+- total mainline activity;
+- identified automation;
+- product-construction signals;
+- qualification signals;
+- repair/rework signals;
+- governance/control-plane signals;
+- publication/closure signals;
+- materially active workstream families;
+- notable new reusable capabilities;
+- notable reuse of prior capabilities;
+- important closures;
+- known incomplete/failed operations.
+
+Preserve 2026-08-04 as a separate boundary.
+
+After reconstruction, compare:
+
+1. pre-agentic production;
+2. post-Aug-4 agentic production;
+3. governed-agentic production.
+
+The target question is:
+
+> How did the productive capacity of the same human principal and the same evolving project change as the development architecture moved from AI-assisted work to agentic operation and then toward governed agentic operation?
+
+## Future instrument
+
+Only after the historical classification is validated should an automated Productivity Receipt be made operational.
+
+Potential future indicators:
+
+- Product Share
+- Qualification Density
+- Repair Burden
+- Governance Cost
+- Closure Rate
+- Reuse / Leverage
+- Qualified output per unit of human direction
+
+The historical audit should define the baseline before those indicators become automated governance claims.

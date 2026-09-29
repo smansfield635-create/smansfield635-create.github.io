@@ -1,0 +1,45 @@
+name: DGB Productivity Receipt v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      period_start:
+        description: UTC start date YYYY-MM-DD
+        required: true
+        type: string
+      period_end:
+        description: UTC end date YYYY-MM-DD
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      period_start:
+        required: true
+        type: string
+      period_end:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Measure bounded repository activity
+        run: node tools/dgb-productivity-receipt-v1.mjs --start "${{ inputs.period_start }}" --end "${{ inputs.period_end }}" --output productivity-receipt.json
+      - name: Verify receipt contract
+        run: node tools/verify-dgb-productivity-receipt-v1.mjs productivity-receipt.json
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: dgb-productivity-receipt-v1-${{ inputs.period_start }}-${{ inputs.period_end }}
+          path: productivity-receipt.json
+          if-no-files-found: error

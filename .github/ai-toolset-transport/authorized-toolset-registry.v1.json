@@ -1705,7 +1705,9 @@
       "commandSpecification": {
         "executable": "node",
         "scriptPath": "tools/ai-room-transport/h-earth-gen2515-render-package-qualification.v1.mjs",
-        "fixedArguments": [],
+        "fixedArguments": [
+          "--max-old-space-size=12288"
+        ],
         "inputArgumentBindings": [
           {
             "argument": "--candidate-head",

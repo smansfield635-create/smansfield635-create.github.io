@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUREN_C3_1_EXACT_HEAD_QUALIFICATION_20260929_001",
+  "capabilityId": "AUREN_C3_1_EXACT_HEAD_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5243,
+  "requestBranch": "ai-dispatch-request-auren-c3-1-20260929-001",
+  "requestCommit": "62883e1973366d3559225deb8002b1aeead9d9e3",
+  "requestCommitParent": "af67b4221d77a31df3eafd11bbe0f97c24ba98b5",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "af67b4221d77a31df3eafd11bbe0f97c24ba98b5",
+  "workflow": "auren-c3-1-exact-head-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "1d4cd149a6db392894c37747ac7166b2b70b4ad6",
+    "base_sha": "650bfa2d9dac5c43d300f7ad1d661d601a984d8e"
+  },
+  "bridgeRunId": "36618018661",
+  "dispatchedRunId": 36618039598,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36618039598",
+  "dispatchedRunHeadSha": "af67b4221d77a31df3eafd11bbe0f97c24ba98b5",
+  "dispatchedAt": "2026-09-29T19:16:13.482Z",
+  "resolvedAt": "2026-09-29T19:16:17.463Z"
+}

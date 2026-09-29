@@ -43,12 +43,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Require exact candidate and four-file scope
+      - name: Require exact candidate and bounded scope
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
-          changed="$(git diff --name-only "${{ github.event.pull_request.base.sha }" HEAD | sort)"
+          changed="$(git diff --name-only "${{ github.event.pull_request.base.sha }}" HEAD | sort)"
           expected="$(printf '%s\n' '.github/workflows/dgb-productivity-receipt-v1.yml' '.github/ai-router/workflow-dispatch-capability.v1.json' 'project-records/fixtures/dgb-productivity-receipt-v1.fixture.json' 'tools/dgb-productivity-receipt-v1.mjs' 'tools/verify-dgb-productivity-receipt-v1.mjs' | sort)"
           test "$changed" = "$expected"
       - name: Verify deterministic fixture

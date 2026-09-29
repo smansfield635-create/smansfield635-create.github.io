@@ -1,4 +1,4 @@
-import { getHEarthOW01CanonicalLiveRenderPackageOccurrence, getHEarthRun8ER2CanonicalVegetationPresentationPlan } from '../preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
+import { getHEarthOW01CanonicalLiveRenderPackageOccurrence, getHEarthRun8ER2CanonicalVegetationPresentationPlan } from '../../preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
 
 const EXPECTED_SHA='271e881272861547411ccd700ce1a3b310b4e4ac';
 const EXPECTED_POPULATION=27585;

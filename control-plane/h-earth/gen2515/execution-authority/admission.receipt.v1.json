@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "43baa457cd7f8d389c80dc22d6cee98a0baa03c0",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "38f737d7270394972a1da1a299930351cd53a3f4",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2515,
+    "lockScope": "H_EARTH:VARIANT_B:VEGETATION_RENDERER_INTEGRATION:GEN2514:V1",
+    "observedBranchHead": "d05736915eba5f0e75d383aaf489f8759a95a2bf",
+    "observedLedgerBlobSha": "673cc2a10cf8221684df3b2a59802370a5d18bf3",
+    "operationId": "H_EARTH_GEN2514_VEGETATION_RENDERER_INTEGRATION_20260929_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "ec3d747f161ccbda7ae0e2773604e628eee5973ddb2aca502952a674d1389386"
+  },
+  "operationId": "H_EARTH_GEN2514_VEGETATION_RENDERER_INTEGRATION_20260929_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "5558b6576a8f2cec6a5b4e84a1552da9da5c754f8b85a19c290fb5db91347eec",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "39ca18977f14d9032581e7e776579a21bae59fd6adb2703460c09f22eb0ec0ed",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

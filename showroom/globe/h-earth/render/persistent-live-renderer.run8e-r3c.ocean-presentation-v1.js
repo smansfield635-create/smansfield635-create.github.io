@@ -545,7 +545,10 @@ uniform sampler2D uDepth;
 out vec4 outColor;
 void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
 
-export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360 } = {}) {
+export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, preTerrainExtensionDiagnostic = null, postTerrainDraw = null, postRenderDiagnostic = null } = {}) {
+  if (preTerrainExtensionDiagnostic !== null && typeof preTerrainExtensionDiagnostic !== 'function') throw new Error('R3C_PRE_TERRAIN_EXTENSION_DIAGNOSTIC_INVALID');
+  if (postTerrainDraw !== null && typeof postTerrainDraw !== 'function') throw new Error('R3C_POST_TERRAIN_DRAW_INVALID');
+  if (postRenderDiagnostic !== null && typeof postRenderDiagnostic !== 'function') throw new Error('R3C_POST_RENDER_DIAGNOSTIC_INVALID');
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
   canvas.height = height;
@@ -554,6 +557,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     preserveDrawingBuffer: true, powerPreference: 'high-performance'
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
+  const actualContextAttributes = Object.freeze({ ...gl.getContextAttributes() });
+  let latestPostBlitGlError = null;
+  let latestDefaultFramebufferT4Readback = null;
   let initialized = false;
   const counters = {
     contextCreationCount: 1, shaderCreateCount: 0, shaderCompileCount: 0,
@@ -721,6 +727,12 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
     gl.depthMask(true); gl.disable(gl.BLEND);
+    if (preTerrainExtensionDiagnostic !== null) preTerrainExtensionDiagnostic(Object.freeze({ gl, packet, width, height, sourceFramebuffer: resources.geometryFramebuffer }));
+    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
+    if (postTerrainDraw !== null) postTerrainDraw(Object.freeze({ gl, packet, width, height }));
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
+    if (postRenderDiagnostic !== null) postRenderDiagnostic(Object.freeze({ gl, packet, width, height, sourceFramebuffer: resources.geometryFramebuffer }));
+    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }
@@ -728,7 +740,18 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST);
+    latestPostBlitGlError = gl.getError();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    if (postTerrainDraw !== null && latestDefaultFramebufferT4Readback === null) {
+      const defaultPixels = new Uint8Array(width * height * 4);
+      gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,defaultPixels);
+      let exactT4ProductionRgbPixelCount = 0;
+      for (let offset = 0; offset < defaultPixels.length; offset += 4) {
+        if (defaultPixels[offset] === 56 && defaultPixels[offset + 1] === 92 && defaultPixels[offset + 2] === 31) exactT4ProductionRgbPixelCount += 1;
+      }
+      latestDefaultFramebufferT4Readback = Object.freeze({pixelCount: width * height, exactT4ProductionRgbPixelCount, byteHash: hash(defaultPixels)});
+    }
     counters.visiblePresentationCount += 1;
     if (!firstFramePresentationPublished) {
       firstFramePresentationPublished = true;
@@ -791,6 +814,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         contractId: rendererInterface.contractId, attributeCount: rendererInterface.attributeLayout.length,
         uniformCount: rendererInterface.frameUniformNames.length, drawRangeCount: rendererInterface.drawRanges.length
       },
+      actualContextAttributes, latestPostBlitGlError, latestDefaultFramebufferT4Readback,
       counters: { ...counters },
       persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
       resourceIdentityStable: initialized && resources.buffers?.length === 9 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
@@ -802,7 +826,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt,
+    getExtensionContext: () => gl
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

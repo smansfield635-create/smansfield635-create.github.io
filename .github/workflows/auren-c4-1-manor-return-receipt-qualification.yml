@@ -1,0 +1,55 @@
+name: Auren C4.1 Manor Return Receipt Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        required: true
+        type: string
+      base_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          fetch-depth: 1
+      - name: Fetch exact base
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+        run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
+      - name: Prove C4.1 bounded diff and C3 preservation
+        env:
+          BASE_SHA: ${{ inputs.base_sha }}
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | sort >/tmp/files
+          cat >/tmp/allowed <<'EOF'
+          .github/live-qualification/verifiers/auren-c4-1-manor-return-receipt.v1.mjs
+          .github/workflows/auren-c4-1-manor-return-receipt-qualification.yml
+          characters/manor-return-receipt.mjs
+          EOF
+          sort -o /tmp/allowed /tmp/allowed
+          diff -u /tmp/allowed /tmp/files
+          test -z "$(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" -- products/auren characters/destination-registry.mjs characters/narrative-world-state.mjs characters/cardinal-scene-state.mjs)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute C4.1 contract
+        env:
+          RUNTIME_RESULT_PATH: /tmp/auren-c4-1-result.json
+        run: node .github/live-qualification/verifiers/auren-c4-1-manor-return-receipt.v1.mjs
+      - name: Preserve receipt
+        if: always()
+        run: mkdir -p .qualification/auren-c4-1 && cp /tmp/auren-c4-1-result.json .qualification/auren-c4-1/receipt.json 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auren-c4-1-manor-return-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/auren-c4-1
+          retention-days: 30

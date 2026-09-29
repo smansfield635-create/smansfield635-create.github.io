@@ -33,6 +33,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify deterministic fixture
+        run: node tools/verify-dgb-productivity-receipt-v1.mjs project-records/fixtures/dgb-productivity-receipt-v1.fixture.json
       - name: Measure bounded repository activity
         run: node tools/dgb-productivity-receipt-v1.mjs --start "${{ inputs.period_start }}" --end "${{ inputs.period_end }}" --output productivity-receipt.json
       - name: Verify receipt contract

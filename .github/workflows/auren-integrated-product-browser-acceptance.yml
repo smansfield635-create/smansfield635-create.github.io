@@ -25,10 +25,11 @@ jobs:
           node-version: '22'
       - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
       - name: Fetch acceptance verifier from main
-        env:
-          GH_TOKEN: \${{ github.token }}
         run: |
-          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github.raw+json" "https://api.github.com/repos/\${{ github.repository }}/contents/.github/live-qualification/verifiers/auren-integrated-product-acceptance.v1.mjs?ref=main" -o /tmp/auren-integrated-product-acceptance.v1.mjs
+          git fetch --no-tags --depth=1 origin main:refs/remotes/origin/acceptance-main
+          git show refs/remotes/origin/acceptance-main:.github/live-qualification/verifiers/auren-integrated-product-acceptance.v1.mjs > /tmp/auren-integrated-product-acceptance.v1.mjs
+          test -s /tmp/auren-integrated-product-acceptance.v1.mjs
+          test "$(git rev-parse HEAD)" = "${{ inputs.candidate_sha }}"
       - name: Serve exact product candidate
         run: |
           python3 -m http.server 18804 >/tmp/auren-accept-http.log 2>&1 &

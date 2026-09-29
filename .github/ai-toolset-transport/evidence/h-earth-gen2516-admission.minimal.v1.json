@@ -1,0 +1,18 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_20260929_001",
+  "projectId": "H_EARTH",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_20260929_001",
+    "lockGeneration": 2516,
+    "lockScope": "H_EARTH:VARIANT_B:GEN2515_RENDER_PACKAGE_QUALIFICATION:V1",
+    "lockAcquired": true,
+    "acquisitionCommitSha": "83608eb22a67b6b6cfa9ce40ae9f8b80b45b617b",
+    "committedLedgerBlobSha": "186a9f8410b93c87c63b71f4c7b43d6f59d42bcb"
+  }
+}

@@ -5,6 +5,7 @@ import {
 } from './live-render-package.run8e-r2.js';
 import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 import { H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS } from './geometry-shoreline.js';
+import { createHEarthRun8ER2CanonicalVegetationPresentationBatch } from './live-render-package.run8e-r2.canonical.js';
 
 // Authored X/Z units are meters. The coast itself is the immutable zero contour.
 // Sample its canonical curve once; each query finds the closest point on that
@@ -313,4 +314,5 @@ export function evaluateHEarthRun8ER2DCanonicalGPUUploadViews(views) {
   });
 }
 
+export function createHEarthRun8ER2DVegetationBatchGPUViews(batchId){const batch=createHEarthRun8ER2CanonicalVegetationPresentationBatch(batchId);const positions=[],normals=[],baseColorsLinear=[],materialParameters=[],materialModelCodes=[],surfaceClassCodes=[],primitiveIndices=[],roleCodes=[],indices=[];let vertexOffset=0,primitiveIndex=0;for(const primitive of batch.primitives){const vertices=primitive.geometry?.vertices??[],localIndices=primitive.geometry?.indices??[],supplied=primitive.geometry?.normals??[];for(let i=0;i<vertices.length;i++){const v=vertices[i],n=supplied[i]??{x:0,y:1,z:0};positions.push(v.x,v.y,v.z);normals.push(n.x,n.y,n.z);const intent=String(primitive?.materialHint?.materialIntent??'');const rgb=intent.includes('TRUNK')||intent.includes('WOODY')?[89,63,39]:intent.includes('CONIFER')?[38,73,48]:intent.includes('SHRUB')?[52,94,52]:[78,126,65];baseColorsLinear.push(srgb8ToLinear(rgb[0]),srgb8ToLinear(rgb[1]),srgb8ToLinear(rgb[2]),1);materialParameters.push(0,0,0,0);materialModelCodes.push(0);surfaceClassCodes.push(255);primitiveIndices.push(primitiveIndex);roleCodes.push(3);}for(const index of localIndices)indices.push(vertexOffset+index);vertexOffset+=vertices.length;primitiveIndex++;}return freezeRecord({batchId,instanceCount:batch.instanceCount,placementIds:batch.placementIds,positions:new Float32Array(positions),normals:canonicalFloat32(new Float32Array(normals),'normals').view,baseColorsLinear:new Float32Array(baseColorsLinear),materialParameters:new Float32Array(materialParameters),materialModelCodes:new Uint8Array(materialModelCodes),surfaceClassCodes:new Uint8Array(surfaceClassCodes),primitiveIndices:new Uint16Array(primitiveIndices),roleCodes:new Uint8Array(roleCodes),indices:new Uint32Array(indices),deterministicTransportEncoding:true,sourceWorldTruthMutated:false});}
 export default createHEarthRun8ER2DCanonicalGPUUploadViews;

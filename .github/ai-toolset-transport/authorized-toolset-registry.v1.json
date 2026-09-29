@@ -1574,7 +1574,7 @@
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "AUREN_C2_BROWSER_QUALIFICATION_DESCRIPTOR_V1",
-      "operationId": "AUREN_FIXED_QUALIFICATION_20260928_001",
+      "operationId": "AUREN_C2_STABLE_TRANSPORT_QUALIFICATION_20260928_001",
       "operationClass": "AUREN_C2_FIXED_EXACT_HEAD_QUALIFICATION",
       "projectId": "AUREN",
       "authorizationMode": "FIXED_EXACT_HEAD_READ_ONLY_QUALIFICATION",
@@ -1817,7 +1817,7 @@
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "AUREN_C2_OWNER_EVIDENCE_DESCRIPTOR_V1",
-      "operationId": "AUREN_FIXED_QUALIFICATION_20260928_001",
+      "operationId": "AUREN_C2_OWNER_EVIDENCE_20260929_001",
       "operationClass": "AUREN_C2_FIXED_EXACT_HEAD_QUALIFICATION",
       "projectId": "AUREN",
       "authorizationMode": "FIXED_EXACT_HEAD_READ_ONLY_QUALIFICATION",

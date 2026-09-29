@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "productivity-v1-govcal-2",
+  "capabilityId": "DGB_PRODUCTIVITY_RECEIPT_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5299,
+  "requestBranch": "ai-dispatch-request-productivity-v1-govcal-2",
+  "requestCommit": "2f4eff3b915a850b41c560b6f3d98fb056558f99",
+  "currentMainSha": "1c6d6d936f2e6c990fbd5c137be589615166a896",
+  "bridgeRunId": "36636230688",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/dgb-productivity-receipt-v1.yml/dispatches: {\"message\":\"Invalid Argument - failed to parse workflow: (Line: 48, Col: 14): The expression is not closed. An unescaped ${{ sequence was found, but the closing }} sequence was not found.\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-09-29T21:53:47.064Z"
+}

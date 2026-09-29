@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-29T15:33:53Z",
+  "generatedAt": "2026-09-29T16:37:32Z",
   "window30d": {
-    "start": "2026-08-30T15:33:53Z",
-    "end": "2026-09-29T15:33:53Z"
+    "start": "2026-08-30T16:37:32Z",
+    "end": "2026-09-29T16:37:32Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 288
+      "pageLoads": 279
     },
     {
       "date": "2026-09-23",
@@ -108,11 +108,11 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 56
+      "pageLoads": 528
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 40
+      "pageLoads": 102
     },
     {
       "date": "2026-09-27",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 20
+      "pageLoads": 22
     }
   ],
   "summary": {
-    "pageLoads": 7109,
-    "botPageLoads": 2594,
-    "nonBotPageLoads": 4515
+    "pageLoads": 7102,
+    "botPageLoads": 2581,
+    "nonBotPageLoads": 4521
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3359,
-      "visits": 3359
+      "pageLoads": 3347,
+      "visits": 3347
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3106,
+      "pageLoads": 3111,
       "visits": 0
     },
     {
@@ -177,18 +177,23 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1695,
-      "visits": 1302
+      "pageLoads": 1918,
+      "visits": 1476
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 913,
-      "visits": 913
+      "pageLoads": 917,
+      "visits": 917
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 641,
-      "visits": 526
+      "pageLoads": 710,
+      "visits": 575
+    },
+    {
+      "path": "/showroom/globe/h-earth/awards/",
+      "pageLoads": 710,
+      "visits": 20
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -197,23 +202,18 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 328,
+      "pageLoads": 336,
       "visits": 128
     },
     {
-      "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 320,
-      "visits": 20
-    },
-    {
       "path": "/analytics/",
-      "pageLoads": 238,
+      "pageLoads": 237,
       "visits": 117
     },
     {
-      "path": "/characters/",
-      "pageLoads": 192,
-      "visits": 70
+      "path": "/evidence/agentic-frontier/",
+      "pageLoads": 182,
+      "visits": 30
     }
   ],
   "ownerMeasurement": {

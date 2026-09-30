@@ -215,6 +215,10 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
   const remoteBefore = readRemoteHead(toolRoot, specification.targetBranchRef);
   if (remoteBefore !== specification.expectedBranchHead) fail('WRITEBACK_REMOTE_HEAD_MISMATCH', `${specification.expectedBranchHead}:${remoteBefore}`);
   if (changedPaths(toolRoot).length !== 0) fail('TREE_GRAFT_WORKTREE_MUST_REMAIN_CLEAN');
+  if (git(toolRoot,['cat-file','-e',`${specification.expectedBranchHead}^{commit}`],true).status !== 0) {
+    const baseFetch=git(toolRoot,['fetch','--no-tags','origin',specification.expectedBranchHead],true);
+    if (baseFetch.status !== 0 || git(toolRoot,['cat-file','-e',`${specification.expectedBranchHead}^{commit}`],true).status !== 0) fail('TREE_GRAFT_BASE_COMMIT_UNAVAILABLE',specification.expectedBranchHead);
+  }
 
   const graft = specification.treeGraft;
   if (git(toolRoot, ['cat-file','-e',`${graft.indexBlobSha}^{blob}`], true).status !== 0) fail('TREE_GRAFT_INDEX_BLOB_UNAVAILABLE', graft.indexBlobSha);

@@ -180,6 +180,8 @@ export function validateWritebackSpecification(descriptor, selectedBackend = 'GI
     return stable({ mode: specification.mode, targetBranchRef, expectedBranchHead, commitMessage, fastForwardOnly: true, requireChangedPaths: true });
   }
   if (specification.requireChangedPaths !== false) fail('TREE_GRAFT_CHANGED_PATHS_MUST_BE_FALSE');
+  const recoveryRemoteHead = specification.recoveryRemoteHead == null ? null : String(specification.recoveryRemoteHead);
+  if (recoveryRemoteHead != null && !/^[0-9a-f]{40}$/.test(recoveryRemoteHead)) fail('TREE_GRAFT_RECOVERY_REMOTE_HEAD_INVALID', recoveryRemoteHead);
   const graft = assertObject(specification.treeGraft, 'TREE_GRAFT_SPECIFICATION_REQUIRED');
   const directoryPath = assertRepositoryPath(graft.directoryPath, 'TREE_GRAFT_DIRECTORY_PATH_INVALID');
   const indexObjectSha = String(graft.indexObjectSha ?? '');
@@ -188,7 +190,7 @@ export function validateWritebackSpecification(descriptor, selectedBackend = 'GI
   if (!/^[0-9a-f]{40}$/.test(sourceCandidateCommit)) fail('TREE_GRAFT_SOURCE_COMMIT_INVALID', sourceCandidateCommit);
   if (!/^[0-9a-f]{40}$/.test(indexObjectSha)) fail('TREE_GRAFT_INDEX_OBJECT_INVALID', indexObjectSha);
   if (!/^[0-9a-f]{40}$/.test(snapshotTreeSha)) fail('TREE_GRAFT_SNAPSHOT_TREE_INVALID', snapshotTreeSha);
-  return stable({ mode: specification.mode, targetBranchRef, expectedBranchHead, commitMessage, fastForwardOnly: true, requireChangedPaths: false, treeGraft: { directoryPath, indexObjectSha, snapshotTreeSha, sourceCandidateCommit } });
+  return stable({ mode: specification.mode, targetBranchRef, expectedBranchHead, recoveryRemoteHead, commitMessage, fastForwardOnly: true, requireChangedPaths: false, treeGraft: { directoryPath, indexObjectSha, snapshotTreeSha, sourceCandidateCommit } });
 }
 
 function pushFastForwardWithToken(toolRoot, targetBranchRef) {

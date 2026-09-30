@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-30T05:33:53Z",
+  "generatedAt": "2026-09-30T06:50:33Z",
   "window30d": {
-    "start": "2026-08-31T05:33:53Z",
-    "end": "2026-09-30T05:33:53Z"
+    "start": "2026-08-31T06:50:33Z",
+    "end": "2026-09-30T06:50:33Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 97
+      "pageLoads": 91
     },
     {
       "date": "2026-09-24",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 30
+      "pageLoads": 31
     }
   ],
   "summary": {
-    "pageLoads": 6923,
-    "botPageLoads": 2583,
-    "nonBotPageLoads": 4340
+    "pageLoads": 6918,
+    "botPageLoads": 2584,
+    "nonBotPageLoads": 4334
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3317,
-      "visits": 3317
+      "pageLoads": 3318,
+      "visits": 3318
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3004,
+      "pageLoads": 2999,
       "visits": 0
     },
     {
@@ -164,11 +164,6 @@
       "visits": 2
     },
     {
-      "host": "search.google.com",
-      "pageLoads": 1,
-      "visits": 1
-    },
-    {
       "host": "l.instagram.com",
       "pageLoads": 1,
       "visits": 1
@@ -177,7 +172,7 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1880,
+      "pageLoads": 1878,
       "visits": 1448
     },
     {
@@ -207,8 +202,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 240,
-      "visits": 128
+      "pageLoads": 238,
+      "visits": 129
     },
     {
       "path": "/evidence/agentic-frontier/",

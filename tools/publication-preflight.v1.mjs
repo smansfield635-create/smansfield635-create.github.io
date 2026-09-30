@@ -175,7 +175,7 @@ function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,po
     seen.add(rel);
     let bytes;
     let source;
-    if(excluded(rel)){
+    if(policy.exactSourceSha||excluded(rel)){
       if(!rel.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_CROSSES_EXCLUDED_ROOT:${rel}`);
       const recovered=readExactRepositoryFile({repoRoot,targetSha:sourceSha,rel});
       bytes=recovered.bytes;

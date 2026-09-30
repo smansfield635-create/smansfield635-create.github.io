@@ -1,15 +1,15 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-09-30T22:32:37Z",
+  "generatedAt": "2026-09-30T23:30:10Z",
   "window": {
-    "start": "2026-08-31T22:32:37Z",
-    "end": "2026-09-30T22:32:37Z"
+    "start": "2026-08-31T23:30:10Z",
+    "end": "2026-09-30T23:30:10Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1850,
+        "pageLoads": 1849,
         "visits": 1421
       },
       {
@@ -40,7 +40,7 @@
       {
         "value": "/analytics/",
         "pageLoads": 261,
-        "visits": 145
+        "visits": 146
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -53,14 +53,14 @@
         "visits": 99
       },
       {
-        "value": "/characters/",
-        "pageLoads": 111,
-        "visits": 70
-      },
-      {
         "value": "/index.html",
         "pageLoads": 110,
         "visits": 0
+      },
+      {
+        "value": "/characters/",
+        "pageLoads": 101,
+        "visits": 70
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -148,12 +148,12 @@
         "visits": 10
       },
       {
-        "value": "/home/",
-        "pageLoads": 31,
-        "visits": 11
+        "value": "/campaigns/consider-the-energy/jen-leney/",
+        "pageLoads": 30,
+        "visits": 10
       },
       {
-        "value": "/campaigns/consider-the-energy/jen-leney/",
+        "value": "/home/",
         "pageLoads": 30,
         "visits": 10
       },
@@ -238,11 +238,6 @@
         "visits": 0
       },
       {
-        "value": "/characters/legacy-dossiers.html",
-        "pageLoads": 10,
-        "visits": 0
-      },
-      {
         "value": "/campaigns/wave/",
         "pageLoads": 10,
         "visits": 0
@@ -313,22 +308,22 @@
         "visits": 1
       },
       {
-        "value": "/laws/research/evidence-and-sources/",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
-        "value": "/preview/governance-bridge/index.html",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/inspection/h-earth-r2-occurrence-probe-5707cfb6/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/inspection/h-earth-t4-3-d8fca316/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/research/evidence-and-sources/",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
+        "value": "/preview/governance-bridge/index.html",
         "pageLoads": 1,
         "visits": 1
       },
@@ -366,18 +361,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3345,
-        "visits": 3345
+        "pageLoads": 3346,
+        "visits": 3346
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3002,
+        "pageLoads": 2980,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 536,
-        "visits": 536
+        "pageLoads": 535,
+        "visits": 535
       },
       {
         "value": "m.facebook.com",
@@ -403,7 +398,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6855,
+        "pageLoads": 6833,
         "visits": 3856
       },
       {
@@ -445,13 +440,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2810,
-        "visits": 2730
+        "pageLoads": 2811,
+        "visits": 2731
       },
       {
         "value": "tablet",
-        "pageLoads": 2262,
-        "visits": 588
+        "pageLoads": 2239,
+        "visits": 587
       },
       {
         "value": "mobile",
@@ -462,13 +457,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2584,
-        "visits": 2524
+        "pageLoads": 2585,
+        "visits": 2525
       },
       {
         "value": "Chrome",
-        "pageLoads": 2411,
-        "visits": 721
+        "pageLoads": 2388,
+        "visits": 720
       },
       {
         "value": "ChromeMobile",
@@ -509,13 +504,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 4040,
-        "visits": 1118
+        "pageLoads": 4017,
+        "visits": 1117
       },
       {
         "value": "Linux",
-        "pageLoads": 2594,
-        "visits": 2534
+        "pageLoads": 2595,
+        "visits": 2535
       },
       {
         "value": "Windows",
@@ -541,25 +536,25 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4341,
-        "visits": 1399
+        "pageLoads": 4318,
+        "visits": 1398
       },
       {
         "value": "1",
-        "pageLoads": 2584,
-        "visits": 2524
+        "pageLoads": 2585,
+        "visits": 2525
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4779,
-        "visits": 3522
+        "pageLoads": 4768,
+        "visits": 3523
       },
       {
         "value": "reload",
-        "pageLoads": 1098,
-        "visits": 313
+        "pageLoads": 1097,
+        "visits": 312
       },
       {
         "value": "soft-navigation",
@@ -572,26 +567,26 @@
         "visits": 88
       },
       {
-        "value": "unknown",
+        "value": "routing-apis",
         "pageLoads": 20,
         "visits": 0
       },
       {
-        "value": "routing-apis",
-        "pageLoads": 20,
+        "value": "unknown",
+        "pageLoads": 10,
         "visits": 0
       }
     ],
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5174,
-        "visits": 3279
+        "pageLoads": 5153,
+        "visits": 3280
       },
       {
         "value": "cache",
-        "pageLoads": 1481,
-        "visits": 374
+        "pageLoads": 1480,
+        "visits": 373
       },
       {
         "value": "navigational-prefetch",
@@ -602,14 +597,14 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6925,
+        "pageLoads": 6903,
         "visits": 3923
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6925,
+        "pageLoads": 6903,
         "visits": 3923
       }
     ]

@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2519-tree-graft-20260930-002",
+  "capabilityId": "H_EARTH_GEN2515_AUTHORIZED_TOOLSET_EXECUTE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5441,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2519-tree-graft-20260930-002",
+  "requestCommit": "70ce85f626ccb8b0e5b1df5137d3ef7252232379",
+  "requestCommitParent": "3c05bc7631754eff176453c6cff557bb348ba4f1",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3c05bc7631754eff176453c6cff557bb348ba4f1",
+  "workflow": "ai-room-execution-transport.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H_EARTH_GEN2519_TREE_GRAFT_20260930_002\",\"descriptorId\":\"H_EARTH_GEN2519_IMMUTABLE_INSPECTION_TREE_GRAFT_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_GEN2519_IMMUTABLE_INSPECTION_TREE_GRAFT_20260930_001\",\"admissionReceiptIdentity\":\"RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT\",\"routerReceiptIdentity\":\"RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT\",\"inputs\":{\"executionHolder\":\"H_EARTH_GEN2519_TREE_GRAFT_20260930_002\"},\"availableCapabilities\":{\"GITHUB_ACTIONS_CLEAN_EXECUTION\":true},\"requestNonce\":\"4d6f0e2a9c1b7f8350d4a6e8c2f9137b5a0c6d8e1f23456789abcdef01234567\"}",
+    "router_callback_issue": "5439",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "36732095700",
+  "dispatchedRunId": 36732119457,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36732119457",
+  "dispatchedRunHeadSha": "3c05bc7631754eff176453c6cff557bb348ba4f1",
+  "dispatchedAt": "2026-09-30T14:50:16.002Z",
+  "resolvedAt": "2026-09-30T14:50:23.598Z"
+}

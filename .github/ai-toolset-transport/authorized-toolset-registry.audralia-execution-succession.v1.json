@@ -360,9 +360,9 @@
         "requireChangedPaths": false,
         "treeGraft": {
           "directoryPath": "preview/h-earth/c3/cb6a05dec4ded5102514361e84686b658827cd68",
-          "indexBlobSha": "c142bbd9918de204fa7c0c72a52573c2244dc330",
           "snapshotTreeSha": "3d450e2c32045a8919570912d0a17dce2047c85d",
-          "sourceCandidateCommit": "cb6a05dec4ded5102514361e84686b658827cd68"
+          "sourceCandidateCommit": "cb6a05dec4ded5102514361e84686b658827cd68",
+          "indexObjectSha": "c142bbd9918de204fa7c0c72a52573c2244dc330"
         }
       },
       "allowedMutationPaths": [

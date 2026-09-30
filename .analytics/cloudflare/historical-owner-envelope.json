@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T03:39:35Z",
+  "generatedAt": "2026-09-30T04:38:20Z",
   "window": {
-    "start": "2026-07-02T03:39:35Z",
-    "end": "2026-09-30T03:39:35Z"
+    "start": "2026-07-02T04:38:20Z",
+    "end": "2026-09-30T04:38:20Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5077,
-    "visits": 1287,
+    "pageLoads": 5085,
+    "visits": 1295,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5077,
-        "visits": 1287
+        "pageLoads": 5085,
+        "visits": 1295
       }
     },
     "byPath": {
-      "/index.html": {
-        "pageLoads": 150,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1090,
         "visits": 753
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
+        "visits": 0
+      },
+      "/index.html": {
+        "pageLoads": 150,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -115,8 +115,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 269,
-        "visits": 69
+        "pageLoads": 277,
+        "visits": 77
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -268,10 +272,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -326,6 +326,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/governance-bridge/": {
+        "pageLoads": 95,
+        "visits": 82
+      },
       "/preview/governance-bridge/": {
         "pageLoads": 5,
         "visits": 5
@@ -338,27 +342,23 @@
         "pageLoads": 51,
         "visits": 0
       },
-      "/governance-bridge/": {
-        "pageLoads": 95,
-        "visits": 82
+      "/preview/governance-bridge/index.html": {
+        "pageLoads": 1,
+        "visits": 1
       },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
         "visits": 1
-      },
-      "/preview/governance-bridge/index.html": {
-        "pageLoads": 1,
-        "visits": 1
       }
     },
     "byReferer": {
+      "(none)": {
+        "pageLoads": 493,
+        "visits": 493
+      },
       "diamondgatebridge.com": {
         "pageLoads": 3790,
         "visits": 0
-      },
-      "(none)": {
-        "pageLoads": 485,
-        "visits": 485
       },
       "www.google.com": {
         "pageLoads": 791,

@@ -285,7 +285,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "H_EARTH_GEN2519_TREE_GRAFT_V1",
-      "exactToolingHead": "806c9941945ec5747a5fcf03d41dea5eeb84d781",
+      "exactToolingHead": "4b6fb4d91419aa97800910dc593624377d933538",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
         "sparsePaths": [
@@ -363,7 +363,8 @@
           "snapshotTreeSha": "3d450e2c32045a8919570912d0a17dce2047c85d",
           "sourceCandidateCommit": "cb6a05dec4ded5102514361e84686b658827cd68",
           "indexObjectSha": "c142bbd9918de204fa7c0c72a52573c2244dc330"
-        }
+        },
+        "recoveryRemoteHead": "976c03325cf22adf85d357c8718d540383e470dc"
       },
       "allowedMutationPaths": [
         "preview/h-earth/c3/cb6a05dec4ded5102514361e84686b658827cd68"

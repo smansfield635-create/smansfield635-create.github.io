@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T14:37:49Z",
+  "generatedAt": "2026-09-30T15:36:17Z",
   "window": {
-    "start": "2026-07-02T14:37:49Z",
-    "end": "2026-09-30T14:37:49Z"
+    "start": "2026-07-02T15:36:17Z",
+    "end": "2026-09-30T15:36:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5083,
-    "visits": 1293,
+    "pageLoads": 5081,
+    "visits": 1291,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5083,
-        "visits": 1293
+        "pageLoads": 5081,
+        "visits": 1291
       }
     },
     "byPath": {
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 275,
-        "visits": 75
+        "pageLoads": 273,
+        "visits": 73
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -258,16 +258,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -353,8 +353,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 491,
-        "visits": 491
+        "pageLoads": 489,
+        "visits": 489
       },
       "diamondgatebridge.com": {
         "pageLoads": 3790,

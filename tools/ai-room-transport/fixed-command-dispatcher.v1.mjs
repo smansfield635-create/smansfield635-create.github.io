@@ -182,13 +182,13 @@ export function validateWritebackSpecification(descriptor, selectedBackend = 'GI
   if (specification.requireChangedPaths !== false) fail('TREE_GRAFT_CHANGED_PATHS_MUST_BE_FALSE');
   const graft = assertObject(specification.treeGraft, 'TREE_GRAFT_SPECIFICATION_REQUIRED');
   const directoryPath = assertRepositoryPath(graft.directoryPath, 'TREE_GRAFT_DIRECTORY_PATH_INVALID');
-  const indexBlobSha = String(graft.indexBlobSha ?? '');
+  const indexObjectSha = String(graft.indexObjectSha ?? '');
   const snapshotTreeSha = String(graft.snapshotTreeSha ?? '');
   const sourceCandidateCommit = String(graft.sourceCandidateCommit ?? '');
   if (!/^[0-9a-f]{40}$/.test(sourceCandidateCommit)) fail('TREE_GRAFT_SOURCE_COMMIT_INVALID', sourceCandidateCommit);
-  if (!/^[0-9a-f]{40}$/.test(indexBlobSha)) fail('TREE_GRAFT_INDEX_BLOB_INVALID', indexBlobSha);
+  if (!/^[0-9a-f]{40}$/.test(indexObjectSha)) fail('TREE_GRAFT_INDEX_OBJECT_INVALID', indexObjectSha);
   if (!/^[0-9a-f]{40}$/.test(snapshotTreeSha)) fail('TREE_GRAFT_SNAPSHOT_TREE_INVALID', snapshotTreeSha);
-  return stable({ mode: specification.mode, targetBranchRef, expectedBranchHead, commitMessage, fastForwardOnly: true, requireChangedPaths: false, treeGraft: { directoryPath, indexBlobSha, snapshotTreeSha, sourceCandidateCommit } });
+  return stable({ mode: specification.mode, targetBranchRef, expectedBranchHead, commitMessage, fastForwardOnly: true, requireChangedPaths: false, treeGraft: { directoryPath, indexObjectSha, snapshotTreeSha, sourceCandidateCommit } });
 }
 
 function pushFastForwardWithToken(toolRoot, targetBranchRef) {
@@ -221,7 +221,7 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
   }
 
   const graft = specification.treeGraft;
-  if (git(toolRoot, ['cat-file','-e',`${graft.indexBlobSha}^{blob}`], true).status !== 0) fail('TREE_GRAFT_INDEX_BLOB_UNAVAILABLE', graft.indexBlobSha);
+  if (git(toolRoot, ['cat-file','-e',`${graft.indexObjectSha}^{blob}`], true).status !== 0) fail('TREE_GRAFT_INDEX_OBJECT_UNAVAILABLE', graft.indexObjectSha);
   if (git(toolRoot, ['cat-file','-e',`${graft.snapshotTreeSha}^{tree}`], true).status !== 0) {
     const fetched = git(toolRoot, ['fetch','--no-tags','origin',graft.sourceCandidateCommit], true);
     if (fetched.status !== 0 || git(toolRoot, ['cat-file','-e',`${graft.snapshotTreeSha}^{tree}`], true).status !== 0) fail('TREE_GRAFT_SNAPSHOT_TREE_UNAVAILABLE', graft.snapshotTreeSha);
@@ -229,7 +229,7 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
   const sourceRootTree = git(toolRoot,['rev-parse',`${graft.sourceCandidateCommit}^{tree}`]).stdout.trim();
   if (sourceRootTree !== graft.snapshotTreeSha) fail('TREE_GRAFT_SOURCE_ROOT_MISMATCH', `${graft.snapshotTreeSha}:${sourceRootTree}`);
 
-  const mktreeInput = `100644 blob ${graft.indexBlobSha}\tindex.html\n040000 tree ${graft.snapshotTreeSha}\tsnapshot\n`;
+  const mktreeInput = `100644 blob ${graft.indexObjectSha}\tindex.html\n040000 tree ${graft.snapshotTreeSha}\tsnapshot\n`;
   const mk = cp.spawnSync('git',['mktree'],{cwd:toolRoot,env:process.env,encoding:'utf8',input:mktreeInput});
   if (mk.status !== 0 || mk.error) fail('TREE_GRAFT_CANDIDATE_DIRECTORY_FAILED', mk.stderr || mk.error?.message);
   const candidateDirTree = mk.stdout.trim();
@@ -263,9 +263,9 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
   const observedDir = git(toolRoot,['ls-tree',rootTree,graft.directoryPath]).stdout.trim();
   if (!observedDir.includes(candidateDirTree)) fail('TREE_GRAFT_ROOT_READBACK_MISMATCH', observedDir);
   const observedEntries = git(toolRoot,['ls-tree',candidateDirTree]).stdout.trim().split(/\r?\n/).filter(Boolean);
-  if (observedEntries.length !== 2 || !observedEntries.some(line=>line.includes(graft.indexBlobSha+'\tindex.html')) || !observedEntries.some(line=>line.includes(graft.snapshotTreeSha+'\tsnapshot'))) fail('TREE_GRAFT_DIRECTORY_READBACK_MISMATCH', observedEntries.join('|'));
+  if (observedEntries.length !== 2 || !observedEntries.some(line=>line.includes(graft.indexObjectSha+'\tindex.html')) || !observedEntries.some(line=>line.includes(graft.snapshotTreeSha+'\tsnapshot'))) fail('TREE_GRAFT_DIRECTORY_READBACK_MISMATCH', observedEntries.join('|'));
 
-  const payload=stable({schema:'REGISTERED_GENERATOR_WRITEBACK_RECEIPT_v1',result:'REGISTERED_TREE_GRAFT_COMMITTED_FAST_FORWARD',operationId:descriptor.operationId,descriptorId:descriptor.descriptorId,targetBranchRef:specification.targetBranchRef,expectedBranchHead:specification.expectedBranchHead,candidateHead,changedPaths:[graft.directoryPath],fastForwardOnly:true,treeGraftDirectory:graft.directoryPath,indexBlobSha:graft.indexBlobSha,snapshotTreeSha:graft.snapshotTreeSha,sourceCandidateCommit:graft.sourceCandidateCommit,candidateDirectoryTree:candidateDirTree,rootTree,remoteHeadVerifiedBeforeCommit:remoteBefore,remoteHeadVerifiedBeforePush:remoteImmediatelyBeforePush,remoteHeadVerifiedAfterPush:remoteAfter,childCommandGitHubTokenExposed:false,mainMutationPerformed:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false});
+  const payload=stable({schema:'REGISTERED_GENERATOR_WRITEBACK_RECEIPT_v1',result:'REGISTERED_TREE_GRAFT_COMMITTED_FAST_FORWARD',operationId:descriptor.operationId,descriptorId:descriptor.descriptorId,targetBranchRef:specification.targetBranchRef,expectedBranchHead:specification.expectedBranchHead,candidateHead,changedPaths:[graft.directoryPath],fastForwardOnly:true,treeGraftDirectory:graft.directoryPath,indexObjectSha:graft.indexObjectSha,snapshotTreeSha:graft.snapshotTreeSha,sourceCandidateCommit:graft.sourceCandidateCommit,candidateDirectoryTree:candidateDirTree,rootTree,remoteHeadVerifiedBeforeCommit:remoteBefore,remoteHeadVerifiedBeforePush:remoteImmediatelyBeforePush,remoteHeadVerifiedAfterPush:remoteAfter,childCommandGitHubTokenExposed:false,mainMutationPerformed:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false});
   fs.writeFileSync(payloadReceiptPath,`${JSON.stringify(payload,null,2)}\n`);
   return payload;
 }

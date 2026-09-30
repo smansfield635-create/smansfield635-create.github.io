@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-30T01:49:49Z",
+  "generatedAt": "2026-09-30T02:45:38Z",
   "window30d": {
-    "start": "2026-08-31T01:49:49Z",
-    "end": "2026-09-30T01:49:49Z"
+    "start": "2026-08-31T02:45:38Z",
+    "end": "2026-09-30T02:45:38Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 99
+      "pageLoads": 93
     },
     {
       "date": "2026-09-24",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 21
+      "pageLoads": 27
     }
   ],
   "summary": {
-    "pageLoads": 7006,
-    "botPageLoads": 2596,
-    "nonBotPageLoads": 4410
+    "pageLoads": 6986,
+    "botPageLoads": 2586,
+    "nonBotPageLoads": 4400
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3326,
-      "visits": 3326
+      "pageLoads": 3315,
+      "visits": 3315
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3051,
+      "pageLoads": 3037,
       "visits": 0
     },
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 32,
-      "visits": 32
+      "pageLoads": 37,
+      "visits": 37
     },
     {
       "host": "com.google.android.googlequicksearchbox",
@@ -177,7 +177,7 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1914,
+      "pageLoads": 1913,
       "visits": 1480
     },
     {
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 660,
-      "visits": 530
+      "pageLoads": 650,
+      "visits": 520
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -202,13 +202,13 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 305,
-      "visits": 111
+      "pageLoads": 301,
+      "visits": 109
     },
     {
       "path": "/analytics/",
-      "pageLoads": 238,
-      "visits": 124
+      "pageLoads": 239,
+      "visits": 125
     },
     {
       "path": "/evidence/agentic-frontier/",

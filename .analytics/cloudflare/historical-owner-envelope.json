@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T01:49:49Z",
+  "generatedAt": "2026-09-30T02:45:38Z",
   "window": {
-    "start": "2026-07-02T01:49:49Z",
-    "end": "2026-09-30T01:49:49Z"
+    "start": "2026-07-02T02:45:38Z",
+    "end": "2026-09-30T02:45:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5084,
+    "pageLoads": 5080,
     "visits": 1289,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5084,
+        "pageLoads": 5080,
         "visits": 1289
       }
     },
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1093,
+        "pageLoads": 1092,
         "visits": 754
       },
       "/showroom/globe/h-earth/": {
@@ -71,7 +71,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 81,
+        "pageLoads": 80,
         "visits": 10
       },
       "/laws/categories/reality/battery-heldout-study/": {
@@ -115,7 +115,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 272,
+        "pageLoads": 270,
         "visits": 70
       },
       "/showroom/globe/h-earth/awards/": {
@@ -353,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3795,
+        "pageLoads": 3791,
         "visits": 0
       },
       "(none)": {

@@ -1382,6 +1382,32 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PRODUCTIVITY_RECEIPT_ARTIFACT"
+    },
+    "H_EARTH_CANONICAL_OPERATION_INTAKE": {
+      "workflow": "canonical-operation-intake-transport-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "request_json": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "router_callback_issue": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "router_callback_repository": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "CANONICAL_OPERATION_INTAKE_TRANSPORT_RECEIPT_v1"
     }
   },
   "continuity": {

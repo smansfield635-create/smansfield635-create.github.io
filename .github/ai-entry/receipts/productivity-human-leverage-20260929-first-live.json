@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "productivity-human-leverage-20260929-first-live",
+  "capabilityId": "DGB_PRODUCTIVITY_RECEIPT_MEASURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5409,
+  "requestBranch": "ai-dispatch-request-productivity-human-leverage-20260929",
+  "requestCommit": "67ef3d7cd073112d0fe53479fc2cda5c6c58e552",
+  "requestCommitParent": "3984e91dcdef2cdff58a7efcf70f94dadaaca852",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3984e91dcdef2cdff58a7efcf70f94dadaaca852",
+  "workflow": "dgb-productivity-receipt-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "period_start": "2026-09-29",
+    "period_end": "2026-09-29",
+    "substantive_human_interventions": "1"
+  },
+  "bridgeRunId": "36650834081",
+  "dispatchedRunId": 36650845908,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36650845908",
+  "dispatchedRunHeadSha": "3984e91dcdef2cdff58a7efcf70f94dadaaca852",
+  "dispatchedAt": "2026-09-30T00:32:38.601Z",
+  "resolvedAt": "2026-09-30T00:32:42.526Z"
+}

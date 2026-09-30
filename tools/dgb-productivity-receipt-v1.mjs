@@ -4,6 +4,9 @@ import fs from 'node:fs';
 
 const args=Object.fromEntries(process.argv.slice(2).map((v,i,a)=>v.startsWith('--')?[v.slice(2),a[i+1]]:null).filter(Boolean));
 const start=args.start, end=args.end, output=args.output || 'productivity-receipt.json';
+const humanRaw=(args['human-interventions']??'').trim();
+const humanInterventions=humanRaw===''?null:Number(humanRaw);
+if(humanInterventions!==null&&(!Number.isInteger(humanInterventions)||humanInterventions<0)) throw new Error('--human-interventions must be a non-negative integer or blank');
 if(!/^\d{4}-\d{2}-\d{2}$/.test(start||'')||!/^\d{4}-\d{2}-\d{2}$/.test(end||'')) throw new Error('Require --start YYYY-MM-DD --end YYYY-MM-DD');
 const git=(a)=>execFileSync('git',a,{encoding:'utf8',maxBuffer:64*1024*1024}).trim();
 const head=git(['rev-parse','HEAD']);
@@ -36,8 +39,8 @@ const receipt={
  commitCount:commits.length,identifiedAutomationCount:commits.length-meaningful.length,meaningfulActivityCount:denom,
  productSignals:product,qualificationSignals:qualification,repairSignals:repair,governanceSignals:governance,publicationClosureSignals:closure,
  productShare:ratio(product),qualificationDensity:ratio(qualification),repairBurden:ratio(repair),governanceCost:ratio(governance),
- workstreamFamilies:families,reuseEvidence:[],humanExecutionBurdenEvidence:{status:'UNKNOWN',evidence:[]},humanAbstractionEvidence:{status:'UNKNOWN',evidence:[]},
- limitations:['Signal categories overlap and are not additive labor accounting.','Commit-message lexical classification is a repository-activity proxy, not equivalent engineering labor.','Reuse, human execution burden, and human abstraction require explicit durable evidence and remain UNKNOWN when not deterministically observable.'],
+ workstreamFamilies:families,reuseEvidence:[],humanExecutionBurdenEvidence:{status:humanInterventions===null?'UNKNOWN':'OBSERVED',substantiveHumanInterventions:humanInterventions,evidence:[]},humanLeverageEvidence:{status:humanInterventions===null?'UNKNOWN':'OBSERVED',substantiveHumanInterventions:humanInterventions,meaningfulActivitiesPerIntervention:humanInterventions&&denom?Number((denom/humanInterventions).toFixed(4)):null,publicationClosuresPerIntervention:humanInterventions&&closure?Number((closure/humanInterventions).toFixed(4)):null},humanAbstractionEvidence:{status:'UNKNOWN',evidence:[]},
+ limitations:['Signal categories overlap and are not additive labor accounting.','Commit-message lexical classification is a repository-activity proxy, not equivalent engineering labor.','Reuse and human abstraction require explicit durable evidence and remain UNKNOWN when not deterministically observable. Human-intervention metrics remain UNKNOWN unless an externally observed substantive intervention count is supplied.'],
  disposition:'PASS_MEASURED_WITH_LIMITATIONS'
 };
 fs.writeFileSync(output,JSON.stringify(receipt,null,2)+'\n'); console.log(JSON.stringify(receipt,null,2));

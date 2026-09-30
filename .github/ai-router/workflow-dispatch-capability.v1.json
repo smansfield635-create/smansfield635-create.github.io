@@ -1356,6 +1356,32 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PASS"
+    },
+    "DGB_PRODUCTIVITY_RECEIPT_MEASURE": {
+      "workflow": "dgb-productivity-receipt-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "period_start": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "period_end": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "substantive_human_interventions": {
+          "source": "REQUEST",
+          "required": false,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PRODUCTIVITY_RECEIPT_ARTIFACT"
     }
   },
   "continuity": {

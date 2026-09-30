@@ -18,10 +18,29 @@
   "qualificationDensity": 1,
   "repairBurden": 0,
   "governanceCost": 1,
-  "workstreamFamilies": [".github"],
+  "workstreamFamilies": [
+    ".github"
+  ],
   "reuseEvidence": [],
-  "humanExecutionBurdenEvidence": {"status":"UNKNOWN","evidence":[]},
-  "humanAbstractionEvidence": {"status":"UNKNOWN","evidence":[]},
-  "limitations": ["fixture"],
-  "disposition": "PASS_MEASURED_WITH_LIMITATIONS"
+  "humanExecutionBurdenEvidence": {
+    "status": "OBSERVED",
+    "substantiveHumanInterventions": 1,
+    "evidence": [
+      "fixture explicit observation"
+    ]
+  },
+  "humanAbstractionEvidence": {
+    "status": "UNKNOWN",
+    "evidence": []
+  },
+  "limitations": [
+    "fixture"
+  ],
+  "disposition": "PASS_MEASURED_WITH_LIMITATIONS",
+  "humanLeverageEvidence": {
+    "status": "OBSERVED",
+    "substantiveHumanInterventions": 1,
+    "meaningfulActivitiesPerIntervention": 1,
+    "publicationClosuresPerIntervention": null
+  }
 }

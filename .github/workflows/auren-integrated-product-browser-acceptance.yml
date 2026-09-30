@@ -27,8 +27,9 @@ jobs:
       - name: Fetch acceptance verifier from main
         run: |
           git fetch --no-tags --depth=1 origin main:refs/remotes/origin/acceptance-main
-          git show refs/remotes/origin/acceptance-main:.github/live-qualification/verifiers/auren-integrated-product-acceptance.v1.mjs > ./.auren-integrated-product-acceptance.runtime.mjs
-          test -s ./.auren-integrated-product-acceptance.runtime.mjs
+          mkdir -p .github/live-qualification/verifiers
+          git show refs/remotes/origin/acceptance-main:.github/live-qualification/verifiers/auren-integrated-product-acceptance.v1.mjs > .github/live-qualification/verifiers/auren-integrated-product-acceptance.runtime.mjs
+          test -s .github/live-qualification/verifiers/auren-integrated-product-acceptance.runtime.mjs
           test "$(git rev-parse HEAD)" = "${{ inputs.candidate_sha }}"
       - name: Serve exact product candidate
         run: |
@@ -43,7 +44,7 @@ jobs:
           RUNTIME_RESULT_PATH: /tmp/auren-accept.json
         run: |
           test "$(git rev-parse HEAD)" = "${{ inputs.candidate_sha }}"
-          node ./.auren-integrated-product-acceptance.runtime.mjs
+          node .github/live-qualification/verifiers/auren-integrated-product-acceptance.runtime.mjs
       - name: Preserve receipt
         if: always()
         run: mkdir -p .qualification/auren-integrated && cp /tmp/auren-accept.json .qualification/auren-integrated/receipt.json 2>/dev/null || true

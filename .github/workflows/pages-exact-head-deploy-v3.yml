@@ -439,6 +439,23 @@ jobs:
             pretty_sha="$(sha256sum "$work/pretty.html" | awk '{print $1}')"
 
             if [ "$canonical_sha" = "$expected_sha" ] && [ "$pretty_sha" = "$expected_sha" ]; then
+              if [ "$SURFACE_ID" = "h-earth-gen2519-inspection" ]; then
+                module_path="/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+                module_expected="$STAGE${module_path}"
+                test -f "$module_expected"
+                module_expected_sha="$(sha256sum "$module_expected" | awk '{print $1}')"
+                module_headers="$work/module.headers"
+                module_body="$work/module.js"
+                curl --fail --silent --show-error -L --max-time 30 -D "$module_headers" -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "${CUSTOM_DOMAIN}${module_path}?dgb_release=${TARGET_SHA}&attempt=${attempt}" -o "$module_body" || { sleep 10; continue; }
+                module_type="$(awk 'BEGIN{IGNORECASE=1} /^content-type:/{gsub(/\r/,""); print $2}' "$module_headers" | tail -1)"
+                module_sha="$(sha256sum "$module_body" | awk '{print $1}')"
+                if [ "$module_sha" != "$module_expected_sha" ] || ! printf '%s' "$module_type" | grep -Eqi 'javascript|ecmascript|text/plain'; then
+                  echo "GEN2519_PUBLIC_MODULE_MISMATCH expected=$module_expected_sha observed=$module_sha content_type=$module_type" >&2
+                  sleep 10
+                  continue
+                fi
+                echo "GEN2519_PUBLIC_RENDERER_MODULE_VERIFIED=$module_sha:$module_type"
+              fi
               jq -n --arg targetSha "$TARGET_SHA" --arg surfaceId "$SURFACE_ID" --arg path "$canonical_path" --arg runtimePath "$pretty_path" --arg expectedSha256 "$expected_sha" --arg canonicalSha256 "$canonical_sha" --arg prettySha256 "$pretty_sha"                 '{schema:"PAGES_PUBLIC_SURFACE_CONVERGENCE_RECEIPT_v2",result:"PASS_CLOSED",targetSha:$targetSha,surfaceId:$surfaceId,customDomain:"diamondgatebridge.com",surfacePath:$path,runtimePath:$runtimePath,expectedStagedSha256:$expectedSha256,canonicalSha256:$canonicalSha256,prettySha256:$prettySha256,ordinarySurfaceBytesConverged:true,productMutationPerformed:false}' > "$RECEIPT"
               echo "CUSTOM_DOMAIN_SURFACE_MATCHES_EXACT_STAGED_FILE=$expected_sha"
               echo "CUSTOM_DOMAIN_RELEASE_MARKER_MATCHES_TARGET_SHA=$TARGET_SHA"

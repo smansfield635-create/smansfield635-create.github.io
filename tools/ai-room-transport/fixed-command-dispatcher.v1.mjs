@@ -256,11 +256,11 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
       const bn = b.slice(b.indexOf('\\t') + 1);
       return an.localeCompare(bn, 'en');
     });
-    const rebuilt = cp.spawnSync('git',['mktree','-z'],{
+    const rebuilt = cp.spawnSync('git',['mktree'],{
       cwd:toolRoot,
       env:process.env,
       encoding:'utf8',
-      input:retained.join('\\0')+'\\0'
+      input:retained.join('\\n')+'\\n'
     });
     if (rebuilt.status !== 0 || rebuilt.error) fail('TREE_GRAFT_ANCESTOR_REBUILD_FAILED', rebuilt.stderr || rebuilt.error?.message || parentPath || '<root>');
     replacementTree = rebuilt.stdout.trim();

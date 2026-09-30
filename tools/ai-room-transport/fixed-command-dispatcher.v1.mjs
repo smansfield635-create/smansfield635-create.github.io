@@ -215,7 +215,8 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
   const actualToolingHead = git(toolRoot, ['rev-parse', 'HEAD^{commit}']).stdout.trim();
   if (actualToolingHead !== descriptor.exactToolingHead) fail('TOOLING_HEAD_MISMATCH', `${descriptor.exactToolingHead}:${actualToolingHead}`);
   const remoteBefore = readRemoteHead(toolRoot, specification.targetBranchRef);
-  if (remoteBefore !== specification.expectedBranchHead) fail('WRITEBACK_REMOTE_HEAD_MISMATCH', `${specification.expectedBranchHead}:${remoteBefore}`);
+  const acceptedRemoteHeads = new Set([specification.expectedBranchHead, specification.recoveryRemoteHead].filter(Boolean));
+  if (!acceptedRemoteHeads.has(remoteBefore)) fail('WRITEBACK_REMOTE_HEAD_MISMATCH', `${[...acceptedRemoteHeads].join('|')}:${remoteBefore}`);
   if (changedPaths(toolRoot).length !== 0) fail('TREE_GRAFT_WORKTREE_MUST_REMAIN_CLEAN');
   if (git(toolRoot,['cat-file','-e',`${specification.expectedBranchHead}^{commit}`],true).status !== 0) {
     const baseFetch=git(toolRoot,['fetch','--no-tags','origin',specification.expectedBranchHead],true);
@@ -282,7 +283,6 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
   if (r.status !== 0 || r.error) fail('TREE_GRAFT_COMMIT_FAILED', r.stderr || r.error);
   const candidateHead = r.stdout.trim();
   const remoteImmediatelyBeforePush = readRemoteHead(toolRoot, specification.targetBranchRef);
-  const acceptedRemoteHeads = new Set([specification.expectedBranchHead, specification.recoveryRemoteHead].filter(Boolean));
   if (!acceptedRemoteHeads.has(remoteImmediatelyBeforePush)) fail('WRITEBACK_REMOTE_HEAD_MOVED', `${[...acceptedRemoteHeads].join('|')}:${remoteImmediatelyBeforePush}`);
   const token = process.env.GITHUB_TOKEN;
   if (!token) fail('WRITEBACK_GITHUB_TOKEN_UNAVAILABLE');

@@ -72,7 +72,36 @@ function createHashWriter() {
   };
 }
 
+function publishR2OccurrenceProbe(raw, stage, evaluation = null) {
+  const buffers = raw?.buffers ?? {};
+  const lengths = Object.fromEntries(HASH_BUFFER_ORDER.map(name => [name, Array.isArray(buffers?.[name]) || ArrayBuffer.isView(buffers?.[name]) ? buffers[name].length : null]));
+  const frozen = Object.fromEntries(HASH_BUFFER_ORDER.map(name => [name, buffers?.[name] ? Object.isFrozen(buffers[name]) : null]));
+  const receipt = Object.freeze({
+    schema: 'H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE_v1',
+    stage,
+    eligible: raw?.eligible ?? null,
+    status: raw?.status ?? null,
+    contractId: raw?.contractId ?? null,
+    packageIdentity: raw?.packageIdentity ?? null,
+    contentDigest: raw?.contentDigest ?? null,
+    primitiveCount: raw?.primitiveIds?.length ?? null,
+    primitiveIds: Array.isArray(raw?.primitiveIds) ? Array.from(raw.primitiveIds) : null,
+    terrainPrimitiveId: raw?.terrainPrimitiveId ?? null,
+    drawRangeCount: raw?.drawRanges?.length ?? null,
+    primitiveSpanCount: raw?.primitiveSpans?.length ?? null,
+    bufferLengths: Object.freeze(lengths),
+    bufferFrozen: Object.freeze(frozen),
+    sourceAuthorities: raw?.sourceAuthorities ? Object.freeze({...raw.sourceAuthorities}) : null,
+    issues: Array.isArray(raw?.issues) ? Array.from(raw.issues) : null,
+    evaluationIssues: Array.isArray(evaluation?.issues) ? Array.from(evaluation.issues) : null
+  });
+  globalThis.H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE = receipt;
+  try { console.info('H_EARTH_R2_RUNTIME_OCCURRENCE_PROBE', JSON.stringify(receipt)); } catch {}
+  return receipt;
+}
+
 function buildCanonicalPackage(raw = getRawPackage()) {
+  publishR2OccurrenceProbe(raw, 'RAW_PACKAGE_RETURNED');
   if (raw?.eligible !== true) return raw;
 
   const buffers = canonicalizeBuffers(raw.buffers);
@@ -100,6 +129,7 @@ function buildCanonicalPackage(raw = getRawPackage()) {
   });
 
   const evaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
+  publishR2OccurrenceProbe(packageRecord, 'CANONICAL_PACKAGE_EVALUATED', evaluation);
   if (evaluation.eligible !== true) {
     return freezeRecord({
       eligible: false,

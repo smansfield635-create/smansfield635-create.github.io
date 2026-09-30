@@ -155,7 +155,10 @@ function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,po
   const sourceSha=policy.exactSourceSha??targetSha;
   const entryFile=path.join(stage,...policy.entryPath.split('/'));
   let entryBytes;
-  if(excluded(policy.entryPath)){
+  if(policy.exactSourceSha){
+    if(!policy.entryPath.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_CROSSES_EXCLUDED_ROOT:${policy.entryPath}`);
+    entryBytes=readExactRepositoryFile({repoRoot,targetSha:sourceSha,rel:policy.entryPath}).bytes;
+  }else if(excluded(policy.entryPath)){
     if(!policy.entryPath.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_CROSSES_EXCLUDED_ROOT:${policy.entryPath}`);
     entryBytes=readExactRepositoryFile({repoRoot,targetSha:sourceSha,rel:policy.entryPath}).bytes;
   }else{

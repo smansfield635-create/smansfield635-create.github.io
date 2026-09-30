@@ -1,0 +1,16 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "H_EARTH_GEN2519_IMMUTABLE_INSPECTION_TREE_GRAFT_20260930_001",
+  "projectId": "H_EARTH",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "H_EARTH_GEN2519_IMMUTABLE_INSPECTION_TREE_GRAFT_20260930_001",
+    "lockGeneration": 2520,
+    "lockScope": "H_EARTH:GEN2519:IMMUTABLE_INSPECTION_TREE_GRAFT:V1",
+    "lockAcquired": true
+  }
+}

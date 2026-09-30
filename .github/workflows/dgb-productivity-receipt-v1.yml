@@ -18,6 +18,10 @@ on:
         description: UTC end date YYYY-MM-DD
         required: true
         type: string
+      substantive_human_interventions:
+        description: Optional externally observed substantive human intervention count; blank means UNKNOWN
+        required: false
+        type: string
   workflow_call:
     inputs:
       period_start:
@@ -25,6 +29,9 @@ on:
         type: string
       period_end:
         required: true
+        type: string
+      substantive_human_interventions:
+        required: false
         type: string
 
 permissions:
@@ -68,7 +75,7 @@ jobs:
       - name: Verify deterministic fixture
         run: node tools/verify-dgb-productivity-receipt-v1.mjs project-records/fixtures/dgb-productivity-receipt-v1.fixture.json
       - name: Measure bounded repository activity
-        run: node tools/dgb-productivity-receipt-v1.mjs --start "${{ inputs.period_start }}" --end "${{ inputs.period_end }}" --output productivity-receipt.json
+        run: node tools/dgb-productivity-receipt-v1.mjs --start "${{ inputs.period_start }}" --end "${{ inputs.period_end }}" --human-interventions "${{ inputs.substantive_human_interventions }}" --output productivity-receipt.json
       - name: Verify receipt contract
         run: node tools/verify-dgb-productivity-receipt-v1.mjs productivity-receipt.json
       - name: Upload receipt

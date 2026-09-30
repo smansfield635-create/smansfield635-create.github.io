@@ -8,6 +8,9 @@ import {
   sampleHEarthRun8BSuccessorTerrainField
 } from '../terrain/h-earth.successor-terrain-field.run8b.js';
 import {
+  H_EARTH_WORLD_MANIFOLD_DOMAIN
+} from '../terrain/h-earth.world-manifold-domain.js';
+import {
   H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT,
   evaluateHEarthRun8AMountainContribution
 } from '../control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js';
@@ -66,7 +69,7 @@ export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS = freeze
 function importIssues() {
   const issues = [];
   if (H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.contractId !== H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID) issues.push('SUCCESSOR_TERRAIN_CONTRACT_ID_MISMATCH');
-  if (H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain.zMinimum !== -320) issues.push('SUCCESSOR_WORLD_DOMAIN_NOT_LOCKED');
+  if (stable(H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain) !== stable(H_EARTH_WORLD_MANIFOLD_DOMAIN.worldDomain)) issues.push('SUCCESSOR_WORLD_DOMAIN_NOT_CANONICAL_MANIFOLD_DOMAIN');
   if (!Object.isFrozen(H_EARTH_TERRAIN_FORMATIONS)) issues.push('FORMATION_AUTHORITY_NOT_FROZEN');
   if (H_EARTH_TERRAIN_FORMATIONS_CONTRACT_ID.length === 0) issues.push('FORMATION_CONTRACT_ID_MISSING');
   if (H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.contractId !== H_EARTH_LANDSCAPE_REALIZATION_PLANNER_CONTRACT_ID) issues.push('REALIZATION_PLAN_CONTRACT_ID_MISMATCH');
@@ -77,7 +80,11 @@ function importIssues() {
 export function extractGRCRTerrainMetrics(worldX, worldZ) {
   const sample = sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ);
   if (sample?.valid !== true) return freeze({ valid: false, worldX, worldZ });
-  return freeze({ valid: true, contractId: sample.contractId, world: sample.world, elevation: sample.elevation, gradient: freeze({ x: sample.gradient.x, z: sample.gradient.z }), slope: sample.slope, curvature: sample.curvature, normal: sample.normal });
+  const normalY = sample?.normal?.y;
+  const gradient = Number.isFinite(normalY) && Math.abs(normalY) > 1e-12
+    ? freeze({ x: -sample.normal.x / normalY, z: -sample.normal.z / normalY })
+    : freeze({ x: Number.NaN, z: Number.NaN });
+  return freeze({ valid: true, contractId: sample.contractId, world: sample.world, elevation: sample.elevation, gradient, slope: sample.slope, curvature: sample.curvature, normal: sample.normal });
 }
 
 const contains = (bounds, x, z) => x >= bounds.xMin && x <= bounds.xMax && z >= bounds.zMin && z <= bounds.zMax;

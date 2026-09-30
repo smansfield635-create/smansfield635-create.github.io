@@ -47,7 +47,7 @@ The following are NOT unique to Diamond Gate Bridge:
 - multiple agent actions per human prompt;
 - autonomous coding-agent pull requests;
 - longitudinal repository studies of agent adoption;
-- control-plane/orchestrator patterns for coding agents;
+- agent-orchestration patterns for coding systems;
 - automated tests/guardrails around agents;
 - controlled longitudinal studies of agent scaffolding.
 

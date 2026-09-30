@@ -235,15 +235,39 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
   const candidateDirTree = mk.stdout.trim();
   if (!/^[0-9a-f]{40}$/.test(candidateDirTree)) fail('TREE_GRAFT_CANDIDATE_DIRECTORY_INVALID', candidateDirTree);
 
-  const tempIndex = path.join(path.dirname(payloadReceiptPath),'tree-graft.index');
-  const env = {...process.env,GIT_INDEX_FILE:tempIndex};
-  let r = run('git',['read-tree',`${specification.expectedBranchHead}^{tree}`],{cwd:toolRoot,env});
-  if (r.status !== 0 || r.error) fail('TREE_GRAFT_READ_BASE_FAILED', r.stderr || r.error);
-  r = run('git',['update-index','--add','--cacheinfo','040000',candidateDirTree,graft.directoryPath],{cwd:toolRoot,env});
-  if (r.status !== 0 || r.error) fail('TREE_GRAFT_INDEX_UPDATE_FAILED', r.stderr || r.error);
-  r = run('git',['write-tree'],{cwd:toolRoot,env});
-  if (r.status !== 0 || r.error) fail('TREE_GRAFT_ROOT_TREE_FAILED', r.stderr || r.error);
-  const rootTree = r.stdout.trim();
+  const pathParts = graft.directoryPath.split('/');
+  let replacementTree = candidateDirTree;
+  for (let depth = pathParts.length - 1; depth >= 0; depth -= 1) {
+    const parentPath = pathParts.slice(0, depth).join('/');
+    const childName = pathParts[depth];
+    const baseTreeish = parentPath
+      ? `${specification.expectedBranchHead}:${parentPath}`
+      : `${specification.expectedBranchHead}^{tree}`;
+    const listed = run('git',['ls-tree','-z',baseTreeish],{cwd:toolRoot,env:process.env});
+    if (listed.status !== 0 || listed.error) fail('TREE_GRAFT_ANCESTOR_READ_FAILED', listed.stderr || listed.error || baseTreeish);
+    const entries = listed.stdout.split('\\0').filter(Boolean);
+    const retained = entries.filter(entry => {
+      const tab = entry.indexOf('\\t');
+      return tab < 0 || entry.slice(tab + 1) !== childName;
+    });
+    retained.push(`040000 tree ${replacementTree}\\t${childName}`);
+    retained.sort((a,b) => {
+      const an = a.slice(a.indexOf('\\t') + 1);
+      const bn = b.slice(b.indexOf('\\t') + 1);
+      return an.localeCompare(bn, 'en');
+    });
+    const rebuilt = cp.spawnSync('git',['mktree','-z'],{
+      cwd:toolRoot,
+      env:process.env,
+      encoding:'utf8',
+      input:retained.join('\\0')+'\\0'
+    });
+    if (rebuilt.status !== 0 || rebuilt.error) fail('TREE_GRAFT_ANCESTOR_REBUILD_FAILED', rebuilt.stderr || rebuilt.error?.message || parentPath || '<root>');
+    replacementTree = rebuilt.stdout.trim();
+    if (!/^[0-9a-f]{40}$/.test(replacementTree)) fail('TREE_GRAFT_ANCESTOR_TREE_INVALID', replacementTree);
+  }
+  const rootTree = replacementTree;
+  let r;
 
   git(toolRoot, ['config','user.name','github-actions[bot]']);
   git(toolRoot, ['config','user.email','41898282+github-actions[bot]@users.noreply.github.com']);

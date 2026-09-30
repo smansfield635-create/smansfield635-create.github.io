@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-30T17:31:07Z",
+  "generatedAt": "2026-09-30T18:38:16Z",
   "window30d": {
-    "start": "2026-08-31T17:31:07Z",
-    "end": "2026-09-30T17:31:07Z"
+    "start": "2026-08-31T18:38:16Z",
+    "end": "2026-09-30T18:38:16Z"
   },
   "daily": [
     {
@@ -116,27 +116,27 @@
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 32
+      "pageLoads": 33
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 50
+      "pageLoads": 43
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 45
+      "pageLoads": 48
     }
   ],
   "summary": {
-    "pageLoads": 6919,
-    "botPageLoads": 2593,
-    "nonBotPageLoads": 4326
+    "pageLoads": 6892,
+    "botPageLoads": 2584,
+    "nonBotPageLoads": 4308
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3323,
-      "visits": 3323
+      "pageLoads": 3314,
+      "visits": 3314
     },
     {
       "host": "diamondgatebridge.com",
@@ -145,13 +145,13 @@
     },
     {
       "host": "www.google.com",
-      "pageLoads": 546,
-      "visits": 546
+      "pageLoads": 526,
+      "visits": 526
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 37,
-      "visits": 37
+      "pageLoads": 39,
+      "visits": 39
     },
     {
       "host": "com.google.android.googlequicksearchbox",
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1866,
-      "visits": 1437
+      "pageLoads": 1846,
+      "visits": 1417
     },
     {
       "path": "/mirror-manor-preview/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 630,
-      "visits": 510
+      "pageLoads": 620,
+      "visits": 500
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -207,8 +207,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 257,
-      "visits": 140
+      "pageLoads": 258,
+      "visits": 141
     },
     {
       "path": "/evidence/agentic-frontier/",

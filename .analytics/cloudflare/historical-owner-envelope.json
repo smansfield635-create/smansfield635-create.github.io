@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T17:31:07Z",
+  "generatedAt": "2026-09-30T18:38:16Z",
   "window": {
-    "start": "2026-07-02T17:31:07Z",
-    "end": "2026-09-30T17:31:07Z"
+    "start": "2026-07-02T18:38:16Z",
+    "end": "2026-09-30T18:38:16Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -342,12 +342,12 @@
         "pageLoads": 51,
         "visits": 0
       },
-      "/preview/governance-bridge/index.html": {
-        "pageLoads": 1,
-        "visits": 1
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
+        "visits": 1
+      },
+      "/preview/governance-bridge/index.html": {
+        "pageLoads": 1,
         "visits": 1
       }
     },

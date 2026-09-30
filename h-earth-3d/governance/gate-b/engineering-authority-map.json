@@ -1,0 +1,22 @@
+{
+  "artifactId": "H_EARTH_GATE_B_ENGINEERING_AUTHORITY_MAP_v1",
+  "status": "COMPACT_ENGINEERING_CONSUMPTION_RECORD",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "controllingRepositoryBasis": "43ea853e4ac4cd278ae8d61c40fb2ae7db466e02",
+  "currentMainReconciliationBasis": "eceac4d5297b2f087c1cf718e29d79c119c29db1",
+  "adapterRole": "ORCHESTRATION_ONLY",
+  "packet002Role": "SEPARATE_DOWNSTREAM_OCCURRENCE_BUILDER",
+  "phaseAPackage": "16_FILES_13_CREATE_3_MODIFY_2_PHASE_B_HELD",
+  "methodLaw": "MANIFEST_FIRST_DEVELOPMENT_LAW_V2_IS_SOLE_ACTIVE_METHOD_LAW",
+  "implementationAuthority": "WITHHELD",
+  "mergeAuthority": "WITHHELD",
+  "requiredPreImplementationAction": "RECONCILE_ACCEPTED_PACKAGE_STATE_AGAINST_CURRENT_MAIN",
+  "prohibitions": [
+    "NO_IMPLEMENTATION_SOURCE_MUTATION",
+    "NO_PACKAGE_SOURCE_MUTATION",
+    "NO_PUBLIC_ROUTE_MUTATION",
+    "NO_DIAGNOSTIC_ROUTE_MUTATION",
+    "NO_AUTHORITY_COLLAPSE",
+    "NO_COMPLETE_DOCUMENT_DUPLICATION_REQUIRED"
+  ]
+}

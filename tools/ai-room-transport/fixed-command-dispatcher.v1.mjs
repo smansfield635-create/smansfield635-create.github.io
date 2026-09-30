@@ -250,20 +250,20 @@ function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRo
     if (listed.status !== 0 || listed.error) fail('TREE_GRAFT_ANCESTOR_READ_FAILED', listed.stderr || listed.error || baseTreeish);
     const entries = listed.stdout.split('\0').filter(Boolean);
     const retained = entries.filter(entry => {
-      const tab = entry.indexOf('\\t');
+      const tab = entry.indexOf('\t');
       return tab < 0 || entry.slice(tab + 1) !== childName;
     });
-    retained.push(`040000 tree ${replacementTree}\\t${childName}`);
+    retained.push(`040000 tree ${replacementTree}\t${childName}`);
     retained.sort((a,b) => {
-      const an = a.slice(a.indexOf('\\t') + 1);
-      const bn = b.slice(b.indexOf('\\t') + 1);
+      const an = a.slice(a.indexOf('\t') + 1);
+      const bn = b.slice(b.indexOf('\t') + 1);
       return an.localeCompare(bn, 'en');
     });
     const rebuilt = cp.spawnSync('git',['mktree'],{
       cwd:toolRoot,
       env:process.env,
       encoding:'utf8',
-      input:retained.join('\\n')+'\\n'
+      input:retained.join('\n')+'\n'
     });
     if (rebuilt.status !== 0 || rebuilt.error) fail('TREE_GRAFT_ANCESTOR_REBUILD_FAILED', rebuilt.stderr || rebuilt.error?.message || parentPath || '<root>');
     replacementTree = rebuilt.stdout.trim();

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "AUREN_INTEGRATED_PRODUCT_BROWSER_ACCEPTANCE_20260929_006",
+  "capabilityId": "AUREN_INTEGRATED_PRODUCT_BROWSER_ACCEPTANCE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5402,
+  "requestBranch": "ai-dispatch-request-auren-integrated-acceptance-r6-20260929",
+  "requestCommit": "3f6ab835e0c38b5a5178a691299f1424c5b9c725",
+  "requestCommitParent": "3d32ea8e19dbd85a0a67d2e050c14e9a1832d13f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3d32ea8e19dbd85a0a67d2e050c14e9a1832d13f",
+  "workflow": "auren-integrated-product-browser-acceptance.yml",
+  "ref": "main",
+  "inputs": {
+    "candidate_sha": "ce1b7f28e1b715ba96044577ef58c8779b8046fe"
+  },
+  "bridgeRunId": "36648900052",
+  "dispatchedRunId": 36648914191,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36648914191",
+  "dispatchedRunHeadSha": "3d32ea8e19dbd85a0a67d2e050c14e9a1832d13f",
+  "dispatchedAt": "2026-09-30T00:09:30.163Z",
+  "resolvedAt": "2026-09-30T00:09:33.687Z"
+}

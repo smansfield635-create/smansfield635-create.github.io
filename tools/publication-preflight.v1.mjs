@@ -27,6 +27,12 @@ const AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES=Object.freeze({
     mode:'EXACT_REFERENCED_CLOSURE_ONLY',
     entryPath:'preview/compass/holographic-orientation-v1/full/index.html',
     allowedPrefix:'preview/compass/holographic-orientation-v1/full/'
+  }),
+  'h-earth-gen2519-inspection':Object.freeze({
+    mode:'EXACT_REFERENCED_CLOSURE_ONLY',
+    exactSourceSha:'cb6a05dec4ded5102514361e84686b658827cd68',
+    entryPath:'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/index.html',
+    allowedPrefix:'preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/'
   })
 });
 const PROTECTED_SURFACE_IDS=Object.freeze(['audralia']);
@@ -146,11 +152,12 @@ function loadSurfaceManifest(repoRoot,surfaceId){
   return {manifestPath,manifest};
 }
 function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,policy}){
+  const sourceSha=policy.exactSourceSha??targetSha;
   const entryFile=path.join(stage,...policy.entryPath.split('/'));
   let entryBytes;
   if(excluded(policy.entryPath)){
     if(!policy.entryPath.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_CROSSES_EXCLUDED_ROOT:${policy.entryPath}`);
-    entryBytes=readExactRepositoryFile({repoRoot,targetSha,rel:policy.entryPath}).bytes;
+    entryBytes=readExactRepositoryFile({repoRoot,targetSha:sourceSha,rel:policy.entryPath}).bytes;
   }else{
     if(!fs.existsSync(entryFile)||!fs.statSync(entryFile).isFile())throw new Error(`AUTHORIZED_RUNTIME_ENTRYPOINT_MISSING:${policy.entryPath}`);
     entryBytes=fs.readFileSync(entryFile);
@@ -167,7 +174,7 @@ function promoteProtectedSurface({repoRoot,stage,targetSha,protectedSurfaceId,po
     let source;
     if(excluded(rel)){
       if(!rel.startsWith(policy.allowedPrefix))throw new Error(`AUTHORIZED_RUNTIME_DEPENDENCY_CROSSES_EXCLUDED_ROOT:${rel}`);
-      const recovered=readExactRepositoryFile({repoRoot,targetSha,rel});
+      const recovered=readExactRepositoryFile({repoRoot,targetSha:sourceSha,rel});
       bytes=recovered.bytes;
       source=recovered.source;
       const to=path.join(stage,...rel.split('/'));

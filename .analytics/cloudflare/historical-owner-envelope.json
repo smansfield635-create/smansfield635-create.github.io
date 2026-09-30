@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T04:38:20Z",
+  "generatedAt": "2026-09-30T05:33:53Z",
   "window": {
-    "start": "2026-07-02T04:38:20Z",
-    "end": "2026-09-30T04:38:20Z"
+    "start": "2026-07-02T05:33:53Z",
+    "end": "2026-09-30T05:33:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5085,
-    "visits": 1295,
+    "pageLoads": 5083,
+    "visits": 1293,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5085,
-        "visits": 1295
+        "pageLoads": 5083,
+        "visits": 1293
       }
     },
     "byPath": {
@@ -115,8 +115,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 277,
-        "visits": 77
+        "pageLoads": 275,
+        "visits": 75
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
@@ -353,8 +353,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 493,
-        "visits": 493
+        "pageLoads": 491,
+        "visits": 491
       },
       "diamondgatebridge.com": {
         "pageLoads": 3790,

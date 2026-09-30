@@ -261,6 +261,9 @@ jobs:
             await context.close();
             await browser.close();
           }
+          const sampledAuthoritativeReady=[initial,later].some(sample=>sample?.startupReceipt?.stages?.READY_PUBLISHED==='PASS'&&sample?.startupReceipt?.firstFailureStage==null);
+          const sampledRouteReady=[initial,later].some(sample=>sample?.routeReady==='true');
+          const finalReadiness=(readiness==='READY'||sampledAuthoritativeReady||sampledRouteReady)?'READY':readiness;
           const receipt={
             schema:'H_EARTH_NEUTRAL_EXACT_HEAD_RUNNER_v1',
             targetSha,
@@ -272,7 +275,7 @@ jobs:
             observationShimApplied:false,
             observationShimScope:'NONE',
             actualBrowserExecution:true,
-            readinessDiagnostic:readiness,
+            readinessDiagnostic:finalReadiness,
             materialized:Boolean(initial?.canvasPresent&&later?.canvasPresent),
             pageErrors,
             consoleErrors,

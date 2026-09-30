@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "auren-c3-1-repair-b33119ca-20260929",
+  "capabilityId": "AUREN_C3_1_EXACT_HEAD_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5421,
+  "requestBranch": "ai-dispatch-request-auren-c3-1-repair-20260929",
+  "requestCommit": "f9b8bae9c0ec78cd2c202f52a5f9cbe9c216e434",
+  "currentMainSha": "df0e859c8e0a962fcba68c72b5df88f1828caa79",
+  "bridgeRunId": "36660499835",
+  "error": "Native dispatch was accepted but run id was not resolved for auren-c3-1-exact-head-qualification.yml",
+  "failedAt": "2026-09-30T02:36:11.934Z"
+}

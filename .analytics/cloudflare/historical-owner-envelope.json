@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T18:38:16Z",
+  "generatedAt": "2026-09-30T19:29:52Z",
   "window": {
-    "start": "2026-07-02T18:38:16Z",
-    "end": "2026-09-30T18:38:16Z"
+    "start": "2026-07-02T19:29:52Z",
+    "end": "2026-09-30T19:29:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5080,
-    "visits": 1290,
+    "pageLoads": 5081,
+    "visits": 1291,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5080,
-        "visits": 1290
+        "pageLoads": 5081,
+        "visits": 1291
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1090,
-        "visits": 753
+        "pageLoads": 1089,
+        "visits": 752
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 272,
-        "visits": 72
+        "pageLoads": 275,
+        "visits": 75
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -190,10 +194,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,8 +218,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
-        "pageLoads": 10,
+      "/instruments/": {
+        "pageLoads": 11,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 11,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -299,8 +299,8 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 41,
-        "visits": 31
+        "pageLoads": 40,
+        "visits": 30
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -353,16 +353,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 488,
-        "visits": 488
+        "pageLoads": 486,
+        "visits": 486
       },
       "diamondgatebridge.com": {
         "pageLoads": 3790,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 791,
-        "visits": 791
+        "pageLoads": 794,
+        "visits": 794
       },
       "raw.githack.com": {
         "pageLoads": 10,

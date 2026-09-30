@@ -40,7 +40,8 @@
     "shell": false,
     "extraArgumentsAllowed": false,
     "environmentOverridesAllowed": false,
-    "streamOutput": true
+    "streamOutput": true,
+    "fixedArgumentsPosition": "BEFORE_SCRIPT"
   },
   "canonicalInputSchema": {
     "schemaId": "H_EARTH_GEN2515_RENDER_PACKAGE_QUALIFICATION_INPUT_v1",

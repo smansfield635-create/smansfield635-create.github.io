@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "h-earth-gen2519-inspection",
-  "description": "Nonproduction immutable owner-inspection carrier for rendered H-Earth Gen2519 candidate cb6a05dec4ded5102514361e84686b658827cd68.",
+  "description": "Nonproduction same-origin immutable owner-device inspection for rendered H-Earth Gen2519 candidate cb6a05dec4ded5102514361e84686b658827cd68.",
   "checks": [
     {
       "path": "/inspection/h-earth-gen2519-cb6a05d/index.html",
@@ -9,9 +9,11 @@
         "NONPRODUCTION · GEN2519 IMMUTABLE INSPECTION",
         "cb6a05dec4ded5102514361e84686b658827cd68",
         "TRANSPORT: PENDING",
-        "rawcdn.githack.com"
+        "Copy device diagnostic",
+        "/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/"
       ],
       "excludes": [
+        "rawcdn.githack.com",
         "271e881272861547411ccd700ce1a3b310b4e4ac"
       ]
     }

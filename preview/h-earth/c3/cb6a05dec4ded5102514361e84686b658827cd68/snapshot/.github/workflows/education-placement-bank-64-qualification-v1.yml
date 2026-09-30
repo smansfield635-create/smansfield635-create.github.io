@@ -1,0 +1,52 @@
+name: Education Placement Bank 64 Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify 64-item placement bank
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const a=s.indexOf('const BANK='),b=s.indexOf('const EDUCATION_STATE_KEY=',a),src=s.slice(a,b);
+          const BANK=Function(src+';return BANK')();
+          if(Object.keys(BANK).length!==8)throw Error('expected 8 stages');
+          const all=[];
+          for(let stage=1;stage<=8;stage++){
+            const items=BANK[stage];
+            if(!Array.isArray(items)||items.length!==8)throw Error('stage '+stage+' item count '+(items?.length));
+            for(const item of items){
+              if(!item.id||!item.q||!item.node||!item.evidenceClass)throw Error('missing item metadata');
+              if(!Array.isArray(item.o)||item.o.length!==4)throw Error(item.id+' options');
+              if(!Number.isInteger(item.a)||item.a<0||item.a>=item.o.length)throw Error(item.id+' answer index');
+              all.push(item);
+            }
+          }
+          if(all.length!==64)throw Error('total '+all.length);
+          const ids=all.map(x=>x.id); if(new Set(ids).size!==64)throw Error('duplicate ids');
+          const prompts=all.map(x=>x.q.trim().toLowerCase()); if(new Set(prompts).size!==64)throw Error('duplicate prompts');
+          if(!BANK[1].every(x=>x.id.startsWith('s1')))throw Error('stage1 identity');
+          if(BANK[1].some(x=>/borrow/i.test(x.q)))throw Error('stage1 aliases stage2 borrow');
+          const stage1Classes=new Set(BANK[1].map(x=>x.evidenceClass));
+          for(const c of ['DIRECT_RECOGNITION','PRACTICAL_COMPREHENSION','SENTENCE_CONSTRUCTION'])if(!stage1Classes.has(c))throw Error('stage1 missing '+c);
+          console.log(JSON.stringify({stages:8,total:64,uniqueIds:64,uniquePrompts:64,stage1Classes:[...stage1Classes]}));
+          console.log('EDUCATION_PLACEMENT_BANK_64_QUALIFICATION=PASS');
+          NODE

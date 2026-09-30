@@ -1,0 +1,52 @@
+name: H-Earth CP7C Control-Field Generator
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-cp7c-control-field-generator.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/cp7/h-earth.cp7c-control-field-generator-execution.v1.mjs'
+      - 'h-earth-3d/validation/cp7/h-earth.cp7c-control-field-generator.mjs'
+      - 'showroom/globe/h-earth/render/terrain-control-field.cp2-round2.v1.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  execute-control-field-generator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact CP7C candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute deterministic CP7C verifier first pass
+        run: node h-earth-3d/validation/cp7/h-earth.cp7c-control-field-generator.mjs h-earth-3d/validation/cp7/cp7c-evidence/receipt-first.json
+      - name: Execute deterministic CP7C verifier second pass
+        run: node h-earth-3d/validation/cp7/h-earth.cp7c-control-field-generator.mjs h-earth-3d/validation/cp7/cp7c-evidence/receipt-second.json
+      - name: Require identical receipts
+        run: cmp h-earth-3d/validation/cp7/cp7c-evidence/receipt-first.json h-earth-3d/validation/cp7/cp7c-evidence/receipt-second.json
+      - name: Upload CP7C evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp7c-control-field-generator
+          path: h-earth-3d/validation/cp7/cp7c-evidence/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Enforce CP7C pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/cp7/cp7c-evidence/receipt-first.json', 'utf8'));
+          if (receipt.result !== 'CP7C_CONTROL_FIELD_GENERATOR_PASS_CLOSED' || receipt.pass !== true) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`CP7C_PASS:${receipt.controlField.canonicalSha256}:${receipt.canonicalReceiptSha256}`);
+          NODE

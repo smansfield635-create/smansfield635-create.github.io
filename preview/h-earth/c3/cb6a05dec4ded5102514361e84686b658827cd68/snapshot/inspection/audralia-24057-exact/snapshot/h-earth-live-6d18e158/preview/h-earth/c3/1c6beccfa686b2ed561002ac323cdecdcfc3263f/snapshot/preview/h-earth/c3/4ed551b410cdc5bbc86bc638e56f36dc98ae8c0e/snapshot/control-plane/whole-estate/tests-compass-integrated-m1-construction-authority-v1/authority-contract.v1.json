@@ -1,0 +1,148 @@
+{
+  "schema": "TESTS_COMPASS_INTEGRATED_M1_CONSTRUCTION_AUTHORITY_v1",
+  "version": "1.0.0",
+  "operation": "TESTS_COMPASS_INTEGRATED_M1_CONSTRUCTION_AUTHORITY_v1",
+  "status": "FROZEN_CONSTRUCTION_AUTHORITY_CANDIDATE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "constructionBaseMain": "5dc56c1b73743706078afeb07cfe2dc144b72c90",
+  "target": "M1_COMPASS_INTEGRATED",
+  "purpose": "Construct one nonpublic Compass-integrated successor of the accepted M1 while preserving its scientific subject, procedural meaning, Research custody, donor semantic exclusions, and public-route boundary.",
+  "governingAuthorities": {
+    "compassTestsBinding": {
+      "promotionMerge": "5dc56c1b73743706078afeb07cfe2dc144b72c90",
+      "approvedSubjectHead": "0995a07ebd5ed7b88480739059c950e8f1265d94",
+      "terminalReview": "4889462676",
+      "approvalReceiptComment": "5227668355",
+      "role": "NAVIGATION_AND_MECHANICAL_ADMISSION_AUTHORITY"
+    },
+    "acceptedM1": {
+      "candidateId": "M1_TESTS_METHODS_OPERATIONAL_FIELD",
+      "candidateHead": "9370bba7841b8a831f7f1c034d0b74fb83dab2e0",
+      "promotionMerge": "391c3543fd048bac90493232f04973911468d3eb",
+      "role": "SCIENTIFIC_AND_PROCEDURAL_BASELINE_AUTHORITY"
+    },
+    "m1r2": {
+      "identity": "M1R2_METHOD_PROCEDURE_FIELD",
+      "classification": "VALID_DEEP_PROCEDURAL_INSTRUMENT",
+      "preservedEvidenceHead": "6840cf0b99914263628e937453497e5af3f16166",
+      "role": "PRESERVED_PRIOR_EVIDENCE_NOT_CONSTRUCTION_SUBJECT",
+      "rewriteAuthorized": false,
+      "entryAuthorized": false
+    },
+    "research": {
+      "role": "AUTHORITATIVE_EVIDENCE_DOMAIN",
+      "rule": "REFERENCE_PLUS_STANDING_PLUS_ROUTE_NOT_COPY"
+    },
+    "tests": {
+      "role": "HIGHER_ORDER_OPERATIONAL_TESTS_ENVIRONMENT"
+    }
+  },
+  "constructionEquation": "EXISTING_M1 + APPROVED_COMPASS_MECHANICS + TESTS_SEMANTICS = M1_COMPASS_INTEGRATED",
+  "differentialConstraint": {
+    "O_integrated_equals_O_isolated": true,
+    "R_integrated_equals_R_isolated": true,
+    "A_integrated_equals_A_isolated": true,
+    "N_integrated_must_differ_from_N_isolated": true
+  },
+  "fixedScientificSubject": {
+    "projection": "METHODS",
+    "objects": [
+      {"OBJECT_ID": "METHODS", "OBJECT_CLASS": "METHOD"},
+      {"OBJECT_ID": "ROUTE_OPERATOR_PLATFORM", "OBJECT_CLASS": "METHOD"},
+      {"OBJECT_ID": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "OBJECT_CLASS": "TEST_INSTANCE"}
+    ],
+    "relations": [
+      {"RELATION_ID": "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "SOURCE_OBJECT": "METHODS", "RELATION": "GOVERNS_PROCEDURE_FOR", "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"},
+      {"RELATION_ID": "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "SOURCE_OBJECT": "ROUTE_OPERATOR_PLATFORM", "RELATION": "EXECUTES", "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"}
+    ],
+    "objectCount": 3,
+    "relationCount": 2,
+    "mutationAuthorized": false
+  },
+  "authorizedNavigationScope": {
+    "layers": ["L_MINUS_1_ORIENTATION", "L0", "L1"],
+    "operations": ["FOCUS"],
+    "capabilities": ["C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08", "C09"],
+    "capabilityDispositionRequired": "ADMIT_WITH_ADAPTER",
+    "entryContextPreservation": true,
+    "returnContextRestoration": true,
+    "presentationGeometrySemanticAuthority": false
+  },
+  "withheldScope": [
+    "L2_INSPECT",
+    "L3_FOLLOW",
+    "L3_PROVENANCE_TRAVERSAL",
+    "L4_ENTER",
+    "M1R2_ENTRY",
+    "BROADER_METHODS_POPULATION",
+    "MODELS_POPULATION",
+    "EXPERIMENTS_POPULATION",
+    "EVIDENCE_POPULATION",
+    "PUBLIC_PROMOTION"
+  ],
+  "authorizedConstructionPaths": [
+    "control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/**",
+    "control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-runtime-evidence-v1/**",
+    "control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-accessibility-responsive-evidence-v1/**",
+    "control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-perceptual-evidence-v1/**",
+    "verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/**",
+    ".github/workflows/tests-l0-l1-compass-integrated-m1-*.yml"
+  ],
+  "constructionProhibitions": [
+    "CHANGE_M1_SCIENTIFIC_SUBJECT",
+    "CHANGE_M1_OBJECT_IDENTITIES_CLASSES_OR_RELATIONS",
+    "REDESIGN_OR_REWRITE_M1R2",
+    "DUPLICATE_RESEARCH_CONTENT_IN_TESTS",
+    "REDEFINE_LAWS_TEST",
+    "EQUATE_LAWS_METHODS_AND_MODELS_WITH_TESTS_METHODS_MODELS",
+    "EQUATE_LAWS_RESULTS_AND_RECORDS_WITH_TESTS_EVIDENCE",
+    "INHERIT_DONOR_SEMANTICS",
+    "INTRODUCE_UNAPPROVED_COMPASS_DONORS",
+    "ALTER_PUBLIC_OR_LIVE_ROUTE",
+    "CREATE_PUBLIC_ROUTE",
+    "MAKE_NEW_SCIENTIFIC_CLAIMS",
+    "MUTATE_T_STAR_OR_B_STAR",
+    "EXPAND_CONTENT_POPULATION",
+    "MAKE_PRESENTATION_GEOMETRY_CREATE_RELATION_CONTAINMENT_IMPORTANCE_SEQUENCE_STANDING_OR_CAUSALITY"
+  ],
+  "excludedDonors": [
+    "UNIVERSAL_COMPASS_PROTOTYPE",
+    "SHOWROOM_COMPASS",
+    "ARCHCOIN_COMPASS",
+    "H_EARTH_WORLD_NAVIGATION"
+  ],
+  "donorReopeningRule": "NO_DONOR_SELECTION_REOPENING_DURING_CONSTRUCTION_WITHOUT_NEW_AUTHORITY_DECISION",
+  "researchBoundary": {
+    "researchEvidenceLocalAuthorityInTests": false,
+    "allowedProjection": ["REFERENCE", "STANDING", "ROUTE"],
+    "copyResearchContent": false,
+    "crossDomainBoundaryMustRemainVisible": true
+  },
+  "lawsBoundary": {
+    "lawsTestEqualsOperationalTests": false,
+    "lawsMethodsModelsEqualsTestsMethodsModels": false,
+    "lawsResultsRecordsEqualsTestsEvidence": false,
+    "lawsRouteMutationAuthorized": false
+  },
+  "requiredVerification": [
+    "ALL_NINE_CAPABILITIES_ENTER_ONLY_THROUGH_APPROVED_ADAPTERS",
+    "DONOR_SEMANTIC_EXCLUSION_AUDIT",
+    "M1_IDENTITY_AND_BEHAVIOR_REGRESSION",
+    "TESTS_HIERARCHY_AND_NAVIGATION_CONFORMANCE",
+    "RESEARCH_REFERENCE_NOT_COPY_AUDIT",
+    "EXCLUDED_DONOR_ABSENCE",
+    "NO_PUBLIC_ROUTE_CHANGE",
+    "REPOSITORY_OPERATION_INTAKE",
+    "COMPASS_TESTS_BINDING_VERIFIER",
+    "APPLICABLE_M1_STATIC_RUNTIME_ACCESSIBILITY_REGRESSION",
+    "RUNTIME_AND_PERCEPTUAL_REVIEW",
+    "EXACT_HEAD_TERMINAL_CERTIFICATION"
+  ],
+  "regressionLaw": "ANY_DEGRADATION_IN_PROCEDURAL_FUNCTION_ACCESSIBILITY_RUNTIME_SCIENTIFIC_LEGIBILITY_OR_PREVIOUSLY_ACCEPTED_M1_BEHAVIOR_IS_REGRESSION",
+  "promotionBoundary": {
+    "constructionCandidateMayBeBuilt": true,
+    "constructionCandidateMayBecomeAcceptedTestsBaselineWithoutSeparatePromotion": false,
+    "publicPromotionAuthorized": false,
+    "scientificClaimUpgradeAuthorized": false
+  }
+}

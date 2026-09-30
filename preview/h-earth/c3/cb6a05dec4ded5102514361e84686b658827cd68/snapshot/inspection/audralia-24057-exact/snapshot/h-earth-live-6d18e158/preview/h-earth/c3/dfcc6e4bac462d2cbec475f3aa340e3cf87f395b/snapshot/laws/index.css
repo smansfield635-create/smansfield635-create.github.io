@@ -1,0 +1,3311 @@
+/* TARGET FILE: /laws/index.css */
+/* COMPLETE REPLACEMENT */
+/* LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_CSS_TNT_v2_3_0 */
+
+/*
+  Contract:
+  LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_CSS_TNT_v2_3_0
+
+  Pairing HTML:
+  LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_HTML_TNT_v2_3_0
+
+  Previous CSS contract:
+  LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_CSS_TNT_v2_2_0
+
+  Purpose:
+  Context-restored, index-derived Laws visual system prepared for:
+  - shared world-pass center planet rendering;
+  - Showroom-modeled Laws Cosmos;
+  - compact Compass-style disclosure architecture;
+  - non-monochromatic Laws page presentation;
+  - preserved controller/compositor/crystals/interactions boundaries.
+
+  Required result:
+  - compact page composition;
+  - non-linear disclosure/discovery system;
+  - visible first-paint compass category stars;
+  - Flow north, Integrity east, Reality south, Structure west;
+  - no CSS-generated fake center planet;
+  - no DOM-mounted planet dependency;
+  - center planet rendered by Laws world pass, not CSS;
+  - [data-upstream-compass-control] remains semantic click authority;
+  - Compass-family category labels use an in-star letter and protected word tab;
+  - semantic controls preserved as hit targets;
+  - law stars visible only when their family is active or projection-visible;
+  - compositor/crystals/interactions compatible;
+  - expanded formula, empirical-support, applied-system, route-maturity,
+    source-custody, and claim-boundary sections;
+  - Frontier link-out cards for heavier applied-system lanes;
+  - Cosmos remains decorative only.
+
+  Runtime status:
+  NOT EXECUTED
+
+  Visual acceptance:
+  NOT CLAIMED
+
+  Production authorization:
+  FALSE
+
+  Deployment authorization:
+  FALSE
+*/
+
+
+/* ============================================================
+   0. TOKENS / RESET
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+
+  --laws-bg-0: #02040a;
+  --laws-bg-1: #050914;
+  --laws-bg-2: #0b1224;
+  --laws-bg-3: #121b35;
+  --laws-bg-4: #172442;
+
+  --laws-ink: rgba(255, 248, 224, 0.96);
+  --laws-ink-soft: rgba(244, 240, 226, 0.80);
+  --laws-ink-muted: rgba(232, 227, 210, 0.60);
+  --laws-ink-faint: rgba(225, 218, 198, 0.42);
+
+  --laws-gold: #d8b86a;
+  --laws-gold-hot: #f3d98b;
+  --laws-gold-soft: rgba(216, 184, 106, 0.28);
+
+  --laws-cyan: #7cdcff;
+  --laws-cyan-soft: rgba(124, 220, 255, 0.24);
+
+  --laws-blue: #7f93ff;
+  --laws-blue-soft: rgba(127, 147, 255, 0.20);
+
+  --laws-violet: #a88cff;
+  --laws-violet-soft: rgba(168, 140, 255, 0.20);
+
+  --laws-warm: #ff9d63;
+  --laws-warm-soft: rgba(255, 157, 99, 0.18);
+
+  --laws-red: #ff7474;
+  --laws-red-soft: rgba(255, 116, 116, 0.18);
+
+  --laws-green: #8ff0b2;
+  --laws-green-soft: rgba(143, 240, 178, 0.16);
+
+  --laws-line: rgba(225, 218, 198, 0.15);
+  --laws-line-strong: rgba(216, 184, 106, 0.34);
+  --laws-cyan-line: rgba(124, 220, 255, 0.24);
+
+  --laws-card: rgba(7, 10, 16, 0.88);
+  --laws-card-strong: rgba(8, 13, 22, 0.96);
+  --laws-glass: rgba(255, 255, 255, 0.045);
+
+  --laws-radius-sm: 12px;
+  --laws-radius-md: 18px;
+  --laws-radius-lg: 28px;
+  --laws-radius-xl: 34px;
+  --laws-radius-full: 999px;
+
+  --laws-shell-max: 1180px;
+  --laws-page-pad: clamp(14px, 3vw, 42px);
+
+  --laws-center-size: clamp(9rem, 20vw, 15rem);
+  --laws-category-size: clamp(3.15rem, 5.8vw, 5.1rem);
+  --laws-authority-size: clamp(3.65rem, 6.6vw, 5.85rem);
+  --laws-law-size: clamp(1.95rem, 3.55vw, 3rem);
+  --laws-stage-min: clamp(430px, 58vh, 720px);
+
+  --laws-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --laws-shadow-deep:
+    0 26px 86px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  --laws-shadow-card:
+    0 16px 48px rgba(0, 0, 0, 0.26),
+    0 0 28px rgba(124, 220, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+
+  --laws-shadow-gold:
+    0 0 30px rgba(216, 184, 106, 0.14),
+    0 22px 62px rgba(0, 0, 0, 0.36);
+
+  --laws-shadow-cyan:
+    0 0 30px rgba(124, 220, 255, 0.13),
+    0 22px 62px rgba(0, 0, 0, 0.34);
+
+  --laws-focus: #f3d98b;
+
+  --laws-cosmos-static-star-opacity: 0.48;
+  --laws-cosmos-runtime-opacity: 0.78;
+  --laws-cosmos-runtime-mobile-opacity: 0.66;
+  --laws-cosmos-runtime-compact-opacity: 0.54;
+
+  --laws-cosmos-static-z: 0;
+  --laws-cosmos-runtime-z: 1;
+  --laws-estate-z: 3;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--laws-bg-0);
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+  margin: 0;
+  color: var(--laws-ink);
+  background:
+    radial-gradient(ellipse at 14% 8%, rgba(124, 220, 255, 0.13), transparent 34rem),
+    radial-gradient(ellipse at 80% 13%, rgba(216, 184, 106, 0.11), transparent 38rem),
+    radial-gradient(ellipse at 88% 46%, rgba(168, 140, 255, 0.075), transparent 36rem),
+    radial-gradient(ellipse at 12% 72%, rgba(69, 132, 165, 0.095), transparent 34rem),
+    radial-gradient(ellipse at 58% 92%, rgba(216, 184, 106, 0.06), transparent 32rem),
+    linear-gradient(180deg, rgba(3, 5, 10, 0.12), rgba(3, 5, 10, 0.44) 38%, rgba(2, 4, 8, 0.72) 100%),
+    linear-gradient(135deg, #02040a 0%, var(--laws-bg-0) 22%, var(--laws-bg-1) 52%, #03050a 76%, #010205 100%);
+  background-attachment:
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+canvas,
+svg,
+img {
+  max-width: 100%;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--laws-focus);
+  outline-offset: 4px;
+}
+
+::selection {
+  color: #120f08;
+  background: var(--laws-gold-hot);
+}
+
+
+/* ============================================================
+   1. STATIC COSMIC ATMOSPHERE
+   ============================================================ */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -4%;
+  z-index: var(--laws-cosmos-static-z);
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(255, 248, 224, 0.78) 0 0.7px, transparent 1.7px),
+    radial-gradient(circle at 21% 31%, rgba(124, 220, 255, 0.50) 0 0.65px, transparent 1.65px),
+    radial-gradient(circle at 34% 7%, rgba(255, 255, 255, 0.48) 0 0.55px, transparent 1.55px),
+    radial-gradient(circle at 47% 26%, rgba(216, 184, 106, 0.56) 0 0.8px, transparent 1.9px),
+    radial-gradient(circle at 63% 14%, rgba(124, 220, 255, 0.62) 0 0.8px, transparent 1.9px),
+    radial-gradient(circle at 78% 38%, rgba(255, 248, 224, 0.54) 0 0.7px, transparent 1.8px),
+    radial-gradient(circle at 91% 17%, rgba(168, 140, 255, 0.50) 0 0.65px, transparent 1.75px),
+    radial-gradient(circle at 12% 69%, rgba(124, 220, 255, 0.48) 0 0.7px, transparent 1.8px),
+    radial-gradient(circle at 29% 84%, rgba(255, 248, 224, 0.62) 0 0.85px, transparent 2px),
+    radial-gradient(circle at 51% 63%, rgba(216, 184, 106, 0.50) 0 0.7px, transparent 1.8px),
+    radial-gradient(circle at 70% 79%, rgba(124, 220, 255, 0.54) 0 0.75px, transparent 1.9px),
+    radial-gradient(circle at 89% 88%, rgba(255, 255, 255, 0.52) 0 0.65px, transparent 1.75px),
+    radial-gradient(ellipse at 18% 13%, rgba(124, 220, 255, 0.040), transparent 27rem),
+    radial-gradient(ellipse at 86% 22%, rgba(243, 217, 139, 0.038), transparent 30rem),
+    radial-gradient(ellipse at 78% 72%, rgba(168, 140, 255, 0.030), transparent 34rem);
+  background-size:
+    233px 197px,
+    347px 293px,
+    491px 389px,
+    673px 521px,
+    419px 337px,
+    587px 463px,
+    761px 607px,
+    389px 311px,
+    557px 431px,
+    701px 569px,
+    467px 373px,
+    823px 647px,
+    auto,
+    auto,
+    auto;
+  mix-blend-mode: screen;
+  opacity: var(--laws-cosmos-static-star-opacity);
+  transform: translate3d(0, 0, 0) scale(1.015);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: var(--laws-cosmos-static-z);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 12% 30%, rgba(124, 220, 255, 0.028), transparent 30rem),
+    radial-gradient(ellipse at 86% 18%, rgba(243, 217, 139, 0.026), transparent 34rem),
+    radial-gradient(ellipse at 76% 78%, rgba(168, 140, 255, 0.022), transparent 38rem),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.16), transparent 14%, transparent 86%, rgba(0, 0, 0, 0.18)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 24%, transparent 72%, rgba(0, 0, 0, 0.30));
+  opacity: 0.68;
+}
+
+
+/* ============================================================
+   2. SHOWROOM-MODELED LAWS COSMOS RUNTIME LAYER
+   ============================================================ */
+
+body > #laws-cosmos-layer,
+body > #dgb-laws-cosmos-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--laws-cosmos-runtime-z);
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: strict;
+  isolation: isolate;
+}
+
+body > #laws-cosmos-layer > #laws-cosmos-canvas,
+body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: var(--laws-cosmos-runtime-opacity);
+  mix-blend-mode: screen;
+}
+
+body > #laws-cosmos-layer > #laws-cosmos-spacecraft,
+body > #laws-cosmos-layer > #laws-cosmos-spacecraft-secondary,
+body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-spacecraft,
+body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-spacecraft-secondary {
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+
+body > #laws-cosmos-layer,
+body > #laws-cosmos-layer *,
+body > #laws-cosmos-layer canvas,
+body > #laws-cosmos-layer svg,
+body > #dgb-laws-cosmos-layer,
+body > #dgb-laws-cosmos-layer *,
+body > #dgb-laws-cosmos-layer canvas,
+body > #dgb-laws-cosmos-layer svg {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  touch-action: none !important;
+}
+
+
+/* ============================================================
+   3. ACCESSIBILITY
+   ============================================================ */
+
+.skip {
+  position: fixed;
+  z-index: 999;
+  top: 12px;
+  left: 12px;
+  transform: translateY(-160%);
+  padding: 10px 14px;
+  border: 1px solid var(--laws-cyan-line);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-ink);
+  background: rgba(6, 10, 24, 0.96);
+  text-decoration: none;
+  box-shadow: var(--laws-shadow-cyan);
+  transition: transform 160ms var(--laws-ease);
+}
+
+.skip:focus {
+  transform: translateY(0);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
+}
+
+.laws-accessibility-note {
+  max-width: 820px;
+  margin: 0;
+  color: var(--laws-ink-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+
+/* ============================================================
+   4. SHELL / HEADER
+   ============================================================ */
+
+[data-laws-root],
+.laws-shell {
+  position: relative;
+  z-index: var(--laws-estate-z);
+  isolation: isolate;
+  width: min(100%, var(--laws-shell-max));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: clamp(18px, 3vw, 42px);
+}
+
+[data-laws-root]::before,
+.laws-shell::before {
+  content: "";
+  position: fixed;
+  inset: 18px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgba(216, 184, 106, 0.12);
+  border-radius: 34px;
+  box-shadow:
+    inset 0 0 76px rgba(216, 184, 106, 0.040),
+    inset 0 0 145px rgba(36, 69, 88, 0.065),
+    0 0 30px rgba(124, 220, 255, 0.018);
+  opacity: 0.90;
+}
+
+[data-laws-root]::after,
+.laws-shell::after {
+  content: "";
+  position: fixed;
+  left: 50%;
+  top: -3vh;
+  z-index: -1;
+  width: min(68vw, 860px);
+  height: 106vh;
+  transform: translate3d(-50%, 0, 0);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(124, 220, 255, 0.15), transparent 30rem),
+    radial-gradient(ellipse at 24% 40%, rgba(168, 140, 255, 0.058), transparent 24rem),
+    radial-gradient(ellipse at 78% 54%, rgba(216, 184, 106, 0.068), transparent 27rem),
+    radial-gradient(ellipse at 52% 86%, rgba(67, 128, 158, 0.078), transparent 30rem),
+    linear-gradient(90deg, transparent, rgba(216, 184, 106, 0.026) 22%, rgba(124, 220, 255, 0.064) 50%, rgba(216, 184, 106, 0.026) 78%, transparent);
+  opacity: 0.50;
+}
+
+.laws-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 10px 0 18px;
+  backdrop-filter: blur(10px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 7px 12px 7px 7px;
+  border: 1px solid rgba(216, 184, 106, 0.18);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-ink);
+  background:
+    linear-gradient(135deg, rgba(216, 184, 106, 0.12), rgba(124, 220, 255, 0.06)),
+    rgba(5, 8, 19, 0.76);
+  text-decoration: none;
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.brand-mark {
+  display: grid;
+  width: 42px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(243, 217, 139, 0.38);
+  border-radius: 50%;
+  color: var(--laws-gold-hot);
+  background:
+    radial-gradient(circle, rgba(243, 217, 139, 0.20), transparent 58%),
+    rgba(6, 10, 24, 0.90);
+  box-shadow: var(--laws-shadow-gold);
+}
+
+.brand-mark span {
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+}
+
+.brand-copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.1;
+}
+
+.brand-copy span {
+  color: var(--laws-ink-muted);
+  font-size: 0.75rem;
+}
+
+.brand-copy strong {
+  color: var(--laws-ink);
+  font-size: 0.93rem;
+  letter-spacing: 0.02em;
+}
+
+.laws-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.laws-nav a {
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-ink-soft);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+.laws-nav a:hover,
+.laws-nav a:focus-visible {
+  color: var(--laws-gold-hot);
+  border-color: rgba(243, 217, 139, 0.28);
+}
+
+
+/* ============================================================
+   5. PAGE FLOW
+   ============================================================ */
+
+.laws-estate {
+  display: grid;
+  gap: clamp(16px, 2.4vw, 26px);
+}
+
+.kicker {
+  margin: 0;
+  color: var(--laws-gold-hot);
+  font-size: 0.77rem;
+  font-weight: 850;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.laws-threshold,
+.laws-orbit-intro,
+.laws-closing {
+  position: relative;
+  max-width: 960px;
+  padding: clamp(18px, 2.4vw, 26px);
+  border: 1px solid rgba(216, 184, 106, 0.18);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(135deg, rgba(216, 184, 106, 0.065), rgba(124, 185, 214, 0.038)),
+    rgba(7, 10, 16, 0.88);
+  box-shadow: var(--laws-shadow-card);
+}
+
+.laws-threshold::before,
+.laws-orbit-intro::before,
+.laws-closing::before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  pointer-events: none;
+  border: 1px solid rgba(216, 184, 106, 0.085);
+  border-radius: calc(var(--laws-radius-md) - 7px);
+}
+
+.laws-threshold h1,
+.laws-orbit-intro h2 {
+  position: relative;
+  z-index: 1;
+  max-width: 820px;
+  margin: 0;
+  color: rgba(255, 248, 224, 0.98);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.25rem, 7vw, 5.85rem);
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+  text-shadow:
+    0 8px 42px rgba(0, 0, 0, 0.72),
+    0 0 30px rgba(216, 184, 106, 0.14),
+    0 0 44px rgba(124, 220, 255, 0.065);
+}
+
+.laws-threshold__lead,
+.laws-orbit-intro p,
+.laws-closing p {
+  position: relative;
+  z-index: 1;
+  max-width: 72ch;
+  margin: clamp(12px, 1.5vw, 16px) 0 0;
+  color: var(--laws-ink-soft);
+  font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+  line-height: 1.64;
+}
+
+.laws-threshold__more,
+.laws-discovery__more,
+.laws-runtime-evidence__group,
+.laws-raw-receipt-disclosure {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+  border-top: 1px solid rgba(225, 218, 198, 0.12);
+  padding-top: 12px;
+}
+
+.laws-threshold__more summary,
+.laws-discovery__more summary,
+.laws-runtime-evidence__group summary,
+.laws-raw-receipt-disclosure summary {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--laws-gold-hot);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.laws-threshold__more summary::-webkit-details-marker,
+.laws-discovery__more summary::-webkit-details-marker,
+.laws-runtime-evidence__group summary::-webkit-details-marker,
+.laws-raw-receipt-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-threshold__more summary::after,
+.laws-discovery__more summary::after,
+.laws-runtime-evidence__group summary::after,
+.laws-raw-receipt-disclosure summary::after {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(243, 217, 139, 0.32);
+  border-radius: var(--laws-radius-full);
+  background: rgba(7, 10, 16, 0.82);
+}
+
+.laws-threshold__more[open] summary::after,
+.laws-discovery__more[open] summary::after,
+.laws-runtime-evidence__group[open] summary::after,
+.laws-raw-receipt-disclosure[open] summary::after {
+  content: "–";
+}
+
+.laws-threshold__more p,
+.laws-discovery__more p,
+.laws-runtime-evidence__group > p {
+  margin: 12px 0 0;
+  color: var(--laws-ink-soft);
+}
+
+
+/* ============================================================
+   6. VALUE DECK
+   ============================================================ */
+
+.laws-value-deck {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+  max-width: 1040px;
+  perspective: 1200px;
+}
+
+.laws-value-card {
+  position: relative;
+  display: grid;
+  gap: 9px;
+  min-height: 148px;
+  padding: 20px 22px;
+  border: 1px solid rgba(124, 220, 255, 0.34);
+  border-radius: var(--laws-radius-md);
+  color: var(--laws-ink);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.085), transparent 22%),
+    radial-gradient(circle at 18% 18%, rgba(124, 220, 255, 0.17), transparent 8.8rem),
+    linear-gradient(155deg, rgba(14, 24, 36, 0.98), rgba(5, 8, 14, 0.98) 56%, rgba(15, 20, 26, 0.99));
+  box-shadow:
+    0 22px 0 rgba(0, 0, 0, 0.18),
+    0 28px 68px rgba(0, 0, 0, 0.46),
+    0 0 30px rgba(124, 220, 255, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -14px 28px rgba(0, 0, 0, 0.30);
+  overflow: hidden;
+  text-decoration: none;
+  transform:
+    translateY(0)
+    rotateX(0deg)
+    rotateY(0deg);
+  transform-style: preserve-3d;
+  transition:
+    transform 240ms var(--laws-ease),
+    border-color 240ms var(--laws-ease),
+    box-shadow 240ms var(--laws-ease);
+}
+
+.laws-value-card:first-child {
+  border-color: rgba(243, 217, 139, 0.52);
+  background:
+    linear-gradient(145deg, rgba(255, 248, 224, 0.12), transparent 23%),
+    radial-gradient(circle at 18% 18%, rgba(243, 217, 139, 0.23), transparent 9rem),
+    linear-gradient(155deg, rgba(41, 34, 20, 0.98), rgba(8, 9, 13, 0.98) 58%, rgba(19, 18, 16, 0.99));
+}
+
+.laws-value-card:nth-child(2) {
+  border-color: rgba(124, 220, 255, 0.54);
+}
+
+.laws-value-card:nth-child(3) {
+  border-color: rgba(168, 140, 255, 0.44);
+  background:
+    linear-gradient(145deg, rgba(236, 226, 255, 0.10), transparent 23%),
+    radial-gradient(circle at 18% 18%, rgba(168, 140, 255, 0.20), transparent 9rem),
+    linear-gradient(155deg, rgba(28, 25, 48, 0.98), rgba(7, 10, 16, 0.98) 58%, rgba(13, 17, 30, 0.99));
+}
+
+.laws-value-card:hover,
+.laws-value-card:focus-visible {
+  transform:
+    translateY(-5px)
+    rotateX(2deg)
+    rotateY(-2deg);
+  border-color: rgba(255, 248, 224, 0.54);
+  box-shadow:
+    0 27px 0 rgba(0, 0, 0, 0.18),
+    0 34px 78px rgba(0, 0, 0, 0.52),
+    0 0 40px rgba(124, 220, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    inset 0 -14px 28px rgba(0, 0, 0, 0.28);
+}
+
+.laws-value-card__eyebrow,
+.laws-value-card__label,
+.laws-value-card__purpose,
+.laws-value-card__action {
+  position: relative;
+  z-index: 1;
+  transform: translateZ(26px);
+}
+
+.laws-value-card__eyebrow {
+  color: var(--laws-gold-hot);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.laws-value-card__label {
+  color: rgba(255, 248, 224, 0.98);
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.laws-value-card__purpose {
+  color: var(--laws-ink-soft);
+  font-size: 0.94rem;
+  line-height: 1.48;
+}
+
+.laws-value-card__action {
+  justify-self: start;
+  margin-top: 3px;
+  color: rgba(255, 248, 224, 0.96);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+
+/* ============================================================
+   7. COMPASS SCENE / STAGE
+   ============================================================ */
+
+.laws-orbit {
+  position: relative;
+  z-index: 1;
+}
+
+.laws-orbit__field,
+[data-laws-scene-field] {
+  position: relative;
+  z-index: 1;
+  min-height: var(--laws-stage-min);
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+  user-select: none;
+  -webkit-user-select: none;
+  border: 1px solid rgba(124, 220, 255, 0.20);
+  border-radius: var(--laws-radius-lg);
+  background:
+    radial-gradient(ellipse at 50% 8%, rgba(106, 126, 214, 0.14), transparent 46%),
+    radial-gradient(ellipse at 8% 76%, rgba(56, 132, 154, 0.12), transparent 40%),
+    radial-gradient(ellipse at 92% 78%, rgba(180, 103, 66, 0.09), transparent 38%),
+    linear-gradient(180deg, rgba(5, 8, 18, 0.98), rgba(2, 4, 10, 0.995));
+  box-shadow:
+    0 26px 86px rgba(0, 0, 0, 0.40),
+    0 0 36px rgba(124, 220, 255, 0.065),
+    inset 0 0 96px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  isolation: isolate;
+}
+
+.laws-orbit__field::before,
+.laws-orbit__field::after {
+  content: none;
+  display: none;
+}
+
+.laws-cosmic-field,
+[data-laws-cosmic-field] {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent;
+  opacity: 1;
+  isolation: isolate;
+}
+
+
+/* ============================================================
+   8. COMPOSITOR / WORLD-PASS RUNTIME CANVASES
+   ============================================================ */
+
+canvas[data-laws-compositor-layer],
+canvas[data-laws-crystals-canvas],
+canvas[data-compass-compositor-layer],
+canvas[data-compass-crystals-canvas] {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+canvas[data-laws-compositor-layer="rear"],
+canvas[data-compass-compositor-layer="rear"] {
+  z-index: 1 !important;
+}
+
+canvas[data-laws-compositor-layer="front"],
+canvas[data-compass-compositor-layer="front"] {
+  z-index: 3 !important;
+}
+
+
+/* ============================================================
+   9. CENTER COMPASS BODY / WORLD-PASS PLANET SURFACE
+   ============================================================ */
+
+.laws-compass-layer,
+[data-laws-compass-layer],
+[data-laws-center-layer] {
+  position: absolute;
+  z-index: 2;
+  inset: 50% auto auto 50%;
+  width: var(--laws-center-size);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.laws-compass-mount,
+[data-upstream-compass-mount],
+[data-laws-compass-visual-mount] {
+  position: absolute;
+  z-index: 1;
+  inset: -12%;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.laws-compass-mount::before,
+[data-upstream-compass-mount]::before {
+  content: "";
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(124, 220, 255, 0.12), rgba(124, 220, 255, 0.040) 40%, transparent 74%);
+  filter: blur(0.35rem);
+  opacity: 0.78;
+}
+
+.laws-compass-mount::after,
+[data-upstream-compass-mount]::after {
+  content: "";
+  position: absolute;
+  inset: 5%;
+  border: 1px solid rgba(243, 217, 139, 0.11);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: rotate(-17deg) scaleX(1.22) scaleY(0.44);
+  opacity: 0.70;
+}
+
+.laws-planetary-center,
+[data-laws-planet-mount] {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+/*
+  World-pass planet note:
+  The visible globe is drawn by /laws/index.planet.js through the shared
+  Laws crystals/compositor render pass. CSS does not construct, skin, or
+  mount the planet. This surface remains only as spatial center and
+  compatibility markup.
+*/
+
+.laws-compass-control,
+[data-upstream-compass-control],
+[data-laws-compass-control] {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: calc(50% - 8px);
+  display: block;
+  width: min(86%, 13rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.laws-compass-control > *:not(.sr-only),
+[data-upstream-compass-control] > *:not(.sr-only),
+[data-laws-compass-control] > *:not(.sr-only) {
+  display: none !important;
+}
+
+
+/* ============================================================
+   10. SEMANTIC OBJECT LAYER / STAR CONTROLS
+   ============================================================ */
+
+.laws-object-layer,
+[data-laws-objects],
+[data-laws-semantic-star-layer],
+[data-laws-fallback-star-layer] {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.laws-star,
+[data-laws-category],
+:is([data-laws-law], [data-laws-member]),
+[data-laws-auxiliary],
+[data-laws-fallback-star],
+[data-laws-semantic-star] {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  text-shadow: none;
+  transition:
+    opacity 180ms var(--laws-ease),
+    filter 180ms var(--laws-ease),
+    transform 180ms var(--laws-ease);
+}
+
+.laws-star > *:not(.sr-only),
+[data-laws-category] > *:not(.sr-only),
+:is([data-laws-law], [data-laws-member]) > *:not(.sr-only),
+[data-laws-auxiliary] > *:not(.sr-only),
+[data-laws-fallback-star] > *:not(.sr-only),
+[data-laws-semantic-star] > *:not(.sr-only) {
+  display: none !important;
+}
+
+.laws-star--large,
+[data-laws-category] {
+  width: var(--laws-category-size);
+  aspect-ratio: 1;
+}
+
+.laws-star--authority,
+[data-laws-auxiliary] {
+  width: var(--laws-authority-size);
+  aspect-ratio: 1;
+}
+
+.laws-star--small,
+:is([data-laws-law], [data-laws-member]) {
+  width: var(--laws-law-size);
+  aspect-ratio: 1;
+}
+
+.laws-star::before,
+[data-laws-category]::before,
+:is([data-laws-law], [data-laws-member])::before,
+[data-laws-auxiliary]::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  clip-path: polygon(
+    50% 0%,
+    60% 34%,
+    95% 25%,
+    68% 50%,
+    95% 75%,
+    60% 66%,
+    50% 100%,
+    40% 66%,
+    5% 75%,
+    32% 50%,
+    5% 25%,
+    40% 34%
+  );
+  background:
+    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.92), rgba(243, 217, 139, 0.82) 20%, rgba(216, 184, 106, 0.88) 48%, rgba(126, 78, 24, 0.92) 82%);
+  box-shadow:
+    inset 0 0 0.3rem rgba(255, 255, 255, 0.62),
+    inset 0 0 0.85rem rgba(88, 51, 13, 0.60),
+    0 0 1rem rgba(243, 217, 139, 0.42),
+    0 0 2.4rem rgba(216, 184, 106, 0.16);
+  filter: drop-shadow(0 0 0.6rem rgba(243, 217, 139, 0.36));
+}
+
+[data-direction="flow"]::before {
+  background:
+    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.92), rgba(243, 217, 139, 0.82) 20%, rgba(216, 184, 106, 0.88) 48%, rgba(126, 78, 24, 0.92) 82%);
+}
+
+[data-direction="integrity"]::before {
+  background:
+    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.92), rgba(124, 220, 255, 0.80) 20%, rgba(58, 178, 209, 0.86) 52%, rgba(15, 62, 92, 0.94) 84%);
+  box-shadow:
+    inset 0 0 0.3rem rgba(255, 255, 255, 0.58),
+    inset 0 0 0.85rem rgba(12, 64, 83, 0.60),
+    0 0 1rem rgba(124, 220, 255, 0.42),
+    0 0 2.4rem rgba(124, 220, 255, 0.16);
+}
+
+[data-direction="reality"]::before {
+  background:
+    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.90), rgba(255, 198, 118, 0.82) 20%, rgba(255, 157, 99, 0.90) 52%, rgba(116, 52, 22, 0.94) 84%);
+  box-shadow:
+    inset 0 0 0.3rem rgba(255, 255, 255, 0.58),
+    inset 0 0 0.85rem rgba(96, 48, 18, 0.60),
+    0 0 1rem rgba(255, 157, 99, 0.34),
+    0 0 2.4rem rgba(255, 157, 99, 0.14);
+}
+
+[data-direction="structure"]::before {
+  background:
+    radial-gradient(circle at 42% 35%, rgba(255, 255, 255, 0.90), rgba(255, 167, 134, 0.80) 20%, rgba(229, 90, 70, 0.88) 52%, rgba(88, 27, 32, 0.94) 84%);
+  box-shadow:
+    inset 0 0 0.3rem rgba(255, 255, 255, 0.55),
+    inset 0 0 0.85rem rgba(88, 27, 32, 0.60),
+    0 0 1rem rgba(255, 116, 116, 0.30),
+    0 0 2.4rem rgba(255, 116, 116, 0.12);
+}
+
+[data-laws-auxiliary-id="test"]::before {
+  background:
+    radial-gradient(circle at 42% 34%, #fff 0 7%, #fff2a8 18%, #f1bf4f 48%, #6e3c00 84%);
+  box-shadow:
+    inset 0 0 0.35rem rgba(255, 255, 255, 0.74),
+    inset 0 0 0.95rem rgba(111, 63, 0, 0.66),
+    0 0 1.4rem rgba(255, 225, 116, 0.66),
+    0 0 3.1rem rgba(241, 191, 79, 0.28);
+}
+
+[data-laws-auxiliary-id="research"]::before {
+  background:
+    radial-gradient(circle at 42% 34%, #fff 0 7%, #c9d8ff 18%, #8a62ff 48%, #24104f 84%);
+  box-shadow:
+    inset 0 0 0.35rem rgba(255, 255, 255, 0.70),
+    inset 0 0 0.95rem rgba(36, 16, 79, 0.70),
+    0 0 1.4rem rgba(157, 126, 255, 0.62),
+    0 0 3.1rem rgba(102, 76, 226, 0.30);
+}
+
+.laws-star:hover,
+.laws-star:focus-visible,
+[data-laws-category]:hover,
+[data-laws-category]:focus-visible,
+:is([data-laws-law], [data-laws-member]):hover,
+:is([data-laws-law], [data-laws-member]):focus-visible,
+[data-laws-auxiliary]:hover,
+[data-laws-auxiliary]:focus-visible {
+  filter:
+    brightness(1.10)
+    drop-shadow(0 0 1rem rgba(243, 217, 139, 0.40));
+}
+
+[data-selected="true"]::before,
+:is([data-laws-law], [data-laws-member])[data-selected="true"]::before,
+[data-laws-category][data-selected="true"]::before {
+  box-shadow:
+    inset 0 0 0.35rem rgba(255, 255, 255, 0.68),
+    inset 0 0 0.85rem rgba(88, 51, 13, 0.60),
+    0 0 1.25rem rgba(124, 220, 255, 0.46),
+    0 0 3.2rem rgba(124, 220, 255, 0.22);
+}
+
+
+/* ============================================================
+   11. FIRST-PAINT FALLBACK GEOMETRY
+   ============================================================ */
+
+[data-laws-category][data-direction="flow"] {
+  top: 9%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-laws-category][data-direction="integrity"] {
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+}
+
+[data-laws-category][data-direction="reality"] {
+  bottom: 9%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-laws-category][data-direction="structure"] {
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+}
+
+[data-laws-auxiliary][data-laws-auxiliary-id="test"] {
+  top: 22%;
+  left: 72%;
+  transform: translate(-50%, -50%);
+}
+
+[data-laws-auxiliary][data-laws-auxiliary-id="research"] {
+  bottom: 22%;
+  left: 28%;
+  transform: translate(-50%, 50%);
+}
+
+[data-laws-auxiliary] > .laws-authority-label {
+  position: absolute;
+  left: 50%;
+  top: 74%;
+  display: block !important;
+  min-width: max-content;
+  padding: 0.3rem 0.56rem;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  color: rgba(255, 250, 233, 0.98);
+  background: rgba(3, 6, 14, 0.88);
+  box-shadow: 0 0.45rem 1.2rem rgba(0, 0, 0, 0.48);
+  font-size: clamp(0.62rem, 1.25vw, 0.78rem);
+  font-weight: 950;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 0.12rem 0.3rem #000;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+[data-laws-auxiliary-id="test"] > .laws-authority-label {
+  border-color: rgba(255, 225, 116, 0.52);
+  color: #fff1ae;
+}
+
+[data-laws-auxiliary-id="research"] > .laws-authority-label {
+  border-color: rgba(157, 126, 255, 0.52);
+  color: #dcd2ff;
+}
+
+:is([data-laws-law], [data-laws-member]) {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-active-cluster="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-laws-active-cluster="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-laws-active-category="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-active-cluster="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-laws-active-cluster="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-laws-active-category="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-active-cluster="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-laws-active-cluster="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-laws-active-category="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-active-cluster="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-laws-active-cluster="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-laws-active-category="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-signals"] {
+  top: 18%;
+  left: 31%;
+  transform: translate(-50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-feedback"] {
+  top: 11%;
+  left: 41%;
+  transform: translate(-50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-cycles"] {
+  top: 11%;
+  right: 41%;
+  transform: translate(50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-handoffs"] {
+  top: 18%;
+  right: 31%;
+  transform: translate(50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-consistency"] {
+  top: 31%;
+  right: 18%;
+  transform: translate(50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-accountability"] {
+  top: 41%;
+  right: 11%;
+  transform: translate(50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-continuity"] {
+  bottom: 41%;
+  right: 11%;
+  transform: translate(50%, 50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-coherence"] {
+  bottom: 31%;
+  right: 18%;
+  transform: translate(50%, 50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-theory"] {
+  bottom: 18%;
+  left: 31%;
+  transform: translate(-50%, 50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-evidence"] {
+  bottom: 11%;
+  left: 41%;
+  transform: translate(-50%, 50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-measure"] {
+  bottom: 11%;
+  right: 41%;
+  transform: translate(50%, 50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-limits"] {
+  bottom: 18%;
+  right: 31%;
+  transform: translate(50%, 50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-constraints"] {
+  top: 31%;
+  left: 18%;
+  transform: translate(-50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-interfaces"] {
+  top: 41%;
+  left: 11%;
+  transform: translate(-50%, -50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-boundaries"] {
+  bottom: 41%;
+  left: 11%;
+  transform: translate(-50%, 50%);
+}
+
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-governance"] {
+  bottom: 31%;
+  left: 18%;
+  transform: translate(-50%, 50%);
+}
+
+
+/* ============================================================
+   12. CRYSTALS / PROJECTION MODE
+   ============================================================ */
+
+[data-projection-visible="true"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+[data-projection-visible="false"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+[data-interaction-priority="0"] {
+  pointer-events: none !important;
+}
+
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-category],
+[data-laws-root][data-laws-crystals-ready="true"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="available"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="ready"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary] {
+  color: transparent !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-category]::before,
+[data-laws-root][data-laws-crystals-ready="true"] :is([data-laws-law], [data-laws-member])::before,
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary]::before,
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-category]::before,
+[data-laws-root][data-laws-crystals-status="available"] :is([data-laws-law], [data-laws-member])::before,
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary]::before,
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category]::before,
+[data-laws-root][data-laws-crystals-status="ready"] :is([data-laws-law], [data-laws-member])::before,
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary]::before {
+  opacity: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-category],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category],
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+[data-laws-root][data-laws-crystals-ready="true"][data-active-law-cluster="true"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-crystals-status="available"][data-active-law-cluster="true"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-crystals-status="ready"][data-active-law-cluster="true"] :is([data-laws-law], [data-laws-member]) {
+  pointer-events: auto;
+}
+
+
+/* ============================================================
+   13. GUIDANCE AND INSPECTION PANEL
+   ============================================================ */
+
+[data-laws-guidance] {
+  color: var(--laws-ink-soft);
+}
+
+.laws-controller-panel,
+.laws-atlas-key {
+  display: grid;
+  gap: 12px;
+  max-width: 900px;
+  padding: 18px 20px;
+  border: 1px solid rgba(216, 184, 106, 0.18);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+    rgba(7, 10, 16, 0.94);
+  box-shadow:
+    0 14px 48px rgba(0, 0, 0, 0.30),
+    0 0 22px rgba(124, 220, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.060);
+}
+
+.laws-atlas-key__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.laws-atlas-key__eyebrow {
+  color: var(--laws-gold-hot);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.laws-atlas-key__identity h2 {
+  margin: 3px 0 0;
+  color: rgba(255, 248, 224, 0.97);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  line-height: 1;
+}
+
+.laws-atlas-key__state {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid rgba(124, 220, 255, 0.20);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-cyan);
+  background: rgba(124, 220, 255, 0.06);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.laws-atlas-key__body {
+  display: grid;
+  gap: 12px;
+}
+
+.laws-atlas-key__purpose,
+.laws-atlas-key__relationship {
+  max-width: 70rem;
+  margin: 0;
+  color: var(--laws-ink-soft);
+}
+
+.laws-law-layers {
+  display: grid;
+  gap: 10px;
+}
+
+.laws-layer-record {
+  display: none;
+  padding: 13px;
+  border: 1px solid rgba(225, 218, 198, 0.10);
+  border-radius: 14px;
+  background: rgba(4, 7, 12, 0.90);
+}
+
+[data-laws-root][data-laws-controller-state="CONSTELLATION"] .laws-layer-record[data-laws-layer-record="idle"],
+[data-laws-root][data-laws-controller-state="CLUSTER_OPEN"] .laws-layer-record[data-laws-layer-record="idle"],
+[data-laws-root][data-compass-selected="true"] .laws-layer-record[data-laws-layer-record="compass"] {
+  display: block;
+}
+
+.laws-layer-record span {
+  display: block;
+  color: var(--laws-gold-hot);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-layer-record p {
+  margin: 8px 0 0;
+  color: var(--laws-ink-soft);
+  font-size: 0.94rem;
+}
+
+.laws-atlas-key__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.laws-atlas-key__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 1px solid rgba(225, 218, 198, 0.12);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-ink-soft);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.82rem;
+}
+
+.laws-atlas-key__legend strong {
+  color: var(--laws-gold-hot);
+}
+
+.laws-atlas-key__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button,
+.laws-atlas-key__actions button,
+.laws-atlas-key__actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid rgba(225, 218, 198, 0.13);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-ink);
+  background:
+    linear-gradient(135deg, rgba(18, 34, 46, 0.96), rgba(7, 10, 16, 0.96));
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.26),
+    0 0 18px rgba(124, 220, 255, 0.065),
+    inset 0 1px 0 rgba(255, 255, 255, 0.080);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button-gold,
+.laws-atlas-key__primary {
+  border-color: rgba(243, 217, 139, 0.56) !important;
+  color: #120f08 !important;
+  background: linear-gradient(135deg, #f6df97, #b98d3e) !important;
+  box-shadow:
+    0 12px 28px rgba(216, 184, 106, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34) !important;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: grayscale(0.45);
+}
+
+.laws-atlas-key__technical {
+  border-top: 1px solid rgba(225, 218, 198, 0.12);
+  padding-top: 12px;
+}
+
+.laws-atlas-key__technical summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  color: var(--laws-ink-soft);
+}
+
+.laws-controller-panel__facts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.laws-controller-panel__facts div {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(225, 218, 198, 0.10);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.laws-controller-panel__facts dt {
+  color: var(--laws-ink-muted);
+  font-size: 0.72rem;
+}
+
+.laws-controller-panel__facts dd {
+  min-height: 1.2em;
+  margin: 3px 0 0;
+  color: var(--laws-ink);
+  word-break: break-word;
+}
+
+
+/* ============================================================
+   14. DISCOVERY / CONTEXT RESTORATION
+   ============================================================ */
+
+.laws-discovery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.8vw, 18px);
+  max-width: 1100px;
+}
+
+.laws-discovery__item {
+  position: relative;
+  border: 1px solid rgba(225, 218, 198, 0.15);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(135deg, rgba(124, 185, 214, 0.050), rgba(216, 184, 106, 0.030)),
+    rgba(8, 13, 22, 0.96);
+  box-shadow:
+    0 13px 38px rgba(0, 0, 0, 0.24),
+    0 0 18px rgba(124, 220, 255, 0.025),
+    inset 0 1px 0 rgba(255, 255, 255, 0.050);
+  overflow: hidden;
+}
+
+.laws-discovery__item[open] {
+  border-color: rgba(216, 184, 106, 0.32);
+  box-shadow:
+    0 15px 42px rgba(0, 0, 0, 0.28),
+    0 0 20px rgba(216, 184, 106, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.060);
+}
+
+.laws-discovery__item > summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 62px;
+  padding: 17px 18px;
+  color: rgba(255, 248, 224, 0.96);
+  cursor: pointer;
+  font-size: 0.93rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.laws-discovery__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-discovery__item > summary::after {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(216, 184, 106, 0.30);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-gold-hot);
+  background: rgba(7, 10, 16, 0.92);
+}
+
+.laws-discovery__item[open] > summary::after {
+  content: "–";
+}
+
+.laws-discovery__item > p {
+  margin: 0;
+  padding: 0 18px 18px;
+  color: var(--laws-ink-soft);
+  font-size: 0.98rem;
+  line-height: 1.62;
+}
+
+.laws-discovery__more,
+.laws-runtime-evidence__group,
+.laws-raw-receipt-disclosure {
+  margin: 0 16px 16px;
+  padding: 11px 12px 12px;
+  border: 1px solid rgba(225, 218, 198, 0.10);
+  border-radius: 14px;
+  background: rgba(4, 7, 12, 0.90);
+}
+
+.laws-equation-card {
+  margin: 0;
+  padding: 14px;
+  border: 1px solid rgba(124, 220, 255, 0.17);
+  border-radius: var(--laws-radius-md);
+  background:
+    radial-gradient(circle at 0 0, rgba(124, 220, 255, 0.07), transparent 13rem),
+    rgba(5, 8, 14, 0.96);
+}
+
+.laws-discovery__more .laws-equation-card,
+.laws-runtime-evidence__group .laws-equation-card {
+  margin-top: 12px;
+}
+
+.laws-equation-card__label {
+  margin-bottom: 7px;
+  color: var(--laws-cyan);
+  font-size: 0.70rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-equation-card p {
+  margin: 11px 0 0;
+  color: var(--laws-ink-soft);
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+code {
+  color: rgba(255, 248, 224, 0.95);
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    monospace;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.laws-branch-grid,
+.laws-maturity-grid,
+.laws-evidence-grid,
+.laws-ownership-chain,
+.laws-equation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 18px 18px;
+}
+
+.laws-equation-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.laws-branch-card,
+.laws-maturity-grid article,
+.laws-evidence-grid article,
+.laws-ownership-chain article {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid rgba(225, 218, 198, 0.10);
+  border-radius: var(--laws-radius-md);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.030), rgba(124, 220, 255, 0.015)),
+    rgba(5, 8, 13, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.050),
+    0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.laws-branch-card {
+  color: var(--laws-ink);
+  text-decoration: none;
+}
+
+.laws-branch-card:hover,
+.laws-branch-card:focus-visible {
+  border-color: rgba(243, 217, 139, 0.30);
+  box-shadow: var(--laws-shadow-gold);
+}
+
+.laws-branch-card span {
+  display: block;
+  color: var(--laws-cyan);
+  font-size: 0.70rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.laws-branch-card strong,
+.laws-maturity-grid h3,
+.laws-evidence-grid h3,
+.laws-ownership-chain strong {
+  display: block;
+  margin: 5px 0;
+  color: var(--laws-gold-hot);
+  font-size: 1.03rem;
+}
+
+.laws-branch-card p,
+.laws-maturity-grid p,
+.laws-evidence-grid p,
+.laws-ownership-chain p {
+  margin: 6px 0 0;
+  color: var(--laws-ink-soft);
+}
+
+.laws-evidence-grid article:nth-child(3n + 1),
+.laws-maturity-grid article:nth-child(3n + 1) {
+  border-color: rgba(243, 217, 139, 0.15);
+}
+
+.laws-evidence-grid article:nth-child(3n + 2),
+.laws-maturity-grid article:nth-child(3n + 2) {
+  border-color: rgba(124, 220, 255, 0.15);
+}
+
+.laws-evidence-grid article:nth-child(3n + 3),
+.laws-maturity-grid article:nth-child(3n + 3) {
+  border-color: rgba(168, 140, 255, 0.15);
+}
+
+
+/* ============================================================
+   15. CONTEXT-SPECIFIC EMPHASIS
+   ============================================================ */
+
+[data-laws-discovery-item="foundation"],
+[data-laws-discovery-item="evidence-boundary"],
+[data-laws-discovery-item="applied-systems"],
+[data-laws-discovery-item="claim-language"] {
+  grid-column: 1 / -1;
+}
+
+[data-laws-discovery-item="formula-context"] {
+  border-color: rgba(124, 220, 255, 0.18);
+}
+
+[data-laws-discovery-item="scientific-law-reality-test"] {
+  border-color: rgba(168, 140, 255, 0.18);
+}
+
+[data-laws-discovery-item="evidence-boundary"] {
+  border-color: rgba(243, 217, 139, 0.20);
+}
+
+[data-laws-discovery-item="claim-language"] {
+  border-color: rgba(255, 116, 116, 0.18);
+}
+
+[data-laws-formula-card="collapse-qualified"],
+[data-laws-formula-card="pcr-kernel"],
+[data-laws-formula-card="ice"] {
+  border-color: rgba(243, 217, 139, 0.20);
+}
+
+[data-laws-frontier-link] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-laws-frontier-link]::after {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  content: "↗";
+  color: rgba(124, 220, 255, 0.72);
+  font-weight: 900;
+}
+
+[data-laws-discovery-item="claim-language"] .laws-evidence-grid article:first-child {
+  border-color: rgba(143, 240, 178, 0.24);
+}
+
+[data-laws-discovery-item="claim-language"] .laws-evidence-grid article:nth-child(2) {
+  border-color: rgba(255, 116, 116, 0.24);
+}
+
+
+/* ============================================================
+   16. RECEIPT ACCORDIONS
+   ============================================================ */
+
+.laws-receipt-accordion {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.laws-receipt-record {
+  border: 1px solid rgba(225, 218, 198, 0.10);
+  border-radius: var(--laws-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.laws-receipt-record summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.laws-receipt-record small {
+  display: block;
+  color: var(--laws-ink-muted);
+}
+
+.laws-receipt-summary__status {
+  padding: 5px 8px;
+  border: 1px solid rgba(243, 217, 139, 0.16);
+  border-radius: var(--laws-radius-full);
+  color: var(--laws-gold-hot);
+  background: rgba(243, 217, 139, 0.055);
+  font-size: 0.74rem;
+  font-weight: 850;
+}
+
+.laws-receipt-record dl {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0 12px 12px;
+}
+
+.laws-receipt-record dl div {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(225, 218, 198, 0.08);
+  border-radius: var(--laws-radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.laws-receipt-record dt {
+  color: var(--laws-ink-muted);
+  font-size: 0.72rem;
+}
+
+.laws-receipt-record dd {
+  margin: 3px 0 0;
+  color: var(--laws-ink-soft);
+  word-break: break-word;
+}
+
+.laws-raw-receipt {
+  overflow: auto;
+  max-height: 20rem;
+  margin: 12px 0 0;
+  padding: 14px;
+  border: 1px solid rgba(225, 218, 198, 0.08);
+  border-radius: var(--laws-radius-sm);
+  color: var(--laws-ink-soft);
+  background: rgba(3, 5, 9, 0.78);
+}
+
+
+/* ============================================================
+   17. CLOSING / FOOTER
+   ============================================================ */
+
+.laws-closing {
+  max-width: 780px;
+}
+
+.laws-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: clamp(16px, 3vw, 32px);
+  padding: 18px 0;
+  color: var(--laws-ink-muted);
+}
+
+.laws-footer div {
+  display: grid;
+  gap: 4px;
+}
+
+.laws-footer strong {
+  color: var(--laws-ink);
+}
+
+.laws-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.laws-footer a {
+  color: var(--laws-ink-soft);
+  text-decoration: none;
+}
+
+.laws-footer a:hover,
+.laws-footer a:focus-visible {
+  color: var(--laws-gold-hot);
+}
+
+
+/* ============================================================
+   18. STATE / FAILURE-SAFE RULES
+   ============================================================ */
+
+[data-laws-root][data-held="true"] .laws-orbit__field,
+[data-laws-root][data-laws-held="true"] .laws-orbit__field {
+  border-color: rgba(255, 116, 116, 0.28);
+}
+
+[data-laws-root][data-held="true"] [data-laws-category],
+[data-laws-root][data-laws-held="true"] [data-laws-category],
+[data-laws-root][data-held="true"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-held="true"] :is([data-laws-law], [data-laws-member]) {
+  pointer-events: none;
+  filter: grayscale(0.35);
+}
+
+[data-laws-staged-orbit-error="true"] .laws-orbit__field,
+[data-laws-staged-interaction-error="true"] .laws-orbit__field {
+  box-shadow:
+    var(--laws-shadow-deep),
+    inset 0 0 0 1px rgba(255, 116, 116, 0.18);
+}
+
+[data-laws-root][data-laws-cosmos-status="held"] .laws-orbit__field,
+[data-laws-root][data-laws-cosmos-status="failed"] .laws-orbit__field {
+  border-color: rgba(124, 220, 255, 0.16);
+}
+
+[data-laws-root][data-laws-planet-status="failed"] [data-upstream-compass-mount],
+[data-laws-root][data-laws-planet-status="held"] [data-upstream-compass-mount] {
+  opacity: 0.86;
+}
+
+
+/* ============================================================
+   19. ANIMATION
+   ============================================================ */
+
+@keyframes laws-celestial-twinkle {
+  0% {
+    opacity: 0.56;
+  }
+
+  50% {
+    opacity: 0.72;
+  }
+
+  100% {
+    opacity: 0.62;
+  }
+}
+
+@keyframes laws-threshold-breathe {
+  0% {
+    opacity: 0.10;
+  }
+
+  100% {
+    opacity: 0.16;
+  }
+}
+
+
+/* ============================================================
+   20. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1040px) {
+  .laws-value-deck {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-receipt-record dl,
+  .laws-controller-panel__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 920px) {
+  .laws-discovery,
+  .laws-value-deck {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+
+  [data-laws-discovery-item="foundation"],
+  [data-laws-discovery-item="evidence-boundary"],
+  [data-laws-discovery-item="applied-systems"],
+  [data-laws-discovery-item="claim-language"] {
+    grid-column: auto;
+  }
+
+  .laws-topbar,
+  .laws-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .laws-nav,
+  .laws-footer nav {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 820px) {
+  :root {
+    --laws-cosmos-static-star-opacity: 0.42;
+    --laws-cosmos-runtime-opacity: var(--laws-cosmos-runtime-mobile-opacity);
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at 10% 8%, rgba(124, 220, 255, 0.10), transparent 24rem),
+      radial-gradient(ellipse at 88% 14%, rgba(216, 184, 106, 0.085), transparent 27rem),
+      radial-gradient(ellipse at 84% 52%, rgba(168, 140, 255, 0.055), transparent 26rem),
+      radial-gradient(ellipse at 14% 76%, rgba(69, 132, 165, 0.070), transparent 25rem),
+      linear-gradient(180deg, rgba(3, 5, 10, 0.16), rgba(3, 5, 10, 0.50) 42%, rgba(2, 4, 8, 0.76) 100%),
+      linear-gradient(135deg, #02040a 0%, var(--laws-bg-0) 24%, var(--laws-bg-1) 54%, #03050a 78%, #010205 100%);
+    background-attachment:
+      scroll,
+      scroll,
+      scroll,
+      scroll,
+      scroll,
+      scroll;
+  }
+
+  body > #laws-cosmos-layer > #laws-cosmos-canvas,
+  body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-canvas {
+    opacity: var(--laws-cosmos-runtime-mobile-opacity);
+  }
+
+  [data-laws-root],
+  .laws-shell {
+    padding: 14px;
+  }
+
+  [data-laws-root]::before,
+  .laws-shell::before {
+    inset: 12px;
+    opacity: 0.72;
+    box-shadow:
+      inset 0 0 54px rgba(216, 184, 106, 0.028),
+      inset 0 0 110px rgba(36, 69, 88, 0.045);
+  }
+
+  [data-laws-root]::after,
+  .laws-shell::after {
+    width: min(84vw, 760px);
+    height: 104vh;
+    opacity: 0.34;
+  }
+
+  .laws-orbit__field,
+  [data-laws-scene-field] {
+    min-height: 520px;
+  }
+
+  .laws-orbit__field::before,
+  .laws-orbit__field::after {
+    animation: none;
+  }
+
+  .laws-branch-grid,
+  .laws-maturity-grid,
+  .laws-evidence-grid,
+  .laws-ownership-chain,
+  .laws-equation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-value-card,
+  .laws-threshold,
+  .laws-orbit-intro,
+  .laws-closing,
+  .laws-discovery__item,
+  .laws-controller-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (max-width: 680px) {
+  :root {
+    --laws-center-size: clamp(7.4rem, 34vw, 9.7rem);
+    --laws-category-size: clamp(2.45rem, 12.5vw, 3.45rem);
+    --laws-law-size: clamp(1.58rem, 8vw, 2.22rem);
+    --laws-stage-min: min(124vw, 32rem);
+  }
+
+  .laws-threshold h1,
+  .laws-orbit-intro h2 {
+    font-size: clamp(2.2rem, 14vw, 4.25rem);
+  }
+
+  .laws-controller-panel__facts,
+  .laws-receipt-record dl {
+    grid-template-columns: 1fr;
+  }
+
+  [data-laws-category][data-direction="flow"] {
+    top: 8%;
+  }
+
+  [data-laws-category][data-direction="integrity"] {
+    right: 7%;
+  }
+
+  [data-laws-category][data-direction="reality"] {
+    bottom: 8%;
+  }
+
+  [data-laws-category][data-direction="structure"] {
+    left: 7%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-signals"] {
+    top: 18%;
+    left: 25%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-feedback"] {
+    top: 10%;
+    left: 40%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-cycles"] {
+    top: 10%;
+    right: 40%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-handoffs"] {
+    top: 18%;
+    right: 25%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-consistency"] {
+    top: 25%;
+    right: 17%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-accountability"] {
+    top: 40%;
+    right: 8%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-continuity"] {
+    bottom: 40%;
+    right: 8%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-coherence"] {
+    bottom: 25%;
+    right: 17%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-theory"] {
+    bottom: 18%;
+    left: 25%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-evidence"] {
+    bottom: 10%;
+    left: 40%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-measure"] {
+    bottom: 10%;
+    right: 40%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-limits"] {
+    bottom: 18%;
+    right: 25%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-constraints"] {
+    top: 25%;
+    left: 17%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-interfaces"] {
+    top: 40%;
+    left: 8%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-boundaries"] {
+    bottom: 40%;
+    left: 8%;
+  }
+
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-governance"] {
+    bottom: 25%;
+    left: 17%;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --laws-cosmos-static-star-opacity: 0.36;
+    --laws-cosmos-runtime-opacity: var(--laws-cosmos-runtime-compact-opacity);
+  }
+
+  body::before {
+    inset: -7%;
+  }
+
+  body::after {
+    opacity: 0.48;
+  }
+
+  body > #laws-cosmos-layer > #laws-cosmos-canvas,
+  body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-canvas {
+    opacity: var(--laws-cosmos-runtime-compact-opacity);
+  }
+
+  [data-laws-root]::before,
+  .laws-shell::before {
+    inset: 10px;
+    border-radius: 26px;
+  }
+
+  [data-laws-root]::after,
+  .laws-shell::after {
+    width: 94vw;
+    height: 106vh;
+    opacity: 0.26;
+  }
+
+  .laws-threshold,
+  .laws-orbit-intro,
+  .laws-closing {
+    padding: 15px 16px;
+  }
+
+  .laws-threshold::before,
+  .laws-orbit-intro::before,
+  .laws-closing::before {
+    inset: 9px;
+  }
+
+  .laws-value-card {
+    min-height: 124px;
+    padding: 16px 17px;
+  }
+
+  .laws-value-card:hover,
+  .laws-value-card:focus-visible {
+    transform: none;
+  }
+
+  .laws-discovery {
+    gap: 11px;
+  }
+
+  .laws-discovery__item > summary {
+    min-height: 54px;
+    padding: 14px 16px;
+    font-size: 0.84rem;
+  }
+
+  .laws-discovery__item > p {
+    padding: 0 16px 15px;
+    font-size: 0.96rem;
+    line-height: 1.58;
+  }
+
+  .laws-discovery__more,
+  .laws-runtime-evidence__group,
+  .laws-raw-receipt-disclosure {
+    margin: 0 12px 13px;
+  }
+
+  .laws-branch-grid,
+  .laws-maturity-grid,
+  .laws-evidence-grid,
+  .laws-ownership-chain,
+  .laws-equation-grid {
+    padding: 0 12px 13px;
+  }
+
+  .laws-orbit__field,
+  [data-laws-scene-field] {
+    min-height: 480px;
+    border-radius: 22px;
+  }
+
+  .laws-orbit__field::after {
+    width: min(48%, 330px);
+    height: min(18%, 110px);
+  }
+
+  code {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .laws-nav a {
+    font-size: 0.80rem;
+  }
+
+  .laws-discovery__item > summary {
+    align-items: flex-start;
+  }
+}
+
+
+/* ============================================================
+   21. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  body::before,
+  body::after,
+  [data-laws-root]::before,
+  [data-laws-root]::after,
+  .laws-shell::before,
+  .laws-shell::after,
+  .laws-orbit__field::before,
+  .laws-orbit__field::after {
+    animation: none !important;
+  }
+
+  body > #laws-cosmos-layer > #laws-cosmos-canvas,
+  body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-canvas {
+    opacity: 0.42;
+  }
+
+  body > #laws-cosmos-layer > #laws-cosmos-spacecraft,
+  body > #laws-cosmos-layer > #laws-cosmos-spacecraft-secondary,
+  body > #laws-cosmos-layer > #laws-cosmos-spacecraft *,
+  body > #laws-cosmos-layer > #laws-cosmos-spacecraft-secondary *,
+  body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-spacecraft,
+  body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-spacecraft-secondary,
+  body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-spacecraft *,
+  body > #dgb-laws-cosmos-layer > #dgb-laws-cosmos-spacecraft-secondary * {
+    display: none !important;
+    animation: none !important;
+  }
+
+  .laws-value-card:hover,
+  .laws-value-card:focus-visible {
+    transform: none;
+  }
+}
+
+:is(
+  [data-laws-root][data-reduced-motion="true"],
+  [data-laws-root][data-laws-reduced-motion="true"],
+  [data-laws-root][data-laws-cosmos-reduced-motion="true"],
+  [data-laws-root][data-laws-renderer-reduced-motion="true"],
+  .laws-shell[data-reduced-motion="true"],
+  .laws-shell[data-laws-reduced-motion="true"],
+  .laws-shell[data-laws-cosmos-reduced-motion="true"],
+  .laws-shell[data-laws-renderer-reduced-motion="true"]
+) {
+  scroll-behavior: auto;
+}
+
+:is(
+  [data-laws-root][data-reduced-motion="true"],
+  [data-laws-root][data-laws-reduced-motion="true"],
+  [data-laws-root][data-laws-cosmos-reduced-motion="true"],
+  [data-laws-root][data-laws-renderer-reduced-motion="true"],
+  .laws-shell[data-reduced-motion="true"],
+  .laws-shell[data-laws-reduced-motion="true"],
+  .laws-shell[data-laws-cosmos-reduced-motion="true"],
+  .laws-shell[data-laws-renderer-reduced-motion="true"]
+) *,
+:is(
+  [data-laws-root][data-reduced-motion="true"],
+  [data-laws-root][data-laws-reduced-motion="true"],
+  [data-laws-root][data-laws-cosmos-reduced-motion="true"],
+  [data-laws-root][data-laws-renderer-reduced-motion="true"],
+  .laws-shell[data-reduced-motion="true"],
+  .laws-shell[data-laws-reduced-motion="true"],
+  .laws-shell[data-laws-cosmos-reduced-motion="true"],
+  .laws-shell[data-laws-renderer-reduced-motion="true"]
+) *::before,
+:is(
+  [data-laws-root][data-reduced-motion="true"],
+  [data-laws-root][data-laws-reduced-motion="true"],
+  [data-laws-root][data-laws-cosmos-reduced-motion="true"],
+  [data-laws-root][data-laws-renderer-reduced-motion="true"],
+  .laws-shell[data-reduced-motion="true"],
+  .laws-shell[data-laws-reduced-motion="true"],
+  .laws-shell[data-laws-cosmos-reduced-motion="true"],
+  .laws-shell[data-laws-renderer-reduced-motion="true"]
+) *::after {
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0ms !important;
+  animation-duration: 0.01ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+}
+
+#laws-cosmos-layer[data-laws-cosmos-reduced-motion="true"] #laws-cosmos-spacecraft,
+#laws-cosmos-layer[data-laws-cosmos-reduced-motion="true"] #laws-cosmos-spacecraft-secondary,
+#laws-cosmos-layer[data-reduced-motion="true"] #laws-cosmos-spacecraft,
+#laws-cosmos-layer[data-reduced-motion="true"] #laws-cosmos-spacecraft-secondary,
+#dgb-laws-cosmos-layer[data-laws-cosmos-reduced-motion="true"] #dgb-laws-cosmos-spacecraft,
+#dgb-laws-cosmos-layer[data-laws-cosmos-reduced-motion="true"] #dgb-laws-cosmos-spacecraft-secondary,
+#dgb-laws-cosmos-layer[data-reduced-motion="true"] #dgb-laws-cosmos-spacecraft,
+#dgb-laws-cosmos-layer[data-reduced-motion="true"] #dgb-laws-cosmos-spacecraft-secondary {
+  display: none !important;
+  animation: none !important;
+}
+
+#laws-cosmos-layer[data-laws-cosmos-reduced-motion="true"] #laws-cosmos-canvas,
+#laws-cosmos-layer[data-reduced-motion="true"] #laws-cosmos-canvas,
+#dgb-laws-cosmos-layer[data-laws-cosmos-reduced-motion="true"] #dgb-laws-cosmos-canvas,
+#dgb-laws-cosmos-layer[data-reduced-motion="true"] #dgb-laws-cosmos-canvas {
+  opacity: 0.42;
+}
+
+
+/* ============================================================
+   22. RECEIPT
+   ============================================================ */
+
+/*
+LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_CSS_RECEIPT_v2_3_0
+
+TARGET:
+/laws/index.css
+
+CONTRACT:
+LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_CSS_TNT_v2_3_0
+
+PAIRING HTML:
+LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_HTML_TNT_v2_3_0
+
+PREVIOUS CSS CONTRACT:
+LAWS_COMPASS_LANE_B_CONTEXT_AND_EMPIRICAL_SUPPORT_CSS_TNT_v2_2_0
+
+INDEX MODEL USE:
+Presentation architecture only.
+
+MAJOR CHANGES FROM v2.2:
+- Updates CSS contract to v2.3.
+- Prepares page for shared world-pass planet architecture.
+- Removes dependency on DOM-mounted Showroom planet surfaces.
+- Keeps [data-laws-planet-mount] as inert compatibility/spatial surface only.
+- Keeps [data-upstream-compass-control] as semantic click authority.
+- Adds Showroom-modeled Laws Cosmos layer compatibility:
+  - #laws-cosmos-layer
+  - #laws-cosmos-canvas
+  - #laws-cosmos-spacecraft
+  - #laws-cosmos-spacecraft-secondary
+  - #dgb-laws-cosmos-layer fallback aliases
+- Strengthens non-monochromatic visual palette:
+  - gold Flow
+  - cyan Integrity
+  - warm Reality
+  - red Structure
+  - violet applied-system accents
+- Preserves first-paint category star visibility.
+- Preserves law stars hidden until active cluster/projection.
+- Preserves projection-visible controls as runtime hit targets.
+- Preserves compositor rear/front canvas pointer transparency.
+- Preserves context-restored discovery sections.
+- Preserves evidence boundary and claim-language separation.
+- Preserves Frontier link-out card support.
+- Preserves receipt accordion support.
+- Preserves reduced-motion behavior.
+
+RUNTIME SURFACES SUPPORTED:
+- [data-laws-root]
+- [data-laws-scene]
+- [data-laws-scene-field]
+- [data-laws-panel]
+- [data-upstream-compass-control]
+- [data-upstream-compass-mount]
+- [data-laws-planet-mount]
+- [data-laws-objects]
+- [data-laws-category]
+- :is([data-laws-law], [data-laws-member])
+- [data-laws-controller-receipt]
+- [data-laws-controller-validation]
+- [data-laws-interactions-receipt]
+- [data-laws-compositor-receipt]
+- [data-laws-crystals-receipt]
+- [data-laws-cosmos-receipt]
+- [data-laws-planet-receipt]
+
+CENTER PLANET:
+- Rendered by Laws world pass.
+- CSS does not construct planet geometry.
+- CSS does not mount planet DOM renderer.
+- CSS does not create fake center planet.
+- [data-upstream-compass-control] remains click authority.
+- Route authority: false.
+- Controller authority: false.
+- Semantic activation authority: false.
+- CSS authority: presentation only.
+
+COSMOS:
+- Decorative only.
+- Functional dependency false.
+- Navigation authority false.
+- Compositor participant false.
+- Pointer authority false.
+- Reduced motion supported.
+
+CLAIM BOUNDARIES PRESERVED:
+- Evidence is not validation.
+- Candidate output is not active bound.
+- Warranty evidence is not observed equipment performance.
+- Synthetic fixture is not empirical evidence.
+- Observation insertion is not validation.
+- Runtime receipt is not production validation.
+- Route existence is not route maturity.
+- Visual pass is not scientific confirmation.
+- Discovery signal is not scientific acceptance.
+- Applied example is not universal proof.
+- Diagnostic framing is not clinical validation.
+
+CONTROLLER REOPEN:
+FALSE
+
+INTERACTIONS REOPEN:
+FALSE
+
+COMPOSITOR REOPEN:
+FALSE
+
+CRYSTALS REOPEN:
+FALSE
+
+COSMOS FUNCTIONAL DEPENDENCY:
+FALSE
+
+RUNTIME EXECUTION:
+NOT PERFORMED
+
+VISUAL ACCEPTANCE:
+NOT CLAIMED
+
+PRODUCTION AUTHORIZATION:
+FALSE
+
+DEPLOYMENT AUTHORIZATION:
+FALSE
+*/
+
+
+/* ============================================================
+   LAWS_COLLAPSED_DISCLOSURE_STANDARD_v1
+   Closed = plus. Open = minus. Independent native details state.
+   ============================================================ */
+
+[data-laws-root] details > summary {
+  position: relative;
+  padding-right: 3.1rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+[data-laws-root] details > summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-laws-root] details > summary::marker {
+  content: "";
+}
+
+[data-laws-root] details > summary::after {
+  content: "+" !important;
+  position: absolute;
+  top: 50%;
+  right: .45rem;
+  display: grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  place-items: center;
+  border: 1px solid rgba(216, 184, 106, .34);
+  border-radius: 999px;
+  color: var(--laws-gold-hot);
+  background: rgba(6, 10, 18, .76);
+  font: 800 1.18rem/1 ui-sans-serif, system-ui, sans-serif;
+  transform: translateY(-50%);
+  box-shadow:
+    0 0 1rem rgba(216, 184, 106, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+[data-laws-root] details[open] > summary::after {
+  content: "−" !important;
+}
+
+[data-laws-root] details > summary:hover::after,
+[data-laws-root] details > summary:focus-visible::after {
+  border-color: rgba(243, 217, 139, .66);
+  color: #fff3be;
+  background: rgba(14, 20, 31, .90);
+}
+
+
+/* ============================================================
+   24. EUCLIDEAN CLUSTER ORBIT CORRECTION
+   ============================================================ */
+
+/*
+  The former field ellipse was atmospheric scenery and was not generated
+  from the four law-star positions. It is suppressed while a law cluster
+  is active so no decorative curve is presented as the governing orbit.
+*/
+[data-laws-root][data-laws-presentation-mode="CLUSTER"]
+  .laws-orbit__field::after,
+[data-laws-root][data-laws-presentation-mode="CLUSTER"]
+  [data-laws-scene-field]::after {
+  content: none;
+  display: none;
+}
+
+
+/* LAWS_FIRST_TEST_LABEL_AND_SHELL_CONFORMANCE_20260729A */
+.laws-atlas-key__legend .laws-atlas-key__method {
+  border-color: rgba(124, 220, 255, 0.30);
+  color: rgba(255, 248, 224, 0.96);
+  background: linear-gradient(135deg, rgba(14, 35, 48, 0.78), rgba(45, 35, 18, 0.72));
+  box-shadow: 0 0 18px rgba(124, 220, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.laws-first-method {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin-top: 2px;
+  padding: 13px 14px;
+  border: 1px solid rgba(124, 220, 255, 0.20);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(7, 18, 29, 0.86), rgba(30, 24, 13, 0.72));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.laws-first-method__acronym {
+  display: grid;
+  place-items: center;
+  min-width: 4.5rem;
+  min-height: 4.5rem;
+  padding: 0.55rem;
+  border: 1px solid rgba(243, 217, 139, 0.46);
+  border-radius: 50%;
+  color: #120f08;
+  background: radial-gradient(circle at 35% 30%, #fff2b8, #c89d48 68%, #6f5324);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.10em;
+  box-shadow: 0 0 24px rgba(243, 217, 139, 0.14);
+}
+
+.laws-first-method strong {
+  color: rgba(255, 248, 224, 0.98);
+  font-size: 1rem;
+}
+
+.laws-first-method p {
+  margin: 0.28rem 0 0;
+  color: var(--laws-ink-soft);
+  font-size: 0.88rem;
+}
+
+.laws-atlas-key__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.laws-atlas-key__actions > * {
+  width: 100%;
+}
+
+.laws-atlas-key__main-compass {
+  grid-column: 1 / -1;
+}
+
+.laws-atlas-key__return:not([hidden]) {
+  border-color: rgba(124, 220, 255, 0.30);
+  background: linear-gradient(135deg, rgba(7, 24, 37, 0.90), rgba(8, 13, 22, 0.94));
+}
+
+@media (max-width: 560px) {
+  .laws-first-method {
+    grid-template-columns: 1fr;
+  }
+  .laws-first-method__acronym {
+    min-width: 3.8rem;
+    min-height: 3.8rem;
+    justify-self: start;
+  }
+  .laws-atlas-key__actions {
+    grid-template-columns: 1fr;
+  }
+  .laws-atlas-key__main-compass {
+    grid-column: auto;
+  }
+}
+
+
+/* CELESTIAL GATEWAY AND AUXILIARY CLUSTER CP2 */
+:root{--laws-category-size:clamp(2.52rem,4.64vw,4.08rem);--laws-authority-size:clamp(4.15rem,7.4vw,6.45rem)}
+[data-laws-category][data-laws-gateway]{width:var(--laws-authority-size);aspect-ratio:1}
+[data-laws-category][data-laws-gateway="solar"]::before{clip-path:circle(49% at 50% 50%);background:radial-gradient(circle at 34% 28%,#fffde2 0 8%,#fff0a1 17%,#ffbd3f 46%,#b84d00 76%,#4d1700 100%);box-shadow:inset -.65rem -.8rem 1.25rem rgba(117,30,0,.62),inset .35rem .25rem .8rem rgba(255,255,255,.48),0 0 1.35rem rgba(255,223,105,.78),0 0 3.6rem rgba(255,143,31,.42);filter:drop-shadow(0 0 .85rem rgba(255,198,63,.68))}
+[data-laws-category][data-laws-gateway="lunar"]::before{clip-path:circle(49% at 50% 50%);background:radial-gradient(circle at 33% 28%,rgba(255,255,255,.96) 0 7%,transparent 8%),radial-gradient(circle at 66% 62%,rgba(31,38,61,.72) 0 9%,transparent 10%),radial-gradient(circle at 44% 71%,rgba(58,66,91,.68) 0 6%,transparent 7%),radial-gradient(circle at 52% 43%,#d7dcf0 0 18%,#858da9 54%,#34394f 82%,#151827 100%);box-shadow:inset -.85rem -.7rem 1.35rem rgba(7,10,24,.78),inset .28rem .2rem .72rem rgba(255,255,255,.34),0 0 1.1rem rgba(178,194,255,.42),0 0 2.8rem rgba(111,91,205,.22);filter:drop-shadow(0 0 .68rem rgba(163,178,239,.44))}
+[data-laws-projected-law-label]{display:grid;min-width:clamp(4.8rem,12vw,7rem);gap:.05rem;border-radius:.8rem;white-space:normal}
+[data-laws-projected-law-label] [data-laws-label-line]{display:block}
+[data-laws-projected-law-label] [data-laws-label-line="ampersand"]{font-size:.72em;line-height:.82;opacity:.82}
+
+/* LAWS_COMPASS_CHECKPOINT_5_EXACT_TWO_OBJECT_RECONCILIATION_v2 */
+[data-laws-category][data-direction="test"],[data-laws-category][data-direction="research"]{top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%)}
+[data-laws-category][data-direction="test"]{z-index:7;opacity:1}
+[data-laws-category][data-direction="research"]{z-index:2;opacity:.72;filter:saturate(.72) brightness(.72)}
+[data-laws-category][data-direction="test"]>.laws-authority-label,[data-laws-category][data-direction="research"]>.laws-authority-label{position:absolute;left:50%;top:74%;display:block!important;min-width:max-content;transform:translate(-50%,-50%);pointer-events:none}
+[data-laws-root][data-active-cluster-direction="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-selected-direction="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-active-cluster="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-laws-active-cluster="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-laws-active-category="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-active-cluster-direction="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-selected-direction="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-active-cluster="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-laws-active-cluster="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-laws-active-category="research"] [data-laws-member][data-direction="research"]{visibility:visible;opacity:1;pointer-events:auto}
+
+
+/* CP6-4/5 · Research comes F.I.R.S.T. and canonical consolidation */
+.laws-first,.laws-consolidated-overview,.laws-consolidated-panel,.laws-custody-summary{position:relative;margin:clamp(16px,3vw,30px) 0;padding:clamp(20px,4vw,42px);border:1px solid rgba(174,205,255,.24);border-radius:clamp(20px,3vw,34px);background:linear-gradient(145deg,rgba(10,18,34,.96),rgba(4,8,18,.94));box-shadow:0 24px 74px rgba(0,0,0,.35);overflow:hidden}.laws-first h2,.laws-consolidated-overview h2,.laws-consolidated-panel h2,.laws-custody-summary h2{margin:.35rem 0 .85rem;font-size:clamp(2rem,6vw,4.7rem);line-height:.98}.laws-first__lead{max-width:900px;font-size:clamp(1rem,2.4vw,1.25rem)}.laws-first__sequence{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:20px}.laws-first__sequence>a,.laws-first__research,.laws-first__test-routes,.laws-consolidated-grid>article{min-width:0;border:1px solid rgba(174,205,255,.2);border-radius:18px;background:rgba(4,10,22,.78);padding:16px;text-decoration:none}.laws-first__sequence span{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:1px solid currentColor;font-weight:950;font-size:1.35rem}.laws-first__sequence strong{display:block;margin:.65rem 0 .2rem;font-size:1.05rem}.laws-first__sequence p,.laws-first__research p,.laws-first__test-routes,.laws-consolidated-grid p{margin:.3rem 0;color:var(--muted,#c5cede)}.laws-first__research{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:18px;margin-top:12px}.laws-first__research span{font-weight:950;letter-spacing:.13em;text-transform:uppercase}.laws-first__research h3{margin:.3rem 0;font-size:clamp(1.35rem,3vw,2.15rem)}.laws-first__routes,.laws-first__test-routes,.laws-consolidated-links{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.laws-first__routes a,.laws-first__test-routes a,.laws-consolidated-links a,.laws-consolidated-grid a{display:inline-flex;align-items:center;min-height:42px;padding:.55rem .78rem;border:1px solid rgba(174,205,255,.25);border-radius:999px;text-decoration:none;font-weight:850}.laws-first__test-routes{margin-top:12px}.laws-consolidated-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.laws-consolidated-panel h2,.laws-custody-summary h2{font-size:clamp(1.65rem,4vw,3rem)}.laws-consolidated-panel p,.laws-custody-summary p{max-width:900px}.laws-discovery__item>summary{overflow-wrap:anywhere}.laws-discovery pre,.laws-discovery code{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}@media(max-width:900px){.laws-first__sequence{grid-template-columns:repeat(2,minmax(0,1fr))}.laws-first__research{grid-template-columns:1fr}}@media(max-width:620px){.laws-first__sequence,.laws-consolidated-grid{grid-template-columns:1fr}.laws-first,.laws-consolidated-overview,.laws-consolidated-panel,.laws-custody-summary{padding:18px;border-radius:20px}}
+
+
+/* LAWS_CP6_LANE1_COMPASS_FIRST_PROGRESSIVE_DISCLOSURE_v1 */
+.laws-topbar {
+  gap: clamp(0.65rem, 1.8vw, 1.25rem);
+  padding-block: clamp(0.55rem, 1.4vw, 0.85rem);
+}
+
+.laws-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem 0.55rem;
+  min-width: 0;
+}
+
+.laws-nav a {
+  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  font-size: clamp(0.72rem, 1.2vw, 0.82rem);
+  white-space: nowrap;
+}
+
+.laws-estate,
+.laws-compass-primary,
+.laws-practical-opening,
+.laws-first--compact,
+.laws-discovery--collapsed,
+.laws-orientation-panel,
+.laws-orientation-panel__body {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.laws-compass-primary {
+  display: grid;
+  gap: clamp(0.8rem, 2vw, 1.35rem);
+  margin-top: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.laws-compass-primary > .laws-orbit {
+  margin-top: 0;
+}
+
+.laws-practical-opening {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(1rem, 2.5vw, 1.8rem) auto 0;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  border: 1px solid rgba(213, 184, 105, 0.28);
+  border-radius: 1rem;
+  background: rgba(10, 15, 27, 0.72);
+}
+
+.laws-practical-opening h1 {
+  max-width: 24ch;
+  margin-block: 0.25rem 0.55rem;
+  font-size: clamp(1.55rem, 4vw, 2.55rem);
+}
+
+.laws-practical-opening p:last-child {
+  max-width: 76ch;
+  margin-bottom: 0;
+}
+
+.laws-first--compact {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(0.85rem, 2vw, 1.35rem) auto 0;
+  padding: clamp(0.9rem, 2.2vw, 1.35rem);
+}
+
+.laws-first__compact-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.laws-first__compact-heading h2,
+.laws-first__compact-heading p {
+  margin-bottom: 0;
+}
+
+.laws-first__compact-heading > p {
+  color: rgba(240, 224, 177, 0.82);
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.laws-first__compact-sequence {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.laws-first__compact-sequence a {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgba(213, 184, 105, 0.24);
+  border-radius: 0.7rem;
+  background: rgba(255, 255, 255, 0.025);
+  text-decoration: none;
+}
+
+.laws-first__compact-sequence span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 50%;
+  background: rgba(213, 184, 105, 0.14);
+  color: #f1dfaa;
+  font-weight: 800;
+}
+
+.laws-first__compact-research {
+  margin: 0.8rem 0 0;
+  max-width: 92ch;
+  font-size: 0.94rem;
+}
+
+.laws-discovery--collapsed {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(0.9rem, 2.5vw, 1.6rem) auto 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.laws-orientation-panel {
+  border: 1px solid rgba(213, 184, 105, 0.24);
+  border-radius: 0.85rem;
+  background: rgba(8, 13, 24, 0.78);
+  overflow: clip;
+}
+
+.laws-orientation-panel > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  touch-action: manipulation;
+}
+
+.laws-orientation-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-orientation-panel > summary span {
+  font-weight: 750;
+  color: #f3e4b9;
+}
+
+.laws-orientation-panel > summary small {
+  color: rgba(226, 231, 241, 0.72);
+  line-height: 1.35;
+}
+
+.laws-orientation-panel[open] > summary {
+  border-bottom: 1px solid rgba(213, 184, 105, 0.18);
+}
+
+.laws-orientation-panel__body {
+  padding: clamp(0.75rem, 2vw, 1.2rem);
+}
+
+.laws-orientation-panel__body > :first-child {
+  margin-top: 0;
+}
+
+.laws-value-deck {
+  display: none !important;
+}
+
+.laws-practical-opening,
+.laws-first--compact,
+.laws-orientation-panel,
+.laws-orientation-panel__body,
+.laws-orientation-panel__body * {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .laws-topbar {
+    align-items: flex-start;
+  }
+
+  .laws-nav {
+    justify-content: flex-start;
+  }
+
+  .laws-first__compact-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .laws-first__compact-sequence {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-first__compact-sequence a:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .laws-orientation-panel > summary {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .laws-practical-opening,
+  .laws-first--compact,
+  .laws-discovery--collapsed {
+    width: min(100% - 1rem, 76rem);
+  }
+
+  .laws-first__compact-sequence {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-first__compact-sequence a:last-child {
+    grid-column: auto;
+  }
+}
+
+
+/* LAWS_CP6_LANE1_PHONE_CRYSTAL_FIT_v1
+   Presentation-only fit for live crystal canvases and their matching semantic
+   hit layer. Runtime projection, geometry authority, routes, and interaction
+   sequencing remain unchanged. */
+@media (max-width: 430px) {
+  .laws-orbit__field > canvas[data-laws-compositor-layer],
+  .laws-orbit__field > .laws-object-layer,
+  .laws-orbit__field > [data-laws-objects] {
+    transform: scale(0.72);
+    transform-origin: 50% 50%;
+  }
+}
+
+
+/* LAWS_CP6_DIRECT_LANGUAGE_AND_HIERARCHY_CORRECTION_v1 */
+.laws-first.laws-first--direct {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(0.55rem, 1.4vw, 0.9rem) auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.laws-first__disclosure {
+  border: 1px solid rgba(216, 184, 106, 0.34);
+  border-radius: clamp(0.9rem, 2vw, 1.3rem);
+  background: linear-gradient(145deg, rgba(12, 19, 34, 0.96), rgba(5, 9, 18, 0.96));
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  overflow: clip;
+}
+
+.laws-first__disclosure > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.4rem);
+  min-height: clamp(7.2rem, 13vw, 9.2rem);
+  padding: clamp(1rem, 2.6vw, 1.55rem) clamp(1rem, 3vw, 1.8rem);
+}
+
+.laws-first__disclosure > summary::after {
+  right: clamp(0.75rem, 2vw, 1.2rem);
+}
+
+.laws-first__summary-copy {
+  min-width: 0;
+  padding-right: clamp(1.7rem, 4vw, 2.7rem);
+}
+
+.laws-first__summary-copy .kicker {
+  margin: 0;
+}
+
+.laws-first__summary-copy h1 {
+  max-width: 18ch;
+  margin: 0.2rem 0 0.45rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 4.8vw, 3.65rem);
+  line-height: 0.98;
+}
+
+.laws-first__summary-copy p:last-child {
+  max-width: 76ch;
+  margin: 0;
+  color: var(--laws-ink-soft);
+  font-size: clamp(0.92rem, 1.6vw, 1.04rem);
+  line-height: 1.48;
+}
+
+.laws-first__expand-label {
+  margin-right: 2.35rem;
+  color: var(--laws-gold-hot);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.laws-first__disclosure[open] {
+  border-color: rgba(243, 217, 139, 0.56);
+}
+
+.laws-first__disclosure-body {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0 clamp(1rem, 3vw, 1.8rem) clamp(1rem, 3vw, 1.65rem);
+  border-top: 1px solid rgba(216, 184, 106, 0.16);
+}
+
+.laws-first__question-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.55rem;
+  padding-top: clamp(0.9rem, 2vw, 1.25rem);
+}
+
+.laws-first__question-grid article,
+.laws-first__research-record {
+  min-width: 0;
+  padding: 0.8rem 0.85rem;
+  border: 1px solid rgba(174, 205, 255, 0.18);
+  border-radius: 0.8rem;
+  background: rgba(5, 10, 21, 0.72);
+}
+
+.laws-first__question-grid a,
+.laws-first__research-record a {
+  color: var(--laws-gold-hot);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+.laws-first__question-grid a:hover,
+.laws-first__question-grid a:focus-visible,
+.laws-first__research-record a:hover,
+.laws-first__research-record a:focus-visible {
+  color: #fff4c3;
+  text-decoration: underline;
+  text-underline-offset: 0.22rem;
+}
+
+.laws-first__question-grid p,
+.laws-first__research-record p {
+  margin: 0.4rem 0 0;
+  color: var(--laws-ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.laws-first__research-record {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.28fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem;
+}
+
+.laws-first__research-record p {
+  margin-top: 0;
+}
+
+.laws-first--direct + .laws-compass-primary {
+  margin-top: clamp(0.6rem, 1.6vw, 1rem);
+}
+
+.laws-practical-opening h2 {
+  max-width: 24ch;
+  margin-block: 0.25rem 0.55rem;
+  font-size: clamp(1.55rem, 4vw, 2.55rem);
+}
+
+.skip:not(:focus):not(:focus-visible) {
+  position: fixed;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 860px) {
+  .laws-first__question-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-first__research-record {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .laws-first.laws-first--direct {
+    width: calc(100% - 0.5rem);
+    margin-top: 0.35rem;
+  }
+
+  .laws-first__disclosure > summary {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 0.9rem 0.9rem 1rem;
+  }
+
+  .laws-first__summary-copy {
+    padding-right: 2rem;
+  }
+
+  .laws-first__summary-copy h1 {
+    font-size: clamp(1.65rem, 9.5vw, 2.65rem);
+  }
+
+  .laws-first__expand-label {
+    margin: -0.15rem 2.25rem 0 0;
+    font-size: 0.69rem;
+  }
+
+  .laws-first__question-grid {
+    grid-template-columns: 1fr;
+  }
+}

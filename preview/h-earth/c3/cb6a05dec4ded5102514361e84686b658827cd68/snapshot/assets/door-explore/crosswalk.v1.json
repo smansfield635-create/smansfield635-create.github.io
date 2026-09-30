@@ -1,0 +1,28 @@
+{
+  "schema": "DOOR_EXPLORE_11_CARD_CROSSWALK_v1",
+  "status": "PASS_CLOSED",
+  "doorCards": ["Products", "Gauges", "Frontier", "Laws", "Governance", "Home"],
+  "exploreCards": ["Measurement", "Identity", "Laws", "Products", "Gauges"],
+  "families": [
+    {"cycle":1,"family":"Frontier","cards":["DOOR_FRONTIER"],"status":"CLOSED","sharedKernel":"frontier-cycle1"},
+    {"cycle":2,"family":"Products","cards":["DOOR_PRODUCTS","EXPLORE_PRODUCTS"],"status":"CLOSED","sharedKernel":"products-cycle2"},
+    {"cycle":3,"family":"InstrumentDecision","cards":["DOOR_GAUGES","EXPLORE_GAUGES","EXPLORE_MEASUREMENT","DOOR_GOVERNANCE"],"status":"CLOSED","sharedKernel":"instrument-cycle3"},
+    {"cycle":4,"family":"Laws","cards":["DOOR_LAWS","EXPLORE_LAWS"],"status":"CLOSED","sharedKernel":"laws-cycle4"},
+    {"cycle":5,"family":"IdentityHome","cards":["DOOR_HOME","EXPLORE_IDENTITY"],"status":"CLOSED","sharedKernel":"identity-cycle5"}
+  ],
+  "cards": [
+    {"id":"DOOR_PRODUCTS","surface":"Door","label":"Products","family":"Products","status":"CLOSED"},
+    {"id":"DOOR_GAUGES","surface":"Door","label":"Gauges","family":"InstrumentDecision","status":"CLOSED"},
+    {"id":"DOOR_FRONTIER","surface":"Door","label":"Frontier","family":"Frontier","status":"CLOSED"},
+    {"id":"DOOR_LAWS","surface":"Door","label":"Laws","family":"Laws","status":"CLOSED"},
+    {"id":"DOOR_GOVERNANCE","surface":"Door","label":"Governance","family":"InstrumentDecision","status":"CLOSED"},
+    {"id":"DOOR_HOME","surface":"Door","label":"Home","family":"IdentityHome","status":"CLOSED"},
+    {"id":"EXPLORE_MEASUREMENT","surface":"Explore","label":"Measurement","family":"InstrumentDecision","status":"CLOSED"},
+    {"id":"EXPLORE_IDENTITY","surface":"Explore","label":"Identity","family":"IdentityHome","status":"CLOSED"},
+    {"id":"EXPLORE_LAWS","surface":"Explore","label":"Laws","family":"Laws","status":"CLOSED"},
+    {"id":"EXPLORE_PRODUCTS","surface":"Explore","label":"Products","family":"Products","status":"CLOSED"},
+    {"id":"EXPLORE_GAUGES","surface":"Explore","label":"Gauges","family":"InstrumentDecision","status":"CLOSED"}
+  ],
+  "progress": {"closed":11,"total":11,"cycleClosed":5,"cycleTotal":5},
+  "browserTerminal": "PASS_CLOSED_11_OF_11"
+}

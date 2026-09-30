@@ -1,0 +1,449 @@
+{
+  "operationId": "H_EARTH_R06_C10_CANDIDATE_PREVIEW_PUBLICATION_001",
+  "status": "PASS_VISIBLE_ENVIRONMENT_PROVEN",
+  "sourceHead": "95504c9927922318225da1d61fa303cec70497f9",
+  "previewFileCount": 114,
+  "dependencyClosureResult": "PASS",
+  "byteManifestResult": "PASS",
+  "manifestDigest": "sha256:4c14107216ba4a4c233bca775487ba8c0512c702feb8c11c7fc378b5b9770b35",
+  "previewCompatibilityInstalled": true,
+  "terrainElevationMutation": false,
+  "candidateDeltaMutation": false,
+  "candidatePackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_07F2FA1F",
+  "previewRuntimeIdentityBindingInstalled": true,
+  "rendererPresentationMutation": false,
+  "desktopBrowserProof": "PASS",
+  "touchMobileBrowserProof": "PASS",
+  "candidateTerrainModuleLoaded": true,
+  "visibleWorldFrameProven": true,
+  "packageConstructionResult": "PASS",
+  "browserProofSummary": {
+    "status": "PASS_VISIBLE_ENVIRONMENT",
+    "sourceHead": "95504c9927922318225da1d61fa303cec70497f9",
+    "desktop": {
+      "profile": "desktop",
+      "url": "http://127.0.0.1:4188/preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9/index.html",
+      "result": {
+        "canvas": {
+          "width": 992,
+          "height": 522,
+          "visiblePixelFraction": 1,
+          "brightPixelFraction": 1,
+          "meanRgbSum": 289.8444181806946,
+          "maximumRgbSum": 539,
+          "glError": 0
+        },
+        "startupReceipt": {
+          "version": "H_EARTH_RENDERER_STARTUP_DIAGNOSTIC_RECEIPT_v1",
+          "stages": {
+            "CANVAS_ACQUIRED": "PASS",
+            "WEBGL2_CONTEXT_REQUESTED": "PASS",
+            "WEBGL2_CONTEXT_ACQUIRED": "PASS",
+            "WEBGL_IDENTITY_CAPTURED": "PASS",
+            "RENDERER_CONSTRUCTOR_ENTERED": "PASS",
+            "RENDERER_CONSTRUCTOR_RETURNED": "PASS",
+            "INITIALIZATION_ENTERED": "PASS",
+            "VERTEX_SHADER_COMPILED": "PASS",
+            "FRAGMENT_SHADER_COMPILED": "PASS",
+            "PROGRAM_LINKED": "PASS",
+            "GPU_RESOURCES_CREATED": "PASS",
+            "FRAMEBUFFER_VALIDATED": "PASS",
+            "INITIAL_DRAW_ENTERED": "PASS",
+            "INITIAL_DRAW_RETURNED": "PASS",
+            "FIRST_FRAME_PRESENTED": "PASS",
+            "READY_PUBLISHED": "PASS"
+          },
+          "firstFailureStage": null,
+          "failureClass": null,
+          "plainLanguageSummary": "Renderer startup is still in progress.",
+          "exceptionName": null,
+          "exceptionMessage": null,
+          "stack": null,
+          "webglError": 0,
+          "shaderLog": null,
+          "programLinkLog": null,
+          "framebufferStatus": 36053,
+          "contextLost": false,
+          "canvasWidth": 992,
+          "canvasHeight": 522,
+          "pixelRatio": 1,
+          "webglVendor": "Google Inc. (Google)",
+          "webglRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "timestamp": "2026-08-04T22:14:56.816Z",
+          "device": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36"
+        },
+        "runtimeSnapshot": {
+          "stages": [
+            {
+              "stage": "BOOT_STARTED",
+              "status": "PASS",
+              "detail": {
+                "integrationId": "H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1"
+              },
+              "timestamp": "2026-08-04T22:14:42.063Z"
+            },
+            {
+              "stage": "CANVAS_ACQUIRED",
+              "status": "PASS",
+              "detail": {
+                "canvasId": "h-earth-functional-landscape-canvas",
+                "cssWidth": 1368,
+                "cssHeight": 720,
+                "backingWidth": 320,
+                "backingHeight": 180,
+                "devicePixelRatio": 1
+              },
+              "timestamp": "2026-08-04T22:14:42.063Z"
+            },
+            {
+              "stage": "RENDERER_CONSTRUCTED",
+              "status": "PASS",
+              "detail": {
+                "rendererInitializationCount": 1
+              },
+              "timestamp": "2026-08-04T22:14:49.791Z"
+            },
+            {
+              "stage": "FIRST_FRAME_DRAWN",
+              "status": "PASS",
+              "detail": {
+                "frameSequence": 1,
+                "sourceKind": "INITIAL_NAVIGATION_STATE",
+                "sourceSequence": 1,
+                "inputClass": null,
+                "navigationStateId": "H_EARTH_NAVIGATION_STATE_0001",
+                "navigationSequence": 1,
+                "cameraPosition": {
+                  "x": 0,
+                  "y": 3.776628613471985,
+                  "z": -96
+                },
+                "verticalFovDegrees": 56,
+                "viewProjectionMatrix": [
+                  0.9896564666439368,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1.862423364669672,
+                  -0.1393090785867973,
+                  -0.13917310096006544,
+                  0,
+                  -0.26174653423991207,
+                  -0.9912355998297397,
+                  -0.9902680687415703,
+                  0,
+                  -32.16134865644181,
+                  -95.13274319124024,
+                  -94.54012948387934
+                ],
+                "worldBuiltBecauseCameraMoved": false,
+                "successorTerrainCameraReconciled": true,
+                "responseMs": 148.8000000000029,
+                "colorSummary": null,
+                "diagnosticReadbackPerformed": false
+              },
+              "timestamp": "2026-08-04T22:14:49.790Z"
+            },
+            {
+              "stage": "WEBGL2_CONTEXT_ACQUIRED",
+              "status": "PASS",
+              "detail": {
+                "contextCreationCount": 1
+              },
+              "timestamp": "2026-08-04T22:14:49.791Z"
+            },
+            {
+              "stage": "RENDERER_MOUNTED",
+              "status": "PASS",
+              "detail": {
+                "canvasConnected": true,
+                "mountConnected": true
+              },
+              "timestamp": "2026-08-04T22:14:49.792Z"
+            },
+            {
+              "stage": "READY_EVENT_EMITTED",
+              "status": "PASS",
+              "detail": {
+                "type": "H_EARTH_RUN8E_READY",
+                "integrationId": "H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1",
+                "timestamp": "2026-08-04T22:14:49.793Z"
+              },
+              "timestamp": "2026-08-04T22:14:49.793Z"
+            },
+            {
+              "stage": "PARENT_READY_STATE_OBSERVED",
+              "status": "NOT_APPLICABLE",
+              "detail": "Top-level route has no parent host.",
+              "timestamp": "2026-08-04T22:14:49.793Z"
+            }
+          ],
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36",
+          "framed": false
+        },
+        "candidateModuleLoaded": true,
+        "routeDataset": {
+          "run6fReady": "false",
+          "run6fError": "false",
+          "run7hReady": "false",
+          "run7hError": "false",
+          "run8eReady": "true",
+          "run8eError": "false",
+          "publicRoute": "true",
+          "gestureUsed": "false",
+          "run8ePublicRoute": "true",
+          "r3e2PublicGpuComposition": "true"
+        },
+        "bodyText": "H\nLIVE INTERACTIVE GAME PLATFORM\nH-Earth\nReturn to Compass\nAwards\n\nDIAMOND GATE BRIDGE \u00b7 MIRRORLAND \u00b7 SURVIVAL\n\nWelcome to H-Earth.\n\nA live interactive world inside the developing Mirrorland game platform. The environment below is available now; its gameplay systems, connected worlds, characters, and larger platform continue to develop.\n\nInteractive now\nIn active development\nEnter and explore\nOpen the context lenses\n\nLIVE WORLD ARRIVAL\n\nThe coast is the entrance.\n\nDirectly manipulate the live environment below. Look, travel, and zoom on desktop or touch devices.\n\nLIVE ENVIRONMENT\nCOASTAL_FOREGROUND_TERRAIN\nH_EARTH_GROUND_CELL_001:R03:C08\n\nOPTIONAL CONTEXT\n\nChoose a lens.\n\nThe page opens as presentation and live world. Context, practical guidance, engineering, and evidence remain closed until selected.\n\nPlatform lens\nWhat is interactive now and what is developing\nStory lens\nMirrorland, Survival, and the developing game universe\nPreservation lens\nHow the world is protected while it develops\nPractical lens\nHow to enter, explore, and return\nEngineering lens\nRuntime architecture and technical surfaces\nEvidence lens\nReceipts, gauges, probes, and session replay"
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "httpFailures": []
+    },
+    "mobile": {
+      "profile": "touch-mobile",
+      "url": "http://127.0.0.1:4188/preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9/index.html",
+      "result": {
+        "canvas": {
+          "width": 374,
+          "height": 604,
+          "visiblePixelFraction": 1,
+          "brightPixelFraction": 1,
+          "meanRgbSum": 292.0853047420052,
+          "maximumRgbSum": 539,
+          "glError": 0
+        },
+        "startupReceipt": {
+          "version": "H_EARTH_RENDERER_STARTUP_DIAGNOSTIC_RECEIPT_v1",
+          "stages": {
+            "CANVAS_ACQUIRED": "PASS",
+            "WEBGL2_CONTEXT_REQUESTED": "PASS",
+            "WEBGL2_CONTEXT_ACQUIRED": "PASS",
+            "WEBGL_IDENTITY_CAPTURED": "PASS",
+            "RENDERER_CONSTRUCTOR_ENTERED": "PASS",
+            "RENDERER_CONSTRUCTOR_RETURNED": "PASS",
+            "INITIALIZATION_ENTERED": "PASS",
+            "VERTEX_SHADER_COMPILED": "PASS",
+            "FRAGMENT_SHADER_COMPILED": "PASS",
+            "PROGRAM_LINKED": "PASS",
+            "GPU_RESOURCES_CREATED": "PASS",
+            "FRAMEBUFFER_VALIDATED": "PASS",
+            "INITIAL_DRAW_ENTERED": "PASS",
+            "INITIAL_DRAW_RETURNED": "PASS",
+            "FIRST_FRAME_PRESENTED": "PASS",
+            "READY_PUBLISHED": "PASS"
+          },
+          "firstFailureStage": null,
+          "failureClass": null,
+          "plainLanguageSummary": "Renderer startup is still in progress.",
+          "exceptionName": null,
+          "exceptionMessage": null,
+          "stack": null,
+          "webglError": 0,
+          "shaderLog": null,
+          "programLinkLog": null,
+          "framebufferStatus": 36053,
+          "contextLost": false,
+          "canvasWidth": 374,
+          "canvasHeight": 604,
+          "pixelRatio": 2,
+          "webglVendor": "Google Inc. (Google)",
+          "webglRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "timestamp": "2026-08-04T22:15:12.606Z",
+          "device": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36"
+        },
+        "runtimeSnapshot": {
+          "stages": [
+            {
+              "stage": "BOOT_STARTED",
+              "status": "PASS",
+              "detail": {
+                "integrationId": "H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1"
+              },
+              "timestamp": "2026-08-04T22:14:57.848Z"
+            },
+            {
+              "stage": "CANVAS_ACQUIRED",
+              "status": "PASS",
+              "detail": {
+                "canvasId": "h-earth-functional-landscape-canvas",
+                "cssWidth": 374,
+                "cssHeight": 604,
+                "backingWidth": 320,
+                "backingHeight": 180,
+                "devicePixelRatio": 2
+              },
+              "timestamp": "2026-08-04T22:14:57.848Z"
+            },
+            {
+              "stage": "RENDERER_CONSTRUCTED",
+              "status": "PASS",
+              "detail": {
+                "rendererInitializationCount": 1
+              },
+              "timestamp": "2026-08-04T22:15:04.648Z"
+            },
+            {
+              "stage": "FIRST_FRAME_DRAWN",
+              "status": "PASS",
+              "detail": {
+                "frameSequence": 1,
+                "sourceKind": "INITIAL_NAVIGATION_STATE",
+                "sourceSequence": 1,
+                "inputClass": null,
+                "navigationStateId": "H_EARTH_NAVIGATION_STATE_0001",
+                "navigationSequence": 1,
+                "cameraPosition": {
+                  "x": 0,
+                  "y": 3.776628613471985,
+                  "z": -96
+                },
+                "verticalFovDegrees": 56,
+                "viewProjectionMatrix": [
+                  3.0373229547304397,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1.862423364669672,
+                  -0.1393090785867973,
+                  -0.13917310096006544,
+                  0,
+                  -0.26174653423991207,
+                  -0.9912355998297397,
+                  -0.9902680687415703,
+                  0,
+                  -32.16134865644181,
+                  -95.13274319124024,
+                  -94.54012948387934
+                ],
+                "worldBuiltBecauseCameraMoved": false,
+                "successorTerrainCameraReconciled": true,
+                "responseMs": 170.6999999999971,
+                "colorSummary": null,
+                "diagnosticReadbackPerformed": false
+              },
+              "timestamp": "2026-08-04T22:15:04.646Z"
+            },
+            {
+              "stage": "WEBGL2_CONTEXT_ACQUIRED",
+              "status": "PASS",
+              "detail": {
+                "contextCreationCount": 1
+              },
+              "timestamp": "2026-08-04T22:15:04.648Z"
+            },
+            {
+              "stage": "RENDERER_MOUNTED",
+              "status": "PASS",
+              "detail": {
+                "canvasConnected": true,
+                "mountConnected": true
+              },
+              "timestamp": "2026-08-04T22:15:04.648Z"
+            },
+            {
+              "stage": "READY_EVENT_EMITTED",
+              "status": "PASS",
+              "detail": {
+                "type": "H_EARTH_RUN8E_READY",
+                "integrationId": "H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1",
+                "timestamp": "2026-08-04T22:15:04.649Z"
+              },
+              "timestamp": "2026-08-04T22:15:04.649Z"
+            },
+            {
+              "stage": "PARENT_READY_STATE_OBSERVED",
+              "status": "NOT_APPLICABLE",
+              "detail": "Top-level route has no parent host.",
+              "timestamp": "2026-08-04T22:15:04.649Z"
+            }
+          ],
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36",
+          "framed": false
+        },
+        "candidateModuleLoaded": true,
+        "routeDataset": {
+          "run6fReady": "false",
+          "run6fError": "false",
+          "run7hReady": "false",
+          "run7hError": "false",
+          "run8eReady": "true",
+          "run8eError": "false",
+          "publicRoute": "true",
+          "gestureUsed": "false",
+          "run8ePublicRoute": "true",
+          "r3e2PublicGpuComposition": "true"
+        },
+        "bodyText": "H\nLIVE INTERACTIVE GAME PLATFORM\nH-Earth\nReturn to Compass\nAwards\n\nDIAMOND GATE BRIDGE \u00b7 MIRRORLAND \u00b7 SURVIVAL\n\nWelcome to H-Earth.\n\nA live interactive world inside the developing Mirrorland game platform. The environment below is available now; its gameplay systems, connected worlds, characters, and larger platform continue to develop.\n\nInteractive now\nIn active development\nEnter and explore\nOpen the context lenses\n\nLIVE WORLD ARRIVAL\n\nThe coast is the entrance.\n\nDirectly manipulate the live environment below. Look, travel, and zoom on desktop or touch devices.\n\nLIVE ENVIRONMENT\nCOASTAL_FOREGROUND_TERRAIN\nH_EARTH_GROUND_CELL_001:R03:C08\n\nOPTIONAL CONTEXT\n\nChoose a lens.\n\nThe page opens as presentation and live world. Context, practical guidance, engineering, and evidence remain closed until selected.\n\nPlatform lens\nWhat is interactive now and what is developing\nStory lens\nMirrorland, Survival, and the developing game universe\nPreservation lens\nHow the world is protected while it develops\nPractical lens\nHow to enter, explore, and return\nEngineering lens\nRuntime architecture and technical surfaces\nEvidence lens\nReceipts, gauges, probes, and session replay"
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "requestFailures": [],
+      "httpFailures": []
+    }
+  },
+  "packageCheck": {
+    "rawStatus": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_COMPLETE",
+    "rawIssueCount": 0,
+    "canonicalStatus": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_COMPLETE",
+    "canonicalEligible": true,
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_07F2FA1F",
+    "contentDigest": "fnv1a32:07f2fa1f",
+    "witnesses": [
+      {
+        "x": 44,
+        "z": -168,
+        "valid": true,
+        "elevation": 19.67009848356247,
+        "delta": 0.07586320788703607,
+        "slope": 0.618179015661509,
+        "curvature": 0.09190291166305542
+      },
+      {
+        "x": 44,
+        "z": -180,
+        "valid": true,
+        "elevation": 16.22801834344864,
+        "delta": -2.9277142303348054,
+        "slope": 0.7741356005091765,
+        "curvature": 0.07899075746536255
+      },
+      {
+        "x": 44,
+        "z": -192,
+        "valid": true,
+        "elevation": 10.843777298927307,
+        "delta": -5.227374030372079,
+        "slope": 0.6423063730170887,
+        "curvature": 0.09509807825088501
+      },
+      {
+        "x": 32,
+        "z": -192,
+        "valid": true,
+        "elevation": 10.104487001895905,
+        "delta": 1.3904390186023532,
+        "slope": 0.912619341097211,
+        "curvature": -0.05688434839248657
+      },
+      {
+        "x": 64,
+        "z": -164,
+        "valid": true,
+        "elevation": 27.299769043922424,
+        "delta": 0.051765546159703316,
+        "slope": 0.33737549957615304,
+        "curvature": -0.007694244384765625
+      }
+    ]
+  },
+  "candidatePackageIdentityReceipt": {
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_07F2FA1F",
+    "contentDigest": "fnv1a32:07f2fa1f",
+    "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_COMPLETE",
+    "eligible": true
+  }
+}

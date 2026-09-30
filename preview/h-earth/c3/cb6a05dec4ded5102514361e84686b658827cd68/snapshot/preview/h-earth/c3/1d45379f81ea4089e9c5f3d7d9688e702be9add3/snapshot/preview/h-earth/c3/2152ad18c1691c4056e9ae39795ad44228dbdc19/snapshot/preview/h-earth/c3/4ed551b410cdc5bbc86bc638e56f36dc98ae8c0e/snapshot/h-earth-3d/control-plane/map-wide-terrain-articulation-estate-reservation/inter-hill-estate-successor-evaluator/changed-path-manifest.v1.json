@@ -1,0 +1,29 @@
+{
+  "schema": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_CHANGED_PATH_MANIFEST_v1",
+  "baseHead": "0d88fe21aba99c97b73fcdc68d44af57d55b68be",
+  "pathCount": 16,
+  "pathMode": "ADDITIVE_ONLY",
+  "expectedChangedPaths": [
+    ".github/workflows/h-earth-inter-hill-estate-successor-evaluator.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/requirements.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/input-schema.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/output-schema.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/operator-family-admission.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/negative-fixtures.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/changed-path-manifest.v1.json",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/accepted-local-reference-loader.v1.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/real-terrain-partition.v1.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/estate-multizone-search.v1.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/view-approach-evaluator.v1.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/cumulative-budget-evaluator.v1.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/successor-evaluator.v1.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/self-test.v1.mjs",
+    "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator.mjs"
+  ],
+  "existingPathMutation": "PROHIBITED",
+  "undeclaredPathDisposition": "STOP_FAIL_CLOSED",
+  "productMutation": false,
+  "terrainMutation": false,
+  "mergeAuthority": false
+}

@@ -1,0 +1,806 @@
+<!doctype html>
+<html
+  lang="en"
+  data-page-id="frontier-lattice"
+  data-page="frontier-lattice"
+  data-route="/frontier/lattice/"
+  data-contract="FRONTIER_LATTICE_COLLECTIVE_BACKLINK_RENEWAL_TNT_v1"
+  data-generation="planetary-frontier-lane-marker-v1"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="frontier-lane"
+  data-manor-attached="true"
+  data-parent-route="/frontier/"
+  data-structural-parent-route="/explore/"
+  data-current-route="/frontier/lattice/"
+  data-frontier-role="expansion-edge"
+  data-frontier-relationship="semantic-child-of-explore"
+  data-frontier-lane="lattice"
+  data-collective-file-set="frontier-lanes"
+  data-sibling-lanes="closed-loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision-remote,vision,waste,water"
+  data-heavy-runtime-loaded="false"
+  data-planet-render-touched="false"
+  data-runtime-touched="false"
+  data-gauges-logic-touched="false"
+  data-visual-pass-claimed="false"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Frontier / Lattice · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Lattice is a Frontier lane inside Diamond Gate Bridge. It exposes the grid, state-space, route-set, and sibling backlinks for the Frontier collective file set."
+  >
+
+  <link rel="stylesheet" href="/assets/dgb-ui-shell.css?v=DGB_GLOBAL_UI_SHELL_ALIGNMENT_TNT_v1">
+
+  <style>
+    :root {
+      --gold: #f2c76f;
+      --text: #f5f7fb;
+      --muted: rgba(226, 234, 248, 0.76);
+      --line: rgba(180, 205, 255, 0.18);
+      --blue: #a9c5ff;
+      --green: #8ff0c6;
+      --purple: #d7a5ff;
+      --orange: #ff9f7a;
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% -8%, rgba(242, 199, 111, 0.14), transparent 34%),
+        radial-gradient(circle at 76% 18%, rgba(84, 130, 220, 0.13), transparent 36%),
+        radial-gradient(circle at 88% 76%, rgba(215, 165, 255, 0.12), transparent 34%),
+        linear-gradient(180deg, #050813 0%, #070c18 58%, #040711 100%);
+    }
+
+    .lane-stage,
+    .lane-panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(242, 199, 111, 0.24);
+      border-radius: 36px;
+      background: linear-gradient(180deg, rgba(12, 20, 38, 0.84), rgba(6, 10, 22, 0.97));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.035),
+        0 28px 90px rgba(0,0,0,0.38);
+      isolation: isolate;
+    }
+
+    .lane-stage {
+      padding: clamp(30px, 7vw, 76px);
+    }
+
+    .lane-panel {
+      padding: clamp(22px, 4vw, 34px);
+      margin-top: 18px;
+    }
+
+    .lane-stage::before,
+    .lane-panel::before {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      background:
+        radial-gradient(circle at 72% 50%, rgba(215, 165, 255, 0.22), transparent 22%),
+        radial-gradient(circle at 72% 50%, transparent 0 24%, rgba(242,199,111,0.10) 25%, transparent 26% 100%),
+        radial-gradient(circle at 72% 50%, transparent 0 44%, rgba(169,197,255,0.09) 45%, transparent 46% 100%);
+      filter: blur(10px);
+      opacity: 0.76;
+      pointer-events: none;
+      z-index: -3;
+    }
+
+    .lane-stage::after,
+    .lane-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(5,8,19,0.30), transparent 48%, rgba(5,8,19,0.18)),
+        radial-gradient(circle at 84% 42%, rgba(255, 217, 140, 0.08), transparent 26%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .lattice-visual {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.42;
+      filter: blur(1.5px);
+    }
+
+    .lattice-core,
+    .lattice-ring,
+    .lattice-line,
+    .lattice-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
+    }
+
+    .lattice-core {
+      left: 78%;
+      top: 55%;
+      width: clamp(190px, 31vw, 360px);
+      height: clamp(190px, 31vw, 360px);
+      border-radius: 28px;
+      border: 2px solid rgba(242,199,111,0.24);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+        radial-gradient(circle at 36% 30%, rgba(255,255,255,0.14), transparent 18%),
+        linear-gradient(135deg, rgba(215,165,255,0.20), rgba(84,130,220,0.13), rgba(6,10,22,0.40));
+      background-size: 32px 32px, 32px 32px, auto, auto;
+      box-shadow:
+        inset 0 0 60px rgba(215,165,255,0.05),
+        0 0 96px rgba(215,165,255,0.11);
+    }
+
+    .lattice-ring {
+      left: 78%;
+      top: 55%;
+      width: clamp(310px, 52vw, 620px);
+      height: clamp(150px, 25vw, 280px);
+      border: 2px dashed rgba(172, 191, 230, 0.16);
+      border-radius: 50%;
+    }
+
+    .lattice-ring.two {
+      transform: translate(-50%, -50%) rotate(64deg);
+      border-color: rgba(242,199,111,0.15);
+    }
+
+    .lattice-line {
+      left: 78%;
+      top: 55%;
+      width: clamp(280px, 50vw, 560px);
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(215,165,255,0.30), rgba(242,199,111,0.16), transparent);
+    }
+
+    .lattice-line.two {
+      transform: translate(-50%, -50%) rotate(44deg);
+    }
+
+    .lattice-line.three {
+      transform: translate(-50%, -50%) rotate(-44deg);
+    }
+
+    .lattice-node {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      color: #06101f;
+      font-size: 0.64rem;
+      font-weight: 950;
+      box-shadow: 0 0 24px rgba(242,199,111,0.18);
+      text-transform: uppercase;
+    }
+
+    .lattice-node.root { left: 61%; top: 50%; background: var(--gold); }
+    .lattice-node.map { left: 70%; top: 36%; background: var(--blue); }
+    .lattice-node.lane { left: 91%; top: 42%; background: var(--purple); }
+    .lattice-node.grid { left: 91%; top: 64%; background: var(--orange); }
+    .lattice-node.back { left: 70%; top: 80%; background: var(--green); }
+
+    .hero-mark {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 950;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      max-width: 1080px;
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(3.2rem, 10vw, 7.9rem);
+      line-height: 0.88;
+      letter-spacing: -0.07em;
+      text-wrap: balance;
+    }
+
+    .hero-title .gold {
+      color: #ffe5a3;
+      text-shadow: 0 0 42px rgba(242, 199, 111, 0.15);
+    }
+
+    .hero-subtitle {
+      max-width: 900px;
+      margin: clamp(24px, 4vw, 36px) 0 0;
+      color: rgba(245, 247, 251, 0.86);
+      font-size: clamp(1.28rem, 3.8vw, 2.12rem);
+      line-height: 1.18;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 820px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.6vw, 1.26rem);
+      line-height: 1.55;
+    }
+
+    .chip-row,
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .lane-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid rgba(172, 191, 230, 0.24);
+      border-radius: 999px;
+      padding: 8px 13px;
+      color: rgba(242, 246, 255, 0.88);
+      background: rgba(255, 255, 255, 0.045);
+      font-size: 0.86rem;
+      font-weight: 850;
+    }
+
+    .lane-chip.lock {
+      border-color: rgba(242, 199, 111, 0.58);
+      color: #ffe7a7;
+      background: rgba(242, 199, 111, 0.11);
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      color: var(--text);
+      font-size: clamp(2.1rem, 6vw, 4.2rem);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
+      text-wrap: balance;
+    }
+
+    .section-copy {
+      max-width: 900px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.58;
+    }
+
+    .lane-grid,
+    .route-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .lane-card,
+    .route-card {
+      position: relative;
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(215, 165, 255, 0.12), transparent 36%),
+        linear-gradient(180deg, rgba(14, 23, 42, 0.86), rgba(7, 12, 25, 0.94));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.028),
+        0 18px 42px rgba(0,0,0,0.24);
+      text-decoration: none;
+      overflow: hidden;
+    }
+
+    .lane-card::after,
+    .route-card::after {
+      content: "";
+      position: absolute;
+      right: -34px;
+      bottom: -34px;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      border: 1px solid rgba(242,199,111,0.12);
+      background: rgba(255,255,255,0.025);
+      pointer-events: none;
+    }
+
+    .lane-kicker,
+    .route-kicker {
+      color: var(--gold);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .lane-card h3,
+    .route-card h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.48rem;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+
+    .lane-card p,
+    .route-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .route-link {
+      color: #ffe7a7;
+      font-weight: 950;
+    }
+
+    details {
+      border: 1px solid rgba(180,205,255,0.16);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.04);
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    details[open] {
+      border-color: rgba(242,199,111,0.32);
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 18px 20px;
+      color: var(--text);
+      font-weight: 950;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .details-body {
+      padding: 0 20px 20px;
+    }
+
+    .lane-receipt {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .audit-source {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+    }
+
+    @media (max-width: 1040px) {
+      .lane-grid,
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lattice-visual {
+        opacity: 0.30;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .lane-stage,
+      .lane-panel {
+        border-radius: 28px;
+        padding: 30px 26px;
+      }
+
+      .hero-title {
+        font-size: clamp(3.35rem, 15vw, 5.2rem);
+      }
+
+      .hero-subtitle {
+        font-size: 1.34rem;
+      }
+
+      .lane-card,
+      .route-card {
+        min-height: 0;
+      }
+
+      .lattice-visual {
+        opacity: 0.22;
+      }
+    }
+  </style>
+</head>
+
+<body
+  class="manor-skin manor-planet frontier-lane frontier-lattice"
+  data-page-id="frontier-lattice"
+  data-page="frontier-lattice"
+  data-route="/frontier/lattice/"
+  data-generation="planetary-frontier-lane-marker-v1"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-manor-room="frontier-lattice"
+  data-manor-class="frontier-lane"
+  data-planet-id="frontier"
+  data-planet-slot="P3_FRONTIER_LATTICE"
+  data-planet-orbit="frontier"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="frontier-lane"
+  data-manor-attached="true"
+  data-parent-route="/frontier/"
+  data-structural-parent-route="/explore/"
+  data-current-route="/frontier/lattice/"
+  data-frontier-role="expansion-edge"
+  data-frontier-relationship="semantic-child-of-explore"
+  data-frontier-lane="lattice"
+>
+  <a class="dgb-skip" href="#lattice-main">Skip to Frontier / Lattice</a>
+
+  <header class="dgb-site-header">
+    <div class="dgb-header-inner">
+      <div class="dgb-brand-row">
+        <a class="dgb-brand" href="/">Diamond Gate Bridge</a>
+        <div class="dgb-subtitle">Explore · Frontier</div>
+        <div class="dgb-room-line">Frontier / Lattice · Grid Logic Lane</div>
+      </div>
+
+      <nav class="dgb-nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/frontier/lattice/" aria-current="page">Lattice</a>
+        <a href="/laws/">Laws</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </div>
+  </header>
+
+  <main
+    id="lattice-main"
+    class="dgb-main"
+    data-page-id="frontier-lattice"
+    data-page="frontier-lattice"
+    data-route="/frontier/lattice/"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="frontier-lane"
+    data-manor-attached="true"
+    data-parent-route="/frontier/"
+    data-structural-parent-route="/explore/"
+    data-current-route="/frontier/lattice/"
+    data-frontier-lane="lattice"
+  >
+    <section class="lane-stage" aria-label="Frontier Lattice lane">
+      <div class="lattice-visual" aria-hidden="true">
+        <div class="lattice-ring"></div>
+        <div class="lattice-ring two"></div>
+        <div class="lattice-line"></div>
+        <div class="lattice-line two"></div>
+        <div class="lattice-line three"></div>
+        <div class="lattice-core"></div>
+        <div class="lattice-node root">Root</div>
+        <div class="lattice-node map">Map</div>
+        <div class="lattice-node lane">Lane</div>
+        <div class="lattice-node grid">Grid</div>
+        <div class="lattice-node back">Back</div>
+      </div>
+
+      <p class="hero-mark">Frontier / Lattice · Collective File Set</p>
+
+      <h1 class="hero-title">
+        The lattice is the grid <span class="gold">under the edge.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Lattice sits inside Frontier. Frontier sits structurally under Explore. The backlinks now show that full placement.
+      </p>
+
+      <p class="hero-copy">
+        This lane carries grid logic, state-space organization, structural mapping, and 256-field thinking.
+        It must return to Frontier, Explore, the sibling Frontier lanes, Laws, Showroom, Products, and Gauges without creating orphan routes.
+      </p>
+
+      <div class="chip-row" aria-label="Lattice status">
+        <span class="lane-chip lock">/frontier/lattice/</span>
+        <span class="lane-chip lock">Parent: /frontier/</span>
+        <span class="lane-chip lock">Structural parent: /explore/</span>
+        <span class="lane-chip">Sibling lanes linked</span>
+        <span class="lane-chip">Gauges-readable</span>
+      </div>
+
+      <div class="action-row" aria-label="Primary Lattice actions">
+        <a class="dgb-button" href="/frontier/">Return to Frontier</a>
+        <a class="dgb-button secondary" href="/explore/">Return to Explore</a>
+        <a class="dgb-button secondary" href="/laws/">Open Laws</a>
+        <a class="dgb-button secondary" href="/gauges/">Read Gauges</a>
+      </div>
+    </section>
+
+    <section class="lane-panel" aria-label="Collective file set backlinks">
+      <p class="hero-mark">Collective file set · Frontier lanes</p>
+      <h2 class="section-title">Every lane needs a return path.</h2>
+      <p class="section-copy">
+        These backlinks satisfy the current Frontier file set. Lattice is one lane in the collective; the page must expose its parent, siblings, and verification routes.
+      </p>
+
+      <div class="lane-grid">
+        <a class="lane-card" href="/frontier/closed-loop/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Closed Loop</h3>
+          <p>Feedback, return logic, proof loops, and completion pathways.</p>
+          <span class="route-link">Open Closed Loop</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/energy/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Energy</h3>
+          <p>Power, motion, charge, force, pressure, and operating capacity.</p>
+          <span class="route-link">Open Energy</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/infrastructure/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Infrastructure</h3>
+          <p>Support layers, rails, utilities, and build foundation.</p>
+          <span class="route-link">Open Infrastructure</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/lattice/" aria-current="page">
+          <span class="lane-kicker">Current Lane</span>
+          <h3>Lattice</h3>
+          <p>Grid logic, state-space organization, structural mapping, and 256-field thinking.</p>
+          <span class="route-link">Current route</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/manual/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Manual</h3>
+          <p>Operating instructions, reference logic, field notes, and how-to control surfaces.</p>
+          <span class="route-link">Open Manual</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/shimmer/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Shimmer</h3>
+          <p>Signal, atmosphere, surface effect, perception layer, and future visual language.</p>
+          <span class="route-link">Open Shimmer</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/trajectory/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Trajectory</h3>
+          <p>Direction, movement, path projection, progress mapping, and system motion.</p>
+          <span class="route-link">Open Trajectory</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/urban/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Urban</h3>
+          <p>City systems, population layers, civic surfaces, and built-environment logic.</p>
+          <span class="route-link">Open Urban</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/vision-remote/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Vision Remote</h3>
+          <p>Remote visibility, distance interfaces, and visual relay logic.</p>
+          <span class="route-link">Open Vision Remote</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/vision/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Vision</h3>
+          <p>Visual systems, imagination surface, sightline planning, and future-facing design.</p>
+          <span class="route-link">Open Vision</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/waste/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Waste</h3>
+          <p>Loss, recovery, disposal, inefficiency, circularity, and system-cleanup logic.</p>
+          <span class="route-link">Open Waste</span>
+        </a>
+
+        <a class="lane-card" href="/frontier/water/">
+          <span class="lane-kicker">Sibling Lane</span>
+          <h3>Water</h3>
+          <p>Flow, support, survival layer, resource motion, maritime logic, and baseline systems.</p>
+          <span class="route-link">Open Water</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="lane-panel" aria-label="Placement backlinks">
+      <p class="hero-mark">Placement · Parent and proof routes</p>
+      <h2 class="section-title">Lattice is not an orphan lane.</h2>
+      <p class="section-copy">
+        Lattice must remain connected upward to Frontier and Explore, outward to sibling lanes, and downward to proof and diagnostics.
+      </p>
+
+      <div class="route-grid">
+        <a class="route-card" href="/frontier/">
+          <span class="route-kicker">Direct Parent</span>
+          <h3>Frontier</h3>
+          <p>Return to the expansion-edge root page that exposes the Frontier collective.</p>
+          <span class="route-link">Open Frontier</span>
+        </a>
+
+        <a class="route-card" href="/explore/">
+          <span class="route-kicker">Structural Parent</span>
+          <h3>Explore</h3>
+          <p>Return to the route-map surface that structurally contains Frontier.</p>
+          <span class="route-link">Open Explore</span>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <span class="route-kicker">Rule Chamber</span>
+          <h3>Laws</h3>
+          <p>Use Laws when lattice expansion needs boundary and generation control.</p>
+          <span class="route-link">Open Laws</span>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <span class="route-kicker">Product Wing</span>
+          <h3>Products</h3>
+          <p>Use Products when a lattice concept becomes a usable public product surface.</p>
+          <span class="route-link">Open Products</span>
+        </a>
+
+        <a class="route-card" href="/showroom/">
+          <span class="route-kicker">Proof Surface</span>
+          <h3>Showroom</h3>
+          <p>Use Showroom when a lattice claim needs public presentation or inspection.</p>
+          <span class="route-link">Open Showroom</span>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <span class="route-kicker">Diagnostics</span>
+          <h3>Gauges</h3>
+          <p>Use Gauges when route, runtime, parser, or receipt truth needs to be measured.</p>
+          <span class="route-link">Open Gauges</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="dgb-card" aria-label="Lattice compressed law">
+      <h2>Route law</h2>
+
+      <details open>
+        <summary>What Lattice owns</summary>
+        <div class="details-body">
+          <p class="section-copy">
+            Lattice owns grid logic, state-space organization, structural mapping, field relationships,
+            and the language needed to describe how a Frontier system is organized before it is built.
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary>What Lattice does not own</summary>
+        <div class="details-body">
+          <p class="section-copy">
+            Lattice does not own the root command surface, the product wing, Showroom proof, Gauges logic,
+            Earth G1 rendering, heavy runtime, or unrelated Frontier lanes.
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Why the backlinks matter</summary>
+        <div class="details-body">
+          <p class="section-copy">
+            A Frontier lane without backlinks becomes isolated. The collective file set only holds when every lane can
+            return to its parent, siblings, proof routes, and diagnostics.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="dgb-card" aria-label="Route receipt">
+      <h2>Route receipt</h2>
+      <pre class="dgb-receipt lane-receipt">FRONTIER_LATTICE_COLLECTIVE_BACKLINK_RENEWAL_TNT_v1
+route=/frontier/lattice/
+page=frontier-lattice
+display_label=Frontier / Lattice
+style_direction=frontier-lane-backlink-satisfaction
+uses_shared_shell=/assets/dgb-ui-shell.css
+construct_class=frontier-lane
+manor_attached=true
+manor_skin=active
+house_field=true
+gauges_truth=live-authority
+parent_route=/frontier/
+structural_parent_route=/explore/
+current_route=/frontier/lattice/
+frontier_role=expansion-edge
+frontier_relationship=semantic-child-of-explore
+frontier_lane=lattice
+collective_file_set=frontier-lanes
+closed-loop=/frontier/closed-loop/
+energy=/frontier/energy/
+infrastructure=/frontier/infrastructure/
+lattice=/frontier/lattice/
+manual=/frontier/manual/
+shimmer=/frontier/shimmer/
+trajectory=/frontier/trajectory/
+urban=/frontier/urban/
+vision-remote=/frontier/vision-remote/
+vision=/frontier/vision/
+waste=/frontier/waste/
+water=/frontier/water/
+explore=/explore/
+frontier=/frontier/
+laws=/laws/
+products=/products/
+showroom=/showroom/
+gauges=/gauges/
+heavy_runtime_loaded=false
+planet_render_touched=false
+runtime_touched=false
+gauges_logic_touched=false
+visual_pass_claimed=false</pre>
+    </section>
+
+    <section class="audit-source" aria-label="Frontier Lattice audit source">
+      <a href="/">Compass</a>
+      <a href="/explore/">Explore</a>
+      <a href="/frontier/">Frontier</a>
+      <a href="/frontier/closed-loop/">Closed Loop</a>
+      <a href="/frontier/energy/">Energy</a>
+      <a href="/frontier/infrastructure/">Infrastructure</a>
+      <a href="/frontier/lattice/">Lattice</a>
+      <a href="/frontier/manual/">Manual</a>
+      <a href="/frontier/shimmer/">Shimmer</a>
+      <a href="/frontier/trajectory/">Trajectory</a>
+      <a href="/frontier/urban/">Urban</a>
+      <a href="/frontier/vision-remote/">Vision Remote</a>
+      <a href="/frontier/vision/">Vision</a>
+      <a href="/frontier/waste/">Waste</a>
+      <a href="/frontier/water/">Water</a>
+      <a href="/laws/">Laws</a>
+      <a href="/products/">Products</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
+      <span>data-route="/frontier/lattice/"</span>
+      <span>data-parent-route="/frontier/"</span>
+      <span>data-structural-parent-route="/explore/"</span>
+      <span>data-frontier-lane="lattice"</span>
+      <span>data-collective-file-set="frontier-lanes"</span>
+      <span>FRONTIER_LATTICE_COLLECTIVE_BACKLINK_RENEWAL_TNT_v1</span>
+    </section>
+  </main>
+
+  <footer class="dgb-footer">
+    FRONTIER_LATTICE_COLLECTIVE_BACKLINK_RENEWAL_TNT_v1 · Frontier / Lattice · Diamond Gate Bridge.
+  </footer>
+</body>
+</html>

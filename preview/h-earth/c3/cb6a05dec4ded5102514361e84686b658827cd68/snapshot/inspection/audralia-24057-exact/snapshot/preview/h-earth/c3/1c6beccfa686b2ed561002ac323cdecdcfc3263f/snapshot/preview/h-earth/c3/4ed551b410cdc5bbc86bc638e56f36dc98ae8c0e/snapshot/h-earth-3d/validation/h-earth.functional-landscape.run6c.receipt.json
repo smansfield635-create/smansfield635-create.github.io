@@ -1,0 +1,26 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6C_RECEIPT",
+  "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_RUN_6C_v2_FULL_SEMANTIC_MEMBERSHIP",
+  "eligible": true,
+  "status": "FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW_COMPLETE",
+  "terrainChunkCount": 12,
+  "shorelineBandCount": 7,
+  "distantProxyCount": 1,
+  "primitiveCount": 20,
+  "semanticAddressCount": 256,
+  "proxySummarizedAddressCount": 64,
+  "sharedEdgeValidation": "PASS",
+  "distantProxyTopologyValidation": "PASS_AFTER_NONDEGENERATE_ENDPOINT_CORRECTION",
+  "admissionPerformed": false,
+  "issues": [],
+  "execution": {
+    "runtime": "GitHub Actions / Node.js 22",
+    "actualRepositorySourceGraph": true,
+    "workflowRunId": 30184708845,
+    "workflowJobId": 89747195822,
+    "workflowConclusion": "success",
+    "checkpointStepConclusion": "success",
+    "geometryKernel": "/showroom/globe/h-earth/render/geometry-kernel.js",
+    "productPromotionClaim": false
+  }
+}

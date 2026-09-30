@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" data-assets-generation="second-generation-renewal">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Assets · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Assets Branch: the Generation 2 shared instrument layer for reusable globe, diamond controls, route surfaces, and UI standards."
+  />
+
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <script src="/assets/universe_ui.js" defer></script>
+
+  <style>
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --line-strong:rgba(142,197,255,.34);
+      --text:#eef4ff;
+      --muted:#aab8d8;
+      --gold:#efd29a;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --purple:#c89cff;
+      --rose:#ff9ab8;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
+    }
+
+    html,
+    body {
+      margin:0;
+      min-height:100%;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 4%,rgba(142,197,255,.18),transparent 22%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(200,156,255,.10),transparent 28%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+      overflow-x:hidden;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.22;
+      background:
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+    }
+
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
+      margin:0 auto;
+      padding:14px 0 30px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar,
+    .hero,
+    .panel,
+    .instrument-card,
+    .contract-card,
+    .receipt-card {
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
+      box-shadow:var(--shadow);
+    }
+
+    .topbar {
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
+      display:grid;
+      gap:14px;
+    }
+
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .mark {
+      width:50px;
+      height:50px;
+      border-radius:17px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line-strong);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(142,197,255,.34),transparent 44%),
+        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
+      color:#fff;
+      font-weight:950;
+      letter-spacing:.08em;
+      flex:0 0 auto;
+      box-shadow:0 0 22px rgba(142,197,255,.14);
+    }
+
+    .brand-text {
+      display:grid;
+      gap:3px;
+    }
+
+    .kicker {
+      display:block;
+      margin:0;
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:850;
+    }
+
+    .title {
+      display:block;
+      margin:0;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
+    }
+
+    .nav {
+      display:grid;
+      gap:10px;
+      perspective:1000px;
+      align-items:center;
+      justify-items:center;
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(24px,5vw,52px);
+      margin-bottom:14px;
+      min-height:clamp(380px,48vw,590px);
+      display:grid;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:min(760px,90vw);
+      height:min(760px,90vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.12),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(200,156,255,.09),transparent 70%);
+      filter:blur(5px);
+      z-index:-3;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      width:min(860px,96vw);
+      height:min(410px,50vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-8deg);
+      border:1px solid rgba(142,197,255,.24);
+      border-radius:50%;
+      z-index:-2;
+      box-shadow:
+        0 0 38px rgba(142,197,255,.08),
+        inset 0 0 38px rgba(239,210,154,.06);
+    }
+
+    .hero-globe {
+      position:absolute;
+      right:clamp(20px,6vw,90px);
+      top:50%;
+      transform:translateY(-50%);
+      opacity:.88;
+      z-index:-1;
+    }
+
+    .hero-copy {
+      display:grid;
+      gap:14px;
+      max-width:760px;
+      position:relative;
+      z-index:2;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--blue);
+      box-shadow:0 0 18px rgba(142,197,255,.50);
+    }
+
+    h1 {
+      margin:0;
+      color:#fff;
+      font-size:clamp(3.4rem,12vw,7.6rem);
+      line-height:.84;
+      letter-spacing:-.085em;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.55rem,5vw,3rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
+    }
+
+    .hero p {
+      max-width:68ch;
+      margin-top:6px;
+      font-size:clamp(1.04rem,1.9vw,1.22rem);
+    }
+
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:16px;
+    }
+
+    .panel-head {
+      display:grid;
+      gap:8px;
+    }
+
+    .instrument-grid,
+    .contract-grid,
+    .route-grid,
+    .receipt-grid {
+      display:grid;
+      gap:12px;
+    }
+
+    .instrument-card,
+    .contract-card,
+    .receipt-card {
+      position:relative;
+      isolation:isolate;
+      border-radius:18px;
+      padding:14px;
+      color:inherit;
+      overflow:hidden;
+    }
+
+    .instrument-card small,
+    .contract-card small,
+    .receipt-card small {
+      display:block;
+      margin-bottom:6px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:850;
+    }
+
+    .instrument-card strong,
+    .contract-card strong,
+    .receipt-card strong {
+      display:block;
+      color:#fff;
+      font-size:1rem;
+      line-height:1.1;
+    }
+
+    .instrument-card p,
+    .contract-card p,
+    .receipt-card p {
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.42;
+    }
+
+    .instrument-card code,
+    .contract-card code,
+    .receipt-card code {
+      display:block;
+      margin-top:10px;
+      padding:10px;
+      border:1px solid rgba(142,197,255,.14);
+      border-radius:14px;
+      background:rgba(255,255,255,.035);
+      color:#dfe8ff;
+      font-size:.78rem;
+      line-height:1.45;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .globe-demo {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:16px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
+      box-shadow:var(--shadow);
+    }
+
+    .status-strip {
+      display:grid;
+      gap:8px;
+      padding:16px;
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:20px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .status-strip code {
+      display:block;
+      white-space:pre-wrap;
+      word-break:break-word;
+      color:#dfe8ff;
+      font-size:.84rem;
+      line-height:1.55;
+    }
+
+    .footer {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
+    }
+
+    .footer a {
+      color:#d6e2ff;
+    }
+
+    @media (min-width:820px) {
+      .topbar {
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+
+      .nav {
+        grid-template-columns:repeat(8,minmax(80px,94px));
+        justify-content:end;
+      }
+
+      .instrument-grid,
+      .contract-grid,
+      .receipt-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(132px,1fr));
+      }
+    }
+
+    @media (max-width:640px) {
+      .page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
+      }
+
+      .topbar,
+      .hero,
+      .panel,
+      .globe-demo {
+        border-radius:24px;
+      }
+
+      .topbar {
+        padding:12px;
+      }
+
+      .brand {
+        gap:10px;
+      }
+
+      .mark {
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:6px;
+      }
+
+      .nav a {
+        width:min(100%,70px) !important;
+        font-size:.55rem !important;
+      }
+
+      .hero {
+        min-height:390px;
+        padding:22px;
+      }
+
+      .hero-globe {
+        right:18px;
+        top:auto;
+        bottom:18px;
+        transform:none;
+        opacity:.46;
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .route-card {
+        width:min(100%,132px) !important;
+      }
+    }
+
+    @media (max-width:360px) {
+      .nav a {
+        width:min(100%,62px) !important;
+        font-size:.48rem !important;
+      }
+
+      .route-card {
+        width:min(100%,122px) !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-page="assets"
+    data-surface="generation-2-assets-branch"
+  >
+    <header class="topbar">
+      <a class="brand" href="/assets/" aria-label="Diamond Gate Bridge Assets">
+        <span class="mark" aria-hidden="true">AS</span>
+        <span class="brand-text">
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">Assets Branch · Shared Instruments</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a class="featured" href="/about/">About</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="assetsTitle">
+      <div class="hero-globe" aria-hidden="true">
+        <div
+          data-dgb-globe="earth"
+          data-dgb-globe-size="hero"
+          data-dgb-globe-theme="purple"
+          data-dgb-globe-label="Assets branch · shared globe instrument"
+        ></div>
+      </div>
+
+      <div class="hero-copy">
+        <span class="pill">Shared instrument branch</span>
+        <h1 id="assetsTitle">Assets</h1>
+        <h2>The reusable layer under the pages.</h2>
+        <p>
+          The Assets Branch holds the shared interface instruments: diamond controls,
+          globe boxes, route surfaces, and reusable UI standards. Pages should consume
+          these instruments instead of rebuilding them locally.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="purposeTitle">
+      <div class="panel-head">
+        <span class="pill">Branch purpose</span>
+        <h2 id="purposeTitle">Assets prevent local page drift.</h2>
+        <p>
+          Generation 2 should not require every page to reinvent bubbles, diamonds,
+          globes, or motion. The shared assets layer gives each page a stable source
+          of visual and runtime truth.
+        </p>
+      </div>
+
+      <div class="instrument-grid">
+        <article class="instrument-card">
+          <small>CSS authority</small>
+          <strong>/assets/ui.css</strong>
+          <p>Owns shared visual contracts: panels, diamonds, bubbles, route cards, globe box styling, and responsive density.</p>
+          <code>CSS_AUTHORITY=/assets/ui.css</code>
+        </article>
+
+        <article class="instrument-card">
+          <small>Runtime authority</small>
+          <strong>/assets/universe_ui.js</strong>
+          <p>Owns reusable globe mounting, shared runtime receipts, and page-level instrument activation.</p>
+          <code>RUNTIME_AUTHORITY=/assets/universe_ui.js</code>
+        </article>
+
+        <article class="instrument-card">
+          <small>Page contract</small>
+          <strong>Consume, do not rebuild.</strong>
+          <p>Pages should request instruments through data attributes instead of duplicating large local implementations.</p>
+          <code>RULE=CONSUME_SHARED_ASSETS</code>
+        </article>
+      </div>
+    </section>
+
+    <section class="globe-demo" aria-labelledby="globeTitle">
+      <div class="panel-head">
+        <span class="pill">Reusable globe instrument</span>
+        <h2 id="globeTitle">One globe system, many page placements.</h2>
+        <p>
+          The shared globe box lets any page mount a real-Earth instrument with a
+          size, theme, and label. Spin direction is controlled globally by the
+          shared asset layer.
+        </p>
+      </div>
+
+      <div
+        class="dgb-globe-stage"
+        data-dgb-globe-stage
+        data-dgb-globe-size="panel"
+        data-dgb-globe-theme="blue"
+        data-dgb-globe-label="Assets branch · Earth instrument"
+        aria-label="Assets branch shared Earth globe instrument"
+      ></div>
+    </section>
+
+    <section class="panel" aria-labelledby="contractsTitle">
+      <div class="panel-head">
+        <span class="pill">Consumption patterns</span>
+        <h2 id="contractsTitle">Pages request instruments by contract.</h2>
+      </div>
+
+      <div class="contract-grid">
+        <article class="contract-card">
+          <small>Direct globe box</small>
+          <strong>Use inside a hero or panel.</strong>
+          <p>Mount a globe where the page needs a specific object.</p>
+          <code>&lt;div
+  data-dgb-globe="earth"
+  data-dgb-globe-size="hero"
+  data-dgb-globe-theme="blue"
+  data-dgb-globe-label="Earth standard"
+&gt;&lt;/div&gt;</code>
+        </article>
+
+        <article class="contract-card">
+          <small>Auto stage</small>
+          <strong>Let the runtime build the globe.</strong>
+          <p>Use a stage when the page needs a full visual instrument section.</p>
+          <code>&lt;div
+  data-dgb-globe-stage
+  data-dgb-globe-size="panel"
+  data-dgb-globe-theme="gold"
+  data-dgb-globe-label="Shared globe"
+&gt;&lt;/div&gt;</code>
+        </article>
+
+        <article class="contract-card">
+          <small>Diamond controls</small>
+          <strong>Use shared route classes.</strong>
+          <p>Route cards and navigation bubbles inherit diamond shape and motion through the shared CSS.</p>
+          <code>&lt;a class="route-card" href="/frontier/"&gt;
+  &lt;small&gt;Edge&lt;/small&gt;
+  &lt;strong&gt;Frontier&lt;/strong&gt;
+&lt;/a&gt;</code>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="routesTitle">
+      <div class="panel-head">
+        <span class="pill">Instrument routes</span>
+        <h2 id="routesTitle">The branch connects the active system.</h2>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card" href="/assets/ui.css">
+          <small>Stylesheet</small>
+          <strong>UI CSS</strong>
+        </a>
+
+        <a class="route-card" href="/assets/universe_ui.js">
+          <small>Runtime</small>
+          <strong>Universe UI</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <small>Inspection</small>
+          <strong>Gauges</strong>
+        </a>
+
+        <a class="route-card" href="/explore/">
+          <small>Route map</small>
+          <strong>Explore</strong>
+        </a>
+
+        <a class="route-card" href="/frontier/">
+          <small>Edge</small>
+          <strong>Frontier</strong>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <small>Chamber</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+        </a>
+
+        <a class="route-card" href="/about/">
+          <small>Identity</small>
+          <strong>About</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="receiptTitle">
+      <div class="panel-head">
+        <span class="pill">Branch receipt</span>
+        <h2 id="receiptTitle">Generation 2 Assets Branch is active.</h2>
+      </div>
+
+      <div class="receipt-grid">
+        <article class="receipt-card">
+          <small>Globe</small>
+          <strong>Shared Earth instrument.</strong>
+          <p>The globe component is reusable and should not be locally rebuilt unless a page has a specific reason.</p>
+        </article>
+
+        <article class="receipt-card">
+          <small>Diamonds</small>
+          <strong>Shared route controls.</strong>
+          <p>Navigation and route cards inherit diamond shape, compact density, and subtle motion from the asset layer.</p>
+        </article>
+
+        <article class="receipt-card">
+          <small>Baseline</small>
+          <strong>Generation 2 consumption rule.</strong>
+          <p>Pages consume assets first. Local overrides should be narrow and page-specific.</p>
+        </article>
+      </div>
+
+      <div class="status-strip">
+        <code>ASSETS_BRANCH_STATUS=GENERATION_2_ACTIVE
+CSS_AUTHORITY=/assets/ui.css
+RUNTIME_AUTHORITY=/assets/universe_ui.js
+GLOBE=SHARED_REAL_EARTH_BOX
+DIAMONDS=SHARED_ROUTE_CONTROLS
+RULE=CONSUME_SHARED_ASSETS_BEFORE_LOCAL_REBUILD
+GRAPHICS_BOX=FORBIDDEN_UNLESS_EXPLICITLY_REQUESTED
+NEXT_ACTION=USE_THIS_BRANCH_AS_THE_REFERENCE_LAYER_FOR_PAGE_RENEWALS</code>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Diamond Gate Bridge · Assets Branch · Shared Instruments</span>
+      <span>
+        <a href="/assets/ui.css">UI CSS</a> ·
+        <a href="/assets

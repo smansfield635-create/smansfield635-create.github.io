@@ -1,0 +1,84 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "evidenceId": "AUDRALIA_TABLET_FRAME_OWNERSHIP_REPAIR_20260913_001",
+  "governingHead": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+  "operationId": "AUDRALIA_TABLET_FRAME_OWNERSHIP_REPAIR_20260913_001",
+  "lockGeneration": 2204,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "ownerObservation": {
+    "source": "OWNER_PROVIDED_TABLET_RECORDING_IN_ACTIVE_SESSION",
+    "deviceClass": "TABLET",
+    "initialization": "PASS",
+    "observedFailure": "VISIBLE_WORLD_INTERMITTENTLY_COLLAPSES_TO_NEAR_BLACK_OR_STAR_FIELD_DURING_INTERACTION_THEN_RECOVERS",
+    "ownerAcceptanceOfCandidate": false
+  },
+  "sourceDiagnosis": {
+    "result": "SPLIT_SAME_CONTEXT_FRAME_OWNERSHIP",
+    "primaryRendererPreserveDrawingBuffer": false,
+    "preRepairSequence": [
+      "PRIMARY_WORLD_DRAW",
+      "CLOUD_DRAW",
+      "PRESENT",
+      "INDEPENDENT_DELAYED_CELESTIAL_DRAW"
+    ],
+    "failureMechanism": "CELESTIAL_PASS_WAS_A_SEPARATE_EVENT_DRIVEN_DOUBLE_RAF_FRAME_PRODUCER_ON_THE_SAME_PRIMARY_WEBGL_CONTEXT_AND_COULD_DRAW_AFTER_THE_BROWSER_DISCARDED_THE_PREVIOUS_PRESENTED_BUFFER"
+  },
+  "candidateRepair": {
+    "frameOwner": "AUDRALIA_TABLET_SINGLE_CONTEXT_RUNTIME",
+    "compositeOrder": [
+      "PRIMARY_WORLD",
+      "CLOUDS",
+      "CELESTIAL",
+      "PRESENT"
+    ],
+    "celestialIndependentAnimationFrameScheduling": false,
+    "celestialIndependentEventFrameOwnership": false,
+    "newCanvasCreated": false,
+    "newWebGLContextRequested": false,
+    "phonePathMutated": false,
+    "rendererPrecomputedMutated": false,
+    "cameraSemanticsMutated": false,
+    "cloudMorphologyMutated": false,
+    "loaderArchitectureMutated": false,
+    "audioMutated": false,
+    "protected24057Mutated": false
+  },
+  "visualContinuity": {
+    "celestialShaderBodyChanged": false,
+    "sunMoonStarAtmosphereParametersChanged": false,
+    "terrainOrGeographyChanged": false,
+    "worldIdentityChanged": false,
+    "assessment": "PRESERVED_BY_EXACT_NONMUTATION_AND_COMPOSITOR_OWNERSHIP_ONLY_DELTA"
+  },
+  "interactionContinuity": {
+    "inputMappingsChanged": false,
+    "cameraMethodsChanged": false,
+    "gestureSemanticsChanged": false,
+    "change": "EXISTING_WORLD_RENDER_INTERACTIONS_NOW_FINISH_WITH_CLOUD_AND_CELESTIAL_ENRICHMENT_UNDER_ONE_RUNTIME_OWNER",
+    "assessment": "PRESERVED"
+  },
+  "continuityBoundary": {
+    "sameCanonicalWorld": true,
+    "parallelProductCreated": false,
+    "secondRendererCreated": false,
+    "secondCanvasCreated": false,
+    "secondWebGLContextCreated": false,
+    "ownerVisibleCandidateAcceptancePending": true
+  },
+  "candidateExperienceFiles": [
+    {
+      "path": "showroom/globe/audralia/celestial-primary-context-v1.mjs",
+      "sha256": "73a5b94e67eec2f3c6c07680d87cfa270ebe3e6bf3f570fea9d6ab2f61fd6d73"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
+      "sha256": "2e04d47e8e32333b034670ad6bc206c6ff23337f7252d6e742724064577186ac"
+    }
+  ],
+  "authority": {
+    "createsOwnerAcceptance": false,
+    "createsProductClosure": false,
+    "createsScopeExpansion": false
+  }
+}

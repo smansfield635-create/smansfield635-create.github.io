@@ -1,0 +1,85 @@
+{
+  "schema":"WHOLE_ESTATE_PROSPECTIVE_CHANGE_REGISTER_v1",
+  "status":"CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "registrationBaseline":"3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "entries":[
+    {
+      "checkpoint":2,
+      "id":"NARRATIVE_SPINE_CONSTITUTION_v1",
+      "status":"REGISTERED_NOT_EXECUTED",
+      "affectedRoles":["ORIENTATION","EPISTEMIC_LAW","FOUNDATION","MEASUREMENT","DIAGNOSIS","APPLICATION","IMPLEMENTATION","PROVENANCE"],
+      "intendedIntervention":"formalize the whole-estate explanatory journey without forced access control",
+      "preservedCapacities":["DIRECT_ENTRY","COMPASS_ORIENTATION_AUTHORITY","ROOM_IDENTITY","CLAIM_BOUNDARIES"],
+      "falsifiers":["one room is framed as the whole estate","direct entry is lost","scientific status changes through narrative wording"],
+      "rollback":"restore Checkpoint 1 narrative baseline",
+      "publicMutationAuthorized":false
+    },
+    {
+      "checkpoint":3,
+      "id":"CONSTITUTIONAL_ROOM_RELATION_CONTRACTS_v1",
+      "status":"REGISTERED_NOT_EXECUTED",
+      "intendedIntervention":"freeze identity, function, authority, forbidden authority, inputs, outputs and adjacency for each constitutional capacity",
+      "preservedCapacities":["ROLE_SEPARATION","NON_SUBSTITUTION","PROVENANCE"],
+      "falsifiers":["authority collapse","role duplication that changes ownership","measurement becomes confirmation"],
+      "rollback":"restore Checkpoint 1 authority matrix",
+      "publicMutationAuthorized":false
+    },
+    {
+      "checkpoint":4,
+      "id":"ESTATE_SCALE_DEVELOPMENTAL_PROVENANCE_v1",
+      "status":"REGISTERED_NOT_EXECUTED",
+      "intendedIntervention":"explain bounded evidence for coherence as a construction constraint across the estate",
+      "preservedCapacities":["EVIDENCE_CLASSIFICATION","RETROSPECTIVE_LIMITS","ROOM_IDENTITY"],
+      "falsifiers":["retrospective interpretation presented as preregistration","construction presented as proof of UCIC"],
+      "rollback":"restore Checkpoint 1 provenance ledger",
+      "publicMutationAuthorized":false
+    },
+    {
+      "checkpoint":5,
+      "id":"METHODS_MODELS_ROLE_CONSTITUTION_v1",
+      "status":"REGISTERED_NOT_EXECUTED",
+      "intendedIntervention":"bind Methods-Models to executable comparison under controlled transformation and its estate dependencies/destinations",
+      "preservedCapacities":["METHOD_MODEL_SEPARATION","UCIC_IMI_SEPARATION","FRONTIER_OWNERSHIP","PROVENANCE_OWNERSHIP"],
+      "falsifiers":["Methods-Models becomes homepage","Methods-Models absorbs Diagnostic or Frontier","model and method become one object"],
+      "rollback":"restore Checkpoint 1 relationship crosswalk",
+      "publicMutationAuthorized":false
+    },
+    {
+      "checkpoint":6,
+      "id":"INVARIANT_CONTRACT_PACKAGE_v1",
+      "status":"REGISTERED_NOT_EXECUTED",
+      "intendedIntervention":"construct machine-verifiable narrative, state, routing, evidence and lens invariants",
+      "preservedCapacities":["CANONICAL_STATE","EVIDENCE_BOUNDARIES","AUTHORITY_BOUNDARIES","RETURN_CONTEXT"],
+      "falsifiers":["navigation silently changes scientific meaning","interface changes evidence state","state restoration is ambiguous"],
+      "rollback":"remove candidate contract package and restore Checkpoint 1 baseline",
+      "publicMutationAuthorized":false
+    },
+    {
+      "checkpoint":7,
+      "id":"FIRST_SAFE_VERTICAL_CASE_SELECTION_v1",
+      "status":"REGISTERED_NOT_EXECUTED",
+      "intendedIntervention":"select one safe completed case for controlled Methods-Models demonstration",
+      "preservedCapacities":["NO_PROSPECTIVE_CONTAMINATION","CLAIM_CEILINGS","FRONTIER_STUDY_OWNERSHIP"],
+      "candidateEvidenceDelta":"PR709 may be considered because it contains true-versus-decoy route specificity with explicit retrospective contamination ceiling",
+      "falsifiers":["case requires hidden outcome access","case duplicates full Frontier study","case requires claim upgrade"],
+      "rollback":"select no case and return to registered candidate set",
+      "publicMutationAuthorized":false
+    },
+    {
+      "checkpoint":8,
+      "id":"TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
+      "status":"REGISTERED_NOT_EXECUTED",
+      "intendedIntervention":"construct the first inspectable stateful Methods-Models successor on a non-live candidate",
+      "preservedCapacities":["TEXT_PRIMARY_SCIENTIFIC_MEANING","XYZ_SPATIAL_ORGANIZATION","CANONICAL_STATE","KEYBOARD_ACCESS","REDUCED_MOTION","DEEP_LINK_STATE","EXACT_RETURN"],
+      "requiredStateAxes":["SYSTEM","SCIENTIFIC_OBJECT","MODEL","METHOD_STAGE","EVIDENCE","EXECUTION","CUSTODY","CLAIM_CEILING","SUPPORT_MODE","LENS","VIEW_MODE","ROUTE_HISTORY","CONTENT_VERSION"],
+      "falsifiers":["XYZ movement is decorative and semantically arbitrary","3D or visual state mutates scientific meaning","reload or back/forward changes authority","invalid state fails silently"],
+      "rollback":"candidate-only rollback; no live deployment",
+      "userVisualApprovalRequired":true,
+      "publicMutationAuthorized":false,
+      "liveMergeAuthorized":false
+    }
+  ],
+  "globalComparatorPrediction":"ordinary site redesign can improve presentation without necessarily preserving authority, evidence, route identity and state invariants; each checkpoint must therefore test those capacities separately",
+  "constructionSuccessCannotCompensateForAuthorityLoss":true,
+  "userVisualApprovalRequiredBeforePublicFacingMerge":true
+}

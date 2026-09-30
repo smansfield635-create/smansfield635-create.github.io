@@ -1,0 +1,58 @@
+.character-card {
+  margin-top: 8px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(223, 214, 163, .18);
+  color: rgba(240, 241, 222, .78);
+  font-size: .66rem;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.character-card[hidden] {
+  display: none;
+}
+
+.character-card p {
+  margin: 0;
+}
+
+.character-card__roles {
+  color: rgba(248, 246, 226, .94);
+  text-transform: capitalize;
+}
+
+.character-card__function {
+  margin-top: 6px !important;
+  color: rgba(211, 224, 201, .78);
+  text-transform: lowercase;
+}
+
+.character-card__provenance {
+  margin-top: 8px !important;
+  color: rgba(226, 203, 132, .86);
+  font: 600 .52rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .04em;
+}
+
+.character-card__hold {
+  color: rgba(218, 229, 208, .78);
+}
+
+.anchor[data-character-state="SOURCE_BOUND_CARDINAL_CARD"] .anchor__label {
+  color: rgba(244, 241, 218, .9);
+}
+
+.anchor[data-character-state="UNASSIGNED_SOURCE_HOLD"] {
+  opacity: .72;
+}
+
+@media (max-width: 760px) {
+  .character-card {
+    font-size: .61rem;
+    line-height: 1.44;
+  }
+
+  .character-card__provenance {
+    font-size: .47rem;
+  }
+}

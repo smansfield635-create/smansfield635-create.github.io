@@ -1,0 +1,45 @@
+{
+  "program": "C2_BOUNDED_COASTAL_AND_TERRAIN_VISUAL_SUCCESSOR",
+  "managementCorrection": "C2_BOUNDED_COASTAL_VISUAL_SUCCESSOR_AUTHORIZATION_001",
+  "branch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
+  "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "rollbackHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "publicDefaultMutation": false,
+  "passes": {
+    "C2.0": {
+      "status": "PASS_CLOSED",
+      "result": "ISOLATED_BRANCH_AND_ROLLBACK_ANCHORED"
+    },
+    "C2.1": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.2": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.3": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.4": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.5": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.6": {
+      "status": "PASS_CLOSED",
+      "result": "PASS_CLOSED"
+    },
+    "C2.7": {
+      "status": "READY_FOR_PUBLICATION"
+    }
+  },
+  "hardBlockers": [],
+  "nonblockingDevelopmentConditions": [],
+  "candidateUrl": "https://diamondgatebridge.com/preview/h-earth/c2/coastal-visual-successor-001/",
+  "userDifferentialReady": false
+}

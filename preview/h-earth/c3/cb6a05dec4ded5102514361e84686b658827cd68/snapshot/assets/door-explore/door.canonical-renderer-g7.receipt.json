@@ -1,0 +1,30 @@
+{
+  "schema": "DOOR_CANONICAL_RENDERER_SOURCE_RECEIPT_v1",
+  "generation": "G7",
+  "intent": "Preserve the physically accepted passive magic-mirror design while replacing only the pixelated Trophy and Brain film states with exact existing Compass renderers.",
+  "sourcePolicy": {
+    "inventedGeometry": false,
+    "generatedArtwork": false,
+    "visitorSceneControls": false,
+    "filmStates": ["Mirrorland", "Audralia", "Mirror Manor"],
+    "canonicalRendererStates": ["Trophy", "Brain"]
+  },
+  "authorities": {
+    "trophy": {
+      "path": "assets/compass/compass.trophy-scene.js",
+      "blob": "d281e18b06128671ffe2a19e8fdb272cc5544e31",
+      "runtime": "CompassTrophyScene"
+    },
+    "brain": {
+      "path": "assets/compass/compass.hra-brain-scene.js",
+      "blob": "c26603744e55c8ede2c82944bd0fd117d04dcbdb",
+      "runtime": "CompassBrainScene",
+      "source": "Allen_M_Brain.glb"
+    },
+    "acceptedFilm": {
+      "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+      "use": "Mirrorland, Audralia, and Mirror Manor clean states only"
+    }
+  },
+  "preserved": ["Explore", "Door Cycle-7 carousel", "six Door card renderers"]
+}

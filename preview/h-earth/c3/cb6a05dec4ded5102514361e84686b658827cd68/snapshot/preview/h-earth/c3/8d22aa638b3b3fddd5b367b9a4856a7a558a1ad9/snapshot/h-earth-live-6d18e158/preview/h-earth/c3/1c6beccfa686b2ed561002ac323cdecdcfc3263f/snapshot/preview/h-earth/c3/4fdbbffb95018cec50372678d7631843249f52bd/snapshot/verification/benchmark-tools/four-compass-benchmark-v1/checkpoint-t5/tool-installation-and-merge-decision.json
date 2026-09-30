@@ -1,0 +1,95 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_TOOL_INSTALLATION_AND_MERGE_DECISION_v1",
+  "phase": "TOOL_INSTALLATION_AND_MERGE_DECISION",
+  "checkpoint": "T5",
+  "status": "PASS_CLEAN_CANDIDATE_VALIDATED_MERGE_AUTHORIZED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "recordedDate": "2026-07-25",
+  "installationMode": "MAIN_PULL_REQUEST_GATE_FOR_TOOL_AND_LAWS_SCOPE_PLUS_MANUAL_DISPATCH",
+  "cleanCandidate": {
+    "rootMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+    "executionCommit": "52bdd928c479b60ffe65b0e04c41eecc9063dcd3",
+    "branch": "agent/metaverse-benchmark-four-compass-tool-t5-clean-install-001",
+    "pullRequest": 143,
+    "commitCount": 1,
+    "pathCount": 10,
+    "historicalBenchmarkCorpusPathCount": 0,
+    "productPathCount": 0
+  },
+  "retainedExactBlobs": {
+    "t1Authority": "ac1f63feb8112659a81ad2830640cfac404e5c1b",
+    "t2Receipt": "42b5c24e0a6a329395185b662a8a165f6bc0d0e0",
+    "t3Receipt": "73015114b8c47491dc76e8dab60c3c72442a733c",
+    "t4Audit": "4dbb013add280561ffd29ccfc2131b6558f5ba18",
+    "config": "f46128d33cc8498616c9accf56b44d6b6c04f534",
+    "baselineHarness": "db7da8e983f5f99926d229a4a1795eb7ecc7fe30",
+    "smokeHarness": "b79b429bf251d6bdaf1d3cc52be9f49d741c9e5a"
+  },
+  "normalizedWorkflowBlobs": {
+    "baseline": "7eee8b1703c19da397ec38ae806378f95b230fb5",
+    "smoke": "4973252071716f8ff032738379aa293552c2dfd0"
+  },
+  "workflowBinding": {
+    "pullRequestTarget": "main",
+    "manualDispatchAvailable": true,
+    "automaticTriggerScope": [
+      "laws/**",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs",
+      ".github/workflows/metaverse-benchmark-four-compass-tool.yml",
+      ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml"
+    ],
+    "checkpointReceiptRetriggerExcluded": true
+  },
+  "execution": {
+    "smoke": {
+      "runId": 30164904321,
+      "jobId": 89696142028,
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS",
+      "allStepsPassed": true,
+      "artifactId": 8621274783,
+      "artifactByteLength": 5438114,
+      "artifactSha256": "149f4a8f5885e3805194fc323bd631316cffd548b5fb124d34cf57f410cd6384"
+    },
+    "baseline": {
+      "runId": 30164904297,
+      "jobId": 89696142030,
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS",
+      "allStepsPassed": true,
+      "artifactId": 8621303142,
+      "artifactByteLength": 82859970,
+      "artifactSha256": "11b6646c326bc425bbcde0221704f8d679afee1d65942396e8550c97c0c296df"
+    }
+  },
+  "decision": {
+    "cleanCandidateConstructed": true,
+    "cleanCandidateExecutionAccepted": true,
+    "validatedJavaScriptSourcesUnchangedFromT3": true,
+    "workflowBindingNormalizationAccepted": true,
+    "installationEligible": true,
+    "mergeEligible": true,
+    "mergeAuthorized": true,
+    "mergeExecutedAtReceiptTime": false,
+    "lawsRepairReadyAfterMerge": true
+  },
+  "authority": {
+    "mergePullRequest143": true,
+    "beginL0AfterVerifiedMerge": true,
+    "changeProductFilesAtT5": false,
+    "beginLawsMutationAtT5": false
+  },
+  "assertions": {
+    "mainRootExact": true,
+    "cleanPathSetExact": true,
+    "historicalCorpusExcluded": true,
+    "bothNormalizedWorkflowsSucceeded": true,
+    "bothArtifactsPresent": true,
+    "fourCompassAndAuxiliarySeparationPreserved": true,
+    "productFilesChanged": 0,
+    "mainChangedAtReceiptTime": false
+  },
+  "nextCheckpoint": "T5_MERGE_EXECUTION_THEN_L0_LAWS_REPAIR_AUTHORITY_AND_BOUNDED_CORRECTION_PLAN"
+}

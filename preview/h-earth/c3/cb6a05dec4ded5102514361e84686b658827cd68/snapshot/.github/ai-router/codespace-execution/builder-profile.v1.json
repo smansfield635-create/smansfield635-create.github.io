@@ -1,0 +1,27 @@
+{
+  "schema": "THREE_TIER_CODESPACE_BUILDER_PROFILE_v1",
+  "roleId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_BUILDER",
+  "status": "ACTIVE_CONTRACT_CANDIDATE",
+  "environmentContract": ".github/ai-router/codespace-execution/execution-environment-contract.v1.json",
+  "mutableEnvironmentReuseByFreshVerifier": false,
+  "requiredInputs": [
+    "repository",
+    "operationId",
+    "projectProfile",
+    "exactTargetHead",
+    "declaredCommand",
+    "authorityReceiptIdentity"
+  ],
+  "requiredOutputs": [
+    "environmentReceipt",
+    "commandExecutionReceipt"
+  ],
+  "mayRepairCandidate": false,
+  "mayMutateTarget": false,
+  "mayMutateOperationLock": false,
+  "mayMerge": false,
+  "mayDeploy": false,
+  "mayRelease": false,
+  "successDisposition": "BUILDER_COMMAND_EXECUTED_AND_PASSED",
+  "failureDisposition": "BUILDER_COMMAND_EXECUTED_AND_FAILED_OR_NOT_EXECUTED_FAIL_CLOSED"
+}

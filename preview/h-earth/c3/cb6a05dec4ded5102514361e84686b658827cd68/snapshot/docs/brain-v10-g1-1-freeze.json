@@ -1,0 +1,15 @@
+{
+  "object": "COMPASS_BRAIN_V10_G1_1_INFERIOR_INTEGRATION",
+  "status": "FROZEN_EVIDENCE_BASELINE",
+  "source_head": "517aeb942650e10467630243ec616c0f06a81cba",
+  "public_release_head": "6aaad20555dd4ea861b3d3e6349f23e1bb2f866b",
+  "preserved_route": "/inspection/compass/brain-v10-g1-1/",
+  "qualified_repairs": [
+    "icosphere-derived cerebral topology removes UV-pole underside pinch",
+    "single continuous posterior-inferior cerebellar mass replaces paired bulbs",
+    "pons-medulla-brainstem generated as one continuous inferior chain"
+  ],
+  "known_limitation": "Global primitive basis remains too generic for high-fidelity anatomy; do not add cortical detail to this object.",
+  "successor": "BRAIN_V11_LAYERED_ANATOMICAL_ASSEMBLY",
+  "mutation_policy": "NO_FURTHER_GEOMETRY_MUTATION"
+}

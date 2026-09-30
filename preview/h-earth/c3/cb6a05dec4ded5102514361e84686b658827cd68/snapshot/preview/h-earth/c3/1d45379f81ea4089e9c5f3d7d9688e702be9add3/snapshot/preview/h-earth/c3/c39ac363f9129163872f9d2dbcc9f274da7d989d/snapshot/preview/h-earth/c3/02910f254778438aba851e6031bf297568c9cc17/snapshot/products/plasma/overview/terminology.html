@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>PLASMA · Terminology · Products · Geodiametrics</title><style>
+html,body{margin:0;height:100%}body{background:radial-gradient(1200px 800px at 50% 20%,#152532,#0a141b);color:#eaf2f6;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
+.page{max-width:980px;margin:0 auto;padding:44px 18px 72px}h1{margin:0 0 18px;font-size:48px;font-weight:900;letter-spacing:.02em}.sub{margin:0 0 26px;opacity:.72;font-size:18px}
+.lensRow{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 30px}.lensBtn{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);color:#eaf2f6;font-weight:900;border:1px solid rgba(255,255,255,.10)}
+.lensBtn[aria-pressed="true"]{background:rgba(80,170,255,.18);box-shadow:0 0 0 1px rgba(80,170,255,.35) inset,0 0 22px rgba(80,170,255,.16)}
+.mode{display:none}body[data-lens="human"] .mode-human{display:block}body[data-lens="scientific"] .mode-scientific{display:block}
+p{margin:18px 0;font-size:20px;line-height:1.7;opacity:.94}
+.bubble{margin:18px 0;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}.bubble summary{padding:18px 20px;font-size:20px;font-weight:900;cursor:pointer;list-style:none}.bubble summary::-webkit-details-marker{display:none}
+.bubbleContent{padding:0 20px 20px}.bubbleContent p{font-size:19px;margin:14px 0}
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-top:44px}.nav a{padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.10);text-decoration:none;color:#eaf2f6;font-weight:900}
+footer{margin-top:44px;text-align:center;opacity:.55;letter-spacing:3px;font-size:12px}
+</style></head><body data-lens="human"><div class="page">
+<h1>Terminology</h1><p class="sub">PLASMA · Definitions used on this product branch.</p>
+<div class="lensRow"><button class="lensBtn" id="btnHuman" aria-pressed="true" type="button">Human lens</button><button class="lensBtn" id="btnSci" aria-pressed="false" type="button">Scientific lens</button></div>
+
+<div class="mode mode-human">
+<p>These terms keep the product pages stable and inspectable.</p>
+<details class="bubble"><summary>Receipt</summary><div class="bubbleContent"><p>A condition that proves a step is valid before moving forward.</p></div></details>
+<details class="bubble"><summary>Constraint</summary><div class="bubbleContent"><p>A non-negotiable rule bounding what counts as admissible.</p></div></details>
+<details class="bubble"><summary>Admissible step</summary><div class="bubbleContent"><p>A move that respects constraints and is supported by a receipt.</p></div></details>
+<details class="bubble"><summary>Drift</summary><div class="bubbleContent"><p>Hidden changes in assumptions/definitions that invalidate downstream work.</p></div></details>
+</div>
+
+<div class="mode mode-scientific">
+<p>Operational vocabulary for constrained execution.</p>
+<details class="bubble"><summary>State</summary><div class="bubbleContent"><p>Validated configuration of evidence + constraints + choices.</p></div></details>
+<details class="bubble"><summary>Transition</summary><div class="bubbleContent"><p>State update gated by a receipt.</p></div></details>
+<details class="bubble"><summary>Invariant</summary><div class="bubbleContent"><p>Property that must remain true across transitions.</p></div></details>
+<details class="bubble"><summary>Invalidation</summary><div class="bubbleContent"><p>Downstream states become non-admissible when upstream assumptions change.</p></div></details>
+</div>
+
+<div class="nav"><a href="/products/plasma/overview/">Back to Overview Hub</a><a href="/products/plasma/">Back to PLASMA</a><a href="/products/">Products</a><a href="/home/">Home</a></div>
+<footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+</div>
+<script>(()=>{const b=document.body,h=document.getElementById("btnHuman"),s=document.getElementById("btnSci");function set(v){b.dataset.lens=v;h.setAttribute("aria-pressed",String(v==="human"));s.setAttribute("aria-pressed",String(v==="scientific"))}h.onclick=()=>set("human");s.onclick=()=>set("scientific")})();</script>
+</body></html>

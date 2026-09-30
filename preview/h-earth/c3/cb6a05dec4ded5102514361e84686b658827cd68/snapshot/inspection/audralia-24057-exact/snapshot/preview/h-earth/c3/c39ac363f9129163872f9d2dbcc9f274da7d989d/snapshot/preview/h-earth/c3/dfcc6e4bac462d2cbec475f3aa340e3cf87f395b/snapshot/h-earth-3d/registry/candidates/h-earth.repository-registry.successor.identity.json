@@ -1,0 +1,10 @@
+{
+  "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+  "registryVersion": "1.0.0-candidate.2",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED_NOT_CANONICAL_NOT_ACTIVE",
+  "integratedAmendmentId": "H_EARTH_REPOSITORY_REGISTRY_COMPOSITOR_AND_ROUTE_ENTRY_AMENDMENT_CANDIDATE_v1",
+  "contentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
+  "acceptedBootstrapChanged": false,
+  "activeRegistryChanged": false,
+  "canonical": false
+}

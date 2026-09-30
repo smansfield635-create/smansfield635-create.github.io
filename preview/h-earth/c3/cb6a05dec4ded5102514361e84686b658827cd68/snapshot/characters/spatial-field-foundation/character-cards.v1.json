@@ -1,0 +1,83 @@
+{
+  "schema": "CHARACTERS_TASK17R_D_PRODUCTION_CHARACTER_CARDS_v1",
+  "sourceAssembly": {
+    "issue": 2378,
+    "authority": "OWNER_ORIGINATING_CHARACTER_SOURCE_HANDOFFS_ONLY",
+    "presentationOrderAuthority": "PRESENTATION_ONLY_NOT_CHARACTER_CANON",
+    "sources": [
+      {"characterId":"ALARIC_AXION","commentId":5470618671,"marker":"ALARIC_AXION_THREAD-CANON_SEED_HANDOFF_v1"},
+      {"characterId":"ELARA_SYLENE","commentId":5470628682,"marker":"ELARA_SYLENE_OWNER-ORIGINATING_CHARACTER_SOURCE_HANDOFF_v1"},
+      {"characterId":"TARIAN_MERROW","commentId":5470642869,"marker":"TARIAN_MERROW_OWNER_ORIGINATING_CHARACTER_SOURCE_HANDOFF_v1"},
+      {"characterId":"SOREN_SEVRIN","commentId":5470634971,"marker":"SOREN_SEVRIN_THREAD-CANON_SOURCE_HANDOFF_v1"}
+    ]
+  },
+  "frozenPredecessor": {
+    "interactionCandidate": "d48613af69a244a9e71e7220ab7410e166f9a420",
+    "spatialFoundationCandidate": "feb19ebcb9dd08f5585db337cb15bba8e6202a89",
+    "qualificationRun": 33358544176
+  },
+  "slots": [
+    {
+      "anchor": "01",
+      "state": "SOURCE_BOUND_CARDINAL_CARD",
+      "characterId": "ALARIC_AXION",
+      "displayName": "Alaric Axion",
+      "seat": "NORTH",
+      "season": "WINTER",
+      "roleLabels": ["FRAMEKEEPER"],
+      "fixedFunction": "LAW_ADMISSIBILITY_BOUNDARY_THRESHOLD",
+      "heldUnknownFields": ["biography_origin","formative_events","family_relationships","appearance","age_dates","private_motivations","catchphrases_mannerisms"],
+      "sourceCommentId": 5470618671
+    },
+    {
+      "anchor": "02",
+      "state": "SOURCE_BOUND_CARDINAL_CARD",
+      "characterId": "ELARA_SYLENE",
+      "displayName": "Elara Sylene",
+      "seat": "EAST",
+      "season": "SPRING",
+      "roleLabels": ["ANOMALY_READER"],
+      "fixedFunction": "SIGNAL_RECOGNITION_PATTERN_OPENING_CONTRADICTION_PRESERVATION",
+      "heldUnknownFields": ["biography_origin","formative_events","family_relationships","appearance","age_dates","private_motivations","decorative_mannerisms"],
+      "sourceCommentId": 5470628682
+    },
+    {
+      "anchor": "03",
+      "state": "SOURCE_BOUND_CARDINAL_CARD",
+      "characterId": "TARIAN_MERROW",
+      "displayName": "Tarian Merrow",
+      "seat": "SOUTH",
+      "season": "SUMMER",
+      "roleLabels": ["SOUTH_CONTINUITYKEEPER","SUMMER_CONTINUITY_ANCHOR"],
+      "fixedFunction": "CONTINUITY_COST_STABILIZATION_RECOVERY_BURDEN_CARRY",
+      "heldUnknownFields": ["biography_origin","formative_events","family_relationships","appearance","age_dates","private_motivations","decorative_mannerisms"],
+      "sourceCommentId": 5470642869
+    },
+    {
+      "anchor": "04",
+      "state": "SOURCE_BOUND_CARDINAL_CARD",
+      "characterId": "SOREN_SEVRIN",
+      "displayName": "Soren Sevrin",
+      "seat": "WEST",
+      "season": "AUTUMN",
+      "roleLabels": ["WEST_PRESSUREKEEPER","FRACTURE_TESTER"],
+      "fixedFunction": "FALSE_CLOSURE_BREAK_ATTACK_PATH_AUDIT_RETURN_PRESSURE",
+      "heldUnknownFields": ["biography_origin","formative_events","family_relationships","appearance","age_dates","private_motivations","decorative_mannerisms"],
+      "sourceCommentId": 5470634971
+    },
+    {"anchor":"05","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
+    {"anchor":"06","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
+    {"anchor":"07","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"},
+    {"anchor":"08","state":"UNASSIGNED_SOURCE_HOLD","characterId":null,"displayName":"Unassigned source hold","reason":"NO_OWNER_ORIGINATING_CHARACTER_SOURCE_ASSIGNED_IN_TASK17R_D"}
+  ],
+  "hardNegatives": {
+    "chronology": false,
+    "relationships": false,
+    "p12": false,
+    "legacyShell": false,
+    "dossierIframe": false,
+    "worldRuntime": false,
+    "freeCamera": false,
+    "publication": false
+  }
+}

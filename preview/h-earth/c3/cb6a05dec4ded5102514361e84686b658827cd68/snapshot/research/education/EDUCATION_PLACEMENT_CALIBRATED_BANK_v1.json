@@ -1,0 +1,1227 @@
+{
+  "schema": "EDUCATION_PLACEMENT_CALIBRATED_BANK_v1",
+  "status": "DEEP_MATRIX_BOUNDED_REPAIR_CANDIDATE_NO_RUNTIME_AUTHORITY",
+  "cardinality": 64,
+  "difficultyDistribution": {
+    "1": 8,
+    "2": 8,
+    "3": 8,
+    "4": 8,
+    "5": 8,
+    "6": 8,
+    "7": 8,
+    "8": 8
+  },
+  "items": [
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s1a",
+      "q": "Which word names a person?",
+      "o": [
+        "table",
+        "teacher",
+        "blue",
+        "quickly"
+      ],
+      "a": 1,
+      "node": "elementary noun meaning",
+      "sourceStage": 1,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s1b",
+      "q": "What does “home” mean?",
+      "o": [
+        "A place where you live",
+        "Something you eat",
+        "A color",
+        "A way to move"
+      ],
+      "a": 0,
+      "node": "basic place meaning",
+      "sourceStage": 1,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s1c",
+      "q": "A sign says “STOP.” What should you do?",
+      "o": [
+        "Keep going",
+        "Stop",
+        "Run",
+        "Sleep"
+      ],
+      "a": 1,
+      "node": "basic sign meaning",
+      "sourceStage": 1,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s1d",
+      "q": "Which word means the opposite of “yes”?",
+      "o": [
+        "no",
+        "day",
+        "big",
+        "go"
+      ],
+      "a": 0,
+      "node": "elementary contrast",
+      "sourceStage": 1,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s1f",
+      "q": "Someone asks, “What is your name?” What should you say?",
+      "o": [
+        "Your name",
+        "Your age",
+        "The weather",
+        "A color"
+      ],
+      "a": 0,
+      "node": "basic personal response",
+      "sourceStage": 1,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s1g",
+      "q": "Which word is a number?",
+      "o": [
+        "three",
+        "tree",
+        "free",
+        "green"
+      ],
+      "a": 0,
+      "node": "elementary numeration",
+      "sourceStage": 1,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s1h",
+      "q": "What does “OPEN” mean on a door?",
+      "o": [
+        "You can open the door",
+        "The door is locked",
+        "The door is broken",
+        "The door is a window"
+      ],
+      "a": 0,
+      "node": "basic functional word",
+      "sourceStage": 1,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6h",
+      "q": "A sign says “EXIT.” What does it show?",
+      "o": [
+        "The way out",
+        "The way in",
+        "A place to pay",
+        "A place to sit"
+      ],
+      "a": 0,
+      "node": "basic sign vocabulary",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 1,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s1e",
+      "q": "Which sentence is complete?",
+      "o": [
+        "I am Sam.",
+        "I Sam.",
+        "Am I Sam.",
+        "Sam am."
+      ],
+      "a": 0,
+      "node": "simple clause completeness",
+      "sourceStage": 1,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s2c",
+      "q": "What does “address” mean here: “Write your address on the form.”",
+      "o": [
+        "Where you live",
+        "What you like to eat",
+        "Where you work only",
+        "Your password"
+      ],
+      "a": 0,
+      "node": "practical concept",
+      "sourceStage": 2,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s2d",
+      "q": "What does “empty” mean?",
+      "o": [
+        "Containing nothing",
+        "Very loud",
+        "Moving fast",
+        "Very expensive"
+      ],
+      "a": 0,
+      "node": "everyday adjective",
+      "sourceStage": 2,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s2e",
+      "q": "Which word best matches “begin”?",
+      "o": [
+        "start",
+        "finish",
+        "lose",
+        "sleep"
+      ],
+      "a": 0,
+      "node": "common synonym",
+      "sourceStage": 2,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s2f",
+      "q": "A label says “Keep dry.” What should you avoid?",
+      "o": [
+        "Water",
+        "Light",
+        "A chair",
+        "A number"
+      ],
+      "a": 0,
+      "node": "simple instruction",
+      "sourceStage": 2,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s2h",
+      "q": "A message says “Call me tonight.” What should you do?",
+      "o": [
+        "Make a phone call tonight",
+        "Send food",
+        "Visit yesterday",
+        "Write an address"
+      ],
+      "a": 0,
+      "node": "everyday instruction",
+      "sourceStage": 2,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3f",
+      "q": "Complete: “Ms. Lee ___ English at our school.”",
+      "o": [
+        "teaches",
+        "teacher",
+        "teaching",
+        "teach"
+      ],
+      "a": 0,
+      "node": "third-person verb form",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6d",
+      "q": "“Bring photo ID to your appointment.” What should you bring?",
+      "o": [
+        "Photo identification",
+        "Cash only",
+        "A meal",
+        "A book"
+      ],
+      "a": 0,
+      "node": "appointment instruction",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 2,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s2a",
+      "q": "What does “borrow” mean?",
+      "o": [
+        "Give something away forever",
+        "Use something and return it",
+        "Buy something cheaply",
+        "Break something"
+      ],
+      "a": 1,
+      "node": "everyday concept",
+      "sourceStage": 2,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s2b",
+      "q": "Complete: “Wash your hands ___ dinner.”",
+      "o": [
+        "before",
+        "after",
+        "during",
+        "because"
+      ],
+      "a": 0,
+      "node": "basic temporal preposition",
+      "sourceStage": 2,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "DIRECT_RECOGNITION",
+      "id": "s2g",
+      "q": "Complete: “We went home ___ the movie ended.”",
+      "o": [
+        "after",
+        "before",
+        "because of",
+        "until"
+      ],
+      "a": 0,
+      "node": "basic temporal conjunction",
+      "sourceStage": 2,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3a",
+      "q": "Complete: “I ___ tired today.”",
+      "o": [
+        "feel",
+        "feels",
+        "feeling",
+        "am feel"
+      ],
+      "a": 0,
+      "node": "present-state verb form",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3c",
+      "q": "Complete: “She is ___ the message now.”",
+      "o": [
+        "reading",
+        "read",
+        "reads",
+        "to read"
+      ],
+      "a": 0,
+      "node": "-ing form",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3d",
+      "q": "Complete: “Yesterday we ___ home.”",
+      "o": [
+        "walk",
+        "walked",
+        "walking",
+        "walker"
+      ],
+      "a": 1,
+      "node": "regular past form",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3e",
+      "q": "Complete the sentence: “He ___ every morning.”",
+      "o": [
+        "run",
+        "runs",
+        "running",
+        "runner"
+      ],
+      "a": 1,
+      "node": "third-person present",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3g",
+      "q": "Complete: “They are ___ dinner now.”",
+      "o": [
+        "cooking",
+        "cook",
+        "cooked",
+        "to cook"
+      ],
+      "a": 0,
+      "node": "progressive verb",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 3,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3b",
+      "q": "Complete: “She works at the hospital. She is a hospital ___.”",
+      "o": [
+        "worker",
+        "working",
+        "worked",
+        "works"
+      ],
+      "a": 0,
+      "node": "agent noun derivation",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRODUCTIVE_FORM",
+      "id": "s3h",
+      "q": "Complete: “By the time we arrived, the game ___.”",
+      "o": [
+        "had started",
+        "starts",
+        "has start",
+        "starting"
+      ],
+      "a": 0,
+      "node": "past perfect sequence",
+      "sourceStage": 3,
+      "competency": "MORPHOLOGY",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4a",
+      "q": "Which sentence about tomorrow is correct?",
+      "o": [
+        "I will go to school tomorrow.",
+        "I will go school tomorrow.",
+        "I go to school tomorrow yesterday.",
+        "I will going to school tomorrow."
+      ],
+      "a": 0,
+      "node": "sentence order",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4c",
+      "q": "Which sentence politely asks for help?",
+      "o": [
+        "Could you help me with this form?",
+        "You can help me with this form.",
+        "You helped me with this form.",
+        "You should help me with this form."
+      ],
+      "a": 0,
+      "node": "functional sentence",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4d",
+      "q": "Which question is correct?",
+      "o": [
+        "Where is the station?",
+        "Where the station is?",
+        "Where does the station is?",
+        "Where is station the?"
+      ],
+      "a": 0,
+      "node": "question order",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4e",
+      "q": "Which sentence about yesterday is correct?",
+      "o": [
+        "I visited my friend yesterday.",
+        "I visit my friend yesterday.",
+        "I have visit my friend yesterday.",
+        "I will visit my friend yesterday."
+      ],
+      "a": 0,
+      "node": "time + sentence structure",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6c",
+      "q": "A sign says: “Entrance closed. Use the west door.” What should you do?",
+      "o": [
+        "Wait at the closed entrance",
+        "Use the west door",
+        "Go home immediately",
+        "Call the police"
+      ],
+      "a": 1,
+      "node": "context response",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6e",
+      "q": "A notice says: “No parking 7–9 AM.” When is parking prohibited?",
+      "o": [
+        "Between 7 and 9 AM",
+        "After noon only",
+        "All day",
+        "Only at night"
+      ],
+      "a": 0,
+      "node": "time restriction",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 4,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4b",
+      "q": "Which sentence about quantity is correct?",
+      "o": [
+        "I need three bottles of water.",
+        "I need three bottle of water.",
+        "I need three bottles water.",
+        "I need third bottles of water."
+      ],
+      "a": 0,
+      "node": "grammar + numeration",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4f",
+      "q": "Which sentence gives a reason correctly?",
+      "o": [
+        "I stayed home because I was sick.",
+        "I stayed home although I was sick.",
+        "I stayed home unless I was sick.",
+        "I stayed home before I was sick."
+      ],
+      "a": 0,
+      "node": "cause construction",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4g",
+      "q": "Which is a polite request?",
+      "o": [
+        "Could you open the window, please?",
+        "You could opened the window, please?",
+        "Open you the window, please?",
+        "Could you opening the window?"
+      ],
+      "a": 0,
+      "node": "polite request",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "SENTENCE_CONSTRUCTION",
+      "id": "s4h",
+      "q": "Which comparison is correct?",
+      "o": [
+        "This bag is heavier than that one.",
+        "This bag is more heavy than that one.",
+        "This bag is heavier that that one.",
+        "This bag heavier than that one is."
+      ],
+      "a": 0,
+      "node": "comparison construction",
+      "sourceStage": 4,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5a",
+      "q": "Which means the same? “I would have brought an umbrella if I had known it was going to rain.”",
+      "o": [
+        "I did not know it would rain, so I did not bring an umbrella.",
+        "I knew it would rain, but I refused to bring an umbrella.",
+        "I brought an umbrella because I knew it would rain.",
+        "It did not rain, although I brought an umbrella."
+      ],
+      "a": 0,
+      "node": "counterfactual conditional meaning",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5c",
+      "q": "Which means the same? “I had already left the pharmacy when I realized I had forgotten one of my prescriptions.”",
+      "o": [
+        "I noticed the missing prescription after leaving the pharmacy.",
+        "I remembered the prescription before I left the pharmacy.",
+        "The pharmacy forgot to give me every prescription.",
+        "I returned the prescription before leaving."
+      ],
+      "a": 0,
+      "node": "past perfect temporal comprehension",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6f",
+      "q": "Which means the same? “Once opened, the product must remain refrigerated.”",
+      "o": [
+        "After it is opened, it must be kept cold.",
+        "It must be frozen before it is opened.",
+        "It can be kept warm after opening.",
+        "Opening it removes the need for refrigeration."
+      ],
+      "a": 0,
+      "node": "reduced clause instruction paraphrase",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6g",
+      "q": "Which means the same? “The appointment originally scheduled for Tuesday has been rescheduled for Thursday.”",
+      "o": [
+        "The appointment will now happen Thursday instead of Tuesday.",
+        "The appointment will happen on both Tuesday and Thursday.",
+        "Thursday's appointment was moved to Tuesday.",
+        "The appointment was canceled on Thursday."
+      ],
+      "a": 0,
+      "node": "formal schedule-change paraphrase",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 5,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5d",
+      "q": "Which means the same? “Because the material is exceptionally fragile, even minor pressure may damage it.”",
+      "o": [
+        "The material can be damaged by very little pressure.",
+        "The material becomes stronger when pressure is applied.",
+        "Only extreme pressure can damage the material.",
+        "The material is fragile only after it is damaged."
+      ],
+      "a": 0,
+      "node": "degree and modal consequence",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5f",
+      "q": "Which means the same? “I was unable to attend because the appointment had been moved without my knowledge.”",
+      "o": [
+        "I missed it because I did not know its scheduled time had changed.",
+        "I changed the appointment because I could not attend.",
+        "I knew about the change but decided to arrive at the old time.",
+        "The appointment was canceled because nobody attended."
+      ],
+      "a": 0,
+      "node": "past perfect causal paraphrase",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5h",
+      "q": "Which means the same? “The refund will be issued once the returned item has been inspected.”",
+      "o": [
+        "The money will be returned after the item is checked.",
+        "The item will be inspected only after the money is returned.",
+        "The refund replaces the need to return the item.",
+        "The inspection and refund have both already happened."
+      ],
+      "a": 0,
+      "node": "future passive temporal dependency",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6a",
+      "q": "What does this mean? “Although the payment is due Friday, no late fee will be charged until Saturday.”",
+      "o": [
+        "Friday is the last day to pay without a late fee.",
+        "Payment is not accepted on Friday.",
+        "The late fee starts on Friday morning.",
+        "Payment is optional until Saturday."
+      ],
+      "a": 0,
+      "node": "concessive temporal meaning",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REVIEW_REWRITE"
+    },
+    {
+      "evidenceClass": "PRACTICAL_COMPREHENSION",
+      "id": "s6b",
+      "q": "Which means the same? “The revised file must be submitted no later than 2 PM.”",
+      "o": [
+        "The changed file must be sent by 2 PM at the latest.",
+        "The original file may be sent any time after 2 PM.",
+        "The file cannot be changed before 2 PM.",
+        "The changed file should be submitted only if 2 PM has passed."
+      ],
+      "a": 0,
+      "node": "formal deadline paraphrase",
+      "sourceStage": 6,
+      "competency": "PRACTICAL_COMPREHENSION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7a",
+      "q": "What does this mean? “Visitors are required to check in before entering secured areas.”",
+      "o": [
+        "Visitors must check in first.",
+        "Visitors may enter before checking in.",
+        "Only employees can enter secured areas.",
+        "Checking in is optional."
+      ],
+      "a": 0,
+      "node": "formal obligation meaning",
+      "sourceStage": 7,
+      "competency": "READING_COMPREHENSION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REVIEW_REWRITE"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7e",
+      "q": "Which means the same? “Service operates at twenty-minute intervals throughout the morning.”",
+      "o": [
+        "Service runs every twenty minutes during the morning.",
+        "Each service lasts exactly twenty minutes and then stops.",
+        "Service begins twenty minutes after the morning ends.",
+        "Only one service runs during the entire morning."
+      ],
+      "a": 0,
+      "node": "formal interval scope paraphrase",
+      "sourceStage": 7,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7f",
+      "q": "What does this mean? “Remote work is permitted only with prior supervisor approval.”",
+      "o": [
+        "You need approval before working remotely.",
+        "Approval can be requested after remote work.",
+        "All employees automatically have approval.",
+        "Remote work is never permitted."
+      ],
+      "a": 0,
+      "node": "restriction and prior condition",
+      "sourceStage": 7,
+      "competency": "READING_COMPREHENSION",
+      "difficulty": 6,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5b",
+      "q": "Which means the same? “The meeting was postponed because the director, who had been expected to attend, became unavailable.”",
+      "o": [
+        "The meeting was moved later because the expected director could not attend.",
+        "The meeting happened earlier because the director unexpectedly arrived.",
+        "The director canceled all future meetings before becoming available.",
+        "The meeting continued as planned despite the director's absence."
+      ],
+      "a": 0,
+      "node": "embedded relative causal paraphrase",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5e",
+      "q": "Which means the same? “She declined the invitation, although she appreciated being asked.”",
+      "o": [
+        "She was grateful for the invitation but chose not to attend.",
+        "She accepted because she appreciated the invitation.",
+        "She did not receive an invitation.",
+        "She attended without answering the invitation."
+      ],
+      "a": 0,
+      "node": "concessive paraphrase",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "MEANING_CONSTRUCTION",
+      "id": "s5g",
+      "q": "Which means the same? “The store is temporarily closed while repairs are being completed.”",
+      "o": [
+        "The store is closed for a limited time during repairs.",
+        "The store has closed permanently because repairs failed.",
+        "The store is open only to repair workers forever.",
+        "The repairs were completed before the store closed."
+      ],
+      "a": 0,
+      "node": "temporal passive paraphrase",
+      "sourceStage": 5,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7b",
+      "q": "Which means the same? “Although the packaging had been damaged in transit, the item itself appeared to be functioning normally.”",
+      "o": [
+        "The package was damaged during delivery, but the item seemed to work normally.",
+        "The item failed because its packaging looked undamaged.",
+        "Both the package and the item were confirmed to be defective.",
+        "The item worked only after the damaged package was repaired."
+      ],
+      "a": 0,
+      "node": "perfect passive concessive paraphrase",
+      "sourceStage": 7,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REVIEW_REWRITE",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7c",
+      "q": "Which means the same? “Requests received after 5 PM will not be processed until the following business day.”",
+      "o": [
+        "Late requests are processed on the next business day.",
+        "Every request is processed before 5 PM.",
+        "Requests after 5 PM are rejected.",
+        "Business-day requests are processed immediately."
+      ],
+      "a": 0,
+      "node": "temporal paraphrase",
+      "sourceStage": 7,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7g",
+      "q": "Which means the same? “Contact support if the light remains solid rather than flashing.”",
+      "o": [
+        "Call support when the light stays solid.",
+        "Call support whenever the light flashes.",
+        "Restart only when the light is solid.",
+        "A solid light means the device is off."
+      ],
+      "a": 0,
+      "node": "conditional contrast paraphrase",
+      "sourceStage": 7,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7h",
+      "q": "Which means the same? “The deadline has been extended to accommodate applicants who were unable to respond within the original timeframe.”",
+      "o": [
+        "Applicants who could not meet the first deadline have been given more time.",
+        "Only applicants who answered early may use the new deadline.",
+        "The original deadline was shortened because applicants responded late.",
+        "Applicants must now respond before the original deadline."
+      ],
+      "a": 0,
+      "node": "formal purpose and relative-clause paraphrase",
+      "sourceStage": 7,
+      "competency": "LEXICAL_MEANING",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8a",
+      "q": "Which response is grammatically correct and appropriately clear?",
+      "o": [
+        "I do not understand this section of the form. Could you explain what information it requires?",
+        "I do not understand this section of the form. Could you explain what information does it require?",
+        "I am not understanding this section; explain me what requires it.",
+        "I do not understand this section, could you explaining its information?"
+      ],
+      "a": 0,
+      "node": "advanced embedded-question form",
+      "sourceStage": 8,
+      "competency": "SENTENCE_FORM",
+      "difficulty": 7,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REVIEW_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "UNSEEN_TRANSFER",
+      "id": "s7d",
+      "q": "Which means the same? “Unless explicitly exempted, applicants are expected to comply with all of the requirements outlined above.”",
+      "o": [
+        "Applicants must follow all the stated requirements unless they are specifically excused.",
+        "Applicants may ignore any requirement that is not explained twice.",
+        "Only exempt applicants are required to follow the stated requirements.",
+        "Applicants are exempt whenever a requirement seems difficult."
+      ],
+      "a": 0,
+      "node": "advanced exception and passive obligation",
+      "sourceStage": 7,
+      "competency": "READING_COMPREHENSION",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE",
+      "itemQualityRepair": "v1",
+      "deepAuditRepair": "v2"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8b",
+      "q": "Which means the same? “We should withhold a final judgment until the available evidence has been verified.”",
+      "o": [
+        "We should wait to decide until the evidence has been checked.",
+        "We should make a decision before checking the evidence.",
+        "We should ignore evidence that delays a decision.",
+        "We should treat an early judgment as verified evidence."
+      ],
+      "a": 0,
+      "node": "formal modality paraphrase",
+      "sourceStage": 8,
+      "competency": "INTEGRATED_TRANSFER",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8c",
+      "q": "Which means the same? “The latest instructions appear to contradict the guidance issued earlier.”",
+      "o": [
+        "The new instructions seem inconsistent with the earlier guidance.",
+        "The latest instructions repeat the earlier guidance exactly.",
+        "The earlier guidance was never issued.",
+        "The instructions are difficult to read."
+      ],
+      "a": 0,
+      "node": "nuanced contradiction paraphrase",
+      "sourceStage": 8,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8d",
+      "q": "What does this mean? “The requested revision would be inconsistent with the terms previously agreed upon.”",
+      "o": [
+        "The requested change would conflict with the earlier agreement.",
+        "The requested change has already been approved.",
+        "The earlier agreement requires the change.",
+        "No agreement was previously made."
+      ],
+      "a": 0,
+      "node": "formal register equivalence",
+      "sourceStage": 8,
+      "competency": "READING_COMPREHENSION",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8e",
+      "q": "Which means the same? “Despite having been warned repeatedly, he appeared not to have understood the seriousness of the situation.”",
+      "o": [
+        "Although he had received several warnings, he seemed not to realize how serious the situation was.",
+        "He understood the situation because nobody had warned him.",
+        "The warnings became serious only after he understood them.",
+        "He repeatedly warned others because the situation appeared simple."
+      ],
+      "a": 0,
+      "node": "perfect aspect concessive paraphrase",
+      "sourceStage": 8,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REVIEW_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8f",
+      "q": "Which means the same? “Completion is contingent upon receiving the missing file.”",
+      "o": [
+        "The task can be completed only after the missing file is received.",
+        "The missing file is unnecessary for completion.",
+        "Completion caused the file to disappear.",
+        "The file will be received after completion."
+      ],
+      "a": 0,
+      "node": "formal dependency paraphrase",
+      "sourceStage": 8,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8g",
+      "q": "Which means the same? “She may have misunderstood what he was implying rather than what he actually said.”",
+      "o": [
+        "She may have misread his suggested meaning, not his exact words.",
+        "She definitely misunderstood every word he said.",
+        "He said exactly what she had already implied.",
+        "She understood his implication more clearly than his words."
+      ],
+      "a": 0,
+      "node": "modal perfect and implied meaning",
+      "sourceStage": 8,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REVIEW_KEEP",
+      "itemQualityRepair": "v1"
+    },
+    {
+      "evidenceClass": "INTEGRATED_TRANSFER",
+      "id": "s8h",
+      "q": "Which means the same? “The figures are mutually incompatible, so at least one must be inaccurate.”",
+      "o": [
+        "The figures cannot both be correct.",
+        "The figures are different but both certainly correct.",
+        "The figures are approximate versions of the same confirmed value.",
+        "Neither figure can be evaluated."
+      ],
+      "a": 0,
+      "node": "formal incompatibility paraphrase",
+      "sourceStage": 8,
+      "competency": "MEANING_CONSTRUCTION",
+      "difficulty": 8,
+      "instructionBurden": "BASIC",
+      "constructValidity": "ENGLISH_DOMINANT_REWRITE",
+      "itemQualityRepair": "v1"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "WHOLE_ESTATE_PROVENANCE_OBLIGATIONS_v1",
+  "status": "CHECKPOINT_4_CONSTRUCTION_CANDIDATE",
+  "roomIdentityPreserved": true,
+  "obligations": [
+    {
+      "room": "COMPASS",
+      "mustPreserve": ["orientation authority", "source route to provenance"],
+      "mustNotImply": ["route prominence equals evidence strength"]
+    },
+    {
+      "room": "REALITY",
+      "mustPreserve": ["evidence versus interpretation", "uncertainty"],
+      "mustNotImply": ["retrospective interpretation is empirical result"]
+    },
+    {
+      "room": "LAWS",
+      "mustPreserve": ["constraint and test boundaries", "claim ceilings"],
+      "mustNotImply": ["doctrine upgrades evidence"]
+    },
+    {
+      "room": "UCIC",
+      "mustPreserve": ["invariant-candidate identity", "falsifiability"],
+      "mustNotImply": ["estate coherence self-validates UCIC", "construction proves universality"]
+    },
+    {
+      "room": "IMI",
+      "mustPreserve": ["instrument identity", "measurement separation"],
+      "mustNotImply": ["measurement or estate fit confirms UCIC"]
+    },
+    {
+      "room": "METHODS_MODELS",
+      "mustPreserve": ["evidence standing", "claim traceability", "developmental source class when shown"],
+      "mustNotImply": ["provenance completeness equals truth", "discovery traversal upgrades standing"]
+    },
+    {
+      "room": "COHERENCE_DIAGNOSTIC",
+      "mustPreserve": ["private bounded reflection"],
+      "mustNotImply": ["estate developmental provenance is diagnostic validation"]
+    },
+    {
+      "room": "FRONTIER",
+      "mustPreserve": ["applied-study ownership", "study-specific evidence status"],
+      "mustNotImply": ["estate construction is a substitute control or replication"]
+    },
+    {
+      "room": "PRODUCTS",
+      "mustPreserve": ["implementation utility separate from scientific standing"],
+      "mustNotImply": ["adoption, polish or utility validates the underlying science"]
+    },
+    {
+      "room": "WORLDS_CHARACTERS_CAMPAIGNS",
+      "mustPreserve": ["metaphor and narrative identity", "scientific boundary when research-bearing"],
+      "mustNotImply": ["metaphor is evidence", "narrative coherence is scientific confirmation"]
+    },
+    {
+      "room": "RESEARCH_PROVENANCE",
+      "mustPreserve": ["source lineage", "evidence class", "version lineage", "claim ceiling", "adverse evidence", "falsifier record"],
+      "mustNotImply": ["hash, CI or record completeness creates truth"]
+    },
+    {
+      "room": "INTERFACE_3D",
+      "mustPreserve": ["declared relation only", "temporal and evidence labels when represented"],
+      "mustNotImply": ["centrality, depth, scale, enclosure or animation means stronger validation"]
+    }
+  ],
+  "globalRules": [
+    "PROVENANCE_MAY_BE_REFERENCED_ESTATE_WIDE_BUT_OWNERSHIP_REMAINS_RESEARCH_PROVENANCE",
+    "ROOM_SPECIFIC_EXPRESSION_MUST_PRESERVE_ROOM_IDENTITY",
+    "DEVELOPMENTAL_PROVENANCE_MUST_CARRY_EVIDENCE_CLASS_AND_CLAIM_CEILING_WHEN_MATERIAL",
+    "ADVERSE_SCIENTIFIC_RESULTS_REMAIN_VISIBLE_WHEN_RELEVANT_TO_A_PUBLIC_CLAIM"
+  ],
+  "publicMutationAuthorized": false
+}

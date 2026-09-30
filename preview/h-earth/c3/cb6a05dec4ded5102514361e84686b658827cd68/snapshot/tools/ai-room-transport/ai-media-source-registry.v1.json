@@ -1,0 +1,59 @@
+{
+  "schema": "AI_MEDIA_SOURCE_REGISTRY_v1",
+  "status": "GOVERNING_CLOSED_WORLD_SOURCE_REGISTRY",
+  "sources": {
+    "COMPASS_CH01_CANONICAL_SOURCE": {
+      "provider": "GOOGLE_DRIVE",
+      "fileName": "23619.mp4",
+      "fileId": "1nQKAfKJ2ORMSpIhjyt5A_gy4neYFrh7A",
+      "driveUrl": "https://drive.google.com/file/d/1nQKAfKJ2ORMSpIhjyt5A_gy4neYFrh7A/view",
+      "mimeType": "video/mp4",
+      "expectedBytes": 91348244,
+      "expectedSha256": "c5caa176633209bdc618f505f64cafef5535e400ce2bf1728cde79582169c9a3",
+      "materializationMode": "DRIVE_RAW_FETCH_STREAM_REFERENCE_TO_EXECUTION_WORKSPACE",
+      "inlineBase64Prohibited": true,
+      "unverifiedPublicDownloadProhibited": true,
+      "postMaterializationRequired": ["BYTE_SIZE_MATCH", "SHA256_MATCH", "FFPROBE_ACCEPTS"]
+    },
+    "CHAPTER_01_STRONG_OWNER_CANDIDATE_V2": {
+      "provider": "GOOGLE_DRIVE",
+      "fileName": "chapter01-compass-successor-continuity-owner-candidate-v2.mp4",
+      "fileId": "1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B",
+      "driveUrl": "https://drive.google.com/file/d/1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B/view",
+      "mimeType": "video/mp4",
+      "expectedBytes": 16476281,
+      "expectedSha256": "db3e981640fe7408fca12d9f6c411660a7dc15edee90ce0e3f1b798b91c928a1",
+      "expectedDurationSeconds": 65.0,
+      "expectedWidth": 1920,
+      "expectedHeight": 1080,
+      "expectedFps": 24,
+      "expectedFrames": 1560,
+      "materializationMode": "DRIVE_RAW_FETCH_STREAM_REFERENCE_TO_EXECUTION_WORKSPACE",
+      "inlineBase64Prohibited": true,
+      "unverifiedPublicDownloadProhibited": true,
+      "postMaterializationRequired": ["BYTE_SIZE_MATCH", "SHA256_MATCH", "FFPROBE_ACCEPTS"],
+      "executionRole": "PRIMARY_SOURCE_FOR_CURRENT_CHAPTER_01_TIMING_CONFORM_ONLY"
+    },
+    "CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1": {
+      "provider": "GOOGLE_DRIVE",
+      "fileName": "chapter01-compass-final-awards-live-1080p.mp4",
+      "fileId": "1fc7SxAJd68AEyjuKnOD5xprZm0j5FkFL",
+      "driveUrl": "https://drive.google.com/file/d/1fc7SxAJd68AEyjuKnOD5xprZm0j5FkFL/view",
+      "mimeType": "video/mp4",
+      "expectedBytes": 15365888,
+      "expectedSha256": "9be6d48d6a8ceeb6d26a64d12440f929ce7f9bac9b6b48bad301ef9a3f6d881f",
+      "expectedDurationSeconds": 65.0,
+      "expectedWidth": 1920,
+      "expectedHeight": 1080,
+      "expectedFps": 24,
+      "expectedFrames": 1560,
+      "materializationMode": "DRIVE_RAW_FETCH_STREAM_REFERENCE_TO_EXECUTION_WORKSPACE",
+      "inlineBase64Prohibited": true,
+      "unverifiedPublicDownloadProhibited": true,
+      "postMaterializationRequired": ["BYTE_SIZE_MATCH", "SHA256_MATCH", "FFPROBE_ACCEPTS"],
+      "executionRole": "OWNER_APPROVED_CHAPTER_01_FINAL_LIVE_PROMOTION_MASTER",
+      "ownerApproved": true,
+      "livePromotionTarget": "showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="h-earth-exact-source-commit" content="c849fb7ca595d9fc4f1e20b96b0501a81bbfa182">
+  <title>H-Earth OW04 Repaired Inspection</title>
+  <style>html,body{margin:0;min-height:100%;background:#020609;color:#eef8f6;font-family:system-ui,sans-serif}body{display:grid;place-items:center;padding:24px;box-sizing:border-box}.loading{max-width:680px;padding:24px}.error{color:#ffd2d2;white-space:pre-wrap}</style>
+</head>
+<body>
+  <section class="loading" aria-live="polite"><h1>Loading H-Earth repaired inspection</h1><p id="status">Resolving exact candidate…</p></section>
+  <script>
+  (async()=>{
+    const EXACT='c849fb7ca595d9fc4f1e20b96b0501a81bbfa182';
+    const ROOT=`https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${EXACT}/`;
+    const response=await fetch(`${ROOT}showroom/globe/h-earth/index.html`,{cache:'no-store'});
+    if(!response.ok) throw new Error(`TEMPORARY_REVIEW_SOURCE_HTTP_FAILURE:${response.status}`);
+    let html=await response.text();
+    html=html.replace(/\b(href|src)=(['"])\/(?!\/)/g,(m,a,q)=>`${a}=${q}${ROOT}`);
+    html=html.replace(/url\((['"]?)\/(?!\/)/g,(m,q)=>`url(${q}${ROOT}`);
+    const close='<'+'/script>';
+    const bootstrap=`<base href="${ROOT}showroom/globe/h-earth/"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="h-earth-exact-source-commit" content="${EXACT}"><script>(()=>{const root=${JSON.stringify(ROOT)};const nativeFetch=window.fetch.bind(window);window.fetch=(input,init)=>{if(typeof input==='string'&&input.startsWith('/')&&!input.startsWith('//'))input=root+input.slice(1);else if(input instanceof Request){const u=new URL(input.url,document.baseURI);if(u.origin===location.origin&&u.pathname.startsWith('/'))input=new Request(root+u.pathname.slice(1)+u.search+u.hash,input);}return nativeFetch(input,init);};window.H_EARTH_TEMPORARY_REVIEW_DELIVERY=Object.freeze({exactSourceCommit:${JSON.stringify(EXACT)},sourceRoot:root,productMutation:false,liveHEarthPageMutation:false});})();${close}`;
+    html=html.replace('<head>',`<head>${bootstrap}`);
+    html=html.replace('<html lang="en"',`<html lang="en" data-h-earth-temporary-review="active" data-h-earth-exact-source-commit="${EXACT}"`);
+    document.open();document.write(html);document.close();
+  })().catch(error=>{const node=document.getElementById('status');if(node){node.className='error';node.textContent=error instanceof Error?`${error.message}\n${error.stack??''}`:String(error);}console.error(error);});
+  </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+{
+  "schema": "WHOLE_ESTATE_DEVELOPMENTAL_PROVENANCE_LEDGER_v1",
+  "status": "CHECKPOINT_4_CONSTRUCTION_CANDIDATE",
+  "governingMain": "a0b0fb3d753637cfc66c06e73b0b5f0cd237056a",
+  "evidenceClasses": [
+    "STRONG_CONTEMPORANEOUS",
+    "PARTIAL_CONTEMPORANEOUS",
+    "RETROSPECTIVE_INTERPRETATION"
+  ],
+  "developmentalClaimCeiling": "ESTATE_SCALE_DEVELOPMENTAL_CONCORDANCE_AND_CONSTRUCTION_LINEAGE_ONLY",
+  "entries": [
+    {
+      "id": "COMPASS_PLURAL_IDENTITY_ARCHITECTURE",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "index.html@1cc9a1de90bb58de6463bafe52a1b1f91c5bef4a",
+      "temporalRole": "CONTEMPORANEOUS_PUBLIC_ARCHITECTURE",
+      "constraintObserved": "plural identities remain distinct while contributing to a larger landscape",
+      "permittedInference": "identity-preserving coherence is present in the public architecture",
+      "forbiddenInference": "this page was preregistered as a UCIC test"
+    },
+    {
+      "id": "MANOR_ROUTE_TRUTH_AND_IDENTITY_SEPARATION",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "assets/manor-blueprint/manor.blueprint.registry.js@f7e72cb61e02ff3001ae059d0ad73e6d7a75986f",
+      "temporalRole": "CONTEMPORANEOUS_ROUTE_ARCHITECTURE",
+      "constraintObserved": "route truth is separated from visitor room identity and route classes retain distinct roles",
+      "permittedInference": "routing and identity separation functioned as a construction constraint",
+      "forbiddenInference": "route architecture validates a scientific invariant"
+    },
+    {
+      "id": "LAWS_FIRST_AUTHORITY_STRUCTURE",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "laws/index.html@df2fc6b74da5791cedf07f0d01449ccf72243c36",
+      "temporalRole": "CONTEMPORANEOUS_AUTHORITY_ARCHITECTURE",
+      "constraintObserved": "FIRST authorities remain distinct and Research is separately bounded",
+      "permittedInference": "authority separation was explicit in the estate",
+      "forbiddenInference": "authority architecture is empirical confirmation of UCIC"
+    },
+    {
+      "id": "RESEARCH_SUPPORT_AND_RECORD_ROLE",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "laws/research/index.html@58b06514bf03bf8c32d8c1ed4d6d39a8693df9cd",
+      "temporalRole": "CONTEMPORANEOUS_RESEARCH_ARCHITECTURE",
+      "constraintObserved": "evidence, methods, negative findings, claim ceilings and records support without becoming a FIRST authority",
+      "permittedInference": "research support and authority were separated",
+      "forbiddenInference": "record completeness creates scientific truth"
+    },
+    {
+      "id": "METHODS_MODELS_EXISTING_XYZ_PRESENTATION",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "laws/research/methods-and-models/index.html@2a84f9a272d051041dd639d95e1dca4dbd5db144",
+      "temporalRole": "CONTEMPORANEOUS_PRESENTATION_ARCHITECTURE",
+      "constraintObserved": "X/Y/Z presentation already separated models, lenses and families while denying validation",
+      "permittedInference": "spatial organization has an estate design lineage",
+      "forbiddenInference": "the current spatial successor has already been validated"
+    },
+    {
+      "id": "GATE0_OBJECT_AND_STATE_SEPARATION",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "PR708 merge fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+      "temporalRole": "LATER_FORMALIZATION",
+      "constraintObserved": "IMI, UCIC, methods, models, evidence, execution, custody and interface were explicitly separated",
+      "permittedInference": "later governance formalized non-substitution and state separation",
+      "forbiddenInference": "Gate 0 retroactively proves earlier design intent"
+    },
+    {
+      "id": "WHOLE_ESTATE_BUILT_THROUGH_COHERENCE",
+      "evidenceClass": "PARTIAL_CONTEMPORANEOUS",
+      "sources": [
+        "current Compass plural-identity language",
+        "current route ownership boundaries",
+        "Gate 0 object separation",
+        "existing governance and return-control architecture"
+      ],
+      "temporalRole": "CROSS_ARTIFACT_DEVELOPMENTAL_CONCORDANCE",
+      "constraintObserved": "multiple artifacts are consistent with coherence constraining identity, routing and authority",
+      "permittedInference": "bounded estate-scale construction-lineage claim",
+      "forbiddenInference": "preregistered whole-estate prediction or scientific confirmation"
+    },
+    {
+      "id": "RETROSPECTIVE_ESTATE_COHERENCE_INTERPRETATION",
+      "evidenceClass": "RETROSPECTIVE_INTERPRETATION",
+      "temporalRole": "LATER_INTERPRETIVE_OVERLAY",
+      "constraintObserved": "earlier choices can be interpreted through the later coherence framework where contemporaneous evidence is incomplete",
+      "permittedInference": "interpretive provenance only",
+      "forbiddenInference": "earlier intent, preregistration, prediction, or confirmation"
+    },
+    {
+      "id": "CHECKPOINT_2_NARRATIVE_SPINE_FORMALIZATION",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "PR723 merge 889197b2cbe73de171756b7545446f12a726cde7",
+      "temporalRole": "LATER_FORMALIZATION",
+      "constraintObserved": "narrative, evidence standing and discovery were formally separated from access control and claim escalation",
+      "permittedInference": "contemporaneous evidence of Checkpoint 2 governance",
+      "forbiddenInference": "proof that all earlier narrative choices were theory-driven"
+    },
+    {
+      "id": "CHECKPOINT_3_ROOM_RELATION_FORMALIZATION",
+      "evidenceClass": "STRONG_CONTEMPORANEOUS",
+      "source": "PR725 merge a0b0fb3d753637cfc66c06e73b0b5f0cd237056a",
+      "temporalRole": "LATER_FORMALIZATION",
+      "constraintObserved": "room identity, authority, non-substitution, translation fidelity and representation boundaries were formalized",
+      "permittedInference": "contemporaneous evidence of Checkpoint 3 governance",
+      "forbiddenInference": "scientific validation by constitutional coherence"
+    }
+  ],
+  "globalRules": [
+    "EVIDENCE_CLASS_MUST_BE_PRESERVED",
+    "LATER_FORMALIZATION_MAY_NOT_BE_BACKDATED",
+    "RETROSPECTIVE_INTERPRETATION_MAY_NOT_BECOME_PREREGISTRATION",
+    "DEVELOPMENTAL_CONCORDANCE_MAY_NOT_BECOME_SCIENTIFIC_VALIDATION",
+    "CI_HASH_OR_MERGE_HISTORY_MAY_NOT_BECOME_SCIENTIFIC_TRUTH"
+  ],
+  "publicMutationAuthorized": false
+}

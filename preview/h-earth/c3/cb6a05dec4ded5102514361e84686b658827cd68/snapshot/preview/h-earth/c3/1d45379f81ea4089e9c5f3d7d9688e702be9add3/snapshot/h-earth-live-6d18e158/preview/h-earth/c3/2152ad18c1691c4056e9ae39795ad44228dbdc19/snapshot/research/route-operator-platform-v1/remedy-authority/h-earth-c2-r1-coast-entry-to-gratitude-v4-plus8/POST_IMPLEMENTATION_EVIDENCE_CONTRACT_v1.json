@@ -1,0 +1,192 @@
+{
+  "admission_rules": {
+    "candidate_or_route_identity_mismatch": "INVALID",
+    "capture_before_manifest_freeze": "INVALID",
+    "cross_viewport_carry_forward": "PROHIBITED",
+    "manifest_hash_mismatch": "INVALID",
+    "measured_failure": "NUMERIC_CONSTRAINT",
+    "missing_admissible_measurement": "UNEVALUABLE",
+    "post_hoc_pitch_selection": "PROHIBITED"
+  },
+  "candidate_id": "H_EARTH_C2_R1_COAST_ENTRY_TO_GRATITUDE_EXPLICIT_PITCH_PLUS_8_REPAIR_CANDIDATE_v1",
+  "candidate_source_commit_sha": "501505fe66dbeede467240d8c7d93f194f7d10d2",
+  "capture_owner": "ROLE_3_EXACT_HEAD_EVIDENCE_AUTHORITY",
+  "contract_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_V4_POST_IMPLEMENTATION_EVIDENCE_CONTRACT_v1",
+  "contract_sha256": "accf3cd22b413ebff314a8bd365803b4610c7ee87422634f1450f6eece97973e",
+  "contract_version": "1.0.0",
+  "coordination_owner": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "correction_manifest_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_V4_PLUS_8_CORRECTION_MANIFEST_v1",
+  "correction_manifest_sha256": "e05e896cd2e791508d65824c17298ef42b4fd0cafde9d14a348a6cc1c4eab1bb",
+  "frozen_at": "2026-08-02T22:32:25Z",
+  "governing_release": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v4",
+  "governing_release_sha256": "49162b7ff730a9efc71bd2151ad00b34e8b9f46271018a015defb5534c7fb3b2",
+  "implementation_owner": "ROLE_1_AUTHORIZED_PRODUCT_IMPLEMENTATION",
+  "required_candidate_derivation": {
+    "authorized_product_mutation_paths": [
+      "showroom/globe/h-earth/functional-landscape/navigation.js"
+    ],
+    "exact_resulting_commit_required_before_capture": true,
+    "must_descend_from_source_commit": true,
+    "required_semantic_delta": "COAST_PITCH_MINUS8_TO_PLUS8_ONLY",
+    "unrelated_product_mutations_prohibited": true
+  },
+  "required_capture_cycles": [
+    "INITIAL_LOAD",
+    "RESET_CYCLE_1",
+    "RESET_CYCLE_2"
+  ],
+  "required_evidence": [
+    {
+      "evidence_id": "EXACT_CANDIDATE_CUSTODY",
+      "requirements": [
+        "candidate_branch",
+        "candidate_commit_sha",
+        "parent_source_commit_sha",
+        "changed_path_list",
+        "diff_sha256",
+        "clean_worktree_receipt"
+      ]
+    },
+    {
+      "evidence_id": "CAMERA_STATE_RECEIPTS",
+      "per_cycle": true,
+      "per_viewport": true,
+      "requirements": [
+        "x",
+        "y",
+        "z",
+        "yaw_degrees",
+        "pitch_degrees",
+        "vertical_fov_degrees",
+        "manifest_sha256",
+        "candidate_id",
+        "route_id",
+        "route_version"
+      ]
+    },
+    {
+      "evidence_id": "VIEWPORT_LOCKED_FRAMES",
+      "per_cycle": true,
+      "per_viewport": true,
+      "requirements": [
+        "png_sha256",
+        "viewport_id",
+        "device_scale_factor",
+        "capture_cycle",
+        "candidate_commit_sha",
+        "manifest_sha256"
+      ]
+    },
+    {
+      "evidence_id": "TERRAIN_CLEARANCE_RECEIPT",
+      "requirements": [
+        "terrain_elevation",
+        "camera_y",
+        "clearance",
+        "minimum_clearance",
+        "pass_boolean"
+      ]
+    },
+    {
+      "evidence_id": "BERM_CENTERLINE_CLEARANCE_RECEIPT",
+      "requirements": [
+        "exact_mesh_lower_bound_degrees",
+        "continuous_lower_bound_degrees",
+        "observed_pitch_degrees",
+        "angular_margin_degrees",
+        "centerline_intersection_boolean"
+      ]
+    },
+    {
+      "evidence_id": "WITNESS_ANNOTATION_RECEIPTS",
+      "per_viewport": true,
+      "requirements": [
+        "GRATITUDE_REGION_ENTRY_PRESENTATION_WITNESS",
+        "BEACH_SHORELINE_FOREGROUND_WITNESS",
+        "BERM_CENTERLINE_WITNESS",
+        "GRATITUDE_INLAND_DEPTH_CUE_WITNESS",
+        "bounding_geometry_sha256"
+      ]
+    },
+    {
+      "evidence_id": "VISIBILITY_AND_OCCLUSION_RECEIPTS",
+      "per_viewport": true,
+      "requirements": [
+        "beach_foreground_fraction",
+        "gratitude_witness_present",
+        "gratitude_witness_unoccluded",
+        "berm_screen_height_fraction",
+        "observer_confidence_separate_from_score"
+      ]
+    },
+    {
+      "evidence_id": "RESET_REPRODUCIBILITY_RECEIPT",
+      "requirements": [
+        "two_cycles",
+        "each_cycle_pitch_plus8_within_0_25",
+        "x0_z_minus96",
+        "yaw0_within_1",
+        "fov56_within_1",
+        "factor_vector_sha256",
+        "manifest_sha256"
+      ]
+    },
+    {
+      "evidence_id": "RUNTIME_HEALTH_RECEIPT",
+      "requirements": [
+        "console_failure_count",
+        "page_failure_count",
+        "request_failure_count",
+        "http_failure_count"
+      ]
+    }
+  ],
+  "required_factor_ids": [
+    "COAST_ENTRY_POSITION_AVAILABILITY",
+    "SUCCESSOR_TERRAIN_CLEARANCE_AVAILABILITY",
+    "AUTHORIZED_INLAND_TARGET_ALIGNMENT_AVAILABILITY",
+    "NEAR_BERM_CENTERLINE_CLEARANCE",
+    "BEACH_FOREGROUND_PRESERVATION",
+    "INLAND_ANCHOR_VISIBILITY",
+    "INLAND_ANCHOR_OCCLUSION_CLEARANCE",
+    "DESKTOP_PRESENTATION_AVAILABILITY",
+    "MOBILE_390_PRESENTATION_AVAILABILITY",
+    "MOBILE_412_PRESENTATION_AVAILABILITY",
+    "RESET_STATE_REPRODUCIBILITY"
+  ],
+  "required_frame_count": 9,
+  "required_reference_viewports": [
+    {
+      "device_scale_factor": 1.0,
+      "height": 900,
+      "mobile": false,
+      "viewport_id": "DESKTOP_1440_X_900",
+      "width": 1440
+    },
+    {
+      "device_scale_factor": 3.0,
+      "height": 844,
+      "mobile": true,
+      "viewport_id": "MOBILE_390_X_844",
+      "width": 390
+    },
+    {
+      "device_scale_factor": 2.625,
+      "height": 915,
+      "mobile": true,
+      "reference_device": "SM-S948U",
+      "viewport_id": "MOBILE_412_X_915",
+      "width": 412
+    }
+  ],
+  "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v4",
+  "route_version": "4.0.0",
+  "status": "FROZEN_BEFORE_PRODUCT_IMPLEMENTATION_AND_EVIDENCE_CAPTURE",
+  "success_boundary": {
+    "all_eleven_factors_must_be_independently_scored": true,
+    "imi_observer_receipts_required": true,
+    "role5_ratification_remains_blocked_until_observer_package_complete": true,
+    "role6_authorization_does_not_establish_success": true,
+    "user_differential_remains_mandatory": true
+  }
+}

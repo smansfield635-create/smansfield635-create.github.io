@@ -1,0 +1,195 @@
+import {step9Frame,step9ShorelineZ,step9TerrainHeight,resolveStep9Site,STEP9_DESTINATION_BINDINGS} from './step9-regional-geography.mjs';
+import {GRATITUDE_COAST_NIGHT} from './night-renderer.mjs';
+
+export const FOREST_REPRESENTATION_SOURCE_SHA='35e8e2fb3e4a093fb3bc8ecc4239e8564bd7938a';
+export const FOREST_NIGHT_MATERIAL_SOURCE='CHARACTERS_GRATITUDE_ENVIRONMENT_RENDERER_V2';
+export const FOREST_ARCHETYPES=Object.freeze([
+  'BROAD_DECIDUOUS','COLUMNAR','WIND_SHAPED_COASTAL','ANCIENT_SPREADING','YOUNG_UNDERSTORY','DEAD_SPARSE'
+]);
+export const FOREST_BUDGETS=Object.freeze({desktop:Object.freeze({target:420,max:520}),mobile:Object.freeze({target:190,max:240})});
+export const FOREST_LOD_POLICY=Object.freeze({near:'BRANCHED_MULTI_CANOPY',mid:'REDUCED_BRANCH_TWO_CANOPY',far:'TRUNK_ASYMMETRIC_CANOPY',mobileReduction:true});
+
+const TAU=Math.PI*2;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mix=(a,b,t)=>a+(b-a)*t;
+const hash32=n=>{n=(n^61)^(n>>>16);n=Math.imul(n,9);n=n^(n>>>4);n=Math.imul(n,0x27d4eb2d);return (n^(n>>>15))>>>0;};
+const rand=(seed,k=0)=>hash32(seed+Math.imul(k+1,0x9e3779b1))/4294967295;
+const normalize=(x,y,z)=>{const l=Math.hypot(x,y,z)||1;return [x/l,y/l,z/l];};
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+
+const REGION_SPECS=Object.freeze([
+  {u:.16,v:.25,rx:.13,rz:.18,density:1.00,seed:101},
+  {u:.34,v:.19,rx:.15,rz:.15,density:.88,seed:211},
+  {u:.55,v:.28,rx:.14,rz:.19,density:1.00,seed:307},
+  {u:.76,v:.22,rx:.14,rz:.16,density:.84,seed:419},
+  {u:.24,v:.55,rx:.15,rz:.16,density:.72,seed:503},
+  {u:.53,v:.58,rx:.18,rz:.15,density:.78,seed:607},
+  {u:.78,v:.54,rx:.13,rz:.18,density:.66,seed:719}
+]);
+
+function landmarkExclusions(){
+  const seen=new Set(),out=[];
+  for(const [id,binding] of Object.entries(STEP9_DESTINATION_BINDINGS)){
+    if(!binding?.siteId||seen.has(binding.siteId))continue;
+    seen.add(binding.siteId);
+    const site=resolveStep9Site(binding.siteId);
+    const key=id==='manor'?'manor':id==='crossing'?'crossing':id==='clock'?'clock':'default';
+    const radius=key==='manor'?155:key==='crossing'?120:key==='clock'?105:74;
+    out.push(Object.freeze({id,siteId:binding.siteId,x:site.world.x,z:site.world.z,radius}));
+  }
+  return Object.freeze(out);
+}
+export const FOREST_SIGHTLINE_EXCLUSIONS=landmarkExclusions();
+
+function archetypeProfile(type,seed){
+  const r=i=>rand(seed,i);
+  switch(type){
+    case 'BROAD_DECIDUOUS': return {height:30+12*r(1),trunk:.9+1.0*r(2),spread:15+8*r(3),lean:(r(4)-.5)*.10,canopy:3,branches:3};
+    case 'COLUMNAR': return {height:38+16*r(1),trunk:.75+.7*r(2),spread:7+4*r(3),lean:(r(4)-.5)*.05,canopy:3,branches:2};
+    case 'WIND_SHAPED_COASTAL': return {height:23+10*r(1),trunk:.8+.8*r(2),spread:17+8*r(3),lean:.16+.15*r(4),canopy:2,branches:3,windBias:1};
+    case 'ANCIENT_SPREADING': return {height:29+11*r(1),trunk:1.5+1.2*r(2),spread:23+10*r(3),lean:(r(4)-.5)*.12,canopy:4,branches:4};
+    case 'YOUNG_UNDERSTORY': return {height:12+8*r(1),trunk:.42+.35*r(2),spread:7+5*r(3),lean:(r(4)-.5)*.18,canopy:2,branches:2,multiStem:true};
+    default: return {height:25+12*r(1),trunk:.72+.7*r(2),spread:10+5*r(3),lean:(r(4)-.5)*.22,canopy:0,branches:5,dead:true};
+  }
+}
+
+function insideSightline(x,z){return FOREST_SIGHTLINE_EXCLUSIONS.some(s=>Math.hypot(x-s.x,z-s.z)<s.radius);}
+function landEligible(x,z,frame){
+  const sx=step9ShorelineZ(x);
+  return x>frame.xMinimum+(frame.xMaximum-frame.xMinimum)*.045&&x<frame.xMaximum-(frame.xMaximum-frame.xMinimum)*.045&&z>frame.zMinimum+(frame.zMaximum-frame.zMinimum)*.045&&z<frame.zMaximum-(frame.zMaximum-frame.zMinimum)*.045&&z<=sx-48;
+}
+
+export function buildForestPopulation({compact=false}={}){
+  const frame=step9Frame().envelope,target=compact?FOREST_BUDGETS.mobile.target:FOREST_BUDGETS.desktop.target;
+  const width=frame.xMaximum-frame.xMinimum,depth=frame.zMaximum-frame.zMinimum,instances=[];
+  for(let ri=0;ri<REGION_SPECS.length;ri++){
+    const reg=REGION_SPECS[ri],quota=Math.ceil(target*reg.density/REGION_SPECS.reduce((s,r)=>s+r.density,0)),cx=mix(frame.xMinimum,frame.xMaximum,reg.u),cz=mix(frame.zMinimum,frame.zMaximum,reg.v);
+    for(let k=0;k<quota*5&&instances.filter(t=>t.region===ri).length<quota;k++){
+      const seed=reg.seed*10007+k*7919,rad=Math.sqrt(rand(seed,1)),angle=TAU*rand(seed,2),edgeNoise=.72+.36*rand(seed,3);
+      const x=cx+Math.cos(angle)*rad*reg.rx*width*edgeNoise,z=cz+Math.sin(angle)*rad*reg.rz*depth*edgeNoise;
+      if(!landEligible(x,z,frame)||insideSightline(x,z))continue;
+      const core=rad<.58,edge=rad>.76;
+      if(edge&&rand(seed,4)>.48)continue;
+      const archetype=FOREST_ARCHETYPES[(ri+k+Math.floor(rand(seed,5)*FOREST_ARCHETYPES.length))%FOREST_ARCHETYPES.length];
+      const y=step9TerrainHeight(x,z),profile=archetypeProfile(archetype,seed),lodRoll=rand(seed,6);
+      const lod=compact?(lodRoll<.16?'near':lodRoll<.55?'mid':'far'):(lodRoll<.24?'near':lodRoll<.70?'mid':'far');
+      instances.push(Object.freeze({id:`r${ri}-t${k}`,region:ri,seed,archetype,x,y,z,yaw:TAU*rand(seed,7),scale:.82+.38*rand(seed,8),core,edge,lod,profile}));
+      if(instances.length>=target)break;
+    }
+    if(instances.length>=target)break;
+  }
+  return Object.freeze({schema:'MIRRORLAND_FOREST_POPULATION_v1',compact,target,instances:Object.freeze(instances),regions:REGION_SPECS,exclusions:FOREST_SIGHTLINE_EXCLUSIONS,frame});
+}
+
+function pushTri(verts,a,b,c,material){const n=normalize(...cross([b[0]-a[0],b[1]-a[1],b[2]-a[2]],[c[0]-a[0],c[1]-a[1],c[2]-a[2]]));for(const p of [a,b,c])verts.push(...p,...n,material);}
+function prism(verts,a,b,radius,sides,material){
+  const axis=normalize(b[0]-a[0],b[1]-a[1],b[2]-a[2]),helper=Math.abs(axis[1])<.9?[0,1,0]:[1,0,0],u=normalize(...cross(axis,helper)),v=normalize(...cross(axis,u));
+  const ring=(p,i)=>{const q=TAU*i/sides,c=Math.cos(q)*radius,s=Math.sin(q)*radius;return[p[0]+u[0]*c+v[0]*s,p[1]+u[1]*c+v[1]*s,p[2]+u[2]*c+v[2]*s];};
+  for(let i=0;i<sides;i++){const j=(i+1)%sides,A=ring(a,i),B=ring(a,j),C=ring(b,i),D=ring(b,j);pushTri(verts,A,C,B,material);pushTri(verts,B,C,D,material);}
+}
+export const FOREST_PRESENTATION_SCALE=.58;
+export const FOREST_MATERIAL_MODEL='GRATITUDE_COAST_NIGHT_INTEGRATED_V2';
+export const FOREST_ATMOSPHERE_MODEL='BASIN_MIST_HORIZON_SCATTER_DISTANCE_DESATURATION';
+function canopyBlob(verts,cx,cy,cz,rx,ry,rz,seed,material=1){
+  const sides=12,rings=5,pts=[];
+  pts.push([[cx,cy-ry*.82,cz]]);
+  for(let r=1;r<=rings;r++){
+    const t=r/(rings+1),phi=-Math.PI/2+Math.PI*t,ring=[];
+    for(let i=0;i<sides;i++){
+      const a=TAU*i/sides,irregularity=.78+.30*rand(seed,r*29+i)+.08*Math.sin(a*3+rand(seed,150+r)*TAU),lift=.90+.16*rand(seed,210+r*7+i);
+      ring.push([cx+Math.cos(a)*Math.cos(phi)*rx*irregularity,cy+Math.sin(phi)*ry*lift,cz+Math.sin(a)*Math.cos(phi)*rz*(.86+.22*rand(seed,310+r*11+i))]);
+    }
+    pts.push(ring);
+  }
+  pts.push([[cx,cy+ry*.90,cz]]);
+  const bottom=pts[0][0],top=pts.at(-1)[0];
+  for(let i=0;i<sides;i++){
+    const j=(i+1)%sides;pushTri(verts,bottom,pts[1][j],pts[1][i],material);
+    for(let r=1;r<rings;r++){pushTri(verts,pts[r][i],pts[r][j],pts[r+1][i],material);pushTri(verts,pts[r][j],pts[r+1][j],pts[r+1][i],material);}
+    pushTri(verts,pts[rings][i],pts[rings][j],top,material);
+  }
+}
+function rotateXZ(x,z,yaw){return[x*Math.cos(yaw)-z*Math.sin(yaw),x*Math.sin(yaw)+z*Math.cos(yaw)];}
+function groundCluster(verts,t){
+  const p=t.profile,s=t.scale*FOREST_PRESENTATION_SCALE;
+  prism(verts,[t.x,t.y-.50,t.z],[t.x,t.y+1.25,t.z],p.trunk*s*1.72,t.lod==='far'?6:8,0);
+  if(!t.core||t.lod==='far'||p.dead)return;
+  const count=t.lod==='near'?5:3;
+  for(let i=0;i<count;i++){
+    const a=TAU*(i/count)+rand(t.seed,401+i)*1.2,d=p.spread*s*(.20+.16*rand(t.seed,420+i)),[ox,oz]=rotateXZ(d,0,a),r=p.spread*s*(.15+.085*rand(t.seed,440+i));
+    canopyBlob(verts,t.x+ox,t.y+.72+r*.17,t.z+oz,r,r*.34,r*(.76+.22*rand(t.seed,470+i)),t.seed+700+i,2);
+  }
+}
+function treeGeometry(verts,t){
+  const p=t.profile,s=t.scale*FOREST_PRESENTATION_SCALE,base=[t.x,t.y-.30,t.z],h=p.height*s,leanX=Math.cos(t.yaw)*p.lean*h,leanZ=Math.sin(t.yaw)*p.lean*h,top=[t.x+leanX,t.y+h*.58,t.z+leanZ];
+  groundCluster(verts,t);prism(verts,base,top,p.trunk*s,t.lod==='far'?6:8,0);
+  const branchCount=t.lod==='far'?1:t.lod==='mid'?Math.min(3,p.branches):p.branches;
+  for(let i=0;i<branchCount;i++){
+    const q=TAU*(i/Math.max(1,branchCount))+.7*rand(t.seed,30+i),length=p.spread*s*(.50+.34*rand(t.seed,40+i)),[dx,dz]=rotateXZ(length,0,q),start=[mix(base[0],top[0],.48+.08*i),t.y+h*(.30+.055*i),mix(base[2],top[2],.48+.08*i)],end=[start[0]+dx,start[1]+h*(.07+.07*rand(t.seed,50+i)),start[2]+dz];
+    prism(verts,start,end,p.trunk*s*(.40-.035*Math.min(i,5)),5,0);
+  }
+  if(p.dead)return;
+  const canopyCount=t.lod==='far'?2:t.lod==='mid'?Math.max(3,Math.min(4,p.canopy)):Math.max(4,p.canopy);
+  for(let i=0;i<canopyCount;i++){
+    const a=TAU*(i/Math.max(1,canopyCount))+rand(t.seed,60+i),offset=p.spread*s*(i?(.18+.17*rand(t.seed,70+i)):.05),wind=(p.windBias||0)*p.spread*s*.20,[ox,oz]=rotateXZ(offset+wind,0,a),cy=t.y+h*(.52+.10*(i%3)),baseRadius=p.spread*s*(t.archetype==='COLUMNAR'?.34:t.archetype==='ANCIENT_SPREADING'?.52:.42),rx=baseRadius*(.86+.22*rand(t.seed,90+i)),ry=h*(t.archetype==='COLUMNAR'?.23:.16),rz=rx*(.76+.30*rand(t.seed,100+i));
+    canopyBlob(verts,top[0]+ox,cy,top[2]+oz,rx,ry,rz,t.seed+i*113,1);
+  }
+  if(t.core&&t.lod!=='far'&&t.archetype!=='COLUMNAR'){const bridge=p.spread*s*(t.archetype==='ANCIENT_SPREADING'?.60:.48);canopyBlob(verts,t.x,t.y+h*.43,t.z,bridge,h*.12,bridge*.92,t.seed+911,2);}
+}
+function compile(gl,type,source){const sh=gl.createShader(type);gl.shaderSource(sh,source);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error(`FOREST_SHADER:${gl.getShaderInfoLog(sh)}`);return sh;}
+function program(gl,vs,fs){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(`FOREST_PROGRAM:${gl.getProgramInfoLog(p)}`);return p;}
+const VS=`#version 300 es
+precision highp float;
+layout(location=0)in vec3 aPos;layout(location=1)in vec3 aNormal;layout(location=2)in float aMaterial;
+uniform mat4 uVP;uniform float uTime;
+out vec3 vN;out float vM;out float vH;out vec3 vWorld;
+void main(){vec3 p=aPos;if(aMaterial>.5){float phase=aPos.x*.017+aPos.z*.013;float sway=sin(uTime*.58+phase)*(.20+clamp((aPos.y-4.0)/65.0,0.0,1.0)*.78);p.x+=sway;p.z+=sway*.22;}vN=aNormal;vM=aMaterial;vH=aPos.y;vWorld=p;gl_Position=uVP*vec4(p,1.0);}`;
+const FS=`#version 300 es
+precision highp float;
+in vec3 vN;in float vM;in float vH;in vec3 vWorld;
+uniform vec3 uMoonDir;uniform vec3 uMoonColor;uniform vec3 uAmbient;uniform vec3 uRockLow;uniform vec3 uRockHigh;uniform vec3 uMarsh;uniform vec3 uHorizon;
+out vec4 outColor;
+float hash21(vec2 p){p=fract(p*vec2(123.34,345.45));p+=dot(p,p+34.345);return fract(p.x*p.y);}
+float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash21(i),hash21(i+vec2(1,0)),f.x),mix(hash21(i+vec2(0,1)),hash21(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float s=0.0,a=.5;mat2 r=mat2(.82,-.57,.57,.82);for(int i=0;i<4;i++){s+=a*noise2(p);p=r*p*2.03+7.17;a*=.5;}return s;}
+float ridged(vec2 p){float n=fbm(p);return 1.0-abs(2.0*n-1.0);}
+vec2 warp(vec2 p){float a=fbm(p*.72),b=fbm(p*.79+vec2(31.7,-19.3));return p+vec2(a-.5,b-.5)*1.85;}
+void main(){
+  vec3 n=normalize(vN),moonDir=normalize(uMoonDir);
+  float lunar=max(0.0,dot(n,moonDir));
+  float slope=1.0-clamp(n.y,0.0,1.0);
+  vec2 macroUv=warp(vWorld.xz*.0031);
+  float macro=fbm(macroUv),medium=fbm(warp(vWorld.xz*.0105+13.7)),fine=fbm(vWorld.xz*.043+37.0),ridge=ridged(vWorld.xz*.016+vec2(5.3,19.7));
+  float elevation=clamp((vH+8.0)/145.0,0.0,1.0);
+  float lowland=1.0-smoothstep(24.0,58.0,vH);
+  float canopy=step(.5,vM),understory=step(1.5,vM);
+  vec3 terrainLift=mix(uRockLow,uRockHigh,smoothstep(.18,.78,elevation));
+  vec3 nightVegetation=mix(terrainLift,uMarsh,clamp(.50+.28*macro-.16*elevation,0.0,1.0));
+  nightVegetation*=mix(.72,1.08,medium*.58+fine*.22+macro*.20);
+  nightVegetation=mix(nightVegetation,uAmbient,.12+.10*(1.0-ridge));
+  vec3 barkBase=mix(uRockLow,uAmbient,.42+.10*medium);
+  vec3 bark=barkBase*(.62+.30*lunar)+uMoonColor*(.025*lunar+.012*ridge);
+  float ambientOcclusion=mix(.61,1.0,smoothstep(.05,.66,n.y))*mix(.86,1.03,medium);
+  vec3 leaf=nightVegetation*(vec3(.15,.19,.23)*ambientOcclusion+uMoonColor*(.12+.74*lunar));
+  leaf+=uMoonColor*pow(lunar,7.0)*.028;
+  vec3 under=nightVegetation*(.58+.20*lunar)*mix(vec3(.78,.88,.82),vec3(.66,.78,.72),lowland);
+  vec3 c=mix(bark,leaf,canopy);
+  c=mix(c,under,understory);
+  float basinMist=exp(-max(vH,0.0)/30.0)*(.58+.42*macro)*(1.0-smoothstep(.16,.64,slope));
+  float radial=length(vWorld.xz);
+  float horizonHaze=smoothstep(520.0,2100.0,radial);
+  c=mix(c,vec3(.066,.091,.112),clamp(basinMist*.095,0.0,.12));
+  c=mix(c,uHorizon,clamp(horizonHaze*.24,0.0,.28));
+  float distanceDesaturation=horizonHaze*.22;
+  float luminance=dot(c,vec3(.2126,.7152,.0722));
+  c=mix(c,vec3(luminance)*vec3(.82,.94,1.08),distanceDesaturation);
+  c*=mix(.79,1.0,smoothstep(-1.0,15.0,vH));
+  outColor=vec4(c,1.0);
+}`;
+
+export function createForestSystem(gl,{compact=false}={}){
+  const population=buildForestPopulation({compact}),verts=[];for(const t of population.instances)treeGeometry(verts,t);
+  const data=new Float32Array(verts),vao=gl.createVertexArray();gl.bindVertexArray(vao);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);const stride=7*4;gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,stride,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,stride,12);gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,1,gl.FLOAT,false,stride,24);const shader=program(gl,VS,FS),uVP=gl.getUniformLocation(shader,'uVP'),uTime=gl.getUniformLocation(shader,'uTime'),uMoonDir=gl.getUniformLocation(shader,'uMoonDir'),uMoonColor=gl.getUniformLocation(shader,'uMoonColor'),uAmbient=gl.getUniformLocation(shader,'uAmbient'),uRockLow=gl.getUniformLocation(shader,'uRockLow'),uRockHigh=gl.getUniformLocation(shader,'uRockHigh'),uMarsh=gl.getUniformLocation(shader,'uMarsh'),uHorizon=gl.getUniformLocation(shader,'uHorizon');gl.bindVertexArray(null);
+  const material=GRATITUDE_COAST_NIGHT;
+  return Object.freeze({population,triangleCount:data.length/7/3,materialSource:FOREST_NIGHT_MATERIAL_SOURCE,materialModel:FOREST_MATERIAL_MODEL,atmosphereModel:FOREST_ATMOSPHERE_MODEL,draw(vp,time){gl.useProgram(shader);gl.uniformMatrix4fv(uVP,false,vp);gl.uniform1f(uTime,time);gl.uniform3fv(uMoonDir,material.moon.direction);gl.uniform3fv(uMoonColor,material.moon.color);gl.uniform3fv(uAmbient,material.terrain.ambient);gl.uniform3fv(uRockLow,material.terrain.rockLow);gl.uniform3fv(uRockHigh,material.terrain.rockHigh);gl.uniform3fv(uMarsh,material.terrain.marsh);gl.uniform3fv(uHorizon,material.sky.horizon);gl.bindVertexArray(vao);gl.drawArrays(gl.TRIANGLES,0,data.length/7);}});
+}

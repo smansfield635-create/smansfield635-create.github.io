@@ -1,0 +1,15 @@
+{
+  "schema": "AWARDS_EPILOGUE_EXACT_CONFORM_RECEIPT_v1",
+  "status": "PASS_CLOSED_PLANNING_BOUNDARY",
+  "issue": 3076,
+  "exactConformLedger": "showroom/globe/h-earth/awards/EPILOGUE_EXACT_CONFORM_LEDGER_20260911.md",
+  "runtimeSeconds": 58.774,
+  "musicCarrierStartSeconds": 88.770,
+  "musicCarrierEndSeconds": 147.544,
+  "constructionProject": "H_EARTH",
+  "constructionAuthorityCreated": false,
+  "liveAwardsMutationAuthorized": false,
+  "deploymentAuthorized": false,
+  "publicationAuthorized": false,
+  "nextBoundary": "CANONICAL_H_EARTH_CONSTRUCTION_ADMISSION"
+}

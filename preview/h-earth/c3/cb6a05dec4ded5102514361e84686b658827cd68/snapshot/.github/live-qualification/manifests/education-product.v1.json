@@ -1,0 +1,24 @@
+{
+  "schema": "DGB_LIVE_QUALIFICATION_MANIFEST_v1",
+  "projectId": "education-product",
+  "publicRoute": "/products/education/",
+  "stage": {"mode": "default", "adapter": null},
+  "publicByteAssertions": [
+    {"sourcePath":"products/education/index.html","publicPath":"/products/education/index.html"}
+  ],
+  "runtime": {
+    "required": true,
+    "verifier": ".github/live-qualification/verifiers/education-product.v1.mjs",
+    "criteria": [
+      "EDUCATION_ROUTE_IDENTITY",
+      "EDUCATION_CAROUSEL_SIX_STANDARDS",
+      "EDUCATION_CAROUSEL_NAVIGATION",
+      "EDUCATION_INTERACTIVE_POINTER_ISOLATION",
+      "EDUCATION_INSPECTION_LENSES",
+      "EDUCATION_STORY_STATE",
+      "EDUCATION_DEMO_GATEWAY",
+      "EDUCATION_LANGUAGE_AVAILABILITY",
+      "EDUCATION_NO_HORIZONTAL_OVERFLOW"
+    ]
+  }
+}

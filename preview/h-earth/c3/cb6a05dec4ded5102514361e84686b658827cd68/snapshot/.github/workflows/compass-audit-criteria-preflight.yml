@@ -1,0 +1,52 @@
+name: Compass Audit Criteria Preflight
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/live-qualification/manifests/compass-root.v1.json'
+      - '.github/live-qualification/verifiers/compass-root.v1.mjs'
+      - 'docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md'
+      - '.github/workflows/compass-audit-criteria-preflight.yml'
+      - '.github/workflows/compass-live-qualification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove-current-live-is-rejected:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install verifier dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Validate manifest and prove criteria discriminate current failing live state
+        shell: bash
+        env:
+          PUBLIC_BASE_URL: https://diamondgatebridge.com
+          RUNTIME_RESULT_PATH: /tmp/compass-audit-preflight.json
+        run: |
+          set -euo pipefail
+          node .github/ai-router/platform/repository-live-qualification-engine.v1.mjs validate-manifest .github/live-qualification/manifests/compass-root.v1.json /tmp/manifest-validation.json
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          set +e
+          node .github/live-qualification/verifiers/compass-root.v1.mjs
+          rc=$?
+          set -e
+          cat "$RUNTIME_RESULT_PATH"
+          test "$rc" -ne 0
+          test "$(jq -r '.status' "$RUNTIME_RESULT_PATH")" = "FAIL"
+          jq -e '.failures | length > 0' "$RUNTIME_RESULT_PATH" >/dev/null
+          jq -e '.failures | any(. == "AUDIT_CONTEXTUAL_ALIGNMENT" or . == "AUDIT_TABLET_SCENE_PRESERVATION" or . == "AUDIT_SETTLED_GEOMETRY")' "$RUNTIME_RESULT_PATH" >/dev/null
+          echo 'AUDIT_DERIVED_CRITERIA_DISCRIMINATION_PASS'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-audit-criteria-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-audit-preflight.json
+          if-no-files-found: error
+          retention-days: 30

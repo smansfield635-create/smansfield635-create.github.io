@@ -1,0 +1,73 @@
+name: Laws Destination Stage Visual Audit
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.destination-stage.js'
+      - 'laws/index.destination-stage.css'
+      - 'laws/index.destination-stage-anchor.css'
+      - '.github/workflows/laws-destination-stage-visual-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Serve exact candidate
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-stage-visual-http.log 2>&1 &
+      - name: Audit visible composition
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({headless:true});
+            const page = await browser.newPage({viewport:{width:1024,height:1366}});
+            await page.goto('http://127.0.0.1:4173/laws/', {waitUntil:'networkidle'});
+            await page.waitForSelector('html[data-laws-destination-stage="active"]', {timeout:15000});
+            const stage = page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
+            const field = stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]');
+            const viewport = field.locator('.laws-rolodex-viewport');
+            const active = field.locator('.laws-rolodex-card[data-active="true"]');
+            const stageBox = await stage.boundingBox();
+            const viewportBox = await viewport.boundingBox();
+            const activeBox = await active.boundingBox();
+            if (!stageBox || !viewportBox || !activeBox) throw new Error('missing rendered stage geometry');
+            const viewportCenter = viewportBox.x + viewportBox.width / 2;
+            const activeCenter = activeBox.x + activeBox.width / 2;
+            const centerError = Math.abs(activeCenter - viewportCenter);
+            if (centerError > viewportBox.width * 0.08) throw new Error(`active card not centered: error=${centerError}, viewport=${viewportBox.width}`);
+            if (activeBox.x < viewportBox.x + 30 || activeBox.x + activeBox.width > viewportBox.x + viewportBox.width - 30) throw new Error('active card is clipped against the carousel viewport');
+            const visibleNeighbors = await field.locator('.laws-rolodex-card:not([data-active="true"])').evaluateAll((nodes, box) => nodes.filter(n => {
+              const r=n.getBoundingClientRect();
+              return r.right > box.x && r.left < box.x + box.width && Number(getComputedStyle(n).opacity) > .2;
+            }).length, viewportBox);
+            if (visibleNeighbors < 1) throw new Error('no intentional neighboring card is visibly present');
+            const selected = await stage.locator('.laws-destination-stage__tab[aria-selected="true"]').count();
+            if (selected !== 1) throw new Error('stage family selection is ambiguous');
+            await stage.scrollIntoViewIfNeeded();
+            await stage.screenshot({path:'laws-destination-stage-visual-audit.png'});
+            console.log(JSON.stringify({stageBox,viewportBox,activeBox,centerError,visibleNeighbors},null,2));
+            await browser.close();
+          })().catch(err=>{console.error(err);process.exit(1)});
+          NODE
+      - name: Upload visual audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-destination-stage-visual-audit
+          path: laws-destination-stage-visual-audit.png
+          if-no-files-found: warn

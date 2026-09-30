@@ -1,0 +1,123 @@
+{
+  "schema": "WHOLE_ESTATE_SCIENTIFIC_DELTA_ADJUDICATION_v1",
+  "status": "CHECKPOINT_7_REPAIR_CANDIDATE",
+  "delta": {
+    "DELTA_ID": "UCIC_HURRICANE_RAW_TC_RADAR_QC_CORRECTED_EXECUTION_2026_08_07",
+    "SOURCE_IDENTITY": {
+      "sourcePr": 735,
+      "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+      "workflowRun": 31195025635,
+      "workflowResult": "SUCCESS",
+      "artifactId": 9001275013,
+      "artifactDigest": "sha256:637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c",
+      "protocolSha256": "52199364e8880188230831080c333a3a83a52fcccd57e7086aa7fac45d45463d",
+      "resultSha256": "9bfe86b5036d8a44aed34fa24c949abf5362d421b59c6838e8a2256d78aab5fe",
+      "featuresSha256": "8fb7684683a8f8a4a846299e1f3e19e44524297c7a3dcd2d49508d740760a306",
+      "qcCorrectionNoteSha256": "6ebdf6e3290f0d0d4e37f71fb0c39faecbb0ebde8df153b3ad74c6543fbd0be6",
+      "executionLogSha256": "adb4c52770edabc7f2a794c2c47e4bc527bbae7d2dd48aa03947732f42691c95"
+    },
+    "DEVELOPMENT_CLASS": "FUTURE_EVIDENCE_DELTA",
+    "CONSTITUTIONAL_IMPACT": false,
+    "CP_REPAIR_REQUIRED": false,
+    "NARRATIVE_IMPACT": "REPLACE_QC_COMPROMISED_HURRICANE_STANDING_WITH_QC_CORRECTED_RAW_TC_RADAR_ADVERSE_RESULT",
+    "CLAIM_CEILING": "bounded retrospective evidence about internal hurricane structural organization and 24-h rapid intensification; does not by itself establish causality, prospective operational utility, independently recovered constitutive routes, or universality",
+    "PROVENANCE_STATUS": "ACTIONS_ARTIFACT_AND_INTERNAL_CONTENT_HASHES_BOUND",
+    "DISPOSITION": "ADMIT_QC_CORRECTED_ADVERSE_EMPIRICAL_RESULT_WITHOUT_CLAIM_UPGRADE"
+  },
+  "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+  "executionClassification": "RETROSPECTIVE_RAW_TC_RADAR_MECHANISTIC_TEMPORAL_HOLDOUT_QC_CORRECTED",
+  "outcome": "24h rapid intensification",
+  "qcCorrection": "SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION",
+  "sample": {
+    "rawRows": 426,
+    "primaryRows": 170,
+    "calibrationRows": 83,
+    "calibrationStorms": 34,
+    "calibrationRiEvents": 9,
+    "holdoutRows": 87,
+    "holdoutStorms": 23,
+    "holdoutRiEvents": 11,
+    "COnlyHoldoutRows": 126,
+    "COnlyHoldoutRiEvents": 13
+  },
+  "results": {
+    "BASE": {
+      "rocAuc": 0.7691387559808613,
+      "averagePrecision": 0.40369678533005837,
+      "brier": 0.1048274083866084
+    },
+    "COMBINED_NONCOMP": {
+      "rocAuc": 0.7595693779904307,
+      "averagePrecision": 0.31729244383352534,
+      "brier": 0.11091801498354142
+    },
+    "COMBINED_ADDITIVE": {
+      "rocAuc": 0.8133971291866029,
+      "averagePrecision": 0.5183026218831845,
+      "brier": 0.09826583016859737
+    },
+    "COMBINED_COMPONENT": {
+      "rocAuc": 0.7069377990430622,
+      "averagePrecision": 0.3712015649667699,
+      "brier": 0.1083131020860795
+    },
+    "primaryIncrementalAuc": -0.009569377990430672,
+    "noncompMinusAdditiveAuc": -0.053827751196172224,
+    "noncompMinusComponentAuc": 0.052631578947368474,
+    "stormClusterBootstrap": {
+      "COMBINED_NONCOMP_minus_BASE": {
+        "n": 1992,
+        "median": -0.009803921568627416,
+        "ci95": [-0.04339188231463211, 0.035535714285714205]
+      },
+      "COMBINED_ADDITIVE_minus_BASE": {
+        "n": 1992,
+        "median": 0.04638388719714026,
+        "ci95": [-0.03179495542509231, 0.11906047077922066]
+      }
+    },
+    "terminalDisposition": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED"
+  },
+  "sourceReceipts": [
+    {
+      "era": "early",
+      "bytes": 6193798847,
+      "seconds": 271.83,
+      "sha256": "ed66d0a3aa42ce6fca27cedc5b6c2ee26893db97a04eb4e57d6808c126327bef"
+    },
+    {
+      "era": "recent",
+      "bytes": 8296243934,
+      "seconds": 346.567,
+      "sha256": "55185569e94d4261c9f90eb4abd45ec6ff877cba5f01ca169f104119a51ff712"
+    }
+  ],
+  "adjudication": {
+    "newProjectEmpiricalResult": true,
+    "priorMetadataStanding": "QUARANTINED_SUPERSEDED_BY_QC_CORRECTED_RAW_RESULT",
+    "rawRadarMechanisticStanding": "NOT_SUPPORTED",
+    "noncompensatoryIncrementalPredictionSupportThresholdCleared": false,
+    "additiveStructuralPointSignal": "POSITIVE_POINT_ESTIMATE_INCONCLUSIVE",
+    "additiveStructuralSupportThresholdCleared": false,
+    "hurricaneEarlyWarningConfirmed": false,
+    "warningTimeTested": false,
+    "causalityEstablished": false,
+    "prospectivityEstablished": false,
+    "universalityEstablished": false,
+    "scientificClaimUpgradeAuthorized": false
+  },
+  "checkpoint7Impact": {
+    "eligibleForCandidateConsideration": true,
+    "selectedAsFirstVerticalCase": false,
+    "reasonNotSelected": [
+      "the authoritative QC-corrected raw mechanistic terminal disposition is RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+      "the additive structural point estimate remains inconclusive because its bootstrap interval crosses zero",
+      "the hurricane line remains active research rather than a fixed first-demonstration source",
+      "a completed registered case with a simpler fixed ceiling is available for the first controlled demonstration"
+    ],
+    "scientificRejection": false,
+    "laterMethodsModelsUsePermitted": true,
+    "laterMethodsModelsUseBoundary": "BOUNDED_PERSPECTIVE_RESEARCH_CONTEXT_ONLY_UNLESS_FUTURE_EVIDENCE_CHANGES_STANDING",
+    "selectedCaseChangedByRepair": false
+  }
+}

@@ -1,0 +1,76 @@
+html.compass-orientation-cinematic-active,html.compass-orientation-cinematic-active body{overflow:hidden!important;overscroll-behavior:none!important}
+.compass-prerendered-player{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;overflow:hidden;background:#010407;color:#f6f0df;isolation:isolate;opacity:1;transition:opacity 2200ms cubic-bezier(.32,0,.18,1)}
+.compass-prerendered-player.is-natural-handoff{opacity:0;pointer-events:none}
+.compass-prerendered-player.is-skip-handoff{opacity:0;pointer-events:none;transition-duration:2300ms}
+.compass-prerendered-player__ambient-video{position:absolute;inset:-6%;z-index:0;width:112%;height:112%;display:block;object-fit:cover;object-position:50% 50%;filter:blur(clamp(18px,3vw,42px)) saturate(.82) brightness(.42);transform:scale(1.06);opacity:.94;background:#010407}
+.compass-prerendered-player__video{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;object-fit:contain;object-position:50% 50%;background:transparent;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
+.compass-prerendered-player__gate{position:absolute;inset:0;z-index:2;display:grid;place-items:center;padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));overflow:hidden;background:transparent}
+.compass-prerendered-player__gate::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 50% 24%,rgba(33,86,91,.14),transparent 42%),linear-gradient(180deg,#061014,#02070b 58%,#010407);opacity:1;transition:opacity 1500ms cubic-bezier(.32,0,.18,1)}
+.compass-prerendered-player__gate.is-dissolving::before{opacity:0}
+.compass-prerendered-player__gate.is-skip-dissolve{pointer-events:none}
+.compass-prerendered-player__gate[hidden]{display:none!important}
+.compass-prerendered-player__entry-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+.compass-prerendered-player__gate-card{position:relative;z-index:1;width:min(680px,100%);box-sizing:border-box;padding:clamp(30px,6vw,54px);border:1px solid rgba(232,203,120,.24);border-radius:32px;background:rgba(2,10,16,.86);box-shadow:0 34px 110px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.045);text-align:center;backdrop-filter:blur(14px);will-change:opacity,transform}
+.compass-prerendered-player__gate-card::before,.compass-prerendered-player__gate-card::after{content:"";position:absolute;left:50%;pointer-events:none}
+.compass-prerendered-player__gate-card::before{top:-68px;width:1px;height:48px;background:linear-gradient(180deg,transparent,rgba(120,220,232,.52))}
+.compass-prerendered-player__gate-card::after{bottom:-52px;width:104px;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(232,203,120,.6),transparent)}
+.compass-prerendered-player__eyebrow{margin:0 0 14px;color:#e8cb78;font:900 .72rem/1.2 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.compass-prerendered-player__gate-card h2{margin:0;color:#f6f0df;font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.15rem,9vw,5.8rem);font-weight:500;line-height:.94;letter-spacing:-.055em}
+.compass-prerendered-player__gate-card>p:not(.compass-prerendered-player__eyebrow){max-width:34rem;margin:18px auto 0;color:#c2ccca;font-size:clamp(1rem,2.4vw,1.22rem);line-height:1.55}
+.compass-prerendered-player__actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px}
+.compass-prerendered-player__button{min-height:52px;padding:0 24px;border:1px solid rgba(232,203,120,.34);border-radius:999px;background:rgba(232,203,120,.08);color:#fff2c7;font:900 .78rem/1 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.02em;cursor:pointer;box-shadow:inset 0 1px rgba(255,255,255,.06);-webkit-tap-highlight-color:transparent}
+.compass-prerendered-player__button:hover{border-color:rgba(232,203,120,.62);background:rgba(232,203,120,.13)}
+.compass-prerendered-player__button:focus-visible{outline:2px solid #78dce8;outline-offset:4px}
+.compass-prerendered-player__button.is-primary{border-color:rgba(232,203,120,.72);background:linear-gradient(135deg,rgba(232,203,120,.24),rgba(120,220,232,.08));box-shadow:0 0 0 5px rgba(120,220,232,.08),inset 0 1px rgba(255,255,255,.08)}
+.compass-prerendered-player__button.is-quiet{min-height:42px;padding:0 18px;background:rgba(2,10,16,.72);font-size:.72rem}
+.compass-prerendered-player__skip{position:absolute;z-index:3;top:max(16px,env(safe-area-inset-top));right:max(16px,env(safe-area-inset-right));opacity:0;pointer-events:none;transition:opacity .18s ease}
+.compass-prerendered-player[data-state="PLAYING"] .compass-prerendered-player__skip{opacity:1;pointer-events:auto}
+.compass-prerendered-player__replay{position:fixed;z-index:2147482000;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));min-height:42px;padding:0 17px;border-color:rgba(232,203,120,.28);background:rgba(2,10,16,.82);box-shadow:0 10px 30px rgba(0,0,0,.28);backdrop-filter:blur(10px)}
+.compass-prerendered-player[data-entry-state="TRANSITION"] .compass-prerendered-player__actions{pointer-events:none}
+@media(max-width:600px){.compass-prerendered-player__gate{padding-inline:14px}.compass-prerendered-player__gate-card{padding:30px 20px;border-radius:26px}.compass-prerendered-player__actions{display:grid;grid-template-columns:1fr 1fr}.compass-prerendered-player__button{min-width:0;padding-inline:12px}.compass-prerendered-player__replay{right:10px;bottom:10px}}
+@media(min-aspect-ratio:16/10){.compass-prerendered-player__video{object-fit:cover;-webkit-mask-image:none;mask-image:none}.compass-prerendered-player__ambient-video{opacity:.35}}
+@media(max-aspect-ratio:4/3){.compass-prerendered-player__video{inset:auto 0;top:50%;width:100%;height:auto;object-fit:fill;transform:translateY(-50%);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%)}.compass-prerendered-player__ambient-video{object-position:50% 58%;filter:blur(clamp(20px,4vw,48px)) saturate(.92) brightness(.52);opacity:1}}
+@media(prefers-reduced-motion:reduce){.compass-prerendered-player,.compass-prerendered-player *{animation:none!important;transition:none!important}.compass-prerendered-player__video,.compass-prerendered-player__ambient-video,.compass-prerendered-player__entry-canvas{display:none!important}}
+
+/* Frame zero is the entry artwork; DOM controls are aligned hit areas only. */
+.compass-prerendered-player{--compass-entry-frame-em:min(1.25vw,2.222222vh)}
+.compass-prerendered-player__gate{isolation:isolate;outline:0}
+.compass-prerendered-player__gate::before{opacity:0}
+.compass-prerendered-player__gate:not(.is-skip-dissolve) .compass-prerendered-player__entry-canvas{opacity:0}
+.compass-prerendered-player__gate-card{width:42.5em;height:22.25em;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;font-size:var(--compass-entry-frame-em);backdrop-filter:none}
+.compass-prerendered-player__gate-card::before,.compass-prerendered-player__gate-card::after{display:none}
+.compass-prerendered-player__eyebrow,.compass-prerendered-player__gate-card h2,.compass-prerendered-player__gate-card>p:not(.compass-prerendered-player__eyebrow){opacity:0}
+.compass-prerendered-player__actions{position:absolute;top:15.9375em;left:50%;gap:.625em;margin:0;transform:translateX(-50%);flex-wrap:nowrap}
+.compass-prerendered-player__actions .compass-prerendered-player__button{height:3.375em;min-height:3.375em;padding:0;border-color:transparent!important;background:transparent!important;color:transparent!important;font-size:1em;box-shadow:none!important}
+.compass-prerendered-player__actions [data-main-orientation-play]{width:8.375em}
+.compass-prerendered-player__actions [data-main-orientation-skip]{width:7.375em}
+@media(min-aspect-ratio:16/10){.compass-prerendered-player{--compass-entry-frame-em:max(1.25vw,2.222222vh)}}
+@media(max-width:600px){.compass-prerendered-player__gate-card{width:42.5em;height:22.25em;padding:0;border-radius:0}.compass-prerendered-player__actions{display:flex;gap:.625em}.compass-prerendered-player__actions .compass-prerendered-player__button{min-width:0;padding:0}}
+@media(prefers-reduced-motion:reduce){.compass-prerendered-player__video,.compass-prerendered-player__ambient-video{display:block!important}}
+
+/* Preserve Audralia's immersive field across the single black bridge frame, then release into the filmed pixels. */
+.compass-prerendered-player__ambient-video{z-index:0}
+.compass-prerendered-player__audralia-hold{position:absolute;display:block;pointer-events:none;opacity:0;transition:opacity 220ms cubic-bezier(.32,0,.18,1)}
+.compass-prerendered-player__audralia-hold.is-active{opacity:1}
+.compass-prerendered-player__audralia-hold.is-releasing{opacity:0}
+.compass-prerendered-player__audralia-hold--ambient{inset:-6%;z-index:1;width:112%;height:112%;object-fit:cover;object-position:50% 50%;filter:blur(clamp(18px,3vw,42px)) saturate(.82) brightness(.42);transform:scale(1.06);background:#010407}
+.compass-prerendered-player__video{z-index:2}
+.compass-prerendered-player__audralia-hold--foreground{inset:0;z-index:3;width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:transparent;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
+.compass-prerendered-player__gate{z-index:4}
+.compass-prerendered-player__skip{z-index:5}
+@media(min-aspect-ratio:16/10){.compass-prerendered-player__audralia-hold--foreground{object-fit:cover;-webkit-mask-image:none;mask-image:none}.compass-prerendered-player__audralia-hold--ambient.is-active{opacity:.35}.compass-prerendered-player__audralia-hold--ambient.is-releasing{opacity:0}}
+@media(max-aspect-ratio:4/3){.compass-prerendered-player__audralia-hold--foreground{inset:auto 0;top:50%;width:100%;height:auto;object-fit:fill;transform:translateY(-50%);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%)}.compass-prerendered-player__audralia-hold--ambient{object-position:50% 58%;filter:blur(clamp(20px,4vw,48px)) saturate(.92) brightness(.52)}}
+
+/* On narrow portrait entries, enlarge the exact button treatment, then retract into the baked canonical frame. */
+@media(max-width:600px) and (max-aspect-ratio:4/3){
+  .compass-prerendered-player__actions{--compass-entry-control-scale:2.3;transform-origin:50% 50%;transition:transform 170ms cubic-bezier(.32,0,.18,1)}
+  .compass-prerendered-player__actions .compass-prerendered-player__button{transition:color 90ms 80ms ease,border-color 90ms 80ms ease,background-color 90ms 80ms ease,box-shadow 90ms 80ms ease}
+  .compass-prerendered-player[data-state="ARMED"][data-entry-state="IDLE"] .compass-prerendered-player__actions{transform:translateX(-50%) scale(var(--compass-entry-control-scale))}
+  .compass-prerendered-player[data-entry-state="CONTROLS_RETRACTING"] .compass-prerendered-player__actions{transform:translateX(-50%) scale(1)}
+  .compass-prerendered-player[data-state="ARMED"][data-entry-state="IDLE"] .compass-prerendered-player__actions .compass-prerendered-player__button{border-color:rgba(232,203,120,.34)!important;background:rgb(16,26,19)!important;color:#fff2c7!important;box-shadow:inset 0 1px rgba(255,255,255,.06)!important}
+  .compass-prerendered-player[data-state="ARMED"][data-entry-state="IDLE"] .compass-prerendered-player__actions .compass-prerendered-player__button.is-primary{border-color:rgba(232,203,120,.72)!important;background:rgb(6,26,29)!important;box-shadow:0 0 0 5px rgba(120,220,232,.08),inset 0 1px rgba(255,255,255,.08)!important}
+  .compass-prerendered-player[data-entry-state="CONTROLS_RETRACTING"] .compass-prerendered-player__actions .compass-prerendered-player__button{border-color:transparent!important;background:transparent!important;color:transparent!important;box-shadow:none!important}
+}
+@media(max-width:450px) and (max-aspect-ratio:4/3){.compass-prerendered-player__actions{--compass-entry-control-scale:3.05}}
+@media(max-width:340px) and (max-aspect-ratio:4/3){.compass-prerendered-player__actions{--compass-entry-control-scale:3.3}}
+@media(prefers-reduced-motion:reduce){.compass-prerendered-player__audralia-hold,.compass-prerendered-player__actions{transition:none!important}}

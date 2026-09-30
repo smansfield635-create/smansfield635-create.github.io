@@ -1,0 +1,365 @@
+/*
+ * METHODS & MODELS — deficiency-bound coherence successor
+ * Governing intent: one readable plane per state.
+ * Orbit = orientation + one readable active object.
+ * Inspection = inspected object has exclusive readable custody.
+ */
+
+@media (max-width: 1100px) {
+  .mm-carousel {
+    --card-width: min(56vw, 32rem);
+    --card-height: 34rem;
+    min-height: 980px;
+    background:
+      radial-gradient(circle at 50% 58%, rgba(217,188,130,.055), transparent 24rem),
+      linear-gradient(180deg, rgba(15,20,26,.96), rgba(5,8,12,.99));
+  }
+
+  /* The compact orbit chrome becomes orientation-only. The active card owns prose. */
+  .mm-carousel__header {
+    position: relative;
+    z-index: 50;
+    min-height: 4.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem .85rem;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: linear-gradient(180deg, rgba(9,13,17,.96), rgba(9,13,17,.78));
+  }
+
+  .mm-carousel__heading h2,
+  .mm-carousel__heading p:last-child {
+    display: none;
+  }
+
+  .mm-carousel__heading .mm-kicker {
+    margin: 0;
+    color: #c0c8cf;
+    font-size: .69rem;
+    letter-spacing: .18em;
+  }
+
+  .mm-live {
+    margin: 0;
+    min-width: 0;
+    max-width: 16rem;
+    padding: 0;
+    color: #d6c49f;
+    font-size: .7rem;
+    line-height: 1.35;
+    text-align: right;
+    letter-spacing: .11em;
+  }
+
+  .mm-family-tabs {
+    position: relative;
+    z-index: 49;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    max-width: none;
+    margin: 0;
+    padding: 0 1rem;
+    overflow: visible;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    background: rgba(6,9,12,.84);
+  }
+
+  .mm-family-tab {
+    min-width: 0;
+    min-height: 3.65rem;
+    padding: .72rem .45rem .65rem;
+    overflow: hidden;
+    border: 0;
+    border-top: 2px solid transparent;
+    background: transparent;
+    color: transparent;
+    font-size: 0;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .mm-family-tab::before {
+    display: block;
+    margin: 0;
+    color: #5f6b75;
+    font-size: .61rem;
+    letter-spacing: .13em;
+  }
+
+  .mm-family-tab[aria-selected="true"] {
+    border-top-color: #d9bc82;
+    background: linear-gradient(180deg, rgba(217,188,130,.09), transparent 88%);
+    color: #f0e5ce;
+    font-size: .74rem;
+    font-weight: 700;
+  }
+
+  .mm-family-tab[aria-selected="true"]::before {
+    margin-bottom: .22rem;
+    color: #b69a65;
+  }
+
+  /* A separate stage begins below the chrome. No readable layer may share this plane. */
+  .mm-viewport {
+    inset: 8.6rem 0 2.9rem;
+    z-index: 20;
+    perspective: 2300px;
+    perspective-origin: 50% 46%;
+  }
+
+  .mm-ring {
+    top: 39%;
+  }
+
+  .mm-card:not([data-active="true"]) .mm-card__top,
+  .mm-card:not([data-active="true"]) .mm-card__body {
+    visibility: hidden;
+  }
+
+  .mm-card:not([data-active="true"]) .mm-card__surface {
+    opacity: .09;
+    filter: saturate(.25) brightness(.7);
+    transform: scale(.86);
+    border-color: rgba(190,202,212,.08);
+    box-shadow: none;
+  }
+
+  .mm-card[data-active="true"] .mm-card__surface {
+    opacity: 1;
+    filter: none;
+    transform: scale(1.035);
+    border-color: rgba(217,188,130,.72);
+    background:
+      radial-gradient(circle at 50% 18%, rgba(217,188,130,.055), transparent 15rem),
+      linear-gradient(155deg, rgba(27,34,41,.995), rgba(8,12,16,.995));
+    box-shadow:
+      0 42px 100px rgba(0,0,0,.62),
+      0 0 0 1px rgba(217,188,130,.06),
+      inset 0 1px 0 rgba(255,255,255,.055);
+  }
+
+  .mm-card[data-active="true"] .mm-card__top {
+    padding: 1.35rem 1.55rem .55rem;
+  }
+
+  .mm-card[data-active="true"] .mm-card__body {
+    padding: .85rem 1.55rem 1.55rem;
+  }
+
+  .mm-card[data-active="true"] .mm-card__body h3 {
+    max-width: 12ch;
+    font-size: clamp(2.35rem, 5vw, 3.65rem);
+    line-height: .94;
+  }
+
+  .mm-card[data-active="true"] .mm-card__question {
+    max-width: 32ch;
+    font-size: 1rem;
+    line-height: 1.58;
+  }
+
+  .mm-card[data-active="true"] .mm-card__equation {
+    font-size: clamp(1.35rem, 2.8vw, 1.8rem);
+  }
+
+  .mm-orbit-note {
+    z-index: 45;
+    bottom: .9rem;
+    width: min(86%, 40rem);
+    color: #65717b;
+    font-size: .68rem;
+  }
+
+  /* Inspection is a different state, not a card layered over an active orbit. */
+  .mm-carousel[data-inspecting="true"] .mm-carousel__header,
+  .mm-carousel[data-inspecting="true"] .mm-family-tabs,
+  .mm-carousel[data-inspecting="true"] .mm-orbit-note {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .mm-carousel[data-inspecting="true"] .mm-card:not([data-active="true"]) {
+    visibility: hidden;
+  }
+
+  .mm-carousel[data-inspecting="true"] .mm-viewport {
+    inset: 0;
+    z-index: 60;
+    perspective: none;
+  }
+
+  .mm-carousel[data-inspecting="true"] .mm-ring {
+    top: 50%;
+  }
+
+  .mm-card[data-inspecting="true"] {
+    z-index: 70;
+    width: min(88vw, 48rem);
+    height: min(78vh, 47rem);
+    left: max(-24rem, -44vw);
+    top: max(-23.5rem, -39vh);
+  }
+
+  .mm-card[data-inspecting="true"] .mm-card__surface {
+    transform: scale(1);
+    border-color: rgba(217,188,130,.82);
+    background:
+      radial-gradient(circle at 76% 18%, rgba(217,188,130,.07), transparent 18rem),
+      linear-gradient(155deg, rgba(23,30,36,.999), rgba(5,8,11,.999));
+    box-shadow: 0 46px 120px rgba(0,0,0,.76), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+
+  .mm-card[data-inspecting="true"] .mm-card__body {
+    padding: 4.25rem 1.6rem 1.6rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .mm-shell {
+    padding-inline: .8rem;
+  }
+
+  .mm-topbar {
+    align-items: flex-start;
+    padding: 1rem 0;
+  }
+
+  .mm-nav {
+    gap: .45rem .8rem;
+    font-size: .76rem;
+  }
+
+  .mm-intro {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-top: 2rem;
+  }
+
+  .mm-intro h1 {
+    font-size: clamp(3.2rem, 16vw, 5.2rem);
+  }
+
+  .mm-carousel {
+    --card-width: min(84vw, 22rem);
+    --card-height: 31rem;
+    min-height: 900px;
+  }
+
+  .mm-carousel__header {
+    min-height: 4.35rem;
+    padding: .9rem .95rem .75rem;
+  }
+
+  .mm-carousel__heading .mm-kicker {
+    font-size: .62rem;
+  }
+
+  .mm-live {
+    max-width: 10.5rem;
+    font-size: .61rem;
+  }
+
+  .mm-family-tabs {
+    padding-inline: .55rem;
+  }
+
+  .mm-family-tab {
+    min-height: 3.2rem;
+    padding: .62rem .25rem .55rem;
+  }
+
+  .mm-family-tab[aria-selected="true"] {
+    font-size: .66rem;
+  }
+
+  .mm-viewport {
+    inset: 7.6rem 0 2.7rem;
+    perspective: 1850px;
+  }
+
+  .mm-ring {
+    top: 40%;
+  }
+
+  .mm-card[data-active="true"] .mm-card__body h3 {
+    font-size: clamp(2.15rem, 10vw, 3rem);
+  }
+
+  .mm-card[data-inspecting="true"] {
+    width: min(92vw, 35rem);
+    height: min(80vh, 42rem);
+    left: max(-17.5rem, -46vw);
+    top: max(-21rem, -40vh);
+  }
+
+  .mm-card[data-inspecting="true"] .mm-card__inspection {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .mm-inspection__rail {
+    display: flex;
+    gap: .5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 0 .65rem;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255,255,255,.09);
+  }
+
+  .mm-inspection__rail h3 {
+    display: none;
+  }
+
+  .mm-model-choice {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 12rem;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 999px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mm-inspection__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 440px) {
+  .mm-carousel {
+    --card-width: min(88vw, 20rem);
+    min-height: 880px;
+  }
+
+  .mm-family-tab[aria-selected="true"] {
+    font-size: .61rem;
+  }
+
+  .mm-card[data-active="true"] .mm-card__top {
+    padding-inline: 1.25rem;
+  }
+
+  .mm-card[data-active="true"] .mm-card__body {
+    padding-inline: 1.25rem;
+  }
+
+  .mm-inspection__close span:last-child {
+    font-size: .68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-card__surface,
+  .mm-carousel__header,
+  .mm-family-tabs,
+  .mm-orbit-note {
+    transition-duration: .001ms !important;
+    transition-delay: 0ms !important;
+  }
+}

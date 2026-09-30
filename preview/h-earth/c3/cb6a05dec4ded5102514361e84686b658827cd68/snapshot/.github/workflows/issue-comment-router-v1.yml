@@ -1,0 +1,53 @@
+name: Central Issue Comment Router v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  route:
+    if: github.event.issue.pull_request == null
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout: |
+            .github/ai-router/issue-comment-router-registry.v1.json
+      - name: Authenticate classify and dispatch exactly one registered handler
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BODY: ${{ github.event.comment.body }}
+          ASSOCIATION: ${{ github.event.comment.author_association }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' > "$RUNNER_TEMP/route.json"
+          import fs from 'node:fs';
+          const registry=JSON.parse(fs.readFileSync('.github/ai-router/issue-comment-router-registry.v1.json','utf8'));
+          const body=process.env.BODY||'', association=process.env.ASSOCIATION||'';
+          const matches=registry.routes.filter(r=>body.startsWith(r.marker)&&r.associations.includes(association));
+          if(matches.length>1) throw new Error('AMBIGUOUS_COMMENT_ROUTE');
+          if(matches.length===0){console.log(JSON.stringify({dispatch:false}));process.exit(0);}
+          const r=matches[0];
+          console.log(JSON.stringify({dispatch:true,workflow:r.workflow,input:r.input,payload:body,marker:r.marker}));
+          NODE
+          dispatch="$(jq -r '.dispatch' "$RUNNER_TEMP/route.json")"
+          [ "$dispatch" = true ] || { echo "COMMENT_ROUTE_NO_DISPATCH"; exit 0; }
+          workflow="$(jq -r '.workflow' "$RUNNER_TEMP/route.json")"
+          input="$(jq -r '.input' "$RUNNER_TEMP/route.json")"
+          payload="$(jq -r '.payload' "$RUNNER_TEMP/route.json")"
+          case "$workflow" in
+            ai-room-execution-transport.yml|canonical-operation-intake-transport-v1.yml|public-private-successor-execution-v1.yml|public-private-terminal-closure-carrier-v1.yml|remote-operation-terminal-closure-v1.yml) ;;
+            *) echo "UNREGISTERED_HANDLER" >&2; exit 1;;
+          esac
+          jq -n --arg ref main --arg key "$input" --arg payload "$payload" '{ref:$ref,inputs:{($key):$payload}}' > "$RUNNER_TEMP/dispatch.json"
+          gh api --method POST "/repos/$REPO/actions/workflows/$workflow/dispatches" --input "$RUNNER_TEMP/dispatch.json"
+          echo "COMMENT_ROUTE_DISPATCHED=$workflow"

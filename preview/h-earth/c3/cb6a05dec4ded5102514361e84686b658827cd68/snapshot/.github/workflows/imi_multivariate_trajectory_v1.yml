@@ -1,0 +1,36 @@
+name: IMI multivariate trajectory test v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/imi/IMI_MULTIVARIATE_TRAJECTORY_PROTOCOL_v1.md'
+      - 'research/imi/IMI_MULTIVARIATE_TRAJECTORY_FREEZE_v1.txt'
+      - 'research/imi/imi_multivariate_trajectory_test_v1.py'
+      - '.github/workflows/imi_multivariate_trajectory_v1.yml'
+  workflow_dispatch:
+
+jobs:
+  multivariate-trajectory-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas requests scikit-learn
+      - name: Execute frozen multivariate trajectory test
+        run: python research/imi/imi_multivariate_trajectory_test_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: imi-multivariate-trajectory-test-v1
+          path: |
+            imi_multivariate_trajectory_findings_v1.json
+            IMI_MULTIVARIATE_TRAJECTORY_VERDICT_v1.txt
+            imi_multivariate_trajectory_confirmation_panel_v1.csv
+          if-no-files-found: warn

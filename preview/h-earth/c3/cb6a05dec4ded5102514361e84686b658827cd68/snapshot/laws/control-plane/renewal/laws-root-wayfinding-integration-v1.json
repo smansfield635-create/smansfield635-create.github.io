@@ -1,0 +1,68 @@
+{
+  "schema": "LAWS_ROOT_WAYFINDING_INTEGRATION_CONTROL_v1",
+  "status": "CONSTRUCTION_CANDIDATE",
+  "operationId": "LAWS_ROOT_WAYFINDING_INTEGRATION_20260825_C8646D4D_R1",
+  "lockGeneration": 1703,
+  "issue": 2072,
+  "route": "/laws/",
+  "exactGoverningHead": "c8646d4dd7e73ac0e27bad99824598d9892d6aab",
+  "routerReceipt": {
+    "workflowRunId": 32889429607,
+    "result": "PASS",
+    "projectId": "LAWS",
+    "routeCount": 5
+  },
+  "ownerIntent": [
+    "REMOVE_FIVE_CIRCULAR_FIRST_INDICATOR_RAIL",
+    "INTEGRATE_OPENING_WITH_ESTATE_COMPASS_VISUAL_LANGUAGE"
+  ],
+  "changedProductSurfaces": [
+    "laws/index.html",
+    "laws/index.experience.polish.css",
+    "laws/index.experience.js"
+  ],
+  "verificationSurface": "laws/control-plane/renewal/verify-laws-root-wayfinding-integration-v1.mjs",
+  "preserved": [
+    "FIVE_FIRST_DISCLOSURE_QUESTIONS_AND_ROUTES",
+    "LAWS_COMPASS_SEMANTIC_CONTROLS",
+    "CONTROLLER_ROUTE_AND_INTERACTION_AUTHORITY",
+    "EVIDENCE_AND_CLAIM_STANDING",
+    "STATIC_NO_JAVASCRIPT_READING",
+    "REDUCED_MOTION_SEMANTICS"
+  ],
+  "protectedBlobs": {
+    "laws/index.controller.js": "e6eef54a8d808c12ea0e5db85539bc521f29f3b2",
+    "laws/index.interactions.js": "be365cc331ee5643f916abee204d4f5f45376c04",
+    "laws/index.compositor.js": "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa",
+    "laws/index.cosmos.js": "76d71d7cbafe52421c9eb68e3604792cc6755cf3",
+    "laws/index.crystals.js": "27577c49250f42b03d123f8105e1d55d59c3a4b4",
+    "laws/index.planet.js": "329d207fd5ad6d89e517f6c0fa992fb1a65b115a"
+  },
+  "displayContinuity": {
+    "constitution": ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
+    "localIdentity": "LAWS",
+    "narrativeRelation": "QUESTION_TO_ANSWERABLE_STRUCTURE_TO_BOUNDED_CONCLUSION",
+    "orientationRelation": "COMPASS_REMAINS_GLOBAL_ORIENTATION_AUTHORITY",
+    "displayRole": "EPISTEMIC_LAW_CHAMBER",
+    "runtimeCeiling": "L3_EXISTING_CEILING_PRESERVED_NO_ESCALATION",
+    "transitionMeaning": "SELECT_LAWS_AUTHORITY_TO_HEAR_ITS_QUESTION",
+    "progressiveDisclosure": "FIVE_QUESTIONS_REMAIN_INSIDE_EXISTING_DISCLOSURE",
+    "mobileComposition": "SINGLE_COLUMN_THRESHOLD_THEN_COMPASS",
+    "reducedMotionEquivalence": true,
+    "returnContract": "EXPLICIT_MAIN_COMPASS_AND_CONSTELLATION_RETURN_PRESERVED",
+    "claimBoundary": "VISUAL_POLISH_CREATES_NO_CLAIM_AUTHORITY",
+    "continuityHook": "SERIF_CREAM_GOLD_CARTOGRAPHIC_FRAME_AND_RESTRAINED_CYAN_INSTRUMENTATION"
+  },
+  "authorityChanges": {
+    "route": false,
+    "controller": false,
+    "interaction": false,
+    "compositor": false,
+    "evidence": false,
+    "scientific": false,
+    "claim": false
+  },
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false,
+  "publicationIncluded": false
+}

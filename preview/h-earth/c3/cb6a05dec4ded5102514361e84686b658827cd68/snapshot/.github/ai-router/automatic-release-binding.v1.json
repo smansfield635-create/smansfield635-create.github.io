@@ -1,0 +1,10 @@
+{
+  "schema": "AUTOMATIC_RELEASE_BINDING_v1",
+  "status": "ACTIVE",
+  "entrypoint": "AI_RELEASE_ENTRYPOINT.json",
+  "workflow": ".github/workflows/ai-entry-auto-release.yml",
+  "trigger": "PUSH_TO_MAIN",
+  "exactHeadRequired": true,
+  "publicMarkerRequired": true,
+  "manualOwnerActionRequired": false
+}

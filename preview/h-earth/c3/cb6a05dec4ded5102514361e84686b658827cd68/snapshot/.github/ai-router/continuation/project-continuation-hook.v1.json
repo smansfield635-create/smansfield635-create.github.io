@@ -1,0 +1,121 @@
+{
+  "schema": "PROJECT_CONTINUATION_ADMIN_HOOK_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "purpose": "Resolve a fresh project room onto the most recent valid project continuation without reconstructing completed work.",
+  "trigger": {
+    "mode": "NATURAL_LANGUAGE_EQUIVALENCE",
+    "examples": [
+      "New information is attached to the most recent work in this project. Please continue.",
+      "Continue the most recent work in this project.",
+      "Resume where we left off in this project.",
+      "Proceed with the current project continuation."
+    ],
+    "magicStringRequired": false
+  },
+  "resolutionOrder": [
+    "CURRENT_PROJECT_MATCH",
+    "VALID_CONTROL_PLANE_RESUME_OBJECT",
+    "REGISTERED_EXACT_FROZEN_SEAM",
+    "LATEST_UNRESOLVED_PROJECT_OPERATION_SUPPORTED_BY_CURRENT_REPOSITORY_EVIDENCE",
+    "FAIL_CLOSED_ON_GENUINE_EQUAL_AMBIGUITY"
+  ],
+  "laws": {
+    "projectMatchPrecedesGlobalRecency": true,
+    "validResumeObjectPrecedesConversationHistory": true,
+    "newAttachmentsAreEvidenceNotAuthority": true,
+    "completedCheckpointsMustBePreserved": true,
+    "resumeFirstIncompleteCheckpoint": true,
+    "freshRoomDoesNotCreateSuccessorGeneration": true,
+    "mainMovementRequiresDifferentialContinuityFirst": true,
+    "disjointMainMovementCarriesForwardUnchangedCandidateAndEvidence": true,
+    "controlPlaneInterruptionDoesNotReplaceProductContinuation": true,
+    "returnToSuspendedProductContinuationAfterSharedBlockerClosureUnlessOwnerRedirects": true,
+    "askUserOnlyWhenCompetingContinuationsRemainMateriallyEqualAfterRepositoryResolution": true,
+    "exactSeamsMustBeRevalidatedAtUse": true
+  },
+  "registeredSeams": {
+    "H_EARTH_AUDRALIA": {
+      "state": "FROZEN_CONTINUATION",
+      "generation": 2286,
+      "branch": "audralia-canonical-geography-rebind-20260915-001",
+      "head": "ab675886e494a36849b23eb842d2bd6cd42009da",
+      "nextAction": "REGISTERED_GENERATOR_WRITEBACK_THEN_READ_ONLY_EXACT_CANDIDATE_VERIFICATION",
+      "stopCondition": "OWNER_PHYSICAL_DEVICE_DISPOSITION",
+      "revalidateAtUse": true,
+      "reopenArchitectureByDefault": false
+    },
+    "PUBLIC_CAMPAIGNS_COMMUNITY": {
+      "state": "FROZEN_CONTINUATION",
+      "generation": 2289,
+      "branch": "gen2289-community-recalibrated-a",
+      "head": "4a8bad0378368086c570e63ad4295446c7a0475f",
+      "subjectPath": "campaigns/consider-the-energy/community-lifecycle3d.js",
+      "subjectBlob": "828f3d517eea0677f7e7fd144711cedb99ba1dc3",
+      "nextAction": "RESUME_EXACT_HEAD_QUALIFICATION_FROM_FIRST_INCOMPLETE_CHECKPOINT",
+      "revalidateAtUse": true,
+      "rebuildByDefault": false
+    },
+    "SHOWROOM_GLOBE_ZIONTS": {
+      "state": "FROZEN_PROJECT_SEAM_NEXT_ACTION_REQUIRES_CURRENT_RESOLUTION",
+      "branch": "zionts/gen2272-definition-context-bridge",
+      "head": "0a151d55e045ca5da6f2e7eeb1a61c7d1a7188da",
+      "nextAction": "RESOLVE_CURRENT_VALID_RESUME_OBJECT_OR_FIRST_INCOMPLETE_CHECKPOINT_BEFORE_EXECUTION",
+      "revalidateAtUse": true,
+      "inventNextAction": false
+    }
+  },
+  "dynamicProjects": {
+    "mode": "CURRENT_PROJECT_ENTRYPOINT_PLUS_REPOSITORY_EVIDENCE",
+    "projects": [
+      "BUILD",
+      "CHARACTERS",
+      "COMPASS",
+      "CONTROL_PLANE_TRANSFERABILITY",
+      "ESTATE_COSMIC_CONTINUITY",
+      "ESTATE_SOUNDTRACK",
+      "ESTATE_VALIDATION",
+      "LAWS",
+      "LINEAGE_RECEIPT_PROTOCOL",
+      "MATERIAL_WORK_AUDIT",
+      "METHODS_INFORMATION_BENCHMARK",
+      "OPEN_WORLD",
+      "PUBLIC_LEGITIMACY",
+      "STATE_BOUND_ADMISSIBILITY_KERNEL"
+    ],
+    "rules": [
+      "DO_NOT_INVENT_FROZEN_HEADS",
+      "RESOLVE_PROJECT_REGISTRATION_FIRST",
+      "PREFER_VALID_RESUME_OBJECT_OR_EXPLICIT_FROZEN_CHECKPOINT",
+      "USE_CURRENT_REPOSITORY_EVIDENCE_FOR_LATEST_UNRESOLVED_OPERATION",
+      "FAIL_CLOSED_ON_GENUINE_AMBIGUITY"
+    ]
+  },
+  "freshRoomSequence": [
+    "IDENTIFY_CURRENT_PROJECT",
+    "READ_AI_ENTRYPOINT_AND_PROJECT_REGISTRATION",
+    "RESOLVE_VALID_RESUME_OBJECT_OR_REGISTERED_SEAM",
+    "REVALIDATE_EXACT_BRANCH_HEAD_AND_RELEVANT_MAIN_CONTINUITY",
+    "BIND_NEW_ATTACHMENTS_AS_EVIDENCE",
+    "RESUME_FIRST_INCOMPLETE_CHECKPOINT",
+    "EXECUTE_ONE_LAWFUL_NEXT_ACTION_OR_REPORT_ONE_EXACT_INVALID_BINDING"
+  ],
+  "reporting": [
+    "CONTINUATION_RESOLVED",
+    "EXACT_CANDIDATE_OR_CHECKPOINT",
+    "NEW_EVIDENCE_EFFECT",
+    "ACTION_EXECUTED",
+    "CURRENT_BOUNDARY",
+    "NEXT_LAWFUL_ACTION_OR_BLOCKER"
+  ],
+  "authority": {
+    "productMutationAuthorityCreated": false,
+    "successorAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "releaseAuthorityCreated": false,
+    "publicationAuthorityCreated": false,
+    "scientificAuthorityCreated": false,
+    "claimAuthorityCreated": false,
+    "authorityEffect": "NONE_ADMINISTRATIVE_CONTINUATION_DISCOVERY_ONLY"
+  }
+}

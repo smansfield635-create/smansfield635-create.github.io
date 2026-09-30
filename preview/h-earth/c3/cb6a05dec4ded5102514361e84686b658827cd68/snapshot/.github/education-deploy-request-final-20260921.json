@@ -1,0 +1,6 @@
+{
+  "schema": "DGB_EDUCATION_DEPLOY_REQUEST_v1",
+  "surface": "education",
+  "target": "current-main",
+  "publication": "required"
+}

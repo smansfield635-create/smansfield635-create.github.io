@@ -1,0 +1,178 @@
+{
+  "schema": "MIRRORLAND_VEGETATION_V4_GROUND_UNDERSTORY_CONTRACT_v1",
+  "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+  "lockGeneration": 1956,
+  "exactParent": "7e45a44a0abd6348892ff54a2109fc0c4248485d",
+  "predecessorBoundary": "V0_V3_PASS_CLOSED",
+  "targetBoundary": "GROUND_AND_UNDERSTORY_CONTINUITY_PASS",
+  "stage": "V4_GROUND_AND_UNDERSTORY_CONTINUITY",
+  "authority": {
+    "ecologySource": "characters/vegetation-ecology.mjs#sampleCanonicalVegetationEcology",
+    "canonicalTreePopulation": "characters/vegetation-population.mjs#getCanonicalVegetationPopulation",
+    "cameraTrueRepresentation": "characters/vegetation-representation.mjs#CAMERA_TRUE_VEGETATION_REPRESENTATION_CONTRACT",
+    "landmarkClearances": "characters/forest-system.mjs#FOREST_SIGHTLINE_EXCLUSIONS",
+    "geographyAuthorityCreated": false,
+    "weatherAuthorityCreated": false,
+    "cameraAuthorityCreated": false
+  },
+  "sourceIdentity": {
+    "control-plane/whole-estate/characters-reconstruction-v1/vegetation-v0-v3-contract.v1.json": "b13793ba0f0b4d71b819b4c9e9a2ed2c3b01e4c5",
+    "characters/vegetation-ecology.mjs": "b2b4ebafeee1e24f5eabd7a43c86afc1734ad43c",
+    "characters/vegetation-population.mjs": "2fcbe1ef5ba62a0e23a10fac3c9b2bc211e93149",
+    "characters/vegetation-representation.mjs": "9fe0a70d86250d004ae1b04b72e1cd6818caaada"
+  },
+  "inheritedLaws": [
+    "GEOGRAPHY_DETERMINES_EXISTENCE",
+    "RENDERER_DETERMINES_REPRESENTATION",
+    "DEVICE_CLASS_MUST_NOT_CHANGE_CANONICAL_POPULATION",
+    "CAMERA_MUST_NOT_CHANGE_CANONICAL_POPULATION",
+    "LOD_CHANGES_SAMPLING_DENSITY_NOT_GEOGRAPHIC_STATE",
+    "V3_CAMERA_TRUE_REPRESENTATION_REMAINS_IN_FORCE",
+    "HISTORICAL_V0_V3_RECEIPTS_REMAIN_IMMUTABLE"
+  ],
+  "ecologyInputs": [
+    "elevation",
+    "normal",
+    "slope",
+    "slopeClass",
+    "curvature",
+    "curvatureClass",
+    "materialProfile",
+    "shorelineDistance",
+    "hydrology.riverWeight",
+    "hydrology.lakeWeight",
+    "hydrology.drainageClass",
+    "biome.forestWeight",
+    "biome.class"
+  ],
+  "population": {
+    "canonical": true,
+    "deviceInvariant": true,
+    "cameraInvariant": true,
+    "parentGridColumns": 60,
+    "parentGridRows": 44,
+    "subdivisionPerParentCell": 2,
+    "columns": 120,
+    "rows": 88,
+    "insetFraction": 0.025,
+    "jitterFraction": 0.34,
+    "seed": 1689746977,
+    "identityFormat": "understory-r<row>-c<column>-<class>",
+    "candidateLaw": "INTEGER_LATTICE_PLUS_FROZEN_HASH_JITTER",
+    "classSelectionLaw": "ELIGIBLE_CLASS_WITH_HIGHEST_DETERMINISTIC_SCORE",
+    "occupancyLaw": "DETERMINISTIC_HASH_MUST_NOT_EXCEED_CLASS_DENSITY",
+    "devicePresentationSampling": {
+      "desktop": 1.0,
+      "compact": 0.55
+    },
+    "devicePresentationSamplingChangesIdentity": false
+  },
+  "classes": {
+    "GRASS_SEDGE": {
+      "eligibility": "valid && drainageClass == LAND && shorelineDistance >= 6 && slopeClass != STEEP_NONCLIMBING",
+      "density": "clamp(0.20 + 0.30*forestWeight + 0.22*max(riverWeight,lakeWeight) + 0.18*(materialProfile in [LOWLAND_SOIL,COASTAL_SOIL,FOREST_SOIL]) - 0.12*(slopeClass == MODERATE), 0, 0.92)",
+      "clusterScale": [0.65, 1.35]
+    },
+    "LOW_SHRUB": {
+      "eligibility": "valid && drainageClass == LAND && shorelineDistance >= 12 && forestWeight >= 0.14 && slopeClass != STEEP_NONCLIMBING",
+      "density": "clamp(0.08 + 0.48*forestWeight + 0.10*(curvatureClass == CONCAVE), 0, 0.68)",
+      "clusterScale": [0.7, 1.4]
+    },
+    "SAPLING_YOUNG_GROWTH": {
+      "eligibility": "valid && drainageClass == LAND && shorelineDistance >= 18 && forestWeight >= 0.28 && slopeClass in [LEVEL,GENTLE,MODERATE]",
+      "density": "clamp(0.04 + 0.32*forestWeight + 0.08*(biomeClass == FOREST), 0, 0.46)",
+      "minimumCanonicalTreeClearance": 5
+    },
+    "REED_WET_MARGIN": {
+      "eligibility": "valid && drainageClass == LAND && shorelineDistance >= 2 && max(riverWeight,lakeWeight) >= 0.08 && slopeClass in [LEVEL,GENTLE]",
+      "density": "clamp(0.10 + 0.82*max(riverWeight,lakeWeight), 0, 0.96)",
+      "channelOrLakeInteriorAllowed": false
+    },
+    "DEAD_SPARSE_GROUND": {
+      "eligibility": "valid && drainageClass == LAND && shorelineDistance >= 10 && materialProfile in [STONE_AND_SPARSE_SOIL,COASTAL_SOIL] && forestWeight < 0.36",
+      "density": "clamp(0.10 + 0.28*(materialProfile == STONE_AND_SPARSE_SOIL) + 0.16*(slopeClass == MODERATE), 0, 0.52)"
+    },
+    "FOREST_FLOOR_CLUSTER": {
+      "eligibility": "valid && drainageClass == LAND && shorelineDistance >= 14 && forestWeight >= 0.28 && (materialProfile == FOREST_SOIL || biomeClass in [WOODLAND,FOREST])",
+      "density": "clamp(0.10 + 0.62*forestWeight + 0.08*(curvatureClass == CONCAVE), 0, 0.88)",
+      "clusterScale": [0.75, 1.55]
+    }
+  },
+  "clearances": {
+    "landmarkSightlineMask": "HARD_EXCLUSION",
+    "largeTreeClearanceAppliedTo": ["SAPLING_YOUNG_GROWTH"],
+    "riverLakeInteriorLargeStemSuppression": true,
+    "shorelineWaterPlacementProhibitedExceptLandSideWetMargin": true
+  },
+  "representation": {
+    "implementation": "WEBGL2_INSTANCED_CLUSTERS",
+    "ecologyTexturePermitted": true,
+    "ecologyTextureAuthority": "DERIVED_READ_ONLY_CACHE_ONLY",
+    "decorativeNoiseMayDetermineExistence": false,
+    "v3CameraContextReused": true,
+    "newCameraOrLodAuthorityProhibited": true,
+    "canonicalInstanceIdentityIndependentOfLod": true
+  },
+  "materialAcceptance": {
+    "wideShotMustNotReadAsIsolatedTreesOnEmptyTerrain": true,
+    "requiredVisibleTransitions": [
+      "SHORELINE",
+      "WET_MARGIN",
+      "WOODLAND",
+      "FOREST_FLOOR",
+      "SPARSE_EXPOSED_SOIL"
+    ],
+    "landmarkClearingsRemainOpen": true,
+    "desktopCompactSameEcologicalWorld": true,
+    "newWorldBoundaryExposureProhibited": true,
+    "materialStabilityRegressionProhibited": true
+  },
+  "mechanicalAcceptance": {
+    "exactParentRequired": true,
+    "deterministicRepeatRequired": true,
+    "deviceInvariantIdentityRequired": true,
+    "hydrologyDifferentiationRequired": true,
+    "forestSparseDifferentiationRequired": true,
+    "landmarkClearingPreservationRequired": true,
+    "v0V3AggregateAuthorityRequired": true,
+    "acceptanceCriteriaRelaxationProhibited": true
+  },
+  "protected": [
+    "characters/vegetation-ecology.mjs",
+    "characters/vegetation-population.mjs",
+    "characters/vegetation-representation.mjs",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/step9-regional-geography.mjs",
+    "characters/cloud-system.mjs",
+    "characters/cloud-traversal.mjs",
+    "characters/night-renderer.mjs",
+    "characters/coast-map.mjs",
+    "characters/coast-map-renderer.mjs",
+    "h-earth-3d/",
+    "showroom/"
+  ],
+  "forbiddenScope": [
+    "V5_HIERARCHICAL_FOLIAGE",
+    "V6_SHARED_WIND",
+    "V7_FOLIAGE_NIGHT_LIGHTING",
+    "V8_FINAL_ACCEPTANCE",
+    "CANONICAL_GEOGRAPHY_REDRAW",
+    "PARALLEL_EQUIVALENT_VERIFIER",
+    "PARALLEL_EQUIVALENT_QUALIFICATION_CARRIER",
+    "MERGE",
+    "DEPLOYMENT",
+    "PUBLICATION"
+  ],
+  "failureSemantics": {
+    "stageFailureBlocksAdvance": true,
+    "repairSameStageOnly": true,
+    "firstFailedAssertionMustBeLocalized": true,
+    "alternateEquivalentCarrierProhibited": true,
+    "historicalReceiptsPreserved": true
+  },
+  "authorityCreated": {
+    "merge": false,
+    "deployment": false,
+    "publication": false
+  }
+}

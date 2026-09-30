@@ -1,0 +1,24 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6B_RECEIPT",
+  "contractId": "H_EARTH_LANDSCAPE_REALIZATION_PLANNER_RUN_6B_v1",
+  "eligible": true,
+  "status": "FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN_PASS",
+  "semanticAddressCount": 256,
+  "physicalChunkCount": 16,
+  "deterministicDigest": "b61a87ba",
+  "formationClasses": [
+    "COASTAL_BERM_OR_DUNE",
+    "DISTANT_HIGHLAND_OR_MOUNTAIN",
+    "HILL",
+    "LOWLAND",
+    "RIDGE_OR_BLUFF",
+    "VALLEY_OR_DRAINAGE"
+  ],
+  "issues": [],
+  "execution": {
+    "runtime": "node --experimental-default-type=module",
+    "localFixtureLattice": "STRUCTURALLY_EQUIVALENT_16_X_16_TEST_DOUBLE_ONLY",
+    "repositoryLatticeImportTarget": "/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+    "productPromotionClaim": false
+  }
+}

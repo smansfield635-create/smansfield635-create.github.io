@@ -1,0 +1,229 @@
+{
+  "schema": "DGB_PUBLIC_ANALYTICS_V1",
+  "generatedAt": "2026-09-23T19:28:07Z",
+  "window30d": {
+    "start": "2026-08-24T19:28:07Z",
+    "end": "2026-09-23T19:28:07Z"
+  },
+  "daily": [
+    {
+      "date": "2026-08-25",
+      "pageLoads": 290
+    },
+    {
+      "date": "2026-08-26",
+      "pageLoads": 80
+    },
+    {
+      "date": "2026-08-27",
+      "pageLoads": 60
+    },
+    {
+      "date": "2026-08-28",
+      "pageLoads": 110
+    },
+    {
+      "date": "2026-08-29",
+      "pageLoads": 180
+    },
+    {
+      "date": "2026-08-30",
+      "pageLoads": 90
+    },
+    {
+      "date": "2026-08-31",
+      "pageLoads": 230
+    },
+    {
+      "date": "2026-09-01",
+      "pageLoads": 210
+    },
+    {
+      "date": "2026-09-02",
+      "pageLoads": 190
+    },
+    {
+      "date": "2026-09-03",
+      "pageLoads": 290
+    },
+    {
+      "date": "2026-09-04",
+      "pageLoads": 230
+    },
+    {
+      "date": "2026-09-05",
+      "pageLoads": 80
+    },
+    {
+      "date": "2026-09-06",
+      "pageLoads": 140
+    },
+    {
+      "date": "2026-09-07",
+      "pageLoads": 50
+    },
+    {
+      "date": "2026-09-08",
+      "pageLoads": 230
+    },
+    {
+      "date": "2026-09-09",
+      "pageLoads": 410
+    },
+    {
+      "date": "2026-09-10",
+      "pageLoads": 160
+    },
+    {
+      "date": "2026-09-11",
+      "pageLoads": 520
+    },
+    {
+      "date": "2026-09-12",
+      "pageLoads": 260
+    },
+    {
+      "date": "2026-09-13",
+      "pageLoads": 330
+    },
+    {
+      "date": "2026-09-14",
+      "pageLoads": 230
+    },
+    {
+      "date": "2026-09-15",
+      "pageLoads": 100
+    },
+    {
+      "date": "2026-09-16",
+      "pageLoads": 193
+    },
+    {
+      "date": "2026-09-17",
+      "pageLoads": 206
+    },
+    {
+      "date": "2026-09-18",
+      "pageLoads": 356
+    },
+    {
+      "date": "2026-09-19",
+      "pageLoads": 379
+    },
+    {
+      "date": "2026-09-20",
+      "pageLoads": 374
+    },
+    {
+      "date": "2026-09-21",
+      "pageLoads": 613
+    },
+    {
+      "date": "2026-09-22",
+      "pageLoads": 278
+    },
+    {
+      "date": "2026-09-23",
+      "pageLoads": 65
+    }
+  ],
+  "summary": {
+    "pageLoads": 7054,
+    "botPageLoads": 2456,
+    "nonBotPageLoads": 4598
+  },
+  "referrers": [
+    {
+      "host": "(none)",
+      "pageLoads": 3234,
+      "visits": 3234
+    },
+    {
+      "host": "diamondgatebridge.com",
+      "pageLoads": 3186,
+      "visits": 0
+    },
+    {
+      "host": "www.google.com",
+      "pageLoads": 603,
+      "visits": 603
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 22,
+      "visits": 22
+    },
+    {
+      "host": "m.facebook.com",
+      "pageLoads": 4,
+      "visits": 4
+    },
+    {
+      "host": "l.instagram.com",
+      "pageLoads": 2,
+      "visits": 2
+    },
+    {
+      "host": "chatgpt.com",
+      "pageLoads": 1,
+      "visits": 1
+    },
+    {
+      "host": "lm.facebook.com",
+      "pageLoads": 1,
+      "visits": 1
+    }
+  ],
+  "topPages": [
+    {
+      "path": "/",
+      "pageLoads": 1826,
+      "visits": 1558
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 853,
+      "visits": 623
+    },
+    {
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 809,
+      "visits": 809
+    },
+    {
+      "path": "/showroom/globe/h-earth/awards/",
+      "pageLoads": 702,
+      "visits": 12
+    },
+    {
+      "path": "/campaigns/consider-the-energy/",
+      "pageLoads": 268,
+      "visits": 91
+    },
+    {
+      "path": "/products/education/",
+      "pageLoads": 222,
+      "visits": 105
+    },
+    {
+      "path": "/evidence/agentic-frontier/",
+      "pageLoads": 183,
+      "visits": 30
+    },
+    {
+      "path": "/index.html",
+      "pageLoads": 133,
+      "visits": 0
+    }
+  ],
+  "ownerMeasurement": {
+    "qualified": false,
+    "qualifiedDeviceCount": 0,
+    "measuredSince": "2026-09-21T17:35:53Z"
+  },
+  "methodology": {
+    "visitsAreUniquePeople": false,
+    "historicalOwnerTraffic": "estimated-conservatively",
+    "forwardOwnerTraffic": "device-heartbeat-qualified"
+  }
+}

@@ -1,0 +1,233 @@
+name: Public → Private Bounded Exact-Head Execution v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  execute:
+    if: >-
+      github.event.issue.number == 578 &&
+      startsWith(github.event.comment.body, 'PUBLIC_PRIVATE_BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_V1') &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      PRIVATE_ISSUE: '217'
+      PRIVATE_CARRIER_PATH: .github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs
+
+    steps:
+      - name: Parse closed locator
+        id: locator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          event=json.load(open(os.environ['GITHUB_EVENT_PATH'],encoding='utf-8'))
+          body=event['comment']['body']
+          marker='PUBLIC_PRIVATE_BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_V1'
+          request=json.loads(body[len(marker):].strip())
+          required={'schema','privateCommentId','expectedRequestId','exactPrivateHead'}
+          if set(request) != required or request['schema'] != marker:
+              raise SystemExit('REQUEST_NOT_CLOSED')
+          comment=str(request['privateCommentId'])
+          if not comment.isdigit() or int(comment) < 1:
+              raise SystemExit('PRIVATE_COMMENT_INVALID')
+          request_id=request['expectedRequestId']
+          if not isinstance(request_id,str) or len(request_id) < 3 or len(request_id) > 128:
+              raise SystemExit('REQUEST_ID_INVALID')
+          allowed=set('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.:-')
+          if request_id[0] not in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' or any(ch not in allowed for ch in request_id):
+              raise SystemExit('REQUEST_ID_INVALID')
+          head=request['exactPrivateHead']
+          if not isinstance(head,str) or len(head)!=40 or any(ch not in '0123456789abcdef' for ch in head):
+              raise SystemExit('PRIVATE_HEAD_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write(f'comment={comment}\n')
+              f.write(f'request_id={request_id}\n')
+              f.write(f'head={head}\n')
+          PY
+
+      - name: Mint private read token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+
+      - name: Fetch and validate frozen bounded request
+        id: request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          PRIVATE_COMMENT: ${{ steps.locator.outputs.comment }}
+          EXPECTED_REQUEST_ID: ${{ steps.locator.outputs.request_id }}
+          EXACT_PRIVATE_HEAD: ${{ steps.locator.outputs.head }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/public-private-bounded-execution"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$PRIVATE_COMMENT" \
+            > "$work/private-comment.json"
+          python - <<'PY'
+          import json, os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'public-private-bounded-execution')
+          comment=json.load(open(os.path.join(work,'private-comment.json'),encoding='utf-8'))
+          if not str(comment.get('issue_url','')).endswith('/issues/' + os.environ['PRIVATE_ISSUE']):
+              raise SystemExit('PRIVATE_COMMENT_ISSUE_MISMATCH')
+          body=comment.get('body') or ''
+          marker='BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_V1'
+          if not body.startswith(marker):
+              raise SystemExit('PRIVATE_BOUNDED_MARKER_MISSING')
+          request=json.loads(body[len(marker):].strip())
+          required={'schema','requestId','descriptorId','operationRequest','constructionProcedure','admissionReceipt','requestNonce'}
+          if set(request) != required or request.get('schema') != 'BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_v1':
+              raise SystemExit('PRIVATE_BOUNDED_REQUEST_NOT_CLOSED')
+          if request.get('requestId') != os.environ['EXPECTED_REQUEST_ID']:
+              raise SystemExit('PRIVATE_REQUEST_ID_MISMATCH')
+          if request.get('operationRequest',{}).get('exactGoverningHead') != os.environ['EXACT_PRIVATE_HEAD']:
+              raise SystemExit('OPERATION_HEAD_MISMATCH')
+          if request.get('constructionProcedure',{}).get('exactGoverningHead') != os.environ['EXACT_PRIVATE_HEAD']:
+              raise SystemExit('PROCEDURE_HEAD_MISMATCH')
+          forbidden={'command','shell','shellCommand','script','scriptBody','executable','arguments','extraArguments','environment','environmentOverride','paths','targetHead','workingDirectory','workflowOverride','architectureBundle','receiptBundle','pageReceiptBundle','browserScript','url','browserUrl','viewport'}
+          if forbidden.intersection(request):
+              raise SystemExit('ARBITRARY_COMMAND_FIELD_PROHIBITED')
+          out=os.path.join(work,'request.json')
+          with open(out,'w',encoding='utf-8') as f:
+              json.dump(request,f,sort_keys=True,separators=(',',':'))
+              f.write('\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              f.write('descriptor=' + request['descriptorId'] + '\n')
+          PY
+
+      - name: Verify live private main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          EXPECTED_HEAD: ${{ steps.locator.outputs.head }}
+        run: |
+          set -euo pipefail
+          observed="$(curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          test "$observed" = "$EXPECTED_HEAD"
+
+      - name: Check out exact private source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ steps.locator.outputs.head }}
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify exact private checkout
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ steps.locator.outputs.head }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          test -f "$PRIVATE_CARRIER_PATH"
+          git status --porcelain=v1 --untracked-files=all | grep -q . && exit 1 || true
+
+      - name: Execute private registered bounded carrier
+        id: execute
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/public-private-bounded-execution"
+          node "$GITHUB_WORKSPACE/private-control-plane/$PRIVATE_CARRIER_PATH" \
+            --input "$work/request.json" \
+            --output "$work/native-receipt.json"
+
+      - name: Produce redacted result
+        id: redact
+        if: always()
+        shell: bash
+        env:
+          REQUEST_ID: ${{ steps.locator.outputs.request_id }}
+          DESCRIPTOR_ID: ${{ steps.request.outputs.descriptor }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/public-private-bounded-execution"
+          test -s "$work/native-receipt.json"
+          python - <<'PY'
+          import hashlib, json, os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'public-private-bounded-execution')
+          raw=open(os.path.join(work,'native-receipt.json'),'rb').read()
+          receipt=json.loads(raw)
+          redacted={
+            'schema':'PUBLIC_PRIVATE_BOUNDED_EXACT_HEAD_EXECUTION_REDACTED_RECEIPT_v1',
+            'requestId':os.environ.get('REQUEST_ID'),
+            'descriptorId':os.environ.get('DESCRIPTOR_ID'),
+            'result':receipt.get('result'),
+            'nativeReceiptSha256':hashlib.sha256(raw).hexdigest(),
+            'runId':os.environ['GITHUB_RUN_ID'],
+            'runAttempt':int(os.environ['GITHUB_RUN_ATTEMPT'])
+          }
+          with open(os.path.join(work,'redacted-receipt.json'),'w',encoding='utf-8') as f:
+              json.dump(redacted,f,sort_keys=True,indent=2); f.write('\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+              for k in ('result','nativeReceiptSha256'):
+                  f.write(f"{k}={redacted.get(k) or ''}\n")
+          PY
+
+      - name: Publish redacted result
+        if: always() && steps.redact.outputs.nativeReceiptSha256 != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUEST_ID: ${{ steps.locator.outputs.request_id }}
+          DESCRIPTOR_ID: ${{ steps.request.outputs.descriptor }}
+          RESULT: ${{ steps.redact.outputs.result }}
+          RECEIPT_SHA: ${{ steps.redact.outputs.nativeReceiptSha256 }}
+        run: |
+          set -euo pipefail
+          body="PUBLIC_PRIVATE_BOUNDED_EXACT_HEAD_EXECUTION_RESULT_V1\nrequestId: $REQUEST_ID\ndescriptorId: $DESCRIPTOR_ID\nresult: $RESULT\nnativeReceiptSha256: $RECEIPT_SHA\nrunId: $GITHUB_RUN_ID\nrunAttempt: $GITHUB_RUN_ATTEMPT"
+          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/result-comment.json"
+          curl --fail-with-body --silent --show-error --request POST \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/578/comments" \
+            --data-binary "@$RUNNER_TEMP/result-comment.json" >/dev/null
+
+      - name: Upload redacted receipt only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: public-private-bounded-execution-redacted-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/public-private-bounded-execution/redacted-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce bounded result
+        if: always()
+        shell: bash
+        env:
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+          RESULT: ${{ steps.redact.outputs.result }}
+        run: |
+          set -euo pipefail
+          test "$EXECUTE_OUTCOME" = 'success'
+          test "$RESULT" = 'COMMAND_EXECUTED_AND_PASSED'

@@ -1,0 +1,4 @@
+Brain V10 G0 exact-head publication trigger.
+Target route: /inspection/compass/brain-v10-continuous/
+Purpose: force deployment pickup after PR #1810 merge.
+No Brain geometry/runtime mutation.

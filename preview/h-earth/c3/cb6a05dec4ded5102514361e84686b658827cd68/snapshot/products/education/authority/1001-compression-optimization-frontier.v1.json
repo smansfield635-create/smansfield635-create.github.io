@@ -1,0 +1,185 @@
+{
+  "object": "EDUCATION_1001_COMPRESSION_OPTIMIZATION_FRONTIER",
+  "version": "v1",
+  "status": "CANDIDATE_FRONTIER_NO_SUBSTITUTIONS_AUTHORIZED",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_1001_COMPRESSION_REPAIR_FRONTIER_20260920_001",
+  "governing_head": "650689982ab33cfe763a8c458c716b3264400258",
+  "evidence_basis": {
+    "source": "OWNER_REPORTED_256_TASK_ADVERSARIAL_PASS",
+    "task_total": 256,
+    "direct_natural_expression": 217,
+    "direct_rate_percent": 84.8,
+    "controlled_paraphrase": 35,
+    "paraphrase_rate_percent": 13.7,
+    "genuine_failure": 4,
+    "failure_rate_percent": 1.6,
+    "practical_completion": 252,
+    "practical_rate_percent": 98.4,
+    "lexical_leakage": 0,
+    "limitation": "The repository does not yet contain the complete task-by-task 256-item battery; these aggregate results are therefore bound as owner-supplied frontier evidence, not independently reproduced task-level evidence."
+  },
+  "optimization_target": {
+    "lexical_concept_total": 1001,
+    "direct_coverage_target_percent_min": 90,
+    "practical_completion_target_percent_min": 98,
+    "expansion_allowed": false,
+    "optimization_method": "PAIRED_SUBSTITUTION_ONLY_AFTER_SEPARATE_ADMISSION_AND_REGRESSION_PROOF"
+  },
+  "scoring_model": {
+    "name": "NET_FUNCTIONAL_VALUE",
+    "positive_factors": [
+      "task_utility",
+      "reconstruction_utility",
+      "cross_domain_reach",
+      "safety_value"
+    ],
+    "negative_factors": [
+      "semantic_redundancy",
+      "easy_replaceability"
+    ],
+    "rule": "A candidate replacement is admissible only when the incoming concept demonstrates greater net functional value than the outgoing concept under the same adversarial battery and does not create a new safety-critical failure."
+  },
+  "candidate_additions": [
+    {
+      "concept": "allergy",
+      "priority": "P1_SAFETY",
+      "reason": "Safety-critical medical distinction that controlled paraphrase may fail to preserve."
+    },
+    {
+      "concept": "blood",
+      "priority": "P1_SAFETY",
+      "reason": "High-utility injury and emergency concept with weak precise reconstruction."
+    },
+    {
+      "concept": "stomach",
+      "priority": "P1_SAFETY",
+      "reason": "Common body-location concept important for symptom reporting."
+    },
+    {
+      "concept": "tooth",
+      "priority": "P1_SAFETY",
+      "reason": "Common body-location concept important for pain and care."
+    },
+    {
+      "concept": "electricity",
+      "priority": "P2_INFRASTRUCTURE",
+      "reason": "High-frequency household and outage concept; broader than the existing utility label."
+    },
+    {
+      "concept": "soap",
+      "priority": "P2_DAILY_LIFE",
+      "reason": "Common hygiene object with repeated daily-life utility."
+    },
+    {
+      "concept": "contract",
+      "priority": "P2_TRANSACTION",
+      "reason": "Common agreement/document concept with legal and commercial precision."
+    },
+    {
+      "concept": "discount",
+      "priority": "P2_TRANSACTION",
+      "reason": "Common purchase and negotiation concept improving direct shopping coverage."
+    },
+    {
+      "concept": "Wi-Fi",
+      "priority": "P2_DIGITAL",
+      "reason": "Common connectivity concept; internet alone does not always identify the access mechanism/problem."
+    },
+    {
+      "concept": "app",
+      "priority": "P2_DIGITAL",
+      "reason": "Common modern software object with cross-domain daily utility."
+    },
+    {
+      "concept": "landlord",
+      "priority": "P3_RECONSTRUCTABLE",
+      "reason": "Useful housing label but usually reconstructable as the person who owns or rents out the home."
+    },
+    {
+      "concept": "tenant",
+      "priority": "P3_RECONSTRUCTABLE",
+      "reason": "Useful housing label but often reconstructable from rent/live/person relations."
+    },
+    {
+      "concept": "agreement",
+      "priority": "P3_RECONSTRUCTABLE",
+      "reason": "Useful formal label but partially reconstructable using agree, document, promise, rule, and commitment."
+    },
+    {
+      "concept": "fork",
+      "priority": "P3_RECONSTRUCTABLE",
+      "reason": "Daily object but usually recoverable by description and lower safety value."
+    },
+    {
+      "concept": "knife",
+      "priority": "P3_RECONSTRUCTABLE",
+      "reason": "Daily object but contextual reconstruction is often adequate; requires safety-aware testing."
+    }
+  ],
+  "candidate_removal_review": [
+    {
+      "concept": "radio",
+      "reason": "Narrower modern task reach and readily reconstructable through media/device."
+    },
+    {
+      "concept": "festival",
+      "reason": "Lower cross-domain task value than exposed safety and transaction gaps."
+    },
+    {
+      "concept": "poem",
+      "reason": "Narrow literary label with strong reconstructability from literature/write/read."
+    },
+    {
+      "concept": "novel",
+      "reason": "Narrow literary label with strong reconstructability from book/story/literature."
+    },
+    {
+      "concept": "pale",
+      "reason": "Fine-grained descriptive adjective with lower task-critical value."
+    },
+    {
+      "concept": "stale",
+      "reason": "Fine-grained food/state adjective with lower cross-domain value."
+    },
+    {
+      "concept": "couple",
+      "reason": "Context-dependent label usually reconstructable from two/people/relationship."
+    },
+    {
+      "concept": "betrayal",
+      "reason": "Derivational review candidate because betray is independently present; removal requires semantic regression test."
+    },
+    {
+      "concept": "unfairly",
+      "reason": "Derivational review candidate because unfair is independently present; removal requires grammar/morphology-law analysis."
+    },
+    {
+      "concept": "exactly",
+      "reason": "Derivational/adverbial review candidate because exact is independently present; removal requires naturalness regression test."
+    },
+    {
+      "concept": "personally",
+      "reason": "Derivational/adverbial review candidate because personal is independently present; removal requires discourse regression test."
+    },
+    {
+      "concept": "respectful",
+      "reason": "Derivational review candidate because respect is independently present; removal requires interpersonal regression test."
+    },
+    {
+      "concept": "disrespectful",
+      "reason": "Potentially reconstructable from disrespect relation, but no substitution is authorized without direct regression evidence."
+    }
+  ],
+  "substitution_gate": [
+    "A later operation must name exact incoming and outgoing concepts.",
+    "Every swap must preserve exactly 1,001 unique lexical concepts.",
+    "Zero exact duplicates and the existing morphological-normalization law must still pass.",
+    "The complete adversarial battery must be rerun without lexical leakage.",
+    "Practical completion must remain at or above 98 percent.",
+    "Direct natural-expression coverage must improve relative to the 217-of-256 baseline.",
+    "No new safety-critical failure may be introduced.",
+    "Removal candidates in this file are review candidates only and are not authorized deletions."
+  ],
+  "current_disposition": "FRONTIER_DURABLE_SUBSTITUTION_NOT_YET_AUTHORIZED"
+}

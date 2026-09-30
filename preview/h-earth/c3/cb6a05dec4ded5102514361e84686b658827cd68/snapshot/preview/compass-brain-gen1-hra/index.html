@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Compass Brain Gen1 · HRA Anatomical Inspection</title>
+<style>
+:root{color-scheme:dark;--bg:#05090d;--panel:rgba(8,15,22,.84);--line:rgba(220,232,236,.15);--text:#eef1ed;--muted:rgba(238,241,237,.58);--gold:#e4c66f}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 54% 42%,rgba(128,143,151,.12),transparent 34rem),#05090d;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.stage{position:absolute;inset:0}.stage canvas{width:100%;height:100%;display:block;touch-action:none}.panel{position:absolute;top:clamp(.7rem,2vw,1.3rem);left:clamp(.7rem,2vw,1.3rem);z-index:4;width:min(19rem,calc(100vw - 1.4rem));padding:1rem;border:1px solid var(--line);border-radius:1rem;background:var(--panel);backdrop-filter:blur(15px);box-shadow:0 18px 50px rgba(0,0,0,.34)}.kicker{margin:0;color:var(--gold);font-size:.66rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}.panel h1{margin:.35rem 0 .8rem;font-family:Georgia,serif;font-size:1.45rem;font-weight:600}.meta{display:grid;gap:.24rem;margin-bottom:.9rem;color:var(--muted);font:600 .64rem/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}.toggle{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.54rem 0;border-top:1px solid rgba(220,232,236,.08);font-size:.8rem}.toggle small{display:block;color:var(--muted);font-size:.64rem;margin-top:.08rem}.toggle input{accent-color:#d9c078;width:1rem;height:1rem}.status{position:absolute;right:clamp(.7rem,2vw,1.3rem);bottom:clamp(.7rem,2vw,1.3rem);z-index:4;max-width:min(36rem,calc(100vw - 1.4rem));padding:.58rem .72rem;border:1px solid var(--line);border-radius:.7rem;background:var(--panel);color:var(--muted);font:650 .66rem/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;backdrop-filter:blur(12px)}.hint{position:absolute;left:50%;bottom:1rem;transform:translateX(-50%);z-index:3;color:rgba(238,241,237,.36);font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;pointer-events:none}@media(max-width:640px){.panel{padding:.8rem;width:15.8rem}.panel h1{font-size:1.15rem}.meta{font-size:.57rem}.toggle{font-size:.72rem}.hint{display:none}}
+</style>
+</head>
+<body>
+<div class="stage"><canvas id="brain" aria-label="Interactive NIH Human Reference Atlas brain surface"></canvas></div>
+<section class="panel" aria-label="Anatomical inspection controls">
+<p class="kicker">Diamond Gate · Gen1 source inspection</p>
+<h1>HRA anatomical brain</h1>
+<div class="meta"><span>Source: NIH 3D / Human Reference Atlas</span><span>Model: Allen_M_Brain.glb</span><span>Geometry: ~656,268 triangles · 283 meshes</span><span>Material: unified neutral · source vertices unchanged</span></div>
+<label class="toggle"><span>Cerebrum<small>Cortical structures</small></span><input id="cerebrum" type="checkbox" checked></label>
+<label class="toggle"><span>Cerebellum<small>Cerebellar structures</small></span><input id="cerebellum" type="checkbox" checked></label>
+<label class="toggle"><span>Brainstem<small>Midbrain + pons + medulla</small></span><input id="brainstem" type="checkbox" checked></label>
+<label class="toggle"><span>Other atlas structures<small>Unclassified source components</small></span><input id="other" type="checkbox" checked></label>
+</section>
+<div class="hint">drag to rotate · wheel/pinch to scale</div>
+<div class="status" id="status">Loading qualified HRA source…</div>
+<script src="./inspector.js?v=1" defer></script>
+</body>
+</html>

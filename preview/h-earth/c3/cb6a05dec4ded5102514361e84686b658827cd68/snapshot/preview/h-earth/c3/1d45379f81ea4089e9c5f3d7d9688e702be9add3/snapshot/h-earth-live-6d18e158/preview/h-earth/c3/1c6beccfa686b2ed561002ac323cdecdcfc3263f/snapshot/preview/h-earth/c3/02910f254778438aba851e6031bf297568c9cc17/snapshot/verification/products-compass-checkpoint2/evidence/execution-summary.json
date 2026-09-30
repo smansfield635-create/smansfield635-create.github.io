@@ -1,0 +1,22 @@
+{
+  "checkpoint": "PRODUCTS_COMPASS_CHECKPOINT_2_EXECUTED_CANDIDATE",
+  "pass": true,
+  "branch": "agent/products-compass-checkpoint0-donor-reconstruction-001",
+  "parent": "9e0d50fc2d7eef03c3e7c87935ed2d24ee390270",
+  "changed": [
+    "products/index.compass.css",
+    "products/index.compositor.js",
+    "products/index.crystals.js",
+    "products/index.html",
+    "verification/products-compass-checkpoint2/source-conversion.receipt.json"
+  ],
+  "tests": [
+    "python fail-closed patch",
+    "node --check",
+    "source assertions",
+    "mobile Chromium WebGL execution",
+    "four screenshot states"
+  ],
+  "visualPassClaimed": false,
+  "mergeAuthorized": false
+}

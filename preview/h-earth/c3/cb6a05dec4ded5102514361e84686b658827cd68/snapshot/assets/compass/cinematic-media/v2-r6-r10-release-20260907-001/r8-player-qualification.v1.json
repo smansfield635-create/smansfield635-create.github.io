@@ -1,0 +1,142 @@
+{
+  "schema": "COMPASS_V2_R8_PLAYER_QUALIFICATION_v1",
+  "result": "R8_COMPLETE_SUCCESSOR_READY_FOR_REVIEW",
+  "operationId": "COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001",
+  "lockGeneration": 1987,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "targetBranch": "compass/v2-r6-r10-master-player-release-20260907-001",
+  "runtimeTestedHead": "f87dcf8d711bdef9a3f8f3f6889d547a919ac47e",
+  "r8PersistenceCommit": "346b0d7899bda59317a0f77fc2cb62a3243d74ce",
+  "r7CustodyCommit": "650a0ce31d5667821fc6c0827cd95ee1874c4ba8",
+  "verifierAlignmentCommit": "f87dcf8d711bdef9a3f8f3f6889d547a919ac47e",
+  "exactIdentities": {
+    "index": {
+      "path": "index.html",
+      "gitBlob": "c7cecb616a90f7d40389c6f04cb5a5ddee5166cd",
+      "integration": "UNCHANGED_HOST_LOADS_R8_CSS_AND_JS_AND_CONTAINS_COMPASS_ROOT"
+    },
+    "host": {
+      "path": "assets/compass/compass.orientation-cinematic.js",
+      "gitBlob": "6a1fc0820b5d69e2b801ee996ada95f137ce0a45"
+    },
+    "css": {
+      "path": "assets/compass/compass.orientation-cinematic.css",
+      "gitBlob": "160ffa61cde2e71049a09efb8b36ef6be1bca85d"
+    },
+    "verifier": {
+      "path": "assets/compass/compass.homepage-cinematic.verify.mjs",
+      "gitBlob": "e86a67821b2479637e5b4384d0bcc6fb8e15794a"
+    },
+    "media": {
+      "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+      "bytes": 2723640,
+      "sha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+      "gitBlob": "b48bc48e531c3eb29bd1a94a91725badd30186f5",
+      "durationMs": 38000,
+      "frameCount": 1140,
+      "video": "H264_HIGH_1280x720_30FPS_YUV420P_TV_BT709",
+      "audio": "AAC_LC_STEREO_48000HZ"
+    },
+    "entryPrerollMs": 4350,
+    "entryPrerollCountedInMaster": false
+  },
+  "staticQualification": {
+    "command": "node assets/compass/compass.homepage-cinematic.verify.mjs",
+    "result": "PASS",
+    "checksPassed": 32,
+    "checksTotal": 32,
+    "capturedOutputSha256": "847e3ff796244295f62bef4f0e8752f463a24ce5488901397b3fc89b9085435a"
+  },
+  "browserQualification": {
+    "result": "PASS",
+    "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36",
+    "substrate": "CONTROLLED_IN_MEMORY_EXACT_BYTE_HARNESS",
+    "reasonForSubstrate": "MANAGED_CHROMIUM_POLICY_BLOCKED_LOCALHOST_AND_FILE_NAVIGATION",
+    "canonicalMediaRequestFulfillment": "EXACT_COMMITTED_V2_MP4_BYTES",
+    "mediaRequestCount": 7,
+    "cases": [
+      {
+        "id": "DESKTOP_SKIP_ARMED",
+        "viewport": "1440x900",
+        "result": "PASS",
+        "settlementReason": "skip-armed",
+        "focusRestoredToPrior": true,
+        "productRestored": true,
+        "ambientRestored": true,
+        "urlUnchanged": true,
+        "historyUnchanged": true,
+        "navigationIntentEvents": 0
+      },
+      {
+        "id": "TABLET_PLAY_FIRST_FRAME_ESCAPE",
+        "viewport": "1024x768",
+        "result": "PASS",
+        "firstFramePresentedBeforeEntryClear": true,
+        "handoffMutationOrder": [4,5],
+        "settlementReason": "skip-playing",
+        "replayFocused": true,
+        "productRestored": true,
+        "ambientRestored": true,
+        "urlUnchanged": true,
+        "historyUnchanged": true,
+        "navigationIntentEvents": 0
+      },
+      {
+        "id": "PORTRAIT_SKIP_ARMED",
+        "viewport": "390x844",
+        "result": "PASS",
+        "containedInViewport": true,
+        "settlementReason": "skip-armed",
+        "productRestored": true,
+        "ambientRestored": true
+      },
+      {
+        "id": "REDUCED_MOTION_PLAY",
+        "viewport": "390x844",
+        "result": "PASS",
+        "videoDisplay": "none",
+        "entryCanvasDisplay": "none",
+        "settlementReason": "reduced-motion-complete",
+        "productRestored": true,
+        "ambientRestored": true
+      },
+      {
+        "id": "NATURAL_COMPLETION_ENDED",
+        "viewport": "1440x900",
+        "result": "PASS",
+        "playbackRate": 16,
+        "endedEventSynthesized": false,
+        "settlementReason": "complete",
+        "firstFramePresentedBeforeEntryClear": true,
+        "productRestored": true,
+        "ambientRestored": true,
+        "urlUnchanged": true,
+        "historyUnchanged": true,
+        "navigationIntentEvents": 0
+      }
+    ],
+    "browserEvidenceSha256": "289c30a4ee2c220b6114eeb02cff55afe6e7b27e03be7be5fe7b998e1d37808e"
+  },
+  "protectedScope": {
+    "result": "PASS",
+    "productMutationAfterR8Persistence": ["assets/compass/compass.homepage-cinematic.verify.mjs"],
+    "protectedAuthoritiesChanged": false,
+    "mainMutated": false,
+    "v1Overwritten": false,
+    "navigationAuthorityDelta": false,
+    "analyticsDelta": false
+  },
+  "limitations": [
+    "Browser qualification used a controlled in-memory exact-byte document because managed Chromium blocked localhost and file navigation.",
+    "No public/live URL was exercised; live verification belongs to R10 after explicit owner acceptance.",
+    "Owner acceptance is not inferred from construction or technical qualification."
+  ],
+  "authority": {
+    "ownerAcceptance": "NOT_YET_GIVEN",
+    "builderMaySelfDeclareOwnerAcceptance": false,
+    "mainMutationAuthorizedNow": false,
+    "mergeAuthorizedNow": false,
+    "deploymentAuthorizedNow": false,
+    "r10": "BLOCKED_BY_R9_OWNER_ACCEPTANCE"
+  }
+}

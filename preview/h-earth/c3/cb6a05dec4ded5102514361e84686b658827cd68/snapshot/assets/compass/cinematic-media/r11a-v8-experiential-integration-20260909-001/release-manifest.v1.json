@@ -1,0 +1,14 @@
+{
+  "schema": "COMPASS_R11A_V8_RELEASE_MANIFEST_v1",
+  "status": "CANDIDATE_QUALIFIED_FOR_OWNER_DIRECTED_REPLACEMENT",
+  "operationId": "COMPASS_R11A_V8_EXPERIENTIAL_INTEGRATION_20260909_001_SUCCESSOR_003",
+  "lockGeneration": 2032,
+  "governingMain": "593a79e2175d0391992a6442b83b9d1f9eb6fcec",
+  "candidateBranch": "compass/r11a-v8-experiential-integration-20260909-003",
+  "candidateSha256": "746606b76fbd05e9278787c25d484d001c67e18ba22f3890e95eee50e42ba29c",
+  "replacesLiveV7OnlyAfterOwnerAcceptance": true,
+  "mergeAuthorized": true,
+  "deploymentAuthorized": true,
+  "liveMutationPerformed": false,
+  "nextGate": "MERGE_AND_EXPLICIT_EXACT_HEAD_DEPLOYMENT"
+}

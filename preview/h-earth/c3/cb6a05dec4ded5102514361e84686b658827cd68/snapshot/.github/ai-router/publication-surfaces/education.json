@@ -1,0 +1,131 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "education",
+  "description": "Diamond Gate Bridge Education learner chamber at /products/education/: program-wide D1-D7 adaptive placement with separate Capstone Integration Gate, four-phase mapping, EN/ES/ZH help-language shell, and independent curriculum availability/access routing.",
+  "checks": [
+    {
+      "path": "/products/education/index.html",
+      "includes": [
+        "EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1",
+        "English Fluency Accelerator",
+        "Possibility",
+        "Understanding",
+        "Action",
+        "Progress",
+        "Independence",
+        "Achievement",
+        "data-shell-language=\"en\"",
+        "data-shell-language=\"es\"",
+        "data-shell-language=\"zh\"",
+        "data-chamber-action",
+        "data-chamber-practice-action",
+        "data-chamber-check-action",
+        "pointermove",
+        "NATIVE_SUPPORTED",
+        "BILINGUAL_BRIDGED",
+        "TARGET_DOMINANT",
+        "TARGET_ONLY",
+        "data-no-backend=\"true\"",
+        "edu-spatial-mini",
+        "data-flip",
+        "data-placement-range=\"program-wide\"",
+        "data-client-local-persistence=\"true\"",
+        "data-server-persistence=\"false\"",
+        "const DIAGNOSTIC_BANDS=",
+        "const PROGRAM_PHASES=",
+        "const CAPSTONE_BANK=",
+        "CAPSTONE_PASS",
+        "CAPSTONE_NOT_ESTABLISHED",
+        "UPPER_PROGRAM_PLACEMENT_BOUNDARY_EXCEEDED",
+        "PUBLIC_AVAILABLE",
+        "NOT_CURRENTLY_AVAILABLE",
+        "FREE_PUBLIC",
+        "NOT_AVAILABLE",
+        "entry_position",
+        "curriculum_availability",
+        "access_status",
+        "program_phase"
+      ],
+      "excludes": [
+        "Public Face",
+        "Technical Face",
+        "Education architecture standards",
+        "Engineering detail",
+        "data-speech-measurement=\"true\"",
+        "data-listening-measurement=\"true\"",
+        "data-edu-tabs",
+        "The target-language curriculum is not yet available in this demo.",
+        "ABOVE_PHASE_1",
+        "PHASE_1_ONLY",
+        "P1S8",
+        "demo_entry_point",
+        "data-no-persistence=\"true\""
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/products/education/",
+    "timeoutMs": 15000,
+    "readySelector": "html[data-education-demo-ready=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/products/education/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Keyboard advances to Understanding",
+        "action": {
+          "type": "key",
+          "selector": "[data-edu-viewport]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "[data-edu-live]",
+            "value": "Understanding"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Find starting point opens learner intake",
+        "action": {
+          "type": "click",
+          "selector": "[data-start-demo]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-demo-stage=\"intake\"]:not([hidden])"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Top Spanish selector controls learner interface",
+        "action": {
+          "type": "click",
+          "selector": "[data-shell-language=\"es\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "html",
+            "name": "lang",
+            "value": "es"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-demo-stage=\"intake\"]:not([hidden])"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

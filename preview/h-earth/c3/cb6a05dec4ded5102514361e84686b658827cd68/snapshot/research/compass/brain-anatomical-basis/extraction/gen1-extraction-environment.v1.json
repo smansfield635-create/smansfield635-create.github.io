@@ -1,0 +1,43 @@
+{
+  "schema": "COMPASS_BRAIN_GEN1_EXTRACTION_ENVIRONMENT_v1",
+  "base_main": "9c729466841163698b32f677e77acf1c2ace8c04",
+  "boundary": "GEN1_EXTRACTION_ENVIRONMENT_IDENTITY_AND_PREEXECUTION_QUALIFICATION",
+  "status": "SPECIFICATION_FROZEN_EXECUTION_NOT_AUTHORIZED",
+  "base_image": {
+    "repository": "freesurfer/freesurfer",
+    "tag": "7.4.1",
+    "platform": "linux/amd64",
+    "manifest_digest": "sha256:10b6468cbd9fcd2db3708f4651d59ad75d4da849a2c5d8bb6dba217f08b8c46b",
+    "authority": "official FreeSurfer Docker Hub image"
+  },
+  "required_tools": {
+    "freesurfer": "7.4.1",
+    "vtk_python": "9.3.0"
+  },
+  "construction": {
+    "parent": "freesurfer/freesurfer@sha256:10b6468cbd9fcd2db3708f4651d59ad75d4da849a2c5d8bb6dba217f08b8c46b",
+    "vtk_install": "python3 -m pip install --no-deps vtk==9.3.0",
+    "network_after_build": false,
+    "mutable_tags_at_execution": false
+  },
+  "preexecution_probes": [
+    "recon-all -version reports FreeSurfer 7.4.1",
+    "command -v recon-all succeeds",
+    "command -v segmentBS.sh succeeds",
+    "python3 -c import vtk; assert vtk.vtkVersion.GetVTKVersion() == 9.3.0",
+    "python3 -c from vtkmodules.vtkFiltersCore import vtkFlyingEdges3D succeeds"
+  ],
+  "final_identity_rule": "Execution remains prohibited until the constructed child image is pushed to a content-addressed registry and its full sha256 manifest digest is recorded in a successor receipt. Parent digest plus build recipe is not a child-image digest.",
+  "license_rule": "A valid FreeSurfer license file may be mounted read-only at execution; it is not embedded in the image or repository.",
+  "prohibitions": [
+    "NO_SURFACE_EXTRACTION",
+    "NO_RECON_ALL_ON_BOUND_SUBJECT",
+    "NO_SEGMENTBS_ON_BOUND_SUBJECT",
+    "NO_CANDIDATE_GEOMETRY",
+    "NO_REFERENCE_DIRECTED_PARAMETER_CHANGE",
+    "NO_MUTABLE_CONTAINER_TAG_AT_EXECUTION"
+  ],
+  "surface_execution_authorized": false,
+  "new_geometry_authorized": false,
+  "next_boundary": "BUILD_PUSH_DIGEST_AND_TOOLCHAIN_PROBE_RECEIPT"
+}

@@ -1,0 +1,140 @@
+name: Public → Private Terminal Closure Carrier v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+  PRIVATE_EXECUTOR_PATH: tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
+  REQUEST_MARKER: PRIVATE_TERMINAL_CLOSURE_REQUEST_V1
+
+jobs:
+  close:
+    if: >-
+      startsWith(github.event.comment.body, 'PRIVATE_TERMINAL_CLOSURE_REQUEST_V1') &&
+      (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Parse closed request
+        id: request
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/private-terminal-closure"
+          mkdir -p "$work"
+          python - <<'PY'
+          import json, os, re
+          body=str(os.environ['COMMENT_BODY']).strip()
+          marker='PRIVATE_TERMINAL_CLOSURE_REQUEST_V1'
+          if not body.startswith(marker): raise SystemExit('REQUEST_MARKER_MISSING')
+          raw=json.loads(body[len(marker):].strip())
+          required={'schema','repository','exactPrivateHead','operationId','lockScope','lockGeneration','terminalDisposition'}
+          if set(raw)!=required: raise SystemExit('REQUEST_KEYS_NOT_CLOSED')
+          if raw['schema']!='PRIVATE_TERMINAL_CLOSURE_REQUEST_v1': raise SystemExit('REQUEST_SCHEMA_MISMATCH')
+          if raw['repository']!='smansfield635-create/geodiametrics1': raise SystemExit('REPOSITORY_SUBSTITUTION_PROHIBITED')
+          if not re.fullmatch(r'[0-9a-f]{40}',raw['exactPrivateHead']): raise SystemExit('PRIVATE_HEAD_INVALID')
+          if not isinstance(raw['lockGeneration'],int) or raw['lockGeneration']<1: raise SystemExit('LOCK_GENERATION_INVALID')
+          if raw['terminalDisposition'] not in {'PASS_CLOSED','FAIL_CLOSED','REJECTED_CLOSED','WITHDRAWN','SUPERSEDED','VOIDED','EXPIRED'}: raise SystemExit('TERMINAL_DISPOSITION_INVALID')
+          native={'schema':'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1','repository':raw['repository'],'operationId':raw['operationId'],'lockScope':raw['lockScope'],'lockGeneration':raw['lockGeneration'],'terminalDisposition':raw['terminalDisposition']}
+          work=os.path.join(os.environ['RUNNER_TEMP'],'private-terminal-closure')
+          json.dump(native,open(os.path.join(work,'closure-input.json'),'w'),sort_keys=True,indent=2); open(os.path.join(work,'closure-input.json'),'a').write('\n')
+          out=os.environ['GITHUB_OUTPUT']
+          with open(out,'a') as f:
+            f.write('head='+raw['exactPrivateHead']+'\n')
+            f.write('operation_id='+raw['operationId']+'\n')
+          PY
+
+      - name: Mint private-repository installation token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+          permission-issues: read
+
+      - name: Verify live private main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.private-token.outputs.token }}
+          EXPECTED_HEAD: ${{ steps.request.outputs.head }}
+        run: |
+          set -euo pipefail
+          observed="$(curl --fail-with-body --silent --show-error --header 'Accept: application/vnd.github+json' --header "Authorization: Bearer $GH_TOKEN" --header 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          test "$observed" = "$EXPECTED_HEAD"
+
+      - name: Check out exact private canonical source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ steps.request.outputs.head }}
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact checkout and canonical closure route
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ steps.request.outputs.head }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          test -f "$PRIVATE_EXECUTOR_PATH"
+          grep -Fq 'closeRemote' "$PRIVATE_EXECUTOR_PATH"
+          grep -Fq 'directLedgerEditPerformed' "$PRIVATE_EXECUTOR_PATH"
+          git status --porcelain=v1 --untracked-files=all | grep -q . && exit 1 || true
+
+      - name: Execute private canonical terminal closure
+        id: closure
+        continue-on-error: true
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/private-terminal-closure"
+          node "$GITHUB_WORKSPACE/private-control-plane/$PRIVATE_EXECUTOR_PATH" --input "$work/closure-input.json" --output "$work/closure-receipt.json" --native-output "$work/native-closure-receipt.json"
+
+      - name: Publish redacted result
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          OPERATION_ID: ${{ steps.request.outputs.operation_id }}
+          EXECUTE_OUTCOME: ${{ steps.closure.outcome }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/private-terminal-closure"
+          test -s "$work/closure-receipt.json"
+          python - <<'PY'
+          import hashlib,json,os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'private-terminal-closure')
+          raw=open(os.path.join(work,'closure-receipt.json'),'rb').read(); r=json.loads(raw)
+          red={'schema':'PUBLIC_PRIVATE_TERMINAL_CLOSURE_REDACTED_RECEIPT_v1','operationId':os.environ.get('OPERATION_ID'),'result':r.get('result'),'terminalDisposition':r.get('terminalDisposition'),'nativeReceiptSha256':r.get('nativeReceiptSha256'),'carrierReceiptSha256':hashlib.sha256(raw).hexdigest(),'runId':os.environ['GITHUB_RUN_ID'],'runAttempt':int(os.environ['GITHUB_RUN_ATTEMPT'])}
+          body='PRIVATE_TERMINAL_CLOSURE_RESULT_V1\n'+json.dumps(red,sort_keys=True,indent=2)
+          json.dump({'body':body},open(os.path.join(work,'comment.json'),'w'))
+          PY
+          curl --fail-with-body --silent --show-error --request POST --header 'Accept: application/vnd.github+json' --header "Authorization: Bearer $GH_TOKEN" --header 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$ISSUE_NUMBER/comments" --data-binary "@$work/comment.json" >/dev/null
+
+      - name: Enforce closure result
+        if: always()
+        shell: bash
+        env:
+          EXECUTE_OUTCOME: ${{ steps.closure.outcome }}
+        run: |
+          set -euo pipefail
+          test "$EXECUTE_OUTCOME" = "success"
+          jq -e '.result == "TERMINAL_CLOSURE_COMMITTED" and .terminalDisposition == "PASS_CLOSED" and .directLedgerEditPerformed == false and .genericCommandAuthority == false' "$RUNNER_TEMP/private-terminal-closure/closure-receipt.json" >/dev/null

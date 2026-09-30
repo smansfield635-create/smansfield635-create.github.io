@@ -1,0 +1,59 @@
+{
+  "schema": "WHOLE_ESTATE_METHODS_MODELS_CANONICAL_PRESENTATION_PRECONDITION_v1",
+  "status": "CHECKPOINT_5_CONSTRUCTION_CANDIDATE",
+  "currentCanonicalManifest": {
+    "path": "laws/research/methods-and-models/canonical-records-v1.html",
+    "recordClass": "READ_ONLY_CANONICAL_MANIFEST",
+    "assignedCanonicalRecords": 10,
+    "sourceInventory": "OPEN",
+    "semanticCrosswalk": "PARTIAL",
+    "presentationCoverage": "OPEN",
+    "reverseAudit": "NOT_STARTED"
+  },
+  "pr541": {
+    "disposition": "PRESERVE_AND_ADAPT",
+    "role": "PRESENTATION_PRESERVATION_PROTOTYPE",
+    "presentationRecords": 25,
+    "families": 4,
+    "interpretiveLenses": 3,
+    "peerCanonicalObjectClaimAuthorized": false,
+    "canonicalScientificHierarchyClaimAuthorized": false,
+    "mutationAuthorized": false
+  },
+  "constructionModel": {
+    "C": "CANONICAL_SCIENTIFIC_OBJECT_GRAPH",
+    "P": "PRESENTATION_SEMANTIC_CORPUS",
+    "X": "CANONICAL_PRESENTATION_CROSSWALK",
+    "T": "DELIVERY_TOPOLOGY",
+    "G": "RENDERED_GEOMETRY",
+    "required": "G=f(T(X(C,P)))",
+    "prohibited": "G=f(P)"
+  },
+  "requiredBeforeTopologyFreeze": [
+    "SCIENTIFIC_OBJECT_REGISTRY_CLOSURE_SUFFICIENT_FOR_SCOPE",
+    "CANONICAL_IDENTITY_DELIVERY_CROSSWALK",
+    "TYPED_SEMANTIC_RELATION_GRAPH"
+  ],
+  "permittedTransformationAuthority": [
+    "RELOCATE",
+    "GROUP",
+    "CONSOLIDATE_PRESENTATION"
+  ],
+  "scientificAuthorityRequiredFor": [
+    "RECLASSIFY_CANONICALLY",
+    "DECLARE_CANONICAL_CONTAINMENT",
+    "CHANGE_OBJECT_CLASS",
+    "CHANGE_CLAIM_CEILING"
+  ],
+  "laws": [
+    "SPATIAL_CONTAINMENT_DOES_NOT_IMPLY_ONTOLOGICAL_CONTAINMENT",
+    "SPATIAL_SEPARATION_DOES_NOT_IMPLY_ONTOLOGICAL_INDEPENDENCE",
+    "PRESENTATION_IDENTITY_DOES_NOT_EQUAL_SCIENTIFIC_IDENTITY",
+    "DELTA_D_DOES_NOT_IMPLY_DELTA_I",
+    "GEOMETRY_MAY_NOT_INVENT_SCIENTIFIC_RELATIONS"
+  ],
+  "canonicalCrosswalkMaterializedByCheckpoint5": false,
+  "spatialTopologyFreezeAuthorized": false,
+  "geometryAuthorized": false,
+  "publicMutationAuthorized": false
+}

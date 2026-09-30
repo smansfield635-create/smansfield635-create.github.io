@@ -1,0 +1,16 @@
+{
+  "requestId": "CAMPAIGN_VISUAL_INTEGRATION_PRODUCTS_ARENA_REGRESSION_v1",
+  "checkpoint": "CP4_EXECUTED_REGRESSION",
+  "reason": "Physical Checkpoint 7 campaign visual correction must preserve the accepted Products arena and six direct product routes.",
+  "candidateBranch": "agent/campaign-visual-integration-asset-correction-cp0-001",
+  "productionProductsMutationAuthorized": false,
+  "expectedProductsPathDelta": [],
+  "requiredWorkflow": "Products Arena Cluster Benchmark v1",
+  "requiredResult": "PASS_ON_EXACT_FINAL_HEAD",
+  "campaignRoutesUnderCorrection": [
+    "/campaigns/consider-the-energy/",
+    "/campaigns/wave/",
+    "/campaigns/wave/mr-lee/",
+    "/campaigns/wave/thai-boxing/"
+  ]
+}

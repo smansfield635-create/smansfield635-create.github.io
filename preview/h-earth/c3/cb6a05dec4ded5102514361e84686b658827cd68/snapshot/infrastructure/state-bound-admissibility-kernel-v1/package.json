@@ -1,0 +1,24 @@
+{
+  "name": "@diamond-gate/state-bound-admissibility",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reference implementation of Diamond Gate state-bound operation admissibility.",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./src/kernel.mjs",
+    "./adapters": "./src/adapters.mjs",
+    "./dsse": "./src/dsse.mjs"
+  },
+  "bin": {
+    "diamond-gate-enforce": "./src/enforce.mjs"
+  },
+  "scripts": {
+    "test": "node test/self-test.mjs",
+    "demo": "node demo/demo.mjs",
+    "enforce": "node src/enforce.mjs"
+  },
+  "license": "UNLICENSED"
+}

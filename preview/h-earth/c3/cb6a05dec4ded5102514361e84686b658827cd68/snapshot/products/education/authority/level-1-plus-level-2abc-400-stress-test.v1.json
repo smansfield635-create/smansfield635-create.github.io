@@ -1,0 +1,109 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2ABC_400_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 400,
+    "prior_battery_tasks": 100,
+    "fresh_transfer_tasks": 24,
+    "total_tasks": 124,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior capability and test novel everyday transfer using only the frozen 400 words."
+  },
+  "results": {
+    "prior_100": {
+      "functionally_expressible": 100,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_24": {
+      "DIRECT": 15,
+      "COMPOSABLE": 6,
+      "MISSING": 3,
+      "functionally_expressible": 21,
+      "coverage_percent": 87.5
+    },
+    "overall_124": {
+      "functionally_expressible": 121,
+      "missing": 3,
+      "coverage_percent": 97.5806451613
+    }
+  },
+  "fresh_transfer_passed": [
+    "name and describe common body parts",
+    "describe simple pain and illness",
+    "ask for a doctor or medicine",
+    "describe cough and fever",
+    "describe hot/cold weather",
+    "talk about rain, snow, wind, clouds, sun and sky",
+    "describe basic natural places using river, sea, mountain and land",
+    "talk about trees, plants and animals",
+    "describe fire as a danger",
+    "describe rooms and common household areas",
+    "ask someone to open or close a door or window",
+    "describe sitting at a table or sleeping in a bed",
+    "name common eating objects",
+    "ask for a cup, plate or spoon",
+    "find or use a key",
+    "put paper or a book in a bag or box",
+    "write with a pen",
+    "talk about a picture",
+    "describe where an object is inside/outside/over/under something",
+    "give simple safety instructions in the home",
+    "explain a simple health problem and next action"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer transportation and travel",
+      "reason": "car, street, go, come and place exist, but ordinary travel modes, route and ticket vocabulary remain sparse."
+    },
+    {
+      "function": "richer food and meal description",
+      "reason": "food, water, eat, drink, cup, plate and spoon exist, but common food categories and preparation language remain thin."
+    },
+    {
+      "function": "clock-time and scheduling precision",
+      "reason": "today, tomorrow, morning, night, day, week, month and year exist, but hour/minute/clock/date scheduling vocabulary is still limited."
+    }
+  ],
+  "marginal_gain": {
+    "cumulative_350_overall_coverage_percent": 97,
+    "cumulative_400_overall_coverage_percent": 97.5806451613,
+    "note": "The percentage rises modestly because the test frontier expanded. More important: all prior functions remain closed while 21 of 24 new everyday functions transfer."
+  },
+  "interpretation": [
+    "Band C successfully broadens the system into body/health, weather/nature, and household life.",
+    "The 400-word system now supports a wide range of ordinary daily-life conversation without specialized vocabulary.",
+    "The remaining frontier has moved again, now toward travel, food detail, and time precision.",
+    "The progression remains coherent: new bands close measured gaps while pushing the frontier outward rather than reopening old failures."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_2_band_c_status": "ADMITTED",
+    "next_step": "CONSTRUCT_LEVEL_2_BAND_D_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "transportation and travel",
+      "food and meal description",
+      "clock-time and scheduling precision"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_400_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "Prior 100-task battery plus 24-task fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention of prior capability; 87.5% novel transfer; 97.58% overall across 124 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_2_BAND_D_GEOMETRIC_RECONSTRUCTION"
+  }
+}

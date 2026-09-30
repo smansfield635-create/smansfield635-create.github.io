@@ -1,0 +1,105 @@
+{
+  "schema": "TASK20_CINEMATIC_PRIMER_CONSTRUCTION_CONTRACT_v1",
+  "status": "ADMITTED_SUCCESSOR_CONSTRUCTION",
+  "operationId": "CHARACTERS_TASK20_CINEMATIC_PRIMER_CONSTRUCTION_20260902_002",
+  "admission": {
+    "canonicalResult": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+    "lockGeneration": 1920,
+    "governingBase": "3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3",
+    "lockScope": "CHARACTERS:TASK20:CINEMATIC_PRIMER_CONSTRUCTION:V1",
+    "scopeHash": "bcb7aa546eec534813b8a550943b3f66ecc5e8750f796a0fdc6748a3016217ed",
+    "requestDigest": "b79120d025271d94ab74930eaabb8e5f3f001aa61601e85d6257cbdaff53eeaf",
+    "procedureDigest": "8ffe38086371d0e4ea27863f4851b47f9ff465ef3e204809a03ced76814a1658",
+    "issue": 2378,
+    "successorRequestComment": 5502820900,
+    "preconstructionPackageComment": 5502348829,
+    "preconstructionAmendmentComment": 5502421523,
+    "predecessorGeneration": 1919,
+    "predecessorDisposition": "SUPERSEDED"
+  },
+  "subject": {
+    "branch": "characters/task20-cinematic-primer-20260902-001",
+    "route": "/characters/",
+    "pageRole": "CINEMATIC_GAME_WORLD_AND_CHARACTER_PRIMER_NOT_GAME_RUNTIME",
+    "worldRepositoryIdentity": "AUDRALIA",
+    "publicRouteIdentity": "Mirrorland · Gratitude Harbor primer",
+    "claimCeiling": "L3"
+  },
+  "allowedPaths": [
+    ".github/workflows/characters-night-world-state-proof.yml",
+    "characters/index.html",
+    "characters/cardinal-scenes.css",
+    "characters/app.mjs",
+    "characters/cinematic-intro.mjs",
+    "characters/gratitude-geography.adapter.mjs",
+    "characters/night-renderer.mjs",
+    "characters/cardinal-scene-state.mjs",
+    "characters/cardinal-scenes.data.mjs",
+    "characters/cardinal-scene-geometry.mjs",
+    "characters/knowledge-card.mjs",
+    "characters/narrative-world-state.mjs",
+    "characters/coast-map.mjs",
+    "characters/encounter-card.mjs",
+    "characters/task20-source-to-shot-binding.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/task20-cinematic-primer-construction-contract.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs"
+  ],
+  "cinematic": {
+    "runtimeSeconds": 28,
+    "autonomousAfterPlay": true,
+    "intermediateClicksRequired": 0,
+    "sequence": ["ONE_WAY_CROSSING", "AUDRALIA_GLOBE", "DESCENT_TO_GRATITUDE_COAST", "MIRROR_MANOR_AND_CLOCK", "FOUR_CHARACTER_ENVIRONMENT_FLASHES", "SETTLE_TO_SURVEY_HUB"],
+    "controls": ["PLAY", "SKIP", "REPLAY"],
+    "autoplayAudioAllowed": false,
+    "filmInterfacePhysicalContinuityRequired": true
+  },
+  "interaction": {
+    "grammar": ["SURVEY_HUB", "ENCOUNTER_PREVIEW", "SCENE_TRANSITION", "CHARACTER_SCENE", "LOCAL_INSPECTION", "KNOWLEDGE_CARD", "EXACT_SURVEY_HUB_RETURN"],
+    "encounterActions": ["ENTER_CHARACTER_SCENE", "CONTINUE_SURVEYING"],
+    "separateSceneRequired": true,
+    "continuousPhysicalTravelRequired": false,
+    "exactReturnRequired": true,
+    "mapRole": "OPTIONAL"
+  },
+  "preservation": {
+    "cardinalSiteCount": 4,
+    "discoveryCount": 23,
+    "presenceStates": ["SITE_ONLY", "CHARACTER_TRACE", "CHARACTER_PRESENT"],
+    "newCharacterCanonAllowed": false,
+    "finalContinentalAuthorityCreated": false,
+    "sourceBoundEncounterRequired": true,
+    "staticAndReducedMotionSemanticEquivalenceRequired": true
+  },
+  "frozenSources": {
+    "donorCommit": "9cf64161dfc647021ff3f3871d6655ac5400ae12",
+    "donorIndexBlob": "e122d09cb9d41410492f16c5f33dc598d1710504",
+    "donorAppBlob": "6f6d126cf4dbfc198ed950c917bfc1c3c44d345e",
+    "planetPath": "assets/audralia/audralia.planet.js",
+    "planetBlob": "4aa2abc623acef47ad8f504e72c8c0907375a7e7",
+    "task19DataBlob": "cef3edc7beb5fc39037e00d5ead360ef9db9cdd5",
+    "task19GeometryBlob": "698dc392edd0b74547d76fb09a05bb3bb2437c15"
+  },
+  "verification": {
+    "command": "node control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs --base 3443f8bab2b85c7214fc7ca4bbc17fded5c3baf3 --candidate HEAD",
+    "candidatePassResult": "PASS_TASK20_CINEMATIC_PRIMER_EXACT_CANDIDATE",
+    "candidateFailResult": "HELD_TASK20_CINEMATIC_PRIMER_EXACT_CANDIDATE",
+    "browserMatrixRequired": true,
+    "pageExcellenceRequired": true,
+    "ownerAcceptanceRequired": true
+  },
+  "constructionOrder": [
+    "CONSTRUCT_ONLY_ON_EXACT_SUCCESSOR_BRANCH",
+    "RUN_EXECUTABLE_CONTRACTS_AND_STATIC_VERIFIER",
+    "FREEZE_AND_PUSH_CANDIDATE",
+    "RUN_INDEPENDENT_BROWSER_MATRIX_AND_PAGE_EXCELLENCE",
+    "RECORD_RECEIPTS_ON_ISSUE_2378",
+    "STOP_BEFORE_MERGE_DEPLOYMENT_OR_PUBLICATION"
+  ],
+  "authorityBoundary": [
+    "NO_MERGE_AUTHORITY",
+    "NO_DEPLOYMENT_AUTHORITY",
+    "NO_PUBLICATION_AUTHORITY",
+    "OWNER_INTEGRATED_ACCEPTANCE_REMAINS_REQUIRED"
+  ],
+  "productMutationPerformedAtThisLayer": true
+}

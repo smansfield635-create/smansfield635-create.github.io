@@ -1,0 +1,59 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "ARCHCOIN_PUBLIC_PAGES",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [],
+  "ownedExactPaths": [
+    "products/archcoin/index.html",
+    "products/archcoin/contract/index.html",
+    "products/archcoin/receivable/index.html",
+    "products/archcoin/payable/index.html",
+    "products/archcoin/allocation/index.html",
+    "products/archcoin/verify-launch-status.v1.mjs"
+  ],
+  "entrypoint": ".github/ai-router/projects/archcoin/entrypoint.v1.json",
+  "authorityBoundary": [
+    "PROJECT_REGISTRATION_CREATES_ROUTING_IDENTITY_ONLY_NOT_PRODUCT_MUTATION_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+    "ARCHCOIN_PUBLIC_PAGES_OWNS_ONLY_DECLARED_EXACT_PUBLIC_PAGE_AND_VERIFIER_PATHS",
+    "NO_PRODUCTS_PREFIX_OR_TOKEN_CONTRACT_OWNERSHIP",
+    "RUNTIME_OR_AUTHORITY_CHANGES_REQUIRE_CANONICAL_OPERATION_ADMISSION_WHEN_APPLICABLE",
+    "PUBLICATION_REMAINS_SEPARATE_FROM_MERGE_AND_USES_EXISTING_REGISTERED_ARCHCOIN_RELEASE_SURFACE"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/publication-surfaces/archcoin.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_FOR_RUNTIME_OR_AUTHORITY_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/archcoin-router-receipt.json",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED_WHEN_REQUIRED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "BOUNDED_ARCHCOIN_PUBLIC_PAGE_UPDATE",
+      "FRESH_EXACT_HEAD_QUALIFICATION",
+      "DRAFT_PR_REVIEW",
+      "OWNER_DISPOSITION",
+      "SEPARATE_MERGE_AND_PUBLICATION_AUTHORITY"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "EXACT_SUBJECT_HEAD",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT_WHEN_REQUIRED",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_ARCHCOIN_PATH"
+    ]
+  },
+  "stoppingRules": [
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_REVIEW_REQUIRED_OR_STOP_FOR_MUTATION",
+    "STOP_IF_RUNTIME_OR_AUTHORITY_CLASS_REQUIRES_CANONICAL_INTAKE_AND_AUTHENTIC_ADMISSION_IS_MISSING",
+    "STOP_IF_SCOPE_EXPANDS_BEYOND_ADMITTED_PATHS",
+    "STOP_BEFORE_MERGE_UNTIL_EXACT_CANDIDATE_QUALIFICATION_AND_OWNER_DISPOSITION",
+    "STOP_AFTER_MERGE_UNTIL_EXPLICIT_PUBLICATION_AND_LIVE_EXACT_HEAD_VERIFICATION_WHEN_PUBLICATION_IS_REQUESTED"
+  ]
+}

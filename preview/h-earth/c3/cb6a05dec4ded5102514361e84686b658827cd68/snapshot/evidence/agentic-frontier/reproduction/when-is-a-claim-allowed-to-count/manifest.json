@@ -1,0 +1,23 @@
+{
+  "schema": "RESEARCH_FRONTIER_REPRODUCTION_MANIFEST_v1",
+  "objectId": "RFV3-04",
+  "publicTitle": "When Is a Claim Allowed to Count?",
+  "technicalBinding": "SCIENTIFIC_CLAIM_ENTITLEMENT_V1_0_4",
+  "evidenceStatus": ["OPERATING_METHOD"],
+  "sourceDispositions": ["EXTERNAL_FOUR_CLASS_AUDIT_SURVIVES", "BOUNDED_FORMAL_COMPUTATION"],
+  "question": "What exact conclusion is an evidence state allowed to support under a frozen deterministic entitlement rule?",
+  "inputs": ["frozen entitlement calculus", "Super-K frozen history", "OPERA frozen history", "NCT00000102 frozen history", "Fragile Families frozen history", "behavioral quotient formalization"],
+  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md"],
+  "comparator": "Source-history semantics and frozen entitlement outputs; competent simpler-review comparison remains a future test.",
+  "procedure": ["normalize each frozen history without core semantic change", "apply deterministic entitlement calculus", "record entitlement state without treating it as truth", "separately compute whole-audit and pointed control quotients"],
+  "environment": "Implementation-neutral deterministic method; public reproduction does not require the complete Diamond Gate Bridge control plane.",
+  "expectedOutputs": {"normalizationDisagreements":"0/4","coreSemanticChanges":"0/4","unregisteredClaimClasses":"0/4","wholeAuditBFull":"aleph_0","wholeAuditBControl":"aleph_0","pointedControlClasses":5,"minimumPointedBits":3,"eightBit256":"sufficient_not_minimal"},
+  "acceptanceCriteria": "The four frozen histories must retain core semantics and reproduce the bounded entitlement vector and quotient results under the published rules.",
+  "verifier": "Independent normalization and deterministic recomputation against the public method/result record.",
+  "sourceIdentities": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md"],
+  "knownGaps": ["unaffiliated reproduction not observed", "prospective unseen-history test pending", "competent simpler-baseline comparison pending", "autonomous natural-language normalization not established"],
+  "proprietaryBoundary": "The entitlement rules and frozen test histories are the public reproduction interface; private control-plane implementation is not required.",
+  "claimCeiling": "Frozen architecture represented and bounded four external histories/classes without core semantic change; no universal scientific method, truth guarantee, complete taxonomy, autonomous normalization or simpler-baseline superiority.",
+  "reproductionPackagingState": "RECORD_BOUND",
+  "externalReproductionObserved": false
+}

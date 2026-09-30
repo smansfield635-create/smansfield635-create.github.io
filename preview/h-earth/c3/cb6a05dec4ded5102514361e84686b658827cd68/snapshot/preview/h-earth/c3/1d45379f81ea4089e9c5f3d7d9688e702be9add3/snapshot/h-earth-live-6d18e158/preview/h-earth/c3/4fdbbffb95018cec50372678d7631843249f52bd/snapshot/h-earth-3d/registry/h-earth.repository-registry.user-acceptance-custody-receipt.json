@@ -1,0 +1,48 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_USER_ACCEPTANCE_CUSTODY_RECEIPT_v1",
+  "result": "PASS",
+  "status": "COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL",
+  "acceptance": {
+    "declarationPath": "/h-earth-3d/registry/finalization/h-earth.repository-registry.user-acceptance-declaration.json",
+    "declarationGitBlobSha": "b49e328d6a7a18b267800db234cab12f2a7dd61b",
+    "statement": "I accept.",
+    "accepted": true,
+    "canonical": false,
+    "acceptedPackageHead": "3808b79e2743128ab25e6200a5c636d72451262f",
+    "completionReceiptGitBlobSha": "22a997a1082ecc4b7c9c9b35d1675516c68e4efc"
+  },
+  "renewedBootstrap": {
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+    "gitBlobSha": "e422e814a29e024df91e8410687ab29ffe63c382",
+    "status": "COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL",
+    "accepted": true,
+    "canonical": false
+  },
+  "repositoryState": {
+    "branch": "agent/h-earth-repository-registry-installation-001",
+    "expectedMainCommit": "3890dfc7165ae3481cd119d1f9c935e93c336f17",
+    "observedMainCommit": "3890dfc7165ae3481cd119d1f9c935e93c336f17",
+    "mainChanged": false
+  },
+  "boundaries": {
+    "mergeAuthorityEstablished": false,
+    "canonicalizationAuthorityEstablished": false,
+    "activeOnMain": false,
+    "mainChanged": false,
+    "branchProtectionCreated": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "runtimeAuthorityCreated": false,
+    "rendererAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionAuthorityCreated": false
+  },
+  "stoppingCondition": {
+    "userAcceptanceEstablished": true,
+    "mergeAuthorityEstablished": false,
+    "canonicalizationAuthorityEstablished": false,
+    "activeOnMain": false,
+    "nextAuthorizedSubtarget": "MERGE_AUTHORIZATION_BOUNDARY"
+  },
+  "recordingCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT"
+}

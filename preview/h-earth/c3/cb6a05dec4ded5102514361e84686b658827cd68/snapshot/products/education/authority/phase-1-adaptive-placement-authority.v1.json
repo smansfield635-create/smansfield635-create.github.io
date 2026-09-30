@@ -1,0 +1,144 @@
+{
+  "object": "EDUCATION_PHASE1_ADAPTIVE_PLACEMENT_AUTHORITY",
+  "version": "v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_PHASE1_ADAPTIVE_PLACEMENT_FREEZE_20260920_001",
+  "lock_generation": 2469,
+  "governing_candidate": "0e2957fa69067d56a290a92e5304f19e9ead481e",
+  "purpose": "Define how learner self-report, adaptive diagnostic evidence, verified placement, and demo-entry initialization interact before Phase 1 instruction begins.",
+  "governing_flow": [
+    "SELF_REPORT",
+    "PROVISIONAL_TEST_ENTRY",
+    "ADAPTIVE_DIAGNOSTIC",
+    "VERIFIED_PLACEMENT",
+    "DEMO_ENTRY_INITIALIZATION"
+  ],
+  "authority_law": {
+    "self_report_role": "ORIENTATION_ONLY",
+    "placement_authority": "DEMONSTRATED_PERFORMANCE",
+    "self_report_may_choose_initial_probe_neighborhood": true,
+    "self_report_may_not_force_final_placement": true,
+    "screen_count_may_not_determine_placement": true,
+    "elapsed_time_may_not_determine_placement": true
+  },
+  "intake_minimum": {
+    "required_fields": [
+      "native_language",
+      "target_language",
+      "claimed_level"
+    ],
+    "optional_fields": [
+      "claimed_history",
+      "current_use_context",
+      "self_identified_difficulties"
+    ],
+    "rule": "Intake data informs where diagnostic probing begins but is not final evidence of proficiency."
+  },
+  "adaptive_probe_law": {
+    "initial_probe": "AROUND_CLAIMED_LEVEL_OR_LOWEST_SAFE_ENTRY_IF_CLAIM_IS_UNUSABLE",
+    "strong_performance": "PROBE_UPWARD",
+    "weak_performance": "PROBE_DOWNWARD",
+    "mixed_performance": "PROBE_ADJACENT_COMPETENCY_NODES_TO_RESOLVE_BOUNDARY",
+    "stopping_condition": "STABLE_COMPETENCY_BOUNDARY_WITH_SUFFICIENT_PLACEMENT_CONFIDENCE",
+    "test_may_cross_stage_boundaries": true,
+    "target_language_only_evidence_required_for_final_proficiency_claims": true
+  },
+  "placement_dimensions": {
+    "competency_coordinate": [
+      "verified_stage",
+      "verified_competency_position",
+      "verified_mastery_nodes",
+      "unresolved_nodes"
+    ],
+    "support_coordinate": [
+      "support_cycle",
+      "support_dependence"
+    ],
+    "evidence_quality": [
+      "placement_score",
+      "placement_confidence"
+    ],
+    "range_coordinate": [
+      "placement_range",
+      "demo_range",
+      "demo_entry_point"
+    ]
+  },
+  "within_stage_law": {
+    "permitted": true,
+    "basis": "DEMONSTRATED_COMPETENCY_NODES",
+    "forbidden_basis": [
+      "SCREEN_INDEX",
+      "PERCENT_OF_UI_COMPLETED",
+      "TIME_SERVED"
+    ],
+    "learner_facing_percentage_may_be_derived": true,
+    "learner_facing_percentage_must_be_derived_from": "MASTERED_REQUIRED_COMPETENCY_NODES_WITHIN_STAGE"
+  },
+  "evidence_separation_law": {
+    "direct_vs_productive": "MUST_REMAIN_SEPARATE",
+    "trained_vs_transfer": "MUST_REMAIN_SEPARATE",
+    "assisted_vs_unassisted": "MUST_REMAIN_SEPARATE",
+    "native_supported_vs_target_only": "MUST_REMAIN_SEPARATE",
+    "claim_vs_observed": "MUST_REMAIN_SEPARATE"
+  },
+  "support_cycle_resolution": {
+    "authority": "/products/education/authority/phase-1-language-support-cycle-authority.v1.json",
+    "placement_must_resolve_support_cycle": true,
+    "native_language_dependence_must_be_recorded": true,
+    "target_only_requires_independent_target_language_evidence": true
+  },
+  "placement_state_required": [
+    "native_language",
+    "target_language",
+    "claimed_level",
+    "claimed_history",
+    "verified_stage",
+    "verified_competency_position",
+    "verified_mastery_nodes",
+    "unresolved_nodes",
+    "support_cycle",
+    "support_dependence",
+    "placement_score",
+    "placement_confidence",
+    "placement_range",
+    "demo_range",
+    "demo_entry_point"
+  ],
+  "above_demo_law": {
+    "verified_placement_value": "ABOVE_PHASE_1",
+    "permitted": true,
+    "demo_range": "PHASE_1_ONLY",
+    "actual_verified_placement_must_be_preserved": true,
+    "demo_may_offer": "ADVANCED_PHASE_1_DEMONSTRATION",
+    "demo_entry_may_not_rewrite_verified_placement": true,
+    "learner_must_be_told_demo_is_below_verified_range": true
+  },
+  "runtime_initialization_law": {
+    "placement_state_becomes_runtime_initialization": true,
+    "runtime_start_must_use_verified_unresolved_boundary": true,
+    "replay_of_already_demonstrated_nodes_required": false,
+    "teacher_may_reassess_if_confidence_is_insufficient": true
+  },
+  "placement_confidence_law": {
+    "required": true,
+    "exact_algorithm": "CONTENT_BUILD_DEPENDENT_BUT_MUST_BE_FROZEN_BEFORE_LEARNER_ATTEMPT",
+    "may_depend_on": [
+      "ITEM_COUNT",
+      "COMPETENCY_SPREAD",
+      "CONSISTENCY",
+      "TRANSFER_EVIDENCE",
+      "ASSISTANCE_DEPENDENCE"
+    ],
+    "may_not_be_invented_after_viewing_individual_learner_result": true
+  },
+  "invariants": [
+    "The learner's claimed level determines where testing may begin, not where the learner is placed.",
+    "The diagnostic may move upward or downward until a stable competency boundary is established.",
+    "Placement may occur inside a stage and is derived from competency evidence rather than screen completion.",
+    "Verified placement and demo entry are distinct records.",
+    "A learner who demonstrates ability above Phase 1 retains ABOVE_PHASE_1 placement even when entering the Phase 1 demo.",
+    "The existing eight competency stages and four language-support cycles are not modified by this authority."
+  ]
+}

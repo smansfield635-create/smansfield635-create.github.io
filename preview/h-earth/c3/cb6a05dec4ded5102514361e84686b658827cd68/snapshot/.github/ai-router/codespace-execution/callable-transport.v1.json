@@ -1,0 +1,24 @@
+{
+  "schema": "THREE_TIER_CODESPACE_CALLABLE_TRANSPORT_v1",
+  "status": "TRANSPORT_UNAVAILABLE",
+  "substrateContract": ".github/ai-router/codespace-execution/execution-environment-contract.v1.json",
+  "transportPurpose": "ALLOW_AN_AI_ROOM_TO_INSTANTIATE_OR_ATTACH_TO_A_DISPOSABLE_NON_ACTIONS_EXECUTOR_AND_INVOKE_ONLY_A_DECLARED_PROJECT_COMMAND",
+  "requiredCapabilities": [
+    "CREATE_OR_ATTACH_DISPOSABLE_EXECUTION_ENVIRONMENT",
+    "MATERIALIZE_EXACT_REPOSITORY_COMMIT",
+    "EXECUTE_NATIVE_COMMAND",
+    "READ_COMMAND_RECEIPT",
+    "DESTROY_OR_DETACH_ENVIRONMENT"
+  ],
+  "acceptedTransportClasses": [
+    "CONNECTED_CODESPACES_NATIVE_EXECUTOR",
+    "CONNECTED_DISPOSABLE_BUILDER",
+    "CONNECTED_EXTERNAL_EXACT_HEAD_EXECUTOR"
+  ],
+  "githubActionsAccepted": false,
+  "connectedTransport": null,
+  "callableByCurrentChatGPTRoom": false,
+  "readyToRevealExecutableHook": false,
+  "readinessRule": "SUBSTRATE_ADOPTION_AND_TRANSPORT_CONNECTIVITY_ARE_SEPARATE; BOTH_MUST_BE_TRUE",
+  "failureDisposition": "DO_NOT_ASSIGN_EXECUTABLE_HOOK"
+}

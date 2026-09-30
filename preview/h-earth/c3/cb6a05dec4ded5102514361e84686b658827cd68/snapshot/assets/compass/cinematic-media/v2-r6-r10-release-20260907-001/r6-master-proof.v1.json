@@ -1,0 +1,67 @@
+{
+  "schema": "COMPASS_V2_R6_MASTER_PROOF_v1",
+  "result": "R6_V2_MASTER_PRODUCED",
+  "operationId": "COMPASS_V2_R6_R10_MASTER_PLAYER_RELEASE_20260907_001",
+  "lockGeneration": 1987,
+  "governingMain": "24eba044e3c4943756ee2412cb81f35a440f9608",
+  "r3r5TerminalClosureCommit": "853a5333059969bfc3f0dbb90bcea74631d93643",
+  "r5EvidenceCommit": "80ac01f75584ca543085fda33b4ad5e16df1844c",
+  "r5Video": {
+    "sha256": "b06c28a18eb849bdace1c5687108284ad15b50f597024a483530cead24982215",
+    "gitBlob": "4a00d224855b6c7b07539876f09ef41c12fb9e78",
+    "videoElementaryStreamSha256": "4f8661ff8921ac60385401382e89a48e883b5c0ecc56826686418e5af1b9fe63"
+  },
+  "acceptedT10Audio": {
+    "masterSha256": "6ada38eadeb6243b3809167f45dd8a74808c88ac677273683338772e7899b4e7",
+    "soundtrackSourceSha256": "0f52601bf88e629f22e0c9307808939814efbaa192d9839b7701d7afea040c2e",
+    "audioElementaryStreamSha256": "6a141917680d6fbed8250ab92c231baf0c4f7b52d4e06267fce305458c8e9001"
+  },
+  "method": {
+    "type": "BITSTREAM_PRESERVING_REMUX",
+    "videoReencoded": false,
+    "audioReencoded": false,
+    "duplicateOutputsBitIdentical": true,
+    "bt709LimitedRangeDeclaredAtMp4TrackLevel": true
+  },
+  "master": {
+    "path": "assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+    "bytes": 2723640,
+    "sha256": "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+    "expectedGitBlob": "b48bc48e531c3eb29bd1a94a91725badd30186f5",
+    "videoElementaryStreamSha256": "4f8661ff8921ac60385401382e89a48e883b5c0ecc56826686418e5af1b9fe63",
+    "audioElementaryStreamSha256": "6a141917680d6fbed8250ab92c231baf0c4f7b52d4e06267fce305458c8e9001",
+    "durationSeconds": 38.0,
+    "frameCount": 1140,
+    "width": 1280,
+    "height": 720,
+    "fps": "30/1",
+    "videoCodec": "h264",
+    "videoProfile": "High",
+    "pixelFormat": "yuv420p",
+    "colorRange": "tv",
+    "colorSpace": "bt709",
+    "colorTransfer": "bt709",
+    "colorPrimaries": "bt709",
+    "audioCodec": "aac",
+    "audioProfile": "LC",
+    "audioSampleRate": 48000,
+    "audioChannels": 2,
+    "fastStart": true,
+    "fullDecodeErrors": 0
+  },
+  "identityChecks": {
+    "r5VideoElementaryStreamPreserved": true,
+    "acceptedT10AudioElementaryStreamPreserved": true,
+    "duplicateRemuxByteEquality": true,
+    "fullDecodePass": true
+  },
+  "binaryIngressReplay": {
+    "authorizationComment": 5575233620,
+    "run": 34158704493,
+    "receiptComment": 5575266314,
+    "result": "PASS_CLOSED",
+    "chunkCount": 6,
+    "finalBlobReadbackVerified": true,
+    "replayAuthorityExhausted": true
+  }
+}

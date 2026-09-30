@@ -1,0 +1,87 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "evidence",
+  "description": "Diamond Gate public Evidence surface with independently responsive carousel and fail-closed current public condition inspection.",
+  "checks": [
+    {
+      "path": "/evidence/",
+      "includes": [
+        "Current Public Condition",
+        "What can the estate say right now?",
+        "data-current-public-condition",
+        "/evidence/current-public-condition.mjs?v=1&cb=prod9"
+      ],
+      "excludes": [
+        "Breakthrough 4",
+        "BT4 ·",
+        "MODULE_OR_RUNTIME_DEADLINE",
+        "bootstrapTerminal"
+      ]
+    },
+    {
+      "path": "/evidence/current-public-condition.mjs?v=1&cb=prod9",
+      "includes": [
+        "SITE_ENTITLEMENT_URL",
+        "site-entitlement.v1.mjs?cb=prod8",
+        "await import(SITE_ENTITLEMENT_URL)",
+        "data-condition-state",
+        "data-condition-objects",
+        "What restores it",
+        "the Evidence carousel remains independently available"
+      ],
+      "excludes": [
+        "import { evaluateSite }",
+        "document.write"
+      ]
+    },
+    {
+      "path": "/evidence/readiness/bt4-site-governance/site-entitlement.v1.mjs?cb=prod8",
+      "includes": [
+        "./entitlement-engine.v1.mjs?cb=prod1",
+        "FETCH_DEADLINE_MS=10000",
+        "ADAPTER_DEADLINE_MS=15000",
+        "Promise.allSettled",
+        "LIVE_RELEASE_MARKER",
+        "/.well-known/dgb-release.json",
+        "CANONICAL_POST_DEPLOY_AUDRALIA_RUNTIME_RECEIPT",
+        "/.well-known/publication-surfaces/audralia-runtime.json",
+        "DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1",
+        "PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1",
+        "LIVE_AUDRALIA_PUBLICATION_RUNTIME_RECEIPT_MATCH",
+        "AUDRALIA_RUNTIME_RECEIPT_TARGET_SHA_MISMATCH",
+        "Scientific claim",
+        "Audralia world/runtime",
+        "Audralia diagnostic authority",
+        "Exact-head public release",
+        "AUDRALIA_RUNTIME_RECEIPT_DEFERRED_DURING_LOCAL_PREFLIGHT"
+      ],
+      "excludes": [
+        "waitForAudraliaReady",
+        "createElement('canvas')",
+        "gitBlobHex",
+        "/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs"
+      ]
+    },
+    {
+      "path": "/evidence/readiness/bt4-site-governance/entitlement-engine.v1.mjs",
+      "includes": [
+        "serveRequestedState",
+        "computeEntitlement",
+        "QUALIFIED",
+        "HELD"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/evidence/",
+    "readyAttribute": {
+      "selector": ".current-condition[data-current-public-condition]",
+      "name": "data-ready",
+      "contains": "true"
+    },
+    "timeoutMs": 25000,
+    "failOnConsoleErrors": true,
+    "requireEvidenceCarouselInteraction": true
+  }
+}

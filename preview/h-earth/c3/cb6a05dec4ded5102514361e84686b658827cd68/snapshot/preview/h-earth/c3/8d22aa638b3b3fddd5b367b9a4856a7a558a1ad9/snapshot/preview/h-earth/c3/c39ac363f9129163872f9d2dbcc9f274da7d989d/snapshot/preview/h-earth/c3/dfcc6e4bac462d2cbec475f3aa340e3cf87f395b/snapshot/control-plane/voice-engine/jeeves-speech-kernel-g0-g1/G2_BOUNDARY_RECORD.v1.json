@@ -1,0 +1,50 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_KERNEL_G2_BOUNDARY_v1",
+  "status": "G2_CONTROL_BOUNDARY_COMPLETE",
+  "predecessor": {
+    "generation": "G1",
+    "installedMain": "da291bc58ea1ef788d600d5b336d1b739eb85fab",
+    "kernelPath": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/jeeves.speech-kernel.js"
+  },
+  "corpusCount": 8,
+  "heldConstant": [
+    "text",
+    "phoneme inventory",
+    "G1 duration law",
+    "G1 word-gap law",
+    "G1 punctuation-pause law",
+    "G1 word-final lengthening",
+    "sample rate",
+    "formant table",
+    "harmonic/noise excitation families",
+    "WAV encoding"
+  ],
+  "g2AuthorizedVariables": [
+    "lexical stress weight",
+    "phrase-level F0 contour",
+    "stress-linked F0 excursion",
+    "stress-linked energy envelope",
+    "phrase-final F0 settling"
+  ],
+  "renderQualification": {
+    "allEightLinesRendered": true,
+    "g1TimingPreservedExactly": true,
+    "waveformChangeDetectedAllEightLines": true,
+    "measuredRmsDeltaRange": [0.019675044593100485, 0.02870717649848227],
+    "userReviewArtifactSurfaced": false,
+    "reasonUserReviewWithheld": "G2 still uses the same deterministic harmonic/formant acoustic generator and is not materially natural enough to qualify as a Jeeves review sample."
+  },
+  "g2ForbiddenVariables": [
+    "micro-prosody",
+    "jitter or shimmer",
+    "coarticulation",
+    "formant interpolation",
+    "spectral dynamics",
+    "breath modeling",
+    "learned residual",
+    "external model weights",
+    "public product mutation"
+  ],
+  "disposition": "ADVANCE_TO_G3_MICRO_PROSODY_EXPERIMENT",
+  "nextLawfulAction": "CONSTRUCT_G3_MICRO_PROSODY_WHILE_PRESERVING_G1_TIMING_AND_G2_STRESS_F0_ENERGY_CONTROLS"
+}

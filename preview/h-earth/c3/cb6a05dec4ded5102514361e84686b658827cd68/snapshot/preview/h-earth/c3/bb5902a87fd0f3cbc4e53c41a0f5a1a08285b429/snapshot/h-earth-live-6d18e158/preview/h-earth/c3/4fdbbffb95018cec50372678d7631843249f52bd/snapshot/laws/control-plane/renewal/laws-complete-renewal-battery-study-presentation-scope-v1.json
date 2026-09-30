@@ -1,0 +1,128 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_BATTERY_STUDY_PRESENTATION_SCOPE_v1",
+  "mode": "USER_AUTHORIZED_STUDY_PATHWAY_PRESENTATION_EXPANSION",
+  "status": "ACTIVE_FOR_PR_493",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-complete-renewal-batch-001",
+  "baseline": "54d79db4f8d17367bf6bbe6388b114e243ec0bd0",
+  "study": {
+    "study_id": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+    "public_label": "Battery health held-out study",
+    "complete_frontier_record": "/frontier/energy/battery-coherence-study/",
+    "controlling_rule": "Every public page that materially presents, interprets, routes to, or wraps this study must meet the user-accepted Laws renewal standard while preserving its distinct authority role."
+  },
+  "accepted_standard": [
+    "MAIN_COMPASS_LEVEL_ATMOSPHERE_AND_PACING",
+    "PAGE_SPECIFIC_DIRECT_QUESTION",
+    "STRUCTURED_VISUAL_OR_MATHEMATICAL_RELATIONSHIP",
+    "PRACTICAL_ENGINEERING_EMPIRICAL_SEPARATION",
+    "VISIBLE_EVIDENCE_STATUS_AND_CLAIM_CEILING",
+    "COLLAPSED_AUDIT_AND_CUSTODY",
+    "COLLAPSIBLE_SHARED_NAVIGATION",
+    "PHONE_TABLET_DESKTOP_COMPOSITION",
+    "FULL_REDUCED_STATIC_NO_JAVASCRIPT_EQUIVALENCE"
+  ],
+  "public_surface_count": 27,
+  "public_surfaces": {
+    "laws_landing_context": [
+      {
+        "route": "/laws/",
+        "source_path": "laws/index.html",
+        "role": "CHAMBER_ORIENTATION_WITH_BATTERY_EXAMPLE",
+        "disposition": "PRESERVE_ACCEPTED_LANDING_AND_RENEW_ONLY_THE_BATTERY_CONTEXT_MODULE"
+      }
+    ],
+    "law_family_relationship_overviews": [
+      {"route":"/laws/categories/flow/","source_path":"laws/categories/flow/index.html","role":"FLOW_BATTERY_RELATIONSHIP_OVERVIEW"},
+      {"route":"/laws/categories/integrity/","source_path":"laws/categories/integrity/index.html","role":"INTEGRITY_BATTERY_RELATIONSHIP_OVERVIEW"},
+      {"route":"/laws/categories/reality/","source_path":"laws/categories/reality/index.html","role":"REALITY_BATTERY_RELATIONSHIP_OVERVIEW"},
+      {"route":"/laws/categories/structure/","source_path":"laws/categories/structure/index.html","role":"STRUCTURE_BATTERY_RELATIONSHIP_OVERVIEW"}
+    ],
+    "battery_related_child_and_destination_routes": [
+      {"route":"/laws/research/applied-investigations/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/research/evidence-and-sources/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/research/methods-and-models/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/research/findings-and-boundaries/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/test/admission-and-baseline/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/test/forward-construction/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/test/reverse-audit/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/test/result-and-record/","relationship":"PRIMARY_CONTEXTUAL_STUDY"},
+      {"route":"/laws/categories/flow/signals/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/flow/cycles/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/integrity/consistency/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/integrity/continuity/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/integrity/coherence/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/reality/evidence/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/reality/measure/","served_source_path":"laws/categories/reality/measure.html","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/reality/limits/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/structure/constraints/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"},
+      {"route":"/laws/categories/structure/boundaries/","relationship":"MATERIAL_LAW_RELATIONSHIP_ADMITTED"}
+    ],
+    "compatibility_routes": [
+      {
+        "route": "/laws/battery-heldout-study/",
+        "source_path": "laws/battery-heldout-study/index.html",
+        "disposition": "RENEW_AS_CONCISE_COMPATIBILITY_WRAPPER"
+      },
+      {
+        "route": "/laws/scientific-law/battery-heldout-study/",
+        "source_path": "laws/scientific-law/battery-heldout-study/index.html",
+        "disposition": "RENEW_AS_CONCISE_COMPATIBILITY_WRAPPER"
+      },
+      {
+        "route": "/laws/categories/reality/battery-heldout-study/",
+        "source_path": "laws/categories/reality/battery-heldout-study/index.html",
+        "disposition": "RENEW_AS_CONCISE_COMPATIBILITY_WRAPPER"
+      }
+    ],
+    "complete_frontier_study": [
+      {
+        "route": "/frontier/energy/battery-coherence-study/",
+        "source_path": "frontier/energy/battery-coherence-study/index.html",
+        "role": "COMPLETE_STUDY_RECORD",
+        "disposition": "RENEW_TO_THE_ACCEPTED_PRESENTATION_STANDARD_WITH_FRONTIER_OWNERSHIP_PRESERVED"
+      }
+    ]
+  },
+  "non_public_authority_assets": {
+    "presentation_redesign_required": false,
+    "paths": [
+      "assets/evidence/battery-coherence-heldout-study-v1.js",
+      "laws/control-plane/cp6-context/laws-battery-study-contextual-interpretation-record-v1.json",
+      "laws/control-plane/cp6-context/laws-frontier-compatibility-crosswalk-v1.json"
+    ],
+    "rule": "These remain source, data, and authority assets. They are verified for identity and custody but are not converted into public story pages."
+  },
+  "frontier_ownership_boundary": {
+    "bounded_frontier_product_mutation_authorized": true,
+    "authorized_path_only": "frontier/energy/battery-coherence-study/index.html",
+    "frontier_route_or_architecture_restructure": false,
+    "complete_record_ownership_remains_frontier": true,
+    "laws_pages_may_duplicate_complete_study": false,
+    "laws_pages_must_return_to_frontier_complete_record": true
+  },
+  "claim_and_content_boundaries": {
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "formula_or_metric_identity_change": false,
+    "sample_or_result_change": false,
+    "negative_or_mixed_finding_erasure": false,
+    "external_replication_claim": false,
+    "operational_readiness_claim": false
+  },
+  "verification_required": [
+    "ALL_27_PUBLIC_SURFACES_INVENTORIED",
+    "ALL_18_CONTEXTUAL_CHILD_AND_DESTINATION_ROUTES_AT_ACCEPTED_STANDARD",
+    "THREE_COMPATIBILITY_WRAPPERS_CONCISE_AND_NON_DUPLICATIVE",
+    "FRONTIER_COMPLETE_RECORD_PRESERVES_COMPLETE_STUDY_AND_OWNERSHIP",
+    "BATTERY_NUMBERS_AND_CLAIM_BOUNDARIES_IDENTICAL_ACROSS_SURFACES",
+    "NO_BATTERY_CONTEXT_ADDED_TO_NO_CURRENT_ADMITTED_STUDY_PAGES",
+    "COLLAPSIBLE_NAVIGATION_ON_EVERY_RENEWED_SURFACE",
+    "DESKTOP_TABLET_PHONE_REDUCED_STATIC_BROWSER_PASS"
+  ],
+  "merge_boundary": {
+    "pr_493_merge_authority": false,
+    "executed_integrated_verification_required": true,
+    "final_live_user_differential_required": true
+  }
+}

@@ -1,0 +1,95 @@
+name: Education Publication Coordinator
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'products/education/**'
+      - '.github/ai-router/publication-surfaces/education.json'
+      - 'tools/publication-preflight.v1.mjs'
+      - 'tools/publication-live-verify.mjs'
+      - '.github/workflows/education-exact-head-deploy.yml'
+      - '.github/workflows/pages-exact-head-deploy-v3.yml'
+  workflow_dispatch:
+    inputs:
+      qualified_education_sha:
+        description: Education-qualified commit whose Education bytes must still exist on current main
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: education-publication-coordinator
+  cancel-in-progress: false
+
+jobs:
+  reconcile-and-dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve current main and qualified Education source
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_SHA: ${{ github.sha }}
+          REQUESTED_SHA: ${{ inputs.qualified_education_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          current="$(gh api "/repos/$REPO/commits/main" --jq .sha)"
+          qualified="${REQUESTED_SHA:-}"
+          if [ -z "$qualified" ]; then
+            qualified="$EVENT_SHA"
+          fi
+
+          qualified_blob="$(gh api "/repos/$REPO/contents/products/education/index.html?ref=$qualified" --jq .sha)"
+          current_blob="$(gh api "/repos/$REPO/contents/products/education/index.html?ref=$current" --jq .sha)"
+
+          if [ "$qualified_blob" != "$current_blob" ]; then
+            echo "EDUCATION_RECONCILIATION_REQUIRED qualified=$qualified:$qualified_blob current=$current:$current_blob" >&2
+            exit 1
+          fi
+
+          echo "current_sha=$current" >> "$GITHUB_OUTPUT"
+          echo "education_blob=$current_blob" >> "$GITHUB_OUTPUT"
+          echo "EDUCATION_BYTES_RECONCILED_ON_CURRENT_MAIN=$current:$current_blob"
+
+      - name: Validate current Education source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CURRENT_SHA: ${{ steps.resolve.outputs.current_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp)"
+          gh api -H 'Accept: application/vnd.github.raw+json'             "/repos/$REPO/contents/products/education/index.html?ref=$CURRENT_SHA" > "$tmp"
+          grep -Fq 'EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1' "$tmp"
+          grep -Fq 'edu-detail-surface' "$tmp"
+          grep -Fq 'function openDetail' "$tmp"
+          grep -Fq 'data-help-language="es"' "$tmp"
+          grep -Fq 'data-help-language="zh"' "$tmp"
+          grep -Fq 'edu-spatial-mini' "$tmp"
+          grep -Fq 'data-flip' "$tmp"
+          echo "CURRENT_EDUCATION_SOURCE_VALIDATED=$CURRENT_SHA"
+
+      - name: Dispatch shared current-head production publisher once
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CURRENT_SHA: ${{ steps.resolve.outputs.current_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          runs="$(gh api "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/runs?event=workflow_dispatch&per_page=100")"
+          equivalent="$(printf '%s' "$runs" | jq -r --arg sha "$CURRENT_SHA" '[.workflow_runs[] | select(.head_sha==$sha and (.status=="queued" or .status=="in_progress" or (.status=="completed" and .conclusion=="success")))] | length')"
+          if [ "$equivalent" -gt 0 ]; then
+            echo "EDUCATION_PUBLICATION_SUPPRESSED_EQUIVALENT_HEAD=$CURRENT_SHA count=$equivalent"
+            exit 0
+          fi
+          gh api --method POST "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/dispatches" -f ref=main -f inputs[target_sha]="$CURRENT_SHA" -f inputs[surface_id]="education"
+          echo "EDUCATION_CURRENT_HEAD_PUBLICATION_DISPATCHED=$CURRENT_SHA"

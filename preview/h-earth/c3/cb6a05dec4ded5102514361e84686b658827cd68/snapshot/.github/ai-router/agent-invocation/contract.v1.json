@@ -1,0 +1,215 @@
+{
+  "schema": "CANONICAL_NATIVE_AGENT_INVOCATION_CONTRACT_v1",
+  "status": "PROPORTIONAL_BY_TASK_RISK",
+  "ownerDirectiveIssue": 3209,
+  "convergenceIssue": 3272,
+  "constitutionPath": "control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json",
+  "constitutionBlob": "49e08bd13e09e70e9363e9c5e18c6f778288cbfe",
+  "identities": {
+    "N": {"identity": "Alaric", "function": "Navigation"},
+    "E": {"identity": "Elara", "function": "Signal"},
+    "S": {"identity": "Tarian", "function": "Continuity"},
+    "W": {"identity": "Soren", "function": "Boundary"}
+  },
+  "intermediateStations": "Twelve frozen adjacent compositions; not additional identities or sixteen independent workers.",
+  "invocationApplicability": {
+    "schema": "CANONICAL_AGENT_INVOCATION_APPLICABILITY_v1",
+    "governingRule": "AGENT_INVOCATION_IS_A_PROPORTIONAL_EXECUTION_AND_REVIEW_INSTRUMENT_NOT_A_UNIVERSAL_EXECUTABILITY_PREREQUISITE",
+    "exemptTaskClasses": [
+      "READ_ONLY_ADMINISTRATIVE",
+      "SOURCE_READBACK",
+      "STATUS_INSPECTION",
+      "STATIC_EDITORIAL_MICRO",
+      "BOUNDED_PAGE_RELEASE",
+      "DETERMINISTIC_REGISTRY_METADATA",
+      "EXACT_IDENTITY_READBACK"
+    ],
+    "proportionalTaskClasses": [
+      "DIAGNOSTIC",
+      "QUALIFICATION",
+      "ADOPTION",
+      "PUBLICATION"
+    ],
+    "requiredTaskClasses": [
+      "MATERIAL_GOVERNED_ENGINEERING",
+      "CONTROL_PLANE",
+      "SCIENTIFIC_OR_EMPIRICAL",
+      "AUTHORITY_BOUNDARY_CHANGE",
+      "DISPUTED_INDEPENDENT_QUALIFICATION"
+    ],
+    "exemptWorkMayProceedWithoutNativeSpawn": true,
+    "nativeToolAvailabilityMayBlockExemptWork": false,
+    "requiredWorkStillNeedsFunctionalSeparation": true,
+    "requiredWorkMayUseOwnerDirectedCoLocatedFallbackWhenNativeSpawnIsUnexposed": true,
+    "classificationSource": "WHOLE_ESTATE_EXECUTION_DECISION_v1",
+    "ambiguityDisposition": "REQUIRED_WHEN_TASK_RISK_CLASS_CANNOT_BE_RESOLVED"
+  },
+  "requiredTaskClasses": ["MATERIAL_GOVERNED_ENGINEERING", "CONTROL_PLANE", "SCIENTIFIC_OR_EMPIRICAL", "AUTHORITY_BOUNDARY_CHANGE", "DISPUTED_INDEPENDENT_QUALIFICATION"],
+  "unitOfInvocation": "One bounded task or unchanged continuing assignment when invocation is required; never one new worker per shell command, file read, status check, or deterministic metadata proof.",
+  "substantiveWorkWithoutInvocationAllowed": true,
+  "substantiveWorkWithoutInvocationConstraint": "ALLOWED_ONLY_WHEN_WHOLE_ESTATE_EXECUTION_DECISION_CLASSIFIES_AGENT_MODE_AS_NOT_REQUIRED_OR_PROPORTIONAL_WITH_NO_INDEPENDENCE_REQUIREMENT",
+  "bootstrap": {
+    "purpose": "Resolve current main, the whole-estate execution decision, and native tool availability only when the decision requires or recommends canonical-agent execution.",
+    "allowedReadPaths": ["AI_ENTRYPOINT.json", "AGENTS.md", ".github/ai-router/agent-invocation/contract.v1.json", "control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json"],
+    "allowedObservations": ["CURRENT_MAIN_IDENTITY", "WHOLE_ESTATE_EXECUTION_DECISION", "NATIVE_TOOL_AVAILABILITY"],
+    "allowsProductInspection": false,
+    "allowsRepositoryMutation": false,
+    "createsAuthority": false
+  },
+  "execution": {
+    "substrate": "NATIVE_AGENT_TOOLS_OR_OWNER_DIRECTED_CO_LOCATED_CARDINAL_ROOM_WHEN_AGENT_MODE_REQUIRES_EXECUTION",
+    "mustActuallyInvoke": false,
+    "mustActuallyInvokeWhenApplicabilityRequired": true,
+    "preferredWhenAvailable": ["NATIVE_AGENT_SPAWN", "NATIVE_AGENT_FOLLOWUP_FOR_EXISTING_INSTANCE"],
+    "persistentSeparateModelRequired": false,
+    "secondExecutorCreated": false,
+    "newIdentitiesAllowed": false,
+    "allFourAgentsEveryTaskRequired": false,
+    "directRoomWorkAllowedForExemptTaskClasses": true,
+    "directRoomWorkSubstitutesForRequiredAssignedAgentInvocation": false,
+    "actionsOrPassiveCIQualifiesAsAgent": false,
+    "coLocatedFallbackContract": ".github/ai-router/agent-invocation/co-located-cardinal-room.v1.json",
+    "coLocatedFallbackRequiresExplicitOwnerDirection": true,
+    "coLocatedFallbackCountsAsCanonicalFunctionExecution": true,
+    "coLocatedFallbackCountsAsNativeSpawn": false,
+    "coLocatedFallbackMayClaimIndependentModelReview": false,
+    "unavailableDisposition": "EXEMPT_TASK_CONTINUES; REQUIRED_TASK_USES_OWNER_DIRECTED_CO_LOCATED_CARDINAL_ROOM_WHEN_AUTHORIZED_OR_STOPS_IF_FUNCTIONAL_SEPARATION_CANNOT_BE_SATISFIED"
+  },
+  "assignment": {
+    "requiredWhenAgentModeIsRequired": ["task identity", "exact repository and governing head", "frozen bearing and participating canonical identities", "objective and required output", "typed target and relationship", "lifecycle phase", "domain capability", "explicit authority and prohibited scope", "evidence and unresolved conditions", "handoff"],
+    "freezeBeforeInvocation": true,
+    "authorityEffect": "NONE",
+    "opposingFunctions": "Separate assignments and decisions under OSL-1 when the task actually requires opposed functional review. In co-located fallback, independence means phase/process separation and frozen-input readback, never a claim of separate model instances.",
+    "continuation": "Reuse an actual invoked task only while its head, scope, authority and lifecycle assignment remain applicable. Exempt work does not manufacture assignment churn. In co-located fallback, emit a new phase receipt only when a required assignment materially changes."
+  },
+  "evidence": {
+    "schema": "CANONICAL_NATIVE_AGENT_EXECUTION_EVIDENCE_v1",
+    "validator": ".github/ai-router/agent-invocation/evidence-gate.v1.mjs",
+    "requiredOnlyWhenNativeExecutionClaimed": true,
+    "requiredStartProof": ["frozen assignment digest", "native invocation source event", "native returned task identity"],
+    "requiredCompletionProof": ["attributable native returned output", "output digest and source event", "independent native observer and source readback when independent review is required", "unresolved conditions and handoff"],
+    "coLocatedFallbackEvidence": {
+      "schema": "CO_LOCATED_CARDINAL_PHASE_RECEIPT_v1",
+      "required": ["exact repository and governing head", "frozen scope", "canonical function", "phase input digest or immutable source refs", "phase output", "phase output digest", "unresolved conditions", "handoff"],
+      "terminalStatements": ["CO_LOCATED_EXECUTION_USED", "NO_SEPARATE_NATIVE_AGENT_INSTANCE_CLAIMED", "NO_INDEPENDENT_MODEL_REVIEW_CLAIMED", "FUNCTIONAL_SEPARATION_PRESERVED", "AUTHORITY_EFFECT_NONE"],
+      "nativeTaskIdentityRequired": false,
+      "separateModelObserverRequired": false,
+      "sourceReadbackRequiredWhenRepositoryStateMaterial": true
+    },
+    "routeResolvedProvesExecution": false,
+    "admittedAndLockedProvesExecution": false,
+    "selfAuthoredInvokedBooleanProvesExecution": false,
+    "jsonStructureProvesSourceAuthenticity": false,
+    "independentObserverMustActuallyRunWhenIndependentNativeReviewIsClaimed": true,
+    "sourceUnavailableDisposition": "DO_NOT_CLAIM_NATIVE_INVOCATION_OR_INDEPENDENT_REVIEW",
+    "fileOnlyValidationResult": "STRUCTURE_VALID_EXECUTION_UNVERIFIED",
+    "providedObservationComparisonResult": "MATCHES_PROVIDED_OBSERVATIONS",
+    "validatorCreatesAuthority": false,
+    "syntheticTestsProveActualInvocation": false,
+    "coLocatedFallbackDoesNotUseNativeEvidenceGateAsAuthenticityProof": true
+  },
+  "requiredCheckpoints": ["BEFORE_REQUIRED_AGENT_ASSIGNMENT", "BEFORE_REQUIRED_INDEPENDENT_REVIEW_CLAIM", "BEFORE_AGENT_EVIDENCE_IS_USED_AS_QUALIFICATION_EVIDENCE"],
+  "authoritySeparation": {
+    "agentInvocationApplicabilityCreatesMutationAuthority": false,
+    "readOnlyInvocationRequiresMutationIntake": false,
+    "staticInvocationRequiresMutationIntake": false,
+    "exemptAgentModeMayBypassCanonicalIntake": false,
+    "canonicalIntakeAndProjectAuthorityStillRequiredWhereApplicable": true,
+    "nativeInvocationGrantsMergeOrDeployment": false,
+    "unsuccessfulExecutionMayReleaseLock": true,
+    "coLocatedFallbackGrantsNoAdditionalAuthority": true,
+    "authorityReducingDispositionsRemainAvailable": ["FAIL_CLOSED", "REJECTED_CLOSED", "WITHDRAWN", "SUPERSEDED", "VOIDED", "EXPIRED", "MUTATION_CLOSED_EVIDENCE_CONTINUES"]
+  },
+  "reporting": {
+    "whenAgentModeRequiredMustName": ["canonical function", "actual native task identity or CO_LOCATED_PHASE_ID", "completed output or exact unresolved boundary"],
+    "whenAgentModeExempt": "REPORT_THE_EXECUTION_DECISION_AND_DO_NOT_INVENT_AGENT_RECEIPTS",
+    "mustSeparateWhenApplicable": ["ASSIGNED", "INVOKED_OR_PHASE_ENTERED", "RUNNING", "RETURNED", "INDEPENDENTLY_CHECKED_OR_PHASE_REVIEWED"],
+    "allRepositoryAgentsCurrentlyEnforcedClaimAllowed": false
+  },
+  "hostEnforcement": {
+    "repositoryProcedureMandatory": false,
+    "repositoryProcedureApplicability": "MANDATORY_ONLY_WHEN_WHOLE_ESTATE_EXECUTION_DECISION_REQUIRES_AGENT_EXECUTION",
+    "hostOrConnectorInterpositionInstalled": false,
+    "globalBypassPreventionProven": false,
+    "gapId": "CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT",
+    "closureRequires": ["Repository entry policy adopted", "Required post-adoption tasks use canonical native assignments or owner-directed co-located cardinal phase execution with exact receipts", "Host or connector enforcement denies unmediated required-agent work or a bounded enforcement claim explicitly excludes those channels"]
+  },
+  "selfTest": ".github/ai-router/agent-invocation/self-test.v1.mjs",
+  "startupDiscovery": {
+    "schema": "CANONICAL_NATIVE_AGENT_STARTUP_DISCOVERY_v1",
+    "purpose": "When the whole-estate execution decision requires agent execution, find an actually exposed native spawn or applicable followup capability; when no such tool exists and the owner explicitly directs execution in the current room, use the co-located cardinal room fallback. Exempt work does not perform this discovery ceremony.",
+    "discoveryOrder": ["DIRECTLY_ADVERTISED_TOOL_NAMESPACES", "AVAILABLE_DEFERRED_TOOL_DISCOVERY_IF_NEEDED"],
+    "directToolRequiresDeferredRegistryMatch": false,
+    "allToolsIsCompleteHostCatalog": false,
+    "deferredDiscoveryOnlyWhenAdvertised": true,
+    "advertisedCallableNamesRequired": true,
+    "inventedApiNamesAllowed": false,
+    "steps": [
+      "First read WHOLE_ESTATE_EXECUTION_DECISION_v1. If agentMode is NOT_REQUIRED, do not perform native-agent discovery merely to satisfy ceremony.",
+      "For REQUIRED agent mode, inspect directly advertised tool definitions for a native spawn or applicable existing-task followup capability, then any actually advertised deferred discovery surface if still unresolved.",
+      "Use an available capability through its advertised namespace and argument schema. Do not wait for a deferred-registry match to use a directly exposed tool.",
+      "Freeze the bounded canonical assignment before invocation and retain the returned task identity and source event.",
+      "If required native spawn/followup is unexposed after complete discovery and the owner explicitly directs execution in the current room, activate CO_LOCATED_CARDINAL_EXECUTION_ROOM_v1. Do not claim native spawn or independent model instances.",
+      "If a required exposed native call fails, preserve the exact failure and stop that required assignment unless a separate owner-directed repair authorizes another execution mode."
+    ],
+    "namespacePolicy": {
+      "directNativeExamples": ["collaboration.spawn_agent", "collaboration.followup_task"],
+      "examplesRequireActualHostAdvertisement": true,
+      "directCollaborationCallsInsideFunctionsExecAllowed": false,
+      "directCollaborationCallsThroughToolsObjectAllowed": false,
+      "rule": "When collaboration tools are advertised directly and agent mode requires them, call them directly outside functions.exec; do not invent aliases or APIs. Other hosts use their actually advertised callable names."
+    },
+    "outcomes": {
+      "AGENT_MODE_NOT_REQUIRED": {"condition": "The authoritative whole-estate execution decision exempts this task class.", "next": "Proceed under the resolved repository and project authority without native-agent ceremony.", "invocationProved": false},
+      "NATIVE_AGENT_TOOL_AVAILABLE": {"condition": "A required applicable native callable is actually exposed.", "next": "Freeze the assignment and invoke it.", "invocationProved": false},
+      "NATIVE_AGENT_DISCOVERY_INCOMPLETE": {"condition": "Required callable is not found and an advertised discovery surface remains unresolved.", "next": "Inspect the remaining available surface; preserve discovery errors."},
+      "NATIVE_AGENT_CAPABILITY_UNEXPOSED": {"condition": "Agent mode is REQUIRED and all advertised discovery surfaces were inspected; none exposes the required capability.", "next": "Use owner-directed CO_LOCATED_CARDINAL_EXECUTION_ROOM_v1 when authorized; otherwise stop only the required assignment."},
+      "NATIVE_AGENT_INVOCATION_CALL_FAILED": {"condition": "A required exposed native invocation callable was called and failed.", "next": "Preserve the exact failure; do not relabel the call as capability absence."}
+    },
+    "requiredObservationsWhenAgentModeRequired": ["direct namespaces inspected", "advertised deferred discovery inspected or not advertised or failed", "actual applicable callable name and namespace when found", "exact discovery or invocation failure and source event when present", "actual returned native task identity and invocation event before work when native mode is used", "explicit owner directive and co-located phase identifiers when fallback mode is used"],
+    "createsAuthority": false,
+    "installsHostTools": false,
+    "untestedRoomOrDeviceInvocationProven": false
+  },
+  "complementaryOfficeDiscovery": {
+    "schema": "COMPLEMENTARY_OFFICE_SOURCE_DISCOVERY_v1",
+    "purpose": "Discover existing whole-estate offices only when the bounded task needs their capabilities or a full integrated-route claim; this is orientation, not a second runtime or authority transfer.",
+    "mode": "DISCOVERY_ONLY_TASK_PROPORTIONAL",
+    "afterInitialNativeInvocation": false,
+    "afterInitialCanonicalExecutionStart": false,
+    "automaticPrivateRouting": false,
+    "allOfficesRequiredForEveryTask": false,
+    "authorityEffect": "NONE",
+    "sourceRepository": "smansfield635-create/geodiametrics1",
+    "sourceRef": "refs/heads/main",
+    "observedSourceHead": "0dfbe032f56e44dd8655e525dcbb5847c3bbaf2a",
+    "observedSourceHeadRole": "HISTORICAL_DISCOVERY_PROVENANCE_NOT_CURRENT_AUTHORITY",
+    "resolveCurrentPrivateMainWhenApplicable": true,
+    "entryPaths": ["AI_ENTRYPOINT.json", "AGENTS.md"],
+    "sourcePaths": {
+      "capabilityCrosswalk": "control-plane/transferability-program/compass-agent-runtime-v0.1/agentic-convergence-capability-crosswalk.v1.json",
+      "runtimeContract": "control-plane/transferability-program/compass-agent-runtime-v0.1/runtime-contract.v0.1.json",
+      "productionEntryContract": "control-plane/transferability-program/compass-agent-runtime-v0.1/production-typed-runtime-entry.v1.json"
+    },
+    "offices": [
+      {"office": "EQUIPMENT_ROOM", "identity": null, "purpose": "CAPABILITY_CLASSIFICATION_AND_EVIDENCE_REQUIREMENT_SELECTION", "executionBackend": false},
+      {"office": "NORTH_RETURN", "identity": "Alaric", "purpose": "FINAL_ADMISSIBILITY_AFTER_FOUR_CARDINAL_RUNTIME", "executionBackend": false},
+      {"office": "LAB_EXECUTION", "identity": "Dextrion", "purpose": "IMPLEMENTATION_DISCIPLINE_AND_EXECUTION_PREPARATION", "executionBackend": false},
+      {"office": "EXECUTION_SUBSTRATE", "identity": null, "purpose": "BOUNDED_SHA_GUARDED_MATERIALIZATION", "executionBackend": true, "backendId": "CANONICAL_EXECUTION_SUBSTRATE_V1"},
+      {"office": "POST_MATERIALIZATION_VERIFICATION", "identity": "Soren", "purpose": "VERIFY_REALIZED_CANDIDATE_SEPARATELY_FROM_PRE_MATERIALIZATION_PROPOSAL_VERIFICATION", "executionBackend": false},
+      {"office": "ESTATE_STEWARD", "identity": "Jeeves", "purpose": "OWNER_FACING_CONTEXTUAL_RETURN_AND_RELAY", "executionBackend": false, "technicalDispositionMutable": false},
+      {"office": "ACK_RETURN", "identity": null, "purpose": "TERMINAL_EVIDENCE_CLOSURE_RETURN_TO_ORIGIN", "executionBackend": false}
+    ],
+    "resolutionSteps": [
+      "Consult complementary offices only when the authoritative execution decision or controlling task contract makes them relevant.",
+      "Resolve current private main through authorized connected access, read the private AI_ENTRYPOINT.json and AGENTS.md at that exact head, then read the source contracts at the same head.",
+      "Treat this office list and observed head as discovery pointers. Current private contracts govern their own scope; public metadata grants no private execution, mutation, scientific, merge, deployment or cross-repository authority.",
+      "Preserve identity, office, capability, stage, backend and authority distinctions. The offices are not extra cardinal identities or a requirement to invoke every office on every task.",
+      "If required private access, exact head or source contracts cannot be read, report REQUIRED_PRIVATE_SOURCE_UNAVAILABLE and stop only that dependent step; do not block unrelated authorized public work.",
+      "Before claiming a full integrated route, check current source requirements and actual operation evidence. Local execution success or this map alone cannot prove full-route traversal."
+    ],
+    "privateAccessGranted": false,
+    "privateExecutionAuthorityGranted": false,
+    "integratedRouteProvenByDiscovery": false
+  }
+}

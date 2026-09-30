@@ -1,0 +1,17 @@
+{
+  "schema": "COMPASS_60S_EDITORIAL_AUTHORITY_v1",
+  "status": "FROZEN_EDITORIAL_AUTHORITY",
+  "purpose": "Preserve the successful 60-second Compass editorial construction independently of presentation geometry.",
+  "lineage": {
+    "pictureSource": {"path": "23619.mp4", "sha256": "c5caa176633209bdc618f505f64cafef5535e400ce2bf1728cde79582169c9a3"},
+    "qualifiedCandidate": {"path": "compass-qualified-candidate.mp4", "sha256": "c8a8c8b3bb6e629204a4be1b3d1c821ad0f987b1c9c43719eb7042aced5ddfa8"},
+    "pictureLock60s": {"path": "compass-cinematic-picture-lock-60s-final.mp4", "sha256": "1718eeca01a468255a9270650f802273fa0c70433c7949e1cb10f4f3c5f1afab", "status": "EDITORIAL_AUTHORITY_PRESENTATION_SUPERSEDED"},
+    "rejectedTextMusicMaster": {"path": "compass-cinematic-final-text-music-v1.mp4", "sha256": "a0f53b1ba8db5b700f65adb5dce2122dfb7164a86dd1dadeb38f43a5e3be602b", "status": "REJECTED_PRESENTATION_EVIDENCE"}
+  },
+  "durationSeconds": 60.0,
+  "preserveExactly": ["shot order","narrative order","relative dwell hierarchy","Mirrorland twitch repair intent","transition windows reserved for reading","read-look-transition-read-look comprehension cadence","return-to-Compass conclusion"],
+  "mayChangeOnlyForLiveRecomposition": ["crop","scale","pan-scan path","background plate","cinematic composite structure","transition geometry needed to preserve full-field presentation"],
+  "narrativeAuthority": ["Navigation requires orientation.","Without orientation, there is no navigation.","Here at Diamond Gate Bridge, we assess our questions through their connections.","And you're never lost, no matter how far from home.","And the stars provide the answers.","Reality relies on their existence.","Therefore: Nothing navigates better than a compass."],
+  "openingLaw": "The first line is presented on a dedicated dark cinematic field before moving website footage begins.",
+  "supersedes": "Any earlier document that treats centered portrait-with-black-field geometry as final presentation authority."
+}

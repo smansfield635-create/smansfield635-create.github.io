@@ -1,0 +1,20 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_COMPASS_G5_QUALIFICATION_v1",
+  "generation": "G5",
+  "status": "PASS_CLOSED_DECISION_ONLY",
+  "corpusCount": 8,
+  "g4OwnerReviewThreshold": "NOT_MET",
+  "residualJustification": "SUPPORTED_BY_G1_G4_CONTROLLED_FAILURE_TO_REMOVE_RECOGNIZABLY_SYNTHETIC_SOURCE_IDENTITY",
+  "residualTrainingAdmission": "FAIL_CLOSED_NO_AUTHORIZED_REFERENCE_SIGNAL",
+  "referencePairsAvailable": 0,
+  "qualificationFindings": {
+    "deterministicControlExhaustedEnoughToJustifyResidualResearch": true,
+    "externalModelRequired": false,
+    "generalTTSPlatformRequired": false,
+    "lawfulResidualFitPossibleNow": false,
+    "reason": "No Diamond Gate-owned or explicitly authorized Jeeves human reference audio is presently bound."
+  },
+  "disposition": "G5_DECISION_COMPLETE_RESIDUAL_FIT_DEFERRED_UNTIL_REFERENCE_ADMISSION",
+  "nextLawfulAction": "CAPTURE_OR_BIND_ONE_ORIGINAL_JEEVES_REFERENCE_FOR_A_FIXED_COMPASS_BEAT_AND_HASH_FREEZE_IT",
+  "reviewArtifactPolicy": "No owner audio review artifact is produced by this decision boundary."
+}

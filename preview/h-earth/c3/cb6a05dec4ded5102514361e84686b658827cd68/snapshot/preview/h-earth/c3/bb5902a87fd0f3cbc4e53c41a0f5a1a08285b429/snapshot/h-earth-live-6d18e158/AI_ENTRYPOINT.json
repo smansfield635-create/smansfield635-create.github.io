@@ -1,0 +1,122 @@
+{
+  "schema": "REPOSITORY_AI_ENTRYPOINT_v3_CANONICAL_SPINE",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "conversationMemoryRequired": false,
+  "rootAgentInstruction": "AGENTS.md",
+  "routerRegistry": ".github/ai-router/router.v1.json",
+  "routerCli": "tools/repository-ai-entry-router.mjs",
+  "projectRegistrationSchema": ".github/ai-router/project-registration.schema.v1.json",
+  "sharedProcedureRegistry": ".github/ai-router/shared-procedures.v1.json",
+  "entryReceiptSchema": ".github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json",
+  "entryCommand": "node tools/repository-ai-entry-router.mjs --path <repository-path> [--path <repository-path> ...]",
+  "mutationCommand": "INTAKE_ADMISSION_RECEIPT=<ADMITTED_AND_LOCKED_RECEIPT> node tools/repository-ai-entry-router.mjs --mutation-intent --path <repository-path> [--path <repository-path> ...] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/mutation-router-receipt.json",
+  "operationIntakeGate": {
+    "locator": ".github/operation-intake/locator.v1.json",
+    "mandatoryBeforeMutationRouting": true,
+    "successorLifecycle": {
+      "protocol": ".github/ai-router/operation-lifecycle/successor-protocol.v1.json",
+      "gateCli": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
+      "selfTest": ".github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs",
+      "trigger": "ACTIVE_OPERATION_GOVERNING_HEAD_DIFFERS_FROM_CURRENT_REFS_HEADS_MAIN",
+      "successResult": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+      "predecessorTerminalDisposition": "SUPERSEDED",
+      "authorityInherited": false,
+      "freshSuccessorRequestAndProcedureRequired": true,
+      "exactHeadRevalidationRequired": true,
+      "oneLedgerCompareAndSwapRequired": true,
+      "command": "GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>",
+      "remoteInvocationMarker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+      "remoteInvocationWorkflow": ".github/workflows/remote-operation-successor-v1.yml",
+      "remoteInvocationSchema": "REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1",
+      "remoteInvocationAuthorityInherited": false,
+      "remoteInvocationGenericCommandAuthority": false,
+      "postRatificationSuccessorCompiler": {
+        "cli": ".github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs",
+        "selfTest": ".github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs",
+        "compileSchema": "REPOSITORY_OPERATION_SUCCESSOR_PACKET_COMPILE_REQUEST_v1",
+        "compiledPacketSchema": "REPOSITORY_OPERATION_SUCCESSOR_COMPILED_PACKET_v1",
+        "remoteInvocationMarker": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1",
+        "remoteInvocationSchema": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_INVOCATION_REQUEST_v1",
+        "remoteInvocationWorkflow": ".github/workflows/remote-operation-successor-v1.yml",
+        "explicitJsonPointerRebindsRequired": true,
+        "freshOperationIdRequired": true,
+        "freshProcedureIdRequired": true,
+        "scopeExpansionAllowed": false,
+        "authorityInherited": false,
+        "automaticEvidenceRelabeling": false,
+        "automaticProductMutation": false,
+        "atomicSuccessorGateStillRequired": true
+      },
+      "differentialPreflight": {
+        "systemId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_v1",
+        "gateCli": ".github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs",
+        "workflow": ".github/workflows/differential-continuity-v1.yml",
+        "requiredBeforeStrictSuccessorWhenCompleteDependencySurfaceAvailable": true,
+        "carryForwardDoesNotExpandAuthority": true,
+        "fallbackOnOverlapAmbiguityDivergenceOrIncompleteEvidence": "STRICT_SUCCESSOR"
+      }
+    }
+  },
+  "remoteCanonicalIntakeTransport": {
+    "schema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_CAPABILITY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "canonicalLocator": ".github/operation-intake/locator.v1.json",
+    "invocationMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+    "executionWorkflow": ".github/workflows/canonical-operation-intake-transport-v1.yml",
+    "fixedCommand": "node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --input <REQUEST_ENVELOPE.json> --output <TRANSPORT_RECEIPT.json>",
+    "authorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "prMutationAuthorityCreated": false,
+    "admissionSemanticsDuplicated": false
+  },
+  "publicQualityInstrumentationHandoff": {
+    "schema": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_HANDOFF_v1",
+    "result": "PUBLIC_PAGE_EXCELLENCE_IMPLEMENTATION_RETIRED",
+    "publicImplementationAvailable": false,
+    "publicExecutionAuthorized": false,
+    "publicMutationAuthorityCreated": false,
+    "forwardingPerformed": false,
+    "privateSuccessorRepository": "smansfield635-create/geodiametrics1",
+    "privateSuccessorEvidenceHead": "840b885db8d3b0331e9ac3bd207df3d32baf8fb6",
+    "privateSuccessorAuthorityInheritedFromPublicMetadata": false,
+    "resolutionLaw": "WHEN_AN_OPERATION_CONTRACT_REQUIRES_PAGE_OR_INTERFACE_QUALITY_QUALIFICATION_RESOLVE_AN_AUTHORIZED_PRIVATE_SUCCESSOR_ROUTE_FAIL_CLOSED_OUTSIDE_THIS_PUBLIC_REPOSITORY"
+  },
+  "systemContinuityTrack": {
+    "status": "ACTIVE_FAIL_CLOSED",
+    "protocol": ".github/ai-router/system-continuity/progressive-system-continuity-protocol.v1.json",
+    "mandatoryFor": [
+      "SHARED_CONTROL_PLANE_INTERFACE_CHANGE",
+      "SYSTEM_GAP_CLOSED_CLAIM"
+    ],
+    "authorityCreated": false,
+    "replacementAuthorityCreated": false
+  },
+  "displayContinuityConstitution": {
+    "schema": "WHOLE_ESTATE_DISPLAY_CONTINUITY_CONSTITUTION_BINDING_v1",
+    "status": "ACTIVE_MANDATORY_DEVELOPMENT_CONTEXT",
+    "locator": ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
+    "humanDocumentation": ".github/ai-router/display-continuity-constitution-v1/README.md",
+    "narrativeContinuityMap": "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json",
+    "narrativeSpine": "control-plane/whole-estate/narrative-spine-constitution-v1/narrative-spine.v1.json",
+    "sharedProcedureId": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
+    "mandatoryForApplicableConstruction": true,
+    "authorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "scientificAuthorityCreated": false,
+    "claimAuthorityCreated": false
+  },
+  "rules": [
+    "EXACT_GOVERNING_HEAD_BEFORE_MUTATION",
+    "EXPLICIT_BOUNDED_MUTATION_SCOPE",
+    "SINGLE_ACTIVE_AUTHORITY_FOR_OVERLAPPING_SCOPE",
+    "NO_SILENT_AUTHORITY_INHERITANCE_OR_WIDENING",
+    "VERIFY_CANDIDATE_BEFORE_ADOPTION",
+    "FAIL_CLOSED_ON_GENUINE_AMBIGUITY_OR_CONTRADICTORY_EVIDENCE",
+    "CANONICAL_INTAKE_REQUIRED_BEFORE_MUTATION_ROUTING",
+    "PUBLIC_METADATA_GRANTS_NO_PRIVATE_AUTHORITY",
+    "TRANSPORT_DOES_NOT_DEFINE_ADMISSION_LOCK_OR_CLOSURE_SEMANTICS",
+    "DISPLAY_CONTINUITY_CONSTITUTION_REQUIRED_FOR_APPLICABLE_CONSTRUCTION"
+  ]
+}

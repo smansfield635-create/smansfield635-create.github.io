@@ -1,0 +1,47 @@
+name: Education Canonical Card Model Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify canonical six-card model
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/c.html
+          git show "$BASE_SHA:products/education/index.html" >/tmp/b.html
+          node - <<'NODE'
+          const fs=require('fs'),c=fs.readFileSync('/tmp/c.html','utf8'),b=fs.readFileSync('/tmp/b.html','utf8');
+          for(const src of [...c.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const block=(s,a,z)=>s.slice(s.indexOf(a),s.indexOf(z,s.indexOf(a)));
+          for(const [a,z,n] of [['const BANK=','const CAPSTONE_BANK=','BANK'],['const CAPSTONE_BANK=','const EDUCATION_STATE_KEY=','CAPSTONE'],['function placementCoordinate','const BANK=','PLACEMENT'],['function submitAdaptiveAnswer','function resolveAdaptiveBoundary','ADAPTIVE']])if(block(c,a,z)!==block(b,a,z))throw Error('protected '+n+' changed');
+          const m=block(c,'const EDUCATION_CARD_MODEL=[','const EDUCATION_ARCHITECTURE=[');
+          for(const id of ['possibility','understanding','action','progress','independence','achievement'])if(!m.includes('id:"'+id+'"'))throw Error('missing card '+id);
+          if((m.match(/id:"(?:possibility|understanding|action|progress|independence|achievement)"/g)||[]).length!==6)throw Error('card count');
+          for(const e of ['BOUNDED_RECOMBINATION','PATTERN_TRANSFORMATION','SENTENCE_ASSEMBLY','CORRECTION_LOOP','SUPPORT_REDUCTION','TRANSFER'])if(!m.includes('evidenceClass:"'+e+'"'))throw Error('missing evidence '+e);
+          for(const locale of ['en:{','es:{','zh:{'])if((m.split(locale).length-1)<6)throw Error('locale coverage '+locale);
+          if(/type:"text"/.test(m))throw Error('free text prohibited');
+          if(!m.includes('task:{type:"assembly",verb:["like","likes"],object:["music","dogs","pizza"]}'))throw Error('Action assembly missing');
+          if(!m.includes('valid:{verb:"like",object:["music","dogs","pizza"]},invalid:{verb:"likes"}'))throw Error('Action discrimination missing');
+          if(!m.includes('required:"both"'))throw Error('Possibility both-output law missing');
+          if(!m.includes('source:"play",operator:"-ed",result:"played"'))throw Error('Understanding reference changed');
+          if(!m.includes('options:["She walk.","She walks."]'))throw Error('Progress reference changed');
+          if(!m.includes('recordHelpState:true'))throw Error('Independence help-state evidence missing');
+          if(!m.includes('earlier:"play → played",now:"walk → walked"'))throw Error('Achievement transfer missing');
+          if(!m.includes('free text; all-options-correct; complete-sentence multiple choice.'))throw Error('Action prohibited-regression boundary missing');
+          console.log('EDUCATION_CANONICAL_CARD_MODEL=PASS');
+          NODE

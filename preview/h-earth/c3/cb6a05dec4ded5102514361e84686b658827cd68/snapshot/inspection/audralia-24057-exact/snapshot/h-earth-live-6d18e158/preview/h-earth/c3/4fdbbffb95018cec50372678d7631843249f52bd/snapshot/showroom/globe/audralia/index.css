@@ -1,0 +1,305 @@
+:root{
+  color-scheme:dark;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#0e1510;
+  color:#edf3eb;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:#0e1510;
+}
+
+body{
+  min-height:100dvh;
+  overscroll-behavior:none;
+}
+
+button,a{font:inherit}
+
+a{color:inherit}
+
+.audralia-loading-screen{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:grid;
+  place-items:center;
+  padding:max(24px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));
+  background:
+    radial-gradient(circle at 50% 44%,rgba(62,92,69,.24) 0%,rgba(14,21,16,.94) 48%,#0a0f0c 100%);
+  opacity:1;
+  visibility:visible;
+  transition:opacity .38s ease,visibility .38s ease;
+}
+
+.audralia-loading-screen[hidden]{display:none}
+
+.audralia-loading-screen.is-ready{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+.audralia-loading-panel{
+  width:min(360px,88vw);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+}
+
+.audralia-loading-orbit{
+  width:72px;
+  height:72px;
+  margin-bottom:22px;
+  position:relative;
+  border:1px solid rgba(225,239,219,.20);
+  border-radius:50%;
+  box-shadow:inset 0 0 28px rgba(199,226,188,.05),0 0 42px rgba(199,226,188,.04);
+}
+
+.audralia-loading-orbit::before,
+.audralia-loading-orbit::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+}
+
+.audralia-loading-orbit::before{
+  inset:8px;
+  border:1px solid rgba(225,239,219,.10);
+}
+
+.audralia-loading-orbit::after{
+  inset:-1px;
+  border:2px solid transparent;
+  border-top-color:rgba(225,239,219,.78);
+  border-right-color:rgba(225,239,219,.18);
+  animation:audralia-loading-orbit 1.35s linear infinite;
+}
+
+.audralia-loading-title{
+  font-size:clamp(26px,6vw,38px);
+  line-height:1;
+  font-weight:760;
+  letter-spacing:.015em;
+}
+
+.audralia-loading-stage{
+  min-height:1.4em;
+  margin-top:13px;
+  color:rgba(237,243,235,.78);
+  font-size:13px;
+  line-height:1.4;
+}
+
+.audralia-loading-track{
+  width:100%;
+  height:2px;
+  margin-top:20px;
+  position:relative;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(225,239,219,.10);
+}
+
+.audralia-loading-track span{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:38%;
+  border-radius:inherit;
+  background:rgba(225,239,219,.72);
+  animation:audralia-loading-track 1.65s ease-in-out infinite;
+}
+
+.audralia-loading-time{
+  margin-top:9px;
+  color:rgba(237,243,235,.45);
+  font-size:10px;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.04em;
+}
+
+.audralia-loading-note{
+  max-width:310px;
+  margin-top:18px;
+  color:rgba(237,243,235,.42);
+  font-size:10px;
+  line-height:1.45;
+}
+
+.audralia-loading-screen.is-error .audralia-loading-orbit::after{
+  animation:none;
+  border-color:rgba(237,243,235,.24);
+}
+
+@keyframes audralia-loading-orbit{
+  to{transform:rotate(360deg)}
+}
+
+@keyframes audralia-loading-track{
+  0%{left:-40%}
+  50%{left:54%}
+  100%{left:104%}
+}
+
+.audralia-live-shell{
+  width:100%;
+  height:100dvh;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  background:#0e1510;
+}
+
+.audralia-live-toolbar{
+  position:relative;
+  z-index:20;
+  min-height:48px;
+  padding:max(7px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 7px max(10px,env(safe-area-inset-left));
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border-bottom:1px solid rgba(229,240,224,.12);
+  background:rgba(13,20,15,.96);
+  backdrop-filter:blur(12px);
+}
+
+.audralia-live-brand{
+  flex:0 0 auto;
+  font-size:14px;
+  line-height:1;
+  font-weight:760;
+  letter-spacing:.01em;
+  white-space:nowrap;
+}
+
+.audralia-live-nav{
+  min-width:0;
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:7px;
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+}
+
+.audralia-live-nav::-webkit-scrollbar{display:none}
+
+.audralia-live-action{
+  flex:0 0 auto;
+  min-height:30px;
+  padding:0 10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(229,240,224,.18);
+  border-radius:9px;
+  background:rgba(235,243,225,.065);
+  color:#edf3eb;
+  text-decoration:none;
+  font-size:11px;
+  font-weight:680;
+  letter-spacing:.01em;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+.audralia-live-action:hover,
+.audralia-live-action:focus-visible{
+  outline:none;
+  border-color:rgba(229,240,224,.34);
+  background:rgba(235,243,225,.13);
+}
+
+.audralia-live-action-primary{
+  border-color:rgba(205,231,177,.26);
+  background:rgba(205,231,177,.12);
+}
+
+.audralia-world-stage{
+  position:relative;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  isolation:isolate;
+  background:#111712;
+}
+
+.audralia-world-canvas{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  touch-action:none;
+  overscroll-behavior:none;
+  cursor:grab;
+}
+
+.audralia-world-canvas:active{cursor:grabbing}
+
+.audralia-live-help{
+  position:relative;
+  z-index:20;
+  min-height:32px;
+  padding:7px max(10px,env(safe-area-inset-right)) max(7px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
+  border-top:1px solid rgba(229,240,224,.1);
+  background:rgba(13,20,15,.96);
+  color:rgba(237,243,235,.67);
+  font-size:10px;
+  line-height:1.25;
+  text-align:center;
+  white-space:normal;
+}
+
+.audralia-help-pointer{display:none}
+
+.audralia-sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+
+@media (hover:hover) and (pointer:fine){
+  .audralia-help-touch{display:none}
+  .audralia-help-pointer{display:inline}
+}
+
+@media (max-width:720px){
+  .audralia-live-toolbar{gap:8px}
+  .audralia-live-brand{font-size:13px}
+  .audralia-live-action{min-height:29px;padding:0 9px;font-size:10px}
+  .audralia-live-help{font-size:9px}
+}
+
+@media (max-width:460px){
+  .audralia-live-toolbar{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+  .audralia-live-nav{gap:6px}
+  .audralia-live-action{padding:0 8px}
+  .audralia-loading-panel{width:min(320px,88vw)}
+  .audralia-loading-note{font-size:9px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.001ms!important;animation-duration:.001ms!important;animation-iteration-count:1!important}
+}
+
+@media (forced-colors:active){
+  .audralia-live-toolbar,.audralia-live-help,.audralia-live-action{border-color:CanvasText}
+  .audralia-loading-orbit,.audralia-loading-track{border-color:CanvasText}
+}

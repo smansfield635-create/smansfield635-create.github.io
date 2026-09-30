@@ -1,0 +1,153 @@
+{
+  "schema": "ARCHCOIN_PROTECTED_SURFACE_FREEZE_v1",
+  "status": "FROZEN_EXACT_PUBLISHED_BASELINE",
+  "operation": {
+    "operationId": "ARCHCOIN_PROTECTED_SURFACE_FREEZE_20260920_001",
+    "issueNumber": 3964,
+    "canonicalSourceCommentId": 5751321453,
+    "lockGeneration": 2450,
+    "lockScope": "ARCHCOIN:WEBSITE:PROTECTED_SURFACE_FREEZE",
+    "governingHead": "1cffd15dcae866416fb967ced61b236b1b2bf68a",
+    "allowedPaths": [
+      "products/archcoin/protected-surface-freeze.v1.json",
+      "products/archcoin/verify-protected-surface-freeze.v1.mjs"
+    ]
+  },
+  "purpose": {
+    "ownerDisposition": "KEEP_THE_EXISTING_COMPASS_AND_PAGE_CONTENT; ADD_ONE_FOREGROUND_STAR_NAME_AT_A_TIME; UPDATE_CONTEXT_FROM_EXISTING_STATE; MAKE_THE_EXISTING_FOUR_PLANE_CAROUSEL_READ_AS_A_SPATIAL_INSTRUMENT",
+    "freezeLaw": "EVERYTHING_NOT_EXPLICITLY_LISTED_AS_A_CONTROLLED_FUTURE_PRESENTATION_SEAM_IS_PROTECTED_FROM_THE_LATER_REPAIR",
+    "repairIncluded": false,
+    "publicBytesChangedByFreeze": false
+  },
+  "protectedBehavior": {
+    "compass": [
+      "ONE_EXISTING_CONTROLLER_REMAINS_THE_SOLE_NAVIGATION_SELECTION_QUATERNION_AND_ROUTE_AUTHORITY",
+      "COMPASS_GEOMETRY_CAMERA_RENDERER_CRYSTAL_MESHES_STARFIELD_AND_FIXED_CENTER_UPSTREAM_COMPASS_REMAIN_UNCHANGED",
+      "ORBIT_AND_CLUSTER_ROTATION_DRAG_TOUCH_SETTLEMENT_OPEN_RETURN_AND_ROUTE_BEHAVIOR_REMAIN_UNCHANGED",
+      "FOUR_CARDINAL_DOMAINS_AND_SIXTEEN_ROOM_IDENTITIES_ROUTES_AND_MAPPINGS_REMAIN_UNCHANGED",
+      "NO_RUNTIME_REPARENTING_MUTATION_OBSERVER_OR_SECOND_PRESENTATION_AUTHORITY",
+      "CONTEXT_AND_ONE_NEAREST_STAR_LABEL_MUST_PROJECT_FROM_EXISTING_AUTHORITATIVE_STATE"
+    ],
+    "carousel": [
+      "FOUR_ASSET_DESTINATIONS_REMAIN_ARCC_ARCR_ARCP_AND_ARCA",
+      "EACH_ASSET_RETAINS_EXACTLY_FOUR_ORDERED_PLANES_OVERVIEW_ENGINEERING_PLATFORM_AND_GOVERNANCE",
+      "ALL_SIXTEEN_PLANE_CONTENT_BLOCKS_AND_ALL_SIXTEEN_LEGACY_DEEP_LINKS_REMAIN_UNCHANGED",
+      "POINTER_SWIPE_ARROW_LEFT_ARROW_RIGHT_HOME_END_HASH_POPSTATE_ARIA_INERT_AND_REDUCED_MOTION_SEMANTICS_REMAIN",
+      "SPATIALIZATION_MAY_CHANGE_PRESENTATION_AND_TRANSITION_GEOMETRY_BUT_NOT_CONTENT_ORDER_IDENTITY_ROUTES_OR_CLAIMS"
+    ],
+    "evmAndClaims": [
+      "FOUR_ASSET_TOKEN_LAW_CONTRACT_CONFIGURATION_TESTS_AND_LOCAL_QUALIFICATION_BYTES_REMAIN_UNCHANGED",
+      "STATUS_REMAINS_SIGNED_TRANSACTION_QUALIFIED_WITH_SEPOLIA_PENDING",
+      "NO_CONTRACT_ADDRESS_OR_DEPLOYED_CRYPTOCURRENCY_CLAIM_BEFORE_VERIFIABLE_ON_CHAIN_STATE",
+      "NO_POST_DEPLOYMENT_MINT_PUBLIC_BURN_PRIVILEGED_TOKEN_MUTATION_OR_UNSUPPORTED_HOLDER_RIGHTS_CLAIM"
+    ]
+  },
+  "controlledFuturePresentationSeams": [
+    {
+      "path": "products/archcoin/index.html",
+      "baselineBlob": "c1e3a7fa1d0bbada82adac485db92dbb11aeb22c",
+      "allowedPurpose": "ADD_CONTEXTUAL_HEADING_MODE_PROJECTION_AND_ONE_FOREGROUND_STAR_LABEL_HOST_ONLY",
+      "mustPreserve": [
+        "FOUR_CARDINAL_DOMAIN_CONTROLS",
+        "SIXTEEN_ROOM_DECLARATIONS",
+        "ALL_ROUTES_PANEL_CONTENT_LENSES_SCRIPT_ORDER_AND_ACCESSIBILITY_SEMANTICS"
+      ]
+    },
+    {
+      "path": "products/archcoin/index.presentation.css",
+      "baselineBlob": "d5feb3bb5b1b763804df13b8a1224fa35a7b1df6",
+      "allowedPurpose": "STYLE_CONTEXTUAL_COPY_AND_THE_SINGLE_FOREGROUND_STAR_LABEL_WITHOUT_CHANGING_COMPASS_GEOMETRY_OR_LAYER_AUTHORITY",
+      "mustPreserve": [
+        "COMPASS_SCALE_POSITION_DEPTH_AND_TOUCH_TARGETS",
+        "MOBILE_COMPOSITION",
+        "REDUCED_MOTION_SEMANTICS"
+      ]
+    },
+    {
+      "path": "products/archcoin/carousel.js",
+      "baselineBlob": "82b44869d922ebe6a0be9aed621f3f4bd2ced13e",
+      "allowedPurpose": "PROJECT_THE_EXISTING_ACTIVE_PLANE_AS_A_SPATIAL_ORBIT_WITH_VISIBLE_NEIGHBORS_AND_DIRECTIONAL_ARRIVAL_DEPARTURE",
+      "mustPreserve": [
+        "ONE_ACTIVE_PLANE",
+        "EXISTING_PLANE_ORDER_AND_HASH_STATE",
+        "POINTER_KEYBOARD_ARIA_INERT_AND_REDUCED_MOTION_BEHAVIOR",
+        "NO_SECOND_CAROUSEL_CONTROLLER"
+      ]
+    },
+    {
+      "path": "products/archcoin/carousel.css",
+      "baselineBlob": "eee06c48e45ba47d7198b423bfe58701f7659fb2",
+      "allowedPurpose": "ADD_DEPTH_NEIGHBOR_PRESENCE_AND_DIRECTIONAL_SPATIAL_TRANSITIONS_TO_THE_EXISTING_FOUR_PLANE_INSTRUMENT",
+      "mustPreserve": [
+        "ALL_CONTENT_READABILITY",
+        "TOUCH_ACTION_PAN_Y",
+        "TABLET_PHONE_DESKTOP_AND_REDUCED_MOTION_EQUIVALENCE"
+      ]
+    }
+  ],
+  "futureOperationLaw": {
+    "freshCanonicalAdmissionRequired": true,
+    "mutationLimitedToDeclaredPresentationSeams": true,
+    "immutablePathMutationRequiresNewOwnerScope": true,
+    "compassAndCarouselRepairsMustQualifyIndependentlyBeforeCombinedRegression": true,
+    "mergeDeploymentPublicationAndSepoliaRemainSeparate": true
+  },
+  "immutablePaths": [
+    {"path":".github/ai-router/publication-surfaces/archcoin.json","blob":"e351f6b5d7e587cbfb8d444342d01d8252fe484d"},
+    {"path":"assets/compass/compass.presentation-convergence.js","blob":"027ca126792e081d1ab05ed09fb8a107f053c49d"},
+    {"path":"assets/compass/upstream-compass.css","blob":"ea4ac7da5f7a20fe1497c1bbcc46250783c6fe8e"},
+    {"path":"assets/compass/upstream-compass.geometry.js","blob":"fe35d8d844859a6af810684ace53d2c65258522f"},
+    {"path":"assets/compass/upstream-compass.renderer.js","blob":"965376dd8a92686bc7008d1fea4846b5f8300872"},
+    {"path":"economy/archcoin/token-law.v1.json","blob":"587ff38e66704c783a638e1869d4f87c9626d9a8"},
+    {"path":"economy/archcoin/evm/contracts/ArchcoinFixedSupply.sol","blob":"38e2b1b2c764511285a71797bf8b459a580d47df"},
+    {"path":"economy/archcoin/evm/hardhat.config.js","blob":"726f643e8742ef8b8a13c679875a920b94c66eb8"},
+    {"path":"economy/archcoin/evm/package.json","blob":"60e2430d45c1a66b2f8212fd9de9df0e221c77b8"},
+    {"path":"economy/archcoin/evm/qualification/stage.sh","blob":"97c169977df8c3cab07748b71675dc8be900d51c"},
+    {"path":"economy/archcoin/evm/scripts/qualify-local.js","blob":"29a5e56ae1abd415969c7dd63eede71202ed97b1"},
+    {"path":"economy/archcoin/evm/test/four-assets.test.js","blob":"be6a8a878b29f50bd7ea3193240f150ae500fb79"},
+    {"path":"products/archcoin/carousel-conversion-map.v1.json","blob":"42e842109de2ab63d67de468e5db4c93a233af46"},
+    {"path":"products/archcoin/verify-carousel-conversion-map.v1.mjs","blob":"52962e06979b0a39c5e551c5fe1418c28bd4a936"},
+    {"path":"products/archcoin/verify-carousel-presentation.v1.mjs","blob":"7a7e5a2cd88f805cccaac1207999ab5504af7e73"},
+    {"path":"products/archcoin/index.base.css","blob":"cade394b5b1e009430a561e6c86711502f8a72a8"},
+    {"path":"products/archcoin/index.compositor.js","blob":"594eefa10bb7ad0583f7c3284a1e0daf28f34960"},
+    {"path":"products/archcoin/index.controller.js","blob":"a9df09dfd130926195c37fdaf98378919bc306e1"},
+    {"path":"products/archcoin/index.crystals.js","blob":"c258fef581f4d1c378ec4d50b11f1a0ec4db8e62"},
+    {"path":"products/archcoin/index.crystals.source.js","blob":"570c8b64f803b46c3ff2eb22d650596d832467af"},
+    {"path":"products/archcoin/index.css","blob":"864a6e78da49ccd9f67f5c26d00b0cb7fc8e78d8"},
+    {"path":"products/archcoin/index.globe.css","blob":"550a1d40de44b12cb3ec92413ce827431029b00c"},
+    {"path":"products/archcoin/index.interactions.js","blob":"c4cf44c512d74be03f1ec7f6b178756f89928e44"},
+    {"path":"products/archcoin/index.interactions.source.js","blob":"c425ece001586db09aeb7353bfde2ab8177db7c3"},
+    {"path":"products/archcoin/index.motion.source.js","blob":"1b9113f5de44b03dfc025519f4b41f61c9e8a743"},
+    {"path":"products/archcoin/index.planet.js","blob":"f2a82154f017895863d0ed33dd08fca14b11a7f2"},
+    {"path":"products/archcoin/index.planet.source.js","blob":"2116a60f13200ada5d6280c01a2d2ddee661f187"},
+    {"path":"products/archcoin/index.starfield.js","blob":"d1754098a3e47ef182b762245e1449f16a4b4508"},
+    {"path":"products/archcoin/contract/index.html","blob":"57f4ffce77489c707415d81006c4dd97d4c99c1f"},
+    {"path":"products/archcoin/contract/overview/index.html","blob":"c5acdc36c9a09018c666c58e1a4a3dcad88b8964"},
+    {"path":"products/archcoin/contract/engineering/index.html","blob":"9d056d8f05172dc472ccb5bbbdf46710b2d21092"},
+    {"path":"products/archcoin/contract/platform/index.html","blob":"bd80d64cf63bf010e8859c746447896d8b5ba719"},
+    {"path":"products/archcoin/contract/governance/index.html","blob":"e46f822bdb6b09ac9181dc9fdc67487387aee326"},
+    {"path":"products/archcoin/receivable/index.html","blob":"5cfd0d681dda71c136019c4a0277623a41bea8ac"},
+    {"path":"products/archcoin/receivable/overview/index.html","blob":"85240aa2676e17d70019e909072e899232d8d1d3"},
+    {"path":"products/archcoin/receivable/engineering/index.html","blob":"a7282711ba6c8942219dc4e6443a6dfe856d4c79"},
+    {"path":"products/archcoin/receivable/platform/index.html","blob":"7d4e2ce772d1cef4be7faecd7616b6cb3f50c51b"},
+    {"path":"products/archcoin/receivable/governance/index.html","blob":"cca04ecb9c4923c36474d3a9e078b8425fbbed68"},
+    {"path":"products/archcoin/payable/index.html","blob":"85663a10105f61a218605c2428e4fc2fd8299ac2"},
+    {"path":"products/archcoin/payable/overview/index.html","blob":"f6c7682c6983dac9fd47d2dd9fc0fbc194cd7932"},
+    {"path":"products/archcoin/payable/engineering/index.html","blob":"1783488644b83ef92c1958c77a9f5da6d19484e8"},
+    {"path":"products/archcoin/payable/platform/index.html","blob":"77802b9b19dbe7c9cfeefa105c86b5fab23275a6"},
+    {"path":"products/archcoin/payable/governance/index.html","blob":"f5d00a1c5e71def8376f0cde9e5a82c20f03c2dc"},
+    {"path":"products/archcoin/allocation/index.html","blob":"2b5eafad2f420677ec95d2122f977ac7ad8e99e0"},
+    {"path":"products/archcoin/allocation/overview/index.html","blob":"4f3703fb5fe1107745d4fdc09e49601a054f4212"},
+    {"path":"products/archcoin/allocation/engineering/index.html","blob":"4517736b1215a8d8613013ab6d4786941d333d99"},
+    {"path":"products/archcoin/allocation/platform/index.html","blob":"288c5c3309415583cea7ecdbfc9dee0f4e340f01"},
+    {"path":"products/archcoin/allocation/governance/index.html","blob":"5f1463f67e01063cb01898ddf1e2496f773f78cf"}
+  ],
+  "qualification": {
+    "exactTestCommand": "node products/archcoin/verify-protected-surface-freeze.v1.mjs",
+    "expectedResult": "PASS_CLOSED",
+    "expectedChangedPaths": 2,
+    "expectedImmutablePaths": 48,
+    "expectedControlledSeams": 4,
+    "publicRuntimeMutationExpected": false
+  }
+}

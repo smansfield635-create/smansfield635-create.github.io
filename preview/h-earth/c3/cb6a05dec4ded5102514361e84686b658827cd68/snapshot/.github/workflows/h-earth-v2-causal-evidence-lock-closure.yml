@@ -1,0 +1,253 @@
+name: H-Earth V2 Causal Evidence Lock Closure
+
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: h-earth-v2-causal-evidence-lock-closure
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  TARGET_PR: '680'
+  EXACT_CANDIDATE_HEAD: 940fe2623501da8a4c2b7362d709ed36de851fb8
+  EXACT_MERGE_COMMIT: 214db7387456699183922e316171e19ad9a2950f
+  PRIOR_PARTIAL_RUN: '31140347544'
+  REQUEST_MARKER: H_EARTH_V2_CAUSAL_EVIDENCE_LOCK_CLOSURE_RETRY_REQUEST_v2
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+
+jobs:
+  reconcile-applicable-locks:
+    if: >-
+      ${{
+        github.event.issue.pull_request &&
+        github.event.issue.number == 680 &&
+        github.event.comment.body == 'H_EARTH_V2_CAUSAL_EVIDENCE_LOCK_CLOSURE_RETRY_REQUEST_v2'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out current protected main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Bind exact merge and authorized retry request
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          COMMENT_ASSOCIATION: ${{ github.event.comment.author_association }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set -euo pipefail
+          case "$COMMENT_ASSOCIATION" in
+            OWNER|MEMBER|COLLABORATOR) ;;
+            *) echo "UNAUTHORIZED_COMMENT_ASSOCIATION:$COMMENT_ASSOCIATION" >&2; exit 1 ;;
+          esac
+          test "$COMMENT_BODY" = "$REQUEST_MARKER"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          git merge-base --is-ancestor "$EXACT_MERGE_COMMIT" HEAD
+          node --input-type=module <<'NODE'
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`https://api.github.com${path}`, {headers});
+            const text = await response.text();
+            const body = text ? JSON.parse(text) : null;
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${text}`);
+            return body;
+          }
+          const [owner, repo] = process.env.REPOSITORY.split('/');
+          const pr = await get(`/repos/${owner}/${repo}/pulls/${process.env.TARGET_PR}`);
+          if (pr.merged !== true) throw new Error('TARGET_PR_NOT_MERGED');
+          if (pr.head.sha !== process.env.EXACT_CANDIDATE_HEAD) throw new Error('TARGET_HEAD_MISMATCH');
+          if (pr.merge_commit_sha !== process.env.EXACT_MERGE_COMMIT) throw new Error('TARGET_MERGE_COMMIT_MISMATCH');
+          const main = await get(`/repos/${owner}/${repo}/git/ref/heads/main`);
+          if (main.object.sha !== process.env.GITHUB_SHA) throw new Error('WORKFLOW_NOT_BOUND_TO_CURRENT_MAIN');
+          const prior = await get(`/repos/${owner}/${repo}/actions/runs/${process.env.PRIOR_PARTIAL_RUN}`);
+          if (prior.conclusion !== 'failure') throw new Error('PRIOR_PARTIAL_RUN_NOT_BOUND');
+          NODE
+
+      - name: Reconcile and close remaining exact lock through CAS manager
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-lock-closure
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {closeRemote, stable} from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+
+          const [owner, repo] = process.env.REPOSITORY.split('/');
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+          async function get(path) {
+            const response = await fetch(`https://api.github.com${path}`, {headers});
+            const raw = await response.text();
+            const body = raw ? JSON.parse(raw) : null;
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${raw}`);
+            return body;
+          }
+
+          async function readLedger() {
+            const ref = await get(
+              `/repos/${owner}/${repo}/git/ref/heads/operation-locks/repository-operation-intake-v1`
+            );
+            const head = ref.object.sha;
+            const file = await get(
+              `/repos/${owner}/${repo}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=${head}`
+            );
+            const ledger = JSON.parse(
+              Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8')
+            );
+            return {head, blob: file.sha, ledger};
+          }
+
+          const expected = [
+            {
+              scopeHash: '161190c12778d6ac4740a0e3e29c7809ccaee4252e01661913bea45b41769dd4',
+              operationId: 'B31133485684',
+              lockGeneration: 388,
+              terminalDisposition: 'FAIL_CLOSED'
+            },
+            {
+              scopeHash: 'c5c29c11541e83886aec256193c388245c63f1513f8e53328af6679153044ad0',
+              operationId: 'H_EARTH_V2_CAUSAL_EVIDENCE_001_GOVERNANCE_REGISTRY_REPAIR_001',
+              lockGeneration: 391,
+              terminalDisposition: 'PASS_CLOSED'
+            },
+            {
+              scopeHash: '85257deb4efad6cc2d2a6c57ae5a193ccb85c2d4968b838847e439fee4ff8bb4',
+              operationId: 'H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001',
+              lockScope: 'H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001_EXACT_25_PATH_SCOPE',
+              lockGeneration: 386,
+              terminalDisposition: 'PASS_CLOSED'
+            }
+          ];
+
+          function terminalMatch(ledger, item) {
+            return ledger.terminalHistory.find((entry) =>
+              entry.scopeHash === item.scopeHash &&
+              entry.operationId === item.operationId &&
+              entry.lockGeneration === item.lockGeneration &&
+              entry.state === 'TERMINAL' &&
+              entry.released === true &&
+              entry.terminalDisposition === item.terminalDisposition
+            ) ?? null;
+          }
+
+          let before = await readLedger();
+          for (const item of expected.slice(0, 2)) {
+            if (!terminalMatch(before.ledger, item)) {
+              throw new Error(`PRIOR_CLOSURE_NOT_PRESERVED:${item.lockGeneration}`);
+            }
+            if (before.ledger.activeScopes[item.scopeHash]) {
+              throw new Error(`PRIOR_CLOSURE_STILL_ACTIVE:${item.lockGeneration}`);
+            }
+          }
+
+          const remaining = expected[2];
+          let closureReceipt = null;
+          let attempts = 0;
+          let alreadyTerminal = Boolean(terminalMatch(before.ledger, remaining));
+
+          if (!alreadyTerminal) {
+            const active = before.ledger.activeScopes[remaining.scopeHash];
+            if (!active) throw new Error('REMAINING_LOCK_NOT_ACTIVE_OR_TERMINAL');
+            if (
+              active.operationId !== remaining.operationId ||
+              active.lockGeneration !== remaining.lockGeneration ||
+              active.lockScope !== remaining.lockScope
+            ) throw new Error('REMAINING_ACTIVE_LOCK_IDENTITY_MISMATCH');
+
+            for (attempts = 1; attempts <= 12; attempts += 1) {
+              const receipt = await closeRemote({
+                repository: process.env.REPOSITORY,
+                lockRef: process.env.LOCK_REF,
+                token: process.env.GITHUB_TOKEN,
+                operationId: remaining.operationId,
+                lockScope: remaining.lockScope,
+                lockGeneration: remaining.lockGeneration,
+                terminalDisposition: remaining.terminalDisposition
+              });
+              if (receipt.result === 'TERMINAL_CLOSURE_COMMITTED' && receipt.lockReleased === true) {
+                closureReceipt = receipt;
+                break;
+              }
+              if (
+                receipt.errorCode !== 'LEDGER_COMPARE_AND_SWAP_CONFLICT' ||
+                ![409, 422].includes(receipt.httpStatus)
+              ) {
+                throw new Error(`NONRETRYABLE_LOCK_CLOSURE_FAILURE:${JSON.stringify(receipt)}`);
+              }
+              await delay(500 + attempts * 250);
+              const observed = await readLedger();
+              if (terminalMatch(observed.ledger, remaining)) {
+                alreadyTerminal = true;
+                break;
+              }
+            }
+          }
+
+          const after = await readLedger();
+          for (const item of expected) {
+            if (!terminalMatch(after.ledger, item)) {
+              throw new Error(`TERMINAL_CLOSURE_NOT_VERIFIED:${item.lockGeneration}`);
+            }
+            if (after.ledger.activeScopes[item.scopeHash]) {
+              throw new Error(`CLOSED_SCOPE_REMAINS_ACTIVE:${item.lockGeneration}`);
+            }
+          }
+
+          const aggregate = stable({
+            schema: 'H_EARTH_V2_CAUSAL_EVIDENCE_LOCK_CLOSURE_RETURN_v2',
+            result: 'PASS_CLOSED',
+            repository: process.env.REPOSITORY,
+            targetPullRequest: Number(process.env.TARGET_PR),
+            exactCandidateHead: process.env.EXACT_CANDIDATE_HEAD,
+            exactMergeCommit: process.env.EXACT_MERGE_COMMIT,
+            priorPartialRun: Number(process.env.PRIOR_PARTIAL_RUN),
+            beforeLedgerHead: before.head,
+            afterLedgerHead: after.head,
+            generation388: 'FAIL_CLOSED_VERIFIED',
+            generation391: 'PASS_CLOSED_VERIFIED',
+            generation386: 'PASS_CLOSED_VERIFIED',
+            generation386AlreadyTerminal: alreadyTerminal,
+            generation386ClosureAttempts: attempts,
+            generation386ClosureReceipt: closureReceipt,
+            ledgerEditedDirectly: false,
+            lockManagerUsed: true,
+            boundedCasRetryUsed: true,
+            terrainConstructionPerformed: false,
+            estateConstructionPerformed: false,
+            manorConstructionPerformed: false,
+            constructionAuthorityIssued: false
+          });
+          fs.writeFileSync(
+            '/tmp/h-earth-v2-lock-closure/lock-closure-return.v2.json',
+            JSON.stringify(aggregate, null, 2) + '\n'
+          );
+          NODE
+
+      - name: Upload exact closure return
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-causal-evidence-lock-closure-return-v2
+          path: /tmp/h-earth-v2-lock-closure/lock-closure-return.v2.json
+          if-no-files-found: error
+          retention-days: 90

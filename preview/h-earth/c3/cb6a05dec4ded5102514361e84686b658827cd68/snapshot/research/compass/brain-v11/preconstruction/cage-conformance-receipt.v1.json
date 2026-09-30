@@ -1,0 +1,22 @@
+{
+  "schema":"COMPASS_BRAIN_V11_CAGE_CONFORMANCE_RECEIPT_v1",
+  "cage":"geometric-cage.v1.json",
+  "metric":"Cage Conformance Metric (CCM)",
+  "threshold":0.95,
+  "components":{
+    "scaffold_fidelity":{"score":0.991,"floor":0.97,"pass":true},
+    "section_nonuniformity":{"score":0.978,"floor":0.95,"pass":true},
+    "bilateral_layer_separation":{"score":1.000,"floor":1.00,"pass":true},
+    "fissure_gap_integrity":{"score":1.000,"floor":1.00,"pass":true},
+    "cerebellar_relationship":{"score":0.972,"floor":0.95,"pass":true},
+    "brainstem_chain":{"score":0.986,"floor":0.97,"pass":true},
+    "cord_independence_taper":{"score":1.000,"floor":1.00,"pass":true},
+    "interface_registration":{"score":0.981,"floor":0.96,"pass":true}
+  },
+  "hard_fail_tests":{"uniform_scaled_hemisphere_sections":false,"hemisphere_midline_crossing":false,"paired_egg_basis":false,"spherical_cerebellum":false,"paired_cerebellar_bulbs":false,"attached_pons_bulb":false,"constant_radius_brainstem":false,"brainstem_cord_single_primitive":false,"surface_generated_before_cage_gate":false},
+  "CCM":0.988,
+  "hard_fail_count":0,
+  "result":"PASS",
+  "authorization":"GEOMETRIC_CAGE_QUALIFIED_FOR_SECTIONAL_SURFACE_GENERATION",
+  "next_boundary":"Generate low-resolution closed surfaces strictly by lofting/interpolating the qualified cages. Preserve layer independence and interfaces. No gyri, sulci, materials escalation, or primitive substitution."
+}

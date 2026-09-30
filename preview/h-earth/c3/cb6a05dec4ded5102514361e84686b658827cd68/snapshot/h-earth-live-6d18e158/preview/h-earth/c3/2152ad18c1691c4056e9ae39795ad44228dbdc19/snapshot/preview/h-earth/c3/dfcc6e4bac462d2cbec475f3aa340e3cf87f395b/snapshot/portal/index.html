@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portal · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Generation 2 Portal: parent chamber for Nine Summits, Laws, Big Laughs, Products, Gauges, About, and Prelude."
+  />
+  <style>
+    :root{
+      --bg:#020610;
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.36);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --blue:#6db8ff;
+      --pink:#ff9fd6;
+      --green:#97e6b4;
+      --warn:#ffd58f;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+
+    html{
+      min-height:100%;
+      scroll-behavior:smooth;
+    }
+
+    body{
+      min-height:100%;
+      margin:0;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 7%, rgba(112,151,255,.22), transparent 22%),
+        radial-gradient(circle at 18% 28%, rgba(255,159,214,.10), transparent 24%),
+        radial-gradient(circle at 82% 34%, rgba(239,210,154,.10), transparent 24%),
+        linear-gradient(180deg,#020610 0%,#071225 52%,#020610 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.20;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.17) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.14) 0 1px, transparent 1.6px);
+      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.035) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+      opacity:.28;
+    }
+
+    .page{
+      width:min(var(--max), calc(100vw - 24px));
+      margin:0 auto;
+      padding:18px 0 44px;
+      position:relative;
+      z-index:1;
+      overflow:hidden;
+    }
+
+    .topbar,.hero,.portal-card,.console,.panel,.readout,.doll-shell,.route-card{
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 16px;
+      border-radius:22px;
+      background:rgba(7,13,26,.74);
+      backdrop-filter:blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      flex:none;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%, rgba(115,171,255,.24), transparent 42%),
+        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
+      color:#f4f8ff;
+      font-weight:900;
+      letter-spacing:.08em;
+      box-shadow:0 0 22px rgba(109,184,255,.09);
+    }
+
+    .brand-kicker{
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:800;
+    }
+
+    .topnav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .nav-link,.button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      min-height:42px;
+      padding:0 15px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text);
+      font-weight:800;
+      background:rgba(255,255,255,.035);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.06);
+      outline:none;
+    }
+
+    .hero{
+      margin-top:16px;
+      border-radius:34px;
+      padding:24px 20px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(132,164,255,.18), transparent 30%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
+      mix-blend-mode:screen;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,.9fr);
+      gap:20px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      margin-bottom:14px;
+    }
+
+    .hero-tag::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 16px rgba(239,210,154,.55);
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(2.45rem,5.4vw,5.2rem);
+      line-height:.94;
+      letter-spacing:-.06em;
+      max-width:11ch;
+    }
+
+    h1 .accent{color:var(--gold)}
+
+    p{
+      color:var(--muted);
+      line-height:1.58;
+    }
+
+    .hero p{
+      margin:0;
+      font-size:clamp(1rem,1.5vw,1.12rem);
+      max-width:68ch;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .button{
+      border-radius:18px;
+      min-height:46px;
+      padding:0 18px;
+      white-space:nowrap;
+    }
+
+    .button.primary{
+      border-color:rgba(239,210,154,.34);
+      background:
+        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
+    }
+
+    .portal-card{
+      border-radius:30px;
+      padding:20px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(109,184,255,.14), transparent 30%),
+        linear-gradient(180deg, rgba(10,22,44,.94), rgba(4,10,20,.96));
+    }
+
+    .portal-stage{
+      position:relative;
+      min-height:420px;
+      border-radius:26px;
+      border:1px solid rgba(170,198,255,.20);
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(109,184,255,.15), transparent 28%),
+        linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
+      box-shadow:
+        inset 0 0 44px rgba(126,164,255,.10),
+        inset 0 -26px 70px rgba(0,0,0,.34);
+      isolation:isolate;
+    }
+
+    .portal-stage::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:inset 0 0 28px rgba(92,184,255,.08);
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .portal-grid{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
+      background-size:32px 32px;
+      opacity:.46;
+      z-index:1;
+    }
+
+    .portal-ring{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:330px;
+      height:330px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      border:1px solid rgba(109,184,255,.22);
+      box-shadow:
+        0 0 26px rgba(109,184,255,.12),
+        inset 0 0 24px rgba(109,184,255,.08);
+      z-index:3;
+    }
+
+    .portal-ring::before,
+    .portal-ring::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      border:1px solid rgba(239,210,154,.20);
+    }
+
+    .portal-ring::before{inset:42px}
+    .portal-ring::after{inset:84px;border-color:rgba(109,184,255,.22)}
+
+    .portal-diamond{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:246px;
+      height:246px;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(239,210,154,.30);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 28%),
+        linear-gradient(135deg, rgba(109,184,255,.10), rgba(239,210,154,.08));
+      box-shadow:
+        0 0 34px rgba(109,184,255,.18),
+        inset 0 0 34px rgba(239,210,154,.08);
+      z-index:4;
+    }
+
+    .portal-diamond::before,
+    .portal-diamond::after{
+      content:"";
+      position:absolute;
+      inset:30px;
+      border:1px solid rgba(109,184,255,.28);
+      box-shadow:0 0 20px rgba(109,184,255,.12);
+    }
+
+    .portal-diamond::after{
+      inset:68px;
+      border-color:rgba(239,210,154,.30);
+    }
+
+    .portal-node{
+      position:absolute;
+      width:68px;
+      height:68px;
+      display:grid;
+      place-items:center;
+      border-radius:20px;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,.16), transparent 50%),
+        rgba(6,14,28,.78);
+      box-shadow:0 0 24px rgba(109,184,255,.16);
+      z-index:5;
+    }
+
+    .portal-node span{
+      transform:rotate(-45deg);
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.08em;
+      font-size:.78rem;
+      text-transform:uppercase;
+      text-align:center;
+      line-height:1.05;
+    }
+
+    .portal-node.north{left:50%;top:14%}
+    .portal-node.northeast{left:74%;top:27%}
+    .portal-node.east{left:84%;top:50%}
+    .portal-node.southeast{left:74%;top:73%}
+    .portal-node.south{left:50%;top:86%}
+    .portal-node.southwest{left:26%;top:73%}
+    .portal-node.west{left:16%;top:50%}
+    .portal-node.northwest{left:26%;top:27%}
+
+    .portal-caption{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      width:calc(100% - 42px);
+      max-width:660px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(140,168,240,.24);
+      background:rgba(6,14,28,.84);
+      text-align:center;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      color:#dbe5ff;
+      z-index:8;
+      line-height:1.35;
+    }
+
+    .portal-caption strong{color:#fff}
+
+    .console,.panel{
+      margin-top:18px;
+      border-radius:30px;
+      padding:22px 20px;
+      overflow:hidden;
+    }
+
+    .section-kicker{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:8px;
+    }
+
+    .console h2,.panel h2{
+      margin:0 0 10px;
+      font-size:clamp(1.7rem,3vw,2.7rem);
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    .readout-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .readout{
+      border-radius:22px;
+      padding:16px;
+      min-height:146px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .readout::after{
+      content:"";
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(109,184,255,.18), transparent 66%);
+      pointer-events:none;
+    }
+
+    .readout small,.doll-head small,.route-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.72rem;
+    }
+
+    .readout strong{
+      display:block;
+      color:#f4f7ff;
+      font-size:1.35rem;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      margin-bottom:10px;
+    }
+
+    .readout p,.route-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .bar{
+      height:8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      overflow:hidden;
+      margin-top:14px;
+    }
+
+    .bar span{
+      display:block;
+      height:100%;
+      width:var(--value);
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(109,184,255,.72), rgba(239,210,154,.72));
+      box-shadow:0 0 16px rgba(109,184,255,.22);
+    }
+
+    .russian-doll{
+      margin-top:18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .doll-shell{
+      border-radius:26px;
+      overflow:hidden;
+    }
+
+    .doll-toggle{
+      width:100%;
+      border:0;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(109,184,255,.08), transparent 42%),
+        rgba(255,255,255,.02);
+      padding:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .doll-head{min-width:0}
+
+    .doll-head h3{
+      margin:0;
+      font-size:1.15rem;
+      letter-spacing:-.02em;
+      line-height:1.15;
+    }
+
+    .doll-meta{
+      flex:none;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#dbe5ff;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.7rem;
+      font-weight:900;
+    }
+
+    .doll-diamond{
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      transform:rotate(45deg);
+      border:1px solid rgba(239,210,154,.34);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%),
+        rgba(6,14,28,.78);
+      box-shadow:0 0 18px rgba(109,184,255,.12);
+    }
+
+    .doll-panel{
+      display:none;
+      padding:0 18px 18px;
+      border-top:1px solid rgba(164,188,255,.12);
+      background:rgba(255,255,255,.018);
+    }
+
+    .doll-shell.is-open .doll-panel{display:block}
+
+    .doll-copy{
+      margin:16px 0 0;
+      max-width:78ch;
+    }
+
+    .inner-dolls{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .inner-doll{
+      border:1px solid rgba(164,188,255,.14);
+      border-radius:20px;
+      overflow:hidden;
+      background:rgba(255,255,255,.022);
+    }
+
+    .inner-toggle{
+      width:100%;
+      border:0;
+      color:var(--text);
+      background:transparent;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      text-align:left;
+      padding:14px;
+      cursor:pointer;
+    }
+
+    .inner-toggle strong{
+      font-size:.98rem;
+      letter-spacing:-.01em;
+    }
+
+    .inner-toggle span{
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.68rem;
+      font-weight:900;
+    }
+
+    .inner-panel{
+      display:none;
+      padding:0 14px 14px;
+      border-top:1px solid rgba(164,188,255,.10);
+    }
+
+    .inner-doll.is-open .inner-panel{display:block}
+
+    .inner-panel p{
+      margin:12px 0 0;
+      font-size:.94rem;
+    }
+
+    .chamber-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .chamber-card{
+      border:1px solid rgba(164,188,255,.14);
+      border-radius:20px;
+      padding:14px;
+      background:rgba(255,255,255,.022);
+    }
+
+    .chamber-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.68rem;
+    }
+
+    .chamber-card strong{
+      display:block;
+      color:#fff;
+      line-height:1.25;
+      margin-bottom:8px;
+    }
+
+    .chamber-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .route-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .route-card{
+      display:block;
+      min-height:136px;
+      border-radius:22px;
+      padding:16px;
+      color:var(--text);
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .route-card:hover,.route-card:focus-visible{
+      transform:translateY(-2px);
+      border-color:var(--line-strong);
+      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
+      outline:none;
+    }
+
+    .route-card h3{
+      margin:0 0 8px;
+      font-size:1.05rem;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      color:var(--muted);
+      padding:14px 4px 0;
+      font-size:.92rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,.footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
+
+    @media (max-width:980px){
+      .hero-grid{grid-template-columns:1fr}
+      .readout-grid,.chamber-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width:720px){
+      .page{
+        width:min(100vw - 16px,var(--max));
+        padding:14px 0 32px;
+      }
+
+      .topbar{
+        flex-wrap:wrap;
+        padding:12px 14px;
+      }
+
+      .topnav{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .hero,.portal-card,.console,.panel{
+        padding:18px 16px;
+      }
+
+      h1{
+        font-size:clamp(2rem,11vw,3.4rem);
+      }
+
+      .hero-actions{gap:8px}
+
+      .button{
+        flex:1 1 calc(50% - 8px);
+      }
+
+      .button.primary{flex-basis:100%}
+
+      .portal-stage{min-height:390px}
+
+      .portal-ring{
+        width:260px;
+        height:260px;
+      }
+
+      .portal-diamond{
+        width:182px;
+        height:182px;
+      }
+
+      .portal-node{
+        width:50px;
+        height:50px;
+        border-radius:16px;
+      }
+
+      .portal-node span{
+        font-size:.58rem;
+      }
+
+      .portal-caption{
+        width:calc(100% - 28px);
+        border-radius:24px;
+        font-size:.56rem;
+        letter-spacing:.10em;
+      }
+
+      .readout-grid,.chamber-grid,.route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .doll-toggle{align-items:flex-start}
+
+      .doll-meta{
+        display:grid;
+        justify-items:end;
+      }
+
+      .footer{
+        display:grid;
+        gap:8px;
+      }
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      .portal-diamond{
+        animation:portalPulse 5.8s ease-in-out infinite;
+      }
+
+      .portal-ring{
+        animation:slowSpin 48s linear infinite;
+      }
+
+      .portal-node{
+        animation:nodePulse 6.2s ease-in-out infinite;
+      }
+
+      @keyframes portalPulse{
+        0%,100%{filter:brightness(1)}
+        50%{filter:brightness(1.14)}
+      }
+
+      @keyframes slowSpin{
+        from{transform:translate(-50%,-50%) rotate(0deg)}
+        to{transform:translate(-50%,-50%) rotate(360deg)}
+      }
+
+      @keyframes nodePulse{
+        0%,100%{box-shadow:0 0 20px rgba(109,184,255,.12)}
+        50%{box-shadow:0 0 34px rgba(239,210,154,.18)}
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{
+        animation:none !important;
+        scroll-behavior:auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">DG</div>
+        <div>
+          <p class="brand-kicker">Generation 2 Portal</p>
+          <p class="brand-title">Portal · Diamond Gate Bridge</p>
+        </div>
+      </div>
+
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/">Door</a>
+        <a class="nav-link" href="/nine-summits/">Nine Summits</a>
+        <a class="nav-link" href="/laws/">Laws</a>
+        <a class="nav-link" href="/big-laughs/">Big Laughs</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="hero-tag">Generation 2 · parent chamber</span>
+          <h1>Enter the <span class="accent">portal</span>.</h1>
+          <p>
+            The portal is the parent chamber behind the root door. Nine Summits, Laws, Big Laughs, Products,
+            Gauges, About, and Prelude can now live inside one unified Russian-doll system instead of competing
+            as unrelated pages.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#portalDolls">Open portal</a>
+            <a class="button" href="/">Back to door</a>
+            <a class="button" href="/big-laughs/">Big Laughs</a>
+          </div>
+        </div>
+
+        <aside class="portal-card">
+          <div class="portal-stage" aria-label="Diamond Gate Bridge parent portal">
+            <div class="portal-grid"></div>
+            <div class="portal-ring"></div>
+            <div class="portal-diamond"></div>
+
+            <div class="portal-node north"><span>Nine<br>Summits</span></div>
+            <div class="portal-node northeast"><span>Laws</span></div>
+            <div class="portal-node east"><span>Gauges</span></div>
+            <div class="portal-node southeast"><span>Products</span></div>
+            <div class="portal-node south"><span>Big<br>Laughs</span></div>
+            <div class="portal-node southwest"><span>About</span></div>
+            <div class="portal-node west"><span>Prelude</span></div>
+            <div class="portal-node northwest"><span>Door</span></div>
+
+            <div class="portal-caption">
+              <strong>Parent chamber</strong> · one portal holding the major worlds
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="console">
+      <div class="section-kicker">Portal readouts</div>
+      <h2>Major chamber status</h2>
+      <p>
+        The portal shows the major worlds first. Details stay collapsed until the visitor chooses a chamber.
+      </p>
+
+      <div class="readout-grid">
+        <div class="readout">
+          <small>Philosophy</small>
+          <strong>Nine Summits</strong>
+          <p>The ascent chamber for the transformational framework.</p>
+          <div class="bar"><span style="--value:88%"></span></div>
+        </div>
+
+        <div class="readout">
+          <small>Authority</small>
+          <strong>Laws</strong>
+          <p>Russian-doll Lawscape with 4, 16, 32, and 256 structure.</p>
+          <div class="bar"><span style="--value:100%"></span></div>
+        </div>
+
+        <div class="readout">
+          <small>Public event</small>
+          <strong>Big Laughs</strong>
+          <p>Comedy promotion chamber with ticket-buyer clarity.</p>
+          <div class="bar"><span style="--value:92%"></span></div>
+        </div>
+
+        <div class="readout">
+          <small>Instrument</small>
+          <strong>Gauges</strong>
+          <p>Authority and diagnostic chamber for stage ownership.</p>
+          <div class="bar"><span style="--value:100%"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="portalDolls">
+      <div class="section-kicker">Russian-doll portal</div>
+      <h2>Open one world at a time</h2>
+      <p>
+        The portal prevents endless-scroll confusion. It gives each world a chamber, a purpose, and a route.
+      </p>
+
+      <div class="russian-doll">
+        <article class="doll-shell is-open" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="true">
+            <div class="doll-head">
+              <small>World 1</small>
+              <h3>Nine Summits</h3>
+            </div>
+            <div class="doll-meta"><span>ASCENT</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Nine Summits is the philosophical and transformational path. It should hold the nine ascent chambers,
+              with each summit opening into its inner layers instead of forcing the full framework into a long scroll.
+            </p>
+
+            <div class="inner-dolls">
+              <div class="inner-doll is-open" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="true">
+                  <strong>Purpose</strong>
+                  <span>Why</span>
+                </button>
+                <div class="inner-panel">
+                  <p>The Nine Summits chamber gives the visitor a structured path through growth, discipline, and coherence.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Format</strong>
+                  <span>How</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Nine visible summits, each opening into compressed sublayers. No endless scroll.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Route</strong>
+                  <span>Go</span>
+                </button>
+                <div class="inner-panel">
+                  <p><a class="button primary" href="/nine-summits/">Open Nine Summits</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>World 2</small>
+              <h3>Laws</h3>
+            </div>
+            <div class="doll-meta"><span>AUTHORITY</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Laws is the authority chamber. It already uses the Russian-doll Lawscape: four Master Psalms,
+              sixteen canopy points, thirty-two-state construct, and two-hundred-fifty-six-state lattice.
+            </p>
+
+            <div class="chamber-grid">
+              <div class="chamber-card">
+                <small>4</small>
+                <strong>Master Psalms</strong>
+                <p>Top authority containers.</p>
+              </div>
+              <div class="chamber-card">
+                <small>16</small>
+                <strong>Canopy Points</strong>
+                <p>Primary law branches.</p>
+              </div>
+              <div class="chamber-card">
+                <small>32</small>
+                <strong>Construct States</strong>
+                <p>Two-state expansion beneath canopy points.</p>
+              </div>
+              <div class="chamber-card">
+                <small>256</small>
+                <strong>Lattice States</strong>
+                <p>Eightfold refinement under the construct.</p>
+              </div>
+            </div>
+
+            <p class="doll-copy"><a class="button primary" href="/laws/">Open Laws</a></p>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>World 3</small>
+              <h3>Big Laughs</h3>
+            </div>
+            <div class="doll-meta"><span>COMEDY</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Big Laughs is the public comedy and live-show chamber. It belongs in the same portal because it is a public-facing
+              world with practical questions: show purpose, tickets, time, lineup, and FAQ.
+            </p>
+
+            <div class="chamber-grid">
+              <div class="chamber-card">
+                <small>Show</small>
+                <strong>Live comedy</strong>
+                <p>Clear show identity and room expectation.</p>
+              </div>
+              <div class="chamber-card">
+                <small>Host</small>
+                <strong>This Underdog</strong>
+                <p>Hosted by This Underdog.</p>
+              </div>
+              <div class="chamber-card">
+                <small>Feature</small>
+                <strong>Shannon</strong>
+                <p>Featuring Shannon.</p>
+              </div>
+              <div class="chamber-card">
+                <small>Buyer</small>
+                <strong>Ticket clarity</strong>
+                <p>Price and schedule should stay easy to find.</p>
+              </div>
+            </div>
+
+            <p class="doll-copy"><a class="button primary" href="/big-laughs/">Open Big Laughs</a></p>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>World 4</small>
+              <h3>Products, Gauges, About, and Prelude</h3>
+            </div>
+            <div class="doll-meta"><span>SYSTEM</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              These chambers complete the public system: Products holds the seasonal molecule, Gauges holds the authority diagnostics,
+              About explains orientation, and Prelude introduces the opening frame.
+            </p>
+
+            <div class="chamber-grid">
+              <div class="chamber-card">
+                <small>Products</small>
+                <strong>Seasonal molecule</strong>
+                <p>Winter/Spring and Fall/Summer runtime chamber.</p>
+              </div>
+              <div class="chamber-card">
+                <small>Gauges</small>
+                <strong>Authority diagnostics</strong>
+                <p>Stage ownership, probes, classifiers, and audit lanes.</p>
+              </div>
+              <div class="chamber-card">
+                <small>About</small>
+                <strong>Orientation</strong>
+                <p>Who this is for and how to understand it.</p>
+              </div>
+              <div class="chamber-card">
+                <small>Prelude</small>
+                <strong>Opening frame</strong>
+                <p>The introductory chamber behind the door.</p>
+              </div>
+            </div>
+
+            <p class="doll-copy">
+              <a class="button primary" href="/products/">Products</a>
+              <a class="button" href="/gauges/">Gauges</a>
+              <a class="button" href="/about/">About</a>
+              <a class="button" href="/prelude/">Prelude</a>
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="console">
+      <div class="section-kicker">Portal route map</div>
+      <h2>Choose a chamber</h2>
+      <p>
+        The portal gives a clean route into each major surface without turning the page into an endless index.
+      </p>
+
+      <div class="route-grid">
+        <a class="route-card" href="/nine-summits/">
+          <small>Ascent</small>
+          <h3>Nine Summits</h3>
+          <p>Open the summit path.</p>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <small>Authority</small>
+          <h3>Laws</h3>
+          <p>Open the Russian-doll Lawscape.</p>
+        </a>
+
+        <a class="route-card" href="/big-laughs/">
+          <small>Comedy</small>
+          <h3>Big Laughs</h3>
+          <p>Open the live-show promotion chamber.</p>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <small>Runtime</small>
+          <h3>Products</h3>
+          <p>Open the seasonal molecule.</p>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Portal · Generation 2 Parent Chamber</span>
+      <div class="footer-links">
+        <a href="/">Door</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/laws/">Laws</a>
+        <a href="/big-laughs/">Big Laughs</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      function closeSiblings(shell) {
+        const parent = shell.parentElement;
+        if (!parent) return;
+
+        parent.querySelectorAll(":scope > [data-doll], :scope > [data-inner-doll]").forEach((item) => {
+          if (item === shell) return;
+          item.classList.remove("is-open");
+          const btn = item.querySelector("button");
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      document.querySelectorAll("[data-doll] > .doll-toggle").forEach((button) => {
+        button.addEventListener("click", () => {
+          const shell = button.closest("[data-doll]");
+          if (!shell) return;
+
+          const willOpen = !shell.classList.contains("is-open");
+          closeSiblings(shell);
+          shell.classList.toggle("is-open", willOpen);
+          button.setAttribute("aria-expanded", String(willOpen));
+        });
+      });
+
+      document.querySelectorAll("[data-inner-doll] > .inner-toggle").forEach((button) => {
+        button.addEventListener("click", () => {
+          const shell = button.closest("[data-inner-doll]");
+          if (!shell) return;
+
+          const willOpen = !shell.classList.contains("is-open");
+          closeSiblings(shell);
+          shell.classList.toggle("is-open", willOpen);
+          button.setAttribute("aria-expanded", String(willOpen));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

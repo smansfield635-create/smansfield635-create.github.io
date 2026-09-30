@@ -1,0 +1,53 @@
+{
+  "schema": "SOURCE_EVIDENCE_SEMANTIC_CORRESPONDENCE_CONTRACT_v1",
+  "version": "1.0.0",
+  "implementationIdentity": "SOURCE_EVIDENCE_SEMANTIC_CORRESPONDENCE",
+  "historicalAliases": ["ROOM_04_SOURCE_EVIDENCE"],
+  "requiredRelations": [
+    "VALUE",
+    "VERSION",
+    "DOMAIN_DEFINITION",
+    "SEMANTIC_OBJECT",
+    "CANONICAL_BYTES",
+    "FIELD_MEANING",
+    "EVIDENTIARY_CLAIM"
+  ],
+  "decisionLaw": {
+    "pass": "ALL_REQUIRED_RELATIONS_PASS",
+    "held": "NO_REQUIRED_RELATION_FAILS_OR_CONFLICTS_AND_AT_LEAST_ONE_LACKS_SUFFICIENT_EVIDENCE",
+    "fail": "AT_LEAST_ONE_REQUIRED_RELATION_IS_DEMONSTRABLY_FALSE",
+    "conflict": "CONTROLLING_AUTHORITATIVE_DEFINITIONS_ARE_INCOMPATIBLE",
+    "compensationPermitted": false
+  },
+  "prohibitedCompensators": [
+    "DIGEST_EQUALITY_ALONE",
+    "ENVELOPE_IDENTITY_EQUALITY",
+    "DOWNSTREAM_PROJECTION_EQUALITY",
+    "PUBLICATION_STATUS",
+    "UNRELATED_IMPLEMENTATION_RESULT"
+  ],
+  "corpusModel": [
+    "LEGACY_EVIDENCE_CORPUS",
+    "GOVERNING_INVARIANT_AND_TRANSITION_CORPUS",
+    "REPLACEMENT_TARGET_CORPUS"
+  ],
+  "corpusMergePermitted": false,
+  "legacyReplacementIdentityDefault": "DISTINCT",
+  "claimCeiling": "SOURCE_EVIDENCE_SEMANTIC_CORRESPONDENCE_ONLY",
+  "historicalAudraliaInstantiation": {
+    "sourceObject": "AUDRALIA_DIAGNOSTIC_SOURCE_BUNDLE_v1",
+    "canonicalByteLength": 814,
+    "rawSha256": "099b29178abf288064d3d42565a05768ca7ae48a650be514abe0bb32ab30fcc7",
+    "preimageDomain": "AUDRALIA:D05:SOURCE:v1",
+    "separatorHex": "00",
+    "domainSeparatedSha256": "311c5c341cc1b3e3e7a46bd418deb94d0093c089babe74370c0fe73432227526",
+    "downstreamField": "D07.sourceHash",
+    "fieldSemanticDomain": "AUDRALIA_DIAGNOSTIC_AUTHORITY_SOURCE_HASH",
+    "hashVersion": "SHA256-D05-1",
+    "specialistResult": "SOURCE_HASH_DOMAIN_SEMANTIC_CORRESPONDENCE_PASS",
+    "room05Checks": {"passed": 16, "total": 16},
+    "computedHashVectors": {"passed": 14, "total": 14},
+    "relationVectors": {"passed": 8, "total": 8},
+    "discrepancySet": []
+  }
+}

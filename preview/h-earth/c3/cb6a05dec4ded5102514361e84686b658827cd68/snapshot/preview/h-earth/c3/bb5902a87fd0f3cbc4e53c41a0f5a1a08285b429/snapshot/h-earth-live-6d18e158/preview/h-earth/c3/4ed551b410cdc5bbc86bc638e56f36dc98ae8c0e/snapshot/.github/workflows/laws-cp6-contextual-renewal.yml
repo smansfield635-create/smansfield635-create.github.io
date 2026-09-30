@@ -1,0 +1,104 @@
+name: Laws CP6 contextual renewal
+
+on:
+  push:
+    branches:
+      - agent/laws-cp6-context-authority-records-001
+    paths:
+      - .github/workflows/laws-cp6-contextual-renewal.yml
+      - scripts/laws_cp6_contextual_renewal.py
+      - scripts/laws_cp6_context_field_reconcile.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp6-contextual-renewal-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apply-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp6-context-authority-records-001
+          fetch-depth: 0
+
+      - name: Apply source-bound contextual renewal
+        run: |
+          python3 scripts/laws_cp6_contextual_renewal.py
+          python3 scripts/laws_cp6_context_field_reconcile.py
+
+      - name: Validate generated JSON authorities
+        run: |
+          python3 -m json.tool laws/control-plane/cp6-context/laws-frontier-compatibility-crosswalk-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/laws-battery-study-contextual-interpretation-record-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/contextual-renewal-verification-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/cp6-2-successor-chain-acceptance-v1.json >/dev/null
+
+      - name: Verify bounded mutation scope
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          allowed = {
+              'laws/index.html',
+              'laws/cp6-contextual-renewal.css',
+              'laws/research/applied-investigations/index.html',
+              'laws/research/evidence-and-sources/index.html',
+              'laws/research/methods-and-models/index.html',
+              'laws/research/findings-and-boundaries/index.html',
+              'laws/test/admission-and-baseline/index.html',
+              'laws/test/forward-construction/index.html',
+              'laws/test/reverse-audit/index.html',
+              'laws/test/result-and-record/index.html',
+              'laws/categories/flow/index.html',
+              'laws/categories/integrity/index.html',
+              'laws/categories/reality/index.html',
+              'laws/categories/structure/index.html',
+              'laws/control-plane/cp6-context/contextual-renewal-verification-v1.json',
+          }
+          changed = set(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
+          unexpected = changed - allowed
+          missing = {p for p in allowed if p != 'laws/control-plane/cp6-context/contextual-renewal-verification-v1.json' and not Path(p).exists()}
+          if unexpected:
+              raise SystemExit(f'Unexpected changed paths: {sorted(unexpected)}')
+          if missing:
+              raise SystemExit(f'Missing required paths: {sorted(missing)}')
+          if any(p.startswith('frontier/') for p in changed):
+              raise SystemExit('Frontier mutation prohibited')
+          if any(p.endswith(('.controller.js', '.compositor.js', '.interactions.js', '.crystals.js', '.cosmos.js')) for p in changed):
+              raise SystemExit('Compass runtime mutation prohibited')
+          print('\n'.join(sorted(changed)))
+          PY
+
+      - name: Commit the verified candidate mutation
+        run: |
+          if git diff --quiet; then
+            echo 'No product changes required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            laws/index.html \
+            laws/cp6-contextual-renewal.css \
+            laws/research/applied-investigations/index.html \
+            laws/research/evidence-and-sources/index.html \
+            laws/research/methods-and-models/index.html \
+            laws/research/findings-and-boundaries/index.html \
+            laws/test/admission-and-baseline/index.html \
+            laws/test/forward-construction/index.html \
+            laws/test/reverse-audit/index.html \
+            laws/test/result-and-record/index.html \
+            laws/categories/flow/index.html \
+            laws/categories/integrity/index.html \
+            laws/categories/reality/index.html \
+            laws/categories/structure/index.html \
+            laws/control-plane/cp6-context/contextual-renewal-verification-v1.json
+          git commit -m 'Complete Laws CP6 source-bound contextual renewal'
+          git push origin HEAD:agent/laws-cp6-context-authority-records-001

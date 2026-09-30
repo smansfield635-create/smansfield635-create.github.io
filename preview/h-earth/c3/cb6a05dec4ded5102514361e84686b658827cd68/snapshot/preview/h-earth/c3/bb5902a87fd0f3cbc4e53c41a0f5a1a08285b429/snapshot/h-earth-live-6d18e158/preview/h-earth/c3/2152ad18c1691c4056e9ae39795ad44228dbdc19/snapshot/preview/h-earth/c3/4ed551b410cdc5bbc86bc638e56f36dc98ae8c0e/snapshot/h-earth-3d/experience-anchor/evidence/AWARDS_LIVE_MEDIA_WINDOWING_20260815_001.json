@@ -1,0 +1,26 @@
+{
+  "schema": "AWARDS_LIVE_MEDIA_WINDOWING_EVIDENCE_v1",
+  "route": "showroom/globe/h-earth/awards/",
+  "page": "showroom/globe/h-earth/awards/index.html",
+  "presentationOnly": true,
+  "videoAssetsMutated": false,
+  "compassAsset": "/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4",
+  "worldAsset": "/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4",
+  "mediaWindow": {
+    "maxWidthPx": 560,
+    "aspectRatio": "4/5",
+    "objectFit": "cover",
+    "objectPosition": "center 52%",
+    "overscanScale": 1.12
+  },
+  "law": {
+    "existingEditedVideosRemainImmutable": true,
+    "existingAudioRemainsImmutable": true,
+    "noNewFootage": true,
+    "noVideoReencoding": true,
+    "cropOccursAtLivePagePresentationLayer": true,
+    "publicPageSwitchRequiresExperienceReview": true
+  },
+  "pageSha256": "2abeb34f88244519367a559da6eb325766605a225409f9cf38fc11f245617123",
+  "status": "CONSTRUCTED_PENDING_EXPERIENCE_REVIEW"
+}

@@ -1,0 +1,143 @@
+{
+  "fixtureReceiptId": "N06_EMPTY_OPERATION_SCOPE_RECEIPT_v1",
+  "fixtureId": "N06_EMPTY_OPERATION_SCOPE",
+  "fixtureClass": "NEGATIVE",
+  "fixtureCategory": "SCOPE",
+  "sourceOperationId": "TARGET_4C_N06_EMPTY_OPERATION_SCOPE",
+  "expectedDisposition": "STOP",
+  "actualDisposition": "STOP",
+  "expectedFailureCodes": [
+    "OPERATION_SCOPE_UNRESOLVED"
+  ],
+  "actualFailureCodes": [
+    "OPERATION_SCOPE_UNRESOLVED"
+  ],
+  "occurrenceResult": "NOT_APPLICABLE",
+  "checks": {
+    "dispositionExact": true,
+    "requiredFailureCodesPresent": true,
+    "prohibitedFailureCodesAbsent": true,
+    "traceLengthExact": true,
+    "traceOrderExact": true,
+    "mutationExpectationExact": true,
+    "deterministic": true,
+    "receiptFrozen": true,
+    "authorityPreserved": true,
+    "cardinalPreserved": true,
+    "occurrenceResultExact": true,
+    "criticalAssertionsPass": true
+  },
+  "criticalAssertionResults": {},
+  "failedChecks": [],
+  "result": "PASS",
+  "engineReceipt": {
+    "receiptId": "TARGET_4C_N06_EMPTY_OPERATION_SCOPE_VALIDATION_RECEIPT_v1",
+    "contractIdentity": {
+      "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+      "contractVersion": 1
+    },
+    "registryIdentity": {
+      "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+      "registryVersion": "1.0.0-candidate.1",
+      "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+      "schemaVersion": 1,
+      "candidateGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+    },
+    "operationIdentity": {
+      "operationId": "TARGET_4C_N06_EMPTY_OPERATION_SCOPE",
+      "operationClass": "READ_ONLY_INSPECTION",
+      "requestedAction": "INSPECT_H_EARTH_ARCHITECTURE",
+      "requestedMutation": false
+    },
+    "resolvedPaths": [],
+    "resolvedOccurrences": [],
+    "affectedNodes": [],
+    "affectedRelations": [],
+    "affectedCompositeUnits": [],
+    "cardinalParticipation": [],
+    "authorityProjection": [],
+    "evidenceProjection": [],
+    "lifecycleProjection": [],
+    "unresolvedFields": [],
+    "permittedMutations": [],
+    "prohibitedMutations": [],
+    "requiredValidations": [],
+    "stoppingBoundaries": [],
+    "failureCodes": [
+      "OPERATION_SCOPE_UNRESOLVED"
+    ],
+    "derivationTrace": [
+      {
+        "sequence": 1,
+        "step": "VALIDATE_INPUT_SHAPE",
+        "result": "PASS"
+      },
+      {
+        "sequence": 2,
+        "step": "VERIFY_REGISTRY_IDENTITY",
+        "result": "PASS"
+      },
+      {
+        "sequence": 3,
+        "step": "RESOLVE_PATHS_AND_OCCURRENCES",
+        "result": "PATHS=0;FAILURES=1"
+      },
+      {
+        "sequence": 4,
+        "step": "RESOLVE_AFFECTED_NODES",
+        "result": "NODES=0;FAILURES=1"
+      },
+      {
+        "sequence": 5,
+        "step": "EXPAND_RELATIONS_AND_COMPOSITES",
+        "result": "RELATIONS=0;COMPOSITES=0"
+      },
+      {
+        "sequence": 6,
+        "step": "PROJECT_CARDINAL_STRUCTURE",
+        "result": "CARDINAL_RECORDS=0;FAILURES=0"
+      },
+      {
+        "sequence": 7,
+        "step": "PROJECT_AUTHORITY_AND_EVIDENCE",
+        "result": "AUTHORITY=0;EVIDENCE=0"
+      },
+      {
+        "sequence": 8,
+        "step": "PROJECT_LIFECYCLE",
+        "result": "LIFECYCLE=0;UNRESOLVED=0"
+      },
+      {
+        "sequence": 9,
+        "step": "COMPARE_DECLARED_AND_DERIVED_SCOPE",
+        "result": "EXACT_MATCH"
+      },
+      {
+        "sequence": 10,
+        "step": "EVALUATE_MUTATION_LIMITS",
+        "result": "PROHIBITED=0;FAILURES=0"
+      },
+      {
+        "sequence": 11,
+        "step": "EVALUATE_STOPPING_BOUNDARIES",
+        "result": "STOPPING_BOUNDARIES=0"
+      },
+      {
+        "sequence": 12,
+        "step": "CLASSIFY_FAILURES",
+        "result": "FAILURES=1"
+      },
+      {
+        "sequence": 13,
+        "step": "CALCULATE_FINAL_DISPOSITION",
+        "result": "STOP"
+      },
+      {
+        "sequence": 14,
+        "step": "EMIT_DETERMINISTIC_RECEIPT",
+        "result": "RECEIPT_EMITTED"
+      }
+    ],
+    "finalDisposition": "STOP"
+  }
+}

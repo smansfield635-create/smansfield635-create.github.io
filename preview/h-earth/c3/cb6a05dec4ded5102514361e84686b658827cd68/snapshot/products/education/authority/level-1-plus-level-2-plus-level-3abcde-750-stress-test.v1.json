@@ -1,0 +1,129 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2_PLUS_LEVEL_3ABCDE_750_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_MAJOR_LEVEL_3_COMPLETE",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-e-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 750,
+    "prior_battery_tasks": 272,
+    "fresh_transfer_tasks": 32,
+    "total_tasks": 304,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Major Level 3 completion gate: retain all prior capability and demonstrate novel transfer in explanation logic, opinion calibration, uncertainty, inference, and multi-part conversational reasoning."
+  },
+  "results": {
+    "prior_272": {
+      "functionally_expressible": 272,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_32": {
+      "DIRECT": 23,
+      "COMPOSABLE": 6,
+      "MISSING": 3,
+      "functionally_expressible": 29,
+      "coverage_percent": 90.625
+    },
+    "overall_304": {
+      "functionally_expressible": 301,
+      "missing": 3,
+      "coverage_percent": 99.0131578947
+    }
+  },
+  "fresh_transfer_passed": [
+    "contrast two ideas using although/however/instead/otherwise",
+    "state a condition using unless/whether",
+    "explain a consequence using therefore/consequence",
+    "state purpose in plain language",
+    "describe one event happening while another happens",
+    "express uncertainty using perhaps, uncertain, unlikely or suppose",
+    "express certainty using certain, surely and clearly",
+    "distinguish fact, claim, opinion and evidence",
+    "state a personal opinion or view",
+    "describe something that seems or appears true",
+    "state an assumption",
+    "state an expectation",
+    "express preference using prefer/rather",
+    "consider multiple choices before deciding",
+    "suggest an action",
+    "imagine a possible situation",
+    "wonder about an unknown result",
+    "notice and realize a change",
+    "state that evidence supports a claim",
+    "describe something as impossible or unlikely",
+    "explain that an outcome depends on a condition",
+    "distinguish either/neither/both",
+    "use whatever/whenever in simple open-choice expressions",
+    "combine cause, contrast and uncertainty in one explanation",
+    "compare a factual claim with a personal opinion",
+    "explain why a conclusion is tentative",
+    "revise an opinion after new evidence",
+    "describe a condition changing a result",
+    "explain why one option is preferred over another"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer conversational idiom and phrasal-verb range",
+      "reason": "Core actions are broad, but everyday expressions built around get/set/bring/take/turn-style phrasal verbs remain uneven."
+    },
+    {
+      "function": "richer social/cultural participation language",
+      "reason": "Community, public, family, school, work and civic vocabulary exist, but celebration, event, tradition, hobby, sport and entertainment participation remain relatively thin."
+    },
+    {
+      "function": "richer high-school-level general knowledge discussion without specialization",
+      "reason": "The system can reason broadly, but plain cross-domain words for history, art, media, environment, technology, health and society remain incomplete."
+    }
+  ],
+  "major_level_3_assessment": {
+    "word_count": 250,
+    "cumulative_word_count": 750,
+    "bands": 5,
+    "prior_capability_retention_percent": 100,
+    "novel_transfer_percent": 90.625,
+    "completion_gate": "PASS",
+    "interpretation": "Major Level 3 adds expressive sophistication, nuanced description, relationship language, school/work process, emotion, comparison, explanation logic, opinion calibration and uncertainty while remaining plain conversational English."
+  },
+  "interpretation": [
+    "Major Level 3 is complete and operational at 250 additional words.",
+    "All previously demonstrated functions remain intact.",
+    "Remaining gaps are no longer foundational grammar, daily-life operation, or ordinary reasoning gaps.",
+    "The final 250 words should therefore broaden cultural participation, idiomatic flexibility, and high-school conversational range rather than increase technical specialization."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "major_level_3_status": "ADMITTED_COMPLETE",
+    "cumulative_words": 750,
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_4_BAND_A_FROM_FINAL_PROGRAM_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "everyday idiom and phrasal-verb flexibility",
+      "social/cultural participation",
+      "high-school-level general knowledge conversation without specialization"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "MAJOR_LEVEL_3_COMPLETE_AT_750_WORDS",
+    "ACTION_PERFORMED": "272-function retention test plus 32-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 90.63% novel transfer; 99.01% overall across 304 tasks. Major Level 3 admitted complete.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_4_BAND_A_GEOMETRIC_RECONSTRUCTION"
+  }
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth RMA1 Single-Family Material Ablations</title>
+  <style>
+    html,body{margin:0;background:#080b0d;color:#d8e1e5;font:13px system-ui,sans-serif}
+    main{padding:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    figure{margin:0;border:1px solid #26323a;background:#10161a;padding:5px}
+    figcaption{padding:3px 0 5px}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    #status{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Official accepted CP2</figcaption><canvas id="official"></canvas></figure>
+    <figure><figcaption>Pass G — accepted material, flat lighting</figcaption><canvas id="pass-g"></canvas></figure>
+    <figure><figcaption>Pass H — accepted CP2 final frame</figcaption><canvas id="pass-h"></canvas></figure>
+    <figure><figcaption>Family 1 — broad/medium/grain/macro/meso/detail neutralized</figcaption><canvas id="pass-family-1"></canvas></figure>
+    <figure><figcaption>Family 2 — strata/cross-grain/face bands neutralized</figcaption><canvas id="pass-family-2"></canvas></figure>
+    <figure><figcaption>Family 3 — crest/terrace/contact neutralized</figcaption><canvas id="pass-family-3"></canvas></figure>
+    <figure><figcaption>Family 4 — contour/slope-rake neutralized</figcaption><canvas id="pass-family-4"></canvas></figure>
+    <figure><figcaption>Family 5 — Manor-local material/contact neutralized</figcaption><canvas id="pass-family-5"></canvas></figure>
+    <figure><figcaption>Family 6 — Cavern-local material/contact neutralized</figcaption><canvas id="pass-family-6"></canvas></figure>
+    <figure><figcaption>Family 7 — base-color/role blend neutralized</figcaption><canvas id="pass-family-7"></canvas></figure>
+    <div id="status">INITIALIZING_RMA1</div>
+  </main>
+  <script type="module">
+    import { createRMA1SingleFamilyAblationSuite } from './h-earth.rma1-single-family-ablations-browser.mjs';
+    const status = document.querySelector('#status');
+    try {
+      const suite = await createRMA1SingleFamilyAblationSuite({
+        officialCanvas: document.querySelector('#official'),
+        passCanvases: {
+          G: document.querySelector('#pass-g'),
+          H: document.querySelector('#pass-h'),
+          FAMILY_1: document.querySelector('#pass-family-1'),
+          FAMILY_2: document.querySelector('#pass-family-2'),
+          FAMILY_3: document.querySelector('#pass-family-3'),
+          FAMILY_4: document.querySelector('#pass-family-4'),
+          FAMILY_5: document.querySelector('#pass-family-5'),
+          FAMILY_6: document.querySelector('#pass-family-6'),
+          FAMILY_7: document.querySelector('#pass-family-7')
+        }
+      });
+      window.H_EARTH_RMA1 = suite;
+      document.documentElement.dataset.rma1Ready = 'true';
+      status.textContent = 'RMA1_READY';
+    } catch (error) {
+      document.documentElement.dataset.rma1Error = 'true';
+      status.textContent = String(error?.stack || error);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

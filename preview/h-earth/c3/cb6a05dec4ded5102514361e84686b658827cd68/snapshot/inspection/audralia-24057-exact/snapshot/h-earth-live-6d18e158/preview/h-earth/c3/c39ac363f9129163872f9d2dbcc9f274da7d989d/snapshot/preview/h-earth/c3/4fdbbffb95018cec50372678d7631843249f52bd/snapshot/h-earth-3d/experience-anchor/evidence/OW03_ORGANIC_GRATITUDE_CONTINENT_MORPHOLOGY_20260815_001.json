@@ -1,0 +1,54 @@
+{
+  "schema": "H_EARTH_OW03_PRODUCT_AND_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "evidenceId": "OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001",
+  "publicBase": "eacb69cf93d18c4f6e1ec4307a05b634dccef4a8",
+  "productCandidate": "6b552536a4d97f141f6e00d327fc7638d632781a",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "initialCandidateDisposition": {
+    "result": "FAIL_CLOSED",
+    "reason": "ARRIVAL_COAST_OVER_CUT_WATER_DOMINANT_FRAGMENTED_VIEW",
+    "repairedBeforeAcceptance": true
+  },
+  "liveComparison": {
+    "route": "/showroom/globe/h-earth/?visual=terrain-relief-v2",
+    "viewport": {"width": 1440, "height": 900},
+    "base": {
+      "status": 200,
+      "canvasCount": 1,
+      "interactionExercised": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "requestFailures": [],
+      "httpErrors": [],
+      "sourceCaptureSha256": "00a8c14dfd0753a566c20005f1e4f9486548872a84e60e28f3187c45b15dcc93",
+      "repositoryVisualProxySha256": "ae6d3aa5290245e180fd276c5146ffd3714879b79e439db104fd62ef7c7f5331"
+    },
+    "candidate": {
+      "status": 200,
+      "canvasCount": 1,
+      "interactionExercised": true,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "requestFailures": [],
+      "httpErrors": [],
+      "sourceCaptureSha256": "fd34ad08527c3d5004c93ad7c8e96e31eaf23b7c6f73aa029c3bf19ddae5a5fa",
+      "repositoryVisualProxySha256": "4944bc7d57eff82d3d5d953943d5f957a8d38390b7821784d42274f7f740d32d"
+    }
+  },
+  "productQualification": {
+    "exactChangedProductPaths": 2,
+    "unauthorizedProductPaths": 0,
+    "terrainFormationEvaluation": "PASS",
+    "shorelineDirectionalTurns": 8,
+    "shorelineRangeWorldUnits": 77.91837850619588,
+    "protectedEntryBandMaximumShorelineDrift": 1.4210854715202004e-14,
+    "ow02ProtectedAnchorSamplesValid": 8,
+    "ow02ProtectedAnchorSampleCount": 8,
+    "ow02MaximumElevationDrift": 7.624486926260943e-7,
+    "ow02InlandMountainWatershedIdentityPreserved": true
+  },
+  "continuityFinding": "The repaired OW03 candidate preserves the qualified H-Earth arrival, embodied ground view, direct interaction, terrain continuity, OW02 inland mountain and watershed system, and single-world identity while adding bounded compound continental morphology outside the protected entry band.",
+  "result": "PASS"
+}
+

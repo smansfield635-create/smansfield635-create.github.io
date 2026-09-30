@@ -1,0 +1,26 @@
+{
+  "alternative_set_id": "ICR_LEVEL4_ALTERNATIVE_MODELS_v1",
+  "models": [
+    {
+      "model_id": "OUTPUT_ONLY_MODEL",
+      "claim": "Equal visible output is the only relevant continuity criterion.",
+      "divergence": "Treats externally supported and substituted PASS states as equivalent to endogenous identity continuity."
+    },
+    {
+      "model_id": "UNRESTRICTED_SUBSTITUTION_MODEL",
+      "claim": "Any component producing the same target output fully restores the original system.",
+      "divergence": "Predicts a substitute PASS state should also pass the original-lineage held-out challenge."
+    },
+    {
+      "model_id": "ADDITIVE_CAPACITY_MODEL",
+      "claim": "Sufficient total enabled capacity can compensate for one missing relation.",
+      "pass_threshold": 5,
+      "divergence": "Predicts the unrelated-capacity condition should pass after capacity exceeds the threshold."
+    },
+    {
+      "model_id": "PROVENANCE_AGNOSTIC_RELIABILITY_MODEL",
+      "claim": "Any successful route counts as availability of the relevant route.",
+      "divergence": "Treats external and substitute routes as reopening the original route."
+    }
+  ]
+}

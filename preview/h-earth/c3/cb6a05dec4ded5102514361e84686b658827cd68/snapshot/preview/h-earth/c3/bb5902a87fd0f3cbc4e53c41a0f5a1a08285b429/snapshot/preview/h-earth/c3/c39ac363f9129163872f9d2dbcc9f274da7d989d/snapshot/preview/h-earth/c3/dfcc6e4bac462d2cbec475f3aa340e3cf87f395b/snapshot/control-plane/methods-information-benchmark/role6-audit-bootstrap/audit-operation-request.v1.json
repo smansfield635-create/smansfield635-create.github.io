@@ -1,0 +1,203 @@
+{
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "projectId": "METHODS_INFORMATION_BENCHMARK",
+  "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_DEVELOPMENTAL_BASELINE",
+  "exactGoverningHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+  "subjectIdentity": {
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "corpusPath": "laws/research/methods-and-models/showroom.js",
+    "corpusShape": {
+      "families": 4,
+      "records": 25,
+      "lenses": 3
+    },
+    "developmentalBaselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a"
+  },
+  "requestingAuthority": {
+    "class": "USER_ORIGIN_PLUS_OPERATION_SCOPED_ASSIGNMENT",
+    "originIssue": 575,
+    "assignmentValidation": "PASS_CLOSED",
+    "assignmentVerification": "PASS_CLOSED"
+  },
+  "executingRole": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "operationScoped": true,
+    "generalRoleAuthority": false
+  },
+  "independentVerifier": {
+    "required": true,
+    "distinctExecutionHolder": true,
+    "repairAuthority": false,
+    "byteAndFingerprintReproduction": true
+  },
+  "constructionProcedureLocator": "control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-construction-procedure.v1.json",
+  "requiredInputs": [
+    {
+      "id": "ROLE_6_ASSIGNMENT_HEAD",
+      "resolved": true,
+      "identity": "ce40519190a9048c1e0cef682108c34b0a7f8055"
+    },
+    {
+      "id": "ROLE_6_ASSIGNMENT_ID",
+      "resolved": true,
+      "identity": "8c4d0f0fb1b3068764e476c4"
+    },
+    {
+      "id": "DEVELOPMENTAL_BASELINE_PACKET",
+      "resolved": true,
+      "identity": "fa7e74403ff43e017bccef7462f4e001918cf0a3"
+    },
+    {
+      "id": "DEVELOPMENTAL_BASELINE_PACKET_SHA256",
+      "resolved": true,
+      "identity": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc"
+    },
+    {
+      "id": "CANONICAL_25_RECORD_CORPUS",
+      "resolved": true,
+      "identity": "laws/research/methods-and-models/showroom.js"
+    },
+    {
+      "id": "USER_ORIGIN_DEVELOPMENTAL_ANSWER_SET",
+      "resolved": true,
+      "identity": "control-plane/methods-information-benchmark/role6-audit-bootstrap/authority-and-lineage.v1.json"
+    },
+    {
+      "id": "AUDIT_OUTPUT_PATH_REGISTRY",
+      "resolved": true,
+      "identity": "control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-output-path-registry.v1.json"
+    }
+  ],
+  "allowedPaths": [
+    "control-plane/methods-information-benchmark/role6-audit/outputs/01-canonical-25-record-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/02-formal-type-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/03-conceptual-cluster-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/04-record-dependency-graph-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/05-independence-classification-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/06-computational-vs-noncomputational-boundary-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/07-invocation-condition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/08-question-intent-to-record-type-routing-spec-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/09-unresolved-or-ambiguous-record-hold-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/10-role-6-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/11-methods-three-anchor-development-contract-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/12-methods-user-cognitive-origin-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/13-generic-trophy-standard-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/14-methods-benchmark-compass-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/15-three-anchor-conflict-and-precedence-rules-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/16-preconstruction-and-postconstruction-evaluation-lifecycle-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/17-phone-tablet-desktop-equivalence-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/18-trophy-and-compass-evidence-requirements-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/19-methods-product-requirements-integration-schema-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/20-role-6-integrated-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/21-developmental-baseline-element-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/22-intent-implementation-outcome-crosswalk-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/23-correlated-developmental-value-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/24-element-level-disposition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/25-concept-implementation-requirements-instrumentation-failure-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/26-baseline-to-successor-requirement-trace-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/27-causal-confidence-and-unresolved-cause-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.packet.v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json"
+  ],
+  "prohibitedPaths": [
+    "laws/",
+    "showroom/",
+    "assets/",
+    "h-earth-3d/",
+    ".github/operation-intake/active-operation-ledger.v1.json",
+    "refs/heads/operation-locks/repository-operation-intake-v1"
+  ],
+  "requiredOutputs": [
+    "CANONICAL_25_RECORD_INVENTORY_v1",
+    "FORMAL_TYPE_ASSIGNMENT_REGISTRY_v1",
+    "CONCEPTUAL_CLUSTER_ASSIGNMENT_REGISTRY_v1",
+    "RECORD_DEPENDENCY_GRAPH_v1",
+    "INDEPENDENCE_CLASSIFICATION_REGISTRY_v1",
+    "COMPUTATIONAL_VS_NONCOMPUTATIONAL_BOUNDARY_v1",
+    "INVOCATION_CONDITION_REGISTRY_v1",
+    "QUESTION_INTENT_TO_RECORD_TYPE_ROUTING_SPEC_v1",
+    "UNRESOLVED_OR_AMBIGUOUS_RECORD_HOLD_REGISTER_v1",
+    "ROLE_6_REQUIREMENTS_FREEZE_RECOMMENDATION_v1",
+    "METHODS_THREE_ANCHOR_DEVELOPMENT_CONTRACT_v1",
+    "METHODS_USER_COGNITIVE_ORIGIN_REQUIREMENTS_v1",
+    "GENERIC_TROPHY_STANDARD_BINDING_REQUIREMENTS_v1",
+    "METHODS_BENCHMARK_COMPASS_BINDING_REQUIREMENTS_v1",
+    "THREE_ANCHOR_CONFLICT_AND_PRECEDENCE_RULES_v1",
+    "PRECONSTRUCTION_AND_POSTCONSTRUCTION_EVALUATION_LIFECYCLE_v1",
+    "PHONE_TABLET_DESKTOP_EQUIVALENCE_REQUIREMENTS_v1",
+    "TROPHY_AND_COMPASS_EVIDENCE_REQUIREMENTS_REGISTRY_v1",
+    "METHODS_PRODUCT_REQUIREMENTS_INTEGRATION_SCHEMA_v1",
+    "ROLE_6_INTEGRATED_REQUIREMENTS_FREEZE_RECOMMENDATION_v1",
+    "DEVELOPMENTAL_BASELINE_ELEMENT_INVENTORY_v1",
+    "INTENT_IMPLEMENTATION_OUTCOME_CROSSWALK_v1",
+    "CORRELATED_DEVELOPMENTAL_VALUE_REGISTRY_v1",
+    "ELEMENT_LEVEL_DISPOSITION_REGISTRY_v1",
+    "CONCEPT_IMPLEMENTATION_REQUIREMENTS_INSTRUMENTATION_FAILURE_REGISTRY_v1",
+    "BASELINE_TO_SUCCESSOR_REQUIREMENT_TRACE_REGISTRY_v1",
+    "CAUSAL_CONFIDENCE_AND_UNRESOLVED_CAUSE_REGISTER_v1",
+    "ROLE_6_OPERATION_RETURN_PACKET_v1",
+    "ROLE_6_OPERATION_RETURN_RECEIPT_v1"
+  ],
+  "exactTestCommand": "node tools/methods-role6-audit/audit-package-materializer.v1.mjs --self-test",
+  "workflowPath": ".github/workflows/methods-role6-audit-execution.yml",
+  "artifactPaths": [
+    "methods-role6-audit-builder-evidence/audit-materialization.receipt.v1.json",
+    "methods-role6-audit-verifier-evidence/audit-verification.receipt.v1.json",
+    "methods-role6-audit-final-return/role6-operation-return.packet.v1.json",
+    "methods-role6-audit-final-return/role6-operation-return.receipt.v1.json",
+    "methods-role6-audit-final-return/first-assignment-ledger.returned-successor.v1.json"
+  ],
+  "fingerprintDomain": {
+    "algorithm": "sha256",
+    "canonicalization": "UTF8_JSON_STABLE_KEY_ORDER_WITH_TRAILING_LF",
+    "boundFields": [
+      "operationId",
+      "assignmentHead",
+      "assignmentId",
+      "packetHead",
+      "packetCanonicalSha256",
+      "substantiveOutputIdPathPayloadMap",
+      "returnArtifactIdPathPayloadMap",
+      "authorizedPathRegistrySha256",
+      "executionHolder"
+    ],
+    "excludeFields": [
+      "generatedAt",
+      "workflowRunId"
+    ]
+  },
+  "errorPrecedence": [
+    "INPUT_SCHEMA_INVALID",
+    "ASSIGNMENT_IDENTITY_MISMATCH",
+    "OPERATION_ID_MISMATCH",
+    "OUTPUT_COUNT_MISMATCH",
+    "OUTPUT_ID_OR_PATH_MISMATCH",
+    "DUPLICATE_OUTPUT_ID_OR_PATH",
+    "PAYLOAD_NOT_OBJECT",
+    "UNAUTHORIZED_PATH",
+    "MATERIALIZATION_WRITE_FAILURE",
+    "BYTE_VERIFICATION_FAILURE",
+    "FINGERPRINT_MISMATCH",
+    "RETURN_OR_TERMINATION_FAILURE"
+  ],
+  "stopConditions": [
+    "NO_ADMITTED_AND_LOCKED_RECEIPT",
+    "GOVERNING_HEAD_MISMATCH",
+    "ASSIGNMENT_NOT_ACTIVE_FOR_EXACT_OPERATION",
+    "ANY_OUTPUT_OR_PATH_MISSING_OR_EXTRA",
+    "VERIFIER_HOLDER_NOT_DISTINCT",
+    "FINGERPRINT_NONREPRODUCTION",
+    "PUBLIC_OR_PROHIBITED_PATH_MUTATION",
+    "MERGE_DEPLOYMENT_OR_RELEASE_REQUESTED"
+  ],
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED"
+  ]
+}

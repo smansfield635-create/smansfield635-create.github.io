@@ -1,0 +1,236 @@
+/*
+ * Laws CP6 post-merge mobile, background-spacecraft, and visitor-path correction.
+ * Presentation only. No controller, route, record, evidence, or claim authority.
+ */
+
+html[data-cp6-experiential-presentation="candidate"] #laws-spacecraft-background-host {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: strict;
+  isolation: isolate;
+}
+
+html[data-cp6-experiential-presentation="candidate"] #laws-spacecraft-background-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.86;
+  mix-blend-mode: screen;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-shell, .laws-footer) {
+  position: relative;
+  z-index: 2;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+  align-items: start;
+}
+
+html[data-cp6-experiential-presentation="candidate"] [data-laws-scene-field] > canvas[data-laws-spacecraft-layer],
+html[data-cp6-experiential-presentation="candidate"] [data-laws-scene-field] > canvas[data-laws-spacecraft-background-layer] {
+  display: none !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] {
+  display: block !important;
+  width: 100%;
+  margin: clamp(1.5rem, 4vh, 3rem) 0 0;
+  padding: 0;
+  border: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] > .laws-visitor-paths__header {
+  margin: 0 0 1rem;
+  display: block;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] > .laws-visitor-paths__header .laws-stage-number {
+  display: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] > .laws-visitor-paths__header h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.3vw, 2rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] > .laws-visitor-paths__header p {
+  max-width: 48rem;
+  margin: 0.55rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__tablist {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 1rem 0 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__tab {
+  min-width: 0;
+  min-height: 3.25rem;
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--laws-experience-line);
+  border-radius: 0.9rem;
+  color: var(--laws-experience-muted);
+  background: rgba(6, 12, 28, 0.68);
+  font: 650 clamp(0.78rem, 1vw, 0.92rem)/1.15 var(--laws-experience-body);
+  letter-spacing: 0.01em;
+  text-align: center;
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__tab:is(:hover, :focus-visible) {
+  color: var(--laws-experience-ink);
+  border-color: rgba(var(--laws-experience-glow), 0.48);
+  outline: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__tab[aria-selected="true"] {
+  color: #07101f;
+  border-color: transparent;
+  background: linear-gradient(110deg, var(--laws-experience-accent), var(--laws-experience-accent-2));
+  box-shadow: 0 0 28px rgba(var(--laws-experience-glow), 0.22);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] > .laws-orientation-panel {
+  display: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] > .laws-orientation-panel[data-laws-tab-active="true"] {
+  display: block;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] > .laws-orientation-panel > summary {
+  display: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] .laws-orientation-panel__body {
+  margin-top: 0.7rem;
+  padding: clamp(1rem, 2.2vw, 1.5rem);
+  border: 1px solid var(--laws-experience-line);
+  border-radius: 1rem;
+  background: rgba(4, 9, 22, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+  backdrop-filter: blur(20px);
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-shell {
+    padding-inline: clamp(0.85rem, 4vw, 1.15rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+    min-height: 0;
+    gap: 1.35rem;
+    padding: 1.2rem 0 2rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__prelude {
+    margin-bottom: 0.8rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy h1 {
+    max-width: 8.3ch;
+    font-size: clamp(2.75rem, 11.7vw, 3.55rem);
+    line-height: 0.93;
+    letter-spacing: -0.058em;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy p {
+    margin-top: 1.15rem;
+    font-size: clamp(1rem, 4.2vw, 1.12rem);
+    line-height: 1.52;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__expand-label {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1.35rem;
+    min-height: 3.2rem;
+    padding-inline: 1rem;
+    text-align: center;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-compass-primary {
+    margin-top: 0;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
+    min-height: 0 !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] :is(.laws-orbit__field, [data-laws-scene-field]) {
+    min-height: clamp(25rem, 108vw, 31rem) !important;
+    max-height: 31rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
+    margin-top: 0.85rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker {
+    min-height: 0;
+    padding-block: 1rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker h2 {
+    font-size: clamp(1.7rem, 8vw, 2.35rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker__body {
+    font-size: 1rem;
+    line-height: 1.48;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__tablist {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__tab {
+    min-height: 2.8rem;
+    text-align: left;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] .laws-orientation-panel__body {
+    padding: 0.95rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 700px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+    padding-top: 0.75rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] :is(.laws-orbit__field, [data-laws-scene-field]) {
+    min-height: max(25rem, 92svh) !important;
+    max-height: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-cp6-experiential-presentation="candidate"] #laws-spacecraft-background-canvas {
+    display: none !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__tab {
+    transition: none;
+  }
+}

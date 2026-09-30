@@ -1,0 +1,37 @@
+name: Education Program-Wide Expression Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify bounded expression reconciliation
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/c.html
+          git show "$BASE_SHA:products/education/index.html" >/tmp/b.html
+          node - <<'NODE'
+          const fs=require('fs'),c=fs.readFileSync('/tmp/c.html','utf8'),b=fs.readFileSync('/tmp/b.html','utf8');
+          for(const src of [...c.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const block=(s,a,z)=>s.slice(s.indexOf(a),s.indexOf(z,s.indexOf(a)));
+          for(const [a,z,n] of [['const BANK=','const CAPSTONE_BANK=','BANK'],['const CAPSTONE_BANK=','const EDUCATION_STATE_KEY=','CAPSTONE'],['function placementCoordinate','const BANK=','CROSSWALK'],['function submitAdaptiveAnswer','function resolveAdaptiveBoundary','ADAPTIVE']])if(block(c,a,z)!==block(b,a,z))throw Error('frozen '+n+' changed');
+          for(const bad of ['Phase 1 Demo','Enter Phase 1 Demo','Phase 1 learning demo','Demo Entry','vertical slice'])if(c.includes(bad))throw Error('legacy expression '+bad);
+          for(const good of ['English Placement','Learning Availability','Start Phase 1','Placement spans the four-phase program.','later-phase placement remains valid','saved on this device'])if(!c.includes(good))throw Error('missing expression '+good);
+          for(const state of ['PHASE_1_RECEIVE','PHASE_2_PLACE','PHASE_3_USE','PHASE_4_OWN','TRANSITION','CAPSTONE_PASS','CAPSTONE_NOT_ESTABLISHED','UNCERTAIN_BOUNDARY','PUBLIC_AVAILABLE','NOT_CURRENTLY_AVAILABLE','FREE_PUBLIC','NOT_AVAILABLE'])if(!c.includes(state))throw Error('missing state '+state);
+          if(!c.includes('p.curriculum_availability!=="PUBLIC_AVAILABLE"||p.access_status!=="FREE_PUBLIC"'))throw Error('entry access guard missing');
+          console.log('EDUCATION_PROGRAM_WIDE_EXPRESSION_QUALIFICATION=PASS');
+          NODE

@@ -1,0 +1,119 @@
+{
+  "artifactId": "PRODUCTS_LAWS_STYLE_RETURN_DISCLOSURE_CHECKPOINT_0_BASELINE_v1",
+  "status": "PASS_BASELINE_FROZEN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "route": "/products/",
+  "base": {
+    "branch": "main",
+    "commit": "95ec09b7fe159332adb9f6e4e8e9cd337511f66c",
+    "meaning": "Restored post-rollback Products baseline after PR #296 was reverted by PR #297."
+  },
+  "workingBranch": "agent/products-laws-return-disclosure-cp0-001",
+  "sourceAnchors": {
+    "productsHtml": {
+      "path": "products/index.html",
+      "blob": "84cc1707500003b824826ec320fcf44826904755"
+    },
+    "productsController": {
+      "path": "products/index.controller.js",
+      "blob": "3bf31e29f6743a8660b12a30c5fb56d087ca3199"
+    },
+    "productsCrystals": {
+      "path": "products/index.crystals.js",
+      "blob": "db6889500dccab53365a564feb1aa96f34b4200d"
+    },
+    "productsCompassCss": {
+      "path": "products/index.compass.css",
+      "blob": "a11fd8fd874b008fbb0d0e578b1c90ed732d0050"
+    },
+    "lawsHtml": {
+      "path": "laws/index.html",
+      "blob": "32fcb1128b7005f9cd309d54132d78a16a3b50cf"
+    },
+    "lawsController": {
+      "path": "laws/index.controller.js",
+      "blob": "5711c261d7fac96a3622ef80e98dacca845f7d96"
+    },
+    "benchmarkSourceAssertions": {
+      "path": "verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-source-assertions.mjs",
+      "blob": "821a202f9e7a39900801eb151fb4ea40a329e8da"
+    }
+  },
+  "approvedInteractionContract": {
+    "globeFirstAction": "PAGE_LOCAL_DISCLOSURE",
+    "globeFirstActionNavigation": false,
+    "globeFirstActionViewportEffect": "SCROLL_CONTEXT_PANEL_INTO_VIEW",
+    "explicitHomeAction": "RETURN_TO_MAIN_COMPASS",
+    "explicitHomeRoute": "/",
+    "returnToOrbitAction": "RESTORE_SIX_PRODUCT_CLUSTER",
+    "returnToOrbitNavigation": false,
+    "returnToOrbitMustRemainIndependent": true,
+    "productPreviewMayExposeActions": [
+      "ENTER_PRODUCT",
+      "RETURN_TO_ORBIT",
+      "RETURN_TO_MAIN_COMPASS_WHEN_GLOBE_DISCLOSURE_IS_OPEN"
+    ]
+  },
+  "confirmedExistingProductsAuthority": {
+    "controllerAlreadyProvides": [
+      "setCenterDisclosure(open)",
+      "requestCompassSelection(event)",
+      "requestReturnToMainCompass(event)",
+      "requestReturnToOrbit()",
+      "previewPanel.scrollIntoView() after globe selection",
+      "scene.scrollIntoView() after Return to Orbit",
+      "explicit two-step Main Compass navigation"
+    ],
+    "htmlAlreadyProvides": [
+      "one center globe control",
+      "one Return to Orbit control",
+      "one Return to Main Compass control",
+      "one Products context panel"
+    ],
+    "architecturalReplacementRequired": false
+  },
+  "confirmedLawsDonorBehavior": {
+    "globeSelection": "requestCompassSelection sets compassSelected, selects Main Compass locally, descends the panel, and does not navigate",
+    "homeNavigation": "requestReturnToMainCompass navigates only after compassSelected is true",
+    "orbitReturn": "requestReturnToOrbit independently restores the active category or constellation and raises the scene"
+  },
+  "localizedFailureBoundary": {
+    "owner": "products/index.crystals.js",
+    "function": "blockedSemanticControl(target) / classifyPointerTerritory(event)",
+    "sourceFact": "blockedSemanticControl includes panel actions but omits [data-products-center-control]",
+    "consequence": "A physical tap whose DOM target is the globe control can continue into renderer-derived product hit testing and be reinterpreted as a nearby product-star tap.",
+    "physicalEvidence": "The prior device/browser evidence reproduced a center-globe touch selecting Education before the failed overlay guard was added.",
+    "classification": "EVENT_AUTHORITY_COLLISION_NOT_VISUAL_ARCHITECTURE_FAILURE"
+  },
+  "authorizedNextCheckpoint": {
+    "id": "CHECKPOINT_1_EXACT_MINIMAL_CORRECTION_AND_BENCHMARK_DESIGN",
+    "candidateProductionOwners": [
+      "products/index.crystals.js",
+      "products/index.controller.js only if ordinary-action disclosure closure requires explicit integration"
+    ],
+    "candidateBenchmarkOwners": [
+      "verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-source-assertions.mjs",
+      "a bounded runtime scenario under the existing Benchmark V1 lane"
+    ]
+  },
+  "prohibitions": [
+    "No new overlay module.",
+    "No new globe-guard stylesheet.",
+    "No dark radial shield or touch corridor.",
+    "No globe resizing or repositioning.",
+    "No compositor replacement.",
+    "No crystal renderer rewrite.",
+    "No second controller.",
+    "No immediate navigation on first globe press.",
+    "No suppression or replacement of Return to Orbit.",
+    "No main mutation.",
+    "No merge before physical-device evidence."
+  ],
+  "checkpointDisposition": {
+    "checkpoint0": "COMPLETE",
+    "productionMutation": false,
+    "mainMutation": false,
+    "visualPassClaimed": false,
+    "mergeAuthorized": false
+  }
+}

@@ -1,0 +1,46 @@
+diff --git a/products/index.compass.css b/products/index.compass.css
+index 62b75247..11c624e8 100644
+--- a/products/index.compass.css
++++ b/products/index.compass.css
+@@ -17,8 +17,8 @@
+ .products-cosmic-field,
+ .products-compass-layer,
+ .products-semantic,
+-.products-scene > canvas[data-products-crystals-canvas],
+-.products-scene > canvas[data-products-front-crystals-canvas] {
++.products-scene > canvas[data-products-crystals-canvas="rear"],
++.products-scene > canvas[data-products-crystals-canvas="front"] {
+   position: absolute;
+ }
+ 
+@@ -39,7 +39,7 @@
+   mix-blend-mode: screen;
+ }
+ 
+-.products-scene > canvas[data-products-crystals-canvas] {
++.products-scene > canvas[data-products-crystals-canvas="rear"] {
+   inset: 0;
+   z-index: 1 !important;
+   display: block;
+@@ -126,7 +126,7 @@
+   white-space: nowrap !important;
+ }
+ 
+-.products-scene > canvas[data-products-front-crystals-canvas] {
++.products-scene > canvas[data-products-crystals-canvas="front"] {
+   inset: 0;
+   z-index: 3;
+   display: block;
+diff --git a/products/index.html b/products/index.html
+index 5453122b..5531a2c9 100644
+--- a/products/index.html
++++ b/products/index.html
+@@ -97,7 +97,7 @@
+   <script defer src="/products/index.controller.js"></script>
+   <script defer src="/products/index.cosmos.js"></script>
+   <script defer src="/products/index.planet.js"></script>
+-  <script defer src="/products/index.crystals.js"></script>
+   <script defer src="/products/index.compositor.js"></script>
++  <script defer src="/products/index.crystals.js"></script>
+ </body>
+ </html>

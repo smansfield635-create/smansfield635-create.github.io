@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>H-Earth Terrain Intelligence and Perceptual Workbench</title>
+  <style>
+    :root{color-scheme:dark;--bg:#071015;--panel:#0d1920;--panel2:#111f27;--line:#263943;--text:#e3edf1;--muted:#9cb0ba;--accent:#78d8c6;--warn:#ffdf70;--danger:#ff7575}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+    body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+    button,select,input{font:inherit}
+    button,select{background:#14252e;color:var(--text);border:1px solid #35505d;border-radius:6px;padding:8px 10px}
+    button:disabled{opacity:.45}
+    button:not(:disabled){cursor:pointer}
+    main{max-width:1800px;margin:auto;padding:14px;display:grid;gap:14px}
+    header,.section{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:10px}
+    header{padding:14px 16px}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:20px;margin-bottom:6px}
+    h2{font-size:17px;margin-bottom:10px}
+    h3{font-size:14px;margin-bottom:7px}
+    .muted{color:var(--muted)}
+    .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .badge{border:1px solid #34505b;background:#102027;border-radius:999px;padding:4px 8px;font:12px ui-monospace,SFMono-Regular,Menlo,monospace}
+    .section{padding:14px}
+    .controls{display:flex;flex-wrap:wrap;align-items:end;gap:10px;margin-bottom:10px}
+    label.control{display:grid;gap:4px;color:var(--muted);font-size:12px}
+    label.check{display:flex;align-items:center;gap:5px;color:var(--text)}
+    .atlas-layout{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(260px,.8fr);gap:12px}
+    #terrain-map{width:100%;aspect-ratio:129/97;display:block;background:#000;border:1px solid #324853;image-rendering:pixelated;cursor:crosshair}
+    pre{margin:0;white-space:pre-wrap;overflow:auto;background:#071015;border:1px solid #253a45;border-radius:7px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}
+    .scene-controls{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:10px;margin-bottom:12px}
+    .scene-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    figure{margin:0;border:1px solid #2a414d;background:#081116;border-radius:8px;padding:8px;min-width:0}
+    figcaption{font-weight:650;margin-bottom:6px}
+    .canvas-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+    .canvas-wrap canvas,.scene-grid>figure>canvas{display:block;width:100%;height:auto;background:#000}
+    #accepted-view,#mark-region{position:absolute;inset:0;width:100%;height:100%}
+    #mark-region{touch-action:none;cursor:crosshair}
+    .question{margin-top:12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(270px,.7fr);gap:12px}
+    fieldset{border:1px solid #2a414d;border-radius:8px;padding:10px;margin:0}
+    legend{padding:0 6px;color:var(--muted)}
+    .radio-row,.score-row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+    .score-row input{width:min(420px,100%)}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    #status{min-height:44px}
+    .danger{color:var(--danger)}
+    .ok{color:var(--accent)}
+    .hidden-renderers{position:absolute;left:-100000px;top:-100000px;width:1px;height:1px;overflow:hidden}
+    @media(max-width:900px){.atlas-layout,.question{grid-template-columns:1fr}.scene-grid{grid-template-columns:1fr}.scene-controls{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>H-Earth Terrain Intelligence and Perceptual Workbench v1</h1>
+      <p class="muted">Internal authoring, diagnostic, and user-comparison tool. No live route, accepted renderer, terrain, binding, or CP2 product mutation.</p>
+      <div class="badges">
+        <span class="badge">B1 fnv1a32:513f79fa</span>
+        <span class="badge">B2 fnv1a32:f228a5b5</span>
+        <span class="badge">CP2 H color 8/8</span>
+        <span class="badge">CP2 depth 8/8</span>
+        <span class="badge">passes A–H</span>
+        <span class="badge">ablations 7/7</span>
+        <span class="badge">LIVE MUTATION FALSE</span>
+      </div>
+    </header>
+
+    <section class="section" aria-labelledby="atlas-title">
+      <h2 id="atlas-title">1. Terrain Intelligence Atlas and Protected World Authority Map</h2>
+      <div class="controls">
+        <label class="control">Map layer
+          <select id="layer-select"></select>
+        </label>
+        <label class="check"><input id="overlay-p0" type="checkbox" checked>P0 exact immutable</label>
+        <label class="check"><input id="overlay-p1" type="checkbox" checked>P1 transition buffer</label>
+        <label class="check"><input id="overlay-p2" type="checkbox" checked>P2 relational protection</label>
+        <label class="check"><input id="overlay-free" type="checkbox">FREE unprotected</label>
+        <label class="control">Overlay opacity
+          <input id="overlay-opacity" type="range" min="0" max="1" step="0.05" value="0.52">
+        </label>
+      </div>
+      <div class="atlas-layout">
+        <canvas id="terrain-map" width="1032" height="776" aria-label="Terrain intelligence map"></canvas>
+        <div>
+          <h3>Click inspection</h3>
+          <pre id="terrain-inspection">Click the map to inspect a world cell.</pre>
+          <h3 style="margin-top:10px">Protection legend</h3>
+          <pre>P0 = EXACT_IMMUTABLE
+P1 = TRANSITION_BUFFER
+P2 = RELATIONALLY_PROTECTED
+FREE = UNPROTECTED</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="scene-title">
+      <h2 id="scene-title">2. Visual Diagnosis and Perceptual Correspondence Console</h2>
+      <div class="scene-controls">
+        <label class="control">Scene
+          <select id="scene-select"></select>
+        </label>
+        <label class="control">Selected material-family ablation
+          <select id="family-select"></select>
+        </label>
+        <label class="control">Selected diagnostic view for packet
+          <select id="diagnostic-select">
+            <option value="H_ACCEPTED_CP2">H — accepted CP2</option>
+            <option value="G_FLAT_LIGHTING">G — accepted material, flat lighting</option>
+            <option value="ORIENTATION_AND_LAG_OVERLAY" selected>Metric orientation-and-lag overlay</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="scene-grid">
+        <figure>
+          <figcaption>Accepted CP2 — pass H</figcaption>
+          <div class="canvas-wrap"><canvas id="accepted-view"></canvas><canvas id="mark-region"></canvas></div>
+        </figure>
+        <figure><figcaption>Pass G — accepted material, flat lighting</figcaption><canvas id="g-view"></canvas></figure>
+        <figure><figcaption>Metric orientation-and-lag overlay</figcaption><canvas id="metric-view"></canvas></figure>
+        <figure><figcaption id="family-caption">Selected material-family ablation</figcaption><canvas id="family-view"></canvas></figure>
+      </div>
+
+      <div class="question">
+        <fieldset>
+          <legend>Is this the repetition you object to?</legend>
+          <div class="radio-row">
+            <label><input type="radio" name="classification" value="YES"> Yes</label>
+            <label><input type="radio" name="classification" value="NO"> No</label>
+            <button id="clear-region" type="button">Clear marked region</button>
+          </div>
+          <p class="muted" style="margin:8px 0 0">When the answer is No, drag a rectangle over the actual problem region on the accepted CP2 frame.</p>
+        </fieldset>
+        <fieldset>
+          <legend>Distraction score</legend>
+          <div class="score-row">
+            <input id="distraction-score" type="range" min="0" max="4" step="1" value="0">
+            <output id="distraction-output">not recorded</output>
+          </div>
+          <p class="muted" style="margin:8px 0 0">0 = not distracting; 4 = dominant visual distraction.</p>
+        </fieldset>
+      </div>
+
+      <div class="actions">
+        <button id="previous-scene" type="button">Previous scene</button>
+        <button id="next-scene" type="button">Next scene</button>
+        <button id="export-packet" type="button" disabled>Export deterministic JSON packet</button>
+        <span id="progress" class="badge">0 / 8 complete</span>
+      </div>
+      <pre id="status">INITIALIZING_WORKBENCH</pre>
+    </section>
+
+    <section class="section">
+      <h2>3. Asset disposition boundary</h2>
+      <p class="muted">Reusable upload, mipmap, resource lifecycle, render comparison, terrain analysis, protection, and diagnostic infrastructure is retained. The rejected 1024 material map, BM4 presentation profile, and rejected CP5/CP7 visual synthesis remain non-promotable visual content.</p>
+      <pre id="authority-status">LIVE_HOST_CHANGED = FALSE
+LIVE_BINDING_CHANGED = FALSE
+ACCEPTED_RENDERER_CHANGED = FALSE
+PUBLIC_H_EARTH_ROUTE_CHANGED = FALSE</pre>
+    </section>
+  </main>
+
+  <div class="hidden-renderers" aria-hidden="true">
+    <canvas id="render-official"></canvas><canvas id="render-g"></canvas><canvas id="render-h"></canvas>
+    <canvas id="render-family-1"></canvas><canvas id="render-family-2"></canvas><canvas id="render-family-3"></canvas>
+    <canvas id="render-family-4"></canvas><canvas id="render-family-5"></canvas><canvas id="render-family-6"></canvas><canvas id="render-family-7"></canvas>
+  </div>
+  <script type="module" src="./workbench.mjs"></script>
+</body>
+</html>

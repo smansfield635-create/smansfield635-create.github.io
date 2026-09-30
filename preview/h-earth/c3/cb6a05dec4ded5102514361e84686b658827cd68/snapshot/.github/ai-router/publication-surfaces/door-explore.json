@@ -1,0 +1,145 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "door-explore",
+  "description": "Door and Explore 11-card animation-coherence successor with the mature Compass Mirror Manor renderer bound into Home and Identity.",
+  "checks": [
+    {
+      "path": "/door/",
+      "includes": [
+        "data-route=\"/door/\"",
+        "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
+        "data-door-card-count=\"6\"",
+        "data-door-carousel",
+        "data-card=\"products\"",
+        "data-card=\"gauges\"",
+        "data-card=\"frontier\"",
+        "data-card=\"laws\"",
+        "data-card=\"governance\"",
+        "data-card=\"home\"",
+        "data-products-constellation-v2",
+        "data-earth-instrument-v2",
+        "data-frontier-cycle1",
+        "data-laws-magnet-v2",
+        "data-governance-gavel-v2",
+        "data-home-identity-v2",
+        "/assets/door-explore/products-constellation-v2.mjs",
+        "/assets/door-explore/earth-instrument-v2.mjs",
+        "/assets/door-explore/frontier-cycle1.mjs",
+        "/assets/door-explore/laws-magnet-v2.mjs",
+        "/assets/door-explore/governance-gavel-v2.mjs",
+        "/assets/door-explore/home-identity-v2.mjs",
+        "pointerdown",
+        "pointermove",
+        "pointerup",
+        "pointercancel",
+        "ArrowLeft",
+        "ArrowRight",
+        "scrollLeft",
+        "spatialCarouselBound",
+        "carouselAuthority",
+        "carouselKeyMoved",
+        "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
+      ],
+      "excludes": ["families-v1.mjs","families-v1.css","data-products-cycle2","data-instrument-cycle3","data-laws-cycle4","data-identity-cycle5","character-section","diagnostic-boundary"]
+    },
+    {
+      "path": "/explore/",
+      "includes": [
+        "data-route=\"/explore/\"",
+        "data-version=\"DOOR-EXPLORE-ANIMATION-COHERENCE-V1-CYCLE7\"",
+        "data-explore-card-count=\"5\"",
+        "data-explore-carousel",
+        "data-card=\"measurement\"",
+        "data-card=\"identity\"",
+        "data-card=\"laws\"",
+        "data-card=\"products\"",
+        "data-card=\"gauges\"",
+        "data-products-constellation-v2",
+        "data-earth-instrument-v2",
+        "data-laws-magnet-v2",
+        "data-home-identity-v2",
+        "/assets/door-explore/products-constellation-v2.mjs",
+        "/assets/door-explore/earth-instrument-v2.mjs",
+        "/assets/door-explore/laws-magnet-v2.mjs",
+        "/assets/door-explore/home-identity-v2.mjs",
+        "pointerdown",
+        "pointermove",
+        "pointerup",
+        "pointercancel",
+        "ArrowLeft",
+        "ArrowRight",
+        "scrollLeft",
+        "spatialCarouselBound",
+        "carouselAuthority",
+        "carouselKeyMoved",
+        "DOOR_EXPLORE_CAROUSEL_TRAVERSAL_REPAIR_V1"
+      ],
+      "excludes": ["families-v1.mjs","families-v1.css","data-products-cycle2","data-instrument-cycle3","data-laws-cycle4","data-identity-cycle5"]
+    },
+    {
+      "path": "/assets/door-explore/card-lifecycle-v1.mjs",
+      "includes": ["DOOR_EXPLORE_CARD_LIFECYCLE_V1", "ACTIVATE", "DEACTIVATE", "sampleCardLifecycle", "createCardClock"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/home-identity-v2.mjs",
+      "includes": ["DOOR_EXPLORE_HOME_IDENTITY_SPATIAL_V2", "assets/compass/compass.house-scene.js", "mirror-manor-gothic-phase3-carousel-v6-material-detail-final", "MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1", "loadMatureHouseScene", "createCardClock", "prefers-reduced-motion"],
+      "excludes": ["buildNeutralMesh", "neutral-fallback"]
+    },
+    {
+      "path": "/assets/compass/compass.house-scene.js",
+      "includes": ["mirror-manor-gothic-phase3-carousel-v6-material-detail-final", "MIRROR_MANOR_GOTHIC_ARCHITECTURAL_DETAIL_PHASE3_v1", "canonical-phase3-principal-estate-mesh", "true-facade-openings", "procedural-slate-shingle-courses", "engraved-stone-court"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/laws-magnet-v2.mjs",
+      "includes": ["DOOR_EXPLORE_LAWS_MAGNET_SPATIAL_V2", "LAW_PROJECT_SCALE = 1.42", "inspectLawsFrame", "createCardClock", "prefers-reduced-motion"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/governance-gavel-v2.mjs",
+      "includes": ["DOOR_GOVERNANCE_GAVEL_SPATIAL_V2", "BLOCK_TOP_Y=-4.425", "inspectGovernancePose", "decisionBeforeClearance", "createCardClock", "prefers-reduced-motion"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/earth-instrument-v2.mjs",
+      "includes": ["DOOR_EXPLORE_EARTH_INSTRUMENT_SPATIAL_V2", "AXIAL_TILT_DEG=23.44", "DGBEarthLattice256", "prefers-reduced-motion"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/products-constellation-v2.mjs",
+      "includes": ["DOOR_EXPLORE_PRODUCTS_VOLUMETRIC_CONSTELLATION_V2", "PRODUCTS_SPATIAL_CYCLE_MS=11000", "createCardClock", "prefers-reduced-motion"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/frontier-cycle1.mjs",
+      "includes": ["/showroom/globe/h-earth/render/geometry-kernel.js", "constructHEarthTriangleMesh", "admitHEarthPrimitiveRecord", "DOOR_FRONTIER_APPLIED_SYSTEMS_CYCLE1_V1", "deriveFrontierCausalVisualState", "flowDelivery", "energyDelivery", "transformedEffect", "createCardClock"],
+      "excludes": []
+    },
+    {
+      "path": "/assets/door-explore/spatial-v2.css",
+      "includes": ["touch-action:pan-y", "@media(max-width:40rem)"],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/explore/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-explore-carousel]",
+    "binding": {"mode": "direct-document", "path": "/explore/"},
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Explore carousel ArrowRight moves under single page authority",
+        "action": {"type": "key", "selector": "[data-explore-carousel]", "key": "ArrowRight"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "[data-explore-carousel]", "name": "data-carousel-key-moved", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-explore-carousel]", "name": "data-carousel-authority", "value": "page-bound-v1"}
+        ],
+        "timeoutMs": 1500
+      }
+    ]
+  }
+}

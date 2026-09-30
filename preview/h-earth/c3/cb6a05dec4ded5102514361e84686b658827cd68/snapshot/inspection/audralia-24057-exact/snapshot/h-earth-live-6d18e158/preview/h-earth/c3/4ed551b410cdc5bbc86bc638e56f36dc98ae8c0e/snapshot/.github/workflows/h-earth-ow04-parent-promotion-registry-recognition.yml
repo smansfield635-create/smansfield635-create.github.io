@@ -1,0 +1,335 @@
+name: H-Earth OW04 Parent Promotion Registry Recognition
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-ow03-shoreline-boundary-corrective-20260815-002
+    paths:
+      - .github/workflows/h-earth-ow04-parent-promotion-registry-recognition.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materialize exact parent-promotion receipt recognition successor
+        run: |
+          cat > h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js <<'EOF'
+          /**
+           * H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_v1
+           *
+           * Read-only exact-path recognition for the cumulative OW03+OW04
+           * Experience Anchor parent-promotion receipt. This amendment resolves
+           * one governed custody path only. It creates no product, renderer,
+           * terrain, evidence, receipt, merge, deployment, publication, or
+           * Experience Anchor waiver authority.
+           */
+          import baseFacade from './h-earth.repository-registry.ow04-exact-path-recognition.facade.js';
+
+          function deepFreeze(value, seen = new WeakSet()) {
+            if (value === null || typeof value !== 'object' || seen.has(value)) return value;
+            seen.add(value);
+            for (const nested of Object.values(value)) deepFreeze(nested, seen);
+            return Object.isFrozen(value) ? value : Object.freeze(value);
+          }
+
+          const normalizePath = (value) => {
+            if (typeof value !== 'string') return null;
+            let result = value.trim().replaceAll('\\', '/');
+            if (result.startsWith('./')) result = result.slice(2);
+            if (!result.startsWith('/')) result = `/${result}`;
+            result = result.replace(/\/{2,}/g, '/');
+            return result.length > 1 && result.endsWith('/') ? result.slice(0, -1) : result;
+          };
+
+          const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
+          const BRANCH = 'control-plane-delivery/h-earth-ow03-shoreline-boundary-corrective-20260815-002';
+          const NODE_ID = 'H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_SCOPE';
+          const EVIDENCE_ID = 'EVIDENCE_H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_v1';
+          export const H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_PATH =
+            '/h-earth-3d/experience-anchor/receipts/ZZ_OW04_PARENT_PROMOTION_20260816_001.json';
+
+          const OCCURRENCE = deepFreeze({
+            repository: REPOSITORY,
+            refType: 'BRANCH',
+            refName: BRANCH,
+            commitSha: null,
+            path: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_PATH,
+            gitBlobSha: null,
+            contentSha256: null,
+            byteCount: null,
+            existenceStatus: 'PRESENT',
+            fetchbackStatus: 'VERIFIED_PRESENT_ON_OW03_PARENT_PROMOTION_BRANCH',
+            occurrenceClass: 'OW04_PARENT_PROMOTION_RECEIPT_EXACT_PATH_READ_ONLY_RECOGNITION'
+          });
+
+          export const H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_EVIDENCE = deepFreeze({
+            evidenceId: EVIDENCE_ID,
+            evidenceClass: 'H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_EXACT_GOVERNED_PATH_RECOGNITION',
+            sourceKind: 'AUTOMATIC_PREFLIGHT_FAILURE_RECEIPT_PLUS_EXACT_PARENT_BRANCH_FETCHBACK',
+            sourceIdOrPath: 'PR_1134_RUN_31957707640_ARTIFACT_9266387923',
+            sourceOccurrenceOrRevision: 'HEAD=56b205fa143176fc26458b441c84d93f5ad74ec1;PREFLIGHT=REQUESTED_PATH_UNRESOLVED',
+            exactTargetPathCount: 1,
+            registrationEffect: 'PATH_RESOLUTION_ONLY',
+            assertionScope: Object.freeze([
+              'EXACT_OW04_PARENT_PROMOTION_RECEIPT_PATH',
+              'AUTOMATIC_H_EARTH_PREFLIGHT_RESOLUTION'
+            ]),
+            evidenceLimitations: Object.freeze([
+              'NO_PREFIX_WIDE_REGISTRATION',
+              'NO_PRODUCT_OR_TERRAIN_MUTATION_AUTHORITY',
+              'NO_RENDERER_MUTATION_AUTHORITY',
+              'NO_EVIDENCE_OR_RECEIPT_MUTATION_AUTHORITY',
+              'NO_EXPERIENCE_ANCHOR_WAIVER_AUTHORITY',
+              'NO_CANONICALIZATION_AUTHORITY',
+              'NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY'
+            ])
+          });
+
+          export const H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE = deepFreeze({
+            nodeId: NODE_ID,
+            nodeType: 'BOUNDARY_PACKET',
+            nodeSubtype: 'H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_SCOPE',
+            displayName: 'H-Earth OW04 Parent Promotion Receipt Recognition',
+            description: 'Read-only exact-path recognition for the cumulative OW03+OW04 parent-promotion Experience Anchor receipt.',
+            repositoryPaths: Object.freeze([H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_PATH]),
+            repositoryOccurrences: Object.freeze([OCCURRENCE]),
+            evidenceClass: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_EVIDENCE.evidenceClass,
+            evidenceReferences: Object.freeze([EVIDENCE_ID]),
+            lifecycleStatus: 'CANDIDATE_PATH_RECOGNITION',
+            authorityClass: 'AUDIT_ONLY',
+            authorityPosture: 'EXACT_PATH_RESOLUTION_ONLY',
+            registrationEffect: 'PATH_RESOLUTION_ONLY',
+            authoritySource: Object.freeze([
+              'PR_1134',
+              'AUTOMATIC_PREFLIGHT_RUN_31957707640',
+              'AUTOMATIC_PREFLIGHT_ARTIFACT_9266387923'
+            ]),
+            authorityScope: Object.freeze(['EXACT_PATH_RESOLUTION','AUTOMATIC_H_EARTH_REPOSITORY_PREFLIGHT_RESOLUTION']),
+            authorityLimitations: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_EVIDENCE.evidenceLimitations,
+            parentRelations: Object.freeze([]),
+            childRelations: Object.freeze([]),
+            peerRelations: Object.freeze([]),
+            upstreamBoundaries: Object.freeze([]),
+            downstreamBoundaries: Object.freeze([]),
+            cardinalRole: 'NONE',
+            cardinalStatus: 'NONE',
+            cardinalCompleteness: 'NOT_APPLICABLE',
+            orderingRules: Object.freeze([
+              'NATIVE_PREFLIGHT_STOP_PRECEDES_EXACT_PATH_RECOGNITION',
+              'EXACT_PATH_RECOGNITION_PRECEDES_FRESH_PREFLIGHT_RETRY',
+              'PATH_RECOGNITION_DOES_NOT_AUTHORIZE_PRODUCT_MUTATION_OR_MERGE'
+            ]),
+            dependencyRelations: Object.freeze([]),
+            allowedMutationScope: 'NONE_REGISTRATION_IS_READ_ONLY_PATH_RESOLUTION',
+            prohibitedMutations: Object.freeze([
+              'OW04_PRODUCT_OR_TERRAIN_MUTATION_FROM_REGISTRY_AUTHORITY',
+              'PERSISTENT_RENDERER_MUTATION_FROM_REGISTRY_AUTHORITY',
+              'EXPERIENCE_ANCHOR_EVIDENCE_OR_RECEIPT_MUTATION_FROM_REGISTRY_AUTHORITY',
+              'EXPERIENCE_ANCHOR_WAIVER_FROM_REGISTRY_AUTHORITY',
+              'MERGE_DEPLOYMENT_OR_PUBLICATION_FROM_REGISTRY_AUTHORITY'
+            ]),
+            requiredValidations: Object.freeze([
+              'EXACT_ONE_TARGET_PATH',
+              'TARGET_PATH_RESOLVES',
+              'PREDECESSOR_REGISTRY_CHAIN_PRESERVED',
+              'NO_AUTHORITY_EXPANSION'
+            ]),
+            stoppingBoundaries: Object.freeze([
+              'STOP_ON_PATH_OUTSIDE_EXACT_ONE',
+              'STOP_ON_PREDECESSOR_REGISTRY_REGRESSION',
+              'STOP_ON_ANY_PRODUCT_RENDERER_EVIDENCE_ANCHOR_OR_MERGE_AUTHORITY_EXPANSION'
+            ]),
+            currentIdentityReferences: Object.freeze([
+              `BRANCH=${BRANCH}`,
+              'PREFLIGHT_RUN=31957707640',
+              'EXACT_TARGET_PATH_COUNT=1'
+            ]),
+            unresolvedFields: Object.freeze([])
+          });
+
+          const baseInstance = baseFacade.getHEarthRepositoryRegistryInstance();
+          const combinedInstance = deepFreeze({
+            ...baseInstance,
+            evidenceRecords: [...(baseInstance.evidenceRecords ?? []), H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_EVIDENCE],
+            nodes: [...baseInstance.nodes.filter((node) => node.nodeId !== NODE_ID), H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE]
+          });
+
+          export function getHEarthRepositoryRegistryInstance() { return combinedInstance; }
+          export function getHEarthRepositoryRegistryNode(nodeId) {
+            return nodeId === NODE_ID ? H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE : baseFacade.getHEarthRepositoryRegistryNode(nodeId);
+          }
+          export function getHEarthRepositoryRegistryEvidence(evidenceId) {
+            return evidenceId === EVIDENCE_ID ? H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_EVIDENCE : baseFacade.getHEarthRepositoryRegistryEvidence(evidenceId);
+          }
+          export function resolveHEarthRepositoryRegistryPath(repositoryPath) {
+            const normalized = normalizePath(repositoryPath);
+            if (normalized !== H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_PATH) {
+              return baseFacade.resolveHEarthRepositoryRegistryPath(normalized ?? repositoryPath);
+            }
+            const base = baseFacade.resolveHEarthRepositoryRegistryPath(normalized);
+            return deepFreeze({
+              ...base,
+              repositoryPath: normalized,
+              resolved: true,
+              nodes: [...(base.nodes ?? []), H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE],
+              occurrences: [...(base.occurrences ?? []), OCCURRENCE],
+              unresolved: false
+            });
+          }
+          export function resolveHEarthRepositoryRegistryOccurrence(input = {}) {
+            const normalizedPath = input.path == null ? null : normalizePath(input.path);
+            const localMatch =
+              (normalizedPath == null || normalizedPath === H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_PATH) &&
+              (input.refType == null || input.refType === OCCURRENCE.refType) &&
+              (input.refName == null || input.refName === OCCURRENCE.refName) &&
+              (input.commitSha == null || input.commitSha === OCCURRENCE.commitSha) &&
+              (input.gitBlobSha == null || input.gitBlobSha === OCCURRENCE.gitBlobSha) &&
+              (input.existenceStatus == null || input.existenceStatus === OCCURRENCE.existenceStatus);
+            const base = baseFacade.resolveHEarthRepositoryRegistryOccurrence({...input,...(normalizedPath == null ? {} : {path:normalizedPath})});
+            return deepFreeze({
+              query: base.query,
+              matches: [...(base.matches ?? []), ...(localMatch ? [deepFreeze({nodeId:NODE_ID,node:H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE,occurrence:OCCURRENCE})] : [])],
+              resolved: base.resolved === true || localMatch
+            });
+          }
+          export function findHEarthRepositoryRegistryNodes(criteria = {}) {
+            const base = baseFacade.findHEarthRepositoryRegistryNodes(criteria);
+            const node = H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE;
+            const normalizedRepositoryPath = criteria.repositoryPath == null ? null : normalizePath(criteria.repositoryPath);
+            const matches =
+              (criteria.nodeId == null || criteria.nodeId === node.nodeId) &&
+              (normalizedRepositoryPath == null || node.repositoryPaths.includes(normalizedRepositoryPath)) &&
+              (criteria.nodeType == null || criteria.nodeType === node.nodeType) &&
+              (criteria.nodeSubtype == null || criteria.nodeSubtype === node.nodeSubtype) &&
+              (criteria.authorityClass == null || criteria.authorityClass === node.authorityClass) &&
+              (criteria.lifecycleStatus == null || criteria.lifecycleStatus === node.lifecycleStatus);
+            return deepFreeze(matches ? [...base,node] : base);
+          }
+          export function getHEarthRepositoryRegistryRelationsForNode(nodeId,direction='BOTH') {
+            return nodeId === NODE_ID ? Object.freeze([]) : baseFacade.getHEarthRepositoryRegistryRelationsForNode(nodeId,direction);
+          }
+          export function getHEarthRepositoryRegistryDependencyClosure(nodeId) {
+            return nodeId === NODE_ID
+              ? deepFreeze({nodeId,nodes:[H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE],relations:[],resolved:true})
+              : baseFacade.getHEarthRepositoryRegistryDependencyClosure(nodeId);
+          }
+          export function getHEarthRepositoryRegistryDiscoveryDescriptor() {
+            return baseFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
+          }
+
+          export function verifyHEarthOW04ParentPromotionReceiptRecognition() {
+            const resolution = resolveHEarthRepositoryRegistryPath(H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_PATH);
+            const checks = deepFreeze({
+              exactTargetPathCount: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE.repositoryPaths.length === 1,
+              targetPathResolves: resolution.resolved === true,
+              candidateOccurrencePresent: OCCURRENCE.existenceStatus === 'PRESENT' && OCCURRENCE.refName === BRANCH,
+              auditOnly: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE.authorityClass === 'AUDIT_ONLY',
+              pathResolutionOnly: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE.registrationEffect === 'PATH_RESOLUTION_ONLY',
+              noProductAuthority: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE.authorityLimitations.includes('NO_PRODUCT_OR_TERRAIN_MUTATION_AUTHORITY'),
+              noReceiptMutationAuthority: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE.authorityLimitations.includes('NO_EVIDENCE_OR_RECEIPT_MUTATION_AUTHORITY'),
+              noAnchorWaiverAuthority: H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_NODE.authorityLimitations.includes('NO_EXPERIENCE_ANCHOR_WAIVER_AUTHORITY')
+            });
+            const eligible = Object.values(checks).every(Boolean);
+            return deepFreeze({eligible,status:eligible?'H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_PASS':'H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_FAIL',checks});
+          }
+
+          const facade = Object.freeze({
+            ...baseFacade,
+            getHEarthRepositoryRegistryInstance,
+            getHEarthRepositoryRegistryNode,
+            getHEarthRepositoryRegistryEvidence,
+            resolveHEarthRepositoryRegistryPath,
+            resolveHEarthRepositoryRegistryOccurrence,
+            findHEarthRepositoryRegistryNodes,
+            getHEarthRepositoryRegistryRelationsForNode,
+            getHEarthRepositoryRegistryDependencyClosure,
+            getHEarthRepositoryRegistryDiscoveryDescriptor
+          });
+
+          export default facade;
+          EOF
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js')
+          s = p.read_text()
+          old_import = "import registryFacade from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.facade.js';"
+          new_import = "import registryFacade from './accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js';"
+          if old_import not in s:
+              raise SystemExit('PARENT_REGISTRY_BASE_IMPORT_NOT_FOUND')
+          s = s.replace(old_import, new_import, 1)
+
+          marker = "import {\n  verifyHEarthOW04ExactPathRecognition\n} from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js';"
+          addition = marker + "\nimport {\n  verifyHEarthOW04ParentPromotionReceiptRecognition\n} from './accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js';"
+          if marker not in s:
+              raise SystemExit('OW04_VERIFY_IMPORT_NOT_FOUND')
+          s = s.replace(marker, addition, 1)
+
+          old = "  const ow04Verification = verifyHEarthOW04ExactPathRecognition();\n  const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();"
+          new = "  const ow04Verification = verifyHEarthOW04ExactPathRecognition();\n  const parentPromotionVerification = verifyHEarthOW04ParentPromotionReceiptRecognition();\n  const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();"
+          if old not in s:
+              raise SystemExit('OW04_VERIFICATION_BLOCK_NOT_FOUND')
+          s = s.replace(old, new, 1)
+
+          old = "    ow04AuditOnlyNoAuthorityLeak:\n      ow04Verification.checks.auditOnly === true &&\n      ow04Verification.checks.pathResolutionOnly === true &&\n      ow04Verification.checks.noProductAuthority === true &&\n      ow04Verification.checks.noRendererAuthority === true &&\n      ow04Verification.checks.noAnchorWaiverAuthority === true,\n    registryIdPreserved:"
+          new = "    ow04AuditOnlyNoAuthorityLeak:\n      ow04Verification.checks.auditOnly === true &&\n      ow04Verification.checks.pathResolutionOnly === true &&\n      ow04Verification.checks.noProductAuthority === true &&\n      ow04Verification.checks.noRendererAuthority === true &&\n      ow04Verification.checks.noAnchorWaiverAuthority === true,\n    parentPromotionReceiptRecognitionEligible:\n      parentPromotionVerification.eligible === true &&\n      parentPromotionVerification.checks.exactTargetPathCount === true &&\n      parentPromotionVerification.checks.targetPathResolves === true &&\n      parentPromotionVerification.checks.candidateOccurrencePresent === true &&\n      parentPromotionVerification.checks.auditOnly === true &&\n      parentPromotionVerification.checks.pathResolutionOnly === true &&\n      parentPromotionVerification.checks.noProductAuthority === true &&\n      parentPromotionVerification.checks.noReceiptMutationAuthority === true &&\n      parentPromotionVerification.checks.noAnchorWaiverAuthority === true,\n    registryIdPreserved:"
+          if old not in s:
+              raise SystemExit('OW04_SUCCESSOR_CHECK_BLOCK_NOT_FOUND')
+          s = s.replace(old, new, 1)
+
+          old = "      ow04ExactPathRecognition:\n        ow04Verification.eligible === true\n    }),"
+          new = "      ow04ExactPathRecognition:\n        ow04Verification.eligible === true,\n      ow04ParentPromotionReceiptRecognition:\n        parentPromotionVerification.eligible === true\n    }),"
+          if old not in s:
+              raise SystemExit('IDENTITY_CHECK_BLOCK_NOT_FOUND')
+          s = s.replace(old, new, 1)
+
+          old = "    ow04ExactPathRecognitionVerification: ow04Verification,\n    ow04ExactPathRecognitionChecks: deepFreeze({"
+          new = "    ow04ExactPathRecognitionVerification: ow04Verification,\n    ow04ParentPromotionReceiptRecognitionVerification: parentPromotionVerification,\n    ow04ExactPathRecognitionChecks: deepFreeze({"
+          if old not in s:
+              raise SystemExit('RETURN_VERIFICATION_BLOCK_NOT_FOUND')
+          s = s.replace(old, new, 1)
+
+          old = "      auditOnlyNoAuthorityLeak: successorChecks.ow04AuditOnlyNoAuthorityLeak\n    }),\n    boundary:"
+          new = "      auditOnlyNoAuthorityLeak: successorChecks.ow04AuditOnlyNoAuthorityLeak\n    }),\n    ow04ParentPromotionReceiptRecognitionChecks: deepFreeze({\n      eligible: successorChecks.parentPromotionReceiptRecognitionEligible,\n      exactOnePathResolved: parentPromotionVerification.checks.exactTargetPathCount === true && parentPromotionVerification.checks.targetPathResolves === true,\n      candidateOccurrencePresent: parentPromotionVerification.checks.candidateOccurrencePresent === true,\n      auditOnlyNoAuthorityLeak: parentPromotionVerification.checks.auditOnly === true && parentPromotionVerification.checks.pathResolutionOnly === true && parentPromotionVerification.checks.noProductAuthority === true && parentPromotionVerification.checks.noReceiptMutationAuthority === true && parentPromotionVerification.checks.noAnchorWaiverAuthority === true\n    }),\n    boundary:"
+          if old not in s:
+              raise SystemExit('RETURN_CHECK_BLOCK_NOT_FOUND')
+          s = s.replace(old, new, 1)
+
+          p.write_text(s)
+          PY
+
+          git diff --check
+
+      - name: Verify parent receipt resolves through canonical validator loader
+        run: |
+          node --experimental-default-type=module - <<'NODE'
+          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          import { runAutomaticHEarthPreflight } from './h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js';
+          const target = '/h-earth-3d/experience-anchor/receipts/ZZ_OW04_PARENT_PROMOTION_20260816_001.json';
+          const deps = loadHEarthRepositoryRegistryValidatorDependencies();
+          if (deps.identityVerified !== true) throw new Error('PARENT_PROMOTION_REGISTRY_IDENTITY_NOT_VERIFIED');
+          const resolution = deps.registryFacade.resolveHEarthRepositoryRegistryPath(target);
+          if (resolution.resolved !== true) throw new Error('PARENT_PROMOTION_RECEIPT_PATH_UNRESOLVED');
+          if (!resolution.nodes.some((node) => node.nodeId === 'H_EARTH_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_SCOPE')) {
+            throw new Error('PARENT_PROMOTION_RECEIPT_NODE_MISSING');
+          }
+          const preflight = runAutomaticHEarthPreflight({paths:[target],taskText:'Parent promotion receipt exact-path recognition verification',mutationIntent:false});
+          if (preflight.finalDisposition !== 'PASS') throw new Error(`PARENT_PROMOTION_PREFLIGHT_${preflight.finalDisposition}`);
+          NODE
+
+      - name: Commit and push registry successor
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js \
+            h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          git commit -m 'OW04 parent promotion: recognize cumulative anchor receipt path'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

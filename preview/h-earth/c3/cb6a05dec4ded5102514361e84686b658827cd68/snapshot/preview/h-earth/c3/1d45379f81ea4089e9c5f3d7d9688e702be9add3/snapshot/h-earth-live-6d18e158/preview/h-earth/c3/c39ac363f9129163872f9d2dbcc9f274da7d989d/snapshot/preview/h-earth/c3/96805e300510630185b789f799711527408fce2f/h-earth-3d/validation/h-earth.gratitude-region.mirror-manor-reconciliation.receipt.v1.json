@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_MIRROR_MANOR_RECONCILIATION_DURABLE_RECEIPT_v1",
+  "sectionId": "GR-CR-03_MIRROR_MANOR",
+  "checkpointId": "GR-CR-03H",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "workingBranch": "agent/h-earth-gratitude-region-coordinate-reconciliation-001",
+  "draftPullRequest": 311,
+  "executionCustody": {
+    "executedHead": "8812bc8503289ef2bfb69c63fd2836d162f182fe",
+    "mirrorManorReconciliationGitBlob": "ea41fe679c0b3f38efa8fd463418b9288b9387fb",
+    "runnerGitBlob": "72d0ffcd9835a2a02b18b220382db105edbc4314",
+    "workflowGitBlob": "69a43df1ec2d3f67dcd10d506993231420a534b5",
+    "workflowRunId": 30468028715,
+    "workflowJobId": 90630787690,
+    "workflowConclusion": "success",
+    "artifactId": 8730397933,
+    "artifactDigest": "sha256:6aac4881562189226d42c4b28ea49ff497a83ecf6593d52b3924ed7c7334ca81",
+    "executionReceiptSha256": "94f179ca1c968949697eb65d65f2a55c6ad9287e105331910a1a44f155e5f68a",
+    "executionLogSha256": "57e77f82e8964e238edcc17f6ea7594817dc677671f5ac852667ac905da84f8f"
+  },
+  "completedMicroCheckpoints": [
+    "GR-CR-03A",
+    "GR-CR-03B",
+    "GR-CR-03C",
+    "GR-CR-03D",
+    "GR-CR-03E",
+    "GR-CR-03F",
+    "GR-CR-03G",
+    "GR-CR-03H"
+  ],
+  "correctionHistory": [
+    {
+      "runId": 30467370469,
+      "head": "09aa8aff96eff3ce42d186fccca5c6b35874c96d",
+      "disposition": "REVIEW_STOPPED_NOT_CLOSED",
+      "issue": "SELECTED_HILL_PAIR_INCLUDED_A_SEARCH_BOUNDARY_PEAK_AND_BEACHWARD_GROUND_SIGHTLINE_WAS_OBSTRUCTED"
+    },
+    {
+      "runId": 30467721602,
+      "head": "b867edddf87aba6cac21a06759360fdc6ac6e459",
+      "disposition": "REVIEW_STOPPED_NOT_CLOSED",
+      "issue": "SEMANTIC_PRIORITY_DID_NOT_REMOVE_THE_CLIPPED_BOUNDARY_PEAK_FROM_LAST_RESORT_FALLBACK"
+    },
+    {
+      "runId": 30468028715,
+      "head": "8812bc8503289ef2bfb69c63fd2836d162f182fe",
+      "disposition": "CORRECTED_EXECUTION_ACCEPTED_FOR_SECTION_CLOSURE",
+      "correction": "EXPAND_READ_ONLY_SEARCH_TO_EXISTING_HILL_AND_RIDGE_CONTEXT_EXCLUDE_BOUNDARY_PEAKS_AND_EXCLUDE_MOUNTAIN_TRANSITION_SITE_CENTERS"
+    }
+  ],
+  "executionReceipt": {
+    "eligible": true,
+    "status": "GR_CR_03H_MIRROR_MANOR_PASS",
+    "sectionStatus": "PASS_CLOSED",
+    "firstExecutionDigest": "2402b33195638db76d8e637a0a3cc8802a64659b5405f9d918100c4b573f4fdb",
+    "secondExecutionDigest": "2402b33195638db76d8e637a0a3cc8802a64659b5405f9d918100c4b573f4fdb",
+    "deterministicRepeatExecution": true,
+    "issues": []
+  },
+  "twoHillAndCorridorEvidence": {
+    "selectionBasis": "BROAD_TERRAIN_DERIVED_FALLBACK",
+    "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
+    "rightHill": {"x": 152, "y": 42.73941022157669, "z": -224},
+    "hillSeparation": 94.40338976964756,
+    "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
+    "lowerHillToSaddleDrop": 10.537935137748718,
+    "lowCorridor": {
+      "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+      "pairAxis": {"x": 0.805055837353368, "z": -0.5931990380498502},
+      "corridorAxis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+      "noBuildHalfWidth": 6,
+      "traceElevationRange": {"minimum": 5.1480324268341064, "maximum": 27.971787095069885},
+      "accepted": false,
+      "finalCenterline": false
+    }
+  },
+  "mirrorManorCandidate": {
+    "candidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+    "candidateClass": "MEASURED_OR_DERIVED_CANDIDATE_PENDING_LATER_MANIFEST_ACCEPTANCE",
+    "eligible": true,
+    "accepted": false,
+    "finalPlacement": false,
+    "finalCoordinatesAssigned": false,
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "elevationRange": {"minimum": 24.005557656288147, "maximum": 29.543441355228424},
+    "slopeRange": {"minimum": 0.04806739259546734, "maximum": 0.5083486719355141},
+    "connectedSampleCount": 49,
+    "approximateSampleAreaWorldUnitsSquared": 784,
+    "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
+    "centerSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C11",
+    "centerPhysicalChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+    "viewEvidence": {
+      "beachwardGroundView": "CLEAR",
+      "beachwardMaximumObstruction": -0.041573455929757586,
+      "mountainwardGroundView": "CLEAR",
+      "mountainwardMaximumObstruction": -3.0548654910176936
+    },
+    "approachEvidence": {
+      "eligible": true,
+      "sampleCount": 27,
+      "maximumSlope": 0.5888144667208294,
+      "maximumNeighborElevationDelta": 2.2297231554985046,
+      "accepted": false,
+      "finalRoute": false
+    },
+    "compatibleFootprints": [
+      {"width": 12, "depth": 12, "compatible": true, "elevationRange": 2.761919379, "maximumSlope": 0.356723473, "corridorConflictCount": 0},
+      {"width": 20, "depth": 16, "compatible": true, "elevationRange": 4.467058659, "maximumSlope": 0.429238325, "corridorConflictCount": 0},
+      {"width": 28, "depth": 20, "compatible": true, "elevationRange": 6.490048051, "maximumSlope": 0.48133755, "corridorConflictCount": 0}
+    ],
+    "envelopeDigest": "318be224df8518c7693302439b7b21e07462f95116300c47a0b6144b13384f21",
+    "candidateDigest": "b502f9503dd2cb753b4ab7a80cf3d4ca5afa7b40566dabe71c6d7009bffca5dd"
+  },
+  "stoppingBoundary": {
+    "entryZoneSectionRemainsPassClosed": true,
+    "mirrorManorMeasurementExecuted": true,
+    "mirrorManorCandidateDerived": true,
+    "mirrorManorCandidateAccepted": false,
+    "fourAreaEnvelopesAccepted": false,
+    "finalCoordinatesAssigned": false,
+    "cavernPrecinctMeasurementExecuted": false,
+    "frontierPlainsMeasurementExecuted": false,
+    "terrainMutation": false,
+    "geometryConstruction": false,
+    "runtimeGameplayRouteOrProductionChange": false,
+    "controllingManifestMutation": false
+  },
+  "nextSection": "GR-CR-04_CAVERN_PRECINCT"
+}

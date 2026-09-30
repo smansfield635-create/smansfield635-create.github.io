@@ -1,0 +1,196 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_CLEAN_TOOL_MERGE_READINESS_AUDIT_v1",
+  "phase": "TOOL_MERGE_READINESS",
+  "checkpoint": "T4",
+  "status": "PASS_AUDIT_DIRECT_STACKED_MERGE_NOT_ADMISSIBLE_CLEAN_INSTALLATION_PROJECTION_REQUIRED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "parentT3Commit": "3f7b8b9e4a2b4b503d4564d11fa75cf09e152abc",
+  "parentT3ReceiptBlob": "73015114b8c47491dc76e8dab60c3c72442a733c",
+  "auditBranch": "agent/metaverse-benchmark-four-compass-tool-t4-001",
+  "recordedDate": "2026-07-25",
+  "mode": "AUDIT_FUNCTIONAL_READINESS_BRANCH_CLEANLINESS_INSTALLATION_PROJECTION_AND_WORKFLOW_BINDINGS_WITHOUT_INSTALLATION",
+  "auditedToolOccurrence": {
+    "t2ExecutionHead": "beb8bf02a45d8c178c52b91244ad9e077853b23c",
+    "t3ReceiptCommit": "3f7b8b9e4a2b4b503d4564d11fa75cf09e152abc",
+    "t3ReceiptBlob": "73015114b8c47491dc76e8dab60c3c72442a733c",
+    "executionPullRequest": 142,
+    "executionPullRequestDisposition": "CLOSED_UNMERGED_DRAFT",
+    "sourceFiles": [
+      {"path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs", "gitBlob": "f46128d33cc8498616c9accf56b44d6b6c04f534", "disposition": "VALIDATED_RETAIN_EXACT"},
+      {"path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs", "gitBlob": "db7da8e983f5f99926d229a4a1795eb7ecc7fe30", "disposition": "VALIDATED_RETAIN_EXACT"},
+      {"path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs", "gitBlob": "b79b429bf251d6bdaf1d3cc52be9f49d741c9e5a", "disposition": "VALIDATED_RETAIN_EXACT"},
+      {"path": ".github/workflows/metaverse-benchmark-four-compass-tool.yml", "gitBlob": "4384e1b2d169053b2b3fba12b5aefba8cc4913c2", "disposition": "VALIDATED_LOGIC_BOUNDED_INSTALLATION_BINDING_NORMALIZATION_REQUIRED"},
+      {"path": ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml", "gitBlob": "926b98839515ed68128fdef1fcaded148d3a1123", "disposition": "VALIDATED_LOGIC_BOUNDED_INSTALLATION_BINDING_NORMALIZATION_REQUIRED"}
+    ]
+  },
+  "functionalReadinessAudit": {
+    "authorityTaxonomy": "PASS",
+    "fourCompassMemberCount": 4,
+    "fourCompassIds": ["MAIN_COMPASS", "ARCHCOIN_COMPASS", "SHOWROOM_COMPASS", "LAWS_COMPASS"],
+    "homeAuxiliaryControlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+    "homeCompassAuthority": false,
+    "separateExecutionRecords": true,
+    "separateSummaries": true,
+    "separateFindings": true,
+    "separateScreenshotManifests": true,
+    "separateDigests": true,
+    "crossLaneAggregateCreated": false,
+    "retiredActiveIdentitiesObserved": [],
+    "browserExecution": "PASS",
+    "workflowExecution": "PASS",
+    "harnessFailureCount": 0,
+    "toolLogicDisposition": "FUNCTIONALLY_ACCEPTED"
+  },
+  "evidenceCustodyAudit": {
+    "smokeWorkflowRun": 30163665632,
+    "baselineWorkflowRun": 30163665625,
+    "bothRunsSucceeded": true,
+    "smokeArtifact": {"id": 8620937660, "byteLength": 5437691, "sha256": "dede20e2d7b99cf7205fef65f7b78be8ef8b8ea6da82afbbc581b24f95ffd5a3"},
+    "baselineArtifact": {"id": 8620971574, "byteLength": 82804260, "sha256": "558000ae772033c325958224208321d1cfb442893f47db5476b2c5402ac7fdc2"},
+    "laneDigests": {
+      "fourCompassSmoke": "2b0d02ffedbb1d6e82d61d4fd6ff10cc36d4d262f0a9d2bcc1e4573eaf0e3b05",
+      "homeAuxiliarySmoke": "f5f4c05649b453119d9d46bb3753d124782521010e77a9a15760fd53b098f51f",
+      "fourCompassBaseline": "ee4446e691bb7ce5302b535f7149e3b2b627f6de7c27fbfa72ee26b715e2e9d3",
+      "homeAuxiliaryBaseline": "ecaf6396c935108a824f00b8bb536ead7ad14b6b4708ba3c8c5b1eb384c541b0"
+    },
+    "verifiedScreenshots": 61,
+    "screenshotByteLengthMismatches": 0,
+    "screenshotSha256Mismatches": 0,
+    "laneDigestsReproduced": true,
+    "evidenceDisposition": "ACCEPTED"
+  },
+  "branchScopeAudit": {
+    "t1ToT2": {"commitCount": 7, "pathCount": 6, "authorizedPathSetExact": true},
+    "t2ToT3": {"commitCount": 1, "pathCount": 1, "receiptOnly": true},
+    "mainToT3": {"commitCount": 28, "pathCount": 26, "toolPackagePathCount": 8, "historicalBenchmarkCorpusPathCount": 18, "productPathCount": 0},
+    "directT3BranchMergeToMain": "NOT_ADMISSIBLE",
+    "directMergeBlockingReason": "STACKED_LINEAGE_WOULD_IMPORT_EIGHTEEN_INVENTORY_AND_RECONCILIATION_PATHS_OUTSIDE_THE_CLEAN_TOOL_INSTALLATION_PACKAGE",
+    "mainChanged": false
+  },
+  "workflowMergeReadinessAudit": {
+    "baselineWorkflowCurrentPullRequestTarget": "agent/metaverse-benchmark-four-compass-tool-t1-001",
+    "smokeWorkflowCurrentPullRequestTarget": "agent/metaverse-benchmark-four-compass-tool-t1-001",
+    "temporaryConstructionTargetRetained": true,
+    "mainPullRequestTriggerReady": false,
+    "workflowDispatchPresent": true,
+    "currentPathFilters": ["verification/benchmark-tools/four-compass-benchmark-v1/**", ".github/workflows/metaverse-benchmark-four-compass-tool.yml", ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml"],
+    "lawsMutationAutomaticTriggerEstablished": false,
+    "requiredT5Decisions": [
+      "SELECT_MANUAL_DISPATCH_ONLY_OR_MAIN_PULL_REQUEST_GATE_INSTALLATION_MODE",
+      "REMOVE_TEMPORARY_T1_BRANCH_BINDING",
+      "IF_MAIN_PULL_REQUEST_GATE_IS_SELECTED_BIND_PULL_REQUEST_TARGET_TO_MAIN",
+      "IF_AUTOMATIC_LAWS_VALIDATION_IS_REQUIRED_INCLUDE_THE_AUTHORIZED_LAWS_PATH_TRIGGER_SCOPE",
+      "REEXECUTE_BOTH_WORKFLOWS_ON_THE_CLEAN_INSTALLATION_CANDIDATE"
+    ],
+    "workflowInstallationDisposition": "NOT_READY_WITHOUT_BOUNDED_BINDING_NORMALIZATION"
+  },
+  "cleanInstallationProjection": {
+    "required": true,
+    "rootRequirement": "CURRENT_MAIN_HEAD_AT_T5",
+    "retainExactPaths": [
+      "verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t1/four-compass-tool-extraction-authority-lock.json",
+      "verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t2/corrected-harness-and-workflow-construction.receipt.json",
+      "verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t3/tool-execution-and-evidence-validation.receipt.json",
+      "verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t4/clean-tool-merge-readiness-audit.json",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+      "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs"
+    ],
+    "boundedNormalizePaths": [".github/workflows/metaverse-benchmark-four-compass-tool.yml", ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml"],
+    "excludePathPrefixes": ["verification/benchmark-corpus/inventory-pass-v1/", "verification/benchmark-corpus/four-compass-reconciliation-v1/"],
+    "expectedPreT5PathCount": 9,
+    "t5MayAddDecisionReceipt": true,
+    "cleanProjectionConstructed": false
+  },
+  "findings": {
+    "blocking": [
+      {"id": "T4-B1-STACKED_LINEAGE_NOT_CLEAN", "finding": "The T3 branch is twenty-eight commits and twenty-six paths beyond main and would import eighteen historical benchmark-corpus paths not required for clean tool installation.", "requiredDisposition": "CREATE_MAIN_ROOTED_CLEAN_INSTALLATION_PROJECTION"},
+      {"id": "T4-B2-TEMPORARY_WORKFLOW_TARGET_BINDING", "finding": "Both workflow pull-request filters still target the temporary T1 construction branch rather than a durable installation target.", "requiredDisposition": "NORMALIZE_WORKFLOW_INSTALLATION_BINDING_AND_REEXECUTE"}
+    ],
+    "decisionRequired": [
+      {"id": "T4-D1-AUTOMATIC_PRODUCT_TRIGGER_SCOPE", "finding": "The current workflow path filters do not establish automatic execution for Laws product mutations.", "requiredDisposition": "T5_MUST_SELECT_MANUAL_DISPATCH_ONLY_OR_AN_EXPLICIT_AUTHORIZED_PRODUCT_TRIGGER_SCOPE"}
+    ],
+    "nonBlocking": [
+      {"id": "T4-N1-ACTION_REFERENCE_HARDENING", "finding": "Workflow source references GitHub Actions by major-version tags rather than immutable commit SHAs; the successful T3 occurrence records the resolved action SHAs in its logs.", "requiredDisposition": "OPTIONAL_SUPPLY_CHAIN_HARDENING_UNLESS_REPOSITORY_POLICY_REQUIRES_PINNING"},
+      {"id": "T4-N2-MAIN_CONSOLE_404_OBSERVATION", "finding": "T3 preserved one Main Compass console 404 message without a page error, request-failure record, or harness failure.", "requiredDisposition": "RETAIN_AS_NONBLOCKING_TELEMETRY_UNTIL_SEPARATELY_CLASSIFIED"}
+    ]
+  },
+  "mergeReadinessDecision": {
+    "toolFunctionalReadiness": "PASS",
+    "toolEvidenceReadiness": "PASS",
+    "currentStackedBranchDirectMergeReadiness": "NOT_ADMISSIBLE",
+    "cleanInstallationProjectionReadiness": "AUTHORIZED_TO_CONSTRUCT_NOT_YET_CONSTRUCTED",
+    "workflowInstallationReadiness": "NORMALIZATION_AND_REEXECUTION_REQUIRED",
+    "toolInstallationAuthorized": false,
+    "toolMergeAuthorized": false,
+    "lawsRepairReady": false,
+    "lawsRepairBlockedByToolInstallationAndAcceptance": true,
+    "nextCheckpoint": "T5_TOOL_INSTALLATION_AND_MERGE_DECISION"
+  },
+  "t5AuthorityBoundary": {
+    "may": [
+      "DECIDE_INSTALLATION_MODE",
+      "CONSTRUCT_ONE_CURRENT_MAIN_ROOTED_CLEAN_INSTALLATION_CANDIDATE",
+      "COPY_THE_SEVEN_EXACT_RETAIN_PATHS",
+      "APPLY_BOUNDED_NORMALIZATION_TO_THE_TWO_WORKFLOW_BINDINGS",
+      "ADD_ONE_T5_DECISION_AND_INSTALLATION_RECEIPT",
+      "EXECUTE_BOTH_WORKFLOWS_AGAINST_THE_CLEAN_CANDIDATE",
+      "DECIDE_INSTALLATION_OR_MERGE_ELIGIBILITY_FROM_FETCH_BACK_AND_EXECUTION_EVIDENCE"
+    ],
+    "mayNot": [
+      "MERGE_THE_T3_OR_T4_STACKED_BRANCH_DIRECTLY",
+      "IMPORT_THE_EIGHTEEN_HISTORICAL_BENCHMARK_CORPUS_PATHS_AS_PART_OF_TOOL_INSTALLATION",
+      "CHANGE_THE_THREE_VALIDATED_JAVASCRIPT_TOOL_SOURCES_WITHOUT_NEW_CONSTRUCTION_AUTHORITY",
+      "BEGIN_LAWS_REPAIR",
+      "CHANGE_PRODUCT_FILES",
+      "CHANGE_MAIN_WITHOUT_AN_EXPLICIT_T5_INSTALLATION_DECISION",
+      "GRANT_MERGE_AUTHORITY_BEFORE_CLEAN_CANDIDATE_VALIDATION"
+    ]
+  },
+  "auditDigest": {
+    "algorithm": "SHA-256(JSON.stringify(auditCore))",
+    "auditCore": {
+      "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+      "parentT3Commit": "3f7b8b9e4a2b4b503d4564d11fa75cf09e152abc",
+      "validatedToolSourceBlobs": {
+        "config": "f46128d33cc8498616c9accf56b44d6b6c04f534",
+        "baselineHarness": "db7da8e983f5f99926d229a4a1795eb7ecc7fe30",
+        "smokeHarness": "b79b429bf251d6bdaf1d3cc52be9f49d741c9e5a",
+        "baselineWorkflow": "4384e1b2d169053b2b3fba12b5aefba8cc4913c2",
+        "smokeWorkflow": "926b98839515ed68128fdef1fcaded148d3a1123"
+      },
+      "workflowRuns": {"smoke": 30163665632, "baseline": 30163665625},
+      "branchScope": {"mainToT3CommitCount": 28, "mainToT3PathCount": 26, "historicalBenchmarkCorpusPathCount": 18, "toolPackagePathCountAtT3": 8},
+      "directStackedMergeReady": false,
+      "cleanInstallationProjectionRequired": true,
+      "workflowTargetNormalizationRequired": true,
+      "installationAuthorized": false,
+      "lawsRepairAuthorized": false,
+      "nextCheckpoint": "T5_TOOL_INSTALLATION_AND_MERGE_DECISION"
+    },
+    "sha256": "3235d36d4e989ae1688348ce144432e403b634153fd08a7ec871107e8ac1dbb1"
+  },
+  "assertions": {
+    "t3ParentExact": true,
+    "toolSourceBlobCount": 5,
+    "toolLogicFunctionallyAccepted": true,
+    "toolEvidenceAccepted": true,
+    "allSixtyOneScreenshotIdentitiesVerified": true,
+    "laneSeparationExact": true,
+    "productFilesChanged": 0,
+    "mainChanged": false,
+    "directStackedMergeReady": false,
+    "cleanInstallationProjectionRequired": true,
+    "workflowTargetNormalizationRequired": true,
+    "toolInstallationAuthorized": false,
+    "lawsRepairReady": false,
+    "mergeAuthority": "NONE"
+  },
+  "stoppingBoundary": {
+    "proves": ["FUNCTIONAL_TOOL_AND_EVIDENCE_READINESS", "EXACT_SOURCE_AND_EVIDENCE_CUSTODY", "DIRECT_STACKED_BRANCH_MERGE_NOT_ADMISSIBLE", "CLEAN_INSTALLATION_PROJECTION_REQUIRED", "TEMPORARY_WORKFLOW_BINDING_NORMALIZATION_REQUIRED", "T5_INSTALLATION_DECISION_ENTRY_AUTHORIZED"],
+    "doesNotProve": ["CLEAN_INSTALLATION_CANDIDATE_EXISTS", "NORMALIZED_WORKFLOW_EXECUTION_PASS", "TOOL_INSTALLATION_COMPLETE", "TOOL_MERGE_AUTHORITY", "LAWS_REPAIR_READINESS", "PRODUCT_ROOT_CAUSE"],
+    "authorizes": ["T5_TOOL_INSTALLATION_AND_MERGE_DECISION"]
+  },
+  "nextCheckpoint": "T5_TOOL_INSTALLATION_AND_MERGE_DECISION"
+}

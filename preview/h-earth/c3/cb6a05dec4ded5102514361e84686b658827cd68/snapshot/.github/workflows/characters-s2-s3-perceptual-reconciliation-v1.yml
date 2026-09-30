@@ -1,0 +1,31 @@
+name: Characters S2 S3 Perceptual Reconciliation v1
+
+on:
+  pull_request:
+    paths:
+      - 'characters/forest-system.mjs'
+      - 'characters/cloud-system.mjs'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/s2-s3-perceptual-reconciliation-contract.v1.json'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/verify-s2-s3-perceptual-reconciliation.v1.mjs'
+      - '.github/workflows/characters-s2-s3-perceptual-reconciliation-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact-head perceptual reconciliation
+        run: node control-plane/whole-estate/characters-reconstruction-v1/verify-s2-s3-perceptual-reconciliation.v1.mjs
+      - name: Upload deterministic receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: s2-s3-perceptual-reconciliation-receipt
+          path: s2-s3-perceptual-reconciliation-receipt.json

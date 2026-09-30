@@ -1,0 +1,152 @@
+name: H-Earth R06 C10 Portable Geometry Articulation Tool Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs
+      - h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.receipt.json
+      - .github/workflows/h-earth-r06-c10-geometry-articulation-tool-validation.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-r06-c10-portable-harness-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  portable-fail-closed-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact substrate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Create explicit failover role-assumption receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r06-c10-authority
+          cat > /tmp/r06-c10-authority/failover-role-assumption.json <<'JSON'
+          {
+            "unavailableRoom": "ROLE_6_PRIMARY_ROOM_SIMULATED_UNAVAILABLE_FOR_PORTABILITY_TEST",
+            "assumedRole": "ROLE_6_FAILOVER",
+            "operationId": "H_EARTH_R06_C10_ROLE_NEUTRAL_HARNESS_PORTABILITY_TEST_001",
+            "exactBaseline": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+            "packageVersionLoaded": "0.2.0_ROLE_6_REQUIREMENTS_COMPLETE",
+            "packageArchiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+            "toolsLoaded": [
+              "H_EARTH_R06_C10_REGION_RESOLVER_v1",
+              "H_EARTH_R06_C10_BASELINE_SAMPLER_v1",
+              "H_EARTH_R06_C10_REQUEST_VALIDATOR_v1",
+              "H_EARTH_R06_C10_CANDIDATE_FIELD_COMPILER_v1",
+              "H_EARTH_R06_C10_RUN8B_GEOMETRY_ADAPTER_v1",
+              "H_EARTH_R06_C10_CANDIDATE_CLEARANCE_ADAPTER_v1"
+            ],
+            "permissionsAssumed": ["READ_ONLY_VERIFICATION"],
+            "prohibitedActions": ["PRODUCT_MUTATION", "WATER_IMPLEMENTATION", "SELF_RATIFICATION"],
+            "independenceConflicts": [],
+            "remainingExternalGates": ["ROLE_3", "ROLE_5", "ROLE_2", "USER_DIFFERENTIAL"]
+          }
+          JSON
+
+      - name: Execute portable harness twice and across roles
+        shell: bash
+        run: |
+          set -euo pipefail
+          HARNESS='h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs'
+          CUSTODY='h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.package-assumption-receipt.v1.json'
+          COMMON=(--custody-receipt "$CUSTODY")
+          node "$HARNESS" "${COMMON[@]}" --invocation-role ROLE_1_PROVISIONAL_LOCAL_CHECK --output /tmp/r06-c10-run-1
+          node "$HARNESS" "${COMMON[@]}" --invocation-role ROLE_1_PROVISIONAL_LOCAL_CHECK --output /tmp/r06-c10-run-2
+          node "$HARNESS" "${COMMON[@]}" --invocation-role ROLE_3_INDEPENDENT_EXECUTION --output /tmp/r06-c10-role-3
+          node "$HARNESS" "${COMMON[@]}" --invocation-role ROLE_6_FAILOVER --role-assumption-receipt /tmp/r06-c10-authority/failover-role-assumption.json --output /tmp/r06-c10-failover
+          cmp /tmp/r06-c10-run-1/verification-receipt.json /tmp/r06-c10-run-2/verification-receipt.json
+
+      - name: Prove missing input fails closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          HARNESS='h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs'
+          set +e
+          node "$HARNESS" \
+            --custody-receipt /tmp/r06-c10-authority/missing-assumption-receipt.json \
+            --invocation-role ROLE_1_PROVISIONAL_LOCAL_CHECK \
+            --output /tmp/r06-c10-missing-input
+          status=$?
+          set -e
+          test "$status" -ne 0
+          node - <<'NODE'
+          const fs=require('fs');
+          const receipt=JSON.parse(fs.readFileSync('/tmp/r06-c10-missing-input/verification-receipt.json','utf8'));
+          if(receipt.classification!=='HARNESS_INPUT_REJECTED_FAIL_CLOSED') throw new Error('MISSING_INPUT_NOT_FAIL_CLOSED');
+          NODE
+
+      - name: Verify exact construction and admission results
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const cp=require('child_process');
+          const crypto=require('crypto');
+          const read=(path)=>JSON.parse(fs.readFileSync(path,'utf8'));
+          const sha=(path)=>crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex');
+          const blob=(path)=>cp.execFileSync('git',['hash-object',path],{encoding:'utf8'}).trim();
+          const first=read('/tmp/r06-c10-run-1/verification-receipt.json');
+          const second=read('/tmp/r06-c10-run-2/verification-receipt.json');
+          const role3=read('/tmp/r06-c10-role-3/verification-receipt.json');
+          const failover=read('/tmp/r06-c10-failover/verification-receipt.json');
+          const missing=read('/tmp/r06-c10-missing-input/verification-receipt.json');
+          const frozen=read('h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.receipt.json');
+          const exactFails=[
+            '19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS',
+            '20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS',
+            '23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS'
+          ];
+          const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+          if(first.assertionImplementationCount!==28||first.assertionExecutionCount!==28) throw new Error('ASSERTION_COUNT_NOT_28');
+          if(first.classification!=='HARNESS_CONSTRUCTION_PASS_CANDIDATE_ADMISSION_FAIL_CLOSED') throw new Error('WRONG_CLASSIFICATION');
+          if(first.harnessConstructionResult!=='PASS'||first.candidateAdmissionResult!=='FAIL_CLOSED') throw new Error('CONSTRUCTION_ADMISSION_SEPARATION_FAILED');
+          if(!same(first.failAssertionIds,exactFails)) throw new Error(`EXACT_FAIL_IDS_MISMATCH:${JSON.stringify(first.failAssertionIds)}`);
+          if(first.passAssertionIds.length!==25) throw new Error('PASS_ASSERTION_COUNT_NOT_25');
+          if(first.deterministicReceiptDigest!==second.deterministicReceiptDigest) throw new Error('REPEAT_DIGEST_MISMATCH');
+          if(role3.harnessConstructionResult!=='PASS'||failover.harnessConstructionResult!=='PASS') throw new Error('ROLE_NEUTRAL_INVOCATION_FAILED');
+          if(missing.classification!=='HARNESS_INPUT_REJECTED_FAIL_CLOSED') throw new Error('MISSING_INPUT_FAIL_CLOSED_FAILED');
+          if(frozen.result!=='R06_C10_ROLE_1_C4_PASS_CLOSED'||frozen.status!=='PASS_CLOSED') throw new Error('FROZEN_C4_RECEIPT_NOT_CLOSED');
+          if(!same(frozen.execution.failAssertionIds,exactFails)) throw new Error('FROZEN_RECEIPT_FAIL_IDS_MISMATCH');
+          if(frozen.execution.deterministicReceiptDigest!==first.deterministicReceiptDigest) throw new Error('FROZEN_RECEIPT_DIGEST_MISMATCH');
+          const harness='h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs';
+          const workflow='.github/workflows/h-earth-r06-c10-geometry-articulation-tool-validation.yml';
+          if(frozen.harness.gitBlob!==blob(harness)||frozen.harness.sha256!==sha(harness)) throw new Error('FROZEN_HARNESS_IDENTITY_MISMATCH');
+          if(frozen.workflow.gitBlob!==blob(workflow)||frozen.workflow.sha256!==sha(workflow)) throw new Error('FROZEN_WORKFLOW_IDENTITY_MISMATCH');
+          const workflowSource=fs.readFileSync(workflow,'utf8');
+          const activeDeploymentPattern=/^(?:\s*uses:\s*actions\/(?:deploy-pages|upload-pages-artifact)@|\s*environment:\s*github-pages\s*$|\s*run:\s*.*\bnpm\s+run\s+deploy\b)/mi;
+          if(activeDeploymentPattern.test(workflowSource)) throw new Error('WORKFLOW_DEPLOYMENT_ACTION_PRESENT');
+          NODE
+
+      - name: Upload nonproduct validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-portable-harness-${{ github.run_id }}
+          path: |
+            /tmp/r06-c10-run-1
+            /tmp/r06-c10-run-2
+            /tmp/r06-c10-role-3
+            /tmp/r06-c10-failover
+            /tmp/r06-c10-missing-input
+            h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.receipt.json
+          if-no-files-found: warn
+          retention-days: 30

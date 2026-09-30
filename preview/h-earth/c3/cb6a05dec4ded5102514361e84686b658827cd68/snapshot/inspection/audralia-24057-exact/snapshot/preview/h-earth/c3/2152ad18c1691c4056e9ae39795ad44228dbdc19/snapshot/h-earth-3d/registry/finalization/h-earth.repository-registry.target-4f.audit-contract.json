@@ -1,0 +1,67 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_AUDIT_CONTRACT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4F-4",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "requiredRegressions": {
+    "target2InstallationAudit": 25,
+    "target3InstructionAudit": 24,
+    "target4AContractAudit": 33,
+    "target4BEngineAudit": 34,
+    "target4CStaticAudit": 37,
+    "target4CFixtureExecution": 33,
+    "target4EStaticActivationAudit": 47,
+    "target4ESystemicScenarioExecution": 8
+  },
+  "requiredActivationIntegrity": [
+    "ROOT_AGENT_ENTRYPOINT_PRESENT",
+    "SCOPED_AGENT_ENTRYPOINTS_PRESERVED",
+    "PERMANENT_AUTOMATIC_WORKFLOW_PRESENT",
+    "REGISTERED_H_EARTH_PATH_ACTIVATES",
+    "UNREGISTERED_H_EARTH_PATH_STOPS",
+    "OUTSIDE_H_EARTH_PATH_NOT_APPLICABLE",
+    "MUTATION_INTENT_NEVER_AUTO_AUTHORIZED",
+    "RECEIPTS_DETERMINISTIC"
+  ],
+  "requiredCustodyChecks": [
+    "PROTECTED_IDENTITIES_EXACT",
+    "TARGET_LEDGER_RECONCILED",
+    "BOOTSTRAP_MATCHES_PREEXECUTION_STATE",
+    "TARGET_4D_DEFERRAL_EXACT",
+    "TARGET_4E_COMPLETION_EXACT",
+    "OLD_TEMPORARY_WORKFLOWS_ABSENT",
+    "TEMPORARY_TRIGGER_SOURCE_ABSENT",
+    "MAIN_COMMIT_UNCHANGED"
+  ],
+  "execution": {
+    "environment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
+    "installationBranch": "agent/h-earth-repository-registry-installation-001",
+    "expectedMainCommit": "3890dfc7165ae3481cd119d1f9c935e93c336f17",
+    "oneUseWorkflowPermitted": true,
+    "commitReceiptOnlyOnPass": true,
+    "removeOneUseWorkflowOnPass": true
+  },
+  "postExecutionConnectorChecks": [
+    "TEMPORARY_EXECUTION_PR_CLOSED_UNMERGED",
+    "TEMPORARY_EXECUTION_BRANCH_DELETED_OR_NEUTRALIZED",
+    "PR_61_OPEN_DRAFT_UNMERGED",
+    "MAIN_UNCHANGED"
+  ],
+  "boundaries": {
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "userAcceptanceCreated": false,
+    "workflowActiveOnMainBeforeMerge": false,
+    "allExternalToolsControlled": false,
+    "portabilityClaimCreated": false
+  },
+  "stoppingCondition": {
+    "finalAuditContractComplete": true,
+    "advanceBeyondTarget4F4": false,
+    "nextAuthorizedSubtarget": "4F-5"
+  }
+}

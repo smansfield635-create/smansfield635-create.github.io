@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "AUTHORITY_TRANSITION_LEDGER_PROFILE_v1",
+  "title": "Authority Transition Ledger Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "ledgerId",
+    "subjectId",
+    "contextBinding",
+    "entries"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "AUTHORITY_TRANSITION_LEDGER_PROFILE_v1"
+    },
+    "ledgerId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subjectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contextBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contextId",
+        "contextRevision"
+      ],
+      "properties": {
+        "contextId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contextRevision": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence",
+          "transitionId",
+          "previousState",
+          "nextState",
+          "priorReceiptId",
+          "nextReceiptId",
+          "authorityReceiptId",
+          "sourceEvidenceReceiptIds",
+          "standingChanged",
+          "standingAuthorityReceiptId",
+          "claimCeilingChanged",
+          "claimCeilingAuthorityReceiptId"
+        ],
+        "properties": {
+          "sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "transitionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "previousState": {
+            "enum": [
+              "ASSERTED",
+              "NONE",
+              "UNKNOWN",
+              "UNEVALUABLE",
+              "CONFLICTED"
+            ]
+          },
+          "nextState": {
+            "enum": [
+              "ASSERTED",
+              "NONE",
+              "UNKNOWN",
+              "UNEVALUABLE",
+              "CONFLICTED"
+            ]
+          },
+          "priorReceiptId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "nextReceiptId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authorityReceiptId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sourceEvidenceReceiptIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "standingChanged": {
+            "type": "boolean"
+          },
+          "standingAuthorityReceiptId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "claimCeilingChanged": {
+            "type": "boolean"
+          },
+          "claimCeilingAuthorityReceiptId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

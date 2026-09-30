@@ -1,0 +1,39 @@
+{
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "operationId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENTATION_EXTENSION_v1",
+  "constructionProcedureLocator": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/construction-procedure.v1.json",
+  "projectIds": ["H_EARTH", "H_EARTH_MAP_WIDE_TERRAIN"],
+  "plannedChangedPaths": [
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/AGENTS.md",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/bootstrap-seed.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/operation-request.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/authority-and-lineage.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/instrument.locator.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/schemas.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/operator-family-registry.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/negative-fixtures.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/progress-ledger.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/bootstrap-termination-policy.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/synthetic-map-fixture.v1.json",
+    "tools/h-earth-map-wide-terrain/lib.v1.mjs",
+    "tools/h-earth-map-wide-terrain/terrain-census.v1.mjs",
+    "tools/h-earth-map-wide-terrain/estate-reservation-validator.v1.mjs",
+    "tools/h-earth-map-wide-terrain/zone-articulation-plan-compiler.v1.mjs",
+    "tools/h-earth-map-wide-terrain/continuous-map-orchestration-compiler.v1.mjs",
+    "tools/h-earth-map-wide-terrain/cumulative-constraint-evaluator.v1.mjs",
+    "tools/h-earth-map-wide-terrain/variance-repetition-detector.v1.mjs",
+    "tools/h-earth-map-wide-terrain/preview-package-planner.v1.mjs",
+    "tools/h-earth-map-wide-terrain/self-test.v1.mjs",
+    "tools/h-earth-map-wide-terrain/fresh-verifier.v1.mjs",
+    "tools/h-earth-map-wide-terrain/bootstrap-authority-terminator.v1.mjs",
+    ".github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml"
+  ],
+  "requestedScopeLocks": [
+    {"scope": "H_EARTH_MAP_WIDE_TERRAIN_INSTRUMENTATION_EXTENSION_V1", "mode": "EXCLUSIVE_NONPRODUCT_BOOTSTRAP"}
+  ],
+  "admissionStatus": "GENESIS_SEED_BOUND_NOT_ORDINARY_ADMISSION",
+  "activationRequested": false,
+  "mergeRequested": false
+}

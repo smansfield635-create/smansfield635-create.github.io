@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compass Gen345 Inspection</title>
+<style>html,body{margin:0;background:#010308;color:#f7f2e7;font-family:system-ui,sans-serif}body{min-height:100vh;display:grid;place-items:center}.loading{opacity:.72;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}</style>
+</head>
+<body><div class="loading">Loading Gen345 progressive clone…</div>
+<script>
+(async()=>{
+  const stamp='gen345-cutting-edge-progressive-clone-1';
+  const url='/compass-isolated-clone/index.html?inspection='+Date.now();
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)throw new Error('SOURCE_FETCH_'+response.status);
+  let html=await response.text();
+  html=html
+    .replaceAll('./compass-isolated-clone.css?v=gen342-visible-carousel-perf-1','/compass-isolated-clone/compass-isolated-clone.css?v='+stamp)
+    .replaceAll('./compass-isolated-clone.controller.js?v=gen343-production-convergence-1','/compass-isolated-clone/compass-isolated-clone.controller.js?v='+stamp)
+    .replaceAll('data-clone-build="gen343-production-convergence-1"','data-clone-build="'+stamp+'"')
+    .replaceAll('data-clone-critical-gen342','data-clone-critical-gen345');
+  document.open();document.write(html);document.close();
+})().catch(error=>{document.body.innerHTML='<pre style="padding:24px;white-space:pre-wrap">GEN345 LOAD FAILURE\n'+String(error.stack||error)+'</pre>'});
+</script></body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "schema": "CHARACTERS_TASK15_QUALIFICATION_CONTRACT_v1",
+  "status": "BOUND_PRECONSTRUCTION",
+  "operationId": "CHARACTERS_RECONSTRUCTION_TASK15_20260830_HEAD_30f500a1",
+  "admission": {
+    "canonicalResult": "ADMITTED_AND_LOCKED",
+    "lockGeneration": 1882,
+    "governingBase": "30f500a171c76cd96cfe82eca14bc49971e930f7"
+  },
+  "subject": {
+    "branch": "characters/task15-reconstruction",
+    "pagePath": "characters/index.html",
+    "legacyBlobSha": "abafc0bc1f4b6538028833c47103596411ff3f3a"
+  },
+  "requiredPrerequisites": [
+    ".github/ai-router/projects/characters/entrypoint.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/legacy-source-identity.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/dossier-preservation-manifest.v1.json",
+    "control-plane/whole-estate/characters-reconstruction-v1/task01-14-decision-lineage.v1.json"
+  ],
+  "surfaceContract": {
+    "carouselCount": 1,
+    "characterCardCount": 8,
+    "characterOrder": ["auren","dextrion","alaric","tarian","elara","soren","jeeves","remote-team"],
+    "carouselArrowControls": false,
+    "singleCarouselMayUse": ["DIRECT_CARD_SELECTION","DOT_OR_TAB_STATE_INDICATORS","TOUCH_OR_TRACKPAD_SCROLL","KEYBOARD_FOCUSABLE_CARD_TRAVERSAL"],
+    "forbiddenCarouselControls": ["PREVIOUS_ARROW","NEXT_ARROW","LEFT_ARROW_BUTTON","RIGHT_ARROW_BUTTON"],
+    "dossierDepthRequired": true,
+    "relationshipChronologyP12AccessRequired": true,
+    "legacyRouteDestinationsRequired": true,
+    "staticUsabilityWithoutJavascriptRequired": true,
+    "generatedImageRequired": false
+  },
+  "contentProtection": {
+    "authority": "control-plane/whole-estate/characters-reconstruction-v1/dossier-preservation-manifest.v1.json",
+    "legacyDossierFieldCount": 256,
+    "legacyLiteralRule": "ALL_LEGACY_DOSSIER_FIELD_LABELS_AND_PARAGRAPHS_MUST_REMAIN_BYTE_EXACT_RECOVERABLE_LITERALS_UNDER_THE_CORRESPONDING_CHARACTER_SURFACE",
+    "heldRule": "HELD_FIELDS_REMAIN_HELD_UNLESS_NEW_SOURCE_EVIDENCE_IS_REINSTRUMENTED",
+    "forbidden": ["PARAPHRASE_LEGACY_DOSSIER_LITERAL","DROP_LEGACY_DOSSIER_LITERAL","INVENT_HELD_DETAIL","ORIN_AUREN_CONFLATION","CARDINAL_NONCARDINAL_ROLE_COLLAPSE"]
+  },
+  "exactCandidateChecks": [
+    "PROJECT_REGISTRATION_PRESENT",
+    "PRESERVATION_ARTIFACTS_PRESENT",
+    "TASK01_14_LINEAGE_PRESENT",
+    "CHARACTERS_PAGE_CHANGED_FROM_LEGACY_BLOB",
+    "ONE_CAROUSEL_PRESENT",
+    "EIGHT_CHARACTER_CARDS_PRESENT",
+    "NO_CAROUSEL_ARROW_CONTROLS",
+    "ALL_EIGHT_CHARACTER_IDS_ADDRESSABLE",
+    "ALL_256_LEGACY_DOSSIER_FIELDS_RECOVERABLE_BYTE_EXACT",
+    "ALL_REQUIRED_NONFRAGMENT_DESTINATIONS_PRESENT",
+    "RELATIONSHIP_CHRONOLOGY_P12_ACCESS_PRESENT",
+    "STATIC_PAGE_USABLE_WITHOUT_JS",
+    "NO_UNRELATED_DIFF"
+  ],
+  "candidatePassResult": "PASS_PROTECTED_EXACT_CANDIDATE",
+  "candidateFailResult": "HELD_EXACT_CANDIDATE",
+  "authorityBoundary": [
+    "QUALIFICATION_CONTRACT_DOES_NOT_CREATE_MERGE_AUTHORITY",
+    "QUALIFICATION_CONTRACT_DOES_NOT_CREATE_DEPLOYMENT_AUTHORITY",
+    "QUALIFICATION_CONTRACT_DOES_NOT_CREATE_PUBLICATION_AUTHORITY",
+    "QUALIFICATION_CONTRACT_DOES_NOT_AUTHORIZE_CHARACTER_REGISTRY_RUNTIME_MUTATION"
+  ],
+  "pageMutationPerformedAtThisLayer": false
+}

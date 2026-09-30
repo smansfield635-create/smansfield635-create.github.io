@@ -1,0 +1,108 @@
+{
+  "system_id": "ICR_LEVEL4_DETERMINISTIC_VERIFICATION_PIPELINE_v1",
+  "version": "1.0.0",
+  "target_output": "PASS",
+  "original_route_family": "P_ORIGINAL",
+  "constitutive_relation": "ORIGINAL_KEY_LINEAGE_V1_VERIFICATION",
+  "conditions": [
+    {
+      "condition_id": "C1_ENDOGENOUS_BASELINE",
+      "original_verifier_available": true,
+      "external_support_available": false,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 0,
+      "support_withdrawn": false,
+      "prior_fracture_latched": false,
+      "reentry_clearance": false,
+      "declared_transition": "INTACT_ENDOGENOUS_OPERATION"
+    },
+    {
+      "condition_id": "C2_EXTERNAL_SUPPORT",
+      "original_verifier_available": false,
+      "external_support_available": true,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 0,
+      "support_withdrawn": false,
+      "prior_fracture_latched": false,
+      "reentry_clearance": false,
+      "declared_transition": "REMOVE_ORIGINAL_RELATION_AND_APPLY_EXTERNAL_SUPPORT"
+    },
+    {
+      "condition_id": "C3_FUNCTIONAL_SUBSTITUTE",
+      "original_verifier_available": false,
+      "external_support_available": false,
+      "substitute_verifier_available": true,
+      "extra_capacity_units": 0,
+      "support_withdrawn": false,
+      "prior_fracture_latched": false,
+      "reentry_clearance": false,
+      "declared_transition": "REMOVE_ORIGINAL_RELATION_AND_APPLY_SUBSTITUTE"
+    },
+    {
+      "condition_id": "C4_UNSUPPORTED_FRACTURE",
+      "original_verifier_available": false,
+      "external_support_available": false,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 0,
+      "support_withdrawn": false,
+      "prior_fracture_latched": false,
+      "reentry_clearance": false,
+      "declared_transition": "REMOVE_ORIGINAL_RELATION_WITHOUT_SUPPORT"
+    },
+    {
+      "condition_id": "C5_UNRELATED_COMPENSATION",
+      "original_verifier_available": false,
+      "external_support_available": false,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 10,
+      "support_withdrawn": false,
+      "prior_fracture_latched": false,
+      "reentry_clearance": false,
+      "declared_transition": "INCREASE_UNRELATED_CAPACITY_WHILE_ORIGINAL_RELATION_REMAINS_ABSENT"
+    },
+    {
+      "condition_id": "C6_RELATION_SPECIFIC_RESTORATION",
+      "original_verifier_available": true,
+      "external_support_available": false,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 0,
+      "support_withdrawn": false,
+      "prior_fracture_latched": false,
+      "reentry_clearance": false,
+      "declared_transition": "RESTORE_ORIGINAL_RELATION"
+    },
+    {
+      "condition_id": "C7_SUPPORT_WITHDRAWAL",
+      "original_verifier_available": false,
+      "external_support_available": true,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 0,
+      "support_withdrawn": true,
+      "prior_fracture_latched": false,
+      "reentry_clearance": false,
+      "declared_transition": "WITHDRAW_EXTERNAL_SUPPORT_WITHOUT_INTERNAL_RESTORATION"
+    },
+    {
+      "condition_id": "C8_HYSTERETIC_RESTORE_BEFORE_CLEARANCE",
+      "original_verifier_available": true,
+      "external_support_available": false,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 0,
+      "support_withdrawn": false,
+      "prior_fracture_latched": true,
+      "reentry_clearance": false,
+      "declared_transition": "RESTORE_ORIGINAL_RELATION_AFTER_LATCHED_FRACTURE_WITHOUT_REENTRY_CLEARANCE"
+    },
+    {
+      "condition_id": "C9_HYSTERETIC_REENTRY_AFTER_CLEARANCE",
+      "original_verifier_available": true,
+      "external_support_available": false,
+      "substitute_verifier_available": false,
+      "extra_capacity_units": 0,
+      "support_withdrawn": false,
+      "prior_fracture_latched": true,
+      "reentry_clearance": true,
+      "declared_transition": "RESTORE_ORIGINAL_RELATION_AND_COMPLETE_REENTRY_CLEARANCE"
+    }
+  ]
+}

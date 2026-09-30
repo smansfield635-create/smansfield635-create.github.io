@@ -1,0 +1,39 @@
+/* DOOR_CANONICAL_ESTATE_REEL_v4
+   Door hero presents actual accepted estate footage from the Compass cinematic.
+   Explore and the frozen Cycle-7 Door cards/traversal remain untouched.
+*/
+html[data-page="door"]{--door-reel-gold:#e8c97e;--door-reel-cyan:#83dceb;--door-reel-ink:#02040a}
+html[data-page="door"] body{position:relative;background:radial-gradient(circle at 50% -10%,rgba(72,113,188,.14),transparent 31rem),radial-gradient(circle at 82% 40%,rgba(98,179,202,.055),transparent 27rem),linear-gradient(180deg,#03050a 0%,#010207 58%,#070910 100%)}
+html[data-page="door"] body::before{content:"";position:fixed;inset:0;z-index:-3;pointer-events:none;opacity:.25;background:radial-gradient(circle at 8% 15%,rgba(161,235,244,.46) 0 .7px,transparent 1.45px),radial-gradient(circle at 72% 18%,rgba(184,149,232,.30) 0 .65px,transparent 1.4px),radial-gradient(circle at 86% 63%,rgba(239,202,132,.27) 0 .65px,transparent 1.4px);background-size:251px 203px,329px 271px,401px 359px}
+html[data-page="door"] body::after{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 17% 28%,rgba(131,220,235,.035),transparent 18rem),radial-gradient(circle at 78% 66%,rgba(232,201,126,.025),transparent 20rem)}
+html[data-page="door"] .shell{position:relative;z-index:1}
+html[data-page="door"] .topbar{border-color:rgba(137,153,181,.23);background:linear-gradient(180deg,rgba(7,9,15,.94),rgba(4,6,11,.82));box-shadow:0 1rem 4rem rgba(0,0,0,.36)}
+html[data-page="door"] .mark{border-color:rgba(164,190,211,.42);box-shadow:0 0 1.5rem rgba(131,220,235,.05)}
+html[data-page="door"] .mark::before{border-color:#d8c391;box-shadow:0 0 .8rem rgba(232,201,126,.08)}
+html[data-page="door"] .hero{position:relative;overflow:hidden;border-color:rgba(137,153,181,.24);background:radial-gradient(circle at 80% 44%,rgba(131,220,235,.06),transparent 20rem),linear-gradient(145deg,rgba(9,12,22,.97),rgba(2,3,8,.995));box-shadow:0 2rem 7rem rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.035)}
+html[data-page="door"] .hero::before{content:"";position:absolute;inset:-18%;pointer-events:none;background:linear-gradient(121deg,transparent 0 42%,rgba(255,255,255,.016) 42.3% 42.7%,transparent 43% 100%)}
+html[data-page="door"] .hero>div{position:relative;z-index:4}
+html[data-page="door"] .portal-object.door-estate-reel{position:relative;overflow:hidden;min-height:0!important;padding:0!important;border-color:rgba(154,174,203,.28);background:#02040a;box-shadow:0 1.8rem 5rem rgba(0,0,0,.52),inset 0 0 0 1px rgba(255,255,255,.025)}
+.door-estate-reel__frame{position:relative;isolation:isolate;width:100%;aspect-ratio:16/9;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(91,137,164,.12),transparent 45%),#02040a}
+.door-estate-reel__frame::after{content:"";position:absolute;z-index:4;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(1,3,7,.04) 0%,transparent 42%,rgba(1,3,7,.16) 65%,rgba(1,3,7,.88) 100%),linear-gradient(90deg,rgba(1,3,7,.16),transparent 15%,transparent 85%,rgba(1,3,7,.14));box-shadow:inset 0 0 3.5rem rgba(0,0,0,.30)}
+.door-estate-reel__video,.door-estate-reel__ghost{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;background:#02040a}
+.door-estate-reel__video{z-index:1;filter:saturate(1.025) contrast(1.025) brightness(1.025);transform:scale(1.002)}
+.door-estate-reel__ghost{z-index:2;opacity:0;pointer-events:none;transition:opacity .68s cubic-bezier(.2,.72,.2,1);filter:saturate(1.02) contrast(1.02)}
+.door-estate-reel__ghost.is-visible{opacity:1;transition:none}
+.door-estate-reel__frame.is-arriving .door-estate-reel__video{animation:door-reel-arrive .72s cubic-bezier(.18,.72,.2,1)}
+.door-estate-reel__caption{position:absolute;z-index:6;left:1rem;right:1rem;bottom:.88rem;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"kicker count" "label count";align-items:end;gap:.14rem 1rem;text-shadow:0 2px 14px rgba(0,0,0,.94);pointer-events:none}
+.door-estate-reel__caption span{grid-area:kicker;color:rgba(231,207,150,.92);font-size:.58rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.door-estate-reel__caption strong{grid-area:label;color:#fff5df;font:600 clamp(1.2rem,2.5vw,1.72rem)/1.05 Georgia,serif;letter-spacing:.01em}
+.door-estate-reel__caption em{grid-area:count;color:rgba(215,226,239,.78);font:800 .56rem/1 system-ui;letter-spacing:.11em;text-transform:uppercase;font-style:normal;white-space:nowrap;padding-bottom:.14rem}
+.door-estate-reel__selectors{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;padding:1px;background:rgba(157,176,202,.10);border-top:1px solid rgba(157,176,202,.12)}
+.door-estate-reel__selector{min-width:0;min-height:44px;padding:.55rem .35rem;border:0;color:rgba(203,214,229,.68);background:rgba(5,8,14,.95);font:800 .58rem/1.05 system-ui;letter-spacing:.055em;text-transform:uppercase;cursor:pointer;transition:color .2s ease,background .2s ease,box-shadow .2s ease}
+.door-estate-reel__selector:hover,.door-estate-reel__selector:focus-visible{color:#fff3d6;background:rgba(20,27,39,.98);outline:none;box-shadow:inset 0 -2px 0 rgba(131,220,235,.46)}
+.door-estate-reel__selector[aria-pressed="true"]{color:#fff5df;background:linear-gradient(180deg,rgba(35,44,57,.98),rgba(11,15,23,.98));box-shadow:inset 0 -2px 0 var(--door-reel-gold)}
+.door-estate-reel[data-door-estate-reel-state="poster-fallback"] .door-estate-reel__caption span::after{content:" · preview fallback";color:rgba(204,214,228,.58)}
+html[data-page="door"] .routes{position:relative;padding-top:.7rem}
+html[data-page="door"] .routes::before{content:"";position:absolute;z-index:-1;inset:-3rem -8vw auto;height:30rem;pointer-events:none;opacity:.20;background:radial-gradient(circle at 80% 20%,rgba(131,220,235,.06),transparent 15rem),linear-gradient(120deg,transparent 0 36%,rgba(255,255,255,.016) 36.2% 36.4%,transparent 36.6%)}
+html[data-page="door"] .route-card{box-shadow:0 1.4rem 4rem rgba(0,0,0,.42),0 0 0 1px rgba(122,97,184,.02)}
+@keyframes door-reel-arrive{0%{transform:scale(1.035);filter:saturate(.92) contrast(1.08) brightness(.82)}100%{transform:scale(1.002);filter:saturate(1.025) contrast(1.025) brightness(1.025)}}
+@media(max-width:62rem){.door-estate-reel__caption{left:.88rem;right:.88rem;bottom:.76rem}.door-estate-reel__selector{font-size:.54rem}}
+@media(max-width:40rem){html[data-page="door"] .hero{padding:1.05rem .75rem 1.2rem}.door-estate-reel__caption{left:.72rem;right:.72rem;bottom:.65rem}.door-estate-reel__caption span{font-size:.52rem}.door-estate-reel__caption strong{font-size:1.12rem}.door-estate-reel__selector{padding:.5rem .22rem;font-size:.49rem;letter-spacing:.025em}.door-estate-reel__selectors{overflow:hidden}}
+@media(prefers-reduced-motion:reduce){.door-estate-reel__ghost{transition:none!important}.door-estate-reel__frame.is-arriving .door-estate-reel__video{animation:none!important}.door-estate-reel__selector{transition:none!important}}

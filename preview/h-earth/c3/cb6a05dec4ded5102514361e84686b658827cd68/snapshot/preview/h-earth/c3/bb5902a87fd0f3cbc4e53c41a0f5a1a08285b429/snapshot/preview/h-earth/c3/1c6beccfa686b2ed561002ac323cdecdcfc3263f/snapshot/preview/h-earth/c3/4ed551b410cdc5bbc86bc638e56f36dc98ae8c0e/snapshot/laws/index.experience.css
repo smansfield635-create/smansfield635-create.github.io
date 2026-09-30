@@ -1,0 +1,1104 @@
+/*
+ * Laws CP6 experiential presentation layer.
+ * Presentation only: no controller, route, evidence, record, or claim authority.
+ */
+
+html[data-cp6-experiential-presentation="candidate"] {
+  --laws-experience-ink: #f5f7ff;
+  --laws-experience-muted: rgba(224, 231, 255, 0.72);
+  --laws-experience-faint: rgba(211, 221, 255, 0.46);
+  --laws-experience-line: rgba(188, 208, 255, 0.16);
+  --laws-experience-glow: 110, 178, 255;
+  --laws-experience-accent: #8bc8ff;
+  --laws-experience-accent-2: #c9a7ff;
+  --laws-experience-surface: rgba(8, 14, 31, 0.58);
+  --laws-experience-display: "Segoe UI Variable Display", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --laws-experience-body: "Segoe UI Variable Text", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+  background: #030714;
+  scroll-behavior: smooth;
+}
+
+html[data-cp6-experiential-presentation="candidate"][data-laws-experience-direction="flow"] {
+  --laws-experience-glow: 87, 215, 255;
+  --laws-experience-accent: #77dcff;
+  --laws-experience-accent-2: #77ffd2;
+}
+
+html[data-cp6-experiential-presentation="candidate"][data-laws-experience-direction="integrity"] {
+  --laws-experience-glow: 255, 199, 102;
+  --laws-experience-accent: #ffd477;
+  --laws-experience-accent-2: #fff0b4;
+}
+
+html[data-cp6-experiential-presentation="candidate"][data-laws-experience-direction="reality"] {
+  --laws-experience-glow: 173, 125, 255;
+  --laws-experience-accent: #c6a0ff;
+  --laws-experience-accent-2: #86b7ff;
+}
+
+html[data-cp6-experiential-presentation="candidate"][data-laws-experience-direction="structure"] {
+  --laws-experience-glow: 103, 255, 177;
+  --laws-experience-accent: #7fffc0;
+  --laws-experience-accent-2: #8ee9ff;
+}
+
+html[data-cp6-experiential-presentation="candidate"][data-laws-experience-direction="test"] {
+  --laws-experience-glow: 255, 128, 108;
+  --laws-experience-accent: #ff9b82;
+  --laws-experience-accent-2: #ffd27f;
+}
+
+html[data-cp6-experiential-presentation="candidate"][data-laws-experience-direction="research"] {
+  --laws-experience-glow: 121, 153, 255;
+  --laws-experience-accent: #91aaff;
+  --laws-experience-accent-2: #e1a9ff;
+}
+
+html[data-cp6-experiential-presentation="candidate"] body {
+  min-width: 0;
+  margin: 0;
+  overflow-x: clip;
+  color: var(--laws-experience-ink);
+  font-family: var(--laws-experience-body);
+  background:
+    radial-gradient(circle at 78% 8%, rgba(var(--laws-experience-glow), 0.14), transparent 34rem),
+    radial-gradient(circle at 15% 34%, rgba(110, 91, 255, 0.1), transparent 38rem),
+    linear-gradient(180deg, #050a19 0%, #030714 46%, #060817 100%);
+  transition: background 900ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.42) 0 0.7px, transparent 0.9px),
+    radial-gradient(circle, rgba(121,178,255,0.24) 0 0.8px, transparent 1px);
+  background-position: 0 0, 34px 46px;
+  background-size: 86px 86px, 132px 132px;
+  mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,0.75) 48%, transparent 100%);
+}
+
+html[data-cp6-experiential-presentation="candidate"] body::after {
+  content: "";
+  position: fixed;
+  inset: -18vh -10vw auto;
+  height: 76vh;
+  z-index: -1;
+  pointer-events: none;
+  background: conic-gradient(from 220deg at 70% 30%, transparent, rgba(var(--laws-experience-glow), 0.13), transparent 32%, rgba(132, 95, 255, 0.09), transparent 68%);
+  filter: blur(72px);
+  transform: translate3d(var(--laws-parallax-x, 0), var(--laws-parallax-y, 0), 0);
+  transition: background 900ms ease, transform 450ms ease-out;
+  animation: laws-experience-breathe 16s ease-in-out infinite alternate;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-shell {
+  width: min(100%, 1600px);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 3rem) 5rem;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-topbar {
+  position: relative;
+  z-index: 40;
+  min-height: 4.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-chamber-identity {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  color: inherit;
+  text-decoration: none;
+  letter-spacing: -0.015em;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-chamber-identity span {
+  color: var(--laws-experience-muted);
+  font-size: 0.82rem;
+  font-weight: 540;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-chamber-identity strong {
+  font-size: 0.95rem;
+  font-weight: 720;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav {
+  position: relative;
+  margin: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0.25rem 0.9rem;
+  color: var(--laws-experience-muted);
+  font-size: 0.82rem;
+  font-weight: 640;
+  border: 1px solid var(--laws-experience-line);
+  border-radius: 999px;
+  background: rgba(9, 15, 34, 0.42);
+  backdrop-filter: blur(18px);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary::after {
+  content: "+";
+  font-size: 1rem;
+  transition: transform 240ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-nav {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  width: min(82vw, 25rem);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.65rem;
+  border: 1px solid var(--laws-experience-line);
+  border-radius: 1.1rem;
+  background: rgba(5, 10, 24, 0.92);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+  backdrop-filter: blur(24px);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-nav a {
+  min-width: 0;
+  padding: 0.7rem 0.75rem;
+  color: var(--laws-experience-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 0;
+  border-radius: 0.7rem;
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-nav a:is(:hover, :focus-visible) {
+  color: var(--laws-experience-ink);
+  background: rgba(var(--laws-experience-glow), 0.1);
+  outline: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-estate {
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(h1, h2, h3, h4) {
+  font-family: var(--laws-experience-display);
+  font-style: normal;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+  isolation: isolate;
+  position: relative;
+  min-height: calc(100svh - 5rem);
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.78fr) minmax(30rem, 1.22fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 5rem);
+  padding: clamp(2rem, 5vh, 5rem) 0 clamp(3rem, 7vh, 7rem);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(26px);
+  opacity: 0.58;
+  mix-blend-mode: screen;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span:nth-child(1) {
+  width: 18rem;
+  height: 18rem;
+  top: 4%;
+  left: 2%;
+  background: rgba(var(--laws-experience-glow), 0.18);
+  animation: laws-orb-drift-a 14s ease-in-out infinite alternate;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span:nth-child(2) {
+  width: 24rem;
+  height: 24rem;
+  right: 3%;
+  bottom: 2%;
+  background: rgba(145, 100, 255, 0.14);
+  animation: laws-orb-drift-b 18s ease-in-out infinite alternate;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span:nth-child(3) {
+  width: 1px;
+  height: 78%;
+  top: 10%;
+  left: 44%;
+  border-radius: 0;
+  filter: none;
+  opacity: 0.38;
+  background: linear-gradient(to bottom, transparent, rgba(var(--laws-experience-glow), 0.55), transparent);
+  box-shadow: 0 0 30px rgba(var(--laws-experience-glow), 0.28);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__prelude {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.15rem;
+  color: var(--laws-experience-accent);
+  font-size: 0.76rem;
+  font-weight: 670;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__prelude::before {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+  box-shadow: 0 0 14px currentColor;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure > summary {
+  list-style: none;
+  cursor: pointer;
+  display: block;
+  padding: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy {
+  max-width: 44rem;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy h1 {
+  margin: 0;
+  color: var(--laws-experience-ink);
+  font-size: clamp(3.35rem, 6.9vw, 7.6rem);
+  font-weight: 760;
+  line-height: 0.91;
+  letter-spacing: -0.066em;
+  text-wrap: balance;
+  text-shadow: 0 0 48px rgba(var(--laws-experience-glow), 0.2);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy h1 span {
+  display: block;
+  color: transparent;
+  background: linear-gradient(105deg, var(--laws-experience-ink), var(--laws-experience-accent) 55%, var(--laws-experience-accent-2));
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy p {
+  max-width: 39rem;
+  margin: clamp(1.5rem, 3vh, 2.5rem) 0 0;
+  color: var(--laws-experience-muted);
+  font-size: clamp(1.05rem, 1.35vw, 1.34rem);
+  font-weight: 430;
+  line-height: 1.62;
+  letter-spacing: -0.012em;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__expand-label {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding: 0.78rem 1.05rem;
+  color: #07101f;
+  font-size: 0.88rem;
+  font-weight: 720;
+  border-radius: 999px;
+  background: linear-gradient(105deg, var(--laws-experience-accent), var(--laws-experience-accent-2));
+  box-shadow: 0 12px 34px rgba(var(--laws-experience-glow), 0.2);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__expand-label::after {
+  content: "↓";
+  font-size: 1rem;
+  transition: transform 240ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__expand-label::after {
+  transform: rotate(180deg);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure-body {
+  width: min(96vw, 74rem);
+  margin-top: 2.5rem;
+  padding: 1.75rem 0 0;
+  border-top: 1px solid var(--laws-experience-line);
+  animation: laws-reveal 420ms ease both;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(8.5rem, 1fr));
+  gap: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid::before {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--laws-experience-glow), 0.64), var(--laws-experience-line), rgba(var(--laws-experience-glow), 0.22));
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article {
+  position: relative;
+  min-width: 0;
+  padding: 1.65rem 1.05rem 1rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: 0.58;
+  transition: opacity 280ms ease, transform 280ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(var(--laws-experience-glow), 0.75);
+  border-radius: 50%;
+  background: #07101f;
+  box-shadow: 0 0 18px rgba(var(--laws-experience-glow), 0.34);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"] {
+  opacity: 1;
+  transform: translateY(-0.18rem);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
+  background: var(--laws-experience-accent);
+  box-shadow: 0 0 24px rgba(var(--laws-experience-glow), 0.72);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid a,
+html[data-cp6-experiential-presentation="candidate"] .laws-first__research-record a {
+  color: var(--laws-experience-ink);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid p,
+html[data-cp6-experiential-presentation="candidate"] .laws-first__research-record p {
+  margin: 0.65rem 0 0;
+  color: var(--laws-experience-muted);
+  font-size: 0.95rem;
+  line-height: 1.48;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__research-record {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.24fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  margin-top: 0.8rem;
+  padding: 1rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--laws-experience-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__research-record p {
+  max-width: 46rem;
+  margin: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-primary {
+  position: sticky;
+  top: 1rem;
+  z-index: 2;
+  min-width: 0;
+  align-self: start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
+  position: relative;
+  min-height: clamp(31rem, 64vh, 48rem);
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orbit::before {
+  content: "";
+  position: absolute;
+  inset: 8% 6%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--laws-experience-glow), 0.11), transparent 66%);
+  filter: blur(18px);
+  transition: background 900ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
+  position: relative;
+  z-index: 8;
+  width: min(92%, 38rem);
+  margin: -4.5rem auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker {
+  position: relative;
+  min-height: 8.5rem;
+  padding: 1.25rem 0 0 1.4rem;
+  border-left: 1px solid rgba(var(--laws-experience-glow), 0.5);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 1px;
+  height: 38%;
+  background: var(--laws-experience-accent);
+  box-shadow: 0 0 20px var(--laws-experience-accent);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker__eyebrow {
+  margin: 0 0 0.45rem;
+  color: var(--laws-experience-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker h2 {
+  margin: 0;
+  color: var(--laws-experience-ink);
+  font-size: clamp(1.7rem, 2.6vw, 3rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker__body {
+  max-width: 34rem;
+  margin: 0.65rem 0 0;
+  color: var(--laws-experience-muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker__state {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+  color: var(--laws-experience-faint);
+  font-size: 0.74rem;
+  font-weight: 620;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker__state::before {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--laws-experience-accent);
+  box-shadow: 0 0 14px var(--laws-experience-accent);
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-atlas-key__header, .laws-atlas-key__body, .laws-atlas-key__technical) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 1rem 0 0 1.4rem;
+  padding: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel__actions :is(button, a) {
+  min-height: 2.75rem;
+  padding: 0.55rem 1rem;
+  color: var(--laws-experience-ink);
+  font-family: var(--laws-experience-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid var(--laws-experience-line);
+  border-radius: 999px;
+  background: rgba(8, 15, 34, 0.48);
+  backdrop-filter: blur(14px);
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel__actions .button-gold:not(:disabled) {
+  color: #07101f;
+  border-color: transparent;
+  background: linear-gradient(105deg, var(--laws-experience-accent), var(--laws-experience-accent-2));
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel__actions :disabled {
+  opacity: 0.35;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-use-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(12rem, 0.6fr);
+  align-items: start;
+  gap: clamp(1rem, 3vw, 3.5rem);
+  padding: clamp(5rem, 10vh, 9rem) 0;
+  border-top: 1px solid var(--laws-experience-line);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-stage-number {
+  margin: 0;
+  color: var(--laws-experience-accent);
+  font: 600 0.72rem/1 var(--laws-experience-body);
+  letter-spacing: 0.08em;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-use-stage h2,
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__header h2 {
+  margin: 0;
+  color: var(--laws-experience-ink);
+  font-size: clamp(2.2rem, 4.5vw, 5.2rem);
+  font-weight: 720;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-use-stage p:not(.laws-stage-number),
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__header p {
+  max-width: 38rem;
+  margin: 1.15rem 0 0;
+  color: var(--laws-experience-muted);
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  line-height: 1.62;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-stage-signal {
+  align-self: stretch;
+  min-height: 9rem;
+  border-left: 1px solid var(--laws-experience-line);
+  background: linear-gradient(to bottom, rgba(var(--laws-experience-glow), 0.2), transparent 78%) left top / 1px 100% no-repeat;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths {
+  margin: 0;
+  padding: clamp(3rem, 7vh, 7rem) 0 clamp(4rem, 9vh, 9rem);
+  border: 0;
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__header {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 3.5rem);
+  margin-bottom: clamp(2.5rem, 6vh, 5rem);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__header > div {
+  max-width: 58rem;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--laws-experience-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel:last-of-type {
+  border-bottom: 1px solid var(--laws-experience-line);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary {
+  list-style: none;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr) 2rem;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  min-height: clamp(7.5rem, 13vw, 11rem);
+  padding: 1.25rem 0;
+  color: var(--laws-experience-ink);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary::after {
+  content: "↘";
+  color: var(--laws-experience-accent);
+  font-size: 1.4rem;
+  transition: transform 280ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel[open] > summary::after {
+  transform: rotate(90deg);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary span {
+  color: inherit;
+  font: 680 clamp(1.55rem, 2.8vw, 3.2rem)/1.05 var(--laws-experience-display);
+  letter-spacing: -0.045em;
+  text-transform: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary small {
+  color: var(--laws-experience-muted);
+  font-size: clamp(0.94rem, 1.15vw, 1.08rem);
+  font-weight: 430;
+  line-height: 1.5;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel__body {
+  max-width: 72rem;
+  margin-left: auto;
+  padding: 1rem 0 4rem;
+  animation: laws-reveal 420ms ease both;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-consolidated-overview, .laws-consolidated-panel, .laws-custody-summary) {
+  margin: 0;
+  padding: 2.5rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--laws-experience-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-consolidated-overview, .laws-consolidated-panel, .laws-custody-summary) .kicker {
+  color: var(--laws-experience-accent);
+  font: 650 0.72rem/1 var(--laws-experience-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-consolidated-overview, .laws-consolidated-panel, .laws-custody-summary) h2 {
+  max-width: 54rem;
+  color: var(--laws-experience-ink);
+  font-size: clamp(1.7rem, 3vw, 3.4rem);
+  font-weight: 680;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-consolidated-overview, .laws-consolidated-panel, .laws-custody-summary) p {
+  max-width: 52rem;
+  color: var(--laws-experience-muted);
+  font-family: var(--laws-experience-body);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-consolidated-grid, .laws-branch-grid, .laws-evidence-grid, .laws-maturity-grid, .laws-ownership-chain) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--laws-experience-line);
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(.laws-consolidated-grid, .laws-branch-grid, .laws-evidence-grid, .laws-maturity-grid, .laws-ownership-chain) > * {
+  margin: 0;
+  padding: 1.5rem 1.5rem 1.5rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--laws-experience-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-discovery__item {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--laws-experience-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-discovery__item > summary {
+  padding: 1.2rem 0;
+  color: var(--laws-experience-muted);
+  font-family: var(--laws-experience-body);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-equation-card,
+html[data-cp6-experiential-presentation="candidate"] .laws-branch-card,
+html[data-cp6-experiential-presentation="candidate"] .laws-layer-record,
+html[data-cp6-experiential-presentation="candidate"] .laws-runtime-evidence__group {
+  border-color: var(--laws-experience-line);
+  border-radius: 0.75rem;
+  background: rgba(8, 15, 34, 0.34);
+  box-shadow: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-accessibility-note {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem 0;
+  color: var(--laws-experience-faint);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  text-align: center;
+  border: 0;
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-footer {
+  width: min(calc(100% - 2rem), 1540px);
+  margin: 0 auto;
+  padding: 2.5rem clamp(1rem, 3vw, 3rem);
+  color: var(--laws-experience-faint);
+  font-family: var(--laws-experience-body);
+  border-top: 1px solid var(--laws-experience-line);
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] [data-laws-experience-stage] {
+  opacity: 0.72;
+  transform: translateY(1.1rem);
+  transition: opacity 700ms ease, transform 700ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] [data-laws-experience-stage][data-laws-experience-visible="true"],
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes laws-experience-breathe {
+  from { opacity: 0.55; transform: translate3d(var(--laws-parallax-x, 0), var(--laws-parallax-y, 0), 0) scale(0.96); }
+  to { opacity: 0.92; transform: translate3d(var(--laws-parallax-x, 0), var(--laws-parallax-y, 0), 0) scale(1.04); }
+}
+
+@keyframes laws-orb-drift-a {
+  from { transform: translate3d(-5%, -3%, 0) scale(0.92); }
+  to { transform: translate3d(18%, 12%, 0) scale(1.12); }
+}
+
+@keyframes laws-orb-drift-b {
+  from { transform: translate3d(8%, 8%, 0) scale(1.08); }
+  to { transform: translate3d(-15%, -12%, 0) scale(0.9); }
+}
+
+@keyframes laws-reveal {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1080px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+    grid-template-columns: minmax(16rem, 0.72fr) minmax(25rem, 1.28fr);
+    gap: 1.5rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy h1 {
+    font-size: clamp(3.2rem, 7vw, 5.8rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid {
+    grid-template-columns: repeat(3, minmax(8rem, 1fr));
+    row-gap: 1rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid::before {
+    display: none;
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-shell {
+    padding-inline: clamp(0.9rem, 4vw, 1.4rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-topbar {
+    min-height: 3.7rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-chamber-identity {
+    display: grid;
+    gap: 0.05rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-chamber-identity span {
+    font-size: 0.68rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-chamber-identity strong {
+    font-size: 0.86rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: clamp(2.5rem, 7vh, 4.5rem) 0 4.5rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span:nth-child(3) {
+    display: none;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first {
+    width: 100%;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy h1 {
+    max-width: 8ch;
+    font-size: clamp(3.4rem, 16vw, 5.7rem);
+    line-height: 0.88;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy p {
+    max-width: 32rem;
+    font-size: 1.02rem;
+    line-height: 1.58;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__expand-label {
+    margin-top: 1.5rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure-body {
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-left: 1.35rem;
+    border-left: 1px solid var(--laws-experience-line);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article {
+    padding: 0.85rem 0 1.35rem 0.8rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+    top: 1rem;
+    left: -1.78rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__research-record {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-compass-primary {
+    position: relative;
+    top: auto;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
+    min-height: min(126vw, 40rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
+    width: 100%;
+    margin-top: -2.25rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-compass-speaker {
+    min-height: 7.5rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-use-stage,
+  html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__header {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-stage-signal {
+    display: none;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary {
+    grid-template-columns: minmax(0, 1fr) 1.5rem;
+    gap: 0.75rem;
+    min-height: 9rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary small {
+    grid-column: 1;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel > summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orientation-panel__body {
+    padding-bottom: 3rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] :is(.laws-consolidated-grid, .laws-branch-grid, .laws-evidence-grid, .laws-maturity-grid, .laws-ownership-chain) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary {
+    min-height: 2.25rem;
+    padding-inline: 0.75rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-nav {
+    position: fixed;
+    top: 4rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__summary-copy h1 {
+    font-size: clamp(3.05rem, 15.6vw, 4.8rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-use-stage,
+  html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths__header {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-stage-number {
+    margin-bottom: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-cp6-experiential-presentation="candidate"] {
+    scroll-behavior: auto;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] *,
+  html[data-cp6-experiential-presentation="candidate"] *::before,
+  html[data-cp6-experiential-presentation="candidate"] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] body::after,
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] [data-laws-experience-stage] {
+    opacity: 1;
+    transform: none;
+  }
+}

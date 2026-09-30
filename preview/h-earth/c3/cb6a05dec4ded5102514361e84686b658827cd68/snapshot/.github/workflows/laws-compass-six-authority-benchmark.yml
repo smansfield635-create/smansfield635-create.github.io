@@ -1,0 +1,161 @@
+name: Laws Compass Six-Authority Benchmark
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'laws/**'
+      - 'verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs'
+      - '.github/workflows/laws-compass-six-authority-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HISTORICAL_BASELINE_COMMIT: 3a6eafcb8c10c61849a452a0c068d34a12117cf5
+      LAWS_SIX_ORIGIN: http://127.0.0.1:4173
+    steps:
+      - name: Checkout selected execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Resolve selected benchmark scope
+        id: scope
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo 'required=true' >> "$GITHUB_OUTPUT"
+            echo "execution_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          test -n "$PR_BASE_SHA"
+          test -n "$PR_HEAD_SHA"
+          test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
+          git fetch --no-tags origin "$PR_BASE_SHA"
+          changed="$(git diff --name-only "$PR_BASE_SHA"..."$PR_HEAD_SHA")"
+          printf '%s\n' "$changed"
+          relevant="$(printf '%s\n' "$changed" | grep -E '^(laws/index\.(controller|compositor|crystals|interactions|planet|cosmos)\.js|verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark\.mjs)$' || true)"
+          if [ -n "$relevant" ]; then
+            echo 'required=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'required=false' >> "$GITHUB_OUTPUT"
+          fi
+          echo "execution_commit=$PR_HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Verify preserved current six-authority contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'data-laws-category-count="6"' laws/index.html
+          grep -F 'data-laws-law-count="16"' laws/index.html
+          grep -F 'data-laws-nonlaw-member-count="8"' laws/index.html
+          grep -F 'data-laws-child-route-count="24"' laws/index.html
+          grep -F 'data-laws-test-method="four-member-reversible-admissibility-cluster"' laws/index.html
+          grep -F 'const D=Object.freeze(["flow","integrity","reality","structure","test","research"])' laws/index.interactions.js
+          grep -F 'singleActiveOuterAuthorityLabel:true' laws/index.interactions.js
+          grep -F 'primary-only-star-center-protected-tab' laws/index.interactions.js
+
+      - name: Record content-only compatibility disposition
+        if: steps.scope.outputs.required != 'true'
+        run: |
+          echo 'Historical six-authority construction benchmark is not applicable.'
+          echo 'The selected Laws change preserves the current six-authority contract.'
+
+      - name: Set up Node for selected benchmark
+        if: steps.scope.outputs.required == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Chrome for selected benchmark
+        if: steps.scope.outputs.required == 'true'
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        if: steps.scope.outputs.required == 'true'
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate selected benchmark source syntax
+        if: steps.scope.outputs.required == 'true'
+        run: |
+          node --check laws/index.controller.js
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.js
+          node --check verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs
+
+      - name: Fetch historical bounded comparison baseline
+        if: steps.scope.outputs.required == 'true'
+        run: git fetch --no-tags --depth=1 origin "$HISTORICAL_BASELINE_COMMIT"
+
+      - name: Start exact-head static server
+        if: steps.scope.outputs.required == 'true'
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-six-authority-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/laws-six-authority-server.log
+          exit 1
+
+      - name: Execute selected historical six-authority benchmark
+        if: steps.scope.outputs.required == 'true'
+        env:
+          BASELINE_COMMIT: ${{ env.HISTORICAL_BASELINE_COMMIT }}
+          EXECUTION_COMMIT: ${{ steps.scope.outputs.execution_commit }}
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs
+
+      - name: Report selected historical receipt
+        if: steps.scope.outputs.required == 'true'
+        env:
+          EXECUTION_COMMIT: ${{ steps.scope.outputs.execution_commit }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const file = 'laws-six-authority-benchmark-v1.json';
+          if (!fs.existsSync(file)) throw new Error('LAWS_SIX_AUTHORITY_RECEIPT_MISSING');
+          const receipt = JSON.parse(fs.readFileSync(file, 'utf8'));
+          console.log(JSON.stringify({
+            pass: receipt.pass,
+            phase: receipt.phase,
+            browserExecuted: receipt.browserExecuted,
+            failures: receipt.failures,
+            observations: receipt.observations.length,
+            screenshots: receipt.screenshotManifest.length,
+            changedPathBoundary: receipt.execution
+          }, null, 2));
+          if (receipt.execution.commit !== process.env.EXECUTION_COMMIT) throw new Error('LAWS_SIX_AUTHORITY_COMMIT_MISMATCH');
+          if (!receipt.pass) throw new Error('LAWS_SIX_AUTHORITY_BENCHMARK_FAILED');
+          NODE
+
+      - name: Upload selected historical six-authority evidence
+        if: steps.scope.outputs.required == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-compass-six-authority-benchmark-v1-evidence
+          path: |
+            laws-six-authority-benchmark-v1.json
+            laws-six-authority-benchmark-v1-screenshots/**
+            /tmp/laws-six-authority-server.log
+          if-no-files-found: error
+          retention-days: 30

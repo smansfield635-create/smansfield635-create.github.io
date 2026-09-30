@@ -1,0 +1,40 @@
+{
+  "receipt_identity": "ANATOMICAL_BASIS_GEN1_SOURCE_QUALIFICATION_RECEIPT_V1",
+  "base_main_sha": "f5eddec4abed869d2af1fb10570c878a209427a8",
+  "governing_boundary": "ANATOMICAL_BASIS_GEN1_SOURCE_SELECTION_AND_BINDING",
+  "new_geometry_authorized": false,
+  "candidates": {
+    "BodyParts3D_4_0": {
+      "provenance": "PASS",
+      "license": "PASS_CC_BY_4_0_CURRENT_LSDB_ARCHIVE",
+      "component_identity": "PASS",
+      "cerebral_cerebellar_brainstem_coverage": "PASS",
+      "native_source_resolution": "NOT_QUALIFIED",
+      "disposition": "CORROBORATION_ONLY_NOT_GEN1_GEOMETRIC_SOURCE",
+      "blocking_fact": "AUTHORITATIVE_DOWNLOAD_IS_99_PERCENT_POLYGON_REDUCED"
+    },
+    "BigBrain": {
+      "real_human_anatomical_basis": "PASS",
+      "resolution": "STRONG_20_MICRON_RECONSTRUCTION",
+      "surface_availability": "PASS_REPORTED_MULTIPLE_FORMATS",
+      "license": "CC_BY_NC_SA_4_0",
+      "public_runtime_license": "NOT_YET_QUALIFIED",
+      "disposition": "HOLD_FOR_LICENSE_COMPATIBILITY"
+    },
+    "WU_Minn_HCP_Open_Access": {
+      "real_human_anatomical_basis": "PASS",
+      "resolution": "PROMISING",
+      "redistribution": "CONDITIONAL_PASS_SAME_DATA_USE_TERMS",
+      "direct_whole_brain_surface_binding": "NOT_YET_PROVEN",
+      "disposition": "HOLD_FOR_SURFACE_AND_TERMS_QUALIFICATION"
+    },
+    "OpenNeuro_CC0_structural_MRI": {
+      "real_human_anatomical_basis": "PASS",
+      "license": "STRONG_CC0",
+      "direct_surface_binding": "NOT_SATISFIED_UNDER_CURRENT_CONTRACT",
+      "disposition": "PROMISING_ALTERNATE_SOURCE_CLASS_REQUIRES_ARCHITECTURE_DECISION"
+    }
+  },
+  "decision": "FAIL_CLOSED_CONTINUE_SOURCE_SEARCH",
+  "next_boundary": "HIGH_RESOLUTION_SOURCE_SEARCH_OR_SOURCE_CLASS_DECISION"
+}

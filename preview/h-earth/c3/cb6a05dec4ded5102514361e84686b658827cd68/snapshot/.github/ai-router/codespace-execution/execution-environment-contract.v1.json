@@ -1,0 +1,51 @@
+{
+  "schema": "THREE_TIER_CODESPACE_EXECUTION_ENVIRONMENT_CONTRACT_v1",
+  "substrateId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_v1",
+  "status": "ACTIVE_ADOPTION_CANDIDATE",
+  "recoveredFromCandidate": "22377f38b733c674a8858ca95163a66923308167",
+  "successorBase": "3e2f75d37b4ef637a8fb4831e410d5cb36477507",
+  "purpose": "STANDARDIZE_AND_PROVE_EXECUTION_WITHOUT_GITHUB_ACTIONS_AS_AGENT_TRANSPORT",
+  "nativeChatGPTTerminalTransportCreated": false,
+  "persistentCodespaceAuthorityAllowed": false,
+  "requiredEnvironmentProperties": [
+    "UNIQUE_ENVIRONMENT_ID",
+    "EXACT_40_CHARACTER_TARGET_COMMIT",
+    "DETACHED_OR_EQUIVALENT_IMMUTABLE_CHECKOUT",
+    "CLEAN_WORKTREE_BEFORE_EXECUTION",
+    "FULL_HISTORY_WHEN_LINEAGE_IS_TESTED",
+    "DECLARED_RUNTIME",
+    "DECLARED_FIXED_COMMAND",
+    "OUTPUTS_OUTSIDE_REPOSITORY_OR_IGNORED",
+    "NO_MUTABLE_STATE_REUSE_BETWEEN_BUILDER_AND_FRESH_VERIFIER"
+  ],
+  "allowedAgentExecutionBackends": [
+    "CODESPACE_DISPOSABLE_EXECUTION",
+    "LOCAL_CLEAN_GIT",
+    "AUTHORIZED_EXTERNAL_DISPOSABLE_BUILDER"
+  ],
+  "githubActionsAllowedAsAgentExecutionTransport": false,
+  "executionPhases": [
+    "ENVIRONMENT_ATTESTATION",
+    "FIXED_COMMAND_EXECUTION",
+    "RECEIPT_CAPTURE",
+    "FRESH_REEXECUTION",
+    "EQUALITY",
+    "DESTRUCTION_OR_NONAUTHORITY"
+  ],
+  "receiptSchemas": {
+    "environment": ".github/ai-router/codespace-execution/schemas/environment-receipt.schema.v1.json",
+    "command": ".github/ai-router/codespace-execution/schemas/command-execution-receipt.schema.v1.json",
+    "equality": ".github/ai-router/codespace-execution/schemas/equality-receipt.schema.v1.json",
+    "destruction": ".github/ai-router/codespace-execution/schemas/destruction-receipt.schema.v1.json"
+  },
+  "executableHookPreflight": {
+    "required": true,
+    "invariant": "NO_USABLE_EXECUTION_SURFACE_NO_EXECUTABLE_HOOK_ASSIGNMENT",
+    "requiredReadyConditions": [
+      "REPOSITORY_MATERIALIZED",
+      "DEPENDENCIES_READY",
+      "COMMAND_EXECUTION_AVAILABLE"
+    ]
+  },
+  "failureDisposition": "BLOCKED_NONTERMINAL_EXECUTION_SURFACE_UNAVAILABLE"
+}

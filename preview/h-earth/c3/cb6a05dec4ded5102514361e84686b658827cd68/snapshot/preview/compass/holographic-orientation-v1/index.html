@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-holographic-orientation-preview="v1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>Diamond Gate Bridge · Holographic Orientation Vertical Slice</title>
+  <meta name="description" content="Isolated construction preview for the Diamond Gate Bridge code-native holographic orientation successor.">
+  <link rel="stylesheet" href="./index.css?v=holo-v1">
+</head>
+<body>
+  <main class="holo-preview" data-holo-root data-state="IDLE" aria-label="Diamond Gate Bridge orientation preview">
+    <canvas class="holo-canvas" data-holo-canvas aria-hidden="true"></canvas>
+
+    <section class="entry-gate" data-entry-gate aria-labelledby="entry-title">
+      <div class="entry-instrument" aria-hidden="true">
+        <span class="instrument-ring instrument-ring--outer"></span>
+        <span class="instrument-ring instrument-ring--inner"></span>
+        <span class="instrument-axis instrument-axis--x"></span>
+        <span class="instrument-axis instrument-axis--y"></span>
+        <i class="instrument-tick instrument-tick--n"></i>
+        <i class="instrument-tick instrument-tick--e"></i>
+        <i class="instrument-tick instrument-tick--s"></i>
+        <i class="instrument-tick instrument-tick--w"></i>
+      </div>
+
+      <div class="entry-card" data-entry-card>
+        <p class="entry-kicker">Diamond Gate Bridge</p>
+        <h1 id="entry-title">Find your way.</h1>
+        <p class="entry-deck">A short orientation before you enter.</p>
+        <div class="entry-actions" aria-label="Orientation choices">
+          <button type="button" class="entry-action entry-action--primary" data-begin-orientation>
+            <span>Begin orientation</span>
+          </button>
+          <button type="button" class="entry-action" data-skip-orientation>
+            <span>Skip intro</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="endpoint" data-endpoint aria-live="polite" hidden>
+      <p class="endpoint-kicker">Orientation</p>
+      <h2>Everything begins with a direction.</h2>
+      <p class="endpoint-note">Isolated vertical-slice endpoint · production handoff intentionally disabled.</p>
+      <button type="button" class="endpoint-replay" data-replay>Replay slice</button>
+    </section>
+
+    <p class="sr-status" data-status aria-live="polite">Orientation preview ready.</p>
+  </main>
+
+  <script src="/assets/compass/upstream-compass.geometry.js?v=3.0.0-fixed-center-independent-sibling"></script>
+  <script src="./descriptors.v1.js?v=holo-v1"></script>
+  <script src="./index.js?v=holo-v1"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+name: Audralia Canonical Weather Spatial LOD Proof
+
+on:
+  pull_request:
+    paths:
+      - 'showroom/globe/audralia/canonical-weather-spatial-lod-proof/**'
+      - '.github/workflows/audralia-canonical-weather-spatial-lod-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  structural-model-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate module syntax
+        run: |
+          node --check showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs
+          node --check showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-renderer.mjs
+          node --check showroom/globe/audralia/canonical-weather-spatial-lod-proof/app.mjs
+      - name: Prove canonical identity, deterministic relevance, LOD normalization, bounded promotion and ray causality
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {
+            buildCanonicalWeatherObjects,
+            evaluateSpatialState,
+            evaluateRayDiagnostics,
+            verifyProofInvariants,
+            MAX_LOCAL_VOLUMETRIC_OBJECTS
+          } from './showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs';
+
+          const add=(a,b)=>a.map((v,i)=>v+b[i]);
+          const scale=(a,s)=>a.map(v=>v*s);
+          const norm=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l);};
+          const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+          const sampleSurface=(u,v)=>({valid:true,elevation:6+3*Math.sin(u*.01)*Math.cos(v*.013)});
+          const objects=buildCanonicalWeatherObjects(sampleSurface);
+          assert.equal(objects.length,3);
+          assert.equal(new Set(objects.map(o=>o.ID_i)).size,objects.length);
+          assert.ok(objects.every(o=>o.terrainClearanceIsRenderingGeometry===false));
+          assert.ok(objects.every(o=>o.Z_i.base>=o.Z_i.terrainMaximum));
+
+          const target=objects[0];
+          const cameraAtDistance=distance=>{
+            const eye=add(target.V_i.center,scale(target.V_i.axisV,distance));
+            const forward=norm(sub(target.V_i.center,eye));
+            return {eye,forward,right:target.V_i.axisU,up:target.V_i.axisUp,target:target.V_i.center};
+          };
+          const local=evaluateSpatialState(objects,cameraAtDistance(560));
+          const regional=evaluateSpatialState(objects,cameraAtDistance(1850));
+          const planetary=evaluateSpatialState(objects,cameraAtDistance(5100));
+          const byId=(state,id)=>state.objects.find(x=>x.object.ID_i===id);
+          assert.ok(byId(local,target.ID_i).alpha.l>byId(local,target.ID_i).alpha.r);
+          assert.ok(byId(regional,target.ID_i).alpha.r>=Math.max(byId(regional,target.ID_i).alpha.l,byId(regional,target.ID_i).alpha.p));
+          assert.ok(byId(planetary,target.ID_i).alpha.p>byId(planetary,target.ID_i).alpha.r);
+          for(const state of [local,regional,planetary]){
+            assert.ok(state.activeLocalCount<=MAX_LOCAL_VOLUMETRIC_OBJECTS);
+            for(const entry of state.objects.filter(x=>x.Q_i))assert.ok(Math.abs(entry.alpha.p+entry.alpha.r+entry.alpha.l-1)<1e-9);
+          }
+
+          const repeat=evaluateSpatialState(objects,cameraAtDistance(1850));
+          assert.deepEqual(regional.objects.map(x=>[x.object.ID_i,x.Q_i,x.alpha]),repeat.objects.map(x=>[x.object.ID_i,x.Q_i,x.alpha]));
+
+          const sideEye=add(target.V_i.center,scale(target.V_i.axisU,target.V_i.radii[0]+420));
+          const sideCamera={eye:sideEye,forward:target.V_i.axisV,right:target.V_i.axisU,up:target.V_i.axisUp,target:add(sideEye,target.V_i.axisV)};
+          const sideState=evaluateSpatialState(objects,sideCamera),sideRay=evaluateRayDiagnostics(sideState,sideCamera);
+          const sideDiag=sideRay.find(x=>x.ID_i===target.ID_i);
+          assert.equal(sideDiag.L_i,0);
+          assert.equal(sideDiag.tau_i,0);
+
+          const insideCamera={eye:target.V_i.center,forward:target.V_i.axisV,right:target.V_i.axisU,up:target.V_i.axisUp,target:add(target.V_i.center,target.V_i.axisV)};
+          const insideState=evaluateSpatialState(objects,insideCamera),insideRay=evaluateRayDiagnostics(insideState,insideCamera),insideDiag=insideRay.find(x=>x.ID_i===target.ID_i);
+          assert.equal(insideDiag.I_camera_i,true);
+          assert.ok(insideDiag.L_i>0);
+          assert.ok(insideDiag.tau_i>0);
+
+          const exitEye=add(target.V_i.center,scale(target.V_i.axisV,target.V_i.radii[2]+340));
+          const exitCamera={eye:exitEye,forward:target.V_i.axisV,right:target.V_i.axisU,up:target.V_i.axisUp,target:add(exitEye,target.V_i.axisV)};
+          const exitState=evaluateSpatialState(objects,exitCamera),exitRay=evaluateRayDiagnostics(exitState,exitCamera),exitDiag=exitRay.find(x=>x.ID_i===target.ID_i);
+          assert.equal(exitDiag.L_i,0);
+          assert.equal(exitDiag.tau_i,0);
+
+          for(const [state,ray] of [[local,evaluateRayDiagnostics(local,cameraAtDistance(560))],[regional,evaluateRayDiagnostics(regional,cameraAtDistance(1850))],[planetary,evaluateRayDiagnostics(planetary,cameraAtDistance(5100))],[sideState,sideRay],[insideState,insideRay],[exitState,exitRay]]){
+            const receipt=verifyProofInvariants(state,ray);assert.equal(receipt.pass,true,receipt.failures.join(','));
+          }
+          console.log(JSON.stringify({pass:true,canonicalIds:objects.map(o=>o.ID_i),localCap:MAX_LOCAL_VOLUMETRIC_OBJECTS,raySequence:{outside:sideDiag.L_i,inside:insideDiag.L_i,exit:exitDiag.L_i}},null,2));
+          NODE
+
+  exact-page-runtime-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Start exact-head server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/audralia-weather-proof-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/canonical-weather-spatial-lod-proof/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/audralia-weather-proof-server.log
+          exit 1
+      - name: Execute exact proof page
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            const page=await browser.newPage();await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            const pageErrors=[];page.on('pageerror',e=>pageErrors.push(String(e?.stack||e)));
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/canonical-weather-spatial-lod-proof/',{waitUntil:'domcontentloaded',timeout:60000});
+            await page.waitForFunction(()=>window.__AUDRALIA_CANONICAL_WEATHER_SPATIAL_LOD_PROOF__?.getRuntime()?.invariants?.pass===true,{timeout:60000});
+            const result=await page.evaluate(()=>{
+              const proof=window.__AUDRALIA_CANONICAL_WEATHER_SPATIAL_LOD_PROOF__;
+              const initial=proof.getRuntime();
+              const ids0=proof.canonicalObjects.map(x=>x.ID_i);
+              const local=proof.setCameraStateForProof({distance:720});
+              const ids1=proof.canonicalObjects.map(x=>x.ID_i);
+              const planetary=proof.setCameraStateForProof({distance:5000});
+              const ids2=proof.canonicalObjects.map(x=>x.ID_i);
+              proof.setCameraStateForProof({distance:720});
+              return {
+                schema:proof.schema,functionalWorldAuthority:proof.functionalWorldAuthority,functionalVisualParent:proof.functionalVisualParent,
+                cameraSemanticsMutated:proof.cameraSemanticsMutated,zoomSemanticsMutated:proof.zoomSemanticsMutated,travelSemanticsMutated:proof.travelSemanticsMutated,
+                initialPass:initial.invariants.pass,localPass:local.invariants.pass,planetaryPass:planetary.invariants.pass,
+                localActive:local.spatial.activeLocalCount,localCap:local.spatial.maxLocalCount,
+                idsStable:JSON.stringify(ids0)===JSON.stringify(ids1)&&JSON.stringify(ids1)===JSON.stringify(ids2),
+                localAlphas:local.spatial.objects.map(x=>[x.object.ID_i,x.alpha]),planetaryAlphas:planetary.spatial.objects.map(x=>[x.object.ID_i,x.alpha]),
+                terrainDepthPrepass:initial.terrainDepthPrepass,status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null
+              };
+            });
+            console.log(JSON.stringify({result,pageErrors},null,2));
+            await page.screenshot({path:'audralia-canonical-weather-proof.png',fullPage:true});
+            const failed=pageErrors.length||!result.initialPass||!result.localPass||!result.planetaryPass||!result.idsStable||result.localActive>result.localCap||result.cameraSemanticsMutated||result.zoomSemanticsMutated||result.travelSemanticsMutated||!result.terrainDepthPrepass||!String(result.status).includes('USER_REVIEW_REQUIRED');
+            await browser.close();if(failed)process.exit(1);
+          })().catch(e=>{console.error(e);process.exit(1);});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: audralia-canonical-weather-spatial-lod-proof
+          path: |
+            audralia-canonical-weather-proof.png
+            /tmp/audralia-weather-proof-server.log

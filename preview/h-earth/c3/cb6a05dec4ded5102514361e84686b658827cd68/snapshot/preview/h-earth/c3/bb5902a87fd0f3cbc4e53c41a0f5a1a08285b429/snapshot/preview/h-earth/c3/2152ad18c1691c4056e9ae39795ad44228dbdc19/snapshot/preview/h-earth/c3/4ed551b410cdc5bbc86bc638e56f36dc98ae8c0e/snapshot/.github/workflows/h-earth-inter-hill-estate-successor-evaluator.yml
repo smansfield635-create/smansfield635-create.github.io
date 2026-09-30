@@ -1,0 +1,103 @@
+name: H-Earth Inter-Hill Estate Successor Evaluator
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-inter-hill-estate-successor-evaluator.yml'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/**'
+      - 'tools/h-earth-map-wide-terrain/inter-hill-estate/**'
+      - 'h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  role1-bounded-implementation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact intake, path set, and source identities
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          mkdir -p /tmp/evidence
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import cp from 'node:child_process';
+          const p='h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/changed-path-manifest.v1.json';
+          const m=JSON.parse(fs.readFileSync(p));
+          const actual=cp.execFileSync('git',['diff','--name-only',m.baseHead,process.env.HEAD_SHA],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
+          const expected=[...m.expectedChangedPaths].sort();
+          if(actual.length!==16||JSON.stringify(actual)!==JSON.stringify(expected))throw Error('PATH_SET_NOT_EXACTLY_16');
+          const status=cp.execFileSync('git',['diff','--name-status',m.baseHead,process.env.HEAD_SHA],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+          if(status.some(x=>!x.startsWith('A\t')))throw Error('EXISTING_PATH_MUTATED');
+          if(actual.some(x=>x.startsWith('h-earth-3d/terrain/')||x.startsWith('showroom/globe/h-earth/')))throw Error('PRODUCT_OR_TERRAIN_PATH_MUTATION');
+          const blob=(h,f)=>cp.execFileSync('git',['rev-parse',`${h}:${f}`],{encoding:'utf8'}).trim();
+          if(blob('0d88fe21aba99c97b73fcdc68d44af57d55b68be','h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js')!=='0bd36eec01a75311bf6441d575bae5a057195bbc')throw Error('CURRENT_TERRAIN_BLOB_MISMATCH');
+          if(blob('d1147c67c366fad53e824c64519998e7ccd5f8f5','h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js')!=='eb544a41aaa56bdee5d6d92114e85d6b4e6262f3')throw Error('ACCEPTED_R06_C10_BLOB_MISMATCH');
+          if(blob('d1147c67c366fad53e824c64519998e7ccd5f8f5','h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js')!=='aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8')throw Error('ACCEPTED_SUCCESSOR_FIELD_BLOB_MISMATCH');
+          fs.writeFileSync('/tmp/evidence/exact-path-boundary.json',JSON.stringify({result:'PASS',baseHead:m.baseHead,head:process.env.HEAD_SHA,exactChangedPathCount:actual.length,exactChangedPaths:actual,additiveOnly:true,productOrTerrainChangedPathCount:0},null,2)+'\n');
+          NODE
+          for f in tools/h-earth-map-wide-terrain/inter-hill-estate/*.mjs h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator.mjs; do node --check "$f"; done
+      - name: Execute schemas and 24 actual negative fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/h-earth-map-wide-terrain/inter-hill-estate/self-test.v1.mjs . /tmp/evidence/self-test.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('/tmp/evidence/self-test.json','utf8'));
+          if(r.schema!=='H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_SELF_TEST_RECEIPT_v2'||r.result!=='PASS')throw Error('SELF_TEST_RECEIPT_INVALID');
+          if(r.staticFixtureNameLookupUsed!==false)throw Error('STATIC_FIXTURE_LOOKUP_STILL_ACTIVE');
+          if(r.actualFixtureExecutionCount!==24||r.actualRejectionCount!==24||r.expectedClassificationMatchCount!==24)throw Error('NEGATIVE_FIXTURE_AGGREGATE_FAILURE');
+          if(!Array.isArray(r.negativeFixtureResults)||r.negativeFixtureResults.length!==24)throw Error('INDIVIDUAL_FIXTURE_EVIDENCE_MISSING');
+          for(const f of r.negativeFixtureResults){
+            if(f.invalidConditionWasActuallyCreated!==true||f.realProductionValidationOrEvaluationPathExecuted!==true||f.executionRejectedOrExitedNonzero!==true||f.nonzeroOrRejectedConfirmation!==true||f.observedErrorClassification!==f.expectedErrorClassification||f.pass!==true)throw Error(`NEGATIVE_FIXTURE_FAILURE:${f.fixtureId}`);
+          }
+          const c=r.schemaControls;
+          if(c.validInputSchemaInstance!=='PASS'||c.invalidInputSchemaInstance!=='REJECTED'||c.validOutputSchemaInstance!=='PASS'||c.invalidOutputSchemaInstance!=='REJECTED')throw Error('SCHEMA_CONTROL_FAILURE');
+          NODE
+      - name: Execute positive evaluator twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 180s node h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator.mjs --root . --governing-main 0d88fe21aba99c97b73fcdc68d44af57d55b68be --output /tmp/evidence/positive-a.json > /tmp/evidence/positive-a.stdout.json
+          timeout 180s node h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator.mjs --root . --governing-main 0d88fe21aba99c97b73fcdc68d44af57d55b68be --output /tmp/evidence/positive-b.json > /tmp/evidence/positive-b.stdout.json
+          cmp -s /tmp/evidence/positive-a.json /tmp/evidence/positive-b.json
+      - name: Verify deterministic identity, schema evidence, counts, and boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const ab=fs.readFileSync('/tmp/evidence/positive-a.json'),bb=fs.readFileSync('/tmp/evidence/positive-b.json');
+          if(!ab.equals(bb))throw Error('POSITIVE_EXECUTIONS_NOT_BYTE_IDENTICAL');
+          const a=JSON.parse(ab),b=JSON.parse(bb),m='CURRENT_MAIN_PLUS_ACCEPTED_R06_C10_ANALYSIS_COMPOSITE';
+          for(const k of ['partitionDigest','adjacencyDigest','candidateSetDigest','paretoFrontierDigest','selectedArrangementDigest'])if(a.sourceModeComparison[m][k]!==b.sourceModeComparison[m][k])throw Error(`NONDETERMINISTIC_${k}`);
+          if(a.outputDigest!==b.outputDigest)throw Error('NONDETERMINISTIC_OUTPUT_DIGEST');
+          if(a.partitionCoverageReceipt.nodeCount!==65536||a.partitionCoverageReceipt.pass!==true)throw Error('NODE_COUNT_MISMATCH');
+          if(a.realAdjacencyReceipt.fourNeighborEdgeCount!==130560||a.realAdjacencyReceipt.eightNeighborEdgeCount!==260610||a.realAdjacencyReceipt.pass!==true)throw Error('ADJACENCY_COUNT_MISMATCH');
+          if(!(a.realTerrainPartition.rearMountainNodeCount>0))throw Error('REAR_MOUNTAIN_BAND_MISSING');
+          if(a.validationEvidence.inputSchemaValidatedBeforeTerrainLoad!==true||a.validationEvidence.outputSchemaValidatedBeforeDigestFinalization!==true||a.validationEvidence.finalOutputValidatedBeforeWrite!==true)throw Error('SCHEMA_ENFORCEMENT_EVIDENCE_MISSING');
+          if(a.role1PotentialPathBoundary.terrainConstructionAuthority||a.role1PotentialPathBoundary.manorConstructionAuthority||a.role1PotentialPathBoundary.mergeAuthority)throw Error('AUTHORITY_BOUNDARY_BREACH');
+          const fileSha256=crypto.createHash('sha256').update(ab).digest('hex');
+          fs.writeFileSync('/tmp/evidence/determinism.json',JSON.stringify({result:'PASS',positiveAAndBByteIdentical:true,positiveFileSha256:fileSha256,partitionDigest:a.sourceModeComparison[m].partitionDigest,adjacencyDigest:a.sourceModeComparison[m].adjacencyDigest,candidateSetDigest:a.sourceModeComparison[m].candidateSetDigest,paretoFrontierDigest:a.sourceModeComparison[m].paretoFrontierDigest,selectedArrangementDigest:a.sourceModeComparison[m].selectedArrangementDigest,outputDigest:a.outputDigest,nodeCount:65536,fourNeighborEdges:130560,eightNeighborEdges:260610,productOrTerrainMutation:false},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-inter-hill-estate-successor-evaluator-role1-evidence
+          path: /tmp/evidence
+          if-no-files-found: error
+          retention-days: 90

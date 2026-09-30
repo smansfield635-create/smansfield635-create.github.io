@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "H_EARTH_REGION_001_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_v1",
+  "artifactIdentity": {
+    "artifactId": "H_EARTH_REGION_001_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_v1",
+    "artifactClass": "ADDITIVE_FINAL_PLACEMENT_DISPOSITION",
+    "status": "FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED",
+    "canonical": false,
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "verifiedControllingBase": "554a693c82876d9533bd577475a818a570d03b0d",
+    "admissionMainHead": "0bf5bcd63132d92fa6a4758a4f57ef2a6f524038",
+    "workingBranch": "agent/h-earth-gratitude-region-final-placement-disposition-001",
+    "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json"
+  },
+  "operation": {
+    "operationClass": "FINAL_SPATIAL_PLACEMENT_REPOSITORY_ADMISSION",
+    "authorityQuestion": "DO_ALL_FOUR_AREAS_HAVE_COMPLETE_LIFECYCLE_DISPOSITIONS_WITH_THE_SIX_PAIR_RELATIONSHIP_MATRIX_AND_ALL_PRESERVATION_LAWS_PASSING?",
+    "requiredResult": "FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED",
+    "repositoryAdmissionAuthorized": true,
+    "mergeAuthorizedByUser": true,
+    "constructionAuthorityCreated": false
+  },
+  "plannedDurableCandidatePaths": [
+    "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json",
+    "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
+  ],
+  "frozenInputInventory": [
+    {"scope":"PR_311_PACKAGE","path":".github/workflows/h-earth-gratitude-region-coordinate-reconciliation.yml","gitBlob":"30b4cd8045130723ef73cfaaa86011b390541c8f"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.gratitude-region.coordinate-reconciliation.input-ledger.v1.json","gitBlob":"c033b1a4de872b3e57fc11c3d2255331a175ec86"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.mjs","gitBlob":"2eb292b1a95abbb01f51a0492738cfccbf474b7d"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json","gitBlob":"48c51c8c889695cbd81b2bc0777e5d28a716776f"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.runner.mjs","gitBlob":"59d4de5eac912524c0041aeb1f61b63eca7418cd"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs","gitBlob":"530bd9953b5767e253858116c6abeff7fc5a62f4"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.receipt.v1.json","gitBlob":"52f065a7ff8eb317d617bc9c03ac119172a1c5d2"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.mjs","gitBlob":"b7e5d6378a772e3ba62320e609cb491365002d05"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json","gitBlob":"cefc91a7ffa3047317e3902f3b29a591aaabe468"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs","gitBlob":"ebf166d39cf815ded36af296006dd09a79232293"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.mjs","gitBlob":"3b1123831ab195900365560b47d10c496f223609"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json","gitBlob":"7b5c8596f39d6855cd975ada282c9a9b18f28fe9"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.runner.mjs","gitBlob":"d89d835bc249032af394836a03a486ded4e8a2b1"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.mjs","gitBlob":"ea41fe679c0b3f38efa8fd463418b9288b9387fb"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json","gitBlob":"9dfc45298d0e5f07537807e0518e9743840839d9"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.runner.mjs","gitBlob":"72d0ffcd9835a2a02b18b220382db105edbc4314"},
+    {"scope":"ACTIVE_REFERENCE_CUSTODY","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-coordinate-reconciliation.active-main-reference-amendment.v1.json","gitBlob":"7ef817685ce12a3a93fdf0a03391ac52c2df2664"},
+    {"scope":"ACTIVE_REFERENCE_CUSTODY","path":"h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-controlling-artifact-reference-update.js","gitBlob":"0f3463e99eb735c2964ec933a5bcadf53c77ad2a"},
+    {"scope":"ACTIVE_REFERENCE_CUSTODY","path":"h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js","gitBlob":"dd0e6ae7042f102e8a3c66bcbede4bff20f358b5"},
+    {"scope":"ORIGINAL_V1_AUTHORITY","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json","gitBlob":"ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d"},
+    {"scope":"ORIGINAL_V1_AUTHORITY","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json","gitBlob":"1702d62036a6b241fdadddfabc304a5288f38652"},
+    {"scope":"ACTIVE_INITIAL_CAMERA","path":"showroom/globe/h-earth/functional-landscape/navigation.js","gitBlob":"8ab3446c536fc24423d5601acce232b19fa71c91"},
+    {"scope":"ACTIVE_INITIAL_CAMERA","path":"showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js","gitBlob":"aae214ddbc4cd18aa8c737ee7bbb3de44322da96"},
+    {"scope":"ACTIVE_INITIAL_CAMERA","path":"showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js","gitBlob":"98c768be0cfb2ec4bc82e2b634913d91cc73a32f"}
+  ],
+  "closedCheckpointState": {
+    "FP_00": "PASS_CLOSED_DO_NOT_REOPEN",
+    "FP_01": "PASS_CLOSED_DO_NOT_REOPEN",
+    "FP_02": "PASS_CLOSED_DO_NOT_REOPEN",
+    "FP_03": "PASS_CLOSED_DO_NOT_REOPEN",
+    "FP_04": "PASS_CLOSED_DO_NOT_REOPEN",
+    "FP_05": "PASS_CLOSED_DO_NOT_REOPEN"
+  },
+  "finalRegionalComposite": {
+    "entryZone": "ACCEPTED",
+    "mirrorManorSiteEnvelope": "ACCEPTED",
+    "cavernCurrentExteriorRelation": "ACCEPTED",
+    "frontierPlains": "RETAINED_ELIGIBLE_NONFINAL"
+  },
+  "areaDispositions": [
+    {"areaId":"GRATITUDE_REGION_ENTRY_ZONE","lifecycleDisposition":"ACCEPTED","placementDisposition":"ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL","sourceCandidateId":"GRATITUDE_REGION_ENTRY_ZONE_CANDIDATE_01","finalBounds":{"xMinimum":-24,"xMaximum":24,"zMinimum":-132,"zMaximum":-88},"activeInitialState":{"waypointId":"COAST","x":0,"z":-96,"yPolicy":"DERIVE_FROM_ACTIVE_TERRAIN_CLEARANCE_LAW","yawDegrees":0,"pitchDegrees":-8,"verticalFovDegrees":56},"deferred":["ALARIC_STAR_GEOMETRY","MAP_PROJECTION_GEOMETRY"],"requiredPlacementFieldsResolved":true},
+    {"areaId":"GRATITUDE_REGION_MIRROR_MANOR_PRECINCT","lifecycleDisposition":"ACCEPTED","placementDisposition":"ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY","sourceCandidateId":"GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01","finalSiteCenter":{"x":80,"z":-172},"finalSiteBounds":{"xMinimum":64,"xMaximum":96,"zMinimum":-188,"zMaximum":-156},"deferred":["EXACT_BUILDING_FOOTPRINT","BUILDING_ORIENTATION","ATRIUM_GEOMETRY","ENTRANCE_COORDINATES","GARDEN_LAYOUT","SCULPTURE_POSITIONS"],"requiredPlacementFieldsResolved":true},
+    {"areaId":"GRATITUDE_REGION_CAVERN_PRECINCT","lifecycleDisposition":"ACCEPTED","placementDisposition":"ACCEPT_CURRENT_RELATION","sourceCandidateId":"GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01","exteriorFace":{"x":40,"z":-284},"apron":{"x":48,"z":-284},"precinctCenter":{"x":56,"z":-284},"deferred":["CAVERN_INTERIOR_OCCURRENCE","ENTRANCE_OPENING_GEOMETRY","INTERIOR_TRANSITION_ANCHOR","CAVERN_SHAPE","CAVERN_SIZE","CAVERN_CONTENTS"],"requiredPlacementFieldsResolved":true},
+    {"areaId":"GRATITUDE_REGION_FRONTIER_PLAINS","lifecycleDisposition":"RETAINED_ELIGIBLE_NONFINAL","placementDisposition":"RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT","sourceCandidateId":"GRATITUDE_REGION_FRONTIER_PLAINS_PRECINCT_ENVELOPE_CANDIDATE_01","preservedRole":"LARGE_REGIONAL_CAPACITY_RESERVE","finalEnvelope":null,"finalAnchor":null,"deferred":["DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY","EXACT_FUNCTIONAL_CELLS","INFRASTRUCTURE_LAYOUT","FRONTIER_CONSTRUCTION"],"requiredPlacementFieldsResolved":true}
+  ],
+  "pairRelationshipMatrix": [
+    {"id":"ENTRY_ZONE__MIRROR_MANOR","status":"PASS","passed":true,"basis":{"relationship":"SEPARATE_CONNECTED_REGIONAL_AREAS","boundsDistance":46.6476151587624}},
+    {"id":"ENTRY_ZONE__CAVERN_PRECINCT","status":"PASS","passed":true,"basis":{"relationship":"DISTINCT_CONCEALED_MOUNTAIN_EXTERIOR_DESTINATION","boundsDistance":145.98630072715724,"straightLineDistance":180.48822676285562}},
+    {"id":"ENTRY_ZONE__FRONTIER_PLAINS","status":"PASS","passed":true,"basis":{"relationship":"CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE","envelopeDistance":128,"routeAccepted":false}},
+    {"id":"MIRROR_MANOR__CAVERN_PRECINCT","status":"PASS","passed":true,"basis":{"relationship":"LAWFUL_APPROACH_TO_CONCEALED_MOUNTAIN_EXTERIOR","boundsDistance":88,"approachPathDistance":113.94112549695429}},
+    {"id":"MIRROR_MANOR__FRONTIER_PLAINS","status":"PASS","passed":true,"basis":{"relationship":"CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE","envelopeDistance":56,"routeAccepted":false}},
+    {"id":"CAVERN_PRECINCT__FRONTIER_PLAINS","status":"PASS","passed":true,"basis":{"relationship":"SEPARATE_CAPACITY_RESERVE_CLEAR_OF_CAVERN_PRECINCT_AND_APPROACH","envelopeDistance":113.27841806805036,"cavernApproachMinimumDistance":72}}
+  ],
+  "preservationLaws": [
+    {"id":"ENTRY_WATER_REMAINS_HARD_BOUNDARY","status":"PASS","passed":true,"basis":"SOURCE_LAW_PLUS_UNCHANGED_CAMERA_BOUND_ARRIVAL"},
+    {"id":"ENTRY_CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE","status":"PASS","passed":true,"basis":"ACTIVE_NAVIGATION_EXECUTED_UNCHANGED"},
+    {"id":"ENTRY_MUST_NOT_COLLAPSE_INTO_MANOR","status":"PASS","passed":true,"basis":{"relationship":"SEPARATE_CONNECTED_REGIONAL_AREAS","boundsDistance":46.6476151587624}},
+    {"id":"MANOR_LOW_CORRIDOR_REMAINS_OPEN","status":"PASS","passed":true,"basis":"FP_02_PROTECTED_LOW_CORRIDOR"},
+    {"id":"MANOR_TWO_HILL_RELATION_REMAINS_LEGIBLE","status":"PASS","passed":true,"basis":"FP_02_TWO_HILL_RELATION"},
+    {"id":"MANOR_BOTH_VIEWS_REMAIN_CLEAR","status":"PASS","passed":true,"basis":"FP_02_VIEW_PRESERVATION"},
+    {"id":"MANOR_ARCHITECTURE_REMAINS_UNASSIGNED","status":"PASS","passed":true,"basis":"FP_02_STOP_BEFORE_ARCHITECTURE"},
+    {"id":"CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED","status":"PASS","passed":true,"basis":"FP_03_CURRENT_RELATION"},
+    {"id":"CAVERN_INTERIOR_REMAINS_SEPARATE","status":"PASS","passed":true,"basis":"SEPARATE_UNASSIGNED_INTERIOR"},
+    {"id":"FRONTIER_NAME_DOES_NOT_PREASSIGN_FINAL_COORDINATES","status":"PASS","passed":true,"basis":"FP_04_FORMAL_DEFERRAL"},
+    {"id":"FRONTIER_CAPACITY_EVIDENCE_PRESERVED_NONFINAL","status":"PASS","passed":true,"basis":"EXISTING_ANALYTICAL_CANDIDATE_RETAINED"},
+    {"id":"FRONTIER_NO_OBJECTS_FLATTENING_OR_SYSTEM_PLACEMENT","status":"PASS","passed":true,"basis":"FP_04_NONCONSTRUCTION"},
+    {"id":"GLOBAL_NO_AUTHORITY_OVERREACH","status":"PASS","passed":true,"basis":{"priorAuthorityMutation":false,"grCr01To04Mutation":false,"terrainMutation":false,"cameraAuthorityMutation":false,"buildingGeometry":false,"cavernExcavation":false,"roadOrCorridorGeometry":false,"runtimeIntegration":false,"publicRouteMutation":false,"livePageChange":false,"productConstruction":false,"mergeAuthorityCreated":false,"canonicalizationAuthority":false}}
+  ],
+  "executionCustody": {
+    "fp05ReceiptSha256": "c5fccf7190bf34824e08e821f80d18b542b2b3057e9adca85e0af38b786d44a9",
+    "fp05ExecutionDigest": "679645707b5a95ebf675d9961a9a11a0b499d798f5c0b851e7e567421d855d3b",
+    "fp05GithubArtifactId": 8741742352,
+    "fp05DriveEvidenceId": "1WKvVxoLUmo9aHpyn3KSW1reSLuHYVW3o",
+    "fp05DriveReceiptId": "1a7KULbTdM5_jmKBMkEIAcchpjnW5G8S6",
+    "externalDurableCustodyInputs": {
+      "fp03": {"status":"PASS_CLOSED_DO_NOT_REOPEN","disposition":"ACCEPT_CURRENT_RELATION","exteriorFace":{"x":40,"z":-284},"apron":{"x":48,"z":-284},"precinctCenter":{"x":56,"z":-284},"userIntentMateriallySatisfied":true,"authorizedBaseHead":"554a693c82876d9533bd577475a818a570d03b0d","workflowTriggerHead":"e4533a52171a56b4054fd5e3aba7286b62b136bb","executedDetachedCandidateHead":"65454a6d46764505048599dfcc56abef20e3007b","executionDigest":"d8aa6c41e6e8bac3ab79ff44b3121e644dcd1be06b43a637a96e86f299d8d57a","receiptSha256":"fdd73087f7e8891b04ce8fe23611947dfbba99e55f37f0bdaf6592c44dd9c986","githubArtifactId":8740913317,"driveEvidence":{"id":"12QvP0O7sjtRj5MRmJxZeG4t2E3uAjLdE","bytes":10603,"sha256":"5910c652169493bc9fe58087c8ed25ada2987010b6d1cd12e533590fd2899fde"},"driveReceipt":{"id":"1dDjdYCipISobV2bKgGKKIFBkx-Dplw5S","bytes":4268,"sha256":"034ef94dbdfabbbb363c7c3201ebd7fb285baad150c9b9f7a6fc61e262404038"}},
+      "fp04": {"status":"PASS_CLOSED_DO_NOT_REOPEN","disposition":"RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT","preservedRole":"LARGE_REGIONAL_CAPACITY_RESERVE","finalEnvelopeAccepted":false,"finalAnchorAssigned":false,"allElevenSystemsAssigned":false,"exactFunctionalCellsAssigned":false,"distributedTopology":"DEFERRED","constructionAuthority":false,"authorizedBaseHead":"554a693c82876d9533bd577475a818a570d03b0d","workflowTriggerHead":"d91b5ae02b747645f8eb0633f04d61fa135ee67d","executedDetachedCandidateHead":"398267fe1a7bb42f7042e27936bf1c5d029574df","executionDigest":"3312969933c7ae7f3397af5a2f8d0a7128a9b77f7bb0af868e56e5d77492582a","receiptSha256":"6d09b601e6128ac0abe657dad8fcc6ea12a5d1ad03c022e26ace653145fc53ad","githubArtifactId":8741378132,"driveEvidence":{"id":"1U2GA1kOZIdYWvNbsOlrI6DXAqoetH40k","bytes":12480,"sha256":"0f114776d5cb9d693750920caa0ae42b1c26290b0ce2200456ab076b752d4351"},"driveReceipt":{"id":"1BusJWUbS5tvigU3tQJ9kpC8K3JFb1lwO","bytes":6317,"sha256":"db35881dcf085c232716884ac54776a8c4d23b70fe07bb06570ea6f2dbbc8429"}}
+    }
+  },
+  "closureAssertions": {"areaDispositionCount":4,"completeLifecycleDispositionCount":4,"pairRelationshipCount":6,"allPairRelationshipsPass":true,"preservationLawCount":13,"allPreservationLawsPass":true,"registryPreflightStatus":"PASS","unresolvedRequiredPlacementFieldCount":0,"priorAuthoritiesUnchanged":true,"productPathsChanged":false,"livePagePathsChanged":false},
+  "authorityBoundary": {"priorAuthorityMutation":false,"terrainMutation":false,"cameraAuthorityMutation":false,"buildingGeometry":false,"cavernExcavation":false,"roadOrCorridorGeometry":false,"infrastructureGeometry":false,"runtimeIntegration":false,"publicRouteMutation":false,"livePageChange":false,"productConstruction":false,"canonicalizationAuthority":false},
+  "postPlacementProgramBoundary": {"constructionRequiresSeparateAuthority":true,"deferred":["MIRROR_MANOR_CONSTRUCTION","CAVERN_ENTRANCE_CONSTRUCTION","CAVERN_INTERIOR","FRONTIER_PLAINS","DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY","DYNAMIC_SUN_AND_WORLD_TIME_ACTIVATION"]}
+}

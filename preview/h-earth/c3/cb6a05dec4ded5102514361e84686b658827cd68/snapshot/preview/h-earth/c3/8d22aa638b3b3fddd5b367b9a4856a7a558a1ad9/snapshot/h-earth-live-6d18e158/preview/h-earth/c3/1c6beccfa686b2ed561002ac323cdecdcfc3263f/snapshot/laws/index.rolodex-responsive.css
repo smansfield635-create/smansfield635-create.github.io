@@ -1,0 +1,274 @@
+/* Laws root responsive Rolodex presentation. Presentation only. */
+html[data-laws-root-rolodex="active"] .laws-visitor-paths--rolodex {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100vw !important;
+  contain: inline-size;
+  overflow-x: clip !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-field,
+html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser,
+html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-track {
+  width: max-content !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-group-switcher,
+html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary {
+  display: none;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage {
+  display: contents;
+}
+html[data-laws-root-rolodex="active"] .laws-first-rail__label {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-intro p:last-child,
+html[data-laws-root-rolodex="active"] .laws-rolodex-card__description,
+html[data-laws-root-rolodex="active"] .laws-rolodex-position {
+  color: rgba(220, 230, 246, .88) !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-card__count,
+html[data-laws-root-rolodex="active"] .laws-rolodex-field__heading > p,
+html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary__eyebrow {
+  color: rgba(157, 232, 255, .94) !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-group-tab {
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(229, 238, 255, .72);
+  font: inherit;
+  font-weight: 760;
+  letter-spacing: .08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-group-tab[aria-selected="true"] {
+  border-color: rgba(128, 224, 255, .52);
+  background: linear-gradient(135deg, rgba(116, 219, 255, .22), rgba(165, 130, 255, .19));
+  color: rgba(248, 252, 255, .99);
+  transform: translateY(-1px);
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-group-tab:focus-visible {
+  outline: 2px solid rgba(128, 224, 255, .95);
+  outline-offset: 3px;
+}
+@media (min-width: 781px) and (max-width: 1200px) {
+  html[data-laws-root-rolodex="active"] .laws-visitor-paths--rolodex[data-laws-tablet-depth-axis="active"] {
+    gap: clamp(1.4rem, 3vw, 2.4rem) !important;
+    padding-bottom: clamp(5rem, 9vw, 8rem) !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-switcher {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .55rem;
+    width: min(calc(100% - 2rem), 52rem);
+    margin: 0 auto;
+    padding: .45rem;
+    border: 1px solid rgba(128, 224, 255, .2);
+    border-radius: 999px;
+    background: rgba(5, 13, 29, .76);
+    box-shadow: 0 1.1rem 3rem rgba(0, 0, 0, .24);
+    backdrop-filter: blur(16px);
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-tab {
+    min-height: 3.2rem;
+    padding: .7rem .8rem;
+    font-size: clamp(.68rem, 1.35vw, .82rem);
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary {
+    display: grid;
+    gap: .55rem;
+    width: min(calc(100% - 2rem), 68rem);
+    margin: .1rem auto 0;
+    padding: clamp(.6rem, 1.8vw, 1rem) clamp(1rem, 3vw, 2.5rem) clamp(.2rem, 1vw, .6rem);
+    text-align: left;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary__eyebrow {
+    margin: 0;
+    font-size: clamp(.72rem, 1.4vw, .88rem);
+    font-weight: 780;
+    letter-spacing: .15em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary__title {
+    margin: 0;
+    max-width: 42rem;
+    color: rgba(245, 250, 255, .98);
+    font-size: clamp(1.9rem, 4.2vw, 3.6rem);
+    line-height: 1.02;
+    letter-spacing: -.035em;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-areas: "depth-stack";
+    align-items: start;
+    width: 100%;
+    min-width: 0;
+    padding: clamp(.35rem, 1vw, .8rem) clamp(1rem, 3vw, 2.5rem) clamp(5.5rem, 9vw, 8rem);
+    perspective: 1100px;
+    perspective-origin: 50% 22%;
+    transform-style: preserve-3d;
+    overflow: clip;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field {
+    grid-area: depth-stack;
+    position: relative;
+    display: block !important;
+    width: min(100%, 68rem) !important;
+    margin-inline: auto;
+    padding: clamp(1rem, 2.4vw, 1.8rem) clamp(1rem, 2.8vw, 2.5rem) clamp(1.4rem, 3vw, 2.4rem) !important;
+    border: 1px solid rgba(128, 224, 255, .14);
+    border-radius: clamp(1.25rem, 2.2vw, 2rem);
+    background: linear-gradient(145deg, rgba(8, 18, 38, .82), rgba(5, 11, 26, .68));
+    box-shadow: 0 2rem 5rem rgba(0, 0, 0, .3);
+    backface-visibility: hidden;
+    transform-origin: 50% 8%;
+    transition: transform 360ms cubic-bezier(.2, .75, .2, 1), opacity 260ms ease, filter 260ms ease;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field .laws-rolodex-field__heading {
+    display: none !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field[data-laws-group-state="active"] {
+    z-index: 4;
+    opacity: 1;
+    filter: none;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field[data-laws-group-state="previous"] {
+    z-index: 2;
+    opacity: .2;
+    filter: saturate(.58) brightness(.72);
+    pointer-events: none;
+    transform: translate3d(-7%, 4.4rem, -210px) scale(.88);
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field[data-laws-group-state="next"] {
+    z-index: 3;
+    opacity: .34;
+    filter: saturate(.72) brightness(.82);
+    pointer-events: none;
+    transform: translate3d(7%, 2.5rem, -115px) scale(.94);
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field:not([data-laws-group-state="active"]) .laws-rolodex-field__browser {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (max-width: 780px) {
+  html[data-laws-root-rolodex="active"],
+  html[data-laws-root-rolodex="active"] body,
+  html[data-laws-root-rolodex="active"] .laws-shell,
+  html[data-laws-root-rolodex="active"] .laws-estate {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  html[data-laws-root-rolodex="active"],
+  html[data-laws-root-rolodex="active"] body {
+    overflow-x: clip !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-first-rail__label {
+    font-size: clamp(.62rem, 2.65vw, .72rem) !important;
+    letter-spacing: .015em !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-visitor-paths--rolodex[data-laws-mobile-rolodex="active"] {
+    gap: 1.25rem !important;
+    padding-top: 3.5rem !important;
+    padding-bottom: 5rem !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-switcher {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .25rem;
+    width: calc(100% - 1rem);
+    margin: 0 auto;
+    padding: .28rem;
+    border: 1px solid rgba(128, 224, 255, .2);
+    border-radius: 1.25rem;
+    background: rgba(5, 13, 29, .82);
+    box-shadow: 0 .9rem 2.4rem rgba(0, 0, 0, .22);
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-tab {
+    min-height: 3.35rem;
+    padding: .6rem .35rem;
+    font-size: clamp(.58rem, 2.65vw, .7rem);
+    letter-spacing: .035em;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary {
+    display: grid;
+    gap: .45rem;
+    width: calc(100% - 2rem);
+    margin: .45rem auto .2rem;
+    padding: 0;
+    text-align: left;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary__eyebrow {
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 780;
+    letter-spacing: .13em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-summary__title {
+    margin: 0;
+    color: rgba(248, 252, 255, .99);
+    font-size: clamp(1.75rem, 8vw, 2.45rem);
+    line-height: 1.02;
+    letter-spacing: -.035em;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: .65rem 0 0;
+    overflow: clip;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field {
+    display: none !important;
+    width: 100% !important;
+    padding-inline: 0 !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field[data-laws-mobile-state="active"] {
+    display: block !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field .laws-rolodex-field__heading {
+    display: none !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
+    justify-content: center !important;
+    padding-inline: 1rem !important;
+    margin-bottom: .75rem !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+    padding-inline: 7% !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+    flex-basis: 86vw !important;
+    min-height: 22rem !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-tab,
+  html[data-laws-root-rolodex="active"] .laws-rolodex-group-stage > .laws-rolodex-field {
+    transition: none !important;
+  }
+}

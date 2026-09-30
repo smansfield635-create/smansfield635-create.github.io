@@ -1,0 +1,46 @@
+{
+  "schema": "MIRRORLAND_VEGETATION_V0_V3_RECONCILIATION_BINDING_v1",
+  "operationId": "MIRRORLAND_CANONICAL_ECOLOGY_CAMERA_TRUE_VEGETATION_20260905_003",
+  "lockGeneration": 1956,
+  "exactGoverningHead": "fa87b2594a9ac43390ed5b657064ffbfd94a06ea",
+  "targetBoundary": "V0_V3_PASS_CLOSED",
+  "historicalEvidence": {
+    "V0": {
+      "candidateHead": "059be03947ded3ce216f721d1f582c26d8bba829",
+      "workflowRunId": 33997817851,
+      "artifactId": 9978618077,
+      "artifactDigest": "sha256:74a77697e43067980994b7d9cecd3e546eeddd2c447a22eb5c3cd945829abfd5",
+      "formalResult": "FAIL_CLOSED",
+      "classification": "KNOWN_VERIFIER_FALSE_NEGATIVE"
+    },
+    "V1": {
+      "candidateHead": "fbedcc25214baad109633f7be29bdd53f9541907",
+      "workflowRunId": 33998350009,
+      "artifactId": 9978749580,
+      "artifactDigest": "sha256:289a119dceb15faaa3170d9585421c46763b3f458421984b9b8a1fb0bd39c074",
+      "formalResult": "V1_ECOLOGY_AUTHORITY_PASS_CLOSED"
+    },
+    "V2": {
+      "candidateHead": "62d27addc54863e3166ac854d4220ee14d014036",
+      "workflowRunId": 33998608949,
+      "artifactId": 9978819830,
+      "artifactDigest": "sha256:f60e18cb4218414db223386aa7a89dda42a4773b1e68407390720999a668b67a",
+      "formalResult": "FAIL_CLOSED",
+      "classification": "KNOWN_INSTRUMENTAL_VERIFIER_FAILURE"
+    },
+    "V3": {
+      "candidateHead": "2f8497468e2ba999fcd959a3ded5d8602b498e75",
+      "workflowRunId": 33999458703,
+      "artifactId": 9979078787,
+      "artifactDigest": "sha256:41e75646ad4462ede2c9b8ff8ab03c2b4da72a7027bd0282a9784efdc5cedc89",
+      "formalResult": "V3_CAMERA_TRUE_REPRESENTATION_PASS_CLOSED"
+    }
+  },
+  "reconciliationLaw": {
+    "historicalReceiptsRemainImmutable": true,
+    "instrumentalFailuresMayBeReconciledOnlyByExactFailureMatchAndIndependentUnderlyingProof": true,
+    "acceptanceCriteriaMayNotBeRelaxed": true,
+    "v4PlusAuthorizedOnlyAfterAggregatePass": true,
+    "mergeDeploymentPublicationAuthorityCreated": false
+  }
+}

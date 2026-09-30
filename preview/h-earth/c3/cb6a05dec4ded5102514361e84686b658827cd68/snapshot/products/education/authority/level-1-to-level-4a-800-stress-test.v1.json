@@ -1,0 +1,112 @@
+{
+  "object": "LEVEL_1_TO_LEVEL_4A_800_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-a-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 800,
+    "prior_battery_tasks": 304,
+    "fresh_transfer_tasks": 28,
+    "total_tasks": 332,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior demonstrated functions and test novel transfer in culture, media, general knowledge, flexible action use, and high-school conversational breadth."
+  },
+  "results": {
+    "prior_304": {
+      "functionally_expressible": 304,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_28": {
+      "DIRECT": 20,
+      "COMPOSABLE": 6,
+      "MISSING": 2,
+      "functionally_expressible": 26,
+      "coverage_percent": 92.8571428571
+    },
+    "overall_332": {
+      "functionally_expressible": 330,
+      "missing": 2,
+      "coverage_percent": 99.3975903614
+    }
+  },
+  "fresh_transfer_passed": [
+    "talk about a holiday, festival or celebration",
+    "describe a cultural tradition",
+    "talk about music, songs, movies, theater and art",
+    "describe a hobby, game or sport",
+    "talk about a museum or cultural event",
+    "discuss news and media in simple terms",
+    "talk about technology, internet and websites",
+    "describe using a device, screen, video, camera or radio",
+    "discuss environment and society in broad plain language",
+    "discuss health and exercise generally",
+    "talk about energy and machines without technical detail",
+    "send or receive an online message",
+    "describe a personal experience",
+    "describe winning or losing a game",
+    "describe spending versus saving money",
+    "describe wearing clothes",
+    "describe picking up or dropping an object compositionally",
+    "describe bringing or carrying something",
+    "describe setting or holding an object",
+    "describe building or growing something",
+    "combine culture and opinion in a multi-part explanation",
+    "compare media or entertainment preferences",
+    "discuss how technology changes everyday life",
+    "discuss how a community celebrates an event",
+    "describe an experience at a museum, theater or festival",
+    "explain why a hobby or sport matters personally"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer idiomatic/phrasal verb combinations",
+      "reason": "The action-root inventory is strong, but ordinary combinations such as find out, figure out, look after, give up, carry on, set up and take care are not yet uniformly expressible as natural phrase units."
+    },
+    {
+      "function": "broader general-knowledge conversational categories",
+      "reason": "History, art, media, environment, society, technology and health are present, but plain words for science-as-a-field, geography, economy, politics-as-a-topic, literature and nature-study remain incomplete."
+    }
+  ],
+  "interpretation": [
+    "Major Level 4 Band A broadens the system into cultural participation and general-knowledge discussion without introducing technical specialization.",
+    "The system now transfers strongly into high-school-level conversational topics.",
+    "The remaining frontier is mostly natural idiomatic combination and broader category naming, not foundational communication."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_4_band_a_status": "ADMITTED",
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_4_BAND_B_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "idiomatic/phrasal verb flexibility",
+      "broader general-knowledge category naming",
+      "nearest empty conversational semantic neighbors"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_800_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "304-function retention test plus 28-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 92.86% novel transfer; 99.40% overall across 332 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_4_BAND_B_GEOMETRIC_RECONSTRUCTION"
+  }
+}

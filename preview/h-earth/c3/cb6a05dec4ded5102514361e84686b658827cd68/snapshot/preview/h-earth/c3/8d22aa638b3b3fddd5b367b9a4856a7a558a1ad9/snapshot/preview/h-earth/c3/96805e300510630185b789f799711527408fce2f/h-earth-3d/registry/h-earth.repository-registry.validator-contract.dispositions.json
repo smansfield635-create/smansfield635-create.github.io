@@ -1,0 +1,51 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+  "contractVersion": 1,
+  "targetNumber": 4,
+  "targetSubtarget": "4A-4",
+  "subtargetName": "DISPOSITION_LAW",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "dispositions": {
+    "PASS": {
+      "severity": 1,
+      "meaning": "COMPLETE_DERIVATION_AND_NO_VIOLATED_BOUNDARY",
+      "mutationMayProceed": false,
+      "separateAuthorityRequired": false
+    },
+    "REVIEW_REQUIRED": {
+      "severity": 2,
+      "meaning": "BOUNDED_CONSIDERATION_POSSIBLE_BUT_NONCRITICAL_UNRESOLVED_EVIDENCE_OR_SEPARATE_AUTHORITY_REMAINS",
+      "mutationMayProceed": false,
+      "separateAuthorityRequired": true
+    },
+    "BLOCK": {
+      "severity": 3,
+      "meaning": "OPERATION_ARCHITECTURALLY_UNLAWFUL_UNDER_ESTABLISHED_INFORMATION",
+      "mutationMayProceed": false,
+      "separateAuthorityRequired": true
+    },
+    "STOP": {
+      "severity": 4,
+      "meaning": "IDENTITY_AUTHORITY_OCCURRENCE_EVIDENCE_OR_SCOPE_INSUFFICIENT_TO_CONTINUE_RELIABLE_EVALUATION",
+      "mutationMayProceed": false,
+      "separateAuthorityRequired": true
+    }
+  },
+  "precedence": ["STOP", "BLOCK", "REVIEW_REQUIRED", "PASS"],
+  "selectionLaw": "SELECT_HIGHEST_SEVERITY_APPLICABLE_DISPOSITION",
+  "tieLaw": "PRESERVE_ALL_DISTINCT_FAILURE_CODES",
+  "noImplicitPass": true,
+  "passRequirements": [
+    "INPUT_SCHEMA_VALID",
+    "REGISTRY_IDENTITY_VERIFIED",
+    "ALL_REQUIRED_PATHS_AND_OCCURRENCES_RESOLVED",
+    "AFFECTED_SCOPE_COMPLETE",
+    "COMPOSITE_AND_CARDINAL_NON_COLLAPSE_PRESERVED",
+    "AUTHORITY_AND_LIFECYCLE_CLAIMS_SUPPORTED",
+    "NO_PROHIBITED_MUTATION_REQUESTED",
+    "NO_STOPPING_BOUNDARY_VIOLATED"
+  ],
+  "stoppingCondition": {"dispositionLawComplete": true, "advanceBeyondTarget4A4": false, "nextAuthorizedSubtarget": "4A-5"}
+}

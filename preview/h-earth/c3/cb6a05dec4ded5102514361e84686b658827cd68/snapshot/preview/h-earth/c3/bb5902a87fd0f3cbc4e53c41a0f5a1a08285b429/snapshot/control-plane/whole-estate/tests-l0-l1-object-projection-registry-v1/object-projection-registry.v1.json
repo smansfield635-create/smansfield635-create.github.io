@@ -1,0 +1,194 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_L0_L1_OBJECT_PROJECTION_REGISTRY_v1",
+  "version": "1.0.0",
+  "operation": "TESTS_L0_L1_OBJECT_PROJECTION_REGISTRY_v1",
+  "status": "BOUNDED_REGISTRY_CONSTRUCTION_CANDIDATE",
+  "constructionBaseMain": "21e1115557ce37507b9b01f4d45d5a6173714637",
+  "governingAuthority": {
+    "testsAuthorityMerge": "21e1115557ce37507b9b01f4d45d5a6173714637",
+    "registryContractPath": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/object-projection-registry-contract.v1.json",
+    "registryContractBlob": "ed969c87359c42444c477a752f332f07f0059a30"
+  },
+  "projectionSelection": {
+    "PROJECTION": "METHODS",
+    "projectionCount": 1,
+    "objectCount": 3,
+    "corpusCompletenessClaim": false,
+    "projectionMembershipCreatesOntology": false,
+    "selectionReason": "SMALLEST_CONNECTED_AUTHORITY_BACKED_METHODS_OPERATIONAL_FIELD_MEETING_THE_3_TO_5_OBJECT_BOUND"
+  },
+  "objects": [
+    {
+      "OBJECT_ID": "METHODS",
+      "DISPLAY_LABEL": "Scientific procedure",
+      "PROJECTION": "METHODS",
+      "OBJECT_CLASS": "METHOD",
+      "AUTHORITY_SOURCE": "GATE0_CANONICAL_HIERARCHY",
+      "AUTHORITY_POINTER": {
+        "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+        "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+        "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+        "locator": "nodes[id=METHODS]"
+      },
+      "CURRENT_STANDING": {
+        "AUTHORITY_STANDING": "ADMITTED_EXISTING_MERGED_GATE0_AUTHORITY",
+        "CANONICAL_STATEMENT": "scientific procedure",
+        "SOURCE_DOCUMENT_STATUS": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+        "SOURCE_DOCUMENT_STATUS_TREATMENT": "PRESERVED_NOT_USED_AS_CURRENT_AUTHORITY_STATUS"
+      },
+      "PROJECTION_JUSTIFICATION": "PRIMARY_METHOD_OBJECT_FOR_THE_METHODS_OPERATIONAL_PROJECTION",
+      "DECLARED_RELATIONS": [
+        "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO"
+      ],
+      "RELATION_AUTHORITY_POINTERS": {
+        "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO": {
+          "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+          "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+          "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+          "locator": "edges[from=METHODS,relation=GOVERNS_PROCEDURE_FOR,to=PROSPECTIVE_FINAL_REPORT_PORTFOLIO]"
+        }
+      },
+      "INSPECTION_AVAILABLE": true,
+      "DEEP_ENTRY_AVAILABLE": false,
+      "DEEP_ENTRY_TARGET": null
+    },
+    {
+      "OBJECT_ID": "ROUTE_OPERATOR_PLATFORM",
+      "DISPLAY_LABEL": "Protocol and execution infrastructure",
+      "PROJECTION": "METHODS",
+      "OBJECT_CLASS": "METHOD",
+      "AUTHORITY_SOURCE": "GATE0_CANONICAL_HIERARCHY",
+      "AUTHORITY_POINTER": {
+        "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+        "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+        "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+        "locator": "nodes[id=ROUTE_OPERATOR_PLATFORM]"
+      },
+      "CURRENT_STANDING": {
+        "AUTHORITY_STANDING": "ADMITTED_EXISTING_MERGED_GATE0_AUTHORITY",
+        "CANONICAL_STATEMENT": "protocol and execution infrastructure",
+        "SOURCE_DOCUMENT_STATUS": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+        "SOURCE_DOCUMENT_STATUS_TREATMENT": "PRESERVED_NOT_USED_AS_CURRENT_AUTHORITY_STATUS"
+      },
+      "PROJECTION_JUSTIFICATION": "EXPLICIT_METHOD_CLASS_OBJECT_THAT_EXECUTES_THE_SELECTED_ACTIVE_TEST_INSTANCE",
+      "DECLARED_RELATIONS": [
+        "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO"
+      ],
+      "RELATION_AUTHORITY_POINTERS": {
+        "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO": {
+          "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+          "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+          "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+          "locator": "edges[from=ROUTE_OPERATOR_PLATFORM,relation=EXECUTES,to=PROSPECTIVE_FINAL_REPORT_PORTFOLIO]"
+        }
+      },
+      "INSPECTION_AVAILABLE": true,
+      "DEEP_ENTRY_AVAILABLE": false,
+      "DEEP_ENTRY_TARGET": null
+    },
+    {
+      "OBJECT_ID": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "DISPLAY_LABEL": "Five-domain severe-test instance",
+      "PROJECTION": "METHODS",
+      "OBJECT_CLASS": "TEST_INSTANCE",
+      "AUTHORITY_SOURCE": "GATE0_CANONICAL_HIERARCHY",
+      "AUTHORITY_POINTER": {
+        "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+        "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+        "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+        "locator": "nodes[id=PROSPECTIVE_FINAL_REPORT_PORTFOLIO]"
+      },
+      "CURRENT_STANDING": {
+        "AUTHORITY_STANDING": "ADMITTED_EXISTING_MERGED_GATE0_AUTHORITY",
+        "CANONICAL_STATEMENT": "active severe-test instance",
+        "SOURCE_DOCUMENT_STATUS": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+        "SOURCE_DOCUMENT_STATUS_TREATMENT": "PRESERVED_NOT_USED_AS_CURRENT_AUTHORITY_STATUS"
+      },
+      "PROJECTION_JUSTIFICATION": "EXPLICIT_TEST_INSTANCE_TARGET_OF_BOTH_SELECTED_METHOD_OBJECTS;METHODS_PROJECTION_MEMBERSHIP_DOES_NOT_RECLASSIFY_TEST_INSTANCE",
+      "DECLARED_RELATIONS": [
+        "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+        "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO"
+      ],
+      "RELATION_AUTHORITY_POINTERS": {
+        "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO": {
+          "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+          "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+          "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+          "locator": "edges[from=METHODS,relation=GOVERNS_PROCEDURE_FOR,to=PROSPECTIVE_FINAL_REPORT_PORTFOLIO]"
+        },
+        "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO": {
+          "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+          "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+          "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+          "locator": "edges[from=ROUTE_OPERATOR_PLATFORM,relation=EXECUTES,to=PROSPECTIVE_FINAL_REPORT_PORTFOLIO]"
+        }
+      },
+      "INSPECTION_AVAILABLE": true,
+      "DEEP_ENTRY_AVAILABLE": false,
+      "DEEP_ENTRY_TARGET": null
+    }
+  ],
+  "relations": [
+    {
+      "RELATION_ID": "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "SOURCE_OBJECT": "METHODS",
+      "RELATION": "GOVERNS_PROCEDURE_FOR",
+      "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "AUTHORITY_SOURCE": "GATE0_CANONICAL_HIERARCHY",
+      "AUTHORITY_POINTER": {
+        "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+        "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+        "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+        "locator": "edges[from=METHODS,relation=GOVERNS_PROCEDURE_FOR,to=PROSPECTIVE_FINAL_REPORT_PORTFOLIO]"
+      }
+    },
+    {
+      "RELATION_ID": "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "SOURCE_OBJECT": "ROUTE_OPERATOR_PLATFORM",
+      "RELATION": "EXECUTES",
+      "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "AUTHORITY_SOURCE": "GATE0_CANONICAL_HIERARCHY",
+      "AUTHORITY_POINTER": {
+        "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+        "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+        "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+        "locator": "edges[from=ROUTE_OPERATOR_PLATFORM,relation=EXECUTES,to=PROSPECTIVE_FINAL_REPORT_PORTFOLIO]"
+      }
+    }
+  ],
+  "inspectionBoundary": {
+    "availableForAllSelectedObjects": true,
+    "authorizedFields": [
+      "OBJECT_ID",
+      "DISPLAY_LABEL",
+      "OBJECT_CLASS",
+      "CURRENT_STANDING",
+      "PROJECTION_JUSTIFICATION",
+      "DECLARED_RELATIONS",
+      "AUTHORITY_POINTER"
+    ],
+    "inspectionMayUpgradeStanding": false,
+    "inspectionMayCreateRelation": false
+  },
+  "deepEntryBoundary": {
+    "m1r2Identity": "M1R2_METHOD_PROCEDURE_FIELD",
+    "m1r2Classification": "VALID_DEEP_PROCEDURAL_INSTRUMENT",
+    "status": "WITHHELD_DEEP_ENTRY_AUTHORITY_UNRESOLVED_FOR_SELECTED_PARENT_BINDING",
+    "reason": "PROMOTED_AUTHORITY_REQUIRES_AN_AUTHORITY_BACKED_PARENT_METHOD_OBJECT_BUT_THE_ADMITTED_POPULATION_SOURCE_DOES_NOT_DECLARE_WHICH_SELECTED_METHOD_OBJECT_CONTAINS_OR_ENTER_BINDS_TO_M1R2",
+    "inferenceFromLabelSimilarity": false,
+    "inferenceFromPriorManifestation": false,
+    "m1r2MutationAuthorized": false
+  },
+  "populationBoundary": {
+    "placeholderObjects": 0,
+    "inventedObjects": 0,
+    "inventedRelations": 0,
+    "evidenceObjectsSelected": 0,
+    "researchContentCopied": false,
+    "legacyResearchManifestUsed": false,
+    "semanticTopologyPreservationSourceUsedAsPopulationAuthority": false
+  },
+  "visualConstructionStatus": "BLOCKED_PENDING_REGISTRY_AUTHORITY_REVIEW_AND_PROMOTION",
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgrade": false
+}

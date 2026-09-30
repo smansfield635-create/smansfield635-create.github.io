@@ -1,0 +1,47 @@
+{
+  "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "ownerLogin": "smansfield635-create",
+  "sourceMarker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+  "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "canonicalSemantics": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs#successorLocal",
+  "requiredAuthentication": [
+    "SOURCE_COMMENT_AUTHOR_IS_OWNER_LOGIN",
+    "SOURCE_COMMENT_AUTHOR_ASSOCIATION_IS_OWNER",
+    "SOURCE_COMMENT_MARKER_MATCHES",
+    "SOURCE_COMMENT_ENVELOPE_MATCHES_TRANSITION_REQUEST_AND_PROCEDURE",
+    "TRANSITION_REQUEST_AND_PROCEDURE_BIND_EXACT_CURRENT_MAIN",
+    "EXACT_ACTIVE_PREDECESSOR_HAS_CANONICAL_AUTHORITY_PROVENANCE",
+    "OBSERVED_LEDGER_BLOB_SHA_IS_CURRENT_AT_WRITE",
+    "OBSERVED_LOCK_REF_HEAD_IS_CURRENT_AT_WRITE"
+  ],
+  "writeLaw": {
+    "exactAllowedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "compareAndSwap": "REQUIRED",
+    "canonicalCommitMessage": "Supersede operation <PREDECESSOR_GENERATION> with successor <SUCCESSOR_GENERATION>: <SUCCESSOR_OPERATION_ID>",
+    "secondLedger": false,
+    "forceRefUpdate": false,
+    "authorityWidening": false,
+    "oneLedgerMutationRequired": true
+  },
+  "lineageLaw": {
+    "legacyVerifiedBotSuccessorCommitsRemainCanonical": true,
+    "ownerConnectorSuccessorCommitCanonicalOnlyWhenIndependentProvenanceMatchesResultingSuccessorAndExactSupersededPredecessor": true,
+    "unsignedOwnerSuccessorCommitWithoutMatchingProvenance": "REJECT",
+    "nonLedgerMutationOnLockRef": "REJECT"
+  },
+  "planResult": "SUCCESSOR_TRANSITION_PLANNED",
+  "successResult": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+  "planIsReceipt": false,
+  "finalReceiptRequiresCommitRereadAndLineageVerification": true,
+  "authorityInherited": false,
+  "admissionSemanticsDuplicated": false,
+  "actionsAgentExecutionRequired": false,
+  "packetCompilationAuthorityCreated": false,
+  "failureDisposition": "FAIL_CLOSED"
+}

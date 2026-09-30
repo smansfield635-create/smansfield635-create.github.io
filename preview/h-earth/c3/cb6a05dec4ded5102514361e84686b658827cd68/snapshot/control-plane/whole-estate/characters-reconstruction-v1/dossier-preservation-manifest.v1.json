@@ -1,0 +1,73 @@
+{
+  "schema": "CHARACTERS_DOSSIER_PRESERVATION_MANIFEST_v1",
+  "status": "BOUND_EXACT_SOURCE_DERIVED",
+  "operationId": "CHARACTERS_RECONSTRUCTION_TASK15_20260830_HEAD_30f500a1",
+  "source": {
+    "path": "characters/index.html",
+    "blobSha": "abafc0bc1f4b6538028833c47103596411ff3f3a",
+    "byteLength": 117417
+  },
+  "dossierModel": {
+    "characterCount": 8,
+    "tabsPerCharacter": 8,
+    "fieldsPerTab": 4,
+    "legacyStateCount": 256,
+    "tabLabels": [
+      "Profile",
+      "Full Bio",
+      "Family History",
+      "Family Members / Lineage",
+      "Origin Event",
+      "Mirrorland Function",
+      "Stats Sheet",
+      "Season Thread"
+    ],
+    "fieldLabels": [
+      "Story Role",
+      "Pressure",
+      "On Screen / In Game",
+      "What Changes"
+    ]
+  },
+  "characters": [
+    {"ordinal":1,"id":"auren","displayName":"Auren Vale","selectDestination":"#auren"},
+    {"ordinal":2,"id":"dextrion","displayName":"Dextrion","selectDestination":"#dextrion"},
+    {"ordinal":3,"id":"alaric","displayName":"Alaric","selectDestination":"#alaric"},
+    {"ordinal":4,"id":"tarian","displayName":"Tarian","selectDestination":"#tarian"},
+    {"ordinal":5,"id":"elara","displayName":"Elara","selectDestination":"#elara"},
+    {"ordinal":6,"id":"soren","displayName":"Soren","selectDestination":"#soren"},
+    {"ordinal":7,"id":"jeeves","displayName":"Jeeves","selectDestination":"#jeeves"},
+    {"ordinal":8,"id":"remote-team","displayName":"Remote Team","selectDestination":"#remote-team"}
+  ],
+  "requiredNonFragmentDestinations": [
+    "/",
+    "/door/",
+    "/home/",
+    "/characters/",
+    "/showroom/globe/",
+    "/explore/",
+    "/frontier/",
+    "/laws/",
+    "/products/",
+    "/gauges/",
+    "/showroom/globe/audralia/"
+  ],
+  "exactLiteralPreservationRule": {
+    "comparisonAuthority": "git blob abafc0bc1f4b6538028833c47103596411ff3f3a",
+    "required": [
+      "Every legacy dossier field label and paragraph literal under each of the eight character dossier IDs must remain byte-exact as a recoverable literal in the corresponding character surface after recomposition.",
+      "All eight legacy character IDs must remain addressable.",
+      "All eight legacy character-select destinations must remain resolvable.",
+      "All listed non-fragment route destinations must remain present somewhere on the Characters surface unless separately superseded by an owner-approved later artifact.",
+      "New Task 03-14 material may extend legacy dossier truth but may not silently rewrite it."
+    ],
+    "forbidden": [
+      "PARAPHRASE_LEGACY_DOSSIER_LITERAL",
+      "SHORTEN_LEGACY_DOSSIER_LITERAL",
+      "INVENT_REPLACEMENT_FOR_LEGACY_DOSSIER_LITERAL",
+      "DROP_LEGACY_CHARACTER_DESTINATION",
+      "ORPHAN_LEGACY_DOSSIER_FROM_ITS_CHARACTER_ID"
+    ]
+  },
+  "pageMutationPerformedAtThisLayer": false
+}

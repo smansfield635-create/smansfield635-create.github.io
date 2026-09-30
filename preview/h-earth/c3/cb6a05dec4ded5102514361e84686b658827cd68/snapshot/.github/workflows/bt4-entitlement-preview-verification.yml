@@ -1,0 +1,42 @@
+name: BT4 Entitlement Preview Verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'preview/bt4/entitlement-v1/**'
+      - '.github/workflows/bt4-entitlement-preview-verification.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'preview/bt4/entitlement-v1/**'
+      - '.github/workflows/bt4-entitlement-preview-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            preview/bt4/entitlement-v1
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Verify shared entitlement engine
+        run: node preview/bt4/entitlement-v1/verify-entitlement-preview.v1.mjs
+      - name: Verify immutable public preview transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/d6f75966b5bec8ede5d210a7a42e401c314b1a34/preview/bt4/entitlement-v1/index.html'
+          BODY="$(curl -fsSL --max-time 20 "$URL")"
+          grep -q 'BT4 SERVED-STATE EXPERIMENT' <<<"$BODY"
+          grep -q 'entitlement-engine.v1.mjs' <<<"$BODY"
+          MODULE_URL='https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/d6f75966b5bec8ede5d210a7a42e401c314b1a34/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs'
+          MODULE="$(curl -fsSL --max-time 20 "$MODULE_URL")"
+          grep -q 'computeEntitlement' <<<"$MODULE"
+          echo 'IMMUTABLE_PUBLIC_PREVIEW_TRANSPORT=PASS'

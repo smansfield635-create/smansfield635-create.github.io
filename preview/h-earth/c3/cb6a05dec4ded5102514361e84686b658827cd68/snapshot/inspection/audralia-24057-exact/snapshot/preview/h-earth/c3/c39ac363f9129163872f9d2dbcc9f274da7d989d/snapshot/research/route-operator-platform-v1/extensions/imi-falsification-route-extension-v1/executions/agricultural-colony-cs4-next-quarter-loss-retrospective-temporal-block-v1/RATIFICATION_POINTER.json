@@ -1,0 +1,20 @@
+{
+  "contract_id": "AGRICULTURAL_COLONY_CS4_NEXT_QUARTER_LOSS_RETROSPECTIVE_TEMPORAL_BLOCK_v1",
+  "core_mutation_performed": false,
+  "execution_status": "PASS_CLOSED",
+  "internal_execution_receipt_sha256": "51aff186bc582ad4ef58012fd3de71401bd6d3f2f1bcd7c836fcfd63bd67eff6",
+  "internal_ratification_receipt_sha256": "03b25f61516562b7637a92ffbcad0da33e22da224f357b70a01cdeb1cfdbb2eb",
+  "internal_verification_receipt_sha256": "7b7fecaae7a53fdb5de184e59fbef7278778c6a77d1e59bc0c2e783b23f3abfb",
+  "multiplicative_specificity": "NOT_SUPPORTED",
+  "package_sha256": "c133c48198abda4c6ca6c394c201634ec580e68b9224a82d62119e3517c97c56",
+  "parent_theory_adjudication": "NOT_PERFORMED",
+  "post_outcome_rescue_performed": false,
+  "primary_result_category": "MULTIDIMENSIONAL_INCREMENT_SUPPORTED_BUT_OPERATOR_NOT_DISTINGUISHED",
+  "ratification_id": "AGRICULTURAL_COLONY_CS4_TEMPORAL_BLOCK_REPOSITORY_RATIFICATION_POINTER_v1",
+  "ratification_status": "PASS_CLOSED",
+  "real_outcome_adjudication_performed": true,
+  "real_parent_theory_adjudication_performed": false,
+  "scientific_strength": "LIMITED_PRELIMINARY_RETROSPECTIVE_PREDICTIVE_UTILITY",
+  "verification_checks_executed": 133,
+  "verification_status": "PASS"
+}

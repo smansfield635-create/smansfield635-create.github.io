@@ -1,0 +1,40 @@
+name: Education Progressive Runtime Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify progressive placement runtime
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          grep -Fq 'highestSustainableDifficulty' /tmp/e.html
+          grep -Fq 'lowestUnsustainableDifficulty' /tmp/e.html
+          grep -Fq 'lo-hi===1' /tmp/e.html
+          grep -Fq 'if(adaptiveState.steps>=24){resolveAdaptiveBoundary("UNCERTAIN");return}' /tmp/e.html
+          grep -Fq 'verified_placement:"UNCERTAIN_BOUNDARY"' /tmp/e.html
+          grep -Fq 'difficulty:item.difficulty' /tmp/e.html
+          grep -Fq 'competency:item.competency' /tmp/e.html
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const a=s.indexOf('const BANK='),b=s.indexOf('const EDUCATION_STATE_KEY=',a),BANK=Function(s.slice(a,b)+';return BANK')();
+          const flat=Object.values(BANK).flat();if(flat.length!==64)throw Error('bank cardinality');
+          for(let d=1;d<=8;d++)if(BANK[d]?.length!==8||BANK[d].some(x=>x.difficulty!==d))throw Error('difficulty bank '+d);
+          console.log('EDUCATION_PROGRESSIVE_RUNTIME_QUALIFICATION=PASS');
+          NODE

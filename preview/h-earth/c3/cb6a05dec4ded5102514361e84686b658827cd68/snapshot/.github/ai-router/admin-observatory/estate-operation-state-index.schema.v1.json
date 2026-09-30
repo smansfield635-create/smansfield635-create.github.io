@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ESTATE_OPERATION_STATE_INDEX_RECORD_SCHEMA_v1",
+  "title": "Estate operation state index record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "repository",
+    "branch",
+    "head",
+    "productLane",
+    "controlPlanePhase",
+    "lockStatus",
+    "admissionStatus",
+    "executionSubstrate",
+    "qualificationState",
+    "terminalState",
+    "deploymentState",
+    "liveVerificationState",
+    "failureClass",
+    "durableEvidenceRefs",
+    "remediationOwner",
+    "nextUsefulAction",
+    "authorityCreated"
+  ],
+  "properties": {
+    "schema": { "const": "ESTATE_OPERATION_STATE_INDEX_RECORD_v1" },
+    "repository": { "type": "string", "minLength": 1 },
+    "branch": { "type": "string", "minLength": 1 },
+    "head": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "operationId": { "type": ["string", "null"] },
+    "productLane": { "type": "string", "minLength": 1 },
+    "controlPlanePhase": { "type": "string", "minLength": 1 },
+    "lockStatus": { "type": "string", "minLength": 1 },
+    "admissionStatus": { "type": "string", "minLength": 1 },
+    "executionSubstrate": { "type": "string", "minLength": 1 },
+    "qualificationState": { "type": "string", "minLength": 1 },
+    "terminalState": { "type": "string", "minLength": 1 },
+    "deploymentState": { "type": "string", "minLength": 1 },
+    "liveVerificationState": { "type": "string", "minLength": 1 },
+    "failureClass": {
+      "enum": [
+        "NONE",
+        "PRODUCT_FAILURE",
+        "CONTROL_PLANE_REJECTION",
+        "REQUEST_CONTRACT_MISMATCH",
+        "VERIFIER_FAILURE",
+        "EXECUTION_INFRASTRUCTURE_FAILURE",
+        "RESEARCH_EXPERIMENT_FAILURE",
+        "DEPLOYMENT_FAILURE",
+        "EVIDENCE_TRANSPORT_FAILURE",
+        "INSUFFICIENT_DURABLE_DETAIL"
+      ]
+    },
+    "exactFailure": { "type": ["string", "null"] },
+    "durableEvidenceRefs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "remediationOwner": { "type": "string", "minLength": 1 },
+    "nextUsefulAction": { "type": "string", "minLength": 1 },
+    "authorityCreated": { "const": false },
+    "notes": { "type": ["string", "null"] }
+  }
+}

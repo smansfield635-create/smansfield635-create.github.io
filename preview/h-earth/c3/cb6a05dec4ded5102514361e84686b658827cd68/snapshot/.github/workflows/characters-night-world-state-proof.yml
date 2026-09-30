@@ -1,0 +1,125 @@
+name: Characters Task 20 Cinematic Primer Proof
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/characters-night-world-state-proof.yml'
+      - 'characters/**'
+      - 'control-plane/whole-estate/characters-reconstruction-v1/**'
+  workflow_dispatch:
+
+permissions: { contents: read }
+
+jobs:
+  browser-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out current Characters verification surface
+        uses: actions/checkout@v4
+        with:
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/characters-night-world-state-proof.yml
+            /assets/audralia/audralia.planet.js
+            /characters/
+            /h-earth-3d/
+            /showroom/globe/h-earth/
+            /control-plane/whole-estate/characters-reconstruction-v1/
+      - name: Verify Task 20 lineage and successor contracts
+        env:
+          CANDIDATE_SHA: '${{ github.event.pull_request.head.sha || github.sha }}'
+        run: |
+          set -euo pipefail
+          TASK20_CONSTRUCTION_SHA=af8e7d21db0e3cde0ca6f8ac88d725503886a250
+          git merge-base --is-ancestor "$TASK20_CONSTRUCTION_SHA" "$CANDIDATE_SHA"
+          git cat-file -e "$TASK20_CONSTRUCTION_SHA^{commit}"
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-task20-cinematic-primer.v1.mjs
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-step10-geography-correspondence.mjs
+          node --check control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step9-regional-bridge.v1.mjs \
+            | tee /tmp/characters-task20-successor-step9.json
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step10-geography-correspondence.mjs \
+            | tee /tmp/characters-task20-successor-geography.json
+      - name: Verify V7 Coast Map stand binding
+        run: |
+          set -euo pipefail
+          node --check characters/coast-map-stand-binding.mjs
+          node --check characters/coast-map-stand-ui.mjs
+          mkdir -p artifacts/characters-night-world-state-proof-v1
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyCoastMapStandBinding} from './characters/coast-map-stand-binding.mjs';
+          const receipt=verifyCoastMapStandBinding();
+          const ui=fs.readFileSync('characters/coast-map-stand-ui.mjs','utf8');
+          const index=fs.readFileSync('characters/index.html','utf8');
+          const script='./coast-map-stand-ui.mjs';
+          const scriptCount=index.split(script).length-1;
+          const staticChecks={
+            uiPointerEventsNone:ui.includes("svg.style.pointerEvents='none'"),
+            uiHasNoEventListeners:!ui.includes('addEventListener'),
+            uiAriaHidden:ui.includes("'aria-hidden':'true'"),
+            indexLoadsUiExactlyOnce:scriptCount===1
+          };
+          const staticIssues=Object.entries(staticChecks).filter(([,ok])=>!ok).map(([id])=>`UI_STATIC_CHECK_FAILED:${id}`);
+          const final={
+            ...receipt,
+            uiStaticChecks:staticChecks,
+            result:receipt.result==='PASS'&&staticIssues.length===0?'PASS':'FAIL',
+            issues:[...receipt.issues,...staticIssues]
+          };
+          fs.writeFileSync('artifacts/characters-night-world-state-proof-v1/coast-map-stand-binding-receipt.json',JSON.stringify(final,null,2)+'\n');
+          console.log(JSON.stringify(final,null,2));
+          if(final.result!=='PASS')process.exit(1);
+          NODE
+      - name: Install browser runtime
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Start candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/characters-task20-http.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/characters/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/characters-task20-http.log
+          exit 1
+      - name: Prove successor cinematic, geography, return, mobile, and reduced motion
+        env:
+          STEP10_ARTIFACT_DIR: .qualification/characters-task20-cinematic-primer
+        run: |
+          mkdir -p .qualification/characters-task20-cinematic-primer
+          node control-plane/whole-estate/characters-reconstruction-v1/verify-step10-browser.mjs \
+            | tee .qualification/characters-task20-cinematic-primer/browser-receipt.json
+      - name: Record compatibility receipt
+        env:
+          CANDIDATE_SHA: '${{ github.event.pull_request.head.sha || github.sha }}'
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const receipt={
+            schema:'CHARACTERS_TASK20_SUCCESSOR_COMPATIBILITY_RECEIPT_v1',
+            result:'PASS_TASK20_REQUIREMENTS_PRESERVED_BY_CURRENT_STEP9_STEP10_CONTRACTS',
+            historicalConstruction:'af8e7d21db0e3cde0ca6f8ac88d725503886a250',
+            candidate:process.env.CANDIDATE_SHA,
+            invariant:'Task 20 cinematic semantics remain protected without reapplying its construction-era DOM or mutation-boundary assumptions to successor architecture.',
+            delegatedChecks:['CHARACTERS_STEP9_REGIONAL_BRIDGE_VERIFICATION_RECEIPT_v1','CHARACTERS_STEP10_CROSS_ENVIRONMENT_GEOGRAPHY_RECEIPT_v1','CHARACTERS_STEP10_BROWSER_ACCEPTANCE_RECEIPT_v2']
+          };
+          fs.writeFileSync('.qualification/characters-task20-cinematic-primer/task20-successor-compatibility.json',JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+      - name: Upload visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characters-task20-cinematic-primer-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .qualification/characters-task20-cinematic-primer
+            artifacts/characters-night-world-state-proof-v1/coast-map-stand-binding-receipt.json
+            /tmp/characters-task20-successor-step9.json
+            /tmp/characters-task20-successor-geography.json
+            /tmp/characters-task20-http.log
+          if-no-files-found: error
+          include-hidden-files: true

@@ -1,0 +1,112 @@
+{
+  "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_CONTRACT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "ownerLogin": "smansfield635-create",
+  "sourceMarker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+  "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "semantics": {
+    "legacyLocalGate": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+    "legacySingleFlight": "tools/operation-intake/repository-operation-lock-manager.v1.mjs#acquireLocal",
+    "planner": "tools/operation-intake/owner-connector-canonical-intake.v1.mjs",
+    "executor": "tools/operation-intake/owner-connector-canonical-intake-executor.v1.mjs",
+    "executorSelfTest": "tools/operation-intake/owner-connector-canonical-intake-executor-self-test.v1.mjs",
+    "plannerRemainsAdmissionDecisionAuthority": true,
+    "planIsReceipt": false,
+    "admissionSemanticsDuplicatedByExecutor": false
+  },
+  "invocationProfiles": {
+    "connectedGithubNative": {
+      "profileId": "CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1",
+      "status": "ACTIVE_PREFERRED_FOR_STANDARD_CONNECTED_ROOMS",
+      "protocol": ".github/operation-intake/connected-github-native-admission-protocol.v1.json",
+      "authenticationModel": "AMBIENT_AUTHORIZED_CONNECTED_GITHUB_IDENTITY_PLUS_OWNER_SOURCE_COMMENT",
+      "rawGithubTokenRequiredFromRoom": false,
+      "sameCanonicalTransport": true,
+      "sameCanonicalPlanner": true,
+      "sameCanonicalLedger": true,
+      "sameCanonicalLockRef": true,
+      "sameAdmissionReceiptMeaning": true,
+      "missingRequiredPrimitiveDisposition": "FAIL_CLOSED"
+    },
+    "localNativeNode": {
+      "profileId": "LOCAL_NATIVE_NODE_EXECUTOR_V1",
+      "status": "ACTIVE_WHEN_AUTHORIZED_TOKEN_BEARING_HOST_EXISTS",
+      "executor": "tools/operation-intake/owner-connector-canonical-intake-executor.v1.mjs",
+      "rawGithubTokenRequiredFromRoom": true,
+      "sameCanonicalTransport": true,
+      "sameCanonicalPlanner": true,
+      "sameCanonicalLedger": true,
+      "sameCanonicalLockRef": true,
+      "sameAdmissionReceiptMeaning": true
+    }
+  },
+  "requiredAuthentication": [
+    "SOURCE_COMMENT_AUTHOR_IS_OWNER_LOGIN",
+    "SOURCE_COMMENT_AUTHOR_ASSOCIATION_IS_OWNER",
+    "SOURCE_COMMENT_MARKER_MATCHES",
+    "SOURCE_COMMENT_ENVELOPE_MATCHES_REQUEST_AND_PROCEDURE",
+    "REQUEST_AND_PROCEDURE_BIND_EXACT_CURRENT_MAIN",
+    "OBSERVED_LEDGER_BLOB_SHA_IS_CURRENT_AT_WRITE",
+    "OBSERVED_LOCK_REF_HEAD_IS_CURRENT_AT_WRITE"
+  ],
+  "executionLaw": {
+    "fixedInputs": [
+      "SOURCE_COMMENT_ID",
+      "EXPECTED_CURRENT_MAIN_HEAD"
+    ],
+    "callerSuppliedCommandAllowed": false,
+    "callerSuppliedRepositoryAllowed": false,
+    "callerSuppliedLedgerContentAllowed": false,
+    "callerSuppliedLockRefAllowed": false,
+    "callerSuppliedMutationPathAllowed": false,
+    "callerSuppliedEnvironmentOverrideAllowed": false,
+    "currentMainRevalidationBeforeCasRequired": true,
+    "ledgerBlobCompareAndSwapRequired": true,
+    "lockRefCompareAndSwapRequired": true,
+    "blindRetryAfterConflictAllowed": false,
+    "postCommitReadbackRequired": true,
+    "canonicalLineageVerificationRequired": true,
+    "successReceiptSchema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+    "nestedCanonicalAdmissionReceiptSchema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "githubActionsAgentTransport": false
+  },
+  "writeLaw": {
+    "exactAllowedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "compareAndSwap": "REQUIRED",
+    "canonicalCommitMessage": "Acquire operation lock <LOCK_GENERATION>: <OPERATION_ID>",
+    "secondLedger": false,
+    "forceRefUpdate": false,
+    "authorityWidening": false
+  },
+  "readbackLaw": {
+    "exactChangedPaths": [
+      ".github/operation-intake/active-operation-ledger.v1.json"
+    ],
+    "requiredIdentityFields": [
+      "operationId",
+      "lockScope",
+      "scopeHash",
+      "lockGeneration",
+      "governingHead",
+      "requestDigest",
+      "procedureLocatorDigest",
+      "independentAuthorityProvenance"
+    ],
+    "exactParentMustEqualObservedLockRefHead": true,
+    "exactCommitMessageMustEqualPlannerMessage": true,
+    "receiptBeforeReadbackAllowed": false
+  },
+  "lineageLaw": {
+    "legacyVerifiedBotCommitsRemainCanonical": true,
+    "ownerConnectorCommitCanonicalOnlyWhenIndependentProvenanceMatchesResultingLock": true,
+    "unsignedOwnerCommitWithoutMatchingProvenance": "REJECT",
+    "nonLedgerMutationOnLockRef": "REJECT"
+  },
+  "successResult": "ADMITTED_AND_LOCKED",
+  "failureDisposition": "FAIL_CLOSED"
+}

@@ -1,0 +1,130 @@
+{
+  "schema": "MIRRORLAND_V6_LIVE_VEGETATION_MATERIAL_RECOVERY_CONTRACT_v1",
+  "operationId": "MIRRORLAND_V6_LIVE_VEGETATION_MATERIAL_RECOVERY_20260908_001",
+  "lockGeneration": 2018,
+  "stage": "V6_LIVE_VEGETATION_MATERIAL_RECOVERY",
+  "targetBoundary": "FOREST_GEOMETRY_MATERIALLY_VISIBLE_CANDIDATE",
+  "governingMain": "423af93560625eac974fea037cbbf14e56baeebb",
+  "predecessor": {
+    "operationId": "MIRRORLAND_FOREST_REPRESENTATION_2A_20260903_004",
+    "lockGeneration": 1930,
+    "terminalDisposition": "SUPERSEDED",
+    "evidenceAuthority": "HISTORICAL_ONLY"
+  },
+  "route": "/characters/",
+  "diagnosis": "RECOVERED_ECOLOGY_PRESENT_BUT_VISIBLE_REPRESENTATION_MATERIALLY_FAILED",
+  "canonicalPopulationCount": 818,
+  "protectedHeadIdentity": [
+    {
+      "path": "characters/forest-system.mjs",
+      "blob": "98d0995143400149cb19c48751a38a5402ca019b"
+    },
+    {
+      "path": "characters/vegetation-ecology.mjs",
+      "blob": "b2b4ebafeee1e24f5eabd7a43c86afc1734ad43c"
+    },
+    {
+      "path": "characters/vegetation-population.mjs",
+      "blob": "2fcbe1ef5ba62a0e23a10fac3c9b2bc211e93149"
+    },
+    {
+      "path": "characters/gratitude-geography.adapter.mjs",
+      "blob": "UNCHANGED_FROM_GOVERNING_MAIN"
+    },
+    {
+      "path": "characters/step9-regional-geography.mjs",
+      "blob": "UNCHANGED_FROM_GOVERNING_MAIN"
+    }
+  ],
+  "editableRuntimePaths": [
+    "characters/app.mjs",
+    "characters/vegetation-representation.mjs",
+    "characters/vegetation-understory.mjs"
+  ],
+  "representationLaws": {
+    "canonicalTreeIdsAndWorldPositionsImmutable": true,
+    "cameraTrueLodPreserved": true,
+    "presentationMayAddLayeredCrownPrimitives": true,
+    "singleTintOutputProhibited": true,
+    "requiredLightingInputs": [
+      "uEye",
+      "uMoonDirection",
+      "uLunarIntensity",
+      "uHorizonHaze"
+    ],
+    "requiredMaterialSignals": [
+      "FACE_NORMAL",
+      "MOON_DIFFUSE",
+      "VIEW_RIM",
+      "HEIGHT_VARIATION",
+      "DISTANCE_HAZE"
+    ],
+    "requiredMaterialProfiles": [
+      "TRUNK",
+      "BOUGH",
+      "INTERNAL_OCCLUSION",
+      "NEAR_MESO",
+      "NEAR_LEAF",
+      "MID_SPRAY",
+      "FAR_CANOPY"
+    ],
+    "foliageNightLighting": true,
+    "depthResponse": true,
+    "farCanopyLayerCount": 2
+  },
+  "compactComposition": {
+    "canonicalIdentityMayChange": false,
+    "understoryPresentationMinimumRatio": 0.9,
+    "nearLeafCompactMaximum": 155,
+    "midClusterCompactMaximum": 44,
+    "mobileMaterialCaptureRequired": true
+  },
+  "displayContinuity": {
+    "localIdentity": "MIRRORLAND_GRATITUDE_COAST_LIVING_NIGHT_WORLD",
+    "narrativeRelation": "UNSEEN_OR_UNFINISHED_CONDITION_TO_FELT_MEANING_TO_CHOICE_OR_BECOMING",
+    "orientationRelation": "INHERIT_COMPASS_WITHOUT_NEW_CARDINAL_MEANING",
+    "displayRole": "EXPLORE_AND_ARRIVE",
+    "runtimeCeiling": "L4_WORLD_GAME_RUNTIME",
+    "persistentObjects": [
+      "CANONICAL_818_TREE_IDENTITIES",
+      "FOREST_STANDS",
+      "DESTINATION_SIGHTLINES"
+    ],
+    "transitionMeaning": "UNCHANGED",
+    "progressiveDisclosure": "UNCHANGED",
+    "mobileComposition": "DENser_SILHOUETTE_WITH_BOUNDED_INSTANCE_BUDGETS",
+    "reducedMotionEquivalence": "STATIC_LIGHTING_AND_COMPLETE_FOREST_SEMANTICS",
+    "returnContract": "UNCHANGED_RETURN_TO_ORBIT",
+    "claimBoundary": "VISUAL_MATERIALITY_CREATES_NO_SCIENTIFIC_OR_CANON_AUTHORITY",
+    "localVisualIdentity": "TACTILE_NOCTURNAL_COASTAL_FOREST",
+    "continuityHook": "RECOVERED_V4_V5_ECOLOGY_REMAINS_IDENTITY_AUTHORITY"
+  },
+  "exactHeadEvidence": {
+    "profiles": [
+      "DESKTOP_1440x900",
+      "TABLET_1024x1366",
+      "MOBILE_390x844"
+    ],
+    "runtimeHealthRequired": true,
+    "exactCandidateShaRequired": true,
+    "automatedCaptureIsEvidenceNotVisualDisposition": true,
+    "ownerVisualDispositionRequiredBeforeMerge": true
+  },
+  "excludedSurfaces": [
+    "COAST_MAP",
+    "NAVIGATION",
+    "DESTINATION_CARDS",
+    "CINEMATIC",
+    "CHARACTER_CANON",
+    "CLOUD_TRAVERSAL",
+    "MERGE",
+    "DEPLOYMENT",
+    "PUBLICATION"
+  ],
+  "negativeEvidence": [
+    "user-evidence:file_00000000fa7081fbb902f0e7f919284c",
+    "user-evidence:file_00000000f2ec81fb9eef02d23f606b3b",
+    "user-evidence:file_00000000df8081fb8bbec94f8f135d18"
+  ],
+  "mergeDeploymentPublicationAuthorized": false
+}

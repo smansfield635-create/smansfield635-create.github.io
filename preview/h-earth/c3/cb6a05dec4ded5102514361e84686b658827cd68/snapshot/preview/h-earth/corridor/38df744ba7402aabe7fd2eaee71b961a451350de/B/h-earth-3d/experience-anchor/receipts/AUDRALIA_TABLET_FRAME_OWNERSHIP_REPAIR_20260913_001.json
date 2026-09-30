@@ -1,0 +1,46 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_TABLET_FRAME_OWNERSHIP_REPAIR_20260913_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_TABLET_FRAME_OWNERSHIP_REPAIR_20260913_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_TABLET_FRAME_OWNERSHIP_REPAIR_20260913_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/celestial-primary-context-v1.mjs",
+      "sha256": "73a5b94e67eec2f3c6c07680d87cfa270ebe3e6bf3f570fea9d6ab2f61fd6d73"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
+      "sha256": "2e04d47e8e32333b034670ad6bc206c6ff23337f7252d6e742724064577186ac"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "governingHead": "3e7164f8f371fdda53d0f1f21cd784f2e8727f26",
+    "reviewedRuntimeHead": "f3c5eced68ca235f3e292ec5639047af2b715d06",
+    "evidenceHead": "c8cde615c0cc883b87c304df029ac18f437fb457",
+    "qualificationOperation": "AUDRALIA_TABLET_FRAME_OWNERSHIP_REPAIR_20260913_001",
+    "finding": "The constrained-tablet repair changes only frame ownership on the existing primary WebGL context. The existing terrain/world renderer still performs the primary draw, the existing cloud pass follows, and the unchanged celestial shader content is now invoked immediately afterward by the tablet runtime instead of independently from delayed event-driven animation frames. No phone path, geography, camera semantics, cloud morphology, loader architecture, audio, protected 24057 surface, second renderer, second canvas, or second WebGL context is introduced. Structural anchor continuity passes; owner-visible live candidate acceptance remains pending and is not inferred by this receipt."
+  }
+}

@@ -1,0 +1,107 @@
+name: Methods Existing Spatial Construct Adoption
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/methods-context-displacement-existing-spatial-construct-adoption-v1.yml'
+      - 'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/**'
+permissions:
+  contents: write
+
+env:
+  C: control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1
+  OP: METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_v1
+  SCOPE: METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT:EXISTING_SPATIAL_CONSTRUCT_ADOPTION:V1
+  LOCK_GENERATION: '282'
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  H: ${{ github.event.pull_request.head.sha }}
+
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Fetch immutable semantic source and verify exact scope
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin 2044e7ab5d27af7bcfbd477a6c3ee046549744ed
+          test "$(git rev-parse HEAD)" = "$H"
+          node "$C/verify.v1.mjs" --repository . --output /tmp/builder.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-spatial-adoption-builder-v1
+          path: /tmp/builder.json
+          if-no-files-found: error
+
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-spatial-adoption-builder-v1
+          path: /tmp/builder
+      - name: Reproduce independently and compare canonical fingerprint
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin 2044e7ab5d27af7bcfbd477a6c3ee046549744ed
+          node "$C/verify.v1.mjs" --repository . --output /tmp/fresh.json
+          node --input-type=module <<'NODE'
+          import fs from'node:fs';
+          const b=JSON.parse(fs.readFileSync('/tmp/builder/builder.json'));
+          const f=JSON.parse(fs.readFileSync('/tmp/fresh.json'));
+          if(b.result!=='PASS'||f.result!=='PASS'||b.fingerprint!==f.fingerprint)throw Error('INDEPENDENT_REPRODUCTION_MISMATCH');
+          fs.writeFileSync('/tmp/equality.json',JSON.stringify({schema:'METHODS_SPATIAL_ADOPTION_INDEPENDENT_EQUALITY_RUNTIME_RECEIPT_v1',result:'PASS',fingerprint:b.fingerprint,exactNormalizedEquality:true,head:process.env.H},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-spatial-adoption-fresh-verifier-v1
+          path: |
+            /tmp/fresh.json
+            /tmp/equality.json
+          if-no-files-found: error
+
+  close-or-confirm-lock:
+    needs: fresh-verifier
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Close admitted lock once or confirm repository receipt
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          STATUS=$(node -e "const r=require('./$C/receipts/operation-closure.receipt.v1.json');process.stdout.write(r.status)")
+          if [ "$STATUS" = PASS_CLOSED ]; then
+            git fetch origin operation-locks/repository-operation-intake-v1
+            git show origin/operation-locks/repository-operation-intake-v1:.github/operation-intake/active-operation-ledger.v1.json > /tmp/ledger.json
+            node -e "const fs=require('fs');const l=JSON.parse(fs.readFileSync('/tmp/ledger.json'));const x=l.terminalHistory.find(x=>x.operationId===process.env.OP&&x.lockGeneration===Number(process.env.LOCK_GENERATION));if(!x||x.released!==true||x.terminalDisposition!=='PASS_CLOSED')throw Error('TERMINAL_LOCK_CONFIRMATION_FAILED');fs.writeFileSync('/tmp/closure.json',JSON.stringify({schema:'METHODS_SPATIAL_ADOPTION_LOCK_CONFIRMATION_RECEIPT_v1',result:'PASS_ALREADY_CLOSED',lockGeneration:Number(process.env.LOCK_GENERATION),terminalDisposition:x.terminalDisposition,lockReleased:x.released},null,2)+'\n')"
+          else
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$OP" --lock-scope "$SCOPE" --lock-generation "$LOCK_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/closure.json
+            node -e "let r=require('/tmp/closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true)throw Error('LOCK_CLOSURE_FAILED')"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-spatial-adoption-operation-closure-v1
+          path: /tmp/closure.json
+          if-no-files-found: error

@@ -1,0 +1,42 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_TABLET_INTERACTION_FRAME_BUDGET_RECOVERY_20260913_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_TABLET_INTERACTION_FRAME_BUDGET_RECOVERY_20260913_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_TABLET_INTERACTION_FRAME_BUDGET_RECOVERY_20260913_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
+      "sha256": "21094306225519160922b5cd701b224ba7cc84bd960c9cb0f81986a1dadb475d"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "governingHead": "d219fec83e571ad22a36f1752089723105a1a35e",
+    "reviewedRuntimeHead": "bbdeaf9d6872af94e796522a9cbe281ab5b058e6",
+    "evidenceHead": "ba5c8de10f3dd61bab8569fdfa79cc4895ff887c",
+    "qualificationOperation": "AUDRALIA_TABLET_INTERACTION_FRAME_BUDGET_RECOVERY_20260913_001",
+    "finding": "The constrained-tablet repair preserves the existing world-first morphology-atlas cloud presentation and all frozen resource ceilings while changing only interaction scheduling in the existing single-context tablet runtime. Raw pointer and wheel events no longer directly force full world/cloud/celestial composites; camera intent is coalesced through requestAnimationFrame, with at most one world-plus-cloud composite per active interaction frame, and celestial composition is deferred until interaction settles. Phone/desktop, renderer, cloud shader, morphology atlas, camera semantics, loader, audio, geography, and protected 24057 bytes remain unchanged. Structural anchor continuity passes; physical tablet session stability and owner-visible acceptance remain pending and are not inferred by this receipt."
+  }
+}

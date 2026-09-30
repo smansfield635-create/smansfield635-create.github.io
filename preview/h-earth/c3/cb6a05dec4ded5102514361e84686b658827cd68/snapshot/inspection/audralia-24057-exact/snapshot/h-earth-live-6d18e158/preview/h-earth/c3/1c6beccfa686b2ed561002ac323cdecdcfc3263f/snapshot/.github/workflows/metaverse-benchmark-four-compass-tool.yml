@@ -1,0 +1,18 @@
+name: Metaverse Four-Compass Benchmark Tool — manual archive
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report benchmark custody
+        run: |
+          echo 'The full cross-product benchmark is retired from automatic Laws pull-request execution.'
+          echo 'Original repository commit: 5efe5118e0addfa6965a2f00511b531afa8c8d8a'
+          echo 'Original workflow blob: 7eee8b1703c19da397ec38ae806378f95b230fb5'
+          echo 'Use the retained Laws exact-head regression for Checkpoint 6; the original benchmark YAML remains recoverable from Git history.'

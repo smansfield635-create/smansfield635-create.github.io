@@ -1,0 +1,105 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "consider-the-energy",
+  "description": "Consider the Energy Community exact-head publication verification for the runtime-generated four-object Community orbit. Static checks bind the page to the Community-local orbit glass override, the shared tab router, the shared orbit controller/style authorities, the production image hero, the exact image-source pointer, and the shared estate cosmic background. Runtime readiness requires the shared orbit controller to complete and the dynamically generated Community orbit to exist; final authoritative live exact-head verification remains required for publication truth.",
+  "checks": [
+    {
+      "path": "/campaigns/consider-the-energy/index.html",
+      "includes": [
+        "data-route=\"/campaigns/consider-the-energy/\"",
+        "data-page=\"consider-energy\"",
+        "data-community-lifecycle-mount></figure>",
+        "/campaigns/index.tabs.js",
+        "html[data-page=\"consider-energy\"] .community-orbit[data-community-orbit=\"true\"]",
+        "/assets/dgb-estate-cosmos.js",
+        "/campaigns/consider-the-energy/community-logo.production.js?v=20260916-transparent-glass-v2",
+        "Consider the Community with Consider the Energy."
+      ],
+      "excludes": [
+        "data-community-lifecycle-fallback",
+        "/campaigns/consider-the-energy/community-lifecycle3d.js?v=20260914-gen2265-eight-state-lifecycle-v2",
+        "community-lifecycle3d.js?v=20260914-stage-final"
+      ]
+    },
+    {
+      "path": "/campaigns/index.tabs.js",
+      "includes": [
+        "const orbitPages = new Set([\"consider-energy\", \"rob\", \"wave\", \"jen-leney\", \"mr-lee\"]);",
+        "link.href = \"/campaigns/index.orbit.css\";",
+        "script.src = \"/campaigns/index.orbit.js\";",
+        "script.dataset.communityOrbitController = \"true\";"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/index.orbit.js",
+      "includes": [
+        "orbit.className='community-orbit';orbit.dataset.communityOrbit='true'",
+        "document.documentElement.dataset.communityOrbitStatus='ready';",
+        "DGB_COMMUNITY_ORBIT_CAROUSEL_v5"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/index.orbit.css",
+      "includes": [
+        ".community-orbit{",
+        ".community-orbit-card{",
+        "DGB_COMMUNITY_ORBIT_CAROUSEL_v2"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/campaigns/consider-the-energy/community-logo.production.js",
+      "includes": [
+        "fetch('./community-image-source.txt', { cache: 'no-store' })",
+        "image.alt = 'Consider the Energy tree emblem'",
+        "image.style.width = '100%'",
+        "image.style.height = 'auto'",
+        "image.style.maxHeight = 'none'",
+        "image.style.objectFit = 'contain'",
+        "mount.style.minHeight = '0'",
+        "mount.style.padding = '0'",
+        "mount.style.background = 'none'",
+        "mount.style.borderLeft = '0'",
+        "mount.replaceChildren(image)"
+      ],
+      "excludes": [
+        "image.style.height = '100%'",
+        "image.style.maxHeight = '36rem'"
+      ]
+    },
+    {
+      "path": "/campaigns/consider-the-energy/community-image-source.txt",
+      "includes": [
+        "/campaigns/consider-the-energy/consider-the-energy-logo-transparent.png"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/dgb-estate-cosmos.js",
+      "includes": [
+        "DGB_ESTATE_COSMIC_CONTINUITY_v1",
+        "pointerEvents: \"none\"",
+        "mobileDprCap: 1",
+        "desktopDprCap: 1.25",
+        "visibilitychange",
+        "prefers-reduced-motion: reduce"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/campaigns/consider-the-energy/",
+    "timeoutMs": 15000,
+    "readySelector": "html[data-community-orbit-status=\"ready\"] .community-orbit[data-community-orbit=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/campaigns/consider-the-energy/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": []
+  }
+}

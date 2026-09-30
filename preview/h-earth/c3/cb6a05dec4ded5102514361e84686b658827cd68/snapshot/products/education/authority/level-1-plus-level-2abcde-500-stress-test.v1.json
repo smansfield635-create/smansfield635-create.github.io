@@ -1,0 +1,120 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2ABCDE_500_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_MAJOR_LEVEL_2_COMPLETE",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 500,
+    "prior_battery_tasks": 148,
+    "fresh_transfer_tasks": 28,
+    "total_tasks": 176,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Major Level 2 completion gate: retain all prior capabilities and demonstrate novel transfer beyond the exact Band E targets."
+  },
+  "results": {
+    "prior_148": {
+      "functionally_expressible": 148,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_28": {
+      "DIRECT": 18,
+      "COMPOSABLE": 7,
+      "MISSING": 3,
+      "functionally_expressible": 25,
+      "coverage_percent": 89.2857142857
+    },
+    "overall_176": {
+      "functionally_expressible": 173,
+      "missing": 3,
+      "coverage_percent": 98.2954545455
+    }
+  },
+  "fresh_transfer_passed": [
+    "give a simple route using left, straight, turn and corner",
+    "describe something in front of or behind another thing",
+    "describe movement across or toward a place",
+    "use north, south, east and west in simple orientation",
+    "explain a path or route to a familiar place",
+    "say an event happens every day or every week",
+    "describe daily, weekly, monthly and yearly recurrence",
+    "say something happened once or twice",
+    "describe how often something usually or rarely happens",
+    "describe something that happened in the past or will happen in the future",
+    "say something happened a period of time ago",
+    "say something is still happening",
+    "say something has already happened",
+    "say something has not happened yet",
+    "describe when something begins and ends",
+    "describe continuing or finishing an activity",
+    "describe reaching or passing a place",
+    "describe staying at or visiting a place",
+    "ask someone to repeat something",
+    "coordinate a repeated appointment",
+    "compare a past plan with a future plan",
+    "describe a trip route and its timing",
+    "give directions to a public place",
+    "describe how long a simple activity continues",
+    "coordinate a visit using date, time, route and recurrence"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer visual description",
+      "reason": "big/small, old/new, high/low and picture exist, but ordinary color, shape and appearance vocabulary remains thin."
+    },
+    {
+      "function": "richer family and social relationship roles",
+      "reason": "family, parent, child, friend, neighbor and stranger exist, but sibling, grandparent and broader relationship vocabulary are not explicit."
+    },
+    {
+      "function": "richer school and work activity language",
+      "reason": "school, work, job, teacher, learn, read and write exist, but class, subject, test, project, meeting and task-level vocabulary remains sparse."
+    }
+  ],
+  "major_level_2_assessment": {
+    "word_count": 250,
+    "cumulative_word_count": 500,
+    "bands": 5,
+    "prior_capability_retention_percent": 100,
+    "novel_transfer_percent": 89.2857142857,
+    "completion_gate": "PASS",
+    "interpretation": "Major Level 2 materially broadens everyday life, social coordination, civic language, health, environment, household, travel, meals, time, navigation and recurrence without specialized vocabulary."
+  },
+  "interpretation": [
+    "Major Level 2 is complete and operational at 250 additional words.",
+    "All previously demonstrated functions remain intact after five sequential 50-word expansions.",
+    "The new failures are no longer repairs to basic daily operation; they are richer descriptive and role-specific conversational resolution.",
+    "This creates a clean boundary between Major Level 2 and Major Level 3."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "major_level_2_status": "ADMITTED_COMPLETE",
+    "cumulative_words": 500,
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_3_BAND_A_FROM_NEW_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "visual description: color, shape, appearance",
+      "family and social relationship roles",
+      "school and work activity language"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "MAJOR_LEVEL_2_COMPLETE_AT_500_WORDS",
+    "ACTION_PERFORMED": "148-function retention test plus 28-function fresh transfer test executed.",
+    "ENGINE_RESPONSE": "100% retention; 89.29% novel transfer; 98.30% overall across 176 tasks. Major Level 2 admitted complete.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_3_BAND_A_GEOMETRIC_RECONSTRUCTION"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "object": "LEVEL_1_TO_LEVEL_4ABC_900_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-c-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 900,
+    "prior_battery_tasks": 364,
+    "fresh_transfer_tasks": 32,
+    "total_tasks": 396,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior demonstrated functions and test novel transfer in services/transactions, digital/media production, personal development, and independent high-school-to-adult conversational tasks."
+  },
+  "results": {
+    "prior_364": {
+      "functionally_expressible": 364,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_32": {
+      "DIRECT": 24,
+      "COMPOSABLE": 5,
+      "MISSING": 3,
+      "functionally_expressible": 29,
+      "coverage_percent": 90.625
+    },
+    "overall_396": {
+      "functionally_expressible": 393,
+      "missing": 3,
+      "coverage_percent": 99.2424242424
+    }
+  },
+  "fresh_transfer_passed": [
+    "talk about bank, cash, card, bill and receipt",
+    "discuss a budget, balance, payment or loan in plain language",
+    "send or receive mail and a package",
+    "make, confirm or cancel a reservation",
+    "place or discuss an order",
+    "describe a delivery or shipment",
+    "ask about a fee or charge",
+    "contact a service or business",
+    "publish or post content",
+    "upload or download a file",
+    "talk about a document, article or page",
+    "talk about a channel or audience",
+    "use profile, password, link and comment language",
+    "discuss privacy, security and access in plain terms",
+    "edit or reply to content",
+    "give or ask for an address",
+    "describe a habit or routine",
+    "describe a challenge or opportunity",
+    "discuss risk and benefit",
+    "describe achievement and growth",
+    "set a target or milestone",
+    "explain why a habit helps progress",
+    "compare opportunity with risk",
+    "describe how digital privacy affects online activity",
+    "coordinate a service appointment or reservation",
+    "describe a payment problem and next step",
+    "describe publishing something for an audience",
+    "describe working toward a milestone",
+    "connect career planning with budget and opportunity"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer practical independence language",
+      "reason": "The system handles money, transport, services and planning well, but rent/utility/account-management, emergency help, identification, insurance-like protection, and household responsibility language remain uneven."
+    },
+    {
+      "function": "richer interpersonal and formal communication transitions",
+      "reason": "Email, message, reply, comment and discussion exist, but introduction, request, invitation-response, complaint, apology-repair, recommendation and formal/informal tone control remain incomplete."
+    },
+    {
+      "function": "richer mature decision and consequence language",
+      "reason": "Risk, benefit, evidence, opinion, goal and consequence exist, but tradeoff, responsibility for outcomes, commitment, consequence severity, long-term versus short-term choice, and priority conflict remain thin."
+    }
+  ],
+  "interpretation": [
+    "Band C materially expands practical independence and digital participation.",
+    "The remaining frontier is now mature everyday decision-making and communication rather than vocabulary coverage of ordinary objects or activities.",
+    "The system remains broad and conversational without specialist drift."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_4_band_c_status": "ADMITTED",
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_4_BAND_D_FROM_NEW_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "practical independence",
+      "formal/informal interpersonal communication transitions",
+      "mature decision and consequence language"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_900_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "364-function retention test plus 32-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 90.63% novel transfer; 99.24% overall across 396 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_4_BAND_D_GEOMETRIC_RECONSTRUCTION"
+  }
+}

@@ -1,0 +1,67 @@
+name: Compass Emergency Live Diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/compass-emergency-live-diagnostic.yml'
+permissions:
+  contents: write
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Inspect live Compass
+        run: |
+          cat > /tmp/diag.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1440,height:1100}});
+          const consoleErrors=[]; const pageErrors=[]; const failed=[];
+          page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+          page.on('pageerror',e=>pageErrors.push(String(e)));
+          page.on('requestfailed',r=>failed.push({url:r.url(),failure:r.failure()?.errorText||''}));
+          const response=await page.goto('https://diamondgatebridge.com/',{waitUntil:'networkidle',timeout:120000});
+          await page.waitForTimeout(4000);
+          const state=await page.evaluate(()=>{
+            const rect=s=>{const e=document.querySelector(s);if(!e)return null;const r=e.getBoundingClientRect();return {w:r.width,h:r.height,display:getComputedStyle(e).display,visibility:getComputedStyle(e).visibility,opacity:getComputedStyle(e).opacity}};
+            return {
+              title:document.title,
+              root:rect('[data-compass-root]'),
+              scene:rect('[data-compass-scene]'),
+              sceneCanvas:[...document.querySelectorAll('[data-compass-scene] canvas')].map(c=>{const r=c.getBoundingClientRect();return {w:r.width,h:r.height}}),
+              mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',
+              controller:!!globalThis.DGB_COMPASS_CONTROLLER,
+              identity:!!globalThis.DGB_COMPASS_IDENTITY_3D,
+              capability:!!globalThis.CompassEditorialCarousel,
+              capabilityOrbit:rect('[data-capability-orbit]'),
+              proofOrbit:rect('[data-proof-orbit]'),
+              roomProxies:document.querySelectorAll('[data-compass-room-proxy]').length,
+              scripts:[...document.scripts].map(s=>s.src).filter(Boolean),
+              styles:[...document.querySelectorAll('link[rel="stylesheet"]')].map(l=>l.href)
+            };
+          });
+          const result={timestamp:new Date().toISOString(),status:response?.status()||0,consoleErrors,pageErrors,failed,state};
+          fs.writeFileSync('compass-live-emergency-diagnostic.json',JSON.stringify(result,null,2)+'\n');
+          await page.screenshot({path:'compass-live-emergency-diagnostic.png',fullPage:true});
+          await browser.close();
+          NODE
+          node /tmp/diag.mjs
+      - name: Commit diagnostic receipt
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add compass-live-emergency-diagnostic.json compass-live-emergency-diagnostic.png
+          git commit -m 'chore(compass): capture emergency live diagnostic' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
+# retrigger: 2026-08-20T21:49Z

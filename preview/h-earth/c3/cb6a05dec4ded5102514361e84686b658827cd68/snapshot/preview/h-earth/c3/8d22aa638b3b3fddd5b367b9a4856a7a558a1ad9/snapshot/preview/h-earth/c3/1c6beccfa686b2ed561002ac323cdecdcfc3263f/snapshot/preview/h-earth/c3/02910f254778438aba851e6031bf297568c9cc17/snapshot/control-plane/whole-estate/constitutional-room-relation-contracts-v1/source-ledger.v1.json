@@ -1,0 +1,69 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_3_SOURCE_LEDGER_v1",
+  "status": "CHECKPOINT_3_CONSTRUCTION_CANDIDATE",
+  "governingMain": "889197b2cbe73de171756b7545446f12a726cde7",
+  "sources": [
+    {
+      "id": "CP1_AUTHORITY_MATRIX",
+      "type": "MERGED_CONSTITUTIONAL_BASELINE",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/authority-and-ownership-matrix.v1.json",
+      "authority": "ROOM_IDENTITY_AUTHORITY_FOR_CHECKPOINT_3"
+    },
+    {
+      "id": "CP1_RELATIONSHIP_CROSSWALK",
+      "type": "MERGED_CONSTITUTIONAL_BASELINE",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/relationship-crosswalk.v1.json",
+      "authority": "BASE_RELATION_AND_OWNERSHIP_SOURCE"
+    },
+    {
+      "id": "CP1_PROSPECTIVE_CHANGE_REGISTER",
+      "type": "MERGED_CHECKPOINT_REGISTRATION",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/prospective-change-register.v1.json",
+      "authority": "CHECKPOINT_3_SCOPE_AND_FALSIFIER_SOURCE"
+    },
+    {
+      "id": "CP2_EVIDENCE_STANDING_TRAVERSAL",
+      "type": "MERGED_NARRATIVE_AND_EVIDENCE_CONTRACT",
+      "path": "control-plane/whole-estate/narrative-spine-constitution-v1/evidence-standing-traversal-contract.v1.json",
+      "authority": "INWARD_OUTWARD_TRAVERSAL_AND_STANDING_BOUNDARY_SOURCE"
+    },
+    {
+      "id": "CP2_METHODS_MODELS_BRIDGE",
+      "type": "MERGED_NARRATIVE_AND_EVIDENCE_CONTRACT",
+      "path": "control-plane/whole-estate/narrative-spine-constitution-v1/methods-models-bridge-obligations.v1.json",
+      "authority": "CLAIM_TRACE_DEPTH_AND_TOPOLOGY_PRECONDITION_SOURCE"
+    },
+    {
+      "id": "METHODS_MODELS_IDENTITY_DELIVERY_AUDIT",
+      "type": "PRE_CHECKPOINT_3_GOVERNANCE_INPUT",
+      "issue": 716,
+      "disposition": "PASS_WITH_MATERIAL_TOPOLOGY_CORRECTION",
+      "authority": "PRESENTATION_IDENTITY_VS_SCIENTIFIC_IDENTITY_BOUNDARY"
+    },
+    {
+      "id": "PRE_CP3_TRANSLATION_AND_UX_REFINEMENTS",
+      "type": "PRE_CHECKPOINT_3_GOVERNANCE_INPUT",
+      "issue": 716,
+      "commentIds": [5212794069],
+      "authority": "TRANSLATION_FIDELITY_QUALIFIER_SALIENCE_UNCERTAINTY_CONFIDENCE_AND_VISUAL_AUTHORITY_BOUNDARIES"
+    },
+    {
+      "id": "WHOLE_ESTATE_CP3_INTAKE_DISPOSITION",
+      "type": "PRE_CHECKPOINT_3_GOVERNANCE_INPUT",
+      "issue": 705,
+      "commentIds": [5212795257],
+      "authority": "CP3_MATERIAL_IMPACT_WITHOUT_CP2_REOPEN"
+    },
+    {
+      "id": "CHECKPOINT_2_MERGE",
+      "type": "GOVERNING_MAIN_TRANSITION",
+      "pr": 723,
+      "mergeCommit": "889197b2cbe73de171756b7545446f12a726cde7",
+      "tree": "0740fa6b1770705b6320dc88c22b7a3c5f6ecb0c",
+      "postMergeCertificationRun": 31150684465,
+      "certificationDisposition": "SUCCESS_AFTER_FAILED_REMOTE_CAS_JOB_RERUN_WITHOUT_ARTIFACT_MUTATION"
+    }
+  ],
+  "unmergedScientificBranchesPromotedToGoverningAuthority": false,
+  "publicMutationAuthorized": false
+}

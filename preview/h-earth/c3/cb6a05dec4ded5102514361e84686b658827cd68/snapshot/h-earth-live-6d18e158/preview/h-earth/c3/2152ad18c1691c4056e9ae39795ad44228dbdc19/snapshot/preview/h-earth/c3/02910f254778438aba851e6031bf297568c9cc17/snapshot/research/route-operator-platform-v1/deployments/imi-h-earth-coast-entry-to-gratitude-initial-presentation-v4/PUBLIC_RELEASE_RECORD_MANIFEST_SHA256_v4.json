@@ -1,0 +1,13 @@
+{
+  "controlled_path_count": 6,
+  "files": {
+    ".github/workflows/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v4-conformance.yml": "8ed37d7997d4b04df23db26b2a15db7fc993261d54048af3f13b2032a3e01149",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v4/IMI_BYTE_CUSTODY_RECEIPT_v1.json": "29b42f112dc488f588682ffa0b656a78b06e7a4f1d1308dbb07cc5a77a03966e",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v4/IMI_EXECUTABLE_RELEASE_RECEIPT_v4.json": "81d3be8b7b64a0220d790b7defa3b2bbd788d36aa30e670e55141b1c50711230",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v4/README.md": "856ad6dbcda6e107e77fc942109a562d6403ba2959f05606ddb027648c87ddff",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v4/RELEASE_POINTER.json": "b560a135292524b30cb09327c3d1ec06476f9773915c84f09c96f290ca309c9f",
+    "research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v4/verify_release_records_v4.py": "6769a80d0bcc192ae55f025e5ff7e5886f908c5bd70f8083d53987f048930b69"
+  },
+  "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v4",
+  "release_version": "4.0.0"
+}

@@ -1,0 +1,70 @@
+{
+  "receiptId": "LAWS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_ACCEPTANCE_RECEIPT_v1",
+  "status": "PASS",
+  "branch": "agent/laws-euclidean-orbit-direct-manipulation-001",
+  "parentCommit": "dedc73841de2b41f5905fd842e9a593116caf300",
+  "sourceBlobs": {
+    "laws/index.crystals.js": "cd06f18bf8384efc97fcabeec5a4de94210c87a8",
+    "laws/index.interactions.source.round4.js": "24fc3e216f3526e9c6d30939454a73bdcf13cd7d",
+    "laws/index.interactions.js": "a6563d2e2e7064136925299a79731147f4a8580b",
+    "laws/index.html": "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260",
+    "laws/index.css": "9c2ef3e9636e134795102e48ea63553d2f3b9778"
+  },
+  "contract": {
+    "model": "EUCLIDEAN_COMMON_RADIUS_ORBIT",
+    "memberCount": 4,
+    "commonRadius": 1.4,
+    "localPlane": "XY",
+    "phaseRadians": -1.5707963267948966,
+    "maximumTiltRadians": 0.3,
+    "projectedClearanceMarginPx": 8,
+    "horizontalDragYawSign": "NEGATIVE",
+    "depthBasedLawScale": false,
+    "decorativeClusterEllipseVisible": false
+  },
+  "geometry": {
+    "commonCenter": true,
+    "commonRadius": true,
+    "coplanar": true,
+    "adjacentSeparationDegrees": 90,
+    "oppositeSeparationDegrees": 180,
+    "memberOffsets": false
+  },
+  "projection": {
+    "planetOuterRadius": 0.486,
+    "lawStarOuterRadius": 0.5841,
+    "fixtureCount": 6912,
+    "cameras": [
+      "desktop-1440x900",
+      "mobile-390x844",
+      "compact-mobile-320x568"
+    ],
+    "worstFixture": {
+      "camera": "compact-mobile-320x568",
+      "tilt": 0.3,
+      "tiltAxisIndex": 0,
+      "twistIndex": 0,
+      "memberIndex": 0,
+      "centerDistance": 121.86641455394886,
+      "projectedPlanetRadius": 48.71802154423952,
+      "projectedStarRadius": 56.15425938287667,
+      "requiredMarginPx": 8,
+      "residualClearancePx": 8.99413362683267
+    }
+  },
+  "preservation": {
+    "mainConstellationGeometryChanged": false,
+    "controllerChanged": false,
+    "compositorChanged": false,
+    "planetChanged": false,
+    "routesChanged": false,
+    "labelsChanged": false,
+    "returnToOrbitChanged": false,
+    "swipeToConstellationChanged": false
+  },
+  "assertions": {
+    "total": 1379694,
+    "passed": 1379694,
+    "failed": 0
+  }
+}

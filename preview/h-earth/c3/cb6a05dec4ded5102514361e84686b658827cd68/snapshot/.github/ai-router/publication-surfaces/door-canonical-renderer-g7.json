@@ -1,0 +1,21 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "door-canonical-renderer-g7-receipt",
+  "description": "Read-only source authority check for Door G7 canonical Trophy and Brain replacement.",
+  "checks": [
+    {
+      "path": "/assets/door-explore/door.canonical-renderer-g7.receipt.json",
+      "includes": [
+        "DOOR_CANONICAL_RENDERER_SOURCE_RECEIPT_v1",
+        "inventedGeometry\": false",
+        "generatedArtwork\": false",
+        "assets/compass/compass.trophy-scene.js",
+        "d281e18b06128671ffe2a19e8fdb272cc5544e31",
+        "assets/compass/compass.hra-brain-scene.js",
+        "c26603744e55c8ede2c82944bd0fd117d04dcbdb",
+        "Allen_M_Brain.glb"
+      ],
+      "excludes": []
+    }
+  ]
+}

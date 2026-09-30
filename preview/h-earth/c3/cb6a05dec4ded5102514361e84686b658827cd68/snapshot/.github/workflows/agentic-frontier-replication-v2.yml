@@ -1,0 +1,124 @@
+name: Agentic Frontier Strong-Model Replication v2
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  preflight:
+    if: >-
+      github.event.issue.number == 2311 &&
+      contains(github.event.comment.body, 'AGENTIC_FRONTIER_STUDY2_EXECUTE_V1')
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      STUDY2_MODEL: gpt-5-2025-08-07
+    steps:
+      - name: Checkout exact study authority
+        uses: actions/checkout@v4
+      - name: Validate Study 2 source rebind without execution
+        env:
+          STUDY2_VALIDATE_ONLY: '1'
+        run: python tools/research/agentic-frontier/study2-runner-v1.py
+      - name: Require OpenAI credential before outcomes
+        run: |
+          set -euo pipefail
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            echo "PRE_EXECUTION_BLOCKED: OPENAI_API_KEY unavailable"
+            exit 42
+          fi
+      - name: Verify authenticated model access
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/models.json -w '%{http_code}' https://api.openai.com/v1/models -H "Authorization: Bearer $OPENAI_API_KEY")
+          test "$code" = "200"
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/models.json'))
+          ids={m['id'] for m in x.get('data',[])}
+          target='gpt-5-2025-08-07'
+          if target not in ids:
+              raise SystemExit(f'PRE_EXECUTION_BLOCKED: model {target} not visible to credential')
+          print('PRE_EXECUTION_READY', target)
+          PY
+
+  study2-shard:
+    needs: preflight
+    strategy:
+      fail-fast: false
+      matrix:
+        stratum: [IMPLEMENTATION_REPAIR, LONG_HORIZON, COLLABORATIVE_HANDOFF, FAILURE_RECOVERY]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      STUDY2_MODEL: gpt-5-2025-08-07
+      AF_STRATUM: ${{ matrix.stratum }}
+      MODEL_HARD_TIMEOUT_S: '300'
+      OPENHANDS_INACTIVITY_S: '240'
+      OPENHANDS_HARD_TIMEOUT_S: '1200'
+      PAIR_HEARTBEAT_S: '15'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Checkout frozen study
+        uses: actions/checkout@v4
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Use Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore stock OpenHands environment
+        uses: actions/cache@v4
+        with:
+          path: .cache/agentic-frontier/openhands-1.14.0
+          key: ${{ runner.os }}-py312-openhands-1.14.0-v1
+      - name: Ensure stock OpenHands 1.14.0
+        run: |
+          set -euo pipefail
+          VENV="$GITHUB_WORKSPACE/.cache/agentic-frontier/openhands-1.14.0"
+          if [ ! -x "$VENV/bin/openhands" ]; then
+            rm -rf "$VENV"
+            python -m venv "$VENV"
+            "$VENV/bin/python" -m pip install --disable-pip-version-check 'openhands==1.14.0'
+          fi
+          echo "$VENV/bin" >> "$GITHUB_PATH"
+          "$VENV/bin/openhands" --version
+      - name: Execute frozen Study 2 stratum
+        run: python tools/research/agentic-frontier/study2-runner-v1.py
+      - name: Upload Study 2 raw receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: study2-shard-${{ matrix.stratum }}
+          path: agentic-frontier-study2/${{ matrix.stratum }}
+          if-no-files-found: error
+
+  aggregate:
+    needs: study2-shard
+    if: always() && needs.study2-shard.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout aggregate authority
+        uses: actions/checkout@v4
+      - name: Download Study 2 shard artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: study2-shard-*
+          path: study2-artifacts
+      - name: Aggregate only after 24 unique receipts
+        run: python tools/research/agentic-frontier/study2-aggregate-v1.py
+      - name: Upload Study 2 aggregate
+        uses: actions/upload-artifact@v4
+        with:
+          name: agentic-frontier-study2-aggregate-v1
+          path: study2-aggregate
+          if-no-files-found: error

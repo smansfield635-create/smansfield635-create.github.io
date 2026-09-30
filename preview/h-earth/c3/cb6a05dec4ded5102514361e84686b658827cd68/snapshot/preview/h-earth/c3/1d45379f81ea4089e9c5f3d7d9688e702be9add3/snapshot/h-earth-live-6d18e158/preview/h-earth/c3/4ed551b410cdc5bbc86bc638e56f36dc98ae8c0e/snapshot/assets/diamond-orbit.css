@@ -1,0 +1,989 @@
+/* /assets/diamond-orbit.css */
+/* COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1 */
+
+:root {
+  color-scheme: dark;
+
+  --diamond-orbit-bg: rgba(14, 18, 48, 0.72);
+  --diamond-orbit-panel: rgba(18, 24, 58, 0.76);
+  --diamond-orbit-panel-strong: rgba(9, 13, 34, 0.92);
+  --diamond-orbit-purple: rgba(117, 78, 214, 0.78);
+  --diamond-orbit-purple-strong: rgba(130, 92, 239, 0.92);
+  --diamond-orbit-purple-soft: rgba(155, 124, 255, 0.22);
+  --diamond-orbit-gold: #f5c76b;
+  --diamond-orbit-text: #f8edd2;
+  --diamond-orbit-muted: rgba(235, 238, 255, 0.72);
+  --diamond-orbit-line: rgba(245, 199, 107, 0.26);
+  --diamond-orbit-blue-line: rgba(126, 181, 255, 0.18);
+  --diamond-orbit-radius: 28px;
+
+  --diamond-orbit-inner-radius: clamp(92px, 21vw, 146px);
+  --diamond-orbit-outer-radius: clamp(176px, 36vw, 286px);
+
+  --diamond-orbit-inner-duration: 34s;
+  --diamond-orbit-outer-duration: 58s;
+
+  --diamond-orbit-inner-width: clamp(82px, 14vw, 128px);
+  --diamond-orbit-inner-height: clamp(70px, 11vw, 104px);
+  --diamond-orbit-outer-width: clamp(76px, 12vw, 114px);
+  --diamond-orbit-outer-height: clamp(66px, 10vw, 96px);
+}
+
+@property --orbit-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --orbit-counter-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes diamondOrbitClockwise {
+  from {
+    --orbit-spin: 0deg;
+    --orbit-counter-spin: 0deg;
+  }
+
+  to {
+    --orbit-spin: 360deg;
+    --orbit-counter-spin: -360deg;
+  }
+}
+
+@keyframes diamondOrbitCounterClockwise {
+  from {
+    --orbit-spin: 0deg;
+    --orbit-counter-spin: 0deg;
+  }
+
+  to {
+    --orbit-spin: -360deg;
+    --orbit-counter-spin: 360deg;
+  }
+}
+
+@keyframes diamondAnchorPulse {
+  0%,
+  100% {
+    opacity: 0.44;
+    transform: translate(-50%, -50%) scale(0.96) rotate(45deg);
+  }
+
+  50% {
+    opacity: 0.68;
+    transform: translate(-50%, -50%) scale(1.04) rotate(45deg);
+  }
+}
+
+@keyframes diamondAuroraDrift {
+  0%,
+  100% {
+    background-position: 0% 50%, 50% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%, 48% 54%;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #02050c;
+}
+
+body {
+  margin: 0;
+  color: var(--diamond-orbit-text);
+  background:
+    radial-gradient(circle at 50% 8%, rgba(155, 124, 255, 0.12), transparent 34rem),
+    radial-gradient(circle at 80% 24%, rgba(245, 199, 107, 0.06), transparent 24rem),
+    linear-gradient(180deg, #02050c 0%, #050914 48%, #080d18 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 1000;
+  transform: translateY(-150%);
+  border: 1px solid var(--diamond-orbit-gold);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  color: #080d18;
+  background: var(--diamond-orbit-gold);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.compass-page-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.compass-topbar,
+.compass-hero,
+.compass-logic,
+.command-routes,
+.route-receipt {
+  border: 1px solid var(--diamond-orbit-line);
+  border-radius: var(--diamond-orbit-radius);
+  background:
+    linear-gradient(135deg, rgba(12, 24, 42, 0.78), rgba(7, 15, 29, 0.90)),
+    radial-gradient(circle at 82% 18%, rgba(245, 199, 107, 0.08), transparent 18rem);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+}
+
+.compass-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 1rem;
+}
+
+.compass-brand {
+  display: inline-flex;
+  gap: 0.8rem;
+  align-items: center;
+  color: var(--diamond-orbit-text);
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(245, 199, 107, 0.38);
+  border-radius: 16px;
+  color: var(--diamond-orbit-gold);
+  background: rgba(155, 124, 255, 0.18);
+  font-weight: 1000;
+  transform: rotate(45deg);
+}
+
+.brand-mark::first-line {
+  transform: rotate(-45deg);
+}
+
+.compass-brand strong,
+.compass-brand em {
+  display: block;
+}
+
+.compass-brand strong {
+  color: var(--diamond-orbit-gold);
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.compass-brand em {
+  color: var(--diamond-orbit-muted);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.compass-nav,
+.compass-cta-row,
+.route-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.compass-nav a,
+.compass-cta-row a,
+.route-chip-grid a {
+  border: 1px solid rgba(245, 199, 107, 0.34);
+  border-radius: 999px;
+  padding: 0.58rem 0.78rem;
+  color: var(--diamond-orbit-text);
+  background: rgba(4, 12, 24, 0.54);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.compass-nav a:hover,
+.compass-nav a:focus-visible,
+.compass-nav a[aria-current="page"],
+.compass-cta-row a:hover,
+.compass-cta-row a:focus-visible,
+.route-chip-grid a:hover,
+.route-chip-grid a:focus-visible {
+  color: #07111f;
+  background: var(--diamond-orbit-gold);
+  outline: none;
+}
+
+.compass-main {
+  display: grid;
+  gap: 24px;
+}
+
+.compass-hero,
+.compass-logic,
+.command-routes,
+.route-receipt {
+  padding: clamp(22px, 3.5vw, 42px);
+}
+
+.eyebrow {
+  margin: 0 0 0.8rem;
+  color: var(--diamond-orbit-gold);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.6rem, 7vw, 6.2rem);
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 3.5vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.compass-lede,
+.compass-line,
+.compass-card,
+.route-receipt p,
+.command-field-copy h2 {
+  color: var(--diamond-orbit-muted);
+  line-height: 1.65;
+}
+
+.compass-lede {
+  max-width: 960px;
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 2vw, 1.22rem);
+}
+
+.compass-line {
+  margin: 0.85rem 0 0;
+}
+
+.compass-cta-row {
+  margin-top: 1.35rem;
+}
+
+.command-field-copy {
+  position: absolute;
+  left: clamp(18px, 4vw, 44px);
+  top: clamp(18px, 4vw, 44px);
+  z-index: 4;
+  max-width: min(420px, calc(100% - 36px));
+  pointer-events: none;
+}
+
+.command-field-copy h2 {
+  font-size: clamp(1.15rem, 2.6vw, 2.1rem);
+}
+
+/* --------------------------------------------------------------------------
+   Compass command field.
+   Index provides explicit 4 + 12 hooks.
+   CSS provides geometry and motion.
+   -------------------------------------------------------------------------- */
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"],
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"],
+[data-compass-command-field],
+[data-command-field="chronological"],
+.compass-command-field,
+.compass-orbit-field,
+.diamond-orbit-field,
+.chronological-command-field,
+.command-field,
+.orbit-field,
+.compass-diamond-command-surface {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(620px, 92vw, 860px);
+  width: min(100%, 980px);
+  margin: 0 auto;
+  border: 1px solid var(--diamond-orbit-line);
+  border-radius: var(--diamond-orbit-radius);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(155, 124, 255, 0.18), transparent 17rem),
+    radial-gradient(circle at 50% 50%, rgba(245, 199, 107, 0.08), transparent 24rem),
+    linear-gradient(135deg, var(--diamond-orbit-panel), var(--diamond-orbit-panel-strong));
+  box-shadow:
+    inset 0 0 0 1px rgba(126, 181, 255, 0.08),
+    0 32px 90px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+  isolation: isolate;
+
+  --orbit-system: compass-4-plus-12;
+  --inner-ring-count: 4;
+  --outer-ring-count: 12;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"]::before,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"]::before,
+[data-compass-command-field]::before,
+[data-command-field="chronological"]::before,
+.compass-command-field::before,
+.compass-orbit-field::before,
+.diamond-orbit-field::before,
+.chronological-command-field::before,
+.command-field::before,
+.orbit-field::before,
+.compass-diamond-command-surface::before {
+  content: "";
+  position: absolute;
+  inset: clamp(18px, 3vw, 34px);
+  border: 1px solid rgba(245, 199, 107, 0.14);
+  border-radius: calc(var(--diamond-orbit-radius) - 8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-visual-system="compass_centered_clockwise_diamond_orbit"]::after,
+[data-compass-visual-system="compass_centered_clockwise_diamond_orbit"]::after,
+[data-compass-command-field]::after,
+[data-command-field="chronological"]::after,
+.compass-command-field::after,
+.compass-orbit-field::after,
+.diamond-orbit-field::after,
+.chronological-command-field::after,
+.command-field::after,
+.orbit-field::after,
+.compass-diamond-command-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 12.5rem, rgba(245, 199, 107, 0.10) 12.6rem 12.72rem, transparent 12.82rem),
+    radial-gradient(circle at 50% 50%, transparent 0 18.8rem, rgba(126, 181, 255, 0.08) 18.9rem 19.02rem, transparent 19.12rem),
+    linear-gradient(90deg, transparent 49.8%, rgba(255, 255, 255, 0.08) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 49.8%, rgba(255, 255, 255, 0.06) 50%, transparent 50.2%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.diamond-route-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Compass center: background command anchor only. It stays behind routes. */
+
+[data-center="compass_background_anchor_only"],
+[data-compass-center],
+.compass-center,
+.command-center,
+.orbit-center,
+.compass-background-anchor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(170px, 34vw, 330px);
+  aspect-ratio: 1 / 1;
+  padding: 1rem;
+  border: 1px solid rgba(245, 199, 107, 0.12);
+  border-radius: 50%;
+  color: rgba(248, 237, 210, 0.46);
+  background:
+    radial-gradient(circle, rgba(155, 124, 255, 0.16), transparent 58%),
+    linear-gradient(135deg, rgba(28, 24, 74, 0.50), rgba(7, 10, 32, 0.30));
+  box-shadow:
+    inset 0 0 38px rgba(155, 124, 255, 0.18),
+    0 0 46px rgba(155, 124, 255, 0.08);
+  text-align: center;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+[data-center="compass_background_anchor_only"]::before,
+[data-compass-center]::before,
+.compass-center::before,
+.command-center::before,
+.orbit-center::before,
+.compass-background-anchor::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(245, 199, 107, 0.13);
+  border-radius: 24px;
+  animation: diamondAnchorPulse 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+[data-center="compass_background_anchor_only"] strong,
+[data-compass-center] strong,
+.compass-center strong,
+.command-center strong,
+.orbit-center strong,
+.compass-background-anchor strong {
+  display: block;
+  color: rgba(248, 237, 210, 0.52);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+[data-center="compass_background_anchor_only"] span,
+[data-compass-center] span,
+.compass-center span,
+.command-center span,
+.orbit-center span,
+.compass-background-anchor span {
+  display: block;
+  margin-top: 0.35rem;
+  color: rgba(235, 238, 255, 0.34);
+}
+
+/* Route diamonds. */
+
+[data-route-diamond],
+[data-diamond-route],
+.route-diamond,
+.diamond-route,
+.diamond-orbit-node,
+.compass-route-diamond {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: var(--diamond-orbit-outer-width);
+  min-height: var(--diamond-orbit-outer-height);
+  padding: 0.48rem 0.5rem;
+  color: var(--diamond-orbit-text);
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.12;
+  font-size: clamp(0.58rem, 1.75vw, 0.84rem);
+  font-weight: 900;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--start-angle, 0deg) + var(--orbit-spin, 0deg)))
+    translateX(var(--ring-radius, var(--diamond-orbit-outer-radius)))
+    rotate(calc(var(--inverse-angle, 0deg) + var(--orbit-counter-spin, 0deg)));
+  transform-origin: 50% 50%;
+  animation: diamondOrbitCounterClockwise var(--diamond-orbit-outer-duration) linear infinite;
+  isolation: isolate;
+  cursor: pointer;
+  touch-action: manipulation;
+  outline: none;
+  pointer-events: auto;
+
+  --ring-radius: var(--diamond-orbit-outer-radius);
+}
+
+[data-route-diamond]::before,
+[data-diamond-route]::before,
+.route-diamond::before,
+.diamond-route::before,
+.diamond-orbit-node::before,
+.compass-route-diamond::before {
+  content: "";
+  position: absolute;
+  inset: -0.18rem;
+  z-index: -1;
+  border: 1px solid rgba(245, 199, 107, 0.44);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(245, 199, 107, 0.12), transparent 40%),
+    linear-gradient(135deg, rgba(155, 124, 255, 0.82), rgba(40, 35, 98, 0.82));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 14px 30px rgba(0, 0, 0, 0.32),
+    0 0 24px rgba(155, 124, 255, 0.20);
+  transform: rotate(45deg);
+  transform-origin: 50% 50%;
+}
+
+[data-route-diamond]::after,
+[data-diamond-route]::after,
+.route-diamond::after,
+.diamond-route::after,
+.diamond-orbit-node::after,
+.compass-route-diamond::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: 42%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(245, 199, 107, 0.16);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.035);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+[data-route-diamond]:hover,
+[data-route-diamond]:focus-visible,
+[data-diamond-route]:hover,
+[data-diamond-route]:focus-visible,
+.route-diamond:hover,
+.route-diamond:focus-visible,
+.diamond-route:hover,
+.diamond-route:focus-visible,
+.diamond-orbit-node:hover,
+.diamond-orbit-node:focus-visible,
+.compass-route-diamond:hover,
+.compass-route-diamond:focus-visible {
+  z-index: 9;
+  color: #fff8e5;
+  animation-play-state: paused;
+}
+
+[data-route-diamond]:hover::before,
+[data-route-diamond]:focus-visible::before,
+[data-diamond-route]:hover::before,
+[data-diamond-route]:focus-visible::before,
+.route-diamond:hover::before,
+.route-diamond:focus-visible::before,
+.diamond-route:hover::before,
+.diamond-route:focus-visible::before,
+.diamond-orbit-node:hover::before,
+.diamond-orbit-node:focus-visible::before,
+.compass-route-diamond:hover::before,
+.compass-route-diamond:focus-visible::before {
+  border-color: rgba(245, 199, 107, 0.82);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(245, 199, 107, 0.22), transparent 40%),
+    linear-gradient(135deg, rgba(171, 146, 255, 0.94), rgba(75, 58, 156, 0.92));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 18px 38px rgba(0, 0, 0, 0.40),
+    0 0 34px rgba(245, 199, 107, 0.22);
+}
+
+/* Inner ring: 4 primary routes. Motion: clockwise. */
+
+[data-ring="inner"],
+[data-route-ring="inner"],
+.inner-ring,
+.route-inner {
+  width: var(--diamond-orbit-inner-width);
+  min-height: var(--diamond-orbit-inner-height);
+  font-size: clamp(0.62rem, 1.9vw, 0.9rem);
+  z-index: 6;
+  animation-name: diamondOrbitClockwise;
+  animation-duration: var(--diamond-orbit-inner-duration);
+
+  --ring-radius: var(--diamond-orbit-inner-radius);
+}
+
+[data-route-index="1"] {
+  --start-angle: -90deg;
+  --inverse-angle: 90deg;
+}
+
+[data-route-index="2"] {
+  --start-angle: 0deg;
+  --inverse-angle: 0deg;
+}
+
+[data-route-index="3"] {
+  --start-angle: 90deg;
+  --inverse-angle: -90deg;
+}
+
+[data-route-index="4"] {
+  --start-angle: 180deg;
+  --inverse-angle: -180deg;
+}
+
+/* Outer ring: 12 expanded routes. Motion: counterclockwise. */
+
+[data-ring="outer"],
+[data-route-ring="outer"],
+.outer-ring,
+.route-outer {
+  animation-name: diamondOrbitCounterClockwise;
+  animation-duration: var(--diamond-orbit-outer-duration);
+
+  --ring-radius: var(--diamond-orbit-outer-radius);
+}
+
+[data-route-index="5"] {
+  --start-angle: -90deg;
+  --inverse-angle: 90deg;
+}
+
+[data-route-index="6"] {
+  --start-angle: -60deg;
+  --inverse-angle: 60deg;
+}
+
+[data-route-index="7"] {
+  --start-angle: -30deg;
+  --inverse-angle: 30deg;
+}
+
+[data-route-index="8"] {
+  --start-angle: 0deg;
+  --inverse-angle: 0deg;
+}
+
+[data-route-index="9"] {
+  --start-angle: 30deg;
+  --inverse-angle: -30deg;
+}
+
+[data-route-index="10"] {
+  --start-angle: 60deg;
+  --inverse-angle: -60deg;
+}
+
+[data-route-index="11"] {
+  --start-angle: 90deg;
+  --inverse-angle: -90deg;
+}
+
+[data-route-index="12"] {
+  --start-angle: 120deg;
+  --inverse-angle: -120deg;
+}
+
+[data-route-index="13"] {
+  --start-angle: 150deg;
+  --inverse-angle: -150deg;
+}
+
+[data-route-index="14"] {
+  --start-angle: 180deg;
+  --inverse-angle: -180deg;
+}
+
+[data-route-index="15"] {
+  --start-angle: 210deg;
+  --inverse-angle: -210deg;
+}
+
+[data-route-index="16"] {
+  --start-angle: 240deg;
+  --inverse-angle: -240deg;
+}
+
+/* Labels inside route diamonds. */
+
+[data-route-diamond] strong,
+[data-diamond-route] strong,
+.route-diamond strong,
+.diamond-route strong,
+.diamond-orbit-node strong,
+.compass-route-diamond strong {
+  display: block;
+  color: var(--diamond-orbit-text);
+  font-size: 1em;
+}
+
+[data-route-diamond] span,
+[data-diamond-route] span,
+.route-diamond span,
+.diamond-route span,
+.diamond-orbit-node span,
+.compass-route-diamond span {
+  display: block;
+  margin-top: 0.28rem;
+  color: var(--diamond-orbit-muted);
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  text-transform: none;
+}
+
+/* Fallback if the index hooks fail but source order remains correct. */
+
+.diamond-route-layer a:nth-of-type(-n + 4) {
+  width: var(--diamond-orbit-inner-width);
+  min-height: var(--diamond-orbit-inner-height);
+  font-size: clamp(0.62rem, 1.9vw, 0.9rem);
+  z-index: 6;
+  animation-name: diamondOrbitClockwise;
+  animation-duration: var(--diamond-orbit-inner-duration);
+
+  --ring-radius: var(--diamond-orbit-inner-radius);
+}
+
+.diamond-route-layer a:nth-of-type(n + 5) {
+  animation-name: diamondOrbitCounterClockwise;
+  animation-duration: var(--diamond-orbit-outer-duration);
+
+  --ring-radius: var(--diamond-orbit-outer-radius);
+}
+
+/* Existing receipt animation names preserved as aliases. */
+
+.diamondOrbitClockwise {
+  animation-name: diamondOrbitClockwise;
+}
+
+.diamondCounterRead {
+  transform-origin: 50% 50%;
+}
+
+.diamondHoverLift:hover,
+.diamondHoverLift:focus-visible {
+  translate: 0 -3px;
+}
+
+.backgroundAnchorPulse {
+  animation: diamondAnchorPulse 7s ease-in-out infinite;
+}
+
+.auroraDrift {
+  animation: diamondAuroraDrift 18s ease-in-out infinite;
+}
+
+/* Logic and route panels. */
+
+.compass-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 1.25rem;
+}
+
+.compass-card {
+  display: grid;
+  gap: 0.4rem;
+  border: 1px solid var(--diamond-orbit-blue-line);
+  border-radius: 22px;
+  padding: 1rem;
+  color: var(--diamond-orbit-muted);
+  background: rgba(255, 255, 255, 0.045);
+  text-decoration: none;
+}
+
+.compass-card strong {
+  color: var(--diamond-orbit-gold);
+  font-weight: 1000;
+}
+
+.compass-card span {
+  color: var(--diamond-orbit-text);
+  font-weight: 900;
+}
+
+.compass-card em {
+  color: var(--diamond-orbit-muted);
+  font-style: normal;
+}
+
+.compass-card:hover,
+.compass-card:focus-visible {
+  border-color: rgba(245, 199, 107, 0.58);
+  outline: none;
+}
+
+.route-chip-grid {
+  margin-top: 1.2rem;
+}
+
+.route-receipt p {
+  border: 1px solid rgba(245, 199, 107, 0.16);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.22);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.84rem;
+}
+
+/* Receipt hooks. */
+
+[data-diamond-orbit-standard],
+.diamond-orbit-standard-receipt {
+  --animation-standard: UNIVERSAL_DIAMOND_ORBIT_ANIMATION_STANDARD_v1;
+  --rebalance-contract: COMPASS_4_PLUS_12_DIAMOND_ORBIT_PAIR_RUN_TNT_v1;
+  --inner-ring: 4;
+  --outer-ring: 12;
+  --inner-direction: clockwise;
+  --outer-direction: counterclockwise;
+  --center-law: background-anchor-only;
+  --non-overlap-law: no-clickable-diamond-hidden-by-center;
+}
+
+/* Mobile: preserve 4 + 12, compress radii and diamond size without removing nodes. */
+
+@media (max-width: 920px) {
+  .compass-page-shell {
+    width: min(100%, calc(100% - 24px));
+    padding-top: 20px;
+  }
+
+  .compass-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compass-topbar {
+    align-items: flex-start;
+  }
+
+  .compass-nav a,
+  .compass-cta-row a,
+  .route-chip-grid a {
+    flex: 1 1 auto;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --diamond-orbit-inner-radius: clamp(82px, 25vw, 116px);
+    --diamond-orbit-outer-radius: clamp(142px, 42vw, 206px);
+    --diamond-orbit-inner-width: clamp(68px, 19vw, 96px);
+    --diamond-orbit-inner-height: clamp(58px, 15vw, 82px);
+    --diamond-orbit-outer-width: clamp(62px, 17vw, 88px);
+    --diamond-orbit-outer-height: clamp(54px, 14vw, 78px);
+    --diamond-orbit-inner-duration: 38s;
+    --diamond-orbit-outer-duration: 64s;
+  }
+
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-command-field],
+  [data-command-field="chronological"],
+  .compass-command-field,
+  .compass-orbit-field,
+  .diamond-orbit-field,
+  .chronological-command-field,
+  .command-field,
+  .orbit-field,
+  .compass-diamond-command-surface {
+    min-height: clamp(540px, 146vw, 720px);
+  }
+
+  .command-field-copy {
+    max-width: min(330px, calc(100% - 28px));
+  }
+
+  [data-route-diamond],
+  [data-diamond-route],
+  .route-diamond,
+  .diamond-route,
+  .diamond-orbit-node,
+  .compass-route-diamond {
+    padding: 0.38rem 0.34rem;
+    font-size: clamp(0.48rem, 2.1vw, 0.68rem);
+    letter-spacing: 0.055em;
+  }
+
+  [data-center="compass_background_anchor_only"],
+  [data-compass-center],
+  .compass-center,
+  .command-center,
+  .orbit-center,
+  .compass-background-anchor {
+    width: clamp(128px, 35vw, 190px);
+  }
+}
+
+@media (max-width: 440px) {
+  :root {
+    --diamond-orbit-inner-radius: clamp(72px, 24vw, 96px);
+    --diamond-orbit-outer-radius: clamp(120px, 39vw, 172px);
+    --diamond-orbit-inner-width: clamp(58px, 18vw, 78px);
+    --diamond-orbit-inner-height: clamp(50px, 15vw, 68px);
+    --diamond-orbit-outer-width: clamp(54px, 16vw, 72px);
+    --diamond-orbit-outer-height: clamp(48px, 14vw, 64px);
+  }
+
+  [data-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-visual-system="compass_centered_clockwise_diamond_orbit"],
+  [data-compass-command-field],
+  [data-command-field="chronological"],
+  .compass-command-field,
+  .compass-orbit-field,
+  .diamond-orbit-field,
+  .chronological-command-field,
+  .command-field,
+  .orbit-field,
+  .compass-diamond-command-surface {
+    min-height: clamp(480px, 150vw, 650px);
+  }
+
+  [data-route-diamond],
+  [data-diamond-route],
+  .route-diamond,
+  .diamond-route,
+  .diamond-orbit-node,
+  .compass-route-diamond {
+    font-size: 0.48rem;
+    line-height: 1.02;
+  }
+
+  [data-route-diamond] span,
+  [data-diamond-route] span,
+  .route-diamond span,
+  .diamond-route span,
+  .diamond-orbit-node span,
+  .compass-route-diamond span {
+    font-size: 0.74em;
+  }
+}
+
+/* Reduced motion: preserve 4 + 12 geometry, stop orbiting. */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-route-diamond],
+  [data-diamond-route],
+  .route-diamond,
+  .diamond-route,
+  .diamond-orbit-node,
+  .compass-route-diamond {
+    animation: none !important;
+  }
+
+  [data-center="compass_background_anchor_only"]::before,
+  [data-compass-center]::before,
+  .compass-center::before,
+  .command-center::before,
+  .orbit-center::before,
+  .compass-background-anchor::before {
+    animation: none !important;
+  }
+}

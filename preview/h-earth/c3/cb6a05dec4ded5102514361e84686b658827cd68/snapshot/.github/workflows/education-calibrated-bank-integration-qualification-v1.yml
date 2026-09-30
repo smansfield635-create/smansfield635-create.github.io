@@ -1,0 +1,47 @@
+name: Education Calibrated Bank Integration Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify calibrated bank runtime integration
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          git show "$BASE_SHA:research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json" >/tmp/c.json
+          node - <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8'),c=JSON.parse(fs.readFileSync('/tmp/c.json','utf8'));
+          for(const src of [...s.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const a=s.indexOf('const BANK='),b=s.indexOf('const EDUCATION_STATE_KEY=',a);
+          const BANK=Function(s.slice(a,b)+';return BANK')();
+          const flat=Object.values(BANK).flat();
+          if(flat.length!==64)throw Error('runtime cardinality');
+          for(let d=1;d<=8;d++){
+            if(BANK[d]?.length!==8)throw Error('D'+d+' cardinality');
+            if(BANK[d].some(x=>x.difficulty!==d))throw Error('D'+d+' metadata mismatch');
+          }
+          const canon=new Map(c.items.map(x=>[x.id,x]));
+          if(new Set(flat.map(x=>x.id)).size!==64)throw Error('runtime duplicate IDs');
+          for(const x of flat){
+            const y=canon.get(x.id);if(!y)throw Error(x.id+' absent from authority');
+            for(const k of ['q','a','node','evidenceClass','competency','difficulty'])if(JSON.stringify(x[k])!==JSON.stringify(y[k]))throw Error(x.id+' '+k+' drift');
+            if(JSON.stringify(x.o)!==JSON.stringify(y.o))throw Error(x.id+' options drift');
+          }
+          if(s.includes('Math.max(2,Math.min(8,stage))'))throw Error('stage2 floor regression');
+          console.log('EDUCATION_CALIBRATED_BANK_INTEGRATION_QUALIFICATION=PASS');
+          NODE

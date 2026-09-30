@@ -1,0 +1,129 @@
+{
+  "schema": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_EVIDENCE_v1",
+  "operationId": "AUDRALIA_TABLET_CLOUD_RESTORATION_ANCHOR_ACCEPTANCE_20260913_001",
+  "lockGeneration": 2183,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "governingMain": "f628feae90cc8c2be4201e826a0856c0d3035b01",
+  "frozenProductCandidate": "094e7b75c5268260046d05cf767fb999c8f2a31b",
+  "qualificationRun": 34730730395,
+  "qualificationResult": "PASS",
+  "qualificationClass": "MECHANICAL_BROWSER_RUNTIME_ONLY",
+  "physicalTabletStabilityClaimed": false,
+  "ownerPhysicalTabletAcceptanceRequiredBeforePublication": true,
+  "productIdentity": {
+    "audraliaIndexGitBlob": "549d943dbfc88dacd37f335bd3da688ea7c9512d",
+    "tabletCloudPassGitBlob": "de19bbf6c8f4d42cfc5be0cbc0491bac9d0b7d2b",
+    "tabletSingleContextRuntimeGitBlob": "3f3177aaedc6e03c94afd82844cccf7f2d447ccb",
+    "protectedPhoneFap1GitBlobBase": "d4c7d230ea8ffa265cfd347629ec2e46d653726c",
+    "protectedPhoneFap1GitBlobCandidate": "d4c7d230ea8ffa265cfd347629ec2e46d653726c",
+    "protectedPhoneFap1ByteStable": true
+  },
+  "browserQualification": {
+    "browserVersion": "Chrome/153.0.8010.36",
+    "phone": {
+      "pass": true,
+      "disposition": "REGRESSION_REFERENCE_ONLY_NO_ORIGINAL_DEFECT_CLAIM"
+    },
+    "tablet": {
+      "pass": true,
+      "enabledChangedPixels": 148753,
+      "ablatedMaxChangedPixels": 0,
+      "enabledBeforeChecksum": 505636901,
+      "enabledAfterChecksum": 4147956720,
+      "visibleCloudContribution": true,
+      "causalCloudContribution": true
+    },
+    "errors": {
+      "consoleErrors": 0,
+      "pageErrors": 0
+    }
+  },
+  "tabletRuntime": {
+    "schema": "AUDRALIA_TABLET_SINGLE_CONTEXT_CLOUDS_RUNTIME_v2_WORLD_FIRST",
+    "renderingMode": "EXACT_PRIMARY_WORLD_SINGLE_WEBGL_CONTEXT_WITH_STAGED_CLOUD_PASS",
+    "singleWebGLContext": true,
+    "webgl2ContextRequests": 1,
+    "cloudPassUsesPrimaryContext": true,
+    "additionalCanvasCount": 0,
+    "additionalRendererCount": 0,
+    "additionalMajorPassCount": 0,
+    "worldRenderedBeforeCloudPass": true,
+    "startupSequence": [
+      "PRIMARY_CONTEXT_READY",
+      "PRIMARY_WORLD_RENDERED",
+      "PRIMARY_WORLD_FRAME_PRESENTED",
+      "CLOUD_PASS_CONSTRUCTED",
+      "CLOUD_FIRST_DRAW"
+    ],
+    "budgets": {
+      "restRaymarchSteps": 8,
+      "interactionRaymarchSteps": 6,
+      "maximumPrimaryRenderPixels": 921600,
+      "rayMarchCeilingsChanged": false
+    },
+    "advancedCloudGrammar": {
+      "frontalSystems": 5,
+      "jetBands": 4,
+      "cyclones": 2,
+      "totalAdvancedSystems": 11,
+      "clearAirWindowsPreserved": true,
+      "cheapGlobalCloudSupportIncluded": false,
+      "regionalSystemsIncluded": false,
+      "canonicalLocalWeatherIncluded": false,
+      "celestialIncluded": false
+    }
+  },
+  "anchorReview": {
+    "SAME_CANONICAL_WORLD_IDENTITY": {
+      "pass": true,
+      "basis": "The constrained tablet path continues to render the canonical Audralia world canvas and canonical H-Earth geographic integration; the operation adds only a staged cloud pass on the existing primary context."
+    },
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": {
+      "pass": true,
+      "basis": "The existing world/navigation authority is preserved; the tablet repair does not replace or fork the planetary/regional/ground world path."
+    },
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": {
+      "pass": true,
+      "basis": "Terrain, hydrology, shoreline and geographic integration sources are read-only dependencies and were not mutated by the candidate."
+    },
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": {
+      "pass": true,
+      "basis": "The candidate preserves the existing renderer, camera frame derivation, focus-Gratitude behavior and navigable world surface; cloud restoration is presentation-only."
+    },
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": {
+      "pass": true,
+      "basis": "The single-context tablet runtime preserves one-finger orbit/look, two-finger travel/zoom, wheel zoom, keyboard travel and focus-Gratitude controls while rendering clouds from the same camera frame."
+    },
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": {
+      "pass": true,
+      "basis": "No new dashboard, panel, canvas or UI surface is introduced; clouds render in the existing world canvas."
+    },
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": {
+      "pass": true,
+      "basis": "The exact primary world is rendered before cloud activation and terrain/coast/elevation authority is unchanged."
+    },
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": {
+      "pass": true,
+      "basis": "The repair creates no alternate H-Earth product, renderer or canvas and uses one primary WebGL2 context."
+    },
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": {
+      "pass": true,
+      "basis": "The repaired surface remains the interactive Audralia planetary world, not a dashboard, map app or card interface."
+    },
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": {
+      "pass": true,
+      "basis": "No globe/world identity or navigation authority was changed; the repair only adds clouds after the same primary world frame is presented."
+    },
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": {
+      "pass": true,
+      "basis": "The same renderer and interaction grammar remain active across the constrained tablet path; cloud activation does not replace the world or its controls."
+    }
+  },
+  "nonClaims": [
+    "No claim of physical-tablet stability is created by browser CI.",
+    "No phone cloud defect is inferred from the retired hidden diagnostic canvas.",
+    "No geography, camera, navigation, celestial, regional-weather or local-weather authority is changed.",
+    "No deployment or publication authority is created by this evidence record."
+  ]
+}

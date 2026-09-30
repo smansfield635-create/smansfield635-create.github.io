@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://diamondgatebridge.com/preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/device-evidence-receipt.schema.json",
+  "title": "H-Earth Run 8E R3F2 physical reference-device evidence receipt",
+  "description": "Normalized evidence-receipt schema for the immutable non-production R3F2 candidate. It does not itself establish physical acceptance.",
+  "type": "object",
+  "required": [
+    "candidateId",
+    "previewUrl",
+    "packageSha256",
+    "previewManifestDigest",
+    "servedAssetIdentities",
+    "sessionIdentifier",
+    "userAgent",
+    "viewport",
+    "devicePixelRatio",
+    "orientation",
+    "webglVersion",
+    "gpuRendererInformationWhenAvailable",
+    "contextCreationCount",
+    "rendererInitializationCount",
+    "bufferUploadCount",
+    "visibleFrameCount",
+    "navigationProposalCount",
+    "maximumResponseTimeMs",
+    "worldRebuildCount",
+    "contextLossCount",
+    "contextRestorationCount",
+    "sessionStart",
+    "sessionEnd"
+  ],
+  "properties": {
+    "candidateId": {
+      "const": "H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_3020154361523CF19113E4C759C234A6C74FF5A493B8E47124CA59470DA7A234"
+    },
+    "previewUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "/preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/?$"
+    },
+    "packageSha256": {
+      "const": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234"
+    },
+    "previewManifestDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "servedAssetIdentities": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "relativePath",
+          "contentSha256",
+          "byteCount"
+        ],
+        "properties": {
+          "relativePath": {
+            "type": "string"
+          },
+          "contentSha256": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "gitBlobSha1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "byteCount": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "sessionIdentifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "userAgent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "viewport": {
+      "type": "object",
+      "required": [
+        "widthCssPx",
+        "heightCssPx"
+      ],
+      "properties": {
+        "widthCssPx": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "heightCssPx": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "devicePixelRatio": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "orientation": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "webglVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gpuRendererInformationWhenAvailable": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contextCreationCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rendererInitializationCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "bufferUploadCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "visibleFrameCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "navigationProposalCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "maximumResponseTimeMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "worldRebuildCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "contextLossCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "contextRestorationCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sessionStart": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sessionEnd": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true,
+  "x-h-earth-boundaries": {
+    "physicalAcceptanceEmbedded": false,
+    "broaderMobileAcceptanceEmbedded": false,
+    "productionDeployment": false,
+    "normalizationMayOccurAtEvidenceAdmission": true
+  }
+}

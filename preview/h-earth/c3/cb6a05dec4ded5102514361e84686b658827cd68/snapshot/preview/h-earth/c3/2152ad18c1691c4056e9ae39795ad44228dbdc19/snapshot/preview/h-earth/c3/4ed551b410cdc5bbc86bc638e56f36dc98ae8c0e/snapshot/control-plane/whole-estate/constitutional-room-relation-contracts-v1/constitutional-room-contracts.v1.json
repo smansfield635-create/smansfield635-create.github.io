@@ -1,0 +1,160 @@
+{
+  "schema": "WHOLE_ESTATE_CONSTITUTIONAL_ROOM_CONTRACTS_v1",
+  "status": "CHECKPOINT_3_CONSTRUCTION_CANDIDATE",
+  "governingMain": "889197b2cbe73de171756b7545446f12a726cde7",
+  "contracts": [
+    {
+      "id": "COMPASS",
+      "identity": "GLOBAL_ORIENTATION_AUTHORITY",
+      "primaryRole": "ORIENTATION",
+      "function": "provide estate wayfinding, plural entry, route choice and return context without absorbing destination authority",
+      "authority": ["WAYFINDING", "ESTATE_ORIENTATION", "DIRECT_ENTRY_CONTEXT", "RETURN_CONTEXT"],
+      "forbiddenAuthority": ["SCIENTIFIC_ADJUDICATION", "EVIDENCE_UPGRADE", "ROOM_ABSORPTION"],
+      "requiredInputs": ["DECLARED_ESTATE_ROUTES", "DECLARED_RETURN_CONTEXT"],
+      "permittedOutputs": ["ROUTE_CHOICE", "ORIENTATION_CONTEXT", "RETURN_CONTEXT"],
+      "constitutionalAdjacency": ["REALITY", "LAWS", "UCIC", "IMI", "COHERENCE_DIAGNOSTIC", "FRONTIER", "PRODUCTS", "WORLDS_CHARACTERS_CAMPAIGNS", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["ORIENTATION_CANNOT_SUBSTITUTE_FOR_EPISTEMIC_LAW", "ORIENTATION_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_STANDING"]
+    },
+    {
+      "id": "REALITY",
+      "identity": "ANSWERABILITY_AND_UNCERTAINTY_BOUNDARY",
+      "primaryRole": "EPISTEMIC_LAW",
+      "function": "separate evidence from interpretation and preserve uncertainty and answerability limits",
+      "authority": ["ANSWERABILITY", "EVIDENCE_INTERPRETATION_SEPARATION", "UNCERTAINTY_BOUNDARY"],
+      "forbiddenAuthority": ["DECLARE_UCIC_PROVEN", "OWN_APPLIED_STUDIES"],
+      "requiredInputs": ["SOURCE_STATUS", "EVIDENCE_STATUS", "KNOWN_UNCERTAINTY"],
+      "permittedOutputs": ["ANSWERABILITY_BOUNDARY", "UNCERTAINTY_STATUS", "INTERPRETATION_LIMIT"],
+      "constitutionalAdjacency": ["LAWS", "UCIC", "METHODS_MODELS", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["EPISTEMIC_FRAMING_CANNOT_SUBSTITUTE_FOR_EMPIRICAL_RESULT"]
+    },
+    {
+      "id": "LAWS",
+      "identity": "CONSTRAINT_ADMISSIBILITY_AND_TEST_BOUNDARY_AUTHORITY",
+      "primaryRole": "EPISTEMIC_LAW",
+      "function": "declare constraints, admissibility rules, FIRST authority structure, test boundaries and claim boundaries",
+      "authority": ["CONSTRAINTS", "ADMISSIBILITY", "FIRST_STRUCTURE", "TEST_BOUNDARIES"],
+      "forbiddenAuthority": ["ABSORB_FRONTIER", "UPGRADE_EVIDENCE_BY_DOCTRINE"],
+      "requiredInputs": ["DECLARED_RULES", "ADMISSIBILITY_CONDITIONS", "FALSIFIERS"],
+      "permittedOutputs": ["CONSTRAINTS", "ADMISSIBILITY_DECISIONS", "TEST_BOUNDARIES", "CLAIM_BOUNDARIES"],
+      "constitutionalAdjacency": ["REALITY", "UCIC", "METHODS_MODELS", "FRONTIER", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["DOCTRINE_CANNOT_SUBSTITUTE_FOR_EVIDENCE", "TEST_BOUNDARY_CANNOT_SUBSTITUTE_FOR_RESULT"]
+    },
+    {
+      "id": "UCIC",
+      "identity": "INVARIANT_CANDIDATE",
+      "primaryRole": "FOUNDATION",
+      "function": "hold the fixed falsifiable candidate concerning constitutive relational coherence and identity continuity",
+      "authority": ["FIXED_INVARIANT_CANDIDATE_IDENTITY", "FALSIFIABLE_RELATIONAL_PROPOSITION"],
+      "forbiddenAuthority": ["SELF_VALIDATE", "UNIVERSALITY_BY_DEFINITION", "REPLACE_IMI"],
+      "requiredInputs": ["REALITY_BOUNDARIES", "LAWS_CONSTRAINTS", "METHODS", "EVIDENCE"],
+      "permittedOutputs": ["TESTABLE_RELATIONAL_PROPOSITIONS", "CONSTRAINTS_FOR_MEASUREMENT_AND_COMPARISON"],
+      "constitutionalAdjacency": ["REALITY", "LAWS", "IMI", "METHODS_MODELS", "FRONTIER", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["FOUNDATION_CANNOT_SUBSTITUTE_FOR_MEASUREMENT", "CANDIDATE_CANNOT_SUBSTITUTE_FOR_CONFIRMATION"]
+    },
+    {
+      "id": "IMI",
+      "identity": "INSTRUMENT",
+      "primaryRole": "MEASUREMENT",
+      "function": "perform observer-grade measurement under declared route, factor, source and boundary rules",
+      "authority": ["OBSERVER_GRADE_MEASUREMENT", "DECLARED_ROUTE_PROFILE_MEASUREMENT", "SOURCE_AND_FACTOR_RULE_APPLICATION"],
+      "forbiddenAuthority": ["DECLARE_UCIC_TRUE", "BECOME_MODEL", "BECOME_COMPARATOR", "REVIVE_GLOBAL_PRODUCT"],
+      "requiredInputs": ["UCIC_CANDIDATE_STRUCTURE", "METHODS", "ADMISSIBLE_EVIDENCE", "DECLARED_ROUTE_PROFILES"],
+      "permittedOutputs": ["MEASUREMENT_STATE", "DIAGNOSTIC_OBSERVATIONS", "UNEVALUABLE_OR_INVALID_STATE_WHEN_REQUIRED"],
+      "constitutionalAdjacency": ["UCIC", "METHODS_MODELS", "FRONTIER", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["MEASUREMENT_CANNOT_SUBSTITUTE_FOR_CONFIRMATION", "INSTRUMENT_CANNOT_SUBSTITUTE_FOR_MODEL", "INSTRUMENT_CANNOT_SUBSTITUTE_FOR_COMPARATOR"]
+    },
+    {
+      "id": "METHODS_MODELS",
+      "identity": "EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE",
+      "primaryRole": "EPISTEMIC_LAW",
+      "function": "make controlled comparison, method/model separation, evidence standing, claim boundaries and lawful discovery inspectable without becoming the whole estate",
+      "authority": ["CONTROLLED_COMPARISON", "METHOD_MODEL_SEPARATION", "COMPARATOR_PARITY", "FALSIFICATION_PROCEDURE_EXPLANATION", "EVIDENCE_STANDING_RESOLUTION", "CLAIM_TRACEABILITY", "DECLARED_RELATION_DISCOVERY"],
+      "forbiddenAuthority": ["WHOLE_ESTATE_OWNERSHIP", "PERSONAL_DIAGNOSIS", "FULL_FRONTIER_STUDY_OWNERSHIP", "TRUST_BY_PRESENTATION", "EVIDENCE_ESCALATION_BY_NAVIGATION"],
+      "requiredInputs": ["UCIC", "IMI", "REALITY", "LAWS", "METHODS", "MODELS", "COMPARATORS", "TEST_RESULTS", "ADVERSE_EVIDENCE", "PROVENANCE"],
+      "permittedOutputs": ["CURRENT_STANDING", "CLAIM_CEILING", "METHOD_MODEL_COMPARISON", "DECLARED_RELATION_MAP", "GIVEN_THAT_STANDING_DISCOVERY_PATH"],
+      "constitutionalAdjacency": ["REALITY", "LAWS", "UCIC", "IMI", "FRONTIER", "PRODUCTS", "WORLDS_CHARACTERS_CAMPAIGNS", "RESEARCH_PROVENANCE", "INTERFACE_3D"],
+      "nonSubstitution": ["METHOD_CANNOT_SUBSTITUTE_FOR_MODEL", "MODEL_CANNOT_SUBSTITUTE_FOR_RESULT", "EVIDENCE_GATE_CANNOT_SUBSTITUTE_FOR_GLOBAL_COMPASS", "DISCOVERY_CANNOT_OUTRUN_STANDING"]
+    },
+    {
+      "id": "COHERENCE_DIAGNOSTIC",
+      "identity": "PRIVATE_BOUNDED_STRUCTURED_REFLECTION",
+      "primaryRole": "DIAGNOSIS",
+      "function": "support private structured reflection without medical, legal, employment, intelligence-testing or scientific-confirmation authority",
+      "authority": ["PRIVATE_LOCAL_STRUCTURED_REFLECTION"],
+      "forbiddenAuthority": ["MEDICAL_DIAGNOSIS", "LEGAL_DETERMINATION", "EMPLOYMENT_SCREENING", "IQ_TESTING", "UCIC_CONFIRMATION"],
+      "requiredInputs": ["USER_PROVIDED_REFLECTION_INPUT", "BOUNDARY_DISCLOSURES"],
+      "permittedOutputs": ["PRIVATE_STRUCTURED_REFLECTION"],
+      "constitutionalAdjacency": ["COMPASS", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["DIAGNOSIS_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_EVIDENCE"]
+    },
+    {
+      "id": "FRONTIER",
+      "identity": "APPLIED_INVESTIGATION_AUTHORITY",
+      "primaryRole": "APPLICATION",
+      "function": "own complete applied investigations, domain studies, experiments, prototypes and unresolved technical problems",
+      "authority": ["COMPLETE_APPLIED_STUDY_OWNERSHIP", "DOMAIN_INVESTIGATION", "PROTOTYPE_AND_EXPERIMENT_CONTEXT"],
+      "forbiddenAuthority": ["UNIVERSAL_CLAIM_UPGRADE_WITHOUT_ADJUDICATION"],
+      "requiredInputs": ["DECLARED_RESEARCH_QUESTION", "METHODS", "MODELS_OR_COMPARATORS_WHEN_APPLICABLE", "ADMISSIBLE_EVIDENCE", "CLAIM_BOUNDARY"],
+      "permittedOutputs": ["APPLIED_STUDY_RECORD", "EXPERIMENT_RESULT", "PROTOTYPE_RESULT", "UNRESOLVED_RESEARCH_QUESTION"],
+      "constitutionalAdjacency": ["LAWS", "UCIC", "IMI", "METHODS_MODELS", "PRODUCTS", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["APPLICATION_CANNOT_SUBSTITUTE_FOR_UNIVERSAL_CONFIRMATION", "PILOT_CANNOT_SUBSTITUTE_FOR_GENERAL_VALIDATION"]
+    },
+    {
+      "id": "PRODUCTS",
+      "identity": "USABLE_IMPLEMENTATION_AUTHORITY",
+      "primaryRole": "IMPLEMENTATION",
+      "function": "deliver usable tools and systems while keeping utility, adoption and market success separate from scientific confirmation",
+      "authority": ["USABLE_TOOL_AND_SYSTEM_DELIVERY"],
+      "forbiddenAuthority": ["SCIENTIFIC_CONFIRMATION_BY_SUCCESS", "FOUNDATIONAL_AUTHORITY"],
+      "requiredInputs": ["IMPLEMENTATION_REQUIREMENTS", "DECLARED_CLAIM_BOUNDARY_WHEN_RESEARCH_BEARING"],
+      "permittedOutputs": ["USABLE_TOOL", "USABLE_SYSTEM", "APPLICATION_EXPERIENCE"],
+      "constitutionalAdjacency": ["COMPASS", "METHODS_MODELS", "FRONTIER", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["IMPLEMENTATION_SUCCESS_CANNOT_SUBSTITUTE_FOR_EVIDENCE", "PRODUCT_UTILITY_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_VALIDATION"]
+    },
+    {
+      "id": "WORLDS_CHARACTERS_CAMPAIGNS",
+      "identity": "NARRATIVE_AND_EXPERIENTIAL_IMPLEMENTATION_AUTHORITY",
+      "primaryRole": "IMPLEMENTATION",
+      "function": "provide narrative, place-based, character-mediated and public-action experiences without turning persuasion or metaphor into scientific evidence",
+      "authority": ["NARRATIVE_EXPERIENCE", "PLACE_BASED_EXPLORATION", "PUBLIC_ACTION"],
+      "forbiddenAuthority": ["SCIENTIFIC_RESULT_GENERATION_BY_PRESENTATION", "METAPHOR_AS_EVIDENCE", "PERSUASION_AS_STANDING"],
+      "requiredInputs": ["NARRATIVE_CONTEXT", "DECLARED_SCIENTIFIC_BOUNDARY_WHEN_RESEARCH_BEARING"],
+      "permittedOutputs": ["NARRATIVE_EXPERIENCE", "EXPLORATION_PATH", "PUBLIC_ACTION_EXPERIENCE"],
+      "constitutionalAdjacency": ["COMPASS", "METHODS_MODELS", "RESEARCH_PROVENANCE", "INTERFACE_3D"],
+      "nonSubstitution": ["NARRATIVE_CANNOT_SUBSTITUTE_FOR_EVIDENCE", "WONDER_CANNOT_SUBSTITUTE_FOR_STANDING"]
+    },
+    {
+      "id": "RESEARCH_PROVENANCE",
+      "identity": "SOURCE_LINEAGE_AND_CLAIM_BOUNDARY_AUTHORITY",
+      "primaryRole": "PROVENANCE",
+      "function": "preserve sources, version lineage, execution receipts, evidence ledgers, adverse findings, claim ceilings and falsifiers",
+      "authority": ["SOURCE_RECORD", "VERSION_LINEAGE", "EXECUTION_RECEIPT", "EVIDENCE_LEDGER", "CLAIM_CEILING", "FALSIFIER_RECORD"],
+      "forbiddenAuthority": ["SCIENTIFIC_TRUTH_BY_HASH", "SCIENTIFIC_TRUTH_BY_CI", "RESULT_UPGRADE_BY_RECORD_COMPLETENESS"],
+      "requiredInputs": ["SOURCE_IDENTITY", "VERSION_IDENTITY", "EXECUTION_IDENTITY_WHEN_APPLICABLE", "EVIDENCE_DISPOSITION", "CLAIM_CEILING"],
+      "permittedOutputs": ["TRACEABLE_LINEAGE", "SOURCE_OWNERSHIP", "EXECUTION_RECEIPT", "CURRENT_CLAIM_BOUNDARY", "ADVERSE_EVIDENCE_RECORD"],
+      "constitutionalAdjacency": ["COMPASS", "REALITY", "LAWS", "UCIC", "IMI", "METHODS_MODELS", "COHERENCE_DIAGNOSTIC", "FRONTIER", "PRODUCTS", "WORLDS_CHARACTERS_CAMPAIGNS", "INTERFACE_3D"],
+      "nonSubstitution": ["PROVENANCE_CANNOT_SUBSTITUTE_FOR_TRUTH", "CI_SUCCESS_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_RESULT"]
+    },
+    {
+      "id": "INTERFACE_3D",
+      "identity": "REPRESENTATION_AND_NAVIGATION_AUTHORITY",
+      "primaryRole": "IMPLEMENTATION",
+      "function": "represent declared information relationships through navigation, presentation, spatial transition and synchronized explanation without mutating scientific state",
+      "authority": ["NAVIGATION_STATE", "PRESENTATION_STATE", "SPATIAL_TRANSITION", "SYNCHRONIZED_EXPLANATION", "REPRESENTATION_OF_DECLARED_RELATIONS"],
+      "forbiddenAuthority": ["SCIENTIFIC_STATE_MUTATION", "EVIDENCE_STATUS_MUTATION", "EXECUTION_STATUS_MUTATION", "CUSTODY_STATUS_MUTATION", "PERSUASION_AUTHORITY", "VISUAL_AUTHORITY_INFLATION"],
+      "requiredInputs": ["DECLARED_SEMANTIC_RELATIONS", "PRESENTATION_STATE", "CURRENT_STANDING", "CLAIM_CEILING", "MATERIAL_QUALIFIERS"],
+      "permittedOutputs": ["NAVIGATION_STATE", "PRESENTATION_STATE", "SPATIAL_TRANSITION", "SYNCHRONIZED_EXPLANATION"],
+      "constitutionalAdjacency": ["COMPASS", "METHODS_MODELS", "WORLDS_CHARACTERS_CAMPAIGNS", "RESEARCH_PROVENANCE"],
+      "nonSubstitution": ["INTERFACE_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_STATE", "NAVIGATIONAL_IMPORTANCE_CANNOT_SUBSTITUTE_FOR_EVIDENTIARY_STRENGTH", "VISUAL_PROMINENCE_CANNOT_SUBSTITUTE_FOR_VALIDATION"]
+    }
+  ],
+  "globalRules": [
+    "ROLE_SEPARATION_REQUIRED",
+    "NON_SUBSTITUTION_REQUIRED",
+    "PROVENANCE_REQUIRED_FOR_MATERIAL_RESEARCH_CLAIMS",
+    "ROOM_ADJACENCY_DOES_NOT_CREATE_UNIVERSAL_OBJECT_RELATION",
+    "MEASUREMENT_MAY_NOT_BECOME_CONFIRMATION",
+    "REPRESENTATION_AUTHORITY_DOES_NOT_INCLUDE_PERSUASION_AUTHORITY"
+  ],
+  "publicMutationAuthorized": false
+}

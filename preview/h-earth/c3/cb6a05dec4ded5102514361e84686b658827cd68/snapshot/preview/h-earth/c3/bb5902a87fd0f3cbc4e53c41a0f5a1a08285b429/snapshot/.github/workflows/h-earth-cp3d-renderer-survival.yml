@@ -1,0 +1,162 @@
+name: H-Earth CP3D Renderer Survival
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'showroom/globe/h-earth/**'
+      - 'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'
+      - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-**'
+      - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1**'
+      - '.github/workflows/h-earth-cp3d-renderer-survival.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cp3d-renderer-survival:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Record and verify executed head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: |
+          mkdir -p "$CP3D_EVIDENCE_DIR"
+          executed_head="$(git rev-parse HEAD)"
+          printf '%s\n' "$executed_head" | tee "$CP3D_EVIDENCE_DIR/cp3d-executed-head.txt"
+          printf '%s\n' "$EXPECTED_HEAD" | tee "$CP3D_EVIDENCE_DIR/cp3d-expected-head.txt"
+          test "$executed_head" = "$EXPECTED_HEAD"
+          git status --short | tee "$CP3D_EVIDENCE_DIR/cp3d-working-tree.txt"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser runtime
+        run: |
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start exact branch server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-cp3d-server.log 2>&1 &
+          echo $! > /tmp/h-earth-cp3d-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-cp3d-server.log
+          exit 1
+
+      - name: Reconfirm CP3D_1D_D shared package boundary equality
+        env:
+          CP3D_ORIGIN: http://127.0.0.1:4173
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs
+
+      - name: Execute promoted renderer identity corridor
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
+
+      - name: Execute corrected Run 8B geometry regression harness
+        env:
+          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1e-run8b-geometry-receipt.json
+        run: |
+          mkdir -p h-earth-3d/validation/evidence/cp3d
+          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
+
+      - name: Execute CP3D full renderer survival
+        id: renderer_survival
+        continue-on-error: true
+        env:
+          CP3D_ORIGIN: http://127.0.0.1:4173
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs
+
+      - name: Capture full renderer startup diagnostic on survival failure
+        if: steps.renderer_survival.outcome == 'failure'
+        env:
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import { mkdir, writeFile } from 'node:fs/promises';
+          const evidenceDirectory = process.env.CP3D_EVIDENCE_DIR;
+          await mkdir(evidenceDirectory, { recursive: true });
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--enable-webgl', '--ignore-gpu-blocklist', '--use-gl=swiftshader', '--disable-dev-shm-usage']
+          });
+          const page = await browser.newPage({
+            viewport: { width: 694, height: 747 },
+            deviceScaleFactor: 1.5,
+            isMobile: true,
+            hasTouch: true,
+            userAgent: 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36'
+          });
+          const consoleMessages = [];
+          const pageErrors = [];
+          page.on('console', message => consoleMessages.push({ type: message.type(), text: message.text() }));
+          page.on('pageerror', error => pageErrors.push({ name: error.name, message: error.message, stack: error.stack ?? null }));
+          try {
+            await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+            await page.waitForFunction(() => {
+              const receipt = globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+              return receipt?.firstFailureStage || globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true;
+            }, null, { timeout: 90_000 });
+            const diagnostic = await page.evaluate(() => ({
+              startup: globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null,
+              routeReady: globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true,
+              routeSnapshot: globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.() ?? null,
+              routeDataset: (() => {
+                const root = document.getElementById('h-earth-functional-landscape-route');
+                return root ? { ...root.dataset } : null;
+              })()
+            }));
+            const receipt = {
+              receiptType: 'H_EARTH_CP3D_GEN329_RENDERER_STARTUP_FAILURE_DIAGNOSTIC_v1',
+              eligible: false,
+              status: diagnostic.routeReady ? 'UNEXPECTED_READY_AFTER_SURVIVAL_FAILURE' : 'RENDERER_STARTUP_FAILURE_CAPTURED',
+              exactHead: process.env.GITHUB_SHA,
+              ...diagnostic,
+              pageErrors,
+              consoleMessages,
+              historicalR2CheckpointRewritten: false,
+              gen329ProductMutation: false,
+              experienceAnchorMutation: false,
+              mergeAuthorized: false,
+              deploymentAuthorized: false
+            };
+            await writeFile(`${evidenceDirectory}/cp3d-gen329-renderer-startup-failure.receipt.json`, `${JSON.stringify(receipt, null, 2)}\n`);
+            console.log(JSON.stringify(receipt, null, 2));
+          } finally {
+            await browser.close();
+          }
+          NODE
+
+      - name: Enforce CP3D renderer survival result
+        if: always()
+        env:
+          RENDERER_SURVIVAL_OUTCOME: ${{ steps.renderer_survival.outcome }}
+        run: test "$RENDERER_SURVIVAL_OUTCOME" = "success"
+
+      - name: Upload CP3D evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp3d-renderer-survival
+          path: |
+            h-earth-3d/validation/evidence/cp3d/**
+            /tmp/h-earth-cp3d-server.log
+          if-no-files-found: error

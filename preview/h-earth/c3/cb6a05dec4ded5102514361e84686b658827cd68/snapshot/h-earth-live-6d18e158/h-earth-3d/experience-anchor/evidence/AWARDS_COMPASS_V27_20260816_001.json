@@ -1,0 +1,70 @@
+{
+  "schema": "H_EARTH_AWARDS_COMPASS_V27_EVIDENCE_v1",
+  "operationId": "AWARDS_COMPASS_V27_60_SECOND_SOCIAL_LIVE_REPLACEMENT_20260816_002",
+  "governingMain": "459585c4e1ca847d18729f16a1eb2441f1d16604",
+  "canonicalIntakeIssue": 1200,
+  "canonicalLockGeneration": 1502,
+  "route": "showroom/globe/h-earth/awards/",
+  "ownerDecision": "APPROVED_FULL_CYCLE_LIVE_REPLACEMENT_AND_SOCIAL_PROMOTION",
+  "masterSha256": "bdfaf4c6292b9f60e8310758b44c42cf7410ea21ca3f3ad29fb00ebd8caf5f76",
+  "governingBaseline": {
+    "classification": "V22_IMMUTABLE_CINEMATIC_FLOOR",
+    "sha256": "c5a8359dba70ff604394d3724f3ab562f7b9c6c80efbe4a606ad95c95a71f9e4",
+    "acceptanceLaw": "NO_FORWARD_ARTIFACT_MAY_REGRESS_THE_V22_STANDARD"
+  },
+  "presentation": {
+    "installedFileName": "diamond-gate-compass-mirrorland-36s.mp4",
+    "sourceArtifact": "diamond-gate-compass-attention-traversal-60s-social-master.mp4",
+    "masterSha256": "bdfaf4c6292b9f60e8310758b44c42cf7410ea21ca3f3ad29fb00ebd8caf5f76",
+    "sizeBytes": 20447376,
+    "durationSeconds": 60.0,
+    "geometry": "NATIVE_1920_BY_1080_LANDSCAPE",
+    "video": "H264_HIGH_BT709_CONSTANT_24_FPS",
+    "audio": "AAC_STEREO_CONTINUOUS_PITCH_PRESERVED",
+    "embeddedText": true,
+    "externalCompassCaptionMapDisabled": true
+  },
+  "authorizedRepairs": {
+    "inheritedV26WinnerRepairs": "PRESERVED",
+    "methodsEvidence": {
+      "sourceArtifact": "23772.mp4",
+      "sourceSha256": "545231d08474bc41cfaa0f190a2eea88d7b6b1f5ab48221a32ae73a393b370c5",
+      "sourceIntervalsSeconds": [
+        "8.8-12.2",
+        "12.2-16.8"
+      ],
+      "presentationIntervalSeconds": "34.5-42.5",
+      "treatment": "AUTHORED_FULL_FRAME_SEMANTIC_CROPS_WITH_DEVICE_CHROME_EXCLUDED"
+    },
+    "duration": "EXACT_60_SECONDS",
+    "promotionalSignoff": {
+      "text": "DiamondGateBridge.com",
+      "placement": "DIRECTLY_BENEATH_FINAL_LINE_BETTER_THAN_A_COMPASS",
+      "presentationIntervalSeconds": "52.0-54.6"
+    }
+  },
+  "qualification": {
+    "ownerApprovalGate": "PASS",
+    "v22CinematicFloorGate": "PASS",
+    "experientialEvidenceGate": "PASS",
+    "presentationGeometryGate": "PASS",
+    "technicalDeliveryGate": "PASS",
+    "socialPromotionalSignoffGate": "PASS",
+    "decodeErrors": 0,
+    "fastStart": "PASS",
+    "audioMeanDb": -18.0,
+    "audioMaxDb": -1.5
+  },
+  "candidatePage": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "d978f420afe93ad5b12b83f264da03df614c0600db4aa15d893cd334a378a102"
+  },
+  "continuityAssessment": {
+    "presentationOnlyAwardsSurface": true,
+    "worldRuntimeMutated": false,
+    "terrainMutated": false,
+    "environmentRuntimeMutated": false,
+    "chapter02Mutated": false,
+    "sameCanonicalWorld": true
+  }
+}

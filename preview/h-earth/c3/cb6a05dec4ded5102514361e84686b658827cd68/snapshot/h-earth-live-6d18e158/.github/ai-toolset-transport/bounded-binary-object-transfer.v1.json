@@ -1,0 +1,63 @@
+{
+  "schema": "BOUNDED_BINARY_OBJECT_TRANSFER_DESCRIPTOR_v1",
+  "id": "BOUNDED_BINARY_OBJECT_TRANSFER_V1",
+  "version": "1.0.0",
+  "status": "QUALIFIED_CANDIDATE_PENDING_ADOPTION_AND_LIVE_PROOF",
+  "purpose": "Reconstruct an exact binary from already-created bounded Git blob chunks and attach it to one exact non-production transfer branch under SHA-256 and exact-head guards.",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "invocation": {
+    "issueNumber": 1323,
+    "marker": "BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1",
+    "authorizedActor": "smansfield635-create",
+    "workflowPath": ".github/workflows/bounded-binary-object-transfer-v1.yml",
+    "implementationPath": "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
+    "testPath": "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs"
+  },
+  "inputSchema": "BOUNDED_BINARY_OBJECT_TRANSFER_MANIFEST_v1",
+  "outputSchema": "BOUNDED_BINARY_OBJECT_TRANSFER_RECEIPT_v1",
+  "targetLaw": {
+    "branchPrefix": "transfer/",
+    "prohibitedBranches": ["main", "master", "gh-pages"],
+    "expectedTargetHeadRequired": true,
+    "fastForwardOnly": true,
+    "repositoryBound": true,
+    "normalizedRepositoryRelativeDestinationRequired": true
+  },
+  "binaryLaw": {
+    "chunkGitBlobShaRequired": true,
+    "chunkSha256Required": true,
+    "chunkByteLengthRequired": true,
+    "contiguousZeroBasedChunkOrderRequired": true,
+    "finalSha256Required": true,
+    "finalByteLengthRequired": true,
+    "finalUnreferencedBlobReadbackRequired": true,
+    "destinationReadbackRequired": true,
+    "recommendedRawChunkBytes": 524288,
+    "maximumChunkCount": 4096
+  },
+  "authorityBoundary": {
+    "arbitraryCommandAuthority": false,
+    "directMainMutationAuthority": false,
+    "productSemanticAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "repositoryScope": "ONE_REPOSITORY_ONE_TRANSFER_BRANCH_ONE_DESTINATION_PER_REQUEST"
+  },
+  "qualification": {
+    "candidateSelfTestRun": 32204412811,
+    "candidateSelfTestResult": "PASS",
+    "activeToolsetConformanceRun": 32204412936,
+    "activeToolsetConformanceResult": "PASS",
+    "realUnreferencedChunkFixture": {
+      "bytes": 38,
+      "sha256": "ac71d46b0573fc76668cc7449797b1dc2e4f5b48c33ea65aebfd066193ac39f6",
+      "gitBlobSha": "e849be941456ba6f6865746c777f421adb2cc4d0",
+      "createBlobIdentityMatchedLocallyComputedGitBlobSha": true
+    }
+  },
+  "operationalProof": {
+    "requiredBeforeActiveClaim": true,
+    "requiredFixture": "REAL_UNREFERENCED_BINARY_GIT_BLOB_CHUNK_TO_TRANSFER_BRANCH_WITH_FINAL_SHA256_READBACK",
+    "status": "PENDING_POST_ADOPTION_LIVE_TRANSFER"
+  }
+}

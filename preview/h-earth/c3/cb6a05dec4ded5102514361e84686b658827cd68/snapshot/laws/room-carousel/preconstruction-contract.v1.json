@@ -1,0 +1,94 @@
+{
+  "schema": "LAWS_LAYERED_INFORMATION_GRID_PRECONSTRUCTION_CONTRACT_v3",
+  "operationId": "LAWS_LAYERED_INFORMATION_GRID_RECONSTRUCTION_20260827_001",
+  "lockGeneration": 1751,
+  "lockScope": "LAWS:BACK_PAGE_CONTEXTUAL_DELIVERY:V1",
+  "governingHead": "b405c91b89df10ee9e51b784d7bd2686c17df6ac",
+  "assetIdentity": "LAWS_LAYERED_INFORMATION_GRID_GEN1751_20260827",
+  "reference": {
+    "route": "/laws/research/methods-and-models/",
+    "role": "CONTEXTUAL_DELIVERY_ARCHITECTURE_REFERENCE_ONLY",
+    "mutationAllowed": false,
+    "indexBlob": "d48ca6648aec91fd19254bfa8de97e72cb0eebc5"
+  },
+  "protected": {
+    "lawsRoot": {
+      "path": "laws/index.html",
+      "mutationAllowed": false,
+      "blob": "d6de5558a6ba38e66ad6284a80c03de67682628b"
+    },
+    "methodsAndModelsTree": {
+      "path": "laws/research/methods-and-models/",
+      "mutationAllowed": false
+    }
+  },
+  "frozenInteractionGrammar": [
+    "NUMBERED_TOP_CAROUSEL_RAIL",
+    "OUTER_SWIPE_KEYBOARD_AND_CARD_ROTATION",
+    "RETURN_TO_ORBIT_RESTORES_SAME_CARD",
+    "BOTTOM_PREVIOUS_NEXT_GREATER_LAWS_NAVIGATION",
+    "THREE_HORIZONTAL_LENSES_INDEPENDENT_FROM_VERTICAL_STORY_LAYERS"
+  ],
+  "reconstructedContextualDelivery": {
+    "routeMap": "laws/room-carousel/route-card-map.v2.json",
+    "routeCount": 29,
+    "cardCount": 134,
+    "allowedCardCounts": [4, 5, 6],
+    "outerCardAuthority": "EXPLICIT_ROUTE_DECLARATION_AND_ROUTE_MAP_ONLY",
+    "directPageSectionInferenceAllowed": false,
+    "internalLayers": ["practical", "engineering", "empirical"],
+    "internalStoryAxis": {
+      "orientation": "VERTICAL",
+      "minimumPerCard": 4,
+      "maximumPerCard": 5,
+      "labels": "PAGE_AND_CARD_SPECIFIC",
+      "visibleCellCount": 1
+    },
+    "initialInternalLayer": "practical_after_explicit_open",
+    "initialStoryLayer": "first_story_after_explicit_open",
+    "internalLayerMayMoveOuterCarousel": false,
+    "storyLayerMayMoveOuterCarousel": false,
+    "lensAndStoryAxesPreserveEachOther": true,
+    "custodyRole": "COMPACT_COLLAPSED_SOURCE_IDENTITY_AND_CLAIM_STANDING_ONLY",
+    "rawLegacyPresentationMirrorAllowed": false,
+    "noJsRole": "STRUCTURED_SEMANTIC_GRID",
+    "claimBoundaryRole": "VISIBLE_INSIDE_RELEVANT_EMPIRICAL_LAYER"
+  },
+  "representatives": {
+    "cycles": ["recurrence", "rhythm", "feedback", "renewal", "engineering-addendum"],
+    "handoffs": ["transfer-object", "state-context", "interface", "acceptance", "receipt-continuity", "failure-boundary"],
+    "reality": ["reality", "theory", "evidence", "measure", "limits", "audit"],
+    "representativeHookReceipt": 5434488841,
+    "renderedCases": 6,
+    "phoneTabletDisposition": "PASS"
+  },
+  "realityCorrection": {
+    "existingDeepRoutes": [
+      "/laws/categories/reality/theory.html",
+      "/laws/categories/reality/evidence.html",
+      "/laws/categories/reality/measure.html",
+      "/laws/categories/reality/limits.html"
+    ],
+    "inventAuditRoute": false,
+    "previousRoute": "/laws/categories/integrity/",
+    "nextRoute": "/laws/categories/structure/"
+  },
+  "responsiveContract": {
+    "orbitOnPhoneAndTablet": true,
+    "innerControlsHiddenUntilOpen": true,
+    "openedCardIsReadingSurface": true,
+    "returnImmediatelyAvailable": true,
+    "innerTabsConflictWithOuterSwipe": false,
+    "verticalStoryRailRemainsVisibleOnPhone": true,
+    "nestedHorizontalScrollingAllowed": false,
+    "reducedMotionRetainsSemantics": true,
+    "noJsSourceAndCustodyReachable": true
+  },
+  "authorityBoundary": {
+    "scientificValidationClaimed": false,
+    "universalLawProven": false,
+    "productAcceptanceGrantedByContract": false,
+    "mergeAuthorityGrantedByContract": false,
+    "deploymentAuthorityGrantedByContract": false
+  }
+}

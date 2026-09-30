@@ -1,0 +1,39 @@
+name: H-Earth Gen2 Live Bridge Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+      - name: Require exact bridge candidate
+        run: test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+      - name: Install browser
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Fetch bridge verifier
+        env:
+          CONTROL_PLANE_SHA: ${{ github.sha }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$CONTROL_PLANE_SHA"
+          git show "$CONTROL_PLANE_SHA:tools/h-earth-gen2-live-bridge-qualify.mjs" > .gen2-live-bridge-qualify.mjs
+      - name: Qualify real public-route bridge
+        run: node .gen2-live-bridge-qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-gen2-live-bridge-${{ inputs.target_sha }}
+          path: /tmp/gen2-bridge-evidence
+          if-no-files-found: error
+          retention-days: 30

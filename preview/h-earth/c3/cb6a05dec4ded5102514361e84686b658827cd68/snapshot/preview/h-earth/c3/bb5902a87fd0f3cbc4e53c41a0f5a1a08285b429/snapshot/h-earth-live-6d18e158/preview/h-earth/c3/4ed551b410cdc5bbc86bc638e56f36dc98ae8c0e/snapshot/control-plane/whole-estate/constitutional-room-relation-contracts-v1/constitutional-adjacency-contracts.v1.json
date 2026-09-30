@@ -1,0 +1,60 @@
+{
+  "schema": "WHOLE_ESTATE_CONSTITUTIONAL_ADJACENCY_CONTRACTS_v1",
+  "status": "CHECKPOINT_3_CONSTRUCTION_CANDIDATE",
+  "relationLaw": "NAVIGABLE_RELATION_REQUIRES_DECLARED_SEMANTIC_RELATION",
+  "roomAdjacencyCreatesUniversalObjectRelation": false,
+  "rendererMayInventRelations": false,
+  "narrativeConvenienceMayInventRelations": false,
+  "relations": [
+    {"from":"COMPASS","to":"REALITY","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"LAWS","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"UCIC","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"IMI","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"COHERENCE_DIAGNOSTIC","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"FRONTIER","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"PRODUCTS","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"WORLDS_CHARACTERS_CAMPAIGNS","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+    {"from":"COMPASS","to":"RESEARCH_PROVENANCE","type":"ORIENTS_TO","scientificStandingEffect":"NONE"},
+
+    {"from":"REALITY","to":"UCIC","type":"EPISTEMIC_BOUNDARY_INPUT","scientificStandingEffect":"CONSTRAINS_INTERPRETATION_NOT_RESULT"},
+    {"from":"REALITY","to":"METHODS_MODELS","type":"EPISTEMIC_BOUNDARY_INPUT","scientificStandingEffect":"CONSTRAINS_INTERPRETATION_NOT_RESULT"},
+    {"from":"LAWS","to":"UCIC","type":"CONSTRAINT_AND_ADMISSIBILITY_INPUT","scientificStandingEffect":"CONSTRAINS_TESTABILITY_NOT_RESULT"},
+    {"from":"LAWS","to":"METHODS_MODELS","type":"TEST_BOUNDARY_INPUT","scientificStandingEffect":"CONSTRAINS_METHOD_NOT_RESULT"},
+    {"from":"LAWS","to":"FRONTIER","type":"APPLIED_TEST_BOUNDARY","scientificStandingEffect":"CONSTRAINS_APPLICATION_NOT_RESULT"},
+
+    {"from":"UCIC","to":"IMI","type":"CANDIDATE_STRUCTURE_INPUT_TO_INSTRUMENT","scientificStandingEffect":"NONE"},
+    {"from":"UCIC","to":"METHODS_MODELS","type":"FOUNDATION_DEPENDENCY","scientificStandingEffect":"NONE"},
+    {"from":"IMI","to":"METHODS_MODELS","type":"MEASUREMENT_INPUT","scientificStandingEffect":"NONE"},
+    {"from":"METHODS_MODELS","to":"FRONTIER","type":"METHOD_MODEL_EVIDENCE_BRIDGE","scientificStandingEffect":"GIVEN_THAT_STANDING_ONLY"},
+    {"from":"METHODS_MODELS","to":"PRODUCTS","type":"CLAIM_TRACE_AND_DISCOVERY_GATEWAY","scientificStandingEffect":"GIVEN_THAT_STANDING_ONLY","objectSpecificRelationRequired":true},
+    {"from":"METHODS_MODELS","to":"WORLDS_CHARACTERS_CAMPAIGNS","type":"CLAIM_TRACE_AND_DISCOVERY_GATEWAY","scientificStandingEffect":"GIVEN_THAT_STANDING_ONLY","objectSpecificRelationRequired":true},
+
+    {"from":"FRONTIER","to":"PRODUCTS","type":"MAY_INFORM_IMPLEMENTATION","scientificStandingEffect":"NONE","objectSpecificRelationRequired":true},
+    {"from":"PRODUCTS","to":"METHODS_MODELS","type":"MATERIAL_RESEARCH_CLAIM_TRACEBACK_GATEWAY","scientificStandingEffect":"NONE","objectSpecificRelationRequired":true},
+    {"from":"WORLDS_CHARACTERS_CAMPAIGNS","to":"METHODS_MODELS","type":"RESEARCH_BEARING_EXPRESSION_TRACEBACK_GATEWAY","scientificStandingEffect":"NONE","objectSpecificRelationRequired":true},
+
+    {"from":"UCIC","to":"RESEARCH_PROVENANCE","type":"PROVENANCE_REQUIRED","scientificStandingEffect":"NONE"},
+    {"from":"IMI","to":"RESEARCH_PROVENANCE","type":"PROVENANCE_REQUIRED","scientificStandingEffect":"NONE"},
+    {"from":"METHODS_MODELS","to":"RESEARCH_PROVENANCE","type":"PROVENANCE_REQUIRED","scientificStandingEffect":"NONE"},
+    {"from":"FRONTIER","to":"RESEARCH_PROVENANCE","type":"PROVENANCE_REQUIRED","scientificStandingEffect":"NONE"},
+    {"from":"PRODUCTS","to":"RESEARCH_PROVENANCE","type":"PROVENANCE_REQUIRED_WHEN_RESEARCH_BEARING","scientificStandingEffect":"NONE"},
+    {"from":"WORLDS_CHARACTERS_CAMPAIGNS","to":"RESEARCH_PROVENANCE","type":"PROVENANCE_REQUIRED_WHEN_RESEARCH_BEARING","scientificStandingEffect":"NONE"},
+
+    {"from":"METHODS_MODELS","to":"INTERFACE_3D","type":"DECLARED_RELATION_REPRESENTATION_INPUT","scientificStandingEffect":"NONE"},
+    {"from":"RESEARCH_PROVENANCE","to":"INTERFACE_3D","type":"STANDING_AND_SOURCE_DISPLAY_INPUT","scientificStandingEffect":"NONE"},
+    {"from":"INTERFACE_3D","to":"METHODS_MODELS","type":"PRESENTATION_AND_NAVIGATION_ONLY","scientificStandingEffect":"PROHIBITED"},
+    {"from":"INTERFACE_3D","to":"WORLDS_CHARACTERS_CAMPAIGNS","type":"PRESENTATION_AND_NAVIGATION_ONLY","scientificStandingEffect":"PROHIBITED"}
+  ],
+  "forbiddenImplications": [
+    "ADJACENCY_DOES_NOT_IMPLY_CONTAINMENT",
+    "ADJACENCY_DOES_NOT_IMPLY_CAUSATION",
+    "ADJACENCY_DOES_NOT_IMPLY_VALIDATION",
+    "SPATIAL_PROXIMITY_DOES_NOT_IMPLY_EVIDENTIARY_STRENGTH",
+    "SPATIAL_CENTRALITY_DOES_NOT_IMPLY_SCIENTIFIC_IMPORTANCE",
+    "DEPTH_DOES_NOT_IMPLY_TRUTH",
+    "SCALE_DOES_NOT_IMPLY_VALIDATION"
+  ],
+  "laterObjectGraphRequired": true,
+  "spatialTopologyFreezeAuthorized": false,
+  "publicMutationAuthorized": false
+}

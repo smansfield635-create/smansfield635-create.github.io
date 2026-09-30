@@ -1,0 +1,106 @@
+{
+  "schema": "CHECKPOINT_1_TO_2_SCIENTIFIC_DEVELOPMENT_RECONCILIATION_v1",
+  "status": "CHECKPOINT_2_CONSTRUCTION_CANDIDATE",
+  "governingMain": "c73a4f8854b8b2bf8f7b12fa860f0bc85d666544",
+  "source": {
+    "pr": 720,
+    "sourceStatus": "DRAFT_UNMERGED",
+    "authoritativeResearchHead": "5664ba8e059a65f1b7ec39f2c7e944866c06278b",
+    "pageReadyRecord": "research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/PAGE_READY_RESEARCH_RECORD.md",
+    "study": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1"
+  },
+  "classificationVocabulary": [
+    "COMPATIBLE_DELTA",
+    "CONSTITUTIONAL_CORRECTION",
+    "FUTURE_EVIDENCE_DELTA",
+    "HYPOTHESIS_GENERATED_BY_EVIDENCE"
+  ],
+  "constitutionalDimensionsTested": [
+    "IDENTITY",
+    "NESTING",
+    "AUTHORITY",
+    "OWNERSHIP",
+    "CLAIM_CEILING",
+    "PUBLIC_ROUTE_ROLE",
+    "PROVENANCE_RELATION",
+    "CROSSWALK_RELATION"
+  ],
+  "developments": [
+    {
+      "deltaId": "UCIC_TEMPORAL_ROUTE_TRANSFER_ARM_A",
+      "developmentClass": "FUTURE_EVIDENCE_DELTA",
+      "disposition": "UCIC_CROSS_DOMAIN_TEMPORAL_ROUTE_TRANSFER_SUPPORTED_WITH_LIMITATIONS",
+      "constitutionalImpact": false,
+      "cp1RepairRequired": false,
+      "cp2NarrativeImpact": "MATERIAL",
+      "claimCeiling": "RETROSPECTIVE_TEMPORAL_ROUTE_TRANSFER_SUPPORT_WITH_LIMITATIONS_NO_TRUE_PROSPECTIVE_OR_UNIVERSALITY_CLAIM",
+      "provenanceStatus": "EXACT_SOURCE_IDENTIFIED"
+    },
+    {
+      "deltaId": "UCIC_SYSTEMIC_EARLY_WARNING_PILOT",
+      "developmentClass": "FUTURE_EVIDENCE_DELTA",
+      "disposition": "EARLY_WARNING_AND_RELATIONAL_MITIGATION_CONTRAST_SUPPORTED",
+      "constitutionalImpact": false,
+      "cp1RepairRequired": false,
+      "cp2NarrativeImpact": "MATERIAL_BOUNDED",
+      "claimCeiling": "BOUNDED_SYSTEMIC_PILOT_NO_UNIVERSAL_COLLAPSE_METRIC",
+      "provenanceStatus": "EXACT_SOURCE_IDENTIFIED"
+    },
+    {
+      "deltaId": "FDIC_LONGITUDINAL_GENERALIZATION",
+      "developmentClass": "FUTURE_EVIDENCE_DELTA",
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+      "constitutionalImpact": false,
+      "cp1RepairRequired": false,
+      "cp2NarrativeImpact": "MATERIAL",
+      "claimCeiling": "REGISTERED_PUBLIC_FINANCIAL_NONCOMPENSATORY_WARNING_RULE_NOT_A_DISCRIMINATING_BANK_COLLAPSE_PREDICTOR",
+      "adverseEvidence": {
+        "ucicSensitivity": 1.0,
+        "ucicFalsePositiveRate": 1.0,
+        "ucicDiscriminationMargin": 0.0,
+        "additiveSensitivity": 0.636,
+        "additiveFalsePositiveRate": 0.273,
+        "additiveDiscriminationMargin": 0.364
+      },
+      "provenanceStatus": "EXACT_SOURCE_IDENTIFIED"
+    },
+    {
+      "deltaId": "RELATIONAL_VS_PREDICTIVE_COLLAPSE_NARRATIVE_DISTINCTION",
+      "developmentClass": "COMPATIBLE_DELTA",
+      "disposition": "THE_RELATIONAL_PROPOSITION_IS_PRESENTLY_STRONGER_THAN_THE_PREDICTIVE_COLLAPSE_PROPOSITION",
+      "constitutionalImpact": false,
+      "cp1RepairRequired": false,
+      "cp2NarrativeImpact": "MATERIAL",
+      "claimCeiling": "NARRATIVE_SYNTHESIS_ONLY_DO_NOT_UPGRADE_THE_UNDERLYING_STUDIES",
+      "provenanceStatus": "DERIVED_FROM_NONCOMPENSATING_STUDY_DISPOSITIONS"
+    },
+    {
+      "deltaId": "CONDITION_VULNERABILITY_TRAJECTORY_FAILURE_SEPARATION",
+      "developmentClass": "HYPOTHESIS_GENERATED_BY_EVIDENCE",
+      "disposition": "RESEARCH_DIRECTION_NOT_ESTABLISHED_BY_FDIC_RESULT",
+      "constitutionalImpact": false,
+      "cp1RepairRequired": false,
+      "cp2NarrativeImpact": "MATERIAL_WITH_HYPOTHESIS_LABEL",
+      "claimCeiling": "MAY_BE_PRESENTED_AS_OPEN_RESEARCH_DISTINCTION_OR_TEST_TARGET_ONLY",
+      "provenanceStatus": "HYPOTHESIS_GENERATED_BY_ADVERSE_RESULT"
+    },
+    {
+      "deltaId": "SUPPORT_MODULATES_VULNERABILITY_TO_FAILURE",
+      "developmentClass": "HYPOTHESIS_GENERATED_BY_EVIDENCE",
+      "disposition": "FUTURE_TEST_TARGET_UNLESS_SEPARATELY_SUPPORTED",
+      "constitutionalImpact": false,
+      "cp1RepairRequired": false,
+      "cp2NarrativeImpact": "BOUNDED",
+      "claimCeiling": "NO_GENERAL_CAUSAL_OR_PREDICTIVE_CLAIM",
+      "provenanceStatus": "OPEN_TEST_TARGET"
+    }
+  ],
+  "terminalConstitutionalDisposition": {
+    "constitutionalImpact": false,
+    "cp1RepairRequired": false,
+    "checkpoint1Reopen": false,
+    "checkpoint2ConstructionPermittedFromScientificGate": true,
+    "scientificClaimUpgradeAuthorized": false,
+    "draftPr720MergeAuthorized": false
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "schema": "COMPASS_HOLOGRAPHIC_VERTICAL_SLICE_CONTRACT_v1",
+  "status": "CONSTRUCTION_AUTHORITY_FROZEN",
+  "operation": {
+    "id": "COMPASS_MAIN_ORIENTATION_HOLOGRAPHIC_SUCCESSOR_VERTICAL_SLICE_20260904_001",
+    "controlPlaneHead": "f0dbfdf17df6560fc475df5f0556029b7edf1718",
+    "publicBaseHead": "8ca9f9fcae3e975993f8c50a4c2524cee0de0f1c",
+    "intakeResult": "ADMITTED_AND_LOCKED",
+    "lockGeneration": 415,
+    "scopeHash": "43fa8c3a8b373d64525e6e226109fbde6c3118a8bfda013df083c497293d1ed2",
+    "requestDigest": "03e267d2c29ea943e886a98bee66f5b852ed5a48afd3f4fe1e3d18acfcc10225",
+    "procedureDigest": "e668ffe550c5316853e2708ac314781413c41db01bf45fb9cccaaf7a90b115d9"
+  },
+  "surface": {
+    "class": "ISOLATED_PREVIEW_ONLY",
+    "scope": "ENTRY_GATE_TO_HOLOGRAPHIC_COMPASS_VERTICAL_SLICE",
+    "productionMutation": false,
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false
+  },
+  "successorProgram": {
+    "masterDurationEnvelopeSeconds": [38, 42],
+    "exactMasterDurationFrozen": false,
+    "acquisitionModel": "CODE_NATIVE_HOLOGRAPHIC_RECONSTRUCTION",
+    "physicalVideoClipsRequired": 0,
+    "genericProxyRequirement": 0,
+    "sourceBindingStatus": "11_OF_11_CLOSED",
+    "renderReadyDescriptorStatus": "P1_P2_VERTICAL_SLICE_ONLY"
+  },
+  "verticalSlice": {
+    "entryState": "DORMANT_INSTRUMENT",
+    "beginSequence": [
+      {"state": "CONFIRM", "fromMs": 0, "toMs": 140},
+      {"state": "TESSELLATE", "fromMs": 140, "toMs": 820},
+      {"state": "DISINTEGRATE", "fromMs": 820, "toMs": 1750},
+      {"state": "STARFIELD_FORM", "fromMs": 1350, "toMs": 2300},
+      {"state": "COMPASS_FORM", "fromMs": 1700, "toMs": 3550},
+      {"state": "SETTLE", "fromMs": 3550, "toMs": 4350}
+    ],
+    "skipSequence": [
+      {"state": "CONFIRM", "fromMs": 0, "toMs": 100},
+      {"state": "TESSELLATE", "fromMs": 100, "toMs": 650},
+      {"state": "CONVERGE", "fromMs": 650, "toMs": 1550},
+      {"state": "COMPASS_FORM", "fromMs": 900, "toMs": 2200},
+      {"state": "SETTLE", "fromMs": 2200, "toMs": 2450}
+    ],
+    "selectedControlContinuityLaw": "SELECTED_CONTROL_CELLS_BECOME_SUCCESSOR_STAR_AND_COMPASS_MATTER",
+    "blankFrameAllowance": 0,
+    "replayOrNavigationAuthority": "NONE_IN_ISOLATED_PREVIEW"
+  },
+  "holographicMaterial": {
+    "law": "PRESENTATION_TRANSFORMS_SOURCE_IDENTITY_WITHOUT_REPLACING_IT",
+    "surface": "RESTRAINED_TRANSLUCENT_TECHNICAL",
+    "edge": "SOURCE_DERIVED_EMISSIVE_LINE",
+    "scan": "BOUNDED_LOCAL_SCAN_ONLY",
+    "sourceAccentPreservation": true,
+    "genericNeonWireframe": false,
+    "fullscreenAnimatedFilter": false,
+    "backdropFilterDuringPlaying": false
+  },
+  "runtimeInvariants": {
+    "masterRequestAnimationFrameAuthorities": 1,
+    "destinationOwnedAnimationSchedulers": 0,
+    "destinationOwnedGpuContexts": 0,
+    "cinematicOwnedContextClass": "CANVAS_2D_FOR_VERTICAL_SLICE",
+    "canvasDimensionAssignmentInRenderLoop": false,
+    "continuouslyRetargetedCssTransitions": false,
+    "stableStateFilter": "none",
+    "inactivePassagePolicy": "UNMOUNTED_OR_RESOURCE_DORMANT",
+    "destinationRuntimeImports": false,
+    "navigationMutation": false,
+    "historyMutation": false,
+    "analyticsMutation": false,
+    "durableApplicationStateMutation": false
+  },
+  "entryGatePersonality": {
+    "identity": "DORMANT_PRECISION_INSTRUMENT",
+    "visualPrinciples": [
+      "RESTRAINED_CONCENTRIC_MEASUREMENT_GEOMETRY",
+      "QUIET_DIRECTIONAL_AXES",
+      "PREMIUM_DARK_TEAL_AND_GOLD_CONTINUITY",
+      "CHOICE_ACTIVATES_THE_INSTRUMENT",
+      "NO_REFERENCE_IMAGE_EMBEDDING"
+    ],
+    "communityBrandBoundary": "CONSIDER_THE_ENERGY_IS_SEPARATE_COMMUNITY_IDENTITY_AND_IS_NOT_ENTRY_GATE_DECORATION"
+  },
+  "sourceBindings": [
+    {"passage":"P1","identity":"ARRIVAL_STARFIELD","path":"assets/build/fibonacci-cosmos-core-v7.js","blob":"93a9fc9989b53ef75319dc1af0206ebc6a2b537c","mode":"ALGORITHM_DERIVATION","implementation":"VERTICAL_SLICE_ACTIVE"},
+    {"passage":"P2","identity":"COMPASS","path":"assets/compass/upstream-compass.geometry.js","blob":"fe35d8d844859a6af810684ace53d2c65258522f","mode":"PURE_GEOMETRY_EXTRACTION","implementation":"VERTICAL_SLICE_ACTIVE"},
+    {"passage":"P3","identity":"CHAPTER_ONE_HEART","path":"nine-summits-of-love/index.html","blob":"ac955931681b46e39706d298f4f83d4cf50a50c5","mode":"CODE_NATIVE_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P4","identity":"RESEARCH_FRONTIER","path":"evidence/agentic-frontier/index.html","blob":"06a82735deec6e577b71cf47b2d7246a9d853f0f","mode":"CODE_NATIVE_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P5","identity":"COHERENCE_DIAGNOSTIC","path":"coherence-diagnostic/index.html","blob":"bef36f101c15fe949b89dd6ecea6117cd471680e","mode":"CODE_NATIVE_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P6","identity":"COHERISCOPE","path":"assets/compass/compass.brain-scene.js","blob":"325b9486d0ab2136d425aed9468c22c28c67a57b","mode":"CODE_NATIVE_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P7A","identity":"HOUSE","path":"assets/compass/compass.house-scene.js","blob":"a82e3c963a10808b9f8f1922faab45155ea4a62b","mode":"CODE_NATIVE_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P7B","identity":"MIRRORLAND_WINDOW","path":"assets/shared/mirrorland-window.geometry.js","blob":"fb3ee8ab92fa4b08e7708b83780de75d1a6f8595","mode":"PURE_GEOMETRY_EXTRACTION","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P7C","identity":"JEEVES_TALK_TO_HOUSE","path":"showroom/globe/hearth/jeeves/index.html","blob":"fe909379190431baaf825df1b776ec1d66c305f2","mode":"SEMANTIC_IDENTITY_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P8","identity":"BUILD_YOUR_OWN_WEBSITE","path":"build/index.html","blob":"7875a6a220fa44da24fe2ad805bb1e146440b5d6","mode":"CODE_NATIVE_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P9","identity":"AUDRALIA_WORLD","path":"inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs","blob":"872d20b17bb0cd89d9613ca0262b25350890a617","mode":"CANONICAL_GEOMETRY_EXTRACTION","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P10","identity":"TROPHY_AWARDS","path":"assets/compass/compass.trophy-scene.js","blob":"d281e18b06128671ffe2a19e8fdb272cc5544e31","mode":"CODE_NATIVE_DESCRIPTOR","implementation":"BOUND_NOT_IMPLEMENTED"},
+    {"passage":"P11","identity":"RETURN_COMPASS_HANDOFF","path":"assets/compass/upstream-compass.geometry.js","blob":"fe35d8d844859a6af810684ace53d2c65258522f","mode":"PURE_GEOMETRY_EXTRACTION_TO_LIVE_HANDOFF","implementation":"BOUND_NOT_IMPLEMENTED"}
+  ],
+  "reducedMotion": {
+    "begin": "DIRECT_GEOMETRIC_DISSOLVE_TO_STATIC_STARFIELD_AND_COMPASS",
+    "skip": "DIRECT_COMPASS_RESOLVE",
+    "stateSemanticsEquivalent": true,
+    "flyingFragments": false
+  },
+  "qualification": {
+    "staticVerifier": "node preview/compass/holographic-orientation-v1/verify.v1.mjs",
+    "gpuTemporalQualificationRequiredBeforeProduction": true,
+    "targetDeviceThreeRunSevereDropRequirement": [0,0,0],
+    "severeDropFormula": "L_t < 0.55*((L_t-1+L_t+1)/2) WITH NEIGHBOR_DIFFERENCE_RATIO < 0.12",
+    "unexpectedDestinationGpuContexts": 0,
+    "rendererOverlapViolations": 0,
+    "unexpectedStageDisconnects": 0,
+    "uncaughtErrors": 0
+  }
+}

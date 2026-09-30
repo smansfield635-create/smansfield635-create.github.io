@@ -1,0 +1,114 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "prelude-threshold",
+  "description": "Prelude editorial threshold: direct premise before route choice, using the estate's current contextual-expression grammar without duplicating Compass or introducing heavy 3D runtime.",
+  "checks": [
+    {
+      "path": "/prelude/",
+      "includes": [
+        "data-contract=\"PRELUDE_THRESHOLD_v1\"",
+        "data-prelude-role=\"premise-before-choice\"",
+        "data-heavy-runtime=\"false\"",
+        "data-canvas=\"false\"",
+        "data-webgl=\"false\"",
+        "data-contextual-expression=\"compass-laws-community-adoption\"",
+        "/assets/prelude/prelude.threshold.css?v=prelude-g1-20260909",
+        "/assets/prelude/prelude.threshold.js?v=prelude-g1-20260909",
+        "Know what you’re walking into.",
+        "Different kinds of work can belong together without becoming the same thing.",
+        "You do not need the whole map.",
+        "Start with what brought you here.",
+        "Enter Door"
+      ],
+      "excludes": [
+        "planetary-attachment-marker-v1",
+        "PL1 · Prelude · Planetary Attachment",
+        "The opening read before descent.",
+        "Enter cleanly.",
+        "Set the cadence.",
+        "Move by fit."
+      ]
+    },
+    {
+      "path": "/assets/prelude/prelude.threshold.css",
+      "includes": [
+        "PRELUDE_THRESHOLD_v1",
+        ".prelude-thesis",
+        ".prelude-read-tabs",
+        ".prelude-read-panel",
+        "@media(prefers-reduced-motion:reduce)"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/prelude/prelude.threshold.js",
+      "includes": [
+        "PRELUDE_THRESHOLD_v1",
+        "data-prelude-read-tab",
+        "data-prelude-read-panel",
+        "ArrowRight",
+        "ArrowLeft",
+        "preludeReady"
+      ],
+      "excludes": [
+        "WebGL",
+        "canvas.getContext"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/prelude/",
+    "timeoutMs": 20000,
+    "readySelector": "[data-prelude-reads]",
+    "readyAttribute": {
+      "selector": "[data-prelude-reads]",
+      "name": "data-prelude-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/prelude/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Select second Prelude read",
+        "action": {
+          "type": "click",
+          "selector": "[data-prelude-read-tab=\"distinguish\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-prelude-reads]",
+            "name": "data-active-read",
+            "value": "distinguish"
+          },
+          {
+            "type": "textContains",
+            "selector": "#prelude-panel-distinguish",
+            "value": "different kinds of answers"
+          }
+        ]
+      },
+      {
+        "name": "Advance Prelude read with keyboard",
+        "action": {
+          "type": "key",
+          "selector": "[data-prelude-read-tab=\"distinguish\"]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-prelude-reads]",
+            "name": "data-active-read",
+            "value": "move"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "schema": "REMOTE_VIDEO_SOURCE_REGISTRY_v1",
+  "status": "ACTIVE_PUBLIC_EXECUTION_SURFACE_WITH_IDENTITY_RESERVATIONS",
+  "sources": [
+    {
+      "sourceId": "CHAPTER_01_LIVE_V28",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "ad395e724cbfea1c19c9ce43393c1148fa557816",
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4",
+      "expectedGitBlob": "90fed782fa6a9c2857909e7d29836d7dd0d83273",
+      "expectedSha256": "42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62",
+      "role": "CHAPTER_01_PROTECTED_BASELINE",
+      "chapterScope": [1],
+      "reusePolicy": "PROTECTED_BASELINE_AND_APPROVED_DERIVATIVE_SOURCE_ONLY"
+    },
+    {
+      "sourceId": "CHAPTER_01_HOMECOMING_WORLD_V1",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "main",
+      "path": "proof-media/video-conform/ch01-homecoming-world-v1.mp4",
+      "expectedGitBlob": "85564815678255e2ab83b892dbdb63a9437826f9",
+      "expectedSha256": "13b45b04c2d5de90dd6d47e58e0b4f7b6ed4180d26b88de38ed178caccff5707",
+      "expectedBytes": 1258225,
+      "durationSeconds": 3.5,
+      "width": 1920,
+      "height": 1080,
+      "fps": 24,
+      "role": "CHAPTER_01_HOMECOMING_PLANETARY_DISTANCE_DERIVATIVE",
+      "chapterScope": [1],
+      "sourceLineage": {
+        "sourceId": "CHAPTER_02_WORLD_REEL_LIVE",
+        "sourceIntervalSeconds": [20.0, 23.5],
+        "normalization": "crop=480:700:720:170 -> scale/crop 1920x1080 -> yuv420p; no audio"
+      },
+      "targetUse": "CHAPTER_01_42.0_TO_45.5_HOMECOMING_ONLY",
+      "reusePolicy": "BOUNDED_CHAPTER_01_HOMECOMING_USE_ONLY__DOES_NOT_SUPERSEDE_23774_AS_CHAPTER_02_SOURCE"
+    },
+    {
+      "sourceId": "CHAPTER_02_WORLD_REEL_LIVE",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "main",
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4",
+      "expectedGitBlob": "db0563a1a45811dadc36c48f0cb2356d748e9a07",
+      "role": "CHAPTER_02_EXISTING_WORLD_REEL_REFERENCE",
+      "chapterScope": [1,2],
+      "reusePolicy": "CROSS_CHAPTER_WHEN_SEMANTICALLY_JUSTIFIED"
+    },
+    {
+      "sourceId": "CHAPTER_02_AWARDS_REEL_LIVE",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "main",
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4",
+      "expectedGitBlob": "bb716dc3642901d1e31a8a09e79229f60e4f073c",
+      "role": "H_EARTH_AWARDS_REFERENCE",
+      "chapterScope": [2,3,6],
+      "reusePolicy": "REFERENCE_OR_PROOF_ONLY_UNLESS_SEPARATELY_ADMITTED"
+    }
+  ],
+  "identityReservations": [
+    {
+      "sourceId": "COMPASS_CH01_CANONICAL_SOURCE_23619",
+      "provider": "GOOGLE_DRIVE",
+      "fileName": "23619.mp4",
+      "fileId": "1nQKAfKJ2ORMSpIhjyt5A_gy4neYFrh7A",
+      "expectedBytes": 91348244,
+      "expectedSha256": "c5caa176633209bdc618f505f64cafef5535e400ce2bf1728cde79582169c9a3",
+      "role": "CHAPTER_01_CANONICAL_PICTURE_RESERVE",
+      "chapterScope": [1,3],
+      "reusePolicy": "SOURCE_RESERVE_ONLY_BY_SEPARATE_ADMISSION",
+      "executionStatus": "AI_ENTRY_CONNECTOR_MATERIALIZATION_AVAILABLE__PUBLIC_RUNNER_DIRECT_FETCH_NOT_AVAILABLE"
+    },
+    {
+      "sourceId": "CHAPTER_01_METHODS_CAPTURE_23772",
+      "fileName": "23772.mp4",
+      "expectedBytes": 12281555,
+      "expectedSha256": "545231d08474bc41cfaa0f190a2eea88d7b6b1f5ab48221a32ae73a393b370c5",
+      "durationSeconds": 20.172458,
+      "role": "METHODS_AND_MODELS_INTERACTION_EVIDENCE",
+      "chapterScope": [1,5,6],
+      "reusePolicy": "REFERENCE_ONLY_FOR_CHAPTER_01_CURRENT_CONFORM__MAY_BE_RECONSIDERED_BY_SEPARATE_ADMISSION",
+      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING"
+    },
+    {
+      "sourceId": "CHAPTER_02_GLOBE_CAPTURE_23774",
+      "fileName": "23774.mp4",
+      "expectedBytes": 28908592,
+      "expectedSha256": "aa73e60ca419b0b8aaed0332e5d97bbd516533c75d7512a9385168b2004845d4",
+      "durationSeconds": 62.663756,
+      "role": "GLOBE_SCALE_APPROACH_AND_ORBITAL_WITHDRAWAL",
+      "chapterScope": [1,2,3],
+      "approvedIntervals": {
+        "approach": "00:08-00:36",
+        "return": "00:43-01:02.66",
+        "chapter01HomecomingCandidate": "00:43-01:02.66"
+      },
+      "reusePolicy": "CROSS_CHAPTER_WHEN_DISTANCE_HOME_OR_PLANETARY_SCALE_IS_SEMANTICALLY_CONTROLLING",
+      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING__CHAPTER_01_DEPENDENCY_SATISFIED_BY_SEPARATE_APPROVED_DERIVATIVE"
+    },
+    {
+      "sourceId": "CHAPTER_02_TRAVERSAL_CAPTURE_23775",
+      "fileName": "23775.mp4",
+      "expectedBytes": 33963833,
+      "expectedSha256": "20028cc073a552e66a876ccefe27e1fa11e414a3ef7810b00b9370e0ad7eda5a",
+      "durationSeconds": 90.810938,
+      "role": "GLOBE_TO_H_EARTH_HANDOFF_AND_FIRST_PERSON_TRAVERSAL",
+      "chapterScope": [2,3,6],
+      "approvedIntervals": {
+        "worldHandoff": "00:00-00:18",
+        "coastalArrival": "00:18-00:35",
+        "environmentalTraversal": "00:55-01:16"
+      },
+      "reusePolicy": "CROSS_CHAPTER_ONLY_WHEN_ENTRY_TRAVERSAL_OR_INHABITED_WORLD_PROOF_IS_SEMANTICALLY_CONTROLLING",
+      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING"
+    },
+    {
+      "sourceId": "CHAPTER_01_LAWS_PHYSICAL_DEVICE_CAPTURE",
+      "fileName": "2026-08-16_LAWS_PAGE_COMPASS_CAROUSEL_PHYSICAL_DEVICE_AWARDS_CAPTURE.mp4",
+      "expectedBytes": 43283153,
+      "expectedSha256": "2d60526da9fe226410bf4b6f7057087e3c067a2070fd1db7ec8423e659ec423c",
+      "durationSeconds": 30.933437,
+      "role": "LAWS_CHAMBER_AND_COMPASS_CAROUSEL_PROOF",
+      "chapterScope": [1,3,5,6],
+      "reusePolicy": "PROOF_SOURCE_WHEN_LAWS_OR_CONNECTED_SYSTEM_BEHAVIOR_IS_RELEVANT",
+      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING"
+    },
+    {
+      "sourceId": "CHAPTER_01_V22_CINEMATIC_FLOOR",
+      "fileName": "chapter01-compass-v22-NATIVE-LANDSCAPE-AWARDS-PREMERGE.mp4",
+      "expectedSha256": "c5a8359dba70ff604394d3724f3ab562f7b9c6c80efbe4a606ad95c95a71f9e4",
+      "role": "CINEMATOGRAPHY_TYPOGRAPHY_CADENCE_TRANSITION_AND_MUSIC_FLOOR",
+      "chapterScope": [1],
+      "reusePolicy": "REFERENCE_FLOOR_ONLY",
+      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING"
+    },
+    {
+      "sourceId": "CHAPTER_01_STRONG_OWNER_CANDIDATE_V2",
+      "provider": "GOOGLE_DRIVE",
+      "fileName": "chapter01-compass-successor-continuity-owner-candidate-v2.mp4",
+      "fileId": "1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B",
+      "driveUrl": "https://drive.google.com/file/d/1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B/view",
+      "expectedBytes": 16476281,
+      "expectedSha256": "db3e981640fe7408fca12d9f6c411660a7dc15edee90ce0e3f1b798b91c928a1",
+      "durationSeconds": 65.0,
+      "width": 1920,
+      "height": 1080,
+      "fps": 24,
+      "role": "CURRENT_STRONG_CHAPTER_01_CONFORM_BASELINE",
+      "chapterScope": [1],
+      "reusePolicy": "PRIMARY_SOURCE_FOR_CURRENT_CHAPTER_01_TIMING_CONFORM_ONLY",
+      "executionStatus": "AI_ENTRY_DRIVE_STREAM_OPERATIONAL__PUBLIC_RUNNER_DIRECT_FETCH_NOT_AVAILABLE"
+    }
+  ],
+  "registrationLaw": {
+    "durableLocatorRequiredForExecutionReadySources": true,
+    "identityReservationMayPrecedeRemoteLocator": true,
+    "identityReservationDoesNotGrantEditorialAuthority": true,
+    "identityReservationDoesNotMakeSourceRendererFetchable": true,
+    "expectedGitBlobRequiredForGithubSources": true,
+    "expectedSha256Preferred": true,
+    "crossChapterReuseRequiresSemanticJustification": true,
+    "roomLocalMaterializationRequiredForExecutionReadySources": false,
+    "noSubstitutionWhenExactSourceIsNamed": true
+  }
+}

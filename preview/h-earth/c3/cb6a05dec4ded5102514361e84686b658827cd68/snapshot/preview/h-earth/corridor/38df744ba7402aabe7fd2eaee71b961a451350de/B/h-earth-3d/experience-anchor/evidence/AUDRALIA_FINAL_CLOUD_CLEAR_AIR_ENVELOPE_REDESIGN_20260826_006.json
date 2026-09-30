@@ -1,0 +1,65 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_BOUNDED_PRESENTATION_EVIDENCE_v1",
+  "candidateHeadBeforeEvidence": "e6a9a00852eaa328ef0f7aedbfcccbe3ad3cb0d5",
+  "changeClass": "AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDISTRIBUTION",
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs",
+      "sha256": "cf805d9028f2a513f571f030915b80fea72dd63927b26a965782430a0cb3a5cc"
+    }
+  ],
+  "anchorReview": {
+    "visual": "The final cloud expansion remains part of the established Audralia planetary atmosphere and adds six compact, visibly causal cloud systems separated by true clear-air gaps. It does not create a dashboard, map application, card surface, alternate world, or unrelated product identity.",
+    "interaction": "Camera semantics, direct look and travel controls, scale transitions, navigation, loader behavior, world canvas count, renderer architecture, and performance ceilings are unchanged. The mutation is confined to geographic centers inside the existing single-pass final cloud compositor.",
+    "continuity": "The same canonical Audralia world, terrain, coast, horizon, regional weather, local continuity, and H-Earth entry relationship remain authoritative. Planetary cloud variation continues to read as weather within the same navigable world rather than a substitute world or separate experience."
+  },
+  "scopeAssertions": {
+    "worldGeometryMutated": false,
+    "terrainMutated": false,
+    "coastMutated": false,
+    "waterMutated": false,
+    "cameraSemanticsMutated": false,
+    "navigationMutated": false,
+    "loaderMutated": false,
+    "rendererArchitectureMutated": false,
+    "cloudDensityMathMutated": false,
+    "cloudOpticsMutated": false,
+    "cloudGeographicCentersMutated": true,
+    "parallelProductCreated": false,
+    "hEarthPublicExperienceMutated": false
+  },
+  "qualificationEvidence": {
+    "verifierSchema": "AUDRALIA_FINAL_EXPANSION_FAIL_FIRST_VISUAL_VERIFIER_v1",
+    "verifierRef": "544df229e80015cdfb4c99a9ce3a1e3d6113071d",
+    "verifierSha256": "841b031b21e65138834dd68741016866acc62d7a2b03420dfdf12f5422c8e0bf",
+    "result": "FINAL_EXPANSION_VISUAL_ACCEPTANCE_PASS",
+    "saturationSuppressionFraction": 0.23779338307249132,
+    "maximumAllowedSuppressionFraction": 0.25,
+    "fullSphereCellCount": 16200,
+    "missingSphereCells": 0,
+    "materialDeltaComponentsAt1": 6,
+    "materialDeltaComponentsAt4": 6,
+    "materialIsolatedComponents": 6,
+    "trueClearAirSeparated": true,
+    "everyIsolatedComponentVisiblyCausal": true,
+    "preservedV6Causality": true,
+    "servedCompositorSha256": "cf805d9028f2a513f571f030915b80fea72dd63927b26a965782430a0cb3a5cc",
+    "totalVisibleCoverageDiagnostic": {
+      "schema": "AUDRALIA_SCRATCH_TOTAL_VISIBLE_COVERAGE_v1",
+      "meanAlphaThreshold": 184,
+      "visibleCloudSphereFraction": 0.6491367993245851,
+      "clearSkySphereFraction": 0.3508632006754149,
+      "targetVisibleCloudSphereFraction": [0.55, 0.65],
+      "targetClearSkySphereFraction": [0.35, 0.45],
+      "pass": true
+    }
+  },
+  "supportingRepositoryEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "showroom/globe/audralia/index.html",
+    "showroom/globe/audralia/final-cloud-shader-composition-v1.mjs",
+    "showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
+    "showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs"
+  ],
+  "disposition": "PASS"
+}

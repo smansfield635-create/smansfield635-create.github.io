@@ -1,0 +1,167 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "analytics",
+  "description": "Diamond Gate Bridge public analytics transparency surface.",
+  "checks": [
+    {
+      "path": "/analytics/index.html",
+      "includes": [
+        "Measurable wake.",
+        "How we count",
+        "Current measurement boundary",
+        "/analytics/data/latest.json",
+        "/analytics/dashboard.js",
+        "/analytics/dashboard.css",
+        "/analytics/atmosphere.js",
+        "data-analytics-finale",
+        "data-effects-pause",
+        "day-picker",
+        "week-change",
+        "trend-scale"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/analytics/dashboard.js",
+      "includes": [
+        "POLL_MS = 60000",
+        "visibilitychange",
+        "Last checked"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/analytics/dashboard.css",
+      "includes": [
+        "max-width:560px",
+        "prefers-reduced-motion"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/analytics/atmosphere.js",
+      "includes": [
+        "DGB_ANALYTICS_COSMOS",
+        "DGB_ANALYTICS_FIREWORKS",
+        "finalePlan",
+        "playGeneration"
+      ],
+      "excludes": [
+        "installCommercialTerms",
+        "integrateBuildNarrative"
+      ]
+    },
+    {
+      "path": "/analytics/data/latest.json",
+      "includes": [
+        "DGB_PUBLIC_ANALYTICS_V1",
+        "generatedAt",
+        "nonBotPageLoads"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/analytics/",
+    "timeoutMs": 15000,
+    "binding": {
+      "mode": "direct-document",
+      "path": "/analytics/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Refresh remains usable with qualified data",
+        "action": {
+          "type": "click",
+          "selector": "#refresh"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#dashboard",
+            "name": "data-ready",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "#data-through",
+            "value": "Data through"
+          },
+          {
+            "type": "exists",
+            "selector": "#refresh:not(:disabled)"
+          },
+          {
+            "type": "exists",
+            "selector": "#status[data-state=\"current\"], #status[data-state=\"delayed\"]"
+          }
+        ],
+        "timeoutMs": 15000
+      },
+      {
+        "name": "Effects can be paused independently of data",
+        "action": {
+          "type": "click",
+          "selector": "[data-effects-pause]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-effects-pause]",
+            "name": "aria-pressed",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-fireworks-sound]",
+            "name": "aria-pressed",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "#dashboard",
+            "name": "data-ready",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Previous-day chart control updates selection",
+        "action": {
+          "type": "click",
+          "selector": "#day-previous"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#day-picker[aria-valuetext]"
+          },
+          {
+            "type": "exists",
+            "selector": "#day-next:not(:disabled)"
+          },
+          {
+            "type": "exists",
+            "selector": "#trend .bar.selected"
+          },
+          {
+            "type": "textContains",
+            "selector": "#week-periods",
+            "value": "Complete UTC days"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ],
+    "readyAttribute": {
+      "selector": "#dashboard",
+      "name": "data-ready",
+      "contains": "true"
+    }
+  }
+}

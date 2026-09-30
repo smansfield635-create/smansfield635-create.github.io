@@ -1,0 +1,324 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_SUCCESSOR_ACTIVATION_TRANSITION_CONTRACT_v1",
+  "contractVersion": 1,
+  "programId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_v1",
+  "step": 1,
+  "checkpoint": "1C_SUCCESSOR_ACTIVATION_TRANSITION_CONTRACT",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED_NOT_ACTIVE",
+  "purpose": "Define the complete nonexecuting lifecycle transition law for a validated repository-registry successor, including actor classes, evidence, atomic artifacts, stopping boundaries, and failure dispositions.",
+  "controllingBaseline": {
+    "acceptedMainCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+    "acceptedBootstrap": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "gitBlobSha": "e422e814a29e024df91e8410687ab29ffe63c382",
+      "status": "COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL",
+      "accepted": true,
+      "canonical": false
+    },
+    "activeRegistryCandidate": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+      "gitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911",
+      "registryVersion": "1.0.0-candidate.1"
+    },
+    "validatedSuccessorCandidate": {
+      "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+      "candidatePath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+      "candidateGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+      "identityPath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json",
+      "identityGitBlobSha": "a5d6ae2f64c7f8ac868aef70aa895bf9979be202",
+      "registryVersion": "1.0.0-candidate.2",
+      "contentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
+      "validationResult": "PASS",
+      "accepted": false,
+      "active": false,
+      "canonical": false
+    },
+    "acceptanceDeclaration": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.user-acceptance-declaration.json",
+      "gitBlobSha": "b49e328d6a7a18b267800db234cab12f2a7dd61b",
+      "appliesToSuccessor": false
+    },
+    "acceptanceCustodyReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.user-acceptance-custody-receipt.json",
+      "gitBlobSha": "78139d26c6f2e9a2b725f77ae7885c273fd97506",
+      "appliesToSuccessor": false
+    },
+    "acceptedPackageCompletionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4f-completion-receipt.json",
+      "gitBlobSha": "22a997a1082ecc4b7c9c9b35d1675516c68e4efc"
+    }
+  },
+  "stateMachine": {
+    "states": [
+      "CANDIDATE",
+      "VALIDATED",
+      "ACCEPTED",
+      "ACTIVE",
+      "SUPERSEDED",
+      "RETIRED"
+    ],
+    "initialState": "CANDIDATE",
+    "terminalState": "RETIRED",
+    "permittedTransitions": [
+      {
+        "transitionId": "CANDIDATE_TO_VALIDATED",
+        "sourceState": "CANDIDATE",
+        "targetState": "VALIDATED",
+        "actorClasses": {
+          "requestingActorClass": "REPOSITORY_OPERATOR_OR_SYSTEMIC_AUDIT_REQUESTER",
+          "approvingAuthorityClass": "VALIDATION_CONTRACT_AUTHORITY",
+          "executingActorClass": "READ_ONLY_VALIDATION_WORKFLOW",
+          "postconditionAuditorClass": "INDEPENDENT_VALIDATION_RECEIPT_AUDITOR"
+        },
+        "requiredEvidenceClasses": [
+          "CANDIDATE_IDENTITY",
+          "CANDIDATE_CONTENT_DIGEST",
+          "SCHEMA_VALIDATION_RECEIPT",
+          "REFERENTIAL_INTEGRITY_RECEIPT",
+          "AUTHORITY_NON_COLLAPSE_RECEIPT",
+          "REGRESSION_CORRIDOR_RECEIPT"
+        ],
+        "resultingAuthority": "VALIDATED_NONAUTHORIZING_CANDIDATE",
+        "executionMutationAuthorized": false
+      },
+      {
+        "transitionId": "VALIDATED_TO_ACCEPTED",
+        "sourceState": "VALIDATED",
+        "targetState": "ACCEPTED",
+        "actorClasses": {
+          "requestingActorClass": "REPOSITORY_OPERATOR_OR_DESIGNATED_REQUESTER",
+          "approvingAuthorityClass": "EXPLICIT_USER_ACCEPTANCE_AUTHORITY",
+          "executingActorClass": "FUTURE_BOUND_ACCEPTANCE_RECORDER",
+          "postconditionAuditorClass": "INDEPENDENT_ACCEPTANCE_CUSTODY_AUDITOR"
+        },
+        "requiredEvidenceClasses": [
+          "PASSING_SUCCESSOR_VALIDATION_RECEIPT",
+          "EXACT_SUCCESSOR_IDENTITY",
+          "EXPLICIT_ACCEPTANCE_STATEMENT",
+          "ACCEPTANCE_SCOPE",
+          "NONCANONICAL_BOUNDARY",
+          "NO_ACTIVATION_INFERENCE_BOUNDARY"
+        ],
+        "resultingAuthority": "ACCEPTED_NONCANONICAL_NOT_ACTIVE",
+        "executionMutationAuthorized": false
+      },
+      {
+        "transitionId": "ACCEPTED_TO_ACTIVE",
+        "sourceState": "ACCEPTED",
+        "targetState": "ACTIVE",
+        "actorClasses": {
+          "requestingActorClass": "REPOSITORY_OPERATOR_OR_DESIGNATED_REQUESTER",
+          "approvingAuthorityClass": "EXPLICIT_SUCCESSOR_ACTIVATION_AUTHORITY",
+          "executingActorClass": "FUTURE_BOUND_ATOMIC_TRANSITION_EXECUTOR",
+          "postconditionAuditorClass": "FUTURE_INDEPENDENT_TRANSITION_POSTCONDITION_AUDITOR"
+        },
+        "requiredEvidenceClasses": [
+          "EXACT_ACCEPTANCE_DECLARATION",
+          "EXACT_ACCEPTANCE_CUSTODY_RECEIPT",
+          "PASSING_SUCCESSOR_VALIDATION_RECEIPT",
+          "EXPECTED_PARENT_COMMIT",
+          "EXPECTED_INPUT_BLOB_MANIFEST",
+          "AUTHORIZED_PATH_SET_DIGEST",
+          "APPROVED_CHANGESET_DIGEST",
+          "RECOVERY_CHECKPOINT",
+          "UNCONSUMED_REPLAY_NONCE"
+        ],
+        "resultingAuthority": "ACTIVE_NONCANONICAL_REGISTRY_SUCCESSOR",
+        "executionMutationAuthorized": false
+      },
+      {
+        "transitionId": "ACTIVE_TO_SUPERSEDED",
+        "sourceState": "ACTIVE",
+        "targetState": "SUPERSEDED",
+        "actorClasses": {
+          "requestingActorClass": "LIFECYCLE_TRANSITION_REQUESTER",
+          "approvingAuthorityClass": "EXPLICIT_SUPERSESSION_AUTHORITY",
+          "executingActorClass": "FUTURE_BOUND_ATOMIC_TRANSITION_EXECUTOR",
+          "postconditionAuditorClass": "FUTURE_INDEPENDENT_TRANSITION_POSTCONDITION_AUDITOR"
+        },
+        "requiredEvidenceClasses": [
+          "REPLACEMENT_ACTIVE_IDENTITY",
+          "SUPERSESSION_RELATION",
+          "HISTORICAL_PROVENANCE_CHECK",
+          "AUTHORITY_WITHDRAWAL_SCOPE"
+        ],
+        "resultingAuthority": "SUPERSEDED_HISTORICAL_IDENTITY",
+        "executionMutationAuthorized": false
+      },
+      {
+        "transitionId": "SUPERSEDED_TO_RETIRED",
+        "sourceState": "SUPERSEDED",
+        "targetState": "RETIRED",
+        "actorClasses": {
+          "requestingActorClass": "LIFECYCLE_TRANSITION_REQUESTER",
+          "approvingAuthorityClass": "EXPLICIT_RETIREMENT_AUTHORITY",
+          "executingActorClass": "FUTURE_BOUND_ATOMIC_TRANSITION_EXECUTOR",
+          "postconditionAuditorClass": "FUTURE_INDEPENDENT_TRANSITION_POSTCONDITION_AUDITOR"
+        },
+        "requiredEvidenceClasses": [
+          "RETIREMENT_REASON",
+          "EXECUTABLE_AUTHORITY_WITHDRAWAL_RECORD",
+          "HISTORICAL_PROVENANCE_PRESERVATION_RECEIPT",
+          "NO_DELETION_BOUNDARY"
+        ],
+        "resultingAuthority": "RETIRED_NONEXECUTABLE_HISTORICAL_IDENTITY",
+        "executionMutationAuthorized": false
+      }
+    ],
+    "prohibitedTransitions": [
+      "CANDIDATE_TO_ACCEPTED",
+      "CANDIDATE_TO_ACTIVE",
+      "VALIDATED_TO_ACTIVE",
+      "ACCEPTED_TO_CANONICAL",
+      "ACTIVE_TO_RETIRED",
+      "SUPERSEDED_TO_ACTIVE",
+      "RETIRED_TO_ACTIVE",
+      "MERGED_TO_ACTIVE_BY_INFERENCE",
+      "VALIDATED_TO_CANONICAL_BY_INFERENCE"
+    ]
+  },
+  "firstControlledOperation": {
+    "operationId": "H_EARTH_REGISTRY_SUCCESSOR_ACTIVATION_v1",
+    "transitionSequence": [
+      "VALIDATED_TO_ACCEPTED",
+      "ACCEPTED_TO_ACTIVE"
+    ],
+    "sequenceMayBeCollapsed": false,
+    "validationMaySubstituteForAcceptance": false,
+    "acceptanceMaySubstituteForActivation": false,
+    "mergeMaySubstituteForActivation": false,
+    "activationMaySubstituteForCanonicalization": false
+  },
+  "preconditions": {
+    "schemaPath": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.precondition-schema.json",
+    "required": [
+      "TRANSITION_ID",
+      "SOURCE_STATE",
+      "TARGET_STATE",
+      "EXPECTED_PARENT_COMMIT",
+      "REQUESTING_ACTOR_CLASS",
+      "APPROVING_AUTHORITY_CLASS",
+      "EXECUTING_ACTOR_CLASS",
+      "VALIDATOR_IDENTITY",
+      "AUTHORIZED_PATH_SET",
+      "EXPECTED_INPUT_BLOBS",
+      "REQUIRED_EVIDENCE",
+      "ATOMIC_ARTIFACT_SET",
+      "APPROVAL_BINDING",
+      "EXECUTION_AUTHORITY",
+      "REPLAY_PROTECTION"
+    ]
+  },
+  "postconditions": {
+    "schemaPath": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.postcondition-schema.json",
+    "required": [
+      "RESULT_COMMIT",
+      "RESULT_PARENT_COMMIT",
+      "RESULT_STATE",
+      "AUTHORIZED_PATHS_ONLY",
+      "RESULT_BLOB_SET",
+      "HISTORICAL_PREDECESSOR_PRESERVED",
+      "SUPERSESSION_RELATION_RECORDED",
+      "ACTIVATION_RECEIPT_RECORDED",
+      "RECOVERY_CHECKPOINT_RECORDED",
+      "DECISION_CONSUMED",
+      "REPLAY_NONCE_CONSUMED",
+      "INDEPENDENT_POSTCONDITION_RESULT"
+    ]
+  },
+  "atomicArtifactSet": [
+    {
+      "artifactClass": "BOOTSTRAP",
+      "currentPath": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "futureMutationRequiredForActivation": true
+    },
+    {
+      "artifactClass": "ACTIVE_REGISTRY_REFERENCE",
+      "currentLocation": "BOOTSTRAP.candidate",
+      "futureMutationRequiredForActivation": true
+    },
+    {
+      "artifactClass": "SUCCESSOR_IDENTITY",
+      "currentPath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json",
+      "futureMutationRequiredForActivation": true
+    },
+    {
+      "artifactClass": "PREVIOUS_ACTIVE_IDENTITY",
+      "currentPath": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+      "futureHistoricalStateRecordRequired": true
+    },
+    {
+      "artifactClass": "SUPERSESSION_RELATION",
+      "futurePathBindingRequired": true
+    },
+    {
+      "artifactClass": "ACTIVATION_RECEIPT",
+      "futurePathBindingRequired": true
+    },
+    {
+      "artifactClass": "RECOVERY_CHECKPOINT",
+      "futurePathBindingRequired": true
+    }
+  ],
+  "authorizedPathLaw": {
+    "exactPathSetMustBeApprovedBeforeExecution": true,
+    "pathSetMayExpandDuringExecution": false,
+    "unresolvedFuturePaths": [
+      "SUPERSESSION_RELATION",
+      "ACTIVATION_RECEIPT",
+      "RECOVERY_CHECKPOINT",
+      "PREVIOUS_ACTIVE_HISTORICAL_STATE_RECORD"
+    ],
+    "unresolvedPathsMayBeInventedByExecutor": false,
+    "pathBindingsDeferredTo": "STEP_3_ATOMIC_TRANSITION_EXECUTOR_PACKAGE"
+  },
+  "failureDispositions": {
+    "MISSING_ACTOR_BINDING": "STOP_WITHOUT_MUTATION",
+    "MISSING_APPROVAL": "STOP_WITHOUT_MUTATION",
+    "EXPIRED_APPROVAL": "STOP_WITHOUT_MUTATION",
+    "REPLAYED_DECISION": "STOP_WITHOUT_MUTATION",
+    "PARENT_COMMIT_MISMATCH": "STOP_WITHOUT_MUTATION",
+    "INPUT_BLOB_MISMATCH": "STOP_WITHOUT_MUTATION",
+    "AUTHORIZED_PATH_SET_MISMATCH": "STOP_WITHOUT_MUTATION",
+    "CHANGESET_DIGEST_MISMATCH": "STOP_WITHOUT_MUTATION",
+    "PARTIAL_RESULT_TREE": "ROLLBACK_REQUIRED",
+    "POSTCONDITION_FAILURE": "SUSPEND_RESULT_OR_ROLLBACK_REQUIRED",
+    "COMPROMISED_IDENTITY": "WITHDRAW_PENDING_AUTHORITY_AND_STOP"
+  },
+  "replayLaw": {
+    "uniqueDecisionIdRequired": true,
+    "uniqueNonceRequired": true,
+    "decisionExpirationRequired": true,
+    "decisionConsumedAfterSuccessfulExecution": true,
+    "consumedDecisionMayBeReused": false,
+    "receiptForDifferentCommitMayBeReused": false
+  },
+  "actorBinding": {
+    "actorClassesDefined": true,
+    "actualRequestingActorBound": false,
+    "actualApprovingAuthorityBound": false,
+    "actualExecutingActorBound": false,
+    "actualPostconditionAuditorBound": false,
+    "bindingDeferredTo": "STEP_2_ACTOR_APPROVAL_AND_DECISION_RECEIPT_SCHEMA"
+  },
+  "boundaries": {
+    "contractCreatesAcceptance": false,
+    "contractCreatesActivationAuthority": false,
+    "contractCreatesExecutionAuthority": false,
+    "contractChangesBootstrap": false,
+    "contractChangesActiveRegistry": false,
+    "contractChangesMain": false,
+    "contractCreatesCanonicalizationAuthority": false,
+    "contractCreatesSourceAuthority": false,
+    "contractCreatesMutationAuthority": false,
+    "contractCreatesDeploymentAuthority": false,
+    "contractCreatesProductionAuthority": false
+  },
+  "checkpointResult": "PASS",
+  "stoppingCondition": {
+    "contractDefinitionComplete": true,
+    "executionAuthorized": false,
+    "nextCheckpoint": "1D_READ_ONLY_STATE_MACHINE_EVALUATOR",
+    "advanceBeyondStep1": false
+  }
+}

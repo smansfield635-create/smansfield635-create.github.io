@@ -1,0 +1,21 @@
+name: H-Earth Stage 1 Stable Inspection Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact current main SHA used to build, publish, and qualify the Stage 1 inspection
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  publish:
+    uses: ./.github/workflows/repository-live-qualification-engine.yml
+    with:
+      target_sha: ${{ inputs.target_sha }}
+      manifest_path: .github/live-qualification/manifests/h-earth-stage1.v1.json

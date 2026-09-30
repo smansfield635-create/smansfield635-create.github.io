@@ -1,0 +1,41 @@
+{
+  "schema": "REMOTE_VIDEO_CONFORM_PROTOCOL_v1",
+  "status": "CANDIDATE_PUBLIC_EXECUTION_SURFACE",
+  "backendId": "REMOTE_VIDEO_CONFORM_RENDERER_PUBLIC_V1",
+  "invocationMarker": "VIDEO_CONFORM_REQUEST_V1",
+  "workflow": ".github/workflows/video-conform-renderer-v1.yml",
+  "renderer": "tools/video-conform/video-conform-renderer.v1.mjs",
+  "sourceRegistry": ".github/ai-router/video-conform/source-registry.v1.json",
+  "purpose": "Keep conversational rooms lightweight by resolving, verifying, trimming, retiming and rendering registered public video media on a public GitHub Actions execution surface that is not subject to the private control repository spending-limit block.",
+  "authority": {
+    "repositoryWriteAuthority": false,
+    "productMutationAuthority": false,
+    "liveRouteMutationAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "ownerAcceptanceAuthority": false
+  },
+  "requestLaw": {
+    "registeredSourcesOnly": true,
+    "callerMaySupplyRawUrl": false,
+    "callerMaySupplyRepositoryPath": false,
+    "callerMaySupplyShellCommand": false,
+    "callerMaySupplyFilterGraph": false,
+    "sourceIdentityVerificationRequired": true,
+    "targetTimelineMustBeContiguous": true,
+    "targetTimelineMayNotOverlap": true,
+    "targetTimelineMustCoverOutputExactly": true,
+    "pacingApprovalPrecedesFinalRender": true
+  },
+  "failClosedOn": [
+    "UNREGISTERED_SOURCE",
+    "SOURCE_FETCH_FAILURE",
+    "SOURCE_BLOB_MISMATCH",
+    "SOURCE_SHA256_MISMATCH",
+    "TIMELINE_GAP",
+    "TIMELINE_OVERLAP",
+    "OUTPUT_DURATION_MISMATCH",
+    "OUTPUT_FRAME_COUNT_MISMATCH",
+    "DECODE_FAILURE"
+  ]
+}

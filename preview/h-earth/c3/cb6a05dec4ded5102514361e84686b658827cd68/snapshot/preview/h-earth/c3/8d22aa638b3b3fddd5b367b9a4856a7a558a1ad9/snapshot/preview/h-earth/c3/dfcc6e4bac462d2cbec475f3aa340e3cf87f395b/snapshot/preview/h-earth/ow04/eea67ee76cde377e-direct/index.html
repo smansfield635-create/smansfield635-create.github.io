@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="color-scheme" content="dark">
+  <title>H-Earth OW04 Direct Runtime Inspection</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#020609;color:#eef8f6;font-family:system-ui,sans-serif}
+    #diag{position:fixed;z-index:2147483647;left:8px;right:8px;bottom:8px;max-height:34vh;overflow:auto;padding:10px 12px;border:1px solid rgba(255,255,255,.25);border-radius:12px;background:rgba(0,0,0,.82);font:12px/1.35 ui-monospace,monospace;white-space:pre-wrap;pointer-events:none}
+    #diag[data-state="PASS"]{border-color:#79d7a0}#diag[data-state="FAIL"]{border-color:#ff8f8f;color:#ffd4d4}
+    .loading{padding:24px}
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">Loading exact H-Earth candidate…</div>
+  <pre id="diag" data-state="PENDING">DIRECT_INSPECTION_BOOT\n</pre>
+  <script>
+    (async()=>{
+      const EXACT='eea67ee76cde377e762b0f1e37ab7d05b7adcc74';
+      const ROOT=`https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${EXACT}/`;
+      const DOC=`${ROOT}showroom/globe/h-earth/index.html`;
+      const MODULE=`${ROOT}showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js`;
+      const diag=document.getElementById('diag');
+      const log=(label,value='')=>{diag.textContent+=`${label}${value?`: ${value}`:''}\n`;};
+      const fail=(label,error)=>{diag.dataset.state='FAIL';log(label,error?.stack||error?.message||String(error));};
+      window.addEventListener('error',e=>fail('WINDOW_ERROR',e.error||e.message));
+      window.addEventListener('unhandledrejection',e=>fail('UNHANDLED_REJECTION',e.reason));
+      window.addEventListener('h-earth-runtime-diagnostic-stage',e=>log(`STAGE_${e.detail?.stage}`,`${e.detail?.status} ${JSON.stringify(e.detail?.detail??null)}`));
+      try{
+        log('SOURCE_FETCH',DOC);
+        const response=await fetch(DOC,{cache:'no-store'});
+        if(!response.ok) throw new Error(`SOURCE_HTTP_${response.status}`);
+        let html=await response.text();
+        html=html.replace(/<script id="h-earth-current-run8e-module"[\s\S]*?<\/script>/i,'');
+        html=html.replace(/<script>document\.getElementById\('h-earth-current-run8e-module'\)[\s\S]*?<\/script>/i,'');
+        html=html.replace(/\b(href|src)=(['"])\/(?!\/)/g,(m,a,q)=>`${a}=${q}${ROOT}`);
+        html=html.replace(/url\((['"]?)\/(?!\/)/g,(m,q)=>`url(${q}${ROOT}`);
+        const bootstrap=`<base href="${ROOT}showroom/globe/h-earth/"><meta name="h-earth-exact-source-commit" content="${EXACT}">`;
+        html=html.replace('<head>',`<head>${bootstrap}`);
+        html=html.replace('</body>',`<script>window.__H_EARTH_DIRECT_MODULE_URL__=${JSON.stringify(MODULE)};<\/script></body>`);
+        document.open();document.write(html);document.close();
+
+        // Inspection delivery law: candidate modules may load from jsDelivr, but
+        // History API mutations must remain on the serving diamondgatebridge.com origin.
+        const nativeReplaceState=history.replaceState.bind(history);
+        const nativePushState=history.pushState.bind(history);
+        const sameOriginHistoryUrl=(url)=>{
+          if(url===undefined||url===null)return null;
+          const parsed=new URL(String(url),location.href);
+          return `${location.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+        };
+        history.replaceState=(state,title,url)=>url===undefined||url===null
+          ? nativeReplaceState(state,title)
+          : nativeReplaceState(state,title,sameOriginHistoryUrl(url));
+        history.pushState=(state,title,url)=>url===undefined||url===null
+          ? nativePushState(state,title)
+          : nativePushState(state,title,sameOriginHistoryUrl(url));
+
+        const panel=document.createElement('pre');
+        panel.id='h-earth-direct-diag';
+        panel.style.cssText='position:fixed;z-index:2147483647;left:8px;right:8px;bottom:8px;max-height:34vh;overflow:auto;padding:10px 12px;border:1px solid #d7b65a;border-radius:12px;background:rgba(0,0,0,.84);color:#fff;font:12px/1.35 ui-monospace,monospace;white-space:pre-wrap;pointer-events:none';
+        panel.textContent=`EXACT ${EXACT}\nDIRECT_MODULE_BOOT\nHISTORY_GUARD SAME_ORIGIN\n`;
+        document.body.appendChild(panel);
+        const plog=(s)=>{panel.textContent+=s+'\n';};
+        window.addEventListener('h-earth-runtime-diagnostic-stage',e=>plog(`STAGE ${e.detail?.stage} ${e.detail?.status} ${JSON.stringify(e.detail?.detail??null)}`));
+        window.addEventListener('error',e=>plog(`ERROR ${e.message||e.error}`));
+        window.addEventListener('unhandledrejection',e=>plog(`REJECTION ${e.reason?.stack||e.reason}`));
+        plog(`IMPORT ${MODULE}`);
+        try{
+          await import(MODULE);
+          plog('IMPORT_RESOLVED');
+          const root=document.getElementById('h-earth-functional-landscape-route');
+          plog(`RUN8E_READY ${root?.dataset?.run8eReady}`);
+          plog(`RUN8E_ERROR ${root?.dataset?.run8eError}`);
+          panel.style.borderColor='#79d7a0';
+        }catch(error){
+          panel.style.borderColor='#ff7f7f';panel.style.color='#ffd4d4';
+          plog(`IMPORT_FAILED ${error?.stack||error?.message||String(error)}`);
+        }
+      }catch(error){
+        fail('DIRECT_INSPECTION_FAILURE',error);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "schema":"WHOLE_ESTATE_AUTHORITY_AND_OWNERSHIP_MATRIX_v1",
+  "status":"CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "entries":[
+    {"id":"COMPASS","primaryRole":"ORIENTATION","authority":["WAYFINDING","ESTATE_ORIENTATION","DIRECT_ENTRY_CONTEXT","RETURN_CONTEXT"],"forbiddenAuthority":["SCIENTIFIC_ADJUDICATION","EVIDENCE_UPGRADE","ROOM_ABSORPTION"],"absenceConsequence":"visitor loses coherent estate orientation","collapseConsequence":"one route can falsely appear to contain the whole"},
+    {"id":"REALITY","primaryRole":"EPISTEMIC_LAW","authority":["ANSWERABILITY","EVIDENCE_INTERPRETATION_SEPARATION","UNCERTAINTY_BOUNDARY"],"forbiddenAuthority":["DECLARE_UCIC_PROVEN","OWN_APPLIED_STUDIES"],"absenceConsequence":"claims lose explicit answerability rules","collapseConsequence":"interpretation can masquerade as evidence"},
+    {"id":"LAWS","primaryRole":"EPISTEMIC_LAW","authority":["CONSTRAINTS","ADMISSIBILITY","FIRST_STRUCTURE","TEST_BOUNDARIES"],"forbiddenAuthority":["ABSORB_FRONTIER","UPGRADE_EVIDENCE_BY_DOCTRINE"],"absenceConsequence":"estate loses explicit constraint and test layer","collapseConsequence":"rules, evidence and applications become conflated"},
+    {"id":"UCIC","primaryRole":"FOUNDATION","authority":["FIXED_INVARIANT_CANDIDATE_IDENTITY","FALSIFIABLE_RELATIONAL_PROPOSITION"],"forbiddenAuthority":["SELF_VALIDATE","UNIVERSALITY_BY_DEFINITION","REPLACE_IMI"],"absenceConsequence":"scientific program loses its proposed foundational invariant object","collapseConsequence":"candidate, instrument and evidence become circular"},
+    {"id":"IMI","primaryRole":"MEASUREMENT","authority":["OBSERVER_GRADE_MEASUREMENT","DECLARED_ROUTE_PROFILE_MEASUREMENT","SOURCE_AND_FACTOR_RULE_APPLICATION"],"forbiddenAuthority":["DECLARE_UCIC_TRUE","BECOME_MODEL","BECOME_COMPARATOR","REVIVE_GLOBAL_PRODUCT"],"absenceConsequence":"candidate lacks its intended observer-grade measurement layer","collapseConsequence":"measurement can be mistaken for theory confirmation"},
+    {"id":"METHODS_MODELS","primaryRole":"EPISTEMIC_LAW","authority":["CONTROLLED_COMPARISON","METHOD_MODEL_SEPARATION","COMPARATOR_PARITY","FALSIFICATION_PROCEDURE_EXPLANATION"],"forbiddenAuthority":["WHOLE_ESTATE_OWNERSHIP","PERSONAL_DIAGNOSIS","FULL_FRONTIER_STUDY_OWNERSHIP"],"absenceConsequence":"model disagreement and method dependence become difficult to inspect","collapseConsequence":"model, method and result can be mistaken for one object"},
+    {"id":"COHERENCE_DIAGNOSTIC","primaryRole":"DIAGNOSIS","authority":["PRIVATE_LOCAL_STRUCTURED_REFLECTION"],"forbiddenAuthority":["MEDICAL_DIAGNOSIS","LEGAL_DETERMINATION","EMPLOYMENT_SCREENING","IQ_TESTING","UCIC_CONFIRMATION"],"absenceConsequence":"estate loses bounded personal application route","collapseConsequence":"personal reflection can be overclaimed as clinical or scientific proof"},
+    {"id":"FRONTIER","primaryRole":"APPLICATION","authority":["COMPLETE_APPLIED_STUDY_OWNERSHIP","DOMAIN_INVESTIGATION","PROTOTYPE_AND_EXPERIMENT_CONTEXT"],"forbiddenAuthority":["UNIVERSAL_CLAIM_UPGRADE_WITHOUT_ADJUDICATION"],"absenceConsequence":"scientific and technical ideas lose real-system application field","collapseConsequence":"bounded applications can be promoted as universal evidence"},
+    {"id":"PRODUCTS","primaryRole":"IMPLEMENTATION","authority":["USABLE_TOOL_AND_SYSTEM_DELIVERY"],"forbiddenAuthority":["SCIENTIFIC_CONFIRMATION_BY_SUCCESS","FOUNDATIONAL_AUTHORITY"],"absenceConsequence":"estate loses practical-value conversion route","collapseConsequence":"utility or market success can be mistaken for truth"},
+    {"id":"WORLDS_CHARACTERS_CAMPAIGNS","primaryRole":"IMPLEMENTATION","authority":["NARRATIVE_EXPERIENCE","PLACE_BASED_EXPLORATION","PUBLIC_ACTION"],"forbiddenAuthority":["SCIENTIFIC_RESULT_GENERATION_BY_PRESENTATION"],"absenceConsequence":"estate loses experiential and narrative capacities","collapseConsequence":"narrative persuasion can be mistaken for evidence"},
+    {"id":"RESEARCH_PROVENANCE","primaryRole":"PROVENANCE","authority":["SOURCE_RECORD","VERSION_LINEAGE","EXECUTION_RECEIPT","EVIDENCE_LEDGER","CLAIM_CEILING","FALSIFIER_RECORD"],"forbiddenAuthority":["SCIENTIFIC_TRUTH_BY_HASH","SCIENTIFIC_TRUTH_BY_CI","RESULT_UPGRADE_BY_RECORD_COMPLETENESS"],"absenceConsequence":"claims lose inspectable lineage and evidence boundaries","collapseConsequence":"execution and scientific truth become conflated"},
+    {"id":"INTERFACE_3D","primaryRole":"IMPLEMENTATION","authority":["NAVIGATION_STATE","PRESENTATION_STATE","SPATIAL_TRANSITION","SYNCHRONIZED_EXPLANATION"],"forbiddenAuthority":["SCIENTIFIC_STATE_MUTATION","EVIDENCE_STATUS_MUTATION","EXECUTION_STATUS_MUTATION","CUSTODY_STATUS_MUTATION"],"absenceConsequence":"later spatial experience is unavailable but scientific objects remain intact","collapseConsequence":"presentation can silently alter scientific meaning"}
+  ],
+  "nonSubstitutionRules":[
+    "ORIENTATION_CANNOT_SUBSTITUTE_FOR_EPISTEMIC_LAW",
+    "FOUNDATION_CANNOT_SUBSTITUTE_FOR_MEASUREMENT",
+    "MEASUREMENT_CANNOT_SUBSTITUTE_FOR_CONFIRMATION",
+    "DIAGNOSIS_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_EVIDENCE",
+    "APPLICATION_CANNOT_SUBSTITUTE_FOR_UNIVERSAL_CONFIRMATION",
+    "IMPLEMENTATION_SUCCESS_CANNOT_SUBSTITUTE_FOR_EVIDENCE",
+    "PROVENANCE_CANNOT_SUBSTITUTE_FOR_TRUTH",
+    "INTERFACE_CANNOT_SUBSTITUTE_FOR_SCIENTIFIC_STATE"
+  ],
+  "publicMutationAuthorized":false
+}

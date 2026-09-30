@@ -1,0 +1,106 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2_PLUS_LEVEL_3ABCD_700_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 700,
+    "prior_battery_tasks": 248,
+    "fresh_transfer_tasks": 24,
+    "total_tasks": 272,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Retain all prior demonstrated functions and test novel transfer in relationship nuance, degree/comparison, and higher-resolution everyday explanation."
+  },
+  "results": {
+    "prior_248": {
+      "functionally_expressible": 248,
+      "missing": 0,
+      "coverage_percent": 100
+    },
+    "fresh_transfer_24": {
+      "DIRECT": 19,
+      "COMPOSABLE": 3,
+      "MISSING": 2,
+      "functionally_expressible": 22,
+      "coverage_percent": 91.6666666667
+    },
+    "overall_272": {
+      "functionally_expressible": 270,
+      "missing": 2,
+      "coverage_percent": 99.2647058824
+    }
+  },
+  "fresh_transfer_passed": [
+    "describe someone as patient or impatient",
+    "describe loyalty and betrayal",
+    "describe someone as trustworthy",
+    "describe supportive, selfish, generous, respectful and disrespectful behavior",
+    "describe helpful versus hurtful behavior",
+    "describe a distant relationship",
+    "describe accepting or refusing an invitation",
+    "welcome or avoid someone",
+    "describe missing or ignoring someone",
+    "include or exclude someone compositionally",
+    "describe slight versus extreme degree",
+    "describe something as almost or nearly complete",
+    "describe average quality or amount",
+    "compare similar versus opposite things",
+    "state an exact amount or position",
+    "describe something as mostly or partly true",
+    "describe extra, double, half and whole amounts",
+    "describe middle, edge, top and bottom position",
+    "compare best and worst options",
+    "compare higher and lower values",
+    "make a multi-step comparison between two choices",
+    "combine relationship judgment with degree language"
+  ],
+  "fresh_transfer_missing": [
+    {
+      "function": "richer cause-purpose-condition explanation",
+      "reason": "because, if, then, so, cause, effect and reason exist, but although, unless, while-as-contrast, purpose/so-that and consequence nuance remain sparse."
+    },
+    {
+      "function": "richer opinion and uncertainty calibration",
+      "reason": "think, believe, maybe, likely, probably, sure, true/false and fact exist, but seem, appear, perhaps, certain/uncertain, doubt and opinion/viewpoint language remain thin."
+    }
+  ],
+  "interpretation": [
+    "Band D adds relational and comparative nuance without reopening any prior capability gaps.",
+    "The remaining frontier is now explanation logic and calibrated opinion/uncertainty rather than ordinary daily-life vocabulary.",
+    "This is an appropriate pre-Level-3-completion frontier: expressive sophistication is increasing while vocabulary remains plain."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_3_band_d_status": "ADMITTED",
+    "next_step": "CONSTRUCT_MAJOR_LEVEL_3_BAND_E_FROM_FINAL_LEVEL_3_FRONTIER",
+    "preserve_plain_language": true,
+    "priority_frontier": [
+      "cause-purpose-condition explanation",
+      "opinion and uncertainty calibration",
+      "nearest empty everyday semantic neighbors"
+    ]
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_700_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "248-function retention test plus 24-function fresh transfer battery executed.",
+    "ENGINE_RESPONSE": "100% retention; 91.67% novel transfer; 99.26% overall across 272 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_3_BAND_E_GEOMETRIC_RECONSTRUCTION"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_KERNEL_G5_DECISION_v1",
+  "generation": "G5",
+  "status": "DECISION_COMPLETE_RESIDUAL_NOT_ADMITTED",
+  "predecessorGeneration": "G4",
+  "installedG4Main": "21a75fae2a3daf5afa686aa701ebb5097babeee4",
+  "purpose": "Determine whether a narrow learned acoustic residual is justified and lawfully trainable after deterministic G1-G4 controls failed to cross the Jeeves owner-review threshold.",
+  "preserved": [
+    "G1 timing and pause law",
+    "G2 stress/F0/energy law",
+    "G3 micro-prosody law",
+    "G4 coarticulation and spectral-dynamics law",
+    "exact eight Compass beats",
+    "Diamond Gate-only runtime and provenance boundary"
+  ],
+  "residualConcept": "R_acoustic = A_human_reference - A_G4_prediction in an aligned stable acoustic representation, never raw unaligned waveform subtraction",
+  "candidateResidualDomain": {
+    "representation": "frame-aligned log-magnitude spectral envelope plus periodicity/noise correction terms",
+    "forbiddenTargets": [
+      "text semantics",
+      "phoneme identity replacement",
+      "timing replacement",
+      "macro prosody replacement",
+      "character identity inference"
+    ]
+  },
+  "requiredTrainingEvidence": [
+    "Diamond Gate-owned or explicitly authorized Jeeves reference audio",
+    "verbatim transcript aligned to the reference",
+    "recorded provenance and authorization",
+    "G4 render of the same utterance",
+    "deterministic alignment receipt"
+  ],
+  "repositoryFinding": {
+    "jeevesReferenceAudioStatus": "UNBOUND",
+    "matchingReferenceWavFound": false,
+    "lawfulTrainingPairsAvailable": 0
+  },
+  "decision": "DO_NOT_FIT_OR_INVENT_A_RESIDUAL_WITHOUT_AN_AUTHORIZED_TARGET_SIGNAL",
+  "ownerReviewThreshold": "NOT_MET_AT_G4",
+  "nextLawfulAction": "ESTABLISH_ONE_DIAMOND_GATE_OWNED_JEEVES_REFERENCE_UTTERANCE_MATCHING_THE_FIXED_CORPUS_THEN_ADMIT_G5_FIT_AS_A_SEPARATE_BOUNDARY",
+  "explicitlyNotAuthorized": [
+    "external pretrained model weights",
+    "third-party voice cloning",
+    "synthetic pseudo-reference data treated as human ground truth",
+    "general TTS platform construction",
+    "public site mutation"
+  ]
+}

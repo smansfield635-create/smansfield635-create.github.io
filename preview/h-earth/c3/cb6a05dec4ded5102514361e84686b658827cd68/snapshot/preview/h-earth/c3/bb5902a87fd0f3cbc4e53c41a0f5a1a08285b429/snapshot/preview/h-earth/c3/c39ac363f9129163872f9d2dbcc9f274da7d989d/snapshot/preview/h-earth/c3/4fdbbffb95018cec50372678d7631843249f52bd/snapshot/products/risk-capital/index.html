@@ -1,0 +1,863 @@
+<!doctype html>
+<!-- TNT — /products/risk-capital/index.html
+     RISK & CAPITAL SYSTEMS — ADMISSIBILITY SPINE (TRILINGUAL · 4 LENSES)
+     SUPERLAYER RULE:
+       - Capital Coherence Doctrine (CCD) is the governing layer for allocation admissibility.
+       - This page is an implementation surface under CCD (not a replacement).
+     LENSES:
+       - lane=platform|engineering (URL-only)
+       - style=informal|formal     (gd_style + URL)
+     STATE:
+       - lang/style/time/depth via URL + localStorage gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+     UX:
+       - Single-open accordion (global)
+       - Sub-bubbles inside each row
+       - No modals/overlays; no inline onclick; addEventListener only
+     ASSETS:
+       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Risk & Capital Systems</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:112px;
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.80);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+}
+
+/* Top controls */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;z-index:240;pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowB);
+  white-space:nowrap;
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented toggles */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowB);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* Page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:98px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:14px;
+  position:relative;z-index:10;
+}
+
+/* Header */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  padding:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.12), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
+  box-shadow:var(--shadowA);
+  position:relative;overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.22;
+  mask: radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%), linear-gradient(#000,#000);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%), linear-gradient(#000,#000);
+}
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
+.h1{margin:0;font-weight:980;font-size:30px;letter-spacing:.35px;color:var(--ink);position:relative}
+.p0{margin:12px 0 0;line-height:1.75;color:rgba(255,255,255,.88);font-size:15.75px;position:relative}
+.note0{margin-top:10px;color:rgba(255,255,255,.78);font-size:13.25px;line-height:1.55;position:relative}
+
+/* Lens row */
+.lensRow{
+  margin-top:14px;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+.badge b{color:var(--ink)}
+
+/* Bands */
+.band{
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:980;letter-spacing:.25px;
+  color:rgba(255,255,255,.90);
+}
+
+/* Accordion rows */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+  position:relative;
+}
+.row::after{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
+.head{
+  padding:16px 16px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.mark{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c, rgba(201,162,74,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.titleBlock{min-width:0}
+.q{
+  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
+  color:rgba(255,255,255,.86);max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);
+  font-weight:980;
+  flex:0 0 auto;margin-top:2px;
+  position:relative;overflow:hidden;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+.body{
+  display:none;
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+  position:relative;
+}
+.row.open .body{display:block}
+
+/* Sub-bubbles */
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{
+  margin:0 0 8px;
+  font-weight:980;
+  letter-spacing:.15px;
+  font-size:15px;
+  color:var(--ink);
+}
+.bubble p{
+  margin:0;
+  color:rgba(255,255,255,.80);
+  line-height:1.7;
+  display:none;
+  font-size:14.5px;
+}
+.bubble.open p{display:block}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;border-radius:22px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  z-index:220;
+}
+.dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3,1fr)}
+  .h1{font-size:27px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+    <a class="btn red" id="btnDoctrine" href="/products/capital-doctrine/" data-route="/products/capital-doctrine/">CAPITAL DOCTRINE</a>
+    <a class="btn" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <div class="seg" role="group" aria-label="Language toggle">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <section class="header" aria-label="Header">
+    <p class="k" id="k0">PRODUCTS · RISK & CAPITAL</p>
+    <h1 class="h1" id="h0">RISK & CAPITAL SYSTEMS</h1>
+
+    <p class="p0" id="p0"></p>
+    <div class="note0" id="note0"></div>
+
+    <div class="lensRow" aria-label="Lenses">
+      <div class="seg" role="group" aria-label="Lane toggle">
+        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+      </div>
+
+      <div class="seg" role="group" aria-label="Style toggle">
+        <button type="button" id="styleInformal" aria-pressed="true">INFORMAL</button>
+        <button type="button" id="styleFormal" aria-pressed="false">FORMAL</button>
+      </div>
+
+      <div class="badge" aria-label="State">
+        <span id="bLang">LANG</span> <b id="bLangV">EN</b>
+        <span style="opacity:.6">·</span>
+        <span id="bLane">LANE</span> <b id="bLaneV">PLATFORM</b>
+        <span style="opacity:.6">·</span>
+        <span id="bStyle">STYLE</span> <b id="bStyleV">INFORMAL</b>
+      </div>
+    </div>
+  </section>
+
+  <div class="band" id="band0">ADMISSIBILITY SURFACE</div>
+  <div class="list" id="list"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+  <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== canonical state carry (gd_* only) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
+
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    var A=(over&&over.lane)?over.lane:lane;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D)+
+           "&lane="+encodeURIComponent(A);
+  }
+
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          if(!sp.get("lane")) sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // Language toggle reload same path
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+
+  var langEN=document.getElementById("langEN");
+  var langZH=document.getElementById("langZH");
+  var langES=document.getElementById("langES");
+  langEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  langZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  langES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  // Lane + Style
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    window.location.href = window.location.pathname + q({lane:lane});
+  }
+  function setStyle(next){
+    if(next!=="informal" && next!=="formal") next="informal";
+    style=next;
+    try{ LS.setItem("gd_style",style); }catch(e){}
+    window.location.href = window.location.pathname + q({style:style});
+  }
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+  document.getElementById("styleInformal").addEventListener("click", function(){ setStyle("informal"); }, {passive:true});
+  document.getElementById("styleFormal").addEventListener("click", function(){ setStyle("formal"); }, {passive:true});
+
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  function laneLabel(){
+    if(lang==="zh") return (lane==="engineering")?"工程":"平台";
+    if(lang==="es") return (lane==="engineering")?"INGENIERÍA":"PLATAFORMA";
+    return (lane==="engineering")?"ENGINEERING":"PLATFORM";
+  }
+  function styleLabel(){
+    if(lang==="zh") return (style==="formal")?"正式":"通俗";
+    if(lang==="es") return (style==="formal")?"FORMAL":"INFORMAL";
+    return (style==="formal")?"FORMAL":"INFORMAL";
+  }
+
+  // ===== Header copy (explicit doctrine binding) =====
+  var HEAD={
+    en:{
+      platform_informal:"This surface organizes risk, contracts, compliance, insurance, and finance into an admissibility posture. It is governed by the Capital Coherence Doctrine.",
+      platform_formal:"This surface is an admissibility layer for economic systems. It is subordinated to Capital Coherence Doctrine invariants and routes execution only after bounds are declared.",
+      engineering_informal:"Engineering view: exposure must be measurable; segmentation must be real; escalation requires receipts. Doctrine governs before deployment.",
+      engineering_formal:"Engineering posture: deterministic bounds, versioned manifests, audited routes. Doctrine invariants constrain finance and governance simultaneously.",
+      note:"Governing Superlayer: /products/capital-doctrine/ (CCD). This page implements bounded economic surfaces; it does not define invariants."
+    },
+    zh:{
+      platform_informal:"本执行面把风险、合约、合规、保险与金融组织成可采信姿态，并受资本一致性教义治理。",
+      platform_formal:"本面是经济系统的可采信层。它从属于资本一致性教义不变量，只有在边界声明后才允许执行路由。",
+      engineering_informal:"工程视图：暴露必须可测；分段必须真实；升级需要收据。部署前先过教义。",
+      engineering_formal:"工程姿态：确定性边界、版本化清单、可审计路由。教义同时约束金融与治理。",
+      note:"治理超层：/products/capital-doctrine/（CCD）。本页是有界经济执行面，不定义不变量。"
+    },
+    es:{
+      platform_informal:"Esta superficie organiza riesgo, contratos, cumplimiento, seguros y finanzas como postura de admisibilidad. Está gobernada por la Doctrina de Coherencia de Capital.",
+      platform_formal:"Capa de admisibilidad económica subordinada a invariantes de la Doctrina. Solo enruta ejecución tras declarar límites.",
+      engineering_informal:"Vista ingeniería: exposición medible; segmentación real; escalación requiere recibos. Doctrina antes del despliegue.",
+      engineering_formal:"Postura ingeniería: límites deterministas, manifiestos versionados, rutas auditables. La doctrina restringe finanzas y gobernanza.",
+      note:"Supercapa gobernante: /products/capital-doctrine/ (CCD). Esta página implementa superficies económicas acotadas; no define invariantes."
+    }
+  };
+
+  function applyHeader(){
+    var H=HEAD[lang] || HEAD.en;
+    var key=(lane==="platform" ? "platform_" : "engineering_") + (style==="formal" ? "formal" : "informal");
+
+    document.getElementById("p0").textContent = H[key];
+    document.getElementById("note0").textContent = H.note;
+
+    document.getElementById("bLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
+    document.getElementById("bLaneV").textContent = laneLabel();
+    document.getElementById("bStyleV").textContent = styleLabel();
+
+    if(lang==="zh"){
+      document.getElementById("k0").textContent="产品 · 风险与资本";
+      document.getElementById("h0").textContent="风险与资本系统";
+      document.getElementById("band0").textContent="可采信执行面（一次只开一个）";
+      document.getElementById("bLang").textContent="语言";
+      document.getElementById("bLane").textContent="车道";
+      document.getElementById("bStyle").textContent="语气";
+      document.getElementById("btnProducts").textContent="产品";
+      document.getElementById("btnDoctrine").textContent="资本教义";
+      document.getElementById("btnIndex").textContent="指南针";
+      document.getElementById("dockIndex").textContent="索引";
+      document.getElementById("dockExplore").textContent="探索";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+      document.getElementById("lanePlatform").textContent="平台";
+      document.getElementById("laneEngineering").textContent="工程";
+      document.getElementById("styleInformal").textContent="通俗";
+      document.getElementById("styleFormal").textContent="正式";
+    }else if(lang==="es"){
+      document.getElementById("k0").textContent="PRODUCTOS · RIESGO Y CAPITAL";
+      document.getElementById("h0").textContent="SISTEMAS DE RIESGO Y CAPITAL";
+      document.getElementById("band0").textContent="SUPERFICIE DE ADMISIBILIDAD (uno a la vez)";
+      document.getElementById("bLang").textContent="IDIOMA";
+      document.getElementById("bLane").textContent="CARRIL";
+      document.getElementById("bStyle").textContent="ESTILO";
+      document.getElementById("btnProducts").textContent="PRODUCTOS";
+      document.getElementById("btnDoctrine").textContent="DOCTRINA";
+      document.getElementById("btnIndex").textContent="ÍNDICE";
+      document.getElementById("dockIndex").textContent="ÍNDICE";
+      document.getElementById("dockExplore").textContent="EXPLORAR";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+      document.getElementById("lanePlatform").textContent="PLATAFORMA";
+      document.getElementById("laneEngineering").textContent="INGENIERÍA";
+      document.getElementById("styleInformal").textContent="INFORMAL";
+      document.getElementById("styleFormal").textContent="FORMAL";
+    }else{
+      document.getElementById("band0").textContent="ADMISSIBILITY SURFACE (one open at a time)";
+    }
+  }
+
+  // ===== Accordion + bubbles =====
+  var list=document.getElementById("list");
+
+  function closeAll(){
+    list.querySelectorAll(".row").forEach(function(r){
+      r.classList.remove("open");
+      var c=r.querySelector(".chevTxt");
+      if(c) c.textContent="▸";
+    });
+  }
+
+  function bubble(h, p){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var hh=document.createElement("h4");
+    hh.textContent=h;
+
+    var pp=document.createElement("p");
+    pp.textContent=p;
+
+    b.appendChild(hh);
+    b.appendChild(pp);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+    return b;
+  }
+
+  function makeRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="mark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var qEl=document.createElement("div");
+    qEl.className="q";
+    qEl.textContent=pick(item.t);
+
+    var sEl=document.createElement("div");
+    sEl.className="sub";
+    sEl.textContent=pick(item.s);
+
+    tb.appendChild(qEl);
+    tb.appendChild(sEl);
+
+    hL.appendChild(mark);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var p1=document.createElement("p");
+    p1.className="p";
+    p1.textContent=pick(item.p1);
+
+    var p2=document.createElement("p");
+    p2.className="p";
+    p2.textContent=pick(item.p2);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    item.bubbles.forEach(function(bb){
+      bubbles.appendChild(bubble(pick(bb.h), pick(bb.p)));
+    });
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a1=document.createElement("a");
+    a1.className="btn red";
+    a1.textContent=(lang==="zh"?"打开：资本教义":(lang==="es"?"ABRIR: DOCTRINA":"OPEN: CAPITAL DOCTRINE"));
+    a1.setAttribute("data-route","/products/capital-doctrine/");
+    actions.appendChild(a1);
+
+    var a2=document.createElement("a");
+    a2.className="btn";
+    a2.textContent=(lang==="zh"?"打开：量规":(lang==="es"?"ABRIR: MEDIDORES":"OPEN: GAUGES"));
+    a2.setAttribute("data-route","/gauges/");
+    actions.appendChild(a2);
+
+    body.appendChild(p1);
+    body.appendChild(p2);
+    body.appendChild(bubbles);
+    body.appendChild(actions);
+
+    function toggle(){
+      var openNow=!row.classList.contains("open");
+      closeAll();
+      row.classList.toggle("open", openNow);
+      row.querySelector(".chevTxt").textContent = openNow ? "▾" : "▸";
+      // close bubbles when row opens to reduce clutter
+      if(openNow){
+        body.querySelectorAll(".bubble").forEach(function(x){ x.classList.remove("open"); });
+      }
+      wireAll();
+    }
+
+    head.addEventListener("click", toggle, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    row.appendChild(head);
+    row.appendChild(body);
+
+    if(idx===0){
+      row.classList.add("open");
+      row.querySelector(".chevTxt").textContent="▾";
+    }
+
+    return row;
+  }
+
+  // ===== Content (institutional; CCD first) =====
+  var ROWS = [
+    {
+      c:"#c9a24a",
+      t:P("Governing Layer: Capital Coherence Doctrine (CCD)","治理层：资本一致性教义（CCD）","Capa gobernante: Doctrina de coherencia de capital (CCD)"),
+      s:P("This surface is subordinated to CCD invariants.","本面从属于 CCD 不变量。","Esta superficie se subordina a los invariantes de la Doctrina."),
+      p1:P(
+        "This page exists to keep economic and capital systems admissible under constraint. It is not a claim engine and not a marketing surface.",
+        "本页用于让经济与资本系统在约束下可采信。它不是主张引擎，也不是营销面。",
+        "Esta página mantiene sistemas económicos admisibles bajo restricciones. No es motor de afirmaciones ni marketing."
+      ),
+      p2:P(
+        "If a decision cannot be bounded by CCD, it does not progress to deployment. Governance and finance are constrained here jointly.",
+        "若决策无法被 CCD 有界，则不得进入部署。本页同时约束治理与金融。",
+        "Si una decisión no puede acotarse por la Doctrina, no progresa. Gobernanza y finanzas quedan restringidas conjuntamente."
+      ),
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), p:P("Capital must not exceed internal coherence. External expansion is bounded by invariants.","资本不得超过内部自洽。外部扩张受不变量约束。","El capital no debe exceder coherencia interna. La expansión se acota por invariantes.")},
+        {h:P("Build Now","现在建","Construir ahora"), p:P("Bind routes: Doctrine → Risk/Capital → Finance → Governance. Make every policy measurable.","绑定路由：教义→风险/资本→金融→治理。让每条政策可测。","Vincular rutas: Doctrina → Riesgo/Capital → Finanzas → Gobernanza. Hacer cada política medible.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), p:P("Automate admissibility gates and publish audit outputs via Gauges.","自动化可采信闸门，并通过量规发布审计输出。","Automatizar compuertas y publicar auditoría en Medidores.")},
+      ]
+    },
+    {
+      c:"#ff2b2b",
+      t:P("Contracts & Obligations","合约与义务","Contratos y obligaciones"),
+      s:P("Explicit bounds, enforceable terms, and non-retroactive change control.","明确边界、可执行条款、非追溯变更控制。","Límites explícitos, términos ejecutables y control no retroactivo."),
+      p1:P(
+        "Contracts are the executable boundary between parties. Incoherent contracts amplify risk and accelerate dispute.",
+        "合约是当事方之间的可执行边界。不自洽合约放大风险并加速争议。",
+        "Los contratos son límites ejecutables. Contratos incoherentes amplifican riesgo y disputas."
+      ),
+      p2:P(
+        "Policy posture: definitions first, scope locked, versioned amendments only. No silent semantic drift.",
+        "政策姿态：先定义、锁范围、仅版本化修订。禁止无声语义漂移。",
+        "Postura: definiciones primero, alcance bloqueado, solo enmiendas versionadas. Sin deriva semántica."
+      ),
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), p:P("Scope precedes authority. Authority without scope is incoherent.","范围先于权威。无范围的权威是不自洽的。","El alcance precede a la autoridad.")},
+        {h:P("Build Now","现在建","Construir ahora"), p:P("Standard contract templates + reason-coded clauses + audit trail.","模板化合约+原因码条款+审计轨迹。","Plantillas + cláusulas con razones + auditoría.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), p:P("Contract registry linked to telemetry and claim buckets.","合约注册表连接遥测与主张桶。","Registro contractual enlazado a telemetría.")},
+      ]
+    },
+    {
+      c:"#93c5fd",
+      t:P("Compliance & Regulatory Mapping","合规与监管映射","Cumplimiento y mapeo regulatorio"),
+      s:P("Constraint surfaces: what is permitted, what is prohibited, what is undecidable.","约束面：允许/禁止/不可判定。","Superficies: permitido, prohibido, indecidible."),
+      p1:P(
+        "Compliance is not paperwork. It is a boundary system. Boundary systems must be explicit, testable, and replayable.",
+        "合规不是文书，而是边界系统。边界系统必须明确、可测试、可回放。",
+        "El cumplimiento es un sistema de límites: explícito, testeable y reproducible."
+      ),
+      p2:P(
+        "This surface routes unclear zones to 'UNDETERMINED' rather than forcing conclusions.",
+        "本面把不清晰区域路由到“未确定”，而不是强行结论。",
+        "Esta superficie enruta lo incierto a 'INDETERMINADO' en vez de forzar conclusiones."
+      ),
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), p:P("Binary admissibility requires declared rules. No rule = undecidable.","二元可采信需规则声明。无规则=不可判定。","Admisibilidad binaria requiere reglas declaradas.")},
+        {h:P("Build Now","现在建","Construir ahora"), p:P("Rule catalog + scope locks + change control receipts.","规则目录+范围锁+变更收据。","Catálogo de reglas + locks + recibos.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), p:P("Automated compliance gates wired into deployment pipelines.","把自动合规闸门接入部署流水线。","Compuertas de cumplimiento automatizadas.")},
+      ]
+    },
+    {
+      c:"#c9a24a",
+      t:P("Insurance & Underwriting Discipline","保险与承保纪律","Seguro y disciplina de suscripción"),
+      s:P("Underwriting is constraint modeling under uncertainty.","承保是在不确定性下做约束建模。","Suscripción = modelar restricciones bajo incertidumbre."),
+      p1:P(
+        "Insurance is a capital structure tool. It is only coherent when exposure is measurable and bounded.",
+        "保险是资本结构工具。只有暴露可测且有界时才自洽。",
+        "El seguro es herramienta de estructura de capital. Solo es coherente con exposición medible y acotada."
+      ),
+      p2:P(
+        "This surface treats correlated exposure as the primary hidden risk at scale.",
+        "本面把相关暴露视为规模下的首要隐性风险。",
+        "Esta superficie trata la exposición correlacionada como riesgo oculto principal."
+      ),
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), p:P("Correlation dominates. Segmentation must be real.","相关性占主导。分段必须真实。","La correlación domina. La segmentación debe ser real.")},
+        {h:P("Build Now","现在建","Construir ahora"), p:P("Exposure registry + correlation checks + bounded coverage posture.","暴露注册表+相关检查+有界覆盖姿态。","Registro de exposición + checks + cobertura acotada.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), p:P("Underwriting dashboards powered by Gauges + DCSE vectors.","用量规+DCSE向量驱动承保仪表盘。","Tableros de suscripción con Medidores + vectores DCSE.")},
+      ]
+    },
+    {
+      c:"#ff2b2b",
+      t:P("Finance & Capital Flow (Implementation Domain)","金融与资本流（实施域）","Finanzas y flujo de capital (dominio)"),
+      s:P("Finance is execution under doctrine — not doctrine itself.","金融是教义下的执行，而非教义本身。","Finanzas es ejecución bajo doctrina."),
+      p1:P(
+        "This system treats capital as a constrained stability vector. Allocation is allowed only after admissibility is declared.",
+        "本系统把资本视为受约束的稳定向量。只有声明可采信后才允许配置。",
+        "Este sistema trata el capital como vector de estabilidad bajo restricciones. Solo se asigna tras declarar admisibilidad."
+      ),
+      p2:P(
+        "Finance output must remain subordinate to the Capital Coherence Doctrine and bounded by measurement.",
+        "金融输出必须从属于资本一致性教义，并受测量约束。",
+        "La salida financiera se subordina a la Doctrina y se acota por medición."
+      ),
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), p:P("Yield is derivative. Continuity is primary.","收益是派生项；连续性是主项。","El rendimiento es derivado; la continuidad es primaria.")},
+        {h:P("Build Now","现在建","Construir ahora"), p:P("Liquidity floors + leverage bounds + duration matching.","流动性底线+杠杆边界+久期匹配。","Pisos de liquidez + límites de apalancamiento + duración.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), p:P("Full finance page elevated under CCD (policy → execution).","在 CCD 下提升金融页（政策→执行）。","Elevar finanzas bajo doctrina (política→ejecución).")},
+      ]
+    },
+    {
+      c:"#a3a3a3",
+      t:P("Crypto (Bounded Subset)","加密资产（有界子集）","Cripto (subconjunto acotado)"),
+      s:P("Crypto is treated as capital flow with high correlation risk.","加密资产被视为高相关风险的资本流。","Cripto como flujo de capital con alto riesgo de correlación."),
+      p1:P(
+        "This subset is included only as a capital flow domain. It is not treated as a narrative or ideological object.",
+        "此子集仅作为资本流领域纳入，不作为叙事或意识形态对象。",
+        "Este subconjunto se incluye solo como dominio de flujo de capital, no como narrativa."
+      ),
+      p2:P(
+        "Exposure, custody, liquidity, and counterparty risk must be explicit and measurable.",
+        "暴露、托管、流动性与对手方风险必须明确可测。",
+        "Exposición, custodia, liquidez y contraparte deben ser explícitas y medibles."
+      ),
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), p:P("Correlation clusters under stress; treat as bounded exposure.","压力下相关聚类；视为有界暴露。","La correlación se agrupa bajo estrés; exposición acotada.")},
+        {h:P("Build Now","现在建","Construir ahora"), p:P("Registry of holdings + custody controls + exit paths.","持仓注册表+托管控制+退出路径。","Registro + controles de custodia + salidas.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), p:P("Telemetry surfaces for exposure acceleration (Δρ) and hazard proxy.","暴露加速度（Δρ）与风险代理的遥测面。","Telemetría para Δρ y proxy de riesgo.")},
+      ]
+    }
+  ];
+
+  function openWord(){
+    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  }
+
+  function build(){
+    // pressed states
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+    setPressed(["styleInformal","styleFormal"], style==="formal"?"styleFormal":"styleInformal");
+
+    applyHeader();
+
+    list.innerHTML="";
+    ROWS.forEach(function(r,i){ list.appendChild(makeRow(r,i)); });
+
+    wireAll();
+  }
+
+  build();
+})();
+</script>
+
+</body>
+</html>

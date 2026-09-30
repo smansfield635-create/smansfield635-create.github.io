@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth RMA2 Bounded Combination Classification</title>
+  <style>
+    html,body{margin:0;background:#080b0d;color:#d8e1e5;font:13px system-ui,sans-serif}
+    main{padding:10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    figure{margin:0;border:1px solid #26323a;background:#10161a;padding:5px}
+    figcaption{padding:3px 0 5px}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    #status{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Official accepted CP2</figcaption><canvas id="official"></canvas></figure>
+    <figure><figcaption>Pass G — accepted material, flat lighting</figcaption><canvas id="pass-g"></canvas></figure>
+    <figure><figcaption>Pass H — accepted CP2 final frame</figcaption><canvas id="pass-h"></canvas></figure>
+    <figure><figcaption>Combination — Family 5 plus Family 4 neutralized</figcaption><canvas id="pass-combination"></canvas></figure>
+    <div id="status">INITIALIZING_RMA2</div>
+  </main>
+  <script type="module">
+    import { createRMA2BoundedCombinationSuite } from './h-earth.rma2-bounded-combination-classification-browser.mjs';
+    const status = document.querySelector('#status');
+    try {
+      const suite = await createRMA2BoundedCombinationSuite({
+        officialCanvas: document.querySelector('#official'),
+        passCanvases: {
+          G: document.querySelector('#pass-g'),
+          H: document.querySelector('#pass-h'),
+          COMBINATION: document.querySelector('#pass-combination')
+        }
+      });
+      window.H_EARTH_RMA2 = suite;
+      document.documentElement.dataset.rma2Ready = 'true';
+      status.textContent = 'RMA2_READY';
+    } catch (error) {
+      document.documentElement.dataset.rma2Error = 'true';
+      status.textContent = String(error?.stack || error);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

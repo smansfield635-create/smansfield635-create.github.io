@@ -1,0 +1,59 @@
+name: Create Earth Cloud Asset
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/create_earth_cloud_asset.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  create-earth-cloud-asset:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Create Earth asset folder
+        run: |
+          mkdir -p assets/earth
+
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick file
+
+      - name: Create earth_clouds_2048.jpg
+        run: |
+          convert -size 2048x1024 xc:'#05070b' \
+            -fill '#f2f2f2' -draw "ellipse 420,310 330,52 0,360" \
+            -fill '#d8d8d8' -draw "ellipse 870,480 460,64 0,360" \
+            -fill '#eeeeee' -draw "ellipse 1350,680 520,72 0,360" \
+            -fill '#cfcfcf' -draw "ellipse 1670,260 360,46 0,360" \
+            -fill '#dddddd' -draw "ellipse 600,760 480,58 0,360" \
+            -fill '#c8c8c8' -draw "ellipse 1560,430 460,50 0,360" \
+            -blur 0x9 \
+            -quality 92 \
+            assets/earth/earth_clouds_2048.jpg
+
+      - name: Verify earth_clouds_2048.jpg
+        run: |
+          test -s assets/earth/earth_clouds_2048.jpg
+          file assets/earth/earth_clouds_2048.jpg
+
+      - name: Commit earth_clouds_2048.jpg
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add assets/earth/earth_clouds_2048.jpg
+
+          if git diff --cached --quiet; then
+            echo "earth_clouds_2048.jpg already exists."
+          else
+            git commit -m "Create Earth cloud asset"
+            git push
+          fi

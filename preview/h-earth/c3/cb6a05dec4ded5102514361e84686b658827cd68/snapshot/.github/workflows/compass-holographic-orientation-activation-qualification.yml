@@ -1,0 +1,59 @@
+name: Compass Holographic Orientation Activation Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/compass/compass.orientation-cinematic.js'
+      - 'assets/compass/compass.orientation-cinematic.css'
+      - 'preview/compass/holographic-orientation-v1/**'
+      - 'tools/compass-holographic-orientation-activation-qualification.mjs'
+      - '.github/workflows/compass-holographic-orientation-activation-qualification.yml'
+      - '.github/workflows/compass-static-editorial-rendered-qualification.yml'
+      - 'tools/compass-static-editorial-interaction-qualification.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  production-activation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove activation does not mutate adopted holographic preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --name-only HEAD^1 HEAD | grep -q '^preview/compass/holographic-orientation-v1/'; then
+            echo 'Adopted holographic preview was mutated by production activation' >&2
+            exit 1
+          fi
+          grep -Fq "sourceMain:'2d214fe237aa748c16a07fd2ceafd6ec88ce95d7'" assets/compass/compass.orientation-cinematic.js
+          grep -Fq '/preview/compass/holographic-orientation-v1/full/' assets/compass/compass.orientation-cinematic.js
+      - name: Reverify adopted source identity and responsive fit
+        run: node preview/compass/holographic-orientation-v1/full/verify.v1.mjs
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-holographic-activation-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-holographic-activation-http.log || true
+          exit 1
+      - name: Execute focused production activation browser qualification
+        run: node tools/compass-holographic-orientation-activation-qualification.mjs
+      - name: Upload activation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-holographic-activation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/compass-holographic-activation
+          if-no-files-found: warn
+          retention-days: 90

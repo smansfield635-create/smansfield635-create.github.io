@@ -1,0 +1,66 @@
+{
+  "schema": "MATERIAL_WORK_AUDIT_V1_CONFORMANCE_SUMMARY_v1",
+  "operationId": "MATERIAL_WORK_AUDIT_V1_CONFORMANCE_CLOSURE_20260825_003",
+  "lockGeneration": 1710,
+  "governingHead": "ef83a4c5a687eabf5f28ce56a33472c94d660a5c",
+  "frozenPopulation": {
+    "count": 906,
+    "cutoff": "2026-08-25T18:25:55Z",
+    "commit": "bebb401aa0d2486f7c0d67504c1413efb356f131",
+    "blob": "c969523bed42e90799ddc3dcb7acda6ea09d852c"
+  },
+  "frozenClassifierTotals": {
+    "PARAMOUNT": 18,
+    "STANDARD": 766,
+    "SUPPORT": 122,
+    "materialUnits": 784,
+    "total": 906
+  },
+  "conformanceOverlay": {
+    "corrections": 85,
+    "transitions": {
+      "STANDARD->SUPPORT": 84,
+      "PARAMOUNT->SUPPORT": 1
+    },
+    "promotions": 0,
+    "method": "bounded hard-gate semantic sweep over frozen evidence; absent rows inherit frozen classification"
+  },
+  "correctedTotals": {
+    "PARAMOUNT": 17,
+    "STANDARD": 682,
+    "SUPPORT": 207,
+    "materialUnits": 699,
+    "total": 906
+  },
+  "windowDisposition": {
+    "status": "QUERY_TIME_DERIVABLE_NOT_MATERIALIZED",
+    "reason": "Corrected pre/installation/mature window rates would require replaying all 906 base rows. To keep proof proportional, the frozen ledger plus overlay preserves everything needed for later aggregation.",
+    "pageUseRule": "Do not publish corrected window-specific rates until computed from base plus overlay."
+  },
+  "reproducibility": {
+    "rowLevelV0Available": false,
+    "disposition": "UNAVAILABLE_NOT_FABRICATED",
+    "v0AggregateReference": {
+      "PARAMOUNT": 143,
+      "STANDARD": 253,
+      "SUPPORT": 510,
+      "materialUnits": 396,
+      "total": 906
+    },
+    "aggregateComparisonLabel": "DISTRIBUTION_COMPARISON_NOT_REPRODUCIBILITY"
+  },
+  "postFreezeRollingBaseline": {
+    "separateFromFrozenExperiment": true,
+    "from": "2026-08-25T18:25:56Z",
+    "throughGoverningHead": "ef83a4c5a687eabf5f28ce56a33472c94d660a5c",
+    "PARAMOUNT": 0,
+    "STANDARD": 2,
+    "SUPPORT": 5,
+    "materialUnits": 2,
+    "total": 7,
+    "prs": [2063, 2064, 2070, 2071, 2073, 2075, 2081],
+    "note": "Initial rolling-counter baseline; it may be refreshed after closure without mutating the 906-row study."
+  },
+  "researchDisposition": "CLOSED_FOR_PAGE_BUILD",
+  "proofProportionality": "No additional Actions carrier, per-PR re-excavation, or verifier architecture is required for closure."
+}

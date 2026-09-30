@@ -1,0 +1,49 @@
+name: Education Calibrated Bank Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify calibrated placement bank
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json
+          git show "$CANDIDATE_SHA:research/education/EDUCATION_PLACEMENT_CALIBRATED_BANK_v1.json" >/tmp/bank.json
+          node - <<'NODE'
+          const fs=require('fs'),j=JSON.parse(fs.readFileSync('/tmp/bank.json','utf8'));
+          if(j.schema!=='EDUCATION_PLACEMENT_CALIBRATED_BANK_v1')throw Error('schema');
+          if(j.status!=='CONTENT_CANDIDATE_NO_RUNTIME_AUTHORITY')throw Error('status');
+          if(j.cardinality!==64||j.items.length!==64)throw Error('cardinality');
+          const ids=j.items.map(x=>x.id),prompts=j.items.map(x=>x.q.trim().toLowerCase());
+          if(new Set(ids).size!==64)throw Error('duplicate ids');
+          if(new Set(prompts).size!==64)throw Error('duplicate prompts');
+          const counts={};
+          for(const x of j.items){
+            counts[x.difficulty]=(counts[x.difficulty]||0)+1;
+            if(!Number.isInteger(x.difficulty)||x.difficulty<1||x.difficulty>8)throw Error(x.id+' difficulty');
+            if(!x.competency||!x.evidenceClass||!x.node)throw Error(x.id+' metadata');
+            if(x.instructionBurden!=='NONE'&&x.instructionBurden!=='BASIC')throw Error(x.id+' instruction burden');
+            if(!Array.isArray(x.o)||x.o.length!==4)throw Error(x.id+' options');
+            if(!Number.isInteger(x.a)||x.a<0||x.a>=4)throw Error(x.id+' answer');
+          }
+          for(let d=1;d<=8;d++)if(counts[d]!==8)throw Error('D'+d+' count '+counts[d]);
+          const stage1=j.items.filter(x=>x.sourceStage===1);
+          if(stage1.length!==8)throw Error('stage1 provenance');
+          if(stage1.some(x=>/borrow/i.test(x.q)))throw Error('stage1 contamination');
+          console.log(JSON.stringify({result:'PASS',counts,uniqueIds:new Set(ids).size,uniquePrompts:new Set(prompts).size}));
+          NODE
+          echo EDUCATION_CALIBRATED_BANK_QUALIFICATION=PASS

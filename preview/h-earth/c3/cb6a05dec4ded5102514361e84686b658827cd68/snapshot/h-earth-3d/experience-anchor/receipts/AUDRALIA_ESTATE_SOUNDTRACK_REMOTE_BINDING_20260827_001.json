@@ -1,0 +1,44 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_ESTATE_SOUNDTRACK_REMOTE_BINDING_20260827_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_ESTATE_SOUNDTRACK_REMOTE_BINDING_20260827_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_ESTATE_SOUNDTRACK_REMOTE_BINDING_20260827_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/audio/estate-soundtrack-v1.mjs",
+      "sha256": "a6f337378b7ceac335197ba4ef591c27ddad98d300d0e5a0d81ac4cd50dcd1c2"
+    },
+    {
+      "path": "showroom/globe/audralia/index.html",
+      "sha256": "95f5da456cf98f3ca0620161daa8ea36f589dd36abe3f9d2cc2d86e6acef716e"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "ff7fd0c80f6256a74fce2eeb0d69596ca7fc4470",
+    "qualificationOperation": "AUDRALIA_ESTATE_SOUNDTRACK_REMOTE_BINDING_20260827_001",
+    "finding": "Additive soundtrack lifecycle binding only. Existing renderer, camera/travel, geography, weather, cloud, terrain and same-world continuity remain unchanged; exact candidate mechanical regressions for static identity, labels, four-compass correspondence and Audralia weather presentation passed before receipt installation."
+  }
+}

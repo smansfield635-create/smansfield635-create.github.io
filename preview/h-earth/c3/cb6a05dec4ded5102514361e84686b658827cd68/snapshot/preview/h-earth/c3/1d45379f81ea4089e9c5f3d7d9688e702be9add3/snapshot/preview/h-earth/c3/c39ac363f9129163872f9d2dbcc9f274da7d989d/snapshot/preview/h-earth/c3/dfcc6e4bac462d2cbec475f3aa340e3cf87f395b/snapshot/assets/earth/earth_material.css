@@ -1,0 +1,294 @@
+/* /assets/earth/earth_material.css */
+/* EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v2 */
+/* Previous: EARTH_G4_ASSET_RESPONSIBILITY_SPLIT_AND_MATERIAL_RESTORE_TNT_v1 */
+
+/*
+  Scope:
+  - Earth material/presentation authority only.
+  - Owns glow, atmosphere, rim clarity, stage containment, canvas presentation, label overlay safety, and mobile sizing.
+  - Does not own canvas projection, image sampling, surface phase, cloud phase, touch control, route shell, Audralia, Gauges, Products, Sun, Moon, GraphicBox, image generation, or visual-pass claims.
+*/
+
+:root {
+  --earth-stage-void: #07111f;
+  --earth-stage-panel: rgba(16, 31, 52, 0.88);
+  --earth-stage-line: rgba(156, 190, 236, 0.24);
+  --earth-glow-blue: rgba(95, 160, 255, 0.34);
+  --earth-glow-soft: rgba(119, 184, 255, 0.20);
+  --earth-glow-faint: rgba(119, 184, 255, 0.10);
+  --earth-rim: rgba(183, 216, 255, 0.56);
+  --earth-rim-soft: rgba(207, 232, 255, 0.32);
+  --earth-label-bg: rgba(7, 13, 24, 0.78);
+  --earth-label-text: #f7f1de;
+  --earth-label-line: rgba(214, 232, 255, 0.22);
+  --earth-shadow: rgba(0, 0, 0, 0.38);
+  --earth-radius: 34px;
+}
+
+#earthRenderMount,
+[data-earth-render-mount],
+[data-body="earth"][data-render-mount],
+.earth-material-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 780px);
+  min-height: clamp(360px, 72vw, 720px);
+  margin: 0 auto;
+  padding: clamp(18px, 4vw, 42px);
+  overflow: visible;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(111, 165, 230, 0.30), transparent 24rem),
+    radial-gradient(circle at 50% 50%, rgba(12, 32, 64, 0.56), transparent 28rem),
+    radial-gradient(circle at 50% 52%, rgba(255, 255, 255, 0.05), transparent 16rem),
+    linear-gradient(180deg, rgba(24, 42, 69, 0.72), rgba(11, 22, 38, 0.92));
+}
+
+#earthRenderMount::before,
+[data-earth-render-mount]::before,
+[data-body="earth"][data-render-mount]::before,
+.earth-material-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(78vw, 680px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, transparent 0 58%, rgba(102, 174, 255, 0.18) 62%, rgba(102, 174, 255, 0.08) 70%, transparent 78%),
+    radial-gradient(circle, rgba(102, 174, 255, 0.16), transparent 65%);
+  filter: blur(2px);
+  opacity: 0.92;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#earthRenderMount::after,
+[data-earth-render-mount]::after,
+[data-body="earth"][data-render-mount]::after,
+.earth-material-stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(73vw, 632px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 0 1px rgba(189, 219, 255, 0.16),
+    0 0 34px rgba(94, 156, 255, 0.24),
+    0 0 92px rgba(94, 156, 255, 0.18);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.earth-material-frame {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: min(100%, 690px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 34%, rgba(255, 255, 255, 0.10), transparent 18%),
+    radial-gradient(circle at 50% 50%, transparent 63%, rgba(91, 157, 240, 0.20) 69%, transparent 78%);
+  filter: saturate(1.05) contrast(1.04);
+}
+
+.earth-material-frame::before {
+  content: "";
+  position: absolute;
+  inset: 2.4%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 3;
+  background:
+    radial-gradient(circle at 34% 27%, rgba(255, 255, 255, 0.22), transparent 16%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.05), transparent 42%, rgba(0, 0, 0, 0.24) 100%);
+  mix-blend-mode: screen;
+  opacity: 0.62;
+}
+
+.earth-material-frame::after {
+  content: "";
+  position: absolute;
+  inset: 1.1%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+  box-shadow:
+    inset 0 0 0 1px var(--earth-rim-soft),
+    inset -24px -20px 46px rgba(0, 0, 0, 0.28),
+    inset 18px 14px 28px rgba(255, 255, 255, 0.08);
+}
+
+.earth-g4-canvas,
+.earth-reference-canvas,
+.earth-material-canvas,
+#earthRenderMount canvas,
+[data-earth-render-mount] canvas,
+[data-body="earth"][data-render-mount] canvas {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: min(100%, 660px);
+  max-width: min(100%, 660px);
+  aspect-ratio: 1 / 1;
+  border: 0;
+  outline: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow:
+    inset -28px -18px 48px rgba(0, 0, 0, 0.32),
+    inset 12px 10px 26px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(184, 217, 255, 0.24),
+    0 0 38px rgba(105, 177, 255, 0.32),
+    0 0 92px rgba(105, 177, 255, 0.18);
+  image-rendering: auto;
+  transform: none !important;
+  rotate: none !important;
+  scale: none !important;
+  translate: none !important;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.earth-g4-canvas[data-dragging="true"],
+.earth-reference-canvas[data-dragging="true"],
+.earth-material-canvas[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.earth-g4-canvas:not([data-dragging="true"]),
+.earth-reference-canvas:not([data-dragging="true"]),
+.earth-material-canvas:not([data-dragging="true"]) {
+  cursor: grab;
+}
+
+.earth-reference-label,
+#earthRenderMount .earth-reference-label,
+[data-earth-render-mount] .earth-reference-label,
+[data-body="earth"][data-render-mount] .earth-reference-label {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(24px, 6vw, 54px);
+  z-index: 6;
+  transform: translateX(-50%);
+  max-width: min(88%, 560px);
+  border: 1px solid var(--earth-label-line);
+  border-radius: 999px;
+  padding: 0.72rem 1.1rem;
+  color: var(--earth-label-text);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(119, 184, 255, 0.13), transparent 44%),
+    var(--earth-label-bg);
+  box-shadow:
+    0 16px 38px var(--earth-shadow),
+    0 0 28px rgba(100, 169, 255, 0.16);
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.earth-g4-hidden-receipt,
+.earth-public-debug,
+[data-public-receipts="hidden"] .earth-public-debug,
+[data-public-receipts="hidden"] .raw-receipts,
+[data-public-receipts="hidden"] [data-earth-debug],
+[data-public-receipts="hidden"] [data-earth-receipt] {
+  display: none !important;
+  visibility: hidden !important;
+  overflow: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  inset: auto !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 760px) {
+  #earthRenderMount,
+  [data-earth-render-mount],
+  [data-body="earth"][data-render-mount],
+  .earth-material-stage {
+    min-height: clamp(360px, 106vw, 620px);
+    padding: clamp(12px, 3vw, 26px);
+  }
+
+  #earthRenderMount::before,
+  [data-earth-render-mount]::before,
+  [data-body="earth"][data-render-mount]::before,
+  .earth-material-stage::before {
+    width: min(94vw, 620px);
+  }
+
+  #earthRenderMount::after,
+  [data-earth-render-mount]::after,
+  [data-body="earth"][data-render-mount]::after,
+  .earth-material-stage::after {
+    width: min(89vw, 580px);
+  }
+
+  .earth-material-frame {
+    width: min(100%, 570px);
+  }
+
+  .earth-reference-label,
+  #earthRenderMount .earth-reference-label,
+  [data-earth-render-mount] .earth-reference-label,
+  [data-body="earth"][data-render-mount] .earth-reference-label {
+    bottom: clamp(18px, 4.5vw, 38px);
+    font-size: clamp(0.72rem, 3vw, 1rem);
+    letter-spacing: 0.055em;
+  }
+}
+
+@media (max-width: 420px) {
+  #earthRenderMount,
+  [data-earth-render-mount],
+  [data-body="earth"][data-render-mount],
+  .earth-material-stage {
+    min-height: clamp(330px, 112vw, 540px);
+    padding: 10px;
+  }
+
+  .earth-material-frame {
+    width: min(100%, 520px);
+  }
+
+  .earth-reference-label,
+  #earthRenderMount .earth-reference-label,
+  [data-earth-render-mount] .earth-reference-label,
+  [data-body="earth"][data-render-mount] .earth-reference-label {
+    max-width: 92%;
+    padding: 0.62rem 0.82rem;
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .earth-g4-canvas,
+  .earth-reference-canvas,
+  .earth-material-canvas,
+  #earthRenderMount canvas,
+  [data-earth-render-mount] canvas,
+  [data-body="earth"][data-render-mount] canvas {
+    transition: none !important;
+  }
+}

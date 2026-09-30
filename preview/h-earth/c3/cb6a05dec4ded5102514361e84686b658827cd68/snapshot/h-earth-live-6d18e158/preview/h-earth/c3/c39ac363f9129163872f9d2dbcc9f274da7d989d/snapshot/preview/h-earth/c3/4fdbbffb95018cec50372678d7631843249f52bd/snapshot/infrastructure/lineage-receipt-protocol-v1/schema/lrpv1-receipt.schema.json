@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://diamondgatebridge.com/schema/lrpv1-receipt.schema.json",
+  "title": "Lineage Receipt Protocol v1 Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "protocol_version",
+    "canonicalization",
+    "digest_algorithm",
+    "payload",
+    "lineage_digest"
+  ],
+  "properties": {
+    "protocol": {"const": "LRP"},
+    "protocol_version": {"const": "1.0.0"},
+    "canonicalization": {"const": "JCS-RFC8785-SAFEINT"},
+    "digest_algorithm": {"const": "SHA-256"},
+    "payload": {"$ref": "#/$defs/value"},
+    "lineage_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "value": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "boolean"},
+        {"type": "string"},
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "array",
+          "items": {"$ref": "#/$defs/value"}
+        },
+        {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/value"}
+        }
+      ]
+    }
+  }
+}

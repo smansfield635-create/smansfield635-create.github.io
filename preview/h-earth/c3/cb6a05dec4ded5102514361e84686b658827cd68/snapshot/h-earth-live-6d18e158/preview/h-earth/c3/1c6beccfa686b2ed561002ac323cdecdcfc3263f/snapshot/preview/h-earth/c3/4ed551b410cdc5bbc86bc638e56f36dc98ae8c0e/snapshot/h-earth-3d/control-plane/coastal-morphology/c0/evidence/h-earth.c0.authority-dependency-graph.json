@@ -1,0 +1,1773 @@
+{
+  "authorityMembership": [
+    {
+      "authorityId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_SUCCESSOR_TERRAIN_AND_MOUNTAIN_NEUTRAL_GEOMETRY_RUN_8B_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/environment/h-earth.water-state.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1",
+      "dependencyPaths": [
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/render/geometry-shoreline.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_LIVE_OCEAN_MATERIAL_PROJECTION_RUN_8E_R2_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/capacity.js",
+        "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "showroom/globe/h-earth/render/landscape-preview.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_WATER_TERRAIN_INTERSECTION_CORRESPONDENCE_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1",
+      "dependencyPaths": [
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/terrain/h-earth.terrain-field.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/capacity.js",
+        "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "showroom/globe/h-earth/render/landscape-preview.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/capacity.js",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+        "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "showroom/globe/h-earth/render/landscape-preview.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+        "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_SUCCESSOR_SURFACE_AND_COASTAL_MATERIAL_CUSTODY_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/landscape-preview.js",
+        "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_FUNCTIONAL_LANDSCAPE_CAMERA_PROJECTION_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/capacity.js",
+        "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "showroom/globe/h-earth/render/landscape-preview.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/capacity.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/functional-landscape/navigation.js"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_RUN_8E_CP3B_LOCKED_CONTINUOUS_POINTER_TOUCH_INTAKE_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/capacity.js",
+        "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+        "showroom/globe/h-earth/functional-landscape/navigation.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+      ]
+    },
+    {
+      "authorityId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+      "dependencyPaths": [
+        "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json",
+        "h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json"
+      ]
+    },
+    {
+      "authorityId": "GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01",
+      "dependencyPaths": [
+        "h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json",
+        "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_GRATITUDE_REGION_OTHER_PROTECTED_PLACEMENTS_v1",
+      "dependencyPaths": [
+        "h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json",
+        "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json",
+        "h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json"
+      ],
+      "primarySourcePaths": [
+        "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json"
+      ]
+    },
+    {
+      "authorityId": "H_EARTH_GROUNDED_VEGETATION_NEUTRAL_GEOMETRY_AND_WORLD_ATTACHMENT_RUN_8D_v1",
+      "dependencyPaths": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "h-earth-3d/h-earth.matrix.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js",
+        "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js"
+      ],
+      "primarySourcePaths": [
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js"
+      ]
+    }
+  ],
+  "complete": true,
+  "edgeCount": 122,
+  "edges": [
+    {
+      "from": "h-earth-3d/cells/ground-cell-001.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/h-earth.matrix.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-distant-context.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-landscape.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.biome-field.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.biome-field.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.biome-field.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.water-state.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.biome-field.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.population-planner.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.population-planner.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.biome-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.population-planner.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.surface-state-field.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.surface-state-field.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.surface-state-field.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.population-planner.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.spatial-lifecycle.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.water-state.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.water-state.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+    },
+    {
+      "from": "h-earth-3d/environment/h-earth.water-state.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/objects/ground-cell-001.objects.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js"
+    },
+    {
+      "from": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/zones/ground-cell-001.zones.js"
+    },
+    {
+      "from": "h-earth-3d/objects/ground-cell-001.objects.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/cells/ground-cell-001.js"
+    },
+    {
+      "from": "h-earth-3d/objects/ground-cell-001.objects.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/zones/ground-cell-001.zones.js"
+    },
+    {
+      "from": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+    },
+    {
+      "from": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/cells/ground-cell-001.js"
+    },
+    {
+      "from": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/h-earth.matrix.js"
+    },
+    {
+      "from": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/zones/ground-cell-001.zones.js"
+    },
+    {
+      "from": "h-earth-3d/zones/ground-cell-001.zones.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/cells/ground-cell-001.js"
+    },
+    {
+      "from": "h-earth-3d/zones/ground-cell-001.zones.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/h-earth.matrix.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/functional-landscape/navigation.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/capacity.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.east.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.south.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.west.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.east.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.east.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.south.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-distant-context.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/landscape-preview.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/landscape-preview.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-distant-context.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/landscape-preview.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/landscape-preview.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-landscape.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/landscape-preview.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-shoreline.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/environment-atmosphere.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/renderer.functional-landscape.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/run8e-successor-environment.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/functional-landscape/navigation.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/landscape-preview.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js"
+    },
+    {
+      "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "kind": "STATIC_OR_LITERAL_DYNAMIC_IMPORT",
+      "to": "showroom/globe/h-earth/render/renderer.functional-landscape.js"
+    }
+  ],
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "nodeCount": 57,
+  "nodes": [
+    {
+      "byteLength": 31945,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "0ce8b5123678cfa36339879792c0bfa4a1a0444d",
+      "importedBy": [
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js"
+      ],
+      "path": "h-earth-3d/cells/ground-cell-001.js",
+      "sha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2"
+    },
+    {
+      "byteLength": 15982,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "ad6a7ac1871e1f248c40ac7836d487f786dc48e4",
+      "importedBy": [],
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+      "sha256": "fc6d82ada19f2f5e2222753289bfea55f5703d77f2308ab91349c4755dfe6e20"
+    },
+    {
+      "byteLength": 25303,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "3f0a833cc32106029318eee460d9ca15cf841959",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js"
+      ],
+      "path": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "sha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7"
+    },
+    {
+      "byteLength": 12746,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "e141af58c037b1be170a168a7b7ee464b3008e6c",
+      "importedBy": [
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+      "sha256": "6ad77be70f7c0536cf9c4474d8d42228a19c46be324ff566747e7598e7a7c3f1"
+    },
+    {
+      "byteLength": 11021,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "63ac317ca90b2c71ef8dc366e83ad17b13d6a155",
+      "importedBy": [
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      ],
+      "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+      "sha256": "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643"
+    },
+    {
+      "byteLength": 7357,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "dbab15717f754b2dc9cedd75ab6835d3f4328a15",
+      "importedBy": [
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+      ],
+      "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+      "sha256": "d00308f30b297f3d1ccfab1bd588172973accfae00fcc1b3eb5f0cfbf1372a97"
+    },
+    {
+      "byteLength": 11821,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "7d50eaf13d0bc719039bc24e571b3dec0dcaf978",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "sha256": "081cc158471dcf4a5d6c3a57c6ceaae8ae575bc77d2195f1a60a23e45f4507eb"
+    },
+    {
+      "byteLength": 12712,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "059aced691f3947cdadd582d84b562fb7f9b94be",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.population-planner.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.biome-field.js",
+      "sha256": "c0a67d1cbd3000e405d1415f25f1e725989b292659072040c15b37db1602ea93"
+    },
+    {
+      "byteLength": 17476,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "a7f7cf194f5a7dda86526244ae396adb81b521ea",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.population-planner.js",
+      "sha256": "5764eba7a1d95b04ca142526234f65aa717e3685ebac82e81b5c7812fa218922"
+    },
+    {
+      "byteLength": 17747,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "e5478149cfe78f1371232bf3ba2b0e610371b030",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+      "sha256": "62a16a20e57cb76a94a324566124df4d1b3ec322567b98e66edaa91d35326839"
+    },
+    {
+      "byteLength": 9859,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "caaef944e0681a98b722f9c99526d38d8f25ec50",
+      "importedBy": [
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "sha256": "e22d06b9118950e334b5c29c57d2d5206d5c0c3ef8307b51e573108975480866"
+    },
+    {
+      "byteLength": 16358,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "d71aaf047bebcc18a47a6bb9c741211ca2a10f45",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.population-planner.js",
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.surface-state-field.js",
+      "sha256": "d67b104ed4ba19bbafee928fea4d54254893e14e4b157022a3685e047e477db2"
+    },
+    {
+      "byteLength": 11335,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "82d0590fdc7346f7b6cdb5eafeb3d51ef13411dc",
+      "importedBy": [
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "sha256": "fbc52764278cac8be054335136693534a7022672afff7be49ec7fda4c929bfe7"
+    },
+    {
+      "byteLength": 15112,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "c99e933a14b2642e0971ffbd8b06dfbaaf562284",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.biome-field.js"
+      ],
+      "path": "h-earth-3d/environment/h-earth.water-state.js",
+      "sha256": "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26"
+    },
+    {
+      "byteLength": 35389,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "a34f94e0c285cd6e0a46111f8e4dcc97bc95f1c9",
+      "importedBy": [
+        "h-earth-3d/cells/ground-cell-001.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "h-earth-3d/zones/ground-cell-001.zones.js"
+      ],
+      "path": "h-earth-3d/h-earth.matrix.js",
+      "sha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5"
+    },
+    {
+      "byteLength": 13010,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "8f20a80ce5797b3616bee64a53d95911c641e46b",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/landscape-preview.js"
+      ],
+      "path": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "sha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a"
+    },
+    {
+      "byteLength": 43060,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "2bcb67ebf84f36248475921c85e75236a1115102",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      ],
+      "path": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+      "sha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523"
+    },
+    {
+      "byteLength": 5784,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "9d32fd89070fa534d63c3c6a3feb4c8f5fd519f4",
+      "importedBy": [
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "sha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85"
+    },
+    {
+      "byteLength": 34235,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "8ed548780039fffba3989e55f5c8f3713354e34f",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      ],
+      "path": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "sha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544"
+    },
+    {
+      "byteLength": 104797,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "1d791ee32d07a16f687c0e40b9e25b3c8074b880",
+      "importedBy": [
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js"
+      ],
+      "path": "h-earth-3d/objects/ground-cell-001.objects.js",
+      "sha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b"
+    },
+    {
+      "byteLength": 8557,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "importedBy": [
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+      ],
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "sha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795"
+    },
+    {
+      "byteLength": 7882,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "bf0dfcc0166fd1e677529ff46b91d943f7eae7c8",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/environment/h-earth.biome-field.js",
+        "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/environment/h-earth.water-state.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js"
+      ],
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad"
+    },
+    {
+      "byteLength": 6275,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "98f8131dab38973f0f30165967443e0057f7615f",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js"
+      ],
+      "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "sha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b"
+    },
+    {
+      "byteLength": 7147,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "48c51c8c889695cbd81b2bc0777e5d28a716776f",
+      "importedBy": [],
+      "path": "h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json",
+      "sha256": "3a6c295efda3a2357696dc611625370dc9f53add3802d0fd69b1a372084dfcff"
+    },
+    {
+      "byteLength": 3387,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "cefc91a7ffa3047317e3902f3b29a591aaabe468",
+      "importedBy": [],
+      "path": "h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json",
+      "sha256": "406df29d11f5af30355241d9646fe20b48387934791e97a92d6104e24807c455"
+    },
+    {
+      "byteLength": 11214,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "6f3146c70eb07e76630f465f90e9d26bd30acdda",
+      "importedBy": [],
+      "path": "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json",
+      "sha256": "6b6a62e1a0bb7398384dd9acd2c54c4060f3783af00b383345371720a92164c7"
+    },
+    {
+      "byteLength": 8646,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "7b5c8596f39d6855cd975ada282c9a9b18f28fe9",
+      "importedBy": [],
+      "path": "h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json",
+      "sha256": "0e1eb00b5e5d53a63ddc30703ed4b2b0f0e59892257c54acdd901e695860111a"
+    },
+    {
+      "byteLength": 5917,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "9dfc45298d0e5f07537807e0518e9743840839d9",
+      "importedBy": [],
+      "path": "h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json",
+      "sha256": "0fac7d695d08dc02659b7bd5818b09f0266c9172eabf96a0a30ce4a72fdeab85"
+    },
+    {
+      "byteLength": 68680,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "ed9ff1f7d3c139a1cba7df169f278336342339f4",
+      "importedBy": [
+        "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js"
+      ],
+      "path": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "sha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482"
+    },
+    {
+      "byteLength": 107753,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "2d21f90e6eda8b0885ce4815b352335827a38522",
+      "importedBy": [
+        "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "h-earth-3d/objects/ground-cell-001.objects.js",
+        "h-earth-3d/zones/ground-cell-001.landscape-lattice.js"
+      ],
+      "path": "h-earth-3d/zones/ground-cell-001.zones.js",
+      "sha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe"
+    },
+    {
+      "byteLength": 107527,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8",
+      "importedBy": [
+        "showroom/globe/h-earth/functional-landscape/navigation.js"
+      ],
+      "path": "showroom/globe/h-earth/capacity.js",
+      "sha256": "696531778b726a61af424cef67286936d5ed22fac7c087ba542cd357c7b78305"
+    },
+    {
+      "byteLength": 10571,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "5eb1b6f2e72ac0525f608850234182b2c646f66f",
+      "importedBy": [
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js"
+      ],
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "sha256": "77414402ba35685e04417d6f45e25efcbb117f58b1bf8c844e8f81c6184dee3f"
+    },
+    {
+      "byteLength": 12347,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "aae214ddbc4cd18aa8c737ee7bbb3de44322da96",
+      "importedBy": [
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js"
+      ],
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "sha256": "332df30201c7a224754a7920e42ed00a9750ce23166620bbb3768099d09fd63a"
+    },
+    {
+      "byteLength": 5044,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "89434de5190f710265e97c717bb2ccba52e8571f",
+      "importedBy": [
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+      ],
+      "path": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+      "sha256": "5936b390e7d4c2b801a44c0e3505440bd089c9e2d32091abad1189fb0d044632"
+    },
+    {
+      "byteLength": 19131,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "8ab3446c536fc24423d5601acce232b19fa71c91",
+      "importedBy": [
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+      ],
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "4be99d9b81c5e3984270014b705c552950fe32bc28293b3ecf58d0c87de1c1a0"
+    },
+    {
+      "byteLength": 11509,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "98c768be0cfb2ec4bc82e2b634913d91cc73a32f",
+      "importedBy": [
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
+      ],
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "3a5551dbdc5bad1efd14e4fd8bd9d84d3c6696d6ea8495eddb7b1296d98b2811"
+    },
+    {
+      "byteLength": 396,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "90f6a0f0f75f2f10ca978d76ec3f3eee0cb9585e",
+      "importedBy": [],
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "9cf8a5e020527fd88b96fec5f0f1ed1f0d21e0208c2e7d49b49ec6f4fb2091ab"
+    },
+    {
+      "byteLength": 10815,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "54459cd7dcb82bf0c2860d581d714b766162f74d",
+      "importedBy": [
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js"
+      ],
+      "path": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "sha256": "f678c52ef0fe16660369a97b43806074b93250efafba1fd89ea48f67a6ec836e"
+    },
+    {
+      "byteLength": 4421,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "9e3c5192ee90f8342c119d60e312027e374629df",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/landscape-preview.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "sha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2"
+    },
+    {
+      "byteLength": 19852,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "cd7a15e9cc67dbb598ae68c26027fd4ea26bdd5b",
+      "importedBy": [
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "sha256": "73f1ddd4d9fca535238760aabf7b231b6592f1db799e82cde7b1e09e41fdaa96"
+    },
+    {
+      "byteLength": 128728,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "261e73cc2c561dbf8d4f2f8210e51dad361cec91",
+      "importedBy": [
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "sha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba"
+    },
+    {
+      "byteLength": 40459,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "91eabcc240b54ef01a52d59a237dff629d90a722",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-landscape.js",
+        "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "showroom/globe/h-earth/render/landscape-preview.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "sha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817"
+    },
+    {
+      "byteLength": 127118,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "b5289094db8648800197a03226d6322902960b48",
+      "importedBy": [
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "sha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0"
+    },
+    {
+      "byteLength": 145913,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "af1c78e2fe336678f9f477256a619b1a25c0d7b1",
+      "importedBy": [
+        "showroom/globe/h-earth/render/geometry-kernel.js",
+        "showroom/globe/h-earth/render/geometry-kernel.west.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "sha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877"
+    },
+    {
+      "byteLength": 73706,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "26f1b41c6a25bc7324082465b70cb6b68c2a457d",
+      "importedBy": [
+        "showroom/globe/h-earth/render/geometry-kernel.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "sha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970"
+    },
+    {
+      "byteLength": 8875,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "929cb0118d6fe71ff381f315590dba6a056d0ce8",
+      "importedBy": [
+        "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "showroom/globe/h-earth/render/landscape-preview.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "sha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f"
+    },
+    {
+      "byteLength": 7372,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "33829da14ab390aba747ac502bfb96332a1209e5",
+      "importedBy": [
+        "showroom/globe/h-earth/render/landscape-preview.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "sha256": "1b61f3008d93b94ef1a6ea16f9f622889d4086d65664669f95cffeeeafc6b9e4"
+    },
+    {
+      "byteLength": 15341,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+      "importedBy": [
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "sha256": "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06"
+    },
+    {
+      "byteLength": 5173,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+      "importedBy": [
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js"
+      ],
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "sha256": "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08"
+    },
+    {
+      "byteLength": 5454,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "6f9060d196bde61092489f7d578c14784117a5f6",
+      "importedBy": [
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "showroom/globe/h-earth/render/landscape-preview.js",
+      "sha256": "f9f0275608c3201568d3221c5c5f3701499a61f6f7cbc24852849c9fd6c142fe"
+    },
+    {
+      "byteLength": 14561,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "bb7b7cd9f835f36cef7eb068fe764f7afe74e817",
+      "importedBy": [
+        "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "sha256": "6e7a6e0ad335425121adff26f99f97e892f453b5c5958afed3f5f0a059e09fa3"
+    },
+    {
+      "byteLength": 3696,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "9d3cb84168f2aea23a013de6d8982b707abf3f60",
+      "importedBy": [
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js"
+      ],
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa"
+    },
+    {
+      "byteLength": 26551,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+      "importedBy": [
+        "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+      ],
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae"
+    },
+    {
+      "byteLength": 12119,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+      "importedBy": [
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js"
+      ],
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "ca85699d6603d95f55ddded611ba37b46b5f13c5dd95a28997a89ee0f831df37"
+    },
+    {
+      "byteLength": 33478,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "de55609b0b0bd66601445a369c727ff7a6d7065d",
+      "importedBy": [],
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+      "sha256": "00b860d494603922db60ca4fffe4c31f427c51ade584e839c318c0768341ba49"
+    },
+    {
+      "byteLength": 17168,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "71ec6950e1a47c31862b596b4144635a97cbaa20",
+      "importedBy": [
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "path": "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+      "sha256": "b5ff536681b7a54310312d1ccf87fa548b857c4f308abfeedaf87898b18b02e3"
+    },
+    {
+      "byteLength": 20969,
+      "correspondingPublicAssetSha256s": [],
+      "gitBlobSha1": "fa6fb8bdc579be109c30a963c2bbdcea398a1d57",
+      "importedBy": [
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      ],
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4"
+    }
+  ],
+  "productMutation": false,
+  "receiptType": "H_EARTH_C0_B_AUTHORITY_DEPENDENCY_GRAPH_v1",
+  "rootSourcePaths": [
+    "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+    "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+    "h-earth-3d/environment/h-earth.atmosphere-state.js",
+    "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+    "h-earth-3d/environment/h-earth.surface-state-field.js",
+    "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+    "h-earth-3d/environment/h-earth.water-state.js",
+    "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+    "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "h-earth-3d/terrain/h-earth.terrain-field.js",
+    "h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json",
+    "showroom/globe/h-earth/capacity.js",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+    "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+    "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+    "showroom/globe/h-earth/render/geometry-kernel.js",
+    "showroom/globe/h-earth/render/geometry-kernel.north.js",
+    "showroom/globe/h-earth/render/geometry-shoreline.js",
+    "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+    "showroom/globe/h-earth/render/renderer.functional-landscape.js"
+  ]
+}

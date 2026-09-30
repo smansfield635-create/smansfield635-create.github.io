@@ -1,0 +1,31 @@
+name: BT4 Pages Transport Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'preview/bt4/entitlement-v1/**'
+      - '.github/workflows/bt4-pages-transport-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe published preview controls
+        shell: bash
+        run: |
+          set -u
+          for URL in \
+            'https://diamondgatebridge.com/preview/h-earth/c3/e7259d40726a7890b34140a9d4154232bf2d91f6/' \
+            'https://smansfield635-create.github.io/preview/h-earth/c3/e7259d40726a7890b34140a9d4154232bf2d91f6/' \
+            'https://diamondgatebridge.com/preview/bt4/entitlement-v1/' \
+            'https://smansfield635-create.github.io/preview/bt4/entitlement-v1/'
+          do
+            CODE="$(curl -sS -o /tmp/body -w '%{http_code}' --max-time 15 "$URL" || true)"
+            BYTES="$(wc -c </tmp/body 2>/dev/null || echo 0)"
+            echo "STATUS=$CODE BYTES=$BYTES URL=$URL"
+          done

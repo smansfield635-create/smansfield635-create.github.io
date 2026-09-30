@@ -1,0 +1,130 @@
+/* AUDRALIA_LOADING_CONTINUITY_v4 — chromatic H-Earth-family arrival */
+.audralia-loading-screen{
+  background:
+    radial-gradient(circle at 18% 16%,rgba(36,170,255,.28),transparent 24rem),
+    radial-gradient(circle at 82% 26%,rgba(130,92,255,.24),transparent 26rem),
+    radial-gradient(circle at 50% 86%,rgba(28,224,173,.25),transparent 30rem),
+    linear-gradient(160deg,#03111f 0%,#082843 38%,#14224f 67%,#061a20 100%);
+  color:#f5fbff;
+}
+
+.audralia-loading-screen::before,
+.audralia-loading-screen::after{
+  content:"";
+  position:absolute;
+  inset:auto;
+  border-radius:50%;
+  filter:blur(48px);
+  pointer-events:none;
+  opacity:.62;
+  animation:audraliaAtmosphereDrift 7s ease-in-out infinite alternate;
+}
+.audralia-loading-screen::before{width:46vw;height:46vw;max-width:520px;max-height:520px;left:-12vw;top:12vh;background:rgba(43,177,255,.18)}
+.audralia-loading-screen::after{width:52vw;height:52vw;max-width:620px;max-height:620px;right:-18vw;bottom:4vh;background:rgba(115,72,255,.16);animation-delay:-2.8s}
+
+.audralia-loading-panel{
+  position:relative;
+  width:min(680px,92vw);
+  padding:clamp(26px,5vw,48px);
+  align-items:stretch;
+  text-align:left;
+  border:1px solid rgba(213,236,255,.30);
+  border-radius:30px;
+  background:linear-gradient(155deg,rgba(3,16,29,.82),rgba(7,20,43,.76) 55%,rgba(5,26,32,.76));
+  box-shadow:0 34px 110px rgba(0,0,0,.46),0 0 70px rgba(43,177,255,.10),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(18px) saturate(128%);
+  overflow:hidden;
+}
+.audralia-loading-panel::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:3px;
+  background:linear-gradient(90deg,#39bdf8,#7b79ff,#52e1b7,#f3d45e);
+  box-shadow:0 0 24px rgba(86,195,255,.55);
+}
+
+.audralia-loading-kicker{
+  color:#a9e6ff;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+}
+.audralia-loading-version{
+  margin-top:8px;
+  width:max-content;
+  padding:5px 9px;
+  border:1px solid rgba(126,197,255,.28);
+  border-radius:999px;
+  background:linear-gradient(90deg,rgba(44,175,255,.13),rgba(116,94,255,.13));
+  color:#ccecff;
+  font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.audralia-loading-mark{
+  width:64px;
+  height:64px;
+  margin:20px 0 18px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(209,240,255,.38);
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(46,184,255,.24),rgba(117,92,255,.18) 55%,rgba(71,225,181,.16));
+  box-shadow:inset 0 0 30px rgba(225,248,255,.08),0 0 38px rgba(71,174,255,.20);
+}
+.audralia-loading-mark span{font-size:26px;font-weight:900;color:#f1fbff;text-shadow:0 0 18px rgba(142,220,255,.45)}
+
+.audralia-loading-title{font-size:clamp(42px,8vw,70px);line-height:.94;font-weight:900;letter-spacing:-.052em;color:#fff}
+.audralia-loading-subtitle{margin-top:9px;color:rgba(235,247,255,.74);font-size:clamp(13px,2vw,16px)}
+.audralia-loading-stage{margin-top:24px;min-height:1.4em;color:#f4fbff;font-size:clamp(13px,2vw,15px);font-weight:800}
+
+.audralia-loading-systems{display:grid;gap:8px;margin-top:18px}
+.audralia-loading-system{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  padding:11px 12px;
+  border:1px solid rgba(201,231,255,.13);
+  border-radius:12px;
+  background:rgba(255,255,255,.035);
+  color:rgba(238,248,255,.66);
+  font-size:12px;
+  transition:border-color .24s ease,background .24s ease,color .24s ease,box-shadow .24s ease,transform .24s ease;
+}
+.audralia-loading-system:nth-child(1){border-left:3px solid rgba(67,188,255,.48)}
+.audralia-loading-system:nth-child(2){border-left:3px solid rgba(111,122,255,.52)}
+.audralia-loading-system:nth-child(3){border-left:3px solid rgba(69,225,184,.48)}
+.audralia-loading-system:nth-child(4){border-left:3px solid rgba(244,205,83,.46)}
+.audralia-loading-system b{color:rgba(235,246,255,.42);font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.08em}
+.audralia-loading-system[data-state="ready"]{color:#f2fbff;transform:translateX(2px);box-shadow:inset 0 0 24px rgba(87,188,255,.05),0 0 20px rgba(54,170,255,.05)}
+.audralia-loading-system:nth-child(1)[data-state="ready"]{border-color:rgba(71,190,255,.38);background:linear-gradient(90deg,rgba(42,174,255,.17),rgba(42,174,255,.04))}
+.audralia-loading-system:nth-child(2)[data-state="ready"]{border-color:rgba(126,119,255,.40);background:linear-gradient(90deg,rgba(110,92,255,.18),rgba(110,92,255,.04))}
+.audralia-loading-system:nth-child(3)[data-state="ready"]{border-color:rgba(73,226,184,.38);background:linear-gradient(90deg,rgba(48,214,168,.16),rgba(48,214,168,.04))}
+.audralia-loading-system:nth-child(4)[data-state="ready"]{border-color:rgba(245,209,92,.36);background:linear-gradient(90deg,rgba(239,198,68,.14),rgba(239,198,68,.03))}
+.audralia-loading-system[data-state="ready"] b{color:#b7f4df}
+
+.audralia-loading-track{position:relative;height:15px;margin-top:24px;overflow:hidden;border:1px solid rgba(210,235,255,.28);border-radius:999px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 12px rgba(0,0,0,.22)}
+.audralia-loading-track span{position:absolute;inset:0 auto 0 0;width:0;overflow:hidden;border-radius:inherit;animation:none;background:linear-gradient(90deg,#34baf7 0%,#7a78ff 36%,#4fe0b5 70%,#f2d25c 100%);box-shadow:0 0 30px rgba(86,194,255,.48);transition:width .30s cubic-bezier(.2,.8,.2,1)}
+.audralia-loading-track span::after{content:"";position:absolute;inset:-2px;width:36%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.82),transparent);transform:translateX(-150%);animation:audraliaLoaderActivity 1.1s linear infinite}
+
+.audralia-loading-meta{display:flex;justify-content:space-between;gap:16px;margin-top:11px;color:rgba(231,245,255,.58);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;letter-spacing:.04em}
+.audralia-loading-note{max-width:34rem;margin-top:18px;color:rgba(225,241,255,.57);font-size:11px;line-height:1.55}
+.audralia-loading-screen[data-delayed="true"] .audralia-loading-stage{color:#ffd978}
+.audralia-loading-screen[data-delayed="true"] .audralia-loading-panel{border-color:rgba(255,213,105,.34)}
+
+@keyframes audraliaLoaderActivity{to{transform:translateX(390%)}}
+@keyframes audraliaAtmosphereDrift{to{transform:translate3d(4vw,-2vh,0) scale(1.08)}}
+
+@media(max-width:460px){
+  .audralia-loading-panel{width:min(366px,92vw);padding:24px 20px;border-radius:25px}
+  .audralia-loading-title{font-size:46px}
+  .audralia-loading-systems{gap:7px}
+  .audralia-loading-system{padding:10px 11px}
+}
+@media(prefers-reduced-motion:reduce){
+  .audralia-loading-track span{transition:none}
+  .audralia-loading-track span::after,.audralia-loading-screen::before,.audralia-loading-screen::after{animation:none}
+}

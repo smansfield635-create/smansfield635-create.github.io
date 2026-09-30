@@ -1,0 +1,31 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_G5_REFERENCE_ADMISSION_CONTRACT_v1",
+  "status": "ACTIVE",
+  "generation": "G5",
+  "minimumReferenceCount": 1,
+  "referenceRequirements": {
+    "ownership": "DIAMOND_GATE_OWNED_OR_EXPLICITLY_AUTHORIZED",
+    "identity": "ORIGINAL_JEEVES_TARGET_NOT_RECOGNIZABLE_THIRD_PARTY_IMITATION",
+    "format": "lossless PCM WAV preferred",
+    "environment": "clean dry speech with low background noise and no music",
+    "transcript": "exact transcript required",
+    "corpusBinding": "must match at least one of the fixed eight Compass beats for first fit",
+    "provenance": "source, recorder/speaker authorization, date, and hash required"
+  },
+  "alignmentLaw": "Reference and G4 prediction must be time-aligned in a stable acoustic domain before residual extraction; unaligned waveform subtraction is prohibited.",
+  "fitScope": [
+    "spectral-envelope correction",
+    "periodicity correction",
+    "voiced-noise balance correction",
+    "small residual energy-shape correction"
+  ],
+  "fitForbidden": [
+    "new timing model",
+    "new phoneme model",
+    "new language model",
+    "new character model",
+    "external pretrained weights",
+    "remote inference dependency"
+  ],
+  "admissionResult": "NOT_ADMITTED_NO_REFERENCE_PRESENT"
+}

@@ -1,0 +1,140 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "about",
+  "description": "Qualified cinematic About estate with Audralia WORLD, authoritative Mirrorland STORY, Play/Skip threshold, user-gesture soundtrack start, navigable January–September history calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
+  "checks": [
+    {
+      "path": "/about/index.html",
+      "includes": [
+        "data-about-generation=\"documentary-estate-v2-reconstructed\"",
+        "data-play-intro",
+        "data-skip-intro",
+        "Chronology · navigable history",
+        "data-prev",
+        "data-calendar-reader",
+        "September 2026",
+        "AI RULES",
+        "CLAIM RULES",
+        "AGENT RESULT",
+        "GRATITUDE COAST",
+        "The human layer",
+        "The work is ultimately about people."
+      ],
+      "excludes": [
+        "Eight historical states · repository anchors",
+        "Chronology · repository evidence"
+      ]
+    },
+    {
+      "path": "/about/about-source-to-shot-binding.v1.json",
+      "includes": [
+        "ABOUT_SOURCE_TO_SHOT_BINDING_v1",
+        "ABOUT_HUMAN_CHRONOLOGY_REFINEMENT_20260901_001",
+        "\"filmToInterfacePhysicalContinuity\": true",
+        "\"skipPathBound\": true"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/about/",
+    "timeoutMs": 15000,
+    "readySelector": "#about-main",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/about/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ],
+    "interactions": [
+      {
+        "name": "Skip intro converges to the persistent About estate",
+        "action": {
+          "type": "click",
+          "selector": "[data-skip-intro]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "html",
+            "name": "data-film-state",
+            "value": "settled"
+          },
+          {
+            "type": "exists",
+            "selector": "#about-main"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar previous month is keyboard operable",
+        "action": {
+          "type": "key",
+          "selector": "[data-prev]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "[data-title]",
+            "value": "August 2026"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar returns to September",
+        "action": {
+          "type": "click",
+          "selector": "[data-next]"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "[data-title]",
+            "value": "September 2026"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar event opens navigable history reader",
+        "action": {
+          "type": "click",
+          "selector": ".calendar-event"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-calendar-reader]:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-reader-title]",
+            "value": "Agentic result"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Calendar reader explicit close restores closed state",
+        "action": {
+          "type": "click",
+          "selector": "[data-reader-close]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-calendar-reader][hidden]"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

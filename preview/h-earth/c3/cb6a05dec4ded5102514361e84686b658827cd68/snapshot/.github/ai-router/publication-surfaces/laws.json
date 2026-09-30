@@ -1,0 +1,65 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "laws",
+  "description": "Diamond Gate Laws chamber with the integrated estate-Compass opening, five preserved F.I.R.S.T. questions, no circular indicator rail, and the accepted Laws Compass runtime.",
+  "checks": [
+    {
+      "path": "/laws/",
+      "includes": [
+        "data-laws-opening-integration=\"estate-compass-v1\"",
+        "LAWS_ROOT_WAYFINDING_INTEGRATION_20260825A",
+        "data-laws-experience-question=\"flow\"",
+        "data-laws-experience-question=\"integrity\"",
+        "data-laws-experience-question=\"reality\"",
+        "data-laws-experience-question=\"structure\"",
+        "data-laws-experience-question=\"test\"",
+        "Explore the five questions",
+        "data-upstream-compass-control"
+      ],
+      "excludes": [
+        "data-laws-first-rail",
+        "laws-first-rail__light",
+        "data-laws-experience-indicator",
+        "data-laws-first-rail-architecture=\"integrated-hero-v1\""
+      ]
+    },
+    {
+      "path": "/laws/index.experience.polish.css?v=LAWS_ROOT_WAYFINDING_INTEGRATION_20260825A",
+      "includes": [
+        "LAWS_ROOT_WAYFINDING_INTEGRATION_v1",
+        "font-family: Georgia, \"Times New Roman\", serif;",
+        "html[data-laws-opening-integration=\"estate-compass-v1\"]"
+      ],
+      "excludes": [
+        "LAWS_ROOT_WAYFINDING_INTEGRATION_v2"
+      ]
+    },
+    {
+      "path": "/laws/index.experience.js?v=LAWS_ROOT_WAYFINDING_INTEGRATION_20260825A",
+      "includes": [
+        "const questionNodes = Array.from(document.querySelectorAll(\"[data-laws-experience-question]\"));",
+        "for (const node of questionNodes)"
+      ],
+      "excludes": [
+        "indicatorNodes",
+        "lawsExperienceIndicator"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/laws/",
+    "timeoutMs": 30000,
+    "readyAttribute": {
+      "selector": "[data-laws-root]",
+      "name": "data-laws-staged-interaction-loaded",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/laws/"
+    },
+    "failOnConsoleErrors": false,
+    "failOnPageErrors": true
+  }
+}

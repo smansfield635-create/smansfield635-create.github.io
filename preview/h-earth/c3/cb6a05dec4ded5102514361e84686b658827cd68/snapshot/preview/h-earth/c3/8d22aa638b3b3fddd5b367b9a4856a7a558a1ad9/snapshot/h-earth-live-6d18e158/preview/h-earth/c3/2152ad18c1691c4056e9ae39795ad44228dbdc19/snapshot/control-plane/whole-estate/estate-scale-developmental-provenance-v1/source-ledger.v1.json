@@ -1,0 +1,65 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_4_SOURCE_LEDGER_v1",
+  "status": "CHECKPOINT_4_CONSTRUCTION_CANDIDATE",
+  "governingMain": "a0b0fb3d753637cfc66c06e73b0b5f0cd237056a",
+  "governingTree": "a79ddd661cf0e8329a90c98daf00bcc0ccdd2b5d",
+  "sources": [
+    {
+      "id": "CP1_PROVENANCE_LEDGER",
+      "type": "MERGED_DEVELOPMENTAL_PROVENANCE_BASELINE",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/provenance-ledger.v1.json",
+      "blob": "9b7e38bb690841ebbd15783b40bf3ecf38f06178",
+      "authority": "EVIDENCE_CLASSIFICATION_AND_RETROSPECTIVE_LIMIT_SOURCE"
+    },
+    {
+      "id": "CP1_PROSPECTIVE_CHANGE_REGISTER",
+      "type": "MERGED_CHECKPOINT_REGISTRATION",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/prospective-change-register.v1.json",
+      "blob": "e817cb14eb736de002c9be6d630951ea65c5c271",
+      "authority": "CHECKPOINT_4_SCOPE_PRESERVED_CAPACITY_FALSIFIER_AND_ROLLBACK_SOURCE"
+    },
+    {
+      "id": "CP2_SCIENTIFIC_DELTA_RECONCILIATION",
+      "type": "MERGED_EVIDENCE_BOUNDARY_CONTRACT",
+      "path": "control-plane/whole-estate/narrative-spine-constitution-v1/scientific-delta-reconciliation.v1.json",
+      "blob": "7f56d1616c286b049eee441a9972882f4be06d66",
+      "authority": "CURRENT_ESTATE_LEVEL_SCIENTIFIC_DELTA_DISPOSITION_SOURCE"
+    },
+    {
+      "id": "CP3_ROOM_CONTRACTS",
+      "type": "MERGED_CONSTITUTIONAL_AUTHORITY_CONTRACT",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/constitutional-room-contracts.v1.json",
+      "blob": "1d9ee109dcfc86ae1a8a8f61e5db9650c9abf481",
+      "authority": "ROOM_IDENTITY_AND_NON_SUBSTITUTION_SOURCE"
+    },
+    {
+      "id": "CP3_MERGE",
+      "type": "GOVERNING_MAIN_TRANSITION",
+      "pr": 725,
+      "reviewedHead": "d827c059a444888f65879df09888551ce3c0c93f",
+      "mergeCommit": "a0b0fb3d753637cfc66c06e73b0b5f0cd237056a",
+      "tree": "a79ddd661cf0e8329a90c98daf00bcc0ccdd2b5d",
+      "postMergeCertificationRun": 31151536653,
+      "certificationDisposition": "SUCCESS"
+    },
+    {
+      "id": "CP4_ACTIVATION",
+      "type": "WHOLE_ESTATE_CONTROL_AUTHORITY",
+      "issue": 705,
+      "commentId": 5212943273,
+      "authority": "CHECKPOINT_4_READY_TO_BEGIN"
+    },
+    {
+      "id": "IMI_UCIC_MIXED_SCIENTIFIC_RECORD",
+      "type": "SCIENTIFIC_EVIDENCE_DELTA_SOURCE",
+      "pr": 720,
+      "prStatus": "DRAFT_UNMERGED",
+      "head": "5664ba8e059a65f1b7ec39f2c7e944866c06278b",
+      "studyDisposition": "MIXED_NONCOMPENSATING_RESULT",
+      "authority": "EXACT_SCIENTIFIC_SOURCE_DELTA_NOT_GOVERNING_MAIN"
+    }
+  ],
+  "unmergedScientificSourceMayBePromotedToGoverningAuthority": false,
+  "developmentalProvenanceMayUpgradeScientificStanding": false,
+  "publicMutationAuthorized": false
+}

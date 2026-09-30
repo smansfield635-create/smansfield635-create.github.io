@@ -1,0 +1,164 @@
+name: H-Earth Run 8D Grounded Vegetation Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8d-grounded-vegetation-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8c-normal-light-material-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out Run 8D workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify bounded changed-path scope
+        run: |
+          set -euo pipefail
+          git diff --name-only 7272cd8609674d2e30a74a32d6a98cee1680f496...HEAD > /tmp/run8d-paths.txt
+          cat /tmp/run8d-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+            '.github/workflows/h-earth-run8d-grounded-vegetation-validation.yml',
+            'h-earth-3d/control-plane/run-8/h-earth.run8d.grounded-vegetation.js',
+            'h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js',
+            'showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8d-grounded-vegetation-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8d.grounded-vegetation.harness.mjs',
+            'h-earth-3d/validation/h-earth.run8d.grounded-vegetation.receipt.json'
+          }
+          paths = {line.strip() for line in Path('/tmp/run8d-paths.txt').read_text().splitlines() if line.strip()}
+          unexpected = sorted(paths - allowed)
+          required = allowed - {'h-earth-3d/validation/h-earth.run8d.grounded-vegetation.receipt.json'}
+          missing = sorted(required - paths)
+          if unexpected:
+            raise SystemExit(f'UNEXPECTED_RUN8D_PATHS:{unexpected}')
+          if missing:
+            raise SystemExit(f'MISSING_RUN8D_PATHS:{missing}')
+          product_paths = {
+            'h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js',
+            'showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js'
+          }
+          if len(paths & product_paths) != 2:
+            raise SystemExit('RUN8D_PRODUCT_CONSTRUCTION_SCOPE_INVALID')
+          PY
+
+      - name: Execute Run 8D grounded vegetation harness
+        env:
+          H_EARTH_RUN8D_RECEIPT: /tmp/run8d-receipt.json
+        run: |
+          set -o pipefail
+          node --input-type=module <<'NODE' | tee /tmp/run8d-control-diagnostic.log
+          import { evaluateHEarthRun8DControlContract } from './h-earth-3d/control-plane/run-8/h-earth.run8d.grounded-vegetation.js';
+          import { buildHEarthRun8DVegetationResolution, evaluateHEarthRun8DVegetationResolution } from './h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js';
+          import { constructHEarthRun8DLocalVegetationArchetypes, constructHEarthRun8DGroundedVegetation, evaluateHEarthRun8DGroundedVegetation } from './showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js';
+          const control = evaluateHEarthRun8DControlContract();
+          const resolution = buildHEarthRun8DVegetationResolution();
+          const local = constructHEarthRun8DLocalVegetationArchetypes();
+          const grounded = constructHEarthRun8DGroundedVegetation();
+          console.log(JSON.stringify({
+            control: { eligible: control.eligible, issues: control.issues },
+            resolution: {
+              eligible: resolution.eligible,
+              issues: resolution.issues,
+              evaluation: evaluateHEarthRun8DVegetationResolution(resolution),
+              instanceCount: resolution.instanceCount,
+              archetypeCounts: resolution.archetypeCounts
+            },
+            local: {
+              eligible: local.eligible,
+              issues: local.issues,
+              constructions: Object.fromEntries(Object.entries(local.constructions).map(([id, list]) => [id, list.map((entry) => ({ valid: entry.valid, issues: entry.issues }))]))
+            },
+            grounded: {
+              eligible: grounded.eligible,
+              issues: grounded.issues,
+              evaluation: evaluateHEarthRun8DGroundedVegetation(grounded),
+              instanceCount: grounded.instanceCount,
+              primitiveCount: grounded.primitiveCount
+            }
+          }, null, 2));
+          NODE
+          node h-earth-3d/validation/h-earth.run8d.grounded-vegetation.harness.mjs \
+            2>&1 | tee /tmp/run8d.log
+
+      - name: Verify Run 8D receipt state
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/run8d-receipt.json', 'utf8'));
+          const requiredTrue = [
+            'eligible',
+            'threeLocalArchetypesConstructed',
+            'southNeutralPrimitiveValidity',
+            'deterministicPopulationResolution',
+            'worldYAnchoredToSuccessorTerrain',
+            'terrainNormalAlignment',
+            'deterministicYawAndScale',
+            'worldSpaceStability',
+            'sameWorldToCameraTransformAsTerrainRequired',
+            'samePhysicalDepthDomainAsTerrainRequired',
+            'terrainOcclusionCompatibility',
+            'run8BNeutralPrimitivePreserved',
+            'deterministicRepeatExecution'
+          ];
+          if (receipt.status !== 'RUN_8D_PASS_CLOSED') process.exit(1);
+          if (!requiredTrue.every((key) => receipt[key] === true)) process.exit(1);
+          if (
+            receipt.localArchetypeCount !== 3 ||
+            receipt.localComponentCount !== 7 ||
+            receipt.resolvedInstanceCount <= 0 ||
+            receipt.worldPrimitiveCount <= 0 ||
+            receipt.worldVertexCount <= 0 ||
+            receipt.worldTriangleCount <= 0 ||
+            receipt.cameraRelativeViolationCount !== 0 ||
+            receipt.screenRelativeViolationCount !== 0 ||
+            receipt.cameraRelativeAttachment !== false ||
+            receipt.screenRelativeAttachment !== false ||
+            receipt.terrainOcclusionExecuted !== false ||
+            receipt.WestAdmissionExecuted !== false ||
+            receipt.packet002TransferExecuted !== false ||
+            receipt.rendererMutation !== false ||
+            receipt.cameraAuthorityCreated !== false ||
+            receipt.publicRouteMutation !== false ||
+            receipt.deployment !== false ||
+            receipt.publicVisualImprovementClaim !== false ||
+            receipt.localConstruction !== false ||
+            receipt.assertionsPassed <= 0 ||
+            receipt.issues.length !== 0
+          ) process.exit(1);
+          const durable = 'h-earth-3d/validation/h-earth.run8d.grounded-vegetation.receipt.json';
+          if (
+            fs.existsSync(durable) &&
+            fs.readFileSync(durable, 'utf8') !== fs.readFileSync('/tmp/run8d-receipt.json', 'utf8')
+          ) process.exit(1);
+          NODE
+
+      - name: Upload Run 8D evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8d-grounded-vegetation-evidence
+          path: |
+            /tmp/run8d-control-diagnostic.log
+            /tmp/run8d.log
+            /tmp/run8d-receipt.json
+          if-no-files-found: error
+          retention-days: 30

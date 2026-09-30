@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Governed Benchmark Claim · Diamond Gate</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#06110f;color:#eef8f4}*{box-sizing:border-box}body{margin:0;padding:32px 20px 72px;background:radial-gradient(circle at 20% 0%,#0d2922 0,#06110f 44%);min-height:100vh}main{max-width:980px;margin:auto}.eyebrow{font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;color:#9bc8b9}.note{color:#b6c8c2;line-height:1.55}.card{margin-top:22px;border:1px solid #29453d;border-radius:20px;background:#091815;padding:24px}.state{font-size:clamp(3rem,9vw,6.4rem);line-height:.92;margin:14px 0 12px;font-weight:800;letter-spacing:-.05em}.claim{font-size:1.5rem;margin:0 0 8px}.summary{color:#c8d8d2;line-height:1.55}.blocked{margin-top:18px;padding:14px 16px;border:1px solid #5f3c3c;border-radius:12px;color:#f0b8b8;background:#211111}.admitted{margin-top:18px;padding:14px 16px;border:1px solid #315f4c;border-radius:12px;color:#b9ebd3;background:#0b2119}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:18px}.datum{border:1px solid #253d36;border-radius:12px;padding:14px}.datum strong{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#8fb3a7;margin-bottom:6px}.datum span{overflow-wrap:anywhere}.error{color:#ffb2b2;white-space:pre-wrap}</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">BT4 · bounded real-object integration</p>
+<h1>Governed public benchmark claim</h1>
+<p class="note">This surface is bound to Diamond Gate's existing <code>blinded-governance-generalization</code> claim and its published Generation 3 benchmark evidence. The benchmark and canonical claim record are not mutated by this experiment. The displayed entitlement is computed by the unchanged BT4 entitlement kernel from live evidence identity, benchmark state, public claim authority, and qualification receipt freshness.</p>
+<section class="card">
+<div class="eyebrow">Maximum permissible public state</div>
+<div class="state" data-state>LOADING</div>
+<h2 class="claim" data-claim-title>Loading real claim…</h2>
+<p class="summary" data-claim-summary></p>
+<div data-override></div>
+<div class="grid">
+<div class="datum"><strong>Observed evidence blob</strong><span data-observed-blob>—</span></div>
+<div class="datum"><strong>Expected evidence blob</strong><span data-expected-blob>—</span></div>
+<div class="datum"><strong>Benchmark disposition</strong><span data-benchmark>—</span></div>
+<div class="datum"><strong>Qualification epoch</strong><span data-epoch>—</span></div>
+</div>
+<p class="error" data-error></p>
+</section>
+</main>
+<script type="module">
+import { serveRequestedState } from '/preview/bt4/entitlement-v1/entitlement-engine.v1.mjs';
+const $=s=>document.querySelector(s);
+async function getJson(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`${url} -> ${r.status}`);return r.json()}
+async function run(){
+ try{
+  const [registry,benchmark,identity,binding]=await Promise.all([
+   getJson('/assets/credibility/claims.v1.json'),
+   getJson('/assets/credibility/governance-gen3-benchmark.v1.json'),
+   getJson('./evidence-identity.v1.json'),
+   getJson('./binding.v1.json')
+  ]);
+  const claim=registry.claims.find(c=>c.id==='blinded-governance-generalization');
+  if(!claim)throw new Error('Real claim missing from public credibility registry.');
+  const statusText=(claim.status||[]).join(' ');
+  const state={epoch:Number(binding.epoch),provenance:identity.sourceBlobSha===binding.expectedEvidenceBlobSha&&identity.sourcePath==='assets/credibility/governance-gen3-benchmark.v1.json',reproduction:benchmark?.protocol?.candidateState==='FROZEN_BEFORE_EVALUATION'&&benchmark?.protocol?.blindedComparisonCases===160&&benchmark?.protocol?.oneShotHoldoutCases===40,evidence:benchmark?.publicFinding?.disposition==='GENERALIZATION_EVIDENCE_SUPPORTED_WITHIN_TESTED_BOUNDARY'?'supporting':'insufficient',authority:/Current evidence/i.test(statusText)&&/Level 4/i.test(statusText),receiptEpoch:Number(binding.receiptEpoch)};
+  const out=serveRequestedState('QUALIFIED',state);
+  $('[data-state]').textContent=out.served;$('[data-state]').dataset.entitlement=out.state;$('[data-claim-title]').textContent=claim.title;$('[data-claim-summary]').textContent=claim.summary;$('[data-observed-blob]').textContent=identity.sourceBlobSha;$('[data-expected-blob]').textContent=binding.expectedEvidenceBlobSha;$('[data-benchmark]').textContent=benchmark.publicFinding.disposition;$('[data-epoch]').textContent=`receipt ${state.receiptEpoch} · required ${state.epoch}`;
+  $('[data-override]').className=out.blocked?'blocked':'admitted';$('[data-override]').textContent=out.blocked?`QUALIFIED presentation BLOCKED → served as ${out.served}.`:'QUALIFIED presentation admitted.';
+  document.documentElement.dataset.bt4RealObject='ready';document.documentElement.dataset.bt4Entitlement=out.state;document.documentElement.dataset.bt4Served=out.served;
+ }catch(e){$('[data-state]').textContent='HELD';$('[data-error]').textContent=String(e?.message||e);document.documentElement.dataset.bt4RealObject='error'}
+}
+run();
+</script>
+</body>
+</html>

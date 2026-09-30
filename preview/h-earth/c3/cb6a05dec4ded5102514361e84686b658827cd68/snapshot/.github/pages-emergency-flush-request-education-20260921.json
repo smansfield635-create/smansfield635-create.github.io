@@ -1,0 +1,6 @@
+{
+  "schema": "DGB_PAGES_EMERGENCY_FLUSH_REQUEST_v1",
+  "surface": "education",
+  "reason": "Education Gate 1-3 publication",
+  "ignore_external_deploy_provider": true
+}

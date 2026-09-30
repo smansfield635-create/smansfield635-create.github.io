@@ -1,0 +1,24 @@
+{
+  "core_mutation_performed": false,
+  "file_count": 13,
+  "files": {
+    "PREREGISTRATION.md": "b15434f32c3a842d098430d4978f5ff1e7ac2b76e0d54b93a383cdf16b667c7c",
+    "README.md": "1b090ffc2013f0fa3ddc5e0106b4ead65255680a8b4ba13459b1792cf517f7df",
+    "alternative-models.v1.json": "717994537ec5d54d964535c63c05b508560ee387841b1f74a0c4f4d31cd4091c",
+    "failure-ownership.v1.json": "90184fdf39ca0cb608f9705ebd08dfa194ee216c3fd84c44fdf8bcabb8487b2b",
+    "frozen-contract.v1.json": "5cbf1aa61013b7cff46c578e2d28810b3fd9ca4e408844109f8be8f66f0fea3f",
+    "heldout_evaluator_v1.py": "79f606155184f97a49fb9fe4e776bc909eb4a31903a05ec13bde40f4c11500c6",
+    "hidden-truth.v1.json": "eb91450008c7ad254ddd3de451d03f252ed2689cb98adc5e669d5b45846df05a",
+    "hidden_system_v1.py": "f73855757c56bacea3000c27c8750357e9e5f3334bbe88b061c72b683390698d",
+    "observation_generator_v1.py": "3d5a68eac7d150614afeca54d40f5ec4ace5da85fd6446d62aeabcb70082dc1e",
+    "observer_inference_v1.py": "11f0f8e52a3a625545265e54977d3d7e80b8662cca62576b4d4774bc7d9dbb46",
+    "public-relation-catalog.v1.json": "ca83fc3cbd06b81ce78bc2ec34bd88554bdb44bddde4ab50aa67aa82328caa57",
+    "verify_hidden_structure_gauntlet_v1.py": "dd1bf218b5291eae694305b12ee4d7b390853fe1d6be182b5b29c8a9c233a7c2",
+    "workflow-spec.v1.yml": "3a1e0e0c5567ba756f0f450514cbed2df9da7695dced56832010412a3ef1f97f"
+  },
+  "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_OBSERVER_BLINDED_HIDDEN_STRUCTURE_GAUNTLET_v1",
+  "post_result_repair_permitted": false,
+  "pre_freeze_development_execution": "NON_ADMISSIBLE_IMPLEMENTATION_TEST_ONLY",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "version": "1.0.0"
+}

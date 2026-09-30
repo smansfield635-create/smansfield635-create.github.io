@@ -1,0 +1,3 @@
+Brain V11 G0 layered anatomy publication trigger.
+Publishes isolated inspection route /inspection/compass/brain-v11-g0/ from qualified layered-anatomy merge a58d80f9cd393032c4ea189923ed59b20fa1b539.
+No Brain geometry or runtime mutation in this commit.

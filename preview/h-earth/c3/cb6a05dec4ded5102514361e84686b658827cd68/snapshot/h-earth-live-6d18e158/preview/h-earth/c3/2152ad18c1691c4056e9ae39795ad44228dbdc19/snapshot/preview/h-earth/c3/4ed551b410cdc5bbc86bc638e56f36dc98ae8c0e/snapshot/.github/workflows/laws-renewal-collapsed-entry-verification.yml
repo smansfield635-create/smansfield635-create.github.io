@@ -1,0 +1,18 @@
+name: Laws Renewal Collapsed Entry Verification — manual archive
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report verification custody
+        run: |
+          echo 'The five-page collapsed-entry verifier is retained as a manual historical diagnostic.'
+          echo 'Its accepted contract is now covered across the complete 33-route cohort by Laws CP6 Final Synchronization Verification.'
+          echo 'Original workflow blob: 38a91024c05182c0a8ed33605169c2df0d6098b3'
+          echo 'No evidence, claim, route, or presentation authority is changed by this trigger narrowing.'

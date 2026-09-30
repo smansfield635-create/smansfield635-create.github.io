@@ -1,0 +1,42 @@
+{
+  "PROJECT_ID": "LAWS_COMPASS",
+  "PROTOCOL_ID": "R&D_RECONCILIATION_APPLICATION_ACCEPTANCE_PROTOCOL_v1",
+  "CHECKPOINT_ID": "CHECKPOINT_5",
+  "TARGET_PR": 383,
+  "PACKAGE_ARTIFACT_ID": 8774780106,
+  "PACKAGE_SOURCE_PARENT": "98de0f9b2247de0100999777c766afa77d29d071",
+  "PACKAGE_MANIFEST_ID": "LAWS_COMPASS_CHECKPOINT_5_EXACT_TWO_OBJECT_MATERIALIZATION_v2",
+  "CANDIDATE_PATH_COUNT": 5,
+  "AUTHORIZED_PATHS": [
+    "laws/index.controller.js",
+    "laws/index.crystals.js",
+    "laws/index.interactions.js",
+    "laws/index.html",
+    "laws/index.css"
+  ],
+  "PROTECTED_PATHS": [
+    ".github/workflows/laws-compass-six-authority-benchmark.yml",
+    "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs"
+  ],
+  "MODEL_ADAPTER": "R&D_SIX_OBJECT_COMPASS_MODEL_ADAPTER_v1",
+  "VERIFICATION_INSTRUMENT": "R&D_SIX_OBJECT_COMPASS_INSTRUMENT_v1",
+  "BENCHMARK_IDENTITY": "LAWS_COMPASS_SIX_AUTHORITY_BENCHMARK_v1",
+  "BENCHMARK_PATH": "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs",
+  "REQUIRED_BENCHMARK_BLOB": "5a4228ddb34816bab065a3d603241c403c293d4b",
+  "BENCHMARK_RESTORATION_COMMIT": "1e4ee5c5f8e37908a824e68648fcae06290a240b",
+  "BENCHMARK_COMMAND": ["node", "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs"],
+  "APPLICATION_MODE": "SEQUENTIAL_CONTENTS_API_WRITE",
+  "REQUIRE_EXACT_READBACK": true,
+  "REQUIRE_FRESHNESS_CLASSIFICATION": true,
+  "REQUIRE_PLAN_ONLY_RECEIPT": true,
+  "REQUIRE_FINAL_BENCHMARK_RECEIPT": true,
+  "MERGE_AUTHORIZED": false,
+  "DEPLOYMENT_AUTHORIZED": false,
+  "PHYSICAL_ACCEPTANCE_AUTHORIZED": false,
+  "CHECKPOINT_SEMANTICS": {
+    "PLAN_ONLY": "CHECKPOINT_5_PLAN_ONLY_PRECONDITION",
+    "APPLICATION": "CHECKPOINT_5",
+    "EXACT_HEAD_VERIFICATION": "REPEATED_CHECKPOINT_3",
+    "PHYSICAL_ACCEPTANCE": "CHECKPOINT_6"
+  }
+}

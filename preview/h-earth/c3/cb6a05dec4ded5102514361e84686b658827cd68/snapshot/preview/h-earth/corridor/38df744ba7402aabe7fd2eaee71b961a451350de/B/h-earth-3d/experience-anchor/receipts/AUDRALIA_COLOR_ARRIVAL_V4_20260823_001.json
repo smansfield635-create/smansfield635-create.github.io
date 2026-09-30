@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_COLOR_ARRIVAL_V4_20260823_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_COLOR_ARRIVAL_V4_20260823_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_COLOR_ARRIVAL_V4_20260823_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/loading-continuity-v3.css",
+      "sha256": "eecb18833cecbe521e6cdee76bd8773d4b60ea66bbfa6716c55559bd68030279"
+    },
+    {
+      "path": "showroom/globe/audralia/index.html",
+      "sha256": "ff7fc189793a81de552fff317871c4d6b02752acaeffebe9bf531a99c65c7e0a"
+    },
+    {
+      "path": "showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs",
+      "sha256": "c8d320548768e615e92d5f84a299a148a309246ced4f8c88795250f927386c2a"
+    },
+    {
+      "path": "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
+      "sha256": "d771727edc0c51571a771d1b43df324be0480eef305a36f549795e960e2a90c8"
+    },
+    {
+      "path": "showroom/globe/audralia/weather-presentation-reconciliation/index.html",
+      "sha256": "ceb66e30770fded46bb68ca57cef9c092986cf590fdbc23cc809a58e766531b7"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "9a488db06bbd25907273d49a165898fa3d312746",
+    "qualificationOperation": "AUDRALIA_COLOR_ARRIVAL_V4_AND_CELESTIAL_STARTUP_SEQUENCE_20260823_003",
+    "finding": "The protected experience mutation is bounded to Audralia arrival presentation, cache identity, fail-visible loader reporting, and sequencing of the pre-existing celestial checkpoint behind renderer authority on both the public and bounded reconciliation pages. The five readiness predicates and all canonical world, terrain, weather authority, camera, navigation, celestial rendering, and world interaction behavior remain unchanged."
+  }
+}

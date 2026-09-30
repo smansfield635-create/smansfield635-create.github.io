@@ -1,0 +1,143 @@
+{
+  "schema": "REPOSITORY_AI_SHARED_PROCEDURE_REGISTRY_v1",
+  "registryId": "SMANSFIELD_SHARED_GITHUB_PROCEDURES_v1",
+  "status": "ACTIVE",
+  "authorityLimit": "PROCEDURES_SUPPLY_OPERATIONAL_METHODS_AND_NEVER_CREATE_PROJECT_AUTHORITY",
+  "procedures": [
+    {
+      "procedureId": "REPOSITORY_ENTRY",
+      "purpose": "Resolve the owning project and load its instructions before substantive action.",
+      "steps": [
+        "Read AI_ENTRYPOINT.json.",
+        "Run the repository entry router for every affected path.",
+        "Load every resolved project entrypoint, nested AGENTS.md, registry, validator, and stopping rule.",
+        "Honor the emitted disposition."
+      ],
+      "failClosedWhen": [
+        "ROUTER_MISSING",
+        "ROUTE_AMBIGUOUS",
+        "PROJECT_ENTRYPOINT_MISSING"
+      ]
+    },
+    {
+      "procedureId": "EXACT_COMMIT_RESOLUTION",
+      "purpose": "Bind work to immutable repository identities.",
+      "steps": [
+        "Resolve each supplied ref with git rev-parse <ref>^{commit}.",
+        "Record the exact 40-character commit SHA.",
+        "Resolve and record parent and merge-base identities when lineage matters.",
+        "Reject abbreviated, missing, or moving refs as final evidence."
+      ],
+      "receiptFields": [
+        "exactCommit",
+        "parentCommit",
+        "mergeBaseCommit"
+      ]
+    },
+    {
+      "procedureId": "CLEAN_CHECKOUT",
+      "purpose": "Execute against committed state rather than conversation or private working state.",
+      "steps": [
+        "Fetch the exact required commits.",
+        "Create a detached checkout or worktree at the governing head.",
+        "Verify git status --porcelain is empty.",
+        "Execute only the repository-declared command.",
+        "Write outputs outside the repository or to an ignored path."
+      ],
+      "failClosedWhen": [
+        "COMMIT_UNRESOLVABLE",
+        "WORKTREE_DIRTY",
+        "DECLARED_COMMAND_MISSING"
+      ]
+    },
+    {
+      "procedureId": "GITHUB_ACTIONS_FALLBACK",
+      "purpose": "Provide a clean execution backend when a local room cannot clone or run the repository.",
+      "steps": [
+        "Use the procedure-specific workflow declared by the project entrypoint.",
+        "Checkout the exact governing head with full history.",
+        "Pass the exact target commit as an explicit workflow input.",
+        "Run the same repository gate or validator used by the local backend.",
+        "Upload the command-emitted receipt and fingerprint even when the gate fails.",
+        "Bind the result to workflow run, job, artifact, governing head, and target commit identities."
+      ],
+      "forbiddenSubstitute": "MANUAL_METADATA_RECONSTRUCTION_AS_EXECUTION_PROOF"
+    },
+    {
+      "procedureId": "BRANCH_MAIN_COMPARISON",
+      "purpose": "Determine exact divergence without assuming branch state.",
+      "steps": [
+        "Resolve exact base and head commits.",
+        "Compute merge base.",
+        "List every changed path and blob identity.",
+        "Record ahead and behind counts.",
+        "Treat unrelated main advancement separately from candidate lineage."
+      ]
+    },
+    {
+      "procedureId": "WORKFLOW_ARTIFACT_RETRIEVAL",
+      "purpose": "Recover executable evidence from GitHub Actions.",
+      "steps": [
+        "Resolve workflow run and job identities.",
+        "Inspect step conclusions and logs.",
+        "List artifacts by exact run.",
+        "Download the named artifact.",
+        "Verify artifact digest and contained receipt identities."
+      ]
+    },
+    {
+      "procedureId": "HASH_AND_BLOB_VERIFICATION",
+      "purpose": "Distinguish repository identity from file names and summaries.",
+      "steps": [
+        "Resolve Git blob SHA for committed text identity.",
+        "Compute SHA-256 for transported artifact bytes.",
+        "Record byte count and member manifest for archives.",
+        "Reject name-only or URL-only identity claims."
+      ]
+    },
+    {
+      "procedureId": "RECEIPT_PUBLICATION",
+      "purpose": "Make execution durable and independently discoverable.",
+      "steps": [
+        "Use the procedure-declared receipt schema.",
+        "Bind exact governing and target commits, commands, measurements, artifacts, and disposition.",
+        "Commit only after validation when repository publication is authorized.",
+        "Preserve workflow artifact identity when repository publication is not authorized."
+      ]
+    },
+    {
+      "procedureId": "ROLLBACK_VERIFICATION",
+      "purpose": "Prove bounded reversibility.",
+      "steps": [
+        "Record exact starting head and changed paths.",
+        "Declare the rollback operation before promotion.",
+        "Execute rollback in an isolated branch or worktree.",
+        "Verify protected blobs and accepted baseline identities are restored exactly."
+      ]
+    },
+    {
+      "procedureId": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
+      "purpose": "Load and apply whole-estate narrative and display continuity laws before applicable page, frontier, product, room, world, campaign, navigation, transition, responsive, or shared visual-system construction.",
+      "steps": [
+        "Read .github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json and .github/ai-router/display-continuity-constitution-v1/README.md.",
+        "Read control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json and the governing narrative spine when narrative relation is material.",
+        "Resolve the route display contract: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, return contract, claim boundary, local visual identity, and continuity hook.",
+        "Treat the runtime class as a ceiling, not a requirement.",
+        "Preserve Compass global orientation, room-local identity, explicit return, semantic meaning under reduced motion, and claim boundaries.",
+        "If the task is not visual or experiential, do not invent display work or widen the admitted scope merely because this global context exists.",
+        "Honor all project-specific entrypoints, nested AGENTS.md files, scientific and evidence boundaries, and runtime authorities after loading this context."
+      ],
+      "failClosedWhen": [
+        "COMPETING_GLOBAL_ORIENTATION",
+        "NARRATIVE_RELATION_UNRESOLVED",
+        "RUNTIME_CEILING_UNJUSTIFIED",
+        "MOBILE_OR_REDUCED_MOTION_SEMANTICS_MISSING",
+        "DISCOVERY_MUTATES_CARDINAL_MAP",
+        "VISUAL_EMPHASIS_CREATES_CLAIM_AUTHORITY",
+        "DEEP_ROUTE_HAS_NO_EXPLICIT_RETURN",
+        "UNIVERSAL_SHELL_FLATTENS_REQUIRED_LOCAL_IDENTITY"
+      ],
+      "authorityCreated": false
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_PROTOCOL_v2",
+  "protocolId": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_v1",
+  "status": "RATIFIED_ACTIVE_FAIL_CLOSED_V2_EVIDENCE_BOUND",
+  "ratifiedAgainstHead": "28c64779b73c3bd224d95ad84859d8cf40b808d9",
+  "governingGapId": "WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY",
+  "requiredEvidenceClasses": [
+    "FULL_ACTIONS_SURFACE_INVENTORY",
+    "CURRENT_AUTHORITY_CLASSIFICATION",
+    "ZERO_JOB_AND_EXPECTED_FAILURE_SIGNAL_NORMALIZATION",
+    "PROTECTED_LIVE_WORKSTREAM_NONINTERFERENCE",
+    "CONTINUITY_PROOF_FOR_EACH_PHYSICAL_RETIREMENT_CLASS",
+    "POST_MERGE_OBSERVATION_PROOF"
+  ],
+  "evidenceBinding": {
+    "typedEvidenceRequired": true,
+    "predicateBindingRequired": true,
+    "machineCheckableAssertionsRequired": true,
+    "liveGitHubIdentityAuthenticationRequired": true,
+    "currentMainMustEqualAssessmentHead": true,
+    "actionsInventoryMustBindExactIdentitySet": true,
+    "consumerAbsenceMustBeDerivedFromReproducedDiscovery": true,
+    "nakedUnresolvedConsumerCountProhibited": true
+  },
+  "signalClasses": {
+    "ZERO_JOB_FAILURE_SIGNAL": {"countsAsLiveControlPlaneRegression": false},
+    "EXPECTED_RETIREMENT_COMPATIBILITY_FAILURE": {"countsAsLiveControlPlaneRegression": false},
+    "LIVE_REQUIRED_CONTROL_PLANE_RESULT": {"countsAsLiveControlPlaneRegression": true}
+  },
+  "closureRule": "ALL_SIX_REQUIRED_EVIDENCE_CLASSES_AUTHENTICATED_AND_PROBATIVE_AND_REPRODUCED_CONSUMER_DISCOVERY_HAS_ZERO_UNRESOLVED_AND_NO_AUTHORITY_INFLATION",
+  "failClosed": true,
+  "authorityEffects": {
+    "physicalRetirementAuthorized": false,
+    "gapRegistryMutationAuthorized": false,
+    "mergeAuthorized": false,
+    "productMutationAuthorized": false,
+    "workflowMutationAuthorized": false
+  }
+}

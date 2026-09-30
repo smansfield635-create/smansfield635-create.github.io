@@ -1,0 +1,23 @@
+{
+  "schema": "RESEARCH_FRONTIER_REPRODUCTION_MANIFEST_v1",
+  "objectId": "RFV3-03",
+  "publicTitle": "When Structure Holds—or Breaks",
+  "technicalBinding": "COHERENCE_GEOMETRY",
+  "evidenceStatus": ["FORMAL_PROOF", "FORMAL_COUNTEREXAMPLE", "FORMAL_SYNTHETIC"],
+  "sourceDispositions": ["FORMAL_PROOF", "FORMAL_COUNTEREXAMPLE", "FORMAL_SYNTHETIC_ORIENTATION_SUCCESSOR", "GEN430_NOT_IDENTIFIABLE_PRESERVED"],
+  "question": "Can individually strong parts fail to produce a coherent whole when required relationships or orientation fail?",
+  "inputs": ["frozen formal definitions", "bounded coherence-to-minimal-constraint model family", "Diamond Operator role/state model", "Orientation v2 N=11 selected class", "untouched N=12 successor class"],
+  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2848"],
+  "comparator": "Exhaustive formal enumeration, relabeling/branch-swap invariance checks, explicit counterexample construction, and untouched N=12 orientation retention.",
+  "procedure": ["reconstruct frozen definitions", "enumerate bounded formal model class", "verify proof and counterexample conditions", "apply the N=11 selected orientation rule to untouched N=12 without redefining it"],
+  "environment": "Implementation-neutral formal/synthetic computation; exact model definitions and acceptance rules govern rather than proprietary runtime identity.",
+  "expectedOutputs": {"coherenceModels":3072,"coherenceObserverChecks":18432,"diamondRoleStateCombinations":20736,"diamondRelabelingChecks":497664,"diamondBranchSwaps":20736,"orientationV2":{"N11":{"positive":34,"negative":4,"zeroMargin":2},"N12Untouched":{"positive":34,"negative":4,"zeroMargin":2},"observerChecks":4718592}},
+  "acceptanceCriteria": "Fresh implementation reproduces the bounded formal dispositions and orientation retention under the frozen definitions; Gen430 remains separate and NOT_IDENTIFIABLE.",
+  "verifier": "Independent formal recomputation/enumeration and counterexample verification against the public method/result record.",
+  "sourceIdentities": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md", "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/2848"],
+  "knownGaps": ["specialist prior-art scrutiny remains open", "unaffiliated proof/reimplementation not observed", "no physical-domain validation"],
+  "proprietaryBoundary": "The formal object can be independently implemented from published definitions and acceptance conditions; production infrastructure is not required.",
+  "claimCeiling": "Formal and synthetic results under frozen definitions/model classes only; no physical law, universal coherence measure or cross-domain empirical validation.",
+  "reproductionPackagingState": "RECORD_BOUND",
+  "externalReproductionObserved": false
+}

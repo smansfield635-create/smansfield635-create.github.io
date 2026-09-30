@@ -1,0 +1,74 @@
+{
+  "artifact": "PRODUCTS_ARENA_CLUSTER_ARCHITECTURE_CONFORMANCE_RECOVERY_v1",
+  "status": "RECOVERED_FOR_CANDIDATE_IMPLEMENTATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "verifiedBase": "6f66a0a1820d30f789506107d47eb9ca12575ad9",
+  "branch": "agent/products-cluster-cosmic-center-label-001",
+  "transportDriftHeadRecorded": "61dd025f2f3d899da48e3d787f33b92e2c2aa160",
+  "transportDriftDurablePreservationRequired": false,
+  "archiveReferenceCreated": false,
+  "modelClass": "ARENA_CLUSTER",
+  "classification": "CANDIDATE_REFERENCE_CLASSIFICATION",
+  "transplantSources": {
+    "planetResponsibilityBoundary": [
+      "/showroom/index.planet.js",
+      "/laws/index.planet.js",
+      "/assets/audralia/audralia.planet.js"
+    ],
+    "cosmosResponsibilityBoundary": [
+      "/showroom/index.cosmos.js",
+      "/assets/compass/compass.cosmos.js"
+    ],
+    "centerControlSeparation": [
+      "/showroom/index.html",
+      "/laws/index.controller.js"
+    ],
+    "benchmarkInfrastructure": [
+      "/verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+      "/verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs"
+    ]
+  },
+  "mutablePaths": [
+    "products/index.html",
+    "products/index.arena.css",
+    "products/index.cosmos.js",
+    "products/index.planet.js",
+    "products/index.controller.center.js",
+    "verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.config.mjs",
+    "verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-source-assertions.mjs",
+    "verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.mjs",
+    "verification/benchmark-tools/products-arena-cluster-benchmark-v1/checkpoint-2r-products-arena-cluster-architecture-conformance-recovery.receipt.json",
+    ".github/workflows/products-arena-cluster-benchmark-v1.yml"
+  ],
+  "retainedUnmodifiedAuthorities": {
+    "products/index.css": "fe35dd5641dd14c735caea14598734c2a34f824a",
+    "products/index.controller.js": "3eb38cc35a88936b884891d3dfe735a71583bf34",
+    "products/index.crystals.js": "6622f9cfd9e44589cf0e94119697256385f1317d",
+    "products/products_runtime.js": "PROTECTED_INACTIVE"
+  },
+  "protectedPaths": [
+    "/index.*",
+    "/assets/compass/**",
+    "/assets/audralia/audralia.planet.js",
+    "/laws/**",
+    "/showroom/**",
+    "/verification/benchmark-tools/four-compass-benchmark-v1/**"
+  ],
+  "compositorDisposition": "NOT_REQUIRED",
+  "compositorJustification": [
+    "existing Products crystals already owns camera projection, hit testing, product rendering, semantic projection, and release settlement",
+    "page-local CSS can deterministically own rear-to-front layer order",
+    "cosmos and planet are independent noninteractive visual participants with their own bounded receipts",
+    "the Products controller lane owns the fixed Main Compass return through a subordinate center-navigation extension with no second state machine",
+    "benchmark code can aggregate module receipts without creating runtime compositor authority",
+    "retaining the provisional compositor would add an unnecessary audit animation loop and duplicate navigation ownership"
+  ],
+  "duplicateRuntimeAuthority": false,
+  "claimBoundary": {
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false,
+    "canonicalPromotionAuthorized": false,
+    "publicVisualPassAuthorized": false,
+    "candidateExecutableClaimed": false
+  }
+}

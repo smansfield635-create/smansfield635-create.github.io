@@ -1,0 +1,88 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "awards",
+  "description": "Awards & Recognition chamber with the qualified judge-facing spatial Achievement and Trophy Standard instruments served from the canonical showroom/globe/h-earth/awards route.",
+  "checks": [
+    {
+      "path": "/showroom/globe/h-earth/awards/index.html",
+      "includes": [
+        "data-awards-architecture=\"JUDGE_FACING_SPATIAL_INSTRUMENT_V1\"",
+        "data-achievement-stage",
+        "aria-label=\"Achievement stories\"",
+        "data-achievement-prev",
+        "data-achievement-next",
+        "1 / 5",
+        "data-trophy-stage",
+        "aria-label=\"Trophy Standard chapters\"",
+        "data-trophy-prev",
+        "data-trophy-next",
+        "1 / 6",
+        "Drag or swipe · tap a visible card to bring it forward · tap the active card to open",
+        "Drag or swipe · tap a visible chapter to bring it forward · tap the active chapter to open"
+      ],
+      "excludes": [
+        "class=\"rail\" role=\"tablist\" aria-label=\"Achievement stories\"",
+        "class=\"lensrail\" role=\"tablist\" aria-label=\"Trophy Standard chapters\""
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/h-earth/awards/",
+    "timeoutMs": 15000,
+    "readySelector": "[data-achievement-stage][data-ready=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/h-earth/awards/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ],
+    "interactions": [
+      {
+        "name": "Achievement spatial instrument advances to World",
+        "action": {
+          "type": "click",
+          "selector": "[data-achievement-next]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-achievement-stage] .instrument-card[data-story=\"world\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-achievement-status]",
+            "value": "2 / 5"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Trophy Standard spatial instrument advances to 3D World",
+        "action": {
+          "type": "click",
+          "selector": "[data-trophy-next]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-trophy-stage] .instrument-card[data-lens-key=\"world\"]",
+            "name": "aria-current",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-trophy-status]",
+            "value": "2 / 6"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

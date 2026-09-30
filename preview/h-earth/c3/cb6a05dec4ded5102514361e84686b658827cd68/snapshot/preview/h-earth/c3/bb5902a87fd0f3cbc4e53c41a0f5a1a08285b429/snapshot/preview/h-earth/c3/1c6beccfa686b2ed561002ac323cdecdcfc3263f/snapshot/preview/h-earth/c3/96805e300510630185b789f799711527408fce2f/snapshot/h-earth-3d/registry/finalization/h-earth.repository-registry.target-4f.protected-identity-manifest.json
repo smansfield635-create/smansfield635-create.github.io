@@ -1,0 +1,114 @@
+{
+  "manifestId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_PROTECTED_IDENTITY_MANIFEST_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4F-9",
+  "status": "COMPLETE_VERIFIED_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "protectedIdentities": {
+    "target2Registry": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+      "gitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+    },
+    "target3Instruction": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
+      "gitBlobSha": "de421803f21808ce27b2ffff349af8756c4d9929"
+    },
+    "target4AContract": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-contract.json",
+      "gitBlobSha": "a6733c868cfee1abce172c0ac901fecf3dd209b2"
+    },
+    "target4BEngine": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.js",
+      "gitBlobSha": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759"
+    },
+    "target4CCompletionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4c-completion-receipt.json",
+      "gitBlobSha": "fc137bb499cd51b4031f671b071c835e6a0cff42"
+    },
+    "target4DBlockerReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4d-blocker-receipt.json",
+      "gitBlobSha": "49e24b382a192b486f1d5cc5f4ed91f3378748ca"
+    },
+    "target4DDeferral": {
+      "path": "/h-earth-3d/registry/portability/h-earth.repository-registry.target-4d.deferral-and-critical-path-reclassification.json",
+      "gitBlobSha": "0b4a842c275368b50d96aecfb510c516641ebfe0"
+    },
+    "target4EExecutionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4e-receipt.json",
+      "gitBlobSha": "e58f660bee60833579a47157383b21a71baf0d62"
+    },
+    "target4ECompletionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4e-completion-receipt.json",
+      "gitBlobSha": "4135e46e85c85b8b0cadb4a98b7f986d82838fdd"
+    },
+    "rootAgentEntrypoint": {
+      "path": "/AGENTS.md",
+      "gitBlobSha": "4e9bfb218afb7dde9a68be893100e4f4ebef93f5"
+    },
+    "automaticActivationContract": {
+      "path": "/h-earth-3d/registry/activation/h-earth.repository-registry.automatic-preflight.contract.json",
+      "gitBlobSha": "56e749d139a0fd587ee284fad2f5f6204d639981"
+    },
+    "automaticActivationModule": {
+      "path": "/h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js",
+      "gitBlobSha": "b3c51381af190b6aab296db222296dc851cb7e9a"
+    },
+    "automaticPreflightCli": {
+      "path": "/tools/h-earth-repository-registry-auto-preflight.mjs",
+      "gitBlobSha": "6d4af698ca75b96aaa660033e9ae24c704673eb7"
+    },
+    "permanentAutomaticWorkflow": {
+      "path": "/.github/workflows/h-earth-repository-registry-preflight.yml",
+      "gitBlobSha": "b230e688c2778f6b5acf5567d1cf32ac2450de25"
+    }
+  },
+  "finalizationArtifacts": {
+    "identityBoundary": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.identity-boundary.json",
+      "gitBlobSha": "6e142ea3cd3ccdcccddcad4f89963b57ac6f20e0"
+    },
+    "targetLedger": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.target-ledger.json",
+      "gitBlobSha": "68e51c986854bd2268038232314fdcf6c90ac72c"
+    },
+    "auditContract": {
+      "path": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.audit-contract.json",
+      "gitBlobSha": "7270db1012a45d01416d115d50b3ced5d0f4a2cb"
+    },
+    "auditHarness": {
+      "path": "/tools/h-earth-repository-registry-target-4f-audit.mjs",
+      "gitBlobSha": "f4269e9f9d299584ed8e1c919f52c304df97234d"
+    },
+    "bootstrapBefore4FExecution": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "gitBlobSha": "7c14d57452280e60d5ff7f7f9c465868d4782764"
+    },
+    "bootstrapFinal": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "gitBlobSha": "3bad5a83bd83f063a4c5593fca5c66d264b4c745"
+    },
+    "target4FExecutionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4f-receipt.json",
+      "gitBlobSha": "6b677b5cdc1ad64e971ce9c3646fa19e4a966e26"
+    },
+    "target4FCompletionReceipt": {
+      "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4f-completion-receipt.json",
+      "identityVerification": "TERMINAL_FETCH_BACK_AFTER_PUBLICATION",
+      "gitBlobShaStorage": "OMITTED_TO_AVOID_SELF_REFERENTIAL_DIGEST_CYCLE"
+    }
+  },
+  "rules": {
+    "protectedIdentitiesMayChangeDuring4F": false,
+    "toolInferenceMaySubstituteForBlobVerification": false,
+    "completionReceiptVerifiedByTerminalFetchBack": true,
+    "userAcceptanceMayBeInferred": false,
+    "mergeAuthorityMayBeInferred": false,
+    "canonicalizationMayBeInferred": false
+  },
+  "stoppingCondition": {
+    "protectedIdentityManifestFinalized": true,
+    "advanceBeyondTarget4F9": false,
+    "nextAuthorizedSubtarget": "4F-10"
+  }
+}

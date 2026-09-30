@@ -1,0 +1,26 @@
+{
+  "authorized_pitch_degrees": 8.0,
+  "authorized_resulting_camera_state": {
+    "pitch_degrees": 8.0,
+    "vertical_fov_degrees": 56.0,
+    "x": 0.0,
+    "yaw_degrees": 0.0,
+    "z": -96.0
+  },
+  "authorized_vertical_fov_degrees": 56.0,
+  "authorized_yaw_degrees": 0.0,
+  "candidate_id": "H_EARTH_C2_R1_COAST_ENTRY_TO_GRATITUDE_EXPLICIT_PITCH_PLUS_8_REPAIR_CANDIDATE_v1",
+  "candidate_source_commit_sha": "501505fe66dbeede467240d8c7d93f194f7d10d2",
+  "correction_mode": "EXPLICIT_PITCH",
+  "evidence_lock_at": "2026-08-02T22:32:25Z",
+  "frozen_before_evidence_at": "2026-08-02T22:32:24Z",
+  "manifest_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_V4_PLUS_8_CORRECTION_MANIFEST_v1",
+  "manifest_sha256": "e05e896cd2e791508d65824c17298ef42b4fd0cafde9d14a348a6cc1c4eab1bb",
+  "manifest_version": "4.0.0",
+  "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v4",
+  "route_version": "4.0.0",
+  "target_correspondence_function_id": null,
+  "target_correspondence_parameters": null,
+  "target_correspondence_parameters_sha256": null,
+  "target_witness_id": "GRATITUDE_REGION_ENTRY_PRESENTATION_WITNESS"
+}

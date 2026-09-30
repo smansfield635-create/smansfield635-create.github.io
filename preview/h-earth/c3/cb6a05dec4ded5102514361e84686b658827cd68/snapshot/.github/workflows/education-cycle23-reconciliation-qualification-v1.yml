@@ -1,0 +1,36 @@
+name: Education Cycle 2-3 Reconciliation Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify collapsed placement entry
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/e.html
+          grep -Fq 'Which best describes your English today?' /tmp/e.html
+          grep -Fq 'Your answer chooses where placement begins. Your performance determines where you start learning.' /tmp/e.html
+          ! grep -Fq 'id="study-history"' /tmp/e.html
+          ! grep -Fq 'id="translation-use"' /tmp/e.html
+          ! grep -Fq 'id="hardest"' /tmp/e.html
+          grep -Fq 'const claimed=Number(qs("#claimed-level").value);' /tmp/e.html
+          grep -Fq 'probeStage=Math.max(2,Math.min(8,claimed))' /tmp/e.html
+          grep -Fq 'if(score>=.9 && hintsUsed===0)return "TARGET_ONLY"' /tmp/e.html
+          grep -Fq 'if(score>=.84 && probeStage<8){startProbe(probeStage+1)' /tmp/e.html
+          grep -Fq 'if(score<=.34 && probeStage>2){startProbe(probeStage-1)' /tmp/e.html
+          echo EDUCATION_CYCLE23_RECONCILIATION=PASS

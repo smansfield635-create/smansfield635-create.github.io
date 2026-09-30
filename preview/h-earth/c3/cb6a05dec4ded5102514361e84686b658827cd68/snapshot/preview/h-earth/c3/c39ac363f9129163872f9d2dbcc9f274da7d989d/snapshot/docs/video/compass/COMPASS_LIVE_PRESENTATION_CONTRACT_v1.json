@@ -1,0 +1,16 @@
+{
+  "schema": "COMPASS_LIVE_PRESENTATION_CONTRACT_v1",
+  "status": "ACTIVE_PRESENTATION_AUTHORITY",
+  "master": {"width": 1920, "height": 1080, "fps": 60, "durationSeconds": 60.0, "videoCodec": "h264"},
+  "governingPrinciple": "Portrait capture is source material, never final geometry.",
+  "required": ["The dominant visual occupies the cinematic field at a scale comparable to successful live Awards videos.","Browser chrome, Android navigation chrome, and phone-edge framing are excluded from the authored cinematic field whenever they are not story material.","No shot may read as a small phone screen floating inside black space.","No black-band solution may be created merely by shrinking the portrait capture.","Important visual information must survive through reframing, pan-scan, or cinematic compositing.","Text appears only on dedicated dark canvas or reduced-demand transition windows.","Major visual reveals do not compete with reading.","The first sentence appears before moving website footage."],
+  "allowedShotTreatments": ["REFRAME", "PAN_SCAN", "COMPOSITE"],
+  "prohibitedTreatments": ["FIT_WHOLE_PHONE_IN_BLACK_FIELD", "PHONE_FRAME_AS_PRIMARY_COMPOSITION", "CROP_WITHOUT_FOCAL_PROOF"],
+  "compatibilityGate": {
+    "frameOccupancy": "PASS only when the intended subject, not the device viewport, dominates the 16:9 frame.",
+    "deviceRead": "PASS only when representative frames do not visually announce a phone recording.",
+    "textBandwidth": "PASS only when reading windows have deliberately reduced visual demand.",
+    "liveEquivalence": "PASS only when representative candidate frames are compositionally consistent with the scale and integration of the successful live videos."
+  },
+  "constructionOrder": ["FREEZE_EDITORIAL_AUTHORITY","MAP_EVERY_SHOT","PROVE_EVERY_SHOT_HAS_LAWFUL_GEOMETRY","RENDER_PICTURE_ONLY_LIVE_MASTER","LIVE_COMPATIBILITY_AUDIT","ADD_TEXT","ADD_MUSIC","FINAL_AUDIT"]
+}

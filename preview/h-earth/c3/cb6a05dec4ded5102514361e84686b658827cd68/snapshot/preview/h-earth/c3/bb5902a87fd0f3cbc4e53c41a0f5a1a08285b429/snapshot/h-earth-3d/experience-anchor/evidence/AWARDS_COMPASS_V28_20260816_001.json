@@ -1,0 +1,92 @@
+{
+  "schema": "H_EARTH_AWARDS_COMPASS_V28_EVIDENCE_v1",
+  "operationId": "AWARDS_COMPASS_V28_65_SECOND_HOMECOMING_LIVE_REPLACEMENT_20260816_002",
+  "governingMain": "54482eee3291d04d26c49980678330369c3ef007",
+  "canonicalSuccessorIssue": 1200,
+  "canonicalLockGeneration": 1506,
+  "successorTransitionId": "AWARDS_COMPASS_V27_TO_V28_65_SECOND_HOMECOMING_TRANSITION_20260816_002",
+  "route": "showroom/globe/h-earth/awards/",
+  "ownerDecision": "APPROVED_65_SECOND_HOMECOMING_AND_BRAND_CLOSURE_FULL_CYCLE_LIVE",
+  "masterSha256": "42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62",
+  "predecessor": {
+    "operationId": "AWARDS_COMPASS_V27_60_SECOND_SOCIAL_LIVE_REPLACEMENT_20260816_002",
+    "masterSha256": "bdfaf4c6292b9f60e8310758b44c42cf7410ea21ca3f3ad29fb00ebd8caf5f76",
+    "terminalDisposition": "SUPERSEDED"
+  },
+  "governingBaseline": {
+    "classification": "V22_IMMUTABLE_CINEMATIC_FLOOR",
+    "sha256": "c5a8359dba70ff604394d3724f3ab562f7b9c6c80efbe4a606ad95c95a71f9e4",
+    "acceptanceLaw": "NO_FORWARD_ARTIFACT_MAY_REGRESS_THE_V22_STANDARD"
+  },
+  "presentation": {
+    "installedFileName": "diamond-gate-compass-mirrorland-36s.mp4",
+    "sourceArtifact": "diamond-gate-compass-homecoming-65s-social-master.mp4",
+    "masterSha256": "42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62",
+    "sizeBytes": 13651045,
+    "durationSeconds": 65.0,
+    "frameCount": 1560,
+    "geometry": "NATIVE_1920_BY_1080_LANDSCAPE",
+    "video": "H264_HIGH_YUV420P_PROGRESSIVE_BT709_CONSTANT_24_FPS",
+    "audio": "AAC_LC_STEREO_48000_HZ_CONTINUOUS_PITCH_PRESERVED",
+    "embeddedText": true,
+    "externalCompassCaptionMapDisabled": true
+  },
+  "authorizedRepairs": {
+    "inheritedV27Sequence": "PRESERVED_THROUGH_34_5_SECONDS",
+    "methodsEvidence": {
+      "sourceArtifact": "23772.mp4",
+      "sourceSha256": "545231d08474bc41cfaa0f190a2eea88d7b6b1f5ab48221a32ae73a393b370c5",
+      "presentationIntervalSeconds": "34.5-44.5",
+      "treatment": "FULL_CAROUSEL_COMPOSITION_CENTERED_AND_CONTAINED_WITHOUT_ZOOM_CROP"
+    },
+    "lawsIntervalSeconds": "44.5-52.5",
+    "thereforeIntervalSeconds": "52.5-53.7",
+    "homecomingLine": {
+      "text": "No matter how far from home, you're never lost.",
+      "presentationIntervalSeconds": "53.7-56.7",
+      "placement": "AFTER_THEREFORE_BEFORE_COMPASS_CONCLUSION"
+    },
+    "compassConclusion": {
+      "text": "Nothing navigates better than a compass.",
+      "promotionalSignoff": "DiamondGateBridge.com",
+      "presentationIntervalSeconds": "56.7-60.7",
+      "signoffPlacement": "DIRECTLY_BENEATH_COMPASS_CONCLUSION"
+    },
+    "brandClosure": {
+      "text": "DIAMOND GATE BRIDGE",
+      "presentationIntervalSeconds": "60.7-65.0",
+      "treatment": "ALL_PRIOR_ELEMENTS_DIMMED_SEPARATE_GLOWING_BRAND_ONLY_CLOSE"
+    },
+    "duration": "EXACT_65_SECONDS_WITH_WIDENED_SEQUENCE_GAPS"
+  },
+  "qualification": {
+    "ownerApprovalGate": "PASS",
+    "v22CinematicFloorGate": "PASS",
+    "experientialEvidenceGate": "PASS",
+    "fullCarouselCompositionGate": "PASS",
+    "homecomingNarrativeLineGate": "PASS",
+    "promotionalSignoffGate": "PASS",
+    "separateBrandClosureGate": "PASS",
+    "presentationGeometryGate": "PASS",
+    "technicalDeliveryGate": "PASS",
+    "decodeErrors": 0,
+    "fastStart": "PASS",
+    "integratedLoudnessLufs": -15.69,
+    "truePeakDbtp": -1.52,
+    "loudnessRangeLu": 6.1,
+    "audioMeanDb": -18.1,
+    "audioMaxDb": -1.5
+  },
+  "candidatePage": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "e35c2d0965ec69bb9e0dec2c54245d9b340e1d268d75241a0f5aac98ff5a69ec"
+  },
+  "continuityAssessment": {
+    "presentationOnlyAwardsSurface": true,
+    "worldRuntimeMutated": false,
+    "terrainMutated": false,
+    "environmentRuntimeMutated": false,
+    "chapter02Mutated": false,
+    "sameCanonicalWorld": true
+  }
+}

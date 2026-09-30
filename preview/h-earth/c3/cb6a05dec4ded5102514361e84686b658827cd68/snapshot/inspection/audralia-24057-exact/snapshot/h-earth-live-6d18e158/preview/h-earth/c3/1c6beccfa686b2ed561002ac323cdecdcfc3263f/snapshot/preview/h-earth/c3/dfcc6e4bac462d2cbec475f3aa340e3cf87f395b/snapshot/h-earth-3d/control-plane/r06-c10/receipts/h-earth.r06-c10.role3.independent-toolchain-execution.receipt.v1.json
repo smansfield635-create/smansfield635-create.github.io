@@ -1,0 +1,141 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_RECEIPT_v1",
+  "operationId": "H_EARTH_R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_001",
+  "executionAttempt": "2_CORRECTED_PACKAGE_REACTIVATION",
+  "exactSuccessToken": "R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_PASS_CLOSED",
+  "status": "PASS_CLOSED",
+  "activeMainHead": {
+    "sha": "53485de0a4b578e271777b53ba39a326244f7c75",
+    "mainComparisonStatus": "IDENTICAL",
+    "aheadBy": 0,
+    "behindBy": 0
+  },
+  "successorPackage": {
+    "packageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED",
+    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_1_ENTRY_POINT_IDENTITY_CORRECTED.zip",
+    "driveFileId": "1j1VFxYBD6Wv3DqH1TMH6Imy6dJIn6Hu-",
+    "archiveSha256": "9b6a3765550c6fe37b59452018ecc660cf709629b4b3661862a1f224ea1cba1e",
+    "archiveByteCount": 13361365,
+    "archiveMemberCount": 165,
+    "rawDriveReadbackPass": true,
+    "completeMemberManifest": {
+      "path": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
+      "sha256": "2cec5b49f81d104ff131463319e71429f7507e31667ddc08592fff4925266d1e",
+      "gitBlob": "dd90c540bb2da5274eee5935b8d4ce0a7b9e7bc8",
+      "coverage": "165_OF_165",
+      "pass": true
+    },
+    "internalSha256Sums": {
+      "coverage": "164_OF_164_NONMANIFEST_MEMBERS",
+      "sha256SumsMemberSha256": "e67f7abc2e0c910cd91f6aa28a27dd0d457b6fa916fe93300ee3d11d15d52ba7",
+      "sha256SumsMemberByteCount": 22846,
+      "pass": true
+    }
+  },
+  "identityVerification": {
+    "eightOfEightToolPathBlobSha256EntryPointPass": true,
+    "correctedRun8B": {
+      "toolId": "H_EARTH_R06_C10_RUN8B_GEOMETRY_ADAPTER_v1",
+      "entryPoint": "constructR06C10CandidateRun8BGeometry",
+      "gitBlob": "fca63387cf1599e12f97e75e16f9e33f92880896",
+      "sha256": "a7e290d3d48167abf6526b54f1d880f7db7f49bf151cbec8047a70ae12a58fc8",
+      "pass": true
+    },
+    "c1ThroughC4ReceiptIdentityPass": true,
+    "acceptedBaselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+    "baselineAncestorPass": true,
+    "baselineAndProtectedBlobIdentityPass": true,
+    "requiredSourceBlobCount": 18,
+    "acceptedV2ProtectedProductBlobCount": 4
+  },
+  "cleanExecutionEnvironment": {
+    "newCleanExtractionDirectoryUsed": true,
+    "priorExtractionDirectoryReused": false,
+    "portableRecoverySubstrateHead": "1b211e2e72487ce7ff6c272e5c20569f9cc8db22",
+    "portableRecoverySubstrateBranch": "replay",
+    "platform": "Linux 6.12.13 x86_64 GNU/Linux",
+    "node": "v22.16.0",
+    "python": "3.13.5",
+    "conversationStateRequired": false
+  },
+  "independentExecution": {
+    "invocationRole": "ROLE_3_INDEPENDENT_EXECUTION",
+    "assertionImplementationCount": 28,
+    "assertionExecutionCount": 28,
+    "passAssertionCount": 25,
+    "failAssertionCount": 3,
+    "exact25PassAssertionIds": [
+      "01_EXACT_BASELINE_COMMIT_AND_ALL_REQUIRED_BLOBS_MATCH",
+      "02_ROLE_6_PACKAGE_AND_MEMBER_SHA256_VALUES_MATCH",
+      "03_REQUEST_SCHEMA_VALID_AND_NO_UNKNOWN_KEYS",
+      "04_ALL_PARAMETERS_INSIDE_SAFE_BOUNDS",
+      "05_CONFORMANCE_OUTPUT_SHA256_MATCHES_EXPECTED_FIXTURE",
+      "06_CANDIDATE_FIELD_DETERMINISTIC_REPEAT_EXECUTION",
+      "07_CANDIDATE_FIELD_FINITE_AT_ALL_RUN_8B_AXIS_POINTS",
+      "08_DELTA_EXACT_ZERO_OUTSIDE_BLEND_SUPPORT",
+      "09_SUPPORT_OUTER_EDGE_DELTA_EXACT_ZERO",
+      "10_SUPPORT_OUTER_EDGE_GRADIENT_WITHIN_1E_MINUS_8",
+      "11_RUN_8B_X_AND_Z_AXES_BYTE_EQUIVALENT",
+      "12_RUN_8B_INDEX_ARRAY_BYTE_EQUIVALENT",
+      "13_VERTEX_TRIANGLE_ROW_COLUMN_COUNTS_MATCH",
+      "14_NONDEGENERATE_TRIANGLES_MINIMUM_DOUBLE_AREA_AT_LEAST_4",
+      "15_FACE_AND_VERTEX_NORMALS_FINITE_AND_UNIT_BOUNDED",
+      "16_ALL_VIRTUAL_SHARED_EDGE_PAIRS_PASS",
+      "17_FORMER_BOUNDARY_CONTINUITY_REMAINS_PASS",
+      "18_COASTLINE_AND_WATER_MEMBERSHIP_UNCHANGED",
+      "21_CLEARANCE_USES_CANDIDATE_FIELD_NOT_RUN_6_FIELD",
+      "22_AT_LEAST_ONE_CAVERN_COMPATIBLE_FACE_PATCH_REPORTED",
+      "24_ACCEPTED_V2_PRODUCT_BLOBS_UNCHANGED",
+      "25_NO_NEW_SHADER_TEXTURE_BUFFER_DRAW_CALL_OR_WATER_PRIMITIVE",
+      "26_MATCHED_CAMERA_MANIFEST_HAS_AT_LEAST_THREE_NORMAL_VIEWS",
+      "27_ROLLBACK_AND_RECOVERY_OUTPUTS_COMPLETE",
+      "28_PACKAGE_MEMBER_HASHES_AND_ARCHIVE_READBACK_PASS"
+    ],
+    "exact3FailAssertionIds": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "toolchainVerificationResult": "PASS",
+    "candidateAdmissionResult": "FAIL_CLOSED",
+    "firstReceiptDigest": "a45a94ac8be3f5594a58058562a2318e9d6420410cb91ecca1b75442bfd85762",
+    "repeatedReceiptDigest": "a45a94ac8be3f5594a58058562a2318e9d6420410cb91ecca1b75442bfd85762",
+    "firstReceiptSha256": "b75d40be065afd5debf9462042e3eba20554faa4d5837d7ea14979122365935c",
+    "repeatedReceiptSha256": "b75d40be065afd5debf9462042e3eba20554faa4d5837d7ea14979122365935c",
+    "deterministicRepeatPass": true,
+    "receiptBytesIdentical": true,
+    "provisionalReplayDigest": "3ddf83abcef0a2f5cfa8aa61d314dd6935d655506505fda8386b9b5d3817a4a4",
+    "provisionalReplayDigestUsedAsIndependentEvidence": false,
+    "independentDigestDifferenceClassification": "EXPECTED_EVIDENCE_BOUND_DIGEST_DIFFERENCE_NOT_A_REPEAT_CONTRADICTION"
+  },
+  "missingAuthorityNegativeTest": {
+    "exitStatus": 2,
+    "classification": "HARNESS_INPUT_REJECTED_FAIL_CLOSED",
+    "candidateAdmissionResult": "FAIL_CLOSED",
+    "exactIssue": "MISSING_REQUIRED_AUTHORITY_INPUT",
+    "deterministicReceiptDigest": "4d923b2786118f2ceff4ccbe101b2b8703698773bf4a11490fa1228a49797419",
+    "receiptSha256": "094c1f6a9a72074798ce521c05af9be3b4f53e4370a0e92d17b5ba4cb97e9fbf",
+    "failClosedPass": true
+  },
+  "boundary": {
+    "productMutation": false,
+    "toolSourceMutation": false,
+    "harnessOrWorkflowMutation": false,
+    "fixtureSchemaFormulaRegionOrBoundMutation": false,
+    "failedAssertionConversionToPass": false,
+    "repositoryMutation": false,
+    "repositoryCommitCreated": false,
+    "mainBranchUpdate": false,
+    "officialGeometryArticulationRound": "NOT_STARTED",
+    "role5OrRole2Work": false
+  },
+  "return": {
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "authorizedReceiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role3.independent-toolchain-execution.receipt.v1.json",
+    "receiptCommitted": false,
+    "stopAfterReturn": true,
+    "waitForUserDirection": false
+  },
+  "role3ReceiptCanonicalSha256": "6901fa97c9b513561226ff407aa5b6a9fd26fa86f37d8497d2ec1d984da5f40d"
+}

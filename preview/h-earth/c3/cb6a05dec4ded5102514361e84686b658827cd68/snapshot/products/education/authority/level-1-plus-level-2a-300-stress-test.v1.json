@@ -1,0 +1,99 @@
+{
+  "object": "LEVEL_1_PLUS_LEVEL_2A_300_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_STRONG_TRANSFER",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "cumulative_vocabulary_count": 300,
+    "original_battery_tasks": 64,
+    "transfer_tasks": 16,
+    "total_tasks": 80,
+    "classifications": [
+      "DIRECT",
+      "COMPOSABLE",
+      "MISSING"
+    ],
+    "standard": "Measure both closure of Level 1 failures and transfer to novel plain-language functions."
+  },
+  "results": {
+    "original_64": {
+      "functionally_expressible": 64,
+      "missing": 0,
+      "coverage_percent": 100,
+      "interpretation": "All 12 Level 1 frontier failures are now directly or compositionally expressible."
+    },
+    "novel_transfer_16": {
+      "DIRECT": 10,
+      "COMPOSABLE": 3,
+      "MISSING": 3,
+      "functionally_expressible": 13,
+      "coverage_percent": 81.25
+    },
+    "overall_80": {
+      "functionally_expressible": 77,
+      "missing": 3,
+      "coverage_percent": 96.25
+    }
+  },
+  "transfer_tasks_passed": [
+    "state and explain a group rule",
+    "grant or deny permission",
+    "state an obligation",
+    "assign responsibility",
+    "describe a role in a team",
+    "describe leadership in a group",
+    "describe how an organization is structured",
+    "discuss a public service",
+    "express probability using likely/probably/chance",
+    "describe safety and danger",
+    "make and evaluate a promise",
+    "explain a decision with a reason",
+    "describe accountability using account/responsibility language"
+  ],
+  "transfer_tasks_missing": [
+    {
+      "function": "explicit conflict-resolution vocabulary",
+      "reason": "Can repair simple disagreement, but lacks a direct plain word for conflict/solve/solution."
+    },
+    {
+      "function": "government/civic-system naming",
+      "reason": "Public, service, organization, rule and leader are available, but the ordinary civic institution itself is not yet named."
+    },
+    {
+      "function": "ownership/property distinction",
+      "reason": "Possession is expressible with my/your/have, but broader ownership/property concepts are not yet explicit."
+    }
+  ],
+  "marginal_gain": {
+    "level_1_250_original_battery_coverage_percent": 81.25,
+    "cumulative_300_original_battery_coverage_percent": 100,
+    "percentage_point_gain_on_original_battery": 18.75,
+    "new_words_added": 50,
+    "frontier_failures_closed": 12,
+    "note": "The 50-word band was highly efficient because it was derived from measured gaps rather than selected generically."
+  },
+  "interpretation": [
+    "Level 2A does more than memorize the prior test: it closes all original failures and passes 13 of 16 novel transfer tasks.",
+    "The remaining frontier is narrow and coherent rather than random.",
+    "The cumulative 300-word system now supports broad everyday communication plus substantial conduct, reasoning, and basic institutional discussion.",
+    "The next band should grow from the three transfer failures and adjacent empty geometric cells, not from arbitrary difficulty escalation."
+  ],
+  "decision": {
+    "gate": "PASS",
+    "level_2_band_a_status": "ADMITTED",
+    "next_step": "CONSTRUCT_LEVEL_2_BAND_B_FROM_TRANSFER_FRONTIER",
+    "preserve_plain_language": true,
+    "avoid_specialization": true
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_300_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "Original 64-function battery plus 16-task transfer battery executed.",
+    "ENGINE_RESPONSE": "100% closure on original battery; 81.25% novel transfer; 96.25% overall across 80 tasks.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_2_BAND_B_GEOMETRIC_RECONSTRUCTION"
+  }
+}

@@ -1,0 +1,40 @@
+name: H-Earth T4 Phase5 Additive Qualification v1
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Static additive-contract qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth"
+          BIND="$BASE/diagnostic/run8e-r3d/live-gpu-binding.js"
+          CP2="$BASE/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js"
+          P5="$BASE/render/persistent-live-renderer.run8e-r3c.phase5-microrelief-v1.js"
+          T4="$BASE/render/t4-post-terrain-draw-v1.js"
+          DATA="$BASE/render/t4-frozen-placement-v1.js"
+          grep -q "t4Requested.*?" "$BIND" || true
+          grep -q "postTerrainDraw: t4Extension?.drawAfterTerrain" "$BIND"
+          grep -q "postTerrainDraw(Object.freeze({ gl, packet, width, height }))" "$CP2"
+          grep -q "createAcceptedCp2Renderer({ ...options, postTerrainDraw })" "$P5"
+          ! grep -q "presentColorFrame" "$T4"
+          ! grep -q "bindFramebuffer" "$T4"
+          ! grep -q "createHEarthRun8ER3CPersistentRendererT4" "$T4"
+          grep -q "gl.drawArraysInstanced" "$BASE/render/t4-static-gpu-batches-v1.js"
+          grep -q "drawCalls>2" "$BASE/render/t4-static-gpu-batches-v1.js"
+          grep -q '"total":647' "$DATA"
+          grep -q '"TUFT":617' "$DATA"
+          grep -q '"ROCK":30' "$DATA"
+      - name: Module syntax qualification
+        run: |
+          node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-static-gpu-batches-v1.js"
+          node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-post-terrain-draw-v1.js"
+          node --check "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/t4-additive-extension-contract-v1.js"

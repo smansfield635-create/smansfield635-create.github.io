@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "THREE_TIER_CODESPACE_ENVIRONMENT_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "environmentId",
+    "backendId",
+    "operationId",
+    "exactTargetHead",
+    "worktreeCleanBeforeExecution",
+    "runtime",
+    "result"
+  ],
+  "properties": {
+    "schema": {"const": "THREE_TIER_CODESPACE_ENVIRONMENT_RECEIPT_v1"},
+    "environmentId": {"type": "string", "minLength": 1},
+    "backendId": {"enum": ["CODESPACE_DISPOSABLE_EXECUTION", "LOCAL_CLEAN_GIT", "GITHUB_ACTIONS_CLEAN_EXECUTION"]},
+    "operationId": {"type": "string", "minLength": 1},
+    "exactTargetHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "worktreeCleanBeforeExecution": {"const": true},
+    "runtime": {"type": "object"},
+    "result": {"enum": ["PASS_ENVIRONMENT_READY", "FAIL_CLOSED"]}
+  }
+}

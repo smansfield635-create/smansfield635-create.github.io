@@ -1,0 +1,88 @@
+name: H-Earth Unified Instrument Platform
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-instrument-platform.yml'
+      - 'h-earth-3d/control-plane/instrument-platform/**'
+      - 'h-earth-3d/tools/instrument-platform/**'
+      - 'h-earth-3d/tools/terrain-workbench/**'
+      - 'h-earth-3d/validation/instrument-platform/**'
+      - 'h-earth-3d/validation/terrain-workbench/**'
+  push:
+    branches: [main]
+    paths:
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_POST_MERGE_ENGINEERING_PROOF_001.v1.mjs'
+      - 'h-earth-3d/tools/instrument-platform/index.html'
+      - 'h-earth-3d/tools/instrument-platform/platform.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.instrument-platform.runner.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-unified-instrument:
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'agent/h-earth-specialized-gauge-authority-reconciliation-') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact unified instrument candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact-source instrument server
+        run: |
+          python3 -m http.server 4185 --bind 127.0.0.1 > /tmp/h-earth-instrument-platform-server.log 2>&1 &
+          for attempt in $(seq 1 90); do
+            curl -fsS http://127.0.0.1:4185/h-earth-3d/tools/instrument-platform/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-instrument-platform-server.log
+          exit 1
+
+      - name: Execute post-merge platform proof verifier
+        env:
+          H_EARTH_INSTRUMENT_PLATFORM_URL: http://127.0.0.1:4185/h-earth-3d/tools/instrument-platform/index.html
+          H_EARTH_PUBLIC_VERIFY: ${{ github.event_name == 'push' && 'true' || 'false' }}
+          H_EARTH_PUBLIC_PLATFORM_URL: https://smansfield635-create.github.io/h-earth-3d/tools/instrument-platform/index.html
+        run: node h-earth-3d/validation/instrument-platform/h-earth.instrument-platform.runner.mjs | tee /tmp/h-earth-instrument-platform.log
+
+      - name: Upload post-merge platform proof evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-post-merge-engineering-proof-001
+          path: |
+            h-earth-3d/validation/instrument-platform/h-earth.instrument-platform.receipt.v1.json
+            h-earth-3d/validation/instrument-platform/evidence/
+            /tmp/h-earth-instrument-platform.log
+            /tmp/h-earth-instrument-platform-server.log
+          retention-days: 90
+
+      - name: Enforce current proof boundary
+        env:
+          EXPECT_PUBLIC: ${{ github.event_name == 'push' && 'true' || 'false' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/instrument-platform/h-earth.instrument-platform.receipt.v1.json', 'utf8'));
+          const expectPublic = process.env.EXPECT_PUBLIC === 'true';
+          const valid = receipt.engineeringPass === true && receipt.runtimeImplemented === true && receipt.userDifferentialRecorded === false && receipt.defaultPromoted === false && (expectPublic ? receipt.publicCandidateVerified === true : receipt.publicCandidateVerified === false);
+          if (!valid) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`H_EARTH_POST_MERGE_PROOF_BOUNDARY:${receipt.result}:${receipt.executedHead}:${receipt.canonicalReceiptSha256}`);
+          NODE

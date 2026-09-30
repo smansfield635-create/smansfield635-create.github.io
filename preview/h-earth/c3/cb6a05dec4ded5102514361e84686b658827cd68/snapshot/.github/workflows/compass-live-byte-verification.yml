@@ -1,0 +1,208 @@
+name: Compass Live Byte Verification
+
+on:
+  workflow_run:
+    workflows: ["Exact Head Pages Deploy v3"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+
+jobs:
+  verify-live:
+    if: github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success'
+    outputs:
+      compass_relevant: ${{ steps.scope.outputs.compass_relevant }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DEPLOYED_HEAD: ${{ github.event.workflow_run.head_sha || github.sha }}
+      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion || 'push-observation' }}
+      VERIFICATION_TRIGGER: ${{ github.event_name }}
+      LIVE_ORIGIN: https://diamondgatebridge.com
+    steps:
+      - name: Resolve publication surface scope
+        id: scope
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_RUN_ID: ${{ github.event.workflow_run.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          artifacts="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/runs/$UPSTREAM_RUN_ID/artifacts")"
+          receipt_id="$(printf '%s' "$artifacts" | jq -r '[.artifacts[] | select(.name=="publication-surface-receipt" and .expired==false)] | if length==1 then .[0].id else empty end')"
+          if [ -z "$receipt_id" ]; then
+            echo "compass_relevant=false" >> "$GITHUB_OUTPUT"
+            echo "COMPASS_VERIFICATION_SKIPPED_NO_UNIQUE_SURFACE_RECEIPT"
+            exit 0
+          fi
+          mkdir -p /tmp/publication-surface-receipt
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/$receipt_id/zip" > /tmp/publication-surface-receipt.zip
+          unzip -q /tmp/publication-surface-receipt.zip -d /tmp/publication-surface-receipt
+          receipt=/tmp/publication-surface-receipt/publication-surface-receipt.json
+          jq -e --arg runId "$UPSTREAM_RUN_ID" '.schema=="PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1" and .runId==$runId' "$receipt" >/dev/null
+          surface="$(jq -r '.surfaceId' "$receipt")"
+          case "$surface" in
+            compass|manor|brain-gen1-hra)
+              echo "compass_relevant=true" >> "$GITHUB_OUTPUT"
+              echo "COMPASS_VERIFICATION_ADMITTED_SURFACE=$surface"
+              ;;
+            *)
+              echo "compass_relevant=false" >> "$GITHUB_OUTPUT"
+              echo "COMPASS_VERIFICATION_SKIPPED_UNRELATED_SURFACE=$surface"
+              ;;
+          esac
+
+      - name: Checkout exact observed main head
+        if: steps.scope.outputs.compass_relevant == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEPLOYED_HEAD }}
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            index.html
+            assets/compass/compass.identity-3d.js
+            assets/compass/compass.identity-3d.css
+            assets/compass/compass.brain-scene.js
+            assets/compass/compass.crystals.js
+            assets/compass/compass.mirrorland-window.js
+            assets/compass/compass.capability-carousel.js
+            assets/compass/compass.capability-carousel.core.js
+            assets/compass/compass.house-scene.js
+            assets/manor-blueprint/manor.estate.neutral-blockout.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1b.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase2.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs
+
+      - name: Verify live bytes against exact observed source
+        if: steps.scope.outputs.compass_relevant == 'true'
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$DEPLOYED_HEAD"
+          files=(
+            index.html
+            assets/compass/compass.identity-3d.js
+            assets/compass/compass.identity-3d.css
+            assets/compass/compass.brain-scene.js
+            assets/compass/compass.crystals.js
+            assets/compass/compass.mirrorland-window.js
+            assets/compass/compass.capability-carousel.js
+            assets/compass/compass.capability-carousel.core.js
+            assets/compass/compass.house-scene.js
+            assets/manor-blueprint/manor.estate.neutral-blockout.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase1b.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase2.mjs
+            assets/manor-blueprint/manor.estate.gothic-detail-phase3.mjs
+          )
+          rm -rf /tmp/compass-live-verify
+          mkdir -p /tmp/compass-live-verify/live
+          : > /tmp/compass-live-verify/receipt.tsv
+          pass=false
+          for attempt in $(seq 1 30); do
+            ok=true
+            : > /tmp/compass-live-verify/receipt.tsv
+            for path in "${files[@]}"; do
+              expected="$(sha256sum "$path" | awk '{print $1}')"
+              out="/tmp/compass-live-verify/live/$(basename "$path")"
+              url="${LIVE_ORIGIN}/${path}?dgb_verify_head=${DEPLOYED_HEAD}&attempt=${attempt}"
+              if ! curl --fail-with-body --silent --show-error --location -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$url" -o "$out"; then
+                actual="FETCH_FAILED"; ok=false
+              else
+                actual="$(sha256sum "$out" | awk '{print $1}')"
+                if [ "$actual" != "$expected" ]; then ok=false; fi
+              fi
+              printf '%s\t%s\t%s\n' "$path" "$expected" "$actual" >> /tmp/compass-live-verify/receipt.tsv
+            done
+            if [ "$ok" = true ]; then pass=true; echo "attempt=$attempt" >> "$GITHUB_OUTPUT"; break; fi
+            sleep 10
+          done
+          cp /tmp/compass-live-verify/receipt.tsv /tmp/compass-live-byte-receipt.tsv
+          if [ "$pass" != true ]; then echo "result=FAIL_CLOSED" >> "$GITHUB_OUTPUT"; cat /tmp/compass-live-byte-receipt.tsv; exit 1; fi
+          echo "result=PASS_CLOSED" >> "$GITHUB_OUTPUT"
+          cat /tmp/compass-live-byte-receipt.tsv
+
+      - name: Install clean Chromium runtime
+        if: steps.scope.outputs.compass_relevant == 'true'
+        run: |
+          mkdir -p /tmp/manor-probe
+          cd /tmp/manor-probe
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+
+      - name: Verify rendered production House card
+        if: steps.scope.outputs.compass_relevant == 'true'
+        id: runtime
+        shell: bash
+        run: |
+          cat > /tmp/manor-probe/probe.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1440,height:1200},deviceScaleFactor:1});
+          const consoleEvents=[],pageErrors=[],failed=[],manorRequests=[];
+          page.on('console',m=>consoleEvents.push({type:m.type(),text:m.text()}));
+          page.on('pageerror',e=>pageErrors.push(String(e.stack||e)));
+          page.on('requestfailed',r=>failed.push({url:r.url(),failure:r.failure()?.errorText||''}));
+          page.on('response',r=>{if(/compass\.(capability-carousel|house-scene)|manor-blueprint/i.test(r.url()))manorRequests.push({url:r.url(),status:r.status(),fromServiceWorker:r.fromServiceWorker()})});
+          await page.goto('https://diamondgatebridge.com/',{waitUntil:'networkidle',timeout:120000});
+          const orbit=page.locator('[data-capability-orbit]');
+          await orbit.scrollIntoViewIfNeeded();
+          await page.waitForTimeout(1000);
+          const plaques=await page.locator('.compass-orbit-plaque').evaluateAll(ns=>ns.map(n=>({cap:n.getAttribute('data-capability'),active:n.getAttribute('data-active'),text:(n.textContent||'').trim().replace(/\s+/g,' ').slice(0,220)})));
+          await orbit.focus();
+          for(let i=0;i<3;i++){
+            const active=await page.locator('.compass-orbit-plaque[data-active="true"]').getAttribute('data-capability');
+            if(active==='house')break;
+            await page.keyboard.press('ArrowRight');
+            await page.waitForTimeout(500);
+          }
+          await page.waitForTimeout(4000);
+          const state=await page.evaluate(()=>{
+            const plaques=[...document.querySelectorAll('.compass-orbit-plaque')];
+            const house=plaques.find(n=>n.getAttribute('data-capability')==='house');
+            const canvases=[...document.querySelectorAll('canvas')].map(c=>{const r=c.getBoundingClientRect();let nonzeroPixels=null;try{const gl=c.getContext('webgl2')||c.getContext('webgl');if(gl){const px=new Uint8Array(4);gl.readPixels(Math.floor(c.width/2),Math.floor(c.height/2),1,1,gl.RGBA,gl.UNSIGNED_BYTE,px);nonzeroPixels=[...px]}}catch{}return {class:String(c.className),width:c.width,height:c.height,rect:{x:r.x,y:r.y,width:r.width,height:r.height},dataset:{...c.dataset},centerPixel:nonzeroPixels}});
+            return {active:document.querySelector('.compass-orbit-plaque[data-active="true"]')?.getAttribute('data-capability')||null,house:house?{cap:house.getAttribute('data-capability'),active:house.getAttribute('data-active'),text:(house.textContent||'').trim().replace(/\s+/g,' ').slice(0,500),html:house.innerHTML.slice(0,1600)}:null,canvases};
+          });
+          await page.screenshot({path:'/tmp/manor-probe/manor-live.png',fullPage:true});
+          const receipt={url:page.url(),plaques,state,consoleEvents,pageErrors,failed,manorRequests};
+          fs.writeFileSync('/tmp/manor-probe/manor-live.json',JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          await browser.close();
+          if(!state.house||state.active!=='house')process.exit(2);
+          EOF
+          cd /tmp/manor-probe
+          node probe.mjs
+          echo "result=EXECUTED" >> "$GITHUB_OUTPUT"
+
+      - name: Upload live evidence
+        if: steps.scope.outputs.compass_relevant == 'true'
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-manor-live-evidence
+          path: |
+            /tmp/compass-live-byte-receipt.tsv
+            /tmp/manor-probe/manor-live.json
+            /tmp/manor-probe/manor-live.png
+          if-no-files-found: warn
+
+      - name: Record live verification on reconciliation PR
+        if: steps.scope.outputs.compass_relevant == 'true'
+        if: always()
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ steps.verify.outputs.result }}
+          RUNTIME_RESULT: ${{ steps.runtime.outputs.result }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/issues/1282/comments" --method POST -f body="Live Manor verification: bytes ${RESULT:-FAIL_CLOSED}; runtime ${RUNTIME_RESULT:-FAIL_CLOSED}; head $DEPLOYED_HEAD" >/dev/null

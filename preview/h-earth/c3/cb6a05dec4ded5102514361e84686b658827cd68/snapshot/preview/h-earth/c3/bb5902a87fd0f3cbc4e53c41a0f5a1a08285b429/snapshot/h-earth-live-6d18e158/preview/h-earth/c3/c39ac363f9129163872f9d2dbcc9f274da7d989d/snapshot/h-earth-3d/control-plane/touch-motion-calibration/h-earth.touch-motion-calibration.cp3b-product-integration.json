@@ -1,0 +1,53 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP3B_PRODUCT_INTEGRATION_v1",
+  "checkpoint": "CP3B_PRODUCT_INTEGRATION_CANDIDATE",
+  "status": "PASS_BOUNDED_PRODUCT_INTEGRATION_CANDIDATE",
+  "parentCheckpoint": "CP3A_LATTICE_AND_MOTION_LAW_CONSTRUCTION",
+  "parentHead": "35064794d57fdb2db876e74f67b6839497618906",
+  "architecture": [
+    "RAW_POINTER_EVENTS",
+    "CONTACT_TRACKING",
+    "256_STATE_GESTURE_CONTROL_LATTICE",
+    "LOCKED_CONTINUOUS_MOTION_INTENT",
+    "FRAME_TIME_NAVIGATION_PROPOSALS",
+    "EXISTING_NAVIGATION_STATE_AUTHORITY",
+    "EXISTING_GPU_PRESENTATION"
+  ],
+  "productMutationPaths": [
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+  ],
+  "preserved": {
+    "worldGeometry": true,
+    "webGLRenderer": true,
+    "cameraCoordinateConvention": true,
+    "publicNavigationState": true,
+    "frameReceipts": true,
+    "cp2bDiagnosticObservation": true,
+    "publicIntegrationCallbackContract": true
+  },
+  "implemented": {
+    "gestureOwnershipLock": true,
+    "pinchVersusTravelStability": true,
+    "forwardBackwardDirectionalSymmetry": true,
+    "viewportNormalization": true,
+    "frameTimeNormalization": true,
+    "boundedElapsedAccumulation": true,
+    "continuousMotionOutput": true,
+    "releaseTermination": true,
+    "orientationIndependentScaling": true
+  },
+  "execution": {
+    "cp3aSyntheticFixtures": "PASS",
+    "cp3bIntegrationContractHarnessCreated": true,
+    "automatedBrowserFixtures": "NOT_YET_CP3C",
+    "physicalDeviceExecution": false
+  },
+  "authority": {
+    "cp2bStandalonePhysicalExecutionRequiredBeforeCp3": false,
+    "cp2bRecorderRetentionRequired": true,
+    "deploymentAuthorized": false,
+    "physicalAcceptanceAuthorized": false,
+    "nextActiveCheckpoint": "CP3C_PREDEPLOYMENT_EXECUTABLE_VERIFICATION"
+  },
+  "stoppingBoundary": "STOP_BEFORE_DEPLOYMENT_OR_PHYSICAL_ALL_EIGHT_ACCEPTANCE"
+}

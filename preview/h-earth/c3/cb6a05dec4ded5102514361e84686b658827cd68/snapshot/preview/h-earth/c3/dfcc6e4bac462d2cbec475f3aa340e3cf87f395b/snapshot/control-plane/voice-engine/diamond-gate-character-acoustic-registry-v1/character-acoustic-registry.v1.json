@@ -1,0 +1,89 @@
+{
+  "schema": "DIAMOND_GATE_CHARACTER_ACOUSTIC_REGISTRY_v1",
+  "status": "CONSTRUCTION_CANDIDATE",
+  "publicProductMutationAuthorized": false,
+  "engineBindingPolicy": "REPLACEABLE_ADAPTER",
+  "identityLaw": "CHARACTER_IDENTITY_DOES_NOT_BELONG_TO_THE_TTS_MODEL",
+  "canonicalRosterSource": "characters/index.html",
+  "governingNarrativeSources": [
+    "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/narrative-journey-map.v1.json",
+    "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/relationship-crosswalk.v1.json",
+    "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/baseline-identities.v1.json"
+  ],
+  "characters": [
+    {
+      "characterId": "auren-vale",
+      "displayName": "Auren Vale",
+      "canonicalRole": "Sanctuary Builder",
+      "source": "characters/index.html",
+      "acousticStatus": "UNRESOLVED",
+      "constructionAuthorized": false
+    },
+    {
+      "characterId": "dextrion",
+      "displayName": "Dextrion",
+      "canonicalRole": "Earth-Side Originator",
+      "source": "characters/index.html",
+      "acousticStatus": "UNRESOLVED",
+      "constructionAuthorized": false
+    },
+    {
+      "characterId": "alaric",
+      "displayName": "Alaric",
+      "canonicalRole": "Field Navigator",
+      "source": "characters/index.html",
+      "acousticStatus": "UNRESOLVED",
+      "constructionAuthorized": false
+    },
+    {
+      "characterId": "tarian",
+      "displayName": "Tarian",
+      "canonicalRole": "Water Anchor",
+      "source": "characters/index.html",
+      "acousticStatus": "UNRESOLVED",
+      "constructionAuthorized": false
+    },
+    {
+      "characterId": "elara",
+      "displayName": "Elara",
+      "canonicalRole": "Signal Bearer",
+      "sources": ["characters/index.html", "elara/elara.voice.js"],
+      "acousticStatus": "UNRESOLVED",
+      "constructionAuthorized": false
+    },
+    {
+      "characterId": "soren",
+      "displayName": "Soren",
+      "canonicalRole": "Boundary Keeper",
+      "source": "characters/index.html",
+      "acousticStatus": "UNRESOLVED",
+      "constructionAuthorized": false
+    },
+    {
+      "characterId": "jeeves",
+      "displayName": "Jeeves",
+      "canonicalRole": "Manor Interface / Welcome and Routing Guide",
+      "sources": [
+        "characters/index.html",
+        "assets/hearth/jeeves/jeeves.voice.js",
+        "assets/hearth/jeeves/jeeves.expression.js"
+      ],
+      "acousticStatus": "PROFILE_CANDIDATE_READY_FOR_SYNTHESIS",
+      "constructionAuthorized": true,
+      "profilePath": "control-plane/voice-engine/diamond-gate-character-acoustic-registry-v1/profiles/jeeves.acoustic.v1.json",
+      "activeQualification": "JEEVES_COMPASS_CH01_Q01"
+    },
+    {
+      "characterId": "remote-team",
+      "displayName": "Remote Team",
+      "canonicalRole": "Distributed Response Unit",
+      "source": "characters/index.html",
+      "acousticStatus": "ENTITY_REGISTERED_VOICE_MEMBERS_UNRESOLVED",
+      "constructionAuthorized": false
+    }
+  ],
+  "activeCharacter": "jeeves",
+  "activeQualification": "JEEVES_COMPASS_CH01_Q01",
+  "nextLawfulAction": "BIND_AUTHORIZED_JEEVES_REFERENCE_OR_ORIGINAL_BASE_VOICE_AND_RENDER_COMPASS_Q01_LINES",
+  "lastUpdated": "2026-08-15"
+}

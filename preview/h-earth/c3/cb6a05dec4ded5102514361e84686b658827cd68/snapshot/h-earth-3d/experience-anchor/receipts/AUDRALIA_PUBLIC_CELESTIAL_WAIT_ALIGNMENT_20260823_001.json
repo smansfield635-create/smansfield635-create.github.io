@@ -1,0 +1,40 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_PUBLIC_CELESTIAL_WAIT_ALIGNMENT_20260823_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_PUBLIC_CELESTIAL_WAIT_ALIGNMENT_20260823_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_PUBLIC_CELESTIAL_WAIT_ALIGNMENT_20260823_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/celestial-bootstrap-v2.mjs",
+      "sha256": "457e47979de2aa0f9c205f295360fff5ee02a6d6cdf8bb25311c87171d830392"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "32c819f3eb7fcd4018d43da5ea536f9e37cfb5d4",
+    "qualificationOperation": "AUDRALIA_PUBLIC_CELESTIAL_WAIT_ALIGNMENT_20260823_001",
+    "finding": "The protected experience mutation changes only the bounded celestial bootstrap wait window from 90 seconds to 210 seconds after public exact-head verification proved that the same canonical renderer and reconciliation runtime can become ready after the former timer expires. Renderer identity, readiness predicate, world geometry, weather authority, camera/navigation semantics, celestial implementation, and loader presentation remain unchanged."
+  }
+}

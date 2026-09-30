@@ -1,0 +1,128 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "zionts",
+  "description": "ZIONTS Gen2263 consequence-path publication contract: world-facing context plus one bounded cinematic witness approach and deterministic return to orbit.",
+  "checks": [
+    {
+      "path": "/showroom/globe/earth/",
+      "includes": [
+        "data-route=\"/showroom/globe/earth/\"",
+        "data-page=\"zionts\"",
+        "data-contract=\"ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_v1\"",
+        "data-witness-traversal-contract=\"ZIONTS_BOUNDED_CINEMATIC_WITNESS_TRAVERSAL_v1\"",
+        "data-parent-route=\"/showroom/globe/\"",
+        "data-planet-input-authority=\"none\"",
+        "data-witness-state=\"orbit-witness\"",
+        "What remains when a living world can no longer carry life?",
+        "ZIONTS is the warning left behind.",
+        "The warning only matters in relation to what still lives.",
+        "Audralia",
+        "H‑Earth",
+        "Gratitude",
+        "data-planet-approach",
+        "data-return-orbit",
+        "Closer is allowed. Control is not.",
+        "./index.js?v=20260914-gen2263"
+      ],
+      "excludes": [
+        "Triple G",
+        "data-planet-input-authority=\"enabled\""
+      ]
+    },
+    {
+      "path": "/showroom/globe/earth/index.js",
+      "includes": [
+        "ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_v1",
+        "ZIONTS_BOUNDED_CINEMATIC_WITNESS_TRAVERSAL_v1",
+        "inputAuthority:\"NONE\"",
+        "canvas.style.pointerEvents=\"none\"",
+        "orbit-witness",
+        "cinematic-approach",
+        "close-witness",
+        "return-to-orbit",
+        "beginApproach",
+        "beginReturn",
+        "prefers-reduced-motion: reduce",
+        "document.documentElement.dataset.ziontsRenderer=\"ready\""
+      ],
+      "excludes": [
+        "pointerdown",
+        "\"wheel\"",
+        "OrbitControls",
+        "showroom/globe/audralia/",
+        "showroom/globe/h-earth/"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/earth/",
+    "timeoutMs": 30000,
+    "readySelector": "#ziontsPlanet",
+    "readyAttribute": {
+      "selector": "html",
+      "name": "data-zionts-renderer",
+      "contains": "ready"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/earth/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "approach Zionts to close witness",
+        "action": {
+          "type": "click",
+          "selector": "[data-planet-approach]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "html",
+            "name": "data-witness-state",
+            "value": "close-witness"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-close-witness]",
+            "name": "aria-hidden",
+            "value": "false"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-return-orbit]"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "return Zionts to orbit witness",
+        "action": {
+          "type": "click",
+          "selector": "[data-return-orbit]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "html",
+            "name": "data-witness-state",
+            "value": "orbit-witness"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-close-witness]",
+            "name": "aria-hidden",
+            "value": "true"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-planet-approach]"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

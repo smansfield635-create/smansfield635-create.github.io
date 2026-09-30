@@ -1,0 +1,349 @@
+name: H-Earth Pre-Mutation Preflight Remote Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_json:
+        description: Exact H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_REQUEST_v1 JSON
+        required: true
+        type: string
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-repository-preflight-remote-execution.yml'
+      - '.github/workflows/h-earth-premutation-preflight-installation-lock-closure.yml'
+
+permissions: {}
+
+jobs:
+  remote-preflight:
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' &&
+       contains(github.event.comment.body, 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_REQUEST_V1') &&
+       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    env:
+      ACTIVE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+      COMMENT_BODY: ${{ github.event.comment.body || '' }}
+      DISPATCH_REQUEST_JSON: ${{ inputs.request_json || '' }}
+      AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association || '' }}
+      REQUEST_ACTOR: ${{ github.actor }}
+      ISSUE_NUMBER: ${{ github.event.issue.number || '' }}
+      PR_HEAD: ${{ github.event.pull_request.head.sha || '' }}
+      DESCRIPTOR_PATH: .github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json
+      REGISTRY_PATH: .github/ai-toolset-transport/authorized-toolset-registry.v1.json
+      EXPECTED_DESCRIPTOR_ID: H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_DESCRIPTOR_V1
+      EXPECTED_OPERATION_ID: H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_v1
+      EXPECTED_TOOL_ID: H_EARTH_REPOSITORY_REGISTRY_AUTO_PREFLIGHT_REMOTE_ADAPTER_V1
+      EXPECTED_TOOLING_HEAD: 7ad9b628dd94d44ec08dbbae8370c501fb3aca73
+      EXPECTED_ADAPTER_PATH: tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs
+      ARTIFACT_NAME: h-earth-premutation-preflight-remote-execution-${{ github.run_id }}-${{ github.run_attempt }}
+
+    steps:
+      - name: Check out exact active workflow head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.ACTIVE_REF }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify active head and clean checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTIVE_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$ACTIVE_HEAD" = "$ACTIVE_REF"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          echo "$ACTIVE_HEAD" > "$RUNNER_TEMP/active-head.txt"
+
+      - name: Parse and validate exact remote request
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+
+          const marker = 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_REQUEST_V1';
+          const allowedKeys = ['schema','requestId','descriptorId','operationId','subjectHead','paths','executionHolder','requestNonce'];
+          const stable = (v) => Array.isArray(v) ? v.map(stable) : v && typeof v === 'object'
+            ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, stable(v[k])])) : v;
+          const fail = (code) => { throw new Error(code); };
+          let request;
+
+          if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+            const head = process.env.PR_HEAD;
+            request = {
+              schema: marker,
+              requestId: 'H_EARTH_PREMUTATION_PREFLIGHT_PR_SELF_VALIDATION',
+              descriptorId: process.env.EXPECTED_DESCRIPTOR_ID,
+              operationId: process.env.EXPECTED_OPERATION_ID,
+              subjectHead: head,
+              paths: ['showroom/globe/h-earth/index.html','showroom/globe/h-earth/index.css'],
+              executionHolder: 'H_EARTH_PREMUTATION_PREFLIGHT_PR_SELF_VALIDATION',
+              requestNonce: crypto.createHash('sha256').update(`pr-self-validation:${head}`).digest('hex')
+            };
+          } else if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
+            try { request = JSON.parse(process.env.DISPATCH_REQUEST_JSON); } catch { fail('REQUEST_JSON_INVALID'); }
+          } else if (process.env.GITHUB_EVENT_NAME === 'issue_comment') {
+            if (!['OWNER','MEMBER','COLLABORATOR'].includes(process.env.AUTHOR_ASSOCIATION)) fail('ACTOR_NOT_AUTHORIZED');
+            const body = process.env.COMMENT_BODY ?? '';
+            const index = body.indexOf(marker);
+            if (index < 0) fail('REQUEST_MARKER_MISSING');
+            const remainder = body.slice(index + marker.length).trim();
+            if (!remainder.startsWith('{')) fail('REQUEST_JSON_MISSING');
+            try { request = JSON.parse(remainder); } catch { fail('REQUEST_JSON_INVALID'); }
+          } else {
+            fail('EVENT_NOT_SUPPORTED');
+          }
+
+          if (!request || typeof request !== 'object' || Array.isArray(request)) fail('REQUEST_OBJECT_INVALID');
+          const keys = Object.keys(request).sort();
+          if (JSON.stringify(keys) !== JSON.stringify([...allowedKeys].sort())) fail('REQUEST_FIELD_SET_INVALID');
+          if (request.schema !== marker) fail('REQUEST_SCHEMA_MISMATCH');
+          if (!/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(request.requestId ?? '')) fail('REQUEST_ID_INVALID');
+          if (request.descriptorId !== process.env.EXPECTED_DESCRIPTOR_ID) fail('DESCRIPTOR_ID_MISMATCH');
+          if (request.operationId !== process.env.EXPECTED_OPERATION_ID) fail('OPERATION_ID_MISMATCH');
+          if (!/^[0-9a-f]{40}$/.test(request.subjectHead ?? '')) fail('SUBJECT_HEAD_INVALID');
+          if (!/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(request.executionHolder ?? '')) fail('EXECUTION_HOLDER_INVALID');
+          if (!/^[0-9a-f]{64}$/.test(request.requestNonce ?? '')) fail('REQUEST_NONCE_INVALID');
+          if (!Array.isArray(request.paths) || request.paths.length < 1 || request.paths.length > 128) fail('PATH_COUNT_INVALID');
+
+          const roots = ['h-earth-3d/','showroom/globe/h-earth/'];
+          const normalized = request.paths.map((value) => {
+            if (typeof value !== 'string' || !value || value.startsWith('/') || value.startsWith('./') || value.includes('\\') || value.includes('\0')) fail('PATH_FORMAT_INVALID');
+            const segments = value.split('/');
+            if (segments.some((segment) => segment === '' || segment === '.' || segment === '..')) fail('PATH_TRAVERSAL_OR_EMPTY_SEGMENT');
+            if (!roots.some((root) => value.startsWith(root))) fail('PATH_OUTSIDE_H_EARTH_SCOPE');
+            return value;
+          });
+          if (new Set(normalized).size !== normalized.length) fail('DUPLICATE_PATH');
+          request.paths = [...normalized].sort((a,b) => a.localeCompare(b));
+
+          const text = JSON.stringify(stable(request), null, 2) + '\n';
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/request.json', text);
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/request-digest.txt', crypto.createHash('sha256').update(text).digest('hex') + '\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/subject-head.txt', request.subjectHead + '\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/paths-base64.txt', Buffer.from(JSON.stringify(request.paths), 'utf8').toString('base64') + '\n');
+          NODE
+
+      - name: Resolve installed closed-world descriptor
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const stable = (v) => Array.isArray(v) ? v.map(stable) : v && typeof v === 'object'
+            ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, stable(v[k])])) : v;
+          const canonical = (v) => JSON.stringify(stable(v));
+          const descriptorBytes = fs.readFileSync(process.env.DESCRIPTOR_PATH);
+          const descriptor = JSON.parse(descriptorBytes);
+          const registry = JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH, 'utf8'));
+          const fail = (code) => { throw new Error(code); };
+          if (registry.status !== 'ACTIVE_CERTIFIED' || registry.closedWorld !== true || registry.arbitraryCommandAccepted !== false || registry.movingToolingRefsAccepted !== false) fail('CLOSED_WORLD_REGISTRY_INVALID');
+          if (descriptor.schema !== 'AUTHORIZED_TOOLSET_DESCRIPTOR_v1') fail('DESCRIPTOR_SCHEMA_MISMATCH');
+          if (descriptor.descriptorId !== process.env.EXPECTED_DESCRIPTOR_ID || descriptor.operationId !== process.env.EXPECTED_OPERATION_ID || descriptor.toolId !== process.env.EXPECTED_TOOL_ID) fail('DESCRIPTOR_IDENTITY_MISMATCH');
+          if (descriptor.exactToolingHead !== process.env.EXPECTED_TOOLING_HEAD) fail('TOOLING_HEAD_MISMATCH');
+          if (descriptor.commandSpecification?.scriptPath !== process.env.EXPECTED_ADAPTER_PATH || descriptor.commandSpecification?.shell !== false || descriptor.commandSpecification?.extraArgumentsAllowed !== false || descriptor.commandSpecification?.environmentOverridesAllowed !== false) fail('COMMAND_SPECIFICATION_MISMATCH');
+          if (!Array.isArray(descriptor.allowedMutationPaths) || descriptor.allowedMutationPaths.length !== 0) fail('WRITABLE_PATH_LEAK');
+          if (descriptor.descriptorActivationStatus !== 'ACTIVE_CERTIFIED') fail('DESCRIPTOR_NOT_ACTIVE');
+          const matches = registry.tools.filter((tool) => tool.descriptorId === descriptor.descriptorId && tool.operationId === descriptor.operationId);
+          if (matches.length !== 1 || canonical(matches[0]) !== canonical(descriptor)) fail('REGISTRY_DESCRIPTOR_MISMATCH');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/tooling-head.txt', descriptor.exactToolingHead + '\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/descriptor-digest.txt', crypto.createHash('sha256').update(descriptorBytes).digest('hex') + '\n');
+          NODE
+
+      - name: Materialize immutable tooling worktree
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLING_HEAD="$(tr -d '\n' < "$RUNNER_TEMP/tooling-head.txt")"
+          if ! git cat-file -e "$TOOLING_HEAD^{commit}" 2>/dev/null; then
+            git fetch --no-tags origin "$TOOLING_HEAD"
+          fi
+          test "$(git rev-parse "$TOOLING_HEAD^{commit}")" = "$TOOLING_HEAD"
+          TOOLING_ROOT="$RUNNER_TEMP/immutable-tooling"
+          git worktree add --detach "$TOOLING_ROOT" "$TOOLING_HEAD"
+          test -z "$(git -C "$TOOLING_ROOT" status --porcelain=v1 --untracked-files=all)"
+          test -f "$TOOLING_ROOT/$EXPECTED_ADAPTER_PATH"
+
+      - name: Prove immutable adapter positive and negative receipt preservation
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLING_ROOT="$RUNNER_TEMP/immutable-tooling"
+          (
+            cd "$TOOLING_ROOT"
+            node "$EXPECTED_ADAPTER_PATH" \
+              --self-test \
+              --output "$RUNNER_TEMP/adapter-self-test-receipt.json"
+          )
+          node - <<'NODE'
+          const receipt = require(process.env.RUNNER_TEMP + '/adapter-self-test-receipt.json');
+          if (receipt.result !== 'PASS_CLOSED') process.exit(1);
+          if (receipt.positiveNativeDisposition !== 'PASS') process.exit(1);
+          if (!['REVIEW_REQUIRED','BLOCK','STOP'].includes(receipt.negativeNativeDisposition)) process.exit(1);
+          if (receipt.negativeClassification !== 'UNREGISTERED_H_EARTH_SCOPED_PATH') process.exit(1);
+          if (receipt.negativeNativeReceiptPreserved !== true) process.exit(1);
+          if (receipt.productMutationPerformed !== false) process.exit(1);
+          if (receipt.constructionAuthorityGranted !== false) process.exit(1);
+          if (receipt.genericCommandAuthority !== false) process.exit(1);
+          NODE
+
+      - name: Execute immutable adapter against exact subject head
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLING_ROOT="$RUNNER_TEMP/immutable-tooling"
+          SUBJECT_HEAD="$(tr -d '\n' < "$RUNNER_TEMP/subject-head.txt")"
+          PATHS_BASE64="$(tr -d '\n' < "$RUNNER_TEMP/paths-base64.txt")"
+          HOLDER="$(node -e "process.stdout.write(require(process.env.RUNNER_TEMP + '/request.json').executionHolder)")"
+          (
+            cd "$TOOLING_ROOT"
+            node "$EXPECTED_ADAPTER_PATH" \
+              --subject-head "$SUBJECT_HEAD" \
+              --paths-base64 "$PATHS_BASE64" \
+              --execution-holder "$HOLDER" \
+              --output "$RUNNER_TEMP/adapter-execution-receipt.json"
+          )
+
+      - name: Validate full native receipt and emit transport receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const stable = (v) => Array.isArray(v) ? v.map(stable) : v && typeof v === 'object'
+            ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, stable(v[k])])) : v;
+          const hash = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+          const fail = (code) => { throw new Error(code); };
+          const request = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/request.json', 'utf8'));
+          const adapterBytes = fs.readFileSync(process.env.RUNNER_TEMP + '/adapter-execution-receipt.json');
+          const adapter = JSON.parse(adapterBytes);
+          if (adapter.schema !== 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_RECEIPT_v1') fail('ADAPTER_RECEIPT_SCHEMA_MISMATCH');
+          if (!['PASS_CLOSED','FAIL_CLOSED'].includes(adapter.result)) fail('ADAPTER_RECEIPT_RESULT_INVALID');
+          if (adapter.subjectHead !== request.subjectHead) fail('ADAPTER_SUBJECT_HEAD_MISMATCH');
+          if (JSON.stringify([...adapter.paths].sort()) !== JSON.stringify([...request.paths].sort())) fail('ADAPTER_PATH_SET_MISMATCH');
+          const native = adapter.nativePreflightReceipt;
+          if (!native || typeof native !== 'object') fail('NATIVE_PREFLIGHT_RECEIPT_MISSING');
+          if (native.mutationMayProceed !== false) fail('NATIVE_PREFLIGHT_MUTATION_AUTHORITY_LEAK');
+          if (adapter.productMutationPerformed || adapter.constructionAuthorityGranted || adapter.branchCreated || adapter.genericCommandAuthority || adapter.runtimeOrRendererMutationPerformed || adapter.cameraOrNavigationMutationPerformed || adapter.terrainOrWaterMutationPerformed || adapter.mergePerformed || adapter.deploymentPerformed || adapter.releasePerformed) fail('SIDE_EFFECT_OR_AUTHORITY_LEAK');
+          if (!adapter.repositoryCleanBefore || !adapter.repositoryCleanAfter || !adapter.subjectWorktreeCleanBefore || !adapter.subjectWorktreeCleanAfter) fail('WORKTREE_CLEANLINESS_FAILURE');
+
+          if (adapter.result === 'PASS_CLOSED') {
+            if (native.finalDisposition !== 'PASS') fail('PASS_ADAPTER_NATIVE_DISPOSITION_MISMATCH');
+            if (native.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') fail('NATIVE_PREFLIGHT_CONTINUATION_MISMATCH');
+          } else {
+            if (!['REVIEW_REQUIRED','BLOCK','STOP'].includes(native.finalDisposition)) fail('FAIL_CLOSED_NATIVE_DISPOSITION_INVALID');
+            if (adapter.errorCode !== 'NATIVE_PREFLIGHT_NOT_PASS') fail('FAIL_CLOSED_ERROR_CODE_MISMATCH');
+            if (typeof native.continuation !== 'string' || native.continuation.length === 0) fail('FAIL_CLOSED_CONTINUATION_MISSING');
+          }
+
+          const nativeText = JSON.stringify(stable(native), null, 2) + '\n';
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/native-preflight-receipt.json', nativeText);
+          const nativeBytes = fs.readFileSync(process.env.RUNNER_TEMP + '/native-preflight-receipt.json');
+          const activeHead = fs.readFileSync(process.env.RUNNER_TEMP + '/active-head.txt', 'utf8').trim();
+          const requestDigest = fs.readFileSync(process.env.RUNNER_TEMP + '/request-digest.txt', 'utf8').trim();
+          const descriptorDigest = fs.readFileSync(process.env.RUNNER_TEMP + '/descriptor-digest.txt', 'utf8').trim();
+          const toolingHead = fs.readFileSync(process.env.RUNNER_TEMP + '/tooling-head.txt', 'utf8').trim();
+          const operationalProof = process.env.GITHUB_EVENT_NAME === 'issue_comment' && request.requestId === 'H_EARTH_PREMUTATION_PREFLIGHT_OPERATIONAL_PROOF';
+          const receipt = stable({
+            schema: 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_TRANSPORT_RECEIPT_v1',
+            result: adapter.result,
+            eventName: process.env.GITHUB_EVENT_NAME,
+            runId: Number(process.env.GITHUB_RUN_ID),
+            runAttempt: Number(process.env.GITHUB_RUN_ATTEMPT),
+            artifactName: process.env.ARTIFACT_NAME,
+            issueNumber: process.env.ISSUE_NUMBER ? Number(process.env.ISSUE_NUMBER) : null,
+            actor: process.env.REQUEST_ACTOR,
+            activeHead,
+            requestId: request.requestId,
+            requestDigest,
+            descriptorId: request.descriptorId,
+            descriptorDigest,
+            toolingHead,
+            subjectHead: request.subjectHead,
+            paths: request.paths,
+            adapterReceiptSha256: hash(adapterBytes),
+            nativeReceiptSha256: hash(nativeBytes),
+            nativeDisposition: native.finalDisposition,
+            mutationMayProceed: native.mutationMayProceed,
+            continuation: native.continuation,
+            fullNativeReceiptArtifact: true,
+            operationalProof,
+            repositoryCleanBefore: adapter.repositoryCleanBefore,
+            repositoryCleanAfter: adapter.repositoryCleanAfter,
+            productMutationPerformed: false,
+            constructionAuthorityGranted: false,
+            branchCreated: false,
+            genericCommandAuthority: false,
+            runtimeOrRendererMutationPerformed: false,
+            cameraOrNavigationMutationPerformed: false,
+            terrainOrWaterMutationPerformed: false,
+            mergePerformed: false,
+            deploymentPerformed: false,
+            releasePerformed: false
+          });
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/transport-receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/transport-result.txt', adapter.result + '\n');
+          NODE
+
+      - name: Verify active checkout remained read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          TOOLING_ROOT="$RUNNER_TEMP/immutable-tooling"
+          test -z "$(git -C "$TOOLING_ROOT" status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload full remote preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: |
+            ${{ runner.temp }}/request.json
+            ${{ runner.temp }}/adapter-self-test-receipt.json
+            ${{ runner.temp }}/adapter-execution-receipt.json
+            ${{ runner.temp }}/native-preflight-receipt.json
+            ${{ runner.temp }}/transport-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Remove immutable tooling worktree
+        if: always()
+        shell: bash
+        run: |
+          if [[ -d "$RUNNER_TEMP/immutable-tooling" ]]; then
+            git worktree remove --force "$RUNNER_TEMP/immutable-tooling" || true
+          fi
+
+      - name: Enforce fail-closed disposition after evidence packaging
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$RUNNER_TEMP/transport-result.txt"
+          RESULT="$(tr -d '\n' < "$RUNNER_TEMP/transport-result.txt")"
+          if [[ "$RESULT" == "PASS_CLOSED" ]]; then
+            exit 0
+          fi
+          if [[ "$RESULT" == "FAIL_CLOSED" ]]; then
+            echo "Native preflight failed closed; full diagnostic evidence was packaged."
+            exit 1
+          fi
+          echo "Unexpected transport result: $RESULT" >&2
+          exit 1

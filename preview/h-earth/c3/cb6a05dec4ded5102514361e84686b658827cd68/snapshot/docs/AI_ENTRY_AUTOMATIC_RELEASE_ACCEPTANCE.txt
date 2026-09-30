@@ -1,0 +1,1 @@
+Acceptance: merge to main must automatically start the exact-head Pages release workflow; the workflow must deploy the pushed main SHA and must not report success until the public .well-known/dgb-release.json marker equals that SHA.

@@ -1,0 +1,475 @@
+name: H-Earth V2 Registry Role 4 Exact-Head Execution Carrier V2
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-v2-registry-role4-exact-head-carrier-v2.yml'
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  actions: read
+
+concurrency:
+  group: h-earth-v2-registry-role4-exact-head-carrier-v2
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  TARGET_PR: '657'
+  SOURCE_PR: '652'
+  EXACT_REGISTRY_BASE: 5123ad418fcb1b88795470120e4632705ceaf288
+  EXACT_REGISTRY_CANDIDATE_HEAD: da74dcf214bb1ff542894ad343a7102899d68bde
+  EXACT_REGISTRY_CANDIDATE_TREE: 6a90c5bcb9004fe0294db8280da561324d64fcc3
+  SOURCE_HEAD: 7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602
+  SOURCE_TREE: c82bbc92b3c77d4cadf29fb40138f53aa0621ae6
+  ROLE1_RETURN_COMMENT: '5200412182'
+  ROLE3_HANDOFF_COMMENT: '5200414705'
+  ROLE3_BLOCKED_RECEIPT_SHA256: c16860bd96429978aed51dba2fba864e9786bd75f5af27eb743e439dec732e4d
+  PRIOR_FAILED_EXECUTION_RUN: '31073505466'
+  ROLE4_AUTHORIZATION_COMMENT: '5200649975'
+  AMENDMENT_PATH: h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-v2-causal-correction-exact-head.js
+  LOADER_PATH: h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+  EXPECTED_AMENDMENT_BLOB: 534bff50eea4422c8d98cb8378a96624c99924a3
+  EXPECTED_LOADER_BLOB: c4a8ff9fc1a824e5f727070a7de5dae95aed88fc
+  EXPECTED_BASE_LOADER_BLOB: c29c2d3f658170724d07b4432b373ea5bd4048b1
+  COMMENT_MARKER: H_EARTH_V2_REGISTRY_ROLE4_EXACT_HEAD_EXECUTION_REQUEST_v2
+  WORKFLOW_PATH: .github/workflows/h-earth-v2-registry-role4-exact-head-carrier-v2.yml
+
+jobs:
+  verify-carrier-v2:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact carrier V2 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify one-file read-only V2 boundary
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-registry-role4-carrier-v2-verification
+          node <<'NODE'
+          const fs = require('fs');
+          const api = 'https://api.github.com';
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`${api}${path}`, {headers});
+            const text = await response.text();
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${text}`);
+            return text ? JSON.parse(text) : null;
+          }
+          function requireCondition(value, code) {
+            if (!value) throw new Error(code);
+          }
+          (async () => {
+            const [owner, repo] = process.env.REPOSITORY.split('/');
+            const pr = await get(`/repos/${owner}/${repo}/pulls/${process.env.PR_NUMBER}`);
+            requireCondition(pr.base.ref === 'main', 'CARRIER_V2_BASE_NOT_MAIN');
+            requireCondition(pr.head.sha === process.env.PR_HEAD_SHA, 'CARRIER_V2_HEAD_MISMATCH');
+            const compare = await get(`/repos/${owner}/${repo}/compare/${process.env.PR_BASE_SHA}...${process.env.PR_HEAD_SHA}`);
+            const paths = compare.files.map(file => file.filename);
+            requireCondition(paths.length === 1 && paths[0] === process.env.WORKFLOW_PATH, 'CARRIER_V2_PATH_BOUNDARY_MISMATCH');
+            requireCondition(compare.files[0].status === 'added', 'CARRIER_V2_NOT_ADDED_ONLY');
+            const workflow = fs.readFileSync(process.env.WORKFLOW_PATH, 'utf8');
+            for (const token of [
+              process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+              process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+              process.env.SOURCE_HEAD,
+              process.env.SOURCE_TREE,
+              process.env.ROLE3_BLOCKED_RECEIPT_SHA256,
+              process.env.PRIOR_FAILED_EXECUTION_RUN,
+              'repositoryOccurrences',
+              'verifyHEarthV2CausalCorrectionExactHeadScope',
+              'runHEarthC2R1MC5AutomaticRegistryPreflight',
+              'H_EARTH_MAP_WIDE_INSTRUMENT_CONTROL_PATHS',
+              'persist-credentials: false',
+              'ROLE_4_EXACT_HEAD_EXECUTION_CARRIER_V2_RECEIPT_v1'
+            ]) requireCondition(workflow.includes(token), `CARRIER_V2_REQUIRED_TOKEN_MISSING:${token}`);
+            const forbidden = [
+              ['contents:', ' write'].join(''),
+              ['pull-requests:', ' write'].join(''),
+              ['issues:', ' write'].join(''),
+              ['merge_', 'pull_request'].join(''),
+              ['git', ' push'].join(''),
+              ['update', '-ref'].join(''),
+              ['--action', ' close'].join('')
+            ];
+            for (const token of forbidden) requireCondition(!workflow.includes(token), `CARRIER_V2_FORBIDDEN_TOKEN:${token}`);
+            const receipt = {
+              schema: 'H_EARTH_V2_REGISTRY_ROLE4_CARRIER_V2_SELF_VERIFICATION_RECEIPT_v1',
+              result: 'PASS',
+              pullRequestNumber: Number(process.env.PR_NUMBER),
+              base: process.env.PR_BASE_SHA,
+              head: process.env.PR_HEAD_SHA,
+              exactChangedPaths: paths,
+              readOnlyPermissions: true,
+              sourceOccurrenceMethod: 'EXPORTED_REPOSITORY_OCCURRENCES_DIRECT_READ',
+              candidateMutationAuthorityAbsent: true,
+              sourceMutationAuthorityAbsent: true,
+              lockMutationAuthorityAbsent: true,
+              mergeAuthorityAbsent: true
+            };
+            fs.writeFileSync('/tmp/h-earth-v2-registry-role4-carrier-v2-verification/receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload carrier V2 self-verification receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-registry-role4-carrier-v2-self-verification
+          path: /tmp/h-earth-v2-registry-role4-carrier-v2-verification
+          if-no-files-found: error
+          retention-days: 30
+
+  execute-exact-head-v2:
+    if: >-
+      ${{
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request &&
+        github.event.issue.number == 657 &&
+        github.event.comment.author_association == 'OWNER' &&
+        startsWith(github.event.comment.body, 'H_EARTH_V2_REGISTRY_ROLE4_EXACT_HEAD_EXECUTION_REQUEST_v2')
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Parse and bind exact Role 4 V2 request
+        id: request
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-registry-role4-execution-v2
+          node <<'NODE'
+          const fs = require('fs');
+          const api = 'https://api.github.com';
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`${api}${path}`, {headers});
+            const text = await response.text();
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${text}`);
+            return text ? JSON.parse(text) : null;
+          }
+          function requireCondition(value, code) {
+            if (!value) throw new Error(code);
+          }
+          function lockByGeneration(ledger, generation) {
+            return Object.values(ledger.activeScopes || {}).find(entry => entry.lockGeneration === generation);
+          }
+          (async () => {
+            const body = String(process.env.COMMENT_BODY || '');
+            requireCondition(body.startsWith(process.env.COMMENT_MARKER), 'REQUEST_V2_MARKER_MISMATCH');
+            let payload = body.slice(process.env.COMMENT_MARKER.length).trim();
+            if (payload.startsWith('```json')) payload = payload.slice(7);
+            else if (payload.startsWith('```')) payload = payload.slice(3);
+            if (payload.endsWith('```')) payload = payload.slice(0, -3);
+            const request = JSON.parse(payload.trim());
+            const exact = {
+              exactRegistryBase: process.env.EXACT_REGISTRY_BASE,
+              exactRegistryCandidateHead: process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+              exactRegistryCandidateTree: process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+              sourceHead: process.env.SOURCE_HEAD,
+              sourceTree: process.env.SOURCE_TREE,
+              role1ReturnCommentId: process.env.ROLE1_RETURN_COMMENT,
+              role3HandoffCommentId: process.env.ROLE3_HANDOFF_COMMENT,
+              role3BlockedReceiptSha256: process.env.ROLE3_BLOCKED_RECEIPT_SHA256,
+              priorFailedExecutionRunId: process.env.PRIOR_FAILED_EXECUTION_RUN,
+              role4AuthorizationCommentId: process.env.ROLE4_AUTHORIZATION_COMMENT
+            };
+            for (const [key, expected] of Object.entries(exact)) {
+              requireCondition(String(request[key]) === String(expected), `REQUEST_V2_${key.toUpperCase()}_MISMATCH`);
+            }
+            const [owner, repo] = process.env.REPOSITORY.split('/');
+            const [registryPr, sourcePr, role1, handoff, authorization, lockRef, ledgerFile] = await Promise.all([
+              get(`/repos/${owner}/${repo}/pulls/${process.env.TARGET_PR}`),
+              get(`/repos/${owner}/${repo}/pulls/${process.env.SOURCE_PR}`),
+              get(`/repos/${owner}/${repo}/issues/comments/${process.env.ROLE1_RETURN_COMMENT}`),
+              get(`/repos/${owner}/${repo}/issues/comments/${process.env.ROLE3_HANDOFF_COMMENT}`),
+              get(`/repos/${owner}/${repo}/issues/comments/${process.env.ROLE4_AUTHORIZATION_COMMENT}`),
+              get(`/repos/${owner}/${repo}/git/ref/heads/operation-locks/repository-operation-intake-v1`),
+              get(`/repos/${owner}/${repo}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1`)
+            ]);
+            requireCondition(registryPr.state === 'open' && registryPr.draft === true && registryPr.merged === false, 'REGISTRY_PR_NOT_OPEN_DRAFT_UNMERGED');
+            requireCondition(registryPr.head.sha === process.env.EXACT_REGISTRY_CANDIDATE_HEAD, 'REGISTRY_PR_HEAD_MISMATCH');
+            requireCondition(sourcePr.state === 'open' && sourcePr.draft === true && sourcePr.merged === false, 'SOURCE_PR_NOT_OPEN_DRAFT_UNMERGED');
+            requireCondition(sourcePr.head.sha === process.env.SOURCE_HEAD, 'SOURCE_PR_HEAD_MISMATCH');
+            requireCondition(role1.author_association === 'OWNER' && String(role1.body || '').includes(process.env.EXACT_REGISTRY_CANDIDATE_HEAD), 'ROLE1_RETURN_NOT_EXACT_OWNER_BOUND');
+            requireCondition(handoff.issue_url.endsWith(`/issues/${process.env.TARGET_PR}`) && String(handoff.body || '').includes(process.env.EXACT_REGISTRY_CANDIDATE_HEAD), 'ROLE3_HANDOFF_NOT_EXACT_PR_BOUND');
+            requireCondition(authorization.issue_url.endsWith(`/issues/${process.env.TARGET_PR}`) && authorization.author_association === 'OWNER', 'ROLE4_AUTHORIZATION_NOT_OWNER_PR_BOUND');
+            for (const token of [
+              'ROLE_4_NONMUTATING_EXACT_HEAD_EXECUTION_CARRIER_AUTHORIZATION',
+              process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+              process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+              process.env.SOURCE_HEAD,
+              process.env.SOURCE_TREE,
+              process.env.ROLE3_BLOCKED_RECEIPT_SHA256
+            ]) requireCondition(String(authorization.body || '').includes(token), `ROLE4_AUTHORIZATION_TOKEN_MISSING:${token}`);
+            const ledger = JSON.parse(Buffer.from(ledgerFile.content.replace(/\s/g, ''), 'base64').toString('utf8'));
+            const lock322 = lockByGeneration(ledger, 322);
+            const lock339 = lockByGeneration(ledger, 339);
+            requireCondition(lock322?.state === 'ADMITTED_LOCKED' && lock322.released === false, 'LOCK_322_NOT_ACTIVE_UNRELEASED');
+            requireCondition(lock339?.state === 'ADMITTED_LOCKED' && lock339.released === false, 'LOCK_339_NOT_ACTIVE_UNRELEASED');
+            const receipt = {
+              schema: 'H_EARTH_V2_REGISTRY_ROLE4_PRE_EXECUTION_BINDING_RECEIPT_v3',
+              result: 'PASS',
+              request,
+              registryPr: Number(process.env.TARGET_PR),
+              registryHead: registryPr.head.sha,
+              sourcePr: Number(process.env.SOURCE_PR),
+              sourceHead: sourcePr.head.sha,
+              lockRefHead: lockRef.object.sha,
+              ledgerBlobSha: ledgerFile.sha,
+              lock322,
+              lock339
+            };
+            fs.writeFileSync('/tmp/h-earth-v2-registry-role4-execution-v2/pre-execution-binding.json', JSON.stringify(receipt, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Check out exact registry candidate read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_REGISTRY_CANDIDATE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute exact Git source loader map-wide and C2 R1 verification
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$SOURCE_HEAD"
+          test "$(git rev-parse HEAD)" = "$EXACT_REGISTRY_CANDIDATE_HEAD"
+          test "$(git rev-parse HEAD^{tree})" = "$EXACT_REGISTRY_CANDIDATE_TREE"
+          test "$(git rev-parse HEAD^)" = "$EXACT_REGISTRY_BASE"
+          test "$(git rev-list --count "$EXACT_REGISTRY_BASE..$EXACT_REGISTRY_CANDIDATE_HEAD")" = "1"
+          test "$(git rev-parse "$SOURCE_HEAD^{tree}")" = "$SOURCE_TREE"
+          test "$(git rev-parse "HEAD:$AMENDMENT_PATH")" = "$EXPECTED_AMENDMENT_BLOB"
+          test "$(git rev-parse "HEAD:$LOADER_PATH")" = "$EXPECTED_LOADER_BLOB"
+          test "$(git rev-parse "$EXACT_REGISTRY_BASE:$LOADER_PATH")" = "$EXPECTED_BASE_LOADER_BLOB"
+          node --check "$AMENDMENT_PATH"
+          node --check "$LOADER_PATH"
+          node --input-type=module <<'NODE'
+          import cp from 'node:child_process';
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          import {
+            H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_HEAD_SCOPE_NODE,
+            H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_PATHS,
+            verifyHEarthV2CausalCorrectionExactHeadScope
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-v2-causal-correction-exact-head.js';
+          import load, {runHEarthC2R1MC5AutomaticRegistryPreflight} from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          import {
+            H_EARTH_MAP_WIDE_INSTRUMENT_CONTROL_PATHS,
+            H_EARTH_MAP_WIDE_INSTRUMENT_SCOPE_NODE
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.map-wide-instrument-scope-registration.js';
+
+          const exec = args => cp.execFileSync('git', args, {encoding:'utf8'}).trim();
+          const raw = args => cp.execFileSync('git', args, {encoding:'utf8'});
+          const requireCondition = (value, code) => { if (!value) throw new Error(code); };
+          const api = 'https://api.github.com';
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`${api}${path}`, {headers});
+            const text = await response.text();
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${text}`);
+            return text ? JSON.parse(text) : null;
+          }
+          const lockByGeneration = (ledger, generation) => Object.values(ledger.activeScopes || {}).find(entry => entry.lockGeneration === generation);
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;
+          const canonical = value => JSON.stringify(stable(value));
+
+          const lines = exec(['diff','--name-status',process.env.EXACT_REGISTRY_BASE,process.env.EXACT_REGISTRY_CANDIDATE_HEAD]).split(/\r?\n/).filter(Boolean);
+          const expectedPaths = [`A\t${process.env.AMENDMENT_PATH}`, `M\t${process.env.LOADER_PATH}`];
+          requireCondition(JSON.stringify(lines.sort()) === JSON.stringify(expectedPaths.sort()), `EXACT_TWO_PATH_STATUS_MISMATCH:${JSON.stringify(lines)}`);
+          const baseLoader = raw(['show',`${process.env.EXACT_REGISTRY_BASE}:${process.env.LOADER_PATH}`]);
+          const candidateLoader = fs.readFileSync(process.env.LOADER_PATH,'utf8');
+          const baseImport = baseLoader.match(/^import registryFacade from .*;$/m)?.[0];
+          const candidateImport = candidateLoader.match(/^import registryFacade from .*;$/m)?.[0];
+          requireCondition(Boolean(baseImport && candidateImport && baseImport !== candidateImport), 'ACTIVE_FACADE_IMPORT_REPLACEMENT_NOT_ISOLATED');
+          requireCondition(baseLoader.replace(baseImport, candidateImport) === candidateLoader, 'LOADER_BODY_NOT_PRESERVED_EXCEPT_IMPORT');
+
+          const occurrences = H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_HEAD_SCOPE_NODE.repositoryOccurrences || [];
+          requireCondition(occurrences.length === 11, `EXPORTED_OCCURRENCE_COUNT_NOT_11:${occurrences.length}`);
+          requireCondition(H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_PATHS.length === 11, 'EXPORTED_EXACT_PATH_COUNT_NOT_11');
+          const sourceBlobChecks = occurrences.map(entry => {
+            requireCondition(entry.commitSha === process.env.SOURCE_HEAD && entry.refName === process.env.SOURCE_HEAD, `OCCURRENCE_SOURCE_HEAD_MISMATCH:${entry.path}`);
+            requireCondition(/^[0-9a-f]{40}$/.test(entry.gitBlobSha), `OCCURRENCE_BLOB_INVALID:${entry.path}`);
+            const repositoryPath = entry.path.startsWith('/') ? entry.path.slice(1) : entry.path;
+            const actualBlob = exec(['rev-parse',`${process.env.SOURCE_HEAD}:${repositoryPath}`]);
+            requireCondition(actualBlob === entry.gitBlobSha, `SOURCE_BLOB_MISMATCH:${repositoryPath}:${actualBlob}:${entry.gitBlobSha}`);
+            return {repositoryPath:`/${repositoryPath}`, expectedBlob:entry.gitBlobSha, actualBlob};
+          });
+
+          const exact = verifyHEarthV2CausalCorrectionExactHeadScope();
+          requireCondition(exact.result === 'PASS', `EXACT_SCOPE_NOT_PASS:${JSON.stringify(exact)}`);
+          requireCondition(exact.pathChecks.length === 11 && exact.pathChecks.every(check => check.resolved && check.resolvesToTargetNode && check.exactOccurrenceResolved && check.exactOccurrenceCount === 1), 'EXACT_SCOPE_PATH_CHECKS_NOT_11_OF_11_PASS');
+
+          const dependencies = load();
+          requireCondition(dependencies.identityVerified === true, 'LOADER_IDENTITY_NOT_VERIFIED');
+          requireCondition(dependencies.exactHeadRegistrationVerified === true, `C2_R1_EXACT_HEAD_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
+          const activeFacade = dependencies.registryFacade;
+          const targetNode = activeFacade.getHEarthRepositoryRegistryNode(H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_HEAD_SCOPE_NODE.nodeId);
+          requireCondition(targetNode?.nodeId === H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_EXACT_HEAD_SCOPE_NODE.nodeId, 'ACTIVE_LOADER_TARGET_NODE_NOT_PRESENT');
+
+          const expectedMap = new Map((H_EARTH_MAP_WIDE_INSTRUMENT_SCOPE_NODE.repositoryOccurrences || []).map(entry => [entry.path, entry]));
+          const mapWideChecks = H_EARTH_MAP_WIDE_INSTRUMENT_CONTROL_PATHS.map(repositoryPath => {
+            const expected = expectedMap.get(repositoryPath);
+            const resolution = activeFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+            return {
+              repositoryPath,
+              resolved: resolution.resolved === true,
+              targetNode: (resolution.nodes || []).some(node => node.nodeId === H_EARTH_MAP_WIDE_INSTRUMENT_SCOPE_NODE.nodeId),
+              exactOccurrence: Boolean(expected) && (resolution.occurrences || []).some(entry => entry.path === expected.path && entry.commitSha === expected.commitSha && entry.gitBlobSha === expected.gitBlobSha)
+            };
+          });
+          requireCondition(mapWideChecks.length === 13 && mapWideChecks.every(check => check.resolved && check.targetNode && check.exactOccurrence), `MAP_WIDE_REGISTRY_SURFACE_FAILED:${JSON.stringify(mapWideChecks)}`);
+          const mapWideNeighbor = activeFacade.resolveHEarthRepositoryRegistryPath('/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/undeclared-neighbor.v1.json');
+          requireCondition(mapWideNeighbor?.resolved !== true, 'MAP_WIDE_UNDECLARED_NEIGHBOR_RESOLVED');
+
+          const c2r1 = await runHEarthC2R1MC5AutomaticRegistryPreflight();
+          requireCondition(c2r1.finalDisposition === 'PASS' && c2r1.requiredFinalDisposition === 'PASS', `C2_R1_REGISTRY_PREFLIGHT_FAILED:${JSON.stringify(c2r1)}`);
+
+          const pre = JSON.parse(fs.readFileSync('/tmp/h-earth-v2-registry-role4-execution-v2/pre-execution-binding.json','utf8'));
+          const [owner, repo] = process.env.REPOSITORY.split('/');
+          const [registryPr, sourcePr, lockRef, ledgerFile] = await Promise.all([
+            get(`/repos/${owner}/${repo}/pulls/${process.env.TARGET_PR}`),
+            get(`/repos/${owner}/${repo}/pulls/${process.env.SOURCE_PR}`),
+            get(`/repos/${owner}/${repo}/git/ref/heads/operation-locks/repository-operation-intake-v1`),
+            get(`/repos/${owner}/${repo}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1`)
+          ]);
+          requireCondition(registryPr.state === 'open' && registryPr.draft === true && registryPr.merged === false && registryPr.head.sha === process.env.EXACT_REGISTRY_CANDIDATE_HEAD, 'POST_REGISTRY_PR_STATE_OR_HEAD_CHANGED');
+          requireCondition(sourcePr.state === 'open' && sourcePr.draft === true && sourcePr.merged === false && sourcePr.head.sha === process.env.SOURCE_HEAD, 'POST_SOURCE_PR_STATE_OR_HEAD_CHANGED');
+          const ledger = JSON.parse(Buffer.from(ledgerFile.content.replace(/\s/g,''),'base64').toString('utf8'));
+          const lock322 = lockByGeneration(ledger, 322);
+          const lock339 = lockByGeneration(ledger, 339);
+          requireCondition(lock322?.state === 'ADMITTED_LOCKED' && lock322.released === false && canonical(lock322) === canonical(pre.lock322), 'POST_LOCK_322_CHANGED');
+          requireCondition(lock339?.state === 'ADMITTED_LOCKED' && lock339.released === false && canonical(lock339) === canonical(pre.lock339), 'POST_LOCK_339_CHANGED');
+          requireCondition(exec(['status','--porcelain=v1','--untracked-files=all']) === '', 'EXACT_CHECKOUT_DIRTY_AFTER_EXECUTION');
+
+          const gitReceipt = {
+            schema: 'H_EARTH_V2_REGISTRY_EXACT_GIT_AND_SOURCE_BLOB_RECEIPT_v3',
+            result: 'PASS',
+            head: exec(['rev-parse','HEAD']),
+            tree: exec(['rev-parse','HEAD^{tree}']),
+            soleParent: exec(['rev-parse','HEAD^']),
+            commitCount: Number(exec(['rev-list','--count',`${process.env.EXACT_REGISTRY_BASE}..${process.env.EXACT_REGISTRY_CANDIDATE_HEAD}`])),
+            changedPathStatus: lines,
+            amendmentBlob: exec(['rev-parse',`HEAD:${process.env.AMENDMENT_PATH}`]),
+            loaderBlob: exec(['rev-parse',`HEAD:${process.env.LOADER_PATH}`]),
+            baseLoaderBlob: exec(['rev-parse',`${process.env.EXACT_REGISTRY_BASE}:${process.env.LOADER_PATH}`]),
+            loaderBodyPreservedExceptActiveFacadeImport: true,
+            sourceHead: process.env.SOURCE_HEAD,
+            sourceTree: exec(['rev-parse',`${process.env.SOURCE_HEAD}^{tree}`]),
+            sourceOccurrenceMethod: 'EXPORTED_REPOSITORY_OCCURRENCES_DIRECT_READ',
+            sourceBlobChecks
+          };
+          const executionReceipt = {
+            schema: 'H_EARTH_V2_REGISTRY_FRESH_FULL_CHAIN_EXECUTION_RECEIPT_v3',
+            result: 'PASS',
+            exactRegistryCandidateHead: process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+            exactRegistryCandidateTree: process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+            loaderImportedAndExecuted: true,
+            exactVerificationFunctionExecuted: true,
+            exactScopeReceipt: exact,
+            activeLoaderTargetNodePresent: true,
+            mapWideRegistrySurface: {result:'PASS', pathCount:mapWideChecks.length, pathChecks:mapWideChecks, undeclaredNeighborUnresolved:true},
+            c2R1RegistrySurface: {result:'PASS', identityVerified:dependencies.identityVerified, exactHeadRegistrationVerified:dependencies.exactHeadRegistrationVerified, automaticPreflightFinalDisposition:c2r1.finalDisposition, receipt:c2r1}
+          };
+          const finalReceipt = {
+            schema: 'ROLE_4_EXACT_HEAD_EXECUTION_CARRIER_V2_RECEIPT_v1',
+            result: 'PASS',
+            workflowRunId: Number(process.env.GITHUB_RUN_ID),
+            workflowEventHead: process.env.GITHUB_SHA,
+            priorFailedExecutionRunId: Number(process.env.PRIOR_FAILED_EXECUTION_RUN),
+            priorFailureClass: 'CARRIER_SOURCE_SYNTAX_PARSER_OMITTED_ONE_EXPORTED_OCCURRENCE',
+            exactRegistryBase: process.env.EXACT_REGISTRY_BASE,
+            exactRegistryCandidateHead: process.env.EXACT_REGISTRY_CANDIDATE_HEAD,
+            exactRegistryCandidateTree: process.env.EXACT_REGISTRY_CANDIDATE_TREE,
+            sourcePr: Number(process.env.SOURCE_PR),
+            sourceHead: process.env.SOURCE_HEAD,
+            sourceTree: process.env.SOURCE_TREE,
+            role3BlockedReceiptSha256: process.env.ROLE3_BLOCKED_RECEIPT_SHA256,
+            mandatoryFreshExecutionGate: 'ESTABLISHED',
+            exactFullCheckout: true,
+            exactRegistryLoaderExecuted: true,
+            exportedVerificationFunctionExecuted: true,
+            mapWideRegistryValidationExecuted: true,
+            c2R1RegistryValidationExecuted: true,
+            elevenSourceBlobIdentities: 'PASS_11_OF_11',
+            registryPrState: 'OPEN_DRAFT_UNMERGED',
+            sourcePrState: 'OPEN_DRAFT_UNMERGED',
+            lock322State: 'ADMITTED_LOCKED_UNRELEASED',
+            lock339State: 'ADMITTED_LOCKED_UNRELEASED',
+            lock322IdentityUnchanged: true,
+            lock339IdentityUnchanged: true,
+            preExecutionLockRefHead: pre.lockRefHead,
+            postExecutionLockRefHead: lockRef.object.sha,
+            preExecutionLedgerBlobSha: pre.ledgerBlobSha,
+            postExecutionLedgerBlobSha: ledgerFile.sha,
+            unrelatedLedgerMovementPermitted: true,
+            mergeExecuted: false,
+            lockClosureExecuted: false,
+            candidateMutation: false,
+            sourceCandidateMutation: false,
+            productTerrainLiveEstateManorMutation: false,
+            gitReceipt,
+            executionReceipt
+          };
+
+          const directory = '/tmp/h-earth-v2-registry-role4-execution-v2';
+          fs.writeFileSync(`${directory}/git-and-source-blobs.json`, JSON.stringify(gitReceipt, null, 2) + '\n');
+          fs.writeFileSync(`${directory}/full-chain-execution.json`, JSON.stringify(executionReceipt, null, 2) + '\n');
+          fs.writeFileSync(`${directory}/final-role4-execution-receipt.json`, JSON.stringify(finalReceipt, null, 2) + '\n');
+          const files = fs.readdirSync(directory).filter(name => name !== 'artifact-sha256.txt').sort();
+          const manifest = files.map(name => `${crypto.createHash('sha256').update(fs.readFileSync(`${directory}/${name}`)).digest('hex')}  ${name}`).join('\n') + '\n';
+          fs.writeFileSync(`${directory}/artifact-sha256.txt`, manifest);
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload exact-head V2 execution receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-registry-role4-exact-head-execution-v2-receipts
+          path: /tmp/h-earth-v2-registry-role4-execution-v2
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,108 @@
+# Run 8A final-head validation
+name: H-Earth Run 8A Dimensional Reconciliation Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8a-dimensional-reconciliation-001
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8a-dimensional-reconciliation-validation.yml'
+      - 'h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8a-dimensional-reconciliation-scope.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+      - 'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.harness.mjs'
+      - 'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.receipt.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out Run 8A workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify bounded changed-path scope
+        run: |
+          set -euo pipefail
+          git diff --name-only bb1273ecad6ad1441555e035a58d2ae7a1c3dc91...HEAD > /tmp/run8a-paths.txt
+          cat /tmp/run8a-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+            '.github/workflows/h-earth-run8a-dimensional-reconciliation-validation.yml',
+            'h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8a-dimensional-reconciliation-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.harness.mjs',
+            'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.receipt.json'
+          }
+          paths = {line.strip() for line in Path('/tmp/run8a-paths.txt').read_text().splitlines() if line.strip()}
+          unexpected = sorted(paths - allowed)
+          required = allowed - {'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.receipt.json'}
+          missing = sorted(required - paths)
+          if unexpected:
+            raise SystemExit(f'UNEXPECTED_RUN8A_PATHS:{unexpected}')
+          if missing:
+            raise SystemExit(f'MISSING_RUN8A_PATHS:{missing}')
+          PY
+
+      - name: Execute Run 8A mathematical and authority harness
+        env:
+          H_EARTH_RUN8A_RECEIPT: /tmp/run8a-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.harness.mjs \
+            2>&1 | tee /tmp/run8a.log
+
+      - name: Verify receipt state
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/run8a-receipt.json', 'utf8'));
+          if (
+            receipt.eligible !== true ||
+            receipt.status !== 'RUN_8A_PASS_CLOSED' ||
+            receipt.outputCount !== 10 ||
+            receipt.gridSamples !== 1617 ||
+            receipt.legacyProxyPreserved !== true ||
+            receipt.successorContinuousMountainAuthorized !== true ||
+            receipt.packet001SuccessorLaneRequired !== true ||
+            receipt.packet002SuccessorLaneRequired !== true ||
+            receipt.southKernelRenewalRequired !== false ||
+            receipt.westAdmissionRenewalRequired !== false ||
+            receipt.publicVisualClaim !== false ||
+            receipt.localConstruction !== false ||
+            receipt.productFilesChanged !== 0 ||
+            receipt.issues.length !== 0
+          ) process.exit(1);
+          const durable = 'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.receipt.json';
+          if (fs.existsSync(durable) &&
+              fs.readFileSync(durable, 'utf8') !== fs.readFileSync('/tmp/run8a-receipt.json', 'utf8')) {
+            process.exit(1);
+          }
+          NODE
+
+      - name: Upload Run 8A evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8a-dimensional-reconciliation-evidence
+          path: |
+            /tmp/run8a.log
+            /tmp/run8a-receipt.json
+          if-no-files-found: error
+          retention-days: 30

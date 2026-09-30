@@ -1,0 +1,4 @@
+BRAIN_V9_HORIZONTAL_BANKS_G1_RELEASE
+source_merge=4792954feecb69733b10a93cc0660caf16206be9
+route=/inspection/compass/brain-v9-horizontal-banks/
+intent=force exact-head publication and live inspection verification

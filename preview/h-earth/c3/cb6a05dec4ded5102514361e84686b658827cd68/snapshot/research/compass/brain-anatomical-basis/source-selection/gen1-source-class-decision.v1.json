@@ -1,0 +1,63 @@
+{
+  "schema": "ANATOMICAL_BASIS_GEN1_SOURCE_CLASS_DECISION_v1",
+  "base": "f384215eec1d161c6a013fea7f267b45e440201d",
+  "status": "DUAL_CLASS_ADMISSIBLE",
+  "decision": {
+    "S1_PREEXISTING_REAL_HUMAN_ANATOMICAL_SURFACE": "ADMISSIBLE",
+    "S2_REAL_HUMAN_ANATOMICAL_VOLUME_PLUS_FROZEN_DETERMINISTIC_SURFACE_EXTRACTION": "ADMISSIBLE",
+    "POST_EXTRACTION_MORPHOLOGY_TUNING": "PROHIBITED",
+    "PROCEDURAL_RECONSTRUCTION_OF_MISSING_ANATOMY": "PROHIBITED",
+    "NEW_GEOMETRY_AUTHORIZED": false
+  },
+  "law": [
+    "SOURCE_SELECTION_NE_SOURCE_MODIFICATION",
+    "DETERMINISTIC_SURFACE_EXTRACTION_NE_PROCEDURAL_ANATOMY_AUTHORING",
+    "SOURCE_CLASS_ADMISSION_DOES_NOT_BIND_A_CANDIDATE",
+    "NO_THRESHOLDS_OR_PIPELINE_PARAMETERS_MAY_BE_TUNED_FROM_FIRST_GEN1_OUTPUT"
+  ],
+  "s2_pre_extraction_freeze": [
+    "exact_dataset_snapshot_identity",
+    "exact_subject_identity",
+    "exact_source_volume_file_identity_and_digest",
+    "license_and_provenance",
+    "voxel_dimensions",
+    "coordinate_and_orientation_convention",
+    "preprocessing_and_resampling_operations",
+    "segmentation_software_and_exact_version",
+    "segmentation_model_weights_or_thresholds_if_any",
+    "component_label_ontology",
+    "surface_extraction_algorithm_and_exact_version",
+    "topology_repair_rules",
+    "smoothing_policy",
+    "decimation_policy",
+    "component_inclusion_exclusion_rules",
+    "coordinate_normalization",
+    "deterministic_output_fingerprint_procedure"
+  ],
+  "s2_prohibited_after_output_observation": [
+    "manual_sculpting",
+    "vertex_movement_to_match_perceptual_reference",
+    "segmentation_threshold_retuning",
+    "selective_region_smoothing",
+    "candidate_specific_topology_repair",
+    "procedural_replacement_of_missing_anatomy",
+    "camera_or_lighting_changes_used_to_rescue_anatomical_failure"
+  ],
+  "candidate_qualification": {
+    "candidate": "OpenNeuro ds006072 v1.1.0",
+    "dataset_doi": "10.18112/openneuro.ds006072.v1.1.0",
+    "license": "CC0",
+    "real_human_source": true,
+    "participants": 11,
+    "structural_modalities": ["T1w", "T2w"],
+    "reported_structural_resolution": "0.9 mm isotropic",
+    "anatomical_recoverability": {
+      "cerebrum": "PLAUSIBLE_NOT_YET_EMPIRICALLY_SEGMENTED",
+      "cerebellum": "PLAUSIBLE_NOT_YET_EMPIRICALLY_SEGMENTED",
+      "brainstem": "PLAUSIBLE_NOT_YET_EMPIRICALLY_SEGMENTED"
+    },
+    "binding_status": "NOT_BOUND",
+    "reason": "Dataset-level rights and acquisition resolution qualify the source class, but no exact subject/volume digest or frozen segmentation/surface-extraction pipeline has yet been bound and executed."
+  },
+  "next_boundary": "GEN1_VOLUME_CANDIDATE_EXACT_SUBJECT_AND_EXTRACTION_CONTRACT_BINDING"
+}

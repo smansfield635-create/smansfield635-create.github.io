@@ -1,0 +1,33 @@
+{
+  "receiptType": "H_EARTH_C2_VISUAL_SUCCESSOR_REJECTION_AND_RECOVERY_v1",
+  "managementCorrection": "C2_VISUAL_SUCCESSOR_REJECTION_AND_RECOVERY_001",
+  "c2FunctionalVerification": "PASS",
+  "c2IsolatedPublication": "PASS",
+  "c2VisualSuccessor": "FAIL_REJECTED",
+  "userDifferential": "REJECTED",
+  "productDefaultMutated": false,
+  "promotionToPublicDefault": "PROHIBITED",
+  "firstBlocker": "PHYSICALLY_AND_VISUALLY_INCOHERENT_COASTAL_MODEL",
+  "supersedes": [
+    "PASS_CLOSED_USER_DIFFERENTIAL_READY",
+    "VERIFIED_READY_FOR_PUBLICATION",
+    "C2_USER_REVIEW_CANDIDATE",
+    "ANY_FEATURE_FLAG_INTERPRETED_AS_VISUAL_SUCCESS"
+  ],
+  "failedCandidateDisposition": "REJECTED_EXPERIMENTAL_CANDIDATE_NOT_APPROVED_FOR_PROMOTION",
+  "failedCandidateMayRemainAsEngineeringEvidence": true,
+  "nextAuthorizedOperation": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
+  "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
+  "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "failedC2GeometryAsStartingSource": "PROHIBITED",
+  "advanceToC3": false,
+  "visualSuccessorMayCloseOnlyAfterAcceptedUserDifferential": true,
+  "requiredRepresentativeCaptures": [
+    "LATERAL_BEACH_PROFILE",
+    "INLAND_TO_DEEP_WATER_PROFILE",
+    "SHALLOW_WATER_AND_SEABED",
+    "SANDBAR_OR_NEARSHORE_BATHYMETRY",
+    "GROUND_LEVEL_COASTAL_TRAVERSAL",
+    "DISTANT_COASTAL_LANDSCAPE"
+  ]
+}

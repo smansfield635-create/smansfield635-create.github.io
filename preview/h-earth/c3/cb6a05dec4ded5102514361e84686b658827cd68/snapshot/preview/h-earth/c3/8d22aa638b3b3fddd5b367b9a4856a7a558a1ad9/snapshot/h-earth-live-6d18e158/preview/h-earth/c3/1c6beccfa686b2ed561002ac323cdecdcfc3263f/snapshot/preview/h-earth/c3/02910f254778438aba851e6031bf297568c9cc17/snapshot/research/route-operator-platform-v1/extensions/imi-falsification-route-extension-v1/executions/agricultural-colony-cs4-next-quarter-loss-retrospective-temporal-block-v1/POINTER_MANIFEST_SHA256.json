@@ -1,0 +1,28 @@
+{
+  "artifacts": [
+    {
+      "bytes": 1324,
+      "path": "EXECUTION_PACKAGE_POINTER.json",
+      "sha256": "422c7af264f36629621917bdd3ee8ea0b6bdda5c070bdc392430a7081468c25c"
+    },
+    {
+      "bytes": 1510,
+      "path": "RESULT_POINTER.json",
+      "sha256": "59b17a6050213201daf4f0180d0fa6007a2a59d4667e7a712f247c07ad823f59"
+    },
+    {
+      "bytes": 1217,
+      "path": "RATIFICATION_POINTER.json",
+      "sha256": "913369c9497cef67f8cb4fbff829ca7dfe8c2d3a207a39ae9b492e66be4ca71a"
+    },
+    {
+      "bytes": 1358,
+      "path": "README.md",
+      "sha256": "696d179249b8326a3ca1f9dfd388096e9c85106bb901f09c56d4b03e08f1be43"
+    }
+  ],
+  "contract_id": "AGRICULTURAL_COLONY_CS4_NEXT_QUARTER_LOSS_RETROSPECTIVE_TEMPORAL_BLOCK_v1",
+  "core_mutation_performed": false,
+  "manifest_id": "AGRICULTURAL_COLONY_CS4_TEMPORAL_BLOCK_POINTER_MANIFEST_v1",
+  "status": "PASS_CLOSED_OPERATIONAL_EXECUTION_POINTER"
+}

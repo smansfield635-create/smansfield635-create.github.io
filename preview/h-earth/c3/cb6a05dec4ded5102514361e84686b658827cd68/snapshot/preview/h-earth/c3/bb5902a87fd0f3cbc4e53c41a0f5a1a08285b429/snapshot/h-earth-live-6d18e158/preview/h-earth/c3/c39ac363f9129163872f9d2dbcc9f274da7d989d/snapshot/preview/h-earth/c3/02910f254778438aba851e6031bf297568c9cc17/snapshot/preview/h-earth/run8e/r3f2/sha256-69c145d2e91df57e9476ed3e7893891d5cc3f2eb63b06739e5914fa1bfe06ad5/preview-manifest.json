@@ -1,0 +1,114 @@
+{
+  "selfIdentity": {
+    "identityClass": "SHA256_OF_CANONICAL_MANIFEST_PAYLOAD_EXCLUDING_SELF_IDENTITY",
+    "canonicalization": "UTF8_JSON_SORTED_KEYS_COMPACT",
+    "canonicalPayloadSha256": "sha256:bc79c92221135ad8f267e2da25ee8c2c301a935071b6f65ecdca77d9295a4dfa"
+  },
+  "manifestId": "H_EARTH_RUN_8E_R3F2_P6C_CORRECTED_PREVIEW_PACKAGE_MANIFEST_v1",
+  "manifestVersion": "1.0.0",
+  "occurrenceClass": "CORRECTED_INSTRUMENTATION_MAIN_HOSTED_PARALLEL_PREVIEW",
+  "nonProduction": true,
+  "candidateId": "H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_69C145D2E91DF57E9476ED3E7893891D5CC3F2EB63B06739E5914FA1BFE06AD5",
+  "previewPath": "/preview/h-earth/run8e/r3f2/sha256-69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5/",
+  "packageIdentity": {
+    "packageHead": "51c2c82b4695c97d309d38e9e01aec728b95601d",
+    "packageSha256": "sha256:69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5",
+    "packageByteCount": 1213849,
+    "validatedPackageManifestSha256": "sha256:5161a9706a73f2fc04a9044c6faae54631faf3a7a46bbabdcf99a9fd09842803",
+    "sourceHead": "548672ae99cd406805f0c8ca576cc650baf7ed18",
+    "publicHtmlGitBlob": "0daedf61f7e19af095f4db5fc47563a9cd786837",
+    "publicOrchestratorGitBlob": "2b0a916b3a6d11da84316925f8abd8a3a1447445",
+    "functionalCssGitBlob": "481148416a8d0466e76c4cb2eca7a67d8932a242",
+    "publicShellCssGitBlob": "f208b7f11096a7bf5da282226903ac634c1eab01"
+  },
+  "instrumentationCorrection": {
+    "defectClass": "CROSS_REALM_CANVAS_INSTANCEOF_FALSE_NEGATIVE",
+    "realmNeutralCanvasQualification": true,
+    "instrumentationMarkerRequired": true,
+    "launcherGitBlob": "689d3398d8af9f409192d8a34de03834daff0fdd",
+    "validationGitBlob": "ccce10f9e932af3ccb0e7ab1a29c736b992df5ee",
+    "validationRun": 30325076598,
+    "validationJob": 90168653477,
+    "validationArtifact": 8675355501,
+    "validationArtifactDigest": "sha256:38d04e2d18bc7e654a244cd93f347cecd64b38171be31f7b7fbfdf78a63f80d6",
+    "loopbackInstrumentation": "PASS",
+    "directFileInstrumentation": "PASS"
+  },
+  "servedFileSetLaw": {
+    "exactFileCount": 3,
+    "externalRuntimeRequestCountAllowed": 0,
+    "mutableMainDependencyCountAllowed": 0,
+    "undeclaredRuntimeDependencyCountAllowed": 0,
+    "serviceWorkerAllowed": false
+  },
+  "servedFiles": [
+    {
+      "relativePath": "index.html",
+      "role": "EXACT_CORRECTED_VALIDATED_SELF_CONTAINED_CANDIDATE",
+      "runtimeDependency": true,
+      "byteCount": 1213849,
+      "contentSha256": "sha256:69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5",
+      "gitBlobSha1": "81e6aabc8605198125ae0d560900a32e00370005"
+    },
+    {
+      "relativePath": "device-evidence-receipt.schema.json",
+      "role": "PHYSICAL_SESSION_NORMALIZED_EVIDENCE_SCHEMA",
+      "runtimeDependency": false,
+      "byteCount": 4596,
+      "contentSha256": "sha256:373d1d2d642b54b811b1b652a81d124d0d9d48f2f2a8681c6d00930dd2ffce8b",
+      "gitBlobSha1": "a95ea7bcee6357415205c26fb0239f4d7c71f4e2"
+    },
+    {
+      "relativePath": "preview-manifest.json",
+      "role": "SERVED_FILE_AND_CANDIDATE_IDENTITY_MANIFEST",
+      "runtimeDependency": false,
+      "identityClass": "CANONICAL_MANIFEST_PAYLOAD_SHA256_PLUS_REPOSITORY_GIT_BLOB_CUSTODY",
+      "contentIdentityReference": "#/selfIdentity"
+    }
+  ],
+  "identityExposure": [
+    {
+      "requirement": "NON_PRODUCTION_LABEL",
+      "surface": "index.html setup text and manifest nonProduction=true"
+    },
+    {
+      "requirement": "CANDIDATE_ID",
+      "surface": "preview-manifest.json and physical-session handoff"
+    },
+    {
+      "requirement": "PACKAGE_SHA256",
+      "surface": "hashed URL path and preview-manifest.json"
+    },
+    {
+      "requirement": "PACKAGE_HEAD",
+      "surface": "index.html embedded package metadata and preview-manifest.json"
+    },
+    {
+      "requirement": "SOURCE_HEAD",
+      "surface": "index.html embedded package metadata and preview-manifest.json"
+    },
+    {
+      "requirement": "TEST_SESSION_IDENTIFIER",
+      "surface": "index.html generated evidenceId and normalized receipt sessionIdentifier"
+    }
+  ],
+  "delivery": {
+    "transport": "GITHUB_PAGES_MAIN_HOST_PARALLEL_HASH_PATH",
+    "httpsRequired": true,
+    "customDomainAdded": false,
+    "ordinaryHEarthRouteReplaced": false,
+    "ordinaryTrafficRedirected": false,
+    "publicNavigationLinkAdded": false,
+    "discoveryControl": "UNLINKED_HASH_BEARING_PATH",
+    "cacheControlExpectedFromHost": "max-age=600"
+  },
+  "boundaries": {
+    "showroomMutated": false,
+    "publicLiveHEarthRouteChanged": false,
+    "recoveryStackMerged": false,
+    "productionAcceptanceEmbedded": false,
+    "physicalReferenceDeviceExecuted": false,
+    "broaderMobileAccepted": false,
+    "run8EPassClosed": false
+  }
+}

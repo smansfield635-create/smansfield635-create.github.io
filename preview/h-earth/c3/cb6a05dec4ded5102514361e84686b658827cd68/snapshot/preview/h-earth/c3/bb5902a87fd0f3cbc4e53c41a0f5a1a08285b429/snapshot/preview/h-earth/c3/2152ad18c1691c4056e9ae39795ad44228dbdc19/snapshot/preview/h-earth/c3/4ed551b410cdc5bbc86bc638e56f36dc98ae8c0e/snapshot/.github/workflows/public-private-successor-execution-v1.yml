@@ -1,0 +1,151 @@
+name: Public → Private Canonical Successor Execution v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  execute:
+    if: >-
+      contains(github.event.comment.body, 'PUBLIC_PRIVATE_SUCCESSOR_EXECUTION_REQUEST_V1') &&
+      github.event.comment.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+    steps:
+      - name: Parse closed locator
+        id: locator
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          event=json.load(open(os.environ['GITHUB_EVENT_PATH'],encoding='utf-8'))
+          body=event['comment']['body']
+          marker='PUBLIC_PRIVATE_SUCCESSOR_EXECUTION_REQUEST_V1'
+          req=json.loads(body[body.index(marker)+len(marker):].strip())
+          required={'schema','privateIssueNumber','privateCommentId','expectedOperationId','exactPrivateHead'}
+          if set(req)!=required or req['schema']!=marker: raise SystemExit('LOCATOR_NOT_CLOSED')
+          if not isinstance(req['privateIssueNumber'],int) or req['privateIssueNumber']<1: raise SystemExit('ISSUE_INVALID')
+          if not isinstance(req['privateCommentId'],int) or req['privateCommentId']<1: raise SystemExit('COMMENT_INVALID')
+          if not isinstance(req['expectedOperationId'],str) or not req['expectedOperationId']: raise SystemExit('OPERATION_INVALID')
+          head=req['exactPrivateHead']
+          if not isinstance(head,str) or len(head)!=40 or any(c not in '0123456789abcdef' for c in head): raise SystemExit('HEAD_INVALID')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:
+            f.write(f"private_issue={req['privateIssueNumber']}\nprivate_comment={req['privateCommentId']}\nexpected_operation={req['expectedOperationId']}\nexact_head={head}\ncallback_issue={event['issue']['number']}\n")
+          PY
+
+      - name: Mint private token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+          permission-issues: read
+
+      - name: Fetch frozen private successor request
+        id: request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.private-token.outputs.token }}
+          PRIVATE_ISSUE: ${{ steps.locator.outputs.private_issue }}
+          PRIVATE_COMMENT: ${{ steps.locator.outputs.private_comment }}
+          EXPECTED_OPERATION: ${{ steps.locator.outputs.expected_operation }}
+          EXACT_HEAD: ${{ steps.locator.outputs.exact_head }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/private-successor"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$PRIVATE_COMMENT" > "$work/comment.json"
+          python - <<'PY'
+          import json, os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'private-successor')
+          c=json.load(open(os.path.join(work,'comment.json'),encoding='utf-8'))
+          if not str(c.get('issue_url','')).endswith('/issues/'+os.environ['PRIVATE_ISSUE']): raise SystemExit('ISSUE_MISMATCH')
+          body=c.get('body') or ''
+          marker='REMOTE_OPERATION_SUCCESSOR_REQUEST_V1'
+          if not body.startswith(marker): raise SystemExit('MARKER_MISSING')
+          envelope=json.loads(body[len(marker):].strip())
+          if envelope.get('schema')!='REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1': raise SystemExit('SCHEMA_MISMATCH')
+          if envelope.get('repository')!='smansfield635-create/geodiametrics1': raise SystemExit('REPO_MISMATCH')
+          transition=envelope.get('transition') or {}
+          request=envelope.get('operationRequest') or {}
+          procedure=envelope.get('constructionProcedure') or {}
+          if request.get('operationId')!=os.environ['EXPECTED_OPERATION']: raise SystemExit('OPERATION_MISMATCH')
+          if request.get('exactGoverningHead')!=os.environ['EXACT_HEAD']: raise SystemExit('REQUEST_HEAD_MISMATCH')
+          if procedure.get('exactGoverningHead')!=os.environ['EXACT_HEAD']: raise SystemExit('PROCEDURE_HEAD_MISMATCH')
+          if (transition.get('successor') or {}).get('governingHead')!=os.environ['EXACT_HEAD']: raise SystemExit('TRANSITION_HEAD_MISMATCH')
+          for name,obj in [('transition',transition),('request',request),('procedure',procedure)]:
+            with open(os.path.join(work,name+'.json'),'w',encoding='utf-8') as f:
+              json.dump(obj,f,sort_keys=True,separators=(',',':')); f.write('\n')
+          PY
+
+      - name: Verify live private main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.private-token.outputs.token }}
+          EXACT_HEAD: ${{ steps.locator.outputs.exact_head }}
+        run: |
+          set -euo pipefail
+          observed="$(curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          test "$observed" = "$EXACT_HEAD"
+
+      - name: Check out exact private canonical source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ steps.locator.outputs.exact_head }}
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Execute private canonical successor gate
+        id: execute
+        continue-on-error: true
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/private-successor"
+          node "$GITHUB_WORKSPACE/private-control-plane/.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs" \
+            --repository "$PRIVATE_REPOSITORY" \
+            --transition "$work/transition.json" \
+            --request "$work/request.json" \
+            --procedure "$work/procedure.json" \
+            --output "$work/receipt.json"
+
+      - name: Publish redacted result
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CALLBACK_ISSUE: ${{ steps.locator.outputs.callback_issue }}
+          OPERATION: ${{ steps.locator.outputs.expected_operation }}
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/private-successor"
+          test -s "$work/receipt.json"
+          RESULT="$(jq -r '.result // ""' "$work/receipt.json")"
+          GENERATION="$(jq -r '.successor.lockGeneration // ""' "$work/receipt.json")"
+          COMMIT="$(jq -r '.transitionCommitSha // ""' "$work/receipt.json")"
+          RECEIPT_SHA="$(sha256sum "$work/receipt.json" | awk '{print $1}')"
+          body="PUBLIC_PRIVATE_SUCCESSOR_EXECUTION_RESULT_V1\noperationId: $OPERATION\nexecuteOutcome: $EXECUTE_OUTCOME\ncanonicalResult: $RESULT\nlockGeneration: $GENERATION\ntransitionCommitSha: $COMMIT\nreceiptSha256: $RECEIPT_SHA\nrunId: $GITHUB_RUN_ID"
+          jq -n --arg body "$body" '{body:$body}' > "$work/result.json"
+          curl --fail-with-body --silent --show-error --request POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$CALLBACK_ISSUE/comments" --data-binary "@$work/result.json" >/dev/null
+          test "$EXECUTE_OUTCOME" = "success"
+          test "$RESULT" = "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED"

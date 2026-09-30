@@ -1,0 +1,43 @@
+name: Software TRL 7 Readiness Validation
+
+on:
+  pull_request:
+    paths:
+      - 'assets/credibility/software-trl7-assessment.v1.json'
+      - 'assets/credibility/claims.v1.json'
+      - 'assets/credibility/trl7-presentation.v1.js'
+      - 'evidence/readiness/index.html'
+      - '.github/credibility/validate-software-trl7-assessment.v1.mjs'
+      - '.github/workflows/software-trl7-readiness-validation-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/credibility/software-trl7-assessment.v1.json'
+      - 'assets/credibility/claims.v1.json'
+      - 'assets/credibility/trl7-presentation.v1.js'
+      - 'evidence/readiness/index.html'
+      - '.github/credibility/validate-software-trl7-assessment.v1.mjs'
+      - '.github/workflows/software-trl7-readiness-validation-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-trl7-readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate TRL 7 assessment invariants
+        run: node .github/credibility/validate-software-trl7-assessment.v1.mjs
+      - name: Upload validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: software-trl7-mechanical-validation-receipt
+          path: trl7-mechanical-validation-receipt.json
+          if-no-files-found: error

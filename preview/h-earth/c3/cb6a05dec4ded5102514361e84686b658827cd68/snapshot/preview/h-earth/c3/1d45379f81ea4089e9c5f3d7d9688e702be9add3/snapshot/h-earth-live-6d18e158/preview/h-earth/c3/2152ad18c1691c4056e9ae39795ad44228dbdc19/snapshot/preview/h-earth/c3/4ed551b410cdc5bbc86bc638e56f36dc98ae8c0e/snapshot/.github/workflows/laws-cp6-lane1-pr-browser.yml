@@ -1,0 +1,133 @@
+name: Laws CP6 Lane 1 inspectable browser comparison
+
+on:
+  pull_request:
+    branches:
+      - agent/laws-cp6-4-first-theme-and-page-consolidation-002
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp6-lane1-pr-browser-v2-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    if: github.head_ref == 'agent/laws-cp6-compass-first-progressive-disclosure-001' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp6-compass-first-progressive-disclosure-001
+          fetch-depth: 0
+
+      - name: Apply bounded browser correction and confirm static acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=c009f2a03c19a6b54ebad62dfba658f808f0b4c1
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          node tools/laws-cp6-lane1-browser-correction.mjs
+          if ! git diff --quiet -- laws/index.css tools/laws-cp6-lane1-verify.mjs; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add laws/index.css tools/laws-cp6-lane1-verify.mjs
+            git diff --cached --check
+            git commit -m "Fit Laws CP6 live phone compass presentation"
+            git push origin HEAD:agent/laws-cp6-compass-first-progressive-disclosure-001
+          fi
+          echo "CANDIDATE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          node tools/laws-cp6-lane1-verify.mjs static
+          test "$(git diff --name-only "$BASE" -- laws/index.compositor.js laws/index.controller.js laws/index.cosmos.js laws/index.crystals.js laws/index.interactions.js laws/index.planet.js assets/audralia/audralia.planet.js | wc -l)" -eq 0
+
+      - name: Install Chromium browser authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Prepare base and candidate servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=c009f2a03c19a6b54ebad62dfba658f808f0b4c1
+          git worktree add --detach /tmp/laws-cp6-base "$BASE"
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory /tmp/laws-cp6-base >/tmp/laws-base-server.log 2>&1 &
+          python3 -m http.server 4174 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >/tmp/laws-candidate-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && curl -fsS http://127.0.0.1:4174/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-base-server.log || true
+          cat /tmp/laws-candidate-server.log || true
+          exit 1
+
+      - name: Execute base-versus-candidate browser comparison
+        shell: bash
+        env:
+          BASE_URL: http://127.0.0.1:4173
+          CANDIDATE_URL: http://127.0.0.1:4174
+        run: |
+          set -euo pipefail
+          node tools/laws-cp6-lane1-verify.mjs browser
+
+      - name: Publish browser evidence to candidate branch
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/control-plane/cp6-lane1
+          if ! git diff --cached --quiet; then
+            git diff --cached --check
+            git commit -m "Record Laws CP6 Lane 1 browser comparison evidence"
+            git pull --rebase origin agent/laws-cp6-compass-first-progressive-disclosure-001
+            git push origin HEAD:agent/laws-cp6-compass-first-progressive-disclosure-001
+          fi
+          echo "EVIDENCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Build executable candidate package
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/laws-cp6-lane1-review
+          {
+            echo '# Laws CP6 Lane 1 executable candidate'
+            echo
+            echo "Product candidate head: ${CANDIDATE_HEAD}"
+            echo "Evidence head: ${EVIDENCE_HEAD}"
+            echo 'Base head: c009f2a03c19a6b54ebad62dfba658f808f0b4c1'
+            echo
+            echo 'Extract the archive, run `python3 -m http.server 8080` from its root, and open `http://127.0.0.1:8080/laws/`.'
+          } > /tmp/laws-cp6-lane1-review/RUN_CANDIDATE.md
+          git archive --format=tar.gz --output=/tmp/laws-cp6-lane1-review/laws-cp6-lane1-candidate.tar.gz HEAD
+          cp laws/control-plane/cp6-lane1/browser-comparison.json /tmp/laws-cp6-lane1-review/
+          cp laws/control-plane/cp6-lane1/browser-comparison.md /tmp/laws-cp6-lane1-review/
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-lane1-pr-browser-${{ github.run_id }}
+          path: laws/control-plane/cp6-lane1
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload executable candidate
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-lane1-executable-candidate-${{ github.run_id }}
+          path: /tmp/laws-cp6-lane1-review
+          if-no-files-found: error
+          retention-days: 30

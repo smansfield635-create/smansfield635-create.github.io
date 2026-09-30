@@ -1,0 +1,23 @@
+{
+  "schema": "RESEARCH_FRONTIER_REPRODUCTION_MANIFEST_v1",
+  "objectId": "RFV3-06",
+  "publicTitle": "Do the Safeguards Earn Their Cost?",
+  "technicalBinding": "CANONICAL_CONTROL_KERNEL_V1",
+  "evidenceStatus": ["OPERATING_METHOD"],
+  "sourceDispositions": ["OPERATIONALLY_DISTINGUISHED", "NOT_DISTINGUISHED", "UNEVALUABLE", "COMPOSED_OPERATIONAL_ARCHITECTURE_DISTINGUISHED"],
+  "question": "Which safeguards actually change an operational result, and which merely add ceremony?",
+  "inputs": ["one bounded repository-operation profile", "256 component", "NEWS component", "ACK_PACK component", "PSALM component", "Fibonacci host utility"],
+  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md"],
+  "comparator": "Bounded operational profile and component-level outcome/burden criteria; competent simpler-control architecture remains a future comparator.",
+  "procedure": ["preserve bounded operation profile", "evaluate each named safeguard under source-native operational criteria", "retain positive negative and unevaluable outcomes separately", "assess composed architecture without converting operational evidence into scientific support"],
+  "environment": "Repository-operational test surface; public reproduction may use a neutral reference implementation preserving the same semantics.",
+  "expectedOutputs": {"256":"OPERATIONALLY_DISTINGUISHED","NEWS":"OPERATIONALLY_DISTINGUISHED","ACK_PACK":"OPERATIONALLY_DISTINGUISHED","PSALM":"NOT_DISTINGUISHED","FIBONACCI_HOST_UTILITY":"UNEVALUABLE","mandatoryCore":["256","NEWS","ACK_PACK"],"overall":"COMPOSED_OPERATIONAL_ARCHITECTURE_DISTINGUISHED"},
+  "acceptanceCriteria": "Mixed component dispositions must be retained exactly; operational distinction must not be represented as scientific authority.",
+  "verifier": "Independent bounded operational recomputation against the public method/result record.",
+  "sourceIdentities": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md"],
+  "knownGaps": ["clean cross-repository transfer unestablished", "competent simpler-control baseline pending", "whole-estate enforcement not demonstrated", "unaffiliated reproduction not observed"],
+  "proprietaryBoundary": "The public target is the operational contract, component dispositions and acceptance criteria; complete private control-plane implementation is not required.",
+  "claimCeiling": "One bounded repository-operation control profile only; no scientific authority, automatic product authority, cross-repository transfer, universal enforcement or simpler-baseline superiority.",
+  "reproductionPackagingState": "RECORD_BOUND",
+  "externalReproductionObserved": false
+}

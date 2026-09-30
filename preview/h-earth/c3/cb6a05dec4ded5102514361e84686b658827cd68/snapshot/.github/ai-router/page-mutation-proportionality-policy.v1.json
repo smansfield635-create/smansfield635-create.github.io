@@ -1,0 +1,323 @@
+{
+  "schema": "PAGE_MUTATION_PROPORTIONALITY_POLICY_v1",
+  "policyId": "PAGE_MUTATION_PROPORTIONALITY_AND_STATIC_EDITORIAL_BYPASS_v1",
+  "status": "ACTIVE_WHEN_ROUTER_WRAPPER_PRESENT",
+  "governingRule": "CANONICAL_ADMITTED_LOCKED_IS_REQUIRED_FOR_WEBSITE_RUNTIME_BEHAVIOR_AUTHORITY_CONTROL_PLANE_OR_AMBIGUOUS_PAGE_MUTATIONS_NOT_FOR_DETERMINISTICALLY_CLASSIFIED_STATIC_EDITORIAL_MICRO_OR_BOUNDED_NON_AUTHORITATIVE_PAGE_RELEASE_MUTATIONS",
+  "instrument": "PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1",
+  "router": "tools/repository-ai-entry-router.mjs",
+  "legacyGovernedRouter": "tools/repository-ai-entry-router.v3-legacy.mjs",
+  "staticVerifier": "tools/static-editorial-micro-verifier.v1.mjs",
+  "wholeEstateExecutionDecision": {
+    "schema": "WHOLE_ESTATE_EXECUTION_DECISION_v1",
+    "status": "AUTHORITATIVE_FOR_BLOCKING_GATE_SELECTION",
+    "producer": "tools/repository-ai-entry-router.mjs",
+    "oneClassificationPerRequestedOperation": true,
+    "oneBlockingDecisionPerRequestedOperation": true,
+    "onlySelectedGatesMayBlock": true,
+    "unselectedWorkflowFailureDisposition": "ADVISORY_NON_BLOCKING_EVIDENCE",
+    "filesystemPathOrDirectoryPrefixAloneMaySelectBlockingGate": false,
+    "semanticDependencyRequiredForNonDirectGate": true,
+    "readOnlyMayEscalateToMutationSemantics": false,
+    "controlPlaneDefectMayManufactureProductPrerequisite": false,
+    "safetyCorePreserved": [
+      "EXACT_HEAD_CUSTODY",
+      "BOUNDED_MUTATION_SCOPE",
+      "CANONICAL_INTAKE_WHEN_REQUIRED",
+      "SCIENTIFIC_AND_EMPIRICAL_FAIL_CLOSED_BOUNDARIES",
+      "MERGE_DEPLOYMENT_PUBLICATION_SEPARATION"
+    ]
+  },
+  "workflowApplicability": {
+    "schema": "WORKFLOW_APPLICABILITY_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED_WHEN_SELECTED",
+    "decisionPrecedesExpensiveExecution": true,
+    "selectionAuthority": "WHOLE_ESTATE_EXECUTION_DECISION_v1",
+    "filesystemPathOrDirectoryPrefixAloneMaySelect": false,
+    "semanticDependencyRequiredForSelection": true,
+    "unselectedDisposition": "NOT_APPLICABLE",
+    "unselectedExitSemantic": "NEUTRAL_SUCCESS",
+    "severityClasses": [
+      "SELECTED_BLOCKER",
+      "ADVISORY_UNSELECTED",
+      "INFRASTRUCTURE_DEFECT",
+      "NOT_APPLICABLE"
+    ],
+    "operatorAlertPolicy": {
+      "alert": [
+        "SELECTED_BLOCKER",
+        "INFRASTRUCTURE_DEFECT"
+      ],
+      "doNotAlert": [
+        "ADVISORY_UNSELECTED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "legacyWorkflowAdapters": {
+      "H_EARTH_REPOSITORY_REGISTRY_PREFLIGHT": {
+        "selector": "tools/workflow-applicability-gate.v1.mjs",
+        "onlyExplicitRegistryOrControlPlaneDependencySelects": true,
+        "ordinaryProductPathPrefixMatchDoesNotSelect": true,
+        "selectedDependencyFailureRemainsFailClosed": true
+      }
+    },
+    "authorityEffect": "ROUTING_AND_FAILURE_SIGNAL_CLASSIFICATION_ONLY"
+  },
+  "instrumentPromotion": {
+    "schema": "INSTRUMENT_PROMOTION_NET_VALUE_POLICY_v1",
+    "status": "ACTIVE",
+    "mandatoryEscalationRequiresMeasuredNetValue": true,
+    "requiredEvidence": [
+      "TRANSITION_CORRECTNESS_IMPROVEMENT",
+      "DEPENDENCY_LOCALIZATION_OR_RECOVERY_FIDELITY_IMPROVEMENT",
+      "FALSE_BLOCK_OVERHEAD_MEASURED",
+      "COMPUTATION_AND_INFORMATION_OVERHEAD_MEASURED_AGAINST_BASELINE"
+    ],
+    "noMeasuredNetValueDisposition": "ADVISORY_OR_REJECTED",
+    "instrumentCannotCreateItsOwnNeedForMandatoryStatus": true,
+    "authorityEffect": "NONE_UNTIL_SEPARATELY_RATIFIED"
+  },
+  "classes": {
+    "STATIC_EDITORIAL_MICRO": {
+      "canonicalAdmissionRequired": false,
+      "pageExcellenceRequired": false,
+      "requiredProofs": ["EXACT_HEAD", "DECLARED_PATHS_ONLY", "NO_EXECUTABLE_RUNTIME_DELTA", "NO_UNRELATED_DIFF"],
+      "examples": ["TEXT_COPY", "INSTRUCTIONS", "TYPO", "LABEL", "HEADLINE", "BOUNDED_STATIC_ORDER", "SPACING", "TYPOGRAPHY", "COLOR"]
+    },
+    "BOUNDED_PAGE_RELEASE": {
+      "canonicalAdmissionRequired": false,
+      "pageExcellenceRequired": false,
+      "purpose": "BOUNDED_NON_AUTHORITATIVE_PRESENTATION_RELEASE",
+      "cinematicPresentationAllowed": true,
+      "cinematicRequirements": [
+        "EXPLICIT_NON_INTERACTIVE_PRESENTATION_INTENT",
+        "EXECUTABLE_PATHS_CINEMATIC_SCOPED",
+        "NO_CONTROL_OR_AUTHORITY_PATH",
+        "NO_WEBSITE_NAVIGATION_ROUTING_CONTROLLER_OR_APPLICATION_STATE_AUTHORITY",
+        "AMBIGUITY_FAILS_CLOSED"
+      ],
+      "requiredProofs": [
+        "EXACT_HEAD",
+        "DECLARED_PATHS_ONLY",
+        "NO_NAVIGATION_DELTA",
+        "NO_APPLICATION_STATE_AUTHORITY_DELTA",
+        "NO_SHARED_DOM_AUTHORITY_DELTA",
+        "NO_ANALYTICS_DELTA",
+        "IDEMPOTENT_PRESENTATION_RESTORATION",
+        "NO_UNRELATED_DIFF"
+      ],
+      "examples": ["NON_INTERACTIVE_CINEMATIC_PRESENTATION", "BOUNDED_FILM_PLAYBACK"]
+    },
+    "RUNTIME_OR_AUTHORITY": {
+      "canonicalAdmissionRequired": true,
+      "pageExcellenceRequiredWhenPageOperation": true,
+      "includes": [
+        "GENERIC_OR_UNSCOPED_EXECUTABLE_FILE_CHANGE",
+        "WEBSITE_RUNTIME_BEHAVIOR",
+        "EVENT_HANDLER_WITH_WEBSITE_AUTHORITY",
+        "NAVIGATION",
+        "SHARED_STATE_MACHINE",
+        "ROUTING",
+        "GESTURE",
+        "DOM_AUTHORITY",
+        "CONTROL_PLANE",
+        "GOVERNANCE",
+        "AMBIGUOUS_MUTATION"
+      ]
+    }
+  },
+  "precedentReuse": {
+    "schema": "WHOLE_ESTATE_PRECEDENT_REUSE_POLICY_v1",
+    "status": "ACTIVE_DEFAULT",
+    "governingRule": "REUSE_ACCEPTED_PRECEDENT_AND_QUALIFY_ONLY_THE_DECLARED_DELTA_AND_DIRECTLY_AFFECTED_DEPENDENCIES",
+    "requiredBeforeNewConstructionWhenApplicable": true,
+    "inheritanceRequires": [
+      "ACCEPTED_PRECEDENT_IDENTITY",
+      "EXACT_SOURCE_OR_CONTENT_IDENTITY_WHEN_BYTE_REUSE_IS_CLAIMED",
+      "EXPLICIT_UNCHANGED_BEHAVIOR_CONTRACT",
+      "DECLARED_DELTA",
+      "DIRECT_DEPENDENCY_SET",
+      "NO_AUTHORITY_OR_CLAIM_UPGRADE_BY_INHERITANCE"
+    ],
+    "unchangedQualifiedBytesRequalifyFromZero": false,
+    "unchangedBehavioralContractMayInheritPriorEvidence": true,
+    "changedBehaviorRequiresFreshRelevantEvidence": true,
+    "newProjectOrPageMayReuseAcceptedPrecedent": true,
+    "precedentUseCreatesProjectAuthority": false,
+    "ambiguityDisposition": "QUALIFY_THE_AMBIGUOUS_PROPERTY_NOT_THE_ENTIRE_PRECEDENT_FROM_ZERO"
+  },
+  "candidateScopeRecognition": {
+    "schema": "ADMITTED_CANDIDATE_SCOPE_RECOGNITION_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "governingRule": "AN_EXACT_PATH_DECLARED_IN_AN_ADMITTED_ALLOWED_PATH_SET_IS_RECOGNIZED_FOR_THAT_OPERATION_EVEN_IF_THE_PATH_IS_CANDIDATE_CREATED",
+    "candidateCreatedPathNeedsSeparatePersistentRegistration": false,
+    "persistentRegistrationRequiredOnlyWhen": [
+      "NEW_DURABLE_PROJECT_AUTHORITY_BOUNDARY",
+      "NEW_DURABLE_WORKFLOW_OWNERSHIP_BOUNDARY",
+      "NEW_DURABLE_PUBLICATION_SURFACE",
+      "NEW_DURABLE_CONTROL_PLANE_CAPABILITY_OR_AUTHORITY"
+    ],
+    "candidateRecognitionMayExpandAllowedPaths": false,
+    "candidateRecognitionMayCreatePrefixAuthority": false,
+    "candidateRecognitionMayWaiveProjectQualification": false,
+    "candidateRecognitionEndsWithOperation": true
+  },
+  "agentExecutionProportionality": {
+    "schema": "AGENT_EXECUTION_PROPORTIONALITY_POLICY_v1",
+    "status": "ACTIVE",
+    "contract": ".github/ai-router/agent-invocation/contract.v1.json",
+    "notRequiredFor": [
+      "READ_ONLY_ADMINISTRATIVE",
+      "SOURCE_READBACK",
+      "STATUS_INSPECTION",
+      "STATIC_EDITORIAL_MICRO",
+      "BOUNDED_PAGE_RELEASE",
+      "DETERMINISTIC_REGISTRY_METADATA",
+      "EXACT_IDENTITY_READBACK"
+    ],
+    "requiredFor": [
+      "MATERIAL_GOVERNED_ENGINEERING",
+      "CONTROL_PLANE",
+      "SCIENTIFIC_OR_EMPIRICAL",
+      "AUTHORITY_BOUNDARY_CHANGE",
+      "DISPUTED_INDEPENDENT_QUALIFICATION"
+    ],
+    "nativeAgentAvailabilityDeterminesExecutabilityForExemptWork": false,
+    "agentExecutionCreatesAuthority": false
+  },
+  "continuityByDefault": {
+    "schema": "DISJOINT_MAIN_MOVEMENT_CONTINUITY_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "onMainMovement": "DIFFERENTIAL_CONTINUITY_FIRST",
+    "disjointRelevantDependencyChange": false,
+    "disjointChangeDisposition": "CARRY_FORWARD_APPROVED",
+    "strictSuccessorRequiredOnlyWhen": [
+      "RELEVANT_SCOPE_CHANGED",
+      "RELEVANT_DEPENDENCY_CHANGED",
+      "AUTHORITY_BOUNDARY_CHANGED",
+      "SCIENTIFIC_OR_EMPIRICAL_FREEZE_CHANGED",
+      "CONTINUITY_EVIDENCE_INCOMPLETE_OR_CONTRADICTORY"
+    ],
+    "mainMovementAloneForcesStrictSuccessor": false,
+    "carryForwardMayExpandAuthority": false
+  },
+  "failureTaxonomy": {
+    "schema": "WHOLE_ESTATE_BLOCKER_TAXONOMY_v1",
+    "classes": [
+      "PRODUCT_DEFECT",
+      "QUALIFICATION_HARNESS_DEFECT",
+      "CONTROL_PLANE_DEFECT",
+      "EXECUTION_SUBSTRATE_DEFECT",
+      "AUTHORITY_DEFECT",
+      "PUBLICATION_DEFECT",
+      "SCIENTIFIC_OR_EMPIRICAL_DEFECT"
+    ],
+    "failureMustRemainInLocalizedClassUntilNewEvidenceChangesIt": true,
+    "controlPlaneDefectMayCreateProductRepairRequirement": false,
+    "qualificationHarnessDefectMayBeRelabeledProductDefectWithoutProductEvidence": false
+  },
+  "qualificationRouting": {
+    "schema": "QUALIFICATION_PROPORTIONALITY_POLICY_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "sequence": [
+      "CLASSIFY_CHANGE_ONCE",
+      "RESOLVE_WHOLE_ESTATE_EXECUTION_DECISION",
+      "ROUTE_EXACT_PATHS",
+      "ADMIT_ONCE_IF_REQUIRED",
+      "IDENTIFY_ACCEPTED_PRECEDENT_WHEN_APPLICABLE",
+      "RUN_ONLY_SELECTED_DISCRIMINATING_CHECKS",
+      "MERGE_AFTER_PASS",
+      "RELEASE_SEPARATELY"
+    ],
+    "separationLaw": "FILESYSTEM_OWNERSHIP_IS_NOT_PRODUCT_SEMANTICS_IS_NOT_QUALIFICATION_SCOPE",
+    "proofLadder": [
+      "EXACT_BASE",
+      "EXACT_DECLARED_DIFF",
+      "PATH_AUTHORITY_VALID",
+      "PRECEDENT_CONTINUITY_WHEN_CLAIMED",
+      "PRODUCT_SPECIFIC_VERIFIER",
+      "ONE_RELEVANT_INTEGRATION_CHECK",
+      "PASS_CLOSED"
+    ],
+    "blockingGateLaw": "A_GATE_MAY_BLOCK_ONLY_IF_IT_INSPECTS_A_CHANGED_BYTE_OR_DECLARED_DIRECT_DEPENDENCY_OR_THE_CANONICAL_EXECUTION_DECISION_EXPLICITLY_ESTABLISHES_A_SEMANTIC_DEPENDENCY",
+    "unselectedGateDisposition": "ADVISORY_NON_BLOCKING_EVIDENCE",
+    "additionalGateLaw": "ADDITIONAL_CHECK_MAY_GATE_ONLY_WHEN_IT_NAMES_A_CONCRETE_FAILURE_CLASS_THE_CURRENT_CANDIDATE_CAN_CAUSE_AND_ACTUALLY_INSPECTS_THAT_DEPENDENCY_OR_SURFACE",
+    "historicalFailureLaw": "WORKFLOW_FAILURE_BEFORE_CANDIDATE_INSPECTION_IS_EVIDENCE_ONLY_NOT_A_GATE",
+    "directoryPrefixLaw": "DIRECTORY_PREFIX_MATCHING_MAY_DISCOVER_CANDIDATES_BUT_MAY_NOT_BY_ITSELF_ESTABLISH_PRODUCT_SEMANTICS_OR_BLOCKING_AUTHORITY",
+    "controlPlaneDefectLaw": "CONTROL_PLANE_OR_QUALIFICATION_MISCLASSIFICATION_MUST_BE_REPAIRED_IN_ITS_OWN_CLASS_AND_MUST_NOT_MANUFACTURE_A_PRODUCT_PREREQUISITE",
+    "awardsUnderHEarth": {
+      "pathPattern": "showroom/globe/h-earth/awards/**",
+      "filesystemOwner": "H_EARTH",
+      "productSemantics": "AWARDS",
+      "namespaceQualification": "BOUNDED_H_EARTH_PATH_REGISTRY_PREFLIGHT",
+      "behavioralQualification": "AWARDS_PRODUCT_SPECIFIC_VERIFIER",
+      "integrationQualification": "ONE_RELEVANT_AWARDS_H_EARTH_INTEGRATION_SANITY_CHECK",
+      "fullHEarthEngineQualificationByDirectoryLocation": false
+    },
+    "byteIdenticalRebind": {
+      "whenCandidateBlobsIdentical": "CONTINUITY_VERIFICATION",
+      "designRestartRequired": false,
+      "scientificRestartRequired": false,
+      "dependencyRequalificationRequiredOnlyIfRelevantDependencyChanged": true
+    },
+    "prerequisiteConvergence": {
+      "reuseEstablishedBoundedPathFamilyRegistration": true,
+      "bespokeSiblingPrerequisiteCycleAllowedOnlyForNewAuthorityBoundary": true,
+      "misclassificationMayCreateRegistrationPrerequisite": false,
+      "admittedCandidatePathMayRequireRecognitionPRSolelyBecauseNew": false
+    },
+    "deterministicRegistryMetadataPrerequisite": {
+      "schema": "DETERMINISTIC_REGISTRY_METADATA_QUALIFICATION_POLICY_v1",
+      "status": "ACTIVE_FAIL_CLOSED",
+      "applicability": "REGISTRY_OR_METADATA_ONLY_PREREQUISITE_WITH_NO_PRODUCT_RUNTIME_BEHAVIOR_OR_EXTERNAL_STATE_DELTA",
+      "requiredEligibilityProofs": [
+        "IMMUTABLE_CANDIDATE_COMMIT",
+        "EXACT_DECLARED_DIFF",
+        "TARGET_OBJECT_IDENTITY_BOUND_WHEN_APPLICABLE",
+        "AUTHORITY_BOUNDARY_PROVEN",
+        "NO_PRODUCT_OR_RUNTIME_BYTE_MUTATION",
+        "NO_PREFIX_OR_WAIVER_AUTHORITY_EXPANSION",
+        "RELEVANT_DEPENDENCY_CONTINUITY_PROVEN",
+        "ALL_PENDING_VERIFIER_PREDICATES_REDUCIBLE_TO_IMMUTABLE_REPOSITORY_FACTS",
+        "INDEPENDENT_AUTHORITATIVE_REPOSITORY_EVIDENCE_COVERS_EACH_PENDING_PREDICATE"
+      ],
+      "equivalentProofResult": "EQUIVALENT_DETERMINISTIC_PROOF_PASS",
+      "executionRequirement": "EQUIVALENT_CONTENT_ADDRESSED_PROOF_ALLOWED_WHEN_ALL_ELIGIBILITY_PROOFS_PASS",
+      "runtimeBehavioralExecutionRequired": true,
+      "executionRequiredClasses": [
+        "RUNTIME_BEHAVIOR",
+        "EXTERNAL_STATE",
+        "DEVICE_OR_BROWSER_BEHAVIOR",
+        "SCIENTIFIC_OR_EMPIRICAL_RESULT",
+        "ENVIRONMENT_DEPENDENT_RESULT",
+        "GENERATED_OR_SIDE_EFFECTFUL_RUNTIME_RESULT",
+        "AMBIGUOUS_PREDICATE"
+      ],
+      "activeOperationReAdjudication": {
+        "allowed": true,
+        "requiresExplicitOwnerRatification": true,
+        "requiresCandidateBytesUnchanged": true,
+        "requiresOriginalScopeUnchanged": true,
+        "maySubstituteOnlyPendingExecutionGate": true,
+        "mayNotRelabelFailedBehavioralEvidence": true,
+        "mayNotExpandMergeDeploymentOrPublicationAuthority": true
+      },
+      "ambiguityDisposition": "EXECUTION_REQUIRED",
+      "failureDisposition": "FAIL_CLOSED",
+      "authorityEffect": "QUALIFICATION_EVIDENCE_SUBSTITUTION_ONLY"
+    },
+    "crossSubsystemChange": {
+      "retainRelevantCrossSubsystemGate": true,
+      "directoryLocationAloneCreatesCrossSubsystemChange": false
+    },
+    "ambiguityDisposition": "FAIL_CLOSED_TO_BROADER_RELEVANT_QUALIFICATION"
+  },
+  "ambiguityDisposition": "RUNTIME_OR_AUTHORITY",
+  "mixedPathDisposition": "RUNTIME_OR_AUTHORITY",
+  "runtimeAuthorityCannotBeCreatedByProportionalClassification": true,
+  "boundedPageReleaseCannotCreateWebsiteRuntimeAuthority": true,
+  "staticClassificationCannotBypassProjectRegistration": true,
+  "boundedPageReleaseCannotBypassProjectRegistration": true,
+  "proportionalClassificationCannotBypassExactDiffVerification": true,
+  "validationRule": "SELF_TEST_AND_EXACT_CANDIDATE_VERIFIER_EVIDENCE_VALIDATE_IMPLEMENTATION_BUT_DO_NOT_CREATE_WEBSITE_RUNTIME_AUTHORITY",
+  "authorityEffect": "PROPORTIONAL_ROUTING_ONLY"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Audralia disposable exact-head executor",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "../.."
+  },
+  "remoteUser": "node",
+  "containerEnv": {
+    "THREE_TIER_EXECUTION_SUBSTRATE": "1",
+    "AUDRALIA_EXECUTION_PROFILE": ".github/ai-router/codespace-execution/project-profiles/audralia-gen1754.v1.json",
+    "CHROME_PATH": "/usr/bin/chromium",
+    "PUPPETEER_SKIP_DOWNLOAD": "true"
+  },
+  "postCreateCommand": "node --version && git --version && python3 --version && chromium --version && curl --version",
+  "shutdownAction": "stopContainer"
+}

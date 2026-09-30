@@ -1,0 +1,18 @@
+{
+  "operation": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B",
+  "additive_comparator": {
+    "status": "RESOLVED",
+    "name": "MEASURE_WEIGHTED_NONWORSE_FRACTION",
+    "formula": "(MORT_nonworse + SAFETY_nonworse) / (MORT_comparable + SAFETY_comparable)",
+    "not_equal_to": "(a_MORT + a_SAFETY) / 2"
+  },
+  "collapse_case_coverage": {
+    "status": "RESOLVED",
+    "case_count": 3,
+    "ANY_COMPARABLE": "NUMERIC_HARD_COLLAPSE",
+    "AT_LEAST_50_PERCENT": "UNEVALUABLE_ALL_THREE",
+    "AT_LEAST_75_PERCENT": "UNEVALUABLE_ALL_THREE",
+    "ALL_REQUIRED": "UNEVALUABLE_ALL_THREE"
+  },
+  "evidentiary_interpretation": "The cases demonstrate additive concealment only within the permissive route and do not constitute complete-coverage collapse evidence."
+}

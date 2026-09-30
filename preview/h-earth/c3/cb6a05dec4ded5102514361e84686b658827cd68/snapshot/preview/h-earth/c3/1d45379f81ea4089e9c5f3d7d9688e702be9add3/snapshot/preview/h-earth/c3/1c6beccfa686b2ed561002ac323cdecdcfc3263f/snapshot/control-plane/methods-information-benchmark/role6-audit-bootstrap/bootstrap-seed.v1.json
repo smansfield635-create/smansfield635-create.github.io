@@ -1,0 +1,40 @@
+{
+  "schema": "METHODS_ROLE_6_AUDIT_ADMISSION_TOOLING_BOOTSTRAP_SEED_v1",
+  "operationId": "METHODS_ROLE_6_AUDIT_ADMISSION_TOOLING_BOOTSTRAP_v1",
+  "originIssue": 575,
+  "originDirection": "Proceed here now.",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "rootMainHeadObserved": "aaa96943d0c817c6a489529250a3e46324324894",
+  "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "assignedRole": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "assignedOperation": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+  "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+  "branch": "bootstrap/methods-role6-audit-admission-tooling-v1-001",
+  "temporaryAuthorities": {
+    "builder": "EXACT_20_PATH_CONSTRUCTION_ONLY",
+    "freshVerifier": "READ_ONLY_INDEPENDENT_REPRODUCTION_ONLY"
+  },
+  "prohibitions": [
+    "SUBSTANTIVE_AUDIT_EXECUTION",
+    "AUDIT_OUTPUT_CREATION",
+    "RETURN_ARTIFACT_CREATION",
+    "MANUAL_ADMISSION_RECEIPT",
+    "ROOT_LEDGER_MUTATION",
+    "GENERAL_ROLE_6_ACTIVATION",
+    "EXISTING_PATH_MUTATION",
+    "PUBLIC_METHODS_OR_LAWS_MUTATION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE"
+  ],
+  "terminalBoundary": {
+    "bootstrapAuthorityActive": false,
+    "substantiveAuditProgress": "0_OF_27",
+    "returnProgress": "0_OF_2",
+    "admissionReceipt": "NOT_EMITTED",
+    "descriptorActivationOnMain": false,
+    "role6Termination": "NOT_PERFORMED"
+  }
+}

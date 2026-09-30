@@ -1,0 +1,51 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "ROB",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "campaigns/rob/"
+  ],
+  "ownedExactPaths": [],
+  "entrypoint": ".github/ai-router/projects/rob/entrypoint.v1.json",
+  "authorityBoundary": [
+    "THIS_ENTRYPOINT_ROUTES_AND_DOES_NOT_CREATE_MUTATION_AUTHORITY",
+    "ROB_OWNS_ONLY_CAMPAIGNS_ROB_PREFIX",
+    "NO_BROADER_CAMPAIGNS_OWNERSHIP",
+    "NO_CONSIDER_THE_ENERGY_OWNERSHIP_CHANGE",
+    "PRODUCT_MUTATION_REMAINS_GOVERNED_BY_ROOT_AI_ENTRYPOINT_AND_RELEASE_CLASS",
+    "BOUNDED_PAGE_RELEASE_DOES_NOT_REQUIRE_CANONICAL_INTAKE_WHEN_ROOT_CLASSIFIER_SAYS_SO",
+    "STOP_RATHER_THAN_INFER_MISSING_AUTHORITY"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json",
+    ".github/ai-router/publication-release-contract.v1.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_ONLY_FOR_RUNTIME_OR_AUTHORITY_CLASS",
+    "publicationReleaseContract": ".github/ai-router/publication-release-contract.v1.json",
+    "boundedPageReleaseLaw": "APPROVED_COMMIT_TO_EXPLICIT_DEPLOYMENT_TO_LIVE_EXACT_HEAD_VERIFICATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/rob-router-receipt.json"
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH"
+    ]
+  },
+  "githubActionsExecution": {
+    "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml"
+  },
+  "stoppingRules": [
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_OR_STOP",
+    "STOP_IF_MUTATION_CLASS_REQUIRES_CANONICAL_INTAKE_AND_AUTHENTIC_ADMISSION_IS_MISSING",
+    "STOP_BEFORE_MERGE_UNTIL_RELEASE_CLASS_QUALIFICATION_PASSES",
+    "STOP_AFTER_MERGE_UNTIL_EXPLICIT_DEPLOYMENT_AND_LIVE_EXACT_HEAD_VERIFICATION_SUCCEED_WHEN_PUBLICATION_IS_REQUESTED"
+  ]
+}

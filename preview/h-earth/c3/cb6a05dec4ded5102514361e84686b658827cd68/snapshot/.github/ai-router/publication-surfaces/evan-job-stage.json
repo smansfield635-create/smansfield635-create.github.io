@@ -1,0 +1,109 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "evan-job-stage",
+  "description": "Persistent contractor Job Stage V4 construction-record dashboard.",
+  "checks": [
+    {
+      "path": "/prototypes/evan-job-stage/index.html",
+      "includes": [
+        "CONTRACTOR JOB CONTROL",
+        "Job Stage",
+        "Needs attention",
+        "Jobs",
+        "dashboard-v2.css?v=3396c284",
+        "dashboard-v2.js?v=3396c284",
+        "job-db-v3.js?v=3396c284",
+        "Backup",
+        "Restore",
+        "Saved on this device",
+        "BUILD 3396C284"
+      ],
+      "excludes": [
+        "Evidence intake",
+        "evidence gaps"
+      ]
+    },
+    {
+      "path": "/prototypes/evan-job-stage/dashboard-v2.js",
+      "includes": [
+        "Jane Doe",
+        "John Smith",
+        "Job Summary",
+        "Contract & Changes",
+        "Billing & Payments",
+        "Job Files",
+        "Closeout",
+        "Remove job",
+        "Archive job",
+        "JobDB.putJob",
+        "JobDB.putFile",
+        "JobDB.backup",
+        "JobDB.restore",
+        "Edit job"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/job-db-v3.js",
+      "includes": [
+        "indexedDB.open",
+        "createObjectStore('jobs'",
+        "createObjectStore('files'",
+        "JOB_STAGE_BACKUP_V1"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/records-v4.js",
+      "includes": [
+        "Contract",
+        "Change Order",
+        "Customer Invoice",
+        "Customer Payment",
+        "Subcontractor Bill",
+        "Supplier Bill",
+        "Insurance Record",
+        "Save record"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/calc-v4.js",
+      "includes": [
+        "unsignedChanges",
+        "tradePayables",
+        "Customer Invoice",
+        "Customer Payment",
+        "Insurance Record"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/prototypes/evan-job-stage/test-kitchen-v4.mjs",
+      "includes": [
+        "JOB_STAGE_V4_TEST_KITCHEN_RECEIPT_v1",
+        "approved:44500",
+        "invoiced:37000",
+        "paid:30000",
+        "customerBalance:7000",
+        "unsignedChanges:2100",
+        "tradePayables:4800"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/prototypes/evan-job-stage/",
+    "timeoutMs": 15000,
+    "readySelector": "#workspace",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/prototypes/evan-job-stage/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": []
+  }
+}

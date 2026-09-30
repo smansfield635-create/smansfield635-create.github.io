@@ -1,0 +1,46 @@
+{
+  "schema": "TASK_01_THROUGH_TASK_14_ISSUE_2378_ARTIFACT_LINEAGE_v1",
+  "status": "BOUND_FROM_ISSUE_2378_RECEIPTS",
+  "operationId": "CHARACTERS_RECONSTRUCTION_TASK15_20260830_HEAD_30f500a1",
+  "issue": 2378,
+  "constructionCycle": "01_END_TO_END_CHARACTERS_RECONSTRUCTION",
+  "tasks": [
+    {"task":1,"name":"FOUNDATION_FREEZE","state":"PASS_PROTECTED_FROZEN","receiptComment":5471493302},
+    {"task":2,"name":"DOSSIER_SCHEMA","state":"PASS_PROTECTED_FROZEN","receiptComment":5471494420},
+    {"task":3,"name":"DEXTRION_PLUS_AUREN","state":"PASS_PROTECTED_FROZEN","receiptComment":5471513364},
+    {"task":4,"name":"ALARIC","state":"PASS_PROTECTED_FROZEN","receiptComment":5471515752},
+    {"task":5,"name":"TARIAN","state":"PASS_PROTECTED_FROZEN","receiptComment":5471516629},
+    {"task":6,"name":"ELARA","state":"PASS_PROTECTED_FROZEN","receiptComment":5471517625},
+    {"task":7,"name":"SOREN","state":"PASS_PROTECTED_FROZEN","receiptComment":5471518570},
+    {"task":8,"name":"JEEVES","state":"PASS_PROTECTED_FROZEN","receiptComment":5471519930},
+    {"task":9,"name":"REMOTE_TEAM","state":"PASS_PROTECTED_FROZEN","receiptComment":5471520772},
+    {"task":10,"name":"RELATIONSHIP_CROSSWALK","state":"PASS_PROTECTED_FROZEN","receiptComment":5471522055},
+    {"task":11,"name":"PRE_P12_CHRONOLOGY","state":"PASS_PROTECTED_FROZEN_WITH_HELD_MICRODETAIL","receiptComment":5471524555},
+    {"task":12,"name":"P12_STATE_MAP","state":"PASS_PROTECTED_FROZEN","receiptComment":5471527337},
+    {"task":13,"name":"FULL_NARRATIVE_ADVISORY_SPREAD","state":"PASS_PROTECTED_WITH_HELD_DETAIL_FROZEN","receiptComment":5471529630},
+    {"task":14,"name":"CHARACTERS_PAGE_INFORMATION_ARCHITECTURE","state":"PASS_PROTECTED_FROZEN","receiptComment":5471531345}
+  ],
+  "phaseClosure": {
+    "A":"PASS_PROTECTED_CLOSED_FROZEN",
+    "B":"PASS_PROTECTED_CLOSED_FROZEN",
+    "C":"PASS_PROTECTED_CLOSED_FROZEN",
+    "D":"PASS_PROTECTED_CLOSED_FROZEN",
+    "E":"TASK_14_FROZEN_TASK_15_ACTIVE"
+  },
+  "epistemicLaw": ["BOUND","PROVISIONAL","HELD"],
+  "heldLaw": "HELD is an intentional non-invention state and does not become BOUND without new source evidence and re-instrumentation.",
+  "task15SurfaceConstraints": {
+    "carouselCount": 1,
+    "characterCardCount": 8,
+    "carouselArrowControls": false,
+    "legacyDossierTruthPreserved": true,
+    "relationshipChronologyP12AccessPreserved": true,
+    "cardinalAndNonCardinalRolesMustNotCollapse": true
+  },
+  "authorityBoundary": [
+    "LINEAGE_DOES_NOT_CREATE_CHARACTER_REGISTRY_RUNTIME_AUTHORITY",
+    "LINEAGE_DOES_NOT_CREATE_MERGE_AUTHORITY",
+    "LINEAGE_DOES_NOT_CREATE_DEPLOYMENT_AUTHORITY",
+    "LINEAGE_DOES_NOT_CREATE_PUBLICATION_AUTHORITY"
+  ]
+}

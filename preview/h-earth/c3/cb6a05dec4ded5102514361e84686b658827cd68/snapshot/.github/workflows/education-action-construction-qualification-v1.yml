@@ -1,0 +1,30 @@
+name: Education Action Construction Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify deterministic Action construction
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" > /tmp/e.html
+          grep -Fq '{type:"choice",options:["music","dogs","pizza"],correct:[0,1,2],construct:true}' /tmp/e.html
+          grep -Fq 'Array.isArray(task.correct)?task.correct.includes(s.choice):s.choice===task.correct' /tmp/e.html
+          grep -Fq 'task.construct?task.options[s.choice]' /tmp/e.html
+          ! grep -Fq 'accepted:["music","dogs","pizza"' /tmp/e.html
+          echo EDUCATION_ACTION_CONSTRUCTION_QUALIFICATION=PASS

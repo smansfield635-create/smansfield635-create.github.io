@@ -1,0 +1,458 @@
+name: Exact Head Pages Deploy v3
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact approved current-main commit SHA to publish
+        required: true
+        type: string
+      surface_id:
+        description: Registered public surface verification id
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy_final.outputs.page_url }}
+    steps:
+      - name: Suppress duplicate exact-head production mutation
+        id: dedupe
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_SHA: ${{ inputs.target_sha }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs?event=workflow_dispatch&per_page=100"
+          runs="$(curl --fail-with-body --silent --show-error -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${GH_TOKEN}" -H "X-GitHub-Api-Version: 2022-11-28" "$api")"
+          prior="$(printf '%s' "$runs" | jq -r --arg sha "$REQUESTED_SHA" --argjson current "$CURRENT_RUN_ID" '[.workflow_runs[] | select(.name=="Exact Head Pages Deploy v3" and .head_sha==$sha and .id < $current and (.status=="queued" or .status=="pending" or .status=="in_progress" or (.status=="completed" and .conclusion=="success")))] | sort_by(.id) | last // empty | @base64')"
+          if [ -n "$prior" ]; then
+            decoded="$(printf '%s' "$prior" | base64 -d)"
+            echo "duplicate=true" >> "$GITHUB_OUTPUT"
+            echo "prior_run_id=$(printf '%s' "$decoded" | jq -r '.id')" >> "$GITHUB_OUTPUT"
+            echo "EXACT_HEAD_PRODUCTION_MUTATION_SUPPRESSED sha=$REQUESTED_SHA prior=$(printf '%s' "$decoded" | jq -r '.id')"
+          else
+            echo "duplicate=false" >> "$GITHUB_OUTPUT"
+            echo "EXACT_HEAD_PRODUCTION_MUTATION_ADMITTED=$REQUESTED_SHA"
+          fi
+
+      - name: Stop duplicate before expensive work
+        if: steps.dedupe.outputs.duplicate == 'true'
+        run: |
+          echo "No Pages mutation required. Equivalent exact-head publication already exists as run ${{ steps.dedupe.outputs.prior_run_id }}."
+
+      - name: Require exact dispatched head
+        id: resolve
+        env:
+          REQUESTED_SHA: ${{ inputs.target_sha }}
+          DISPATCHED_HEAD_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          requested="$(printf '%s' "$REQUESTED_SHA" | tr -d '[:space:]')"
+          dispatched="$(printf '%s' "$DISPATCHED_HEAD_SHA" | tr -d '[:space:]')"
+          test -n "$requested"
+          test -n "$dispatched"
+          if [ "$requested" != "$dispatched" ]; then
+            echo "EXACT_DISPATCH_HEAD_MISMATCH requested=$requested dispatched=$dispatched" >&2
+            exit 1
+          fi
+          echo "target_sha=$requested" >> "$GITHUB_OUTPUT"
+          echo "EXACT_DISPATCH_HEAD_VERIFIED=$requested"
+
+      - name: Materialize bounded publication sparse index
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"
+          git sparse-checkout init --cone --sparse-index
+
+          mapfile -t top_dirs < <(git ls-tree -d --name-only FETCH_HEAD)
+          sparse_paths=(".github/ai-router/publication-surfaces")
+          for root in "${top_dirs[@]}"; do
+            case "$root" in
+              .github|preview|node_modules|h-earth-live-6d18e158)
+                ;;
+              inspection)
+                while IFS= read -r child; do
+                  test -n "$child" || continue
+                  test "$child" = "audralia-24057-exact" && continue
+                  sparse_paths+=("inspection/$child")
+                done < <(git ls-tree -d --name-only "FETCH_HEAD:inspection")
+                ;;
+              *)
+                sparse_paths+=("$root")
+                ;;
+            esac
+          done
+
+          git sparse-checkout set -- "${sparse_paths[@]}"
+          git checkout --detach FETCH_HEAD
+          test "$(git config --bool index.sparse)" = "true"
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 20000
+          test "$materialized_files" -lt 20000
+          test -f tools/publication-preflight.v1.mjs
+          test -f tools/publication-live-verify.mjs
+          test -d .github/ai-router/publication-surfaces
+          test ! -e preview
+          test ! -e h-earth-live-6d18e158
+          test ! -e inspection/audralia-24057-exact
+          echo "PUBLICATION_SPARSE_INDEX_ENTRIES=$sparse_entries"
+          echo "PUBLICATION_MATERIALIZED_FILES=$materialized_files"
+
+      - name: Validate registered surface
+        if: steps.dedupe.outputs.duplicate != 'true'
+        id: surface
+        env:
+          SURFACE_ID: ${{ inputs.surface_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$SURFACE_ID" | grep -Eq '^[a-z0-9][a-z0-9._-]{0,79}$'
+          manifest=".github/ai-router/publication-surfaces/${SURFACE_ID}.json"
+          test -f "$manifest"
+          jq -e --arg id "$SURFACE_ID" '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId==$id and (.checks|type=="array") and (.checks|length>0)' "$manifest" >/dev/null
+          test -f '.github/ai-router/publication-surfaces/audralia.json'
+          jq -e '.schema=="PUBLICATION_SURFACE_VERIFICATION_v1" and .surfaceId=="audralia" and (.checks|type=="array") and (.checks|length>0)' '.github/ai-router/publication-surfaces/audralia.json' >/dev/null
+          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+          echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
+
+      - name: Build and size-check exact Pages payload
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/publication-preflight.v1.mjs build \
+            --target-sha "$TARGET_SHA" \
+            --surface-id "$SURFACE_ID" \
+            --stage "$STAGE" \
+            --receipt "$RECEIPT"
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PAYLOAD_BUILT" and .deploymentPerformed==false and (.protectedSurfaceIds|index("audralia")!=null) and .authorizedExcludedRuntimeDependencies.status=="PROMOTED"' "$RECEIPT" >/dev/null
+          echo "PAGES_PAYLOAD_BYTES=$(jq -r '.payloadBytes' "$RECEIPT")"
+          echo "PROTECTED_AUDRALIA_DEPENDENCY_FILES=$(jq -r '.authorizedExcludedRuntimeDependencies.fileCount' "$RECEIPT")"
+
+      - name: Set up Chrome for preflight
+        if: steps.dedupe.outputs.duplicate != 'true'
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install runtime verifier for preflight
+        if: steps.dedupe.outputs.duplicate != 'true'
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Require local exact-payload preflight pass
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          RECEIPT: ${{ runner.temp }}/publication-preflight-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          node tools/publication-preflight.v1.mjs verify \
+            --target-sha "$TARGET_SHA" \
+            --surface-id "$SURFACE_ID" \
+            --stage "$STAGE" \
+            --receipt "$RECEIPT"
+          jq -e '.schema=="PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1" and .result=="PREFLIGHT_PASS" and .deploymentPerformed==false and .checks.authorizedRuntimeDependencyClosure=="PASS" and .checks.runtimeReadiness=="PASS"' "$RECEIPT" >/dev/null
+          echo "PUBLICATION_FAST_PREFLIGHT_PASS=$TARGET_SHA:$SURFACE_ID"
+          short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+          grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" "$STAGE/showroom/globe/audralia/index.html"
+          grep -Fq "BUILD $short_sha" "$STAGE/showroom/globe/audralia/index.html"
+          echo "PROTECTED_AUDRALIA_VISIBLE_BUILD_FINGERPRINT=$short_sha"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: production-publication-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/publication-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages-site
+      - name: Deploy exact-head artifact
+        if: steps.dedupe.outputs.duplicate != 'true'
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Publish surface-aware deployment receipt
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          SURFACE_ID: ${{ inputs.surface_id }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          RECEIPT: ${{ runner.temp }}/publication-surface-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -n --arg surfaceId "$SURFACE_ID" --arg targetSha "$TARGET_SHA" --arg runId "$GITHUB_RUN_ID" \
+            '{schema:"PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1",surfaceId:$surfaceId,targetSha:$targetSha,runId:$runId}' > "$RECEIPT"
+          jq -e --arg surfaceId "$SURFACE_ID" --arg targetSha "$TARGET_SHA" '.schema=="PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1" and .surfaceId==$surfaceId and .targetSha==$targetSha' "$RECEIPT" >/dev/null
+
+      - name: Upload surface-aware deployment receipt
+        if: steps.dedupe.outputs.duplicate != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: publication-surface-receipt
+          path: ${{ runner.temp }}/publication-surface-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Verify static public surfaces
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          MANIFEST: ${{ steps.surface.outputs.manifest }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          AUDRALIA_MANIFEST: .github/ai-router/publication-surfaces/audralia.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            marker="$(curl --fail --silent --show-error -L --max-time 20 "${PAGE_URL%/}/.well-known/dgb-release.json" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ] && [ "$observed_surface" = "$SURFACE_ID" ]; then
+              short_sha="$(printf '%s' "$TARGET_SHA" | cut -c1-8 | tr '[:lower:]' '[:upper:]')"
+              audralia_url="${PAGE_URL%/}/showroom/globe/audralia/"
+              public_html="$(curl --fail --silent --show-error -L --max-time 20 "$audralia_url")"
+              if ! printf '%s' "$public_html" | grep -Fq "data-audralia-build-sha=\"$TARGET_SHA\"" || ! printf '%s' "$public_html" | grep -Fq "BUILD $short_sha"; then
+                echo "PROTECTED_PUBLIC_BUILD_FINGERPRINT_MISMATCH expected=$short_sha observed=NONE" >&2
+                exit 1
+              fi
+              echo "PROTECTED_PUBLIC_BUILD_FINGERPRINT_VERIFIED=$short_sha"
+              if [ "$SURFACE_ID" = "brain-gen1-hra" ]; then
+                brain_url="${PAGE_URL%/}/inspection/compass/brain-gen1-hra/Allen_M_Brain.glb"
+                brain_tmp="$(mktemp)"
+                curl --fail --silent --show-error -L --max-time 30 "$brain_url" -o "$brain_tmp"
+                test "$(sha256sum "$brain_tmp" | awk '{print $1}')" = '2b9ad5b53e40e9f0936da74f7be38d2eed15604e26358c3870a0ea13499b9a35'
+                test "$(stat -c '%s' "$brain_tmp")" = '11977312'
+                rm -f "$brain_tmp"
+                echo 'BRAIN_GEN1_HRA_PUBLIC_ASSET_IDENTITY_VERIFIED'
+              fi
+              node tools/publication-live-verify.mjs static "$PAGE_URL" "$MANIFEST"
+              if [ "$SURFACE_ID" != "audralia" ]; then
+                node tools/publication-live-verify.mjs static "$PAGE_URL" "$AUDRALIA_MANIFEST"
+              fi
+              echo "PROTECTED_STATIC_SURFACE_CONTINUITY_VERIFIED=$TARGET_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+
+      - name: Verify runtime public surfaces
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          MANIFEST: ${{ steps.surface.outputs.manifest }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          REQUESTED_RUNTIME: ${{ steps.surface.outputs.runtime }}
+          AUDRALIA_MANIFEST: .github/ai-router/publication-surfaces/audralia.json
+          AUDRALIA_RUNTIME_VERIFICATION: ${{ runner.temp }}/audralia-runtime-live-verification.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          if [ "$REQUESTED_RUNTIME" = "true" ] && [ "$SURFACE_ID" != "audralia" ] && [ "$SURFACE_ID" != "evidence" ]; then
+            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
+          fi
+          if [ "$SURFACE_ID" = "audralia" ]; then
+            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$AUDRALIA_MANIFEST" > "$AUDRALIA_RUNTIME_VERIFICATION"
+            cat "$AUDRALIA_RUNTIME_VERIFICATION"
+            jq -e '.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .surfaceId=="audralia" and .result=="PASS"' "$AUDRALIA_RUNTIME_VERIFICATION" >/dev/null
+            echo "PROTECTED_RUNTIME_SURFACE_CONTINUITY_VERIFIED"
+          else
+            echo "AUDRALIA_RUNTIME_VERIFICATION_SKIPPED_FOR_UNRELATED_SURFACE=$SURFACE_ID"
+          fi
+
+      - name: Materialize public Audralia runtime publication receipt
+        if: ${{ steps.dedupe.outputs.duplicate != 'true' && inputs.surface_id == 'audralia' }}
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          AUDRALIA_RUNTIME_VERIFICATION: ${{ runner.temp }}/audralia-runtime-live-verification.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          receipt_dir="$STAGE/.well-known/publication-surfaces"
+          receipt_path="$receipt_dir/audralia-runtime.json"
+          mkdir -p "$receipt_dir"
+          jq -e '.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .surfaceId=="audralia" and .result=="PASS"' "$AUDRALIA_RUNTIME_VERIFICATION" >/dev/null
+          timestamp="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          jq -n \
+            --slurpfile runtimeVerification "$AUDRALIA_RUNTIME_VERIFICATION" \
+            --arg targetSha "$TARGET_SHA" \
+            --arg publicationSurfaceId "$SURFACE_ID" \
+            --arg finalUrl "https://diamondgatebridge.com/showroom/globe/audralia/" \
+            --arg workflowRunId "$GITHUB_RUN_ID" \
+            --argjson workflowRunAttempt "$GITHUB_RUN_ATTEMPT" \
+            --arg timestamp "$timestamp" \
+            '{schema:"DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1",result:"PASS_CLOSED",surfaceId:"audralia",targetSha:$targetSha,finalUrl:$finalUrl,runtimeVerification:($runtimeVerification[0]+{verifier:"tools/publication-live-verify.mjs",protectedContinuity:true}),releaseMarkerPath:"/.well-known/dgb-release.json",publicationSurfaceId:$publicationSurfaceId,workflowRunId:$workflowRunId,workflowRunAttempt:$workflowRunAttempt,timestamp:$timestamp,hiddenWebGLOnEvidencePage:false}' \
+            > "$receipt_path"
+          jq -e --arg targetSha "$TARGET_SHA" '.schema=="DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .result=="PASS_CLOSED" and .surfaceId=="audralia" and .targetSha==$targetSha and .runtimeVerification.schema=="PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1" and .runtimeVerification.surfaceId=="audralia" and .runtimeVerification.result=="PASS" and .runtimeVerification.protectedContinuity==true and .hiddenWebGLOnEvidencePage==false' "$receipt_path" >/dev/null
+          echo "AUDRALIA_RUNTIME_PUBLICATION_RECEIPT_MATERIALIZED=$TARGET_SHA"
+
+      - name: Upload exact-head artifact with runtime receipt
+        if: ${{ steps.dedupe.outputs.duplicate != 'true' && inputs.surface_id == 'audralia' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/pages-site
+
+      - name: Deploy exact-head artifact with runtime receipt
+        if: ${{ steps.dedupe.outputs.duplicate != 'true' && inputs.surface_id == 'audralia' }}
+        id: deploy_final
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Verify final release marker and Audralia runtime receipt
+        if: ${{ steps.dedupe.outputs.duplicate != 'true' && inputs.surface_id == 'audralia' }}
+        env:
+          PAGE_URL: ${{ steps.deploy_final.outputs.page_url }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            marker="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "${PAGE_URL%/}/.well-known/dgb-release.json?runtime_receipt=${TARGET_SHA}&attempt=${attempt}" 2>/dev/null || true)"
+            receipt="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "${PAGE_URL%/}/.well-known/publication-surfaces/audralia-runtime.json?target=${TARGET_SHA}&attempt=${attempt}" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
+            receipt_target="$(printf '%s' "$receipt" | jq -r '.targetSha // empty' 2>/dev/null || true)"
+            receipt_surface="$(printf '%s' "$receipt" | jq -r '.surfaceId // empty' 2>/dev/null || true)"
+            receipt_result="$(printf '%s' "$receipt" | jq -r '.result // empty' 2>/dev/null || true)"
+            runtime_surface="$(printf '%s' "$receipt" | jq -r '.runtimeVerification.surfaceId // empty' 2>/dev/null || true)"
+            runtime_result="$(printf '%s' "$receipt" | jq -r '.runtimeVerification.result // empty' 2>/dev/null || true)"
+            if [ "$observed" = "$TARGET_SHA" ] && [ "$observed_surface" = "$SURFACE_ID" ] && [ "$receipt_target" = "$TARGET_SHA" ] && [ "$receipt_surface" = "audralia" ] && [ "$receipt_result" = "PASS_CLOSED" ] && [ "$runtime_surface" = "audralia" ] && [ "$runtime_result" = "PASS" ]; then
+              echo "FINAL_RELEASE_MARKER_AND_AUDRALIA_RUNTIME_RECEIPT_VERIFIED=$TARGET_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "FINAL_AUDRALIA_RUNTIME_RECEIPT_MISMATCH target=$TARGET_SHA" >&2
+          exit 1
+
+      - name: Verify deferred Evidence runtime surface
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          PAGE_URL: ${{ steps.deploy_final.outputs.page_url }}
+          MANIFEST: ${{ steps.surface.outputs.manifest }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          REQUESTED_RUNTIME: ${{ steps.surface.outputs.runtime }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$REQUESTED_RUNTIME" = "true" ] && [ "$SURFACE_ID" = "evidence" ]; then
+            export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+            test -n "$CHROME_PATH"
+            node tools/publication-live-verify.mjs runtime "$PAGE_URL" "$MANIFEST"
+            echo "EVIDENCE_RUNTIME_VERIFIED_AFTER_AUDRALIA_RECEIPT_PUBLICATION=$TARGET_SHA"
+          fi
+
+      - name: Verify custom-domain surface convergence (nonfatal follow-up)
+        if: steps.dedupe.outputs.duplicate != 'true'
+        continue-on-error: true
+        env:
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          MANIFEST: ${{ steps.surface.outputs.manifest }}
+          CUSTOM_DOMAIN: https://diamondgatebridge.com
+          RECEIPT: /tmp/public-alias-convergence-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          check_path="$(jq -r '.checks[0].path // empty' "$MANIFEST")"
+          runtime_path="$(jq -r '.runtime.path // empty' "$MANIFEST")"
+          test -n "$check_path"
+          rel="${check_path#/}"
+          expected="$STAGE/$rel"
+          test -f "$expected"
+          expected_sha="$(sha256sum "$expected" | awk '{print $1}')"
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+
+          fetch_plain() {
+            curl --fail --silent --show-error -L --max-time 30               -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$1" -o "$2"
+          }
+
+          canonical_path="$check_path"
+          pretty_path="${runtime_path:-$check_path}"
+          for attempt in $(seq 1 30); do
+            marker_url="${CUSTOM_DOMAIN}/.well-known/dgb-release.json?dgb_release=${TARGET_SHA}&attempt=${attempt}"
+            marker="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$marker_url" 2>/dev/null || true)"
+            observed="$(printf '%s' "$marker" | jq -r '.commit // empty' 2>/dev/null || true)"
+            observed_surface="$(printf '%s' "$marker" | jq -r '.surface // empty' 2>/dev/null || true)"
+            if [ "$observed" != "$TARGET_SHA" ] || [ "$observed_surface" != "$SURFACE_ID" ]; then sleep 10; continue; fi
+
+            if [ "$SURFACE_ID" = "audralia" ]; then
+              runtime_receipt_url="${CUSTOM_DOMAIN}/.well-known/publication-surfaces/audralia-runtime.json?dgb_release=${TARGET_SHA}&attempt=${attempt}"
+              runtime_receipt="$(curl --fail --silent --show-error -L --max-time 20 -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' "$runtime_receipt_url" 2>/dev/null || true)"
+              receipt_target="$(printf '%s' "$runtime_receipt" | jq -r '.targetSha // empty' 2>/dev/null || true)"
+              receipt_result="$(printf '%s' "$runtime_receipt" | jq -r '.result // empty' 2>/dev/null || true)"
+              if [ "$receipt_target" != "$TARGET_SHA" ] || [ "$receipt_result" != "PASS_CLOSED" ]; then sleep 10; continue; fi
+            fi
+
+            fetch_plain "${CUSTOM_DOMAIN}${canonical_path}?dgb_release=${TARGET_SHA}&attempt=${attempt}" "$work/canonical.html" || { sleep 10; continue; }
+            fetch_plain "${CUSTOM_DOMAIN}${pretty_path}?dgb_release=${TARGET_SHA}&attempt=${attempt}" "$work/pretty.html" || { sleep 10; continue; }
+            canonical_sha="$(sha256sum "$work/canonical.html" | awk '{print $1}')"
+            pretty_sha="$(sha256sum "$work/pretty.html" | awk '{print $1}')"
+
+            if [ "$canonical_sha" = "$expected_sha" ] && [ "$pretty_sha" = "$expected_sha" ]; then
+              jq -n --arg targetSha "$TARGET_SHA" --arg surfaceId "$SURFACE_ID" --arg path "$canonical_path" --arg runtimePath "$pretty_path" --arg expectedSha256 "$expected_sha" --arg canonicalSha256 "$canonical_sha" --arg prettySha256 "$pretty_sha"                 '{schema:"PAGES_PUBLIC_SURFACE_CONVERGENCE_RECEIPT_v2",result:"PASS_CLOSED",targetSha:$targetSha,surfaceId:$surfaceId,customDomain:"diamondgatebridge.com",surfacePath:$path,runtimePath:$runtimePath,expectedStagedSha256:$expectedSha256,canonicalSha256:$canonicalSha256,prettySha256:$prettySha256,ordinarySurfaceBytesConverged:true,productMutationPerformed:false}' > "$RECEIPT"
+              echo "CUSTOM_DOMAIN_SURFACE_MATCHES_EXACT_STAGED_FILE=$expected_sha"
+              echo "CUSTOM_DOMAIN_RELEASE_MARKER_MATCHES_TARGET_SHA=$TARGET_SHA"
+              echo "LIVE_EXACT_SURFACE_VERIFIED=$TARGET_SHA:$SURFACE_ID"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "PUBLIC_SURFACE_CONVERGENCE_FAILURE surface=$SURFACE_ID path=$check_path expected=$expected_sha" >&2
+          exit 1
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-alias-convergence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/public-alias-convergence-receipt.json
+          if-no-files-found: warn
+          retention-days: 90

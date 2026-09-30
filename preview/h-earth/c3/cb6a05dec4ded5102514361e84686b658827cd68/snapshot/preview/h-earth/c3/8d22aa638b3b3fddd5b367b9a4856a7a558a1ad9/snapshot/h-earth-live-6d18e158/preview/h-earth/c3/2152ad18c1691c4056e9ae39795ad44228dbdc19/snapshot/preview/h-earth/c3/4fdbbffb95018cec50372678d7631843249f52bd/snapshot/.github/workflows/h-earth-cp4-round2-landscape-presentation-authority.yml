@@ -1,0 +1,51 @@
+name: H-Earth CP4 Round 2 Landscape Presentation Authority
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-cp4-round2-landscape-presentation-authority.yml
+      - h-earth-3d/control-plane/post-cp2-round2/h-earth.cp4-multiscale-directional-repetition-metric.v1.mjs
+      - h-earth-3d/control-plane/post-cp2-round2/h-earth.cp4-round2-landscape-presentation-authority.v1.mjs
+      - h-earth-3d/validation/h-earth.cp4-round2-landscape-presentation-authority.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-cp4-round2-authority-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-round2-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact CP4 authority candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute deterministic CP4 authority verification
+        run: |
+          node h-earth-3d/validation/h-earth.cp4-round2-landscape-presentation-authority.mjs \
+            h-earth.cp4-round2-landscape-presentation-authority.receipt.v1.json \
+            | tee h-earth.cp4-round2-landscape-presentation-authority.log
+
+      - name: Upload CP4 authority evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp4-round2-landscape-presentation-authority
+          path: |
+            h-earth.cp4-round2-landscape-presentation-authority.receipt.v1.json
+            h-earth.cp4-round2-landscape-presentation-authority.log
+          if-no-files-found: error

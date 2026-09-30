@@ -1,0 +1,23 @@
+{
+  "contract": "COMPASS_BRAIN_GEN1_HRA_GEOMETRY_FREEZE_v1",
+  "status": "FROZEN",
+  "source": {
+    "authority": "NIH Human Reference Atlas",
+    "asset": "Allen_M_Brain.glb",
+    "url": "https://ccf-ontology.hubmapconsortium.org/objects/v1.2/Allen_M_Brain.glb"
+  },
+  "qualified_geometry": {
+    "mesh_count": 283,
+    "triangle_count": 656268,
+    "render_contract": "SINGLE_OBJECT_ONE_DRAW_CALL",
+    "vertex_mutation": "FORBIDDEN",
+    "topology_mutation": "FORBIDDEN",
+    "component_remodeling": "FORBIDDEN"
+  },
+  "presentation": {
+    "geometry": "LOCKED",
+    "material": "ROSE_FLESH_PRESENTATION_ONLY",
+    "material_may_change_geometry": false,
+    "carousel_role": "COHERISCOPE_ENTRY_OBJECT"
+  }
+}

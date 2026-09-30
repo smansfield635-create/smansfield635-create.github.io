@@ -1,0 +1,96 @@
+{
+  "schema": "PROGRESSIVE_SYSTEM_CONTINUITY_GAP_REGISTRY_v1",
+  "registryId": "REPOSITORY_SHARED_SYSTEM_GAP_REGISTRY_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "records": [
+    {
+      "gapId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_CONTINUITY",
+      "status": "CLOSED_BOUNDED",
+      "discoveredAtHead": "9608702942bd3b09ece55023d5becf2d2b4cdb0b",
+      "closedAtHead": "d2455e87226586379b2f985a7c277f1f74b0a765",
+      "coordinationIssue": 817,
+      "summary": "A fresh lifecycle successor must use a changed operationId and produces a successor-transition receipt, while the current closed-world AI-room resolver binds execution to an exact registered operationId and an ordinary admission receipt.",
+      "interfaceKeys": ["operationId", "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1", "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1", "AUTHORIZED_TOOLSET_DESCRIPTOR_v1"],
+      "pathScopes": [".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs", "tools/ai-room-transport/toolset-resolver.v1.mjs", ".github/ai-toolset-transport/authorized-toolset-registry.v1.json"],
+      "evidenceRefs": ["PR_814_GENERIC_SUCCESSOR_PROTOCOL", "ISSUE_817_CONTINUITY_TRACK_COORDINATION", "PR_825_SUCCESSOR_AWARE_CLOSED_WORLD_RESOLVER", "GENERATION_752_PASS_CLOSED", "PR_829_REMOTE_OPERATION_SUCCESSOR_ROUTE", "GENERATION_651_SUPERSEDED_BY_GENERATION_781", "GENERATION_774_PASS_CLOSED", "GENERATION_781_PASS_CLOSED", "RUN_31329000335_REAL_SUCCESSOR_PAGE_EXCELLENCE_COMMAND_PASS", "RUN_31329093626_UNRELATED_OPERATION_SUCCESSOR_OPERATION_ID_MISMATCH_FAIL_CLOSED", "PR_831_PROVIDER_RATIFICATION_MERGE_257EBC15", "GENERATION_781_CANONICAL_CLOSURE_E1EEB3AC", "PR_833_STRICT_SUCCESSOR_FALLBACK_PRESERVED_7036251B", "PR_839_CLOSURE_AWARE_PROGRESSIVE_SELF_TEST_MERGE_D2455E87", "GENERATION_811_PASS_CLOSED", "GENERATION_820_CURRENT_HEAD_SUCCESSOR_ADMISSION"],
+      "closureRequirements": [],
+      "authorityCreated": false
+    },
+    {
+      "gapId": "REMOTE_OPERATION_TERMINAL_CLOSURE_OPERATIONAL_PROOF",
+      "status": "CLOSED_BOUNDED",
+      "discoveredAtHead": "d36466ac42b781198ebcbf5edc8696f64b8c7d60",
+      "closedAtHead": "0cd88a4965f354de93e37a8cb9ab607263536b46",
+      "coordinationIssue": 817,
+      "summary": "The remote closure route required preservation of the native remote receipt schema and PR-conversation receipt return permission.",
+      "interfaceKeys": ["REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1", "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1", "PR_CONVERSATION_RECEIPT_RETURN"],
+      "pathScopes": ["tools/operation-intake/repository-operation-lock-manager.v1.mjs", "tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs", "tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs", ".github/workflows/remote-operation-terminal-closure-v1.yml"],
+      "evidenceRefs": ["PR_818", "RUN_31323108429", "GENERATION_721_PASS_CLOSED"],
+      "closureRequirements": [],
+      "authorityCreated": false
+    },
+    {
+      "gapId": "WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY",
+      "status": "CLOSED_BOUNDED",
+      "discoveredAtHead": "d0d0ea03b9f6d867dcb9689bc4ed4050bd7e57da",
+      "closedAtHead": "45a189f62ce020c32b22463ee92444f311d50841",
+      "coordinationIssue": 820,
+      "summary": "The GitHub Actions event surface contains legacy and unregistered workflows whose active/failed UI state is not equivalent to current authority or current system health; lifecycle classification, signal normalization, continuity-safe adoption, and bounded retirement remain to be proven end to end.",
+      "interfaceKeys": ["GITHUB_ACTIONS_WORKFLOW_STATE", "REPOSITORY_AI_ROUTER_REGISTRY_v1", "REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1", "INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1"],
+      "pathScopes": [".github/workflows/", ".github/ai-router/router.v1.json", ".github/ai-router/instrument-lifecycle/"],
+      "evidenceRefs": ["ISSUE_820_AUDIT", "GMAIL_FAILURE_CORPUS_AUGUST_7_9", "PRE_REGISTRATION_ADMISSION_GENERATION_731", "PR_953_ROOT_ROUTER_RECONCILIATION", "RUN_31670243826_CONSUMER_DISCOVERY_ZERO_UNRESOLVED", "RUN_31670250640_ACTIONS_INVENTORY_721", "RUN_31670421304_NATIVE_V2_PASS_CLOSED_ELIGIBLE", "RUN_31670568794_PROGRESSIVE_SYSTEM_CONTINUITY_SYSTEM_GAP_CLOSED"],
+      "closureRequirements": [],
+      "authorityCreated": false
+    },
+    {
+      "gapId": "EXECUTION_ROUTE_DISCOVERY_ADOPTION_GAP",
+      "status": "OPEN",
+      "discoveredAtHead": "67816c8d89c9bc0aed8a83a736b6f7870ca782aa",
+      "coordinationIssue": 822,
+      "summary": "The root entrypoint already declared the permanent pre-registration intake bridge and the local-execution-unavailable fallback law, but mutation routing did not emit an executable specialized backend transition when local authenticated canonical intake execution was unavailable, allowing rooms to terminate unnecessarily.",
+      "interfaceKeys": ["LOCAL_EXECUTION_UNAVAILABLE_USES_DECLARED_GITHUB_ACTIONS_BACKEND", "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1", "REPOSITORY_AI_EXECUTION_BACKEND_REGISTRY_v1", "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1", "REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1"],
+      "pathScopes": ["tools/repository-ai-entry-router.mjs", ".github/ai-router/execution-backends.v1.json", ".github/workflows/repository-ai-entry-router-validation.yml"],
+      "evidenceRefs": ["PR_822_EXPOSED_GAP", "PRE_REGISTRATION_BRIDGE_ACTIVE_PERMANENT_AT_0CD88A_AND_D0D0EA", "PRE_REGISTRATION_BRIDGE_RUN_31326203213", "PRE_REGISTRATION_ADMISSION_GENERATION_751"],
+      "closureRequirements": ["LOCAL_AUTHENTICATED_INTAKE_UNAVAILABLE_RESOLVES_TO_CERTIFIED_PRE_REGISTRATION_BRIDGE", "ACTIVE_VALID_BRIDGE_PROHIBITS_TERMINAL_INABILITY_FALLTHROUGH", "ABSENT_INACTIVE_OR_IDENTITY_INVALID_BRIDGE_FAILS_CLOSED", "GENERIC_WORKFLOW_DISPATCH_SUBSTITUTION_REMAINS_PROHIBITED", "PROTECTED_LAWS_WORKSTREAM_NONINTERFERENCE", "REAL_REMOTE_INVOCATION_PROOF", "POST_MERGE_CONTINUITY_PROOF"],
+      "authorityCreated": false
+    },
+    {
+      "gapId": "EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN",
+      "status": "OPEN",
+      "discoveredAtHead": "64ec16ce6a4f65c72d54a5460071c1c20caf126f",
+      "coordinationIssue": 830,
+      "summary": "Exact-head safety currently forces successor/proof reconstruction for every main movement even when a complete dependency declaration can prove the cumulative change is irrelevant; differential continuity must suppress only provably non-impacting churn while preserving strict successor fallback.",
+      "interfaceKeys": ["DIFFERENTIAL_CONTINUITY_RECEIPT_v1", "DEPENDENCY_SURFACE_RECEIPT_v1", "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1", "LATEST_MAIN_CUMULATIVE_COMPARE"],
+      "pathScopes": [".github/ai-router/differential-continuity/", ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs", ".github/workflows/remote-operation-successor-v1.yml", "AI_ENTRYPOINT.json", ".github/ai-router/router.v1.json"],
+      "evidenceRefs": ["PR_827_VALIDATION_ONLY_PROOF_CHURN", "PR_828_VALIDATION_ONLY_PROOF_CHURN", "ISSUE_830_DIFFERENTIAL_CONTINUITY_COORDINATION", "GENERATION_784_CORRECTED_DIFFERENTIAL_CONTINUITY_ADMISSION"],
+      "closureRequirements": ["DETERMINISTIC_DIFFERENTIAL_SELF_TEST_PASS", "PINNED_STRICT_SUCCESSOR_REGRESSION_PASS", "ROUTER_AND_ROOT_DISCOVERY_PASS", "REMOTE_DIFFERENTIAL_ASSESSMENT_PASS", "POST_MERGE_PUSH_VALIDATION_PASS", "REAL_COMPLETE_DEPENDENCY_SURFACE_DISJOINT_MAIN_MOVE_CARRY_FORWARD_PROOF"],
+      "authorityCreated": false
+    },
+    {
+      "gapId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_CONTINUITY",
+      "status": "CLOSED_BOUNDED",
+      "discoveredAtHead": "331284949940c95db80a332235492de4c80d3d43",
+      "closedAtHead": "fd9ce418d754356908f0ab4a99c43f6d3a2d951a",
+      "coordinationIssue": 578,
+      "summary": "An admitted closed-world operation can have a registered repository command and still lack an accessible clean exact-head execution carrier, forcing bespoke workflows or terminal inability despite complete authority and command definition.",
+      "interfaceKeys": ["BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_v1", "BOUNDED_EXECUTABLE_DESCRIPTOR_v1", "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1", "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1"],
+      "pathScopes": [".github/ai-router/bounded-exact-head-execution-carrier/", ".github/ai-router/execution-backends.v1.json", ".github/workflows/bounded-exact-head-execution-carrier-v1.yml"],
+      "evidenceRefs": ["GENERATION_825_ADMITTED_LOCKED", "GENERATION_825_ROUTER_NOT_EXECUTED_INFRASTRUCTURE_UNAVAILABLE", "GENERATION_832_CARRIER_INSTALLATION_ADMISSION", "GENERATION_839_CARRIER_INSTALLATION_SUCCESSOR_ADMISSION", "RUN_31333629470_EIGHT_PATH_COMMAND_EMITTED_ROUTER_PASS", "PR_847_RATIFIED_DEFAULT_BRANCH_MERGE_FD9CE418", "RUN_31335005724_REAL_GENERATION_825_FIVE_PATH_ROUTER_COMMAND_PASS", "RUN_31335005724_NATIVE_RECEIPT_9609C5E273D708A36AB1CB17E919ECD07973CEF5AE1A44A677971146F127A0DE", "RUN_31334831590_ATTEMPT_2_POST_OPERATIONAL_PROOF_PROGRESSIVE_SYSTEM_CONTINUITY_PASS"],
+      "closureRequirements": [],
+      "authorityCreated": false
+    },
+    {
+      "gapId": "POST_RATIFICATION_STRICT_SUCCESSOR_PACKET_RECONSTRUCTION",
+      "status": "OPEN",
+      "discoveredAtHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
+      "coordinationIssue": 578,
+      "summary": "When a materially relevant ratifying merge advances main, the strict successor gate correctly requires a fresh request and procedure, but rooms currently reconstruct those packets manually even when the canonical predecessor contract is already available. A non-authoritative compiler must prepare only explicit exact-head rebinds and leave admission to the existing atomic successor gate.",
+      "interfaceKeys": ["REPOSITORY_OPERATION_SUCCESSOR_PACKET_COMPILE_REQUEST_v1", "REPOSITORY_OPERATION_SUCCESSOR_COMPILED_PACKET_v1", "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1", "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1"],
+      "pathScopes": [".github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs", ".github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs", ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs", ".github/workflows/remote-operation-successor-v1.yml", "AI_ENTRYPOINT.json"],
+      "evidenceRefs": ["GENERATION_1168_RUNTIME_OPERATION", "GENERATION_1169_RUNTIME_DESCRIPTOR_INSTALLATION", "PR_925_VALIDATED_RUNTIME_DESCRIPTOR_CANDIDATE", "GENERATION_1176_SUCCESSOR_COMPILER_INSTALLATION_ADMISSION"],
+      "closureRequirements": ["COMPILER_ADVERSARIAL_SELF_TEST_PASS", "EXISTING_ATOMIC_SUCCESSOR_REGRESSION_PASS", "REMOTE_COMPILE_AND_EXECUTE_VALIDATION_PASS", "POST_MERGE_PUSH_VALIDATION_PASS", "REAL_GEN1168_POST_RATIFICATION_SUCCESSOR_HANDOFF_PROOF"],
+      "relatedOpenGapNotSuperseded": "EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN",
+      "authorityCreated": false
+    }
+  ]
+}

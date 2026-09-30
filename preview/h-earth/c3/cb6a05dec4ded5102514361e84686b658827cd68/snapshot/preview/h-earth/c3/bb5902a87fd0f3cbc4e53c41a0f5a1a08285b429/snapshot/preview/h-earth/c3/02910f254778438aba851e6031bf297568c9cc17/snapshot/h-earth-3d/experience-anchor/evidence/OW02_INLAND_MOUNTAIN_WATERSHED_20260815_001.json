@@ -1,0 +1,629 @@
+{
+  "schema": "H_EARTH_OW02_ANCHOR_BROWSER_EVIDENCE_v1",
+  "evidenceId": "OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001",
+  "productHead": "ee88405c2296dc02661eaa998a7264ebf8adf5ce",
+  "qualificationHead": "3854d5994ef40d91f05d239c1119d8d83017fb50",
+  "baseHead": "8644b618ee8e9d64a7762e651a98bc86eb97d123",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "route": "/showroom/globe/h-earth/",
+  "terrainFieldSha256": "617b5c57b3ce78a5041dee671fcc4dcfac85489e72b606f85154a325c13a9a27",
+  "terrainFormationsSha256": "c65e8d890a97effe45611c61ed6b0d17f2344990530f17669192f958ca4ed67b",
+  "base": {
+    "label": "base",
+    "status": 200,
+    "title": "H-Earth · Live Interactive World",
+    "url": "http://127.0.0.1:4174/showroom/globe/h-earth/?visual=terrain-relief-v2",
+    "canvasCount": 1,
+    "interactionExercised": true,
+    "beforeGesture": "false",
+    "afterGesture": "true",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "requestFailures": [],
+    "captureError": null,
+    "terrainDiagnostic": {
+      "ok": true,
+      "systemId": null,
+      "samples": [
+        {
+          "x": 148,
+          "z": -224,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 148,
+              "y": 42.30696627989956,
+              "z": -224
+            },
+            "elevation": 42.30696627989956,
+            "shorelineZ": -122.24311221176146,
+            "shorelineDistance": 101.75688778823854,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": 0.00893363978403272,
+              "z": -0.32989466433898684
+            },
+            "normal": {
+              "x": -0.008483600881869497,
+              "y": 0.9496242390511885,
+              "z": 0.3132759695899576
+            },
+            "slope": 0.3300156049024404,
+            "slopeClass": "MODERATE",
+            "curvature": -0.1334639265233193,
+            "curvatureClass": "CONCAVE",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 86,
+          "z": -235,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 86,
+              "y": 18.691105665058487,
+              "z": -235
+            },
+            "elevation": 18.691105665058487,
+            "shorelineZ": -109.02052244714162,
+            "shorelineDistance": 125.97947755285838,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": 0.3305108910508139,
+              "z": 0.5512324422264285
+            },
+            "normal": {
+              "x": -0.27803543431285865,
+              "y": 0.8412292660882771,
+              "z": -0.4637128628181871
+            },
+            "slope": 0.6427244000861612,
+            "slopeClass": "STEEP_NONCLIMBING",
+            "curvature": -0.012102643387891021,
+            "curvatureClass": "NEAR_PLANAR",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 18,
+          "z": -226,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 18,
+              "y": -1.2517491602860633,
+              "z": -226
+            },
+            "elevation": -1.2517491602860633,
+            "shorelineZ": -75.72372668125925,
+            "shorelineDistance": 150.27627331874075,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": 0.32931870277808084,
+              "z": -0.07691737737207505
+            },
+            "normal": {
+              "x": -0.31196240294821853,
+              "y": 0.9472963433796888,
+              "z": 0.07286355032692231
+            },
+            "slope": 0.33818203817062215,
+            "slopeClass": "MODERATE",
+            "curvature": 0.016352647847848623,
+            "curvatureClass": "NEAR_PLANAR",
+            "materialProfile": "LOWLAND_SOIL"
+          }
+        },
+        {
+          "x": -52,
+          "z": -208,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": -52,
+              "y": 0.3250639324112399,
+              "z": -208
+            },
+            "elevation": 0.3250639324112399,
+            "shorelineZ": -90.31619227793988,
+            "shorelineDistance": 117.68380772206012,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": -0.050285957580392115,
+              "z": -0.06285352507405939
+            },
+            "normal": {
+              "x": 0.05012383749503825,
+              "y": 0.996776036628224,
+              "z": 0.06265088761143361
+            },
+            "slope": 0.0804937459931665,
+            "slopeClass": "GENTLE",
+            "curvature": -0.006156158935323841,
+            "curvatureClass": "NEAR_PLANAR",
+            "materialProfile": "LOWLAND_SOIL"
+          }
+        },
+        {
+          "x": 119,
+          "z": -226,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 119,
+              "y": 36.23599942591435,
+              "z": -226
+            },
+            "elevation": 36.23599942591435,
+            "shorelineZ": -125.95554655329586,
+            "shorelineDistance": 100.04445344670414,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": 0.3728347499704867,
+              "z": 0.1697984243294357
+            },
+            "normal": {
+              "x": -0.3450048664207696,
+              "y": 0.9253559826386353,
+              "z": -0.15712398779585693
+            },
+            "slope": 0.4096794548062112,
+            "slopeClass": "MODERATE",
+            "curvature": -0.11143310879936053,
+            "curvatureClass": "CONCAVE",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 52,
+          "z": -230,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 52,
+              "y": 10.638744191511137,
+              "z": -230
+            },
+            "elevation": 10.638744191511137,
+            "shorelineZ": -74.3728704096738,
+            "shorelineDistance": 155.6271295903262,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": 0.29529064041850006,
+              "z": 0.17860418766842479
+            },
+            "normal": {
+              "x": -0.2791361000557773,
+              "y": 0.9452927450059788,
+              "z": -0.16883324283064824
+            },
+            "slope": 0.3451029095378157,
+            "slopeClass": "MODERATE",
+            "curvature": -0.003051713355098684,
+            "curvatureClass": "NEAR_PLANAR",
+            "materialProfile": "COASTAL_SOIL"
+          }
+        },
+        {
+          "x": 18,
+          "z": -192,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 18,
+              "y": 0.1804400449982964,
+              "z": -192
+            },
+            "elevation": 0.1804400449982964,
+            "shorelineZ": -75.72372668125925,
+            "shorelineDistance": 116.27627331874075,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": 0.5538692246903502,
+              "z": 0.14345104879853915
+            },
+            "normal": {
+              "x": -0.4807448256178957,
+              "y": 0.8679753345867233,
+              "z": -0.12451197207772839
+            },
+            "slope": 0.5721444935158342,
+            "slopeClass": "STEEP_NONCLIMBING",
+            "curvature": 0.018063404300562746,
+            "curvatureClass": "NEAR_PLANAR",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": -12,
+          "z": -176,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": -12,
+              "y": -5.564821388595975,
+              "z": -176
+            },
+            "elevation": -5.564821388595975,
+            "shorelineZ": -81.22663203540641,
+            "shorelineDistance": 94.77336796459359,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "gradient": {
+              "x": -0.05803180529553931,
+              "z": 0.065078315896268
+            },
+            "normal": {
+              "x": 0.05781245094226529,
+              "y": 0.9962201011642339,
+              "z": -0.06483232644577808
+            },
+            "slope": 0.08719448162443444,
+            "slopeClass": "GENTLE",
+            "curvature": 0.01564515405538458,
+            "curvatureClass": "NEAR_PLANAR",
+            "materialProfile": "LOWLAND_SOIL"
+          }
+        }
+      ]
+    },
+    "vegetationDiagnostic": {
+      "ok": true,
+      "eligible": true,
+      "status": "RUN_8D_VEGETATION_RESOLUTION_COMPLETE",
+      "instanceCount": 19,
+      "issues": []
+    },
+    "screenshotSha256": "687a00c9e4a8c3caf4e8e82aa3f78ef8fbaecdd0ebf4fcb6b8ee89d46ab64fbb",
+    "screenshotBytes": 326628
+  },
+  "candidate": {
+    "label": "candidate",
+    "status": 200,
+    "title": "H-Earth · Live Interactive World",
+    "url": "http://127.0.0.1:4173/showroom/globe/h-earth/?visual=terrain-relief-v2",
+    "canvasCount": 1,
+    "interactionExercised": true,
+    "beforeGesture": "false",
+    "afterGesture": "true",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "requestFailures": [],
+    "captureError": null,
+    "terrainDiagnostic": {
+      "ok": true,
+      "systemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+      "samples": [
+        {
+          "x": 148,
+          "z": -224,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 148,
+              "y": 48.705351407894625,
+              "z": -224
+            },
+            "elevation": 48.705351407894625,
+            "shorelineZ": -122.24311221176146,
+            "shorelineDistance": 101.75688778823854,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": -0.3040050022560621,
+              "z": -0.18034985982897211
+            },
+            "normal": {
+              "x": 0.2866256568655074,
+              "y": 0.9428320413757003,
+              "z": 0.17003962650437118
+            },
+            "slope": 0.3534757606074824,
+            "slopeClass": "MODERATE",
+            "curvature": -0.14974206925549538,
+            "curvatureClass": "CONCAVE",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 86,
+          "z": -235,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 86,
+              "y": 55.65617894198543,
+              "z": -235
+            },
+            "elevation": 55.65617894198543,
+            "shorelineZ": -109.02052244714162,
+            "shorelineDistance": 125.97947755285838,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": 0.004344367052844689,
+              "z": 0.466802235369002
+            },
+            "normal": {
+              "x": -0.003936557139426192,
+              "y": 0.9061290382562258,
+              "z": -0.4229830605907702
+            },
+            "slope": 0.46682245069253797,
+            "slopeClass": "MODERATE",
+            "curvature": -0.11315131421500269,
+            "curvatureClass": "CONCAVE",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 18,
+          "z": -226,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 18,
+              "y": 38.42551433656277,
+              "z": -226
+            },
+            "elevation": 38.42551433656277,
+            "shorelineZ": -75.72372668125925,
+            "shorelineDistance": 150.27627331874075,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": 0.3666387586868538,
+              "z": -0.13913645168262434
+            },
+            "normal": {
+              "x": -0.3413314603991482,
+              "y": 0.9309748418897507,
+              "z": 0.12953253610633214
+            },
+            "slope": 0.3921516690749489,
+            "slopeClass": "MODERATE",
+            "curvature": -0.058682381799997074,
+            "curvatureClass": "CONCAVE",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": -52,
+          "z": -208,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": -52,
+              "y": 30.684456833836876,
+              "z": -208
+            },
+            "elevation": 30.684456833836876,
+            "shorelineZ": -90.31619227793988,
+            "shorelineDistance": 117.68380772206012,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": 0.1557338254162559,
+              "z": -0.1385690449207253
+            },
+            "normal": {
+              "x": -0.15245659409925752,
+              "y": 0.9789562010164538,
+              "z": 0.13565302579407157
+            },
+            "slope": 0.2084572008567295,
+            "slopeClass": "GENTLE",
+            "curvature": -0.04196780626479324,
+            "curvatureClass": "CONCAVE",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 119,
+          "z": -226,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 119,
+              "y": 41.399443228226886,
+              "z": -226
+            },
+            "elevation": 41.399443228226886,
+            "shorelineZ": -125.95554655329586,
+            "shorelineDistance": 100.04445344670414,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": -0.08414686591599718,
+              "z": -0.1914824777232198
+            },
+            "normal": {
+              "x": 0.08236457926901565,
+              "y": 0.9788193341774515,
+              "z": 0.18742675135169068
+            },
+            "slope": 0.20915600473930498,
+            "slopeClass": "GENTLE",
+            "curvature": 0.09155199238855971,
+            "curvatureClass": "CONVEX",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 52,
+          "z": -230,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 52,
+              "y": 40.25157548655588,
+              "z": -230
+            },
+            "elevation": 40.25157548655588,
+            "shorelineZ": -74.3728704096738,
+            "shorelineDistance": 155.6271295903262,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": 0.2885136911243862,
+              "z": 0.029439244779908336
+            },
+            "normal": {
+              "x": -0.2770960844125394,
+              "y": 0.9604261181944245,
+              "z": -0.02827421958654284
+            },
+            "slope": 0.29001175682966557,
+            "slopeClass": "MODERATE",
+            "curvature": 0.07167095514333255,
+            "curvatureClass": "CONVEX",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": 18,
+          "z": -192,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": 18,
+              "y": 16.67558360381403,
+              "z": -192
+            },
+            "elevation": 16.67558360381403,
+            "shorelineZ": -75.72372668125925,
+            "shorelineDistance": 116.27627331874075,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": 0.3572403443357537,
+              "z": -0.5689241271279961
+            },
+            "normal": {
+              "x": -0.29653953417225437,
+              "y": 0.8300841124863281,
+              "z": 0.4722548791391016
+            },
+            "slope": 0.6717851784979184,
+            "slopeClass": "STEEP_NONCLIMBING",
+            "curvature": 0.046865468127862187,
+            "curvatureClass": "CONVEX",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        },
+        {
+          "x": -12,
+          "z": -176,
+          "sample": {
+            "valid": true,
+            "status": "TERRAIN_SAMPLE_COMPLETE",
+            "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+            "generationRevision": 1,
+            "world": {
+              "x": -12,
+              "y": 8.942149188177432,
+              "z": -176
+            },
+            "elevation": 8.942149188177432,
+            "shorelineZ": -81.22663203540641,
+            "shorelineDistance": 94.77336796459359,
+            "coastalSystemId": "H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1",
+            "inlandMountainWatershedSystemId": "H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1",
+            "gradient": {
+              "x": -0.26037731610801984,
+              "z": -0.35154884732688885
+            },
+            "normal": {
+              "x": 0.2385489217445249,
+              "y": 0.9161662978566104,
+              "z": 0.3220772059712345
+            },
+            "slope": 0.43747335781791324,
+            "slopeClass": "MODERATE",
+            "curvature": 0.027792404244024738,
+            "curvatureClass": "NEAR_PLANAR",
+            "materialProfile": "STONE_AND_SPARSE_SOIL"
+          }
+        }
+      ]
+    },
+    "vegetationDiagnostic": {
+      "ok": true,
+      "eligible": true,
+      "status": "RUN_8D_VEGETATION_RESOLUTION_COMPLETE",
+      "instanceCount": 10,
+      "issues": []
+    },
+    "screenshotSha256": "5011a2a4bfc951f9fb6bd528f1e1e9c1c21ef7c301701fb2bd8108ea0a450581",
+    "screenshotBytes": 304920
+  },
+  "anchor": {
+    "status": 200,
+    "captureError": null,
+    "screenshotSha256": "f49a4cf43be938f7c8f6d5a0fffa25dabf3d159a05b3c5a5d4538d87d8467cd1",
+    "screenshotBytes": 31401
+  },
+  "automatedFindings": {
+    "baseRouteLoaded": true,
+    "candidateRouteLoaded": true,
+    "baseCanvasPresent": true,
+    "candidateCanvasPresent": true,
+    "baseNoPageErrors": true,
+    "candidateNoPageErrors": true,
+    "candidateNoConsoleErrors": true,
+    "candidateNoRequestFailures": true,
+    "candidateInteractionExercised": true,
+    "candidateGestureStateAdvanced": true,
+    "sameCanonicalRoute": true,
+    "visualStateChanged": true,
+    "anchorContactSheetCaptured": true,
+    "candidateTerrainSystemLoaded": true
+  },
+  "disposition": "PENDING_INDEPENDENT_VISUAL_REVIEW"
+}

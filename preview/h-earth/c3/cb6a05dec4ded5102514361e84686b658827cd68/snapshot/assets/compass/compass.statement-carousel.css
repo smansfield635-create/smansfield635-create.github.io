@@ -1,0 +1,155 @@
+.compass-statement-orbit{position:relative;max-width:760px;min-height:7rem;margin:1rem auto .9rem;display:grid;grid-template-rows:minmax(4.8rem,auto) auto;row-gap:.35rem;place-items:center;isolation:isolate;outline:0}
+.compass-statement-object{grid-area:1/1;position:relative;width:min(92%,720px);margin:0!important;padding:.25rem .5rem!important;border:0!important;background:none!important;box-shadow:none!important;color:rgba(249,244,226,.96);font-family:var(--font-display,Georgia,serif);font-size:clamp(1.02rem,2.25vw,1.32rem);font-style:italic;line-height:1.48;text-align:center;text-shadow:0 0 18px rgba(244,214,128,.10);transition:opacity .22s ease}
+.compass-statement-object[data-slot="front"]{z-index:2;opacity:1;pointer-events:auto}
+.compass-statement-object[data-slot="rear"]{z-index:1;opacity:0;pointer-events:none}
+.compass-statement-object.is-arriving{animation:compassThoughtArrival .38s ease-out 1}
+.compass-statement-guidance{grid-area:2/1;margin:0;color:rgba(185,218,226,.64);font:760 clamp(.68rem,1.5vw,.76rem)/1.35 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.065em;text-align:center;text-transform:uppercase}
+@keyframes compassThoughtArrival{0%{opacity:.28;text-shadow:0 0 0 transparent}45%{opacity:1;text-shadow:0 0 24px rgba(244,214,128,.42),0 0 34px rgba(102,205,224,.18)}100%{opacity:1;text-shadow:0 0 18px rgba(244,214,128,.10)}}
+
+/* Experience consolidation + interaction restoration successor — generation 1553. */
+[data-compass-root]{--experience-rule:rgba(215,226,226,.14);--experience-rule-strong:rgba(137,227,255,.28);--experience-text:rgba(237,239,230,.82);--experience-soft:rgba(194,211,212,.58)}
+
+/* Opening: eliminate inherited floor and compress the content itself. */
+[data-compass-root] .compass-estate__header{max-width:980px!important;min-height:auto!important;height:auto!important;padding-top:clamp(28px,4vw,48px)!important;padding-bottom:clamp(16px,2.5vw,28px)!important}
+[data-compass-root] .compass-wordmark-stage--maker{min-height:1.65em!important;font-size:clamp(.82rem,1.25vw,1.18rem)!important}
+[data-compass-root] .compass-wordmark-stage--compass{min-height:1em!important;font-size:clamp(3rem,7vw,6rem)!important}
+[data-compass-root] .compass-studio-descriptor{margin:.4rem auto 0!important;font-size:clamp(.68rem,1vw,.86rem)!important;line-height:1.45!important}
+[data-compass-root] .compass-estate__epigraph{max-width:680px!important;margin:clamp(14px,2vw,22px) 0 0!important;padding:0!important;border:0!important;text-align:left!important;color:rgba(239,232,211,.72)!important}
+[data-compass-root] .compass-introduction{max-width:760px!important;margin-top:clamp(22px,3.5vw,38px)!important;border:0!important;overflow:visible!important}
+[data-compass-root] .compass-introduction>summary{width:max-content;max-width:100%;padding:0 0 8px!important;border:0!important;border-bottom:1px solid var(--experience-rule-strong)!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:rgba(221,236,237,.78)!important;font-size:.72rem!important;letter-spacing:.14em!important;text-transform:uppercase!important}
+[data-compass-root] .compass-introduction__body{margin:0!important;padding:clamp(22px,3vw,34px) 0 0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;gap:clamp(18px,3vw,28px)!important;color:var(--experience-text)!important}
+[data-compass-root] .compass-introduction__body::before{display:none!important}
+[data-compass-root] .compass-introduction__connective,[data-compass-root] .compass-introduction__orientation,[data-compass-root] .compass-monument-question,[data-compass-root] .compass-philosophy-claim{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+[data-compass-root] .compass-monument-question{display:inline!important;color:rgba(255,242,202,.94)!important}
+[data-compass-root] .compass-introduction__orientation{color:rgba(224,237,236,.78)!important}
+[data-compass-root] .compass-philosophy-claim{max-width:34ch!important;margin-top:6px!important;color:rgba(255,239,190,.9)!important;font-size:clamp(1.3rem,2.6vw,1.8rem)!important}
+
+/* Compass: working object first; explanatory furniture dissolves. */
+[data-compass-root] .compass-instrument{margin-top:0!important;padding-top:clamp(12px,2vw,20px)!important;border-top:1px solid var(--experience-rule)!important}
+[data-compass-root] .compass-orbit-intro{max-width:100%!important;margin:0 0 clamp(10px,1.5vw,16px)!important}
+[data-compass-root] .compass-orbit-intro h2,[data-compass-root] .compass-orbit-intro>p:last-child{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+[data-compass-root] .compass-instrument__grid{grid-template-columns:minmax(0,1fr)!important;gap:0!important}
+[data-compass-root] .compass-scene{min-height:clamp(560px,72vh,780px)!important;border:0!important;border-radius:0!important;background:radial-gradient(ellipse at 50% 42%,rgba(124,220,255,.065),transparent 40%)!important;box-shadow:none!important}
+[data-compass-root] .compass-guidance{bottom:16px!important;width:auto!important;max-width:min(90%,680px)!important;height:auto!important;min-height:2.75rem!important;padding:7px 0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;color:rgba(210,228,230,.64)!important;letter-spacing:.04em!important;line-height:1.45!important;white-space:normal!important;overflow:visible!important}
+[data-compass-root] .compass-panel{min-height:0!important;margin-top:0!important;padding:clamp(22px,3.5vw,34px) 0 0!important;border:0!important;border-top:1px solid var(--experience-rule)!important;border-radius:0!important;background:none!important;box-shadow:none!important;overflow:visible!important;display:grid!important;grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr)!important;column-gap:clamp(28px,5vw,72px)!important;align-items:start!important}
+[data-compass-root] .compass-panel__eyebrow,[data-compass-root] .compass-live-preview__state{grid-column:1!important;margin:0 0 8px!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;letter-spacing:.12em!important}
+[data-compass-root] .compass-panel h2{grid-column:1!important;max-width:12ch!important;margin:0!important;font-size:clamp(1.8rem,3vw,2.8rem)!important}
+[data-compass-root] .compass-panel>p:not(.compass-panel__eyebrow):not(.compass-live-preview__state){grid-column:2!important;margin:0 0 .7rem!important;max-width:58ch!important;color:var(--experience-text)!important}
+[data-compass-root] .compass-panel__actions{grid-column:2!important;margin-top:8px!important}
+[data-compass-root] .compass-panel__actions button{padding:8px 0!important;border:0!important;border-bottom:1px solid rgba(242,213,138,.42)!important;border-radius:0!important;background:none!important;min-height:38px!important}
+
+/* Mirrorland choice is an exclusive state, not a translucent layer over stale panel copy. */
+[data-compass-root] [data-compass-panel]:has([data-compass-mirrorland-routes]:not([hidden])){display:block!important;position:relative!important;isolation:isolate!important;padding:clamp(22px,3.5vw,34px) 0 0!important;border:0!important;border-top:1px solid var(--experience-rule)!important;border-radius:0!important;background:rgba(2,7,13,.985)!important;box-shadow:none!important;overflow:visible!important}
+[data-compass-root] [data-compass-panel]:has([data-compass-mirrorland-routes]:not([hidden]))>:not([data-compass-mirrorland-routes]){display:none!important;visibility:hidden!important;pointer-events:none!important}
+[data-compass-root] .compass-mirrorland-routes:not([hidden]){display:block!important;position:relative!important;inset:auto!important;z-index:3!important;width:100%!important;max-width:760px!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important}
+[data-compass-root] .compass-mirrorland-routes h3{max-width:16ch!important;margin:.35rem 0 1rem!important;font-size:clamp(2rem,4vw,3.6rem)!important;line-height:.96!important;letter-spacing:-.04em!important}
+[data-compass-root] .compass-mirrorland-routes nav{display:grid!important;gap:0!important;border-top:1px solid var(--experience-rule)!important}
+[data-compass-root] .compass-mirrorland-routes nav a{display:block!important;padding:14px 0!important;border:0!important;border-bottom:1px solid var(--experience-rule)!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:rgba(238,240,231,.9)!important;text-decoration:none!important}
+
+/* Opening thought is content, not a floating card. */
+[data-compass-root] .compass-statement-orbit{max-width:920px!important;min-height:0!important;margin:clamp(20px,3vw,32px) auto 0!important;padding:clamp(14px,2vw,22px) 0!important;border:0!important;border-top:1px solid var(--experience-rule)!important;border-bottom:1px solid var(--experience-rule)!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;grid-template-rows:auto auto!important}
+[data-compass-root] .compass-statement-object{width:min(100%,800px)!important;font-size:clamp(1.35rem,2.5vw,2.15rem)!important;font-style:normal!important;font-weight:650!important;line-height:1.04!important;letter-spacing:-.035em!important;text-align:left!important}
+[data-compass-root] .compass-statement-guidance{justify-self:start!important;margin-top:8px!important;text-align:left!important}
+
+/* Protected runtime injects purpose styling after CSS load; this outranks presentation only. */
+html body [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-introduction.compass-purpose-stage{display:block!important;position:relative!important;inset:auto!important;float:none!important;transform:none!important;width:auto!important;height:auto!important;max-width:1120px!important;margin:clamp(54px,7vw,84px) auto 0!important;padding:clamp(24px,4vw,38px) 0 0!important;border:0!important;border-top:1px solid var(--experience-rule)!important;border-radius:0!important;background:none!important;background-image:none!important;box-shadow:none!important;backdrop-filter:none!important;z-index:auto!important;overflow:visible!important;contain:none!important}
+html body [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-purpose-stage>summary{padding:0 0 8px!important;border:0!important;border-bottom:1px solid var(--experience-rule-strong)!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+html body [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-purpose-stage .compass-introduction__body{padding:clamp(22px,3vw,32px) 0 0!important;border:0!important;border-radius:0!important;background:none!important;background-image:none!important;box-shadow:none!important;backdrop-filter:none!important}
+html body [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-purpose-first-read{max-width:860px!important;gap:14px!important}
+html body [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-purpose-first-read h2{max-width:17ch!important;font-size:clamp(2.5rem,5vw,4.8rem)!important;line-height:.92!important}
+
+/* Capability selection: one editorial sequence rather than a shelf of cards. */
+[data-compass-root] .compass-monuments{max-width:1120px!important;margin:clamp(62px,8vw,96px) auto 0!important;grid-template-columns:minmax(210px,.56fr) minmax(0,1.44fr)!important;gap:clamp(32px,6vw,86px)!important;border-top:1px solid var(--experience-rule)!important;padding-top:clamp(28px,5vw,52px)!important}
+[data-compass-root] .compass-capability-choices{gap:0!important;border-top:1px solid var(--experience-rule)!important}
+[data-compass-root] .compass-monument{min-height:0!important;padding:18px 0!important;border:0!important;border-bottom:1px solid var(--experience-rule)!important;border-radius:0!important;background:none!important;box-shadow:none!important;transform:none!important}
+[data-compass-root] .compass-monument[aria-selected="true"]{padding-left:14px!important;border-left:2px solid rgba(242,213,138,.68)!important;border-bottom-color:var(--experience-rule)!important;background:none!important;box-shadow:none!important;transform:none!important}
+[data-compass-root] .compass-monument h2{font-size:clamp(1.05rem,2vw,1.35rem)!important;letter-spacing:-.02em!important}
+[data-compass-root] .compass-monument p{display:none!important}
+[data-compass-root] .compass-monument-detail{min-height:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;overflow:visible!important;align-content:start!important}
+[data-compass-root] .compass-monument-detail::before{display:none!important}
+[data-compass-root] .compass-monument-detail h3{max-width:13ch!important;font-size:clamp(2.8rem,5.5vw,5.2rem)!important;line-height:.9!important;letter-spacing:-.055em!important}
+[data-compass-root] .compass-monument-detail p{max-width:52ch!important;color:var(--experience-text)!important;font-size:clamp(1rem,1.8vw,1.12rem)!important}
+[data-compass-root] .compass-monument-detail a{display:inline-flex!important;margin-top:1rem!important;padding:0 0 .35rem!important;border:0!important;border-bottom:1px solid rgba(137,227,255,.44)!important;border-radius:0!important;background:none!important}
+
+/* Dimensional capability orbit: object remains; plaque does not become a card. */
+[data-compass-root] .compass-capability-cue{margin-top:clamp(58px,8vw,96px)!important;color:rgba(201,216,217,.46)!important}
+[data-compass-root] .compass-capability-orbit{min-height:40rem!important;margin-top:12px!important}
+[data-compass-root] .compass-orbit-plaque{border:0!important;border-radius:0!important;background:none!important;background-image:none!important;box-shadow:none!important;backdrop-filter:none!important}
+[data-compass-root] .compass-orbit-plaque::before{display:none!important}
+[data-compass-root] .compass-status-rail li{padding:.2rem .35rem!important;border:0!important;border-radius:0!important;background:none!important}
+[data-compass-root] .compass-status-rail li[data-state=current]{border-bottom:1px solid rgba(244,214,128,.58)!important;background:none!important}
+[data-compass-root] .compass-orbit-controls button{border-color:rgba(137,227,255,.24)!important;background:rgba(2,8,13,.28)!important}
+[data-compass-root] .house-orbit-member{border-color:rgba(139,168,175,.10)!important;background:rgba(5,15,23,.18)!important;box-shadow:none!important}
+
+/* Readiness/evidence: preserve proof rail while removing proof furniture. */
+[data-compass-root] .compass-built{max-width:1120px!important;margin:clamp(70px,9vw,110px) auto 0!important;padding:clamp(30px,5vw,54px) 0 0!important;border:0!important;border-top:1px solid var(--experience-rule)!important;border-radius:0!important;background:none!important;box-shadow:none!important}
+[data-compass-root] .compass-built>h2{max-width:16ch!important;font-size:clamp(2.8rem,6vw,5.8rem)!important;line-height:.9!important}
+[data-compass-root] .compass-built__lead{max-width:58ch!important;color:var(--experience-text)!important}
+[data-compass-root] .compass-built__proof{gap:0!important;margin-top:clamp(28px,4vw,44px)!important;border-top:1px solid var(--experience-rule)!important}
+[data-compass-root] .compass-proof-choice{min-height:0!important;padding:16px 12px 16px 0!important;border:0!important;border-bottom:1px solid var(--experience-rule)!important;border-radius:0!important;background:none!important;transform:none!important}
+[data-compass-root] .compass-proof-choice[aria-selected="true"]{padding-left:12px!important;border-left:2px solid rgba(242,213,138,.64)!important;background:none!important;transform:none!important}
+[data-compass-root] .compass-built__active-proof,[data-compass-root] .compass-proof-card{min-height:0!important;margin-top:clamp(20px,3vw,32px)!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;background-image:none!important;box-shadow:none!important;backdrop-filter:none!important;overflow:visible!important}
+[data-compass-root] .compass-built__active-proof::before,[data-compass-root] .compass-proof-card::before{display:none!important}
+[data-compass-root] .compass-built__active-proof strong,[data-compass-root] .compass-proof-card h3{font-family:Georgia,serif!important;font-size:clamp(1.7rem,3vw,2.4rem)!important}
+[data-compass-root] .compass-proof-card p{max-width:68ch!important;color:var(--experience-text)!important}
+[data-compass-root] .compass-trl-rail{margin-top:clamp(20px,3vw,30px)!important;padding-top:18px!important;border-top:1px solid var(--experience-rule)!important}
+[data-compass-root] .compass-built__more{max-width:760px!important;margin-top:clamp(30px,5vw,48px)!important;border-top:1px solid var(--experience-rule)!important}
+[data-compass-root] .compass-built__more nav{gap:22px!important}
+
+/* Construction remains available but cannot dominate the terminal category beat. */
+[data-compass-root] .compass-build-cta{max-width:760px!important;margin:clamp(42px,6vw,66px) auto 0!important;padding:clamp(22px,3vw,30px) 0 0!important;border-top:1px solid var(--experience-rule)!important;grid-template-columns:1fr!important;gap:10px!important;align-items:start!important;opacity:.72!important}
+[data-compass-root] .compass-build-cta h3{max-width:24ch!important;margin:4px 0!important;font-size:clamp(1.15rem,1.8vw,1.55rem)!important;line-height:1.08!important;letter-spacing:-.02em!important}
+[data-compass-root] .compass-build-cta p{max-width:60ch!important;color:var(--experience-soft)!important;font-size:.86rem!important;line-height:1.55!important}
+[data-compass-root] .compass-build-cta a{justify-self:start!important;align-self:start!important;padding:0 0 .3rem!important;border:0!important;border-bottom:1px solid rgba(242,213,138,.32)!important;border-radius:0!important;background:none!important;font-size:.8rem!important}
+[data-compass-root] .compass-selective-routes{margin-top:clamp(38px,5vw,58px)!important;gap:18px!important;border-top:1px solid var(--experience-rule)!important;padding-top:22px!important}
+[data-compass-root] .compass-selective-routes a{padding:0 0 .3rem!important;border:0!important;border-bottom:1px solid rgba(137,227,255,.2)!important;border-radius:0!important;background:none!important}
+
+/* Tablet is explicitly part of the experience gate at 1024px. */
+@media(max-width:1100px){
+ [data-compass-root] .compass-panel{grid-template-columns:1fr!important;row-gap:8px!important}
+ [data-compass-root] .compass-panel__eyebrow,[data-compass-root] .compass-live-preview__state,[data-compass-root] .compass-panel h2,[data-compass-root] .compass-panel>p:not(.compass-panel__eyebrow):not(.compass-live-preview__state),[data-compass-root] .compass-panel__actions{grid-column:1!important}
+ [data-compass-root] .compass-monuments{grid-template-columns:1fr!important;gap:30px!important}
+ [data-compass-root] .compass-capability-choices{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ [data-compass-root] .compass-monument{padding-right:14px!important}
+ [data-compass-root] .compass-built__proof{grid-template-columns:1fr!important}
+ [data-compass-root] .compass-build-cta{grid-template-columns:1fr!important}
+ [data-compass-root] .compass-build-cta a{justify-self:start!important}
+}
+@media(max-width:560px){
+ [data-compass-root] .compass-estate{padding-inline:18px!important}
+ [data-compass-root] .compass-estate__header{min-height:auto!important;padding-top:24px!important;padding-bottom:18px!important}
+ [data-compass-root] .compass-identity-3d,[data-compass-root] .compass-statement-orbit{width:92%!important;max-width:92%!important;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box!important;transform:none!important}
+ [data-compass-root] .compass-wordmark-stage,[data-compass-root] .compass-wordmark-geometry{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+ [data-compass-root] .compass-wordmark-stage--compass{font-size:clamp(2.35rem,10.8vw,3.35rem)!important}
+ [data-compass-root] .compass-studio-descriptor{max-width:94%!important;font-size:.62rem!important;line-height:1.4!important;overflow-wrap:anywhere!important}
+ [data-compass-root] .compass-estate__sentence{max-width:28ch!important}
+ [data-compass-root] .compass-introduction__body{font-size:.98rem!important;line-height:1.65!important}
+ [data-compass-root] .compass-scene{min-height:560px!important}
+ [data-compass-root] .compass-guidance{bottom:10px!important;width:88%!important;max-width:88%!important;min-height:3rem!important;font-size:.7rem!important;line-height:1.45!important}
+ [data-compass-root] .compass-panel{padding-top:22px!important}
+ [data-compass-root] .compass-panel>p:not(.compass-panel__eyebrow):not(.compass-live-preview__state){font-size:.96rem!important}
+ [data-compass-root] .compass-statement-orbit{margin-top:16px!important;padding:12px 0!important}
+ [data-compass-root] .compass-statement-object{font-size:clamp(1.25rem,6.8vw,1.85rem)!important}
+ [data-compass-root] .compass-mirrorland-routes:not([hidden]){max-width:100%!important}
+ [data-compass-root] .compass-mirrorland-routes h3{font-size:clamp(2rem,10vw,2.8rem)!important}
+ html body [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-introduction.compass-purpose-stage{margin-top:44px!important;padding-top:22px!important}
+ html body [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-purpose-first-read h2{font-size:clamp(2.2rem,11vw,3rem)!important}
+ [data-compass-root] .compass-capability-choices{grid-template-columns:1fr!important}
+ [data-compass-root] .compass-monument{padding:14px 0!important}
+ [data-compass-root] .compass-monument[aria-selected="true"]{padding-left:10px!important}
+ [data-compass-root] .compass-monument-detail h3{font-size:clamp(2.6rem,13vw,4rem)!important}
+ [data-compass-root] .compass-capability-orbit{min-height:37rem!important}
+ [data-compass-root] .compass-status-rail{gap:.18rem!important}
+ [data-compass-root] .compass-status-rail li{min-width:0!important;font-size:.56rem!important}
+ [data-compass-root] .compass-built>h2{font-size:clamp(2.6rem,13vw,4rem)!important}
+ [data-compass-root] .compass-build-cta h3{font-size:1.15rem!important}
+}
+
+/* Gen1844 continuity renewal: restore the sayings as a luminous signal without returning to a card treatment. */
+[data-compass-root] .compass-statement-orbit{isolation:isolate!important;filter:drop-shadow(0 0 18px rgba(244,214,128,.07))!important}
+[data-compass-root] .compass-statement-object{color:rgba(255,247,220,.98)!important;text-shadow:0 0 20px rgba(244,214,128,.20),0 0 32px rgba(102,205,224,.08)!important;transition:opacity .24s ease,text-shadow .34s ease,filter .34s ease!important}
+[data-compass-root] .compass-statement-object[data-slot="front"]{filter:brightness(1.08)!important}
+[data-compass-root] .compass-statement-object.is-arriving{animation:compassThoughtArrivalGen1844 .55s cubic-bezier(.2,.78,.18,1) 1!important}
+@keyframes compassThoughtArrivalGen1844{0%{opacity:.22;filter:brightness(.82);text-shadow:0 0 0 transparent}48%{opacity:1;filter:brightness(1.24);text-shadow:0 0 34px rgba(244,214,128,.56),0 0 48px rgba(102,205,224,.22)}100%{opacity:1;filter:brightness(1.08);text-shadow:0 0 20px rgba(244,214,128,.20),0 0 32px rgba(102,205,224,.08)}}
+
+@media(prefers-reduced-motion:reduce){.compass-statement-object{transition:none}.compass-statement-object.is-arriving{animation:none!important}}

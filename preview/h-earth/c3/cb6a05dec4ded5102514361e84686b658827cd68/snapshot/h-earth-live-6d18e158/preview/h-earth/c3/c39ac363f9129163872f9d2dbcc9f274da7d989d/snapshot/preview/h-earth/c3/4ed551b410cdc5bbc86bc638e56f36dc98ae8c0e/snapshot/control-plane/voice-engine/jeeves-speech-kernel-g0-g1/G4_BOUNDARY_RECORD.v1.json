@@ -1,0 +1,37 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_KERNEL_G4_BOUNDARY_v1",
+  "status": "CONSTRUCTED_PENDING_RENDER_QUALIFICATION",
+  "predecessorGeneration": "G3",
+  "installedMain": "678ce3011b8382692df69ec3b213f652ca18f369",
+  "heldConstant": [
+    "exact eight Compass lines",
+    "G1 timing law",
+    "G2 lexical stress law",
+    "G2 macro F0 contour",
+    "G2 energy law",
+    "G3 micro F0 variation",
+    "G3 micro amplitude variation",
+    "sample rate",
+    "WAV encoding"
+  ],
+  "g4AuthorizedVariables": [
+    "cross-phoneme formant interpolation",
+    "vowel-to-vowel spectral glide",
+    "sonorant transition smoothing",
+    "time-varying harmonic spectral tilt",
+    "voiced/unvoiced boundary crossfade",
+    "consonant release spectral shaping"
+  ],
+  "g4ForbiddenVariables": [
+    "new timing law",
+    "new lexical stress law",
+    "new macro prosody law",
+    "breath insertion",
+    "learned residual",
+    "external model weights",
+    "public product mutation"
+  ],
+  "acceptanceQuestion": "Does G4 materially reduce rigid metallic acoustic identity by smoothing articulation and making the spectral envelope evolve through phoneme transitions while preserving G1-G3 performance behavior?",
+  "nextIfPass": "ASSESS_OWNER_REVIEW_THRESHOLD_THEN_G5_ONLY_IF_ACOUSTIC_RESIDUAL_REMAINS",
+  "nextIfFail": "REPAIR_G4_COARTICULATION_AND_SPECTRAL_DYNAMICS_WITHOUT_ADVANCING_GENERATION"
+}

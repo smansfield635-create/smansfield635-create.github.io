@@ -1,0 +1,68 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "MATERIAL_WORK_AUDIT",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "research/material-work-audit/"
+  ],
+  "ownedExactPaths": [],
+  "entrypoint": ".github/ai-router/projects/material-work-audit/entrypoint.v1.json",
+  "authorityBoundary": [
+    "REPOSITORY_EVIDENCE_IS_AUTHORITATIVE_FOR_LAYER_A_SOFTWARE_PRODUCTION_FACTS",
+    "CONVERSATION_MEMORY_MUST_NOT_SUBSTITUTE_FOR_REPOSITORY_EVIDENCE",
+    "V0_CLASSIFICATIONS_MUST_NOT_BE_READ_WHILE_ASSIGNING_V1",
+    "V0_CLASSIFICATIONS_AND_AGGREGATES_MUST_NOT_BE_OVERWRITTEN",
+    "V0_V1_DISAGREEMENTS_MUST_BE_PRESERVED_AS_EVIDENCE",
+    "RESEARCH_AUDIT_OUTPUT_DOES_NOT_CREATE_PRODUCT_RUNTIME_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json",
+    "research/material-work-audit/material-work-audit-v1.md"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> [--path <PATH> ...] --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/material-work-audit-router-receipt.json",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "BIND_FIXED_906_PR_POPULATION",
+      "CLASSIFY_V1_WITHOUT_V0_LABEL_ACCESS",
+      "FREEZE_V1_DATASET",
+      "COMPUTE_V0_V1_DISAGREEMENT_LEDGER",
+      "CALCULATE_REPRODUCIBILITY",
+      "DRAFT_PR_REVIEW",
+      "STOP_BEFORE_MERGE"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "CLEAN_WORKTREE",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH"
+    ]
+  },
+  "githubActionsExecution": {
+    "allowed": true,
+    "requirements": [
+      "EXACT_HEAD_BINDING",
+      "FIXED_906_PR_POPULATION_RECONCILIATION",
+      "V1_CLASSIFICATION_BLINDED_TO_V0",
+      "PERSISTENT_PER_PR_EVIDENCE_LEDGER"
+    ]
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_REVIEW_REQUIRED_OR_STOP_FOR_A_MUTATION_PATH",
+    "STOP_IF_V0_LABELS_ARE_EXPOSED_BEFORE_V1_DATASET_FREEZE",
+    "STOP_IF_FIXED_906_PR_POPULATION_CANNOT_BE_RECONCILED",
+    "STOP_IF_REPOSITORY_EVIDENCE_IS_INSUFFICIENT_FOR_A_CLASSIFICATION_WITHOUT_RECORDING_UNRESOLVED_STATE",
+    "STOP_BEFORE_MERGE_WITHOUT_SEPARATE_EXACT_HEAD_AUTHORITY"
+  ]
+}

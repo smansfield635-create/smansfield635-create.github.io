@@ -1,0 +1,86 @@
+name: H-Earth Registry Two-Path Toolset Registration Validation
+on:
+  pull_request:
+    paths:
+      - '.github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json'
+      - 'tools/h-earth-registry-two-path-toolset/**'
+      - '.github/workflows/h-earth-registry-two-path-toolset-registration-validation.yml'
+permissions:
+  contents: write
+  actions: read
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    outputs:
+      tooling_head: ${{ steps.ids.outputs.tooling_head }}
+      registration_head: ${{ steps.ids.outputs.registration_head }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - id: ids
+        run: |
+          echo "tooling_head=$(node -e "const d=require('./.github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json');process.stdout.write(d.exactToolingHead)")" >> "$GITHUB_OUTPUT"
+          echo "registration_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - run: for f in tools/h-earth-registry-two-path-toolset/*.mjs; do node --check "$f"; done
+      - run: |
+          node tools/h-earth-registry-two-path-toolset/self-test.v1.mjs --tooling-head "${{ steps.ids.outputs.tooling_head }}" --registration-head "${{ steps.ids.outputs.registration_head }}" --execution-holder "CP9_A002_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}" --output /tmp/builder.json
+      - uses: actions/upload-artifact@v4
+        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder.json, if-no-files-found: error, retention-days: 90}
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: "${{ github.event.pull_request.head.sha }}", fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: actions/download-artifact@v4
+        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder}
+      - run: |
+          node tools/h-earth-registry-two-path-toolset/fresh-verifier.v1.mjs --tooling-head "${{ needs.builder.outputs.tooling_head }}" --registration-head "${{ needs.builder.outputs.registration_head }}" --builder-receipt /tmp/builder/builder.json --execution-holder "CP9_A002_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}" --output /tmp/verifier.json
+      - uses: actions/upload-artifact@v4
+        with: {name: "h-earth-two-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/verifier.json, if-no-files-found: error, retention-days: 90}
+  certify-and-close:
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: "${{ github.event.pull_request.head.sha }}", fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - uses: actions/download-artifact@v4
+        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder}
+      - uses: actions/download-artifact@v4
+        with: {name: "h-earth-two-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/verifier}
+      - run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';const b=JSON.parse(fs.readFileSync('/tmp/builder/builder.json')),v=JSON.parse(fs.readFileSync('/tmp/verifier/verifier.json'));
+          if(b.result!=='PASS_CLOSED_TOOLSET_CONFORMANT'||v.result!=='PASS_CLOSED_INDEPENDENTLY_REPRODUCED'||b.packageFingerprint!==v.packageFingerprint)throw Error('CERTIFICATION_FAILED');
+          fs.writeFileSync('/tmp/certification.json',JSON.stringify({schema:'CP9_OPERATION_A_TOOLSET_FINAL_CERTIFICATION_v1',result:'PASS_CLOSED_TOOLSET_REGISTERED_AND_REPRODUCED',operationId:'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_002',toolingHead:b.toolingHead,registrationHead:b.registrationHead,descriptorId:b.descriptorId,packageFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,exactRouteCount:b.routePositiveCount,negativeRouteCount:b.routeNegativeCount,negativeFixtureCount:b.negativeFixtureCount,productMutationPerformed:false,pr570Mutated:false,mergePerformed:false},null,2)+'\n');
+          NODE
+      - run: |
+          node tools/h-earth-registry-two-path-toolset/termination.v1.mjs --builder /tmp/builder/builder.json --verifier /tmp/verifier/verifier.json --certification /tmp/certification.json --output /tmp/termination.json
+      - env: {GITHUB_TOKEN: "${{ github.token }}"}
+        run: |
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "${{ github.repository }}" --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_002 --lock-scope 'H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1:RETRY:002' --lock-generation 47 --terminal-disposition PASS_CLOSED --output /tmp/closure.json
+          node -e "const r=require('/tmp/closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED')process.exit(1)"
+      - run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';const c=JSON.parse(fs.readFileSync('/tmp/certification.json')),t=JSON.parse(fs.readFileSync('/tmp/termination.json')),l=JSON.parse(fs.readFileSync('/tmp/closure.json'));const pass=c.result==='PASS_CLOSED_TOOLSET_REGISTERED_AND_REPRODUCED'&&t.result==='PASS_CLOSED_OPERATION_A_AUTHORITY_TERMINATED'&&l.result==='TERMINAL_CLOSURE_COMMITTED';fs.writeFileSync('/tmp/continuation.json',JSON.stringify({schema:'CP9_OPERATION_A_CONTINUATION_GATE_RESULT_v1',result:pass?'CONTINUE_TO_SEPARATE_CP10_AUTHORITY':'STOP',operationBAuthorityInherited:false},null,2)+'\n');if(!pass)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "h-earth-two-path-final-${{ github.run_id }}-${{ github.run_attempt }}"
+          path: |
+            /tmp/builder/builder.json
+            /tmp/verifier/verifier.json
+            /tmp/certification.json
+            /tmp/termination.json
+            /tmp/closure.json
+            /tmp/continuation.json
+          if-no-files-found: error
+          retention-days: 90

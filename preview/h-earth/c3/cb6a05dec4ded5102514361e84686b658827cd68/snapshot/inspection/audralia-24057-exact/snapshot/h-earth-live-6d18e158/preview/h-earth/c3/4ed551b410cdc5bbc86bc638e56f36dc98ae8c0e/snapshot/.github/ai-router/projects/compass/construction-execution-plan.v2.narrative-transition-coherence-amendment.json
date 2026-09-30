@@ -1,0 +1,117 @@
+{
+  "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2_NARRATIVE_TRANSITION_COHERENCE_AMENDMENT",
+  "status": "ACTIVE_MANDATORY_CONSTRUCTION_CONTEXT",
+  "projectId": "COMPASS",
+  "appliesWith": [
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.display-fidelity-amendment.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.information-delivery-amendment.json"
+  ],
+  "purpose": "Preserve the approved Diamond Gate Bridge narrative progression and define the diagnosed constellation transition-coherence defect before the next public Compass construction pass.",
+  "authorityBoundary": [
+    "THIS_AMENDMENT_IS_DEVELOPMENT_CONTEXT_AND_CREATES_NO_MUTATION_AUTHORITY",
+    "THIS_AMENDMENT_DOES_NOT_BY_ITSELF_AUTHORIZE_PUBLIC_PRODUCT_CONSTRUCTION_OR_MERGE",
+    "EXISTING_V2_DISPLAY_FIDELITY_AND_INFORMATION_DELIVERY_CONTEXT_REMAINS_IN_FORCE",
+    "NO_SCIENTIFIC_EVIDENCE_GOVERNANCE_OR_DOMAIN_AUTHORITY_IS_CREATED_OR_WIDENED"
+  ],
+  "approvedNarrativeChanges": {
+    "diamondGateBridgeDiscoveryProposition": {
+      "exactText": "Discovery begins when the boundaries between what we know start to disappear.",
+      "intendedPlacement": "Replace the redundant instructional sentence directly beneath The Compass heading and immediately before the existing original epigraph.",
+      "why": [
+        "The prior sentence repeats navigation instructions already delivered by the interactive Compass below.",
+        "The top of the page should state a Diamond Gate Bridge worldview before it teaches interface operation.",
+        "The proposition expresses the estate's cross-boundary purpose without describing the website mechanics."
+      ]
+    },
+    "mirrorlandNarrativeAnchor": {
+      "exactText": "Find the door to Mirrorland.",
+      "role": "Persistent narrative objective for the full Compass interactive experience until the Mirrorland threshold is discovered.",
+      "intendedPrimaryApplication": "Replace the generic Estate Navigation headline while retaining concise practical interaction guidance underneath.",
+      "supportingCopyDirection": "Rotate the Compass. Bring a star forward to learn what it contains. Follow the rooms until the door becomes clear.",
+      "why": [
+        "Mirrorland should function as a discovery objective rather than a mechanically pre-explained destination.",
+        "The user should receive a mission as well as operating instructions.",
+        "The narrative objective gives cardinal and room exploration a coherent reason to continue."
+      ]
+    },
+    "existingOriginalEpigraph": {
+      "exactText": "When you learn to live a life without expectations, you experience a life without limitations.",
+      "status": "PRESERVE",
+      "relationship": "The discovery proposition states the Diamond Gate Bridge worldview; the epigraph states its human possibility."
+    },
+    "narrativeSequence": [
+      "DIAMOND_GATE_BRIDGE_DISCOVERY_PROPOSITION",
+      "HUMAN_EPIGRAPH",
+      "WHY_DIAMOND_GATE_EXISTS",
+      "FIND_THE_DOOR_TO_MIRRORLAND",
+      "PRACTICAL_COMPASS_INTERACTION",
+      "MIRRORLAND_THRESHOLD_DISCOVERY"
+    ]
+  },
+  "diagnosedTransitionDefect": {
+    "id": "CONSTELLATION_FOREGROUND_COMMIT_SKEW",
+    "status": "CODE_SUPPORTED_DIAGNOSIS",
+    "observedSymptom": "A brief flicker or contradictory visual state occurs during constellation cardinal transitions, especially around release and settlement.",
+    "rootCauseClassification": {
+      "crossLayerCommitSkew": "CONFIRMED_ROOT_CAUSE",
+      "quaternionRendererDiscontinuity": "NOT_SUPPORTED",
+      "foregroundLabelTiming": "CONFIRMED_MANIFESTATION_OF_ROOT_CAUSE",
+      "performanceStarvation": "NOT_SUPPORTED"
+    },
+    "codeMechanism": [
+      "During direct manipulation, assets/compass/compass.crystals.js owns the continuously changing rendered quaternion and determines the visually foremost cardinal from that rendered orientation.",
+      "On pointer release, finishConstellationDrag computes a settledQuaternion and immediately commits that final cardinal/orientation through requestControllerOrbitCommit.",
+      "The crystal renderer then continues moving from its current rendered quaternion toward the committed target using quaternionSlerp over subsequent animation frames.",
+      "The inline homepage semantic presentation observes controller data-orbit-preview-focus/data-orbit-focus and immediately changes the is-readable-cardinal class.",
+      "Therefore the readable cardinal can advance to the committed destination while rendered crystal geometry is still physically interpolating toward that destination.",
+      "During drag, nearestPrimaryWing can also change discretely near cardinal boundaries without a visual-settlement or hysteresis requirement, allowing the readable identity to toggle while geometry remains continuous."
+    ],
+    "whyQuaternionDiscontinuityIsNotThePrimaryDiagnosis": "The renderer normalizes quaternions and uses quaternionSlerp between current and target orientations, providing a continuous interpolation path; the contradiction instead arises because semantic identity and rendered foreground do not share the same visual commit boundary.",
+    "whyPerformanceStarvationIsNotThePrimaryDiagnosis": "The contradictory state is produced deterministically by source-level authority timing and does not require dropped frames or sustained rendering overload."
+  },
+  "transitionCoherenceLaw": {
+    "formula": "READABLE_CARDINAL = RENDERED_FOREGROUND_CARDINAL",
+    "prohibitedFormula": "READABLE_CARDINAL = CONTROLLER_NEXT_OR_COMMITTED_CARDINAL_WHILE_RENDERER_IS_STILL_SETTLING",
+    "displayFrameLaw": "Every displayed frame must represent one coherent Compass state. Geometry, readable foreground identity, and semantic presentation may not expose contradictory cardinal states in the same displayed frame.",
+    "authorityRequirement": "Foreground readability must follow a renderer-authoritative visual foreground/settlement signal, or an equivalent single visual-commit authority that guarantees semantic and rendered foreground correspondence.",
+    "boundaryStabilityRequirement": "Foreground identity must not chatter at cardinal decision boundaries during continuous manipulation; the implementation must provide deterministic visual stability before changing the readable cardinal identity.",
+    "preserve": [
+      "Continuous direct manipulation",
+      "Normalized quaternion orientation",
+      "Quaternion SLERP settlement",
+      "Four-cardinal spatial geometry",
+      "One-readable-cardinal information-delivery law",
+      "Reduced-motion semantic equivalence",
+      "Existing routes and destination authority"
+    ],
+    "doNotMaskWith": [
+      "ARBITRARY_LONGER_EASING",
+      "GLOBAL_OPACITY_FADE",
+      "HIDE_CONSTELLATION_DURING_TRANSITION",
+      "WILL_CHANGE_AS_UNPROVEN_FIX",
+      "DOUBLE_REQUEST_ANIMATION_FRAME_AS_UNPROVEN_FIX"
+    ]
+  },
+  "nextConstructionScopeGuidance": {
+    "publicProductMutationAuthorizedByThisDocument": false,
+    "expectedPrimaryFilesForFutureAdmittedConstruction": [
+      "index.html",
+      "assets/compass/compass.crystals.js"
+    ],
+    "controllerMutation": "ONLY_IF_IMPLEMENTATION_PROVES_A_RENDERER_AUTHORITATIVE_VISUAL_COMMIT_SIGNAL_CANNOT_BE_EXPOSED_WITHOUT_CONTROLLER_CHANGE",
+    "narrativeMutation": "Bounded text replacement only; do not add another equivalent instructional block.",
+    "transitionMutation": "Repair state authority correspondence rather than visually covering the flicker."
+  },
+  "acceptanceCriteria": [
+    "The top Compass proposition reads exactly: Discovery begins when the boundaries between what we know start to disappear.",
+    "The narrative objective reads exactly: Find the door to Mirrorland.",
+    "The existing original epigraph remains present and unchanged in meaning.",
+    "Practical Compass interaction instructions remain available but do not duplicate the top worldview proposition.",
+    "During constellation drag and settlement, the one readable cardinal always corresponds to the actually rendered foreground cardinal.",
+    "No displayed transition frame presents semantic/cardinal identity from a later state while crystal geometry remains in an earlier state.",
+    "No cardinal-label chatter occurs at foreground decision boundaries during controlled manipulation.",
+    "Existing routes, Mirrorland lifecycle, room declarations, controller authority boundaries, quaternion continuity, accessibility, and reduced-motion behavior remain preserved."
+  ],
+  "documentationReason": "This amendment records both what is changing and why so subsequent Compass development can distinguish approved narrative intent from diagnosed runtime correction, preserve prior context, and continue iterating without reconstructing decisions from conversation history."
+}

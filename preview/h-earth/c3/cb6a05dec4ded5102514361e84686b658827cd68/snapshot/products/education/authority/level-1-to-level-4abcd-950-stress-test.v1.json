@@ -1,0 +1,112 @@
+{
+  "object": "LEVEL_1_TO_LEVEL_4ABCD_950_WORD_STRESS_TEST",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "PASS_CUMULATIVE_STRUCTURE_AND_TRANSFER_CLOSURE",
+  "governing_head": "c18e289b2835bb8031f52c1f50da747658b6dd54",
+  "authorities": [
+    "/products/education/authority/major-level-1-250-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-2-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+    "/products/education/authority/major-level-3-band-e-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-a-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-b-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-c-50-geometry.v1.json",
+    "/products/education/authority/major-level-4-band-d-50-geometry.v1.json"
+  ],
+  "test_law": {
+    "closed_vocabulary": true,
+    "recompute_from_source_arrays": true,
+    "cumulative_surface_entries": 950,
+    "required_exact_unique_concepts": 950,
+    "normalization_authority": "/products/education/authority/vocabulary-morphological-normalization.v1.json",
+    "prior_transfer_authority": "/products/education/authority/level-1-to-level-4abc-900-stress-test.v1.json",
+    "added_band_authority": "/products/education/authority/major-level-4-band-d-50-geometry.v1.json"
+  },
+  "results": {
+    "surface_entries": 950,
+    "exact_unique_entries": 950,
+    "exact_duplicates": 0,
+    "band_d_exact_overlap_with_prior_900": 0,
+    "band_d_inflection_only_duplicates_reported": 0,
+    "prior_900_retention": "PRESERVED_BY_UNCHANGED_AUTHORITIES"
+  },
+  "transfer_frontier_closure": {
+    "practical_independence": [
+      "refund",
+      "deposit",
+      "withdraw",
+      "transfer",
+      "warranty",
+      "lease",
+      "insurance",
+      "coverage",
+      "utility",
+      "maintenance",
+      "income",
+      "expense",
+      "salary",
+      "tax",
+      "license"
+    ],
+    "interpersonal_formality_transitions": [
+      "decline",
+      "clarify",
+      "resolve",
+      "introduction",
+      "recommendation",
+      "complaint",
+      "apology",
+      "formal",
+      "informal",
+      "tone",
+      "respond"
+    ],
+    "mature_decision_and_consequence": [
+      "permission",
+      "obligation",
+      "commitment",
+      "tradeoff",
+      "outcome",
+      "impact",
+      "severity",
+      "option",
+      "independent",
+      "secure",
+      "urgent"
+    ],
+    "conclusion": "The three deficits recorded by the 900-word stress test are materially addressed by Band D without specialist drift."
+  },
+  "lexical_family_read": {
+    "automatic_inflection_inflation_detected": 0,
+    "derivational_families_retained_only_as_distinct_everyday_concepts": [
+      "work/worker",
+      "lead/leader",
+      "own/owner",
+      "meet/meeting",
+      "read/reader"
+    ],
+    "false_positive_stem_pairs_rejected": [
+      "for/forest",
+      "care/career"
+    ]
+  },
+  "decision": {
+    "gate": "PASS",
+    "next_step": "CONSTRUCT_FINAL_51_UNIQUE_CONCEPTS",
+    "remaining_to_target": 51
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_950_WORD_SYSTEM_STRESS_TEST_COMPLETE",
+    "ACTION_PERFORMED": "Rebuilt the full corpus from the current authority arrays and checked exact uniqueness and normalization continuity.",
+    "ENGINE_RESPONSE": "950 surface entries; 950 exact unique concepts; zero exact duplicates; Band D closes the 900-word transfer frontier.",
+    "NEXT_REQUIRED_INPUT": "MAJOR_LEVEL_4_BAND_E_51_GEOMETRIC_RECONSTRUCTION"
+  }
+}

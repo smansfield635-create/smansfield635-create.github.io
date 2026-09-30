@@ -1,0 +1,100 @@
+{
+  "schema": "EXECUTION_PACKET_v1",
+  "operationId": "COMPASS_AUDIT_DERIVED_PERCEPTUAL_REPAIR_20260822_R2",
+  "lockGeneration": 1593,
+  "mode": "DIRECT_CONSTRUCTION",
+  "exactGoverningHead": "2107b4aa516a1d151a6e3f1c4588e24f0b9c2041",
+  "allowedPaths": [
+    "assets/compass/compass.crystals.js",
+    "assets/compass/compass.capability-carousel.js",
+    "index.html"
+  ],
+  "prohibitedPaths": [
+    ".github/live-qualification/verifiers/compass-root.v1.mjs",
+    ".github/live-qualification/manifests/compass-root.v1.json",
+    "docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md",
+    "laws/",
+    "door/",
+    "home/",
+    "showroom/globe/h-earth/",
+    "showroom/globe/audralia/",
+    "compass-isolated-clone/",
+    ".github/workflows/repository-live-qualification-engine.yml"
+  ],
+  "targetSymbols": [
+    {
+      "path": "assets/compass/compass.crystals.js",
+      "symbols": [
+        "dragQuaternionFromPointer",
+        "settledConstellationQuaternion",
+        "constellation committed convergence branch"
+      ],
+      "maximumExactReads": 1
+    },
+    {
+      "path": "assets/compass/compass.capability-carousel.js",
+      "symbols": [
+        "installGen1591Bounds"
+      ],
+      "maximumExactReads": 1
+    },
+    {
+      "path": "index.html",
+      "symbols": [
+        "compass.crystals.js request identity",
+        "compass.capability-carousel.js request identity"
+      ],
+      "maximumExactReads": 1
+    }
+  ],
+  "requiredMutations": [
+    "Change constellation horizontal drag from the current Y-axis rotation to the cardinal XY-plane Z-axis rotation without changing unrelated pointer or cluster behavior.",
+    "Replace generic constellation vector-to-anchor settlement with deterministic canonical cardinal Z-axis quarter-turn settlements: north 0, east -pi/2, south pi, west +pi/2.",
+    "Use constellation-only committed convergence sufficient to satisfy the existing <=6px release-drift criterion; do not globally change cluster or ambient convergence.",
+    "Preserve the already-bounded contextual/tablet correction in compass.capability-carousel.js and do not re-expand its scope.",
+    "Advance only the request identities in index.html for changed browser-loaded Compass assets.",
+    "Require the final candidate diff to remain small and bounded; the prior ~9500-line textual rewrite is explicitly rejected."
+  ],
+  "prohibitedActions": [
+    "WEB_SEARCH",
+    "BROAD_REPOSITORY_SEARCH",
+    "ARCHITECTURE_SEARCH",
+    "PRECEDENT_SEARCH",
+    "WORKFLOW_DISCOVERY",
+    "CAPABILITY_DISCOVERY",
+    "RE_AUDIT",
+    "REPEATED_SOURCE_FETCH"
+  ],
+  "executionTransport": {
+    "status": "BOUND",
+    "primary": "GitHub Contents API update_file on admitted branch",
+    "targetRepository": "smansfield635-create/smansfield635-create.github.io",
+    "targetBranch": "compass-audit-perceptual-repair-20260822-r2",
+    "supportsAllowedPaths": true,
+    "supportsLargeFiles": true,
+    "fallback": "GitHub Git Data blob/tree/commit/ref transport",
+    "handoffTarget": "write-capable GitHub connector executor",
+    "unboundDisposition": "EXECUTION_TRANSPORT_UNBOUND"
+  },
+  "nextRequiredEvent": "ALLOWED_PATH_MUTATION",
+  "watchdog": {
+    "deadlineSeconds": 120,
+    "observes": "REPOSITORY_VISIBLE_ALLOWED_PATH_MUTATION",
+    "timeoutDisposition": "DIRECT_CONSTRUCTION_TIMEOUT"
+  },
+  "qualification": {
+    "candidateAuthority": ".github/live-qualification/verifiers/compass-root.v1.mjs",
+    "staticAssetIdentityGate": ".github/workflows/static-asset-identity-gate.yml",
+    "liveManifest": ".github/live-qualification/manifests/compass-root.v1.json",
+    "terminalReceipt": "DGB_LIVE_QUALIFICATION_RECEIPT_v1",
+    "mustRemainUnchanged": true
+  },
+  "exitConditions": [
+    "CANDIDATE_READY",
+    "EXECUTION_TRANSPORT_UNBOUND",
+    "EXECUTION_TOOLING_BLOCKED",
+    "DIRECT_CONSTRUCTION_TIMEOUT",
+    "GOVERNING_HEAD_OVERLAP",
+    "SUPERSEDED"
+  ]
+}

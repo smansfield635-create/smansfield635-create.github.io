@@ -1,0 +1,31 @@
+{
+  "schema": "AUDRALIA_ESTATE_SOUNDTRACK_ANCHOR_EVIDENCE_v1",
+  "operationId": "AUDRALIA_ESTATE_SOUNDTRACK_REMOTE_BINDING_20260827_001",
+  "candidateHeadReviewed": "2808557806b012d3fca26f64ffd6d049929cf003",
+  "base": "2574781e2f453cfd1d6ccbc79b0fc30baf7dc86f",
+  "scope": [
+    "showroom/globe/audralia/index.html",
+    "showroom/globe/audralia/audio/estate-soundtrack-v1.mjs"
+  ],
+  "differentialReview": {
+    "worldRendererChanged": false,
+    "cameraSemanticsChanged": false,
+    "weatherPresentationChanged": false,
+    "terrainOrGeographyChanged": false,
+    "navigationSemanticsChanged": false,
+    "newExperienceSurface": "soundtrack control plus visible music attribution",
+    "audioLifecycle": "Swan Lake during loading; Gymnopédie No. 1 after runtime-ready; autoplay denial recovers on user gesture; mute remains user-controlled"
+  },
+  "mechanicalEvidence": {
+    "staticAssetIdentityGate": "PASS",
+    "showroomLabelConformanceBenchmark": "PASS",
+    "showroomFourCompassExactHeadRegression": "PASS",
+    "audraliaWeatherPresentationReconciliation": "PASS",
+    "vercel": "IGNORED_NON_CANONICAL_PUBLICATION_PROVIDER"
+  },
+  "continuityBasis": [
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_FINAL_CLOUD_CLEAR_AIR_ENVELOPE_REDESIGN_20260826_006.json",
+    "h-earth-3d/experience-anchor/evidence/AUDRALIA_STARTUP_TRACE_FIRST_VISUAL_20260823_001.json"
+  ],
+  "finding": "The soundtrack binding is additive and does not alter the accepted Audralia world renderer, geographic continuity, camera/travel controls, cloud/weather presentation, terrain, coast, or scale-transition semantics. The only owner-visible visual additions are a soundtrack toggle in the existing toolbar and attribution in the existing help footer. The accepted H-Earth same-world anchor remains applicable."
+}

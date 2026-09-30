@@ -1,0 +1,123 @@
+{
+  "schema": "CANONICAL_NATIVE_AGENT_INVOCATION_INSTALLATION_EVIDENCE_v1",
+  "operationId": "CANONICAL_AGENT_INVOCATION_ALL_REPOSITORY_WORK_20260912_001",
+  "generation": 2170,
+  "governingHead": "68ba1039054c35f5bb30720e2f53b12d15f8d4ae",
+  "coordinationIssue": 3209,
+  "admissionCommit": "a28cab040e73c97ec2f3a36ca1bfe3278aa77a1b",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3209#issuecomment-5648359719",
+  "declaredChangedPaths": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json",
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/system-continuity/gap-registry.v1.json",
+    ".github/ai-router/agent-invocation/contract.v1.json",
+    ".github/ai-router/agent-invocation/evidence-gate.v1.mjs",
+    ".github/ai-router/agent-invocation/self-test.v1.mjs",
+    ".github/ai-router/agent-invocation/README.md",
+    ".github/ai-router/agent-invocation/installation-evidence.v1.json"
+  ],
+  "recordKind": "COORDINATOR_COMPILED_SOURCE_OBSERVATIONS_NOT_NATIVE_HOST_ATTESTATION",
+  "nativeTasks": [
+    {
+      "nativeTaskId": "/root/elara_invocation_audit",
+      "assignedFunction": "Elara / E / Signal",
+      "state": "COMPLETED",
+      "work": "Independent exact-main source audit located route-only receipts and missing native executor/output fields.",
+      "independentNativeReadback": {
+        "observerTaskId": "/root/soren_invocation_review",
+        "tool": "collaboration.list_agents",
+        "observed": "Native completed task identity and attributable full audit output",
+        "originalDispatchArgumentsObservedByReviewer": false
+      },
+      "limits": [
+        "No independently captured dispatch timestamp",
+        "No new structured evidence-schema record was frozen before this task; do not relabel it as full compliance with the prospective contract"
+      ]
+    },
+    {
+      "nativeTaskId": "/root/tarian_native_evidence_builder",
+      "assignedFunction": "Tarian / S / Continuity",
+      "state": "COMPLETED",
+      "work": "Construct exactly evidence-gate.v1.mjs and self-test.v1.mjs",
+      "nativeReturnedReport": {
+        "text": "Tarian continuity builder: completed local construction report\n\nActual native task identity: /root/tarian_native_evidence_builder\nAssigned canonical function: Tarian / S / Continuity\nOperation: CANONICAL_AGENT_INVOCATION_ALL_REPOSITORY_WORK_20260912_001\nAdmission reported by coordinator: Generation 2170, ADMITTED_AND_LOCKED\nGoverning head assigned: 68ba1039054c35f5bb30720e2f53b12d15f8d4ae\nOriginal immutable assignment source: parent native NEW_TASK message. No timestamp or pre-invocation digest has been reconstructed.\n\nCompleted work: Created the two admitted full files listed below. No other repository file was written by this worker. This scratch report was explicitly requested by the coordinator.\n\n.github/ai-router/agent-invocation/evidence-gate.v1.mjs\nSHA256 264d5d40786fac0d87d4480a1a72608ac7af6b6a8f38e3718dc4de6cc8117bc4\n.github/ai-router/agent-invocation/self-test.v1.mjs\nSHA256 735c23f08f322a9fa77b5229f6c6905d97888b465237ad35e8ce149b629122cc\n\nValidation: node .github/ai-router/agent-invocation/self-test.v1.mjs\nActual observed result: PASS_CLOSED; checks 82; passed 82; failed 0.\nFixture provenance: SYNTHETIC_ONLY_NOT_ACTUAL_AGENT_INVOCATION_EVIDENCE.\nCoverage includes all ten required task classes; all sixteen frozen station mappings; assignment context, head, task, role, authority, unresolved condition, output and observer bindings; malformed digests; route-only and handwritten flags; passive CI rejection; failed worker release requests without success output; file-only authorization attempts; unchanged-constitution mapping; contract and AI entry/AGENTS/shared procedure links.\n\nExported API:\n- canonicalJson(value): deterministic sorted-object-key JSON; array order preserved; non-JSON values rejected.\n- sha256Canonical(assignment): assignment integrity digest, not authenticity proof.\n- sha256Text(text): UTF-8 text digest.\n- validateReceipt(receipt, {expectedAssignment = null} = {}): structure and optional supplied expectation match only.\n- compareReadback(receipt, {assignmentObservation, invocationObservation, outputObservation, observerObservation}, options): comparison of caller-provided observations only.\n- runCli(argv, {readFile, write}): file-only validation; authorization requests always rejected.\n\nRecord shape (CANONICAL_NATIVE_AGENT_EXECUTION_EVIDENCE_v1):\n{schema,taskId,operationId,governingHead,taskClass,\n assignment:{packetId,bearing,canonicalIdentities,objective,authority,unresolvedConditions,\n context:{repository,R,L,D,requiredOutput,evidenceRefs,prohibitedAuthority,handoff}},\n assignmentSha256,nativeTaskId,invocation:{tool,eventRef,returnedTaskId},\n state,output:{text,sha256,sourceEventRef}|null,\n observer:{nativeTaskId,sourceEventRef}|null,\n failure?:{code,detail,sourceEventRef},disposition?:PRESERVE|RELEASE_ONLY}\n\nExpected assignment shape:\n{taskId,operationId,governingHead,taskClass,assignment,assignmentSha256,nativeTaskId?}\n\nProvided observation shapes:\nassignmentObservation:{sourceEventRef,taskId,operationId,governingHead,taskClass,assignment,assignmentSha256,nativeTaskId}\ninvocationObservation:{sourceEventRef,tool,returnedTaskId,taskId,operationId,governingHead,assignmentSha256,state,failureSourceEventRef?}\noutputObservation:{sourceEventRef,nativeTaskId,taskId,assignmentSha256,state,text,sha256}|null\nobserverObservation:{sourceEventRef,nativeTaskId,observedNativeTaskId,taskId,assignmentSha256,invocationEventRef,outputEventRef,outputSha256}|null\n\nResult shape (CANONICAL_NATIVE_AGENT_EVIDENCE_CHECK_v1):\n{schema,result,errorCode,field,taskId,operationId,governingHead,state,\n assignmentBinding,executionAuthenticity,actualInvocationProved:false,\n workAuthorized:false,authorityEffect:NONE,authorityPreserved,\n unresolvedConditionsPreserved,dispositionRequested,hostResponsibility}\n\nValid structure result: STRUCTURE_VALID_EXECUTION_UNVERIFIED.\nMatching supplied observations result: MATCHES_PROVIDED_OBSERVATIONS.\nFile-only CLI never promotes its result beyond STRUCTURE_VALID_EXECUTION_UNVERIFIED; matching observation files add providedObservationComparison only. --authorize always exits 2 with authorizationAttempt REJECTED_SOURCE_AUTHENTICITY_UNPROVABLE_FROM_FILES. Invalid evidence exits 1; valid structural inspection exits 0.\nRUNNING requires no completion output/observer; COMPLETED requires output digest/source and distinct observer; FAILED requires failure evidence and may request RELEASE_ONLY with no successful output. No release is granted by this validator.\n\nLimits: This worker has local construction authority only for the two listed files. No certification, commit, merge, deployment, publication, external message, signed receipt, credential or new autonomous executor was created. Native host source authenticity requires actual independent observation; manufactured agreeing JSON cannot prove it. This report is an attributable work artifact whose relation to this execution must be checked against the worker's native returned completion. The global host/connector enforcement gap remains open. The existing functional router and constitution were read, not changed.\n",
+        "sha256": "9bb840b49d18cad770e66ce2e2cfaa7e3072bec8c2da7d5014bdf33ab9179aed",
+        "source": "Actual native final response for /root/tarian_native_evidence_builder returned this report SHA256; root read the file and verified it."
+      },
+      "limits": [
+        "Original native assignment was a task message; no later schema reconstruction is claimed as a pre-dispatch structured record"
+      ],
+      "independentNativeReadback": {
+        "observerTaskId": "/root/soren_invocation_review",
+        "tool": "collaboration.list_agents",
+        "observed": "Completed native Tarian output naming exact report digest, independently matched to report bytes",
+        "originalDispatchArgumentsObservedByReviewer": false
+      }
+    },
+    {
+      "nativeTaskId": "/root/soren_invocation_review",
+      "assignedFunction": "Soren / W / Boundary",
+      "state": "COMPLETED",
+      "work": "Independent policy, source and native-output readback review",
+      "nativeReturnedReport": {
+        "text": "Soren independent boundary review: completed bounded local review\n\nActual native task identity: /root/soren_invocation_review\nAssigned existing canonical function: Soren / W / Boundary\nOperation: CANONICAL_AGENT_INVOCATION_ALL_REPOSITORY_WORK_20260912_001\nGeneration assigned by coordinator: 2170\nGoverning head recorded by candidate: 68ba1039054c35f5bb30720e2f53b12d15f8d4ae\nAuthority: read-only repository/source review and independent native output readback. Coordinator separately authorized this scratch report. No repository file, branch, GitHub state, admission, merge or deployment was changed by this reviewer.\n\nDisposition: BOUNDED_POLICY_AND_STRUCTURAL_IMPLEMENTATION_REVIEW_PASS. No remaining concrete blocking defect within the stated repository procedure and structural-check scope. This disposition grants no adoption, qualification of unrelated work, merge, deployment, or universal host enforcement authority.\n\nThe reviewed policy requires an actual native spawn/followup for every substantive repository task, including reads, diagnosis, static work, construction, review and publication. It permits only minimal source/current-main/tool discovery before invocation. It reuses actual bounded assignments and requires a new attributable followup for material changes. Native tools unavailable means substantive work stops. Route receipts, JSON labels, coordinator relabeling, fixed intake and passive CI do not count as intelligent-agent invocation.\n\nThe mapping preserves exactly Alaric/N/Navigation, Elara/E/Signal, Tarian/S/Continuity and Soren/W/Boundary, and twelve adjacent composed stations. No additional identity, separate persistent model, or replacement executor is created. Opposing functions remain separately assigned. Mutation/project/lifecycle authority remains independent of bearing and native invocation. Read-only/static tasks retain proportional admission paths; failed or withdrawn work can reduce/release authority without inventing successful output.\n\nTwo concrete preliminary defects were reported to the builder: the gate accepted only four of the ten contract task classes, and its closed assignment schema omitted required context fields. Both are fixed in the reviewed final bytes: all ten classes are represented, and required assignment.context retains repository, typed target/relationship, lifecycle, domain, required output, evidence, prohibited authority and handoff. Context and authority are digest-bound and compared against supplied original expectations.\n\nI read the final gate and test source and independently ran the declared command once:\nnode .github/ai-router/agent-invocation/self-test.v1.mjs\nObserved result: PASS_CLOSED; checks 82; passed 82; failed 0; fixtureProvenance SYNTHETIC_ONLY_NOT_ACTUAL_AGENT_INVOCATION_EVIDENCE; actualInvocationProved false; workAuthorized false; authorityEffect NONE.\n\nThe gate checks structure and consistency. It requires distinct worker/observer identities for completed records and matching output digests. File-only success is STRUCTURE_VALID_EXECUTION_UNVERIFIED. Supplied matching observations yield only MATCHES_PROVIDED_OBSERVATIONS; the CLI still returns the structural result. --authorize fails closed. Caller-manufactured agreeing JSON remains unauthenticated. Neither the gate nor this review installs host/connector mediation.\n\nIndependent native source observations:\n1. Actual collaboration.list_agents returned /root/elara_invocation_audit as completed with its attributable full source-audit output. That output identified Elara/E/Signal, a read-only audit at the governing head, and the difference between route assignment and invocation. I observed the host task identity/status/output, not the original spawn arguments or a pre-invocation assignment digest.\n2. Actual collaboration.list_agents first returned /root/tarian_native_evidence_builder as running, and later returned it as completed with attributable final output naming Tarian/S/Continuity, both frozen code hashes, 82/82 checks and the scratch report digest.\n3. I independently read the exact UTF-8 Tarian report and computed SHA256 9bb840b49d18cad770e66ce2e2cfaa7e3072bec8c2da7d5014bdf33ab9179aed. This equals the digest returned by the native completed task. Its two code hashes equal my independently computed reviewed-file hashes below. This binds the reviewed report bytes to the observed native returned output; it does not establish original dispatch order or complete prospective receipt compliance.\n4. I have not independently authenticated my own execution. My original NEW_TASK supplied Soren/W, Generation 2170, read-only scope and review deliverable, but did not include every prospective structured dispatch field or a pre-invocation digest. No historical timestamp or assignment digest has been reconstructed.\n\nExact reviewed implementation/policy bytes:\nAGENTS.md\nSHA256 e86c5af3ba6ebf0df1893fdf86efe241675d4a0de8a99cb0b2592f3d9ea413eb\nAI_ENTRYPOINT.json\nSHA256 7f7f7d67519bbe61ffea57d01cd851bdae017e44b7ba157f543865de74a11e58\n.github/ai-router/shared-procedures.v1.json\nSHA256 faf7bba8aaa8e495c50cca1ef70ab0ca7225b8b3df8c72335275a0d64f894f83\n.github/ai-router/system-continuity/gap-registry.v1.json\nSHA256 5414ba353f346d4e28b887072e409690bedff6351cb411edbd0ce22de33e8f75\n.github/ai-router/agent-invocation/contract.v1.json\nSHA256 9d7d329e8629a1e8c72bbd87719a4b6eacc0b8a4fed78ea60b3e7d2a78e85260\n.github/ai-router/agent-invocation/evidence-gate.v1.mjs\nSHA256 264d5d40786fac0d87d4480a1a72608ac7af6b6a8f38e3718dc4de6cc8117bc4\n.github/ai-router/agent-invocation/self-test.v1.mjs\nSHA256 735c23f08f322a9fa77b5229f6c6905d97888b465237ad35e8ce149b629122cc\n.github/ai-router/agent-invocation/README.md\nSHA256 c05c3c95d3532a01445b4755d20db5dbb0b6b9139b3ca26d518910e83764c674\n\nThe frozen constitution was read and its Git blob independently computed as 49e08bd13e09e70e9363e9c5e18c6f778288cbfe, matching the contract. Its SHA256 is bef4433b68b64ea6f58d7427d90e27aed54c46f5fca84b4cbd25d419ec87b9d6.\n\nThe installation-evidence.v1.json draft was reviewed for claim boundaries: coordinator-compiled observations, initial dispatch metadata limits, no separately invoked Alaric claim for coordinator work, not merged, no cloud-execution retroclaim, and host gap OPEN. The final wrapper will embed this report, so its final bytes are outside this report's non-self-referential reviewed hash set and require coordinator exact-candidate readback. The local Git store is intentionally partial and git status cannot read its complete governing tree; I reviewed materialized file bytes and hashes, not a full-worktree diff or remote changed-path proof.\n\nUnresolved boundaries and handoff:\n- Candidate adoption and post-adoption task execution are not proven here.\n- CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT remains OPEN. Repository instructions govern compliant rooms; this candidate cannot prevent an unrestricted host or connector from making unmediated calls.\n- The user's universal assurance is therefore not fully implemented by this candidate alone. Describe the result as mandatory repository procedure plus structural checks and actual bounded native tasks observed during this repair.\n- Coordinator must preserve these limits, bind final report bytes to native outputs, perform exact-candidate remote scope/readback, and use existing authorized adoption/lifecycle procedures. This review does not grant those authorities.\n",
+        "sha256": "4cb69e2df668af1aa54e1c9ccd673d0f67a1c3bb56e965b16815c09815488b69",
+        "source": "Actual native Soren final response returned this report SHA256; root verified report bytes."
+      },
+      "disposition": "BOUNDED_REVIEW_PASS",
+      "limits": [
+        "Independently observed native task statuses and returned outputs via collaboration.list_agents",
+        "Original worker spawn arguments and pre-dispatch structured metadata were not independently observed; no such proof is asserted"
+      ]
+    }
+  ],
+  "constructionCoordinator": "Root room; canonical intake, policy bindings and transport under declared coordinator role; not counted as a separately invoked Alaric worker",
+  "codeChecks": {
+    "status": "PASS_CLOSED",
+    "passed": 82,
+    "failed": 0,
+    "independentRerun": "Soren reports 82/82 pass",
+    "syntheticFixturesAreNotExecutionProof": true,
+    "existingFunctionalRouterChecks": 13,
+    "existingFunctionalRouterResult": "PASS_CLOSED",
+    "existingRootRouterAndClassifier": "PASS"
+  },
+  "protectedBaseline": {
+    "frozenConstitutionBlob": "49e08bd13e09e70e9363e9c5e18c6f778288cbfe",
+    "functionalRouterBlob": "ca3a7a8b6099001ff8d350a3f59c4d9e5422dad4",
+    "bytesUnchanged": true
+  },
+  "adoption": {
+    "merged": false,
+    "postAdoptionTaskProof": false
+  },
+  "enforcement": {
+    "repositoryProcedureCandidate": true,
+    "hostConnectorInterpositionInstalled": false,
+    "globalBypassPreventionProven": false,
+    "gapId": "CANONICAL_NATIVE_AGENT_INVOCATION_HOST_ENFORCEMENT",
+    "gapStatus": "OPEN"
+  },
+  "cloudOperation": {
+    "issue": 3192,
+    "candidateAgentInvocationRetroactivelyClaimed": false
+  },
+  "unresolvedConditions": [
+    "Candidate not yet adopted on canonical main",
+    "Host/connector-wide prevention of unmediated calls remains unproven",
+    "Initial native tasks establish actual existence and outputs, with original structured-dispatch metadata limits preserved"
+  ],
+  "reviewedImplementationSHA256": {
+    "AGENTS.md": "e86c5af3ba6ebf0df1893fdf86efe241675d4a0de8a99cb0b2592f3d9ea413eb",
+    "AI_ENTRYPOINT.json": "7f7f7d67519bbe61ffea57d01cd851bdae017e44b7ba157f543865de74a11e58",
+    ".github/ai-router/shared-procedures.v1.json": "faf7bba8aaa8e495c50cca1ef70ab0ca7225b8b3df8c72335275a0d64f894f83",
+    ".github/ai-router/system-continuity/gap-registry.v1.json": "5414ba353f346d4e28b887072e409690bedff6351cb411edbd0ce22de33e8f75",
+    ".github/ai-router/agent-invocation/contract.v1.json": "9d7d329e8629a1e8c72bbd87719a4b6eacc0b8a4fed78ea60b3e7d2a78e85260",
+    ".github/ai-router/agent-invocation/evidence-gate.v1.mjs": "264d5d40786fac0d87d4480a1a72608ac7af6b6a8f38e3718dc4de6cc8117bc4",
+    ".github/ai-router/agent-invocation/self-test.v1.mjs": "735c23f08f322a9fa77b5229f6c6905d97888b465237ad35e8ce149b629122cc",
+    ".github/ai-router/agent-invocation/README.md": "c05c3c95d3532a01445b4755d20db5dbb0b6b9139b3ca26d518910e83764c674"
+  },
+  "qualificationScope": "BOUNDED_PROCEDURE_AND_STRUCTURAL_EVIDENCE_VALIDATION_ONLY",
+  "qualification": "PASS_CLOSED_WITH_EXPLICIT_OPEN_HOST_ENFORCEMENT_GAP"
+}

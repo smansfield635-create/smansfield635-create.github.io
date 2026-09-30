@@ -1,0 +1,22 @@
+name: AI Media End-to-End Qualifier
+on:
+  pull_request:
+    paths:
+      - 'tools/ai-room-transport/ai-media-end-to-end-qualifier.v1.mjs'
+      - 'tools/ai-room-transport/ai-media-end-to-end-qualifier.self-test.v1.mjs'
+      - '.github/workflows/ai-media-end-to-end-qualifier.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run closed end-to-end qualification fixture
+        run: node tools/ai-room-transport/ai-media-end-to-end-qualifier.self-test.v1.mjs | tee "$RUNNER_TEMP/e2e-self-test.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-media-e2e-self-test
+          path: ${{ runner.temp }}/e2e-self-test.json
+          if-no-files-found: error

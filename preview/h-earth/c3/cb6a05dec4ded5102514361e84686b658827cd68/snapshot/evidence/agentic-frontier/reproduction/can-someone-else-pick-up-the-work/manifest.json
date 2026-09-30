@@ -1,0 +1,23 @@
+{
+  "schema": "RESEARCH_FRONTIER_REPRODUCTION_MANIFEST_v1",
+  "objectId": "RFV3-07",
+  "publicTitle": "Can Someone Else Pick Up the Work?",
+  "technicalBinding": "TRANSFER / SUCCESSION / REPRODUCTION FRONTIER",
+  "evidenceStatus": ["OPERATING_METHOD"],
+  "sourceDispositions": ["INTERNAL_SUCCESSION_AND_RECOVERY_EVIDENCE"],
+  "question": "Can another operator recover what happened, what evidence exists, what failed, what remains unresolved and what may lawfully happen next?",
+  "inputs": ["exact-head identities", "durable receipts", "negative/null/unresolved states", "frozen task/protocol identities", "explicit evidence and authority boundaries"],
+  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md"],
+  "comparator": "Dependence on principal-operator private memory; decisive future comparator is a clean unaffiliated operator/repository transfer.",
+  "procedure": ["provide durable state without private conversational memory", "require successor to recover current state failures evidence boundaries and lawful next actions", "compare recovered identities and dispositions with frozen record", "fail transfer if continuation requires undisclosed private memory or silently changes meaning"],
+  "environment": "Repository-state recovery and handoff method; the external test is operator/repository transfer rather than identical production runtime recreation.",
+  "expectedOutputs": {"internalStateRecovery":"demonstrated in bounded workflows","preservedClasses":["exact-head identities","durable receipts","negative states","null states","unresolved states","frozen task/protocol identities"]},
+  "acceptanceCriteria": "An external transfer passes only if an unaffiliated operator can recover the bounded state and lawful continuation without inherited private memory or semantic drift.",
+  "verifier": "Identity/disposition comparison against the durable record; current public standing remains internal until an unaffiliated transfer is executed.",
+  "sourceIdentities": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md"],
+  "knownGaps": ["clean unaffiliated operator reproduction not observed", "complete cross-repository Kernel transfer unestablished", "organization-level portability unestablished"],
+  "proprietaryBoundary": "Only state required to reproduce the bounded custody/succession claim must be exposed; any necessary hidden dependency must be declared as a gap rather than silently assumed.",
+  "claimCeiling": "Demonstrated internal custody and succession mechanics only; no clean unaffiliated reproduction, cross-repository transfer, organization-level portability or inference that transfer validates underlying science.",
+  "reproductionPackagingState": "RECORD_BOUND",
+  "externalReproductionObserved": false
+}

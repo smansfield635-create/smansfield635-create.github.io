@@ -1,0 +1,28 @@
+{
+  "contract": "LAWS_CAROUSEL_MEANINGFUL_PRODUCT_REFINEMENT_20260816F",
+  "predecessor": "20260816E_DIRECTION_ONLY_CANONICAL",
+  "goal": "Deliver a materially perceptible Laws carousel interaction while preserving direction-only canonical custody.",
+  "preserved_laws": {
+    "live_pointer_geometry": false,
+    "one_gesture_one_step": true,
+    "canonical_landing": true,
+    "vertical_gesture_passthrough": true,
+    "velocity_projection": false,
+    "momentum_traversal": false
+  },
+  "product_changes": [
+    "bounded non-positional swipe pressure feedback",
+    "directional edge response before release",
+    "incoming target visibility during atomic traversal",
+    "faster 500ms released rotation",
+    "restrained canonical landing pulse",
+    "fresh loader cache identity"
+  ],
+  "excluded_authority": [
+    "Laws content",
+    "Compass behavior",
+    "routes",
+    "claims",
+    "evidence status"
+  ]
+}

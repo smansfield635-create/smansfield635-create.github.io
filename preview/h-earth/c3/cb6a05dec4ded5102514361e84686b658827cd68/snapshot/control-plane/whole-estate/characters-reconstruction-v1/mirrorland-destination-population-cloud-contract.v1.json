@@ -1,0 +1,65 @@
+{
+  "schema": "MIRRORLAND_DESTINATION_POPULATION_CLOUD_CONTRACT_v1",
+  "operationId": "MIRRORLAND_DESTINATION_POPULATION_CLOUD_TRAVERSAL_20260902_004",
+  "governingHead": "eb45762f4307958217dd46ef9b4a5b3f8bbe2e57",
+  "route": "/characters/",
+  "world": "AUDRALIA",
+  "region": "GRATITUDE_HARBOR_MIRROR_MANOR_REGION",
+  "geographyAuthority": "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1",
+  "geographyMode": "READ_ONLY_CONSUMER",
+  "semanticClasses": [
+    "PLACE",
+    "CHARACTER",
+    "ENSEMBLE",
+    "ENSEMBLE_MEMBER",
+    "ORIENTATION_INSTRUMENT",
+    "CONNECTED_WORLD"
+  ],
+  "orientationInstruments": ["STORY", "CLOCK"],
+  "populationLaw": {
+    "remoteTeamClass": "ENSEMBLE",
+    "memberAddressabilityRequired": true,
+    "unsourcedMemberFields": "HELD",
+    "inventedMemberCanonAllowed": false
+  },
+  "safeInteriorLaw": {
+    "invariant": "NO_NORMAL_NARRATIVE_CAMERA_STATE_REVEALS_THE_DEVELOPMENT_FRAME_BOUNDARY",
+    "developmentFrame": {"xMin": -1050, "xMax": 1050, "zMin": -1200, "zMax": 280},
+    "minimumHorizontalInset": 230,
+    "cameraHullIncludes": [
+      "DESTINATION_CENTER",
+      "SURVEY_CAMERA_EYE",
+      "ASCENT_CONTROL_POINTS",
+      "CLOUD_TRANSIT_CONTROL_POINTS",
+      "DESCENT_CONTROL_POINTS",
+      "MAX_TRANSIT_ALTITUDE",
+      "DESKTOP_FOV",
+      "PHONE_FOV",
+      "RETURN_TO_COAST",
+      "REDUCED_MOTION_SETTLEMENT"
+    ],
+    "cloudConcealmentMayBeSoleCorrectnessMechanism": false
+  },
+  "cloudLaw": {
+    "authorityPrecedent": "H_EARTH_AUDRALIA_CANONICAL_EVOLVING_CLOUD_STATE_v1",
+    "identityFrame": "WORLD_ANCHORED",
+    "cameraMayCreateWeatherIdentity": false,
+    "presentation": "SINGLE_LOCAL_VOLUMETRIC_PATH",
+    "longRangeVisibilityReducedInsideCloud": true
+  },
+  "travelStateOrder": ["ORBIT", "ASCENT", "CLOUD_ENTRY", "CLOUD_TRANSIT", "DESCENT", "ARRIVAL"],
+  "sceneEntryStateOrder": ["ENTER_REQUESTED", "UI_SETTLE", "FADE_TO_BLACK", "BLACK_HOLD", "ROUTE_HANDOFF"],
+  "futureSceneEntryStateOrder": ["SCENE_BOOT", "FADE_FROM_BLACK", "SCENE_ACTIVE"],
+  "sceneEntryLaw": {
+    "routeMustResolveBeforeFade": true,
+    "interactionLockedDuringFade": true,
+    "controlledPlaceholderUsesOutgoingFade": true,
+    "browserBackMustClearOpaqueOverlay": true,
+    "returnMustClearOpaqueOverlay": true,
+    "reducedMotionPreservesSemanticTransition": true
+  },
+  "connectedWorldRoutes": ["COMPASS", "SHOWROOM", "H_EARTH", "AUDRALIA"],
+  "legacyDossierStateCount": 256,
+  "sharedAuthorityMutationAllowed": false,
+  "mergeDeploymentPublicationAuthority": false
+}

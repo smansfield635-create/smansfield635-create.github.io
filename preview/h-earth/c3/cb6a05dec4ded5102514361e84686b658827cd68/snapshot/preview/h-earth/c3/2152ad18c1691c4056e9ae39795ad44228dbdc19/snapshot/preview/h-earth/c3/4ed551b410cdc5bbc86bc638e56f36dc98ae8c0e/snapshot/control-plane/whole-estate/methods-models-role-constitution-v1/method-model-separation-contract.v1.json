@@ -1,0 +1,27 @@
+{
+  "schema": "WHOLE_ESTATE_METHOD_MODEL_SEPARATION_CONTRACT_v1",
+  "status": "CHECKPOINT_5_CONSTRUCTION_CANDIDATE",
+  "requiredSeparations": [
+    {"left":"METHOD","right":"MODEL","law":"METHOD_IS_PROCEDURE_MODEL_IS_REPRESENTATION"},
+    {"left":"MODEL","right":"RESULT","law":"REPRESENTATION_DOES_NOT_EQUAL_OBSERVED_OUTCOME"},
+    {"left":"IMI","right":"MODEL","law":"IMI_REMAINS_INSTRUMENT"},
+    {"left":"IMI","right":"UCIC","law":"MEASUREMENT_CANNOT_SUBSTITUTE_FOR_INVARIANT_CANDIDATE"},
+    {"left":"METHODS_MODELS","right":"FRONTIER","law":"EVIDENCE_GATE_DOES_NOT_OWN_COMPLETE_APPLIED_STUDY"},
+    {"left":"METHODS_MODELS","right":"RESEARCH_PROVENANCE","law":"TRACEABILITY_SURFACE_DOES_NOT_OWN_SOURCE_LINEAGE"},
+    {"left":"METHODS_MODELS","right":"COHERENCE_DIAGNOSTIC","law":"SCIENTIFIC_COMPARISON_SURFACE_DOES_NOT_OWN_PRIVATE_STRUCTURED_REFLECTION"}
+  ],
+  "identityInvariant": [
+    "OBJECT_CLASS",
+    "AUTHORITY",
+    "EVIDENCE_STATUS",
+    "CLAIM_CEILING",
+    "CUSTODY_STATUS",
+    "EXECUTION_STATUS"
+  ],
+  "depthLaw": "DELTA_D_DOES_NOT_IMPLY_DELTA_I",
+  "representationLaw": "PRESENTATION_IDENTITY_DOES_NOT_EQUAL_SCIENTIFIC_IDENTITY",
+  "methodModelCollapseIsFalsifier": true,
+  "automaticCanonicalReclassificationAuthorized": false,
+  "automaticEvidenceUpgradeAuthorized": false,
+  "publicMutationAuthorized": false
+}

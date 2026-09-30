@@ -1,0 +1,65 @@
+{
+  "schema": "CO_LOCATED_CARDINAL_EXECUTION_ROOM_v1",
+  "status": "OWNER_DIRECTED_FALLBACK",
+  "purpose": "Permit bounded repository work to continue when the current host exposes the required repository tools but no native agent spawn/followup surface exists.",
+  "activation": {
+    "requiresNativeSpawnOrFollowupUnexposed": true,
+    "requiresExplicitOwnerDirectionToProceedInCurrentRoom": true,
+    "nativeInvocationPreferredWhenAvailable": true,
+    "automaticFallback": false
+  },
+  "identities": {
+    "N": {"identity": "Alaric", "function": "Navigation"},
+    "E": {"identity": "Elara", "function": "Signal"},
+    "S": {"identity": "Tarian", "function": "Continuity"},
+    "W": {"identity": "Soren", "function": "Boundary"}
+  },
+  "executionModel": {
+    "host": "SINGLE_COORDINATOR_ROOM",
+    "persistentSeparateModelsClaimed": false,
+    "newAgentProcessesClaimed": false,
+    "fourCanonicalFunctionsRequiredWhenTaskContractRequiresAllFour": true,
+    "phaseOrder": ["ALARIC_ORIENT", "ELARA_EXECUTE_OR_OBSERVE", "TARIAN_CONTINUITY_CHECK", "SOREN_BOUNDARY_REVIEW", "ALARIC_ROUTE"],
+    "phaseIsolation": "Each phase receives the frozen task/evidence boundary and emits its own attributable phase receipt. Later phases may inspect evidence artifacts but may not silently rewrite earlier dispositions.",
+    "independenceClaim": "PROCESS_SEPARATION_ONLY_NOT_INDEPENDENT_MODEL_INSTANCE"
+  },
+  "evidence": {
+    "required": [
+      "exact repository and governing head",
+      "frozen scope",
+      "participating canonical function",
+      "phase input digest or immutable source references",
+      "phase output",
+      "phase output digest",
+      "unresolved conditions",
+      "handoff target"
+    ],
+    "terminalReceiptMustState": [
+      "CO_LOCATED_EXECUTION_USED",
+      "NO_SEPARATE_NATIVE_AGENT_INSTANCE_CLAIMED",
+      "NO_INDEPENDENT_MODEL_REVIEW_CLAIMED",
+      "FUNCTIONAL_SEPARATION_PRESERVED",
+      "AUTHORITY_EFFECT_NONE"
+    ],
+    "sourceReadback": "Use available repository/source tools to re-read exact immutable inputs before terminal routing when the task depends on repository state.",
+    "selfAuthoredReceiptCreatesAuthority": false
+  },
+  "authority": {
+    "effect": "NONE",
+    "doesNotReplaceCanonicalIntake": true,
+    "doesNotReplaceProjectRouting": true,
+    "doesNotCreateMergeAuthority": true,
+    "doesNotCreateDeploymentAuthority": true,
+    "doesNotCreatePublicationAuthority": true,
+    "doesNotCreateScientificAuthority": true
+  },
+  "prohibited": [
+    "CLAIMING_NATIVE_SPAWN_OCCURRED_WHEN_IT_DID_NOT",
+    "CLAIMING_DISTINCT_MODEL_INSTANCES",
+    "CLAIMING_INDEPENDENT_MODEL_REVIEW",
+    "SILENTLY_COLLAPSING_REQUIRED_CARDINAL_PHASES",
+    "USING_FALLBACK_WHEN_NATIVE_AGENT_TOOLS_ARE_AVAILABLE",
+    "USING_FALLBACK_TO_BYPASS_INTAKE_PROJECT_OR_RELEASE_AUTHORITY"
+  ],
+  "ownerDirectiveContext": "2026-09-12: owner explicitly directed that no separate native room exists and that the execution room must be created and operated here so work can proceed."
+}

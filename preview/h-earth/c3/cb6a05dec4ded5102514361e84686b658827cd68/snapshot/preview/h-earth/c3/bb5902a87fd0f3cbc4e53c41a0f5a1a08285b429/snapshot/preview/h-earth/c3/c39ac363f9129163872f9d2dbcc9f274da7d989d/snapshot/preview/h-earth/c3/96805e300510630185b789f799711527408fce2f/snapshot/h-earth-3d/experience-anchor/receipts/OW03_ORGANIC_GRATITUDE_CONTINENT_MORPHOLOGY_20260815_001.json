@@ -1,0 +1,44 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.base.png",
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.candidate.png",
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {"path": "h-earth-3d/terrain/h-earth.terrain-field.js", "sha256": "9fef8304af4a352d00a12d03b0768746c448d33916b0281b6ae5b019bc15fff6"},
+    {"path": "h-earth-3d/terrain/h-earth.terrain-formations.js", "sha256": "ee3c5f6439f5fd4dbbc3479d7df3aee79d7535caa9682c8b4f9a4758d9fcfbe2"}
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "6b552536a4d97f141f6e00d327fc7638d632781a",
+    "qualificationOperation": "H_EARTH_OW03_EXPERIENCE_ANCHOR_EVIDENCE_20260815_001",
+    "qualificationLockGeneration": 1490,
+    "failedGateRunBeforeEvidence": 31920533478,
+    "finding": "The initial over-cut candidate failed closed. The repaired candidate restores the protected arrival shoreline to numerical identity with the base, preserves all OW02 anchor samples and the live single-world ground experience, and confines new compound-coast morphology to bounded western and far-eastern continental reaches."
+  }
+}
+
+

@@ -1,0 +1,21 @@
+{
+  "analysis_code_sha256": "73c65bcb37b7690234a866ab6c7c027d525a17cccb9283de5a665d4bb29818a5",
+  "analysis_plan_sha256": "810f2c3c419cbec891a607ed9433764fc6382ce1a54c6122cd8f3507e518a156",
+  "candidate_base_commit": "452b1cf75ea801d5239ed8e01e014e0961491bfe",
+  "core_instrument_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+  "core_mutation_performed": false,
+  "core_package_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+  "custody_readback_status": "PASS_EXACT_SHA256_AND_SIZE",
+  "drive_file_id": "1OoYrTqfBVjmCuC5RA52xBMEgAEy0WIr4",
+  "drive_file_url": "https://drive.google.com/file/d/1OoYrTqfBVjmCuC5RA52xBMEgAEy0WIr4/view?usp=drivesdk",
+  "drive_parent_folder_id": "1FXxYOVY0UkKbmkLJ8gIsDFQLwnFIzMfv",
+  "extension_id": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1",
+  "package_class": "RETROSPECTIVE_TEMPORAL_BLOCK_EXECUTION_PACKAGE",
+  "package_file_count": 19,
+  "package_id": "AGRICULTURAL_COLONY_CS4_NEXT_QUARTER_LOSS_RETROSPECTIVE_TEMPORAL_BLOCK_v1",
+  "package_version": "1.0.0",
+  "source_workbook_sha256": "1b4c198a03bb8c0bac473a7118a4dcde03ecdce4e270f89f68780f43687bc8e2",
+  "zip_file_name": "AGRICULTURAL_COLONY_CS4_NEXT_QUARTER_LOSS_RETROSPECTIVE_TEMPORAL_BLOCK_v1.zip",
+  "zip_sha256": "c133c48198abda4c6ca6c394c201634ec580e68b9224a82d62119e3517c97c56",
+  "zip_size_bytes": 124638
+}

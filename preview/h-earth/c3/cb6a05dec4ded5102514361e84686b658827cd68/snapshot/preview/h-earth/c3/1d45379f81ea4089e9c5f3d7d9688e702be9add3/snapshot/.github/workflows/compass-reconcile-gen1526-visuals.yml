@@ -1,0 +1,32 @@
+name: Compass Reconcile Gen1526 Visuals
+on:
+  push:
+    branches: [reconcile/compass-gen1526-visuals-gen1531-runtime]
+    paths: ['.github/workflows/compass-reconcile-gen1526-visuals.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: reconcile/compass-gen1526-visuals-gen1531-runtime
+          fetch-depth: 0
+      - name: Restore exact Gen1526 visual runtime blobs
+        run: |
+          set -euo pipefail
+          git show 48132ad9f44b8b838bb7dffaf7638b9ca072d0fd:assets/compass/compass.identity-3d.js > assets/compass/compass.identity-3d.js
+          git show 48132ad9f44b8b838bb7dffaf7638b9ca072d0fd:assets/compass/compass.brain-scene.js > assets/compass/compass.brain-scene.js
+          test "$(git hash-object assets/compass/compass.identity-3d.js)" = 04df9de4b20b1420a707d25c2f2b28664a90ca65
+          test "$(git hash-object assets/compass/compass.brain-scene.js)" = 80553f1a689b1724f60bd8c7a65da96da592b40d
+          git diff --check
+      - name: Commit reconciliation checkpoint
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/compass/compass.identity-3d.js assets/compass/compass.brain-scene.js
+          git commit -m 'Reconcile exact Gen1526 Compass visual runtimes'
+          git push origin HEAD:reconcile/compass-gen1526-visuals-gen1531-runtime

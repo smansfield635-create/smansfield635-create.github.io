@@ -1,0 +1,50 @@
+name: H-Earth Experience Anchor Gate
+
+on:
+  pull_request:
+    paths:
+      - 'showroom/globe/h-earth/**'
+      - 'showroom/globe/audralia/**'
+      - 'h-earth-3d/**'
+      - 'tools/h-earth-experience-anchor-gate.mjs'
+      - '.github/workflows/h-earth-experience-anchor-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'showroom/globe/h-earth/**'
+      - 'showroom/globe/audralia/**'
+      - 'h-earth-3d/**'
+      - 'tools/h-earth-experience-anchor-gate.mjs'
+      - '.github/workflows/h-earth-experience-anchor-gate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  hard-anchor-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve comparison heads
+        id: heads
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "base=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+            echo "head=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=${{ github.event.before }}" >> "$GITHUB_OUTPUT"
+            echo "head=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Enforce immutable H-Earth experience anchor
+        env:
+          BASE_SHA: ${{ steps.heads.outputs.base }}
+          HEAD_SHA: ${{ steps.heads.outputs.head }}
+        run: node tools/h-earth-experience-anchor-gate.mjs

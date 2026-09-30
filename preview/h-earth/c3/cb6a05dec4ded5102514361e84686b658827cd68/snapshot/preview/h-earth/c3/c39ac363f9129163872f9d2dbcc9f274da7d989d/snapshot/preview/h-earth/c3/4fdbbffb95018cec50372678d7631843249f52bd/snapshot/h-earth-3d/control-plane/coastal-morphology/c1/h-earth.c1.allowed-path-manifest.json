@@ -1,0 +1,24 @@
+{
+  "manifestType": "H_EARTH_C1_READ_ONLY_DIAGNOSIS_ALLOWED_PATH_MANIFEST_v1",
+  "operation": "C1_EXISTING_COASTAL_STRUCTURE_AND_PRESENTATION_DIAGNOSIS",
+  "class": "READ_ONLY_CAUSAL_DIAGNOSIS",
+  "baseEvidenceMergeHead": "d3f53591fd040bc76ec4b6c604570298c67b346d",
+  "productBaselineHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "activeBranch": "agent/h-earth-c1-coastal-structure-diagnosis-001",
+  "exactAllowedPathCount": 5,
+  "exactAllowedPaths": [
+    ".github/workflows/h-earth-c1-coastal-structure-diagnosis.yml",
+    "h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.post-merge-custody.json",
+    "h-earth-3d/control-plane/coastal-morphology/c1/evidence/h-earth.c1.diagnosis.json",
+    "h-earth-3d/control-plane/coastal-morphology/c1/evidence/h-earth.c1.receipt.json",
+    "h-earth-3d/control-plane/coastal-morphology/c1/h-earth.c1.allowed-path-manifest.json"
+  ],
+  "productMutationProhibited": true,
+  "capturesRepeated": false,
+  "performanceTestingRepeated": false,
+  "c2Authorized": false,
+  "c3Authorized": false,
+  "c4Authorized": false,
+  "c5Authorized": false,
+  "phaseT": "INACCESSIBLE"
+}

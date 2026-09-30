@@ -1,0 +1,64 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CP3D_LIVE_RUNTIME_IDENTITY_RECONCILIATION_AND_PERMANENT_RENDERER_SURVIVAL_GATE_v1",
+  "checkpoint": "CP3D_LIVE_RUNTIME_IDENTITY_RECONCILIATION_AND_PERMANENT_RENDERER_SURVIVAL_GATE",
+  "status": "IN_PROGRESS_STOP_BEFORE_MERGE_OR_CP4",
+  "targetBase": {
+    "branch": "main",
+    "commit": "b2f07c80ff339319b7b951d9680107e41860c68b"
+  },
+  "preCorrectionWitness": {
+    "observedFailure": "R3C_RUNTIME_PACKAGE_IDENTITY_MISMATCH:H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD",
+    "canvasAcquired": "PASS",
+    "webgl2ContextAcquired": "PASS",
+    "rendererConstructorEntered": "PASS",
+    "rendererConstructorReturned": "FAIL",
+    "firstFramePresented": false,
+    "frames": 0,
+    "deviceGpuVendor": "Qualcomm",
+    "deviceGpuRenderer": "Adreno (TM) 840",
+    "capturedAt": "2026-07-28T21:25:29.333Z"
+  },
+  "acceptedWorkingOccurrence": {
+    "rendererCorrectionCommit": "e1adf2eb00d826df4e698fc490ca3d81e4bfe5d0",
+    "rendererMerge": "224beb9e03d4f899d8807aaaabb89c3fad422037"
+  },
+  "provenIdentityDivergence": {
+    "rendererPath": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+    "rendererBlobAtWorkingOccurrence": "243eb4fdc9c9fadc55fe3bcea45d7941fee7e768",
+    "rendererBlobAtTargetBase": "243eb4fdc9c9fadc55fe3bcea45d7941fee7e768",
+    "rendererExpectedRuntimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_59361792",
+    "actualConstructedPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD",
+    "rendererSourceChangedSinceWorkingOccurrence": false,
+    "classification": "STALE_RENDERER_EXPECTED_RUNTIME_IDENTITY_AFTER_UPSTREAM_PACKAGE_CONTENT_CHANGE"
+  },
+  "authorizedCorrection": {
+    "kind": "ONE_IDENTITY_LITERAL_CORRECTION",
+    "oldValue": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_59361792",
+    "newValue": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD",
+    "identityGuardRemovalAuthorized": false,
+    "rendererRewriteAuthorized": false,
+    "gpuArchitectureMutationAuthorized": false,
+    "touchMotionLawMutationAuthorized": false
+  },
+  "permanentLaw": {
+    "sequence": [
+      "TOUCH_CHANGE",
+      "SOURCE_EXECUTION",
+      "IDENTITY_CORRIDOR_EXECUTION",
+      "REAL_BROWSER_RENDERER_CONSTRUCTION",
+      "FIRST_FRAME_PRESENTATION",
+      "TOUCH_WITNESS_VERIFICATION",
+      "CHECKPOINT_PASS"
+    ],
+    "stoppingRule": "IF_RUNTIME_PACKAGE_IDENTITY_CORRIDOR_NOT_PASS_OR_RENDERER_CONSTRUCTOR_RETURNED_NOT_PASS_OR_FIRST_FRAME_PRESENTED_NOT_PASS_OR_VISIBLE_ENVIRONMENT_PRESERVED_NOT_TRUE_THEN_CHECKPOINT_PASS_FALSE_MERGE_FALSE_CP4_FALSE"
+  },
+  "requiredBeforeClosure": {
+    "runtimePackageIdentityCorridor": "PASS_REQUIRED",
+    "rendererConstructorReturned": "PASS_REQUIRED",
+    "firstFramePresented": "PASS_REQUIRED",
+    "visibleEnvironmentPreserved": "TRUE_REQUIRED",
+    "touchRuntimeInstalled": "PASS_REQUIRED",
+    "cp2bRecorderAvailable": "PASS_REQUIRED",
+    "cp3bRuntimeReceiptAvailable": "PASS_REQUIRED"
+  }
+}

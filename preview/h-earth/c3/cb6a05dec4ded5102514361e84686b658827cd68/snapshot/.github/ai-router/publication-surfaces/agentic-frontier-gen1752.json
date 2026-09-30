@@ -1,0 +1,99 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "agentic-frontier-gen1752",
+  "description": "Gen1752 accepted Agentic Frontier five-scene publication contract with click and keyboard carousel proof.",
+  "checks": [
+    {
+      "path": "/evidence/agentic-frontier/",
+      "includes": [
+        "data-scene-id=\"frontier\"",
+        "data-scene-id=\"comparison\"",
+        "data-scene-id=\"agency\"",
+        "data-scene-id=\"maturity\"",
+        "data-scene-id=\"evidence-record\"",
+        "END_TO_END_GOVERNED_AGENTIC_PRODUCTION = DEMONSTRATED",
+        "PROTOCOL_CANDIDATE = NOT_YET",
+        "FRONTIER_CONTRIBUTION = UNPROVEN_PENDING_INDEPENDENT_REPRODUCTION",
+        "data-af-dot data-index=\"4\"",
+        "data-af-ordinal"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/evidence/agentic-frontier/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-af-carousel]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/evidence/agentic-frontier/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "fifth scene opens by numbered control",
+        "action": {
+          "type": "click",
+          "selector": "[data-af-dot][data-index=\"4\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-af-scene][data-scene-id=\"evidence-record\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-af-ordinal]",
+            "value": "05 / 05"
+          }
+        ]
+      },
+      {
+        "name": "home key restores first scene",
+        "action": {
+          "type": "key",
+          "selector": "[data-af-carousel]",
+          "key": "Home"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-af-scene][data-scene-id=\"frontier\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-af-ordinal]",
+            "value": "01 / 05"
+          }
+        ]
+      },
+      {
+        "name": "arrow right advances scene",
+        "action": {
+          "type": "key",
+          "selector": "[data-af-carousel]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-af-scene][data-scene-id=\"comparison\"]",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-af-ordinal]",
+            "value": "02 / 05"
+          }
+        ]
+      }
+    ]
+  }
+}

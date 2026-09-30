@@ -1,0 +1,155 @@
+{
+  "object": "EDUCATION_PHASE1_TEACHER_STATE_MACHINE",
+  "version": "v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_PHASE1_LEARNER_TRACK_FREEZE_20260920_001",
+  "lock_generation": 2467,
+  "purpose": "Define the teacher-student control loop for every Phase 1 learning activity.",
+  "states": [
+    {
+      "id": "ORIENT",
+      "role": "Explain the immediate objective in learner-facing language.",
+      "next": [
+        "PRESENT"
+      ]
+    },
+    {
+      "id": "PRESENT",
+      "role": "Present one bounded reading or written-expression challenge.",
+      "next": [
+        "RESPOND"
+      ]
+    },
+    {
+      "id": "RESPOND",
+      "role": "Collect the learner's selected, arranged, completed, rewritten, constructed, or free-written response.",
+      "next": [
+        "CLASSIFY"
+      ]
+    },
+    {
+      "id": "CLASSIFY",
+      "role": "Evaluate the response against the frozen activity criteria.",
+      "outcomes": [
+        "PASS",
+        "PARTIAL",
+        "RETRY",
+        "HINT",
+        "REPAIR"
+      ]
+    },
+    {
+      "id": "FEEDBACK",
+      "role": "Give concise teacher feedback tied to the actual response.",
+      "next": [
+        "RETRY_ACTIVITY",
+        "CHECK_STAGE"
+      ]
+    },
+    {
+      "id": "RETRY_ACTIVITY",
+      "role": "Re-present the learning objective with bounded assistance or a changed example without changing the competency being tested.",
+      "next": [
+        "RESPOND"
+      ]
+    },
+    {
+      "id": "CHECK_STAGE",
+      "role": "Determine whether the stage's predeclared completion criteria are satisfied.",
+      "next": [
+        "CHECKPOINT_REQUEST",
+        "PRESENT"
+      ]
+    },
+    {
+      "id": "CHECKPOINT_REQUEST",
+      "role": "Request durable stage-completion persistence.",
+      "next": [
+        "CHECKPOINT_CONFIRMED",
+        "CHECKPOINT_FAILED"
+      ]
+    },
+    {
+      "id": "CHECKPOINT_CONFIRMED",
+      "role": "Accept the authoritative completion receipt.",
+      "next": [
+        "ADVANCE"
+      ]
+    },
+    {
+      "id": "CHECKPOINT_FAILED",
+      "role": "Hold advancement and preserve the learner's completed attempt for retrying the save.",
+      "next": [
+        "CHECKPOINT_REQUEST"
+      ]
+    },
+    {
+      "id": "ADVANCE",
+      "role": "Unlock the next stage or Phase 1 completion only after confirmed durable checkpoint.",
+      "next": [
+        "ORIENT",
+        "PHASE1_COMPLETE"
+      ]
+    },
+    {
+      "id": "PHASE1_COMPLETE",
+      "role": "Show the learner a completion summary grounded in durable checkpoints.",
+      "terminal": true
+    }
+  ],
+  "classification_law": {
+    "PASS": "Correct and independent enough to satisfy the activity criterion.",
+    "PARTIAL": "Meaning is substantially correct but a bounded correction is needed.",
+    "RETRY": "The learner should try the same competency again without receiving the answer.",
+    "HINT": "Provide the smallest useful cue, then return control to the learner.",
+    "REPAIR": "Teach or re-teach the exact missing concept, productive mechanism, or comprehension distinction before retry."
+  },
+  "hint_ladder": [
+    {
+      "level": 0,
+      "id": "NONE",
+      "rule": "No assistance."
+    },
+    {
+      "level": 1,
+      "id": "ORIENTING_CUE",
+      "rule": "Point toward the relevant idea or operation without supplying the answer."
+    },
+    {
+      "level": 2,
+      "id": "STRUCTURAL_CUE",
+      "rule": "Expose part of the needed structure, relationship, or productive mechanism."
+    },
+    {
+      "level": 3,
+      "id": "GUIDED_REPAIR",
+      "rule": "Teach the missing step explicitly, then require a fresh learner response."
+    }
+  ],
+  "teacher_feedback_examples": {
+    "pass": [
+      "Good. You got that one.",
+      "Exactly. Move on."
+    ],
+    "partial": [
+      "Almost. The meaning is there; fix this part and try again."
+    ],
+    "composition_success": [
+      "You did not need the exact word. You built the meaning correctly."
+    ],
+    "retry": [
+      "Not yet. Try it again."
+    ],
+    "repair": [
+      "You know the pieces. Now use them together."
+    ]
+  },
+  "invariants": [
+    "Feedback must distinguish direct lexical success from productive/compositional success.",
+    "Teacher feedback must not claim speaking or listening performance.",
+    "A learner is never advanced merely because client UI state changed.",
+    "Fast-pass is permitted when the frozen competency criterion is already demonstrated.",
+    "Stage criteria may not be changed after the learner begins that stage attempt."
+  ]
+}

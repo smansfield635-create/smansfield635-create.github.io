@@ -1,0 +1,283 @@
+/* /products/index.compass.css
+   PRODUCTS_COMPASS_CHECKPOINT_ZERO_HYBRID_v1
+   Donor structure: ARCHCOIN / Laws / Showroom.
+   Label presentation: Index Compass projected-proxy treatment.
+*/
+
+.products-scene[data-products-scene] {
+  --products-compass-size: clamp(126px, 15vw, 184px);
+  --products-compass-x: 50%;
+  --products-compass-y: 50%;
+  isolation: isolate;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.products-cosmic-field,
+.products-compass-layer,
+.products-semantic,
+.products-scene > canvas[data-products-crystals-canvas="rear"],
+.products-scene > canvas[data-products-crystals-canvas="front"] {
+  position: absolute;
+}
+
+.products-cosmic-field {
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.products-cosmic-field canvas[data-products-cosmos-canvas] {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.products-scene > canvas[data-products-crystals-canvas="rear"] {
+  inset: 0;
+  z-index: 1 !important;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.products-compass-layer,
+[data-products-compass-layer],
+[data-products-center-layer] {
+  position: absolute;
+  z-index: 2;
+  left: var(--products-compass-x);
+  top: var(--products-compass-y);
+  width: var(--products-compass-size);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 0 1.15rem rgba(91, 196, 255, .28));
+}
+
+.products-compass-mount,
+.products-planet-mount,
+[data-products-compass-visual-mount],
+[data-products-planet-mount] {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: transparent;
+}
+
+.products-planet-mount::before,
+.products-planet-mount::after,
+[data-products-planet-mount]::before,
+[data-products-planet-mount]::after {
+  display: none !important;
+  content: none !important;
+}
+
+.products-planet-mount canvas[data-products-planet-canvas] {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: transparent;
+}
+
+.products-compass-control,
+[data-products-center-control],
+[data-upstream-compass-control] {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: filter 180ms ease;
+}
+
+.products-compass-control:hover,
+.products-compass-control:focus-visible,
+.products-compass-control[data-selected="true"],
+.products-compass-control[aria-expanded="true"],
+[data-products-center-control]:hover,
+[data-products-center-control]:focus-visible,
+[data-products-center-control][data-selected="true"],
+[data-products-center-control][aria-expanded="true"] {
+  filter: brightness(1.08) drop-shadow(0 0 14px rgba(234, 208, 131, .16));
+}
+
+.products-compass-control:focus-visible,
+[data-products-center-control]:focus-visible {
+  outline: 3px solid rgba(234, 208, 131, .92);
+  outline-offset: 4px;
+}
+
+.products-compass-control__label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+.products-scene > canvas[data-products-crystals-canvas="front"] {
+  inset: 0;
+  z-index: 3;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.products-semantic[data-products-semantic] {
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.products-semantic [data-products-primary-entry],
+.products-semantic [data-products-product] {
+  pointer-events: auto;
+  overflow: visible !important;
+}
+
+.products-semantic [data-products-product] > .products-star__label,
+.products-semantic [data-products-product] > .products-star__short {
+  display: none !important;
+}
+
+/* Exact Index Compass projected-proxy label method. The product button already
+   follows the renderer projection, so its pseudo-element rotates with the star. */
+.products-semantic [data-products-product]::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + .34rem);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: max-content;
+  max-width: 9.4rem;
+  min-height: 1.7rem;
+  padding: .32rem .52rem;
+  border: 1px solid rgba(225, 218, 198, .13);
+  border-radius: 999px;
+  color: rgba(244, 240, 226, .86);
+  background: linear-gradient(135deg, rgba(5, 8, 15, .76), rgba(15, 26, 40, .68));
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .30), 0 0 16px rgba(124, 220, 255, .055), inset 0 1px 0 rgba(255,255,255,.06);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: .70rem;
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: .055em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 1px 5px rgba(0,0,0,.95);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transform-origin: center;
+  opacity: 0;
+  filter: brightness(.92) saturate(.90);
+  transition: opacity 180ms ease, filter 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.products-semantic [data-products-product][data-primary="true"]::after,
+.products-semantic [data-products-product][data-selected="true"]::after,
+.products-semantic [data-products-product]:focus-visible::after {
+  opacity: 1;
+}
+
+.products-semantic [data-products-product][data-primary="true"]::after {
+  color: rgba(255,248,224,.98);
+  border-color: rgba(243,217,139,.42);
+  background: linear-gradient(135deg, rgba(71,56,29,.90), rgba(11,31,43,.86));
+  box-shadow: 0 8px 24px rgba(0,0,0,.34), 0 0 20px rgba(243,217,139,.12), inset 0 1px 0 rgba(255,255,255,.10);
+  filter: brightness(1.08) saturate(1.04);
+}
+
+.products-semantic [data-products-product][data-selected="true"]::after {
+  color: #120f08;
+  border-color: rgba(243,217,139,.72);
+  background: linear-gradient(135deg, #f6df97, #b98d3e);
+  text-shadow: none;
+  filter: none;
+}
+
+.products-page[data-products-state="PRIMARY_ENTRY"] .products-compass-layer,
+.products-page[data-products-state="HELD"] .products-compass-layer {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.products-page[data-products-state="CLUSTER_OPEN"] .products-compass-layer,
+.products-page[data-products-state="PRODUCT_SELECTED"] .products-compass-layer {
+  visibility: visible;
+  opacity: 1;
+}
+
+.products-compass-control[hidden],
+.products-action--main-compass[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 820px) {
+  .products-scene[data-products-scene] {
+    --products-compass-size: clamp(118px, 28vw, 156px);
+  }
+
+  .products-semantic [data-products-product]::after {
+    max-width: 7.6rem;
+    min-height: 1.55rem;
+    padding: .27rem .42rem;
+    font-size: .64rem;
+    letter-spacing: .045em;
+  }
+}
+
+@media (max-width: 560px) {
+  .products-scene[data-products-scene] {
+    --products-compass-size: clamp(112px, 30vw, 144px);
+  }
+
+  .products-semantic [data-products-product]::after {
+    max-width: 6.8rem;
+    padding: .25rem .38rem;
+    font-size: .60rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .products-compass-control,
+  [data-products-center-control],
+  .products-semantic [data-products-product]::after {
+    transition: none;
+  }
+}

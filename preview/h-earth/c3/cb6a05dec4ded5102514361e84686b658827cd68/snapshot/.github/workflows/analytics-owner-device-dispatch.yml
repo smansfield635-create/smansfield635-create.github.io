@@ -1,0 +1,23 @@
+name: Analytics Surface Qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - analytics/**
+      - index.html
+      - about/index.html
+      - .github/ai-router/publication-surfaces/analytics.json
+      - .github/workflows/analytics-owner-device-dispatch.yml
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record qualified Analytics head
+        run: |
+          echo "ANALYTICS_SURFACE_QUALIFIED=${GITHUB_SHA}"
+          echo "Publication is delegated to the shared current-head Pages publisher."

@@ -1,0 +1,106 @@
+name: Showroom Label Conformance Benchmark
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "showroom/**"
+      - "verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs"
+      - ".github/workflows/showroom-label-conformance-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: showroom-label-conformance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  SHOWROOM_LABEL_ORIGIN: http://127.0.0.1:4173
+
+jobs:
+  showroom-label-conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate source syntax
+        run: |
+          node --check showroom/index.interactions.js
+          node --check showroom/index.controller.js
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs
+
+      - name: Start exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/showroom-label-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/showroom/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/showroom-label-server.log
+          exit 1
+
+      - name: Execute Showroom label browser benchmark
+        id: benchmark
+        continue-on-error: true
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs
+
+      - name: Report and validate receipt
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const file = 'showroom-label-conformance-benchmark-v1.json';
+          if (!fs.existsSync(file)) throw new Error('SHOWROOM_LABEL_RECEIPT_MISSING');
+          const receipt = JSON.parse(fs.readFileSync(file, 'utf8'));
+          console.log(JSON.stringify({ pass: receipt.pass, failures: receipt.failures, observations: receipt.observations.length, screenshots: receipt.screenshotManifest.length }, null, 2));
+          const failures = [];
+          if (receipt.pass !== true || receipt.failures.length !== 0) failures.push('receipt');
+          if (receipt.execution.commit !== process.env.EXECUTION_COMMIT) failures.push('commit');
+          if (receipt.invariant.cardinalCount !== 4 || receipt.invariant.roomCount !== 16) failures.push('membership');
+          if (receipt.invariant.constellationVisibleLabelCount !== 4 || receipt.invariant.clusterVisibleLabelCount !== 1) failures.push('label_count');
+          if (receipt.invariant.cardinalLabelModel !== 'compass-family-letter-word' || receipt.invariant.clusterLabelModel !== 'camera-front-primary-only') failures.push('label_model');
+          if (receipt.observations.length !== 2 || receipt.screenshotManifest.length !== 10) failures.push('evidence_count');
+          if (failures.length) throw new Error(`SHOWROOM_LABEL_RECEIPT_INVALID:${failures.join(',')}`);
+          NODE
+
+      - name: Upload exact-head evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-label-conformance-benchmark-v1-evidence
+          path: |
+            showroom-label-conformance-benchmark-v1.json
+            showroom-label-conformance-benchmark-v1-screenshots/**
+            /tmp/showroom-label-server.log
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,75 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "compass-v2-r10",
+  "description": "Compass V2 R10 exact accepted root release surface. Verifies the preserved current Compass host, the R8 thin V2 player bound to the immutable R7 V2 master, and Skip restoration before release.",
+  "checks": [
+    {
+      "path": "/",
+      "includes": [
+        "<title>Diamond Gate Bridge Compass</title>",
+        "data-compass-root",
+        "data-compass-static-introduction",
+        "/assets/compass/compass.orientation-cinematic.css?v=prerendered-master-t12-v1&cb=dea9061beb87b354",
+        "/assets/compass/compass.orientation-cinematic.js?v=prerendered-master-t12-v1&cb=aa56aab44b8bc51a",
+        "/assets/compass/compass.readiness-context-v1.js?v=compass-runtime-copy-owner-repair-gen1876&cb=d3fe9edfa21e0d0e",
+        "/assets/compass/compass.crystals.js?v=gen1858-release-orbit-continuity&cb=cd2cbad0494852cc",
+        "/assets/compass/compass.orbit-input.js?v=gen1846&cb=681410dac29d2dae"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/compass/compass.orientation-cinematic.js",
+      "includes": [
+        "COMPASS_PRERENDERED_THIN_PLAYER_R8_v2",
+        "/assets/compass/cinematic-media/compass-main-orientation-final-v2.mp4",
+        "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+        "b48bc48e531c3eb29bd1a94a91725badd30186f5",
+        "entryPrerollMs:4350",
+        "entryPrerollCountedInMaster:false"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/compass/cinematic-media/manifest.v1.json",
+      "includes": [
+        "R8_SUCCESSOR_PLAYER_BOUND_TO_R7_V2_MASTER",
+        "0326240cf1d3d8cf7753b91ea1cd0206378b8db7e37590b8bb39c37f6b50f444",
+        "b48bc48e531c3eb29bd1a94a91725badd30186f5",
+        "R7_GIT_READBACK_PASS_CLOSED"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-main-orientation-film]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Settle V2 orientation and restore Compass",
+        "action": {
+          "type": "click",
+          "selector": "[data-main-orientation-skip]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "[data-compass-root]:not([inert])"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-main-orientation-replay]"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

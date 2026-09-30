@@ -1,0 +1,49 @@
+{
+  "schema": "PUBLIC_PRIVATE_CANONICAL_EXECUTION_CARRIER_v1",
+  "status": "CANDIDATE_BOUNDED_EXECUTION_TRANSPORT",
+  "carrierId": "PUBLIC_RUNNER_PRIVATE_CANONICAL_EXECUTION_CARRIER_v1",
+  "publicRepository": "smansfield635-create/smansfield635-create.github.io",
+  "privateRepository": "smansfield635-create/geodiametrics1",
+  "authorityLaw": "PUBLIC_COMPUTE_MAY_TRANSPORT_EXECUTION_BUT_PRIVATE_CONTROL_PLANE_REMAINS_SOLE_AUTHORITY",
+  "trigger": {
+    "event": "issue_comment.created",
+    "marker": "PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1",
+    "trustedAuthorAssociations": ["OWNER"],
+    "requestBody": "PRIVATE_REQUEST_LOCATOR_ONLY"
+  },
+  "privateExecution": {
+    "privateRequestSource": "PRIVATE_ISSUE_COMMENT_FETCHED_WITH_JOB_SCOPED_APP_TOKEN",
+    "checkoutRef": "REQUEST_EXACT_GOVERNING_HEAD_ONLY",
+    "executorPath": "tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs",
+    "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+    "nativeReceiptRequired": true,
+    "receiptResultMayNotBeRewritten": true
+  },
+  "authentication": {
+    "mechanism": "GITHUB_APP_INSTALLATION_TOKEN",
+    "repositoryScope": ["geodiametrics1"],
+    "requiredPermissions": {"contents": "write", "issues": "read"},
+    "tokenLifetime": "SHORT_LIVED_JOB_SCOPED",
+    "publicWorkflowSecrets": ["PRIVATE_EXECUTION_APP_PRIVATE_KEY"],
+    "publicWorkflowVariables": ["PRIVATE_EXECUTION_APP_ID"]
+  },
+  "prohibitions": [
+    "PUBLIC_TRANSPORT_OF_PRIVATE_INTAKE_PAYLOAD",
+    "ARBITRARY_COMMAND_EXECUTION",
+    "ARBITRARY_PRIVATE_REPOSITORY_SELECTION",
+    "ARBITRARY_PRIVATE_PATH_SELECTION",
+    "CALLER_SUPPLIED_LEDGER_BYTES",
+    "CALLER_SUPPLIED_ADMISSION_RESULT",
+    "PRIVATE_PRODUCT_MUTATION",
+    "PRIVATE_MAIN_MUTATION",
+    "MERGE_AUTHORITY_CREATION",
+    "DEPLOYMENT_AUTHORITY_CREATION",
+    "PUBLIC_AUTHORITY_INHERITANCE"
+  ],
+  "publicOutputs": {
+    "redactedResultOnly": true,
+    "allowedFields": ["schema", "requestId", "result", "canonicalResult", "canonicalReceiptSha256", "runId", "runAttempt"],
+    "fullPrivateReceiptPublished": false
+  }
+}

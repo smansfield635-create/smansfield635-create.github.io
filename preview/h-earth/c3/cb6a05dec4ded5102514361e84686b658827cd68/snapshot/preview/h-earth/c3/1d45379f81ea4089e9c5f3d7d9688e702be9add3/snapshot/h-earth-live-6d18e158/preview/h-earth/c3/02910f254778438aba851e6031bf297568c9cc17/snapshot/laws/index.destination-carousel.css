@@ -1,0 +1,214 @@
+/*
+ * LAWS_NATIVE_DESTINATION_CAROUSEL_v3
+ * Chamber-native spatial carousel presentation for the existing Laws records.
+ * Surrogate Previous/Next controls are prohibited; traversal is spatial.
+ */
+html[data-laws-root-rolodex="active"] {
+  --laws-carousel-width: min(68vw, 33rem);
+  --laws-carousel-height: clamp(25rem, 38vw, 31rem);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-field {
+  isolation: isolate;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  padding: .7rem 0 1.25rem;
+  border: 1px solid rgba(132, 218, 255, .15);
+  border-radius: clamp(1.1rem, 2vw, 1.65rem);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(73, 170, 226, .07), transparent 48%),
+    linear-gradient(180deg, rgba(3, 10, 25, .58), rgba(2, 7, 18, .3));
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, .14);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 2.1rem;
+  margin: 0;
+  padding: .2rem clamp(1rem, 3vw, 2.4rem) .55rem;
+  pointer-events: none;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-control {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+  position: relative !important;
+  z-index: 2;
+  height: var(--laws-carousel-height) !important;
+  min-height: var(--laws-carousel-height) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  perspective: 1700px;
+  perspective-origin: 50% 48%;
+  touch-action: pan-y;
+  cursor: grab;
+  outline-offset: -2px;
+  mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-viewport[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-track {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform-style: preserve-3d;
+}
+
+html[data-laws-destination-stage="active"][data-laws-root-rolodex="active"] [data-laws-root-rolodex-section] .laws-destination-stage__field .laws-rolodex-track {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  width: var(--laws-carousel-width) !important;
+  max-width: var(--laws-carousel-width) !important;
+  min-height: min(22rem, calc(var(--laws-carousel-height) - 2.2rem)) !important;
+  margin: 0 !important;
+  flex: none !important;
+  opacity: var(--laws-carousel-opacity, .12) !important;
+  filter: blur(var(--laws-carousel-blur, 0px)) saturate(.68) brightness(.7);
+  transform:
+    translate(-50%, -50%)
+    translateX(var(--laws-carousel-x, 0%))
+    translateZ(var(--laws-carousel-z, -140px))
+    rotateY(var(--laws-carousel-rotate, 0deg))
+    scale(var(--laws-carousel-scale, .76)) !important;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
+  pointer-events: none;
+  box-shadow: 0 1.4rem 4.2rem rgba(0, 0, 0, .32);
+  transition:
+    transform 520ms cubic-bezier(.2,.76,.18,1),
+    opacity 360ms ease,
+    filter 360ms ease,
+    border-color 320ms ease,
+    box-shadow 420ms ease;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-carousel-relative="-1"],
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-carousel-relative="1"],
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
+  pointer-events: auto;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
+  filter: none;
+  border-color: rgba(132, 218, 255, .62);
+  box-shadow:
+    0 2rem 5.5rem rgba(0, 0, 0, .42),
+    0 0 0 1px rgba(121, 234, 255, .055),
+    0 0 2.9rem rgba(93, 201, 255, .065),
+    inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"]) :is(
+  .laws-rolodex-card__count,
+  h4,
+  .laws-rolodex-card__question,
+  .laws-rolodex-card__description,
+  .laws-rolodex-enter
+) {
+  opacity: .12;
+  transition: opacity 240ms ease;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] :is(
+  .laws-rolodex-card__count,
+  h4,
+  .laws-rolodex-card__question,
+  .laws-rolodex-card__description,
+  .laws-rolodex-enter
+) {
+  opacity: 1;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"]) .laws-rolodex-enter {
+  pointer-events: none;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-position {
+  min-width: 4.5rem;
+  color: rgba(204, 232, 245, .78);
+  font-variant-numeric: tabular-nums;
+  font-size: .76rem;
+  letter-spacing: .11em;
+  text-align: center;
+}
+
+@media (min-width: 781px) and (max-width: 1200px) {
+  html[data-laws-root-rolodex="active"] {
+    --laws-carousel-width: min(58vw, 28.5rem);
+    --laws-carousel-height: clamp(26rem, 52vw, 31rem);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
+    margin-inline: clamp(.35rem, 1.2vw, .8rem);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-laws-root-rolodex="active"] {
+    --laws-carousel-width: 78vw;
+    --laws-carousel-height: 27rem;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
+    margin-inline: .5rem;
+    border-radius: 1.15rem;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
+    padding-inline: 1rem;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+    mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 98%, transparent 100%);
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+    min-height: 22.5rem !important;
+  }
+}
+
+@media (max-width: 430px) {
+  html[data-laws-root-rolodex="active"] {
+    --laws-carousel-width: 82vw;
+    --laws-carousel-height: 28rem;
+  }
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-field[data-carousel-dragging="true"] .laws-rolodex-card {
+  transition: opacity 90ms linear, filter 90ms linear !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+    transition: none !important;
+    filter: none;
+  }
+}

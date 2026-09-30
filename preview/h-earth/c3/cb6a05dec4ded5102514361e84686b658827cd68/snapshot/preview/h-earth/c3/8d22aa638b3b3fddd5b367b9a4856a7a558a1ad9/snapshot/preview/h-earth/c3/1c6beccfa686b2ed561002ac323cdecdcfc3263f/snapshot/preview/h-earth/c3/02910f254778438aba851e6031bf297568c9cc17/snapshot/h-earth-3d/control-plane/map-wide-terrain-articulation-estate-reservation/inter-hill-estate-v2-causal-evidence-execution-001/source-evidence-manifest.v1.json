@@ -1,0 +1,58 @@
+{
+  "lock322": {
+    "generation": 322,
+    "paths": [
+      ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/AGENTS.md",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/causal-rules.v2.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/changed-path-manifest.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/fixtures.v2.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/operation-request.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/rollback.v1.json",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs",
+      "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator-v2.mjs",
+      "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs"
+    ],
+    "released": false,
+    "scopePathCount": 13,
+    "state": "ADMITTED_LOCKED"
+  },
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001",
+  "proposedPathIntersectionWithLock322": [],
+  "schema": "H_EARTH_INTER_HILL_ESTATE_V2_SOURCE_EVIDENCE_MANIFEST_v1",
+  "sourceIdentities": {
+    "acceptedDelta": {
+      "blob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+      "head": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+      "path": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js"
+    },
+    "causalEvaluator": {
+      "blob": "c5216445f8bd8267e94d7651c7b06c5f38ab1c83",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs"
+    },
+    "currentMain": {
+      "commit": "502f791f26f19b9802920a7d1d24671aeae822c2",
+      "tree": "19137a72f347f7b832f036a258cbe425d59e221d"
+    },
+    "currentTerrain": {
+      "blob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "head": "0d88fe21aba99c97b73fcdc68d44af57d55b68be",
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+    },
+    "generator": {
+      "blob": "80ff6fa6f8b349babf668fa40f54456ed140452b",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/estate-multizone-search.v1.mjs"
+    },
+    "orchestrator": {
+      "blob": "d443e7e900e260b4399dfd6014bce4e158ac32c9",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/successor-evaluator.v1.mjs"
+    },
+    "realTerrainPartition": {
+      "blob": "28cbbcc8882ad061fad99cce6b772f4914dc3d86",
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/real-terrain-partition.v1.mjs"
+    }
+  }
+}

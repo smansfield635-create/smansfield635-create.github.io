@@ -1,0 +1,1520 @@
+<!doctype html>
+<html lang="en"
+  data-route="/products/education/"
+  data-page="education-coheriscope-pattern-placement-demo"
+  data-contract="EDUCATION_COHERISCOPE_PATTERN_PLACEMENT_DEMO_v1"
+  data-operation="EDUCATION_PAGE_PLACEMENT_DEMO_VERTICAL_SLICE_20260920_001"
+  data-lock-generation="2470"
+  data-public-face-default="true"
+  data-technical-face-available="true"
+  data-demo-language-english="available"
+  data-demo-language-spanish="available"
+  data-demo-language-chinese="available"
+  data-placement-authority="demonstrated-performance"
+  data-self-report-authority="orientation-only"
+  data-placement-range="program-wide"
+  data-no-backend="true"
+  data-client-local-persistence="true" data-server-persistence="false"
+  data-speech-measurement="false"
+  data-listening-measurement="false">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>English Fluency Accelerator · Diamond Gate Bridge Education</title>
+<meta name="description" content="A guided English learning experience built around 1,001 carefully chosen words and concepts, productive patterns, adaptive placement, and a designed 3–6 month journey.">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#030611;--panel:#081225;--panel2:#0d1930;--text:#f8fbff;
+  --muted:rgba(232,241,252,.79);--faint:rgba(232,241,252,.56);
+  --gold:#f4cf83;--blue:#8dd8ff;--mint:#a7f3c6;--violet:#b9a0ff;
+  --line:rgba(255,255,255,.13);--danger:#ff8d95;--max:1120px;
+}
+*{box-sizing:border-box}
+html{min-width:320px;background:var(--bg);scroll-behavior:smooth}
+body{margin:0;min-width:320px;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;background:
+radial-gradient(circle at 50% -8%,rgba(244,207,131,.14),transparent 30rem),
+radial-gradient(circle at 8% 22%,rgba(185,160,255,.12),transparent 28rem),
+radial-gradient(circle at 92% 34%,rgba(141,216,255,.12),transparent 30rem),
+linear-gradient(180deg,#071122 0%,#020610 58%,#01030a 100%)}
+a{color:inherit;text-decoration:none}.skip{position:absolute;left:-999px;top:8px;z-index:20;background:var(--gold);color:#07111d;padding:.7rem 1rem;border-radius:999px;font-weight:900}.skip:focus{left:8px}
+.shell{width:min(var(--max),calc(100% - 28px));margin:auto;padding:18px 0 52px}.topbar{display:flex;gap:1rem;align-items:center;justify-content:space-between;padding:.6rem 0 1rem}.brand{display:grid;gap:.08rem}.brand small,.eyebrow{color:var(--gold);font-size:.7rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.brand strong{font-size:1.18rem}.routes{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:flex-end}.routes a{border:1px solid var(--line);border-radius:999px;padding:.45rem .7rem;color:var(--muted);font-size:.72rem;font-weight:800}
+.panel{border:1px solid var(--line);border-radius:1.5rem;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),rgba(5,12,27,.9);box-shadow:0 28px 90px rgba(0,0,0,.38);overflow:hidden}
+.face-tabs{display:flex;gap:.4rem;padding:.75rem;border-bottom:1px solid var(--line);background:rgba(0,0,0,.16)}button{font:inherit}.face-tab,.button,.button-secondary{border:1px solid var(--line);border-radius:999px;padding:.65rem .95rem;color:var(--text);background:rgba(255,255,255,.04);font-weight:900;cursor:pointer}.face-tab[aria-selected="true"],.button{color:#07111d;background:linear-gradient(135deg,#fff0b8,var(--gold));border-color:rgba(244,207,131,.7)}.button-secondary:hover,.face-tab:hover{border-color:rgba(141,216,255,.55)}.button[disabled],.button-secondary[disabled]{opacity:.45;cursor:not-allowed}
+.face-panel{padding:clamp(1.2rem,4vw,2.8rem);display:grid;gap:1rem}.hero{display:grid;gap:.8rem;max-width:900px}h1,h2,h3,p{margin:0}h1{font-size:clamp(2.5rem,7vw,5rem);line-height:.92;letter-spacing:-.065em}h2{font-size:clamp(1.55rem,4vw,2.5rem);line-height:1;letter-spacing:-.045em}h3{font-size:1.05rem}p{color:var(--muted)}.lead{font-size:clamp(1rem,2.2vw,1.15rem);max-width:800px}.actions,.button-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.grid-3,.grid-4,.language-grid,.result-grid{display:grid;gap:.7rem}.grid-3,.language-grid,.result-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card,.language-card,.metric,.stage-card,.question-card{border:1px solid var(--line);border-radius:1.1rem;background:rgba(255,255,255,.025);padding:1rem;display:grid;gap:.45rem}.card b,.metric b,.stage-card b{color:var(--gold);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}.card strong,.language-card strong,.metric strong{font-size:1rem}.card span,.language-card span,.metric span,.stage-card span{color:var(--muted);font-size:.84rem;line-height:1.45}
+details{border:1px solid var(--line);border-radius:1rem;background:rgba(255,255,255,.02)}summary{cursor:pointer;padding:.85rem 1rem;font-weight:850}.detail{padding:0 1rem 1rem;display:grid;gap:.5rem}.detail li,.detail p{color:var(--muted);font-size:.85rem}
+.demo-shell{margin-top:1rem;border:1px solid rgba(141,216,255,.24);border-radius:1.4rem;background:rgba(3,10,23,.9);overflow:visible}.demo-head{padding:1rem 1.2rem;border-bottom:1px solid var(--line);display:flex;gap:1rem;align-items:center;justify-content:space-between}.demo-progress{display:flex;gap:.35rem;flex-wrap:wrap}.demo-step{padding:.35rem .55rem;border-radius:999px;border:1px solid var(--line);font-size:.67rem;color:var(--faint);font-weight:850}.demo-step[data-state="active"]{color:#07111d;background:var(--blue);border-color:var(--blue)}.demo-step[data-state="complete"]{color:var(--mint);border-color:rgba(167,243,198,.38)}
+.demo-stage{padding:clamp(1rem,4vw,1.6rem);display:grid;gap:1rem}.demo-stage[hidden]{display:none}.language-card{position:relative}.language-card button{justify-self:start}.soon{position:absolute;right:.8rem;top:.8rem;color:var(--violet);font-size:.67rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.field{display:grid;gap:.35rem}.field label{font-size:.78rem;font-weight:850;color:var(--muted)}select,input,textarea{width:100%;border:1px solid var(--line);border-radius:.8rem;background:#07101f;color:var(--text);padding:.72rem .8rem;font:inherit}textarea{min-height:5.5rem;resize:vertical}.validation{color:var(--danger);font-size:.8rem;min-height:1.2rem}
+.question-card{gap:.8rem}.question-card .meta{display:flex;gap:.4rem;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:.25rem .5rem;color:var(--faint);font-size:.66rem;font-weight:850}.options{display:grid;gap:.5rem}.option{display:grid;grid-template-columns:auto 1fr;gap:.6rem;align-items:start;border:1px solid var(--line);border-radius:.9rem;padding:.7rem;cursor:pointer}.option:has(input:checked){border-color:rgba(141,216,255,.6);background:rgba(141,216,255,.07)}.option input{width:auto;margin-top:.2rem}.hint{border-left:3px solid var(--violet);padding:.65rem .8rem;background:rgba(185,160,255,.06);color:var(--muted);font-size:.84rem}
+.result-hero{border:1px solid rgba(244,207,131,.28);border-radius:1.2rem;padding:1rem;background:rgba(244,207,131,.045);display:grid;gap:.4rem}.result-hero strong{font-size:1.4rem}.result-note{color:var(--muted);font-size:.84rem}.warning{border:1px solid rgba(244,207,131,.3);border-radius:1rem;padding:.85rem;background:rgba(244,207,131,.05);color:rgba(255,244,216,.92)}.boundary{font-size:.78rem;color:var(--faint)}
+.stage-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem}.stage-card[data-mastered="true"]{border-color:rgba(167,243,198,.32)}.stage-card[data-current="true"]{border-color:rgba(141,216,255,.5);background:rgba(141,216,255,.05)}
+footer{padding:1.2rem 0;color:var(--faint);font-size:.72rem;text-align:center}
+@media(max-width:850px){.grid-4,.stage-map{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3,.language-grid,.result-grid{grid-template-columns:1fr}.topbar{align-items:flex-start}.routes{max-width:55%}}
+@media(max-width:620px){.shell{width:min(100% - 18px,var(--max))}.topbar{display:grid}.routes{max-width:none;justify-content:flex-start}.form-grid,.grid-4,.stage-map{grid-template-columns:1fr}.face-tabs{overflow:auto}.demo-head{display:grid}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Education six-card replacement — sole carousel/flip geometry authority. */
+.edu-hero{margin-top:.6rem;padding:clamp(1.35rem,4vw,3rem);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(16rem,.6fr);gap:clamp(1rem,4vw,3rem);align-items:end;min-height:28rem;position:relative;overflow:hidden}.edu-hero__copy{position:relative;z-index:2;display:grid;gap:.9rem}.edu-hero__signal{display:flex;flex-wrap:wrap;gap:.42rem;align-items:center;justify-content:flex-end;padding:1rem;border:1px solid var(--line);border-radius:1rem;background:rgba(255,255,255,.025)}.edu-hero__signal span{padding:.45rem .65rem;border-radius:999px;border:1px solid rgba(141,216,255,.24);color:var(--muted);font-size:.72rem;font-weight:900}.edu-hero__signal b{color:var(--gold)}
+.edu-carousel{--edu-accent:var(--gold);--edu-soft:rgba(244,207,131,.08);margin-top:1rem;padding:clamp(1rem,2.4vw,1.45rem);position:relative;overflow:hidden;min-height:31rem}.edu-carousel__header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:end}.edu-carousel__live{color:var(--faint);font-size:.72rem;font-weight:850}.edu-carousel__viewport{position:relative;height:26rem;overflow:hidden;perspective:1800px;touch-action:pan-y;outline:none}.edu-carousel__track{position:absolute;inset:0;transform-style:preserve-3d}
+.edu-standard-card{position:absolute;left:50%;top:1.2rem;overflow:hidden;transform:translateX(-50%) translate3d(var(--spatial-x,0),0,var(--spatial-z,0)) scale(var(--spatial-scale,1));opacity:var(--spatial-opacity,1);border:1px solid rgba(255,255,255,.13);border-radius:1.2rem;background:linear-gradient(150deg,rgba(19,28,45,.98),rgba(5,10,20,.99));box-shadow:0 28px 70px rgba(0,0,0,.38);transition:transform .34s cubic-bezier(.2,.8,.2,1),opacity .25s ease;pointer-events:none;transform-style:preserve-3d}.edu-standard-card[data-active="true"]{z-index:10;pointer-events:auto}.edu-standard-card[data-adjacent="true"]{z-index:6;pointer-events:auto;cursor:pointer}.edu-standard-card[data-distant="true"]{visibility:hidden}.edu-standard-card[data-dragging="true"]{transition:none}
+.edu-card-inner{height:100%}.edu-card-face{height:100%;padding:1.2rem;display:flex;flex-direction:column}.edu-card-back{display:none!important}
+.edu-standard-count{color:var(--faint);font-size:.68rem;font-weight:800}.edu-standard-kicker{margin:.55rem 0 0;color:var(--edu-accent);font-size:.67rem;font-weight:850}.edu-standard-title{margin:.55rem 0 0;max-width:14ch;font-family:Georgia,serif;font-size:clamp(2rem,4vw,3.4rem);font-weight:500;line-height:.94}.edu-standard-copy{margin:.72rem 0 0;max-width:28ch;color:var(--muted)}.edu-card-action{margin-top:.35rem;align-self:flex-start;flex:0 0 auto}.edu-card-action,.edu-card-check,.edu-card-help,.edu-card-options button{min-height:2.55rem;padding:.55rem .8rem;border:1px solid rgba(255,255,255,.16);border-radius:.7rem;background:rgba(255,255,255,.06);color:var(--text);font:inherit;font-weight:800;cursor:pointer}.edu-card-back-head{display:flex;justify-content:space-between;gap:.75rem;align-items:center}.edu-card-back-body{display:grid;gap:.65rem;margin-top:.65rem}.edu-card-step{padding:.65rem;border:1px solid rgba(255,255,255,.09);border-radius:.8rem;background:rgba(255,255,255,.025)}.edu-card-step h4{margin:0 0 .3rem;color:var(--edu-accent)}.edu-card-step p{margin:0;font-size:.86rem}.edu-card-options{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.45rem}.edu-card-options button[aria-pressed="true"]{border-color:var(--edu-accent);background:var(--edu-soft)}.edu-card-input{width:100%;margin-top:.45rem;padding:.65rem;border:1px solid var(--line);border-radius:.65rem;background:#07101d;color:var(--text)}.edu-card-feedback{min-height:1.4rem;margin:.4rem 0}.edu-card-feedback[data-state="success"]{color:#b9f7d1}.edu-card-feedback[data-state="retry"]{color:#ffd5a0}.edu-carousel__note{margin:.35rem auto 0;max-width:58rem;text-align:center;color:var(--faint);font-size:.78rem}.edu-demo-gateway{margin-top:1rem;padding:clamp(1rem,3vw,1.45rem);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:center}
+.edu-detail-surface{position:fixed!important;z-index:100000!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;overflow:auto!important;padding:max(1rem,env(safe-area-inset-top)) 1rem max(1rem,env(safe-area-inset-bottom))!important;background:linear-gradient(180deg,rgba(5,13,29,.99),rgba(2,6,16,.995))!important;backdrop-filter:blur(14px);overscroll-behavior:contain}.edu-detail-surface[hidden]{display:none!important}.edu-detail-panel{width:min(100%,70rem)!important;min-height:min-content;margin:0 auto!important;padding:clamp(1rem,3vw,2rem)!important;border:1px solid var(--line)!important;border-radius:1.25rem!important;background:#081225!important;box-shadow:0 30px 90px rgba(0,0,0,.55)!important}.edu-detail-top{display:flex!important;justify-content:space-between!important;gap:1rem!important;align-items:flex-start!important;border-bottom:1px solid var(--line)!important;padding-bottom:1rem!important}.edu-detail-top h3{font-family:Georgia,serif!important;font-size:clamp(2rem,5vw,3.5rem)!important;font-weight:500!important}.edu-detail-body{display:grid!important;gap:1rem!important;margin-top:1rem!important}.edu-expanded-card{perspective:1800px;touch-action:pan-y}.edu-expanded-card__inner{display:grid;grid-template-areas:"face";transform-style:preserve-3d;will-change:transform}.edu-expanded-face{grid-area:face;backface-visibility:hidden;min-width:0}.edu-expanded-face--exercise{transform:rotateY(180deg)}.edu-expanded-face[aria-hidden="true"]{pointer-events:none}.edu-expanded-face-switch{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:.8rem}.edu-expanded-face-switch button{min-height:2.6rem;padding:.58rem .85rem;border:1px solid rgba(244,207,131,.28);border-radius:999px;background:rgba(244,207,131,.08);color:var(--text);font:inherit;font-weight:800}.edu-detail-step{padding:1rem!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:1rem!important;background:rgba(255,255,255,.025)!important}.edu-detail-step h4{margin:0 0 .45rem!important;color:var(--gold)!important}@media(max-width:599px){.edu-detail-surface{padding:.55rem!important}.edu-detail-panel{border-radius:1rem!important;padding:1rem!important}.edu-detail-top{display:grid!important}.edu-detail-top .edu-return{justify-self:start}}
+.edu-custom-select{position:relative}
+.edu-custom-select>button{width:100%;min-height:3rem;padding:.7rem .85rem;border:1px solid var(--line);border-radius:.75rem;background:#08162d;color:var(--text);font:inherit;text-align:left;display:flex;justify-content:space-between}
+.edu-custom-select>button::after{content:"⌄";color:var(--gold)}
+.edu-custom-options{position:absolute;z-index:400;left:0;right:0;top:calc(100% + .3rem);max-height:min(20rem,55dvh);overflow:auto;overscroll-behavior:contain;padding:.35rem;border:1px solid rgba(141,216,255,.25);border-radius:.85rem;background:#08162d;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.edu-custom-options[data-direction="up"]{top:auto;bottom:calc(100% + .3rem)}
+.edu-custom-options[hidden]{display:none}
+.edu-custom-options button{display:block;width:100%;padding:.72rem;border:0;border-radius:.55rem;background:transparent;color:var(--text);font:inherit;text-align:left}
+.edu-custom-options button:hover,.edu-custom-options button:focus-visible,.edu-custom-options button[aria-selected="true"]{background:rgba(141,216,255,.12)}
+.field select.edu-native-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+@media(max-width:900px){
+ .edu-carousel{min-height:29rem}
+ .edu-carousel__viewport{height:25rem}
+}
+@media(max-width:599px){
+ .edu-carousel{min-height:27rem;padding-inline:.45rem}
+ .edu-carousel__viewport{height:23rem}
+ .edu-standard-card{top:.8rem}
+ .edu-card-face{padding:1rem}
+ .edu-card-front .edu-standard-title{font-size:clamp(1.8rem,8vw,2.45rem)}
+ .edu-card-front .edu-standard-copy{font-size:clamp(.92rem,3.5vw,1.05rem)}
+ .edu-detail-top{display:grid}
+}
+@media(max-height:600px) and (orientation:landscape){
+ .edu-carousel{min-height:22rem}
+ .edu-carousel__viewport{height:min(21rem,calc(100dvh - 6rem))}
+ .edu-standard-card{top:.5rem}
+}
+
+
+/* Cycle-One Completion v1 — authoritative expression geometry (#4179/#4180). */
+.edu-carousel{--edu-card-width:28rem;--edu-card-height:23rem;min-height:calc(var(--edu-card-height) + 8rem)}
+.edu-carousel__viewport{height:calc(var(--edu-card-height) + 3rem)}
+.edu-standard-card{width:var(--edu-card-width);height:var(--edu-card-height)}
+.edu-expanded-orientation{display:grid;grid-template-columns:1fr auto 1fr;gap:.55rem;align-items:center;margin-bottom:1rem;padding:.4rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.025)}
+.edu-expanded-orientation button{min-height:2.7rem;border:0;border-radius:999px;background:transparent;color:var(--muted);font:inherit;font-weight:900}
+.edu-expanded-orientation button[aria-selected="true"]{background:rgba(244,207,131,.14);color:var(--text);box-shadow:inset 0 0 0 1px rgba(244,207,131,.34)}
+.edu-teaching-object{margin:1rem 0;padding:clamp(1.2rem,4vw,2rem);border:1px solid rgba(141,216,255,.22);border-radius:1.1rem;background:linear-gradient(135deg,rgba(141,216,255,.08),rgba(185,160,255,.045));font-family:Georgia,serif;font-size:clamp(2rem,7vw,4.5rem);line-height:1.05;text-align:center;color:var(--text)}
+.edu-state-confirmation{margin-top:.75rem;padding:.75rem 1rem;border:1px solid rgba(167,243,198,.34);border-radius:.85rem;background:rgba(167,243,198,.07);font-weight:900;color:var(--mint)}
+.edu-card-feedback[aria-live]{min-height:2.2rem}
+@media(max-width:1199px){.edu-carousel{--edu-card-width:min(46vw,27rem);--edu-card-height:22rem}}
+@media(max-width:899px){.edu-carousel{--edu-card-width:min(68vw,25rem);--edu-card-height:21rem}.edu-carousel__header{grid-template-columns:1fr}.edu-carousel__live{justify-self:start}}
+@media(max-width:599px){.edu-carousel{--edu-card-width:min(84vw,22rem);--edu-card-height:20rem;min-height:calc(var(--edu-card-height) + 7rem)}.edu-carousel__viewport{height:calc(var(--edu-card-height) + 2.4rem)}.edu-standard-card{top:.8rem}.edu-card-face{padding:1rem}.edu-detail-top h3{font-size:clamp(1.5rem,8vw,2.3rem)!important}.edu-expanded-orientation{grid-template-columns:1fr auto 1fr}}
+@media(max-height:600px) and (orientation:landscape){.edu-carousel{--edu-card-height:min(19rem,calc(100dvh - 8rem));min-height:calc(var(--edu-card-height) + 3rem)}.edu-carousel__viewport{height:calc(var(--edu-card-height) + 2rem)}}
+.edu-hero-v2{margin-top:.6rem;padding:clamp(1.2rem,4vw,3rem);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(18rem,.95fr);gap:clamp(1.2rem,4vw,3rem);align-items:center;min-height:34rem;overflow:hidden}.edu-hero-v2__copy{display:grid;gap:1rem}.edu-hero-v2__system{position:relative;min-height:24rem;display:grid;place-items:center}.edu-signature{text-align:center;z-index:2}.edu-signature__number{font-family:Georgia,serif;font-size:clamp(5.5rem,14vw,10rem);line-height:.8;letter-spacing:-.075em;color:var(--gold)}.edu-signature__label{font-weight:900;max-width:22rem;margin:.5rem auto}.edu-signature__equation{color:var(--muted);font-size:.8rem;font-weight:850}.edu-duration{display:grid;gap:.2rem;padding:.8rem 1rem;border:1px solid rgba(244,207,131,.3);border-radius:1rem;background:rgba(244,207,131,.055)}.edu-duration strong{color:var(--gold)}.edu-duration span{font-size:.82rem;color:var(--muted)}.edu-nodefield{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(244,207,131,.13),transparent 28%),radial-gradient(circle at 20% 30%,rgba(141,216,255,.1),transparent 4%),radial-gradient(circle at 80% 22%,rgba(185,160,255,.1),transparent 4%),radial-gradient(circle at 14% 72%,rgba(141,216,255,.09),transparent 3%),radial-gradient(circle at 88% 70%,rgba(185,160,255,.09),transparent 3%)}.edu-story-bridge,.edu-journey-resolution{margin-top:1rem;padding:1rem 1.1rem;display:grid;gap:.8rem}.edu-story-bridge__rail{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.4rem}.edu-story-node{padding:.7rem .4rem;border-top:2px solid var(--line);display:grid;gap:.15rem}.edu-story-node b{color:var(--gold);font-size:.65rem}.edu-story-node span{color:var(--muted);font-size:.72rem}.edu-revelation{display:grid;gap:.75rem}.edu-revelation__visual{padding:clamp(1rem,3vw,1.7rem);border:1px solid rgba(141,216,255,.18);border-radius:1rem;background:rgba(141,216,255,.035);display:grid;gap:.65rem;text-align:center}.edu-revelation__big{font-family:Georgia,serif;font-size:clamp(3.5rem,9vw,6.5rem);line-height:.9;color:var(--gold)}.edu-revelation__flow{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center}.edu-revelation__flow span{padding:.42rem .62rem;border:1px solid var(--line);border-radius:999px;font-weight:850}.edu-revelation__qualifier{font-size:.8rem;color:var(--faint)}.edu-journey-resolution__rail{display:flex;gap:.4rem;flex-wrap:wrap}.edu-journey-resolution__rail span{padding:.42rem .6rem;border:1px solid var(--line);border-radius:999px;font-size:.72rem;font-weight:850}.edu-placement-path{display:grid;grid-template-columns:repeat(5,1fr);gap:.45rem;margin:.7rem 0}.edu-placement-path span{height:.5rem;border-radius:999px;background:rgba(141,216,255,.14)}.edu-evidence{margin-top:1rem}@media(max-width:850px){.edu-hero-v2{grid-template-columns:1fr;min-height:0}.edu-story-bridge__rail{grid-template-columns:repeat(3,1fr)}}@media(max-width:599px){.edu-hero-v2{padding:1rem}.edu-signature__number{font-size:clamp(5rem,28vw,7rem)}.edu-story-bridge__rail{grid-template-columns:repeat(2,1fr)}.edu-revelation__flow,.edu-journey-resolution__rail{display:grid}}
+/* Education Spatial Instrument v1 — frozen authority #4197 */
+.edu-spatial-instrument{position:relative;min-height:11rem;display:grid;place-items:center;gap:.7rem;padding:1rem;border:1px solid rgba(141,216,255,.14);border-radius:1.15rem;background:radial-gradient(circle at 50% 45%,rgba(141,216,255,.08),transparent 48%),rgba(255,255,255,.015);overflow:hidden;isolation:isolate}
+.edu-spatial-node{position:relative;z-index:2;display:grid;place-items:center;min-width:5.4rem;min-height:2.6rem;padding:.55rem .75rem;border:1px solid rgba(141,216,255,.24);border-radius:999px;background:#08162b;color:var(--text);font-weight:900;text-align:center;line-height:1.15}
+.edu-spatial-node[data-primary="true"]{border-color:rgba(244,207,131,.5);background:rgba(244,207,131,.09);color:var(--gold);font-family:Georgia,serif;font-size:clamp(1.45rem,4vw,2.6rem)}
+.edu-spatial-node[data-soft="true"]{opacity:.62}.edu-spatial-link{color:var(--gold);font-weight:900;opacity:.75}.edu-spatial-label{font-size:.7rem;color:var(--muted);text-align:center}
+.edu-spatial-mini{position:relative;flex:1 1 auto;min-height:2.75rem;margin:.45rem 0 .4rem;display:grid;place-items:center;pointer-events:none;overflow:hidden;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.04)}
+.edu-spatial-mini .edu-spatial-node{min-width:0;min-height:0;padding:.3rem .45rem;font-size:.65rem}.edu-spatial-mini .edu-spatial-link{font-size:.7rem}
+.edu-spatial-row{display:flex;align-items:center;justify-content:center;gap:clamp(.35rem,2vw,1rem);flex-wrap:wrap}.edu-spatial-stack{display:grid;gap:.55rem;justify-items:center}
+.edu-spatial-instrument[data-geometry="compression"] .edu-spatial-field{position:absolute;inset:0;pointer-events:none}.edu-spatial-field i{position:absolute;width:.35rem;height:.35rem;border:1px solid rgba(141,216,255,.32);border-radius:50%}.edu-spatial-field i:nth-child(1){left:8%;top:18%}.edu-spatial-field i:nth-child(2){left:15%;top:66%}.edu-spatial-field i:nth-child(3){left:28%;top:31%}.edu-spatial-field i:nth-child(4){right:28%;top:24%}.edu-spatial-field i:nth-child(5){right:14%;top:62%}.edu-spatial-field i:nth-child(6){right:7%;top:34%}
+.edu-spatial-routes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.45rem;width:min(100%,38rem);z-index:2}.edu-spatial-route{padding:.5rem;border-top:1px solid rgba(141,216,255,.3);font-size:.68rem;color:var(--muted);text-align:center}
+.edu-spatial-instrument[data-geometry="branching"] .edu-spatial-branches{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;width:min(100%,34rem)}
+.edu-spatial-instrument[data-geometry="loop"] .edu-spatial-loop{display:grid;grid-template-columns:repeat(2,minmax(7rem,1fr));gap:1.1rem;width:min(100%,30rem)}.edu-spatial-instrument[data-geometry="loop"] .edu-spatial-node:nth-child(4){border-color:rgba(167,243,198,.4)}
+.edu-spatial-instrument[data-geometry="support"] .edu-spatial-node:nth-child(2){opacity:.72}.edu-spatial-instrument[data-geometry="support"] .edu-spatial-node:nth-child(3){opacity:.48}.edu-spatial-instrument[data-geometry="support"][data-help="false"] .edu-spatial-node:first-child{opacity:.3}.edu-spatial-return{font-size:.72rem;color:var(--mint)}
+.edu-spatial-instrument[data-geometry="transfer"]{grid-template-columns:minmax(0,1fr) minmax(5rem,.8fr) minmax(0,1fr);min-height:15rem}.edu-transfer-line{height:2px;width:100%;background:linear-gradient(90deg,rgba(141,216,255,.25),var(--gold),rgba(167,243,198,.35));position:relative}.edu-transfer-line:after{content:"›";position:absolute;right:-.15rem;top:50%;transform:translateY(-57%);color:var(--gold);font-size:1.5rem}
+.edu-story-bridge__rail{position:relative}.edu-story-bridge__rail:before{content:"";position:absolute;left:5%;right:5%;top:0;height:2px;background:linear-gradient(90deg,rgba(244,207,131,.25),rgba(141,216,255,.45),rgba(167,243,198,.3));pointer-events:none}.edu-story-node{position:relative;border-top:0!important;padding-top:1rem}.edu-story-node:before{content:"";position:absolute;top:-.3rem;left:50%;width:.65rem;height:.65rem;border-radius:50%;transform:translateX(-50%);background:#081225;border:2px solid rgba(141,216,255,.45)}.edu-story-node[data-selected="true"]:before{background:var(--gold);border-color:var(--gold);box-shadow:0 0 1rem rgba(244,207,131,.35)}
+.edu-synthesis{display:grid;gap:1rem}.edu-synthesis-path{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.35rem;position:relative}.edu-synthesis-path:before{content:"";position:absolute;left:5%;right:5%;top:50%;height:1px;background:rgba(141,216,255,.3)}.edu-synthesis-path .edu-spatial-node{font-size:.62rem;min-width:0}.edu-time-band{display:grid;grid-template-columns:auto 1fr auto;gap:.6rem;align-items:center;padding:.7rem 0}.edu-time-band__line{height:.5rem;border-radius:999px;background:linear-gradient(90deg,rgba(244,207,131,.5),rgba(141,216,255,.38));position:relative}.edu-time-band__line:before,.edu-time-band__line:after{content:"";position:absolute;top:50%;width:.8rem;height:.8rem;border:2px solid var(--gold);border-radius:50%;background:#081225;transform:translateY(-50%)}.edu-time-band__line:before{left:0}.edu-time-band__line:after{right:0}
+.edu-placement-path{position:relative!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:0!important;margin:1.2rem 0!important}.edu-placement-path:before{content:"";position:absolute;left:5%;right:5%;top:50%;height:2px;background:rgba(141,216,255,.28)}.edu-placement-path span{width:1rem!important;height:1rem!important;justify-self:center;border:2px solid var(--blue);border-radius:50%!important;background:#081225!important;z-index:2}.edu-placement-path span:after{display:none!important}
+.edu-revelation{gap:.75rem}.edu-revelation>h4{display:none}.edu-teaching-object{display:none}
+@media(max-width:899px){.edu-spatial-mini{min-height:2.25rem;margin:.3rem 0}.edu-spatial-mini .edu-spatial-node{padding:.22rem .34rem;font-size:.58rem}.edu-spatial-mini .edu-spatial-row{gap:.25rem}}
+@media(max-width:700px){.edu-spatial-routes{grid-template-columns:repeat(2,1fr)}.edu-spatial-instrument[data-geometry="transfer"]{grid-template-columns:1fr;min-height:0}.edu-transfer-line{width:2px;height:3.5rem;background:linear-gradient(180deg,rgba(141,216,255,.25),var(--gold),rgba(167,243,198,.35))}.edu-transfer-line:after{right:auto;left:50%;top:auto;bottom:-.8rem;transform:translateX(-50%) rotate(90deg)}.edu-synthesis-path{grid-template-columns:1fr}.edu-synthesis-path:before{left:50%;right:auto;top:5%;bottom:5%;width:1px;height:auto}.edu-story-bridge__rail:before{display:none}.edu-spatial-instrument[data-geometry="branching"] .edu-spatial-branches{grid-template-columns:1fr}.edu-spatial-instrument[data-geometry="loop"] .edu-spatial-loop{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.edu-spatial-instrument *{animation:none!important;transition:none!important}}
+
+/* Cycle-One Finish v1 — frozen authority #4215 */
+.edu-spatial-instrument[data-attempt="success"][data-geometry="branching"] [data-example-branch="true"]{opacity:.5}
+.edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"]{opacity:.48;border-style:dashed}
+.edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.58;border-style:dashed}
+.edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.58);box-shadow:0 0 0 1px rgba(167,243,198,.12),0 0 1.1rem rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-attempt="success"] [data-result-link="true"]{opacity:1}
+.edu-spatial-instrument[data-attempt="idle"] [data-result-link="true"],.edu-spatial-instrument[data-attempt="retry"] [data-result-link="true"]{opacity:.3}
+.edu-spatial-instrument[data-geometry="branching"][data-attempt="success"] [data-example-branch="true"]{opacity:.45}
+.edu-spatial-instrument[data-geometry="branching"] [data-learner-branch="true"]{border-style:dashed}
+.edu-spatial-instrument[data-geometry="branching"][data-attempt="success"] [data-learner-branch="true"]{border-style:solid;opacity:1;border-color:rgba(167,243,198,.58);box-shadow:0 0 1rem rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="more"]{opacity:1;border-color:rgba(244,207,131,.5)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="independent"]{opacity:.45}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="more"]{opacity:.3}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="independent"]{opacity:1;border-color:rgba(167,243,198,.5)}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="idle"] .edu-transfer-line,.edu-spatial-instrument[data-geometry="transfer"][data-attempt="retry"] .edu-transfer-line{opacity:.3;background:repeating-linear-gradient(90deg,rgba(141,216,255,.38) 0 8px,transparent 8px 15px)}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="success"] .edu-transfer-line{opacity:1}
+.edu-detail-panel{padding:clamp(.8rem,2vw,1.15rem)}
+.edu-detail-top{margin-bottom:.55rem;padding-bottom:.55rem}
+.edu-detail-body{gap:.55rem}
+.edu-detail-step{gap:.6rem}
+.edu-expanded-orientation{margin-bottom:.55rem}
+.edu-revelation>p+ p{margin-top:.1rem}
+.edu-synthesis-path .edu-spatial-node:before{display:block;font-size:.72rem;color:var(--gold);margin-bottom:.18rem}
+.edu-synthesis-path .edu-spatial-node:nth-child(1):before{content:"●"}
+.edu-synthesis-path .edu-spatial-node:nth-child(2):before{content:"＋"}
+.edu-synthesis-path .edu-spatial-node:nth-child(3):before{content:"↗"}
+.edu-synthesis-path .edu-spatial-node:nth-child(4):before{content:"↻"}
+.edu-synthesis-path .edu-spatial-node:nth-child(5):before{content:"⇢"}
+.edu-synthesis-path .edu-spatial-node:nth-child(6):before{content:"⟶"}
+@media(min-width:900px){.edu-story-bridge__rail{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(min-width:600px) and (max-width:899px){
+ .edu-story-bridge__rail{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto auto;gap:1.2rem .4rem}
+ .edu-story-bridge__rail:before{left:16.5%;right:16.5%;top:0;height:calc(100% - .7rem);background:none;border-top:2px solid rgba(141,216,255,.4);border-right:2px solid rgba(141,216,255,.4);border-bottom:2px solid rgba(141,216,255,.4);border-radius:0 1rem 1rem 0}
+ .edu-story-node:nth-child(4){grid-column:3;grid-row:2}.edu-story-node:nth-child(5){grid-column:2;grid-row:2}.edu-story-node:nth-child(6){grid-column:1;grid-row:2}
+}
+@media(max-width:599px){
+ .edu-story-bridge__rail{grid-template-columns:1fr!important;gap:.25rem;padding-left:1.2rem}
+ .edu-story-bridge__rail:before{display:block;left:.3rem;right:auto;top:.35rem;bottom:.35rem;width:2px;height:auto;background:rgba(141,216,255,.4)}
+ .edu-story-node{padding:.55rem .5rem .55rem .8rem}
+ .edu-story-node:before{left:-.9rem;top:50%;transform:translateY(-50%)}
+}
+
+/* Cycle-One Finish v1 — frozen authority #4215 */
+.edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"]{opacity:.48;border-style:dashed}
+.edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.62;border-style:dashed}
+.edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.62);box-shadow:0 0 0 1px rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-attempt="success"] [data-learner-branch="true"]{border-color:rgba(244,207,131,.62);background:rgba(244,207,131,.1);transform:scale(1.035)}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="transformation"] [data-result-node="true"]{border-color:rgba(244,207,131,.62);opacity:1}
+.edu-spatial-instrument[data-attempt="retry"][data-geometry="loop"] .edu-spatial-loop:after{content:"↺";font-size:1.2rem;color:var(--gold);text-align:center;grid-column:1/-1}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="loop"] [data-result-node="true"]{transform:scale(1.035)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="more"]{opacity:1;border-color:rgba(244,207,131,.55)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="independent"]{opacity:.48}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="more"]{opacity:.32}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="independent"]{opacity:1;border-color:rgba(167,243,198,.55)}
+.edu-spatial-instrument[data-attempt="idle"][data-geometry="transfer"] .edu-transfer-line,.edu-spatial-instrument[data-attempt="retry"][data-geometry="transfer"] .edu-transfer-line{opacity:.32;background:repeating-linear-gradient(90deg,rgba(141,216,255,.4) 0 8px,transparent 8px 15px)}
+.edu-spatial-instrument[data-attempt="success"][data-geometry="transfer"] .edu-transfer-line{opacity:1}
+.edu-detail-panel{padding:clamp(.8rem,2vw,1.2rem)}
+.edu-detail-top{margin-bottom:.55rem}
+.edu-detail-body{gap:.55rem}
+.edu-detail-step{gap:.55rem}
+.edu-expanded-orientation{margin-bottom:.55rem}
+.edu-revelation{gap:.55rem}
+.edu-revelation>p:first-of-type{margin-bottom:0}
+.edu-story-bridge__rail{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media(min-width:701px) and (max-width:899px){
+ .edu-story-bridge__rail{grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;row-gap:1.35rem}
+ .edu-story-bridge__rail:before{display:none}
+ .edu-story-node:nth-child(1){grid-column:1;grid-row:1}.edu-story-node:nth-child(2){grid-column:2;grid-row:1}.edu-story-node:nth-child(3){grid-column:3;grid-row:1}
+ .edu-story-node:nth-child(4){grid-column:3;grid-row:2}.edu-story-node:nth-child(5){grid-column:2;grid-row:2}.edu-story-node:nth-child(6){grid-column:1;grid-row:2}
+ .edu-story-node:after{content:"";position:absolute;top:0;left:50%;right:-50%;height:2px;background:rgba(141,216,255,.3);z-index:0}
+ .edu-story-node:nth-child(3):after{left:50%;right:auto;width:2px;height:calc(100% + 1.35rem)}
+ .edu-story-node:nth-child(4):after{left:auto;right:50%;width:50%;height:2px}
+ .edu-story-node:nth-child(6):after{display:none}
+}
+@media(max-width:700px){
+ .edu-story-bridge__rail{display:grid;grid-template-columns:1fr;gap:.2rem}
+ .edu-story-node{padding:.75rem .5rem .75rem 2rem}
+ .edu-story-node:before{left:.55rem;top:50%;transform:translateY(-50%)}
+ .edu-story-node:after{content:"";position:absolute;left:.85rem;top:50%;bottom:-50%;width:2px;background:rgba(141,216,255,.3)}
+ .edu-story-node:last-child:after{display:none}
+}
+.edu-synthesis-path .edu-spatial-node[data-motif="compression"]:before{content:"1,001";font-size:.55rem;color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="transformation"]:before{content:"→";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="branching"]:before{content:"↗";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="loop"]:before{content:"↺";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="support"]:before{content:"⇢";color:var(--gold)}
+.edu-synthesis-path .edu-spatial-node[data-motif="transfer"]:before{content:"⟶";color:var(--gold)}
+
+/* Cycle-One Finish v1 — frozen authority #4215 */
+.edu-spatial-instrument[data-attempt="idle"] [data-result-node="true"],.edu-spatial-instrument[data-attempt="retry"] [data-result-node="true"]{opacity:.48;border-style:dashed}
+.edu-spatial-instrument[data-attempt="success"] [data-result-node="true"]{opacity:1;border-style:solid;border-color:rgba(167,243,198,.7);box-shadow:0 0 0 1px rgba(167,243,198,.15),0 0 1.4rem rgba(167,243,198,.12)}
+.edu-spatial-instrument[data-attempt="retry"] [data-attempt-node="true"]{outline:1px dashed rgba(244,207,131,.48);outline-offset:3px}
+.edu-spatial-instrument[data-attempt="success"] [data-learner-node="true"]{border-color:rgba(167,243,198,.72);background:rgba(167,243,198,.09);transform:scale(1.035)}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="idle"] .edu-transfer-line,.edu-spatial-instrument[data-geometry="transfer"][data-attempt="retry"] .edu-transfer-line{opacity:.28}
+.edu-spatial-instrument[data-geometry="transfer"][data-attempt="success"] .edu-transfer-line{opacity:1;box-shadow:0 0 .8rem rgba(167,243,198,.18)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="more"]{opacity:1;border-color:rgba(244,207,131,.55)}
+.edu-spatial-instrument[data-geometry="support"][data-help="true"] [data-support="independent"]{opacity:.45}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="more"]{opacity:.35}
+.edu-spatial-instrument[data-geometry="support"][data-help="false"] [data-support="independent"]{opacity:1;border-color:rgba(167,243,198,.58)}
+.edu-detail-panel{padding:clamp(.85rem,2.2vw,1.35rem)}.edu-detail-top{margin-bottom:.45rem}.edu-detail-body,.edu-detail-step{gap:.55rem}
+@media (min-width:701px) and (max-width:899px){.edu-story-bridge__rail{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,auto);gap:1.1rem .45rem}.edu-story-bridge__rail:before{left:8%;right:8%;top:.05rem;height:calc(100% - .1rem);border-right:2px solid rgba(141,216,255,.34);border-radius:0 1rem 1rem 0}.edu-story-node:nth-child(4){grid-column:3;grid-row:2}.edu-story-node:nth-child(5){grid-column:2;grid-row:2}.edu-story-node:nth-child(6){grid-column:1;grid-row:2}}
+@media(max-width:700px){.edu-story-bridge__rail{grid-template-columns:1fr;gap:.35rem;padding-left:1rem}.edu-story-bridge__rail:before{display:block;left:.28rem;right:auto;top:.4rem;bottom:.4rem;width:2px;height:auto;background:linear-gradient(180deg,rgba(244,207,131,.25),rgba(141,216,255,.45),rgba(167,243,198,.3))}.edu-story-node{padding:.55rem .4rem .55rem 1rem}.edu-story-node:before{left:-.72rem;top:50%;transform:translateY(-50%)}}
+.edu-synthesis-path .edu-spatial-node:after{display:block;margin-top:.2rem;font-size:.5rem;letter-spacing:.04em;color:var(--faint)}.edu-synthesis-path .edu-spatial-node:nth-child(1):after{content:"BOUND"}.edu-synthesis-path .edu-spatial-node:nth-child(2):after{content:"MULTIPLY"}.edu-synthesis-path .edu-spatial-node:nth-child(3):after{content:"BUILD"}.edu-synthesis-path .edu-spatial-node:nth-child(4):after{content:"IMPROVE"}.edu-synthesis-path .edu-spatial-node:nth-child(5):after{content:"LESS HELP"}.edu-synthesis-path .edu-spatial-node:nth-child(6):after{content:"TRANSFER"}
+@media(prefers-reduced-motion:reduce){.edu-spatial-instrument[data-attempt] *{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#education-main">Skip to Education</a>
+<div class="shell">
+<header class="topbar">
+  <a class="brand" href="/products/education/" aria-current="page"><small>Diamond Gate Bridge Education</small><strong>English Fluency Accelerator</strong></a>
+  <nav class="routes" aria-label="Education routes"><a href="/">Compass</a><a href="/products/">Products</a><a href="/coherence-diagnostic/">Coheriscope</a><a href="/gauges/">Gauges</a></nav>
+</header>
+
+<main id="education-main">
+<section class="panel" data-language-shell style="padding:1rem;margin-bottom:1rem"><p class="eyebrow" data-shell-language-prompt>Choose your help language</p><div class="actions"><button class="button-secondary" type="button" data-shell-language="en">English</button><button class="button-secondary" type="button" data-shell-language="es">Español</button><button class="button-secondary" type="button" data-shell-language="zh">简体中文</button></div></section>
+<section class="panel edu-hero-v2"><div class="edu-hero-v2__copy"><p class="eyebrow" data-story="heroEyebrow"></p><h1 data-story="heroPrimary"></h1><p class="lead" data-story="heroSupport"></p><div class="edu-duration"><strong data-story="durationBadge"></strong><span data-story="durationQualifier"></span></div><div class="actions"><button class="button" type="button" data-jump-standards data-story="seeHow"></button><button class="button-secondary" type="button" data-start-demo data-story="findStart"></button></div></div><div class="edu-hero-v2__system"><div class="edu-spatial-instrument" data-geometry="compression" data-hero-spatial><div class="edu-spatial-field" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="edu-signature"><div class="edu-signature__number">1,001</div><div class="edu-signature__label" data-story="signature"></div></div><div class="edu-spatial-routes" data-hero-routes></div><div class="edu-spatial-label" data-story="equation"></div></div></div></section>
+<section class="edu-carousel panel" id="education-standards-carousel" data-edu-carousel data-inspecting="false" aria-labelledby="standards-title">
+  <header class="edu-carousel__header">
+    <div>
+      <p class="eyebrow">Your Learning Journey</p>
+      <h2 id="standards-title">Six standards. One learning system.</h2>
+      <p class="lead">See how the system works, one step at a time.</p>
+    </div>
+    <div class="edu-carousel__live" data-edu-live aria-live="polite">Possibility · 1 of 6</div>
+  </header>
+
+  
+
+  <div class="edu-carousel__viewport" data-edu-viewport tabindex="0" aria-label="Six-card learning chamber. Drag, swipe, click a neighboring card, or use arrow keys.">
+    <div class="edu-carousel__track" data-edu-track></div>
+  </div>
+
+  <p class="edu-carousel__note">Drag, swipe, tap a neighboring card, or use the arrow keys.</p>
+</section>
+
+<section class="edu-detail-surface" id="edu-detail-surface" hidden aria-modal="true" role="dialog"><article class="edu-detail-panel"><div class="edu-detail-top"><div><p class="eyebrow" id="edu-detail-kicker"></p><h3 id="edu-detail-title"></h3></div><button class="edu-return" type="button" id="edu-detail-return">Return to orbit</button></div><div class="edu-detail-body" id="edu-detail-body"></div></article></section>
+<section class="edu-demo-gateway panel"><div><p class="eyebrow" data-story="placementEye"></p><h2 data-story="placementHeadline"></h2><p class="lead" data-story="placementExplanation"></p><p class="boundary" data-story="placementBoundary"></p></div><button class="button" type="button" data-start-demo data-story="findStart"></button></section><section class="demo-shell" id="demo-shell" hidden aria-label="English Fluency Accelerator demo">
+  <div class="demo-head">
+    <div><p class="eyebrow">Find your starting point</p><h2 id="demo-title">Tell us about your English</h2></div>
+    <div class="demo-progress" aria-label="Demo progress">
+      <span class="demo-step" data-step-indicator="intake" data-state="active">Start</span>
+      <span class="demo-step" data-step-indicator="test">Placement</span>
+      <span class="demo-step" data-step-indicator="result">Result</span>
+      <span class="demo-step" data-step-indicator="entry">Start</span>
+    </div>
+  </div>
+
+  <section class="demo-stage" data-demo-stage="intake" hidden>
+    <div><p class="eyebrow">Your Starting Point</p><h2>Which best describes your English today?</h2><p>Your answer chooses where placement begins. Your performance determines where you start learning.</p></div>
+    <div class="form-grid">
+      <div class="field"><label for="claimed-level">Current English level</label><select id="claimed-level"><option value="">Choose</option><option value="1">Very new to English</option><option value="2">Know some common words</option><option value="3">Can build simple sentences</option><option value="4">Can handle everyday written English</option><option value="5">Can explain ideas in writing</option><option value="6">Comfortable in many written situations</option><option value="7">Strong reader/writer; want advanced challenge</option><option value="8">Advanced English; start with the highest challenge</option></select></div>
+    </div>
+    <div class="validation" id="intake-validation" role="alert"></div>
+    <div class="button-row"><button class="button" type="button" id="begin-placement">Start placement</button></div>
+  </section>
+
+  <section class="demo-stage" data-demo-stage="test" hidden>
+    <div><p class="eyebrow">Placement</p><h2 id="placement-heading">A few questions help us find the right place to begin.</h2><p id="placement-copy">The diagnostic will move higher or lower as needed.</p></div>
+    <div id="question-host"></div>
+    <div class="validation" id="question-validation" role="alert"></div>
+  </section>
+
+  <section class="demo-stage" data-demo-stage="result" hidden>
+    <div><p class="eyebrow">Placement Result</p><h2>Your starting point is ready.</h2></div>
+    <div id="placement-result"></div>
+    <div class="button-row"><button class="button-secondary" type="button" id="retake-placement">Retake Placement</button><button class="button" type="button" id="enter-demo">Start Phase 1</button></div>
+  </section>
+
+  <section class="demo-stage" data-demo-stage="entry" hidden>
+    <div><p class="eyebrow">Learning Availability</p><h2 id="entry-title">Start from what you know. Build from there.</h2></div>
+    <div id="entry-state"></div>
+    <div class="warning">Placement spans the four-phase program. Phase 1 is the currently available public learning experience; later-phase placement remains valid even when that curriculum is not yet available. Progress is saved on this device, not to a server checkpoint.</div>
+    <div class="button-row"><button class="button-secondary" type="button" id="restart-demo">Restart Demo</button></div>
+  </section>
+</section>
+<section class="panel edu-journey-resolution"><p class="eyebrow" data-story="resolutionEye"></p><div class="edu-synthesis"><div class="edu-synthesis-path" data-resolution-rail></div><div class="edu-time-band" data-geometry="time"><strong>3</strong><div><div class="edu-time-band__line" aria-hidden="true"></div><div class="edu-spatial-label" data-story="resolutionDuration"></div></div><strong>6</strong></div><p class="boundary" data-story="resolutionQualifier"></p></div></section><details class="edu-evidence"><summary data-story="evidenceLabel"></summary><div class="detail"><p data-story="evidenceBody"></p></div></details><div hidden aria-hidden="true" data-gate2-deferred-contract>
+  <span data-chamber-practice-action></span>
+  <span data-chamber-check-action></span>
+</div>
+</main>
+<footer>English Fluency Accelerator · Program-wide placement</footer>
+</div>
+
+<script>
+(() => {
+"use strict";
+const PRODUCT_STORY={
+en:{heroEyebrow:"A different way to build English",heroPrimary:"English can feel enormous. You don't need to learn every word before you can start living in English.",heroSupport:"We bounded the foundation. Then we built a system that teaches you how to do more with what you know.",signature:"1,001 carefully chosen words and concepts",equation:"1,001 → patterns → sentences → more ways to communicate",durationBadge:"DESIGNED JOURNEY · 3–6 MONTHS",durationQualifier:"Your path depends on where you start and what you demonstrate along the way.",seeHow:"See how it works",findStart:"Find your starting point",bridgeIntro:"You are not about to memorize six lessons. You are about to see how the system works.",verbs:["BOUND","MULTIPLY","BUILD","IMPROVE","REDUCE HELP","TRANSFER"],chapters:["Possibility","Understanding","Action","Progress","Independence","Achievement"],headlines:["1,001 changes the size of the problem.","A word is not only one thing to memorize.","Knowing words is not the goal. Using them is.","The system pays attention to what happens when you try.","Help should not disappear before you are ready.","Real learning shows up again later."],supports:["Not all of English. A carefully chosen foundation you can build from.","Patterns change what known words can do.","Combine what you know to make something new.","Try. Check. Correct. Keep moving.","Use it. Hide it. Bring it back. Try again.","Use something you saw before in a new moment."],explain:["English is huge. Your starting foundation does not have to be. This system fixes the core at 1,001 carefully chosen words and concepts.","The system does not stop at a list of 1,001. English patterns help those words change, connect, and do more.","A useful system lets you build. The same words and patterns can create many different sentences.","A wrong answer is not the end. It gives the system—and you—information about what needs another try.","The goal is not to take help away. The goal is to see what you can do with less help when you are ready.","Achievement is not seeing the same lesson twice. It is carrying something forward and using it later."],qual:["That does not mean English has only 1,001 words. It means we chose a smaller foundation and teach you how to do more with it.","word changes · sentence patterns · numbers · combinations","","","",""],flows:[["ENDLESS MEMORIZATION","BOUNDED FOUNDATION"],["KNOWN WORD","PATTERN","NEW USE"],["I + like + _____","music · dogs · pizza"],["TRY","CHECK","CHANGE","TRY AGAIN"],["MORE HELP","LESS HELP","INDEPENDENT TRY"],["Earlier: play → played","Use it again"]],success:["You used the same small foundation to build more than one English message.","You found the pattern. One known word can do more when you understand how it changes.","You built an English sentence instead of choosing one.","You checked the answer and changed it. That is progress you can see.","You solved it with support.","You used an earlier pattern with a new word."],resolutionEye:"One system. One journey.",resolution:["1,001 FOUNDATION","PRODUCTIVE PATTERNS","YOUR STARTING POINT","YOUR PROGRESS FOLLOWS WHAT YOU CAN SHOW","LESS SUPPORT","TRANSFER"],resolutionDuration:"DESIGNED AS A 3–6 MONTH LEARNING JOURNEY",resolutionQualifier:"Where you begin matters. What you demonstrate along the way determines how you move through it.",placementEye:"Your starting point",placementHeadline:"Now find where you should begin.",placementStatement:"You may already know part of the system. We do not need to make you start over.",placementExplanation:"You may already know part of the system. Show us what you can do, and placement will move higher or lower to find the right starting point.",placementBoundary:"The six activities above do not determine your level. Placement does.",evidenceLabel:"How we tested the system",evidenceBody:"We stress-tested the 1,001-concept system against broad functional-English tasks, including direct expression and ways of combining words and ideas you already know. These tests evaluate the system architecture. They are not a promise that every learner becomes fluent from a word list."},
+es:{heroEyebrow:"Una forma diferente de construir tu inglés",heroPrimary:"El inglés puede parecer enorme. No necesitas aprender cada palabra antes de empezar a vivir en inglés.",heroSupport:"Limitamos la base. Después construimos un sistema que te enseña a hacer más con lo que ya sabes.",signature:"1.001 palabras y conceptos elegidos cuidadosamente",equation:"1.001 → patrones → oraciones → más formas de comunicarte",durationBadge:"RECORRIDO DISEÑADO · 3–6 MESES",durationQualifier:"Tu recorrido depende de dónde empieces y de lo que demuestres durante el proceso.",seeHow:"Mira cómo funciona",findStart:"Encuentra tu punto de partida",bridgeIntro:"No vas a memorizar seis lecciones. Vas a ver cómo funciona el sistema.",verbs:["LIMITAR","MULTIPLICAR","CONSTRUIR","MEJORAR","REDUCIR AYUDA","TRANSFERIR"],chapters:["Posibilidad","Comprensión","Acción","Progreso","Independencia","Logro"],headlines:["1.001 cambia el tamaño del problema.","Una palabra no es solo algo que memorizar.","Conocer palabras no es la meta. Usarlas sí.","El sistema presta atención a lo que ocurre cuando lo intentas.","La ayuda no debe desaparecer antes de que estés listo.","El aprendizaje real vuelve a aparecer más adelante."],supports:["No todo el inglés. Una base elegida cuidadosamente sobre la que puedes construir.","Los patrones cambian lo que pueden hacer las palabras que ya conoces.","Combina lo que sabes para crear algo nuevo.","Intenta. Comprueba. Corrige. Sigue avanzando.","Úsala. Ocúltala. Vuelve a mostrarla. Inténtalo otra vez.","Usa algo que viste antes en un momento nuevo."],explain:["El inglés es enorme. Tu base inicial no tiene que serlo. Este sistema fija el núcleo en 1.001 palabras y conceptos elegidos cuidadosamente.","El sistema no termina en una lista de 1.001. Los patrones del inglés ayudan a que esas palabras cambien, se conecten y hagan más.","Un sistema útil te permite construir. Las mismas palabras y patrones pueden crear muchas oraciones diferentes.","Una respuesta incorrecta no es el final. Le da al sistema —y a ti— información sobre lo que necesita otro intento.","La meta no es quitarte la ayuda. La meta es ver qué puedes hacer con menos ayuda cuando estés listo.","El logro no es ver la misma lección dos veces. Es llevar algo contigo y usarlo más adelante."],qual:["Eso no significa que el inglés tenga solo 1.001 palabras. Significa que elegimos una base más pequeña y te enseñamos a hacer más con ella.","cambios de palabras · patrones de oraciones · números · combinaciones","","","",""],flows:[["MEMORIZACIÓN SIN FIN","BASE LIMITADA"],["PALABRA CONOCIDA","PATRÓN","NUEVO USO"],["I + like + _____","music · dogs · pizza"],["INTENTAR","COMPROBAR","CAMBIAR","INTENTAR DE NUEVO"],["MÁS AYUDA","MENOS AYUDA","INTENTO INDEPENDIENTE"],["Antes: play → played","Úsalo otra vez"]],success:["Ya usaste inglés partiendo de una base pequeña.","Encontraste el patrón. Una palabra que ya conoces puede hacer más cuando entiendes cómo cambia.","Construiste una oración en lugar de memorizar una.","Comprobaste la respuesta y la cambiaste. Ese es un progreso que puedes ver.","Lo resolviste con ayuda.","Usaste algo que aprendiste antes."],resolutionEye:"Un sistema. Un recorrido.",resolution:["BASE DE 1.001","PATRONES PRODUCTIVOS","TU PUNTO DE PARTIDA","TU PROGRESO SIGUE LO QUE PUEDES DEMOSTRAR","MENOS AYUDA","TRANSFERENCIA"],resolutionDuration:"DISEÑADO COMO UN RECORRIDO DE APRENDIZAJE DE 3 A 6 MESES",resolutionQualifier:"Dónde empieces importa. Lo que demuestres durante el proceso determina cómo avanzas.",placementEye:"Tu punto de partida",placementHeadline:"Ahora encuentra dónde debes comenzar.",placementStatement:"Puede que ya conozcas parte del sistema. No necesitamos hacerte empezar de nuevo.",placementExplanation:"Cuéntanos un poco sobre tu experiencia. Después muéstranos lo que puedes hacer. Tus respuestas ayudan al sistema a subir o bajar hasta encontrar el punto de partida adecuado.",placementBoundary:"Las seis actividades que acabas de probar no determinaron tu nivel. El siguiente paso sí lo hará.",evidenceLabel:"Cómo probamos el sistema",evidenceBody:"Probamos intensamente el sistema de 1.001 conceptos con tareas amplias de inglés funcional, incluyendo expresión directa y formas de combinar palabras e ideas que ya conoces. Estas pruebas evalúan la arquitectura del sistema. No prometen que cada estudiante alcance fluidez a partir de una lista de palabras."},
+zh:{heroEyebrow:"一种不同的英语学习方式",heroPrimary:"英语可能让人觉得非常庞大。你不需要先学会每一个单词，才能开始真正使用英语。",heroSupport:"我们把学习基础控制在一个明确范围内，然后教你怎样用已经掌握的内容表达更多。",signature:"1,001 个精心选择的英语词汇和概念",equation:"1,001 → 规律 → 句子 → 更多表达方式",durationBadge:"设计学习周期 · 3–6 个月",durationQualifier:"你的学习路径取决于你的起点，以及你在学习过程中实际展示的能力。",seeHow:"看看它如何运作",findStart:"找到你的起点",bridgeIntro:"接下来不是让你背六节课，而是让你看懂这个学习系统怎样运作。",verbs:["限定基础","扩展能力","自己构建","不断改进","减少帮助","迁移运用"],chapters:["可能性","理解","行动","进步","独立","成就"],headlines:["1,001 让学习任务变得更有边界。","一个单词不只是一个需要背下来的东西。","目标不只是认识单词，而是使用它们。","系统会关注你尝试以后发生了什么。","在你准备好之前，帮助不应该消失。","真正学会的东西，以后还能够再次用出来。"],supports:["不是学完整个英语，而是从一个精心选择的基础开始构建。","规律可以让你已经认识的单词发挥更多作用。","把你已经知道的内容组合起来，创造新的表达。","尝试。检查。修改。继续前进。","使用帮助。隐藏帮助。需要时再打开。然后再试一次。","在新的时候，再使用你之前见过的内容。"],explain:["英语很庞大，但你的学习基础不需要那么庞大。这个系统把核心限定为 1,001 个精心选择的英语词汇和概念。","这个系统并不止于一张 1,001 词表。英语中的规律可以让这些词发生变化、互相连接，并表达更多。","真正有用的系统应该让你自己构建表达。同样的词和规律可以组成许多不同的句子。","答错并不是结束。它会告诉系统，也告诉你，哪些地方需要再试一次。","目标不是把帮助拿走，而是在你准备好时，看看减少帮助以后你能做到什么。","成就不是把同一节内容再看一次，而是把学到的东西带到后面，并再次使用。"],qual:["这并不是说英语只有 1,001 个单词，而是说我们选择了一个更小、更明确的基础，并教你怎样用它表达更多。","词形变化 · 句子规律 · 数字 · 组合表达","","","",""],flows:[["无尽背诵","有边界的基础"],["已知单词","规律","新的用法"],["I + like + _____","music · dogs · pizza"],["尝试","检查","修改","再次尝试"],["更多帮助","更少帮助","独立尝试"],["之前: play → played","再次使用"]],success:["你已经从一个很小的基础开始使用英语了。","你找到了规律。理解一个已知单词怎样变化，就能让它发挥更多作用。","你自己构建了一个句子，而不是背下一个句子。","你检查了答案并做了修改。这就是你能看到的进步。","你在帮助下完成了。","你使用了之前学过的内容。"],resolutionEye:"一个系统。一段学习旅程。",resolution:["1,001 基础","可生成更多表达的规律","你的起点","你的进度取决于你实际展示的能力","更少帮助","迁移运用"],resolutionDuration:"设计为 3–6 个月的学习过程",resolutionQualifier:"你的起点很重要。学习过程中实际展示的能力会决定你怎样向前推进。",placementEye:"你的起点",placementHeadline:"现在找到适合你的起点。",placementStatement:"你可能已经掌握了这个系统中的一部分内容。我们不需要让你从头开始。",placementExplanation:"先告诉我们一些你的学习经历，然后展示你能做到什么。你的回答会帮助系统向上或向下调整，直到找到合适的起点。",placementBoundary:"你刚才完成的六个活动没有决定你的水平。下一步才会确定你的起点。",evidenceLabel:"我们怎样测试这个系统",evidenceBody:"我们用广泛的实用英语任务对这个 1,001 概念系统进行了压力测试，包括直接表达，以及组合已经知道的词和想法。这些测试评估的是系统架构，并不承诺每个学习者仅靠一张词表就能达到流利程度。"}};
+const HELP_LANGUAGES={
+ en:{label:"English",returnOrbit:"Return to orbit",states:["I can start.","I can see.","I can make.","I can improve.","I can use less help.","I can reuse what I learned."],journey:"Your Learning Journey",standards:"Six standards. One learning system.",demo:"Find your starting point",help:"Help",learn:"Understand",practice:"Try it",check:"Check",back:"Back",why:"Why this works",success:"Correct. Keep going.",retry:"Try again.",swipeTry:"Swipe to try it →",swipeUnderstand:"← Swipe to understand",cards:[
+ {title:"Possibility",front:"A small foundation can build more than one message.",support:"Reuse what you know instead of starting over.",action:"Open",learn:"Use the same small foundation more than once. Build “I like music.” and “I like dogs.” from what is already available.",practice:"Build both messages from the same small foundation.",check:"Check both messages."},
+ {title:"Understanding",front:"English has patterns. See what changes.",support:"Look: play → played.",action:"Open",learn:"A small change can change the meaning. Here, -ed helps show that something happened before. Example: play → played.",practice:"Which word shows the past here?",check:"Check your answer."},
+ {title:"Action",front:"Use English. Make something yourself.",support:"One small sentence is real practice.",action:"Open",learn:"Reading an answer is useful. Making an answer makes you use English. Example: “I like ___.”",practice:"Choose one word to build the sentence.",check:"Check your sentence."},
+ {title:"Progress",front:"Try. Check. Try again.",support:"You do not have to be right the first time.",action:"Open",learn:"Try an answer. Check it. Use the feedback and try again. Example: “She walk.” → “She walks.”",practice:"Choose the better English sentence.",check:"Check your answer."},
+ {title:"Independence",front:"Use help when you need it.",support:"Try with less help when you are ready.",action:"Open",learn:"Help is here when you need it. When you are ready, try with less help. You can bring the help back.",practice:"You can hide the help. Then choose the meaning.",check:"Check your answer."},
+ {title:"Achievement",front:"Use an earlier idea in a new place.",support:"Transfer the pattern to a different word.",action:"Open",learn:"Earlier you saw play → played. Now use the same regular-past idea with a new word: walk.",practice:"Which form shows the past of walk?",check:"Check your transfer."}]},
+ es:{label:"Español",returnOrbit:"Volver al recorrido",states:["Puedo empezar.","Puedo verlo.","Puedo crear.","Puedo mejorar.","Puedo usar menos ayuda.","Puedo volver a usar lo que aprendí."],journey:"Tu recorrido de aprendizaje",standards:"Seis etapas. Un solo sistema de aprendizaje.",demo:"Encuentra tu punto de partida",help:"Ayuda",learn:"Entiende",practice:"Pruébalo",check:"Comprueba",back:"Atrás",why:"Por qué funciona",success:"Correcto. Sigue adelante.",retry:"Inténtalo de nuevo.",swipeTry:"Desliza para probarlo →",swipeUnderstand:"← Desliza para entender",cards:[
+ {title:"Posibilidad",front:"Una base pequeña puede construir más de un mensaje.",support:"Reutiliza lo que sabes en vez de empezar de nuevo.",action:"Abrir",learn:"Usa la misma base pequeña más de una vez. Construye “I like music.” y “I like dogs.” con lo que ya está disponible.",practice:"Construye los dos mensajes con la misma base pequeña.",check:"Comprueba los dos mensajes."},
+ {title:"Comprensión",front:"El inglés tiene patrones. Mira qué cambia.",support:"Mira: play → played.",action:"Abrir",learn:"Un pequeño cambio puede cambiar el significado. Aquí, -ed ayuda a mostrar que algo ocurrió antes. Ejemplo: play → played.",practice:"¿Qué palabra muestra el pasado aquí?",check:"Comprueba tu respuesta."},
+ {title:"Acción",front:"Usa el inglés. Crea algo tú mismo.",support:"Una oración pequeña es práctica real.",action:"Abrir",learn:"Leer una respuesta ayuda. Crear una respuesta te hace usar el inglés. Ejemplo: “I like ___.”",practice:"Elige una palabra para construir la oración.",check:"Comprueba tu oración."},
+ {title:"Progreso",front:"Intenta. Comprueba. Intenta otra vez.",support:"No tienes que acertar la primera vez.",action:"Abrir",learn:"Prueba una respuesta. Compruébala. Usa la información y vuelve a intentarlo. Ejemplo: “She walk.” → “She walks.”",practice:"Elige la mejor oración en inglés.",check:"Comprueba tu respuesta."},
+ {title:"Independencia",front:"Usa la ayuda cuando la necesites.",support:"Prueba con menos ayuda cuando estés listo.",action:"Abrir",learn:"La ayuda está disponible cuando la necesites. Cuando estés listo, prueba con menos ayuda. Puedes volver a mostrarla.",practice:"Puedes ocultar la ayuda. Después elige el significado.",check:"Comprueba tu respuesta."},
+ {title:"Logro",front:"Usa una idea anterior en un lugar nuevo.",support:"Transfiere el patrón a una palabra diferente.",action:"Abrir",learn:"Antes viste play → played. Ahora usa la misma idea del pasado regular con una palabra nueva: walk.",practice:"¿Qué forma muestra el pasado de walk?",check:"Comprueba la transferencia."}]},
+ zh:{label:"简体中文",returnOrbit:"返回学习轨道",states:["我可以开始。","我能看出规律。","我可以自己造句。","我可以进步。","我可以少用一些帮助。","我可以再次使用学过的内容。"],journey:"你的学习旅程",standards:"六个阶段，一个学习系统。",demo:"找到你的起点",help:"帮助",learn:"理解",practice:"试一试",check:"检查",back:"返回",why:"为什么有效",success:"正确。继续。",retry:"再试一次。",swipeTry:"滑动来试一试 →",swipeUnderstand:"← 滑动返回理解",cards:[
+ {title:"可能性",front:"一个小基础可以构建不止一个信息。",support:"重复使用你已经知道的内容，而不是重新开始。",action:"打开",learn:"多次使用同一个小基础。用已有内容构建 “I like music.” 和 “I like dogs.”。",practice:"用同一个小基础构建两个信息。",check:"检查两个信息。"},
+ {title:"理解",front:"英语有规律。看看哪里发生了变化。",support:"看：play → played。",action:"打开",learn:"一个小变化可以改变意思。这里，-ed 帮助表示事情发生在过去。示例：play → played。",practice:"这里哪个词表示过去？",check:"检查你的答案。"},
+ {title:"行动",front:"使用英语。自己说出一个句子。",support:"一个小句子也是真正的练习。",action:"打开",learn:"阅读答案有帮助。自己做出答案会让你真正使用英语。示例：“I like ___.”",practice:"选择一个词来构建这个句子。",check:"检查你的句子。"},
+ {title:"进步",front:"尝试。检查。再尝试。",support:"你不需要第一次就答对。",action:"打开",learn:"先回答，再检查。使用反馈，然后再试一次。示例：“She walk.” → “She walks.”",practice:"选择更好的英语句子。",check:"检查你的答案。"},
+ {title:"独立",front:"需要时使用帮助。",support:"准备好以后，试着少用一些帮助。",action:"打开",learn:"需要时可以使用帮助。准备好以后，可以少用一些帮助。你随时可以再次显示帮助。",practice:"你可以隐藏帮助，然后选择意思。",check:"检查你的答案。"},
+ {title:"成就",front:"把之前的规律用在新的地方。",support:"把这个规律迁移到不同的单词。",action:"打开",learn:"之前你看过 play → played。现在把同一个规则过去式规律用在新单词 walk 上。",practice:"walk 的过去式是哪一个？",check:"检查你的迁移。"}]}
+};
+
+const LEARNER_SHELL={
+ en:{languagePrompt:"Choose your help language",brandSmall:"Diamond Gate Bridge Education",brandStrong:"English Fluency Accelerator",nav:["Compass","Products","Coheriscope","Gauges"],countWord:"of",footer:"English Fluency Accelerator · Program-wide placement",heroEyebrow:"English Fluency Accelerator · Start Living in English",heroTitle:"You don’t need all of English to start living in English.",heroLead:"A 1,001-concept language system that uses productive rules, performance-gated progression, adaptive placement, and target-language demonstration. Explore the architecture spatially, then enter the demo at your verified starting coordinate.",start:"Find your starting point",how:"See How It Works",boundary:"Phase 1 measures reading comprehension and written or constructed expression. Speaking, pronunciation, listening, and oral fluency are outside the current evidence boundary.",path:["Claim","Test","Place","Learn","Transfer"],journey:"Your Learning Journey",standards:"Six standards. One learning system.",journeyLead:"See how the system works, one step at a time.",railNote:"Drag, swipe, tap a neighboring card, or use the arrow keys.",gatewayEye:"Your starting point",gatewayTitle:"Now find where you should begin.",gatewayCopy:"You may already know part of the system. Show us what you can do, and placement will move higher or lower to find the right starting point.",choose:"Choose your help language. The English being taught and checked stays in English.",intakeEye:"Your Starting Point",intakeTitle:"Tell us where English feels comfortable today.",intakeCopy:"Your answers choose where the diagnostic begins. They do not determine your final placement.",native:"Native language",level:"Current English level",history:"How long have you studied English?",translation:"How often do you rely on translation?",hardest:"What feels hardest right now? (optional)",chooseOpt:"Choose",back:"Back",begin:"Start placement",required:"Choose the description that fits you best.",
+ nativeOptions:["Spanish","English","Chinese","Arabic","French","Hindi","Other"],
+ levelOptions:["Very new to English","Know some common words","Can build simple sentences","Can handle everyday written English","Can explain ideas in writing","Comfortable in many written situations","Strong reader/writer; want advanced challenge","Advanced English; start with the highest challenge"],
+ historyOptions:["Less than 3 months","3–12 months","1–3 years","More than 3 years","Mostly self-taught"],
+ translationOptions:["Often","Sometimes","Rarely","Never"],
+ hardestPlaceholder:"Reading, grammar, finding words, understanding forms, writing clearly...",
+ demoEye:"English Placement",demoSteps:["Starting Point","Adaptive Placement","Placement Result","Program Position","Learning Availability"],demoTitle:{language:"Starting point",intake:"Starting point",test:"Adaptive placement",result:"Program position",entry:"Learning availability"}},
+ es:{languagePrompt:"Elige tu idioma de ayuda",brandSmall:"Educación Diamond Gate Bridge",brandStrong:"Acelerador de fluidez en inglés",nav:["Inicio","Productos","Coheriscope","Indicadores"],countWord:"de",footer:"Acelerador de fluidez en inglés · Demostración de aprendizaje de Fase 1",heroEyebrow:"Acelerador de fluidez en inglés · Empieza a vivir en inglés",heroTitle:"No necesitas dominar todo el inglés para empezar a vivir en inglés.",heroLead:"Un sistema de 1.001 conceptos que usa reglas productivas, progreso basado en desempeño, ubicación adaptativa y demostración en el idioma objetivo. Explora el recorrido y entra en la demostración desde tu punto verificado.",start:"Encuentra tu punto de partida",how:"Ver cómo funciona",boundary:"La Fase 1 mide comprensión lectora y expresión escrita o construida. Habla, pronunciación, comprensión auditiva y fluidez oral están fuera del alcance actual.",path:["Declarar","Probar","Ubicar","Aprender","Transferir"],journey:"Tu recorrido de aprendizaje",standards:"Seis etapas. Un solo sistema de aprendizaje.",journeyLead:"Mira cómo funciona el sistema, paso a paso.",railNote:"Arrastra, desliza, toca una tarjeta vecina o usa las flechas.",gatewayEye:"Tu punto de partida",gatewayTitle:"Ahora encuentra dónde debes comenzar.",gatewayCopy:"Puede que ya conozcas parte del sistema. Muéstranos lo que puedes hacer y la prueba subirá o bajará hasta encontrar el punto de partida adecuado.",choose:"Elige el idioma de ayuda. El inglés que estás aprendiendo y comprobando permanece en inglés.",intakeEye:"Tu punto de partida",intakeTitle:"Cuéntanos dónde te sientes cómodo con el inglés hoy.",intakeCopy:"Tus respuestas eligen dónde comienza el diagnóstico. No determinan tu ubicación final.",native:"Idioma nativo",level:"Nivel actual de inglés",history:"¿Cuánto tiempo has estudiado inglés?",translation:"¿Con qué frecuencia dependes de la traducción?",hardest:"¿Qué te resulta más difícil ahora? (opcional)",chooseOpt:"Elegir",back:"Atrás",begin:"Comenzar ubicación",required:"Elige la descripción que mejor te represente.",
+ nativeOptions:["Español","Inglés","Chino","Árabe","Francés","Hindi","Otro"],
+ levelOptions:["Muy nuevo en inglés","Conozco algunas palabras comunes","Puedo construir oraciones sencillas","Puedo manejar inglés escrito cotidiano","Puedo explicar ideas por escrito","Me siento cómodo en muchas situaciones escritas","Leo y escribo bien; quiero un reto avanzado","Puede que esté por encima de esta demostración"],
+ historyOptions:["Menos de 3 meses","3–12 meses","1–3 años","Más de 3 años","Principalmente autodidacta"],
+ translationOptions:["A menudo","A veces","Rara vez","Nunca"],
+ hardestPlaceholder:"Lectura, gramática, encontrar palabras, entender formularios, escribir con claridad...",
+ demoEye:"Demostración de Fase 1",demoSteps:["Idioma","Datos","Independencia","Resultado","Entrada"],demoTitle:{language:"Elige un idioma",intake:"Datos del estudiante",test:"Ubicación adaptativa",result:"Resultado de independencia",entry:"Entrada a la demostración"}},
+ zh:{languagePrompt:"选择帮助语言",brandSmall:"Diamond Gate Bridge 教育",brandStrong:"英语流利度加速器",nav:["主页","产品","Coheriscope","指标"],countWord:"共",footer:"英语流利度加速器 · 第一阶段学习演示",heroEyebrow:"英语流利度加速器 · 开始用英语生活",heroTitle:"不必掌握全部英语，也可以开始用英语生活。",heroLead:"一个由1,001个概念构成的语言系统，使用生成规则、基于表现的进阶、自适应定位和目标语言展示。先探索学习路径，再从你经过验证的起点进入演示。",start:"找到你的起点",how:"查看运作方式",boundary:"第一阶段衡量阅读理解以及书面或构建式表达。目前不衡量口语、发音、听力理解或口语流利度。",path:["自述","测试","定位","学习","迁移"],journey:"你的学习旅程",standards:"六个阶段，一个学习系统。",journeyLead:"一步一步了解这个系统如何运作。",railNote:"拖动、滑动、点击相邻卡片，或使用方向键。",gatewayEye:"你的起点",gatewayTitle:"现在找到适合你的起点。",gatewayCopy:"你可能已经掌握了系统的一部分。展示你能做什么，定位测试会向上或向下调整，找到合适的起点。",choose:"选择帮助语言。正在教授和检查的英语内容仍保持英语。",intakeEye:"你的起点",intakeTitle:"告诉我们今天你在什么程度的英语上感到自在。",intakeCopy:"你的回答只决定诊断从哪里开始，不决定最终定位。",native:"母语",level:"当前英语水平",history:"你学习英语多长时间了？",translation:"你多经常依赖翻译？",hardest:"目前什么最难？（可选）",chooseOpt:"请选择",back:"返回",begin:"开始独立能力评估",required:"请选择最符合你当前情况的描述。",
+ nativeOptions:["西班牙语","英语","中文","阿拉伯语","法语","印地语","其他"],
+ levelOptions:["刚开始学习英语","认识一些常用词","能组成简单句子","能处理日常书面英语","能用书面表达想法","能应对许多书面情境","读写能力较强；希望接受高级挑战","我的水平可能高于此演示"],
+ historyOptions:["少于3个月","3–12个月","1–3年","3年以上","主要靠自学"],
+ translationOptions:["经常","有时","很少","从不"],
+ hardestPlaceholder:"阅读、语法、找词、理解表格、清楚写作……",
+ demoEye:"第一阶段演示",demoSteps:["语言","信息","独立能力","结果","进入演示"],demoTitle:{language:"选择语言",intake:"学习者信息",test:"自适应定位",result:"独立能力结果",entry:"进入演示"}}
+};
+function applyLearnerShell(code){const t=LEARNER_SHELL[code]||LEARNER_SHELL.en;const one=(s,v)=>{const e=document.querySelector(s);if(e)e.textContent=v};const all=(s,v)=>document.querySelectorAll(s).forEach(e=>e.textContent=v);one("[data-shell-language-prompt]",t.languagePrompt);one(".brand small",t.brandSmall);one(".brand strong",t.brandStrong);document.querySelectorAll(".routes a").forEach((e,i)=>e.textContent=t.nav[i]||e.textContent);one("footer",t.footer);one(".edu-hero .eyebrow",t.heroEyebrow);one("#education-title",t.heroTitle);one(".edu-hero .lead",t.heroLead);all("[data-start-demo]",t.start);one("[data-jump-standards]",t.how);one(".edu-hero .boundary",t.boundary);document.querySelectorAll(".edu-hero__signal span").forEach((e,i)=>e.textContent=t.path[i]||e.textContent);one(".edu-carousel__header .eyebrow",t.journey);one("#standards-title",t.standards);one(".edu-carousel__header .lead",t.journeyLead);one(".edu-carousel__note",t.railNote);one(".edu-demo-gateway .eyebrow",t.gatewayEye);one(".edu-demo-gateway h2",t.gatewayTitle);one(".edu-demo-gateway p:not(.eyebrow)",t.gatewayCopy);one('[data-demo-stage="language"] > p',t.choose);one('[data-demo-stage="intake"] .eyebrow',t.intakeEye);one('[data-demo-stage="intake"] h2',t.intakeTitle);one('[data-demo-stage="intake"] div > p:not(.eyebrow)',t.intakeCopy);one('label[for="native-language"]',t.native);one('label[for="claimed-level"]',t.level);one('label[for="study-history"]',t.history);one('label[for="translation-use"]',t.translation);one('label[for="hardest"]',t.hardest);document.querySelectorAll('select option[value=""]').forEach(e=>e.textContent=t.chooseOpt);one('[data-back="language"]',t.back);one("#begin-placement",t.begin);
+ const optionText=(selector,items)=>document.querySelectorAll(selector).forEach((e,i)=>{if(items[i]!==undefined)e.textContent=items[i]});
+ optionText('#native-language option:not([value=""])',t.nativeOptions);optionText('#claimed-level option:not([value=""])',t.levelOptions);optionText('#study-history option:not([value=""])',t.historyOptions);optionText('#translation-use option:not([value=""])',t.translationOptions);
+ const hardest=document.querySelector("#hardest");if(hardest)hardest.placeholder=t.hardestPlaceholder;
+ one(".demo-head .eyebrow",t.demoEye);document.querySelectorAll("[data-step-indicator]").forEach((e,i)=>e.textContent=t.demoSteps[i]||e.textContent);
+ const stage=document.querySelector('[data-demo-stage]:not([hidden])')?.dataset.demoStage||"language";one("#demo-title",t.demoTitle[stage]||t.demoTitle.language);}
+let helpLanguage="en";
+function setHelpLanguage(code){if(!HELP_LANGUAGES[code])code="en";helpLanguage=code;document.documentElement.lang=code==="zh"?"zh-CN":code;document.documentElement.dataset.helpLanguage=code;applyLearnerShell(code);document.dispatchEvent(new CustomEvent("education-help-language-change",{detail:{code,copy:HELP_LANGUAGES[code]}}));document.querySelectorAll(".edu-standard-card").forEach((card,index)=>renderChamberCard(card,index));return HELP_LANGUAGES[code];}
+window.EDUCATION_HELP_LANGUAGES=HELP_LANGUAGES;window.setEducationHelpLanguage=setHelpLanguage;
+document.querySelectorAll("[data-shell-language]").forEach(button=>button.addEventListener("click",()=>{setHelpLanguage(button.dataset.shellLanguage);document.querySelectorAll("[data-shell-language]").forEach(peer=>peer.setAttribute("aria-pressed",String(peer===button)));}));
+const CHAMBER_ACTIONS=new Map();
+function chamberCopy(index){return HELP_LANGUAGES[helpLanguage].cards[index]||HELP_LANGUAGES.en.cards[index]}
+function renderChamberCard(card,index){const copy=chamberCopy(index);const title=card.querySelector("[data-chamber-title]"),front=card.querySelector("[data-chamber-front]"),support=card.querySelector("[data-chamber-support]"),action=card.querySelector("[data-chamber-action]"),learn=card.querySelector("[data-chamber-learn]"),practice=card.querySelector("[data-chamber-practice]"),check=card.querySelector("[data-chamber-check]");if(title)title.textContent=copy.title;if(front)front.textContent=copy.front;if(support)support.textContent=copy.support;if(action)action.textContent=copy.action;if(learn)learn.textContent=copy.learn;if(practice)practice.textContent=copy.practice;if(check)check.textContent=copy.check;}
+function bindChamberCard(card,index){card.dataset.face=card.dataset.face||"front";card.addEventListener("click",e=>{if(e.target.closest("button,input,textarea,select"))return;document.querySelectorAll(".edu-standard-card").forEach((c,i)=>c.dataset.active=String(i===index));});renderChamberCard(card,index);}
+
+document.querySelectorAll("[data-help-language]").forEach(button=>button.addEventListener("click",()=>{
+  const code=button.dataset.helpLanguage;
+  setHelpLanguage(code);
+  document.querySelectorAll("[data-help-language]").forEach(peer=>peer.setAttribute("aria-pressed",peer===button?"true":"false"));
+  setStage("intake");
+}));
+
+const DIAGNOSTIC_BANDS=[
+ {id:"D1",name:"Foundational Recognition"},
+ {id:"D2",name:"Receive → Place"},
+ {id:"D3",name:"Relational Forms"},
+ {id:"D4",name:"Place → Use"},
+ {id:"D5",name:"Applied Use"},
+ {id:"D6",name:"Use → Own"},
+ {id:"D7",name:"Independent Transfer"}
+];
+const PROGRAM_PHASES={
+ 1:{id:"PHASE_1_RECEIVE",name:"Phase 1 · Receive",availability:"PUBLIC_AVAILABLE",access:"FREE_PUBLIC"},
+ 2:{id:"PHASE_2_PLACE",name:"Phase 2 · Place",availability:"NOT_CURRENTLY_AVAILABLE",access:"NOT_AVAILABLE"},
+ 3:{id:"PHASE_3_USE",name:"Phase 3 · Use",availability:"NOT_CURRENTLY_AVAILABLE",access:"NOT_AVAILABLE"},
+ 4:{id:"PHASE_4_OWN",name:"Phase 4 · Own",availability:"NOT_CURRENTLY_AVAILABLE",access:"NOT_AVAILABLE"}
+};
+function placementCoordinate(band){
+ const map={1:{phase:1,position:"ESTABLISHED"},2:{phase:1,transitionTo:2,position:"TRANSITION"},3:{phase:2,position:"ESTABLISHED"},4:{phase:2,transitionTo:3,position:"TRANSITION"},5:{phase:3,position:"ESTABLISHED"},6:{phase:3,transitionTo:4,position:"TRANSITION"},7:{phase:4,position:"ESTABLISHED"}};
+ return map[band]||null;
+}
+const BANK={
+ "1": [
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1a",
+   "q": "Which word names a person?",
+   "o": [
+    "table",
+    "teacher",
+    "blue",
+    "quickly"
+   ],
+   "a": 1,
+   "node": "elementary noun meaning",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1b",
+   "q": "What does “home” mean?",
+   "o": [
+    "A place where you live",
+    "Something you eat",
+    "A color",
+    "A way to move"
+   ],
+   "a": 0,
+   "node": "basic place meaning",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s1c",
+   "q": "A sign says “STOP.” What should you do?",
+   "o": [
+    "Keep going",
+    "Stop",
+    "Run",
+    "Sleep"
+   ],
+   "a": 1,
+   "node": "basic sign meaning",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1d",
+   "q": "Which word means the opposite of “yes”?",
+   "o": [
+    "no",
+    "day",
+    "big",
+    "go"
+   ],
+   "a": 0,
+   "node": "elementary contrast",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s1f",
+   "q": "Someone asks, “What is your name?” What should you say?",
+   "o": [
+    "Your name",
+    "Your age",
+    "The weather",
+    "A color"
+   ],
+   "a": 0,
+   "node": "basic personal response",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s1g",
+   "q": "Which word is a number?",
+   "o": [
+    "three",
+    "tree",
+    "free",
+    "green"
+   ],
+   "a": 0,
+   "node": "elementary numeration",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s1h",
+   "q": "What does “OPEN” mean on a door?",
+   "o": [
+    "You can open the door",
+    "The door is locked",
+    "The door is broken",
+    "The door is a window"
+   ],
+   "a": 0,
+   "node": "basic functional word",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6h",
+   "q": "A sign says “EXIT.” What does it show?",
+   "o": [
+    "The way out",
+    "The way in",
+    "A place to pay",
+    "A place to sit"
+   ],
+   "a": 0,
+   "node": "basic sign vocabulary",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 1
+  }
+ ],
+ "2": [
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s1e",
+   "q": "Which sentence is complete?",
+   "o": [
+    "I am Sam.",
+    "I Sam.",
+    "Am I Sam.",
+    "Sam am."
+   ],
+   "a": 0,
+   "node": "simple clause completeness",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s2c",
+   "q": "What does “address” mean here: “Write your address on the form.”",
+   "o": [
+    "Where you live",
+    "What you like to eat",
+    "Where you work only",
+    "Your password"
+   ],
+   "a": 0,
+   "node": "practical concept",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2d",
+   "q": "What does “empty” mean?",
+   "o": [
+    "Containing nothing",
+    "Very loud",
+    "Moving fast",
+    "Very expensive"
+   ],
+   "a": 0,
+   "node": "everyday adjective",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2e",
+   "q": "Which word best matches “begin”?",
+   "o": [
+    "start",
+    "finish",
+    "lose",
+    "sleep"
+   ],
+   "a": 0,
+   "node": "common synonym",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s2f",
+   "q": "A label says “Keep dry.” What should you avoid?",
+   "o": [
+    "Water",
+    "Light",
+    "A chair",
+    "A number"
+   ],
+   "a": 0,
+   "node": "simple instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s2h",
+   "q": "A message says “Call me tonight.” What should you do?",
+   "o": [
+    "Make a phone call tonight",
+    "Send food",
+    "Visit yesterday",
+    "Write an address"
+   ],
+   "a": 0,
+   "node": "everyday instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3f",
+   "q": "Complete: “Ms. Lee ___ English at our school.”",
+   "o": [
+    "teaches",
+    "teacher",
+    "teaching",
+    "teach"
+   ],
+   "a": 0,
+   "node": "third-person verb form",
+   "competency": "MORPHOLOGY",
+   "difficulty": 2
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6d",
+   "q": "“Bring photo ID to your appointment.” What should you bring?",
+   "o": [
+    "Photo identification",
+    "Cash only",
+    "A meal",
+    "A book"
+   ],
+   "a": 0,
+   "node": "appointment instruction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 2
+  }
+ ],
+ "3": [
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2a",
+   "q": "What does “borrow” mean?",
+   "o": [
+    "Give something away forever",
+    "Use something and return it",
+    "Buy something cheaply",
+    "Break something"
+   ],
+   "a": 1,
+   "node": "everyday concept",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2b",
+   "q": "Complete: “Wash your hands ___ dinner.”",
+   "o": [
+    "before",
+    "after",
+    "during",
+    "because"
+   ],
+   "a": 0,
+   "node": "basic temporal preposition",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "DIRECT_RECOGNITION",
+   "id": "s2g",
+   "q": "Complete: “We went home ___ the movie ended.”",
+   "o": [
+    "after",
+    "before",
+    "because of",
+    "until"
+   ],
+   "a": 0,
+   "node": "basic temporal conjunction",
+   "competency": "LEXICAL_MEANING",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3a",
+   "q": "Complete: “I ___ tired today.”",
+   "o": [
+    "feel",
+    "feels",
+    "feeling",
+    "am feel"
+   ],
+   "a": 0,
+   "node": "present-state verb form",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3c",
+   "q": "Complete: “She is ___ the message now.”",
+   "o": [
+    "reading",
+    "read",
+    "reads",
+    "to read"
+   ],
+   "a": 0,
+   "node": "-ing form",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3d",
+   "q": "Complete: “Yesterday we ___ home.”",
+   "o": [
+    "walk",
+    "walked",
+    "walking",
+    "walker"
+   ],
+   "a": 1,
+   "node": "regular past form",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3e",
+   "q": "Complete the sentence: “He ___ every morning.”",
+   "o": [
+    "run",
+    "runs",
+    "running",
+    "runner"
+   ],
+   "a": 1,
+   "node": "third-person present",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3g",
+   "q": "Complete: “They are ___ dinner now.”",
+   "o": [
+    "cooking",
+    "cook",
+    "cooked",
+    "to cook"
+   ],
+   "a": 0,
+   "node": "progressive verb",
+   "competency": "MORPHOLOGY",
+   "difficulty": 3
+  }
+ ],
+ "4": [
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3b",
+   "q": "Complete: “She works at the hospital. She is a hospital ___.”",
+   "o": [
+    "worker",
+    "working",
+    "worked",
+    "works"
+   ],
+   "a": 0,
+   "node": "agent noun derivation",
+   "competency": "MORPHOLOGY",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "PRODUCTIVE_FORM",
+   "id": "s3h",
+   "q": "Complete: “By the time we arrived, the game ___.”",
+   "o": [
+    "had started",
+    "starts",
+    "has start",
+    "starting"
+   ],
+   "a": 0,
+   "node": "past perfect sequence",
+   "competency": "MORPHOLOGY",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4a",
+   "q": "Which sentence about tomorrow is correct?",
+   "o": [
+    "I will go to school tomorrow.",
+    "I will go school tomorrow.",
+    "I go to school tomorrow yesterday.",
+    "I will going to school tomorrow."
+   ],
+   "a": 0,
+   "node": "sentence order",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4c",
+   "q": "Which sentence politely asks for help?",
+   "o": [
+    "Could you help me with this form?",
+    "You can help me with this form.",
+    "You helped me with this form.",
+    "You should help me with this form."
+   ],
+   "a": 0,
+   "node": "functional sentence",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4d",
+   "q": "Which question is correct?",
+   "o": [
+    "Where is the station?",
+    "Where the station is?",
+    "Where does the station is?",
+    "Where is station the?"
+   ],
+   "a": 0,
+   "node": "question order",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4e",
+   "q": "Which sentence about yesterday is correct?",
+   "o": [
+    "I visited my friend yesterday.",
+    "I visit my friend yesterday.",
+    "I have visit my friend yesterday.",
+    "I will visit my friend yesterday."
+   ],
+   "a": 0,
+   "node": "time + sentence structure",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6c",
+   "q": "A sign says: “Entrance closed. Use the west door.” What should you do?",
+   "o": [
+    "Wait at the closed entrance",
+    "Use the west door",
+    "Go home immediately",
+    "Call the police"
+   ],
+   "a": 1,
+   "node": "context response",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 4
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6e",
+   "q": "A notice says: “No parking 7–9 AM.” When is parking prohibited?",
+   "o": [
+    "Between 7 and 9 AM",
+    "After noon only",
+    "All day",
+    "Only at night"
+   ],
+   "a": 0,
+   "node": "time restriction",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 4
+  }
+ ],
+ "5": [
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4b",
+   "q": "Which sentence about quantity is correct?",
+   "o": [
+    "I need three bottles of water.",
+    "I need three bottle of water.",
+    "I need three bottles water.",
+    "I need third bottles of water."
+   ],
+   "a": 0,
+   "node": "grammar + numeration",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4f",
+   "q": "Which sentence gives a reason correctly?",
+   "o": [
+    "I stayed home because I was sick.",
+    "I stayed home although I was sick.",
+    "I stayed home unless I was sick.",
+    "I stayed home before I was sick."
+   ],
+   "a": 0,
+   "node": "cause construction",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4g",
+   "q": "Which is a polite request?",
+   "o": [
+    "Could you open the window, please?",
+    "You could opened the window, please?",
+    "Open you the window, please?",
+    "Could you opening the window?"
+   ],
+   "a": 0,
+   "node": "polite request",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "SENTENCE_CONSTRUCTION",
+   "id": "s4h",
+   "q": "Which comparison is correct?",
+   "o": [
+    "This bag is heavier than that one.",
+    "This bag is more heavy than that one.",
+    "This bag is heavier that that one.",
+    "This bag heavier than that one is."
+   ],
+   "a": 0,
+   "node": "comparison construction",
+   "competency": "SENTENCE_FORM",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5a",
+   "q": "Which means the same? “I would have brought an umbrella if I had known it was going to rain.”",
+   "o": [
+    "I did not know it would rain, so I did not bring an umbrella.",
+    "I knew it would rain, but I refused to bring an umbrella.",
+    "I brought an umbrella because I knew it would rain.",
+    "It did not rain, although I brought an umbrella."
+   ],
+   "a": 0,
+   "node": "counterfactual conditional meaning",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "MEANING_CONSTRUCTION",
+   "id": "s5c",
+   "q": "Which means the same? “I had already left the pharmacy when I realized I had forgotten one of my prescriptions.”",
+   "o": [
+    "I noticed the missing prescription after leaving the pharmacy.",
+    "I remembered the prescription before I left the pharmacy.",
+    "The pharmacy forgot to give me every prescription.",
+    "I returned the prescription before leaving."
+   ],
+   "a": 0,
+   "node": "past perfect temporal comprehension",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6f",
+   "q": "Which means the same? “Once opened, the product must remain refrigerated.”",
+   "o": [
+    "After it is opened, it must be kept cold.",
+    "It must be frozen before it is opened.",
+    "It can be kept warm after opening.",
+    "Opening it removes the need for refrigeration."
+   ],
+   "a": 0,
+   "node": "reduced clause instruction paraphrase",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 5
+  },
+  {
+   "evidenceClass": "PRACTICAL_COMPREHENSION",
+   "id": "s6g",
+   "q": "Which means the same? “The appointment originally scheduled for Tuesday has been rescheduled for Thursday.”",
+   "o": [
+    "The appointment will now happen Thursday instead of Tuesday.",
+    "The appointment will happen on both Tuesday and Thursday.",
+    "Thursday's appointment was moved to Tuesday.",
+    "The appointment was canceled on Thursday."
+   ],
+   "a": 0,
+   "node": "formal schedule-change paraphrase",
+   "competency": "PRACTICAL_COMPREHENSION",
+   "difficulty": 5
+  }
+ ],
+ "6": [
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6a","q":"A notice says: “Although payment is due Friday, no late fee will be charged until Saturday.” Which action avoids a late fee?","o":["Pay no later than Friday","Pay any time Saturday","Wait until Sunday","Payment timing does not matter"],"a":0,"node":"concessive temporal condition","competency":"PRACTICAL_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6b","q":"“The revised file must be submitted no later than 2 PM.” What is the latest acceptable submission time?","o":["2 PM","After 2 PM","Only before noon","Any time today"],"a":0,"node":"formal deadline scope","competency":"PRACTICAL_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6c","q":"“The refund will be issued once the returned item has been inspected.” What must happen first?","o":["The returned item must be inspected","The refund must be issued","A replacement must be shipped","The customer must place another order"],"a":0,"node":"temporal dependency","competency":"MEANING_CONSTRUCTION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6d","q":"“Remote work is permitted only with prior supervisor approval.” Which employee may work remotely?","o":["An employee whose supervisor approved it beforehand","Any employee who asks afterward","Every employee automatically","No employee under any circumstance"],"a":0,"node":"restriction and prior condition","competency":"READING_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6e","q":"“Because the material is exceptionally fragile, even minor pressure may damage it.” Which handling instruction follows from this?","o":["Handle it with very little pressure","Press firmly before moving it","Pressure cannot affect it","Only extreme force matters"],"a":0,"node":"degree and modal consequence","competency":"MEANING_CONSTRUCTION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6f","q":"“Service operates at twenty-minute intervals throughout the morning.” A bus leaves at 8:00 AM. If the schedule continues normally, which departure best fits the notice?","o":["8:20 AM","8:05 AM","8:45 AM","9:30 AM only"],"a":0,"node":"interval application","competency":"PRACTICAL_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6g","q":"“Visitors are required to check in before entering secured areas.” A visitor has not checked in yet. What should happen next?","o":["The visitor should check in before entering","The visitor should enter and check in later","The visitor may ignore the rule","The visitor must leave permanently"],"a":0,"node":"formal obligation application","competency":"READING_COMPREHENSION","difficulty":6},
+  {"evidenceClass":"COMPLEX_COMPREHENSION","id":"d6h","q":"“I was unable to attend because the appointment had been moved without my knowledge.” What caused the missed appointment?","o":["The schedule changed and the speaker did not know","The speaker canceled it personally","The appointment never changed","The speaker knew the new time and attended"],"a":0,"node":"past-perfect causal relation","competency":"MEANING_CONSTRUCTION","difficulty":6}
+ ],
+ "7": [
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7a","q":"A rule says, “Requests received after 5 PM are processed the following business day.” A request arrives at 5:20 PM Monday. When should it normally be processed?","o":["Tuesday","Monday before 5 PM","Immediately at 5:20 PM","The following weekend"],"a":0,"node":"temporal rule transfer","competency":"PRACTICAL_APPLICATION","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7b","q":"A device guide says, “Contact support if the light remains solid rather than flashing.” The light flashes for a minute and then stays solid. What should the user do?","o":["Contact support","Ignore the solid light","Contact support only while it flashes","Assume the device is off"],"a":0,"node":"conditional contrast transfer","competency":"PRACTICAL_APPLICATION","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7c","q":"The deadline was extended for applicants who could not respond in the original timeframe. Which new situation follows the same principle?","o":["A school gives extra time to students affected by a system outage","A store closes early because sales are high","A meeting begins sooner because everyone arrived","A fee increases for people who paid early"],"a":0,"node":"purpose relation transfer","competency":"MEANING_TRANSFER","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7d","q":"Choose the clearest repair: “Could you explain what information does this section require?”","o":["Could you explain what information this section requires?","Could you explain what does require this section?","Explain me what information requires this section.","Could you explaining this section requires what?"],"a":0,"node":"embedded-question repair","competency":"SENTENCE_FORM","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7e","q":"A package was damaged during delivery, but the product appears to work normally. Which response preserves both facts without claiming more evidence than you have?","o":["The package was damaged, but the product appears to be working normally.","The product is definitely undamaged because it turned on.","Both the package and product are defective.","The delivery caused no damage of any kind."],"a":0,"node":"evidence-bounded concessive transfer","competency":"MEANING_TRANSFER","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7f","q":"A notice says a store is temporarily closed while repairs are completed. Which customer message applies that information accurately?","o":["The store is closed for now and should reopen after the repairs.","The store has permanently closed.","The store is open to everyone during repairs.","The repairs were canceled because the store reopened."],"a":0,"node":"temporary-state application","competency":"PRACTICAL_APPLICATION","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7g","q":"“She declined the invitation, although she appreciated being asked.” Which new sentence uses the same contrast relationship?","o":["He rejected the offer, even though he was grateful to receive it.","He accepted the offer because he wanted it.","He never received the offer.","He rejected the offer before anyone made it."],"a":0,"node":"concessive relation transfer","competency":"MEANING_TRANSFER","difficulty":7},
+  {"evidenceClass":"UNSEEN_TRANSFER","id":"d7h","q":"A meeting was postponed because an expected director became unavailable. Which message communicates the same causal structure in a new situation?","o":["The inspection was delayed because the specialist who was expected to attend became unavailable.","The inspection happened early because the specialist arrived.","The specialist attended after the completed inspection.","The inspection and specialist were unrelated."],"a":0,"node":"embedded causal transfer","competency":"MEANING_TRANSFER","difficulty":7}
+ ],
+
+};
+
+const CAPSTONE_BANK=[
+  {
+   "evidenceClass": "UNSEEN_TRANSFER",
+   "id": "s7d",
+   "q": "Which means the same? “Unless explicitly exempted, applicants are expected to comply with all of the requirements outlined above.”",
+   "o": [
+    "Applicants must follow all the stated requirements unless they are specifically excused.",
+    "Applicants may ignore any requirement that is not explained twice.",
+    "Only exempt applicants are required to follow the stated requirements.",
+    "Applicants are exempt whenever a requirement seems difficult."
+   ],
+   "a": 0,
+   "node": "advanced exception and passive obligation",
+   "competency": "READING_COMPREHENSION",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8b",
+   "q": "Which means the same? “We should withhold a final judgment until the available evidence has been verified.”",
+   "o": [
+    "We should wait to decide until the evidence has been checked.",
+    "We should make a decision before checking the evidence.",
+    "We should ignore evidence that delays a decision.",
+    "We should treat an early judgment as verified evidence."
+   ],
+   "a": 0,
+   "node": "formal modality paraphrase",
+   "competency": "INTEGRATED_TRANSFER",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8c",
+   "q": "Which means the same? “The latest instructions appear to contradict the guidance issued earlier.”",
+   "o": [
+    "The new instructions seem inconsistent with the earlier guidance.",
+    "The latest instructions repeat the earlier guidance exactly.",
+    "The earlier guidance was never issued.",
+    "The instructions are difficult to read."
+   ],
+   "a": 0,
+   "node": "nuanced contradiction paraphrase",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8d",
+   "q": "What does this mean? “The requested revision would be inconsistent with the terms previously agreed upon.”",
+   "o": [
+    "The requested change would conflict with the earlier agreement.",
+    "The requested change has already been approved.",
+    "The earlier agreement requires the change.",
+    "No agreement was previously made."
+   ],
+   "a": 0,
+   "node": "formal register equivalence",
+   "competency": "READING_COMPREHENSION",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8e",
+   "q": "Which means the same? “Despite having been warned repeatedly, he appeared not to have understood the seriousness of the situation.”",
+   "o": [
+    "Although he had received several warnings, he seemed not to realize how serious the situation was.",
+    "He understood the situation because nobody had warned him.",
+    "The warnings became serious only after he understood them.",
+    "He repeatedly warned others because the situation appeared simple."
+   ],
+   "a": 0,
+   "node": "perfect aspect concessive paraphrase",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8f",
+   "q": "Which means the same? “Completion is contingent upon receiving the missing file.”",
+   "o": [
+    "The task can be completed only after the missing file is received.",
+    "The missing file is unnecessary for completion.",
+    "Completion caused the file to disappear.",
+    "The file will be received after completion."
+   ],
+   "a": 0,
+   "node": "formal dependency paraphrase",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8g",
+   "q": "Which means the same? “She may have misunderstood what he was implying rather than what he actually said.”",
+   "o": [
+    "She may have misread his suggested meaning, not his exact words.",
+    "She definitely misunderstood every word he said.",
+    "He said exactly what she had already implied.",
+    "She understood his implication more clearly than his words."
+   ],
+   "a": 0,
+   "node": "modal perfect and implied meaning",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 8
+  },
+  {
+   "evidenceClass": "INTEGRATED_TRANSFER",
+   "id": "s8h",
+   "q": "Which means the same? “The figures are mutually incompatible, so at least one must be inaccurate.”",
+   "o": [
+    "The figures cannot both be correct.",
+    "The figures are different but both certainly correct.",
+    "The figures are approximate versions of the same confirmed value.",
+    "Neither figure can be evaluated."
+   ],
+   "a": 0,
+   "node": "formal incompatibility paraphrase",
+   "competency": "MEANING_CONSTRUCTION",
+   "difficulty": 8
+  }
+];
+
+const EDUCATION_STATE_KEY="dgb.education.phase1.v1";
+let learner={target_language:"English"}, probeStage=2, probeHistory=[], placementEvidence=[], currentQuestionIndex=0, currentSet=[], currentSetScore=0, finalIndependence=null, mixedAnchor=null, adaptiveState=null, teachingState=null;
+function saveEducationState(extra={}){try{localStorage.setItem(EDUCATION_STATE_KEY,JSON.stringify({helpLanguage,learner,probeStage,probeHistory,placementEvidence,currentQuestionIndex,currentSetScore,finalIndependence,mixedAnchor,adaptiveState,teachingState,...extra}))}catch(e){}}
+function restoreEducationState(){try{const raw=localStorage.getItem(EDUCATION_STATE_KEY);if(!raw)return null;const s=JSON.parse(raw);if(s.learner)learner=s.learner;if(Number.isInteger(s.probeStage))probeStage=s.probeStage;if(Array.isArray(s.probeHistory))probeHistory=s.probeHistory;if(Array.isArray(s.placementEvidence))placementEvidence=s.placementEvidence;if(Number.isInteger(s.currentQuestionIndex))currentQuestionIndex=s.currentQuestionIndex;if(Number.isFinite(s.currentSetScore))currentSetScore=s.currentSetScore;if(s.finalIndependence)finalIndependence=s.finalIndependence;if(s.mixedAnchor!==undefined)mixedAnchor=s.mixedAnchor;if(s.adaptiveState)adaptiveState=s.adaptiveState;if(s.teachingState)teachingState=s.teachingState;return s}catch(e){return null}}
+function clearEducationState(){try{localStorage.removeItem(EDUCATION_STATE_KEY)}catch(e){}}
+
+const qs=s=>document.querySelector(s);
+const qsa=s=>[...document.querySelectorAll(s)];
+const escapeEducationHTML=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+
+const EDUCATION_ARCHITECTURE=[
+ {id:"foundation",label:"Possibility",title:"1,001 Concepts",question:"What is the fixed lexical foundation?",summary:"A canonical concept inventory supplies the base while productive rules generate lawful forms without pretending every form needs another vocabulary slot.",stories:[
+  {title:"What 1,001 means",reading:"The system starts from a fixed set of 1,001 ordinary concepts. The goal is usable coverage, not memorizing an endless dictionary.",engineering:"The canonical distribution remains 250 + 250 + 250 + 251. Concept identity is preserved while predictable forms are generated by productive systems.",evidence:"The architecture has frozen stress-test evidence. This establishes system coverage under the tested task framework, not human fluency.",boundary:"A concept inventory is a foundation, not a claim that 1,001 isolated words directly express everything."},
+  {title:"Lexical families",reading:"Related word forms should not force a learner to memorize each predictable variation as a separate core concept.",engineering:"Morphological normalization prevents crude stemming errors while preserving genuinely distinct derivational concepts where required.",evidence:"Lexical-family audits were used to distinguish false collisions from real concept distinctions.",boundary:"Normalization does not erase meaningful lexical distinctions."},
+  {title:"Coverage vs fluency",reading:"A compact language architecture can cover many tasks without proving that a person has learned it.",engineering:"A strong learning map can cover many situations, but your progress is proven by what you can actually do.",evidence:"The prospective frozen 768-task benchmark reached 100% practical completion under the productive laws already in force.",boundary:"Benchmark completion is internal architecture evidence, not certification of a learner."}
+ ]},
+ {id:"productive",label:"Understanding",title:"Build More Than You Memorize",question:"How does the system create usable language beyond direct recall?",summary:"Grammar, morphology, numeration, controlled composition, and semantic paraphrase are first-class productive systems.",stories:[
+  {title:"Grammar and morphology",reading:"Learners should learn how language changes and combines, not just collect isolated words.",engineering:"Learn how words change and combine so one idea can help you build many useful expressions.",evidence:"Productive completion is recorded separately from direct lexical retrieval.",boundary:"Generated forms still have to preserve the intended meaning."},
+  {title:"Numeration",reading:"Numbers are treated as a rule system rather than thousands of separate vocabulary items.",engineering:"Learn number patterns as a reusable system instead of treating every number as a separate vocabulary item.",evidence:"Numeration participates in sentence-building and practical-response tasks.",boundary:"Numeration does not replace the concepts needed to understand quantity and context."},
+  {title:"Composition and paraphrase",reading:"If a learner forgets one exact word, they should still be able to communicate the meaning.",engineering:"Practice building the same meaning in more than one clear way, so communication does not stop when one word is missing.",evidence:"Direct and productive paths remain separately measurable so paraphrase does not masquerade as direct retrieval.",boundary:"Paraphrase must remain semantically equivalent."}
+ ]},
+ {id:"progression",label:"Action",title:"Four Program Phases",question:"What exactly advances as the learner moves?",summary:"Stages define what competency is being learned. Advancement is performance-gated, not screen-gated.",stories:[
+  {title:"Receive",reading:"The learner is oriented, establishes a baseline, learns direct concepts, then learns how words change.",engineering:"Begin by finding your starting point, learning essential concepts, and discovering how words can change.",evidence:"Each stage has its own completion checkpoint and mastery evidence.",boundary:"Time spent in a stage does not create mastery."},
+  {title:"Place and Use",reading:"The learner builds sentences, builds meaning, then applies written English in practical situations.",engineering:"Next, build sentences, express meaning, and use written English in practical situations.",evidence:"Your practice keeps different skills visible so progress can be checked without mixing everything together.",boundary:"A practiced response is not automatically transfer evidence."},
+  {title:"Own",reading:"The learner retrieves, selects, and transfers English with increasing independence.",engineering:"Phase 4 emphasizes independent command and transfer; the separate Capstone checks the upper placement boundary.",evidence:"Unseen transfer is separated from trained and practiced tasks.",boundary:"Capstone success is an upper-bound placement result, not universal English mastery."}
+ ]},
+ {id:"support",label:"Progress",title:"Four Language-Progress Cycles",question:"How does native-language help fade without corrupting proficiency evidence?",summary:"Cycles define how much native-language scaffolding is available while stages continue to define what competency is taught.",stories:[
+  {title:"Native Progressed",reading:"At the beginning, the teacher can explain in the learner's native language so the learner can acquire the concept.",engineering:"CYCLE_1_SUPPORTED permits native-language explanation and translation.",evidence:"Progressed success is valid learning evidence and records assistance use.",boundary:"Progressed success is not final independent proficiency."},
+  {title:"Bridged to dominant",reading:"Progress gradually recedes as the learner becomes able to operate directly in English.",engineering:"BILINGUAL_BRIDGED transitions to TARGET_DOMINANT through performance-gated evidence.",evidence:"Native-language dependence and support level remain explicit measurement fields.",boundary:"Dependence on native-language support blocks target-only promotion."},
+  {title:"Target Only",reading:"Final demonstration happens in the language being learned.",engineering:"TARGET_ONLY forbids native-language explanation, translation, and native-language hints for final demonstration.",evidence:"Final proficiency and final transfer evidence require TARGET_ONLY performance.",boundary:"Instruction may be bilingual. Demonstrated proficiency may not be."}
+ ]},
+ {id:"placement",label:"Independence",title:"Start at Demonstrated Ability",question:"How does the system decide where this learner begins?",summary:"Self-report chooses the initial test neighborhood. Demonstrated performance resolves the actual competency boundary and support state.",stories:[
+  {title:"Claim vs evidence",reading:"You tell the system where you think you are, but the test is allowed to disagree with you.",engineering:"SELF_REPORT → PROVISIONAL_TEST_ENTRY → ADAPTIVE_DIAGNOSTIC → VERIFIED_PLACEMENT.",evidence:"Claimed ability remains separate from observed performance.",boundary:"Self-report never becomes placement authority."},
+  {title:"Adaptive probing",reading:"If the first questions are too easy, the test moves up. If they are too hard, it moves down.",engineering:"Strong performance probes upward; weak performance probes downward; mixed evidence requires an adjacent probe before a stable boundary is resolved.",evidence:"Probe history, placement score, assistance, and confidence remain visible.",boundary:"Screen count and elapsed time cannot determine placement."},
+  {title:"Independence vs demo entry",reading:"If you test above what the demo can teach, the system should say so instead of pretending you belong at a lower level.",engineering:"VERIFIED_PLACEMENT and DEMO_ENTRY_POINT are distinct state fields. UPPER_PROGRAM_PLACEMENT_BOUNDARY_EXCEEDED is a valid verified result.",evidence:"The verified result remains truthful even when the mapped curriculum is not currently available.",boundary:"Available curriculum may be narrower than the program-wide placement range."}
+ ]},
+ {id:"evidence",label:"Achievement",title:"What the Program Can Claim",question:"What is measured, what is established, and what remains outside scope?",summary:"The evidence model separates trained from transfer, direct from productive, assisted from unassisted, and architecture evidence from human learning evidence.",stories:[
+  {title:"Measurement separation",reading:"The program should know the difference between getting help, recalling directly, constructing an answer, and transferring learning to something new.",engineering:"Event evidence preserves trained/transfer, direct/productive, assisted/unassisted, support level, retry burden, hint dependence, latency, and retention signals.",evidence:"Progress checks keep these different kinds of performance separate so one score does not hide how learning happened.",boundary:"A high aggregate score cannot erase how the answer was produced."},
+  {title:"Architecture benchmark",reading:"The language architecture has been stress-tested, but that does not mean a human learner has been proven fluent.",engineering:"The third prospective 768-task frozen benchmark produced 768/768 practical completion after scorer correction for an already-frozen morphology law.",evidence:"Zero genuine failures remained in that benchmark; the historical scorer output and correction history are preserved separately.",boundary:"Architecture evidence is not a human efficacy trial."},
+  {title:"Current measurement boundary",reading:"The current interface reports only capabilities it can measure honestly.",engineering:"The current instrument measures written reading comprehension and written/constructed expression.",evidence:"Speech, pronunciation, listening comprehension, oral retrieval, and oral conversational fluency are explicitly excluded.",boundary:"The page must not imply measurement capability the current product does not possess."}
+ ]}
+];
+
+function spatialLexicon(){return ({en:{routes:['word changes','sentence patterns','numbers','combinations'],again:'AGAIN',earlier:'Earlier',now:'Now',more:'MORE HELP',less:'LESS HELP',independent:'INDEPENDENT TRY',returnHelp:'← help is still available'},es:{routes:['cambios de palabras','patrones de oraciones','números','combinaciones'],again:'DE NUEVO',earlier:'Antes',now:'Ahora',more:'MÁS AYUDA',less:'MENOS AYUDA',independent:'INTENTO INDEPENDIENTE',returnHelp:'← la ayuda sigue disponible'},zh:{routes:['词形变化','句子规律','数字','组合表达'],again:'再次尝试',earlier:'之前',now:'现在',more:'更多帮助',less:'更少帮助',independent:'独立尝试',returnHelp:'← 仍然可以使用帮助'}}[helpLanguage]||null)||{}}
+function applyProductStory(){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en,X=spatialLexicon();document.querySelectorAll("[data-story]").forEach(el=>{const k=el.dataset.story;if(T[k]!==undefined)el.textContent=T[k]});const hr=document.querySelector("[data-hero-routes]");if(hr)hr.innerHTML=X.routes.map(x=>'<span class="edu-spatial-route">'+x+'</span>').join("");const b=document.querySelector("[data-story-bridge]");if(b)b.innerHTML=T.verbs.map((v,i)=>'<div class="edu-story-node" data-story-index="'+i+'"><b>'+v+'</b><span>'+T.chapters[i]+'</span></div>').join("");const r=document.querySelector("[data-resolution-rail]");if(r){const motifs=["compression","transformation","branching","loop","support","transfer"];r.innerHTML=T.resolution.map((x,i)=>'<span class="edu-spatial-node" data-motif="'+motifs[i]+'">'+x+'</span>').join("")}}document.addEventListener("education-help-language-change",applyProductStory);
+function mountEducationCarousel(){
+ const root=qs("[data-edu-carousel]"),track=qs("[data-edu-track]"),viewport=qs("[data-edu-viewport]"),live=qs("[data-edu-live]");
+ if(!root||!track||!viewport)return;
+ let index=0,dragStart=null,dragDx=0;
+ const state=EDUCATION_ARCHITECTURE.map(()=>({choice:null,text:"",help:true,feedback:"",feedbackState:""})); // CYCLE_ONE_EXAMPLE_STATE_v1
+ const deep=[
+  "This activity demonstrates bounded combinatorial leverage. It does not prove that 1,001 concepts alone equal fluency or all English.",
+  "English has many patterns. This is one useful pattern—not a rule for every word.",
+  "This action is practice inside this demo, not general fluency certification.",
+  "This is local learning feedback, not longitudinal outcome evidence.",
+  "Help may be restored at any time. Support is never forcibly removed.",
+  "This check demonstrates one changed-surface transfer. It does not establish general past-tense mastery, unrestricted transfer, or program completion."
+ ];
+ const tasks=[
+  {type:"choice",options:["I like music.","I like dogs."],correct:[0,1],constructPair:true},
+  {type:"choice",options:["play","played"],correct:1},
+  {type:"choice",options:["music","dogs","pizza"],correct:[0,1,2],construct:true},
+  {type:"choice",options:["She walk.","She walks."],correct:1},
+  {type:"choice",options:["It means hello.","It means goodbye."],correct:0,help:"hello = a greeting"},
+  {type:"choice",options:["walked","walk"],correct:0,transferFrom:"play → played"}
+ ];
+ const labels=()=>({en:{learn:"Learn",practice:"Practice",check:"Check",back:"Back",why:"Why this works",choose:"Choose an answer first.",write:"Write one word first.",hide:"Hide help",show:"Show help",continue:"Continue",complete:"Complete this check to continue."},es:{learn:"Aprende",practice:"Practica",check:"Comprueba",back:"Volver",why:"Por qué funciona",choose:"Primero elige una respuesta.",write:"Primero escribe una palabra.",hide:"Ocultar ayuda",show:"Mostrar ayuda",continue:"Continuar",complete:"Completa esta comprobación para continuar."},zh:{learn:"学习",practice:"练习",check:"检查",back:"返回",why:"为什么有效",choose:"请先选择一个答案。",write:"请先写一个词。",hide:"隐藏帮助",show:"显示帮助",continue:"继续",complete:"完成检查后再继续。"}}[helpLanguage]||null)||{};
+ const feedback=(i,ok,val)=>{
+  const L=helpLanguage;
+  const good={
+   en:["Yes! “I am Sam.” is a complete sentence.","Yes! “played” means in the past here.",'You made an English sentence: “I like '+val+'.”',"Yes! With “she,” use “walks” here.","You did it with less help.","Ready for the next step."],
+   es:["¡Sí! “I am Sam.” es una oración completa.","¡Sí! Aquí, “played” indica el pasado.",'Hiciste una oración en inglés: “I like '+val+'.”',"¡Sí! Aquí, con “she” usamos “walks”.","Lo hiciste con menos ayuda.","Listo para el siguiente paso."],
+   zh:["答对了！“I am Sam.” 是完整的句子。","答对了！这里 “played” 表示过去。",'你完成了一个英语句子：“I like '+val+'.”',"答对了！这里和 “she” 一起用 “walks”。","你用更少的帮助完成了。","可以进入下一步。"]
+  };
+  const retry={en:["Almost. Try “I am Sam.”","Try again. Look at play → played.","Add one word. Example: music, dogs, or pizza.","Try again. With “she,” look for “walks.”","Try again. You can show help anytime.","Practice this once more."],es:["Casi. Prueba “I am Sam.”","Inténtalo otra vez. Mira play → played.","Añade una palabra. Por ejemplo: music, dogs o pizza.","Inténtalo otra vez. Con “she”, busca “walks”.","Inténtalo otra vez. Puedes mostrar la ayuda cuando quieras.","Practica esto una vez más."],zh:["快对了。试试 “I am Sam.”","再试一次。看看 play → played。","加一个词。例如：music、dogs 或 pizza。","再试一次。看到 “she” 时，找 “walks”。","再试一次。你随时可以显示帮助。","再练习一次。"]};
+  return (ok?good:retry)[L]?.[i]||(ok?good.en[i]:retry.en[i]);
+ };
+ const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+ function mini(i){const X=spatialLexicon(),A=x=>'<span class="edu-spatial-node">'+esc(x)+'</span>',L='<span class="edu-spatial-link">→</span>';const rows=[["···","1,001"],["play","-ed","played"],["I like ____","music · dogs · pizza"],["TRY","CHECK","CHANGE",X.again],[X.more,X.less,X.independent],[X.earlier+': play → played',X.now]];return '<div class="edu-spatial-mini" aria-hidden="true"><div class="edu-spatial-row">'+rows[i].map(A).join(L)+'</div></div>'}
+ function instrument(i,s){const T=PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en,X=spatialLexicon(),attempt=s.feedbackState||"idle",A=(x,p,attrs="")=>'<span class="edu-spatial-node"'+(p?' data-primary="true"':'')+(attrs?' '+attrs:'')+'>'+esc(x)+'</span>',L=(result=false)=>'<span class="edu-spatial-link" aria-hidden="true"'+(result?' data-result-link="true"':'')+'>→</span>';if(i===0)return '<div class="edu-spatial-instrument" data-geometry="compression" data-attempt="'+attempt+'"><div class="edu-spatial-field" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="edu-spatial-row"><span class="edu-spatial-label">'+esc(T.flows[0][0])+'</span>'+L()+A("1,001",true)+L(true)+A("I am Sam.",false,'data-result-node="true"')+'</div><p class="edu-revelation__qualifier">'+esc(T.qual[0])+'</p></div>';if(i===1)return '<div class="edu-spatial-instrument" data-geometry="transformation" data-attempt="'+attempt+'"><div class="edu-spatial-row">'+A("play",true)+L()+A("-ed",false,'data-result-node="true"')+L(true)+A("played",true,'data-result-node="true"')+'</div><div class="edu-spatial-label">KNOWN WORD + PATTERN = NEW USE</div><div class="edu-spatial-routes">'+X.routes.map(x=>'<span class="edu-spatial-route">'+esc(x)+'</span>').join("")+'</div></div>';if(i===2){const chosen=Number.isInteger(s.choice)?tasks[i].options[s.choice]:"";return '<div class="edu-spatial-instrument" data-geometry="branching" data-attempt="'+attempt+'"><div class="edu-spatial-stack">'+A("I like _____.",true)+'<span class="edu-spatial-link">↓</span><div class="edu-spatial-branches">'+["music","dogs","pizza"].map(x=>A(x,false,'data-example-branch="true"')).join("")+(chosen?A("I like "+chosen+".",false,'data-learner-branch="true" data-result-node="true"'):"")+'</div></div></div>'};if(i===3)return '<div class="edu-spatial-instrument" data-geometry="loop" data-attempt="'+attempt+'"><div class="edu-spatial-loop">'+A("TRY · She walk.")+A("CHECK")+A("CHANGE · +s")+A("AGAIN · She walks.",true,'data-result-node="true"')+'</div><div class="edu-spatial-label">↺</div></div>';if(i===4)return '<div class="edu-spatial-instrument" data-geometry="support" data-attempt="'+attempt+'" data-help="'+String(s.help)+'"><div class="edu-spatial-row">'+A(X.more,false,'data-support="more"')+L()+A(X.less,false,'data-support="less"')+L()+A(X.independent,false,'data-support="independent" data-result-node="true"')+'</div><div class="edu-spatial-node" lang="en">hello = a greeting</div><div class="edu-spatial-return">'+esc(X.returnHelp)+'</div></div>';return '<div class="edu-spatial-instrument" data-geometry="transfer" data-attempt="'+attempt+'"><div class="edu-spatial-stack"><span class="edu-spatial-label">'+esc(X.earlier)+'</span>'+A("play → played",true)+'</div><div class="edu-transfer-line" data-result-link="true" aria-hidden="true"></div><div class="edu-spatial-stack"><span class="edu-spatial-label">'+esc(X.now)+'</span>'+A("walk → walked",true,'data-result-node="true"')+'</div></div>'}
+ function distance(i){let d=i-index;if(d>3)d-=6;if(d<-3)d+=6;return d}
+ function cardHTML(c,i){
+  const copy=chamberCopy(i),L=labels(),task=tasks[i],s=state[i];
+  let practice="";
+  if(task.type==="choice")practice='<div class="edu-card-options">'+task.options.map((o,j)=>'<button type="button" data-choice="'+j+'" aria-pressed="'+(s.choice===j)+'" lang="en">'+esc(o)+'</button>').join("")+'</div>';
+  else practice='<input class="edu-card-input" data-card-input lang="en" value="'+esc(s.text)+'" placeholder="'+esc(task.placeholder)+'">';
+  if(i===4)practice='<button type="button" class="edu-card-help" data-toggle-help>'+(s.help?L.hide:L.show)+'</button><p data-help-cue '+(s.help?"":'hidden')+'>'+esc(task.help)+'</p>'+practice;
+  return '<article class="edu-standard-card" data-card-index="'+i+'" data-face="front"><div class="edu-card-inner">'+
+   '<section class="edu-card-face edu-card-front"><span class="edu-standard-count">'+(i+1)+' / 6</span><p class="edu-standard-kicker">'+esc(copy.title)+'</p><h3 class="edu-standard-title">'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).headlines[i])+'</h3><p class="edu-standard-copy">'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).supports[i])+'</p>'+mini(i)+'<button class="edu-inspect edu-card-action" type="button" data-flip>'+esc(copy.action)+'</button></section>'+
+   '</div></article>';
+
+ }
+ function build(){track.innerHTML=EDUCATION_ARCHITECTURE.map(cardHTML).join("");layout()}
+ function layout(){
+  const activeCard=track.querySelector(".edu-standard-card");const cardWidth=activeCard?.getBoundingClientRect().width||Math.min(viewport.clientWidth*.78,448);const gap=Math.max(cardWidth*.98,viewport.clientWidth*.42);
+  track.querySelectorAll(".edu-standard-card").forEach((card,i)=>{
+   const d=distance(i),x=d*gap+dragDx,ad=Math.min(Math.abs(d+dragDx/gap),3);
+   card.style.setProperty("--spatial-x",x+"px");card.style.setProperty("--spatial-z",(-ad*120)+"px");card.style.setProperty("--spatial-scale",String(1-ad*.12));card.style.setProperty("--spatial-opacity",String(Math.max(.18,1-ad*.28)));
+   card.dataset.active=String(d===0);card.dataset.adjacent=String(Math.abs(d)===1);card.dataset.distant=String(Math.abs(d)>1);card.dataset.dragging=String(dragStart!==null);
+  });
+  document.querySelectorAll("[data-story-index]").forEach((n,j)=>n.dataset.selected=String(j===index));live.textContent=chamberCopy(index).title+" · "+(index+1)+" / 6";
+ }
+ function select(n){index=(n+6)%6;dragDx=0;layout()}
+ const detailSurface=qs("#edu-detail-surface"),detailTitle=qs("#edu-detail-title"),detailKicker=qs("#edu-detail-kicker"),detailBody=qs("#edu-detail-body"),detailReturn=qs("#edu-detail-return");
+ function openDetail(i){
+  const copy=chamberCopy(i),L=labels(),task=tasks[i],s=state[i];index=i;layout();detailKicker.textContent=(i+1)+" / 6 · "+copy.title;detailTitle.textContent=copy.front;
+  let practice=task.type==="choice"?'<div class="edu-card-options">'+task.options.map((o,j)=>'<button type="button" data-detail-choice="'+j+'" aria-pressed="'+(s.choice===j)+'" lang="en">'+esc(o)+'</button>').join("")+'</div>':'<input class="edu-card-input" data-detail-input lang="en" value="'+esc(s.text)+'" placeholder="'+esc(task.placeholder)+'">';
+  if(i===4)practice='<button type="button" class="edu-card-help" data-toggle-help>'+esc(s.help?L.hide:L.show)+'</button><p data-help-cue '+(s.help?'':'hidden')+'>'+esc(task.help)+'</p>'+practice;
+  detailReturn.textContent=(HELP_LANGUAGES[helpLanguage]||HELP_LANGUAGES.en).returnOrbit;detailBody.innerHTML='<div class="edu-expanded-card" data-expanded-card data-face="understand"><div class="edu-expanded-orientation" role="tablist" aria-label="'+esc(L.learn)+' / '+esc(L.practice)+'"><button type="button" role="tab" data-show-face="understand" aria-selected="true">'+esc(L.learn)+'</button><span aria-hidden="true">↔</span><button type="button" role="tab" data-show-face="exercise" aria-selected="false">'+esc(L.practice)+'</button></div><div class="edu-expanded-card__inner" data-expanded-inner><section class="edu-expanded-face edu-expanded-face--understand" data-expanded-face="understand" aria-hidden="false"><section class="edu-detail-step edu-revelation"><h3>'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).headlines[i])+'</h3>'+instrument(i,s)+'<p>'+esc((PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).explain[i])+'</p></section><details class="edu-card-deep"><summary>'+esc(L.why)+'</summary><p>'+esc(deep[i])+'</p></details><div class="edu-expanded-face-switch"><button type="button" data-show-face="exercise">'+esc(L.swipeTry||L.practice+' →')+'</button></div></section><section class="edu-expanded-face edu-expanded-face--exercise" data-expanded-face="exercise" aria-hidden="true"><div data-exercise-spatial>'+instrument(i,s)+'</div><section class="edu-detail-step"><h4>'+esc(L.practice)+'</h4><p>'+esc(copy.practice)+'</p>'+practice+'</section><section class="edu-detail-step"><h4>'+esc(L.check)+'</h4><button class="edu-card-check" type="button" data-detail-check>'+esc(copy.check)+'</button><p class="edu-card-feedback" data-detail-feedback role="status" aria-live="polite" data-state="'+esc(s.feedbackState)+'">'+esc(s.feedback)+'</p></section><div class="edu-expanded-face-switch"><button type="button" data-show-face="understand">← '+esc(L.learn)+'</button></div></section></div></div>';
+  detailSurface.hidden=false;document.body.style.overflow="hidden";setExpandedFace("understand",false);detailReturn.focus()
+ }
+ let expandedFace="understand",expandedDrag=null;
+ function setExpandedFace(face,animate=true){const shell=detailBody.querySelector("[data-expanded-card]"),inner=detailBody.querySelector("[data-expanded-inner]");if(!shell||!inner)return;expandedFace=face;shell.dataset.face=face;detailBody.querySelectorAll("[data-expanded-face]").forEach(el=>el.setAttribute("aria-hidden",String(el.dataset.expandedFace!==face)));detailBody.querySelectorAll("[data-show-face]").forEach(el=>{if(el.getAttribute("role")==="tab")el.setAttribute("aria-selected",String(el.dataset.showFace===face))});const target=face==="exercise"?-180:0,reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;if(!animate||reduced||typeof inner.animate!=="function"){inner.style.transform="rotateY("+target+"deg)";return}inner.animate([{transform:inner.style.transform||"rotateY("+(face==="exercise"?0:-180)+"deg)"},{transform:"rotateY("+target+"deg)"}],{duration:420,easing:"cubic-bezier(.2,.72,.2,1)",fill:"forwards"}).finished.then(()=>inner.style.transform="rotateY("+target+"deg)").catch(()=>{})}
+ function closeDetail(){detailSurface.hidden=true;document.body.style.overflow="";viewport.focus()} detailReturn.addEventListener("click",closeDetail);
+ detailSurface.addEventListener("click",e=>{const faceButton=e.target.closest("[data-show-face]");if(faceButton){setExpandedFace(faceButton.dataset.showFace);return}const i=index,task=tasks[i],s=state[i],L=labels();const choice=e.target.closest("[data-detail-choice]");if(choice){const n=Number(choice.dataset.detailChoice);if(task.constructPair){s.pair=s.pair||[];s.pair=s.pair.includes(n)?s.pair.filter(x=>x!==n):[...s.pair,n];detailBody.querySelectorAll("[data-detail-choice]").forEach(b=>b.setAttribute("aria-pressed",String(s.pair.includes(Number(b.dataset.detailChoice)))))}else{s.choice=n;detailBody.querySelectorAll("[data-detail-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)))}return}if(e.target.closest("[data-detail-continue]")){if(s.feedbackState!=="success")return;closeDetail();return}if(e.target.closest("[data-toggle-help]")){s.help=!s.help;openDetail(i);return}if(e.target.closest("[data-detail-check]")){let val="";if(task.type==="choice"){if(task.constructPair?!(Array.isArray(s.pair)&&s.pair.length):s.choice===null){s.feedback=L.choose;s.feedbackState="retry"}else{const ok=task.constructPair?(Array.isArray(s.pair)&&task.correct.every(x=>s.pair.includes(x))):(Array.isArray(task.correct)?task.correct.includes(s.choice):s.choice===task.correct);s.feedback=feedback(i,ok,task.construct?task.options[s.choice]:"");s.feedbackState=ok?"success":"retry"}}else{const input=detailBody.querySelector("[data-detail-input]");val=input.value.trim();s.text=val;if(!val){s.feedback=L.write;s.feedbackState="retry"}else{const normalized=val.toLowerCase().replace(/[.!?]+$/,"").trim(),ok=Array.isArray(task.accepted)&&task.accepted.includes(normalized);s.feedback=feedback(i,ok,val);s.feedbackState=ok?"success":"retry"}}const spatial=detailBody.querySelector("[data-exercise-spatial]");if(spatial)spatial.innerHTML=instrument(i,s);const out=detailBody.querySelector("[data-detail-feedback]");out.textContent=s.feedback;out.dataset.state=s.feedbackState;let stateBox=detailBody.querySelector("[data-state-confirmation]");if(s.feedbackState==="success"){if(!stateBox){stateBox=document.createElement("div");stateBox.className="edu-state-confirmation";stateBox.dataset.stateConfirmation="true";out.after(stateBox)}stateBox.textContent=(HELP_LANGUAGES[helpLanguage]||HELP_LANGUAGES.en).states[i]+" · "+(PRODUCT_STORY[helpLanguage]||PRODUCT_STORY.en).success[i]}else if(stateBox){stateBox.remove()}const next=detailBody.querySelector("[data-detail-continue]");if(next)next.disabled=s.feedbackState!=="success"}});detailSurface.addEventListener("input",e=>{if(e.target.matches("[data-detail-input]"))state[index].text=e.target.value});
+ detailSurface.addEventListener("pointerdown",e=>{if(e.target.closest("button,input,textarea,select,summary"))return;const card=e.target.closest("[data-expanded-card]");if(!card)return;expandedDrag={x:e.clientX,y:e.clientY,id:e.pointerId};card.setPointerCapture?.(e.pointerId)});
+ detailSurface.addEventListener("pointerup",e=>{if(!expandedDrag)return;const dx=e.clientX-expandedDrag.x,dy=e.clientY-expandedDrag.y;expandedDrag=null;if(Math.abs(dx)<48||Math.abs(dx)<=Math.abs(dy)*1.15)return;setExpandedFace(dx<0?"exercise":"understand")});
+ detailSurface.addEventListener("pointercancel",()=>{expandedDrag=null});
+ detailSurface.addEventListener("keydown",e=>{if(e.target.matches("input,textarea,select"))return;if(e.key==="ArrowRight"){e.preventDefault();setExpandedFace("exercise")}else if(e.key==="ArrowLeft"){e.preventDefault();setExpandedFace("understand")}else if(e.key==="Escape"){e.preventDefault();closeDetail()}});
+
+ root.addEventListener("click",e=>{
+  const card=e.target.closest(".edu-standard-card");if(!card)return;const i=Number(card.dataset.cardIndex);
+  if(e.target.closest("[data-flip]")){if(i!==index){select(i);return}openDetail(i);return}
+  if(i!==index&&!e.target.closest("button,input")){select(i);return}
+  const choice=e.target.closest("[data-choice]");if(choice){state[i].choice=Number(choice.dataset.choice);card.querySelectorAll("[data-choice]").forEach(b=>b.setAttribute("aria-pressed",String(b===choice)));return}
+ });
+ track.addEventListener("input",e=>{if(e.target.matches("[data-card-input]"))state[Number(e.target.closest(".edu-standard-card").dataset.cardIndex)].text=e.target.value});
+ viewport.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){e.preventDefault();select(index+1)}if(e.key==="ArrowLeft"){e.preventDefault();select(index-1)}});
+ viewport.addEventListener("pointerdown",e=>{if(e.target.closest("button,input,textarea,select,summary"))return;dragStart=e.clientX;dragDx=0;viewport.setPointerCapture?.(e.pointerId);layout()});
+ viewport.addEventListener("pointermove",e=>{if(dragStart===null)return;dragDx=e.clientX-dragStart;layout()});
+ function endDrag(e){if(dragStart===null)return;const dx=e.clientX-dragStart;dragStart=null;const threshold=Math.min(90,viewport.clientWidth*.16);if(Math.abs(dx)>threshold)index=(index+(dx<0?1:-1)+6)%6;dragDx=0;layout()}
+ viewport.addEventListener("pointerup",endDrag);viewport.addEventListener("pointercancel",()=>{dragStart=null;dragDx=0;layout()});window.addEventListener("resize",layout);
+ document.addEventListener("education-help-language-change",()=>build());
+ build();
+}
+applyProductStory();
+mountEducationCarousel();
+qsa("[data-jump-standards]").forEach(b=>b.addEventListener("click",()=>qs("#education-standards-carousel")?.scrollIntoView({behavior:"smooth",block:"start"})));
+
+function setStage(name){
+ qsa("[data-demo-stage]").forEach(x=>x.hidden=x.dataset.demoStage!==name);
+ const order=["intake","test","result","entry"], i=order.indexOf(name);
+ qsa("[data-step-indicator]").forEach(el=>{const j=order.indexOf(el.dataset.stepIndicator);el.dataset.state=j<i?"complete":j===i?"active":""});
+ qs("#demo-title").textContent=(LEARNER_SHELL[helpLanguage]?.demoTitle?.[name])||LEARNER_SHELL.en.demoTitle[name]||"English Placement";
+}
+function startDemo(){qs("#demo-shell").hidden=false;setStage("intake");qs("#demo-shell").scrollIntoView({behavior:"smooth",block:"start"})}
+qsa("[data-start-demo]").forEach(b=>b.addEventListener("click",startDemo));
+qsa("[data-language]").forEach(b=>b.addEventListener("click",()=>{learner.target_language=b.dataset.language;setStage("intake")}));
+qsa("[data-back]").forEach(b=>b.addEventListener("click",()=>setStage(b.dataset.back)));
+
+function enhanceEducationSelect(select){
+ if(!select||select.dataset.customized)return;
+ select.dataset.customized="true";select.classList.add("edu-native-hidden");
+ const wrap=document.createElement("div"),trigger=document.createElement("button"),list=document.createElement("div");
+ wrap.className="edu-custom-select";trigger.type="button";trigger.setAttribute("aria-haspopup","listbox");trigger.setAttribute("aria-expanded","false");list.className="edu-custom-options";list.hidden=true;
+ select.after(wrap);wrap.append(trigger,list);
+ const place=()=>{if(list.hidden)return;const r=trigger.getBoundingClientRect(),gap=10,below=window.innerHeight-r.bottom-gap,above=r.top-gap;const up=below<220&&above>below;list.dataset.direction=up?"up":"down";const available=Math.max(120,(up?above:below)-8);list.style.maxHeight=Math.min(320,available)+"px"};
+ const rebuild=()=>{trigger.textContent=select.selectedOptions[0]?.textContent||"Choose";list.innerHTML="";[...select.options].slice(1).forEach(opt=>{const b=document.createElement("button");b.type="button";b.textContent=opt.textContent;b.setAttribute("aria-selected",String(opt.value===select.value));b.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event("change",{bubbles:true}));list.hidden=true;trigger.setAttribute("aria-expanded","false");rebuild()};list.append(b)})};
+ trigger.onclick=()=>{list.hidden=!list.hidden;trigger.setAttribute("aria-expanded",String(!list.hidden));if(!list.hidden)requestAnimationFrame(place)};
+ document.addEventListener("click",e=>{if(!wrap.contains(e.target)){list.hidden=true;trigger.setAttribute("aria-expanded","false")}});
+ window.addEventListener("resize",place);window.addEventListener("scroll",place,{passive:true});
+ document.addEventListener("education-help-language-change",()=>queueMicrotask(rebuild));rebuild()
+}
+["claimed-level"].forEach(id=>enhanceEducationSelect(qs("#"+id)));
+function beginIndependence(){
+ const claimed=Number(qs("#claimed-level").value);
+ if(!claimed){qs("#intake-validation").textContent=(LEARNER_SHELL[helpLanguage]||LEARNER_SHELL.en).required;return}
+ qs("#intake-validation").textContent="";
+ learner={...learner,help_language:helpLanguage,claimed_level:claimed,intake_complete:true};
+ probeStage=Math.max(1,Math.min(7,claimed));probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};
+ setStage("test");saveEducationState({stage:"test"});startAdaptiveItem(probeStage,0);requestAnimationFrame(()=>qs("#placement-heading")?.scrollIntoView({behavior:"smooth",block:"start"}));
+}
+qs("#begin-placement").addEventListener("click",beginIndependence);
+
+function startAdaptiveItem(stage,itemIndex=0){
+ probeStage=Math.max(1,Math.min(7,stage));
+ const bank=BANK[probeStage]||BANK[7];
+ adaptiveState.usedItems=adaptiveState.usedItems||[];
+ let index=bank.findIndex((x,i)=>i>=itemIndex&&!adaptiveState.usedItems.includes(x.id));
+ if(index<0)index=bank.findIndex(x=>!adaptiveState.usedItems.includes(x.id));
+ if(index<0){resolveAdaptiveBoundary(probeStage);return}
+ currentSet=[{...bank[index]}];currentQuestionIndex=0;currentSetScore=0;
+ adaptiveState={...(adaptiveState||{}),stage:probeStage,itemIndex:index,steps:(adaptiveState?.steps||0)};
+ saveEducationState({stage:"test"});
+ const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;
+ qs("#placement-heading").textContent=gateT.testing;
+ qs("#placement-copy").textContent=adaptiveState.pending?gateT.checking:gateT.claimStart;
+ renderQuestion();
+}
+function renderQuestion(){
+ const item=currentSet[0];
+ qs("#question-validation").textContent="";
+ const gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;
+ const order=[0,1,2,3].sort((a,b)=>stableOptionRank(item.id,a)-stableOptionRank(item.id,b));
+ qs("#question-host").innerHTML='<article class="question-card"><h3 lang="en">'+item.q+'</h3><div class="options">'+order.map(i=>'<label class="option"><input type="radio" name="placement-answer" value="'+i+'"><span lang="en">'+item.o[i]+'</span></label>').join("")+'</div><div class="button-row"><button class="button" type="button" id="submit-placement-answer">'+escapeEducationHTML(gateT.continue)+'</button></div></article>';
+ qs("#submit-placement-answer").addEventListener("click",submitAdaptiveAnswer);
+}
+function stableOptionRank(id,index){
+ let h=2166136261;const text=id+":"+index;
+ for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)}
+ return h>>>0;
+}
+function submitAdaptiveAnswer(){
+ const chosen=qs('input[name="placement-answer"]:checked');
+ if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
+ const item=currentSet[0],correct=Number(chosen.value)===item.a;
+ adaptiveState.usedItems=adaptiveState.usedItems||[];adaptiveState.stageEvidence=adaptiveState.stageEvidence||{};
+ const fresh=!adaptiveState.usedItems.includes(item.id);
+ if(fresh)adaptiveState.usedItems.push(item.id);
+ placementEvidence.push({stage:probeStage,difficulty:item.difficulty,itemId:item.id,node:item.node,competency:item.competency,evidenceClass:item.evidenceClass,correct,fresh});
+ adaptiveState.steps++;
+ if(fresh){
+   const bucket=adaptiveState.stageEvidence[probeStage]||(adaptiveState.stageEvidence[probeStage]={unique:0,correct:0,unassistedCorrect:0,incorrect:0});
+   bucket.unique++;if(correct){bucket.correct++;bucket.unassistedCorrect++}else bucket.incorrect++;
+ }
+ probeHistory.push({stage:probeStage,difficulty:item.difficulty,score:correct?1:0,correct:correct?1:0,total:1,itemId:item.id,evidenceClass:item.evidenceClass,fresh});
+ const bucket=adaptiveState.stageEvidence[probeStage],unique=bucket?.unique||0,ratio=unique?bucket.correct/unique:0;
+ adaptiveState.highestSustainableDifficulty=adaptiveState.highestSustainableDifficulty??null;
+ adaptiveState.lowestUnsustainableDifficulty=adaptiveState.lowestUnsustainableDifficulty??null;
+ const resolveBracket=()=>{
+   const hi=adaptiveState.highestSustainableDifficulty,lo=adaptiveState.lowestUnsustainableDifficulty;
+   if(hi!==null&&lo!==null&&lo-hi===1){resolveAdaptiveBoundary(hi);return true}
+   return false;
+ };
+ if(unique>=2&&ratio===1){
+   adaptiveState.highestSustainableDifficulty=Math.max(adaptiveState.highestSustainableDifficulty??0,probeStage);
+   if(resolveBracket())return;
+   if(probeStage===7){if(unique>=5){startCapstone();return}}
+   else {startAdaptiveItem(probeStage+1,0);return}
+ }
+ if(unique>=2&&ratio===0){
+   adaptiveState.lowestUnsustainableDifficulty=Math.min(adaptiveState.lowestUnsustainableDifficulty??9,probeStage);
+   if(resolveBracket())return;
+   if(probeStage===1){if(unique>=5){resolveAdaptiveBoundary(1);return}}
+   else {startAdaptiveItem(probeStage-1,0);return}
+ }
+ if(unique>=5){
+   if(ratio>=.8&&bucket.unassistedCorrect>=4){
+     adaptiveState.highestSustainableDifficulty=Math.max(adaptiveState.highestSustainableDifficulty??0,probeStage);
+     if(resolveBracket())return;
+     if(probeStage===7){startCapstone();return}
+     startAdaptiveItem(probeStage+1,0);return;
+   }
+   if(ratio<=.4){
+     adaptiveState.lowestUnsustainableDifficulty=Math.min(adaptiveState.lowestUnsustainableDifficulty??9,probeStage);
+     if(resolveBracket())return;
+     if(probeStage===1){resolveAdaptiveBoundary(1);return}
+     startAdaptiveItem(probeStage-1,0);return;
+   }
+ }
+ if(adaptiveState.steps>=24){resolveAdaptiveBoundary("UNCERTAIN");return}
+ if(unique>=8){resolveAdaptiveBoundary("UNCERTAIN");return}
+ startAdaptiveItem(probeStage,(adaptiveState.itemIndex+1)%BANK[probeStage].length);
+}
+function buildPlacementResult(band,kind="RESOLVED"){
+ const coord=placementCoordinate(band),phase=coord?PROGRAM_PHASES[coord.phase]:null;
+ return {result_kind:kind,diagnostic_position:band?"D"+band:null,diagnostic_band:band||null,program_phase:phase?.id||null,program_phase_name:phase?.name||null,phase_position:coord?.position||null,transition_to:coord?.transitionTo?PROGRAM_PHASES[coord.transitionTo].id:null,entry_position:band?"D"+band:null,placement_confidence:null,curriculum_availability:phase?.availability||"NOT_CURRENTLY_AVAILABLE",access_status:phase?.access||"NOT_AVAILABLE",support_state:band?supportCycle(1):"BOUNDARY_REVIEW",demonstrated_nodes:placementEvidence.filter(x=>x.correct).length,unresolved_nodes:placementEvidence.filter(x=>!x.correct).length,probe_history:probeHistory,placement_evidence:placementEvidence,claimed_level:learner.claimed_level};
+}
+function resolveAdaptiveBoundary(result){
+ if(result==="UNCERTAIN") finalIndependence=buildPlacementResult(null,"UNCERTAIN_BOUNDARY");
+ else finalIndependence=buildPlacementResult(Math.max(1,Math.min(7,Number(result)||probeStage)));
+ saveEducationState({stage:"result"});renderIndependence();
+}
+function startCapstone(){
+ adaptiveState.capstone={itemIndex:0,correct:0,total:0};saveEducationState({stage:"test"});renderCapstoneItem();
+}
+function renderCapstoneItem(){
+ const c=adaptiveState.capstone,item=CAPSTONE_BANK[c.itemIndex],gateT=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;
+ qs("#placement-heading").textContent="Capstone integration check";
+ qs("#placement-copy").textContent="You established the upper ordinary placement boundary. These final questions check integrated written English.";
+ const order=[0,1,2,3].sort((a,b)=>stableOptionRank("capstone-"+item.id,a)-stableOptionRank("capstone-"+item.id,b));
+ qs("#question-host").innerHTML='<article class="question-card"><h3 lang="en">'+item.q+'</h3><div class="options">'+order.map(i=>'<label class="option"><input type="radio" name="capstone-answer" value="'+i+'"><span lang="en">'+item.o[i]+'</span></label>').join("")+'</div><div class="button-row"><button class="button" type="button" id="submit-capstone">'+escapeEducationHTML(gateT.continue)+'</button></div></article>';
+ qs("#submit-capstone").addEventListener("click",submitCapstoneAnswer);
+}
+function submitCapstoneAnswer(){
+ const chosen=qs('input[name="capstone-answer"]:checked');if(!chosen){qs("#question-validation").textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
+ const c=adaptiveState.capstone,item=CAPSTONE_BANK[c.itemIndex];c.total++;if(Number(chosen.value)===item.a)c.correct++;placementEvidence.push({stage:"CAPSTONE",difficulty:"CAPSTONE",itemId:item.id,node:item.node,competency:item.competency,evidenceClass:item.evidenceClass,correct:Number(chosen.value)===item.a,fresh:true});
+ c.itemIndex++;if(c.itemIndex<5){saveEducationState({stage:"test"});renderCapstoneItem();return}
+ const pass=c.correct>=4;finalIndependence=buildPlacementResult(7,pass?"CAPSTONE_PASS":"CAPSTONE_NOT_ESTABLISHED");if(pass){finalIndependence.program_phase="UPPER_PROGRAM_PLACEMENT_BOUNDARY_EXCEEDED";finalIndependence.program_phase_name="Upper program placement boundary exceeded";finalIndependence.phase_position="UPPER_BOUNDARY";finalIndependence.curriculum_availability="NOT_CURRENTLY_AVAILABLE";finalIndependence.access_status="NOT_AVAILABLE";finalIndependence.entry_position=null}saveEducationState({stage:"result"});renderIndependence();
+}
+function supportCycle(score){
+ if(score>=.9)return "TARGET_ONLY";
+ if(score>=.75)return "TARGET_DOMINANT";
+ if(score>=.5)return "BILINGUAL_BRIDGED";
+ return "NATIVE_SUPPORTED";
+}
+function renderIndependence(){
+ setStage("result");const p=finalIndependence,uncertain=p.result_kind==="UNCERTAIN_BOUNDARY",cap=p.result_kind==="CAPSTONE_PASS";
+ const title=uncertain?"We need a little more information":cap?"Upper placement boundary exceeded":p.program_phase_name+(p.phase_position==="TRANSITION"?" · transition":"");
+ const message=uncertain?"Your answers were mixed near the boundary. Continue placement so we do not guess.":cap?"You demonstrated integrated written English beyond the ordinary D1–D7 placement range.":p.phase_position==="TRANSITION"?"Your demonstrated position sits between two program phases.":"Your demonstrated placement maps here in the four-phase program.";
+ const availability=uncertain?"Placement is not resolved yet.":p.curriculum_availability==="PUBLIC_AVAILABLE"?"This curriculum is currently public and available.":"Your placement is preserved, but this curriculum is not currently available.";
+ qs("#placement-result").innerHTML='<div class="result-grid"><article class="result-hero"><span class="eyebrow">Your placement</span><strong>'+escapeEducationHTML(title)+'</strong><span class="result-note">'+escapeEducationHTML(message)+'</span></article><article class="result-hero"><span class="eyebrow">Availability</span><strong>'+escapeEducationHTML(p.curriculum_availability||"PENDING")+'</strong><span class="result-note">'+escapeEducationHTML(availability)+'</span></article></div>';
+ qs("#enter-demo").hidden=uncertain||cap||p.curriculum_availability!=="PUBLIC_AVAILABLE"||p.access_status!=="FREE_PUBLIC";
+}
+const TEACHING_UNITS=[
+ {target:"Use am with I.",example:"I am ready.",prompt:"Choose the correct sentence.",options:["I ready.","I am ready.","Am I ready."],answer:1,remediation:"With I, use am before the describing word.",next:"Build another simple sentence."},
+ {target:"Use the past form for a finished action.",example:"Yesterday, I played.",prompt:"Choose the sentence about yesterday.",options:["Yesterday, I play.","Yesterday, I played.","Yesterday, I playing."],answer:1,remediation:"A finished regular action often uses -ed: play → played.",next:"Use another past-time sentence."},
+ {target:"Put the subject before the verb in a statement.",example:"She reads books.",prompt:"Choose the clear statement.",options:["Reads she books.","She reads books.","Books she reads?"],answer:1,remediation:"For this statement, use subject + verb + object.",next:"Build a new statement."},
+ {target:"Connect a reason with because.",example:"I stayed home because it rained.",prompt:"Choose the sentence that gives a reason.",options:["I stayed home because it rained.","Because stayed home I rain.","I because rain stayed."],answer:0,remediation:"Use because before the reason: result + because + reason.",next:"Connect another reason."},
+ {target:"Keep the intended meaning when wording changes.",example:"The meeting was canceled = The meeting will not happen.",prompt:"Choose the same meaning as “The store is closed.”",options:["The store is not open.","The store is crowded.","The store moved."],answer:0,remediation:"Look for the option that preserves the whole meaning, not just a related word.",next:"Paraphrase another message."},
+ {target:"Use written English for a practical request.",example:"Could you send me the file, please?",prompt:"Choose the clearest polite request.",options:["File now.","Could you send me the file, please?","You file send."],answer:1,remediation:"A clear request can use Could you + action + please.",next:"Write another practical request."},
+ {target:"Transfer a known pattern to an unseen sentence.",example:"If it rains, we will stay inside.",prompt:"Choose the sentence with the same condition pattern.",options:["If I finish early, I will call you.","I finished because call.","Early if call finished."],answer:0,remediation:"Match the relationship: if + condition, then the likely result.",next:"Try a new unseen relationship."},
+ {target:"Interpret formal English precisely.",example:"Completion is contingent upon approval = approval is required first.",prompt:"Choose the same meaning as “Access is restricted to staff.”",options:["Only staff may enter.","Staff cannot enter.","Everyone may enter."],answer:0,remediation:"Restricted to names the group that is allowed.",next:"Continue with advanced meaning transfer."}
+];
+function teachingLocale(){return ({en:{learn:"Learn",practice:"Practice",check:"Check",retry:"Try again",correct:"Correct. Continue.",next:"Next lesson"},es:{learn:"Aprende",practice:"Practica",check:"Comprobar",retry:"Inténtalo de nuevo",correct:"Correcto. Continúa.",next:"Siguiente lección"},zh:{learn:"学习",practice:"练习",check:"检查",retry:"再试一次",correct:"正确。继续。",next:"下一课"}}[helpLanguage]||null)||{learn:"Learn",practice:"Practice",check:"Check",retry:"Try again",correct:"Correct. Continue.",next:"Next lesson"}}
+function renderTeaching(){
+ const host=qs("#entry-state"),t=teachingLocale(),u=TEACHING_UNITS[teachingState.level-1],name="Phase 1 · Receive";
+ host.innerHTML='<article class="question-card" data-teaching-runtime><span class="eyebrow">'+escapeEducationHTML(name)+'</span><h3>'+escapeEducationHTML(t.learn)+'</h3><p lang="en"><strong>'+escapeEducationHTML(u.target)+'</strong> '+escapeEducationHTML(u.example)+'</p><h3>'+escapeEducationHTML(t.practice)+'</h3><p lang="en">'+escapeEducationHTML(u.prompt)+'</p><div class="options">'+u.options.map((x,i)=>'<label class="option"><input type="radio" name="teaching-answer" value="'+i+'"><span lang="en">'+escapeEducationHTML(x)+'</span></label>').join("")+'</div><div class="button-row"><button class="button" id="check-teaching" type="button">'+escapeEducationHTML(t.check)+'</button></div><div id="teaching-feedback" class="result-note" aria-live="polite"></div></article>';
+ qs("#check-teaching").addEventListener("click",checkTeaching);
+ saveEducationState({stage:"entry"});
+}
+function checkTeaching(){
+ const chosen=qs('input[name="teaching-answer"]:checked'),t=teachingLocale(),u=TEACHING_UNITS[teachingState.level-1],feedback=qs("#teaching-feedback");
+ if(!chosen){feedback.textContent=(GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en).chooseAnswer;return}
+ if(Number(chosen.value)!==u.answer){teachingState.attempts++;teachingState.remediationShown=true;feedback.innerHTML='<strong>'+escapeEducationHTML(t.retry)+'</strong> '+escapeEducationHTML(u.remediation);saveEducationState({stage:"entry"});return}
+ teachingState.completed=teachingState.completed||[];if(!teachingState.completed.includes(teachingState.level))teachingState.completed.push(teachingState.level);
+ feedback.innerHTML='<strong>'+escapeEducationHTML(t.correct)+'</strong> '+escapeEducationHTML(u.next)+' <button class="button-secondary" type="button" id="next-teaching">'+escapeEducationHTML(t.next)+'</button>';
+ qs("#next-teaching").addEventListener("click",()=>{teachingState.level=Math.min(TEACHING_UNITS.length,teachingState.level+1);teachingState.attempts=0;teachingState.remediationShown=false;renderTeaching()});saveEducationState({stage:"entry"});
+}
+function enterDemo(){
+ setStage("entry");const p=finalIndependence;
+ if(p.result_kind==="UNCERTAIN_BOUNDARY"){qs("#entry-title").textContent="Confirm your starting point";qs("#entry-state").innerHTML='<article class="result-hero"><strong>Continue placement</strong><button class="button" type="button" id="continue-boundary">Continue placement</button></article>';qs("#continue-boundary").addEventListener("click",()=>{setStage("test");startAdaptiveItem(probeStage,adaptiveState?.itemIndex||0)});return}
+ if(p.curriculum_availability!=="PUBLIC_AVAILABLE"||p.access_status!=="FREE_PUBLIC"){qs("#entry-title").textContent="Your placement is preserved";qs("#entry-state").innerHTML='<article class="result-hero"><strong>'+escapeEducationHTML(p.program_phase_name||"Placement complete")+'</strong><span class="result-note">This curriculum is not currently available. Your placement has not been lowered.</span></article>';return}
+ if(!teachingState||!Number.isInteger(teachingState.level))teachingState={level:1,attempts:0,remediationShown:false,completed:[]};
+ qs("#entry-title").textContent="Phase 1 · Receive";renderTeaching();
+}
+qs("#enter-demo").addEventListener("click",enterDemo);
+qs("#retake-placement").addEventListener("click",()=>{setStage("intake");finalIndependence=null;probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState=null});
+qs("#restart-demo").addEventListener("click",()=>{clearEducationState();learner={target_language:"English"};finalIndependence=null;probeHistory=[];placementEvidence=[];mixedAnchor=null;adaptiveState=null;teachingState=null;setStage("intake")});
+
+
+/* Gate One — persistent help-language propagation outside target-English evidence. */
+const GATE_ONE_UI={
+ en:{testEye:"Placement",testHeading:"A few questions help us find the right place to begin.",testCopy:"The questions will get easier or harder as needed.",resultEye:"Placement Result",resultTitle:"Your starting point is ready.",retake:"Retake Placement",enter:"Start Phase 1",entryEye:"Learning Availability",restart:"Start Over",continue:"Continue",chooseAnswer:"Choose one answer before continuing.",testing:"English placement",claimStart:"Answer each question as well as you can. The questions will adjust to your answers.",checking:"Checking a few more questions near your level."},
+ es:{testEye:"Ubicación",testHeading:"Unas preguntas nos ayudan a encontrar el lugar adecuado para comenzar.",testCopy:"Las preguntas serán más fáciles o más difíciles según sea necesario.",resultEye:"Resultado de ubicación",resultTitle:"Tu punto de partida está listo.",retake:"Repetir ubicación",enter:"Empezar a aprender",entryEye:"Listo para aprender",restart:"Empezar de nuevo",continue:"Continuar",chooseAnswer:"Elige una respuesta antes de continuar.",testing:"Ubicación de inglés",claimStart:"Responde cada pregunta lo mejor que puedas. Las preguntas se ajustarán a tus respuestas.",checking:"Comprobando algunas preguntas más cerca de tu nivel."},
+ zh:{testEye:"分级",testHeading:"几个问题帮助我们找到合适的起点。",testCopy:"题目会根据需要变简单或变难。",resultEye:"分级结果",resultTitle:"你的起点已经准备好。",retake:"重新分级",enter:"开始学习",entryEye:"准备学习",restart:"重新开始",continue:"继续",chooseAnswer:"继续之前请选择一个答案。",testing:"英语分级",claimStart:"请尽力回答每一道题。题目会根据你的回答调整难度。",checking:"正在你的水平附近再检查几道题。"}
+};
+function gateOneText(selector,value){const el=document.querySelector(selector);if(el&&value!==undefined)el.textContent=value}
+function applyGateOneLocale(){const t=GATE_ONE_UI[helpLanguage]||GATE_ONE_UI.en;gateOneText('[data-demo-stage="test"] .eyebrow',t.testEye);gateOneText("#placement-heading",t.testHeading);gateOneText("#placement-copy",t.testCopy);gateOneText('[data-demo-stage="result"] .eyebrow',t.resultEye);gateOneText('[data-demo-stage="result"] h2',t.resultTitle);gateOneText("#retake-placement",t.retake);gateOneText("#enter-demo",t.enter);gateOneText('[data-demo-stage="entry"] .eyebrow',t.entryEye);gateOneText("#restart-demo",t.restart)}
+document.addEventListener("education-help-language-change",applyGateOneLocale);
+
+applyGateOneLocale();
+const restoredEducation=restoreEducationState();
+if(restoredEducation?.helpLanguage&&HELP_LANGUAGES[restoredEducation.helpLanguage])setHelpLanguage(restoredEducation.helpLanguage);
+if(restoredEducation?.stage==="language"){setStage("intake")}
+else if(restoredEducation?.stage==="result"&&finalIndependence){renderIndependence()}
+else if(restoredEducation?.stage==="entry"&&finalIndependence){enterDemo()}
+else if(restoredEducation?.stage==="test"&&learner.intake_complete){setStage("test");if(!adaptiveState)adaptiveState={stage:probeStage,itemIndex:0,pending:null,confirmedLow:null,confirmedHigh:null,steps:0,usedItems:[],stageEvidence:{},highestSustainableDifficulty:null,lowestUnsustainableDifficulty:null};startAdaptiveItem(adaptiveState.stage||probeStage,adaptiveState.itemIndex||0)}
+document.documentElement.dataset.educationDemoReady="true";
+})();
+</script>
+</body>
+</html>

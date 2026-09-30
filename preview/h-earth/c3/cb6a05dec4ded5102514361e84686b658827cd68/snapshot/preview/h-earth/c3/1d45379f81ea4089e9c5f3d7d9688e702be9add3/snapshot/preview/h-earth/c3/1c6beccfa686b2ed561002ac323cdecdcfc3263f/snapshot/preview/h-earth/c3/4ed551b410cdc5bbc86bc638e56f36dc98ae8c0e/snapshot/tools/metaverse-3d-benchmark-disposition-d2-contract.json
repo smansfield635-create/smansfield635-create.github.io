@@ -1,0 +1,244 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_CANONICAL_EVIDENCE_FACT_NORMALIZATION_D2_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D2",
+  "checkpointTitle": "CANONICAL_EVIDENCE_FACT_NORMALIZATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d2-001",
+  "parentD1": {
+    "branch": "agent/metaverse-3d-benchmark-disposition-compiler-d1-001",
+    "headCommit": "15ae6cfdd2b6929c06c4fac8905d5b201548b5a0",
+    "draftPullRequest": 140,
+    "pullRequestState": "OPEN_DRAFT_UNMERGED",
+    "status": "PASS_CLOSED",
+    "contractPath": "tools/metaverse-3d-benchmark-disposition-d1-contract.json",
+    "contractGitBlob": "b83228120ccea9241ad20e5d224c091f4a548f1f",
+    "intakeEngineGitBlob": "13fb6c992dc9d89b337766a5c5a91f98ca281c44",
+    "controlsGitBlob": "e64d0205922c43f1a47fc16e957073660b5082fb",
+    "workflowGitBlob": "b1f02c9d1ab7db34459965dd3e8b4e5ad4c82ec7",
+    "workflowRunId": "30161684434",
+    "jobId": "89687906478",
+    "artifactId": "8620403379",
+    "artifactSizeBytes": 10733,
+    "artifactSha256": "4ea337358b5d9f9b1c5a3b11e492fe1930f8563b00df796266d5032bf2769b71",
+    "artifactName": "metaverse-3d-benchmark-disposition-d1-15ae6cfdd2b6929c06c4fac8905d5b201548b5a0",
+    "sourceManifestSha256": "a61acb81a838e3b37c2fcffc7bba3cd94eb2c36cd8c9a39f3483602da59601bc",
+    "nativeEvidenceInventorySha256": "5e9814e39125a4f18ec415e8ec46bdc716f1259474ad2528806f95e0f2317c7e",
+    "intakeReceiptSha256": "ef5cb1a19cee6940c4c6403ae824708d02844c04ec625e346ec8660cf482c286",
+    "aggregateReceiptSha256": "ec59dec1f54721e1ac5fa070f0142031366253d9289fc34ed579b29a21879fd9"
+  },
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d2.yml",
+    "tools/metaverse-3d-benchmark-disposition-d2-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d2-normalize.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d2-controls.mjs"
+  ],
+  "lockedInputs": {
+    "laneIds": [
+      "FOUR_COMPASS_PRODUCTION_BENCHMARK_CORPUS",
+      "UNIVERSAL_COMPASS_PROTOTYPE_CANDIDATE",
+      "PROJECT_AWARENESS_V1_HISTORICAL_BASELINE"
+    ],
+    "canonicalCompassIds": [
+      "MAIN_COMPASS",
+      "ARCHCOIN_COMPASS",
+      "SHOWROOM_COMPASS",
+      "LAWS_COMPASS"
+    ],
+    "auxiliaryControlIds": [
+      "WEBSITE_HOME_RECEIVER_CONTROL"
+    ],
+    "sourceRecordCount": 21,
+    "nativeEvidenceRecordCount": 7,
+    "prototypePackagePathCount": 8,
+    "prototypeInternalRuntimeModuleCount": 5,
+    "currentPrototypeCommit": "775ae01438820abecd8bfc242d186ef1342fe9d6",
+    "currentPrototypeExecutionStatus": "NOT_EXECUTED",
+    "historicalPrototypeExecutionCommit": "9b9e2ec306ce8fb9944d4c129b2967dfa3df4957",
+    "historicalPrototypeExecutionAppliesToCurrent": false,
+    "awarenessPackageOccurrenceCommit": "d9e88e6cb1a9feccacc617b5d56d944a77979689",
+    "awarenessInspectedRepositoryCommit": "febf7ac9ca0bd69c791b70d3f914bbfff5403c1d",
+    "awarenessCurrentAuthority": false
+  },
+  "canonicalFactSchema": {
+    "schemaVersion": "METAVERSE_3D_CANONICAL_EVIDENCE_FACT_v1",
+    "requiredFields": [
+      "schemaVersion",
+      "canonicalFactId",
+      "laneId",
+      "sourceProvenancePointer",
+      "sourceOccurrenceIdentity",
+      "subjectIdentity",
+      "predicateIdentity",
+      "factKind",
+      "epistemicPosture",
+      "observationInterpretationPosture",
+      "temporalPosture",
+      "executionPosture",
+      "authorityPosture",
+      "valueType",
+      "originalValue",
+      "normalizedValue",
+      "unit",
+      "presencePosture",
+      "applicabilityPosture",
+      "transformationTrace",
+      "coexistenceKey",
+      "deterministicOrderKey"
+    ],
+    "identityBasis": [
+      "schemaVersion",
+      "laneId",
+      "sourceOccurrenceIdentity",
+      "subjectIdentity",
+      "predicateIdentity",
+      "factKind",
+      "temporalPosture",
+      "executionPosture",
+      "authorityPosture",
+      "normalizedValue",
+      "unit",
+      "presencePosture",
+      "applicabilityPosture"
+    ]
+  },
+  "vocabularies": {
+    "factKind": [
+      "SOURCE_OCCURRENCE_FACT",
+      "NATIVE_EVIDENCE_OCCURRENCE_FACT",
+      "LANE_POSTURE_FACT",
+      "AUTHORITY_IDENTITY_FACT",
+      "EXECUTION_FACT",
+      "COUNT_FACT",
+      "RELATION_FACT",
+      "APPLICABILITY_FACT"
+    ],
+    "epistemicPosture": [
+      "VERIFIED_D1_OBSERVATION",
+      "D1_DECLARED_METADATA",
+      "D2_LOSSLESS_DERIVATION"
+    ],
+    "observationInterpretationPosture": [
+      "OBSERVATION",
+      "DERIVATION"
+    ],
+    "temporalPosture": [
+      "CURRENT_CONTROLLING_OCCURRENCE",
+      "CURRENT_CANDIDATE_OCCURRENCE",
+      "HISTORICAL_OCCURRENCE",
+      "CURRENT_CUSTODY_OF_HISTORICAL_EVIDENCE"
+    ],
+    "executionPosture": [
+      "EXECUTED_PASS",
+      "NOT_EXECUTED",
+      "EXECUTION_NOT_APPLICABLE",
+      "EXECUTION_STATUS_UNRESOLVED"
+    ],
+    "authorityPosture": [
+      "CURRENT_CONTROLLING_INPUT",
+      "CURRENT_SOURCE_UNEXECUTED",
+      "HISTORICAL_BASELINE_ONLY",
+      "PASS_HISTORICAL_SOURCE_OCCURRENCE",
+      "CANONICAL_COMPASS_AUTHORITY",
+      "AUXILIARY_NON_COMPASS_CONTROL",
+      "NORMALIZATION_METADATA_ONLY"
+    ],
+    "valueType": [
+      "BOOLEAN",
+      "INTEGER",
+      "STRING",
+      "HASH",
+      "PATH",
+      "STRUCTURED_OBJECT"
+    ],
+    "presencePosture": [
+      "PRESENT",
+      "EXPLICITLY_ABSENT",
+      "NOT_RECORDED",
+      "UNAVAILABLE",
+      "UNRESOLVED"
+    ],
+    "applicabilityPosture": [
+      "APPLICABLE",
+      "NOT_APPLICABLE",
+      "APPLICABILITY_UNRESOLVED"
+    ],
+    "lossPosture": [
+      "LOSSLESS",
+      "LOSSY_BUT_DECLARED",
+      "TRANSFORMATION_NOT_APPLIED"
+    ],
+    "factRelation": [
+      "SEMANTICALLY_EQUIVALENT_DISTINCT_OCCURRENCE",
+      "TEMPORALLY_COEXISTENT",
+      "EXECUTION_POSTURE_DIFFERENCE",
+      "VALUE_CONFLICT_SAME_SCOPE",
+      "VALUE_DIFFERENCE_DIFFERENT_SCOPE",
+      "NOT_COMPARABLE"
+    ]
+  },
+  "normalizationRules": {
+    "representationOnly": true,
+    "meaningResolutionPerformed": false,
+    "canonicalEncoding": "UTF-8",
+    "unicodeNormalization": "NFC",
+    "lineEndings": "LF",
+    "objectKeyOrder": "LEXICOGRAPHIC",
+    "arrayOrder": "CONTRACT_OR_SEMANTIC_ORDER",
+    "hashEncoding": "LOWERCASE_HEXADECIMAL",
+    "pathEncoding": "REPOSITORY_RELATIVE_FORWARD_SLASH",
+    "genericNullAllowed": false,
+    "lossyTransformationAllowed": false,
+    "originalValuePreserved": true,
+    "reversibleTransformationTraceRequired": true
+  },
+  "coexistenceRules": {
+    "winnerSelection": false,
+    "sameScopeConflictPreserved": true,
+    "differentCommitFactsCoexist": true,
+    "differentOccurrenceFactsCoexist": true,
+    "differentExecutionPostureFactsCoexist": true,
+    "differentLaneFactsCoexist": true,
+    "historicalPassProjectedToCurrentSource": false
+  },
+  "deterministicOrdering": [
+    "laneOrdinal",
+    "sourceClassOrdinal",
+    "sourceRecordOrdinal",
+    "subjectIdentity",
+    "predicateIdentity",
+    "temporalPostureOrdinal",
+    "executionPostureOrdinal",
+    "canonicalFactId"
+  ],
+  "prohibitedOperations": [
+    "REDISCOVER_OR_REPLACE_D1_INPUT_PACKAGE",
+    "CROSS_LANE_EVIDENCE_TRANSFER",
+    "COLLAPSE_DISTINCT_SOURCE_OCCURRENCES",
+    "PROJECT_HISTORICAL_ROUTE_SHELL_PASS_TO_CURRENT_PROTOTYPE",
+    "PROMOTE_PROJECT_AWARENESS_V1_TO_CURRENT",
+    "TREAT_PROTOTYPE_AS_FIFTH_COMPASS",
+    "TREAT_HOME_AS_COMPASS",
+    "SELECT_FACT_WINNER",
+    "RESOLVE_CONTRADICTIONS",
+    "CLASSIFY_BENCHMARK_DIMENSIONS",
+    "WEIGHT_EVIDENCE",
+    "COMPILE_DISPOSITIONS",
+    "EDIT_PRODUCT_SOURCE",
+    "EDIT_MAIN",
+    "MERGE",
+    "GRANT_USER_ACCEPTANCE"
+  ],
+  "claims": {
+    "d1ClosedPackageIsSoleInput": true,
+    "canonicalEvidenceFactNormalizationPerformed": true,
+    "contradictionResolutionPerformed": false,
+    "dimensionClassificationPerformed": false,
+    "evidenceWeightingPerformed": false,
+    "dispositionCompilationPerformed": false,
+    "productFilesChanged": 0,
+    "mergePerformed": false,
+    "userAcceptanceGranted": false
+  },
+  "nextCheckpoint": "D3_CANONICAL_BENCHMARK_DIMENSION_CLASSIFICATION"
+}

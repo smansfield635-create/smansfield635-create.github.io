@@ -1,0 +1,128 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "build",
+  "description": "Build public page exact-head verification for the consumer-facing spatial capability and pricing instruments.",
+  "checks": [
+    {
+      "path": "/build/index.html",
+      "includes": [
+        "Build something worth returning to.",
+        "A website used to be an address. Now it can be a destination.",
+        "data-spatial-instrument=\"capabilities\"",
+        "data-spatial-instrument=\"pricing\"",
+        "Custom Website",
+        "Interactive Experience",
+        "Browser Tool",
+        "Advanced System",
+        "Custom Essential",
+        "Custom Interactive",
+        "Custom Systems",
+        "From $750",
+        "From $1,750",
+        "Scoped after consultation",
+        "Generation 2084 environmental refinement"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/build/",
+    "timeoutMs": 45000,
+    "readySelector": "[data-spatial-instrument=\"capabilities\"][data-enhanced=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/build/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Capability orbit advances",
+        "action": {
+          "type": "click",
+          "selector": "[data-spatial-instrument=\"capabilities\"] [data-orbit-next]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-spatial-instrument=\"capabilities\"]",
+            "name": "data-orbit-index",
+            "value": "1"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-spatial-instrument=\"capabilities\"] [data-instrument-status]",
+            "value": "Interactive Experience"
+          }
+        ]
+      },
+      {
+        "name": "Pricing orbit advances independently",
+        "action": {
+          "type": "click",
+          "selector": "[data-spatial-instrument=\"pricing\"] [data-orbit-next]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-spatial-instrument=\"pricing\"]",
+            "name": "data-orbit-index",
+            "value": "1"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-spatial-instrument=\"pricing\"] [data-instrument-status]",
+            "value": "Custom Interactive"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-spatial-instrument=\"capabilities\"]",
+            "name": "data-orbit-index",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "name": "Selected pricing object opens its reader",
+        "action": {
+          "type": "click",
+          "selector": "[data-spatial-instrument=\"pricing\"] [data-orbit-object][data-front=\"true\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-spatial-instrument=\"pricing\"]",
+            "name": "data-depth-state",
+            "value": "reader"
+          },
+          {
+            "type": "exists",
+            "selector": "[data-spatial-instrument=\"pricing\"] [data-reader-index=\"1\"] [data-turn-card]"
+          }
+        ]
+      },
+      {
+        "name": "Pricing reader turns to terms",
+        "action": {
+          "type": "click",
+          "selector": "[data-spatial-instrument=\"pricing\"] [data-reader-index=\"1\"] [data-turn-toggle]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-spatial-instrument=\"pricing\"] [data-reader-index=\"1\"] [data-turn-card]",
+            "name": "data-face",
+            "value": "back"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-spatial-instrument=\"pricing\"] [data-reader-index=\"1\"] [data-turn-status]",
+            "value": "Price & terms"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+name: AI Entry Workflow Dispatch Bridge
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ai-entry-workflow-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'ai-dispatch-request-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout authoritative bridge working set from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/ai-router/workflow-dispatch-capability.v1.json
+            /tools/ai-entry-workflow-dispatch-bridge.mjs
+
+      - name: Execute bounded native workflow dispatch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REQUEST_COMMIT: ${{ github.event.pull_request.head.sha }}
+          REQUEST_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: node tools/ai-entry-workflow-dispatch-bridge.mjs

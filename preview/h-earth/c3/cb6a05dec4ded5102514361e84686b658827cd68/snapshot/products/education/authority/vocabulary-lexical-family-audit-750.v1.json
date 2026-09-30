@@ -1,0 +1,138 @@
+{
+  "object": "VOCABULARY_LEXICAL_FAMILY_AUDIT_750",
+  "version": "v1",
+  "owner": "Sean",
+  "status": "CORRECTED_PROVISIONAL_COUNT",
+  "source_scope": "All frozen vocabulary authorities through Major Level 3 Band E",
+  "counting_law": {
+    "surface_entries": 750,
+    "unit_of_count": "UNIQUE_LEXICAL_CONCEPT",
+    "rule": "Predictable grammatical/inflectional variants do not consume independent slots.",
+    "derivational_policy": "Derived forms remain separate only when they add a distinct everyday lexical concept or function."
+  },
+  "automatic_collapses": [
+    {
+      "variant": "focused",
+      "base": "focus"
+    },
+    {
+      "variant": "organized",
+      "base": "organize"
+    },
+    {
+      "variant": "higher",
+      "base": "high"
+    },
+    {
+      "variant": "lower",
+      "base": "low"
+    },
+    {
+      "variant": "does",
+      "base": "do"
+    },
+    {
+      "variant": "did",
+      "base": "do"
+    },
+    {
+      "variant": "best",
+      "base": "good"
+    },
+    {
+      "variant": "better",
+      "base": "good"
+    },
+    {
+      "variant": "worst",
+      "base": "bad"
+    },
+    {
+      "variant": "worse",
+      "base": "bad"
+    },
+    {
+      "variant": "yours",
+      "base": "your"
+    }
+  ],
+  "count": {
+    "surface_unique_entries": 750,
+    "automatic_collapses": 11,
+    "provisional_unique_lexical_concepts": 739,
+    "replacement_slots_required_at_minimum": 11
+  },
+  "semantic_review_required": [
+    {
+      "family": [
+        "meet",
+        "meeting"
+      ],
+      "status": "REVIEW"
+    },
+    {
+      "family": [
+        "lead",
+        "leader"
+      ],
+      "status": "REVIEW"
+    },
+    {
+      "family": [
+        "work",
+        "worker"
+      ],
+      "status": "REVIEW"
+    },
+    {
+      "family": [
+        "own",
+        "owner"
+      ],
+      "status": "REVIEW"
+    },
+    {
+      "family": [
+        "responsible",
+        "responsibility"
+      ],
+      "status": "REVIEW"
+    },
+    {
+      "family": [
+        "decide",
+        "decision"
+      ],
+      "status": "REVIEW"
+    },
+    {
+      "family": [
+        "solve",
+        "solution"
+      ],
+      "status": "REVIEW"
+    },
+    {
+      "family": [
+        "organize",
+        "organization"
+      ],
+      "status": "REVIEW"
+    }
+  ],
+  "interpretation": [
+    "The previously stated 750 count was a surface-string count, not a normalized lexical-concept count.",
+    "The corrected minimum count is 739 unique lexical concepts before derivational-family adjudication.",
+    "At least 11 genuinely new lexical concepts must be admitted before the system can honestly claim 750 concepts."
+  ],
+  "execution_lock": {
+    "level_4_build": "PAUSED",
+    "next_required_action": "Adjudicate review families, replace rejected redundant slots, then re-run cumulative count."
+  },
+  "traversal_state": {
+    "CURRENT_STATE": "CUMULATIVE_COUNT_CORRECTED_TO_MINIMUM_739",
+    "ACTION_PERFORMED": "Automatic grammatical variants collapsed under lexical-family law.",
+    "ENGINE_RESPONSE": "At least 11 replacement concepts required; final count may fall further after derivational review.",
+    "NEXT_REQUIRED_INPUT": "DERIVATIONAL_FAMILY_ADJUDICATION_AND_REPLACEMENT_SLOT_GENERATION"
+  }
+}

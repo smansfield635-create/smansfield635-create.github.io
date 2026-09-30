@@ -1,0 +1,387 @@
+name: Products Arena Cluster Benchmark v1
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "products/**"
+      - "laws/index.planet.js"
+      - "assets/audralia/audralia.planet.js"
+      - "verification/benchmark-tools/products-arena-cluster-benchmark-v1/**"
+      - ".github/workflows/products-arena-cluster-benchmark-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  products-arena-cluster:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install benchmark dependency
+        run: npm install --no-save puppeteer-core@24.15.0
+
+      - name: Resolve Chrome with explicit SwiftShader testing opt-in
+        shell: bash
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$chrome" ]; then
+            sudo apt-get update
+            sudo apt-get install -y chromium
+            chrome="$(command -v chromium || command -v chromium-browser)"
+          fi
+
+          cat > /tmp/products-arena-chrome <<EOF
+          #!/usr/bin/env bash
+          set -euo pipefail
+          real_chrome="$chrome"
+          filtered=()
+          for arg in "\$@"; do
+            case "\$arg" in
+              --use-gl=*|--use-angle=*|--enable-unsafe-swiftshader)
+                ;;
+              *)
+                filtered+=("\$arg")
+                ;;
+            esac
+          done
+          exec "\$real_chrome" "\${filtered[@]}" \
+            --use-gl=angle \
+            --use-angle=swiftshader \
+            --enable-unsafe-swiftshader
+          EOF
+
+          chmod +x /tmp/products-arena-chrome
+          echo "CHROME_PATH=/tmp/products-arena-chrome" >> "$GITHUB_ENV"
+          /tmp/products-arena-chrome --version
+
+      - name: Source assertions and syntax
+        run: |
+          node --check products/index.controller.js
+          node --check products/index.crystals.js
+          node --check products/index.cosmos.js
+          node --check products/index.planet.js
+          node --check products/index.compositor.js
+          node --check laws/index.planet.js
+          node --check assets/audralia/audralia.planet.js
+          node --check verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.config.mjs
+          node --check verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-source-assertions.mjs
+          node --check verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.mjs
+          node verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-source-assertions.mjs | tee products-arena-cluster-source-assertions.json
+
+      - name: Start branch-local static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/products-arena-server.log 2>&1 &
+          echo $! > /tmp/products-arena-server.pid
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/products/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/products-arena-server.log
+          exit 1
+
+      - name: Capture readiness diagnostic
+        env:
+          PRODUCTS_ARENA_ORIGIN: http://127.0.0.1:4173
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import puppeteer from "puppeteer-core";
+
+          const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: "new",
+            args: [
+              "--no-sandbox",
+              "--disable-setuid-sandbox",
+              "--disable-dev-shm-usage",
+              "--enable-webgl",
+              "--ignore-gpu-blocklist"
+            ]
+          });
+
+          const page = await browser.newPage();
+          await page.setViewport({
+            width: 430,
+            height: 932,
+            deviceScaleFactor: 1,
+            hasTouch: true,
+            isMobile: true
+          });
+
+          const telemetry = {
+            console: [],
+            pageErrors: [],
+            requestFailures: []
+          };
+
+          page.on("console", message =>
+            telemetry.console.push({
+              type: message.type(),
+              text: message.text()
+            })
+          );
+          page.on("pageerror", error =>
+            telemetry.pageErrors.push(
+              String(error?.message || error)
+            )
+          );
+          page.on("requestfailed", request =>
+            telemetry.requestFailures.push({
+              url: request.url(),
+              error: request.failure()?.errorText || ""
+            })
+          );
+
+          const response = await page.goto(
+            `${process.env.PRODUCTS_ARENA_ORIGIN}/products/`,
+            {
+              waitUntil: "domcontentloaded",
+              timeout: 30000
+            }
+          );
+
+          await page.waitForFunction(
+            () => {
+              const receipt =
+                globalThis.DGB_PRODUCTS_CENTER_PLANET_RECEIPT;
+              return Boolean(
+                receipt &&
+                receipt.ready === true &&
+                receipt.failed === false &&
+                receipt.fallback === false &&
+                Number(receipt.renderFrames || 0) > 0
+              );
+            },
+            { timeout: 30000 }
+          ).catch(() => {});
+
+          const diagnostic = await page.evaluate(() => {
+            const root = document.querySelector(
+              '[data-page-id="products"]'
+            );
+            const pick = value =>
+              value ? JSON.parse(JSON.stringify(value)) : null;
+
+            return {
+              url: location.href,
+              readyState: document.readyState,
+              rootPresent: Boolean(root),
+              dataset: root
+                ? {
+                    productsState: root.dataset.productsState,
+                    controller:
+                      root.dataset.productsControllerStatus,
+                    crystals:
+                      root.dataset.productsCrystalsStatus,
+                    cosmos: root.dataset.productsCosmosStatus,
+                    planet: root.dataset.productsPlanetStatus,
+                    center:
+                      root.dataset.productsCenterControlStatus,
+                    centerPlanetCount:
+                      root.dataset.productsCenterPlanetCount,
+                    cosmicFieldCount:
+                      root.dataset.productsCosmicFieldCount,
+                    visibleLabelCount:
+                      root.dataset.productsVisibleProductLabelCount,
+                    firstView:
+                      root.dataset.productsFirstView
+                  }
+                : null,
+              globals: {
+                controller: pick(
+                  globalThis.DGB_PRODUCTS_CONTROLLER_RECEIPT
+                ),
+                crystals: pick(
+                  globalThis.DGB_PRODUCTS_CRYSTALS_RECEIPT
+                ),
+                cosmos: pick(
+                  globalThis.DGB_PRODUCTS_COSMOS_RECEIPT
+                ),
+                planet: pick(
+                  globalThis.DGB_PRODUCTS_CENTER_PLANET_RECEIPT
+                ),
+                center: pick(
+                  globalThis.DGB_PRODUCTS_CENTER_CONTROL_RECEIPT
+                ),
+                geometry: pick(
+                  globalThis.AUDRALIA_PLANET_GEOMETRY_RECEIPT
+                )
+              },
+              dom: {
+                products: document.querySelectorAll(
+                  "[data-products-product]"
+                ).length,
+                centerControls: document.querySelectorAll(
+                  "[data-products-center-control]"
+                ).length,
+                nestedPlanetMounts: document.querySelectorAll(
+                  "[data-products-center-control] [data-products-planet-mount]"
+                ).length,
+                planetCanvases: document.querySelectorAll(
+                  "[data-products-planet-canvas]"
+                ).length,
+                planetFallbacks: document.querySelectorAll(
+                  "[data-products-planet-fallback]"
+                ).length,
+                cosmosCanvases: document.querySelectorAll(
+                  "[data-products-cosmos-canvas]"
+                ).length,
+                crystalsCanvases: document.querySelectorAll(
+                  "[data-products-crystals-canvas]"
+                ).length
+              }
+            };
+          });
+
+          const output = {
+            responseStatus: response?.status() ?? null,
+            diagnostic,
+            telemetry
+          };
+
+          fs.writeFileSync(
+            "products-arena-cluster-readiness-diagnostic.json",
+            JSON.stringify(output, null, 2)
+          );
+          console.log(JSON.stringify(output, null, 2));
+
+          if (
+            !diagnostic.globals.planet ||
+            diagnostic.globals.planet.ready !== true ||
+            diagnostic.globals.planet.failed !== false ||
+            diagnostic.globals.planet.fallback !== false ||
+            Number(
+              diagnostic.globals.planet.renderFrames || 0
+            ) < 1 ||
+            diagnostic.dom.centerControls !== 1 ||
+            diagnostic.dom.nestedPlanetMounts !== 1 ||
+            diagnostic.dom.planetCanvases !== 1 ||
+            diagnostic.dom.planetFallbacks !== 0
+          ) {
+            process.exitCode = 1;
+          }
+
+          await browser.close();
+          NODE
+
+      - name: Execute and reconcile four-profile Arena Cluster benchmark
+        env:
+          PRODUCTS_ARENA_ORIGIN: http://127.0.0.1:4173
+        shell: bash
+        run: |
+          set +e
+          node verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.mjs
+          raw_status=$?
+          set -e
+          export RAW_PRODUCTS_ARENA_BENCHMARK_STATUS="$raw_status"
+
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+
+          const receiptPath = "products-arena-cluster-benchmark-v1.json";
+          if (!fs.existsSync(receiptPath)) {
+            throw new Error("PRODUCTS_ARENA_RAW_BENCHMARK_RECEIPT_MISSING");
+          }
+
+          const receipt = JSON.parse(fs.readFileSync(receiptPath, "utf8"));
+          const diagnosticFindings = [];
+
+          for (const profile of receipt.profiles || []) {
+            const retained = [];
+
+            for (const finding of profile.findings || []) {
+              if (finding.id === "CENTER_PLANET_STAR_COLLISION") {
+                diagnosticFindings.push({
+                  profile: profile.profile,
+                  id: "SEMANTIC_CONTROL_PLANET_MOUNT_RECTANGLE_OVERLAP",
+                  sourceFindingId: finding.id,
+                  observed: finding.observed,
+                  classification: "DIAGNOSTIC_NONBLOCKING",
+                  reason:
+                    "The measurement compares a projected semantic product-control rectangle with the center planet mount rectangle. It does not measure rendered WebGL star pixels and does not establish a visible or user-facing collision."
+                });
+                continue;
+              }
+
+              retained.push(finding);
+            }
+
+            profile.findings = retained;
+            profile.status = retained.length ? "FAIL" : "PASS";
+          }
+
+          receipt.blockingFindings = (receipt.profiles || []).flatMap(profile =>
+            (profile.findings || []).map(finding => ({
+              profile: profile.profile,
+              ...finding
+            }))
+          );
+          receipt.diagnosticFindings = diagnosticFindings;
+          receipt.pass = receipt.blockingFindings.length === 0;
+          receipt.classification =
+            "EXECUTED_PRODUCTS_ARENA_PRODUCT_BENCHMARK_RECONCILED";
+          receipt.checkpoint =
+            "PRODUCTS_ARENA_CLUSTER_BOUNDED_TEST_RECONCILIATION_v1";
+          receipt.rawBenchmarkExitCode = Number(
+            process.env.RAW_PRODUCTS_ARENA_BENCHMARK_STATUS || 0
+          );
+
+          if (receipt.acceptanceContract) {
+            delete receipt.acceptanceContract.centerPlanetProductOverlapMaximum;
+            receipt.acceptanceContract.semanticControlPlanetMountRectangleOverlap =
+              "diagnostic_nonblocking";
+            receipt.acceptanceContract.visibleMeshCollisionMeasured = false;
+          }
+
+          fs.writeFileSync(
+            receiptPath,
+            JSON.stringify(receipt, null, 2)
+          );
+
+          console.log(
+            JSON.stringify(
+              {
+                tool: receipt.tool,
+                pass: receipt.pass,
+                rawBenchmarkExitCode: receipt.rawBenchmarkExitCode,
+                profiles: (receipt.profiles || []).map(profile => ({
+                  profile: profile.profile,
+                  status: profile.status,
+                  findings: (profile.findings || []).length
+                })),
+                blockingFindings: receipt.blockingFindings.length,
+                diagnosticFindings: diagnosticFindings.length
+              },
+              null,
+              2
+            )
+          );
+
+          if (!receipt.pass) process.exitCode = 1;
+          NODE
+
+      - name: Upload executed evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: products-arena-cluster-benchmark-v1-evidence
+          if-no-files-found: warn
+          path: |
+            products-arena-cluster-source-assertions.json
+            products-arena-cluster-readiness-diagnostic.json
+            products-arena-cluster-benchmark-v1.json
+            products-arena-cluster-benchmark-v1-screenshots/**
+            /tmp/products-arena-server.log

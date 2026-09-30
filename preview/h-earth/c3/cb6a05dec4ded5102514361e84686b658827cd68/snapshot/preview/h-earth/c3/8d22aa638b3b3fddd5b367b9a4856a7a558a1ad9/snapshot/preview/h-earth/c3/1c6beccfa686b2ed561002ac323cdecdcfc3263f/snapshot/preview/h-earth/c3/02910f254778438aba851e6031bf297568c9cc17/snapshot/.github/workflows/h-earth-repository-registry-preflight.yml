@@ -1,0 +1,71 @@
+name: H-Earth Automatic Repository Registry Preflight
+
+on:
+  pull_request:
+    paths:
+      - 'h-earth-3d/**'
+      - '!h-earth-3d/registry/**'
+      - '!h-earth-3d/AGENTS.md'
+      - 'showroom/globe/h-earth/**'
+      - '!showroom/globe/h-earth/AGENTS.md'
+  push:
+    paths:
+      - 'h-earth-3d/**'
+      - '!h-earth-3d/registry/**'
+      - '!h-earth-3d/AGENTS.md'
+      - 'showroom/globe/h-earth/**'
+      - '!showroom/globe/h-earth/AGENTS.md'
+
+permissions:
+  contents: read
+
+jobs:
+  automatic-h-earth-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Discover changed governed H-Earth paths
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > /tmp/all-changed-paths.txt
+          elif [[ -n "${BEFORE_SHA:-}" && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
+            git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" > /tmp/all-changed-paths.txt
+          else
+            git show --pretty='' --name-only "$CURRENT_SHA" > /tmp/all-changed-paths.txt
+          fi
+
+          grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+            | sort -u > /tmp/h-earth-changed-paths.txt || true
+
+          cat /tmp/h-earth-changed-paths.txt
+
+      - name: Execute automatic H-Earth registry preflight
+        run: |
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-changed-paths.txt \
+            --task "Automatic GitHub change preflight" \
+            --mutation-intent \
+            --output /tmp/h-earth-automatic-preflight-receipt.json
+
+      - name: Upload deterministic preflight receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-automatic-preflight-receipt
+          path: /tmp/h-earth-automatic-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 30

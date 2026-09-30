@@ -1,0 +1,188 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "research-frontier-semantic-successor-20260908",
+  "description": "Research Frontier seven-object semantic successor live verification contract.",
+  "checks": [
+    {
+      "path": "/evidence/agentic-frontier/",
+      "includes": [
+        "<title>Research Frontier — Diamond Gate Bridge</title>",
+        "The results are no longer theoretical.",
+        "Each experiment remains independently bounded; their evidence is not pooled into a universal law.",
+        "Seven research objects · Meaning ↔ Evidence",
+        "data-object='RFV3-01'",
+        "data-object='RFV3-07'",
+        "PREDICTIVE SIGNAL",
+        "MECHANISM REPLICATED",
+        "Orientation v2 selected",
+        "The constraint is shared. The evidence is not.",
+        "PROVENANCE ≠ EVIDENCE."
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/evidence/agentic-frontier/",
+    "timeoutMs": 30000,
+    "readySelector": "[data-orbit-stage]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/evidence/agentic-frontier/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 ()"
+    ],
+    "interactions": [
+      {
+        "name": "keyboard rotates to research object 02",
+        "action": {
+          "type": "key",
+          "selector": "[data-orbit-stage]",
+          "key": "ArrowRight"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-orbit-card][data-object='RFV3-02']",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-orbit-status]",
+            "value": "02 / 07"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "keyboard opens selected Meaning side",
+        "action": {
+          "type": "key",
+          "selector": "[data-orbit-stage]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "scientific"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "aria-labelledby",
+            "value": "meaning-rfv3-02-title"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "visible control turns selected object to Evidence side",
+        "action": {
+          "type": "click",
+          "selector": "[data-reader-face='scientific'] [data-flip-face='agentic']"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "agentic"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "aria-labelledby",
+            "value": "evidence-rfv3-02-title"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "keyboard opens Shared Bridge from Evidence side",
+        "action": {
+          "type": "key",
+          "selector": "[data-reader-face='agentic'] [data-open-bridge]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-bridge-open",
+            "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-shared-bridge]",
+            "value": "The constraint is shared. The evidence is not."
+          },
+          {
+            "type": "textContains",
+            "selector": "[data-shared-bridge]",
+            "value": "PROVENANCE ≠ EVIDENCE."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "keyboard closes Shared Bridge to retained Evidence side",
+        "action": {
+          "type": "key",
+          "selector": "[data-shared-bridge]:not([hidden]) [data-close-bridge]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-bridge-open",
+            "value": ""
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-reader]",
+            "name": "data-face",
+            "value": "agentic"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-evidence-field]",
+            "name": "data-active-evidence",
+            "value": "limits"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "keyboard return restores selected orbit object",
+        "action": {
+          "type": "key",
+          "selector": "[data-reader-face='agentic'] [data-return-orbit]",
+          "key": "Enter"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-orbit-card][data-object='RFV3-02']",
+            "name": "data-active",
+            "value": "true"
+          },
+          {
+            "type": "attributeContains",
+            "selector": "[data-orbit-card][data-object='RFV3-02']",
+            "name": "aria-label",
+            "value": "Evidence side"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

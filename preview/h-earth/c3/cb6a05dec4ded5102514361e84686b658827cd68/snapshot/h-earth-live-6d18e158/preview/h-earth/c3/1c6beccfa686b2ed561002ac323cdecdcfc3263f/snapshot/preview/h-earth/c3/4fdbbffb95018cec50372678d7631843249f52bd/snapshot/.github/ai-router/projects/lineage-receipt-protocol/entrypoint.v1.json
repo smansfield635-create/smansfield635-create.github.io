@@ -1,0 +1,64 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "LINEAGE_RECEIPT_PROTOCOL",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "infrastructure/lineage-receipt-protocol-v1/"
+  ],
+  "ownedExactPaths": [
+    ".github/workflows/lrpv1-conformance.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/lineage-receipt-protocol/entrypoint.v1.json",
+  "authorityBoundary": [
+    "ROUTING_DOES_NOT_CREATE_CRYPTOGRAPHIC_TRUST_OR_AUTHENTICITY",
+    "ROUTING_DOES_NOT_AUTHORIZE_MUTATION_WITHOUT_CANONICAL_REPOSITORY_OPERATION_INTAKE",
+    "LRPV1_PROVES_DECLARED_CONTENT_IDENTITY_AND_TAMPER_EVIDENCE_WITHIN_ITS_SPECIFIED_TRUST_BOUNDARY_NOT_FACTUAL_TRUTH",
+    "LRPV1_MAY_WRAP_FROZEN_ROUTE_OPERATOR_RECEIPTS_BUT_MAY_NOT_REINTERPRET_OR_MUTATE_THEIR_LEGACY_HASH_CONTRACT",
+    "LRPV1_ROUTING_AUTHORITY_DOES_NOT_MUTATE_IMI_INSTRUMENT_MATHEMATICS_SCIENTIFIC_STATUS_OR_FROZEN_PACKAGES"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/execution-backends.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/lrpv1-router-receipt.json",
+    "conformanceWorkflow": ".github/workflows/lrpv1-conformance.yml",
+    "legacyBoundary": "ROUTE_OPERATOR_CANONICAL_V1_MUST_REMAIN_VERIFIABLE_UNDER_ITS_ORIGINAL_SERIALIZATION_AND_HASH_CONTRACT",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "BOUNDED_LRPV1_CONSTRUCTION",
+      "PYTHON_REFERENCE_CONFORMANCE",
+      "ECMASCRIPT_REFERENCE_CONFORMANCE",
+      "CROSS_LANGUAGE_INTEROPERABILITY",
+      "LEGACY_ROUTE_OPERATOR_COMPATIBILITY",
+      "DRAFT_PR_REVIEW"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH"
+    ]
+  },
+  "githubActionsExecution": {
+    "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
+    "lrpv1ConformanceWorkflow": ".github/workflows/lrpv1-conformance.yml"
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_OR_STOP",
+    "STOP_IF_REFERENCE_IMPLEMENTATIONS_DISAGREE_ON_A_CONFORMANCE_VECTOR",
+    "STOP_IF_LEGACY_ROUTE_OPERATOR_HASHES_ARE_REINTERPRETED",
+    "STOP_IF_LRPV1_IS_USED_TO_CLAIM_FACTUAL_TRUTH_OR_SOURCE_AUTHENTICITY_NOT_ESTABLISHED_BY_AN_EXTERNAL_TRUST_LAYER"
+  ]
+}

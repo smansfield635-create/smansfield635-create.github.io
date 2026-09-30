@@ -1,0 +1,204 @@
+{
+  "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "supersedes": "constructionExecutionPlan embedded in route-display-contract.v1.json",
+  "scope": "COMPASS_ONLY",
+  "purpose": "Bind the post-merge visual reassessment into a construction-adjacent plan so the next Compass renewal is executed from the adopted decisions rather than conversation memory.",
+  "constructionLaw": "Every Compass visual or interaction mutation must map to this plan. Preserve proven constellation geometry, four-cardinal authority, Mirrorland threshold identity, navigation authority, return behavior, accessibility, and Fibonacci cosmos discipline unless a bounded defect requires correction.",
+  "pageIdentity": {
+    "role": "The Compass is both the estate's global orientation instrument and the primary public introduction to Diamond Gate Bridge.",
+    "narrative": [
+      "WHAT_IS_DIAMOND_GATE",
+      "WHY_DOES_IT_EXIST",
+      "HOW_DO_I_NAVIGATE_IT",
+      "WHAT_MAKES_IT_DIFFERENT",
+      "WHERE_DO_I_GO_NEXT"
+    ],
+    "visualTarget": "Adopt the Laws Chamber's decisive hierarchy and asymmetrical editorial confidence without copying Laws authority or F.I.R.S.T. semantics. Compass must feel like an instrument, not an instruction manual or stacked encyclopedia."
+  },
+  "opening": {
+    "copy": "PRESERVE_EXISTING_INTRODUCTION_IN_FULL",
+    "defaultState": "COLLAPSED",
+    "control": "WHY_THE_COMPASS_EXISTS_OR_READ_THE_INTRODUCTION",
+    "law": "The long introduction remains available intact but must not consume the initial page experience.",
+    "composition": "Compact hero/orientation followed quickly by the primary Compass experience. Use Laws-style hierarchy, asymmetry, breathing room, and progressive disclosure."
+  },
+  "interactionGuidance": {
+    "law": "GUIDANCE_MUST_FOLLOW_ACTUAL_RUNTIME_STATE; DO_NOT_EXPOSE_CONTROLS_BEFORE_THEY_FUNCTION.",
+    "globalConstellation": "Drag to rotate the constellation. Tap a primary star to open its cluster.",
+    "clusterOpen": "Drag to rotate the cluster. Tap a room star to select it. Swipe across open space to return to the constellation.",
+    "roomSelected": "Preserve cluster guidance, show selected-room context, and expose the explicit Enter action.",
+    "mirrorland": "Show the three-route threshold and an explicit Back to Compass control.",
+    "remove": [
+      "STATIC_SIGNATURE_COMPASS_INTERACTION_INSTRUCTION_DECK",
+      "THREE_NUMBERED_INSTRUCTION_BOXES",
+      "GLOBAL_SWIPE_TO_ROTATE_CLAIM"
+    ]
+  },
+  "mirrorland": {
+    "identity": "VISIBLE_PLAYFUL_HIDDEN_ENTRANCE_NOT_DIFFICULT_SCAVENGER_HUNT",
+    "promptIntent": "Invite the visitor to find the hidden entrance to Mirrorland inside the Compass without pretending it is hard to discover.",
+    "prohibitedCopyIntent": "SEE_IF_YOU_CAN_FIND_IT",
+    "routes": {
+      "Enter the Narrative": "SHOWROOM",
+      "Enter the Demo": "H_EARTH",
+      "See the World Map": "AUDRALIA_OBSERVATORY_PLANETARY_MAP"
+    },
+    "notice": "All three experiences remain under construction, but visitors are welcome to explore.",
+    "law": "Mirrorland remains a discovery threshold, never a fifth cardinal and never a direct Showroom redirect."
+  },
+  "stateArchitecture": {
+    "GLOBAL_CONSTELLATION_ROTATION": "As a cardinal comes forward, update the adjacent/lower context preview to Orientation, Worlds, Instruments, or Frontier without navigation.",
+    "CARDINAL_OPEN": "Opening a cardinal enters its room cluster and changes context to cluster-level meaning.",
+    "CLUSTER_ROTATION": "As each miniature room star comes forward, update the adjacent/lower context to that room's mini-page preview immediately, before selection.",
+    "ROOM_PREVIEW": "Preview explains the currently forward room and does not expose Enter.",
+    "ROOM_SELECTED": "Tap/select commits the room state and exposes the room-specific Enter action.",
+    "ENTER": "Only explicit Enter navigates away.",
+    "WITHDRAWAL": "Swipe across open cluster space returns to the constellation; explicit return controls preserve recoverable orientation.",
+    "criticalInvariant": "ROOM_PREVIEW_IS_NOT_ROOM_SELECTED"
+  },
+  "contextContent": {
+    "renewalRequired": true,
+    "scope": "All four cardinal descriptions and every room mini-page/preview must reflect current estate meaning.",
+    "pattern": "Compact kicker, strong title, concise meaning, practical orientation cue; add Enter only after selection.",
+    "law": "The visual star and explanatory state remain synchronized at cardinal and room levels."
+  },
+  "mathematicalFoundation": {
+    "compassStatus": "REMOVE",
+    "preservationStatus": "PRESERVE_IMPLEMENTATION_AND_DESIGN_FOR_RELOCATION",
+    "reason": "The current mathematical foundation is visually successful but conceptually abstract for the primary orientation/introduction surface and interrupts Compass identity.",
+    "law": "Do not delete the design or content from repository history; identify an authoritative future home before destructive cleanup."
+  },
+  "builtDifferent": {
+    "status": "RESTORE_AND_PROMOTE_TO_MAJOR_PAGE_FEATURE",
+    "purpose": "Answer why Diamond Gate Bridge is worth paying attention to using bounded, defensible technological and operational accomplishments.",
+    "visualRole": "MONUMENTAL_CREDIBILITY_AND_TECHNOLOGY_FEATURE",
+    "candidateHighlights": [
+      "SOFTWARE_TRL_7_STRENGTHENED_POST_CONSOLIDATION_OPERATIONALLY_RECONFIRMED",
+      "GOVERNED_SOFTWARE_CONSTRUCTION_PLATFORM",
+      "CANONICAL_AUTHORITY_LOCKING_QUALIFICATION_AND_RECOVERY_CONTROL_PLANE",
+      "STATE_LED_INTERACTIVE_ARCHITECTURE",
+      "WHOLE_ESTATE_DISPLAY_AND_NARRATIVE_CONTINUITY",
+      "DETERMINISTIC_FIBONACCI_COSMOS_AND_SPATIAL_PRESENTATION_METHODS",
+      "EVIDENCE_GOVERNANCE_AND_VERIFICATION_MACHINERY",
+      "OTHER_CURRENT_HIGH_VALUE_BENCHMARKS_THAT_CAN_BE_CITED_WITHOUT_OVERCLAIMING"
+    ],
+    "claimLaw": "Compass may summarize bounded achievements but must route proof, validation, governance, awards, and technical custody to their authoritative pages. Do not manufacture or inflate claims.",
+    "composition": "One dominant statement plus a small number of high-value proof points with progressive disclosure; avoid a long technical list."
+  },
+  "cuttingEdgeFeatureMonuments": {
+    "status": "MANDATORY",
+    "features": [
+      {
+        "name": "COHERENCE_DIAGNOSTIC",
+        "role": "Cutting-edge assessment/instrument entry point",
+        "displayLaw": "Give it monumental visual treatment appropriate to a flagship capability, not a minor utility card.",
+        "routeLaw": "Preserve its existing authoritative destination and do not duplicate the diagnostic itself on Compass."
+      },
+      {
+        "name": "TALK_TO_THE_HOUSE",
+        "role": "Estate intelligence/guidance entry point",
+        "displayLaw": "Give it monumental visual treatment appropriate to a flagship estate-intelligence capability, not a small fallback prompt.",
+        "routeLaw": "Preserve House authority; Compass introduces and routes to the capability rather than absorbing it."
+      }
+    ],
+    "relationship": "These are signature Diamond Gate capabilities and must be intentionally staged as major reasons to explore the estate, while remaining distinct from Built Different proof claims."
+  },
+  "commercialContinuation": {
+    "status": "RESTORE",
+    "feature": "BUILD_YOUR_OWN_CUSTOM_SITE",
+    "placement": "DIRECTLY_ADJACENT_TO_OR_IMMEDIATELY_AFTER_BUILT_DIFFERENT",
+    "narrative": "BUILT_DIFFERENT -> SEE_THE_PROOF -> BUILD_YOUR_OWN",
+    "law": "The construction CTA should feel like the practical continuation of demonstrated capability, not an unrelated footer advertisement."
+  },
+  "requiredPageSequence": [
+    "COMPACT_COMPASS_HERO_AND_IDENTITY",
+    "COLLAPSED_FULL_INTRODUCTION_AVAILABLE_ON_INTENT",
+    "PRIMARY_COMPASS_INSTRUMENT_WITH_STATE_SPECIFIC_GUIDANCE",
+    "CARDINAL_AND_ROOM_LIVE_CONTEXT_PREVIEWS",
+    "MIRRORLAND_DISCOVERY_THRESHOLD_WHEN_OPENED",
+    "MONUMENTAL_COHERENCE_DIAGNOSTIC_AND_TALK_TO_THE_HOUSE_FEATURES",
+    "BUILT_DIFFERENT_TECHNOLOGY_AND_CREDIBILITY_FEATURE",
+    "BUILD_YOUR_OWN_CUSTOM_SITE_CONTINUATION",
+    "SELECTIVE_AUTHORITATIVE_OUTBOUND_ROUTES"
+  ],
+  "fibonacciStarryNight": {
+    "status": "PRESERVE_EXISTING_REPOSITORY_OWNED_SOURCE",
+    "sharedCore": "assets/build/fibonacci-cosmos-core-v7.js",
+    "sharedWrapper": "assets/build/fibonacci-cosmos.js",
+    "lawsScenePrecedent": "laws/index.cosmos.js",
+    "geometry": "DETERMINISTIC_GOLDEN_ANGLE_PHYLLOTAXIS_WITH_BOUNDED_JITTER_AND_SPARSE_SPARKLE",
+    "prohibited": [
+      "GENERIC_CSS_STARFIELD",
+      "UNBOUNDED_DENSITY",
+      "BACKGROUND_COMPETING_WITH_COPY_OR_COMPASS",
+      "BACKGROUND_NAVIGATION_AUTHORITY"
+    ]
+  },
+  "directEstateAdoptions": {
+    "LAWS_CHAMBER": [
+      "RUTHLESS_PUBLIC_HIERARCHY",
+      "ASYMMETRICAL_EDITORIAL_COMPOSITION",
+      "COLLAPSED_SECONDARY_EXPLANATION",
+      "CINEMATIC_BREATHING_ROOM",
+      "INTERACTIVE_OBJECT_EARLY"
+    ],
+    "GOVERNANCE": [
+      "ACTIVE_STATE_DRIVES_SINGLE_CONTEXT_FEATURE",
+      "PEER_RECESSION_AND_SELECTED_STATE_EMPHASIS"
+    ],
+    "BUILD": [
+      "PRACTICAL_FIRST_FEATURE",
+      "CAPABILITY_TO_COMMERCIAL_CONTINUATION"
+    ],
+    "EVIDENCE": [
+      "BOUNDED_CLAIMS_AND_OUTBOUND_PROOF_AUTHORITY",
+      "PROGRESSIVE_TECHNICAL_DEPTH"
+    ],
+    "AWARDS": [
+      "CINEMATIC_STORY_PACING",
+      "ONE_STRONG_FEATURE_INSTEAD_OF_STACKED_ESSAYS"
+    ]
+  },
+  "removeOrDemote": [
+    "CURRENT_EXPANDED_INTRODUCTION_FROM_DEFAULT_VIEW",
+    "STATIC_SIGNATURE_INTERACTION_DECK",
+    "GLOBAL_SWIPE_INSTRUCTION",
+    "CURRENT_COMPASS_MATHEMATICAL_FOUNDATION_SECTION",
+    "REDUNDANT_ENCYCLOPEDIC_LOWER_PAGE_TAXONOMY"
+  ],
+  "preserve": [
+    "FULL_INTRODUCTION_COPY",
+    "FOUR_CARDINAL_AUTHORITY",
+    "PROVEN_CONSTELLATION_AND_CLUSTER_GEOMETRY",
+    "MIRRORLAND_THRESHOLD_IDENTITY",
+    "EXPLICIT_NAVIGATION_AUTHORITY",
+    "RETURN_AND_RECOVERY_BEHAVIOR",
+    "KEYBOARD_TOUCH_AND_REDUCED_MOTION_EQUIVALENCE",
+    "FIBONACCI_STARRY_NIGHT_SOURCE",
+    "MATHEMATICAL_FOUNDATION_DESIGN_FOR_RELOCATION"
+  ],
+  "qualification": {
+    "userScreenshotReviewRequired": false,
+    "screenshots": "Internal Playwright/filtering evidence only unless the user explicitly requests them.",
+    "requiredBehavior": [
+      "INTRO_COLLAPSED_BY_DEFAULT_AND_FULL_COPY_RECOVERABLE",
+      "GLOBAL_GUIDANCE_CONTAINS_NO_FALSE_SWIPE_ROTATION_CLAIM",
+      "CLUSTER_GUIDANCE_EXPOSES_SWIPE_RETURN_ONLY_WHEN_CLUSTER_IS_OPEN",
+      "CARDINAL_ROTATION_UPDATES_CONTEXT_PREVIEW_WITHOUT_NAVIGATION",
+      "CLUSTER_ROTATION_UPDATES_ROOM_PREVIEW_WITHOUT_SELECTION",
+      "ROOM_PREVIEW_HAS_NO_ENTER_ACTION",
+      "ROOM_SELECTION_EXPOSES_CORRECT_ENTER_ACTION",
+      "MIRRORLAND_PROMPT_IS_INVITATIONAL_NOT_FAKE_SCAVENGER_HUNT",
+      "MIRRORLAND_ROUTES_MATCH_SHOWROOM_H_EARTH_AUDRALIA_OBSERVATORY",
+      "COHERENCE_DIAGNOSTIC_AND_TALK_TO_THE_HOUSE_ARE_VISUALLY_MAJOR",
+      "BUILT_DIFFERENT_IS_VISUALLY_MAJOR_AND_CLAIMS_ARE_BOUNDED",
+      "BUILD_YOUR_OWN_SITE_IS_ADJACENT_TO_BUILT_DIFFERENT",
+      "MATHEMATICAL_FOUNDATION_IS_REMOVED_FROM_COMPASS_BUT_PRESERVED_FOR_RELOCATION",
+      "DESKTOP_TABLET_PHONE_REFLOW_WITHOUT_HORIZONTAL_OVERFLOW",
+      "KEYBOARD_TOUCH_REDUCED_MOTION_AND_RETURN_BEHAVIOR_PASS"
+    ],
+    "mergeLaw": "Exact-candidate automated engineering and Playwright visual/interaction qualification must pass before merge. Screenshots are filtering evidence, not a user approval gate. Obvious visual or behavioral defects discovered by the filter must be corrected and the exact candidate requalified before merge."
+  },
+  "handoffLaw": "A new construction room must load this file first, then the Compass entrypoint, route-display contract, display continuity constitution, narrative continuity map, and current live Compass source before mutation. It must not reconstruct these adopted decisions from chat history."
+}

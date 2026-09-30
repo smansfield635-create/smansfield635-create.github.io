@@ -1,0 +1,31 @@
+{
+  "schema": "CHARACTERS_LEGACY_SOURCE_IDENTITY_v1",
+  "status": "BOUND_EXACT_SOURCE",
+  "operationId": "CHARACTERS_RECONSTRUCTION_TASK15_20260830_HEAD_30f500a1",
+  "lockGeneration": 1882,
+  "governingBase": "30f500a171c76cd96cfe82eca14bc49971e930f7",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "path": "characters/index.html",
+  "blobSha": "abafc0bc1f4b6538028833c47103596411ff3f3a",
+  "byteLength": 117417,
+  "sourceIssue": 2377,
+  "sourceIssueStatement": "Exact source identity and hard dossier preservation law",
+  "sourceIdentityVerification": {
+    "blobAtGoverningBaseMatchesIssue2377": true,
+    "sameBlobImpliesSameBytes": true,
+    "pageMutationPerformedAtThisLayer": false
+  },
+  "narrativeParents": [
+    "control-plane/whole-estate/narrative-spine-constitution-v1/narrative-spine.v1.json",
+    "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json"
+  ],
+  "inheritedNarrativeRole": "NARRATIVE_MIRRORLAND_WORLDS_CHARACTERS = UNSEEN_OR_UNFINISHED_CONDITION_TO_FELT_MEANING_TO_CHOICE_OR_BECOMING",
+  "preservationLaw": "The exact legacy source blob is the immutable comparison authority for pre-existing dossier literals and route destinations. Presentation may be recomposed; legacy character truth may not be paraphrased, shortened, invented, silently omitted, or structurally orphaned.",
+  "authorityBoundary": [
+    "NO_PAGE_MUTATION_BY_THIS_ARTIFACT",
+    "NO_CHARACTER_REGISTRY_RUNTIME_MUTATION",
+    "NO_MERGE_AUTHORITY",
+    "NO_DEPLOYMENT_AUTHORITY",
+    "NO_PUBLICATION_AUTHORITY"
+  ]
+}

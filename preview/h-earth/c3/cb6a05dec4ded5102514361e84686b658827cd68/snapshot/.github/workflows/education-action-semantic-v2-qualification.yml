@@ -1,0 +1,35 @@
+name: Education Action Semantic v2 Qualification
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify bounded complement contract
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=10 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = products/education/index.html
+          git show "$CANDIDATE_SHA:products/education/index.html" > /tmp/e.html
+          node <<'NODE'
+          const fs=require('fs'),s=fs.readFileSync('/tmp/e.html','utf8');
+          const m=s.match(/accepted:\[([^\]]+)\]/); if(!m)throw Error('NO_ACCEPTANCE_SET');
+          const accepted=JSON.parse('['+m[1]+']');
+          const check=v=>accepted.includes(v.trim().toLowerCase().replace(/[.!?]+$/,'').trim());
+          for(const v of ['music','dogs','pizza','Apple','Apples','books','coffee','sports.']) if(!check(v))throw Error('EXPECTED_PASS:'+v);
+          for(const v of ['do','walk','walking','asdf','123','run']) if(check(v))throw Error('EXPECTED_RETRY:'+v);
+          console.log('ACTION_SEMANTIC_V2=PASS');
+          NODE

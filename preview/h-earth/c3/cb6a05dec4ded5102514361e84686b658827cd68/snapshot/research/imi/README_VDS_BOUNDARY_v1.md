@@ -1,0 +1,1 @@
+This branch contains the post-threshold-failure viable decision-space test. It preserves the failed integer IMI 3→4 confirmation as binding evidence and tests a theory-derived continuous reachability proxy on an untouched corporate cohort.

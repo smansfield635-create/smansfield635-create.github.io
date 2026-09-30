@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "COMPASS_BRAIN_V11_PRECONSTRUCTION_RECEIPT_SCHEMA_v1",
+  "title": "Brain V11 Preconstruction Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specificationIdentity","metricIdentity","coordinateFrame","landmarks","sectionProfiles","interfaces","scores","hardFails","decision"],
+  "properties": {
+    "specificationIdentity": {"const":"COMPASS_BRAIN_V11_LANDMARK_SPEC_v1"},
+    "metricIdentity": {"const":"COMPASS_BRAIN_V11_PRECONSTRUCTION_METRIC_v1"},
+    "coordinateFrame": {"const":"BRAIN_V11_AP_LENGTH_NORMALIZED_FRAME_v1"},
+    "landmarks": {
+      "type":"object",
+      "minProperties":50,
+      "additionalProperties": {
+        "type":"array","prefixItems":[{"type":"number"},{"type":"number"},{"type":"number"}],"minItems":3,"maxItems":3
+      }
+    },
+    "sectionProfiles": {
+      "type":"object",
+      "required":["left","right"],
+      "properties": {
+        "left":{"$ref":"#/$defs/profileSet"},
+        "right":{"$ref":"#/$defs/profileSet"}
+      },
+      "additionalProperties":false
+    },
+    "interfaces": {
+      "type":"array",
+      "minItems":7,
+      "items": {
+        "type":"object",
+        "required":["id","parent","child","centroid","normal","footprint","depth"],
+        "properties": {
+          "id":{"type":"string"},"parent":{"type":"string"},"child":{"type":"string"},
+          "centroid":{"$ref":"#/$defs/vec3"},"normal":{"$ref":"#/$defs/vec3"},
+          "footprint":{"type":"array","items":{"type":"number"},"minItems":2,"maxItems":3},
+          "depth":{"type":"number"}
+        },
+        "additionalProperties":false
+      }
+    },
+    "scores": {
+      "type":"object",
+      "required":["L","C","B","F","I","R","S","Y","ALCM"],
+      "properties": {
+        "L":{"type":"number","minimum":0,"maximum":1},"C":{"type":"number","minimum":0,"maximum":1},
+        "B":{"type":"number","minimum":0,"maximum":1},"F":{"type":"number","minimum":0,"maximum":1},
+        "I":{"type":"number","minimum":0,"maximum":1},"R":{"type":"number","minimum":0,"maximum":1},
+        "S":{"type":"number","minimum":0,"maximum":1},"Y":{"type":"number","minimum":0,"maximum":1},
+        "ALCM":{"type":"number","minimum":0,"maximum":1}
+      },
+      "additionalProperties":false
+    },
+    "hardFails": {
+      "type":"object",
+      "required":["H1","H2","H3","H4","H5","H6","H7","H8","H9","H10"],
+      "additionalProperties":{"type":"boolean"}
+    },
+    "decision":{"enum":["PASS","HOLD"]}
+  },
+  "$defs": {
+    "vec3":{"type":"array","prefixItems":[{"type":"number"},{"type":"number"},{"type":"number"}],"minItems":3,"maxItems":3},
+    "station":{"type":"object","required":["W","U","D","M","K"],"properties":{"W":{"type":"number"},"U":{"type":"number"},"D":{"type":"number"},"M":{"type":"number"},"K":{"type":"number"}},"additionalProperties":false},
+    "profileSet":{"type":"object","required":["Z0","Z1","Z2","Z3","Z4","Z5","Z6"],"properties":{"Z0":{"$ref":"#/$defs/station"},"Z1":{"$ref":"#/$defs/station"},"Z2":{"$ref":"#/$defs/station"},"Z3":{"$ref":"#/$defs/station"},"Z4":{"$ref":"#/$defs/station"},"Z5":{"$ref":"#/$defs/station"},"Z6":{"$ref":"#/$defs/station"}},"additionalProperties":false}
+  }
+}

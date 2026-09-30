@@ -1,0 +1,19 @@
+{
+  "schema": "DGB_LIVE_QUALIFICATION_MANIFEST_v1",
+  "projectId": "H_EARTH_STAGE1_STABLE_INSPECTION",
+  "publicRoute": "/inspection/h-earth/stage1-cost-decoupling/showroom/globe/audralia/weather-presentation-reconciliation/",
+  "stage": {
+    "mode": "adapter",
+    "adapter": ".github/live-qualification/adapters/h-earth-stage1-stage.v1.sh"
+  },
+  "publicByteAssertions": [
+    {
+      "sourcePath": ".github/live-qualification/fixtures/h-earth-stage1/fap1-stage1-cost-decoupling-v1.mjs",
+      "publicPath": "/inspection/h-earth/stage1-cost-decoupling/showroom/globe/audralia/fap1-stage1-cost-decoupling-v1.mjs"
+    }
+  ],
+  "runtime": {
+    "required": true,
+    "verifier": ".github/live-qualification/verifiers/h-earth-stage1-runtime.v1.mjs"
+  }
+}

@@ -1,0 +1,210 @@
+name: H-Earth Exact Public Corridor A-B Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact candidate SHA to execute
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  exact-public-corridor-ab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 1
+
+      - name: Require exact checked-out SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+
+      - name: Prove protected renderer identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object showroom/globe/h-earth/renderer.js)" = "799d37cec5244e6aa19b7d94dffe37e182b85884"
+          test "$(git hash-object h-earth-live-6d18e158/showroom/globe/h-earth/renderer.js)" = "799d37cec5244e6aa19b7d94dffe37e182b85884"
+          cmp --silent showroom/globe/h-earth/renderer.js h-earth-live-6d18e158/showroom/globe/h-earth/renderer.js
+
+      - name: Build two exact public-route workspaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hearth-ab/A/showroom/globe /tmp/hearth-ab/B/showroom/globe
+          mkdir -p /tmp/hearth-ab/A/h-earth-3d /tmp/hearth-ab/B/h-earth-3d
+          cp -a showroom/globe/h-earth /tmp/hearth-ab/A/showroom/globe/
+          cp -a showroom/globe/h-earth /tmp/hearth-ab/B/showroom/globe/
+          # H-Earth's public module graph crosses multiple h-earth-3d domains.
+          # Materialize that bounded product root once rather than discovering leaves by repeated browser failure.
+          cp -a h-earth-3d /tmp/hearth-ab/A/
+          cp -a h-earth-3d /tmp/hearth-ab/B/
+          test -f /tmp/hearth-ab/A/h-earth-3d/terrain/h-earth.terrain-field.js
+          test -f /tmp/hearth-ab/B/h-earth-3d/terrain/h-earth.terrain-field.js
+          test -f /tmp/hearth-ab/A/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+          test -f /tmp/hearth-ab/B/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+          test -f /tmp/hearth-ab/A/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          test -f /tmp/hearth-ab/B/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          test -f showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          test -f /tmp/hearth-ab/A/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          test -f /tmp/hearth-ab/B/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          cp h-earth-3d/inspection/public-corridor-ab/current/compositor.js /tmp/hearth-ab/A/showroom/globe/h-earth/compositor.js
+          cp h-earth-3d/inspection/public-corridor-ab/live-target-y/compositor.js /tmp/hearth-ab/B/showroom/globe/h-earth/compositor.js
+          cmp --silent /tmp/hearth-ab/A/showroom/globe/h-earth/renderer.js /tmp/hearth-ab/B/showroom/globe/h-earth/renderer.js
+          test "$(git hash-object /tmp/hearth-ab/A/showroom/globe/h-earth/renderer.js)" = "799d37cec5244e6aa19b7d94dffe37e182b85884"
+          test "$(git hash-object /tmp/hearth-ab/B/showroom/globe/h-earth/renderer.js)" = "799d37cec5244e6aa19b7d94dffe37e182b85884"
+
+      - name: Install bounded Chromium
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute A and B through actual public route
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory /tmp/hearth-ab/A >/tmp/hearth-a-server.log 2>&1 &
+          A_PID=$!
+          python3 -m http.server 4174 --directory /tmp/hearth-ab/B >/tmp/hearth-b-server.log 2>&1 &
+          B_PID=$!
+          trap 'kill $A_PID $B_PID 2>/dev/null || true' EXIT
+          for port in 4173 4174; do
+            for i in $(seq 1 40); do
+              curl --fail --silent "http://127.0.0.1:$port/showroom/globe/h-earth/" >/dev/null && break
+              sleep 1
+            done
+          done
+          mkdir -p /tmp/hearth-ab-evidence
+          cat > h-earth-ab-run.mjs <<'NODE'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+
+          const out='/tmp/hearth-ab-evidence';
+          const targetSha=process.env.TARGET_SHA;
+          const cases=[
+            {id:'A_CURRENT',url:'http://127.0.0.1:4173/showroom/globe/h-earth/'},
+            {id:'B_LIVE_TARGET_Y',url:'http://127.0.0.1:4174/showroom/globe/h-earth/'}
+          ];
+          const browser=await chromium.launch({headless:true});
+          const results=[];
+          try {
+            for (const c of cases) {
+              const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});
+              const page=await context.newPage();
+              const errors=[];
+              page.on('pageerror',e=>errors.push(e.message));
+              page.on('console',m=>{if(m.type()==='error') errors.push(m.text())});
+              const requestsFailed=[];
+              const responses=[];
+              page.on('requestfailed',request=>requestsFailed.push({url:request.url(),failure:request.failure()}));
+              page.on('response',response=>{
+                const u=response.url();
+                responses.push({url:u,status:response.status(),contentType:response.headers()['content-type']||null});
+              });
+              await page.goto(c.url,{waitUntil:'networkidle',timeout:180000});
+              const readiness = await page.waitForFunction(() => {
+                const text = document.body?.innerText || '';
+                const failed = /Initialization failed\.|RENDERER_CONSTRUCTION_EXCEPTION/.test(text);
+                const initializationVisible =
+                  /H-EARTH · LIVE WORLD INITIALIZATION|Constructing world renderer|Entering the coast\./i.test(text);
+                const liveEnvironmentResolved =
+                  /LIVE ENVIRONMENT/i.test(text) &&
+                  /H_EARTH_GROUND_CELL_001:[A-Z0-9:]+/i.test(text);
+                const mounted =
+                  window.H_EARTH_3D_RENDERER != null ||
+                  window.H_EARTH_3D_RENDERER_CONTRACT != null ||
+                  /RENDERER_MOUNTED|Entering complete|World ready|Initialization complete/i.test(text) ||
+                  (!initializationVisible && liveEnvironmentResolved);
+                return failed ? 'FAILED' : mounted ? 'READY' : false;
+              }, null, { timeout: 120000 }).then(h => h.jsonValue()).catch(() => 'TIMEOUT');
+              const state=await page.evaluate(() => ({
+                title:document.title,
+                bodyText:(document.body?.innerText||'').slice(0,2000),
+                htmlClass:document.documentElement.className,
+                bodyClass:document.body?.className||'',
+                scripts:[...document.scripts].map(s=>s.src||'inline'),
+                rendererModel: window.H_EARTH_3D_RENDERER?.outputModel ?? window.H_EARTH_3D_RENDERER_CONTRACT?.outputModel ?? null
+              }));
+              const screenshot=`${out}/${c.id}.png`;
+              await page.screenshot({path:screenshot,fullPage:true});
+              const bytes=await fs.readFile(screenshot);
+              results.push({...c,readiness,state,errors,requestsFailed,responses,screenshot:`${c.id}.png`,screenshotSha256:crypto.createHash('sha256').update(bytes).digest('hex')});
+              await context.close();
+            }
+          } finally { await browser.close(); }
+          const receipt={
+            schema:'H_EARTH_EXACT_PUBLIC_CORRIDOR_AB_PREVIEW_v1',
+            targetSha,
+            publicRoute:'/showroom/globe/h-earth/',
+            corridor:['index.html','index.js','compositor.js','renderer.js','DOM/CSS'],
+            rendererBlob:'799d37cec5244e6aa19b7d94dffe37e182b85884',
+            variantA:'CURRENT_BOUNDED_TARGET_Y',
+            variantB:'PRESERVED_LIVE_FIXED_GROUND_OBSERVER_EYE_HEIGHT',
+            actualBrowserExecution:true,
+            results
+          };
+          await fs.writeFile(`${out}/receipt.json`,JSON.stringify(receipt,null,2)+'\n');
+          const failed=results.filter(r => r.readiness !== 'READY' || /Initialization failed\.|RENDERER_CONSTRUCTION_EXCEPTION/.test(r.state.bodyText) || r.errors.length>0);
+          console.log(JSON.stringify(receipt,null,2));
+          if (failed.length) {
+            console.error(JSON.stringify({status:'PUBLIC_ROUTE_INITIALIZATION_FAILED',failed},null,2));
+            process.exitCode=1;
+          }
+          NODE
+          node h-earth-ab-run.mjs
+
+      - name: Build owner-inspection Pages payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/A
+          mkdir -p /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/B
+          cp -a /tmp/hearth-ab/A/. /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/A/
+          cp -a /tmp/hearth-ab/B/. /tmp/hearth-pages/preview/h-earth/corridor/${{ inputs.target_sha }}/B/
+          touch /tmp/hearth-pages/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload owner-inspection Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/hearth-pages
+
+      - name: Deploy owner-inspection Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Upload physical-inspection evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-exact-public-corridor-ab-${{ inputs.target_sha }}
+          path: |
+            /tmp/hearth-ab-evidence
+            /tmp/hearth-a-server.log
+            /tmp/hearth-b-server.log
+          if-no-files-found: error
+          retention-days: 30

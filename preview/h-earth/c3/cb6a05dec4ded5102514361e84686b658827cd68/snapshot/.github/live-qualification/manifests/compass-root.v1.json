@@ -1,0 +1,28 @@
+{
+  "schema": "DGB_LIVE_QUALIFICATION_MANIFEST_v1",
+  "projectId": "compass-root",
+  "publicRoute": "/",
+  "stage": {
+    "mode": "default",
+    "adapter": null
+  },
+  "publicByteAssertions": [
+    {"sourcePath": "index.html", "publicPath": "/index.html"},
+    {"sourcePath": "assets/compass/compass.controller.js", "publicPath": "/assets/compass/compass.controller.js"},
+    {"sourcePath": "assets/compass/compass.crystals.js", "publicPath": "/assets/compass/compass.crystals.js"},
+    {"sourcePath": "assets/compass/compass.presentation-convergence.js", "publicPath": "/assets/compass/compass.presentation-convergence.js"},
+    {"sourcePath": "assets/compass/compass.capability-carousel.js", "publicPath": "/assets/compass/compass.capability-carousel.js"}
+  ],
+  "runtime": {
+    "required": true,
+    "verifier": ".github/live-qualification/verifiers/compass-root.v1.mjs",
+    "acceptanceContract": "docs/COMPASS_AUDIT_DERIVED_ACCEPTANCE_CONTRACT_20260822.md",
+    "criteria": [
+      "AUDIT_CONTEXTUAL_ALIGNMENT",
+      "AUDIT_SETTLED_GEOMETRY",
+      "AUDIT_SINGLE_SETTLED_LABEL",
+      "AUDIT_FOUR_STAR_PRESENCE",
+      "AUDIT_RELEASE_STABILITY"
+    ]
+  }
+}

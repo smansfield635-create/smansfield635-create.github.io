@@ -1,0 +1,12 @@
+{
+  "file_count": 5,
+  "files": {
+    "SCIENTIFIC_EXECUTION_REPORT.md": "59ac353c3d6952fd33a71b5aeb8d636acba148e80ac18c93c1a5ec5294c3ccfa",
+    "execution-receipt.json": "7df3c19349a81d6c481442b546d9fc45a102c2ff407ed26118577c650d385cee",
+    "execution-summary.json": "e0db8d588126285925ff48e90e0fa23c2d0e31d553356ffbb58ef94ff65a11b7",
+    "independent-reproduction.json": "5e382efb4855a14a90c5cb7a51ce7c92b172b25f00358ae6111155f5ad3197f5",
+    "package-verification.json": "a3eec65d7375d626e3bf3a7720d9349fc0319c0ccb2e66dab5605a4406e11c90"
+  },
+  "frozen_commit": "c8f57d5f2dda90a2f1efb8020857f13446df8132",
+  "manifest_id": "ICR_LEVEL4_RUN_001_RESULT_MANIFEST_v1"
+}

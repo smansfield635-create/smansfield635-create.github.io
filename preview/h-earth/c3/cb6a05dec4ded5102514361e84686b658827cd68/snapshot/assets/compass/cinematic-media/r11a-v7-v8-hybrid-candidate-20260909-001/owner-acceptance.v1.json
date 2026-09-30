@@ -1,0 +1,17 @@
+{
+  "schema": "COMPASS_R11A_V7_V8_HYBRID_OWNER_ACCEPTANCE_v1",
+  "status": "OWNER_ACCEPTED_AND_ORDERED_LIVE_RELEASE",
+  "operationId": "COMPASS_R11A_V7_V8_HYBRID_CANDIDATE_20260909_001",
+  "ownerAcceptanceIsInferred": false,
+  "candidate": {
+    "sha256": "507081bfe7290b201c357368649430b2de7b1c45bba141f2037e0b28f0faec01",
+    "durationMs": 64767,
+    "frameCount": 1943,
+    "branch": "compass/r11a-v7-v8-hybrid-candidate-20260909-001",
+    "constructionHead": "dac29f92be267370a3104c267b7875f4575bae36"
+  },
+  "ownerDirection": "Let's go ahead and get it merged.",
+  "mergeAuthorized": true,
+  "deploymentAuthorized": true,
+  "publicationAuthority": true
+}

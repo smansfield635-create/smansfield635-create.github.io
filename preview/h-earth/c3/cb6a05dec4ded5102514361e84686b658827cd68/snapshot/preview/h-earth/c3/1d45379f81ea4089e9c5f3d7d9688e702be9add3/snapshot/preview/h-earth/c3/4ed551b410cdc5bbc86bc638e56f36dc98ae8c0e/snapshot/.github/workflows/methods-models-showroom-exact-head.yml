@@ -1,0 +1,92 @@
+name: Methods and Models Showroom Exact-Head Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "laws/research/methods-and-models/index.html"
+      - "laws/research/methods-and-models/showroom.css"
+      - "laws/research/methods-and-models/showroom.js"
+      - "laws/research/methods-and-models/showroom-refinement.css"
+      - "laws/research/methods-and-models/showroom-refinement.js"
+      - "laws/research/methods-and-models/showroom-euclidean.css"
+      - "laws/research/methods-and-models/showroom-euclidean-interaction.css"
+      - "laws/research/methods-and-models/showroom-euclidean.js"
+      - "laws/research/methods-and-models/canonical-records-v1.html"
+      - "verification/methods-models-showroom-browser.mjs"
+      - ".github/workflows/methods-models-showroom-exact-head.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-models-showroom-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  METHODS_MODELS_ORIGIN: http://127.0.0.1:4173
+
+jobs:
+  exact-head-showroom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check laws/research/methods-and-models/showroom.js
+          node --check laws/research/methods-and-models/showroom-refinement.js
+          node --check laws/research/methods-and-models/showroom-euclidean.js
+          node --check verification/methods-models-showroom-browser.mjs
+
+      - name: Start exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-models-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/laws/research/methods-and-models/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/methods-models-server.log
+          exit 1
+
+      - name: Execute exact-head source and browser verification
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/methods-models-showroom-browser.mjs
+
+      - name: Upload verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-models-showroom-exact-head-evidence
+          path: |
+            methods-models-showroom-exact-head.json
+            /tmp/methods-models-server.log
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,0 +1,50 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "characters",
+  "description": "Environment-first Characters publication contract for the Gratitude Coast stage and traversal surface.",
+  "checks": [
+    {
+      "path": "/characters/",
+      "includes": [
+        "data-route=\"/characters/\"",
+        "data-page=\"characters-coastal-narrative-v1\"",
+        "Mirrorland · Gratitude Coast",
+        "id=\"scene\"",
+        "id=\"map-toggle\"",
+        "id=\"coast-map\"",
+        "Return to orbit",
+        "./app.mjs"
+      ],
+      "excludes": [
+        "data-task17-candidate=\"true\"",
+        "Spatial Narrative Field · One Principal Carousel",
+        "/characters/spatial-narrative.runtime.js"
+      ]
+    },
+    {
+      "path": "/characters/app.mjs",
+      "includes": [
+        "getContext('webgl2'",
+        "prefers-reduced-motion: reduce",
+        "function travelTo(",
+        "function returnOrbit(",
+        "mapButton.addEventListener",
+        "requestAnimationFrame(render)"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/characters/",
+    "timeoutMs": 30000,
+    "readySelector": "#scene",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/characters/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": []
+  }
+}

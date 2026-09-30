@@ -1,0 +1,122 @@
+name: Tests L0 L1 Bounded Manifestation M1 Validation
+
+on:
+  push:
+    branches:
+      - agent/tests-l0-l1-bounded-manifestation-m1-v1
+  pull_request:
+    paths:
+      - control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/**
+      - .github/workflows/tests-l0-l1-bounded-manifestation-m1-validation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  exact-scope-and-promoted-source-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact candidate scope and promoted source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=64d0ea7673d1ecb61372a0dd8b127b889157da1d
+          HEAD_SHA="${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}"
+          REVIEW_BASE="${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || '64d0ea7673d1ecb61372a0dd8b127b889157da1d' }}"
+
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+
+          mapfile -t actual < <(git diff --name-only "$BASE"...HEAD | sort)
+          expected=(
+            ".github/workflows/tests-l0-l1-bounded-manifestation-m1-validation.yml"
+            "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/README.md"
+            "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/candidate-manifest.v1.json"
+            "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/index.html"
+            "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/manifestation.css"
+            "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/manifestation.mjs"
+            "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/verify.v1.mjs"
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${actual[@]}")
+
+          check_blob_at() {
+            local ref="$1"
+            local path="$2"
+            local expected_sha="$3"
+            local actual_sha
+            actual_sha="$(git rev-parse "$ref:$path")"
+            test "$actual_sha" = "$expected_sha"
+          }
+
+          AUTHORITY_PATH="control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json"
+          REGISTRY_CONTRACT_PATH="control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/object-projection-registry-contract.v1.json"
+          REGISTRY_PATH="control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json"
+
+          check_blob_at "$BASE" "$AUTHORITY_PATH" "0bfab791c005ca71cee771a5d14d27f8dfab3177"
+          check_blob_at "$BASE" "$REGISTRY_CONTRACT_PATH" "ed969c87359c42444c477a752f332f07f0059a30"
+          check_blob_at "$BASE" "$REGISTRY_PATH" "b801a11e342051a6b00e6f7098b1d691685ad0b6"
+
+          git cat-file -e "$REVIEW_BASE^{commit}"
+          check_blob_at "$REVIEW_BASE" "$AUTHORITY_PATH" "0bfab791c005ca71cee771a5d14d27f8dfab3177"
+          check_blob_at "$REVIEW_BASE" "$REGISTRY_CONTRACT_PATH" "ed969c87359c42444c477a752f332f07f0059a30"
+          check_blob_at "$REVIEW_BASE" "$REGISTRY_PATH" "b801a11e342051a6b00e6f7098b1d691685ad0b6"
+
+          mapfile -t drift < <(git diff --name-only "$BASE"..."$REVIEW_BASE" | sort)
+          protected=("$AUTHORITY_PATH" "$REGISTRY_CONTRACT_PATH" "$REGISTRY_PATH")
+          overlap_count=0
+          for path in "${protected[@]}"; do
+            if printf '%s\n' "${drift[@]}" | grep -Fxq "$path"; then
+              overlap_count=$((overlap_count + 1))
+            fi
+          done
+          test "$overlap_count" -eq 0
+
+          mkdir -p artifacts
+          cat > artifacts/tests-l0-l1-m1-scope-source-audit.v1.json <<EOF
+          {
+            "schema": "WHOLE_ESTATE_TESTS_L0_L1_M1_SCOPE_SOURCE_AUDIT_v1",
+            "result": "PASS",
+            "constructionBaseMain": "$BASE",
+            "candidateHead": "$HEAD_SHA",
+            "reviewBase": "$REVIEW_BASE",
+            "candidateChangedPathCount": ${#actual[@]},
+            "protectedSourceBlobCount": 3,
+            "reviewBaseDriftPathCount": ${#drift[@]},
+            "protectedSourceOverlapCount": $overlap_count,
+            "publicMutation": false,
+            "publicRouteCreation": false,
+            "m1r2Mutation": false,
+            "scientificClaimUpgrade": false
+          }
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tests-l0-l1-m1-scope-source-audit-v1
+          path: artifacts/tests-l0-l1-m1-scope-source-audit.v1.json
+
+  static-manifestation-conformance:
+    needs: exact-scope-and-promoted-source-identity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Execute bounded manifestation static verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/verify.v1.mjs | tee artifacts/tests-l0-l1-m1-static-verification.v1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tests-l0-l1-m1-static-verification-v1
+          path: artifacts/tests-l0-l1-m1-static-verification.v1.json

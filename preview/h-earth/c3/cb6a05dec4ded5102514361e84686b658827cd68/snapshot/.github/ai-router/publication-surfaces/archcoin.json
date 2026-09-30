@@ -1,0 +1,262 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "archcoin",
+  "description": "ARCHCOIN exact-head publication verification for the four-domain carousel presentation: ARCC and ARCR launched on Ethereum mainnet, with ARCP and ARCA prospective and not launched. Static checks bind verified mainnet identities, supply, decimals, and explorer links, preserve sixteen semantic planes and sixteen legacy deep links, and retain token-rights boundaries. Runtime verification requires the ARCC carousel to initialize and proves click plus keyboard traversal before publication is accepted.",
+  "checks": [
+    {
+      "path": "/products/archcoin/index.html",
+      "includes": [
+        "Each token page presents its Overview, Engineering, Platform, and Governance.",
+        "/products/archcoin/contract/#overview",
+        "/products/archcoin/receivable/#engineering",
+        "/products/archcoin/payable/#platform",
+        "/products/archcoin/allocation/#governance",
+        "Two tokens launched. Two prospective.",
+        "Ethereum mainnet"
+      ],
+      "excludes": [
+        "domain then opens four navigable rooms"
+      ]
+    },
+    {
+      "path": "/products/archcoin/index.controller.js",
+      "includes": [
+        "route: \"/products/archcoin/contract/#overview\"",
+        "route: \"/products/archcoin/receivable/#engineering\"",
+        "route: \"/products/archcoin/payable/#platform\"",
+        "route: \"/products/archcoin/allocation/#governance\"",
+        "ROOM_BY_ROUTE.size === 16"
+      ],
+      "excludes": [
+        "route: \"/products/archcoin/contract/overview/\""
+      ]
+    },
+    {
+      "path": "/products/archcoin/contract/index.html",
+      "includes": [
+        "data-domain=\"contract\"",
+        "ARCHCOIN Contract",
+        "ARCC",
+        "data-archcoin-carousel",
+        "ERC-20 behavior",
+        "No post-deployment mint",
+        "Launch status",
+        "Ethereum mainnet · Launched",
+        "1,000,000 ARCC",
+        "18 decimal places",
+        "href=\"https://etherscan.io/address/0xAA4eA6c3020795C2DA0Aa3bA478099bA1f5F1947\"",
+        "href=\"https://etherscan.io/tx/0xd932dceef5f3085f7d42e6ac25a44c6675364156261305b1fd650899c70a3ea0\""
+      ],
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "not represented here as a deployed cryptocurrency",
+        "Mainnet remains later",
+        "not a frozen Sepolia or mainnet issuance quantity",
+        "no recipient wallet has been selected"
+      ]
+    },
+    {
+      "path": "/products/archcoin/receivable/index.html",
+      "includes": [
+        "data-domain=\"receivable\"",
+        "ARCHCOIN Receivable",
+        "ARCR",
+        "data-archcoin-carousel",
+        "does not create a debt",
+        "Launch status",
+        "Ethereum mainnet · Launched",
+        "1,000,000 ARCR",
+        "18 decimal places",
+        "href=\"https://etherscan.io/address/0xebffa6543fa839fb3287867a18b536fd6c543c9f\"",
+        "href=\"https://etherscan.io/tx/0xceed44390a9e0456331569964d2fc4e39f6654707d34ff1f3d7c38eb928c732a\""
+      ],
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "not represented here as a deployed cryptocurrency",
+        "Mainnet remains later",
+        "not a frozen Sepolia or mainnet issuance quantity",
+        "no recipient wallet has been selected"
+      ]
+    },
+    {
+      "path": "/products/archcoin/payable/index.html",
+      "includes": [
+        "data-domain=\"payable\"",
+        "ARCHCOIN Payable",
+        "ARCP",
+        "data-archcoin-carousel",
+        "creates no legal payment obligation",
+        "Launch status",
+        "Prospective · Not launched"
+      ],
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "Ethereum mainnet · Launched"
+      ]
+    },
+    {
+      "path": "/products/archcoin/allocation/index.html",
+      "includes": [
+        "data-domain=\"allocation\"",
+        "ARCHCOIN Allocation",
+        "ARCA",
+        "data-archcoin-carousel",
+        "creates no entitlement to funds",
+        "Launch status",
+        "Prospective · Not launched"
+      ],
+      "excludes": [
+        "0x0000000000000000000000000000000000000000",
+        "Sepolia pending",
+        "Ethereum mainnet · Launched"
+      ]
+    },
+    {
+      "path": "/products/archcoin/carousel.js",
+      "includes": [
+        "SITE_CONTINUITY_V3_ONE_STAGE_TABS_SWIPE_KEYBOARD",
+        "ArrowLeft",
+        "ArrowRight",
+        "pointerdown",
+        "aria-selected",
+        "toggleAttribute(\"inert\"",
+        "root.dataset.carouselReady = \"true\""
+      ],
+      "excludes": ["compass.carousel.js"]
+    },
+    {
+      "path": "/products/archcoin/carousel.css",
+      "includes": [
+        "touch-action: pan-y",
+        "@media (max-width: 760px)",
+        "@media (prefers-reduced-motion: reduce)",
+        ".carousel-plane[hidden]"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/contract/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/receivable/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/payable/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/overview/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#overview\"", "content=\"0; url=../#overview\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/engineering/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#engineering\"", "content=\"0; url=../#engineering\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/platform/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#platform\"", "content=\"0; url=../#platform\""],
+      "excludes": []
+    },
+    {
+      "path": "/products/archcoin/allocation/governance/index.html",
+      "includes": ["rel=\"canonical\" href=\"../#governance\"", "content=\"0; url=../#governance\""],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/products/archcoin/contract/",
+    "timeoutMs": 15000,
+    "readySelector": "[data-archcoin-carousel][data-carousel-ready=\"true\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/products/archcoin/contract/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Open engineering plane",
+        "action": {"type": "click", "selector": "#tab-engineering"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "#tab-engineering", "name": "aria-selected", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-archcoin-carousel]", "name": "data-active-plane", "value": "engineering"},
+          {"type": "attributeEquals", "selector": "#plane-engineering", "name": "aria-hidden", "value": "false"}
+        ]
+      },
+      {
+        "name": "Traverse to governance with keyboard",
+        "action": {"type": "key", "selector": "#tab-engineering", "key": "End"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "#tab-governance", "name": "aria-selected", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-archcoin-carousel]", "name": "data-active-plane", "value": "governance"},
+          {"type": "textContains", "selector": "#plane-governance", "value": "No post-deployment mint"}
+        ]
+      },
+      {
+        "name": "Return to overview",
+        "action": {"type": "click", "selector": "#tab-overview"},
+        "assertions": [
+          {"type": "attributeEquals", "selector": "#tab-overview", "name": "aria-selected", "value": "true"},
+          {"type": "attributeEquals", "selector": "[data-archcoin-carousel]", "name": "data-active-plane", "value": "overview"}
+        ]
+      }
+    ]
+  }
+}

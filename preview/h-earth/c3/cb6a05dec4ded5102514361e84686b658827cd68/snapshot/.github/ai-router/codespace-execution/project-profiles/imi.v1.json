@@ -1,0 +1,24 @@
+{
+  "schema": "THREE_TIER_CODESPACE_PROJECT_EXECUTION_PROFILE_v1",
+  "projectId": "IMI",
+  "status": "ACTIVE_CONTRACT_CANDIDATE",
+  "substrateId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_v1",
+  "operationClasses": [
+    "FROZEN_PACKAGE_REPRODUCTION",
+    "BLINDED_SCORING_EXECUTION",
+    "COMPARATOR_EXECUTION",
+    "PERMUTATION_OR_NULL_EXECUTION",
+    "REPRODUCIBILITY_CHECK",
+    "OUTCOME_UNBLINDING_EXECUTION_ONLY_WHEN_SEPARATELY_AUTHORIZED"
+  ],
+  "targetIdentityRule": "EXACT_40_CHARACTER_COMMIT_ONLY",
+  "commandRule": "PROJECT_DECLARED_FIXED_COMMAND_ONLY",
+  "builderFreshVerifierSeparation": "REQUIRED",
+  "outputs": "OUTSIDE_REPOSITORY_OR_IGNORED_UNLESS_SEPARATELY_AUTHORIZED",
+  "productMutationAuthorityCreated": false,
+  "mergeAuthorityCreated": false,
+  "scientificClaimAuthorityCreated": false,
+  "nativeTerminalTransportRequired": false,
+  "failureDisposition": "FAIL_CLOSED",
+  "outcomeUnblindingAuthorityCreated": false
+}

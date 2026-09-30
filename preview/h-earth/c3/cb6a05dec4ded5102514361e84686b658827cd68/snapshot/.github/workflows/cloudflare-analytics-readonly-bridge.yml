@@ -1,0 +1,385 @@
+name: Cloudflare Analytics Read-Only Bridge
+
+on:
+  workflow_dispatch:
+  # qualification trigger
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cloudflare-analytics-readonly-bridge.yml'
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cloudflare-analytics-collection
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_ANALYTICS_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require analytics token
+        shell: bash
+        run: |
+          test -n "$CF_TOKEN" || { echo "CLOUDFLARE_ANALYTICS_TOKEN is missing"; exit 1; }
+
+      - name: Collect read-only Cloudflare Web Analytics
+        shell: python
+        run: |
+          import json, os, urllib.request, time, random
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          endpoint = "https://api.cloudflare.com/client/v4/graphql"
+          token = os.environ["CF_TOKEN"]
+          now = datetime.now(timezone.utc).replace(microsecond=0)
+          history_start = now - timedelta(days=90)
+
+          def gql(query, variables=None, attempts=6):
+              body = json.dumps({"query": query, "variables": variables or {}}).encode()
+              last = None
+              for attempt in range(1, attempts + 1):
+                  try:
+                      req = urllib.request.Request(endpoint, data=body, method="POST",
+                          headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json", "Accept": "application/json"})
+                      with urllib.request.urlopen(req, timeout=60) as r:
+                          doc = json.load(r)
+                      transient = any(
+                          e.get("extensions",{}).get("code") in {"serviceUnavailable","internal","rateLimit","timeout"}
+                          for e in (doc.get("errors") or [])
+                      )
+                      if not transient:
+                          return doc
+                      last = doc
+                  except Exception as e:
+                      last = {"exception": repr(e)}
+                  if attempt < attempts:
+                      delay = min(30, 2 ** (attempt - 1)) + random.random()
+                      print(f"Transient Cloudflare failure; retry {attempt}/{attempts} after {delay:.1f}s")
+                      time.sleep(delay)
+              if isinstance(last, dict) and "errors" in last:
+                  return last
+              raise RuntimeError("Cloudflare request exhausted retries: " + json.dumps(last))
+
+          # Web Analytics/RUM is account-scoped. Bind the known Cloudflare Account ID.
+          accounts = [{"accountTag": "832a0c759fbdc46553494f572a0e534b"}]
+
+          # Schema was already qualified and persisted on main; do not re-query it every run.
+          Path("analytics-bridge").mkdir(exist_ok=True)
+          durable_schema = Path(".analytics/cloudflare/rum-schema.json")
+          if durable_schema.exists():
+              Path("analytics-bridge/rum-schema.json").write_text(durable_schema.read_text())
+          else:
+              Path("analytics-bridge/rum-schema.json").write_text(json.dumps({"status":"schema-already-qualified"},indent=2)+"\n")
+
+          query = """
+          query RUMBridge($accountTag: string, $start: Time, $end: Time) {
+            viewer {
+              accounts(filter: {accountTag: $accountTag}) {
+                pages: rumPageloadEventsAdaptiveGroups(
+                  limit: 5000
+                  orderBy: [datetimeHour_ASC]
+                  filter: {
+                    datetime_geq: $start
+                    datetime_lt: $end
+                  }
+                ) {
+                  count
+                  dimensions { datetimeHour }
+                }
+              }
+            }
+          }
+          """
+          out = {"schema":"DGB_CLOUDFLARE_RUM_BRIDGE_V3","generatedAt":now.isoformat().replace("+00:00","Z"),
+                 "window":{"start":history_start.isoformat().replace("+00:00","Z"),"end":now.isoformat().replace("+00:00","Z")},
+                 "chunkDays":1,"accounts":[]}
+          for a in accounts:
+              tag=a["accountTag"]
+              merged={}
+              cursor=history_start
+              chunks=0
+              while cursor < now:
+                  chunk_end=min(cursor+timedelta(days=1), now)
+                  s=cursor.isoformat().replace("+00:00","Z")
+                  e=chunk_end.isoformat().replace("+00:00","Z")
+                  res=gql(query,{"accountTag":tag,"start":s,"end":e})
+                  if res.get("errors"):
+                      raise SystemExit("RUM analytics query failed for "+s+".."+e+": "+json.dumps(res["errors"]))
+                  rows=res.get("data",{}).get("viewer",{}).get("accounts",[])
+                  for row in (rows[0].get("pages",[]) if rows else []):
+                      hour=row.get("dimensions",{}).get("datetimeHour")
+                      if hour:
+                          merged[hour]=merged.get(hour,0)+int(row.get("count",0))
+                  chunks+=1
+                  cursor=chunk_end
+              pages=[{"count":merged[h],"dimensions":{"datetimeHour":h}} for h in sorted(merged)]
+              out["accounts"].append({"accountTag":tag,"chunks":chunks,"pages":pages})
+          Path("analytics-bridge").mkdir(exist_ok=True)
+          Path("analytics-bridge/latest.json").write_text(json.dumps(out,indent=2)+"\n")
+          # Full-scope composition snapshot over the latest 30 days.
+          # Each dimension is queried separately to avoid combinatorial grouping and sampling.
+          composition_start = max(history_start, now - timedelta(days=30))
+          dimensions = [
+              "requestPath","refererHost","countryName","deviceType",
+              "userAgentBrowser","userAgentOS","bot","navigationType",
+              "deliveryType","requestHost","siteTag"
+          ]
+          composition = {
+              "schema":"DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
+              "generatedAt":out["generatedAt"],
+              "window":{"start":composition_start.isoformat().replace("+00:00","Z"),"end":out["window"]["end"]},
+              "dimensions":{}
+          }
+          checkpoint_path = Path(".analytics/cloudflare/composition.json")
+          if checkpoint_path.exists():
+              try:
+                  prior=json.loads(checkpoint_path.read_text())
+                  if prior.get("schema") == composition["schema"] and prior.get("window") == composition["window"]:
+                      composition["dimensions"].update(prior.get("dimensions",{}))
+              except Exception:
+                  pass
+          for dim in dimensions:
+              if dim in composition["dimensions"]:
+                  print("Reusing completed dimension:", dim)
+                  continue
+              merged={}
+              cursor=composition_start
+              while cursor < now:
+                  chunk_end=min(cursor+timedelta(days=1), now)
+                  q = f"""
+                  query Composition($accountTag: string, $start: Time, $end: Time) {{
+                    viewer {{
+                      accounts(filter: {{accountTag: $accountTag}}) {{
+                        rows: rumPageloadEventsAdaptiveGroups(
+                          limit: 5000
+                          orderBy: [count_DESC]
+                          filter: {{datetime_geq: $start datetime_lt: $end}}
+                        ) {{
+                          count
+                          sum {{ visits }}
+                          dimensions {{ {dim} }}
+                        }}
+                      }}
+                    }}
+                  }}
+                  """
+                  res=gql(q,{"accountTag":accounts[0]["accountTag"],
+                            "start":cursor.isoformat().replace("+00:00","Z"),
+                            "end":chunk_end.isoformat().replace("+00:00","Z")})
+                  if res.get("errors"):
+                      raise SystemExit("Composition query failed for "+dim+": "+json.dumps(res["errors"]))
+                  accts=res.get("data",{}).get("viewer",{}).get("accounts",[])
+                  for row in (accts[0].get("rows",[]) if accts else []):
+                      key=row.get("dimensions",{}).get(dim)
+                      key="(none)" if key in (None,"") else str(key)
+                      cur=merged.setdefault(key,{"pageLoads":0,"visits":0})
+                      cur["pageLoads"] += int(row.get("count",0))
+                      cur["visits"] += int(row.get("sum",{}).get("visits",0) or 0)
+                  cursor=chunk_end
+              composition["dimensions"][dim]=[
+                  {"value":k,**v} for k,v in sorted(merged.items(),key=lambda kv:kv[1]["pageLoads"],reverse=True)
+              ]
+              # Persist a local checkpoint immediately; later dimensions cannot erase completed work.
+              Path("analytics-bridge/composition.json").write_text(json.dumps(composition,indent=2)+"\n")
+              print("Completed composition dimension:", dim)
+          Path("analytics-bridge/composition.json").write_text(json.dumps(composition,indent=2)+"\n")
+
+          # Owner-device heartbeat qualification: short-window exact-path query.
+          heartbeat_start = now - timedelta(hours=6)
+          heartbeat_query = """
+          query Heartbeats($accountTag: string, $start: Time, $end: Time) {
+            viewer {
+              accounts(filter: {accountTag: $accountTag}) {
+                rows: rumPageloadEventsAdaptiveGroups(
+                  limit: 1000
+                  orderBy: [count_DESC]
+                  filter: {datetime_geq: $start datetime_lt: $end}
+                ) {
+                  count
+                  sum { visits }
+                  dimensions { requestPath }
+                }
+              }
+            }
+          }
+          """
+          hb_res=gql(heartbeat_query,{"accountTag":accounts[0]["accountTag"],
+                    "start":heartbeat_start.isoformat().replace("+00:00","Z"),
+                    "end":now.isoformat().replace("+00:00","Z")})
+          if hb_res.get("errors"):
+              raise SystemExit("Heartbeat qualification query failed: "+json.dumps(hb_res["errors"]))
+          hb_accounts=hb_res.get("data",{}).get("viewer",{}).get("accounts",[])
+          wanted=["/analytics-owner-device/heartbeat/s26/","/analytics-owner-device/heartbeat/a9-1/","/analytics-owner-device/heartbeat/a9-2/"]
+          observed={}
+          for row in (hb_accounts[0].get("rows",[]) if hb_accounts else []):
+              p=row.get("dimensions",{}).get("requestPath")
+              if p in wanted:
+                  observed[p]={"pageLoads":int(row.get("count",0)),"visits":int(row.get("sum",{}).get("visits",0) or 0)}
+          heartbeat={"schema":"DGB_OWNER_HEARTBEAT_QUALIFICATION_V1","generatedAt":out["generatedAt"],
+                     "window":{"start":heartbeat_start.isoformat().replace("+00:00","Z"),"end":out["window"]["end"]},
+                     "expected":wanted,"observed":observed,
+                     "result":"PASS" if all(p in observed for p in wanted) else "PENDING"}
+          Path("analytics-bridge/owner-heartbeats.json").write_text(json.dumps(heartbeat,indent=2)+"\n")
+          print("OWNER_HEARTBEAT_QUALIFICATION="+heartbeat["result"])
+
+          # Historical owner-footprint envelope. Known owner devices are US + Android +
+          # Chrome-family + mobile/tablet + non-bot. Query the intersection directly; never
+          # infer it by multiplying separate aggregate dimensions.
+          historical_start = history_start
+          owner_candidate = {"pageLoads":0,"visits":0,"byDevice":{},"byPath":{},"byReferer":{}}
+          for device in ["mobile","tablet"]:
+              cursor=historical_start
+              while cursor < now:
+                  chunk_end=min(cursor+timedelta(days=1),now)
+                  q = """
+                  query OwnerEnvelope($accountTag:string,$start:Time,$end:Time,$device:string) {
+                    viewer { accounts(filter:{accountTag:$accountTag}) {
+                      rows: rumPageloadEventsAdaptiveGroups(
+                        limit:5000
+                        orderBy:[count_DESC]
+                        filter:{
+                          datetime_geq:$start datetime_lt:$end
+                          countryName:"US" userAgentOS:"Android" userAgentBrowser:"Chrome"
+                          deviceType:$device bot:0
+                        }
+                      ) {
+                        count
+                        sum { visits }
+                        dimensions { deviceType requestPath refererHost }
+                      }
+                    }}
+                  }
+                  """
+                  res=gql(q,{"accountTag":accounts[0]["accountTag"],
+                            "start":cursor.isoformat().replace("+00:00","Z"),
+                            "end":chunk_end.isoformat().replace("+00:00","Z"),
+                            "device":device})
+                  if res.get("errors"):
+                      raise SystemExit("Historical owner-envelope query failed: "+json.dumps(res["errors"]))
+                  accts=res.get("data",{}).get("viewer",{}).get("accounts",[])
+                  for row in (accts[0].get("rows",[]) if accts else []):
+                      n=int(row.get("count",0)); v=int(row.get("sum",{}).get("visits",0) or 0)
+                      owner_candidate["pageLoads"]+=n; owner_candidate["visits"]+=v
+                      d=row.get("dimensions",{})
+                      dv=d.get("deviceType") or "(none)"; rp=d.get("requestPath") or "(none)"; rf=d.get("refererHost") or "(none)"
+                      for bucket,key in [(owner_candidate["byDevice"],dv),(owner_candidate["byPath"],rp),(owner_candidate["byReferer"],rf)]:
+                          cur=bucket.setdefault(key,{"pageLoads":0,"visits":0});cur["pageLoads"]+=n;cur["visits"]+=v
+                  cursor=chunk_end
+          historical_owner={
+            "schema":"DGB_HISTORICAL_OWNER_ENVELOPE_V1",
+            "generatedAt":out["generatedAt"],
+            "window":out["window"],
+            "knownOwnerFootprint":{"country":"US","os":"Android","browser":"Chrome","devices":["mobile","tablet"],"bot":0},
+            "interpretation":"Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
+            "candidate":owner_candidate
+          }
+          Path("analytics-bridge/historical-owner-envelope.json").write_text(json.dumps(historical_owner,indent=2)+"\n")
+
+          # Forward reporting methodology. Measured owner exclusion begins only after
+          # device heartbeat qualification; historical owner subtraction remains estimated.
+          methodology={
+            "schema":"DGB_ANALYTICS_REPORTING_METHODOLOGY_V1",
+            "generatedAt":out["generatedAt"],
+            "ownerMeasurement":{"qualification":heartbeat["result"],
+              "qualifiedPaths":wanted,
+              "measuredExclusionStart":"2026-09-21T17:35:53Z"},
+            "reportingOrder":["total","cloudflareClassifiedBots","ownerDevelopment","externalNonBot"],
+            "historicalRule":"Before measuredExclusionStart, owner traffic is not deterministically identifiable; report an owner-compatible envelope and a definitely-external lower bound.",
+            "forwardRule":"After measuredExclusionStart, report device-specific owner heartbeat activity separately from external non-bot traffic; do not relabel Cloudflare visits as unique people."
+          }
+          Path("analytics-bridge/reporting-methodology.json").write_text(json.dumps(methodology,indent=2)+"\n")
+
+          # Sanitized public dashboard payload. Aggregate evidence only.
+          def comp_map(dim):
+              return {str(x.get("value")):x for x in composition.get("dimensions",{}).get(dim,[])}
+          bot_rows=comp_map("bot")
+          total_30=sum(int(x.get("pageLoads",0)) for x in composition.get("dimensions",{}).get("bot",[]))
+          bot_30=sum(int(v.get("pageLoads",0)) for k,v in bot_rows.items() if k not in {"0","false","False","(none)"})
+          nonbot_30=max(0,total_30-bot_30)
+          refs=composition.get("dimensions",{}).get("refererHost",[])
+          paths=composition.get("dimensions",{}).get("requestPath",[])
+          # Reuse collected hourly counts; no extra Cloudflare queries or identifiers.
+          day_start = now.replace(hour=0, minute=0, second=0) - timedelta(days=29)
+          daily_counts = {(day_start + timedelta(days=i)).date().isoformat(): 0 for i in range(30)}
+          for account in out["accounts"]:
+              for row in account["pages"]:
+                  date = row["dimensions"]["datetimeHour"][:10]
+                  if date in daily_counts:
+                      daily_counts[date] += row["count"]
+          public={
+            "schema":"DGB_PUBLIC_ANALYTICS_V1",
+            "generatedAt":out["generatedAt"],
+            "window30d":composition["window"],
+            "daily":[{"date":date,"pageLoads":value} for date,value in sorted(daily_counts.items())],
+            "summary":{"pageLoads":total_30,"botPageLoads":bot_30,"nonBotPageLoads":nonbot_30},
+            "referrers":[{"host":x["value"],"pageLoads":x["pageLoads"],"visits":x["visits"]} for x in refs[:8]],
+            "topPages":[{"path":x["value"],"pageLoads":x["pageLoads"],"visits":x["visits"]} for x in paths[:10]
+                        if not str(x["value"]).startswith("/analytics-owner-device/")][:8],
+            "ownerMeasurement":{"qualified":heartbeat["result"]=="PASS",
+              "qualifiedDeviceCount":len(heartbeat.get("observed",{})),
+              "measuredSince":"2026-09-21T17:35:53Z"},
+            "methodology":{"visitsAreUniquePeople":False,
+              "historicalOwnerTraffic":"estimated-conservatively",
+              "forwardOwnerTraffic":"device-heartbeat-qualified"}
+          }
+          Path("analytics-bridge/public-latest.json").write_text(json.dumps(public,indent=2)+"\n")
+
+          Path("analytics/data").mkdir(parents=True,exist_ok=True)
+          Path("analytics/data/latest.json").write_text(json.dumps(public,indent=2)+"\n")
+
+          Path("analytics-bridge/status.txt").write_text(f"PASS\nschema={out['schema']}\ngeneratedAt={out['generatedAt']}\naccounts={len(out['accounts'])}\n")
+          print(f"Collected Web Analytics probe for {len(out['accounts'])} account(s); token value was never printed.")
+
+      - name: Persist latest analytics for connector reads
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          files=(latest.json status.txt rum-schema.json composition.json owner-heartbeats.json historical-owner-envelope.json reporting-methodology.json)
+          # Generated analytics files are authoritative snapshots. Never merge/rebase them.
+          # On each retry, reset to fresh main, copy the just-collected snapshots, commit, push.
+          for attempt in 1 2 3 4 5 6 7 8; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p .analytics/cloudflare
+            for file in "${files[@]}"; do
+              cp "analytics-bridge/$file" ".analytics/cloudflare/$file"
+            done
+            cp analytics-bridge/public-latest.json analytics/data/latest.json
+            git add .analytics/cloudflare/ analytics/data/latest.json
+            if git diff --cached --quiet; then
+              echo "ANALYTICS_SNAPSHOT_ALREADY_CURRENT attempt=$attempt"
+              exit 0
+            fi
+            git commit -m "Update Cloudflare analytics snapshot [skip ci]"
+            if git push origin HEAD:main; then
+              echo "ANALYTICS_SNAPSHOT_PERSISTED attempt=$attempt"
+              exit 0
+            fi
+            echo "Concurrent main update; rebuilding snapshot commit from newest main (attempt $attempt/8)"
+            sleep $((attempt * 2))
+          done
+          echo "Analytics collection succeeded but snapshot persistence exhausted retries." >&2
+          exit 1
+
+      - name: Upload private workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-analytics-latest
+          path: analytics-bridge/
+          retention-days: 30
+          if-no-files-found: error

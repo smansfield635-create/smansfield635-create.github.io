@@ -1,0 +1,68 @@
+SHIMMER V10A ELIMINATE OLD BASELINE REPORT
+Generated: 2026-05-03T20:27:05.376Z
+Repo root: /home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io
+
+SELECTED TARGETS:
+
+FILE=explore/frontier/closed-loop/index.html
+HITS=old_baseline,old_method,old_lens,shimmer_route,russian_doll_labels,open_only_domain_needed
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+FILE=explore/frontier/lattice/index.html
+HITS=old_baseline,old_method,shimmer_route,russian_doll_labels
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+FILE=explore/frontier/manual/index.html
+HITS=old_baseline,old_method,shimmer_route,russian_doll_labels
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+FILE=explore/frontier/shimmer/index.html
+HITS=old_active_contract,old_contract_family,old_visible_title_dot,old_footer_dot,old_status_phrase,old_baseline,old_method,old_lens,shimmer_route,signal_category,russian_doll_labels,open_only_domain_needed
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+FILE=explore/frontier/trajectory/index.html
+HITS=old_lens,shimmer_route,russian_doll_labels,open_only_domain_needed
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+FILE=explore/frontier/vision/index.js
+HITS=old_lens,shimmer_route,russian_doll_labels,open_only_domain_needed
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+FILE=explore/frontier/vision-remote/index.html
+HITS=old_lens,shimmer_route,russian_doll_labels,open_only_domain_needed
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+FILE=frontier/shimmer/index.html
+HITS=old_contract_family,old_visible_title_dot,old_footer_dot,shimmer_route,open_only_domain_needed
+RESULT=REWRITTEN
+NEW_TITLE=Shimmer · G1 V10A
+NEW_CONTRACT=SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE=TRUE
+NEW_PROOF=Universal Node · V10A active
+
+PUBLIC SUCCESS MARKERS:
+Shimmer · G1 V10A
+SHIMMER_G1_V10A_UNIVERSAL_NODE_ACTIVE
+Universal Node · V10A active
+
+RESULT=COMPLETE

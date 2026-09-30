@@ -1,0 +1,4 @@
+PUBLICATION_TRIGGER_v1
+source_merge=6bc9362653cd44d1beedd3f30c89d2a13d29bddd
+surface=audralia
+purpose=deploy merged Audralia diagnostic reconciliation through existing automatic exact-head Pages release

@@ -1,0 +1,63 @@
+/* Gen1596 surgical composite: preserve the current successful Compass page; correct only known ownership/layout regressions. */
+html,body{max-width:100%;overflow-x:clip!important}
+body{background:#010308!important}
+.compass-estate,[data-compass-root],.compass-instrument,.compass-built,.compass-monuments{max-width:100%!important;box-sizing:border-box!important}
+
+/* Laws precedent: all four star owners remain present; exactly one native readable cardinal label owns text/focus. */
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing>span{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing.is-readable-cardinal>span{opacity:1!important;visibility:visible!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal){background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline-color:transparent!important}
+/* The duplicate seen on-device is the decorative black shell of a non-readable wing, not the readable label itself. Remove only that shell. */
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::before,
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::after{content:none!important;display:none!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline:0!important;opacity:0!important}
+
+/* Gen1587 ownership rule: no ring of competing room labels. */
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-projected-room-label{display:none!important}
+.compass-projected-room-label:not([data-gen1587-current="true"]):not([data-gen1596-current="true"]){display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.compass-projected-room-label[data-gen1587-current="true"],.compass-projected-room-label[data-gen1596-current="true"]{display:grid!important;opacity:1!important;visibility:visible!important}
+
+/* Keep the Mirrorland hit target, but suppress its stale text shell while a cardinal/room owns the readable label. */
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--mirrorland,
+[data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-object--mirrorland,
+[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-object--mirrorland{background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline-color:transparent!important;color:transparent!important;text-shadow:none!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--mirrorland>span,
+[data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-object--mirrorland>span,
+[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-object--mirrorland>span{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+
+/* Preserve the successful current capability state rail/detail system. Never allow an older 3-D orbit to become a second owner. */
+.compass-monuments{overflow:hidden!important}
+.compass-capability-choices{position:relative!important;z-index:3!important}
+.compass-monument-detail{position:relative!important;z-index:2!important;overflow:hidden!important}
+.compass-monument[aria-selected="false"]{opacity:.58!important}
+.compass-monument[aria-selected="true"]{opacity:1!important}
+[data-capability-orbit].compass-capability-orbit-legacy,[data-compass-legacy-capability-orbit]{display:none!important}
+
+/* One readiness/proof state owns the reading surface; inactive controls remain controls, not stacked content. */
+.compass-built__active-proof{isolation:isolate!important;overflow:hidden!important}
+.compass-built__proof{position:relative!important;z-index:2!important}
+.compass-built__active-proof>*{position:relative!important;z-index:1!important}
+
+/* Mirrorland must become the sole decision surface without inheriting ancestor blur/filter contexts. */
+.compass-mirrorland-focus-backdrop{position:fixed!important;inset:0!important;z-index:2147482500!important;background:rgba(1,4,9,.86)!important;backdrop-filter:none!important;filter:none!important}
+.compass-mirrorland-routes.is-gen1587-fork,.compass-mirrorland-routes.is-gen1588-fork,.compass-mirrorland-routes.is-gen1591-fork,.compass-mirrorland-routes[data-compass-mirrorland-portal="true"]{position:fixed!important;left:50%!important;top:50%!important;z-index:2147483000!important;width:min(calc(100vw - 28px),760px)!important;max-height:calc(100dvh - 36px)!important;margin:0!important;transform:translate(-50%,-50%)!important;filter:none!important;backdrop-filter:none!important;overflow:auto!important;background:linear-gradient(145deg,rgba(7,17,28,.995),rgba(2,7,13,.998))!important;border:1px solid rgba(248,222,147,.54)!important;box-shadow:0 36px 120px rgba(0,0,0,.78),0 0 46px rgba(244,214,128,.12)!important}
+.compass-mirrorland-routes nav{gap:.7rem!important}
+.compass-mirrorland-routes nav a{min-width:0!important}
+
+/* Remove inspection/build badges and unrelated floating decoration from the owner-review candidate. */
+.ap-build-mark,[data-build-mark],[data-inspection-badge]{display:none!important}
+
+@media(max-width:820px){
+  .compass-estate{width:100%!important;padding-inline:10px!important}
+  .compass-instrument{width:100%!important;margin-inline:auto!important;overflow:hidden!important}
+  .compass-instrument__grid{grid-template-columns:1fr!important;gap:12px!important}
+  [data-compass-scene]{max-width:100%!important;margin-inline:auto!important}
+  .compass-panel{width:100%!important;min-width:0!important}
+  .compass-monuments{grid-template-columns:1fr!important;gap:12px!important}
+  .compass-capability-choices{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .compass-built__proof{grid-template-columns:1fr!important}
+}
+@media(max-width:560px){
+  .compass-capability-choices{grid-template-columns:1fr!important}
+  .compass-mirrorland-routes nav{grid-template-columns:1fr!important}
+}

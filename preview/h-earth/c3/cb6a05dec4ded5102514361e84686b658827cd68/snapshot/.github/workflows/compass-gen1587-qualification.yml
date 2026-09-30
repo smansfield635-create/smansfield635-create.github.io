@@ -1,0 +1,32 @@
+name: Compass Gen1587 Takeover Boundary Qualification — Manual Legacy Diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  takeover-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-gen1587-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-gen1587-http.log || true
+          exit 1
+      - name: Exercise Gen1587 legacy takeover boundary
+        run: node tools/compass-gen1587-qualification.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-gen1587-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .qualification/compass-gen1587
+          retention-days: 30

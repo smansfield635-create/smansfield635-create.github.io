@@ -1,0 +1,36 @@
+{
+  "schema": "COMPASS_FUNCTIONAL_COORDINATE_CONSTITUTION_v1",
+  "status": "FROZEN",
+  "angularIncrementDegrees": 22.5,
+  "cardinalIdentities": [
+    {"bearing":"N","identity":"Alaric","primitive":"Navigation","basis":[1,0,0,0]},
+    {"bearing":"E","identity":"Elara","primitive":"Signal","basis":[0,1,0,0]},
+    {"bearing":"S","identity":"Tarian","primitive":"Continuity","basis":[0,0,1,0]},
+    {"bearing":"W","identity":"Soren","primitive":"Boundary","basis":[0,0,0,1]}
+  ],
+  "constants": {"c22_5":0.9238795325112867,"s22_5":0.3826834323650898,"sqrtHalf":0.7071067811865476},
+  "stations": [
+    {"bearing":"N","angle":0,"weights":[1,0,0,0]},
+    {"bearing":"NNE","angle":22.5,"weights":[0.9238795325112867,0.3826834323650898,0,0]},
+    {"bearing":"NE","angle":45,"weights":[0.7071067811865476,0.7071067811865476,0,0]},
+    {"bearing":"ENE","angle":67.5,"weights":[0.3826834323650898,0.9238795325112867,0,0]},
+    {"bearing":"E","angle":90,"weights":[0,1,0,0]},
+    {"bearing":"ESE","angle":112.5,"weights":[0,0.9238795325112867,0.3826834323650898,0]},
+    {"bearing":"SE","angle":135,"weights":[0,0.7071067811865476,0.7071067811865476,0]},
+    {"bearing":"SSE","angle":157.5,"weights":[0,0.3826834323650898,0.9238795325112867,0]},
+    {"bearing":"S","angle":180,"weights":[0,0,1,0]},
+    {"bearing":"SSW","angle":202.5,"weights":[0,0,0.9238795325112867,0.3826834323650898]},
+    {"bearing":"SW","angle":225,"weights":[0,0,0.7071067811865476,0.7071067811865476]},
+    {"bearing":"WSW","angle":247.5,"weights":[0,0,0.3826834323650898,0.9238795325112867]},
+    {"bearing":"W","angle":270,"weights":[0,0,0,1]},
+    {"bearing":"WNW","angle":292.5,"weights":[0.3826834323650898,0,0,0.9238795325112867]},
+    {"bearing":"NW","angle":315,"weights":[0.7071067811865476,0,0,0.7071067811865476]},
+    {"bearing":"NNW","angle":337.5,"weights":[0.9238795325112867,0,0,0.3826834323650898]}
+  ],
+  "laws": {
+    "ACL-1": {"name":"Adjacent Composition Law","rule":"A single station may compose exactly two primitives if and only if those primitives are adjacent in the cyclic order N-E-S-W-N.","effects":["COMPOSITION_CREATES_FUNCTIONAL_STATION_NOT_IDENTITY","BOTH_PRIMITIVES_REMAIN_LEGIBLE","LARGER_WEIGHT_ESTABLISHES_DOMINANCE","NO_THIRD_PRIMITIVE","DOMAIN_AND_AUTHORITY_REMAIN_SEPARATE","COMPOSED_STATION_INHERITS_NO_COMBINED_AUTHORITY"]},
+    "OSL-1": {"name":"Opposing Separation Law","opposingPairs":[["N","S"],["E","W"]],"rule":"Opposing primitives may collaborate within one operation but may not collapse into one station, undifferentiated assignment, or unchecked decision authority for the same decision object and lifecycle checkpoint.","effects":["OPPOSING_WORK_DECOMPOSES","DIRECTION_CANNOT_CERTIFY_OWN_CONTINUITY","SIGNAL_CANNOT_SET_ITS_OWN_BOUNDARY","HANDOFFS_PRESERVE_OBJECT_LIFECYCLE_AUTHORITY_EVIDENCE_AND_UNRESOLVED_CONDITIONS","INDEPENDENT_REVIEW_REMAINS_INDEPENDENT","THREE_OR_FOUR_PRIMITIVE_WORK_DECOMPOSES"]}
+  },
+  "operationCoordinate": {"notation":"O=(B,R,L,D,A)","B":"functional bearing","R":"typed target and relationship","L":"lifecycle position","D":"domain capability","A":"explicitly granted authority"},
+  "invariants": ["FOUR_PERSISTENT_CARDINAL_IDENTITIES_ONLY","TWELVE_INTERMEDIATE_FUNCTIONAL_STATIONS_NOT_IDENTITIES","BEARING_NEVER_IMPLIES_AUTHORITY","DOMAIN_NEVER_CHANGES_IDENTITY","LIFECYCLE_NOT_ENCODED_AS_PERSONALITY","NO_TASK_SPECIFIC_BEARINGS","NO_GEOMETRY_MUTATION_TO_IMPROVE_BENCHMARK_FIT"]
+}

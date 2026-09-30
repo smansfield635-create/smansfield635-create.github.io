@@ -1,0 +1,35 @@
+{
+  "receipt_id": "ICR_LEVEL4_RUN_002_VERIFICATION_RECEIPT_v1",
+  "status": "PASS",
+  "exact_execution_head": "888b70bd8a56767f0e33d9c083d412cd55c339f4",
+  "manifest_integrity": "PASS_11_OF_11",
+  "package_verification": {
+    "status": "PASS",
+    "checks_passed": 49,
+    "conditions": 9,
+    "predictions": 9,
+    "alternative_models": 4
+  },
+  "execution": {
+    "result_category": "ENGINEERED_LEVEL4_PREDICTIONS_SURVIVED",
+    "predictions_passed": 9,
+    "predictions_total": 9,
+    "matched_output_discrimination_pass": true,
+    "execution_receipt_sha256": "b308450f189accd414736316c3f95f84fc17868131ec318dbc9e06b5e6062c66"
+  },
+  "independent_reproduction": {
+    "status": "PASS",
+    "checks_passed": 27,
+    "checks_total": 27,
+    "failed_checks": []
+  },
+  "repository_checks": {
+    "dedicated_level4_workflow": "PASS",
+    "route_operator_platform_conformance": "PASS",
+    "repository_operation_intake": "PASS_AFTER_TRANSIENT_RETRY"
+  },
+  "scientific_payload_changed_after_freeze": false,
+  "post_result_repair_performed": false,
+  "core_mutation_performed": false,
+  "archived_result_mutation_performed": false
+}

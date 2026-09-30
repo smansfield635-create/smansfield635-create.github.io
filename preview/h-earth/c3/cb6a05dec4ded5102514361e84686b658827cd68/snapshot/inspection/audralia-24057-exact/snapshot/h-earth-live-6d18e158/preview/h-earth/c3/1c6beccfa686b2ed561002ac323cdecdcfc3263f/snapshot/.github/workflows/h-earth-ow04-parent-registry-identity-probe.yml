@@ -1,0 +1,32 @@
+name: H-Earth OW04 Parent Registry Identity Probe
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-ow03-shoreline-boundary-corrective-20260815-002
+    paths:
+      - .github/workflows/h-earth-ow04-parent-registry-identity-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Report current registry loader identity
+        run: |
+          node --experimental-default-type=module - <<'NODE'
+          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const deps = loadHEarthRepositoryRegistryValidatorDependencies();
+          console.log(JSON.stringify({
+            loaderId: deps.loaderId,
+            identityVerified: deps.identityVerified,
+            identityChecks: deps.identityChecks,
+            ow03: deps.ow03ExperienceAnchorEvidencePathRecognitionVerification,
+            ow04: deps.ow04ExactPathRecognitionVerification,
+            boundary: deps.boundary,
+            stoppingCondition: deps.stoppingCondition
+          }, null, 2));
+          NODE

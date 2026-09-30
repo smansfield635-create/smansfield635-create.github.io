@@ -1,0 +1,79 @@
+{
+  "object": "EDUCATION_1001_SEVEN_SWAP_CANONICAL_ADOPTION",
+  "version": "v1",
+  "status": "PASS_CANONICAL_ADOPTION_CANDIDATE",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_SEVEN_SWAP_CANONICAL_ADOPTION_20260920_001",
+  "lock_generation": 2458,
+  "governing_main": "650689982ab33cfe763a8c458c716b3264400258",
+  "stacked_evidence_candidate": "e827d425f0144ef68dbe876ed332cae93ff3080c",
+  "evidence_authorities": [
+    "/products/education/authority/1001-adversarial-task-battery-256.v1.json",
+    "/products/education/authority/1001-paired-substitution-regression-256.v1.json",
+    "/products/education/authority/1001-seven-swap-cumulative-regression-256.v1.json"
+  ],
+  "canonical_substitutions": [
+    {
+      "path": "/products/education/authority/major-level-4-band-a-50-geometry.v1.json",
+      "out": "radio",
+      "in": "allergy"
+    },
+    {
+      "path": "/products/education/authority/major-level-4-band-a-50-geometry.v1.json",
+      "out": "festival",
+      "in": "blood"
+    },
+    {
+      "path": "/products/education/authority/major-level-4-band-b-50-geometry.v1.json",
+      "out": "poem",
+      "in": "stomach"
+    },
+    {
+      "path": "/products/education/authority/major-level-4-band-b-50-geometry.v1.json",
+      "out": "novel",
+      "in": "tooth"
+    },
+    {
+      "path": "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+      "out": "pale",
+      "in": "electricity"
+    },
+    {
+      "path": "/products/education/authority/major-level-3-band-c-50-geometry.v1.json",
+      "out": "stale",
+      "in": "soap"
+    },
+    {
+      "path": "/products/education/authority/major-level-3-band-d-50-geometry.v1.json",
+      "out": "betrayal",
+      "in": "discount"
+    }
+  ],
+  "lexical_validation": {
+    "surface_entries": 1001,
+    "exact_unique_entries": 1001,
+    "exact_duplicates": 0,
+    "normalization_failures": 0
+  },
+  "frozen_battery_validation": {
+    "task_total": 256,
+    "direct": 227,
+    "controlled_paraphrase": 29,
+    "genuine_failure": 0,
+    "practical": 256,
+    "practical_rate_percent": 100,
+    "safety_failures": 0
+  },
+  "acceptance": {
+    "all_seven_survive_cumulative_interaction": true,
+    "practical_completion_improves": true,
+    "direct_coverage_improves": true,
+    "all_baseline_failures_removed": true,
+    "new_safety_failures": 0
+  },
+  "decision": {
+    "gate": "PASS",
+    "canonical_candidate_qualified": true,
+    "next_step": "STACKED_REVIEW_AND_ADOPTION"
+  }
+}

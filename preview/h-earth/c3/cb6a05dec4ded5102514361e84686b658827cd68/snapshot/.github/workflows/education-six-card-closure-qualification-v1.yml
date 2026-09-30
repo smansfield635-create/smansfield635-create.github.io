@@ -1,0 +1,47 @@
+name: Education Six Card Closure Qualification v1
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha: {required: true, type: string}
+      base_sha: {required: true, type: string}
+permissions: {contents: read}
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Qualify six-card closure
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=20 origin "$CANDIDATE_SHA" "$BASE_SHA"
+          git show "$CANDIDATE_SHA:products/education/index.html" >/tmp/c.html
+          git show "$BASE_SHA:products/education/index.html" >/tmp/b.html
+          node - <<'NODE'
+          const fs=require('fs'),c=fs.readFileSync('/tmp/c.html','utf8'),b=fs.readFileSync('/tmp/b.html','utf8');
+          for(const src of [...c.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]))new Function(src);
+          const block=(s,a,z)=>s.slice(s.indexOf(a),s.indexOf(z,s.indexOf(a)));
+          for(const [a,z,n] of [['const BANK=','const CAPSTONE_BANK=','BANK'],['const CAPSTONE_BANK=','const EDUCATION_STATE_KEY=','CAPSTONE'],['function placementCoordinate','const BANK=','PLACEMENT'],['function submitAdaptiveAnswer','function resolveAdaptiveBoundary','ADAPTIVE']])if(block(c,a,z)!==block(b,a,z))throw Error('protected '+n+' changed');
+          const req=[
+            'constructPair:true',
+            'options:["I like music.","I like dogs."]',
+            'task.correct.every(x=>s.pair.includes(x))',
+            'type:"text",placeholder:"music, dogs, or pizza",accepted:["music","dogs","pizza"]',
+            'const chosen=s.text||""',
+            'options:["walked","walk"]',
+            'transferFrom:"play → played"',
+            'A("walk → walked",true,',
+            'This activity demonstrates bounded combinatorial leverage.',
+            'This check demonstrates one changed-surface transfer.'
+          ];
+          for(const x of req)if(!c.includes(x))throw Error('missing closure authority '+x);
+          for(const x of ['Eight Competency Stages','Stages 7–8','Current Phase 1 boundary','I may be beyond this demo'])if(c.includes(x))throw Error('obsolete authority '+x);
+          const tasks=block(c,'const tasks=','const labels=');
+          for(const x of ['options:["play","played"]','options:["She walk.","She walks."]','options:["It means hello.","It means goodbye."]'])if(!tasks.includes(x))throw Error('protected card task changed '+x);
+          for(const x of ['pointermove','data-flip','CAPSTONE_PASS','PUBLIC_AVAILABLE','NOT_CURRENTLY_AVAILABLE'])if(!c.includes(x))throw Error('runtime regression '+x);
+          console.log('EDUCATION_SIX_CARD_CLOSURE=PASS');
+          NODE

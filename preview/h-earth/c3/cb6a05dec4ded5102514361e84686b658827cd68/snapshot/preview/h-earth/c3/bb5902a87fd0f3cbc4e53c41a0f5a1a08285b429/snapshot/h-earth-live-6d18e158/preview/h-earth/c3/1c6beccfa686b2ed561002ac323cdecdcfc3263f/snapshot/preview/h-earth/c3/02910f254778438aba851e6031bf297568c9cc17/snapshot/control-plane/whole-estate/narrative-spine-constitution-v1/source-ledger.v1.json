@@ -1,0 +1,75 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_2_SOURCE_LEDGER_v1",
+  "status": "CHECKPOINT_2_CONSTRUCTION_CANDIDATE",
+  "sources": [
+    {
+      "id": "CP1_MERGED_BASELINE",
+      "type": "GOVERNING_REPOSITORY_BASELINE",
+      "identity": "c73a4f8854b8b2bf8f7b12fa860f0bc85d666544",
+      "tree": "aedef3f75a3c4fd445a736bf8eeb73125bea3fb4",
+      "authority": "GOVERNING"
+    },
+    {
+      "id": "CP1_PROSPECTIVE_CHANGE_REGISTER",
+      "type": "REGISTERED_CHECKPOINT_SCOPE",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/prospective-change-register.v1.json",
+      "authority": "GOVERNING_FOR_CHECKPOINT_2_SCOPE"
+    },
+    {
+      "id": "CP1_NARRATIVE_JOURNEY_MAP",
+      "type": "CONSTITUTIONAL_NARRATIVE_BASELINE",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/narrative-journey-map.v1.json",
+      "authority": "GOVERNING"
+    },
+    {
+      "id": "CP1_RELATIONSHIP_CROSSWALK",
+      "type": "CONSTITUTIONAL_RELATION_BASELINE",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/relationship-crosswalk.v1.json",
+      "authority": "GOVERNING"
+    },
+    {
+      "id": "ISSUE_716_AUDIT_ACCEPTANCE",
+      "type": "PRE_CP2_GOVERNANCE_INPUT",
+      "issue": 716,
+      "commentId": 5212277475,
+      "authority": "ACCEPTED_SUBSTANTIVE_INPUT"
+    },
+    {
+      "id": "ISSUE_716_FINAL_ROLE_REFINEMENT",
+      "type": "PRE_CP2_GOVERNANCE_INPUT",
+      "issue": 716,
+      "commentId": 5212699057,
+      "authority": "ACCEPTED_FOR_CP2_NARRATIVE_INTAKE"
+    },
+    {
+      "id": "ISSUE_705_CP2_NARRATIVE_INTAKE",
+      "type": "CONTROL_ROOM_NARRATIVE_SOURCE",
+      "issue": 705,
+      "commentId": 5212701089,
+      "authority": "SOURCE_INTAKE_ONLY"
+    },
+    {
+      "id": "IMI_UCIC_TEMPORAL_COLLAPSE_PAGE_READY_RECORD",
+      "type": "SCIENTIFIC_EVIDENCE_DELTA_SOURCE",
+      "pr": 720,
+      "prStatus": "DRAFT_UNMERGED",
+      "head": "5664ba8e059a65f1b7ec39f2c7e944866c06278b",
+      "path": "research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/PAGE_READY_RESEARCH_RECORD.md",
+      "authority": "EXACT_SOURCE_DELTA_NOT_GOVERNING_MAIN"
+    },
+    {
+      "id": "METHODS_MODELS_READ_ONLY_CANONICAL_MANIFEST",
+      "type": "READ_ONLY_CANONICAL_MANIFEST",
+      "path": "laws/research/methods-and-models/canonical-records-v1.html",
+      "authority": "READ_ONLY_PARTIAL_CANONICAL_RECORD_MANIFEST",
+      "closureState": {
+        "sourceInventory": "OPEN",
+        "semanticCrosswalk": "PARTIAL",
+        "presentationCoverage": "OPEN",
+        "reverseAudit": "NOT_STARTED_AT_CP1_BASELINE"
+      }
+    }
+  ],
+  "unmergedScientificSourceMayBePromotedToGoverningAuthority": false,
+  "publicMutationAuthorized": false
+}

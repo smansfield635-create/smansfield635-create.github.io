@@ -1,0 +1,589 @@
+/*
+ * Laws CP6 captured-frame presentation corrections.
+ * Presentation only. No Compass, route, record, evidence, or claim authority.
+ */
+
+@import url("/laws/index.stellar-continuity.css?v=LAWS_STELLAR_CONTINUITY_20260801A");
+
+html[data-cp6-experiential-presentation="candidate"] :is(
+  [data-laws-root],
+  .shell.laws-shell,
+  .laws-estate,
+  .laws-experience-hero
+)::before,
+html[data-cp6-experiential-presentation="candidate"] :is(
+  [data-laws-root],
+  .shell.laws-shell,
+  .laws-estate,
+  .laws-experience-hero
+)::after {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(
+  [data-laws-root],
+  .shell.laws-shell,
+  .laws-estate,
+  .laws-experience-hero
+) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary {
+  width: auto !important;
+  min-width: 6.25rem !important;
+  max-width: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary > span {
+  display: inline !important;
+  width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+}
+
+@media (min-width: 781px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero:has(.laws-first__disclosure[open]) {
+    min-height: max(100svh, 58rem);
+    padding-bottom: clamp(15.5rem, 20vw, 19rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero:has(.laws-first__disclosure[open]) .laws-first {
+    position: static;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__disclosure-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(2rem, 4vh, 3.5rem);
+    z-index: 24;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 1.65rem 0 0;
+    border-top: 1px solid var(--laws-experience-line);
+    background:
+      linear-gradient(180deg, rgba(3, 7, 20, 0), rgba(3, 7, 20, 0.42) 28%, rgba(3, 7, 20, 0.86));
+    backdrop-filter: blur(2px);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid {
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.8rem, 2vw, 2rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid article {
+    min-width: 0;
+    padding-right: clamp(0.5rem, 1vw, 1rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid p {
+    max-width: 18rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__research-record {
+    grid-template-columns: minmax(7rem, 0.16fr) minmax(0, 1fr);
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}
+
+@media (min-width: 781px) and (max-width: 1080px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero:has(.laws-first__disclosure[open]) {
+    min-height: max(100svh, 66rem);
+    padding-bottom: 22rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid a {
+    font-size: 0.66rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid p {
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] :is(
+    [data-laws-root],
+    .shell.laws-shell,
+    .laws-estate,
+    .laws-experience-hero
+  ) {
+    border-radius: 0 !important;
+  }
+}
+
+/*
+ * LAWS_FIRST_DYNAMIC_INDICATOR_RESTORATION_v1
+ * Restores the five visual F.I.R.S.T. state lights without creating a new
+ * state source. The existing read-only Compass correspondence continues to
+ * set data-laws-experience-active on the five question records.
+ */
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article {
+  isolation: isolate;
+  overflow: visible;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article > :is(a, p) {
+  opacity: 0.58;
+  transition: opacity 220ms ease, color 220ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"] > :is(a, p) {
+  opacity: 1;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+  z-index: 4;
+  box-sizing: border-box;
+  display: block;
+  width: 0.9rem;
+  height: 0.9rem;
+  opacity: 1 !important;
+  visibility: visible !important;
+  border: 2px solid rgba(116, 229, 255, 0.52);
+  background: #07101f;
+  box-shadow:
+    0 0 0 1px rgba(116, 229, 255, 0.08),
+    0 0 12px rgba(116, 229, 255, 0.18);
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 220ms ease,
+    transform 180ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
+  border-color: #e7fcff;
+  background: #79eaff;
+  box-shadow:
+    0 0 0 4px rgba(121, 234, 255, 0.12),
+    0 0 12px rgba(121, 234, 255, 0.9),
+    0 0 28px rgba(121, 234, 255, 0.72);
+  transform: scale(1.16);
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid {
+    position: relative;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid::before {
+    display: block !important;
+    top: 1.45rem;
+    bottom: 1.45rem;
+    left: 0.45rem;
+    right: auto;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(
+      to bottom,
+      rgba(121, 234, 255, 0.5),
+      var(--laws-experience-line) 18%,
+      var(--laws-experience-line) 82%,
+      rgba(121, 234, 255, 0.26)
+    );
+    box-shadow: 0 0 12px rgba(121, 234, 255, 0.12);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article {
+    padding: 0.85rem 0 1.35rem 2.15rem !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+    top: 1rem !important;
+    left: 0 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure-body {
+    backdrop-filter: none;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article,
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before,
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article > :is(a, p) {
+    transition: none !important;
+  }
+}
+
+/*
+ * LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1
+ * Restores the F.I.R.S.T. rail to the declaration side of the split hero,
+ * removes the detached Compass-zone sequence, and keeps the native disclosure
+ * response adjacent to its activation point on tablet viewports.
+ * Presentation only: no route, controller, record, evidence, or claim authority.
+ */
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first > .laws-first-rail {
+  position: relative;
+  z-index: 5;
+  width: min(100%, 34rem);
+  margin: clamp(1.65rem, 3.5vh, 2.65rem) 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__list {
+  isolation: isolate;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__list::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0.43rem;
+  right: 0.4rem;
+  left: 0.4rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(121, 234, 255, 0.58), var(--laws-experience-line), rgba(121, 234, 255, 0.28));
+  box-shadow: 0 0 14px rgba(121, 234, 255, 0.14);
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item {
+  position: relative;
+  min-width: 0;
+  padding: 1.35rem 0.15rem 0;
+  opacity: 0.5;
+  text-align: center;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__light {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  box-sizing: border-box;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(116, 229, 255, 0.56);
+  border-radius: 50%;
+  background: #07101f;
+  box-shadow: 0 0 12px rgba(116, 229, 255, 0.18);
+  transform: translateX(-50%);
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 220ms ease, transform 180ms ease;
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__label {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--laws-experience-ink);
+  font-size: clamp(0.53rem, 0.75vw, 0.66rem);
+  font-weight: 760;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__question {
+  display: none;
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item[data-laws-experience-active="true"] {
+  opacity: 1;
+  transform: translateY(-0.12rem);
+}
+
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item[data-laws-experience-active="true"] .laws-first-rail__light {
+  border-color: #e7fcff;
+  background: #79eaff;
+  box-shadow: 0 0 0 4px rgba(121, 234, 255, 0.12), 0 0 12px rgba(121, 234, 255, 0.92), 0 0 28px rgba(121, 234, 255, 0.74);
+  transform: translateX(-50%) scale(1.16);
+}
+
+@media (min-width: 781px) and (max-width: 1200px) {
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-experience-hero,
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-experience-hero:has(.laws-first__disclosure[open]) {
+    min-height: calc(100svh - 5rem);
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+    gap: clamp(1.5rem, 3.2vw, 3rem);
+    padding: clamp(2rem, 5vh, 4rem) 0 clamp(3rem, 7vh, 5rem);
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first {
+    position: relative;
+    width: 100%;
+    align-self: start;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__disclosure-body {
+    position: static;
+    width: 100%;
+    max-width: 34rem;
+    margin: 1.35rem 0 0;
+    padding: 1.2rem 0 0;
+    border-top: 1px solid var(--laws-experience-line);
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid::before {
+    display: none;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid article {
+    display: grid;
+    grid-template-columns: minmax(5.25rem, 0.34fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.72rem 0 0.72rem 1.45rem;
+    border-bottom: 1px solid rgba(121, 234, 255, 0.09);
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid article::before {
+    top: 0.9rem;
+    left: 0;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid p {
+    max-width: none;
+    margin: 0;
+    font-size: 0.88rem;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__research-record {
+    grid-template-columns: minmax(5.25rem, 0.34fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+    padding: 0.85rem 0 0 1.45rem;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-compass-primary {
+    position: sticky;
+    top: 1rem;
+    width: 100%;
+    align-self: start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin: 0;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-orbit {
+    min-height: clamp(31rem, 70vw, 44rem);
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-controller-panel {
+    width: min(96%, 38rem);
+    margin: -3.5rem auto 0;
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first > .laws-first-rail {
+    width: 100%;
+    margin-top: 1.4rem;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__label {
+    font-size: clamp(0.52rem, 2.45vw, 0.65rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item,
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__light {
+    transition: none !important;
+  }
+}
+
+
+/*
+ * LAWS_FOUNDATION_FIRST_APPLIED_STUDY_v1
+ * Keeps the Laws foundation primary. Applied research remains available as
+ * optional evidence depth and does not occupy the chamber threshold.
+ */
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure {
+  margin: 0.35rem 0 1.35rem;
+  border: 0;
+  border-top: 1px solid rgba(121, 234, 255, 0.22);
+  border-bottom: 1px solid rgba(121, 234, 255, 0.12);
+  background: transparent;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 0.24fr) minmax(0, 1fr) auto;
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  padding: 1.15rem 0;
+  color: var(--laws-experience-ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::after {
+  content: "+";
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: #79eaff;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure[open] > summary::after {
+  content: "−";
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary span {
+  color: #79eaff;
+  font-size: 0.68rem;
+  font-weight: 760;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary strong {
+  font-size: clamp(1rem, 1.7vw, 1.28rem);
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary small {
+  grid-column: 2;
+  color: var(--laws-experience-muted);
+  font-size: 0.82rem;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure__body {
+  padding: 0 0 1.35rem;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure .lr-battery-landing {
+  margin: 0;
+  padding: clamp(1rem, 2.5vw, 1.5rem) 0 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+@media (max-width: 780px) {
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary span,
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary strong,
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary small {
+    grid-column: 1;
+  }
+
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+}
+
+
+/*
+ * LAWS_DESKTOP_FIRST_DISCLOSURE_ADJACENCY_v1
+ * Keeps the Explore response adjacent to its control on wide desktop screens.
+ * Presentation only: no route, controller, evidence, formula, or claim authority.
+ */
+@media (min-width: 1201px) {
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-experience-hero:has(.laws-first__disclosure[open]) {
+    min-height: max(100svh, 58rem);
+    padding-bottom: clamp(3rem, 7vh, 5rem);
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-experience-hero:has(.laws-first__disclosure[open]) .laws-first {
+    position: relative;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__disclosure-body {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    max-width: 34rem;
+    margin: 1.35rem 0 0;
+    padding: 1.2rem 0 0;
+    border-top: 1px solid var(--laws-experience-line);
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid::before {
+    display: none;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid article {
+    display: grid;
+    grid-template-columns: minmax(5.75rem, 0.34fr) minmax(0, 1fr);
+    gap: 0.85rem;
+    align-items: baseline;
+    padding: 0.72rem 0 0.72rem 1.45rem;
+    border-bottom: 1px solid rgba(121, 234, 255, 0.09);
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid article::before {
+    top: 0.9rem;
+    left: 0;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid p {
+    max-width: none;
+    margin: 0;
+    font-size: 0.88rem;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__research-record {
+    grid-template-columns: minmax(5.75rem, 0.34fr) minmax(0, 1fr);
+    gap: 0.85rem;
+    margin-top: 0.4rem;
+    padding: 0.85rem 0 0 1.45rem;
+  }
+}

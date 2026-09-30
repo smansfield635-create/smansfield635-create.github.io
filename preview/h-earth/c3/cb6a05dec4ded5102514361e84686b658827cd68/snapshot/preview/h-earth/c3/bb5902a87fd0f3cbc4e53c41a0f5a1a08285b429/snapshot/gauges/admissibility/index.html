@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admissibility · Geodiametrics</title>
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+</head>
+<body>
+  <main class="gPage">
+    <header class="gHeader">
+      <h1 class="gTitle">Admissibility</h1>
+      <p class="gSub">Execution gate (live).</p>
+    </header>
+
+    <section class="gPanel" aria-label="Admissibility gauge">
+      <div class="gBody" id="out">
+        <p><strong>Status</strong> Loading…</p>
+      </div>
+
+      <div class="gActions">
+        <a class="gBtn" href="/gauges/">Back</a>
+        <a class="gBtn" href="/home/">Home</a>
+      </div>
+
+      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+    </section>
+  </main>
+
+  <script>
+    fetch('/gauges/live.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        const g = data.admissibility || {};
+        document.getElementById('out').innerHTML =
+          `<p><strong>Value</strong> ${(g.value ?? '—')}</p>` +
+          `<p><strong>Label</strong> ${(g.label ?? '—')}</p>` +
+          `<p><strong>Updated</strong> ${(data.updated_at ?? '—')}</p>`;
+      })
+      .catch(() => {
+        document.getElementById('out').innerHTML =
+          `<p><strong>Status</strong> Live feed not available.</p>`;
+      });
+  </script>
+</body>
+</html>

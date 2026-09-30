@@ -1,0 +1,89 @@
+{
+  "schema": "H_EARTH_OW01_NARRATIVE_WORLD_RECIPROCITY_BINDING_v1",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "projectId": "H_EARTH",
+  "checkpointId": "OW01",
+  "purpose": "Bind OW01 world construction and qualification to the existing whole-estate narrative laws and H-Earth Region 001 narrative/character/temporal reconciliation plan so geography, map representation, character state, temporal order and narrative development cannot drift apart.",
+  "privateSourceRepository": "smansfield635-create/geodiametrics1",
+  "privateSourceHead": "4543d2e65e51b4f53ae6c5d0741bed6dbed19a52",
+  "requiredNarrativeAuthorities": {
+    "wholeEstateInvariant": {
+      "path": "control-plane/whole-estate/invariant-contract-package-v1/narrative-invariant-contract.v1.json",
+      "blob": "de37525d99a2f51ec1b7a522aabd41b7700c54d7",
+      "role": "NARRATIVE_NONRECLASSIFICATION_NONINVENTION_AND_MEANING_PRESERVATION_LAW"
+    },
+    "wholeEstateSpine": {
+      "path": "control-plane/whole-estate/narrative-spine-constitution-v1/narrative-spine.v1.json",
+      "blob": "8df2184cbde273648849be906a701454993371cb",
+      "role": "WHOLE_ESTATE_EXPLANATORY_SEQUENCE_AND_TRANSLATION_BOUNDARY"
+    },
+    "hEarthRegion001NarrativePlan": {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json",
+      "role": "H_EARTH_REGION_001_NARRATIVE_CHARACTER_TEMPORAL_AND_WORLD_RELATIONSHIP_PLAN",
+      "canonicalStatusAtBinding": "WORKING_RECONCILIATION_CANDIDATE",
+      "mayCreateNewWorldAuthority": false,
+      "mayOverrideTerrainOrEstablishedGeography": false
+    }
+  },
+  "reciprocalLaws": [
+    "NARRATIVE_MAY_ASSIGN_MEANING_BUT_MAY_NOT_RELOCATE_ESTABLISHED_WORLD_FACTS",
+    "MAP_MAY_ORGANIZE_EXISTING_WORLD_FACTS_BUT_MAY_NOT_INVENT_NARRATIVE_FACTS_OR_CHARACTER_AUTHORITY",
+    "ESTABLISHED_WORLD_GEOGRAPHY_MAY_CONSTRAIN_FUTURE_NARRATIVE_PLACEMENT",
+    "ESTABLISHED_NARRATIVE_WORLD_IDENTITY_TEMPORAL_ORDER_AND_CHARACTER_BOUNDARIES_MAY_CONSTRAIN_FUTURE_MAP_AND_ENVIRONMENT_CONSTRUCTION",
+    "NARRATIVE_AND_MAP_MUST_RECIPROCALLY_RECONCILE_WHEN_EITHER_SIDE_ADVANCES",
+    "UNRESOLVED_NARRATIVE_HOLDS_MAY_NOT_BE_SILENTLY_RESOLVED_BY_GEOMETRY_OR_MAP_PLACEMENT",
+    "UNRESOLVED_GEOGRAPHIC_PLACEMENT_MAY_NOT_BE_SILENTLY_RESOLVED_BY_NARRATIVE_WORDING",
+    "AUDRALIA_REMAINS_WORLD_AUTHORITY_AND_H_EARTH_REMAINS_ITS_ENTERED_GROUND_VIEW_OCCURRENCE_UNLESS_SEPARATELY_SUPERSEDED",
+    "THE_SAME_PUBLISHED_MIRROR_MANOR_OCCURRENCE_MAY_NOT_BE_REPLACED_BY_AN_UNRELATED_MANOR_OCCURRENCE",
+    "PLAYER_ARRIVAL_STATE_TEMPORAL_ORDER_AND_EARNED_AGENCY_BOUNDARIES_MAY_NOT_BE_BROKEN_BY_WORLD_OR_ROUTE_CONSTRUCTION"
+  ],
+  "ow01NarrativeConstraints": {
+    "preserve": [
+      "AUDRALIA_GROUND_VIEW_WORLD_IDENTITY",
+      "MIRRORLAND_POSSIBLE_FUTURES_REPEATED_CHOICE_INHERITED_CONSEQUENCE_PRESERVED_CONTEXT_EARNED_AGENCY_PHYSICAL_SURVIVAL_TRUTHFUL_PREPARATION",
+      "PLAYER_ARRIVAL_IN_SPIRIT_FORM_BEFORE_DIGITAL_EMBODIMENT",
+      "ALARIC_DIRECT_OPENING_COMMUNICATION_BOUNDARY",
+      "MIRROR_ME_SEARCH_TRUST_AND_EMBODIMENT_GATE",
+      "MORE_THAN_ONE_ROUTE_AVAILABLE_AT_OPENING",
+      "MANOR_EXISTS_BUT_EXACT_WORLD_ANCHOR_REMAINS_SUBJECT_TO_RECONCILIATION",
+      "FRONTIER_ACTIVITY_EXISTS_WITHIN_REGION",
+      "COMPLETE_REGION_MAP_AND_OTHER_EXPLICIT_REVEALS_REMAIN_WITHHELD_UNTIL_LAWFULLY_EARNED"
+    ],
+    "openHoldsRemainOpenUnlessSeparatelyResolved": [
+      "SPIRIT_FORM_TRAVERSAL_AND_INTERACTION_LAW",
+      "MIRROR_ME_PERSONAL_IDENTITY_AND_LOCATION",
+      "TRUST_GAIN_LOSS_THRESHOLD_MECHANICS",
+      "CAVERN_PRIMARY_AND_SECONDARY_NARRATIVE_FUNCTION",
+      "EXACT_MANOR_WORLD_ANCHOR_WHERE_NOT_ALREADY_RECONCILED",
+      "EXACT_INTERACTION_OBJECT_OCCURRENCES_AND_COORDINATES"
+    ]
+  },
+  "qualificationRequirement": {
+    "candidateVsNarrativePlan": true,
+    "narrativePlanVsCandidate": true,
+    "mapNarrativeReciprocalAuditRequired": true,
+    "exactCandidateShaRequired": true,
+    "narrativeContradictionAllowed": false,
+    "silentHoldResolutionAllowed": false,
+    "userReviewEligibleOnlyAfterPass": true
+  },
+  "failureModes": [
+    "FAIL_IF_MAP_RELOCATES_ESTABLISHED_NARRATIVE_WORLD_FACT",
+    "FAIL_IF_NARRATIVE_RECLASSIFIES_OR_RELOCATES_ESTABLISHED_MAP_OR_WORLD_FACT",
+    "FAIL_IF_WORLD_CONSTRUCTION_IMPLIES_A_RESOLUTION_FOR_AN_EXPLICIT_OPEN_NARRATIVE_HOLD_WITHOUT_SEPARATE_AUTHORITY",
+    "FAIL_IF_NARRATIVE_DEVELOPMENT_IMPLIES_A_GEOGRAPHIC_PLACEMENT_NOT_SUPPORTED_BY_CURRENT_WORLD_AUTHORITY",
+    "FAIL_IF_PLAYER_TEMPORAL_CHARACTER_OR_AGENCY_BOUNDARY_IS_CONTRADICTED_BY_THE_CANDIDATE",
+    "FAIL_IF_AUDRALIA_H_EARTH_WORLD_IDENTITY_RELATION_IS_BROKEN",
+    "FAIL_IF_REQUIRED_NARRATIVE_RECIPROCAL_AUDIT_IS_SKIPPED"
+  ],
+  "authorityBoundary": {
+    "createsNarrativeAuthority": false,
+    "createsGeographicAuthority": false,
+    "createsProductMutationAuthority": false,
+    "createsBranchAuthority": false,
+    "createsMergeAuthority": false,
+    "createsDeploymentAuthority": false,
+    "createsUserApproval": false,
+    "effect": "MANDATORY_RECIPROCAL_CONTEXT_AND_DRIFT_PREVENTION_ONLY"
+  }
+}

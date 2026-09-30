@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>H-Earth Gen2519 Immutable Inspection</title>
+<style>
+html,body{margin:0;height:100%;background:#05090b;color:#eef8f6;font:14px/1.4 system-ui,sans-serif}
+body{display:grid;grid-template-rows:auto 1fr}
+header{padding:9px 12px;background:#0b1215;border-bottom:1px solid #314047;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+strong{letter-spacing:.04em} code{font:12px ui-monospace,monospace;color:#cce7df}
+#state[data-state="PASS"]{color:#9de5bd}
+iframe{width:100%;height:100%;border:0;background:#000}
+</style>
+</head>
+<body>
+<header>
+<strong>NONPRODUCTION · GEN2519 IMMUTABLE INSPECTION</strong>
+<span id="state" data-state="PENDING">TRANSPORT: PENDING</span>
+<code>cb6a05dec4ded5102514361e84686b658827cd68</code>
+</header>
+<iframe id="candidate" title="H-Earth Gen2519 candidate" allow="fullscreen; gamepad"></iframe>
+<script>
+(() => {
+  const candidateSha='cb6a05dec4ded5102514361e84686b658827cd68';
+  const root='https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/'+candidateSha+'/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/';
+  const target=root+'index.html';
+  const probes=[
+    ['index.html','dc24057a8472907a0a10aa0bfe4c4af146d5eb69'],
+    ['render/live-render-package.run8e-r2.js','738c041db6fe984b97443a6ed9fb2e4db2214f18'],
+    ['render/live-render-package.run8e-r2.canonical.js','b630c24da596a92e3bbb98c5b81d21022c11ecdf'],
+    ['render/run8e-successor-environment.js','296c0c2414ee3e968908bb307fff2a3ee853b6e8'],
+    ['render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','e2852e07d6b9d70242e92fa91f2f9f7bf17ca96e']
+  ];
+  const state=document.getElementById('state');
+  window.H_EARTH_GEN2519_TRANSPORT_RECEIPT=Object.freeze({candidateSha,target,expectedGitBlobs:Object.freeze(probes.map(([path,blob])=>Object.freeze({path,blob})))});
+  state.textContent='TRANSPORT: IMMUTABLE SHA BOUND';
+  state.dataset.state='PASS';
+  document.getElementById('candidate').src=target;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "auren-c3-1-repair-bf734639-20260929",
+  "capabilityId": "AUREN_C3_1_EXACT_HEAD_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5426,
+  "requestBranch": "ai-dispatch-request-auren-c3-1-bf734639-20260929",
+  "requestCommit": "337852003626f715ecd8e5de8a359c16d65fdaba",
+  "currentMainSha": "7ad97611653f5dd998bc462b7a716733fc13ce9a",
+  "bridgeRunId": "36661709301",
+  "error": "Stale dispatch request: parent 2149016222d0fde3f47d218741905651fb4807bc != current main 7ad97611653f5dd998bc462b7a716733fc13ce9a",
+  "failedAt": "2026-09-30T02:50:59.160Z"
+}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T20:34:05Z",
+  "generatedAt": "2026-09-30T21:32:21Z",
   "window": {
-    "start": "2026-07-02T20:34:05Z",
-    "end": "2026-09-30T20:34:05Z"
+    "start": "2026-07-02T21:32:21Z",
+    "end": "2026-09-30T21:32:21Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5080,
-    "visits": 1290,
+    "pageLoads": 5096,
+    "visits": 1306,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5080,
-        "visits": 1290
+        "pageLoads": 5096,
+        "visits": 1306
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1089,
-        "visits": 752
+        "pageLoads": 1098,
+        "visits": 761
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -326,6 +326,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 11,
+        "visits": 11
+      },
       "/governance-bridge/": {
         "pageLoads": 95,
         "visits": 82
@@ -333,10 +337,6 @@
       "/preview/governance-bridge/": {
         "pageLoads": 5,
         "visits": 5
-      },
-      "/home/": {
-        "pageLoads": 4,
-        "visits": 4
       },
       "/analytics/": {
         "pageLoads": 51,
@@ -353,16 +353,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 485,
-        "visits": 485
+        "pageLoads": 494,
+        "visits": 494
       },
       "diamondgatebridge.com": {
         "pageLoads": 3790,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 794,
-        "visits": 794
+        "pageLoads": 801,
+        "visits": 801
       },
       "raw.githack.com": {
         "pageLoads": 10,

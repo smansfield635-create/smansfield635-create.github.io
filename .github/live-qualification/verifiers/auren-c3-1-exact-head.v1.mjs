@@ -7,13 +7,13 @@ const click=async(p,t)=>{await ready(p);const before=await labels(p);add('MAX3_'
 const open=async()=>{const p=await browser.newPage();await p.setViewport({width:390,height:844,isMobile:true,hasTouch:true});const errors=[];p.on('pageerror',e=>errors.push(String(e)));const res=await p.goto(base+'/products/auren/',{waitUntil:'networkidle0',timeout:60000});await p.waitForFunction(()=>document.querySelector('[data-auren-chamber]')?.getAttribute('data-auren-ready')==='true',{timeout:20000});await ready(p);return{p,res,errors}};
 try{
  let {p,res,errors}=await open();let o=await labels(p);add('ROUTE_READY',res?.status()===200,{status:res?.status()});add('OPENING_MODES',JSON.stringify(o)===JSON.stringify(['Products','Learn About Auren']),{options:o});add('OPENING_MAX3',o.length<=3,{count:o.length});
- await click(p,'Products');o=await labels(p);add('PRODUCT_BANK_1',JSON.stringify(o)===JSON.stringify(['ARCHCOIN','Five Flags','More']),{options:o});await click(p,'More');o=await labels(p);add('PRODUCT_BANK_2',JSON.stringify(o)===JSON.stringify(['Education','Nutrition','Book / Nine Summits']),{options:o});await p.close();
+ await click(p,'Products');o=await labels(p);add('PRODUCT_BANK_1',JSON.stringify(o)===JSON.stringify(['ARCHCOIN','Five Flags','Education · Nutrition · Book']),{options:o});await click(p,'Education · Nutrition · Book');o=await labels(p);add('PRODUCT_BANK_2',JSON.stringify(o)===JSON.stringify(['Education','Nutrition','Book / Nine Summits']),{options:o});add('NO_AMBIGUOUS_MORE',!o.includes('More')&&!o.includes('More products'),{options:o});await p.close();
  const paths=[
   ['ARCHCOIN',['Products','ARCHCOIN'],['What is it for?','Which two are live?','How do the four fit?']],
   ['Five Flags',['Products','Five Flags'],['How does it work?','Why only five signals?','Show me Five Flags']],
-  ['Education',['Products','More','Education'],['How does placement work?','What is actually available?','Show me Education']],
-  ['Nutrition',['Products','More','Nutrition'],['What does baseline mean?','What is the prototype?','Show me Nutrition']],
-  ['Book',['Products','More','Book / Nine Summits'],['Why Elara?','Talk to Elara','Back to Products']]
+  ['Education',['Products','Education · Nutrition · Book','Education'],['How does placement work?','What is actually available?','Show me Education']],
+  ['Nutrition',['Products','Education · Nutrition · Book','Nutrition'],['What is in R1?','What is still open?','Show me Nutrition']],
+  ['Book',['Products','Education · Nutrition · Book','Book / Nine Summits'],['Why Elara?','Talk to Elara','Back to Products']]
  ];
  for(const [name,steps,expected] of paths){({p,errors}=await open());for(const s of steps)await click(p,s);o=await labels(p);add(name.toUpperCase().replace(/ /g,'_')+'_BANK',JSON.stringify(o)===JSON.stringify(expected),{options:o});add(name.toUpperCase().replace(/ /g,'_')+'_MAX3',o.length<=3,{count:o.length});add(name.toUpperCase().replace(/ /g,'_')+'_NO_ERRORS',errors.length===0,{errors});await p.close()}
  ({p,errors}=await open());await click(p,'Products');await click(p,'Five Flags');await click(p,'Show me Five Flags');o=await labels(p);add('FIVE_FLAGS_HANDOFF',o.includes('Open Five Flags'),{options:o});const ff=await p.$eval('a.auren-option',a=>a.getAttribute('href'));add('FIVE_FLAGS_ROUTE',ff==='/products/five-flags/',{href:ff});await p.close();

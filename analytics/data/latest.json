@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-09-30T10:35:16Z",
+  "generatedAt": "2026-09-30T11:29:58Z",
   "window30d": {
-    "start": "2026-08-31T10:35:16Z",
-    "end": "2026-09-30T10:35:16Z"
+    "start": "2026-08-31T11:29:58Z",
+    "end": "2026-09-30T11:29:58Z"
   },
   "daily": [
     {
       "date": "2026-09-01",
-      "pageLoads": 210
+      "pageLoads": 180
     },
     {
       "date": "2026-09-02",
-      "pageLoads": 190
+      "pageLoads": 120
     },
     {
       "date": "2026-09-03",
@@ -92,11 +92,11 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 250
+      "pageLoads": 80
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 91
+      "pageLoads": 61
     },
     {
       "date": "2026-09-24",
@@ -108,35 +108,35 @@
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 102
+      "pageLoads": 49
     },
     {
       "date": "2026-09-27",
-      "pageLoads": 29
+      "pageLoads": 14
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 32
+      "pageLoads": 22
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 50
+      "pageLoads": 54
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 35
+      "pageLoads": 36
     }
   ],
   "summary": {
-    "pageLoads": 6922,
-    "botPageLoads": 2588,
+    "pageLoads": 6923,
+    "botPageLoads": 2589,
     "nonBotPageLoads": 4334
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3322,
-      "visits": 3322
+      "pageLoads": 3323,
+      "visits": 3323
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,8 +172,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1878,
-      "visits": 1448
+      "pageLoads": 1874,
+      "visits": 1445
     },
     {
       "path": "/mirror-manor-preview/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 353,
-      "visits": 91
+      "pageLoads": 352,
+      "visits": 90
     },
     {
       "path": "/products/education/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 242,
-      "visits": 133
+      "pageLoads": 211,
+      "visits": 113
     },
     {
       "path": "/evidence/agentic-frontier/",

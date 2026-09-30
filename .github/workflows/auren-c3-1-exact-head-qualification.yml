@@ -36,7 +36,13 @@ jobs:
           products/auren/auren.voice.js
           EOF
           sort -o /tmp/allowed /tmp/allowed
-          diff -u /tmp/allowed /tmp/files
+          while IFS= read -r changed; do
+            grep -Fxq "$changed" /tmp/allowed || {
+              echo "Unauthorized C3.1 changed file: $changed" >&2
+              exit 1
+            }
+          done </tmp/files
+          test -s /tmp/files
           ! grep -E 'products/auren/(index\.html|index\.css|auren\.room\.)' /tmp/files
       - uses: browser-actions/setup-chrome@v1
       - name: Resolve Chrome

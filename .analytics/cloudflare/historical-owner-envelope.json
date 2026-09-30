@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T19:29:52Z",
+  "generatedAt": "2026-09-30T20:34:05Z",
   "window": {
-    "start": "2026-07-02T19:29:52Z",
-    "end": "2026-09-30T19:29:52Z"
+    "start": "2026-07-02T20:34:05Z",
+    "end": "2026-09-30T20:34:05Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5081,
-    "visits": 1291,
+    "pageLoads": 5080,
+    "visits": 1290,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5081,
-        "visits": 1291
+        "pageLoads": 5080,
+        "visits": 1290
       }
     },
     "byPath": {
@@ -58,13 +58,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -119,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 275,
-        "visits": 75
+        "pageLoads": 274,
+        "visits": 74
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -146,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 62,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 94,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 62,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -353,8 +353,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 486,
-        "visits": 486
+        "pageLoads": 485,
+        "visits": 485
       },
       "diamondgatebridge.com": {
         "pageLoads": 3790,

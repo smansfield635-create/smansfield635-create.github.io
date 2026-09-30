@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2520-tree-graft-003",
+  "capabilityId": "H_EARTH_GEN2515_AUTHORIZED_TOOLSET_EXECUTE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5451,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2520-tree-graft-003",
+  "requestCommit": "78e79912dd47ff15ecf73517177f10036eb027b7",
+  "requestCommitParent": "9e9973b277c5c8aa847209fd2223a398d50fb22f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "9e9973b277c5c8aa847209fd2223a398d50fb22f",
+  "workflow": "ai-room-execution-transport.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H_EARTH_GEN2520_TREE_GRAFT_EXECUTE_20260930_003\",\"descriptorId\":\"H_EARTH_GEN2519_IMMUTABLE_INSPECTION_TREE_GRAFT_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_GEN2519_IMMUTABLE_INSPECTION_TREE_GRAFT_20260930_001\",\"admissionReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"82a034cfcf96d3a4985e6583a2cb0c425895aaa0\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2520-tree-graft-admission.minimal.v1.json\",\"sha256\":\"411529c54500477e6655bc501ecc327337424e8b3cf472361299cb2e16be870f\"},\"routerReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"061b1c123387f9c4752727256686ef968aabceea\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2520-tree-graft-router.minimal.v1.json\",\"sha256\":\"fde71773de2beca587301b72355f5c7e1f4faf34cfcf5f226760fec2267323da\"},\"inputs\":{\"executionHolder\":\"AI_ROOM_GEN2520_TREE_GRAFT\"},\"availableCapabilities\":{\"GITHUB_ACTIONS_CLEAN_EXECUTION\":true},\"requestNonce\":\"d9f134778ef34804b8b5ccf01c60dcfb2343ab0f3f07d45c992bc81d234a6c51\"}",
+    "router_callback_issue": "5439",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "36774563052",
+  "dispatchedRunId": 36774585239,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36774585239",
+  "dispatchedRunHeadSha": "9e9973b277c5c8aa847209fd2223a398d50fb22f",
+  "dispatchedAt": "2026-09-30T20:43:11.665Z",
+  "resolvedAt": "2026-09-30T20:43:15.629Z"
+}

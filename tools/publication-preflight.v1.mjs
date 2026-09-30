@@ -97,6 +97,7 @@ function extractJavaScriptResourceSpecifiers(target,text){
   appendMatches(target,text,/\bnew\s+URL\s*\(\s*["']([^"']+)["']\s*,\s*import\.meta\.url\s*\)/gs);
   appendMatches(target,text,/\bfetch\s*\(\s*["']([^"']+)["']/gs);
   appendMatches(target,text,/\b(?:Worker|SharedWorker)\s*\(\s*["']([^"']+)["']/gs);
+  if(/\bimport\s*\(\s*selectedRendererPath\s*\)/.test(text))appendMatches(target,text,/\b[A-Z0-9_]*RENDERER_PATH\s*=\s*["']([^"']+)["']/gs);
 }
 function extractResourceSpecifiers(rel,text){
   const ext=path.posix.extname(rel).toLowerCase();

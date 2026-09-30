@@ -210,8 +210,8 @@ export function stageValidatedWritebackPaths({ descriptor, toolRoot, changed }) 
 }
 
 function performRegisteredTreeGraftWriteback({ descriptor, specification, toolRoot, payloadReceiptPath }) {
-  const actualHead = git(toolRoot, ['rev-parse', 'HEAD^{commit}']).stdout.trim();
-  if (actualHead !== specification.expectedBranchHead) fail('WRITEBACK_LOCAL_HEAD_MISMATCH', `${specification.expectedBranchHead}:${actualHead}`);
+  const actualToolingHead = git(toolRoot, ['rev-parse', 'HEAD^{commit}']).stdout.trim();
+  if (actualToolingHead !== descriptor.exactToolingHead) fail('TOOLING_HEAD_MISMATCH', `${descriptor.exactToolingHead}:${actualToolingHead}`);
   const remoteBefore = readRemoteHead(toolRoot, specification.targetBranchRef);
   if (remoteBefore !== specification.expectedBranchHead) fail('WRITEBACK_REMOTE_HEAD_MISMATCH', `${specification.expectedBranchHead}:${remoteBefore}`);
   if (changedPaths(toolRoot).length !== 0) fail('TREE_GRAFT_WORKTREE_MUST_REMAIN_CLEAN');

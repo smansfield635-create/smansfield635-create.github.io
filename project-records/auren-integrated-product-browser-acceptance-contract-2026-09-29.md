@@ -141,3 +141,19 @@ One exact-head browser receipt must provide:
 **IT DOES NOT AUTHORIZE NEW PRODUCT BEHAVIOR.**
 
 **FAILURE LOCALIZES A PRODUCT GAP; PASS ESTABLISHES AN INTEGRATED ACCEPTANCE BASELINE.**
+
+## Terminal qualification receipt
+
+Status: **PASS / INTEGRATED ACCEPTANCE BASELINE ESTABLISHED**
+
+- Frozen candidate: `ce1b7f28e1b715ba96044577ef58c8779b8046fe`
+- Governed AI-entry bridge run: `36650561824`
+- Integrated browser acceptance run: `36650574552`
+- Receipt artifact: `11069609662` (`auren-integrated-36650574552-1`)
+- Artifact digest: `sha256:c65ede440b45043755fb5c2cf88aeac17e806188c1feca888142b1828a576196`
+- Receipt failures: `[]`
+- Receipt firstFailure: `null`
+- Tested handoffs: ARCHCOIN, Five Flags, Education, Nutrition, Elara.
+- Global timing/performance and no-persistence invariants: PASS.
+
+The integrated browser verifier executed to completion against the frozen candidate. This closes the qualification-only contract without authorizing or introducing additional Auren product behavior.

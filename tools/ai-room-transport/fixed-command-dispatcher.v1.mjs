@@ -58,7 +58,7 @@ function safeEnvironment() {
   return Object.fromEntries(keys.filter(key => process.env[key] != null).map(key => [key, process.env[key]]));
 }
 
-export function buildFixedCommand(descriptor, inputs, payloadReceiptPath) {
+export function buildFixedCommand(descriptor, inputs, payloadReceiptPath, manifestArtifactPath = null) {
   const specification = assertObject(descriptor.commandSpecification, 'COMMAND_SPECIFICATION_INVALID');
   if (specification.shell !== false) fail('SHELL_EXECUTION_PROHIBITED');
   if (specification.extraArgumentsAllowed !== false) fail('EXTRA_ARGUMENTS_PROHIBITION_MISSING');
@@ -76,8 +76,11 @@ export function buildFixedCommand(descriptor, inputs, payloadReceiptPath) {
     args.push(binding.argument, String(inputs[binding.inputField]));
   }
   for (const binding of specification.outputArgumentBindings ?? []) {
-    if (binding.runtimeValue !== 'COMMAND_PAYLOAD_RECEIPT_PATH') fail('UNSUPPORTED_OUTPUT_BINDING', binding.runtimeValue);
-    args.push(binding.argument, payloadReceiptPath);
+    let outputPath;
+    if (binding.runtimeValue === 'COMMAND_PAYLOAD_RECEIPT_PATH') outputPath = payloadReceiptPath;
+    else if (binding.runtimeValue === 'COMMAND_MANIFEST_ARTIFACT_PATH' && manifestArtifactPath) outputPath = manifestArtifactPath;
+    else fail('UNSUPPORTED_OUTPUT_BINDING', binding.runtimeValue);
+    args.push(binding.argument, outputPath);
   }
   return { executable, args, digest: commandDigest(executable, args) };
 }
@@ -395,7 +398,8 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
     if (actualHead !== descriptor.exactToolingHead) fail('EXACT_TOOLING_HEAD_MISMATCH', `${descriptor.exactToolingHead}:${actualHead}`);
     if (changedPaths(toolRoot).length !== 0) fail('TOOLING_WORKTREE_NOT_CLEAN_BEFORE_EXECUTION');
     const payloadReceiptPath = path.join(worktreeParent, 'command-payload-receipt.json');
-    const fixed = buildFixedCommand(descriptor, resolution.validatedInputs, payloadReceiptPath);
+    const manifestArtifactPath = path.join(worktreeParent, 'command-manifest-artifact.json');
+    const fixed = buildFixedCommand(descriptor, resolution.validatedInputs, payloadReceiptPath, manifestArtifactPath);
     const streamOutput = descriptor.commandSpecification?.streamOutput === true;
     if (streamOutput) console.log('AI_TOOLING_PHASE REGISTERED_COMMAND_START');
     const execution = run(fixed.executable, fixed.args, { cwd: toolRoot, env: safeEnvironment(), visible: streamOutput });
@@ -415,6 +419,7 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
 
     const outputDigests = {};
     let payloadSchema = null;
+    if (fs.existsSync(manifestArtifactPath)) outputDigests.commandManifestArtifactSha256 = sha256(fs.readFileSync(manifestArtifactPath));
     if (fs.existsSync(payloadReceiptPath)) {
       const bytes = fs.readFileSync(payloadReceiptPath);
       outputDigests.commandPayloadReceiptSha256 = sha256(bytes);

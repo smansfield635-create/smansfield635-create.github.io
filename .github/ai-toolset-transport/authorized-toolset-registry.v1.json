@@ -1928,6 +1928,131 @@
       "continuationRule": "CONTINUE_ONLY_AFTER_VALIDATED_PASS",
       "terminationRule": "READ_ONLY_QUALIFICATION_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_DESCRIPTOR_V1",
+      "operationId": "H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_20261001_001",
+      "operationClass": "H_EARTH_CANONICAL_ASSET_MATERIALIZATION",
+      "projectId": "H_EARTH",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZER_V1",
+      "exactToolingHead": "48a9a0ce0197477831bdf5bdeb50aad0498b91f3",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--manifest-output",
+            "runtimeValue": "COMMAND_MANIFEST_ARTIFACT_PATH"
+          },
+          {
+            "argument": "--receipt-output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": true,
+        "fixedArgumentsPosition": "BEFORE_SCRIPT"
+      },
+      "canonicalInputSchema": {
+        "schemaId": "H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_INPUT_v1",
+        "required": [
+          "executionHolder"
+        ],
+        "allowed": [
+          "executionHolder"
+        ],
+        "properties": {
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_QUALIFICATION_RECEIPT_v1",
+        "required": [
+          "schema",
+          "result",
+          "executionHolder",
+          "placementAuthority",
+          "geometryAuthority",
+          "instanceCount",
+          "uniquePlacementIdCount",
+          "batchCount",
+          "batchCoverage",
+          "batchSizeMaximum",
+          "coordinatesReplanned",
+          "recordIdentityCompared",
+          "recordIdentityMismatchCount",
+          "manifestSha256",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "mergePerformed",
+          "deploymentPerformed",
+          "publicationPerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "preview/h-earth/",
+        "showroom/",
+        "assets/",
+        "campaigns/",
+        "laws/",
+        "characters/"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_AND_FULL_IDENTITY_RECEIPT",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "RETURN_FIRST_EXACT_ASSERTION_AND_STOP",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "RETURN_EXECUTION_BOUNDARY",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "CONTINUE_ONLY_AFTER_PASS_CLOSED_FULL_27585_RECORD_IDENTITY",
+      "terminationRule": "MATERIALIZATION_AUTHORITY_TERMINATES_AFTER_ARTIFACT_RECEIPT;NO_PRODUCT_MUTATION_MERGE_DEPLOYMENT_PUBLICATION_AUTHORITY",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

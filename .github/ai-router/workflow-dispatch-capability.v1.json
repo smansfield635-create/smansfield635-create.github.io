@@ -1409,15 +1409,31 @@
       "controlPlaneSemanticAuthority": false,
       "successResult": "CANONICAL_OPERATION_INTAKE_TRANSPORT_RECEIPT_v1"
     },
-    "H_EARTH_GEN2514_MANIFEST_TOOLING_FIXED_QUALIFY": {
-      "workflow": "h-earth-gen2514-manifest-tooling-fixed-qualification.yml",
+    "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZE": {
+      "workflow": "ai-room-execution-transport.yml",
       "ref": "main",
-      "inputPolicy": {},
+      "inputPolicy": {
+        "request_json": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "router_callback_issue": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        },
+        "router_callback_repository": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
       "workflowDispatchRegistrationRequired": true,
       "deploymentAuthority": false,
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
-      "successResult": "PASS_CLOSED"
+      "successResult": "COMMAND_EXECUTION_RECEIPT_v1"
     }
   },
   "continuity": {

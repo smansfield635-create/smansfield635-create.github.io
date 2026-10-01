@@ -2,6 +2,7 @@ import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/t
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
+import { getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch } from './live-render-package.run8e-r2.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
@@ -703,7 +704,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     cameraUniformUpdateCount: 0, staticUniformUpdateCount: 0,
     geometryDrawCallCount: 0, totalDrawnIndexCount: 0,
     depthVisualizationDrawCallCount: 0,
-    refinementResourceCreateCount: 0, refinementBufferUploadCount: 0, refinementDrawCallCount: 0
+    refinementResourceCreateCount: 0, refinementBufferUploadCount: 0, refinementDrawCallCount: 0,
+    vegetationBatchMaterializationCount: 0, vegetationResidentInstanceCount: 0, vegetationResidentPrimitiveCount: 0,
+    vegetationBufferUploadCount: 0, vegetationDrawCallCount: 0, worldRebuildCount: 0
   };
   const resources = {};
   const markPostInitializationCreation = () => {
@@ -780,6 +783,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     }
   }
 
+  const vegetationTruth=getHEarthRun8ER2VegetationWorldTruthPlan();
+  if(vegetationTruth.qualifiedManifestIdentity?.manifestSha256!=='9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e')throw new Error('R3C_QUALIFIED_VEGETATION_MANIFEST_MISMATCH');
+  resources.vegetation={truth:vegetationTruth,nextBatchIndex:0,residentBatches:[],residentPlacementIds:new Set(),complete:false};
   let contactField=createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans);
   let contactFieldBuildCount=1,contactFieldTotalMilliseconds=contactField.stats.initializationMilliseconds;
 
@@ -927,6 +933,18 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   }
   function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
 
+  function materializeNextVegetationBatch(){
+    if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');
+    const state=resources.vegetation;if(state.complete)return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});
+    const descriptor=state.truth.batches[state.nextBatchIndex];if(!descriptor){state.complete=true;return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});}
+    const batch=createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId);
+    if(batch.instanceCount!==descriptor.count||batch.placementIds.length!==descriptor.count)throw new Error('R3C_VEGETATION_BATCH_IDENTITY_MISMATCH');
+    for(const id of batch.placementIds){if(state.residentPlacementIds.has(id))throw new Error('R3C_VEGETATION_DUPLICATE_PLACEMENT');state.residentPlacementIds.add(id);}
+    state.residentBatches.push(batch);state.nextBatchIndex+=1;counters.vegetationBatchMaterializationCount+=1;counters.vegetationResidentInstanceCount+=batch.instanceCount;counters.vegetationResidentPrimitiveCount+=batch.primitives.length;
+    if(state.nextBatchIndex===state.truth.batches.length){state.complete=true;if(counters.vegetationResidentInstanceCount!==state.truth.instanceCount||state.residentPlacementIds.size!==state.truth.instanceCount)throw new Error('R3C_VEGETATION_EVENTUAL_RESIDENCY_INCOMPLETE');}
+    return Object.freeze({complete:state.complete,batchId:descriptor.batchId,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:state.nextBatchIndex});
+  }
+
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
@@ -1024,13 +1042,14 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
+      vegetationResidency:{manifestSha256:vegetationTruth.qualifiedManifestIdentity.manifestSha256,totalInstanceCount:vegetationTruth.instanceCount,totalBatchCount:vegetationTruth.batches.length,maxInstancesPerBatch:vegetationTruth.maxInstancesPerMaterializationBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth.droppedPlacementCount,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth.cameraIndependent},
       canonicalPackageMutated:false
     };
   }
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, activateInitialRefinement, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, activateInitialRefinement, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

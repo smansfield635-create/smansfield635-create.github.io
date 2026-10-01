@@ -17,6 +17,11 @@ on:
         required: false
         default: ''
         type: string
+      apply_timing_shim:
+        description: Apply Variant-B timing observation shim
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -45,7 +50,7 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Apply bounded Variant-B timing observation shim
-        if: ${{ inputs.route_path == '/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/' }}
+        if: ${{ inputs.route_path == '/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/' && inputs.apply_timing_shim }}
         shell: bash
         run: |
           set -euo pipefail

@@ -525,6 +525,8 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       neutralPackageContractId: neutralPackage.contractId,
       westAdmissionContractId: transfer.westContractId,
       packet002TransferContractId: transfer.contractId,
+      packet002CompositionMode: transfer.compositionMode,
+      packet002VegetationResidencyDisposition: transfer.vegetationResidencyDisposition,
       run8CMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
       functionalLandscapeRendererContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
       atmosphereContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,

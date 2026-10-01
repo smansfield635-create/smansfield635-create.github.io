@@ -1,0 +1,3417 @@
+{
+  "schema": "ABC_ROOFING_NORMALIZED_GOVERNANCE_FEED_v1",
+  "fictional": true,
+  "asOf": "2026-09-30T17:00:00-04:00",
+  "sourceSystem": "ABC_ROOFING_SYNTHETIC_CRM_v1",
+  "jobs": [
+    {
+      "jobId": "ABC-SEP-C-001",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-001",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-002",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-002",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-003",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-003",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-004",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-004",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-005",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-005",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-006",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-006",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-007",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-007",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-008",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-008",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-009",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-009",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-010",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-010",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-011",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-011",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-012",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-012",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-013",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-013",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-014",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-014",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-015",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-015",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-016",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-016",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-017",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-017",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-018",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-018",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-019",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-019",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-020",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-020",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-021",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-021",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-022",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-022",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-023",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-023",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-024",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-024",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-025",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-025",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-026",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-026",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-027",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-027",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-028",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-028",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-029",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-029",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-030",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-030",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-031",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-031",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-032",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-032",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-033",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-033",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-034",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-034",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-035",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-035",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-036",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-036",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-037",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-037",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-038",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-038",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-039",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-039",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-040",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-040",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-041",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-041",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-042",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-042",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-043",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-043",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-044",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-044",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-045",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-045",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-046",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-046",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-047",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-047",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-048",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-048",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-049",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-049",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-050",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-050",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-051",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-051",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-052",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-052",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-053",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-053",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-054",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-054",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-055",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-055",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-056",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-056",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-057",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-057",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-C-058",
+      "crm": {
+        "status": "COMPLETED",
+        "stage": "CLOSEOUT",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-C-058",
+      "evidence": []
+    },
+    {
+      "jobId": "ABC-SEP-A-001",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "LEADS",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-001",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-001",
+          "jobId": "ABC-SEP-A-001",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-001-R2",
+          "jobId": "ABC-SEP-A-001",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-001"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-001-R2",
+          "jobId": "ABC-SEP-A-001",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-001-R1"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-001",
+          "jobId": "ABC-SEP-A-001",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-001-R2",
+          "jobId": "ABC-SEP-A-001",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-001-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-001",
+          "jobId": "ABC-SEP-A-001",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-001"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-002",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPOINTMENTS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-002",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-002",
+          "jobId": "ABC-SEP-A-002",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-002-R2",
+          "jobId": "ABC-SEP-A-002",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-002"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-002",
+          "jobId": "ABC-SEP-A-002",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-002-R2",
+          "jobId": "ABC-SEP-A-002",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-002-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-002",
+          "jobId": "ABC-SEP-A-002",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-002"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-003",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "INSPECTIONS",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-003",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-003",
+          "jobId": "ABC-SEP-A-003",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-003-R2",
+          "jobId": "ABC-SEP-A-003",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-003"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-003-R2",
+          "jobId": "ABC-SEP-A-003",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-003-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-003",
+          "jobId": "ABC-SEP-A-003",
+          "type": "Permit",
+          "state": "denied"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-003-R2",
+          "jobId": "ABC-SEP-A-003",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-003-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-003",
+          "jobId": "ABC-SEP-A-003",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-003"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-004",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "SCOPES",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-004",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-004",
+          "jobId": "ABC-SEP-A-004",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-004-R2",
+          "jobId": "ABC-SEP-A-004",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-004"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-004-R2",
+          "jobId": "ABC-SEP-A-004",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-004-R1"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-004",
+          "jobId": "ABC-SEP-A-004",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-004-R2",
+          "jobId": "ABC-SEP-A-004",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-004-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-004",
+          "jobId": "ABC-SEP-A-004",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-004"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-005",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-005",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-005",
+          "jobId": "ABC-SEP-A-005",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-005-R2",
+          "jobId": "ABC-SEP-A-005",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-005"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-005",
+          "jobId": "ABC-SEP-A-005",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-005-R2",
+          "jobId": "ABC-SEP-A-005",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-005-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-005",
+          "jobId": "ABC-SEP-A-005",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-005"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-006",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION_READY",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-006",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-006",
+          "jobId": "ABC-SEP-A-006",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-006-R2",
+          "jobId": "ABC-SEP-A-006",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-006"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-006-R2",
+          "jobId": "ABC-SEP-A-006",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-006-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-006",
+          "jobId": "ABC-SEP-A-006",
+          "type": "Permit",
+          "state": "denied"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-006-R2",
+          "jobId": "ABC-SEP-A-006",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-006-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-006",
+          "jobId": "ABC-SEP-A-006",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-006"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-007",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-007",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-007",
+          "jobId": "ABC-SEP-A-007",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-007-R2",
+          "jobId": "ABC-SEP-A-007",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-007"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-007-R2",
+          "jobId": "ABC-SEP-A-007",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-007-R1"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-007",
+          "jobId": "ABC-SEP-A-007",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-007-R2",
+          "jobId": "ABC-SEP-A-007",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-007-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-007",
+          "jobId": "ABC-SEP-A-007",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-007"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-0047",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PROD-0047",
+      "evidence": [
+        {
+          "id": "INS-ABC-0047",
+          "jobId": "ABC-0047",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-0047-R2",
+          "jobId": "ABC-0047",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-0047"
+        },
+        {
+          "id": "PERMIT-ABC-0047",
+          "jobId": "ABC-0047",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-0047-R2",
+          "jobId": "ABC-0047",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-0047-R2"
+        },
+        {
+          "id": "SLOT-ABC-0047",
+          "jobId": "ABC-0047",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PROD-0047"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-009",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "LEADS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-009",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-009",
+          "jobId": "ABC-SEP-A-009",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-009-R2",
+          "jobId": "ABC-SEP-A-009",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-009"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-009-R2",
+          "jobId": "ABC-SEP-A-009",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-009-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-009",
+          "jobId": "ABC-SEP-A-009",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-009-R2",
+          "jobId": "ABC-SEP-A-009",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-009-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-009",
+          "jobId": "ABC-SEP-A-009",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-009"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-010",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPOINTMENTS",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-010",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-010",
+          "jobId": "ABC-SEP-A-010",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-010-R2",
+          "jobId": "ABC-SEP-A-010",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-010"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-010-R2",
+          "jobId": "ABC-SEP-A-010",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-010-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-010",
+          "jobId": "ABC-SEP-A-010",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-010-R2",
+          "jobId": "ABC-SEP-A-010",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-010-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-010",
+          "jobId": "ABC-SEP-A-010",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-010"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-011",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "INSPECTIONS",
+        "owner": "Tampa Operations",
+        "crmBlocker": "Awaiting operational follow-up"
+      },
+      "productionStateId": "PS-ABC-SEP-A-011",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-011",
+          "jobId": "ABC-SEP-A-011",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-011-R2",
+          "jobId": "ABC-SEP-A-011",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-011"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-011-R2",
+          "jobId": "ABC-SEP-A-011",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-011-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-011",
+          "jobId": "ABC-SEP-A-011",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-011-R2",
+          "jobId": "ABC-SEP-A-011",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-011-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-011",
+          "jobId": "ABC-SEP-A-011",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-011"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-012",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "SCOPES",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-012",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-012",
+          "jobId": "ABC-SEP-A-012",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-012-R2",
+          "jobId": "ABC-SEP-A-012",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-012"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-012-R2",
+          "jobId": "ABC-SEP-A-012",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-012-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-012",
+          "jobId": "ABC-SEP-A-012",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-012-R2",
+          "jobId": "ABC-SEP-A-012",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-012-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-012",
+          "jobId": "ABC-SEP-A-012",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-012"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-013",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-013",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-013",
+          "jobId": "ABC-SEP-A-013",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-013-R2",
+          "jobId": "ABC-SEP-A-013",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-013"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-013-R2",
+          "jobId": "ABC-SEP-A-013",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-013-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-013",
+          "jobId": "ABC-SEP-A-013",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-013-R2",
+          "jobId": "ABC-SEP-A-013",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-013-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-013",
+          "jobId": "ABC-SEP-A-013",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-013"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-014",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION_READY",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-014",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-014",
+          "jobId": "ABC-SEP-A-014",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-014-R2",
+          "jobId": "ABC-SEP-A-014",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-014"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-014-R2",
+          "jobId": "ABC-SEP-A-014",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-014-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-014",
+          "jobId": "ABC-SEP-A-014",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-014-R2",
+          "jobId": "ABC-SEP-A-014",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-014-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-014",
+          "jobId": "ABC-SEP-A-014",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-014"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-015",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-015",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-015",
+          "jobId": "ABC-SEP-A-015",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-015-R2",
+          "jobId": "ABC-SEP-A-015",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-015"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-015-R2",
+          "jobId": "ABC-SEP-A-015",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-015-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-015",
+          "jobId": "ABC-SEP-A-015",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-015-R2",
+          "jobId": "ABC-SEP-A-015",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-015-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-015",
+          "jobId": "ABC-SEP-A-015",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-015"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-016",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "QC",
+        "owner": "Quality Control",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-016",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-016",
+          "jobId": "ABC-SEP-A-016",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-016-R2",
+          "jobId": "ABC-SEP-A-016",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-016"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-016-R2",
+          "jobId": "ABC-SEP-A-016",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-016-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-016",
+          "jobId": "ABC-SEP-A-016",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-016-R2",
+          "jobId": "ABC-SEP-A-016",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-016-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-016",
+          "jobId": "ABC-SEP-A-016",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-016"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-017",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "LEADS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-017",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-017",
+          "jobId": "ABC-SEP-A-017",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-017-R2",
+          "jobId": "ABC-SEP-A-017",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-017"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-017-R2",
+          "jobId": "ABC-SEP-A-017",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-017-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-017",
+          "jobId": "ABC-SEP-A-017",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-017-R2",
+          "jobId": "ABC-SEP-A-017",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-017-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-017",
+          "jobId": "ABC-SEP-A-017",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-017"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-018",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPOINTMENTS",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-018",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-018",
+          "jobId": "ABC-SEP-A-018",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-018-R2",
+          "jobId": "ABC-SEP-A-018",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-018"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-018-R2",
+          "jobId": "ABC-SEP-A-018",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-018-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-018",
+          "jobId": "ABC-SEP-A-018",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-018-R2",
+          "jobId": "ABC-SEP-A-018",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-018-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-018",
+          "jobId": "ABC-SEP-A-018",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-018"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-019",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "INSPECTIONS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-019",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-019",
+          "jobId": "ABC-SEP-A-019",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-019-R2",
+          "jobId": "ABC-SEP-A-019",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-019"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-019-R2",
+          "jobId": "ABC-SEP-A-019",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-019-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-019",
+          "jobId": "ABC-SEP-A-019",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-019-R2",
+          "jobId": "ABC-SEP-A-019",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-019-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-019",
+          "jobId": "ABC-SEP-A-019",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-019"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-020",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "SCOPES",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-020",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-020",
+          "jobId": "ABC-SEP-A-020",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-020-R2",
+          "jobId": "ABC-SEP-A-020",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-020"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-020-R2",
+          "jobId": "ABC-SEP-A-020",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-020-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-020",
+          "jobId": "ABC-SEP-A-020",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-020-R2",
+          "jobId": "ABC-SEP-A-020",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-020-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-020",
+          "jobId": "ABC-SEP-A-020",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-020"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-021",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-021",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-021",
+          "jobId": "ABC-SEP-A-021",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-021-R2",
+          "jobId": "ABC-SEP-A-021",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-021"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-021-R2",
+          "jobId": "ABC-SEP-A-021",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-021-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-021",
+          "jobId": "ABC-SEP-A-021",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-021-R2",
+          "jobId": "ABC-SEP-A-021",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-021-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-021",
+          "jobId": "ABC-SEP-A-021",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-021"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-022",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION_READY",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-022",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-022",
+          "jobId": "ABC-SEP-A-022",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-022-R2",
+          "jobId": "ABC-SEP-A-022",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-022"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-022-R2",
+          "jobId": "ABC-SEP-A-022",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-022-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-022",
+          "jobId": "ABC-SEP-A-022",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-022-R2",
+          "jobId": "ABC-SEP-A-022",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-022-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-022",
+          "jobId": "ABC-SEP-A-022",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-022"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-023",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-023",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-023",
+          "jobId": "ABC-SEP-A-023",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-023-R2",
+          "jobId": "ABC-SEP-A-023",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-023"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-023-R2",
+          "jobId": "ABC-SEP-A-023",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-023-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-023",
+          "jobId": "ABC-SEP-A-023",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-023-R2",
+          "jobId": "ABC-SEP-A-023",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-023-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-023",
+          "jobId": "ABC-SEP-A-023",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-023"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-024",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "QC",
+        "owner": "Quality Control",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-024",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-024",
+          "jobId": "ABC-SEP-A-024",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-024-R2",
+          "jobId": "ABC-SEP-A-024",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-024"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-024-R2",
+          "jobId": "ABC-SEP-A-024",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-024-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-024",
+          "jobId": "ABC-SEP-A-024",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-024-R2",
+          "jobId": "ABC-SEP-A-024",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-024-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-024",
+          "jobId": "ABC-SEP-A-024",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-024"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-025",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "LEADS",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-025",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-025",
+          "jobId": "ABC-SEP-A-025",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-025-R2",
+          "jobId": "ABC-SEP-A-025",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-025"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-025-R2",
+          "jobId": "ABC-SEP-A-025",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-025-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-025",
+          "jobId": "ABC-SEP-A-025",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-025-R2",
+          "jobId": "ABC-SEP-A-025",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-025-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-025",
+          "jobId": "ABC-SEP-A-025",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-025"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-026",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPOINTMENTS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-026",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-026",
+          "jobId": "ABC-SEP-A-026",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-026-R2",
+          "jobId": "ABC-SEP-A-026",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-026"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-026-R2",
+          "jobId": "ABC-SEP-A-026",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-026-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-026",
+          "jobId": "ABC-SEP-A-026",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-026-R2",
+          "jobId": "ABC-SEP-A-026",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-026-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-026",
+          "jobId": "ABC-SEP-A-026",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-026"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-027",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "INSPECTIONS",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-027",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-027",
+          "jobId": "ABC-SEP-A-027",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-027-R2",
+          "jobId": "ABC-SEP-A-027",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-027"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-027-R2",
+          "jobId": "ABC-SEP-A-027",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-027-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-027",
+          "jobId": "ABC-SEP-A-027",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-027-R2",
+          "jobId": "ABC-SEP-A-027",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-027-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-027",
+          "jobId": "ABC-SEP-A-027",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-027"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-028",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "SCOPES",
+        "owner": "Sales Coordination",
+        "crmBlocker": "Awaiting operational follow-up"
+      },
+      "productionStateId": "PS-ABC-SEP-A-028",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-028",
+          "jobId": "ABC-SEP-A-028",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-028-R2",
+          "jobId": "ABC-SEP-A-028",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-028"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-028-R2",
+          "jobId": "ABC-SEP-A-028",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-028-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-028",
+          "jobId": "ABC-SEP-A-028",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-028-R2",
+          "jobId": "ABC-SEP-A-028",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-028-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-028",
+          "jobId": "ABC-SEP-A-028",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-028"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-029",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-029",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-029",
+          "jobId": "ABC-SEP-A-029",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-029-R2",
+          "jobId": "ABC-SEP-A-029",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-029"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-029-R2",
+          "jobId": "ABC-SEP-A-029",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-029-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-029",
+          "jobId": "ABC-SEP-A-029",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-029-R2",
+          "jobId": "ABC-SEP-A-029",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-029-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-029",
+          "jobId": "ABC-SEP-A-029",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-029"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-030",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION_READY",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-030",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-030",
+          "jobId": "ABC-SEP-A-030",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-030-R2",
+          "jobId": "ABC-SEP-A-030",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-030"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-030-R2",
+          "jobId": "ABC-SEP-A-030",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-030-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-030",
+          "jobId": "ABC-SEP-A-030",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-030-R2",
+          "jobId": "ABC-SEP-A-030",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-030-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-030",
+          "jobId": "ABC-SEP-A-030",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-030"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-031",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-031",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-031",
+          "jobId": "ABC-SEP-A-031",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-031-R2",
+          "jobId": "ABC-SEP-A-031",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-031"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-031-R2",
+          "jobId": "ABC-SEP-A-031",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-031-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-031",
+          "jobId": "ABC-SEP-A-031",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-031-R2",
+          "jobId": "ABC-SEP-A-031",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-031-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-031",
+          "jobId": "ABC-SEP-A-031",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-031"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-032",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "QC",
+        "owner": "Quality Control",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-032",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-032",
+          "jobId": "ABC-SEP-A-032",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-032-R2",
+          "jobId": "ABC-SEP-A-032",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-032"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-032-R2",
+          "jobId": "ABC-SEP-A-032",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-032-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-032",
+          "jobId": "ABC-SEP-A-032",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-032-R2",
+          "jobId": "ABC-SEP-A-032",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-032-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-032",
+          "jobId": "ABC-SEP-A-032",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-032"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-033",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "LEADS",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-033",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-033",
+          "jobId": "ABC-SEP-A-033",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-033-R2",
+          "jobId": "ABC-SEP-A-033",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-033"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-033-R2",
+          "jobId": "ABC-SEP-A-033",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-033-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-033",
+          "jobId": "ABC-SEP-A-033",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-033-R2",
+          "jobId": "ABC-SEP-A-033",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-033-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-033",
+          "jobId": "ABC-SEP-A-033",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-033"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-034",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPOINTMENTS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-034",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-034",
+          "jobId": "ABC-SEP-A-034",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-034-R2",
+          "jobId": "ABC-SEP-A-034",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-034"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-034-R2",
+          "jobId": "ABC-SEP-A-034",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-034-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-034",
+          "jobId": "ABC-SEP-A-034",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-034-R2",
+          "jobId": "ABC-SEP-A-034",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-034-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-034",
+          "jobId": "ABC-SEP-A-034",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-034"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-035",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "INSPECTIONS",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-035",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-035",
+          "jobId": "ABC-SEP-A-035",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-035-R2",
+          "jobId": "ABC-SEP-A-035",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-035"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-035-R2",
+          "jobId": "ABC-SEP-A-035",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-035-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-035",
+          "jobId": "ABC-SEP-A-035",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-035-R2",
+          "jobId": "ABC-SEP-A-035",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-035-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-035",
+          "jobId": "ABC-SEP-A-035",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-035"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-036",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "SCOPES",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-036",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-036",
+          "jobId": "ABC-SEP-A-036",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-036-R2",
+          "jobId": "ABC-SEP-A-036",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-036"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-036-R2",
+          "jobId": "ABC-SEP-A-036",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-036-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-036",
+          "jobId": "ABC-SEP-A-036",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-036-R2",
+          "jobId": "ABC-SEP-A-036",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-036-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-036",
+          "jobId": "ABC-SEP-A-036",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-036"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-037",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-037",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-037",
+          "jobId": "ABC-SEP-A-037",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-037-R2",
+          "jobId": "ABC-SEP-A-037",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-037"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-037-R2",
+          "jobId": "ABC-SEP-A-037",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-037-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-037",
+          "jobId": "ABC-SEP-A-037",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-037-R2",
+          "jobId": "ABC-SEP-A-037",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-037-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-037",
+          "jobId": "ABC-SEP-A-037",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-037"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-038",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION_READY",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-038",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-038",
+          "jobId": "ABC-SEP-A-038",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-038-R2",
+          "jobId": "ABC-SEP-A-038",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-038"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-038-R2",
+          "jobId": "ABC-SEP-A-038",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-038-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-038",
+          "jobId": "ABC-SEP-A-038",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-038-R2",
+          "jobId": "ABC-SEP-A-038",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-038-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-038",
+          "jobId": "ABC-SEP-A-038",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-038"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-039",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-039",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-039",
+          "jobId": "ABC-SEP-A-039",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-039-R2",
+          "jobId": "ABC-SEP-A-039",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-039"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-039-R2",
+          "jobId": "ABC-SEP-A-039",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-039-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-039",
+          "jobId": "ABC-SEP-A-039",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-039-R2",
+          "jobId": "ABC-SEP-A-039",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-039-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-039",
+          "jobId": "ABC-SEP-A-039",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-039"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-040",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "QC",
+        "owner": "Quality Control",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-040",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-040",
+          "jobId": "ABC-SEP-A-040",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-040-R2",
+          "jobId": "ABC-SEP-A-040",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-040"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-040-R2",
+          "jobId": "ABC-SEP-A-040",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-040-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-040",
+          "jobId": "ABC-SEP-A-040",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-040-R2",
+          "jobId": "ABC-SEP-A-040",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-040-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-040",
+          "jobId": "ABC-SEP-A-040",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-040"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-041",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "LEADS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-041",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-041",
+          "jobId": "ABC-SEP-A-041",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-041-R2",
+          "jobId": "ABC-SEP-A-041",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-041"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-041-R2",
+          "jobId": "ABC-SEP-A-041",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-041-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-041",
+          "jobId": "ABC-SEP-A-041",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-041-R2",
+          "jobId": "ABC-SEP-A-041",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-041-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-041",
+          "jobId": "ABC-SEP-A-041",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-041"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-042",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPOINTMENTS",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-042",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-042",
+          "jobId": "ABC-SEP-A-042",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-042-R2",
+          "jobId": "ABC-SEP-A-042",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-042"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-042-R2",
+          "jobId": "ABC-SEP-A-042",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-042-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-042",
+          "jobId": "ABC-SEP-A-042",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-042-R2",
+          "jobId": "ABC-SEP-A-042",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-042-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-042",
+          "jobId": "ABC-SEP-A-042",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-042"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-043",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "INSPECTIONS",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-043",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-043",
+          "jobId": "ABC-SEP-A-043",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-043-R2",
+          "jobId": "ABC-SEP-A-043",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-043"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-043-R2",
+          "jobId": "ABC-SEP-A-043",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-043-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-043",
+          "jobId": "ABC-SEP-A-043",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-043-R2",
+          "jobId": "ABC-SEP-A-043",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-043-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-043",
+          "jobId": "ABC-SEP-A-043",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-043"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-044",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "SCOPES",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-044",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-044",
+          "jobId": "ABC-SEP-A-044",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-044-R2",
+          "jobId": "ABC-SEP-A-044",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-044"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-044-R2",
+          "jobId": "ABC-SEP-A-044",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-044-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-044",
+          "jobId": "ABC-SEP-A-044",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-044-R2",
+          "jobId": "ABC-SEP-A-044",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-044-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-044",
+          "jobId": "ABC-SEP-A-044",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-044"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-045",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": "Awaiting operational follow-up"
+      },
+      "productionStateId": "PS-ABC-SEP-A-045",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-045",
+          "jobId": "ABC-SEP-A-045",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-045-R2",
+          "jobId": "ABC-SEP-A-045",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-045"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-045-R2",
+          "jobId": "ABC-SEP-A-045",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-045-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-045",
+          "jobId": "ABC-SEP-A-045",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-045-R2",
+          "jobId": "ABC-SEP-A-045",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-045-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-045",
+          "jobId": "ABC-SEP-A-045",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-045"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-046",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION_READY",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-046",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-046",
+          "jobId": "ABC-SEP-A-046",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-046-R2",
+          "jobId": "ABC-SEP-A-046",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-046"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-046-R2",
+          "jobId": "ABC-SEP-A-046",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-046-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-046",
+          "jobId": "ABC-SEP-A-046",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-046-R2",
+          "jobId": "ABC-SEP-A-046",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-046-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-046",
+          "jobId": "ABC-SEP-A-046",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-046"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-047",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "PRODUCTION",
+        "owner": "Production Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-047",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-047",
+          "jobId": "ABC-SEP-A-047",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-047-R2",
+          "jobId": "ABC-SEP-A-047",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-047"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-047-R2",
+          "jobId": "ABC-SEP-A-047",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-047-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-047",
+          "jobId": "ABC-SEP-A-047",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-047-R2",
+          "jobId": "ABC-SEP-A-047",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-047-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-047",
+          "jobId": "ABC-SEP-A-047",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-047"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-048",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "QC",
+        "owner": "Quality Control",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-048",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-048",
+          "jobId": "ABC-SEP-A-048",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-048-R2",
+          "jobId": "ABC-SEP-A-048",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-048"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-048-R2",
+          "jobId": "ABC-SEP-A-048",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-048-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-048",
+          "jobId": "ABC-SEP-A-048",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-048-R2",
+          "jobId": "ABC-SEP-A-048",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-048-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-048",
+          "jobId": "ABC-SEP-A-048",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-048"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-049",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "LEADS",
+        "owner": "Jacksonville Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-049",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-049",
+          "jobId": "ABC-SEP-A-049",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-049-R2",
+          "jobId": "ABC-SEP-A-049",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-049"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-049-R2",
+          "jobId": "ABC-SEP-A-049",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-049-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-049",
+          "jobId": "ABC-SEP-A-049",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-049-R2",
+          "jobId": "ABC-SEP-A-049",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-049-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-049",
+          "jobId": "ABC-SEP-A-049",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-049"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-050",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPOINTMENTS",
+        "owner": "Tampa Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-050",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-050",
+          "jobId": "ABC-SEP-A-050",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-050-R2",
+          "jobId": "ABC-SEP-A-050",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-050"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-050-R2",
+          "jobId": "ABC-SEP-A-050",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-050-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-050",
+          "jobId": "ABC-SEP-A-050",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-050-R2",
+          "jobId": "ABC-SEP-A-050",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-050-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-050",
+          "jobId": "ABC-SEP-A-050",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-050"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-051",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "INSPECTIONS",
+        "owner": "Orlando Operations",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-051",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-051",
+          "jobId": "ABC-SEP-A-051",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-051-R2",
+          "jobId": "ABC-SEP-A-051",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-051"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-051-R2",
+          "jobId": "ABC-SEP-A-051",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-051-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-051",
+          "jobId": "ABC-SEP-A-051",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-051-R2",
+          "jobId": "ABC-SEP-A-051",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-051-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-051",
+          "jobId": "ABC-SEP-A-051",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-051"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-052",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "SCOPES",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-052",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-052",
+          "jobId": "ABC-SEP-A-052",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-052-R2",
+          "jobId": "ABC-SEP-A-052",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-052"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-052-R2",
+          "jobId": "ABC-SEP-A-052",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-052-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-052",
+          "jobId": "ABC-SEP-A-052",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-052-R2",
+          "jobId": "ABC-SEP-A-052",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-052-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-052",
+          "jobId": "ABC-SEP-A-052",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-052"
+        }
+      ]
+    },
+    {
+      "jobId": "ABC-SEP-A-053",
+      "crm": {
+        "status": "ACTIVE",
+        "stage": "APPROVALS",
+        "owner": "Sales Coordination",
+        "crmBlocker": null
+      },
+      "productionStateId": "PS-ABC-SEP-A-053",
+      "evidence": [
+        {
+          "id": "INS-ABC-SEP-A-053",
+          "jobId": "ABC-SEP-A-053",
+          "type": "Inspection",
+          "state": "approved"
+        },
+        {
+          "id": "SCOPE-ABC-SEP-A-053-R2",
+          "jobId": "ABC-SEP-A-053",
+          "type": "Scope",
+          "state": "approved",
+          "inspectionRef": "INS-ABC-SEP-A-053"
+        },
+        {
+          "id": "AUTH-ABC-SEP-A-053-R2",
+          "jobId": "ABC-SEP-A-053",
+          "type": "Customer Authorization",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-053-R2"
+        },
+        {
+          "id": "PERMIT-ABC-SEP-A-053",
+          "jobId": "ABC-SEP-A-053",
+          "type": "Permit",
+          "state": "approved"
+        },
+        {
+          "id": "MAT-ABC-SEP-A-053-R2",
+          "jobId": "ABC-SEP-A-053",
+          "type": "Material Order",
+          "state": "approved",
+          "scopeRef": "SCOPE-ABC-SEP-A-053-R2"
+        },
+        {
+          "id": "SLOT-ABC-SEP-A-053",
+          "jobId": "ABC-SEP-A-053",
+          "type": "Production Slot",
+          "state": "approved",
+          "productionStateRef": "PS-ABC-SEP-A-053"
+        }
+      ]
+    }
+  ],
+  "agileCycle": {
+    "id": "SEP-CLOSE-OCT-START",
+    "reportedCompletionPercent": 82,
+    "items": [
+      {
+        "id": "SEP-CLOSE",
+        "label": "Close September operating records",
+        "reported": "COMPLETE",
+        "evidence": "ESTABLISHED"
+      },
+      {
+        "id": "OCT-PIPELINE",
+        "label": "Confirm October production-ready pipeline",
+        "reported": "COMPLETE",
+        "evidence": "CONFLICTING"
+      },
+      {
+        "id": "CRM-BLOCKERS",
+        "label": "Resolve ordinary CRM blockers before October release",
+        "reported": "IN_PROGRESS",
+        "evidence": "UNPROVEN"
+      },
+      {
+        "id": "BRANCH-REVIEW",
+        "label": "Complete three branch operating reviews",
+        "reported": "COMPLETE",
+        "evidence": "ESTABLISHED"
+      },
+      {
+        "id": "CARRYOVER",
+        "label": "Assign owners to September carryover",
+        "reported": "COMPLETE",
+        "evidence": "ESTABLISHED"
+      }
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema": "ABC_ROOFING_ANNUAL_OPERATING_HISTORY_v1",
+  "fictional": true,
+  "period": "2025-10-01/2026-09-30",
+  "months": [
+    {
+      "month": "2025-10",
+      "opened": 47,
+      "completed": 43,
+      "monthEndActive": 24,
+      "monthEndIssues": 5,
+      "averageCycleDays": 22.8,
+      "contractVolume": 1023400
+    },
+    {
+      "month": "2025-11",
+      "opened": 45,
+      "completed": 42,
+      "monthEndActive": 25,
+      "monthEndIssues": 6,
+      "averageCycleDays": 23.1,
+      "contractVolume": 1012200
+    },
+    {
+      "month": "2025-12",
+      "opened": 39,
+      "completed": 38,
+      "monthEndActive": 23,
+      "monthEndIssues": 4,
+      "averageCycleDays": 21.9,
+      "contractVolume": 910100
+    },
+    {
+      "month": "2026-01",
+      "opened": 46,
+      "completed": 43,
+      "monthEndActive": 26,
+      "monthEndIssues": 6,
+      "averageCycleDays": 22.5,
+      "contractVolume": 1040600
+    },
+    {
+      "month": "2026-02",
+      "opened": 45,
+      "completed": 42,
+      "monthEndActive": 29,
+      "monthEndIssues": 7,
+      "averageCycleDays": 23.8,
+      "contractVolume": 1029000
+    },
+    {
+      "month": "2026-03",
+      "opened": 51,
+      "completed": 47,
+      "monthEndActive": 33,
+      "monthEndIssues": 8,
+      "averageCycleDays": 24.4,
+      "contractVolume": 1156200
+    },
+    {
+      "month": "2026-04",
+      "opened": 54,
+      "completed": 50,
+      "monthEndActive": 37,
+      "monthEndIssues": 9,
+      "averageCycleDays": 25.1,
+      "contractVolume": 1240000
+    },
+    {
+      "month": "2026-05",
+      "opened": 57,
+      "completed": 52,
+      "monthEndActive": 42,
+      "monthEndIssues": 11,
+      "averageCycleDays": 26.2,
+      "contractVolume": 1305200
+    },
+    {
+      "month": "2026-06",
+      "opened": 58,
+      "completed": 53,
+      "monthEndActive": 47,
+      "monthEndIssues": 12,
+      "averageCycleDays": 27.4,
+      "contractVolume": 1340900
+    },
+    {
+      "month": "2026-07",
+      "opened": 60,
+      "completed": 55,
+      "monthEndActive": 52,
+      "monthEndIssues": 10,
+      "averageCycleDays": 25.8,
+      "contractVolume": 1369500
+    },
+    {
+      "month": "2026-08",
+      "opened": 55,
+      "completed": 51,
+      "monthEndActive": 56,
+      "monthEndIssues": 9,
+      "averageCycleDays": 24.1,
+      "contractVolume": 1262250
+    },
+    {
+      "month": "2026-09",
+      "opened": 55,
+      "completed": 58,
+      "monthEndActive": 53,
+      "monthEndIssues": 8,
+      "averageCycleDays": 22.7,
+      "contractVolume": 1452900
+    }
+  ]
+}

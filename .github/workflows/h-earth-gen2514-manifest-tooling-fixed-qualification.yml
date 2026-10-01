@@ -13,49 +13,70 @@ jobs:
       - name: Checkout exact tooling candidate
         uses: actions/checkout@v4
         with:
-          ref: 1dbd53537ed46e6458b9a2748004b69466352fff
+          ref: 1f1d546c0b4fd51cfbe99cf62655b1677bfbfd96
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run admitted fixed self-test
+      - name: Run full canonical materialization proof
         id: test
         shell: bash
         run: |
           set -euo pipefail
-          node tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs --self-test | tee "$RUNNER_TEMP/self-test.stdout"
-          test "$(tr -d '\r\n' < "$RUNNER_TEMP/self-test.stdout")" = "PASS"
+          node tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs \
+            --execution-holder H_EARTH_GEN2514_MANIFEST_TOOLING_FULL_QUALIFICATION_20261001_002 \
+            --manifest-output "$RUNNER_TEMP/canonical-manifest.json" \
+            --receipt-output "$RUNNER_TEMP/materialization-receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/materialization-receipt.json','utf8'));
+          const ok=r.schema==='H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_QUALIFICATION_RECEIPT_v1' &&
+            r.result==='PASS_CLOSED' && r.instanceCount===27585 && r.uniquePlacementIdCount===27585 &&
+            r.batchCount===108 && r.batchCoverage===27585 && r.batchSizeMaximum<=256 &&
+            r.coordinatesReplanned===false && r.recordIdentityCompared===27585 && r.recordIdentityMismatchCount===0 &&
+            r.sourceMutationPerformed===false && r.productMutationPerformed===false && r.mergePerformed===false &&
+            r.deploymentPerformed===false && r.publicationPerformed===false;
+          if(!ok) process.exit(1);
+          NODE
       - name: Emit qualification receipt
         if: always()
         shell: bash
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const stdoutPath=process.env.RUNNER_TEMP+'/self-test.stdout';
-          const stdout=fs.existsSync(stdoutPath)?fs.readFileSync(stdoutPath,'utf8').trim():'';
-          const pass=stdout==='PASS';
+          const receiptPath=process.env.RUNNER_TEMP+'/materialization-receipt.json';
+          const manifestPath=process.env.RUNNER_TEMP+'/canonical-manifest.json';
+          const materialization=fs.existsSync(receiptPath)?JSON.parse(fs.readFileSync(receiptPath,'utf8')):null;
+          const pass=materialization?.result==='PASS_CLOSED' && materialization.instanceCount===27585 &&
+            materialization.uniquePlacementIdCount===27585 && materialization.batchCount===108 &&
+            materialization.batchCoverage===27585 && materialization.batchSizeMaximum<=256 &&
+            materialization.coordinatesReplanned===false && materialization.recordIdentityCompared===27585 &&
+            materialization.recordIdentityMismatchCount===0 && fs.existsSync(manifestPath);
           fs.writeFileSync(process.env.RUNNER_TEMP+'/qualification-receipt.json',JSON.stringify({
-            schema:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_SELF_TEST_RECEIPT_v1',
-            operationId:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_QUALIFICATION_20261001_001',
-            candidateHead:'1dbd53537ed46e6458b9a2748004b69466352fff',
+            schema:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_FULL_QUALIFICATION_RECEIPT_v1',
+            operationId:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_QUALIFICATION_20261001_002',
+            candidateHead:'1f1d546c0b4fd51cfbe99cf62655b1677bfbfd96',
             targetPath:'tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs',
-            command:'node tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs --self-test',
-            node:process.version,
-            stdout,
             result:pass?'PASS_CLOSED':'FAIL_CLOSED',
-            repositoryMutationPerformed:false,
-            productMutationPerformed:false,
-            materializationPerformed:false,
-            mergePerformed:false,
-            deploymentPerformed:false
-          },null,2)+'\n');
+            materializationReceipt:materialization,
+            manifestProduced:fs.existsSync(manifestPath),
+            repositoryMutationPerformed:false,productMutationPerformed:false,mergePerformed:false,deploymentPerformed:false
+          },null,2)+'\\n');
           if(!pass)process.exitCode=1;
           NODE
       - name: Upload qualification receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen2514-manifest-tooling-self-test-${{ github.run_id }}-${{ github.run_attempt }}
+          name: h-earth-gen2514-manifest-tooling-full-qualification-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/qualification-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Upload canonical manifest proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2514-canonical-manifest-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canonical-manifest.json
           if-no-files-found: error
           retention-days: 90

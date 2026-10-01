@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-800beb0b-mobile-constructor-relief",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5470,
+  "requestBranch": "ai-dispatch-request-h-earth-mobile-800beb0b",
+  "requestCommit": "cd8829ab8fa6704f377c1baf61df5c0d48b65992",
+  "currentMainSha": "11a80b79e817a81ac5e068aec233755b5948ef80",
+  "bridgeRunId": "36805392665",
+  "error": "Stale dispatch request: parent 9a9f6207b03c352ca6565c910ad322547d7b9fa8 != current main 11a80b79e817a81ac5e068aec233755b5948ef80",
+  "failedAt": "2026-10-01T02:20:51.404Z"
+}

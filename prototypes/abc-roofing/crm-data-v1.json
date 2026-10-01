@@ -1,0 +1,4010 @@
+{
+  "schema": "ABC_ROOFING_SYNTHETIC_CRM_v1",
+  "fictional": true,
+  "asOf": "2026-09-30T17:00:00-04:00",
+  "company": "ABC Roofing & Remodeling",
+  "agile": {
+    "framework": "Agile operating model with Scrum-style planning/review cadence",
+    "cycle": {
+      "id": "SEP-CLOSE-OCT-START",
+      "name": "September close / October readiness",
+      "start": "2026-09-28",
+      "end": "2026-10-02",
+      "objectives": [
+        "Close September operating records",
+        "Confirm October production-ready pipeline",
+        "Resolve ordinary CRM blockers before October release"
+      ],
+      "nativeCompletionPercent": 82,
+      "nativeBlockers": 3
+    }
+  },
+  "owners": [
+    "Tampa Operations",
+    "Orlando Operations",
+    "Jacksonville Operations",
+    "Sales Coordination",
+    "Production Coordination",
+    "Quality Control"
+  ],
+  "records": [
+    {
+      "jobId": "ABC-SEP-C-001",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 01",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-10",
+      "completedOn": "2026-09-01",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-01",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-10",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-001-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-002",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 02",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-11",
+      "completedOn": "2026-09-02",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-02",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-11",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-002-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-003",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 03",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-12",
+      "completedOn": "2026-09-03",
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-03",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-12",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-003-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-004",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 04",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-13",
+      "completedOn": "2026-09-04",
+      "scheduledStart": null,
+      "contractValue": 25125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-04",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-13",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-004-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-005",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 05",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-14",
+      "completedOn": "2026-09-05",
+      "scheduledStart": null,
+      "contractValue": 26500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-05",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-14",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-005-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-006",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 06",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-15",
+      "completedOn": "2026-09-06",
+      "scheduledStart": null,
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-06",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-15",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-006-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-007",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 07",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-16",
+      "completedOn": "2026-09-07",
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-07",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-16",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-007-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-008",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 08",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-17",
+      "completedOn": "2026-09-08",
+      "scheduledStart": null,
+      "contractValue": 30625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-08",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-17",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-008-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-009",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 09",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-18",
+      "completedOn": "2026-09-09",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-09",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-18",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-009-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-010",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 10",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-19",
+      "completedOn": "2026-09-10",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-10",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-19",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-010-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-011",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 11",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-20",
+      "completedOn": "2026-09-11",
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-11",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-20",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-011-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-012",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 12",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-21",
+      "completedOn": "2026-09-12",
+      "scheduledStart": null,
+      "contractValue": 25125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-12",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-21",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-012-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-013",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 13",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-22",
+      "completedOn": "2026-09-13",
+      "scheduledStart": null,
+      "contractValue": 26500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-13",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-22",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-013-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-014",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 14",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-23",
+      "completedOn": "2026-09-14",
+      "scheduledStart": null,
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-14",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-23",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-014-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-015",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 15",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-24",
+      "completedOn": "2026-09-15",
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-15",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-24",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-015-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-016",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 16",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-25",
+      "completedOn": "2026-09-16",
+      "scheduledStart": null,
+      "contractValue": 30625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-16",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-25",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-016-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-017",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 17",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-26",
+      "completedOn": "2026-09-17",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-17",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-26",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-017-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-018",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 18",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-27",
+      "completedOn": "2026-09-18",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-18",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-27",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-018-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-019",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 19",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-28",
+      "completedOn": "2026-09-19",
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-19",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-28",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-019-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-020",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 20",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-29",
+      "completedOn": "2026-09-20",
+      "scheduledStart": null,
+      "contractValue": 25125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-20",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-29",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-020-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-021",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 21",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-30",
+      "completedOn": "2026-09-21",
+      "scheduledStart": null,
+      "contractValue": 26500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-21",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-30",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-021-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-022",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 22",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-31",
+      "completedOn": "2026-09-22",
+      "scheduledStart": null,
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-22",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-31",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-022-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-023",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 23",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-10",
+      "completedOn": "2026-09-23",
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-23",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-10",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-023-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-024",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 24",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-11",
+      "completedOn": "2026-09-24",
+      "scheduledStart": null,
+      "contractValue": 30625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-24",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-11",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-024-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-025",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 25",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-12",
+      "completedOn": "2026-09-25",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-25",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-12",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-025-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-026",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 26",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-13",
+      "completedOn": "2026-09-26",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-26",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-13",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-026-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-027",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 27",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-14",
+      "completedOn": "2026-09-27",
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-27",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-14",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-027-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-028",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 28",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-15",
+      "completedOn": "2026-09-28",
+      "scheduledStart": null,
+      "contractValue": 25125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-28",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-15",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-028-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-029",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 29",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-16",
+      "completedOn": "2026-09-29",
+      "scheduledStart": null,
+      "contractValue": 26500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-29",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-16",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-029-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-030",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 30",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-17",
+      "completedOn": "2026-09-30",
+      "scheduledStart": null,
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-17",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-030-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-031",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 31",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-18",
+      "completedOn": "2026-09-01",
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-01",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-18",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-031-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-032",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 32",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-19",
+      "completedOn": "2026-09-02",
+      "scheduledStart": null,
+      "contractValue": 30625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-02",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-19",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-032-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-033",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 33",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-20",
+      "completedOn": "2026-09-03",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-03",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-20",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-033-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-034",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 34",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-21",
+      "completedOn": "2026-09-04",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-04",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-21",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-034-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-035",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 35",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-22",
+      "completedOn": "2026-09-05",
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-05",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-22",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-035-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-036",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 36",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-23",
+      "completedOn": "2026-09-06",
+      "scheduledStart": null,
+      "contractValue": 25125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-06",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-23",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-036-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-037",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 37",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-24",
+      "completedOn": "2026-09-07",
+      "scheduledStart": null,
+      "contractValue": 26500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-07",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-24",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-037-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-038",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 38",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-25",
+      "completedOn": "2026-09-08",
+      "scheduledStart": null,
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-08",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-25",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-038-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-039",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 39",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-26",
+      "completedOn": "2026-09-09",
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-09",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-26",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-039-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-040",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 40",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-27",
+      "completedOn": "2026-09-10",
+      "scheduledStart": null,
+      "contractValue": 30625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-10",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-27",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-040-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-041",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 41",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-28",
+      "completedOn": "2026-09-11",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-11",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-28",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-041-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-042",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 42",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-29",
+      "completedOn": "2026-09-12",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-12",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-29",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-042-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-043",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 43",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-30",
+      "completedOn": "2026-09-13",
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-13",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-30",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-043-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-044",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 44",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-31",
+      "completedOn": "2026-09-14",
+      "scheduledStart": null,
+      "contractValue": 25125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-14",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-31",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-044-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-045",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 45",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-10",
+      "completedOn": "2026-09-15",
+      "scheduledStart": null,
+      "contractValue": 26500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-15",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-10",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-045-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-046",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 46",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-11",
+      "completedOn": "2026-09-16",
+      "scheduledStart": null,
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-16",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-11",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-046-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-047",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 47",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-12",
+      "completedOn": "2026-09-17",
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-17",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-12",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-047-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-048",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 48",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-13",
+      "completedOn": "2026-09-18",
+      "scheduledStart": null,
+      "contractValue": 30625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-18",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-13",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-048-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-049",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 49",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-14",
+      "completedOn": "2026-09-19",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-19",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-14",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-049-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-050",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 50",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-15",
+      "completedOn": "2026-09-20",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-20",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-15",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-050-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-051",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 51",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-16",
+      "completedOn": "2026-09-21",
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-21",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-16",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-051-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-052",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 52",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-17",
+      "completedOn": "2026-09-22",
+      "scheduledStart": null,
+      "contractValue": 25125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-22",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-17",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-052-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-053",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 53",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-18",
+      "completedOn": "2026-09-23",
+      "scheduledStart": null,
+      "contractValue": 26500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-23",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-18",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-053-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-054",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 54",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-19",
+      "completedOn": "2026-09-24",
+      "scheduledStart": null,
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-24",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-19",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-054-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-055",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 55",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-20",
+      "completedOn": "2026-09-25",
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-25",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-20",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-055-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-056",
+      "branch": "Orlando",
+      "customer": "Synthetic September Customer 56",
+      "owner": "Orlando Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-21",
+      "completedOn": "2026-09-26",
+      "scheduledStart": null,
+      "contractValue": 30625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-26",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-21",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-056-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-057",
+      "branch": "Jacksonville",
+      "customer": "Synthetic September Customer 57",
+      "owner": "Jacksonville Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-22",
+      "completedOn": "2026-09-27",
+      "scheduledStart": null,
+      "contractValue": 21000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-27",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-22",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-057-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-C-058",
+      "branch": "Tampa",
+      "customer": "Synthetic September Customer 58",
+      "owner": "Tampa Operations",
+      "status": "COMPLETED",
+      "stage": "CLOSEOUT",
+      "openedOn": "2026-08-23",
+      "completedOn": "2026-09-28",
+      "scheduledStart": null,
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-28",
+          "value": "CLOSED"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-08-23",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-C-058-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-001",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 01",
+      "owner": "Tampa Operations",
+      "status": "ACTIVE",
+      "stage": "LEADS",
+      "openedOn": "2026-09-01",
+      "completedOn": null,
+      "scheduledStart": "2026-10-01",
+      "contractValue": 22000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "LEADS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-01",
+          "value": "Tampa Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-01"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-001-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-002",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 02",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "APPOINTMENTS",
+      "openedOn": "2026-09-02",
+      "completedOn": null,
+      "scheduledStart": "2026-10-02",
+      "contractValue": 23625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPOINTMENTS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-02",
+          "value": "Orlando Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-02"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-002-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-003",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 03",
+      "owner": "Jacksonville Operations",
+      "status": "ACTIVE",
+      "stage": "INSPECTIONS",
+      "openedOn": "2026-09-03",
+      "completedOn": null,
+      "scheduledStart": "2026-10-03",
+      "contractValue": 25250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "INSPECTIONS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-03",
+          "value": "Jacksonville Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-03"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-003-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-003-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-004",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 04",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "SCOPES",
+      "openedOn": "2026-09-04",
+      "completedOn": null,
+      "scheduledStart": "2026-10-04",
+      "contractValue": 26875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "SCOPES"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-04",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-04"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-004-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-004-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-005",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 05",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-05",
+      "completedOn": null,
+      "scheduledStart": "2026-10-05",
+      "contractValue": 28500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-05",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-05"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-005-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-005-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-006",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 06",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION_READY",
+      "openedOn": "2026-09-06",
+      "completedOn": null,
+      "scheduledStart": "2026-10-06",
+      "contractValue": 30125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION_READY"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-06",
+          "value": "Production Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-06"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-006-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-006-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-007",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 07",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION",
+      "openedOn": "2026-09-07",
+      "completedOn": null,
+      "scheduledStart": "2026-10-07",
+      "contractValue": 31750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-07",
+          "value": "Production Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-07"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-007-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-007-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-0047",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 08",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-08",
+      "completedOn": null,
+      "scheduledStart": "2026-10-08",
+      "contractValue": 33375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-08",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-08"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-0047-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-0047-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-009",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 09",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "LEADS",
+      "openedOn": "2026-09-09",
+      "completedOn": null,
+      "scheduledStart": "2026-10-09",
+      "contractValue": 23000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "LEADS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-09",
+          "value": "Orlando Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-09"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-009-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-010",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 10",
+      "owner": "Jacksonville Operations",
+      "status": "ACTIVE",
+      "stage": "APPOINTMENTS",
+      "openedOn": "2026-09-10",
+      "completedOn": null,
+      "scheduledStart": "2026-10-10",
+      "contractValue": 24625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPOINTMENTS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-10",
+          "value": "Jacksonville Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-10"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-010-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-011",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 11",
+      "owner": "Tampa Operations",
+      "status": "ACTIVE",
+      "stage": "INSPECTIONS",
+      "openedOn": "2026-09-11",
+      "completedOn": null,
+      "scheduledStart": "2026-10-11",
+      "contractValue": 26250,
+      "crmBlocker": "Awaiting operational follow-up",
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "INSPECTIONS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-11",
+          "value": "Tampa Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-11"
+        },
+        {
+          "type": "CRM_BLOCKER",
+          "at": "2026-09-30",
+          "value": "Awaiting operational follow-up"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-011-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-011-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-012",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 12",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "SCOPES",
+      "openedOn": "2026-09-12",
+      "completedOn": null,
+      "scheduledStart": "2026-10-12",
+      "contractValue": 27875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "SCOPES"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-12",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-12"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-012-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-012-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-013",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 13",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-13",
+      "completedOn": null,
+      "scheduledStart": "2026-10-13",
+      "contractValue": 29500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-13",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-13"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-013-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-013-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-014",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 14",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION_READY",
+      "openedOn": "2026-09-14",
+      "completedOn": null,
+      "scheduledStart": "2026-10-14",
+      "contractValue": 31125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION_READY"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-14",
+          "value": "Production Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-14"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-014-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-014-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-015",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 15",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION",
+      "openedOn": "2026-09-15",
+      "completedOn": null,
+      "scheduledStart": "2026-10-01",
+      "contractValue": 32750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-15",
+          "value": "Production Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-01"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-015-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-015-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-016",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 16",
+      "owner": "Quality Control",
+      "status": "ACTIVE",
+      "stage": "QC",
+      "openedOn": "2026-09-16",
+      "completedOn": null,
+      "scheduledStart": "2026-10-02",
+      "contractValue": 22375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "QC"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-16",
+          "value": "Quality Control"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-02"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-016-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-016-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-017",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 17",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "LEADS",
+      "openedOn": "2026-09-17",
+      "completedOn": null,
+      "scheduledStart": "2026-10-03",
+      "contractValue": 24000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "LEADS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-17",
+          "value": "Orlando Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-03"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-017-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-018",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 18",
+      "owner": "Tampa Operations",
+      "status": "ACTIVE",
+      "stage": "APPOINTMENTS",
+      "openedOn": "2026-09-18",
+      "completedOn": null,
+      "scheduledStart": "2026-10-04",
+      "contractValue": 25625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPOINTMENTS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-18",
+          "value": "Tampa Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-04"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-018-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-019",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 19",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "INSPECTIONS",
+      "openedOn": "2026-09-19",
+      "completedOn": null,
+      "scheduledStart": "2026-10-05",
+      "contractValue": 27250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "INSPECTIONS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-19",
+          "value": "Orlando Operations"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-05"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-019-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-019-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-020",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 20",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "SCOPES",
+      "openedOn": "2026-09-20",
+      "completedOn": null,
+      "scheduledStart": "2026-10-06",
+      "contractValue": 28875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "SCOPES"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-20",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-06"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-020-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-020-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-021",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 21",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-21",
+      "completedOn": null,
+      "scheduledStart": "2026-10-07",
+      "contractValue": 30500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-21",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "SCHEDULED_START",
+          "at": "2026-09-30",
+          "value": "2026-10-07"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-021-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-021-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-022",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 22",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION_READY",
+      "openedOn": "2026-09-22",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 32125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION_READY"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-22",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-022-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-022-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-023",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 23",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION",
+      "openedOn": "2026-09-23",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 33750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-23",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-023-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-023-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-024",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 24",
+      "owner": "Quality Control",
+      "status": "ACTIVE",
+      "stage": "QC",
+      "openedOn": "2026-09-24",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 23375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "QC"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-24",
+          "value": "Quality Control"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-024-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-024-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-025",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 25",
+      "owner": "Jacksonville Operations",
+      "status": "ACTIVE",
+      "stage": "LEADS",
+      "openedOn": "2026-09-25",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 25000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "LEADS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-25",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-025-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-026",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 26",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "APPOINTMENTS",
+      "openedOn": "2026-09-26",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 26625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPOINTMENTS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-26",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-026-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-027",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 27",
+      "owner": "Jacksonville Operations",
+      "status": "ACTIVE",
+      "stage": "INSPECTIONS",
+      "openedOn": "2026-09-27",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 28250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "INSPECTIONS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-27",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-027-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-027-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-028",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 28",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "SCOPES",
+      "openedOn": "2026-09-28",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 29875,
+      "crmBlocker": "Awaiting operational follow-up",
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "SCOPES"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-28",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "CRM_BLOCKER",
+          "at": "2026-09-30",
+          "value": "Awaiting operational follow-up"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-028-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-028-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-029",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 29",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-29",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 31500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-29",
+          "value": "Sales Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-029-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-029-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-030",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 30",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION_READY",
+      "openedOn": "2026-09-30",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 33125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION_READY"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-30",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-030-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-030-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-031",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 31",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION",
+      "openedOn": "2026-09-01",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 22750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-01",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-031-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-031-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-032",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 32",
+      "owner": "Quality Control",
+      "status": "ACTIVE",
+      "stage": "QC",
+      "openedOn": "2026-09-02",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 24375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "QC"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-02",
+          "value": "Quality Control"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-032-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-032-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-033",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 33",
+      "owner": "Tampa Operations",
+      "status": "ACTIVE",
+      "stage": "LEADS",
+      "openedOn": "2026-09-03",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 26000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "LEADS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-03",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-033-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-034",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 34",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "APPOINTMENTS",
+      "openedOn": "2026-09-04",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 27625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPOINTMENTS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-04",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-034-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-035",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 35",
+      "owner": "Tampa Operations",
+      "status": "ACTIVE",
+      "stage": "INSPECTIONS",
+      "openedOn": "2026-09-05",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 29250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "INSPECTIONS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-05",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-035-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-035-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-036",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 36",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "SCOPES",
+      "openedOn": "2026-09-06",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 30875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "SCOPES"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-06",
+          "value": "Sales Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-036-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-036-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-037",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 37",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-07",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 32500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-07",
+          "value": "Sales Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-037-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-037-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-038",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 38",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION_READY",
+      "openedOn": "2026-09-08",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 22125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION_READY"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-08",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-038-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-038-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-039",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 39",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION",
+      "openedOn": "2026-09-09",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 23750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-09",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-039-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-039-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-040",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 40",
+      "owner": "Quality Control",
+      "status": "ACTIVE",
+      "stage": "QC",
+      "openedOn": "2026-09-10",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 25375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "QC"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-10",
+          "value": "Quality Control"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-040-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-040-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-041",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 41",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "LEADS",
+      "openedOn": "2026-09-11",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 27000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "LEADS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-11",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-041-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-042",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 42",
+      "owner": "Jacksonville Operations",
+      "status": "ACTIVE",
+      "stage": "APPOINTMENTS",
+      "openedOn": "2026-09-12",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 28625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPOINTMENTS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-12",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-042-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-043",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 43",
+      "owner": "Tampa Operations",
+      "status": "ACTIVE",
+      "stage": "INSPECTIONS",
+      "openedOn": "2026-09-13",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 30250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "INSPECTIONS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-13",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-043-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-043-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-044",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 44",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "SCOPES",
+      "openedOn": "2026-09-14",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 31875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "SCOPES"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-14",
+          "value": "Sales Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-044-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-044-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-045",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 45",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-15",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 33500,
+      "crmBlocker": "Awaiting operational follow-up",
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-15",
+          "value": "Sales Coordination"
+        },
+        {
+          "type": "CRM_BLOCKER",
+          "at": "2026-09-30",
+          "value": "Awaiting operational follow-up"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-045-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-045-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-046",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 46",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION_READY",
+      "openedOn": "2026-09-16",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 23125,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION_READY"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-16",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-046-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-046-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-047",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 47",
+      "owner": "Production Coordination",
+      "status": "ACTIVE",
+      "stage": "PRODUCTION",
+      "openedOn": "2026-09-17",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 24750,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "PRODUCTION"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-17",
+          "value": "Production Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-047-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-047-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-048",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 48",
+      "owner": "Quality Control",
+      "status": "ACTIVE",
+      "stage": "QC",
+      "openedOn": "2026-09-18",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 26375,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "QC"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-18",
+          "value": "Quality Control"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-048-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-048-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-049",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 49",
+      "owner": "Jacksonville Operations",
+      "status": "ACTIVE",
+      "stage": "LEADS",
+      "openedOn": "2026-09-19",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 28000,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "LEADS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-19",
+          "value": "Jacksonville Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-049-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-050",
+      "branch": "Tampa",
+      "customer": "Synthetic Active Customer 50",
+      "owner": "Tampa Operations",
+      "status": "ACTIVE",
+      "stage": "APPOINTMENTS",
+      "openedOn": "2026-09-20",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 29625,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPOINTMENTS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-20",
+          "value": "Tampa Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-050-01",
+          "type": "Job Record",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-051",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 51",
+      "owner": "Orlando Operations",
+      "status": "ACTIVE",
+      "stage": "INSPECTIONS",
+      "openedOn": "2026-09-21",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 31250,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "INSPECTIONS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-21",
+          "value": "Orlando Operations"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-051-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-051-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-052",
+      "branch": "Jacksonville",
+      "customer": "Synthetic Active Customer 52",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "SCOPES",
+      "openedOn": "2026-09-22",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 32875,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "SCOPES"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-22",
+          "value": "Sales Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-052-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-052-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "jobId": "ABC-SEP-A-053",
+      "branch": "Orlando",
+      "customer": "Synthetic Active Customer 53",
+      "owner": "Sales Coordination",
+      "status": "ACTIVE",
+      "stage": "APPROVALS",
+      "openedOn": "2026-09-23",
+      "completedOn": null,
+      "scheduledStart": null,
+      "contractValue": 22500,
+      "crmBlocker": null,
+      "activities": [
+        {
+          "type": "CRM_STATUS",
+          "at": "2026-09-30",
+          "value": "APPROVALS"
+        },
+        {
+          "type": "OWNER",
+          "at": "2026-09-23",
+          "value": "Sales Coordination"
+        }
+      ],
+      "documents": [
+        {
+          "id": "DOC-ABC-SEP-A-053-01",
+          "type": "Job Record",
+          "state": "present"
+        },
+        {
+          "id": "DOC-ABC-SEP-A-053-02",
+          "type": "Operational Evidence",
+          "state": "present"
+        }
+      ],
+      "synthetic": true
+    }
+  ]
+}

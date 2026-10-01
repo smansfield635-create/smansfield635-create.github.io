@@ -94,7 +94,7 @@
   "boundaries": [
     "This contract does not determine roofing quality, legal compliance, insurance coverage, structural safety, or customer satisfaction beyond the explicitly supplied evidence.",
     "A workflow/CRM stage label is evidence but is not authoritative proof of READY_FOR_PRODUCTION.",
-    "No synthetic ABC-0047 expected state is encoded in this contract.",
+    "No blind qualification specimen identity or expected state is encoded in this contract.",
     "Human decision authority is preserved; this contract qualifies evidence and permitted progression only."
   ]
 }

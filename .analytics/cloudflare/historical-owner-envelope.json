@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-01T01:19:07Z",
+  "generatedAt": "2026-10-01T02:51:31Z",
   "window": {
-    "start": "2026-07-03T01:19:07Z",
-    "end": "2026-10-01T01:19:07Z"
+    "start": "2026-07-03T02:51:31Z",
+    "end": "2026-10-01T02:51:31Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5089,
-    "visits": 1305,
+    "pageLoads": 5091,
+    "visits": 1307,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5089,
-        "visits": 1305
+        "pageLoads": 5091,
+        "visits": 1307
       }
     },
     "byPath": {
@@ -70,6 +70,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 80,
+        "visits": 10
+      },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
@@ -82,9 +86,9 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/products/": {
-        "pageLoads": 80,
-        "visits": 10
+      "/products/archcoin/": {
+        "pageLoads": 40,
+        "visits": 0
       },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
@@ -92,10 +96,6 @@
       },
       "/laws/categories/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/archcoin/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/laws/": {
@@ -114,13 +114,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 274,
         "visits": 74
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 111,
@@ -186,13 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -349,6 +349,10 @@
       "/preview/governance-bridge/index.html": {
         "pageLoads": 1,
         "visits": 1
+      },
+      "/prototypes/abc-roofing/": {
+        "pageLoads": 2,
+        "visits": 2
       }
     },
     "byReferer": {
@@ -357,8 +361,8 @@
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 494,
-        "visits": 494
+        "pageLoads": 496,
+        "visits": 496
       },
       "www.google.com": {
         "pageLoads": 800,

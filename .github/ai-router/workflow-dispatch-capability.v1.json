@@ -937,6 +937,11 @@
           "source": "REQUEST",
           "required": false,
           "userOverrideAllowed": true
+        },
+        "exercise_vegetation_residency": {
+          "source": "REQUEST",
+          "required": false,
+          "userOverrideAllowed": true
         }
       },
       "workflowDispatchRegistrationRequired": true,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-01T03:44:40Z",
+  "generatedAt": "2026-10-01T04:38:07Z",
   "window": {
-    "start": "2026-07-03T03:44:40Z",
-    "end": "2026-10-01T03:44:40Z"
+    "start": "2026-07-03T04:38:07Z",
+    "end": "2026-10-01T04:38:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5085,
-    "visits": 1301,
+    "pageLoads": 4990,
+    "visits": 1296,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5085,
-        "visits": 1301
+        "pageLoads": 4990,
+        "visits": 1296
       }
     },
     "byPath": {
-      "/index.html": {
-        "pageLoads": 150,
-        "visits": 0
-      },
       "/": {
-        "pageLoads": 1095,
+        "pageLoads": 1085,
         "visits": 761
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
+        "visits": 0
+      },
+      "/index.html": {
+        "pageLoads": 150,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -119,7 +119,7 @@
         "visits": 74
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
+        "pageLoads": 470,
         "visits": 0
       },
       "/laws/research/methods-and-models/": {
@@ -219,7 +219,7 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -270,10 +274,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
         "visits": 0
@@ -283,14 +283,6 @@
         "visits": 0
       },
       "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -331,19 +323,19 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 94,
-        "visits": 81
+        "pageLoads": 89,
+        "visits": 76
       },
       "/analytics/": {
         "pageLoads": 49,
         "visits": 0
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 16,
-        "visits": 1
-      },
       "/preview/governance-bridge/index.html": {
         "pageLoads": 1,
+        "visits": 1
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 16,
         "visits": 1
       },
       "/prototypes/abc-roofing/": {
@@ -352,13 +344,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 3784,
-        "visits": 0
-      },
       "(none)": {
-        "pageLoads": 490,
-        "visits": 490
+        "pageLoads": 486,
+        "visits": 486
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 3694,
+        "visits": 0
       },
       "www.google.com": {
         "pageLoads": 800,
@@ -367,10 +359,6 @@
       "raw.githack.com": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "com.google.android.googlequicksearchbox": {
-        "pageLoads": 1,
-        "visits": 1
       }
     }
   }

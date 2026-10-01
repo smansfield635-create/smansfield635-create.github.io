@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-01T03:44:40Z",
+  "generatedAt": "2026-10-01T04:38:07Z",
   "window": {
-    "start": "2026-09-01T03:44:40Z",
-    "end": "2026-10-01T03:44:40Z"
+    "start": "2026-09-01T04:38:07Z",
+    "end": "2026-10-01T04:38:07Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1832,
-        "visits": 1401
+        "pageLoads": 1837,
+        "visits": 1403
       },
       {
         "value": "/mirror-manor-preview/",
@@ -19,8 +19,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
-        "pageLoads": 710,
-        "visits": 20
+        "pageLoads": 711,
+        "visits": 21
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -34,23 +34,23 @@
       },
       {
         "value": "/products/education/",
-        "pageLoads": 302,
-        "visits": 112
+        "pageLoads": 301,
+        "visits": 111
       },
       {
         "value": "/analytics/",
-        "pageLoads": 261,
-        "visits": 148
+        "pageLoads": 262,
+        "visits": 149
       },
       {
         "value": "/evidence/agentic-frontier/",
-        "pageLoads": 138,
+        "pageLoads": 144,
         "visits": 30
       },
       {
         "value": "/governance-bridge/",
-        "pageLoads": 122,
-        "visits": 98
+        "pageLoads": 114,
+        "visits": 90
       },
       {
         "value": "/index.html",
@@ -63,14 +63,14 @@
         "visits": 49
       },
       {
+        "value": "/governance-bridge/governance/",
+        "pageLoads": 93,
+        "visits": 63
+      },
+      {
         "value": "/characters/",
         "pageLoads": 91,
         "visits": 60
-      },
-      {
-        "value": "/governance-bridge/governance/",
-        "pageLoads": 89,
-        "visits": 59
       },
       {
         "value": "/products/archcoin/contract/",
@@ -98,11 +98,6 @@
         "visits": 50
       },
       {
-        "value": "/evidence/",
-        "pageLoads": 57,
-        "visits": 2
-      },
-      {
         "value": "/showroom/globe/h-earth/diagnostic/",
         "pageLoads": 52,
         "visits": 0
@@ -116,6 +111,11 @@
         "value": "/products/archcoin/receivable/",
         "pageLoads": 50,
         "visits": 0
+      },
+      {
+        "value": "/evidence/",
+        "pageLoads": 47,
+        "visits": 2
       },
       {
         "value": "/door/",
@@ -139,13 +139,8 @@
       },
       {
         "value": "/governance/",
-        "pageLoads": 38,
+        "pageLoads": 33,
         "visits": 0
-      },
-      {
-        "value": "/campaigns/consider-the-energy/jen-leney/",
-        "pageLoads": 30,
-        "visits": 10
       },
       {
         "value": "/home/",
@@ -168,12 +163,17 @@
         "visits": 0
       },
       {
-        "value": "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html",
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 24,
+        "visits": 0
+      },
+      {
+        "value": "/campaigns/consider-the-energy/jen-leney/",
         "pageLoads": 20,
         "visits": 0
       },
       {
-        "value": "/meet-sean-mansfield/",
+        "value": "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html",
         "pageLoads": 20,
         "visits": 0
       },
@@ -208,14 +208,19 @@
         "visits": 20
       },
       {
+        "value": "/coherence-diagnostic/",
+        "pageLoads": 14,
+        "visits": 10
+      },
+      {
         "value": "/showroom/globe/hearth/jeeves/",
-        "pageLoads": 12,
+        "pageLoads": 13,
         "visits": 2
       },
       {
-        "value": "/coherence-diagnostic/",
+        "value": "/showroom/globe/earth/",
         "pageLoads": 12,
-        "visits": 10
+        "visits": 0
       },
       {
         "value": "/governance-bridge/collaboration/",
@@ -224,11 +229,6 @@
       },
       {
         "value": "/laws/research/methods-and-models/",
-        "pageLoads": 11,
-        "visits": 0
-      },
-      {
-        "value": "/developer/",
         "pageLoads": 11,
         "visits": 0
       },
@@ -258,11 +258,6 @@
         "visits": 0
       },
       {
-        "value": "/showroom/globe/earth/",
-        "pageLoads": 10,
-        "visits": 0
-      },
-      {
         "value": "/showroom/globe/hearth/diagnostic/",
         "pageLoads": 10,
         "visits": 0
@@ -270,6 +265,11 @@
       {
         "value": "/products/archcoin/allocation/",
         "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/developer/",
+        "pageLoads": 9,
         "visits": 0
       },
       {
@@ -283,16 +283,6 @@
         "visits": 4
       },
       {
-        "value": "/laws/",
-        "pageLoads": 2,
-        "visits": 1
-      },
-      {
-        "value": "/instruments/",
-        "pageLoads": 2,
-        "visits": 0
-      },
-      {
         "value": "/evidence/readiness/",
         "pageLoads": 2,
         "visits": 0
@@ -303,7 +293,22 @@
         "visits": 2
       },
       {
+        "value": "/about-this-underdog/",
+        "pageLoads": 2,
+        "visits": 0
+      },
+      {
         "value": "/preview/h-earth/t4-3-d8fca316/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/preview/governance-bridge/index.html",
         "pageLoads": 1,
         "visits": 1
       },
@@ -323,9 +328,9 @@
         "visits": 0
       },
       {
-        "value": "/preview/governance-bridge/index.html",
+        "value": "/instruments/",
         "pageLoads": 1,
-        "visits": 1
+        "visits": 0
       },
       {
         "value": "/elara/",
@@ -348,6 +353,11 @@
         "visits": 1
       },
       {
+        "value": "/elara/index.html",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
         "value": "/nine-summits-of-love/",
         "pageLoads": 1,
         "visits": 0
@@ -356,17 +366,22 @@
         "value": "/nine-summits/",
         "pageLoads": 1,
         "visits": 0
+      },
+      {
+        "value": "/explore/frontier/vision/",
+        "pageLoads": 1,
+        "visits": 0
       }
     ],
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3291,
-        "visits": 3291
+        "pageLoads": 3283,
+        "visits": 3283
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2969,
+        "pageLoads": 2972,
         "visits": 0
       },
       {
@@ -376,13 +391,8 @@
       },
       {
         "value": "m.facebook.com",
-        "pageLoads": 39,
-        "visits": 39
-      },
-      {
-        "value": "com.google.android.googlequicksearchbox",
-        "pageLoads": 1,
-        "visits": 1
+        "pageLoads": 37,
+        "visits": 37
       },
       {
         "value": "l.instagram.com",
@@ -398,8 +408,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6776,
-        "visits": 3810
+        "pageLoads": 6768,
+        "visits": 3799
       },
       {
         "value": "BR",
@@ -440,50 +450,50 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2770,
-        "visits": 2690
+        "pageLoads": 2774,
+        "visits": 2694
       },
       {
         "value": "tablet",
-        "pageLoads": 2201,
-        "visits": 573
+        "pageLoads": 2195,
+        "visits": 567
       },
       {
         "value": "mobile",
-        "pageLoads": 1866,
-        "visits": 605
+        "pageLoads": 1860,
+        "visits": 596
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2545,
-        "visits": 2485
+        "pageLoads": 2550,
+        "visits": 2490
       },
       {
         "value": "Chrome",
-        "pageLoads": 2349,
-        "visits": 705
+        "pageLoads": 2343,
+        "visits": 699
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1764,
+        "pageLoads": 1753,
         "visits": 516
       },
       {
-        "value": "Unknown",
-        "pageLoads": 52,
-        "visits": 52
+        "value": "MobileSafari",
+        "pageLoads": 49,
+        "visits": 35
       },
       {
-        "value": "MobileSafari",
-        "pageLoads": 33,
-        "visits": 33
+        "value": "Unknown",
+        "pageLoads": 42,
+        "visits": 42
       },
       {
         "value": "Facebook",
-        "pageLoads": 32,
-        "visits": 18
+        "pageLoads": 31,
+        "visits": 17
       },
       {
         "value": "Firefox",
@@ -497,25 +507,25 @@
       },
       {
         "value": "ChromeMobileWebview",
-        "pageLoads": 12,
-        "visits": 9
+        "pageLoads": 11,
+        "visits": 8
       }
     ],
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3992,
-        "visits": 1103
+        "pageLoads": 3974,
+        "visits": 1096
       },
       {
         "value": "Linux",
-        "pageLoads": 2555,
-        "visits": 2495
+        "pageLoads": 2560,
+        "visits": 2500
       },
       {
         "value": "Windows",
-        "pageLoads": 104,
-        "visits": 94
+        "pageLoads": 103,
+        "visits": 93
       },
       {
         "value": "MacOSX",
@@ -523,52 +533,52 @@
         "visits": 90
       },
       {
-        "value": "Unknown",
-        "pageLoads": 52,
-        "visits": 52
+        "value": "iOS",
+        "pageLoads": 50,
+        "visits": 36
       },
       {
-        "value": "iOS",
-        "pageLoads": 34,
-        "visits": 34
+        "value": "Unknown",
+        "pageLoads": 42,
+        "visits": 42
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4292,
-        "visits": 1383
+        "pageLoads": 4279,
+        "visits": 1367
       },
       {
         "value": "1",
-        "pageLoads": 2545,
-        "visits": 2485
+        "pageLoads": 2550,
+        "visits": 2490
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4702,
-        "visits": 3469
+        "pageLoads": 4707,
+        "visits": 3458
       },
       {
         "value": "reload",
-        "pageLoads": 1095,
+        "pageLoads": 1093,
         "visits": 311
       },
       {
         "value": "soft-navigation",
-        "pageLoads": 668,
+        "pageLoads": 656,
         "visits": 0
       },
       {
         "value": "back-forward",
-        "pageLoads": 342,
+        "pageLoads": 341,
         "visits": 88
       },
       {
         "value": "routing-apis",
-        "pageLoads": 20,
+        "pageLoads": 22,
         "visits": 0
       },
       {
@@ -580,13 +590,13 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5089,
-        "visits": 3224
+        "pageLoads": 5074,
+        "visits": 3215
       },
       {
         "value": "cache",
-        "pageLoads": 1478,
-        "visits": 374
+        "pageLoads": 1485,
+        "visits": 372
       },
       {
         "value": "navigational-prefetch",
@@ -597,15 +607,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6837,
-        "visits": 3868
+        "pageLoads": 6829,
+        "visits": 3857
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6837,
-        "visits": 3868
+        "pageLoads": 6829,
+        "visits": 3857
       }
     ]
   }

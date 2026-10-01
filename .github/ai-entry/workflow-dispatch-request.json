@@ -1,9 +1,10 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZE_20261001_002",
+  "capabilityId": "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZE_20261001_002\",\"descriptorId\":\"H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_20261001_001\",\"admissionReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"635ad28c34a6ee45f853ad2df7b3919cf3eb5946\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2514-materialization-2521-admission.minimal.v1.json\",\"sha256\":\"a8d4285a7f2131a5af841d23201f509eb1c1fe755805f6690b1b4d0fe1de4a3b\"},\"routerReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"635ad28c34a6ee45f853ad2df7b3919cf3eb5946\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2514-materialization-router.minimal.v1.json\",\"sha256\":\"f09addfb07b7a5ff6ea6b9207fe2c3187b37e098010495a4bc9349976c1b371a\"},\"inputs\":{\"executionHolder\":\"H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_20261001_001\"},\"availableCapabilities\":{\"schema\":\"AVAILABLE_CAPABILITY_RECEIPT_v1\",\"availableBackends\":[\"GITHUB_ACTIONS_CLEAN_EXECUTION\"],\"availableWorkflowPaths\":[\".github/workflows/ai-room-execution-transport.yml\"],\"availableToolingHeads\":[\"c3c84dab8f1c96784beb0596e37433ba70faa3e1\"]},\"requestNonce\":\"2522252225222522252225222522252225222522252225222522252225222522\"}",
+    "router_callback_issue": "5086",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
   }
 }

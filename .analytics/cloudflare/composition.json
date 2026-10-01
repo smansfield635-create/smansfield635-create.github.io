@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-01T17:31:08Z",
+  "generatedAt": "2026-10-01T18:39:53Z",
   "window": {
-    "start": "2026-09-01T17:31:08Z",
-    "end": "2026-10-01T17:31:08Z"
+    "start": "2026-09-01T18:39:53Z",
+    "end": "2026-10-01T18:39:53Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1823,
-        "visits": 1390
+        "pageLoads": 1824,
+        "visits": 1391
       },
       {
         "value": "/mirror-manor-preview/",
@@ -39,8 +39,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 275,
-        "visits": 162
+        "pageLoads": 276,
+        "visits": 163
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -49,8 +49,8 @@
       },
       {
         "value": "/governance-bridge/",
-        "pageLoads": 120,
-        "visits": 96
+        "pageLoads": 118,
+        "visits": 94
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -323,12 +323,12 @@
         "visits": 1
       },
       {
-        "value": "/elara/",
+        "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/hybrid-collapse/",
+        "value": "/elara/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -356,8 +356,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3299,
-        "visits": 3299
+        "pageLoads": 3298,
+        "visits": 3298
       },
       {
         "value": "diamondgatebridge.com",
@@ -376,8 +376,8 @@
       },
       {
         "value": "l.instagram.com",
-        "pageLoads": 1,
-        "visits": 1
+        "pageLoads": 2,
+        "visits": 2
       },
       {
         "value": "com.linkedin.android",
@@ -430,30 +430,30 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2790,
-        "visits": 2708
+        "pageLoads": 2791,
+        "visits": 2709
       },
       {
         "value": "tablet",
-        "pageLoads": 2125,
-        "visits": 561
+        "pageLoads": 2123,
+        "visits": 559
       },
       {
         "value": "mobile",
-        "pageLoads": 1826,
-        "visits": 593
+        "pageLoads": 1827,
+        "visits": 594
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2563,
-        "visits": 2503
+        "pageLoads": 2564,
+        "visits": 2504
       },
       {
         "value": "Chrome",
-        "pageLoads": 2276,
-        "visits": 694
+        "pageLoads": 2274,
+        "visits": 692
       },
       {
         "value": "ChromeMobile",
@@ -467,8 +467,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 42,
-        "visits": 42
+        "pageLoads": 43,
+        "visits": 43
       },
       {
         "value": "Facebook",
@@ -494,13 +494,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3869,
-        "visits": 1087
+        "pageLoads": 3867,
+        "visits": 1085
       },
       {
         "value": "Linux",
-        "pageLoads": 2573,
-        "visits": 2513
+        "pageLoads": 2574,
+        "visits": 2514
       },
       {
         "value": "Windows",
@@ -519,32 +519,32 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 42,
-        "visits": 42
+        "pageLoads": 43,
+        "visits": 43
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4178,
-        "visits": 1359
+        "pageLoads": 4177,
+        "visits": 1358
       },
       {
         "value": "1",
-        "pageLoads": 2563,
-        "visits": 2503
+        "pageLoads": 2564,
+        "visits": 2504
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4636,
-        "visits": 3460
+        "pageLoads": 4608,
+        "visits": 3432
       },
       {
         "value": "reload",
-        "pageLoads": 1088,
-        "visits": 316
+        "pageLoads": 1086,
+        "visits": 314
       },
       {
         "value": "soft-navigation",
@@ -570,13 +570,13 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5032,
-        "visits": 3226
+        "pageLoads": 5033,
+        "visits": 3227
       },
       {
         "value": "cache",
-        "pageLoads": 1449,
-        "visits": 376
+        "pageLoads": 1448,
+        "visits": 375
       },
       {
         "value": "navigational-prefetch",

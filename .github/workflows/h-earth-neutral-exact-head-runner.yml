@@ -239,6 +239,7 @@ jobs:
           let readiness='TIMEOUT';
           let initial=null;
           let later=null;
+          let residencySamples=[];
           try {
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
@@ -263,7 +264,7 @@ jobs:
             initial=await sample('initial');
             await page.waitForTimeout(3000);
             later=await sample('later');
-            const residencySamples=[];
+            residencySamples=[];
             for(let sampleIndex=0;sampleIndex<8;sampleIndex+=1){
               await page.waitForTimeout(2000);
               const live=await page.evaluate(() => {

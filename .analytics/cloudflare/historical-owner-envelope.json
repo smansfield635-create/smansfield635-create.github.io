@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-09-30T23:30:10Z",
+  "generatedAt": "2026-10-01T01:19:07Z",
   "window": {
-    "start": "2026-07-02T23:30:10Z",
-    "end": "2026-09-30T23:30:10Z"
+    "start": "2026-07-03T01:19:07Z",
+    "end": "2026-10-01T01:19:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5093,
+    "pageLoads": 5089,
     "visits": 1305,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5093,
+        "pageLoads": 5089,
         "visits": 1305
       }
     },
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1097,
+        "pageLoads": 1095,
         "visits": 761
       },
       "/showroom/globe/h-earth/": {
@@ -82,6 +82,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 80,
+        "visits": 10
+      },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
         "visits": 0
@@ -89,10 +93,6 @@
       "/laws/categories/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 80,
-        "visits": 10
       },
       "/products/archcoin/": {
         "pageLoads": 40,
@@ -130,12 +130,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 21,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -170,6 +170,14 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -181,14 +189,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -247,7 +247,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 73,
+        "pageLoads": 72,
         "visits": 0
       },
       "/characters/legacy-dossiers.html": {
@@ -258,16 +258,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -339,7 +339,7 @@
         "visits": 5
       },
       "/analytics/": {
-        "pageLoads": 50,
+        "pageLoads": 49,
         "visits": 0
       },
       "/governance-bridge/governance/": {
@@ -353,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3788,
+        "pageLoads": 3784,
         "visits": 0
       },
       "(none)": {

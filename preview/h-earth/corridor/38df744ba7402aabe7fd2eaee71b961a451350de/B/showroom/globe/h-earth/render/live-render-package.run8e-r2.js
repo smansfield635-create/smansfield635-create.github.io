@@ -257,7 +257,8 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   timeOfDayHours = 15.25,
   defaultObserverElevation = 2.25,
   defaultViewDistance = 512,
-  packageOccurrenceId = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001'
+  packageOccurrenceId = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001',
+  packageClass = null
 } = {}) {
   const startedAt = now();
   const issues = [];
@@ -271,6 +272,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   }
 
   const historicalOccurrence = packageOccurrenceId.trim() === H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID;
+  const resolvedPackageClass = packageClass ?? (historicalOccurrence ? 'COMPLETE_WORLD_HISTORICAL' : 'BASE_RESIDENT_TERRAIN_WATER');
   const neutralPackage = buildHEarthRun8ENeutralPackage({
     compositionMode: historicalOccurrence ? 'HISTORICAL_R2_CLOSED' : 'CONTENT_ADDRESSED_CURRENT_TERRAIN',
     includeVegetation: historicalOccurrence
@@ -279,7 +281,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   const westAdmission = issues.length === 0
     ? admitHEarthPrimitiveBatch(neutralPackage.primitives, {
         frameId: `${packageOccurrenceId}:WEST_AGGREGATE`,
-        metadata: { recoveryCheckpoint: 'RUN_8E_R2', packageClass: 'IMMUTABLE_LIVE_RENDER_PACKAGE' }
+        metadata: { recoveryCheckpoint: 'RUN_8E_R2', packageClass: resolvedPackageClass }
       })
     : null;
   if (westAdmission?.valid !== true) issues.push('R2_WEST_ADMISSION_FAILED');
@@ -475,6 +477,8 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     status: 'RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_COMPLETE',
     contractId: H_EARTH_RUN_8E_R2_CONTRACT_ID,
     packageOccurrenceId: packageOccurrenceId.trim(),
+    packageClass: resolvedPackageClass,
+    vegetationResidencyDisposition: historicalOccurrence ? 'RESIDENT_IN_COMPLETE_WORLD' : 'BOUNDED_PRESENTATION_BATCHES',
     packageIdentity: `H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_${hash.digest().toUpperCase()}`,
     contentDigest,
     revision: 1,
@@ -531,7 +535,9 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       formationIds: freezeArray(transfer.formationIds),
       shorelineBandIds: freezeArray(transfer.shorelineBandIds),
       legacyProxyIncluded: transfer.legacyProxyIncluded,
-      successorMountainIncluded: transfer.successorMountainIncluded
+      successorMountainIncluded: transfer.successorMountainIncluded,
+      packageClass: resolvedPackageClass,
+      vegetationResidencyDisposition: historicalOccurrence ? 'RESIDENT_IN_COMPLETE_WORLD' : 'BOUNDED_PRESENTATION_BATCHES'
     }),
     constructionMilliseconds: now() - startedAt,
     issues: freezeArray([])
@@ -556,6 +562,7 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
   if (packageRecord?.eligible !== true) issues.push('R2_PACKAGE_NOT_ELIGIBLE');
   if (packageRecord?.contractId !== H_EARTH_RUN_8E_R2_CONTRACT_ID) issues.push('R2_PACKAGE_CONTRACT_MISMATCH');
   const historicalOccurrence = packageRecord?.packageOccurrenceId === H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID;
+  const baseResident = packageRecord?.packageClass === 'BASE_RESIDENT_TERRAIN_WATER';
   if (historicalOccurrence) {
     if (packageRecord?.primitiveCount !== 35) issues.push(`R2_PRIMITIVE_COUNT_INVALID:${packageRecord?.primitiveCount}`);
     if (packageRecord?.triangleCount !== 49040) issues.push(`R2_TRIANGLE_COUNT_INVALID:${packageRecord?.triangleCount}`);
@@ -565,6 +572,8 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
     if (!Number.isSafeInteger(packageRecord?.triangleCount) || packageRecord.triangleCount < 1) issues.push('LIVE_OCCURRENCE_TRIANGLE_COUNT_INVALID');
     if (!Number.isSafeInteger(packageRecord?.indexCount) || packageRecord.indexCount !== packageRecord.triangleCount * 3) issues.push('LIVE_OCCURRENCE_INDEX_COUNT_INVALID');
     if ((packageRecord?.roleCounts?.TERRAIN ?? 0) !== 1) issues.push('LIVE_OCCURRENCE_TERRAIN_COUNT_INVALID');
+    if (baseResident && (packageRecord?.roleCounts?.VEGETATION ?? 0) !== 0) issues.push('BASE_RESIDENT_VEGETATION_PRESENT');
+    if (baseResident && packageRecord?.vegetationResidencyDisposition !== 'BOUNDED_PRESENTATION_BATCHES') issues.push('BASE_RESIDENT_VEGETATION_DISPOSITION_INVALID');
     const roleTotal=(packageRecord?.roleCounts?.TERRAIN??0)+(packageRecord?.roleCounts?.SHORELINE??0)+(packageRecord?.roleCounts?.VEGETATION??0);
     if (roleTotal !== packageRecord?.primitiveCount) issues.push('LIVE_OCCURRENCE_ROLE_COUNT_MISMATCH');
   }

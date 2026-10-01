@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-01T13:36:27Z",
+  "generatedAt": "2026-10-01T14:37:09Z",
   "window": {
-    "start": "2026-09-01T13:36:27Z",
-    "end": "2026-10-01T13:36:27Z"
+    "start": "2026-09-01T14:37:09Z",
+    "end": "2026-10-01T14:37:09Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1837,
-        "visits": 1403
+        "pageLoads": 1834,
+        "visits": 1400
       },
       {
         "value": "/mirror-manor-preview/",
@@ -29,7 +29,7 @@
       },
       {
         "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 353,
+        "pageLoads": 343,
         "visits": 91
       },
       {
@@ -39,8 +39,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 271,
-        "visits": 158
+        "pageLoads": 272,
+        "visits": 159
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -203,11 +203,6 @@
         "visits": 20
       },
       {
-        "value": "/coherence-diagnostic/",
-        "pageLoads": 14,
-        "visits": 10
-      },
-      {
         "value": "/showroom/globe/hearth/jeeves/",
         "pageLoads": 13,
         "visits": 2
@@ -216,6 +211,11 @@
         "value": "/showroom/globe/earth/",
         "pageLoads": 12,
         "visits": 0
+      },
+      {
+        "value": "/coherence-diagnostic/",
+        "pageLoads": 12,
+        "visits": 10
       },
       {
         "value": "/governance-bridge/collaboration/",
@@ -229,11 +229,6 @@
       },
       {
         "value": "/campaigns/consider-the-energy/jen-leney/",
-        "pageLoads": 10,
-        "visits": 0
-      },
-      {
-        "value": "/campaigns/wave/",
         "pageLoads": 10,
         "visits": 0
       },
@@ -338,12 +333,12 @@
         "visits": 0
       },
       {
-        "value": "/elara/",
+        "value": "/laws/research/applied-investigations/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/research/applied-investigations/",
+        "value": "/elara/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -376,12 +371,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3291,
-        "visits": 3291
+        "pageLoads": 3289,
+        "visits": 3289
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2943,
+        "pageLoads": 2921,
         "visits": 0
       },
       {
@@ -408,8 +403,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6747,
-        "visits": 3807
+        "pageLoads": 6723,
+        "visits": 3805
       },
       {
         "value": "BR",
@@ -450,35 +445,35 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2783,
-        "visits": 2703
+        "pageLoads": 2784,
+        "visits": 2704
       },
       {
         "value": "tablet",
-        "pageLoads": 2194,
+        "pageLoads": 2174,
         "visits": 566
       },
       {
         "value": "mobile",
-        "pageLoads": 1831,
-        "visits": 596
+        "pageLoads": 1826,
+        "visits": 593
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2559,
-        "visits": 2499
+        "pageLoads": 2560,
+        "visits": 2500
       },
       {
         "value": "Chrome",
-        "pageLoads": 2342,
+        "pageLoads": 2322,
         "visits": 698
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1723,
-        "visits": 516
+        "pageLoads": 1718,
+        "visits": 513
       },
       {
         "value": "MobileSafari",
@@ -514,13 +509,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3943,
-        "visits": 1095
+        "pageLoads": 3918,
+        "visits": 1092
       },
       {
         "value": "Linux",
-        "pageLoads": 2569,
-        "visits": 2509
+        "pageLoads": 2570,
+        "visits": 2510
       },
       {
         "value": "Windows",
@@ -546,25 +541,25 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4249,
-        "visits": 1366
+        "pageLoads": 4224,
+        "visits": 1363
       },
       {
         "value": "1",
-        "pageLoads": 2559,
-        "visits": 2499
+        "pageLoads": 2560,
+        "visits": 2500
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4687,
+        "pageLoads": 4665,
         "visits": 3467
       },
       {
         "value": "reload",
-        "pageLoads": 1093,
-        "visits": 311
+        "pageLoads": 1091,
+        "visits": 309
       },
       {
         "value": "soft-navigation",
@@ -590,13 +585,13 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5053,
+        "pageLoads": 5052,
         "visits": 3224
       },
       {
         "value": "cache",
-        "pageLoads": 1485,
-        "visits": 371
+        "pageLoads": 1462,
+        "visits": 369
       },
       {
         "value": "navigational-prefetch",
@@ -607,15 +602,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6808,
-        "visits": 3865
+        "pageLoads": 6784,
+        "visits": 3863
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6808,
-        "visits": 3865
+        "pageLoads": 6784,
+        "visits": 3863
       }
     ]
   }

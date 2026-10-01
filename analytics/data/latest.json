@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-01T13:36:27Z",
+  "generatedAt": "2026-10-01T14:37:09Z",
   "window30d": {
-    "start": "2026-09-01T13:36:27Z",
-    "end": "2026-10-01T13:36:27Z"
+    "start": "2026-09-01T14:37:09Z",
+    "end": "2026-10-01T14:37:09Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 73
+      "pageLoads": 68
     },
     {
       "date": "2026-09-25",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-01",
-      "pageLoads": 50
+      "pageLoads": 51
     }
   ],
   "summary": {
-    "pageLoads": 6808,
-    "botPageLoads": 2559,
-    "nonBotPageLoads": 4249
+    "pageLoads": 6784,
+    "botPageLoads": 2560,
+    "nonBotPageLoads": 4224
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3291,
-      "visits": 3291
+      "pageLoads": 3289,
+      "visits": 3289
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2943,
+      "pageLoads": 2921,
       "visits": 0
     },
     {
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1837,
-      "visits": 1403
+      "pageLoads": 1834,
+      "visits": 1400
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,7 +187,7 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 353,
+      "pageLoads": 343,
       "visits": 91
     },
     {
@@ -197,8 +197,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 271,
-      "visits": 158
+      "pageLoads": 272,
+      "visits": 159
     },
     {
       "path": "/evidence/agentic-frontier/",

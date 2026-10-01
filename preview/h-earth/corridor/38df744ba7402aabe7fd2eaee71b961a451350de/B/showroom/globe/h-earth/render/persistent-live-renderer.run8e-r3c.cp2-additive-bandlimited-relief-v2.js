@@ -1,8 +1,8 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
-import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
+import { getHEarthOW01CanonicalLiveRenderPackageOccurrence, getHEarthRun8ER2CanonicalVegetationPresentationPlan } from './live-render-package.run8e-r2.canonical.js';
+import { createHEarthRun8ER2DCanonicalGPUUploadViews, createHEarthRun8ER2DVegetationBatchGPUViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.
@@ -762,6 +762,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   const renderPackage = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
   const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
+  const vegetationPlan = getHEarthRun8ER2CanonicalVegetationPresentationPlan();
+  const residentVegetationBatches = [];
+  let nextVegetationBatchIndex = 0;
   if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
   if (uploadViews.deterministicTransportEncoding !== true) throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
   const sandIds = new Set(['H_EARTH_FUNCTIONAL_SHORELINE:DRY_SAND_EDGE', 'H_EARTH_FUNCTIONAL_SHORELINE:DAMP_TRANSITION', 'H_EARTH_FUNCTIONAL_SHORELINE:WET_SAND']);
@@ -820,6 +823,16 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     resources.indexBuffer = createBuffer();
     resources.buffers.push({ name: 'indices', buffer: resources.indexBuffer, byteLength: uploadViews.indices.byteLength });
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
+    resources.createVegetationResidentBatch = (descriptor) => {
+      const views=createHEarthRun8ER2DVegetationBatchGPUViews(descriptor.batchId);
+      if(views.deterministicTransportEncoding!==true)throw new Error('R3C_VEGETATION_BATCH_TRANSPORT_INVALID');
+      const vao=gl.createVertexArray();if(!vao)throw new Error('R3C_VEGETATION_VAO_CREATE_FAILED');counters.vertexArrayCreateCount++;gl.bindVertexArray(vao);
+      const buffers=[];const specs=[['positions',views.positions,0,3,gl.FLOAT,false],['normals',views.normals,1,3,gl.FLOAT,false],['baseColorsLinear',views.baseColorsLinear,2,4,gl.FLOAT,false],['materialParameters',views.materialParameters,3,4,gl.FLOAT,false],['materialModelCodes',views.materialModelCodes,4,1,gl.UNSIGNED_BYTE,true],['surfaceClassCodes',views.surfaceClassCodes,5,1,gl.UNSIGNED_BYTE,true],['primitiveIndices',views.primitiveIndices,6,1,gl.UNSIGNED_SHORT,true],['roleCodes',views.roleCodes,7,1,gl.UNSIGNED_BYTE,true]];
+      for(const [name,data,location,size,type,integer] of specs){const buffer=createBuffer();buffers.push({name,buffer,byteLength:data.byteLength});gl.bindBuffer(gl.ARRAY_BUFFER,buffer);upload(gl.ARRAY_BUFFER,data);gl.enableVertexAttribArray(location);integer?gl.vertexAttribIPointer(location,size,type,0,0):gl.vertexAttribPointer(location,size,type,false,0,0);}
+      gl.disableVertexAttribArray(8);gl.vertexAttrib1f(8,64);gl.disableVertexAttribArray(9);gl.vertexAttrib1f(9,64);
+      const indexBuffer=createBuffer();buffers.push({name:'indices',buffer:indexBuffer,byteLength:views.indices.byteLength});gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);upload(gl.ELEMENT_ARRAY_BUFFER,views.indices);
+      const resident=Object.freeze({batchId:descriptor.batchId,instanceCount:views.instanceCount,indexCount:views.indices.length,vao,buffers});residentVegetationBatches.push(resident);nextVegetationBatchIndex++;return resident;
+    };
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -952,9 +965,11 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
     if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
+    gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of residentVegetationBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
+    if(nextVegetationBatchIndex<vegetationPlan.batches.length){const resident=resources.createVegetationResidentBatch(vegetationPlan.batches[nextVegetationBatchIndex]);resources.buffers.push(...resident.buffers);gl.bindVertexArray(resources.vertexArray);}
   }
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
@@ -1024,6 +1039,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
+      vegetationResidency:{worldTruthInstanceCount:vegetationPlan.instanceCount,batchCount:vegetationPlan.batches.length,residentBatchCount:residentVegetationBatches.length,residentInstanceCount:residentVegetationBatches.reduce((sum,b)=>sum+b.instanceCount,0),nextBatchIndex:nextVegetationBatchIndex,complete:nextVegetationBatchIndex>=vegetationPlan.batches.length,bounded:true},
       canonicalPackageMutated:false
     };
   }

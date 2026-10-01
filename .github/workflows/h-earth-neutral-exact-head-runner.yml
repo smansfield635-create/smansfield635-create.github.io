@@ -17,6 +17,11 @@ on:
         required: false
         default: ''
         type: string
+      exercise_vegetation_residency:
+        description: After READY, exercise bounded Gen2523 vegetation residency to completion
+        required: false
+        default: false
+        type: boolean
       apply_timing_shim:
         description: Apply Variant-B timing observation shim
         required: false
@@ -104,6 +109,7 @@ jobs:
           TARGET_SHA: ${{ inputs.target_sha }}
           ROUTE_PATH: ${{ inputs.route_path }}
           ROUTE_QUERY: ${{ inputs.route_query }}
+          EXERCISE_VEGETATION_RESIDENCY: ${{ inputs.exercise_vegetation_residency }}
         shell: bash
         run: |
           set -euo pipefail
@@ -264,6 +270,25 @@ jobs:
             initial=await sample('initial');
             await page.waitForTimeout(3000);
             later=await sample('later');
+            const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
+            let vegetationExercise=null;
+            if(exerciseVegetation){
+              vegetationExercise=await page.evaluate(async () => {
+                const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
+                const owner=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)||null;
+                const route=owner?.H_EARTH_RUN8E_PUBLIC_ROUTE??null;
+                const renderer=route?.getLiveRenderer?.()??route?.liveRenderer??owner?.H_EARTH_RUN8E_LIVE_RENDERER??null;
+                if(!renderer?.materializeNextVegetationBatch) return {executed:false,error:'VEGETATION_RESIDENCY_API_UNAVAILABLE',routeKeys:route?Object.keys(route).sort():[]};
+                const transitions=[];
+                for(let i=0;i<108;i++){
+                  const result=renderer.materializeNextVegetationBatch();
+                  transitions.push(result);
+                  await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+                }
+                const receipt=route.getLiveGpuReceipt?.()??null;
+                return {executed:true,transitions,finalResidency:receipt?.resources?.vegetationResidency??renderer.getResourceReceipt?.()?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??renderer.getResourceReceipt?.()?.counters?.worldRebuildCount??null};
+              });
+            }
             residencySamples=[];
             for(let sampleIndex=0;sampleIndex<8;sampleIndex+=1){
               await page.waitForTimeout(2000);
@@ -309,12 +334,17 @@ jobs:
             animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
             worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false),
             residencySamples,
+            vegetationExercise,
             vegetationResidencyMonotonic:residencySamples.every((sample,index,array)=>index===0||!sample?.residency||!array[index-1]?.residency||(sample.residency.residentBatchCount>=array[index-1].residency.residentBatchCount&&sample.residency.residentInstanceCount>=array[index-1].residency.residentInstanceCount)),
             residencyWorldRebuildStayedZero:residencySamples.every(sample=>sample?.worldRebuildCount===0)
           };
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(!receipt.materialized||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
+          if(String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true'){
+            const v=receipt.vegetationExercise;
+            if(v?.executed!==true||v?.transitions?.length!==108||v?.finalResidency?.residentBatchCount!==108||v?.finalResidency?.residentInstanceCount!==27585||v?.finalResidency?.complete!==true||v?.finalResidency?.droppedPlacementCount!==0||v?.worldRebuildCount!==0) process.exitCode=1;
+          }
           NODE
           node h-earth-exact-run.mjs
 

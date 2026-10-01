@@ -773,18 +773,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   const sandRange = sandRanges[0];
   const coastDistances = new Float32Array(uploadViews.positions.length / 3);
   const planetRadius = H_EARTH_PLANETARY_WORLD_FRAME.exactSphereRadius;
-  for (const span of renderPackage.primitiveSpans) {
-    if (span.role !== 'TERRAIN') continue;
-    for (let vertex = span.vertexStart; vertex < span.vertexStart + span.vertexCount; vertex++) {
-      const p = vertex * 3, px = uploadViews.positions[p], py = uploadViews.positions[p + 1], pz = uploadViews.positions[p + 2];
-      const horizontal = Math.hypot(px, pz);
-      const scale = horizontal > Number.EPSILON ? Math.atan2(horizontal, py + planetRadius) * planetRadius / horizontal : 0;
-      coastDistances[vertex] = getHEarthSignedCoastDistanceMeters(px * scale, pz * scale);
-    }
-  }
-
-  let contactField=createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans);
-  let contactFieldBuildCount=1,contactFieldTotalMilliseconds=contactField.stats.initializationMilliseconds;
+  let packageCoastFieldReady=false;
+  let contactField={packageDistances:new Float32Array(uploadViews.positions.length/3),patchDistances:new Float32Array(0),stats:{initializationMilliseconds:0}};
+  let contactFieldBuildCount=0,contactFieldTotalMilliseconds=0;
 
   function initialize(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
@@ -873,6 +864,20 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
 
   function buildInitialRefinementPatch(packet) {
     if (resources.refinement?.created) return resources.refinement;
+    if(!packageCoastFieldReady){
+      for(const span of renderPackage.primitiveSpans){
+        if(span.role!=='TERRAIN')continue;
+        for(let vertex=span.vertexStart;vertex<span.vertexStart+span.vertexCount;vertex++){
+          const p=vertex*3,px=uploadViews.positions[p],py=uploadViews.positions[p+1],pz=uploadViews.positions[p+2];
+          const horizontal=Math.hypot(px,pz);
+          const scale=horizontal>Number.EPSILON?Math.atan2(horizontal,py+planetRadius)*planetRadius/horizontal:0;
+          coastDistances[vertex]=getHEarthSignedCoastDistanceMeters(px*scale,pz*scale);
+        }
+      }
+      const coastBuffer=resources.buffers.find(entry=>entry.name==='coastDistances')?.buffer;
+      if(coastBuffer){gl.bindBuffer(gl.ARRAY_BUFFER,coastBuffer);gl.bufferSubData(gl.ARRAY_BUFFER,0,coastDistances);}
+      packageCoastFieldReady=true;
+    }
     const local=packet?.camera?.localAuthoringPosition;if(!local)return null;
     const spacing=4,radius=64,x0=Math.round(local.x/spacing)*spacing,z0=Math.round(local.z/spacing)*spacing,xs=[],zs=[];
     for(let x=x0-radius;x<=x0+radius;x+=spacing)xs.push(x);for(let z=z0-radius;z<=z0+radius;z+=spacing)zs.push(z);

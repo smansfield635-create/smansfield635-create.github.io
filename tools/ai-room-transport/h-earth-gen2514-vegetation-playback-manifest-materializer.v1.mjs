@@ -8,7 +8,10 @@ const manifestOut=get('--manifest-output'),receiptOut=get('--receipt-output'),ho
 if(!manifestOut||!receiptOut||!holder)throw Error('REQUIRED_ARGUMENT_MISSING');
 const run=(a,o={})=>cp.spawnSync('git',a,{encoding:'utf8',maxBuffer:268435456,...o});
 let r=run(['cat-file','-e',SOURCE+'^{commit}']);if(r.status){r=run(['fetch','--no-tags','origin',SOURCE]);if(r.status)throw Error('SOURCE_FETCH_FAILED');}
-const tmp=fs.mkdtempSync('/tmp/h-earth-gen2514-manifest-');r=run(['worktree','add','--detach',tmp,SOURCE]);if(r.status)throw Error('WORKTREE_FAILED');
+const tmp=fs.mkdtempSync('/tmp/h-earth-gen2514-manifest-');r=run(['worktree','add','--detach','--no-checkout',tmp,SOURCE]);if(r.status)throw Error('WORKTREE_FAILED');
+r=run(['-C',tmp,'sparse-checkout','init','--cone']);if(r.status)throw Error('SOURCE_SPARSE_INIT_FAILED');
+r=run(['-C',tmp,'sparse-checkout','set','preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render','preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment']);if(r.status)throw Error('SOURCE_SPARSE_SET_FAILED');
+r=run(['-C',tmp,'checkout','--detach',SOURCE]);if(r.status)throw Error('SOURCE_CHECKOUT_FAILED');
 const stable=v=>JSON.stringify(v);
 const digest=v=>crypto.createHash('sha256').update(typeof v==='string'?v:stable(v)).digest('hex');
 try{

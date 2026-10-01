@@ -940,7 +940,19 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const batch=createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId);
     if(batch.instanceCount!==descriptor.count||batch.placementIds.length!==descriptor.count)throw new Error('R3C_VEGETATION_BATCH_IDENTITY_MISMATCH');
     for(const id of batch.placementIds){if(state.residentPlacementIds.has(id))throw new Error('R3C_VEGETATION_DUPLICATE_PLACEMENT');state.residentPlacementIds.add(id);}
-    state.residentBatches.push(batch);state.nextBatchIndex+=1;counters.vegetationBatchMaterializationCount+=1;counters.vegetationResidentInstanceCount+=batch.instanceCount;counters.vegetationResidentPrimitiveCount+=batch.primitives.length;
+    const positions=[],normals=[],colors=[],mats=[],models=[],surfaces=[],primitiveIds=[],roles=[],indices=[];let vertexOffset=0;
+    const normalize=(x,y,z)=>{const n=Math.hypot(x,y,z)||1;return [x/n,y/n,z/n];};
+    for(let pi=0;pi<batch.primitives.length;pi++){const primitive=batch.primitives[pi],g=primitive.geometry,verts=g?.vertices??[],local=g?.indices??[];if(!verts.length||!local.length)throw new Error('R3C_VEGETATION_PRIMITIVE_GEOMETRY_INVALID');
+      const sums=Array.from({length:verts.length},()=>[0,0,0]);for(let k=0;k<local.length;k+=3){const ia=local[k],ib=local[k+1],ic=local[k+2],a=verts[ia],b=verts[ib],d=verts[ic],ab=[b.x-a.x,b.y-a.y,b.z-a.z],ad=[d.x-a.x,d.y-a.y,d.z-a.z],n=[ab[1]*ad[2]-ab[2]*ad[1],ab[2]*ad[0]-ab[0]*ad[2],ab[0]*ad[1]-ab[1]*ad[0]];for(const id of [ia,ib,ic])for(let q=0;q<3;q++)sums[id][q]+=n[q];}
+      const intent=String(primitive?.materialHint?.materialIntent??''),rgba=intent.includes('TRUNK')||intent.includes('WOODY')?[89,63,39,255]:intent.includes('CONIFER')?[38,73,48,255]:intent.includes('SHRUB')?[52,94,52,255]:[78,126,65,255];
+      for(let vi=0;vi<verts.length;vi++){const v=verts[vi],n=g?.normals?.[vi],nn=n&&[n.x,n.y,n.z].every(Number.isFinite)?[n.x,n.y,n.z]:normalize(...sums[vi]);positions.push(v.x,v.y,v.z);normals.push(...nn);colors.push(...rgba.slice(0,3).map(x=>{const s=x/255;return s<=.04045?s/12.92:Math.pow((s+.055)/1.055,2.4)}),1);mats.push(0,0,0,0);models.push(0);surfaces.push(255);primitiveIds.push(pi);roles.push(3);}
+      for(const id of local)indices.push(vertexOffset+id);vertexOffset+=verts.length;
+    }
+    const vao=gl.createVertexArray();if(!vao)throw new Error('R3C_VEGETATION_VAO_CREATE_FAILED');gl.bindVertexArray(vao);const bufs=[];
+    const bind=(loc,data,size,integer=false,type=gl.FLOAT)=>{const b=gl.createBuffer();if(!b)throw new Error('R3C_VEGETATION_BUFFER_CREATE_FAILED');bufs.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);integer?gl.vertexAttribIPointer(loc,size,type,0,0):gl.vertexAttribPointer(loc,size,type,false,0,0);counters.vegetationBufferUploadCount++;};
+    bind(0,new Float32Array(positions),3);bind(1,new Float32Array(normals),3);bind(2,new Float32Array(colors),4);bind(3,new Float32Array(mats),4);bind(4,new Uint8Array(models),1,true,gl.UNSIGNED_BYTE);bind(5,new Uint8Array(surfaces),1,true,gl.UNSIGNED_BYTE);bind(6,new Uint16Array(primitiveIds),1,true,gl.UNSIGNED_SHORT);bind(7,new Uint8Array(roles),1,true,gl.UNSIGNED_BYTE);bind(8,new Float32Array(vertexOffset),1);bind(9,new Float32Array(vertexOffset),1);
+    const ib=gl.createBuffer();if(!ib)throw new Error('R3C_VEGETATION_INDEX_BUFFER_CREATE_FAILED');gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(indices),gl.STATIC_DRAW);counters.vegetationBufferUploadCount++;
+    state.residentBatches.push({batch,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length});gl.bindVertexArray(resources.vertexArray);state.nextBatchIndex+=1;counters.vegetationBatchMaterializationCount+=1;counters.vegetationResidentInstanceCount+=batch.instanceCount;counters.vegetationResidentPrimitiveCount+=batch.primitives.length;
     if(state.nextBatchIndex===state.truth.batches.length){state.complete=true;if(counters.vegetationResidentInstanceCount!==state.truth.instanceCount||state.residentPlacementIds.size!==state.truth.instanceCount)throw new Error('R3C_VEGETATION_EVENTUAL_RESIDENCY_INCOMPLETE');}
     return Object.freeze({complete:state.complete,batchId:descriptor.batchId,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:state.nextBatchIndex});
   }
@@ -970,6 +982,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
     if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
+    gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
@@ -1035,8 +1048,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
       resourceIdentityStable: initialized && resources.buffers?.length === 11 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
       packageUploadedOnce: counters.bufferUploadCount === 11 && counters.postInitializationBufferUploadCount === 0,
-      noPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,
-      noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0 && (counters.contactOwnershipBufferUpdateCount??0) === 0,
+      noUnauthorizedPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,
+      noUnauthorizedPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0 && (counters.contactOwnershipBufferUpdateCount??0) === 0,
+      authorizedVegetationPostReadyResidency: true,
       refinementResourceAuthorized:true, refinementResourceCreated:resources.refinement?.created===true,
       refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,

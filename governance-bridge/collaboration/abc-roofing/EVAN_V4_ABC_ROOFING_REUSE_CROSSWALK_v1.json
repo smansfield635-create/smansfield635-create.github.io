@@ -1,0 +1,195 @@
+{
+  "schema": "EVAN_V4_ABC_ROOFING_REUSE_CROSSWALK_v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "purpose": "Reuse the existing Evan Job Stage V4 contractor application as the operational shell for ABC Roofing production-readiness governance without rewriting proven financial/closeout behavior.",
+  "source": {
+    "route": "/prototypes/evan-job-stage/",
+    "publicationSurface": ".github/ai-router/publication-surfaces/evan-job-stage.json",
+    "components": {
+      "shell": "prototypes/evan-job-stage/index.html",
+      "dashboard": "prototypes/evan-job-stage/dashboard-v2.js",
+      "persistence": "prototypes/evan-job-stage/job-db-v3.js",
+      "records": "prototypes/evan-job-stage/records-v4.js",
+      "calculation": "prototypes/evan-job-stage/calc-v4.js",
+      "deterministicFixture": "prototypes/evan-job-stage/test-kitchen-v4.mjs"
+    }
+  },
+  "targetContract": "governance-bridge/collaboration/abc-roofing/ABC_ROOFING_PRODUCTION_READINESS_CONTRACT_v1.json",
+  "architectureLaw": "Evan V4 remains the job/record/persistence/management shell. ABC Roofing adds production-readiness record classes and a separate governance evaluator. Existing financial and closeout calculations are not redefined by the roofing module.",
+  "classifications": [
+    {
+      "component": "Job identity and editable job records",
+      "source": "job-db-v3.js + dashboard-v2.js",
+      "disposition": "REUSE_UNCHANGED",
+      "reason": "Existing job identity, create/edit/archive/remove lifecycle is domain-compatible."
+    },
+    {
+      "component": "IndexedDB persistence",
+      "source": "job-db-v3.js",
+      "disposition": "REUSE_UNCHANGED",
+      "reason": "Existing jobs/files/records stores already support persistent per-job evidence."
+    },
+    {
+      "component": "Backup and restore",
+      "source": "job-db-v3.js",
+      "disposition": "REUSE_UNCHANGED",
+      "reason": "Existing backup V2 preserves jobs, records and files and is useful for portable qualification specimens."
+    },
+    {
+      "component": "Job files",
+      "source": "job-db-v3.js + dashboard-v2.js",
+      "disposition": "REUSE_UNCHANGED",
+      "reason": "Existing local file attachment mechanism can hold supporting documents without creating a new storage system."
+    },
+    {
+      "component": "Management dashboard",
+      "source": "index.html + dashboard-v2.js",
+      "disposition": "EXTEND",
+      "reason": "Keep Active Jobs, Needs Attention and job workspace; add production-readiness state and blockers without removing financial metrics."
+    },
+    {
+      "component": "Management language",
+      "source": "dashboard-v2.js",
+      "disposition": "REUSE_PATTERN",
+      "reason": "Preserve Done / Still needed / Needs review and Needs attention translation; map governance states to manager-facing language rather than exposing only technical state names."
+    },
+    {
+      "component": "Construction record model",
+      "source": "records-v4.js",
+      "disposition": "EXTEND",
+      "reason": "Existing structured record editor is reusable but record vocabulary must include production-readiness evidence classes."
+    },
+    {
+      "component": "Existing record classes",
+      "source": "records-v4.js",
+      "disposition": "REUSE_UNCHANGED",
+      "reason": "Contract, Change Order, Customer Invoice, Customer Payment, Subcontractor Bill, Supplier Bill, Insurance Record and Other remain valid."
+    },
+    {
+      "component": "New roofing record classes",
+      "source": "records-v4.js extension",
+      "disposition": "NEW",
+      "values": [
+        "Inspection",
+        "Scope",
+        "Customer Authorization",
+        "Permit",
+        "Material Order",
+        "Production Slot",
+        "QC Record"
+      ],
+      "reason": "Required to represent the frozen roofing operating corridor and later QC progression."
+    },
+    {
+      "component": "Financial derivation",
+      "source": "calc-v4.js",
+      "disposition": "REUSE_UNCHANGED",
+      "reason": "Approved, invoiced, paid, unsigned changes, trade payables and closeout issues remain an independent proven concern."
+    },
+    {
+      "component": "Production-readiness evaluator",
+      "source": "new module",
+      "disposition": "NEW",
+      "reason": "Must implement the frozen readiness contract separately from financial calculation logic."
+    },
+    {
+      "component": "Governance result persistence",
+      "source": "job record / derived runtime state",
+      "disposition": "NEW",
+      "reason": "Per-job readiness result must expose overall state, requirement states, blockers, correspondence findings and permitted next moves."
+    },
+    {
+      "component": "Closeout tab",
+      "source": "dashboard-v2.js",
+      "disposition": "REUSE_UNCHANGED",
+      "reason": "Existing back-half job closeout remains useful and should not be conflated with production readiness."
+    },
+    {
+      "component": "Production Readiness tab",
+      "source": "dashboard-v2.js extension",
+      "disposition": "NEW",
+      "reason": "Dedicated manager-facing view for Inspection → Scope → Authorization → Permit → Materials → Production Slot qualification."
+    },
+    {
+      "component": "Deterministic test-kitchen fixture",
+      "source": "test-kitchen-v4.mjs",
+      "disposition": "REUSE_AS_REGRESSION",
+      "reason": "Existing financial fixture must continue passing after roofing extension."
+    },
+    {
+      "component": "Roofing development fixtures",
+      "source": "new fixtures",
+      "disposition": "NEW",
+      "reason": "Evaluator development uses non-blind fixtures separate from the frozen ABC qualification specimen."
+    },
+    {
+      "component": "ABC blind specimen",
+      "source": "frozen external specimen set",
+      "disposition": "KEEP_SEPARATE",
+      "reason": "Must not be encoded into contract, evaluator logic or development fixtures before evaluator freeze."
+    }
+  ],
+  "governanceMapping": {
+    "ESTABLISHED": {
+      "managerLabel": "Ready",
+      "managerAction": "Production may proceed subject to human authorization."
+    },
+    "NEGATED": {
+      "managerLabel": "Blocked",
+      "managerAction": "Resolve the failed or revoked requirement before production."
+    },
+    "UNPROVEN": {
+      "managerLabel": "Still needed",
+      "managerAction": "Obtain or establish the missing evidence before production."
+    },
+    "CONFLICTING": {
+      "managerLabel": "Needs review",
+      "managerAction": "Reconcile incompatible job/scope/version evidence before production."
+    }
+  },
+  "productionReadinessRequirements": [
+    {
+      "contractRequirement": "INSPECTION_CURRENT",
+      "recordClass": "Inspection"
+    },
+    {
+      "contractRequirement": "SCOPE_CURRENT",
+      "recordClass": "Scope"
+    },
+    {
+      "contractRequirement": "CUSTOMER_AUTHORIZATION_CURRENT",
+      "recordClass": "Customer Authorization"
+    },
+    {
+      "contractRequirement": "PERMIT_REQUIREMENT_SATISFIED",
+      "recordClass": "Permit"
+    },
+    {
+      "contractRequirement": "MATERIAL_ORDER_CURRENT",
+      "recordClass": "Material Order"
+    },
+    {
+      "contractRequirement": "PRODUCTION_SLOT_AUTHORIZED",
+      "recordClass": "Production Slot"
+    }
+  ],
+  "protectedBehaviors": [
+    "Existing Evan financial calculations remain unchanged.",
+    "Existing Evan record classes remain accepted.",
+    "Existing job persistence and backup/restore remain functional.",
+    "Existing demo/real-job separation remains functional unless separately changed.",
+    "Existing closeout semantics are not redefined as production-readiness semantics.",
+    "A CRM/dashboard stage or manual status does not override governance qualification.",
+    "Human authority is preserved; evaluator output qualifies evidence and permitted progression only."
+  ],
+  "implementationSequence": [
+    "Extend record vocabulary only.",
+    "Add separate roofing readiness evaluator against the frozen contract.",
+    "Add non-blind roofing development fixtures and verify evaluator behavior.",
+    "Run existing Evan V4 test-kitchen regression unchanged.",
+    "Extend dashboard with Production Readiness view and management-facing blockers.",
+    "Freeze evaluator identity.",
+    "Only then expose evaluator to frozen ABC blind specimen."
+  ],
+  "stopCondition": "No application mutation beyond the frozen crosswalk until the implementation delta is explicitly bound and existing Evan V4 regression behavior is preserved."
+}

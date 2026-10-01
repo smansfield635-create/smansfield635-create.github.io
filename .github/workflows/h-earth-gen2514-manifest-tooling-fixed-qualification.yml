@@ -1,0 +1,61 @@
+name: H-Earth Gen2514 Manifest Tooling Fixed Qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact tooling candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 1dbd53537ed46e6458b9a2748004b69466352fff
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run admitted fixed self-test
+        id: test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs --self-test | tee "$RUNNER_TEMP/self-test.stdout"
+          test "$(tr -d '\r\n' < "$RUNNER_TEMP/self-test.stdout")" = "PASS"
+      - name: Emit qualification receipt
+        if: always()
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const stdoutPath=process.env.RUNNER_TEMP+'/self-test.stdout';
+          const stdout=fs.existsSync(stdoutPath)?fs.readFileSync(stdoutPath,'utf8').trim():'';
+          const pass=stdout==='PASS';
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/qualification-receipt.json',JSON.stringify({
+            schema:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_SELF_TEST_RECEIPT_v1',
+            operationId:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_QUALIFICATION_20261001_001',
+            candidateHead:'1dbd53537ed46e6458b9a2748004b69466352fff',
+            targetPath:'tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs',
+            command:'node tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs --self-test',
+            node:process.version,
+            stdout,
+            result:pass?'PASS_CLOSED':'FAIL_CLOSED',
+            repositoryMutationPerformed:false,
+            productMutationPerformed:false,
+            materializationPerformed:false,
+            mergePerformed:false,
+            deploymentPerformed:false
+          },null,2)+'\n');
+          if(!pass)process.exitCode=1;
+          NODE
+      - name: Upload qualification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2514-manifest-tooling-self-test-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/qualification-receipt.json
+          if-no-files-found: error
+          retention-days: 90

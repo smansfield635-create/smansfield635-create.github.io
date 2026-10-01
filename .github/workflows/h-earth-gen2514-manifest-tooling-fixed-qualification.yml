@@ -13,7 +13,7 @@ jobs:
       - name: Checkout exact tooling candidate
         uses: actions/checkout@v4
         with:
-          ref: 1f1d546c0b4fd51cfbe99cf62655b1677bfbfd96
+          ref: ea7d1e69b4d34333a1475357bff137ffdfdf60e5
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -24,7 +24,7 @@ jobs:
         run: |
           set -euo pipefail
           node tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs \
-            --execution-holder H_EARTH_GEN2514_MANIFEST_TOOLING_FULL_QUALIFICATION_20261001_002 \
+            --execution-holder H_EARTH_GEN2514_MANIFEST_TOOLING_FULL_QUALIFICATION_20261001_003 \
             --manifest-output "$RUNNER_TEMP/canonical-manifest.json" \
             --receipt-output "$RUNNER_TEMP/materialization-receipt.json"
           node --input-type=module <<'NODE'
@@ -54,8 +54,8 @@ jobs:
             materialization.recordIdentityMismatchCount===0 && fs.existsSync(manifestPath);
           fs.writeFileSync(process.env.RUNNER_TEMP+'/qualification-receipt.json',JSON.stringify({
             schema:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_FULL_QUALIFICATION_RECEIPT_v1',
-            operationId:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_QUALIFICATION_20261001_002',
-            candidateHead:'1f1d546c0b4fd51cfbe99cf62655b1677bfbfd96',
+            operationId:'H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_TOOLING_QUALIFICATION_20261001_003',
+            candidateHead:'ea7d1e69b4d34333a1475357bff137ffdfdf60e5',
             targetPath:'tools/ai-room-transport/h-earth-gen2514-vegetation-playback-manifest-materializer.v1.mjs',
             result:pass?'PASS_CLOSED':'FAIL_CLOSED',
             materializationReceipt:materialization,

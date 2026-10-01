@@ -4,11 +4,11 @@
   "requestId": "compass-studio-copy-republish-9d9abd3f",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "repository": "smansfield635-create/smansfield635-create.github.io",
-  "transportPullRequest": 5459,
-  "requestBranch": "ai-dispatch-request-h-earth-gen2519-d4aca2d",
-  "requestCommit": "1e41b8f4a08dae6c980cfdca92454622dc387ea1",
-  "currentMainSha": "960d6edfe44caa7941118cca0c9fb35bcff6ba8f",
-  "bridgeRunId": "36798329156",
+  "transportPullRequest": 5472,
+  "requestBranch": "ai-dispatch-request-h-earth-vegetation-manifest-intake",
+  "requestCommit": "7ca649c118986c67bc496565232a737dae80481c",
+  "currentMainSha": "344fa0066fb01a697b671e1ee3de189ac74e0692",
+  "bridgeRunId": "36807226839",
   "error": "Input may not be user supplied: target_sha",
-  "failedAt": "2026-10-01T00:52:35.588Z"
+  "failedAt": "2026-10-01T02:44:25.445Z"
 }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-01T19:30:18Z",
+  "generatedAt": "2026-10-01T20:37:00Z",
   "window": {
-    "start": "2026-07-03T19:30:18Z",
-    "end": "2026-10-01T19:30:18Z"
+    "start": "2026-07-03T20:37:00Z",
+    "end": "2026-10-01T20:37:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5078,
-    "visits": 1298,
+    "pageLoads": 5075,
+    "visits": 1295,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5078,
-        "visits": 1298
+        "pageLoads": 5075,
+        "visits": 1295
       }
     },
     "byPath": {
@@ -58,13 +58,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -146,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 62,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 94,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 62,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -331,8 +331,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 93,
-        "visits": 80
+        "pageLoads": 90,
+        "visits": 77
       },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
@@ -353,8 +353,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 489,
-        "visits": 489
+        "pageLoads": 486,
+        "visits": 486
       },
       "diamondgatebridge.com": {
         "pageLoads": 3780,

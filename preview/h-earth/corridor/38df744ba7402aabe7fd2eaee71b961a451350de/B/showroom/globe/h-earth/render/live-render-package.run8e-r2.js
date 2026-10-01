@@ -272,7 +272,8 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
 
   const historicalOccurrence = packageOccurrenceId.trim() === H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID;
   const neutralPackage = buildHEarthRun8ENeutralPackage({
-    compositionMode: historicalOccurrence ? 'HISTORICAL_R2_CLOSED' : 'CONTENT_ADDRESSED_CURRENT_TERRAIN'
+    compositionMode: historicalOccurrence ? 'HISTORICAL_R2_CLOSED' : 'CONTENT_ADDRESSED_CURRENT_TERRAIN',
+    includeVegetation: historicalOccurrence
   });
   if (neutralPackage?.ok !== true) issues.push(...(neutralPackage?.issues ?? ['R2_NEUTRAL_PACKAGE_FAILED']));
   const westAdmission = issues.length === 0

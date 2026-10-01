@@ -294,19 +294,22 @@ setTimeout(() => {
 },0);
 
 // Gen2519 bounded vegetation residency: advance independently of user navigation after READY.
+const VEGETATION_RESIDENCY_INTERVAL_MS = 250;
 const advanceVegetationResidency = () => {
   try {
     const residency = binding.getReceipt?.()?.resources?.vegetationResidency ?? null;
     if (!residency || residency.complete === true) return;
+    const startedAt = performance.now();
     lastPresentedFrame = binding.presentResidencyAdvance?.() ?? lastPresentedFrame;
+    const elapsedMs = performance.now() - startedAt;
     const next = binding.getReceipt?.()?.resources?.vegetationResidency ?? null;
-    emitDiagnosticStage('POST_READY_VEGETATION_RESIDENCY_ACTIVE','PASS',next);
-    if (next && next.complete !== true) window.setTimeout(advanceVegetationResidency, 16);
+    emitDiagnosticStage('POST_READY_VEGETATION_RESIDENCY_ACTIVE','PASS',{...next,lastTickMilliseconds:elapsedMs,intervalMilliseconds:VEGETATION_RESIDENCY_INTERVAL_MS});
+    if (next && next.complete !== true) window.setTimeout(advanceVegetationResidency, VEGETATION_RESIDENCY_INTERVAL_MS);
   } catch (error) {
     emitDiagnosticStage('POST_READY_VEGETATION_RESIDENCY_ACTIVE','FAIL',{name:error?.name,message:error?.message});
   }
 };
-window.setTimeout(advanceVegetationResidency, 16);
+window.setTimeout(advanceVegetationResidency, VEGETATION_RESIDENCY_INTERVAL_MS);
 
 if (window.parent === window) {
   emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');

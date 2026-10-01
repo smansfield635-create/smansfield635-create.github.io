@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZE_20261001_001",
+  "capabilityId": "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5488,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2514-vegetation-manifest-materialize-20261001-001",
+  "requestCommit": "06e33971e5dc30489d3d1505a016035d6bb63626",
+  "requestCommitParent": "635ad28c34a6ee45f853ad2df7b3919cf3eb5946",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "635ad28c34a6ee45f853ad2df7b3919cf3eb5946",
+  "workflow": "ai-room-execution-transport.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZE_20261001_001\",\"descriptorId\":\"H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_20261001_001\",\"admissionReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"635ad28c34a6ee45f853ad2df7b3919cf3eb5946\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2514-materialization-2521-admission.minimal.v1.json\",\"sha256\":\"a8d4285a7f2131a5af841d23201f509eb1c1fe755805f6690b1b4d0fe1de4a3b\"},\"routerReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"635ad28c34a6ee45f853ad2df7b3919cf3eb5946\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2514-materialization-router.minimal.v1.json\",\"sha256\":\"f09addfb07b7a5ff6ea6b9207fe2c3187b37e098010495a4bc9349976c1b371a\"},\"inputs\":{\"executionHolder\":\"H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZATION_20261001_001\"},\"availableCapabilities\":{\"GITHUB_ACTIONS_CLEAN_EXECUTION\":true},\"requestNonce\":\"2521252125212521252125212521252125212521252125212521252125212521\"}",
+    "router_callback_issue": "5086",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "36902113788",
+  "dispatchedRunId": 36902136434,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36902136434",
+  "dispatchedRunHeadSha": "635ad28c34a6ee45f853ad2df7b3919cf3eb5946",
+  "dispatchedAt": "2026-10-01T17:48:39.388Z",
+  "resolvedAt": "2026-10-01T17:48:44.229Z"
+}

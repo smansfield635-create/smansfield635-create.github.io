@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-vegetation-manifest-canonical-intake-v2",
+  "capabilityId": "H_EARTH_CANONICAL_OPERATION_INTAKE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5474,
+  "requestBranch": "ai-dispatch-request-h-earth-vegetation-manifest-intake-v3",
+  "requestCommit": "b5933500e22b1132497136341393daea1873c012",
+  "currentMainSha": "b0e28ebb9a8245369a1a259da89c4d9b0d8ab0cf",
+  "bridgeRunId": "36807997989",
+  "error": "Stale dispatch request: parent 344fa0066fb01a697b671e1ee3de189ac74e0692 != current main b0e28ebb9a8245369a1a259da89c4d9b0d8ab0cf",
+  "failedAt": "2026-10-01T02:54:14.196Z"
+}

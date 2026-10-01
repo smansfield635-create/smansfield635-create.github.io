@@ -1938,7 +1938,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "H_EARTH_GEN2514_VEGETATION_PLAYBACK_MANIFEST_MATERIALIZER_V1",
-      "exactToolingHead": "3791505173598c36bfa4ce3924cf9331552f9be7",
+      "exactToolingHead": "48a9a0ce0197477831bdf5bdeb50aad0498b91f3",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
         "sparsePaths": [

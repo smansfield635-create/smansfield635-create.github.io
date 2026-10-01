@@ -293,6 +293,21 @@ setTimeout(() => {
   }
 },0);
 
+// Gen2519 bounded vegetation residency: advance independently of user navigation after READY.
+const advanceVegetationResidency = () => {
+  try {
+    const residency = binding.getReceipt?.()?.resources?.vegetationResidency ?? null;
+    if (!residency || residency.complete === true) return;
+    lastPresentedFrame = binding.presentResidencyAdvance?.() ?? lastPresentedFrame;
+    const next = binding.getReceipt?.()?.resources?.vegetationResidency ?? null;
+    emitDiagnosticStage('POST_READY_VEGETATION_RESIDENCY_ACTIVE','PASS',next);
+    if (next && next.complete !== true) window.setTimeout(advanceVegetationResidency, 16);
+  } catch (error) {
+    emitDiagnosticStage('POST_READY_VEGETATION_RESIDENCY_ACTIVE','FAIL',{name:error?.name,message:error?.message});
+  }
+};
+window.setTimeout(advanceVegetationResidency, 16);
+
 if (window.parent === window) {
   emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');
 } else {

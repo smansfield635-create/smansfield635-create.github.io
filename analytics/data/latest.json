@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-01T04:38:07Z",
+  "generatedAt": "2026-10-01T05:34:55Z",
   "window30d": {
-    "start": "2026-09-01T04:38:07Z",
-    "end": "2026-10-01T04:38:07Z"
+    "start": "2026-09-01T05:34:55Z",
+    "end": "2026-10-01T05:34:55Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 74
+      "pageLoads": 73
     },
     {
       "date": "2026-09-25",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-01",
-      "pageLoads": 40
+      "pageLoads": 41
     }
   ],
   "summary": {
     "pageLoads": 6829,
-    "botPageLoads": 2550,
-    "nonBotPageLoads": 4279
+    "botPageLoads": 2551,
+    "nonBotPageLoads": 4278
   },
   "referrers": [
     {
@@ -192,13 +192,13 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 301,
-      "visits": 111
+      "pageLoads": 300,
+      "visits": 110
     },
     {
       "path": "/analytics/",
-      "pageLoads": 262,
-      "visits": 149
+      "pageLoads": 263,
+      "visits": 150
     },
     {
       "path": "/evidence/agentic-frontier/",

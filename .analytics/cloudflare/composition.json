@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-01T04:38:07Z",
+  "generatedAt": "2026-10-01T05:34:55Z",
   "window": {
-    "start": "2026-09-01T04:38:07Z",
-    "end": "2026-10-01T04:38:07Z"
+    "start": "2026-09-01T05:34:55Z",
+    "end": "2026-10-01T05:34:55Z"
   },
   "dimensions": {
     "requestPath": [
@@ -34,13 +34,13 @@
       },
       {
         "value": "/products/education/",
-        "pageLoads": 301,
-        "visits": 111
+        "pageLoads": 300,
+        "visits": 110
       },
       {
         "value": "/analytics/",
-        "pageLoads": 262,
-        "visits": 149
+        "pageLoads": 263,
+        "visits": 150
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -408,8 +408,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6768,
-        "visits": 3799
+        "pageLoads": 6528,
+        "visits": 3699
       },
       {
         "value": "BR",
@@ -450,13 +450,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2774,
-        "visits": 2694
+        "pageLoads": 2775,
+        "visits": 2695
       },
       {
         "value": "tablet",
-        "pageLoads": 2195,
-        "visits": 567
+        "pageLoads": 2194,
+        "visits": 566
       },
       {
         "value": "mobile",
@@ -467,13 +467,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2550,
-        "visits": 2490
+        "pageLoads": 2551,
+        "visits": 2491
       },
       {
         "value": "Chrome",
-        "pageLoads": 2343,
-        "visits": 699
+        "pageLoads": 2342,
+        "visits": 698
       },
       {
         "value": "ChromeMobile",
@@ -514,13 +514,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3974,
-        "visits": 1096
+        "pageLoads": 3973,
+        "visits": 1095
       },
       {
         "value": "Linux",
-        "pageLoads": 2560,
-        "visits": 2500
+        "pageLoads": 2561,
+        "visits": 2501
       },
       {
         "value": "Windows",
@@ -546,20 +546,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 4279,
-        "visits": 1367
+        "pageLoads": 4278,
+        "visits": 1366
       },
       {
         "value": "1",
-        "pageLoads": 2550,
-        "visits": 2490
+        "pageLoads": 2551,
+        "visits": 2491
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4707,
-        "visits": 3458
+        "pageLoads": 4708,
+        "visits": 3459
       },
       {
         "value": "reload",
@@ -573,8 +573,8 @@
       },
       {
         "value": "back-forward",
-        "pageLoads": 341,
-        "visits": 88
+        "pageLoads": 340,
+        "visits": 87
       },
       {
         "value": "routing-apis",
@@ -590,13 +590,13 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 5074,
-        "visits": 3215
+        "pageLoads": 5075,
+        "visits": 3216
       },
       {
         "value": "cache",
-        "pageLoads": 1485,
-        "visits": 372
+        "pageLoads": 1484,
+        "visits": 371
       },
       {
         "value": "navigational-prefetch",

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-01T04:38:07Z",
+  "generatedAt": "2026-10-01T05:34:55Z",
   "window": {
-    "start": "2026-07-03T04:38:07Z",
-    "end": "2026-10-01T04:38:07Z"
+    "start": "2026-07-03T05:34:55Z",
+    "end": "2026-10-01T05:34:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4990,
-    "visits": 1296,
+    "pageLoads": 5079,
+    "visits": 1295,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4990,
-        "visits": 1296
+        "pageLoads": 5079,
+        "visits": 1295
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1085,
+        "pageLoads": 1095,
         "visits": 761
       },
       "/showroom/globe/h-earth/": {
@@ -115,11 +115,11 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 274,
-        "visits": 74
+        "pageLoads": 273,
+        "visits": 73
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 470,
+        "pageLoads": 500,
         "visits": 0
       },
       "/laws/research/methods-and-models/": {
@@ -219,7 +219,7 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -234,13 +234,13 @@
         "pageLoads": 11,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -255,7 +255,7 @@
         "visits": 0
       },
       "/door/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -283,6 +283,14 @@
         "visits": 0
       },
       "/door/canonical-object.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -345,11 +353,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 486,
-        "visits": 486
+        "pageLoads": 485,
+        "visits": 485
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3694,
+        "pageLoads": 3784,
         "visits": 0
       },
       "www.google.com": {

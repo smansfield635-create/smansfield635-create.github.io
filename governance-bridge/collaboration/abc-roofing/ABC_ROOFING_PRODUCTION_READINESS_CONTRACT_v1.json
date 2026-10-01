@@ -1,0 +1,100 @@
+{
+  "schema": "ABC_ROOFING_PRODUCTION_READINESS_CONTRACT_v1",
+  "status": "FROZEN_DEVELOPMENT_CONTRACT",
+  "purpose": "Determine whether evidence establishes that a roofing job is ready to enter production. This contract is business-domain governance and does not encode any ABC-0047 specimen or expected answer.",
+  "claim": {
+    "id": "READY_FOR_PRODUCTION",
+    "subject": "roofing_job",
+    "meaning": "The governed roofing job has satisfied the evidence and correspondence requirements required to authorize production scheduling/execution."
+  },
+  "requiredEvidence": [
+    {
+      "id": "INSPECTION_CURRENT",
+      "artifactClass": "inspection",
+      "requirement": "A completed current inspection exists for the governed job and identifies the subject property/job."
+    },
+    {
+      "id": "SCOPE_CURRENT",
+      "artifactClass": "scope",
+      "requirement": "A current production scope exists and derives from or explicitly corresponds to the current inspection."
+    },
+    {
+      "id": "CUSTOMER_AUTHORIZATION_CURRENT",
+      "artifactClass": "authorization",
+      "requirement": "Required customer authorization exists and explicitly corresponds to the current production scope."
+    },
+    {
+      "id": "PERMIT_REQUIREMENT_SATISFIED",
+      "artifactClass": "permit",
+      "requirement": "Where the governed job requires permit evidence before production, the required permit state is established as satisfied."
+    },
+    {
+      "id": "MATERIAL_ORDER_CURRENT",
+      "artifactClass": "materials",
+      "requirement": "The material order required for production exists and corresponds to the current production scope."
+    },
+    {
+      "id": "PRODUCTION_SLOT_AUTHORIZED",
+      "artifactClass": "production_slot",
+      "requirement": "A production slot/crew assignment exists for the governed job and is authorized against the current production state."
+    }
+  ],
+  "correspondenceRules": [
+    "All evidence must resolve to the same governed job identity.",
+    "Scope evidence must identify its governing inspection or otherwise establish explicit correspondence to it.",
+    "Authorization must identify the exact current scope/version it approves.",
+    "Material evidence must identify the exact current scope/version it fulfills.",
+    "Production scheduling must identify the governed job and current production state.",
+    "A superseded artifact remains historically valid but cannot establish a current requirement unless an explicit rule authorizes supersession carry-forward.",
+    "Conflicting current artifacts fail closed until correspondence is resolved."
+  ],
+  "states": {
+    "ESTABLISHED": "All required evidence is present, valid for the requirement, current, and mutually corresponding to the same governed job/current scope.",
+    "NEGATED": "Evidence affirmatively establishes that a required condition is false, rejected, revoked, failed, or otherwise not satisfied.",
+    "UNPROVEN": "A required condition lacks sufficient evidence to establish or negate it.",
+    "CONFLICTING": "Individually valid evidence establishes incompatible subjects, versions, approvals, or current states such that the required correspondence cannot be established."
+  },
+  "aggregation": {
+    "precedence": [
+      "CONFLICTING",
+      "NEGATED",
+      "UNPROVEN",
+      "ESTABLISHED"
+    ],
+    "READY_FOR_PRODUCTION": "ESTABLISHED only when every required requirement is ESTABLISHED and no correspondence conflict exists.",
+    "failClosed": true
+  },
+  "permittedNextMoves": {
+    "ESTABLISHED": [
+      "AUTHORIZE_PRODUCTION_PROGRESSION"
+    ],
+    "NEGATED": [
+      "HOLD_PRODUCTION",
+      "RESOLVE_NEGATED_REQUIREMENT"
+    ],
+    "UNPROVEN": [
+      "HOLD_PRODUCTION",
+      "OBTAIN_OR_ESTABLISH_MISSING_EVIDENCE"
+    ],
+    "CONFLICTING": [
+      "HOLD_PRODUCTION",
+      "RECONCILE_CORRESPONDENCE"
+    ]
+  },
+  "outputMinimum": [
+    "governedJobId",
+    "claim",
+    "overallState",
+    "requirementStates",
+    "blockingRequirements",
+    "correspondenceFindings",
+    "permittedNextMoves",
+    "evidenceReferences"
+  ],
+  "boundaries": [
+    "This contract does not determine roofing quality, legal compliance, insurance coverage, structural safety, or customer satisfaction beyond the explicitly supplied evidence.",
+    "A workflow/CRM stage label is evidence but is not authoritative proof of READY_FOR_PRODUCTION.",
+    "No blind qualification specimen identity or expected state is encoded in this contract.",
+    "Human decision authority is preserved; this contract qualifies evidence and permitted progression only."
+  ]
+}

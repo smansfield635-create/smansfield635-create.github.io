@@ -1,0 +1,204 @@
+{
+  "schema": "ABC_ROOFING_OCTOBER_2026_FORWARD_PLAN_v1",
+  "fictional": true,
+  "period": "2026-10-01/2026-10-31",
+  "committedScheduled": [
+    {
+      "jobId": "ABC-SEP-A-001",
+      "branch": "Tampa",
+      "start": "2026-10-01",
+      "governance": "CONFLICTING"
+    },
+    {
+      "jobId": "ABC-SEP-A-002",
+      "branch": "Orlando",
+      "start": "2026-10-02",
+      "governance": "UNPROVEN"
+    },
+    {
+      "jobId": "ABC-SEP-A-003",
+      "branch": "Jacksonville",
+      "start": "2026-10-03",
+      "governance": "NEGATED"
+    },
+    {
+      "jobId": "ABC-SEP-A-004",
+      "branch": "Tampa",
+      "start": "2026-10-04",
+      "governance": "CONFLICTING"
+    },
+    {
+      "jobId": "ABC-SEP-A-005",
+      "branch": "Jacksonville",
+      "start": "2026-10-05",
+      "governance": "UNPROVEN"
+    },
+    {
+      "jobId": "ABC-SEP-A-006",
+      "branch": "Tampa",
+      "start": "2026-10-06",
+      "governance": "NEGATED"
+    },
+    {
+      "jobId": "ABC-SEP-A-007",
+      "branch": "Orlando",
+      "start": "2026-10-07",
+      "governance": "CONFLICTING"
+    },
+    {
+      "jobId": "ABC-0047",
+      "branch": "Orlando",
+      "start": "2026-10-08",
+      "governance": "UNPROVEN"
+    },
+    {
+      "jobId": "ABC-SEP-A-009",
+      "branch": "Orlando",
+      "start": "2026-10-09",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-010",
+      "branch": "Jacksonville",
+      "start": "2026-10-10",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-011",
+      "branch": "Tampa",
+      "start": "2026-10-11",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-012",
+      "branch": "Orlando",
+      "start": "2026-10-12",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-013",
+      "branch": "Jacksonville",
+      "start": "2026-10-13",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-014",
+      "branch": "Orlando",
+      "start": "2026-10-14",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-015",
+      "branch": "Jacksonville",
+      "start": "2026-10-01",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-016",
+      "branch": "Tampa",
+      "start": "2026-10-02",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-017",
+      "branch": "Orlando",
+      "start": "2026-10-03",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-018",
+      "branch": "Tampa",
+      "start": "2026-10-04",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-019",
+      "branch": "Orlando",
+      "start": "2026-10-05",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-020",
+      "branch": "Jacksonville",
+      "start": "2026-10-06",
+      "governance": "ESTABLISHED"
+    },
+    {
+      "jobId": "ABC-SEP-A-021",
+      "branch": "Tampa",
+      "start": "2026-10-07",
+      "governance": "ESTABLISHED"
+    }
+  ],
+  "carryoverJobIds": [
+    "ABC-SEP-A-001",
+    "ABC-SEP-A-002",
+    "ABC-SEP-A-003",
+    "ABC-SEP-A-004",
+    "ABC-SEP-A-005",
+    "ABC-SEP-A-006",
+    "ABC-SEP-A-007",
+    "ABC-0047",
+    "ABC-SEP-A-009",
+    "ABC-SEP-A-010",
+    "ABC-SEP-A-011",
+    "ABC-SEP-A-012",
+    "ABC-SEP-A-013",
+    "ABC-SEP-A-014",
+    "ABC-SEP-A-015",
+    "ABC-SEP-A-016",
+    "ABC-SEP-A-017",
+    "ABC-SEP-A-018",
+    "ABC-SEP-A-019",
+    "ABC-SEP-A-020",
+    "ABC-SEP-A-021",
+    "ABC-SEP-A-022",
+    "ABC-SEP-A-023",
+    "ABC-SEP-A-024",
+    "ABC-SEP-A-025",
+    "ABC-SEP-A-026",
+    "ABC-SEP-A-027",
+    "ABC-SEP-A-028",
+    "ABC-SEP-A-029",
+    "ABC-SEP-A-030",
+    "ABC-SEP-A-031",
+    "ABC-SEP-A-032",
+    "ABC-SEP-A-033",
+    "ABC-SEP-A-034",
+    "ABC-SEP-A-035",
+    "ABC-SEP-A-036",
+    "ABC-SEP-A-037",
+    "ABC-SEP-A-038",
+    "ABC-SEP-A-039",
+    "ABC-SEP-A-040",
+    "ABC-SEP-A-041",
+    "ABC-SEP-A-042",
+    "ABC-SEP-A-043",
+    "ABC-SEP-A-044",
+    "ABC-SEP-A-045",
+    "ABC-SEP-A-046",
+    "ABC-SEP-A-047",
+    "ABC-SEP-A-048",
+    "ABC-SEP-A-049",
+    "ABC-SEP-A-050",
+    "ABC-SEP-A-051",
+    "ABC-SEP-A-052",
+    "ABC-SEP-A-053"
+  ],
+  "modeledNewIntake": 57,
+  "modeledCompletionCapacity": 61,
+  "governanceExpectations": [
+    {
+      "branch": "Orlando",
+      "expectation": "Resolve all scope/authorization correspondence conflicts before production release."
+    },
+    {
+      "branch": "Tampa",
+      "expectation": "Clear September evidence holds before adding production load."
+    },
+    {
+      "branch": "Jacksonville",
+      "expectation": "Prevent QC-held work from entering closeout without established QC evidence."
+    }
+  ]
+}

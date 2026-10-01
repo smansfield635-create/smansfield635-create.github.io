@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-01T20:37:00Z",
+  "generatedAt": "2026-10-01T21:30:43Z",
   "window": {
-    "start": "2026-07-03T20:37:00Z",
-    "end": "2026-10-01T20:37:00Z"
+    "start": "2026-07-03T21:30:43Z",
+    "end": "2026-10-01T21:30:43Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5075,
-    "visits": 1295,
+    "pageLoads": 5067,
+    "visits": 1287,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5075,
-        "visits": 1295
+        "pageLoads": 5067,
+        "visits": 1287
       }
     },
     "byPath": {
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -331,8 +331,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 90,
-        "visits": 77
+        "pageLoads": 82,
+        "visits": 69
       },
       "/governance-bridge/governance/": {
         "pageLoads": 16,
@@ -353,8 +353,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 486,
-        "visits": 486
+        "pageLoads": 478,
+        "visits": 478
       },
       "diamondgatebridge.com": {
         "pageLoads": 3780,

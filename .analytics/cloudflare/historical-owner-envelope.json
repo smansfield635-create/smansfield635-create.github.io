@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-01T14:37:09Z",
+  "generatedAt": "2026-10-01T15:35:05Z",
   "window": {
-    "start": "2026-07-03T14:37:09Z",
-    "end": "2026-10-01T14:37:09Z"
+    "start": "2026-07-03T15:35:05Z",
+    "end": "2026-10-01T15:35:05Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5079,
-    "visits": 1295,
+    "pageLoads": 5074,
+    "visits": 1294,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5079,
-        "visits": 1295
+        "pageLoads": 5074,
+        "visits": 1294
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1095,
+        "pageLoads": 1094,
         "visits": 761
       },
       "/showroom/globe/h-earth/": {
@@ -99,8 +99,8 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 301,
-        "visits": 91
+        "pageLoads": 300,
+        "visits": 90
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
@@ -123,7 +123,7 @@
         "visits": 73
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 111,
+        "pageLoads": 110,
         "visits": 0
       },
       "/laws/categories/structure/": {
@@ -135,7 +135,7 @@
         "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
-        "pageLoads": 21,
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -247,7 +247,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 72,
+        "pageLoads": 71,
         "visits": 0
       },
       "/characters/legacy-dossiers.html": {
@@ -258,16 +258,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -357,12 +357,12 @@
         "visits": 485
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3784,
+        "pageLoads": 3780,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 800,
-        "visits": 800
+        "pageLoads": 799,
+        "visits": 799
       },
       "raw.githack.com": {
         "pageLoads": 10,

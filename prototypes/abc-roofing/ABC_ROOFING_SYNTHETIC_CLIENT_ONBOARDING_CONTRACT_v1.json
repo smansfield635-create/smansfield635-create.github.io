@@ -1,0 +1,66 @@
+{
+  "schema": "ABC_ROOFING_SYNTHETIC_CLIENT_ONBOARDING_CONTRACT_v1",
+  "status": "FROZEN_MODEL_ASSUMPTIONS",
+  "fictional": true,
+  "effectiveAsOf": "2026-09-30",
+  "company": {
+    "name": "ABC Roofing & Remodeling",
+    "employees": 200,
+    "branches": [
+      "Tampa",
+      "Orlando",
+      "Jacksonville"
+    ],
+    "operatingModel": "Multi-branch residential roofing/remodeling contractor with centralized governance and branch operations.",
+    "provenance": "SOMAK_HYPOTHETICAL_PLUS_SYNTHETIC"
+  },
+  "evidenceBoundary": {
+    "publicConstraints": [
+      "Multi-office Florida roofing operations exist across Tampa, Orlando and Jacksonville.",
+      "Industry growth example supports hundreds of annual sold roof replacements at high-volume scale.",
+      "Typical lead-to-final-invoice cycle commonly spans roughly two weeks to one month.",
+      "Quote acceptance to job start commonly falls within roughly one to three weeks."
+    ],
+    "syntheticClientData": "All ABC volumes, customers, employees, dates, financials, issues, capacities and performance are fictional but internally reconciled.",
+    "governanceDerived": "Flags, readiness states, carryover and management queues must be calculated from supplied synthetic records rather than manually asserted."
+  },
+  "annualModel": {
+    "period": "2025-10-01/2026-09-30",
+    "soldJobsTarget": 612,
+    "completedJobsTarget": 574,
+    "averageContractValue": 24750,
+    "branchShare": {
+      "Tampa": 0.31,
+      "Orlando": 0.38,
+      "Jacksonville": 0.31
+    },
+    "rationale": "Modeled as a mature ~200-person three-branch contractor at a scale comparable to publicly described high-volume roofing operations; values are synthetic, not attributed to a real company."
+  },
+  "september": {
+    "period": "2026-09-01/2026-09-30",
+    "purpose": "Closed operating month and governance checkpoint.",
+    "requiredViews": [
+      "OPENED",
+      "COMPLETED",
+      "ACTIVE_AT_MONTH_END",
+      "SCHEDULED_FORWARD",
+      "ISSUES_AT_MONTH_END",
+      "CARRYOVER_TO_OCTOBER"
+    ],
+    "law": "Every September headline count must reconcile to identifiable job/event records."
+  },
+  "october": {
+    "period": "2026-10-01/2026-10-31",
+    "purpose": "Forward operating plan.",
+    "law": "Scheduled jobs must be identifiable carryover/current jobs with scheduling evidence. Forecast intake/capacity must be labeled modeled and remain distinct from committed scheduled work."
+  },
+  "annualBridge": [
+    "MONTHLY_OPENED",
+    "MONTHLY_COMPLETED",
+    "MONTH_END_ACTIVE",
+    "MONTH_END_ISSUES",
+    "AVERAGE_CYCLE_DAYS",
+    "CONTRACT_VOLUME"
+  ],
+  "reconciliationLaw": "No dashboard metric may exist independently of the underlying synthetic jobs/events from which it is calculated."
+}

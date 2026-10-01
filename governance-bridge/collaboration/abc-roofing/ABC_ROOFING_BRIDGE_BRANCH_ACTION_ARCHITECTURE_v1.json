@@ -1,0 +1,117 @@
+{
+  "schema": "ABC_ROOFING_BRIDGE_BRANCH_ACTION_ARCHITECTURE_v1",
+  "status": "FROZEN_PRE_REBUILD",
+  "purpose": "Define the presentation and governed-action architecture for the ABC Roofing & Remodeling synthetic operating demonstration.",
+  "hierarchy": [
+    {
+      "layer": "LBS_MEETING_SURFACE",
+      "law": "Short executive entry only: Somak's ask → what was built → enter ABC Roofing → Thursday decisions."
+    },
+    {
+      "layer": "BRIDGE",
+      "law": "NOTICE. Company-wide exception-first summary across Tampa, Orlando and Jacksonville. Surface material state, flags, bottlenecks and priority jobs; do not duplicate branch/job detail."
+    },
+    {
+      "layer": "BRANCH_CAROUSEL",
+      "law": "INVESTIGATE. Three equivalent full-screen branch pages: Tampa, Orlando, Jacksonville. Selecting a branch consumes the page. Same anatomy, independent synthetic state."
+    },
+    {
+      "layer": "BRANCH_FRONT",
+      "law": "KNOW. Show workflow, workload, bottlenecks, governance flags, priority jobs and changes since prior cycle."
+    },
+    {
+      "layer": "BRANCH_BACK",
+      "law": "ACT. Only governed actions derived from a visible operational condition: Notify, Instruct, Delegate, Set Next Governance Expectation."
+    },
+    {
+      "layer": "JOB_STAGE",
+      "law": "UNDERSTAND. Drill into job records, evidence, financials, files, production readiness and closeout using Evan-derived capability."
+    },
+    {
+      "layer": "GOVERNANCE",
+      "law": "JUSTIFY. Determine what supplied evidence establishes and what progression is permitted."
+    },
+    {
+      "layer": "ACTION_RECEIPT",
+      "law": "Record issue, disposition, action, owner/recipient, instruction, due point, expected evidence/state and creation timestamp. The receipt becomes input to the next governance cycle."
+    }
+  ],
+  "branchWorkflow": [
+    "LEADS",
+    "APPOINTMENTS",
+    "INSPECTIONS",
+    "SCOPES",
+    "APPROVALS",
+    "PRODUCTION_READY",
+    "PRODUCTION",
+    "QC",
+    "CLOSEOUT"
+  ],
+  "bridgeSignals": [
+    "ACTIVE_JOBS",
+    "PRODUCTION_READY",
+    "IN_PRODUCTION",
+    "CLOSEOUT",
+    "STILL_NEEDED",
+    "NEEDS_REVIEW",
+    "BLOCKED",
+    "CORRESPONDENCE_CONFLICTS",
+    "AGING_HANDOFFS",
+    "QC_HOLDS"
+  ],
+  "governedActions": [
+    {
+      "action": "NOTIFY",
+      "boundary": "Synthetic/demo notification receipt for Thursday; no external message is sent."
+    },
+    {
+      "action": "INSTRUCT",
+      "boundary": "Document a management instruction tied to a governed issue."
+    },
+    {
+      "action": "DELEGATE",
+      "boundary": "Assign a bounded task/owner/due point tied to the issue."
+    },
+    {
+      "action": "SET_EXPECTATION",
+      "boundary": "Define the evidence/state required at the next governance check and when it is expected."
+    }
+  ],
+  "actionLaw": "No generic task or communications suite. Every action must originate from an identified operational condition and create a receipt that can be evaluated in a later governance cycle.",
+  "loop": [
+    "OBSERVE",
+    "QUALIFY",
+    "DECIDE",
+    "ACT",
+    "DELEGATE",
+    "EXPECT",
+    "REQUALIFY"
+  ],
+  "syntheticData": {
+    "branches": [
+      "Tampa",
+      "Orlando",
+      "Jacksonville"
+    ],
+    "targetJobCount": "45–60",
+    "requirement": "Dataset must include healthy progression, aging work, missing evidence, correspondence conflicts, explicit blocks and QC holds. All identities and incidents are fictional.",
+    "seededScenarioLaw": "Branch scenarios demonstrate different management conditions but must never imply those conditions exist in the real cities or any real company."
+  },
+  "protectedAssets": [
+    "ABC_ROOFING_PRODUCTION_READINESS_CONTRACT_v1",
+    "Frozen roofing evaluator blob a7c10928c56e3e0cee6325b932c4d166e609aea7",
+    "ABC blind qualification 4/4 result",
+    "Evan V4 financial/closeout calculations and regression",
+    "Existing job persistence/files/backup capability"
+  ],
+  "thursdayBoundary": "Action architecture may be fully interactive with synthetic receipts, but external email, messaging, CRM and task-service integrations are out of scope unless separately authorized after the meeting.",
+  "rebuildOrder": [
+    "Create deterministic synthetic multi-branch dataset.",
+    "Build ABC Roofing Bridge aggregation from dataset.",
+    "Build full-screen three-branch carousel front faces.",
+    "Build bounded flip-to-action backs and synthetic action receipts.",
+    "Bind job drill-down to Evan-derived Job Stage capability.",
+    "Compress LBS collaboration page to four executive sections and link into Bridge.",
+    "Run presentation/runtime qualification before publication."
+  ]
+}

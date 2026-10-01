@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-01T02:51:31Z",
+  "generatedAt": "2026-10-01T03:44:40Z",
   "window": {
-    "start": "2026-07-03T02:51:31Z",
-    "end": "2026-10-01T02:51:31Z"
+    "start": "2026-07-03T03:44:40Z",
+    "end": "2026-10-01T03:44:40Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5091,
-    "visits": 1307,
+    "pageLoads": 5085,
+    "visits": 1301,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5091,
-        "visits": 1307
+        "pageLoads": 5085,
+        "visits": 1301
       }
     },
     "byPath": {
@@ -146,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 94,
-        "visits": 0
-      },
       "/governance/": {
         "pageLoads": 62,
         "visits": 10
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 94,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -331,12 +331,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 95,
-        "visits": 82
-      },
-      "/preview/governance-bridge/": {
-        "pageLoads": 5,
-        "visits": 5
+        "pageLoads": 94,
+        "visits": 81
       },
       "/analytics/": {
         "pageLoads": 49,
@@ -361,8 +357,8 @@
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 496,
-        "visits": 496
+        "pageLoads": 490,
+        "visits": 490
       },
       "www.google.com": {
         "pageLoads": 800,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-01T02:51:31Z",
+  "generatedAt": "2026-10-01T03:44:40Z",
   "window30d": {
-    "start": "2026-09-01T02:51:31Z",
-    "end": "2026-10-01T02:51:31Z"
+    "start": "2026-09-01T03:44:40Z",
+    "end": "2026-10-01T03:44:40Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 107
+      "pageLoads": 101
     },
     {
       "date": "2026-09-25",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-01",
-      "pageLoads": 6
+      "pageLoads": 11
     }
   ],
   "summary": {
-    "pageLoads": 6838,
-    "botPageLoads": 2540,
-    "nonBotPageLoads": 4298
+    "pageLoads": 6837,
+    "botPageLoads": 2545,
+    "nonBotPageLoads": 4292
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3292,
-      "visits": 3292
+      "pageLoads": 3291,
+      "visits": 3291
     },
     {
       "host": "diamondgatebridge.com",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 260,
-      "visits": 147
+      "pageLoads": 261,
+      "visits": 148
     },
     {
       "path": "/evidence/agentic-frontier/",

@@ -1,0 +1,116 @@
+{
+  "schema": "ABC_ROOFING_BLIND_QUALIFICATION_PACKET_SET_v1",
+  "frozenEvaluatorBlob": "a7c10928c56e3e0cee6325b932c4d166e609aea7",
+  "subject": {
+    "id": "ABC-0047",
+    "company": "ABC Roofing & Remodeling",
+    "fictional": true,
+    "office": "Orlando",
+    "productionStateId": "PROD-0047"
+  },
+  "claim": "READY_FOR_PRODUCTION",
+  "provenance": "Synthetic blind qualification specimen. No real customer, employee, transaction, or failure.",
+  "expectedGroundTruth": [
+    {
+      "variant": "CONTROL_COHERENT",
+      "state": "ESTABLISHED"
+    },
+    {
+      "variant": "MISSING_AUTHORIZATION",
+      "state": "UNPROVEN"
+    },
+    {
+      "variant": "CORRESPONDENCE_CONFLICT",
+      "state": "CONFLICTING"
+    },
+    {
+      "variant": "READINESS_UNRESOLVED",
+      "state": "UNPROVEN"
+    }
+  ],
+  "baseRecords": [
+    {
+      "id": "INS-0047-R2",
+      "jobId": "ABC-0047",
+      "type": "Inspection",
+      "state": "approved",
+      "date": "2026-09-29"
+    },
+    {
+      "id": "SCOPE-0047-R2",
+      "jobId": "ABC-0047",
+      "type": "Scope",
+      "state": "approved",
+      "date": "2026-09-29",
+      "inspectionRef": "INS-0047-R2"
+    },
+    {
+      "id": "AUTH-0047-R2",
+      "jobId": "ABC-0047",
+      "type": "Customer Authorization",
+      "state": "approved",
+      "date": "2026-09-29",
+      "scopeRef": "SCOPE-0047-R2"
+    },
+    {
+      "id": "PERMIT-0047",
+      "jobId": "ABC-0047",
+      "type": "Permit",
+      "state": "approved",
+      "date": "2026-09-30"
+    },
+    {
+      "id": "MAT-0047-R2",
+      "jobId": "ABC-0047",
+      "type": "Material Order",
+      "state": "approved",
+      "date": "2026-09-30",
+      "scopeRef": "SCOPE-0047-R2"
+    },
+    {
+      "id": "PROD-SLOT-0047",
+      "jobId": "ABC-0047",
+      "type": "Production Slot",
+      "state": "approved",
+      "date": "2026-09-30",
+      "productionStateRef": "PROD-0047"
+    }
+  ],
+  "variants": {
+    "CONTROL_COHERENT": {
+      "operations": []
+    },
+    "MISSING_AUTHORIZATION": {
+      "operations": [
+        {
+          "op": "removeType",
+          "type": "Customer Authorization"
+        }
+      ]
+    },
+    "CORRESPONDENCE_CONFLICT": {
+      "operations": [
+        {
+          "op": "replace",
+          "id": "AUTH-0047-R2",
+          "value": {
+            "id": "AUTH-0047-R1",
+            "jobId": "ABC-0047",
+            "type": "Customer Authorization",
+            "state": "approved",
+            "date": "2026-09-28",
+            "scopeRef": "SCOPE-0047-R1"
+          }
+        }
+      ]
+    },
+    "READINESS_UNRESOLVED": {
+      "operations": [
+        {
+          "op": "removeType",
+          "type": "Permit"
+        }
+      ]
+    }
+  }
+}

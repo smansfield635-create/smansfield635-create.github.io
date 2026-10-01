@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GEN2514_MANIFEST_TOOLING_FULL_QUALIFY_20261001_002",
+  "capabilityId": "H_EARTH_GEN2514_MANIFEST_TOOLING_FIXED_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5493,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2514-manifest-tooling-full-qualify-20261001-002",
+  "requestCommit": "fc1837c5334b23fb10d20c477794ec1df9c62ce0",
+  "requestCommitParent": "6cec483e61735090535567bacc4cfb05e982da90",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "6cec483e61735090535567bacc4cfb05e982da90",
+  "workflow": "h-earth-gen2514-manifest-tooling-fixed-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "36913460801",
+  "dispatchedRunId": 36913489742,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36913489742",
+  "dispatchedRunHeadSha": "6cec483e61735090535567bacc4cfb05e982da90",
+  "dispatchedAt": "2026-10-01T19:19:55.890Z",
+  "resolvedAt": "2026-10-01T19:19:59.699Z"
+}

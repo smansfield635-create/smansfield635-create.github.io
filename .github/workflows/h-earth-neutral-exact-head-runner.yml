@@ -263,6 +263,17 @@ jobs:
             initial=await sample('initial');
             await page.waitForTimeout(3000);
             later=await sample('later');
+            const residencySamples=[];
+            for(let sampleIndex=0;sampleIndex<8;sampleIndex+=1){
+              await page.waitForTimeout(2000);
+              const live=await page.evaluate(() => {
+                const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
+                const receipt=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
+                const residency=receipt?.resources?.vegetationResidency??null;
+                return {residency,worldRebuildCount:receipt?.counters?.worldRebuildCount??null,gpuFramebufferPresentationCount:receipt?.counters?.gpuFramebufferPresentationCount??null};
+              });
+              residencySamples.push(live);
+            }
           } finally {
             await context.close();
             await browser.close();
@@ -295,7 +306,10 @@ jobs:
             rendererDefaultFramebufferReadbackLater:later?.liveGpuReceipt?.resources?.latestDefaultFramebufferT4Readback??null,
             rendererDefaultFramebufferChanged:Boolean(initial?.liveGpuReceipt?.resources?.latestDefaultFramebufferT4Readback?.byteHash&&later?.liveGpuReceipt?.resources?.latestDefaultFramebufferT4Readback?.byteHash&&initial.liveGpuReceipt.resources.latestDefaultFramebufferT4Readback.byteHash!==later.liveGpuReceipt.resources.latestDefaultFramebufferT4Readback.byteHash),
             animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
-            worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false)
+            worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false),
+            residencySamples,
+            vegetationResidencyMonotonic:residencySamples.every((sample,index,array)=>index===0||!sample?.residency||!array[index-1]?.residency||(sample.residency.residentBatchCount>=array[index-1].residency.residentBatchCount&&sample.residency.residentInstanceCount>=array[index-1].residency.residentInstanceCount)),
+            residencyWorldRebuildStayedZero:residencySamples.every(sample=>sample?.worldRebuildCount===0)
           };
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-gen2523-ea9db84e-residency-qualification-001",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5499,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2523-residency-001",
+  "requestCommit": "0ddf3d9f7484922dbe3fc530b8d5597895af41ee",
+  "currentMainSha": "b330d6be9bd8be48e1955258a0b31b2d6c61d975",
+  "bridgeRunId": "36941896732",
+  "error": "Undeclared input: exercise_vegetation_residency",
+  "failedAt": "2026-10-01T23:38:56.974Z"
+}

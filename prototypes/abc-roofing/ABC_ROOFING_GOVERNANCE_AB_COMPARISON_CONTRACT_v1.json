@@ -1,0 +1,73 @@
+{
+  "schema": "ABC_ROOFING_GOVERNANCE_AB_COMPARISON_CONTRACT_v1",
+  "status": "FROZEN_PRE_IMPLEMENTATION",
+  "experimentLaw": "Same source data, same CRM state, same Agile operating cycle, same timestamp. Governance visibility is the only variable.",
+  "modes": {
+    "OFF": {
+      "label": "Governance Off",
+      "shows": [
+        "CRM operational state",
+        "CRM workflow stage",
+        "CRM/Agile ordinary alerts",
+        "Agile objectives and completion",
+        "Existing operational metrics"
+      ],
+      "hides": [
+        "Governance-qualified state",
+        "Evidence sufficiency flags",
+        "Correspondence conflicts not already reported by CRM",
+        "Governed expectations",
+        "Governed action receipts",
+        "Requalification history"
+      ],
+      "law": "OFF must remain a credible useful operating system and must never be intentionally degraded to make governance appear valuable."
+    },
+    "ON": {
+      "label": "Governance On",
+      "shows": [
+        "Everything visible in OFF",
+        "Governance-qualified state",
+        "CRM-vs-governance discrepancies",
+        "Evidence gaps",
+        "Correspondence conflicts",
+        "Governed expectations",
+        "Governed action receipts",
+        "Requalification history"
+      ],
+      "law": "ON is an additive evidence/qualification layer. It must not mutate CRM facts, workflow stages, schedules, Agile completion records, or source evidence merely by being enabled."
+    }
+  },
+  "globalState": {
+    "storageKey": "abc-roofing-governance-mode-v1",
+    "default": "OFF",
+    "scope": [
+      "ABC Roofing Bridge",
+      "Tampa branch",
+      "Orlando branch",
+      "Jacksonville branch",
+      "Job/evidence drill-down"
+    ],
+    "law": "Changing mode anywhere changes the presentation mode everywhere on the ABC Roofing demonstration."
+  },
+  "comparisonExamples": [
+    {
+      "source": "CRM",
+      "claim": "ABC-0047 READY_FOR_PRODUCTION",
+      "off": "Display CRM state as reported.",
+      "on": "Display CRM state plus governance qualification and any evidence correspondence discrepancy."
+    },
+    {
+      "source": "Agile",
+      "claim": "Cycle item complete",
+      "off": "Display Agile completion as recorded.",
+      "on": "Display recorded completion plus whether required evidence establishes completion."
+    }
+  ],
+  "protectedBoundaries": [
+    "Governance mode does not change source records.",
+    "Governance mode does not fabricate failures.",
+    "Governance mode does not send external communications.",
+    "Governance OFF does not hide ordinary CRM-native warnings or Agile-native blockers.",
+    "Synthetic client data remains clearly identified as synthetic."
+  ]
+}

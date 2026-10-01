@@ -26,7 +26,7 @@ export function buildHEarthRun8EPacket002SuccessorTransfer({neutralPackage,westB
   if(neutralPackage?.worldManifoldUnion?.valid!==true)issues.push('RUN_8E_WORLD_MANIFOLD_UNION_INVALID');
   if(neutralPackage?.canonicalWorldFieldProtected!==true)issues.push('GEN311_CANONICAL_WORLD_FIELD_NOT_PROTECTED');
   if(neutralPackage?.regionalEnvironmentMaterialized!==true||neutralPackage?.regionalDevelopment?.sampleCount<20)issues.push('GEN311_REGIONAL_ENVIRONMENT_NOT_MATERIALIZED');
-  if(neutralPackage?.regionalVegetation?.eligible!==true||neutralPackage?.regionalEcologyPrimitiveCount<=0)issues.push('GEN311_REGIONAL_VEGETATION_NOT_MATERIALIZED');
+  const boundedVegetationDisposition=neutralPackage?.regionalVegetation?.residencyDisposition==='BOUNDED_PRESENTATION_BATCHES'&&neutralPackage?.regionalVegetation?.worldTruthQualified===true&&neutralPackage?.regionalEcologyPrimitiveCount===0;if(neutralPackage?.regionalVegetation?.eligible!==true||(!boundedVegetationDisposition&&neutralPackage?.regionalEcologyPrimitiveCount<=0))issues.push('GEN311_REGIONAL_VEGETATION_NOT_MATERIALIZED');
   if(westBatchAdmissionResult?.valid!==true||!isHEarthAggregateFrameAdmissionRecord(westBatchAdmissionResult?.frame)||!Array.isArray(westBatchAdmissionResult?.primitiveAdmissions))issues.push('RUN_8E_WEST_BATCH_INVALID');
   if(typeof transferOccurrenceId!=='string'||!transferOccurrenceId.trim())issues.push('RUN_8E_TRANSFER_OCCURRENCE_ID_INVALID');
   const admittedPrimitives=(westBatchAdmissionResult?.primitiveAdmissions??[]).map(a=>a?.primitive).filter(Boolean);

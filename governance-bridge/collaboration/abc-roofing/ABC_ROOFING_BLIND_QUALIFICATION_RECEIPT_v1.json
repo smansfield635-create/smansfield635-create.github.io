@@ -1,0 +1,44 @@
+{
+  "schema": "ABC_ROOFING_BLIND_QUALIFICATION_RECEIPT_v1",
+  "result": "PASS_CLOSED",
+  "evaluator": {
+    "path": "prototypes/evan-job-stage/roofing-readiness-v1.js",
+    "blob": "a7c10928c56e3e0cee6325b932c4d166e609aea7",
+    "mutatedAfterFreeze": false
+  },
+  "packet": "ABC_ROOFING_BLIND_QUALIFICATION_PACKET_SET_v1",
+  "subject": "ABC-0047",
+  "claim": "READY_FOR_PRODUCTION",
+  "results": [
+    {
+      "variant": "CONTROL_COHERENT",
+      "expected": "ESTABLISHED",
+      "actual": "ESTABLISHED",
+      "pass": true
+    },
+    {
+      "variant": "MISSING_AUTHORIZATION",
+      "expected": "UNPROVEN",
+      "actual": "UNPROVEN",
+      "pass": true
+    },
+    {
+      "variant": "CORRESPONDENCE_CONFLICT",
+      "expected": "CONFLICTING",
+      "actual": "CONFLICTING",
+      "pass": true
+    },
+    {
+      "variant": "READINESS_UNRESOLVED",
+      "expected": "UNPROVEN",
+      "actual": "UNPROVEN",
+      "pass": true
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "total": 4,
+    "evaluatorChangesAfterResult": 0
+  },
+  "boundary": "Synthetic roofing qualification only. This does not establish commercial validation, legal compliance, roofing quality, or performance on real LBS/client data."
+}

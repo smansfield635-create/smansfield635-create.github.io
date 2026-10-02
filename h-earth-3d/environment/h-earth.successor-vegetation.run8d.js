@@ -14,6 +14,7 @@ import {
   evaluateHEarthRun8CSuccessorSurfaceMaterial
 } from './h-earth.successor-surface-material.run8c.js';
 
+import { buildHEarthGen311PlacementData as buildHEarthGen2514QualifiedPlacementData } from './h-earth.gen2514-qualified-placement-authority.js';
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const clamp01=v=>Math.min(1,Math.max(0,v));
@@ -382,7 +383,23 @@ export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;
 // Gen2514 consumes qualified Gen2510 records; it does not invoke the old population planner.
 export const H_EARTH_GEN2514_PLACEMENT_ARCHETYPE_ADAPTER_CONTRACT_ID =
   'H_EARTH_GEN2510_PLACEMENT_TO_RUN8D_ARCHETYPE_ADAPTER_v1';
-export function buildHEarthGen2514VegetationArchetypeAdapter(placementData = buildHEarthGen311PlacementData()) {
+export const H_EARTH_GEN2514_QUALIFIED_PLACEMENT_AUTHORITY = freeze({
+  vegetationBlob: '775f6b5a49266eebb0d06a0407e89c26e08134c9',
+  terrainFieldBlob: 'fd5d7d48ed9090c6b8bac74cb5d9897ca2d5ec0a',
+  run8BBlob: '4f929cd467edb447e2116de745d9b02c28daf219',
+  run8CMaterialBlob: '9ea6056353453254a2c00e3ed9abf44b2fe7b275',
+  resolutionBlob: '82d0590fdc7346f7b6cdb5eafeb3d51ef13411dc',
+  expectedPlacementCount: 27585,
+  expectedCanonicalDigest: '3a79813434d3942ed0045844ed061499b3a8c163476de9fde1b94670e137d61b'
+});
+export function buildHEarthGen2514QualifiedPlacementInput() {
+  const placementData = buildHEarthGen2514QualifiedPlacementData();
+  if (placementData?.eligible !== true || placementData?.placementCount !== H_EARTH_GEN2514_QUALIFIED_PLACEMENT_AUTHORITY.expectedPlacementCount) {
+    throw new Error(`GEN2514_QUALIFIED_PLACEMENT_AUTHORITY_MISMATCH:${placementData?.placementCount ?? 'NULL'}`);
+  }
+  return placementData;
+}
+export function buildHEarthGen2514VegetationArchetypeAdapter(placementData = buildHEarthGen2514QualifiedPlacementInput()) {
   const evaluation = evaluateHEarthGen311PlacementData(placementData);
   const issues = [...evaluation.issues];
   if (!evaluation.eligible) issues.push('GEN2514_PLACEMENT_INPUT_NOT_ELIGIBLE');

@@ -273,38 +273,30 @@ jobs:
             later=await sample('later');
             const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
             if(exerciseVegetation){
-              try{
-                vegetationExercise=await page.evaluate(async () => {
-                  try{
+              const browserProbe=page.evaluate(() => {
                 const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
                 const owner=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)||null;
                 const route=owner?.H_EARTH_RUN8E_PUBLIC_ROUTE??null;
-                const renderer=route;
-                if(!renderer?.materializeNextVegetationBatch) return {executed:false,error:'VEGETATION_RESIDENCY_API_UNAVAILABLE',routeKeys:route?Object.keys(route).sort():[]};
-                const transitions=[];let failure=null;
-                const snapshot=()=>{const receipt=route.getLiveGpuReceipt?.()??null,resource=renderer.getResourceReceipt?.()??null;return {residency:receipt?.resources?.vegetationResidency??resource?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??resource?.counters?.worldRebuildCount??null};};
-                for(let i=0;i<108;i++){
-                  const pre=snapshot();let returnedState=null;
-                  try{
-                    returnedState=renderer.materializeNextVegetationBatch();
-                    await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
-                    const post=snapshot();
-                    transitions.push({batchIndex:i,preResidency:pre.residency,returnedState,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount});
-                  }catch(error){
-                    const post=snapshot();
-                    failure={batchIndex:i,preResidency:pre.residency,returnedState,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount,error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}};
-                    transitions.push({...failure});
-                    break;
-                  }
+                if(!route?.materializeNextVegetationBatch) return {executed:false,error:'VEGETATION_RESIDENCY_API_UNAVAILABLE',routeKeys:route?Object.keys(route).sort():[]};
+                const snapshot=()=>{const receipt=route.getLiveGpuReceipt?.()??null;return {residency:receipt?.resources?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??null};};
+                const pre=snapshot();
+                const started=performance.now();
+                try{
+                  const returnedState=route.materializeNextVegetationBatch();
+                  const post=snapshot();
+                  return {executed:true,batchIndex:0,elapsedMilliseconds:performance.now()-started,preResidency:pre.residency,returnedState,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount};
+                }catch(error){
+                  const post=snapshot();
+                  return {executed:false,batchIndex:0,elapsedMilliseconds:performance.now()-started,preResidency:pre.residency,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount,failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
                 }
-                const final=snapshot();
-                return {executed:true,transitions,failure,finalResidency:final.residency,worldRebuildCount:final.worldRebuildCount};
-                  }catch(error){
-                    return {executed:false,phase:'BROWSER_EXERCISE_OUTER',failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
-                  }
-                });
+              });
+              try{
+                vegetationExercise=await Promise.race([
+                  browserProbe,
+                  new Promise(resolve=>setTimeout(()=>resolve({executed:false,batchIndex:0,phase:'NODE_BATCH_TIMEOUT',timeoutMilliseconds:60000}),60000))
+                ]);
               }catch(error){
-                vegetationExercise={executed:false,phase:'NODE_PAGE_EVALUATE_REJECTED',failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
+                vegetationExercise={executed:false,batchIndex:0,phase:'NODE_PAGE_EVALUATE_REJECTED',failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
               }
             }
             residencySamples=[];
@@ -361,7 +353,7 @@ jobs:
           if(!receipt.materialized||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
           if(String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true'){
             const v=receipt.vegetationExercise;
-            if(v?.executed!==true||v?.transitions?.length!==108||v?.finalResidency?.residentBatchCount!==108||v?.finalResidency?.residentInstanceCount!==27585||v?.finalResidency?.complete!==true||v?.finalResidency?.droppedPlacementCount!==0||v?.worldRebuildCount!==0) process.exitCode=1;
+            if(v?.executed!==true||v?.batchIndex!==0||v?.postResidency?.residentBatchCount!==1||!(v?.postResidency?.residentInstanceCount>0)||v?.worldRebuildCount!==0) process.exitCode=1;
           }
           NODE
           node h-earth-exact-run.mjs

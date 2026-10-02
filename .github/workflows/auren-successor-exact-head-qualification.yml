@@ -22,19 +22,33 @@ jobs:
         env:
           BASE_SHA: ${{ inputs.product_base_sha }}
         run: git fetch --no-tags --depth=1 origin "$BASE_SHA"
-      - name: Prove exact candidate and qualification-only delta
+      - name: Prove exact candidate and qualification boundary
         env:
           BASE_SHA: ${{ inputs.product_base_sha }}
           CANDIDATE_SHA: ${{ inputs.candidate_sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
-          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | grep -v -E '^\\.analytics/cloudflare/|^analytics/data/latest\\.json
+          git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" \
+            | grep -v -E '^(\.analytics/cloudflare/|analytics/data/latest\.json$)' \
+            | sort >/tmp/files
           cat >/tmp/allowed <<'EOF'
           .github/live-qualification/verifiers/auren-successor-exact-head.v1.mjs
           .github/workflows/auren-successor-exact-head-qualification.yml
+          products/auren/auren.archetype.js
+          products/auren/auren.chamber.js
+          products/auren/auren.privacy.js
+          products/auren/auren.scene-offer.js
+          products/auren/auren.session-context.js
+          products/auren/auren.state-dependent.js
+          products/auren/auren.voice.js
+          products/auren/index.css
+          products/auren/index.html
           EOF
           sort -o /tmp/allowed /tmp/allowed
-          diff -u /tmp/allowed /tmp/files
+          while IFS= read -r changed; do
+            grep -Fxq "$changed" /tmp/allowed || { echo "Unauthorized successor changed file: $changed" >&2; exit 1; }
+          done </tmp/files
+          test -s /tmp/files
       - uses: browser-actions/setup-chrome@v1
       - name: Resolve Chrome
         run: |
@@ -49,46 +63,8 @@ jobs:
         run: |
           python3 -m http.server 18826 >/tmp/auren-successor-http.log 2>&1 &
           for i in {1..30}; do curl -fsS http://127.0.0.1:18826/products/auren/ >/dev/null && exit 0; sleep 1; done
-          cat /tmp/auren-successor-http.log; exit 1
-      - name: Execute successor matrix
-        env:
-          PUBLIC_BASE_URL: http://127.0.0.1:18826
-          CHROME_PATH: ${{ env.CHROME_PATH }}
-          RUNTIME_RESULT_PATH: /tmp/auren-successor-result.json
-        run: node .github/live-qualification/verifiers/auren-successor-exact-head.v1.mjs
-      - name: Preserve receipt
-        if: always()
-        run: |
-          mkdir -p .qualification/auren-successor
-          cp /tmp/auren-successor-result.json .qualification/auren-successor/receipt.json 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: auren-successor-exact-head-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .qualification/auren-successor
-          retention-days: 30
- | sort >/tmp/files
-          cat >/tmp/allowed <<'EOF'
-          .github/live-qualification/verifiers/auren-successor-exact-head.v1.mjs
-          .github/workflows/auren-successor-exact-head-qualification.yml
-          EOF
-          sort -o /tmp/allowed /tmp/allowed
-          diff -u /tmp/allowed /tmp/files
-      - uses: browser-actions/setup-chrome@v1
-      - name: Resolve Chrome
-        run: |
-          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
-          test -x "$chrome"
-          echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-      - name: Serve exact candidate
-        run: |
-          python3 -m http.server 18826 >/tmp/auren-successor-http.log 2>&1 &
-          for i in {1..30}; do curl -fsS http://127.0.0.1:18826/products/auren/ >/dev/null && exit 0; sleep 1; done
-          cat /tmp/auren-successor-http.log; exit 1
+          cat /tmp/auren-successor-http.log
+          exit 1
       - name: Execute successor matrix
         env:
           PUBLIC_BASE_URL: http://127.0.0.1:18826

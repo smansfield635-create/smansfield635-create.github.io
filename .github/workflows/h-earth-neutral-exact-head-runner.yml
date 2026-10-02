@@ -246,6 +246,7 @@ jobs:
           let initial=null;
           let later=null;
           let residencySamples=[];
+          let vegetationExercise=null;
           try {
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
@@ -271,7 +272,6 @@ jobs:
             await page.waitForTimeout(3000);
             later=await sample('later');
             const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
-            let vegetationExercise=null;
             if(exerciseVegetation){
               try{
                 vegetationExercise=await page.evaluate(async () => {

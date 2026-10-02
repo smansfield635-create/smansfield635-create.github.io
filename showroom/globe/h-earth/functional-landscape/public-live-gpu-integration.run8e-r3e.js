@@ -267,6 +267,8 @@ export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   getSnapshot: () => buildPublicReceipt(),
   getIntakeReceipt: () => intake.getReceipt(),
   getLiveGpuReceipt: () => binding.getReceipt(),
+  materializeNextVegetationBatch: () => binding.materializeNextVegetationBatch(),
+  getVegetationResidency: () => binding.getVegetationResidency(),
   getRepresentationTransitionSurface: () => representationTransitionSurface
 });
 

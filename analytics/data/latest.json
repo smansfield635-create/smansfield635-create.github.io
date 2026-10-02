@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-02T03:39:05Z",
+  "generatedAt": "2026-10-02T04:37:10Z",
   "window30d": {
-    "start": "2026-09-02T03:39:05Z",
-    "end": "2026-10-02T03:39:05Z"
+    "start": "2026-09-02T04:37:10Z",
+    "end": "2026-10-02T04:37:10Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 514
+      "pageLoads": 544
     },
     {
       "date": "2026-09-26",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 3
+      "pageLoads": 4
     }
   ],
   "summary": {
-    "pageLoads": 6679,
-    "botPageLoads": 2542,
-    "nonBotPageLoads": 4137
+    "pageLoads": 6670,
+    "botPageLoads": 2523,
+    "nonBotPageLoads": 4147
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3262,
-      "visits": 3262
+      "pageLoads": 3270,
+      "visits": 3270
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2855,
+      "pageLoads": 2840,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 522,
-      "visits": 522
+      "pageLoads": 520,
+      "visits": 520
     },
     {
       "host": "m.facebook.com",
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1818,
-      "visits": 1387
+      "pageLoads": 1812,
+      "visits": 1384
     },
     {
       "path": "/mirror-manor-preview/",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 550,
-      "visits": 450
+      "pageLoads": 540,
+      "visits": 440
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -192,13 +192,13 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 300,
-      "visits": 110
+      "pageLoads": 298,
+      "visits": 108
     },
     {
       "path": "/analytics/",
-      "pageLoads": 284,
-      "visits": 172
+      "pageLoads": 283,
+      "visits": 173
     },
     {
       "path": "/evidence/agentic-frontier/",

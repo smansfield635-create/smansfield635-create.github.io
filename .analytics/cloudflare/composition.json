@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-02T08:40:45Z",
+  "generatedAt": "2026-10-02T09:36:54Z",
   "window": {
-    "start": "2026-09-02T08:40:45Z",
-    "end": "2026-10-02T08:40:45Z"
+    "start": "2026-09-02T09:36:54Z",
+    "end": "2026-10-02T09:36:54Z"
   },
   "dimensions": {
     "requestPath": [
@@ -39,8 +39,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 287,
-        "visits": 177
+        "pageLoads": 288,
+        "visits": 178
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -341,8 +341,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3267,
-        "visits": 3267
+        "pageLoads": 3268,
+        "visits": 3268
       },
       {
         "value": "diamondgatebridge.com",
@@ -373,8 +373,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6608,
-        "visits": 3772
+        "pageLoads": 6609,
+        "visits": 3773
       },
       {
         "value": "BR",
@@ -415,8 +415,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2752,
-        "visits": 2670
+        "pageLoads": 2753,
+        "visits": 2671
       },
       {
         "value": "tablet",
@@ -432,8 +432,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2527,
-        "visits": 2467
+        "pageLoads": 2528,
+        "visits": 2468
       },
       {
         "value": "Chrome",
@@ -484,8 +484,8 @@
       },
       {
         "value": "Linux",
-        "pageLoads": 2537,
-        "visits": 2477
+        "pageLoads": 2538,
+        "visits": 2478
       },
       {
         "value": "Windows",
@@ -516,15 +516,15 @@
       },
       {
         "value": "1",
-        "pageLoads": 2527,
-        "visits": 2467
+        "pageLoads": 2528,
+        "visits": 2468
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4581,
-        "visits": 3430
+        "pageLoads": 4582,
+        "visits": 3431
       },
       {
         "value": "reload",
@@ -550,8 +550,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 4962,
-        "visits": 3192
+        "pageLoads": 4963,
+        "visits": 3193
       },
       {
         "value": "cache",
@@ -567,15 +567,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6666,
-        "visits": 3827
+        "pageLoads": 6667,
+        "visits": 3828
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6666,
-        "visits": 3827
+        "pageLoads": 6667,
+        "visits": 3828
       }
     ]
   }

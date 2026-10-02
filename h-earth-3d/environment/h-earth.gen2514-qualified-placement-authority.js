@@ -8,7 +8,7 @@ import {
   H_EARTH_GEN311_REGIONAL_ARTICULATION_CONTRACT_ID,
   deriveHEarthGen311RegionalArticulation,
   sampleHEarthRun8BSuccessorTerrainField
-} from '../terrain/h-earth.successor-terrain-field.run8b.js';
+} from '../terrain/h-earth.gen2514-qualified-successor-terrain-field.run8b.js';
 import {
   H_EARTH_GEN311_REGIONAL_MATERIAL_RESPONSE_CONTRACT_ID,
   sampleHEarthRun8CSuccessorSurfaceMaterial,

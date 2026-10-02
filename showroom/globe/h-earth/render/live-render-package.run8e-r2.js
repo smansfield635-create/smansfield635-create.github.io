@@ -618,6 +618,12 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
 }
 
 export function createHEarthRun8ER2GPUBufferViews(packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()) {
+  if (packageRecord?.eligible !== true) {
+    const sourceIssues = Array.isArray(packageRecord?.issues) && packageRecord.issues.length > 0
+      ? packageRecord.issues
+      : ['R2_PACKAGE_REJECTED_WITHOUT_SOURCE_ISSUES'];
+    throw new Error(`R2_GPU_VIEW_SOURCE_PACKAGE_REJECTED:${sourceIssues.join(',')}`);
+  }
   const evaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
   if (evaluation.eligible !== true) {
     throw new Error(`R2_GPU_VIEW_SOURCE_INVALID:${evaluation.issues.join(',')}`);

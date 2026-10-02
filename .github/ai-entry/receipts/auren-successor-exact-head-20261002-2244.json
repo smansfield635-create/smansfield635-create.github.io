@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "auren-successor-exact-head-20261002-2244",
+  "capabilityId": "AUREN_SUCCESSOR_EXACT_HEAD_QUALIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5567,
+  "requestBranch": "ai-dispatch-request-auren-successor-20261002",
+  "requestCommit": "078e81d981846dd7a9b593991e265a6761e19240",
+  "currentMainSha": "aeb94c6bfc341b243cd680b490840d1017fe655e",
+  "bridgeRunId": "37074103409",
+  "error": "GitHub API 422 /repos/smansfield635-create/smansfield635-create.github.io/actions/workflows/auren-successor-exact-head-qualification.yml/dispatches: {\"message\":\"Workflow does not have 'workflow_dispatch' trigger\",\"documentation_url\":\"https://docs.github.com/rest/actions/workflows#create-a-workflow-dispatch-event\",\"status\":\"422\"}",
+  "failedAt": "2026-10-02T22:44:48.798Z"
+}

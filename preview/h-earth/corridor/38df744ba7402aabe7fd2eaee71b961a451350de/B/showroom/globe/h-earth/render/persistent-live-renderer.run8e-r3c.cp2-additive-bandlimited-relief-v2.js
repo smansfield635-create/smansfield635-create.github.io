@@ -1,7 +1,7 @@
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
+import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js';
 import { getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch } from './live-render-package.run8e-r2.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
@@ -145,7 +145,7 @@ export const H_EARTH_RUN_8E_R3C_RENDERER_ID =
 export const H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID =
   'H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2';
 
-const LOGICAL_ID = 'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
+const LOGICAL_ID = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 const RUNTIME_OCCURRENCE_ID = LOGICAL_ID;
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const color3 = (value) => {
@@ -762,7 +762,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
     if (status !== gl.FRAMEBUFFER_COMPLETE) throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${label}:${status}`);
   };
-  const renderPackage = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
+  const renderPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
   const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
   if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);

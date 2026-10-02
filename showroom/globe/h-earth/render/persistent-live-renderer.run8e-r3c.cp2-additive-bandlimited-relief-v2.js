@@ -2,7 +2,7 @@ import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/t
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
 import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js';
-import { getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch } from './live-render-package.run8e-r2.js';
+import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch } from './live-render-package.run8e-r2.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
@@ -146,7 +146,7 @@ export const H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID =
   'H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2';
 
 const LOGICAL_ID = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
-const RUNTIME_OCCURRENCE_ID = LOGICAL_ID;
+const RUNTIME_OCCURRENCE_ID = H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID;
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const color3 = (value) => {
   const array = Array.isArray(value) ? value : [0, 0, 0];

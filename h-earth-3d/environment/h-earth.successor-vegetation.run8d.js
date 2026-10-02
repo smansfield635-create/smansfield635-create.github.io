@@ -402,10 +402,12 @@ export function buildHEarthGen2514QualifiedPlacementInput() {
   }
   return placementData;
 }
-export function buildHEarthGen2514VegetationArchetypeAdapter(placementData = buildHEarthGen2514QualifiedPlacementInput()) {
-  const evaluation = placementData === undefined
-    ? evaluateHEarthGen2514QualifiedPlacementData(buildHEarthGen2514QualifiedPlacementInput())
-    : evaluateHEarthGen2514QualifiedPlacementData(placementData);
+export function buildHEarthGen2514VegetationArchetypeAdapter(placementData) {
+  const usesQualifiedDefault = placementData === undefined;
+  if (usesQualifiedDefault) placementData = buildHEarthGen2514QualifiedPlacementInput();
+  const evaluation = usesQualifiedDefault
+    ? evaluateHEarthGen2514QualifiedPlacementData(placementData)
+    : evaluateHEarthGen311PlacementData(placementData);
   const issues = [...evaluation.issues];
   if (!evaluation.eligible) issues.push('GEN2514_PLACEMENT_INPUT_NOT_ELIGIBLE');
   const instances = [];

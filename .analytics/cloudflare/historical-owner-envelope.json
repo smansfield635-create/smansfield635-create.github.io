@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-02T01:10:01Z",
+  "generatedAt": "2026-10-02T01:47:08Z",
   "window": {
-    "start": "2026-07-04T01:10:01Z",
-    "end": "2026-10-02T01:10:01Z"
+    "start": "2026-07-04T01:47:08Z",
+    "end": "2026-10-02T01:47:08Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5063,
-    "visits": 1283,
+    "pageLoads": 5058,
+    "visits": 1281,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5063,
-        "visits": 1283
+        "pageLoads": 5058,
+        "visits": 1281
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1094,
-        "visits": 761
+        "pageLoads": 1091,
+        "visits": 760
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
@@ -70,6 +70,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 80,
+        "visits": 10
+      },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
@@ -82,20 +86,16 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/archcoin/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 80,
-        "visits": 10
-      },
-      "/products/archcoin/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/laws/": {
@@ -114,13 +114,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 273,
         "visits": 73
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -182,17 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -331,11 +331,11 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 78,
-        "visits": 65
+        "pageLoads": 77,
+        "visits": 64
       },
       "/analytics/": {
-        "pageLoads": 49,
+        "pageLoads": 48,
         "visits": 0
       },
       "/governance-bridge/governance/": {
@@ -353,12 +353,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3780,
+        "pageLoads": 3777,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 474,
-        "visits": 474
+        "pageLoads": 472,
+        "visits": 472
       },
       "www.google.com": {
         "pageLoads": 799,

@@ -36,6 +36,8 @@ export const H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_SOURCE_FILE =
   '/showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
 export const H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID =
   'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
+export const H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID =
+  'H_EARTH_RUN_8E_R2_CURRENT_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 export const H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID =
   'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 
@@ -257,7 +259,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   timeOfDayHours = 15.25,
   defaultObserverElevation = 2.25,
   defaultViewDistance = 512,
-  packageOccurrenceId = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001'
+  packageOccurrenceId = H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID
 } = {}) {
   const startedAt = now();
   const issues = [];

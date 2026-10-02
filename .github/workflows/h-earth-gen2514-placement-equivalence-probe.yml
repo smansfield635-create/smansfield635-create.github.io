@@ -1,0 +1,62 @@
+name: H-Earth Gen2514 Placement Equivalence Probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute qualified versus current placement constructors
+        run: |
+          cat > /tmp/placement-equivalence.mjs <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { writeFile } from 'node:fs/promises';
+          const qualifiedPath = process.cwd() + '/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
+          const currentPath = process.cwd() + '/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
+          const canonical = placements => [...placements].map(p=>({id:p.placementId,x:p.world.x,y:p.world.y,z:p.world.z})).sort((a,b)=>a.id.localeCompare(b.id));
+          const digest = rows => createHash('sha256').update(JSON.stringify(rows)).digest('hex');
+          async function execute(label,path){
+            try {
+              const mod=await import('file://'+path+'?probe='+label);
+              const result=mod.buildHEarthGen311PlacementData();
+              const rows=canonical(result.placements??[]);
+              return {label,ok:true,eligible:result.eligible===true,placementCount:result.placementCount??rows.length,digest:digest(rows),rows};
+            } catch(error) {
+              return {label,ok:false,errorName:error?.name??null,errorMessage:error?.message??String(error),stack:error?.stack??null,rows:[]};
+            }
+          }
+          const qualified=await execute('qualified',qualifiedPath);
+          const current=await execute('current',currentPath);
+          const q=new Map(qualified.rows.map(r=>[r.id,r])), c=new Map(current.rows.map(r=>[r.id,r]));
+          const qualifiedOnlyIds=[...q.keys()].filter(id=>!c.has(id)).sort();
+          const currentOnlyIds=[...c.keys()].filter(id=>!q.has(id)).sort();
+          const sharedCoordinateMismatches=[...q.keys()].filter(id=>c.has(id)).filter(id=>{
+            const a=q.get(id),b=c.get(id); return a.x!==b.x||a.y!==b.y||a.z!==b.z;
+          }).sort().map(id=>({id,qualified:q.get(id),current:c.get(id)}));
+          const receipt={
+            schema:'H_EARTH_GEN2514_PLACEMENT_EQUIVALENCE_PROBE_v1',
+            qualified:{ok:qualified.ok,eligible:qualified.eligible??null,placementCount:qualified.placementCount??null,digest:qualified.digest??null,errorName:qualified.errorName??null,errorMessage:qualified.errorMessage??null},
+            current:{ok:current.ok,eligible:current.eligible??null,placementCount:current.placementCount??null,digest:current.digest??null,errorName:current.errorName??null,errorMessage:current.errorMessage??null},
+            comparison:{
+              countDelta:(current.placementCount??0)-(qualified.placementCount??0),
+              digestEquality:qualified.digest!=null&&qualified.digest===current.digest,
+              qualifiedOnlyIds,
+              currentOnlyIds,
+              sharedCoordinateMismatchCount:sharedCoordinateMismatches.length,
+              sharedCoordinateMismatches
+            }
+          };
+          await writeFile('/tmp/h-earth-gen2514-placement-equivalence.json',JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+          node /tmp/placement-equivalence.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2514-placement-equivalence
+          path: /tmp/h-earth-gen2514-placement-equivalence.json
+          retention-days: 30

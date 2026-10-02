@@ -266,6 +266,13 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     });
   };
 
+  const materializeNextVegetationBatch = () => {
+    if (!initialized) throw new Error('R3D3_RENDERER_NOT_INITIALIZED_FOR_VEGETATION_RESIDENCY');
+    return renderer.materializeNextVegetationBatch();
+  };
+
+  const getVegetationResidency = () => renderer.getResourceReceipt().vegetationResidency;
+
   const captureLatestEvidence = (label = `explicit-${frameSequence}`) => {
     counters.explicitEvidenceCaptureCount += 1;
     return clone(captureEvidence(label));
@@ -358,6 +365,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
     acceptNavigationState,
     captureLatestEvidence,
+    materializeNextVegetationBatch,
+    getVegetationResidency,
     getReceipt,
     getLastPngDataUrl: () => lastPngDataUrl
   });

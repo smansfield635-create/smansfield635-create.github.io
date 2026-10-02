@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2523-gpu-seam-qualification-ac475a84",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5515,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2523-gpu-seam-qualification",
+  "requestCommit": "80ceec56462a94f86118dde7374e46a127d04508",
+  "requestCommitParent": "54efce1eeb59422f8477523427f3b252810af0eb",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "54efce1eeb59422f8477523427f3b252810af0eb",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ac475a84026de5b229feb0e26f0d9088c0d6427c",
+    "exercise_vegetation_residency": "true"
+  },
+  "bridgeRunId": "36960829508",
+  "dispatchedRunId": 36960847352,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/36960847352",
+  "dispatchedRunHeadSha": "54efce1eeb59422f8477523427f3b252810af0eb",
+  "dispatchedAt": "2026-10-02T03:35:30.227Z",
+  "resolvedAt": "2026-10-02T03:35:34.654Z"
+}

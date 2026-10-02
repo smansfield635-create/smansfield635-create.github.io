@@ -16,7 +16,7 @@ jobs:
       - name: Execute candidate qualified authority
         run: |
           set -euo pipefail
-          git archive accc88e3952ea108dafdb7cd69fd3312f79e8742 | tar -x -C /tmp
+          git archive 50715e988b4b61f90e3f28a2b116f5e553b7c1c5 | tar -x -C /tmp
           cat > /tmp/gen2514-authority-acceptance.mjs <<'NODE'
           import { createHash } from 'node:crypto';
           const mod=await import('file:///tmp/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js?acceptance=gen2514');

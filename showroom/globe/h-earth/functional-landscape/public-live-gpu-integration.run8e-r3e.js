@@ -295,4 +295,64 @@ if (window.parent === window) {
   });
 }
 
+
+let vegetationFrameRequest = null;
+let vegetationLoadingStopped = false;
+let vegetationLoadingFailed = false;
+
+function scheduleVegetationResidency() {
+  if (vegetationLoadingStopped || vegetationLoadingFailed || vegetationFrameRequest !== null) return;
+  const residency = binding.getVegetationResidency();
+  if (!residency || residency.totalBatchCount === 0) return;
+  if (residency.complete) {
+    root.dataset.vegetationResidency = 'complete';
+    return;
+  }
+  root.dataset.vegetationResidency = 'loading';
+  vegetationFrameRequest = window.requestAnimationFrame(() => {
+    vegetationFrameRequest = null;
+    if (vegetationLoadingStopped || vegetationLoadingFailed) return;
+    try {
+      const before = binding.getVegetationResidency();
+      if (before.complete) {
+        root.dataset.vegetationResidency = 'complete';
+        return;
+      }
+      binding.materializeNextVegetationBatch();
+      const after = binding.getVegetationResidency();
+      if (!after.complete && after.residentBatchCount <= before.residentBatchCount) {
+        throw new Error('R3E2_VEGETATION_RESIDENCY_STALLED');
+      }
+      if (after.complete) {
+        root.dataset.vegetationResidency = 'complete';
+        emitDiagnosticStage('VEGETATION_RESIDENCY_COMPLETE', 'PASS', after);
+      } else {
+        scheduleVegetationResidency();
+      }
+    } catch (error) {
+      vegetationLoadingFailed = true;
+      root.dataset.vegetationResidency = 'failed';
+      emitDiagnosticStage('VEGETATION_RESIDENCY_COMPLETE', 'FAIL', {
+        name: error?.name ?? 'Error',
+        message: error?.message ?? String(error),
+        stack: error?.stack ?? null
+      });
+      throw error;
+    }
+  });
+}
+
+window.addEventListener('pagehide', () => {
+  vegetationLoadingStopped = true;
+  if (vegetationFrameRequest !== null) {
+    window.cancelAnimationFrame(vegetationFrameRequest);
+    vegetationFrameRequest = null;
+  }
+});
+window.addEventListener('pageshow', () => {
+  vegetationLoadingStopped = false;
+  scheduleVegetationResidency();
+});
+scheduleVegetationResidency();
+
 export default H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;

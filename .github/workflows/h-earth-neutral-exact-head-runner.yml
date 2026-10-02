@@ -273,7 +273,9 @@ jobs:
             const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
             let vegetationExercise=null;
             if(exerciseVegetation){
-              vegetationExercise=await page.evaluate(async () => {
+              try{
+                vegetationExercise=await page.evaluate(async () => {
+                  try{
                 const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
                 const owner=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)||null;
                 const route=owner?.H_EARTH_RUN8E_PUBLIC_ROUTE??null;
@@ -297,7 +299,13 @@ jobs:
                 }
                 const final=snapshot();
                 return {executed:true,transitions,failure,finalResidency:final.residency,worldRebuildCount:final.worldRebuildCount};
-              });
+                  }catch(error){
+                    return {executed:false,phase:'BROWSER_EXERCISE_OUTER',failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
+                  }
+                });
+              }catch(error){
+                vegetationExercise={executed:false,phase:'NODE_PAGE_EVALUATE_REJECTED',failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
+              }
             }
             residencySamples=[];
             for(let sampleIndex=0;sampleIndex<8;sampleIndex+=1){

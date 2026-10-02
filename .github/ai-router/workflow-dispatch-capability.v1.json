@@ -1449,6 +1449,16 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PASS_CLOSED"
+    },
+    "H_EARTH_GEN2514_PLACEMENT_EQUIVALENCE_PROBE": {
+      "workflow": "h-earth-gen2514-placement-equivalence-probe.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "GEN2514_PLACEMENT_EQUIVALENCE_ARTIFACT"
     }
   },
   "continuity": {

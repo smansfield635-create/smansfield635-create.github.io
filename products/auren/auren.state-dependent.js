@@ -1,12 +1,34 @@
 /* TARGET FILE: /products/auren/auren.state-dependent.js
-   AUREN_C3_4_STATE_DEPENDENT_AUREN_V1 */
+   AUREN_SUCCESSOR_CONTEXTUAL_SELECTION_BRIDGE_V1
+   Transitional successor authority: no global relationship phase/mask selection. */
 (()=>{"use strict";
-const CONTRACT="AUREN_C3_4_STATE_DEPENDENT_AUREN_V1",MASK={PUBLIC:"PUBLIC_MASK",ENGAGED:"OPEN_MASK",GUARDED:"PROTECTIVE_MASK"},ARCH=new Set(["Strategist","Builder","Mitigator","Auditor"]);
-function select(node,relationship,archetype){
- const phase=MASK[relationship?.phase]?relationship.phase:"PUBLIC",maskBand=MASK[phase],eligible=archetype?.disposition==="LEADING"&&["MODERATE","HIGH"].includes(archetype?.confidence)&&ARCH.has(archetype?.provisionalPrimary);
- const framing=eligible?archetype.provisionalPrimary:"neutral",variants=node?.variants||null,band=variants?.[maskBand]||null;let selected=band?.[framing]||band?.neutral||null,fallbackUsed=false,reason="EXACT_AUTHORED_VARIANT";
- if(!selected){selected=node?.responses||[];fallbackUsed=true;reason="BASELINE_FALLBACK";}
- return Object.freeze({responses:Object.freeze([...(selected||[])]),receipt:Object.freeze({contract:CONTRACT,sourceNode:node?.id||null,relationshipPhase:phase,maskBand,archetypeDisposition:archetype?.disposition||"INSUFFICIENT",archetypeConfidence:archetype?.confidence||"NONE",eligibleFraming:eligible,selectedFraming:selected===band?.[framing]&&framing!=="neutral"?framing:"neutral",selectedVariant:selected===band?.[framing]?maskBand+":"+framing:selected===band?.neutral?maskBand+":neutral":"baseline",fallbackUsed,reason})});
+const CONTRACT="AUREN_SUCCESSOR_CONTEXTUAL_SELECTION_BRIDGE_V1";
+function select(node,context={},archetype={}){
+ const variants=node?.variants||null;
+ const neutral=variants?.PUBLIC_MASK?.neutral||node?.responses||[];
+ const selected=Array.isArray(neutral)&&neutral.length?neutral:(node?.responses||[]);
+ const state=context&&typeof context.getState==="function"?context.getState():null;
+ return Object.freeze({
+  responses:Object.freeze([...(selected||[])]),
+  receipt:Object.freeze({
+   contract:CONTRACT,
+   sourceNode:node?.id||null,
+   selectionAuthority:"AUREN_CANON_PLUS_CONTEXT",
+   relationshipPhase:null,
+   maskBand:null,
+   archetypeDisposition:archetype?.disposition||"UNUSED_FOR_DIALOGUE_SELECTION",
+   archetypeConfidence:archetype?.confidence||"UNUSED_FOR_DIALOGUE_SELECTION",
+   eligibleFraming:false,
+   selectedFraming:"neutral",
+   selectedVariant:variants?.PUBLIC_MASK?.neutral?"legacy-neutral-reconciled":"baseline",
+   sessionRevision:state?.revision??null,
+   activeSubject:state?.activeSubject??null,
+   activeThread:state?.activeThread??null,
+   fallbackUsed:false,
+   reason:"GLOBAL_PHASE_AND_ARCHETYPE_BANKS_NON_AUTHORITATIVE"
+  })
+ });
 }
-Object.defineProperty(globalThis,"AUREN_STATE_DEPENDENT",{value:Object.freeze({contract:CONTRACT,select}),writable:false,configurable:false});globalThis.dispatchEvent(new CustomEvent("auren:state-dependent-ready",{detail:{contract:CONTRACT}}));
+Object.defineProperty(globalThis,"AUREN_STATE_DEPENDENT",{value:Object.freeze({contract:CONTRACT,select}),writable:false,configurable:false});
+globalThis.dispatchEvent(new CustomEvent("auren:state-dependent-ready",{detail:{contract:CONTRACT}}));
 })();

@@ -18,11 +18,13 @@ jobs:
           set -euo pipefail
           Q=preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B
           C=/tmp/current-tree
-          mkdir -p /tmp/qualified-tree /tmp/current-tree /tmp/run8c-current-tree
+          mkdir -p /tmp/qualified-tree /tmp/current-tree /tmp/run8c-current-tree /tmp/current-with-qualified-run8c-tree
           git archive 28bc466fe029b449ce4edd27843c0457bfa3349d "$Q" | tar -x -C /tmp/qualified-tree
           git archive 5bc913cad513b044c5b0de37d921102314460a3f | tar -x -C /tmp/current-tree
           cp -a /tmp/qualified-tree/. /tmp/run8c-current-tree/
           cp /tmp/current-tree/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js /tmp/run8c-current-tree/$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
+          cp -a /tmp/current-tree/. /tmp/current-with-qualified-run8c-tree/
+          cp /tmp/qualified-tree/$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js /tmp/current-with-qualified-run8c-tree/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js)" = "775f6b5a49266eebb0d06a0407e89c26e08134c9"
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js)" = "4f929cd467edb447e2116de745d9b02c28daf219"
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js)" = "9ea6056353453254a2c00e3ed9abf44b2fe7b275"
@@ -35,6 +37,7 @@ jobs:
           const qualifiedPath='/tmp/qualified-tree/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
           const currentPath='/tmp/current-tree/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
           const run8cCurrentPath='/tmp/run8c-current-tree/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
+          const currentWithQualifiedRun8CPath='/tmp/current-with-qualified-run8c-tree/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
           const canonical=placements=>[...placements].map(p=>({id:p.placementId,x:p.world.x,y:p.world.y,z:p.world.z})).sort((a,b)=>a.id.localeCompare(b.id));
           const digest=rows=>createHash('sha256').update(JSON.stringify(rows)).digest('hex');
           async function execute(label,path){
@@ -47,11 +50,12 @@ jobs:
           const qualified=await execute('qualified',qualifiedPath);
           const run8cCurrent=await execute('qualified_with_current_run8c',run8cCurrentPath);
           const current=await execute('current',currentPath);
+          const currentWithQualifiedRun8C=await execute('current_with_qualified_run8c',currentWithQualifiedRun8CPath);
           const q=new Map(qualified.rows.map(r=>[r.id,r])),c=new Map(current.rows.map(r=>[r.id,r]));
           const qualifiedOnlyIds=[...q.keys()].filter(id=>!c.has(id)).sort();
           const currentOnlyIds=[...c.keys()].filter(id=>!q.has(id)).sort();
           const sharedCoordinateMismatches=[...q.keys()].filter(id=>c.has(id)).filter(id=>{const a=q.get(id),b=c.get(id);return a.x!==b.x||a.y!==b.y||a.z!==b.z;}).sort().map(id=>({id,qualified:q.get(id),current:c.get(id)}));
-          const receipt={schema:'H_EARTH_GEN2514_PLACEMENT_DEPENDENCY_ISOLATION_PROBE_v1',qualified:{eligible:qualified.eligible,placementCount:qualified.placementCount,digest:qualified.digest},qualifiedWithCurrentRun8C:{eligible:run8cCurrent.eligible,placementCount:run8cCurrent.placementCount,digest:run8cCurrent.digest,matchesQualifiedDigest:run8cCurrent.digest===qualified.digest,matchesCurrentDigest:run8cCurrent.digest===current.digest},current:{eligible:current.eligible,placementCount:current.placementCount,digest:current.digest},comparison:{countDelta:current.placementCount-qualified.placementCount,digestEquality:qualified.digest===current.digest,qualifiedOnlyIds,currentOnlyIds,sharedCoordinateMismatchCount:sharedCoordinateMismatches.length,sharedCoordinateMismatches}};
+          const receipt={schema:'H_EARTH_GEN2514_PLACEMENT_DEPENDENCY_ISOLATION_PROBE_v1',qualified:{eligible:qualified.eligible,placementCount:qualified.placementCount,digest:qualified.digest},qualifiedWithCurrentRun8C:{eligible:run8cCurrent.eligible,placementCount:run8cCurrent.placementCount,digest:run8cCurrent.digest,matchesQualifiedDigest:run8cCurrent.digest===qualified.digest,matchesCurrentDigest:run8cCurrent.digest===current.digest},current:{eligible:current.eligible,placementCount:current.placementCount,digest:current.digest},currentWithQualifiedRun8C:{eligible:currentWithQualifiedRun8C.eligible,placementCount:currentWithQualifiedRun8C.placementCount,digest:currentWithQualifiedRun8C.digest,matchesQualifiedDigest:currentWithQualifiedRun8C.digest===qualified.digest,matchesCurrentDigest:currentWithQualifiedRun8C.digest===current.digest},comparison:{countDelta:current.placementCount-qualified.placementCount,digestEquality:qualified.digest===current.digest,qualifiedOnlyIds,currentOnlyIds,sharedCoordinateMismatchCount:sharedCoordinateMismatches.length,sharedCoordinateMismatches}};
           await writeFile('/tmp/h-earth-gen2514-placement-equivalence.json',JSON.stringify(receipt,null,2));
           console.log(JSON.stringify(receipt,null,2));
           NODE

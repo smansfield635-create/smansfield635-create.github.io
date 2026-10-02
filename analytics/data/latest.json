@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-01T23:28:48Z",
+  "generatedAt": "2026-10-02T01:10:01Z",
   "window30d": {
-    "start": "2026-09-01T23:28:48Z",
-    "end": "2026-10-01T23:28:48Z"
+    "start": "2026-09-02T01:10:01Z",
+    "end": "2026-10-02T01:10:01Z"
   },
   "daily": [
-    {
-      "date": "2026-09-02",
-      "pageLoads": 190
-    },
     {
       "date": "2026-09-03",
       "pageLoads": 290
@@ -100,7 +96,7 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 528
+      "pageLoads": 524
     },
     {
       "date": "2026-09-26",
@@ -124,23 +120,27 @@
     },
     {
       "date": "2026-10-01",
-      "pageLoads": 64
+      "pageLoads": 65
+    },
+    {
+      "date": "2026-10-02",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 6759,
-    "botPageLoads": 2629,
-    "nonBotPageLoads": 4130
+    "pageLoads": 6686,
+    "botPageLoads": 2540,
+    "nonBotPageLoads": 4146
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3276,
-      "visits": 3276
+      "pageLoads": 3263,
+      "visits": 3263
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2869,
+      "pageLoads": 2859,
       "visits": 0
     },
     {
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 560,
-      "visits": 460
+      "pageLoads": 550,
+      "visits": 450
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 281,
-      "visits": 168
+      "pageLoads": 282,
+      "visits": 169
     },
     {
       "path": "/evidence/agentic-frontier/",

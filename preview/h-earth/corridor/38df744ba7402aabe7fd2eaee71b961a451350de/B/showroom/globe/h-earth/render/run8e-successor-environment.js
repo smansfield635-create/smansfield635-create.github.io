@@ -76,7 +76,9 @@ function gen2515Vegetation() {
     cameraIndependent: true, populationLimit: null, legacyPopulationPlannerUsed: false});
   return gen2515VegetationCache;
 }
+let gen2515VegetationWorldTruthPlanCache = null;
 export function getHEarthGen2515VegetationWorldTruthPlan() {
+  if (gen2515VegetationWorldTruthPlanCache) return gen2515VegetationWorldTruthPlanCache;
   const plan = planHEarthGen2514GroundedVegetation();
   const issues = [...(plan.issues ?? [])];
   if (plan.eligible !== true) issues.push('GEN2515_GEOMETRY_PLAN_NOT_ELIGIBLE');
@@ -86,7 +88,7 @@ export function getHEarthGen2515VegetationWorldTruthPlan() {
     start: batch.start,
     count: batch.count
   })));
-  return freeze({
+  gen2515VegetationWorldTruthPlanCache = freeze({
     eligible: plan.eligible === true && issues.length === 0,
     contractId: plan.contractId,
     instanceCount: plan.instanceCount,
@@ -102,6 +104,7 @@ export function getHEarthGen2515VegetationWorldTruthPlan() {
     retainedGeometryPolicy: plan.performancePolicy?.retainedGeometryPolicy ?? null,
     issues: freeze(issues)
   });
+  return gen2515VegetationWorldTruthPlanCache;
 }
 export function constructHEarthGen2515VegetationPresentationBatch(batchId) {
   const plan = planHEarthGen2514GroundedVegetation();

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-auto-035b6593-normal-visit-20261002",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5570,
+  "requestBranch": "ai-dispatch-request-h-earth-auto-035b6593",
+  "requestCommit": "641347445805f8f83fc7ff1fbbfcba71a8512686",
+  "currentMainSha": "67841269579608807f6c1cd2d71c876f9e15b1ec",
+  "bridgeRunId": "37074900283",
+  "error": "Native dispatch was accepted but run id was not resolved for h-earth-neutral-exact-head-runner.yml",
+  "failedAt": "2026-10-02T22:55:24.303Z"
+}

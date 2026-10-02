@@ -14,7 +14,10 @@ import {
   evaluateHEarthRun8CSuccessorSurfaceMaterial
 } from './h-earth.successor-surface-material.run8c.js';
 
-import { buildHEarthGen311PlacementData as buildHEarthGen2514QualifiedPlacementData } from './h-earth.gen2514-qualified-placement-authority.js';
+import {
+  buildHEarthGen311PlacementData as buildHEarthGen2514QualifiedPlacementData,
+  evaluateHEarthGen311PlacementData as evaluateHEarthGen2514QualifiedPlacementData
+} from './h-earth.gen2514-qualified-placement-authority.js';
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const clamp01=v=>Math.min(1,Math.max(0,v));
@@ -400,7 +403,9 @@ export function buildHEarthGen2514QualifiedPlacementInput() {
   return placementData;
 }
 export function buildHEarthGen2514VegetationArchetypeAdapter(placementData = buildHEarthGen2514QualifiedPlacementInput()) {
-  const evaluation = evaluateHEarthGen311PlacementData(placementData);
+  const evaluation = placementData === undefined
+    ? evaluateHEarthGen2514QualifiedPlacementData(buildHEarthGen2514QualifiedPlacementInput())
+    : evaluateHEarthGen2514QualifiedPlacementData(placementData);
   const issues = [...evaluation.issues];
   if (!evaluation.eligible) issues.push('GEN2514_PLACEMENT_INPUT_NOT_ELIGIBLE');
   const instances = [];

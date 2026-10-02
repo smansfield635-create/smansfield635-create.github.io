@@ -2,8 +2,9 @@
 import { admitHEarthPrimitiveBatch,mergeHEarthGeometryBounds,isHEarthAABB3D } from './geometry-kernel.js';
 import { previewHEarthFunctionalLandscape } from './landscape-preview.js';
 import { buildHEarthRun8CTerrainMaterialLightingPresentation,evaluateHEarthRun8CTerrainMaterialLightingPresentation } from './lighting-material-successor-terrain.run8c.js';
-import { constructHEarthRun8DGroundedVegetation,evaluateHEarthRun8DGroundedVegetation } from './geometry-grounded-vegetation.run8d.js';
-import { H_EARTH_GEN311_SUCCESSOR_VEGETATION_CONTRACT_ID,buildHEarthGen311SuccessorVegetation,evaluateHEarthGen311SuccessorVegetation } from '../../../../h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
+import { planHEarthGen2514GroundedVegetation,constructHEarthGen2514GroundedVegetationBatch } from './geometry-grounded-vegetation.run8d.js';
+import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import { H_EARTH_GEN311_SUCCESSOR_VEGETATION_CONTRACT_ID } from '../../../../h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
 import { prepareHEarthFunctionalLandscapeRenderPlan,rasterizeHEarthFunctionalLandscapePlan } from './renderer.functional-landscape.js';
 import { H_EARTH_RUN_8E_NEUTRAL_PACKAGE_CONTRACT_ID,H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,buildHEarthRun8EPacket002SuccessorTransfer } from '../../../../h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js';
 import { H_EARTH_RUN_8E_CONTROL_CONTRACT_ID,evaluateHEarthRun8EControlContract } from '../../../../h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js';
@@ -27,7 +28,148 @@ function decoratePrimitive(p,terrainSourceId,terrainColors){
   const material=role==='TERRAIN'?{rgba:terrainColors?.[0]??[103,104,65,255],transparencyClass:'OPAQUE'}:role==='FAR_OCEAN'?(p.renderMaterial??farMaterial(role)):role==='FAR_TERRAIN'?farMaterial(role):role==='VEGETATION'?{rgba:vegetationColor(p),transparencyClass:'OPAQUE'}:p.renderMaterial;
   return freeze({...p,renderMaterial:material,renderTriangleColors:role==='TERRAIN'?terrainColors:null,metadata:freeze({...p.metadata,run8ERenderClass:role,geographicIdentity:role==='FAR_TERRAIN'||role==='FAR_OCEAN'?'AUDRALIA':'GRATITUDE',climateIdentity:'WARM_SUBTROPICAL_COASTAL',topologySourceId:p.metadata?.topologySourceId??(role==='VEGETATION'?null:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID),samePhysicalDepthDomainAsTerrain:role==='VEGETATION'||role==='FAR_TERRAIN'||role==='FAR_OCEAN'?true:p.metadata?.samePhysicalDepthDomainAsTerrain,atmosphericDistanceContinuation:role==='FAR_TERRAIN'||role==='FAR_OCEAN',oceanFacingWaterContinuationMaterialized:role==='FAR_OCEAN',farOceanVertexColorPreserved:role==='FAR_OCEAN'&&Array.isArray(p.renderMaterial?.vertexRgba),gen311RegionalDevelopmentIntegrated:true})});
 }
-export function buildHEarthRun8ENeutralPackage({cameraWorld={x:0,y:8,z:-40}}={}){const manifold=previewHEarthFunctionalLandscape({cameraWorld}),vegetation=constructHEarthRun8DGroundedVegetation(),vegetationEvaluation=evaluateHEarthRun8DGroundedVegetation(vegetation),regionalVegetation=buildHEarthGen311SuccessorVegetation(),regionalVegetationEvaluation=evaluateHEarthGen311SuccessorVegetation(regionalVegetation),issues=[];if(manifold?.ok!==true)issues.push(...(manifold?.issues??['RUN_8E_MANIFOLD_PREVIEW_INVALID']));if(manifold?.geographicIdentity?.playableRegion!=='GRATITUDE'||manifold?.geographicIdentity?.continentalContext!=='AUDRALIA'||manifold?.oceanFacingEmptinessPreserved!==true)issues.push('RUN_8E_GEOGRAPHIC_IDENTITY_INVALID');if(manifold?.oceanVisualContinuationMaterialized!==true)issues.push('RUN_8E_OCEAN_CONTINUATION_NOT_MATERIALIZED');if(manifold?.regionalDevelopment?.contractId==null)issues.push('GEN311_REGIONAL_DEVELOPMENT_PREVIEW_MISSING');if(vegetationEvaluation.eligible!==true)issues.push(...vegetationEvaluation.issues);if(regionalVegetationEvaluation.eligible!==true)issues.push(...regionalVegetationEvaluation.issues);const rawVegetationPrimitives=(vegetation?.instances??[]).flatMap(i=>i.components??[]).map(c=>c.primitiveRecord).filter(Boolean),vegetationPrimitives=attachRegionalEcology(rawVegetationPrimitives,regionalVegetation),primitives=[...(manifold?.primitives??[]),...vegetationPrimitives],bounds=primitives.length?mergeHEarthGeometryBounds(primitives.map(p=>p.geometry.bounds)):null;if(!isHEarthAABB3D(bounds))issues.push('RUN_8E_NEUTRAL_PACKAGE_BOUNDS_INVALID');const ids=primitives.map(p=>p.primitiveId);if(new Set(ids).size!==ids.length)issues.push('RUN_8E_DUPLICATE_PRIMITIVE_ID');const regionalEcologyPrimitiveCount=vegetationPrimitives.filter(p=>p.metadata?.gen311RegionalEcology).length;if(regionalEcologyPrimitiveCount===0)issues.push('GEN311_REGIONAL_ECOLOGY_NOT_MATERIALIZED');return freeze({ok:issues.length===0,status:issues.length?'RUN_8E_WORLD_MANIFOLD_NEUTRAL_PACKAGE_FAILED':'RUN_8E_WORLD_MANIFOLD_NEUTRAL_PACKAGE_COMPLETE',contractId:H_EARTH_RUN_8E_NEUTRAL_PACKAGE_CONTRACT_ID,gen311IntegrationContractId:H_EARTH_GEN311_RUN_8E_REGIONAL_INTEGRATION_CONTRACT_ID,compositionMode:'GRATITUDE_AUDRALIA_WORLD_MANIFOLD_GEN311_REGIONAL_ELABORATION',controllingRun8EContractId:H_EARTH_RUN_8E_CONTROL_CONTRACT_ID,geographicIdentity:manifold?.geographicIdentity,regionalDevelopment:manifold?.regionalDevelopment,regionalVegetation,regionalEcologyPrimitiveCount,representationPlan:manifold?.representationPlan,worldManifoldUnion:manifold?.worldManifoldUnion,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,primitives,primitiveIds:freeze(ids),primitiveCount:primitives.length,terrainPrimitiveCount:manifold?.componentResults?.terrain?.primitive?1:0,shorelinePrimitiveCount:manifold?.componentResults?.shoreline?.primitives?.length??0,farRepresentationPrimitiveCount:(manifold?.componentResults?.distantContext?.primitives??[]).filter(p=>p?.metadata?.representationClass==='FAR').length,vegetationPrimitiveCount:vegetationPrimitives.length,bounds,semanticAddressCount:manifold?.semanticAddressCount??0,semanticAddressIds:manifold?.semanticAddressIds??[],terrainAddressCount:manifold?.terrainAddressCount??0,terrainAddressIds:manifold?.terrainAddressIds??[],shorelineWaterAddressCount:manifold?.shorelineWaterAddressCount??0,shorelineWaterAddressIds:manifold?.shorelineWaterAddressIds??[],proxySummarizedAddressCount:manifold?.proxySummarizedAddressCount??0,proxySummarizedAddressIds:manifold?.proxySummarizedAddressIds??[],formationIds:canonical([...(manifold?.formationIds??[]),'H_EARTH_CONTINUOUS_HIGHLAND_MOUNTAIN_001']),shorelineBandIds:canonical((manifold?.componentResults?.shoreline?.primitives??[]).map(p=>p.metadata?.bandId)),oceanFacingEmptinessPreserved:true,oceanVisualContinuationMaterialized:true,oppositeShoreFabricationProhibited:true,legacyProxyIncluded:false,legacyProxyPreservedOutsideSuccessorFrame:false,successorMountainIncluded:true,continuousWorldManifold:manifold?.worldManifoldUnion?.valid===true,canonicalWorldFieldProtected:true,regionalEnvironmentMaterialized:true,admitted:false,WestAdmissionPerformed:false,packet002TransferPerformed:false,issues});}
+// Descriptive zones follow the existing Gen311 landform mapping. They do not
+// replace continuous response signals, replan population, or identify species.
+function gen2515RegionalEcology(instance, issues) {
+  const sample = sampleHEarthRun8BSuccessorTerrainField(instance.worldAnchor.x, instance.worldAnchor.z);
+  const landform = sample.regionalArticulation?.landformClass;
+  const zones = {
+    RIDGELINE: 'WIND_EXPOSED_RIDGELINE', PASS: 'PASS_CORRIDOR_MOSAIC',
+    VALLEY: 'SHELTERED_MOIST_VALLEY', WATERSHED: 'DRAINAGE_DIVIDE_WOODLAND',
+    FOOTHILL: 'SUBTROPICAL_FOOTHILL_WOODLAND', HIGHLAND_SLOPE: 'MONTANE_TRANSITION',
+    LOWLAND: 'COASTAL_LOWLAND'
+  };
+  if (sample.valid !== true || sample.regionalArticulation?.valid !== true || !zones[landform]) {
+    issues.push(`GEN2515_ECOLOGICAL_ZONE_UNRESOLVED:${instance.placementId}`);
+  }
+  const sourceCommunity = instance.archetypeId === 'COASTAL_GRASS_TUFT' ? 'groundcover' : null;
+  if (!sourceCommunity) issues.push(`GEN2515_COMMUNITY_UNRESOLVED:${instance.placementId}`);
+  return freeze({ecologicalZone: zones[landform] ?? null, sourceCommunity,
+    communityWeights: instance.communityWeights, continuousSignals: instance.continuousSignals,
+    habitatDisposition: instance.habitatDisposition, ecologicalValidityClaim: false});
+}
+let gen2515VegetationCache = null;
+function gen2515Vegetation() {
+  if (gen2515VegetationCache) return gen2515VegetationCache;
+  const plan = planHEarthGen2514GroundedVegetation();
+  const issues = [...(plan.issues ?? [])], instances = [];
+  if (plan.eligible !== true) issues.push('GEN2515_GEOMETRY_PLAN_NOT_ELIGIBLE');
+  else for (const batch of plan.batches) {
+    const built = constructHEarthGen2514GroundedVegetationBatch(plan, batch.batchId);
+    if (built.eligible !== true) issues.push(`GEN2515_BATCH_FAILED:${batch.batchId}`, ...(built.issues ?? []));
+    instances.push(...(built.instances ?? []));
+  }
+  const regionalInstances = instances.map(i => freeze({sourcePopulationInstanceId: i.sourcePopulationInstanceId,
+    regionalEcology: gen2515RegionalEcology(i, issues)}));
+  const ecologyByPopulation = new Map(regionalInstances.map(i => [i.sourcePopulationInstanceId, i.regionalEcology]));
+  const primitives = instances.flatMap(i => (i.components ?? []).map(c => {
+    const p = c.primitiveRecord;
+    if (!p) { issues.push(`GEN2515_PRIMITIVE_MISSING:${i.placementId}`); return null; }
+    return freeze({...p, metadata: freeze({...p.metadata, run8DInstanceId: i.instanceId,
+      sourcePopulationInstanceId: i.sourcePopulationInstanceId, gen2514PlacementId: i.placementId,
+      gen311RegionalEcology: ecologyByPopulation.get(i.sourcePopulationInstanceId),
+      gen311SuccessorVegetationContractId: H_EARTH_GEN311_SUCCESSOR_VEGETATION_CONTRACT_ID})});
+  }).filter(Boolean));
+  gen2515VegetationCache = freeze({eligible: plan.eligible === true && issues.length === 0 && instances.length === plan.instanceCount,
+    plan, instances: freeze(instances), regionalInstances: freeze(regionalInstances), primitives: freeze(primitives),
+    instanceCount: instances.length, primitiveCount: primitives.length, issues: freeze(issues),
+    cameraIndependent: true, populationLimit: null, legacyPopulationPlannerUsed: false});
+  return gen2515VegetationCache;
+}
+let gen2515VegetationGroundedPlanCache = null;
+let gen2515VegetationWorldTruthPlanCache = null;
+function getGen2515VegetationGroundedPlan() {
+  if (!gen2515VegetationGroundedPlanCache) gen2515VegetationGroundedPlanCache = planHEarthGen2514GroundedVegetation();
+  return gen2515VegetationGroundedPlanCache;
+}
+export function getHEarthGen2515VegetationWorldTruthPlan() {
+  if (gen2515VegetationWorldTruthPlanCache) return gen2515VegetationWorldTruthPlanCache;
+  const plan = getGen2515VegetationGroundedPlan();
+  const issues = [...(plan.issues ?? [])];
+  if (plan.eligible !== true) issues.push('GEN2515_GEOMETRY_PLAN_NOT_ELIGIBLE');
+  const placementIds = freeze((plan.instances ?? []).map(instance => instance.placementId));
+  const batches = freeze((plan.batches ?? []).map(batch => freeze({
+    batchId: batch.batchId,
+    start: batch.start,
+    count: batch.count
+  })));
+  gen2515VegetationWorldTruthPlanCache = freeze({
+    eligible: plan.eligible === true && issues.length === 0,
+    contractId: plan.contractId,
+    instanceCount: plan.instanceCount,
+    placementIds,
+    batches,
+    maxInstancesPerMaterializationBatch: plan.performancePolicy?.maxInstancesPerMaterializationBatch ?? null,
+    populationLimit: plan.performancePolicy?.populationLimit ?? null,
+    droppedPlacementCount: plan.performancePolicy?.droppedPlacementCount ?? null,
+    completeWorldPlacementCoverageRequired: plan.performancePolicy?.completeWorldPlacementCoverageRequired === true,
+    partitionOrder: plan.performancePolicy?.partitionOrder ?? null,
+    cameraIndependent: plan.performancePolicy?.cameraIndependent === true,
+    lodOrVisibilitySelectionPerformed: plan.performancePolicy?.lodOrVisibilitySelectionPerformed === true,
+    retainedGeometryPolicy: plan.performancePolicy?.retainedGeometryPolicy ?? null,
+    issues: freeze(issues)
+  });
+  return gen2515VegetationWorldTruthPlanCache;
+}
+export function constructHEarthGen2515VegetationPresentationBatch(batchId) {
+  const plan = getGen2515VegetationGroundedPlan();
+  const issues = [...(plan.issues ?? [])];
+  const built = constructHEarthGen2514GroundedVegetationBatch(plan, batchId);
+  if (built.eligible !== true) issues.push(`GEN2515_BATCH_FAILED:${batchId}`, ...(built.issues ?? []));
+  const regionalInstances = (built.instances ?? []).map(instance => freeze({
+    sourcePopulationInstanceId: instance.sourcePopulationInstanceId,
+    regionalEcology: gen2515RegionalEcology(instance, issues)
+  }));
+  const ecologyByPopulation = new Map(regionalInstances.map(instance => [
+    instance.sourcePopulationInstanceId,
+    instance.regionalEcology
+  ]));
+  const primitives = (built.instances ?? []).flatMap(instance => (instance.components ?? []).map(component => {
+    const primitive = component.primitiveRecord;
+    if (!primitive) {
+      issues.push(`GEN2515_PRIMITIVE_MISSING:${instance.placementId}`);
+      return null;
+    }
+    return freeze({
+      ...primitive,
+      metadata: freeze({
+        ...primitive.metadata,
+        run8DInstanceId: instance.instanceId,
+        sourcePopulationInstanceId: instance.sourcePopulationInstanceId,
+        gen2514PlacementId: instance.placementId,
+        gen311RegionalEcology: ecologyByPopulation.get(instance.sourcePopulationInstanceId),
+        gen311SuccessorVegetationContractId: H_EARTH_GEN311_SUCCESSOR_VEGETATION_CONTRACT_ID
+      })
+    });
+  }).filter(Boolean));
+  return freeze({
+    eligible: plan.eligible === true && built.eligible === true && issues.length === 0,
+    batchId,
+    instanceCount: built.instanceCount ?? 0,
+    placementIds: freeze((built.instances ?? []).map(instance => instance.placementId)),
+    regionalInstances: freeze(regionalInstances),
+    primitives: freeze(primitives),
+    issues: freeze(issues),
+    cameraIndependent: true,
+    lodOrVisibilitySelectionPerformed: false
+  });
+}
+export function buildHEarthRun8ENeutralPackage({cameraWorld={x:0,y:8,z:-40}}={}){
+  const manifold=previewHEarthFunctionalLandscape({cameraWorld}),issues=[];
+  if(manifold?.ok!==true)issues.push(...(manifold?.issues??['RUN_8E_MANIFOLD_PREVIEW_INVALID']));
+  if(manifold?.geographicIdentity?.playableRegion!=='GRATITUDE'||manifold?.geographicIdentity?.continentalContext!=='AUDRALIA'||manifold?.oceanFacingEmptinessPreserved!==true)issues.push('RUN_8E_GEOGRAPHIC_IDENTITY_INVALID');
+  if(manifold?.oceanVisualContinuationMaterialized!==true)issues.push('RUN_8E_OCEAN_CONTINUATION_NOT_MATERIALIZED');
+  if(manifold?.regionalDevelopment?.contractId==null)issues.push('GEN311_REGIONAL_DEVELOPMENT_PREVIEW_MISSING');
+  const vegetationTruth=getHEarthGen2515VegetationWorldTruthPlan();
+  if(vegetationTruth.eligible!==true)issues.push(...vegetationTruth.issues);
+  const primitives=freeze([...(manifold?.primitives??[])]);
+  const bounds=primitives.length?mergeHEarthGeometryBounds(primitives.map(p=>p.geometry.bounds)):null;
+  if(!isHEarthAABB3D(bounds))issues.push('RUN_8E_NEUTRAL_PACKAGE_BOUNDS_INVALID');
+  const ids=primitives.map(p=>p.primitiveId);
+  if(new Set(ids).size!==ids.length)issues.push('RUN_8E_DUPLICATE_PRIMITIVE_ID');
+  const regionalVegetation=freeze({eligible:vegetationTruth.eligible===true,contractId:H_EARTH_GEN311_SUCCESSOR_VEGETATION_CONTRACT_ID,instanceCount:vegetationTruth.instanceCount,instances:freeze([]),source:'GEN2514_QUALIFIED_GEOMETRY_BOUNDED_PRESENTATION',presentationSeparated:true,batchCount:vegetationTruth.batches.length});
+  return freeze({ok:issues.length===0,status:issues.length?'RUN_8E_WORLD_MANIFOLD_NEUTRAL_PACKAGE_FAILED':'RUN_8E_WORLD_MANIFOLD_NEUTRAL_PACKAGE_COMPLETE',contractId:H_EARTH_RUN_8E_NEUTRAL_PACKAGE_CONTRACT_ID,gen311IntegrationContractId:H_EARTH_GEN311_RUN_8E_REGIONAL_INTEGRATION_CONTRACT_ID,compositionMode:'GRATITUDE_AUDRALIA_WORLD_MANIFOLD_GEN311_REGIONAL_ELABORATION',controllingRun8EContractId:H_EARTH_RUN_8E_CONTROL_CONTRACT_ID,geographicIdentity:manifold?.geographicIdentity,regionalDevelopment:manifold?.regionalDevelopment,regionalVegetation,regionalEcologyPrimitiveCount:0,representationPlan:manifold?.representationPlan,worldManifoldUnion:manifold?.worldManifoldUnion,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,primitives,primitiveIds:freeze(ids),primitiveCount:primitives.length,terrainPrimitiveCount:manifold?.componentResults?.terrain?.primitive?1:0,shorelinePrimitiveCount:manifold?.componentResults?.shoreline?.primitives?.length??0,farRepresentationPrimitiveCount:(manifold?.componentResults?.distantContext?.primitives??[]).filter(p=>p?.metadata?.representationClass==='FAR').length,vegetationPrimitiveCount:0,vegetationWorldTruthInstanceCount:vegetationTruth.instanceCount,vegetationPresentationSeparated:true,bounds,semanticAddressCount:manifold?.semanticAddressCount??0,semanticAddressIds:manifold?.semanticAddressIds??[],terrainAddressCount:manifold?.terrainAddressCount??0,terrainAddressIds:manifold?.terrainAddressIds??[],shorelineWaterAddressCount:manifold?.shorelineWaterAddressCount??0,shorelineWaterAddressIds:manifold?.shorelineWaterAddressIds??[],proxySummarizedAddressCount:manifold?.proxySummarizedAddressCount??0,proxySummarizedAddressIds:manifold?.proxySummarizedAddressIds??[],formationIds:canonical([...(manifold?.formationIds??[]),'H_EARTH_CONTINUOUS_HIGHLAND_MOUNTAIN_001']),shorelineBandIds:canonical((manifold?.componentResults?.shoreline?.primitives??[]).map(p=>p.metadata?.bandId)),oceanFacingEmptinessPreserved:true,oceanVisualContinuationMaterialized:true,oppositeShoreFabricationProhibited:true,legacyProxyIncluded:false,legacyProxyPreservedOutsideSuccessorFrame:false,successorMountainIncluded:true,continuousWorldManifold:manifold?.worldManifoldUnion?.valid===true,canonicalWorldFieldProtected:true,regionalEnvironmentMaterialized:true,admitted:false,WestAdmissionPerformed:false,packet002TransferPerformed:false,issues});
+}
 export function constructHEarthRun8ESuccessorEnvironmentFrame({camera,viewport={width:320,height:180,pixelRatio:1},timeOfDayHours=15.25,frameOccurrenceId='H_EARTH_RUN_8E_SUCCESSOR_FRAME_OCCURRENCE_001',transferOccurrenceId='H_EARTH_RUN_8E_PACKET_002_TRANSFER_OCCURRENCE_001'}={}){const issues=[],control=evaluateHEarthRun8EControlContract();if(control.eligible!==true)issues.push(...control.issues);if(!camera||![camera.position?.x,camera.position?.y,camera.position?.z,camera.target?.x,camera.target?.y,camera.target?.z].every(finite))issues.push('RUN_8E_CAMERA_INVALID');const neutralPackage=buildHEarthRun8ENeutralPackage({cameraWorld:camera?.position});if(neutralPackage.ok!==true)issues.push(...neutralPackage.issues);const westAdmission=issues.length===0?admitHEarthPrimitiveBatch(neutralPackage.primitives,{frameId:`${frameOccurrenceId}:WEST_AGGREGATE`,metadata:{successorProgram:'H_EARTH_RUN_8E_GEN311_REGIONAL',presentationMode:'GRATITUDE_AUDRALIA_WORLD_MANIFOLD_REGIONAL_ELABORATION'}}):null;const transfer=issues.length===0?buildHEarthRun8EPacket002SuccessorTransfer({neutralPackage,westBatchAdmissionResult:westAdmission,transferOccurrenceId}):null;if(transfer?.ok!==true||transfer?.contractId!==H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID)issues.push(...(transfer?.issues??['RUN_8E_PACKET_002_TRANSFER_FAILED']));const worldFarPlane=finite(camera?.farPlane)?camera.farPlane:RUN8C_PRESENTATION_DISTANCE_MAX,run8CPresentationFarPlane=Math.min(worldFarPlane,RUN8C_PRESENTATION_DISTANCE_MAX),presentation=issues.length===0?buildHEarthRun8CTerrainMaterialLightingPresentation({timeOfDayHours,cameraWorld:camera.position,viewportWidth:viewport.width,viewportHeight:viewport.height,cameraFarPlane:run8CPresentationFarPlane}):null,presentationEvaluation=presentation?evaluateHEarthRun8CTerrainMaterialLightingPresentation(presentation):{eligible:false,issues:['RUN_8E_RUN_8C_PRESENTATION_MISSING']};if(presentationEvaluation.eligible!==true)issues.push(...presentationEvaluation.issues);if(issues.length)return freeze({ok:false,status:'RUN_8E_WORLD_MANIFOLD_FRAME_REJECTED',contractId:H_EARTH_RUN_8E_RENDER_INTEGRATION_CONTRACT_ID,worldFarPlane,run8CPresentationFarPlane,issues});const terrainSourceId=presentation.sourcePrimitiveId,terrainPrimitive=transfer.admittedPrimitives.find(p=>p.primitiveId===terrainSourceId),colors=terrainTriangleColors(terrainPrimitive,presentation),primitives=transfer.admittedPrimitives.map(p=>decoratePrimitive(p,terrainSourceId,colors)),sky=presentation.skyGradientStops,farOceanCount=primitives.filter(p=>p.metadata?.run8ERenderClass==='FAR_OCEAN').length,farLandCount=primitives.filter(p=>p.metadata?.run8ERenderClass==='FAR_TERRAIN').length,regionalEcologyCount=primitives.filter(p=>p.metadata?.gen311RegionalEcology).length;if(farOceanCount!==1||farLandCount!==1)return freeze({ok:false,status:'RUN_8E_WORLD_MANIFOLD_FRAME_REJECTED',contractId:H_EARTH_RUN_8E_RENDER_INTEGRATION_CONTRACT_ID,worldFarPlane,run8CPresentationFarPlane,issues:['RUN_8E_RECIPROCAL_FAR_REPRESENTATION_INVALID']});if(regionalEcologyCount===0)return freeze({ok:false,status:'RUN_8E_WORLD_MANIFOLD_FRAME_REJECTED',contractId:H_EARTH_RUN_8E_RENDER_INTEGRATION_CONTRACT_ID,worldFarPlane,run8CPresentationFarPlane,issues:['GEN311_REGIONAL_ECOLOGY_RENDER_INTEGRATION_MISSING']});return freeze({ok:true,status:'RUN_8E_WORLD_MANIFOLD_FRAME_COMPLETE',contractId:H_EARTH_RUN_8E_RENDER_INTEGRATION_CONTRACT_ID,gen311IntegrationContractId:H_EARTH_GEN311_RUN_8E_REGIONAL_INTEGRATION_CONTRACT_ID,frameId:frameOccurrenceId,frameOccurrenceId,revision:6,presentationMode:'GRATITUDE_AUDRALIA_WORLD_MANIFOLD_GEN311_REGIONAL_ELABORATION',geographicIdentity:neutralPackage.geographicIdentity,regionalDevelopment:neutralPackage.regionalDevelopment,regionalVegetation:neutralPackage.regionalVegetation,regionalEcologyPrimitiveCount:regionalEcologyCount,neutralPackage,westAdmission,transfer,packet002SuccessorTransferExecuted:true,representationPlanContractId:H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,worldManifoldUnion:neutralPackage.worldManifoldUnion,primitiveCount:primitives.length,primitiveIds:primitives.map(p=>p.primitiveId),primitives,admittedPrimitives:primitives,bounds:transfer.bounds,camera:freeze({...camera}),viewport:freeze({...viewport}),worldFarPlane,run8CPresentationFarPlane,presentationDistanceDecoupledFromWorldEnvelope:worldFarPlane>run8CPresentationFarPlane,environment:freeze({skyTop:sky[0].rgba,skyHorizon:sky[sky.length-1].rgba,groundHaze:presentation.horizonHaze.rgba,skyGradientStops:sky,sunDisc:presentation.sunDisc,ownsSkyAuthority:true,singleSkyAuthority:true,climateIdentity:'WARM_SUBTROPICAL_COASTAL',atmosphericDepthContinuity:true,regionalEnvironmentalResponse:true}),run8CPresentation:presentation,visibility:freeze({visiblePrimitiveIds:primitives.map(p=>p.primitiveId),hiddenPrimitiveIds:[]}),terrainTriangleColorCount:colors.length,terrainOcclusionExecuted:true,sameWorldToCameraTransformForAllRepresentations:true,singlePhysicalDepthDomain:true,continuousWorldManifold:true,canonicalWorldFieldProtected:true,regionalEnvironmentMaterialized:true,oceanFacingEmptinessPreserved:true,oceanVisualContinuationMaterialized:true,farOceanPrimitiveCount:farOceanCount,farLandPrimitiveCount:farLandCount,oppositeShoreFabricationProhibited:true,legacyProxyIncluded:false,legacyProxyPreservedOutsideSuccessorFrame:false,rendererAuthorityCreated:false,cameraAuthorityCreated:false,publicRouteMutation:false,deployment:false,issues:[]});}
 function applyColors(plan,frame){const map=new Map(frame.primitives.map(p=>[p.primitiveId,p])),triangles=plan.triangles.map(t=>{const p=map.get(t.primitiveId),rgba=p?.renderTriangleColors?.[t.sourceTriangleIndex]??p?.renderMaterial?.rgba??t.material.rgba;return freeze({...t,material:freeze({...t.material,rgba})});}),opaqueTriangles=triangles.filter(t=>t.material.transparencyClass!=='TRANSLUCENT'),translucentTriangles=triangles.filter(t=>t.material.transparencyClass==='TRANSLUCENT').sort((a,b)=>b.cameraDepth-a.cameraDepth);return freeze({...plan,triangles,opaqueTriangles,translucentTriangles,run8EWorldManifoldMaterialProjection:true,gen311RegionalEnvironmentProjection:true});}
 export function prepareHEarthRun8ERenderPlan(frame,viewport){const base=prepareHEarthFunctionalLandscapeRenderPlan(frame,viewport);return base?.eligible===true?applyColors(base,frame):base;}

@@ -19,8 +19,8 @@ jobs:
           Q=preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B
           C=/tmp/current-tree
           mkdir -p /tmp/qualified-tree /tmp/current-tree
-          git archive 28bc466fe029b449ce4edd27843c0457bfa3349d "$Q/h-earth-3d" | tar -x -C /tmp/qualified-tree
-          git archive 5bc913cad513b044c5b0de37d921102314460a3f h-earth-3d | tar -x -C /tmp/current-tree
+          git archive 28bc466fe029b449ce4edd27843c0457bfa3349d "$Q" | tar -x -C /tmp/qualified-tree
+          git archive 5bc913cad513b044c5b0de37d921102314460a3f | tar -x -C /tmp/current-tree
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js)" = "775f6b5a49266eebb0d06a0407e89c26e08134c9"
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js)" = "4f929cd467edb447e2116de745d9b02c28daf219"
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js)" = "9ea6056353453254a2c00e3ed9abf44b2fe7b275"

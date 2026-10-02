@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2514-terrain-field-isolation-001",
+  "capabilityId": "H_EARTH_GEN2514_PLACEMENT_EQUIVALENCE_PROBE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5535,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2514-terrain-field-isolation",
+  "requestCommit": "c746d0a1b2f15687f4cf4ef861fba311f371771a",
+  "requestCommitParent": "b33574d718a4cd6147e0cdac14f00c1beaa8bf7a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "b33574d718a4cd6147e0cdac14f00c1beaa8bf7a",
+  "workflow": "h-earth-gen2514-placement-equivalence-probe.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37054615826",
+  "dispatchedRunId": 37054637384,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37054637384",
+  "dispatchedRunHeadSha": "b33574d718a4cd6147e0cdac14f00c1beaa8bf7a",
+  "dispatchedAt": "2026-10-02T19:31:10.749Z",
+  "resolvedAt": "2026-10-02T19:31:15.145Z"
+}

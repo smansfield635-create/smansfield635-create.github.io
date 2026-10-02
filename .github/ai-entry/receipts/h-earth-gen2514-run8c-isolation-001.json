@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2514-run8c-isolation-001",
+  "capabilityId": "H_EARTH_GEN2514_PLACEMENT_EQUIVALENCE_PROBE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5531,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2514-run8c-isolation",
+  "requestCommit": "f654485be1f4624ad6c0c82984d148c04595ba00",
+  "requestCommitParent": "216645580aa640e1322cf4d25bc1be9988642b5f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "216645580aa640e1322cf4d25bc1be9988642b5f",
+  "workflow": "h-earth-gen2514-placement-equivalence-probe.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37049620694",
+  "dispatchedRunId": 37049638581,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37049638581",
+  "dispatchedRunHeadSha": "216645580aa640e1322cf4d25bc1be9988642b5f",
+  "dispatchedAt": "2026-10-02T18:45:50.579Z",
+  "resolvedAt": "2026-10-02T18:45:54.194Z"
+}

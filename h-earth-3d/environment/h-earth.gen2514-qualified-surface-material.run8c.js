@@ -1,7 +1,7 @@
 /** H_EARTH_SUCCESSOR_SURFACE_MATERIAL_PROJECTION_RUN_8C_v6_PLAYER_SCALE_DEPTH */
 import { H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID,H_EARTH_SURFACE_CLASSES,sampleHEarthSurfaceState,evaluateHEarthSurfaceStateSample } from './h-earth.surface-state-field.js';
 import { getHEarthCanonicalShorelineZ } from '../terrain/h-earth.gen2514-qualified-terrain-field.js';
-import { H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,H_EARTH_GEN311_REGIONAL_ARTICULATION_CONTRACT_ID,sampleHEarthRun8BSuccessorTerrainField } from '../terrain/h-earth.successor-terrain-field.run8b.js';
+import { H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,H_EARTH_GEN311_REGIONAL_ARTICULATION_CONTRACT_ID,sampleHEarthRun8BSuccessorTerrainField } from '../terrain/h-earth.gen2514-qualified-successor-terrain-field.run8b.js';
 import { H_EARTH_RUN_8A_NORMAL_LIGHT_AND_MATERIAL_INTERFACE_CONTRACT } from '../control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js';
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};const finite=v=>typeof v==='number'&&Number.isFinite(v);const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),clamp01=v=>clamp(v,0,1),mix=(a,b,t)=>a+(b-a)*clamp01(t),smooth01=v=>{const t=clamp01(v);return t*t*(3-2*t)};
 // Authored X/Z units are meters. The coast itself is the immutable zero contour.

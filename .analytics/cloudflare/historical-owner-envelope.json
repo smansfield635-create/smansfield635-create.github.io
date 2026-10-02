@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-02T19:30:38Z",
+  "generatedAt": "2026-10-02T20:32:51Z",
   "window": {
-    "start": "2026-07-04T19:30:38Z",
-    "end": "2026-10-02T19:30:38Z"
+    "start": "2026-07-04T20:32:51Z",
+    "end": "2026-10-02T20:32:51Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -58,13 +58,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -146,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 62,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 93,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 62,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-02T19:30:38Z",
+  "generatedAt": "2026-10-02T20:32:51Z",
   "window30d": {
-    "start": "2026-09-02T19:30:38Z",
-    "end": "2026-10-02T19:30:38Z"
+    "start": "2026-09-02T20:32:51Z",
+    "end": "2026-10-02T20:32:51Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 595
+      "pageLoads": 607
     },
     {
       "date": "2026-09-26",
@@ -124,39 +124,34 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 19
+      "pageLoads": 20
     }
   ],
   "summary": {
-    "pageLoads": 6656,
-    "botPageLoads": 2543,
-    "nonBotPageLoads": 4113
+    "pageLoads": 6669,
+    "botPageLoads": 2548,
+    "nonBotPageLoads": 4121
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3261,
-      "visits": 3261
+      "pageLoads": 3514,
+      "visits": 3514
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2829,
+      "pageLoads": 3072,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 517,
-      "visits": 517
+      "pageLoads": 477,
+      "visits": 477
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 46,
-      "visits": 46
-    },
-    {
-      "host": "l.instagram.com",
-      "pageLoads": 2,
-      "visits": 2
+      "pageLoads": 35,
+      "visits": 35
     },
     {
       "host": "com.linkedin.android",
@@ -166,24 +161,34 @@
   ],
   "topPages": [
     {
-      "path": "/",
-      "pageLoads": 1807,
-      "visits": 1381
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 1830,
+      "visits": 1830
     },
     {
-      "path": "/mirror-manor-preview/",
-      "pageLoads": 910,
-      "visits": 910
+      "path": "/",
+      "pageLoads": 1664,
+      "visits": 1308
+    },
+    {
+      "path": "/prelude/",
+      "pageLoads": 1040,
+      "visits": 30
+    },
+    {
+      "path": "/characters/",
+      "pageLoads": 1030,
+      "visits": 10
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 711,
-      "visits": 21
+      "pageLoads": 801,
+      "visits": 11
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 540,
-      "visits": 440
+      "pageLoads": 520,
+      "visits": 340
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -191,19 +196,9 @@
       "visits": 91
     },
     {
-      "path": "/products/education/",
-      "pageLoads": 297,
-      "visits": 107
-    },
-    {
       "path": "/analytics/",
-      "pageLoads": 297,
-      "visits": 188
-    },
-    {
-      "path": "/governance-bridge/",
-      "pageLoads": 177,
-      "visits": 131
+      "pageLoads": 332,
+      "visits": 205
     }
   ],
   "ownerMeasurement": {

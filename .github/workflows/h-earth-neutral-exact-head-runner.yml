@@ -279,14 +279,24 @@ jobs:
                 const route=owner?.H_EARTH_RUN8E_PUBLIC_ROUTE??null;
                 const renderer=route?.getLiveRenderer?.()??route?.liveRenderer??owner?.H_EARTH_RUN8E_LIVE_RENDERER??null;
                 if(!renderer?.materializeNextVegetationBatch) return {executed:false,error:'VEGETATION_RESIDENCY_API_UNAVAILABLE',routeKeys:route?Object.keys(route).sort():[]};
-                const transitions=[];
+                const transitions=[];let failure=null;
+                const snapshot=()=>{const receipt=route.getLiveGpuReceipt?.()??null,resource=renderer.getResourceReceipt?.()??null;return {residency:receipt?.resources?.vegetationResidency??resource?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??resource?.counters?.worldRebuildCount??null};};
                 for(let i=0;i<108;i++){
-                  const result=renderer.materializeNextVegetationBatch();
-                  transitions.push(result);
-                  await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+                  const pre=snapshot();let returnedState=null;
+                  try{
+                    returnedState=renderer.materializeNextVegetationBatch();
+                    await new Promise(resolve=>requestAnimationFrame(()=>resolve()));
+                    const post=snapshot();
+                    transitions.push({batchIndex:i,preResidency:pre.residency,returnedState,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount});
+                  }catch(error){
+                    const post=snapshot();
+                    failure={batchIndex:i,preResidency:pre.residency,returnedState,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount,error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}};
+                    transitions.push({...failure});
+                    break;
+                  }
                 }
-                const receipt=route.getLiveGpuReceipt?.()??null;
-                return {executed:true,transitions,finalResidency:receipt?.resources?.vegetationResidency??renderer.getResourceReceipt?.()?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??renderer.getResourceReceipt?.()?.counters?.worldRebuildCount??null};
+                const final=snapshot();
+                return {executed:true,transitions,failure,finalResidency:final.residency,worldRebuildCount:final.worldRebuildCount};
               });
             }
             residencySamples=[];

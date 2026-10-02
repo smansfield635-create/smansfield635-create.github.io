@@ -18,18 +18,26 @@ jobs:
           set -euo pipefail
           Q=preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B
           C=/tmp/current-tree
-          mkdir -p /tmp/qualified-tree /tmp/current-tree /tmp/run8c-current-tree /tmp/current-with-qualified-run8c-tree /tmp/qualified-with-current-terrain-tree /tmp/current-with-qualified-terrain-tree /tmp/current-with-qualified-run8c-terrain-tree
+          mkdir -p /tmp/qualified-tree /tmp/current-tree
           git archive 28bc466fe029b449ce4edd27843c0457bfa3349d "$Q" | tar -x -C /tmp/qualified-tree
           git archive 5bc913cad513b044c5b0de37d921102314460a3f | tar -x -C /tmp/current-tree
-          cp -a /tmp/qualified-tree/. /tmp/run8c-current-tree/
+          # Variant trees are created with hard links, so repository bytes are not recopied.
+          cp -al /tmp/qualified-tree /tmp/run8c-current-tree
+          cp -al /tmp/current-tree /tmp/current-with-qualified-run8c-tree
+          cp -al /tmp/qualified-tree /tmp/qualified-with-current-terrain-tree
+          cp -al /tmp/current-tree /tmp/current-with-qualified-terrain-tree
+          cp -al /tmp/current-tree /tmp/current-with-qualified-run8c-terrain-tree
+          # Break only the files being substituted before overwriting them.
+          rm /tmp/run8c-current-tree/$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
           cp /tmp/current-tree/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js /tmp/run8c-current-tree/$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
-          cp -a /tmp/current-tree/. /tmp/current-with-qualified-run8c-tree/
+          rm /tmp/current-with-qualified-run8c-tree/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
           cp /tmp/qualified-tree/$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js /tmp/current-with-qualified-run8c-tree/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
-          cp -a /tmp/qualified-tree/. /tmp/qualified-with-current-terrain-tree/
+          rm /tmp/qualified-with-current-terrain-tree/$Q/h-earth-3d/terrain/h-earth.terrain-field.js
           cp /tmp/current-tree/h-earth-3d/terrain/h-earth.terrain-field.js /tmp/qualified-with-current-terrain-tree/$Q/h-earth-3d/terrain/h-earth.terrain-field.js
-          cp -a /tmp/current-tree/. /tmp/current-with-qualified-terrain-tree/
+          rm /tmp/current-with-qualified-terrain-tree/h-earth-3d/terrain/h-earth.terrain-field.js
           cp /tmp/qualified-tree/$Q/h-earth-3d/terrain/h-earth.terrain-field.js /tmp/current-with-qualified-terrain-tree/h-earth-3d/terrain/h-earth.terrain-field.js
-          cp -a /tmp/current-with-qualified-run8c-tree/. /tmp/current-with-qualified-run8c-terrain-tree/
+          rm /tmp/current-with-qualified-run8c-terrain-tree/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js /tmp/current-with-qualified-run8c-terrain-tree/h-earth-3d/terrain/h-earth.terrain-field.js
+          cp /tmp/qualified-tree/$Q/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js /tmp/current-with-qualified-run8c-terrain-tree/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
           cp /tmp/qualified-tree/$Q/h-earth-3d/terrain/h-earth.terrain-field.js /tmp/current-with-qualified-run8c-terrain-tree/h-earth-3d/terrain/h-earth.terrain-field.js
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js)" = "775f6b5a49266eebb0d06a0407e89c26e08134c9"
           test "$(git rev-parse 28bc466fe029b449ce4edd27843c0457bfa3349d:$Q/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js)" = "4f929cd467edb447e2116de745d9b02c28daf219"

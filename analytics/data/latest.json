@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-02T20:32:51Z",
+  "generatedAt": "2026-10-02T21:30:35Z",
   "window30d": {
-    "start": "2026-09-02T20:32:51Z",
-    "end": "2026-10-02T20:32:51Z"
+    "start": "2026-09-02T21:30:35Z",
+    "end": "2026-10-02T21:30:35Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 607
+      "pageLoads": 631
     },
     {
       "date": "2026-09-26",
@@ -128,30 +128,35 @@
     }
   ],
   "summary": {
-    "pageLoads": 6669,
-    "botPageLoads": 2548,
-    "nonBotPageLoads": 4121
+    "pageLoads": 6693,
+    "botPageLoads": 2550,
+    "nonBotPageLoads": 4143
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3514,
-      "visits": 3514
+      "pageLoads": 3265,
+      "visits": 3265
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 3072,
+      "pageLoads": 2865,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 477,
-      "visits": 477
+      "pageLoads": 514,
+      "visits": 514
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 35,
-      "visits": 35
+      "pageLoads": 46,
+      "visits": 46
+    },
+    {
+      "host": "l.instagram.com",
+      "pageLoads": 2,
+      "visits": 2
     },
     {
       "host": "com.linkedin.android",
@@ -161,34 +166,24 @@
   ],
   "topPages": [
     {
-      "path": "/mirror-manor-preview/",
-      "pageLoads": 1830,
-      "visits": 1830
-    },
-    {
       "path": "/",
-      "pageLoads": 1664,
-      "visits": 1308
+      "pageLoads": 1807,
+      "visits": 1375
     },
     {
-      "path": "/prelude/",
-      "pageLoads": 1040,
-      "visits": 30
-    },
-    {
-      "path": "/characters/",
-      "pageLoads": 1030,
-      "visits": 10
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 910,
+      "visits": 910
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 801,
-      "visits": 11
+      "pageLoads": 711,
+      "visits": 21
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 520,
-      "visits": 340
+      "pageLoads": 540,
+      "visits": 440
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -197,8 +192,18 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 332,
-      "visits": 205
+      "pageLoads": 314,
+      "visits": 189
+    },
+    {
+      "path": "/products/education/",
+      "pageLoads": 297,
+      "visits": 107
+    },
+    {
+      "path": "/governance-bridge/",
+      "pageLoads": 183,
+      "visits": 131
     }
   ],
   "ownerMeasurement": {

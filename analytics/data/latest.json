@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-02T01:47:08Z",
+  "generatedAt": "2026-10-02T02:44:11Z",
   "window30d": {
-    "start": "2026-09-02T01:47:08Z",
-    "end": "2026-10-02T01:47:08Z"
+    "start": "2026-09-02T02:44:11Z",
+    "end": "2026-10-02T02:44:11Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 518
+      "pageLoads": 516
     },
     {
       "date": "2026-09-26",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 1
+      "pageLoads": 2
     }
   ],
   "summary": {
-    "pageLoads": 6681,
-    "botPageLoads": 2540,
-    "nonBotPageLoads": 4141
+    "pageLoads": 6680,
+    "botPageLoads": 2541,
+    "nonBotPageLoads": 4139
   },
   "referrers": [
     {
@@ -145,8 +145,8 @@
     },
     {
       "host": "www.google.com",
-      "pageLoads": 524,
-      "visits": 524
+      "pageLoads": 523,
+      "visits": 523
     },
     {
       "host": "m.facebook.com",
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1820,
-      "visits": 1389
+      "pageLoads": 1819,
+      "visits": 1388
     },
     {
       "path": "/mirror-manor-preview/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 282,
-      "visits": 170
+      "pageLoads": 283,
+      "visits": 171
     },
     {
       "path": "/evidence/agentic-frontier/",

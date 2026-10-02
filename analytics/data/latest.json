@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-02T18:38:42Z",
+  "generatedAt": "2026-10-02T19:30:38Z",
   "window30d": {
-    "start": "2026-09-02T18:38:42Z",
-    "end": "2026-10-02T18:38:42Z"
+    "start": "2026-09-02T19:30:38Z",
+    "end": "2026-10-02T19:30:38Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 582
+      "pageLoads": 595
     },
     {
       "date": "2026-09-26",
@@ -124,34 +124,34 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 18
+      "pageLoads": 19
     }
   ],
   "summary": {
-    "pageLoads": 6642,
+    "pageLoads": 6656,
     "botPageLoads": 2543,
-    "nonBotPageLoads": 4099
+    "nonBotPageLoads": 4113
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3262,
-      "visits": 3262
+      "pageLoads": 3261,
+      "visits": 3261
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2822,
+      "pageLoads": 2829,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 518,
-      "visits": 518
+      "pageLoads": 517,
+      "visits": 517
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 37,
-      "visits": 37
+      "pageLoads": 46,
+      "visits": 46
     },
     {
       "host": "l.instagram.com",
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1808,
-      "visits": 1382
+      "pageLoads": 1807,
+      "visits": 1381
     },
     {
       "path": "/mirror-manor-preview/",
@@ -197,13 +197,13 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 296,
-      "visits": 187
+      "pageLoads": 297,
+      "visits": 188
     },
     {
       "path": "/governance-bridge/",
-      "pageLoads": 163,
-      "visits": 122
+      "pageLoads": 177,
+      "visits": 131
     }
   ],
   "ownerMeasurement": {

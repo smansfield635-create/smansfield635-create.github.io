@@ -267,7 +267,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   };
 
   const materializeNextVegetationBatch = () => {
-    if (!initialized) throw new Error('R3D3_RENDERER_NOT_INITIALIZED_FOR_VEGETATION_RESIDENCY');
+    if (counters.rendererInitializationCount !== 1) throw new Error('R3D3_RENDERER_NOT_INITIALIZED_FOR_VEGETATION_RESIDENCY');
     return renderer.materializeNextVegetationBatch();
   };
 

@@ -279,7 +279,7 @@ jobs:
                 const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
                 const owner=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)||null;
                 const route=owner?.H_EARTH_RUN8E_PUBLIC_ROUTE??null;
-                const renderer=route?.getLiveRenderer?.()??route?.liveRenderer??owner?.H_EARTH_RUN8E_LIVE_RENDERER??null;
+                const renderer=route;
                 if(!renderer?.materializeNextVegetationBatch) return {executed:false,error:'VEGETATION_RESIDENCY_API_UNAVAILABLE',routeKeys:route?Object.keys(route).sort():[]};
                 const transitions=[];let failure=null;
                 const snapshot=()=>{const receipt=route.getLiveGpuReceipt?.()??null,resource=renderer.getResourceReceipt?.()??null;return {residency:receipt?.resources?.vegetationResidency??resource?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??resource?.counters?.worldRebuildCount??null};};

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-02T17:32:03Z",
+  "generatedAt": "2026-10-02T18:38:42Z",
   "window": {
-    "start": "2026-07-04T17:32:03Z",
-    "end": "2026-10-02T17:32:03Z"
+    "start": "2026-07-04T18:38:42Z",
+    "end": "2026-10-02T18:38:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5071,
-    "visits": 1305,
+    "pageLoads": 5110,
+    "visits": 1322,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5071,
-        "visits": 1305
+        "pageLoads": 5110,
+        "visits": 1322
       }
     },
     "byPath": {
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -331,16 +331,16 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 107,
-        "visits": 94
+        "pageLoads": 142,
+        "visits": 112
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/analytics/": {
         "pageLoads": 46,
         "visits": 0
-      },
-      "/governance-bridge/governance/": {
-        "pageLoads": 16,
-        "visits": 1
       },
       "/prototypes/abc-roofing/": {
         "pageLoads": 2,
@@ -349,11 +349,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 497,
-        "visits": 497
+        "pageLoads": 514,
+        "visits": 514
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3766,
+        "pageLoads": 3788,
         "visits": 0
       },
       "www.google.com": {

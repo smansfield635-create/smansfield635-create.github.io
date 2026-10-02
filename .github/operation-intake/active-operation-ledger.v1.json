@@ -14807,6 +14807,50 @@
       "scopeHash": "fde80f06feb51ca5120d5540dbd89c2ec9c8ce47c449872163b97f434a97d674",
       "state": "ADMITTED_LOCKED"
     },
+    "ff478cca9be7e3723efed8b35afff6bd775f4527c130f91d89603e6c66169fd0": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "67841269579608807f6c1cd2d71c876f9e15b1ec",
+          "lockGeneration": 2525,
+          "lockScope": "H_EARTH:ACTIVE_ROOT:AUTOMATIC_VEGETATION_PRESENTATION:20261002",
+          "operationId": "H_EARTH_AUTOMATIC_VEGETATION_PRESENTATION_20261002_001",
+          "procedureLocatorDigest": "cb040f0f879e87b2a16eb3fdaf4d4dfc19636b168448047ba93d103cdd4827bc",
+          "requestDigest": "391046762998eb87ff868c4ab24494b751954df4634dd1bb98067e826d6ab9aa",
+          "scopeHash": "ff478cca9be7e3723efed8b35afff6bd775f4527c130f91d89603e6c66169fd0"
+        },
+        "bindingDigest": "06373ca0138369f1aec9fad9d7912355d23728b6b5094424cc564d4ef7aca2a4",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b49e665d27528de2467295b095ba0c8c69eaf6ab3f5e78a1569391ebea9cca46",
+          "commentId": 5962698366,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5086,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37074577940,
+          "workflowSha": "67841269579608807f6c1cd2d71c876f9e15b1ec"
+        },
+        "lineageAnchorCommitSha": "3bb04773a310bccbba7aacb62044462cbaa821a6",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "67841269579608807f6c1cd2d71c876f9e15b1ec",
+      "lockGeneration": 2525,
+      "lockScope": "H_EARTH:ACTIVE_ROOT:AUTOMATIC_VEGETATION_PRESENTATION:20261002",
+      "operationId": "H_EARTH_AUTOMATIC_VEGETATION_PRESENTATION_20261002_001",
+      "procedureLocatorDigest": "cb040f0f879e87b2a16eb3fdaf4d4dfc19636b168448047ba93d103cdd4827bc",
+      "released": false,
+      "requestDigest": "391046762998eb87ff868c4ab24494b751954df4634dd1bb98067e826d6ab9aa",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ff478cca9be7e3723efed8b35afff6bd775f4527c130f91d89603e6c66169fd0",
+      "state": "ADMITTED_LOCKED"
+    },
     "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247": {
       "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
       "lockGeneration": 1544,
@@ -14835,7 +14879,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2524,
+  "lockGeneration": 2525,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

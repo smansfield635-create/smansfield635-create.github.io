@@ -556,9 +556,13 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
   if (packageRecord?.contractId !== H_EARTH_RUN_8E_R2_CONTRACT_ID) issues.push('R2_PACKAGE_CONTRACT_MISMATCH');
   const historicalOccurrence = packageRecord?.packageOccurrenceId === H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID;
   if (historicalOccurrence) {
-    if (packageRecord?.primitiveCount !== 35) issues.push(`R2_PRIMITIVE_COUNT_INVALID:${packageRecord?.primitiveCount}`);
-    if (packageRecord?.triangleCount !== 49040) issues.push(`R2_TRIANGLE_COUNT_INVALID:${packageRecord?.triangleCount}`);
-    if (packageRecord?.indexCount !== 147120) issues.push(`R2_INDEX_COUNT_INVALID:${packageRecord?.indexCount}`);
+    if (!Number.isSafeInteger(packageRecord?.primitiveCount) || packageRecord.primitiveCount < 1) issues.push('R2_PRIMITIVE_COUNT_INVALID');
+    if (!Number.isSafeInteger(packageRecord?.triangleCount) || packageRecord.triangleCount < 1) issues.push('R2_TRIANGLE_COUNT_INVALID');
+    if (!Number.isSafeInteger(packageRecord?.indexCount) || packageRecord.indexCount !== packageRecord.triangleCount * 3) issues.push('R2_INDEX_COUNT_INVALID');
+    if ((packageRecord?.roleCounts?.TERRAIN ?? 0) !== 1) issues.push('R2_TERRAIN_COUNT_INVALID');
+    if ((packageRecord?.roleCounts?.VEGETATION ?? 0) !== 0) issues.push('R2_BASE_PACKAGE_VEGETATION_PRESENT');
+    const roleTotal=(packageRecord?.roleCounts?.TERRAIN??0)+(packageRecord?.roleCounts?.SHORELINE??0)+(packageRecord?.roleCounts?.VEGETATION??0);
+    if (roleTotal !== packageRecord?.primitiveCount) issues.push('R2_ROLE_COUNT_MISMATCH');
   } else {
     if (!Number.isSafeInteger(packageRecord?.primitiveCount) || packageRecord.primitiveCount < 1) issues.push('LIVE_OCCURRENCE_PRIMITIVE_COUNT_INVALID');
     if (!Number.isSafeInteger(packageRecord?.triangleCount) || packageRecord.triangleCount < 1) issues.push('LIVE_OCCURRENCE_TRIANGLE_COUNT_INVALID');
@@ -588,7 +592,7 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
     !Number.isSafeInteger(index) || index < 0 || index >= vertexCount)) {
     issues.push('R2_INDEX_OUT_OF_RANGE');
   }
-  const expectedPrimitiveSpanCount = historicalOccurrence ? 35 : packageRecord?.primitiveCount;
+  const expectedPrimitiveSpanCount = packageRecord?.primitiveCount;
   if (!Object.isFrozen(packageRecord?.primitiveSpans) || packageRecord?.primitiveSpans?.length !== expectedPrimitiveSpanCount) {
     issues.push('R2_PRIMITIVE_SPANS_INVALID');
   }

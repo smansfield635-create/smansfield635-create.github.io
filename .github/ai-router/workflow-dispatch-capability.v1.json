@@ -1459,6 +1459,16 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "GEN2514_PLACEMENT_EQUIVALENCE_ARTIFACT"
+    },
+    "H_EARTH_GEN2514_QUALIFIED_AUTHORITY_ACCEPTANCE": {
+      "workflow": "h-earth-gen2514-qualified-authority-acceptance.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "GEN2514_QUALIFIED_AUTHORITY_ACCEPTED"
     }
   },
   "continuity": {

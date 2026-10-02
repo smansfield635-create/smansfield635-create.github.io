@@ -1,0 +1,31 @@
+name: H-Earth Gen2514 Qualified Authority Acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  accept:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Execute candidate qualified authority
+        run: |
+          set -euo pipefail
+          git archive accc88e3952ea108dafdb7cd69fd3312f79e8742 | tar -x -C /tmp
+          cat > /tmp/gen2514-authority-acceptance.mjs <<'NODE'
+          import { createHash } from 'node:crypto';
+          const mod=await import('file:///tmp/h-earth-3d/environment/h-earth.successor-vegetation.run8d.js?acceptance=gen2514');
+          if(typeof mod.buildHEarthGen2514QualifiedPlacementInput!=='function')throw new Error('GEN2514_QUALIFIED_AUTHORITY_EXPORT_MISSING');
+          const result=mod.buildHEarthGen2514QualifiedPlacementInput();
+          const rows=[...(result.placements??[])].map(p=>({id:p.placementId,x:p.world.x,y:p.world.y,z:p.world.z})).sort((a,b)=>a.id.localeCompare(b.id));
+          const digest=createHash('sha256').update(JSON.stringify(rows)).digest('hex');
+          const receipt={eligible:result.eligible===true,placementCount:result.placementCount,digest,expectedCount:27585,expectedDigest:'3a79813434d3942ed0045844ed061499b3a8c163476de9fde1b94670e137d61b'};
+          console.log(JSON.stringify(receipt,null,2));
+          if(!receipt.eligible||receipt.placementCount!==receipt.expectedCount||receipt.digest!==receipt.expectedDigest)throw new Error('GEN2514_QUALIFIED_AUTHORITY_ACCEPTANCE_FAILED');
+          NODE
+          node /tmp/gen2514-authority-acceptance.mjs

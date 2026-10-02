@@ -19,6 +19,3 @@
 .auren-typing-dots i:nth-child(2){animation-delay:.14s}.auren-typing-dots i:nth-child(3){animation-delay:.28s}
 @keyframes aurenTyping{0%,60%,100%{opacity:.22;transform:translateY(0)}30%{opacity:.85;transform:translateY(-3px)}}
 @media(prefers-reduced-motion:reduce){.auren-typing-dots i{animation:none}.auren-typing-dots i:nth-child(2){opacity:.5}.auren-typing-dots i:nth-child(3){opacity:.8}}
-
-/* AUREN_VISIBLE_RELATIONSHIP_PRESENTATION_V1 */
-.auren-relationship{margin-left:auto;display:grid;gap:.22rem;min-width:112px}.auren-relationship>span{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.auren-relationship>strong{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase}.auren-relationship>i{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:96px}.auren-relationship>i b{height:3px;border-radius:999px;background:rgba(255,255,255,.12)}.auren-relationship[data-phase="PUBLIC"]>i b:nth-child(1),.auren-relationship[data-phase="ENGAGED"]>i b:nth-child(-n+2),.auren-relationship[data-phase="GUARDED"]>i b{background:var(--gold)}.auren-relationship[data-phase="GUARDED"]>strong{letter-spacing:.12em}@media(max-width:420px){.auren-console-topline{flex-wrap:wrap}.auren-relationship{order:3;width:100%;margin-left:46px}.auren-relationship>i{width:min(180px,70vw)}}

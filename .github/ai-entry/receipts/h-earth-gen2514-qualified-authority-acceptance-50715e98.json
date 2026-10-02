@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2514-qualified-authority-acceptance-50715e98",
+  "capabilityId": "H_EARTH_GEN2514_QUALIFIED_AUTHORITY_ACCEPTANCE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5542,
+  "requestBranch": "ai-dispatch-request-gen2514-authority-50715e98",
+  "requestCommit": "cc8aa0ed64c5ee3fa1c29bca9a3a42da040edb9f",
+  "requestCommitParent": "a9cd452ce487b0bb26e5e2df0ca0a72f5e9d0f80",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a9cd452ce487b0bb26e5e2df0ca0a72f5e9d0f80",
+  "workflow": "h-earth-gen2514-qualified-authority-acceptance.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37061407201",
+  "dispatchedRunId": 37061428077,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37061428077",
+  "dispatchedRunHeadSha": "a9cd452ce487b0bb26e5e2df0ca0a72f5e9d0f80",
+  "dispatchedAt": "2026-10-02T20:34:13.354Z",
+  "resolvedAt": "2026-10-02T20:34:17.293Z"
+}

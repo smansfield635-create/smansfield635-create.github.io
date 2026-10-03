@@ -323,6 +323,23 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
 
   if (oceanPresentationRequested) startPresentationAnimation();
 
+  const materializeNextVegetationBatch = () => {
+    if (counters.rendererInitializationCount !== 1) throw new Error('R3D3_RENDERER_NOT_INITIALIZED_FOR_VEGETATION_RESIDENCY');
+    const beforeBatchCount = renderer.getResourceReceipt().vegetationResidency?.residentBatchCount ?? 0;
+    const result = renderer.materializeNextVegetationBatch();
+    const afterBatchCount = renderer.getResourceReceipt().vegetationResidency?.residentBatchCount ?? 0;
+    if (afterBatchCount > beforeBatchCount) {
+      presentNavigationState(latestNavigationState, {
+        kind: 'VEGETATION_RESIDENCY_PROGRESS',
+        sequence: afterBatchCount,
+        captureEvidence: false
+      });
+    }
+    return result;
+  };
+
+  const getVegetationResidency = () => renderer.getResourceReceipt().vegetationResidency;
+
   const captureLatestEvidence = (label = `explicit-${frameSequence}`) => {
     counters.explicitEvidenceCaptureCount += 1;
     return clone(captureEvidence(label));
@@ -429,6 +446,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
     acceptNavigationState,
     captureLatestEvidence,
+    materializeNextVegetationBatch,
+    getVegetationResidency,
     startPresentationAnimation,
     stopPresentationAnimation,
     getReceipt,

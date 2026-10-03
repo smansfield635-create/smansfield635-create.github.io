@@ -88,7 +88,7 @@
         "productCount:5",
         "showConnection",
         "showRoute",
-        "data.aurenEncounterState",
+        "dataset.aurenEncounterState",
         "auren-expression-current",
         "auren-route-emergent",
         "meaningfulHistory.established",

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-03T05:41:17Z",
+  "generatedAt": "2026-10-03T06:56:41Z",
   "window": {
-    "start": "2026-07-05T05:41:17Z",
-    "end": "2026-10-03T05:41:17Z"
+    "start": "2026-07-05T06:56:41Z",
+    "end": "2026-10-03T06:56:41Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -70,19 +70,23 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/products/": {
-        "pageLoads": 80,
-        "visits": 10
-      },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/frontier/energy/battery-coherence-study/": {
+      "/laws/scientific-law/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/scientific-law/battery-heldout-study/": {
+      "/laws/categories/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/products/": {
+        "pageLoads": 80,
+        "visits": 10
+      },
+      "/frontier/energy/battery-coherence-study/": {
         "pageLoads": 20,
         "visits": 0
       },
@@ -91,10 +95,6 @@
         "visits": 0
       },
       "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -110,6 +110,10 @@
         "pageLoads": 230,
         "visits": 20
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
+      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
@@ -118,12 +122,12 @@
         "pageLoads": 270,
         "visits": 70
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -132,10 +136,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -294,13 +294,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,

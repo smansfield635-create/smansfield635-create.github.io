@@ -1,0 +1,1142 @@
+{
+  "schema": "H_EARTH_OASIS_FOLIAGE_SAMPLE_EVIDENCE_v1",
+  "operationId": "H_EARTH_OASIS_FOLIAGE_SAMPLE_20261003_001",
+  "baselineCommit": "c449707775fabd8574ec7f5e9787eaebcb7d2309",
+  "governingHead": "85b71b1d055216cef543853ab25905cd2036d638",
+  "admission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2530,
+    "sourceComment": 5965175041,
+    "receiptComment": 5965178585,
+    "workflowRun": 37094157511
+  },
+  "predecessorClosure": {
+    "commit": "78423d360f02568f7d3fe191f065f776cc03f8a8",
+    "receiptComment": 5965173041
+  },
+  "geometryVerification": {
+    "status": "PASS",
+    "acceptedFunctionSha256": "7a908ba17b685bd6dcaf2c197e2bb9750b56f41d1ced1cbd727a30de7263ec5d",
+    "oasis": {
+      "primitiveCount": 60,
+      "grassTuftCount": 24,
+      "cattailCount": 18,
+      "closedSeedheadCount": 18,
+      "triangleCount": 26712,
+      "rootCount": 3924,
+      "dryClearanceMeters": [
+        0.05880412618888213,
+        0.7494196896367783
+      ],
+      "wetClearanceMeters": [
+        -0.23859764389183086,
+        0.09885370483249109
+      ],
+      "bounds": {
+        "minX": -14,
+        "maxX": 2,
+        "minZ": -174,
+        "maxZ": -158
+      }
+    },
+    "sourceHashes": {
+      "grass-lowland-trial.js": "4a1cbaf7d4e9828d91adbc44d4b4e37559643332ca0ed605b206de865242455d",
+      "live-render-package.run8e-r2.js": "58d7a35792fc16b9eceaa7e465c5881d623948d794a862f8800e11738a924449",
+      "grass-lowland-trial.verify.mjs": "0a6a6b49905c098d8ab6757f2db935ecdff327679ee01102f14959611f71a00c"
+    },
+    "packageBefore": "38cf74904ad1ff274ac8df0e5800cd7c59e009189a7bff55b0d0222147ae5095",
+    "packageAfter": "38cf74904ad1ff274ac8df0e5800cd7c59e009189a7bff55b0d0222147ae5095",
+    "selectedAnchors": [
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:437f9031",
+        "x": -17.48377451684414,
+        "y": 3.06630676984787,
+        "z": -153.53065064282404
+      },
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:83316cda",
+        "x": -23.570047350733088,
+        "y": 3.3636797666549683,
+        "z": -151.616923476713
+      },
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:8333ab71",
+        "x": -24.473244313028,
+        "y": 4.543727993965149,
+        "z": -144.5201204390079
+      },
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:a33fa046",
+        "x": -29.470945965142676,
+        "y": 1.0985833406448364,
+        "z": -157.51782209112258
+      }
+    ],
+    "instanceCount": 27585,
+    "batchCount": 108,
+    "changedPrimitives": 4,
+    "changedPlacementIds": [
+      "H_EARTH_GEN311_PLACEMENT:437f9031",
+      "H_EARTH_GEN311_PLACEMENT:83316cda",
+      "H_EARTH_GEN311_PLACEMENT:8333ab71",
+      "H_EARTH_GEN311_PLACEMENT:a33fa046"
+    ],
+    "unchangedNongrassPrimitives": 0,
+    "unchangedByArchetype": {},
+    "suppressedLegacyGrassPrimitives": 27581,
+    "suppressedByArchetype": {
+      "COASTAL_GRASS_TUFT": 27581
+    },
+    "renderedPrimitiveCount": 64,
+    "consumedPlacementCount": 27585,
+    "emptyPresentationBatches": 104,
+    "renderedLegacyGrassCount": 0,
+    "rootCount": 576,
+    "maxRootErrorMeters": 1.1917769437985726e-07,
+    "trialTriangleCount": 3456,
+    "deterministic": true,
+    "contactSurface": "BASE_PACKAGE_FLOAT32_TRIANGLES",
+    "refinementActivationVerified": false
+  },
+  "runtimeVerification": {
+    "url": "http://127.0.0.1:4174/candidate/h-earth-lowland-grass-trial-evidence/index.html",
+    "receipt": {
+      "ready": true,
+      "state": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0007",
+        "sequence": 7,
+        "action": "PITCH_DOWN",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "position": {
+          "x": -10,
+          "y": 3.8484353091452617,
+          "z": -159
+        },
+        "yawDegrees": 5,
+        "pitchDegrees": -19,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 0.9016227731699473,
+        "visibleTerrainElevation": 0.9016227731699473,
+        "clearanceReferenceElevation": 1.5984353091452619,
+        "canonicalTerrainElevation": 1.1772961409050264,
+        "minimumCameraY": 3.198435309145262,
+        "targetCameraY": 3.8484353091452617,
+        "clearance": 2.9468125359753143,
+        "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+        "verticalDelta": 0,
+        "verticalAcceleration": 0,
+        "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+        "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+        "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+        "formationIds": [
+          "H_EARTH_COASTAL_BERM_001",
+          "H_EARTH_DRAINAGE_VALLEY_001",
+          "H_EARTH_GRATITUDE_CENTRAL_HEADLAND_001",
+          "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+          "H_EARTH_GRATITUDE_SANCTUARY_BAY_001",
+          "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+          "H_EARTH_LOWLAND_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R07:C08",
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+        "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0007",
+        "terrainSupported": true,
+        "sweptTerrainSupportSampleCount": 0,
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false,
+        "geographyAuthorityCreated": false,
+        "topologyAuthorityCreated": false,
+        "navigationScaleAuthorityCreated": false
+      },
+      "resources": {
+        "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+        "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+        "presentationProfile": {
+          "terrainScaleCues": true,
+          "slopeReadability": true,
+          "routeContainment": true,
+          "manorSiteDifferentiation": true,
+          "cavernExteriorRelationDifferentiation": true,
+          "sharedMacroFrequencyCorrection": true,
+          "lawfulSlopeCurvatureModulation": true,
+          "boundedContactDepthReinforcement": true,
+          "temporallyStableWorldSpaceVariation": true,
+          "regressionColorDiversityRestoration": true,
+          "cavernNearThresholdReinforcement": true,
+          "geometryMutation": false,
+          "terrainMutation": false,
+          "placementMutation": false,
+          "cameraMutation": false,
+          "touchMutation": false
+        },
+        "initialized": true,
+        "dimensions": {
+          "width": 720,
+          "height": 1000
+        },
+        "context": {
+          "created": true,
+          "lost": false,
+          "vendor": "WebKit",
+          "renderer": "WebKit WebGL",
+          "unmaskedVendor": "Google Inc. (Google)",
+          "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+        },
+        "package": {
+          "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+          "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0FDD954B",
+          "runtimeContentDigest": "fnv1a32:0fdd954b",
+          "primitiveCount": 10,
+          "vertexCount": 23626,
+          "triangleCount": 42736,
+          "indexCount": 128208,
+          "drawRangeCount": 4,
+          "canonicalGpuTransport": true
+        },
+        "rendererInterface": {
+          "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+          "attributeCount": 8,
+          "uniformCount": 12,
+          "drawRangeCount": 4
+        },
+        "counters": {
+          "contextCreationCount": 1,
+          "shaderCreateCount": 4,
+          "shaderCompileCount": 4,
+          "programCreateCount": 2,
+          "programLinkCount": 2,
+          "vertexArrayCreateCount": 1,
+          "bufferCreateCount": 11,
+          "bufferUploadCount": 11,
+          "uploadedByteLength": 2143026,
+          "textureCreateCount": 3,
+          "framebufferCreateCount": 2,
+          "postInitializationResourceCreationCount": 0,
+          "postInitializationBufferUploadCount": 0,
+          "frameCount": 1,
+          "visiblePresentationCount": 1,
+          "colorReadbackCount": 0,
+          "depthReadbackCount": 0,
+          "pngEncodingCount": 0,
+          "gpuFinishCount": 0,
+          "cameraUniformUpdateCount": 3,
+          "staticUniformUpdateCount": 10,
+          "geometryDrawCallCount": 3,
+          "totalDrawnIndexCount": 214104,
+          "depthVisualizationDrawCallCount": 0,
+          "refinementResourceCreateCount": 0,
+          "refinementBufferUploadCount": 0,
+          "refinementDrawCallCount": 0,
+          "vegetationBatchMaterializationCount": 108,
+          "vegetationResidentInstanceCount": 27585,
+          "vegetationResidentPrimitiveCount": 64,
+          "vegetationBufferUploadCount": 1188,
+          "vegetationDrawCallCount": 108,
+          "worldRebuildCount": 0
+        },
+        "persistentObjectCounts": {
+          "contexts": 1,
+          "programs": 2,
+          "shaders": 4,
+          "vertexArrays": 1,
+          "gpuBuffers": 11,
+          "textures": 3,
+          "framebuffers": 2
+        },
+        "resourceIdentityStable": true,
+        "packageUploadedOnce": true,
+        "noUnauthorizedPostInitializationResourceCreation": true,
+        "noUnauthorizedPostInitializationBufferUpload": true,
+        "authorizedVegetationPostReadyResidency": true,
+        "refinementResourceAuthorized": true,
+        "refinementResourceCreated": false,
+        "refinementResourceBufferUploadCount": 0,
+        "refinementPatchVertexCount": 0,
+        "refinementPatchTriangleCount": 0,
+        "refinementAnchor": null,
+        "refinementFallbackAvailable": false,
+        "contactField": {
+          "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+          "saturationMeters": 64,
+          "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+          "terrainTriangles": 20736,
+          "oceanTriangles": 17696,
+          "overlapTests": 62308,
+          "contactSegments": 434,
+          "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+          "patchTriangles": 0,
+          "packageVertices": 10573,
+          "patchVertices": 0,
+          "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+          "contactTrianglesWithoutVertexSignChange": 0,
+          "initializationMilliseconds": 227.80000000074506,
+          "buildCount": 1,
+          "totalBuildMilliseconds": 227.80000000074506
+        },
+        "vegetationResidency": {
+          "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+          "totalInstanceCount": 27585,
+          "totalBatchCount": 108,
+          "maxInstancesPerBatch": 256,
+          "residentInstanceCount": 27585,
+          "residentBatchCount": 108,
+          "residentPrimitiveCount": 64,
+          "complete": true,
+          "droppedPlacementCount": 0,
+          "worldRebuildCount": 0,
+          "cameraIndependent": true
+        },
+        "canonicalPackageMutated": false
+      },
+      "afterWalk": {
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+          "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0016",
+          "sequence": 16,
+          "action": "MOVE_FORWARD",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": -9.861370075585572,
+            "y": 3.7181600361736544,
+            "z": -160.5845472867848
+          },
+          "yawDegrees": 5,
+          "pitchDegrees": -19,
+          "verticalFovDegrees": 56,
+          "terrainElevation": 0.8076784177346692,
+          "visibleTerrainElevation": 0.8076784177346692,
+          "clearanceReferenceElevation": 1.4681600361736546,
+          "canonicalTerrainElevation": 1.0962675796728343,
+          "minimumCameraY": 3.068160036173655,
+          "targetCameraY": 3.7181600361736544,
+          "clearance": 2.9104816184389852,
+          "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+          "verticalDelta": -0.02815206435215778,
+          "verticalAcceleration": 0,
+          "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+          "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_GRATITUDE_CENTRAL_HEADLAND_001",
+            "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+            "H_EARTH_GRATITUDE_SANCTUARY_BAY_001",
+            "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+            "H_EARTH_LOWLAND_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R07:C08",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0016",
+          "terrainSupported": true,
+          "sweptTerrainSupportSampleCount": 1,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false,
+          "geographyAuthorityCreated": false,
+          "topologyAuthorityCreated": false,
+          "navigationScaleAuthorityCreated": false
+        },
+        "check": {
+          "eligible": true,
+          "status": "NAVIGATION_STATE_PASS",
+          "issues": []
+        },
+        "resources": {
+          "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+          "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+          "presentationProfile": {
+            "terrainScaleCues": true,
+            "slopeReadability": true,
+            "routeContainment": true,
+            "manorSiteDifferentiation": true,
+            "cavernExteriorRelationDifferentiation": true,
+            "sharedMacroFrequencyCorrection": true,
+            "lawfulSlopeCurvatureModulation": true,
+            "boundedContactDepthReinforcement": true,
+            "temporallyStableWorldSpaceVariation": true,
+            "regressionColorDiversityRestoration": true,
+            "cavernNearThresholdReinforcement": true,
+            "geometryMutation": false,
+            "terrainMutation": false,
+            "placementMutation": false,
+            "cameraMutation": false,
+            "touchMutation": false
+          },
+          "initialized": true,
+          "dimensions": {
+            "width": 720,
+            "height": 1000
+          },
+          "context": {
+            "created": true,
+            "lost": false,
+            "vendor": "WebKit",
+            "renderer": "WebKit WebGL",
+            "unmaskedVendor": "Google Inc. (Google)",
+            "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+          },
+          "package": {
+            "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+            "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0FDD954B",
+            "runtimeContentDigest": "fnv1a32:0fdd954b",
+            "primitiveCount": 10,
+            "vertexCount": 23626,
+            "triangleCount": 42736,
+            "indexCount": 128208,
+            "drawRangeCount": 4,
+            "canonicalGpuTransport": true
+          },
+          "rendererInterface": {
+            "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+            "attributeCount": 8,
+            "uniformCount": 12,
+            "drawRangeCount": 4
+          },
+          "counters": {
+            "contextCreationCount": 1,
+            "shaderCreateCount": 4,
+            "shaderCompileCount": 4,
+            "programCreateCount": 2,
+            "programLinkCount": 2,
+            "vertexArrayCreateCount": 1,
+            "bufferCreateCount": 11,
+            "bufferUploadCount": 11,
+            "uploadedByteLength": 2143026,
+            "textureCreateCount": 3,
+            "framebufferCreateCount": 2,
+            "postInitializationResourceCreationCount": 0,
+            "postInitializationBufferUploadCount": 0,
+            "frameCount": 10,
+            "visiblePresentationCount": 10,
+            "colorReadbackCount": 0,
+            "depthReadbackCount": 0,
+            "pngEncodingCount": 0,
+            "gpuFinishCount": 0,
+            "cameraUniformUpdateCount": 30,
+            "staticUniformUpdateCount": 10,
+            "geometryDrawCallCount": 30,
+            "totalDrawnIndexCount": 2141040,
+            "depthVisualizationDrawCallCount": 0,
+            "refinementResourceCreateCount": 0,
+            "refinementBufferUploadCount": 0,
+            "refinementDrawCallCount": 0,
+            "vegetationBatchMaterializationCount": 108,
+            "vegetationResidentInstanceCount": 27585,
+            "vegetationResidentPrimitiveCount": 64,
+            "vegetationBufferUploadCount": 1188,
+            "vegetationDrawCallCount": 1080,
+            "worldRebuildCount": 0
+          },
+          "persistentObjectCounts": {
+            "contexts": 1,
+            "programs": 2,
+            "shaders": 4,
+            "vertexArrays": 1,
+            "gpuBuffers": 11,
+            "textures": 3,
+            "framebuffers": 2
+          },
+          "resourceIdentityStable": true,
+          "packageUploadedOnce": true,
+          "noUnauthorizedPostInitializationResourceCreation": true,
+          "noUnauthorizedPostInitializationBufferUpload": true,
+          "authorizedVegetationPostReadyResidency": true,
+          "refinementResourceAuthorized": true,
+          "refinementResourceCreated": false,
+          "refinementResourceBufferUploadCount": 0,
+          "refinementPatchVertexCount": 0,
+          "refinementPatchTriangleCount": 0,
+          "refinementAnchor": null,
+          "refinementFallbackAvailable": false,
+          "contactField": {
+            "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+            "saturationMeters": 64,
+            "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+            "terrainTriangles": 20736,
+            "oceanTriangles": 17696,
+            "overlapTests": 62308,
+            "contactSegments": 434,
+            "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+            "patchTriangles": 0,
+            "packageVertices": 10573,
+            "patchVertices": 0,
+            "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+            "contactTrianglesWithoutVertexSignChange": 0,
+            "initializationMilliseconds": 227.80000000074506,
+            "buildCount": 1,
+            "totalBuildMilliseconds": 227.80000000074506
+          },
+          "vegetationResidency": {
+            "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+            "totalInstanceCount": 27585,
+            "totalBatchCount": 108,
+            "maxInstancesPerBatch": 256,
+            "residentInstanceCount": 27585,
+            "residentBatchCount": 108,
+            "residentPrimitiveCount": 64,
+            "complete": true,
+            "droppedPlacementCount": 0,
+            "worldRebuildCount": 0,
+            "cameraIndependent": true
+          },
+          "canonicalPackageMutated": false
+        }
+      },
+      "afterTouchButton": {
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+          "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0015",
+          "sequence": 15,
+          "action": "STRAFE_RIGHT",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": -8.465959784408517,
+            "y": 3.609986059334508,
+            "z": -158.86578887174286
+          },
+          "yawDegrees": 5,
+          "pitchDegrees": -19,
+          "verticalFovDegrees": 56,
+          "terrainElevation": 0.6930514095157809,
+          "visibleTerrainElevation": 0.6930514095157809,
+          "clearanceReferenceElevation": 1.3599860593345083,
+          "canonicalTerrainElevation": 0.9885350826310413,
+          "minimumCameraY": 2.9599860593345086,
+          "targetCameraY": 3.609986059334508,
+          "clearance": 2.916934649818727,
+          "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+          "verticalDelta": -0.03716333525201687,
+          "verticalAcceleration": 0,
+          "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+          "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_GRATITUDE_CENTRAL_HEADLAND_001",
+            "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+            "H_EARTH_GRATITUDE_SANCTUARY_BAY_001",
+            "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+            "H_EARTH_LOWLAND_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R07:C08",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0015",
+          "terrainSupported": true,
+          "sweptTerrainSupportSampleCount": 1,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false,
+          "geographyAuthorityCreated": false,
+          "topologyAuthorityCreated": false,
+          "navigationScaleAuthorityCreated": false
+        },
+        "check": {
+          "eligible": true,
+          "status": "NAVIGATION_STATE_PASS",
+          "issues": []
+        }
+      },
+      "afterResize": {
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+          "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0015",
+          "sequence": 15,
+          "action": "STRAFE_RIGHT",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": -8.465959784408517,
+            "y": 3.609986059334508,
+            "z": -158.86578887174286
+          },
+          "yawDegrees": 5,
+          "pitchDegrees": -19,
+          "verticalFovDegrees": 56,
+          "terrainElevation": 0.6930514095157809,
+          "visibleTerrainElevation": 0.6930514095157809,
+          "clearanceReferenceElevation": 1.3599860593345083,
+          "canonicalTerrainElevation": 0.9885350826310413,
+          "minimumCameraY": 2.9599860593345086,
+          "targetCameraY": 3.609986059334508,
+          "clearance": 2.916934649818727,
+          "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+          "verticalDelta": -0.03716333525201687,
+          "verticalAcceleration": 0,
+          "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+          "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_GRATITUDE_CENTRAL_HEADLAND_001",
+            "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+            "H_EARTH_GRATITUDE_SANCTUARY_BAY_001",
+            "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+            "H_EARTH_LOWLAND_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R07:C08",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0015",
+          "terrainSupported": true,
+          "sweptTerrainSupportSampleCount": 1,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false,
+          "geographyAuthorityCreated": false,
+          "topologyAuthorityCreated": false,
+          "navigationScaleAuthorityCreated": false
+        },
+        "resources": {
+          "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+          "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+          "presentationProfile": {
+            "terrainScaleCues": true,
+            "slopeReadability": true,
+            "routeContainment": true,
+            "manorSiteDifferentiation": true,
+            "cavernExteriorRelationDifferentiation": true,
+            "sharedMacroFrequencyCorrection": true,
+            "lawfulSlopeCurvatureModulation": true,
+            "boundedContactDepthReinforcement": true,
+            "temporallyStableWorldSpaceVariation": true,
+            "regressionColorDiversityRestoration": true,
+            "cavernNearThresholdReinforcement": true,
+            "geometryMutation": false,
+            "terrainMutation": false,
+            "placementMutation": false,
+            "cameraMutation": false,
+            "touchMutation": false
+          },
+          "initialized": true,
+          "dimensions": {
+            "width": 720,
+            "height": 1000
+          },
+          "context": {
+            "created": true,
+            "lost": false,
+            "vendor": "WebKit",
+            "renderer": "WebKit WebGL",
+            "unmaskedVendor": "Google Inc. (Google)",
+            "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+          },
+          "package": {
+            "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+            "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0FDD954B",
+            "runtimeContentDigest": "fnv1a32:0fdd954b",
+            "primitiveCount": 10,
+            "vertexCount": 23626,
+            "triangleCount": 42736,
+            "indexCount": 128208,
+            "drawRangeCount": 4,
+            "canonicalGpuTransport": true
+          },
+          "rendererInterface": {
+            "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+            "attributeCount": 8,
+            "uniformCount": 12,
+            "drawRangeCount": 4
+          },
+          "counters": {
+            "contextCreationCount": 1,
+            "shaderCreateCount": 4,
+            "shaderCompileCount": 4,
+            "programCreateCount": 2,
+            "programLinkCount": 2,
+            "vertexArrayCreateCount": 1,
+            "bufferCreateCount": 11,
+            "bufferUploadCount": 11,
+            "uploadedByteLength": 2143026,
+            "textureCreateCount": 3,
+            "framebufferCreateCount": 2,
+            "postInitializationResourceCreationCount": 0,
+            "postInitializationBufferUploadCount": 0,
+            "frameCount": 28,
+            "visiblePresentationCount": 28,
+            "colorReadbackCount": 0,
+            "depthReadbackCount": 0,
+            "pngEncodingCount": 0,
+            "gpuFinishCount": 0,
+            "cameraUniformUpdateCount": 84,
+            "staticUniformUpdateCount": 10,
+            "geometryDrawCallCount": 84,
+            "totalDrawnIndexCount": 5994912,
+            "depthVisualizationDrawCallCount": 0,
+            "refinementResourceCreateCount": 0,
+            "refinementBufferUploadCount": 0,
+            "refinementDrawCallCount": 0,
+            "vegetationBatchMaterializationCount": 108,
+            "vegetationResidentInstanceCount": 27585,
+            "vegetationResidentPrimitiveCount": 64,
+            "vegetationBufferUploadCount": 1188,
+            "vegetationDrawCallCount": 3024,
+            "worldRebuildCount": 0
+          },
+          "persistentObjectCounts": {
+            "contexts": 1,
+            "programs": 2,
+            "shaders": 4,
+            "vertexArrays": 1,
+            "gpuBuffers": 11,
+            "textures": 3,
+            "framebuffers": 2
+          },
+          "resourceIdentityStable": true,
+          "packageUploadedOnce": true,
+          "noUnauthorizedPostInitializationResourceCreation": true,
+          "noUnauthorizedPostInitializationBufferUpload": true,
+          "authorizedVegetationPostReadyResidency": true,
+          "refinementResourceAuthorized": true,
+          "refinementResourceCreated": false,
+          "refinementResourceBufferUploadCount": 0,
+          "refinementPatchVertexCount": 0,
+          "refinementPatchTriangleCount": 0,
+          "refinementAnchor": null,
+          "refinementFallbackAvailable": false,
+          "contactField": {
+            "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+            "saturationMeters": 64,
+            "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+            "terrainTriangles": 20736,
+            "oceanTriangles": 17696,
+            "overlapTests": 62308,
+            "contactSegments": 434,
+            "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+            "patchTriangles": 0,
+            "packageVertices": 10573,
+            "patchVertices": 0,
+            "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+            "contactTrianglesWithoutVertexSignChange": 0,
+            "initializationMilliseconds": 227.80000000074506,
+            "buildCount": 1,
+            "totalBuildMilliseconds": 227.80000000074506
+          },
+          "vegetationResidency": {
+            "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+            "totalInstanceCount": 27585,
+            "totalBatchCount": 108,
+            "maxInstancesPerBatch": 256,
+            "residentInstanceCount": 27585,
+            "residentBatchCount": 108,
+            "residentPrimitiveCount": 64,
+            "complete": true,
+            "droppedPlacementCount": 0,
+            "worldRebuildCount": 0,
+            "cameraIndependent": true
+          },
+          "canonicalPackageMutated": false
+        }
+      }
+    },
+    "errors": []
+  },
+  "exactProductFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "sha256": "4a1cbaf7d4e9828d91adbc44d4b4e37559643332ca0ed605b206de865242455d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+      "sha256": "0a6a6b49905c098d8ab6757f2db935ecdff327679ee01102f14959611f71a00c"
+    },
+    {
+      "path": "h-earth-lowland-grass-trial-evidence/index.html",
+      "sha256": "43e99640dbe914c0c02615f3209aaa8eb5d2633bf34f00a7c8a6c8d0dc9f6ffc"
+    }
+  ],
+  "visualReview": {
+    "reviewer": "parent and independent grass_scope agent",
+    "result": "PASS_BOUNDED_ENGINEERING_REVIEW",
+    "observations": [
+      "Grass on dry bank and rounded brown cattail heads along actual water edge",
+      "No obvious floating roots across before/after walking views",
+      "Same canonical terrain, water and horizon",
+      "Responsive overlay controls remain usable in portrait and landscape"
+    ],
+    "limitations": [
+      "Owner physical and perceptual acceptance pending",
+      "Thin grass is stippled at distance; existing shoreline polygonal",
+      "No new full globe-to-ground traversal claimed; unchanged higher-scale code inherited from baseline",
+      "Software GPU checks are not target phone frame-rate qualification"
+    ]
+  },
+  "visualCapture": {
+    "mimeType": "image/jpeg",
+    "source": "Actual Chromium screenshot of exact product files; JPEG encoding of PNG",
+    "pngSha256": "83d6b1dab46f3f5803137d2ea6001af8eb6ce2a2695fe1da8e6c1ef70ad6d10c",
+    "base64": "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VAQFAChAcnRUBAUAKEByUqAhSgIUAIdBAQpUByUoCFADkoAQoAQAAAAAAAAAKAEKAEKAEAAAAAAAIAFAAQoAQoAQoAQoAQpUAAAAAAAAAAQpUBAAAFQAFAAAEKAHJQAgAAAAAAKAAAAAAAAAAAAACFACAAKQAKAApCoDIKcoo5KUAIAFAAUgAdEIAoAACoACoACoACoACoCkKAAICFKgOSlEVCgAIBFUAAAEUAAQARQARQARUAEAAAAAUAAAAQoAQAAAAQoAQABCgBCgBAAAoAAAEKAEAACBQUEAClQEAAQoAQABClAQoAQoAQoAcnQAQoAQoQEBQEKAEAAAAAAAAAAAAAAAAAAUAEAAAAAAAAAAAAQoAQAFUAQQoAQoAQAFQpUQcnRQHJQAFAKACAAAhQCoUCKhQIqFAioUCKhQAgAAAAyQcCgUCKhQIOToArkoEUAVABAAABSAFUAQAAAAAAAQpUBAAFIAFIAAoAQABClQEKVAQFQAFQAFQAFAQoAAAFAQAFQEKVAclKgICgKAgIUoCAAAAAAAhQAgAigAigAggAKFAioUAIUAIUCKhQIqFAioUCCAAoAIqFAioUqIqACKhQIqAqIqFKgAKiKFKiKhSoioCoigKIqFACFCAAqIoUqIqFKiKhSoDkpQEAAABFABFCgRUKAEKAEAAABFQoAQAAAAUAAKVAcnRUByUqAAoAUICAqAAoAAAhQAyAcCiFAAUAIAApAAFADk6AiuSgBAAAABQBFAAAABQBFQoAQARUKBFQARQARQAAAEUAEUAEUAEUKBFclAioUCKhQIoAIAACAAoAIoAIoAIoCoioUCCAAAKgIUoCAAAACFAAUAACAAABSgACAhSoDgpQEAAAAAoAQoAQoAAAEKAHBQAhQAFAAUAOSgBCgByUABQAhQAhQAhQAgACFACFKgIUAAAAUqA5KAEKAEKAEKFBCgBDoIDk7KgOClAQABDoAIUAIUAIUAIUAOSgBAAAABkFORQAACgAAAQoAcnQAQAAAAAAEOgA5KAAABCgAAAAAAABCgBAAAAAKAHJ0AHJQAgAAAApAAoACFAAQABQAhQA5OgAgAAAAhQAhQAhQAhQA5KAEKAEKAEKAEKBFAVEVChQQpFABAAoAQABClRFclKIoAIAAAAAgAKACAAAhQAhQCoUCCFAAAAAAIUAAACFACFACAAoUCCFACFADkoAQoAAAAAAAAAAUKBBAAUAEUAEEAAAAUAVFAEQAVAAUFAAAARUKBFQARWQU5BUKBFABAAAAAAgBQARQARVIBFUoEEKAEKAHJ0AHJQAhQAgACkACkAAUAIUAIAApAApQA5OgA5OgA4OgA5KAEKAEAAAAFAACgByUAIUAIAAFACFACFADkoAclAAAAAAAACFACFAAAAAAAAAAAh0AHJQA5KAEBQEKQBClQEKVAAUAAAQ6CA5OioDk6KgOToqA5KUBCgBCgBChAQpQEKAEKAEKAEAAQoAQAAAAAAAABQBFAAAgACgBCgBAAAAAAAQAAAAAVAClQEBUABUBkA5FFIAFIAAoAQAAAAAVAAUAKEBCgAAAUhURVIBFCgBClRFcnRURXJSoiuSlRFclKAEAiuiARVAEUKBFCBEVSFRFUFRFAVEVClRFclKIOSgBAAVSAQUAAABQAAAAABFABFQoEVABFABFAERQFEUAEUAEUAEUAEUAEAAAABQAQQAFQARUKBBAAAAAKAAAFABFABFABFCAQAAAhUBQAAAABUAKAEKAEBUABUBClQEKVAQpUBAVAAVAAUAAAQoAAEABQAAByUAIAAAAAAAAAAABQAgADJKciqhQIIUAIdAByUAIUAOToAOToAIUAIUAIAAAAAAAAAoAAQAKAAhQA5KAHJSoCAqAAqAoACkACkAAUAIAApAApAAFADk6KgOSlQHJSgBAA6OSKDohAFAAQoAQAAAAQpQEBAAgUFIAFAQAAABUABUABUAIUBSAAAAQoAQ6ADkoAQAAAACgBCgBCgBAAAABCgRXJQIoAIoACAAqKACqAAgAioUCKAAIUCKgAgAAIACgAgAAAAAAAAAACioUCCAAAAAAAhQAAABQCoUCKyQcigAAAAAAAAIoAIoAIqFAioAIqkAiqAIqFAioUCKgAihQIIUArkoEEAAAAAAAIAAoAQAAKAEAAQoAQABSBQUEAU5ADogACgBCgByUAIUqA5KVAQFAUhFB0QgCgAIAAhSoDkpQEKEBClQEKUABFBQEABUBCgBAAABQCAAAAAAAAAAAARQAAABAQFAAAEKAAgAAAAoAQoAAAFIAFIAAAAAAAAEAAAAAARQABCgBCgBABFABFABFABABUUCFQFAVFAQRQFQQAAAAGQUiOhAUBQAABAClQEKVAclKgIUoCAAAAAAAAAAACkAAA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WiI7Z+HmgMX9qneymfP3Nc8o1fLAAaP26OXbLey/3+p/bsj4YgDVFFMaIbWRPVrn+U6svBjgOPLTyjudtvnrn+VXfLUpAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAApAA9AHz4+yUIARQBQAAAAAoEHJQAhQA5KAEKAEBURUKVEVClRFQpURXJ0VEVwdlEHB0AHJ0AHJ0BFclAiuToCK5KBFcnRUQcHRUByUqAAoCFACFAAAAoAAAgAKgIUqA5OigODoCK5FoNsUVThEo01dWinGqPHwDjiNTNjozpmNu5ueXP3VOimZ45fLs1WzCerHSpjfxeo+fq+46lXKOH1u2mg8p7sREYZPfwfKTM1YzM8W60aTyY6dU6LcXrvoauv06dN+Gf0fONnEazAjo857me9er7r+tOufj6vIdWcmiOnTGi/FvZVXX6lWm3DL6sUADEABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFABFeiD58fZAAAhQAhQAgACkACgAAAAAAhQAhQIqFAiuToCK5OgIrkoEVCgQQoAcnQAclKiKhSoioCoioUqIrk6KiK5KUQcnQAclADk6AiuSgRUAdREzhF0cVVU04zEIa+I5Z9PR5zqh28mv7r+sX3z8Npj2zAe1FFMYQ9Z8xV1a6sap8PBvsxjyIpmcIl7j6OqumnGYh8o38RoPLjo1Tjk9R71X3NEYXq7I7fh4LZxM1mHHRpjG8sx6VX3Nc4REds/HY81bIcRTFOEO22quqvGZnw7sGoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeiD58fZAAApAAAAAAAAAAAKQAKQAKAAAAIUIACoAAoBQAhQA5OgA5KAEKBFclACFAioAIqFAghQomDk1uaIy6ejVOOXirzq/uaKcPy8O92Yrk2Yr2KenTTo73oPmq+tXXjNo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"
+  },
+  "continuity": {
+    "terrainWaterRendererNavigationModelChanged": false,
+    "legacyGrassRendered": false,
+    "acceptedFourTuftsPreserved": true,
+    "additionalPlantsPresentationOnly": true,
+    "planetaryRegionalGroundSpacePreservedByUnchangedDependencies": true,
+    "waterDescription": "Existing exposed water surface; no freshwater or new hydrology claim",
+    "productionPublished": false,
+    "ownerReview": "PENDING"
+  },
+  "operationRequest": {
+    "allowedPaths": [
+      "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+      "h-earth-lowland-grass-trial-evidence/index.html",
+      "h-earth-lowland-grass-trial-evidence/oasis-receipt.json",
+      "h-earth-3d/experience-anchor/receipts/h-earth-oasis-foliage-sample-20261003.json"
+    ],
+    "artifactPaths": [
+      "h-earth-lowland-grass-trial-evidence"
+    ],
+    "constructionProcedureLocator": "INLINE_OWNER_AUTHENTICATED_SOURCE_ENVELOPE#constructionProcedure",
+    "errorPrecedence": [
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "RELEVANT_EXACT_HEAD_OR_DEPENDENCY_MISMATCH",
+      "OUTSIDE_SAMPLE_OR_PROTECTED_SURFACE_CHANGED",
+      "QUALIFIED_PLACEMENT_IDENTITY_CHANGED",
+      "ACCEPTED_GRASS_CHANGED_OR_LEGACY_GRASS_RENDERED",
+      "ROOT_NOT_ON_FINAL_TRIANGLE",
+      "INELIGIBLE_ROOT_OR_WATER_CLEARANCE",
+      "GEOMETRY_OR_BUDGET_FAILURE",
+      "RENDER_OR_NAVIGATION_REGRESSION",
+      "OWNER_REVIEW_PENDING"
+    ],
+    "exactGoverningHead": "85b71b1d055216cef543853ab25905cd2036d638",
+    "exactTestCommand": "node showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+    "executingRole": {
+      "role": "TARIAN_S_INTEGRATION",
+      "scope": "FIVE_EXACT_PATHS_BOUNDED_OASIS_PRESENTATION_AND_PREVIEW"
+    },
+    "fingerprintDomain": {
+      "acceptedFourTuftBuilderSha256": "7a908ba17b685bd6dcaf2c197e2bb9750b56f41d1ced1cbd727a30de7263ec5d",
+      "allowedPaths": [
+        "showroom/globe/h-earth/render/grass-lowland-trial.js",
+        "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+        "h-earth-lowland-grass-trial-evidence/index.html",
+        "h-earth-lowland-grass-trial-evidence/oasis-receipt.json",
+        "h-earth-3d/experience-anchor/receipts/h-earth-oasis-foliage-sample-20261003.json"
+      ],
+      "batchCount": 108,
+      "bounds": {
+        "maxX": 2,
+        "maxZ": -158,
+        "minX": -14,
+        "minZ": -174
+      },
+      "canonicalWaterPrimitive": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+      "freshwaterClaim": false,
+      "instanceCount": 27585,
+      "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+      "newPresentationOnly": true,
+      "nonvegetation": "BYTE_IDENTICAL",
+      "outsideSamplePresentation": "BYTE_IDENTICAL_TO_CLEAN_PREDECESSOR_EXCEPT_PRESERVED_ACCEPTED_FOUR",
+      "parentHead": "c449707775fabd8574ec7f5e9787eaebcb7d2309",
+      "preservedAcceptedPatchBounds": {
+        "maxX": -16,
+        "maxZ": -142,
+        "minX": -32,
+        "minZ": -158
+      }
+    },
+    "functionalCoordination": {
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "authorityEffect": "NONE",
+      "functionalBearing": {
+        "bearings": [
+          "ESE",
+          "SSW"
+        ],
+        "exemptionReason": null,
+        "mode": "ROUTE"
+      },
+      "primitiveRequirements": [
+        "E",
+        "S",
+        "W"
+      ],
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+    },
+    "independentVerifier": {
+      "actualExecution": {
+        "geometryBuilder": "/root/grass_geometry",
+        "independentVerifier": "/root/grass_scope",
+        "integration": "/root"
+      },
+      "checks": [
+        "all 108 batches preserve 27585 canonical placement IDs/counts and qualified manifest identity",
+        "zero rendered legacy grass; preserve predecessor cleanup",
+        "accepted four tuft builder source SHA256 7a908ba17b685bd6dcaf2c197e2bb9750b56f41d1ced1cbd727a30de7263ec5d unchanged and accepted root contacts pass",
+        "24 additional dry grass tufts and 18 three-dimensional cattails; 60 added primitives 26712 triangles within 100000 budget",
+        "3924 new root vertices independently tested against actual Float32 terrain and existing water triangles",
+        "dry root clearance 0.035..1.10 metres; wet root clearance -0.30..0.18 metres; finite slope <=0.45 and LOWLAND_SOIL or COASTAL_SOIL",
+        "per-root estate exclusions and planning holds empty",
+        "all added vertices inside exact sample bounds; finite nondegenerate geometry; 18 seedheads closed consistently wound outward meshes",
+        "repeat generation deterministic; unchanged base package, terrain, water, navigation model, renderer and distant presentation",
+        "browser first frame, full 108-batch consumption, 64 actual rendered primitives, no WebGL errors or world rebuilds",
+        "preview full-world movement through existing navigation API; direct oasis view; owner physical KEEP ONE_REPAIR REJECT pending"
+      ],
+      "implementationAuthorMaySelfCertify": false,
+      "physicalReview": "OWNER_KEEP_ONE_REPAIR_REJECT",
+      "required": true,
+      "role": "INDEPENDENT_SOREN_W_DELTA_VERIFIER"
+    },
+    "intakeCompletenessReceipt": {
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "d39a45c7817e2ed1c56c56cf31cf90c3bad329afc36bcfe608a9e0ea0612182f",
+      "receiptId": "H_EARTH_OASIS_FOLIAGE_SAMPLE_20261003_001:INTENT_COMPLETE",
+      "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "unresolvedMaterialQuestions": []
+    },
+    "lockScope": "H_EARTH:ACTIVE_ROOT:OASIS_FOLIAGE_SAMPLE:20261003",
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "operationId": "H_EARTH_OASIS_FOLIAGE_SAMPLE_20261003_001",
+    "prohibitedPaths": [
+      "ALL_OTHER_REPOSITORY_PATHS",
+      "GLOBAL_PLACEMENT_MANIFEST_MUTATION",
+      "TERRAIN_WATER_STRUCTURES_NAVIGATION_MODEL_RENDERER_MUTATION",
+      "DISTANT_PRESENTATION_MUTATION",
+      "MERGE_DEPLOYMENT_PUBLICATION"
+    ],
+    "projectId": "H_EARTH",
+    "requestingAuthority": {
+      "deploymentAuthority": false,
+      "intent": {
+        "objective": "Create bounded oasis sample with accepted grass style, natural clustered dry-bank grass, and three-dimensional cattails on actual existing inland-looking water edge; preview full navigable world using unchanged navigation API",
+        "ownerInstruction": "Owner accepted new grass, directed removal of legacy grass, then authorized bounded oasis sample and proceeding with full navigable world preview",
+        "preservedAcceptedPatchBounds": {
+          "maxX": -16,
+          "maxZ": -142,
+          "minX": -32,
+          "minZ": -158
+        },
+        "publication": false,
+        "sampleBounds": {
+          "maxX": 2,
+          "maxZ": -158,
+          "minX": -14,
+          "minZ": -174
+        }
+      },
+      "mergeAuthority": false,
+      "role": "OWNER",
+      "source": "OWNER_EXPLICIT_OASIS_AND_FULL_NAVIGABLE_WORLD_PREVIEW_AUTHORIZATION_CURRENT_SESSION"
+    },
+    "requiredInputs": [
+      {
+        "id": "EXACT_CANDIDATE_c449707775fabd8574ec7f5e9787eaebcb7d2309",
+        "resolved": true
+      },
+      {
+        "id": "OWNER_ACCEPTED_GRASS_AND_CLEANUP_AND_AUTHORIZED_OASIS",
+        "resolved": true
+      },
+      {
+        "id": "ACTUAL_TRIANGLE_WATER_BANK_AND_INDEPENDENT_VERIFICATION",
+        "resolved": true
+      }
+    ],
+    "requiredOutputs": [
+      "EXACT_ISOLATED_OASIS_CANDIDATE",
+      "INDEPENDENT_OASIS_AND_PRESERVATION_EVIDENCE",
+      "FULL_NAVIGABLE_WORLD_PREVIEW_FOR_OWNER",
+      "EXPERIENCE_ANCHOR_RECEIPT"
+    ],
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "stopConditions": [
+      "MISSING_AUTHENTIC_ADMISSION",
+      "OVERLAPPING_ACTIVE_MUTATION_SCOPE",
+      "CHANGE_OUTSIDE_EXACT_ALLOWED_PATHS_REQUIRED",
+      "ROOT_CONTACT_OR_PRESERVATION_FAILURE",
+      "OWNER_PHYSICAL_REVIEW_PENDING_NO_MERGE_OR_PRODUCTION"
+    ],
+    "subjectIdentity": {
+      "baseHead": "c449707775fabd8574ec7f5e9787eaebcb7d2309",
+      "objective": "Create bounded oasis sample with accepted grass style, natural clustered dry-bank grass, and three-dimensional cattails on actual existing inland-looking water edge; preview full navigable world using unchanged navigation API",
+      "ownerInstruction": "Owner accepted new grass, directed removal of legacy grass, then authorized bounded oasis sample and proceeding with full navigable world preview",
+      "predecessorClosureComment": 5965161750,
+      "predecessorClosureStatus": "SUBMITTED_AWAIT_AUTHENTIC_TERMINAL_RECEIPT",
+      "predecessorGeneration": 2529,
+      "predecessorOperation": "H_EARTH_LOWLAND_GRASS_PRESENTATION_TRIAL_20261003_002",
+      "preservedAcceptedPatchBounds": {
+        "maxX": -16,
+        "maxZ": -142,
+        "minX": -32,
+        "minZ": -158
+      },
+      "publication": false,
+      "sampleBounds": {
+        "maxX": 2,
+        "maxZ": -158,
+        "minX": -14,
+        "minZ": -174
+      }
+    },
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "WITHDRAWN"
+    ],
+    "workflowPath": "LOCAL_NATIVE_NODE_EXECUTOR_V1"
+  },
+  "constructionProcedure": {
+    "bridgeOutputFingerprintDomain": {
+      "acceptedFourTuftBuilderSha256": "7a908ba17b685bd6dcaf2c197e2bb9750b56f41d1ced1cbd727a30de7263ec5d",
+      "allowedPaths": [
+        "showroom/globe/h-earth/render/grass-lowland-trial.js",
+        "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+        "h-earth-lowland-grass-trial-evidence/index.html",
+        "h-earth-lowland-grass-trial-evidence/oasis-receipt.json",
+        "h-earth-3d/experience-anchor/receipts/h-earth-oasis-foliage-sample-20261003.json"
+      ],
+      "batchCount": 108,
+      "bounds": {
+        "maxX": 2,
+        "maxZ": -158,
+        "minX": -14,
+        "minZ": -174
+      },
+      "canonicalWaterPrimitive": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+      "freshwaterClaim": false,
+      "instanceCount": 27585,
+      "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+      "newPresentationOnly": true,
+      "nonvegetation": "BYTE_IDENTICAL",
+      "outsideSamplePresentation": "BYTE_IDENTICAL_TO_CLEAN_PREDECESSOR_EXCEPT_PRESERVED_ACCEPTED_FOUR",
+      "parentHead": "c449707775fabd8574ec7f5e9787eaebcb7d2309",
+      "preservedAcceptedPatchBounds": {
+        "maxX": -16,
+        "maxZ": -142,
+        "minX": -32,
+        "minZ": -158
+      }
+    },
+    "canonicalInputSchemas": [
+      "QUALIFIED_VEGETATION_MANIFEST",
+      "EXACT_CANDIDATE_TERRAIN_TRIANGLES"
+    ],
+    "canonicalOutputSchemas": [
+      "H_EARTH_OASIS_FOLIAGE_EVIDENCE_v1",
+      "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "RELEVANT_EXACT_HEAD_OR_DEPENDENCY_MISMATCH",
+      "OUTSIDE_SAMPLE_OR_PROTECTED_SURFACE_CHANGED",
+      "QUALIFIED_PLACEMENT_IDENTITY_CHANGED",
+      "ACCEPTED_GRASS_CHANGED_OR_LEGACY_GRASS_RENDERED",
+      "ROOT_NOT_ON_FINAL_TRIANGLE",
+      "INELIGIBLE_ROOT_OR_WATER_CLEARANCE",
+      "GEOMETRY_OR_BUDGET_FAILURE",
+      "RENDER_OR_NAVIGATION_REGRESSION",
+      "OWNER_REVIEW_PENDING"
+    ],
+    "evaluationToolingHeadBindingRule": "Governance head pinned 85b71b1d055216cef543853ab25905cd2036d638; product parent c449707775fabd8574ec7f5e9787eaebcb7d2309. Disjoint main movement uses differential continuity without restarting accepted work. Only relevant dependency/scope changes invalidate evidence. Preserve accepted four grass tufts and predecessor removal of legacy grass. Compiler readiness creates no admission authority.",
+    "exactAllowedRepositoryPaths": [
+      "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+      "h-earth-lowland-grass-trial-evidence/index.html",
+      "h-earth-lowland-grass-trial-evidence/oasis-receipt.json",
+      "h-earth-3d/experience-anchor/receipts/h-earth-oasis-foliage-sample-20261003.json"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "action": "VERIFY_PREDECESSOR_TERMINAL_RECEIPT_AND_AUTHENTIC_NEW_ADMISSION",
+        "step": 1
+      },
+      {
+        "action": "BIND_EXACT_CHILD_OF_c449707775fabd8574ec7f5e9787eaebcb7d2309",
+        "step": 2
+      },
+      {
+        "action": "REUSE_ACCEPTED_FOUR_GRASS_GEOMETRY_AND_CLEAN_PREDECESSOR",
+        "step": 3
+      },
+      {
+        "action": "BOUND_ADDED_DRY_GRASS_AND_CATTAILS_TO_DECLARED_SAMPLE_ACTUAL_TERRAIN_WATER_TRIANGLES",
+        "step": 4
+      },
+      {
+        "action": "INDEPENDENT_108_BATCH_ROOT_GEOMETRY_PRESERVATION_AND_DETERMINISM_CHECKS",
+        "step": 5
+      },
+      {
+        "action": "BUILD_FULL_NAVIGABLE_WORLD_PREVIEW_USING_UNCHANGED_NAVIGATION_API",
+        "step": 6
+      },
+      {
+        "action": "WRITE_EVIDENCE_AND_EXPERIENCE_ANCHOR_RECEIPTS",
+        "step": 7
+      },
+      {
+        "action": "PRESERVE_IMMUTABLE_CANDIDATE_AND_STOP_FOR_OWNER_PHYSICAL_DISPOSITION_NO_MERGE_NO_PRODUCTION",
+        "step": 8
+      }
+    ],
+    "exactGoverningHead": "85b71b1d055216cef543853ab25905cd2036d638",
+    "exactTestRunnerCommand": "node showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+    "independentVerifierDefinition": {
+      "actualExecution": {
+        "geometryBuilder": "/root/grass_geometry",
+        "independentVerifier": "/root/grass_scope",
+        "integration": "/root"
+      },
+      "checks": [
+        "all 108 batches preserve 27585 canonical placement IDs/counts and qualified manifest identity",
+        "zero rendered legacy grass; preserve predecessor cleanup",
+        "accepted four tuft builder source SHA256 7a908ba17b685bd6dcaf2c197e2bb9750b56f41d1ced1cbd727a30de7263ec5d unchanged and accepted root contacts pass",
+        "24 additional dry grass tufts and 18 three-dimensional cattails; 60 added primitives 26712 triangles within 100000 budget",
+        "3924 new root vertices independently tested against actual Float32 terrain and existing water triangles",
+        "dry root clearance 0.035..1.10 metres; wet root clearance -0.30..0.18 metres; finite slope <=0.45 and LOWLAND_SOIL or COASTAL_SOIL",
+        "per-root estate exclusions and planning holds empty",
+        "all added vertices inside exact sample bounds; finite nondegenerate geometry; 18 seedheads closed consistently wound outward meshes",
+        "repeat generation deterministic; unchanged base package, terrain, water, navigation model, renderer and distant presentation",
+        "browser first frame, full 108-batch consumption, 64 actual rendered primitives, no WebGL errors or world rebuilds",
+        "preview full-world movement through existing navigation API; direct oasis view; owner physical KEEP ONE_REPAIR REJECT pending"
+      ],
+      "implementationAuthorMaySelfCertify": false,
+      "physicalReview": "OWNER_KEEP_ONE_REPAIR_REJECT",
+      "required": true,
+      "role": "INDEPENDENT_SOREN_W_DELTA_VERIFIER"
+    },
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "priorAttemptInspectionLimits": {
+      "doNotRestartWorldwidePlacement": true,
+      "doNotTreatOldGrassAsImprovedGeometry": true,
+      "noControlPlaneRedesign": true,
+      "reuseSavedAudit": true
+    },
+    "procedureId": "H_EARTH_OASIS_FOLIAGE_SAMPLE_20261003_001:PROCEDURE",
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "workflowAndArtifactPackagingPaths": {
+      "artifactPaths": [
+        "h-earth-lowland-grass-trial-evidence"
+      ],
+      "workflowPath": "LOCAL_NATIVE_NODE_EXECUTOR_V1"
+    }
+  }
+}

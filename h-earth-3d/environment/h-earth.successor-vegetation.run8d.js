@@ -381,8 +381,6 @@ export function compareHEarthGen311PlacementRepeatability(){
 }
 
 
-export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;
-
 // Gen2514 consumes qualified Gen2510 records; it does not invoke the old population planner.
 export const H_EARTH_GEN2514_PLACEMENT_ARCHETYPE_ADAPTER_CONTRACT_ID =
   'H_EARTH_GEN2510_PLACEMENT_TO_RUN8D_ARCHETYPE_ADAPTER_v1';

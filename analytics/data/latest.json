@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-03T14:40:36Z",
+  "generatedAt": "2026-10-03T16:42:14Z",
   "window30d": {
-    "start": "2026-09-03T14:40:36Z",
-    "end": "2026-10-03T14:40:36Z"
+    "start": "2026-09-03T16:42:14Z",
+    "end": "2026-10-03T16:42:14Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 80
+      "pageLoads": 77
     },
     {
       "date": "2026-09-27",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 17
+      "pageLoads": 19
     }
   ],
   "summary": {
-    "pageLoads": 6442,
-    "botPageLoads": 2437,
-    "nonBotPageLoads": 4005
+    "pageLoads": 6431,
+    "botPageLoads": 2436,
+    "nonBotPageLoads": 3995
   },
   "referrers": [
     {
@@ -140,7 +140,7 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2789,
+      "pageLoads": 2778,
       "visits": 0
     },
     {
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1658,
-      "visits": 1241
+      "pageLoads": 1649,
+      "visits": 1242
     },
     {
       "path": "/mirror-manor-preview/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 336,
-      "visits": 212
+      "pageLoads": 334,
+      "visits": 211
     },
     {
       "path": "/products/education/",

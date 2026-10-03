@@ -141,22 +141,44 @@ export function applyHEarthLowlandGrassTrialBatch(batch,renderPackage) {
 
 /** Owner-requested wet-edge visual sample. Existing continuous water is not reclassified as freshwater. */
 export const H_EARTH_OASIS_FOLIAGE_SAMPLE=freeze({
-  id:'H_EARTH_BOUNDED_WET_EDGE_FOLIAGE_SAMPLE_v1',
-  minX:-14,maxX:2,minZ:-174,maxZ:-158,bladesPerTuft:48,
+  id:'H_EARTH_CONNECTED_OASIS_BANK_FOLIAGE_GEN2532_v1',
+  minX:-18,maxX:34,minZ:-204,maxZ:-131,bladesPerTuft:48,
   batchId:'GEN2514_BATCH:H_EARTH_GEN311_PLACEMENT:0001527b',
   waterPrimitive:'FAR_OCEAN_CONTINUATION',waterAuthorityChanged:false,
-  canonicalPlacementAuthorityChanged:false,maximumTriangles:100000
+  canonicalPlacementAuthorityChanged:false,maximumTriangles:350000
 });
-const O=H_EARTH_OASIS_FOLIAGE_SAMPLE,oasisCache=new WeakMap(),waterForIndex=new WeakMap();
+const O=H_EARTH_OASIS_FOLIAGE_SAMPLE,oasisCache=new WeakMap(),waterForIndex=new WeakMap(),basinForIndex=new WeakMap(),basinCache=new WeakMap(),slopeForIndex=new WeakMap();
 const oasisInside=(x,z)=>Number.isFinite(x)&&Number.isFinite(z)&&x>=O.minX&&x<=O.maxX&&z>=O.minZ&&z<=O.maxZ;
+function actualTriangleSlope(index,triangleId){
+  let slopes=slopeForIndex.get(index);if(!slopes){slopes=new Map();for(const t of index.triangles){const [a,b,c]=t.vertices,ux=b.x-a.x,uy=b.y-a.y,uz=b.z-a.z,vx=c.x-a.x,vy=c.y-a.y,vz=c.z-a.z,nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;slopes.set(t.triangleId,Math.abs(ny)>1e-12?Math.hypot(nx,nz)/Math.abs(ny):Infinity);}slopeForIndex.set(index,slopes);}return slopes.get(triangleId)??Infinity;
+}
+function connectBasin(index,water){
+  const wet=new Set(),key=(x,z)=>`${x},${z}`;
+  for(let z=O.minZ;z<=O.maxZ;z++)for(let x=O.minX;x<=O.maxX;x++){
+    const t=sampleHEarthGrassTrialTerrain(index,x,z),w=sampleHEarthGrassTrialTerrain(water,x,z);if(t&&w&&w.y>t.y)wet.add(key(x,z));
+  }
+  const seed=key(-6,-164);if(!wet.has(seed))throw new Error('OASIS_CONNECTED_BASIN_SEED_NOT_WET');
+  const connected=new Set([seed]),queue=[[-6,-164]];
+  for(let i=0;i<queue.length;i++){const [x,z]=queue[i];for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]]){const q=key(x+dx,z+dz);if(wet.has(q)&&!connected.has(q)){connected.add(q);queue.push([x+dx,z+dz]);}}}
+  const distances=new Map([...connected].map(k=>[k,0])),bankQueue=queue.slice();
+  for(let i=0;i<bankQueue.length;i++){const [x,z]=bankQueue[i],d=distances.get(key(x,z));if(d>=4)continue;for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,nz=z+dz,k=key(nx,nz);if(oasisInside(nx,nz)&&!distances.has(k)){distances.set(k,d+1);bankQueue.push([nx,nz]);}}}
+  return {connected,distances,receipt:freeze({schema:'OASIS_CONNECTED_RENDERED_WATER_GRID_v1',seed:{x:-6,z:-164},gridSpacingMeters:1,adjacency:'FOUR_CARDINAL_NEIGHBORS',grassMaximumGridDistance:4,wetCells:queue.map(([x,z])=>({x,z})),wetCellCount:connected.size,waterPrimitive:O.waterPrimitive})};
+}
+export function buildHEarthOasisConnectedBasinIndex(renderPackage){
+  if(basinCache.has(renderPackage))return basinCache.get(renderPackage);
+  const terrain=buildHEarthGrassTrialTerrainIndex(renderPackage,O),water=buildHEarthGrassTrialTerrainIndex(renderPackage,O,true),basin=connectBasin(terrain,water);
+  const receipt=basin.receipt;basinCache.set(renderPackage,receipt);return receipt;
+}
 function oasisEligible(index,x,z,wet){
   if(!oasisInside(x,z))return false;
   const t=sampleHEarthGrassTrialTerrain(index,x,z),w=sampleHEarthGrassTrialTerrain(waterForIndex.get(index),x,z);
-  if(!t||!w)return false;
+  if(!t||!w||actualTriangleSlope(index,t.triangleId)>.45)return false;
   const clearance=t.y-w.y;
-  if(wet?(clearance<-.30||clearance>.18):(clearance<.035||clearance>1.10))return false;
+  if(wet?(clearance<-.45||clearance>0):(clearance<.035||clearance>1.10))return false;
+  const basin=basinForIndex.get(index),cell=`${Math.round(x)},${Math.round(z)}`;
+  if(wet?!basin.connected.has(cell):!basin.distances.has(cell))return false;
   const m=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);
-  if(!m.valid||!['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)||m.slope>.45)return false;
+  if(!m.valid||!['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)||!Number.isFinite(m.soilDepth)||m.soilDepth<.20||m.slope>.45)return false;
   const r=sampleHEarthGen311PlacementStructureDisposition(x,z);
   return r.status==='NO_KNOWN_ESTATE_FOOTPRINT_OVERLAP'&&!r.hardExclusions.length&&!r.planningHolds.length;
 }
@@ -166,9 +188,9 @@ function colorOasisPrimitive(primitive,kind,bankClearance=0){
   const dryness=Math.max(0,Math.min(1,(bankClearance-.035)/.80));
   if(kind==='GRASS'){
     // Stable per-blade palettes: olive, yellow-green, cooler green, and sparse straw.
-    const palettes=[[[65,78,33],[133,146,65]],[[84,96,39],[167,168,79]],[[39,75,42],[95,145,90]],[[85,70,38],[199,166,99]]];
+    const palettes=[[[65,78,33],[133,146,65]],[[116,111,45],[193,183,90]],[[39,75,42],[95,145,90]],[[110,79,40],[202,159,91]]];
     for(let base=0;base<verts.length;base+=16){
-      const draw=rng(),strawShare=.025+.13*dryness,yellowShare=.19+.20*dryness,oliveShare=.27;
+      const draw=rng(),strawShare=.18+.30*dryness,yellowShare=.25+.10*dryness,oliveShare=.18;
       const palette=palettes[draw<strawShare?3:draw<strawShare+yellowShare?1:draw<strawShare+yellowShare+oliveShare?0:2],shade=.89+rng()*.20;
       for(let i=0;i<16&&base+i<verts.length;i++){
         const t=i===15?1:Math.floor(i/3)/5,c=mixRgb(palette[0],palette[1],Math.pow(t,.72));
@@ -179,7 +201,7 @@ function colorOasisPrimitive(primitive,kind,bankClearance=0){
     const stemShade=.9+rng()*.15;
     for(let i=0;i<48;i++)colors.push(mixRgb([35,65,43],[91,124,73],Math.floor(i/8)/5).map(v=>v*stemShade));
     for(let base=48;base<verts.length;base+=19){
-      const aged=rng()<.10+.12*dryness,shade=.88+rng()*.20,lo=aged?[105,90,44]:[29,67,47],hi=aged?[172,146,83]:[99,146,97];
+      const aged=rng()<.24+.16*dryness,shade=.88+rng()*.20,lo=aged?[105,90,44]:[29,67,47],hi=aged?[172,146,83]:[99,146,97];
       for(let i=0;i<19&&base+i<verts.length;i++)colors.push(mixRgb(lo,hi,i===18?1:Math.floor(i/3)/6).map(v=>v*shade));
     }
   }else{
@@ -187,7 +209,7 @@ function colorOasisPrimitive(primitive,kind,bankClearance=0){
     for(const v of verts)colors.push(mixRgb([62,39,23],[132,91,49],(v.y-minY)/(maxY-minY||1)).map(c=>c*shade));
   }
   if(colors.length!==verts.length)throw new Error('OASIS_VERTEX_COLOR_COUNT_MISMATCH');
-  return freeze({...primitive,metadata:{...primitive.metadata,oasisFoliage:{...primitive.metadata.oasisFoliage,vertexColorsSrgb:colors,colorEncoding:'SRGB_NORMALIZED_RGB',bankClearanceMeters:bankClearance,dryBankPaletteBias:dryness,colorDesign:'ROOT_TIP_GRADIENT_SEEDED_BLADE_VARIATION_V2',heightLayers:kind==='GRASS'?['SHORT_UNDERSTORY','TALL_CURVED_BLADES']:null}}});
+  return freeze({...primitive,metadata:{...primitive.metadata,oasisFoliage:{...primitive.metadata.oasisFoliage,vertexColorsSrgb:colors,colorEncoding:'SRGB_NORMALIZED_RGB',bankClearanceMeters:bankClearance,dryBankPaletteBias:dryness,colorDesign:'MOIST_GREEN_DRY_YELLOW_AND_DEAD_BROWN_BLADES_GEN2532',heightLayers:kind==='GRASS'?['SHORT_UNDERSTORY','TALL_CURVED_BLADES']:null}}});
 }
 function replaceOasisTuft(primitive,index) {
   const anchor=primitive.metadata.worldAnchor,random=randomFor(primitive.primitiveId);
@@ -287,31 +309,34 @@ function cattail(index,x,z,number){
 export function buildHEarthOasisFoliagePresentation(renderPackage){
   if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);
   const index=buildHEarthGrassTrialTerrainIndex(renderPackage,O),water=buildHEarthGrassTrialTerrainIndex(renderPackage,O,true);waterForIndex.set(index,water);
+  const basin=connectBasin(index,water);basinForIndex.set(index,basin);basinCache.set(renderPackage,basin.receipt);
   const primitives=[],rng=randomFor(O.id);let grassTuftCount=0,cattailCount=0;
-  const candidates=[];
-  // Overlapping tuft footprints follow the bank as one irregular band; preserve two small gaps.
-  for(let z=-172.8,row=0;z<=-159.4;z+=.48,row++)for(let across=-1.30;across<=1.30;across+=.48){
-    const pathX=-8.3+(z+161)*.34;
-    const x=pathX+across+(rng()-.5)*.28+(row%2)*.13,zz=z+(rng()-.5)*.28;
-    const edgeNoise=.88+.18*Math.sin(zz*1.71)+.14*Math.cos(x*2.13);
-    if(Math.abs(across)>1.24*edgeNoise)continue;
-    if(Math.hypot((x+9.5)/.42,(zz+163.6)/.50)<1||Math.hypot((x+11.6)/.42,(zz+169.1)/.55)<1)continue;
-    candidates.push({x,z:zz,priority:rng()});
+  const candidates=[],wetCandidates=[];
+  // Survey-guided connected banks, with seeded spatial gaps and no row-first allocation.
+  for(let z=O.minZ+.8,row=0;z<O.maxZ-.8;z+=.70,row++)for(let x=O.minX+.8;x<O.maxX-.8;x+=.70){
+    const px=x+(rng()-.5)*.30+(row%2)*.16,pz=z+(rng()-.5)*.30;
+    const gap=.5+.5*Math.sin(px*1.29+pz*.63)*Math.cos(px*.42-pz*.91);
+    if(gap<.12)continue;
+    candidates.push({x:px,z:pz,priority:rng()});
   }
-  // Seeded ordering fills all parts of the band before increasing local density.
   candidates.sort((a,b)=>a.priority-b.priority);
   for(const {x,z} of candidates){
-    if(grassTuftCount>=96)break;
+    if(grassTuftCount>=360)break;
     if(!oasisEligible(index,x,z,false)||!oasisInside(x-.65,z-.65)||!oasisInside(x+.65,z+.65))continue;
     const id=`${O.id}:GRASS:${grassTuftCount}`,source={primitiveId:id,geometry:{geometryId:`${id}:GEOMETRY`},semanticRole:'BOUNDED_WET_EDGE_PRESENTATION',materialHint:{materialIntent:'COASTAL_GRASS_GREEN',archetypeId:'OASIS_ACCEPTED_BLADE_GRASS'},metadata:{worldAnchor:{x,y:sampleHEarthGrassTrialTerrain(index,x,z).y,z}},source:{sourceType:'OWNER_REQUESTED_BOUNDED_FOLIAGE_PRESENTATION'}};
     try{primitives.push(replaceOasisTuft(source,index));grassTuftCount++;}catch(error){if(!String(error.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS:'))throw error;}
   }
-  const wetCenters=[[-8,-166],[-6,-164],[-10,-170]];
-  for(let attempt=0;attempt<240&&cattailCount<18;attempt++){
-    const c=wetCenters[attempt%3],a=rng()*Math.PI*2,r=Math.sqrt(rng())*.85,x=c[0]+Math.cos(a)*r,z=c[1]+Math.sin(a)*r;
+  for(let z=O.minZ+.8;z<O.maxZ-.8;z+=.92)for(let x=O.minX+.8;x<O.maxX-.8;x+=.92){
+    const px=x+(rng()-.5)*.40,pz=z+(rng()-.5)*.40;
+    if(.5+.5*Math.sin(px*.81+pz*.44)*Math.cos(px*.33-pz*.71)<.20)continue;
+    wetCandidates.push({x:px,z:pz,priority:rng()});
+  }
+  wetCandidates.sort((a,b)=>a.priority-b.priority);
+  for(const {x,z} of wetCandidates){
+    if(cattailCount>=72)break;
     if(!oasisEligible(index,x,z,true))continue;const p=cattail(index,x,z,cattailCount);if(!p)continue;primitives.push(...p);cattailCount++;
   }
-  if(grassTuftCount<48||cattailCount<9)throw new Error(`OASIS_ELIGIBLE_SAMPLE_INCOMPLETE:${grassTuftCount}:${cattailCount}`);
+  if(grassTuftCount<100||cattailCount<24)throw new Error(`OASIS_ELIGIBLE_SAMPLE_INCOMPLETE:${grassTuftCount}:${cattailCount}`);
   const triangleCount=primitives.reduce((n,p)=>n+p.geometry.indices.length/3,0);if(triangleCount>O.maximumTriangles)throw new Error('OASIS_TRIANGLE_BUDGET_EXCEEDED');
-  const out=freeze({id:O.id,primitives,grassTuftCount,cattailCount,triangleCount,waterPrimitive:O.waterPrimitive,worldPlacementCountChanged:false});oasisCache.set(renderPackage,out);return out;
+  const out=freeze({id:O.id,primitives,grassTuftCount,cattailCount,triangleCount,basinAssociation:basin.receipt,waterPrimitive:O.waterPrimitive,worldPlacementCountChanged:false});oasisCache.set(renderPackage,out);return out;
 }

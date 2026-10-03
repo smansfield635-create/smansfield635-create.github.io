@@ -597,8 +597,11 @@ void main(){
     geometricNormal=vec3(0.0,1.0,0.0);
     shadingNormal=normalize(vec3(-slopeX,1.0,-slopeZ));
   }else{
-    float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
-    base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
+    // Explicit oasis colors already encode live, straw and dead foliage.
+    if(vMaterialParameters.w<0.5){
+      float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
+      base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
+    }
     base*=0.78+0.34*clamp(geometricNormal.y,0.0,1.0);
   }
 
@@ -948,7 +951,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       // Bounded oasis assets carry explicit per-vertex sRGB colors; other vegetation keeps its existing palette.
       const vertexColors=primitive?.metadata?.oasisFoliage?.vertexColorsSrgb;
       if(vertexColors!==undefined&&(!Array.isArray(vertexColors)||vertexColors.length!==verts.length||vertexColors.some(c=>!Array.isArray(c)||c.length!==3||c.some(v=>!Number.isFinite(v)||v<0||v>1))))throw new Error('OASIS_VERTEX_COLOR_STREAM_INVALID');
-      for(let vi=0;vi<verts.length;vi++){const v=verts[vi],n=g?.normals?.[vi],nn=n&&[n.x,n.y,n.z].every(Number.isFinite)?[n.x,n.y,n.z]:normalize(...sums[vi]);positions.push(v.x,v.y,v.z);normals.push(...nn);const srgb=vertexColors?vertexColors[vi]:rgba.slice(0,3).map(x=>x/255);colors.push(...srgb.map(s=>s<=.04045?s/12.92:Math.pow((s+.055)/1.055,2.4)),1);mats.push(0,0,0,0);models.push(0);surfaces.push(255);primitiveIds.push(pi);roles.push(3);}
+      for(let vi=0;vi<verts.length;vi++){const v=verts[vi],n=g?.normals?.[vi],nn=n&&[n.x,n.y,n.z].every(Number.isFinite)?[n.x,n.y,n.z]:normalize(...sums[vi]);positions.push(v.x,v.y,v.z);normals.push(...nn);const srgb=vertexColors?vertexColors[vi]:rgba.slice(0,3).map(x=>x/255);colors.push(...srgb.map(s=>s<=.04045?s/12.92:Math.pow((s+.055)/1.055,2.4)),1);mats.push(0,0,0,vertexColors?1:0);models.push(0);surfaces.push(255);primitiveIds.push(pi);roles.push(3);}
       for(const id of local)indices.push(vertexOffset+id);vertexOffset+=verts.length;
     }
     const vao=gl.createVertexArray();if(!vao)throw new Error('R3C_VEGETATION_VAO_CREATE_FAILED');gl.bindVertexArray(vao);const bufs=[];

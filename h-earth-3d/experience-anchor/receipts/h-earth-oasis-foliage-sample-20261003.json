@@ -16,15 +16,15 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "sha256": "206c9e89f14a99fea71ac538131cf04dad84a1670c603d50a843f9bcc7ae808d"
+      "sha256": "25f8d0857d956c90bb6fad7dea1a273f291ae836f3f2d477e4e98d6c9f7f873c"
     },
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
-      "sha256": "9c1f48f69e2317e6b81c1e642f18f1ecdc583352fda7550f8b61922a00b3228d"
+      "sha256": "3464138d864f21e4509ab06eae421e7c067438df692de90b900980ee674c3ba0"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "a5932b71cc3318f7d5475bde94481a40fae6676c34279d4ad6c2024c8641fad6"
+      "sha256": "155c08a047703ec8b2d03216acfda8d2af29cb8bc9ab172e9b5c6c2a65308a9e"
     }
   ],
   "invariants": {
@@ -40,5 +40,5 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "reviewBoundary": "Engineering comparison against durable anchor proxy and actual refined renders. Terrain, world frame, navigation and higher-scale continuity remain unchanged. Owner physical acceptance pending; no production authority."
+  "reviewBoundary": "Engineering comparison against durable anchor proxy and actual surveyed oasis renders. Terrain, world frame, navigation and higher-scale continuity remain unchanged. Owner physical acceptance pending; no production authority."
 }

@@ -505,3 +505,82 @@ export function evaluateHEarthRun8DGroundedVegetation(result) {
 }
 
 export default H_EARTH_RUN_8D_GROUNDED_VEGETATION_PROFILE;
+
+import { H_EARTH_GEN2514_PLACEMENT_ARCHETYPE_ADAPTER_CONTRACT_ID, buildHEarthGen2514VegetationArchetypeAdapter } from '../../../../h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
+
+// Separate candidate API: existing Run8D/Run8E call sites retain their original behavior.
+export const H_EARTH_GEN2514_GROUNDED_GEOMETRY_CONTRACT_ID =
+  'H_EARTH_GEN2510_PLACEMENT_GROUNDED_RUN8D_GEOMETRY_v1';
+const GEN2514_BATCH_INSTANCE_LIMIT = 256;
+let gen2514LocalArchetypes;
+function gen2514Archetypes() {
+  return gen2514LocalArchetypes ??= constructHEarthRun8DLocalVegetationArchetypes();
+}
+export function planHEarthGen2514GroundedVegetation(adapter = buildHEarthGen2514VegetationArchetypeAdapter()) {
+  const local = gen2514Archetypes(), issues = [...(adapter.issues ?? []), ...local.issues];
+  if (!adapter.eligible || adapter.contractId !== H_EARTH_GEN2514_PLACEMENT_ARCHETYPE_ADAPTER_CONTRACT_ID) {
+    issues.push('GEN2514_ADAPTER_NOT_ELIGIBLE');
+  }
+  const instances = [...(adapter.instances ?? [])].sort((a,b) => a.placementId.localeCompare(b.placementId));
+  let vertexCount = 0, triangleCount = 0;
+  for (const instance of instances) {
+    const parts = local.constructions[instance.archetypeId];
+    if (!parts?.length) { issues.push(`GEN2514_ARCHETYPE_MISSING:${instance.archetypeId}`); continue; }
+    for (const part of parts) {
+      vertexCount += part.primitiveRecord.geometry.vertices.length;
+      triangleCount += part.primitiveRecord.geometry.indices.length / 3;
+    }
+  }
+  const batches = [];
+  for (let start = 0; start < instances.length; start += GEN2514_BATCH_INSTANCE_LIMIT) {
+    const count = Math.min(GEN2514_BATCH_INSTANCE_LIMIT, instances.length - start);
+    batches.push(freeze({batchId:`GEN2514_BATCH:${instances[start].placementId}`,start,count}));
+  }
+  return freeze({
+    contractId: H_EARTH_GEN2514_GROUNDED_GEOMETRY_CONTRACT_ID,
+    eligible: issues.length === 0 && instances.length === adapter.sourcePlacementCount,
+    issues, instances, batches, instanceCount: instances.length,
+    vertexCount, triangleCount,
+    packedFloat32PositionNormalUint32IndexBytes: vertexCount * 24 + triangleCount * 12,
+    performancePolicy: {
+      maxInstancesPerMaterializationBatch: GEN2514_BATCH_INSTANCE_LIMIT,
+      populationLimit: null, droppedPlacementCount: 0,
+      completeWorldPlacementCoverageRequired: true,
+      partitionOrder: 'CANONICAL_PLACEMENT_ID',
+      cameraIndependent: true, lodOrVisibilitySelectionPerformed: false,
+      retainedGeometryPolicy: 'CALLER_MAY_RELEASE_COMPLETED_BATCHES_WITHOUT_DROPPING_PLACEMENT_TRUTH',
+      frameTimeOrDevicePerformanceClaim: false
+    },
+    coordinatesReplanned: false, legacyPopulationPlannerUsed: false,
+    rendererMutation: false, terrainMutation: false, roadAuthority: false,
+    vehicleAccessAuthority: false, deployment: false
+  });
+}
+export function constructHEarthGen2514GroundedVegetationBatch(plan, batchId) {
+  const issues = [];
+  const batch = plan?.batches?.find(b => b.batchId === batchId);
+  if (plan?.eligible !== true || plan?.contractId !== H_EARTH_GEN2514_GROUNDED_GEOMETRY_CONTRACT_ID || !batch) {
+    return freeze({eligible:false,issues:['GEN2514_INVALID_PLAN_OR_BATCH'],instances:[]});
+  }
+  const local = gen2514Archetypes(), instances = [];
+  let vertexCount = 0, triangleCount = 0;
+  for (const instance of plan.instances.slice(batch.start, batch.start + batch.count)) {
+    const components = local.constructions[instance.archetypeId].map((part,index) => instantiateComponent(instance,part,index));
+    for (const component of components) {
+      if (!component.valid || !isHEarthNeutralPrimitiveRecord(component.primitiveRecord)) {
+        issues.push(`GEN2514_INVALID_WORLD_COMPONENT:${instance.instanceId}`); continue;
+      }
+      vertexCount += component.primitiveRecord.geometry.vertices.length;
+      triangleCount += component.primitiveRecord.geometry.indices.length / 3;
+    }
+    instances.push(freeze({...instance,componentCount:components.length,components}));
+  }
+  return freeze({
+    contractId:H_EARTH_GEN2514_GROUNDED_GEOMETRY_CONTRACT_ID,
+    batchId, eligible:issues.length === 0 && instances.length === batch.count,
+    instanceCount:instances.length,vertexCount,triangleCount,instances,issues,
+    worldSpaceVertices:true, terrainNormalAlignment:true,
+    rendererMaterialized:false, terrainOcclusionExecuted:false,
+    roadAuthority:false, vehicleAccessAuthority:false, deployment:false
+  });
+}

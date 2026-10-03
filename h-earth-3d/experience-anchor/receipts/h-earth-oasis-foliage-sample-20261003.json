@@ -16,11 +16,15 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "sha256": "4a1cbaf7d4e9828d91adbc44d4b4e37559643332ca0ed605b206de865242455d"
+      "sha256": "206c9e89f14a99fea71ac538131cf04dad84a1670c603d50a843f9bcc7ae808d"
     },
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
-      "sha256": "0a6a6b49905c098d8ab6757f2db935ecdff327679ee01102f14959611f71a00c"
+      "sha256": "9c1f48f69e2317e6b81c1e642f18f1ecdc583352fda7550f8b61922a00b3228d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "a5932b71cc3318f7d5475bde94481a40fae6676c34279d4ad6c2024c8641fad6"
     }
   ],
   "invariants": {
@@ -36,5 +40,5 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "reviewBoundary": "Engineering comparison against durable anchor proxy and actual local renders; higher-scale continuity preserved by unchanged code. Owner device/perceptual approval pending; no production authority."
+  "reviewBoundary": "Engineering comparison against durable anchor proxy and actual refined renders. Terrain, world frame, navigation and higher-scale continuity remain unchanged. Owner physical acceptance pending; no production authority."
 }

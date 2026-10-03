@@ -7975,50 +7975,6 @@
       "scopeHash": "8aa83ef0f77c262e81d2ded245c9ddccf3d87ea40a908b5fc0b7ac7424fea036",
       "state": "ADMITTED_LOCKED"
     },
-    "8bbdf27bc43bf7ea945b98b9928b4f94ff444528f12649882bc759636e588a6c": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "fc7d1db34506fc08c43a63bbbe72859e0d5dab2c",
-          "lockGeneration": 2531,
-          "lockScope": "H_EARTH:ACTIVE_ROOT:OASIS_FOLIAGE_REFINEMENT:20261003",
-          "operationId": "H_EARTH_OASIS_FOLIAGE_REFINEMENT_20261003_001",
-          "procedureLocatorDigest": "512464e3e33ba48a20c97eec2cee4df134d5f5a68cafcc45a74b847b2a9ad952",
-          "requestDigest": "9047968e1086706409aaa9e0c6061f49d10af3f3c6984a4d31baaf22c129ff70",
-          "scopeHash": "8bbdf27bc43bf7ea945b98b9928b4f94ff444528f12649882bc759636e588a6c"
-        },
-        "bindingDigest": "b3b6f845cf0ff6c017a7e98ebdfc3f4aba1b30625c00e13d1ebbeac16a98aaad",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "8f8ee35ac7beb04538bea5a57c33c3536b89504ee922f87328370c919812048b",
-          "commentId": 5965290862,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 5086,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 37094829952,
-          "workflowSha": "05a0190009a5e6a814b1d751b05c4f702cf054bb"
-        },
-        "lineageAnchorCommitSha": "de9077e98d5eba49b026267f429160c17469c3cb",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "fc7d1db34506fc08c43a63bbbe72859e0d5dab2c",
-      "lockGeneration": 2531,
-      "lockScope": "H_EARTH:ACTIVE_ROOT:OASIS_FOLIAGE_REFINEMENT:20261003",
-      "operationId": "H_EARTH_OASIS_FOLIAGE_REFINEMENT_20261003_001",
-      "procedureLocatorDigest": "512464e3e33ba48a20c97eec2cee4df134d5f5a68cafcc45a74b847b2a9ad952",
-      "released": false,
-      "requestDigest": "9047968e1086706409aaa9e0c6061f49d10af3f3c6984a4d31baaf22c129ff70",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "8bbdf27bc43bf7ea945b98b9928b4f94ff444528f12649882bc759636e588a6c",
-      "state": "ADMITTED_LOCKED"
-    },
     "8c386db10f9f487dbf27ea03a0fe8421f9353abd25e5f2d3a4e491a89dfff147": {
       "governingHead": "47c6b01c03d575a935027a0410317d02479cfce4",
       "lockGeneration": 1558,
@@ -67542,6 +67498,51 @@
       "requestDigest": "bb68b09cdc8d7f8541d97f4d361a9179b7113e479be4ff0031e481f4273743bc",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "3f491a49917bb272ea96e78bcc361210bee745bb95a623f4a4449596a7f419f6",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fc7d1db34506fc08c43a63bbbe72859e0d5dab2c",
+          "lockGeneration": 2531,
+          "lockScope": "H_EARTH:ACTIVE_ROOT:OASIS_FOLIAGE_REFINEMENT:20261003",
+          "operationId": "H_EARTH_OASIS_FOLIAGE_REFINEMENT_20261003_001",
+          "procedureLocatorDigest": "512464e3e33ba48a20c97eec2cee4df134d5f5a68cafcc45a74b847b2a9ad952",
+          "requestDigest": "9047968e1086706409aaa9e0c6061f49d10af3f3c6984a4d31baaf22c129ff70",
+          "scopeHash": "8bbdf27bc43bf7ea945b98b9928b4f94ff444528f12649882bc759636e588a6c"
+        },
+        "bindingDigest": "b3b6f845cf0ff6c017a7e98ebdfc3f4aba1b30625c00e13d1ebbeac16a98aaad",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8f8ee35ac7beb04538bea5a57c33c3536b89504ee922f87328370c919812048b",
+          "commentId": 5965290862,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5086,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37094829952,
+          "workflowSha": "05a0190009a5e6a814b1d751b05c4f702cf054bb"
+        },
+        "lineageAnchorCommitSha": "de9077e98d5eba49b026267f429160c17469c3cb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "fc7d1db34506fc08c43a63bbbe72859e0d5dab2c",
+      "lockGeneration": 2531,
+      "lockScope": "H_EARTH:ACTIVE_ROOT:OASIS_FOLIAGE_REFINEMENT:20261003",
+      "operationId": "H_EARTH_OASIS_FOLIAGE_REFINEMENT_20261003_001",
+      "procedureLocatorDigest": "512464e3e33ba48a20c97eec2cee4df134d5f5a68cafcc45a74b847b2a9ad952",
+      "released": true,
+      "requestDigest": "9047968e1086706409aaa9e0c6061f49d10af3f3c6984a4d31baaf22c129ff70",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8bbdf27bc43bf7ea945b98b9928b4f94ff444528f12649882bc759636e588a6c",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
     }

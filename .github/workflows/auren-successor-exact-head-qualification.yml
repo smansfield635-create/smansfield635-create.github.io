@@ -31,24 +31,28 @@ jobs:
           git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" \
             | grep -v -E '^(\.analytics/cloudflare/|analytics/data/latest\.json$)' \
             | sort >/tmp/files
-          cat >/tmp/allowed <<'EOF'
-          .github/ai-router/workflow-dispatch-capability.v1.json
-          .github/ai-router/publication-surfaces/auren.json
-          .github/live-qualification/verifiers/auren-successor-exact-head.v1.mjs
-          .github/workflows/auren-successor-exact-head-qualification.yml
-          products/auren/auren.archetype.js
-          products/auren/auren.chamber.js
-          products/auren/auren.privacy.js
-          products/auren/auren.scene-offer.js
-          products/auren/auren.session-context.js
-          products/auren/auren.state-dependent.js
-          products/auren/auren.voice.js
-          products/auren/index.css
-          products/auren/index.html
-          EOF
-          sort -o /tmp/allowed /tmp/allowed
           while IFS= read -r changed; do
-            grep -Fxq "$changed" /tmp/allowed || { echo "Unauthorized successor changed file: $changed" >&2; exit 1; }
+            case "$changed" in
+              .github/ai-router/workflow-dispatch-capability.v1.json|\
+              .github/ai-router/publication-surfaces/auren.json|\
+              .github/live-qualification/verifiers/auren-successor-exact-head.v1.mjs|\
+              .github/workflows/auren-successor-exact-head-qualification.yml|\
+              products/auren/auren.archetype.js|\
+              products/auren/auren.chamber.js|\
+              products/auren/auren.privacy.js|\
+              products/auren/auren.scene-offer.js|\
+              products/auren/auren.session-context.js|\
+              products/auren/auren.state-dependent.js|\
+              products/auren/auren.voice.js|\
+              products/auren/index.css|\
+              products/auren/index.html|\
+              project-records/auren-*.md)
+                ;;
+              *)
+                echo "Unauthorized successor changed file: $changed" >&2
+                exit 1
+                ;;
+            esac
           done </tmp/files
           test -s /tmp/files
       - name: Fetch accepted verifier from main

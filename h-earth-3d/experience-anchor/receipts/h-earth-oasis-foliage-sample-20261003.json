@@ -16,7 +16,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "sha256": "25f8d0857d956c90bb6fad7dea1a273f291ae836f3f2d477e4e98d6c9f7f873c"
+      "sha256": "f3b93873b7e63e7c3054d706315a2a3068875a3deaae1754e8cb298c6efb019a"
     },
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
@@ -40,5 +40,5 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "reviewBoundary": "Engineering comparison against durable anchor proxy and actual surveyed oasis renders. Terrain, world frame, navigation and higher-scale continuity remain unchanged. Owner physical acceptance pending; no production authority."
+  "reviewBoundary": "Incremental startup repair preserves exact plant geometry and colors. Landscape and controls shown before preparation completes; simulated phone CPU test passes. Owner physical acceptance pending."
 }

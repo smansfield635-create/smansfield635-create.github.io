@@ -4,9 +4,15 @@
 <body><canvas id="scene" aria-label="H-Earth full environment. Drag to look; use arrow buttons or W A S D to travel."></canvas><header><h1>Inner oasis</h1><small id="status">Shore grasses & cattails</small></header><nav aria-label="Return to a location"><button id="close" disabled>Oasis</button><button id="wide" disabled>Original grass</button></nav><div id="travel" aria-label="Travel controls"><button id="forward" aria-label="Move forward" data-action="MOVE_FORWARD" disabled>↑</button><button id="left" aria-label="Move left" data-action="STRAFE_LEFT" disabled>←</button><button id="back" aria-label="Move backward" data-action="MOVE_BACKWARD" disabled>↓</button><button id="right" aria-label="Move right" data-action="STRAFE_RIGHT" disabled>→</button></div><span id="hint">Drag to look · Hold arrows to walk<br>Keyboard: W A S D</span><div id="loading"><strong id="progress">Opening the oasis…</strong><p>You can explore the full environment.</p></div>
 <script type="module">
 const canvas=document.querySelector('#scene'),status=document.querySelector('#status'),progress=document.querySelector('#progress');
+const yieldToScreen=()=>new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
+const startup={startedAt:performance.now(),stages:[]};window.OASIS_STARTUP=startup;
+async function stage(label){progress.textContent=label;status.textContent=label;startup.stages.push({label,elapsedMs:performance.now()-startup.startedAt});await yieldToScreen();}
 try {
+ await stage('Loading the environment…');
  const base='../showroom/globe/h-earth/';
- const [nav,frames,mod]=await Promise.all([import(base+'functional-landscape/navigation.js'),import(base+'render/live-renderer-contract.run8e-r3a.js'),import(base+'render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js')]);
+ const imports=Promise.all([import(base+'functional-landscape/navigation.js'),import(base+'render/live-renderer-contract.run8e-r3a.js'),import(base+'render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),import(base+'render/grass-lowland-trial.js'),import(base+'render/live-render-package.run8e-r2.js')]);
+ let importTimer;const [nav,frames,mod,foliage,packages]=await Promise.race([imports,new Promise((_,reject)=>{importTimer=setTimeout(()=>reject(new Error('The environment files did not arrive. Please reload this page.')),90000);})]).finally(()=>clearTimeout(importTimer));
+ await stage('Preparing the landscape…');
  const rect=canvas.getBoundingClientRect(),ratio=Math.min(devicePixelRatio||1,1.5),width=Math.min(1440,Math.round(rect.width*ratio)),height=Math.round(width*rect.height/rect.width);
  canvas.width=width;canvas.height=height;
  let state,renderer,sequence=0,dirty=true;
@@ -14,10 +20,9 @@ try {
  function position(oasis){state=nav.createHEarthFunctionalLandscapeNavigationState({waypointId:'LOWLAND'}).state;if(!act({action:'SET_CAMERA_POSITION',position:oasis?{x:-10,z:-159}:{x:-23.57004735,z:-147.1}}))throw new Error('Arrival point lacks terrain support');const yaw=oasis?5:18,pitch=oasis?-19:-24;for(let i=0;i<50&&Math.abs(state.yawDegrees-yaw)>.01;i++)act({action:state.yawDegrees>yaw?'TURN_LEFT':'TURN_RIGHT',degrees:Math.min(8,Math.abs(state.yawDegrees-yaw))});for(let i=0;i<30&&Math.abs(state.pitchDegrees-pitch)>.01;i++)act({action:state.pitchDegrees>pitch?'PITCH_DOWN':'PITCH_UP',degrees:Math.min(8,Math.abs(state.pitchDegrees-pitch))});}
  function packet(){return frames.createHEarthRun8ER3AFrameUniformPacket({navigationState:state,viewport:{width:canvas.clientWidth,height:canvas.clientHeight,pixelRatio:ratio},frameSequence:++sequence});}
  function draw(){renderer.renderFrame(packet());renderer.presentColorFrame();window.GRASS_PATCH_PREVIEW.navigationState=state;dirty=false;}
- position(true);renderer=mod.createHEarthRun8ER3CPersistentRenderer({canvas,width,height});renderer.initialize(packet());
- for(let i=0;i<108;i++){renderer.materializeNextVegetationBatch();progress.textContent=`Opening the oasis… ${Math.round((i+1)/108*100)}%`;if(i%4===0)await new Promise(requestAnimationFrame);}
- window.GRASS_PATCH_PREVIEW={baselineCommit:'e07981a377e08b32bfc8ee13314ea3a1c3d197ee',foliageRevision:'SURVEY_GUIDED_OASIS_V3',legacyGrassPolicy:'EXCLUDED',patch:{minX:-18,maxX:34,minZ:-204,maxZ:-131},getReceipt:()=>renderer.getResourceReceipt(),getNavigationCheck:()=>nav.evaluateHEarthFunctionalLandscapeNavigationState(state),navigationState:state,ready:false};
- draw();window.GRASS_PATCH_PREVIEW.ready=true;document.querySelector('#loading').hidden=true;
+ position(true);await stage('Building the terrain…');renderer=mod.createHEarthRun8ER3CPersistentRenderer({canvas,width,height});await stage('Opening the view…');renderer.initialize(packet());
+ window.GRASS_PATCH_PREVIEW={baselineCommit:'e07981a377e08b32bfc8ee13314ea3a1c3d197ee',foliageRevision:'SURVEY_GUIDED_OASIS_V3_STARTUP_REPAIR',legacyGrassPolicy:'EXCLUDED',patch:{minX:-18,maxX:34,minZ:-204,maxZ:-131},getReceipt:()=>renderer.getResourceReceipt(),getNavigationCheck:()=>nav.evaluateHEarthFunctionalLandscapeNavigationState(state),navigationState:state,ready:false,vegetationReady:false,startup};
+ draw();window.GRASS_PATCH_PREVIEW.ready=true;startup.firstFrameMs=performance.now()-startup.startedAt;document.querySelector('#loading').hidden=true;
  const held=new Set();
  for(const [id,oasis] of [['close',true],['wide',false]]){const button=document.querySelector('#'+id);button.disabled=false;button.onclick=()=>{held.clear();position(oasis);};}
  for(const button of document.querySelectorAll('[data-action]')){button.disabled=false;button.onpointerdown=e=>{e.preventDefault();button.setPointerCapture(e.pointerId);held.add(button.dataset.action);};button.onpointerup=button.onpointercancel=button.onlostpointercapture=()=>held.delete(button.dataset.action);}
@@ -29,5 +34,10 @@ try {
  canvas.onpointerup=canvas.onpointercancel=canvas.onlostpointercapture=e=>{if(previous?.id===e.pointerId)previous=null;};
  canvas.onwheel=e=>{e.preventDefault();act({action:e.deltaY>0?'ZOOM_OUT':'ZOOM_IN',degrees:3});};
  window.addEventListener('resize',()=>{dirty=true;});let last=performance.now();function tick(now){const dt=Math.min(.08,(now-last)/1000);last=now;for(const action of held)act({action,magnitude:dt*3});if(dirty)draw();requestAnimationFrame(tick);}requestAnimationFrame(tick);
-} catch(error){status.textContent='Could not open';progress.textContent=error.message;window.GRASS_PATCH_PREVIEW_ERROR=error.message;console.error(error);}
+ await stage('Growing the shoreline…');
+ await foliage.prepareHEarthOasisFoliagePresentation(packages.getHEarthRun8ER2ImmutableLiveRenderPackage(),{yieldControl:yieldToScreen,onProgress:detail=>{status.textContent=`Preparing shoreline plants… ${detail.grassTuftCount+detail.cattailCount}`;}});
+ let visiblePlants=0;
+ for(let i=0;i<108;i++){await yieldToScreen();renderer.materializeNextVegetationBatch();status.textContent=`Adding shoreline plants… ${Math.round((i+1)/108*100)}%`;const count=renderer.getResourceReceipt().vegetationResidency.residentPrimitiveCount;if(count!==visiblePlants){visiblePlants=count;dirty=true;draw();}}
+ window.GRASS_PATCH_PREVIEW.vegetationReady=true;startup.completedAt=performance.now();startup.totalMs=startup.completedAt-startup.startedAt;status.textContent='Shore grasses & cattails';
+} catch(error){status.textContent='Could not open';progress.textContent=error.message;document.querySelector('#loading').hidden=false;window.GRASS_PATCH_PREVIEW_ERROR=error.message;console.error(error);}
 </script></body></html>

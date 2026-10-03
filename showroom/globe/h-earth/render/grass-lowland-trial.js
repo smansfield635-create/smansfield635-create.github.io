@@ -306,12 +306,15 @@ function cattail(index,x,z,number){
   for(let i=0;i<headI.length;i+=3){const t=headI[i+1];headI[i+1]=headI[i+2];headI[i+2]=t;}
   return [oasisMesh(`${id}:STEM_LEAVES`,verts,inds,roots,'SHRUB_GREEN_CATTAIL','CATTAIL_STEM_AND_LEAVES',root.y-sampleHEarthGrassTrialTerrain(waterForIndex.get(index),x,z).y),oasisMesh(`${id}:SEEDHEAD`,headV,headI,[],'WOODY_BROWN_CATTAIL_SEEDHEAD','ROUNDED_CATTAIL_SEEDHEAD')];
 }
-export function buildHEarthOasisFoliagePresentation(renderPackage){
+function* constructOasisFoliageSteps(renderPackage){
   if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);
+  yield {phase:'PREPARING_BASIN',grassTuftCount:0,cattailCount:0,primitiveCount:0};
   const index=buildHEarthGrassTrialTerrainIndex(renderPackage,O),water=buildHEarthGrassTrialTerrainIndex(renderPackage,O,true);waterForIndex.set(index,water);
   const basin=connectBasin(index,water);basinForIndex.set(index,basin);basinCache.set(renderPackage,basin.receipt);
   const primitives=[],rng=randomFor(O.id);let grassTuftCount=0,cattailCount=0;
   const candidates=[],wetCandidates=[];
+  const progress=phase=>({phase,grassTuftCount,cattailCount,primitiveCount:primitives.length});
+  yield progress('BASIN_READY');
   // Survey-guided connected banks, with seeded spatial gaps and no row-first allocation.
   for(let z=O.minZ+.8,row=0;z<O.maxZ-.8;z+=.70,row++)for(let x=O.minX+.8;x<O.maxX-.8;x+=.70){
     const px=x+(rng()-.5)*.30+(row%2)*.16,pz=z+(rng()-.5)*.30;
@@ -320,11 +323,14 @@ export function buildHEarthOasisFoliagePresentation(renderPackage){
     candidates.push({x:px,z:pz,priority:rng()});
   }
   candidates.sort((a,b)=>a.priority-b.priority);
+  let grassAttempts=0;
+  yield progress('GRASS_CANDIDATES_READY');
   for(const {x,z} of candidates){
+    if(++grassAttempts%32===0)yield progress('GRASS_SCAN');
     if(grassTuftCount>=360)break;
     if(!oasisEligible(index,x,z,false)||!oasisInside(x-.65,z-.65)||!oasisInside(x+.65,z+.65))continue;
     const id=`${O.id}:GRASS:${grassTuftCount}`,source={primitiveId:id,geometry:{geometryId:`${id}:GEOMETRY`},semanticRole:'BOUNDED_WET_EDGE_PRESENTATION',materialHint:{materialIntent:'COASTAL_GRASS_GREEN',archetypeId:'OASIS_ACCEPTED_BLADE_GRASS'},metadata:{worldAnchor:{x,y:sampleHEarthGrassTrialTerrain(index,x,z).y,z}},source:{sourceType:'OWNER_REQUESTED_BOUNDED_FOLIAGE_PRESENTATION'}};
-    try{primitives.push(replaceOasisTuft(source,index));grassTuftCount++;}catch(error){if(!String(error.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS:'))throw error;}
+    try{primitives.push(replaceOasisTuft(source,index));grassTuftCount++;yield progress('GRASS');}catch(error){if(!String(error.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS:'))throw error;}
   }
   for(let z=O.minZ+.8;z<O.maxZ-.8;z+=.92)for(let x=O.minX+.8;x<O.maxX-.8;x+=.92){
     const px=x+(rng()-.5)*.40,pz=z+(rng()-.5)*.40;
@@ -332,11 +338,40 @@ export function buildHEarthOasisFoliagePresentation(renderPackage){
     wetCandidates.push({x:px,z:pz,priority:rng()});
   }
   wetCandidates.sort((a,b)=>a.priority-b.priority);
+  let cattailAttempts=0;
+  yield progress('CATTAIL_CANDIDATES_READY');
   for(const {x,z} of wetCandidates){
+    if(++cattailAttempts%32===0)yield progress('CATTAIL_SCAN');
     if(cattailCount>=72)break;
-    if(!oasisEligible(index,x,z,true))continue;const p=cattail(index,x,z,cattailCount);if(!p)continue;primitives.push(...p);cattailCount++;
+    if(!oasisEligible(index,x,z,true))continue;const p=cattail(index,x,z,cattailCount);if(!p)continue;primitives.push(...p);cattailCount++;yield progress('CATTAIL');
   }
   if(grassTuftCount<100||cattailCount<24)throw new Error(`OASIS_ELIGIBLE_SAMPLE_INCOMPLETE:${grassTuftCount}:${cattailCount}`);
   const triangleCount=primitives.reduce((n,p)=>n+p.geometry.indices.length/3,0);if(triangleCount>O.maximumTriangles)throw new Error('OASIS_TRIANGLE_BUDGET_EXCEEDED');
   const out=freeze({id:O.id,primitives,grassTuftCount,cattailCount,triangleCount,basinAssociation:basin.receipt,waterPrimitive:O.waterPrimitive,worldPlacementCountChanged:false});oasisCache.set(renderPackage,out);return out;
+}
+
+/** Synchronous compatibility path consumes exactly the same deterministic construction steps. */
+export function buildHEarthOasisFoliagePresentation(renderPackage){
+  if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);
+  const steps=constructOasisFoliageSteps(renderPackage);let result;
+  do{result=steps.next();}while(!result.done);
+  return result.value;
+}
+const oasisPreparationInFlight=new WeakMap();
+/** Prepare without monopolizing the browser event loop; no partial presentation is published. */
+export async function prepareHEarthOasisFoliagePresentation(renderPackage,{yieldControl=()=>new Promise(resolve=>setTimeout(resolve,0)),onProgress=()=>{}}={}){
+  if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);
+  if(oasisPreparationInFlight.has(renderPackage))return oasisPreparationInFlight.get(renderPackage);
+  if(typeof yieldControl!=='function'||typeof onProgress!=='function')throw new TypeError('OASIS_PREPARATION_CALLBACK_INVALID');
+  const preparation=(async()=>{
+    const steps=constructOasisFoliageSteps(renderPackage);
+    for(;;){
+      const step=steps.next();
+      if(step.done){onProgress({phase:'COMPLETE',grassTuftCount:step.value.grassTuftCount,cattailCount:step.value.cattailCount,primitiveCount:step.value.primitives.length});return step.value;}
+      onProgress(step.value);
+      await yieldControl();
+    }
+  })();
+  oasisPreparationInFlight.set(renderPackage,preparation);
+  try{return await preparation;}finally{oasisPreparationInFlight.delete(renderPackage);}
 }

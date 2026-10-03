@@ -1,9 +1,11 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-base-c784444",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "c7844447533e4454a60c2781954a888d66a5bdc0",
+    "route_path": "/showroom/globe/h-earth/",
+    "route_query": "visual=terrain-relief-v2",
+    "exercise_vegetation_residency": "false"
   }
 }

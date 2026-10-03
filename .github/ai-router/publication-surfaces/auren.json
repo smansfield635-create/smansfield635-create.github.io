@@ -1,16 +1,18 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "auren",
-  "description": "Auren Vale direct spatial Character Chamber publication contract.",
+  "description": "Auren Vale early-encounter Character Chamber publication contract.",
   "checks": [
     {
       "path": "/products/auren/",
       "includes": [
-        "data-page=\"auren-spatial-character-chamber\"",
+        "data-page=\"auren-early-encounter\"",
         "data-auren-chamber",
-        "data-custody-state=\"PROTECTED\"",
+        "data-auren-mode=\"meet\"",
         "data-auren-thread",
         "data-auren-options",
+        "data-auren-connection",
+        "data-auren-context-route",
         "auren.voice.js",
         "auren.room.geometry.js",
         "auren.room.presentation.js",
@@ -25,14 +27,20 @@
     {
       "path": "/products/auren/auren.voice.js",
       "includes": [
-        "AUREN_C2_PERSONALITY_PERFORMANCE_V1",
+        "AUREN_EARLY_ENCOUNTER_VOICE_V1",
         "AUREN_VALE_SANCTUARY_BUILDER_V1",
-        "Products",
-        "About Auren",
-        "What's Mirrorland?"
+        "ARCHCOIN",
+        "Education",
+        "Five Flags",
+        "Nutrition",
+        "Book / Nine Summits",
+        "Can I try it?",
+        "I'm actually excited about that one.",
+        "What makes the Book different to you?"
       ],
       "excludes": [
-        "On Your Side AI"
+        "On Your Side AI",
+        "Education · Nutrition · Book"
       ]
     },
     {
@@ -70,21 +78,26 @@
     {
       "path": "/products/auren/auren.chamber.js",
       "includes": [
-        "AUREN_C2_TIMED_CONVERSATION_RUNTIME_V1",
+        "AUREN_EARLY_ENCOUNTER_RUNTIME_V1",
         "data-auren-ready",
-        "conversationPrimary:true",
-        "boundedActiveStage:true",
-        "MEMORY_NOT_ACTIVE_TRANSCRIPT",
-        "timedPerformance:true",
-        "typingIndicator:true",
-        "choicesDelayedUntilTurnComplete:true"
+        "expressionAnchors:true",
+        "arbitraryChoiceCap:false",
+        "topLevelModes:[\"meet\",\"products\"]",
+        "productCount:5",
+        "showConnection",
+        "showRoute"
       ],
-      "excludes": []
+      "excludes": [
+        "slice(0,3)"
+      ]
     },
     {
       "path": "/products/auren/index.css",
       "includes": [
         "[data-custody-state=\"REVEALED\"]",
+        ".auren-connection",
+        ".auren-prompt-dock",
+        ".auren-context-route",
         "@media(max-width:700px)",
         "@media(max-width:420px)",
         "@media(prefers-reduced-motion:reduce)"

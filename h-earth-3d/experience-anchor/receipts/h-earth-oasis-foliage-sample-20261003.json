@@ -17,14 +17,6 @@
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
       "sha256": "f3b93873b7e63e7c3054d706315a2a3068875a3deaae1754e8cb298c6efb019a"
-    },
-    {
-      "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
-      "sha256": "3464138d864f21e4509ab06eae421e7c067438df692de90b900980ee674c3ba0"
-    },
-    {
-      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "155c08a047703ec8b2d03216acfda8d2af29cb8bc9ab172e9b5c6c2a65308a9e"
     }
   ],
   "invariants": {

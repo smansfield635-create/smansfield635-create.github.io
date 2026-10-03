@@ -79,7 +79,7 @@
       "path": "/products/auren/auren.chamber.js",
       "includes": [
         "AUREN_EARLY_ENCOUNTER_RUNTIME_V1",
-        "data-auren-ready",
+        "root.dataset.aurenReady=\"true\"",
         "expressionAnchors:true",
         "arbitraryChoiceCap:false",
         "topLevelModes:[\"meet\",\"products\"]",

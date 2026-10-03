@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-03T02:48:05Z",
+  "generatedAt": "2026-10-03T03:46:38Z",
   "window": {
-    "start": "2026-07-05T02:48:05Z",
-    "end": "2026-10-03T02:48:05Z"
+    "start": "2026-07-05T03:46:38Z",
+    "end": "2026-10-03T03:46:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5074,
-    "visits": 1309,
+    "pageLoads": 5080,
+    "visits": 1306,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5074,
-        "visits": 1309
+        "pageLoads": 5080,
+        "visits": 1306
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1065,
-        "visits": 743
+        "pageLoads": 1060,
+        "visits": 740
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
@@ -146,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 90,
-        "visits": 0
-      },
       "/governance/": {
         "pageLoads": 60,
         "visits": 10
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 90,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -334,12 +334,12 @@
         "pageLoads": 142,
         "visits": 112
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 20,
+      "/analytics/": {
+        "pageLoads": 43,
         "visits": 0
       },
-      "/analytics/": {
-        "pageLoads": 32,
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -353,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3765,
+        "pageLoads": 3774,
         "visits": 0
       },
       "(none)": {
@@ -361,8 +361,8 @@
         "visits": 516
       },
       "www.google.com": {
-        "pageLoads": 783,
-        "visits": 783
+        "pageLoads": 780,
+        "visits": 780
       },
       "raw.githack.com": {
         "pageLoads": 10,

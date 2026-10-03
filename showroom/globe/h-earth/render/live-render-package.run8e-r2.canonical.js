@@ -2,7 +2,9 @@
 import {
   getHEarthRun8ER2ImmutableLiveRenderPackage as getRawPackage,
   getHEarthOW01LiveRenderPackageOccurrence as getOW01RawPackage,
-  evaluateHEarthRun8ER2ImmutableLiveRenderPackage
+  evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
+  getHEarthRun8ER2VegetationWorldTruthPlan,
+  createHEarthRun8ER2VegetationPresentationBatch
 } from './live-render-package.run8e-r2.js';
 
 const GRID_SCALE = 16777216;
@@ -124,4 +126,6 @@ export function getHEarthOW01CanonicalLiveRenderPackageOccurrence() {
   return cachedOW01Package;
 }
 
+export function getHEarthRun8ER2CanonicalVegetationPresentationPlan(){const truth=getHEarthRun8ER2VegetationWorldTruthPlan();return freezeRecord({...truth,batches:Object.freeze(truth.batches.map(batch=>freezeRecord({...batch}))),numericIdentityBoundary:'CANONICAL_PLACEMENT_TRUTH_WITH_BOUNDED_PRESENTATION_BATCHES'});}
+export function createHEarthRun8ER2CanonicalVegetationPresentationBatch(batchId){const batch=createHEarthRun8ER2VegetationPresentationBatch(batchId);return freezeRecord({...batch,placementIds:Object.freeze(Array.from(batch.placementIds??[])),primitives:Object.freeze(Array.from(batch.primitives??[]))});}
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;

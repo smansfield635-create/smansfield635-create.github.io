@@ -14885,50 +14885,6 @@
       "scopeHash": "fde80f06feb51ca5120d5540dbd89c2ec9c8ce47c449872163b97f434a97d674",
       "state": "ADMITTED_LOCKED"
     },
-    "fec8d099d6b6dbff989daa4e86a265dcf55dad2ee31c5ab68b7df8dc8d7a9432": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "fe3ad8ab069b1df861ea97f3b125d9d0c8441b4a",
-          "lockGeneration": 2529,
-          "lockScope": "H_EARTH:ACTIVE_ROOT:LOWLAND_GRASS_PRESENTATION_TRIAL:20261003",
-          "operationId": "H_EARTH_LOWLAND_GRASS_PRESENTATION_TRIAL_20261003_002",
-          "procedureLocatorDigest": "231042eceb4a276fb4fc6adf9604110144cfbdef8bf22122ce47835d00231e1a",
-          "requestDigest": "281f91fb19f9e67331587f81f2f500ad8346ff5ec902ef28ad4bb80ed134944e",
-          "scopeHash": "fec8d099d6b6dbff989daa4e86a265dcf55dad2ee31c5ab68b7df8dc8d7a9432"
-        },
-        "bindingDigest": "6bd0cde0155c393596c79f7f1a93b8ed90f048498fc3603f12014ae4c7dd1237",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "fcb444a3e31c91eba4d2e5ac701c348a4e4bdbb540f1e1c375e2e9bf847e5c43",
-          "commentId": 5964573652,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 5086,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 37089704334,
-          "workflowSha": "fe3ad8ab069b1df861ea97f3b125d9d0c8441b4a"
-        },
-        "lineageAnchorCommitSha": "8eff15f18b8eb450f621e07c32ccbd4f088e004f",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "fe3ad8ab069b1df861ea97f3b125d9d0c8441b4a",
-      "lockGeneration": 2529,
-      "lockScope": "H_EARTH:ACTIVE_ROOT:LOWLAND_GRASS_PRESENTATION_TRIAL:20261003",
-      "operationId": "H_EARTH_LOWLAND_GRASS_PRESENTATION_TRIAL_20261003_002",
-      "procedureLocatorDigest": "231042eceb4a276fb4fc6adf9604110144cfbdef8bf22122ce47835d00231e1a",
-      "released": false,
-      "requestDigest": "281f91fb19f9e67331587f81f2f500ad8346ff5ec902ef28ad4bb80ed134944e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "fec8d099d6b6dbff989daa4e86a265dcf55dad2ee31c5ab68b7df8dc8d7a9432",
-      "state": "ADMITTED_LOCKED"
-    },
     "ff478cca9be7e3723efed8b35afff6bd775f4527c130f91d89603e6c66169fd0": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -67454,6 +67410,51 @@
       "scopeHash": "fec8d099d6b6dbff989daa4e86a265dcf55dad2ee31c5ab68b7df8dc8d7a9432",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fe3ad8ab069b1df861ea97f3b125d9d0c8441b4a",
+          "lockGeneration": 2529,
+          "lockScope": "H_EARTH:ACTIVE_ROOT:LOWLAND_GRASS_PRESENTATION_TRIAL:20261003",
+          "operationId": "H_EARTH_LOWLAND_GRASS_PRESENTATION_TRIAL_20261003_002",
+          "procedureLocatorDigest": "231042eceb4a276fb4fc6adf9604110144cfbdef8bf22122ce47835d00231e1a",
+          "requestDigest": "281f91fb19f9e67331587f81f2f500ad8346ff5ec902ef28ad4bb80ed134944e",
+          "scopeHash": "fec8d099d6b6dbff989daa4e86a265dcf55dad2ee31c5ab68b7df8dc8d7a9432"
+        },
+        "bindingDigest": "6bd0cde0155c393596c79f7f1a93b8ed90f048498fc3603f12014ae4c7dd1237",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fcb444a3e31c91eba4d2e5ac701c348a4e4bdbb540f1e1c375e2e9bf847e5c43",
+          "commentId": 5964573652,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5086,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37089704334,
+          "workflowSha": "fe3ad8ab069b1df861ea97f3b125d9d0c8441b4a"
+        },
+        "lineageAnchorCommitSha": "8eff15f18b8eb450f621e07c32ccbd4f088e004f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "fe3ad8ab069b1df861ea97f3b125d9d0c8441b4a",
+      "lockGeneration": 2529,
+      "lockScope": "H_EARTH:ACTIVE_ROOT:LOWLAND_GRASS_PRESENTATION_TRIAL:20261003",
+      "operationId": "H_EARTH_LOWLAND_GRASS_PRESENTATION_TRIAL_20261003_002",
+      "procedureLocatorDigest": "231042eceb4a276fb4fc6adf9604110144cfbdef8bf22122ce47835d00231e1a",
+      "released": true,
+      "requestDigest": "281f91fb19f9e67331587f81f2f500ad8346ff5ec902ef28ad4bb80ed134944e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fec8d099d6b6dbff989daa4e86a265dcf55dad2ee31c5ab68b7df8dc8d7a9432",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

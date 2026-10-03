@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-03T01:42:17Z",
+  "generatedAt": "2026-10-03T02:48:05Z",
   "window": {
-    "start": "2026-07-05T01:42:17Z",
-    "end": "2026-10-03T01:42:17Z"
+    "start": "2026-07-05T02:48:05Z",
+    "end": "2026-10-03T02:48:05Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5088,
-    "visits": 1312,
+    "pageLoads": 5074,
+    "visits": 1309,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5088,
-        "visits": 1312
+        "pageLoads": 5074,
+        "visits": 1309
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1070,
-        "visits": 746
+        "pageLoads": 1065,
+        "visits": 743
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
@@ -186,13 +186,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -339,7 +339,7 @@
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 41,
+        "pageLoads": 32,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -353,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3776,
+        "pageLoads": 3765,
         "visits": 0
       },
       "(none)": {
@@ -361,8 +361,8 @@
         "visits": 516
       },
       "www.google.com": {
-        "pageLoads": 786,
-        "visits": 786
+        "pageLoads": 783,
+        "visits": 783
       },
       "raw.githack.com": {
         "pageLoads": 10,

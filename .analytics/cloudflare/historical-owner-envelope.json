@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-03T18:25:15Z",
+  "generatedAt": "2026-10-03T20:07:52Z",
   "window": {
-    "start": "2026-07-05T18:25:15Z",
-    "end": "2026-10-03T18:25:15Z"
+    "start": "2026-07-05T20:07:52Z",
+    "end": "2026-10-03T20:07:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -58,13 +58,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -146,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -173,6 +173,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -190,10 +194,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,7 +218,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

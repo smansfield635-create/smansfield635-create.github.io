@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-03T18:25:15Z",
+  "generatedAt": "2026-10-03T20:07:52Z",
   "window30d": {
-    "start": "2026-09-03T18:25:15Z",
-    "end": "2026-10-03T18:25:15Z"
+    "start": "2026-09-03T20:07:52Z",
+    "end": "2026-10-03T20:07:52Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 65
+      "pageLoads": 60
     },
     {
       "date": "2026-09-27",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 20
+      "pageLoads": 21
     }
   ],
   "summary": {
-    "pageLoads": 6370,
-    "botPageLoads": 2430,
-    "nonBotPageLoads": 3940
+    "pageLoads": 6356,
+    "botPageLoads": 2426,
+    "nonBotPageLoads": 3930
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3156,
-      "visits": 3156
+      "pageLoads": 3152,
+      "visits": 3152
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2725,
+      "pageLoads": 2715,
       "visits": 0
     },
     {
@@ -192,8 +192,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 332,
-      "visits": 211
+      "pageLoads": 331,
+      "visits": 210
     },
     {
       "path": "/products/education/",

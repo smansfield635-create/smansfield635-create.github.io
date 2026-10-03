@@ -252,13 +252,8 @@ root.dataset.run6fReady = 'false';
 root.dataset.run6fError = 'false';
 root.dataset.run7hReady = 'false';
 root.dataset.run7hError = 'false';
-root.dataset.run8eReady = 'true';
+root.dataset.run8eReady = 'false';
 root.dataset.run8eError = 'false';
-root.dataset.run8ePublicRoute = 'true';
-root.dataset.r3e2PublicGpuComposition = 'true';
-root.dataset.publicRoute = 'true';
-
-updateHud();
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
@@ -272,29 +267,48 @@ export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   getRepresentationTransitionSurface: () => representationTransitionSurface
 });
 
-window.H_EARTH_RUN8E_PUBLIC_ROUTE = H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;
-window.H_EARTH_RUN8E_R3E2_PUBLIC_INTEGRATION = H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;
+let readyPublished = false;
+const publishExistingReadyFromFirstPresentedFrame = () => {
+  if (readyPublished || !firstFramePublished) return false;
+  readyPublished = true;
 
-const readyDetail = {
-  type: 'H_EARTH_RUN8E_READY',
-  integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
-  timestamp: new Date().toISOString()
+  root.dataset.run8eReady = 'true';
+  root.dataset.run8ePublicRoute = 'true';
+  root.dataset.r3e2PublicGpuComposition = 'true';
+  root.dataset.publicRoute = 'true';
+
+  updateHud();
+
+  window.H_EARTH_RUN8E_PUBLIC_ROUTE = H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;
+  window.H_EARTH_RUN8E_R3E2_PUBLIC_INTEGRATION = H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;
+
+  const readyDetail = {
+    type: 'H_EARTH_RUN8E_READY',
+    integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
+    timestamp: new Date().toISOString()
+  };
+  window.dispatchEvent(new CustomEvent('h-earth-run8e-ready', { detail: readyDetail }));
+  emitDiagnosticStage('READY_EVENT_EMITTED', 'PASS', readyDetail);
+
+  if (window.parent === window) {
+    emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');
+  } else {
+    window.parent.postMessage(readyDetail, window.location.origin);
+    window.addEventListener('message', (event) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === 'H_EARTH_RUN8E_READY_ACK') {
+        emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'PASS', event.data);
+      }
+    });
+  }
+  return true;
 };
-window.dispatchEvent(new CustomEvent('h-earth-run8e-ready', { detail: readyDetail }));
-emitDiagnosticStage('READY_EVENT_EMITTED', 'PASS', readyDetail);
 
-if (window.parent === window) {
-  emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');
-} else {
-  window.parent.postMessage(readyDetail, window.location.origin);
-  window.addEventListener('message', (event) => {
-    if (event.origin !== window.location.origin) return;
-    if (event.data?.type === 'H_EARTH_RUN8E_READY_ACK') {
-      emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'PASS', event.data);
-    }
-  });
+if (!publishExistingReadyFromFirstPresentedFrame()) {
+  throw new Error('R3E_FIRST_PRESENTED_FRAME_REQUIRED_BEFORE_READY');
 }
 
+export default H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;
 
 let vegetationFrameRequest = null;
 let vegetationLoadingStopped = false;

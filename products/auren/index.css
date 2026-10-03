@@ -61,3 +61,88 @@
   .room-caption span{display:none}
   .auren-thread-screen{max-height:none;overflow:visible}
 }
+
+/* AUREN_P1_FULL_VIEWPORT_ENCOUNTER_SHELL_V1 */
+html[data-auren-encounter-state="engaged"],
+html[data-auren-encounter-state="engaged"] body{height:100%;overflow:hidden}
+.auren-encounter-exit{display:none}
+.auren-chamber[data-auren-encounter-state="engaged"]{
+  position:fixed;inset:0;z-index:1000;width:100%;height:100dvh;margin:0;padding:0;overflow:hidden;background:#030304
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-header{
+  position:absolute;inset:0;z-index:0;margin:0;padding:0;opacity:.06;filter:blur(5px);pointer-events:none
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-room{
+  position:absolute;inset:0;z-index:0;width:100%;height:100%;border:0;border-radius:0;opacity:.22;filter:blur(3px) saturate(.7);transform:scale(1.035);pointer-events:none
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .room-caption{opacity:.18}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-console{
+  position:absolute;inset:0;z-index:4;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;width:100%;height:100dvh;margin:0;border:0;border-radius:0;background:linear-gradient(180deg,rgba(2,3,6,.76),rgba(5,5,7,.91) 48%,rgba(3,3,4,.97));overflow:hidden
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-encounter-exit{
+  display:block;position:absolute;top:max(.7rem,env(safe-area-inset-top));right:max(.7rem,env(safe-area-inset-right));z-index:20;min-height:40px;padding:.5rem .8rem;border:1px solid rgba(232,192,108,.22);border-radius:999px;background:rgba(3,3,4,.7);color:var(--muted);font:inherit;cursor:pointer
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-console-topline{
+  min-height:58px;padding:max(.7rem,env(safe-area-inset-top)) max(5.7rem,env(safe-area-inset-right)) .55rem max(.8rem,env(safe-area-inset-left));border-bottom:0;background:transparent
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-avatar{width:32px;height:32px}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-identity-copy span{display:none}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-status{font-size:.72rem;opacity:.72}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection{
+  position:absolute;top:max(3.65rem,calc(env(safe-area-inset-top) + 3rem));left:max(.8rem,env(safe-area-inset-left));z-index:7;width:min(210px,42vw);padding:0;border:0;opacity:.28;grid-template-columns:auto 1fr;pointer-events:none
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection>span,
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection>strong{display:none}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-mode-tabs{
+  position:absolute;top:max(3.35rem,calc(env(safe-area-inset-top) + 2.7rem));right:max(.75rem,env(safe-area-inset-right));z-index:8;padding:0;border:0;opacity:.58
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-mode-button{min-height:34px;padding:.35rem .62rem;font-size:.72rem;background:rgba(3,3,4,.52)}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-thread-screen{
+  grid-row:3;display:grid;place-items:center;min-height:0;max-height:none;overflow:hidden;padding:clamp(1rem,4vh,3rem) max(1rem,6vw)
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-thread{
+  width:min(860px,100%);min-height:0;padding:0;gap:.75rem;align-content:center
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-bubble{
+  max-width:min(820px,100%);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-bubble-auren .auren-bubble-body{
+  font-size:clamp(1.22rem,2.2vw,2rem);line-height:1.42;letter-spacing:-.012em;text-wrap:pretty;text-shadow:0 2px 22px rgba(0,0,0,.72)
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-bubble-context{
+  justify-self:start;max-width:90%;padding:0 0 .25rem;color:rgba(232,192,108,.68);font-size:.82rem;border:0;background:transparent
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-prompt-dock{
+  grid-row:4;position:relative;bottom:auto;z-index:10;width:100%;padding:0 max(1rem,5vw) max(1rem,env(safe-area-inset-bottom));border-top:0;background:linear-gradient(180deg,transparent,rgba(3,3,4,.92) 22%,#030304 100%);box-shadow:none
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-prompt-label{
+  width:min(920px,100%);margin:0 auto;padding:.45rem 0;color:rgba(188,197,211,.58);font-size:.65rem
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-options{
+  width:min(920px,100%);margin:0 auto;padding:.2rem 0 0;border:0;gap:.5rem
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-option{
+  min-height:44px;background:rgba(8,8,9,.82);backdrop-filter:blur(12px)
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-context-route{
+  grid-row:5;width:min(920px,calc(100% - 2rem));margin:0 auto;padding:0 0 max(.75rem,env(safe-area-inset-bottom))
+}
+@media(max-width:600px){
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-console{grid-template-rows:auto auto minmax(0,1fr) auto auto}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-thread-screen{padding:4.7rem 1rem .75rem}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-bubble-auren .auren-bubble-body{font-size:clamp(1.08rem,5vw,1.42rem);line-height:1.38}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-options{display:grid;grid-template-columns:1fr}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-option{width:100%;padding:.58rem .72rem;text-align:left}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-mode-tabs{top:max(3.25rem,calc(env(safe-area-inset-top) + 2.6rem))}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-connection{top:max(3.55rem,calc(env(safe-area-inset-top) + 2.9rem));width:28vw}
+}
+@media(max-height:620px){
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-thread-screen{padding-top:3.8rem;padding-bottom:.45rem}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-bubble-auren .auren-bubble-body{font-size:1.05rem;line-height:1.3}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-prompt-label{display:none}
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-option{min-height:38px;padding:.42rem .62rem;font-size:.86rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-header,
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-room{filter:none}
+}

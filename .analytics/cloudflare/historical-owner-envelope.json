@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-03T04:39:13Z",
+  "generatedAt": "2026-10-03T05:41:17Z",
   "window": {
-    "start": "2026-07-05T04:39:13Z",
-    "end": "2026-10-03T04:39:13Z"
+    "start": "2026-07-05T05:41:17Z",
+    "end": "2026-10-03T05:41:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5080,
-    "visits": 1306,
+    "pageLoads": 5082,
+    "visits": 1307,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5080,
-        "visits": 1306
+        "pageLoads": 5082,
+        "visits": 1307
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1060,
-        "visits": 740
+        "pageLoads": 1061,
+        "visits": 741
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 200,
@@ -234,13 +234,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -347,17 +347,17 @@
         "visits": 2
       },
       "/products/auren/": {
-        "pageLoads": 2,
+        "pageLoads": 3,
         "visits": 2
       }
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 516,
-        "visits": 516
+        "pageLoads": 517,
+        "visits": 517
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3774,
+        "pageLoads": 3775,
         "visits": 0
       },
       "www.google.com": {

@@ -1,9 +1,10 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-gen2534-module-parser-v4-20261003",
+  "capabilityId": "H_EARTH_GEN2515_AUTHORIZED_TOOLSET_EXECUTE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H_EARTH_GEN2534_EXACT_HEAD_MODULE_PARSE_20261003_005\",\"descriptorId\":\"H_EARTH_EXACT_HEAD_MODULE_PARSER_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_FULL_ENVIRONMENT_LIVE_PROMOTION_20261003_001\",\"admissionReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"e0a1de4b3e07015fac909f6bf3ed3d18a2074707\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2534-full-environment-promotion-admission.minimal.v1.json\",\"sha256\":\"aa5c34a7b3d558678e10a9f91e5ecf79bd9f51f2e16488079548e7b2f47ed5d4\"},\"routerReceiptIdentity\":{\"sourceClass\":\"REPOSITORY_PATH_AT_EXACT_HEAD\",\"exactHead\":\"e0a1de4b3e07015fac909f6bf3ed3d18a2074707\",\"path\":\".github/ai-toolset-transport/evidence/h-earth-gen2534-full-environment-promotion-router.minimal.v1.json\",\"sha256\":\"3b186c878c437284101480247c6c46ea13e001b114991a9d1809dd8645a6609e\"},\"inputs\":{\"subjectHead\":\"3ad24e461c2ef035bded1604359937b61f4acc10\",\"entryPath\":\"showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js\",\"executionHolder\":\"H_EARTH_GEN2534_MODULE_PARSER_20261003\"},\"availableCapabilities\":{\"schema\":\"AVAILABLE_CAPABILITY_RECEIPT_v1\",\"availableBackends\":[\"GITHUB_ACTIONS_CLEAN_EXECUTION\"],\"availableWorkflowPaths\":[\".github/workflows/ai-room-execution-transport.yml\"],\"availableToolingHeads\":[\"65005835c53debde65a19624a850872dfe25ae21\"]},\"requestNonce\":\"2534253425342534253425342534253425342534253425342534253425342538\"}",
+    "router_callback_issue": "5086",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
   }
 }

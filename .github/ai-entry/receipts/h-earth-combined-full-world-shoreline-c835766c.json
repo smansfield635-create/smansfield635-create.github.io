@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-combined-full-world-shoreline-c835766c",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5642,
+  "requestBranch": "ai-dispatch-request-h-earth-combined-c835766c",
+  "requestCommit": "6b49c59ba5397033799de759eeed3c1efcd77590",
+  "requestCommitParent": "9590d04dd4bc0b7c5ae1c2afb34ec976fe3d0c79",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "9590d04dd4bc0b7c5ae1c2afb34ec976fe3d0c79",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "c835766c839d7a0446d8d98b4092ec2de9066e64",
+    "exercise_vegetation_residency": "true"
+  },
+  "bridgeRunId": "37133651778",
+  "dispatchedRunId": 37133661025,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37133661025",
+  "dispatchedRunHeadSha": "9590d04dd4bc0b7c5ae1c2afb34ec976fe3d0c79",
+  "dispatchedAt": "2026-10-03T15:33:27.025Z",
+  "resolvedAt": "2026-10-03T15:33:30.920Z"
+}

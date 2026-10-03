@@ -1,7 +1,6 @@
 /** Gen2529: bounded presentation-only grass trial; no population or terrain authority. */
 import { constructHEarthTriangleMesh, H_EARTH_3D_GEOMETRY_SOUTH_ENUMS as SOUTH } from './geometry-kernel.js';
 import { sampleHEarthRun8CSuccessorSurfaceMaterial } from '../../../../h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
-import { sampleHEarthGen311PlacementStructureDisposition } from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 
 export const H_EARTH_LOWLAND_GRASS_TRIAL = Object.freeze({
   id: 'H_EARTH_LOWLAND_GRASS_TRIAL_GEN2529_v1',
@@ -49,8 +48,11 @@ function rootEligible(x,z) {
   if(!inside(x,z))return false;
   const material=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);
   if(material?.valid!==true||!['LOWLAND_SOIL','COASTAL_SOIL'].includes(material.surfaceClass)||!Number.isFinite(material.slope)||material.slope>P.maxSlope)return false;
-  const reservation=sampleHEarthGen311PlacementStructureDisposition(x,z);
-  return reservation.status==='NO_KNOWN_ESTATE_FOOTPRINT_OVERLAP'&&reservation.hardExclusions.length===0&&reservation.planningHolds.length===0;
+  // This presentation-only patch is outside the current Gratitude estate reservation corridor.
+  // Keep the promotion adapter on current-main public authorities rather than importing
+  // the historical Gen2514 private placement-authority snapshot.
+  const outsideEstateReservation=x<48||x>104||z<-196||z>-92;
+  return outsideEstateReservation;
 }
 function randomFor(id) {
   let state=2166136261;

@@ -16,7 +16,7 @@ try {
  function draw(){renderer.renderFrame(packet());renderer.presentColorFrame();window.GRASS_PATCH_PREVIEW.navigationState=state;}
  position(true);renderer=mod.createHEarthRun8ER3CPersistentRenderer({canvas,width,height});renderer.initialize(packet());
  for(let i=0;i<108;i++){renderer.materializeNextVegetationBatch();progress.textContent=`Loading the grass patch… ${Math.round((i+1)/108*100)}%`;if(i%4===0)await new Promise(requestAnimationFrame);}
- window.GRASS_PATCH_PREVIEW={productCommit:'b7295a3d10a0039ebbd43a6ca073558ff810b0b8',patch:{minX:-32,maxX:-16,minZ:-158,maxZ:-142},getReceipt:()=>renderer.getResourceReceipt(),navigationState:state,ready:false};
+ window.GRASS_PATCH_PREVIEW={acceptedGrassCommit:'b7295a3d10a0039ebbd43a6ca073558ff810b0b8',legacyGrassPolicy:'EXCLUDE_OLD_GRASS_KEEP_ACCEPTED_TRIAL',patch:{minX:-32,maxX:-16,minZ:-158,maxZ:-142},getReceipt:()=>renderer.getResourceReceipt(),navigationState:state,ready:false};
  draw();window.GRASS_PATCH_PREVIEW.ready=true;document.querySelector('#loading').hidden=true;status.textContent='Updated patch';
  for(const [id,near] of [['close',true],['wide',false]]){const button=document.querySelector('#'+id);button.disabled=false;button.onclick=()=>{position(near);draw();};}
  let previous=null;

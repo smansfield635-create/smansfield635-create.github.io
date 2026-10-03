@@ -108,15 +108,31 @@ function replaceTuft(primitive,index) {
   if(!result.valid||!result.primitiveRecord)throw new Error(`GRASS_TRIAL_SOUTH_CONSTRUCTION_FAILED:${JSON.stringify(result.issues)}`);
   return result.primitiveRecord;
 }
-/** No-op batches retain identity. Other primitives retain exact object references. */
+/** Owner-directed presentation suppression; canonical population truth stays intact. */
 export function applyHEarthLowlandGrassTrialBatch(batch,renderPackage) {
-  if(!batch.primitives.some(eligiblePrimitive))return batch;
-  let index=cache.get(renderPackage);
-  if(!index){index=buildHEarthGrassTrialTerrainIndex(renderPackage);cache.set(renderPackage,index);}
-  let replacedPrimitiveCount=0;
-  const primitives=batch.primitives.map(primitive=>{
-    if(!eligiblePrimitive(primitive))return primitive;
-    replacedPrimitiveCount++;return replaceTuft(primitive,index);
-  });
-  return freeze({...batch,primitives,lowlandGrassTrial:{id:P.id,replacedPrimitiveCount,populationIdentityPreserved:true}});
+  const needsReplacement=batch.primitives.some(primitive=>eligiblePrimitive(primitive)&&!primitive.metadata?.lowlandGrassTrial);
+  let index;
+  if(needsReplacement){
+    index=cache.get(renderPackage);
+    if(!index){index=buildHEarthGrassTrialTerrainIndex(renderPackage);cache.set(renderPackage,index);}
+  }
+  let replacedPrimitiveCount=0,suppressedLegacyGrassCount=0;
+  const primitives=[];
+  for(const primitive of batch.primitives){
+    let presented=primitive;
+    if(eligiblePrimitive(primitive)&&!primitive.metadata?.lowlandGrassTrial){
+      presented=replaceTuft(primitive,index);replacedPrimitiveCount++;
+    }
+    if(presented.materialHint?.archetypeId==='COASTAL_GRASS_TUFT'&&!presented.metadata?.lowlandGrassTrial){
+      suppressedLegacyGrassCount++;continue;
+    }
+    primitives.push(presented);
+  }
+  return freeze({...batch,primitives,lowlandGrassTrial:{
+    id:P.id,
+    presentationPolicyId:'H_EARTH_ACCEPTED_PATCH_GRASS_ONLY_LEGACY_GRASS_HIDDEN_v1',
+    replacedPrimitiveCount,suppressedLegacyGrassCount,renderedPrimitiveCount:primitives.length,
+    populationIdentityPreserved:true,legacyGrassPresentationSuppressed:true,
+    completeWorldPlacementPresentationClaimed:false
+  }});
 }

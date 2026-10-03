@@ -1,0 +1,95 @@
+{
+  "ownerDecision": {
+    "source": "Owner message accompanying 27723.mp4, 2026-10-02 22:05 America/Chicago",
+    "accepted": "Curved realistic grass in the test patch",
+    "required": "No old ugly grass in the rendered environment",
+    "futureDirection": "Grass may form general patches and areas, rather than only isolated tufts",
+    "scopeUpdate": "Owner removal instruction supersedes previous outside-patch legacy-grass visual preservation"
+  },
+  "acceptedGrassCommit": "b7295a3d10a0039ebbd43a6ca073558ff810b0b8",
+  "parentPreviewCommit": "60405c2d548566666c5cff7fb380a41c52122996",
+  "change": "Exclude legacy coastal grass primitives from presentation; keep accepted four and canonical placement data",
+  "acceptedBladeConstructionUnchanged": true,
+  "verification": {
+    "status": "PASS",
+    "sourceHashes": {
+      "grass-lowland-trial.js": "f71411e4e406b752051b01923fbc99c1430309434f58aa63d1beb860c4e253e2",
+      "live-render-package.run8e-r2.js": "58d7a35792fc16b9eceaa7e465c5881d623948d794a862f8800e11738a924449",
+      "grass-lowland-trial.verify.mjs": "e0943f85413c9c45b4b95938065eb0aba02193c842ba792112816fc6d3fb6168"
+    },
+    "packageBefore": "a979e68e5a352b85c49f0ef302f1d2181af2c9186fe28ffb0771ff8d4b30f7d0",
+    "packageAfter": "a979e68e5a352b85c49f0ef302f1d2181af2c9186fe28ffb0771ff8d4b30f7d0",
+    "selectedAnchors": [
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:437f9031",
+        "x": -17.48377451684414,
+        "y": 3.06630676984787,
+        "z": -153.53065064282404
+      },
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:83316cda",
+        "x": -23.570047350733088,
+        "y": 3.3636797666549683,
+        "z": -151.616923476713
+      },
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:8333ab71",
+        "x": -24.473244313028,
+        "y": 4.543727993965149,
+        "z": -144.5201204390079
+      },
+      {
+        "placementId": "H_EARTH_GEN311_PLACEMENT:a33fa046",
+        "x": -29.470945965142676,
+        "y": 1.0985833406448364,
+        "z": -157.51782209112258
+      }
+    ],
+    "instanceCount": 27585,
+    "batchCount": 108,
+    "changedPrimitives": 4,
+    "changedPlacementIds": [
+      "H_EARTH_GEN311_PLACEMENT:437f9031",
+      "H_EARTH_GEN311_PLACEMENT:83316cda",
+      "H_EARTH_GEN311_PLACEMENT:8333ab71",
+      "H_EARTH_GEN311_PLACEMENT:a33fa046"
+    ],
+    "unchangedNongrassPrimitives": 0,
+    "unchangedByArchetype": {},
+    "suppressedLegacyGrassPrimitives": 27581,
+    "suppressedByArchetype": {
+      "COASTAL_GRASS_TUFT": 27581
+    },
+    "renderedPrimitiveCount": 4,
+    "consumedPlacementCount": 27585,
+    "emptyPresentationBatches": 105,
+    "renderedLegacyGrassCount": 0,
+    "rootCount": 576,
+    "maxRootErrorMeters": 1.1917769437985726e-07,
+    "trialTriangleCount": 3456,
+    "deterministic": true,
+    "contactSurface": "BASE_PACKAGE_FLOAT32_TRIANGLES",
+    "refinementActivationVerified": false
+  },
+  "browser": {
+    "ready": true,
+    "errors": [],
+    "vegetationResidency": {
+      "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+      "totalInstanceCount": 27585,
+      "totalBatchCount": 108,
+      "maxInstancesPerBatch": 256,
+      "residentInstanceCount": 27585,
+      "residentBatchCount": 108,
+      "residentPrimitiveCount": 4,
+      "complete": true,
+      "droppedPlacementCount": 0,
+      "worldRebuildCount": 0,
+      "cameraIndependent": true
+    },
+    "refinementResourceCreated": false
+  },
+  "distinction": "27585 canonical placements consumed;4 primitives rendered. Hidden legacy placements are not claimed as visible.",
+  "productionPublication": false,
+  "nextAction": "Use this clean candidate as the base for any expansion of the accepted grass into natural patches."
+}

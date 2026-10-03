@@ -18,14 +18,18 @@ for(const span of pkg.primitiveSpans.filter(s=>s.role==='TERRAIN'))for(let i=spa
 }
 function terrainY(p){for(const [a,b,c] of triangles){const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);if(Math.abs(d)<1e-12)continue;const u=((b.z-c.z)*(p.x-c.x)+(c.x-b.x)*(p.z-c.z))/d,v=((c.z-a.z)*(p.x-c.x)+(a.x-c.x)*(p.z-c.z))/d,w=1-u-v;if(Math.min(u,v,w)>=-1e-7)return u*a.y+v*b.y+w*c.y;}throw Error('ROOT_OUTSIDE_TERRAIN');}
 const truth=getHEarthRun8ER2VegetationWorldTruthPlan();assert.equal(truth.batches.length,108);
-let count=0,unchanged=0,changed=0,roots=0,maxRootError=0,triangleCount=0;const changedPlacements=new Set(),allIds=new Set();
+let count=0,unchanged=0,changed=0,roots=0,maxRootError=0,triangleCount=0,suppressed=0,rendered=0,emptyBatches=0;const suppressedByArchetype={},unchangedByArchetype={};const changedPlacements=new Set(),allIds=new Set();
 for(const descriptor of truth.batches){
  const original=constructHEarthGen2515VegetationPresentationBatch(descriptor.batchId),candidate=createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId),repeat=createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId);
- assert.equal(candidate.eligible,true);assert.equal(candidate.instanceCount,original.instanceCount);assert.deepEqual(candidate.placementIds,original.placementIds);assert.equal(candidate.primitives.length,original.primitives.length);assert.equal(digest(candidate),digest(repeat),'repeat differs');count+=candidate.instanceCount;
+ assert.equal(candidate.eligible,true);assert.equal(candidate.instanceCount,original.instanceCount);assert.deepEqual(candidate.placementIds,original.placementIds);assert.equal(digest(candidate),digest(repeat),'repeat differs');count+=candidate.instanceCount;
  for(const id of candidate.placementIds){assert(!allIds.has(id));allIds.add(id);}
+ const byId=new Map(candidate.primitives.map(p=>[p.primitiveId,p]));assert.equal(byId.size,candidate.primitives.length);rendered+=candidate.primitives.length;if(!candidate.primitives.length)emptyBatches++;let batchSuppressed=0;
+ for(const p of candidate.primitives){assert(original.primitives.some(before=>before.primitiveId===p.primitiveId),'new primitive identity');assert(p.materialHint.archetypeId!=='COASTAL_GRASS_TUFT'||p.metadata.lowlandGrassTrial,'legacy grass rendered');}
  for(let i=0;i<original.primitives.length;i++){
-  const before=original.primitives[i],after=candidate.primitives[i];assert.equal(before.primitiveId,after.primitiveId);
-  if(digest(before)===digest(after)){unchanged++;continue;}
+  const before=original.primitives[i],after=byId.get(before.primitiveId),archetype=before.materialHint.archetypeId;
+  if(!after){assert.equal(archetype,'COASTAL_GRASS_TUFT','nongrass suppressed');const a=before.metadata.worldAnchor;assert(!(a.x>=-32&&a.x<=-16&&a.z>=-158&&a.z<=-142),'accepted patch suppressed');suppressed++;batchSuppressed++;suppressedByArchetype[archetype]=(suppressedByArchetype[archetype]??0)+1;continue;}
+  assert.equal(before.primitiveId,after.primitiveId);
+  if(archetype!=='COASTAL_GRASS_TUFT'){assert.equal(digest(before),digest(after),'nongrass changed');unchanged++;unchangedByArchetype[archetype]=(unchangedByArchetype[archetype]??0)+1;continue;}
   changed++;const anchor=before.metadata.worldAnchor;selectedAnchors.push({placementId:before.metadata.gen2514PlacementId,...anchor});assert(anchor.x>=-32&&anchor.x<=-16&&anchor.z>=-158&&anchor.z<=-142);assert.equal(before.materialHint.archetypeId,'COASTAL_GRASS_TUFT');changedPlacements.add(before.metadata.gen2514PlacementId);assert.deepEqual(after.materialHint,before.materialHint);
   for(const [key,value] of Object.entries(before.metadata))assert.deepEqual(after.metadata[key],value,`metadata changed: ${key}`);
   const g=after.geometry;assert(g.vertices.length>before.geometry.vertices.length);
@@ -35,7 +39,9 @@ for(const descriptor of truth.batches){
   const points=after.metadata.lowlandGrassTrial.rootPoints;assert(points.length>=96);
   for(const p of points){const vertex=g.vertices[p.vertexIndex];assert(vertex);const soil=sampleHEarthRun8CSuccessorSurfaceMaterial(vertex.x,vertex.z);assert.equal(soil.valid,true);assert(['LOWLAND_SOIL','COASTAL_SOIL'].includes(soil.surfaceClass));assert(Number.isFinite(soil.slope)&&soil.slope<=.45);const estate=sampleHEarthGen311PlacementStructureDisposition(vertex.x,vertex.z);assert.equal(estate.status,'NO_KNOWN_ESTATE_FOOTPRINT_OVERLAP');assert.equal(estate.hardExclusions.length,0);assert.equal(estate.planningHolds.length,0);const err=Math.abs(vertex.y-terrainY(vertex));assert(err<=0.00002,`root error ${err}`);maxRootError=Math.max(maxRootError,err);roots++;}
  }
+ if(candidate.lowlandGrassTrial){assert.equal(candidate.lowlandGrassTrial.suppressedLegacyGrassCount,batchSuppressed);assert.equal(candidate.lowlandGrassTrial.renderedPrimitiveCount,candidate.primitives.length);assert.equal(candidate.lowlandGrassTrial.completeWorldPlacementPresentationClaimed,false);}
 }
+assert(suppressed>0);assert.equal(rendered,unchanged+changed);
 assert.equal(count,27585);assert.equal(allIds.size,27585);assert.equal(changedPlacements.size,4);assert.equal(changed,4);
 const packageAfter=digest(pkg);assert.equal(packageAfter,packageBefore);
-console.log(JSON.stringify({status:'PASS',sourceHashes,packageBefore,packageAfter,selectedAnchors,instanceCount:count,batchCount:truth.batches.length,changedPrimitives:changed,changedPlacementIds:[...changedPlacements],unchangedPrimitives:unchanged,rootCount:roots,maxRootErrorMeters:maxRootError,trialTriangleCount:triangleCount,deterministic:true,contactSurface:'BASE_PACKAGE_FLOAT32_TRIANGLES',refinementActivationVerified:false},null,2));
+console.log(JSON.stringify({status:'PASS',sourceHashes,packageBefore,packageAfter,selectedAnchors,instanceCount:count,batchCount:truth.batches.length,changedPrimitives:changed,changedPlacementIds:[...changedPlacements],unchangedNongrassPrimitives:unchanged,unchangedByArchetype,suppressedLegacyGrassPrimitives:suppressed,suppressedByArchetype,renderedPrimitiveCount:rendered,consumedPlacementCount:count,emptyPresentationBatches:emptyBatches,renderedLegacyGrassCount:0,rootCount:roots,maxRootErrorMeters:maxRootError,trialTriangleCount:triangleCount,deterministic:true,contactSurface:'BASE_PACKAGE_FLOAT32_TRIANGLES',refinementActivationVerified:false},null,2));

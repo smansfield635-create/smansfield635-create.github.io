@@ -2063,7 +2063,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "H_EARTH_EXACT_HEAD_MODULE_PARSER_V1",
-      "exactToolingHead": "TOOLING_HEAD_SELF",
+      "exactToolingHead": "40d3e5c7e7c3a46732e2730bcb3e3b7e3817e9d1",
       "commandSpecification": {
         "executable": "node",
         "scriptPath": "tools/ai-room-transport/h-earth-exact-head-module-parser.v1.mjs",

@@ -35,8 +35,10 @@
         "Nutrition",
         "Book / Nine Summits",
         "Can I try it?",
-        "I'm actually excited about that one.",
-        "What makes the Book different to you?"
+        "Personally, I'm excited about it.",
+        "Why does that matter to you?",
+        "Then Elara is where this should go next.",
+        "Talk to Elara"
       ],
       "excludes": [
         "On Your Side AI",
@@ -85,7 +87,12 @@
         "topLevelModes:[\"meet\",\"products\"]",
         "productCount:5",
         "showConnection",
-        "showRoute"
+        "showRoute",
+        "data.aurenEncounterState",
+        "auren-expression-current",
+        "auren-route-emergent",
+        "meaningfulHistory.established",
+        "instead of starting over"
       ],
       "excludes": [
         "slice(0,3)"
@@ -100,7 +107,12 @@
         ".auren-context-route",
         "@media(max-width:700px)",
         "@media(max-width:420px)",
-        "@media(prefers-reduced-motion:reduce)"
+        "@media(prefers-reduced-motion:reduce)",
+        "AUREN_P1_FULL_VIEWPORT_ENCOUNTER_SHELL_V1",
+        "height:100dvh",
+        "AUREN_P2_TRANSIENT_EXCHANGE_V1",
+        "AUREN_P3_HANDOFF_TRANSFORMATION_V1",
+        "AUREN_P4_AMBIENT_CONNECTION_V1"
       ],
       "excludes": []
     }

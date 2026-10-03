@@ -3,7 +3,8 @@ import {
   H_EARTH_RUN_8E_R2_CONTRACT_ID,
   evaluateHEarthRun8ER2Control
 } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
-import { buildHEarthRun8ENeutralPackage } from './run8e-successor-environment.js';
+import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch } from './run8e-successor-environment.js';
+import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js';
 import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
 import {
   H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,
@@ -36,6 +37,8 @@ export const H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_SOURCE_FILE =
   '/showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
 export const H_EARTH_RUN_8E_R2_HISTORICAL_OCCURRENCE_ID =
   'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
+export const H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID =
+  'H_EARTH_RUN_8E_R2_CURRENT_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 export const H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID =
   'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
 
@@ -257,7 +260,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   timeOfDayHours = 15.25,
   defaultObserverElevation = 2.25,
   defaultViewDistance = 512,
-  packageOccurrenceId = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001'
+  packageOccurrenceId = H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID
 } = {}) {
   const startedAt = now();
   const issues = [];
@@ -618,6 +621,12 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
 }
 
 export function createHEarthRun8ER2GPUBufferViews(packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()) {
+  if (packageRecord?.eligible !== true) {
+    const sourceIssues = Array.isArray(packageRecord?.issues) && packageRecord.issues.length > 0
+      ? packageRecord.issues
+      : ['R2_PACKAGE_REJECTED_WITHOUT_SOURCE_ISSUES'];
+    throw new Error(`R2_GPU_VIEW_SOURCE_PACKAGE_REJECTED:${sourceIssues.join(',')}`);
+  }
   const evaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
   if (evaluation.eligible !== true) {
     throw new Error(`R2_GPU_VIEW_SOURCE_INVALID:${evaluation.issues.join(',')}`);
@@ -650,4 +659,7 @@ export function getHEarthOW01LiveRenderPackageOccurrence() {
   return cachedOW01Package;
 }
 
+export const H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY=freezeRecord({schema:'H_EARTH_GEN2514_CANONICAL_VEGETATION_PLAYBACK_MANIFEST_v1',manifestSha256:'9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e',instanceCount:27585,batchCount:108,maxInstancesPerBatch:256,placementAuthority:'28bc466fe029b449ce4edd27843c0457bfa3349d',geometryAuthority:'5b5d07d2b1320b4e235de0aee0f526a0c206e63b',sourceWorkflowRun:36927299507});
+export function getHEarthRun8ER2VegetationWorldTruthPlan(){const truth=getHEarthGen2515VegetationWorldTruthPlan();if(truth?.eligible!==true)throw new Error('R2_VEGETATION_WORLD_TRUTH_INVALID');const manifest=H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY;const actual=freezeRecord({instanceCount:truth.instanceCount,batchCount:truth.batches?.length,maxInstancesPerBatch:truth.maxInstancesPerMaterializationBatch,droppedPlacementCount:truth.droppedPlacementCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,cameraIndependent:truth.cameraIndependent,lodOrVisibilitySelectionPerformed:truth.lodOrVisibilitySelectionPerformed});const expected=freezeRecord({instanceCount:manifest.instanceCount,batchCount:manifest.batchCount,maxInstancesPerBatch:manifest.maxInstancesPerBatch,droppedPlacementCount:0,completeWorldPlacementCoverageRequired:true,cameraIndependent:true,lodOrVisibilitySelectionPerformed:false});if(Object.keys(expected).some(key=>actual[key]!==expected[key]))throw new Error(`R2_QUALIFIED_MANIFEST_IDENTITY_MISMATCH:actual=${JSON.stringify(actual)}:expected=${JSON.stringify(expected)}`);return freezeRecord({...truth,qualifiedManifestIdentity:manifest});}
+export function createHEarthRun8ER2VegetationPresentationBatch(batchId){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=constructHEarthGen2515VegetationPresentationBatch(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const presentation=applyHEarthLowlandGrassTrialBatch(materialized,getHEarthRun8ER2ImmutableLiveRenderPackage());return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
 export default getHEarthRun8ER2ImmutableLiveRenderPackage;

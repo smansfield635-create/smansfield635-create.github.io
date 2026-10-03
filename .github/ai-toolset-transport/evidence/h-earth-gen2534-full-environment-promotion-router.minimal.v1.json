@@ -1,0 +1,13 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "disposition": "PASS",
+  "governingHead": "9590d04dd4bc0b7c5ae1c2afb34ec976fe3d0c79",
+  "routes": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "routeClass": "REGISTERED_PROJECT",
+      "projectId": "H_EARTH",
+      "disposition": "PASS"
+    }
+  ]
+}

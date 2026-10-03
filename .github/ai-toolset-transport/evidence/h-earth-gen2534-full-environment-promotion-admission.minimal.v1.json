@@ -1,0 +1,16 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "H_EARTH_FULL_ENVIRONMENT_LIVE_PROMOTION_20261003_001",
+  "projectId": "H_EARTH",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "H_EARTH_FULL_ENVIRONMENT_LIVE_PROMOTION_20261003_001",
+    "lockGeneration": 2534,
+    "lockScope": "H_EARTH:ACTIVE_ROOT:SURVEY_GUIDED_OASIS:20261003",
+    "lockAcquired": true
+  }
+}

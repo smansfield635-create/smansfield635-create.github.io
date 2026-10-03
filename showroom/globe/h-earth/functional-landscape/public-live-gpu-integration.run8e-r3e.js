@@ -308,7 +308,6 @@ if (!publishExistingReadyFromFirstPresentedFrame()) {
   throw new Error('R3E_FIRST_PRESENTED_FRAME_REQUIRED_BEFORE_READY');
 }
 
-export default H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;
 
 let vegetationFrameRequest = null;
 let vegetationLoadingStopped = false;

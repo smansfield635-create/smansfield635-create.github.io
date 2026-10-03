@@ -217,3 +217,39 @@ html[data-auren-encounter-state="engaged"] body{height:100%;overflow:hidden}
   .auren-chamber[data-auren-encounter-state="engaged"] .auren-route-emergent{animation:aurenHandoffEmerge .32s ease-out both}
   @keyframes aurenHandoffEmerge{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 }
+
+/* AUREN_P4_AMBIENT_CONNECTION_V1 */
+.auren-connection{position:relative}
+.auren-connection-ambient{display:none}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection{
+  top:auto;left:auto;right:max(.9rem,env(safe-area-inset-right));bottom:max(.7rem,env(safe-area-inset-bottom));
+  z-index:6;width:18px;height:18px;display:block;padding:0;opacity:1;border:0;pointer-events:none
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection-word,
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection-track,
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection>strong{display:none}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection-ambient{
+  display:block;position:absolute;inset:5px;border-radius:50%;background:rgba(232,192,108,.34);
+  box-shadow:0 0 12px rgba(232,192,108,.08);transition:transform .45s ease,opacity .45s ease,box-shadow .45s ease
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection[data-auren-connection-state="new"] .auren-connection-ambient{
+  opacity:.26;transform:scale(.72)
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection[data-auren-connection-state="interested"] .auren-connection-ambient{
+  opacity:.48;transform:scale(.9);box-shadow:0 0 16px rgba(232,192,108,.13)
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-connection[data-auren-connection-state="opening"] .auren-connection-ambient{
+  opacity:.68;transform:scale(1);box-shadow:0 0 20px rgba(232,192,108,.18)
+}
+.auren-chamber[data-auren-encounter-state="engaged"] .auren-expression-current::after{
+  content:"";position:absolute;left:-1rem;top:8%;bottom:8%;width:1px;
+  background:rgba(232,192,108,.08);opacity:.35;pointer-events:none;transition:opacity .4s ease
+}
+.auren-chamber[data-auren-encounter-state="engaged"][data-auren-connection-state="interested"] .auren-expression-current::after{opacity:.52}
+.auren-chamber[data-auren-encounter-state="engaged"][data-auren-connection-state="opening"] .auren-expression-current::after{opacity:.7}
+@media(max-width:600px){
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-connection{right:max(.45rem,env(safe-area-inset-right));bottom:max(.4rem,env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){
+  .auren-chamber[data-auren-encounter-state="engaged"] .auren-connection-ambient{transition:none}
+}

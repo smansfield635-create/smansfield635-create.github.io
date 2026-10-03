@@ -12,7 +12,7 @@ function setEncounterState(state){root.dataset.aurenEncounterState=state;documen
 function engage(){if(root.dataset.aurenEncounterState==="engaged")return;setEncounterState("engaged");requestAnimationFrame(()=>q("[data-auren-encounter-surface]")?.focus?.({preventScroll:true}))}
 function disengage(){setEncounterState("threshold");window.scrollTo({top:0,behavior:reduced()?"auto":"smooth"})}
 let connection=18;
-function showConnection(delta=0){connection=Math.max(12,Math.min(62,connection+delta));if(connectionFill)connectionFill.style.width=connection+"%";if(connectionLabel)connectionLabel.textContent=connection>=45?"Opening up":connection>=28?"Interested":"New"}
+function showConnection(delta=0){connection=Math.max(12,Math.min(62,connection+delta));const state=connection>=45?"opening":connection>=28?"interested":"new";const label=state==="opening"?"Opening up":state==="interested"?"Interested":"New";if(connectionFill)connectionFill.style.width=connection+"%";if(connectionLabel)connectionLabel.textContent=label;const mount=q("[data-auren-connection]");if(mount){mount.dataset.aurenConnectionState=state;mount.setAttribute("aria-label","Connection with Auren: "+label.toLowerCase())}root.dataset.aurenConnectionState=state}
 function attentionDelta(id){return ["dontPush","dontTell","fiveExcited","bookAuren","educationWhy","nutritionWhy","archcoinWhy","control"].includes(id)?5:["protectedPress"].includes(id)?-3:0}
 function setHandoffState(active){root.dataset.aurenHandoff=active?"active":"none";if(promptLabel)promptLabel.hidden=Boolean(active)}
 function clearRoute(){setHandoffState(false);if(routeMount)empty(routeMount)}

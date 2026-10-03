@@ -1,0 +1,53 @@
+{
+  "schema": "H_EARTH_SHORELINE_CONTINUATION_v1",
+  "status": "CANDIDATE_READY_FOR_OWNER_REVIEW",
+  "operationId": "H_EARTH_SHORELINE_SOIL_CATTAIL_REFERENCE_20261003_001",
+  "generation": 2533,
+  "sourceComment": 5966112856,
+  "acquisitionCommit": "5f4c2d24c712ccd0157aad5eab6ad268d207d741",
+  "governingHead": "6ed89d815790be2bff1e0a61dd74afb023af2194",
+  "candidateBranch": "h-earth-shoreline-soil-cattails-20261003",
+  "rollbackCommit": "2717035f6c6d7ba0f488ee424ddfb6ee361b4df3",
+  "candidateSourceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "sha256": "80c296aed7324d01865acf6e6cb4a61d9c92085cd506d17de47d5c012a5dd8ca"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+      "sha256": "448d5cb6eaf3852c750b5f53d898c028faedefe5056c6c75ebf68f39db087abf"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "473eb2af69658601dbf045ae7693789dd2dc92529e4bd10564c4caea6555b49e"
+    },
+    {
+      "path": "h-earth-lowland-grass-trial-evidence/index.html",
+      "sha256": "3de1630a5f4e53915feb6fe805aaebe70df1c53ce594149d0651fb9afd1ec54f"
+    }
+  ],
+  "evidencePath": "h-earth-lowland-grass-trial-evidence/oasis-receipt.json",
+  "evidenceSha256": "4c5e4270f4b009e4ed952b174e8bee436a0620e993dc7c8d87fe25194b0c262e",
+  "previewPath": "h-earth-lowland-grass-trial-evidence/index.html",
+  "previewPolicy": "EXACT_COMMIT_GITHACK_FULL_WORLD_REVIEW_USING_EXISTING_AUTHORIZED_PREVIEW_PROVIDER",
+  "completed": [
+    "all72 cattail reference forms",
+    "entire existing grassy shoreline soil display treatment",
+    "all350 oasis grass tufts and original4 unchanged",
+    "zero added oasis triangles",
+    "independent geometry and renderer scope verification",
+    "desktop and portrait browser interaction checks"
+  ],
+  "ownerReview": "PENDING",
+  "nextAction": "Review this complete candidate; keep, request a repair, or return to the exact saved parent.",
+  "permissions": {
+    "merge": false,
+    "productionDeployment": false
+  },
+  "registrationRecovery": {
+    "failedWorkflowRun": 37101246776,
+    "classification": "Missing workflow source-comment match corrected through existing native authenticated invocation. No authority logic modified.",
+    "mainMovement": "6dd1ce to6ed89: only disjoint analytics and Auren reconstruction plan changed; same product parent and exact seven-path scope retained.",
+    "stalePublicRefReadback": "Raw failure preserved during execution; fresh connected ref, exact original plan and unchanged native readback/lineage checks produced authentic admission."
+  }
+}

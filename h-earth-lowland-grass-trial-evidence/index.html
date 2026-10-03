@@ -21,7 +21,7 @@ try {
  function packet(){return frames.createHEarthRun8ER3AFrameUniformPacket({navigationState:state,viewport:{width:canvas.clientWidth,height:canvas.clientHeight,pixelRatio:ratio},frameSequence:++sequence});}
  function draw(){renderer.renderFrame(packet());renderer.presentColorFrame();window.GRASS_PATCH_PREVIEW.navigationState=state;dirty=false;}
  position(true);await stage('Building the terrain…');renderer=mod.createHEarthRun8ER3CPersistentRenderer({canvas,width,height});await stage('Opening the view…');renderer.initialize(packet());
- window.GRASS_PATCH_PREVIEW={baselineCommit:'eb975ec3fd7de628c36f45d9c5626366106fbb3d',foliageRevision:'REFERENCE_SECTION_STRUCTURE_AND_COLOR_V4',legacyGrassPolicy:'EXCLUDED',patch:{minX:-18,maxX:34,minZ:-204,maxZ:-131},getReceipt:()=>renderer.getResourceReceipt(),getNavigationCheck:()=>nav.evaluateHEarthFunctionalLandscapeNavigationState(state),navigationState:state,ready:false,vegetationReady:false,startup};
+ window.GRASS_PATCH_PREVIEW={baselineCommit:'2717035f6c6d7ba0f488ee424ddfb6ee361b4df3',foliageRevision:'FULL_SHORELINE_SOIL_AND_CATTAIL_REFERENCE_V5',legacyGrassPolicy:'EXCLUDED',patch:{minX:-18,maxX:34,minZ:-204,maxZ:-131},getReceipt:()=>renderer.getResourceReceipt(),getNavigationCheck:()=>nav.evaluateHEarthFunctionalLandscapeNavigationState(state),navigationState:state,ready:false,vegetationReady:false,startup};
  draw();window.GRASS_PATCH_PREVIEW.ready=true;startup.firstFrameMs=performance.now()-startup.startedAt;document.querySelector('#loading').hidden=true;
  const held=new Set();
  for(const [id,oasis] of [['close',true],['wide',false]]){const button=document.querySelector('#'+id);button.disabled=false;button.onclick=()=>{held.clear();position(oasis);};}

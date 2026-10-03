@@ -214,6 +214,36 @@ function refineCattailUpper(stem,head,roots,x,z,id){
   for(let i=0;i<head.length;i++)head[i]=transform(head[i],true);
   return {version:'REPRESENTATIVE_SHORELINE_LEAF_REFINEMENT_v1',section:shorelineSection,anchor:{x,z},pocket:shorelineStyle(x,z),rootVerticesPreserved:true};
 }
+/** Photo 27734 morphology, applied after surveyed roots and original indices are fixed. */
+function referenceCattailUpper(stem,head,roots,x,z,id){
+  const rng=randomFor(`${id}:PHOTO_REFERENCE_FORM_27734`),bottom={...head[60]},oldTop=head[61];
+  const normalize=v=>{const length=Math.hypot(v.x,v.y,v.z);return {x:v.x/length,y:v.y/length,z:v.z/length};};
+  const axis=normalize({x:oldTop.x-bottom.x,y:oldTop.y-bottom.y,z:oldTop.z-bottom.z});
+  const side=normalize({x:1-axis.x*axis.x,y:-axis.x*axis.y,z:-axis.x*axis.z});
+  const across={x:side.y*axis.z-side.z*axis.y,y:side.z*axis.x-side.x*axis.z,z:side.x*axis.y-side.y*axis.x};
+  const oldLength=Math.hypot(oldTop.x-bottom.x,oldTop.y-bottom.y,oldTop.z-bottom.z),length=Math.max(.28,Math.min(.46,oldLength*1.15)),aspect=6+rng(),radius=length/(2*aspect);
+  const point=(t,radial,a)=>({x:Math.fround(bottom.x+axis.x*length*t+radial*(side.x*Math.cos(a)+across.x*Math.sin(a))),y:Math.fround(bottom.y+axis.y*length*t+radial*(side.y*Math.cos(a)+across.y*Math.sin(a))),z:Math.fround(bottom.z+axis.z*length*t+radial*(side.z*Math.cos(a)+across.z*Math.sin(a)))});
+  const fractions=[.025,.075,.15,.85,.925,.975],radii=[.45,.85,1,1,.85,.45];
+  for(let ring=0;ring<6;ring++)for(let column=0;column<10;column++)head[ring*10+column]=point(fractions[ring],radius*radii[ring],column*Math.PI/5);
+  head[60]=point(0,0,0);head[61]=point(1,0,0);
+  const spikeLength=.10+rng()*.06;
+  // Reuse the final stem segment as a slender extension through and above the head.
+  for(const [row,t,stemRadius] of [[4,.03,.010],[5,1+spikeLength/length,.0025]])for(let column=0;column<8;column++)stem[row*8+column]=point(t,stemRadius,column*Math.PI/4);
+  let curvedDryLeafCount=0;
+  for(let leaf=0;leaf<6;leaf++){
+    const start=48+leaf*19,a=stem[start],b=stem[start+1],c=stem[start+2],oldTip=stem[start+18],root={x:b.x,y:b.y,z:b.z};
+    const initialReach=Math.hypot(oldTip.x-root.x,oldTip.z-root.z),dx=(oldTip.x-root.x)/initialReach,dz=(oldTip.z-root.z)/initialReach;
+    const rootHalfWidth=Math.hypot(c.x-a.x,c.y-a.y,c.z-a.z)/2,height=Math.max(.20,oldTip.y-root.y),reach=initialReach*(1.50+rng()*.25),curled=rng()<.28,twist=(rng()-.5)*.32;
+    if(curled)curvedDryLeafCount++;
+    const center=t=>{const travel=reach*(.32*t+.68*t*t),sweep=reach*twist*Math.sin(Math.PI*t),rise=height*(curled?2*t-1.25*t*t*t:1.42*t-.42*t*t*t);return {x:root.x+dx*travel-dz*sweep,y:root.y+rise,z:root.z+dz*travel+dx*sweep};};
+    for(let row=1;row<6;row++){
+      const t=row/6,mid=center(t),half=rootHalfWidth*(1+2.2*Math.sin(Math.PI*t))*Math.pow(1-t,.55),rotation=twist*t,wx=-dz*Math.cos(rotation)+dx*Math.sin(rotation),wz=dx*Math.cos(rotation)+dz*Math.sin(rotation);
+      for(let column=-1;column<=1;column++)stem[start+row*3+column+1]={x:Math.fround(Math.max(O.minX+.002,Math.min(O.maxX-.002,mid.x+wx*half*column))),y:Math.fround(mid.y+(column===0?half*.22*Math.sin(Math.PI*t):0)),z:Math.fround(Math.max(O.minZ+.002,Math.min(O.maxZ-.002,mid.z+wz*half*column)))};
+    }
+    const tip=center(1);stem[start+18]={x:Math.fround(Math.max(O.minX+.002,Math.min(O.maxX-.002,tip.x))),y:Math.fround(tip.y),z:Math.fround(Math.max(O.minZ+.002,Math.min(O.maxZ-.002,tip.z)))};
+  }
+  return {reference:'27734.jpg',version:'FULL_OASIS_CATTAIL_REFERENCE_FORM_v1',headLengthMeters:length,headLengthToDiameter:aspect,spikeLengthMeters:spikeLength,leafCount:6,curvedDryLeafCount,rootVerticesPreserved:true,indexTopologyPreserved:true};
+}
 const mixRgb=(a,b,t)=>a.map((v,i)=>Math.max(0,Math.min(1,(v+(b[i]-v)*t)/255)));
 function colorOasisPrimitive(primitive,kind,bankClearance=0){
   const verts=primitive.geometry.vertices,rng=randomFor(`${primitive.primitiveId}:NATURAL_COLOR_V2`),colors=[];
@@ -237,8 +267,11 @@ function colorOasisPrimitive(primitive,kind,bankClearance=0){
       for(let i=0;i<19&&base+i<verts.length;i++)colors.push(mixRgb(lo,hi,i===18?1:Math.floor(i/3)/6).map(v=>v*shade));
     }
   }else{
-    const shade=.82+rng()*.27,minY=Math.min(...verts.map(v=>v.y)),maxY=Math.max(...verts.map(v=>v.y));
-    for(const v of verts)colors.push(mixRgb([62,39,23],[132,91,49],(v.y-minY)/(maxY-minY||1)).map(c=>c*shade));
+    const shade=.88+rng()*.20;
+    for(let i=0;i<verts.length;i++){
+      const ring=Math.floor(i/10),side=i%10,mottle=.47+.18*Math.sin(side*2.1+ring*.7)+.12*(rng()-.5);
+      colors.push(mixRgb([100,55,25],[165,98,41],mottle).map(c=>c*shade));
+    }
   }
   const refinement=primitive.metadata.oasisFoliage.shorelineRefinement;
   if(refinement&&kind==='GRASS'){
@@ -303,8 +336,8 @@ function replaceOasisTuft(primitive,index) {
   return colorOasisPrimitive(result.primitiveRecord,'GRASS',ground.y-water.y);
 }
 
-function oasisMesh(id,vertices,indices,roots,intent,kind,bankClearance=0,shorelineRefinement=null){
-  const r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,primitiveType:SOUTH.primitiveType.TRIANGLE_MESH,vertices,indices,normalMode:SOUTH.normalMode.FACE_AND_VERTEX,expectedClosure:SOUTH.expectedClosure.OPEN_ALLOWED,semanticRole:'BOUNDED_WET_EDGE_PRESENTATION',materialHint:{materialIntent:intent,archetypeId:'OASIS_CATTAIL'},metadata:{oasisFoliage:{id:O.id,kind,rootPoints:roots,...(shorelineRefinement?{shorelineRefinement}:{}),worldTruthMutated:false,attachment:'FINAL_CANONICAL_FLOAT32_TERRAIN_TRIANGLES'}},source:{sourceType:'OWNER_REQUESTED_BOUNDED_FOLIAGE_PRESENTATION'}});
+function oasisMesh(id,vertices,indices,roots,intent,kind,bankClearance=0,shorelineRefinement=null,cattailReferenceForm=null){
+  const r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,primitiveType:SOUTH.primitiveType.TRIANGLE_MESH,vertices,indices,normalMode:SOUTH.normalMode.FACE_AND_VERTEX,expectedClosure:SOUTH.expectedClosure.OPEN_ALLOWED,semanticRole:'BOUNDED_WET_EDGE_PRESENTATION',materialHint:{materialIntent:intent,archetypeId:'OASIS_CATTAIL'},metadata:{oasisFoliage:{id:O.id,kind,rootPoints:roots,...(shorelineRefinement?{shorelineRefinement}:{}),...(cattailReferenceForm?{cattailReferenceForm}:{}),worldTruthMutated:false,attachment:'FINAL_CANONICAL_FLOAT32_TERRAIN_TRIANGLES'}},source:{sourceType:'OWNER_REQUESTED_BOUNDED_FOLIAGE_PRESENTATION'}});
   if(!r.valid||!r.primitiveRecord)throw new Error(`OASIS_MESH_INVALID:${id}:${JSON.stringify(r.issues)}`);
   return colorOasisPrimitive(r.primitiveRecord,kind,bankClearance);
 }
@@ -346,7 +379,8 @@ function cattail(index,x,z,number){
   }
   for(let i=0;i<headI.length;i+=3){const t=headI[i+1];headI[i+1]=headI[i+2];headI[i+2]=t;}
   const shorelineRefinement=refineCattailUpper(verts,headV,roots,x,z,id);
-  return [oasisMesh(`${id}:STEM_LEAVES`,verts,inds,roots,'SHRUB_GREEN_CATTAIL','CATTAIL_STEM_AND_LEAVES',root.y-sampleHEarthGrassTrialTerrain(waterForIndex.get(index),x,z).y,shorelineRefinement),oasisMesh(`${id}:SEEDHEAD`,headV,headI,[],'WOODY_BROWN_CATTAIL_SEEDHEAD','ROUNDED_CATTAIL_SEEDHEAD',0,shorelineRefinement)];
+  const cattailReferenceForm=referenceCattailUpper(verts,headV,roots,x,z,id);
+  return [oasisMesh(`${id}:STEM_LEAVES`,verts,inds,roots,'SHRUB_GREEN_CATTAIL','CATTAIL_STEM_AND_LEAVES',root.y-sampleHEarthGrassTrialTerrain(waterForIndex.get(index),x,z).y,shorelineRefinement,cattailReferenceForm),oasisMesh(`${id}:SEEDHEAD`,headV,headI,[],'WOODY_BROWN_CATTAIL_SEEDHEAD','ROUNDED_CATTAIL_SEEDHEAD',0,shorelineRefinement,cattailReferenceForm)];
 }
 function* constructOasisFoliageSteps(renderPackage){
   if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);
@@ -416,4 +450,34 @@ export async function prepareHEarthOasisFoliagePresentation(renderPackage,{yield
   })();
   oasisPreparationInFlight.set(renderPackage,preparation);
   try{return await preparation;}finally{oasisPreparationInFlight.delete(renderPackage);}
+}
+
+/** One presentation mask from the existing oasis grass roots; never a terrain or placement authority. */
+export function buildHEarthOasisGrassSoilCoverage(primitives){
+  const cellSizeMeters=.5,width=104,height=146,size=width*height,bounds=Object.freeze({minX:O.minX,maxX:O.maxX,minZ:O.minZ,maxZ:O.maxZ});
+  const occupied=new Uint8Array(size);let grassTuftCount=0,grassRootCount=0;
+  for(const primitive of primitives??[]){
+    if(!primitive.primitiveId?.startsWith(`${O.id}:GRASS:`)||!primitive.metadata?.oasisFoliage)continue;
+    grassTuftCount++;
+    for(const root of primitive.metadata.oasisFoliage.rootPoints){
+      const x=Math.floor((root.x-O.minX)/cellSizeMeters),z=Math.floor((root.z-O.minZ)/cellSizeMeters);
+      if(x>=0&&x<width&&z>=0&&z<height){occupied[z*width+x]=1;grassRootCount++;}
+    }
+  }
+  let occupiedCellCount=0;const expanded=new Float32Array(size);
+  for(let z=0;z<height;z++)for(let x=0;x<width;x++)if(occupied[z*width+x]){
+    occupiedCellCount++;
+    for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++)if(dx*dx+dz*dz<=4&&x+dx>=0&&x+dx<width&&z+dz>=0&&z+dz<height)expanded[(z+dz)*width+x+dx]=1;
+  }
+  const blur=input=>{const horizontal=new Float32Array(size),output=new Float32Array(size);
+    for(let z=0;z<height;z++)for(let x=0;x<width;x++){let sum=0;for(let d=-2;d<=2;d++)if(x+d>=0&&x+d<width)sum+=input[z*width+x+d];horizontal[z*width+x]=sum/5;}
+    for(let z=0;z<height;z++)for(let x=0;x<width;x++){let sum=0;for(let d=-2;d<=2;d++)if(z+d>=0&&z+d<height)sum+=horizontal[(z+d)*width+x];output[z*width+x]=sum/5;}
+    return output;
+  };
+  const blurred=blur(blur(expanded)),pixels=new Uint8Array(size),smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};let nonzeroTexelCount=0;
+  for(let z=0;z<height;z++)for(let x=0;x<width;x++){
+    const edge=Math.min(x,width-1-x,z,height-1-z)*cellSizeMeters,value=smooth(.025,.70,blurred[z*width+x])*smooth(0,1.5,edge);
+    pixels[z*width+x]=Math.round(value*255);if(pixels[z*width+x])nonzeroTexelCount++;
+  }
+  return Object.freeze({width,height,bounds,cellSizeMeters,pixels,grassTuftCount,grassRootCount,occupiedCellCount,nonzeroTexelCount});
 }

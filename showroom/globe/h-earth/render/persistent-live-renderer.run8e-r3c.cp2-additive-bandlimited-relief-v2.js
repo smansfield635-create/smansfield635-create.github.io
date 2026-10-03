@@ -5,6 +5,9 @@ import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-packag
 import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch } from './live-render-package.run8e-r2.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
+// SHORELINE_SOIL_BEGIN import
+import { buildHEarthOasisGrassSoilCoverage } from './grass-lowland-trial.js';
+// SHORELINE_SOIL_END import
 
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.
 // The GPU attribute is a sampled, linearly interpolated approximation, not an
@@ -260,6 +263,9 @@ uniform float uMaximumFogFactor;
 uniform float uDistanceDesaturationStrength;
 uniform vec4 uTerrainPatchClip;
 uniform int uClipBaseTerrain;
+// SHORELINE_SOIL_BEGIN uniform
+uniform sampler2D uShorelineSoilCoverage;
+// SHORELINE_SOIL_END uniform
 out vec4 outColor;
 
 float hash21(vec2 p){
@@ -585,6 +591,22 @@ void main(){
     palette=mix(palette,sand,sandCoverage);
     presentationContact*=1.0-0.85*sandCoverage;
     presentationHighlight*=1.0-0.70*sandCoverage;
+// SHORELINE_SOIL_BEGIN shade
+    // The mask is derived once from the accepted grass roots on this bank.
+    vec2 soilUv=(world-vec2(-18.0,-204.0))/vec2(52.0,73.0);
+    if(all(greaterThanEqual(soilUv,vec2(0.0)))&&all(lessThanEqual(soilUv,vec2(1.0)))){
+      float coverage=texture(uShorelineSoilCoverage,soilUv).r;
+      float moist=1.0-smoothstep(0.5,6.0,max(0.0,inlandMeters));
+      float broadSoil=noise2(world*0.37+vec2(7.3,13.8));
+      float brokenSoil=noise2(world*1.1+vec2(19.7,3.2));
+      vec3 drySoil=vec3(0.245,0.174,0.092);
+      vec3 dampSoil=vec3(0.125,0.082,0.043);
+      vec3 soil=mix(drySoil,dampSoil,moist*0.82);
+      soil*=0.88+0.19*broadSoil+0.07*brokenSoil;
+      float soilBlend=coverage*(0.70+0.23*broadSoil);
+      palette=mix(palette,soil,soilBlend);
+    }
+// SHORELINE_SOIL_END shade
     base=palette;
   }else if(vRoleCode==4u){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.
@@ -701,6 +723,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     programCreateCount: 0, programLinkCount: 0, vertexArrayCreateCount: 0,
     bufferCreateCount: 0, bufferUploadCount: 0, uploadedByteLength: 0,
     textureCreateCount: 0, framebufferCreateCount: 0,
+// SHORELINE_SOIL_BEGIN counters
+    shorelineSoilTextureUploadCount: 0, shorelineSoilUploadedByteLength: 0,
+// SHORELINE_SOIL_END counters
     postInitializationResourceCreationCount: 0, postInitializationBufferUploadCount: 0,
     frameCount: 0, visiblePresentationCount: 0, colorReadbackCount: 0,
     depthReadbackCount: 0, pngEncodingCount: 0, gpuFinishCount: 0,
@@ -845,6 +870,18 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.depthFramebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, resources.depthColorTexture, 0);
     requireCompleteFramebuffer('DEPTH');
+// SHORELINE_SOIL_BEGIN allocation
+    // Allocate at initialization; foliage residency supplies the pixels once.
+    resources.shorelineSoilTexture=createTexture();
+    resources.shorelineSoilCoverage={ready:false,width:104,height:146,grassTuftCount:0};
+    gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,resources.shorelineSoilTexture);
+    gl.texStorage2D(gl.TEXTURE_2D,1,gl.R8,104,146);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+    gl.activeTexture(gl.TEXTURE0);
+// SHORELINE_SOIL_END allocation
     resources.uniforms = {
       viewProjection: uniform(resources.geometryProgram, 'uViewProjection'), cameraPosition: uniform(resources.geometryProgram, 'uCameraPosition'),
       sunDirection: uniform(resources.geometryProgram, 'uSunDirection'), sunIntensity: uniform(resources.geometryProgram, 'uSunIntensity'),
@@ -855,6 +892,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), patchClip: uniform(resources.geometryProgram, 'uTerrainPatchClip'), clipBaseTerrain: uniform(resources.geometryProgram, 'uClipBaseTerrain'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
+// SHORELINE_SOIL_BEGIN location
+    resources.uniforms.shorelineSoilCoverage=uniform(resources.geometryProgram,'uShorelineSoilCoverage');
+// SHORELINE_SOIL_END location
     resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
     resources.clearColorBytes = resources.skyColor.map((entry) => Math.round(entry * 255));
     gl.useProgram(resources.geometryProgram);
@@ -864,7 +904,10 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
     gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
-    counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
+// SHORELINE_SOIL_BEGIN sampler
+    gl.uniform1i(resources.uniforms.shorelineSoilCoverage,1);
+// SHORELINE_SOIL_END sampler
+    counters.staticUniformUpdateCount = 11; initialized = true; return getResourceReceipt();
   }
 
   function buildInitialRefinementPatch(packet) {
@@ -941,6 +984,19 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const state=resources.vegetation;if(state.complete)return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});
     const descriptor=state.truth.batches[state.nextBatchIndex];if(!descriptor){state.complete=true;return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});}
     const batch=createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId);
+// SHORELINE_SOIL_BEGIN upload
+    if(!resources.shorelineSoilCoverage.ready&&batch.primitives.some(p=>p.metadata?.oasisFoliage&&p.primitiveId.includes(':GRASS:'))){
+      const mask=buildHEarthOasisGrassSoilCoverage(batch.primitives);
+      if(mask.width!==104||mask.height!==146||mask.grassTuftCount!==350)throw new Error('OASIS_SOIL_COVERAGE_IDENTITY_MISMATCH');
+      gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,resources.shorelineSoilTexture);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
+      gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,mask.width,mask.height,gl.RED,gl.UNSIGNED_BYTE,mask.pixels);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);gl.activeTexture(gl.TEXTURE0);
+      counters.shorelineSoilTextureUploadCount++;counters.shorelineSoilUploadedByteLength+=mask.pixels.byteLength;
+      const {pixels,...summary}=mask;
+      resources.shorelineSoilCoverage={...summary,ready:true,derivedFrom:'EXISTING_OASIS_GRASS_ROOTS',terrainGeometryMutated:false};
+    }
+// SHORELINE_SOIL_END upload
     if(batch.instanceCount!==descriptor.count||batch.placementIds.length!==descriptor.count)throw new Error('R3C_VEGETATION_BATCH_IDENTITY_MISMATCH');
     for(const id of batch.placementIds){if(state.residentPlacementIds.has(id))throw new Error('R3C_VEGETATION_DUPLICATE_PLACEMENT');state.residentPlacementIds.add(id);}
     const positions=[],normals=[],colors=[],mats=[],models=[],surfaces=[],primitiveIds=[],roles=[],indices=[];let vertexOffset=0;
@@ -970,6 +1026,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);
     gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
+// SHORELINE_SOIL_BEGIN binding
+    gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,resources.shorelineSoilTexture);gl.activeTexture(gl.TEXTURE0);
+// SHORELINE_SOIL_END binding
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     const patch=resources.refinement;
@@ -1051,7 +1110,10 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         uniformCount: rendererInterface.frameUniformNames.length, drawRangeCount: rendererInterface.drawRanges.length
       },
       counters: { ...counters },
-      persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
+// SHORELINE_SOIL_BEGIN receipt
+      shorelineSoilCoverage:{...resources.shorelineSoilCoverage},
+// SHORELINE_SOIL_END receipt
+      persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 4, framebuffers: 2 },
       resourceIdentityStable: initialized && resources.buffers?.length === 11 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
       packageUploadedOnce: counters.bufferUploadCount === 11 && counters.postInitializationBufferUploadCount === 0,
       noUnauthorizedPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,

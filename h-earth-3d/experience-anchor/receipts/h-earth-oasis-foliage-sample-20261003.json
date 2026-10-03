@@ -16,11 +16,19 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "sha256": "97d8f874c3706cb41f035c16f3c9f40b6ef9f9d17c9edea638d84f0cf4056fcb"
+      "sha256": "80c296aed7324d01865acf6e6cb4a61d9c92085cd506d17de47d5c012a5dd8ca"
     },
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
-      "sha256": "aadde78619496a7bbd9bdd303a5b5debf5efb211f837dc6757fd35940c3fcac3"
+      "sha256": "448d5cb6eaf3852c750b5f53d898c028faedefe5056c6c75ebf68f39db087abf"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "473eb2af69658601dbf045ae7693789dd2dc92529e4bd10564c4caea6555b49e"
+    },
+    {
+      "path": "h-earth-lowland-grass-trial-evidence/index.html",
+      "sha256": "3de1630a5f4e53915feb6fe805aaebe70df1c53ce594149d0651fb9afd1ec54f"
     }
   ],
   "invariants": {
@@ -36,5 +44,5 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "reviewBoundary": "Representative foliage refinement tested against unchanged world and same comparison camera. Outside primitives and original roots preserved. Owner physical acceptance pending."
+  "reviewBoundary": "Full surveyed shoreline candidate compared with exact saved parent and supplied cattail reference. Same navigable world, terrain topology, all roots and grass bytes preserved. Inherited scale/narrative/acoustic contracts unchanged; physical owner acceptance pending."
 }

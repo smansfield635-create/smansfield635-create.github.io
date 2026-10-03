@@ -34,3 +34,30 @@
 .auren-context-route{padding:0 1rem 1rem}.auren-context-route:empty{display:none}.auren-route-card{display:grid;gap:.35rem;padding:.9rem 1rem;border:1px solid var(--line);border-radius:16px;background:rgba(232,192,108,.06)}.auren-route-card span{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.auren-route-card a{font-weight:800;color:var(--gold)}
 @media(max-width:520px){.auren-connection{grid-template-columns:auto 1fr auto}.auren-thread-screen{max-height:52vh}}
 @media(prefers-reduced-motion:reduce){.auren-connection-track i{transition:none}}
+
+/* AUREN_SINGLE_SCROLL_CONVERSATION_V1 */
+.auren-room-compact{height:clamp(190px,28vw,320px)}
+.auren-console{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;min-height:0}
+.auren-thread-screen{max-height:none;overflow:visible}
+.auren-thread{min-height:0}
+.auren-prompt-dock{position:sticky;bottom:0;z-index:8;background:linear-gradient(180deg,rgba(6,9,17,.96),rgba(6,9,17,1));box-shadow:0 -14px 30px rgba(2,3,7,.55)}
+@media(max-width:900px){
+  .auren-chamber{width:min(100% - 12px,1180px);padding-top:6px}
+  .auren-header{padding-bottom:.45rem}
+  .auren-room-compact{height:210px;border-radius:18px}
+  .room-caption{bottom:.55rem;left:.65rem;padding:.45rem .6rem}
+  .auren-presence{bottom:13%}
+  .auren-console{margin-top:8px}
+  .auren-console-topline{padding:.7rem .8rem}
+  .auren-connection{padding:.55rem .8rem}
+  .auren-mode-tabs{padding:.55rem .8rem}
+  .auren-thread{padding:.75rem .8rem;gap:.5rem}
+  .auren-bubble{padding:.58rem .72rem}
+  .auren-prompt-label{padding:.6rem .8rem 0}
+  .auren-prompt-dock .auren-options{padding:.55rem .8rem .75rem}
+}
+@media(max-width:520px){
+  .auren-room-compact{height:170px}
+  .room-caption span{display:none}
+  .auren-thread-screen{max-height:none;overflow:visible}
+}

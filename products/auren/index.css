@@ -19,3 +19,18 @@
 .auren-typing-dots i:nth-child(2){animation-delay:.14s}.auren-typing-dots i:nth-child(3){animation-delay:.28s}
 @keyframes aurenTyping{0%,60%,100%{opacity:.22;transform:translateY(0)}30%{opacity:.85;transform:translateY(-3px)}}
 @media(prefers-reduced-motion:reduce){.auren-typing-dots i{animation:none}.auren-typing-dots i:nth-child(2){opacity:.5}.auren-typing-dots i:nth-child(3){opacity:.8}}
+
+/* AUREN_EARLY_ENCOUNTER_MODES_V1 */
+.auren-mode-tabs{display:flex;gap:.5rem;padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.auren-mode-button{min-height:42px;padding:.6rem 1rem;border:1px solid rgba(232,192,108,.22);border-radius:999px;background:transparent;color:var(--muted);cursor:pointer}
+.auren-mode-button.is-active{color:var(--ink);border-color:var(--gold);background:rgba(232,192,108,.1)}
+.auren-option[data-auren-anchor]{position:relative}
+@media(max-width:420px){.auren-mode-tabs{display:grid;grid-template-columns:1fr 1fr}.auren-mode-button{width:100%}}
+
+/* AUREN_EARLY_ENCOUNTER_PRESENTATION_V2 */
+.auren-connection{display:grid;grid-template-columns:auto minmax(90px,180px) auto;align-items:center;gap:.7rem;padding:.8rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);font-size:.75rem;color:var(--muted)}
+.auren-connection-track{height:5px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.auren-connection-track i{display:block;width:18%;height:100%;background:currentColor;transition:width .5s ease}.auren-connection strong{color:var(--ink);font-size:.72rem}
+.auren-thread-screen{max-height:440px;overflow:auto;scrollbar-width:thin}.auren-thread{min-height:150px}.auren-prompt-dock{border-top:1px solid rgba(255,255,255,.08)}.auren-prompt-label{padding:.8rem 1rem 0;color:var(--muted);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}.auren-prompt-dock .auren-options{border-top:0;padding-top:.7rem}
+.auren-context-route{padding:0 1rem 1rem}.auren-context-route:empty{display:none}.auren-route-card{display:grid;gap:.35rem;padding:.9rem 1rem;border:1px solid var(--line);border-radius:16px;background:rgba(232,192,108,.06)}.auren-route-card span{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}.auren-route-card a{font-weight:800;color:var(--gold)}
+@media(max-width:520px){.auren-connection{grid-template-columns:auto 1fr auto}.auren-thread-screen{max-height:52vh}}
+@media(prefers-reduced-motion:reduce){.auren-connection-track i{transition:none}}

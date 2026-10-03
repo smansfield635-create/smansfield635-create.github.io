@@ -4,7 +4,33 @@ import {
   createHEarthRun8ER2GPUBufferViews
 } from './live-render-package.run8e-r2.js';
 import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
+import { H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS } from './geometry-shoreline.js';
+import { createHEarthRun8ER2CanonicalVegetationPresentationBatch } from './live-render-package.run8e-r2.canonical.js';
 
+// Authored X/Z units are meters. The coast itself is the immutable zero contour.
+// Sample its canonical curve once; each query finds the closest point on that
+// polyline. A 1 m chord limits curvature approximation without per-frame work.
+const COAST_MIN_X=-7200,COAST_MAX_X=7200,COAST_STEP_METERS=1;
+const coastSamples=Array.from({length:COAST_MAX_X-COAST_MIN_X+1},(_,i)=>getHEarthCanonicalShorelineZ(COAST_MIN_X+i));
+export function getHEarthSignedCoastDistanceMeters(worldX,worldZ){
+  if(!Number.isFinite(worldX)||!Number.isFinite(worldZ))return Number.NaN;
+  const localCoast=getHEarthCanonicalShorelineZ(worldX);
+  const delta=worldZ-localCoast;
+  // Beyond this distance every coastal color/material transition is saturated.
+  // The canonical coast varies by far less than 260 m across this domain.
+  if(Math.abs(delta)>620)return delta>0?-620:620;
+  const reach=Math.abs(delta)+COAST_STEP_METERS;
+  const first=Math.max(0,Math.floor(worldX-reach-COAST_MIN_X));
+  const last=Math.min(coastSamples.length-2,Math.ceil(worldX+reach-COAST_MIN_X));
+  let best=delta*delta;
+  for(let i=first;i<=last;i++){
+    const ax=COAST_MIN_X+i,az=coastSamples[i],vx=COAST_STEP_METERS,vz=coastSamples[i+1]-az;
+    const t=Math.min(1,Math.max(0,((worldX-ax)*vx+(worldZ-az)*vz)/(vx*vx+vz*vz)));
+    const dx=worldX-ax-t*vx,dz=worldZ-az-t*vz;
+    best=Math.min(best,dx*dx+dz*dz);
+  }
+  return delta>0?-Math.sqrt(best):Math.sqrt(best);
+}
 const freezeRecord = (value) => Object.freeze(value);
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
@@ -145,8 +171,7 @@ function invertSphericalPresentationPoint(x, y, z) {
 }
 
 function recoveredWaterRgb(worldX, worldZ) {
-  const shorelineZ = getHEarthCanonicalShorelineZ(worldX);
-  const distance = Math.max(0, worldZ - shorelineZ);
+  const distance = Math.max(0, -getHEarthSignedCoastDistanceMeters(worldX, worldZ));
   const shallowToShelf = smoothstep(6, 86, distance);
   const shelfToDeep = smoothstep(54, 360, distance);
   return mix3(mix3(SHALLOW, SHELF, shallowToShelf), DEEP, shelfToDeep);
@@ -190,6 +215,29 @@ function projectRecoveredWaterBaseColors(rawViews, packageRecord) {
   };
 }
 
+function projectShorelineSandColors(waterProjectedColors, packageRecord){
+  const result=new Float32Array(waterProjectedColors);
+  const projectedPrimitiveIds=[];
+  let projectedVertexCount=0;
+  for(const span of packageRecord?.primitiveSpans??[]){
+    const bandId=String(span?.primitiveId??'').split(':').at(-1);
+    const material=H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS[bandId];
+    if(!material||span?.primitiveId!==`H_EARTH_FUNCTIONAL_SHORELINE:${bandId}`)continue;
+    projectedPrimitiveIds.push(span.primitiveId);
+    const start=Number(span.vertexStart)||0,count=Number(span.vertexCount)||0;
+    for(let local=0;local<count;local++){
+      const c=(start+local)*4;
+      result[c]=srgb8ToLinear(material.rgba[0]);
+      result[c+1]=srgb8ToLinear(material.rgba[1]);
+      result[c+2]=srgb8ToLinear(material.rgba[2]);
+      result[c+3]=1;
+      projectedVertexCount++;
+    }
+  }
+  if(projectedPrimitiveIds.length!==3)throw new Error('SHORELINE_SAND_GPU_SPAN_COUNT_INVALID');
+  return {view:result,receipt:freezeRecord({projectedVertexCount,projectedPrimitiveIds:Object.freeze(projectedPrimitiveIds),sourcePackageMutated:false,activeWebglBaseColorProjection:true})};
+}
+
 export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()
 ) {
@@ -201,11 +249,12 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   );
   const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
   const projectedWaterColors = projectRecoveredWaterBaseColors(rawViews, packageRecord);
+  const projectedSandColors = projectShorelineSandColors(projectedWaterColors.view, packageRecord);
 
   return freezeRecord({
     positions: new Float32Array(rawViews.positions),
     normals: canonicalNormals.view,
-    baseColorsLinear: projectedWaterColors.view,
+    baseColorsLinear: projectedSandColors.view,
     materialParameters: canonicalMaterialParameters.view,
     materialModelCodes: new Uint8Array(rawViews.materialModelCodes),
     surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
@@ -220,6 +269,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       materialParameterBuffer: canonicalMaterialParameters.receipt,
       gpuRoleProjection: projectedRoleCodes.receipt,
       gpuWaterOpticalProjection: projectedWaterColors.receipt,
+      gpuShorelineSandProjection: projectedSandColors.receipt,
       sourcePackageMutated: false,
       transportEncodingOnly: true
     }),
@@ -264,4 +314,5 @@ export function evaluateHEarthRun8ER2DCanonicalGPUUploadViews(views) {
   });
 }
 
+export function createHEarthRun8ER2DVegetationBatchGPUViews(batchId){const batch=createHEarthRun8ER2CanonicalVegetationPresentationBatch(batchId);const positions=[],normals=[],baseColorsLinear=[],materialParameters=[],materialModelCodes=[],surfaceClassCodes=[],primitiveIndices=[],roleCodes=[],indices=[];let vertexOffset=0,primitiveIndex=0;for(const primitive of batch.primitives){const vertices=primitive.geometry?.vertices??[],localIndices=primitive.geometry?.indices??[],supplied=primitive.geometry?.normals??[];for(let i=0;i<vertices.length;i++){const v=vertices[i],n=supplied[i]??{x:0,y:1,z:0};positions.push(v.x,v.y,v.z);normals.push(n.x,n.y,n.z);const intent=String(primitive?.materialHint?.materialIntent??'');const rgb=intent.includes('TRUNK')||intent.includes('WOODY')?[89,63,39]:intent.includes('CONIFER')?[38,73,48]:intent.includes('SHRUB')?[52,94,52]:[78,126,65];baseColorsLinear.push(srgb8ToLinear(rgb[0]),srgb8ToLinear(rgb[1]),srgb8ToLinear(rgb[2]),1);materialParameters.push(0,0,0,0);materialModelCodes.push(0);surfaceClassCodes.push(255);primitiveIndices.push(primitiveIndex);roleCodes.push(3);}for(const index of localIndices)indices.push(vertexOffset+index);vertexOffset+=vertices.length;primitiveIndex++;}return freezeRecord({batchId,instanceCount:batch.instanceCount,placementIds:batch.placementIds,positions:new Float32Array(positions),normals:canonicalFloat32(new Float32Array(normals),'normals').view,baseColorsLinear:new Float32Array(baseColorsLinear),materialParameters:new Float32Array(materialParameters),materialModelCodes:new Uint8Array(materialModelCodes),surfaceClassCodes:new Uint8Array(surfaceClassCodes),primitiveIndices:new Uint16Array(primitiveIndices),roleCodes:new Uint8Array(roleCodes),indices:new Uint32Array(indices),deterministicTransportEncoding:true,sourceWorldTruthMutated:false});}
 export default createHEarthRun8ER2DCanonicalGPUUploadViews;

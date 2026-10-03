@@ -6,18 +6,15 @@ import {
 } from './h-earth.vegetation-resolution.run8d.js';
 import {
   H_EARTH_GEN311_REGIONAL_ARTICULATION_CONTRACT_ID,
+  deriveHEarthGen311RegionalArticulation,
   sampleHEarthRun8BSuccessorTerrainField
-} from '../terrain/h-earth.successor-terrain-field.run8b.js';
+} from '../terrain/h-earth.gen2514-qualified-successor-terrain-field.run8b.js';
 import {
   H_EARTH_GEN311_REGIONAL_MATERIAL_RESPONSE_CONTRACT_ID,
   sampleHEarthRun8CSuccessorSurfaceMaterial,
   evaluateHEarthRun8CSuccessorSurfaceMaterial
-} from './h-earth.successor-surface-material.run8c.js';
+} from './h-earth.gen2514-qualified-surface-material.run8c.js';
 
-import {
-  buildHEarthGen311PlacementData as buildHEarthGen2514QualifiedPlacementData,
-  evaluateHEarthGen311PlacementData as evaluateHEarthGen2514QualifiedPlacementData
-} from './h-earth.gen2514-qualified-placement-authority.js';
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const clamp01=v=>Math.min(1,Math.max(0,v));
@@ -380,78 +377,4 @@ export function compareHEarthGen311PlacementRepeatability(){
   return freeze({eligible:repeatable,repeatable,status:repeatable?'GEN311_PLACEMENT_REPEATABILITY_PASS':'GEN311_PLACEMENT_REPEATABILITY_FAIL',forwardCount:forward.placementCount,reverseCount:reverse.placementCount,canonicalDataEqual});
 }
 
-
 export default H_EARTH_GEN311_SUCCESSOR_VEGETATION_PROFILE;
-
-// Gen2514 consumes qualified Gen2510 records; it does not invoke the old population planner.
-export const H_EARTH_GEN2514_PLACEMENT_ARCHETYPE_ADAPTER_CONTRACT_ID =
-  'H_EARTH_GEN2510_PLACEMENT_TO_RUN8D_ARCHETYPE_ADAPTER_v1';
-export const H_EARTH_GEN2514_QUALIFIED_PLACEMENT_AUTHORITY = freeze({
-  vegetationBlob: '775f6b5a49266eebb0d06a0407e89c26e08134c9',
-  terrainFieldBlob: 'fd5d7d48ed9090c6b8bac74cb5d9897ca2d5ec0a',
-  run8BBlob: '4f929cd467edb447e2116de745d9b02c28daf219',
-  run8CMaterialBlob: '9ea6056353453254a2c00e3ed9abf44b2fe7b275',
-  resolutionBlob: '82d0590fdc7346f7b6cdb5eafeb3d51ef13411dc',
-  expectedPlacementCount: 27585,
-  expectedCanonicalDigest: '3a79813434d3942ed0045844ed061499b3a8c163476de9fde1b94670e137d61b'
-});
-export function buildHEarthGen2514QualifiedPlacementInput() {
-  const placementData = buildHEarthGen2514QualifiedPlacementData();
-  if (placementData?.eligible !== true || placementData?.placementCount !== H_EARTH_GEN2514_QUALIFIED_PLACEMENT_AUTHORITY.expectedPlacementCount) {
-    throw new Error(`GEN2514_QUALIFIED_PLACEMENT_AUTHORITY_MISMATCH:${placementData?.placementCount ?? 'NULL'}`);
-  }
-  return placementData;
-}
-export function buildHEarthGen2514VegetationArchetypeAdapter(placementData) {
-  const usesQualifiedDefault = placementData === undefined;
-  if (usesQualifiedDefault) placementData = buildHEarthGen2514QualifiedPlacementInput();
-  const evaluation = usesQualifiedDefault
-    ? evaluateHEarthGen2514QualifiedPlacementData(placementData)
-    : evaluateHEarthGen311PlacementData(placementData);
-  const issues = [...evaluation.issues];
-  if (!evaluation.eligible) issues.push('GEN2514_PLACEMENT_INPUT_NOT_ELIGIBLE');
-  const instances = [];
-  for (const placement of placementData.placements ?? []) {
-    // Only the community actually qualified by Gen2510 is mapped. Future communities
-    // require their own ecological/archetype choice; conifers are not inferred from a zone.
-    if (placement.dominantCommunity !== 'groundcover') {
-      issues.push(`GEN2514_COMMUNITY_ARCHETYPE_UNRESOLVED:${placement.placementId}`);
-      continue;
-    }
-    if (!finite(placement.scaleSuitability) || placement.scaleSuitability <= 0) {
-      issues.push(`GEN2514_INVALID_SCALE:${placement.placementId}`);
-      continue;
-    }
-    instances.push(freeze({
-      instanceId: `${placement.placementId}:RUN8D_GEOMETRY`,
-      sourcePopulationInstanceId: placement.placementId,
-      placementId: placement.placementId,
-      archetypeId: 'COASTAL_GRASS_TUFT',
-      speciesId: 'GEN311_GROUNDCOVER_UNSPECIFIED_SPECIES',
-      speciesIdentificationClaim: false,
-      worldAnchor: placement.world,
-      successorTerrainNormal: placement.terrainAttachment.normal,
-      yawRadians: hash01(`${placement.placementId}|RUN8D_YAW`) * Math.PI * 2,
-      uniformScale: placement.scaleSuitability,
-      communityWeights: placement.communityWeights,
-      continuousSignals: placement.continuousSignals,
-      habitatDisposition: placement.habitatDisposition,
-      reservationDisposition: placement.structure,
-      placementCoordinatesChanged: false
-    }));
-  }
-  instances.sort((a,b) => a.placementId.localeCompare(b.placementId));
-  if (instances.length !== placementData.placementCount) issues.push('GEN2514_PLACEMENT_COVERAGE_MISMATCH');
-  return freeze({
-    contractId: H_EARTH_GEN2514_PLACEMENT_ARCHETYPE_ADAPTER_CONTRACT_ID,
-    qualifiedInputHead: '28bc466fe029b449ce4edd27843c0457bfa3349d',
-    qualifiedInputBlob: '775f6b5a49266eebb0d06a0407e89c26e08134c9',
-    eligible: issues.length === 0,
-    status: issues.length ? 'GEN2514_ARCHETYPE_ADAPTER_FAILED' : 'GEN2514_ARCHETYPE_ADAPTER_COMPLETE',
-    sourcePlacementCount: placementData.placementCount, instanceCount: instances.length,
-    instances, issues, legacyPopulationPlannerUsed: false, coordinatesReplanned: false,
-    geometryCreated: false, roadAuthority: false, vehicleAccessAuthority: false,
-    ecologicalValidityClaim: false, rendererMutation: false
-  });
-}
-

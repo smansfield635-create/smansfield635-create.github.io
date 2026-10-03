@@ -16,7 +16,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "sha256": "f3b93873b7e63e7c3054d706315a2a3068875a3deaae1754e8cb298c6efb019a"
+      "sha256": "97d8f874c3706cb41f035c16f3c9f40b6ef9f9d17c9edea638d84f0cf4056fcb"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.verify.mjs",
+      "sha256": "aadde78619496a7bbd9bdd303a5b5debf5efb211f837dc6757fd35940c3fcac3"
     }
   ],
   "invariants": {
@@ -32,5 +36,5 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "reviewBoundary": "Incremental startup repair preserves exact plant geometry and colors. Landscape and controls shown before preparation completes; simulated phone CPU test passes. Owner physical acceptance pending."
+  "reviewBoundary": "Representative foliage refinement tested against unchanged world and same comparison camera. Outside primitives and original roots preserved. Owner physical acceptance pending."
 }

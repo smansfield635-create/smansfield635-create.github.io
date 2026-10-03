@@ -182,6 +182,38 @@ function oasisEligible(index,x,z,wet){
   const r=sampleHEarthGen311PlacementStructureDisposition(x,z);
   return r.status==='NO_KNOWN_ESTATE_FOOTPRINT_OVERLAP'&&!r.hardExclusions.length&&!r.planningHolds.length;
 }
+const shorelineSection=freeze({minX:-15,maxX:-3,minZ:-176,maxZ:-154,inset:.8});
+function shorelineAnchor(x,z){const b=shorelineSection;return x>=b.minX+b.inset&&x<=b.maxX-b.inset&&z>=b.minZ+b.inset&&z<=b.maxZ-b.inset;}
+function shorelineStyle(x,z){
+  const signal=Math.sin(x*.91+z*.39)+.62*Math.cos(x*.37-z*.73);
+  return signal>.45?'GOLD':signal<-.45?'BROWN':'OLIVE';
+}
+function refineGrassUpper(vertices,anchor,index,id){
+  if(!shorelineAnchor(anchor.x,anchor.z))return null;
+  const rng=randomFor(`${id}:SHORELINE_LEAF_FORM`),tuftScale=.68+rng()*.62,pocket=shorelineStyle(anchor.x,anchor.z);
+  for(let start=0;start<vertices.length;start+=16){
+    const root=vertices[start+1],tip=vertices[start+15],dx=tip.x-root.x,dz=tip.z-root.z,oldBend=Math.hypot(dx,dz),ux=oldBend?dx/oldBend:1,uz=oldBend?dz/oldBend:0;
+    const collapsed=rng()<(pocket==='BROWN'?.48:.24),heightScale=collapsed?.18+rng()*.20:tuftScale*(.80+rng()*.35),spread=collapsed?1.6+rng()*.55:1.25+rng()*.50,widthScale=2.3+rng()*1.8;
+    for(let local=3;local<16;local++){
+      const v=vertices[start+local],t=local===15?1:Math.floor(local/3)/5,px=v.x-root.x,pz=v.z-root.z,along=px*ux+pz*uz,side=-px*uz+pz*ux;
+      let x=root.x+ux*along*spread-uz*side*(1+(widthScale-1)*Math.sin(Math.PI*t*.85)),z=root.z+uz*along*spread+ux*side*(1+(widthScale-1)*Math.sin(Math.PI*t*.85));
+      const ax=x-anchor.x,az=z-anchor.z,r=Math.hypot(ax,az);if(r>.69){x=anchor.x+ax*.69/r;z=anchor.z+az*.69/r;}
+      const terrain=sampleHEarthGrassTrialTerrain(index,x,z);let y=root.y+(v.y-root.y)*heightScale;
+      if(collapsed)y+=.035*Math.sin(Math.PI*t);
+      y=Math.max(y,(terrain?.y??root.y)+.018+.018*Math.sin(Math.PI*t));
+      vertices[start+local]={x:Math.fround(x),y:Math.fround(y),z:Math.fround(z)};
+    }
+  }
+  return {version:'REPRESENTATIVE_SHORELINE_LEAF_REFINEMENT_v1',section:shorelineSection,anchor:{x:anchor.x,z:anchor.z},pocket,rootVerticesPreserved:true};
+}
+function refineCattailUpper(stem,head,roots,x,z,id){
+  if(!shorelineAnchor(x,z))return null;
+  const rng=randomFor(`${id}:SHORELINE_CATTAIL_FORM`),base=roots.reduce((n,r)=>n+r.y,0)/roots.length,heightScale=.72+rng()*.63,leanX=(rng()-.5)*.36,leanZ=(rng()-.5)*.36,rootIds=new Set(roots.map(r=>r.vertexIndex));
+  const transform=(v,isHead=false)=>{const h=Math.max(0,v.y-base),t=h/1.8;return {x:Math.fround(v.x+leanX*t*t),y:Math.fround(base+(v.y-base)*heightScale),z:Math.fround(v.z+leanZ*t*t)};};
+  for(let i=0;i<stem.length;i++)if(!rootIds.has(i))stem[i]=transform(stem[i]);
+  for(let i=0;i<head.length;i++)head[i]=transform(head[i],true);
+  return {version:'REPRESENTATIVE_SHORELINE_LEAF_REFINEMENT_v1',section:shorelineSection,anchor:{x,z},pocket:shorelineStyle(x,z),rootVerticesPreserved:true};
+}
 const mixRgb=(a,b,t)=>a.map((v,i)=>Math.max(0,Math.min(1,(v+(b[i]-v)*t)/255)));
 function colorOasisPrimitive(primitive,kind,bankClearance=0){
   const verts=primitive.geometry.vertices,rng=randomFor(`${primitive.primitiveId}:NATURAL_COLOR_V2`),colors=[];
@@ -207,6 +239,14 @@ function colorOasisPrimitive(primitive,kind,bankClearance=0){
   }else{
     const shade=.82+rng()*.27,minY=Math.min(...verts.map(v=>v.y)),maxY=Math.max(...verts.map(v=>v.y));
     for(const v of verts)colors.push(mixRgb([62,39,23],[132,91,49],(v.y-minY)/(maxY-minY||1)).map(c=>c*shade));
+  }
+  const refinement=primitive.metadata.oasisFoliage.shorelineRefinement;
+  if(refinement&&kind==='GRASS'){
+    const prng=randomFor(`${primitive.primitiveId}:SHORELINE_POCKET_COLORS`),palette={GOLD:[[66,57,26],[211,177,91]],BROWN:[[58,39,23],[181,128,68]],OLIVE:[[37,52,25],[138,155,76]]};
+    for(let start=0;start<colors.length;start+=16){
+      const pocket=prng()<.78?refinement.pocket:['GOLD','BROWN','OLIVE'][Math.floor(prng()*3)],shade=.88+prng()*.22;
+      for(let i=0;i<16;i++){const t=i===15?1:Math.floor(i/3)/5;colors[start+i]=mixRgb(palette[pocket][0],palette[pocket][1],Math.pow(t,.55)).map(c=>Math.min(1,c*shade));}
+    }
   }
   if(colors.length!==verts.length)throw new Error('OASIS_VERTEX_COLOR_COUNT_MISMATCH');
   return freeze({...primitive,metadata:{...primitive.metadata,oasisFoliage:{...primitive.metadata.oasisFoliage,vertexColorsSrgb:colors,colorEncoding:'SRGB_NORMALIZED_RGB',bankClearanceMeters:bankClearance,dryBankPaletteBias:dryness,colorDesign:'MOIST_GREEN_DRY_YELLOW_AND_DEAD_BROWN_BLADES_GEN2532',heightLayers:kind==='GRASS'?['SHORT_UNDERSTORY','TALL_CURVED_BLADES']:null}}});
@@ -248,12 +288,13 @@ function replaceOasisTuft(primitive,index) {
     roots.push(...rootSamples.map((sample,i)=>({...sample,vertexIndex:start+i})));bladeCount++;
   }
   if(bladeCount<32)throw new Error(`GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS:${primitive.primitiveId}`);
+  const shorelineRefinement=refineGrassUpper(vertices,anchor,index,primitive.primitiveId);
   const result=constructHEarthTriangleMesh({
     primitiveId:primitive.primitiveId,geometryId:primitive.geometry.geometryId,
     primitiveType:SOUTH.primitiveType.TRIANGLE_MESH,vertices,indices,
     normalMode:SOUTH.normalMode.FACE_AND_VERTEX,expectedClosure:SOUTH.expectedClosure.OPEN_ALLOWED,
     semanticRole:primitive.semanticRole,materialHint:primitive.materialHint,
-    metadata:{...primitive.metadata,oasisFoliage:{id:O.id,bladeCount,rootPoints:roots,sourceGeometryId:primitive.geometry.geometryId,worldTruthMutated:false,attachment:'FINAL_CANONICAL_FLOAT32_TERRAIN_TRIANGLES'}},
+    metadata:{...primitive.metadata,oasisFoliage:{id:O.id,bladeCount,rootPoints:roots,...(shorelineRefinement?{shorelineRefinement}:{}),sourceGeometryId:primitive.geometry.geometryId,worldTruthMutated:false,attachment:'FINAL_CANONICAL_FLOAT32_TERRAIN_TRIANGLES'}},
     source:primitive.source??{sourceType:'BOUNDED_GRASS_PRESENTATION_TRIAL'}
   });
   if(!result.valid||!result.primitiveRecord)throw new Error(`GRASS_TRIAL_SOUTH_CONSTRUCTION_FAILED:${JSON.stringify(result.issues)}`);
@@ -262,8 +303,8 @@ function replaceOasisTuft(primitive,index) {
   return colorOasisPrimitive(result.primitiveRecord,'GRASS',ground.y-water.y);
 }
 
-function oasisMesh(id,vertices,indices,roots,intent,kind,bankClearance=0){
-  const r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,primitiveType:SOUTH.primitiveType.TRIANGLE_MESH,vertices,indices,normalMode:SOUTH.normalMode.FACE_AND_VERTEX,expectedClosure:SOUTH.expectedClosure.OPEN_ALLOWED,semanticRole:'BOUNDED_WET_EDGE_PRESENTATION',materialHint:{materialIntent:intent,archetypeId:'OASIS_CATTAIL'},metadata:{oasisFoliage:{id:O.id,kind,rootPoints:roots,worldTruthMutated:false,attachment:'FINAL_CANONICAL_FLOAT32_TERRAIN_TRIANGLES'}},source:{sourceType:'OWNER_REQUESTED_BOUNDED_FOLIAGE_PRESENTATION'}});
+function oasisMesh(id,vertices,indices,roots,intent,kind,bankClearance=0,shorelineRefinement=null){
+  const r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,primitiveType:SOUTH.primitiveType.TRIANGLE_MESH,vertices,indices,normalMode:SOUTH.normalMode.FACE_AND_VERTEX,expectedClosure:SOUTH.expectedClosure.OPEN_ALLOWED,semanticRole:'BOUNDED_WET_EDGE_PRESENTATION',materialHint:{materialIntent:intent,archetypeId:'OASIS_CATTAIL'},metadata:{oasisFoliage:{id:O.id,kind,rootPoints:roots,...(shorelineRefinement?{shorelineRefinement}:{}),worldTruthMutated:false,attachment:'FINAL_CANONICAL_FLOAT32_TERRAIN_TRIANGLES'}},source:{sourceType:'OWNER_REQUESTED_BOUNDED_FOLIAGE_PRESENTATION'}});
   if(!r.valid||!r.primitiveRecord)throw new Error(`OASIS_MESH_INVALID:${id}:${JSON.stringify(r.issues)}`);
   return colorOasisPrimitive(r.primitiveRecord,kind,bankClearance);
 }
@@ -304,7 +345,8 @@ function cattail(index,x,z,number){
     const cy=baseY+length*(ring/5)+dy,t=(cy-root.y)/h,tip=headV.length;headV.push({x:Math.fround(x+Math.cos(angle)*lean*t*t),y:Math.fround(cy),z:Math.fround(z+Math.sin(angle)*lean*t*t)});for(let side=0;side<10;side++){const a=ring*10+side,b=ring*10+(side+1)%10;headI.push(...(ring?[a,b,tip]:[b,a,tip]));}
   }
   for(let i=0;i<headI.length;i+=3){const t=headI[i+1];headI[i+1]=headI[i+2];headI[i+2]=t;}
-  return [oasisMesh(`${id}:STEM_LEAVES`,verts,inds,roots,'SHRUB_GREEN_CATTAIL','CATTAIL_STEM_AND_LEAVES',root.y-sampleHEarthGrassTrialTerrain(waterForIndex.get(index),x,z).y),oasisMesh(`${id}:SEEDHEAD`,headV,headI,[],'WOODY_BROWN_CATTAIL_SEEDHEAD','ROUNDED_CATTAIL_SEEDHEAD')];
+  const shorelineRefinement=refineCattailUpper(verts,headV,roots,x,z,id);
+  return [oasisMesh(`${id}:STEM_LEAVES`,verts,inds,roots,'SHRUB_GREEN_CATTAIL','CATTAIL_STEM_AND_LEAVES',root.y-sampleHEarthGrassTrialTerrain(waterForIndex.get(index),x,z).y,shorelineRefinement),oasisMesh(`${id}:SEEDHEAD`,headV,headI,[],'WOODY_BROWN_CATTAIL_SEEDHEAD','ROUNDED_CATTAIL_SEEDHEAD',0,shorelineRefinement)];
 }
 function* constructOasisFoliageSteps(renderPackage){
   if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);

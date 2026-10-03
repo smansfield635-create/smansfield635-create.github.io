@@ -50,6 +50,12 @@ jobs:
             grep -Fxq "$changed" /tmp/allowed || { echo "Unauthorized successor changed file: $changed" >&2; exit 1; }
           done </tmp/files
           test -s /tmp/files
+      - name: Fetch accepted verifier from main
+        run: |
+          git fetch --no-tags --depth=1 origin main:refs/remotes/origin/qualification-main
+          git show refs/remotes/origin/qualification-main:.github/live-qualification/verifiers/auren-successor-exact-head.v1.mjs > /tmp/auren-successor-verifier.mjs
+          test -s /tmp/auren-successor-verifier.mjs
+          test "$(git rev-parse HEAD)" = "${{ inputs.candidate_sha }}"
       - uses: browser-actions/setup-chrome@v1
       - name: Resolve Chrome
         run: |
@@ -71,7 +77,7 @@ jobs:
           PUBLIC_BASE_URL: http://127.0.0.1:18826
           CHROME_PATH: ${{ env.CHROME_PATH }}
           RUNTIME_RESULT_PATH: /tmp/auren-successor-result.json
-        run: node .github/live-qualification/verifiers/auren-successor-exact-head.v1.mjs
+        run: node /tmp/auren-successor-verifier.mjs
       - name: Preserve receipt
         if: always()
         run: |

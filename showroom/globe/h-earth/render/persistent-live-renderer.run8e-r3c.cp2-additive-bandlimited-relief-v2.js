@@ -1,3 +1,5 @@
+// Observation-only synchronous spans; the operation and its exceptions are unchanged.
+const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
@@ -790,8 +792,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
     if (status !== gl.FRAMEBUFFER_COMPLETE) throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${label}:${status}`);
   };
-  const renderPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
-  const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
+  const renderPackage = startupMeasure('CANONICAL_PACKAGE',()=>getHEarthRun8ER2CanonicalLiveRenderPackage());
+  const uploadViews = startupMeasure('GPU_UPLOAD_VIEWS',()=>createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage));
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
   if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
   if (uploadViews.deterministicTransportEncoding !== true) throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
@@ -811,13 +813,14 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     }
   }
 
-  const vegetationTruth=getHEarthRun8ER2VegetationWorldTruthPlan();
+  const vegetationTruth=startupMeasure('VEGETATION_TRUTH_LOOKUP',()=>getHEarthRun8ER2VegetationWorldTruthPlan());
   if(vegetationTruth.qualifiedManifestIdentity?.manifestSha256!=='9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e')throw new Error('R3C_QUALIFIED_VEGETATION_MANIFEST_MISMATCH');
   resources.vegetation={truth:vegetationTruth,nextBatchIndex:0,residentBatches:[],residentPlacementIds:new Set(),complete:false};
-  let contactField=createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans);
+  let contactField=startupMeasure('CONTACT_FIELD',()=>createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans));
   let contactFieldBuildCount=1,contactFieldTotalMilliseconds=contactField.stats.initializationMilliseconds;
 
-  function initialize(packet) {
+  function initialize(packet) {return startupMeasure('INITIALIZATION',()=>initializeObserved(packet));}
+  function initializeObserved(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) {
       throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
@@ -979,11 +982,13 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   }
   function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
 
-  function materializeNextVegetationBatch(){
+  function materializeNextVegetationBatch(){return startupMeasure('VEGETATION_BATCH_RESIDENCY',()=>materializeNextVegetationBatchObserved());}
+  function materializeNextVegetationBatchObserved(){
     if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     const state=resources.vegetation;if(state.complete)return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});
     const descriptor=state.truth.batches[state.nextBatchIndex];if(!descriptor){state.complete=true;return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});}
-    const batch=createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId);
+    if(state.nextBatchIndex===0)globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_START');
+    const batch=startupMeasure('VEGETATION_BATCH_GEOMETRY',()=>createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId));
 // SHORELINE_SOIL_BEGIN upload
     if(!resources.shorelineSoilCoverage.ready&&batch.primitives.some(p=>p.metadata?.oasisFoliage&&p.primitiveId.includes(':GRASS:'))){
       const mask=buildHEarthOasisGrassSoilCoverage(batch.primitives);
@@ -1016,6 +1021,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const ib=gl.createBuffer();if(!ib)throw new Error('R3C_VEGETATION_INDEX_BUFFER_CREATE_FAILED');gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(indices),gl.STATIC_DRAW);counters.vegetationBufferUploadCount++;
     state.residentBatches.push({batch,vao,buffers:bufs,indexBuffer:ib,indexCount:indices.length});gl.bindVertexArray(resources.vertexArray);state.nextBatchIndex+=1;counters.vegetationBatchMaterializationCount+=1;counters.vegetationResidentInstanceCount+=batch.instanceCount;counters.vegetationResidentPrimitiveCount+=batch.primitives.length;
     if(state.nextBatchIndex===state.truth.batches.length){state.complete=true;if(counters.vegetationResidentInstanceCount!==state.truth.instanceCount||state.residentPlacementIds.size!==state.truth.instanceCount)throw new Error('R3C_VEGETATION_EVENTUAL_RESIDENCY_INCOMPLETE');}
+    if(state.complete)globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_COMPLETE');
     return Object.freeze({complete:state.complete,batchId:descriptor.batchId,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:state.nextBatchIndex});
   }
 
@@ -1124,7 +1130,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
-      vegetationResidency:{manifestSha256:vegetationTruth.qualifiedManifestIdentity.manifestSha256,totalInstanceCount:vegetationTruth.instanceCount,totalBatchCount:vegetationTruth.batches.length,maxInstancesPerBatch:vegetationTruth.maxInstancesPerMaterializationBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth.droppedPlacementCount,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth.cameraIndependent},
+      vegetationResidency:{...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),manifestSha256:vegetationTruth.qualifiedManifestIdentity.manifestSha256,totalInstanceCount:vegetationTruth.instanceCount,totalBatchCount:vegetationTruth.batches.length,maxInstancesPerBatch:vegetationTruth.maxInstancesPerMaterializationBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth.droppedPlacementCount,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth.cameraIndependent},
       canonicalPackageMutated:false
     };
   }

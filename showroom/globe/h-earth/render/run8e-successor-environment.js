@@ -1,3 +1,5 @@
+// Observation-only synchronous spans; the operation and its exceptions are unchanged.
+const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 /** H_EARTH_RUN_8E_GRATITUDE_AUDRALIA_RECIPROCAL_REGIONAL_DEVELOPMENT_GEN311_v1 */
 import { admitHEarthPrimitiveBatch,mergeHEarthGeometryBounds,isHEarthAABB3D } from './geometry-kernel.js';
 import { previewHEarthFunctionalLandscape } from './landscape-preview.js';
@@ -79,7 +81,7 @@ function gen2515Vegetation() {
 let gen2515VegetationGroundedPlanCache = null;
 let gen2515VegetationWorldTruthPlanCache = null;
 function getGen2515VegetationGroundedPlan() {
-  if (!gen2515VegetationGroundedPlanCache) gen2515VegetationGroundedPlanCache = planHEarthGen2514GroundedVegetation();
+  if (!gen2515VegetationGroundedPlanCache) gen2515VegetationGroundedPlanCache = startupMeasure('VEGETATION_GROUNDED_PLAN',()=>planHEarthGen2514GroundedVegetation());
   return gen2515VegetationGroundedPlanCache;
 }
 export function getHEarthGen2515VegetationWorldTruthPlan() {
@@ -155,12 +157,12 @@ export function constructHEarthGen2515VegetationPresentationBatch(batchId) {
   });
 }
 export function buildHEarthRun8ENeutralPackage({cameraWorld={x:0,y:8,z:-40}}={}){
-  const manifold=previewHEarthFunctionalLandscape({cameraWorld}),issues=[];
+  const manifold=startupMeasure('BASE_WORLD_MANIFOLD',()=>previewHEarthFunctionalLandscape({cameraWorld})),issues=[];
   if(manifold?.ok!==true)issues.push(...(manifold?.issues??['RUN_8E_MANIFOLD_PREVIEW_INVALID']));
   if(manifold?.geographicIdentity?.playableRegion!=='GRATITUDE'||manifold?.geographicIdentity?.continentalContext!=='AUDRALIA'||manifold?.oceanFacingEmptinessPreserved!==true)issues.push('RUN_8E_GEOGRAPHIC_IDENTITY_INVALID');
   if(manifold?.oceanVisualContinuationMaterialized!==true)issues.push('RUN_8E_OCEAN_CONTINUATION_NOT_MATERIALIZED');
   if(manifold?.regionalDevelopment?.contractId==null)issues.push('GEN311_REGIONAL_DEVELOPMENT_PREVIEW_MISSING');
-  const vegetationTruth=getHEarthGen2515VegetationWorldTruthPlan();
+  const vegetationTruth=startupMeasure('VEGETATION_WORLD_TRUTH',()=>getHEarthGen2515VegetationWorldTruthPlan());
   if(vegetationTruth.eligible!==true)issues.push(...vegetationTruth.issues);
   const primitives=freeze([...(manifold?.primitives??[])]);
   const bounds=primitives.length?mergeHEarthGeometryBounds(primitives.map(p=>p.geometry.bounds)):null;

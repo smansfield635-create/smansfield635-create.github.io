@@ -15,7 +15,7 @@ const types={'.js':'text/javascript','.mjs':'text/javascript','.html':'text/html
 const server=http.createServer(async(req,res)=>{
   try{
     const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
-    if(pathname==='/__startup-status.html'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><body><div id="h-earth-functional-landscape-route"><canvas id="h-earth-functional-landscape-canvas"></canvas></div><script type="module" src="/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js"></script><script type="module" src="/showroom/globe/h-earth/arrival-loader.js"></script></body></html>');return;}
+    if(pathname==='/__startup-status.html'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><body><div id="h-earth-functional-landscape-route"><canvas id="h-earth-functional-landscape-canvas"></canvas></div><script type="module" src="/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js?cb=91af5719a8c41be8"></script><script type="module" src="/showroom/globe/h-earth/arrival-loader.js"></script></body></html>');return;}
     let file=path.resolve(root,'.'+pathname);
     if(!file.startsWith(root+path.sep))throw Error('PATH_OUTSIDE_CHECKOUT');
     if((await fs.stat(file)).isDirectory())file=path.join(file,'index.html');
@@ -86,7 +86,7 @@ const receipts=[];
 try{
   browser=await chromium.launch({headless:true});
   if(mode==='startup-status')receipts.push(...await qualifyStartupStatus());
-  for(const profile of (mode==='startup-status'?[]:mode==='tablet-diagnostic'?[{id:'tablet-diagnostic',viewport:{width:800,height:1280},cpu:1,isMobile:true,hasTouch:true}]:[{id:'desktop',viewport:{width:1280,height:800},cpu:1},{id:'constrained-mobile',viewport:{width:390,height:844},cpu:4,isMobile:true,hasTouch:true},{id:'mobile-landscape-controls',viewport:{width:844,height:390},cpu:1,isMobile:true,hasTouch:true}])){
+  for(const profile of (mode==='startup-status'?[]:(mode==='tablet-diagnostic'||mode==='loading-responsive')?[{id:'tablet-diagnostic',viewport:{width:800,height:1280},cpu:1,isMobile:true,hasTouch:true}]:[{id:'desktop',viewport:{width:1280,height:800},cpu:1},{id:'constrained-mobile',viewport:{width:390,height:844},cpu:4,isMobile:true,hasTouch:true},{id:'mobile-landscape-controls',viewport:{width:844,height:390},cpu:1,isMobile:true,hasTouch:true}])){
     const receipt={sha,profile,emulationOnly:true,errors:[],requestsFailed:[],result:'FAIL'};
     const context=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile??false,hasTouch:profile.hasTouch??false,deviceScaleFactor:1});
     const page=await context.newPage(),cdp=await context.newCDPSession(page);
@@ -96,7 +96,7 @@ try{
     page.on('requestfailed',r=>receipt.requestsFailed.push({url:r.url(),error:r.failure()}));
     await cdp.send('Emulation.setCPUThrottlingRate',{rate:profile.cpu});
     try{
-      await page.goto(`http://127.0.0.1:${server.address().port}/showroom/globe/h-earth/${mode==='tablet-diagnostic'?'?performance=1':''}`,{waitUntil:'domcontentloaded',timeout:240000});
+      await page.goto(`http://127.0.0.1:${server.address().port}/showroom/globe/h-earth/${mode==='tablet-diagnostic'||mode==='loading-responsive'?'?performance=1':''}`,{waitUntil:'domcontentloaded',timeout:240000});
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,{},{timeout:240000});
       receipt.atReady=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency());
       receipt.readyHitTest=await page.evaluate(()=>{const c=document.querySelector('canvas'),b=c.getBoundingClientRect(),e=document.elementFromPoint(b.x+b.width/2,b.y+b.height/2),l=document.querySelector('.h-earth-experience-loader');return {atMs:performance.now(),hitTag:e?.tagName,hitClass:e?.className,canvasHit:e===c,loaderReady:l?.dataset.ready??null,loaderConnected:!!l};});
@@ -107,7 +107,7 @@ try{
       if(receipt.progressAtReady&&!(receipt.progressAtReady.textRect.width>80&&receipt.progressAtReady.textRect.height>8))throw Error('VEGETATION_PROGRESS_TEXT_NOT_RENDERED');
       if(receipt.progressAtReady&&!(receipt.progressAtReady.rect.width>0&&receipt.progressAtReady.rect.height>0&&receipt.progressAtReady.rect.x>=0&&receipt.progressAtReady.rect.y>=0&&receipt.progressAtReady.rect.right<=profile.viewport.width&&receipt.progressAtReady.rect.bottom<=profile.viewport.height))throw Error('VEGETATION_PROGRESS_OUTSIDE_VIEWPORT');
       if(!receipt.progressAtReady||receipt.progressAtReady.hidden||receipt.progressAtReady.pointerEvents!=='none'||!receipt.progressAtReady.text)throw Error('NONBLOCKING_VEGETATION_PROGRESS_MISSING');
-      if(mode==='tablet-diagnostic'){
+      if(mode==='tablet-diagnostic'||mode==='loading-responsive'){
         receipt.reportButton=await page.locator('#h-earth-performance-report-button').boundingBox();
         const b=receipt.reportButton;
         if(!b||b.x<0||b.y<0||b.x+b.width>profile.viewport.width||b.y+b.height>profile.viewport.height)throw Error('REPORT_BUTTON_OUTSIDE_VIEWPORT');
@@ -145,6 +145,14 @@ try{
           return {requestedPixels:direction*box.height*.12,normalizedCentroidTravel:direction*.12,before:a,after:b,delta:{x:b.x-a.x,z:b.z-a.z},counters:after.counters};
         };
         receipt.forward=await move(-1);receipt.backward=await move(1);
+        if(mode==='loading-responsive'){
+          await page.waitForFunction(()=>{const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency();return r.residentBatchCount>=2&&!r.complete;},{},{timeout:480000});
+          receipt.loadingForward=await move(-1);receipt.loadingBackward=await move(1);
+          receipt.duringLoading=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency());
+          if(receipt.duringLoading.complete)throw Error('LOADING_TOUCH_NOT_EXERCISED_DURING_LOADING');
+          await page.screenshot({path:path.join(out,profile.id+'-loading.png')});
+        }
+
         const cx=box.x+box.width/2,cy=box.y+box.height/2;
         const lookBefore=await read();
         await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:cx,y:cy}]});
@@ -173,7 +181,7 @@ try{
         if(receipt.forward.delta.x*receipt.backward.delta.x+receipt.forward.delta.z*receipt.backward.delta.z>=0)throw Error('TWO_FINGER_DIRECTIONS_NOT_OPPOSED');
       }
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getVegetationResidency()?.complete===true,{},{timeout:480000});
-      if(mode==='tablet-diagnostic'){
+      if(mode==='tablet-diagnostic'||mode==='loading-responsive'){
         const b=await page.locator('canvas').first().boundingBox();
         const before=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt());
         await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:b.x+b.width*.5,y:b.y+b.height*.5}]});
@@ -197,6 +205,12 @@ try{
       const stages=receipt.final.startup.timing.stages,firstVegetation=stages.FIRST_VEGETATION_FRAME_PRESENTED?.firstPassAtMs;
       if(!Number.isFinite(firstVegetation)||firstVegetation<t.readyAtMs||firstVegetation>t.vegetationCompleteAtMs)throw Error('FIRST_VISIBLE_VEGETATION_TIMING_MISSING');
       if(!(stages.OASIS_PREPARATION_START?.firstPassAtMs>t.readyAtMs&&stages.OASIS_PREPARATION_START.firstPassAtMs<stages.VEGETATION_PLAN_VALIDATED.firstPassAtMs))throw Error('POST_READY_PREPARATION_OVERLAP_FAILED');
+      if(mode==='loading-responsive'){
+        if(receipt.final.startup.plainLanguageSummary!=='Environment and vegetation loading complete.')throw Error('STALE_COMPLETION_SUMMARY');
+        if(!receipt.performanceReport.frameIntervals?.loading?.count)throw Error('LOADING_FRAME_GAPS_MISSING');
+        await page.waitForTimeout(2600);
+        if(!(await page.locator('#h-earth-vegetation-progress').evaluate(e=>e.hidden)))throw Error('COMPLETED_LOADING_PROMPT_NOT_HIDDEN');
+      }
       if(receipt.errors.length||receipt.requestsFailed.length)throw Error('BROWSER_ERRORS');
       await page.screenshot({path:path.join(out,profile.id+'.png')});receipt.result='PASS';
     }catch(error){receipt.failure=String(error);process.exitCode=1;}

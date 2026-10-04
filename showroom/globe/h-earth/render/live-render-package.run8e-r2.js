@@ -3,8 +3,8 @@ import {
   H_EARTH_RUN_8E_R2_CONTRACT_ID,
   evaluateHEarthRun8ER2Control
 } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
-import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js?cb=6a7244976262033a';
-import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js?cb=04fe92450529e834';
+import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch,constructHEarthGen2515VegetationPresentationBatchAsync, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js?cb=31759f8abd072c3d';
+import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js?cb=31b5193e7020fd23';
 import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
 import {
   H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,
@@ -670,4 +670,5 @@ export function getHEarthRun8ER2VegetationWorldTruthPlan(){const truth=getHEarth
 export const isHEarthRun8ER2VegetationWorldTruthPrepared=isHEarthGen2515VegetationWorldTruthPrepared;
 export async function prepareHEarthRun8ER2VegetationWorldTruthPlan(){await prepareHEarthGen2515VegetationWorldTruthPlan();return getHEarthRun8ER2VegetationWorldTruthPlan();}
 export function createHEarthRun8ER2VegetationPresentationBatch(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=constructHEarthGen2515VegetationPresentationBatch(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const presentation=applyHEarthLowlandGrassTrialBatch(materialized,getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
+export async function createHEarthRun8ER2VegetationPresentationBatchAsync(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=await constructHEarthGen2515VegetationPresentationBatchAsync(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const presentation=applyHEarthLowlandGrassTrialBatch(materialized,getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
 export default getHEarthRun8ER2ImmutableLiveRenderPackage;

@@ -1,4 +1,4 @@
-import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js?cb=2fe026d707605ff0';
+import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js?cb=bfb7bb5c546e38ce';
 
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
@@ -23,7 +23,7 @@ const OCEAN_PROOF_RENDERER_PATH =
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=ac8158e6ce2d688b';
+  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=cd3c1009167e73fa';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -328,8 +328,9 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
 
   if (oceanPresentationRequested) startPresentationAnimation();
 
-  const materializeNextVegetationBatch = () => {
+  const materializeNextVegetationBatch = async () => {
     if (counters.rendererInitializationCount !== 1) throw new Error('R3D3_RENDERER_NOT_INITIALIZED_FOR_VEGETATION_RESIDENCY');
+    await renderer.prepareNextVegetationBatch();
     const beforeResidency = renderer.getResourceReceipt().vegetationResidency;
     const result = renderer.materializeNextVegetationBatch();
     const afterResidency = renderer.getResourceReceipt().vegetationResidency;

@@ -6,12 +6,12 @@
     {
       "path": "/showroom/globe/h-earth/index.html",
       "includes": [
-        "<title>H-Earth · Live Interactive World</title>",
+        "<title>H-Earth \u00b7 Live Interactive World</title>",
         "id=\"h-earth-functional-landscape-route\"",
         "data-h-earth-public-route=\"functional-landscape\"",
         "data-run8e-ready=\"false\"",
         "id=\"h-earth-current-run8e-module\"",
-        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=8b2b3b250acd55f9"
+        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=d6c3b036843edf34"
       ],
       "excludes": [
         "raw.githack.com",
@@ -21,9 +21,9 @@
     {
       "path": "/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
       "includes": [
-        "import '../diagnostic/renderer-startup-observer.v1.js?cb=fd66e9719b883594';",
+        "import '../diagnostic/renderer-startup-observer.v1.js?cb=91af5719a8c41be8';",
         "await import('../arrival-loader.js?cb=adc56ba904a45b50');",
-        "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=c23884f63c776088');",
+        "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=f70e70e5c842454b');",
         "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"
       ],
       "excludes": [
@@ -35,7 +35,7 @@
       "path": "/showroom/globe/h-earth/arrival-loader.js",
       "includes": [
         "H_EARTH_ARRIVAL_LOADER_23949_v1",
-        "H-Earth · live world initialization",
+        "H-Earth \u00b7 live world initialization",
         "Entering the coast.",
         "h-earth-renderer-startup-receipt",
         "READY_PUBLISHED",
@@ -47,7 +47,7 @@
     {
       "path": "/showroom/globe/h-earth/custody/index.html",
       "includes": [
-        "<title>H-Earth · Renderer Custody Route</title>",
+        "<title>H-Earth \u00b7 Renderer Custody Route</title>",
         "CUSTODY ROUTE ACTIVE",
         "public-live-gpu-integration.run8e-r3e.custody-route.js?v=dedicated-custody-v2"
       ],

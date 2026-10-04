@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-04T14:17:29Z",
+  "generatedAt": "2026-10-04T15:54:33Z",
   "window": {
-    "start": "2026-07-06T14:17:29Z",
-    "end": "2026-10-04T14:17:29Z"
+    "start": "2026-07-06T15:54:33Z",
+    "end": "2026-10-04T15:54:33Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,21 +17,21 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5090,
-    "visits": 1317,
+    "pageLoads": 5093,
+    "visits": 1319,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5090,
-        "visits": 1317
+        "pageLoads": 5093,
+        "visits": 1319
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1063,
-        "visits": 743
+        "pageLoads": 1065,
+        "visits": 745
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 202,
+        "pageLoads": 203,
         "visits": 0
       },
       "/index.html": {
@@ -170,6 +170,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -179,10 +183,6 @@
         "visits": 0
       },
       "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
       },
@@ -258,16 +258,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -353,11 +353,11 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 527,
-        "visits": 527
+        "pageLoads": 529,
+        "visits": 529
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3773,
+        "pageLoads": 3774,
         "visits": 0
       },
       "www.google.com": {

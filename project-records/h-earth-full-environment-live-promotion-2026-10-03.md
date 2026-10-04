@@ -83,3 +83,39 @@ Read `.github/ai-router/page-mutation-proportionality-policy.v1.json#candidateSc
 The worker entry is the existing `geometry-grounded-vegetation.run8d.js`, not a newly created worker path; no scope expansion follows from its worker use.
 
 Direct admission cross-check completed: independently read the recovered issue comment 5970456165 in admission-source.json and compared its constructionProcedure.exactAllowedRepositoryPaths with all 15 baseline-to-a40a changed paths. All 15 are literal members, including all four registry-unresolved paths. All three proposed evidence destinations are also literal members. This resolves the prior conditional dependence on parent-reported scope; no new scope or persistent registration is needed. The admission independently limits extra physical review to material uncertainty not resolvable through engineering verification.
+
+
+## Owner-reported vegetation wait and measured progress continuation
+
+Baseline 5294b81d45d5e97882c2678fcdb7dd9557ced398; frozen tested application d1c8b71af9d6e90006670825c20e5623a5c8c113; pull request5674. Same active Gen2534 admission independently reconciled; no scope or authority expansion. Scheduling candidate37ffc adds measured nonblocking progress, overlaps independent unchanged preparation tasks afterREADY, and omits104 redundant world redraws while retaining every placement and batch check. No geometry, placement, terrain, material, camera, or control changes.
+
+| Profile | Baseline after READY to complete | Candidate after READY to complete | Improvement |
+|---|---:|---:|---:|
+| desktop | 127.52s | 82.74s | 35.1% |
+| constrained-mobile | 463.30s | 348.33s | 24.8% |
+
+Runtime evidence is explicitly carried forward from37ffc desktop/portrait and9f331 landscape; finald1c8 differs only in reviewed indicator placement/cache identities and verification. Its exact-candidate visual run passes all viewport compositions with no HUD overlap. All three qualified profiles pass27585instances/108batches/0drops/0rebuilds/no runtime or request errors. Mobile is emulation. Source and actual browser evidence confirm four vegetation-triggered presentations. Percentage text is measured from completed batches and reaches100 only at completion. Corrected-font exact-candidate visual check confirms readable, in-viewport status and unblocked canvas; status hides after completion. Original font-substrate failure and all earlier failures are preserved in the evidence file. These timings do not promise physical-device performance.
+
+The evidence-only successor must preserve candidate application blobs. Final exact publication preflight, merge, registered deployment and live verification remain separate prerequisites.
+
+INDEPENDENT WEST FINAL QUALIFICATION REVIEW
+Candidate: d1c8b71af9d6e90006670825c20e5623a5c8c113
+Disposition: PASS_FOR_RECORDS_AND_REGISTERED_PUBLICATION_PREFLIGHT
+Authority context: Gen2534 demonstrated-readiness continuation, preserving owner-accepted complete environment and controls. This review supplies independent qualification evidence, not new mutation or deployment authority.
+
+SOURCE AND CONTINUITY
+Independently reviewed scheduling source at37ffc18285b06f9d36ae00940849450882fbb451: existing worker and oasis algorithms unchanged; preparations overlap after READY, both must pass before uploads; all108 batches retain validation/accounting, only104 zero-presentation-change redraws omitted. No density, mesh, terrain, water, material, placement or controls redesign. Immutable GitHub compares37->9f331950ef2e79a06765d9a40d783bab75b751ba and9f->d1c8 show only indicator position/parent, coherent cache identifiers, and stronger qualification assertions. Scheduling/control/geometry evidence carries forward. Parent reports intervening main7bc25885 changes analytics only; final merge custody/preflight remains parent responsibility.
+
+RUNTIME EVIDENCE INDEPENDENTLY READ
+37 desktop and constrained390x844 CPU4 receipts both PASS:27585 resident instances,108 batches,498 presentation primitives, zero drops/rebuilds/errors/failed requests. Exactly four vegetation presentations at batches1,29,56,69.108 monotonic residency events. Portrait proves camera-relative forward/back, one-finger look and stable release, native cancellation and stopped travel;36 accepted proposals with no rejections during preparation.
+9f full landscape844x390 receipt independently PASS: same full counts, zero errors/drops/rebuilds, four presentation batches, correct two-finger directions, look stopping, native cancelcount2 and identical stopped position. This unchanged runtime/control evidence carries to d1c8 by exact CSS/cache-only diff.
+Final d1c8 font-corrected visual-receipt.json independently read: exactSHA, PASS, no errors, full27585/108/498, zero drops/rebuilds, validated preparation,350 grass tufts/72 cattails, cameraIndependent true, and indicator hidden after completion.
+
+VISUAL FAILURE CLOSURES
+37 landscape outside-viewport failure preserved;9f viewport-fixed parent correction repaired it.9f portrait semantic-label overlap preserved;d1c8 96px bottom offset repairs it. Browser substrate missing-font diagnosis preserved separately, with no product font substitution. Independently viewed final desktop/portrait preparation, portrait/landscape loading and landscape completed screenshots. Text readable, within viewport, separated from headers and semantic labels; vegetation visible in loading views; indicator absent after completion. Final receipt records rendered text ranges, actual HUD bounds and canvasUnblocked true with pointerEvents none for all four sampled views. No remaining demonstrated visual uncertainty from this bounded indicator delta.
+
+PERFORMANCE CLAIM LIMIT
+Use only paired37 same-substrate timings against5294 baseline: desktop READY-relative completion82.739s vs127.519s (~35.1 percent sooner); constrainedportrait348.329s vs463.304s (~24.8 percent sooner). These are emulated/software-renderer measurements, not physical-device guarantees. Final font-corrected visual-run timing is not substituted into that comparison. Full environment/controls preservation is distinct from measured speed.
+
+NEXT BOUNDARY
+PASS to preserve qualification records and run registered exact-candidate publication preflight. No additional physical-review gate is introduced absent demonstrated unresolved material uncertainty. Merge/deployment and authoritative live exact-head verification remain separate existing required steps. No repository mutation or heavy browser execution performed by West.

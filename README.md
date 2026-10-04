@@ -26,11 +26,15 @@ The linked results identify particular tested versions. They do not serve as a b
 
 [Open H-Earth](https://diamondgatebridge.com/showroom/globe/h-earth/)
 
+Source directory: `showroom/globe/h-earth/`.
+
 The renderer acquires a WebGL2 context, compiles GLSL shaders, uploads geometry buffers, and draws indexed triangles. The [GPU binding][hearth-binding] selects the renderer and connects it to camera state; the [browser integration][hearth-integration] coordinates presentation and vegetation residency.
 
 The [Playwright verifier][hearth-tests] checks exact checkout identity, readiness before vegetation completion, monotonic batch progress, final population counts, camera-relative touch movement, look/release/cancellation behavior, and runtime/request errors.
 
-**Observed result:** the [saved browser receipts][hearth-results] contain passing desktop, constrained-mobile, and mobile-landscape profiles at candidate `e014ed9b55f24acb21b4fb7e7cf4eb0d46c612d7`. Each completes **27,585 instances across 108 batches**, with **zero dropped placements and zero world rebuilds**. A separate tablet-sized traversal checks movement during loading.
+**Observed result:** the [saved browser receipts][hearth-results] contain passing desktop, constrained-mobile, and mobile-landscape profiles at candidate `e014ed9b55f24acb21b4fb7e7cf4eb0d46c612d7`. Each completes **27,585 instances across 108 batches**, with **zero dropped vegetation instances and zero world rebuilds**. A separate tablet-sized traversal checks movement during loading.
+
+The instance count concerns vegetation placement, not animation frame drops.
 
 These are Chromium/SwiftShader emulation results. They establish the tested behavior and population invariants; physical-device performance requires separate observations.
 
@@ -61,6 +65,8 @@ This is a computational reference. Its [claim manifest][kernel-claims] distingui
 ### Auren — stateful conversational software
 
 [Open the chamber](https://diamondgatebridge.com/products/auren/)
+
+Source directory: `products/auren/`.
 
 Auren combines authored dialogue with client-side session state. The [session context][auren-session] records semantic events such as topic revisits, boundary acknowledgments, pressure, and handoff returns. The chamber uses that history to select responses and pace delivery.
 

@@ -1,0 +1,99 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "candidateHead": "a40a267b0100c30d2760f47106444029aecee367",
+  "comparisonBaseline": "57b2ee71f3018b1ca5fe486f301aae7371ff54a5",
+  "reviewMode": "INDEPENDENT_SCHEDULING_DELTA_REVIEW_WITH_UNCHANGED_WORLD_CONTINUITY_INHERITANCE",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "sha256": "d12121468273fcf46887616f7e5687c9214d3adea95546bea720798ca208a918"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "a8516282447b51d6f39024a31944ed3827d05fe93518b6b74f4143b0aa8ea1a6"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "ea29e834a50e10d3afc6843304649907acfc65efcc4303bfa497bf3385489b57"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "c2ab175e6337c6f4bdef94cf61e3733a6805790e2093311b1186dfb88973805c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "sha256": "8c008f474e4f74f17f17a40523d31a266e22bf5898fb84d9d50f52c09c50cb20"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "sha256": "40fec92c4db04238824794f0becc8e588a46e16a0335c8c6f7d576c3ffeece2c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "90d639e6aa2ed4b63f8951d44e6449cb11d3bd974b52d843d5ace4e063f185f6"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "4973aef2393984d36dff4152888d8f5a458d57fd86e6b74f1b9b12a81bdb01fd"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "19698d714d80c91873fb295f61c70c3f3a0cf51b4f795ead158d1bab76b238f4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "d2ca448bab3d0a2e25a529d4ec86899bfbeb44f8e30386582cbeba9ced1f7957"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "a393d7145e845bdd6a653cebaae58bb0a488af70afc76cf86d5ec03d2d253cdf"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewBasis": {
+    "newlyObserved": [
+      "Saved exact-candidate desktop ground-world screenshot compared with repository anchor visual proxy",
+      "Saved exact-candidate mobile portrait and landscape emulated look/travel/release/cancel evidence",
+      "First frame and readiness precede preparation and loading, exact final 27585/108 population with no drops/rebuild/errors"
+    ],
+    "inheritedUnchanged": [
+      "Planetary/regional/ground continuity and same canonical world identity carried from accepted baseline through unchanged representation/navigation implementations and exact world/package/vegetation equivalence",
+      "All 108 batch digests and grounded plan/base package equal accepted baseline; 67cf-to-a40a application changes are cache query identities only"
+    ],
+    "limitations": [
+      "No newly executed globe-to-region traversal",
+      "No original-video replay or physical-device acceptance",
+      "Independent review of saved runs; no independent browser rerun",
+      "Long SwiftShader/emulated timings do not establish physical-device speed improvement"
+    ]
+  },
+  "physicalAcceptancePerformed": false,
+  "publicationChecksPassed": false,
+  "publicationAuthorityCreated": false
+}

@@ -6,7 +6,7 @@ import http from 'node:http';
 import {execFileSync} from 'node:child_process';
 import {chromium} from 'playwright';
 
-const [sha,out]=process.argv.slice(2),root=process.cwd();
+const [sha,out,mode='matrix']=process.argv.slice(2),root=process.cwd();
 if(!/^[0-9a-f]{40}$/.test(sha??'')||!out)throw Error('EXACT_SHA_AND_OUTPUT_REQUIRED');
 if(execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()!==sha)throw Error('CHECKOUT_SHA_MISMATCH');
 if(execFileSync('git',['status','--porcelain','--untracked-files=no'],{encoding:'utf8'}).trim())throw Error('TRACKED_CHECKOUT_NOT_CLEAN');
@@ -15,6 +15,7 @@ const types={'.js':'text/javascript','.mjs':'text/javascript','.html':'text/html
 const server=http.createServer(async(req,res)=>{
   try{
     const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+    if(pathname==='/__startup-status.html'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><body><div id="h-earth-functional-landscape-route"><canvas id="h-earth-functional-landscape-canvas"></canvas></div><script type="module" src="/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js"></script><script type="module" src="/showroom/globe/h-earth/arrival-loader.js"></script></body></html>');return;}
     let file=path.resolve(root,'.'+pathname);
     if(!file.startsWith(root+path.sep))throw Error('PATH_OUTSIDE_CHECKOUT');
     if((await fs.stat(file)).isDirectory())file=path.join(file,'index.html');
@@ -23,11 +24,69 @@ const server=http.createServer(async(req,res)=>{
   }catch{res.writeHead(404);res.end();}
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+async function qualifyStartupStatus(){
+  const results=[];
+  const cases=[{id:'delayed-ready',ready:true},{id:'pending-no-ready'},{id:'shader-error',fail:'VERTEX_SHADER_COMPILED'},{id:'context-error',fail:'WEBGL2_CONTEXT_ACQUIRED'},{id:'draw-error',fail:'INITIAL_DRAW_RETURNED'},{id:'constructor-error',fail:'RENDERER_CONSTRUCTOR_RETURNED'},{id:'unhandled-rejection',rejection:true},{id:'fast-ready',ready:true,fast:true},{id:'performance-sharing',ready:true,fast:true,performance:true}];
+  for(const test of cases){
+    const context=await browser.newContext({viewport:{width:800,height:1280},reducedMotion:'reduce'}),page=await context.newPage();
+    const result={id:test.id,result:'FAIL',syntheticClock:true,actualObserverAndLoader:true};
+    try{
+      await page.clock.install();
+      await page.goto(`http://127.0.0.1:${server.address().port}/__startup-status.html${test.performance?'?performance=1':''}`,{waitUntil:'load'});
+      await page.waitForFunction(()=>!!window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS&&!!window.H_EARTH_ARRIVAL_LOADER);
+      if(!test.fast)await page.clock.fastForward(21000);
+      result.before=await page.evaluate(()=>({receipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),headline:document.querySelector('.h-earth-experience-loader__headline')?.textContent,status:document.querySelector('.h-earth-experience-loader__status')?.textContent,failed:document.querySelector('.h-earth-experience-loader')?.dataset.failed}));
+      if(result.before.failed==='true'||Object.values(result.before.receipt.stages).includes('FAIL')||result.before.receipt.firstFailureStage)throw Error('ELAPSED_TIME_MISCLASSIFIED_AS_FAILURE');
+      if(test.fail||test.rejection){
+        await page.evaluate(({stage,rejection})=>{if(rejection)window.dispatchEvent(new PromiseRejectionEvent('unhandledrejection',{promise:Promise.resolve(),reason:new Error('QUALIFICATION_ACTUAL_REJECTION')}));else window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.fail(stage,new Error('QUALIFICATION_ACTUAL_FAILURE'));},{stage:test.fail,rejection:test.rejection});
+        result.after=await page.evaluate(()=>({receipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),failed:document.querySelector('.h-earth-experience-loader')?.dataset.failed,headline:document.querySelector('.h-earth-experience-loader__headline')?.textContent}));
+        if(result.after.failed!=='true'||!result.after.receipt.firstFailureStage||!result.after.headline.includes('failed'))throw Error('REAL_FAILURE_CONCEALED');
+        await page.evaluate(()=>window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage',{detail:{stage:'READY_EVENT_EMITTED',status:'PASS'}})));
+        result.afterLateReady=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt());
+        if(result.afterLateReady.firstFailureStage!==result.after.receipt.firstFailureStage)throw Error('REAL_FAILURE_ERASED_BY_LATE_READY');
+      }else if(test.ready){
+        await page.evaluate(()=>{window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage',{detail:{stage:'FIRST_FRAME_DRAWN',status:'PASS'}}));document.getElementById('h-earth-functional-landscape-route').dataset.run8eReady='true';window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage',{detail:{stage:'READY_EVENT_EMITTED',status:'PASS'}}));});
+        await page.clock.fastForward(1500);
+        result.after=await page.evaluate(()=>({receipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),loaderConnected:!!document.querySelector('.h-earth-experience-loader')}));
+        if(result.after.loaderConnected||result.after.receipt.stages.READY_PUBLISHED!=='PASS'||result.after.receipt.firstFailureStage)throw Error('LATE_READY_NOT_RECOVERED');
+        if(test.performance){
+          await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('QUALIFICATION_CLIPBOARD_DENIED');}}}));
+          await page.locator('#h-earth-performance-report-button').click();
+          const area=page.locator('#h-earth-performance-report-fallback textarea');
+          result.sharedReport=JSON.parse(await area.inputValue());
+          if(!result.sharedReport.performanceEnabled||result.sharedReport.startup.stages.READY_PUBLISHED!=='PASS')throw Error('READABLE_REPORT_FALLBACK_INVALID');
+          await page.getByRole('button',{name:'Close',exact:true}).click();
+          if(await page.locator('#h-earth-performance-report-fallback').count())throw Error('REPORT_FALLBACK_DID_NOT_CLOSE');
+        }else if(await page.locator('#h-earth-performance-report-button').count())throw Error('DIAGNOSTICS_UI_NOT_OPT_IN');
+
+      }else{
+        await page.clock.fastForward(120000);
+        result.after=await page.evaluate(()=>({receipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),failed:document.querySelector('.h-earth-experience-loader')?.dataset.failed,status:document.querySelector('.h-earth-experience-loader__status')?.textContent,loaderConnected:!!document.querySelector('.h-earth-experience-loader')}));
+        if(!result.after.loaderConnected||result.after.failed==='true'||result.after.receipt.stages.READY_PUBLISHED==='PASS')throw Error('PENDING_STATE_FABRICATED_TERMINAL_RESULT');
+        result.loaderBounds=[];
+        for(const viewport of [{width:800,height:1280},{width:390,height:844},{width:1280,height:800},{width:844,height:390}]){
+          await page.setViewportSize(viewport);
+          const bounds=await page.locator('.h-earth-experience-loader__card').boundingBox();
+          result.loaderBounds.push({viewport,bounds});
+          if(!bounds||bounds.x<0||bounds.y<0||bounds.x+bounds.width>viewport.width||bounds.y+bounds.height>viewport.height)throw Error('LOADER_CARD_OUTSIDE_VIEWPORT');
+          await page.screenshot({path:path.join(out,`delayed-loader-${viewport.width}x${viewport.height}.png`)});
+        }
+        await page.setViewportSize({width:800,height:1280});
+        await page.screenshot({path:path.join(out,'delayed-tablet-loader.png')});
+      }
+      result.result='PASS';
+    }catch(e){result.failure=String(e);process.exitCode=1;}finally{results.push(result);await context.close();}
+  }
+  await fs.writeFile(path.join(out,'startup-status.json'),JSON.stringify({sha,result:results.every(r=>r.result==='PASS')?'PASS':'FAIL',cases:results},null,2)+'\n');
+  return results;
+}
+
 let browser;
 const receipts=[];
 try{
   browser=await chromium.launch({headless:true});
-  for(const profile of [{id:'desktop',viewport:{width:1280,height:800},cpu:1},{id:'constrained-mobile',viewport:{width:390,height:844},cpu:4,isMobile:true,hasTouch:true},{id:'mobile-landscape-controls',viewport:{width:844,height:390},cpu:1,isMobile:true,hasTouch:true}]){
+  if(mode==='startup-status')receipts.push(...await qualifyStartupStatus());
+  for(const profile of (mode==='startup-status'?[]:mode==='tablet-diagnostic'?[{id:'tablet-diagnostic',viewport:{width:800,height:1280},cpu:1,isMobile:true,hasTouch:true}]:[{id:'desktop',viewport:{width:1280,height:800},cpu:1},{id:'constrained-mobile',viewport:{width:390,height:844},cpu:4,isMobile:true,hasTouch:true},{id:'mobile-landscape-controls',viewport:{width:844,height:390},cpu:1,isMobile:true,hasTouch:true}])){
     const receipt={sha,profile,emulationOnly:true,errors:[],requestsFailed:[],result:'FAIL'};
     const context=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile??false,hasTouch:profile.hasTouch??false,deviceScaleFactor:1});
     const page=await context.newPage(),cdp=await context.newCDPSession(page);
@@ -37,7 +96,7 @@ try{
     page.on('requestfailed',r=>receipt.requestsFailed.push({url:r.url(),error:r.failure()}));
     await cdp.send('Emulation.setCPUThrottlingRate',{rate:profile.cpu});
     try{
-      await page.goto(`http://127.0.0.1:${server.address().port}/showroom/globe/h-earth/`,{waitUntil:'domcontentloaded',timeout:240000});
+      await page.goto(`http://127.0.0.1:${server.address().port}/showroom/globe/h-earth/${mode==='tablet-diagnostic'?'?performance=1':''}`,{waitUntil:'domcontentloaded',timeout:240000});
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,{},{timeout:240000});
       receipt.atReady=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency());
       receipt.readyHitTest=await page.evaluate(()=>{const c=document.querySelector('canvas'),b=c.getBoundingClientRect(),e=document.elementFromPoint(b.x+b.width/2,b.y+b.height/2),l=document.querySelector('.h-earth-experience-loader');return {atMs:performance.now(),hitTag:e?.tagName,hitClass:e?.className,canvasHit:e===c,loaderReady:l?.dataset.ready??null,loaderConnected:!!l};});
@@ -48,6 +107,14 @@ try{
       if(receipt.progressAtReady&&!(receipt.progressAtReady.textRect.width>80&&receipt.progressAtReady.textRect.height>8))throw Error('VEGETATION_PROGRESS_TEXT_NOT_RENDERED');
       if(receipt.progressAtReady&&!(receipt.progressAtReady.rect.width>0&&receipt.progressAtReady.rect.height>0&&receipt.progressAtReady.rect.x>=0&&receipt.progressAtReady.rect.y>=0&&receipt.progressAtReady.rect.right<=profile.viewport.width&&receipt.progressAtReady.rect.bottom<=profile.viewport.height))throw Error('VEGETATION_PROGRESS_OUTSIDE_VIEWPORT');
       if(!receipt.progressAtReady||receipt.progressAtReady.hidden||receipt.progressAtReady.pointerEvents!=='none'||!receipt.progressAtReady.text)throw Error('NONBLOCKING_VEGETATION_PROGRESS_MISSING');
+      if(mode==='tablet-diagnostic'){
+        receipt.reportButton=await page.locator('#h-earth-performance-report-button').boundingBox();
+        const b=receipt.reportButton;
+        if(!b||b.x<0||b.y<0||b.x+b.width>profile.viewport.width||b.y+b.height>profile.viewport.height)throw Error('REPORT_BUTTON_OUTSIDE_VIEWPORT');
+        const v=receipt.progressAtReady.rect;
+        if(b.x<v.right&&b.x+b.width>v.left&&b.y<v.bottom&&b.y+b.height>v.top)throw Error('REPORT_BUTTON_OVERLAPS_VEGETATION_PROGRESS');
+      }
+
       await page.screenshot({path:path.join(out,profile.id+'-preparing.png')});
       await fs.writeFile(path.join(out,profile.id+'-ready.json'),JSON.stringify(receipt,null,2)+'\n');
       if(profile.hasTouch){
@@ -106,6 +173,20 @@ try{
         if(receipt.forward.delta.x*receipt.backward.delta.x+receipt.forward.delta.z*receipt.backward.delta.z>=0)throw Error('TWO_FINGER_DIRECTIONS_NOT_OPPOSED');
       }
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getVegetationResidency()?.complete===true,{},{timeout:480000});
+      if(mode==='tablet-diagnostic'){
+        const b=await page.locator('canvas').first().boundingBox();
+        const before=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt());
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:b.x+b.width*.5,y:b.y+b.height*.5}]});
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:b.x+b.width*.62,y:b.y+b.height*.5}]});
+        await page.waitForTimeout(300);
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        const after=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt());
+        receipt.postCompleteLook={before,after};
+        if(Math.abs(after.currentNavigationState.yawDegrees-before.currentNavigationState.yawDegrees)<.01)throw Error('POST_COMPLETE_LOOK_NO_ROTATION');
+        receipt.performanceReport=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getPerformanceReport());
+        if(!receipt.performanceReport)throw Error('PERFORMANCE_REPORT_MISSING');
+        if(!(receipt.performanceReport.startup.performanceCosts?.aggregates?.['complete:NAVIGATION_FRAME']?.count>0))throw Error('POST_COMPLETE_NAVIGATION_MEASUREMENT_MISSING');
+      }
       receipt.final=await page.evaluate(()=>({residency:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency(),live:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),startup:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),progress:window.__vegetationProgressEvidence,progressText:window.__vegetationTextEvidence}));
       const r=receipt.final.residency,t=r.timing;
       if(r.residentInstanceCount!==27585||r.residentBatchCount!==108||r.droppedPlacementCount!==0||r.worldRebuildCount!==0||r.cameraIndependent!==true)throw Error('FINAL_ENVIRONMENT_INVARIANT_FAILED');

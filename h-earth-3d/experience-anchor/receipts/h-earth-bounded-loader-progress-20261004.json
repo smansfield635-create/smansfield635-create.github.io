@@ -1,0 +1,88 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "candidateHead": "3b786634f9a42906d904e1a2e54067d47bb4895",
+  "comparisonBaseline": "311ea2e53ad8d769e3f2f70ede40d46fb55aae7a",
+  "reviewMode": "BOUNDED_LOADER_PROGRESS_AND_UNCHANGED_WORLD_CARRY_FORWARD",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/arrival-loader.js",
+      "sha256": "341ff2815e33de731f58894158af498483b470f36939e8c8c2870039193f3d18"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "08122923c0cd9bc0efec6c35eba77ca5cf3f9448e7ded52da1f5e571e16af070"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewBasis": {
+    "newlyObserved": [
+      "Exact candidate source diff and SHA-256 identities for the two changed experience files.",
+      "Independent source comparison confirms the restored startBoundedActivity function is text-identical to the implementation in exact prior candidate 730034d3864b80468aa5eda1e39697b7717e2587; that implementation advances one displayed percentage point every 520 ms up to one point below the next confirmed renderer milestone and respects reduced-motion.",
+      "The wrapper change only refreshes the loader module cache key."
+    ],
+    "inheritedUnchanged": [
+      "The accepted full-environment receipt/evidence covers the unchanged world, terrain, materials, renderer, navigation, controls, and continuity.",
+      "The repository anchor visual proxy remains unchanged.",
+      "The owner reported that the promoted environment loads on phone and tablet and remains navigable while vegetation loads; that observation is about the prior live head."
+    ],
+    "limitations": [
+      "This exact candidate head was not deployed, visually previewed, or physically tested on a phone or tablet.",
+      "The earlier 730034d candidate exact-head run supports the timer source/runtime behavior, but its composite environment visual acceptance remained open because terrain was not resolved; it is not carried forward as world-appearance acceptance.",
+      "The 2026-09-20 loader receipt records an earlier bounded-progress implementation and reduced-motion behavior; its whole-file hashes differ from this candidate and it is not an exact-head receipt.",
+      "The current exact-head progress percentage has not been observed in a browser; the carry-forward basis is function identity, limited source diff, unchanged loader design, and unchanged accepted world.",
+      "The progress timer changes only displayed loading progress; it does not accelerate renderer or vegetation work.",
+      "Publication checks and live exact-head verification remain pending."
+    ],
+    "evidenceReferences": [
+      "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/6d18e158171a31b296a787202ac731a5c0513e37",
+      "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/730034d3864b80468aa5eda1e39697b7717e2587",
+      "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37078079631",
+      "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5086#issuecomment-5963120039"
+    ],
+    "evidenceRoleMap": {
+      "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg": "Repository visual proxy for the unchanged anchored world.",
+      "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json": "Accepted unchanged environment, control, and continuity evidence; physicalAcceptancePerformed=false.",
+      "h-earth-3d/experience-anchor/evidence/H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001.json": "Historical loader source/runtime and reduced-motion evidence; not exact candidate and not a numerical-percentage screenshot."
+    },
+    "sourceReview": {
+      "exactProductSourceHead": "3b786634f9a42906d904e1a2e54067d47bb4895",
+      "changedSourcePaths": [
+        "showroom/globe/h-earth/arrival-loader.js",
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
+      ],
+      "unchangedRendererAndEnvironment": true,
+      "unchangedPhoneAndTabletControls": true
+    }
+  },
+  "physicalAcceptancePerformed": false,
+  "publicationChecksPassed": false,
+  "publicationAuthorityCreated": false
+}

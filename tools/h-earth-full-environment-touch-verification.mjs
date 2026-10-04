@@ -41,6 +41,9 @@ async function qualifyStartupStatus(){
         await page.evaluate(({stage,rejection})=>{if(rejection)window.dispatchEvent(new PromiseRejectionEvent('unhandledrejection',{promise:Promise.resolve(),reason:new Error('QUALIFICATION_ACTUAL_REJECTION')}));else window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.fail(stage,new Error('QUALIFICATION_ACTUAL_FAILURE'));},{stage:test.fail,rejection:test.rejection});
         result.after=await page.evaluate(()=>({receipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),failed:document.querySelector('.h-earth-experience-loader')?.dataset.failed,headline:document.querySelector('.h-earth-experience-loader__headline')?.textContent}));
         if(result.after.failed!=='true'||!result.after.receipt.firstFailureStage||!result.after.headline.includes('failed'))throw Error('REAL_FAILURE_CONCEALED');
+        await page.evaluate(()=>window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage',{detail:{stage:'READY_EVENT_EMITTED',status:'PASS'}})));
+        result.afterLateReady=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt());
+        if(result.afterLateReady.firstFailureStage!==result.after.receipt.firstFailureStage)throw Error('REAL_FAILURE_ERASED_BY_LATE_READY');
       }else if(test.ready){
         await page.evaluate(()=>{window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage',{detail:{stage:'FIRST_FRAME_DRAWN',status:'PASS'}}));document.getElementById('h-earth-functional-landscape-route').dataset.run8eReady='true';window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage',{detail:{stage:'READY_EVENT_EMITTED',status:'PASS'}}));});
         await page.clock.fastForward(1500);
@@ -60,6 +63,15 @@ async function qualifyStartupStatus(){
         await page.clock.fastForward(120000);
         result.after=await page.evaluate(()=>({receipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),failed:document.querySelector('.h-earth-experience-loader')?.dataset.failed,status:document.querySelector('.h-earth-experience-loader__status')?.textContent,loaderConnected:!!document.querySelector('.h-earth-experience-loader')}));
         if(!result.after.loaderConnected||result.after.failed==='true'||result.after.receipt.stages.READY_PUBLISHED==='PASS')throw Error('PENDING_STATE_FABRICATED_TERMINAL_RESULT');
+        result.loaderBounds=[];
+        for(const viewport of [{width:800,height:1280},{width:390,height:844},{width:1280,height:800},{width:844,height:390}]){
+          await page.setViewportSize(viewport);
+          const bounds=await page.locator('.h-earth-experience-loader__card').boundingBox();
+          result.loaderBounds.push({viewport,bounds});
+          if(!bounds||bounds.x<0||bounds.y<0||bounds.x+bounds.width>viewport.width||bounds.y+bounds.height>viewport.height)throw Error('LOADER_CARD_OUTSIDE_VIEWPORT');
+          await page.screenshot({path:path.join(out,`delayed-loader-${viewport.width}x${viewport.height}.png`)});
+        }
+        await page.setViewportSize({width:800,height:1280});
         await page.screenshot({path:path.join(out,'delayed-tablet-loader.png')});
       }
       result.result='PASS';
@@ -163,11 +175,17 @@ try{
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getVegetationResidency()?.complete===true,{},{timeout:480000});
       if(mode==='tablet-diagnostic'){
         const b=await page.locator('canvas').first().boundingBox();
+        const before=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt());
         await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:b.x+b.width*.5,y:b.y+b.height*.5}]});
-        for(let i=1;i<=3;i++){await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:b.x+b.width*(.5+i*.02),y:b.y+b.height*.5}]});await page.waitForTimeout(100);}
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:b.x+b.width*.62,y:b.y+b.height*.5}]});
+        await page.waitForTimeout(300);
         await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        const after=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt());
+        receipt.postCompleteLook={before,after};
+        if(Math.abs(after.currentNavigationState.yawDegrees-before.currentNavigationState.yawDegrees)<.01)throw Error('POST_COMPLETE_LOOK_NO_ROTATION');
         receipt.performanceReport=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getPerformanceReport());
         if(!receipt.performanceReport)throw Error('PERFORMANCE_REPORT_MISSING');
+        if(!(receipt.performanceReport.startup.performanceCosts?.aggregates?.['complete:NAVIGATION_FRAME']?.count>0))throw Error('POST_COMPLETE_NAVIGATION_MEASUREMENT_MISSING');
       }
       receipt.final=await page.evaluate(()=>({residency:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency(),live:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),startup:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),progress:window.__vegetationProgressEvidence,progressText:window.__vegetationTextEvidence}));
       const r=receipt.final.residency,t=r.timing;

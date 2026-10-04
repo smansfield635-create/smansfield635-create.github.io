@@ -76,7 +76,11 @@
     {
       "projectId": "H_EARTH",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["h-earth-3d/", "showroom/globe/h-earth/", "showroom/globe/audralia/audio/"],
+      "ownedPathPrefixes": [
+        "h-earth-3d/",
+        "showroom/globe/h-earth/",
+        "showroom/globe/audralia/audio/"
+      ],
       "ownedExactPaths": [
         "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/run8e-successor-environment.js",
         ".github/workflows/h-earth-repository-registry-preflight.yml",
@@ -155,7 +159,9 @@
     {
       "projectId": "LAWS",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["laws/"],
+      "ownedPathPrefixes": [
+        "laws/"
+      ],
       "ownedExactPaths": [
         "scripts/laws_cp6_final_browser_verify.mjs",
         "scripts/laws_cp6_final_browser_verify_runner.mjs",
@@ -168,23 +174,33 @@
     {
       "projectId": "LINEAGE_RECEIPT_PROTOCOL",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["infrastructure/lineage-receipt-protocol-v1/"],
-      "ownedExactPaths": [".github/workflows/lrpv1-conformance.yml"],
+      "ownedPathPrefixes": [
+        "infrastructure/lineage-receipt-protocol-v1/"
+      ],
+      "ownedExactPaths": [
+        ".github/workflows/lrpv1-conformance.yml"
+      ],
       "entrypoint": ".github/ai-router/projects/lineage-receipt-protocol/entrypoint.v1.json",
       "priority": 100
     },
     {
       "projectId": "ESTATE_VALIDATION",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["validation/"],
-      "ownedExactPaths": [".github/workflows/estate-validation-v1.yml"],
+      "ownedPathPrefixes": [
+        "validation/"
+      ],
+      "ownedExactPaths": [
+        ".github/workflows/estate-validation-v1.yml"
+      ],
       "entrypoint": ".github/ai-router/projects/estate-validation/entrypoint.v1.json",
       "priority": 100
     },
     {
       "projectId": "ESTATE_SOUNDTRACK",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["assets/audio/estate-soundtrack/"],
+      "ownedPathPrefixes": [
+        "assets/audio/estate-soundtrack/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/estate-soundtrack/entrypoint.v1.json",
       "priority": 100
@@ -192,7 +208,9 @@
     {
       "projectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["infrastructure/state-bound-admissibility-kernel-v1/"],
+      "ownedPathPrefixes": [
+        "infrastructure/state-bound-admissibility-kernel-v1/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json",
       "priority": 100
@@ -200,7 +218,9 @@
     {
       "projectId": "CONTROL_PLANE_TRANSFERABILITY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["control-plane/transferability-program/"],
+      "ownedPathPrefixes": [
+        "control-plane/transferability-program/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/control-plane-transferability/entrypoint.v1.json",
       "priority": 100
@@ -208,7 +228,9 @@
     {
       "projectId": "OPEN_WORLD",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["open-world/"],
+      "ownedPathPrefixes": [
+        "open-world/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/open-world/entrypoint.v1.json",
       "priority": 100
@@ -216,7 +238,9 @@
     {
       "projectId": "COMPASS",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["assets/compass/"],
+      "ownedPathPrefixes": [
+        "assets/compass/"
+      ],
       "ownedExactPaths": [
         "index.html",
         "assets/manor-blueprint/manor.estate.gothic-detail-phase1.mjs",
@@ -230,7 +254,11 @@
     {
       "projectId": "PUBLIC_LEGITIMACY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["developer/", "evidence/", "governance/"],
+      "ownedPathPrefixes": [
+        "developer/",
+        "evidence/",
+        "governance/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/public-legitimacy/entrypoint.v1.json",
       "priority": 100
@@ -238,7 +266,9 @@
     {
       "projectId": "MATERIAL_WORK_AUDIT",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["research/material-work-audit/"],
+      "ownedPathPrefixes": [
+        "research/material-work-audit/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/material-work-audit/entrypoint.v1.json",
       "priority": 100
@@ -263,7 +293,9 @@
       "projectId": "ESTATE_COSMIC_CONTINUITY",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": [],
-      "ownedExactPaths": ["assets/dgb-estate-cosmos.js"],
+      "ownedExactPaths": [
+        "assets/dgb-estate-cosmos.js"
+      ],
       "entrypoint": ".github/ai-router/projects/estate-cosmic-continuity/entrypoint.v1.json",
       "priority": 100
     },
@@ -281,7 +313,9 @@
     {
       "projectId": "CONSIDER_THE_ENERGY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["campaigns/consider-the-energy/"],
+      "ownedPathPrefixes": [
+        "campaigns/consider-the-energy/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/consider-the-energy/entrypoint.v1.json",
       "priority": 100
@@ -289,7 +323,9 @@
     {
       "projectId": "ROB",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["campaigns/rob/"],
+      "ownedPathPrefixes": [
+        "campaigns/rob/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/rob/entrypoint.v1.json",
       "priority": 100
@@ -298,14 +334,18 @@
       "projectId": "BUILD",
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": [],
-      "ownedExactPaths": ["build/index.html"],
+      "ownedExactPaths": [
+        "build/index.html"
+      ],
       "entrypoint": ".github/ai-router/projects/build/entrypoint.v1.json",
       "priority": 100
     },
     {
       "projectId": "ON_YOUR_SIDE_AAI",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["products/on-your-side-ai/"],
+      "ownedPathPrefixes": [
+        "products/on-your-side-ai/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/on-your-side-aai/entrypoint.v1.json",
       "priority": 100
@@ -313,7 +353,9 @@
     {
       "projectId": "EDUCATION",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["products/education/"],
+      "ownedPathPrefixes": [
+        "products/education/"
+      ],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/education/entrypoint.v1.json",
       "priority": 100
@@ -331,6 +373,18 @@
         "products/archcoin/verify-launch-status.v1.mjs"
       ],
       "entrypoint": ".github/ai-router/projects/archcoin/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "LEGACY_PRODUCT_PUBLIC_PAGES",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "products/eai/index.html",
+        "products/cvd/index.html",
+        "products/platform/index.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/legacy-product-pages/entrypoint.v1.json",
       "priority": 100
     }
   ],

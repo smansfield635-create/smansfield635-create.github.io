@@ -386,6 +386,16 @@
       ],
       "entrypoint": ".github/ai-router/projects/legacy-product-pages/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "NOT_FOUND_PUBLIC_PAGE",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "404.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/not-found-page/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

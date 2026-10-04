@@ -107,12 +107,13 @@ export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
-export function createHEarthRun8ER3D3LiveGpuBinding({
+export async function createHEarthRun8ER3D3LiveGpuBinding({
   canvas,
   initialNavigationState,
   viewport = { width: 640, height: 360, pixelRatio: 1 },
   deferVegetation = false,
-  onFramePresented = null
+  onFramePresented = null,
+  onStartupProgress = null
 } = {}) {
   const deferredVegetationActive=deferVegetation===true&&selectedRendererPath===ADDITIVE_VISUAL_RENDERER_PATH;
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3D3_CANVAS_REQUIRED');
@@ -165,7 +166,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, deferVegetation:deferredVegetationActive });
+  const renderer = await createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, deferVegetation:deferredVegetationActive, onStartupProgress });
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -257,15 +258,17 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     frameSequence: 1
   });
   counters.r3AFramePacketCount += 1;
-  const initialization = renderer.initialize(initialPacket);
+  const initialization = await renderer.initialize(initialPacket,{onStartupProgress});
   counters.rendererInitializationCount += 1;
   frameSequence = 0;
+  onStartupProgress?.(Object.freeze({phase:'INITIAL_DRAW_ENTERED',completed:0,total:1,unit:'frame',progress:88,status:'Drawing first world frame'}));
   presentNavigationState(initialNavigationState, {
     kind: 'INITIAL_NAVIGATION_STATE',
     sequence: initialNavigationState.sequence,
     label: 'initial',
     captureEvidence: true
   });
+  onStartupProgress?.(Object.freeze({phase:'FIRST_FRAME_PRESENTED',completed:1,total:1,unit:'frame',progress:97,status:'First world frame presented'}));
 
   const scheduleAnimationFrame = () => {
     if (!oceanPresentationRequested || !animationRunning || animationFrameHandle !== null) return;

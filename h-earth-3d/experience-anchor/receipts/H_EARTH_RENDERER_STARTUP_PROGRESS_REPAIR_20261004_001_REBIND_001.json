@@ -1,0 +1,79 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "comparisonBaseline": "26d1c95542be704938005f64d780ea400a9a9004",
+  "candidateBranch": "h-earth/renderer-startup-progress-20261004-rebind-001",
+  "reviewMode": "MEASURED_STARTUP_PROGRESS_WITH_UNCHANGED_WORLD_CARRY_FORWARD",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/arrival-loader.js",
+      "sha256": "a2deaa2024952e60aae13394afe3a2b5434d648ea3030546cd17442de0dd8da8"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "21931aa72244f5dc43b5b7d48c20b85e8e4558d58c9b668f532074e77e116e2e"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "664829e287ef1896bbefe8ae5cb29d281722749c637e786b59aa8f1e92a76f94"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewBasis": {
+    "newlyObserved": [
+      "Full source files were restored; SHA-256 identities were recorded for every changed experience surface file.",
+      "Five deterministic Node cases evaluate repeatable contact-field values and phase counts and verify async yielding.",
+      "Module-mode syntax checks pass on all four runtime files; renderer construction and initialization are awaited through the binding.",
+      "Coast, contact, residual, and GPU upload progress derives from completed work; the loader does not advance by elapsed time and holds below 100 until READY_PUBLISHED PASS."
+    ],
+    "inheritedUnchanged": [
+      "The anchor visual proxy and accepted full-environment evidence cover the unchanged H-Earth world, terrain, controls, and continuity.",
+      "Historical loader evidence covers the same arrival surface and reduced-motion semantics; this repair changes only how completed renderer work is reported."
+    ],
+    "limitations": [
+      "This is static candidate and deterministic Node evidence. No browser exact-head run, production URL inspection, phone retest, or tablet retest was performed.",
+      "The accepted environment evidence is carried forward only for unchanged H-Earth world and interaction properties; it does not prove the new progress display at runtime.",
+      "Main is 6962f4f; its ten-commit difference from the governing base changes no H-Earth runtime or experience paths. The current main routing files were reread before candidate reconstruction."
+    ],
+    "sourceReview": {
+      "exactProductSourceBase": "26d1c95542be704938005f64d780ea400a9a9004",
+      "changedSourcePaths": [
+        "showroom/globe/h-earth/arrival-loader.js",
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+      ],
+      "unchangedVegetationPlacements": 27585,
+      "unchangedVegetationBatches": 108,
+      "phoneAndTabletControlsChanged": false
+    }
+  },
+  "physicalAcceptancePerformed": false,
+  "publicationChecksPassed": false,
+  "publicationAuthorityCreated": false
+}

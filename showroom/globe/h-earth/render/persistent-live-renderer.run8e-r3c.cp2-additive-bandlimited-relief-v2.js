@@ -14,7 +14,7 @@ import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentatio
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.
 // The GPU attribute is a sampled, linearly interpolated approximation, not an
 // exact fragment contact test. Distances saturate at 64 m (sand ends at 38 m).
-function createExposedWaterContactField(views, spans, patch = null) {
+function* createExposedWaterContactFieldSteps(views, spans, patch = null) {
   const started = performance.now(), limit = 64, eps = 1e-8;
   const stats = { coordinateSpace: 'UPLOADED_WORLD_XZ_METERS', saturationMeters: limit,
     interpolation: 'PER_VERTEX_LINEAR_APPROXIMATION', terrainTriangles: 0,
@@ -36,7 +36,7 @@ function createExposedWaterContactField(views, spans, patch = null) {
     if(node.items){for(const t of node.items)if(overlap(t.box,box))out.push(t);}
     else {query(node.left,box,out);query(node.right,box,out);}return out;
   }
-  function triangles(positions,indices,start,count,owner) {
+  function* triangles(positions,indices,start,count,owner) {
     const out=[];
     for(let i=start;i<start+count;i+=3){
       const ids=[indices[i],indices[i+1],indices[i+2]];
@@ -46,6 +46,7 @@ function createExposedWaterContactField(views, spans, patch = null) {
       const dx=((p[1][2]-p[0][2])*(p[2][1]-p[0][1])-(p[2][2]-p[0][2])*(p[1][1]-p[0][1]))/den;
       const dz=((p[1][0]-p[0][0])*(p[2][2]-p[0][2])-(p[2][0]-p[0][0])*(p[1][2]-p[0][2]))/den;
       out.push({ids,p,box:bounds(p),owner,den,height:q=>p[0][2]+dx*(q[0]-p[0][0])+dz*(q[1]-p[0][1])});
+      if((i-start+3)%3072===0||i+3>=start+count)yield {phase:'CONTACT_TRIANGLES',completed:Math.min(i+3-start,count),total:count,unit:'indices'};
     }return out;
   }
   function contains(t,p) {const s=Math.sign(t.den);return t.p.every((a,i)=>s*cross(a,t.p[(i+1)%3],p)>=-eps);}
@@ -62,12 +63,12 @@ function createExposedWaterContactField(views, spans, patch = null) {
   }
   const terrain=[],ocean=[];
   for(const span of spans){
-    if(span.role==='TERRAIN')terrain.push(...triangles(views.positions,views.indices,span.indexStart,span.indexCount,'package'));
-    if(span.materialIntent==='ONE_CONTINUOUS_OPEN_OCEAN_TO_GEOMETRIC_HORIZON')ocean.push(...triangles(views.positions,views.indices,span.indexStart,span.indexCount,'ocean'));
+    if(span.role==='TERRAIN')terrain.push(...(yield* triangles(views.positions,views.indices,span.indexStart,span.indexCount,'package')));
+    if(span.materialIntent==='ONE_CONTINUOUS_OPEN_OCEAN_TO_GEOMETRIC_HORIZON')ocean.push(...(yield* triangles(views.positions,views.indices,span.indexStart,span.indexCount,'ocean')));
   }
   if(!terrain.length||!ocean.length)throw new Error('R3C_CONTACT_SOURCE_MISSING');
   const packageTree=tree(terrain.slice());
-  const patchTriangles=patch?triangles(patch.positions,patch.indices,0,patch.indices.length,'patch'):[];
+  const patchTriangles=patch?(yield* triangles(patch.positions,patch.indices,0,patch.indices.length,'patch')):[];
   const patchTree=tree(patchTriangles.slice()),waterTree=tree(ocean.slice());
   const rectangle=patch?[patch.x-64+.04,patch.z-64+.04,patch.x+64-.04,patch.z+64-.04]:null;
   const inRectangle=p=>rectangle&&p[0]>rectangle[0]&&p[0]<rectangle[2]&&p[1]>rectangle[1]&&p[1]<rectangle[3];
@@ -91,8 +92,10 @@ function createExposedWaterContactField(views, spans, patch = null) {
       pieces.push([mix(a,b,cuts[i-1]),mix(a,b,cuts[i])]);
     }return pieces;
   }
-  const segments=[],seen=new Set();
-  for(const t of [...terrain,...patchTriangles])for(const w of query(waterTree,t.box)){
+  const segments=[],seen=new Set(),contactTriangles=[...terrain,...patchTriangles];
+  for(let triangleIndex=0;triangleIndex<contactTriangles.length;triangleIndex++){
+    const t=contactTriangles[triangleIndex];
+    for(const w of query(waterTree,t.box)){
     stats.overlapTests++;
     const poly=clip(t.p.map(p=>p.slice(0,2)),w);if(poly.length<2)continue;
     const heights=poly.map(p=>t.height(p)-w.height(p));
@@ -111,11 +114,13 @@ function createExposedWaterContactField(views, spans, patch = null) {
       stats.maximumPlaneResidualMeters=Math.max(stats.maximumPlaneResidualMeters,Math.abs(t.height(a)-w.height(a)),Math.abs(t.height(b)-w.height(b)));
       segments.push({a,b,box:bounds([a,b]),triangle:t});
     }
+    }
+    if(triangleIndex%256===255||triangleIndex===contactTriangles.length-1)yield {phase:'CONTACT_INTERSECTIONS',completed:triangleIndex+1,total:contactTriangles.length,unit:'triangles'};
   }
   const segmentTree=tree(segments.slice());
-  function sample(positions,ids) {
+  function* sample(positions,ids) {
     const distances=new Float32Array(positions.length/3);distances.fill(limit);
-    for(const id of ids){
+    let completed=0;for(const id of ids){
       const p=[positions[id*3],positions[id*3+2]],y=positions[id*3+1];let d2=limit*limit;
       for(const s of query(segmentTree,[p[0]-limit,p[1]-limit,p[0]+limit,p[1]+limit])){
         const dx=s.b[0]-s.a[0],dz=s.b[1]-s.a[1],den=dx*dx+dz*dz;
@@ -124,25 +129,40 @@ function createExposedWaterContactField(views, spans, patch = null) {
       }
       const wet=query(waterTree,[p[0],p[1],p[0],p[1]]).some(w=>contains(w,p)&&y<w.height(p));
       distances[id]=(wet?-1:1)*Math.sqrt(d2);
+      completed++;if(completed%4096===0||completed===ids.size)yield {phase:'CONTACT_VERTEX_SAMPLES',completed,total:ids.size,unit:'vertices'};
     }return distances;
   }
   const packageIds=new Set(terrain.flatMap(t=>t.ids));
-  const packageDistances=sample(views.positions,packageIds);
-  const patchDistances=patch?sample(patch.positions,new Set(patchTriangles.flatMap(t=>t.ids))):null;
+  const packageDistances=yield* sample(views.positions,packageIds);
+  const patchDistances=patch?yield* sample(patch.positions,new Set(patchTriangles.flatMap(t=>t.ids))):null;
   let interpolationResidual=0,missedTriangles=new Set();
-  for(const s of segments){
+  for(let residualIndex=0;residualIndex<segments.length;residualIndex++){
+    const s=segments[residualIndex];
     const t=s.triangle,d=t.owner==='patch'?patchDistances:packageDistances,v=t.ids.map(i=>d[i]);
     if(v.every(x=>x>0)||v.every(x=>x<0))missedTriangles.add(t);
     for(const p of [s.a,s.b,mix(s.a,s.b,.5)]){
       const wa=cross(t.p[1],t.p[2],p)/t.den,wb=cross(t.p[2],t.p[0],p)/t.den;
       interpolationResidual=Math.max(interpolationResidual,Math.abs(wa*v[0]+wb*v[1]+(1-wa-wb)*v[2]));
     }
+    if(residualIndex%256===255||residualIndex===segments.length-1)yield {phase:'CONTACT_RESIDUALS',completed:residualIndex+1,total:segments.length,unit:'segments'};
   }
   Object.assign(stats,{terrainTriangles:terrain.length,patchTriangles:patchTriangles.length,oceanTriangles:ocean.length,contactSegments:segments.length,
     packageVertices:packageIds.size,patchVertices:patchDistances?.length??0,
     maximumSampledZeroContourAttributeResidualMeters:interpolationResidual,contactTrianglesWithoutVertexSignChange:missedTriangles.size,
     initializationMilliseconds:performance.now()-started});
   return {packageDistances,patchDistances,stats};
+}
+
+
+async function yieldToBrowserPaint(){await new Promise(resolve=>{if(typeof globalThis.requestAnimationFrame==='function')globalThis.requestAnimationFrame(()=>resolve());else globalThis.setTimeout(resolve,0);});}
+function createExposedWaterContactField(views,spans,patch=null){const iterator=createExposedWaterContactFieldSteps(views,spans,patch);let step;do{step=iterator.next();}while(!step.done);return step.value;}
+async function createExposedWaterContactFieldAsync(views,spans,patch=null,options={}){
+  if(patch&&!patch.positions&&(patch.onProgress||patch.yieldControl)){options=patch;patch=null;}
+  const {onProgress=()=>{},yieldControl=yieldToBrowserPaint,startProgress=34}=options;
+  const progressCallback=onProgress;
+  const iterator=createExposedWaterContactFieldSteps(views,spans,patch);let step,lastStartupPercent=startProgress;
+  do{step=iterator.next();if(!step.done){const {phase,completed,total,unit}=step.value;const fraction=total?completed/total:1;const low=phase==='CONTACT_TRIANGLES'?startProgress:phase==='CONTACT_INTERSECTIONS'?startProgress+1.5:phase==='CONTACT_VERTEX_SAMPLES'?startProgress+3:startProgress+4.2;const high=phase==='CONTACT_TRIANGLES'?startProgress+1.5:phase==='CONTACT_INTERSECTIONS'?startProgress+3:phase==='CONTACT_VERTEX_SAMPLES'?startProgress+4.2:startProgress+4.5;const progress=Math.max(lastStartupPercent,low+(high-low)*fraction);lastStartupPercent=progress;const label=phase==='CONTACT_TRIANGLES'?'Preparing terrain contact geometry':phase==='CONTACT_INTERSECTIONS'?'Finding exposed shoreline contacts':phase==='CONTACT_RESIDUALS'?'Checking contact field accuracy':'Sampling coast vertices';progressCallback(Object.freeze({phase,completed,total,unit,progress,status:label}));await yieldControl();}}while(!step.done);
+  onProgress(Object.freeze({phase:'CONTACT_FIELD_COMPLETE',completed:1,total:1,unit:'fields',progress:39.5,status:'Terrain contact field ready'}));return step.value;
 }
 
 export const H_EARTH_RUN_8E_R3C_RENDERER_ID =
@@ -710,7 +730,7 @@ uniform sampler2D uDepth;
 out vec4 outColor;
 void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
 
-export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false } = {}) {
+export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false, onStartupProgress = null } = {}) {
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
   canvas.height = height;
@@ -719,6 +739,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     preserveDrawingBuffer: true, powerPreference: 'high-performance'
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
+  onStartupProgress?.(Object.freeze({phase:'RENDERER_CONSTRUCTOR',completed:0,total:1,unit:'renderer',progress:34,status:'Constructing world renderer'}));
+  await yieldToBrowserPaint();
   let initialized = false;
   const counters = {
     contextCreationCount: 1, shaderCreateCount: 0, shaderCompileCount: 0,
@@ -803,6 +825,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   const sandRange = sandRanges[0];
   const coastDistances = new Float32Array(uploadViews.positions.length / 3);
   const planetRadius = H_EARTH_PLANETARY_WORLD_FRAME.exactSphereRadius;
+  const totalCoastVertices=renderPackage.primitiveSpans.filter(span=>span.role==='TERRAIN').reduce((total,span)=>total+span.vertexCount,0);
+  let coastVertexCompleted=0,lastCoastProgress=34;
   for (const span of renderPackage.primitiveSpans) {
     if (span.role !== 'TERRAIN') continue;
     for (let vertex = span.vertexStart; vertex < span.vertexStart + span.vertexCount; vertex++) {
@@ -810,13 +834,20 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       const horizontal = Math.hypot(px, pz);
       const scale = horizontal > Number.EPSILON ? Math.atan2(horizontal, py + planetRadius) * planetRadius / horizontal : 0;
       coastDistances[vertex] = getHEarthSignedCoastDistanceMeters(px * scale, pz * scale);
+      coastVertexCompleted++;
+      if(coastVertexCompleted%4096===0||coastVertexCompleted===totalCoastVertices){
+        const progress=Math.max(lastCoastProgress,34+coastVertexCompleted/Math.max(1,totalCoastVertices));
+        lastCoastProgress=progress;
+        onStartupProgress?.(Object.freeze({phase:'COAST_VERTEX_SAMPLES',completed:coastVertexCompleted,total:totalCoastVertices,unit:'vertices',progress,status:'Sampling coast vertices'}));
+        await yieldToBrowserPaint();
+      }
     }
   }
 
   let vegetationTruth=deferVegetation?null:startupMeasure('VEGETATION_TRUTH_LOOKUP',()=>getHEarthRun8ER2VegetationWorldTruthPlan());
   if(!deferVegetation&&vegetationTruth.qualifiedManifestIdentity?.manifestSha256!=='9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e')throw new Error('R3C_QUALIFIED_VEGETATION_MANIFEST_MISMATCH');
   resources.vegetation={truth:vegetationTruth,nextBatchIndex:0,residentBatches:[],residentPlacementIds:new Set(),complete:false};
-  let contactField=startupMeasure('CONTACT_FIELD',()=>createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans));
+  let contactField=await createExposedWaterContactFieldAsync(uploadViews,renderPackage.primitiveSpans,null,{onProgress:onStartupProgress??(()=>{}),startProgress:35});
   let contactFieldBuildCount=1,contactFieldTotalMilliseconds=contactField.stats.initializationMilliseconds;
 
   let vegetationPreparation=null;
@@ -848,8 +879,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     })();
     return vegetationPreparation;
   }
-  function initialize(packet) {return startupMeasure('INITIALIZATION',()=>initializeObserved(packet));}
-  function initializeObserved(packet) {
+  async function initialize(packet,{onStartupProgress:progressCallback=onStartupProgress}={}) {return await startupMeasure('INITIALIZATION',()=>initializeObserved(packet,progressCallback));}
+  async function initializeObserved(packet,progressCallback) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) {
       throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
@@ -876,16 +907,32 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       ['coastDistances', coastDistances, 8, 1, gl.FLOAT, false],
       ['contactDistances', contactField.packageDistances, 9, 1, gl.FLOAT, false]
     ];
+    let lastStartupPercent=40;
+    const totalStartupUploadBytes=specifications.reduce((total,item)=>total+item[1].byteLength,uploadViews.indices.byteLength);
+    let uploadedStartupBytes=0;
+    const reportUploadProgress=(phase,completed,total,unit,label)=>{const progress=Math.max(lastStartupPercent,40+44*(uploadedStartupBytes/Math.max(1,totalStartupUploadBytes)));lastStartupPercent=progress;progressCallback?.(Object.freeze({phase,completed,total,unit,progress,status:label}));};
+    const uploadChunked=async(target,data)=>{
+      gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);
+      const chunkElements=Math.max(1,Math.floor(262144/data.BYTES_PER_ELEMENT));
+      for(let start=0;start<data.length;start+=chunkElements){
+        const chunk=data.subarray(start,Math.min(data.length,start+chunkElements));
+        gl.bufferSubData(target,start*data.BYTES_PER_ELEMENT,chunk);
+        uploadedStartupBytes+=chunk.byteLength;
+        reportUploadProgress('GPU_STARTUP_UPLOAD',uploadedStartupBytes,totalStartupUploadBytes,'bytes','Loading world resources');
+        await yieldToBrowserPaint();
+      }
+      counters.bufferUploadCount++;counters.uploadedByteLength+=data.byteLength;
+    };
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {
       const buffer = createBuffer(); resources.buffers.push({ name, buffer, byteLength: data.byteLength });
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer); upload(gl.ARRAY_BUFFER, data); gl.enableVertexAttribArray(location);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer); await uploadChunked(gl.ARRAY_BUFFER, data); gl.enableVertexAttribArray(location);
       if (integer) gl.vertexAttribIPointer(location, size, type, 0, 0);
       else gl.vertexAttribPointer(location, size, type, false, 0, 0);
     }
     resources.indexBuffer = createBuffer();
     resources.buffers.push({ name: 'indices', buffer: resources.indexBuffer, byteLength: uploadViews.indices.byteLength });
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -939,7 +986,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
 // SHORELINE_SOIL_BEGIN sampler
     gl.uniform1i(resources.uniforms.shorelineSoilCoverage,1);
 // SHORELINE_SOIL_END sampler
-    counters.staticUniformUpdateCount = 11; initialized = true; return getResourceReceipt();
+    counters.staticUniformUpdateCount = 11; initialized = true;
+    progressCallback?.(Object.freeze({phase:'GPU_STARTUP_RESOURCES_READY',completed:1,total:1,unit:'initialization',progress:87,status:'Graphics resources initialized'}));
+    return getResourceReceipt();
   }
 
   function buildInitialRefinementPatch(packet) {
@@ -1189,4 +1238,3 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;
-

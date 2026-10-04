@@ -205,7 +205,7 @@ try {
 
   emitDiagnosticStage('RENDERER_CONSTRUCTED', 'PENDING', 'Live GPU binding construction requested.');
 
-  binding = createHEarthRun8ER3D3LiveGpuBinding({
+  binding = await createHEarthRun8ER3D3LiveGpuBinding({
     deferVegetation: true,
     canvas,
     initialNavigationState: intake.getNavigationState(),
@@ -217,7 +217,8 @@ try {
         emitDiagnosticStage('FIRST_FRAME_DRAWN', 'PASS', frameRecord);
       }
       updateHud();
-    }
+    },
+    onStartupProgress: (detail) => window.dispatchEvent(new CustomEvent('h-earth-renderer-startup-progress', { detail }))
   });
 
   const bindingReceipt = binding.getReceipt();

@@ -1,5 +1,5 @@
 import { installHEarthRun8ER3D2PointerTouchIntake } from '../diagnostic/run8e-r3d/pointer-touch-intake.js';
-import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=45ad8eb3aafa0f59';
+import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=9699e72535343b34';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
@@ -342,8 +342,9 @@ function vegetationComplete(){
   window.setTimeout(()=>{vegetationStatus.hidden=true;},2500);
 }
 
+let vegetationBatchInFlight=false;
 function scheduleVegetationResidency() {
-  if (!vegetationPrepared || vegetationLoadingStopped || vegetationLoadingFailed || vegetationFrameRequest !== null) return;
+  if (vegetationBatchInFlight || !vegetationPrepared || vegetationLoadingStopped || vegetationLoadingFailed || vegetationFrameRequest !== null) return;
   const residency = binding.getVegetationResidency();
   if (!residency || residency.totalBatchCount === 0) return;
   if (residency.complete) {
@@ -353,7 +354,7 @@ function scheduleVegetationResidency() {
   root.dataset.vegetationResidency = 'loading';
   const diagnostics=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
   const scheduledAt=diagnostics?.performanceEnabled?performance.now():0;
-  vegetationFrameRequest = window.requestAnimationFrame(() => {
+  vegetationFrameRequest = window.requestAnimationFrame(async () => {
     if(diagnostics?.performanceEnabled)diagnostics.recordCost('SCHEDULER_WAIT',performance.now()-scheduledAt);
     vegetationFrameRequest = null;
     if (vegetationLoadingStopped || vegetationLoadingFailed) return;
@@ -363,10 +364,11 @@ function scheduleVegetationResidency() {
         vegetationComplete();
         return;
       }
-      binding.materializeNextVegetationBatch();
+      vegetationBatchInFlight=true;
+      try{await binding.materializeNextVegetationBatch();}finally{vegetationBatchInFlight=false;}
       const after = binding.getVegetationResidency();
       window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'RESIDENCY',residentBatchCount:after.residentBatchCount,totalBatchCount:after.totalBatchCount,residentPrimitiveCount:after.residentPrimitiveCount}}));
-      showVegetationStatus(`Loading vegetation — ${Math.floor(100*after.residentBatchCount/after.totalBatchCount)}%`);
+      showVegetationStatus(`Loading vegetation — ${Math.floor(100*after.residentBatchCount/after.totalBatchCount)}% · Visible plants may appear sooner.`);
       if (!after.complete && after.residentBatchCount <= before.residentBatchCount) {
         throw new Error('R3E2_VEGETATION_RESIDENCY_STALLED');
       }

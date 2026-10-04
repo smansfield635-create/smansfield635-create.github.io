@@ -382,7 +382,7 @@ function cattail(index,x,z,number){
   const cattailReferenceForm=referenceCattailUpper(verts,headV,roots,x,z,id);
   return [oasisMesh(`${id}:STEM_LEAVES`,verts,inds,roots,'SHRUB_GREEN_CATTAIL','CATTAIL_STEM_AND_LEAVES',root.y-sampleHEarthGrassTrialTerrain(waterForIndex.get(index),x,z).y,shorelineRefinement,cattailReferenceForm),oasisMesh(`${id}:SEEDHEAD`,headV,headI,[],'WOODY_BROWN_CATTAIL_SEEDHEAD','ROUNDED_CATTAIL_SEEDHEAD',0,shorelineRefinement,cattailReferenceForm)];
 }
-function* constructOasisFoliageSteps(renderPackage){
+function* constructOasisFoliageSteps(renderPackage,onPrimitive=()=>{}){
   if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);
   yield {phase:'PREPARING_BASIN',grassTuftCount:0,cattailCount:0,primitiveCount:0};
   const index=buildHEarthGrassTrialTerrainIndex(renderPackage,O),water=buildHEarthGrassTrialTerrainIndex(renderPackage,O,true);waterForIndex.set(index,water);
@@ -406,7 +406,7 @@ function* constructOasisFoliageSteps(renderPackage){
     if(grassTuftCount>=360)break;
     if(!oasisEligible(index,x,z,false)||!oasisInside(x-.65,z-.65)||!oasisInside(x+.65,z+.65))continue;
     const id=`${O.id}:GRASS:${grassTuftCount}`,source={primitiveId:id,geometry:{geometryId:`${id}:GEOMETRY`},semanticRole:'BOUNDED_WET_EDGE_PRESENTATION',materialHint:{materialIntent:'COASTAL_GRASS_GREEN',archetypeId:'OASIS_ACCEPTED_BLADE_GRASS'},metadata:{worldAnchor:{x,y:sampleHEarthGrassTrialTerrain(index,x,z).y,z}},source:{sourceType:'OWNER_REQUESTED_BOUNDED_FOLIAGE_PRESENTATION'}};
-    try{primitives.push(replaceOasisTuft(source,index));grassTuftCount++;yield progress('GRASS');}catch(error){if(!String(error.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS:'))throw error;}
+    try{const primitive=replaceOasisTuft(source,index);primitives.push(primitive);onPrimitive(primitive);grassTuftCount++;yield progress('GRASS');}catch(error){if(!String(error.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS:'))throw error;}
   }
   for(let z=O.minZ+.8;z<O.maxZ-.8;z+=.92)for(let x=O.minX+.8;x<O.maxX-.8;x+=.92){
     const px=x+(rng()-.5)*.40,pz=z+(rng()-.5)*.40;
@@ -419,7 +419,7 @@ function* constructOasisFoliageSteps(renderPackage){
   for(const {x,z} of wetCandidates){
     if(++cattailAttempts%32===0)yield progress('CATTAIL_SCAN');
     if(cattailCount>=72)break;
-    if(!oasisEligible(index,x,z,true))continue;const p=cattail(index,x,z,cattailCount);if(!p)continue;primitives.push(...p);cattailCount++;yield progress('CATTAIL');
+    if(!oasisEligible(index,x,z,true))continue;const p=cattail(index,x,z,cattailCount);if(!p)continue;primitives.push(...p);p.forEach(onPrimitive);cattailCount++;yield progress('CATTAIL');
   }
   if(grassTuftCount<100||cattailCount<24)throw new Error(`OASIS_ELIGIBLE_SAMPLE_INCOMPLETE:${grassTuftCount}:${cattailCount}`);
   const triangleCount=primitives.reduce((n,p)=>n+p.geometry.indices.length/3,0);if(triangleCount>O.maximumTriangles)throw new Error('OASIS_TRIANGLE_BUDGET_EXCEEDED');
@@ -439,7 +439,9 @@ export async function prepareHEarthOasisFoliagePresentation(renderPackage,{yield
   if(oasisCache.has(renderPackage))return oasisCache.get(renderPackage);
   if(oasisPreparationInFlight.has(renderPackage))return oasisPreparationInFlight.get(renderPackage);
   if(typeof yieldControl!=='function'||typeof onProgress!=='function')throw new TypeError('OASIS_PREPARATION_CALLBACK_INVALID');
-  const preparation=(async()=>{
+  const preparation=typeof window!=='undefined'&&typeof Worker==='function'
+    ? prepareOasisInWorker(renderPackage,onProgress)
+    : (async()=>{
     const steps=constructOasisFoliageSteps(renderPackage);
     const diagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
     for(;;){
@@ -483,4 +485,61 @@ export function buildHEarthOasisGrassSoilCoverage(primitives){
     pixels[z*width+x]=Math.round(value*255);if(pixels[z*width+x])nonzeroTexelCount++;
   }
   return Object.freeze({width,height,bounds,cellSizeMeters,pixels,grassTuftCount,grassRootCount,occupiedCellCount,nonzeroTexelCount});
+}
+
+
+// Stream completed primitives separately: cloning/freezing the whole oasis in one
+// browser task would reintroduce the loading stall that worker execution avoids.
+function prepareOasisInWorker(renderPackage,onProgress){
+  return new Promise((resolve,reject)=>{
+    const url=new URL(import.meta.url);url.searchParams.set('hearthOasisWorker','1');
+    const worker=new Worker(url,{type:'module'}),primitives=[];
+    let settled=false,sequence=0;
+    const fail=error=>{if(settled)return;settled=true;worker.terminate();reject(error);};
+    worker.onerror=event=>fail(new Error(event.message||'OASIS_WORKER_FAILED'));
+    worker.onmessageerror=()=>fail(new Error('OASIS_WORKER_MESSAGE_INVALID'));
+    worker.onmessage=event=>{
+      if(settled)return;
+      try{
+        const message=event.data;
+        if(message?.sequence!==sequence++)throw new Error('OASIS_WORKER_SEQUENCE_INVALID');
+        if(message.type==='OASIS_WORKER_FAILED')throw new Error(message.error?.message||'OASIS_WORKER_FAILED');
+        if(message.type==='OASIS_WORKER_PROGRESS'){
+          globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.recordCost?.('WORKER_OASIS_STEP',message.durationMs);
+          for(const primitive of message.primitives??[]){
+            if(!primitive?.metadata?.oasisFoliage||!primitive.geometry?.vertices?.length)throw new Error('OASIS_WORKER_PRIMITIVE_INVALID');
+            primitives.push(freeze(primitive));
+          }
+          if(message.progress?.primitiveCount!==primitives.length)throw new Error('OASIS_WORKER_PROGRESS_INVALID');
+          onProgress(message.progress);return;
+        }
+        if(message.type!=='OASIS_WORKER_COMPLETE'||message.primitiveCount!==primitives.length)throw new Error('OASIS_WORKER_RESULT_INVALID');
+        const summary=message.summary;
+        const out=freeze({id:summary.id,primitives,grassTuftCount:summary.grassTuftCount,cattailCount:summary.cattailCount,triangleCount:summary.triangleCount,basinAssociation:summary.basinAssociation,waterPrimitive:summary.waterPrimitive,worldPlacementCountChanged:summary.worldPlacementCountChanged});
+        if(out.id!==O.id||out.grassTuftCount+2*out.cattailCount!==primitives.length)throw new Error('OASIS_WORKER_IDENTITY_INVALID');
+        oasisCache.set(renderPackage,out);basinCache.set(renderPackage,out.basinAssociation);
+        onProgress({phase:'COMPLETE',grassTuftCount:out.grassTuftCount,cattailCount:out.cattailCount,primitiveCount:primitives.length});
+        settled=true;worker.terminate();resolve(out);
+      }catch(error){fail(error);}
+    };
+    // Copy only the immutable terrain inputs used by the unchanged constructor.
+    // Never transfer/detach the renderer's live buffers.
+    try{worker.postMessage({type:'OASIS_WORKER_PREPARE',renderPackage:{packageIdentity:renderPackage.packageIdentity,buffers:{positions:renderPackage.buffers.positions,indices:renderPackage.buffers.indices},primitiveSpans:renderPackage.primitiveSpans}});}catch(error){fail(error);}
+  });
+}
+if(typeof DedicatedWorkerGlobalScope!=='undefined'&&globalThis instanceof DedicatedWorkerGlobalScope&&new URL(import.meta.url).searchParams.get('hearthOasisWorker')==='1'){
+  globalThis.addEventListener('message',async event=>{
+    if(event.data?.type!=='OASIS_WORKER_PREPARE')return;
+    let sequence=0,pending=[];
+    try{
+      const steps=constructOasisFoliageSteps(event.data.renderPackage,primitive=>pending.push(primitive));
+      for(;;){
+        const startedAt=performance.now(),step=steps.next(),durationMs=performance.now()-startedAt;
+        if(step.done){const {primitives,...summary}=step.value;globalThis.postMessage({type:'OASIS_WORKER_COMPLETE',sequence:sequence++,primitiveCount:primitives.length,summary});break;}
+        globalThis.postMessage({type:'OASIS_WORKER_PROGRESS',sequence:sequence++,progress:step.value,primitives:pending,durationMs});pending=[];
+        // Backpressure through the event loop keeps output delivery incremental.
+        await new Promise(resolve=>setTimeout(resolve,0));
+      }
+    }catch(error){globalThis.postMessage({type:'OASIS_WORKER_FAILED',sequence:sequence++,error:{name:error?.name,message:error?.message}});}
+  },{once:true});
 }

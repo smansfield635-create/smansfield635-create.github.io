@@ -82,32 +82,77 @@ let gen2515VegetationGroundedPlanCache = null;
 let gen2515VegetationWorldTruthPlanCache = null;
 let vegetationPreparation = null;
 export const isHEarthGen2515VegetationWorldTruthPrepared=()=>gen2515VegetationWorldTruthPlanCache!==null;
+// The existing planner worker also constructs one complete, unchanged logical batch at a time.
+let vegetationWorker=null,vegetationWorkerPending=null,vegetationWorkerNextBatch=0,vegetationWorkerFailure=null;
+async function freezeVegetationWorkerResult(value){
+  const seen=new WeakSet(),stack=[value];let budgetStart=performance.now(),visited=0;
+  while(stack.length){
+    const item=stack.pop();
+    if(item===null||typeof item!=='object'||Object.isFrozen(item)||seen.has(item))continue;
+    seen.add(item);for(const child of Object.values(item))if(child&&typeof child==='object')stack.push(child);
+    Object.freeze(item);
+    if(++visited%128===0&&performance.now()-budgetStart>=8){await new Promise(resolve=>setTimeout(resolve,0));budgetStart=performance.now();}
+  }
+  return value;
+}
+function failVegetationWorker(error){
+  vegetationWorkerFailure=error;vegetationWorker?.terminate();vegetationWorker=null;
+  const pending=vegetationWorkerPending;vegetationWorkerPending=null;pending?.reject(error);
+}
 export function prepareHEarthGen2515VegetationWorldTruthPlan() {
-  if (gen2515VegetationGroundedPlanCache) return Promise.resolve(getHEarthGen2515VegetationWorldTruthPlan());
-  if (vegetationPreparation) return vegetationPreparation;
-  vegetationPreparation = new Promise((resolve,reject) => {
-    const worker = new Worker(new URL('./geometry-grounded-vegetation.run8d.js?hearthVegetationPlanner=1&cb=8c008f474e4f74f1',import.meta.url),{type:'module'});
-    const fail = error => {worker.terminate();reject(error);};
-    worker.onerror = event => fail(new Error(event.message || 'GEN2515_VEGETATION_WORKER_FAILED'));
-    worker.onmessageerror = () => fail(new Error('GEN2515_VEGETATION_WORKER_MESSAGE_INVALID'));
-    worker.onmessage = event => {
-      const diagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
-      const receivedAt=diagnostics?.performanceEnabled?performance.now():0;
-      worker.terminate();
-      try {
-        if(event.data?.type !== 'H_EARTH_QUALIFIED_VEGETATION_PREPARED') throw new Error(event.data?.error?.message || 'GEN2515_VEGETATION_WORKER_FAILED');
-        if(diagnostics?.performanceEnabled)diagnostics.recordCost('WORKER_PLAN',event.data.durationMs);
-        const plan=event.data.plan;
-        if(plan?.eligible!==true || plan.contractId!=='H_EARTH_GEN2510_PLACEMENT_GROUNDED_RUN8D_GEOMETRY_v1' ||
-          !Array.isArray(plan.instances) || !Array.isArray(plan.batches) || plan.instances.length!==plan.instanceCount ||
-          plan.issues?.length!==0) throw new Error('GEN2515_VEGETATION_WORKER_PLAN_INVALID');
-        gen2515VegetationGroundedPlanCache=freeze(plan);
-        resolve(getHEarthGen2515VegetationWorldTruthPlan());
-      } catch(error) {reject(error);}finally{if(diagnostics?.performanceEnabled)diagnostics.recordCost('WORKER_RECEIVE_FREEZE',performance.now()-receivedAt);}
-    };
-    try {worker.postMessage({type:'H_EARTH_PREPARE_QUALIFIED_VEGETATION'});}catch(error){fail(error);}
+  if(vegetationPreparation)return vegetationPreparation;
+  vegetationPreparation=new Promise((resolve,reject)=>{
+    vegetationWorkerPending={kind:'PLAN',resolve,reject};
+    try{
+      const workerUrl=new URL(import.meta.url);workerUrl.searchParams.set('hearthVegetationPlanner','1');
+      const worker=vegetationWorker=new Worker(workerUrl,{type:'module'});
+      worker.onerror=event=>failVegetationWorker(new Error(event.message||'GEN2515_VEGETATION_WORKER_FAILED'));
+      worker.onmessageerror=()=>failVegetationWorker(new Error('GEN2515_VEGETATION_WORKER_MESSAGE_INVALID'));
+      worker.onmessage=async event=>{
+        const pending=vegetationWorkerPending,diagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
+        if(!pending||pending.receiving){failVegetationWorker(new Error('GEN2515_VEGETATION_WORKER_UNEXPECTED_MESSAGE'));return;}
+        pending.receiving=true;
+        const receivedAt=diagnostics?.performanceEnabled?performance.now():0;
+        try{
+          const data=event.data;
+          if(data?.error)throw new Error(data.error.message||'GEN2515_VEGETATION_WORKER_FAILED');
+          if(pending.kind==='PLAN'){
+            if(data?.type!=='H_EARTH_QUALIFIED_VEGETATION_PREPARED')throw new Error('GEN2515_VEGETATION_WORKER_PLAN_INVALID');
+            const plan=data.plan;
+            if(plan?.eligible!==true||plan.contractId!=='H_EARTH_GEN2510_PLACEMENT_GROUNDED_RUN8D_GEOMETRY_v1'||!Array.isArray(plan.instances)||!Array.isArray(plan.batches)||plan.instances.length!==plan.instanceCount||plan.issues?.length!==0)throw new Error('GEN2515_VEGETATION_WORKER_PLAN_INVALID');
+            if(diagnostics?.performanceEnabled)diagnostics.recordCost('WORKER_PLAN',data.durationMs);
+            await freezeVegetationWorkerResult(plan);
+            if(vegetationWorker!==worker)return;
+            gen2515VegetationGroundedPlanCache=plan;
+            const truth=getHEarthGen2515VegetationWorldTruthPlan();vegetationWorkerPending=null;pending.resolve(truth);
+          }else{
+            const batch=data.batch,descriptor=gen2515VegetationGroundedPlanCache.batches[vegetationWorkerNextBatch];
+            const expectedIds=gen2515VegetationGroundedPlanCache.instances.slice(descriptor.start,descriptor.start+descriptor.count).map(instance=>instance.placementId);
+            if(data?.type!=='H_EARTH_VEGETATION_BATCH_PREPARED'||data.batchId!==pending.batchId||batch?.batchId!==pending.batchId||batch.eligible!==true||batch.instanceCount!==descriptor.count||!Array.isArray(batch.placementIds)||batch.placementIds.length!==expectedIds.length||batch.placementIds.some((id,index)=>id!==expectedIds[index])||!Array.isArray(batch.primitives)||batch.issues?.length!==0)throw new Error('GEN2515_VEGETATION_WORKER_BATCH_INVALID');
+            await freezeVegetationWorkerResult(batch);
+            if(vegetationWorker!==worker)return;
+            vegetationWorkerNextBatch++;vegetationWorkerPending=null;
+            if(vegetationWorkerNextBatch===gen2515VegetationGroundedPlanCache.batches.length){worker.terminate();vegetationWorker=null;}
+            pending.resolve(batch);
+          }
+        }catch(error){failVegetationWorker(error);}
+        finally{if(diagnostics?.performanceEnabled)diagnostics.recordCost('WORKER_RECEIVE_FREEZE',performance.now()-receivedAt);}
+      };
+      worker.postMessage({type:'H_EARTH_PREPARE_QUALIFIED_VEGETATION'});
+    }catch(error){failVegetationWorker(error);}
   });
   return vegetationPreparation;
+}
+export async function constructHEarthGen2515VegetationPresentationBatchAsync(batchId){
+  await prepareHEarthGen2515VegetationWorldTruthPlan();
+  if(vegetationWorkerFailure)throw vegetationWorkerFailure;
+  if(vegetationWorkerPending)throw new Error('GEN2515_VEGETATION_WORKER_BATCH_IN_FLIGHT');
+  const descriptor=gen2515VegetationGroundedPlanCache.batches[vegetationWorkerNextBatch];
+  if(!vegetationWorker||descriptor?.batchId!==batchId)throw new Error('GEN2515_VEGETATION_WORKER_BATCH_ORDER_INVALID');
+  return new Promise((resolve,reject)=>{
+    vegetationWorkerPending={kind:'BATCH',batchId,resolve,reject};
+    try{vegetationWorker.postMessage({type:'H_EARTH_PREPARE_VEGETATION_BATCH',batchId});}catch(error){failVegetationWorker(error);}
+  });
 }
 function getGen2515VegetationGroundedPlan() {
   if (!gen2515VegetationGroundedPlanCache) gen2515VegetationGroundedPlanCache = startupMeasure('VEGETATION_GROUNDED_PLAN',()=>planHEarthGen2514GroundedVegetation());
@@ -207,3 +252,22 @@ export function prepareHEarthRun8ERenderPlan(frame,viewport){const base=prepareH
 export function rasterizeHEarthRun8ERenderPlan(plan,frame){const base=rasterizeHEarthFunctionalLandscapePlan(plan);if(base?.ok!==true)return base;const rgba=new Uint8ClampedArray(base.rgba),depth=base.depth,stops=frame.environment.skyGradientStops;let skyPixelCount=0;for(let y=0;y<base.height;y++){const t=y/Math.max(1,base.height-1);let left=stops[0],right=stops[stops.length-1];for(let i=1;i<stops.length;i++)if(t<=stops[i].offset){left=stops[i-1];right=stops[i];break;}const span=Math.max(Number.EPSILON,right.offset-left.offset),a=Math.min(1,Math.max(0,(t-left.offset)/span)),color=[0,1,2,3].map(c=>mix(left.rgba[c],right.rgba[c],a));for(let x=0;x<base.width;x++){const p=y*base.width+x;if(depth[p]!==Number.POSITIVE_INFINITY)continue;const o=p*4;rgba[o]=color[0];rgba[o+1]=color[1];rgba[o+2]=color[2];rgba[o+3]=255;skyPixelCount++;}}return {...base,rgba,skyPixelCount,alphaClosed:true,singleSkyAuthorityMaterialized:true,singlePhysicalDepthDomainExecuted:true,worldManifoldRepresentationPlanExecuted:true,gen311RegionalEnvironmentProjection:true,oceanVisualContinuationMaterialized:frame.oceanVisualContinuationMaterialized===true};}
 export function evaluateHEarthRun8EFrame(frame){const issues=[];if(frame?.ok!==true||frame?.contractId!==H_EARTH_RUN_8E_RENDER_INTEGRATION_CONTRACT_ID)issues.push('RUN_8E_FRAME_INVALID');if(frame?.gen311IntegrationContractId!==H_EARTH_GEN311_RUN_8E_REGIONAL_INTEGRATION_CONTRACT_ID)issues.push('GEN311_RUN_8E_INTEGRATION_MISSING');if(frame?.transfer?.ok!==true||frame?.packet002SuccessorTransferExecuted!==true)issues.push('RUN_8E_TRANSFER_NOT_EXECUTED');if(frame?.geographicIdentity?.playableRegion!=='GRATITUDE'||frame?.geographicIdentity?.continentalContext!=='AUDRALIA'||frame?.geographicIdentity?.climate!=='WARM_SUBTROPICAL_COASTAL')issues.push('RUN_8E_GEOGRAPHIC_IDENTITY_NOT_PRESERVED');if(frame?.oceanFacingEmptinessPreserved!==true||frame?.oppositeShoreFabricationProhibited!==true)issues.push('RUN_8E_OCEAN_FACING_IDENTITY_INVALID');if(frame?.oceanVisualContinuationMaterialized!==true||frame?.farOceanPrimitiveCount!==1||frame?.farLandPrimitiveCount!==1)issues.push('RUN_8E_RECIPROCAL_WORLD_CONTINUATION_INVALID');if(frame?.representationPlanContractId!==H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID||frame?.topologySourceId!==H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID||frame?.continuousWorldManifold!==true||frame?.canonicalWorldFieldProtected!==true)issues.push('RUN_8E_WORLD_MANIFOLD_NOT_PRESERVED');if(frame?.regionalEnvironmentMaterialized!==true||frame?.vegetationPresentationSeparated!==true||!Number.isInteger(frame?.vegetationWorldTruthInstanceCount)||frame.vegetationWorldTruthInstanceCount<=0||!Number.isInteger(frame?.regionalEcologyPrimitiveCount)||frame.regionalEcologyPrimitiveCount<0)issues.push('GEN311_REGIONAL_ENVIRONMENT_NOT_MATERIALIZED');if(frame?.singlePhysicalDepthDomain!==true||frame?.terrainOcclusionExecuted!==true)issues.push('RUN_8E_DEPTH_DOMAIN_NOT_EXECUTED');if(frame?.environment?.singleSkyAuthority!==true||frame?.environment?.atmosphericDepthContinuity!==true)issues.push('RUN_8E_SKY_NOT_INTEGRATED');if(frame?.legacyProxyIncluded!==false)issues.push('RUN_8E_LEGACY_PROXY_DISPOSITION_INVALID');if(frame?.cameraAuthorityCreated!==false||frame?.rendererAuthorityCreated!==false||frame?.deployment!==false)issues.push('RUN_8E_AUTHORITY_BOUNDARY_VIOLATION');if(!finite(frame?.worldFarPlane)||!finite(frame?.run8CPresentationFarPlane)||frame.run8CPresentationFarPlane>RUN8C_PRESENTATION_DISTANCE_MAX||frame.run8CPresentationFarPlane>frame.worldFarPlane)issues.push('RUN_8E_PRESENTATION_DISTANCE_BOUNDARY_INVALID');return freeze({eligible:issues.length===0,status:issues.length?'RUN_8E_FRAME_FAIL':'RUN_8E_FRAME_PASS',issues});}
 export default H_EARTH_RUN_8E_RENDER_INTEGRATION_CONTRACT_ID;
+
+// No alternate geometry implementation: worker calls the same synchronous constructor.
+if(typeof DedicatedWorkerGlobalScope!=='undefined'&&globalThis instanceof DedicatedWorkerGlobalScope&&new URL(import.meta.url).searchParams.get('hearthVegetationPlanner')==='1'){
+  let nextBatch=0,prepared=false;
+  globalThis.addEventListener('message',event=>{
+    try{
+      if(event.data?.type==='H_EARTH_PREPARE_QUALIFIED_VEGETATION'){
+        if(prepared)throw new Error('GEN2515_VEGETATION_WORKER_ALREADY_PREPARED');
+        const startedAt=performance.now(),plan=getGen2515VegetationGroundedPlan();prepared=true;
+        globalThis.postMessage({type:'H_EARTH_QUALIFIED_VEGETATION_PREPARED',plan,durationMs:performance.now()-startedAt});
+      }else if(event.data?.type==='H_EARTH_PREPARE_VEGETATION_BATCH'){
+        const descriptor=gen2515VegetationGroundedPlanCache?.batches[nextBatch];
+        if(!prepared||descriptor?.batchId!==event.data.batchId)throw new Error('GEN2515_VEGETATION_WORKER_BATCH_ORDER_INVALID');
+        const batch=constructHEarthGen2515VegetationPresentationBatch(event.data.batchId);nextBatch++;
+        globalThis.postMessage({type:'H_EARTH_VEGETATION_BATCH_PREPARED',batchId:event.data.batchId,batch});
+      }else throw new Error('GEN2515_VEGETATION_WORKER_REQUEST_INVALID');
+    }catch(error){globalThis.postMessage({type:'H_EARTH_QUALIFIED_VEGETATION_FAILED',error:{name:error?.name,message:error?.message,stack:error?.stack}});globalThis.close();}
+  });
+}

@@ -3,12 +3,12 @@ const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGN
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js?cb=6afe9f41baef1ff4';
-import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch, prepareHEarthRun8ER2VegetationWorldTruthPlan, getHEarthRun8ER2ImmutableLiveRenderPackage, H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY } from './live-render-package.run8e-r2.js?cb=cbff244c8f5f3654';
-import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=ec1210db240b6736';
-import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=2fe026d707605ff0';
+import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js?cb=0a430c8d2fa5dbf2';
+import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch, createHEarthRun8ER2VegetationPresentationBatchAsync, prepareHEarthRun8ER2VegetationWorldTruthPlan, getHEarthRun8ER2ImmutableLiveRenderPackage, H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY } from './live-render-package.run8e-r2.js?cb=b42bdb4ab1b0af92';
+import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=5877cdc984862cc5';
+import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=bfb7bb5c546e38ce';
 // SHORELINE_SOIL_BEGIN import
-import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=04fe92450529e834';
+import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=31b5193e7020fd23';
 // SHORELINE_SOIL_END import
 
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.
@@ -1011,6 +1011,22 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   }
   function activateInitialRefinement(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');return buildInitialRefinementPatch(packet);}
 
+  let preparedVegetationBatch=null,vegetationBatchPreparation=null;
+  function prepareNextVegetationBatch(){
+    if(!vegetationPreparationComplete)return Promise.reject(new Error('R3C_VEGETATION_PREPARATION_PENDING'));
+    const state=resources.vegetation,descriptor=state.truth?.batches[state.nextBatchIndex];
+    if(state.complete||!descriptor)return Promise.resolve();
+    if(preparedVegetationBatch)return Promise.resolve();
+    if(vegetationBatchPreparation)return vegetationBatchPreparation;
+    if(state.nextBatchIndex===0)globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_START');
+    const operation=()=>createHEarthRun8ER2VegetationPresentationBatchAsync(descriptor.batchId,{deferVegetation});
+    const diagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
+    vegetationBatchPreparation=(diagnostics?.measureAsync?diagnostics.measureAsync('VEGETATION_BATCH_GEOMETRY',operation):operation()).then(batch=>{
+      if(batch.batchId!==descriptor.batchId)throw new Error('R3C_VEGETATION_PREPARED_BATCH_MISMATCH');
+      preparedVegetationBatch=batch;
+    }).finally(()=>{vegetationBatchPreparation=null;});
+    return vegetationBatchPreparation;
+  }
   function materializeNextVegetationBatch(){return startupMeasure('VEGETATION_BATCH_RESIDENCY',()=>materializeNextVegetationBatchObserved());}
   function materializeNextVegetationBatchObserved(){
     if(!vegetationPreparationComplete)throw new Error('R3C_VEGETATION_PREPARATION_PENDING');
@@ -1018,7 +1034,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const state=resources.vegetation;if(!state.truth)throw new Error('R3C_VEGETATION_WORLD_TRUTH_PENDING');if(state.complete)return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});
     const descriptor=state.truth.batches[state.nextBatchIndex];if(!descriptor){state.complete=true;return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});}
     if(state.nextBatchIndex===0)globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_START');
-    const batch=startupMeasure('VEGETATION_BATCH_GEOMETRY',()=>createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId,{deferVegetation}));
+    if(deferVegetation&&!preparedVegetationBatch)throw new Error('R3C_VEGETATION_BATCH_PREPARATION_PENDING');
+    const batch=preparedVegetationBatch??startupMeasure('VEGETATION_BATCH_GEOMETRY',()=>createHEarthRun8ER2VegetationPresentationBatch(descriptor.batchId,{deferVegetation}));
+    preparedVegetationBatch=null;
 // SHORELINE_SOIL_BEGIN upload
     if(!resources.shorelineSoilCoverage.ready&&batch.primitives.some(p=>p.metadata?.oasisFoliage&&p.primitiveId.includes(':GRASS:'))){
       const mask=buildHEarthOasisGrassSoilCoverage(batch.primitives);
@@ -1167,7 +1185,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, activateInitialRefinement, prepareVegetationResidency, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

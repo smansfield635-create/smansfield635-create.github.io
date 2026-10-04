@@ -10866,45 +10866,6 @@
       "scopeHash": "b863779715ea5296a89b644328fa6e0466f7dfad97a7600c2723ade21b92639c",
       "state": "ADMITTED_LOCKED"
     },
-    "b8ea04e7e4835b3535ff4be2001a4d88e9c9d5748e252e3c294bedac24ea34ec": {
-      "governingHead": "5ee3336dc6da6211496b418791d2f128f137403c",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "5ee3336dc6da6211496b418791d2f128f137403c",
-          "lockGeneration": 2537,
-          "lockScope": "PUBLIC_SITE/DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
-          "operationId": "REPOSITORY_DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
-          "procedureLocatorDigest": "12dc39a11c4a3a900485de723eb2c24429b02e658966150583a043151c2b04c9",
-          "requestDigest": "f43806e4c4b409d72f19cde91465d2f2c3e4969d5a699e608ccccbbf24f32887",
-          "scopeHash": "b8ea04e7e4835b3535ff4be2001a4d88e9c9d5748e252e3c294bedac24ea34ec"
-        },
-        "bindingDigest": "30710ab5696c9275f66421e6ebb16a0ba550a692fc8f1598ce52e0f4c93637b5",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "215629e0d77f7ec5803a3b9784e11db300826d60",
-          "observedLockRefHead": "075438017181a55ccc937e31032ab64a0e54228b"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "26049f671fdfd4a4aff3a7334378b615e9d759a1fd4c753dd9e63c825e45c9fb",
-          "commentId": 5983107846,
-          "issueNumber": 5693,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2537,
-      "lockScope": "PUBLIC_SITE/DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
-      "operationId": "REPOSITORY_DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
-      "procedureLocatorDigest": "12dc39a11c4a3a900485de723eb2c24429b02e658966150583a043151c2b04c9",
-      "released": false,
-      "requestDigest": "f43806e4c4b409d72f19cde91465d2f2c3e4969d5a699e608ccccbbf24f32887",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "b8ea04e7e4835b3535ff4be2001a4d88e9c9d5748e252e3c294bedac24ea34ec",
-      "state": "ADMITTED_LOCKED"
-    },
     "b8f407e3498f703352e151108b4fcead1b369b8bb391b392a8b1a736fa09a38d": {
       "governingHead": "889197b2cbe73de171756b7545446f12a726cde7",
       "lockGeneration": 430,
@@ -67864,6 +67825,83 @@
       "requestDigest": "041c785d5c26cf01b3ce972d9d3710449926ed5aa78e699a22af3fe8ede5efd5",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "04599b1522a549f407c9429861b088314be48065c601cb4787b6708a8078074c",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "5ee3336dc6da6211496b418791d2f128f137403c",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "5ee3336dc6da6211496b418791d2f128f137403c",
+          "lockGeneration": 2537,
+          "lockScope": "PUBLIC_SITE/DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+          "operationId": "REPOSITORY_DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+          "procedureLocatorDigest": "12dc39a11c4a3a900485de723eb2c24429b02e658966150583a043151c2b04c9",
+          "requestDigest": "f43806e4c4b409d72f19cde91465d2f2c3e4969d5a699e608ccccbbf24f32887",
+          "scopeHash": "b8ea04e7e4835b3535ff4be2001a4d88e9c9d5748e252e3c294bedac24ea34ec"
+        },
+        "bindingDigest": "30710ab5696c9275f66421e6ebb16a0ba550a692fc8f1598ce52e0f4c93637b5",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "215629e0d77f7ec5803a3b9784e11db300826d60",
+          "observedLockRefHead": "075438017181a55ccc937e31032ab64a0e54228b"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "26049f671fdfd4a4aff3a7334378b615e9d759a1fd4c753dd9e63c825e45c9fb",
+          "commentId": 5983107846,
+          "issueNumber": 5693,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "5ee3336dc6da6211496b418791d2f128f137403c",
+          "lockGeneration": 2537,
+          "lockScope": "PUBLIC_SITE/DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+          "operationId": "REPOSITORY_DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+          "procedureLocatorDigest": "12dc39a11c4a3a900485de723eb2c24429b02e658966150583a043151c2b04c9",
+          "requestDigest": "f43806e4c4b409d72f19cde91465d2f2c3e4969d5a699e608ccccbbf24f32887",
+          "scopeHash": "b8ea04e7e4835b3535ff4be2001a4d88e9c9d5748e252e3c294bedac24ea34ec"
+        },
+        "bindingDigest": "22ec94bc8f4a3a17c2a2871e5d04d7e698d42f8764fd52b30e8f67c2b53a5102",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "71ea4b250022fd07d764a7df4f5945244a928fea",
+          "observedLockRefHead": "2cfc2a95e132a9245dafccd98cfe418b199e66d3"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "b47473171194104ea09117ab27fed5bc79d7f3c12859c41558380985677a8d7b",
+          "commentId": 5983227597,
+          "issueNumber": 5698,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "5ee3336dc6da6211496b418791d2f128f137403c",
+          "lockGeneration": 2537,
+          "lockScope": "PUBLIC_SITE/DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+          "operationId": "REPOSITORY_DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+          "released": true,
+          "scopeHash": "b8ea04e7e4835b3535ff4be2001a4d88e9c9d5748e252e3c294bedac24ea34ec",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2537,
+      "lockScope": "PUBLIC_SITE/DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+      "operationId": "REPOSITORY_DUPLICATE_SNAPSHOT_CLEANUP_20261004_001",
+      "procedureLocatorDigest": "12dc39a11c4a3a900485de723eb2c24429b02e658966150583a043151c2b04c9",
+      "released": true,
+      "requestDigest": "f43806e4c4b409d72f19cde91465d2f2c3e4969d5a699e608ccccbbf24f32887",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b8ea04e7e4835b3535ff4be2001a4d88e9c9d5748e252e3c294bedac24ea34ec",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

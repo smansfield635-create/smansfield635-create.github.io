@@ -1,0 +1,27 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "sean-mansfield-ai-walkthrough",
+  "description": "Owner-approved two-minute retrospective AI design walkthrough with native video controls and captioned reconstructed review.",
+  "checks": [
+    {
+      "path": "/assets/compass/cinematic-media/sean-mansfield-ai-walkthrough/index.html",
+      "includes": [
+        "<title>Sean Mansfield — Working with AI</title>",
+        "<video controls playsinline preload=\"metadata\" poster=\"poster.jpg\"",
+        "<source src=\"walkthrough.mp4\" type=\"video/mp4\">",
+        "reconstructed design review",
+        "No new repository implementation or qualification is claimed.",
+        "creativecommons.org/licenses/by-sa/2.0/"
+      ],
+      "excludes": [
+        "<script",
+        "autoplay",
+        "iframe"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": false,
+    "path": "/assets/compass/cinematic-media/sean-mansfield-ai-walkthrough/"
+  }
+}

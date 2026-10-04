@@ -7714,45 +7714,6 @@
       "scopeHash": "85e15b1afd5aed4402f50c631e038a36eff3270139e49c648546f77c8eef00be",
       "state": "ADMITTED_LOCKED"
     },
-    "862e3a633bb688839311f401aa209e4feb98736d14039f52687cfa04c97483ae": {
-      "governingHead": "6962f4fe9cb668cc5ca892fa7253294e252a4cce",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "6962f4fe9cb668cc5ca892fa7253294e252a4cce",
-          "lockGeneration": 2543,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
-          "operationId": "NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
-          "procedureLocatorDigest": "312cbfaa2a823419dfde3ad6b9677f7153103e99c70a897759ec7ddde2c77aab",
-          "requestDigest": "3c78188c0bcaa27c0821175d080d99b5d455174b80faa68dd7bc344c12ab486c",
-          "scopeHash": "862e3a633bb688839311f401aa209e4feb98736d14039f52687cfa04c97483ae"
-        },
-        "bindingDigest": "87ac36650df4f2f78c63be7946d6872af6f8b5d4a4af88dc389cc5969a242e31",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "4d98f27a6b6d81e4971eadab93312c880279e134",
-          "observedLockRefHead": "cf819994bb98198f1515a2bf3f4daabc00bdd4af"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "483222ed5268c136dfe10b436ea8942fae399376a5b3348065344e4dea1155ca",
-          "commentId": 5985220901,
-          "issueNumber": 3054,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2543,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
-      "operationId": "NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
-      "procedureLocatorDigest": "312cbfaa2a823419dfde3ad6b9677f7153103e99c70a897759ec7ddde2c77aab",
-      "released": false,
-      "requestDigest": "3c78188c0bcaa27c0821175d080d99b5d455174b80faa68dd7bc344c12ab486c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "862e3a633bb688839311f401aa209e4feb98736d14039f52687cfa04c97483ae",
-      "state": "ADMITTED_LOCKED"
-    },
     "879b4beef90a48982284956ac85aeda8c3ddcbfbdf49c607c13220c3cf3f823e": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -68250,6 +68211,83 @@
       "requestDigest": "8ede6f63d1e34059e1666c92832eb3663d3f0738332fbb0ac809509e3be2d4b6",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "ce92f6b362dee1dada8f7700d494850afb3956242b6f9bb573ac77f8b26e542f",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "6962f4fe9cb668cc5ca892fa7253294e252a4cce",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6962f4fe9cb668cc5ca892fa7253294e252a4cce",
+          "lockGeneration": 2543,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+          "operationId": "NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+          "procedureLocatorDigest": "312cbfaa2a823419dfde3ad6b9677f7153103e99c70a897759ec7ddde2c77aab",
+          "requestDigest": "3c78188c0bcaa27c0821175d080d99b5d455174b80faa68dd7bc344c12ab486c",
+          "scopeHash": "862e3a633bb688839311f401aa209e4feb98736d14039f52687cfa04c97483ae"
+        },
+        "bindingDigest": "87ac36650df4f2f78c63be7946d6872af6f8b5d4a4af88dc389cc5969a242e31",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "4d98f27a6b6d81e4971eadab93312c880279e134",
+          "observedLockRefHead": "cf819994bb98198f1515a2bf3f4daabc00bdd4af"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "483222ed5268c136dfe10b436ea8942fae399376a5b3348065344e4dea1155ca",
+          "commentId": 5985220901,
+          "issueNumber": 3054,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6962f4fe9cb668cc5ca892fa7253294e252a4cce",
+          "lockGeneration": 2543,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+          "operationId": "NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+          "procedureLocatorDigest": "312cbfaa2a823419dfde3ad6b9677f7153103e99c70a897759ec7ddde2c77aab",
+          "requestDigest": "3c78188c0bcaa27c0821175d080d99b5d455174b80faa68dd7bc344c12ab486c",
+          "scopeHash": "862e3a633bb688839311f401aa209e4feb98736d14039f52687cfa04c97483ae"
+        },
+        "bindingDigest": "59131b0c9e06dc15b800008ec7255182d8c0bd6c450655ac07b76896509f1d54",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "848ba47ad4832ff03639d77eb3cb5ef0ec4006c4",
+          "observedLockRefHead": "7b645a513088917de18a9c4e7f3bea6be627bafc"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "4408d51b26942e7be149d010bcbcbf53e30cda3c35c0a92d44683a6af2c334ed",
+          "commentId": 5985265739,
+          "issueNumber": 5710,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "6962f4fe9cb668cc5ca892fa7253294e252a4cce",
+          "lockGeneration": 2543,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+          "operationId": "NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+          "released": true,
+          "scopeHash": "862e3a633bb688839311f401aa209e4feb98736d14039f52687cfa04c97483ae",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2543,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+      "operationId": "NOT_FOUND_EXACT_PATH_REGISTRATION_20261004_001",
+      "procedureLocatorDigest": "312cbfaa2a823419dfde3ad6b9677f7153103e99c70a897759ec7ddde2c77aab",
+      "released": true,
+      "requestDigest": "3c78188c0bcaa27c0821175d080d99b5d455174b80faa68dd7bc344c12ab486c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "862e3a633bb688839311f401aa209e4feb98736d14039f52687cfa04c97483ae",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

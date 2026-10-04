@@ -6,7 +6,7 @@
     {
       "path": "/showroom/globe/h-earth/index.html",
       "includes": [
-        "<title>H-Earth \u00b7 Live Interactive World</title>",
+        "<title>H-Earth · Live Interactive World</title>",
         "id=\"h-earth-functional-landscape-route\"",
         "data-h-earth-public-route=\"functional-landscape\"",
         "data-run8e-ready=\"false\"",
@@ -22,7 +22,7 @@
       "path": "/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
       "includes": [
         "import '../diagnostic/renderer-startup-observer.v1.js?cb=91af5719a8c41be8';",
-        "await import('../arrival-loader.js?cb=adc56ba904a45b50');",
+        "await import('../arrival-loader.js?cb=h-earth-bounded-progress-v1');",
         "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=f70e70e5c842454b');",
         "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"
       ],
@@ -35,7 +35,7 @@
       "path": "/showroom/globe/h-earth/arrival-loader.js",
       "includes": [
         "H_EARTH_ARRIVAL_LOADER_23949_v1",
-        "H-Earth \u00b7 live world initialization",
+        "H-Earth · live world initialization",
         "Entering the coast.",
         "h-earth-renderer-startup-receipt",
         "READY_PUBLISHED",
@@ -47,7 +47,7 @@
     {
       "path": "/showroom/globe/h-earth/custody/index.html",
       "includes": [
-        "<title>H-Earth \u00b7 Renderer Custody Route</title>",
+        "<title>H-Earth · Renderer Custody Route</title>",
         "CUSTODY ROUTE ACTIVE",
         "public-live-gpu-integration.run8e-r3e.custody-route.js?v=dedicated-custody-v2"
       ],

@@ -22,9 +22,9 @@ const NEXT_LIMIT=Object.freeze(Object.fromEntries(STAGES.map(([stage,value],inde
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const style=document.createElement('style');
 style.textContent=`
-.h-earth-experience-loader{position:fixed;inset:0;z-index:2147483600;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 70%,rgba(18,67,79,.34),transparent 40%),linear-gradient(180deg,#07151d 0%,#082431 52%,#07161b 100%);color:#eef8f6;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:opacity .5s ease,visibility .5s ease}
+.h-earth-experience-loader{position:fixed;inset:0;box-sizing:border-box;z-index:2147483600;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 70%,rgba(18,67,79,.34),transparent 40%),linear-gradient(180deg,#07151d 0%,#082431 52%,#07161b 100%);color:#eef8f6;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:opacity .5s ease,visibility .5s ease}
 .h-earth-experience-loader[data-ready="true"]{opacity:0;visibility:hidden;pointer-events:none}
-.h-earth-experience-loader__card{box-sizing:border-box;width:min(760px,92vw);padding:clamp(24px,5vw,48px);border:1px solid rgba(220,242,238,.22);border-radius:28px;background:rgba(2,13,18,.72);box-shadow:0 30px 100px rgba(0,0,0,.44);backdrop-filter:blur(16px)}
+.h-earth-experience-loader__card{box-sizing:border-box;width:min(760px,92vw);max-width:100%;max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);overflow:auto;padding:clamp(24px,5vw,48px);border:1px solid rgba(220,242,238,.22);border-radius:28px;background:rgba(2,13,18,.72);box-shadow:0 30px 100px rgba(0,0,0,.44);backdrop-filter:blur(16px)}
 .h-earth-experience-loader__eyebrow{margin:0 0 12px;color:#bde7db;font-size:.72rem;font-weight:900;letter-spacing:.17em;text-transform:uppercase}
 .h-earth-experience-loader__headline{margin:0;font-size:clamp(2rem,7vw,4.8rem);line-height:.92;letter-spacing:-.055em}
 .h-earth-experience-loader__status{margin:18px 0 0;color:rgba(238,248,246,.8);font-size:clamp(.96rem,2vw,1.12rem)}

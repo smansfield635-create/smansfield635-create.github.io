@@ -11,7 +11,7 @@
         "data-h-earth-public-route=\"functional-landscape\"",
         "data-run8e-ready=\"false\"",
         "id=\"h-earth-current-run8e-module\"",
-        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=cbe7c1d06e8afa7a"
+        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=8b2b3b250acd55f9"
       ],
       "excludes": [
         "raw.githack.com",
@@ -22,7 +22,7 @@
       "path": "/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
       "includes": [
         "import '../diagnostic/renderer-startup-observer.v1.js?cb=fd66e9719b883594';",
-        "await import('../arrival-loader.js?cb=15a2fb62bf22ef2e');",
+        "await import('../arrival-loader.js?cb=adc56ba904a45b50');",
         "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=c23884f63c776088');",
         "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"
       ],

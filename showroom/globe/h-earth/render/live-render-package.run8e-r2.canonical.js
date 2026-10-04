@@ -4,8 +4,9 @@ import {
   getHEarthOW01LiveRenderPackageOccurrence as getOW01RawPackage,
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
   getHEarthRun8ER2VegetationWorldTruthPlan,
+  isHEarthRun8ER2VegetationWorldTruthPrepared,
   createHEarthRun8ER2VegetationPresentationBatch
-} from './live-render-package.run8e-r2.js';
+} from './live-render-package.run8e-r2.js?cb=4973aef2393984d3';
 
 const GRID_SCALE = 16777216;
 const FLOAT_BUFFER_NAMES = Object.freeze([
@@ -114,9 +115,11 @@ function buildCanonicalPackage(raw = getRawPackage()) {
 }
 
 let cachedPackage = null;
+let cachedDeferredPackage = null;
 let cachedOW01Package = null;
 
-export function getHEarthRun8ER2CanonicalLiveRenderPackage() {
+export function getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=false}={}) {
+  if(deferVegetation)return cachedDeferredPackage??=buildCanonicalPackage(getRawPackage({deferVegetation:true}));
   if (!cachedPackage) cachedPackage = buildCanonicalPackage();
   return cachedPackage;
 }
@@ -126,6 +129,6 @@ export function getHEarthOW01CanonicalLiveRenderPackageOccurrence() {
   return cachedOW01Package;
 }
 
-export function getHEarthRun8ER2CanonicalVegetationPresentationPlan(){const truth=getHEarthRun8ER2VegetationWorldTruthPlan();return freezeRecord({...truth,batches:Object.freeze(truth.batches.map(batch=>freezeRecord({...batch}))),numericIdentityBoundary:'CANONICAL_PLACEMENT_TRUTH_WITH_BOUNDED_PRESENTATION_BATCHES'});}
+export function getHEarthRun8ER2CanonicalVegetationPresentationPlan({deferVegetation=false}={}){if(deferVegetation&&!isHEarthRun8ER2VegetationWorldTruthPrepared())return freezeRecord({eligible:false,status:'PENDING_POST_READY_VALIDATION',instanceCount:null,batches:[],populationLimit:null,droppedPlacementCount:null});const truth=getHEarthRun8ER2VegetationWorldTruthPlan();return freezeRecord({...truth,batches:Object.freeze(truth.batches.map(batch=>freezeRecord({...batch}))),numericIdentityBoundary:'CANONICAL_PLACEMENT_TRUTH_WITH_BOUNDED_PRESENTATION_BATCHES'});}
 export function createHEarthRun8ER2CanonicalVegetationPresentationBatch(batchId){const batch=createHEarthRun8ER2VegetationPresentationBatch(batchId);return freezeRecord({...batch,placementIds:Object.freeze(Array.from(batch.placementIds??[])),primitives:Object.freeze(Array.from(batch.primitives??[]))});}
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;

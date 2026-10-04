@@ -1,4 +1,4 @@
-import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
+import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js?cb=19698d714d80c918';
 
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
@@ -23,7 +23,7 @@ const OCEAN_PROOF_RENDERER_PATH =
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=d2ca448bab3d0a2e';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -111,8 +111,10 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   canvas,
   initialNavigationState,
   viewport = { width: 640, height: 360, pixelRatio: 1 },
+  deferVegetation = false,
   onFramePresented = null
 } = {}) {
+  const deferredVegetationActive=deferVegetation===true&&selectedRendererPath===ADDITIVE_VISUAL_RENDERER_PATH;
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3D3_CANVAS_REQUIRED');
   if (!initialNavigationState || typeof initialNavigationState !== 'object') {
     throw new TypeError('R3D3_INITIAL_NAVIGATION_STATE_REQUIRED');
@@ -163,7 +165,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height });
+  const renderer = createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, deferVegetation:deferredVegetationActive });
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -196,6 +198,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     const startedAt = performance.now();
     frameSequence += 1;
     const packet = createHEarthRun8ER3AFrameUniformPacket({
+      deferVegetation:deferredVegetationActive,
       navigationState,
       viewport: { width, height, pixelRatio },
       frameSequence
@@ -247,6 +250,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   };
 
   const initialPacket = createHEarthRun8ER3AFrameUniformPacket({
+    deferVegetation:deferredVegetationActive,
     navigationState: initialNavigationState,
     viewport: { width, height, pixelRatio },
     frameSequence: 1
@@ -446,6 +450,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
     acceptNavigationState,
     captureLatestEvidence,
+    prepareVegetationResidency: () => deferredVegetationActive?renderer.prepareVegetationResidency():Promise.resolve(getVegetationResidency()),
     materializeNextVegetationBatch,
     getVegetationResidency,
     startPresentationAnimation,

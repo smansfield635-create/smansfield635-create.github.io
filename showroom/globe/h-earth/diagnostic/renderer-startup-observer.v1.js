@@ -5,8 +5,10 @@ const STAGES = Object.freeze([
   'VERTEX_SHADER_COMPILED','FRAGMENT_SHADER_COMPILED','PROGRAM_LINKED','GPU_RESOURCES_CREATED',
   'FRAMEBUFFER_VALIDATED','INITIAL_DRAW_ENTERED','INITIAL_DRAW_RETURNED','FIRST_FRAME_PRESENTED','READY_PUBLISHED'
 ]);
+const observerStartedAtMs=performance.now();
 const state = {
   version:'H_EARTH_RENDERER_STARTUP_DIAGNOSTIC_RECEIPT_v1',
+  timing:{clock:'performance.now',timeOrigin:performance.timeOrigin,observerStartedAtMs,stages:{},spans:{}},
   stages:Object.fromEntries(STAGES.map(stage=>[stage,'NOT_REACHED'])), firstFailureStage:null,
   failureClass:null, plainLanguageSummary:'Renderer startup is still in progress.', exceptionName:null,
   exceptionMessage:null, stack:null, webglError:null, shaderLog:null, programLinkLog:null,
@@ -16,6 +18,11 @@ const state = {
 };
 let gl=null, firstFailureLocked=false, presented=false, originalGetContext=null;
 const clone=()=>JSON.parse(JSON.stringify(state));
+// Bounded aggregate timings only: no schedules, geometry, or GPU calls are changed.
+const timingMark=(stage,status='PASS')=>{const now=performance.now(),entry=state.timing.stages[stage]||(state.timing.stages[stage]={firstAtMs:now,lastAtMs:now,elapsedFromObserverMs:now-observerStartedAtMs,count:0,firstPassAtMs:null,firstFailAtMs:null});entry.lastAtMs=now;entry.count++;if(status==='PASS'&&entry.firstPassAtMs===null)entry.firstPassAtMs=now;if(status==='FAIL'&&entry.firstFailAtMs===null)entry.firstFailAtMs=now;};
+const measure=(name,operation)=>{const start=performance.now();let succeeded=false;try{const result=operation();succeeded=true;return result;}finally{const end=performance.now(),entry=state.timing.spans[name]||(state.timing.spans[name]={firstStartAtMs:start,lastEndAtMs:null,count:0,failedCount:0,totalDurationMs:0,maxDurationMs:0});entry.lastEndAtMs=end;entry.count++;if(!succeeded)entry.failedCount++;entry.totalDurationMs+=end-start;entry.maxDurationMs=Math.max(entry.maxDurationMs,end-start);}};
+
+const getMilestoneTiming=()=>({preparationStartAtMs:state.timing.stages.VEGETATION_PREPARATION_START?.firstPassAtMs??null,preparationCompleteAtMs:state.timing.stages.VEGETATION_PREPARATION_COMPLETE?.firstPassAtMs??null,firstFrameAtMs:state.timing.stages.FIRST_FRAME_PRESENTED?.firstPassAtMs??null,readyAtMs:state.timing.stages.READY_PUBLISHED?.firstPassAtMs??null,vegetationStartAtMs:state.timing.stages.VEGETATION_START?.firstPassAtMs??null,vegetationCompleteAtMs:state.timing.stages.VEGETATION_COMPLETE?.firstPassAtMs??null});
 const classify=(stage,message='')=>{
   if(stage==='WEBGL2_CONTEXT_ACQUIRED')return['NO_WEBGL2_CONTEXT','The browser could not create the WebGL2 context required by the renderer.'];
   if(state.contextLost)return['CONTEXT_LOST_DURING_STARTUP','The WebGL2 context was lost while the renderer was starting.'];
@@ -31,7 +38,7 @@ const classify=(stage,message='')=>{
   return['UNKNOWN_STARTUP_FAILURE',message||'The renderer failed during startup at an unclassified stage.'];
 };
 const publish=()=>window.dispatchEvent(new CustomEvent('h-earth-renderer-startup-receipt',{detail:clone()}));
-const mark=(stage,status,detail=null)=>{if(!STAGES.includes(stage))return;if(firstFailureLocked&&status==='FAIL')return;state.stages[stage]=status;state.timestamp=new Date().toISOString();if(status==='FAIL'){firstFailureLocked=true;state.firstFailureStage=stage;const [failureClass,summary]=classify(stage,typeof detail==='string'?detail:detail?.message);state.failureClass=failureClass;state.plainLanguageSummary=summary;if(detail&&typeof detail==='object'){state.exceptionName=detail.name??state.exceptionName;state.exceptionMessage=detail.message??state.exceptionMessage;state.stack=detail.stack??state.stack;}}publish();};
+const mark=(stage,status,detail=null)=>{if(!STAGES.includes(stage))return;if(firstFailureLocked&&status==='FAIL')return;timingMark(stage,status);state.stages[stage]=status;state.timestamp=new Date().toISOString();if(status==='FAIL'){firstFailureLocked=true;state.firstFailureStage=stage;const [failureClass,summary]=classify(stage,typeof detail==='string'?detail:detail?.message);state.failureClass=failureClass;state.plainLanguageSummary=summary;if(detail&&typeof detail==='object'){state.exceptionName=detail.name??state.exceptionName;state.exceptionMessage=detail.message??state.exceptionMessage;state.stack=detail.stack??state.stack;}}publish();};
 const fail=(stage,error,extra={})=>{const detail={name:error?.name??'Error',message:error?.message??String(error),stack:error?.stack??null,...extra};mark(stage,'FAIL',detail);};
 const wrap=(obj,name,before,after,onError)=>{const original=obj?.[name];if(typeof original!=='function')return;obj[name]=function(...args){try{before?.call(this,args);const result=original.apply(this,args);after?.call(this,result,args);return result;}catch(error){onError?.call(this,error,args);throw error;}};};
 function instrumentContext(context,canvas){gl=context;state.canvasWidth=canvas.width;state.canvasHeight=canvas.height;state.contextLost=context.isContextLost();mark('WEBGL2_CONTEXT_ACQUIRED','PASS');try{const ext=context.getExtension('WEBGL_debug_renderer_info');state.webglVendor=ext?context.getParameter(ext.UNMASKED_VENDOR_WEBGL):context.getParameter(context.VENDOR);state.webglRenderer=ext?context.getParameter(ext.UNMASKED_RENDERER_WEBGL):context.getParameter(context.RENDERER);mark('WEBGL_IDENTITY_CAPTURED','PASS');}catch(error){fail('WEBGL_IDENTITY_CAPTURED',error);}
@@ -52,7 +59,7 @@ export function installRendererStartupObserver(){
   window.addEventListener('error',event=>{if(!firstFailureLocked)fail(state.stages.RENDERER_CONSTRUCTOR_RETURNED==='NOT_REACHED'?'RENDERER_CONSTRUCTOR_RETURNED':'INITIAL_DRAW_RETURNED',event.error||new Error(event.message));});
   window.addEventListener('unhandledrejection',event=>{if(!firstFailureLocked)fail(state.stages.RENDERER_CONSTRUCTOR_RETURNED==='NOT_REACHED'?'RENDERER_CONSTRUCTOR_RETURNED':'INITIAL_DRAW_RETURNED',event.reason);});
   window.setTimeout(()=>{if(!presented&&!firstFailureLocked)mark('FIRST_FRAME_PRESENTED','FAIL','No first-frame event within 12 seconds.');},12000);
-  window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=Object.freeze({version:state.version,getReceipt:clone,mark,fail,constructorReturned:()=>mark('RENDERER_CONSTRUCTOR_RETURNED','PASS'),initializationEntered:()=>mark('INITIALIZATION_ENTERED','PASS')});
+  window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=Object.freeze({version:state.version,getReceipt:clone,mark,fail,timingMark,measure,getMilestoneTiming,constructorReturned:()=>mark('RENDERER_CONSTRUCTOR_RETURNED','PASS'),initializationEntered:()=>mark('INITIALIZATION_ENTERED','PASS')});
   publish();return window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
 }
 installRendererStartupObserver();

@@ -1,0 +1,35 @@
+{
+  "schema": "REPOSITORY_DUPLICATE_SNAPSHOT_REMOVAL_MANIFEST_v2",
+  "operationId": "REPOSITORY_DUPLICATE_SNAPSHOT_CLEANUP_20261004_002",
+  "baseHead": "105cb312bdc3cd97228748d3ef3d59b628bc1ccb",
+  "removedPrefix": "preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/h-earth-live-6d18e158/",
+  "survivingPrefix": "inspection/audralia-24057-exact/snapshot/h-earth-live-6d18e158/",
+  "identicalTreeSha": "4af964ce49e35dfe8105287e05ebe41e803cfc65",
+  "removedFiles": 61825,
+  "removedLogicalBytes": 2649179084,
+  "uniqueBlobsLost": 0,
+  "originalParentSnapshotTree": "88f8a247d891bd0ca44e21d91da935792afd8993",
+  "mappingRule": "For every inventory relativePath, removedPrefix+relativePath maps to survivingPrefix+relativePath with identical mode, blobSha and byte size.",
+  "inventory": {
+    "path": "inventory.tsv.gz",
+    "encoding": "gzip UTF-8 TSV",
+    "columns": [
+      "relativePath",
+      "mode",
+      "blobSha",
+      "bytes"
+    ],
+    "rows": 61825,
+    "compressedBytes": 2618621,
+    "compressedSha256": "8567bd5e6b442b9670c21e35ec9fc0fe66d79bde71915c70c918a54fd7b632b5",
+    "decodedBytes": 14928773,
+    "decodedSha256": "baec0c78c3214115cca4400b643cf0c28d9e1af3f81d37acae29bcc597868f1c"
+  },
+  "recovery": {
+    "commit": "105cb312bdc3cd97228748d3ef3d59b628bc1ccb",
+    "prefix": "preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/h-earth-live-6d18e158/",
+    "command": "git restore --source=105cb312bdc3cd97228748d3ef3d59b628bc1ccb -- preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/h-earth-live-6d18e158/"
+  },
+  "archiveDisposition": "Remove exactly one redundant nested archive, preserve identical surviving tree and recovery history. Parent current snapshot is pruned; original source-tree is provenance, not current whole-tree equality.",
+  "publicationBoundary": "No merge or deployment authorized. Removed prefix is outside standard publication and all approved rematerialization closure prefixes."
+}

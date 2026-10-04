@@ -15,7 +15,7 @@ const types={'.js':'text/javascript','.mjs':'text/javascript','.html':'text/html
 const server=http.createServer(async(req,res)=>{
   try{
     const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
-    if(pathname==='/__startup-status.html'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><body><div id="h-earth-functional-landscape-route"><canvas id="h-earth-functional-landscape-canvas"></canvas></div><script type="module" src="/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js"></script><script type="module" src="/showroom/globe/h-earth/arrival-loader.js"></script></body></html>');return;}
+    if(pathname==='/__startup-status.html'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><body><div id="h-earth-functional-landscape-route"><canvas id="h-earth-functional-landscape-canvas"></canvas></div><script type="module" src="/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js?cb=91af5719a8c41be8"></script><script type="module" src="/showroom/globe/h-earth/arrival-loader.js"></script></body></html>');return;}
     let file=path.resolve(root,'.'+pathname);
     if(!file.startsWith(root+path.sep))throw Error('PATH_OUTSIDE_CHECKOUT');
     if((await fs.stat(file)).isDirectory())file=path.join(file,'index.html');

@@ -4,9 +4,9 @@
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "reviewedAgainstAnchor": true,
   "disposition": "PASS",
-  "candidateHead": "047c8baf983bda6524ceaa3ac530e996c67716a3",
-  "comparisonBaseline": "18472b2cd9c3a4a6bebfd2a5ea392084cfd9f4ef",
-  "reviewMode": "INDEPENDENT_TABLET_WAIT_FAILURE_AND_OPT_IN_DIAGNOSTIC_REVIEW",
+  "candidateHead": "8ba478019eda7b2c96f70b402a661dd88ad83388",
+  "comparisonBaseline": "52fbc534b7db4eb0983bc6f8dde2da5aedbbb595",
+  "reviewMode": "WORKER_EQUIVALENCE_AND_LOADING_INTERACTION_REVIEW",
   "visualEvidence": [
     "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
     "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg"
@@ -19,48 +19,44 @@
   ],
   "experienceFiles": [
     {
-      "path": "showroom/globe/h-earth/arrival-loader.js",
-      "sha256": "adc56ba904a45b50ff16c0a793e706430c48d91c17e263445ec536547b618652"
-    },
-    {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "c23884f63c7760881657d889ba6d607caa4be068ccf1158f9c8a2f07fe21f453"
+      "sha256": "f70e70e5c842454b965699afbe0df4015386c451d3bdff29b7277249c8d1f397"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
-      "sha256": "8b2b3b250acd55f9c0f336eeb266c1662853f2a08c8c28dc09623a407c44f08d"
+      "sha256": "d6c3b036843edf3449cf94b1aa396e69d5ed0e85eeedbc2d31de68b63f9b6527"
     },
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "1c6e377a7f4316c81a2a986ddb92a37244f815bc7191c23c9deeb2cd480f6235"
+      "sha256": "f4c8d785ffc576b44d5a1d696b7d79e251ea44cd352591207d73029fec9ca34f"
     },
     {
       "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
-      "sha256": "ec1210db240b67367e4dc6d3b5a3ece90f00b288cbe06284cc2cde1fe1a55b53"
+      "sha256": "5877cdc984862cc55f362501d16ba09556a8adabbfe0130e5db995192df16f8b"
     },
     {
       "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "sha256": "04fe92450529e8347939b38d68c003c3d65076682182fc3b1ae56e907994b040"
+      "sha256": "31b5193e7020fd233f235d19fc6eb2e1a0f7b699b63f663c7713c3470b3ec41e"
     },
     {
       "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
-      "sha256": "6afe9f41baef1ff4e08135286eae6dd53a9a752796dc309aba4f7a84fed8bff7"
+      "sha256": "0a430c8d2fa5dbf25affe43bcb1b2b79226623688e6bf42b7c579389945a7bea"
     },
     {
       "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
-      "sha256": "cbff244c8f5f36543fa1cdfa0fd9abbe5bf43248e4c8a588b8cf900f2db7718a"
+      "sha256": "b42bdb4ab1b0af927d3754cbaf432066a2c77a899652d018478ed21d4184e0e0"
     },
     {
       "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
-      "sha256": "2fe026d707605ff0a378960b0864bbe50749c0c00a0d9ef3a99656f5c296519d"
+      "sha256": "bfb7bb5c546e38ce10ed2a5e1ca9a7ba388a3e3cde4dc5713e5e283812b0919f"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "ac8158e6ce2d688bd3e29122d8959f80f4e9c466324bd3933fbd8f29e55d74f7"
+      "sha256": "cd3c1009167e73fad576123c8e5fac53d23c506cc924d24701b51a139bf01c64"
     },
     {
       "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
-      "sha256": "6a7244976262033a78b9cd65d9174beb664663aeecf4ee1b32c5261dbf747ec4"
+      "sha256": "31759f8abd072c3deeea5c5cc1166a3032f7719d8bef728f947f563a01c41dde"
     }
   ],
   "invariants": {
@@ -78,19 +74,23 @@
   },
   "reviewBasis": {
     "newlyObserved": [
-      "Controlled elapsed-time waiting, late readiness, genuine failure and report fallback behavior",
-      "Full tablet-sized browser completion and controls with opt-in diagnostics",
-      "Readable waiting/progress/report button with preserved full environment"
+      "Byte-identical full worker outputs",
+      "Loading-phase touch movement and complete residency",
+      "Desktop portrait and landscape completion with preserved controls",
+      "Progress and summary distinguish ready world from full vegetation completion"
     ],
     "inheritedUnchanged": [
-      "Geometry placement materials terrain and control algorithms retained from baseline",
-      "Previous full environment equivalence and continuity evidence retained"
+      "Canonical geography, terrain, materials, camera and world-scale continuity retained",
+      "Prior anchor acceptance retained by exact immutable evidence reference"
     ],
     "limitations": [
-      "Browser run is software-rendered tablet-viewport emulation, not actual owner tablet timing.",
-      "Opt-in aggregates measure CPU-side API and elapsed wall durations, include instrumentation overhead, overlap, and are not additive. Graphics hardware execution time remains unmeasured.",
-      "Owner physical device report collection remains next step; no tablet performance cause or scalability conclusion established.",
-      "Accepted geometry, placement, materials, controls and complete environment carry forward unchanged by source review; no vegetation optimization performed."
+      "Software-rendered Chromium153 with tablet/mobile viewport and CPU emulation is not a physical device.",
+      "Final tablet loading and matrix runs overlapped; elapsed durations must not be used for a before/after speed comparison.",
+      "Loading frame-gap maximum854.5ms and preparation maximum2424.9ms remain in final tablet emulation. No claim of fully smooth loading.",
+      "Heavy unchanged geometry construction moved into workers; structured clone, freezing, GL uploads and drawing still consume main-thread work.",
+      "Worker CPU/wall durations and frame intervals overlap; they are not additive and do not measure GPU execution time.",
+      "Owner observed smooth motion after completion before this repair; steady-state rendering algorithms were not changed.",
+      "Historical raw qualification remains in the immutable prior evidence object; new receipts below retain their original hashes and selected fields."
     ]
   },
   "physicalAcceptancePerformed": false,

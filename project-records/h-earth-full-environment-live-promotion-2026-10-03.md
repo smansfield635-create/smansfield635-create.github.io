@@ -145,3 +145,14 @@ Recorded firstframe65.8827s,READY65.9794s,vegetationstart114.6139s,complete160.4
 
 BOUNDARY
 PASS to preserve public-safe qualification evidence and perform existing exact-candidate preflight. No additional owner physical-device gate is justified for this bounded message/diagnostic repair. Actual hardware slowness cause and any performance optimization remain unproven; the opt-in report enables subsequent actual-device evidence. Merge/deployment/live exact-head verification remain separate required publication steps. No repository mutation or heavy test execution performed by West.
+
+
+## Loading responsiveness continuation — 2026-10-04
+
+Owner phone/tablet reports establish successful full residency and slow movement confined to loading. Tablet first frame was27.48s, first vegetation80.51s and completion142.60s. Main-thread geometry batches reached1114.3ms; oasis steps668.3ms. Looking complete early is consistent with the existing lowland grass presentation rule, not proof all batches finished.
+
+The repair retains the same constructors and moves oasis preparation and sequential vegetation geometry construction to module workers. Atomic GPU upload/presentation and all world validations remain on the main thread. No placement, density, material, terrain, touch meaning or steady-state draw algorithm changes. The progress label now explains that visible plants may appear sooner; the diagnostic terminal summary agrees with full completion.
+
+Runtime candidate8ba478019eda7b2c96f70b402a661dd88ad83388 has exactly the same tree as browser-tested locale014ed9b55f24acb21b4fb7e7cf4eb0d46c612d7. A following fixture-only cache-identity correction has no production effect. Full batch equality108/27585 and oasis byte equality350grass/72cattails/494primitives pass; browser desktop, constrained portrait, landscape, tablet loading-phase travel and nine controlled startup cases pass. Exact source hashes, receipts, screenshots, independent West review and preserved failures are in the existing anchor evidence JSON. Prior evidence remains immutable by reference.
+
+Bounded functional acceptance passes. Physical-tablet smoothness is not established: concurrent software-rendered emulation still recorded occasional long frame gaps. No before/after speed claim is made. Publication preflight, exact deployment and live verification remain separate release steps.

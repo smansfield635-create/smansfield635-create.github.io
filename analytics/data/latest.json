@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-03T23:18:00Z",
+  "generatedAt": "2026-10-04T00:09:53Z",
   "window30d": {
-    "start": "2026-09-03T23:18:00Z",
-    "end": "2026-10-03T23:18:00Z"
+    "start": "2026-09-04T00:09:53Z",
+    "end": "2026-10-04T00:09:53Z"
   },
   "daily": [
-    {
-      "date": "2026-09-04",
-      "pageLoads": 230
-    },
     {
       "date": "2026-09-05",
       "pageLoads": 80
@@ -96,7 +92,7 @@
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 53
+      "pageLoads": 102
     },
     {
       "date": "2026-09-27",
@@ -124,34 +120,38 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 28
+      "pageLoads": 29
+    },
+    {
+      "date": "2026-10-04",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 6346,
-    "botPageLoads": 2417,
-    "nonBotPageLoads": 3929
+    "pageLoads": 6386,
+    "botPageLoads": 2438,
+    "nonBotPageLoads": 3948
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3152,
-      "visits": 3152
+      "pageLoads": 3166,
+      "visits": 3166
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2715,
+      "pageLoads": 2738,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 431,
-      "visits": 431
+      "pageLoads": 433,
+      "visits": 433
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 45,
-      "visits": 45
+      "pageLoads": 46,
+      "visits": 46
     },
     {
       "host": "l.instagram.com",
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1629,
-      "visits": 1232
+      "pageLoads": 1638,
+      "visits": 1235
     },
     {
       "path": "/mirror-manor-preview/",
@@ -186,14 +186,14 @@
       "visits": 410
     },
     {
-      "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 340,
-      "visits": 90
+      "path": "/analytics/",
+      "pageLoads": 346,
+      "visits": 210
     },
     {
-      "path": "/analytics/",
-      "pageLoads": 330,
-      "visits": 209
+      "path": "/campaigns/consider-the-energy/",
+      "pageLoads": 341,
+      "visits": 91
     },
     {
       "path": "/products/education/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/governance-bridge/",
-      "pageLoads": 191,
-      "visits": 139
+      "pageLoads": 183,
+      "visits": 131
     }
   ],
   "ownerMeasurement": {

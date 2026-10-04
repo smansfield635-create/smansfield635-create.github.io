@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-03T23:18:00Z",
+  "generatedAt": "2026-10-04T00:09:53Z",
   "window": {
-    "start": "2026-07-05T23:18:00Z",
-    "end": "2026-10-03T23:18:00Z"
+    "start": "2026-07-06T00:09:53Z",
+    "end": "2026-10-04T00:09:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5088,
-    "visits": 1316,
+    "pageLoads": 5100,
+    "visits": 1318,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5088,
-        "visits": 1316
+        "pageLoads": 5100,
+        "visits": 1318
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1062,
-        "visits": 742
+        "pageLoads": 1077,
+        "visits": 752
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 201,
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 70,
+        "pageLoads": 71,
         "visits": 0
       },
       "/characters/": {
@@ -130,12 +130,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/gauges/": {
         "pageLoads": 10,
         "visits": 0
@@ -224,10 +228,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -278,19 +278,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -331,15 +331,15 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 142,
+        "visits": 112
       },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 40,
+        "pageLoads": 44,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -353,16 +353,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3772,
+        "pageLoads": 3782,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 526,
-        "visits": 526
+        "pageLoads": 518,
+        "visits": 518
       },
       "www.google.com": {
-        "pageLoads": 780,
-        "visits": 780
+        "pageLoads": 790,
+        "visits": 790
       },
       "raw.githack.com": {
         "pageLoads": 10,

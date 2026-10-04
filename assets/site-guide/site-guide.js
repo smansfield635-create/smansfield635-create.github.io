@@ -151,7 +151,7 @@
       title: "Audralia Worldroom",
       copy: "Audralia Worldroom gives a focused look at the visible world-body without pretending the whole world is finished.",
       list: ["Purpose: inspect the visible world body", "Connects to: Audralia Conservatory and Control Cockpit", "Next move: inspect the worldroom or preview another room"],
-      href: "/showroom/globe/audralia/planet/",
+      href: "/showroom/globe/audralia/",
       action: "Inspect Worldroom"
     },
     cockpit: {

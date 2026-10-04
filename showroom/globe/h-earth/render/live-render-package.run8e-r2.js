@@ -3,13 +3,13 @@ import {
   H_EARTH_RUN_8E_R2_CONTRACT_ID,
   evaluateHEarthRun8ER2Control
 } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
-import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js';
+import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js?cb=a393d7145e845bdd';
 import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js';
 import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
 import {
   H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,
   buildHEarthRun8EPacket002SuccessorTransfer
-} from '../../../../h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js';
+} from '../../../../h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js?cb=d12121468273fcf4';
 import {
   H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
   sampleHEarthRun8CSuccessorSurfaceMaterial,

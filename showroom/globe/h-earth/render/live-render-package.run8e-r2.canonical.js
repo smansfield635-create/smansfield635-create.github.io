@@ -6,7 +6,7 @@ import {
   getHEarthRun8ER2VegetationWorldTruthPlan,
   isHEarthRun8ER2VegetationWorldTruthPrepared,
   createHEarthRun8ER2VegetationPresentationBatch
-} from './live-render-package.run8e-r2.js';
+} from './live-render-package.run8e-r2.js?cb=4973aef2393984d3';
 
 const GRID_SCALE = 16777216;
 const FLOAT_BUFFER_NAMES = Object.freeze([

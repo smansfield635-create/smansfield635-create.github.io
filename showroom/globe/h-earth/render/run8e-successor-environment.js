@@ -4,11 +4,11 @@ const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGN
 import { admitHEarthPrimitiveBatch,mergeHEarthGeometryBounds,isHEarthAABB3D } from './geometry-kernel.js';
 import { previewHEarthFunctionalLandscape } from './landscape-preview.js';
 import { buildHEarthRun8CTerrainMaterialLightingPresentation,evaluateHEarthRun8CTerrainMaterialLightingPresentation } from './lighting-material-successor-terrain.run8c.js';
-import { planHEarthGen2514GroundedVegetation,constructHEarthGen2514GroundedVegetationBatch } from './geometry-grounded-vegetation.run8d.js';
+import { planHEarthGen2514GroundedVegetation,constructHEarthGen2514GroundedVegetationBatch } from './geometry-grounded-vegetation.run8d.js?cb=8c008f474e4f74f1';
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { H_EARTH_GEN311_SUCCESSOR_VEGETATION_CONTRACT_ID } from '../../../../h-earth-3d/environment/h-earth.successor-vegetation.run8d.js';
 import { prepareHEarthFunctionalLandscapeRenderPlan,rasterizeHEarthFunctionalLandscapePlan } from './renderer.functional-landscape.js';
-import { H_EARTH_RUN_8E_NEUTRAL_PACKAGE_CONTRACT_ID,H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,buildHEarthRun8EPacket002SuccessorTransfer } from '../../../../h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js';
+import { H_EARTH_RUN_8E_NEUTRAL_PACKAGE_CONTRACT_ID,H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,buildHEarthRun8EPacket002SuccessorTransfer } from '../../../../h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js?cb=d12121468273fcf4';
 import { H_EARTH_RUN_8E_CONTROL_CONTRACT_ID,evaluateHEarthRun8EControlContract } from '../../../../h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js';
 import { H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID } from '../../../../h-earth-3d/terrain/h-earth.world-manifold-domain.js';
 import { H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID } from '../../../../h-earth-3d/integration/h-earth.world-representation-plan.js';
@@ -86,7 +86,7 @@ export function prepareHEarthGen2515VegetationWorldTruthPlan() {
   if (gen2515VegetationGroundedPlanCache) return Promise.resolve(getHEarthGen2515VegetationWorldTruthPlan());
   if (vegetationPreparation) return vegetationPreparation;
   vegetationPreparation = new Promise((resolve,reject) => {
-    const worker = new Worker(new URL('./geometry-grounded-vegetation.run8d.js?hearthVegetationPlanner=1',import.meta.url),{type:'module'});
+    const worker = new Worker(new URL('./geometry-grounded-vegetation.run8d.js?hearthVegetationPlanner=1&cb=8c008f474e4f74f1',import.meta.url),{type:'module'});
     const fail = error => {worker.terminate();reject(error);};
     worker.onerror = event => fail(new Error(event.message || 'GEN2515_VEGETATION_WORKER_FAILED'));
     worker.onmessageerror = () => fail(new Error('GEN2515_VEGETATION_WORKER_MESSAGE_INVALID'));

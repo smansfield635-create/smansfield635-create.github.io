@@ -27,7 +27,7 @@ let browser;
 const receipts=[];
 try{
   browser=await chromium.launch({headless:true});
-  for(const profile of [{id:'desktop',viewport:{width:1280,height:800},cpu:1},{id:'constrained-mobile',viewport:{width:390,height:844},cpu:4,isMobile:true,hasTouch:true}]){
+  for(const profile of [{id:'desktop',viewport:{width:1280,height:800},cpu:1},{id:'constrained-mobile',viewport:{width:390,height:844},cpu:4,isMobile:true,hasTouch:true},{id:'mobile-landscape-controls',viewport:{width:844,height:390},cpu:1,isMobile:true,hasTouch:true}]){
     const receipt={sha,profile,emulationOnly:true,errors:[],requestsFailed:[],result:'FAIL'};
     const context=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile??false,hasTouch:profile.hasTouch??false,deviceScaleFactor:1});
     const page=await context.newPage(),cdp=await context.newCDPSession(page);
@@ -39,22 +39,28 @@ try{
       await page.goto(`http://127.0.0.1:${server.address().port}/showroom/globe/h-earth/`,{waitUntil:'domcontentloaded',timeout:240000});
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,{},{timeout:240000});
       receipt.atReady=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency());
+      receipt.readyHitTest=await page.evaluate(()=>{const c=document.querySelector('canvas'),b=c.getBoundingClientRect(),e=document.elementFromPoint(b.x+b.width/2,b.y+b.height/2),l=document.querySelector('.h-earth-experience-loader');return {atMs:performance.now(),hitTag:e?.tagName,hitClass:e?.className,canvasHit:e===c,loaderReady:l?.dataset.ready??null,loaderConnected:!!l};});
+      await page.waitForFunction(()=>{const c=document.querySelector('canvas'),b=c?.getBoundingClientRect();return b&&document.elementFromPoint(b.x+b.width/2,b.y+b.height/2)===c;},{},{timeout:30000});
+      receipt.inputEnabledAtMs=await page.evaluate(()=>performance.now());
+      await fs.writeFile(path.join(out,profile.id+'-ready.json'),JSON.stringify(receipt,null,2)+'\n');
       if(profile.hasTouch){
         const canvas=page.locator('canvas').first(),box=await canvas.boundingBox();
         if(!box)throw Error('CANVAS_NOT_VISIBLE');
+        receipt.canvasBox=box;
         const read=()=>page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt());
         const move=async(direction)=>{
           const before=await read(),x=box.x+box.width/2,y=box.y+box.height/2;
           const points=offset=>[{id:1,x:x-25,y:y+offset},{id:2,x:x+25,y:y+offset}];
           await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:points(0)});
           for(let i=1;i<=10;i++){
-            await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:points(direction*i*4)});
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:points(direction*i*box.height*0.012)});
             await page.waitForTimeout(30);
           }
           await page.waitForTimeout(300);
           await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
           const after=await read();
           const a=before.currentNavigationState.position,b=after.currentNavigationState.position;
+          receipt.lastGesture={direction,before,after};
           if(Math.hypot(b.x-a.x,b.z-a.z)<0.001)throw Error('TWO_FINGER_TRAVEL_NO_MOVEMENT');
           const yaw=before.currentNavigationState.yawDegrees*Math.PI/180;
           const forwardDistance=(b.x-a.x)*Math.sin(yaw)-(b.z-a.z)*Math.cos(yaw);
@@ -62,9 +68,34 @@ try{
           await page.waitForTimeout(200);
           const stopped=(await read()).currentNavigationState.position;
           if(Math.hypot(stopped.x-b.x,stopped.z-b.z)>0.001)throw Error('TOUCH_RELEASE_DID_NOT_STOP_TRAVEL');
-          return {before:a,after:b,delta:{x:b.x-a.x,z:b.z-a.z},counters:after.counters};
+          return {requestedPixels:direction*box.height*.12,normalizedCentroidTravel:direction*.12,before:a,after:b,delta:{x:b.x-a.x,z:b.z-a.z},counters:after.counters};
         };
         receipt.forward=await move(-1);receipt.backward=await move(1);
+        const cx=box.x+box.width/2,cy=box.y+box.height/2;
+        const lookBefore=await read();
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:cx,y:cy}]});
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:cx+box.width*.12,y:cy}]});
+        await page.waitForTimeout(300);
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        const lookAfter=await read();
+        if(Math.abs(lookAfter.currentNavigationState.yawDegrees-lookBefore.currentNavigationState.yawDegrees)<0.01)throw Error('ONE_FINGER_LOOK_NO_ROTATION');
+        await page.waitForTimeout(200);
+        const lookStopped=await read();
+        if(Math.abs(lookStopped.currentNavigationState.yawDegrees-lookAfter.currentNavigationState.yawDegrees)>0.01)throw Error('LOOK_RELEASE_DID_NOT_STOP');
+        receipt.look={requestedPixels:box.width*.12,normalizedCentroidTravel:.12,before:lookBefore.currentNavigationState,after:lookAfter.currentNavigationState,stopped:lookStopped.currentNavigationState};
+        const cancelBefore=await read();
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:cx-25,y:cy},{id:2,x:cx+25,y:cy}]});
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:cx-25,y:cy-box.height*.12},{id:2,x:cx+25,y:cy-box.height*.12}]});
+        await page.waitForTimeout(250);
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
+        const cancelled=await read();
+        if(cancelled.counters.pointerCancelCount<=cancelBefore.counters.pointerCancelCount)throw Error('NATIVE_POINTER_CANCEL_NOT_OBSERVED');
+        if(Math.hypot(cancelled.currentNavigationState.position.x-cancelBefore.currentNavigationState.position.x,cancelled.currentNavigationState.position.z-cancelBefore.currentNavigationState.position.z)<0.001)throw Error('CANCEL_TEST_HAD_NO_ACTIVE_TRAVEL');
+        await page.waitForTimeout(250);
+        const cancelStopped=await read(),a=cancelled.currentNavigationState.position,b=cancelStopped.currentNavigationState.position;
+        if(Math.hypot(b.x-a.x,b.z-a.z)>0.001)throw Error('TOUCH_CANCEL_DID_NOT_STOP');
+        receipt.cancel={requestedPixels:-box.height*.12,normalizedCentroidTravel:-.12,cancelled:cancelled.currentNavigationState,stopped:cancelStopped.currentNavigationState,counters:cancelStopped.counters};
+
         if(receipt.forward.delta.x*receipt.backward.delta.x+receipt.forward.delta.z*receipt.backward.delta.z>=0)throw Error('TWO_FINGER_DIRECTIONS_NOT_OPPOSED');
       }
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getVegetationResidency()?.complete===true,{},{timeout:480000});

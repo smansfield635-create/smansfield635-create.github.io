@@ -4,6 +4,10 @@
 
 Diamond Gate Bridge is a software and research project created by Sean Mansfield in January 2026. This public repository contains working browser experiences, JavaScript/Node and Python implementations, automated tests, GitHub Actions workflows, and recorded engineering results.
 
+**Technologies:** JavaScript · Node.js · Python · WebGL2 / GLSL · Playwright / Chromium · GitHub Actions
+
+Sean conceived and leads DGB, setting its strategy, originating its concepts, defining product requirements, and directing development across its software and research. He uses extensive AI assistance for implementation, testing, and technical analysis, while retaining responsibility for direction, evaluation, and acceptance.
+
 [Explore the website](https://diamondgatebridge.com) · [Enter the product estate](https://diamondgatebridge.com/door/) · [Contact Sean](mailto:geodiametrics@gmail.com)
 
 ## Start with the software
@@ -13,8 +17,8 @@ Each example below links the implementation to its tests and evidence.
 | Example | What it does | Inspect |
 | --- | --- | --- |
 | **H-Earth** | Renders an interactive 3D environment with custom WebGL2/GLSL, staged vegetation loading, and touch navigation. | [Renderer][hearth-renderer] · [Browser tests][hearth-tests] · [Saved results][hearth-results] |
-| **Python computational kernel** | Computes state transitions and validates ordered receipt chains, rejecting tampering, identity mismatches, and skipped stages. | [Implementation][kernel-source] · [16-test suite][kernel-tests] · [CI][kernel-ci] |
-| **Auren conversation chamber** | Runs an authored, stateful conversation with paced delivery, contextual disclosure, history-aware responses, and product handoffs. | [Tested implementation][auren-historical] · [Browser qualification run][auren-run] |
+| **Full Bird Kernel v3.2 — Python state and receipt validation** | Computes state transitions and validates ordered receipt chains, rejecting tampering, identity mismatches, and skipped stages. | [Implementation][kernel-source] · [16-test suite][kernel-tests] · [CI][kernel-ci] |
+| **Auren — stateful conversation application** | Runs an authored, stateful conversation with paced delivery, contextual disclosure, history-aware responses, and product handoffs. | [Tested implementation][auren-historical] · [Browser qualification run][auren-run] |
 | **Productivity Receipt** | Reads bounded Git history and emits a JSON report of repository activity, with explicit unknowns and measurement limits. | [Implementation][productivity-source] · [Verifier][productivity-tests] · [Observed run][productivity-run] |
 | **Publication preflight** | Builds a release payload, checks its identity and dependencies, and executes registered readiness checks. | [Implementation][preflight-source] · [Fixture tests][preflight-tests] · [Observed run][preflight-run] |
 
@@ -40,7 +44,7 @@ These are Chromium/SwiftShader emulation results. They establish the tested beha
 
 **Failure/recovery example:** the same evidence includes nine controlled startup cases. Elapsed delay remains a waiting state; actual shader, context, draw, constructor, and rejection faults retain their failure identity even if readiness arrives later. The test exercises the observer and loader rather than treating every timeout as a renderer defect.
 
-### Python — executable state and receipt validation
+### Full Bird Kernel v3.2 — Python state transitions and receipt validation
 
 The [Full Bird Kernel v3.2 implementation][kernel-source] uses Python's standard library to calculate transitions between exact eight-bit states and validate a lifecycle through successive receipts.
 
@@ -62,7 +66,7 @@ The [GitHub Actions workflow][kernel-ci] runs the same suite. An October 4, 2026
 
 This is a computational reference. Its [claim manifest][kernel-claims] distinguishes executable conformance from empirical calibration, domain validity, and authenticated issuer/signature trust.
 
-### Auren — stateful conversational software
+### Auren conversation chamber — stateful conversational software
 
 [Open the chamber](https://diamondgatebridge.com/products/auren/)
 
@@ -124,7 +128,7 @@ The [longitudinal claim matrix][longitudinal] records bounded claims about the p
 
 ## Development and review
 
-DGB uses extensive AI-assisted engineering. Sean Mansfield created and develops the project; this README does not represent that contribution as manually typing every line of code.
+Sean Mansfield owns DGB's conception, strategy, product direction, and development decisions. AI tools contribute extensively to implementation, testing, and technical analysis. Sean defines requirements, evaluates behavior, identifies defects, directs revisions, and decides whether results meet the project's acceptance criteria. This describes project authorship and responsibility; it does not claim that he manually wrote every implementation or test.
 
 For review, follow **implementation → test → workflow → observed result**. Evaluate the test's assertions and candidate identity alongside its PASS label. The examples above expose both the engineering work and its evidence boundaries.
 

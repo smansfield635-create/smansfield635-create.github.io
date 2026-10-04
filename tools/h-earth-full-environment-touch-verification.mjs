@@ -31,6 +31,7 @@ try{
     const receipt={sha,profile,emulationOnly:true,errors:[],requestsFailed:[],result:'FAIL'};
     const context=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile??false,hasTouch:profile.hasTouch??false,deviceScaleFactor:1});
     const page=await context.newPage(),cdp=await context.newCDPSession(page);
+    await page.addInitScript(()=>{window.__vegetationProgressEvidence=[];window.__vegetationTextEvidence=[];let lastText='';new MutationObserver(()=>{const e=document.getElementById('h-earth-vegetation-progress');if(e&&e.textContent!==lastText){lastText=e.textContent;window.__vegetationTextEvidence.push({atMs:performance.now(),text:lastText,complete:window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getVegetationResidency()?.complete??false});}}).observe(document,{childList:true,subtree:true,characterData:true});window.addEventListener('h-earth-vegetation-progress',event=>{window.__vegetationProgressEvidence.push({atMs:performance.now(),...event.detail});});});
     page.on('pageerror',e=>receipt.errors.push(String(e)));
     page.on('console',m=>{if(m.type()==='error')receipt.errors.push(m.text());});
     page.on('requestfailed',r=>receipt.requestsFailed.push({url:r.url(),error:r.failure()}));
@@ -42,6 +43,12 @@ try{
       receipt.readyHitTest=await page.evaluate(()=>{const c=document.querySelector('canvas'),b=c.getBoundingClientRect(),e=document.elementFromPoint(b.x+b.width/2,b.y+b.height/2),l=document.querySelector('.h-earth-experience-loader');return {atMs:performance.now(),hitTag:e?.tagName,hitClass:e?.className,canvasHit:e===c,loaderReady:l?.dataset.ready??null,loaderConnected:!!l};});
       await page.waitForFunction(()=>{const c=document.querySelector('canvas'),b=c?.getBoundingClientRect();return b&&document.elementFromPoint(b.x+b.width/2,b.y+b.height/2)===c;},{},{timeout:30000});
       receipt.inputEnabledAtMs=await page.evaluate(()=>performance.now());
+      receipt.progressAtReady=await page.evaluate(()=>{const e=document.getElementById('h-earth-vegetation-progress');if(!e)return null;const range=document.createRange();range.selectNodeContents(e);return {text:e.textContent,hidden:e.hidden,pointerEvents:getComputedStyle(e).pointerEvents,hudRects:[...document.querySelectorAll('.semantic-readout,.h-earth-3d-public-header,#h-earth-b10-world-heading')].map(n=>n.getBoundingClientRect().toJSON()),font:getComputedStyle(e).font,textRect:range.getBoundingClientRect().toJSON(),rect:e.getBoundingClientRect().toJSON()};});
+      if(receipt.progressAtReady&&receipt.progressAtReady.hudRects.some(h=>{const b=receipt.progressAtReady.rect;return h.width>0&&h.height>0&&b.left<h.right&&b.right>h.left&&b.top<h.bottom&&b.bottom>h.top;}))throw Error('VEGETATION_PROGRESS_OVERLAPS_HUD');
+      if(receipt.progressAtReady&&!(receipt.progressAtReady.textRect.width>80&&receipt.progressAtReady.textRect.height>8))throw Error('VEGETATION_PROGRESS_TEXT_NOT_RENDERED');
+      if(receipt.progressAtReady&&!(receipt.progressAtReady.rect.width>0&&receipt.progressAtReady.rect.height>0&&receipt.progressAtReady.rect.x>=0&&receipt.progressAtReady.rect.y>=0&&receipt.progressAtReady.rect.right<=profile.viewport.width&&receipt.progressAtReady.rect.bottom<=profile.viewport.height))throw Error('VEGETATION_PROGRESS_OUTSIDE_VIEWPORT');
+      if(!receipt.progressAtReady||receipt.progressAtReady.hidden||receipt.progressAtReady.pointerEvents!=='none'||!receipt.progressAtReady.text)throw Error('NONBLOCKING_VEGETATION_PROGRESS_MISSING');
+      await page.screenshot({path:path.join(out,profile.id+'-preparing.png')});
       await fs.writeFile(path.join(out,profile.id+'-ready.json'),JSON.stringify(receipt,null,2)+'\n');
       if(profile.hasTouch){
         const canvas=page.locator('canvas').first(),box=await canvas.boundingBox();
@@ -99,10 +106,16 @@ try{
         if(receipt.forward.delta.x*receipt.backward.delta.x+receipt.forward.delta.z*receipt.backward.delta.z>=0)throw Error('TWO_FINGER_DIRECTIONS_NOT_OPPOSED');
       }
       await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getVegetationResidency()?.complete===true,{},{timeout:480000});
-      receipt.final=await page.evaluate(()=>({residency:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency(),live:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt()}));
+      receipt.final=await page.evaluate(()=>({residency:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getVegetationResidency(),live:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),startup:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt(),progress:window.__vegetationProgressEvidence,progressText:window.__vegetationTextEvidence}));
       const r=receipt.final.residency,t=r.timing;
       if(r.residentInstanceCount!==27585||r.residentBatchCount!==108||r.droppedPlacementCount!==0||r.worldRebuildCount!==0||r.cameraIndependent!==true)throw Error('FINAL_ENVIRONMENT_INVARIANT_FAILED');
       if(![t?.firstFrameAtMs,t?.readyAtMs,t?.vegetationStartAtMs,t?.vegetationCompleteAtMs].every(Number.isFinite)||!(t.firstFrameAtMs<=t.readyAtMs&&t.readyAtMs<t.vegetationStartAtMs&&t.vegetationStartAtMs<t.vegetationCompleteAtMs))throw Error('STARTUP_ORDER_FAILED');
+      const events=receipt.final.progress,loads=events.filter(e=>e.phase==='RESIDENCY');
+      if(loads.length!==108||loads.some((e,i)=>e.residentBatchCount!==i+1)||events.at(-1)?.phase!=='COMPLETE')throw Error('MEASURED_PROGRESS_SEQUENCE_FAILED');
+      if(!receipt.final.progressText.some(e=>e.text.startsWith('Loading vegetation')&&e.text.includes('%'))||receipt.final.progressText.some(e=>e.text.includes('100%')&&!e.complete))throw Error('RENDERED_PERCENTAGE_PROGRESS_FAILED');
+      const stages=receipt.final.startup.timing.stages,firstVegetation=stages.FIRST_VEGETATION_FRAME_PRESENTED?.firstPassAtMs;
+      if(!Number.isFinite(firstVegetation)||firstVegetation<t.readyAtMs||firstVegetation>t.vegetationCompleteAtMs)throw Error('FIRST_VISIBLE_VEGETATION_TIMING_MISSING');
+      if(!(stages.OASIS_PREPARATION_START?.firstPassAtMs>t.readyAtMs&&stages.OASIS_PREPARATION_START.firstPassAtMs<stages.VEGETATION_PLAN_VALIDATED.firstPassAtMs))throw Error('POST_READY_PREPARATION_OVERLAP_FAILED');
       if(receipt.errors.length||receipt.requestsFailed.length)throw Error('BROWSER_ERRORS');
       await page.screenshot({path:path.join(out,profile.id+'.png')});receipt.result='PASS';
     }catch(error){receipt.failure=String(error);process.exitCode=1;}

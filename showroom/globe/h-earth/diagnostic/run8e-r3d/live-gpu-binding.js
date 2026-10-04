@@ -23,7 +23,7 @@ const OCEAN_PROOF_RENDERER_PATH =
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=d2ca448bab3d0a2e';
+  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=93f614ac5e3d0215';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -329,15 +329,20 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
 
   const materializeNextVegetationBatch = () => {
     if (counters.rendererInitializationCount !== 1) throw new Error('R3D3_RENDERER_NOT_INITIALIZED_FOR_VEGETATION_RESIDENCY');
-    const beforeBatchCount = renderer.getResourceReceipt().vegetationResidency?.residentBatchCount ?? 0;
+    const beforeResidency = renderer.getResourceReceipt().vegetationResidency;
     const result = renderer.materializeNextVegetationBatch();
-    const afterBatchCount = renderer.getResourceReceipt().vegetationResidency?.residentBatchCount ?? 0;
-    if (afterBatchCount > beforeBatchCount) {
+    const afterResidency = renderer.getResourceReceipt().vegetationResidency;
+    const afterBatchCount = afterResidency?.residentBatchCount ?? 0;
+    const changedPresentation = Number.isInteger(beforeResidency?.residentPrimitiveCount)&&Number.isInteger(afterResidency?.residentPrimitiveCount)
+      ? afterResidency.residentPrimitiveCount > beforeResidency.residentPrimitiveCount
+      : afterBatchCount > (beforeResidency?.residentBatchCount ?? 0);
+    if (changedPresentation) {
       presentNavigationState(latestNavigationState, {
         kind: 'VEGETATION_RESIDENCY_PROGRESS',
         sequence: afterBatchCount,
         captureEvidence: false
       });
+      if((beforeResidency?.residentPrimitiveCount??0)===0)globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('FIRST_VEGETATION_FRAME_PRESENTED');
     }
     return result;
   };
@@ -450,7 +455,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
     liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
     acceptNavigationState,
     captureLatestEvidence,
-    prepareVegetationResidency: () => deferredVegetationActive?renderer.prepareVegetationResidency():Promise.resolve(getVegetationResidency()),
+    prepareVegetationResidency: options => deferredVegetationActive?renderer.prepareVegetationResidency(options):Promise.resolve(getVegetationResidency()),
     materializeNextVegetationBatch,
     getVegetationResidency,
     startPresentationAnimation,

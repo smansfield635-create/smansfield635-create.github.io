@@ -821,17 +821,29 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
 
   let vegetationPreparation=null;
   let vegetationPreparationComplete=!deferVegetation;
-  function prepareVegetationResidency(){
+  let vegetationPreparationProgress=Object.freeze({phase:'NOT_STARTED',worldTruthValidated:!deferVegetation,oasisComplete:!deferVegetation,grassTuftCount:0,cattailCount:0,primitiveCount:0});
+  function prepareVegetationResidency({onProgress=()=>{}}={}){
+    if(typeof onProgress!=='function')throw new TypeError('R3C_VEGETATION_PROGRESS_CALLBACK_INVALID');
     if(vegetationPreparation)return vegetationPreparation;
+    const progress=update=>{vegetationPreparationProgress=Object.freeze({...vegetationPreparationProgress,...update});onProgress(vegetationPreparationProgress);};
     vegetationPreparation=(async()=>{
       globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_PREPARATION_START');
-      const truth=await prepareHEarthRun8ER2VegetationWorldTruthPlan();
-      if(truth.qualifiedManifestIdentity?.manifestSha256!=='9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e')throw new Error('R3C_QUALIFIED_VEGETATION_MANIFEST_MISMATCH');
-      vegetationTruth=truth;resources.vegetation.truth=truth;
-      globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_PLAN_VALIDATED');
-      await prepareHEarthOasisFoliagePresentation(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}));
+      progress({phase:'PREPARING'});
+      const truthPreparation=prepareHEarthRun8ER2VegetationWorldTruthPlan().then(truth=>{
+        if(truth.qualifiedManifestIdentity?.manifestSha256!=='9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e')throw new Error('R3C_QUALIFIED_VEGETATION_MANIFEST_MISMATCH');
+        vegetationTruth=truth;resources.vegetation.truth=truth;
+        globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_PLAN_VALIDATED');
+        progress({phase:'WORLD_TRUTH_VALIDATED',worldTruthValidated:true});
+      });
+      globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('OASIS_PREPARATION_START');
+      const oasisPreparation=prepareHEarthOasisFoliagePresentation(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{onProgress:update=>progress({...update,phase:`OASIS_${update.phase}`})}).then(()=>{
+        globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('OASIS_PREPARATION_COMPLETE');
+        progress({phase:'OASIS_READY',oasisComplete:true});
+      });
+      await Promise.all([truthPreparation,oasisPreparation]);
       vegetationPreparationComplete=true;
       globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_PREPARATION_COMPLETE');
+      progress({phase:'PREPARED'});
       return getResourceReceipt().vegetationResidency;
     })();
     return vegetationPreparation;
@@ -1148,7 +1160,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
-      vegetationResidency:{...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
+      vegetationResidency:{...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,preparationProgress:vegetationPreparationProgress,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
       canonicalPackageMutated:false
     };
   }

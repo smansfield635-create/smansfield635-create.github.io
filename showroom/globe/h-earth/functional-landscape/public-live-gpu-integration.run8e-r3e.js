@@ -1,5 +1,5 @@
 import { installHEarthRun8ER3D2PointerTouchIntake } from '../diagnostic/run8e-r3d/pointer-touch-intake.js';
-import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=a5bb1a8e0a650fbb';
+import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=9a16b5577b5fbeea';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
@@ -314,13 +314,40 @@ let vegetationFrameRequest = null;
 let vegetationLoadingStopped = false;
 let vegetationLoadingFailed = false;
 let vegetationPrepared = false;
+const vegetationStatus = document.createElement('output');
+vegetationStatus.id = 'h-earth-vegetation-progress';
+vegetationStatus.setAttribute('role','status');
+vegetationStatus.setAttribute('aria-live','polite');
+vegetationStatus.style.cssText = 'position:fixed;bottom:max(96px,env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));z-index:4;box-sizing:border-box;max-width:calc(100vw - 24px);padding:8px 10px;border-radius:8px;background:rgba(7,20,18,.82);color:#f1f7f3;font:12px/1.4 system-ui,sans-serif;pointer-events:none;';
+document.body.appendChild(vegetationStatus);
+let lastVegetationStatusAt = -Infinity;
+function showVegetationStatus(text,force=false){
+  const now=performance.now();
+  if(!force&&now-lastVegetationStatusAt<250)return;
+  lastVegetationStatusAt=now;
+  vegetationStatus.textContent=text;
+}
+function showVegetationPreparation(progress){
+  if(vegetationLoadingFailed)return;
+  window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
+  if(progress.oasisComplete&&!progress.worldTruthValidated){showVegetationStatus('Preparing vegetation locations · You can explore.',true);return;}
+  const grass=progress.grassTuftCount??0,cattails=progress.cattailCount??0;
+  showVegetationStatus(grass||cattails?`Preparing plants · ${grass} grass tufts · ${cattails} cattails`:'Preparing vegetation · You can explore.');
+}
+function vegetationComplete(){
+  root.dataset.vegetationResidency='complete';
+  const residency=binding.getVegetationResidency();
+  window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'COMPLETE',residentBatchCount:residency.residentBatchCount,totalBatchCount:residency.totalBatchCount}}));
+  showVegetationStatus('Vegetation complete — 100%',true);
+  window.setTimeout(()=>{vegetationStatus.hidden=true;},2500);
+}
 
 function scheduleVegetationResidency() {
   if (!vegetationPrepared || vegetationLoadingStopped || vegetationLoadingFailed || vegetationFrameRequest !== null) return;
   const residency = binding.getVegetationResidency();
   if (!residency || residency.totalBatchCount === 0) return;
   if (residency.complete) {
-    root.dataset.vegetationResidency = 'complete';
+    vegetationComplete();
     return;
   }
   root.dataset.vegetationResidency = 'loading';
@@ -330,16 +357,18 @@ function scheduleVegetationResidency() {
     try {
       const before = binding.getVegetationResidency();
       if (before.complete) {
-        root.dataset.vegetationResidency = 'complete';
+        vegetationComplete();
         return;
       }
       binding.materializeNextVegetationBatch();
       const after = binding.getVegetationResidency();
+      window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'RESIDENCY',residentBatchCount:after.residentBatchCount,totalBatchCount:after.totalBatchCount,residentPrimitiveCount:after.residentPrimitiveCount}}));
+      showVegetationStatus(`Loading vegetation — ${Math.floor(100*after.residentBatchCount/after.totalBatchCount)}%`);
       if (!after.complete && after.residentBatchCount <= before.residentBatchCount) {
         throw new Error('R3E2_VEGETATION_RESIDENCY_STALLED');
       }
       if (after.complete) {
-        root.dataset.vegetationResidency = 'complete';
+        vegetationComplete();
         emitDiagnosticStage('VEGETATION_RESIDENCY_COMPLETE', 'PASS', after);
       } else {
         scheduleVegetationResidency();
@@ -347,6 +376,8 @@ function scheduleVegetationResidency() {
     } catch (error) {
       vegetationLoadingFailed = true;
       root.dataset.vegetationResidency = 'failed';
+      window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'FAILED'}}));
+      showVegetationStatus('Vegetation could not finish loading.',true);
       emitDiagnosticStage('VEGETATION_RESIDENCY_COMPLETE', 'FAIL', {
         name: error?.name ?? 'Error',
         message: error?.message ?? String(error),
@@ -369,12 +400,15 @@ window.addEventListener('pageshow', () => {
   scheduleVegetationResidency();
 });
 root.dataset.vegetationResidency = 'preparing';
-binding.prepareVegetationResidency().then(() => {
+showVegetationStatus('Preparing vegetation · You can explore.',true);
+binding.prepareVegetationResidency({onProgress:showVegetationPreparation}).then(() => {
   vegetationPrepared = true;
   scheduleVegetationResidency();
 }).catch(error => {
   vegetationLoadingFailed = true;
   root.dataset.vegetationResidency = 'failed';
+      window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'FAILED'}}));
+      showVegetationStatus('Vegetation could not finish loading.',true);
   emitDiagnosticStage('VEGETATION_RESIDENCY_COMPLETE','FAIL',{name:error?.name,message:error?.message,stack:error?.stack});
   throw error;
 });

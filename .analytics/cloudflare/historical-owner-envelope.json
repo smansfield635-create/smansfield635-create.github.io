@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-04T17:47:51Z",
+  "generatedAt": "2026-10-04T19:31:00Z",
   "window": {
-    "start": "2026-07-06T17:47:51Z",
-    "end": "2026-10-04T17:47:51Z"
+    "start": "2026-07-06T19:31:00Z",
+    "end": "2026-10-04T19:31:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5097,
-    "visits": 1322,
+    "pageLoads": 5100,
+    "visits": 1323,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5097,
-        "visits": 1322
+        "pageLoads": 5100,
+        "visits": 1323
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1068,
-        "visits": 748
+        "pageLoads": 1069,
+        "visits": 749
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 204,
@@ -174,6 +174,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -190,10 +194,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -206,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -214,7 +218,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -228,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -323,7 +323,7 @@
         "visits": 30
       },
       "/meet-sean-mansfield/": {
-        "pageLoads": 10,
+        "pageLoads": 11,
         "visits": 0
       },
       "/home/": {
@@ -334,12 +334,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -349,15 +349,19 @@
       "/products/auren/": {
         "pageLoads": 3,
         "visits": 2
+      },
+      "/about-this-underdog/": {
+        "pageLoads": 1,
+        "visits": 0
       }
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 532,
-        "visits": 532
+        "pageLoads": 533,
+        "visits": 533
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3775,
+        "pageLoads": 3777,
         "visits": 0
       },
       "www.google.com": {

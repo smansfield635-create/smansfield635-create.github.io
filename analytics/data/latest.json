@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-04T04:47:38Z",
+  "generatedAt": "2026-10-04T07:16:03Z",
   "window30d": {
-    "start": "2026-09-04T04:47:38Z",
-    "end": "2026-10-04T04:47:38Z"
+    "start": "2026-09-04T07:16:03Z",
+    "end": "2026-10-04T07:16:03Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-27",
-      "pageLoads": 29
+      "pageLoads": 27
     },
     {
       "date": "2026-09-28",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 23
+      "pageLoads": 32
     }
   ],
   "summary": {
-    "pageLoads": 6327,
-    "botPageLoads": 2416,
-    "nonBotPageLoads": 3911
+    "pageLoads": 6334,
+    "botPageLoads": 2418,
+    "nonBotPageLoads": 3916
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3159,
-      "visits": 3159
+      "pageLoads": 3165,
+      "visits": 3165
     },
     {
       "host": "diamondgatebridge.com",
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 5,
-      "visits": 5
+      "pageLoads": 6,
+      "visits": 6
     },
     {
       "host": "l.instagram.com",
@@ -172,8 +172,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1603,
-      "visits": 1206
+      "pageLoads": 1604,
+      "visits": 1207
     },
     {
       "path": "/mirror-manor-preview/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 338,
-      "visits": 217
+      "pageLoads": 337,
+      "visits": 216
     },
     {
       "path": "/products/education/",

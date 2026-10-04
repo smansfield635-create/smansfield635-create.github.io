@@ -1,5 +1,5 @@
 import { installHEarthRun8ER3D2PointerTouchIntake } from '../diagnostic/run8e-r3d/pointer-touch-intake.js';
-import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=9a16b5577b5fbeea';
+import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=45ad8eb3aafa0f59';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
@@ -351,7 +351,10 @@ function scheduleVegetationResidency() {
     return;
   }
   root.dataset.vegetationResidency = 'loading';
+  const diagnostics=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
+  const scheduledAt=diagnostics?.performanceEnabled?performance.now():0;
   vegetationFrameRequest = window.requestAnimationFrame(() => {
+    if(diagnostics?.performanceEnabled)diagnostics.recordCost('SCHEDULER_WAIT',performance.now()-scheduledAt);
     vegetationFrameRequest = null;
     if (vegetationLoadingStopped || vegetationLoadingFailed) return;
     try {

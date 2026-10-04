@@ -441,11 +441,14 @@ export async function prepareHEarthOasisFoliagePresentation(renderPackage,{yield
   if(typeof yieldControl!=='function'||typeof onProgress!=='function')throw new TypeError('OASIS_PREPARATION_CALLBACK_INVALID');
   const preparation=(async()=>{
     const steps=constructOasisFoliageSteps(renderPackage);
+    const diagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
     for(;;){
-      const step=steps.next();
+      const stepStart=diagnostics?.performanceEnabled?performance.now():0;
+      let step;try{step=steps.next();}finally{if(diagnostics?.performanceEnabled)diagnostics.recordCost('OASIS_STEP',performance.now()-stepStart);}
       if(step.done){onProgress({phase:'COMPLETE',grassTuftCount:step.value.grassTuftCount,cattailCount:step.value.cattailCount,primitiveCount:step.value.primitives.length});return step.value;}
       onProgress(step.value);
-      await yieldControl();
+      const yieldStart=diagnostics?.performanceEnabled?performance.now():0;
+      try{await yieldControl();}finally{if(diagnostics?.performanceEnabled)diagnostics.recordCost('OASIS_YIELD_WAIT',performance.now()-yieldStart);}
     }
   })();
   oasisPreparationInFlight.set(renderPackage,preparation);

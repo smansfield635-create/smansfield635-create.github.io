@@ -91,16 +91,19 @@ export function prepareHEarthGen2515VegetationWorldTruthPlan() {
     worker.onerror = event => fail(new Error(event.message || 'GEN2515_VEGETATION_WORKER_FAILED'));
     worker.onmessageerror = () => fail(new Error('GEN2515_VEGETATION_WORKER_MESSAGE_INVALID'));
     worker.onmessage = event => {
+      const diagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
+      const receivedAt=diagnostics?.performanceEnabled?performance.now():0;
       worker.terminate();
       try {
         if(event.data?.type !== 'H_EARTH_QUALIFIED_VEGETATION_PREPARED') throw new Error(event.data?.error?.message || 'GEN2515_VEGETATION_WORKER_FAILED');
+        if(diagnostics?.performanceEnabled)diagnostics.recordCost('WORKER_PLAN',event.data.durationMs);
         const plan=event.data.plan;
         if(plan?.eligible!==true || plan.contractId!=='H_EARTH_GEN2510_PLACEMENT_GROUNDED_RUN8D_GEOMETRY_v1' ||
           !Array.isArray(plan.instances) || !Array.isArray(plan.batches) || plan.instances.length!==plan.instanceCount ||
           plan.issues?.length!==0) throw new Error('GEN2515_VEGETATION_WORKER_PLAN_INVALID');
         gen2515VegetationGroundedPlanCache=freeze(plan);
         resolve(getHEarthGen2515VegetationWorldTruthPlan());
-      } catch(error) {reject(error);}
+      } catch(error) {reject(error);}finally{if(diagnostics?.performanceEnabled)diagnostics.recordCost('WORKER_RECEIVE_FREEZE',performance.now()-receivedAt);}
     };
     try {worker.postMessage({type:'H_EARTH_PREPARE_QUALIFIED_VEGETATION'});}catch(error){fail(error);}
   });

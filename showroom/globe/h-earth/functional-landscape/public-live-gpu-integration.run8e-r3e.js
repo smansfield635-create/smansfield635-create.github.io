@@ -318,7 +318,7 @@ const vegetationStatus = document.createElement('output');
 vegetationStatus.id = 'h-earth-vegetation-progress';
 vegetationStatus.setAttribute('role','status');
 vegetationStatus.setAttribute('aria-live','polite');
-vegetationStatus.style.cssText = 'position:fixed;bottom:max(12px,env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));z-index:4;box-sizing:border-box;max-width:calc(100vw - 24px);padding:8px 10px;border-radius:8px;background:rgba(7,20,18,.82);color:#f1f7f3;font:12px/1.4 system-ui,sans-serif;pointer-events:none;';
+vegetationStatus.style.cssText = 'position:fixed;bottom:max(96px,env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));z-index:4;box-sizing:border-box;max-width:calc(100vw - 24px);padding:8px 10px;border-radius:8px;background:rgba(7,20,18,.82);color:#f1f7f3;font:12px/1.4 system-ui,sans-serif;pointer-events:none;';
 document.body.appendChild(vegetationStatus);
 let lastVegetationStatusAt = -Infinity;
 function showVegetationStatus(text,force=false){

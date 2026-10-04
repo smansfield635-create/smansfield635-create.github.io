@@ -206,6 +206,7 @@ try {
   emitDiagnosticStage('RENDERER_CONSTRUCTED', 'PENDING', 'Live GPU binding construction requested.');
 
   binding = createHEarthRun8ER3D3LiveGpuBinding({
+    deferVegetation: true,
     canvas,
     initialNavigationState: intake.getNavigationState(),
     viewport,
@@ -312,9 +313,10 @@ if (!publishExistingReadyFromFirstPresentedFrame()) {
 let vegetationFrameRequest = null;
 let vegetationLoadingStopped = false;
 let vegetationLoadingFailed = false;
+let vegetationPrepared = false;
 
 function scheduleVegetationResidency() {
-  if (vegetationLoadingStopped || vegetationLoadingFailed || vegetationFrameRequest !== null) return;
+  if (!vegetationPrepared || vegetationLoadingStopped || vegetationLoadingFailed || vegetationFrameRequest !== null) return;
   const residency = binding.getVegetationResidency();
   if (!residency || residency.totalBatchCount === 0) return;
   if (residency.complete) {
@@ -366,6 +368,15 @@ window.addEventListener('pageshow', () => {
   vegetationLoadingStopped = false;
   scheduleVegetationResidency();
 });
-scheduleVegetationResidency();
+root.dataset.vegetationResidency = 'preparing';
+binding.prepareVegetationResidency().then(() => {
+  vegetationPrepared = true;
+  scheduleVegetationResidency();
+}).catch(error => {
+  vegetationLoadingFailed = true;
+  root.dataset.vegetationResidency = 'failed';
+  emitDiagnosticStage('VEGETATION_RESIDENCY_COMPLETE','FAIL',{name:error?.name,message:error?.message,stack:error?.stack});
+  throw error;
+});
 
 export default H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;

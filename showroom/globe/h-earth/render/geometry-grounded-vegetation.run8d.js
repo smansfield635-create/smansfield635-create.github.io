@@ -584,3 +584,18 @@ export function constructHEarthGen2514GroundedVegetationBatch(plan, batchId) {
     roadAuthority:false, vehicleAccessAuthority:false, deployment:false
   });
 }
+
+// Dedicated post-READY planner entry. The existing complete planner remains authoritative.
+if (typeof DedicatedWorkerGlobalScope !== 'undefined' && globalThis instanceof DedicatedWorkerGlobalScope &&
+    new URL(import.meta.url).searchParams.get('hearthVegetationPlanner') === '1') {
+  globalThis.addEventListener('message', event => {
+    if (event.data?.type !== 'H_EARTH_PREPARE_QUALIFIED_VEGETATION') return;
+    try {
+      const startedAt = performance.now();
+      const plan = planHEarthGen2514GroundedVegetation();
+      globalThis.postMessage({type:'H_EARTH_QUALIFIED_VEGETATION_PREPARED',plan,durationMs:performance.now()-startedAt});
+    } catch (error) {
+      globalThis.postMessage({type:'H_EARTH_QUALIFIED_VEGETATION_FAILED',error:{name:error?.name,message:error?.message,stack:error?.stack}});
+    }
+  }, {once:true});
+}

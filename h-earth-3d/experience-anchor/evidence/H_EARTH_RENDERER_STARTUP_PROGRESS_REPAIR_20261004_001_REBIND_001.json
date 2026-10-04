@@ -1,0 +1,115 @@
+{
+  "schema": "H_EARTH_RENDERER_STARTUP_PROGRESS_EVIDENCE_v1",
+  "operationId": "H_EARTH_RENDERER_STARTUP_PROGRESS_REPAIR_20261004_001_REBIND_001",
+  "result": "PASS_STATIC_CANDIDATE",
+  "governingHead": "26d1c95542be704938005f64d780ea400a9a9004",
+  "candidateBranch": "h-earth/renderer-startup-progress-20261004-rebind-001",
+  "authority": {
+    "issue": 3947,
+    "canonicalIntakeResult": "ADMITTED_LOCKED",
+    "lockGeneration": 2541,
+    "allowedPathCount": 7,
+    "scopeExpansion": false
+  },
+  "mainMovementDifferential": {
+    "newMainHead": "6962f4fe9cb668cc5ca892fa7253294e252a4cce",
+    "parent": "26d1c95542be704938005f64d780ea400a9a9004",
+    "changedFiles": [
+      ".analytics/cloudflare/composition.json",
+      ".analytics/cloudflare/historical-owner-envelope.json",
+      ".analytics/cloudflare/latest.json",
+      ".analytics/cloudflare/owner-heartbeats.json",
+      ".analytics/cloudflare/reporting-methodology.json",
+      ".analytics/cloudflare/status.txt",
+      ".github/ai-router/projects/legacy-product-pages/entrypoint.v1.json",
+      ".github/ai-router/router.v1.json",
+      "analytics/data/latest.json",
+      "products/cvd/index.html",
+      "products/eai/index.html",
+      "products/platform/index.html"
+    ],
+    "runtimeOrExperiencePathsChanged": false,
+    "continuityResult": "NO_H_EARTH_RUNTIME_OR_EXPERIENCE_PATHS_CHANGED_ROUTER_RELOADED",
+    "commitsAhead": 10
+  },
+  "startupRepair": {
+    "progressSource": "measured completed vertex, triangle, segment, and byte counts only; elapsed time never advances percentage",
+    "mainThreadYields": [
+      "coastline vertices every 4096 completed terrain vertices",
+      "contact triangle construction every 1024 completed triangles",
+      "contact intersection scan every 256 completed terrain triangles",
+      "contact vertex sampling every 4096 completed vertices",
+      "contact residual checks every 256 completed segments",
+      "GPU buffer uploads in chunks no larger than 256 KiB"
+    ],
+    "yieldContract": "requestAnimationFrame when available, with setTimeout(0) fallback; yield after every reported CPU or upload chunk",
+    "bindingAndCallerAwaited": true,
+    "readyContract": "loader reaches 100 only on READY_PUBLISHED PASS",
+    "reducedMotion": "status text and measured updates remain readable; decorative motion is disabled",
+    "vegetationInvariant": {
+      "placements": 27585,
+      "batches": 108,
+      "manifestOrBatchLogicChanged": false
+    },
+    "controlsAndWorldContentChanged": false
+  },
+  "deterministicTests": {
+    "command": "node showroom/globe/h-earth/diagnostic/renderer-startup-progress.test.mjs",
+    "result": "PASS",
+    "tests": 5,
+    "coverage": [
+      "deterministic contact-field values and completed counts",
+      "async yields after each emitted progress chunk",
+      "renderer and binding await order before public receipt inspection",
+      "loader monotonicity and READY_PUBLISHED-only 100 percent",
+      "syntax checks on all four runtime files"
+    ],
+    "syntaxCommand": "node --input-type=module --check < <runtime-file> (run on all four runtime files)"
+  },
+  "sourceReview": {
+    "changedExperienceFiles": [
+      {
+        "path": "showroom/globe/h-earth/arrival-loader.js",
+        "sha256": "a2deaa2024952e60aae13394afe3a2b5434d648ea3030546cd17442de0dd8da8"
+      },
+      {
+        "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "sha256": "21931aa72244f5dc43b5b7d48c20b85e8e4558d58c9b668f532074e77e116e2e"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "sha256": "664829e287ef1896bbefe8ae5cb29d281722749c637e786b59aa8f1e92a76f94"
+      }
+    ],
+    "nonExperienceChangedPaths": [
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "showroom/globe/h-earth/diagnostic/renderer-startup-progress.test.mjs"
+    ],
+    "sourceRestoration": "All five changed source files were reconstructed from complete files; no 5000-byte truncation remains."
+  },
+  "runtimeQualification": {
+    "browserExactHeadTest": "NOT_RUN",
+    "phoneRetest": "NOT_RUN",
+    "tabletRetest": "NOT_RUN",
+    "productionDeviceAcceptance": "NOT_CLAIMED"
+  },
+  "evidenceReferences": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "authorityEffect": "EVIDENCE_ONLY_NO_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY"
+}

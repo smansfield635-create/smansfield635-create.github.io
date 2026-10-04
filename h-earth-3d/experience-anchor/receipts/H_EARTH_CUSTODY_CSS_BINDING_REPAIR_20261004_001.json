@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "comparisonBaseline": "59891d34bd0df90a09ecff16e0d07d5463a7829b",
+  "reviewMode": "MEASURED_CSS_BINDING_WITH_UNCHANGED_WORLD_CARRY_FORWARD",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_CUSTODY_CSS_BINDING_REPAIR_20261004_001.json",
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_CUSTODY_CSS_BINDING_REPAIR_20261004_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_CUSTODY_CSS_BINDING_REPAIR_20261004_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/custody/index.html",
+      "sha256": "dcbe4c47c1c461482e063afca5c2aa4b5c4c38fa568bd0fd01a2da7471dcf09d"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewBasis": {
+    "newlyObserved": [
+      "Exact parent CSS URL resolution and live stylesheet byte identity on both domains",
+      "Six browser CSS states across three viewport sizes, stylesheet rules, geometry and screenshot evidence",
+      "Complete body, inline script/style blocks and navigation byte preservation"
+    ],
+    "inheritedUnchanged": [
+      "Accepted canonical world, terrain, controls, scale continuity, loader and GPU runtime from governing source"
+    ],
+    "limitations": [
+      "JavaScript disabled during the CSS qualification; screenshots establish shell layout only.",
+      "No fresh GPU/world interaction, physical phone/tablet or performance acceptance.",
+      "Current optional Cloudflare convergence byte caveat remains unchanged."
+    ]
+  },
+  "physicalAcceptancePerformed": false,
+  "publicationChecksPassed": false,
+  "publicationAuthorityCreated": false
+}

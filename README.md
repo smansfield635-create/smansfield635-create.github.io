@@ -2,11 +2,13 @@
 
 **Browser applications, custom 3D rendering, Python computational models, and tools for AI-assisted software development.**
 
-Diamond Gate Bridge is a software and research project created by Sean Mansfield in January 2026. This public repository contains working browser experiences, JavaScript/Node and Python implementations, automated tests, GitHub Actions workflows, and recorded engineering results.
+Diamond Gate Bridge is Sean Mansfield's software and research project exploring how human-directed AI development can produce working applications with testable behavior and controlled releases. This public repository contains browser experiences, JavaScript/Node and Python implementations, automated tests, GitHub Actions workflows, and recorded engineering results.
 
 **Technologies:** JavaScript · Node.js · Python · WebGL2 / GLSL · Playwright / Chromium · GitHub Actions
 
-Sean conceived and leads DGB, setting its strategy, originating its concepts, defining product requirements, and directing development across its software and research. He uses extensive AI assistance for implementation, testing, and technical analysis, while retaining responsibility for direction, evaluation, and acceptance.
+**Ownership and development:** Sean originated DGB's concepts and directs its strategy, architecture, product requirements, development, and acceptance. He develops the project entirely from **phone and tablet**, using AI tools and remote execution for implementation, testing, and technical analysis. He identifies defects, directs revisions, and evaluates whether the software meets the intended behavior.
+
+**Project history:** this repository's [root commit][first-commit] is dated **January 27, 2026 (UTC)**. By October 2026, the work spans interactive graphics, computational models, conversation software, and engineering tools.
 
 [Explore the website](https://diamondgatebridge.com) · [Enter the product estate](https://diamondgatebridge.com/door/) · [Contact Sean](mailto:geodiametrics@gmail.com)
 
@@ -16,13 +18,24 @@ Each example below links the implementation to its tests and evidence.
 
 | Example | What it does | Inspect |
 | --- | --- | --- |
-| **H-Earth** | Renders an interactive 3D environment with custom WebGL2/GLSL, staged vegetation loading, and touch navigation. | [Renderer][hearth-renderer] · [Browser tests][hearth-tests] · [Saved results][hearth-results] |
+| **H-Earth** | Renders a touch-navigable 3D world, with staged loading so the environment can become usable before all vegetation finishes. | [Renderer][hearth-renderer] · [Browser tests][hearth-tests] · [Saved results][hearth-results] |
+| **Audralia — spatial weather and graphics research** | Preserves weather-object identity across viewing scales while limiting expensive local volumetric rendering. | [Model][audralia-model] · [Executable assertions and browser workflow][audralia-ci] |
 | **Full Bird Kernel v3.2 — Python state and receipt validation** | Computes state transitions and validates ordered receipt chains, rejecting tampering, identity mismatches, and skipped stages. | [Implementation][kernel-source] · [16-test suite][kernel-tests] · [CI][kernel-ci] |
 | **Auren — stateful conversation application** | Runs an authored, stateful conversation with paced delivery, contextual disclosure, history-aware responses, and product handoffs. | [Tested implementation][auren-historical] · [Browser qualification run][auren-run] |
 | **Productivity Receipt** | Reads bounded Git history and emits a JSON report of repository activity, with explicit unknowns and measurement limits. | [Implementation][productivity-source] · [Verifier][productivity-tests] · [Observed run][productivity-run] |
 | **Publication preflight** | Builds a release payload, checks its identity and dependencies, and executes registered readiness checks. | [Implementation][preflight-source] · [Fixture tests][preflight-tests] · [Observed run][preflight-run] |
 
 The linked results identify particular tested versions. They do not serve as a blanket certification of the current repository or live website.
+
+## Engineering decisions in practice
+
+| Problem | Engineering response | Evidence |
+| --- | --- | --- |
+| A visible 3D scene can still be loading, with different costs on phone and tablet. | Separate first frame, vegetation residency, geometry construction, and completion; check movement during loading and diagnose actual startup faults. | [Device observations and browser receipts][hearth-results] · [Verifier][hearth-tests] |
+| Rich weather graphics need consistent behavior as viewing scale changes. | Keep stable object identities, blend level-of-detail representations, and cap local volumetric objects. | [Audralia model][audralia-model] · [Deterministic and browser checks][audralia-ci] |
+| A release can package successfully while still containing broken dependencies. | Test transitive module/CSS closure, missing assets, identity errors, server readiness, and early exit with positive and negative fixtures. | [Preflight implementation][preflight-source] · [Self-tests][preflight-tests] |
+
+These examples connect product decisions to debugging, performance investigation, test design, and release engineering.
 
 ## Representative engineering work
 
@@ -40,9 +53,23 @@ The [Playwright verifier][hearth-tests] checks exact checkout identity, readines
 
 The instance count concerns vegetation placement, not animation frame drops.
 
-These are Chromium/SwiftShader emulation results. They establish the tested behavior and population invariants; physical-device performance requires separate observations.
+These are Chromium/SwiftShader emulation results. They establish the tested behavior and population invariants.
+
+**Physical-device investigation:** the same [public record][hearth-results] separately preserves owner-supplied phone and tablet observations. Both report all **27,585 instances and 108 batches**, zero dropped instances, no world rebuilds, and no context loss. The measurements separate first frame from complete loading and identify different construction costs on each device. Owner observations describe smooth movement after completion; loading responsiveness remains a distinct engineering problem.
+
+DGB's device work combines phone/tablet/desktop qualification profiles with selected physical-device retests. Private excellence and awards-admission instruments support that process; their proprietary implementation is outside this public repository. These checks establish particular behaviors and candidates, rather than universal frame-rate or named-award certification.
 
 **Failure/recovery example:** the same evidence includes nine controlled startup cases. Elapsed delay remains a waiting state; actual shader, context, draw, constructor, and rejection faults retain their failure identity even if readiness arrives later. The test exercises the observer and loader rather than treating every timeout as a renderer defect.
+
+### Audralia — spatial detail and bounded rendering
+
+Source directory: `showroom/globe/audralia/canonical-weather-spatial-lod-proof/`.
+
+Audralia's [weather model][audralia-model] represents the same weather objects at local, regional, and planetary viewing scales. It normalizes representation weights and caps expensive local volumetric objects at **two**, while retaining stable identities and terrain-relative placement.
+
+The [workflow][audralia-ci] contains executable assertions for deterministic state, normalized weights, the local rendering cap, and outside/inside/exit ray behavior. Its browser check changes viewing distance and checks object identity, terrain depth, errors, and runtime invariants.
+
+**Observed local result:** an October 4 replay of the workflow's existing structural assertions against the pinned model passed. This establishes those mathematical and state invariants. The browser job specifies Chromium/SwiftShader; it is separate from physical-device performance evidence.
 
 ### Full Bird Kernel v3.2 — Python state transitions and receipt validation
 
@@ -172,3 +199,7 @@ Founder / Applied AI & Software Engineer
 [material-summary]: https://github.com/smansfield635-create/smansfield635-create.github.io/blob/88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749/research/material-work-audit/material-work-audit-v1-conformance-summary.json
 [material-boundary]: https://github.com/smansfield635-create/smansfield635-create.github.io/blob/88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749/research/material-work-audit/material-work-audit-v1-reproducibility-boundary.md
 [longitudinal]: https://github.com/smansfield635-create/smansfield635-create.github.io/blob/88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749/evidence/agentic-frontier/research-records/longitudinal-single-operator-claim-matrix-v1.md
+
+[first-commit]: https://github.com/smansfield635-create/smansfield635-create.github.io/commit/7c569431bf342e38225b30d67f35bd5b600854b5
+[audralia-model]: https://github.com/smansfield635-create/smansfield635-create.github.io/blob/88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs
+[audralia-ci]: https://github.com/smansfield635-create/smansfield635-create.github.io/blob/88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749/.github/workflows/audralia-canonical-weather-spatial-lod-proof.yml

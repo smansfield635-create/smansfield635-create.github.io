@@ -1,6 +1,6 @@
 /** H_EARTH_RENDERER_STARTUP_DIAGNOSTIC_RECEIPT_v1 integration wrapper */
 import '../diagnostic/renderer-startup-observer.v1.js?cb=91af5719a8c41be8';
-await import('../arrival-loader.js?cb=adc56ba904a45b50');
+await import('../arrival-loader.js?cb=h-earth-progress-phases-v2');
 try {
   await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=f70e70e5c842454b');
   window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();

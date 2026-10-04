@@ -119,3 +119,29 @@ Use only paired37 same-substrate timings against5294 baseline: desktop READY-rel
 
 NEXT BOUNDARY
 PASS to preserve qualification records and run registered exact-candidate publication preflight. No additional physical-review gate is introduced absent demonstrated unresolved material uncertainty. Merge/deployment and authoritative live exact-head verification remain separate existing required steps. No repository mutation or heavy browser execution performed by West.
+
+## Tablet false failure and device performance diagnosis continuation
+
+Baseline 18472b2cd9c3a4a6bebfd2a5ea392084cfd9f4ef; frozen source 047c8baf983bda6524ceaa3ac530e996c67716a3; pull request5678. Owner videos show tablet timeout wording despite eventual world and vegetation completion. Exact watchdog reproduction establishes elapsed time alone falsely marks first-frame failure. The bounded repair records nonterminal delay at12/20seconds, keeps confirmed milestone percentages, retains genuine faults, and adds an opt-in performance report at `?performance=1`.
+
+Nine controlled browser cases pass, including slow-ready, pending-no-ready, actual failure channels, normal-ready and clipboard-denied readable report fallback. Full tablet-sized emulation passes complete27585instances/108batches/zero drops/rebuilds/errors and touch forward/backward/look/release/cancellation. Post-completion navigation produces a measured frame entry; waiting cards fit four viewport sizes, and genuine failures retain their metadata after late readiness. Earlier clipping and missing post-completion test coverage are preserved with their diagnoses. No device-speed improvement is claimed. Physical-tablet report collection remains necessary to identify its dominant cost. Existing accepted geometry, world, density and controls are preserved.
+
+INDEPENDENT WEST TABLET READINESS AND DIAGNOSTICS REVIEW
+Candidate: 047c8baf983bda6524ceaa3ac530e996c67716a3
+Disposition: PASS_FOR_EVIDENCE_AND_REGISTERED_PUBLICATION_PREFLIGHT
+
+Scope: bounded false-timeout repair and measured opt-in performance diagnostics under existing admitted readiness continuation. No vegetation optimization, environment redesign, or claimed tablet hardware diagnosis.
+
+SOURCE REVIEW
+Reviewed actual runtime delta:12-second first-frame and20-second READY thresholds now record nonterminal waiting, with retry/copy guidance, not fabricated failures. Confirmed milestone percentage no longer advances through unverified bands. Genuine faults remain first-failure locked; later READY does not erase first-failure identity/class/error records. Extra performance instrumentation is opt-in via performance=1, after-READY report control only; finite nonnegative aggregates have a closed12-name/four-phase maximum, no new GL queries, and CPU/wall/overlap limitations are explicitly reported. Clipboard failure provides readable JSON and downloadable fallback rather than false success. Construction equations, yield sequence, worker planner, placement, density, meshes, world bounds, controls and upload validation are unchanged.
+Reviewed3de->3c and3c->047 successors: product behavior delta limited to loader box sizing/viewport maximums/scrolling, plus cache identities. Helper strengthens actual-fault late-READY retention, four viewport bounds and postcompletion navigation measurements. Prior clipped-loader and short-landscape failure receipts, plus missing postcomplete measurement coverage, remain preserved rather than overwritten.
+
+CONTROLLED EXACT-CANDIDATE RESULTS
+Independently read tablet-qualified-startup-status/startup-status.json: exact047SHA, all9 cases PASS. Delayed READY clears waiting without fabricated failure; pending-no-READY never claims success or failure; shader/context/draw/constructor/unhandled-rejection fault identities persist after lateREADY; fastREADY and performance-sharing cases pass. These use actual observer/loader with synthetic clock and fault injection, not hardware timing evidence. Four viewport bounds checked. Independently viewed390portrait and844landscape screenshots: loader fits; short landscape uses internal scrolling for remaining content/actions.
+
+FULL EXACT-CANDIDATE RUNTIME
+Independently read tablet-qualified-runtime/tablet-diagnostic.json: exact047SHA, PASS, no page/console errors or failed requests. Validated complete27585 instances,108 batches,498 presentation primitives,350 grass tufts/72 cattails,zero drops,zero world rebuilds,camera independence and unchanged accepted manifest identity. Forward/backward camera-relative movement passes; one-finger look and release/cancel stopping pass. After completion, yaw changes17.275853->28.795392 degrees and complete:NAVIGATION_FRAME records4 frames,total635.6ms,max235.5ms. Report has23 finite aggregate entries and no firstFailureStage.
+Recorded firstframe65.8827s,READY65.9794s,vegetationstart114.6139s,complete160.4287s. These are emulated800x1280 software-renderer observations only, not physical-tablet measurements or speed improvements. Independently viewed completion screenshot: vegetation present, readable opt-in report button and completion status separated from semantic labels, no demonstrated UI obstruction.
+
+BOUNDARY
+PASS to preserve public-safe qualification evidence and perform existing exact-candidate preflight. No additional owner physical-device gate is justified for this bounded message/diagnostic repair. Actual hardware slowness cause and any performance optimization remain unproven; the opt-in report enables subsequent actual-device evidence. Merge/deployment/live exact-head verification remain separate required publication steps. No repository mutation or heavy test execution performed by West.

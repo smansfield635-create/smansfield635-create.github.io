@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-05T04:58:12Z",
+  "generatedAt": "2026-10-05T05:45:07Z",
   "window": {
-    "start": "2026-07-07T04:58:12Z",
-    "end": "2026-10-05T04:58:12Z"
+    "start": "2026-07-07T05:45:07Z",
+    "end": "2026-10-05T05:45:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -126,16 +126,16 @@
         "pageLoads": 110,
         "visits": 0
       },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/test/reverse-audit/": {
         "pageLoads": 60,
         "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -234,13 +234,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,

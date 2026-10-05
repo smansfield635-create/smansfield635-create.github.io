@@ -159,6 +159,18 @@ if(startupWorkerMode&&typeof document==='undefined'&&typeof globalThis.postMessa
   globalThis.postMessage({phase:'CANONICAL_WORKER_MODULE_READY',...(timing?{timing}: {})});
 }
 let pendingDeferredPreparation=null;
+const preparationProgressSubscribers=new Set();
+let preparationProgressSettled=false;
+let latestPreparationProgress=null;
+function publishPreparationProgress(detail){
+  latestPreparationProgress=Object.freeze({...detail});
+  for(const subscriber of preparationProgressSubscribers)subscriber(latestPreparationProgress);
+}
+function observePreparationProgress(onProgress){
+  if(typeof onProgress!=='function')return;
+  if(!preparationProgressSettled&&!cachedDeferredPackage)preparationProgressSubscribers.add(onProgress);
+  if(latestPreparationProgress)onProgress(latestPreparationProgress);
+}
 const canonicalPreparationTiming=preparationPerformanceEnabled&&!startupWorkerMode?{schema:'H_EARTH_CANONICAL_PREPARATION_TIMING_v1',version:1,sourceModuleUrl:import.meta.url,status:'NOT_STARTED',branch:null,main:{clock:'performance.now',timeOrigin:preparationTimeOrigin(),receiveAtMs:null,stages:{}},worker:null,normalizedHandoffDurationMs:null,handoffScope:'SERIALIZATION_DESERIALIZATION_DELIVERY_AND_MAIN_THREAD_SCHEDULING_NOT_PURE_CLONE',failure:null}:null;
 export function getHEarthRun8ER2CanonicalPreparationTiming(){
   if(!canonicalPreparationTiming)return null;
@@ -183,15 +195,16 @@ async function freezeStartupRecords(value){
     }
   }
 }
-export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=false,onProgress=()=>{}}={}){
+export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=false,onProgress=null}={}){
   if(!deferVegetation)return Promise.resolve(getHEarthRun8ER2CanonicalLiveRenderPackage());
+  try{observePreparationProgress(onProgress);}catch(error){preparationProgressSubscribers.delete(onProgress);return Promise.reject(error);}
   if(cachedDeferredPackage)return Promise.resolve(cachedDeferredPackage);
   if(pendingDeferredPreparation)return pendingDeferredPreparation;
   if(typeof Worker!=='function'){
     if(canonicalPreparationTiming){canonicalPreparationTiming.branch='SYNCHRONOUS_BASELINE_FALLBACK';canonicalPreparationTiming.status='FALLBACK';}
-    try{onProgress({phase:'SYNCHRONOUS_BASELINE_FALLBACK',completed:0,total:1,unit:'packages'});
-      return pendingDeferredPreparation=Promise.resolve(getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}));
-    }catch(error){if(canonicalPreparationTiming){canonicalPreparationTiming.status='FAILED';canonicalPreparationTiming.failure={name:error?.name??'Error',message:error?.message??String(error)};}return pendingDeferredPreparation=Promise.reject(error);}
+    try{publishPreparationProgress({phase:'SYNCHRONOUS_BASELINE_FALLBACK',completed:0,total:1,unit:'packages'});
+      const result=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});preparationProgressSettled=true;preparationProgressSubscribers.clear();return pendingDeferredPreparation=Promise.resolve(result);
+    }catch(error){if(canonicalPreparationTiming){canonicalPreparationTiming.status='FAILED';canonicalPreparationTiming.failure={name:error?.name??'Error',message:error?.message??String(error)};}preparationProgressSettled=true;preparationProgressSubscribers.clear();return pendingDeferredPreparation=Promise.reject(error);}
   }
   if(canonicalPreparationTiming){canonicalPreparationTiming.branch='MODULE_WORKER';canonicalPreparationTiming.status='PREPARING';}
   pendingDeferredPreparation=new Promise((resolve,reject)=>{
@@ -211,7 +224,7 @@ export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=
         ?canonicalPreparationTiming.main.timeOrigin+receiveAtMs-(remote.timeOrigin+remote.resultPostStartAtMs):null;
       canonicalPreparationTiming.normalizedHandoffDurationMs=Number.isFinite(elapsed)&&elapsed>=0?elapsed:null;
     };
-    const fail=error=>{if(settled)return;settled=true;if(canonicalPreparationTiming){canonicalPreparationTiming.status='FAILED';canonicalPreparationTiming.failure={name:error?.name??'Error',message:error?.message??String(error)};}moduleReject(error);resultReject(error);worker?.terminate();reject(error);};
+    const fail=error=>{if(settled)return;settled=true;preparationProgressSettled=true;preparationProgressSubscribers.clear();if(canonicalPreparationTiming){canonicalPreparationTiming.status='FAILED';canonicalPreparationTiming.failure={name:error?.name??'Error',message:error?.message??String(error)};}moduleReject(error);resultReject(error);worker?.terminate();reject(error);};
     try{
       const url=new URL(import.meta.url);url.searchParams.set('hearthCanonicalPreparation','1');if(preparationPerformanceEnabled)url.searchParams.set('hearthCanonicalTiming','1');worker=new Worker(url,{type:'module'});
       worker.onerror=event=>fail(new Error(event.message||'R2_CANONICAL_WORKER_FAILED'));
@@ -225,23 +238,23 @@ export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=
             if(canonicalPreparationTiming&&data.timing)canonicalPreparationTiming.worker=data.timing;
             stage='RAW';moduleResolve(data);resultWait=measurePreparationStage('CANONICAL_WORKER_RESULT_WAIT',()=>resultPromise);resultWait.catch(()=>{});return;
           }
-          if(data?.phase==='RAW_PACKAGE_COMPLETE'&&!receiving&&stage==='RAW'){stage='CANONICAL';onProgress({phase:data.phase,completed:1,total:1,unit:'packages'});return;}
+          if(data?.phase==='RAW_PACKAGE_COMPLETE'&&!receiving&&stage==='RAW'){stage='CANONICAL';publishPreparationProgress({phase:data.phase,completed:1,total:1,unit:'packages'});return;}
           if(receiving||stage!=='CANONICAL'||data?.phase!=='CANONICAL_PACKAGE_COMPLETE'||!data.raw||!data.canonical)throw new Error('R2_CANONICAL_WORKER_RESULT_INVALID');
           receiving=true;receiveTiming(data);resultResolve(data);await moduleWait;await resultWait;
-          onProgress({phase:data.phase,completed:1,total:1,unit:'packages'});
+          publishPreparationProgress({phase:data.phase,completed:1,total:1,unit:'packages'});
           await measurePreparationStage('CANONICAL_MAIN_FREEZE',()=>freezeStartupRecords(data));if(settled)return;
-          await measurePreparationStage('CANONICAL_RAW_ADOPTION_VALIDATE',()=>adoptHEarthRun8ER2DeferredLiveRenderPackage(data.raw,{onProgress}));if(settled)return;
+          await measurePreparationStage('CANONICAL_RAW_ADOPTION_VALIDATE',()=>adoptHEarthRun8ER2DeferredLiveRenderPackage(data.raw,{onProgress:publishPreparationProgress}));if(settled)return;
           await measurePreparationStage('CANONICAL_MAIN_VALIDATE',async()=>{
-            const evaluation=await evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(data.canonical,{onProgress});
+            const evaluation=await evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(data.canonical,{onProgress:publishPreparationProgress});
           if(!evaluation.eligible)throw new Error(`R2_CANONICAL_WORKER_PACKAGE_INVALID:${evaluation.issues.join(',')}`);
           if(data.canonical.packageOccurrenceId!==data.raw.packageOccurrenceId||['vertexCount','indexCount','primitiveCount','triangleCount'].some(key=>data.canonical[key]!==data.raw[key])||data.canonical.primitiveIds.length!==data.raw.primitiveIds.length||data.canonical.primitiveIds.some((id,index)=>id!==data.raw.primitiveIds[index])||!/^fnv1a32:[a-f0-9]{8}$/.test(data.canonical.contentDigest)||data.canonical.packageIdentity!==`H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_${data.canonical.contentDigest.slice(8).toUpperCase()}`||data.canonical.revision!==2||data.canonical.sourceAuthorities?.numericCanonicalizationLaw!=='ROUND_TO_BINARY_GRID_2^-24_AND_NORMALIZE_NEGATIVE_ZERO')throw new Error('R2_CANONICAL_WORKER_IDENTITY_INVALID');
             return evaluation;
           });
           if(settled)return;
-          onProgress({phase:'CANONICAL_PACKAGE_READY',completed:1,total:1,unit:'packages'});cachedDeferredPackage=data.canonical;if(canonicalPreparationTiming)canonicalPreparationTiming.status='READY';settled=true;worker.terminate();resolve(cachedDeferredPackage);
+          publishPreparationProgress({phase:'CANONICAL_PACKAGE_READY',completed:1,total:1,unit:'packages'});cachedDeferredPackage=data.canonical;if(canonicalPreparationTiming)canonicalPreparationTiming.status='READY';settled=true;preparationProgressSettled=true;preparationProgressSubscribers.clear();worker.terminate();resolve(cachedDeferredPackage);
         }catch(error){fail(error);}
       };
-      onProgress({phase:'RAW_PACKAGE_PREPARING',completed:0,total:1,unit:'packages'});worker.postMessage({prepare:true,performanceEnabled:preparationPerformanceEnabled});
+      publishPreparationProgress({phase:'RAW_PACKAGE_PREPARING',completed:0,total:1,unit:'packages'});worker.postMessage({prepare:true,performanceEnabled:preparationPerformanceEnabled});
     }catch(error){fail(error);}
   });
   return pendingDeferredPreparation;

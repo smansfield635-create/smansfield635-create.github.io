@@ -46,15 +46,15 @@
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "254702c4102c4d7cb1e656c21b97781fa2a4683e50416109bd7156007d44e873"
+      "sha256": "afff9faab22a23c088fc45fdea14ea2acfdcf7818aaba0e701de99d097a16d60"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
-      "sha256": "73f43a5be24a2e34690150d5efb4ac8d4b0ccbaaabf0c00fefb8adf38be639cf"
+      "sha256": "13811da4743596b4543f4d7a387defc52486222424375659630ffd79852c84cd"
     },
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "445656483f185614c64e6bc0ba66d933e0f3f407dec6d3b48422b2fcf1f93e1a"
+      "sha256": "84f5870c12a810091a2a16bddecf246df6659071a95147ee00e01cc536f4d4b0"
     }
   ],
   "acceptanceBoundary": "CPU full-buffer equivalence supports unchanged world data. Browser GPU/rendered interaction and owner exact-candidate physical review remain unexecuted; this receipt deliberately cannot pass the hard anchor gate."

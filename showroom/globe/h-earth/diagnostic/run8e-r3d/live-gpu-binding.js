@@ -72,9 +72,11 @@ const selectedRendererPath = rendererCustodyRequested
     : ACCEPTED_BASELINE_RENDERER_PATH;
 // Start the existing deferred owner while the selected renderer imports. Its
 // original pending promise remains authoritative, including sticky failures.
+const publicRouteRoot = globalThis.document?.getElementById?.('h-earth-3d-route-root');
 const functionalLandscapeRoute = globalThis.document?.getElementById?.('h-earth-functional-landscape-route');
 if(selectedRendererPath===ADDITIVE_VISUAL_RENDERER_PATH &&
-   functionalLandscapeRoute?.getAttribute?.('data-h-earth-public-route')==='functional-landscape' &&
+   publicRouteRoot?.getAttribute?.('data-h-earth-public-route')==='functional-landscape' &&
+   functionalLandscapeRoute &&
    typeof globalThis.Worker==='function'){
   prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}).catch(()=>{});
 }

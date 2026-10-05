@@ -55,9 +55,23 @@ for(const [source,digest] of Object.entries(sourceDigests)){
 // Run the actual binding selection/hook with its selected import held unresolved.
 const bindingSource=readFileSync(resolve(root,'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'),'utf8');
 const bindingPrefix=bindingSource.slice(0,bindingSource.indexOf('const { createHEarthRun8ER3CPersistentRenderer }')).replace(/^import .*;\n/gm,'').replace('()=>import(selectedRendererPath)','()=>holdRendererImport(selectedRendererPath)');
-for(const [search,route,hasWorker,expected] of [['?visual=terrain-relief-v2&performance=1',true,true,1],['?visual=terrain-relief-v2',true,true,1],['?visual=terrain-relief-v2&renderer-custody=v1',true,true,0],['?visual=terrain-relief-v2&water-attribution=v1',true,true,0],['?visual=terrain-relief-v2',false,true,0],['?visual=terrain-relief-v2',true,false,0],['',true,true,0]]){
+const indexSource=readFileSync(resolve(root,'showroom/globe/h-earth/index.html'),'utf8');
+const indexElements=new Map();
+for(const tag of indexSource.matchAll(/<[a-z][^>]*\bid="(?:h-earth-3d-route-root|h-earth-functional-landscape-route)"[^>]*>/g)){
+ const attributes=Object.fromEntries([...tag[0].matchAll(/([\w-]+)="([^"]*)"/g)].map(match=>[match[1],match[2]]));
+ indexElements.set(attributes.id,{attributes,getAttribute:name=>attributes[name]??null});
+}
+assert.equal(indexElements.size,2);assert.equal(indexElements.get('h-earth-3d-route-root').getAttribute('data-h-earth-public-route'),'functional-landscape');
+assert.equal(indexElements.get('h-earth-functional-landscape-route').getAttribute('data-h-earth-public-route'),null);
+const fixtureDocument=mode=>{
+ const elements=new Map([...indexElements].map(([id,element])=>{const attributes={...element.attributes};if(id==='h-earth-3d-route-root'&&mode==='wrong-route')attributes['data-h-earth-public-route']='other';return [id,{getAttribute:name=>attributes[name]??null}];}));
+ return {getElementById:id=>mode==='absent'||mode===id?null:elements.get(id)??null};
+};
+const oldGuardPrefix=bindingPrefix.replace("publicRouteRoot?.getAttribute?.('data-h-earth-public-route')","functionalLandscapeRoute?.getAttribute?.('data-h-earth-public-route')");
+let oldGuardStarts=0;const oldGuardContext={URLSearchParams,location:{search:'?visual=terrain-relief-v2'},document:fixtureDocument('actual'),Worker:function(){},prepareHEarthRun8ER2CanonicalLiveRenderPackage:()=>{oldGuardStarts++;return Promise.resolve();},holdRendererImport:()=>Promise.resolve({})};vm.createContext(oldGuardContext);await vm.runInContext('(async()=>{'+oldGuardPrefix+'})()',oldGuardContext);assert.equal(oldGuardStarts,0);
+for(const [search,route,hasWorker,expected] of [['?visual=terrain-relief-v2&performance=1','actual',true,1],['?visual=terrain-relief-v2','actual',true,1],['?visual=terrain-relief-v2&renderer-custody=v1','actual',true,0],['?visual=terrain-relief-v2&water-attribution=v1','actual',true,0],['?visual=terrain-relief-v2','absent',true,0],['?visual=terrain-relief-v2','h-earth-3d-route-root',true,0],['?visual=terrain-relief-v2','h-earth-functional-landscape-route',true,0],['?visual=terrain-relief-v2','wrong-route',true,0],['?visual=terrain-relief-v2','actual',false,0],['','actual',true,0]]){
  let started=0,importStarted=false,importSpanCount=0,releaseImport;const held=new Promise(resolve=>releaseImport=resolve);
- const context={H_EARTH_RENDERER_STARTUP_DIAGNOSTICS:{measureAsync:(name,operation)=>{assert.equal(name,'SELECTED_RENDERER_MODULE_IMPORT');importSpanCount++;return operation();}},URLSearchParams,location:{search},document:{getElementById:()=>route?{getAttribute:()=> 'functional-landscape'}:null},Worker:hasWorker?function(){}:undefined,prepareHEarthRun8ER2CanonicalLiveRenderPackage:options=>{assert.equal(options.deferVegetation,true);assert.equal(importStarted,false);started++;return Promise.resolve();},holdRendererImport:()=>{importStarted=true;return held;}};
+ const context={H_EARTH_RENDERER_STARTUP_DIAGNOSTICS:{measureAsync:(name,operation)=>{assert.equal(name,'SELECTED_RENDERER_MODULE_IMPORT');importSpanCount++;return operation();}},URLSearchParams,location:{search},document:fixtureDocument(route),Worker:hasWorker?function(){}:undefined,prepareHEarthRun8ER2CanonicalLiveRenderPackage:options=>{assert.equal(options.deferVegetation,true);assert.equal(importStarted,false);started++;return Promise.resolve();},holdRendererImport:()=>{importStarted=true;return held;}};
  vm.createContext(context);const evaluation=vm.runInContext('(async()=>{'+bindingPrefix+'})()',context);assert.equal(started,expected);assert.equal(importStarted,true);assert.equal(importSpanCount,search.includes('performance=1')?1:0);releaseImport({});await evaluation;
 }
 
@@ -96,13 +110,16 @@ try{
  globalThis.Worker=BrowserWorkerOnNode;
  const candidateModule=await import(candidateUrl.href),candidateRawModule=await import(rawURLFrom(candidateUrl).href);
  const phases=[],start=performance.now();let timerTicks=0;interval=setInterval(()=>timerTicks++,10);
- const promise=candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
+ let promise,releaseActualImport;const actualImportHeld=new Promise(resolve=>releaseActualImport=resolve);
+ const actualHookContext={URLSearchParams,location:{search:'?visual=terrain-relief-v2'},document:fixtureDocument('actual'),Worker:BrowserWorkerOnNode,prepareHEarthRun8ER2CanonicalLiveRenderPackage:options=>{promise=candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage(options);return promise;},holdRendererImport:()=>actualImportHeld};
+ vm.createContext(actualHookContext);const actualHookEvaluation=vm.runInContext('(async()=>{'+bindingPrefix+'})()',actualHookContext);
+ assert.ok(promise);assert.equal(workerCount,1);assert.equal(requestCount,1);
  promise.catch(()=>{}); // Observe eager failure without replacing the owner promise.
  await new Promise(resolve=>setTimeout(resolve,0));
  const lateProgress=[];
  assert.equal(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:detail=>{assert.ok(Object.isFrozen(detail));phases.push(detail.phase);}}),promise);
  assert.equal(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:detail=>lateProgress.push(detail.phase)}),promise);
- assert.equal(phases[0],'RAW_PACKAGE_PREPARING');assert.equal(lateProgress[0],'RAW_PACKAGE_PREPARING');
+ assert.equal(phases[0],'RAW_PACKAGE_PREPARING');assert.equal(lateProgress[0],'RAW_PACKAGE_PREPARING');releaseActualImport({});await actualHookEvaluation;
  assert.equal(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),promise);
  const candidate=await promise;const workerElapsedMs=performance.now()-start;clearInterval(interval);interval=null;
  const raw=candidateRawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
@@ -164,6 +181,6 @@ try{
  const {constructionMilliseconds:ignored,...fallbackIdentity}=fallback;const {constructionMilliseconds:ignored2,...baselineIdentity}=baseline;
  assert.deepEqual(fallbackIdentity,baselineIdentity);assert.deepEqual(fallbackPhases,['SYNCHRONOUS_BASELINE_FALLBACK']);const fallbackTiming=fallbackModule.getHEarthRun8ER2CanonicalPreparationTiming();assert.equal(fallbackTiming.branch,'SYNCHRONOUS_BASELINE_FALLBACK');assert.equal(fallbackTiming.status,'FALLBACK');assert.equal(fallbackTiming.worker,null);assert.equal(fallbackTiming.normalizedHandoffDurationMs,null);assert.deepEqual(fallbackTiming.main.stages,{});const failedFallback=await import(candidateUrl.href+'?fallbackFailure=1');await assert.rejects(failedFallback.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{throw new Error('test-fallback-error');}}));assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().status,'FAILED');assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().failure.message,'test-fallback-error');
  for(const phase of ['RAW_PACKAGE_PREPARING','RAW_PACKAGE_COMPLETE','CANONICAL_PACKAGE_COMPLETE','CANONICAL_PACKAGE_READY'])assert.ok(phases.includes(phase));
- const result={schema:'H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1',result:'PASS',baselineHead:'935e756e725f8c205921437fbace9faef45c28eb',fullBufferAndMetadataHashes:hashes,sourceDigests,baselineSourceCount:seenSources.size,workerCount,terminated,timerTicks,workerElapsedMs,phases:[...new Set(phases)],metadataExclusion:['constructionMilliseconds'],canonicalPreparationTiming:timing,earlyBindingRouteAndImportOrdering:'PASS',lateProgressReplay:'PASS',singlePreparationRequest:requestCount,timingReportSerialization:'PASS',timingDisabledGating:'PASS',timingFallbackAndFailure:'PASS',timingUnknownClockCases:'PASS',claimCeiling:'CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence'};
+ const result={schema:'H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1',result:'PASS',baselineHead:'935e756e725f8c205921437fbace9faef45c28eb',fullBufferAndMetadataHashes:hashes,sourceDigests,baselineSourceCount:seenSources.size,workerCount,terminated,timerTicks,workerElapsedMs,phases:[...new Set(phases)],metadataExclusion:['constructionMilliseconds'],canonicalPreparationTiming:timing,earlyBindingRouteAndImportOrdering:'PASS_INDEX_DERIVED_FIXTURE',actualWorkerBeforeHeldRendererImport:'PASS',lateProgressReplay:'PASS',singlePreparationRequest:requestCount,timingReportSerialization:'PASS',timingDisabledGating:'PASS',timingFallbackAndFailure:'PASS',timingUnknownClockCases:'PASS',claimCeiling:'CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence'};
  if(process.env.H_EARTH_STARTUP_CPU_RECEIPT)writeFileSync(process.env.H_EARTH_STARTUP_CPU_RECEIPT,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
 }finally{if(interval)clearInterval(interval);globalThis.Worker=nativeWorker;globalThis.location=originalLocation;globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=originalDiagnostics;}

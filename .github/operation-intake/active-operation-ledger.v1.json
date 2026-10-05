@@ -3965,6 +3965,45 @@
       "scopeHash": "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1",
       "state": "ADMITTED_LOCKED"
     },
+    "4976fe69232fbda133ed915e30982240715e2ad5cb0484faf1c98104da205673": {
+      "governingHead": "ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a",
+          "lockGeneration": 2558,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/LEGACY_NAVIGATION_EXACT_PATH_REGISTRATION_20261005_001",
+          "operationId": "LEGACY_NAVIGATION_EXACT_PATH_REGISTRATION_20261005_001",
+          "procedureLocatorDigest": "32ca366217280690438a5cc48df9659c78b7cbeb1bb20d6487a1f0f57f3832f4",
+          "requestDigest": "3ef872fd411a7bb87c5882e6c997ee3b91266efe6490724b5e29d414155fc085",
+          "scopeHash": "4976fe69232fbda133ed915e30982240715e2ad5cb0484faf1c98104da205673"
+        },
+        "bindingDigest": "4deb48653cb953259d8171248581934eaf7c74f82fd8a6c2dce6f2e1f7d8cf83",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "283eb0cce9d63b480f7aaf125cb011696ed13dc7",
+          "observedLockRefHead": "6728e78104984edd41ef4461635668735ef8f6d1"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "5cfe1e216f9f3176edac2c840826242715fae7b3d175c5e47fe99a1f9b706d70",
+          "commentId": 5988318880,
+          "issueNumber": 5744,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2558,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE/LEGACY_NAVIGATION_EXACT_PATH_REGISTRATION_20261005_001",
+      "operationId": "LEGACY_NAVIGATION_EXACT_PATH_REGISTRATION_20261005_001",
+      "procedureLocatorDigest": "32ca366217280690438a5cc48df9659c78b7cbeb1bb20d6487a1f0f57f3832f4",
+      "released": false,
+      "requestDigest": "3ef872fd411a7bb87c5882e6c997ee3b91266efe6490724b5e29d414155fc085",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4976fe69232fbda133ed915e30982240715e2ad5cb0484faf1c98104da205673",
+      "state": "ADMITTED_LOCKED"
+    },
     "49784da7dbcc05734c55b2c1005f30db5ae77541b087181e461d62f739df8387": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -15118,7 +15157,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2557,
+  "lockGeneration": 2558,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -438,7 +438,11 @@
         "compass-successor/index.html",
         "compass-successor/index.css",
         "compass-successor/index.js",
-        "compass-successor/PUBLISH_RECEIPT_20260822_1901.txt"
+        "compass-successor/PUBLISH_RECEIPT_20260822_1901.txt",
+        "root/index.html",
+        "gate/index.html",
+        "portal/index.html",
+        "flat/index.html"
       ],
       "entrypoint": ".github/ai-router/projects/legacy-diagnostic-pages/entrypoint.v1.json",
       "priority": 100

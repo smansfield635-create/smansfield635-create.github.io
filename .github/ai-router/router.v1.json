@@ -430,7 +430,15 @@
         "gauges/coherence/index.html",
         "gauges/admissibility/index.html",
         "gauges/ohm/index.html",
-        "gauges/instrument/index.html"
+        "gauges/instrument/index.html",
+        "compass-presentable/index.html",
+        "compass-presentable/index.css",
+        "compass-presentable/index.js",
+        "compass-presentable/BUILD_HOLD.md",
+        "compass-successor/index.html",
+        "compass-successor/index.css",
+        "compass-successor/index.js",
+        "compass-successor/PUBLISH_RECEIPT_20260822_1901.txt"
       ],
       "entrypoint": ".github/ai-router/projects/legacy-diagnostic-pages/entrypoint.v1.json",
       "priority": 100

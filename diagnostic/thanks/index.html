@@ -1,66 +1,36 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="robots" content="noindex,follow"/>
-  <title>Alignment Diagnostic · Coming Soon</title>
-
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coherence Diagnostic · Diamond Gate Bridge</title>
+  <meta name="robots" content="noindex,follow">
+  <link rel="canonical" href="https://diamondgatebridge.com/coherence-diagnostic/">
+  <noscript><meta http-equiv="refresh" content="0;url=/coherence-diagnostic/"></noscript>
   <style>
-    .box{
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:18px;
-      padding:16px 18px;
-      line-height:1.55;
-      text-align:center;
-    }
-    .muted{opacity:.85}
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #080d18; color: #eef2fa; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { max-width: 36rem; padding: 2rem; }
+    h1 { font-size: 2rem; line-height: 1.2; }
+    p { line-height: 1.65; }
+    a { color: #e9c773; text-underline-offset: .25em; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: .35rem; }
   </style>
 </head>
-
 <body>
-  <main class="gPage">
-  <section aria-label="Historical diagnostic" style="box-sizing:border-box;max-width:900px;margin:16px auto;padding:16px;border:1px solid #526b7b;border-radius:14px;background:#182633;color:#eaf2f6;font-family:system-ui,sans-serif;line-height:1.55">
-    <p><strong>Historical diagnostic · Archived October 4, 2026</strong></p>
-    <p>This earlier assessment is preserved as historical reference. Its labels, unfinished steps and sample calculations do not describe the current diagnostic. Some original links and assets are unavailable.</p>
-    <p><a href="/coherence-diagnostic/" style="color:#9dd6ff">Open the current Coherence Diagnostic</a></p>
-  </section>
-
-    <header class="gHeader">
-      <h1 class="gTitle">You’re In</h1>
-      <p class="gSub">Thank you for your interest.</p>
-    </header>
-
-    <section class="gPanel" aria-label="Diagnostic coming soon">
-      <div class="box">
-        <p><strong>Status</strong> The Alignment Diagnostic is being finalized.</p>
-
-        <p class="muted">
-          You’ve successfully completed the entry and declaration steps.
-          The full exam is intentionally being released in stages to ensure
-          clarity, inspectability, and coherence.
-        </p>
-
-        <p class="muted">
-          When the diagnostic opens, your path will remain the same:
-          deliberate choices, receipt-gated progression, and no persuasion.
-        </p>
-      </div>
-
-      <div class="gActions" aria-label="Navigation controls">
-        <a class="gBtn" href="/home/">Home</a>
-        <a class="gBtn" href="/gate/">Gate</a>
-      </div>
-
-      <footer class="gFooter">
-        CANONICAL · STABLE · © GEODIAMETRICS
-      </footer>
-    </section>
+  <main>
+    <h1>Coherence Diagnostic has moved.</h1>
+    <p>This old diagnostic has been retired. Continue to the current Coherence Diagnostic.</p>
+    <p><a id="coherence-diagnostic" href="/coherence-diagnostic/">Continue to Coherence Diagnostic</a></p>
   </main>
+  <script>
+    (() => {
+      const destination = new URL('/coherence-diagnostic/', window.location.origin);
+      destination.search = window.location.search;
+      destination.hash = window.location.hash;
+      document.getElementById('coherence-diagnostic').href = destination.href;
+      window.location.replace(destination.href);
+    })();
+  </script>
 </body>
 </html>

@@ -19,16 +19,16 @@
       "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js": "82eb1329a47e876cb4b61224c0ba259766731954d9dc0813ca5e73d0c3bed397",
       "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js": "b0e2ca1e61b5368fa8295535ce94b2b03b860ec2f42cc88a66a110f5864a28f5",
       "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "483d81b8dfb6737d6bc36473a66368625d0b88f9c18756be85183403688fce23",
-      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "88b70dce244c1a008bfa6c9829c080134a75137712f3db19d23cdd23642c3b95",
-      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "254702c4102c4d7cb1e656c21b97781fa2a4683e50416109bd7156007d44e873",
-      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "73f43a5be24a2e34690150d5efb4ac8d4b0ccbaaabf0c00fefb8adf38be639cf",
-      "showroom/globe/h-earth/index.html": "445656483f185614c64e6bc0ba66d933e0f3f407dec6d3b48422b2fcf1f93e1a"
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "d8ab8dcd8864341b672a79d01771146a74ad92604e6a9f9092d5bd55bc2273d5",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "afff9faab22a23c088fc45fdea14ea2acfdcf7818aaba0e701de99d097a16d60",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "13811da4743596b4543f4d7a387defc52486222424375659630ffd79852c84cd",
+      "showroom/globe/h-earth/index.html": "84f5870c12a810091a2a16bddecf246df6659071a95147ee00e01cc536f4d4b0"
     },
     "baselineSourceCount": 52,
     "workerCount": 1,
     "terminated": 1,
-    "timerTicks": 1310,
-    "workerElapsedMs": 13446.646250999998,
+    "timerTicks": 1540,
+    "workerElapsedMs": 15728.978162999996,
     "phases": [
       "RAW_PACKAGE_PREPARING",
       "RAW_PACKAGE_COMPLETE",
@@ -46,38 +46,38 @@
       "branch": "MODULE_WORKER",
       "main": {
         "clock": "performance.now",
-        "timeOrigin": 1791242795417.343,
-        "receiveAtMs": 32685.445377,
+        "timeOrigin": 1791243734824.582,
+        "receiveAtMs": 34349.560133,
         "stages": {
           "CANONICAL_WORKER_MODULE_READY_WAIT": {
             "status": "PASS",
-            "startAtMs": 19291.551795,
-            "endAtMs": 24957.967226,
-            "durationMs": 5666.415431000001
+            "startAtMs": 18672.79694,
+            "endAtMs": 24765.075976,
+            "durationMs": 6092.279036
           },
           "CANONICAL_WORKER_RESULT_WAIT": {
             "status": "PASS",
-            "startAtMs": 24957.930901,
-            "endAtMs": 32685.472568,
-            "durationMs": 7727.541667000001
+            "startAtMs": 24765.044568,
+            "endAtMs": 34349.584309,
+            "durationMs": 9584.539740999997
           },
           "CANONICAL_MAIN_FREEZE": {
             "status": "PASS",
-            "startAtMs": 32685.505498,
-            "endAtMs": 32685.80497,
-            "durationMs": 0.29947200000242447
+            "startAtMs": 34349.61127,
+            "endAtMs": 34349.899686,
+            "durationMs": 0.2884159999957774
           },
           "CANONICAL_RAW_ADOPTION_VALIDATE": {
             "status": "PASS",
-            "startAtMs": 32685.809116,
-            "endAtMs": 32713.353167,
-            "durationMs": 27.544051000000763
+            "startAtMs": 34349.903732,
+            "endAtMs": 34376.799591,
+            "durationMs": 26.89585900000384
           },
           "CANONICAL_MAIN_VALIDATE": {
             "status": "PASS",
-            "startAtMs": 32713.369292,
-            "endAtMs": 32737.302492,
-            "durationMs": 23.933199999999488
+            "startAtMs": 34376.814273,
+            "endAtMs": 34400.494148,
+            "durationMs": 23.679874999994354
           }
         }
       },
@@ -86,17 +86,18 @@
         "version": 1,
         "sourceModuleUrl": "file:///workspace/scratch/6c2e5891a387/h-earth-startup-candidate/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js?hearthCanonicalPreparation=1&hearthCanonicalTiming=1",
         "clock": "performance.now",
-        "timeOrigin": 1791242795417.343,
+        "timeOrigin": 1791243734824.582,
         "status": "RESULT_POSTING",
-        "rawBuildDurationMs": 7517.0858469999985,
-        "canonicalBuildDurationMs": 85.51472300000023,
-        "resultPostStartAtMs": 32560.433939
+        "rawBuildDurationMs": 9351.717517999998,
+        "canonicalBuildDurationMs": 86.71160899999813,
+        "resultPostStartAtMs": 34203.324865
       },
-      "normalizedHandoffDurationMs": 125.011474609375,
+      "normalizedHandoffDurationMs": 146.235107421875,
       "handoffScope": "SERIALIZATION_DESERIALIZATION_DELIVERY_AND_MAIN_THREAD_SCHEDULING_NOT_PURE_CLONE",
       "failure": null
     },
-    "earlyBindingRouteAndImportOrdering": "PASS",
+    "earlyBindingRouteAndImportOrdering": "PASS_INDEX_DERIVED_FIXTURE",
+    "actualWorkerBeforeHeldRendererImport": "PASS",
     "lateProgressReplay": "PASS",
     "singlePreparationRequest": 1,
     "timingReportSerialization": "PASS",
@@ -105,7 +106,7 @@
     "timingUnknownClockCases": "PASS",
     "claimCeiling": "CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence"
   },
-  "qualificationToolSHA256": "da89d83dda6bfcf66185ef3808884338d2f5ce50c54e55639fa5babbf3f640a2",
+  "qualificationToolSHA256": "6f5d6cf68622e1fd3fb390ca19b3355b80cd9a16ab369f29506f131c0962b315",
   "syntax": "PASS_9_JAVASCRIPT_FILES",
   "diffCheck": "PASS",
   "browserGPU": "PENDING",
@@ -115,12 +116,21 @@
   "anchorAcceptance": "PENDING",
   "mergePerformed": false,
   "deploymentPerformed": false,
-  "performanceLimits": "Worker import and structured clone can increase total startup despite reducing UI blocking. CPU timer progress is not tablet responsiveness, first-frame timing or a Lighthouse score. No total startup improvement claimed. Timing fields are opt-in at performance=1. Worker handoff includes serialization, deserialization, delivery and scheduling; it does not isolate clone CPU. Worker sidecar report visibility requires published runtime binding; early startup failures retain main spans in observer but copied vegetationResidency may be null. Early preparation overlaps the selected renderer import in source ordering; actual device elapsed-time benefit is unmeasured. Worker starts only for the live functional-landscape additive renderer with Worker available; existing synchronous fallback stays at renderer preparation.",
+  "performanceLimits": "Worker import and structured clone can increase total startup despite reducing UI blocking. CPU timer progress is not tablet responsiveness, first-frame timing or a Lighthouse score. No total startup improvement claimed. Timing fields are opt-in at performance=1. Worker handoff includes serialization, deserialization, delivery and scheduling; it does not isolate clone CPU. Worker sidecar report visibility requires published runtime binding; early startup failures retain main spans in observer but copied vegetationResidency may be null. Early preparation overlaps the selected renderer import in source ordering; actual device elapsed-time benefit is unmeasured. Worker starts only for the live functional-landscape additive renderer with Worker available; existing synchronous fallback stays at renderer preparation. Prior early-worker preview checked the marker on the inner element and did not trigger eager preparation on the real page. Corrected guard CPU proof does not establish device speed improvement; canonical module URL is unchanged, so live identity requires corrected binding URL and deployment marker.",
   "timingInstrumentation": "CPU_PASS_TABLET_REPORT_PENDING",
   "unchangedObserverFailureCounterTest": {
     "result": "PASS",
     "command": "node showroom/globe/h-earth/diagnostic/startup-preparation-20261005/qualify.mjs --observer-timing-only",
     "failedCount": 1
   },
-  "earlyPreparationOverlap": "CPU_SOURCE_ORDER_CACHE_ERROR_PROGRESS_PASS_TABLET_TIMING_PENDING"
+  "earlyPreparationOverlap": "CPU_ACTUAL_WORKER_BEFORE_HELD_RENDERER_IMPORT_INDEX_DERIVED_ROUTE_PASS_TABLET_TIMING_PENDING",
+  "routeGuardCorrection": {
+    "outerRouteRoot": "h-earth-3d-route-root",
+    "requiredOuterAttribute": "data-h-earth-public-route=functional-landscape",
+    "requiredInnerPresence": "h-earth-functional-landscape-route",
+    "fixture": "ACTUAL_INDEX_ATTRIBUTES",
+    "priorGuardOnActualIndex": "NO_EARLY_START",
+    "correctedGuardOnActualIndex": "EARLY_START_BEFORE_HELD_IMPORT",
+    "deviceTiming": "PENDING_EXACT_CORRECTED_BINDING"
+  }
 }

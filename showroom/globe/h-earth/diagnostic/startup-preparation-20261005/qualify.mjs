@@ -1,0 +1,103 @@
+import assert from 'node:assert/strict';
+import {Worker as ThreadWorker} from 'node:worker_threads';
+import {readFileSync,writeFileSync,mkdtempSync,mkdirSync,rmSync} from 'node:fs';
+import {resolve,dirname,posix} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {execFileSync} from 'node:child_process';
+import {tmpdir} from 'node:os';
+import {createHash} from 'node:crypto';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../../../../..');
+const baselineHead='935e756e725f8c205921437fbace9faef45c28eb';
+const baselineRoot=process.env.H_EARTH_STARTUP_BASELINE_ROOT??mkdtempSync(resolve(tmpdir(),'h-earth-startup-baseline-'));
+const ownedTemporaryBaseline=!process.env.H_EARTH_STARTUP_BASELINE_ROOT;
+if(ownedTemporaryBaseline)process.on('exit',()=>rmSync(baselineRoot,{recursive:true,force:true}));
+const queue=['showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'],seenSources=new Set();
+while(queue.length){const path=queue.pop();if(seenSources.has(path))continue;seenSources.add(path);
+ const accepted=execFileSync('git',['show',baselineHead+':'+path],{cwd:root,encoding:'utf8'}),destination=resolve(baselineRoot,path);
+ if(ownedTemporaryBaseline){mkdirSync(dirname(destination),{recursive:true});writeFileSync(destination,accepted);}
+ else assert.equal(readFileSync(destination,'utf8'),accepted,'Frozen baseline source: '+path);
+ for(const match of accepted.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s*)['"]([^'"]+)['"]/g)){
+  const specifier=match[1].split('?')[0].split('#')[0];assert.ok(specifier.startsWith('.'),'Only relative baseline CPU modules expected');queue.push(posix.normalize(posix.join(posix.dirname(path),specifier)));
+ }
+}
+if(ownedTemporaryBaseline)writeFileSync(resolve(baselineRoot,'package.json'),'{"type":"module"}\n');
+const rel='showroom/globe/h-earth/render/';
+const canonicalName='live-render-package.run8e-r2.canonical.js',rawName='live-render-package.run8e-r2.js';
+const candidateUrl=pathToFileURL(resolve(root,rel,canonicalName));
+const rawURLFrom=base=>{const code=readFileSync(fileURLToPath(base),'utf8'),specifier=code.match(/from '([^']*live-render-package\.run8e-r2\.js\?[^']+)'/)[1];return new URL(specifier,base);};
+const baselineUrl=pathToFileURL(resolve(baselineRoot,rel,canonicalName));
+const baselineModule=await import(baselineUrl.href),baselineRawModule=await import(rawURLFrom(baselineUrl).href);
+const baseline=baselineModule.getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
+const baselineRaw=baselineRawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
+assert.equal(baseline.eligible,true);
+
+const runtimePaths=['render/live-render-package.run8e-r2.js','render/live-render-package.run8e-r2.canonical.js','render/gpu-upload-views.run8e-r2d.js','render/live-renderer-contract.run8e-r3a.js','render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','diagnostic/run8e-r3d/live-gpu-binding.js','functional-landscape/public-live-gpu-integration.run8e-r3e.js','functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','index.html'];
+const sourceDigests=Object.fromEntries(runtimePaths.map(path=>{const relative='showroom/globe/h-earth/'+path;return [relative,createHash('sha256').update(readFileSync(resolve(root,relative))).digest('hex')];}));
+for(const [source,digest] of Object.entries(sourceDigests)){
+ const name=source.split('/').at(-1);
+ for(const consumer of Object.keys(sourceDigests)){
+  const text=readFileSync(resolve(root,consumer),'utf8');
+  const escaped=name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  for(const match of text.matchAll(new RegExp(escaped+'\\?[^\\s\'\"]*?\\bcb=([a-f0-9]{16})','g')))assert.equal(match[1],digest.slice(0,16),'Cache link '+consumer+' -> '+source);
+ }
+}
+
+let workerCount=0,terminated=0,receivedRaw=null,receivedCanonical=null,interval=null;
+class BrowserWorkerOnNode{
+ constructor(url){workerCount++;
+  const bootstrap=`import {parentPort} from 'node:worker_threads';let ready=false,pending=[];globalThis.postMessage=data=>parentPort.postMessage(data);parentPort.on('message',data=>ready?globalThis.onmessage?.({data}):pending.push(data));await import(${JSON.stringify(url.href)});ready=true;for(const data of pending)globalThis.onmessage?.({data});`;
+  this.thread=new ThreadWorker(new URL('data:text/javascript,'+encodeURIComponent(bootstrap)),{type:'module'});
+  this.thread.on('message',data=>{if(data.phase==='CANONICAL_PACKAGE_COMPLETE'){receivedRaw=data.raw;receivedCanonical=data.canonical;}this.onmessage?.({data});});this.thread.on('error',error=>this.onerror?.({message:error.message}));
+ }
+ postMessage(data){this.thread.postMessage(data);}
+ terminate(){terminated++;this.thread.terminate();}
+}
+const nativeWorker=globalThis.Worker;
+try{
+ // Failure paths must retain their rejected pending promise and cannot retry on main.
+ for(const kind of ['constructor','error','messageerror','malformed']){
+  let attempts=0;
+  globalThis.Worker=class{constructor(){attempts++;if(kind==='constructor')throw new Error('test-constructor');}terminate(){}postMessage(){queueMicrotask(()=>kind==='error'?this.onerror({message:'test-error'}):kind==='messageerror'?this.onmessageerror():this.onmessage({data:{phase:'unexpected'}}));}};
+  const module=await import(candidateUrl.href+'?failure='+kind);const promise=module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
+  assert.equal(module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),promise);await assert.rejects(promise);await assert.rejects(module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}));assert.equal(attempts,1);
+ }
+ globalThis.Worker=BrowserWorkerOnNode;
+ const candidateModule=await import(candidateUrl.href),candidateRawModule=await import(rawURLFrom(candidateUrl).href);
+ const phases=[],start=performance.now();let timerTicks=0;interval=setInterval(()=>timerTicks++,10);
+ const promise=candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:detail=>phases.push(detail.phase)});
+ assert.equal(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),promise);
+ const candidate=await promise;const workerElapsedMs=performance.now()-start;clearInterval(interval);interval=null;
+ const raw=candidateRawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
+ assert.equal(raw,receivedRaw);assert.equal(candidate,receivedCanonical);assert.notEqual(raw,candidate);assert.notEqual(raw.buffers.positions,candidate.buffers.positions);
+ assert.equal(candidateModule.getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),candidate);
+ assert.equal(await candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),candidate);
+ assert.equal(candidateRawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true}),raw);
+ assert.equal(workerCount,1);assert.equal(terminated,1);assert.ok(timerTicks>0);
+ const hashes={};
+ for(const [label,current,accepted] of [['canonical',candidate,baseline],['raw',raw,baselineRaw]]){
+  for(const name of Object.keys(accepted.buffers)){assert.deepEqual(current.buffers[name],accepted.buffers[name],label+':'+name);assert.ok(Object.isFrozen(current.buffers[name]));}
+  const {constructionMilliseconds:currentTime,...currentIdentity}=current;const {constructionMilliseconds:baselineTime,...baselineIdentity}=accepted;
+  assert.deepEqual(currentIdentity,baselineIdentity,label+' complete identity excluding elapsed constructionMilliseconds');
+  hashes[label]=createHash('sha256').update(JSON.stringify(currentIdentity)).digest('hex');
+ }
+ const bufferArrays=new WeakSet([...Object.values(raw.buffers),...Object.values(candidate.buffers)]);
+ function frozenTree(value,seen=new WeakSet()){if(!value||typeof value!=='object'||seen.has(value))return;seen.add(value);assert.ok(Object.isFrozen(value));if(bufferArrays.has(value))return;for(const child of Object.values(value))frozenTree(child,seen);}
+ frozenTree(candidate);frozenTree(raw);
+ // Identical issue ordering and sparse .some behavior, including multiple failures.
+ for(const invalid of [null,{...raw,eligible:false},{...raw,buffers:Object.freeze({...raw.buffers,positions:Object.freeze([NaN,Infinity]),indices:Object.freeze([-1,0.5])})},{...raw,buffers:Object.freeze({...raw.buffers,normals:Object.freeze(new Array(raw.buffers.normals.length))})}]){
+  assert.deepEqual(await candidateRawModule.evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(invalid),baselineRawModule.evaluateHEarthRun8ER2ImmutableLiveRenderPackage(invalid));
+ }
+ // Malformed final record pairs reject even when individual evaluator shape is valid.
+ for(const change of [{packageOccurrenceId:'INVALID_OCCURRENCE'},{revision:1},{contentDigest:'fnv1a32:00000000'}]){
+  globalThis.Worker=class{terminate(){}postMessage(){queueMicrotask(()=>{this.onmessage({data:{phase:'RAW_PACKAGE_COMPLETE'}});this.onmessage({data:{phase:'CANONICAL_PACKAGE_COMPLETE',raw,canonical:{...candidate,...change}}});});}};
+  const badModule=await import(candidateUrl.href+'?malformed='+Object.keys(change)[0]);await assert.rejects(badModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}));
+ }
+ // Absence is the sole synchronous fallback; it returns original identical data.
+ globalThis.Worker=undefined;const fallbackModule=await import(candidateUrl.href+'?fallback=1');const fallbackPhases=[];
+ const fallback=await fallbackModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:d=>fallbackPhases.push(d.phase)});
+ const {constructionMilliseconds:ignored,...fallbackIdentity}=fallback;const {constructionMilliseconds:ignored2,...baselineIdentity}=baseline;
+ assert.deepEqual(fallbackIdentity,baselineIdentity);assert.deepEqual(fallbackPhases,['SYNCHRONOUS_BASELINE_FALLBACK']);
+ for(const phase of ['RAW_PACKAGE_PREPARING','RAW_PACKAGE_COMPLETE','CANONICAL_PACKAGE_COMPLETE','CANONICAL_PACKAGE_READY'])assert.ok(phases.includes(phase));
+ const result={schema:'H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1',result:'PASS',baselineHead:'935e756e725f8c205921437fbace9faef45c28eb',fullBufferAndMetadataHashes:hashes,sourceDigests,baselineSourceCount:seenSources.size,workerCount,terminated,timerTicks,workerElapsedMs,phases:[...new Set(phases)],metadataExclusion:['constructionMilliseconds'],claimCeiling:'CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence'};
+ if(process.env.H_EARTH_STARTUP_CPU_RECEIPT)writeFileSync(process.env.H_EARTH_STARTUP_CPU_RECEIPT,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
+}finally{if(interval)clearInterval(interval);globalThis.Worker=nativeWorker;}

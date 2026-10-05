@@ -555,7 +555,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   return packageRecord;
 }
 
-export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
+function* evaluatePackageChecks(packageRecord) {
   const issues = [];
   const buffers = packageRecord?.buffers;
   const vertexCount = packageRecord?.vertexCount ?? 0;
@@ -589,10 +589,9 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
   for (const [name, length] of Object.entries(expectedLengths)) {
     if (!Array.isArray(buffers?.[name]) || buffers[name].length !== length) issues.push(`R2_BUFFER_LENGTH_INVALID:${name}`);
     if (!Object.isFrozen(buffers?.[name])) issues.push(`R2_BUFFER_NOT_FROZEN:${name}`);
-    if (Array.isArray(buffers?.[name]) && buffers[name].some((value) => !finite(value))) issues.push(`R2_BUFFER_NONFINITE:${name}`);
+    if (Array.isArray(buffers?.[name]) && (yield {values:buffers[name],predicate:(value)=>!finite(value)})) issues.push(`R2_BUFFER_NONFINITE:${name}`);
   }
-  if (Array.isArray(buffers?.indices) && buffers.indices.some((index) =>
-    !Number.isSafeInteger(index) || index < 0 || index >= vertexCount)) {
+  if (Array.isArray(buffers?.indices) && (yield {values:buffers.indices,predicate:(index)=>!Number.isSafeInteger(index)||index<0||index>=vertexCount})) {
     issues.push('R2_INDEX_OUT_OF_RANGE');
   }
   const expectedPrimitiveSpanCount = historicalOccurrence ? 35 : packageRecord?.primitiveCount;
@@ -622,6 +621,35 @@ export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
     status: issues.length === 0 ? 'RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_PASS' : 'RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_FAIL',
     issues: freezeArray(issues)
   });
+}
+
+export function evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord) {
+  const checks=evaluatePackageChecks(packageRecord);let step=checks.next();
+  while(!step.done){const {values,predicate}=step.value;step=checks.next(values.some(predicate));}
+  return step.value;
+}
+export async function evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(packageRecord,{onProgress=()=>{}}={}) {
+  const checks=evaluatePackageChecks(packageRecord);let step=checks.next(),completed=0;
+  while(!step.done){const {values,predicate}=step.value;let found=false,budgetStart=globalThis.performance?.now?.()??Date.now();
+    for(let index=0;index<values.length;index++){
+      if(index in values&&predicate(values[index],index,values)){found=true;break;}
+      completed++;
+      if(index%4096===4095&&((globalThis.performance?.now?.()??Date.now())-budgetStart>=8)){
+        onProgress({phase:'VALIDATING_PACKAGE_BUFFERS',completed,total:null,unit:'values'});
+        await new Promise(resolve=>setTimeout(resolve,0));budgetStart=globalThis.performance?.now?.()??Date.now();
+      }
+    }
+    step=checks.next(found);await new Promise(resolve=>setTimeout(resolve,0));
+  }
+  return step.value;
+}
+export async function adoptHEarthRun8ER2DeferredLiveRenderPackage(packageRecord,{onProgress=()=>{}}={}) {
+  const evaluation=await evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(packageRecord,{onProgress});
+  if(!evaluation.eligible)throw new Error(`R2_DEFERRED_WORKER_PACKAGE_INVALID:${evaluation.issues.join(',')}`);
+  if(packageRecord.revision!==1||packageRecord.packageOccurrenceId!==H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID||packageRecord.sourceAuthorities?.vegetationAdmissionMode!=='BASE_WORLD_ONLY'||packageRecord.sourceAuthorities?.vegetationValidationStatus!=='PENDING_POST_READY_VALIDATION')
+    throw new Error('R2_DEFERRED_WORKER_OCCURRENCE_INVALID');
+  if(cachedDeferredPackage&&cachedDeferredPackage!==packageRecord)throw new Error('R2_DEFERRED_WORKER_CACHE_CONFLICT');
+  cachedDeferredPackage=packageRecord;return packageRecord;
 }
 
 export function createHEarthRun8ER2GPUBufferViews(packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()) {

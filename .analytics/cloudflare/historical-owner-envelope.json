@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-05T03:46:43Z",
+  "generatedAt": "2026-10-05T04:58:12Z",
   "window": {
-    "start": "2026-07-07T03:46:43Z",
-    "end": "2026-10-05T03:46:43Z"
+    "start": "2026-07-07T04:58:12Z",
+    "end": "2026-10-05T04:58:12Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,16 +26,16 @@
       }
     },
     "byPath": {
-      "/index.html": {
-        "pageLoads": 150,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1071,
         "visits": 749
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 204,
+        "visits": 0
+      },
+      "/index.html": {
+        "pageLoads": 150,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -50,12 +50,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -268,10 +272,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -356,13 +356,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 3781,
-        "visits": 0
-      },
       "(none)": {
         "pageLoads": 533,
         "visits": 533
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 3781,
+        "visits": 0
       },
       "www.google.com": {
         "pageLoads": 780,

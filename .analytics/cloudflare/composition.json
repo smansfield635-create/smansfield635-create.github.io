@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-05T05:45:07Z",
+  "generatedAt": "2026-10-05T07:08:28Z",
   "window": {
-    "start": "2026-09-05T05:45:07Z",
-    "end": "2026-10-05T05:45:07Z"
+    "start": "2026-09-05T07:08:28Z",
+    "end": "2026-10-05T07:08:28Z"
   },
   "dimensions": {
     "requestPath": [
@@ -29,8 +29,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 342,
-        "visits": 220
+        "pageLoads": 343,
+        "visits": 221
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -361,8 +361,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3135,
-        "visits": 3135
+        "pageLoads": 3136,
+        "visits": 3136
       },
       {
         "value": "diamondgatebridge.com",
@@ -398,8 +398,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6125,
-        "visits": 3521
+        "pageLoads": 6126,
+        "visits": 3522
       },
       {
         "value": "BR",
@@ -435,8 +435,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2603,
-        "visits": 2517
+        "pageLoads": 2604,
+        "visits": 2518
       },
       {
         "value": "tablet",
@@ -452,8 +452,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2351,
-        "visits": 2301
+        "pageLoads": 2352,
+        "visits": 2302
       },
       {
         "value": "Chrome",
@@ -504,8 +504,8 @@
       },
       {
         "value": "Linux",
-        "pageLoads": 2365,
-        "visits": 2315
+        "pageLoads": 2366,
+        "visits": 2316
       },
       {
         "value": "MacOSX",
@@ -536,15 +536,15 @@
       },
       {
         "value": "1",
-        "pageLoads": 2351,
-        "visits": 2301
+        "pageLoads": 2352,
+        "visits": 2302
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4238,
-        "visits": 3235
+        "pageLoads": 4239,
+        "visits": 3236
       },
       {
         "value": "reload",
@@ -570,8 +570,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 4652,
-        "visits": 3028
+        "pageLoads": 4653,
+        "visits": 3029
       },
       {
         "value": "cache",
@@ -587,15 +587,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6174,
-        "visits": 3567
+        "pageLoads": 6175,
+        "visits": 3568
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6174,
-        "visits": 3567
+        "pageLoads": 6175,
+        "visits": 3568
       }
     ]
   }

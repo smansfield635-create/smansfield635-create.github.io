@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-05T18:40:39Z",
+  "generatedAt": "2026-10-05T20:35:42Z",
   "window": {
-    "start": "2026-07-07T18:40:39Z",
-    "end": "2026-10-05T18:40:39Z"
+    "start": "2026-07-07T20:35:42Z",
+    "end": "2026-10-05T20:35:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,49 +17,57 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4784,
-    "visits": 1173,
+    "pageLoads": 5104,
+    "visits": 1323,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4784,
-        "visits": 1173
+        "pageLoads": 5104,
+        "visits": 1323
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1021,
-        "visits": 729
+        "pageLoads": 1071,
+        "visits": 749
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 194,
+        "pageLoads": 204,
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 140,
+        "pageLoads": 150,
         "visits": 0
       },
       "/nine-summits-of-love/": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 70,
+        "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 70,
+        "visits": 30
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 30,
+        "visits": 0
+      },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/showroom/": {
+        "pageLoads": 140,
+        "visits": 10
       },
       "/coherence-diagnostic/": {
         "pageLoads": 30,
         "visits": 0
       },
-      "/showroom/": {
-        "pageLoads": 120,
-        "visits": 10
-      },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 50,
         "visits": 0
       },
       "/laws/categories/reality/battery-heldout-study/": {
@@ -83,7 +91,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 70,
+        "pageLoads": 80,
         "visits": 10
       },
       "/products/archcoin/": {
@@ -111,8 +119,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 60
+        "pageLoads": 270,
+        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -138,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -165,6 +173,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -182,10 +194,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -198,6 +206,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -206,7 +218,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -220,10 +232,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -245,10 +253,6 @@
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -290,10 +294,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
@@ -326,13 +326,21 @@
         "pageLoads": 11,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/governance-bridge/": {
+        "pageLoads": 150,
+        "visits": 120
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/analytics/": {
         "pageLoads": 41,
         "visits": 0
-      },
-      "/governance-bridge/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/prototypes/abc-roofing/": {
         "pageLoads": 2,
@@ -349,16 +357,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 413,
-        "visits": 413
+        "pageLoads": 533,
+        "visits": 533
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3611,
+        "pageLoads": 3781,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 750,
-        "visits": 750
+        "pageLoads": 780,
+        "visits": 780
       },
       "raw.githack.com": {
         "pageLoads": 10,

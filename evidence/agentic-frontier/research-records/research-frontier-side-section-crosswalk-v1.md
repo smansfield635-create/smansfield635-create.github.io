@@ -1,3 +1,5 @@
+> **RFV3-06 correction (2026-10-05):** The original mapping below is preserved as history. See the [dated Gen449 result correction](publication-crosswalk-v3.md#rfv3-06-correction-2026-10-05) for the completed bounded baseline comparison.
+
 # Research Frontier side-section crosswalk v1
 
 Status: `PRECONSTRUCTION_CONTENT_ENTITLEMENT_CANDIDATE`
@@ -394,3 +396,8 @@ If all verification conditions pass, the candidate may be described only as:
 `LIVE_PAGE_MUTATION_ZERO`
 
 These are preconstruction/control dispositions only. They are not scientific results and do not authorize adoption, implementation, deployment, or publication.
+
+
+## RFV3-06 correction — 2026-10-05
+
+The RFV3-06 baseline-pending wording and blanket exclusion of simpler-baseline superiority are superseded by the [Gen449 result correction](publication-crosswalk-v3.md#rfv3-06-correction-2026-10-05). FULL achieved 36/36 correct next actions and exact recoveries, versus BASELINE’s 24/36 and 12/36, across seven configurations and 252 arm-cases. Component removals distinguished 256, NEWS, and ACK_PACK; PSALM remains NOT_DISTINGUISHED and Fibonacci host utility UNEVALUABLE. The linked correction records costs, exact source identities, and limits. Cross-repository transfer, production-scale benefit, unaffiliated reproduction, and general superiority beyond the tested workload and comparator remain unestablished. Other objects and the historical mapping above are unchanged.

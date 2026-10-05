@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-05T17:30:55Z",
+  "generatedAt": "2026-10-05T18:40:39Z",
   "window": {
-    "start": "2026-07-07T17:30:55Z",
-    "end": "2026-10-05T17:30:55Z"
+    "start": "2026-07-07T18:40:39Z",
+    "end": "2026-10-05T18:40:39Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,41 +17,29 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5104,
-    "visits": 1323,
+    "pageLoads": 4784,
+    "visits": 1173,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5104,
-        "visits": 1323
+        "pageLoads": 4784,
+        "visits": 1173
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1071,
-        "visits": 749
+        "pageLoads": 1021,
+        "visits": 729
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 204,
+        "pageLoads": 194,
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 150,
+        "pageLoads": 140,
         "visits": 0
       },
       "/nine-summits-of-love/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 70,
-        "visits": 0
-      },
-      "/characters/": {
-        "pageLoads": 70,
-        "visits": 30
-      },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/globe/audralia/disposition/": {
@@ -63,11 +51,15 @@
         "visits": 0
       },
       "/showroom/": {
-        "pageLoads": 140,
+        "pageLoads": 120,
         "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 50,
         "visits": 0
       },
       "/laws/categories/reality/battery-heldout-study/": {
@@ -91,7 +83,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 80,
+        "pageLoads": 70,
         "visits": 10
       },
       "/products/archcoin/": {
@@ -119,8 +111,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 270,
-        "visits": 70
+        "pageLoads": 260,
+        "visits": 60
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -206,16 +198,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -253,6 +245,10 @@
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -294,6 +290,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
@@ -326,21 +326,13 @@
         "pageLoads": 11,
         "visits": 0
       },
-      "/home/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
-      },
       "/analytics/": {
         "pageLoads": 41,
         "visits": 0
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 20,
-        "visits": 0
+      "/governance-bridge/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/prototypes/abc-roofing/": {
         "pageLoads": 2,
@@ -357,16 +349,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 533,
-        "visits": 533
+        "pageLoads": 413,
+        "visits": 413
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3781,
+        "pageLoads": 3611,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 780,
-        "visits": 780
+        "pageLoads": 750,
+        "visits": 750
       },
       "raw.githack.com": {
         "pageLoads": 10,

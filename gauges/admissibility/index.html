@@ -1,48 +1,36 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admissibility · Geodiametrics</title>
-  <link rel="icon" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <link rel="stylesheet" href="/assets/branch.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Measurement Lab · Diamond Gate Bridge</title>
+  <meta name="robots" content="noindex,follow">
+  <link rel="canonical" href="https://diamondgatebridge.com/gauges/">
+  <noscript><meta http-equiv="refresh" content="0;url=/gauges/"></noscript>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #080d18; color: #eef2fa; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { max-width: 36rem; padding: 2rem; }
+    h1 { font-size: 2rem; line-height: 1.2; }
+    p { line-height: 1.65; }
+    a { color: #e9c773; text-underline-offset: .25em; }
+    a:focus-visible { outline: 2px solid currentColor; outline-offset: .35rem; }
+  </style>
 </head>
 <body>
-  <main class="gPage">
-    <header class="gHeader">
-      <h1 class="gTitle">Admissibility</h1>
-      <p class="gSub">Execution gate (live).</p>
-    </header>
-
-    <section class="gPanel" aria-label="Admissibility gauge">
-      <div class="gBody" id="out">
-        <p><strong>Status</strong> Loading…</p>
-      </div>
-
-      <div class="gActions">
-        <a class="gBtn" href="/gauges/">Back</a>
-        <a class="gBtn" href="/home/">Home</a>
-      </div>
-
-      <footer class="gFooter">CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    </section>
+  <main>
+    <h1>Measurement Lab has moved.</h1>
+    <p>These old gauge interfaces have been retired. Continue to the current Measurement Lab.</p>
+    <p><a id="measurement-lab" href="/gauges/">Continue to Measurement Lab</a></p>
   </main>
-
   <script>
-    fetch('/gauges/live.json?v=' + Date.now())
-      .then(r => r.json())
-      .then(data => {
-        const g = data.admissibility || {};
-        document.getElementById('out').innerHTML =
-          `<p><strong>Value</strong> ${(g.value ?? '—')}</p>` +
-          `<p><strong>Label</strong> ${(g.label ?? '—')}</p>` +
-          `<p><strong>Updated</strong> ${(data.updated_at ?? '—')}</p>`;
-      })
-      .catch(() => {
-        document.getElementById('out').innerHTML =
-          `<p><strong>Status</strong> Live feed not available.</p>`;
-      });
+    (() => {
+      const destination = new URL('/gauges/', window.location.origin);
+      destination.search = window.location.search;
+      destination.hash = window.location.hash;
+      document.getElementById('measurement-lab').href = destination.href;
+      window.location.replace(destination.href);
+    })();
   </script>
 </body>
 </html>

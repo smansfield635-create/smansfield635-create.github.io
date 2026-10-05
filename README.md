@@ -220,6 +220,8 @@ The CRM is a synthetic demonstration and the construction application is a proto
 
 DGB also contains philosophical writing, fictional characters, experimental models, and narrative environments. These provide the project's creative identity. Technical claims are evaluated through the relevant implementation, test, and evidence chain.
 
+Sean directed AI-assisted development and evaluation of operational safeguards. In the [bounded 36-case comparison](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/fed13a2d6e2d9dbcbf3d6f05026b5f89dfebd722/evidence/agentic-frontier/reproduction/do-the-safeguards-earn-their-cost/manifest.json), full safeguards recorded **36/36 correct next actions and 36/36 recoveries**, versus **24/36 and 12/36** for the baseline. Mean checks rose from **8 to 17.889**. Component results were mixed; this operational test does not establish scientific validity or general production superiority.
+
 Supporting research includes the **Material Work Audit**, whose [conformance summary][material-summary] records **906 pull requests**, classified as 17 PARAMOUNT, 682 STANDARD, and 207 SUPPORT: **699 material units under that study's rubric**. The [reproducibility boundary][material-boundary] explains the frozen dataset, correction overlay, and unavailable row-level v0 comparison.
 
 The [longitudinal claim matrix][longitudinal] records bounded claims about the project's development. Commit volume, material-work classifications, and human-leverage measurements have different meanings and should be read with their methods.

@@ -5867,6 +5867,50 @@
       "scopeHash": "66c47668f469134eb3aedfa5b819a19e78394ca4a8d1bfc059d0ca25c587039e",
       "state": "ADMITTED_LOCKED"
     },
+    "6738ecb0754f85bd9617f25d9ff26c5f67ab0f158b52f3529e03b99b7158c74a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "4f51ecb534c12aa2259becaa3dc9d700937590c7",
+          "lockGeneration": 2561,
+          "lockScope": "COMPASS:ENTRANCE:BOUNDED_STARTUP_OPTIMIZATION:INDEX_AND_READINESS_CONTEXT",
+          "operationId": "COMPASS_ENTRANCE_BOUNDED_STARTUP_OPTIMIZATION_20261005_001",
+          "procedureLocatorDigest": "63c06583f756ef8884bf28850b9cf373d208d9dad7399cbbd596e760a6cde1b6",
+          "requestDigest": "75fb9a86af926189d8af6627b3a6a41ff33bc41a84cdfbcd00c3af73d69437b1",
+          "scopeHash": "6738ecb0754f85bd9617f25d9ff26c5f67ab0f158b52f3529e03b99b7158c74a"
+        },
+        "bindingDigest": "7ec338d64d8477533ded8bbfe3f5a3a68e84578ebdbf50db6e90b4cb758258bc",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0c95bfb06dd34379c36ec042d09beadd3db04aaf825dbff253553e454793ad44",
+          "commentId": 6003273440,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5770,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37375941888,
+          "workflowSha": "4f51ecb534c12aa2259becaa3dc9d700937590c7"
+        },
+        "lineageAnchorCommitSha": "71867d534a37d8f5eebbd9adda6730258a0cc2db",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "4f51ecb534c12aa2259becaa3dc9d700937590c7",
+      "lockGeneration": 2561,
+      "lockScope": "COMPASS:ENTRANCE:BOUNDED_STARTUP_OPTIMIZATION:INDEX_AND_READINESS_CONTEXT",
+      "operationId": "COMPASS_ENTRANCE_BOUNDED_STARTUP_OPTIMIZATION_20261005_001",
+      "procedureLocatorDigest": "63c06583f756ef8884bf28850b9cf373d208d9dad7399cbbd596e760a6cde1b6",
+      "released": false,
+      "requestDigest": "75fb9a86af926189d8af6627b3a6a41ff33bc41a84cdfbcd00c3af73d69437b1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6738ecb0754f85bd9617f25d9ff26c5f67ab0f158b52f3529e03b99b7158c74a",
+      "state": "ADMITTED_LOCKED"
+    },
     "689d447fabc190d684d0e159023c5dde25343a3fd1227a68df053e5100e00b61": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -15157,7 +15201,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2560,
+  "lockGeneration": 2561,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

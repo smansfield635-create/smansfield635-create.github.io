@@ -429,6 +429,19 @@
       ],
       "entrypoint": ".github/ai-router/projects/legacy-diagnostic-pages/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "SUPPORT_PRODUCT_PUBLIC_PAGES",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "five-flags/index.html",
+        "products/five-flags/index.html",
+        "products/nutrition/index.html",
+        "products/ssg/index.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/support-product-pages/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

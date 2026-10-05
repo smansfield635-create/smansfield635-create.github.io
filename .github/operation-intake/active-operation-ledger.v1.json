@@ -13627,45 +13627,6 @@
       "scopeHash": "e258a29e878ae2c636a0fc99e972e1c4f197d13f08208ff19b3190849b81eff5",
       "state": "ADMITTED_LOCKED"
     },
-    "e2663e842746d14c506f8a57b4d16cad02b5e2f14446aa8137f2863155dcb2ea": {
-      "governingHead": "19179fe03f9a8afab4d8b645b21f8ec5f9b87c9d",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "19179fe03f9a8afab4d8b645b21f8ec5f9b87c9d",
-          "lockGeneration": 2548,
-          "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
-          "operationId": "LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
-          "procedureLocatorDigest": "f22278bf261210727550f526bba245af8b54cf8b3646ff527c948de318fa0132",
-          "requestDigest": "a3387bbb01731605538de7c72f021a731d4357f73092e1dc7da2ff37582c08e5",
-          "scopeHash": "e2663e842746d14c506f8a57b4d16cad02b5e2f14446aa8137f2863155dcb2ea"
-        },
-        "bindingDigest": "7f8559fa5102370f72d98e72fc88745f44230ec33df8625121f834f948c09e0a",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "df175d53aad3df893fe5fd84b1ad70fa1cdae2e4",
-          "observedLockRefHead": "f5ca605f1acfd76daf041959096e930ba66c9457"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "da6f230184ab862efd58ee23fda81ace0abda4feec848ac07d8d36b895dc1829",
-          "commentId": 5986254975,
-          "issueNumber": 5728,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2548,
-      "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
-      "operationId": "LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
-      "procedureLocatorDigest": "f22278bf261210727550f526bba245af8b54cf8b3646ff527c948de318fa0132",
-      "released": false,
-      "requestDigest": "a3387bbb01731605538de7c72f021a731d4357f73092e1dc7da2ff37582c08e5",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "e2663e842746d14c506f8a57b4d16cad02b5e2f14446aa8137f2863155dcb2ea",
-      "state": "ADMITTED_LOCKED"
-    },
     "e2ac878383d374a1ca7e66bbf0a153ee32dc5bb3e7abaf984fb0113cd150a8d5": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -68679,6 +68640,83 @@
       "requestDigest": "8b3229a91dc1815d458046379acdfa9686bd8fbcefdc6d8fbf3441c842b8e163",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "44397e5b29249c57c63e0645f6e7adf1f77c704a5ccdc58db67ec82dcba8fb0b",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "19179fe03f9a8afab4d8b645b21f8ec5f9b87c9d",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "19179fe03f9a8afab4d8b645b21f8ec5f9b87c9d",
+          "lockGeneration": 2548,
+          "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+          "operationId": "LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+          "procedureLocatorDigest": "f22278bf261210727550f526bba245af8b54cf8b3646ff527c948de318fa0132",
+          "requestDigest": "a3387bbb01731605538de7c72f021a731d4357f73092e1dc7da2ff37582c08e5",
+          "scopeHash": "e2663e842746d14c506f8a57b4d16cad02b5e2f14446aa8137f2863155dcb2ea"
+        },
+        "bindingDigest": "7f8559fa5102370f72d98e72fc88745f44230ec33df8625121f834f948c09e0a",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "df175d53aad3df893fe5fd84b1ad70fa1cdae2e4",
+          "observedLockRefHead": "f5ca605f1acfd76daf041959096e930ba66c9457"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "da6f230184ab862efd58ee23fda81ace0abda4feec848ac07d8d36b895dc1829",
+          "commentId": 5986254975,
+          "issueNumber": 5728,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "19179fe03f9a8afab4d8b645b21f8ec5f9b87c9d",
+          "lockGeneration": 2548,
+          "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+          "operationId": "LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+          "procedureLocatorDigest": "f22278bf261210727550f526bba245af8b54cf8b3646ff527c948de318fa0132",
+          "requestDigest": "a3387bbb01731605538de7c72f021a731d4357f73092e1dc7da2ff37582c08e5",
+          "scopeHash": "e2663e842746d14c506f8a57b4d16cad02b5e2f14446aa8137f2863155dcb2ea"
+        },
+        "bindingDigest": "621b08d99e9601467b1a10d3c10f4c7b73b323eb82dfead3f90ae3e037656c8d",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "b7d6031ed4640ff772a32668b3a1fec189ae8489",
+          "observedLockRefHead": "6726363da9476597edf1c70c0a5ab26304241fef"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "b794185785752dec92cca178e3c4ef6430076a0e7a63740006659f6a0e1b50c7",
+          "commentId": 5986288939,
+          "issueNumber": 5732,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "19179fe03f9a8afab4d8b645b21f8ec5f9b87c9d",
+          "lockGeneration": 2548,
+          "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+          "operationId": "LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+          "released": true,
+          "scopeHash": "e2663e842746d14c506f8a57b4d16cad02b5e2f14446aa8137f2863155dcb2ea",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2548,
+      "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+      "operationId": "LEGACY_DIAGNOSTIC_PUBLIC_RETIREMENT_20261004_001",
+      "procedureLocatorDigest": "f22278bf261210727550f526bba245af8b54cf8b3646ff527c948de318fa0132",
+      "released": true,
+      "requestDigest": "a3387bbb01731605538de7c72f021a731d4357f73092e1dc7da2ff37582c08e5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e2663e842746d14c506f8a57b4d16cad02b5e2f14446aa8137f2863155dcb2ea",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

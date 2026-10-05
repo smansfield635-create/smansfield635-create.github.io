@@ -135,19 +135,43 @@ export function getHEarthRun8ER2CanonicalVegetationPresentationPlan({deferVegeta
 export function createHEarthRun8ER2CanonicalVegetationPresentationBatch(batchId){const batch=createHEarthRun8ER2VegetationPresentationBatch(batchId);return freezeRecord({...batch,placementIds:Object.freeze(Array.from(batch.placementIds??[])),primitives:Object.freeze(Array.from(batch.primitives??[]))});}
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;
 
-// The worker uses these existing constructors; no world or numeric identity changes.
+// Preparation timing is opt-in diagnostic metadata, outside world identity.
 const startupWorkerMode=new URL(import.meta.url).searchParams.get('hearthCanonicalPreparation')==='1';
+const preparationPerformanceEnabled=startupWorkerMode
+  ?new URL(import.meta.url).searchParams.get('hearthCanonicalTiming')==='1'
+  :new URLSearchParams(globalThis.location?.search??'').get('performance')==='1';
+const preparationNow=()=>globalThis.performance?.now?.()??null;
+const preparationTimeOrigin=()=>Number.isFinite(globalThis.performance?.timeOrigin)?globalThis.performance.timeOrigin:null;
+const durationBetween=(start,end)=>Number.isFinite(start)&&Number.isFinite(end)?end-start:null;
 if(startupWorkerMode&&typeof document==='undefined'&&typeof globalThis.postMessage==='function'){
+  const timing=preparationPerformanceEnabled?{schema:'H_EARTH_CANONICAL_PREPARATION_TIMING_v1',version:1,sourceModuleUrl:import.meta.url,clock:'performance.now',timeOrigin:preparationTimeOrigin(),status:'MODULE_READY',rawBuildDurationMs:null,canonicalBuildDurationMs:null,resultPostStartAtMs:null}:null;
   globalThis.onmessage=()=>{
     try{
-      const raw=getRawPackage({deferVegetation:true});
+      const rawStart=timing?preparationNow():null;let raw;
+      try{raw=getRawPackage({deferVegetation:true});}finally{if(timing)timing.rawBuildDurationMs=durationBetween(rawStart,preparationNow());}
       globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});
-      const canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
-      globalThis.postMessage({phase:'CANONICAL_PACKAGE_COMPLETE',raw,canonical});
-    }catch(error){globalThis.postMessage({error:{message:error?.message??String(error)}});}
+      const canonicalStart=timing?preparationNow():null;let canonical;
+      try{canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});}finally{if(timing)timing.canonicalBuildDurationMs=durationBetween(canonicalStart,preparationNow());}
+      if(timing){timing.status='RESULT_POSTING';timing.resultPostStartAtMs=preparationNow();}
+      globalThis.postMessage({phase:'CANONICAL_PACKAGE_COMPLETE',raw,canonical,...(timing?{timing}: {})});
+    }catch(error){if(timing){timing.status='FAILED';timing.resultPostStartAtMs=preparationNow();}globalThis.postMessage({error:{message:error?.message??String(error)},...(timing?{timing}: {})});}
   };
+  globalThis.postMessage({phase:'CANONICAL_WORKER_MODULE_READY',...(timing?{timing}: {})});
 }
 let pendingDeferredPreparation=null;
+const canonicalPreparationTiming=preparationPerformanceEnabled&&!startupWorkerMode?{schema:'H_EARTH_CANONICAL_PREPARATION_TIMING_v1',version:1,sourceModuleUrl:import.meta.url,status:'NOT_STARTED',branch:null,main:{clock:'performance.now',timeOrigin:preparationTimeOrigin(),receiveAtMs:null,stages:{}},worker:null,normalizedHandoffDurationMs:null,handoffScope:'SERIALIZATION_DESERIALIZATION_DELIVERY_AND_MAIN_THREAD_SCHEDULING_NOT_PURE_CLONE',failure:null}:null;
+export function getHEarthRun8ER2CanonicalPreparationTiming(){
+  if(!canonicalPreparationTiming)return null;
+  const snapshot=JSON.parse(JSON.stringify(canonicalPreparationTiming));
+  const freeze=node=>{if(!node||typeof node!=='object')return;for(const child of Object.values(node))freeze(child);Object.freeze(node);};freeze(snapshot);return snapshot;
+}
+async function measurePreparationStage(name,operation){
+  if(!canonicalPreparationTiming)return await operation();
+  const stage=canonicalPreparationTiming.main.stages[name]={status:'RUNNING',startAtMs:preparationNow(),endAtMs:null,durationMs:null};
+  try{const diagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;const result=await(diagnostics?.measureAsync?diagnostics.measureAsync(name,operation):operation());stage.status='PASS';return result;}
+  catch(error){stage.status='FAIL';throw error;}
+  finally{stage.endAtMs=preparationNow();stage.durationMs=durationBetween(stage.startAtMs,stage.endAtMs);}
+}
 async function freezeStartupRecords(value){
   const bufferArrays=new WeakSet([...Object.values(value.raw.buffers),...Object.values(value.canonical.buffers)]);
   const seen=new WeakSet(),stack=[value];let count=0,budgetStart=globalThis.performance?.now?.()??Date.now();
@@ -164,34 +188,60 @@ export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=
   if(cachedDeferredPackage)return Promise.resolve(cachedDeferredPackage);
   if(pendingDeferredPreparation)return pendingDeferredPreparation;
   if(typeof Worker!=='function'){
-    onProgress({phase:'SYNCHRONOUS_BASELINE_FALLBACK',completed:0,total:1,unit:'packages'});
-    return pendingDeferredPreparation=Promise.resolve(getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}));
+    if(canonicalPreparationTiming){canonicalPreparationTiming.branch='SYNCHRONOUS_BASELINE_FALLBACK';canonicalPreparationTiming.status='FALLBACK';}
+    try{onProgress({phase:'SYNCHRONOUS_BASELINE_FALLBACK',completed:0,total:1,unit:'packages'});
+      return pendingDeferredPreparation=Promise.resolve(getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}));
+    }catch(error){if(canonicalPreparationTiming){canonicalPreparationTiming.status='FAILED';canonicalPreparationTiming.failure={name:error?.name??'Error',message:error?.message??String(error)};}return pendingDeferredPreparation=Promise.reject(error);}
   }
+  if(canonicalPreparationTiming){canonicalPreparationTiming.branch='MODULE_WORKER';canonicalPreparationTiming.status='PREPARING';}
   pendingDeferredPreparation=new Promise((resolve,reject)=>{
-    let worker=null,receiving=false,settled=false,stage='RAW';
-    const fail=error=>{if(settled)return;settled=true;worker?.terminate();reject(error);};
+    let worker=null,receiving=false,settled=false,stage='MODULE';
+    let moduleResolve,moduleReject,resultResolve,resultReject,resultWait=null;
+    const modulePromise=new Promise((resolve,reject)=>{moduleResolve=resolve;moduleReject=reject;});
+    const resultPromise=new Promise((resolve,reject)=>{resultResolve=resolve;resultReject=reject;});
+    // Both lifecycle gates may fail before their awaited stage starts.
+    resultPromise.catch(()=>{});
+    const moduleWait=measurePreparationStage('CANONICAL_WORKER_MODULE_READY_WAIT',()=>modulePromise);moduleWait.catch(()=>{});
+    const receiveTiming=data=>{
+      if(!canonicalPreparationTiming)return;
+      const receiveAtMs=preparationNow();canonicalPreparationTiming.main.receiveAtMs=receiveAtMs;
+      if(data?.timing)canonicalPreparationTiming.worker=data.timing;
+      const remote=canonicalPreparationTiming.worker;
+      const elapsed=Number.isFinite(remote?.timeOrigin)&&Number.isFinite(remote?.resultPostStartAtMs)&&Number.isFinite(receiveAtMs)&&Number.isFinite(canonicalPreparationTiming.main.timeOrigin)
+        ?canonicalPreparationTiming.main.timeOrigin+receiveAtMs-(remote.timeOrigin+remote.resultPostStartAtMs):null;
+      canonicalPreparationTiming.normalizedHandoffDurationMs=Number.isFinite(elapsed)&&elapsed>=0?elapsed:null;
+    };
+    const fail=error=>{if(settled)return;settled=true;if(canonicalPreparationTiming){canonicalPreparationTiming.status='FAILED';canonicalPreparationTiming.failure={name:error?.name??'Error',message:error?.message??String(error)};}moduleReject(error);resultReject(error);worker?.terminate();reject(error);};
     try{
-      const url=new URL(import.meta.url);url.searchParams.set('hearthCanonicalPreparation','1');worker=new Worker(url,{type:'module'});
+      const url=new URL(import.meta.url);url.searchParams.set('hearthCanonicalPreparation','1');if(preparationPerformanceEnabled)url.searchParams.set('hearthCanonicalTiming','1');worker=new Worker(url,{type:'module'});
       worker.onerror=event=>fail(new Error(event.message||'R2_CANONICAL_WORKER_FAILED'));
       worker.onmessageerror=()=>fail(new Error('R2_CANONICAL_WORKER_MESSAGE_INVALID'));
       worker.onmessage=async event=>{
         if(settled)return;
         const data=event.data;
         try{
-          if(data?.error)throw new Error(data.error.message||'R2_CANONICAL_WORKER_FAILED');
+          if(data?.error){receiveTiming(data);throw new Error(data.error.message||'R2_CANONICAL_WORKER_FAILED');}
+          if(data?.phase==='CANONICAL_WORKER_MODULE_READY'&&stage==='MODULE'){
+            if(canonicalPreparationTiming&&data.timing)canonicalPreparationTiming.worker=data.timing;
+            stage='RAW';moduleResolve(data);resultWait=measurePreparationStage('CANONICAL_WORKER_RESULT_WAIT',()=>resultPromise);resultWait.catch(()=>{});return;
+          }
           if(data?.phase==='RAW_PACKAGE_COMPLETE'&&!receiving&&stage==='RAW'){stage='CANONICAL';onProgress({phase:data.phase,completed:1,total:1,unit:'packages'});return;}
           if(receiving||stage!=='CANONICAL'||data?.phase!=='CANONICAL_PACKAGE_COMPLETE'||!data.raw||!data.canonical)throw new Error('R2_CANONICAL_WORKER_RESULT_INVALID');
-          receiving=true;onProgress({phase:data.phase,completed:1,total:1,unit:'packages'});
-          await freezeStartupRecords(data);if(settled)return;
-          await adoptHEarthRun8ER2DeferredLiveRenderPackage(data.raw,{onProgress});if(settled)return;
-          const evaluation=await evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(data.canonical,{onProgress});
+          receiving=true;receiveTiming(data);resultResolve(data);await moduleWait;await resultWait;
+          onProgress({phase:data.phase,completed:1,total:1,unit:'packages'});
+          await measurePreparationStage('CANONICAL_MAIN_FREEZE',()=>freezeStartupRecords(data));if(settled)return;
+          await measurePreparationStage('CANONICAL_RAW_ADOPTION_VALIDATE',()=>adoptHEarthRun8ER2DeferredLiveRenderPackage(data.raw,{onProgress}));if(settled)return;
+          await measurePreparationStage('CANONICAL_MAIN_VALIDATE',async()=>{
+            const evaluation=await evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(data.canonical,{onProgress});
           if(!evaluation.eligible)throw new Error(`R2_CANONICAL_WORKER_PACKAGE_INVALID:${evaluation.issues.join(',')}`);
           if(data.canonical.packageOccurrenceId!==data.raw.packageOccurrenceId||['vertexCount','indexCount','primitiveCount','triangleCount'].some(key=>data.canonical[key]!==data.raw[key])||data.canonical.primitiveIds.length!==data.raw.primitiveIds.length||data.canonical.primitiveIds.some((id,index)=>id!==data.raw.primitiveIds[index])||!/^fnv1a32:[a-f0-9]{8}$/.test(data.canonical.contentDigest)||data.canonical.packageIdentity!==`H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_${data.canonical.contentDigest.slice(8).toUpperCase()}`||data.canonical.revision!==2||data.canonical.sourceAuthorities?.numericCanonicalizationLaw!=='ROUND_TO_BINARY_GRID_2^-24_AND_NORMALIZE_NEGATIVE_ZERO')throw new Error('R2_CANONICAL_WORKER_IDENTITY_INVALID');
+            return evaluation;
+          });
           if(settled)return;
-          onProgress({phase:'CANONICAL_PACKAGE_READY',completed:1,total:1,unit:'packages'});cachedDeferredPackage=data.canonical;settled=true;worker.terminate();resolve(cachedDeferredPackage);
+          onProgress({phase:'CANONICAL_PACKAGE_READY',completed:1,total:1,unit:'packages'});cachedDeferredPackage=data.canonical;if(canonicalPreparationTiming)canonicalPreparationTiming.status='READY';settled=true;worker.terminate();resolve(cachedDeferredPackage);
         }catch(error){fail(error);}
       };
-      onProgress({phase:'RAW_PACKAGE_PREPARING',completed:0,total:1,unit:'packages'});worker.postMessage({prepare:true});
+      onProgress({phase:'RAW_PACKAGE_PREPARING',completed:0,total:1,unit:'packages'});worker.postMessage({prepare:true,performanceEnabled:preparationPerformanceEnabled});
     }catch(error){fail(error);}
   });
   return pendingDeferredPreparation;

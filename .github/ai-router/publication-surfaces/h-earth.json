@@ -40,7 +40,7 @@
         "h-earth-renderer-startup-receipt",
         "READY_PUBLISHED",
         "verifiedMilestoneProgress:true",
-        "boundedStageActivity:true"
+        "measuredWorkProgress:true"
       ],
       "excludes": []
     },

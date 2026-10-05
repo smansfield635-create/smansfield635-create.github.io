@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "legacy-gauge-preflight-20261005-001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5750,
+  "requestBranch": "ai-dispatch-request-legacy-gauge-preflight-20261005-001",
+  "requestCommit": "1f67f07d2526c877ff40fe8bf70532b113fa8d6d",
+  "currentMainSha": "0d0e1a12673b1e8a00111350143c2d1cb1e2ad7d",
+  "bridgeRunId": "37253420960",
+  "error": "Stale dispatch request: parent bd7848f4222913fd09cb336e2a71762571168835 != current main 0d0e1a12673b1e8a00111350143c2d1cb1e2ad7d",
+  "failedAt": "2026-10-05T01:57:06.655Z"
+}

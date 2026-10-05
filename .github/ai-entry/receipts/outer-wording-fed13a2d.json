@@ -6,9 +6,9 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 5767,
   "requestBranch": "ai-dispatch-request-outer-wording-fed13a2d",
-  "requestCommit": "8d1034686f3ad4893db0f565383e16f67238c5a6",
+  "requestCommit": "4554b9d95984600f6a4c755f186e862abf0d7dbe",
   "currentMainSha": "fed13a2d6e2d9dbcbf3d6f05026b5f89dfebd722",
-  "bridgeRunId": "37348582958",
-  "error": "Input may not be user supplied: target_sha",
-  "failedAt": "2026-10-05T17:27:47.791Z"
+  "bridgeRunId": "37348768733",
+  "error": "Stale dispatch request: parent 8d1034686f3ad4893db0f565383e16f67238c5a6 != current main fed13a2d6e2d9dbcbf3d6f05026b5f89dfebd722",
+  "failedAt": "2026-10-05T17:29:54.970Z"
 }

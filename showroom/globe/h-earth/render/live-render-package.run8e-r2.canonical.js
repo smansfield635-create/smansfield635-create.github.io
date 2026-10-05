@@ -3,10 +3,12 @@ import {
   getHEarthRun8ER2ImmutableLiveRenderPackage as getRawPackage,
   getHEarthOW01LiveRenderPackageOccurrence as getOW01RawPackage,
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
+  evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync,
+  adoptHEarthRun8ER2DeferredLiveRenderPackage,
   getHEarthRun8ER2VegetationWorldTruthPlan,
   isHEarthRun8ER2VegetationWorldTruthPrepared,
   createHEarthRun8ER2VegetationPresentationBatch
-} from './live-render-package.run8e-r2.js?cb=b42bdb4ab1b0af92';
+} from './live-render-package.run8e-r2.js?cb=3b265737a4a96e79';
 
 const GRID_SCALE = 16777216;
 const FLOAT_BUFFER_NAMES = Object.freeze([
@@ -132,3 +134,65 @@ export function getHEarthOW01CanonicalLiveRenderPackageOccurrence() {
 export function getHEarthRun8ER2CanonicalVegetationPresentationPlan({deferVegetation=false}={}){if(deferVegetation&&!isHEarthRun8ER2VegetationWorldTruthPrepared())return freezeRecord({eligible:false,status:'PENDING_POST_READY_VALIDATION',instanceCount:null,batches:[],populationLimit:null,droppedPlacementCount:null});const truth=getHEarthRun8ER2VegetationWorldTruthPlan();return freezeRecord({...truth,batches:Object.freeze(truth.batches.map(batch=>freezeRecord({...batch}))),numericIdentityBoundary:'CANONICAL_PLACEMENT_TRUTH_WITH_BOUNDED_PRESENTATION_BATCHES'});}
 export function createHEarthRun8ER2CanonicalVegetationPresentationBatch(batchId){const batch=createHEarthRun8ER2VegetationPresentationBatch(batchId);return freezeRecord({...batch,placementIds:Object.freeze(Array.from(batch.placementIds??[])),primitives:Object.freeze(Array.from(batch.primitives??[]))});}
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;
+
+// The worker uses these existing constructors; no world or numeric identity changes.
+const startupWorkerMode=new URL(import.meta.url).searchParams.get('hearthCanonicalPreparation')==='1';
+if(startupWorkerMode&&typeof document==='undefined'&&typeof globalThis.postMessage==='function'){
+  globalThis.onmessage=()=>{
+    try{
+      const raw=getRawPackage({deferVegetation:true});
+      globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});
+      const canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
+      globalThis.postMessage({phase:'CANONICAL_PACKAGE_COMPLETE',raw,canonical});
+    }catch(error){globalThis.postMessage({error:{message:error?.message??String(error)}});}
+  };
+}
+let pendingDeferredPreparation=null;
+async function freezeStartupRecords(value){
+  const bufferArrays=new WeakSet([...Object.values(value.raw.buffers),...Object.values(value.canonical.buffers)]);
+  const seen=new WeakSet(),stack=[value];let count=0,budgetStart=globalThis.performance?.now?.()??Date.now();
+  while(stack.length){const node=stack.pop();if(!node||typeof node!=='object'||seen.has(node))continue;seen.add(node);
+    if(bufferArrays.has(node))Object.freeze(node);
+    else{for(const child of Object.values(node))if(child&&typeof child==='object')stack.push(child);Object.freeze(node);}
+    if(++count%64===0&&((globalThis.performance?.now?.()??Date.now())-budgetStart>=8)){
+      await new Promise(resolve=>setTimeout(resolve,0));budgetStart=globalThis.performance?.now?.()??Date.now();
+    }
+  }
+}
+export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=false,onProgress=()=>{}}={}){
+  if(!deferVegetation)return Promise.resolve(getHEarthRun8ER2CanonicalLiveRenderPackage());
+  if(cachedDeferredPackage)return Promise.resolve(cachedDeferredPackage);
+  if(pendingDeferredPreparation)return pendingDeferredPreparation;
+  if(typeof Worker!=='function'){
+    onProgress({phase:'SYNCHRONOUS_BASELINE_FALLBACK',completed:0,total:1,unit:'packages'});
+    return pendingDeferredPreparation=Promise.resolve(getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}));
+  }
+  pendingDeferredPreparation=new Promise((resolve,reject)=>{
+    let worker=null,receiving=false,settled=false,stage='RAW';
+    const fail=error=>{if(settled)return;settled=true;worker?.terminate();reject(error);};
+    try{
+      const url=new URL(import.meta.url);url.searchParams.set('hearthCanonicalPreparation','1');worker=new Worker(url,{type:'module'});
+      worker.onerror=event=>fail(new Error(event.message||'R2_CANONICAL_WORKER_FAILED'));
+      worker.onmessageerror=()=>fail(new Error('R2_CANONICAL_WORKER_MESSAGE_INVALID'));
+      worker.onmessage=async event=>{
+        if(settled)return;
+        const data=event.data;
+        try{
+          if(data?.error)throw new Error(data.error.message||'R2_CANONICAL_WORKER_FAILED');
+          if(data?.phase==='RAW_PACKAGE_COMPLETE'&&!receiving&&stage==='RAW'){stage='CANONICAL';onProgress({phase:data.phase,completed:1,total:1,unit:'packages'});return;}
+          if(receiving||stage!=='CANONICAL'||data?.phase!=='CANONICAL_PACKAGE_COMPLETE'||!data.raw||!data.canonical)throw new Error('R2_CANONICAL_WORKER_RESULT_INVALID');
+          receiving=true;onProgress({phase:data.phase,completed:1,total:1,unit:'packages'});
+          await freezeStartupRecords(data);if(settled)return;
+          await adoptHEarthRun8ER2DeferredLiveRenderPackage(data.raw,{onProgress});if(settled)return;
+          const evaluation=await evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync(data.canonical,{onProgress});
+          if(!evaluation.eligible)throw new Error(`R2_CANONICAL_WORKER_PACKAGE_INVALID:${evaluation.issues.join(',')}`);
+          if(data.canonical.packageOccurrenceId!==data.raw.packageOccurrenceId||['vertexCount','indexCount','primitiveCount','triangleCount'].some(key=>data.canonical[key]!==data.raw[key])||data.canonical.primitiveIds.length!==data.raw.primitiveIds.length||data.canonical.primitiveIds.some((id,index)=>id!==data.raw.primitiveIds[index])||!/^fnv1a32:[a-f0-9]{8}$/.test(data.canonical.contentDigest)||data.canonical.packageIdentity!==`H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_${data.canonical.contentDigest.slice(8).toUpperCase()}`||data.canonical.revision!==2||data.canonical.sourceAuthorities?.numericCanonicalizationLaw!=='ROUND_TO_BINARY_GRID_2^-24_AND_NORMALIZE_NEGATIVE_ZERO')throw new Error('R2_CANONICAL_WORKER_IDENTITY_INVALID');
+          if(settled)return;
+          onProgress({phase:'CANONICAL_PACKAGE_READY',completed:1,total:1,unit:'packages'});cachedDeferredPackage=data.canonical;settled=true;worker.terminate();resolve(cachedDeferredPackage);
+        }catch(error){fail(error);}
+      };
+      onProgress({phase:'RAW_PACKAGE_PREPARING',completed:0,total:1,unit:'packages'});worker.postMessage({prepare:true});
+    }catch(error){fail(error);}
+  });
+  return pendingDeferredPreparation;
+}

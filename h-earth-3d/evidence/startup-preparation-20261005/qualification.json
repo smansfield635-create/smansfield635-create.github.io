@@ -1,0 +1,54 @@
+{
+  "schema": "H_EARTH_CANONICAL_STARTUP_PREPARATION_QUALIFICATION_v1",
+  "operationId": "H_EARTH_BOUNDED_CANONICAL_STARTUP_PREPARATION_20261005_001",
+  "lockGeneration": 2562,
+  "result": "CPU_PASS_PHYSICAL_PENDING",
+  "baselineHead": "935e756e725f8c205921437fbace9faef45c28eb",
+  "candidateBinding": "EXACT_SOURCE_FILE_SHA256_DIGESTS_AND_SUBSEQUENT_IMMUTABLE_COMMIT",
+  "cpu": {
+    "schema": "H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1",
+    "result": "PASS",
+    "baselineHead": "935e756e725f8c205921437fbace9faef45c28eb",
+    "fullBufferAndMetadataHashes": {
+      "canonical": "b85e284ad81ed987513ea2a2ba86f35704894bd3fac866ac3c1bd797d2ed317d",
+      "raw": "9f3446a3b7e0dec8729426acc94a80ab54cf3d30466fc96f997a8a472309141a"
+    },
+    "sourceDigests": {
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.js": "3b265737a4a96e791cb434f3ec40bd9bee4503c6092dfa9e151d1888efbcf37e",
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "2a08189025bce85fc16a404a9d4578ac39d788c61321dfbbd961bcb21156d2a1",
+      "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js": "fde0a14baae81e6b98a48066c31ff2df8c12e4e10471fc368be16cb1a9160eae",
+      "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js": "b134baaba124224e68f97d73d3babc18f8ad694a0a6beec8892690b706d9ca99",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "47482d11865c9ec80d0842483b0e9f9a3511a6d97488bcbc4570db30c3e7bcb6",
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "42bdad16e4f62a169ec024e47d203fc9647bbbb9844abc8b64828a06113407bc",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "6f909dffa6f1e7f4b4e72817e47cb720d949459523157ed85eebfd69cb40ffe0",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "880b175136b0e06f1faf08d5d47fcee6dbbbc08c6484a2d0dc7f231d62aad48c",
+      "showroom/globe/h-earth/index.html": "15b9b03c0180ca90d402798a05bf3af4e47ee56e1593b8e250b358c25825729b"
+    },
+    "baselineSourceCount": 52,
+    "workerCount": 1,
+    "terminated": 1,
+    "timerTicks": 1328,
+    "workerElapsedMs": 13662.245659,
+    "phases": [
+      "RAW_PACKAGE_PREPARING",
+      "RAW_PACKAGE_COMPLETE",
+      "CANONICAL_PACKAGE_COMPLETE",
+      "CANONICAL_PACKAGE_READY"
+    ],
+    "metadataExclusion": [
+      "constructionMilliseconds"
+    ],
+    "claimCeiling": "CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence"
+  },
+  "qualificationToolSHA256": "f3e951a2b678981a8c1081561b04667b5a6f73ee540b5f72a3d4832a63aca106",
+  "syntax": "PASS_9_JAVASCRIPT_FILES",
+  "diffCheck": "PASS",
+  "browserGPU": "PENDING",
+  "firstFrameReadyVegetationAndNavigation": "PENDING_EXACT_CANDIDATE_BROWSER",
+  "ownerPhysicalDisposition": "PENDING",
+  "independentReview": "PENDING",
+  "anchorAcceptance": "PENDING",
+  "mergePerformed": false,
+  "deploymentPerformed": false,
+  "performanceLimits": "Worker import and structured clone can increase total startup despite reducing UI blocking. CPU timer progress is not tablet responsiveness, first-frame timing or a Lighthouse score. No total startup improvement claimed."
+}

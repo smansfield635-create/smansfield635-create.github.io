@@ -3,10 +3,10 @@ const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGN
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js?cb=0a430c8d2fa5dbf2';
-import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch, createHEarthRun8ER2VegetationPresentationBatchAsync, prepareHEarthRun8ER2VegetationWorldTruthPlan, getHEarthRun8ER2ImmutableLiveRenderPackage, H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY } from './live-render-package.run8e-r2.js?cb=b42bdb4ab1b0af92';
-import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=5877cdc984862cc5';
-import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=bfb7bb5c546e38ce';
+import { getHEarthRun8ER2CanonicalLiveRenderPackage, prepareHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js?cb=2a08189025bce85f';
+import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch, createHEarthRun8ER2VegetationPresentationBatchAsync, prepareHEarthRun8ER2VegetationWorldTruthPlan, getHEarthRun8ER2ImmutableLiveRenderPackage, H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY } from './live-render-package.run8e-r2.js?cb=3b265737a4a96e79';
+import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=fde0a14baae81e6b';
+import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=b134baaba124224e';
 // SHORELINE_SOIL_BEGIN import
 import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=31b5193e7020fd23';
 // SHORELINE_SOIL_END import
@@ -814,7 +814,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
     if (status !== gl.FRAMEBUFFER_COMPLETE) throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${label}:${status}`);
   };
-  const renderPackage = startupMeasure('CANONICAL_PACKAGE',()=>getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation}));
+  let canonicalStartupPercent=34;
+  const renderPackage = await (globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measureAsync??((name,operation)=>operation()))('CANONICAL_PACKAGE',()=>prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation,onProgress:update=>{
+    const milestone=update.phase==='RAW_PACKAGE_COMPLETE'?34.4:update.phase==='CANONICAL_PACKAGE_COMPLETE'?34.7:update.phase==='CANONICAL_PACKAGE_READY'?35:34;
+    const progress=Math.max(canonicalStartupPercent,milestone);canonicalStartupPercent=progress;
+    const status=update.phase==='RAW_PACKAGE_COMPLETE'?'Base world geometry ready':update.phase==='CANONICAL_PACKAGE_COMPLETE'?'Canonical world buffers ready':update.phase==='CANONICAL_PACKAGE_READY'?'World package validated':update.phase==='VALIDATING_PACKAGE_BUFFERS'?'Validating world buffers':update.phase==='SYNCHRONOUS_BASELINE_FALLBACK'?'Preparing world on this device':'Preparing canonical world geometry';
+    onStartupProgress?.(Object.freeze({...update,progress,status}));
+  }}));
   const uploadViews = startupMeasure('GPU_UPLOAD_VIEWS',()=>createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage));
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface({deferVegetation});
   if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);

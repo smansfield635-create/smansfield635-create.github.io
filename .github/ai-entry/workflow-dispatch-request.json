@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-startup-preflight-20261005-c7e63eb",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "c7e63eb20c3dbb475c5da261b60493b4f790ba32",
+    "surface_id": "h-earth"
   }
 }

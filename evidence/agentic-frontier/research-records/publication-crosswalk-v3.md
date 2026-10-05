@@ -1,3 +1,5 @@
+> **RFV3-06 correction (2026-10-05):** The original mapping below is preserved as history. Its baseline-pending wording is superseded by the [dated Gen449 correction](#rfv3-06-correction-2026-10-05).
+
 # Research Frontier publication crosswalk v3
 
 Status: `PRECONSTRUCTION_PUBLICATION_AUTHORITY_MAP_V3_CANDIDATE`
@@ -1019,3 +1021,37 @@ It does not authorize:
 - deployment/publication.
 
 The next lawful product-design boundary after v3 adoption is a **carousel cardinality + three-plane binding amendment**, followed by exact Meaning/Evidence/Bridge content binding and only then a separately admitted live-page construction operation.
+
+
+<a id="rfv3-06-correction-2026-10-05"></a>
+## RFV3-06 correction — 2026-10-05
+
+This dated correction supersedes only the RFV3-06 statements treating the bounded baseline comparison as future work or excluding all baseline superiority. The original crosswalk remains intact above. Other research objects and novelty classifications are unchanged.
+
+Gen449 completed a same-information comparison of seven frozen configurations at four authentic Gen448 host boundaries (B0–B3). CLEAN and M1–M8 gave 36 cases per configuration and **252 arm-cases**, not 252 independent scenarios.
+
+| Configuration | Correct next action /36 | Exact recovery /36 | Invalid detection /32 | False blocks | Mean checks | Mean serialized decision bytes |
+|---|---:|---:|---:|---:|---:|---:|
+| BASELINE | 24 | 12 | 20 | 0 | 8.000 | 1063.31 |
+| FULL | 36 | 36 | 32 | 0 | 17.889 | 1071.86 |
+| −256 | 32 | 36 | 28 | 0 | 13.556 | 1083.89 |
+| −NEWS | 32 | 36 | 28 | 0 | 15.000 | 1082.42 |
+| −FIB | 36 | 36 | 32 | 0 | 17.889 | 1083.19 |
+| −PSALM | 36 | 36 | 32 | 0 | 15.556 | 1083.86 |
+| −ACK | 32 | 12 | 28 | 0 | 18.000 | 1084.58 |
+
+FULL improved all three endpoints over BASELINE, with approximately 2.236× the mean checks and 0.805% more serialized decision bytes. These cost measures do not establish runtime, memory, or production cost. The five recorded scientific noncontamination and history-preservation invariants remained zero.
+
+Removing 256 lost M3 stale-address localization; removing NEWS lost the exact M2 semantic-order response; removing ACK_PACK lost M5 corruption handling and returned exact recovery to baseline. The source therefore distinguishes 256, NEWS, and ACK_PACK. PSALM remains NOT_DISTINGUISHED. Fibonacci host utility remains UNEVALUABLE because no genuine live unresolved source/capability condition arose; shadow-case behavior cannot upgrade it.
+
+Overall disposition: **COMPOSED_OPERATIONAL_ARCHITECTURE_DISTINGUISHED**. This establishes operational differentiation against the frozen comparator within the tested workload. Cross-repository transfer, production-scale benefit, whole-estate enforcement, unaffiliated reproduction, and general superiority over other control architectures remain unestablished. The scientific result and separate custody lifecycle are not changed by this correction. Packaging remains RECORD_BOUND; externalReproductionObserved remains false.
+
+### Exact source identities
+
+- Canonical operation: `RTG_GEN448_OPERATIONAL_SIDECAR_SCORING_V1_20260906_001`, generation 449.
+- Frozen sidecar head: `612f52ddce8fed6b578abe6986098d83335fb8a0`.
+- Result commit: `e3f90c0e92da206c4bbfa76a5b3a4f40627f3a47`.
+- [Gen449 scoring record — private repository, access required](https://github.com/smansfield635-create/geodiametrics1/issues/537#issuecomment-5557202040).
+- [Result commit — private repository, access required](https://github.com/smansfield635-create/geodiametrics1/commit/e3f90c0e92da206c4bbfa76a5b3a4f40627f3a47).
+
+Only aggregate results and source identities are projected here. This record does not disclose the private implementation or constitute a complete public executable reproduction bundle.

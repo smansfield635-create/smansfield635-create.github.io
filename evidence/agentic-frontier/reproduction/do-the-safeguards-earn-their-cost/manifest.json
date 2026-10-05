@@ -3,21 +3,146 @@
   "objectId": "RFV3-06",
   "publicTitle": "Do the Safeguards Earn Their Cost?",
   "technicalBinding": "CANONICAL_CONTROL_KERNEL_V1",
-  "evidenceStatus": ["OPERATING_METHOD"],
-  "sourceDispositions": ["OPERATIONALLY_DISTINGUISHED", "NOT_DISTINGUISHED", "UNEVALUABLE", "COMPOSED_OPERATIONAL_ARCHITECTURE_DISTINGUISHED"],
+  "evidenceStatus": [
+    "OPERATING_METHOD"
+  ],
+  "sourceDispositions": [
+    "OPERATIONALLY_DISTINGUISHED",
+    "NOT_DISTINGUISHED",
+    "UNEVALUABLE",
+    "COMPOSED_OPERATIONAL_ARCHITECTURE_DISTINGUISHED"
+  ],
   "question": "Which safeguards actually change an operational result, and which merely add ceremony?",
-  "inputs": ["one bounded repository-operation profile", "256 component", "NEWS component", "ACK_PACK component", "PSALM component", "Fibonacci host utility"],
-  "inputLicensingOrLocator": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md"],
-  "comparator": "Bounded operational profile and component-level outcome/burden criteria; competent simpler-control architecture remains a future comparator.",
-  "procedure": ["preserve bounded operation profile", "evaluate each named safeguard under source-native operational criteria", "retain positive negative and unevaluable outcomes separately", "assess composed architecture without converting operational evidence into scientific support"],
+  "inputs": [
+    "frozen Gen448 sidecar at four authentic host boundaries B0–B3",
+    "CLEAN and M1–M8 cases at each boundary; 36 cases per configuration",
+    "seven configurations: BASELINE, FULL, -256, -NEWS, -FIB, -PSALM, -ACK",
+    "252 arm-cases; identical scientific information across configurations"
+  ],
+  "inputLicensingOrLocator": [
+    "/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md"
+  ],
+  "comparator": "Completed Gen449 comparison against the frozen BASELINE arm and five single-component removals; differentiation is bounded to the tested workload and comparator.",
+  "procedure": [
+    "preserve bounded operation profile",
+    "evaluate each named safeguard under source-native operational criteria",
+    "retain positive negative and unevaluable outcomes separately",
+    "assess composed architecture without converting operational evidence into scientific support"
+  ],
   "environment": "Repository-operational test surface; public reproduction may use a neutral reference implementation preserving the same semantics.",
-  "expectedOutputs": {"256":"OPERATIONALLY_DISTINGUISHED","NEWS":"OPERATIONALLY_DISTINGUISHED","ACK_PACK":"OPERATIONALLY_DISTINGUISHED","PSALM":"NOT_DISTINGUISHED","FIBONACCI_HOST_UTILITY":"UNEVALUABLE","mandatoryCore":["256","NEWS","ACK_PACK"],"overall":"COMPOSED_OPERATIONAL_ARCHITECTURE_DISTINGUISHED"},
+  "expectedOutputs": {
+    "256": "OPERATIONALLY_DISTINGUISHED",
+    "NEWS": "OPERATIONALLY_DISTINGUISHED",
+    "ACK_PACK": "OPERATIONALLY_DISTINGUISHED",
+    "PSALM": "NOT_DISTINGUISHED",
+    "FIBONACCI_HOST_UTILITY": "UNEVALUABLE",
+    "mandatoryCore": [
+      "256",
+      "NEWS",
+      "ACK_PACK"
+    ],
+    "overall": "COMPOSED_OPERATIONAL_ARCHITECTURE_DISTINGUISHED"
+  },
   "acceptanceCriteria": "Mixed component dispositions must be retained exactly; operational distinction must not be represented as scientific authority.",
   "verifier": "Independent bounded operational recomputation against the public method/result record.",
-  "sourceIdentities": ["/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md", "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md"],
-  "knownGaps": ["clean cross-repository transfer unestablished", "competent simpler-control baseline pending", "whole-estate enforcement not demonstrated", "unaffiliated reproduction not observed"],
+  "sourceIdentities": [
+    "/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md",
+    "/evidence/agentic-frontier/research-records/reproduction-expression-standard-crosswalk-v1.md",
+    "/evidence/agentic-frontier/research-records/publication-crosswalk-v3.md#rfv3-06-correction-2026-10-05"
+  ],
+  "knownGaps": [
+    "clean cross-repository transfer unestablished",
+    "production-scale benefit unestablished",
+    "general superiority over other control architectures unestablished",
+    "whole-estate enforcement not demonstrated",
+    "unaffiliated reproduction not observed"
+  ],
   "proprietaryBoundary": "The public target is the operational contract, component dispositions and acceptance criteria; complete private control-plane implementation is not required.",
-  "claimCeiling": "One bounded repository-operation control profile only; no scientific authority, automatic product authority, cross-repository transfer, universal enforcement or simpler-baseline superiority.",
+  "claimCeiling": "Operational differentiation against the frozen Gen449 baseline within one bounded repository-operation profile; no scientific or automatic product authority, cross-repository transfer, production-scale benefit, universal enforcement, or general superiority beyond the tested workload and comparator.",
   "reproductionPackagingState": "RECORD_BOUND",
-  "externalReproductionObserved": false
+  "externalReproductionObserved": false,
+  "boundedComparison": {
+    "generation": 449,
+    "frozenSidecarHead": "612f52ddce8fed6b578abe6986098d83335fb8a0",
+    "resultCommit": "e3f90c0e92da206c4bbfa76a5b3a4f40627f3a47",
+    "hostBoundaries": 4,
+    "configurations": 7,
+    "casesPerConfiguration": 36,
+    "totalArmCases": 252,
+    "invalidCasesPerConfiguration": 32,
+    "identicalScientificInformation": true,
+    "scores": {
+      "BASELINE": {
+        "correctNextAction": 24,
+        "exactRecovery": 12,
+        "invalidDetection": 20,
+        "falseBlocks": 0,
+        "meanChecks": 8.0,
+        "meanSerializedDecisionBytes": 1063.31
+      },
+      "FULL": {
+        "correctNextAction": 36,
+        "exactRecovery": 36,
+        "invalidDetection": 32,
+        "falseBlocks": 0,
+        "meanChecks": 17.889,
+        "meanSerializedDecisionBytes": 1071.86
+      },
+      "-256": {
+        "correctNextAction": 32,
+        "exactRecovery": 36,
+        "invalidDetection": 28,
+        "falseBlocks": 0,
+        "meanChecks": 13.556,
+        "meanSerializedDecisionBytes": 1083.89
+      },
+      "-NEWS": {
+        "correctNextAction": 32,
+        "exactRecovery": 36,
+        "invalidDetection": 28,
+        "falseBlocks": 0,
+        "meanChecks": 15.0,
+        "meanSerializedDecisionBytes": 1082.42
+      },
+      "-FIB": {
+        "correctNextAction": 36,
+        "exactRecovery": 36,
+        "invalidDetection": 32,
+        "falseBlocks": 0,
+        "meanChecks": 17.889,
+        "meanSerializedDecisionBytes": 1083.19
+      },
+      "-PSALM": {
+        "correctNextAction": 36,
+        "exactRecovery": 36,
+        "invalidDetection": 32,
+        "falseBlocks": 0,
+        "meanChecks": 15.556,
+        "meanSerializedDecisionBytes": 1083.86
+      },
+      "-ACK": {
+        "correctNextAction": 32,
+        "exactRecovery": 12,
+        "invalidDetection": 28,
+        "falseBlocks": 0,
+        "meanChecks": 18.0,
+        "meanSerializedDecisionBytes": 1084.58
+      }
+    },
+    "costInterpretation": "Mean checks and serialized decision bytes only; not wall-clock latency, memory use, or production cost.",
+    "componentRemovalFindings": {
+      "256": "loss of M3 stale-address localization",
+      "NEWS": "loss of exact M2 semantic-order response",
+      "ACK_PACK": "loss of M5 corruption handling; exact recovery returns to baseline",
+      "PSALM": "no loss in next-action, recovery, or invalid-detection endpoints",
+      "FIBONACCI_HOST_UTILITY": "no genuine unresolved source/capability condition; live-host utility unevaluable"
+    },
+    "hardInvariants": {
+      "WRONG_SCIENTIFIC_TRANSITIONS": 0,
+      "OUTCOME_LEAKAGE": 0,
+      "SCIENTIFIC_RULE_MUTATION": 0,
+      "RETROACTIVE_HISTORY_MUTATION": 0,
+      "FALSE_SCIENTIFIC_AUTHORITY": 0
+    }
+  }
 }

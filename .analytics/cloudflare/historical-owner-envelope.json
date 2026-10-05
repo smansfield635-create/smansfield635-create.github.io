@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-05T07:08:28Z",
+  "generatedAt": "2026-10-05T07:56:13Z",
   "window": {
-    "start": "2026-07-07T07:08:28Z",
-    "end": "2026-10-05T07:08:28Z"
+    "start": "2026-07-07T07:56:13Z",
+    "end": "2026-10-05T07:56:13Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5104,
-    "visits": 1323,
+    "pageLoads": 4854,
+    "visits": 1073,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5104,
-        "visits": 1323
+        "pageLoads": 4854,
+        "visits": 1073
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1071,
-        "visits": 749
+        "pageLoads": 791,
+        "visits": 539
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 204,
+        "pageLoads": 164,
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 150,
+        "pageLoads": 80,
         "visits": 0
       },
       "/nine-summits-of-love/": {
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 70,
+        "pageLoads": 60,
         "visits": 0
       },
       "/characters/": {
@@ -59,47 +59,27 @@
         "visits": 0
       },
       "/showroom/": {
-        "pageLoads": 140,
-        "visits": 10
+        "pageLoads": 110,
+        "visits": 0
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/categories/reality/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/scientific-law/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/": {
-        "pageLoads": 80,
+        "pageLoads": 160,
         "visits": 10
       },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/archcoin/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
+        "pageLoads": 130,
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 300,
+        "pageLoads": 290,
         "visits": 90
       },
       "/showroom/story/welcome/": {
@@ -143,12 +123,12 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 160,
+        "pageLoads": 150,
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
+        "pageLoads": 50,
+        "visits": 0
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
@@ -169,14 +149,6 @@
       "/developer/": {
         "pageLoads": 50,
         "visits": 20
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -219,7 +191,7 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -235,12 +207,8 @@
         "visits": 0
       },
       "/laws/categories/integrity/": {
-        "pageLoads": 20,
+        "pageLoads": 200,
         "visits": 0
-      },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -274,6 +242,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
         "visits": 0
@@ -291,6 +263,10 @@
         "visits": 0
       },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/build/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -331,8 +307,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 140,
+        "visits": 110
       },
       "/analytics/": {
         "pageLoads": 41,
@@ -357,20 +333,16 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 533,
-        "visits": 533
+        "pageLoads": 493,
+        "visits": 493
       },
       "diamondgatebridge.com": {
         "pageLoads": 3781,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 780,
-        "visits": 780
-      },
-      "raw.githack.com": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 580,
+        "visits": 580
       }
     }
   }

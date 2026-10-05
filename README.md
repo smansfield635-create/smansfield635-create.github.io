@@ -107,6 +107,14 @@ Auren combines authored dialogue with client-side session state. The [session co
 
 The live chamber and verifier have evolved since that run. The historical source link above preserves what the result applies to. The workflow's verifier retrieval from main also means product identity alone does not freeze the complete test environment.
 
+### Native Chat — historical browser-local model prototype
+
+[Historical source](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/d9847a69ff46fbf31a70e71ad9216f7695bbea2e/products/on-your-side-ai/native-chat/index.js)
+
+Native Chat integrated local language-model loading and generation in the browser, streamed responses, cancellation, recent conversation context, CPU fallback, and diagnostic timing.
+
+Recorded tests established generation but also exposed slow responses, repetition, and follow-up reasoning failures. [Issue #3913](https://github.com/smansfield635-create/smansfield635-create.github.io/issues/3913) records those acceptance failures; [PR #3919](https://github.com/smansfield635-create/smansfield635-create.github.io/pull/3919) withdrew the public prototype and removed its runtime files. Historical source remains inspectable. This is model-integration and failure-investigation experience, not a current deployed conversational product or evidence of reliable reasoning.
+
 ### Productivity Receipt — bounded engineering measurement
 
 The [Node implementation][productivity-source] reads first-parent Git history for a UTC date range, excludes identified automation, classifies commit-message signals, and writes a JSON receipt. Categories cover product, qualification, repair, governance, and publication/closure activity.
@@ -136,6 +144,22 @@ node tools/publication-preflight-self-test.v1.mjs
 Within this process, qualification, merge, deployment, and live verification are distinct steps. A preflight pass establishes the selected checks, and repository policy does not by itself demonstrate enforcement across every host or execution path.
 
 The [public Governance Model](https://diamondgatebridge.com/governance-bridge/governance/) provides an inspection interface for the architecture. Its [catalog][governance-catalog] and [browser implementation][governance-ui] describe and display the relationships; the executable tools above demonstrate specific operational behavior.
+
+### Evidence validation and adversarial qualification
+
+The evidence evaluator checks whether supplied records support acceptance, conflict with one another, or leave required facts unresolved. It checks candidate and artifact identities and refuses unsupported closure when required evidence is missing or contradictory.
+
+**Verified recorded result:** [qualification run 36270130663](https://github.com/smansfield635-create/geodiametrics/actions/runs/36270130663) succeeded at `818f44eac587645f95f237038301e517b0c501e1`. Readback of its execution output matched all **22 frozen synthetic cases** against the expected result, primary failure class, and consequent failure classes: **22 exact matches, zero mismatches**. The logs also record evaluator, runner, and packet hash checks and the absence of sealed expected answers from the execution checkout.
+
+This is a bounded test of structured evidence classification, not a general truth detector or an evaluation of language-model answer quality. The historical public carrier is a separate execution environment under the same owner; it is not independent human review. The current implementation and frozen expected answers reside in the private engineering repository and require access for inspection.
+
+### Dataset acquisition and held-out outcome protection
+
+A Python workflow acquired and validated NASA C-MAPSS FD001 training and test data, checking archive layout, numerical shape, unit counts, and file identity while withholding outcome-label content from the handoff.
+
+**Verified recorded result:** private [source-binding run 31459262254](https://github.com/smansfield635-create/geodiametrics1/actions/runs/31459262254), job `93679331453`, succeeded with `SOURCE_BOUND_SAFE_HANDOFF_READY`. Its receipt records **20,631 training rows** and **13,096 test rows**, each with **26 columns and 100 units**, plus SHA-256 file identities. Outcome bytes were not read, extracted, or handed off.
+
+This establishes an executed acquisition and validation workflow. This run alone does not establish predictive model quality. The source and logs require private repository access; no fresh download or model-training result is claimed here.
 
 ### Browser recording repair and verified recovery
 
@@ -178,7 +202,7 @@ Sean Mansfield owns DGB's conception, strategy, product direction, and developme
 
 For review, follow **implementation → test → workflow → observed result**. Evaluate the test's assertions and candidate identity alongside its PASS label. The examples above expose both the engineering work and its evidence boundaries.
 
-Source links are pinned to the October 4 evidence baseline, `88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749`, except explicitly identified historical examples. Local source replays are separate from historical GitHub runs and live deployment verification.
+Unless separately dated or identified as historical/private, source links are pinned to the October 4 evidence baseline, `88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749`, except explicitly identified historical examples. Local source replays are separate from historical GitHub runs and live deployment verification.
 
 AI agents performing repository work should begin with [`AI_ENTRYPOINT.json`](./AI_ENTRYPOINT.json) and follow [`AGENTS.md`](./AGENTS.md).
 

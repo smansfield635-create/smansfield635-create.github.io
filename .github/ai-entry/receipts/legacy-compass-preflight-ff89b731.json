@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "legacy-compass-preflight-ff89b731",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5757,
+  "requestBranch": "ai-dispatch-request-legacy-compass-preflight-ff89b731",
+  "requestCommit": "9a7f3b4887d1c3e9e7a70a3bdefdc373e4befbda",
+  "requestCommitParent": "ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a",
+    "surface_id": "build"
+  },
+  "bridgeRunId": "37261696745",
+  "dispatchedRunId": 37261710455,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37261710455",
+  "dispatchedRunHeadSha": "ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a",
+  "dispatchedAt": "2026-10-05T04:00:58.207Z",
+  "resolvedAt": "2026-10-05T04:01:02.406Z"
+}

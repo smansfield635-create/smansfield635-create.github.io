@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-05T11:33:17Z",
+  "generatedAt": "2026-10-05T12:47:44Z",
   "window30d": {
-    "start": "2026-09-05T11:33:17Z",
-    "end": "2026-10-05T11:33:17Z"
+    "start": "2026-09-05T12:47:44Z",
+    "end": "2026-10-05T12:47:44Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 20
+      "pageLoads": 19
     },
     {
       "date": "2026-09-29",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 56
+      "pageLoads": 58
     }
   ],
   "summary": {
-    "pageLoads": 6176,
+    "pageLoads": 6177,
     "botPageLoads": 2352,
-    "nonBotPageLoads": 3824
+    "nonBotPageLoads": 3825
   },
   "referrers": [
     {
@@ -159,12 +159,12 @@
       "visits": 6
     },
     {
-      "host": "com.linkedin.android",
-      "pageLoads": 1,
-      "visits": 1
+      "host": "l.instagram.com",
+      "pageLoads": 2,
+      "visits": 2
     },
     {
-      "host": "l.instagram.com",
+      "host": "com.linkedin.android",
       "pageLoads": 1,
       "visits": 1
     }
@@ -172,8 +172,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1572,
-      "visits": 1176
+      "pageLoads": 1573,
+      "visits": 1177
     },
     {
       "path": "/mirror-manor-preview/",

@@ -425,7 +425,12 @@
         "diagnostic/index.html",
         "diagnostic/exam/index.html",
         "diagnostic/type/index.html",
-        "diagnostic/thanks/index.html"
+        "diagnostic/thanks/index.html",
+        "gauges/overview/index.html",
+        "gauges/coherence/index.html",
+        "gauges/admissibility/index.html",
+        "gauges/ohm/index.html",
+        "gauges/instrument/index.html"
       ],
       "entrypoint": ".github/ai-router/projects/legacy-diagnostic-pages/entrypoint.v1.json",
       "priority": 100

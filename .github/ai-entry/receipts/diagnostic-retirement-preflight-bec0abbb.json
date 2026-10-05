@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "diagnostic-retirement-preflight-bec0abbb",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5734,
+  "requestBranch": "ai-dispatch-request-diagnostic-retirement-preflight-bec0abbb",
+  "requestCommit": "dcd3ea36318ab6961fbeac328b02357c2cee56da",
+  "requestCommitParent": "bec0abbb9e74b011e0a003f55ef1ac0e4a867e41",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "bec0abbb9e74b011e0a003f55ef1ac0e4a867e41",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "bec0abbb9e74b011e0a003f55ef1ac0e4a867e41",
+    "surface_id": "build"
+  },
+  "bridgeRunId": "37249600623",
+  "dispatchedRunId": 37249611735,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37249611735",
+  "dispatchedRunHeadSha": "bec0abbb9e74b011e0a003f55ef1ac0e4a867e41",
+  "dispatchedAt": "2026-10-05T00:59:21.036Z",
+  "resolvedAt": "2026-10-05T00:59:25.212Z"
+}

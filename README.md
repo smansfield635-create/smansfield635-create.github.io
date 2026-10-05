@@ -137,6 +137,25 @@ Within this process, qualification, merge, deployment, and live verification are
 
 The [public Governance Model](https://diamondgatebridge.com/governance-bridge/governance/) provides an inspection interface for the architecture. Its [catalog][governance-catalog] and [browser implementation][governance-ui] describe and display the relationships; the executable tools above demonstrate specific operational behavior.
 
+### Browser recording repair and verified recovery
+
+A browser recording tool stalled because it blocked the local server supplying the page. Sean directed the repair and its qualification. The repaired tool recorded an actual public application page, and the captured files were retrieved from GitHub and checked byte-for-byte. A regression test also checked decoded image pixels to detect recordings that failed to show the intended page.
+
+The coordinated verification covered four practical questions:
+
+| Question | Recorded result |
+| --- | --- |
+| Can the available execution tools run the selected work? | The execution path was tested and its saved records were read back. |
+| Can existing proof survive an unrelated repository change? | Existing proof remained valid for a tested change outside the files and inputs it depended on. Relevant changes still require fresh review. |
+| Can an actual consumer record a page and preserve the captured files? | Browser capture and byte-for-byte retrieval passed. |
+| Are current workflows and failed or empty runs accounted for? | The inventory and tracking rules passed the checks defined for the current workflows. |
+
+**Adopted result:** private engineering-tools [PR #660](https://github.com/smansfield635-create/geodiametrics1/pull/660) merged at `81e9d4442449be422765c7fa9de06387881e22b3`, recording all four current gaps as `CLOSED_BOUNDED`. The closure applies to the current behavior covered by those tests. The earlier historical review remains on hold (Gen492 HOLD); it was not reopened, and no independent human review is claimed. The implementation and evidence are private and require repository access for technical inspection.
+
+### Repository maintenance
+
+Completed maintenance includes [removing 2,600 proven duplicate files](https://github.com/smansfield635-create/smansfield635-create.github.io/pull/5698), reducing logical content by 111.28 MB while retaining identical surviving copies and recovery history. Later changes [retired four obsolete diagnostic interfaces](https://github.com/smansfield635-create/smansfield635-create.github.io/pull/5732) with forwarding to the current Coherence Diagnostic and [removed ten unavailable links from four support-product pages](https://github.com/smansfield635-create/smansfield635-create.github.io/pull/5739). Registered deployment checks passed for those later changes; direct verification of the four forwarding pages and four support-product pages remained open at the recorded checkpoint because workspace access was blocked. Archive consolidation and the remaining asset review are ongoing.
+
 ## Research and project identity
 
 DGB also contains philosophical writing, fictional characters, experimental models, and narrative environments. These provide the project's creative identity. Technical claims are evaluated through the relevant implementation, test, and evidence chain.

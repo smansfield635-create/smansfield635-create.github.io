@@ -416,6 +416,19 @@
       ],
       "entrypoint": ".github/ai-router/projects/links-page/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "diagnostic/index.html",
+        "diagnostic/exam/index.html",
+        "diagnostic/type/index.html",
+        "diagnostic/thanks/index.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/legacy-diagnostic-pages/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

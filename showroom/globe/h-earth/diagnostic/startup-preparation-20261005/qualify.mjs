@@ -52,14 +52,23 @@ for(const [source,digest] of Object.entries(sourceDigests)){
  }
 }
 
-let workerCount=0,terminated=0,receivedRaw=null,receivedCanonical=null,interval=null;
+// Run the actual binding selection/hook with its selected import held unresolved.
+const bindingSource=readFileSync(resolve(root,'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'),'utf8');
+const bindingPrefix=bindingSource.slice(0,bindingSource.indexOf('const { createHEarthRun8ER3CPersistentRenderer }')).replace(/^import .*;\n/gm,'').replace('()=>import(selectedRendererPath)','()=>holdRendererImport(selectedRendererPath)');
+for(const [search,route,hasWorker,expected] of [['?visual=terrain-relief-v2&performance=1',true,true,1],['?visual=terrain-relief-v2',true,true,1],['?visual=terrain-relief-v2&renderer-custody=v1',true,true,0],['?visual=terrain-relief-v2&water-attribution=v1',true,true,0],['?visual=terrain-relief-v2',false,true,0],['?visual=terrain-relief-v2',true,false,0],['',true,true,0]]){
+ let started=0,importStarted=false,importSpanCount=0,releaseImport;const held=new Promise(resolve=>releaseImport=resolve);
+ const context={H_EARTH_RENDERER_STARTUP_DIAGNOSTICS:{measureAsync:(name,operation)=>{assert.equal(name,'SELECTED_RENDERER_MODULE_IMPORT');importSpanCount++;return operation();}},URLSearchParams,location:{search},document:{getElementById:()=>route?{getAttribute:()=> 'functional-landscape'}:null},Worker:hasWorker?function(){}:undefined,prepareHEarthRun8ER2CanonicalLiveRenderPackage:options=>{assert.equal(options.deferVegetation,true);assert.equal(importStarted,false);started++;return Promise.resolve();},holdRendererImport:()=>{importStarted=true;return held;}};
+ vm.createContext(context);const evaluation=vm.runInContext('(async()=>{'+bindingPrefix+'})()',context);assert.equal(started,expected);assert.equal(importStarted,true);assert.equal(importSpanCount,search.includes('performance=1')?1:0);releaseImport({});await evaluation;
+}
+
+let workerCount=0,requestCount=0,terminated=0,receivedRaw=null,receivedCanonical=null,interval=null;
 class BrowserWorkerOnNode{
  constructor(url){workerCount++;
   const bootstrap=`import {parentPort} from 'node:worker_threads';let ready=false,pending=[];globalThis.postMessage=data=>parentPort.postMessage(data);parentPort.on('message',data=>ready?globalThis.onmessage?.({data}):pending.push(data));await import(${JSON.stringify(url.href)});ready=true;for(const data of pending)globalThis.onmessage?.({data});`;
   this.thread=new ThreadWorker(new URL('data:text/javascript,'+encodeURIComponent(bootstrap)),{type:'module'});
   this.thread.on('message',data=>{if(data.phase==='CANONICAL_PACKAGE_COMPLETE'){receivedRaw=data.raw;receivedCanonical=data.canonical;}this.onmessage?.({data});});this.thread.on('error',error=>this.onerror?.({message:error.message}));
  }
- postMessage(data){this.thread.postMessage(data);}
+ postMessage(data){requestCount++;this.thread.postMessage(data);}
  terminate(){terminated++;this.thread.terminate();}
 }
 const nativeWorker=globalThis.Worker,originalLocation=globalThis.location,originalDiagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
@@ -71,12 +80,29 @@ try{
   let attempts=0;
   globalThis.Worker=class{constructor(){attempts++;if(kind==='constructor')throw new Error('test-constructor');}terminate(){}postMessage(){queueMicrotask(()=>{this.onmessage({data:{phase:'CANONICAL_WORKER_MODULE_READY'}});kind==='error'?this.onerror({message:'test-error'}):kind==='messageerror'?this.onmessageerror():this.onmessage({data:{phase:'unexpected'}});});}};
   const module=await import(candidateUrl.href+'?failure='+kind);const promise=module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
-  assert.equal(module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),promise);await assert.rejects(promise);await assert.rejects(module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}));assert.equal(attempts,1);const failureTiming=module.getHEarthRun8ER2CanonicalPreparationTiming();assert.equal(failureTiming.status,'FAILED');assert.equal(failureTiming.branch,'MODULE_WORKER');assert.ok(failureTiming.failure.message);assert.equal(failureTiming.normalizedHandoffDurationMs,null);
+  assert.equal(module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),promise);await assert.rejects(promise);assert.equal(module.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{}}),promise);await assert.rejects(promise);assert.equal(attempts,1);const failureTiming=module.getHEarthRun8ER2CanonicalPreparationTiming();assert.equal(failureTiming.status,'FAILED');assert.equal(failureTiming.branch,'MODULE_WORKER');assert.ok(failureTiming.failure.message);assert.equal(failureTiming.normalizedHandoffDurationMs,null);
  }
+ // Replay exceptions reject only the joining caller; live publication exceptions
+ // reject the authoritative owner and retain its sticky failure.
+ let progressWorker,progressAttempts=0;
+ globalThis.Worker=class{constructor(){progressWorker=this;progressAttempts++;}terminate(){}postMessage(){}};
+ const progressModule=await import(candidateUrl.href+'?progressExceptions=1');
+ const progressOwner=progressModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});progressOwner.catch(()=>{});
+ await assert.rejects(progressModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{throw new Error('replay');}}),/replay/);
+ assert.equal(progressModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),progressOwner);
+ let publications=0;assert.equal(progressModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{if(++publications>1)throw new Error('publication');}}),progressOwner);
+ await progressWorker.onmessage({data:{phase:'CANONICAL_WORKER_MODULE_READY'}});await progressWorker.onmessage({data:{phase:'RAW_PACKAGE_COMPLETE'}});
+ await assert.rejects(progressOwner,/publication/);assert.equal(progressModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{}}),progressOwner);assert.equal(progressAttempts,1);
  globalThis.Worker=BrowserWorkerOnNode;
  const candidateModule=await import(candidateUrl.href),candidateRawModule=await import(rawURLFrom(candidateUrl).href);
  const phases=[],start=performance.now();let timerTicks=0;interval=setInterval(()=>timerTicks++,10);
- const promise=candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:detail=>phases.push(detail.phase)});
+ const promise=candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
+ promise.catch(()=>{}); // Observe eager failure without replacing the owner promise.
+ await new Promise(resolve=>setTimeout(resolve,0));
+ const lateProgress=[];
+ assert.equal(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:detail=>{assert.ok(Object.isFrozen(detail));phases.push(detail.phase);}}),promise);
+ assert.equal(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:detail=>lateProgress.push(detail.phase)}),promise);
+ assert.equal(phases[0],'RAW_PACKAGE_PREPARING');assert.equal(lateProgress[0],'RAW_PACKAGE_PREPARING');
  assert.equal(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),promise);
  const candidate=await promise;const workerElapsedMs=performance.now()-start;clearInterval(interval);interval=null;
  const raw=candidateRawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
@@ -84,7 +110,8 @@ try{
  assert.equal(candidateModule.getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),candidate);
  assert.equal(await candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),candidate);
  assert.equal(candidateRawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true}),raw);
- assert.equal(workerCount,1);assert.equal(terminated,1);assert.ok(timerTicks>0);
+ assert.equal(workerCount,1);assert.equal(requestCount,1);assert.equal(terminated,1);
+ const cachedProgress=[];assert.equal(await candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:detail=>cachedProgress.push(detail.phase)}),candidate);assert.deepEqual(cachedProgress,['CANONICAL_PACKAGE_READY']);assert.ok(lateProgress.includes('CANONICAL_PACKAGE_READY'));await assert.rejects(candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{throw new Error('cached-listener');}}));assert.equal(await candidateModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}),candidate);assert.ok(timerTicks>0);
  const hashes={};
  for(const [label,current,accepted] of [['canonical',candidate,baseline],['raw',raw,baselineRaw]]){
   for(const name of Object.keys(accepted.buffers)){assert.deepEqual(current.buffers[name],accepted.buffers[name],label+':'+name);assert.ok(Object.isFrozen(current.buffers[name]));}
@@ -137,6 +164,6 @@ try{
  const {constructionMilliseconds:ignored,...fallbackIdentity}=fallback;const {constructionMilliseconds:ignored2,...baselineIdentity}=baseline;
  assert.deepEqual(fallbackIdentity,baselineIdentity);assert.deepEqual(fallbackPhases,['SYNCHRONOUS_BASELINE_FALLBACK']);const fallbackTiming=fallbackModule.getHEarthRun8ER2CanonicalPreparationTiming();assert.equal(fallbackTiming.branch,'SYNCHRONOUS_BASELINE_FALLBACK');assert.equal(fallbackTiming.status,'FALLBACK');assert.equal(fallbackTiming.worker,null);assert.equal(fallbackTiming.normalizedHandoffDurationMs,null);assert.deepEqual(fallbackTiming.main.stages,{});const failedFallback=await import(candidateUrl.href+'?fallbackFailure=1');await assert.rejects(failedFallback.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{throw new Error('test-fallback-error');}}));assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().status,'FAILED');assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().failure.message,'test-fallback-error');
  for(const phase of ['RAW_PACKAGE_PREPARING','RAW_PACKAGE_COMPLETE','CANONICAL_PACKAGE_COMPLETE','CANONICAL_PACKAGE_READY'])assert.ok(phases.includes(phase));
- const result={schema:'H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1',result:'PASS',baselineHead:'935e756e725f8c205921437fbace9faef45c28eb',fullBufferAndMetadataHashes:hashes,sourceDigests,baselineSourceCount:seenSources.size,workerCount,terminated,timerTicks,workerElapsedMs,phases:[...new Set(phases)],metadataExclusion:['constructionMilliseconds'],canonicalPreparationTiming:timing,timingReportSerialization:'PASS',timingDisabledGating:'PASS',timingFallbackAndFailure:'PASS',timingUnknownClockCases:'PASS',claimCeiling:'CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence'};
+ const result={schema:'H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1',result:'PASS',baselineHead:'935e756e725f8c205921437fbace9faef45c28eb',fullBufferAndMetadataHashes:hashes,sourceDigests,baselineSourceCount:seenSources.size,workerCount,terminated,timerTicks,workerElapsedMs,phases:[...new Set(phases)],metadataExclusion:['constructionMilliseconds'],canonicalPreparationTiming:timing,earlyBindingRouteAndImportOrdering:'PASS',lateProgressReplay:'PASS',singlePreparationRequest:requestCount,timingReportSerialization:'PASS',timingDisabledGating:'PASS',timingFallbackAndFailure:'PASS',timingUnknownClockCases:'PASS',claimCeiling:'CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence'};
  if(process.env.H_EARTH_STARTUP_CPU_RECEIPT)writeFileSync(process.env.H_EARTH_STARTUP_CPU_RECEIPT,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
 }finally{if(interval)clearInterval(interval);globalThis.Worker=nativeWorker;globalThis.location=originalLocation;globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=originalDiagnostics;}

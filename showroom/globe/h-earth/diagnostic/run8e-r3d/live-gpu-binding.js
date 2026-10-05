@@ -1,4 +1,5 @@
-import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js?cb=a4393167b45251fa';
+import { prepareHEarthRun8ER2CanonicalLiveRenderPackage } from '../../render/live-render-package.run8e-r2.canonical.js?cb=2217ddf095698420';
+import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js?cb=b0e2ca1e61b5368f';
 
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
@@ -23,7 +24,7 @@ const OCEAN_PROOF_RENDERER_PATH =
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=07c27b117137085c';
+  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=483d81b8dfb6737d';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -69,7 +70,19 @@ const selectedRendererPath = rendererCustodyRequested
   : cp2LiveDifferentialRequested
     ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH
     : ACCEPTED_BASELINE_RENDERER_PATH;
-const selectedRendererModule = await import(selectedRendererPath);
+// Start the existing deferred owner while the selected renderer imports. Its
+// original pending promise remains authoritative, including sticky failures.
+const functionalLandscapeRoute = globalThis.document?.getElementById?.('h-earth-functional-landscape-route');
+if(selectedRendererPath===ADDITIVE_VISUAL_RENDERER_PATH &&
+   functionalLandscapeRoute?.getAttribute?.('data-h-earth-public-route')==='functional-landscape' &&
+   typeof globalThis.Worker==='function'){
+  prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}).catch(()=>{});
+}
+const importSelectedRenderer=()=>import(selectedRendererPath);
+const startupDiagnostics=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS;
+const selectedRendererModule = await(queryParameters.get('performance')==='1'&&startupDiagnostics?.measureAsync
+  ?startupDiagnostics.measureAsync('SELECTED_RENDERER_MODULE_IMPORT',importSelectedRenderer)
+  :importSelectedRenderer());
 const { createHEarthRun8ER3CPersistentRenderer } = selectedRendererModule;
 
 export const H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID =

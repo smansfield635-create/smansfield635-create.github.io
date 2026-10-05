@@ -1,6 +1,6 @@
 # Diamond Gate Bridge
 
-**Browser applications, custom 3D rendering, Python computational models, and tools for AI-assisted software development.**
+**Browser applications, custom 3D rendering, diagnostic and business dashboards, Python computational models, and tools for AI-assisted software development.**
 
 Diamond Gate Bridge is Sean Mansfield's software and research project exploring how human-directed AI development can produce working applications with testable behavior and controlled releases. This public repository contains browser experiences, JavaScript/Node and Python implementations, automated tests, GitHub Actions workflows, and recorded engineering results.
 
@@ -180,6 +180,42 @@ The coordinated verification covered four practical questions:
 
 Completed maintenance includes [removing 2,600 proven duplicate files](https://github.com/smansfield635-create/smansfield635-create.github.io/pull/5698), reducing logical content by 111.28 MB while retaining identical surviving copies and recovery history. Later changes [retired four obsolete diagnostic interfaces](https://github.com/smansfield635-create/smansfield635-create.github.io/pull/5732) with forwarding to the current Coherence Diagnostic and [removed ten unavailable links from four support-product pages](https://github.com/smansfield635-create/smansfield635-create.github.io/pull/5739). Registered deployment checks passed for those later changes; direct verification of the four forwarding pages and four support-product pages remained open at the recorded checkpoint because workspace access was blocked. Archive consolidation and the remaining asset review are ongoing.
 
+## Diagnostic dashboards and observability
+
+Sean directed AI-assisted development of browser diagnostic workbenches and operates their live interfaces to inspect components, investigate failures, and evaluate evidence.
+
+| Tool | Implemented capability | Inspect |
+| --- | --- | --- |
+| **Estate Laboratory** | Nine selectable instruments: seven lightweight HTTP/content checks plus separate Audralia runtime and evidence-carousel interactions; timed reports with evidence, absence, and next steps. | [Source](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/instruments/laboratory.js) |
+| **Hearth Diagnostic** | Thirty selectable audits across six categories, with component/alias inspection, targeted method invocation, reports, and archive views. | [Source](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/showroom/globe/hearth/diagnostic/index.js) |
+| **Audralia Diagnostic** | Participant and runtime inspection, shared report lanes, direct execution, and conductor-managed nine-station receipts that retain held or missing evidence. | [Source](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/showroom/globe/audralia/diagnostic/index.js) |
+| **H-Earth FD_05** | Captures resource bytes and SHA-256 hashes before ordered native-module imports; separates transport, parser, linker, and transitive-module evidence. | [Capture](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/showroom/globe/h-earth/diagnostic/capture-runtime.js) · [Import diagnosis](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/showroom/globe/h-earth/diagnostic/h-earth.fd-05-module-import-track.js) |
+| **Startup observer and performance probes** | Separates context, shader, resource, draw, presentation, and ready stages; bounded CPU/worker/WebGL probes and browser interaction metrics. | [Observer](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js) · [Profiler](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js) |
+| **Unified instrument platform** | Coordinates four registered tools through session records, evidence envelopes, readiness transitions, and export packets. | [Tool registry](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/h-earth-3d/tools/instrument-platform/tool-registry.mjs) · [Evidence envelopes](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/h-earth-3d/tools/instrument-platform/evidence-envelope.mjs) |
+| **Terrain-analysis workbench** | Eight fixed scenes and seven material families; computed slope, curvature, landform, flow-accumulation, and other model descriptors, with structured visual assessments. | [Terrain atlas](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/h-earth-3d/tools/terrain-workbench/terrain-atlas.mjs) · [Scene comparisons](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/h-earth-3d/tools/terrain-workbench/scene-lab.mjs) |
+
+**October 5 verification:** all 109 inspected JavaScript/MJS files passed syntax checks. The existing [renderer-startup tests](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/showroom/globe/h-earth/diagnostic/renderer-startup-progress.test.mjs) passed five tests: four source/integration contracts and one executed deterministic geometry fixture. A separate private observability self-test passed projection, contradiction preservation, immutability, and invalid-event checks.
+
+Owner-supplied browser footage demonstrates laboratory checks, Audralia runtime readiness and report generation, carousel interaction, FD_05 capture/cycle operation, and Hearth interface use. In that recording, FD_05's exact-nine receipt structure passed while missing engineering evidence correctly kept the terminal result held. Sean reports additional live diagnostic sessions; the recording does not cover every selectable mode.
+
+These counts describe instruments and inspection views, not independently passed benchmark suites. Some Audralia selections share report lanes; a Hearth direct-run flag records method invocation rather than necessarily completed asynchronous work. SHA-256 capture establishes recorded-byte identity; comparison requires a known expected digest. Browser-side timings are not GPU execution timings, and generated-terrain measurements do not establish real-world geographic validity.
+
+## Business dashboards and analytical models
+
+The estate also contains implemented business software prototypes and spreadsheet research models, developed with extensive AI assistance under Sean's product direction.
+
+| Project | Implemented capability | Inspect |
+| --- | --- | --- |
+| **Synthetic roofing CRM demonstration** | Searchable customer/job/branch records, status filters, activity history, document references, operating metrics, and evidence qualification. Its 111 records and company/financial assumptions are explicitly fictional. | [CRM source](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/prototypes/abc-roofing/crm-v1.js) · [Synthetic data](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/prototypes/abc-roofing/crm-data-v1.json) |
+| **Construction operations prototype** | Job editing/archive, contracts/change records, invoices/payments, trade payables, attachments, local IndexedDB storage, JSON backup/restore, and production-readiness checks. | [Dashboard](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/prototypes/evan-job-stage/dashboard-v2.js) · [Calculations](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/prototypes/evan-job-stage/calc-v4.js) · [Readiness](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/prototypes/evan-job-stage/roofing-readiness-v1.js) |
+| **Website analytics dashboard** | Validated snapshots, last-valid-state preservation, freshness states, daily history, equal complete-week comparisons, and page/referrer reporting backed by a Cloudflare collector. | [Dashboard](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/analytics/dashboard.js) · [Tests](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/analytics/dashboard.test.cjs) · [Data snapshot](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a/analytics/data/latest.json) |
+
+**October 5 calculation checks:** the construction fixture and direct calculation replay matched their expected amounts; all seven roofing-readiness tests passed. Analytics tests passed **16 of 17**: the remaining test expects an older publication-trigger arrangement that differs from the current publisher workflow. That mismatch remains unresolved; it does not alone establish a live-dashboard failure.
+
+**Spreadsheet modeling:** inspection of the Google Sheets agricultural-trajectory working model found 61 entered formula cells across its analysis and summary tabs, including regression, correlation, rank comparisons, held-out quarters, and error measurements. Its inspected summary range had no effective cell errors and reported **material improvement not established**. Some older import workbooks have connection/reference errors; populated tables are not automatically working statistical models.
+
+The CRM is a synthetic demonstration and the construction application is a prototype. Some CRM management buttons lack action handlers in the inspected implementation. These projects establish software and operational-modeling work, not commercial adoption, enterprise CRM platform proficiency, or measured sales-conversion gains. They are DGB projects; this audit does not attribute their construction to Sean's earlier employers.
+
 ## Research and project identity
 
 DGB also contains philosophical writing, fictional characters, experimental models, and narrative environments. These provide the project's creative identity. Technical claims are evaluated through the relevant implementation, test, and evidence chain.
@@ -202,14 +238,14 @@ Sean Mansfield owns DGB's conception, strategy, product direction, and developme
 
 For review, follow **implementation → test → workflow → observed result**. Evaluate the test's assertions and candidate identity alongside its PASS label. The examples above expose both the engineering work and its evidence boundaries.
 
-Unless separately dated or identified as historical/private, source links are pinned to the October 4 evidence baseline, `88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749`, except explicitly identified historical examples. Local source replays are separate from historical GitHub runs and live deployment verification.
+The diagnostic and business-dashboard source links above are pinned to the October 5 inspection head, `ff89b731dfcae5cc72c4f2d5abd3b778dc118b2a`. Unless separately dated or identified as historical/private, other source links are pinned to the October 4 evidence baseline, `88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749`, except explicitly identified historical examples. Local source replays are separate from historical GitHub runs and live deployment verification.
 
 AI agents performing repository work should begin with [`AI_ENTRYPOINT.json`](./AI_ENTRYPOINT.json) and follow [`AGENTS.md`](./AGENTS.md).
 
 ---
 
 **Sean Mansfield**  
-Founder / Applied AI & Software Engineer  
+Founder / AI-Assisted Software Development  
 [Diamond Gate Bridge](https://diamondgatebridge.com) · [geodiametrics@gmail.com](mailto:geodiametrics@gmail.com)
 
 [hearth-renderer]: https://github.com/smansfield635-create/smansfield635-create.github.io/blob/88f1432fbf7ef2bb9fa9bec51d8c2a12fc56c749/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js

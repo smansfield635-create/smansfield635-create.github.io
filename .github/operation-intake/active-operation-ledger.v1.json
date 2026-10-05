@@ -12141,6 +12141,50 @@
       "scopeHash": "cc1fdfdda18cf85a4255fac34e29819286cd620759126778bb4b02d047a712cf",
       "state": "ADMITTED_LOCKED"
     },
+    "cc56b7c437ee237a0ba11ac45d46d83908ff9bbc6bcaa2971207f3e5838526bf": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "90399b63c0b36c708208c9bd0496f448eb505ef8",
+          "lockGeneration": 2555,
+          "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_GAUGE_PUBLIC_RETIREMENT_20261005_001",
+          "operationId": "LEGACY_GAUGE_PUBLIC_RETIREMENT_20261005_001",
+          "procedureLocatorDigest": "fd5869b89c64d70cb8b2ba773bc71c99455e93709e7cdac98d7723c5936ccb6b",
+          "requestDigest": "9fd8dc1ed0e5241b8efedf34233cf5f7cd2cad88d370fda330580fcbf1c19608",
+          "scopeHash": "cc56b7c437ee237a0ba11ac45d46d83908ff9bbc6bcaa2971207f3e5838526bf"
+        },
+        "bindingDigest": "0fbf791b60c64f871ca35264ecb4f534a9710031d518d03e5408e020e6056092",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "76e4554da08ac561a7eb9c9b22caf63df3def46e7b91e25054ad99c13ce3c5b7",
+          "commentId": 5986744270,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5744,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37253012057,
+          "workflowSha": "5173239f04c7ba4180877fbfc2b1d1eaa462e39c"
+        },
+        "lineageAnchorCommitSha": "cf53d51f6cd464476fab75e535b7076b03b08113",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "90399b63c0b36c708208c9bd0496f448eb505ef8",
+      "lockGeneration": 2555,
+      "lockScope": "LEGACY_DIAGNOSTIC_PUBLIC_PAGES/LEGACY_GAUGE_PUBLIC_RETIREMENT_20261005_001",
+      "operationId": "LEGACY_GAUGE_PUBLIC_RETIREMENT_20261005_001",
+      "procedureLocatorDigest": "fd5869b89c64d70cb8b2ba773bc71c99455e93709e7cdac98d7723c5936ccb6b",
+      "released": false,
+      "requestDigest": "9fd8dc1ed0e5241b8efedf34233cf5f7cd2cad88d370fda330580fcbf1c19608",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cc56b7c437ee237a0ba11ac45d46d83908ff9bbc6bcaa2971207f3e5838526bf",
+      "state": "ADMITTED_LOCKED"
+    },
     "cc7f2010b670f8a055b366a9a2a512c1efb26612228b7a5e0bc8d9df9e6a2a44": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -15118,7 +15162,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2554,
+  "lockGeneration": 2555,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

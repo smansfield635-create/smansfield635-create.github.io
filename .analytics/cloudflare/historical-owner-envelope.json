@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-06T19:29:32Z",
+  "generatedAt": "2026-10-06T20:36:10Z",
   "window": {
-    "start": "2026-07-08T19:29:32Z",
-    "end": "2026-10-06T19:29:32Z"
+    "start": "2026-07-08T20:36:10Z",
+    "end": "2026-10-06T20:36:10Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -58,13 +58,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -146,20 +146,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -173,6 +173,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -189,10 +193,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,

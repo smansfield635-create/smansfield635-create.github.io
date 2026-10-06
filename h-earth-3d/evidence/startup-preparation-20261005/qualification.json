@@ -116,7 +116,7 @@
     "timingUnknownClockCases": "PASS",
     "claimCeiling": "CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence"
   },
-  "qualificationToolSHA256": "7c233edceaeda0f3d3d10389f1a57a9e46c75b59735bfe1cb6a623c639ad1598",
+  "qualificationToolSHA256": "b1349ee2d3be701136c849b17f04b061bb853ee532309438157b7df872331a2f",
   "syntax": "PASS_9_JAVASCRIPT_FILES",
   "diffCheck": "PASS",
   "browserGPU": "PENDING",
@@ -153,5 +153,13 @@
     "diagnosticSpan": "CANONICAL_MAIN_RAW_MODULE_WAIT",
     "deviceTiming": "PENDING",
     "workerRequestDuringImport": "LISTENER_INSTALLED_BEFORE_TLA_REQUEST_AWAITS_READY_PROMISE"
+  },
+  "workerRawImportFailureQualification": {
+    "result": "PASS",
+    "command": "node showroom/globe/h-earth/diagnostic/startup-preparation-20261005/qualify.mjs --worker-raw-failure-only",
+    "moduleRejected": true,
+    "postedOriginalError": true,
+    "constructionPhases": [],
+    "validationBoundary": "Additional isolated actual-source worker failure fixture after full-suite PASS; runtime bytes unchanged"
   }
 }

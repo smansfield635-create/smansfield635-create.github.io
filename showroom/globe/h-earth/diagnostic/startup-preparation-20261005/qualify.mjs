@@ -8,6 +8,18 @@ import {tmpdir} from 'node:os';
 import vm from 'node:vm';
 import {createHash} from 'node:crypto';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../../../../..');
+async function qualifyWorkerRawImportFailure(){
+ const url=pathToFileURL(resolve(root,'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js')).href+'?hearthCanonicalPreparation=1';
+ const source=readFileSync(fileURLToPath(new URL(url)),'utf8').replace(/export default [^;]+;/g,'').replace(/export /g,'').replaceAll('import.meta.url','canonicalModuleUrl').replace(/import\('([^']*live-render-package\.run8e-r2\.js\?[^']+)'\)/,"loadRawNamespace('$1')");
+ let rejectRaw;const rawHeld=new Promise((resolve,reject)=>rejectRaw=reject),messages=[];
+ const context={URL,URLSearchParams,performance,TextEncoder,setTimeout,canonicalModuleUrl:url,loadRawNamespace:()=>rawHeld,postMessage:data=>messages.push(data)};vm.createContext(context);
+ const evaluation=vm.runInContext('(async()=>{'+source+'})()',context);evaluation.catch(()=>{});assert.equal(typeof context.onmessage,'function');const request=context.onmessage({data:{prepare:true}});
+ rejectRaw(new Error('worker-held-raw-import-failed'));await assert.rejects(evaluation,/worker-held-raw-import-failed/);await request;
+ assert.equal(messages.length,1);assert.equal(messages[0].error.message,'worker-held-raw-import-failed');assert.equal(messages.some(message=>message.phase),false);
+ return {result:'PASS',scope:'ACTUAL_WORKER_HANDLER_RAW_IMPORT_REJECTION_DURING_TLA',moduleRejected:true,postedOriginalError:true,constructionPhases:[]};
+}
+if(process.argv.includes('--worker-raw-failure-only')){console.log(JSON.stringify(await qualifyWorkerRawImportFailure()));process.exit(0);}
+await qualifyWorkerRawImportFailure();
 if(process.argv.includes('--observer-timing-only')){
  const observer=readFileSync(resolve(root,'showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js'),'utf8');
  const measure=observer.slice(observer.indexOf('const measureAsync=async'),observer.indexOf('const getMilestoneTiming='));

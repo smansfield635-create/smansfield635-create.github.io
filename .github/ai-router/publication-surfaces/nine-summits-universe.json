@@ -1,16 +1,19 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "nine-summits-universe",
-  "description": "Nine summit planets surrounding an illuminated diamond heart, existing Compass physics and geometry kernel, with Gratitude to Joy approach and return.",
+  "description": "Nine summits, one path and nine source-grounded teaching panels, using the existing geometry kernel and Compass physics.",
   "checks": [
     {
       "path": "/nine-summits/universe/index.html",
       "includes": [
-        "Nine paths. One heart.",
+        "Nine summits. One heart.",
         "Back to Compass",
         "/assets/compass/compass.orbit-physics.js",
         "id=\"reflection\"",
-        "data-summit=\"8\""
+        "data-summit=\"8\"",
+        "One choice. One path.",
+        "Choose love.",
+        "id=\"summit-teaching\""
       ],
       "excludes": []
     },
@@ -20,7 +23,8 @@
         "DGB_COMPASS_ORBIT_PHYSICS",
         "admitHEarthPrimitiveBatch",
         "Joy begins with noticing.",
-        "DGB_UNIVERSE"
+        "DGB_UNIVERSE",
+        "const teachings"
       ],
       "excludes": []
     },
@@ -50,7 +54,7 @@
     ],
     "interactions": [
       {
-        "name": "Open nine paths list",
+        "name": "Open nine summits list",
         "action": {
           "type": "click",
           "selector": "#path-list summary"
@@ -83,7 +87,7 @@
         "timeoutMs": 5000
       },
       {
-        "name": "Approach selected summit",
+        "name": "Open summit teaching",
         "action": {
           "type": "click",
           "selector": "#approach"
@@ -97,6 +101,15 @@
             "type": "textContains",
             "selector": "#scene-note",
             "value": "Return to all nine"
+          },
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Joy does not begin with having everything."
           }
         ],
         "timeoutMs": 5000
@@ -116,6 +129,310 @@
             "type": "textContains",
             "selector": "#scene-note",
             "value": "Drag to turn the universe"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 2",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"1\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Love"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 2",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Love becomes visible when value moves outward without destroying the person giving it."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 3",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"2\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Stability"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 3",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Stability is not a feeling. It is trustworthy action repeated long enough for others\u2014and your future self\u2014to stand on it."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 4",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"3\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Character"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 4",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Character begins when we stop asking only what we intended and become willing to answer for what our choices produced."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 5",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"4\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Peace"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 5",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 6",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"5\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Balance"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 6",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Balance is not the absence of emotion. It is the ability to feel deeply without surrendering authority over what happens next."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 7",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"6\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Structure"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 7",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Anything built too quickly can collapse under the weight it was meant to carry. Patience gives strong things time to form."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 8",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"7\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Dignity"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 8",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "Humility is not becoming smaller. It is seeing yourself in honest proportion\u2014without self-erasure or artificial superiority."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select summit 9",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"8\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-path",
+            "value": "Free Will"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Read summit 9",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#summit-teaching:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#teaching-copy",
+            "value": "A choice is not fully free when fear, coercion, resentment, or appetite is making it for us. Purity clears the field."
           }
         ],
         "timeoutMs": 5000

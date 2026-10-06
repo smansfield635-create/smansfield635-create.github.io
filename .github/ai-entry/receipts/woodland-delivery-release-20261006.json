@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "woodland-delivery-release-20261006",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5816,
+  "requestBranch": "ai-dispatch-request-woodland-delivery-release-20261006",
+  "requestCommit": "25bfe7cbdb385cf0da45ff33ff45f0520532a320",
+  "requestCommitParent": "6d694c6b70f5b8e5dd4d6c56e34e4ef4d8bd130c",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "6d694c6b70f5b8e5dd4d6c56e34e4ef4d8bd130c",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "6d694c6b70f5b8e5dd4d6c56e34e4ef4d8bd130c",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "37515519911",
+  "dispatchedRunId": 37515541431,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37515541431",
+  "dispatchedRunHeadSha": "6d694c6b70f5b8e5dd4d6c56e34e4ef4d8bd130c",
+  "dispatchedAt": "2026-10-06T18:59:25.065Z",
+  "resolvedAt": "2026-10-06T18:59:29.342Z"
+}

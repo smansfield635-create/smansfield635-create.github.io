@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "meet-sean-mansfield",
-  "description": "Compact speaking topic carousel with on-demand adult/youth agenda inspector; inquiry preparation preserves pending email activation.",
+  "description": "Direct-manipulation spatial talk orbit using shared Compass rotation math, with on-demand adult/youth agenda inspection.",
   "checks": [
     {
       "path": "/meet-sean-mansfield/index.html",
@@ -53,13 +53,14 @@
       {
         "name": "Choose an inspectable topic",
         "action": {
-          "type": "click",
-          "selector": "[data-talk-index=\"2\"]"
+          "type": "key",
+          "selector": ".talk-stage",
+          "key": "ArrowRight"
         },
         "assertions": [
           {
             "type": "exists",
-            "selector": ".topic-slide[data-active=\"true\"] [data-topic=\"The Inner Underdog\"]"
+            "selector": ".topic-slide[data-active=\"true\"] [data-topic=\"Fear and Love\"]"
           }
         ]
       },
@@ -77,7 +78,7 @@
           {
             "type": "textContains",
             "selector": "#inspector-title",
-            "value": "The Inner Underdog"
+            "value": "Fear and Love"
           }
         ]
       },
@@ -98,13 +99,13 @@
         "name": "Carry inspected audience into inquiry",
         "action": {
           "type": "click",
-          "selector": "#agenda-inspector [data-topic=\"The Inner Underdog\"]"
+          "selector": "#agenda-inspector [data-topic=\"Fear and Love\"]"
         },
         "assertions": [
           {
             "type": "textContains",
             "selector": "#topic option:checked",
-            "value": "The Inner Underdog"
+            "value": "Fear and Love"
           },
           {
             "type": "textContains",

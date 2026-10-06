@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-05T23:29:13Z",
+  "generatedAt": "2026-10-06T01:08:39Z",
   "window30d": {
-    "start": "2026-09-05T23:29:13Z",
-    "end": "2026-10-05T23:29:13Z"
+    "start": "2026-09-06T01:08:39Z",
+    "end": "2026-10-06T01:08:39Z"
   },
   "daily": [
-    {
-      "date": "2026-09-06",
-      "pageLoads": 140
-    },
     {
       "date": "2026-09-07",
       "pageLoads": 50
@@ -96,11 +92,11 @@
     },
     {
       "date": "2026-09-28",
-      "pageLoads": 2
+      "pageLoads": 10
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 50
+      "pageLoads": 46
     },
     {
       "date": "2026-09-30",
@@ -124,23 +120,27 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 138
+      "pageLoads": 169
+    },
+    {
+      "date": "2026-10-06",
+      "pageLoads": 32
     }
   ],
   "summary": {
-    "pageLoads": 6220,
-    "botPageLoads": 2343,
-    "nonBotPageLoads": 3877
+    "pageLoads": 6277,
+    "botPageLoads": 2352,
+    "nonBotPageLoads": 3925
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3150,
-      "visits": 3150
+      "pageLoads": 3245,
+      "visits": 3245
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2557,
+      "pageLoads": 2597,
       "visits": 0
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 7,
-      "visits": 7
+      "pageLoads": 9,
+      "visits": 9
     },
     {
       "host": "l.instagram.com",
@@ -172,8 +172,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1579,
-      "visits": 1183
+      "pageLoads": 1577,
+      "visits": 1181
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,8 +187,13 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 466,
-      "visits": 376
+      "pageLoads": 456,
+      "visits": 366
+    },
+    {
+      "path": "/analytics/",
+      "pageLoads": 350,
+      "visits": 228
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -196,19 +201,14 @@
       "visits": 90
     },
     {
-      "path": "/analytics/",
-      "pageLoads": 340,
-      "visits": 218
-    },
-    {
       "path": "/products/education/",
       "pageLoads": 297,
       "visits": 107
     },
     {
-      "path": "/governance-bridge/",
-      "pageLoads": 191,
-      "visits": 139
+      "path": "/showroom/globe/h-earth/",
+      "pageLoads": 195,
+      "visits": 171
     }
   ],
   "ownerMeasurement": {

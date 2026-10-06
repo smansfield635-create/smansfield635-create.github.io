@@ -629,6 +629,18 @@ void main(){
       palette=mix(palette,soil,soilBlend);
     }
 // SHORELINE_SOIL_END shade
+    // P2: bounded forest-floor transitions follow the three authored cluster
+    // footprints. This is static contact reinforcement, not a cast-shadow claim.
+    if(world.x>-180.0 && world.x<-24.0 && world.y>-380.0 && world.y<-190.0){
+      float a=length((world-vec2(-145.0,-230.0))/vec2(25.0,25.0));
+      float b=length((world-vec2(-125.0,-285.0))/vec2(29.0,25.0));
+      float c=length((world-vec2(-65.0,-315.0))/vec2(24.0,22.0));
+      float edge=min(a,min(b,c))+(noise2(world*0.23)-0.5)*0.22;
+      float litter=1.0-smoothstep(0.67,1.10,edge);
+      vec3 woodlandSoil=vec3(0.16,0.119,0.066)*(0.88+0.21*noise2(world*0.71));
+      palette=mix(palette,woodlandSoil,litter*0.70);
+      presentationContact=max(presentationContact,litter*0.65);
+    }
     base=palette;
   }else if(vRoleCode==4u){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.
@@ -642,7 +654,7 @@ void main(){
     shadingNormal=normalize(vec3(-slopeX,1.0,-slopeZ));
   }else{
     // Explicit oasis colors already encode live, straw and dead foliage.
-    if(vMaterialParameters.w<0.5){
+    if(vRoleCode==3u && vMaterialParameters.w<0.5){
       float vegetationVariation=noise2(vWorldPosition.xz*0.42+identitySignal*19.0);
       base=mix(base*vec3(0.56,0.83,0.58),base*vec3(0.92,1.28,0.82),vegetationVariation);
     }
@@ -689,7 +701,7 @@ void main(){
 
   float specularLightingGain=vRoleCode==1u
     ?mix(0.035,0.22,clamp(terrainReflectanceForLighting*0.72+terrainWetnessForLighting*0.28,0.0,1.0))
-    :(vRoleCode==4u?0.22:0.07);
+    :(vRoleCode==4u?0.22:(vMaterialParameters.w>1.5?0.004:0.07));
 
   float ambient=
     0.26+

@@ -50,7 +50,8 @@ export const H_EARTH_RUN_8E_R2_MATERIAL_MODEL = freezeRecord({
 export const H_EARTH_RUN_8E_R2_ROLE_CODE = freezeRecord({
   TERRAIN: 1,
   SHORELINE: 2,
-  VEGETATION: 3
+  VEGETATION: 3,
+  LAND_SURFACE: 5
 });
 
 const SURFACE_CLASS_CODES = freezeRecord(Object.fromEntries(
@@ -110,6 +111,9 @@ function resolveNormals(geometry, issues, primitiveId) {
 
 function roleForPrimitive(primitive, terrainPrimitiveId) {
   if (primitive.primitiveId === terrainPrimitiveId) return 'TERRAIN';
+  if (primitive.primitiveId === 'H_EARTH_LANDSCAPE_P2_BARK') return 'LAND_SURFACE';
+  if (primitive.metadata?.landscapeSectorKind === 'TREE') return 'VEGETATION';
+  if (primitive.metadata?.landscapeSectorKind === 'ROCK' || primitive.metadata?.farSurfaceClass === 'LAND') return 'LAND_SURFACE';
   if (primitive.metadata?.run8DInstanceId) return 'VEGETATION';
   return 'SHORELINE';
 }
@@ -155,6 +159,11 @@ function functionalLandscapeMaterialDefaults(primitive) {
 function resolvePrimitiveMaterialProjection(primitive, role, issues) {
   const materialReference = primitive?.materialHint?.materialReference ?? null;
   const materialIntent = primitive?.materialHint?.materialIntent ?? null;
+  if (primitive.metadata?.landscapeSectorKind || role === 'LAND_SURFACE') {
+    const rgba=primitive.renderMaterial?.rgba ?? [58,88,63,255];
+    if(!Array.isArray(rgba)||rgba.length!==4||!rgba.every(finite))issues.push('LAND_SURFACE_INVALID_RGBA:'+primitive.primitiveId);
+    return {rgba,transparencyClass:'OPAQUE',materialReference,materialIntent,sourceAuthorityContractId:'H_EARTH_LANDSCAPE_SECTOR_20261006_001',projectionModel:'EXPLICIT_OPAQUE_LAND_MATERIAL'};
+  }
   if (role === 'VEGETATION') {
     return {
       rgba: vegetationRgba(primitive),
@@ -330,7 +339,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   const primitiveSpans = [];
   const drawRanges = [];
   const normalSourceCounts = { SOURCE_GEOMETRY_NORMALS: 0, DETERMINISTIC_GEOMETRIC_DERIVATION: 0 };
-  const roleCounts = { TERRAIN: 0, SHORELINE: 0, VEGETATION: 0 };
+  const roleCounts = { TERRAIN: 0, SHORELINE: 0, VEGETATION: 0, LAND_SURFACE: 0 };
   let vertexOffset = 0;
 
   primitives.forEach((primitive, primitiveIndex) => {
@@ -352,7 +361,13 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     const materialModelCode = role === 'TERRAIN'
       ? H_EARTH_RUN_8E_R2_MATERIAL_MODEL.RUN_8C_INTRINSIC_TERRAIN
       : H_EARTH_RUN_8E_R2_MATERIAL_MODEL.PRIMITIVE_RGBA;
-    const primitiveMaterial = role === 'TERRAIN' ? null : resolvePrimitiveMaterialProjection(primitive, role, issues);
+    // West admits geometry and intentionally omits presentation-only fields.
+    // Rejoin only material data by the already-verified source identity.
+    const sectorMaterial=primitive.metadata?.landscapeSectorKind
+      ? neutralPackage.primitives.find(p=>p.primitiveId===primitive.primitiveId)?.renderMaterial : null;
+    if(primitive.metadata?.landscapeSectorKind && (!sectorMaterial?.rgba || sectorMaterial.vertexRgba?.length!==vertices.length))issues.push('LAND_SECTOR_MATERIAL_SOURCE_MISSING:'+primitive.primitiveId);
+    const materialPrimitive=sectorMaterial?{...primitive,renderMaterial:sectorMaterial}:primitive;
+    const primitiveMaterial = role === 'TERRAIN' ? null : resolvePrimitiveMaterialProjection(materialPrimitive, role, issues);
     const rgba = primitiveMaterial?.rgba ?? null;
     const transparencyClass = primitiveMaterial?.transparencyClass ?? 'OPAQUE';
     const indexStart = indices.length;
@@ -397,13 +412,16 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
           surfaceClassCodes.push(SURFACE_CLASS_CODES[material.surfaceClass]);
         }
       } else {
+        const vertexRgba=primitive.metadata?.landscapeSectorKind ? sectorMaterial?.vertexRgba?.[localVertexIndex] : null;
+        const surfaceRgba=vertexRgba ?? rgba;
+        if(!Array.isArray(surfaceRgba)||surfaceRgba.length!==4||!surfaceRgba.every(finite))issues.push('LAND_SURFACE_INVALID_VERTEX_RGBA:'+primitive.primitiveId);
         baseColorsLinear.push(
-          srgb8ToLinear(rgba[0]),
-          srgb8ToLinear(rgba[1]),
-          srgb8ToLinear(rgba[2]),
-          clamp01(rgba[3] / 255)
+          srgb8ToLinear(surfaceRgba[0]),
+          srgb8ToLinear(surfaceRgba[1]),
+          srgb8ToLinear(surfaceRgba[2]),
+          clamp01(surfaceRgba[3] / 255)
         );
-        materialParameters.push(0, 0, 0, 0);
+        materialParameters.push(0, 0, 0, primitive.metadata?.landscapeSectorKind ? 2 : 0);
         surfaceClassCodes.push(NON_TERRAIN_SURFACE_CLASS_CODE);
       }
     });
@@ -571,7 +589,7 @@ function* evaluatePackageChecks(packageRecord) {
     if (!Number.isSafeInteger(packageRecord?.triangleCount) || packageRecord.triangleCount < 1) issues.push('LIVE_OCCURRENCE_TRIANGLE_COUNT_INVALID');
     if (!Number.isSafeInteger(packageRecord?.indexCount) || packageRecord.indexCount !== packageRecord.triangleCount * 3) issues.push('LIVE_OCCURRENCE_INDEX_COUNT_INVALID');
     if ((packageRecord?.roleCounts?.TERRAIN ?? 0) !== 1) issues.push('LIVE_OCCURRENCE_TERRAIN_COUNT_INVALID');
-    const roleTotal=(packageRecord?.roleCounts?.TERRAIN??0)+(packageRecord?.roleCounts?.SHORELINE??0)+(packageRecord?.roleCounts?.VEGETATION??0);
+    const roleTotal=(packageRecord?.roleCounts?.TERRAIN??0)+(packageRecord?.roleCounts?.SHORELINE??0)+(packageRecord?.roleCounts?.VEGETATION??0)+(packageRecord?.roleCounts?.LAND_SURFACE??0);
     if (roleTotal !== packageRecord?.primitiveCount) issues.push('LIVE_OCCURRENCE_ROLE_COUNT_MISMATCH');
   }
   if (!buffers || !Object.isFrozen(buffers)) issues.push('R2_BUFFERS_NOT_FROZEN');

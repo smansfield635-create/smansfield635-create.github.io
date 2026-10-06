@@ -26,15 +26,35 @@ function compact(vertices,indices,diagnostics={},vertexRgba=null){
   return freeze({vertices:referenced.map(i=>vertices[i]),indices:indices.map(i=>remap.get(i)),vertexRgba:Array.isArray(vertexRgba)?freeze(referenced.map(i=>vertexRgba[i])):null,sourceVertexCount:vertices.length,compactVertexCount:referenced.length,removedUnreferencedVertexCount:vertices.length-referenced.length,triangleCount:indices.length/3,...diagnostics});
 }
 
-function buildLandMesh(plan,rings,sectorCount){
+/** Subtract the detailed footprint before projection, then weld its actual
+ * projected boundary. This changes representation ownership, never G_world.
+ * Crossing cells are clipped, not discarded; ocean construction is untouched. */
+function buildLandMesh(plan,rings,sectorCount,nearTerrain=null){
   const vertices=plan.vertices.map(v=>createHEarthVector3(v.world.x,v.world.y,v.world.z));
   const indices=[];let retainedCellCount=0,suppressedCellCount=0,mixedTransitionCellCount=0;
+  const axes=nearTerrain?.geometry?.attributes;
+  const xs=axes?.xValues,zs=axes?.zValues,near=nearTerrain?.geometry?.vertices;
+  const hasNear=Array.isArray(xs)&&Array.isArray(zs)&&Array.isArray(near)&&near.length===xs.length*zs.length;
+  if(nearTerrain&&!hasNear)throw new Error('FAR_NEAR_SEAM_SOURCE_INVALID');
+  const box=hasNear?{minX:xs[0],maxX:xs.at(-1),minZ:zs[0],maxZ:zs.at(-1)}:null;
+  const epsilon=1e-7,seamKeys=new Set();let clippedTriangleCount=0,removedTriangleCount=0,seamVertexCount=0;
+  const key=v=>[v.x,v.y,v.z].map(n=>n.toFixed(9)).join(':');
+  const vertexMap=new Map(vertices.map((v,i)=>[key(v),i]));
+  function add(v){const k=key(v);if(vertexMap.has(k))return vertexMap.get(k);const i=vertices.length;vertices.push(createHEarthVector3(v.x,v.y,v.z));vertexMap.set(k,i);return i;}
+  function sideOf(p){if(!box)return null;if(p.z>=box.minZ-epsilon&&p.z<=box.maxZ+epsilon){if(Math.abs(p.x-box.minX)<epsilon)return'LEFT';if(Math.abs(p.x-box.maxX)<epsilon)return'RIGHT';}if(p.x>=box.minX-epsilon&&p.x<=box.maxX+epsilon){if(Math.abs(p.z-box.minZ)<epsilon)return'BOTTOM';if(Math.abs(p.z-box.maxZ)<epsilon)return'TOP';}return null;}
+  function weld(p){const side=sideOf(p);if(!side)return p.world;const vertical=side==='LEFT'||side==='RIGHT',axis=vertical?zs:xs,t=vertical?p.z:p.x;let i=0;while(i<axis.length-2&&axis[i+1]<t-epsilon)i++;const f=Math.max(0,Math.min(1,(t-axis[i])/(axis[i+1]-axis[i]))),index=j=>vertical?j*xs.length+(side==='LEFT'?0:xs.length-1):(side==='BOTTOM'?0:zs.length-1)*xs.length+j,a=near[index(i)],b=near[index(i+1)];const v={x:a.x+(b.x-a.x)*f,y:a.y+(b.y-a.y)*f,z:a.z+(b.z-a.z)*f};seamKeys.add(key(v));return v;}
+  function interpolate(a,b,t){return{x:a.x+(b.x-a.x)*t,z:a.z+(b.z-a.z)*t,world:{x:a.world.x+(b.world.x-a.world.x)*t,y:a.world.y+(b.world.y-a.world.y)*t,z:a.world.z+(b.world.z-a.world.z)*t}};}
+  function clip(poly,coordinate,value,keepGreater){const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],da=(a[coordinate]-value)*(keepGreater?1:-1),db=(b[coordinate]-value)*(keepGreater?1:-1),ai=da>=-1e-10,bi=db>=-1e-10;if(ai)out.push(a);if(ai!==bi){const p=interpolate(a,b,da/(da-db));p[coordinate]=value;out.push(p);}}return out;}
+  function expandBoundary(poly){const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length];out.push(a);let vertical=null;if(Math.abs(a.x-b.x)<epsilon&&(Math.abs(a.x-box.minX)<epsilon||Math.abs(a.x-box.maxX)<epsilon))vertical=true;else if(Math.abs(a.z-b.z)<epsilon&&(Math.abs(a.z-box.minZ)<epsilon||Math.abs(a.z-box.maxZ)<epsilon))vertical=false;if(vertical===null)continue;const axis=vertical?zs:xs,aa=vertical?a.z:a.x,bb=vertical?b.z:b.x,steps=axis.filter(t=>t>Math.min(aa,bb)+epsilon&&t<Math.max(aa,bb)-epsilon);if(bb<aa)steps.reverse();for(const t of steps)out.push(interpolate(a,b,(t-aa)/(bb-aa)));}return out;}
+  function emit(poly){if(poly.length<3)return;const expanded=hasNear?expandBoundary(poly):poly,points=expanded.map(weld);const ids=points.map(add);if(ids.length===3){const [a,b,c]=points;if(Math.abs((b.x-a.x)*(c.z-a.z)-(b.z-a.z)*(c.x-a.x))>1e-10)indices.push(...ids);return;}const center=points.reduce((p,v)=>({x:p.x+v.x/points.length,y:p.y+v.y/points.length,z:p.z+v.z/points.length}),{x:0,y:0,z:0}),ci=add(center);for(let i=0;i<ids.length;i++){const j=(i+1)%ids.length,a=points[i],b=points[j];if(Math.abs((a.x-center.x)*(b.z-center.z)-(a.z-center.z)*(b.x-center.x))>1e-10)indices.push(ci,ids[i],ids[j]);}}
+  function triangle(ids){const poly=ids.map(i=>({x:plan.vertices[i].planarWorld.x,z:plan.vertices[i].planarWorld.z,world:plan.vertices[i].world}));if(!hasNear){indices.push(...ids);return;}if(poly.every(p=>p.x<box.minX)||poly.every(p=>p.x>box.maxX)||poly.every(p=>p.z<box.minZ)||poly.every(p=>p.z>box.maxZ)){indices.push(...ids);return;}let remainder=poly;const outside=[];for(const [coordinate,value,greater] of [['x',box.minX,true],['x',box.maxX,false],['z',box.minZ,true],['z',box.maxZ,false]]){if(remainder.length<3)break;const piece=clip(remainder,coordinate,value,!greater);if(piece.length>=3)outside.push(piece);remainder=clip(remainder,coordinate,value,greater);}if(!outside.length)removedTriangleCount++;else{clippedTriangleCount++;outside.forEach(emit);}}
   for(let ring=0;ring<rings.length-1;ring++)for(let column=0;column<sectorCount;column++){
     const next=(column+1)%sectorCount,a=ring*sectorCount+column,b=ring*sectorCount+next,d=(ring+1)*sectorCount+next,e=(ring+1)*sectorCount+column;
     const cell=[plan.vertices[a],plan.vertices[b],plan.vertices[d],plan.vertices[e]],votes=cell.filter(v=>v.terrainSilhouettePermitted===true).length;
-    if(votes<3){suppressedCellCount++;continue}if(votes<4)mixedTransitionCellCount++;indices.push(a,e,b,b,e,d);retainedCellCount++;
+    if(votes<3){suppressedCellCount++;continue}if(votes<4)mixedTransitionCellCount++;triangle([a,e,b]);triangle([b,e,d]);retainedCellCount++;
   }
-  return compact(vertices,indices,{retainedCellCount,suppressedCellCount,mixedTransitionCellCount});
+  seamVertexCount=seamKeys.size;
+  return compact(vertices,indices,{retainedCellCount,suppressedCellCount,mixedTransitionCellCount,nearFootprintExcluded:hasNear,nearBoundarySource:hasNear?nearTerrain.primitiveId:null,clippedTriangleCount,removedTriangleCount,seamVertexCount,seamLaw:hasNear?'FINAL_NEAR_PROJECTED_PIECEWISE_LINEAR_BOUNDARY':null});
 }
 
 function buildContinuousOceanField(){
@@ -67,13 +87,13 @@ function primitive(mesh,surfaceClass,plan=null){
   return ocean?freeze({...base,renderMaterial:freeze({...DEEP_OCEAN_RENDER_MATERIAL,vertexRgba:mesh.vertexRgba})}):base;
 }
 
-export function constructHEarthDistantContextGeometry({cameraWorld={x:0,y:8,z:-40},sectorCount=DEFAULT_SECTORS}={}){
+export function constructHEarthDistantContextGeometry({cameraWorld={x:0,y:8,z:-40},sectorCount=DEFAULT_SECTORS,nearTerrain=null}={}){
   const landPlan=buildHEarthWorldManifoldRepresentationPlan({cameraWorld,rings:LAND_RINGS,sectorCount});
   const issues=[];
   if(landPlan.eligible!==true)issues.push(...landPlan.issues.map(i=>`LAND:${i}`));
   if(landPlan.vertices.some(v=>v.valid!==true))issues.push('FAR_CONTEXT_WORLD_SAMPLE_INVALID');
   if(issues.length)return freeze({ok:false,status:'DISTANT_CONTEXT_GEOMETRY_FAILED',contractId:H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,primitives:[],issues});
-  const landMesh=buildLandMesh(landPlan,LAND_RINGS,sectorCount),oceanMesh=buildContinuousOceanField(),land=primitive(landMesh,'LAND',landPlan),ocean=primitive(oceanMesh,'OCEAN');
+  const landMesh=buildLandMesh(landPlan,LAND_RINGS,sectorCount,nearTerrain),oceanMesh=buildContinuousOceanField(),land=primitive(landMesh,'LAND',landPlan),ocean=primitive(oceanMesh,'OCEAN');
   if(!land)issues.push('FAR_LAND_REPRESENTATION_EMPTY_OR_INVALID');if(!ocean)issues.push('FAR_OCEAN_REPRESENTATION_EMPTY_OR_INVALID');
   const primitives=[land,ocean].filter(Boolean),horizon=getHEarthDerivedHorizonDistance(Math.max(0,Number(cameraWorld?.y)||0));
   if(oceanMesh.outerRadius<horizon)issues.push('CONTINUOUS_OCEAN_DOES_NOT_REACH_DERIVED_HORIZON');

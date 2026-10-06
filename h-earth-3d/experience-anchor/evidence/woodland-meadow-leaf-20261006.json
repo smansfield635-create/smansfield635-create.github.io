@@ -1,0 +1,2572 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_LEAF_EVIDENCE_v1",
+  "executedSourceHead": "2ea6e659ba264b90cb29c23b7a2c90945d4a1c65",
+  "governingHead": "98c81d5a068b6dc6c695565d2e7727106d3d8776",
+  "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+  "lockGeneration": 2597,
+  "admission": {
+    "acquisitionCommitSha": "8f3426ea03f247c7fa384d842026176c8c03dc07",
+    "auditEvents": [
+      {
+        "details": {
+          "expectedMainHead": "98c81d5a068b6dc6c695565d2e7727106d3d8776",
+          "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "sourceCommentId": 6027216209
+        },
+        "event": "EXECUTION_INPUT_VALIDATED",
+        "sequence": 1
+      },
+      {
+        "details": {
+          "issueNumber": 5842,
+          "sourceCommentId": 6027216209
+        },
+        "event": "OWNER_SOURCE_AUTHENTICATED",
+        "sequence": 2
+      },
+      {
+        "details": {
+          "ledgerGeneration": 2596,
+          "observedLedgerBlobSha": "47121a3761a0519b5c30473b7a72133de9cf04ad",
+          "observedLockRefHead": "78e5184dbbe1ef5fd57d1593759299e1e8c82d36"
+        },
+        "event": "CANONICAL_STATE_OBSERVED",
+        "sequence": 3
+      },
+      {
+        "details": {
+          "lockGeneration": 2597,
+          "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+          "planIsReceipt": false
+        },
+        "event": "CANONICAL_PLAN_PRODUCED",
+        "sequence": 4
+      },
+      {
+        "details": {
+          "ledgerBlobSha": "47121a3761a0519b5c30473b7a72133de9cf04ad",
+          "lockRefHead": "78e5184dbbe1ef5fd57d1593759299e1e8c82d36",
+          "mainHead": "98c81d5a068b6dc6c695565d2e7727106d3d8776"
+        },
+        "event": "WRITE_BOUNDARY_REVALIDATED",
+        "sequence": 5
+      },
+      {
+        "details": {
+          "createdCommitSha": "8f3426ea03f247c7fa384d842026176c8c03dc07",
+          "ledgerBlobSha": "b7efdbd3a7944d863c723f659662eac3721ee571",
+          "message": "Acquire operation lock 2597: H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+          "parent": "78e5184dbbe1ef5fd57d1593759299e1e8c82d36"
+        },
+        "event": "CANDIDATE_LEDGER_COMMIT_MATERIALIZED",
+        "sequence": 6
+      },
+      {
+        "details": {
+          "createdCommitSha": "8f3426ea03f247c7fa384d842026176c8c03dc07"
+        },
+        "event": "LOCK_REF_CAS_COMMITTED",
+        "sequence": 7
+      },
+      {
+        "details": {
+          "commitVerification": "CANONICAL_LEDGER_COMMIT_VERIFIED",
+          "lineageVerification": "CANONICAL_LOCK_REF_LINEAGE_VERIFIED",
+          "lockGeneration": 2597,
+          "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006"
+        },
+        "event": "READBACK_AND_LINEAGE_VERIFIED",
+        "sequence": 8
+      }
+    ],
+    "canonicalAdmissionReceipt": {
+      "branchCreationAuthorized": true,
+      "errorCode": null,
+      "field": null,
+      "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+      "implementationInferenceAuthorized": false,
+      "lock": {
+        "governingHead": "98c81d5a068b6dc6c695565d2e7727106d3d8776",
+        "independentAuthorityProvenance": {
+          "authorityIdentity": {
+            "governingHead": "98c81d5a068b6dc6c695565d2e7727106d3d8776",
+            "lockGeneration": 2597,
+            "lockScope": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+            "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+            "procedureLocatorDigest": "d083092c939c1ac4fcfbc3cb2c2a68dff1dbfb31c9dc4bcf4f349032a5de6be8",
+            "requestDigest": "9348de8b2ae08cb70125a6e5cd57a9f647186f7720ace854d858d423863b6a50",
+            "scopeHash": "3a7fe7d89c0f133f713e8bd6cbcde30c3b44bb8952cefb947af30108414df1c1"
+          },
+          "bindingDigest": "aa8e4e8eaffc8c716c7be345e694b71ccd7e9308270b41dd057d8ff480e646e9",
+          "compareAndSwap": {
+            "observedLedgerBlobSha": "47121a3761a0519b5c30473b7a72133de9cf04ad",
+            "observedLockRefHead": "78e5184dbbe1ef5fd57d1593759299e1e8c82d36"
+          },
+          "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+          "source": {
+            "authorAssociation": "OWNER",
+            "authorLogin": "smansfield635-create",
+            "commentBodySha256": "3205d550a7ad1df7f0e3c77b21303393041d17ebae36b5f90f36e32dfda7a943",
+            "commentId": 6027216209,
+            "issueNumber": 5842,
+            "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+            "repository": "smansfield635-create/smansfield635-create.github.io"
+          },
+          "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        },
+        "lockGeneration": 2597,
+        "lockScope": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+        "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+        "procedureLocatorDigest": "d083092c939c1ac4fcfbc3cb2c2a68dff1dbfb31c9dc4bcf4f349032a5de6be8",
+        "released": false,
+        "requestDigest": "9348de8b2ae08cb70125a6e5cd57a9f647186f7720ace854d858d423863b6a50",
+        "schema": "REPOSITORY_OPERATION_LOCK_v1",
+        "scopeHash": "3a7fe7d89c0f133f713e8bd6cbcde30c3b44bb8952cefb947af30108414df1c1",
+        "state": "ADMITTED_LOCKED"
+      },
+      "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+      "operationStarted": true,
+      "procedureLocatorDigest": "d083092c939c1ac4fcfbc3cb2c2a68dff1dbfb31c9dc4bcf4f349032a5de6be8",
+      "repositoryWritesAuthorized": true,
+      "requestDigest": "9348de8b2ae08cb70125a6e5cd57a9f647186f7720ace854d858d423863b6a50",
+      "result": "ADMITTED_AND_LOCKED",
+      "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+      "sourceDocument": null,
+      "workflowExecutionAuthorized": true
+    },
+    "committedLedgerBlobSha": "b7efdbd3a7944d863c723f659662eac3721ee571",
+    "directUnplannedLedgerMutation": false,
+    "githubActionsAgentTransport": false,
+    "governingHead": "98c81d5a068b6dc6c695565d2e7727106d3d8776",
+    "lockGeneration": 2597,
+    "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "lockScope": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+    "observedLedgerBlobSha": "47121a3761a0519b5c30473b7a72133de9cf04ad",
+    "observedLockRefHead": "78e5184dbbe1ef5fd57d1593759299e1e8c82d36",
+    "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+    "planWasReceipt": false,
+    "plannerSemanticsDuplicated": false,
+    "procedureLocatorDigest": "d083092c939c1ac4fcfbc3cb2c2a68dff1dbfb31c9dc4bcf4f349032a5de6be8",
+    "readbackVerified": true,
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "repositoryMutationLimitedToCanonicalLedger": true,
+    "requestDigest": "9348de8b2ae08cb70125a6e5cd57a9f647186f7720ace854d858d423863b6a50",
+    "result": "ADMITTED_AND_LOCKED",
+    "routeId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_EXECUTOR_V1",
+    "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+    "scopeHash": "3a7fe7d89c0f133f713e8bd6cbcde30c3b44bb8952cefb947af30108414df1c1",
+    "sourceCommentId": 6027216209
+  },
+  "mechanical": {
+    "schema": "H_EARTH_WOODLAND_MEADOW_LEAF_MECHANICAL_QUALIFICATION_v1",
+    "result": "PASS",
+    "executedHead": "2ea6e659ba264b90cb29c23b7a2c90945d4a1c65",
+    "trackedWorkingTreeClean": true,
+    "baseline": "5896bba366a768f702a1edbd30e01689c0449c1e",
+    "sectorDigest": "743cb323d7f3e4d9a07d2d57aa48c90cde6a50828cb871202f9b5b6e74d74551",
+    "terrainDigest": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
+    "decisionDigest": "e0e4a7d76ed7de413770a349dad330a24be09625453cd8c01546456e1064e9b8",
+    "acceptedTufts": 250,
+    "blades": 500,
+    "rootColumns": 1500,
+    "maxGroundError": 4.768125556608993e-07,
+    "maxTipHeight": 0.8240079879760742,
+    "grassVertices": 8000,
+    "grassTriangles": 9000,
+    "grassBufferBytes": 660000,
+    "sectorTriangles": 35676,
+    "baseVertices": 47031,
+    "baseTriangles": 78846,
+    "baseStartupGeometryBufferBytes": 4191291,
+    "drawRangesUnchanged": 9,
+    "profiles": [
+      {
+        "name": "CANOPY",
+        "eligibleCells": 45,
+        "estimatedEligibleArea": 350.7402885326976,
+        "retainedTufts": 7,
+        "meanTargetDensity": 0.2839644140464588
+      },
+      {
+        "name": "OPEN",
+        "eligibleCells": 258,
+        "estimatedEligibleArea": 2010.9109875874665,
+        "retainedTufts": 238,
+        "meanTargetDensity": 0.805052025667177
+      },
+      {
+        "name": "FEATHER",
+        "eligibleCells": 94,
+        "estimatedEligibleArea": 732.657491601635,
+        "retainedTufts": 5,
+        "meanTargetDensity": 0.15641550592425765
+      }
+    ],
+    "decisionReasons": {
+      "OUTSIDE_TRIAL": 174,
+      "DENSITY_REJECTED": 146,
+      "ACCEPTED": 250,
+      "WALKING_CAPSULE_MARGIN": 22,
+      "TRUNK_CLEARANCE": 6
+    },
+    "unchangedNonGrassGeometry": true,
+    "archivalSitesRootsColorsIndicesIdentical": true,
+    "changedUpperVertices": 4000,
+    "orderVariants": 3,
+    "physicalDeviceAcceptance": "NOT_ESTABLISHED",
+    "browserReadinessQualification": "SEPARATE_REQUIRED"
+  },
+  "frozenVisualComparison": {
+    "NEAR_A": {
+      "changedPixelCount": 1204,
+      "changedFraction": 0.0036577956009235632,
+      "threshold": 0.005,
+      "pass": false,
+      "bounds": [
+        0,
+        531,
+        389,
+        662
+      ]
+    },
+    "APPROACH": {
+      "changedPixelCount": 3787,
+      "changedFraction": 0.01150504314011423,
+      "threshold": 0.002596,
+      "pass": true,
+      "bounds": [
+        0,
+        570,
+        388,
+        842
+      ]
+    }
+  },
+  "renderer": {
+    "executedSourceHead": "2ea6e659ba264b90cb29c23b7a2c90945d4a1c65",
+    "baselineHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+    "candidate": {
+      "residency": {
+        "canonicalPreparationTiming": null,
+        "preparationComplete": true,
+        "preparationProgress": {
+          "phase": "PREPARED",
+          "worldTruthValidated": true,
+          "oasisComplete": true,
+          "grassTuftCount": 350,
+          "cattailCount": 72,
+          "primitiveCount": 494
+        },
+        "validationStatus": "VALIDATED",
+        "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+        "totalInstanceCount": 27585,
+        "totalBatchCount": 108,
+        "maxInstancesPerBatch": 256,
+        "residentInstanceCount": 27585,
+        "residentBatchCount": 108,
+        "residentPrimitiveCount": 498,
+        "complete": true,
+        "droppedPlacementCount": 0,
+        "worldRebuildCount": 0,
+        "cameraIndependent": true
+      },
+      "captures": {
+        "NEAR_A": {
+          "camera": {
+            "position": {
+              "x": -145.00275526639766,
+              "y": 7.929084143252112,
+              "z": -210.0039903858173
+            },
+            "target": {
+              "x": -145.00340376212515,
+              "y": 9.801263718691189,
+              "z": -227.9067439244466
+            },
+            "up": {
+              "x": -0.0003452380739950581,
+              "y": 0.9999998154053346,
+              "z": -0.0004999999692342221
+            },
+            "localAuthoringPosition": {
+              "x": -145,
+              "y": 8.0066153807682,
+              "z": -210
+            },
+            "localAuthoringTarget": {
+              "x": -145,
+              "y": 9.888127719585961,
+              "z": -227.90139411662892
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.999999940405333,
+              -0.00034335317310781987,
+              3.602678202425622e-05,
+              0,
+              0.00034523805715766135,
+              0.9945764229362288,
+              -0.10400778696838059,
+              0,
+              -1.1998431207233518e-07,
+              0.1040077932078874,
+              0.9945764822033604,
+              0,
+              144.99998400621777,
+              13.906184304393108,
+              209.6949404836771,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.070084723476191,
+              -0.0006457533996245173,
+              -3.602768270506534e-05,
+              -3.602678202425622e-05,
+              0.0014051482261393383,
+              1.8705262004256522,
+              0.10401038719555765,
+              0.10400778696838059,
+              -4.883463447252491e-07,
+              0.19561020928834233,
+              -0.9946013469262246,
+              -0.9945764822033604,
+              590.1622549785221,
+              26.153728853255892,
+              -210.20018917279782,
+              -209.6949404836771
+            ]
+          },
+          "frame": {
+            "label": "NEAR_A",
+            "frameNumber": 1,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 213885,
+              "uniqueColorBucketCount": 61,
+              "meanLuminance": 113.97220119467309,
+              "luminanceStandardDeviation": 51.91534075682407,
+              "byteHash": "fnv1a32:834a8dd7"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_36A00591",
+              "runtimeContentDigest": "fnv1a32:36a00591",
+              "primitiveCount": 14,
+              "vertexCount": 47031,
+              "triangleCount": 78846,
+              "indexCount": 236538,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 4191291,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 1,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 1,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 1,
+              "gpuFinishCount": 1,
+              "cameraUniformUpdateCount": 3,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 8,
+              "totalDrawnIndexCount": 1221210,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 108,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2182.599999997765,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2182.599999997765
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "APPROACH": {
+          "camera": {
+            "position": {
+              "x": -125.00326536056053,
+              "y": 10.927463503845502,
+              "z": -200.00522457689684
+            },
+            "target": {
+              "x": -125.00401005108802,
+              "y": 13.423712386342231,
+              "z": -217.83181314676781
+            },
+            "up": {
+              "x": -0.0002976190319774572,
+              "y": 0.9999998423327705,
+              "z": -0.0004761904511639315
+            },
+            "localAuthoringPosition": {
+              "x": -125,
+              "y": 10.993685473527874,
+              "z": -200
+            },
+            "localAuthoringTarget": {
+              "x": -125,
+              "y": 13.498801290809052,
+              "z": -217.82482523734828
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.999999955711454,
+              -0.0002947296568819081,
+              4.1370513667594366e-05,
+              0,
+              0.0002976190187246561,
+              0.9903376855205792,
+              -0.1386765303166394,
+              0,
+              -9.869255656623971e-08,
+              0.1386765364875092,
+              0.9903377293771144,
+              0,
+              124.99998786435556,
+              16.877310739212714,
+              199.59327414421693,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.070084785773404,
+              -0.0005543058658202482,
+              -4.1371547943364504e-05,
+              -4.1370513667594366e-05,
+              0.001211334693716285,
+              1.8625542947883862,
+              0.1386799972732343,
+              0.1386765303166394,
+              -4.0168709073947053e-07,
+              0.2608126322946248,
+              -0.9903624881298333,
+              -0.9903377293771144,
+              508.7605713608397,
+              31.74160497111122,
+              -200.09827028852234,
+              -199.59327414421693
+            ]
+          },
+          "frame": {
+            "label": "APPROACH",
+            "frameNumber": 2,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 200104,
+              "uniqueColorBucketCount": 61,
+              "meanLuminance": 117.68202268998468,
+              "luminanceStandardDeviation": 53.159566052265504,
+              "byteHash": "fnv1a32:2e3bdf30"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_36A00591",
+              "runtimeContentDigest": "fnv1a32:36a00591",
+              "primitiveCount": 14,
+              "vertexCount": 47031,
+              "triangleCount": 78846,
+              "indexCount": 236538,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 4191291,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 2,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 2,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 2,
+              "gpuFinishCount": 2,
+              "cameraUniformUpdateCount": 6,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 16,
+              "totalDrawnIndexCount": 2442420,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 216,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2182.599999997765,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2182.599999997765
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "ROCKS": {
+          "camera": {
+            "position": {
+              "x": -66.00450286204455,
+              "y": 28.61710980470525,
+              "z": -207.01412261277605
+            },
+            "target": {
+              "x": -68.50978907126215,
+              "y": 28.60754468437517,
+              "z": -224.84016224535165
+            },
+            "up": {
+              "x": -0.00015714285013423236,
+              "y": 0.9999998661989825,
+              "z": -0.0004928571208755469
+            },
+            "localAuthoringPosition": {
+              "x": -66,
+              "y": 28.673310068506325,
+              "z": -207
+            },
+            "localAuthoringTarget": {
+              "x": -68.50511581728118,
+              "y": 28.673310068506325,
+              "z": -224.82482523734828
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.9902680607018899,
+              -0.00016012513052257515,
+              0.13917306604965188,
+              0,
+              8.702108847120816e-05,
+              0.9999998550423025,
+              0.000531359298819148,
+              0,
+              -0.1391731309594217,
+              -0.0005140771506840378,
+              0.990267931089175,
+              0,
+              36.548857157907435,
+              -28.7340958663749,
+              214.17028997498824,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.03047514620398,
+              -0.0003011515707408428,
+              -0.13917654541979527,
+              -0.13917306604965188,
+              0.0003541832239143657,
+              1.8807261927205539,
+              -0.0005313725829676705,
+              -0.000531359298819148,
+              -0.5664464679934822,
+              -0.0009668385025213041,
+              -0.9902926880969148,
+              -0.990267931089175,
+              148.75695404403365,
+              -54.040974553689914,
+              -214.67565054924478,
+              -214.17028997498824
+            ]
+          },
+          "frame": {
+            "label": "ROCKS",
+            "frameNumber": 3,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 168806,
+              "uniqueColorBucketCount": 38,
+              "meanLuminance": 133.84870547469635,
+              "luminanceStandardDeviation": 47.159841487105844,
+              "byteHash": "fnv1a32:b98ad364"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_36A00591",
+              "runtimeContentDigest": "fnv1a32:36a00591",
+              "primitiveCount": 14,
+              "vertexCount": 47031,
+              "triangleCount": 78846,
+              "indexCount": 236538,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 4191291,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 3,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 3,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 3,
+              "gpuFinishCount": 3,
+              "cameraUniformUpdateCount": 9,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 24,
+              "totalDrawnIndexCount": 3663630,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 324,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2182.599999997765,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2182.599999997765
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "DISTANT": {
+          "camera": {
+            "position": {
+              "x": -170.00209985559985,
+              "y": 5.136290600697976,
+              "z": -190.00234689743513
+            },
+            "target": {
+              "x": -170.0026069335374,
+              "y": 6.383399907324929,
+              "z": -207.9593418921434
+            },
+            "up": {
+              "x": -0.00040476187990407854,
+              "y": 0.9999998157596428,
+              "z": -0.000452380924598676
+            },
+            "localAuthoringPosition": {
+              "x": -170,
+              "y": 5.213672511291223,
+              "z": -190
+            },
+            "localAuthoringTarget": {
+              "x": -170,
+              "y": 6.469289038685479,
+              "z": -207.95615290467683
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.9999999180839055,
+              -0.0004037803850568616,
+              2.8170607400105547e-05,
+              0,
+              0.0004047618634889902,
+              0.997596971155423,
+              -0.06928289333854384,
+              0,
+              -1.278392678631287e-07,
+              0.06928289906554735,
+              0.9975970528710761,
+              0,
+              169.9999826653759,
+              7.971321962741575,
+              189.9064274397253,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.070084632626085,
+              -0.0007594004563641723,
+              -2.8171311674093976e-05,
+              -2.8170607400105547e-05,
+              0.0016474151754094534,
+              1.8762070254013454,
+              0.06928462543252849,
+              0.06928289333854384,
+              -5.203166821982003e-07,
+              0.13030218186849357,
+              -0.9976219931091509,
+              -0.9975970528710761,
+              691.9143736719705,
+              14.991876179124548,
+              -190.4111814098359,
+              -189.9064274397253
+            ]
+          },
+          "frame": {
+            "label": "DISTANT",
+            "frameNumber": 4,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 176703,
+              "uniqueColorBucketCount": 47,
+              "meanLuminance": 131.51695372228963,
+              "luminanceStandardDeviation": 47.4889553661676,
+              "byteHash": "fnv1a32:e9b39236"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_36A00591",
+              "runtimeContentDigest": "fnv1a32:36a00591",
+              "primitiveCount": 14,
+              "vertexCount": 47031,
+              "triangleCount": 78846,
+              "indexCount": 236538,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 4191291,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 4,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 4,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 4,
+              "gpuFinishCount": 4,
+              "cameraUniformUpdateCount": 12,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 32,
+              "totalDrawnIndexCount": 4884840,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 432,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2182.599999997765,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2182.599999997765
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        }
+      }
+    },
+    "baseline": {
+      "residency": {
+        "canonicalPreparationTiming": null,
+        "preparationComplete": true,
+        "preparationProgress": {
+          "phase": "PREPARED",
+          "worldTruthValidated": true,
+          "oasisComplete": true,
+          "grassTuftCount": 350,
+          "cattailCount": 72,
+          "primitiveCount": 494
+        },
+        "validationStatus": "VALIDATED",
+        "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+        "totalInstanceCount": 27585,
+        "totalBatchCount": 108,
+        "maxInstancesPerBatch": 256,
+        "residentInstanceCount": 27585,
+        "residentBatchCount": 108,
+        "residentPrimitiveCount": 498,
+        "complete": true,
+        "droppedPlacementCount": 0,
+        "worldRebuildCount": 0,
+        "cameraIndependent": true
+      },
+      "captures": {
+        "NEAR_A": {
+          "camera": {
+            "position": {
+              "x": -145.00275526639766,
+              "y": 7.929084143252112,
+              "z": -210.0039903858173
+            },
+            "target": {
+              "x": -145.00340376212515,
+              "y": 9.801263718691189,
+              "z": -227.9067439244466
+            },
+            "up": {
+              "x": -0.0003452380739950581,
+              "y": 0.9999998154053346,
+              "z": -0.0004999999692342221
+            },
+            "localAuthoringPosition": {
+              "x": -145,
+              "y": 8.0066153807682,
+              "z": -210
+            },
+            "localAuthoringTarget": {
+              "x": -145,
+              "y": 9.888127719585961,
+              "z": -227.90139411662892
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.999999940405333,
+              -0.00034335317310781987,
+              3.602678202425622e-05,
+              0,
+              0.00034523805715766135,
+              0.9945764229362288,
+              -0.10400778696838059,
+              0,
+              -1.1998431207233518e-07,
+              0.1040077932078874,
+              0.9945764822033604,
+              0,
+              144.99998400621777,
+              13.906184304393108,
+              209.6949404836771,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.070084723476191,
+              -0.0006457533996245173,
+              -3.602768270506534e-05,
+              -3.602678202425622e-05,
+              0.0014051482261393383,
+              1.8705262004256522,
+              0.10401038719555765,
+              0.10400778696838059,
+              -4.883463447252491e-07,
+              0.19561020928834233,
+              -0.9946013469262246,
+              -0.9945764822033604,
+              590.1622549785221,
+              26.153728853255892,
+              -210.20018917279782,
+              -209.6949404836771
+            ]
+          },
+          "frame": {
+            "label": "NEAR_A",
+            "frameNumber": 1,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 213885,
+              "uniqueColorBucketCount": 44,
+              "meanLuminance": 114.05125507120741,
+              "luminanceStandardDeviation": 51.85839595900376,
+              "byteHash": "fnv1a32:dcc683f4"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_50314975",
+              "runtimeContentDigest": "fnv1a32:50314975",
+              "primitiveCount": 14,
+              "vertexCount": 44023,
+              "triangleCount": 75462,
+              "indexCount": 226386,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 3943131,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 1,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 1,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 1,
+              "gpuFinishCount": 1,
+              "cameraUniformUpdateCount": 3,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 8,
+              "totalDrawnIndexCount": 1211058,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 108,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2199.699999999255,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2199.699999999255
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "APPROACH": {
+          "camera": {
+            "position": {
+              "x": -125.00326536056053,
+              "y": 10.927463503845502,
+              "z": -200.00522457689684
+            },
+            "target": {
+              "x": -125.00401005108802,
+              "y": 13.423712386342231,
+              "z": -217.83181314676781
+            },
+            "up": {
+              "x": -0.0002976190319774572,
+              "y": 0.9999998423327705,
+              "z": -0.0004761904511639315
+            },
+            "localAuthoringPosition": {
+              "x": -125,
+              "y": 10.993685473527874,
+              "z": -200
+            },
+            "localAuthoringTarget": {
+              "x": -125,
+              "y": 13.498801290809052,
+              "z": -217.82482523734828
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.999999955711454,
+              -0.0002947296568819081,
+              4.1370513667594366e-05,
+              0,
+              0.0002976190187246561,
+              0.9903376855205792,
+              -0.1386765303166394,
+              0,
+              -9.869255656623971e-08,
+              0.1386765364875092,
+              0.9903377293771144,
+              0,
+              124.99998786435556,
+              16.877310739212714,
+              199.59327414421693,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.070084785773404,
+              -0.0005543058658202482,
+              -4.1371547943364504e-05,
+              -4.1370513667594366e-05,
+              0.001211334693716285,
+              1.8625542947883862,
+              0.1386799972732343,
+              0.1386765303166394,
+              -4.0168709073947053e-07,
+              0.2608126322946248,
+              -0.9903624881298333,
+              -0.9903377293771144,
+              508.7605713608397,
+              31.74160497111122,
+              -200.09827028852234,
+              -199.59327414421693
+            ]
+          },
+          "frame": {
+            "label": "APPROACH",
+            "frameNumber": 2,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 200104,
+              "uniqueColorBucketCount": 53,
+              "meanLuminance": 117.88275524132781,
+              "luminanceStandardDeviation": 53.00966907188203,
+              "byteHash": "fnv1a32:e916a7d9"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_50314975",
+              "runtimeContentDigest": "fnv1a32:50314975",
+              "primitiveCount": 14,
+              "vertexCount": 44023,
+              "triangleCount": 75462,
+              "indexCount": 226386,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 3943131,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 2,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 2,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 2,
+              "gpuFinishCount": 2,
+              "cameraUniformUpdateCount": 6,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 16,
+              "totalDrawnIndexCount": 2422116,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 216,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2199.699999999255,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2199.699999999255
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "ROCKS": {
+          "camera": {
+            "position": {
+              "x": -66.00450286204455,
+              "y": 28.61710980470525,
+              "z": -207.01412261277605
+            },
+            "target": {
+              "x": -68.50978907126215,
+              "y": 28.60754468437517,
+              "z": -224.84016224535165
+            },
+            "up": {
+              "x": -0.00015714285013423236,
+              "y": 0.9999998661989825,
+              "z": -0.0004928571208755469
+            },
+            "localAuthoringPosition": {
+              "x": -66,
+              "y": 28.673310068506325,
+              "z": -207
+            },
+            "localAuthoringTarget": {
+              "x": -68.50511581728118,
+              "y": 28.673310068506325,
+              "z": -224.82482523734828
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.9902680607018899,
+              -0.00016012513052257515,
+              0.13917306604965188,
+              0,
+              8.702108847120816e-05,
+              0.9999998550423025,
+              0.000531359298819148,
+              0,
+              -0.1391731309594217,
+              -0.0005140771506840378,
+              0.990267931089175,
+              0,
+              36.548857157907435,
+              -28.7340958663749,
+              214.17028997498824,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.03047514620398,
+              -0.0003011515707408428,
+              -0.13917654541979527,
+              -0.13917306604965188,
+              0.0003541832239143657,
+              1.8807261927205539,
+              -0.0005313725829676705,
+              -0.000531359298819148,
+              -0.5664464679934822,
+              -0.0009668385025213041,
+              -0.9902926880969148,
+              -0.990267931089175,
+              148.75695404403365,
+              -54.040974553689914,
+              -214.67565054924478,
+              -214.17028997498824
+            ]
+          },
+          "frame": {
+            "label": "ROCKS",
+            "frameNumber": 3,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 168806,
+              "uniqueColorBucketCount": 38,
+              "meanLuminance": 133.84870547469635,
+              "luminanceStandardDeviation": 47.159841487105844,
+              "byteHash": "fnv1a32:b98ad364"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_50314975",
+              "runtimeContentDigest": "fnv1a32:50314975",
+              "primitiveCount": 14,
+              "vertexCount": 44023,
+              "triangleCount": 75462,
+              "indexCount": 226386,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 3943131,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 3,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 3,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 3,
+              "gpuFinishCount": 3,
+              "cameraUniformUpdateCount": 9,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 24,
+              "totalDrawnIndexCount": 3633174,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 324,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2199.699999999255,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2199.699999999255
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "DISTANT": {
+          "camera": {
+            "position": {
+              "x": -170.00209985559985,
+              "y": 5.136290600697976,
+              "z": -190.00234689743513
+            },
+            "target": {
+              "x": -170.0026069335374,
+              "y": 6.383399907324929,
+              "z": -207.9593418921434
+            },
+            "up": {
+              "x": -0.00040476187990407854,
+              "y": 0.9999998157596428,
+              "z": -0.000452380924598676
+            },
+            "localAuthoringPosition": {
+              "x": -170,
+              "y": 5.213672511291223,
+              "z": -190
+            },
+            "localAuthoringTarget": {
+              "x": -170,
+              "y": 6.469289038685479,
+              "z": -207.95615290467683
+            },
+            "verticalFovDegrees": 56,
+            "nearPlane": 0.25,
+            "farPlane": 20000,
+            "viewMatrix": [
+              0.9999999180839055,
+              -0.0004037803850568616,
+              2.8170607400105547e-05,
+              0,
+              0.0004047618634889902,
+              0.997596971155423,
+              -0.06928289333854384,
+              0,
+              -1.278392678631287e-07,
+              0.06928289906554735,
+              0.9975970528710761,
+              0,
+              169.9999826653759,
+              7.971321962741575,
+              189.9064274397253,
+              1
+            ],
+            "projectionMatrix": [
+              4.0700849660315495,
+              0,
+              0,
+              0,
+              0,
+              1.880726465346332,
+              0,
+              0,
+              0,
+              0,
+              -1.000025000312504,
+              -1,
+              0,
+              0,
+              -0.5000062500781259,
+              0
+            ],
+            "viewProjectionMatrix": [
+              4.070084632626085,
+              -0.0007594004563641723,
+              -2.8171311674093976e-05,
+              -2.8170607400105547e-05,
+              0.0016474151754094534,
+              1.8762070254013454,
+              0.06928462543252849,
+              0.06928289333854384,
+              -5.203166821982003e-07,
+              0.13030218186849357,
+              -0.9976219931091509,
+              -0.9975970528710761,
+              691.9143736719705,
+              14.991876179124548,
+              -190.4111814098359,
+              -189.9064274397253
+            ]
+          },
+          "frame": {
+            "label": "DISTANT",
+            "frameNumber": 4,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 176703,
+              "uniqueColorBucketCount": 32,
+              "meanLuminance": 131.58020624142912,
+              "luminanceStandardDeviation": 47.41659789058956,
+              "byteHash": "fnv1a32:3adda455"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_50314975",
+              "runtimeContentDigest": "fnv1a32:50314975",
+              "primitiveCount": 14,
+              "vertexCount": 44023,
+              "triangleCount": 75462,
+              "indexCount": 226386,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 3943131,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 4,
+              "visiblePresentationCount": 0,
+              "colorReadbackCount": 4,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 4,
+              "gpuFinishCount": 4,
+              "cameraUniformUpdateCount": 12,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 32,
+              "totalDrawnIndexCount": 4844232,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 0,
+              "refinementBufferUploadCount": 0,
+              "refinementDrawCallCount": 0,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 432,
+              "worldRebuildCount": 0
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": true,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": false,
+            "refinementResourceBufferUploadCount": 0,
+            "refinementPatchVertexCount": 0,
+            "refinementPatchTriangleCount": 0,
+            "refinementAnchor": null,
+            "refinementFallbackAvailable": false,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 62308,
+              "contactSegments": 434,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 0,
+              "packageVertices": 10573,
+              "patchVertices": 0,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 2199.699999999255,
+              "buildCount": 1,
+              "totalBuildMilliseconds": 2199.699999999255
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        }
+      }
+    }
+  },
+  "visualResult": "FAIL",
+  "physicalPhoneTabletAcceptance": "NOT_ESTABLISHED",
+  "published": false,
+  "independentReviews": {
+    "East": "PASS: exact frozen source and geometry reviewed",
+    "West": "Frozen visual FAIL. Exact candidate invocation and immutable git-object source requests verified. Near leaves broader but isolated; foreground remains largely bare. Approach readability improved. Physical device acceptance untested."
+  },
+  "harnessSha256": "f82162d9539b72895e64da473b258142144a840c12ba965d3e210f46a9acbaa4",
+  "images": {
+    "NEAR_A": {
+      "path": "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-near.png",
+      "sha256": "cf4c3edf520654b8f85bf6e05a2fd9be97bd86fbea927c7ed807f8e2d0f79717"
+    },
+    "APPROACH": {
+      "path": "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-approach.png",
+      "sha256": "31cd415e2d69fcf4158636e05905dcb3990f0a846ae9c060fb5f47ee5bb22967"
+    }
+  }
+}

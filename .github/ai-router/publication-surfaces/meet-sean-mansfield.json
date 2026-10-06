@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "meet-sean-mansfield",
-  "description": "Spatial speaking carousel, agenda inspection, and guided event conversation with draft continuity and honest email handoff.",
+  "description": "Spatial speaking carousel, agenda inspection, and donor-based speaking companion with visible conversation and honest email handoff.",
   "checks": [
     {
       "path": "/meet-sean-mansfield/index.html",
@@ -30,7 +30,10 @@
       "path": "/meet-sean-mansfield/speaking.js",
       "includes": [
         "https://formsubmit.co/ajax/hello@diamondgatebridge.com",
-        "if(!verified)"
+        "if(!verified)",
+        "dgb-speaking-companion-v2",
+        "function bubble(",
+        "function nextQuestion("
       ],
       "excludes": []
     }
@@ -119,6 +122,10 @@
           {
             "type": "exists",
             "selector": "#event-guide:not([hidden])"
+          },
+          {
+            "type": "exists",
+            "selector": "#event-guide [data-chat-log][role=\"log\"]"
           }
         ]
       }

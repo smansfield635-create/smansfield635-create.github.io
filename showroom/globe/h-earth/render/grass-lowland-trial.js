@@ -293,9 +293,9 @@ function replaceOasisTuft(primitive,index,woodland=null) {
   for(let attempt=0;attempt<bladeLimit*5&&bladeCount<bladeLimit;attempt++) {
     const angle=random()*Math.PI*2,radius=Math.sqrt(random())*.34;
     const x=Math.fround(anchor.x+Math.cos(angle)*radius),z=Math.fround(anchor.z+Math.sin(angle)*radius);
-    const shortLayer=bladeCount%3!==0;
-    const heading=angle+(random()-.5)*1.8,height=shortLayer?.10+random()*.18:.34+random()*.43,width=shortLayer?.008+random()*.012:.007+random()*.011;
-    const bend=shortLayer?.09+random()*.20:.12+random()*.29,dx=Math.cos(heading),dz=Math.sin(heading),sx=-dz,sz=dx;
+    const shortLayer=woodland?bladeCount%2===1:bladeCount%3!==0;
+    const heading=angle+(random()-.5)*1.8,height=woodland?(shortLayer?.22+random()*.16:.65+random()*.30):(shortLayer?.10+random()*.18:.34+random()*.43),width=woodland?.045+random()*.030:(shortLayer?.008+random()*.012:.007+random()*.011);
+    const bend=woodland?.18+random()*.20:(shortLayer?.09+random()*.20:.12+random()*.29),dx=Math.cos(heading),dz=Math.sin(heading),sx=-dz,sz=dx;
     const root=sample(x,z);
     if(!root||!eligible(x,z))continue;
     const blade=[],rootSamples=[];
@@ -324,6 +324,22 @@ function replaceOasisTuft(primitive,index,woodland=null) {
     roots.push(...rootSamples.map((sample,i)=>({...sample,vertexIndex:start+i})));bladeCount++;
   }
   if(bladeCount<(woodland?bladeLimit:32))throw new Error(`GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS:${primitive.primitiveId}`);
+  // Frozen leaf correction: acceptance/random stream is complete before this transform.
+  if(woodland){
+    for(let start=0;start<vertices.length;start+=16){
+      const root=vertices[start+1],tip=vertices[start+15],length=Math.hypot(tip.x-root.x,tip.z-root.z);
+      const ux=(tip.x-root.x)/length,uz=(tip.z-root.z)/length;
+      for(let row=1;row<5;row++){
+        const center=vertices[start+row*3+1],scale=1+3*Math.sin(Math.PI*row/5);
+        for(const column of [0,2]){
+          const offset=start+row*3+column,v=vertices[offset],px=v.x-center.x,pz=v.z-center.z;
+          const side=-px*uz+pz*ux;
+          vertices[offset]={x:Math.fround(v.x-uz*side*(scale-1)),y:v.y,z:Math.fround(v.z+ux*side*(scale-1))};
+        }
+      }
+    }
+    if(vertices.some(v=>!within(v.x,v.z)))throw new Error(`WOODLAND_LEAF_DOMAIN_INVALID:${primitive.primitiveId}`);
+  }
   const shorelineRefinement=woodland?{version:'OASIS_PALETTE_REUSE_WOODLAND_v1',pocket:woodland.pocket,rootVerticesPreserved:true}:refineGrassUpper(vertices,anchor,index,primitive.primitiveId);
   const result=constructHEarthTriangleMesh({
     primitiveId:primitive.primitiveId,geometryId:primitive.geometry.geometryId,
@@ -342,7 +358,7 @@ function replaceOasisTuft(primitive,index,woodland=null) {
 /** Reuse the accepted oasis folded blade and palette, with explicit woodland
  * habitat/ground callbacks. Default oasis construction is unchanged. */
 export function buildHEarthWoodlandGrassTuft({id,x,z,bladeCount=8,pocket='OLIVE',sample,eligible,inside}) {
-  if(![6,7,8,18].includes(bladeCount)||!['GOLD','BROWN','OLIVE'].includes(pocket)||![sample,eligible,inside].every(f=>typeof f==='function'))throw new Error('WOODLAND_GRASS_INPUT_INVALID');
+  if(![2,6,7,8,18].includes(bladeCount)||!['GOLD','BROWN','OLIVE'].includes(pocket)||![sample,eligible,inside].every(f=>typeof f==='function'))throw new Error('WOODLAND_GRASS_INPUT_INVALID');
   const root=sample(x,z);if(!root)throw new Error('WOODLAND_GRASS_ROOT_MISSING');
   const source={primitiveId:id,geometry:{geometryId:`${id}:GEOMETRY`},semanticRole:'BOUNDED_WOODLAND_GRASS_PRESENTATION',materialHint:{materialIntent:'COASTAL_GRASS_GREEN',archetypeId:'OASIS_ACCEPTED_BLADE_GRASS'},metadata:{worldAnchor:{x,y:root.y,z},woodlandGrass:{sourceRecipe:O.id,populationTruthMutated:false}},source:{sourceType:'EXISTING_OASIS_BLADE_REUSE'}};
   return replaceOasisTuft(source,null,{bladeCount,pocket,sample,eligible,inside});

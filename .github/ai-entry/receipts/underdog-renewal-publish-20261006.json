@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "underdog-renewal-publish-20261006",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5813,
+  "requestBranch": "ai-dispatch-request-underdog-20261006",
+  "requestCommit": "0f8e42fb7bdc6f6255dcebef3051b4af9930ced9",
+  "requestCommitParent": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+    "surface_id": "about-this-underdog"
+  },
+  "bridgeRunId": "37514755754",
+  "dispatchedRunId": 37514777577,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37514777577",
+  "dispatchedRunHeadSha": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+  "dispatchedAt": "2026-10-06T18:53:28.627Z",
+  "resolvedAt": "2026-10-06T18:53:32.921Z"
+}

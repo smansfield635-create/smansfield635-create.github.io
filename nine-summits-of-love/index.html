@@ -13,7 +13,7 @@
   - Give gold navigation bubbles dark navy-black lettering.
   - Give dark navigation bubbles saturated cyan lettering.
   - Correct mobile horizontal overflow in the header, title, kicker, and controls.
-  - Preserve the House Control Pad entrance.
+  - Provide direct Compass return from the heart and reading navigation.
   - Use native WebGL with no external 3D library.
 -->
 
@@ -37,7 +37,6 @@
   data-streaming="false"
   data-mobile-horizontal-overflow="forbidden"
   data-navigation-bubble-contrast="renewed"
-  data-house-controller-form="rounded-double-convex-diamond-heart"
   data-heart-geometry-renewed="false"
   data-heart-geometry-preserved="true"
   data-heart-primary-color-family="ruby-crimson-rose-garnet-burgundy"
@@ -66,11 +65,6 @@
   <meta
     name="description"
     content="What if the heart is not broken, but simply under pressure? The Nine Summits of Love presents a connected path from pressure to human potential."
-  >
-
-  <link
-    rel="stylesheet"
-    href="/assets/house-control-pad/house.control-pad.css"
   >
 
   <style>
@@ -2051,9 +2045,25 @@
       }
     }
   </style>
+<style id="reading-navigation-style">
+.heart-door{display:block;text-decoration:none;text-align:center}
+/* Direct reading-page navigation: shared destinations, page-local presentation. */
+html{scroll-padding-top:calc(90px + env(safe-area-inset-top))}
+body{padding-top:calc(72px + env(safe-area-inset-top))}
+.reading-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;align-items:stretch;font:600 13px/1.25 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:0;text-align:center}
+.reading-nav--top{position:fixed;z-index:100;top:0;left:0;right:0;padding:calc(8px + env(safe-area-inset-top)) max(12px,calc((100vw - 760px)/2)) 8px;background:#080e18;border-bottom:1px solid rgba(228,201,121,.25);box-shadow:0 4px 18px #0003}
+.reading-nav a{display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;padding:8px 5px;border:1px solid transparent;border-radius:8px;color:#f5efd8;text-decoration:none;overflow-wrap:normal}
+.reading-nav a:hover{color:#ffe6a1;background:#202538}
+.reading-nav a[aria-current="page"]{color:#ffe6a1;background:#242638;border-color:#867244}
+.reading-nav a:focus-visible{outline:3px solid #f0d58b;outline-offset:2px}
+.reading-nav--footer{position:relative;z-index:2;margin:24px 0 0;padding:14px 0;border-top:1px solid rgba(228,201,121,.25)}
+.page-skip:focus,.skip:focus{position:fixed;top:4px;z-index:110}
+@media(max-width:380px){.reading-nav{font-size:12px;gap:2px}.reading-nav a{padding-inline:3px}}
+</style>
 </head>
 
 <body>
+<nav class="reading-nav reading-nav--top" aria-label="Reading pages"><a href="/" aria-label="Return to Compass">Compass</a><a href="/nine-summits-of-love/" aria-current="page">The Book</a><a href="/meet-sean-mansfield/">Meet Sean</a><a href="/about-this-underdog/">This Underdog</a></nav>
   <a
     class="page-skip"
     href="#nine-summits-main"
@@ -2264,25 +2274,19 @@
             />
           </svg>
 
-          <button
-            class="heart-door"
-            type="button"
-            data-house-control-pad-open
-            data-house-context="nine-summits-of-love"
-            aria-label="Open the interactive House estate from the ruby internally luminous rotating Nine Summits diamond heart"
-          >
+          <a class="heart-door" href="/" aria-label="Return to Compass">
             <span class="heart-status">
               A living heart under pressure
             </span>
 
             <span class="heart-enter">
-              Enter the House
+              Return to Compass
             </span>
 
             <span class="heart-help">
-              Select the heart to open the interactive estate
+              Select the heart to find your next direction
             </span>
-          </button>
+          </a>
         </div>
 
         <div class="hero-actions">
@@ -2729,30 +2733,17 @@
             Enter the Universe
           </a>
 
-          <button
-            class="page-button"
-            type="button"
-            data-house-control-pad-open
-            data-house-context="nine-summits-of-love-final"
-          >
-            Enter the House
-          </button>
+          <a class="page-button" href="/">Return to Compass</a>
         </div>
       </section>
     </main>
+<nav class="reading-nav reading-nav--footer" aria-label="Continue exploring"><a href="/" aria-label="Return to Compass">Compass</a><a href="/nine-summits-of-love/" aria-current="page">The Book</a><a href="/meet-sean-mansfield/">Meet Sean</a><a href="/about-this-underdog/">This Underdog</a></nav>
 
     <footer class="page-footer">
       <nav
         class="footer-links"
         aria-label="Secondary navigation"
       >
-        <a href="/about-this-underdog/">
-          About This Underdog
-        </a>
-
-        <a href="/meet-sean-mansfield/">
-          Meet Sean
-        </a>
 
         <a href="/products/">
           Products
@@ -6073,10 +6064,5 @@
       }
     })();
   </script>
-
-  <script
-    src="/assets/house-control-pad/house.control-pad.js"
-    defer
-  ></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "meet-sean-mansfield",
-  "description": "Direct-manipulation spatial talk orbit using shared Compass rotation math, with on-demand adult/youth agenda inspection.",
+  "description": "Spatial speaking carousel, agenda inspection, and guided event conversation with draft continuity and honest email handoff.",
   "checks": [
     {
       "path": "/meet-sean-mansfield/index.html",
@@ -115,6 +115,10 @@
           {
             "type": "exists",
             "selector": "#send-button[disabled]"
+          },
+          {
+            "type": "exists",
+            "selector": "#event-guide:not([hidden])"
           }
         ]
       }

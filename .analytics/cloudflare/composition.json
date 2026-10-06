@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-06T13:34:41Z",
+  "generatedAt": "2026-10-06T14:33:56Z",
   "window": {
-    "start": "2026-09-06T13:34:41Z",
-    "end": "2026-10-06T13:34:41Z"
+    "start": "2026-09-06T14:33:56Z",
+    "end": "2026-10-06T14:33:56Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1557,
-        "visits": 1161
-      },
-      {
-        "value": "/mirror-manor-preview/",
-        "pageLoads": 800,
-        "visits": 800
+        "pageLoads": 1437,
+        "visits": 1041
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
         "pageLoads": 713,
         "visits": 23
+      },
+      {
+        "value": "/mirror-manor-preview/",
+        "pageLoads": 690,
+        "visits": 690
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -39,8 +39,8 @@
       },
       {
         "value": "/products/education/",
-        "pageLoads": 297,
-        "visits": 107
+        "pageLoads": 257,
+        "visits": 77
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -61,16 +61,6 @@
         "value": "/evidence/agentic-frontier/",
         "pageLoads": 89,
         "visits": 49
-      },
-      {
-        "value": "/products/archcoin/contract/",
-        "pageLoads": 80,
-        "visits": 10
-      },
-      {
-        "value": "/prototypes/evan-job-stage/",
-        "pageLoads": 70,
-        "visits": 70
       },
       {
         "value": "/products/on-your-side-ai/native-chat/",
@@ -98,11 +88,6 @@
         "visits": 0
       },
       {
-        "value": "/products/archcoin/receivable/",
-        "pageLoads": 50,
-        "visits": 0
-      },
-      {
         "value": "/build/",
         "pageLoads": 44,
         "visits": 24
@@ -111,6 +96,11 @@
         "value": "/index.html",
         "pageLoads": 40,
         "visits": 0
+      },
+      {
+        "value": "/products/archcoin/contract/",
+        "pageLoads": 40,
+        "visits": 10
       },
       {
         "value": "/analytics-owner-device/",
@@ -183,6 +173,11 @@
         "visits": 10
       },
       {
+        "value": "/products/archcoin/receivable/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
         "value": "/products/archcoin/",
         "pageLoads": 20,
         "visits": 20
@@ -244,11 +239,6 @@
       },
       {
         "value": "/showroom/globe/hearth/diagnostic/",
-        "pageLoads": 10,
-        "visits": 0
-      },
-      {
-        "value": "/products/archcoin/allocation/",
         "pageLoads": 10,
         "visits": 0
       },
@@ -393,8 +383,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6230,
-        "visits": 3636
+        "pageLoads": 6190,
+        "visits": 3596
       },
       {
         "value": "BR",

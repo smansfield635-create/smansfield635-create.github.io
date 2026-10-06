@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-06T13:34:41Z",
+  "generatedAt": "2026-10-06T14:33:56Z",
   "window30d": {
-    "start": "2026-09-06T13:34:41Z",
-    "end": "2026-10-06T13:34:41Z"
+    "start": "2026-09-06T14:33:56Z",
+    "end": "2026-10-06T14:33:56Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 52
+      "pageLoads": 51
     },
     {
       "date": "2026-09-30",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 69
+      "pageLoads": 70
     }
   ],
   "summary": {
@@ -172,18 +172,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1557,
-      "visits": 1161
-    },
-    {
-      "path": "/mirror-manor-preview/",
-      "pageLoads": 800,
-      "visits": 800
+      "pageLoads": 1437,
+      "visits": 1041
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
       "pageLoads": 713,
       "visits": 23
+    },
+    {
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 690,
+      "visits": 690
     },
     {
       "path": "/showroom/globe/audralia/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 297,
-      "visits": 107
+      "pageLoads": 257,
+      "visits": 77
     },
     {
       "path": "/showroom/globe/h-earth/",

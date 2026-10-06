@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-06T13:34:41Z",
+  "generatedAt": "2026-10-06T14:33:56Z",
   "window": {
-    "start": "2026-07-08T13:34:41Z",
-    "end": "2026-10-06T13:34:41Z"
+    "start": "2026-07-08T14:33:56Z",
+    "end": "2026-10-06T14:33:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5104,
+    "pageLoads": 5074,
     "visits": 1323,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5104,
+        "pageLoads": 5074,
         "visits": 1323
       }
     },
@@ -31,7 +31,7 @@
         "visits": 749
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 204,
+        "pageLoads": 184,
         "visits": 0
       },
       "/index.html": {
@@ -59,7 +59,7 @@
         "visits": 0
       },
       "/showroom/": {
-        "pageLoads": 140,
+        "pageLoads": 130,
         "visits": 10
       },
       "/coherence-diagnostic/": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -267,10 +271,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -361,7 +361,7 @@
         "visits": 533
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3781,
+        "pageLoads": 3751,
         "visits": 0
       },
       "www.google.com": {

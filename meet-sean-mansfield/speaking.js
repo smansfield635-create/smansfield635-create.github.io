@@ -138,7 +138,16 @@
       card.classList.add('agenda-enhanced');card.querySelectorAll('.agenda-controls,.agenda-hint,.agenda-status').forEach(el=>el.hidden=false);select('adult');
     });
   }
+  function initStoryCompass(){
+    const compass=document.querySelector('.story-compass');
+    if(!compass||matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in globalThis))return;
+    const observer=new IntersectionObserver(entries=>{
+      if(entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>=.45)){compass.dataset.arrived='true';observer.disconnect();}
+    },{threshold:.45});
+    observer.observe(compass);
+  }
   function boot() {
+    initStoryCompass();
     initAgendas();
     initTalkCarousel();
     const form=document.getElementById('speaking-form');if(!form)return;

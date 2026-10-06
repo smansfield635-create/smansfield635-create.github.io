@@ -491,6 +491,16 @@
       ],
       "entrypoint": ".github/ai-router/projects/nine-summits-universe/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "BOOK_PUBLIC_PAGE",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "nine-summits-of-love/index.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/book-page/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

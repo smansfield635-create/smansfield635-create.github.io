@@ -1,11 +1,27 @@
 {
-  "schema": "H_EARTH_CANONICAL_STARTUP_PREPARATION_QUALIFICATION_v1",
-  "operationId": "H_EARTH_BOUNDED_CANONICAL_STARTUP_PREPARATION_20261005_001",
-  "lockGeneration": 2562,
+  "schema": "H_EARTH_IDENTICAL_DEFAULT_PREVIEW_REUSE_QUALIFICATION_v1",
+  "operationId": "H_EARTH_IDENTICAL_DEFAULT_PREVIEW_REUSE_20261006_001",
+  "lockGeneration": 2564,
+  "queryClosureLockGeneration": 2565,
   "result": "CPU_PASS_PHYSICAL_PENDING",
   "baselineHead": "935e756e725f8c205921437fbace9faef45c28eb",
-  "candidateBinding": "EXACT_SOURCE_FILE_SHA256_DIGESTS_AND_SUBSEQUENT_IMMUTABLE_COMMIT",
-  "cpu": {
+  "candidateBinding": "EXACT_SOURCE_DIGESTS_AND_SUBSEQUENT_IMMUTABLE_COMMIT",
+  "previewCPU": {
+    "schema": "H_EARTH_IDENTICAL_DEFAULT_PREVIEW_REUSE_CPU_QUALIFICATION_v1",
+    "result": "PASS",
+    "baselineHead": "935e756e725f8c205921437fbace9faef45c28eb",
+    "baselineClosureFiles": 27,
+    "defaultConstructionCount": 1,
+    "defaultIdentityReuse": "PASS",
+    "explicitCameraIsolation": "PASS_EQUAL_NONDEFAULT_EXTRA_ACCESSOR_CUSTOM_PROTOTYPE_NEGATIVE_ZERO",
+    "optionsAndProxyObservables": "PASS",
+    "unsuccessfulAndThrowNotCached": "PASS",
+    "deepImmutability": "PASS",
+    "clearanceSurfaceAndEnvelopeEquality": "PASS",
+    "previewSourceSHA256": "b8fc053cb9abb6c685ea501b257aaef3c12c8f2e6b98e7d6222011c95b2d9d69",
+    "claimCeiling": "CPU immutable reuse and equality only; no physical device READY gain or anchor acceptance"
+  },
+  "fullWorkerCPU": {
     "schema": "H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1",
     "result": "PASS",
     "baselineHead": "935e756e725f8c205921437fbace9faef45c28eb",
@@ -116,51 +132,15 @@
     "timingUnknownClockCases": "PASS",
     "claimCeiling": "CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence"
   },
-  "qualificationToolSHA256": "b1349ee2d3be701136c849b17f04b061bb853ee532309438157b7df872331a2f",
-  "syntax": "PASS_9_JAVASCRIPT_FILES",
-  "diffCheck": "PASS",
-  "browserGPU": "PENDING",
-  "firstFrameReadyVegetationAndNavigation": "PENDING_EXACT_CANDIDATE_BROWSER",
-  "ownerPhysicalDisposition": "PENDING",
-  "independentReview": "PENDING_EXACT_IMMUTABLE_CANDIDATE",
-  "anchorAcceptance": "PENDING",
-  "mergePerformed": false,
-  "deploymentPerformed": false,
-  "performanceLimits": "Worker import and structured clone can increase total startup despite reducing UI blocking. CPU timer progress is not tablet responsiveness, first-frame timing or a Lighthouse score. No total startup improvement claimed. Timing fields are opt-in at performance=1. Worker handoff includes serialization, deserialization, delivery and scheduling; it does not isolate clone CPU. Worker sidecar report visibility requires published runtime binding; early startup failures retain main spans in observer but copied vegetationResidency may be null. Early preparation overlaps the selected renderer import in source ordering; actual device elapsed-time benefit is unmeasured. Worker starts only for the live functional-landscape additive renderer with Worker available; existing synchronous fallback stays at renderer preparation. Prior early-worker preview checked the marker on the inner element and did not trigger eager preparation on the real page. Corrected guard CPU proof does not establish device speed improvement; canonical module URL is unchanged, so live identity requires corrected binding URL and deployment marker. Dynamic raw import now permits main graph and selfworker loading/evaluation to overlap; eager landscape-preview construction outside scope remains unchanged in both realms. Increased CPU contention and transfer overhead may offset gains. CANONICAL_MAIN_RAW_MODULE_WAIT measures the awaited module namespace, not pure network time. No device elapsed-time benefit claimed.",
-  "timingInstrumentation": "CPU_PASS_TABLET_REPORT_PENDING",
-  "unchangedObserverFailureCounterTest": {
+  "finalQueryGraph": {
     "result": "PASS",
-    "command": "node showroom/globe/h-earth/diagnostic/startup-preparation-20261005/qualify.mjs --observer-timing-only",
-    "failedCount": 1
-  },
-  "earlyPreparationOverlap": "CPU_CANONICAL_OWNER_BEFORE_HELD_RAW_NAMESPACE_PASS_TABLET_TIMING_PENDING",
-  "routeGuardCorrection": {
-    "outerRouteRoot": "h-earth-3d-route-root",
-    "requiredOuterAttribute": "data-h-earth-public-route=functional-landscape",
-    "requiredInnerPresence": "h-earth-functional-landscape-route",
-    "fixture": "ACTUAL_INDEX_ATTRIBUTES",
-    "priorGuardOnActualIndex": "NO_EARLY_START",
-    "correctedGuardOnActualIndex": "EARLY_START_BEFORE_HELD_IMPORT",
-    "deviceTiming": "PENDING_EXACT_CORRECTED_BINDING"
-  },
-  "canonicalRawDependencyOverlap": {
-    "rawClosureFiles": 51,
-    "rawToCanonicalCyclePaths": [],
-    "rawImport": "TOP_LEVEL_AWAIT_DYNAMIC_NAMESPACE",
-    "workerStart": "EXISTING_OWNER_BEFORE_MAIN_RAW_NAMESPACE_COMPLETES",
-    "rawImportFailure": "EXISTING_WORKER_TERMINATION_AND_STICKY_OWNER_REJECTION_THEN_MODULE_REJECTION",
-    "syncAPIs": "UNCHANGED_SIGNATURES_AFTER_MODULE_EVALUATION",
-    "diagnosticSpan": "CANONICAL_MAIN_RAW_MODULE_WAIT",
-    "deviceTiming": "PENDING",
-    "workerRequestDuringImport": "LISTENER_INSTALLED_BEFORE_TLA_REQUEST_AWAITS_READY_PROMISE"
-  },
-  "workerRawImportFailureQualification": {
-    "result": "PASS",
-    "command": "node showroom/globe/h-earth/diagnostic/startup-preparation-20261005/qualify.mjs --worker-raw-failure-only",
-    "moduleRejected": true,
-    "postedOriginalError": true,
-    "constructionPhases": [],
-    "validationBoundary": "Additional isolated actual-source worker failure fixture after full-suite PASS; runtime bytes unchanged"
+    "privateConstructorBody": "BYTE_IDENTICAL",
+    "sourceHashEdges": 7,
+    "selectedClosureModuleURLs": 64,
+    "selectedPreviewModuleURLs": [
+      "file:///workspace/scratch/6c2e5891a387/h-earth-startup-candidate/showroom/globe/h-earth/render/landscape-preview.js?cb=b8fc053cb9abb6c6"
+    ],
+    "actualFinalBindingGraph": "PASS_SINGLE_WORKER_REQUEST"
   },
   "finalSourceDigests": {
     "showroom/globe/h-earth/render/landscape-preview.js": "b8fc053cb9abb6c685ea501b257aaef3c12c8f2e6b98e7d6222011c95b2d9d69",
@@ -179,9 +159,15 @@
     "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "3ced973a0d9671b99a8107d6476264f686ee0cc24356b796940cbbacde129e69",
     "showroom/globe/h-earth/index.html": "e318b3458973a150167dce2583d6287b9c605011aa32a567d30342476076ac0a"
   },
-  "postFullSuiteQueryOnlyPropagation": {
-    "result": "PASS_FINAL_SOURCE_AND_ACTUAL_BINDING_GRAPH",
-    "evidence": "h-earth-3d/evidence/startup-preparation-20261006/preview-reuse-qualification.json",
-    "fullSuiteRerunAfterQueryOnlyEdits": false
-  }
+  "qualificationToolSHA256": "111c443bd99381e3cc22e496c097c285ce148609bbeec6feec6cb49bf327b3d6",
+  "executionBoundary": "Full preview and real-worker suites passed before final query-only navigation/pointer/parent propagation. Final source/query and actual binding graph command passed after propagation; full suite not rerun after those query-only edits.",
+  "finalGraphCommand": "node showroom/globe/h-earth/diagnostic/startup-preparation-20261006/qualify-preview-reuse.mjs --source-and-binding-graph-only",
+  "syntax": "PASS_16_JS_FILES",
+  "diffCheck": "PASS",
+  "browserGPU": "PENDING",
+  "ownerPhysicalDisposition": "PENDING",
+  "anchorAcceptance": "PENDING",
+  "independentReview": "PENDING_EXACT_IMMUTABLE_HEAD",
+  "devicePerformanceClaim": "NONE_CPU_REUSE_IS_NOT_MEASURED_DEVICE_READY_GAIN",
+  "limitations": "Trusted default camera identity alone reuses one successful deeply frozen preview. Explicit external cameras construct through the unchanged private body. Eager preview remains; no general cache, geometry, clearance or material algorithm changes. Construction count proves avoided duplicate CPU construction, not device elapsed-time improvement."
 }

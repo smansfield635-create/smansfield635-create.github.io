@@ -11,7 +11,7 @@
         "data-h-earth-public-route=\"functional-landscape\"",
         "data-run8e-ready=\"false\"",
         "id=\"h-earth-current-run8e-module\"",
-        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=mountain-traversal-20261006"
+        "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=ecotone-trial-20261006"
       ],
       "excludes": [
         "raw.githack.com",
@@ -23,7 +23,7 @@
       "includes": [
         "import '../diagnostic/renderer-startup-observer.v1.js?cb=ecotone-trial-20261006';",
         "await import('../arrival-loader.js?cb=h-earth-bounded-progress-v1');",
-        "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=mountain-traversal-20261006');",
+        "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=ecotone-trial-20261006');",
         "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"
       ],
       "excludes": [

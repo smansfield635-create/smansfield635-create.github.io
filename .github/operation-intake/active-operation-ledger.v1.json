@@ -3014,6 +3014,50 @@
       "scopeHash": "389aea3c4dd3ec52b20285a531b8d741e6685fb70a356a1284408148526a74d9",
       "state": "ADMITTED_LOCKED"
     },
+    "38b7492b853752b8532255af28ecbcf8feecb00f735efb795524ad09bf749715": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "372ef8df8f79ba1fa2d7d74de964b336c1937549",
+          "lockGeneration": 2567,
+          "lockScope": "H_EARTH:LANDSCAPE:BOUNDED_SECTOR_GEOMETRY",
+          "operationId": "H_EARTH_LANDSCAPE_SECTOR_20261006_001",
+          "procedureLocatorDigest": "e4b003368cff211f5e38720874b316a781df9236db704893eca43c5fa8fc8725",
+          "requestDigest": "b485180bd887db3f0203b233c61c0c3f5cfd6b26d4c970247fc281cec10034bc",
+          "scopeHash": "38b7492b853752b8532255af28ecbcf8feecb00f735efb795524ad09bf749715"
+        },
+        "bindingDigest": "1737e040c18ef322facd277d4fe133f5cff7e7d7f2006a18b9dcaa5ea2356857",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "23a1bd9a98cc25242521609d2039b4e9140f77d402bf4ceb64391817fa6d9cfa",
+          "commentId": 6020315596,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5795,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37492886416,
+          "workflowSha": "372ef8df8f79ba1fa2d7d74de964b336c1937549"
+        },
+        "lineageAnchorCommitSha": "895f962bb3dbf57cd5cd3c2e3e1a3ac54b0d7e2c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "372ef8df8f79ba1fa2d7d74de964b336c1937549",
+      "lockGeneration": 2567,
+      "lockScope": "H_EARTH:LANDSCAPE:BOUNDED_SECTOR_GEOMETRY",
+      "operationId": "H_EARTH_LANDSCAPE_SECTOR_20261006_001",
+      "procedureLocatorDigest": "e4b003368cff211f5e38720874b316a781df9236db704893eca43c5fa8fc8725",
+      "released": false,
+      "requestDigest": "b485180bd887db3f0203b233c61c0c3f5cfd6b26d4c970247fc281cec10034bc",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "38b7492b853752b8532255af28ecbcf8feecb00f735efb795524ad09bf749715",
+      "state": "ADMITTED_LOCKED"
+    },
     "39b8cda8da7bcab01fb74a75942cb630d02fcbe61aeff3e349b9c0120ee95b65": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -15377,7 +15421,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2566,
+  "lockGeneration": 2567,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

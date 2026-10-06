@@ -5,7 +5,7 @@
 import {constructHEarthTriangleMesh,H_EARTH_3D_GEOMETRY_SOUTH_ENUMS as E} from './geometry-kernel.south.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as policy} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
-import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js?cb=woodland-delivery-20261006';
+import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js?cb=ecotone-trial-20261006';
 const SEED='WEST_WOODLAND_P2_20261006';
 const hash=(id,channel)=>{let h=2166136261;for(const c of `${SEED}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0)/4294967296;};
 const bounds={minX:-180,maxX:-24,minZ:-380,maxZ:-190};
@@ -91,7 +91,7 @@ function burySupport(m, start, ringStart, count, ground, wholeObject) {
  for(const p of samples){p.meshY-=shift;p.burial=p.surfaceY-p.meshY;}
  return{minimumBurial,downwardShift:shift,minimumMeasuredBurial:Math.min(...samples.map(p=>p.burial)),witnesses:samples};
 }
-export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOrder=false}={}){
+export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOrder=false,grassCellOrder='FORWARD'}={}){
  const ground=sampler(terrainPrimitive),issues=[],manifest=[],rejections=[];
  if(!ground)return{eligible:false,primitives:[],manifest,diagnostics:{},issues:['PROJECTED_NEAR_TRIANGLES_REQUIRED']};
  const candidates=[];
@@ -122,29 +122,47 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
   }
   manifest.push({support:{minimumBurial:.12,minimumMeasuredBurial:Math.min(...witnesses.map(p=>p.burial)),witnesses},supportRings,stoneVertexStart,stoneVertexCount:stone.vertices.length-stoneVertexStart,id,kind:'ROCK',form:'PAIRED_FRACTURE_WEDGES',x,y:a.y,z,height:h*.86,crownRadius:r*1.35,groundTriangle:a.triangle,footprintClear:true});
  }
- // Stable cell identities and a canopy-dependent density field create tufts in
- // the A clearing and full sun edges, retaining sparse understory near trunks.
- const clusterTrees=manifest.filter(p=>p.refinementCluster==='A');
- const withinA=(x,z)=>((x+145)/28)**2+((z+230)/28)**2<=1&&clearFootprint(x,z,.8);
- const grassEligible=(x,z)=>{const t=ground(x,z),m=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);return withinA(x,z)&&t&&t.slope<=.45&&['LOWLAND_SOIL','COASTAL_SOIL'].includes(m?.surfaceClass)&&!clusterTrees.some(p=>Math.hypot(x-p.x,z-p.z)<p.trunkRadius+.5);};
+ // One authored ecotone replaces A grass; all existing tree/rock construction stays intact.
+ const trialSeed='ECOTONE_A_MEADOW_20261006';
+ const trialHash=(id,channel)=>{let h=2166136261;for(const c of `${trialSeed}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return(h>>>0)/4294967296;};
+ const smooth=(a,b,value)=>{const t=Math.max(0,Math.min(1,(value-a)/(b-a)));return t*t*(3-2*t);};
+ const clusterTrees=manifest.filter(p=>p.refinementCluster==='A'),allTrees=manifest.filter(p=>p.kind==='TREE');
+ const ellipse=(x,z)=>Math.hypot((x+141)/33,(z+226)/32);
+ const walkingDistance=(x,z)=>segmentDistance(x,z,{x:-145,z:-194},{x:-145,z:-230});
+ const reservationClear=(x,z,r)=>clearFootprint(x,z,r)&&![policy.terrainBuffer].filter(Boolean).some(b=>Math.hypot(x-Math.max(b.minX,Math.min(b.maxX,x)),z-Math.max(b.minZ,Math.min(b.maxZ,z)))<=r);
+ const insideTrial=(x,z)=>ellipse(x,z)<=1&&walkingDistance(x,z)>1.5&&reservationClear(x,z,0);
+ const groundReason=(x,z)=>{const t=ground(x,z),m=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);return !t?'GROUND_MISSING':t.slope>.45?'STEEP_SLOPE':!['LOWLAND_SOIL','COASTAL_SOIL'].includes(m?.surfaceClass)?'HABITAT_EXCLUDED':allTrees.some(p=>Math.hypot(x-p.x,z-p.z)<(p.trunkRadius??(.32+p.height*.018))+.5)?'TRUNK_CLEARANCE':null;};
+ const grassEligible=(x,z)=>insideTrial(x,z)&&groundReason(x,z)===null;
  const sample=(x,z)=>{const g=ground(x,z);return g?{x,y:Math.fround(g.y),z,triangleId:g.triangle,terrainPrimitiveId:terrainPrimitive.primitiveId}:null;};
- const grassCandidates=[];
- for(let iz=0;iz<12;iz++)for(let ix=0;ix<12;ix++){
-  const id=`P2_GRASS_A_${String(iz).padStart(2,'0')}_${String(ix).padStart(2,'0')}`,x=-171+ix*4.7+(hash(id,'x')-.5)*1.9,z=-256+iz*4.7+(hash(id,'z')-.5)*1.9;
-  if(!withinA(x,z)||!grassEligible(x,z))continue;
-  const coverage=clusterTrees.reduce((n,p)=>Math.max(n,Math.max(0,1-Math.hypot(x-p.x,z-p.z)/p.crownRadius)),0),density=coverage>.25?.23:.82;
-  if(hash(id,'density')>density)continue;grassCandidates.push({id,x,z,coverage,rank:hash(id,'selection')});
+ const grassCells=[];
+ for(let iz=Math.floor(-258/5.5);iz<=Math.floor(-194/5.5);iz++)for(let ix=Math.floor(-174/5.5);ix<=Math.floor(-108/5.5);ix++){
+  const id=`ECOTONE_${ix}_${iz}`;grassCells.push({id,ix,iz,x:(ix+.5)*5.5+(trialHash(id,'x')-.5)*1.9,z:(iz+.5)*5.5+(trialHash(id,'z')-.5)*1.9});
  }
- grassCandidates.sort((a,b)=>a.rank-b.rank);const chosen=grassCandidates.slice(0,28).sort((a,b)=>a.id.localeCompare(b.id));
- for(const p of chosen){
-  const bladeCount=18,pocket=['GOLD','BROWN','OLIVE'][Math.floor(hash(p.id,'palette')*3)];
-  let tuft;try{tuft=buildHEarthWoodlandGrassTuft({...p,bladeCount,pocket,sample,eligible:grassEligible,inside:withinA});}catch(e){if(String(e.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS'))continue;throw e;}
+ if(reverseGenerationOrder||grassCellOrder==='REVERSE')grassCells.reverse();
+ if(grassCellOrder==='CHUNKED')grassCells.sort((a,b)=>(a.ix%3)-(b.ix%3)||b.iz-a.iz);
+ const grassCandidates=[],grassDecisions=[];
+ for(const p of grassCells){
+  const {id,x,z}=p,radial=ellipse(x,z),canopy=clusterTrees.reduce((n,t)=>Math.max(n,1-smooth(.48,1.08,Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0),edge=smooth(0,8,(1-radial)*32),density=(.18+.70*(1-canopy))*edge,selection=trialHash(id,'density'),g=ground(x,z),material=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);
+  const reason=radial>1?'OUTSIDE_TRIAL':walkingDistance(x,z)<=2.3?'WALKING_CAPSULE_MARGIN':!reservationClear(x,z,.8)?'FOOTPRINT_EXCLUDED':groundReason(x,z)??(selection>density?'DENSITY_REJECTED':null);
+  const decision={...p,canopy,edge,density,selection,groundTriangle:g?.triangle??null,groundSlope:g?.slope??null,surfaceClass:material?.surfaceClass??null,eligible:!reason||reason==='DENSITY_REJECTED',accepted:false,reason};
+  grassDecisions.push(decision);if(!reason)grassCandidates.push({...p,canopy,edge,density,decision});
+ }
+ // Fail the entire trial rather than order-dependent trimming or global reranking.
+ if(grassCandidates.length>84)throw new Error('ECOTONE_TRIAL_TUFT_BUDGET_EXCEEDED');
+ grassCandidates.sort((a,b)=>a.id.localeCompare(b.id));
+ for(const p of grassCandidates){
+  const bladeCount=6,palette=trialHash(p.id,'palette'),pocket=palette<.25+.5*p.canopy?'OLIVE':palette<.65+.25*p.canopy?'GOLD':'BROWN';
+  let tuft;try{tuft=buildHEarthWoodlandGrassTuft({...p,bladeCount,pocket,sample,eligible:grassEligible,inside:insideTrial});}catch(e){if(String(e.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS')){p.decision.reason='INSUFFICIENT_ELIGIBLE_ROOT_COLUMNS';continue;}throw e;}
+  if(tuft.metadata.oasisFoliage.rootPoints.length!==18)throw new Error('ECOTONE_TRIAL_ROOT_COLUMN_COUNT');
   const grassVertexStart=grass.vertices.length,offset=grassVertexStart;
   grass.vertices.push(...tuft.geometry.vertices);grass.indices.push(...tuft.geometry.indices.map(i=>i+offset));grass.colors.push(...tuft.metadata.oasisFoliage.vertexColorsSrgb.map(c=>[...c.map(v=>Math.round(v*255)),255]));
-  manifest.push({id:p.id,kind:'GRASS',x:p.x,y:sample(p.x,p.z).y,z:p.z,grassVertexStart,grassVertexCount:tuft.geometry.vertices.length,bladeCount,pocket,canopyCoverage:p.coverage,rootPoints:tuft.metadata.oasisFoliage.rootPoints.map(p=>({...p,vertexIndex:p.vertexIndex+offset})),crownRadius:.8,footprintClear:true,recipe:'OASIS_FOLDED_BLADE_16_VERTICES_18_TRIANGLES'});
+  p.decision.accepted=true;p.decision.reason='ACCEPTED';
+  manifest.push({id:p.id,kind:'GRASS',x:p.x,y:sample(p.x,p.z).y,z:p.z,grassVertexStart,grassVertexCount:tuft.geometry.vertices.length,bladeCount,pocket,canopyCoverage:p.canopy,edgeFeather:p.edge,targetDensity:p.density,rootPoints:tuft.metadata.oasisFoliage.rootPoints.map(p=>({...p,vertexIndex:p.vertexIndex+offset})),crownRadius:.8,footprintClear:true,recipe:'OASIS_FOLDED_BLADE_16_VERTICES_18_TRIANGLES'});
  }
+ grassDecisions.sort((a,b)=>a.id.localeCompare(b.id));
+ const grassTrial={schema:'H_EARTH_WOODLAND_MEADOW_TRIAL_v1',seed:trialSeed,extent:{center:[-141,-226],radii:[33,32]},walkingCapsule:{a:[-145,-194],b:[-145,-230],radius:1.5,centerMargin:.8},cellMeters:5.5,selectedCenterCount:grassCandidates.length,decisions:grassDecisions,fieldProvenance:{ground:'FINAL_PROJECTED_FLOAT32_NEAR_TRIANGLES',soil:'QUALIFIED_SURFACE_CLASS_PROXY',canopy:'AUTHORED_ACCEPTED_A_CROWN_INFLUENCE_NOT_MEASURED_SHADE',edge:'AUTHORED_8M_EQUIVALENT_FEATHER',palette:'AUTHORED_CANOPY_COLOR_PROXY_NO_MOISTURE_CLAIM'}};
  const primitives=[];for(const [name,m,kind,rgba] of [['BARK',bark,'TREE',[81,64,44,255]],['CANOPY',foliage,'TREE',[66,92,38,255]],['ROCK',stone,'ROCK',[121,113,91,255]],['GRASS',grass,'GRASS',[120,117,61,255]]]){if(!m.indices.length)continue;const id=`H_EARTH_LANDSCAPE_P2_${name}`,r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,vertices:m.vertices,indices:m.indices,normalMode:E.normalMode.FACE_AND_VERTEX,expectedClosure:E.expectedClosure.OPEN_ALLOWED,semanticRole:`LANDSCAPE_SECTOR_${kind}`,metadata:{landscapeSectorKind:kind,landscapeSectorId:'WESTERN_P2',seed:SEED},source:{sourceType:'DETERMINISTIC_BOUNDED_LANDSCAPE_SOUTH'}});if(r.valid!==true){issues.push(`SOUTH_CONSTRUCTION_FAILED:${name}:${JSON.stringify(r.issues)}`);continue;}primitives.push({...r.primitiveRecord,renderMaterial:{rgba,vertexRgba:m.colors,transparencyClass:'OPAQUE'}});}
  const triangles=primitives.reduce((s,p)=>s+p.geometry.indices.length/3,0);if(accepted.length>128||triangles>48000)issues.push('SECTOR_BUDGET_EXCEEDED');if(!accepted.length)issues.push('NO_ACCEPTED_TREES');
  manifest.sort((a,b)=>a.id.localeCompare(b.id));rejections.sort((a,b)=>a.id.localeCompare(b.id));
- return{eligible:issues.length===0,primitives,manifest,diagnostics:{seed:SEED,bounds,treeCount:accepted.length,grassTuftCount:manifest.filter(p=>p.kind==='GRASS').length,grassBladeCount:manifest.filter(p=>p.kind==='GRASS').reduce((n,p)=>n+p.bladeCount,0),grassTriangleCount:grass.indices.length/3,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:false,reservationPolicySha256:policy.reservationSha256},issues};
+ return{eligible:issues.length===0,primitives,manifest,diagnostics:{grassTrial,seed:SEED,bounds,treeCount:accepted.length,grassTuftCount:manifest.filter(p=>p.kind==='GRASS').length,grassBladeCount:manifest.filter(p=>p.kind==='GRASS').reduce((n,p)=>n+p.bladeCount,0),grassTriangleCount:grass.indices.length/3,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:true,canonicalVegetationPopulationModified:false,replacedClusterAGrass:true,reservationPolicySha256:policy.reservationSha256},issues};
 }

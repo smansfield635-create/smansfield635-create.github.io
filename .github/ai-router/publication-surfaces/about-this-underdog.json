@@ -1,0 +1,75 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "about-this-underdog",
+  "description": "Visitor-centered Inner Underdog renewal, native reflective disclosures and unchanged shared cosmos. No personal-data collection or clinical/outcome claims.",
+  "checks": [
+    {
+      "path": "/about-this-underdog/index.html",
+      "includes": [
+        "The underdog is not",
+        "Finding your inner underdog",
+        "/assets/dgb-estate-cosmos.js",
+        "What is mine to change?",
+        "There\u2019s nothing to submit or score.",
+        "/campaigns/rob/",
+        "/meet-sean-mansfield/#invite"
+      ],
+      "excludes": [
+        "Universal underdog lane",
+        "Route receipt",
+        "surviving intelligence",
+        "stop wasting what the struggle taught you"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/about-this-underdog/",
+    "timeoutMs": 15000,
+    "readySelector": "#page-title",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/about-this-underdog/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "favicon.ico"
+    ],
+    "interactions": [
+      {
+        "name": "Reader can open the accountability reflection",
+        "action": {
+          "type": "click",
+          "selector": "#accountability summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#accountability[open]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#accountability .prompt",
+            "value": "What is one choice within my reach"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Reader can close the reflection",
+        "action": {
+          "type": "click",
+          "selector": "#accountability summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#accountability:not([open])"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

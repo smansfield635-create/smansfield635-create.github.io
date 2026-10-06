@@ -470,6 +470,16 @@
       ],
       "entrypoint": ".github/ai-router/projects/meet-sean-page/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "ABOUT_UNDERDOG_PUBLIC_PAGE",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "about-this-underdog/index.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/about-underdog-page/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

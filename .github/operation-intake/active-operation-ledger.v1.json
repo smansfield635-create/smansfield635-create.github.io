@@ -3766,45 +3766,6 @@
       "scopeHash": "435014bbea9e255294a5354396f4f348d1a5aa3df8d8c2cb0e58e86d20b123a4",
       "state": "ADMITTED_LOCKED"
     },
-    "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec": {
-      "governingHead": "171a74bc3f1f170c36079b00407fb569b56992bf",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "171a74bc3f1f170c36079b00407fb569b56992bf",
-          "lockGeneration": 2578,
-          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
-          "operationId": "BOOK_SEAN_UNDERDOG_NAVIGATION_20261006_001",
-          "procedureLocatorDigest": "7dba00c4b7664e6ec38645ed6376454bbe45e44328f14fbe81abcee73cb31b7a",
-          "requestDigest": "53635000c3120c0157539e9ffb871287cc67e96ecc4dc0e880bc8b22a6b1af41",
-          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec"
-        },
-        "bindingDigest": "a5c92a17ec89de8aa325ccc5d00d6c66c354f8811404252059fe7316b7f1d34d",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "fb269feaac49782081a6e0d655a7b538d4393533",
-          "observedLockRefHead": "41952c1c36cee85dd048903edc73168d33151563"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "21f8e0de91ff6c25ff7a66f3843a74e435190f04988db5074daf8cc1ea7c1b6e",
-          "commentId": 6024056559,
-          "issueNumber": 5820,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2578,
-      "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
-      "operationId": "BOOK_SEAN_UNDERDOG_NAVIGATION_20261006_001",
-      "procedureLocatorDigest": "7dba00c4b7664e6ec38645ed6376454bbe45e44328f14fbe81abcee73cb31b7a",
-      "released": false,
-      "requestDigest": "53635000c3120c0157539e9ffb871287cc67e96ecc4dc0e880bc8b22a6b1af41",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec",
-      "state": "ADMITTED_LOCKED"
-    },
     "44f9bcd41eef1dc7a1b8e370b5a5569ce7fa663809c5db16d1b4c280421af81e": {
       "governingHead": "fd1d8b0b9f8f758749402d3976f70a2bebd9d33b",
       "lockGeneration": 1453,
@@ -70446,6 +70407,83 @@
       "scopeHash": "e981cacf59cdb72154ccaaa47008eb97580878f9780a0515d5629689428cc3c0",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "171a74bc3f1f170c36079b00407fb569b56992bf",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "171a74bc3f1f170c36079b00407fb569b56992bf",
+          "lockGeneration": 2578,
+          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+          "operationId": "BOOK_SEAN_UNDERDOG_NAVIGATION_20261006_001",
+          "procedureLocatorDigest": "7dba00c4b7664e6ec38645ed6376454bbe45e44328f14fbe81abcee73cb31b7a",
+          "requestDigest": "53635000c3120c0157539e9ffb871287cc67e96ecc4dc0e880bc8b22a6b1af41",
+          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec"
+        },
+        "bindingDigest": "a5c92a17ec89de8aa325ccc5d00d6c66c354f8811404252059fe7316b7f1d34d",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "fb269feaac49782081a6e0d655a7b538d4393533",
+          "observedLockRefHead": "41952c1c36cee85dd048903edc73168d33151563"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "21f8e0de91ff6c25ff7a66f3843a74e435190f04988db5074daf8cc1ea7c1b6e",
+          "commentId": 6024056559,
+          "issueNumber": 5820,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "171a74bc3f1f170c36079b00407fb569b56992bf",
+          "lockGeneration": 2578,
+          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+          "operationId": "BOOK_SEAN_UNDERDOG_NAVIGATION_20261006_001",
+          "procedureLocatorDigest": "7dba00c4b7664e6ec38645ed6376454bbe45e44328f14fbe81abcee73cb31b7a",
+          "requestDigest": "53635000c3120c0157539e9ffb871287cc67e96ecc4dc0e880bc8b22a6b1af41",
+          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec"
+        },
+        "bindingDigest": "2ae68299717ce779de719552b0c57ee2df4f0f7eed3e6c24c503a099cf5b1e4e",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "30d81f4afd62d02ce62d0ac2b5beb6f832204f02",
+          "observedLockRefHead": "967f8c58ee3b27bf8b90130f5cbdd828020da312"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "a969b1a888272e7725dc2283c7ca5cfb5becab5d17a98b25a88dff84a487ea3c",
+          "commentId": 6024222047,
+          "issueNumber": 5824,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "171a74bc3f1f170c36079b00407fb569b56992bf",
+          "lockGeneration": 2578,
+          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+          "operationId": "BOOK_SEAN_UNDERDOG_NAVIGATION_20261006_001",
+          "released": true,
+          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2578,
+      "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+      "operationId": "BOOK_SEAN_UNDERDOG_NAVIGATION_20261006_001",
+      "procedureLocatorDigest": "7dba00c4b7664e6ec38645ed6376454bbe45e44328f14fbe81abcee73cb31b7a",
+      "released": true,
+      "requestDigest": "53635000c3120c0157539e9ffb871287cc67e96ecc4dc0e880bc8b22a6b1af41",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

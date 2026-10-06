@@ -10480,45 +10480,6 @@
       "scopeHash": "abe1bbea45186f434c0e75459ebbdee92c7f14d183c6294078688029ff703d54",
       "state": "ADMITTED_LOCKED"
     },
-    "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e": {
-      "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
-          "lockGeneration": 2593,
-          "lockScope": "MEET_SEAN_EVENT_CONVERSATION",
-          "operationId": "MEET_SEAN_EVENT_CONVERSATION_20261006_001",
-          "procedureLocatorDigest": "50a502491f43541a5d53958c89b17d35a06d822656e27bc67a73da29379c94c9",
-          "requestDigest": "10c8a076bc0bb444f1403fb0d39a21354f6a5179ebc1b52c4c71e2aa31811cd3",
-          "scopeHash": "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e"
-        },
-        "bindingDigest": "b2d137fe6e3b8bb90c98e534a230d7d92b74ecc00730257d50cadd9c834c2c4e",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "1a0655866169a39373202eb7e56a08ce9fd3bfb3",
-          "observedLockRefHead": "3f171351403d088ee8f05ec6c6970df9ffa96bea"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "22897f0b0561eb0001bbea54771644ee460df474bb2b414640497107485303d0",
-          "commentId": 6026518058,
-          "issueNumber": 5869,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2593,
-      "lockScope": "MEET_SEAN_EVENT_CONVERSATION",
-      "operationId": "MEET_SEAN_EVENT_CONVERSATION_20261006_001",
-      "procedureLocatorDigest": "50a502491f43541a5d53958c89b17d35a06d822656e27bc67a73da29379c94c9",
-      "released": false,
-      "requestDigest": "10c8a076bc0bb444f1403fb0d39a21354f6a5179ebc1b52c4c71e2aa31811cd3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e",
-      "state": "ADMITTED_LOCKED"
-    },
     "acf6e1a69d463293d023d1719a3d38eb4912d77033888ea61c9405f1de8b6ea5": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -71418,6 +71379,83 @@
       "requestDigest": "95692255eb12c83534a843464a68ebd4144ea8dcc15625a0828026ae7ce21b44",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "8b6a126e141577b570fd18fa29f07025562e050495f5983a431e1cd209dc567c",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+          "lockGeneration": 2593,
+          "lockScope": "MEET_SEAN_EVENT_CONVERSATION",
+          "operationId": "MEET_SEAN_EVENT_CONVERSATION_20261006_001",
+          "procedureLocatorDigest": "50a502491f43541a5d53958c89b17d35a06d822656e27bc67a73da29379c94c9",
+          "requestDigest": "10c8a076bc0bb444f1403fb0d39a21354f6a5179ebc1b52c4c71e2aa31811cd3",
+          "scopeHash": "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e"
+        },
+        "bindingDigest": "b2d137fe6e3b8bb90c98e534a230d7d92b74ecc00730257d50cadd9c834c2c4e",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "1a0655866169a39373202eb7e56a08ce9fd3bfb3",
+          "observedLockRefHead": "3f171351403d088ee8f05ec6c6970df9ffa96bea"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "22897f0b0561eb0001bbea54771644ee460df474bb2b414640497107485303d0",
+          "commentId": 6026518058,
+          "issueNumber": 5869,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+          "lockGeneration": 2593,
+          "lockScope": "MEET_SEAN_EVENT_CONVERSATION",
+          "operationId": "MEET_SEAN_EVENT_CONVERSATION_20261006_001",
+          "procedureLocatorDigest": "50a502491f43541a5d53958c89b17d35a06d822656e27bc67a73da29379c94c9",
+          "requestDigest": "10c8a076bc0bb444f1403fb0d39a21354f6a5179ebc1b52c4c71e2aa31811cd3",
+          "scopeHash": "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e"
+        },
+        "bindingDigest": "614d77ddda881dd0c49606f47347ab03eae163a420bd9d2b2ee077aa651583cd",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "47ee70af7bd8a0327a457b954b068e2dda7b324a",
+          "observedLockRefHead": "b8cd2f2e4f0074951072718006f50e6d54135377"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "0f418a7d19ad1f68cf39bb66d927b1005997fe24145bff7ef70067d00c4802f0",
+          "commentId": 6026611676,
+          "issueNumber": 5870,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+          "lockGeneration": 2593,
+          "lockScope": "MEET_SEAN_EVENT_CONVERSATION",
+          "operationId": "MEET_SEAN_EVENT_CONVERSATION_20261006_001",
+          "released": true,
+          "scopeHash": "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2593,
+      "lockScope": "MEET_SEAN_EVENT_CONVERSATION",
+      "operationId": "MEET_SEAN_EVENT_CONVERSATION_20261006_001",
+      "procedureLocatorDigest": "50a502491f43541a5d53958c89b17d35a06d822656e27bc67a73da29379c94c9",
+      "released": true,
+      "requestDigest": "10c8a076bc0bb444f1403fb0d39a21354f6a5179ebc1b52c4c71e2aa31811cd3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

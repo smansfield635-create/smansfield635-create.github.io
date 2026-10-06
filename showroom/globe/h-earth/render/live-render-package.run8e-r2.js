@@ -112,7 +112,7 @@ function resolveNormals(geometry, issues, primitiveId) {
 function roleForPrimitive(primitive, terrainPrimitiveId) {
   if (primitive.primitiveId === terrainPrimitiveId) return 'TERRAIN';
   if (primitive.primitiveId === 'H_EARTH_LANDSCAPE_P2_BARK') return 'LAND_SURFACE';
-  if (['TREE','GRASS'].includes(primitive.metadata?.landscapeSectorKind)) return 'VEGETATION';
+  if (primitive.metadata?.landscapeSectorKind === 'TREE') return 'VEGETATION';
   if (primitive.metadata?.landscapeSectorKind === 'ROCK' || primitive.metadata?.farSurfaceClass === 'LAND') return 'LAND_SURFACE';
   if (primitive.metadata?.run8DInstanceId) return 'VEGETATION';
   return 'SHORELINE';
@@ -476,17 +476,6 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   });
   const frozenPrimitiveSpans = freezeArray(primitiveSpans);
   const frozenDrawRanges = freezeDrawRanges(drawRanges);
-  // Bounded presentation data comes from accepted construction, not a second
-  // independently authored set of forest-floor centers. Keep its identity
-  // separate because the canonical wrapper identifies numeric mesh buffers.
-  const landscapeFloorFootprints = freezeArray((neutralPackage.landscapeSector?.manifest ?? [])
-    .filter(item => item.kind === 'TREE' && item.id.startsWith('P2_TREE_A_'))
-    .map(item => freezeRecord({id:item.id,x:item.x,z:item.z,crownRadius:item.crownRadius,
-      trunkRadius:item.trunkRadius ?? .32+item.height*.018})));
-  const floorHash = createHashWriter();
-  floorHash.string('WOODLAND_A_FLOOR_FOOTPRINTS_v1');
-  for(const item of landscapeFloorFootprints){floorHash.string(item.id);floorHash.numbers([item.x,item.z,item.crownRadius,item.trunkRadius]);}
-  const landscapeFloorContentDigest = `fnv1a32:${floorHash.digest()}`;
   const hash = createHashWriter();
   hash.string(H_EARTH_RUN_8E_R2_CONTRACT_ID);
   hash.string(H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID);
@@ -533,8 +522,6 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     primitiveIds: freezeArray(primitives.map((primitive) => primitive.primitiveId)),
     primitiveSpans: frozenPrimitiveSpans,
     drawRanges: frozenDrawRanges,
-    landscapeFloorFootprints,
-    landscapeFloorContentDigest,
     buffers: immutableBuffers,
     environmentDefaults: freezeRecord({
       contractId: atmosphere.contractId,

@@ -15,20 +15,28 @@
   ],
   "experienceFiles": [
     {
-      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
-      "sha256": "d052f4f909c9ff3abb7e8447242959177ce5fa74b1e1f264a476f8b65da30892"
+      "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "sha256": "1077aea22bd5ba3cc799d14bbc65951d57a8fcaeef275e006a66de34a02e662a"
     },
     {
-      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "sha256": "b7d9609cfc2f1117dfe3dddc39c5f5562aede82a49a1f0be774c172ec1bb4640"
+      "path": "showroom/globe/h-earth/render/landscape-preview.js",
+      "sha256": "788a7937a0fcdfbc1e86744a812b9a1c7f8067f61d56d8444ec4bf1623a90dab"
     },
     {
       "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
-      "sha256": "a40151826733ce004da48e3b2c522bcfbaf8fa0d68916aecdd97f5447573ce71"
+      "sha256": "df356f8d449ce0cc2aa37794d4f6001c3ab05509cb7ac5868c6ca496106cb808"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "c22e3c6f181afdbe781db9b65ecb91104928140a1efa913373431c41e93a8933"
+      "sha256": "51d8134ee9b88fa7b2d2134ac2adf7a6b3ffa0d6e04edfd3be420836a76c69e5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "3616b8f744756d1687870ec690b0c8db80e07c265183d45084f3596ae17c29d2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "5060de2d67a1be64cdb03576f137e8f97eed5d91bddd2dc865b0334a0f5ab1d5"
     }
   ],
   "invariants": {
@@ -45,5 +53,5 @@
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
   "instructions": "Copy this template into h-earth-3d/experience-anchor/receipts/ for an experience-changing candidate. Populate exact changed experience-file SHA-256 values and repository-resident visual, interaction, and continuity evidence. Set every invariant true and disposition PASS only after actual comparison to the controlling anchor. The gate fails closed otherwise.",
-  "notes": "Bounded same-world anchor continuity PASS: independent repository visual-proxy comparison, exact unchanged entry/navigation/world mappings, seam/grounding checks, real-browser public route and two-finger delivery. This is not owner visual KEEP. New candidate owner disposition and physical phone/tablet performance remain pending. Full controlling video not replayed; declared repository visual proxy used."
+  "notes": "PASS is bounded anchor continuity, with owner visual KEEP, independent repository-proxy/source review and automated actual-route touch/vegetation evidence. Physical phone/tablet performance is unmeasured and not claimed; owner explicitly requested publication. Approved runtime source bytes unchanged."
 }

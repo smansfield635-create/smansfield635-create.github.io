@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-06T18:39:04Z",
+  "generatedAt": "2026-10-06T19:29:32Z",
   "window30d": {
-    "start": "2026-09-06T18:39:04Z",
-    "end": "2026-10-06T18:39:04Z"
+    "start": "2026-09-06T19:29:32Z",
+    "end": "2026-10-06T19:29:32Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 42
+      "pageLoads": 37
     },
     {
       "date": "2026-09-30",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 90
+      "pageLoads": 99
     }
   ],
   "summary": {
-    "pageLoads": 6283,
-    "botPageLoads": 2343,
-    "nonBotPageLoads": 3940
+    "pageLoads": 6275,
+    "botPageLoads": 2333,
+    "nonBotPageLoads": 3942
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3268,
-      "visits": 3268
+      "pageLoads": 3262,
+      "visits": 3262
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,8 +172,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1548,
-      "visits": 1152
+      "pageLoads": 1538,
+      "visits": 1142
     },
     {
       "path": "/mirror-manor-preview/",
@@ -207,8 +207,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 222,
-      "visits": 198
+      "pageLoads": 225,
+      "visits": 201
     }
   ],
   "ownerMeasurement": {

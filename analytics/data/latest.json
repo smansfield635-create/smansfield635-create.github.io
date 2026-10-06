@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-06T02:45:01Z",
+  "generatedAt": "2026-10-06T03:39:31Z",
   "window30d": {
-    "start": "2026-09-06T02:45:01Z",
-    "end": "2026-10-06T02:45:01Z"
+    "start": "2026-09-06T03:39:31Z",
+    "end": "2026-10-06T03:39:31Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 44
+      "pageLoads": 42
     },
     {
       "date": "2026-09-30",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 53
+      "pageLoads": 55
     }
   ],
   "summary": {
     "pageLoads": 6266,
-    "botPageLoads": 2323,
-    "nonBotPageLoads": 3943
+    "botPageLoads": 2322,
+    "nonBotPageLoads": 3944
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3234,
-      "visits": 3234
+      "pageLoads": 3233,
+      "visits": 3233
     },
     {
       "host": "diamondgatebridge.com",
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 9,
-      "visits": 9
+      "pageLoads": 10,
+      "visits": 10
     },
     {
       "host": "l.instagram.com",
@@ -207,8 +207,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 214,
-      "visits": 190
+      "pageLoads": 215,
+      "visits": 191
     }
   ],
   "ownerMeasurement": {

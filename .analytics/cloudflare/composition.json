@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-06T02:45:01Z",
+  "generatedAt": "2026-10-06T03:39:31Z",
   "window": {
-    "start": "2026-09-06T02:45:01Z",
-    "end": "2026-10-06T02:45:01Z"
+    "start": "2026-09-06T03:39:31Z",
+    "end": "2026-10-06T03:39:31Z"
   },
   "dimensions": {
     "requestPath": [
@@ -44,8 +44,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 214,
-        "visits": 190
+        "pageLoads": 215,
+        "visits": 191
       },
       {
         "value": "/governance-bridge/",
@@ -259,8 +259,8 @@
       },
       {
         "value": "/products/auren/",
-        "pageLoads": 6,
-        "visits": 5
+        "pageLoads": 5,
+        "visits": 4
       },
       {
         "value": "/about-this-underdog/",
@@ -356,8 +356,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3234,
-        "visits": 3234
+        "pageLoads": 3233,
+        "visits": 3233
       },
       {
         "value": "diamondgatebridge.com",
@@ -376,8 +376,8 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 9,
-        "visits": 9
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "l.instagram.com",
@@ -447,13 +447,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2323,
-        "visits": 2273
+        "pageLoads": 2322,
+        "visits": 2272
       },
       {
         "value": "Chrome",
-        "pageLoads": 2121,
-        "visits": 704
+        "pageLoads": 2122,
+        "visits": 705
       },
       {
         "value": "ChromeMobile",
@@ -509,8 +509,8 @@
       },
       {
         "value": "Linux",
-        "pageLoads": 2365,
-        "visits": 2315
+        "pageLoads": 2364,
+        "visits": 2314
       },
       {
         "value": "MacOSX",
@@ -519,8 +519,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 119,
-        "visits": 107
+        "pageLoads": 120,
+        "visits": 108
       },
       {
         "value": "iOS",
@@ -536,13 +536,13 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3943,
-        "visits": 1396
+        "pageLoads": 3944,
+        "visits": 1397
       },
       {
         "value": "1",
-        "pageLoads": 2323,
-        "visits": 2273
+        "pageLoads": 2322,
+        "visits": 2272
       }
     ],
     "navigationType": [

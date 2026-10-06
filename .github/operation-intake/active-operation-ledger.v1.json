@@ -7560,6 +7560,50 @@
       "scopeHash": "7fbd677bc260b9bb74de17628f68a1b49b45456c188ab780997ac7967ba697fe",
       "state": "ADMITTED_LOCKED"
     },
+    "803477566a8e13eb6f6fb65b7c3e18e477281e770bdd9fe8131559e7ee8f9eb6": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+          "lockGeneration": 2594,
+          "lockScope": "H_EARTH_WOODLAND_MEADOW_COVER_20261006",
+          "operationId": "H_EARTH_WOODLAND_MEADOW_COVER_20261006",
+          "procedureLocatorDigest": "436c4a6c356ef48a3c783a783e48186df5bf4a19db9806b2ae87e7d6057d5952",
+          "requestDigest": "f66a66218165d51b73cbab8caa56d239375eee7723bc0e55b645be65db6f33f5",
+          "scopeHash": "803477566a8e13eb6f6fb65b7c3e18e477281e770bdd9fe8131559e7ee8f9eb6"
+        },
+        "bindingDigest": "124f5e7374f9e3929536aea29e0d3c6ef52e8f0a4233c91d2b0fb5b0f7694fe3",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0500aea728bfa9bd53b3232ec3d40cbae3a7a1762105d5fb38d12cd8d867bd18",
+          "commentId": 6026578196,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5842,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37540547192,
+          "workflowSha": "a2b70017902fa675ef0882b4affea185cfcb6388"
+        },
+        "lineageAnchorCommitSha": "65051120ddf1e90a93e0778e5aae5d0c1dfc5f5a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+      "lockGeneration": 2594,
+      "lockScope": "H_EARTH_WOODLAND_MEADOW_COVER_20261006",
+      "operationId": "H_EARTH_WOODLAND_MEADOW_COVER_20261006",
+      "procedureLocatorDigest": "436c4a6c356ef48a3c783a783e48186df5bf4a19db9806b2ae87e7d6057d5952",
+      "released": false,
+      "requestDigest": "f66a66218165d51b73cbab8caa56d239375eee7723bc0e55b645be65db6f33f5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "803477566a8e13eb6f6fb65b7c3e18e477281e770bdd9fe8131559e7ee8f9eb6",
+      "state": "ADMITTED_LOCKED"
+    },
     "806cf5af45b1cd7c0f9abb480756db60bf7f0c90b9b42b11e1f9063cebeab8f7": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -15733,7 +15777,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2593,
+  "lockGeneration": 2594,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

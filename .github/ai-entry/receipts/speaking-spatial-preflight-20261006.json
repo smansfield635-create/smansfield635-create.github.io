@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "speaking-spatial-preflight-20261006",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5863,
+  "requestBranch": "ai-dispatch-request-speaking-spatial-preflight-20261006",
+  "requestCommit": "c5ca36baf796f540fb2657b031e01da760654cfe",
+  "requestCommitParent": "0d2dab4790964895d75b2f07f3b00dd63ea7c7a0",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "0d2dab4790964895d75b2f07f3b00dd63ea7c7a0",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "0d2dab4790964895d75b2f07f3b00dd63ea7c7a0",
+    "surface_id": "meet-sean-mansfield"
+  },
+  "bridgeRunId": "37537041694",
+  "dispatchedRunId": 37537061056,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37537061056",
+  "dispatchedRunHeadSha": "0d2dab4790964895d75b2f07f3b00dd63ea7c7a0",
+  "dispatchedAt": "2026-10-06T21:53:56.413Z",
+  "resolvedAt": "2026-10-06T21:54:00.295Z"
+}

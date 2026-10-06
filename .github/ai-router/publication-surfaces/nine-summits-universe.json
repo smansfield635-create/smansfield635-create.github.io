@@ -1,0 +1,125 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "nine-summits-universe",
+  "description": "Nine summit planets surrounding an illuminated diamond heart, existing Compass physics and geometry kernel, with Gratitude to Joy approach and return.",
+  "checks": [
+    {
+      "path": "/nine-summits/universe/index.html",
+      "includes": [
+        "Nine paths. One heart.",
+        "Back to Compass",
+        "/assets/compass/compass.orbit-physics.js",
+        "id=\"reflection\"",
+        "data-summit=\"8\""
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/nine-summits/universe/universe.motion.js",
+      "includes": [
+        "DGB_COMPASS_ORBIT_PHYSICS",
+        "admitHEarthPrimitiveBatch",
+        "Joy begins with noticing.",
+        "DGB_UNIVERSE"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/compass/compass.orbit-physics.js",
+      "includes": [
+        "DGB_COMPASS_ORBIT_PHYSICS",
+        "constellationReleaseQuaternionAt",
+        "releaseParameters"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/nine-summits/universe/",
+    "timeoutMs": 30000,
+    "readySelector": "#universe-scene.ready",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/nine-summits/universe/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "favicon.ico"
+    ],
+    "interactions": [
+      {
+        "name": "Open nine paths list",
+        "action": {
+          "type": "click",
+          "selector": "#path-list summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#path-list[open]"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Select Gratitude to Joy",
+        "action": {
+          "type": "click",
+          "selector": "[data-summit=\"0\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#reflection:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#reflection-title",
+            "value": "Joy begins with noticing."
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Approach selected summit",
+        "action": {
+          "type": "click",
+          "selector": "#approach"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#approach[disabled]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#scene-note",
+            "value": "Return to all nine"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Return to all nine",
+        "action": {
+          "type": "click",
+          "selector": "#return-view"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#reflection[hidden]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#scene-note",
+            "value": "Drag to turn the universe"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

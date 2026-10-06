@@ -455,6 +455,21 @@
       ],
       "entrypoint": ".github/ai-router/projects/support-product-pages/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "MEET_SEAN_PUBLIC_PAGE",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "meet-sean-mansfield/index.html",
+        "meet-sean-mansfield/profile.css",
+        "meet-sean-mansfield/speaking.js",
+        "meet-sean-mansfield/speaking.test.mjs",
+        "meet-sean-mansfield/sean-portrait.webp",
+        "meet-sean-mansfield/UPDATE_NOTES.md"
+      ],
+      "entrypoint": ".github/ai-router/projects/meet-sean-page/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

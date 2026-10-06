@@ -2045,6 +2045,17 @@
       }
     }
   </style>
+
+<style id="choice-scale-style">
+.choice-scale{padding:clamp(24px,5vw,64px);--scale-tilt:9deg;--pan-tilt:-9deg;scroll-margin-top:90px;background:radial-gradient(ellipse at 78% 46%,#ad773022,transparent 48%),linear-gradient(145deg,#151728,#090e19)}
+.choice-scale h2{font-family:Georgia,serif;font-size:clamp(30px,4vw,49px);font-weight:400;line-height:1.15;margin:18px 0}.choice-scale .scale-intro{max-width:650px;color:var(--page-muted);line-height:1.7;margin:0}
+.choice-scale svg{display:block;width:100%;max-width:780px;height:auto;margin:0 auto;overflow:visible}
+.scale-beam,.scale-pan{transform-box:view-box;transition:transform 1.2s cubic-bezier(.22,.8,.25,1)}.scale-beam{transform-origin:400px 135px;transform:rotate(var(--scale-tilt))}.scale-pan{transform:rotate(var(--pan-tilt))}.scale-pan-left{transform-origin:165px 135px}.scale-pan-right{transform-origin:635px 135px}.choice-scale[data-side="entitlement"]{--scale-tilt:-9deg;--pan-tilt:9deg}.choice-scale[data-arrived="false"]{--scale-tilt:0deg;--pan-tilt:0deg}
+.scale-options{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,3vw,32px);max-width:780px;margin:0 auto}.scale-option{font:inherit;color:var(--page-ink);text-align:left;padding:clamp(15px,2vw,24px);min-height:100px;border-radius:16px;border:1px solid #b4b9d23b;background:#101626;cursor:pointer;transition:background .3s,border-color .3s}.scale-option:disabled{cursor:default}.scale-option span{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#b5aec8}.scale-option strong{display:block;font:400 clamp(20px,3vw,30px) Georgia,serif;margin:8px 0}.scale-option small{font-size:12px;line-height:1.5;color:#cbc6c0;display:block}.scale-option[aria-pressed="true"]{border-color:#edca84;background:#3c30213b}.scale-option[aria-pressed="true"] span{color:#f3d496}.scale-option:focus-visible{outline:3px solid #f3d496;outline-offset:4px}.choice-scale .scale-hint{font-size:12px;text-align:center;color:var(--page-soft);margin:16px 0 28px}
+.scale-reflection{max-width:780px;margin:auto;padding:24px clamp(18px,3vw,30px);border-left:2px solid #e4bf79;background:#ffffff04;min-height:180px}.scale-reflection h3{font:400 clamp(22px,3vw,30px) Georgia,serif;line-height:1.3;margin:0 0 12px}.scale-reflection p{color:var(--page-muted);line-height:1.7;margin:0}.scale-next{display:block;width:fit-content;margin:25px auto 0;color:var(--page-gold-light);text-underline-offset:5px;font-size:14px;padding:10px 0;min-height:44px}
+@media(max-width:600px){.choice-scale{padding:26px 18px}.choice-scale svg{margin:10px 0}.scale-reflection{min-height:225px}.scale-options{gap:10px}.scale-option{padding:16px 12px}.choice-scale .scale-hint{font-size:11px}.choice-scale .scale-intro{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.scale-beam,.scale-pan,.scale-option{transition:none!important}}
+</style>
 <style id="reading-navigation-style">
 .heart-door{display:block;text-decoration:none;text-align:center}
 /* Direct reading-page navigation: shared destinations, page-local presentation. */
@@ -2128,7 +2139,7 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
           </div>
 
           <div class="hero-thesis">
-            The heart is not empty. Its value is still present—even when it is locked, guarded, exhausted, or afraid.
+            At the heart of this book is a choice: love or fear. The nine summits explore how we give that choice form in the way we live.
           </div>
         </div>
 
@@ -2306,6 +2317,76 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
         </div>
       </section>
 
+
+      <section class="page-panel choice-scale" id="love-fear-choice" aria-labelledby="choice-scale-title" data-side="gratitude">
+        <div class="page-kicker">The choice at the heart of the book</div>
+        <h2 id="choice-scale-title">What are you giving weight to?</h2>
+        <p class="scale-intro">Love or fear. The Nine Summits of Love explores how that choice shapes what we become. Entitlement and gratitude bring the contrast into everyday life.</p>
+        <svg viewBox="0 0 800 390" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="choice-metal" x1="0" x2="1"><stop stop-color="#8c7455"/><stop offset=".5" stop-color="#fff0be"/><stop offset="1" stop-color="#b69659"/></linearGradient>
+            <linearGradient id="choice-left" x2="0" y2="1"><stop stop-color="#a498be" stop-opacity=".5"/><stop offset="1" stop-color="#333448"/></linearGradient>
+            <linearGradient id="choice-right" x2="0" y2="1"><stop stop-color="#ffe6a3"/><stop offset="1" stop-color="#986031"/></linearGradient>
+            <radialGradient id="choice-light"><stop stop-color="#f6c774" stop-opacity=".22"/><stop offset="1" stop-color="#f6c774" stop-opacity="0"/></radialGradient>
+          </defs>
+          <ellipse cx="400" cy="348" rx="230" ry="18" fill="#000" opacity=".35"/>
+          <circle cx="400" cy="190" r="180" fill="url(#choice-light)"/>
+          <path d="M400 135 L400 325 M345 339 Q400 304 455 339" fill="none" stroke="url(#choice-metal)" stroke-width="9" stroke-linecap="round"/>
+          <g class="scale-beam">
+            <path d="M145 135 Q400 100 655 135" fill="none" stroke="url(#choice-metal)" stroke-width="7" stroke-linecap="round"/>
+            <g class="scale-pan scale-pan-left">
+              <path d="M165 135 L95 260 M165 135 L235 260 M165 135 L165 260" fill="none" stroke="#aaa0be" stroke-width="2" opacity=".8"/>
+              <path d="M85 260 Q165 340 245 260 Z" fill="url(#choice-left)" stroke="#c0b3ca" stroke-width="2"/>
+              <ellipse cx="165" cy="260" rx="80" ry="9" fill="#242436" stroke="#b6aac5" stroke-width="2"/>
+              <path d="M142 250 L148 222 L168 210 L190 229 L186 252 Z" fill="#8a819e" stroke="#c2b7d3" stroke-width="1.5"/>
+              <path d="M148 222 L170 236 L168 210 M170 236 L186 252" fill="none" stroke="#514b64" stroke-width="2"/>
+            </g>
+            <g class="scale-pan scale-pan-right">
+              <path d="M635 135 L565 260 M635 135 L705 260 M635 135 L635 260" fill="none" stroke="#e2c38b" stroke-width="2" opacity=".8"/>
+              <path d="M555 260 Q635 340 715 260 Z" fill="url(#choice-right)" stroke="#ffe3a0" stroke-width="2"/>
+              <ellipse cx="635" cy="260" rx="80" ry="9" fill="#6e4c2f" stroke="#efce8e" stroke-width="2"/>
+              <path d="M610 231 L635 209 L660 231 L635 256 Z" fill="#f4d18a" stroke="#fff2c2" stroke-width="1.5"/>
+              <path d="M610 231 L660 231 M635 209 L635 256" fill="none" stroke="#ad7847" stroke-width="1.5"/>
+            </g>
+          </g>
+          <path d="M400 111 L424 135 L400 159 L376 135 Z" fill="#ffe3a0" stroke="#fff3c6" stroke-width="2"/>
+          <circle cx="400" cy="135" r="5" fill="#805a3c"/>
+        </svg>
+        <div class="scale-options" role="group" aria-label="Explore the two sides of the scale">
+          <button type="button" class="scale-option" data-scale-side="entitlement" aria-pressed="false" aria-controls="scale-reflection" disabled><span>Fear</span><strong>Entitlement</strong><small>What am I owed?</small></button>
+          <button type="button" class="scale-option" data-scale-side="gratitude" aria-pressed="true" aria-controls="scale-reflection" disabled><span>Love</span><strong>Gratitude</strong><small>What can I appreciate?</small></button>
+        </div>
+        <p class="scale-hint">Select either side to explore the contrast.</p>
+        <div class="scale-reflection" id="scale-reflection" aria-live="polite" aria-atomic="true">
+          <h3>Begin with what is already here.</h3>
+          <p>Gratitude recognizes what is alive, valuable, and worth receiving. What could you notice today that fear has pushed out of view?</p>
+        </div>
+        <a class="scale-next" href="#connected-paths-title">One path through nine summits ↓</a>
+      </section>
+      <script>
+      (()=>{
+        const scale=document.querySelector('#love-fear-choice');
+        const buttons=[...scale.querySelectorAll('[data-scale-side]')];
+        const reflection=scale.querySelector('#scale-reflection');
+        const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+        const copy={
+          entitlement:['When the question is what I am owed.','Consider a moment when an expectation was not met. What does entitlement bring into focus—and what might it keep you from seeing?'],
+          gratitude:['Begin with what is already here.','Gratitude recognizes what is alive, valuable, and worth receiving. What could you notice today that fear has pushed out of view?']
+        };
+        const settle=()=>{scale.dataset.arrived='true';};
+        buttons.forEach(button=>{button.disabled=false;button.addEventListener('click',()=>{
+          settle();const side=button.dataset.scaleSide;scale.dataset.side=side;
+          buttons.forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+          reflection.querySelector('h3').textContent=copy[side][0];reflection.querySelector('p').textContent=copy[side][1];
+        });});
+        if(!reduced.matches&&'IntersectionObserver' in window){
+          scale.dataset.arrived='false';
+          const observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){settle();observer.disconnect();}},{threshold:.25});observer.observe(scale);
+          reduced.addEventListener('change',event=>{if(event.matches){settle();observer.disconnect();}});
+        }
+      })();
+      </script>
+
       <section
         class="page-panel book-section"
         aria-labelledby="book-covers-title"
@@ -2378,12 +2459,12 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
       >
         <div class="journey-heading">
           <div class="page-kicker">
-            Nine beginnings · nine paths · nine summits
+            Nine summits · one heart · one choice · one path
           </div>
 
           <div class="journey-heading-copy">
             <h2 id="connected-paths-title">
-              No one reaches love by taking only one path.
+              Nine summits. One path toward love.
             </h2>
 
             <p>
@@ -2391,14 +2472,14 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
             </p>
 
             <p>
-              But these qualities do not develop independently. The paths cross because human formation is connected.
+              These qualities belong to one connected path. Each summit expresses the choice to love, and each strengthens our capacity to keep choosing it.
             </p>
           </div>
         </div>
 
         <div
           class="path-map"
-          aria-label="Connected paths from nine human beginnings to the Nine Summits of Love"
+          aria-label="Nine connected practices and summits on one path of love"
         >
           <svg
             class="path-network"
@@ -2503,7 +2584,7 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
           </svg>
 
           <div class="path-columns">
-            <span>Path begins with</span>
+            <span>Practice</span>
             <span>Link</span>
             <span>Summit formation</span>
           </div>
@@ -2691,7 +2772,7 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
           </div>
 
           <div class="path-law">
-            The Nine Summits are not nine separate achievements. They are one connected human formation. Each path strengthens the next. Each summit supports the others. Love is not waiting at the top as a prize. Love is what the climber becomes capable of carrying.
+            The Nine Summits are not nine separate achievements. They are one connected human formation. Each practice strengthens the next. Each summit supports the others. Love is not waiting at the top as a prize. Love is what the climber becomes capable of carrying.
           </div>
         </div>
       </section>

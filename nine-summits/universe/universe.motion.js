@@ -1,10 +1,76 @@
 /* Universe first slice. Geometry: H-Earth kernel; motion: unchanged Compass physics.
  * Heart contour and dome proportions: nine-summits-of-love/index.html at 171a74bc.
  * Planet lighting is a visual metaphor; no physical simulation claims. */
-const paths = [
+const summits = [
   ['Gratitude','Joy','#d5aa66'],['Generosity','Love','#cb7584'],['Dependability','Stability','#749cab'],
   ['Accountability','Character','#b88360'],['Forgiveness','Peace','#a3b8aa'],['Self-Control','Balance','#8e8ead'],
   ['Patience','Structure','#9caa7d'],['Humility','Dignity','#ba9cae'],['Purity','Free Will','#b8c9d2']
+];
+// Teaching text follows the nine relationships on the book page; examples invite reflection.
+const teachings = [
+  {
+    "title": "Joy begins with noticing.",
+    "intro": "Gratitude makes room for joy in what is already here.",
+    "teaching": "Joy does not begin with having everything. It begins with recognizing what is already alive, valuable, and worth receiving.",
+    "choice": "After a difficult day, fear can narrow your attention to what is missing. Choosing love can begin with noticing one kindness without pretending the difficulty has disappeared.",
+    "question": "What is worth appreciating in your life today?"
+  },
+  {
+    "title": "Love becomes something we give.",
+    "intro": "Generosity gives love a visible expression.",
+    "teaching": "Love becomes visible when value moves outward without destroying the person giving it.",
+    "choice": "Someone needs your help. You can offer time, attention, or support honestly, without promising more than you can give. A loving yes can live alongside a necessary boundary.",
+    "question": "What can you offer someone today without neglecting yourself?"
+  },
+  {
+    "title": "Trust grows through showing up.",
+    "intro": "Dependability gives love something steady to stand on.",
+    "teaching": "Stability is not a feeling. It is trustworthy action repeated long enough for others—and your future self—to stand on it.",
+    "choice": "When keeping a promise becomes inconvenient, return to why you made it. Follow through, or speak honestly and make a new agreement. Conviction takes shape in what you do again tomorrow.",
+    "question": "What promise can you honor today?"
+  },
+  {
+    "title": "Our choices ask something of us.",
+    "intro": "Accountability turns intention into responsibility.",
+    "teaching": "Character begins when we stop asking only what we intended and become willing to answer for what our choices produced.",
+    "choice": "When your words hurt someone, fear may urge you to defend your intentions. Choosing love means listening to the impact, owning your part, and taking a concrete step toward repair.",
+    "question": "What can you take responsibility for and begin to repair?"
+  },
+  {
+    "title": "Peace leaves room for truth.",
+    "intro": "Forgiveness releases the fight without erasing what happened.",
+    "teaching": "Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room.",
+    "choice": "You can choose to stop feeding resentment while keeping an honest boundary. Forgiveness does not require pretending trust has already been restored.",
+    "question": "What would peace look like while keeping an honest boundary?"
+  },
+  {
+    "title": "Feel deeply. Choose deliberately.",
+    "intro": "Self-control creates room between an impulse and a response.",
+    "teaching": "Balance is not the absence of emotion. It is the ability to feel deeply without surrendering authority over what happens next.",
+    "choice": "In a tense conversation, pause before sending the message or raising your voice. You can acknowledge anger and still choose words that protect dignity—yours and theirs.",
+    "question": "What response would express your convictions rather than your first impulse?"
+  },
+  {
+    "title": "Give strong things time to form.",
+    "intro": "Patience supports what cannot be built in a moment.",
+    "teaching": "Anything built too quickly can collapse under the weight it was meant to carry. Patience gives strong things time to form.",
+    "choice": "When progress feels slow, fear can push you to force an outcome. Choosing love may mean continuing the small, necessary work and allowing growth its own time.",
+    "question": "What deserves your steady care instead of being rushed?"
+  },
+  {
+    "title": "Honesty makes room for dignity.",
+    "intro": "Humility lets us learn without denying our worth.",
+    "teaching": "Humility is not becoming smaller. It is seeing yourself in honest proportion—without self-erasure or artificial superiority.",
+    "choice": "When someone offers a perspective you have missed, you can listen without treating it as a threat to your worth. Admitting you do not know creates room to learn together.",
+    "question": "Where can you acknowledge a limitation without denying your worth?"
+  },
+  {
+    "title": "Make room for a freer choice.",
+    "intro": "Purity asks what is influencing the choice we call our own.",
+    "teaching": "A choice is not fully free when fear, coercion, resentment, or appetite is making it for us. Purity clears the field.",
+    "choice": "Before a consequential decision, notice what is pressing you: approval, resentment, or an immediate urge. Make space to choose from love rather than simply obeying that pressure.",
+    "question": "What would you choose if fear were not deciding for you?"
+  }
 ];
 const scene=document.querySelector('#universe-scene'), canvas=document.querySelector('#universe-canvas');
 const panel=document.querySelector('#reflection'), status=document.querySelector('#status');
@@ -21,13 +87,16 @@ function stopInertia(){if(inertia){quaternion=P.constellationReleaseQuaternionAt
 function choose(index,scroll=true){
   if(pointer?.dragging || performance.now()<suppressUntil)return;
   stopInertia();$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];
-  const [begin,summit]=paths[index];
-  $('#reflection-path').textContent=`${begin} → ${summit}`;
-  $('#reflection-title').textContent=index===0?'Joy begins with noticing.':summit;
-  $('#reflection-copy').textContent=index===0?'Joy does not begin with having everything. It begins with recognizing what is already alive, valuable, and worth receiving.':`In The Nine Summits of Love, ${begin.toLowerCase()} is the beginning of the path toward ${summit.toLowerCase()}. Explore this relationship in the book.`;
-  $('#reflection-question').textContent=index===0?'What is already present in your life that deserves to be noticed?':'';
-  $('#reflection-question').hidden=index!==0;
-  panel.hidden=false;returnButton.hidden=false;approach.hidden=!ready;approach.disabled=false;approach.textContent='Move closer';
+  const [begin,summit]=summits[index], teaching=teachings[index];
+  $('#reflection-path').textContent=`Summit ${index+1} of 9 · ${begin} → ${summit}`;
+  $('#reflection-title').textContent=teaching.title;
+  $('#reflection-copy').textContent=teaching.intro;
+  $('#teaching-copy').textContent=teaching.teaching;
+  $('#teaching-choice').textContent=teaching.choice;
+  $('#reflection-question').textContent=teaching.question;
+  $('#summit-teaching').hidden=true;
+  panel.hidden=false;returnButton.hidden=false;approach.hidden=false;approach.disabled=false;approach.textContent='Look closer';
+  approach.setAttribute('aria-expanded','false');
   labels.forEach((el,i)=>el.setAttribute('aria-pressed',String(i===index)));
   status.textContent=`${begin} leads to ${summit}.`;
   requestFrame();
@@ -35,17 +104,22 @@ function choose(index,scroll=true){
 }
 function returnToAll(){
   stopInertia();$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];
-  panel.hidden=true;returnButton.hidden=true;status.textContent='All nine paths. Your orientation is preserved.';
+  panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
+  $('#summit-teaching').hidden=true;approach.setAttribute('aria-expanded','false');
   labels.forEach(el=>el.setAttribute('aria-pressed','false'));requestFrame();
-  if(prior>=0)labels[prior]?.focus({preventScroll:true});
+  if(prior>=0){const target=ready?labels[prior]:$(`[data-summit="${prior}"]`);target?.focus({preventScroll:true});}
 }
 document.querySelectorAll('[data-summit]').forEach(el=>el.addEventListener('click',()=>choose(Number(el.dataset.summit))));
 returnButton.addEventListener('click',returnToAll);
+$('#return-from-teaching').addEventListener('click',returnToAll);
 approach.addEventListener('click',()=>{
-  if(selected<0||!ready)return;stopInertia();close=true;
-  targetOffset=centers[selected].slice();targetZoom=2.8;
-  approach.disabled=true;approach.textContent='Exploring this path';$('#scene-note').textContent=`${paths[selected][0]} → ${paths[selected][1]} · Return to all nine to keep exploring`;requestFrame();
-  scene.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});
+  if(selected<0)return;stopInertia();close=true;
+  if(ready){targetOffset=centers[selected].slice();targetZoom=2.8;requestFrame();}
+  approach.disabled=true;approach.textContent='Exploring this summit';approach.setAttribute('aria-expanded','true');
+  $('#scene-note').textContent=`${summits[selected][0]} → ${summits[selected][1]} · Return to all nine to keep exploring`;
+  const teaching=$('#summit-teaching');teaching.hidden=false;
+  status.textContent=`${summits[selected][1]} teaching opened.`;
+  teaching.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});teaching.focus({preventScroll:true});
 });
 $('#reset-view').addEventListener('click',()=>{if(!ready)return;cancelPointer();stopInertia();quaternion=[0,0,0,1];returnToAll();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selected>=0){returnToAll();event.preventDefault();}});
@@ -81,7 +155,7 @@ function heartDescriptor(K){
   return K.constructHEarthTriangleMesh({primitiveId:'universe-diamond-heart',vertices,indices,expectedClosure:'CLOSED_REQUIRED',semanticRole:'ILLUMINATED_CENTRAL_HEART'});
 }
 function buildGeometry(K){
-  const results=[heartDescriptor(K),...paths.map((p,i)=>K.constructHEarthEllipsoidMesh({primitiveId:`universe-planet-${i}`,center:K.createHEarthVector3(0,0,0),radii:K.createHEarthVector3(1,1,1),longitudeSampleCount:24,latitudeSampleCount:13,semanticRole:`${p[0]}_TO_${p[1]}`}))];
+  const results=[heartDescriptor(K),...summits.map((p,i)=>K.constructHEarthEllipsoidMesh({primitiveId:`universe-planet-${i}`,center:K.createHEarthVector3(0,0,0),radii:K.createHEarthVector3(1,1,1),longitudeSampleCount:24,latitudeSampleCount:13,semanticRole:`${p[0]}_TO_${p[1]}`}))];
   for(const result of results)if(!result.valid||K.hasHEarthBlockingIssues(result.issues))throw Error('Geometry construction: '+result.issues.map(x=>x.code).join(','));
   const admitted=K.admitHEarthPrimitiveBatch(results.map(x=>x.primitiveRecord),{frameId:'nine-summits-universe-first-slice'});
   if(!admitted.valid||!K.isHEarthAggregateFrameAdmissionRecord(admitted.frame)||K.hasHEarthBlockingIssues(admitted.issues))throw Error('Geometry admission failed');
@@ -126,10 +200,10 @@ function render(time){
   if(!moving){zoom=targetZoom;offset=targetOffset.slice();}
   gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
   gl.uniform2f(loc.uView,viewWidth,viewHeight);gl.uniform3fv(loc.uOffset,offset);gl.uniform1f(loc.uZoom,zoom);
-  centers=paths.map((_,i)=>P.quaternionRotateVector(quaternion,basePosition(i)));
+  centers=summits.map((_,i)=>P.quaternionRotateVector(quaternion,basePosition(i)));
   draw(meshes[0],[0,0,0],1,[1,.7,.3],true,false);
   projected=centers.map((center,i)=>{
-    draw(meshes[i+1],center,radius(i),color(paths[i][2]),false,i===selected);
+    draw(meshes[i+1],center,radius(i),color(summits[i][2]),false,i===selected);
     const p=project(center), label=labels[i], labelY=p.y+radius(i)*p.scale+7;
     label.style.transform=`translate(${p.x}px,${labelY}px) translateX(-50%)`;
     const obscured=center[2]<-.1&&Math.hypot(center[0],center[1])<.75;
@@ -169,12 +243,12 @@ function bindInput(){
   window.addEventListener('pagehide',()=>{cancelPointer();stopInertia();if(raf)cancelAnimationFrame(raf);raf=0;});
   window.addEventListener('pageshow',()=>{lastTime=0;requestFrame();});
 }
-function fallback(error){cancelPointer();stopInertia();if(raf)cancelAnimationFrame(raf);raf=0;$('#planet-labels').hidden=true;canvas.hidden=true;$('.heart-glow').hidden=true;ready=false;receipt={...receipt,status:'fallback',error:String(error.message||error)};scene.classList.remove('ready');$('.loading').textContent='The nine paths are available below.';$('#path-list').open=true;status.textContent='Explore the paths below, or continue to the book.';approach.hidden=true;$('#reset-view').disabled=true;console.error('Universe:',error);}
+function fallback(error){cancelPointer();stopInertia();if(raf)cancelAnimationFrame(raf);raf=0;$('#planet-labels').hidden=true;canvas.hidden=true;$('.heart-glow').hidden=true;ready=false;receipt={...receipt,status:'fallback',error:String(error.message||error)};scene.classList.remove('ready');$('.loading').textContent='The nine summits are available below.';$('#path-list').open=true;status.textContent='Explore the summit teachings below, or continue to the book.';approach.hidden=selected<0;$('#reset-view').disabled=true;console.error('Universe:',error);}
 async function init(){
   P=globalThis.DGB_COMPASS_ORBIT_PHYSICS;if(!P)throw Error('Shared Compass physics unavailable');
   const K=await import('../../showroom/globe/h-earth/render/geometry-kernel.js');
   setupGL();meshes=buildGeometry(K);
-  paths.forEach(([begin,summit],i)=>{const el=document.createElement('button');el.type='button';el.className='planet-label';el.dataset.planet=i;el.setAttribute('aria-label',`${begin} leads to ${summit}`);el.setAttribute('aria-pressed','false');el.innerHTML=`<strong>${begin}</strong><span>${summit}</span>`;el.addEventListener('click',event=>{if(event.detail===0)choose(i);});$('#planet-labels').append(el);labels.push(el);});
+  summits.forEach(([begin,summit],i)=>{const el=document.createElement('button');el.type='button';el.className='planet-label';el.dataset.planet=i;el.setAttribute('aria-label',`${begin} leads to ${summit}`);el.setAttribute('aria-pressed','false');el.innerHTML=`<strong>${begin}</strong><span>${summit}</span>`;el.addEventListener('click',event=>{if(event.detail===0)choose(i);});$('#planet-labels').append(el);labels.push(el);});
   ready=true;scene.classList.add('ready');resize();bindInput();new ResizeObserver(resize).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());

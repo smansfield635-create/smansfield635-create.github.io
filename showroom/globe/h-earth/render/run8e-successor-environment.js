@@ -2,7 +2,7 @@
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 /** H_EARTH_RUN_8E_GRATITUDE_AUDRALIA_RECIPROCAL_REGIONAL_DEVELOPMENT_GEN311_v1 */
 import { admitHEarthPrimitiveBatch,mergeHEarthGeometryBounds,isHEarthAABB3D } from './geometry-kernel.js';
-import { previewHEarthFunctionalLandscape } from './landscape-preview.js';
+import { previewHEarthFunctionalLandscape, H_EARTH_FUNCTIONAL_LANDSCAPE_DEFAULT_CAMERA } from './landscape-preview.js?cb=b8fc053cb9abb6c6';
 import { buildHEarthRun8CTerrainMaterialLightingPresentation,evaluateHEarthRun8CTerrainMaterialLightingPresentation } from './lighting-material-successor-terrain.run8c.js';
 import { planHEarthGen2514GroundedVegetation,constructHEarthGen2514GroundedVegetationBatch } from './geometry-grounded-vegetation.run8d.js?cb=8c008f474e4f74f1';
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -230,7 +230,7 @@ export function constructHEarthGen2515VegetationPresentationBatch(batchId) {
     lodOrVisibilitySelectionPerformed: false
   });
 }
-export function buildHEarthRun8ENeutralPackage({cameraWorld={x:0,y:8,z:-40},deferVegetation=false}={}){
+export function buildHEarthRun8ENeutralPackage({cameraWorld=H_EARTH_FUNCTIONAL_LANDSCAPE_DEFAULT_CAMERA,deferVegetation=false}={}){
   const manifold=startupMeasure('BASE_WORLD_MANIFOLD',()=>previewHEarthFunctionalLandscape({cameraWorld})),issues=[];
   if(manifold?.ok!==true)issues.push(...(manifold?.issues??['RUN_8E_MANIFOLD_PREVIEW_INVALID']));
   if(manifold?.geographicIdentity?.playableRegion!=='GRATITUDE'||manifold?.geographicIdentity?.continentalContext!=='AUDRALIA'||manifold?.oceanFacingEmptinessPreserved!==true)issues.push('RUN_8E_GEOGRAPHIC_IDENTITY_INVALID');

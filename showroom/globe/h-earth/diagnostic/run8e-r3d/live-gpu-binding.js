@@ -1,5 +1,5 @@
-import { prepareHEarthRun8ER2CanonicalLiveRenderPackage } from '../../render/live-render-package.run8e-r2.canonical.js?cb=fa8422b515eb5a00';
-import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js?cb=e6e9d909f4aab8dc';
+import { prepareHEarthRun8ER2CanonicalLiveRenderPackage } from '../../render/live-render-package.run8e-r2.canonical.js?cb=da1bbebf713c61b4';
+import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js?cb=f428b31f96908a85';
 
 const RENDERER_CUSTODY_QUERY_KEY = 'renderer-custody';
 const RENDERER_CUSTODY_QUERY_VALUE = 'v1';
@@ -24,7 +24,7 @@ const OCEAN_PROOF_RENDERER_PATH =
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=8efbc20cf6d7571d';
+  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=9140a941cfd48e6d';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =

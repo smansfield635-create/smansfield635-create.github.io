@@ -10,7 +10,7 @@ import {
   H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,
   sampleHEarthVisibleTerrainClearanceSurface,
   sampleHEarthVisibleTerrainClearanceEnvelope
-} from './visible-terrain-clearance.js';
+} from './visible-terrain-clearance.js?cb=3bd635f46186bf3c';
 
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);

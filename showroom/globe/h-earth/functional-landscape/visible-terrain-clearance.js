@@ -9,7 +9,7 @@
  * This module creates no geography, topology, renderer, navigation-scale,
  * collision/physics, merge, deployment, or production authority.
  */
-import { H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW } from '../render/landscape-preview.js';
+import { H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW } from '../render/landscape-preview.js?cb=b8fc053cb9abb6c6';
 
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);

@@ -1,14 +1,9 @@
 /** H_EARTH_RUN_8E_R2_CANONICAL_LIVE_RENDER_PACKAGE_v1 */
-import {
-  getHEarthRun8ER2ImmutableLiveRenderPackage as getRawPackage,
-  getHEarthOW01LiveRenderPackageOccurrence as getOW01RawPackage,
-  evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
-  evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync,
-  adoptHEarthRun8ER2DeferredLiveRenderPackage,
-  getHEarthRun8ER2VegetationWorldTruthPlan,
-  isHEarthRun8ER2VegetationWorldTruthPrepared,
-  createHEarthRun8ER2VegetationPresentationBatch
-} from './live-render-package.run8e-r2.js?cb=3b265737a4a96e79';
+let getRawPackage,getOW01RawPackage,evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
+  evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync,adoptHEarthRun8ER2DeferredLiveRenderPackage,
+  getHEarthRun8ER2VegetationWorldTruthPlan,isHEarthRun8ER2VegetationWorldTruthPrepared,
+  createHEarthRun8ER2VegetationPresentationBatch;
+let rawPackageModulePromise=null;
 
 const GRID_SCALE = 16777216;
 const FLOAT_BUFFER_NAMES = Object.freeze([
@@ -143,21 +138,6 @@ const preparationPerformanceEnabled=startupWorkerMode
 const preparationNow=()=>globalThis.performance?.now?.()??null;
 const preparationTimeOrigin=()=>Number.isFinite(globalThis.performance?.timeOrigin)?globalThis.performance.timeOrigin:null;
 const durationBetween=(start,end)=>Number.isFinite(start)&&Number.isFinite(end)?end-start:null;
-if(startupWorkerMode&&typeof document==='undefined'&&typeof globalThis.postMessage==='function'){
-  const timing=preparationPerformanceEnabled?{schema:'H_EARTH_CANONICAL_PREPARATION_TIMING_v1',version:1,sourceModuleUrl:import.meta.url,clock:'performance.now',timeOrigin:preparationTimeOrigin(),status:'MODULE_READY',rawBuildDurationMs:null,canonicalBuildDurationMs:null,resultPostStartAtMs:null}:null;
-  globalThis.onmessage=()=>{
-    try{
-      const rawStart=timing?preparationNow():null;let raw;
-      try{raw=getRawPackage({deferVegetation:true});}finally{if(timing)timing.rawBuildDurationMs=durationBetween(rawStart,preparationNow());}
-      globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});
-      const canonicalStart=timing?preparationNow():null;let canonical;
-      try{canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});}finally{if(timing)timing.canonicalBuildDurationMs=durationBetween(canonicalStart,preparationNow());}
-      if(timing){timing.status='RESULT_POSTING';timing.resultPostStartAtMs=preparationNow();}
-      globalThis.postMessage({phase:'CANONICAL_PACKAGE_COMPLETE',raw,canonical,...(timing?{timing}: {})});
-    }catch(error){if(timing){timing.status='FAILED';timing.resultPostStartAtMs=preparationNow();}globalThis.postMessage({error:{message:error?.message??String(error)},...(timing?{timing}: {})});}
-  };
-  globalThis.postMessage({phase:'CANONICAL_WORKER_MODULE_READY',...(timing?{timing}: {})});
-}
 let pendingDeferredPreparation=null;
 const preparationProgressSubscribers=new Set();
 let preparationProgressSettled=false;
@@ -225,6 +205,7 @@ export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=
       canonicalPreparationTiming.normalizedHandoffDurationMs=Number.isFinite(elapsed)&&elapsed>=0?elapsed:null;
     };
     const fail=error=>{if(settled)return;settled=true;preparationProgressSettled=true;preparationProgressSubscribers.clear();if(canonicalPreparationTiming){canonicalPreparationTiming.status='FAILED';canonicalPreparationTiming.failure={name:error?.name??'Error',message:error?.message??String(error)};}moduleReject(error);resultReject(error);worker?.terminate();reject(error);};
+    rawPackageModulePromise?.catch(fail);
     try{
       const url=new URL(import.meta.url);url.searchParams.set('hearthCanonicalPreparation','1');if(preparationPerformanceEnabled)url.searchParams.set('hearthCanonicalTiming','1');worker=new Worker(url,{type:'module'});
       worker.onerror=event=>fail(new Error(event.message||'R2_CANONICAL_WORKER_FAILED'));
@@ -240,7 +221,7 @@ export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=
           }
           if(data?.phase==='RAW_PACKAGE_COMPLETE'&&!receiving&&stage==='RAW'){stage='CANONICAL';publishPreparationProgress({phase:data.phase,completed:1,total:1,unit:'packages'});return;}
           if(receiving||stage!=='CANONICAL'||data?.phase!=='CANONICAL_PACKAGE_COMPLETE'||!data.raw||!data.canonical)throw new Error('R2_CANONICAL_WORKER_RESULT_INVALID');
-          receiving=true;receiveTiming(data);resultResolve(data);await moduleWait;await resultWait;
+          receiving=true;receiveTiming(data);resultResolve(data);await moduleWait;await resultWait;await rawPackageModulePromise;if(settled)return;
           publishPreparationProgress({phase:data.phase,completed:1,total:1,unit:'packages'});
           await measurePreparationStage('CANONICAL_MAIN_FREEZE',()=>freezeStartupRecords(data));if(settled)return;
           await measurePreparationStage('CANONICAL_RAW_ADOPTION_VALIDATE',()=>adoptHEarthRun8ER2DeferredLiveRenderPackage(data.raw,{onProgress:publishPreparationProgress}));if(settled)return;
@@ -259,3 +240,44 @@ export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=
   });
   return pendingDeferredPreparation;
 }
+
+// Launch the existing preparation owner before awaiting the heavy raw graph.
+// Synchronous exports remain callable after this module's evaluation completes.
+rawPackageModulePromise=import('./live-render-package.run8e-r2.js?cb=3b265737a4a96e79').then(namespace=>{
+  ({getHEarthRun8ER2ImmutableLiveRenderPackage:getRawPackage,
+    getHEarthOW01LiveRenderPackageOccurrence:getOW01RawPackage,
+    evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
+    evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync,
+    adoptHEarthRun8ER2DeferredLiveRenderPackage,
+    getHEarthRun8ER2VegetationWorldTruthPlan,
+    isHEarthRun8ER2VegetationWorldTruthPrepared,
+    createHEarthRun8ER2VegetationPresentationBatch}=namespace);
+});
+let workerRawReadyPromise=null;
+if(startupWorkerMode&&typeof document==='undefined'&&typeof globalThis.postMessage==='function'){
+  const timing=preparationPerformanceEnabled?{schema:'H_EARTH_CANONICAL_PREPARATION_TIMING_v1',version:1,sourceModuleUrl:import.meta.url,clock:'performance.now',timeOrigin:preparationTimeOrigin(),status:'MODULE_READY',rawBuildDurationMs:null,canonicalBuildDurationMs:null,resultPostStartAtMs:null}:null;
+  workerRawReadyPromise=rawPackageModulePromise.then(()=>{
+    globalThis.postMessage({phase:'CANONICAL_WORKER_MODULE_READY',...(timing?{timing}: {})});
+  });
+  globalThis.onmessage=async()=>{
+    try{
+      await workerRawReadyPromise;
+      const rawStart=timing?preparationNow():null;let raw;
+      try{raw=getRawPackage({deferVegetation:true});}finally{if(timing)timing.rawBuildDurationMs=durationBetween(rawStart,preparationNow());}
+      globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});
+      const canonicalStart=timing?preparationNow():null;let canonical;
+      try{canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});}finally{if(timing)timing.canonicalBuildDurationMs=durationBetween(canonicalStart,preparationNow());}
+      if(timing){timing.status='RESULT_POSTING';timing.resultPostStartAtMs=preparationNow();}
+      globalThis.postMessage({phase:'CANONICAL_PACKAGE_COMPLETE',raw,canonical,...(timing?{timing}: {})});
+    }catch(error){if(timing){timing.status='FAILED';timing.resultPostStartAtMs=preparationNow();}globalThis.postMessage({error:{message:error?.message??String(error)},...(timing?{timing}: {})});}
+  };
+}
+const earlyPreparationQuery=new URLSearchParams(globalThis.location?.search??'');
+const earlyPreparationSelected=earlyPreparationQuery.get('visual')==='terrain-relief-v2' &&
+  !['renderer-custody','water-index-span','water-attribution','ocean-presentation','ocean-proof'].some(key=>earlyPreparationQuery.get(key)==='v1');
+if(!startupWorkerMode&&earlyPreparationSelected&&typeof globalThis.Worker==='function'&&
+  globalThis.document?.getElementById?.('h-earth-3d-route-root')?.getAttribute?.('data-h-earth-public-route')==='functional-landscape'&&
+  globalThis.document?.getElementById?.('h-earth-functional-landscape-route')){
+  prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}).catch(()=>{});
+}
+await(startupWorkerMode?(workerRawReadyPromise??rawPackageModulePromise):measurePreparationStage('CANONICAL_MAIN_RAW_MODULE_WAIT',()=>rawPackageModulePromise));

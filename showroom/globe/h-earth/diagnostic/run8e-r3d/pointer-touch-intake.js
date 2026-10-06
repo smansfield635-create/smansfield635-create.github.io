@@ -1,11 +1,14 @@
 import {
   createHEarthFunctionalLandscapeNavigationState,
   proposeHEarthFunctionalLandscapeNavigation,
-  evaluateHEarthFunctionalLandscapeNavigationState
-} from '../../functional-landscape/navigation.js?cb=4359f951b7186b7c';
+  evaluateHEarthFunctionalLandscapeNavigationState,
+  resolveHEarthNavigationBoundaryFeedback
+} from '../../functional-landscape/navigation.js?cb=mountain-traversal-20261006';
 import {
   createGestureControlLattice
 } from '../touch-motion-cp3a/touch-control-lattice.js';
+
+export { resolveHEarthNavigationBoundaryFeedback };
 
 export const H_EARTH_RUN_8E_R3D2_POINTER_TOUCH_INTAKE_ID =
   'H_EARTH_RUN_8E_CP3B_LOCKED_CONTINUOUS_POINTER_TOUCH_INTAKE_v1';
@@ -137,6 +140,8 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
       frameFacts: frameFacts ? clone(frameFacts) : null,
       accepted: result?.ok === true,
       status: result?.status ?? 'UNKNOWN',
+      issues: Object.freeze([...(result?.issues ?? [])]),
+      moved: result?.ok === true && Math.hypot(navigationState.position.x-before.position.x,navigationState.position.z-before.position.z)>1e-9,
       beforeStateId: before.stateId,
       afterStateId: result?.state?.stateId ?? before.stateId,
       afterNavigationSequence: result?.state?.sequence ?? before.sequence

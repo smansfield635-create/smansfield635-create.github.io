@@ -1,4 +1,4 @@
-import { installHEarthRun8ER3D2PointerTouchIntake } from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=fd35f94bcfb77636';
+import { installHEarthRun8ER3D2PointerTouchIntake, resolveHEarthNavigationBoundaryFeedback } from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=mountain-traversal-20261006';
 import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=woodland-delivery-20261006';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
@@ -38,6 +38,20 @@ emitDiagnosticStage('CANVAS_ACQUIRED', 'PASS', {
   backingHeight: canvas.height,
   devicePixelRatio: window.devicePixelRatio || 1
 });
+
+const boundaryStatus = document.createElement('output');
+boundaryStatus.id = 'h-earth-navigation-boundary';
+boundaryStatus.setAttribute('role','status');
+boundaryStatus.setAttribute('aria-live','polite');
+boundaryStatus.setAttribute('aria-atomic','true');
+boundaryStatus.hidden = true;
+boundaryStatus.style.cssText = 'position:fixed;bottom:max(198px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:5;box-sizing:border-box;width:max-content;max-width:calc(100vw - 32px);padding:10px 12px;border-radius:8px;background:rgba(7,20,18,.88);color:#f1f7f3;font:13px/1.4 system-ui,sans-serif;text-align:center;pointer-events:none;';
+document.body.appendChild(boundaryStatus);
+function updateBoundaryFeedback(proposal){
+  const message=resolveHEarthNavigationBoundaryFeedback(boundaryStatus.textContent,proposal);
+  if(message!==boundaryStatus.textContent)boundaryStatus.textContent=message;
+  boundaryStatus.hidden=!message;
+}
 
 const hud = Object.freeze({
   waypoint: document.getElementById('hud-waypoint'),
@@ -185,6 +199,7 @@ try {
       if (!binding) throw new Error('R3E2_LIVE_GPU_BINDING_NOT_READY');
       lastPresentedFrame = binding.acceptNavigationState(proposalRecord, navigationState);
       root.dataset.gestureUsed = 'true';
+      updateBoundaryFeedback(proposalRecord);
       updateHud();
     }
   });

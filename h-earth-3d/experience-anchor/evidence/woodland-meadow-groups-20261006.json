@@ -1,0 +1,205 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_VISIBLE_GROUPS_FAILED_CANDIDATE_v1",
+  "operationId": "H_EARTH_WOODLAND_MEADOW_VISIBLE_GROUPS_20261006",
+  "baseline": "a2b70017902fa675ef0882b4affea185cfcb6388",
+  "disposition": "FAIL_VISIBLE_MOBILE_GATES",
+  "published": false,
+  "mergeAuthorized": false,
+  "mechanicalCommand": "node h-earth-3d/validation/h-earth.woodland-meadow-groups-20261006.mjs --output /tmp/hearth-groups-mechanical.json",
+  "mechanical": {
+    "oasisDigest": "5d22b2ec7b47d23c43f93fad5f0408b49859d68ae824bcfef4aaad286557eb83",
+    "unchangedOasisGeometry": true,
+    "nominalHeightRanges": {
+      "short": [
+        0.22,
+        0.38
+      ],
+      "tall": [
+        0.65,
+        0.95
+      ]
+    },
+    "tipHeightScale": 0.87,
+    "schema": "H_EARTH_WOODLAND_MEADOW_MECHANICAL_QUALIFICATION_v1",
+    "result": "PASS",
+    "executedHead": "a2b70017902fa675ef0882b4affea185cfcb6388",
+    "trackedWorkingTreeClean": false,
+    "baseline": "a2b70017902fa675ef0882b4affea185cfcb6388",
+    "sectorDigest": "e0f7d8e8faff826e868af55906931583fc3735b20748a9829c512ccb5d782099",
+    "terrainDigest": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
+    "decisionDigest": "06493901f81ebaa6439819e4c29d0510fa960c391cfeab2e8df290c5ba439f08",
+    "acceptedTufts": 32,
+    "blades": 192,
+    "rootColumns": 576,
+    "maxGroundError": 4.759025848954934e-07,
+    "maxTipHeight": 0.8220798969268799,
+    "grassVertices": 3072,
+    "grassTriangles": 3456,
+    "grassBufferBytes": 253440,
+    "sectorTriangles": 30132,
+    "baseVertices": 42103,
+    "baseTriangles": 73302,
+    "baseStartupGeometryBufferBytes": 3784731,
+    "drawRangesUnchanged": 9,
+    "profiles": [
+      {
+        "name": "CANOPY",
+        "eligibleCells": 5,
+        "retainedTufts": 0,
+        "meanTargetDensity": 0.2743230976423335
+      },
+      {
+        "name": "OPEN",
+        "eligibleCells": 61,
+        "retainedTufts": 32,
+        "meanTargetDensity": 0.8066661651967297
+      },
+      {
+        "name": "FEATHER",
+        "eligibleCells": 18,
+        "retainedTufts": 0,
+        "meanTargetDensity": 0.2508722531951392
+      }
+    ],
+    "decisionReasons": {
+      "DENSITY_REJECTED": 52,
+      "ACCEPTED": 32
+    },
+    "unchangedNonGrassGeometry": true,
+    "orderVariants": 3,
+    "physicalDeviceAcceptance": "NOT_ESTABLISHED",
+    "browserReadinessQualification": "SEPARATE_REQUIRED"
+  },
+  "independentWest": {
+    "schema": "H_EARTH_WOODLAND_VISIBLE_MOBILE_ACCEPTANCE_v1",
+    "mode": "SOFTWARE_EMULATION_ONLY",
+    "frozenGates": {
+      "NEAR_A": 0.005,
+      "APPROACH": 0.002596
+    },
+    "views": {
+      "NEAR_A": {
+        "dimensions": [
+          390,
+          844
+        ],
+        "changedPixels": 490,
+        "changedFraction": 0.0014886377445619153,
+        "changedPixelsAtLeast8RGB": 490,
+        "changedBounds": [
+          2,
+          545,
+          372,
+          658
+        ],
+        "gate": 0.005,
+        "gatePass": false
+      },
+      "APPROACH": {
+        "dimensions": [
+          390,
+          844
+        ],
+        "changedPixels": 594,
+        "changedFraction": 0.0018045935107546482,
+        "changedPixelsAtLeast8RGB": 594,
+        "changedBounds": [
+          3,
+          575,
+          378,
+          842
+        ],
+        "gate": 0.002596,
+        "gatePass": false
+      }
+    },
+    "pixelGatePass": false,
+    "limitations": "Pixel gates alone do not establish perceptual quality or mobile performance; inspect both images at native390px and prove unchanged non-grass bytes separately.",
+    "sourceHashes": {
+      "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "7ea8847f5216813762e456d7b04d2177dc3bf42645c8544d182fe78f65d28734",
+      "showroom/globe/h-earth/render/grass-lowland-trial.js": "212bdd0fd624da753215627b6a17f9a4c13d09f96e161073f754626e2390f739",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "ad04db7780a4bb50a06bb9d2aa99fd1259c5348fe28e5069261aa61848d9bba2",
+      "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js": "4fdbcf0f38f1f8651473f4aa3974f507e66a8f934c135ff6c70f711538dae45a",
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "cd42366f432f1f13888ac9af071b8c381b81da720321a2c2c2a63a91144a9fc6"
+    },
+    "sourceAudit": {
+      "baseline": "a2b70017902fa675ef0882b4affea185cfcb6388",
+      "status": "PASS",
+      "cacheOnlyFiles": [
+        ".github/ai-router/publication-surfaces/h-earth.json",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "showroom/globe/h-earth/index.html",
+        "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      ],
+      "woodlandOnlyBladeConditional": true,
+      "treeRockConstructionPrefixUnchanged": true,
+      "oasisSourceChangeOnlyThreeWoodlandConditionalLines": true
+    },
+    "geometry": {
+      "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+      "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_085BACAE",
+      "runtimeContentDigest": "fnv1a32:085bacae",
+      "primitiveCount": 14,
+      "vertexCount": 42103,
+      "triangleCount": 73302,
+      "indexCount": 219906,
+      "drawRangeCount": 9,
+      "canonicalGpuTransport": true
+    },
+    "startupBufferBytes": 3784731,
+    "geometryBudgetPass": true,
+    "vegetationResidency": {
+      "canonicalPreparationTiming": null,
+      "preparationComplete": true,
+      "preparationProgress": {
+        "phase": "PREPARED",
+        "worldTruthValidated": true,
+        "oasisComplete": true,
+        "grassTuftCount": 350,
+        "cattailCount": 72,
+        "primitiveCount": 494
+      },
+      "validationStatus": "VALIDATED",
+      "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+      "totalInstanceCount": 27585,
+      "totalBatchCount": 108,
+      "maxInstancesPerBatch": 256,
+      "residentInstanceCount": 27585,
+      "residentBatchCount": 108,
+      "residentPrimitiveCount": 498,
+      "complete": true,
+      "droppedPlacementCount": 0,
+      "worldRebuildCount": 0,
+      "cameraIndependent": true
+    },
+    "visualReview": "Individual blades now visible, but sparse edge patches and broad bare floor remain; no perceptual PASS. Frozen pixel gates failed both fixed portrait views.",
+    "result": "FAIL_VISIBLE_MOBILE_GATES"
+  },
+  "sourceSha256": {
+    ".github/ai-router/publication-surfaces/h-earth.json": "eb041528948fb2120f370627cd511465b07e4ec424a17f3385bb06038f9fb9a0",
+    "h-earth-3d/environment/woodland-meadow-groups-20261006.spec.json": "3de3027e4d5e06ba0f1b8f131a7b525fa3530cdb934d58f7f3c6d2b8692db3a0",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-groups-20261006-approach.png": "3ec9ea4ed4221004bf9f35dfad39db03f8546e217da1c09aa65958d506ba41ba",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-groups-20261006-near.png": "6da6c6dec09d2437fe05fd7a9ee9b240f57ee3239afb060e7f4525bc435aa23c",
+    "h-earth-3d/validation/h-earth.woodland-meadow-groups-20261006.mjs": "9e94328823722b7ab5a4ea417e6f671b043165f2ed4e62a3ff16c035d29d7968",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "cc8dcbeabe3d2368c8959e106cb8fe9e081f78ecefabdb07794ffdddc9e35f14",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "b85cdccaf7b39604c293555f8fe95e0cadf65f9f64b4807e8ce802d2dff5293a",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "4a54c69b4d490d58f53bc0753d29f50bc3dc355c846ebcd508ec418f80e40be8",
+    "showroom/globe/h-earth/index.html": "63ef5bc089d108626f218b9cfff5009967f0b0573c2a5c8af614b8660a136205",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "7ea8847f5216813762e456d7b04d2177dc3bf42645c8544d182fe78f65d28734",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js": "7b867b43ecd268b0037c3e85cdb6ce66e0efa00388f08f35f3b7bd185c72eb88",
+    "showroom/globe/h-earth/render/grass-lowland-trial.js": "212bdd0fd624da753215627b6a17f9a4c13d09f96e161073f754626e2390f739",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "cd42366f432f1f13888ac9af071b8c381b81da720321a2c2c2a63a91144a9fc6",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js": "ee3524211d0732faa0039f53c2869d9edfea4d19eadbe02fd55ccc2aff8df605",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js": "4fdbcf0f38f1f8651473f4aa3974f507e66a8f934c135ff6c70f711538dae45a",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "ad04db7780a4bb50a06bb9d2aa99fd1259c5348fe28e5069261aa61848d9bba2",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js": "e20f4daa7e71d0c27ae23a227b1fa555cc966685a03ab0f29c3acaef4dc1d7d7"
+  },
+  "limitations": "Software emulation; no physical device acceptance. Mechanically safe candidate failed both frozen visual gates; preserve as failed trial, no publication or gate relaxation."
+}

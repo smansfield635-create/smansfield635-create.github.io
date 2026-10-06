@@ -1,0 +1,109 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_VISIBLE_GROUPS_SPEC_v1",
+  "baseline": "a2b70017902fa675ef0882b4affea185cfcb6388",
+  "operationId": "H_EARTH_WOODLAND_MEADOW_VISIBLE_GROUPS_20261006",
+  "exactAllowedPaths": [
+    ".github/ai-router/publication-surfaces/h-earth.json",
+    "h-earth-3d/environment/woodland-meadow-groups-20261006.spec.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-groups-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-groups-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-groups-20261006.json",
+    "h-earth-3d/validation/h-earth.woodland-meadow-groups-20261006.mjs",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+    "showroom/globe/h-earth/index.html",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "showroom/globe/h-earth/render/grass-lowland-trial.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js"
+  ],
+  "parentX": [
+    -163,
+    -149,
+    -135,
+    -121
+  ],
+  "parentZ": [
+    -246,
+    -226,
+    -206
+  ],
+  "children": 7,
+  "ringRadius": 1.35,
+  "childJitterRadius": 0.18,
+  "seed": "ECOTONE_A_MEADOW_GROUPS_20261006",
+  "density": "parent density hash <= (.18+.70*(1-canopy))*edge evaluated at each child",
+  "palette": "shared parent hash with existing canopy-aware OLIVE/GOLD/BROWN thresholds perchild",
+  "blades": 6,
+  "shortLayer": "odd blade index",
+  "shortHeight": [
+    0.22,
+    0.38
+  ],
+  "tallHeight": [
+    0.65,
+    0.95
+  ],
+  "width": [
+    0.045,
+    0.075
+  ],
+  "bend": [
+    0.18,
+    0.38
+  ],
+  "rootRadius": 0.34,
+  "maxTufts": 84,
+  "maxBlades": 504,
+  "footprintRadius": 0.8,
+  "ellipse": {
+    "center": [
+      -141,
+      -226
+    ],
+    "radii": [
+      33,
+      32
+    ]
+  },
+  "walkingCapsule": {
+    "a": [
+      -145,
+      -194
+    ],
+    "b": [
+      -145,
+      -230
+    ],
+    "radius": 1.5,
+    "centerMargin": 0.8
+  },
+  "visualGates": {
+    "viewport": [
+      390,
+      844
+    ],
+    "verticalFov": 56,
+    "nearChangedFractionMin": 0.005,
+    "approachChangedFractionMin": 0.002596,
+    "sameAcceptedCameras": true
+  },
+  "geometryCeilings": {
+    "vertices": 47095,
+    "triangles": 78918,
+    "startupBufferBytes": 4196571,
+    "drawRanges": 9
+  },
+  "preserve": [
+    "all terrain,trees,rocks,navigation,oasis geometry",
+    "27585resident instances108batches0drops",
+    "exact ground roots and xzclearance",
+    "original oasis branch byte-equivalent"
+  ],
+  "cacheToken": "meadow-groups-20261006"
+}

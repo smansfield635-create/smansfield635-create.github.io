@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-raw-overlap-preflight-20261006-b57894d",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5785,
+  "requestBranch": "ai-dispatch-request-h-earth-raw-overlap-preflight-20261006-b57894d",
+  "requestCommit": "261f97d0f80d7474cafbf7ebcfc2f2dd08ac557f",
+  "requestCommitParent": "26b1a1b81aef64fd060e79bb636fc9f43a9d771e",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "26b1a1b81aef64fd060e79bb636fc9f43a9d771e",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b57894d9f5eba041eba29a45df4da73db8a9b875",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "37392665175",
+  "dispatchedRunId": 37392679863,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37392679863",
+  "dispatchedRunHeadSha": "26b1a1b81aef64fd060e79bb636fc9f43a9d771e",
+  "dispatchedAt": "2026-10-06T00:11:33.205Z",
+  "resolvedAt": "2026-10-06T00:11:37.534Z"
+}

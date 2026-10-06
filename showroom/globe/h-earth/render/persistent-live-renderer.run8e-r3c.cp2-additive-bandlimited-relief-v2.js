@@ -3,12 +3,12 @@ const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGN
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './planetary-world-frame.js';
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthRun8ER2CanonicalLiveRenderPackage, prepareHEarthRun8ER2CanonicalLiveRenderPackage, getHEarthRun8ER2CanonicalPreparationTiming } from './live-render-package.run8e-r2.canonical.js?cb=da1bbebf713c61b4';
-import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch, createHEarthRun8ER2VegetationPresentationBatchAsync, prepareHEarthRun8ER2VegetationWorldTruthPlan, getHEarthRun8ER2ImmutableLiveRenderPackage, H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY } from './live-render-package.run8e-r2.js?cb=00d0c2beb964210c';
-import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=130c7856e148c045';
-import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=f428b31f96908a85';
+import { getHEarthRun8ER2CanonicalLiveRenderPackage, prepareHEarthRun8ER2CanonicalLiveRenderPackage, getHEarthRun8ER2CanonicalPreparationTiming } from './live-render-package.run8e-r2.canonical.js?cb=woodland-delivery-20261006';
+import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch, createHEarthRun8ER2VegetationPresentationBatchAsync, prepareHEarthRun8ER2VegetationWorldTruthPlan, getHEarthRun8ER2ImmutableLiveRenderPackage, H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY } from './live-render-package.run8e-r2.js?cb=woodland-delivery-20261006';
+import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=woodland-delivery-20261006';
+import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=woodland-delivery-20261006';
 // SHORELINE_SOIL_BEGIN import
-import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=31b5193e7020fd23';
+import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=woodland-delivery-20261006';
 // SHORELINE_SOIL_END import
 
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.

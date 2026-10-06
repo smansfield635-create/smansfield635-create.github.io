@@ -1,0 +1,201 @@
+{
+  "schema": "H_EARTH_WOODLAND_DELIVERY_QUALIFICATION_v1",
+  "result": "PASS",
+  "baselineHead": "43a0461d0097548a927a79b55e131c305dba386a",
+  "candidateBase": "36ffdb2551e95bb46eede2c3b232da496b2717b7",
+  "oldPackage": {
+    "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+    "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_F818783C",
+    "runtimeContentDigest": "fnv1a32:f818783c",
+    "primitiveCount": 13,
+    "vertexCount": 37491,
+    "triangleCount": 67242,
+    "indexCount": 201726,
+    "drawRangeCount": 8,
+    "canonicalGpuTransport": true
+  },
+  "correctedGeometry": {
+    "status": "UPLOADED",
+    "selectedRendererPath": "../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=woodland-delivery-20261006",
+    "initialized": true,
+    "package": {
+      "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+      "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_1DC07AF8",
+      "runtimeContentDigest": "fnv1a32:1dc07af8",
+      "primitiveCount": 14,
+      "vertexCount": 47095,
+      "triangleCount": 78918,
+      "indexCount": 236754,
+      "drawRangeCount": 9,
+      "canonicalGpuTransport": true
+    },
+    "landscapeFloor": {
+      "treeCount": 15,
+      "floorContentDigest": "fnv1a32:e3678f4a",
+      "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+      "worldSpace": "PROJECTED_WORLD_XZ",
+      "terrainGeometryChanged": false,
+      "castShadowClaim": false
+    },
+    "packageUploadedOnce": true,
+    "contextLost": false
+  },
+  "reloadedGeometry": {
+    "status": "UPLOADED",
+    "selectedRendererPath": "../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=woodland-delivery-20261006",
+    "initialized": true,
+    "package": {
+      "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+      "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_1DC07AF8",
+      "runtimeContentDigest": "fnv1a32:1dc07af8",
+      "primitiveCount": 14,
+      "vertexCount": 47095,
+      "triangleCount": 78918,
+      "indexCount": 236754,
+      "drawRangeCount": 9,
+      "canonicalGpuTransport": true
+    },
+    "landscapeFloor": {
+      "treeCount": 15,
+      "floorContentDigest": "fnv1a32:e3678f4a",
+      "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+      "worldSpace": "PROJECTED_WORLD_XZ",
+      "terrainGeometryChanged": false,
+      "castShadowClaim": false
+    },
+    "packageUploadedOnce": true,
+    "contextLost": false
+  },
+  "residentVegetation": {
+    "canonicalPreparationTiming": {
+      "schema": "H_EARTH_CANONICAL_PREPARATION_TIMING_v1",
+      "version": 1,
+      "sourceModuleUrl": "http://127.0.0.1:8792/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js?cb=woodland-delivery-20261006",
+      "status": "READY",
+      "branch": "MODULE_WORKER",
+      "main": {
+        "clock": "performance.now",
+        "timeOrigin": 1791312218676.6,
+        "receiveAtMs": 22712.200000001118,
+        "stages": {
+          "CANONICAL_WORKER_MODULE_READY_WAIT": {
+            "status": "PASS",
+            "startAtMs": 141.30000000074506,
+            "endAtMs": 8673.700000001118,
+            "durationMs": 8532.400000000373
+          },
+          "CANONICAL_MAIN_RAW_MODULE_WAIT": {
+            "status": "PASS",
+            "startAtMs": 141.5,
+            "endAtMs": 8663.5,
+            "durationMs": 8522
+          },
+          "CANONICAL_WORKER_RESULT_WAIT": {
+            "status": "PASS",
+            "startAtMs": 8673.700000001118,
+            "endAtMs": 22712.200000001118,
+            "durationMs": 14038.5
+          },
+          "CANONICAL_MAIN_FREEZE": {
+            "status": "PASS",
+            "startAtMs": 22712.5,
+            "endAtMs": 22712.900000000373,
+            "durationMs": 0.40000000037252903
+          },
+          "CANONICAL_RAW_ADOPTION_VALIDATE": {
+            "status": "PASS",
+            "startAtMs": 22712.900000000373,
+            "endAtMs": 22819.5,
+            "durationMs": 106.59999999962747
+          },
+          "CANONICAL_MAIN_VALIDATE": {
+            "status": "PASS",
+            "startAtMs": 22819.5,
+            "endAtMs": 22919,
+            "durationMs": 99.5
+          }
+        }
+      },
+      "worker": {
+        "schema": "H_EARTH_CANONICAL_PREPARATION_TIMING_v1",
+        "version": 1,
+        "sourceModuleUrl": "http://127.0.0.1:8792/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js?cb=woodland-delivery-20261006&hearthCanonicalPreparation=1&hearthCanonicalTiming=1",
+        "clock": "performance.now",
+        "timeOrigin": 1791312218829.2,
+        "status": "RESULT_POSTING",
+        "rawBuildDurationMs": 13764.199999999255,
+        "canonicalBuildDurationMs": 233.59999999962747,
+        "resultPostStartAtMs": 21909.099999999627
+      },
+      "normalizedHandoffDurationMs": 650.5,
+      "handoffScope": "SERIALIZATION_DESERIALIZATION_DELIVERY_AND_MAIN_THREAD_SCHEDULING_NOT_PURE_CLONE",
+      "failure": null
+    },
+    "timing": {
+      "firstVegetationFrameAtMs": 64155.40000000037,
+      "planValidatedAtMs": 51851.10000000149,
+      "oasisPreparationStartAtMs": 32059.300000000745,
+      "oasisPreparationCompleteAtMs": 63265.20000000112,
+      "preparationStartAtMs": 32058.900000000373,
+      "preparationCompleteAtMs": 63265.40000000037,
+      "firstFrameAtMs": 32052.200000001118,
+      "readyAtMs": 32058.10000000149,
+      "vegetationStartAtMs": 63273.20000000112,
+      "vegetationCompleteAtMs": 104806.60000000149
+    },
+    "preparationComplete": true,
+    "preparationProgress": {
+      "phase": "PREPARED",
+      "worldTruthValidated": true,
+      "oasisComplete": true,
+      "grassTuftCount": 350,
+      "cattailCount": 72,
+      "primitiveCount": 494
+    },
+    "validationStatus": "VALIDATED",
+    "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+    "totalInstanceCount": 27585,
+    "totalBatchCount": 108,
+    "maxInstancesPerBatch": 256,
+    "residentInstanceCount": 27585,
+    "residentBatchCount": 108,
+    "residentPrimitiveCount": 498,
+    "complete": true,
+    "droppedPlacementCount": 0,
+    "worldRebuildCount": 0,
+    "cameraIndependent": true
+  },
+  "cacheReuseByPhase": {
+    "old": 0,
+    "corrected": 58,
+    "reload": 70
+  },
+  "touch": {
+    "beforeAccepted": 0,
+    "afterAccepted": 9,
+    "twoFingerAccepted": 9
+  },
+  "servedSources": {
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "9dad1930ce322da42e3ed0983dc8b0b8225143df49b4664ce7fd179d52cffc06",
+    "showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js": "f2494e1a541eadc05b73a1a8371150d6210344aa575888513fe06dd51407f784",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "e04a0eee1a98ca4c9773fecce4cb8fd4841cd33a35c35e797988d7687fc0f6ea",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "809fe7f661ad8d256210ae94ca2e492c90768a5f4bc6e8f4f5df433e76452d4e",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js": "1c8bc57f6a04814ee82fd7cb1fb2cb8edebbcea380e33646a2ebe867c59a95a0",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "709de17b74d1c38caf96257e5fdaa7045b841b52e0f2003558e2911bd1fbbffa",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js": "fe12a797edd59e6334d37064ee399cc097c82ca33c59c4ea2d5c3f79d54d786e",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js": "b93af367e392fb333d94eb216f0932c4d32f01d3a4e299487b4eaa35fb40ca42",
+    "showroom/globe/h-earth/render/grass-lowland-trial.js": "b7d9609cfc2f1117dfe3dddc39c5f5562aede82a49a1f0be774c172ec1bb4640",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js": "27e21af7914df77154d8ee76591b36673c06a8bb65afbe9cf3056c62e6df18a9",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "f2ad2f1764dcf06af2d05edec542a547c71cf00b55e93bc54072d893e62b06fe",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "f94b03c925b9fa1f5c6a371b19f3d93d986d2645d1734cb880d975649b51b0fe"
+  },
+  "errors": [],
+  "unchangedExecutableContract": "All non-observer source deltas are dependency URL query versions only; GPU base geometry and floor fingerprints match the qualified woodland candidate. Existing controls and world authority unchanged.",
+  "independentReportCases": [
+    "UNAVAILABLE route",
+    "UNAVAILABLE exception",
+    "NOT_CONFIRMED context loss",
+    "UPLOADED actual resources"
+  ],
+  "measurementLimits": "Local real-browser warmed HTTP cache and headless WebGL rendering; no physical phone acceptance."
+}

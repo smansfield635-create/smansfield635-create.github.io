@@ -3766,45 +3766,6 @@
       "scopeHash": "435014bbea9e255294a5354396f4f348d1a5aa3df8d8c2cb0e58e86d20b123a4",
       "state": "ADMITTED_LOCKED"
     },
-    "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec": {
-      "governingHead": "f4a0ecb6fb7224f3cda014a15bccc4cdc2f8e40a",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "f4a0ecb6fb7224f3cda014a15bccc4cdc2f8e40a",
-          "lockGeneration": 2581,
-          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
-          "operationId": "READING_PAGES_MANIFEST_BINDING_REPAIR_20261006_001",
-          "procedureLocatorDigest": "066c97fe78e102177cc56bd5624cea24019e83ff2f027766fc9a6e40e21f70d5",
-          "requestDigest": "c43701f6f9a8277b8a9d8b257aaf097eef8e02a612049acfd7fe13b4bfe4cc92",
-          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec"
-        },
-        "bindingDigest": "7735511ee4eddcfe8cb8b086b25d44e0abacd0be6b91f455df29dbdc41fab4ac",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "542409dbb725f21210846dd884bdf7dfc9030d54",
-          "observedLockRefHead": "97b013cc7ca5e5abce08d0902b6d5e5d14fffc40"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "20cd5e8c2fcfaa7bd9ac56db7c7e10f42e6ecd2160cbe666c4ee2b098f315c74",
-          "commentId": 6024271294,
-          "issueNumber": 5824,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2581,
-      "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
-      "operationId": "READING_PAGES_MANIFEST_BINDING_REPAIR_20261006_001",
-      "procedureLocatorDigest": "066c97fe78e102177cc56bd5624cea24019e83ff2f027766fc9a6e40e21f70d5",
-      "released": false,
-      "requestDigest": "c43701f6f9a8277b8a9d8b257aaf097eef8e02a612049acfd7fe13b4bfe4cc92",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec",
-      "state": "ADMITTED_LOCKED"
-    },
     "44f9bcd41eef1dc7a1b8e370b5a5569ce7fa663809c5db16d1b4c280421af81e": {
       "governingHead": "fd1d8b0b9f8f758749402d3976f70a2bebd9d33b",
       "lockGeneration": 1453,
@@ -70519,6 +70480,83 @@
       "procedureLocatorDigest": "7dba00c4b7664e6ec38645ed6376454bbe45e44328f14fbe81abcee73cb31b7a",
       "released": true,
       "requestDigest": "53635000c3120c0157539e9ffb871287cc67e96ecc4dc0e880bc8b22a6b1af41",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "f4a0ecb6fb7224f3cda014a15bccc4cdc2f8e40a",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f4a0ecb6fb7224f3cda014a15bccc4cdc2f8e40a",
+          "lockGeneration": 2581,
+          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+          "operationId": "READING_PAGES_MANIFEST_BINDING_REPAIR_20261006_001",
+          "procedureLocatorDigest": "066c97fe78e102177cc56bd5624cea24019e83ff2f027766fc9a6e40e21f70d5",
+          "requestDigest": "c43701f6f9a8277b8a9d8b257aaf097eef8e02a612049acfd7fe13b4bfe4cc92",
+          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec"
+        },
+        "bindingDigest": "7735511ee4eddcfe8cb8b086b25d44e0abacd0be6b91f455df29dbdc41fab4ac",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "542409dbb725f21210846dd884bdf7dfc9030d54",
+          "observedLockRefHead": "97b013cc7ca5e5abce08d0902b6d5e5d14fffc40"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "20cd5e8c2fcfaa7bd9ac56db7c7e10f42e6ecd2160cbe666c4ee2b098f315c74",
+          "commentId": 6024271294,
+          "issueNumber": 5824,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f4a0ecb6fb7224f3cda014a15bccc4cdc2f8e40a",
+          "lockGeneration": 2581,
+          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+          "operationId": "READING_PAGES_MANIFEST_BINDING_REPAIR_20261006_001",
+          "procedureLocatorDigest": "066c97fe78e102177cc56bd5624cea24019e83ff2f027766fc9a6e40e21f70d5",
+          "requestDigest": "c43701f6f9a8277b8a9d8b257aaf097eef8e02a612049acfd7fe13b4bfe4cc92",
+          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec"
+        },
+        "bindingDigest": "930bd217c359f1b187dbc6b3ae06391a3ff2518f3f2dad8da0553c3b525046b0",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "38ead19e3d377904568780bed7a0c8e814141f18",
+          "observedLockRefHead": "ce5c57b1a1a092ade26e7707e947d3de8fb0e8d6"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "dff2d3cab0edc10693a1ed66d3e9fa60cf4f5c88bc3ce31681993b74c5d7befc",
+          "commentId": 6024302000,
+          "issueNumber": 5826,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "f4a0ecb6fb7224f3cda014a15bccc4cdc2f8e40a",
+          "lockGeneration": 2581,
+          "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+          "operationId": "READING_PAGES_MANIFEST_BINDING_REPAIR_20261006_001",
+          "released": true,
+          "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2581,
+      "lockScope": "BOOK_SEAN_UNDERDOG_NAVIGATION",
+      "operationId": "READING_PAGES_MANIFEST_BINDING_REPAIR_20261006_001",
+      "procedureLocatorDigest": "066c97fe78e102177cc56bd5624cea24019e83ff2f027766fc9a6e40e21f70d5",
+      "released": true,
+      "requestDigest": "c43701f6f9a8277b8a9d8b257aaf097eef8e02a612049acfd7fe13b4bfe4cc92",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "43c1e7192434950d7fdfa6a39200f6325725c9fb9a23f90d8fc4662542e446ec",
       "state": "TERMINAL",

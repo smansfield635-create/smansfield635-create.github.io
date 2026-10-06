@@ -1,0 +1,170 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_FAN_SPEC_v1",
+  "baseline": "fe5f84c94b8b896c785131acc6b8bb21bd5e82d4",
+  "geometryBaseline": "fe5f84c94b8b896c785131acc6b8bb21bd5e82d4",
+  "issue": 5842,
+  "operationId": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+  "frozenRules": {
+    "bend": [
+      0.18,
+      0.38
+    ],
+    "blades": 4,
+    "cacheToken": "meadow-fan-20261006",
+    "childJitterRadius": 0.25,
+    "columns": [
+      0,
+      22
+    ],
+    "density": "9m FIELD_ix_iz density hashes, bilinear interpolation at (x+174)/9,(z+258)/9 <= (.18+.70*(1-canopy))*edge",
+    "ellipse": {
+      "center": [
+        -141,
+        -226
+      ],
+      "radii": [
+        33,
+        32
+      ]
+    },
+    "footprintRadius": 0.8,
+    "geometryCeilings": {
+      "drawRanges": 9,
+      "startupBufferBytes": 4196571,
+      "triangles": 78918,
+      "vertices": 47095
+    },
+    "maxBlades": 1008,
+    "maxTufts": 252,
+    "oddRowOffset": 1.5,
+    "origin": [
+      -174,
+      -258
+    ],
+    "palette": "per-site palette hash with unchanged canopy-aware thresholds",
+    "preflightAcceptedTufts": 250,
+    "preserve": [
+      "all terrain,trees,rocks,navigation,oasis geometry",
+      "27585resident instances108batches0drops",
+      "exact ground roots and xzclearance",
+      "original oasis branch byte-equivalent"
+    ],
+    "priorRejectedCandidate": "074efba6d9b28409922256f561168805865e19dd",
+    "rootRadius": 0.34,
+    "rowStep": "3*sqrt(3)/2",
+    "rows": [
+      0,
+      25
+    ],
+    "seed": "ECOTONE_A_MEADOW_COVER_20261006",
+    "shortHeight": [
+      0.22,
+      0.38
+    ],
+    "shortLayer": "blade index1",
+    "spacing": 3,
+    "tallHeight": [
+      0.65,
+      0.95
+    ],
+    "visualGates": {
+      "approachChangedFractionMin": 0.002596,
+      "nearChangedFractionMin": 0.005,
+      "sameAcceptedCameras": true,
+      "verticalFov": 56,
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    "walkingCapsule": {
+      "a": [
+        -145,
+        -194
+      ],
+      "b": [
+        -145,
+        -230
+      ],
+      "centerMargin": 0.8,
+      "radius": 1.5
+    },
+    "width": [
+      0.045,
+      0.075
+    ]
+  },
+  "fanTransform": {
+    "selection": [
+      0,
+      1,
+      2,
+      6,
+      7,
+      8,
+      15
+    ],
+    "topology": [
+      0,
+      1,
+      3,
+      1,
+      4,
+      3,
+      1,
+      2,
+      4,
+      2,
+      5,
+      4,
+      3,
+      4,
+      6,
+      4,
+      5,
+      6
+    ],
+    "companions": "source blade0 rotates+90deg; source blade1 rotates-90deg in XZ around own root center; upper y unchanged; companion3roots sample actualground",
+    "preserve": "old original1500root positions,250site ids/density decisions, source leaf selected geometry and palettes, canopy/edge/corridor/footprint/oasis/non-grass",
+    "validate": "allcompanionroots support+eligible, allverts domain; no retry/clamp/drop; same frozen visual gates",
+    "geometry": "4leaves/tuft,7vertices6triangles/leaf:7000grassvertices6000grasstriangles; base46031vertices75846triangles4086291bytes; no addeddrawranges/shaders/textures",
+    "precedents": [
+      "https://gpuopen.com/learn/mesh_shaders/mesh_shaders-procedural_grass_rendering/",
+      "https://www.guerrilla-games.com/read/gpu-based-procedural-placement-in-horizon-zero-dawn"
+    ]
+  },
+  "exactAllowedPaths": [
+    ".github/ai-router/publication-surfaces/h-earth.json",
+    "h-earth-3d/environment/woodland-meadow-cover-20261006.spec.json",
+    "h-earth-3d/environment/woodland-meadow-fan-20261006.spec.json",
+    "h-earth-3d/environment/woodland-meadow-leaf-20261006.spec.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-cover-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-cover-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-cover-20261006.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006.json",
+    "h-earth-3d/experience-anchor/receipts/woodland-meadow-cover-20261006.json",
+    "h-earth-3d/experience-anchor/receipts/woodland-meadow-fan-20261006.json",
+    "h-earth-3d/experience-anchor/receipts/woodland-meadow-leaf-20261006.json",
+    "h-earth-3d/validation/h-earth.woodland-meadow-cover-20261006.mjs",
+    "h-earth-3d/validation/h-earth.woodland-meadow-fan-20261006.mjs",
+    "h-earth-3d/validation/h-earth.woodland-meadow-leaf-20261006.mjs",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+    "showroom/globe/h-earth/index.html",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "showroom/globe/h-earth/render/grass-lowland-trial.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js"
+  ],
+  "physicalDeviceAcceptance": "NOT_ESTABLISHED"
+}

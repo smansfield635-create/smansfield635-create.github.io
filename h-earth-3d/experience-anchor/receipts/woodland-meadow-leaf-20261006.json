@@ -1,0 +1,15 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "executedSourceHead": "2ea6e659ba264b90cb29c23b7a2c90945d4a1c65",
+  "reviewedAgainstAnchor": true,
+  "disposition": "FAIL",
+  "accepted": false,
+  "stopCondition": "VISUAL_GATE_FAILED",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006.json"
+  ],
+  "notes": "Frozen camera comparison recorded without further tuning. Physical performance and touch qualification not established. Nothing merged or published."
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-early-preparation-preflight-20261006-2d0b1585",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5791,
+  "requestBranch": "ai-dispatch-request-h-earth-early-preparation-preflight-20261006-2d0b1585",
+  "requestCommit": "37060fefe3656980ed4a01fc3ed574699dab1dfb",
+  "currentMainSha": "e45060d3dad7a7bea94eef862b0d6e7fdfece5e6",
+  "bridgeRunId": "37398108328",
+  "error": "Stale dispatch request: parent 591f1e8adbaa0d9a42a0e3fba76354af455a20ac != current main e45060d3dad7a7bea94eef862b0d6e7fdfece5e6",
+  "failedAt": "2026-10-06T01:14:04.379Z"
+}

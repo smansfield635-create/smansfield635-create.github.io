@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "meet-sean-mansfield",
-  "description": "Meet Sean profile, preserved standing portrait derivative, Fibonacci atmosphere and speaking inquiry preparation; automatic sending visibly disabled pending activation.",
+  "description": "Compact speaking topic carousel with on-demand adult/youth agenda inspector; inquiry preparation preserves pending email activation.",
   "checks": [
     {
       "path": "/meet-sean-mansfield/index.html",
@@ -51,10 +51,54 @@
     ],
     "interactions": [
       {
-        "name": "Topic selection prepares the inquiry without sending",
+        "name": "Choose an inspectable topic",
         "action": {
           "type": "click",
-          "selector": "[data-topic=\"The Inner Underdog\"]"
+          "selector": "[data-talk-index=\"2\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": ".topic-slide[data-active=\"true\"] [data-topic=\"The Inner Underdog\"]"
+          }
+        ]
+      },
+      {
+        "name": "Open the selected agenda",
+        "action": {
+          "type": "click",
+          "selector": ".topic-slide[data-active=\"true\"] summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#agenda-inspector[open]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#inspector-title",
+            "value": "The Inner Underdog"
+          }
+        ]
+      },
+      {
+        "name": "Inspect the youth agenda",
+        "action": {
+          "type": "click",
+          "selector": "#agenda-inspector [data-agenda-side=\"youth\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#agenda-inspector [data-face=\"youth\"][aria-hidden=\"false\"]"
+          }
+        ]
+      },
+      {
+        "name": "Carry inspected audience into inquiry",
+        "action": {
+          "type": "click",
+          "selector": "#agenda-inspector [data-topic=\"The Inner Underdog\"]"
         },
         "assertions": [
           {
@@ -63,11 +107,15 @@
             "value": "The Inner Underdog"
           },
           {
+            "type": "textContains",
+            "selector": "#audience option:checked",
+            "value": "Schools & youth"
+          },
+          {
             "type": "exists",
             "selector": "#send-button[disabled]"
           }
-        ],
-        "timeoutMs": 5000
+        ]
       }
     ]
   }

@@ -30,31 +30,31 @@
     },
     {
       "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
-      "sha256": "2217ddf095698420e451d77158ea1b6915a90d7bb48a5666ecbd973969361ba5"
+      "sha256": "fa8422b515eb5a00170c0f39ce1ab64723b6ed7794df4c3a7dcd0d01bc05d6b0"
     },
     {
       "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
-      "sha256": "82eb1329a47e876cb4b61224c0ba259766731954d9dc0813ca5e73d0c3bed397"
+      "sha256": "c5da9b390d735e92c9c848979d9a10f4e8a224c4c3db2e6e90b9bdc6619afe67"
     },
     {
       "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
-      "sha256": "b0e2ca1e61b5368fa8295535ce94b2b03b860ec2f42cc88a66a110f5864a28f5"
+      "sha256": "e6e9d909f4aab8dc4a36aef15f4f2c5d1635b2d7782d27cb15b067003aa187c2"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "483d81b8dfb6737d6bc36473a66368625d0b88f9c18756be85183403688fce23"
+      "sha256": "8efbc20cf6d7571d7371d81ebeb44fd34813fa18f1a7626b3cecb27803f99886"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "afff9faab22a23c088fc45fdea14ea2acfdcf7818aaba0e701de99d097a16d60"
+      "sha256": "9a986f5a6664f62eb24c8119b671d26448858dafcf7e73dd056c94225bc0cf87"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
-      "sha256": "13811da4743596b4543f4d7a387defc52486222424375659630ffd79852c84cd"
+      "sha256": "3811f0312378d43d2357d4e126e3a10477d8ce3c1a00f662ad0f41a81ba406df"
     },
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "84f5870c12a810091a2a16bddecf246df6659071a95147ee00e01cc536f4d4b0"
+      "sha256": "0250d7faaf6e2962bd898a17e314ee38455a9fb2bbb79ac3f6a6ac19bfca19e8"
     }
   ],
   "acceptanceBoundary": "CPU full-buffer equivalence supports unchanged world data. Browser GPU/rendered interaction and owner exact-candidate physical review remain unexecuted; this receipt deliberately cannot pass the hard anchor gate."

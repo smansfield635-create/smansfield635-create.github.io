@@ -8,6 +8,18 @@ import {tmpdir} from 'node:os';
 import vm from 'node:vm';
 import {createHash} from 'node:crypto';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../../../../..');
+async function qualifyWorkerRawImportFailure(){
+ const url=pathToFileURL(resolve(root,'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js')).href+'?hearthCanonicalPreparation=1';
+ const source=readFileSync(fileURLToPath(new URL(url)),'utf8').replace(/export default [^;]+;/g,'').replace(/export /g,'').replaceAll('import.meta.url','canonicalModuleUrl').replace(/import\('([^']*live-render-package\.run8e-r2\.js\?[^']+)'\)/,"loadRawNamespace('$1')");
+ let rejectRaw;const rawHeld=new Promise((resolve,reject)=>rejectRaw=reject),messages=[];
+ const context={URL,URLSearchParams,performance,TextEncoder,setTimeout,canonicalModuleUrl:url,loadRawNamespace:()=>rawHeld,postMessage:data=>messages.push(data)};vm.createContext(context);
+ const evaluation=vm.runInContext('(async()=>{'+source+'})()',context);evaluation.catch(()=>{});assert.equal(typeof context.onmessage,'function');const request=context.onmessage({data:{prepare:true}});
+ rejectRaw(new Error('worker-held-raw-import-failed'));await assert.rejects(evaluation,/worker-held-raw-import-failed/);await request;
+ assert.equal(messages.length,1);assert.equal(messages[0].error.message,'worker-held-raw-import-failed');assert.equal(messages.some(message=>message.phase),false);
+ return {result:'PASS',scope:'ACTUAL_WORKER_HANDLER_RAW_IMPORT_REJECTION_DURING_TLA',moduleRejected:true,postedOriginalError:true,constructionPhases:[]};
+}
+if(process.argv.includes('--worker-raw-failure-only')){console.log(JSON.stringify(await qualifyWorkerRawImportFailure()));process.exit(0);}
+await qualifyWorkerRawImportFailure();
 if(process.argv.includes('--observer-timing-only')){
  const observer=readFileSync(resolve(root,'showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js'),'utf8');
  const measure=observer.slice(observer.indexOf('const measureAsync=async'),observer.indexOf('const getMilestoneTiming='));
@@ -34,7 +46,7 @@ if(ownedTemporaryBaseline)writeFileSync(resolve(baselineRoot,'package.json'),'{"
 const rel='showroom/globe/h-earth/render/';
 const canonicalName='live-render-package.run8e-r2.canonical.js',rawName='live-render-package.run8e-r2.js';
 const candidateUrl=pathToFileURL(resolve(root,rel,canonicalName));
-const rawURLFrom=base=>{const code=readFileSync(fileURLToPath(base),'utf8'),specifier=code.match(/from '([^']*live-render-package\.run8e-r2\.js\?[^']+)'/)[1];return new URL(specifier,base);};
+const rawURLFrom=base=>{const code=readFileSync(fileURLToPath(base),'utf8'),specifier=code.match(/(?:from |import\()'([^']*live-render-package\.run8e-r2\.js\?[^']+)'/)[1];return new URL(specifier,base);};
 const baselineUrl=pathToFileURL(resolve(baselineRoot,rel,canonicalName));
 const baselineModule=await import(baselineUrl.href),baselineRawModule=await import(rawURLFrom(baselineUrl).href);
 const baseline=baselineModule.getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
@@ -74,6 +86,32 @@ for(const [search,route,hasWorker,expected] of [['?visual=terrain-relief-v2&perf
  const context={H_EARTH_RENDERER_STARTUP_DIAGNOSTICS:{measureAsync:(name,operation)=>{assert.equal(name,'SELECTED_RENDERER_MODULE_IMPORT');importSpanCount++;return operation();}},URLSearchParams,location:{search},document:fixtureDocument(route),Worker:hasWorker?function(){}:undefined,prepareHEarthRun8ER2CanonicalLiveRenderPackage:options=>{assert.equal(options.deferVegetation,true);assert.equal(importStarted,false);started++;return Promise.resolve();},holdRendererImport:()=>{importStarted=true;return held;}};
  vm.createContext(context);const evaluation=vm.runInContext('(async()=>{'+bindingPrefix+'})()',context);assert.equal(started,expected);assert.equal(importStarted,true);assert.equal(importSpanCount,search.includes('performance=1')?1:0);releaseImport({});await evaluation;
 }
+
+// Exercise the complete canonical source with its raw dependency held pending.
+// Only module syntax is adapted for the VM; production preparation logic is used.
+const canonicalSource=readFileSync(fileURLToPath(candidateUrl),'utf8');
+const canonicalBody=canonicalSource.replace(/export default [^;]+;/g,'').replace(/export /g,'').replaceAll('import.meta.url','canonicalModuleUrl').replace(/import\('([^']*live-render-package\.run8e-r2\.js\?[^']+)'\)/,"loadRawNamespace('$1')").replace('\nawait(startupWorkerMode?', '\nthis.preparationAPI={prepare:prepareHEarthRun8ER2CanonicalLiveRenderPackage,getTiming:getHEarthRun8ER2CanonicalPreparationTiming};await(startupWorkerMode?');
+for(const [query,route,hasWorker,expected,rejectRaw] of [['?visual=terrain-relief-v2&performance=1','actual',true,1,false],['?visual=terrain-relief-v2','actual',true,1,false],['?visual=terrain-relief-v2&renderer-custody=v1','actual',true,0,false],['?visual=terrain-relief-v2','wrong-route',true,0,false],['?visual=terrain-relief-v2','actual',false,0,false],['?visual=terrain-relief-v2&performance=1','actual',true,1,true]]){
+ let releaseRaw,rejectNamespace,attempts=0,terminations=0,ownerWorker;const heldRaw=new Promise((resolve,reject)=>{releaseRaw=resolve;rejectNamespace=reject;});
+ const context={URL,URLSearchParams,performance,TextEncoder,setTimeout,location:{search:query},document:fixtureDocument(route),canonicalModuleUrl:candidateUrl.href,loadRawNamespace:()=>heldRaw,Worker:hasWorker?class{constructor(){attempts++;ownerWorker=this;}postMessage(){}terminate(){terminations++;}}:undefined};vm.createContext(context);
+ const evaluation=vm.runInContext('(async()=>{'+canonicalBody+'})()',context);evaluation.catch(()=>{});assert.equal(attempts,expected,'Worker must start before raw namespace resolves');
+ const owner=expected?context.preparationAPI.prepare({deferVegetation:true}):null;owner?.catch(()=>{});
+ if(rejectRaw){rejectNamespace(new Error('held-raw-import-failed'));await assert.rejects(evaluation,/held-raw-import-failed/);await assert.rejects(owner,/held-raw-import-failed/);assert.equal(terminations,1);assert.equal(context.preparationAPI.prepare({deferVegetation:true}),owner);assert.equal(context.preparationAPI.getTiming().main.stages.CANONICAL_MAIN_RAW_MODULE_WAIT.status,'FAIL');}
+ else{releaseRaw(baselineRawModule);await evaluation;if(query.includes('performance=1')){const measured=context.preparationAPI.getTiming();assert.equal(measured.main.stages.CANONICAL_MAIN_RAW_MODULE_WAIT.status,'PASS');assert.ok(measured.main.stages.CANONICAL_WORKER_MODULE_READY_WAIT.startAtMs<=measured.main.stages.CANONICAL_MAIN_RAW_MODULE_WAIT.startAtMs);}if(owner){assert.equal(context.preparationAPI.prepare({deferVegetation:true}),owner);ownerWorker.onerror({message:'held-owner-stop'});await assert.rejects(owner,/held-owner-stop/);assert.equal(terminations,1);}}
+}
+// Native worker events can arrive during TLA: dispatch to the actual handler
+// before the raw namespace resolves and require READY before construction phases.
+let releaseWorkerRaw;const workerRawHeld=new Promise(resolve=>releaseWorkerRaw=resolve),workerMessages=[];
+const workerContext={URL,URLSearchParams,performance,TextEncoder,setTimeout,canonicalModuleUrl:candidateUrl.href+'?hearthCanonicalPreparation=1',loadRawNamespace:()=>workerRawHeld,postMessage:data=>workerMessages.push(data)};
+vm.createContext(workerContext);const workerEvaluation=vm.runInContext('(async()=>{'+canonicalBody+'})()',workerContext);
+assert.equal(typeof workerContext.onmessage,'function');const deliveredWhileHeld=workerContext.onmessage({data:{prepare:true}});assert.deepEqual(workerMessages,[]);
+releaseWorkerRaw(baselineRawModule);await workerEvaluation;await deliveredWhileHeld;
+assert.deepEqual(workerMessages.map(data=>data.phase),['CANONICAL_WORKER_MODULE_READY','RAW_PACKAGE_COMPLETE','CANONICAL_PACKAGE_COMPLETE']);
+
+// Load the actual binding/contract/upload graph in a fresh Node realm. The spy
+// worker remains pending; no renderer or WebGL construction is requested.
+const graphProgram=`import assert from 'node:assert/strict';import {registerHooks} from 'node:module';const rawSourceURL=${JSON.stringify(rawURLFrom(candidateUrl).href)};registerHooks({load(url,context,nextLoad){const loaded=nextLoad(url,context);if(url===rawSourceURL){const source=typeof loaded.source==='string'?loaded.source:Buffer.from(loaded.source).toString('utf8');return {...loaded,source:source+'\\n;globalThis.__qualificationRawNamespaceCompleted=true;'};}return loaded;}});let workers=0,requests=0;globalThis.location={search:'?visual=terrain-relief-v2'};const elements=${JSON.stringify([...indexElements].map(([id,element])=>[id,element.attributes]))};globalThis.document={getElementById:id=>{const attrs=elements.find(row=>row[0]===id)?.[1];return attrs?{getAttribute:name=>attrs[name]??null}:null;}};globalThis.Worker=class{constructor(){assert.notEqual(globalThis.__qualificationRawNamespaceCompleted,true);workers++;}postMessage(){requests++;}terminate(){}};await import(${JSON.stringify(pathToFileURL(resolve(root,'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js')).href)});assert.equal(workers,1);assert.equal(requests,1);assert.equal(globalThis.__qualificationRawNamespaceCompleted,true);console.log('ACTUAL_BINDING_GRAPH_PASS');`;
+assert.ok(execFileSync(process.execPath,['--input-type=module','-e',graphProgram],{encoding:'utf8'}).includes('ACTUAL_BINDING_GRAPH_PASS'));
 
 let workerCount=0,requestCount=0,terminated=0,receivedRaw=null,receivedCanonical=null,interval=null;
 class BrowserWorkerOnNode{
@@ -151,7 +189,7 @@ try{
 
  const timing=candidateModule.getHEarthRun8ER2CanonicalPreparationTiming();
  assert.equal(timing.schema,'H_EARTH_CANONICAL_PREPARATION_TIMING_v1');assert.equal(timing.version,1);assert.equal(timing.status,'READY');assert.equal(timing.branch,'MODULE_WORKER');
- const expectedSpans=['CANONICAL_WORKER_MODULE_READY_WAIT','CANONICAL_WORKER_RESULT_WAIT','CANONICAL_MAIN_FREEZE','CANONICAL_RAW_ADOPTION_VALIDATE','CANONICAL_MAIN_VALIDATE'];
+ const expectedSpans=['CANONICAL_MAIN_RAW_MODULE_WAIT','CANONICAL_WORKER_MODULE_READY_WAIT','CANONICAL_WORKER_RESULT_WAIT','CANONICAL_MAIN_FREEZE','CANONICAL_RAW_ADOPTION_VALIDATE','CANONICAL_MAIN_VALIDATE'];
  for(const name of expectedSpans){assert.equal(timing.main.stages[name].status,'PASS');assert.ok(Number.isFinite(timing.main.stages[name].durationMs));assert.ok(observedSpans.some(entry=>entry.name===name&&entry.status==='PASS'));}
  assert.equal(timing.worker.schema,timing.schema);assert.equal(timing.worker.version,1);assert.ok(timing.worker.sourceModuleUrl.includes('hearthCanonicalTiming=1'));
  for(const name of ['rawBuildDurationMs','canonicalBuildDurationMs','resultPostStartAtMs','timeOrigin'])assert.ok(Number.isFinite(timing.worker[name]),name);
@@ -179,8 +217,8 @@ try{
  globalThis.Worker=undefined;const fallbackModule=await import(candidateUrl.href+'?fallback=1');const fallbackPhases=[];
  const fallback=await fallbackModule.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:d=>fallbackPhases.push(d.phase)});
  const {constructionMilliseconds:ignored,...fallbackIdentity}=fallback;const {constructionMilliseconds:ignored2,...baselineIdentity}=baseline;
- assert.deepEqual(fallbackIdentity,baselineIdentity);assert.deepEqual(fallbackPhases,['SYNCHRONOUS_BASELINE_FALLBACK']);const fallbackTiming=fallbackModule.getHEarthRun8ER2CanonicalPreparationTiming();assert.equal(fallbackTiming.branch,'SYNCHRONOUS_BASELINE_FALLBACK');assert.equal(fallbackTiming.status,'FALLBACK');assert.equal(fallbackTiming.worker,null);assert.equal(fallbackTiming.normalizedHandoffDurationMs,null);assert.deepEqual(fallbackTiming.main.stages,{});const failedFallback=await import(candidateUrl.href+'?fallbackFailure=1');await assert.rejects(failedFallback.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{throw new Error('test-fallback-error');}}));assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().status,'FAILED');assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().failure.message,'test-fallback-error');
+ assert.deepEqual(fallbackIdentity,baselineIdentity);assert.deepEqual(fallbackPhases,['SYNCHRONOUS_BASELINE_FALLBACK']);const fallbackTiming=fallbackModule.getHEarthRun8ER2CanonicalPreparationTiming();assert.equal(fallbackTiming.branch,'SYNCHRONOUS_BASELINE_FALLBACK');assert.equal(fallbackTiming.status,'FALLBACK');assert.equal(fallbackTiming.worker,null);assert.equal(fallbackTiming.normalizedHandoffDurationMs,null);assert.deepEqual(Object.keys(fallbackTiming.main.stages),['CANONICAL_MAIN_RAW_MODULE_WAIT']);assert.equal(fallbackTiming.main.stages.CANONICAL_MAIN_RAW_MODULE_WAIT.status,'PASS');const failedFallback=await import(candidateUrl.href+'?fallbackFailure=1');await assert.rejects(failedFallback.prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:()=>{throw new Error('test-fallback-error');}}));assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().status,'FAILED');assert.equal(failedFallback.getHEarthRun8ER2CanonicalPreparationTiming().failure.message,'test-fallback-error');
  for(const phase of ['RAW_PACKAGE_PREPARING','RAW_PACKAGE_COMPLETE','CANONICAL_PACKAGE_COMPLETE','CANONICAL_PACKAGE_READY'])assert.ok(phases.includes(phase));
- const result={schema:'H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1',result:'PASS',baselineHead:'935e756e725f8c205921437fbace9faef45c28eb',fullBufferAndMetadataHashes:hashes,sourceDigests,baselineSourceCount:seenSources.size,workerCount,terminated,timerTicks,workerElapsedMs,phases:[...new Set(phases)],metadataExclusion:['constructionMilliseconds'],canonicalPreparationTiming:timing,earlyBindingRouteAndImportOrdering:'PASS_INDEX_DERIVED_FIXTURE',actualWorkerBeforeHeldRendererImport:'PASS',lateProgressReplay:'PASS',singlePreparationRequest:requestCount,timingReportSerialization:'PASS',timingDisabledGating:'PASS',timingFallbackAndFailure:'PASS',timingUnknownClockCases:'PASS',claimCeiling:'CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence'};
+ const result={schema:'H_EARTH_CANONICAL_STARTUP_PREPARATION_CPU_QUALIFICATION_v1',result:'PASS',baselineHead:'935e756e725f8c205921437fbace9faef45c28eb',fullBufferAndMetadataHashes:hashes,sourceDigests,baselineSourceCount:seenSources.size,workerCount,terminated,timerTicks,workerElapsedMs,phases:[...new Set(phases)],metadataExclusion:['constructionMilliseconds'],canonicalPreparationTiming:timing,earlyBindingRouteAndImportOrdering:'PASS_INDEX_DERIVED_FIXTURE',actualWorkerBeforeHeldRendererImport:'PASS',canonicalOwnerBeforeHeldRawNamespace:'PASS',rawImportFailureStickyTermination:'PASS',workerRequestDuringHeldRawNamespace:'PASS_READY_BEFORE_RAW',actualBindingContractUploadGraph:'PASS_WORKER_START_BEFORE_OBSERVED_RAW_NAMESPACE_COMPLETION',lateProgressReplay:'PASS',singlePreparationRequest:requestCount,timingReportSerialization:'PASS',timingDisabledGating:'PASS',timingFallbackAndFailure:'PASS',timingUnknownClockCases:'PASS',claimCeiling:'CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence'};
  if(process.env.H_EARTH_STARTUP_CPU_RECEIPT)writeFileSync(process.env.H_EARTH_STARTUP_CPU_RECEIPT,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
 }finally{if(interval)clearInterval(interval);globalThis.Worker=nativeWorker;globalThis.location=originalLocation;globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS=originalDiagnostics;}

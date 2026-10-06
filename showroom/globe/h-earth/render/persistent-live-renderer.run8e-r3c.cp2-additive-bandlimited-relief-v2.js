@@ -287,6 +287,8 @@ uniform vec4 uTerrainPatchClip;
 uniform int uClipBaseTerrain;
 // SHORELINE_SOIL_BEGIN uniform
 uniform sampler2D uShorelineSoilCoverage;
+uniform vec4 uLandscapeFloorFootprints[15];
+uniform int uLandscapeFloorCount;
 // SHORELINE_SOIL_END uniform
 out vec4 outColor;
 
@@ -591,7 +593,7 @@ void main(){
     float ravineDepth=1.0-smoothstep(-292.0,-210.0,vWorldPosition.z);
     float routePulse=stableWave(vWorldPosition.z*0.56+vWorldPosition.y*0.31+mesoField*3.0);
     float ravineWallSignal=stableWave(abs(vWorldPosition.x-40.0)*0.32+(-vWorldPosition.z-210.0)*0.09+vWorldPosition.y*0.51);
-    float ravineWallContact=transitionBand(ravineWallSignal,0.080)*ravineDepth;
+    float ravineWallContact=transitionBand(ravineWallSignal,0.080)*ravineDepth*ravineAxis;
     float routeSignal=ravineAxis*ravineDepth*(0.36+0.64*slopeResponse);
     palette=mix(palette,vec3(0.060,0.125,0.14),routeSignal*(0.42+0.40*routePulse));
     palette*=mix(1.0,0.70,max(ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse),ravineWallContact*0.62));
@@ -629,17 +631,30 @@ void main(){
       palette=mix(palette,soil,soilBlend);
     }
 // SHORELINE_SOIL_END shade
-    // P2: bounded forest-floor transitions follow the three authored cluster
-    // footprints. This is static contact reinforcement, not a cast-shadow claim.
+    // A floor follows accepted tree footprints, not a filled cluster ellipse.
+    // B/C retain their existing treatment. This is static material/contact
+    // reinforcement on the actual terrain, never a cast shadow or new surface.
     if(world.x>-180.0 && world.x<-24.0 && world.y>-380.0 && world.y<-190.0){
-      float a=length((world-vec2(-145.0,-230.0))/vec2(25.0,25.0));
       float b=length((world-vec2(-125.0,-285.0))/vec2(29.0,25.0));
       float c=length((world-vec2(-65.0,-315.0))/vec2(24.0,22.0));
-      float edge=min(a,min(b,c))+(noise2(world*0.23)-0.5)*0.22;
-      float litter=1.0-smoothstep(0.67,1.10,edge);
+      float edge=min(b,c)+(noise2(world*0.23)-0.5)*0.22;
+      float existingLitter=1.0-smoothstep(0.67,1.10,edge);
+      float canopyLitter=0.0;
+      float trunkContact=0.0;
+      float brokenEdge=(noise2(world*0.71+vec2(17.3,-9.7))-0.5)*0.18;
+      for(int i=0;i<15;i++){
+        if(i>=uLandscapeFloorCount)break;
+        vec4 tree=uLandscapeFloorFootprints[i];
+        float rootDistance=distance(world,tree.xy);
+        float crownDistance=rootDistance/tree.z+brokenEdge;
+        float underCrown=1.0-smoothstep(0.48,1.08,crownDistance);
+        canopyLitter=max(canopyLitter,underCrown);
+        trunkContact=max(trunkContact,1.0-smoothstep(tree.w,tree.w+0.80,rootDistance));
+      }
       vec3 woodlandSoil=vec3(0.16,0.119,0.066)*(0.88+0.21*noise2(world*0.71));
-      palette=mix(palette,woodlandSoil,litter*0.70);
-      presentationContact=max(presentationContact,litter*0.65);
+      float litterStrength=max(existingLitter*0.70,canopyLitter*0.50+trunkContact*0.15);
+      palette=mix(palette,woodlandSoil,litterStrength);
+      presentationContact=max(presentationContact,max(existingLitter*0.65,canopyLitter*0.10+trunkContact*0.28));
     }
     base=palette;
   }else if(vRoleCode==4u){
@@ -833,6 +848,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const status=update.phase==='RAW_PACKAGE_COMPLETE'?'Base world geometry ready':update.phase==='CANONICAL_PACKAGE_COMPLETE'?'Canonical world buffers ready':update.phase==='CANONICAL_PACKAGE_READY'?'World package validated':update.phase==='VALIDATING_PACKAGE_BUFFERS'?'Validating world buffers':update.phase==='SYNCHRONOUS_BASELINE_FALLBACK'?'Preparing world on this device':'Preparing canonical world geometry';
     onStartupProgress?.(Object.freeze({...update,progress,status}));
   }}));
+  const landscapeFloorFootprints=renderPackage.landscapeFloorFootprints;
+  if(!Array.isArray(landscapeFloorFootprints)||landscapeFloorFootprints.length<1||landscapeFloorFootprints.length>15||
+    landscapeFloorFootprints.some(p=>![p.x,p.z,p.crownRadius,p.trunkRadius].every(Number.isFinite)||p.crownRadius<=0||p.trunkRadius<=0||p.trunkRadius>=p.crownRadius)||
+    typeof renderPackage.landscapeFloorContentDigest!=='string'||!renderPackage.landscapeFloorContentDigest.length)
+    throw new Error('R3C_LANDSCAPE_FLOOR_MANIFEST_INVALID');
+  const landscapeFloorUniforms=new Float32Array(15*4);
+  landscapeFloorFootprints.forEach((p,i)=>landscapeFloorUniforms.set([p.x,p.z,p.crownRadius,p.trunkRadius],i*4));
   const uploadViews = startupMeasure('GPU_UPLOAD_VIEWS',()=>createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage));
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface({deferVegetation});
   if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
@@ -986,6 +1008,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
+      landscapeFloorFootprints:uniform(resources.geometryProgram,'uLandscapeFloorFootprints[0]'),
+      landscapeFloorCount:uniform(resources.geometryProgram,'uLandscapeFloorCount'),
       distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), patchClip: uniform(resources.geometryProgram, 'uTerrainPatchClip'), clipBaseTerrain: uniform(resources.geometryProgram, 'uClipBaseTerrain'), depth: uniform(resources.depthProgram, 'uDepth')
     };
     const environment = packet.environmentUniforms;
@@ -1003,8 +1027,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
 // SHORELINE_SOIL_BEGIN sampler
     gl.uniform1i(resources.uniforms.shorelineSoilCoverage,1);
+    gl.uniform1i(resources.uniforms.landscapeFloorCount,landscapeFloorFootprints.length);
+    gl.uniform4fv(resources.uniforms.landscapeFloorFootprints,landscapeFloorUniforms);
 // SHORELINE_SOIL_END sampler
-    counters.staticUniformUpdateCount = 11; initialized = true;
+    counters.staticUniformUpdateCount = 13; initialized = true;
     progressCallback?.(Object.freeze({phase:'GPU_STARTUP_RESOURCES_READY',completed:1,total:1,unit:'initialization',progress:87,status:'Graphics resources initialized'}));
     return getResourceReceipt();
   }
@@ -1233,6 +1259,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       counters: { ...counters },
 // SHORELINE_SOIL_BEGIN receipt
       shorelineSoilCoverage:{...resources.shorelineSoilCoverage},
+      landscapeFloor:{treeCount:landscapeFloorFootprints.length,floorContentDigest:renderPackage.landscapeFloorContentDigest,source:'ACCEPTED_CLUSTER_A_MANIFEST',worldSpace:'PROJECTED_WORLD_XZ',terrainGeometryChanged:false,castShadowClaim:false},
 // SHORELINE_SOIL_END receipt
       persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 4, framebuffers: 2 },
       resourceIdentityStable: initialized && resources.buffers?.length === 11 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),

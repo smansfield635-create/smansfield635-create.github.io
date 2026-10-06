@@ -3577,45 +3577,6 @@
       "scopeHash": "3ef1dbeb853b39b14c9296e887d3b6c0d7f75a24466e0ae8bebf5e23c83522b3",
       "state": "ADMITTED_LOCKED"
     },
-    "3f85e8c0b1924adfb3bc7eddaccf9960dc4ef7d6cd8fae23d50142937a6fb270": {
-      "governingHead": "e41f79d03b2d532c6e69e00fad1afb1f2a37b9c5",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "e41f79d03b2d532c6e69e00fad1afb1f2a37b9c5",
-          "lockGeneration": 2583,
-          "lockScope": "MEET_SEAN_INTERACTIVE_SPEAKING",
-          "operationId": "MEET_SEAN_INTERACTIVE_SPEAKING_20261006_001",
-          "procedureLocatorDigest": "fcf6b8c7e27f0812dac14db89757ce0639bcef8335fb12b0d1c9574b6b2eff5c",
-          "requestDigest": "3a6647e9c9de7923a34c4bcdd5023eb085fb2fc3dad43c1fc7445149e95a269e",
-          "scopeHash": "3f85e8c0b1924adfb3bc7eddaccf9960dc4ef7d6cd8fae23d50142937a6fb270"
-        },
-        "bindingDigest": "815157d31b2694bbde13ba455e00fa1a4b2d6e7172e8769a64d0967efdf0bd33",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "2f615a29443acad89883b25c05d8825eed378f06",
-          "observedLockRefHead": "3eabfd729745875cca873d2b0a3ea5396b303a91"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "9995305e4d32f1856398ac451ebce29f85f15f7a118e879977268b59c566a096",
-          "commentId": 6024624110,
-          "issueNumber": 5834,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2583,
-      "lockScope": "MEET_SEAN_INTERACTIVE_SPEAKING",
-      "operationId": "MEET_SEAN_INTERACTIVE_SPEAKING_20261006_001",
-      "procedureLocatorDigest": "fcf6b8c7e27f0812dac14db89757ce0639bcef8335fb12b0d1c9574b6b2eff5c",
-      "released": false,
-      "requestDigest": "3a6647e9c9de7923a34c4bcdd5023eb085fb2fc3dad43c1fc7445149e95a269e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "3f85e8c0b1924adfb3bc7eddaccf9960dc4ef7d6cd8fae23d50142937a6fb270",
-      "state": "ADMITTED_LOCKED"
-    },
     "400c8d96cbd9198eb07bf06ba6c102ab41f3827be4d1847d004b536132454764": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -70715,6 +70676,83 @@
       "scopeHash": "f0f8a96829e6d26669b72032e1780b023cbefdc3d203fd04c1f1febeb2829cea",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "e41f79d03b2d532c6e69e00fad1afb1f2a37b9c5",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e41f79d03b2d532c6e69e00fad1afb1f2a37b9c5",
+          "lockGeneration": 2583,
+          "lockScope": "MEET_SEAN_INTERACTIVE_SPEAKING",
+          "operationId": "MEET_SEAN_INTERACTIVE_SPEAKING_20261006_001",
+          "procedureLocatorDigest": "fcf6b8c7e27f0812dac14db89757ce0639bcef8335fb12b0d1c9574b6b2eff5c",
+          "requestDigest": "3a6647e9c9de7923a34c4bcdd5023eb085fb2fc3dad43c1fc7445149e95a269e",
+          "scopeHash": "3f85e8c0b1924adfb3bc7eddaccf9960dc4ef7d6cd8fae23d50142937a6fb270"
+        },
+        "bindingDigest": "815157d31b2694bbde13ba455e00fa1a4b2d6e7172e8769a64d0967efdf0bd33",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "2f615a29443acad89883b25c05d8825eed378f06",
+          "observedLockRefHead": "3eabfd729745875cca873d2b0a3ea5396b303a91"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "9995305e4d32f1856398ac451ebce29f85f15f7a118e879977268b59c566a096",
+          "commentId": 6024624110,
+          "issueNumber": 5834,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e41f79d03b2d532c6e69e00fad1afb1f2a37b9c5",
+          "lockGeneration": 2583,
+          "lockScope": "MEET_SEAN_INTERACTIVE_SPEAKING",
+          "operationId": "MEET_SEAN_INTERACTIVE_SPEAKING_20261006_001",
+          "procedureLocatorDigest": "fcf6b8c7e27f0812dac14db89757ce0639bcef8335fb12b0d1c9574b6b2eff5c",
+          "requestDigest": "3a6647e9c9de7923a34c4bcdd5023eb085fb2fc3dad43c1fc7445149e95a269e",
+          "scopeHash": "3f85e8c0b1924adfb3bc7eddaccf9960dc4ef7d6cd8fae23d50142937a6fb270"
+        },
+        "bindingDigest": "d930ebb3d50e9040981158a1a228fb592013d3fa43bbd3ebf47674d7450295c2",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "710ebe5759ecf039bc9df1a0eff18c3934b28e3f",
+          "observedLockRefHead": "a0e69aabef5dc459c802c8de551c3c08652216d3"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "6cc0bc5b639a094db57b4fa90935b9b899e4793e94f87289e335d9cf9bc7f5ba",
+          "commentId": 6024675057,
+          "issueNumber": 5836,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "e41f79d03b2d532c6e69e00fad1afb1f2a37b9c5",
+          "lockGeneration": 2583,
+          "lockScope": "MEET_SEAN_INTERACTIVE_SPEAKING",
+          "operationId": "MEET_SEAN_INTERACTIVE_SPEAKING_20261006_001",
+          "released": true,
+          "scopeHash": "3f85e8c0b1924adfb3bc7eddaccf9960dc4ef7d6cd8fae23d50142937a6fb270",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2583,
+      "lockScope": "MEET_SEAN_INTERACTIVE_SPEAKING",
+      "operationId": "MEET_SEAN_INTERACTIVE_SPEAKING_20261006_001",
+      "procedureLocatorDigest": "fcf6b8c7e27f0812dac14db89757ce0639bcef8335fb12b0d1c9574b6b2eff5c",
+      "released": true,
+      "requestDigest": "3a6647e9c9de7923a34c4bcdd5023eb085fb2fc3dad43c1fc7445149e95a269e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3f85e8c0b1924adfb3bc7eddaccf9960dc4ef7d6cd8fae23d50142937a6fb270",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

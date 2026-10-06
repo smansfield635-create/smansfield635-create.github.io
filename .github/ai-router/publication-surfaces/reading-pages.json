@@ -1,0 +1,132 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "reading-pages",
+  "description": "Direct Book, Meet Sean, Underdog and Compass navigation; local House Map detached from Book; existing content and renderers preserved.",
+  "checks": [
+    {
+      "path": "/about-this-underdog/index.html",
+      "includes": [
+        "reading-nav--top",
+        "reading-nav--footer",
+        "href=\"/about-this-underdog/\" aria-current=\"page\"",
+        "aria-label=\"Return to Compass\"",
+        "href=\"/\"",
+        "href=\"/nine-summits-of-love/\"",
+        "href=\"/meet-sean-mansfield/\"",
+        "href=\"/about-this-underdog/\""
+      ],
+      "excludes": [
+        "data-house-control-pad-open",
+        "/assets/house-control-pad/"
+      ]
+    },
+    {
+      "path": "/meet-sean-mansfield/index.html",
+      "includes": [
+        "reading-nav--top",
+        "reading-nav--footer",
+        "href=\"/meet-sean-mansfield/\" aria-current=\"page\"",
+        "aria-label=\"Return to Compass\"",
+        "href=\"/\"",
+        "href=\"/nine-summits-of-love/\"",
+        "href=\"/meet-sean-mansfield/\"",
+        "href=\"/about-this-underdog/\""
+      ],
+      "excludes": [
+        "data-house-control-pad-open",
+        "/assets/house-control-pad/"
+      ]
+    },
+    {
+      "path": "/nine-summits-of-love/index.html",
+      "includes": [
+        "reading-nav--top",
+        "reading-nav--footer",
+        "href=\"/nine-summits-of-love/\" aria-current=\"page\"",
+        "aria-label=\"Return to Compass\"",
+        "href=\"/\"",
+        "href=\"/nine-summits-of-love/\"",
+        "href=\"/meet-sean-mansfield/\"",
+        "href=\"/about-this-underdog/\""
+      ],
+      "excludes": [
+        "data-house-control-pad-open",
+        "/assets/house-control-pad/"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/about-this-underdog/",
+    "timeoutMs": 20000,
+    "readySelector": ".reading-nav--top",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/about-this-underdog/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "favicon.ico"
+    ],
+    "interactions": [
+      {
+        "name": "Navigate to The Book",
+        "action": {
+          "type": "click",
+          "selector": ".reading-nav--top a[href=\"/nine-summits-of-love/\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": ".reading-nav--top a[href=\"/nine-summits-of-love/\"][aria-current=\"page\"]"
+          }
+        ],
+        "timeoutMs": 15000
+      },
+      {
+        "name": "Navigate to Meet Sean",
+        "action": {
+          "type": "click",
+          "selector": ".reading-nav--top a[href=\"/meet-sean-mansfield/\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": ".reading-nav--top a[href=\"/meet-sean-mansfield/\"][aria-current=\"page\"]"
+          }
+        ],
+        "timeoutMs": 15000
+      },
+      {
+        "name": "Navigate to This Underdog",
+        "action": {
+          "type": "click",
+          "selector": ".reading-nav--top a[href=\"/about-this-underdog/\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": ".reading-nav--top a[href=\"/about-this-underdog/\"][aria-current=\"page\"]"
+          }
+        ],
+        "timeoutMs": 15000
+      },
+      {
+        "name": "Return to Compass",
+        "action": {
+          "type": "click",
+          "selector": ".reading-nav--top a[href=\"/\"]"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "body",
+            "value": "Welcome to the Compass."
+          }
+        ],
+        "timeoutMs": 15000
+      }
+    ]
+  }
+}

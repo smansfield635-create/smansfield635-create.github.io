@@ -10,7 +10,7 @@
 .intro .invitation{color:var(--gold);font:italic 24px Georgia,serif;margin:18px 0 12px}.intro .intro-copy{line-height:1.7}.reflection{scroll-margin-top:90px}.teaching{border-top:1px solid var(--line);margin-top:24px;padding-top:22px;scroll-margin-top:90px}.teaching h3{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}.teaching p+h3{margin-top:25px}.teaching:focus,.reflection:focus{outline:none}.teaching .reflection-actions{justify-content:space-between;gap:20px}.teaching .reflection-actions a{line-height:1.6;min-height:44px;display:flex;align-items:center}@media(max-width:600px){h1{font-size:32px}h1 span{display:block}h1 br{display:none}.intro .intro-copy{max-width:320px}.intro .invitation{font-size:23px}.teaching .reflection-actions{align-items:flex-start;flex-direction:column}}
 </style>
 <script defer src="/assets/compass/compass.orbit-physics.js?cb=nine-summits-physics-20261006"></script>
-<script type="module" src="./universe.motion.js?cb=nine-teachings-20261006"></script>
+<script type="module" src="./universe.motion.js?cb=natural-orbits-20261006"></script>
 </head>
 <body>
 <header class="topbar"><a href="/">← Back to Compass</a><span class="brand">DIAMOND GATE BRIDGE</span></header>
@@ -19,7 +19,7 @@
 <section class="scene" id="universe-scene" aria-label="Nine summit planets around an illuminated diamond heart">
 <div class="heart-glow" aria-hidden="true"></div><canvas id="universe-canvas" aria-hidden="true"></canvas><div class="loading">Preparing your universe…</div><div id="planet-labels"></div></section>
 <p class="scene-note" id="scene-note">Drag to turn the universe · Choose a planet to explore</p>
-<div class="scene-controls"><button class="quiet-button" id="reset-view" type="button">Restore view</button><button class="quiet-button" id="return-view" type="button" hidden>← Return to all nine</button></div>
+<div class="scene-controls"><button class="quiet-button" id="toggle-motion" type="button" aria-pressed="false" disabled>Pause motion</button><button class="quiet-button" id="reset-view" type="button">Restore view</button><button class="quiet-button" id="return-view" type="button" hidden>← Return to all nine</button></div>
 <p class="status" id="status" role="status"></p>
 <section class="reflection" id="reflection" aria-labelledby="reflection-title" hidden tabindex="-1">
 <p class="eyebrow" id="reflection-path"></p><h2 id="reflection-title"></h2><p id="reflection-copy"></p>

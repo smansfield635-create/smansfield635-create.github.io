@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-06T17:29:24Z",
+  "generatedAt": "2026-10-06T18:39:04Z",
   "window": {
-    "start": "2026-07-08T17:29:24Z",
-    "end": "2026-10-06T17:29:24Z"
+    "start": "2026-07-08T18:39:04Z",
+    "end": "2026-10-06T18:39:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5104,
-    "visits": 1323,
+    "pageLoads": 5094,
+    "visits": 1313,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5104,
-        "visits": 1323
+        "pageLoads": 5094,
+        "visits": 1313
       }
     },
     "byPath": {
-      "/": {
-        "pageLoads": 1071,
-        "visits": 749
-      },
       "/showroom/globe/h-earth/": {
         "pageLoads": 204,
         "visits": 0
@@ -37,6 +33,10 @@
       "/index.html": {
         "pageLoads": 150,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 1061,
+        "visits": 739
       },
       "/nine-summits-of-love/": {
         "pageLoads": 10,
@@ -206,16 +206,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -334,12 +334,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 41,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 41,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -356,13 +356,13 @@
       }
     },
     "byReferer": {
-      "(none)": {
-        "pageLoads": 533,
-        "visits": 533
-      },
       "diamondgatebridge.com": {
         "pageLoads": 3781,
         "visits": 0
+      },
+      "(none)": {
+        "pageLoads": 523,
+        "visits": 523
       },
       "www.google.com": {
         "pageLoads": 780,

@@ -12,7 +12,8 @@ import {verifyHEarthAudraliaTabletCloudPassPathRecognition} from './accepted-ame
 import {verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-cloud-globalization-experience-receipt-path-recognition.js';
 import {verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-single-context-runtime-path-recognition.js';
 import {verifyHEarthRun8ESparseAdmissionReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.run8e-sparse-admission-receipt-path-recognition.js';
-import registryFacade,{verifyHEarthFd05DiagnosticPathRecognition} from './accepted-amendments/h-earth.repository-registry.fd05-diagnostic-path-recognition.js';
+import {verifyHEarthFd05DiagnosticPathRecognition} from './accepted-amendments/h-earth.repository-registry.fd05-diagnostic-path-recognition.js';
+import registryFacade,{verifyHEarthMountainTraversalPathRecognition} from './accepted-amendments/h-earth.repository-registry.mountain-traversal-20261006-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
@@ -23,9 +24,11 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const tabletRuntimePathRecognitionVerification=verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition();
   const run8eSparseAdmissionReceiptPathRecognitionVerification=verifyHEarthRun8ESparseAdmissionReceiptPathRecognition();
   const fd05DiagnosticPathRecognitionVerification=verifyHEarthFd05DiagnosticPathRecognition();
+  const mountainTraversalVerification=verifyHEarthMountainTraversalPathRecognition();
   const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const successorChecks=deepFreeze({
+    mountainTraversalRecognitionEligible:mountainTraversalVerification.eligible===true,
     predecessorLoaderIdentityPreserved:base.loaderId==='H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v27_AWARDS_SHARED_CAROUSEL_CYCLE_F_EXACT_PATH_RECOGNITION_SUCCESSOR',
     predecessorIdentityStatePreserved:base.identityVerified===false,
     predecessorSuccessorIntegrityPreserved:base.successorIntegrityVerified===true,

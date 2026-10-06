@@ -1,0 +1,79 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "1e32b39a26b5a93b5dcf1e5d486cb415ed72508c005a8698b74a3aae36a4bb03"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "4e47fe159630d113513abad77a1aaa760f838f7df6c1e32204cb5894f65e736d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "1c11d394cf8ac25f1d9e6ef7de51b796103cca5790f1e291b6527bd2378f9325"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "sha256": "48e067d5e83736275e405379f01b3f794203e6aa7616c4e22df53ff4a73af0ef"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "8cf695c912f69074242e669206acf5e95922fbff371142b7631ab2125d468c2c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "712fc976880d8f731293dd89a1753791fffd3dde7cf770e4cc8b7559afe67017"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "b4f838debfa89b26208f4da3cbd2dc41b03b6b171d84da4d7f1fe69bb3036d31"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "b7d3a9c73710ea283ccc3a4fa980874ec9dc776d9dd6cac27a01f040cb6e599d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "2904d15595387ea45e6ca529166bca5c6ed78aae17aebf334a7651b04ddcc2f9"
+    },
+    {
+      "path": "h-earth-3d/environment/woodland-meadow-trial-20261006.spec.json",
+      "sha256": "77340889aad458b00344f3ecc4bb031318bc531c9f83a0e2bc277665b1383e11"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.woodland-meadow-trial-20261006.mjs",
+      "sha256": "1ad2ae2c3b76141b2a5c06f5c3073704ea5d8b51a95e1369f16b2b23fa357e36"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "instructions": "Copy this template into h-earth-3d/experience-anchor/receipts/ for an experience-changing candidate. Populate exact changed experience-file SHA-256 values and repository-resident visual, interaction, and continuity evidence. Set every invariant true and disposition PASS only after actual comparison to the controlling anchor. The gate fails closed otherwise.",
+  "notes": "Same canonical world delta anchor PASS from repository visual proxy comparison, unchanged qualified contracts, exact geometry/camera binding and actual desktop/phone/tablet emulated touch qualification. Full video not replayed; owner perceptual KEEP and physical performance remain PENDING. No adoption, release or device authority created."
+}

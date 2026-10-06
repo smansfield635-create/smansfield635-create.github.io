@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "speaking-event-preflight-20261006",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5871,
+  "requestBranch": "ai-dispatch-request-speaking-event-preflight-20261006",
+  "requestCommit": "05c68a78d4ef58927127c857d1004990bc97d155",
+  "requestCommitParent": "41d6b4440d9c5ba374d6a727e708397ce07946b6",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "41d6b4440d9c5ba374d6a727e708397ce07946b6",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "41d6b4440d9c5ba374d6a727e708397ce07946b6",
+    "surface_id": "meet-sean-mansfield"
+  },
+  "bridgeRunId": "37540948869",
+  "dispatchedRunId": 37540969863,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37540969863",
+  "dispatchedRunHeadSha": "41d6b4440d9c5ba374d6a727e708397ce07946b6",
+  "dispatchedAt": "2026-10-06T22:30:05.976Z",
+  "resolvedAt": "2026-10-06T22:30:10.228Z"
+}

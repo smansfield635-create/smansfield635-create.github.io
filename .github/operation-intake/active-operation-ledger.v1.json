@@ -7670,45 +7670,6 @@
       "scopeHash": "80f687f61e6309bc59dcf236b27ab841a5c69d8e768dad13f9e64648b28c2142",
       "state": "ADMITTED_LOCKED"
     },
-    "811db68097ac8ee7e71d7c5f670494d2f5c65834a89226962528076badbef4aa": {
-      "governingHead": "468027d38c3fb301388279b2b272b175afb5f6e9",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "468027d38c3fb301388279b2b272b175afb5f6e9",
-          "lockGeneration": 2596,
-          "lockScope": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE",
-          "operationId": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE_20261007_001",
-          "procedureLocatorDigest": "46f9e47f2eb3ab0a228b55b11aaae8913fe03abc879ee1ba9c002009fac46da1",
-          "requestDigest": "5b3df85984664245e633973423d7bba0f1e2f96b114da0f7eacefc670db6bd81",
-          "scopeHash": "811db68097ac8ee7e71d7c5f670494d2f5c65834a89226962528076badbef4aa"
-        },
-        "bindingDigest": "ceb17b6218ec59de20c359ba682506c119bfb711475c200f6356860e0131c2e6",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "a60e922f3d9f8205f93fc56b2b2e0e892879d33b",
-          "observedLockRefHead": "c36fc904259aa7d4929fc6d7dd919d4d08e39c65"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "d28ec7805cc240040084add354664b525f6a332aedfd384625a524c1557607b8",
-          "commentId": 6026907299,
-          "issueNumber": 5874,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2596,
-      "lockScope": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE",
-      "operationId": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE_20261007_001",
-      "procedureLocatorDigest": "46f9e47f2eb3ab0a228b55b11aaae8913fe03abc879ee1ba9c002009fac46da1",
-      "released": false,
-      "requestDigest": "5b3df85984664245e633973423d7bba0f1e2f96b114da0f7eacefc670db6bd81",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "811db68097ac8ee7e71d7c5f670494d2f5c65834a89226962528076badbef4aa",
-      "state": "ADMITTED_LOCKED"
-    },
     "8132ef3b3d75f3c357864a490f155d6ee345e69d1f1fe1c036c4cc5c62c2b4ba": {
       "governingHead": "2c85d727c1fc9a73e7200b2ceb6a438efb5a54c4",
       "lockGeneration": 1497,
@@ -71652,6 +71613,83 @@
       "scopeHash": "ace59acf0020f7f7470c33da965cd1141e355bda34d25145a0159edd8b87536e",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "468027d38c3fb301388279b2b272b175afb5f6e9",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "468027d38c3fb301388279b2b272b175afb5f6e9",
+          "lockGeneration": 2596,
+          "lockScope": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE",
+          "operationId": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE_20261007_001",
+          "procedureLocatorDigest": "46f9e47f2eb3ab0a228b55b11aaae8913fe03abc879ee1ba9c002009fac46da1",
+          "requestDigest": "5b3df85984664245e633973423d7bba0f1e2f96b114da0f7eacefc670db6bd81",
+          "scopeHash": "811db68097ac8ee7e71d7c5f670494d2f5c65834a89226962528076badbef4aa"
+        },
+        "bindingDigest": "ceb17b6218ec59de20c359ba682506c119bfb711475c200f6356860e0131c2e6",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "a60e922f3d9f8205f93fc56b2b2e0e892879d33b",
+          "observedLockRefHead": "c36fc904259aa7d4929fc6d7dd919d4d08e39c65"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "d28ec7805cc240040084add354664b525f6a332aedfd384625a524c1557607b8",
+          "commentId": 6026907299,
+          "issueNumber": 5874,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "468027d38c3fb301388279b2b272b175afb5f6e9",
+          "lockGeneration": 2596,
+          "lockScope": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE",
+          "operationId": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE_20261007_001",
+          "procedureLocatorDigest": "46f9e47f2eb3ab0a228b55b11aaae8913fe03abc879ee1ba9c002009fac46da1",
+          "requestDigest": "5b3df85984664245e633973423d7bba0f1e2f96b114da0f7eacefc670db6bd81",
+          "scopeHash": "811db68097ac8ee7e71d7c5f670494d2f5c65834a89226962528076badbef4aa"
+        },
+        "bindingDigest": "aa0ac32ac2d521d9af07ec8a0764b846cc6c5061e844a7eafd530704d6406f5f",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "b7efdbd3a7944d863c723f659662eac3721ee571",
+          "observedLockRefHead": "8f3426ea03f247c7fa384d842026176c8c03dc07"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "91b8383c8a9d53c69e1ac53699ff5114abfaa013e00fd79c945abf8babbdcdef",
+          "commentId": 6027245568,
+          "issueNumber": 5874,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "468027d38c3fb301388279b2b272b175afb5f6e9",
+          "lockGeneration": 2596,
+          "lockScope": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE",
+          "operationId": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE_20261007_001",
+          "released": true,
+          "scopeHash": "811db68097ac8ee7e71d7c5f670494d2f5c65834a89226962528076badbef4aa",
+          "state": "TERMINAL",
+          "terminalDisposition": "WITHDRAWN"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2596,
+      "lockScope": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE",
+      "operationId": "BOOK_ENTITLEMENT_GRATITUDE_ANIMATED_BALANCE_20261007_001",
+      "procedureLocatorDigest": "46f9e47f2eb3ab0a228b55b11aaae8913fe03abc879ee1ba9c002009fac46da1",
+      "released": true,
+      "requestDigest": "5b3df85984664245e633973423d7bba0f1e2f96b114da0f7eacefc670db6bd81",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "811db68097ac8ee7e71d7c5f670494d2f5c65834a89226962528076badbef4aa",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

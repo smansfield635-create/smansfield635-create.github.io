@@ -1,0 +1,74 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "meet-sean-mansfield",
+  "description": "Meet Sean profile, preserved standing portrait derivative, Fibonacci atmosphere and speaking inquiry preparation; automatic sending visibly disabled pending activation.",
+  "checks": [
+    {
+      "path": "/meet-sean-mansfield/index.html",
+      "includes": [
+        "The person",
+        "sean-portrait.webp",
+        "/assets/dgb-estate-cosmos.js",
+        "data-delivery-status=\"pending-verification\"",
+        "mailto:hello@diamondgatebridge.com",
+        "Online sending unavailable",
+        "type=\"date\""
+      ],
+      "excludes": [
+        "requests are not sent from this preview"
+      ]
+    },
+    {
+      "path": "/meet-sean-mansfield/profile.css",
+      "includes": [
+        ".portrait",
+        "@media"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/meet-sean-mansfield/speaking.js",
+      "includes": [
+        "https://formsubmit.co/ajax/hello@diamondgatebridge.com",
+        "if(!verified)"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/meet-sean-mansfield/",
+    "timeoutMs": 15000,
+    "readySelector": "#review-button:not([disabled])",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/meet-sean-mansfield/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [
+      "favicon.ico"
+    ],
+    "interactions": [
+      {
+        "name": "Topic selection prepares the inquiry without sending",
+        "action": {
+          "type": "click",
+          "selector": "[data-topic=\"The Inner Underdog\"]"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#topic option:checked",
+            "value": "The Inner Underdog"
+          },
+          {
+            "type": "exists",
+            "selector": "#send-button[disabled]"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

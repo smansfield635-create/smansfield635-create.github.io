@@ -27,3 +27,7 @@ Portrait prompt: preserve the exact man, full standing pose, suit, shirt, sungla
 Independent review passed the eight tests and identified two bounded fixes, now applied: the project boundary describes all six exact page-local paths accurately, and the review button starts disabled until JavaScript initialization succeeds, preventing accidental native GET submission. `git diff --check` passes.
 
 Local browser preview was blocked with ERR_BLOCKED_BY_CLIENT; no visual browser/device verification is claimed. A setup-only POST to the fixed FormSubmit endpoint returned success=false and an activation-required message saying an Activate Form email was sent. Actual receipt, recipient activation, and end-to-end inbox delivery remain unverified. The release hold remains in place.
+
+## Owner publication direction
+
+Owner explicitly prioritized publishing the page on 2026-10-06 over email activation. Proceed with live visual review; sending remains disabled with a direct email link and clear public wording. Delivery activation is no longer a page-publication prerequisite; it remains required before enabling automatic submission. Prior candidate-only wording above records the earlier checkpoint. Publication manifest separately admitted as MEET_SEAN_PUBLICATION_MANIFEST_20261006_001, generation 2570, acquisition d9b39c4bfb5897f49a555ddeb98ad4a467ed11b8.

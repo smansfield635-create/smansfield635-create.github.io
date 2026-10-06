@@ -28,7 +28,7 @@
   async function sendRequest(raw, {fetcher=globalThis.fetch, today=localDate(), timeout=15000, verified=false}={}) {
     const result=validate(raw,today);
     if(!result.valid) return {kind:'invalid',errors:result.errors};
-    if(!verified) return {kind:'held',message:'This preview cannot send requests yet. Online delivery needs to be activated and verified.'};
+    if(!verified) return {kind:'held',message:'Online requests are awaiting activation. Please email hello@diamondgatebridge.com with your event details.'};
     const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeout);
     try {
       const response=await fetcher(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(payload(result.data)),signal:controller.signal,credentials:'omit',referrerPolicy:'strict-origin-when-cross-origin'});
@@ -43,7 +43,7 @@
     const controls=Object.fromEntries(FIELDS.map(k=>[k,form.elements.namedItem(k)]));
     const fields=document.getElementById('form-fields'),review=document.getElementById('request-review'),details=document.getElementById('review-details'),status=document.getElementById('form-status'),send=document.getElementById('send-button'),edit=document.getElementById('edit-button');let busy=false,done=false,reviewed=null;
     controls.date.min=localDate();
-    if(form.dataset.deliveryStatus==='verified') form.querySelector('.preview-notice')?.remove();
+    if(form.dataset.deliveryStatus==='verified') { form.querySelector('.preview-notice')?.remove(); send.disabled=false; send.textContent='Send speaking request'; }
     const raw=()=>Object.fromEntries(FIELDS.map(k=>[k,controls[k].value]));
     const notify=(kind,message)=>{status.dataset.kind=kind;status.textContent=message;};
     function showErrors(errors) {

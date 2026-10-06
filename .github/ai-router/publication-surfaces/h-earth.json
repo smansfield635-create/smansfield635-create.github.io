@@ -21,7 +21,7 @@
     {
       "path": "/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
       "includes": [
-        "import '../diagnostic/renderer-startup-observer.v1.js?cb=woodland-delivery-20261006';",
+        "import '../diagnostic/renderer-startup-observer.v1.js?cb=ecotone-trial-20261006';",
         "await import('../arrival-loader.js?cb=h-earth-bounded-progress-v1');",
         "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=mountain-traversal-20261006');",
         "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"

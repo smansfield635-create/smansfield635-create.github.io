@@ -5554,45 +5554,6 @@
       "scopeHash": "5f937afcb14ecbbdfed9db7789b03086f97a390fa5a8431d84df01f68c4e4a00",
       "state": "ADMITTED_LOCKED"
     },
-    "60b5ac25f2e19463e6d70231a7ce1239e93fe9df547e7096da0b4ac14a300682": {
-      "governingHead": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
-          "lockGeneration": 2573,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:H_EARTH_PUBLICATION:EXACT_EXPECTED_URL_SYNC",
-          "operationId": "H_EARTH_WOODLAND_DELIVERY_MANIFEST_SYNC_20261006_001",
-          "procedureLocatorDigest": "38bceb5df67db6519ca5f7a5be50b9a77616d72bb63f3c191d38b9dfa753973b",
-          "requestDigest": "61e463628c6cf61713880841465a8e32f4cf770d2a2defe89d51868c25ab8994",
-          "scopeHash": "60b5ac25f2e19463e6d70231a7ce1239e93fe9df547e7096da0b4ac14a300682"
-        },
-        "bindingDigest": "dc95f1a455ed6313a5c15063fb68149b0bb6c373977b9ad414e522241ca73621",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "6d1560dcb8e79078a2610809dbbd974c942a743e",
-          "observedLockRefHead": "528aafed2ac4b704153e7b0b84318fde0359ee36"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "c61539504040f9ed58a6bc41ea7a39b46d3b24194c743e7798e13c7419da5f76",
-          "commentId": 6023264094,
-          "issueNumber": 5810,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2573,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:H_EARTH_PUBLICATION:EXACT_EXPECTED_URL_SYNC",
-      "operationId": "H_EARTH_WOODLAND_DELIVERY_MANIFEST_SYNC_20261006_001",
-      "procedureLocatorDigest": "38bceb5df67db6519ca5f7a5be50b9a77616d72bb63f3c191d38b9dfa753973b",
-      "released": false,
-      "requestDigest": "61e463628c6cf61713880841465a8e32f4cf770d2a2defe89d51868c25ab8994",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "60b5ac25f2e19463e6d70231a7ce1239e93fe9df547e7096da0b4ac14a300682",
-      "state": "ADMITTED_LOCKED"
-    },
     "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8": {
       "governingHead": "c961469d366f39422e143a2c6156e79b1c991735",
       "lockGeneration": 471,
@@ -70019,6 +69980,83 @@
       "requestDigest": "e4e909a70a75ee4e9de9168e2a7b5cfe8d4734fb0d695ac54128d7000c0c03b5",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "38b7492b853752b8532255af28ecbcf8feecb00f735efb795524ad09bf749715",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+          "lockGeneration": 2573,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:H_EARTH_PUBLICATION:EXACT_EXPECTED_URL_SYNC",
+          "operationId": "H_EARTH_WOODLAND_DELIVERY_MANIFEST_SYNC_20261006_001",
+          "procedureLocatorDigest": "38bceb5df67db6519ca5f7a5be50b9a77616d72bb63f3c191d38b9dfa753973b",
+          "requestDigest": "61e463628c6cf61713880841465a8e32f4cf770d2a2defe89d51868c25ab8994",
+          "scopeHash": "60b5ac25f2e19463e6d70231a7ce1239e93fe9df547e7096da0b4ac14a300682"
+        },
+        "bindingDigest": "dc95f1a455ed6313a5c15063fb68149b0bb6c373977b9ad414e522241ca73621",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "6d1560dcb8e79078a2610809dbbd974c942a743e",
+          "observedLockRefHead": "528aafed2ac4b704153e7b0b84318fde0359ee36"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "c61539504040f9ed58a6bc41ea7a39b46d3b24194c743e7798e13c7419da5f76",
+          "commentId": 6023264094,
+          "issueNumber": 5810,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+          "lockGeneration": 2573,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:H_EARTH_PUBLICATION:EXACT_EXPECTED_URL_SYNC",
+          "operationId": "H_EARTH_WOODLAND_DELIVERY_MANIFEST_SYNC_20261006_001",
+          "procedureLocatorDigest": "38bceb5df67db6519ca5f7a5be50b9a77616d72bb63f3c191d38b9dfa753973b",
+          "requestDigest": "61e463628c6cf61713880841465a8e32f4cf770d2a2defe89d51868c25ab8994",
+          "scopeHash": "60b5ac25f2e19463e6d70231a7ce1239e93fe9df547e7096da0b4ac14a300682"
+        },
+        "bindingDigest": "80f1ec03fbc4f67c0b5da3efec8857b847bc06626c21785b8f4565ad922c89b5",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "4d2224d02278f6897c1530b198311db7293fb060",
+          "observedLockRefHead": "56fea81a762ad8cd1e02f3298925c81989765e90"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "91d56378d8df3fe12dbee1f87549557c3da4b56d97af51a053e9a283565e0c4e",
+          "commentId": 6023337519,
+          "issueNumber": 5814,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "d63ddd263877a7c778fad3aaf17271af74a1e0b5",
+          "lockGeneration": 2573,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:H_EARTH_PUBLICATION:EXACT_EXPECTED_URL_SYNC",
+          "operationId": "H_EARTH_WOODLAND_DELIVERY_MANIFEST_SYNC_20261006_001",
+          "released": true,
+          "scopeHash": "60b5ac25f2e19463e6d70231a7ce1239e93fe9df547e7096da0b4ac14a300682",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2573,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:H_EARTH_PUBLICATION:EXACT_EXPECTED_URL_SYNC",
+      "operationId": "H_EARTH_WOODLAND_DELIVERY_MANIFEST_SYNC_20261006_001",
+      "procedureLocatorDigest": "38bceb5df67db6519ca5f7a5be50b9a77616d72bb63f3c191d38b9dfa753973b",
+      "released": true,
+      "requestDigest": "61e463628c6cf61713880841465a8e32f4cf770d2a2defe89d51868c25ab8994",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "60b5ac25f2e19463e6d70231a7ce1239e93fe9df547e7096da0b4ac14a300682",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

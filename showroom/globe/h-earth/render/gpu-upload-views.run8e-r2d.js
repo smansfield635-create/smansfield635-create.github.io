@@ -2,10 +2,10 @@
 import {
   getHEarthRun8ER2ImmutableLiveRenderPackage,
   createHEarthRun8ER2GPUBufferViews
-} from './live-render-package.run8e-r2.js?cb=00d0c2beb964210c';
+} from './live-render-package.run8e-r2.js?cb=woodland-delivery-20261006';
 import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 import { H_EARTH_FUNCTIONAL_SHORELINE_SAND_RENDER_MATERIALS } from './geometry-shoreline.js';
-import { createHEarthRun8ER2CanonicalVegetationPresentationBatch } from './live-render-package.run8e-r2.canonical.js?cb=da1bbebf713c61b4';
+import { createHEarthRun8ER2CanonicalVegetationPresentationBatch } from './live-render-package.run8e-r2.canonical.js?cb=woodland-delivery-20261006';
 
 // Authored X/Z units are meters. The coast itself is the immutable zero contour.
 // Sample its canonical curve once; each query finds the closest point on that

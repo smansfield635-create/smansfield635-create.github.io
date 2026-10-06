@@ -1,0 +1,73 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/landscape-sector-p2/qualification.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/woodland-delivery-20261006/qualification.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/woodland-delivery-20261006/qualification.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "809fe7f661ad8d256210ae94ca2e492c90768a5f4bc6e8f4f5df433e76452d4e"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "9dad1930ce322da42e3ed0983dc8b0b8225143df49b4664ce7fd179d52cffc06"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "e3f8bb688e1eaaabce016b01782de3d7a66231469248f5425db8dfef6c43455b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "f2ad2f1764dcf06af2d05edec542a547c71cf00b55e93bc54072d893e62b06fe"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "sha256": "27e21af7914df77154d8ee76591b36673c06a8bb65afbe9cf3056c62e6df18a9"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "e04a0eee1a98ca4c9773fecce4cb8fd4841cd33a35c35e797988d7687fc0f6ea"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "1c8bc57f6a04814ee82fd7cb1fb2cb8edebbcea380e33646a2ebe867c59a95a0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "fe12a797edd59e6334d37064ee399cc097c82ca33c59c4ea2d5c3f79d54d786e"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "f94b03c925b9fa1f5c6a371b19f3d93d986d2645d1734cb880d975649b51b0fe"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "b93af367e392fb333d94eb216f0932c4d32f01d3a4e299487b4eaa35fb40ca42"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "instructions": "Copy this template into h-earth-3d/experience-anchor/receipts/ for an experience-changing candidate. Populate exact changed experience-file SHA-256 values and repository-resident visual, interaction, and continuity evidence. Set every invariant true and disposition PASS only after actual comparison to the controlling anchor. The gate fails closed otherwise.",
+  "notes": "Same-world continuity inherited from published qualified woodland geometry and repository visual proxy; actual GPU geometry and floor fingerprints remain identical, source delta URL-only except optional report capture. Warmed old-cache browser replacement, full27585-instance loading, two-finger travel and cached reload PASS. Owner physical phone identity and performance remain unverified."
+}

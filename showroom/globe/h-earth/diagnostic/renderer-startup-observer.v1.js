@@ -41,9 +41,17 @@ const measure=(name,operation)=>{const start=performance.now();let succeeded=fal
 const measureAsync=async(name,operation)=>{const start=performance.now();let succeeded=false;try{const result=await operation();succeeded=true;return result;}finally{const end=performance.now(),entry=state.timing.spans[name]||(state.timing.spans[name]={firstStartAtMs:start,lastEndAtMs:null,count:0,failedCount:0,totalDurationMs:0,maxDurationMs:0});entry.lastEndAtMs=end;entry.count++;if(!succeeded)entry.failedCount++;entry.totalDurationMs+=end-start;entry.maxDurationMs=Math.max(entry.maxDurationMs,end-start);}};
 
 const getMilestoneTiming=()=>({firstVegetationFrameAtMs:state.timing.stages.FIRST_VEGETATION_FRAME_PRESENTED?.firstPassAtMs??null,planValidatedAtMs:state.timing.stages.VEGETATION_PLAN_VALIDATED?.firstPassAtMs??null,oasisPreparationStartAtMs:state.timing.stages.OASIS_PREPARATION_START?.firstPassAtMs??null,oasisPreparationCompleteAtMs:state.timing.stages.OASIS_PREPARATION_COMPLETE?.firstPassAtMs??null,preparationStartAtMs:state.timing.stages.VEGETATION_PREPARATION_START?.firstPassAtMs??null,preparationCompleteAtMs:state.timing.stages.VEGETATION_PREPARATION_COMPLETE?.firstPassAtMs??null,firstFrameAtMs:state.timing.stages.FIRST_FRAME_PRESENTED?.firstPassAtMs??null,readyAtMs:state.timing.stages.READY_PUBLISHED?.firstPassAtMs??null,vegetationStartAtMs:state.timing.stages.VEGETATION_START?.firstPassAtMs??null,vegetationCompleteAtMs:state.timing.stages.VEGETATION_COMPLETE?.firstPassAtMs??null});
+// Read uploaded resources at capture time; a release label or module URL is not render proof.
+const getRenderedGeometry=()=>{
+  try{
+    const receipt=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.(),resources=receipt?.resources;
+    if(!resources?.package)return {status:'UNAVAILABLE',reason:'LIVE_GPU_PACKAGE_RECEIPT_NOT_AVAILABLE'};
+    return {status:resources.initialized===true&&resources.packageUploadedOnce===true&&resources.context?.lost===false?'UPLOADED':'NOT_CONFIRMED',selectedRendererPath:receipt.selectedRendererPath??null,initialized:resources.initialized??null,package:{...resources.package},landscapeFloor:resources.landscapeFloor?{...resources.landscapeFloor}:null,packageUploadedOnce:resources.packageUploadedOnce??null,contextLost:resources.context?.lost??null};
+  }catch{return {status:'UNAVAILABLE',reason:'LIVE_GPU_RECEIPT_READ_FAILED'};}
+};
 const getPerformanceReport=()=>{const canvas=document.getElementById('h-earth-functional-landscape-canvas'),rect=canvas?.getBoundingClientRect?.();return({
   schema:'H_EARTH_DEVICE_PERFORMANCE_REPORT_v1',capturedAt:new Date().toISOString(),performanceEnabled,
-  observerModuleUrl:import.meta.url,pageUrl:location.href,
+  observerModuleUrl:import.meta.url,pageUrl:location.href,renderedGeometry:getRenderedGeometry(),
   device:{userAgent:navigator.userAgent,hardwareConcurrency:navigator.hardwareConcurrency??null,deviceMemoryGiB:navigator.deviceMemory??null,pixelRatio:window.devicePixelRatio||1},
   viewport:{width:window.innerWidth,height:window.innerHeight,visualWidth:window.visualViewport?.width??null,visualHeight:window.visualViewport?.height??null,visibility:document.visibilityState,canvasWidth:canvas?.width??null,canvasHeight:canvas?.height??null,canvasRect:rect?{x:rect.x,y:rect.y,width:rect.width,height:rect.height}:null,contextLost:state.contextLost},
   loadedModuleUrls:performance.getEntriesByType('resource').filter(entry=>/\.(?:m?js)(?:\?|$)/.test(entry.name)&&entry.name.includes('/h-earth')).slice(-128).map(entry=>entry.name),

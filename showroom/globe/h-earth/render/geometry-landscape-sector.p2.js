@@ -5,7 +5,7 @@
 import {constructHEarthTriangleMesh,H_EARTH_3D_GEOMETRY_SOUTH_ENUMS as E} from './geometry-kernel.south.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as policy} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
-import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js';
+import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js?cb=woodland-delivery-20261006';
 const SEED='WEST_WOODLAND_P2_20261006';
 const hash=(id,channel)=>{let h=2166136261;for(const c of `${SEED}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0)/4294967296;};
 const bounds={minX:-180,maxX:-24,minZ:-380,maxZ:-190};

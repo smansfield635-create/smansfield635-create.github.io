@@ -5,6 +5,7 @@
 import {constructHEarthTriangleMesh,H_EARTH_3D_GEOMETRY_SOUTH_ENUMS as E} from './geometry-kernel.south.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as policy} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
+import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js';
 const SEED='WEST_WOODLAND_P2_20261006';
 const hash=(id,channel)=>{let h=2166136261;for(const c of `${SEED}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0)/4294967296;};
 const bounds={minX:-180,maxX:-24,minZ:-380,maxZ:-190};
@@ -38,6 +39,44 @@ function lobe(m,id,c,r,color,rough=.13){const base=m.vertices.length,indexStart=
  for(let j=1;j<=3;j++){const phi=j*Math.PI/4;for(let k=0;k<8;k++){const theta=k*Math.PI/4,noise=1+rough*(hash(id,`lobe-${j}-${k}`)-.5)*2;const light=.58+.29*(1-Math.cos(phi))*.5+.12*Math.cos(theta-.7);v(m,c[0]+r[0]*Math.sin(phi)*Math.cos(theta)*noise,c[1]-r[1]*Math.cos(phi),c[2]+r[2]*Math.sin(phi)*Math.sin(theta)*noise,color.map((q,i)=>i===3?q:q*light));}}
  const top=v(m,c[0],c[1]+r[1],c[2],color);for(let k=0;k<8;k++){const n=(k+1)%8;face(m,bottom,base+1+n,base+1+k);for(let j=0;j<2;j++){const a=base+1+j*8+k,b=base+1+j*8+n;face(m,a,b,a+8);face(m,b,b+8,a+8);}face(m,base+17+k,base+17+n,top);}for(let i=indexStart;i<m.indices.length;i+=3){const q=m.indices[i+1];m.indices[i+1]=m.indices[i+2];m.indices[i+2]=q;}
 }
+// Three scaffold families only affect A; other authored trees keep their bytes.
+function openWoodlandTree(bark,foliage,p,height,leanX,leanZ) {
+ const {id,x,z,radius,anchor}=p,y=anchor.y,style=Number(id.slice(-2))%3;
+ const rotation=hash(id,'open-scaffold-heading')*Math.PI*2;
+ const forkHeight=height*[.38,.54,.30][style];
+ const trunkRadius=.32+height*.018;
+ branch(bark,[x,y,z],[x+leanX*.7,y+forkHeight,z+leanZ*.7],trunkRadius,.19,[93,75,52,255]);
+ const count=[4,5,6][style],crownParts=[];
+ for(let j=0;j<count;j++){
+  const angle=rotation+j*(style===1?2.4:Math.PI*2/count),reach=radius*(style===1?.40:.48)*(j%2?.86:1);
+  const dx=Math.cos(angle)*reach,dz=Math.sin(angle)*reach;
+  const level=style===0?(j<2?.78:.61):style===1?(.51+j*.095):(.66+(j%3)*.055);
+  const center=[x+dx,y+height*level,z+dz],r=radius*(style===1?.34:.36),ry=radius*(style===2?.32:.38);
+  const elbow=[x+dx*.51,y+forkHeight+(height*level-forkHeight)*.49,z+dz*.51];
+  branch(bark,[x+leanX*.7,y+forkHeight,z+leanZ*.7],elbow,.19-j*.014,.10,[94,76,53,255]);
+  branch(bark,elbow,center,.105,.035,[94,76,53,255]);
+  lobe(foliage,`${id}:OPEN:${j}`,center,[r,ry,r*.79],[76+hash(id,'tint')*22,100+hash(id,'tint')*22,44+hash(id,'tint')*12,255],.25);
+  crownParts.push({x:center[0],y:center[1],z:center[2],radius:r*1.25,heightRadius:ry});
+  if(j<2){
+   const satellite=[center[0]+Math.cos(angle+1.1)*radius*.18,center[1]+ry*(j?.35:-.3),center[2]+Math.sin(angle+1.1)*radius*.18],sr=radius*(j?.19:.16);
+   lobe(foliage,`${id}:SATELLITE:${j}`,satellite,[sr,sr*.72,sr*.85],[80+hash(id,'tint')*22,105+hash(id,'tint')*22,47+hash(id,'tint')*12,255],.25);
+   crownParts.push({x:satellite[0],y:satellite[1],z:satellite[2],radius:sr*1.25,heightRadius:sr*.72});
+  }
+ }
+ return{style:['LEANING_OPEN_FORK','INTERRUPTED_TALL_SCAFFOLD','ASYMMETRIC_LOW_SPREAD'][style],crownParts,trunkRadius};
+}
+function fractureWedge(m,id,x,y,z,r,h,side,rotation) {
+ const start=m.vertices.length,lo=side<0?-.92:.045,hi=side<0?-.045:.89;
+ const corners=[[lo,-.62],[hi,-.55],[hi*.93,.60],[lo*.91,.50]],c=Math.cos(rotation),s=Math.sin(rotation);
+ for(let layer=0;layer<2;layer++)for(let j=0;j<4;j++){
+  const taper=layer?.63+.17*hash(id,`fracture-taper-${side}-${j}`):1;
+  const dx=corners[j][0]*taper+(layer?.11*side:0),dz=corners[j][1]*taper+(layer?-.09:0),height=layer?h*(.48+.34*hash(id,`fracture-top-${side}-${j}`)+(j===2?.18:0)):-.65;
+  v(m,x+r*(dx*c-dz*s),y+height,z+r*(dx*s+dz*c),[128,118,95,255].map((q,i)=>i===3?q:q*(layer?.93+.1*hash(id,`rock-light-${j}`):.58)));
+ }
+ for(const f of [[0,1,2],[0,2,3],[4,6,5],[4,7,6]])face(m,...f.map(i=>start+i));
+ for(let j=0;j<4;j++){const n=(j+1)%4;face(m,start+j,start+j+4,start+n);face(m,start+n,start+j+4,start+n+4);}
+ return start;
+}
 // Witness the actual polygon edges, not just an analytic center. Sampling every
 // quarter edge also catches changes of supporting NEAR triangle within a collar.
 function burySupport(m, start, ringStart, count, ground, wholeObject) {
@@ -61,17 +100,51 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  if(reverseGenerationOrder)candidates.reverse();
  candidates.sort((a,b)=>a.id.localeCompare(b.id));
  const accepted=[];for(const p of candidates){const radius=2.4+hash(p.id,'crown')*2,anchor=ground(p.x,p.z),material=sampleHEarthRun8CSuccessorSurfaceMaterial(p.x,p.z);const reason=!clearFootprint(p.x,p.z,radius)?'FOOTPRINT_EXCLUDED':!anchor?'GROUND_MISSING':anchor.slope>.72?'STEEP_SLOPE':!['LOWLAND_SOIL','COASTAL_SOIL'].includes(material?.surfaceClass)?'HABITAT_EXCLUDED':accepted.some(q=>Math.hypot(p.x-q.x,p.z-q.z)<(radius+q.radius)*.65)?'TRUNK_SPACING_CONFLICT':null;if(reason){rejections.push({id:p.id,reason});continue;}accepted.push({...p,radius,anchor,material});}
- accepted.sort((a,b)=>a.id.localeCompare(b.id));const bark=mesh(),foliage=mesh(),stone=mesh();
+ accepted.sort((a,b)=>a.id.localeCompare(b.id));const bark=mesh(),foliage=mesh(),stone=mesh(),grass=mesh();
  for(const p of accepted){const {id,x,z,radius,anchor}=p,y=anchor.y,height=8+hash(id,'height')*8,leanX=(hash(id,'leanX')-.5)*1.1,leanZ=(hash(id,'leanZ')-.5)*1.1;
  const barkVertexStart=bark.vertices.length,canopyVertexStart=foliage.vertices.length;
+ let scaffold=null;
+ if(id.startsWith('P2_TREE_A_'))scaffold=openWoodlandTree(bark,foliage,p,height,leanX,leanZ);else {
  branch(bark,[x,y,z],[x+leanX,y+height*.72,z+leanZ],.32+height*.018,.10,[93,75,52,255]);
  for(let j=0;j<5;j++){const angle=j*2.399+hash(id,'rotation')*6.28,offset=j===4?.15:radius*.33,dx=Math.cos(angle)*offset,dz=Math.sin(angle)*offset,cy=y+height*(j===4?.81:.62+hash(id,`tier${j}`)*.1);branch(bark,[x+leanX*.35,y+height*.35,z+leanZ*.35],[x+dx,cy,z+dz],.15,.055,[94,76,53,255]);const r=radius*(j===4?.59:.58);lobe(foliage,`${id}:${j}`,[x+dx,cy,z+dz],[r,(y+height-cy)*(j===4?1:.76),r*.92],[72+hash(id,'tint')*22,99+hash(id,'tint')*22,42+hash(id,'tint')*12,255]);}
- const support=burySupport(bark,barkVertexStart,barkVertexStart,6,ground,false);if(!support){issues.push(`ROOT_SUPPORT_MISSING:${id}`);continue;}
- manifest.push({support,barkVertexStart,barkVertexCount:bark.vertices.length-barkVertexStart,canopyVertexStart,canopyVertexCount:foliage.vertices.length-canopyVertexStart,id,kind:'TREE',x,y,z,height,crownRadius:radius,groundTriangle:anchor.triangle,groundSlope:anchor.slope,surfaceClass:p.material.surfaceClass,footprintClear:true});
  }
- for(let i=0;i<14;i++){const id=`P2_ROCK_${String(i).padStart(2,'0')}`,x=-79+i*2.65+(hash(id,'x')-.5)*5,z=-239+i*1.9+(hash(id,'z')-.5)*8,r=2+hash(id,'size')*2.7,a=ground(x,z);if(!a||!clearFootprint(x,z,r*1.35))continue;const h=1.5+hash(id,'height')*2.5,stoneVertexStart=stone.vertices.length;lobe(stone,id,[x,a.y+h*.12,z],[r,h,r*.72],[118+hash(id,'color')*18,111+hash(id,'color')*14,89+hash(id,'color')*12,255],.35);const support=burySupport(stone,stoneVertexStart,stoneVertexStart+1,8,ground,true);if(!support){issues.push(`ROCK_SUPPORT_MISSING:${id}`);continue;}manifest.push({support,stoneVertexStart,stoneVertexCount:stone.vertices.length-stoneVertexStart,id,kind:'ROCK',x,y:a.y,z,height:h*1.12-support.downwardShift,crownRadius:r*1.35,groundTriangle:a.triangle,footprintClear:true});}
- const primitives=[];for(const [name,m,kind,rgba] of [['BARK',bark,'TREE',[81,64,44,255]],['CANOPY',foliage,'TREE',[66,92,38,255]],['ROCK',stone,'ROCK',[121,113,91,255]]]){if(!m.indices.length)continue;const id=`H_EARTH_LANDSCAPE_P2_${name}`,r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,vertices:m.vertices,indices:m.indices,normalMode:E.normalMode.FACE_AND_VERTEX,expectedClosure:E.expectedClosure.OPEN_ALLOWED,semanticRole:`LANDSCAPE_SECTOR_${kind}`,metadata:{landscapeSectorKind:kind,landscapeSectorId:'WESTERN_P2',seed:SEED},source:{sourceType:'DETERMINISTIC_BOUNDED_LANDSCAPE_SOUTH'}});if(r.valid!==true){issues.push(`SOUTH_CONSTRUCTION_FAILED:${name}:${JSON.stringify(r.issues)}`);continue;}primitives.push({...r.primitiveRecord,renderMaterial:{rgba,vertexRgba:m.colors,transparencyClass:'OPAQUE'}});}
+ const support=burySupport(bark,barkVertexStart,barkVertexStart,6,ground,false);if(!support){issues.push(`ROOT_SUPPORT_MISSING:${id}`);continue;}
+ manifest.push({...(scaffold?{scaffoldStyle:scaffold.style,crownParts:scaffold.crownParts,trunkRadius:scaffold.trunkRadius,refinementCluster:'A'}:{}),support,barkVertexStart,barkVertexCount:bark.vertices.length-barkVertexStart,canopyVertexStart,canopyVertexCount:foliage.vertices.length-canopyVertexStart,id,kind:'TREE',x,y,z,height,crownRadius:radius,groundTriangle:anchor.triangle,groundSlope:anchor.slope,surfaceClass:p.material.surfaceClass,footprintClear:true});
+ }
+ for(let i=0;i<14;i++){
+  const id=`P2_ROCK_${String(i).padStart(2,'0')}`,x=-79+i*2.65+(hash(id,'x')-.5)*5,z=-239+i*1.9+(hash(id,'z')-.5)*8,r=2+hash(id,'size')*2.7,a=ground(x,z);
+  if(!a||!clearFootprint(x,z,r*1.35))continue;
+  const h=1.5+hash(id,'height')*2.5,stoneVertexStart=stone.vertices.length,supportRings=[],witnesses=[];
+  for(const side of [-1,1]){
+   const start=fractureWedge(stone,id,x,a.y,z,r,h,side,hash(id,'fracture-heading')*6.28),support=burySupport(stone,start,start,4,ground,true);
+   if(!support){issues.push(`ROCK_SUPPORT_MISSING:${id}`);continue;}
+   supportRings.push({start,count:4});witnesses.push(...support.witnesses);
+  }
+  manifest.push({support:{minimumBurial:.12,minimumMeasuredBurial:Math.min(...witnesses.map(p=>p.burial)),witnesses},supportRings,stoneVertexStart,stoneVertexCount:stone.vertices.length-stoneVertexStart,id,kind:'ROCK',form:'PAIRED_FRACTURE_WEDGES',x,y:a.y,z,height:h*.86,crownRadius:r*1.35,groundTriangle:a.triangle,footprintClear:true});
+ }
+ // Stable cell identities and a canopy-dependent density field create tufts in
+ // the A clearing and full sun edges, retaining sparse understory near trunks.
+ const clusterTrees=manifest.filter(p=>p.refinementCluster==='A');
+ const withinA=(x,z)=>((x+145)/28)**2+((z+230)/28)**2<=1&&clearFootprint(x,z,.8);
+ const grassEligible=(x,z)=>{const t=ground(x,z),m=sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);return withinA(x,z)&&t&&t.slope<=.45&&['LOWLAND_SOIL','COASTAL_SOIL'].includes(m?.surfaceClass)&&!clusterTrees.some(p=>Math.hypot(x-p.x,z-p.z)<p.trunkRadius+.5);};
+ const sample=(x,z)=>{const g=ground(x,z);return g?{x,y:Math.fround(g.y),z,triangleId:g.triangle,terrainPrimitiveId:terrainPrimitive.primitiveId}:null;};
+ const grassCandidates=[];
+ for(let iz=0;iz<12;iz++)for(let ix=0;ix<12;ix++){
+  const id=`P2_GRASS_A_${String(iz).padStart(2,'0')}_${String(ix).padStart(2,'0')}`,x=-171+ix*4.7+(hash(id,'x')-.5)*1.9,z=-256+iz*4.7+(hash(id,'z')-.5)*1.9;
+  if(!withinA(x,z)||!grassEligible(x,z))continue;
+  const coverage=clusterTrees.reduce((n,p)=>Math.max(n,Math.max(0,1-Math.hypot(x-p.x,z-p.z)/p.crownRadius)),0),density=coverage>.25?.23:.82;
+  if(hash(id,'density')>density)continue;grassCandidates.push({id,x,z,coverage,rank:hash(id,'selection')});
+ }
+ grassCandidates.sort((a,b)=>a.rank-b.rank);const chosen=grassCandidates.slice(0,28).sort((a,b)=>a.id.localeCompare(b.id));
+ for(const p of chosen){
+  const bladeCount=18,pocket=['GOLD','BROWN','OLIVE'][Math.floor(hash(p.id,'palette')*3)];
+  let tuft;try{tuft=buildHEarthWoodlandGrassTuft({...p,bladeCount,pocket,sample,eligible:grassEligible,inside:withinA});}catch(e){if(String(e.message).startsWith('GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS'))continue;throw e;}
+  const grassVertexStart=grass.vertices.length,offset=grassVertexStart;
+  grass.vertices.push(...tuft.geometry.vertices);grass.indices.push(...tuft.geometry.indices.map(i=>i+offset));grass.colors.push(...tuft.metadata.oasisFoliage.vertexColorsSrgb.map(c=>[...c.map(v=>Math.round(v*255)),255]));
+  manifest.push({id:p.id,kind:'GRASS',x:p.x,y:sample(p.x,p.z).y,z:p.z,grassVertexStart,grassVertexCount:tuft.geometry.vertices.length,bladeCount,pocket,canopyCoverage:p.coverage,rootPoints:tuft.metadata.oasisFoliage.rootPoints.map(p=>({...p,vertexIndex:p.vertexIndex+offset})),crownRadius:.8,footprintClear:true,recipe:'OASIS_FOLDED_BLADE_16_VERTICES_18_TRIANGLES'});
+ }
+ const primitives=[];for(const [name,m,kind,rgba] of [['BARK',bark,'TREE',[81,64,44,255]],['CANOPY',foliage,'TREE',[66,92,38,255]],['ROCK',stone,'ROCK',[121,113,91,255]],['GRASS',grass,'GRASS',[120,117,61,255]]]){if(!m.indices.length)continue;const id=`H_EARTH_LANDSCAPE_P2_${name}`,r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,vertices:m.vertices,indices:m.indices,normalMode:E.normalMode.FACE_AND_VERTEX,expectedClosure:E.expectedClosure.OPEN_ALLOWED,semanticRole:`LANDSCAPE_SECTOR_${kind}`,metadata:{landscapeSectorKind:kind,landscapeSectorId:'WESTERN_P2',seed:SEED},source:{sourceType:'DETERMINISTIC_BOUNDED_LANDSCAPE_SOUTH'}});if(r.valid!==true){issues.push(`SOUTH_CONSTRUCTION_FAILED:${name}:${JSON.stringify(r.issues)}`);continue;}primitives.push({...r.primitiveRecord,renderMaterial:{rgba,vertexRgba:m.colors,transparencyClass:'OPAQUE'}});}
  const triangles=primitives.reduce((s,p)=>s+p.geometry.indices.length/3,0);if(accepted.length>128||triangles>48000)issues.push('SECTOR_BUDGET_EXCEEDED');if(!accepted.length)issues.push('NO_ACCEPTED_TREES');
  manifest.sort((a,b)=>a.id.localeCompare(b.id));rejections.sort((a,b)=>a.id.localeCompare(b.id));
- return{eligible:issues.length===0,primitives,manifest,diagnostics:{seed:SEED,bounds,treeCount:accepted.length,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:false,reservationPolicySha256:policy.reservationSha256},issues};
+ return{eligible:issues.length===0,primitives,manifest,diagnostics:{seed:SEED,bounds,treeCount:accepted.length,grassTuftCount:manifest.filter(p=>p.kind==='GRASS').length,grassBladeCount:manifest.filter(p=>p.kind==='GRASS').reduce((n,p)=>n+p.bladeCount,0),grassTriangleCount:grass.indices.length/3,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:false,reservationPolicySha256:policy.reservationSha256},issues};
 }

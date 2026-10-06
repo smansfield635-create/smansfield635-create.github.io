@@ -62,7 +62,7 @@
     "readySelector": ".reading-nav--top",
     "binding": {
       "mode": "direct-document",
-      "path": "/about-this-underdog/"
+      "path": "/"
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,

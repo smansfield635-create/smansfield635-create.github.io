@@ -480,6 +480,17 @@
       ],
       "entrypoint": ".github/ai-router/projects/about-underdog-page/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "NINE_SUMMITS_UNIVERSE",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "nine-summits/universe/index.html",
+        "nine-summits/universe/universe.motion.js"
+      ],
+      "entrypoint": ".github/ai-router/projects/nine-summits-universe/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

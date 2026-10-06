@@ -116,7 +116,7 @@
     "timingUnknownClockCases": "PASS",
     "claimCeiling": "CPU actual module worker, package equivalence, cache and error tests; no browser GPU, physical device or performance score evidence"
   },
-  "qualificationToolSHA256": "b1349ee2d3be701136c849b17f04b061bb853ee532309438157b7df872331a2f",
+  "qualificationToolSHA256": "67631984e25c87197bc11200b413d33a6c2c3210a326b32887e77ac135adb98d",
   "syntax": "PASS_9_JAVASCRIPT_FILES",
   "diffCheck": "PASS",
   "browserGPU": "PENDING",
@@ -126,7 +126,7 @@
   "anchorAcceptance": "PENDING",
   "mergePerformed": false,
   "deploymentPerformed": false,
-  "performanceLimits": "Worker import and structured clone can increase total startup despite reducing UI blocking. CPU timer progress is not tablet responsiveness, first-frame timing or a Lighthouse score. No total startup improvement claimed. Timing fields are opt-in at performance=1. Worker handoff includes serialization, deserialization, delivery and scheduling; it does not isolate clone CPU. Worker sidecar report visibility requires published runtime binding; early startup failures retain main spans in observer but copied vegetationResidency may be null. Early preparation overlaps the selected renderer import in source ordering; actual device elapsed-time benefit is unmeasured. Worker starts only for the live functional-landscape additive renderer with Worker available; existing synchronous fallback stays at renderer preparation. Prior early-worker preview checked the marker on the inner element and did not trigger eager preparation on the real page. Corrected guard CPU proof does not establish device speed improvement; canonical module URL is unchanged, so live identity requires corrected binding URL and deployment marker. Dynamic raw import now permits main graph and selfworker loading/evaluation to overlap; eager landscape-preview construction outside scope remains unchanged in both realms. Increased CPU contention and transfer overhead may offset gains. CANONICAL_MAIN_RAW_MODULE_WAIT measures the awaited module namespace, not pure network time. No device elapsed-time benefit claimed.",
+  "performanceLimits": "Worker import and structured clone can increase total startup despite reducing UI blocking. CPU timer progress is not tablet responsiveness, first-frame timing or a Lighthouse score. No total startup improvement claimed. Timing fields are opt-in at performance=1. Worker handoff includes serialization, deserialization, delivery and scheduling; it does not isolate clone CPU. Worker sidecar report visibility requires published runtime binding; early startup failures retain main spans in observer but copied vegetationResidency may be null. Early preparation overlaps the selected renderer import in source ordering; actual device elapsed-time benefit is unmeasured. Worker starts only for the live functional-landscape additive renderer with Worker available; existing synchronous fallback stays at renderer preparation. Prior early-worker preview checked the marker on the inner element and did not trigger eager preparation on the real page. Corrected guard CPU proof does not establish device speed improvement; canonical module URL is unchanged, so live identity requires corrected binding URL and deployment marker. Dynamic raw import now permits main graph and selfworker loading/evaluation to overlap; eager landscape-preview construction outside scope remains unchanged in both realms. Increased CPU contention and transfer overhead may offset gains. CANONICAL_MAIN_RAW_MODULE_WAIT measures the awaited module namespace, not pure network time. No device elapsed-time benefit claimed. Receipt initiates a detached import of the same canonical URL before arrival and navigation dependencies. CPU ordering is demonstrated with observer/arrival UI stubs and integration host body omitted; device loading, UI paint and elapsed READY improvement remain unmeasured.",
   "timingInstrumentation": "CPU_PASS_TABLET_REPORT_PENDING",
   "unchangedObserverFailureCounterTest": {
     "result": "PASS",
@@ -176,12 +176,90 @@
     "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "9140a941cfd48e6d66af093cf54855a6b368449f6fb830beda33b8d2955e3f03",
     "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "a98a927b2539c73f04bcefd00964a5aed3acb5e7c25267ccde04ba05f24b0b9f",
     "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "4d2fdb016a9686fa089836b77d6d5cfdf2e92bc2f2c43ada3a1f192ec2af55ad",
-    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "3ced973a0d9671b99a8107d6476264f686ee0cc24356b796940cbbacde129e69",
-    "showroom/globe/h-earth/index.html": "e318b3458973a150167dce2583d6287b9c605011aa32a567d30342476076ac0a"
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "c57cd468d2049a8a86e26fea456fe901e1823adbb8c1e75c6afe65e95a449918",
+    "showroom/globe/h-earth/index.html": "dba1c2eaba664d0bcd1972eb776f12e0fe09796f131dfefc0b2ae4b2440b45f1"
   },
   "postFullSuiteQueryOnlyPropagation": {
     "result": "PASS_FINAL_SOURCE_AND_ACTUAL_BINDING_GRAPH",
     "evidence": "h-earth-3d/evidence/startup-preparation-20261006/preview-reuse-qualification.json",
     "fullSuiteRerunAfterQueryOnlyEdits": false
-  }
+  },
+  "receiptSchedulingCPU": {
+    "schema": "H_EARTH_RECEIPT_EARLY_CANONICAL_IMPORT_CPU_QUALIFICATION_v1",
+    "result": "PASS",
+    "baselineReceiptHead": "46e3984a10e9e0f3381cbb5b92793e5d35170e7c",
+    "guards": "PASS_ACTUAL_INDEX_AND_FIVE_PRIORITY_KEYS",
+    "workerAbsent": "NO_DETACHED_IMPORT",
+    "earlyRejectionObserved": "PASS_NO_UNHANDLED",
+    "integrationOriginalRejection": "PASS_SAME_ERROR",
+    "baseline": {
+      "mode": "baseline",
+      "result": "PASS",
+      "workerCount": 1,
+      "requests": 1,
+      "terminations": 1,
+      "sameReceivedRawAndCanonical": true,
+      "workerRequestBeforeMainPreview": false,
+      "workerRequestBeforeNavigation": false,
+      "events": [
+        {
+          "name": "main-preview-construction",
+          "time": 132.750752
+        },
+        {
+          "name": "main-navigation-evaluated",
+          "time": 6220.896315
+        },
+        {
+          "name": "worker-created",
+          "time": 6222.512304
+        },
+        {
+          "name": "worker-request",
+          "time": 6224.442637
+        },
+        {
+          "name": "wrapper-returned",
+          "time": 6242.816735
+        }
+      ],
+      "scope": "Actual receipt/integration static dependency graph; observer/arrival UI stubs and integration top-level host body omitted. Real selfworker and received cache adoption. CPU scheduling proof, not browser/device gain."
+    },
+    "candidate": {
+      "mode": "early-import",
+      "result": "PASS",
+      "workerCount": 1,
+      "requests": 1,
+      "terminations": 1,
+      "sameReceivedRawAndCanonical": true,
+      "workerRequestBeforeMainPreview": true,
+      "workerRequestBeforeNavigation": true,
+      "events": [
+        {
+          "name": "worker-created",
+          "time": 108.254363
+        },
+        {
+          "name": "worker-request",
+          "time": 109.999117
+        },
+        {
+          "name": "main-preview-construction",
+          "time": 147.992163
+        },
+        {
+          "name": "main-navigation-evaluated",
+          "time": 5654.792422
+        },
+        {
+          "name": "wrapper-returned",
+          "time": 5659.42217
+        }
+      ],
+      "scope": "Actual receipt/integration static dependency graph; observer/arrival UI stubs and integration top-level host body omitted. Real selfworker and received cache adoption. CPU scheduling proof, not browser/device gain."
+    },
+    "wrapperSHA256": "c57cd468d2049a8a86e26fea456fe901e1823adbb8c1e75c6afe65e95a449918",
+    "claimCeiling": "Actual dependency scheduling and real worker/cache identity with UI bodies stubbed; no device elapsed improvement"
+  },
+  "receiptSchedulingBoundary": "Focused exact receipt guard/error tests and real-worker graph ordering PASS; existing world equivalence and fallback proof retained because world/raw/canonical/renderer source bytes unchanged. No full suite rerun for receipt scheduling."
 }

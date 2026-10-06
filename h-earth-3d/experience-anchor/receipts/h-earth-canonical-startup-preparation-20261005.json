@@ -71,11 +71,11 @@
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
-      "sha256": "3ced973a0d9671b99a8107d6476264f686ee0cc24356b796940cbbacde129e69"
+      "sha256": "c57cd468d2049a8a86e26fea456fe901e1823adbb8c1e75c6afe65e95a449918"
     },
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "e318b3458973a150167dce2583d6287b9c605011aa32a567d30342476076ac0a"
+      "sha256": "dba1c2eaba664d0bcd1972eb776f12e0fe09796f131dfefc0b2ae4b2440b45f1"
     }
   ],
   "acceptanceBoundary": "CPU full-buffer equivalence supports unchanged world data. Browser GPU/rendered interaction and owner exact-candidate physical review remain unexecuted; this receipt deliberately cannot pass the hard anchor gate."

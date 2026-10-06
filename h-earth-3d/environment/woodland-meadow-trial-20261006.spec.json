@@ -1,0 +1,179 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_TRIAL_SPEC_v1",
+  "issue": 5842,
+  "stage": "S1_FROZEN_FOR_SINGLE_TRIAL",
+  "baseline": "1b0f602e12306004425bd107526e63051856678b",
+  "coordinateSpace": "PROJECTED_WORLD_XZ_METERS",
+  "extent": {
+    "center": [
+      -141,
+      -226
+    ],
+    "radii": [
+      33,
+      32
+    ],
+    "envelope": [
+      -174,
+      -108,
+      -258,
+      -194
+    ]
+  },
+  "fields": {
+    "canopy": "max over 15 accepted A trees of 1-smoothstep(0.48,1.08,distance/crownRadius); an approximate canopy influence, not measured shade",
+    "edge": "smoothstep(0,8,(1-hypot((x+141)/33,(z+226)/32))*32)",
+    "density": "(0.18+0.70*(1-canopy))*edge",
+    "ground": "existing final Float32 NEAR triangle interpolation; actual slope <=0.45",
+    "soil": "existing material sampler LOWLAND_SOIL or COASTAL_SOIL; proxy classification, no moisture claim"
+  },
+  "placement": {
+    "seed": "ECOTONE_A_MEADOW_20261006",
+    "cellMeters": 5.5,
+    "id": "ECOTONE_${globalIx}_${globalIz}",
+    "center": "(index+0.5)*5.5+(hash(id,axis)-0.5)*1.9",
+    "hash": "FNV1a32 UTF-16 characters of seed:id:channel normalized by 2^32",
+    "selection": "hash(id,density)<=density; canonical lexicographic id order; reject whole trial on >84 selected centers, never truncate/rerank",
+    "safety": "clearFootprint radius0.8, all estate rectangles including terrainBuffer; all existing sector trunks radius+0.5; full ellipse and walking capsule tested for each blade vertex; roots also slope/material/support",
+    "palette": "OLIVE if hash(id,palette)<0.25+0.5*canopy, otherwise GOLD if hash<0.65+0.25*canopy, otherwise BROWN; authored canopy-color proxy"
+  },
+  "protectedWalkingCapsule": {
+    "a": [
+      -145,
+      -194
+    ],
+    "b": [
+      -145,
+      -230
+    ],
+    "radius": 1.5,
+    "centerMargin": 0.8,
+    "purpose": "authored local grass-free walk/view corridor; crowns may overhang; not a new canonical navigation route"
+  },
+  "construction": {
+    "replace": "existing A grass within H_EARTH_LANDSCAPE_P2_GRASS, no append",
+    "recipe": "unchanged buildHEarthWoodlandGrassTuft 6 folded blades,16vertices/18tri each; existing short blade .10..28m and tall .34..77m before existing .87 tip factor; actual max tip<=.67m",
+    "trees": "retain all65 trees including15 A scaffold recipes and floor footprints byte-for-byte",
+    "rocks": "retain all14 rocks byte-for-byte",
+    "cache": "only change woodland-delivery-20261006 query tokens to ecotone-trial-20261006 in exact declared imports; shader code unchanged after stripping token"
+  },
+  "costLimits": {
+    "tufts": 84,
+    "blades": 504,
+    "grassVertices": 8064,
+    "grassTriangles": 9072,
+    "grassBufferBytes": 665280,
+    "baseVertices": 47095,
+    "baseTriangles": 78918,
+    "baseStartupGeometryBufferBytes": 4196571,
+    "baseDrawRanges": 9,
+    "newTextures": 0,
+    "newShaders": 0,
+    "newResidentBatches": 0,
+    "sectorTriangleCeiling": 35748,
+    "totalVegetationInstances": 27585,
+    "residentVegetationBatches": 108,
+    "droppedInstances": 0,
+    "physicalDevice": "same device/browser/session settings baseline vs exact candidate, three 20-second runs each; frame p95 <= baseline*1.10+1ms; startup median <=baseline*1.10+250ms; no WebGL context loss; CPU grass construction p95<=baseline*1.10+2ms",
+    "costScope": "buffer bytes exclude framebuffer, refinement and existing resident vegetation; no total VRAM claim"
+  },
+  "qualification": [
+    "independent all-root grounding against actual Float32 terrain triangles tolerance0.0001m",
+    "all upper vertices/roots inside ellipse/outside capsule and estate reservations",
+    "same accepted/rejected result and full geometry under reversed generation and cell chunk orders",
+    "at least one retained canopy tuft and open mean density>canopy mean density; report retained tufts/root columns and estimated eligible area by canopy/feather bins; no small-sample density claims",
+    "non-grass P2 geometry/trees/rocks/floor footprints/canonical terrain hashes unchanged",
+    "same9drawranges and geometry/buffer ceilings; oasis grass and other vegetation unchanged",
+    "readiness, touch/look/travel, loading phone portrait/landscape/tablet;27585instances108batches0drops0rebuild/context-loss",
+    "paired NEAR_A/APPROACH/ROCKS/DISTANT camera views preserve horizon/tree shapes/open route and gradual edge without hard grass wall",
+    "anchor compare one world at globe/regional/ground; exact file digests and visual/interaction/continuity evidence",
+    "owner exact-SHA phone/tablet disposition KEEP/ONE_REPAIR/REJECT before terminal closure or publication"
+  ],
+  "precedents": [
+    {
+      "source": "https://www.guerrilla-games.com/media/News/Files/GDC2017_VanMuijden_GPUBasedProceduralPlacementInHorizonZeroDawn.pdf",
+      "adaptation": "deterministic locally stable placement/ecotope density bands/clearance maps/asset footprints; use existing CPU mesh, no GPU compute or PS4 budget transfer"
+    },
+    {
+      "source": "https://media.gdcvault.com/gdc2018/presentations/gilbert_sanders_between_tech_and.pdf",
+      "adaptation": "terrain-hugging vegetation and authored color variation; no unsupported flow/moisture fields or new animation/shadow architecture"
+    },
+    {
+      "source": "https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Runtime/Foliage/UFoliageType",
+      "adaptation": "independent density/spacing/slope eligibility and smooth density falloff; retain existing browser batching"
+    }
+  ],
+  "audit": {
+    "sampleGrid": {
+      "points": 1089,
+      "bounds": [
+        -172,
+        -108,
+        -258,
+        -194
+      ],
+      "spacing": 2,
+      "renderedElevation": [
+        2.51913993456,
+        12.39037474804
+      ],
+      "slope": [
+        0.0091073149,
+        0.38783398215
+      ],
+      "missing": 0,
+      "lowland": 902,
+      "coastal": 187
+    },
+    "prediction": {
+      "eligibleCenters": 100,
+      "selectedTufts": 52,
+      "blades": 312,
+      "triangles": 5616,
+      "notConstructionEvidence": true
+    },
+    "hydrology": "no damp drainage valley established; drainage/moisture/season/wind not implemented",
+    "reviewRooms": [
+      "terrain_audit E exact footprint/support mapping",
+      "studio_research N primary studio source comparison",
+      "spec_review W independent rule/cost acceptance review"
+    ],
+    "deficiencies": {
+      "D03": "bounded vegetation cue improvement only, not climate closure",
+      "D04": "canopy/ground/slope/material causal subset; hydrology remains open",
+      "D06": "local fields independent of planetary silhouette; ellipse explicitly authored first trial",
+      "D01_D02_D05_D07_D08": "preserve prior baselines/holds; not resolved by grass trial"
+    },
+    "reciprocity": "no planetary/coast/relief/nav/audio/story geography or authority delta; unchanged OW01 evidence inherited only for unchanged contracts"
+  },
+  "exactAllowedPaths": [
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js",
+    "h-earth-3d/environment/woodland-meadow-trial-20261006.spec.json",
+    "h-earth-3d/validation/h-earth.woodland-meadow-trial-20261006.mjs",
+    "h-earth-3d/experience-anchor/receipts/woodland-meadow-trial-20261006.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-trial-20261006-approach.png"
+  ],
+  "handoff": {
+    "owner": "root specification/integration",
+    "South": "construct only frozen grass replacement after authentic admission",
+    "West": "independent exact candidate acceptance",
+    "nextStage": "S3 held until first trial proves approach and owner KEEP; never add foothills/oasis/coast now",
+    "publication": "not authorized by admission/preview; requires separate approved release and live exact-head verification"
+  },
+  "sourceErratum": {
+    "initialSpecSha256": "b04778fe752ac3c8e32db64df949eaf833f8db25457727eccf9a068a8b25eb03",
+    "issueComment": 6025185095,
+    "scope": "descriptive inherited blade height correction; unchanged recipe"
+  }
+}

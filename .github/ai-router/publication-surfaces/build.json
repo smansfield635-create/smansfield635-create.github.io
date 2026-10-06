@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "build",
-  "description": "Build public page exact-head verification for the consumer-facing spatial capability and pricing instruments.",
+  "description": "Build spatial capability and pricing instruments, plus explicitly opened project companion.",
   "checks": [
     {
       "path": "/build/index.html",
@@ -20,7 +20,38 @@
         "From $750",
         "From $1,750",
         "Scoped after consultation",
-        "Generation 2084 environmental refinement"
+        "Generation 2084 environmental refinement",
+        "/assets/build/build-companion.js?v=1",
+        "/assets/build/build-companion.css?v=1"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/build/intake/index.html",
+      "includes": [
+        "data-open-build-companion",
+        "/assets/build/build-companion.js?v=1"
+      ],
+      "excludes": [
+        "wizard-progress"
+      ]
+    },
+    {
+      "path": "/assets/build/build-companion.js",
+      "includes": [
+        "dgb-build-companion-v1",
+        "Close project conversation",
+        "geodiametrics@gmail.com",
+        "dialog.showModal()"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/build/build-companion.css",
+      "includes": [
+        ".build-companion:not([open])",
+        ".bc-header",
+        ".bc-close"
       ],
       "excludes": []
     }
@@ -120,6 +151,37 @@
             "type": "textContains",
             "selector": "[data-spatial-instrument=\"pricing\"] [data-reader-index=\"1\"] [data-turn-status]",
             "value": "Price & terms"
+          }
+        ]
+      },
+      {
+        "name": "Project conversation opens on selection",
+        "action": {
+          "type": "click",
+          "selector": ".hero a[href=\"/build/intake/\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#build-companion[open] .bc-close"
+          },
+          {
+            "type": "textContains",
+            "selector": ".bc-log",
+            "value": "What would you like to bring to life?"
+          }
+        ]
+      },
+      {
+        "name": "Project conversation closes",
+        "action": {
+          "type": "click",
+          "selector": "#build-companion .bc-close"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#build-companion:not([open])"
           }
         ]
       }

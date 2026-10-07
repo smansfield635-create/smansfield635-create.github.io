@@ -2302,6 +2302,124 @@
       "continuationRule": "CONTINUE_ONLY_FROM_AUTHENTIC_EXACT_CANDIDATE_QUALIFICATION_RESULT",
       "terminationRule": "FIXED_QUALIFICATION_EXECUTION_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN;NO_PRODUCT_MUTATION_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "BUILD_MATRIX_V2_FIXED_EXACT_HEAD_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "BUILD_MATRIX_V2_FIXED_QUALIFICATION_REGISTRATION_20261006_001",
+      "operationClass": "BUILD_MATRIX_V2_FIXED_EXACT_HEAD_QUALIFICATION",
+      "projectId": "BUILD",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "BUILD_MATRIX_V2_FIXED_EXACT_HEAD_QUALIFICATION_ADAPTER_V1",
+      "exactToolingHead": "4f0f4012041d25cc380531d3dc1b1a7ef9a6f16b",
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/build-matrix-v2-fixed-exact-head-qualification.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "BUILD_MATRIX_V2_FIXED_EXACT_HEAD_QUALIFICATION_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "4f0f4012041d25cc380531d3dc1b1a7ef9a6f16b"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "BUILD_MATRIX_V2_FIXED_EXACT_HEAD_QUALIFICATION_ADAPTER_RECEIPT_v1",
+        "required": [
+          "schema",
+          "result",
+          "operationId",
+          "executionHolder",
+          "candidateHead",
+          "testPath",
+          "testExitCode",
+          "stdout",
+          "stderr",
+          "candidateCleanAfter",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "assets/build/",
+        "tools/build-companion-matrix.test.mjs",
+        "build/"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_BUILD_MATRIX_V2_EXACT_HEAD_QUALIFICATION_RECEIPT",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "STOP_AND_RETURN_EXACT_QUALIFICATION_FAILURE",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_AND_RETURN_BINDING_FAILURE",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "CONTINUE_ONLY_AFTER_VALIDATED_PASS",
+      "terminationRule": "READ_ONLY_QUALIFICATION_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

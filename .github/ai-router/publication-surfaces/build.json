@@ -42,7 +42,11 @@
         "dgb-build-companion-v1",
         "Close project conversation",
         "geodiametrics@gmail.com",
-        "dialog.showModal()"
+        "dialog.showModal()",
+        "Restaurant / hospitality",
+        "Request catering",
+        "Find hours and directions",
+        "businessMatrix"
       ],
       "excludes": []
     },
@@ -52,6 +56,26 @@
         ".build-companion:not([open])",
         ".bc-header",
         ".bc-close"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/build/build-matrix.v1_1.json",
+      "includes": [
+        "BUILD_COMPANION_MATRIX_v1_1",
+        "Request catering",
+        "Request a reservation",
+        "View the menu",
+        "Find hours and directions"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/build/build-engine.mjs",
+      "includes": [
+        "pruneAnswers",
+        "reviewRows",
+        "emailDraft"
       ],
       "excludes": []
     }

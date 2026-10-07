@@ -1,0 +1,192 @@
+{
+  "schema": "BUILD_COMPANION_MATRIX_v1_1",
+  "version": "1.1",
+  "contracts": {
+    "scope": "Answers belong to their branch. Editing an upstream answer prunes only descendants that no longer apply.",
+    "record": "Every accepted answer is retained in the review brief and manual email draft.",
+    "delivery": "Manual editable email only; nothing is sent automatically."
+  },
+  "categories": {
+    "Business / services": {
+      "opening": "What kind of customer action matters most?",
+      "options": [
+        "Request a quote",
+        "Book a service",
+        "Ask a question",
+        "View services",
+        "Find hours and directions"
+      ],
+      "followups": [
+        "service",
+        "location",
+        "timing",
+        "details"
+      ]
+    },
+    "Professional practice": {
+      "opening": "How should a prospective client begin?",
+      "options": [
+        "Request a consultation",
+        "Ask about services",
+        "Check availability",
+        "Learn about the practice",
+        "Find hours and directions"
+      ],
+      "followups": [
+        "service",
+        "timing",
+        "details"
+      ]
+    },
+    "Creator / personal project": {
+      "opening": "What should your audience be able to do?",
+      "options": [
+        "Explore my work",
+        "Contact me",
+        "Follow a project",
+        "Request a collaboration",
+        "Support or buy"
+      ],
+      "followups": [
+        "content",
+        "action",
+        "details"
+      ]
+    },
+    "Portfolio / public presence": {
+      "opening": "What should the portfolio lead people toward?",
+      "options": [
+        "View selected work",
+        "Contact me",
+        "Request a project",
+        "Learn about me",
+        "Download or review credentials"
+      ],
+      "followups": [
+        "content",
+        "action",
+        "details"
+      ]
+    },
+    "Restaurant / hospitality": {
+      "opening": "What should a guest be able to do?",
+      "options": [
+        "Request catering",
+        "Request a reservation",
+        "View the menu",
+        "Find hours and directions",
+        "Plan an event"
+      ],
+      "followups": [
+        "occasion",
+        "date",
+        "partySize",
+        "serviceMode",
+        "food",
+        "budget",
+        "location",
+        "details"
+      ]
+    },
+    "Community / cause": {
+      "opening": "How should someone take part?",
+      "options": [
+        "Join the community",
+        "Attend an event",
+        "Volunteer",
+        "Contribute",
+        "Learn about the cause",
+        "Contact the team"
+      ],
+      "followups": [
+        "action",
+        "timing",
+        "details"
+      ]
+    },
+    "Commerce": {
+      "opening": "What should shoppers be able to do?",
+      "options": [
+        "Browse products",
+        "Buy online",
+        "Ask about an item",
+        "Request a custom order",
+        "Check pickup or delivery"
+      ],
+      "followups": [
+        "product",
+        "fulfillment",
+        "details"
+      ]
+    },
+    "Interactive application": {
+      "opening": "What is the main job of the application?",
+      "options": [
+        "Guide a workflow",
+        "Collect information",
+        "Manage records",
+        "Provide a calculator or tool",
+        "Support accounts or dashboards"
+      ],
+      "followups": [
+        "users",
+        "workflow",
+        "data",
+        "details"
+      ]
+    },
+    "3D / spatial experience": {
+      "opening": "What should people experience in the world?",
+      "options": [
+        "Explore a place",
+        "Follow a story",
+        "Interact with objects",
+        "Learn through a simulation",
+        "Showcase a product or environment"
+      ],
+      "followups": [
+        "experience",
+        "interaction",
+        "platform",
+        "details"
+      ]
+    },
+    "Existing site rebuild": {
+      "opening": "What needs to improve first?",
+      "options": [
+        "Clarify the message",
+        "Improve mobile use",
+        "Modernize the design",
+        "Add functionality",
+        "Improve conversion or inquiries"
+      ],
+      "followups": [
+        "url",
+        "platform",
+        "priority",
+        "details"
+      ]
+    },
+    "Help me decide": {
+      "opening": "What outcome would make the project useful?",
+      "options": [
+        "Bring in inquiries",
+        "Book or schedule",
+        "Sell something",
+        "Explain my work",
+        "Create an experience",
+        "Build a useful tool"
+      ],
+      "followups": [
+        "goal",
+        "details"
+      ]
+    }
+  },
+  "mixed": {
+    "enabled": true,
+    "prompt": "Does more than one of these describe the project?",
+    "rule": "Keep each selected offering as a named branch; shared contact and project facts remain shared."
+  },
+  "responseTone": "Acknowledge the selected business action in concrete language before asking the next relevant question. Never use abstract funnel terminology in visitor-facing copy."
+}

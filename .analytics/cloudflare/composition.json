@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T17:35:53Z",
+  "generatedAt": "2026-10-07T18:41:35Z",
   "window": {
-    "start": "2026-09-07T17:35:53Z",
-    "end": "2026-10-07T17:35:53Z"
+    "start": "2026-09-07T18:41:35Z",
+    "end": "2026-10-07T18:41:35Z"
   },
   "dimensions": {
     "requestPath": [
@@ -83,11 +83,6 @@
         "visits": 50
       },
       {
-        "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
-        "pageLoads": 52,
-        "visits": 22
-      },
-      {
         "value": "/prelude/",
         "pageLoads": 50,
         "visits": 30
@@ -101,6 +96,11 @@
         "value": "/showroom/globe/h-earth/diagnostic/",
         "pageLoads": 50,
         "visits": 0
+      },
+      {
+        "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
+        "pageLoads": 50,
+        "visits": 20
       },
       {
         "value": "/products/archcoin/receivable/",
@@ -366,8 +366,8 @@
       },
       {
         "value": "m.facebook.com",
-        "pageLoads": 32,
-        "visits": 32
+        "pageLoads": 30,
+        "visits": 30
       },
       {
         "value": "bing.com",
@@ -388,8 +388,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6248,
-        "visits": 3653
+        "pageLoads": 6246,
+        "visits": 3651
       },
       {
         "value": "BR",
@@ -435,8 +435,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1705,
-        "visits": 582
+        "pageLoads": 1703,
+        "visits": 580
       }
     ],
     "userAgentBrowser": [
@@ -456,14 +456,14 @@
         "visits": 469
       },
       {
-        "value": "MobileSafari",
-        "pageLoads": 60,
-        "visits": 44
-      },
-      {
         "value": "Unknown",
         "pageLoads": 59,
         "visits": 59
+      },
+      {
+        "value": "MobileSafari",
+        "pageLoads": 58,
+        "visits": 42
       },
       {
         "value": "Edge",
@@ -519,8 +519,8 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 70,
-        "visits": 54
+        "pageLoads": 68,
+        "visits": 52
       },
       {
         "value": "Unknown",
@@ -531,8 +531,8 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3955,
-        "visits": 1415
+        "pageLoads": 3953,
+        "visits": 1413
       },
       {
         "value": "1",
@@ -543,8 +543,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4410,
-        "visits": 3419
+        "pageLoads": 4408,
+        "visits": 3417
       },
       {
         "value": "reload",
@@ -570,8 +570,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 4800,
-        "visits": 3187
+        "pageLoads": 4798,
+        "visits": 3185
       },
       {
         "value": "cache",
@@ -587,15 +587,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6295,
-        "visits": 3700
+        "pageLoads": 6293,
+        "visits": 3698
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6295,
-        "visits": 3700
+        "pageLoads": 6293,
+        "visits": 3698
       }
     ]
   }

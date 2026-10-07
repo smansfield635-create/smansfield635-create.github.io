@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-07T17:35:53Z",
+  "generatedAt": "2026-10-07T18:41:35Z",
   "window": {
-    "start": "2026-07-09T17:35:53Z",
-    "end": "2026-10-07T17:35:53Z"
+    "start": "2026-07-09T18:41:35Z",
+    "end": "2026-10-07T18:41:35Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5054,
-    "visits": 1303,
+    "pageLoads": 4954,
+    "visits": 1293,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5054,
-        "visits": 1303
+        "pageLoads": 4954,
+        "visits": 1293
       }
     },
     "byPath": {
@@ -39,7 +39,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 184,
+        "pageLoads": 154,
         "visits": 0
       },
       "/characters/": {
@@ -59,7 +59,7 @@
         "visits": 0
       },
       "/showroom/": {
-        "pageLoads": 140,
+        "pageLoads": 130,
         "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -91,12 +91,8 @@
         "visits": 10
       },
       "/products/archcoin/": {
-        "pageLoads": 40,
+        "pageLoads": 30,
         "visits": 0
-      },
-      "/laws/": {
-        "pageLoads": 300,
-        "visits": 90
       },
       "/index.html": {
         "pageLoads": 140,
@@ -105,6 +101,10 @@
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/": {
+        "pageLoads": 260,
+        "visits": 80
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 230,
@@ -117,10 +117,6 @@
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
         "visits": 0
-      },
-      "/products/education/": {
-        "pageLoads": 270,
-        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -206,16 +202,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -318,6 +314,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
+      },
       "/analytics-owner-device/": {
         "pageLoads": 30,
         "visits": 30
@@ -334,12 +334,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 41,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 41,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -357,12 +357,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3751,
+        "pageLoads": 3661,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 780,
-        "visits": 780
+        "pageLoads": 770,
+        "visits": 770
       },
       "(none)": {
         "pageLoads": 513,

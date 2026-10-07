@@ -39,18 +39,15 @@
     {
       "path": "/assets/build/build-companion.js",
       "includes": [
-        "dgb-build-companion-v2",
-        "build-matrix.v2.json",
-        "build-engine.mjs",
-        "Close project conversation",
+        "dgb-build-companion-v3",
+        "build-matrix.v3.json",
+        "build-engine.v3.mjs",
         "geodiametrics@gmail.com",
-        "dialog.showModal()",
+        "showModal()",
         "Nothing is sent automatically."
       ],
       "excludes": [
-        "businessMatrix",
-        "Request catering",
-        "Find hours and directions"
+        "Who does this website need to serve first?"
       ]
     },
     {
@@ -65,33 +62,36 @@
     {
       "path": "/assets/build/build-engine.v3.mjs",
       "includes": [
-        "activeNodes",
-        "pruneAnswers",
-        "pruneDone",
-        "synthesizeBrief",
-        "emailDraft"
+        "applyOption",
+        "applyMulti",
+        "nextAfterReturn",
+        "purposePath",
+        "brief"
       ],
       "excludes": [
-        "categories['Help me decide']"
+        "activeNodes",
+        "pruneAnswers",
+        "pruneDone"
       ]
     },
     {
       "path": "/assets/build/build-matrix.v3.json",
       "includes": [
-        "BUILD_COMPANION_MATRIX_v2",
-        "Who does this website need to serve first?",
-        "What should the website accomplish for them and for you?",
-        "Accept catering inquiries",
-        "Present the catalog only",
-        "Complete purchases on the site",
-        "What job or workflow should the application help its users complete?",
-        "What place, world, product, or idea should people explore?",
-        "What is the current website address?"
+        "BUILD_BUSINESS_FUNNEL_MATRIX_V1",
+        "BUS.ACTIVITY",
+        "PRO.ACTIVITY",
+        "HOSPITALITY",
+        "SHOP.INTENT",
+        "APP.INTENT",
+        "SPACE.INTENT",
+        "Receive catering inquiries",
+        "Sell physical products",
+        "Calculate a price or estimate",
+        "Explore an imagined world"
       ],
       "excludes": [
-        "Request a quote",
-        "Book a service",
-        "Find hours and directions"
+        "Who does this website need to serve first?",
+        "What should the website accomplish for them and for you?"
       ]
     }
   ],
@@ -207,7 +207,7 @@
           {
             "type": "textContains",
             "selector": ".bc-log",
-            "value": "What would you like to bring to life?"
+            "value": "What kind of business or project is this website for?"
           }
         ]
       },

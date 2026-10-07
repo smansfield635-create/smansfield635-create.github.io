@@ -306,25 +306,43 @@ jobs:
                 const residency=receipt?.resources?.vegetationResidency??null;
                 return residency?.preparationComplete===true && residency?.validationStatus==='VALIDATED';
               },null,{timeout:600000});
-              const browserProbe=page.evaluate(() => {
+              const browserProbe=page.evaluate(async () => {
                 const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
                 const owner=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)||null;
                 const route=owner?.H_EARTH_RUN8E_PUBLIC_ROUTE??null;
                 if(!route?.materializeNextVegetationBatch) return {executed:false,error:'VEGETATION_RESIDENCY_API_UNAVAILABLE',routeKeys:route?Object.keys(route).sort():[]};
                 const snapshot=()=>{const receipt=route.getLiveGpuReceipt?.()??null;return {residency:receipt?.resources?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??null};};
+                const waitFor=async (predicate,timeoutMilliseconds=30000)=>{
+                  const started=performance.now();
+                  while(performance.now()-started<timeoutMilliseconds){
+                    const state=snapshot();
+                    if(predicate(state)) return state;
+                    await new Promise(resolve=>setTimeout(resolve,16));
+                  }
+                  return null;
+                };
                 const transitions=[];
                 for(let batchIndex=0;batchIndex<108;batchIndex++){
                   const pre=snapshot(),started=performance.now();
                   try{
                     const returnedState=route.materializeNextVegetationBatch();
-                    const post=snapshot();
-                    transitions.push({batchIndex,elapsedMilliseconds:performance.now()-started,preResidency:pre.residency,returnedState,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount});
+                    const settled=await waitFor(state=>
+                      Number(state?.residency?.residentBatchCount)>Number(pre?.residency?.residentBatchCount??-1) ||
+                      state?.residency?.complete===true
+                    );
+                    if(!settled) return {executed:false,phase:'IN_PAGE_BATCH_RESIDENCY_TIMEOUT',batchIndex,transitions,elapsedMilliseconds:performance.now()-started,preResidency:pre.residency,returnedState,postResidency:snapshot().residency,worldRebuildCount:snapshot().worldRebuildCount};
+                    transitions.push({batchIndex,elapsedMilliseconds:performance.now()-started,preResidency:pre.residency,returnedState,postResidency:settled.residency,worldRebuildCount:settled.worldRebuildCount});
                   }catch(error){
                     const post=snapshot();
                     return {executed:false,batchIndex,transitions,elapsedMilliseconds:performance.now()-started,preResidency:pre.residency,postResidency:post.residency,worldRebuildCount:post.worldRebuildCount,failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
                   }
                 }
-                const final=snapshot();
+                const final=await waitFor(state=>
+                  state?.residency?.residentBatchCount===108 &&
+                  state?.residency?.residentInstanceCount===27585 &&
+                  state?.residency?.complete===true
+                ,60000);
+                if(!final) return {executed:false,phase:'IN_PAGE_FINAL_RESIDENCY_TIMEOUT',transitions,finalResidency:snapshot().residency,worldRebuildCount:snapshot().worldRebuildCount};
                 return {executed:true,transitions,finalResidency:final.residency,worldRebuildCount:final.worldRebuildCount};
               });
               try{

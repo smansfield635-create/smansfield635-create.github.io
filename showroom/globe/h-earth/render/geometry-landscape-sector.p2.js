@@ -150,7 +150,7 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
   grassDecisions.push(decision);if(!reason)grassCandidates.push({...p,canopy,edge,density,decision});
  }
  // Fail the entire trial rather than order-dependent trimming or global reranking.
- if(grassCandidates.length>252)throw new Error('ECOTONE_TRIAL_TUFT_BUDGET_EXCEEDED');
+ if(grassCandidates.length>250)throw new Error('ECOTONE_TRIAL_TUFT_BUDGET_EXCEEDED');
  grassCandidates.sort((a,b)=>a.id.localeCompare(b.id));
  for(const p of grassCandidates){
   const bladeCount=4,palette=trialHash(p.id,'palette'),pocket=palette<.25+.5*p.canopy?'OLIVE':palette<.65+.25*p.canopy?'GOLD':'BROWN';

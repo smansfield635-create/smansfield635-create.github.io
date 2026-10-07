@@ -21,8 +21,8 @@
         "From $1,750",
         "Scoped after consultation",
         "Generation 2084 environmental refinement",
-        "/assets/build/build-companion.js?v=2",
-        "/assets/build/build-companion.css?v=2"
+        "/assets/build/build-companion.js?v=3",
+        "/assets/build/build-companion.css?v=3"
       ],
       "excludes": []
     },
@@ -30,7 +30,7 @@
       "path": "/build/intake/index.html",
       "includes": [
         "data-open-build-companion",
-        "/assets/build/build-companion.js?v=2"
+        "/assets/build/build-companion.js?v=3"
       ],
       "excludes": [
         "wizard-progress"
@@ -63,7 +63,7 @@
       "excludes": []
     },
     {
-      "path": "/assets/build/build-engine.mjs",
+      "path": "/assets/build/build-engine.v3.mjs",
       "includes": [
         "activeNodes",
         "pruneAnswers",
@@ -76,7 +76,7 @@
       ]
     },
     {
-      "path": "/assets/build/build-matrix.v2.json",
+      "path": "/assets/build/build-matrix.v3.json",
       "includes": [
         "BUILD_COMPANION_MATRIX_v2",
         "Who does this website need to serve first?",

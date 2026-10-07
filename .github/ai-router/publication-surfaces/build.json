@@ -39,16 +39,19 @@
     {
       "path": "/assets/build/build-companion.js",
       "includes": [
-        "dgb-build-companion-v1",
+        "dgb-build-companion-v2",
+        "build-matrix.v2.json",
+        "build-engine.mjs",
         "Close project conversation",
         "geodiametrics@gmail.com",
         "dialog.showModal()",
-        "Restaurant / hospitality",
-        "Request catering",
-        "Find hours and directions",
-        "businessMatrix"
+        "Nothing is sent automatically."
       ],
-      "excludes": []
+      "excludes": [
+        "businessMatrix",
+        "Request catering",
+        "Find hours and directions"
+      ]
     },
     {
       "path": "/assets/build/build-companion.css",
@@ -60,24 +63,36 @@
       "excludes": []
     },
     {
-      "path": "/assets/build/build-matrix.v1_1.json",
-      "includes": [
-        "BUILD_COMPANION_MATRIX_v1_1",
-        "Request catering",
-        "Request a reservation",
-        "View the menu",
-        "Find hours and directions"
-      ],
-      "excludes": []
-    },
-    {
       "path": "/assets/build/build-engine.mjs",
       "includes": [
+        "activeNodes",
         "pruneAnswers",
-        "reviewRows",
+        "pruneDone",
+        "synthesizeBrief",
         "emailDraft"
       ],
-      "excludes": []
+      "excludes": [
+        "categories['Help me decide']"
+      ]
+    },
+    {
+      "path": "/assets/build/build-matrix.v2.json",
+      "includes": [
+        "BUILD_COMPANION_MATRIX_v2",
+        "Who does this website need to serve first?",
+        "What should the website accomplish for them and for you?",
+        "Accept catering inquiries",
+        "Present the catalog only",
+        "Complete purchases on the site",
+        "What job or workflow should the application help its users complete?",
+        "What place, world, product, or idea should people explore?",
+        "What is the current website address?"
+      ],
+      "excludes": [
+        "Request a quote",
+        "Book a service",
+        "Find hours and directions"
+      ]
     }
   ],
   "runtime": {

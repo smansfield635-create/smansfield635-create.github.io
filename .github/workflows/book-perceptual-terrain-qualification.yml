@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 23c63d2d7ec29621b69ca0f8ba6ae14549ab00e7
+          ref: c8aaaa8c8328dc322fbfa6534c88394bdd2ac4c3
           fetch-depth: 1
       - name: Prove immutable candidate
-        run: test "$(git rev-parse HEAD)" = "23c63d2d7ec29621b69ca0f8ba6ae14549ab00e7"
+        run: test "$(git rev-parse HEAD)" = "c8aaaa8c8328dc322fbfa6534c88394bdd2ac4c3"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -28,7 +28,7 @@ jobs:
           mkdir -p /tmp/book-perceptual
           cat > .book-perceptual.mjs <<'NODE'
           import{chromium}from'playwright';import fs from'node:fs';
-          const candidate='23c63d2d7ec29621b69ca0f8ba6ae14549ab00e7',browser=await chromium.launch({headless:true}),receipt={schema:'BOOK_PERCEPTUAL_TERRAIN_QUALIFICATION_v1',candidate,result:'PASS',viewports:{}};
+          const candidate='c8aaaa8c8328dc322fbfa6534c88394bdd2ac4c3',browser=await chromium.launch({headless:true}),receipt={schema:'BOOK_PERCEPTUAL_TERRAIN_QUALIFICATION_v1',candidate,result:'PASS',viewports:{}};
           try{for(const[name,viewport]of Object.entries({phone:{width:390,height:844},tablet:{width:800,height:1280}})){const page=await browser.newPage({viewport});const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});await page.goto('http://127.0.0.1:4173/nine-summits-of-love/',{waitUntil:'networkidle'});await page.locator('#path-scene').scrollIntoViewIfNeeded();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH?.readback?.().status==='ready');let st=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback());if(st.mode!=='navigable-natural-terrain-atlas'||st.gridVisible!==false||st.destinations!==18||st.hEarthRuntimeDependency!==false)throw Error(name+': readback regression');let overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);if(overflow>2)throw Error(name+': overflow '+overflow);let labels=page.locator('.topo-label');if(await labels.count()!==9)throw Error(name+': label count');for(const i of[0,4,8]){await labels.nth(i).click();await page.waitForFunction(i=>globalThis.DGB_BOOK_PATH.readback().selected===i&&globalThis.DGB_BOOK_PATH.readback().targetFocus>.7,i);await page.screenshot({path:'/tmp/book-perceptual/'+name+'-mountain-destination-'+i+'.png'});await page.locator('.terrain-overview').click()}await page.addStyleTag({content:'.topo-label,.terrain-leader,.terrain-pin,.topo-switch,.terrain-overview{visibility:hidden!important}'});await page.screenshot({path:'/tmp/book-perceptual/'+name+'-mountain-overview-label-hidden.png'});await page.evaluate(()=>document.querySelector('.topo-switch').style.visibility='visible');await page.locator('.topo-switch').click({force:true});await page.evaluate(()=>document.querySelector('.topo-switch').style.visibility='hidden');await page.screenshot({path:'/tmp/book-perceptual/'+name+'-canyon-overview-label-hidden.png'});await page.evaluate(()=>document.querySelectorAll('.topo-label,.terrain-leader,.terrain-pin,.topo-switch').forEach(e=>e.style.visibility='visible'));for(const i of[0,4,8]){await labels.nth(i).click();await page.waitForFunction(i=>globalThis.DGB_BOOK_PATH.readback().selected===i&&globalThis.DGB_BOOK_PATH.readback().targetFocus>.7,i);await page.screenshot({path:'/tmp/book-perceptual/'+name+'-canyon-destination-'+i+'.png'});await page.locator('.terrain-overview').click()}let boxes=await labels.evaluateAll(bs=>bs.map(b=>{let r=b.getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height}}));for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){let a=boxes[i],b=boxes[j];if(a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y)throw Error(name+': label overlap '+i+'/'+j)}if(errors.length)throw Error(name+': runtime '+errors.join('|'));receipt.viewports[name]={overflow,mechanicalRegression:'PASS',mountainLabelHidden:'CAPTURED',canyonLabelHidden:'CAPTURED',destinationCloseups:6};await page.close()} }catch(e){receipt.result='FAIL';receipt.error=String(e);throw e}finally{await browser.close();fs.writeFileSync('/tmp/book-perceptual/receipt.json',JSON.stringify(receipt,null,2))}console.log(JSON.stringify(receipt,null,2));
           NODE
           node .book-perceptual.mjs

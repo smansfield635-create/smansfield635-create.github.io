@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "BOOK_TOPOGRAPHY_PREFLIGHT_20261007_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5971,
+  "requestBranch": "ai-dispatch-request-book-topography-preflight-20261007",
+  "requestCommit": "9eab8c4e35c79c5eb88ecec99812a712cd9eabc6",
+  "requestCommitParent": "22490bf46dcdf8ea661bd270b7bd283ae00ba3ef",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "22490bf46dcdf8ea661bd270b7bd283ae00ba3ef",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "22490bf46dcdf8ea661bd270b7bd283ae00ba3ef",
+    "surface_id": "reading-pages"
+  },
+  "bridgeRunId": "37656076358",
+  "dispatchedRunId": 37656106071,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37656106071",
+  "dispatchedRunHeadSha": "22490bf46dcdf8ea661bd270b7bd283ae00ba3ef",
+  "dispatchedAt": "2026-10-07T17:03:57.569Z",
+  "resolvedAt": "2026-10-07T17:04:01.884Z"
+}

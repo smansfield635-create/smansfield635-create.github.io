@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "BOOK_TERRAIN_ATLAS_QUALIFY_20261007_002",
+  "capabilityId": "BOOK_NAVIGABLE_TERRAIN_ATLAS_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5981,
+  "requestBranch": "ai-dispatch-request-book-terrain-atlas-qualify-v2-20261007",
+  "requestCommit": "89cf9787b28a5ffd5f4ca9f735217bbb715f2a27",
+  "requestCommitParent": "e6880882553aa6f6f5f18ab2b8d6e34b71065361",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e6880882553aa6f6f5f18ab2b8d6e34b71065361",
+  "workflow": "book-terrain-atlas-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37688462704",
+  "dispatchedRunId": 37688479442,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37688479442",
+  "dispatchedRunHeadSha": "e6880882553aa6f6f5f18ab2b8d6e34b71065361",
+  "dispatchedAt": "2026-10-07T21:18:42.017Z",
+  "resolvedAt": "2026-10-07T21:18:45.958Z"
+}

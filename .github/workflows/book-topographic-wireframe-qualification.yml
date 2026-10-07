@@ -1,0 +1,66 @@
+name: Book Topographic Wireframe Exact-Candidate Qualification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2768ab830d2fd4f2ed6e9fbbbf5c8f5805c7b71f
+          fetch-depth: 1
+      - name: Prove immutable candidate
+        run: test "$(git rev-parse HEAD)" = "2768ab830d2fd4f2ed6e9fbbbf5c8f5805c7b71f"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser runtime
+        run: npm install --no-save --no-package-lock playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/book-topography-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/nine-summits-of-love/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/book-topography-http.log || true
+          exit 1
+      - name: Qualify phone and tablet
+        run: |
+          mkdir -p /tmp/book-topography-qualification
+          cat > /tmp/book-topography-qualification/qualify.mjs <<'NODE'
+          import{chromium}from'playwright';import fs from'node:fs';
+          const candidate='2768ab830d2fd4f2ed6e9fbbbf5c8f5805c7b71f',browser=await chromium.launch({headless:true});
+          const receipt={schema:'BOOK_TOPOGRAPHIC_WIREFRAME_QUALIFICATION_v1',candidate,result:'PASS',viewports:{}};
+          const specs={phone:{width:390,height:844},tablet:{width:800,height:1280}};
+          try{
+            for(const[name,viewport]of Object.entries(specs)){
+              const page=await browser.newPage({viewport});const errors=[];
+              page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+              const r=await page.goto('http://127.0.0.1:4173/nine-summits-of-love/',{waitUntil:'networkidle'});if(!r||!r.ok())throw Error(name+': page load');
+              await page.locator('#path-scene').scrollIntoViewIfNeeded();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH?.readback?.().status==='ready');
+              const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);if(overflow>2)throw Error(name+': overflow '+overflow);
+              const love=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback());
+              for(const[k,v]of Object.entries({mode:'two-independent-topographic-maps',activeMap:'love',trianglesPerMap:4608,residentTriangles:9216,regions:18,pairs:9,worldUp:'+Y',yawOnly:true,canyonIndependent:true}))if(love[k]!==v)throw Error(name+': '+k+' '+love[k]);
+              const labels=page.locator('.topo-label');if(await labels.count()!==9)throw Error(name+': nine active labels required');
+              const sceneBox=await page.locator('#path-scene').boundingBox();const labelBoxes=await labels.evaluateAll(bs=>bs.map(b=>{let r=b.getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height}}));
+              if(!sceneBox||labelBoxes.some(b=>b.w<44||b.h<44||b.x<sceneBox.x-2||b.y<sceneBox.y-2||b.x+b.w>sceneBox.x+sceneBox.width+2||b.y+b.h>sceneBox.y+sceneBox.height+2))throw Error(name+': label hit/framing');
+              await labels.nth(0).click();let selected=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback().selected);if(selected!==0)throw Error(name+': love selection');
+              await page.locator('.topo-switch').click();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH.readback().activeMap==='fear');
+              const fear=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback());if(!fear.canyonIndependent||fear.activeMap!=='fear')throw Error(name+': canyon state');
+              if(await labels.count()!==9)throw Error(name+': nine canyon labels required');await labels.nth(8).click();selected=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback().selected);if(selected!==8)throw Error(name+': fear selection');
+              if(errors.length)throw Error(name+': runtime errors '+errors.join('|'));
+              await page.screenshot({path:'/tmp/book-topography-qualification/'+name+'.png',fullPage:true});
+              receipt.viewports[name]={viewport,overflow,love,fear,labelCount:9,selectionChecks:'PASS',runtimeErrors:[]};await page.close();
+            }
+          }catch(e){receipt.result='FAIL';receipt.error=String(e);throw e}finally{await browser.close();fs.writeFileSync('/tmp/book-topography-qualification/receipt.json',JSON.stringify(receipt,null,2))}
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+          node /tmp/book-topography-qualification/qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: book-topographic-wireframe-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/book-topography-qualification
+          if-no-files-found: error
+          retention-days: 30

@@ -5581,6 +5581,50 @@
       "scopeHash": "5eebf141ab2e83c8787eac8b840b92fa78f11955dec3bac5c116787e42c89c77",
       "state": "ADMITTED_LOCKED"
     },
+    "5eeef8eb5c31c94a21fea7840522263a6822e8d1b23751793b1e6d466e739bd2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0c73af4fcdb600d9170be043e4d57ab41dd7f7b8",
+          "lockGeneration": 2606,
+          "lockScope": "BOOK_PUBLIC_PAGE_INFINITE_FUNNEL",
+          "operationId": "BOOK_NINE_SUMMITS_INFINITE_FUNNEL_20261006_001",
+          "procedureLocatorDigest": "35c0157d8af623673380aea87dafb9dec5bd06ca78923eda77b7d681f1cc83b4",
+          "requestDigest": "27849adbedde6730acded89e1d8c1a5056ae1a2773677b299c3cd450a472e7f8",
+          "scopeHash": "5eeef8eb5c31c94a21fea7840522263a6822e8d1b23751793b1e6d466e739bd2"
+        },
+        "bindingDigest": "1bf9b3d7c85b6e98a13c78829ad67dab2ba090ef510c600dc74f744b08b08888",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ffa63f2d2b38fb70ba046d903cb3a36b139e9f0746f9c2a532bfb6cb7c598525",
+          "commentId": 6029501812,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5898,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37561441792,
+          "workflowSha": "d94ee433afb2fd2ad2aad2a327e32e58d29a695c"
+        },
+        "lineageAnchorCommitSha": "217942d6f25140866110c570e9b24f7d08c5f302",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0c73af4fcdb600d9170be043e4d57ab41dd7f7b8",
+      "lockGeneration": 2606,
+      "lockScope": "BOOK_PUBLIC_PAGE_INFINITE_FUNNEL",
+      "operationId": "BOOK_NINE_SUMMITS_INFINITE_FUNNEL_20261006_001",
+      "procedureLocatorDigest": "35c0157d8af623673380aea87dafb9dec5bd06ca78923eda77b7d681f1cc83b4",
+      "released": false,
+      "requestDigest": "27849adbedde6730acded89e1d8c1a5056ae1a2773677b299c3cd450a472e7f8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5eeef8eb5c31c94a21fea7840522263a6822e8d1b23751793b1e6d466e739bd2",
+      "state": "ADMITTED_LOCKED"
+    },
     "5f937afcb14ecbbdfed9db7789b03086f97a390fa5a8431d84df01f68c4e4a00": {
       "governingHead": "3b40468e6342a235e9cdefb4f2ec1a16920a0e7d",
       "lockGeneration": 1609,
@@ -15860,7 +15904,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2605,
+  "lockGeneration": 2606,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

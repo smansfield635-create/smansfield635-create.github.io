@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-06T23:31:13Z",
+  "generatedAt": "2026-10-07T01:12:12Z",
   "window30d": {
-    "start": "2026-09-06T23:31:13Z",
-    "end": "2026-10-06T23:31:13Z"
+    "start": "2026-09-07T01:12:12Z",
+    "end": "2026-10-07T01:12:12Z"
   },
   "daily": [
-    {
-      "date": "2026-09-07",
-      "pageLoads": 50
-    },
     {
       "date": "2026-09-08",
       "pageLoads": 230
@@ -96,11 +92,11 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 45
+      "pageLoads": 40
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 54
+      "pageLoads": 49
     },
     {
       "date": "2026-10-01",
@@ -124,23 +120,27 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 150
+      "pageLoads": 155
+    },
+    {
+      "date": "2026-10-07",
+      "pageLoads": 14
     }
   ],
   "summary": {
-    "pageLoads": 6254,
-    "botPageLoads": 2311,
-    "nonBotPageLoads": 3943
+    "pageLoads": 6253,
+    "botPageLoads": 2307,
+    "nonBotPageLoads": 3946
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3264,
-      "visits": 3264
+      "pageLoads": 3268,
+      "visits": 3268
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2601,
+      "pageLoads": 2599,
       "visits": 0
     },
     {
@@ -150,13 +150,13 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 42,
-      "visits": 42
+      "pageLoads": 38,
+      "visits": 38
     },
     {
       "host": "bing.com",
-      "pageLoads": 14,
-      "visits": 14
+      "pageLoads": 15,
+      "visits": 15
     },
     {
       "host": "l.instagram.com",
@@ -172,13 +172,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1489,
-      "visits": 1093
+      "pageLoads": 1488,
+      "visits": 1092
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 790,
-      "visits": 790
+      "pageLoads": 780,
+      "visits": 780
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -202,13 +202,13 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 302,
-      "visits": 112
+      "pageLoads": 300,
+      "visits": 110
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 239,
-      "visits": 215
+      "pageLoads": 246,
+      "visits": 222
     }
   ],
   "ownerMeasurement": {

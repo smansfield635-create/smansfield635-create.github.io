@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import {category,pruneAnswers,reviewRows,emailDraft} from '../assets/build/build-engine.mjs';
+const m=JSON.parse(fs.readFileSync(new URL('../assets/build/build-matrix.v1_1.json',import.meta.url)));
+assert.equal(m.schema,'BUILD_COMPANION_MATRIX_v1_1');
+assert.deepEqual(category(m,'Restaurant / hospitality').options,['Request catering','Request a reservation','View the menu','Find hours and directions','Plan an event']);
+assert.ok(category(m,'Business / services').options.includes('Request a quote'));
+assert.ok(category(m,'Commerce').options.includes('Browse products'));
+const p=pruneAnswers(m,'Restaurant / hospitality',{type:'Restaurant / hospitality',action:'View the menu',occasion:'Birthday',location:'Fort Worth',name:'A'});
+assert.equal(p.occasion,undefined);assert.equal(p.location,'Fort Worth');assert.equal(p.name,'A');
+assert.ok(reviewRows({action:'Request catering',food:['Tacos','Fajitas']}).some(r=>r.value==='Tacos, Fajitas'));
+assert.ok(emailDraft({action:'Request catering',name:'A'}).includes('Request catering'));
+assert.equal(m.mixed.enabled,true);assert.match(m.contracts.delivery,/nothing is sent automatically/i);
+console.log('BUILD_COMPANION_MATRIX_V11_PASS');

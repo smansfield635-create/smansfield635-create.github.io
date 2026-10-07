@@ -5593,6 +5593,50 @@
       "scopeHash": "5f937afcb14ecbbdfed9db7789b03086f97a390fa5a8431d84df01f68c4e4a00",
       "state": "ADMITTED_LOCKED"
     },
+    "60c65428482a3f21dd71fbe6ee3cec3d6f2ea67fafbf83056db089478b5abfbe": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "06b2a119164e725bdd2749f4707cf866ac6c3b21",
+          "lockGeneration": 2603,
+          "lockScope": "BOOK_PUBLIC_PAGE_NINE_BAND_MOUNTAIN",
+          "operationId": "BOOK_NINE_SUMMITS_MOUNTAIN_20261006_001",
+          "procedureLocatorDigest": "fb2aaa1920df8bf671f94cbfc2b7fa0e88542770a90120f4e6f883a356c176dd",
+          "requestDigest": "8d2b198db6e44f5a6a445e58276eec5e354e2051d10197a3b718497683bbea01",
+          "scopeHash": "60c65428482a3f21dd71fbe6ee3cec3d6f2ea67fafbf83056db089478b5abfbe"
+        },
+        "bindingDigest": "1e1c6f5e8eef681f2421343ad657a2939c12e5221bc71a80e5501210ee941fd3",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ace63766baa8cb775b7d08a636282a3a10ea9698efc9079a137c02a52062826c",
+          "commentId": 6029016945,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5891,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37558080660,
+          "workflowSha": "06b2a119164e725bdd2749f4707cf866ac6c3b21"
+        },
+        "lineageAnchorCommitSha": "790f46192862d62652ea75b1955957a6cd35fed4",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "06b2a119164e725bdd2749f4707cf866ac6c3b21",
+      "lockGeneration": 2603,
+      "lockScope": "BOOK_PUBLIC_PAGE_NINE_BAND_MOUNTAIN",
+      "operationId": "BOOK_NINE_SUMMITS_MOUNTAIN_20261006_001",
+      "procedureLocatorDigest": "fb2aaa1920df8bf671f94cbfc2b7fa0e88542770a90120f4e6f883a356c176dd",
+      "released": false,
+      "requestDigest": "8d2b198db6e44f5a6a445e58276eec5e354e2051d10197a3b718497683bbea01",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "60c65428482a3f21dd71fbe6ee3cec3d6f2ea67fafbf83056db089478b5abfbe",
+      "state": "ADMITTED_LOCKED"
+    },
     "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8": {
       "governingHead": "c961469d366f39422e143a2c6156e79b1c991735",
       "lockGeneration": 471,
@@ -15772,7 +15816,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2602,
+  "lockGeneration": 2603,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

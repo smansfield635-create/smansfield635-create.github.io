@@ -22,4 +22,4 @@ jobs:
         run: |
           export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
           test -n "$CHROME_PATH"
-          node tools/build-companion-v4-browser.test.mjs
+          node tools/build-companion-v4-browser.test.mjs\n          node tools/build-companion-v4-sufficiency-browser.test.mjs

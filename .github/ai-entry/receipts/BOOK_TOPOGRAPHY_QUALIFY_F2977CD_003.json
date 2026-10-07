@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "BOOK_TOPOGRAPHY_QUALIFY_F2977CD_003",
+  "capabilityId": "BOOK_TOPOGRAPHIC_WIREFRAME_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5928,
+  "requestBranch": "ai-dispatch-request-book-topography-qualify-003",
+  "requestCommit": "dc6f9d064683c7dd1709ce67508ca0714c44e0f8",
+  "currentMainSha": "4680f1dbbd1ee54a02b540a19ac4554697089bf7",
+  "bridgeRunId": "37566784146",
+  "error": "Stale dispatch request: parent 6e5f6bbc0485f08e01d4c168d63b2dc946b360a6 != current main 4680f1dbbd1ee54a02b540a19ac4554697089bf7",
+  "failedAt": "2026-10-07T03:27:37.297Z"
+}

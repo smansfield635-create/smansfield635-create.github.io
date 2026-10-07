@@ -3,8 +3,8 @@ import {
   H_EARTH_RUN_8E_R2_CONTRACT_ID,
   evaluateHEarthRun8ER2Control
 } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
-import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch,constructHEarthGen2515VegetationPresentationBatchAsync, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js?cb=ecotone-trial-20261006';
-import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js?cb=ecotone-trial-20261006';
+import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch,constructHEarthGen2515VegetationPresentationBatchAsync, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js?cb=meadow-fan-20261006';
+import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js?cb=meadow-fan-20261006';
 import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
 import {
   H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,

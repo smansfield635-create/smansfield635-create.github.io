@@ -1,0 +1,105 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "executedSourceHead": "376210ddefeacbf0f22f66233c7e8746d6be075c",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-fan-20261006.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/environment/woodland-meadow-cover-20261006.spec.json",
+      "sha256": "a74b5a6d1b7f6c990ce653197dffd7ba447f163dd301bc1f6c1fd0e00e5e54ff"
+    },
+    {
+      "path": "h-earth-3d/environment/woodland-meadow-fan-20261006.spec.json",
+      "sha256": "76e8bc13350ffc24107c58efa4996e661223cb696109324352f55f46a7f4053b"
+    },
+    {
+      "path": "h-earth-3d/environment/woodland-meadow-leaf-20261006.spec.json",
+      "sha256": "c0a5000059249ef93323322a6d4ee0545d75e243e96abe8261f35cfdde95329f"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.woodland-meadow-cover-20261006.mjs",
+      "sha256": "07d5d25ee2f6fffef71ee45c39d470939eddc15ad6ea74b565c01039319b85ab"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.woodland-meadow-fan-20261006.mjs",
+      "sha256": "921e6aa71bc1372e75b6dcfbc4cb91b8e4f1321577840e8eb444fda147babf6a"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.woodland-meadow-leaf-20261006.mjs",
+      "sha256": "e5a84cbc31b544e8e72134bde5af44c70fc5eb9e5c02c017b7f33a6aee8183d0"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "fcaa2f76dcccaa9043a952c99b29d335420e3911e34da72d4e2ea5b6439a23ca"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "f46df0ed8e266d90d4da609284def5fe819863e8074262a2fae06a20fc968767"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "d984f78ee1fde6930e57d29ce9a1a512aa5e6b26e35a91b596c8c7d9a373daa0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "094675888fdd7769328539940d07fc6175765fb02358050f365e562a71504dd1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "sha256": "eb53a9a9b7df18628e362b3aab9c0649dae0dcdabe90c2a8230649bf2883dbd6"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "sha256": "0f75e195c8e1548d8b34910e53d630d4255e88d92c1e4a1c209d53ae3c15444f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "9f08cb270cfc61af70d36b59054162b097dbdea3290b4a22c4409521489df6d5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "95928c847d49954dd85e357cbd6cbf7de2ed1342b5a99bbb8cb6cd864cb107a7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "5e4be94b7d56da5a77a7e36bc49467966631d80d27ddf0fb6f1ff47318b3ca4d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "17c65c806b954404712c99914055ce10b458aa1bc3f6dcd2dbec3504f5a038e0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "067fde4cafca9a136383d450136dc57aa958c47e5d7ed3d66028d2413d2bb8fc"
+    }
+  ],
+  "physicalDeviceAcceptance": "NOT_ESTABLISHED",
+  "mobileBrowserQualification": "PHONE_AND_TABLET_EMULATION_PASS",
+  "notes": "Same embodied world, terrain, coast, trees, rocks, navigation and oasis preserved; visual delta is habitat-grounded four-leaf grass tufts. Automated phone/tablet two-finger travel and cached reload qualify unchanged interaction. Owner explicitly requests autonomous publication; no physical phone/tablet KEEP or performance acceptance is asserted."
+}

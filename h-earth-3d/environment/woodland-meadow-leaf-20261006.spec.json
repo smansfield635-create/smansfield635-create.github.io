@@ -1,0 +1,132 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_LEAF_SPEC_v1",
+  "baseline": "5896bba366a768f702a1edbd30e01689c0449c1e",
+  "geometryBaseline": "5896bba366a768f702a1edbd30e01689c0449c1e",
+  "issue": 5842,
+  "operationId": "H_EARTH_WOODLAND_MEADOW_LEAF_20261006",
+  "frozenRules": {
+    "bend": [
+      0.18,
+      0.38
+    ],
+    "blades": 2,
+    "cacheToken": "meadow-cover-20261006",
+    "childJitterRadius": 0.25,
+    "columns": [
+      0,
+      22
+    ],
+    "density": "9m FIELD_ix_iz density hashes, bilinear interpolation at (x+174)/9,(z+258)/9 <= (.18+.70*(1-canopy))*edge",
+    "ellipse": {
+      "center": [
+        -141,
+        -226
+      ],
+      "radii": [
+        33,
+        32
+      ]
+    },
+    "footprintRadius": 0.8,
+    "geometryCeilings": {
+      "drawRanges": 9,
+      "startupBufferBytes": 4196571,
+      "triangles": 78918,
+      "vertices": 47095
+    },
+    "maxBlades": 504,
+    "maxTufts": 252,
+    "oddRowOffset": 1.5,
+    "origin": [
+      -174,
+      -258
+    ],
+    "palette": "per-site palette hash with unchanged canopy-aware thresholds",
+    "preflightAcceptedTufts": 250,
+    "preserve": [
+      "all terrain,trees,rocks,navigation,oasis geometry",
+      "27585resident instances108batches0drops",
+      "exact ground roots and xzclearance",
+      "original oasis branch byte-equivalent"
+    ],
+    "priorRejectedCandidate": "074efba6d9b28409922256f561168805865e19dd",
+    "rootRadius": 0.34,
+    "rowStep": "3*sqrt(3)/2",
+    "rows": [
+      0,
+      25
+    ],
+    "seed": "ECOTONE_A_MEADOW_COVER_20261006",
+    "shortHeight": [
+      0.22,
+      0.38
+    ],
+    "shortLayer": "blade index1",
+    "spacing": 3,
+    "tallHeight": [
+      0.65,
+      0.95
+    ],
+    "visualGates": {
+      "approachChangedFractionMin": 0.002596,
+      "nearChangedFractionMin": 0.005,
+      "sameAcceptedCameras": true,
+      "verticalFov": 56,
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    "walkingCapsule": {
+      "a": [
+        -145,
+        -194
+      ],
+      "b": [
+        -145,
+        -230
+      ],
+      "centerMargin": 0.8,
+      "radius": 1.5
+    },
+    "width": [
+      0.045,
+      0.075
+    ]
+  },
+  "leafTransform": {
+    "vertices": "local3..14 only; roots0..2 and tip15 byte-identical",
+    "perpendicularXZScale": "1+3*sin(pi*t); row t=row/5",
+    "preserve": "along-row xz center and y, index stream/colors; reconstruct normals afterward",
+    "validation": "after acceptance, domain fail aborts whole trial, no retries/drops/clamps",
+    "gates": "same frozen visual gates; physical-device acceptance separate"
+  },
+  "exactAllowedPaths": [
+    ".github/ai-router/publication-surfaces/h-earth.json",
+    "h-earth-3d/environment/woodland-meadow-cover-20261006.spec.json",
+    "h-earth-3d/environment/woodland-meadow-leaf-20261006.spec.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-cover-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-cover-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-cover-20261006.json",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-approach.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006-near.png",
+    "h-earth-3d/experience-anchor/evidence/woodland-meadow-leaf-20261006.json",
+    "h-earth-3d/experience-anchor/receipts/woodland-meadow-cover-20261006.json",
+    "h-earth-3d/experience-anchor/receipts/woodland-meadow-leaf-20261006.json",
+    "h-earth-3d/validation/h-earth.woodland-meadow-cover-20261006.mjs",
+    "h-earth-3d/validation/h-earth.woodland-meadow-leaf-20261006.mjs",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+    "showroom/globe/h-earth/index.html",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "showroom/globe/h-earth/render/grass-lowland-trial.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js"
+  ],
+  "physicalDeviceAcceptance": "SEPARATE_REQUIRED"
+}

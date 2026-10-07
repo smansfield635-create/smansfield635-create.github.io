@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T13:38:10Z",
+  "generatedAt": "2026-10-07T14:35:05Z",
   "window": {
-    "start": "2026-09-07T13:38:10Z",
-    "end": "2026-10-07T13:38:10Z"
+    "start": "2026-09-07T14:35:05Z",
+    "end": "2026-10-07T14:35:05Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1488,
-        "visits": 1092
+        "pageLoads": 1479,
+        "visits": 1083
       },
       {
         "value": "/mirror-manor-preview/",
@@ -29,8 +29,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 390,
-        "visits": 268
+        "pageLoads": 385,
+        "visits": 263
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -44,8 +44,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 261,
-        "visits": 237
+        "pageLoads": 234,
+        "visits": 212
       },
       {
         "value": "/governance-bridge/",
@@ -268,11 +268,6 @@
         "visits": 4
       },
       {
-        "value": "/products/auren/",
-        "pageLoads": 6,
-        "visits": 5
-      },
-      {
         "value": "/products/nutrition/",
         "pageLoads": 4,
         "visits": 4
@@ -351,23 +346,28 @@
         "value": "/build/intake/",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/products/auren/",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "refererHost": [
       {
-        "value": "(none)",
-        "pageLoads": 3303,
-        "visits": 3303
-      },
-      {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2595,
+        "pageLoads": 4374,
         "visits": 0
       },
       {
+        "value": "(none)",
+        "pageLoads": 2986,
+        "visits": 2986
+      },
+      {
         "value": "www.google.com",
-        "pageLoads": 330,
-        "visits": 330
+        "pageLoads": 310,
+        "visits": 310
       },
       {
         "value": "m.facebook.com",
@@ -435,13 +435,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2719,
-        "visits": 2630
+        "pageLoads": 2689,
+        "visits": 2600
       },
       {
         "value": "tablet",
-        "pageLoads": 1854,
-        "visits": 473
+        "pageLoads": 1844,
+        "visits": 463
       },
       {
         "value": "mobile",
@@ -452,23 +452,23 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2309,
-        "visits": 2256
+        "pageLoads": 2323,
+        "visits": 2270
       },
       {
         "value": "Chrome",
-        "pageLoads": 2147,
-        "visits": 730
+        "pageLoads": 2139,
+        "visits": 722
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1568,
-        "visits": 468
+        "pageLoads": 1579,
+        "visits": 470
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 71,
-        "visits": 50
+        "pageLoads": 60,
+        "visits": 44
       },
       {
         "value": "Unknown",
@@ -604,8 +604,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6380,
-        "visits": 3817
+        "pageLoads": 6281,
+        "visits": 3686
       }
     ]
   }

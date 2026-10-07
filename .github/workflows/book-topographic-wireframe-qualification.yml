@@ -45,12 +45,12 @@ jobs:
               const labels=page.locator('.topo-label');if(await labels.count()!==9)throw Error(name+': nine active labels required');
               const sceneBox=await page.locator('#path-scene').boundingBox();const labelBoxes=await labels.evaluateAll(bs=>bs.map(b=>{let r=b.getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height}}));
               if(!sceneBox||labelBoxes.some(b=>b.w<44||b.h<44||b.x<sceneBox.x-2||b.y<sceneBox.y-2||b.x+b.w>sceneBox.x+sceneBox.width+2||b.y+b.h>sceneBox.y+sceneBox.height+2))throw Error(name+': label hit/framing');
-              await labels.nth(0).click();let selected=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback().selected);if(selected!==0)throw Error(name+': love selection');
+              await labels.nth(0).click();let selected=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback().selected);if(selected!==0)throw Error(name+': love selection');await page.screenshot({path:'/tmp/book-topography-qualification/'+name+'-mountain.png',fullPage:true});
               await page.locator('.topo-switch').click();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH.readback().activeMap==='fear');
               const fear=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback());if(!fear.canyonIndependent||fear.activeMap!=='fear')throw Error(name+': canyon state');
               if(await labels.count()!==9)throw Error(name+': nine canyon labels required');await labels.nth(8).click();selected=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback().selected);if(selected!==8)throw Error(name+': fear selection');
               if(errors.length)throw Error(name+': runtime errors '+errors.join('|'));
-              await page.screenshot({path:'/tmp/book-topography-qualification/'+name+'.png',fullPage:true});
+              await page.screenshot({path:'/tmp/book-topography-qualification/'+name+'-canyon.png',fullPage:true});
               receipt.viewports[name]={viewport,overflow,love,fear,labelCount:9,selectionChecks:'PASS',runtimeErrors:[]};await page.close();
             }
           }catch(e){receipt.result='FAIL';receipt.error=String(e);throw e}finally{await browser.close();fs.writeFileSync('/tmp/book-topography-qualification/receipt.json',JSON.stringify(receipt,null,2))}

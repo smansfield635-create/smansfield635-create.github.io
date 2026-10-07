@@ -1,0 +1,56 @@
+name: H-Earth Distribution V8 Qualification Dispatch Bridge
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_json:
+        description: Fixed V8 qualification request
+        required: true
+        type: string
+      router_callback_issue:
+        required: true
+        type: string
+      router_callback_repository:
+        required: true
+        type: string
+
+permissions:
+  actions: write
+  issues: write
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate fixed request and dispatch exact runner
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUEST_JSON: ${{ inputs.request_json }}
+          CALLBACK_ISSUE: ${{ inputs.router_callback_issue }}
+          CALLBACK_REPOSITORY: ${{ inputs.router_callback_repository }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' > "$RUNNER_TEMP/validated.json"
+          const r=JSON.parse(process.env.REQUEST_JSON);
+          const expected={
+            schema:'H_EARTH_DISTRIBUTION_V8_QUALIFICATION_REQUEST_v1',
+            candidateHead:'35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba',
+            exerciseVegetationResidency:true
+          };
+          if(r.schema!==expected.schema||r.candidateHead!==expected.candidateHead||r.exerciseVegetationResidency!==true) throw new Error('FIXED_V8_REQUEST_MISMATCH');
+          if(Object.keys(r).sort().join(',')!=='candidateHead,exerciseVegetationResidency,schema') throw new Error('V8_REQUEST_CLOSED_WORLD_VIOLATION');
+          console.log(JSON.stringify(r));
+          NODE
+          jq -n --arg ref main --arg sha "35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba" '{ref:$ref,inputs:{target_sha:$sha,route_path:"/showroom/globe/h-earth/",route_query:"",exercise_vegetation_residency:true,apply_timing_shim:false}}' > "$RUNNER_TEMP/dispatch.json"
+          gh api --method POST "/repos/$REPO/actions/workflows/h-earth-neutral-exact-head-runner.yml/dispatches" --input "$RUNNER_TEMP/dispatch.json"
+          sleep 3
+          run_id="$(gh api "/repos/$REPO/actions/workflows/h-earth-neutral-exact-head-runner.yml/runs?event=workflow_dispatch&per_page=10" --jq '.workflow_runs | map(select(.head_branch=="main")) | sort_by(.created_at) | reverse | .[0].id')"
+          test -n "$run_id" && test "$run_id" != "null"
+          [ "$CALLBACK_REPOSITORY" = "$REPO" ]
+          gh api --method POST "/repos/$REPO/issues/$CALLBACK_ISSUE/comments" -f body="H_EARTH_DISTRIBUTION_V8_DISPATCH_RETURN_v1
+workflowRun = $run_id
+candidateHead = 35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba
+exerciseVegetationResidency = true"

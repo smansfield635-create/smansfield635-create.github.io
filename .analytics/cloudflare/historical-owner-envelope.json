@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-07T03:42:06Z",
+  "generatedAt": "2026-10-07T04:38:53Z",
   "window": {
-    "start": "2026-07-09T03:42:06Z",
-    "end": "2026-10-07T03:42:06Z"
+    "start": "2026-07-09T04:38:53Z",
+    "end": "2026-10-07T04:38:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5074,
-    "visits": 1313,
+    "pageLoads": 5054,
+    "visits": 1303,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5074,
-        "visits": 1313
+        "pageLoads": 5054,
+        "visits": 1303
       }
     },
     "byPath": {
-      "/": {
-        "pageLoads": 1061,
-        "visits": 739
-      },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 194,
-        "visits": 0
-      },
       "/nine-summits-of-love/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/": {
+        "pageLoads": 1051,
+        "visits": 729
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 184,
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
@@ -46,12 +46,12 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -254,6 +254,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -268,10 +272,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -356,17 +356,17 @@
       }
     },
     "byReferer": {
-      "(none)": {
-        "pageLoads": 523,
-        "visits": 523
-      },
       "diamondgatebridge.com": {
-        "pageLoads": 3761,
+        "pageLoads": 3751,
         "visits": 0
       },
       "www.google.com": {
         "pageLoads": 780,
         "visits": 780
+      },
+      "(none)": {
+        "pageLoads": 513,
+        "visits": 513
       },
       "raw.githack.com": {
         "pageLoads": 10,

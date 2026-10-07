@@ -1,15 +1,15 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T22:32:00Z",
+  "generatedAt": "2026-10-07T23:29:37Z",
   "window": {
-    "start": "2026-09-07T22:32:00Z",
-    "end": "2026-10-07T22:32:00Z"
+    "start": "2026-09-07T23:29:37Z",
+    "end": "2026-10-07T23:29:37Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1479,
+        "pageLoads": 1469,
         "visits": 1093
       },
       {
@@ -351,7 +351,7 @@
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2587,
+        "pageLoads": 2577,
         "visits": 0
       },
       {
@@ -388,7 +388,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6223,
+        "pageLoads": 6213,
         "visits": 3636
       },
       {
@@ -430,7 +430,7 @@
       },
       {
         "value": "tablet",
-        "pageLoads": 1854,
+        "pageLoads": 1844,
         "visits": 473
       },
       {
@@ -447,7 +447,7 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 2130,
+        "pageLoads": 2120,
         "visits": 723
       },
       {
@@ -499,7 +499,7 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3443,
+        "pageLoads": 3433,
         "visits": 955
       },
       {
@@ -531,7 +531,7 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3936,
+        "pageLoads": 3926,
         "visits": 1406
       },
       {
@@ -548,7 +548,7 @@
       },
       {
         "value": "reload",
-        "pageLoads": 918,
+        "pageLoads": 908,
         "visits": 196
       },
       {
@@ -575,7 +575,7 @@
       },
       {
         "value": "cache",
-        "pageLoads": 1286,
+        "pageLoads": 1276,
         "visits": 314
       },
       {
@@ -587,14 +587,14 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6270,
+        "pageLoads": 6260,
         "visits": 3683
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6270,
+        "pageLoads": 6260,
         "visits": 3683
       }
     ]

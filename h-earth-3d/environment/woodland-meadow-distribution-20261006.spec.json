@@ -1,0 +1,88 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_SPEC_v1",
+  "operationId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
+  "issue": 5842,
+  "baseline": "7804b359aa032caa00f8dd526f8e4186df97fac9",
+  "scope": "same accepted woodland A ellipse only",
+  "distribution": {
+    "lattice": {
+      "spacingMeters": 3,
+      "rowStep": "3*sqrt(3)/2",
+      "oddRowOffsetMeters": 1.5,
+      "role": "DETERMINISTIC_INDEXING_ONLY"
+    },
+    "centerJitter": {
+      "maxRadiusMeters": 0.9,
+      "angleChannel": "center-jitter-angle",
+      "radiusChannel": "center-jitter-radius",
+      "radiusFormula": "sqrt(hash)*0.90",
+      "seed": "ECOTONE_A_MEADOW_COVER_20261006"
+    },
+    "reevaluateAtDisplacedCenter": [
+      "ellipse",
+      "walking capsule margin",
+      "reservation/footprint",
+      "ground support",
+      "slope",
+      "surface class",
+      "trunk clearance",
+      "canopy",
+      "edge",
+      "density field"
+    ],
+    "retry": false,
+    "clamp": false,
+    "silentRelocation": false
+  },
+  "preserve": [
+    "four-leaf FAN morphology/topology/palette",
+    "9m density field formula",
+    "all terrain, trees, rocks, navigation and oasis geometry",
+    "geometry/draw-range ceilings",
+    "27585 resident instances / 108 batches / zero drops target"
+  ],
+  "limits": {
+    "maxTufts": 252,
+    "maxBlades": 1008,
+    "drawRanges": 9,
+    "startupBufferBytes": 4196571,
+    "vertices": 47095,
+    "triangles": 78918
+  },
+  "acceptance": {
+    "antiLattice": {
+      "required": true,
+      "baseline": "7804b359",
+      "metric": "nearest-neighbor bearing directional concentration",
+      "rule": "candidate concentration materially lower than baseline"
+    },
+    "visual": {
+      "viewport": [
+        390,
+        844
+      ],
+      "verticalFov": 56,
+      "nearChangedFractionMin": 0.005,
+      "approachChangedFractionMin": 0.002596
+    },
+    "physicalDeviceReview": "REQUIRED_BEFORE_PROPAGATION_OR_PUBLICATION"
+  },
+  "propagation": "PROHIBITED",
+  "precedent": [
+    "AMD GPUOpen procedural grass seeded radial scatter",
+    "AMD procedural sub-tile random positional offset to break regular grid",
+    "Guerrilla Horizon Zero Dawn rule-driven procedural placement"
+  ],
+  "coLocatedExecution": {
+    "used": true,
+    "separateNativeAgentInstancesClaimed": false,
+    "independentModelReviewClaimed": false,
+    "functionalSeparation": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "authorityEffect": "NONE"
+  }
+}

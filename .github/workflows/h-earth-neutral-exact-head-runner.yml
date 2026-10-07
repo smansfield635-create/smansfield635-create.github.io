@@ -403,13 +403,16 @@ jobs:
             vegetationResidencyMonotonic:residencySamples.every((sample,index,array)=>index===0||!sample?.residency||!array[index-1]?.residency||(sample.residency.residentBatchCount>=array[index-1].residency.residentBatchCount&&sample.residency.residentInstanceCount>=array[index-1].residency.residentInstanceCount)),
             residencyWorldRebuildStayedZero:residencySamples.every(sample=>sample?.worldRebuildCount===0)
           };
+          const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
+          const v=receipt.vegetationExercise;
+          const authoritativeResidencyPass=exerciseVegetation&&v?.executed===true&&v?.transitions?.length===108&&v?.finalResidency?.preparationComplete===true&&v?.finalResidency?.validationStatus==='VALIDATED'&&v?.finalResidency?.residentBatchCount===108&&v?.finalResidency?.residentInstanceCount===27585&&v?.finalResidency?.complete===true&&v?.finalResidency?.droppedPlacementCount===0&&v?.worldRebuildCount===0;
+          const fatalPageErrors=authoritativeResidencyPass?pageErrors.filter(message=>message!=='R3C_VEGETATION_BATCH_PREPARATION_PENDING'):pageErrors;
+          receipt.fatalPageErrors=fatalPageErrors;
+          receipt.expectedTransientPreparationPendingCount=authoritativeResidencyPass?pageErrors.length-fatalPageErrors.length:0;
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
-          if(!receipt.materialized||pageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
-          if(String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true'){
-            const v=receipt.vegetationExercise;
-            if(v?.executed!==true||v?.transitions?.length!==108||v?.finalResidency?.residentBatchCount!==108||v?.finalResidency?.residentInstanceCount!==27585||v?.finalResidency?.complete!==true||v?.finalResidency?.droppedPlacementCount!==0||v?.worldRebuildCount!==0) process.exitCode=1;
-          }
+          if(!receipt.materialized||fatalPageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
+          if(exerciseVegetation&&!authoritativeResidencyPass) process.exitCode=1;
           NODE
           node h-earth-exact-run.mjs
 

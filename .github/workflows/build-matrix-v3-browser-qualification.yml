@@ -1,0 +1,31 @@
+name: Build Matrix v3 Browser Qualification
+on:
+  pull_request:
+    paths:
+      - 'assets/build/build-companion.js'
+      - 'assets/build/build-engine.v3.mjs'
+      - 'assets/build/build-matrix.v3.json'
+      - 'build/index.html'
+      - 'build/intake/index.html'
+      - 'tools/build-companion-matrix-v3-*.test.mjs'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Require total-edge graph
+        run: node tools/build-companion-matrix-v3-edge.test.mjs
+      - name: Require route-model journeys
+        run: node tools/build-companion-matrix-v3-journeys.test.mjs
+      - name: Require real-browser journeys
+        shell: bash
+        run: |
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          node tools/build-companion-matrix-v3-browser.test.mjs

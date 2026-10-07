@@ -39,9 +39,9 @@
     {
       "path": "/assets/build/build-companion.js",
       "includes": [
-        "dgb-build-companion-v2",
-        "build-matrix.v2.json",
-        "build-engine.mjs",
+        "dgb-build-companion-v3",
+        "build-matrix.v3.json",
+        "build-engine.v3.mjs",
         "Close project conversation",
         "geodiametrics@gmail.com",
         "dialog.showModal()",
@@ -207,7 +207,7 @@
           {
             "type": "textContains",
             "selector": ".bc-log",
-            "value": "What would you like to bring to life?"
+            "value": "What kind of business or project is this website for?"
           }
         ]
       },

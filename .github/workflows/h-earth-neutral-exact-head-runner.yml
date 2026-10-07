@@ -300,6 +300,12 @@ jobs:
             later=await sample('later');
             const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
             if(exerciseVegetation){
+              await page.waitForFunction(() => {
+                const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
+                const receipt=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
+                const residency=receipt?.resources?.vegetationResidency??null;
+                return residency?.preparationComplete===true && residency?.validationStatus==='VALIDATED';
+              },null,{timeout:600000});
               const browserProbe=page.evaluate(() => {
                 const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
                 const owner=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)||null;

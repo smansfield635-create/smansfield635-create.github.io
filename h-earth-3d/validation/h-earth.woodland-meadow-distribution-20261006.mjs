@@ -28,7 +28,17 @@ const baselineText=git('show',`7804b359aa032caa00f8dd526f8e4186df97fac9:${sector
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'hearth-distribution-baseline-'));
 let baseline;
 try{
- const changed=[...git('diff','--name-only','7804b359aa032caa00f8dd526f8e4186df97fac9','HEAD').trim().split('\n')].filter(Boolean);
+ const recipePath='showroom/globe/h-earth/render/grass-lowland-trial.js';
+ const archivedRecipe=git('show',`7804b359aa032caa00f8dd526f8e4186df97fac9:${recipePath}`);
+ const absoluteImports=(source,sourcePath)=>source.replace(/from (['"])(\.[^'"]+)\1/g,(_,q,target)=>`from ${q}${new URL(target,pathToFileURL(path.join(root,sourcePath))).href}${q}`);
+ const recipeFile=path.join(temp,'grass.mjs');fs.writeFileSync(recipeFile,absoluteImports(archivedRecipe,recipePath));
+ const source=absoluteImports(baselineText,sectorPath).replace(/file:[^'"]*grass-lowland-trial\.js\?cb=[^'"]+/g,pathToFileURL(recipeFile).href);
+ const baselineFile=path.join(temp,'sector.mjs');fs.writeFileSync(baselineFile,source);
+ baseline=(await import(pathToFileURL(baselineFile).href)).buildHEarthLandscapeSector({terrainPrimitive:terrain});
+}finally{fs.rmSync(temp,{recursive:true,force:true});}
+for(const name of ['BARK','CANOPY','ROCK']){const id=`H_EARTH_LANDSCAPE_P2_${name}`;assert.equal(digest(sector.primitives.find(p=>p.primitiveId===id)),digest(baseline.primitives.find(p=>p.primitiveId===id)),`PRESERVED_${name}_DRIFT`);}
+assert.equal(digest(sector.manifest.filter(p=>p.kind!=='GRASS')),digest(baseline.manifest.filter(p=>p.kind!=='GRASS')),'TREE_ROCK_MANIFEST_DRIFT');
+const changed=git('diff','--name-only','7804b359aa032caa00f8dd526f8e4186df97fac9','HEAD').trim().split('\n').filter(Boolean);
 assert(changed.every(p=>spec.exactAllowedPaths.includes(p)),'EXACT_SCOPE_MISMATCH');
 const candidateSites=sector.manifest.filter(p=>p.kind==='GRASS'),baselineSites=baseline.manifest.filter(p=>p.kind==='GRASS');
 assert(candidateSites.length<=baselineSites.length,'TUFT_COUNT_INCREASE');
@@ -57,7 +67,7 @@ const grassVertices=grass.geometry.vertices.length,grassTriangles=grass.geometry
 assert(tufts.length<=252);assert(grassVertices<=7056);assert(grassTriangles<=6048);assert(grassBufferBytes<=559440);assert(sector.diagnostics.triangleCount<=35748);
 // Base package cost inherits untouched other geometry: only grass vertices/indices change.
 const oldGrass=baseline.primitives.find(p=>p.primitiveId==='H_EARTH_LANDSCAPE_P2_GRASS'),deltaVertices=grassVertices-oldGrass.geometry.vertices.length,deltaTriangles=grassTriangles-oldGrass.geometry.indices.length/3;
-const report={schema:'H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_MECHANICAL_QUALIFICATION_v1',antiLattice:{baselineConcentration,candidateConcentration,reduction:antiLatticeReduction,pass:candidateConcentration<baselineConcentration},result:'PASS',executedHead:git('rev-parse','HEAD').trim(),trackedWorkingTreeClean:git('status','--porcelain','--untracked-files=no').trim()==='',baseline:spec.baseline,sectorDigest:digest(sector),terrainDigest:digest(terrain),decisionDigest:digest(decisions),acceptedTufts:tufts.length,blades:tufts.length*4,rootColumns:roots,maxGroundError,maxTipHeight,grassVertices,grassTriangles,grassBufferBytes,sectorTriangles:sector.diagnostics.triangleCount,baseVertices:47031+deltaVertices,baseTriangles:78846+deltaTriangles,baseStartupGeometryBufferBytes:4191291+deltaVertices*69+deltaTriangles*3*4,drawRangesUnchanged:9,profiles,decisionReasons:Object.fromEntries([...new Set(decisions.map(p=>p.reason))].map(reason=>[reason,decisions.filter(p=>p.reason===reason).length])),unchangedNonGrassGeometry:true,archivalSitesOriginalRootsAndSelectedColorsPreserved:true,originalRoots,companionRoots,orderVariants:3,physicalDeviceAcceptance:'NOT_ESTABLISHED',browserReadinessQualification:'SEPARATE_REQUIRED'};
+const report={schema:'H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_MECHANICAL_QUALIFICATION_v1',antiLattice:{baselineConcentration,candidateConcentration,reduction:antiLatticeReduction,pass:candidateConcentration<baselineConcentration},result:'PASS',executedHead:git('rev-parse','HEAD').trim(),trackedWorkingTreeClean:git('status','--porcelain','--untracked-files=no').trim()==='',baseline:spec.baseline,sectorDigest:digest(sector),terrainDigest:digest(terrain),decisionDigest:digest(decisions),acceptedTufts:tufts.length,blades:tufts.length*4,rootColumns:roots,maxGroundError,maxTipHeight,grassVertices,grassTriangles,grassBufferBytes,sectorTriangles:sector.diagnostics.triangleCount,baseVertices:47031+deltaVertices,baseTriangles:78846+deltaTriangles,baseStartupGeometryBufferBytes:4191291+deltaVertices*69+deltaTriangles*3*4,drawRangesUnchanged:9,profiles,decisionReasons:Object.fromEntries([...new Set(decisions.map(p=>p.reason))].map(reason=>[reason,decisions.filter(p=>p.reason===reason).length])),unchangedNonGrassGeometry:true,archivalSitesOriginalRootsAndSelectedColorsPreserved:false,orderVariants:3,physicalDeviceAcceptance:'NOT_ESTABLISHED',browserReadinessQualification:'SEPARATE_REQUIRED'};
 assert(grassVertices<=7000);assert(grassTriangles<=6000);
 assert(report.baseVertices<=47095&&report.baseTriangles<=78918&&report.baseStartupGeometryBufferBytes<=4196571);
 const output=process.argv[process.argv.indexOf('--output')+1];if(process.argv.includes('--output'))fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

@@ -10365,45 +10365,6 @@
       "scopeHash": "a91d0b88736f4c9e01aa078daf65ecb79e315772221688fbac4ca616d8cc6825",
       "state": "ADMITTED_LOCKED"
     },
-    "a9b7ab2d069de538c758affa7aa1fbc31f09e700dc42fcfa1744a36414e679d4": {
-      "governingHead": "e1733beb23435bf24f164b492dc069f0d43d35a4",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "e1733beb23435bf24f164b492dc069f0d43d35a4",
-          "lockGeneration": 2600,
-          "lockScope": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
-          "operationId": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
-          "procedureLocatorDigest": "a3561bed9f75c08f0d01adbc404dc95a5d9d896474acf21a7bf37ce80e2742fc",
-          "requestDigest": "5df43db86fb687bdee6d5c7751e03b839878fbbd12b2232a57cc95e793752614",
-          "scopeHash": "a9b7ab2d069de538c758affa7aa1fbc31f09e700dc42fcfa1744a36414e679d4"
-        },
-        "bindingDigest": "bd33ed046598f280a4162f50f84a4b83fdde9c72fd6c124454b2b4a5e4295604",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "c1dc49399918f82c4951baba8896e1c63a0bd651",
-          "observedLockRefHead": "9b9d780e4d9906d2b2f214cc742e957f36691a09"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "5653ca98efe19261d074943b54b5d368e1babe415dd1f120ad33a9130deb9447",
-          "commentId": 6027542939,
-          "issueNumber": 5842,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2600,
-      "lockScope": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
-      "operationId": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
-      "procedureLocatorDigest": "a3561bed9f75c08f0d01adbc404dc95a5d9d896474acf21a7bf37ce80e2742fc",
-      "released": false,
-      "requestDigest": "5df43db86fb687bdee6d5c7751e03b839878fbbd12b2232a57cc95e793752614",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a9b7ab2d069de538c758affa7aa1fbc31f09e700dc42fcfa1744a36414e679d4",
-      "state": "ADMITTED_LOCKED"
-    },
     "aa53681c8031a7e59affe6a2763018e45f8ced56416d18b3da9f474e57d8ad1f": {
       "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
       "lockGeneration": 390,
@@ -71883,6 +71844,83 @@
       "scopeHash": "f4eb02d248292f4f1df6fb9a426d64ae248e0e7294db6a0334528e998b1a6df4",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "governingHead": "e1733beb23435bf24f164b492dc069f0d43d35a4",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e1733beb23435bf24f164b492dc069f0d43d35a4",
+          "lockGeneration": 2600,
+          "lockScope": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+          "operationId": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+          "procedureLocatorDigest": "a3561bed9f75c08f0d01adbc404dc95a5d9d896474acf21a7bf37ce80e2742fc",
+          "requestDigest": "5df43db86fb687bdee6d5c7751e03b839878fbbd12b2232a57cc95e793752614",
+          "scopeHash": "a9b7ab2d069de538c758affa7aa1fbc31f09e700dc42fcfa1744a36414e679d4"
+        },
+        "bindingDigest": "bd33ed046598f280a4162f50f84a4b83fdde9c72fd6c124454b2b4a5e4295604",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "c1dc49399918f82c4951baba8896e1c63a0bd651",
+          "observedLockRefHead": "9b9d780e4d9906d2b2f214cc742e957f36691a09"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "5653ca98efe19261d074943b54b5d368e1babe415dd1f120ad33a9130deb9447",
+          "commentId": 6027542939,
+          "issueNumber": 5842,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e1733beb23435bf24f164b492dc069f0d43d35a4",
+          "lockGeneration": 2600,
+          "lockScope": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+          "operationId": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+          "procedureLocatorDigest": "a3561bed9f75c08f0d01adbc404dc95a5d9d896474acf21a7bf37ce80e2742fc",
+          "requestDigest": "5df43db86fb687bdee6d5c7751e03b839878fbbd12b2232a57cc95e793752614",
+          "scopeHash": "a9b7ab2d069de538c758affa7aa1fbc31f09e700dc42fcfa1744a36414e679d4"
+        },
+        "bindingDigest": "c9e4141ecc9a4caee62c0f5a1b938f5032ef66dbcecf2fe5a4d14bb80edcea59",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "3a97a026948e18f295cc9dee79d43a6bd6ec9b90",
+          "observedLockRefHead": "9d5e5fe25e052090a7317a7912ef98af504aa124"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "c4e8abfe0c4282af69650be8d83e52fc8430eb04692459ef740d618b3c86e338",
+          "commentId": 6027795298,
+          "issueNumber": 5842,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "e1733beb23435bf24f164b492dc069f0d43d35a4",
+          "lockGeneration": 2600,
+          "lockScope": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+          "operationId": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+          "released": true,
+          "scopeHash": "a9b7ab2d069de538c758affa7aa1fbc31f09e700dc42fcfa1744a36414e679d4",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2600,
+      "lockScope": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+      "operationId": "H_EARTH_WOODLAND_MEADOW_FAN_20261006",
+      "procedureLocatorDigest": "a3561bed9f75c08f0d01adbc404dc95a5d9d896474acf21a7bf37ce80e2742fc",
+      "released": true,
+      "requestDigest": "5df43db86fb687bdee6d5c7751e03b839878fbbd12b2232a57cc95e793752614",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a9b7ab2d069de538c758affa7aa1fbc31f09e700dc42fcfa1744a36414e679d4",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

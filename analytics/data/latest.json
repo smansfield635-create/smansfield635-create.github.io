@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-07T18:41:35Z",
+  "generatedAt": "2026-10-07T19:31:38Z",
   "window30d": {
-    "start": "2026-09-07T18:41:35Z",
-    "end": "2026-10-07T18:41:35Z"
+    "start": "2026-09-07T19:31:38Z",
+    "end": "2026-10-07T19:31:38Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 36
+      "pageLoads": 35
     },
     {
       "date": "2026-10-01",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 67
+      "pageLoads": 70
     }
   ],
   "summary": {
-    "pageLoads": 6293,
+    "pageLoads": 6285,
     "botPageLoads": 2340,
-    "nonBotPageLoads": 3953
+    "nonBotPageLoads": 3945
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3318,
-      "visits": 3318
+      "pageLoads": 3308,
+      "visits": 3308
     },
     {
       "host": "diamondgatebridge.com",
@@ -164,6 +164,11 @@
       "visits": 2
     },
     {
+      "host": "com.google.android.googlequicksearchbox",
+      "pageLoads": 2,
+      "visits": 2
+    },
+    {
       "host": "l.facebook.com",
       "pageLoads": 1,
       "visits": 1
@@ -172,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1487,
-      "visits": 1091
+      "pageLoads": 1379,
+      "visits": 983
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 780,
-      "visits": 780
+      "pageLoads": 730,
+      "visits": 730
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -187,18 +192,13 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 436,
-      "visits": 346
+      "pageLoads": 416,
+      "visits": 326
     },
     {
       "path": "/analytics/",
       "pageLoads": 400,
       "visits": 278
-    },
-    {
-      "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 340,
-      "visits": 90
     },
     {
       "path": "/products/education/",
@@ -209,6 +209,11 @@
       "path": "/showroom/globe/h-earth/",
       "pageLoads": 264,
       "visits": 240
+    },
+    {
+      "path": "/campaigns/consider-the-energy/",
+      "pageLoads": 250,
+      "visits": 90
     }
   ],
   "ownerMeasurement": {

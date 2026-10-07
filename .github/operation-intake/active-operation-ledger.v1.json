@@ -11091,6 +11091,50 @@
       "scopeHash": "b42c855020ac097941aaabe6e2524e0b60f9262518a3f23e73c93e8f14c5469c",
       "state": "ADMITTED_LOCKED"
     },
+    "b452cdb3b4eb19b31ecb5a5e4bd75ab8bf3fec58bc9a52dcdef4b61e567c5b5e": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "682b31bde146f3a193cae7af5eecd1a6423024b5",
+          "lockGeneration": 2608,
+          "lockScope": "BOOK_TOPOGRAPHIC_QUALIFICATION_TOOLING",
+          "operationId": "BOOK_TOPOGRAPHIC_EXACT_CANDIDATE_QUALIFIER_20261006_001",
+          "procedureLocatorDigest": "ec069419080dbd44bd1c41cd3814b18a6eb16fbf79ca69e8c0cc0b28088a1eed",
+          "requestDigest": "e4dc1166e0d13cf0abdaa0dbd4bf6124fd858691437b4a4da9f53481b531c052",
+          "scopeHash": "b452cdb3b4eb19b31ecb5a5e4bd75ab8bf3fec58bc9a52dcdef4b61e567c5b5e"
+        },
+        "bindingDigest": "edeb386985db6b13f4be87b07d42598130d1143a36d70e1a212e722142a57907",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a39dca25a068a2841abe4dfe822fef29d79d8156324bc3c2624370bac1a06a23",
+          "commentId": 6029826694,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5898,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37563600933,
+          "workflowSha": "682b31bde146f3a193cae7af5eecd1a6423024b5"
+        },
+        "lineageAnchorCommitSha": "663aaf3f3aa7071f9828d5e3858e84ea8c9874aa",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "682b31bde146f3a193cae7af5eecd1a6423024b5",
+      "lockGeneration": 2608,
+      "lockScope": "BOOK_TOPOGRAPHIC_QUALIFICATION_TOOLING",
+      "operationId": "BOOK_TOPOGRAPHIC_EXACT_CANDIDATE_QUALIFIER_20261006_001",
+      "procedureLocatorDigest": "ec069419080dbd44bd1c41cd3814b18a6eb16fbf79ca69e8c0cc0b28088a1eed",
+      "released": false,
+      "requestDigest": "e4dc1166e0d13cf0abdaa0dbd4bf6124fd858691437b4a4da9f53481b531c052",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b452cdb3b4eb19b31ecb5a5e4bd75ab8bf3fec58bc9a52dcdef4b61e567c5b5e",
+      "state": "ADMITTED_LOCKED"
+    },
     "b491d11fc7016d737b0e4666792ef274b734b796b83977d47237b9c5956d7995": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -15904,7 +15948,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2607,
+  "lockGeneration": 2608,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-07T19:31:38Z",
+  "generatedAt": "2026-10-07T20:34:12Z",
   "window30d": {
-    "start": "2026-09-07T19:31:38Z",
-    "end": "2026-10-07T19:31:38Z"
+    "start": "2026-09-07T20:34:12Z",
+    "end": "2026-10-07T20:34:12Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 35
+      "pageLoads": 34
     },
     {
       "date": "2026-10-01",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 70
+      "pageLoads": 71
     }
   ],
   "summary": {
@@ -177,13 +177,13 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1379,
-      "visits": 983
+      "pageLoads": 1489,
+      "visits": 1093
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 730,
-      "visits": 730
+      "pageLoads": 780,
+      "visits": 780
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -192,13 +192,18 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 416,
-      "visits": 326
+      "pageLoads": 436,
+      "visits": 346
     },
     {
       "path": "/analytics/",
       "pageLoads": 400,
       "visits": 278
+    },
+    {
+      "path": "/campaigns/consider-the-energy/",
+      "pageLoads": 340,
+      "visits": 90
     },
     {
       "path": "/products/education/",
@@ -209,11 +214,6 @@
       "path": "/showroom/globe/h-earth/",
       "pageLoads": 264,
       "visits": 240
-    },
-    {
-      "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 250,
-      "visits": 90
     }
   ],
   "ownerMeasurement": {

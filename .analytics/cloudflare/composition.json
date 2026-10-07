@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T19:31:38Z",
+  "generatedAt": "2026-10-07T20:34:12Z",
   "window": {
-    "start": "2026-09-07T19:31:38Z",
-    "end": "2026-10-07T19:31:38Z"
+    "start": "2026-09-07T20:34:12Z",
+    "end": "2026-10-07T20:34:12Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1379,
-        "visits": 983
+        "pageLoads": 1489,
+        "visits": 1093
       },
       {
         "value": "/mirror-manor-preview/",
-        "pageLoads": 730,
-        "visits": 730
+        "pageLoads": 780,
+        "visits": 780
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
@@ -24,13 +24,18 @@
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 416,
-        "visits": 326
+        "pageLoads": 436,
+        "visits": 346
       },
       {
         "value": "/analytics/",
         "pageLoads": 400,
         "visits": 278
+      },
+      {
+        "value": "/campaigns/consider-the-energy/",
+        "pageLoads": 340,
+        "visits": 90
       },
       {
         "value": "/products/education/",
@@ -41,11 +46,6 @@
         "value": "/showroom/globe/h-earth/",
         "pageLoads": 264,
         "visits": 240
-      },
-      {
-        "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 250,
-        "visits": 90
       },
       {
         "value": "/governance-bridge/",
@@ -153,6 +153,11 @@
         "visits": 0
       },
       {
+        "value": "/about/",
+        "pageLoads": 26,
+        "visits": 6
+      },
+      {
         "value": "/door/canonical-object.html",
         "pageLoads": 22,
         "visits": 0
@@ -201,11 +206,6 @@
         "value": "/evidence/readiness/",
         "pageLoads": 20,
         "visits": 0
-      },
-      {
-        "value": "/about/",
-        "pageLoads": 16,
-        "visits": 6
       },
       {
         "value": "/coherence-diagnostic/",
@@ -283,17 +283,17 @@
         "visits": 0
       },
       {
+        "value": "/explore/frontier/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
         "value": "/five-flags/",
         "pageLoads": 2,
         "visits": 2
       },
       {
         "value": "/products/ssg/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/explore/frontier/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -388,8 +388,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6153,
-        "visits": 3558
+        "pageLoads": 6238,
+        "visits": 3643
       },
       {
         "value": "BR",

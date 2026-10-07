@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "BOOK_TOPOGRAPHY_QUALIFY_F2977CD_005",
+  "capabilityId": "BOOK_TOPOGRAPHIC_WIREFRAME_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5932,
+  "requestBranch": "ai-dispatch-request-book-topography-qualify-005",
+  "requestCommit": "ec4acf7bd50e1e89422d8ba91573354fcfe61a87",
+  "requestCommitParent": "837df17e16bf198c6aef611916a016055509e88b",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "837df17e16bf198c6aef611916a016055509e88b",
+  "workflow": "book-topographic-wireframe-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37566914991",
+  "dispatchedRunId": 37566928458,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37566928458",
+  "dispatchedRunHeadSha": "837df17e16bf198c6aef611916a016055509e88b",
+  "dispatchedAt": "2026-10-07T03:28:45.066Z",
+  "resolvedAt": "2026-10-07T03:28:48.648Z"
+}

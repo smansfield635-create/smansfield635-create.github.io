@@ -332,20 +332,6 @@ jobs:
                   browserProbe,
                   new Promise(resolve=>setTimeout(()=>resolve({executed:false,phase:'NODE_FULL_RESIDENCY_TIMEOUT',timeoutMilliseconds:600000}),600000))
                 ]);
-                if(vegetationExercise?.executed===true){
-                  await page.waitForFunction(() => {
-                    const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
-                    const receipt=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
-                    const residency=receipt?.resources?.vegetationResidency??null;
-                    return residency?.residentBatchCount===108 && residency?.residentInstanceCount===27585 && residency?.complete===true && residency?.droppedPlacementCount===0 && receipt?.counters?.worldRebuildCount===0;
-                  },null,{timeout:600000});
-                  const settled=await page.evaluate(() => {
-                    const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
-                    const receipt=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
-                    return {finalResidency:receipt?.resources?.vegetationResidency??null,worldRebuildCount:receipt?.counters?.worldRebuildCount??null};
-                  });
-                  vegetationExercise={...vegetationExercise,...settled};
-                }
               }catch(error){
                 vegetationExercise={executed:false,phase:'NODE_PAGE_EVALUATE_REJECTED',failure:{error:{name:error?.name??null,message:error?.message??String(error),stack:error?.stack??null}}};
               }

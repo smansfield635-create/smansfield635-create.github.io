@@ -1,0 +1,327 @@
+{
+  "schema": "BUILD_COMPANION_MATRIX_v2",
+  "version": "2.0",
+  "start": "type",
+  "contracts": {
+    "delivery": "Nothing is sent automatically.",
+    "capabilityLaw": "Capabilities are introduced by owner answers, never inferred from category."
+  },
+  "branches": [
+    "Business / services",
+    "Professional practice",
+    "Creator / personal project",
+    "Portfolio / public presence",
+    "Restaurant / hospitality",
+    "Community / cause",
+    "Commerce",
+    "Interactive application",
+    "3D / spatial experience",
+    "Existing site rebuild",
+    "Help me decide"
+  ],
+  "nodes": [
+    {
+      "id": "type",
+      "prompt": "What would you like to bring to life?",
+      "type": "single",
+      "record": "project.type",
+      "synthesis": "Project",
+      "options": [
+        "Business / services",
+        "Professional practice",
+        "Creator / personal project",
+        "Portfolio / public presence",
+        "Restaurant / hospitality",
+        "Community / cause",
+        "Commerce",
+        "Interactive application",
+        "3D / spatial experience",
+        "Existing site rebuild",
+        "Help me decide"
+      ]
+    },
+    {
+      "id": "context",
+      "prompt": "In a sentence, what is the organization, project, or thing you are building around?",
+      "type": "text",
+      "record": "project.context",
+      "synthesis": "Project"
+    },
+    {
+      "id": "audience",
+      "prompt": "Who does this website need to serve first?",
+      "type": "text",
+      "record": "audience.primary",
+      "synthesis": "Audience"
+    },
+    {
+      "id": "outcome",
+      "prompt": "What should the website accomplish for them and for you?",
+      "type": "text",
+      "record": "objective.primary",
+      "synthesis": "Website objective"
+    },
+    {
+      "id": "restaurantNeeds",
+      "prompt": "Which website needs apply to this restaurant or hospitality project?",
+      "type": "multi",
+      "when": {
+        "type": "Restaurant / hospitality"
+      },
+      "record": "restaurant.needs",
+      "synthesis": "Required capabilities",
+      "options": [
+        "Show the menu",
+        "Accept catering inquiries",
+        "Support reservations",
+        "Promote events",
+        "Show locations or hours",
+        "Tell the story"
+      ]
+    },
+    {
+      "id": "restaurantCatering",
+      "prompt": "For catering, what should visitors be able to learn or submit on the website?",
+      "type": "text",
+      "when": {
+        "answerIncludes": [
+          "restaurantNeeds",
+          "Accept catering inquiries"
+        ]
+      },
+      "record": "restaurant.cateringScope",
+      "synthesis": "Required capabilities",
+      "dependsOn": [
+        "restaurantNeeds"
+      ]
+    },
+    {
+      "id": "commerceMode",
+      "prompt": "Should the site only present the catalog, or should customers complete purchases on the site?",
+      "type": "single",
+      "when": {
+        "type": "Commerce"
+      },
+      "record": "commerce.mode",
+      "synthesis": "Required capabilities",
+      "options": [
+        "Present the catalog only",
+        "Complete purchases on the site",
+        "Custom orders or inquiries",
+        "Not sure yet"
+      ]
+    },
+    {
+      "id": "fulfillment",
+      "prompt": "If purchases happen on the site, how should fulfillment work?",
+      "type": "text",
+      "when": {
+        "answerEquals": [
+          "commerceMode",
+          "Complete purchases on the site"
+        ]
+      },
+      "record": "commerce.fulfillment",
+      "synthesis": "Required capabilities",
+      "dependsOn": [
+        "commerceMode"
+      ]
+    },
+    {
+      "id": "appWorkflow",
+      "prompt": "What job or workflow should the application help its users complete?",
+      "type": "text",
+      "when": {
+        "type": "Interactive application"
+      },
+      "record": "application.workflow",
+      "synthesis": "Website objective"
+    },
+    {
+      "id": "appIO",
+      "prompt": "What information goes in, and what should the application produce or change?",
+      "type": "text",
+      "when": {
+        "type": "Interactive application"
+      },
+      "record": "application.inputsOutputs",
+      "synthesis": "Required capabilities"
+    },
+    {
+      "id": "accounts",
+      "prompt": "Does that workflow require people to sign in or keep private saved data?",
+      "type": "single",
+      "when": {
+        "type": "Interactive application"
+      },
+      "record": "application.accounts",
+      "synthesis": "Required capabilities",
+      "options": [
+        "Yes",
+        "No",
+        "Not sure yet"
+      ]
+    },
+    {
+      "id": "spatialWorld",
+      "prompt": "What place, world, product, or idea should people explore?",
+      "type": "text",
+      "when": {
+        "type": "3D / spatial experience"
+      },
+      "record": "spatial.world",
+      "synthesis": "Content / information architecture"
+    },
+    {
+      "id": "spatialInteraction",
+      "prompt": "How should people move through it or interact with it?",
+      "type": "text",
+      "when": {
+        "type": "3D / spatial experience"
+      },
+      "record": "spatial.interaction",
+      "synthesis": "Required capabilities"
+    },
+    {
+      "id": "spatialDevices",
+      "prompt": "Which devices matter most for this experience?",
+      "type": "multi",
+      "when": {
+        "type": "3D / spatial experience"
+      },
+      "record": "spatial.devices",
+      "synthesis": "Constraints / timing",
+      "options": [
+        "Phones",
+        "Tablets",
+        "Desktop / laptop",
+        "Large displays",
+        "Not sure yet"
+      ]
+    },
+    {
+      "id": "rebuildUrl",
+      "prompt": "What is the current website address?",
+      "type": "url",
+      "when": {
+        "type": "Existing site rebuild"
+      },
+      "record": "rebuild.url",
+      "synthesis": "Starting point / assets"
+    },
+    {
+      "id": "rebuildWorks",
+      "prompt": "What is working well on the current site and should be preserved?",
+      "type": "text",
+      "when": {
+        "type": "Existing site rebuild"
+      },
+      "record": "rebuild.strengths",
+      "synthesis": "Starting point / assets"
+    },
+    {
+      "id": "rebuildFails",
+      "prompt": "What is not working or needs to change?",
+      "type": "text",
+      "when": {
+        "type": "Existing site rebuild"
+      },
+      "record": "rebuild.problems",
+      "synthesis": "Website objective"
+    },
+    {
+      "id": "decidePlain",
+      "prompt": "Describe what you do or are making without worrying about website terminology.",
+      "type": "text",
+      "when": {
+        "type": "Help me decide"
+      },
+      "record": "decide.description",
+      "synthesis": "Project"
+    },
+    {
+      "id": "content",
+      "prompt": "What must visitors understand, see, or trust before they can take the next step?",
+      "type": "text",
+      "record": "content.core",
+      "synthesis": "Content / information architecture"
+    },
+    {
+      "id": "capabilities",
+      "prompt": "Is there anything visitors must actually be able to do on the site beyond reading or viewing?",
+      "type": "text",
+      "record": "capabilities.explicit",
+      "synthesis": "Required capabilities",
+      "openQuestion": true
+    },
+    {
+      "id": "starting",
+      "prompt": "What are we starting with?",
+      "type": "single",
+      "record": "starting.point",
+      "synthesis": "Starting point / assets",
+      "options": [
+        "Starting fresh",
+        "Existing site and content",
+        "Branding/assets but no site",
+        "Some pieces are ready",
+        "Not sure yet"
+      ]
+    },
+    {
+      "id": "experience",
+      "prompt": "How should the experience feel?",
+      "type": "multi",
+      "record": "experience.direction",
+      "synthesis": "Experience direction",
+      "options": [
+        "Professional",
+        "Warm",
+        "Minimal",
+        "Bold",
+        "Playful",
+        "Cinematic",
+        "Luxurious",
+        "Technical"
+      ]
+    },
+    {
+      "id": "constraints",
+      "prompt": "Are there any known technical, business, accessibility, or platform constraints Sean should account for?",
+      "type": "text",
+      "record": "constraints.known",
+      "synthesis": "Constraints / timing",
+      "openQuestion": true
+    },
+    {
+      "id": "timeline",
+      "prompt": "When would you ideally like it ready? This is a preference, not a confirmed schedule.",
+      "type": "single",
+      "record": "delivery.timing",
+      "synthesis": "Constraints / timing",
+      "options": [
+        "As soon as practical",
+        "Within 1–2 weeks",
+        "Within 1 month",
+        "Within 2–3 months",
+        "I have a specific date",
+        "No fixed deadline",
+        "Not sure yet"
+      ]
+    },
+    {
+      "id": "name",
+      "prompt": "What name should we put with your project?",
+      "type": "text",
+      "record": "contact.name",
+      "synthesis": "Contact"
+    },
+    {
+      "id": "email",
+      "prompt": "What email should Sean use to follow up?",
+      "type": "email",
+      "record": "contact.email",
+      "synthesis": "Contact"
+    }
+  ]
+}

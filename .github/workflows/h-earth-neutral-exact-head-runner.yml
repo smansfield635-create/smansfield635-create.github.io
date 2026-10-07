@@ -48,6 +48,15 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
 
+      - name: Fetch fixed woodland-meadow qualification history
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin 376210ddefeacbf0f22f66233c7e8746d6be075c
+          git fetch --no-tags --depth=1 origin 7804b359aa032caa00f8dd526f8e4186df97fac9
+          git cat-file -e 376210ddefeacbf0f22f66233c7e8746d6be075c^{commit}
+          git cat-file -e 7804b359aa032caa00f8dd526f8e4186df97fac9^{commit}
+
       - name: Execute fixed woodland-meadow distribution mechanical validator
         shell: bash
         run: |

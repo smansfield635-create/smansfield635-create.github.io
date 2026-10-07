@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T12:47:16Z",
+  "generatedAt": "2026-10-07T13:38:10Z",
   "window": {
-    "start": "2026-09-07T12:47:16Z",
-    "end": "2026-10-07T12:47:16Z"
+    "start": "2026-09-07T13:38:10Z",
+    "end": "2026-10-07T13:38:10Z"
   },
   "dimensions": {
     "requestPath": [
@@ -451,24 +451,24 @@
     ],
     "userAgentBrowser": [
       {
-        "value": "Chrome",
-        "pageLoads": 3059,
-        "visits": 682
+        "value": "ChromeHeadless",
+        "pageLoads": 2309,
+        "visits": 2256
       },
       {
-        "value": "ChromeHeadless",
-        "pageLoads": 2233,
-        "visits": 2180
+        "value": "Chrome",
+        "pageLoads": 2147,
+        "visits": 730
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1489,
-        "visits": 460
+        "pageLoads": 1568,
+        "visits": 468
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 60,
-        "visits": 44
+        "pageLoads": 71,
+        "visits": 50
       },
       {
         "value": "Unknown",
@@ -604,8 +604,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6061,
-        "visits": 3576
+        "pageLoads": 6380,
+        "visits": 3817
       }
     ]
   }

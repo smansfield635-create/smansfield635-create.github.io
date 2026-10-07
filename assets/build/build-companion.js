@@ -4,7 +4,7 @@
    session restoration and editable review. Build delta: explicit modal lifecycle,
    project questions and email draft only. No provider or donor backend. */
 (()=>{'use strict';
-const key='dgb-build-companion-v1',own=(o,k)=>Object.hasOwn(o,k);
+const key='dgb-build-companion-v1',matrixVersion='1.1',own=(o,k)=>Object.hasOwn(o,k);
 const businessMatrix={
  'Business / services':['Request a quote','Book a service','Ask a question','View services','Find hours and directions'],
  'Professional practice':['Request a consultation','Ask about services','Check availability','Learn about the practice','Find hours and directions'],
@@ -38,13 +38,22 @@ const fields={
  notes:{label:'Other details',prompt:'Is there anything else you would like to discuss?',options:['Nothing else for now','Help defining the scope','Accessibility needs','An integration or technical question','I would rather talk through the rest','Add a short detail']},
  detail:{label:'Additional detail',prompt:'What else should Sean know? A short note is enough.',type:'textarea',max:1500}
 };
-const fresh=()=>({values:{},done:[],drafts:{},history:[],pending:'type',promptShown:false,mode:'conversation',resume:null,preparing:false});
+const fresh=()=>({matrixVersion,values:{},done:[],drafts:{},history:[],pending:'type',promptShown:false,mode:'conversation',resume:null,preparing:false});
 let state=fresh(),storageOK=true,epoch=0,busy=false,opener=null,savedOverflow='',initialized=false;
 try{const d=JSON.parse(sessionStorage.getItem(key)||'null');if(d&&typeof d==='object'){
  for(const k of Object.keys(fields)){const f=fields[k],v=d.values?.[k];if(f.multi&&Array.isArray(v))state.values[k]=v.filter(x=>f.options.includes(x));else if(typeof v==='string'&&(!f.options||f.options.includes(v)||v===''))state.values[k]=v.slice(0,f.max||500);const draft=d.drafts?.[k];if(f.multi&&Array.isArray(draft))state.drafts[k]=draft.filter(x=>f.options.includes(x));else if(typeof draft==='string')state.drafts[k]=draft.slice(0,f.max||500);}
  state.done=Array.isArray(d.done)?d.done.filter(k=>own(fields,k)):[];
  state.history=Array.isArray(d.history)?d.history.filter(x=>x&&['host','user'].includes(x.role)&&typeof x.text==='string').slice(-150).map(x=>({role:x.role,text:x.text.slice(0,2200)})):[];
  state.pending=own(fields,d.pending)?d.pending:null;state.promptShown=d.promptShown===true;state.mode=d.mode==='review'?'review':'conversation';state.resume=d.resume==='review'?'review':null;state.preparing=d.preparing===true;
+ if(d.matrixVersion!==matrixVersion&&state.values.type){
+  // Matrix v1.1 inserted a business-specific action step before the legacy generic goal.
+  // Preserve valid project/contact facts, but force restored pre-v1.1 sessions through that step.
+  delete state.values.action;delete state.drafts.action;
+  state.done=state.done.filter(k=>k!=='action'&&k!=='goal');
+  state.pending='action';state.promptShown=false;state.mode='conversation';state.resume=null;state.preparing=false;
+  state.history=[];
+ }
+ state.matrixVersion=matrixVersion;
 }}catch{storageOK=false;}
 const dialog=document.createElement('dialog');dialog.id='build-companion';dialog.className='build-companion';dialog.setAttribute('aria-labelledby','bc-title');
 dialog.innerHTML='<div class="bc-frame"><header class="bc-header"><div><p class="bc-eyebrow">DIAMOND GATE BUILD</p><h2 id="bc-title">Let’s shape your idea.</h2></div><button type="button" class="bc-close" aria-label="Close project conversation">×</button></header><div class="bc-body"><div class="bc-log" role="log" aria-label="Project conversation" aria-live="polite" aria-relevant="additions"></div><div class="bc-choices" tabindex="-1" aria-label="Your response"></div><section class="bc-review" hidden aria-label="Your project brief"></section></div><footer class="bc-footer"><div class="bc-tools"><button type="button" data-bc-review>Review my brief</button><button type="button" data-bc-help>Questions</button><button type="button" data-bc-reset>Start over</button></div><p class="bc-saving"></p></footer></div>';

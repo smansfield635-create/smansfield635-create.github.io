@@ -54,8 +54,10 @@ jobs:
           set -euo pipefail
           git fetch --no-tags --depth=1 origin 376210ddefeacbf0f22f66233c7e8746d6be075c
           git fetch --no-tags --depth=1 origin 7804b359aa032caa00f8dd526f8e4186df97fac9
+          git fetch --no-tags --depth=1 origin 35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba
           git cat-file -e 376210ddefeacbf0f22f66233c7e8746d6be075c^{commit}
           git cat-file -e 7804b359aa032caa00f8dd526f8e4186df97fac9^{commit}
+          git cat-file -e 35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba^{commit}
 
       - name: Execute fixed woodland-meadow distribution mechanical validator
         shell: bash

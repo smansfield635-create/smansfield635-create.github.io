@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T14:35:05Z",
+  "generatedAt": "2026-10-07T15:43:04Z",
   "window": {
-    "start": "2026-09-07T14:35:05Z",
-    "end": "2026-10-07T14:35:05Z"
+    "start": "2026-09-07T15:43:04Z",
+    "end": "2026-10-07T15:43:04Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1479,
-        "visits": 1083
+        "pageLoads": 1488,
+        "visits": 1092
       },
       {
         "value": "/mirror-manor-preview/",
@@ -29,8 +29,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 385,
-        "visits": 263
+        "pageLoads": 390,
+        "visits": 268
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -44,8 +44,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 234,
-        "visits": 212
+        "pageLoads": 261,
+        "visits": 237
       },
       {
         "value": "/governance-bridge/",
@@ -268,6 +268,11 @@
         "visits": 4
       },
       {
+        "value": "/products/auren/",
+        "pageLoads": 6,
+        "visits": 5
+      },
+      {
         "value": "/products/nutrition/",
         "pageLoads": 4,
         "visits": 4
@@ -346,28 +351,23 @@
         "value": "/build/intake/",
         "pageLoads": 1,
         "visits": 1
-      },
-      {
-        "value": "/products/auren/",
-        "pageLoads": 1,
-        "visits": 1
       }
     ],
     "refererHost": [
       {
+        "value": "(none)",
+        "pageLoads": 3303,
+        "visits": 3303
+      },
+      {
         "value": "diamondgatebridge.com",
-        "pageLoads": 4374,
+        "pageLoads": 2595,
         "visits": 0
       },
       {
-        "value": "(none)",
-        "pageLoads": 2986,
-        "visits": 2986
-      },
-      {
         "value": "www.google.com",
-        "pageLoads": 310,
-        "visits": 310
+        "pageLoads": 330,
+        "visits": 330
       },
       {
         "value": "m.facebook.com",
@@ -435,13 +435,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2689,
-        "visits": 2600
+        "pageLoads": 2719,
+        "visits": 2630
       },
       {
         "value": "tablet",
-        "pageLoads": 1844,
-        "visits": 463
+        "pageLoads": 1854,
+        "visits": 473
       },
       {
         "value": "mobile",

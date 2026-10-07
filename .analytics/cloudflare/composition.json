@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T20:34:12Z",
+  "generatedAt": "2026-10-07T21:32:42Z",
   "window": {
-    "start": "2026-09-07T20:34:12Z",
-    "end": "2026-10-07T20:34:12Z"
+    "start": "2026-09-07T21:32:42Z",
+    "end": "2026-10-07T21:32:42Z"
   },
   "dimensions": {
     "requestPath": [
@@ -178,12 +178,12 @@
         "visits": 10
       },
       {
-        "value": "/governance/",
+        "value": "/showroom/story/invitation/",
         "pageLoads": 20,
         "visits": 0
       },
       {
-        "value": "/showroom/story/invitation/",
+        "value": "/governance/",
         "pageLoads": 20,
         "visits": 0
       },

@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 9b85a33225f2f6484c00ddf1bdcf36d19ae94754
+          ref: 051e24fb61c96b39f927b3d154ea71bb564c7b82
           fetch-depth: 1
       - name: Prove immutable candidate
-        run: test "$(git rev-parse HEAD)" = "9b85a33225f2f6484c00ddf1bdcf36d19ae94754"
+        run: test "$(git rev-parse HEAD)" = "051e24fb61c96b39f927b3d154ea71bb564c7b82"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -29,7 +29,7 @@ jobs:
           mkdir -p /tmp/book-atlas-qualification
           cat > .book-atlas-qualify.mjs <<'NODE'
           import{chromium}from'playwright';import fs from'node:fs';
-          const candidate='9b85a33225f2f6484c00ddf1bdcf36d19ae94754',browser=await chromium.launch({headless:true});
+          const candidate='051e24fb61c96b39f927b3d154ea71bb564c7b82',browser=await chromium.launch({headless:true});
           const receipt={schema:'BOOK_NAVIGABLE_TERRAIN_ATLAS_QUALIFICATION_v1',candidate,result:'PASS',viewports:{}};
           const specs={phone:{width:390,height:844},tablet:{width:800,height:1280}};
           try{

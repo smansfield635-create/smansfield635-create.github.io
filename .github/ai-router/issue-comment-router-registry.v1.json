@@ -83,6 +83,17 @@
       "issueOnly": true,
       "representation": "MARKER_PLUS_JSON",
       "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
+    },
+    {
+      "marker": "H_EARTH_DISTRIBUTION_V8_QUALIFICATION_REQUEST_V1",
+      "workflow": "h-earth-distribution-v8-dispatch-bridge.yml",
+      "input": "request_json",
+      "associations": [
+        "OWNER"
+      ],
+      "issueOnly": true,
+      "representation": "RAW_JSON",
+      "callbackContext": "ROUTER_AUTHENTICATED_ISSUE_COMMENT"
     }
   ],
   "invariants": [

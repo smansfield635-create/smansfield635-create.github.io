@@ -2174,6 +2174,134 @@
       "continuationRule": "CONTINUE_ONLY_FROM_RETURNED_EXACT_MODULE_FAILURE",
       "terminationRule": "READ_ONLY_DIAGNOSTIC_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_EXACT_HEAD_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
+      "operationClass": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_FIXED_EXACT_HEAD_QUALIFICATION",
+      "projectId": "H_EARTH",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_QUALIFICATION_ADAPTER_V1",
+      "exactToolingHead": "321faa01ca6fd44018ea94e4db49877f542baeca",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/h-earth-woodland-meadow-distribution-qualification.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": true
+      },
+      "canonicalInputSchema": {
+        "schemaId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_QUALIFICATION_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_QUALIFICATION_RECEIPT_v1",
+        "required": [
+          "schema",
+          "result",
+          "operationId",
+          "executionHolder",
+          "candidateHead",
+          "validatorPath",
+          "validatorExitCode",
+          "mechanicalReceipt",
+          "stdout",
+          "stderr",
+          "candidateCleanAfter",
+          "productMutationPerformed",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "showroom/",
+        "h-earth-3d/",
+        "assets/",
+        "laws/",
+        "characters/"
+      ],
+      "prohibitedSideEffects": [
+        "PRODUCT_MUTATION",
+        "SOURCE_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
+      "successDisposition": "RETURN_AUTHENTIC_DISTRIBUTION_MECHANICAL_QUALIFICATION_RECEIPT_TO_ISSUE_5842",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "RETURN_VALIDATOR_FAILURE_AND_PRESERVE_CANDIDATE",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "CLASSIFY_EXECUTION_SUBSTRATE_AND_PRESERVE_CANDIDATE",
+        "MISSING_OR_INVALID_RECEIPT": "STOP_AND_RETURN_RECEIPT_BOUNDARY"
+      },
+      "continuationRule": "CONTINUE_ONLY_FROM_AUTHENTIC_EXACT_CANDIDATE_QUALIFICATION_RESULT",
+      "terminationRule": "FIXED_QUALIFICATION_EXECUTION_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN;NO_PRODUCT_MUTATION_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

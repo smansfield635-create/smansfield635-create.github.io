@@ -15,6 +15,9 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const spec=JSON.parse(fs.readFileSync(path.join(root,'h-earth-3d/environment/woodland-meadow-distribution-20261006.spec.json'),'utf8'));
 spec.exactAllowedPaths=spec.exactAllowedPaths||["showroom/globe/h-earth/render/geometry-landscape-sector.p2.js","h-earth-3d/environment/woodland-meadow-distribution-20261006.spec.json","h-earth-3d/validation/h-earth.woodland-meadow-distribution-20261006.mjs","showroom/globe/h-earth/render/run8e-successor-environment.js","showroom/globe/h-earth/render/live-render-package.run8e-r2.js","showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js","showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js","showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js","showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js","showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js","showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js","showroom/globe/h-earth/index.html"];
 const sectorPath='showroom/globe/h-earth/render/geometry-landscape-sector.p2.js';
+const productCandidateHead='35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba';
+const publishedBaselineHead='7804b359aa032caa00f8dd526f8e4186df97fac9';
+const baselineSourceHead='376210ddefeacbf0f22f66233c7e8746d6be075c';
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',maxBuffer:20*1024*1024});
 const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const abortBase={id:'DISTRIBUTION_ABORT_WITNESS',x:0,z:0,bladeCount:4,pocket:'OLIVE',eligible:()=>true};let domainCalls=0;
@@ -24,12 +27,12 @@ const terrain=previewHEarthFunctionalLandscape().componentResults.terrain.primit
 const sector=buildHEarthLandscapeSector({terrainPrimitive:terrain});
 assert.equal(sector.eligible,true,sector.issues.join(','));
 for(const options of [{reverseGenerationOrder:true},{grassCellOrder:'REVERSE'},{grassCellOrder:'CHUNKED'}])assert.equal(digest(buildHEarthLandscapeSector({terrainPrimitive:terrain,...options})),digest(sector),'GENERATION_ORDER_DRIFT');
-const baselineText=git('show',`7804b359aa032caa00f8dd526f8e4186df97fac9:${sectorPath}`);
+const baselineText=git('show',`${baselineSourceHead}:${sectorPath}`);
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'hearth-distribution-baseline-'));
 let baseline;
 try{
  const recipePath='showroom/globe/h-earth/render/grass-lowland-trial.js';
- const archivedRecipe=git('show',`7804b359aa032caa00f8dd526f8e4186df97fac9:${recipePath}`);
+ const archivedRecipe=git('show',`${baselineSourceHead}:${recipePath}`);
  const absoluteImports=(source,sourcePath)=>source.replace(/from (['"])(\.[^'"]+)\1/g,(_,q,target)=>`from ${q}${new URL(target,pathToFileURL(path.join(root,sourcePath))).href}${q}`);
  const recipeFile=path.join(temp,'grass.mjs');fs.writeFileSync(recipeFile,absoluteImports(archivedRecipe,recipePath));
  const source=absoluteImports(baselineText,sectorPath).replace(/file:[^'"]*grass-lowland-trial\.js\?cb=[^'"]+/g,pathToFileURL(recipeFile).href);
@@ -67,7 +70,7 @@ const grassVertices=grass.geometry.vertices.length,grassTriangles=grass.geometry
 assert(tufts.length<=252);assert(grassVertices<=7056);assert(grassTriangles<=6048);assert(grassBufferBytes<=559440);assert(sector.diagnostics.triangleCount<=35748);
 // Base package cost inherits untouched other geometry: only grass vertices/indices change.
 const oldGrass=baseline.primitives.find(p=>p.primitiveId==='H_EARTH_LANDSCAPE_P2_GRASS'),deltaVertices=grassVertices-oldGrass.geometry.vertices.length,deltaTriangles=grassTriangles-oldGrass.geometry.indices.length/3;
-const report={schema:'H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_MECHANICAL_QUALIFICATION_v1',antiLattice:{baselineConcentration,candidateConcentration,reduction:antiLatticeReduction,pass:candidateConcentration<baselineConcentration},result:'PASS',executedHead:git('rev-parse','HEAD').trim(),trackedWorkingTreeClean:git('status','--porcelain','--untracked-files=no').trim()==='',baseline:spec.baseline,sectorDigest:digest(sector),terrainDigest:digest(terrain),decisionDigest:digest(decisions),acceptedTufts:tufts.length,blades:tufts.length*4,rootColumns:roots,maxGroundError,maxTipHeight,grassVertices,grassTriangles,grassBufferBytes,sectorTriangles:sector.diagnostics.triangleCount,baseVertices:47031+deltaVertices,baseTriangles:78846+deltaTriangles,baseStartupGeometryBufferBytes:4191291+deltaVertices*69+deltaTriangles*3*4,drawRangesUnchanged:9,profiles,decisionReasons:Object.fromEntries([...new Set(decisions.map(p=>p.reason))].map(reason=>[reason,decisions.filter(p=>p.reason===reason).length])),unchangedNonGrassGeometry:true,archivalSitesOriginalRootsAndSelectedColorsPreserved:false,orderVariants:3,physicalDeviceAcceptance:'NOT_ESTABLISHED',browserReadinessQualification:'SEPARATE_REQUIRED'};
+const report={schema:'H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_MECHANICAL_QUALIFICATION_v1',productCandidateHead,publishedBaselineHead,baselineSourceHead,baselineSectorDigest:digest(baseline),candidateSectorDigest:digest(sector),antiLattice:{baselineConcentration,candidateConcentration,reduction:antiLatticeReduction,pass:candidateConcentration<baselineConcentration},result:'PASS',executedHead:git('rev-parse','HEAD').trim(),trackedWorkingTreeClean:git('status','--porcelain','--untracked-files=no').trim()==='',baseline:spec.baseline,sectorDigest:digest(sector),terrainDigest:digest(terrain),decisionDigest:digest(decisions),acceptedTufts:tufts.length,blades:tufts.length*4,rootColumns:roots,maxGroundError,maxTipHeight,grassVertices,grassTriangles,grassBufferBytes,sectorTriangles:sector.diagnostics.triangleCount,baseVertices:47031+deltaVertices,baseTriangles:78846+deltaTriangles,baseStartupGeometryBufferBytes:4191291+deltaVertices*69+deltaTriangles*3*4,drawRangesUnchanged:9,profiles,decisionReasons:Object.fromEntries([...new Set(decisions.map(p=>p.reason))].map(reason=>[reason,decisions.filter(p=>p.reason===reason).length])),unchangedNonGrassGeometry:true,archivalSitesOriginalRootsAndSelectedColorsPreserved:false,orderVariants:3,physicalDeviceAcceptance:'NOT_ESTABLISHED',browserReadinessQualification:'SEPARATE_REQUIRED'};
 assert(grassVertices<=7000);assert(grassTriangles<=6000);
 assert(report.baseVertices<=47095&&report.baseTriangles<=78918&&report.baseStartupGeometryBufferBytes<=4196571);
 const output=process.argv[process.argv.indexOf('--output')+1];if(process.argv.includes('--output'))fs.writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

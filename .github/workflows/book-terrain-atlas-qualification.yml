@@ -1,0 +1,65 @@
+name: Book Navigable Terrain Atlas Exact-Candidate Qualification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2dc5540644182527d6d511e7d4a1556222bcc307
+          fetch-depth: 1
+      - name: Prove immutable candidate
+        run: test "$(git rev-parse HEAD)" = "2dc5540644182527d6d511e7d4a1556222bcc307"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser runtime
+        run: npm install --no-save --no-package-lock playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/book-atlas-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/nine-summits-of-love/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Qualify phone and tablet navigation
+        run: |
+          mkdir -p /tmp/book-atlas-qualification
+          cat > .book-atlas-qualify.mjs <<'NODE'
+          import{chromium}from'playwright';import fs from'node:fs';
+          const candidate='2dc5540644182527d6d511e7d4a1556222bcc307',browser=await chromium.launch({headless:true});
+          const receipt={schema:'BOOK_NAVIGABLE_TERRAIN_ATLAS_QUALIFICATION_v1',candidate,result:'PASS',viewports:{}};
+          const specs={phone:{width:390,height:844},tablet:{width:800,height:1280}};
+          try{
+            for(const[name,viewport]of Object.entries(specs)){
+              const page=await browser.newPage({viewport});const errors=[];
+              page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+              const r=await page.goto('http://127.0.0.1:4173/nine-summits-of-love/',{waitUntil:'networkidle'});if(!r||!r.ok())throw Error(name+': page load');
+              await page.locator('#path-scene').scrollIntoViewIfNeeded();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH?.readback?.().status==='ready');
+              const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);if(overflow>2)throw Error(name+': overflow '+overflow);
+              let state=await page.evaluate(()=>globalThis.DGB_BOOK_PATH.readback());
+              for(const[k,v]of Object.entries({mode:'navigable-natural-terrain-atlas',activeMap:'love',gridVisible:false,destinations:18,hEarthRuntimeDependency:false}))if(state[k]!==v)throw Error(name+': '+k+' '+state[k]);
+              const labels=page.locator('.topo-label');if(await labels.count()!==9)throw Error(name+': nine active labels required');
+              const sceneBox=await page.locator('#path-scene').boundingBox(),boxes=await labels.evaluateAll(bs=>bs.map(b=>{let r=b.getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height}}));
+              if(!sceneBox||boxes.some(b=>b.w<44||b.h<44||b.x<sceneBox.x-2||b.y<sceneBox.y-2||b.x+b.w>sceneBox.x+sceneBox.width+2||b.y+b.h>sceneBox.y+sceneBox.height+2))throw Error(name+': destination hit/framing');
+              await page.screenshot({path:'/tmp/book-atlas-qualification/'+name+'-mountain-overview.png',fullPage:true});
+              for(const i of [0,4,8]){await labels.nth(i).click();await page.waitForFunction(i=>globalThis.DGB_BOOK_PATH.readback().selected===i&&globalThis.DGB_BOOK_PATH.readback().targetFocus>.7,i);if(!(await page.locator('.terrain-overview').isVisible()))throw Error(name+': overview control missing');await page.locator('.terrain-overview').click();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH.readback().selected===-1)}
+              await page.locator('.topo-switch').click();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH.readback().activeMap==='fear');await page.screenshot({path:'/tmp/book-atlas-qualification/'+name+'-canyon-overview.png',fullPage:true});
+              for(const i of [0,4,8]){await labels.nth(i).click();await page.waitForFunction(i=>globalThis.DGB_BOOK_PATH.readback().selected===i&&globalThis.DGB_BOOK_PATH.readback().targetFocus>.7,i);await page.locator('.terrain-overview').click();await page.waitForFunction(()=>globalThis.DGB_BOOK_PATH.readback().selected===-1)}
+              if(errors.length)throw Error(name+': runtime errors '+errors.join('|'));
+              receipt.viewports[name]={viewport,overflow,destinationCount:18,nearMidFarBothMaps:'PASS',overviewReturn:'PASS',runtimeErrors:[]};await page.close();
+              const reduced=await browser.newPage({viewport,reducedMotion:'reduce'});await reduced.goto('http://127.0.0.1:4173/nine-summits-of-love/',{waitUntil:'networkidle'});await reduced.locator('#path-scene').scrollIntoViewIfNeeded();await reduced.waitForFunction(()=>globalThis.DGB_BOOK_PATH?.readback?.().status==='ready');await reduced.locator('.topo-label').nth(4).click();let rs=await reduced.evaluate(()=>globalThis.DGB_BOOK_PATH.readback());if(!rs.reducedMotion||rs.selected!==4||Math.abs(rs.focus-rs.targetFocus)>.001)throw Error(name+': reduced motion transition');await reduced.close();
+            }
+          }catch(e){receipt.result='FAIL';receipt.error=String(e);throw e}finally{await browser.close();fs.writeFileSync('/tmp/book-atlas-qualification/receipt.json',JSON.stringify(receipt,null,2))}
+          console.log(JSON.stringify(receipt,null,2));
+          NODE
+          node .book-atlas-qualify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: book-terrain-atlas-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/book-atlas-qualification
+          if-no-files-found: error
+          retention-days: 30

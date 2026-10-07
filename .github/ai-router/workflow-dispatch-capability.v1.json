@@ -1490,6 +1490,16 @@
       "productMutationAuthority": false,
       "controlPlaneSemanticAuthority": false,
       "successResult": "PASS"
+    },
+    "BOOK_TOPOGRAPHIC_WIREFRAME_QUALIFY": {
+      "workflow": "book-topographic-wireframe-qualification.yml",
+      "ref": "main",
+      "inputPolicy": {},
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "PASS"
     }
   },
   "continuity": {

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-distribution-preflight-4fa308bf",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5966,
+  "requestBranch": "ai-dispatch-request-h-earth-distribution-preflight-4fa308bf",
+  "requestCommit": "cadd3599d44ad7f988f815d3e04eede900d57950",
+  "requestCommitParent": "4fa308bf99953748c1b6df3cfce7904e2e29b235",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "4fa308bf99953748c1b6df3cfce7904e2e29b235",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "4fa308bf99953748c1b6df3cfce7904e2e29b235",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "37652857603",
+  "dispatchedRunId": 37652883912,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37652883912",
+  "dispatchedRunHeadSha": "4fa308bf99953748c1b6df3cfce7904e2e29b235",
+  "dispatchedAt": "2026-10-07T16:32:44.659Z",
+  "resolvedAt": "2026-10-07T16:32:49.223Z"
+}

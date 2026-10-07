@@ -2044,6 +2044,29 @@
         animation:none!important;
       }
     }
+
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    /* Complete nine-layer composition; labels remain fixed while the shared geometry turns. */
+    .summit-diagram{position:relative;isolation:isolate;border:1px solid #d8bc7830;border-radius:24px;overflow:hidden;background:radial-gradient(ellipse at 35% 8%,#c8953d20,transparent 44%),radial-gradient(ellipse at 68% 92%,#78608421,transparent 44%),#080e19;box-shadow:inset 0 0 80px #0006}
+    .contrast-head{display:flex;justify-content:space-between;padding:28px 5% 8px;color:#e4be77;font-size:12px;letter-spacing:.19em}
+    .contrast-head>span:last-child{text-align:right;color:#b29ebf}.contrast-head b{font-size:20px}.contrast-head small{display:block;font-size:11px;color:#a5a8af;letter-spacing:.03em;margin-top:5px}
+    .path-scene{height:590px;position:relative;touch-action:pan-y;user-select:none}
+    #path-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    .contrast-layers{position:absolute;inset:0}
+    .contrast-layer{position:absolute;top:calc(16px + var(--level) * 62px);height:58px;left:0;width:100%;border:0;background:transparent;color:#ede8dc;font:inherit;cursor:pointer;text-align:left;outline-offset:-3px;z-index:2}
+    .contrast-layer>span:not(.sr-only){position:absolute;top:50%;transform:translateY(-50%);width:27%;font-size:clamp(13px,1.7vw,19px);line-height:1.2;font-weight:600;letter-spacing:-.025em}
+    .summit-word{left:5%;text-align:left}.opponent-word{right:5%;text-align:right;color:#b9a9c1}
+    .contrast-layer:hover,.contrast-layer:focus-visible{background:linear-gradient(90deg,#e3bd7612,transparent,#ae93bd12)}
+    .contrast-layer[aria-pressed=true]{background:linear-gradient(90deg,#e3bd7620,transparent,#ae93bd20)}
+    .contrast-layer[aria-pressed=true] .summit-word{color:#ffe5a7}.contrast-layer[aria-pressed=true] .opponent-word{color:#e7cdef}
+    .path-foot{padding:0 5% 22px;display:flex;justify-content:space-between;color:#9f9c98;font-size:12px}.path-foot>span:last-child{color:#e4be77;font-family:Georgia,serif;font-size:19px;font-style:italic}
+    .path-controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.path-controls button,.path-teaching button{color:#dbd7cf;background:#ffffff08;border:1px solid #ffffff27;border-radius:24px;padding:10px 18px;font:inherit;font-size:13px;cursor:pointer;min-height:44px}
+    .diagram-instruction{text-align:center;font-size:13px;color:#a9a9ad}
+    .path-teaching{border:1px solid #d8bc7844;background:#101624;padding:clamp(20px,4vw,32px);border-radius:18px;scroll-margin-top:100px}
+    .path-teaching h3{font:normal clamp(23px,3vw,32px)/1.2 Georgia,serif;margin:12px 0}.path-teaching p{margin:12px 0;line-height:1.65}.path-question{color:#e6c88b}.path-context{font-size:14px;color:#aaaeb7;line-height:1.65;max-width:760px;margin:auto;text-align:center}
+    .path-fallback{position:absolute;inset:0;display:flex;justify-content:center;gap:15%;align-items:center;font:100px Georgia;color:#c9aa6855}.path-fallback span:last-child{color:#9d82b055}.path-scene.geometry-ready .path-fallback{display:none}
+    @media(max-width:600px){.journey-section{padding:18px 10px}.contrast-head{padding:22px 4% 6px;font-size:10px}.contrast-head small{font-size:10px}.path-scene{height:532px}.contrast-layer{top:calc(10px + var(--level) * 56px);height:52px}.contrast-layer>span:not(.sr-only){width:31%;font-size:13px}.summit-word{left:4%}.opponent-word{right:4%}.path-foot{padding:0 4% 18px;font-size:10px}.path-context{font-size:13px}.path-teaching{scroll-margin-top:80px}}
+
   </style>
 <style id="reading-navigation-style">
 .heart-door{display:block;text-decoration:none;text-align:center}
@@ -2372,328 +2395,39 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
         </div>
       </section>
 
-      <section
-        class="page-panel journey-section"
-        aria-labelledby="connected-paths-title"
-      >
+      <section class="page-panel journey-section" aria-labelledby="connected-paths-title">
         <div class="journey-heading">
-          <div class="page-kicker">
-            Nine beginnings · nine paths · nine summits
-          </div>
-
+          <div class="page-kicker">The Nine Summits of Love</div>
           <div class="journey-heading-copy">
-            <h2 id="connected-paths-title">
-              No one reaches love by taking only one path.
-            </h2>
-
-            <p>
-              We tend to separate human growth into isolated instructions: be grateful, be patient, be accountable, forgive, exercise self-control.
-            </p>
-
-            <p>
-              But these qualities do not develop independently. The paths cross because human formation is connected.
-            </p>
+            <h2 id="connected-paths-title">One path. A choice at every summit.</h2>
+            <p>The climb begins with gratitude. Each summit explores a practice of love—and the pull of fear that opposes it.</p>
           </div>
         </div>
-
-        <div
-          class="path-map"
-          aria-label="Connected paths from nine human beginnings to the Nine Summits of Love"
-        >
-          <svg
-            class="path-network"
-            viewBox="0 0 1000 1280"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient
-                id="pathSpineGradient"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop
-                  offset="0%"
-                  stop-color="#8de7ff"
-                  stop-opacity=".7"
-                />
-
-                <stop
-                  offset="48%"
-                  stop-color="#f3c86f"
-                  stop-opacity=".8"
-                />
-
-                <stop
-                  offset="100%"
-                  stop-color="#9c79ff"
-                  stop-opacity=".72"
-                />
-              </linearGradient>
-
-              <filter
-                id="pathGlow"
-                x="-40%"
-                y="-20%"
-                width="180%"
-                height="140%"
-              >
-                <feGaussianBlur
-                  stdDeviation="7"
-                  result="blur"
-                />
-
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-
-            <path
-              d="
-                M 500 52
-                C 490 180 510 280 500 410
-                C 490 540 510 650 500 790
-                C 490 930 510 1060 500 1228
-              "
-              fill="none"
-              stroke="url(#pathSpineGradient)"
-              stroke-width="4"
-              stroke-linecap="round"
-              filter="url(#pathGlow)"
-            />
-
-            <g
-              fill="none"
-              stroke="#8de7ff"
-              stroke-width="2.4"
-              stroke-linecap="round"
-              opacity=".54"
-            >
-              <path d="M 165 115 C 310 115 350 115 500 115 C 650 115 690 115 835 115"/>
-              <path d="M 165 250 C 320 250 365 250 500 250 C 635 250 680 250 835 250"/>
-              <path d="M 165 385 C 300 385 385 385 500 385 C 615 385 700 385 835 385"/>
-              <path d="M 165 520 C 315 520 365 520 500 520 C 635 520 685 520 835 520"/>
-              <path d="M 165 655 C 295 655 380 655 500 655 C 620 655 705 655 835 655"/>
-              <path d="M 165 790 C 315 790 365 790 500 790 C 635 790 685 790 835 790"/>
-              <path d="M 165 925 C 300 925 385 925 500 925 C 615 925 700 925 835 925"/>
-              <path d="M 165 1060 C 315 1060 365 1060 500 1060 C 635 1060 685 1060 835 1060"/>
-              <path d="M 165 1195 C 295 1195 380 1195 500 1195 C 620 1195 705 1195 835 1195"/>
-            </g>
-
-            <g
-              fill="none"
-              stroke="#f3c86f"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-dasharray="8 14"
-              opacity=".42"
-            >
-              <path d="M 170 115 C 330 170 360 200 500 250 C 640 300 680 330 830 385"/>
-              <path d="M 170 250 C 320 315 370 350 500 385 C 630 420 680 465 830 520"/>
-              <path d="M 170 385 C 330 440 360 485 500 520 C 640 555 680 610 830 655"/>
-              <path d="M 170 520 C 310 580 380 615 500 655 C 620 695 690 750 830 790"/>
-              <path d="M 170 655 C 320 710 370 760 500 790 C 630 820 680 880 830 925"/>
-              <path d="M 170 790 C 330 850 360 900 500 925 C 640 950 680 1010 830 1060"/>
-              <path d="M 170 925 C 310 985 380 1025 500 1060 C 620 1095 690 1150 830 1195"/>
-            </g>
-          </svg>
-
-          <div class="path-columns">
-            <span>Path begins with</span>
-            <span>Link</span>
-            <span>Summit formation</span>
+        <div class="summit-diagram" id="summit-diagram">
+          <div class="contrast-head"><span>LOVE <b>↑</b><small>The ascent</small></span><span>FEAR <b>↓</b><small>The opposing pull</small></span></div>
+          <div class="path-scene" id="path-scene">
+            <canvas id="path-canvas" aria-hidden="true"></canvas>
+            <div class="path-fallback" aria-hidden="true"><span>↑</span><span>↓</span></div>
+            <div class="contrast-layers"><button type="button" class="contrast-layer" data-layer="8" style="--level:0" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Purity</span><span class="opponent-word">Pettiness</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="7" style="--level:1" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Patience</span><span class="opponent-word">Instant gratification</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="6" style="--level:2" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Self-Control</span><span class="opponent-word">Impulsivity</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="5" style="--level:3" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Forgiveness</span><span class="opponent-word">Resentment</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="4" style="--level:4" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Humility</span><span class="opponent-word">Arrogance</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="3" style="--level:5" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Accountability</span><span class="opponent-word">Blame</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="2" style="--level:6" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Dependability</span><span class="opponent-word">Irresponsibility</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="1" style="--level:7" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Generosity</span><span class="opponent-word">Greed</span><span class="sr-only">: explore this contrast</span></button>
+<button type="button" class="contrast-layer" data-layer="0" style="--level:8" aria-pressed="false" aria-controls="path-teaching"><span class="summit-word">Gratitude</span><span class="opponent-word">Entitlement</span><span class="sr-only">: explore this contrast</span></button></div>
           </div>
-
-          <div class="path-list">
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Gratitude</strong>
-              </div>
-
-              <div class="path-node">
-                <span>1</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Joy</strong>
-              </div>
-
-              <div class="path-thread">
-                Joy does not begin with having everything. It begins with recognizing what is already alive, valuable, and worth receiving.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Generosity</strong>
-              </div>
-
-              <div class="path-node">
-                <span>2</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Love</strong>
-              </div>
-
-              <div class="path-thread">
-                Love becomes visible when value moves outward without destroying the person giving it.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Dependability</strong>
-              </div>
-
-              <div class="path-node">
-                <span>3</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Stability</strong>
-              </div>
-
-              <div class="path-thread">
-                Stability is not a feeling. It is trustworthy action repeated long enough for others—and your future self—to stand on it.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Accountability</strong>
-              </div>
-
-              <div class="path-node">
-                <span>4</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Character</strong>
-              </div>
-
-              <div class="path-thread">
-                Character begins when we stop asking only what we intended and become willing to answer for what our choices produced.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Forgiveness</strong>
-              </div>
-
-              <div class="path-node">
-                <span>5</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Peace</strong>
-              </div>
-
-              <div class="path-thread">
-                Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Self-Control</strong>
-              </div>
-
-              <div class="path-node">
-                <span>6</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Balance</strong>
-              </div>
-
-              <div class="path-thread">
-                Balance is not the absence of emotion. It is the ability to feel deeply without surrendering authority over what happens next.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Patience</strong>
-              </div>
-
-              <div class="path-node">
-                <span>7</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Structure</strong>
-              </div>
-
-              <div class="path-thread">
-                Anything built too quickly can collapse under the weight it was meant to carry. Patience gives strong things time to form.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Humility</strong>
-              </div>
-
-              <div class="path-node">
-                <span>8</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Dignity</strong>
-              </div>
-
-              <div class="path-thread">
-                Humility is not becoming smaller. It is seeing yourself in honest proportion—without self-erasure or artificial superiority.
-              </div>
-            </article>
-
-            <article class="path-step">
-              <div class="path-origin">
-                <small>Beginning</small>
-                <strong>Purity</strong>
-              </div>
-
-              <div class="path-node">
-                <span>9</span>
-              </div>
-
-              <div class="path-summit">
-                <small>Summit</small>
-                <strong>Free Will</strong>
-              </div>
-
-              <div class="path-thread">
-                A choice is not fully free when fear, coercion, resentment, or appetite is making it for us. Purity clears the field.
-              </div>
-            </article>
-          </div>
-
-          <div class="path-law">
-            The Nine Summits are not nine separate achievements. They are one connected human formation. Each path strengthens the next. Each summit supports the others. Love is not waiting at the top as a prize. Love is what the climber becomes capable of carrying.
-          </div>
+          <div class="path-foot"><span>Begin with gratitude</span><span>Choose love.</span></div>
         </div>
+        <p class="diagram-instruction" id="diagram-instruction">Choose a pair to explore what the choice means.</p>
+        <div class="path-controls"><button type="button" id="path-motion" hidden>Pause motion</button><button type="button" id="path-reset" hidden>Restore view</button></div>
+        <div class="path-teaching" id="path-teaching" tabindex="-1" aria-labelledby="path-teaching-title" hidden>
+          <span class="page-kicker" id="path-teaching-pair"></span>
+          <h3 id="path-teaching-title"></h3><p id="path-teaching-copy"></p><p class="path-question" id="path-teaching-question"></p>
+          <button type="button" id="path-close">Return to the whole path</button>
+        </div>
+        <p class="path-context">The qualities strengthen one another. Love is practiced throughout the climb; purity remains something we cultivate. The opposing side shows the choices that pull against that work.</p>
       </section>
 
       <section
@@ -6064,5 +5798,64 @@ body{padding-top:calc(72px + env(safe-area-inset-top))}
       }
     })();
   </script>
+<script src="/assets/compass/compass.orbit-physics.js"></script>
+<script type="module">
+// Geometry authority and release motion are reused unchanged from the Compass / Universe.
+const pairs=[["Gratitude", "Entitlement", "Notice what has been given.", "Gratitude recognizes value and the people who contribute it. Entitlement treats that value as something already owed.", "What can you appreciate before asking for more?"], ["Generosity", "Greed", "Let value move outward.", "Generosity makes room to give. Greed holds on to more from the fear that there will never be enough.", "What can you offer freely, within honest boundaries?"], ["Dependability", "Irresponsibility", "Give others something to trust.", "Dependability honors commitments through action. Irresponsibility leaves others carrying the consequences of neglected commitments.", "What promise needs your follow-through?"], ["Accountability", "Blame", "Own your part.", "Accountability faces the impact of a choice and makes repair possible. Blame moves responsibility elsewhere.", "What is yours to acknowledge and repair?"], ["Humility", "Arrogance", "Leave room to learn.", "Humility recognizes both your worth and your limits. Arrogance puts being right above understanding another person.", "Where could listening change what you see?"], ["Forgiveness", "Resentment", "Release the hold of a grievance.", "Forgiveness makes room to move forward without erasing truth or necessary boundaries. Resentment keeps the injury at the center of the next choice.", "What can you release while keeping a wise boundary?"], ["Self-Control", "Impulsivity", "Choose how you respond.", "Self-control moderates how your capacities become action. Impulsivity lets the first urge decide before your convictions have a voice.", "What response would honor your convictions?"], ["Patience", "Instant gratification", "Care for what takes time.", "Patience sustains effort and gives growth time to form. Instant gratification trades that continuing work for an immediate reward.", "What deserves your continued care?"], ["Purity", "Pettiness", "Return to a larger purpose.", "Purity is an ongoing cultivation of intention. Pettiness narrows a choice to small grievances, status, or self-interest. There is no final arrival that ends the practice of choosing love.", "What would serve love beyond this moment of self-interest?"]];
+const $=s=>document.querySelector(s),scene=$('#path-scene'),canvas=$('#path-canvas'),ctx=canvas.getContext('2d');
+const P=globalThis.DGB_COMPASS_ORBIT_PHYSICS,media=matchMedia('(prefers-reduced-motion: reduce)');
+const buttons=[...document.querySelectorAll('[data-layer]')];
+let selected=-1,ready=false,paused=false,visible=false,reduced=media.matches,raf=0,last=0,phase=0,q=[0,0,0,1],pointer=null,inertia=null,suppress=0,w=1,h=1,mesh=null,receipt={status:'loading'};
+function request(){if(ready&&!raf&&visible&&!document.hidden)raf=requestAnimationFrame(draw);}
+function stop(){if(raf)cancelAnimationFrame(raf);raf=0;last=0;}
+function controls(){const b=$('#path-motion');b.hidden=!ready;b.disabled=reduced;b.textContent=reduced?'Reduced motion':paused?'Resume motion':'Pause motion';b.setAttribute('aria-pressed',String(paused));$('#path-reset').hidden=!ready;}
+function choose(i){if(performance.now()<suppress)return;selected=i;inertia=null;buttons.forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.layer===i)));const [summit,opponent,title,copy,question]=pairs[i];$('#path-teaching-pair').textContent=summit+' / '+opponent;$('#path-teaching-title').textContent=title;$('#path-teaching-copy').textContent=copy;$('#path-teaching-question').textContent=question;$('#path-teaching').hidden=false;$('#path-teaching').focus({preventScroll:true});$('#path-teaching').scrollIntoView({block:'nearest',behavior:reduced?'instant':'smooth'});request();}
+buttons.forEach(b=>b.addEventListener('click',()=>choose(+b.dataset.layer)));
+function close(){const prior=selected;selected=-1;$('#path-teaching').hidden=true;buttons.forEach(b=>b.setAttribute('aria-pressed','false'));if(prior>=0)buttons.find(b=>+b.dataset.layer===prior).focus({preventScroll:true});request();}
+$('#path-close').addEventListener('click',close);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selected>=0)close();});
+$('#path-motion').addEventListener('click',()=>{paused=!paused;inertia=null;last=0;controls();request();});
+$('#path-reset').addEventListener('click',()=>{q=[0,0,0,1];inertia=null;pointer=null;phase=0;close();request();});
+function rotate(v,theta){let a=P.quaternionRotateVector(q,[v.x,v.y,v.z]);const x=a[0]*Math.cos(theta)+a[2]*Math.sin(theta),z=-a[0]*Math.sin(theta)+a[2]*Math.cos(theta);return [x,a[1]*.74-z*.67,a[1]*.67+z*.74];}
+function point(v,cx,cy,r,theta){const a=rotate(v,theta);return [cx+a[0]*r,cy-a[1]*r,a[2]];}
+function line(points,color,width){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();}
+function polygon(points,fill,stroke){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.lineWidth=.6;ctx.strokeStyle=stroke;ctx.stroke();}}
+function centers(side){const mobile=w<600,step=mobile?56:62,start=mobile?36:45;return Array.from({length:9},(_,j)=>[(side===0?.415:.585)*w+Math.sin(j*.66+phase)*(mobile?3:9),start+j*step]);}
+function draw(time){raf=0;if(!ready)return;const dt=last?Math.min(.05,(time-last)/1000):0;last=time;
+ if(inertia){const elapsed=Math.min(inertia.durationMs,time-inertia.startedAt);q=P.constellationReleaseQuaternionAt(inertia,elapsed);if(elapsed>=inertia.durationMs)inertia=null;}
+ const moving=!reduced&&!paused&&selected<0&&!pointer&&!inertia;
+ if(moving)phase=(phase+dt*.08)%(Math.PI*2);
+ ctx.clearRect(0,0,w,h);const radius=Math.min(w*.058,54),all=[centers(0),centers(1)];
+ // Paired levels stay legible; up/down light travel expresses the opposed directions.
+ for(let j=0;j<9;j++){const cy=all[0][j][1];line([[w*.345,cy],[w*.655,cy]],'#b9a99518',.7);ctx.fillStyle='#c6b58e66';ctx.font='9px system-ui';ctx.textAlign='center';ctx.fillText(String(9-j),w*.5,cy+3);}
+ for(let side=0;side<2;side++){
+ const cs=all[side],warm=side===0;
+ const halo=ctx.createRadialGradient(cs[warm?0:8][0],cs[warm?0:8][1],0,cs[warm?0:8][0],cs[warm?0:8][1],radius*3.5);halo.addColorStop(0,warm?'#eabd522c':'#81648d25');halo.addColorStop(1,'#00000000');ctx.fillStyle=halo;ctx.fillRect(0,0,w,h);
+ for(let j=0;j<8;j++){
+ const a=cs[j],b=cs[j+1],rw=radius*.28;
+ polygon([[a[0]-rw,a[1]+7],[a[0]+rw,a[1]+7],[b[0]+rw,b[1]+7],[b[0]-rw,b[1]+7]],warm?'#685132':'#35303f');
+ line([[a[0]-rw,a[1]+7],[b[0]-rw,b[1]+7]],warm?'#d8ad6655':'#9e81b044',1);
+ }
+ for(let j=8;j>=0;j--){const i=8-j,c=cs[j],theta=phase+j*.16;const vertices=mesh.vertices.map(v=>point(v,c[0],c[1],radius,theta));let faces=[];
+ for(let k=0;k<mesh.indices.length;k+=3){const pts=mesh.indices.slice(k,k+3).map(n=>vertices[n]);const n=rotate(mesh.faceNormals[k/3],theta);faces.push({pts,z:pts.reduce((a,v)=>a+v[2],0)/3,light:Math.max(0,n[0]*-.3+n[1]*.6+n[2]*.74)});}
+ faces.sort((a,b)=>a.z-b.z).forEach(f=>{const L=(warm?30:19)+f.light*(warm?42:24)+(selected===i?10:0);polygon(f.pts,`hsl(${warm?39:276} ${warm?52:18}% ${L}%)`,warm?'#f4ce8744':'#b8a0c533');});
+ // Fixed leader lines bind HTML names to their corresponding dimensional layer.
+ const outer=side===0?w*.335:w*.665;line([[outer,c[1]],[c[0]+(side===0?-radius:radius),c[1]]],warm?'#d8ba7866':'#a88db655',.7);
+ if(selected===i){ctx.strokeStyle=warm?'#f7d48e':'#d3aedf';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(c[0],c[1],radius*1.17,radius*.59,0,0,Math.PI*2);ctx.stroke();}
+ }
+ // Direction markers remain visible in the static / reduced-motion view.
+ const t=reduced||paused? .45:(phase*1.4) % 1;
+ for(let n=0;n<3;n++){const progress=((t+n/3)%1)*8,index=warm?8-progress:progress,j=Math.min(7,Math.floor(index)),f=index-j;const x=cs[j][0]*(1-f)+cs[j+1][0]*f,y=cs[j][1]*(1-f)+cs[j+1][1]*f;const direction=warm?-1:1;line([[x-3,y-direction*3],[x,y+direction*2],[x+3,y-direction*3]],warm?'#ffe3a3':'#bba0cf',1.6);}
+ }
+ if(moving||inertia)request();else last=0;
+}
+function resize(){const b=scene.getBoundingClientRect();w=b.width;h=b.height;const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0);request();}
+function cancel(){if(pointer){q=pointer.startQuaternion.slice();pointer=null;}inertia=null;last=0;request();}
+function input(){scene.addEventListener('pointerdown',e=>{if(!ready||e.button!==0||!e.isPrimary||pointer)return;inertia=null;pointer={id:e.pointerId,startX:e.clientX,startY:e.clientY,startTime:performance.now(),startQuaternion:q.slice(),currentQuaternion:q.slice(),samples:[],dragging:false};P.addPointerSample(pointer,e.clientX,e.clientY,performance.now());});scene.addEventListener('pointermove',e=>{if(!pointer||e.pointerId!==pointer.id)return;P.addPointerSample(pointer,e.clientX,e.clientY,performance.now());if(!pointer.dragging&&P.pointerDistance(pointer,e.clientX,e.clientY)<P.GESTURE.minimumDragDistancePx)return;if(!pointer.dragging&&Math.abs(e.clientY-pointer.startY)>Math.abs(e.clientX-pointer.startX))return;pointer.dragging=true;scene.setPointerCapture(e.pointerId);q=P.dragQuaternionFromPointer(pointer,e.clientX,e.clientY,w,h);pointer.currentQuaternion=q.slice();request();});scene.addEventListener('pointerup',e=>{if(!pointer||e.pointerId!==pointer.id)return;const p=pointer;pointer=null;if(p.dragging){const now=performance.now(),params=P.releaseParameters(P.gestureMetrics(p,e.clientX,e.clientY,now),w,h,reduced);inertia=params&&!paused?{...params,startedAt:now,releaseQuaternion:q.slice()}:null;suppress=now+P.GESTURE.suppressClickMs;}if(scene.hasPointerCapture(e.pointerId))scene.releasePointerCapture(e.pointerId);last=0;request();});scene.addEventListener('pointercancel',cancel);scene.addEventListener('lostpointercapture',()=>{if(pointer)cancel();});}
+async function init(){if(!P||!ctx)throw Error('Shared rendering unavailable');const K=await import('/showroom/globe/h-earth/render/geometry-kernel.js');const result=K.constructHEarthPrismMesh({primitiveId:'book-summit-layer',center:K.createHEarthVector3(0,0,0),radius:1,height:.32,sideCount:6,semanticRole:'PAIRED_SUMMIT_TERRACE'});if(!result.valid||K.hasHEarthBlockingIssues(result.issues))throw Error('Geometry construction failed');const admitted=K.admitHEarthPrimitiveBatch([result.primitiveRecord],{frameId:'book-nine-opposing-summits'});if(!admitted.valid||!K.isHEarthAggregateFrameAdmissionRecord(admitted.frame))throw Error('Geometry admission failed');mesh=admitted.frame.primitives[0].geometry;ready=true;receipt={status:'ready',geometryKernel:'/showroom/globe/h-earth/render/geometry-kernel.js',physics:'/assets/compass/compass.orbit-physics.js',primitiveCount:1,instances:18,trianglesPerInstance:mesh.indices.length/3};scene.classList.add('geometry-ready');controls();resize();input();new ResizeObserver(resize).observe(scene);new IntersectionObserver(es=>{visible=es[0].isIntersecting;if(visible)request();else stop();}).observe(scene);}
+media.addEventListener('change',()=>{reduced=media.matches;cancel();controls();request();});document.addEventListener('visibilitychange',()=>{if(document.hidden){cancel();stop();}else request();});window.addEventListener('blur',()=>{cancel();stop();});window.addEventListener('focus',request);window.addEventListener('pagehide',stop);window.addEventListener('pageshow',request);
+globalThis.DGB_BOOK_PATH=Object.freeze({readback:()=>({...receipt,selected,phase,paused,reducedMotion:reduced,quaternion:q.slice(),inertiaActive:!!inertia,pointerActive:!!pointer,frameScheduled:!!raf})});
+init().catch(e=>{receipt={status:'fallback',message:e.message};stop();controls();});
+</script>
+
 </body>
 </html>

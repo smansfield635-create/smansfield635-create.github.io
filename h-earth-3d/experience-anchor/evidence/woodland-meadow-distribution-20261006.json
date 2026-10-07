@@ -1,0 +1,61 @@
+{
+  "schema": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_EVIDENCE_v1",
+  "operationId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
+  "lockGeneration": 2602,
+  "candidateSourceHead": "35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba",
+  "baselineHead": "7804b359aa032caa00f8dd526f8e4186df97fac9",
+  "status": "QUALIFICATION_PENDING",
+  "qualification": {
+    "exactCommand": "node h-earth-3d/validation/h-earth.woodland-meadow-distribution-20261006.mjs --output /tmp/woodland-meadow-distribution-mechanical.json",
+    "requiredMechanicalSchema": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_MECHANICAL_QUALIFICATION_v1",
+    "requiredResult": "PASS",
+    "acceptOnlyExecutedHead": "35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba",
+    "fabricatedOrPreflightSubstitutionProhibited": true
+  },
+  "frozenVisualComparison": {
+    "viewport": [
+      390,
+      844
+    ],
+    "verticalFovDegrees": 56,
+    "NEAR_A": {
+      "position": [
+        -145,
+        8.0066153807682,
+        -210
+      ],
+      "target": [
+        -145,
+        9.888127719585961,
+        -227.90139411662892
+      ],
+      "changedFractionMin": 0.005,
+      "status": "PENDING"
+    },
+    "APPROACH": {
+      "position": [
+        -125,
+        10.993685473527874,
+        -200
+      ],
+      "target": [
+        -125,
+        13.498801290809052,
+        -217.82482523734828
+      ],
+      "changedFractionMin": 0.002596,
+      "status": "PENDING"
+    }
+  },
+  "invariants": {
+    "nonGrassGeometryByteEquivalent": true,
+    "tuftCountMustNotIncrease": true,
+    "rootSupportRequired": true,
+    "slopeCeiling": 0.45,
+    "walkingAndEllipseExclusionsRequired": true,
+    "geometryBudgetInherited": true,
+    "acceptedSiteAntiLatticeImprovementRequired": true
+  },
+  "publicationAuthorization": false,
+  "propagationAuthorization": false
+}

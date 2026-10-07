@@ -1,7 +1,7 @@
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 /** H_EARTH_RUN_8E_GRATITUDE_AUDRALIA_RECIPROCAL_REGIONAL_DEVELOPMENT_GEN311_v1 */
-import {buildHEarthLandscapeSector} from './geometry-landscape-sector.p2.js?cb=meadow-fan-20261006';
+import {buildHEarthLandscapeSector} from './geometry-landscape-sector.p2.js?cb=meadow-distribution-20261006';
 import { admitHEarthPrimitiveBatch,mergeHEarthGeometryBounds,isHEarthAABB3D } from './geometry-kernel.js';
 import { previewHEarthFunctionalLandscape, H_EARTH_FUNCTIONAL_LANDSCAPE_DEFAULT_CAMERA } from './landscape-preview.js?cb=b8fc053cb9abb6c6';
 import { buildHEarthRun8CTerrainMaterialLightingPresentation,evaluateHEarthRun8CTerrainMaterialLightingPresentation } from './lighting-material-successor-terrain.run8c.js';

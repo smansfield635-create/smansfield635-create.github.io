@@ -136,7 +136,7 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  const sample=(x,z)=>{const g=ground(x,z);return g?{x,y:Math.fround(g.y),z,triangleId:g.triangle,terrainPrimitiveId:terrainPrimitive.primitiveId}:null;};
  const grassCells=[];
  for(let iz=0;iz<=25;iz++)for(let ix=0;ix<=22;ix++){
-  const id=`MEADOW_COVER_${ix}_${iz}`,jitterAngle=trialHash(id,'jitter-angle')*Math.PI*2,jitterRadius=Math.sqrt(trialHash(id,'jitter-radius'))*.25;
+  const id=`MEADOW_COVER_${ix}_${iz}`,jitterAngle=trialHash(id,'center-jitter-angle')*Math.PI*2,jitterRadius=Math.sqrt(trialHash(id,'center-jitter-radius'))*.90;
   grassCells.push({id,ix,iz,x:-174+ix*3+(iz%2)*1.5+Math.cos(jitterAngle)*jitterRadius,z:-258+iz*3*Math.sqrt(3)/2+Math.sin(jitterAngle)*jitterRadius});
  }
  const densityField=(x,z)=>{const fx=(x+174)/9,fz=(z+258)/9,ix=Math.floor(fx),iz=Math.floor(fz),u=fx-ix,v=fz-iz,at=(a,b)=>trialHash(`FIELD_${a}_${b}`,'density');return at(ix,iz)*(1-u)*(1-v)+at(ix+1,iz)*u*(1-v)+at(ix,iz+1)*(1-u)*v+at(ix+1,iz+1)*u*v;};
@@ -150,7 +150,7 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
   grassDecisions.push(decision);if(!reason)grassCandidates.push({...p,canopy,edge,density,decision});
  }
  // Fail the entire trial rather than order-dependent trimming or global reranking.
- if(grassCandidates.length>252)throw new Error('ECOTONE_TRIAL_TUFT_BUDGET_EXCEEDED');
+ if(grassCandidates.length>250)throw new Error('ECOTONE_TRIAL_TUFT_BUDGET_EXCEEDED');
  grassCandidates.sort((a,b)=>a.id.localeCompare(b.id));
  for(const p of grassCandidates){
   const bladeCount=4,palette=trialHash(p.id,'palette'),pocket=palette<.25+.5*p.canopy?'OLIVE':palette<.65+.25*p.canopy?'GOLD':'BROWN';
@@ -162,7 +162,7 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
   manifest.push({id:p.id,kind:'GRASS',x:p.x,y:sample(p.x,p.z).y,z:p.z,grassVertexStart,grassVertexCount:tuft.geometry.vertices.length,bladeCount,pocket,canopyCoverage:p.canopy,edgeFeather:p.edge,targetDensity:p.density,rootPoints:tuft.metadata.oasisFoliage.rootPoints.map(p=>({...p,vertexIndex:p.vertexIndex+offset})),crownRadius:.8,footprintClear:true,recipe:'OASIS_COMPACT_LEAF_7_VERTICES_6_TRIANGLES_PERPENDICULAR_FAN'});
  }
  grassDecisions.sort((a,b)=>a.id.localeCompare(b.id));
- const grassTrial={schema:'H_EARTH_WOODLAND_MEADOW_TRIAL_v1',seed:trialSeed,extent:{center:[-141,-226],radii:[33,32]},walkingCapsule:{a:[-145,-194],b:[-145,-230],radius:1.5,centerMargin:.8},cellMeters:3,rowStep:3*Math.sqrt(3)/2,oddRowOffset:1.5,childJitterRadius:.25,densityFieldMeters:9,selectedCenterCount:grassCandidates.length,decisions:grassDecisions,fieldProvenance:{ground:'FINAL_PROJECTED_FLOAT32_NEAR_TRIANGLES',soil:'QUALIFIED_SURFACE_CLASS_PROXY',canopy:'AUTHORED_ACCEPTED_A_CROWN_INFLUENCE_NOT_MEASURED_SHADE',edge:'AUTHORED_8M_EQUIVALENT_FEATHER',palette:'AUTHORED_CANOPY_COLOR_PROXY_NO_MOISTURE_CLAIM'}};
+ const grassTrial={schema:'H_EARTH_WOODLAND_MEADOW_TRIAL_v1',seed:trialSeed,extent:{center:[-141,-226],radii:[33,32]},walkingCapsule:{a:[-145,-194],b:[-145,-230],radius:1.5,centerMargin:.8},cellMeters:3,rowStep:3*Math.sqrt(3)/2,oddRowOffset:1.5,childJitterRadius:.90,centerJitterChannels:['center-jitter-angle','center-jitter-radius'],distributionBaseline:'7804b359aa032caa00f8dd526f8e4186df97fac9',densityFieldMeters:9,selectedCenterCount:grassCandidates.length,decisions:grassDecisions,fieldProvenance:{ground:'FINAL_PROJECTED_FLOAT32_NEAR_TRIANGLES',soil:'QUALIFIED_SURFACE_CLASS_PROXY',canopy:'AUTHORED_ACCEPTED_A_CROWN_INFLUENCE_NOT_MEASURED_SHADE',edge:'AUTHORED_8M_EQUIVALENT_FEATHER',palette:'AUTHORED_CANOPY_COLOR_PROXY_NO_MOISTURE_CLAIM'}};
  const primitives=[];for(const [name,m,kind,rgba] of [['BARK',bark,'TREE',[81,64,44,255]],['CANOPY',foliage,'TREE',[66,92,38,255]],['ROCK',stone,'ROCK',[121,113,91,255]],['GRASS',grass,'GRASS',[120,117,61,255]]]){if(!m.indices.length)continue;const id=`H_EARTH_LANDSCAPE_P2_${name}`,r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,vertices:m.vertices,indices:m.indices,normalMode:E.normalMode.FACE_AND_VERTEX,expectedClosure:E.expectedClosure.OPEN_ALLOWED,semanticRole:`LANDSCAPE_SECTOR_${kind}`,metadata:{landscapeSectorKind:kind,landscapeSectorId:'WESTERN_P2',seed:SEED},source:{sourceType:'DETERMINISTIC_BOUNDED_LANDSCAPE_SOUTH'}});if(r.valid!==true){issues.push(`SOUTH_CONSTRUCTION_FAILED:${name}:${JSON.stringify(r.issues)}`);continue;}primitives.push({...r.primitiveRecord,renderMaterial:{rgba,vertexRgba:m.colors,transparencyClass:'OPAQUE'}});}
  const triangles=primitives.reduce((s,p)=>s+p.geometry.indices.length/3,0);if(accepted.length>128||triangles>48000)issues.push('SECTOR_BUDGET_EXCEEDED');if(!accepted.length)issues.push('NO_ACCEPTED_TREES');
  manifest.sort((a,b)=>a.id.localeCompare(b.id));rejections.sort((a,b)=>a.id.localeCompare(b.id));

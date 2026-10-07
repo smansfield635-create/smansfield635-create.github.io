@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "BOOK_TERRAIN_ATLAS_DEPLOY_20261007_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 5987,
+  "requestBranch": "ai-dispatch-request-book-atlas-deploy-20261007",
+  "requestCommit": "e750771caad0bbb8e449276936c75077bf920f08",
+  "requestCommitParent": "b37b411628a1d6eabb974f91a61fb361907b351c",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "b37b411628a1d6eabb974f91a61fb361907b351c",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b37b411628a1d6eabb974f91a61fb361907b351c",
+    "surface_id": "reading-pages"
+  },
+  "bridgeRunId": "37694529648",
+  "dispatchedRunId": 37694548235,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37694548235",
+  "dispatchedRunHeadSha": "b37b411628a1d6eabb974f91a61fb361907b351c",
+  "dispatchedAt": "2026-10-07T22:11:24.764Z",
+  "resolvedAt": "2026-10-07T22:11:28.726Z"
+}

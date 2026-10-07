@@ -1159,45 +1159,6 @@
       "scopeHash": "10395de588f9010c490895fafe8e8f3fde74654f7feeb978f458a2a56e9867af",
       "state": "ADMITTED_LOCKED"
     },
-    "1068de52ce87b74fd3ced4b712467331e53ea9567fd30a9f54863a055354b032": {
-      "governingHead": "b6864b2792c00eb1ee3bcb75dedda16f37744d1b",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b6864b2792c00eb1ee3bcb75dedda16f37744d1b",
-          "lockGeneration": 2611,
-          "lockScope": "H_EARTH:WOODLAND_A:NORTHERN_SEVEN_TUFTS:GEOMETRY_LANDSCAPE_SECTOR",
-          "operationId": "H_EARTH_WOODLAND_A_NORTHERN_SEVEN_TUFTS_20261007_001",
-          "procedureLocatorDigest": "8c1a96e2ecd3eb7dc35176db3d32e9f2e26903ebbef772b3c75bde32629f51e0",
-          "requestDigest": "2898359f3295c140bfc412b894cadd29f6141d2221183996599db4936e72eb1d",
-          "scopeHash": "1068de52ce87b74fd3ced4b712467331e53ea9567fd30a9f54863a055354b032"
-        },
-        "bindingDigest": "2d621afc66d10db1eee1650c8a13dfb36cdd01cd39d0a732ee13f6e7e362d6bb",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "b42ca5109529307f10730ad1fa918081dbec7eb2",
-          "observedLockRefHead": "da2fd64bff055e0ea18dfeb75ce91f71364c6a03"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "2917e4a311d4b11449b7d0677a301794ca89f1ba6bc24b7eba0fc12654886ce6",
-          "commentId": 6048607298,
-          "issueNumber": 5886,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2611,
-      "lockScope": "H_EARTH:WOODLAND_A:NORTHERN_SEVEN_TUFTS:GEOMETRY_LANDSCAPE_SECTOR",
-      "operationId": "H_EARTH_WOODLAND_A_NORTHERN_SEVEN_TUFTS_20261007_001",
-      "procedureLocatorDigest": "8c1a96e2ecd3eb7dc35176db3d32e9f2e26903ebbef772b3c75bde32629f51e0",
-      "released": false,
-      "requestDigest": "2898359f3295c140bfc412b894cadd29f6141d2221183996599db4936e72eb1d",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "1068de52ce87b74fd3ced4b712467331e53ea9567fd30a9f54863a055354b032",
-      "state": "ADMITTED_LOCKED"
-    },
     "10c6ac04f01a2601a720f7aa8e13cda600c5b6a0e8f5192277bcb4141ff9e051": {
       "governingHead": "faae686456e5422ce5bc631166f67b53cf8f804a",
       "lockGeneration": 1215,
@@ -72397,6 +72358,83 @@
       "scopeHash": "5eeef8eb5c31c94a21fea7840522263a6822e8d1b23751793b1e6d466e739bd2",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "b6864b2792c00eb1ee3bcb75dedda16f37744d1b",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b6864b2792c00eb1ee3bcb75dedda16f37744d1b",
+          "lockGeneration": 2611,
+          "lockScope": "H_EARTH:WOODLAND_A:NORTHERN_SEVEN_TUFTS:GEOMETRY_LANDSCAPE_SECTOR",
+          "operationId": "H_EARTH_WOODLAND_A_NORTHERN_SEVEN_TUFTS_20261007_001",
+          "procedureLocatorDigest": "8c1a96e2ecd3eb7dc35176db3d32e9f2e26903ebbef772b3c75bde32629f51e0",
+          "requestDigest": "2898359f3295c140bfc412b894cadd29f6141d2221183996599db4936e72eb1d",
+          "scopeHash": "1068de52ce87b74fd3ced4b712467331e53ea9567fd30a9f54863a055354b032"
+        },
+        "bindingDigest": "2d621afc66d10db1eee1650c8a13dfb36cdd01cd39d0a732ee13f6e7e362d6bb",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "b42ca5109529307f10730ad1fa918081dbec7eb2",
+          "observedLockRefHead": "da2fd64bff055e0ea18dfeb75ce91f71364c6a03"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "2917e4a311d4b11449b7d0677a301794ca89f1ba6bc24b7eba0fc12654886ce6",
+          "commentId": 6048607298,
+          "issueNumber": 5886,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b6864b2792c00eb1ee3bcb75dedda16f37744d1b",
+          "lockGeneration": 2611,
+          "lockScope": "H_EARTH:WOODLAND_A:NORTHERN_SEVEN_TUFTS:GEOMETRY_LANDSCAPE_SECTOR",
+          "operationId": "H_EARTH_WOODLAND_A_NORTHERN_SEVEN_TUFTS_20261007_001",
+          "procedureLocatorDigest": "8c1a96e2ecd3eb7dc35176db3d32e9f2e26903ebbef772b3c75bde32629f51e0",
+          "requestDigest": "2898359f3295c140bfc412b894cadd29f6141d2221183996599db4936e72eb1d",
+          "scopeHash": "1068de52ce87b74fd3ced4b712467331e53ea9567fd30a9f54863a055354b032"
+        },
+        "bindingDigest": "f42b84017316dae0b2b803fdfb28d94b5472e664cc326417d8b8d90d950ae108",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "84d2dd4194d90edc67e3b597870325a9c58c6030",
+          "observedLockRefHead": "42d4d5d3727d5e6194147362c63f69bfe263e19e"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "2fd35dd508f1c5b1accc730646334c0a3d631fdd5f8be92b05397a205ab63d0b",
+          "commentId": 6049053700,
+          "issueNumber": 5886,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "b6864b2792c00eb1ee3bcb75dedda16f37744d1b",
+          "lockGeneration": 2611,
+          "lockScope": "H_EARTH:WOODLAND_A:NORTHERN_SEVEN_TUFTS:GEOMETRY_LANDSCAPE_SECTOR",
+          "operationId": "H_EARTH_WOODLAND_A_NORTHERN_SEVEN_TUFTS_20261007_001",
+          "released": true,
+          "scopeHash": "1068de52ce87b74fd3ced4b712467331e53ea9567fd30a9f54863a055354b032",
+          "state": "TERMINAL",
+          "terminalDisposition": "WITHDRAWN"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2611,
+      "lockScope": "H_EARTH:WOODLAND_A:NORTHERN_SEVEN_TUFTS:GEOMETRY_LANDSCAPE_SECTOR",
+      "operationId": "H_EARTH_WOODLAND_A_NORTHERN_SEVEN_TUFTS_20261007_001",
+      "procedureLocatorDigest": "8c1a96e2ecd3eb7dc35176db3d32e9f2e26903ebbef772b3c75bde32629f51e0",
+      "released": true,
+      "requestDigest": "2898359f3295c140bfc412b894cadd29f6141d2221183996599db4936e72eb1d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1068de52ce87b74fd3ced4b712467331e53ea9567fd30a9f54863a055354b032",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

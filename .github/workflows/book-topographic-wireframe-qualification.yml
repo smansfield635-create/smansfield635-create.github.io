@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 54d286c6ae63dafa5271d2da1ec8b026d58ee1f8
+          ref: d0618f0e9c37f63f202bafe7f82efbdff0a72a46
           fetch-depth: 1
       - name: Prove immutable candidate
-        run: test "$(git rev-parse HEAD)" = "54d286c6ae63dafa5271d2da1ec8b026d58ee1f8"
+        run: test "$(git rev-parse HEAD)" = "d0618f0e9c37f63f202bafe7f82efbdff0a72a46"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -30,7 +30,7 @@ jobs:
           mkdir -p /tmp/book-topography-qualification
           cat > .book-topography-qualify.mjs <<'NODE'
           import{chromium}from'playwright';import fs from'node:fs';
-          const candidate='54d286c6ae63dafa5271d2da1ec8b026d58ee1f8',browser=await chromium.launch({headless:true});
+          const candidate='d0618f0e9c37f63f202bafe7f82efbdff0a72a46',browser=await chromium.launch({headless:true});
           const receipt={schema:'BOOK_TOPOGRAPHIC_WIREFRAME_QUALIFICATION_v1',candidate,result:'PASS',viewports:{}};
           const specs={phone:{width:390,height:844},tablet:{width:800,height:1280}};
           try{

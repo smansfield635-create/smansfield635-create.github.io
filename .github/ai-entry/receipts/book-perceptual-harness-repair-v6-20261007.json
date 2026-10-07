@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "book-perceptual-harness-repair-v6-20261007",
+  "capabilityId": "BOOK_PERCEPTUAL_TERRAIN_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6005,
+  "requestBranch": "ai-dispatch-request-book-perceptual-harness-repair-v6-20261007",
+  "requestCommit": "c568a7d51c73fdd7fc4b806154968dff3a7ea8d4",
+  "requestCommitParent": "3516300d4756fd494e95ec45a5d6fada73d0900d",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3516300d4756fd494e95ec45a5d6fada73d0900d",
+  "workflow": "book-perceptual-terrain-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37704563833",
+  "dispatchedRunId": 37704577864,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37704577864",
+  "dispatchedRunHeadSha": "3516300d4756fd494e95ec45a5d6fada73d0900d",
+  "dispatchedAt": "2026-10-07T23:51:10.663Z",
+  "resolvedAt": "2026-10-07T23:51:14.229Z"
+}

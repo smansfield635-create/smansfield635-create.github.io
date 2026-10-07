@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-07T04:38:53Z",
+  "generatedAt": "2026-10-07T05:35:53Z",
   "window": {
-    "start": "2026-09-07T04:38:53Z",
-    "end": "2026-10-07T04:38:53Z"
+    "start": "2026-09-07T05:35:53Z",
+    "end": "2026-10-07T05:35:53Z"
   },
   "dimensions": {
     "requestPath": [
@@ -328,6 +328,11 @@
         "visits": 1
       },
       {
+        "value": "/showroom/globe/audralia/diagnostic/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/evidence/agentic-frontier/reproduction/can-the-agent-actually-do-the-work/",
         "pageLoads": 1,
         "visits": 1
@@ -339,11 +344,6 @@
       },
       {
         "value": "/laws/categories/structure/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/showroom/globe/audralia/diagnostic/",
         "pageLoads": 1,
         "visits": 1
       },

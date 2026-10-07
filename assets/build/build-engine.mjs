@@ -1,0 +1,5 @@
+export function category(matrix,type){return matrix.categories[type]||matrix.categories['Help me decide'];}
+export function activeQuestions(matrix,type,answers={}){const c=category(matrix,type);return [...c.followups].filter(k=>!(k==='occasion'&&answers.action&&answers.action!=='Request catering'&&answers.action!=='Plan an event'));}
+export function pruneAnswers(matrix,type,answers={}){const keep=new Set(['type','action','name','email','business',...activeQuestions(matrix,type,answers)]);return Object.fromEntries(Object.entries(answers).filter(([k])=>keep.has(k)));}
+export function reviewRows(answers={}){return Object.entries(answers).filter(([,v])=>Array.isArray(v)?v.length:String(v??'').trim()).map(([key,value])=>({key,value:Array.isArray(value)?value.join(', '):String(value)}));}
+export function emailDraft(answers={}){return 'Hello Sean,\n\nI would like to discuss a project with Diamond Gate Bridge.\n\n'+reviewRows(answers).map(r=>r.key+': '+r.value).join('\n')+'\n\nPlease help me work out the next step.';}

@@ -48,6 +48,22 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
 
+      - name: Execute fixed woodland-meadow distribution mechanical validator
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-exact-evidence
+          node h-earth-3d/validation/h-earth.woodland-meadow-distribution-20261006.mjs --output /tmp/h-earth-exact-evidence/woodland-meadow-distribution-mechanical.json
+
+      - name: Upload mechanical validator evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-woodland-meadow-distribution-mechanical-${{ inputs.target_sha }}
+          path: /tmp/h-earth-exact-evidence/woodland-meadow-distribution-mechanical.json
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Install bounded Chromium
         shell: bash
         run: |

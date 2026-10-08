@@ -76,13 +76,38 @@ export function selfTest() {
       assert.equal(validateReceipt(receipt).result, 'STRUCTURE_VALID_EXECUTION_UNVERIFIED');
     }
   });
-  for (const taskClass of TASK_CLASSES) run(`native-invocation-required-for-${taskClass}`, () => {
+  for (const taskClass of TASK_CLASSES) run(`native-evidence-requires-invocation-for-${taskClass}`, () => {
     const receipt = fixture(); receipt.taskClass = taskClass;
     if (taskClass !== 'MATERIAL_GOVERNED_ENGINEERING') receipt.operationId = null;
     assert.equal(validateReceipt(receipt).result, 'STRUCTURE_VALID_EXECUTION_UNVERIFIED');
     delete receipt.invocation;
     assert.equal(validateReceipt(receipt).result, 'INVALID_EVIDENCE');
   });
+  // These required classes were previously rejected by the gate. Exercise both
+  // acceptance and tampering per class, without promoting synthetic authenticity.
+  for (const taskClass of ['SCIENTIFIC_OR_EMPIRICAL', 'AUTHORITY_BOUNDARY_CHANGE', 'DISPUTED_INDEPENDENT_QUALIFICATION']) {
+    run(`required-class-${taskClass}-provided-observations-remain-unverified`, () => {
+      const receipt = fixture(); receipt.taskClass = taskClass;
+      const result = compareReadback(receipt, observations(receipt), {expectedAssignment: expected(receipt)});
+      assert.equal(result.result, 'MATCHES_PROVIDED_OBSERVATIONS'); assertUnverified(result);
+    });
+    for (const [name, mutate, code] of [
+      ['wrong-returned-task', receipt => { receipt.invocation.returnedTaskId = '/synthetic/other'; }, 'TASK_ID_MISMATCH'],
+      ['assignment-tamper', receipt => { receipt.assignment.objective = 'Tampered'; }, 'ASSIGNMENT_MISMATCH'],
+      ['output-tamper', receipt => { receipt.output.text += ' Tampered'; }, 'OUTPUT_MISMATCH'],
+      ['self-observer', receipt => { receipt.observer.nativeTaskId = receipt.nativeTaskId; }, 'INDEPENDENCE_FAILURE']
+    ]) run(`required-class-${taskClass}-${name}-rejected`, () => {
+      const receipt = fixture(); receipt.taskClass = taskClass; mutate(receipt);
+      const result = validateReceipt(receipt); assert.equal(result.result, 'INVALID_EVIDENCE');
+      assert.equal(result.errorCode, code); assertUnverified(result);
+    });
+    run(`required-class-${taskClass}-cannot-match-another-task-class`, () => {
+      const receipt = fixture(); receipt.taskClass = taskClass; const original = expected(receipt);
+      receipt.taskClass = 'CONTROL_PLANE';
+      const result = validateReceipt(receipt, {expectedAssignment: original});
+      assert.equal(result.errorCode, 'ASSIGNMENT_MISMATCH'); assertUnverified(result);
+    });
+  }
   invalid('route-only-receipt-rejected', receipt => { receipt.schema = 'FUNCTIONAL_BEARING_EXECUTION_RECEIPT_v1'; }, 'ROUTE_ONLY_OR_UNSUPPORTED_RECEIPT');
   run('actual-legacy-route-shape-does-not-prove-execution', () => {
     const result = validateReceipt({schema: 'FUNCTIONAL_BEARING_EXECUTION_RECEIPT_v1', result: 'ROUTE_RESOLVED', orderedRoute: ['S'], authorityEffect: 'NONE'});
@@ -217,16 +242,39 @@ export function selfTest() {
   const contractPath = path.join(root, '.github/ai-router/agent-invocation/contract.v1.json');
   if (fs.existsSync(contractPath)) run('native-policy-contract-and-task-classes-integrate', () => {
     const contract = JSON.parse(fs.readFileSync(contractPath, 'utf8'));
-    assert.deepEqual([...TASK_CLASSES].sort(), [...contract.requiredTaskClasses].sort());
-    assert.equal(contract.substantiveWorkWithoutInvocationAllowed, false);
-    assert.equal(contract.authoritySeparation.functionalRouteExemptionExemptsNativeInvocation, false);
+    const applicability = contract.invocationApplicability;
+    assert.deepEqual([...TASK_CLASSES].sort(), [...new Set([...applicability.exemptTaskClasses, ...applicability.proportionalTaskClasses, ...applicability.requiredTaskClasses])].sort());
+    assert.deepEqual(contract.requiredTaskClasses, applicability.requiredTaskClasses);
+    assert.equal(contract.substantiveWorkWithoutInvocationAllowed, true);
+    assert.equal(applicability.classificationSource, 'WHOLE_ESTATE_EXECUTION_DECISION_v1');
+    assert.equal(applicability.exemptWorkMayProceedWithoutNativeSpawn, true);
+    assert.equal(applicability.nativeToolAvailabilityMayBlockExemptWork, false);
+    assert.equal(applicability.requiredWorkStillNeedsFunctionalSeparation, true);
+    assert.equal(contract.execution.mustActuallyInvoke, false);
+    assert.equal(contract.execution.mustActuallyInvokeWhenApplicabilityRequired, true);
+    assert.equal(contract.execution.allFourAgentsEveryTaskRequired, false);
+    assert.equal(contract.authoritySeparation.exemptAgentModeMayBypassCanonicalIntake, false);
+    assert.equal(contract.authoritySeparation.canonicalIntakeAndProjectAuthorityStillRequiredWhereApplicable, true);
     assert.equal(contract.execution.actionsOrPassiveCIQualifiesAsAgent, false);
     assert.equal(contract.evidence.fileOnlyValidationResult, 'STRUCTURE_VALID_EXECUTION_UNVERIFIED');
     assert.equal(contract.evidence.providedObservationComparisonResult, 'MATCHES_PROVIDED_OBSERVATIONS');
     assert.equal(contract.hostEnforcement.globalBypassPreventionProven, false);
     assert.equal(contract.bootstrap.allowsProductInspection, false);
     assert.equal(contract.bootstrap.allowsRepositoryMutation, false);
-    for (const entry of ['AI_ENTRYPOINT.json', 'AGENTS.md', '.github/ai-router/shared-procedures.v1.json']) assert.match(fs.readFileSync(path.join(root, entry), 'utf8'), /agent-invocation\/contract\.v1\.json/);
+    for (const entry of ['AI_ENTRYPOINT.json', '.github/ai-router/shared-procedures.v1.json']) assert.match(fs.readFileSync(path.join(root, entry), 'utf8'), /agent-invocation\/contract\.v1\.json/);
+  });
+  run('shared-procedures-preserve-proportional-applicability-and-authority', () => {
+    const registry = JSON.parse(fs.readFileSync(path.join(root, '.github/ai-router/shared-procedures.v1.json'), 'utf8'));
+    const native = registry.procedures.find(procedure => procedure.procedureId === 'CANONICAL_NATIVE_AGENT_INVOCATION');
+    const bearing = registry.procedures.find(procedure => procedure.procedureId === 'FUNCTIONAL_BEARING_ROUTING');
+    assert.equal(native.contract, '.github/ai-router/agent-invocation/contract.v1.json');
+    assert.equal(native.applicability, 'WHOLE_ESTATE_EXECUTION_DECISION_CONTROLS_PROPORTIONAL_AGENT_EXECUTION');
+    assert.equal(native.authorityCreated, false); assert.equal(native.newExecutorCreated, false);
+    assert.equal(native.hostEnforcementProven, false);
+    assert.equal(bearing.nativeInvocationRequirement.allTaskClassesRequired, false);
+    assert.equal(bearing.nativeInvocationRequirement.wholeEstateExecutionDecisionControlsApplicability, true);
+    assert.equal(bearing.nativeInvocationRequirement.legacyApplicabilityExemptionsApplyOnlyToBearingRouteValidation, true);
+    assert.equal(bearing.nativeInvocationRequirement.routeReceiptDoesNotProveAgentExecution, true);
   });
   // These assertions guard the startup procedure and source locators only.
   // They neither install tools nor simulate proof that a real room invoked one.
@@ -237,16 +285,16 @@ export function selfTest() {
     for (const section of ['startupDiscovery', 'complementaryOfficeDiscovery']) {
       assert.equal(entry.canonicalAgentInvocation[section], `.github/ai-router/agent-invocation/contract.v1.json#${section}`);
       assert.ok(contract[section]);
-      assert.match(fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8'), new RegExp(section));
     }
     assert.equal(entry.canonicalAgentInvocation.emptyDeferredRegistryProvesNativeUnavailable, false);
+    assert.match(fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8'), /Agent execution is proportional, not a universal entrance fee/);
   });
   run('empty-deferred-registry-cannot-hide-direct-native-capability', () => {
     const discovery = readStartupContract().startupDiscovery;
     assert.deepEqual(discovery.discoveryOrder, ['DIRECTLY_ADVERTISED_TOOL_NAMESPACES', 'AVAILABLE_DEFERRED_TOOL_DISCOVERY_IF_NEEDED']);
     assert.equal(discovery.allToolsIsCompleteHostCatalog, false);
     assert.equal(discovery.directToolRequiresDeferredRegistryMatch, false);
-    assert.match(discovery.outcomes.NATIVE_AGENT_TOOL_AVAILABLE.condition, /direct or advertised deferred/);
+    assert.equal(discovery.advertisedCallableNamesRequired, true);
     assert.equal(discovery.outcomes.NATIVE_AGENT_TOOL_AVAILABLE.invocationProved, false);
     assert.equal(discovery.deferredDiscoveryOnlyWhenAdvertised, true);
   });
@@ -261,12 +309,16 @@ export function selfTest() {
   });
   run('incomplete-discovery-unexposed-capability-and-failed-call-stay-distinct', () => {
     const discovery = readStartupContract().startupDiscovery;
-    assert.deepEqual(Object.keys(discovery.outcomes).sort(), ['NATIVE_AGENT_TOOL_AVAILABLE', 'NATIVE_AGENT_DISCOVERY_INCOMPLETE', 'NATIVE_AGENT_CAPABILITY_UNEXPOSED', 'NATIVE_AGENT_INVOCATION_CALL_FAILED'].sort());
-    assert.match(discovery.outcomes.NATIVE_AGENT_DISCOVERY_INCOMPLETE.condition, /uninspected or failed/);
-    assert.match(discovery.outcomes.NATIVE_AGENT_CAPABILITY_UNEXPOSED.condition, /inspected successfully/);
-    assert.match(discovery.outcomes.NATIVE_AGENT_CAPABILITY_UNEXPOSED.next, /NATIVE_AGENT_INVOCATION_UNAVAILABLE_STOP_SUBSTANTIVE_WORK/);
+    assert.deepEqual(Object.keys(discovery.outcomes).sort(), ['AGENT_MODE_NOT_REQUIRED', 'NATIVE_AGENT_TOOL_AVAILABLE', 'NATIVE_AGENT_DISCOVERY_INCOMPLETE', 'NATIVE_AGENT_CAPABILITY_UNEXPOSED', 'NATIVE_AGENT_INVOCATION_CALL_FAILED'].sort());
+    assert.match(discovery.outcomes.NATIVE_AGENT_DISCOVERY_INCOMPLETE.condition, /advertised discovery surface remains unresolved/);
+    assert.match(discovery.outcomes.NATIVE_AGENT_CAPABILITY_UNEXPOSED.condition, /all advertised discovery surfaces were inspected/);
+    assert.match(discovery.outcomes.NATIVE_AGENT_CAPABILITY_UNEXPOSED.next, /owner-directed CO_LOCATED_CARDINAL_EXECUTION_ROOM_v1 when authorized; otherwise stop only the required assignment/);
     assert.match(discovery.outcomes.NATIVE_AGENT_INVOCATION_CALL_FAILED.next, /exact failure/);
-    assert.match(discovery.requiredObservations.join('\n'), /source event/);
+    assert.equal(discovery.outcomes.AGENT_MODE_NOT_REQUIRED.invocationProved, false);
+    assert.equal(readStartupContract().execution.coLocatedFallbackRequiresExplicitOwnerDirection, true);
+    assert.equal(readStartupContract().execution.coLocatedFallbackCountsAsNativeSpawn, false);
+    assert.equal(readStartupContract().execution.coLocatedFallbackMayClaimIndependentModelReview, false);
+    assert.match(discovery.requiredObservationsWhenAgentModeRequired.join('\n'), /source event/);
   });
   run('startup-retains-native-proof-bootstrap-and-untested-device-boundaries', () => {
     const contract = readStartupContract();
@@ -278,7 +330,7 @@ export function selfTest() {
     assert.equal(contract.bootstrap.allowsProductInspection, false);
     assert.equal(contract.bootstrap.allowsRepositoryMutation, false);
     assert.ok(contract.evidence.requiredStartProof.includes('native returned task identity'));
-    assert.ok(contract.evidence.requiredCompletionProof.includes('independent native observer and source readback'));
+    assert.ok(contract.evidence.requiredCompletionProof.includes('independent native observer and source readback when independent review is required'));
   });
   run('office-discovery-preserves-existing-roles-and-sole-backend', () => {
     const discovery = readStartupContract().complementaryOfficeDiscovery;
@@ -309,11 +361,12 @@ export function selfTest() {
   run('private-office-map-cannot-force-routing-authority-or-full-route-proof', () => {
     const discovery = readStartupContract().complementaryOfficeDiscovery;
     assert.equal(discovery.mode, 'DISCOVERY_ONLY_TASK_PROPORTIONAL');
-    assert.equal(discovery.afterInitialNativeInvocation, true);
+    assert.equal(discovery.afterInitialNativeInvocation, false);
+    assert.equal(discovery.afterInitialCanonicalExecutionStart, false);
     for (const flag of ['automaticPrivateRouting', 'allOfficesRequiredForEveryTask', 'privateAccessGranted', 'privateExecutionAuthorityGranted', 'integratedRouteProvenByDiscovery']) assert.equal(discovery[flag], false);
     assert.equal(discovery.authorityEffect, 'NONE');
     assert.match(discovery.resolutionSteps.join('\n'), /REQUIRED_PRIVATE_SOURCE_UNAVAILABLE/);
-    assert.match(discovery.resolutionSteps.join('\n'), /do not reconstruct private authority or block unrelated authorized public work/);
+    assert.match(discovery.resolutionSteps.join('\n'), /stop only that dependent step; do not block unrelated authorized public work/);
   });
   const failures = checks.filter(check => !check.pass);
   return {schema: 'CANONICAL_NATIVE_AGENT_EVIDENCE_SELF_TEST_v1', result: failures.length ? 'FAIL_CLOSED' : 'PASS_CLOSED', fixtureProvenance: 'SYNTHETIC_ONLY_NOT_ACTUAL_AGENT_INVOCATION_EVIDENCE', checks: checks.length, passed: checks.length - failures.length, failed: failures.length, failures, authorityEffect: 'NONE', actualInvocationProved: false, workAuthorized: false};

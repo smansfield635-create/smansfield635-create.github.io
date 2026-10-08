@@ -6,18 +6,19 @@
   "procedures": [
     {
       "procedureId": "CANONICAL_NATIVE_AGENT_INVOCATION",
-      "purpose": "Require actual native execution instances assigned existing canonical functions for every repository task, with independent source readback before completion claims.",
+      "purpose": "Execute canonical functions proportionally when the whole-estate execution decision requires them, using exposed native tools or explicitly owner-directed co-located cardinal execution without false independence claims.",
       "contract": ".github/ai-router/agent-invocation/contract.v1.json",
-      "applicability": "ALL_REPOSITORY_TASKS_INCLUDING_READ_ONLY_STATIC_AND_SOURCE_READBACK",
+      "applicability": "WHOLE_ESTATE_EXECUTION_DECISION_CONTROLS_PROPORTIONAL_AGENT_EXECUTION",
       "steps": [
-        "Perform only minimal bootstrap discovery declared by the contract.",
-        "Freeze exact-head bounded assignment with canonical function, objective, authority, evidence and handoff.",
-        "Actually invoke the existing native agent tool and retain its returned native task identity before substantive work.",
-        "Continue only the unchanged assigned task or issue an attributable native followup.",
-        "Capture native returned output and digest; independently inspect native source events and output before completion or acceptance claims.",
-        "Use evidence validation for structure/consistency only; never treat JSON or ROUTE_RESOLVED as source authenticity.",
-        "Report invoked native identities and outputs; stop substantive work when invocation is unavailable.",
-        "Preserve existing proportional intake, project authority and authority-reducing closure."
+        "Resolve WHOLE_ESTATE_EXECUTION_DECISION_v1 first; when agentMode is NOT_REQUIRED proceed under existing repository/project authority without native-agent ceremony.",
+        "When agentMode requires execution, perform only the native capability discovery declared by the contract; directly exposed tools do not require a deferred-registry match.",
+        "Freeze exact-head bounded assignment with canonical function, objective, authority, evidence and handoff before required execution.",
+        "Invoke the exposed native spawn/followup and retain its returned task identity and source event; continue only the unchanged assigned task or issue an attributable followup.",
+        "If required native capability is unexposed after complete discovery, use the existing co-located cardinal room only on explicit owner direction; never claim native spawn or independent model instances. Preserve actual failed calls and stop the required assignment unless separately authorized repair changes the mode.",
+        "For claimed native execution capture returned output and digest; where independent native review is required, the independent observer must actually run and inspect native source events and output.",
+        "Use evidence validation for structure/consistency only; never treat JSON, admission, passive CI or ROUTE_RESOLVED as source authenticity. Retain co-located phase evidence separately when that fallback is used.",
+        "Report actual native task identities or co-located phase identities and outputs when required; exempt work does not invent agent receipts.",
+        "Preserve proportional intake, project authority and authority-reducing closure; agent execution never creates mutation, merge, deployment or scientific authority."
       ],
       "authorityCreated": false,
       "newExecutorCreated": false,
@@ -63,9 +64,10 @@
       "bearingAuthorityEffect": "NONE",
       "nativeInvocationRequirement": {
         "procedureId": "CANONICAL_NATIVE_AGENT_INVOCATION",
-        "allTaskClassesRequired": true,
+        "allTaskClassesRequired": false,
         "legacyApplicabilityExemptionsApplyOnlyToBearingRouteValidation": true,
-        "routeReceiptDoesNotProveAgentExecution": true
+        "routeReceiptDoesNotProveAgentExecution": true,
+        "wholeEstateExecutionDecisionControlsApplicability": true
       }
     },
     {

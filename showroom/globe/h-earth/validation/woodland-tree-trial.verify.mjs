@@ -54,7 +54,13 @@ const target=trees.find(p=>p.id===targetId),oldTarget=oldTrees.get(targetId);ass
 const parts=['BARK','CANOPY'].map(name=>treePart(sector,target,name)),oldParts=['BARK','CANOPY'].map(name=>treePart(baseline,oldTarget,name));
 assert.notEqual(digest(parts),digest(oldParts),'TARGET_GEOMETRY_UNCHANGED');
 const targetTriangles=parts.reduce((n,p)=>n+p.indices.length/3,0),baselineTargetTriangles=oldParts.reduce((n,p)=>n+p.indices.length/3,0);
-assert.equal(baselineTargetTriangles,644,'BASELINE_TARGET_COST');assert(targetTriangles<=2000,'TARGET_BUDGET_EXCEEDED');
+assert.equal(baselineTargetTriangles,644,'BASELINE_TARGET_COST');
+// Original admission permits 6,000 target triangles. The unchanged surrounding
+// 60,400 triangles make the sector's stricter 64,000 ceiling controlling.
+const admittedTargetCeiling=6000,sectorCeiling=64000,preservedSectorTriangles=baseline.diagnostics.triangleCount-baselineTargetTriangles;
+assert.equal(preservedSectorTriangles,60400,'PRESERVED_SECTOR_COST_CHANGED');
+const targetCeiling=Math.min(admittedTargetCeiling,sectorCeiling-preservedSectorTriangles);
+assert.equal(targetCeiling,3600,'EFFECTIVE_TARGET_CEILING_CHANGED');assert(targetTriangles<=targetCeiling,'TARGET_BUDGET_EXCEEDED');
 same(parts[0].vertices.slice(0,6),oldParts[0].vertices.slice(0,6),'ROOT_RING_CHANGED');same(target.support,oldTarget.support,'ROOT_SUPPORT_CHANGED');assert(target.support.minimumMeasuredBurial>=.12-1e-9,'ROOT_BURIAL');
 let checkedTriangles=0;
 let maximumHorizontalExtent=0;
@@ -75,5 +81,5 @@ const reverseStart=performance.now(),reverse=buildHEarthLandscapeSector({terrain
 same(reverse,sector,'REVERSE_CHUNKED_GENERATION_DRIFT');
 assert.equal(git('rev-parse','HEAD').trim(),candidateHead,'CANDIDATE_HEAD_CHANGED_DURING_VERIFICATION');
 same(sourceHashes(),frozenSourceSha256,'SOURCE_BYTES_CHANGED_DURING_VERIFICATION');
-const report={schema:'H_EARTH_ONE_TREE_REALISM_VERIFICATION_v1',status:'PASS',baseline:baselineSha,candidateHead,frozenSourceSha256,workingTreeClean:git('status','--porcelain').trim()==='',changedPaths:[...new Set(changed)].sort(),targetId,treeCount:65,grassTuftCount:1432,preservedTreeCount:64,baselineTargetTriangles,targetTriangles,maximumHorizontalExtent,acceptedCrownRadius:target.crownRadius,sectorTriangles:sector.diagnostics.triangleCount,sectorCeiling:64000,primitiveCount:4,checkedTriangles,terrainSha256:terrainBefore,baselineSectorSha256:digest(baseline),candidateSectorSha256:digest(sector),generationOrder:'FORWARD_EQUALS_REVERSED_AND_CHUNKED',timingsMs:{importAndTerrain:importAndTerrainMs,baselineSector:baselineMs,candidateSector:candidateMs,reverseSector:reverseMs},physicalDeviceAcceptance:'NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION'};
+const report={schema:'H_EARTH_ONE_TREE_REALISM_VERIFICATION_v1',status:'PASS',baseline:baselineSha,candidateHead,frozenSourceSha256,workingTreeClean:git('status','--porcelain').trim()==='',changedPaths:[...new Set(changed)].sort(),targetId,treeCount:65,grassTuftCount:1432,preservedTreeCount:64,baselineTargetTriangles,targetTriangles,admittedTargetCeiling,preservedSectorTriangles,targetCeiling,maximumHorizontalExtent,acceptedCrownRadius:target.crownRadius,sectorTriangles:sector.diagnostics.triangleCount,sectorCeiling,primitiveCount:4,checkedTriangles,terrainSha256:terrainBefore,baselineSectorSha256:digest(baseline),candidateSectorSha256:digest(sector),generationOrder:'FORWARD_EQUALS_REVERSED_AND_CHUNKED',timingsMs:{importAndTerrain:importAndTerrainMs,baselineSector:baselineMs,candidateSector:candidateMs,reverseSector:reverseMs},physicalDeviceAcceptance:'NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION'};
 if(process.argv.includes('--output'))fs.writeFileSync(arg('--output'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

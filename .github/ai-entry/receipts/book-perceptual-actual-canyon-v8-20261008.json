@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "book-perceptual-actual-canyon-v8-20261008",
+  "capabilityId": "BOOK_PERCEPTUAL_TERRAIN_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6010,
+  "requestBranch": "ai-dispatch-request-book-perceptual-actual-canyon-v8-20261008",
+  "requestCommit": "ed686e0e48f81dad8f71809b261f30deb55eaf55",
+  "requestCommitParent": "678c554551267d9de227b9b69add4f044d82d8e1",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "678c554551267d9de227b9b69add4f044d82d8e1",
+  "workflow": "book-perceptual-terrain-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37706196195",
+  "dispatchedRunId": 37706210113,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37706210113",
+  "dispatchedRunHeadSha": "678c554551267d9de227b9b69add4f044d82d8e1",
+  "dispatchedAt": "2026-10-08T00:09:05.004Z",
+  "resolvedAt": "2026-10-08T00:09:08.550Z"
+}

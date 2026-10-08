@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-cover-release-preflight-20261008",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6011,
+  "requestBranch": "ai-dispatch-request-h-earth-cover-release-preflight-20261008",
+  "requestCommit": "7d42e95d6ec2ee1760350a0144911a01883db323",
+  "currentMainSha": "678c554551267d9de227b9b69add4f044d82d8e1",
+  "bridgeRunId": "37706513887",
+  "error": "Stale dispatch request: parent 1241584cf24d5937249ba07a4d9826013ff860b4 != current main 678c554551267d9de227b9b69add4f044d82d8e1",
+  "failedAt": "2026-10-08T00:12:28.539Z"
+}

@@ -120,11 +120,14 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  if(id===H_EARTH_WOODLAND_TREE_TRIAL_ID){
  const originalBark=mesh(),originalFoliage=mesh();
  scaffold=openWoodlandTree(originalBark,originalFoliage,p,height,leanX,leanZ);
- // Retain the exact accepted first branch, including the six basal vertices
- // consumed by burySupport. The original crown metadata preserves floor ecology.
+ // Retain the accepted branch vertices and lower closed surface, including
+ // the six basal vertices consumed by burySupport. Its top ring continues
+ // into the trial trunk; omit the interior cap so every seam edge has two faces.
+ // The original crown metadata preserves floor ecology.
  bark.vertices.push(...originalBark.vertices.slice(0,12));
  bark.colors.push(...originalBark.colors.slice(0,12));
- bark.indices.push(...originalBark.indices.slice(0,60).map(i=>i+barkVertexStart));
+ const retainedBranchIndices=[...originalBark.indices.slice(0,36),...[36,42,48,54].flatMap(i=>originalBark.indices.slice(i,i+3))];
+ bark.indices.push(...retainedBranchIndices.map(i=>i+barkVertexStart));
  appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ,scaffold});
  }else if(id.startsWith('P2_TREE_A_'))scaffold=openWoodlandTree(bark,foliage,p,height,leanX,leanZ);else {
  branch(bark,[x,y,z],[x+leanX,y+height*.72,z+leanZ],.32+height*.018,.10,[93,75,52,255]);

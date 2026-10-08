@@ -101,7 +101,7 @@ export function appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ
    leaf(foliage,root,direction,width,length,.045,[46+tint*29,75+tint*35,24+tint*20,255]);leafCount++;
   }
  }
- const triangles=(bark.indices.length+foliage.indices.length-before)/3+20;
+ const triangles=(bark.indices.length+foliage.indices.length-before)/3+16;
  if(triangles>3600)throw new Error(`WOODLAND_TREE_TRIAL_BUDGET_EXCEEDED:${triangles}`);
- return {recipe:'OPAQUE_CURVED_HIERARCHY_v2',seed:SEED,leafCount,triangleCount:triangles,woodTriangleCount:triangles-20-leafCount*4,structure:{trunk,majorForks:forks,branchPaths:paths,secondaryCount:14,twigCount:28}};
+ return {recipe:'OPAQUE_CURVED_HIERARCHY_v2',seed:SEED,leafCount,triangleCount:triangles,woodTriangleCount:triangles-16-leafCount*4,structure:{trunk,majorForks:forks,branchPaths:paths,secondaryCount:14,twigCount:28}};
 }

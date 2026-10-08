@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-08T01:51:53Z",
+  "generatedAt": "2026-10-08T02:47:56Z",
   "window": {
-    "start": "2026-07-10T01:51:53Z",
-    "end": "2026-10-08T01:51:53Z"
+    "start": "2026-07-10T02:47:56Z",
+    "end": "2026-10-08T02:47:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5054,
-    "visits": 1303,
+    "pageLoads": 5062,
+    "visits": 1311,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5054,
-        "visits": 1303
+        "pageLoads": 5062,
+        "visits": 1311
       }
     },
     "byPath": {
@@ -343,8 +343,8 @@
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
-        "pageLoads": 2,
-        "visits": 2
+        "pageLoads": 10,
+        "visits": 10
       },
       "/products/auren/": {
         "pageLoads": 3,
@@ -365,8 +365,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 513,
-        "visits": 513
+        "pageLoads": 521,
+        "visits": 521
       },
       "raw.githack.com": {
         "pageLoads": 10,

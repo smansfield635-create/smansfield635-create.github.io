@@ -7,11 +7,13 @@
   "disposition": "NOT_READY_FOR_ADOPTION_VISUAL_TIMING_AND_PHYSICAL_REVIEW_PENDING",
   "visualEvidence": [
     "libfile_371e5ab890b081919b22154bcda3ad7a: four identical-camera fully-loaded pairs and independent six-criterion assessment",
-    "libfile_b3e23c9d6e8c8191ad3cc676f7d29973: recovered candidate3ad884a5; four exact-camera comparisons; independent visual/timing failures preserved."
+    "libfile_b3e23c9d6e8c8191ad3cc676f7d29973: recovered candidate3ad884a5; four exact-camera comparisons; independent visual/timing failures preserved.",
+    "libfile_047584d5f70881918d7ed15807474504: four fresh exact-source camera captures, three-camera diagnostic profile, preserved failed limits and independent audits."
   ],
   "interactionEvidence": [
     "libfile_371e5ab890b081919b22154bcda3ad7a: one-finger look, release and cancellation pass; actual two-finger travel unexercised; physical acceptance false",
-    "Recovered candidate: synthetic one-finger look and actual two-finger displacement, release and cancellation verified; physical device acceptance remains false."
+    "Recovered candidate: synthetic one-finger look and actual two-finger displacement, release and cancellation verified; physical device acceptance remains false.",
+    "libfile_047584d5f70881918d7ed15807474504: corrected synthetic two-finger travel and release PASS during startup residency loading; separate look/pinch cancellation PASS. Travel-specific cancellation unexercised; physical acceptance false."
   ],
   "continuityEvidence": [
     "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
@@ -27,8 +29,8 @@
     "worldRebuilds": 0,
     "drops": 0,
     "gpuResourceQualification": "PASS",
-    "softwarePerformanceQualification": "FAIL_FROZEN_THRESHOLDS",
-    "testedCandidate": "3ad884a5a02367da0520178acb36fd295ae8148d"
+    "softwarePerformanceQualification": "FAIL_FROZEN_CLOSE_AND_DISTANT_MEDIANS",
+    "testedCandidate": "c5e3f07fd30135316ed60d6d06892b387535d73d"
   },
   "experienceFiles": [
     {
@@ -61,7 +63,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "b6b8437bacee60436d10ae35f2ff302a88cf2ba6ba2d87c6477bbd9285bd350d"
+      "sha256": "113e547c9a17444c1832d8d89e72df2b437adb894a744a14619d0d4c4e243775"
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
@@ -81,7 +83,7 @@
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
-      "sha256": "a3c35b2234fe809d99f9ec9f8c536c542f86dca307d2fc503bcd18279ce6988d"
+      "sha256": "139483367931bd4e11589a99c687e868f58d57e32ea9a782c9884171dff2146b"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.verify.mjs",
@@ -91,5 +93,28 @@
   "releaseEligible": false,
   "physicalAcceptance": false,
   "mergePerformed": false,
-  "deploymentPerformed": false
+  "deploymentPerformed": false,
+  "profileRepairCheckpoint": {
+    "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+    "generation": 2629,
+    "branch": "h-earth-reference-clearing-20261008",
+    "testedCandidate": "c5e3f07fd30135316ed60d6d06892b387535d73d",
+    "testedTree": "434c747c85aba503142cb228ef59137c5199424c",
+    "remoteSourceCommit": "925ab3e9e52992190486dde40f007c5810d9a73f",
+    "nextAction": "Measure close and distant render cost on a stable device or with valid GPU timing, paired with the unchanged baseline and this exact candidate, before choosing further repair. Keep frozen limits unchanged; require owner physical phone/tablet review before adoption.",
+    "completedAction": "Three-camera render-cost profile, one bounded shader repair, exact-source four-camera frozen qualification, separate corrected synthetic interaction check.",
+    "stopCondition": "Stop before adoption, merge or deployment. No further repair or budget relaxation without measured diagnosis.",
+    "failedChecks": [
+      "close median ratio1.5650926167493908 >1.25",
+      "distant median ratio1.4209030628351775 >1.25",
+      "Prior visual concerns and owner phone/tablet physical review remain unresolved."
+    ],
+    "phoneTabletPerformance": "UNMEASURED",
+    "evidenceBundle": {
+      "libraryFileId": "libfile_047584d5f70881918d7ed15807474504",
+      "filename": "H-Earth-clearing-profile-and-repair.zip",
+      "sha256": "a1fe04acfed6a149c4563a5c9916789ad80289c9a1c7a673beb345b8a2fe79a0"
+    },
+    "authorityEffect": "NONE_CHECKPOINT_ONLY"
+  }
 }

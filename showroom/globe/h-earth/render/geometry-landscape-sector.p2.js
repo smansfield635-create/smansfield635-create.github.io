@@ -6,6 +6,7 @@ import {constructHEarthTriangleMesh,H_EARTH_3D_GEOMETRY_SOUTH_ENUMS as E} from '
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as policy} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js?cb=meadow-fan-20261006';
+import {appendHEarthWoodlandTreeTrial,H_EARTH_WOODLAND_TREE_TRIAL_ID} from './geometry-woodland-tree-trial.js';
 const SEED='WEST_WOODLAND_P2_20261006';
 const hash=(id,channel)=>{let h=2166136261;for(const c of `${SEED}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0)/4294967296;};
 const bounds={minX:-180,maxX:-24,minZ:-380,maxZ:-190};
@@ -116,7 +117,16 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  for(const p of accepted){const {id,x,z,radius,anchor}=p,y=anchor.y,height=8+hash(id,'height')*8,leanX=(hash(id,'leanX')-.5)*1.1,leanZ=(hash(id,'leanZ')-.5)*1.1;
  const barkVertexStart=bark.vertices.length,canopyVertexStart=foliage.vertices.length;
  let scaffold=null;
- if(id.startsWith('P2_TREE_A_'))scaffold=openWoodlandTree(bark,foliage,p,height,leanX,leanZ);else {
+ if(id===H_EARTH_WOODLAND_TREE_TRIAL_ID){
+ const originalBark=mesh(),originalFoliage=mesh();
+ scaffold=openWoodlandTree(originalBark,originalFoliage,p,height,leanX,leanZ);
+ // Retain the exact accepted first branch, including the six basal vertices
+ // consumed by burySupport. The original crown metadata preserves floor ecology.
+ bark.vertices.push(...originalBark.vertices.slice(0,12));
+ bark.colors.push(...originalBark.colors.slice(0,12));
+ bark.indices.push(...originalBark.indices.slice(0,60).map(i=>i+barkVertexStart));
+ appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ,scaffold});
+ }else if(id.startsWith('P2_TREE_A_'))scaffold=openWoodlandTree(bark,foliage,p,height,leanX,leanZ);else {
  branch(bark,[x,y,z],[x+leanX,y+height*.72,z+leanZ],.32+height*.018,.10,[93,75,52,255]);
  for(let j=0;j<5;j++){const angle=j*2.399+hash(id,'rotation')*6.28,offset=j===4?.15:radius*.33,dx=Math.cos(angle)*offset,dz=Math.sin(angle)*offset,cy=y+height*(j===4?.81:.62+hash(id,`tier${j}`)*.1);branch(bark,[x+leanX*.35,y+height*.35,z+leanZ*.35],[x+dx,cy,z+dz],.15,.055,[94,76,53,255]);const r=radius*(j===4?.59:.58);lobe(foliage,`${id}:${j}`,[x+dx,cy,z+dz],[r,(y+height-cy)*(j===4?1:.76),r*.92],[72+hash(id,'tint')*22,99+hash(id,'tint')*22,42+hash(id,'tint')*12,255]);}
  }

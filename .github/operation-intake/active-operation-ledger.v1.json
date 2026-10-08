@@ -1255,45 +1255,6 @@
       "scopeHash": "119d9d71c14b4434b7b0b862bbed2f93ae4693e36beec89c92d1ab65297ec2ad",
       "state": "ADMITTED_LOCKED"
     },
-    "121a49478a8f5b42503dfe34d097cd53407fcf704cc81865cd9ce9e32429ee80": {
-      "governingHead": "309540330229c1b1ba9cf32abf7afc302d79d97a",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "309540330229c1b1ba9cf32abf7afc302d79d97a",
-          "lockGeneration": 2621,
-          "lockScope": "H_EARTH:LANDSCAPE_IDENTITY:PUBLICATION",
-          "operationId": "H_EARTH_LANDSCAPE_IDENTITY_PUBLICATION_20261008_001",
-          "procedureLocatorDigest": "f2f592a6bb286a0c264f76a70fbe19af8486b017f4dd1d7ae0c30e9c78f0dd84",
-          "requestDigest": "194bb7213a87c159c2e2ef3d015e8a1d5aa3800f515ce3dccd433fc50bdb8394",
-          "scopeHash": "121a49478a8f5b42503dfe34d097cd53407fcf704cc81865cd9ce9e32429ee80"
-        },
-        "bindingDigest": "c9e7947fc58f8b86731e7d18b8b28316470525eb4394713a63776377c595a5b6",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "e2b1cfa787b85f2b5067aa19086fc75a480d1923",
-          "observedLockRefHead": "cb26faa79608ed5d371bfdb7964b3bde58e2f9f0"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "7565d4fdec77b65f9ad82de6927049014d4da765082027577d974dbf5b84b716",
-          "commentId": 6051356363,
-          "issueNumber": 6028,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2621,
-      "lockScope": "H_EARTH:LANDSCAPE_IDENTITY:PUBLICATION",
-      "operationId": "H_EARTH_LANDSCAPE_IDENTITY_PUBLICATION_20261008_001",
-      "procedureLocatorDigest": "f2f592a6bb286a0c264f76a70fbe19af8486b017f4dd1d7ae0c30e9c78f0dd84",
-      "released": false,
-      "requestDigest": "194bb7213a87c159c2e2ef3d015e8a1d5aa3800f515ce3dccd433fc50bdb8394",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "121a49478a8f5b42503dfe34d097cd53407fcf704cc81865cd9ce9e32429ee80",
-      "state": "ADMITTED_LOCKED"
-    },
     "130b91450800662195c41e6efddd8931e868979b4ed76bae359a9cfe88de00e9": {
       "governingHead": "df733992456ca523338f87d545be6a9320330e03",
       "lockGeneration": 1449,
@@ -73165,6 +73126,83 @@
       "requestDigest": "7f79f02a92664035f73b4c8af603083fd9605ce129ceb4b5eddaf4a2a7e848ac",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "35c4efb7f98be49e7f6f8a4efc8ff8c6d9e88bb59a6f07268e8c38db7bccda05",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "309540330229c1b1ba9cf32abf7afc302d79d97a",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "309540330229c1b1ba9cf32abf7afc302d79d97a",
+          "lockGeneration": 2621,
+          "lockScope": "H_EARTH:LANDSCAPE_IDENTITY:PUBLICATION",
+          "operationId": "H_EARTH_LANDSCAPE_IDENTITY_PUBLICATION_20261008_001",
+          "procedureLocatorDigest": "f2f592a6bb286a0c264f76a70fbe19af8486b017f4dd1d7ae0c30e9c78f0dd84",
+          "requestDigest": "194bb7213a87c159c2e2ef3d015e8a1d5aa3800f515ce3dccd433fc50bdb8394",
+          "scopeHash": "121a49478a8f5b42503dfe34d097cd53407fcf704cc81865cd9ce9e32429ee80"
+        },
+        "bindingDigest": "c9e7947fc58f8b86731e7d18b8b28316470525eb4394713a63776377c595a5b6",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "e2b1cfa787b85f2b5067aa19086fc75a480d1923",
+          "observedLockRefHead": "cb26faa79608ed5d371bfdb7964b3bde58e2f9f0"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "7565d4fdec77b65f9ad82de6927049014d4da765082027577d974dbf5b84b716",
+          "commentId": 6051356363,
+          "issueNumber": 6028,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "309540330229c1b1ba9cf32abf7afc302d79d97a",
+          "lockGeneration": 2621,
+          "lockScope": "H_EARTH:LANDSCAPE_IDENTITY:PUBLICATION",
+          "operationId": "H_EARTH_LANDSCAPE_IDENTITY_PUBLICATION_20261008_001",
+          "procedureLocatorDigest": "f2f592a6bb286a0c264f76a70fbe19af8486b017f4dd1d7ae0c30e9c78f0dd84",
+          "requestDigest": "194bb7213a87c159c2e2ef3d015e8a1d5aa3800f515ce3dccd433fc50bdb8394",
+          "scopeHash": "121a49478a8f5b42503dfe34d097cd53407fcf704cc81865cd9ce9e32429ee80"
+        },
+        "bindingDigest": "80e8762c8407fd927109d6b2a57c7bb7a6e953b332e6b71f69b56f1344dfde43",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "13ccb7523269c1fd68a317a765459a30d01c884e",
+          "observedLockRefHead": "2aa6ce2e06086d4c65816616d23779760eb9e659"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "642fda28183413e482c6c06d2e6f2646ef3bf58dea93d2320f156d0af642e4d4",
+          "commentId": 6051423273,
+          "issueNumber": 6028,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "309540330229c1b1ba9cf32abf7afc302d79d97a",
+          "lockGeneration": 2621,
+          "lockScope": "H_EARTH:LANDSCAPE_IDENTITY:PUBLICATION",
+          "operationId": "H_EARTH_LANDSCAPE_IDENTITY_PUBLICATION_20261008_001",
+          "released": true,
+          "scopeHash": "121a49478a8f5b42503dfe34d097cd53407fcf704cc81865cd9ce9e32429ee80",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2621,
+      "lockScope": "H_EARTH:LANDSCAPE_IDENTITY:PUBLICATION",
+      "operationId": "H_EARTH_LANDSCAPE_IDENTITY_PUBLICATION_20261008_001",
+      "procedureLocatorDigest": "f2f592a6bb286a0c264f76a70fbe19af8486b017f4dd1d7ae0c30e9c78f0dd84",
+      "released": true,
+      "requestDigest": "194bb7213a87c159c2e2ef3d015e8a1d5aa3800f515ce3dccd433fc50bdb8394",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "121a49478a8f5b42503dfe34d097cd53407fcf704cc81865cd9ce9e32429ee80",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

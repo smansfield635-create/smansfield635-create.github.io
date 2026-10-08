@@ -464,9 +464,7 @@ void main(){
   }
   vec3 geometricNormal=normalize(vNormal);
   vec3 shadingNormal=geometricNormal;
-  vec3 lightDirection=normalize(-uSunDirection);
   vec3 viewDirection=normalize(uCameraPosition-vWorldPosition);
-  vec3 halfDirection=normalize(lightDirection+viewDirection);
   float slope=1.0-clamp(geometricNormal.y,0.0,1.0);
   float specularScale=1.0;
   float terrainReliefEnvelope=0.0;
@@ -794,22 +792,6 @@ void main(){
     shadingNormal=limitTerrainNormalDeviation(geometricNormal,
       perturbTerrainNormal(geometricNormal,vWorldPosition,dot(clearingTexel.rgb,vec3(0.3333))*0.055));
   }
-  float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
-  float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
-  float diffuse=vRoleCode==4u?reliefDiffuse:geometricDiffuse;
-  if(vRoleCode==1u){
-    diffuse=mix(
-      geometricDiffuse,
-      reliefDiffuse,
-      0.95*terrainReliefEnvelope
-    );
-    diffuse=clamp(
-      diffuse,
-      max(0.0,geometricDiffuse-0.34),
-      min(1.0,geometricDiffuse+0.34)
-    );
-  }
-
   float geometricRim=pow(
     1.0-max(dot(geometricNormal,viewDirection),0.0),
     2.2
@@ -827,10 +809,37 @@ void main(){
     :(vRoleCode==4u?reliefRim:geometricRim);
 
   float specularExponent=vRoleCode==1u?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
-  float specular=pow(
-    max(dot(shadingNormal,halfDirection),0.0),
-    specularExponent
-  )*specularScale;
+  float specular=0.0;
+  float directional=0.0;
+  // Full-interior clearing lighting replaces these two values with weight 1.
+  // Keep every original expression for the transition band and outside world.
+  if(clearingEdge!=1.0){
+    vec3 lightDirection=normalize(-uSunDirection);
+    vec3 halfDirection=normalize(lightDirection+viewDirection);
+    float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
+    float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
+    float diffuse=vRoleCode==4u?reliefDiffuse:geometricDiffuse;
+    if(vRoleCode==1u){
+      diffuse=mix(
+        geometricDiffuse,
+        reliefDiffuse,
+        0.95*terrainReliefEnvelope
+      );
+      diffuse=clamp(
+        diffuse,
+        max(0.0,geometricDiffuse-0.34),
+        min(1.0,geometricDiffuse+0.34)
+      );
+    }
+    specular=pow(
+      max(dot(shadingNormal,halfDirection),0.0),
+      specularExponent
+    )*specularScale;
+    directional=
+      diffuse*
+      uSunIntensity*
+      (vRoleCode==1u?0.96:(vRoleCode==4u?0.74:0.82));
+  }
 
   float specularLightingGain=vRoleCode==1u
     ?mix(0.035,0.22,clamp(terrainReflectanceForLighting*0.72+terrainWetnessForLighting*0.28,0.0,1.0))
@@ -840,10 +849,6 @@ void main(){
     0.26+
     0.16*clamp(geometricNormal.y,0.0,1.0)+
     0.05*materialSignal;
-  float directional=
-    diffuse*
-    uSunIntensity*
-    (vRoleCode==1u?0.96:(vRoleCode==4u?0.74:0.82));
   if(clearingType>0.5&&clearingType<2.5){
     vec3 reference=clearingType>1.5?vec3(94.0,135.0,61.0)/255.0:vec3(100.0,83.0,62.0)/255.0;
     vec3 detail=clamp(pow(clearingTexel.rgb/max(reference,vec3(0.01)),vec3(2.2)),vec3(0.45),vec3(1.55));

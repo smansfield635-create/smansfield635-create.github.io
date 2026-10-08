@@ -1,0 +1,2399 @@
+{
+  "schema": "H_EARTH_LANDSCAPE_IDENTITY_REVIEW_v1",
+  "base": "37705c12ec2c22c0e6d284a58b8a9b24faaa4e9f",
+  "operationId": "H_EARTH_LANDSCAPE_IDENTITY_ENGINEERING_20261008_001",
+  "generation": 2620,
+  "acquisitionCommit": "413b7d1a250e33e38929880e0722bc0b8e74bd5d",
+  "mechanicalQualification": {
+    "schema": "H_EARTH_LANDSCAPE_IDENTITY_MECHANICAL_QUALIFICATION_v1",
+    "result": "PASS",
+    "executedHead": null,
+    "baseline": "37705c12ec2c22c0e6d284a58b8a9b24faaa4e9f",
+    "sourceDigests": {
+      "showroom/globe/h-earth/render/grass-lowland-trial.js": "0f75e195c8e1548d8b34910e53d630d4255e88d92c1e4a1c209d53ae3c15444f",
+      "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb",
+      "h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js": "639b36a2bf7ac7c5962e5990374e6f7ceb817601ea89c4db35bb09618d316e4c",
+      "h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js": "bb9e131316121bf5e79533b375a74b5e8fce3008b0362d24d19d004136b44137"
+    },
+    "candidateSourceDigests": {
+      "showroom/globe/h-earth/render/geometry-landscape-cover.js": "ff14d48862c47b9a17a39305941541f023a7a8ffaa719019eb3d603debd0ad3e",
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.js": "95fc5f9096201054b52ca4cabb7093158b3bd61cdfc81d830516192bbefb78e7",
+      "h-earth-3d/validation/h-earth.landscape-identity.v1.mjs": "5319d0de92222c5eadaf68a3db51a348c20f20e1c659dc40965517d4766ed81f"
+    },
+    "planDigest": "05408b481192f48cca55c422dfe17c3c9335840207bbbae9391d50a7872c489f",
+    "geometryDigest": "52a0e253aeda5ace746088b2a758adc59d30567a9d31e73f165be882fb094ff5",
+    "candidateCount": 10598,
+    "plannedTufts": 1892,
+    "constructedTufts": 1892,
+    "rootCollarRejections": 0,
+    "roots": 22704,
+    "vertices": 52976,
+    "triangles": 45408,
+    "maxGroundError": 9.52235541973323e-07,
+    "waterChecked": 22704,
+    "patchCounts": {
+      "-1:-11": 25,
+      "-2:-6": 15,
+      "-3:-6": 7,
+      "-3:-9": 9,
+      "-4:-10": 29,
+      "-4:-4": 22,
+      "-4:-6": 9,
+      "-5:-8": 25,
+      "-6:-8": 14,
+      "2:-10": 14,
+      "2:-7": 23,
+      "3:-4": 21,
+      "5:-4": 15,
+      "5:-6": 36,
+      "WOODLAND_SHOULDER": 315,
+      "-3:-11": 22,
+      "-3:-3": 10,
+      "-4:-5": 32,
+      "-4:-9": 16,
+      "-5:-4": 24,
+      "-6:-3": 27,
+      "-6:-9": 17,
+      "1:-5": 24,
+      "1:-9": 17,
+      "4:-4": 15,
+      "4:-7": 13,
+      "-4:-11": 46,
+      "-5:-11": 5,
+      "-5:-3": 15,
+      "-5:-5": 26,
+      "-5:-7": 18,
+      "-6:-6": 20,
+      "0:-10": 10,
+      "0:-6": 25,
+      "1:-12": 6,
+      "1:-6": 28,
+      "2:-8": 8,
+      "3:-7": 39,
+      "4:-11": 13,
+      "5:-10": 38,
+      "-1:-10": 10,
+      "-2:-7": 25,
+      "-3:-7": 13,
+      "-5:-6": 21,
+      "-6:-10": 9,
+      "1:-11": 14,
+      "3:-5": 14,
+      "3:-9": 22,
+      "-1:-7": 5,
+      "-1:-9": 22,
+      "-2:-10": 11,
+      "1:-10": 11,
+      "3:-11": 10,
+      "5:-3": 21,
+      "5:-9": 3,
+      "-2:-3": 11,
+      "-2:-5": 17,
+      "-2:-8": 16,
+      "-3:-5": 17,
+      "-5:-9": 29,
+      "0:-5": 15,
+      "0:-7": 19,
+      "2:-11": 33,
+      "2:-5": 26,
+      "-1:-5": 17,
+      "-3:-10": 13,
+      "0:-9": 15,
+      "1:-8": 18,
+      "4:-5": 23,
+      "4:-9": 4,
+      "-6:-11": 22,
+      "4:-6": 20,
+      "-4:-8": 9,
+      "2:-6": 6,
+      "4:-8": 6,
+      "-1:-8": 9,
+      "-2:-12": 15,
+      "-6:-5": 28,
+      "3:-12": 17,
+      "-2:-11": 24,
+      "3:-6": 14,
+      "4:-10": 15,
+      "5:-7": 11,
+      "4:-3": 12,
+      "5:-11": 6,
+      "1:-7": 7,
+      "-2:-4": 10,
+      "2:-9": 6,
+      "-2:-9": 10,
+      "-6:-7": 18,
+      "3:-3": 14,
+      "0:-8": 3,
+      "0:-11": 11,
+      "-4:-7": 2,
+      "3:-8": 5,
+      "-4:-3": 2,
+      "3:-10": 3,
+      "-1:-6": 3,
+      "-6:-12": 2,
+      "-6:-4": 1,
+      "-3:-12": 3,
+      "-5:-10": 1
+    },
+    "batches": [
+      {
+        "index": 0,
+        "tufts": 22,
+        "sha256": "af58a9169f8e92ef5411e4f8ea9f06a5d406497447fc701001cdbc36a5119733"
+      },
+      {
+        "index": 1,
+        "tufts": 18,
+        "sha256": "d10ed5fd30ca7a90c4e08e1edf841cb71fdb87af7cb0b8cb4d2e0707424130aa"
+      },
+      {
+        "index": 2,
+        "tufts": 25,
+        "sha256": "f304e5da1edc356e7dcf879d32fc89517b9d3103867d02794e02f86d7ed947df"
+      },
+      {
+        "index": 3,
+        "tufts": 7,
+        "sha256": "ca89014c8e762e50aca86089abd9bb7337194c32f708b1ab66a5bb2ba064fd21"
+      },
+      {
+        "index": 4,
+        "tufts": 20,
+        "sha256": "6c655b5cea96c0290bbcdc705d546b14adc84af31e69c2106fd6eb623629d071"
+      },
+      {
+        "index": 5,
+        "tufts": 18,
+        "sha256": "70471cfd9f8b425806c57079904cadc8bfc6025eca07e1d2f45e5ff69883d1bd"
+      },
+      {
+        "index": 6,
+        "tufts": 18,
+        "sha256": "988c3a7968f77b74a6e278f904424aed8f021690c05bd9a1184e7aed66026ab3"
+      },
+      {
+        "index": 7,
+        "tufts": 21,
+        "sha256": "15b2ac3e44be447b9d27734fbc56beca89eab3e6b53766d5a4e726dbeb6c6730"
+      },
+      {
+        "index": 8,
+        "tufts": 15,
+        "sha256": "0be69e5bc5feb0ea19c222b4eab39fb9ed1c544e023028ef5d28b2a3fa5a648a"
+      },
+      {
+        "index": 9,
+        "tufts": 16,
+        "sha256": "627b9fec021f335db7a3bfe7c5ff7212326eb8d242fd0e017bbed7e0c3d18585"
+      },
+      {
+        "index": 10,
+        "tufts": 19,
+        "sha256": "53ae89437062995f5d3055133e5b943f47212649e0485e546cfc90eb8ee76518"
+      },
+      {
+        "index": 11,
+        "tufts": 6,
+        "sha256": "4e4fdf39a46927c53a71cdc53b0b6a0e7fd44cbdadd9c78396a634eab03e0264"
+      },
+      {
+        "index": 12,
+        "tufts": 18,
+        "sha256": "e176551e6decf50d2cc4def2596ffe9d07183e5d6d1c1ec720c0024c3d49b9c9"
+      },
+      {
+        "index": 13,
+        "tufts": 17,
+        "sha256": "2326b7aeeeccc36e7a50fe4759642f2216115e98928681fed02d1854b5bb0ef4"
+      },
+      {
+        "index": 14,
+        "tufts": 18,
+        "sha256": "1daf64897953abc188f873498aced6a9cb981aa03afe2f60b63e9947ee1a2194"
+      },
+      {
+        "index": 15,
+        "tufts": 11,
+        "sha256": "69e7641c716347639f59d0aa0170cbc3fc874611495c567d2dacd542a96785e8"
+      },
+      {
+        "index": 16,
+        "tufts": 27,
+        "sha256": "7302e1b98bf4aba04e77770b6fb515eb9742f666d67630c0d133e3e8a43d7e9c"
+      },
+      {
+        "index": 17,
+        "tufts": 17,
+        "sha256": "47e981ab62c2533a955ad53b6ca228a1b7248b97e376b120542f9b1f40ab9937"
+      },
+      {
+        "index": 18,
+        "tufts": 11,
+        "sha256": "1286ac90e9b707615f99b1a37ef7f6d527d88bd98129e7e442b7ad4846c86ac5"
+      },
+      {
+        "index": 19,
+        "tufts": 15,
+        "sha256": "608bf725bfd852ff46d06105754e4d642275771f8b8b9ee048d5d6c3ce1f609b"
+      },
+      {
+        "index": 20,
+        "tufts": 10,
+        "sha256": "8a9cf99613c428d49cdd054b081a5a6c52896579031c607cb8790c57d617a168"
+      },
+      {
+        "index": 21,
+        "tufts": 21,
+        "sha256": "439cbac8f5a903061f523d9adea247eb0c64d8c50716d8c9bd49a760cd1312f2"
+      },
+      {
+        "index": 22,
+        "tufts": 15,
+        "sha256": "167c80231d1b5aec101944fa4123ff44bcece0b4cf16b315e108622e8f55e042"
+      },
+      {
+        "index": 23,
+        "tufts": 12,
+        "sha256": "d06b5e5af2b7002d1c011176b46e8c53d12ad82d08fc759bd562724de1de80d3"
+      },
+      {
+        "index": 24,
+        "tufts": 19,
+        "sha256": "3043dd5607063a71db809ae562808f68735c1211823563ae00b8d32da101a70f"
+      },
+      {
+        "index": 25,
+        "tufts": 21,
+        "sha256": "8f86234f9ecb5399bb96632661e11a926bd7f75e7451a9b88de0a195adcb46e3"
+      },
+      {
+        "index": 26,
+        "tufts": 17,
+        "sha256": "1ef905707dd3d81517694bffd1ad2b6d0b29624fbcb9645b541198b335ba3fd3"
+      },
+      {
+        "index": 27,
+        "tufts": 23,
+        "sha256": "2c6f92e070fe1d807e6dbec383ff77151144a702e161f4cbe643c001d2ed81ad"
+      },
+      {
+        "index": 28,
+        "tufts": 22,
+        "sha256": "0d0bcb62dbcab663f5e21e34a25342296392d35d446d9bd976ab6baffa582387"
+      },
+      {
+        "index": 29,
+        "tufts": 15,
+        "sha256": "584b04746a02974ab8de4446162a3d4838d91c4aa9328e497fded34b8c28a500"
+      },
+      {
+        "index": 30,
+        "tufts": 15,
+        "sha256": "cb9a2001f912581b716cc8fec39db658080d0e21d98177c00ed886dcc84b653e"
+      },
+      {
+        "index": 31,
+        "tufts": 24,
+        "sha256": "3e93b9c098e6db75d894ef7f1914b2d4b1186d507c27d4abf703a5e5b14f63cf"
+      },
+      {
+        "index": 32,
+        "tufts": 21,
+        "sha256": "904f5964bedc12f26daaa12283a0b06dc93f56f431d6b6724a8ddc923dc6f26c"
+      },
+      {
+        "index": 33,
+        "tufts": 17,
+        "sha256": "069eb4134fac2ba57067b9bdefe78333b7d3d3f68520986cd299c44d80907326"
+      },
+      {
+        "index": 34,
+        "tufts": 18,
+        "sha256": "a074e0d86b2f7b21af90de5a1c50f1707f312c186efeb524fb51e715af230190"
+      },
+      {
+        "index": 35,
+        "tufts": 21,
+        "sha256": "3d468ceebce5726fe9b983a703e15280407b49a56102ff83c4a14b0f96d11009"
+      },
+      {
+        "index": 36,
+        "tufts": 15,
+        "sha256": "28984e3e3488c07d26bcc913dca361ba95fb232397732f07c52077dd22625714"
+      },
+      {
+        "index": 37,
+        "tufts": 21,
+        "sha256": "144e8b88d5d37a6b49faf9777cda3dd9714eb19d5f90b54b26f649fcb71ea8cf"
+      },
+      {
+        "index": 38,
+        "tufts": 16,
+        "sha256": "1ee3cf4da3b48cabeb71a0c8915bb44c43842dfa4dc5a372e1e5fe457f12ab34"
+      },
+      {
+        "index": 39,
+        "tufts": 14,
+        "sha256": "19a3b599a50f0169981023ee52e9f413069d7c2c3fefa6c1408f458adbef1884"
+      },
+      {
+        "index": 40,
+        "tufts": 18,
+        "sha256": "dda28fe32ddcc7f780fe38c02b86df56436860f90ae8ab894aae44977264f307"
+      },
+      {
+        "index": 41,
+        "tufts": 20,
+        "sha256": "ac19efdcfe256c10a477c675e3b23f8f2b80948e79a25771b4b8c7dae03e6c83"
+      },
+      {
+        "index": 42,
+        "tufts": 8,
+        "sha256": "6e85fb886653d76ef5b7a92c6593790510d7dff84e1a054cc62a43a29bb22174"
+      },
+      {
+        "index": 43,
+        "tufts": 13,
+        "sha256": "cb23ce85e992e51cd488cd4c9c04d3229438e9cc2b2cd394519f70ee054e4782"
+      },
+      {
+        "index": 44,
+        "tufts": 19,
+        "sha256": "0ca5e674d8fcbd3c48215113a1237a6b1d32509fa45f1e42c96ca1f211d4184a"
+      },
+      {
+        "index": 45,
+        "tufts": 17,
+        "sha256": "0d0f066074458f93d863cfc8c56472266cdc737f4a348b0d33784d07b51bca98"
+      },
+      {
+        "index": 46,
+        "tufts": 17,
+        "sha256": "3ef2502a1ed6b6c1cb816f5e11e1f69e5abaaf2949644df0367eb18bedf48751"
+      },
+      {
+        "index": 47,
+        "tufts": 22,
+        "sha256": "fc9ad19e372fcce56a2073c3286431a76546edb95071ee4851465faed2d24bf3"
+      },
+      {
+        "index": 48,
+        "tufts": 28,
+        "sha256": "7698366da62ee44453f5af4c9bfc5659cabf0496ecd649388b982d53f15eeb1c"
+      },
+      {
+        "index": 49,
+        "tufts": 23,
+        "sha256": "2709a71b6de14557a27f6e5ee9eea9a7f6103e848884457c785465bba140b83c"
+      },
+      {
+        "index": 50,
+        "tufts": 23,
+        "sha256": "ac57c04ebf9bd15150814f8009aaebbc9506adc9b10568868b0fe2394556eab4"
+      },
+      {
+        "index": 51,
+        "tufts": 17,
+        "sha256": "8d3cda6afabd78f50d3af8bdfd037ae0afff8656514ffbd7a588077abcc85303"
+      },
+      {
+        "index": 52,
+        "tufts": 19,
+        "sha256": "97ee46e7f79cbfa2a34232fd21f2834cb888c32a1e36e2706b698e56c26586bb"
+      },
+      {
+        "index": 53,
+        "tufts": 25,
+        "sha256": "9dbfc00711522d99222100201d9fc02728dda17538bf85a9c2dedad6d611f1d1"
+      },
+      {
+        "index": 54,
+        "tufts": 15,
+        "sha256": "ae01036829809b632ec5e4ec06a9a1adc73e1fc2e068d5250c24836f534f9a15"
+      },
+      {
+        "index": 55,
+        "tufts": 21,
+        "sha256": "f5557e9d8126d05deb21cfe548f46770f96e57eb3d1cf73bd0f9aca0fc438ae3"
+      },
+      {
+        "index": 56,
+        "tufts": 17,
+        "sha256": "f9109668d87fe8a326b01ba1724c341668c3ba0f95da36194623f38a62a80f4a"
+      },
+      {
+        "index": 57,
+        "tufts": 22,
+        "sha256": "51f785ce97436e5ecfeffaa77bf612d837c51b81e7c098db0db3c06b402afbb7"
+      },
+      {
+        "index": 58,
+        "tufts": 18,
+        "sha256": "579fa1b7bf95cd9e97c217361924065aac4b168f9ed64253fc9938d19769c646"
+      },
+      {
+        "index": 59,
+        "tufts": 11,
+        "sha256": "f0b8afa9b6c36992e21c06f1492cb78aaf2d3049a5cecf1a4edd3898c60cd643"
+      },
+      {
+        "index": 60,
+        "tufts": 24,
+        "sha256": "a5c4c0207751f2603aeb403a68be6e2cdc2c949a79d38e369b66dacdfeabb763"
+      },
+      {
+        "index": 61,
+        "tufts": 19,
+        "sha256": "bcaf303349628a45d24d7b76fc1dad5a708e20abb552985840ceb440490ca937"
+      },
+      {
+        "index": 62,
+        "tufts": 13,
+        "sha256": "9e75b69d34a2bec2da78e094a67d615b3d2096b432f5be47498fa890273726d2"
+      },
+      {
+        "index": 63,
+        "tufts": 17,
+        "sha256": "1a554edcfea7e337829957c3a792615c8332078c8c0ece6bbcdaa22e16801c08"
+      },
+      {
+        "index": 64,
+        "tufts": 13,
+        "sha256": "72b53484bdf791df90505a9440ff8e8d776d2443618142e57197d1aa0cdb0d52"
+      },
+      {
+        "index": 65,
+        "tufts": 23,
+        "sha256": "f76eb72ca58a81cbbecc4bb17e6b57ebdd24983fdae1eb4289b1373b366b92ec"
+      },
+      {
+        "index": 66,
+        "tufts": 14,
+        "sha256": "c5e9760a2a89147c68b9a37ed5ee18ab1fb6dee58a0beeb16107e900269062df"
+      },
+      {
+        "index": 67,
+        "tufts": 17,
+        "sha256": "3830c2856fd7b5f39e72b5f604451a74e5bed1a13953b5a8fba87bba9dc0771d"
+      },
+      {
+        "index": 68,
+        "tufts": 18,
+        "sha256": "2c2c06ef8e01cbc5d5710421fa1228adb0a8b8f30459bd5f83d8cecd309cb39e"
+      },
+      {
+        "index": 69,
+        "tufts": 13,
+        "sha256": "62f37c165bf53af8710afff4bb274c864e64013f9f7a457fd3e9df1de983ec91"
+      },
+      {
+        "index": 70,
+        "tufts": 20,
+        "sha256": "e4138d78826f7424213757dfa78e9dacc40fcf7da7bd08e25426d6321e7ae88e"
+      },
+      {
+        "index": 71,
+        "tufts": 21,
+        "sha256": "e428a8c3826d4edafb8333374bd93635a229cc43f70ccc94e27c59fbb23d495a"
+      },
+      {
+        "index": 72,
+        "tufts": 25,
+        "sha256": "28cc54f7b9ab96cbd4df23776ec1d66352ae87a1950d13109c9f646d38624b2b"
+      },
+      {
+        "index": 73,
+        "tufts": 15,
+        "sha256": "fde0e6b73b3aae43ff6d3c5bc7ab37bf73daf8c0e35a4500414504da7d14b11a"
+      },
+      {
+        "index": 74,
+        "tufts": 23,
+        "sha256": "92ef6e6f34eb0e6db7277a265827599b40c591d61591795e185f6d1ad8642b10"
+      },
+      {
+        "index": 75,
+        "tufts": 18,
+        "sha256": "cbeae17204a96011033f27ee3f9c93018db19b1b0e0e5785915edee6443ca3fd"
+      },
+      {
+        "index": 76,
+        "tufts": 15,
+        "sha256": "10246c32d35d91c4c4100c3cab8ea58d9e969ba7627b00d7f1d6bb46cb0029a5"
+      },
+      {
+        "index": 77,
+        "tufts": 20,
+        "sha256": "3f5209ef31ef6ca18659228532230a77ba04b0f8586dc147e4a227892db110ad"
+      },
+      {
+        "index": 78,
+        "tufts": 11,
+        "sha256": "3d40816ee17e534b3bc81586f127d650d2b4701bb9627550e9c20b6fb61958dc"
+      },
+      {
+        "index": 79,
+        "tufts": 20,
+        "sha256": "3805488c7cba41c67bf04c5e8930d92389c35a00dc9dbdb765eb1ccbbdc8254f"
+      },
+      {
+        "index": 80,
+        "tufts": 14,
+        "sha256": "e494a2e6b18f196da085fdeb6eab937b1a274ce776feba77a1277dfeef17c3dc"
+      },
+      {
+        "index": 81,
+        "tufts": 14,
+        "sha256": "86e245086801e45ef4b15941f27a19b792f5e7e6be04b974c6dd9f6b26d62bdf"
+      },
+      {
+        "index": 82,
+        "tufts": 15,
+        "sha256": "6e468e77c583c71a4f37ff87539154e8c26b22c6689dc571711abc667d67b7ca"
+      },
+      {
+        "index": 83,
+        "tufts": 17,
+        "sha256": "471a01fad026fe1eefa8ce0fe590ea981a5ac176b5ba165f4b8cd4d23d981974"
+      },
+      {
+        "index": 84,
+        "tufts": 16,
+        "sha256": "4c6f99d1c00a572c1313436e3c6078c5a48b97b4838bc87b048b8663cd531756"
+      },
+      {
+        "index": 85,
+        "tufts": 13,
+        "sha256": "6ac18c0a4ba2755128ad0971cd2ede74b9d7655b6adacafe5c3ecddad4699c59"
+      },
+      {
+        "index": 86,
+        "tufts": 12,
+        "sha256": "d500cb81a26ab48c665261aae2af6bc8a4abfc2978b26448c6da563e4b56bd9e"
+      },
+      {
+        "index": 87,
+        "tufts": 11,
+        "sha256": "121acacdca8051afa0a7a89e4c993fa7225837c019161b61f1fe0d187ec0e84e"
+      },
+      {
+        "index": 88,
+        "tufts": 17,
+        "sha256": "46c050783749ec080a10f39b4718a9ad7c29ab4f36b2a5ae241ab83e5a4d11a3"
+      },
+      {
+        "index": 89,
+        "tufts": 12,
+        "sha256": "815c9be1e7977b1b2fcd6fb654c6ecc893b1f83dd6f2c857ab0ae9b41ea339fc"
+      },
+      {
+        "index": 90,
+        "tufts": 15,
+        "sha256": "801f89fa6d8a9dd0c017458a54722941737f6e93e0c5755dc170787f61545389"
+      },
+      {
+        "index": 91,
+        "tufts": 21,
+        "sha256": "64c31eb37c5895086ead37ee03f5a85ada8b4e53b826833d412fe750e5ea2dcc"
+      },
+      {
+        "index": 92,
+        "tufts": 16,
+        "sha256": "d6574c2d83cd91814f53aaf7eb42eaa5cc4a1bcec24eb2e366db908fc2251328"
+      },
+      {
+        "index": 93,
+        "tufts": 16,
+        "sha256": "d20677ccdeffd2e7914bd6c53a7253a8a343ca89262b06527da7807132786bed"
+      },
+      {
+        "index": 94,
+        "tufts": 17,
+        "sha256": "095da892aa5d14461b520ed6aaee128dbcee45ed319a072e40ceba59edfbbe35"
+      },
+      {
+        "index": 95,
+        "tufts": 16,
+        "sha256": "94f053f12fe75c9533a9feaac330747f1d124e8b903a76a465a6407be9eaa761"
+      },
+      {
+        "index": 96,
+        "tufts": 21,
+        "sha256": "0565511c4a4df0a80c34bbfe3bb8385145d95811d5252dc8e558b6e49d34c4e0"
+      },
+      {
+        "index": 97,
+        "tufts": 22,
+        "sha256": "183ac074b92ba4709944ebfbdf4593999cdd885af43a79ebef2f1480df5bce57"
+      },
+      {
+        "index": 98,
+        "tufts": 19,
+        "sha256": "9c163b3662ef49dc4fef64ce3854a7f7cc9369672f71a22b3ca180a85f132adf"
+      },
+      {
+        "index": 99,
+        "tufts": 17,
+        "sha256": "b2c419fed9ad28c3dc85464738eaa77f7ee066d041e63e7499b41248ae343ada"
+      },
+      {
+        "index": 100,
+        "tufts": 15,
+        "sha256": "2a7ef8bc7f57ce7a8e4dea3eae73d851d3fdab84e245da10a0f0c725fd713a25"
+      },
+      {
+        "index": 101,
+        "tufts": 21,
+        "sha256": "73bd486fd084220e24a9ce87b48c06f227b707b2b7c74e2347108bb21d703f17"
+      },
+      {
+        "index": 102,
+        "tufts": 24,
+        "sha256": "aa1ea6de7a91e094937030183ccd48da969f92bec685548abdd160ef852ca4ab"
+      },
+      {
+        "index": 103,
+        "tufts": 13,
+        "sha256": "1886ae9e21f5c98ecad1108892e9f8e6ed8053105e219d35ab217dfc72557eed"
+      },
+      {
+        "index": 104,
+        "tufts": 17,
+        "sha256": "4dfe69ddd6cb4d7aa82424582feef58383604c47ce3aba1741c4ebaac851b86f"
+      },
+      {
+        "index": 105,
+        "tufts": 19,
+        "sha256": "2f93c871cab1fe2573f4bf052a0015012be6a7d8e2e9db2915377837b5cb050a"
+      },
+      {
+        "index": 106,
+        "tufts": 21,
+        "sha256": "1401e4718c694ae67729c49eeb7aedd896d079187ba1b8ae2e99e609b410eac8"
+      },
+      {
+        "index": 107,
+        "tufts": 13,
+        "sha256": "1a447dff58f602e6e015189e86dc5a8250610704ec16c72c9f921c4e1008b85a"
+      }
+    ],
+    "planOrderVariants": 3,
+    "independentFloat32Grounding": true,
+    "reservationAndWalkingClearances": true,
+    "acceptedRecipesUnchanged": true,
+    "worldTruth": {
+      "instanceCount": 27585,
+      "batchCount": 108,
+      "droppedPlacementCount": 0
+    },
+    "timing": {
+      "rawPackageMs": 17942.686461999998,
+      "planMs": 1022.1049879999991,
+      "maxBatchMs": 266.6413739999989,
+      "totalMs": 50484.182178
+    },
+    "browserReadiness": "SEPARATE_EXACT_HEAD_REQUIRED",
+    "physicalDeviceAcceptance": "NOT_ESTABLISHED",
+    "productMutationPerformed": false,
+    "mergePerformed": false,
+    "deploymentPerformed": false,
+    "scope": "EXACT_SOURCE_BYTES_PRE_COMMIT"
+  },
+  "baseGeometryPreservation": {
+    "schema": "H_EARTH_LANDSCAPE_BASE_GEOMETRY_PRESERVATION_v1",
+    "result": "PASS",
+    "exactBase": "37705c12ec2c22c0e6d284a58b8a9b24faaa4e9f",
+    "preservedBufferNames": [
+      "positions",
+      "normals",
+      "materialParameters",
+      "materialModelCodes",
+      "surfaceClassCodes",
+      "primitiveIndices",
+      "roleCodes",
+      "indices"
+    ],
+    "primitiveSpansPreserved": true,
+    "drawRangesPreserved": true,
+    "baselineMs": 22111.613913999998,
+    "baseVertexCount": 79127,
+    "baseTriangleCount": 104214,
+    "paletteDeltaExpected": true
+  },
+  "visualComparison": [
+    {
+      "view": "woodland",
+      "changedPixels": 10424,
+      "frameFraction": 0.0316684894883947,
+      "baselineSha256": "770d65e4e531e2e84087df11692ad09a6f64502e32a52194a3f74619d83a5965",
+      "candidateSha256": "dc2aabd594f6431a9baf37271eb9dfbda1ef6d97372718e5f8468da781bb677b"
+    },
+    {
+      "view": "shoulder",
+      "changedPixels": 92810,
+      "frameFraction": 0.2819601409648803,
+      "baselineSha256": "d013db50fc611c19e8f1ded2e382fc4123f87dcf01cdef2016b620097649f3c4",
+      "candidateSha256": "b250f0a8486a0c25767a36d02803cee9620176127beb31f29b960f6f78e029bc"
+    },
+    {
+      "view": "open-ground",
+      "changedPixels": 174340,
+      "frameFraction": 0.5296512334427026,
+      "baselineSha256": "f6283d6c2be48bef25e01c85f438d6c26e1a9d838da24009f55bbc5ee3da8f10",
+      "candidateSha256": "a68b4526d78a57515923613e8e83744685be46a29e64a955f394960403525495"
+    },
+    {
+      "view": "oasis",
+      "changedPixels": 775,
+      "frameFraction": 0.0023544780653785395,
+      "baselineSha256": "5c4bf2d6a94bd04d23b777dcddd61e6f67dfe64c91146c8c62fba03418c8c076",
+      "candidateSha256": "da7f1a1640c77cb7d35c0b00b31fd767b296fcfc5bf6fbb24810ced49928bdae"
+    }
+  ],
+  "browser": {
+    "baseline": {
+      "elapsedMs": 89899,
+      "errors": [],
+      "views": {
+        "woodland": {
+          "capture": {
+            "label": "woodland",
+            "frameNumber": 1,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 214172,
+              "uniqueColorBucketCount": 63,
+              "meanLuminance": 113.39537715044004,
+              "luminanceStandardDeviation": 52.22191156263027,
+              "byteHash": "fnv1a32:0888771a"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E4A0F62C",
+              "runtimeContentDigest": "fnv1a32:e4a0f62c",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 1,
+              "visiblePresentationCount": 1,
+              "colorReadbackCount": 1,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 1,
+              "gpuFinishCount": 1,
+              "cameraUniformUpdateCount": 4,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 8,
+              "totalDrawnIndexCount": 1297314,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 1,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 108,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 243.70000000298023,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2426.60000000149
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "shoulder": {
+          "capture": {
+            "label": "shoulder",
+            "frameNumber": 2,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 209910,
+              "uniqueColorBucketCount": 58,
+              "meanLuminance": 119.15309813842723,
+              "luminanceStandardDeviation": 48.965233018139045,
+              "byteHash": "fnv1a32:0dddddb1"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E4A0F62C",
+              "runtimeContentDigest": "fnv1a32:e4a0f62c",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 2,
+              "visiblePresentationCount": 2,
+              "colorReadbackCount": 2,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 2,
+              "gpuFinishCount": 2,
+              "cameraUniformUpdateCount": 8,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 16,
+              "totalDrawnIndexCount": 2594628,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 2,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 216,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 243.70000000298023,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2426.60000000149
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "open-ground": {
+          "capture": {
+            "label": "open-ground",
+            "frameNumber": 3,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 176169,
+              "uniqueColorBucketCount": 18,
+              "meanLuminance": 134.58650690259515,
+              "luminanceStandardDeviation": 43.47941130174489,
+              "byteHash": "fnv1a32:1f0a0266"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E4A0F62C",
+              "runtimeContentDigest": "fnv1a32:e4a0f62c",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 3,
+              "visiblePresentationCount": 3,
+              "colorReadbackCount": 3,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 3,
+              "gpuFinishCount": 3,
+              "cameraUniformUpdateCount": 12,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 24,
+              "totalDrawnIndexCount": 3891942,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 3,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 324,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 243.70000000298023,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2426.60000000149
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "oasis": {
+          "capture": {
+            "label": "oasis",
+            "frameNumber": 4,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 299976,
+              "uniqueColorBucketCount": 88,
+              "meanLuminance": 113.59055046243888,
+              "luminanceStandardDeviation": 26.564767268549307,
+              "byteHash": "fnv1a32:6ea1b2e3"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E4A0F62C",
+              "runtimeContentDigest": "fnv1a32:e4a0f62c",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 4,
+              "visiblePresentationCount": 4,
+              "colorReadbackCount": 4,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 4,
+              "gpuFinishCount": 4,
+              "cameraUniformUpdateCount": 16,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 32,
+              "totalDrawnIndexCount": 5189256,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 4,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 498,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 432,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 243.70000000298023,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2426.60000000149
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 498,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        }
+      }
+    },
+    "candidate": {
+      "elapsedMs": 93691,
+      "errors": [],
+      "views": {
+        "woodland": {
+          "capture": {
+            "label": "woodland",
+            "frameNumber": 1,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 214172,
+              "uniqueColorBucketCount": 61,
+              "meanLuminance": 113.38321776167989,
+              "luminanceStandardDeviation": 52.2315575730132,
+              "byteHash": "fnv1a32:75565146"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_A1D5FA8D",
+              "runtimeContentDigest": "fnv1a32:a1d5fa8d",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 1,
+              "visiblePresentationCount": 1,
+              "colorReadbackCount": 1,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 1,
+              "gpuFinishCount": 1,
+              "cameraUniformUpdateCount": 4,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 8,
+              "totalDrawnIndexCount": 1433538,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 1,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 2390,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 108,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 227.69999999925494,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2393.900000002235
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 2390,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "shoulder": {
+          "capture": {
+            "label": "shoulder",
+            "frameNumber": 2,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 209910,
+              "uniqueColorBucketCount": 61,
+              "meanLuminance": 119.0977929324238,
+              "luminanceStandardDeviation": 49.001704322002816,
+              "byteHash": "fnv1a32:e323a245"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_A1D5FA8D",
+              "runtimeContentDigest": "fnv1a32:a1d5fa8d",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 2,
+              "visiblePresentationCount": 2,
+              "colorReadbackCount": 2,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 2,
+              "gpuFinishCount": 2,
+              "cameraUniformUpdateCount": 8,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 16,
+              "totalDrawnIndexCount": 2867076,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 2,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 2390,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 216,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 227.69999999925494,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2393.900000002235
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 2390,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "open-ground": {
+          "capture": {
+            "label": "open-ground",
+            "frameNumber": 3,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 176169,
+              "uniqueColorBucketCount": 54,
+              "meanLuminance": 134.6480668192972,
+              "luminanceStandardDeviation": 43.37797721610368,
+              "byteHash": "fnv1a32:cce5fb59"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_A1D5FA8D",
+              "runtimeContentDigest": "fnv1a32:a1d5fa8d",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 3,
+              "visiblePresentationCount": 3,
+              "colorReadbackCount": 3,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 3,
+              "gpuFinishCount": 3,
+              "cameraUniformUpdateCount": 12,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 24,
+              "totalDrawnIndexCount": 4300614,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 3,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 2390,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 324,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 227.69999999925494,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2393.900000002235
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 2390,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        },
+        "oasis": {
+          "capture": {
+            "label": "oasis",
+            "frameNumber": 4,
+            "width": 390,
+            "height": 844,
+            "summary": {
+              "pixelCount": 329160,
+              "nonClearPixelCount": 299976,
+              "uniqueColorBucketCount": 88,
+              "meanLuminance": 113.59015797975654,
+              "luminanceStandardDeviation": 26.564874775506762,
+              "byteHash": "fnv1a32:cceb180d"
+            }
+          },
+          "receipt": {
+            "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+            "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+            "presentationProfile": {
+              "terrainScaleCues": true,
+              "slopeReadability": true,
+              "routeContainment": true,
+              "manorSiteDifferentiation": true,
+              "cavernExteriorRelationDifferentiation": true,
+              "sharedMacroFrequencyCorrection": true,
+              "lawfulSlopeCurvatureModulation": true,
+              "boundedContactDepthReinforcement": true,
+              "temporallyStableWorldSpaceVariation": true,
+              "regressionColorDiversityRestoration": true,
+              "cavernNearThresholdReinforcement": true,
+              "geometryMutation": false,
+              "terrainMutation": false,
+              "placementMutation": false,
+              "cameraMutation": false,
+              "touchMutation": false
+            },
+            "initialized": true,
+            "dimensions": {
+              "width": 390,
+              "height": 844
+            },
+            "context": {
+              "created": true,
+              "lost": false,
+              "vendor": "WebKit",
+              "renderer": "WebKit WebGL",
+              "unmaskedVendor": "Google Inc. (Google)",
+              "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+              "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+              "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+            },
+            "package": {
+              "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+              "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_A1D5FA8D",
+              "runtimeContentDigest": "fnv1a32:a1d5fa8d",
+              "primitiveCount": 14,
+              "vertexCount": 79127,
+              "triangleCount": 104214,
+              "indexCount": 312642,
+              "drawRangeCount": 9,
+              "canonicalGpuTransport": true
+            },
+            "rendererInterface": {
+              "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+              "attributeCount": 8,
+              "uniformCount": 12,
+              "drawRangeCount": 9
+            },
+            "counters": {
+              "contextCreationCount": 1,
+              "shaderCreateCount": 4,
+              "shaderCompileCount": 4,
+              "programCreateCount": 2,
+              "programLinkCount": 2,
+              "vertexArrayCreateCount": 1,
+              "bufferCreateCount": 11,
+              "bufferUploadCount": 11,
+              "uploadedByteLength": 6710331,
+              "textureCreateCount": 4,
+              "framebufferCreateCount": 2,
+              "shorelineSoilTextureUploadCount": 1,
+              "shorelineSoilUploadedByteLength": 15184,
+              "postInitializationResourceCreationCount": 0,
+              "postInitializationBufferUploadCount": 0,
+              "frameCount": 4,
+              "visiblePresentationCount": 4,
+              "colorReadbackCount": 4,
+              "depthReadbackCount": 0,
+              "pngEncodingCount": 4,
+              "gpuFinishCount": 4,
+              "cameraUniformUpdateCount": 16,
+              "staticUniformUpdateCount": 13,
+              "geometryDrawCallCount": 32,
+              "totalDrawnIndexCount": 5734152,
+              "depthVisualizationDrawCallCount": 0,
+              "refinementResourceCreateCount": 1,
+              "refinementBufferUploadCount": 11,
+              "refinementDrawCallCount": 4,
+              "vegetationBatchMaterializationCount": 108,
+              "vegetationResidentInstanceCount": 27585,
+              "vegetationResidentPrimitiveCount": 2390,
+              "vegetationBufferUploadCount": 1188,
+              "vegetationDrawCallCount": 432,
+              "worldRebuildCount": 0,
+              "contactOwnershipBufferUpdateCount": 1
+            },
+            "shorelineSoilCoverage": {
+              "width": 104,
+              "height": 146,
+              "bounds": {
+                "minX": -18,
+                "maxX": 34,
+                "minZ": -204,
+                "maxZ": -131
+              },
+              "cellSizeMeters": 0.5,
+              "grassTuftCount": 350,
+              "grassRootCount": 50400,
+              "occupiedCellCount": 760,
+              "nonzeroTexelCount": 2173,
+              "ready": true,
+              "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+              "terrainGeometryMutated": false
+            },
+            "landscapeFloor": {
+              "treeCount": 15,
+              "floorContentDigest": "fnv1a32:e3678f4a",
+              "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+              "worldSpace": "PROJECTED_WORLD_XZ",
+              "terrainGeometryChanged": false,
+              "castShadowClaim": false
+            },
+            "persistentObjectCounts": {
+              "contexts": 1,
+              "programs": 2,
+              "shaders": 4,
+              "vertexArrays": 1,
+              "gpuBuffers": 11,
+              "textures": 4,
+              "framebuffers": 2
+            },
+            "resourceIdentityStable": true,
+            "packageUploadedOnce": true,
+            "noUnauthorizedPostInitializationResourceCreation": true,
+            "noUnauthorizedPostInitializationBufferUpload": false,
+            "authorizedVegetationPostReadyResidency": true,
+            "refinementResourceAuthorized": true,
+            "refinementResourceCreated": true,
+            "refinementResourceBufferUploadCount": 11,
+            "refinementPatchVertexCount": 1089,
+            "refinementPatchTriangleCount": 2048,
+            "refinementAnchor": {
+              "x": 0,
+              "z": -96
+            },
+            "refinementFallbackAvailable": true,
+            "contactField": {
+              "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+              "saturationMeters": 64,
+              "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+              "terrainTriangles": 20736,
+              "oceanTriangles": 17696,
+              "overlapTests": 67796,
+              "contactSegments": 602,
+              "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+              "patchTriangles": 2048,
+              "packageVertices": 10573,
+              "patchVertices": 1089,
+              "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+              "contactTrianglesWithoutVertexSignChange": 0,
+              "initializationMilliseconds": 227.69999999925494,
+              "buildCount": 2,
+              "totalBuildMilliseconds": 2393.900000002235
+            },
+            "vegetationResidency": {
+              "canonicalPreparationTiming": null,
+              "preparationComplete": true,
+              "preparationProgress": {
+                "phase": "PREPARED",
+                "worldTruthValidated": true,
+                "oasisComplete": true,
+                "grassTuftCount": 350,
+                "cattailCount": 72,
+                "primitiveCount": 494
+              },
+              "validationStatus": "VALIDATED",
+              "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+              "totalInstanceCount": 27585,
+              "totalBatchCount": 108,
+              "maxInstancesPerBatch": 256,
+              "residentInstanceCount": 27585,
+              "residentBatchCount": 108,
+              "residentPrimitiveCount": 2390,
+              "complete": true,
+              "droppedPlacementCount": 0,
+              "worldRebuildCount": 0,
+              "cameraIndependent": true
+            },
+            "canonicalPackageMutated": false
+          }
+        }
+      }
+    }
+  },
+  "sourceBaselineCpu": {
+    "sourceCommit": "37705c12ec2c22c0e6d284a58b8a9b24faaa4e9f",
+    "kind": "COLD_NODE_RAW_DEFERRED_BASELINE",
+    "node": "v24.19.0",
+    "importMs": 5592.019313,
+    "buildMs": 16400.499348999998,
+    "totalMs": 21992.518662,
+    "eligible": true,
+    "contentDigest": "fnv1a32:2856958a",
+    "memory": {
+      "rss": 1487654912,
+      "heapTotal": 1388814336,
+      "heapUsed": 1169397272,
+      "external": 3866228,
+      "arrayBuffers": 277654
+    },
+    "issues": []
+  },
+  "substrate": "Native Node and exact-source Chromium WebGL2 SwiftShader. Headless render evidence is not phone/tablet performance or owner KEEP.",
+  "physicalDeviceAcceptance": "PENDING_OWNER_EXACT_CANDIDATE_REVIEW",
+  "registeredExactHeadPreflight": "PENDING_IMMUTABLE_COMMIT",
+  "canonicalPopulationPreserved": true,
+  "acceptedWoodlandAndOasisRecipeBytesPreserved": true,
+  "publicationAuthorized": false
+}

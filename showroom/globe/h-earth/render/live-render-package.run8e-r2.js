@@ -4,6 +4,7 @@ import {
   evaluateHEarthRun8ER2Control
 } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
 import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch,constructHEarthGen2515VegetationPresentationBatchAsync, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js?cb=meadow-distribution-20261006';
+import { landscapeSoilColor, applyHEarthLandscapeCoverBatch } from './geometry-landscape-cover.js';
 import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js?cb=meadow-distribution-20261006';
 import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
 import {
@@ -397,12 +398,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
           materialParameters.push(0, 0, 0, 0);
           surfaceClassCodes.push(NON_TERRAIN_SURFACE_CLASS_CODE);
         } else {
-          baseColorsLinear.push(
-            material.baseColorProfile.linearR,
-            material.baseColorProfile.linearG,
-            material.baseColorProfile.linearB,
-            material.baseColorProfile.alpha
-          );
+          baseColorsLinear.push(...landscapeSoilColor(material,vertex.x,vertex.z),material.baseColorProfile.alpha);
           materialParameters.push(
             material.roughness,
             material.reflectance,
@@ -415,12 +411,12 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
         const vertexRgba=primitive.metadata?.landscapeSectorKind ? sectorMaterial?.vertexRgba?.[localVertexIndex] : null;
         const surfaceRgba=vertexRgba ?? rgba;
         if(!Array.isArray(surfaceRgba)||surfaceRgba.length!==4||!surfaceRgba.every(finite))issues.push('LAND_SURFACE_INVALID_VERTEX_RGBA:'+primitive.primitiveId);
-        baseColorsLinear.push(
-          srgb8ToLinear(surfaceRgba[0]),
-          srgb8ToLinear(surfaceRgba[1]),
-          srgb8ToLinear(surfaceRgba[2]),
-          clamp01(surfaceRgba[3] / 255)
-        );
+        let surfaceLinear=surfaceRgba.slice(0,3).map(srgb8ToLinear);
+        if(primitive.primitiveId==='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION'){
+          const material=sampleHEarthRun8CSuccessorSurfaceMaterial(vertex.x,vertex.z);
+          if(material?.valid===true)surfaceLinear=landscapeSoilColor(material,vertex.x,vertex.z,surfaceLinear);
+        }
+        baseColorsLinear.push(...surfaceLinear,clamp01(surfaceRgba[3]/255));
         materialParameters.push(0, 0, 0, primitive.metadata?.landscapeSectorKind ? 2 : 0);
         surfaceClassCodes.push(NON_TERRAIN_SURFACE_CLASS_CODE);
       }
@@ -534,6 +530,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     primitiveSpans: frozenPrimitiveSpans,
     drawRanges: frozenDrawRanges,
     landscapeFloorFootprints,
+    landscapeCoverFootprints: freezeArray((neutralPackage.landscapeSector?.manifest??[]).filter(p=>p.kind==='TREE'||p.kind==='ROCK').map(p=>freezeRecord({id:p.id,kind:p.kind,x:p.x,z:p.z,radius:p.kind==='TREE'?(p.trunkRadius??.32+p.height*.018)+.5:p.crownRadius}))),
     landscapeFloorContentDigest,
     buffers: immutableBuffers,
     environmentDefaults: freezeRecord({
@@ -728,6 +725,6 @@ export const H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY=freezeRecord
 export function getHEarthRun8ER2VegetationWorldTruthPlan(){const truth=getHEarthGen2515VegetationWorldTruthPlan();if(truth?.eligible!==true)throw new Error('R2_VEGETATION_WORLD_TRUTH_INVALID');const manifest=H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY;const actual=freezeRecord({instanceCount:truth.instanceCount,batchCount:truth.batches?.length,maxInstancesPerBatch:truth.maxInstancesPerMaterializationBatch,droppedPlacementCount:truth.droppedPlacementCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,cameraIndependent:truth.cameraIndependent,lodOrVisibilitySelectionPerformed:truth.lodOrVisibilitySelectionPerformed});const expected=freezeRecord({instanceCount:manifest.instanceCount,batchCount:manifest.batchCount,maxInstancesPerBatch:manifest.maxInstancesPerBatch,droppedPlacementCount:0,completeWorldPlacementCoverageRequired:true,cameraIndependent:true,lodOrVisibilitySelectionPerformed:false});if(Object.keys(expected).some(key=>actual[key]!==expected[key]))throw new Error(`R2_QUALIFIED_MANIFEST_IDENTITY_MISMATCH:actual=${JSON.stringify(actual)}:expected=${JSON.stringify(expected)}`);return freezeRecord({...truth,qualifiedManifestIdentity:manifest});}
 export const isHEarthRun8ER2VegetationWorldTruthPrepared=isHEarthGen2515VegetationWorldTruthPrepared;
 export async function prepareHEarthRun8ER2VegetationWorldTruthPlan(){await prepareHEarthGen2515VegetationWorldTruthPlan();return getHEarthRun8ER2VegetationWorldTruthPlan();}
-export function createHEarthRun8ER2VegetationPresentationBatch(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=constructHEarthGen2515VegetationPresentationBatch(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const presentation=applyHEarthLowlandGrassTrialBatch(materialized,getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
-export async function createHEarthRun8ER2VegetationPresentationBatchAsync(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=await constructHEarthGen2515VegetationPresentationBatchAsync(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const presentation=applyHEarthLowlandGrassTrialBatch(materialized,getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
+export function createHEarthRun8ER2VegetationPresentationBatch(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=constructHEarthGen2515VegetationPresentationBatch(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const pkg=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),presentation=applyHEarthLandscapeCoverBatch(applyHEarthLowlandGrassTrialBatch(materialized,pkg),pkg,truth.batches.indexOf(descriptor));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
+export async function createHEarthRun8ER2VegetationPresentationBatchAsync(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=await constructHEarthGen2515VegetationPresentationBatchAsync(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const pkg=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),presentation=applyHEarthLandscapeCoverBatch(applyHEarthLowlandGrassTrialBatch(materialized,pkg),pkg,truth.batches.indexOf(descriptor));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
 export default getHEarthRun8ER2ImmutableLiveRenderPackage;

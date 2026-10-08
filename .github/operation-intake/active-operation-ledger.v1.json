@@ -15232,50 +15232,6 @@
       "scopeHash": "f0bf41476ea1605acb924aa95b3d77562deba1451a9dd55f87d34722411908c4",
       "state": "ADMITTED_LOCKED"
     },
-    "f0d664f1ef62b4d771cd34f3d16f0bb9ce17b0cb3311641bfc808c2e6a02136f": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "7804b359aa032caa00f8dd526f8e4186df97fac9",
-          "lockGeneration": 2602,
-          "lockScope": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
-          "operationId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
-          "procedureLocatorDigest": "56233637db18bbb9ce9972db37e04e63b0f315655f8a4c7d40e5bc07f1431a85",
-          "requestDigest": "fa0c45ad192d7561bea3b0a8d7df9103f76424208a3d892dd1661c757a448483",
-          "scopeHash": "f0d664f1ef62b4d771cd34f3d16f0bb9ce17b0cb3311641bfc808c2e6a02136f"
-        },
-        "bindingDigest": "b4157bc810f7d61038e4678050065bb9413c00be5c5e5b17db8c7d45d8e9d49a",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "b767069e4e8a6ebaf263c28382d7452d258bc417b15c5d8827499eedde7bd6a8",
-          "commentId": 6028536514,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 5842,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 37554705420,
-          "workflowSha": "7804b359aa032caa00f8dd526f8e4186df97fac9"
-        },
-        "lineageAnchorCommitSha": "ddd6fad42e0c7b6ccd8a54ccc78493bf7f1c79ad",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "7804b359aa032caa00f8dd526f8e4186df97fac9",
-      "lockGeneration": 2602,
-      "lockScope": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
-      "operationId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
-      "procedureLocatorDigest": "56233637db18bbb9ce9972db37e04e63b0f315655f8a4c7d40e5bc07f1431a85",
-      "released": false,
-      "requestDigest": "fa0c45ad192d7561bea3b0a8d7df9103f76424208a3d892dd1661c757a448483",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "f0d664f1ef62b4d771cd34f3d16f0bb9ce17b0cb3311641bfc808c2e6a02136f",
-      "state": "ADMITTED_LOCKED"
-    },
     "f0e4fd005a821d995a9e7f750043582ced1e9e08fa136da8931770e58c8eb7a1": {
       "governingHead": "12050f0562b58f6ba2a379e36d57654a46266aa0",
       "lockGeneration": 1595,
@@ -73747,6 +73703,51 @@
       "requestDigest": "4469d07b063070590281d6efcbb8318d89c2ce68a8e545c22995f0d66b5fbecb",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "3f8c2c263f81aff07001816220d9f8eea2eebc3076d47037eb169188d59d9114",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "7804b359aa032caa00f8dd526f8e4186df97fac9",
+          "lockGeneration": 2602,
+          "lockScope": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
+          "operationId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
+          "procedureLocatorDigest": "56233637db18bbb9ce9972db37e04e63b0f315655f8a4c7d40e5bc07f1431a85",
+          "requestDigest": "fa0c45ad192d7561bea3b0a8d7df9103f76424208a3d892dd1661c757a448483",
+          "scopeHash": "f0d664f1ef62b4d771cd34f3d16f0bb9ce17b0cb3311641bfc808c2e6a02136f"
+        },
+        "bindingDigest": "b4157bc810f7d61038e4678050065bb9413c00be5c5e5b17db8c7d45d8e9d49a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b767069e4e8a6ebaf263c28382d7452d258bc417b15c5d8827499eedde7bd6a8",
+          "commentId": 6028536514,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5842,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37554705420,
+          "workflowSha": "7804b359aa032caa00f8dd526f8e4186df97fac9"
+        },
+        "lineageAnchorCommitSha": "ddd6fad42e0c7b6ccd8a54ccc78493bf7f1c79ad",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "7804b359aa032caa00f8dd526f8e4186df97fac9",
+      "lockGeneration": 2602,
+      "lockScope": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
+      "operationId": "H_EARTH_WOODLAND_MEADOW_DISTRIBUTION_20261006",
+      "procedureLocatorDigest": "56233637db18bbb9ce9972db37e04e63b0f315655f8a4c7d40e5bc07f1431a85",
+      "released": true,
+      "requestDigest": "fa0c45ad192d7561bea3b0a8d7df9103f76424208a3d892dd1661c757a448483",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f0d664f1ef62b4d771cd34f3d16f0bb9ce17b0cb3311641bfc808c2e6a02136f",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

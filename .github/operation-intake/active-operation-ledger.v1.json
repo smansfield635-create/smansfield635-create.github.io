@@ -879,45 +879,6 @@
       "scopeHash": "0bb1f31d413c5e1e6bbacb45d56184915b13e9a91bbc746f7b1f37b013585568",
       "state": "ADMITTED_LOCKED"
     },
-    "0be2f5739ff0b9e29f7407ebbff7c1cefd9c6c5593ea105522f6eb51ac9c77b0": {
-      "governingHead": "08daba2dfa1c9c8034995edce8f0743304d8211b",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "08daba2dfa1c9c8034995edce8f0743304d8211b",
-          "lockGeneration": 2617,
-          "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION",
-          "operationId": "BOOK_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION_20261008_001",
-          "procedureLocatorDigest": "cb5683701a13e84ec2617f83245c9e56153bdf18a1933e4f4caed7a022541cd6",
-          "requestDigest": "05cc0b1dd54c8a96058e183f4b2eddf3e10feba3241c9e92d54916a4786a59f4",
-          "scopeHash": "0be2f5739ff0b9e29f7407ebbff7c1cefd9c6c5593ea105522f6eb51ac9c77b0"
-        },
-        "bindingDigest": "144dd3e9d799a18234214eb191ac64b6d33b05d177d4be358cb627fc39f17fb1",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "fa29df9666e8a9a928930705df48e2442f51e58f",
-          "observedLockRefHead": "681a2513dcb2e41e9c3b0b4ea1134af30357d26d"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "22b7136a8224d111ea887bf7e20d809ae4e2e1e8b87d14c515a280e75f89375a",
-          "commentId": 6050411341,
-          "issueNumber": 6021,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2617,
-      "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION",
-      "operationId": "BOOK_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION_20261008_001",
-      "procedureLocatorDigest": "cb5683701a13e84ec2617f83245c9e56153bdf18a1933e4f4caed7a022541cd6",
-      "released": false,
-      "requestDigest": "05cc0b1dd54c8a96058e183f4b2eddf3e10feba3241c9e92d54916a4786a59f4",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "0be2f5739ff0b9e29f7407ebbff7c1cefd9c6c5593ea105522f6eb51ac9c77b0",
-      "state": "ADMITTED_LOCKED"
-    },
     "0c6842f1271b5541d35866ec0a8e922361ba236e4c505e22364be04f7ce18b61": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -72857,6 +72818,83 @@
       "requestDigest": "8f7ef3719361d8e86d5d83c74bc0161e54dcfe040e7d98e2d34ed6e64c3a76ff",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "cb63f221023bf24c231cd742c1d64283dcce48b48e78dd319065f718abd72793",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "08daba2dfa1c9c8034995edce8f0743304d8211b",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "08daba2dfa1c9c8034995edce8f0743304d8211b",
+          "lockGeneration": 2617,
+          "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION",
+          "operationId": "BOOK_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION_20261008_001",
+          "procedureLocatorDigest": "cb5683701a13e84ec2617f83245c9e56153bdf18a1933e4f4caed7a022541cd6",
+          "requestDigest": "05cc0b1dd54c8a96058e183f4b2eddf3e10feba3241c9e92d54916a4786a59f4",
+          "scopeHash": "0be2f5739ff0b9e29f7407ebbff7c1cefd9c6c5593ea105522f6eb51ac9c77b0"
+        },
+        "bindingDigest": "144dd3e9d799a18234214eb191ac64b6d33b05d177d4be358cb627fc39f17fb1",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "fa29df9666e8a9a928930705df48e2442f51e58f",
+          "observedLockRefHead": "681a2513dcb2e41e9c3b0b4ea1134af30357d26d"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "22b7136a8224d111ea887bf7e20d809ae4e2e1e8b87d14c515a280e75f89375a",
+          "commentId": 6050411341,
+          "issueNumber": 6021,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "08daba2dfa1c9c8034995edce8f0743304d8211b",
+          "lockGeneration": 2617,
+          "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION",
+          "operationId": "BOOK_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION_20261008_001",
+          "procedureLocatorDigest": "cb5683701a13e84ec2617f83245c9e56153bdf18a1933e4f4caed7a022541cd6",
+          "requestDigest": "05cc0b1dd54c8a96058e183f4b2eddf3e10feba3241c9e92d54916a4786a59f4",
+          "scopeHash": "0be2f5739ff0b9e29f7407ebbff7c1cefd9c6c5593ea105522f6eb51ac9c77b0"
+        },
+        "bindingDigest": "2a4e64169a4777084a067a63c8fe42ac6e780e9e0c5ed9c1f66e5df9c06f3f4b",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "fdccafa2a10c5eec33c923de98091ef2fca595a7",
+          "observedLockRefHead": "b67a4f4d0afa708d5735baf33326d26745449faa"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "196a13680ce2735bb2561a5571557ff3dfdb57b8290bf656594dcf22d8cfb322",
+          "commentId": 6050526492,
+          "issueNumber": 6021,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "08daba2dfa1c9c8034995edce8f0743304d8211b",
+          "lockGeneration": 2617,
+          "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION",
+          "operationId": "BOOK_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION_20261008_001",
+          "released": true,
+          "scopeHash": "0be2f5739ff0b9e29f7407ebbff7c1cefd9c6c5593ea105522f6eb51ac9c77b0",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2617,
+      "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION",
+      "operationId": "BOOK_GEOGRAPHIC_ATLAS_ACCEPTED_PUBLICATION_20261008_001",
+      "procedureLocatorDigest": "cb5683701a13e84ec2617f83245c9e56153bdf18a1933e4f4caed7a022541cd6",
+      "released": true,
+      "requestDigest": "05cc0b1dd54c8a96058e183f4b2eddf3e10feba3241c9e92d54916a4786a59f4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0be2f5739ff0b9e29f7407ebbff7c1cefd9c6c5593ea105522f6eb51ac9c77b0",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

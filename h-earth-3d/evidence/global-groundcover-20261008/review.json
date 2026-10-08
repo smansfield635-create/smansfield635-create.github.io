@@ -1,0 +1,471 @@
+{
+  "schema": "H_EARTH_GLOBAL_BUSHIER_COVER_REVIEW_v1",
+  "operationId": "H_EARTH_GLOBAL_BUSHIER_COVER_ENGINEERING_20261008_001",
+  "generation": 2622,
+  "base": "026aabc1a93b70c65de155693781dfa8b488cfc6",
+  "sourceDigests": {
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "bfa7f52e219efc9d39513a1527a4b3c6018b33056d10f1e5e4e4669a9d447415",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "1f055347d1288c15de9e0260cc1e86c0f47be72ab36f47fba364a3d411e2bad5",
+    "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "0926845c3543d4801ce19df4c50e23878208afe24942c150aefc83f199d74821"
+  },
+  "engineeringCandidate": true,
+  "independentQualification": {
+    "schema": "H_EARTH_GLOBAL_GROUND_COVER_INDEPENDENT_QUALIFICATION_v1",
+    "result": "PASS",
+    "stableWorldSha256": "51c11cd7d4e2ded96d285506ac80faac1e6e8853798afc8efc3efe01e39c873d",
+    "recordsSha256": "3abf8f2575dda3bb66a25113240c94d9c6cd5a7c79005f9a251bef652828ab63",
+    "storedInstances": 61094,
+    "primaryFans": 49488,
+    "secondaryFans": 11606,
+    "maximumSecondaryCenterOffset": 0.29999668665030377,
+    "recordStrideBytes": 80,
+    "templateVertices": 28,
+    "templateTriangles": 24,
+    "totalGpuBytes": 4889376,
+    "paddedRgba32fTextureGpuBytes": 4900672,
+    "roots": 733128,
+    "maxGroundError": 1.8462551167885977e-06,
+    "maxActualSlope": 0.34826623682847946,
+    "waterChecked": 733128,
+    "mountainRoots": 2845,
+    "refinementRoots": 0,
+    "classes": {
+      "COASTAL_SOIL": 437181,
+      "LOWLAND_SOIL": 293102,
+      "STONE_AND_SPARSE_SOIL": 2845
+    },
+    "zones": {
+      "INLAND": 33955,
+      "WOODLAND_AND_FOOTHILL": 20089,
+      "COASTAL": 7050
+    },
+    "coverage": {
+      "eligibleBlocks": 413,
+      "occupiedEligibleBlocks": 412,
+      "excludedBlocks": 235,
+      "zones": {
+        "INLAND": {
+          "eligibleBlocks": 240,
+          "occupiedBlocks": 240,
+          "instances": 33955
+        },
+        "WOODLAND_AND_FOOTHILL": {
+          "eligibleBlocks": 124,
+          "occupiedBlocks": 124,
+          "instances": 20089
+        },
+        "COASTAL": {
+          "eligibleBlocks": 49,
+          "occupiedBlocks": 48,
+          "instances": 7050
+        }
+      },
+      "occupationRatio": 0.9975786924939467
+    },
+    "visibility": [
+      {
+        "camera": {
+          "x": 0,
+          "y": 10,
+          "z": -96
+        },
+        "visibleInstanceCount": 326,
+        "drawCallCount": 22
+      },
+      {
+        "camera": {
+          "x": -141,
+          "y": 15,
+          "z": -226
+        },
+        "visibleInstanceCount": 2248,
+        "drawCallCount": 62
+      },
+      {
+        "camera": {
+          "x": 150,
+          "y": 45,
+          "z": -500
+        },
+        "visibleInstanceCount": 3628,
+        "drawCallCount": 64
+      },
+      {
+        "camera": {
+          "x": 370,
+          "y": 20,
+          "z": -700
+        },
+        "visibleInstanceCount": 1647,
+        "drawCallCount": 26
+      },
+      {
+        "camera": {
+          "x": 10000,
+          "y": 0,
+          "z": 10000
+        },
+        "visibleInstanceCount": 0,
+        "drawCallCount": 0
+      }
+    ],
+    "generationOrders": 3,
+    "canonicalWorldTruth": {
+      "instanceCount": 27585,
+      "batchCount": 108,
+      "droppedPlacementCount": 0
+    },
+    "preparationReceipt": {
+      "schema": "H_EARTH_GLOBAL_GROUND_COVER_v1",
+      "instanceCount": 61094,
+      "primaryFanCount": 49488,
+      "secondaryFanCount": 11606,
+      "bushyClumpCount": 11606,
+      "mountainInstanceCount": 231,
+      "candidateCount": 106568,
+      "rootSampleCount": 611034,
+      "materialSampleCount": 698854,
+      "recordBytes": 4887520,
+      "templateGpuBytes": 1856,
+      "totalGpuBytes": 4889376,
+      "maximumInstances": 65536,
+      "baseTerrainTriangleCount": 20736,
+      "refinementTriangleCount": 0,
+      "elapsedMilliseconds": 58323.827325000006,
+      "yieldCount": 5781,
+      "rejections": {
+        "BOUNDARY_COLLAR": 1304,
+        "BUSH_HABITAT": 1,
+        "BUSH_ROOT_COLLAR": 3,
+        "DENSITY": 18518,
+        "HABITAT": 8156,
+        "PRESERVED_OR_RESERVED": 1905,
+        "RENDERED_WATER": 27147,
+        "ROOT_COLLAR": 50
+      },
+      "canonicalPopulationChanged": false,
+      "cameraIndependent": true,
+      "rootEncoding": "TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS",
+      "sparseSoilPresentationRule": "SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35",
+      "bushyPocketRule": "BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED"
+    },
+    "elapsedMilliseconds": 220514.937147,
+    "qualificationBoundaries": {
+      "actualBrowserInstancing": "SEPARATE_REQUIRED",
+      "shaderCompilation": "SEPARATE_REQUIRED",
+      "physicalDevicePerformance": "NOT_ESTABLISHED"
+    },
+    "productMutationPerformed": false,
+    "mergePerformed": false,
+    "deploymentPerformed": false,
+    "executedHead": null,
+    "baseline": "026aabc1a93b70c65de155693781dfa8b488cfc6",
+    "sourceDigests": {
+      "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "bfa7f52e219efc9d39513a1527a4b3c6018b33056d10f1e5e4e4669a9d447415",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "1f055347d1288c15de9e0260cc1e86c0f47be72ab36f47fba364a3d411e2bad5",
+      "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "0926845c3543d4801ce19df4c50e23878208afe24942c150aefc83f199d74821"
+    },
+    "rawPackageMilliseconds": 19005.90079,
+    "acceptedOverlaySourcesUnchanged": true
+  },
+  "syntheticRefinementQualification": {
+    "schema": "H_EARTH_GLOBAL_GROUND_COVER_INDEPENDENT_QUALIFICATION_v1",
+    "result": "PASS",
+    "stableWorldSha256": "60cecee0565575f73fb26df1c28fe20601129a40ec01ac4d2d8fc5754db76fa7",
+    "recordsSha256": "b6ca54bdb2812a7351689adcc593771cb995a01ef10836229327d89af6518935",
+    "storedInstances": 61094,
+    "primaryFans": 49488,
+    "secondaryFans": 11606,
+    "maximumSecondaryCenterOffset": 0.29999668665030377,
+    "recordStrideBytes": 80,
+    "templateVertices": 28,
+    "templateTriangles": 24,
+    "totalGpuBytes": 4889376,
+    "paddedRgba32fTextureGpuBytes": 4900672,
+    "roots": 733128,
+    "maxGroundError": 1.8462551167885977e-06,
+    "maxActualSlope": 0.34826623682847946,
+    "waterChecked": 733128,
+    "mountainRoots": 2845,
+    "refinementRoots": 522,
+    "classes": {
+      "COASTAL_SOIL": 437181,
+      "LOWLAND_SOIL": 293102,
+      "STONE_AND_SPARSE_SOIL": 2845
+    },
+    "zones": {
+      "INLAND": 33955,
+      "WOODLAND_AND_FOOTHILL": 20089,
+      "COASTAL": 7050
+    },
+    "coverage": {
+      "eligibleBlocks": 413,
+      "occupiedEligibleBlocks": 412,
+      "excludedBlocks": 235,
+      "zones": {
+        "INLAND": {
+          "eligibleBlocks": 240,
+          "occupiedBlocks": 240,
+          "instances": 33955
+        },
+        "WOODLAND_AND_FOOTHILL": {
+          "eligibleBlocks": 124,
+          "occupiedBlocks": 124,
+          "instances": 20089
+        },
+        "COASTAL": {
+          "eligibleBlocks": 49,
+          "occupiedBlocks": 48,
+          "instances": 7050
+        }
+      },
+      "occupationRatio": 0.9975786924939467
+    },
+    "visibility": [
+      {
+        "camera": {
+          "x": 0,
+          "y": 10,
+          "z": -96
+        },
+        "visibleInstanceCount": 326,
+        "drawCallCount": 22
+      },
+      {
+        "camera": {
+          "x": -141,
+          "y": 15,
+          "z": -226
+        },
+        "visibleInstanceCount": 2248,
+        "drawCallCount": 62
+      },
+      {
+        "camera": {
+          "x": 150,
+          "y": 45,
+          "z": -500
+        },
+        "visibleInstanceCount": 3628,
+        "drawCallCount": 64
+      },
+      {
+        "camera": {
+          "x": 370,
+          "y": 20,
+          "z": -700
+        },
+        "visibleInstanceCount": 1647,
+        "drawCallCount": 26
+      },
+      {
+        "camera": {
+          "x": 10000,
+          "y": 0,
+          "z": 10000
+        },
+        "visibleInstanceCount": 0,
+        "drawCallCount": 0
+      }
+    ],
+    "generationOrders": 1,
+    "canonicalWorldTruth": null,
+    "preparationReceipt": {
+      "schema": "H_EARTH_GLOBAL_GROUND_COVER_v1",
+      "instanceCount": 61094,
+      "primaryFanCount": 49488,
+      "secondaryFanCount": 11606,
+      "bushyClumpCount": 11606,
+      "mountainInstanceCount": 231,
+      "candidateCount": 106568,
+      "rootSampleCount": 611034,
+      "materialSampleCount": 698854,
+      "recordBytes": 4887520,
+      "templateGpuBytes": 1856,
+      "totalGpuBytes": 4889376,
+      "maximumInstances": 65536,
+      "baseTerrainTriangleCount": 20736,
+      "refinementTriangleCount": 2,
+      "elapsedMilliseconds": 57284.378025,
+      "yieldCount": 5728,
+      "rejections": {
+        "BOUNDARY_COLLAR": 1304,
+        "BUSH_HABITAT": 1,
+        "BUSH_ROOT_COLLAR": 3,
+        "DENSITY": 18518,
+        "HABITAT": 8156,
+        "PRESERVED_OR_RESERVED": 1905,
+        "RENDERED_WATER": 27147,
+        "ROOT_COLLAR": 50
+      },
+      "canonicalPopulationChanged": false,
+      "cameraIndependent": true,
+      "rootEncoding": "TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS",
+      "sparseSoilPresentationRule": "SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35",
+      "bushyPocketRule": "BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED"
+    },
+    "elapsedMilliseconds": 101703.186138,
+    "qualificationBoundaries": {
+      "actualBrowserInstancing": "SEPARATE_REQUIRED",
+      "shaderCompilation": "SEPARATE_REQUIRED",
+      "physicalDevicePerformance": "NOT_ESTABLISHED"
+    },
+    "productMutationPerformed": false,
+    "mergePerformed": false,
+    "deploymentPerformed": false,
+    "refinementFixture": {
+      "clip": [
+        -360,
+        -344,
+        -712,
+        -696
+      ],
+      "positions": [
+        -360,
+        13.412070274353027,
+        -712,
+        -344,
+        13.412070274353027,
+        -712,
+        -360,
+        13.412070274353027,
+        -696,
+        -344,
+        13.412070274353027,
+        -696
+      ],
+      "indices": [
+        0,
+        2,
+        1,
+        1,
+        2,
+        3
+      ],
+      "purpose": "FLOAT32_REPLACEMENT_SURFACE_OWNERSHIP_ONLY_NOT_PRODUCT_GEOMETRY"
+    },
+    "executedHead": null,
+    "baseline": "026aabc1a93b70c65de155693781dfa8b488cfc6",
+    "sourceDigests": {
+      "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "bfa7f52e219efc9d39513a1527a4b3c6018b33056d10f1e5e4e4669a9d447415",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "1f055347d1288c15de9e0260cc1e86c0f47be72ab36f47fba364a3d411e2bad5",
+      "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "0926845c3543d4801ce19df4c50e23878208afe24942c150aefc83f199d74821"
+    },
+    "rawPackageMilliseconds": 18794.910584999998,
+    "acceptedOverlaySourcesUnchanged": true
+  },
+  "browser": {
+    "surface": "ACTUAL_PERSISTENT_WEBGL2_RENDERER",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "errors": [],
+    "firstFrameBeforeCoverPreparation": true,
+    "baselineFirstFrameMilliseconds": 27049.70000000298,
+    "candidateFirstFrameMilliseconds": 30089.79999999702,
+    "candidateCompleteResidencyMilliseconds": 146919.09999999776,
+    "grassPlanningMilliseconds": 71797,
+    "gpuCover": {
+      "schema": "H_EARTH_GLOBAL_GROUND_COVER_v1",
+      "instanceCount": 61094,
+      "primaryFanCount": 49488,
+      "secondaryFanCount": 11606,
+      "bushyClumpCount": 11606,
+      "mountainInstanceCount": 231,
+      "candidateCount": 106568,
+      "rootSampleCount": 611034,
+      "materialSampleCount": 698854,
+      "recordBytes": 4887520,
+      "templateGpuBytes": 1856,
+      "totalGpuBytes": 4889376,
+      "maximumInstances": 65536,
+      "baseTerrainTriangleCount": 20736,
+      "refinementTriangleCount": 0,
+      "elapsedMilliseconds": 71797,
+      "yieldCount": 5376,
+      "rejections": {
+        "BOUNDARY_COLLAR": 1304,
+        "BUSH_HABITAT": 1,
+        "BUSH_ROOT_COLLAR": 3,
+        "DENSITY": 18518,
+        "HABITAT": 8156,
+        "PRESERVED_OR_RESERVED": 1905,
+        "RENDERED_WATER": 27147,
+        "ROOT_COLLAR": 50
+      },
+      "canonicalPopulationChanged": false,
+      "cameraIndependent": true,
+      "rootEncoding": "TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS",
+      "sparseSoilPresentationRule": "SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35",
+      "bushyPocketRule": "BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED",
+      "prepared": true,
+      "storedInstanceCount": 61094,
+      "gpuByteLength": 4900672,
+      "uploadCount": 6,
+      "maximumUploadChunkBytes": 262144,
+      "authorizedPostReadyResourceCount": 9,
+      "visibleInstanceCount": 3496,
+      "drawCallCount": 60,
+      "storedPopulationChanged": false,
+      "perFrameUploadBytes": 0
+    },
+    "matchedViews": [
+      {
+        "view": "western-stretch",
+        "baselineImageSha256": "014c670675dc4fb3bc90e70d7fd39c8866548dea1b54774a0301ae2c6d477cf0",
+        "candidateImageSha256": "ed8c86134418dbe344f49d7d600607611306c6e2a98e70272ab521984afcac5d",
+        "coverDraw": {
+          "visibleInstanceCount": 3496,
+          "drawCallCount": 60,
+          "perFrameUploadBytes": 0
+        }
+      },
+      {
+        "view": "dry-stretch",
+        "baselineImageSha256": "12d0e38af3db4cd755483826bc004511a8e504ab63f77f3c6be7fb9d19fe3b9f",
+        "candidateImageSha256": "e8225a138523f76b43582cde359245fc16076d32e27c0546cf04222b0f26a881",
+        "coverDraw": {
+          "visibleInstanceCount": 3173,
+          "drawCallCount": 64,
+          "perFrameUploadBytes": 0
+        }
+      },
+      {
+        "view": "woodland",
+        "baselineImageSha256": "823e345d8741d4b6ddde74a1f9eb0a1c823c14b296d4c004457b0d8bf71896b6",
+        "candidateImageSha256": "e94b86b1250aef66b84ef93387a72a51141b77fe7d4ad82b9c867fe4fc5a7aa6",
+        "coverDraw": {
+          "visibleInstanceCount": 2055,
+          "drawCallCount": 57,
+          "perFrameUploadBytes": 0
+        }
+      },
+      {
+        "view": "oasis",
+        "baselineImageSha256": "879248f43d48192f50356c92bad9f58c9b51773ebc234f1b942da742b25489b0",
+        "candidateImageSha256": "c2bcc275818f5a88bc8c4161de446682a8f2df4080935d0458bdeb6badf885bf",
+        "coverDraw": {
+          "visibleInstanceCount": 586,
+          "drawCallCount": 37,
+          "perFrameUploadBytes": 0
+        }
+      }
+    ]
+  },
+  "anchorReview": {
+    "sameEmbodiedWorld": true,
+    "acceptedRecipeUnchanged": true,
+    "navigationTouchTerrainAuthorityUnchanged": true
+  },
+  "ownerPerceptualDisposition": "PENDING",
+  "physicalDeviceAcceptance": false,
+  "engineeringTerminalClosed": false,
+  "mergeAuthorityCreated": false,
+  "deploymentAuthorityCreated": false,
+  "limitations": [
+    "Stylized accepted grass fans; sparse-soil mountain pockets only, steep rock and exposed slopes remain clear.",
+    "Headless static frames do not prove walking/touch feel or phone/tablet performance.",
+    "Post-READY planning/residency still has a measured loading interval; no device performance claim."
+  ]
+}

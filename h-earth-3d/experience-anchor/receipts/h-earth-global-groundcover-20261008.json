@@ -1,0 +1,46 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "bfa7f52e219efc9d39513a1527a4b3c6018b33056d10f1e5e4e4669a9d447415"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "1f055347d1288c15de9e0260cc1e86c0f47be72ab36f47fba364a3d411e2bad5"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
+      "sha256": "0926845c3543d4801ce19df4c50e23878208afe24942c150aefc83f199d74821"
+    }
+  ],
+  "acceptanceBasis": "Architectural same-world anchor reviewed against embodied-ground visual proxy and matched complete-residency WebGL frames. Actual Float32 roots, independently qualified overlapping accepted fans, preserved canonical 27,585 placements/108 batches and unchanged terrain/navigation/touch/accepted recipes. Sparse-soil mountain pockets are an explicit presentation delta, FAR color only. Mechanical and headless WebGL PASS; owner exact-candidate perceptual disposition and registered exact-head preflight remain pending. No physical-device, merge or deployment authority claimed.",
+  "physicalDeviceAcceptance": false,
+  "ownerPerceptualDisposition": "PENDING"
+}

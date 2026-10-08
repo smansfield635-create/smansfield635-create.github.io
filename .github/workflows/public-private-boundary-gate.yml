@@ -21,10 +21,49 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          git diff --unified=0 "$BASE_SHA" "$HEAD_SHA" -- . ':(exclude).github/workflows/public-private-boundary-gate.yml' > /tmp/public-boundary.diff
-          additions="$(grep -E '^\+' /tmp/public-boundary.diff | grep -Ev '^\+\+\+' || true)"
-          if printf '%s\n' "$additions" | grep -Ei 'canonicalSource|blobSha|tools/operation-intake/|tools/ai-entry/|\.github/ai-router/|control-plane/|instrument-lifecycle-registry|canonical-execution-substrate|platform-control-plane|authority-and-ownership-matrix'; then
-            echo 'PUBLIC_PRIVATE_BOUNDARY_VIOLATION'
-            exit 1
-          fi
-          echo 'PUBLIC_PRIVATE_BOUNDARY_PASS'
+          python3 - <<'PYTHON'
+          import os
+          import re
+          import subprocess
+          import sys
+          
+          # Git failures must not turn into an empty, passing additions set.
+          diff = subprocess.run(
+              ["git", "diff", "--unified=0", os.environ["BASE_SHA"], os.environ["HEAD_SHA"],
+               "--", ".", ":(exclude).github/workflows/public-private-boundary-gate.yml"],
+              check=True, capture_output=True, text=True,
+          ).stdout
+          sensitive = re.compile(
+              r"canonicalSource|blobSha|instrument-lifecycle-registry|canonical-execution-substrate|"
+              r"platform-control-plane|authority-and-ownership-matrix", re.IGNORECASE,
+          )
+          protected = re.compile(
+              r"[A-Za-z0-9_./-]*(?:tools/operation-intake/|tools/ai-entry/|"
+              r"\.github/ai-router/|control-plane/)[A-Za-z0-9_./-]*", re.IGNORECASE,
+          )
+          in_hunk = False
+          for line in diff.splitlines():
+              if line.startswith("diff --git "):
+                  in_hunk = False
+              elif line.startswith("@@ "):
+                  in_hunk = True
+              if not in_hunk or not line.startswith("+"):
+                  continue
+              paths = protected.findall(line[1:])
+              if sensitive.search(line) or (paths and "geodiametrics1" in line.lower()):
+                  print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
+                  sys.exit(1)
+              for path in paths:
+                  # Only exact existing public blobs qualify; never normalize traversal.
+                  if path.startswith("/") or any(part in ("", ".", "..") for part in path.split("/")):
+                      print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
+                      sys.exit(1)
+                  result = subprocess.run(
+                      ["git", "cat-file", "-t", os.environ["BASE_SHA"] + ":" + path],
+                      capture_output=True, text=True,
+                  )
+                  if result.returncode != 0 or result.stdout.strip() != "blob":
+                      print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
+                      sys.exit(1)
+          print("PUBLIC_PRIVATE_BOUNDARY_PASS")
+          PYTHON

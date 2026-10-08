@@ -29,7 +29,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
-      "sha256": "ffd95a4dfa1f312fa3660173d119933d64f430661f8b77b640197940367804cb"
+      "sha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb"
     }
   ],
   "candidateCommit": "941bb141a89db941e11605f36115febab38077c4",
@@ -330,10 +330,47 @@
         {
           "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
           "baselineSha256": "985d28f0a22dfbae8c6e9c8f44401403c65cd54856ec40c126caae2d10aa82da",
-          "candidateSha256": "ffd95a4dfa1f312fa3660173d119933d64f430661f8b77b640197940367804cb"
+          "candidateSha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb"
         }
       ],
       "method": "Compared exact baseline and candidate file bytes; the repository diff corroborates that only the sector geometry source changed."
     }
+  },
+  "samplerOptimization": {
+    "schema": "H_EARTH_CONNECTED_COVER_SAMPLER_PARITY_v1",
+    "result": "PASS",
+    "acceptedHead": "d2eca126541693b5739ce818f6cf1937ff987a23",
+    "change": "EXACT_COORDINATE_MEMOIZATION_ORIGINAL_16M_BINS",
+    "fullSectorDeepEquality": true,
+    "baselineMs": 79105.700006,
+    "checks": [
+      {
+        "name": "FORWARD",
+        "deepEqual": true,
+        "ms": 67674.946888
+      },
+      {
+        "name": "REVERSE",
+        "deepEqual": true,
+        "ms": 68674.322144
+      },
+      {
+        "name": "CHUNKED",
+        "deepEqual": true,
+        "ms": 66771.287258
+      }
+    ],
+    "sectorSha256": "0564d83a71ca6776073dabd5489cb2dedae65cffe1da66ded51642da205cfc91",
+    "baselineTuftCount": 245,
+    "addedTuftCount": 1187,
+    "triangles": 61044,
+    "operationGeneration": 2615,
+    "optimizedSourceSha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb",
+    "originalSourceSha256": "ffd95a4dfa1f312fa3660173d119933d64f430661f8b77b640197940367804cb",
+    "fullDeferredPackageDeepEquality": true,
+    "packageContentDigest": "fnv1a32:e4a0f62c",
+    "packageComparison": "assert.deepStrictEqual of complete serialized package; only observational construction clock fixed to zero for both builds",
+    "timingQualification": "Local elapsed measurements ran with overlapping qualification work; release startup remains subject to exact-head preflight.",
+    "boundaryReview": "Retain original 16m bins and triangle scan arithmetic. Exact Number-pair cache; null results cached; nonfinite and zero coordinates bypass cache; fresh object on hits."
   }
 }

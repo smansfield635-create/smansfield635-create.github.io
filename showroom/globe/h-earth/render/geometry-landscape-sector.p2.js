@@ -26,7 +26,19 @@ function sampler(primitive){
     if(hiX<bounds.minX||loX>bounds.maxX||hiZ<bounds.minZ||loZ>bounds.maxZ)continue;
     for(let x=Math.floor(loX/16);x<=Math.floor(hiX/16);x++)for(let z=Math.floor(loZ/16);z<=Math.floor(hiZ/16);z++){const k=`${x},${z}`;if(!bins.has(k))bins.set(k,[]);bins.get(k).push({t,triangle:i/3});}
   }
-  return(x,z)=>{for(const {t:[a,b,c],triangle} of bins.get(key(x,z))??[]){const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);if(Math.abs(d)<1e-10)continue;const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/d,w=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/d,q=1-u-w;if(Math.min(u,w,q)<-1e-7)continue;const dx=((b.y-a.y)*(c.z-a.z)-(c.y-a.y)*(b.z-a.z))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z)),dz=((b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z));return{y:u*a.y+w*b.y+q*c.y,slope:Math.hypot(dx,dz),triangle};}return null;};
+  const exactSamples=new Map();
+  const evaluate=(x,z)=>{for(const {t:[a,b,c],triangle} of bins.get(key(x,z))??[]){const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);if(Math.abs(d)<1e-10)continue;const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/d,w=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/d,q=1-u-w;if(Math.min(u,w,q)<-1e-7)continue;const dx=((b.y-a.y)*(c.z-a.z)-(c.y-a.y)*(b.z-a.z))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z)),dz=((b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z));return{y:u*a.y+w*b.y+q*c.y,slope:Math.hypot(dx,dz),triangle};}return null;};
+  // Repeated root-support and eligibility checks share exact Number coordinates.
+  // Keep the original bin scan, triangle order and arithmetic on every cache miss.
+  return(x,z)=>{
+    if(!Number.isFinite(x)||!Number.isFinite(z)||x===0||z===0)return evaluate(x,z);
+    let row=exactSamples.get(x);
+    if(row?.has(z)){const result=row.get(z);return result?{...result}:null;}
+    const result=evaluate(x,z);
+    if(!row){row=new Map();exactSamples.set(x,row);}
+    row.set(z,result);
+    return result;
+  };
 }
 // Closed tapered branch, including basal root flare. Its own axial frame avoids
 // skewed horizontal branch cross-sections and preserves consistent winding.

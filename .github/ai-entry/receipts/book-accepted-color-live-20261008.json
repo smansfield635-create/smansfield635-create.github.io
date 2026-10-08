@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "book-accepted-color-live-20261008",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6019,
+  "requestBranch": "ai-dispatch-request-book-accepted-color-live-20261008",
+  "requestCommit": "9b9c53a0d5f4d4a3be84eaeb9cf4300d5ad49385",
+  "requestCommitParent": "9bac83bf26907de3b4a56d72a08d973149502cf1",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "9bac83bf26907de3b4a56d72a08d973149502cf1",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9bac83bf26907de3b4a56d72a08d973149502cf1",
+    "surface_id": "reading-pages"
+  },
+  "bridgeRunId": "37708235283",
+  "dispatchedRunId": 37708247995,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37708247995",
+  "dispatchedRunHeadSha": "9bac83bf26907de3b4a56d72a08d973149502cf1",
+  "dispatchedAt": "2026-10-08T00:31:49.791Z",
+  "resolvedAt": "2026-10-08T00:31:53.754Z"
+}

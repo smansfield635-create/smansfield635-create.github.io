@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-08T05:35:17Z",
+  "generatedAt": "2026-10-08T06:53:37Z",
   "window": {
-    "start": "2026-09-08T05:35:17Z",
-    "end": "2026-10-08T05:35:17Z"
+    "start": "2026-09-08T06:53:37Z",
+    "end": "2026-10-08T06:53:37Z"
   },
   "dimensions": {
     "requestPath": [
@@ -484,13 +484,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3428,
-        "visits": 957
+        "pageLoads": 3438,
+        "visits": 967
       },
       {
         "value": "Linux",
-        "pageLoads": 2479,
-        "visits": 2416
+        "pageLoads": 2409,
+        "visits": 2346
       },
       {
         "value": "MacOSX",
@@ -503,14 +503,14 @@
         "visits": 139
       },
       {
+        "value": "iOS",
+        "pageLoads": 82,
+        "visits": 60
+      },
+      {
         "value": "Unknown",
         "pageLoads": 53,
         "visits": 53
-      },
-      {
-        "value": "iOS",
-        "pageLoads": 52,
-        "visits": 50
       }
     ],
     "bot": [

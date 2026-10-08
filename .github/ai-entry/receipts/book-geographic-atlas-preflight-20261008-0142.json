@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "book-geographic-atlas-preflight-20261008-0142",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6023,
+  "requestBranch": "ai-dispatch-request-book-geographic-atlas-preflight-20261008-0142",
+  "requestCommit": "353c60ca7fca3375aa3ba5184f87297de4680c05",
+  "requestCommitParent": "d2517b489eb5751b3ef19f0f177ad20b51addc21",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "d2517b489eb5751b3ef19f0f177ad20b51addc21",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d2517b489eb5751b3ef19f0f177ad20b51addc21",
+    "surface_id": "reading-pages"
+  },
+  "bridgeRunId": "37714193152",
+  "dispatchedRunId": 37714208442,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37714208442",
+  "dispatchedRunHeadSha": "d2517b489eb5751b3ef19f0f177ad20b51addc21",
+  "dispatchedAt": "2026-10-08T01:41:49.648Z",
+  "resolvedAt": "2026-10-08T01:41:54.028Z"
+}

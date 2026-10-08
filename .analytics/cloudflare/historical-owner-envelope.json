@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-08T22:32:35Z",
+  "generatedAt": "2026-10-08T23:32:18Z",
   "window": {
-    "start": "2026-07-10T22:32:35Z",
-    "end": "2026-10-08T22:32:35Z"
+    "start": "2026-07-10T23:32:18Z",
+    "end": "2026-10-08T23:32:18Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -166,6 +166,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -173,10 +177,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -202,6 +202,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/gauges/": {
         "pageLoads": 10,
         "visits": 0
@@ -220,10 +224,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -246,11 +246,11 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },

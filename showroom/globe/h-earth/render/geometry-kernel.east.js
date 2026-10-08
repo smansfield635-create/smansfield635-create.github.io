@@ -6168,6 +6168,9 @@ second
 };
 }
 
+// Only immutable topology records produced here enter the optimized traversal.
+const indexedShellTopologyRecords = new WeakSet();
+
 export function extractHEarthIndexedTopology(
 vertices,
 triangleIndices
@@ -6773,7 +6776,7 @@ triangleConnectedComponents.push(
 
 }
 
-return deepFreeze({
+const topologyRecord = deepFreeze({
 valid:
 !hasHEarthBlockingIssues(
 issues
@@ -6846,6 +6849,8 @@ issues:
   )
 
 });
+indexedShellTopologyRecords.add(topologyRecord);
+return topologyRecord;
 }
 
 /* ==========================================================================
@@ -7019,6 +7024,44 @@ triangleIndex
 );
 }
 
+// Preserve legacy traversal for caller-supplied records, including Proxy traps,
+// accessors, malformed arrays and exception order. Builder records are frozen.
+function indexComponentShellCounts(topology) {
+  if (!indexedShellTopologyRecords.has(topology)) return null;
+  const components = topology.triangleConnectedComponents;
+  const edges = topology.edges;
+  const conflicts = topology.directedConflicts;
+  const owners = new Map();
+  const counts = components.map(() => ({boundaryEdgeCount: 0, nonmanifoldEdgeCount: 0, directedConflictCount: 0}));
+  components.forEach((component, componentIndex) => {
+    for (const triangleIndex of new Set(component)) {
+      let memberships = owners.get(triangleIndex);
+      if (!memberships) owners.set(triangleIndex, memberships = []);
+      memberships.push(componentIndex);
+    }
+  });
+  for (const edge of edges) {
+    const usesPerComponent = new Map();
+    for (const use of edge.uses) {
+      for (const owner of owners.get(use.triangleIndex) || []) {
+        usesPerComponent.set(owner, (usesPerComponent.get(owner) || 0) + 1);
+      }
+    }
+    for (const [owner, useCount] of usesPerComponent) {
+      if (useCount === 1) counts[owner].boundaryEdgeCount += 1;
+      if (useCount > 2) counts[owner].nonmanifoldEdgeCount += 1;
+    }
+  }
+  for (const conflict of conflicts) {
+    const touched = new Set();
+    for (const triangleIndex of conflict.triangleIndices) {
+      for (const owner of owners.get(triangleIndex) || []) touched.add(owner);
+    }
+    for (const owner of touched) counts[owner].directedConflictCount += 1;
+  }
+  return counts;
+}
+
 export function analyzeHEarthMeshShells(
 vertices,
 triangleIndices,
@@ -7107,6 +7150,8 @@ let nonmanifoldShellCount = 0;
 
 let windingInconsistentShellCount = 0;
 
+const indexedShellCounts = indexComponentShellCounts(topology);
+
 for (
 let componentIndex = 0;
 componentIndex <
@@ -7126,6 +7171,8 @@ const triangleSet =
     component  
   );  
 
+const {boundaryEdgeCount, nonmanifoldEdgeCount, directedConflictCount} =
+  indexedShellCounts ? indexedShellCounts[componentIndex] : (() => {
 const componentEdges =  
   collectComponentEdges(  
     topology,  
@@ -7164,6 +7211,9 @@ const nonmanifoldEdgeCount =
 
 const directedConflictCount =  
   componentDirectedConflicts.length;  
+
+return {boundaryEdgeCount, nonmanifoldEdgeCount, directedConflictCount};
+})();
 
 const componentIndices = [];  
 

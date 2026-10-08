@@ -1,0 +1,445 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/receipts/h-earth-connected-cover-20261008.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/receipts/h-earth-connected-cover-20261008.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/receipts/h-earth-connected-cover-20261008.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "sha256": "9a04f56868cf875894b75915c4ce99d710c46afb40a1448f32ac27d5a93bd9a7"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.mesh-shell-index-parity.v1.mjs",
+      "sha256": "60e533b5c532477ac95f1aa59a4bd01ec5d3f4e3535f603f18c2aa4c18e52e2f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb"
+    }
+  ],
+  "candidateCommit": "941bb141a89db941e11605f36115febab38077c4",
+  "acceptanceBasis": "Owner KEEP on matched views; exact source closure and preserved baseline geometry establish unchanged interaction and world continuity. No new physical-device performance claim. The mesh-shell index preserves the entire canonical deferred package except its observational constructionMilliseconds field, verified by deep equality and 140 shell parity cases. Owner visual acceptance inherited; no new browser, GPU, READY or device-performance acceptance.",
+  "reviewEvidence": {
+    "schema": "H_EARTH_CONNECTED_COVER_ANCHOR_REVIEW_EVIDENCE_v1",
+    "candidateCommit": "941bb141a89db941e11605f36115febab38077c4",
+    "sectorBlob": "ea18839ac63e9700096c488910a3407f56e1e97b",
+    "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+    "review": "Reviewed the current repository visual proxy: embodied terrain and travel within one world. The grass-only geometry append preserves that interaction and world architecture. Owner accepted the three matched woodland views and explicitly requested publication.",
+    "ownerDisposition": {
+      "disposition": "KEEP",
+      "instruction": "Yes, I think this is going to be much better. Let's get this published.",
+      "reviewSurface": "H-Earth-connected-cover-comparison.html",
+      "physicalDevicePerformanceClaimed": false
+    },
+    "visualEvidence": [
+      {
+        "view": "near",
+        "baselinePngSha256": "c015821cfdf96ad40471be30dca0d68debab47a5cb44e6ba2e06944f8088a2c4",
+        "candidatePngSha256": "770d65e4e531e2e84087df11692ad09a6f64502e32a52194a3f74619d83a5965"
+      },
+      {
+        "view": "approach",
+        "baselinePngSha256": "1708cac7dbad07c42d946a949180177127eb2e5a28e42c6759bf5940691c762b",
+        "candidatePngSha256": "c29392475ab7d53022669db83e4d50041f47c0f30db6ba8e1acf7c9e06c22175"
+      },
+      {
+        "view": "north",
+        "baselinePngSha256": "96ba5afd976c1298e3926cd6b9586afe6f9781b02f2667769ff2180cf859fc90",
+        "candidatePngSha256": "9301098afae2158023febed2565873ad2cd17f9073bb602a79a2a3e6652fb465"
+      }
+    ],
+    "geometry": {
+      "schema": "H_EARTH_CONNECTED_COVER_GEOMETRY_RECEIPT_v1",
+      "result": "GEOMETRY_PASS",
+      "addedTufts": 1187,
+      "totalTufts": 1432,
+      "roots": 14244,
+      "verticesAdded": 33236,
+      "trianglesAdded": 28488,
+      "sectorTriangles": 61044,
+      "additionalBytes": 2635140,
+      "drawRanges": 9,
+      "baselineContentDigest": "fnv1a32:b957074b",
+      "candidateContentDigest": "fnv1a32:e4a0f62c",
+      "baselineGeometryPreserved": true,
+      "orderDeterminism": true,
+      "deviceAcceptance": false
+    },
+    "renderer": {
+      "views": [
+        {
+          "view": "near",
+          "changedPixels": 5685,
+          "frameFraction": 0.017271235873131608,
+          "bounds": [
+            0,
+            520,
+            389,
+            706
+          ]
+        },
+        {
+          "view": "approach",
+          "changedPixels": 10927,
+          "frameFraction": 0.03319662170373071,
+          "bounds": [
+            0,
+            576,
+            388,
+            843
+          ]
+        },
+        {
+          "view": "north",
+          "changedPixels": 15949,
+          "frameFraction": 0.04845363956738364,
+          "bounds": [
+            0,
+            383,
+            389,
+            741
+          ]
+        }
+      ],
+      "resource": {
+        "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+        "presentationProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+        "presentationProfile": {
+          "terrainScaleCues": true,
+          "slopeReadability": true,
+          "routeContainment": true,
+          "manorSiteDifferentiation": true,
+          "cavernExteriorRelationDifferentiation": true,
+          "sharedMacroFrequencyCorrection": true,
+          "lawfulSlopeCurvatureModulation": true,
+          "boundedContactDepthReinforcement": true,
+          "temporallyStableWorldSpaceVariation": true,
+          "regressionColorDiversityRestoration": true,
+          "cavernNearThresholdReinforcement": true,
+          "geometryMutation": false,
+          "terrainMutation": false,
+          "placementMutation": false,
+          "cameraMutation": false,
+          "touchMutation": false
+        },
+        "initialized": true,
+        "dimensions": {
+          "width": 390,
+          "height": 844
+        },
+        "context": {
+          "created": true,
+          "lost": false,
+          "vendor": "WebKit",
+          "renderer": "WebKit WebGL",
+          "unmaskedVendor": "Google Inc. (Google)",
+          "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+        },
+        "package": {
+          "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+          "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E4A0F62C",
+          "runtimeContentDigest": "fnv1a32:e4a0f62c",
+          "primitiveCount": 14,
+          "vertexCount": 79127,
+          "triangleCount": 104214,
+          "indexCount": 312642,
+          "drawRangeCount": 9,
+          "canonicalGpuTransport": true
+        },
+        "rendererInterface": {
+          "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+          "attributeCount": 8,
+          "uniformCount": 12,
+          "drawRangeCount": 9
+        },
+        "counters": {
+          "contextCreationCount": 1,
+          "shaderCreateCount": 4,
+          "shaderCompileCount": 4,
+          "programCreateCount": 2,
+          "programLinkCount": 2,
+          "vertexArrayCreateCount": 1,
+          "bufferCreateCount": 11,
+          "bufferUploadCount": 11,
+          "uploadedByteLength": 6710331,
+          "textureCreateCount": 4,
+          "framebufferCreateCount": 2,
+          "shorelineSoilTextureUploadCount": 1,
+          "shorelineSoilUploadedByteLength": 15184,
+          "postInitializationResourceCreationCount": 0,
+          "postInitializationBufferUploadCount": 0,
+          "frameCount": 1,
+          "visiblePresentationCount": 1,
+          "colorReadbackCount": 1,
+          "depthReadbackCount": 0,
+          "pngEncodingCount": 1,
+          "gpuFinishCount": 1,
+          "cameraUniformUpdateCount": 4,
+          "staticUniformUpdateCount": 13,
+          "geometryDrawCallCount": 8,
+          "totalDrawnIndexCount": 1297314,
+          "depthVisualizationDrawCallCount": 0,
+          "refinementResourceCreateCount": 1,
+          "refinementBufferUploadCount": 11,
+          "refinementDrawCallCount": 1,
+          "vegetationBatchMaterializationCount": 108,
+          "vegetationResidentInstanceCount": 27585,
+          "vegetationResidentPrimitiveCount": 498,
+          "vegetationBufferUploadCount": 1188,
+          "vegetationDrawCallCount": 108,
+          "worldRebuildCount": 0,
+          "contactOwnershipBufferUpdateCount": 1
+        },
+        "shorelineSoilCoverage": {
+          "width": 104,
+          "height": 146,
+          "bounds": {
+            "minX": -18,
+            "maxX": 34,
+            "minZ": -204,
+            "maxZ": -131
+          },
+          "cellSizeMeters": 0.5,
+          "grassTuftCount": 350,
+          "grassRootCount": 50400,
+          "occupiedCellCount": 760,
+          "nonzeroTexelCount": 2173,
+          "ready": true,
+          "derivedFrom": "EXISTING_OASIS_GRASS_ROOTS",
+          "terrainGeometryMutated": false
+        },
+        "landscapeFloor": {
+          "treeCount": 15,
+          "floorContentDigest": "fnv1a32:e3678f4a",
+          "source": "ACCEPTED_CLUSTER_A_MANIFEST",
+          "worldSpace": "PROJECTED_WORLD_XZ",
+          "terrainGeometryChanged": false,
+          "castShadowClaim": false
+        },
+        "persistentObjectCounts": {
+          "contexts": 1,
+          "programs": 2,
+          "shaders": 4,
+          "vertexArrays": 1,
+          "gpuBuffers": 11,
+          "textures": 4,
+          "framebuffers": 2
+        },
+        "resourceIdentityStable": true,
+        "packageUploadedOnce": true,
+        "noUnauthorizedPostInitializationResourceCreation": true,
+        "noUnauthorizedPostInitializationBufferUpload": false,
+        "authorizedVegetationPostReadyResidency": true,
+        "refinementResourceAuthorized": true,
+        "refinementResourceCreated": true,
+        "refinementResourceBufferUploadCount": 11,
+        "refinementPatchVertexCount": 1089,
+        "refinementPatchTriangleCount": 2048,
+        "refinementAnchor": {
+          "x": 0,
+          "z": -96
+        },
+        "refinementFallbackAvailable": true,
+        "contactField": {
+          "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+          "saturationMeters": 64,
+          "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+          "terrainTriangles": 20736,
+          "oceanTriangles": 17696,
+          "overlapTests": 67796,
+          "contactSegments": 602,
+          "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+          "patchTriangles": 2048,
+          "packageVertices": 10573,
+          "patchVertices": 1089,
+          "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+          "contactTrianglesWithoutVertexSignChange": 0,
+          "initializationMilliseconds": 222.09999999962747,
+          "buildCount": 2,
+          "totalBuildMilliseconds": 2386.5999999996275
+        },
+        "vegetationResidency": {
+          "canonicalPreparationTiming": null,
+          "preparationComplete": true,
+          "preparationProgress": {
+            "phase": "PREPARED",
+            "worldTruthValidated": true,
+            "oasisComplete": true,
+            "grassTuftCount": 350,
+            "cattailCount": 72,
+            "primitiveCount": 494
+          },
+          "validationStatus": "VALIDATED",
+          "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+          "totalInstanceCount": 27585,
+          "totalBatchCount": 108,
+          "maxInstancesPerBatch": 256,
+          "residentInstanceCount": 27585,
+          "residentBatchCount": 108,
+          "residentPrimitiveCount": 498,
+          "complete": true,
+          "droppedPlacementCount": 0,
+          "worldRebuildCount": 0,
+          "cameraIndependent": true
+        },
+        "canonicalPackageMutated": false
+      }
+    },
+    "interactionEvidence": {
+      "method": "Exact-byte comparison of all 60 runtime closure files, plus localized geometry diff",
+      "unchangedFileCount": 59,
+      "changedPaths": [
+        "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js"
+      ],
+      "cameraTouchNavigationLoaderTerrainRendererUnchanged": true,
+      "physicalDevicePerformanceMeasured": false
+    },
+    "continuityEvidence": {
+      "method": "Grass-only append; retained baseline geometry, terrain roots and canonical render package. No alternate world, route, UI, globe or region source changed.",
+      "baselineGeometryPreserved": true,
+      "orderDeterminism": true,
+      "ownerMatchedViewAcceptance": true
+    },
+    "visualComparisonArtifact": {
+      "libraryFileId": "libfile_d334ae4dbbe88191b03942f863dcf1a8",
+      "filename": "H-Earth-connected-cover-comparison.html",
+      "sha256": "baad5fab072cdee833d76532f45e1439b30a0d85fecb8ed5371034fc25198230",
+      "contains": "Six exact PNGs paired across near, approach and north views; owner inspected and accepted."
+    },
+    "sourceClosureSummary": {
+      "comparedRuntimeFiles": 60,
+      "unchangedRuntimeFiles": 59,
+      "changedFiles": [
+        {
+          "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+          "baselineSha256": "985d28f0a22dfbae8c6e9c8f44401403c65cd54856ec40c126caae2d10aa82da",
+          "candidateSha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb"
+        }
+      ],
+      "method": "Compared exact baseline and candidate file bytes; the repository diff corroborates that only the sector geometry source changed."
+    }
+  },
+  "samplerOptimization": {
+    "schema": "H_EARTH_CONNECTED_COVER_SAMPLER_PARITY_v1",
+    "result": "PASS",
+    "acceptedHead": "d2eca126541693b5739ce818f6cf1937ff987a23",
+    "change": "EXACT_COORDINATE_MEMOIZATION_ORIGINAL_16M_BINS",
+    "fullSectorDeepEquality": true,
+    "baselineMs": 79105.700006,
+    "checks": [
+      {
+        "name": "FORWARD",
+        "deepEqual": true,
+        "ms": 67674.946888
+      },
+      {
+        "name": "REVERSE",
+        "deepEqual": true,
+        "ms": 68674.322144
+      },
+      {
+        "name": "CHUNKED",
+        "deepEqual": true,
+        "ms": 66771.287258
+      }
+    ],
+    "sectorSha256": "0564d83a71ca6776073dabd5489cb2dedae65cffe1da66ded51642da205cfc91",
+    "baselineTuftCount": 245,
+    "addedTuftCount": 1187,
+    "triangles": 61044,
+    "operationGeneration": 2615,
+    "optimizedSourceSha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb",
+    "originalSourceSha256": "ffd95a4dfa1f312fa3660173d119933d64f430661f8b77b640197940367804cb",
+    "fullDeferredPackageDeepEquality": true,
+    "packageContentDigest": "fnv1a32:e4a0f62c",
+    "packageComparison": "assert.deepStrictEqual of complete serialized package; only observational construction clock fixed to zero for both builds",
+    "timingQualification": "Local elapsed measurements ran with overlapping qualification work; release startup remains subject to exact-head preflight.",
+    "boundaryReview": "Retain original 16m bins and triangle scan arithmetic. Exact Number-pair cache; null results cached; nonfinite and zero coordinates bypass cache; fresh object on hits."
+  },
+  "meshShellIndexOptimization": {
+    "result": "PASS",
+    "deepStrictEqual": true,
+    "excludedObservationalField": "constructionMilliseconds",
+    "contentDigest": "fnv1a32:e4a0f62c",
+    "timings": {
+      "baseline": {
+        "moduleMs": 5923.831824,
+        "buildMs": 73115.418311,
+        "totalMs": 79039.250135,
+        "eligible": true,
+        "issues": []
+      },
+      "indexed": {
+        "moduleMs": 5390.0622109999995,
+        "buildMs": 17438.685829,
+        "totalMs": 22828.74804,
+        "eligible": true,
+        "issues": []
+      }
+    },
+    "substrate": "Node CPU construction; browser/GPU/first frame/READY unmeasured",
+    "schema": "H_EARTH_MESH_SHELL_INDEX_QUALIFICATION_v1",
+    "operationId": "H_EARTH_MESH_SHELL_EDGE_INDEX_20261008_001",
+    "operationGeneration": 2618,
+    "governingHead": "d2517b489eb5751b3ef19f0f177ad20b51addc21",
+    "baselineCandidate": "3e343c8a8db53e358ab2cfb6c1f407cb53b4f626",
+    "admissionCommit": "8e1ebee867e0da0c8f7ad90941297b849c9e20a3",
+    "parityCases": 140,
+    "independentVerification": {
+      "North": "PASS",
+      "East": "PASS",
+      "West": "PASS"
+    },
+    "exactTestCommand": "node h-earth-3d/validation/h-earth.mesh-shell-index-parity.v1.mjs",
+    "pairedTiming": {
+      "baselineTotalMs": 79039.250135,
+      "indexedTotalMs": 23919.592702,
+      "baselineBuildMs": 73115.418311,
+      "indexedBuildMs": 18396.183628
+    },
+    "timingQualification": "Single local native Node CPU samples, not statistical device performance; paired comparison followed by isolated indexed package parity rerun. Construction time observation excluded from full-package equality; every other field deepStrictEqual.",
+    "provenanceGate": "Only canonical immutable extractor records enter index; all caller-provided topology records use original traversal.",
+    "browserGPUFirstFrameReadyMeasured": false,
+    "publicationAuthorized": false,
+    "sourceFiles": [
+      {
+        "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "sha256": "9a04f56868cf875894b75915c4ce99d710c46afb40a1448f32ac27d5a93bd9a7"
+      },
+      {
+        "path": "h-earth-3d/validation/h-earth.mesh-shell-index-parity.v1.mjs",
+        "sha256": "60e533b5c532477ac95f1aa59a4bd01ec5d3f4e3535f603f18c2aa4c18e52e2f"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+        "sha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb"
+      }
+    ],
+    "qualificationPath": "h-earth-3d/evidence/mesh-shell-index-20261008/qualification.json"
+  }
+}

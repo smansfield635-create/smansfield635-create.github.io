@@ -26,7 +26,19 @@ function sampler(primitive){
     if(hiX<bounds.minX||loX>bounds.maxX||hiZ<bounds.minZ||loZ>bounds.maxZ)continue;
     for(let x=Math.floor(loX/16);x<=Math.floor(hiX/16);x++)for(let z=Math.floor(loZ/16);z<=Math.floor(hiZ/16);z++){const k=`${x},${z}`;if(!bins.has(k))bins.set(k,[]);bins.get(k).push({t,triangle:i/3});}
   }
-  return(x,z)=>{for(const {t:[a,b,c],triangle} of bins.get(key(x,z))??[]){const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);if(Math.abs(d)<1e-10)continue;const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/d,w=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/d,q=1-u-w;if(Math.min(u,w,q)<-1e-7)continue;const dx=((b.y-a.y)*(c.z-a.z)-(c.y-a.y)*(b.z-a.z))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z)),dz=((b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z));return{y:u*a.y+w*b.y+q*c.y,slope:Math.hypot(dx,dz),triangle};}return null;};
+  const exactSamples=new Map();
+  const evaluate=(x,z)=>{for(const {t:[a,b,c],triangle} of bins.get(key(x,z))??[]){const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);if(Math.abs(d)<1e-10)continue;const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/d,w=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/d,q=1-u-w;if(Math.min(u,w,q)<-1e-7)continue;const dx=((b.y-a.y)*(c.z-a.z)-(c.y-a.y)*(b.z-a.z))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z)),dz=((b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y))/((b.x-a.x)*(c.z-a.z)-(c.x-a.x)*(b.z-a.z));return{y:u*a.y+w*b.y+q*c.y,slope:Math.hypot(dx,dz),triangle};}return null;};
+  // Repeated root-support and eligibility checks share exact Number coordinates.
+  // Keep the original bin scan, triangle order and arithmetic on every cache miss.
+  return(x,z)=>{
+    if(!Number.isFinite(x)||!Number.isFinite(z)||x===0||z===0)return evaluate(x,z);
+    let row=exactSamples.get(x);
+    if(row?.has(z)){const result=row.get(z);return result?{...result}:null;}
+    const result=evaluate(x,z);
+    if(!row){row=new Map();exactSamples.set(x,row);}
+    row.set(z,result);
+    return result;
+  };
 }
 // Closed tapered branch, including basal root flare. Its own axial frame avoids
 // skewed horizontal branch cross-sections and preserves consistent winding.
@@ -161,10 +173,39 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
   p.decision.accepted=true;p.decision.reason='ACCEPTED';
   manifest.push({id:p.id,kind:'GRASS',x:p.x,y:sample(p.x,p.z).y,z:p.z,grassVertexStart,grassVertexCount:tuft.geometry.vertices.length,bladeCount,pocket,canopyCoverage:p.canopy,edgeFeather:p.edge,targetDensity:p.density,rootPoints:tuft.metadata.oasisFoliage.rootPoints.map(p=>({...p,vertexIndex:p.vertexIndex+offset})),crownRadius:.8,footprintClear:true,recipe:'OASIS_COMPACT_LEAF_7_VERTICES_6_TRIANGLES_PERPENDICULAR_FAN'});
  }
+ // Connected woodland-A coverage pass; authored density, no hydrology claim.
+ const coverageSeed='WOODLAND_A_CONNECTED_COVER_20261007';
+ const coverageHash=(id,channel)=>{let h=2166136261;for(const c of `${coverageSeed}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return(h>>>0)/4294967296;};
+ const coverageInside=(x,z)=>ellipse(x,z)<=1.25&&reservationClear(x,z,0)&&walkingDistance(x,z)>1.5;
+ const coverageEligible=(x,z)=>coverageInside(x,z)&&groundReason(x,z)===null;
+ const oldGrass=manifest.filter(p=>p.kind==='GRASS');
+ const coverageCells=[];
+ for(let iz=0;iz<=51;iz++)for(let ix=0;ix<=55;ix++){
+  const id=`CONNECTED_COVER_${ix}_${iz}`,angle=coverageHash(id,'jitter-angle')*Math.PI*2,r=Math.sqrt(coverageHash(id,'jitter-radius'))*.48;
+  coverageCells.push({id,ix,iz,x:-181+ix*1.9+(iz%2)*.95+Math.cos(angle)*r,z:-267+iz*1.9*Math.sqrt(3)/2+Math.sin(angle)*r});
+ }
+ if(reverseGenerationOrder||grassCellOrder==='REVERSE')coverageCells.reverse();
+ if(grassCellOrder==='CHUNKED')coverageCells.sort((a,b)=>(a.ix%3)-(b.ix%3)||b.iz-a.iz);
+ coverageCells.sort((a,b)=>a.id.localeCompare(b.id));
+ const coverageDecisions=[];
+ for(const p of coverageCells){
+  const radial=ellipse(p.x,p.z),canopy=allTrees.reduce((n,t)=>Math.max(n,1-smooth(.48,1.08,Math.hypot(p.x-t.x,p.z-t.z)/t.crownRadius)),0),edge=smooth(0,4,(1.25-radial)*32),density=(.42+.48*(1-canopy))*edge,selection=coverageHash(`FIELD_${Math.floor((p.x+181)/6)}_${Math.floor((p.z+267)/6)}`,'density');
+  const reason=!coverageInside(p.x,p.z)?'OUTSIDE_OR_RESERVED':walkingDistance(p.x,p.z)<=2.3?'WALKING_CAPSULE_MARGIN':!reservationClear(p.x,p.z,.8)?'FOOTPRINT_EXCLUDED':groundReason(p.x,p.z)??(oldGrass.some(q=>Math.hypot(p.x-q.x,p.z-q.z)<.65)?'EXISTING_TUFT_CLEARANCE':selection>density?'DENSITY_REJECTED':null);
+  const decision={...p,canopy,edge,density,selection,accepted:false,reason};coverageDecisions.push(decision);if(reason)continue;
+  const pocket=coverageHash(p.id,'palette')<.25+.5*canopy?'OLIVE':coverageHash(p.id,'palette')<.65+.25*canopy?'GOLD':'BROWN';
+  let tuft;try{tuft=buildHEarthWoodlandGrassTuft({...p,bladeCount:4,pocket,sample,eligible:coverageEligible,inside:coverageInside});}catch(e){if(['GRASS_TRIAL_INSUFFICIENT_ELIGIBLE_ROOTS','WOODLAND_FAN_ROOT_INVALID','WOODLAND_FAN_DOMAIN_INVALID'].some(code=>String(e.message).startsWith(code))){decision.reason='INSUFFICIENT_ELIGIBLE_ROOT_COLUMNS';continue;}throw e;}
+  const offset=grass.vertices.length;
+  grass.vertices.push(...tuft.geometry.vertices);grass.indices.push(...tuft.geometry.indices.map(i=>i+offset));grass.colors.push(...tuft.metadata.oasisFoliage.vertexColorsSrgb.map(c=>[...c.map(v=>Math.round(v*255)),255]));
+  decision.accepted=true;decision.reason='ACCEPTED';
+  manifest.push({id:p.id,kind:'GRASS',x:p.x,y:sample(p.x,p.z).y,z:p.z,grassVertexStart:offset,grassVertexCount:28,bladeCount:4,pocket,canopyCoverage:canopy,edgeFeather:edge,targetDensity:density,rootPoints:tuft.metadata.oasisFoliage.rootPoints.map(r=>({...r,vertexIndex:r.vertexIndex+offset})),crownRadius:.8,footprintClear:true,recipe:'OASIS_COMPACT_LEAF_7_VERTICES_6_TRIANGLES_PERPENDICULAR_FAN',habitatPatch:'WOODLAND_A_CONNECTED_COVER'});
+ }
+ const addedTuftCount=coverageDecisions.filter(p=>p.accepted).length;
+ if(oldGrass.length+addedTuftCount>1500)throw new Error(`CONNECTED_COVER_TUFT_BUDGET_EXCEEDED:${oldGrass.length+addedTuftCount}`);
+ const connectedCover={schema:'H_EARTH_CONNECTED_WOODLAND_COVER_v1',seed:coverageSeed,extent:{center:[-141,-226],radii:[33,32],maximumEllipseRadius:1.25},cellMeters:1.9,jitterRadius:.48,densityFieldMeters:6,edgeFeatherMeters:4,baselineTuftCount:oldGrass.length,addedTuftCount,decisions:coverageDecisions,moistureClaim:false,canonicalPopulationChanged:false};
  grassDecisions.sort((a,b)=>a.id.localeCompare(b.id));
  const grassTrial={schema:'H_EARTH_WOODLAND_MEADOW_TRIAL_v1',seed:trialSeed,extent:{center:[-141,-226],radii:[33,32]},walkingCapsule:{a:[-145,-194],b:[-145,-230],radius:1.5,centerMargin:.8},cellMeters:3,rowStep:3*Math.sqrt(3)/2,oddRowOffset:1.5,childJitterRadius:.90,centerJitterChannels:['center-jitter-angle','center-jitter-radius'],distributionBaseline:'7804b359aa032caa00f8dd526f8e4186df97fac9',densityFieldMeters:9,selectedCenterCount:grassCandidates.length,decisions:grassDecisions,fieldProvenance:{ground:'FINAL_PROJECTED_FLOAT32_NEAR_TRIANGLES',soil:'QUALIFIED_SURFACE_CLASS_PROXY',canopy:'AUTHORED_ACCEPTED_A_CROWN_INFLUENCE_NOT_MEASURED_SHADE',edge:'AUTHORED_8M_EQUIVALENT_FEATHER',palette:'AUTHORED_CANOPY_COLOR_PROXY_NO_MOISTURE_CLAIM'}};
  const primitives=[];for(const [name,m,kind,rgba] of [['BARK',bark,'TREE',[81,64,44,255]],['CANOPY',foliage,'TREE',[66,92,38,255]],['ROCK',stone,'ROCK',[121,113,91,255]],['GRASS',grass,'GRASS',[120,117,61,255]]]){if(!m.indices.length)continue;const id=`H_EARTH_LANDSCAPE_P2_${name}`,r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,vertices:m.vertices,indices:m.indices,normalMode:E.normalMode.FACE_AND_VERTEX,expectedClosure:E.expectedClosure.OPEN_ALLOWED,semanticRole:`LANDSCAPE_SECTOR_${kind}`,metadata:{landscapeSectorKind:kind,landscapeSectorId:'WESTERN_P2',seed:SEED},source:{sourceType:'DETERMINISTIC_BOUNDED_LANDSCAPE_SOUTH'}});if(r.valid!==true){issues.push(`SOUTH_CONSTRUCTION_FAILED:${name}:${JSON.stringify(r.issues)}`);continue;}primitives.push({...r.primitiveRecord,renderMaterial:{rgba,vertexRgba:m.colors,transparencyClass:'OPAQUE'}});}
- const triangles=primitives.reduce((s,p)=>s+p.geometry.indices.length/3,0);if(accepted.length>128||triangles>48000)issues.push('SECTOR_BUDGET_EXCEEDED');if(!accepted.length)issues.push('NO_ACCEPTED_TREES');
+ const triangles=primitives.reduce((s,p)=>s+p.geometry.indices.length/3,0);if(accepted.length>128||triangles>64000)issues.push('SECTOR_BUDGET_EXCEEDED');if(!accepted.length)issues.push('NO_ACCEPTED_TREES');
  manifest.sort((a,b)=>a.id.localeCompare(b.id));rejections.sort((a,b)=>a.id.localeCompare(b.id));
- return{eligible:issues.length===0,primitives,manifest,diagnostics:{grassTrial,seed:SEED,bounds,treeCount:accepted.length,grassTuftCount:manifest.filter(p=>p.kind==='GRASS').length,grassBladeCount:manifest.filter(p=>p.kind==='GRASS').reduce((n,p)=>n+p.bladeCount,0),grassTriangleCount:grass.indices.length/3,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:true,canonicalVegetationPopulationModified:false,replacedClusterAGrass:true,reservationPolicySha256:policy.reservationSha256},issues};
+ return{eligible:issues.length===0,primitives,manifest,diagnostics:{grassTrial,connectedCover,seed:SEED,bounds,treeCount:accepted.length,grassTuftCount:manifest.filter(p=>p.kind==='GRASS').length,grassBladeCount:manifest.filter(p=>p.kind==='GRASS').reduce((n,p)=>n+p.bladeCount,0),grassTriangleCount:grass.indices.length/3,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:true,canonicalVegetationPopulationModified:false,replacedClusterAGrass:true,reservationPolicySha256:policy.reservationSha256},issues};
 }

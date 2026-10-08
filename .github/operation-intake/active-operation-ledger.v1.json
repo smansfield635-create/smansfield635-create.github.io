@@ -11503,6 +11503,50 @@
       "scopeHash": "b8f407e3498f703352e151108b4fcead1b369b8bb391b392a8b1a736fa09a38d",
       "state": "ADMITTED_LOCKED"
     },
+    "b903c45c7e7e4a908c7f5a3fd85a0de3755afb5d7a5841612ead7291500abaad": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f0572cdfa8621bfd797005c9fd7566e5a87275a4",
+          "lockGeneration": 2629,
+          "lockScope": "H_EARTH_REFERENCE_WOODLAND_CLEARING",
+          "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+          "procedureLocatorDigest": "52185bda59790de77d1d6fe22d65247ced23ea4074d86fe702b05eb17f72f739",
+          "requestDigest": "bd886f68f5c428173de21ee59c8020a6b588bcee144a42f91a99853c38443e9d",
+          "scopeHash": "b903c45c7e7e4a908c7f5a3fd85a0de3755afb5d7a5841612ead7291500abaad"
+        },
+        "bindingDigest": "94afda4ebb9dd51ae1b9209ea3140968e1c2e35f6a2a31a67a27c007bdf5b7bc",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "050a0c4cecbeb5b6dad43be6e9aa24a6e39011bfb5ec59ef01827d21d275c9d6",
+          "commentId": 6066595666,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6051,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 37825778607,
+          "workflowSha": "f0572cdfa8621bfd797005c9fd7566e5a87275a4"
+        },
+        "lineageAnchorCommitSha": "765e1ced8c3f8c5847abf639457abf71658f261f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f0572cdfa8621bfd797005c9fd7566e5a87275a4",
+      "lockGeneration": 2629,
+      "lockScope": "H_EARTH_REFERENCE_WOODLAND_CLEARING",
+      "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+      "procedureLocatorDigest": "52185bda59790de77d1d6fe22d65247ced23ea4074d86fe702b05eb17f72f739",
+      "released": false,
+      "requestDigest": "bd886f68f5c428173de21ee59c8020a6b588bcee144a42f91a99853c38443e9d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b903c45c7e7e4a908c7f5a3fd85a0de3755afb5d7a5841612ead7291500abaad",
+      "state": "ADMITTED_LOCKED"
+    },
     "b97df7525443f153ed5ce9410430bebb6d692bb9040df2810e892126f3a10198": {
       "governingHead": "7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602",
       "lockGeneration": 373,
@@ -15953,7 +15997,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2628,
+  "lockGeneration": 2629,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

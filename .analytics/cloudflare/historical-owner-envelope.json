@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-08T17:32:09Z",
+  "generatedAt": "2026-10-08T18:41:40Z",
   "window": {
-    "start": "2026-07-10T17:32:09Z",
-    "end": "2026-10-08T17:32:09Z"
+    "start": "2026-07-10T18:41:40Z",
+    "end": "2026-10-08T18:41:40Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5052,
+    "pageLoads": 5042,
     "visits": 1311,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5052,
+        "pageLoads": 5042,
         "visits": 1311
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1051,
+        "pageLoads": 1041,
         "visits": 729
       },
       "/showroom/globe/h-earth/diagnostic/": {
@@ -202,16 +202,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -330,12 +330,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 41,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 41,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -353,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3741,
+        "pageLoads": 3731,
         "visits": 0
       },
       "www.google.com": {

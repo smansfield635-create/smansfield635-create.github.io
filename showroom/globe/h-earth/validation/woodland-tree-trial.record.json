@@ -1,7 +1,7 @@
 {
   "schema": "H_EARTH_ONE_TREE_REALISM_COMPARISON_RECORD_v1",
   "operationId": "H_EARTH_ONE_TREE_REALISM_COMPARISON_20261008",
-  "status": "AUTOMATED_GEOMETRY_PASS_REVIEW_PENDING",
+  "status": "GEOMETRY_AND_CROWN_COVERAGE_PASS_REVIEW_PENDING",
   "admission": {
     "issue": 6044,
     "sourceComment": 6064280217,
@@ -11,33 +11,37 @@
     "state": "ADMITTED_LOCKED"
   },
   "baseline": "ea294bfe896502031d142982f0c87c9b82febfec",
-  "immutableGeometryCommit": "287542083bc8eeed0784efc437e943ebae6013b1",
-  "localQualificationCommit": "680dcb2da264b172f74ee8af5d6450d297f7bcf3",
-  "identicalRepositoryTree": "d4c05e1a5ef15cbf6af1c498f21f32ef4b9bcf7c",
+  "immutableGeometryCommit": "e3135b44b93e3c23b4d77e6af8aa9fc174b3e49c",
+  "localQualificationCommit": "f3fc189d2d50d1439abe3ab1a2ebd79d7f0ccc30",
+  "identicalRepositoryTree": "4053e5e26765d7405a48fa9dc4e7c70e4e50f245",
   "targetId": "P2_TREE_A_11",
   "recipe": {
-    "leaves": 336,
+    "leaves": 684,
     "materials": "EXISTING_OPAQUE_VERTEX_RGBA",
     "texturesAdded": false,
     "shadersChanged": false,
-    "triangleCount": 1796,
+    "triangleCount": 3404,
     "seed": "WOODLAND_ONE_TREE_REALISM_20261008",
-    "scope": "ONE_TREE_ONLY"
+    "scope": "ONE_TREE_ONLY",
+    "mainCrownSectors": 6,
+    "upperInteriorLeaders": 3
   },
   "independentQualification": {
     "schema": "H_EARTH_ONE_TREE_REALISM_VERIFICATION_v1",
     "status": "PASS",
     "baseline": "ea294bfe896502031d142982f0c87c9b82febfec",
-    "candidateHead": "680dcb2da264b172f74ee8af5d6450d297f7bcf3",
+    "candidateHead": "f3fc189d2d50d1439abe3ab1a2ebd79d7f0ccc30",
     "frozenSourceSha256": {
       "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "741649dab4dcc4f796b70feb0c4a8a993cc5a359a2a1d2484c27c6e9811f2f2c",
-      "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "12ee15542da66cd32be36e11f717bcaf056737e739d36eace77ad108cc945760",
-      "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs": "467f270048c283a1118e84e45caae0e28f7c50a23f670cfe9a9dcc0402126d7b"
+      "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "e5df0f0c84168647d7c55927fbbc04eed03bd0a777ded86c781d64b0346e457a",
+      "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs": "da36512c0a4e20767cfeeced0f30f2a378b5971f78c77be0ae7e649df90bdbc4"
     },
     "workingTreeClean": true,
     "changedPaths": [
+      "h-earth-3d/experience-anchor/receipts/h-earth-woodland-tree-trial-20261008.receipt.json",
       "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
       "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
       "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs"
     ],
     "targetId": "P2_TREE_A_11",
@@ -45,22 +49,25 @@
     "grassTuftCount": 1432,
     "preservedTreeCount": 64,
     "baselineTargetTriangles": 644,
-    "targetTriangles": 1796,
-    "maximumHorizontalExtent": 3.1359100156564885,
+    "targetTriangles": 3404,
+    "admittedTargetCeiling": 6000,
+    "preservedSectorTriangles": 60400,
+    "targetCeiling": 3600,
+    "maximumHorizontalExtent": 3.1990775416090336,
     "acceptedCrownRadius": 3.5297488859854638,
-    "sectorTriangles": 62196,
+    "sectorTriangles": 63804,
     "sectorCeiling": 64000,
     "primitiveCount": 4,
-    "checkedTriangles": 1796,
+    "checkedTriangles": 3404,
     "terrainSha256": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
     "baselineSectorSha256": "b82e2b8aa0827af8a3ea75ed736f9e5d3adc35fd012bf59ed5a1b0ef539c64df",
-    "candidateSectorSha256": "c140e45a071e75846998997caf4f3ff9e830fef8a713f7338166e208b5903dcc",
+    "candidateSectorSha256": "3e82f83f343c71fea7a808ba17fee4eb246beb05131a769d328dbddfa13ab0b6",
     "generationOrder": "FORWARD_EQUALS_REVERSED_AND_CHUNKED",
     "timingsMs": {
-      "importAndTerrain": 8891.491511,
-      "baselineSector": 23142.334924000003,
-      "candidateSector": 17219.623233,
-      "reverseSector": 17087.11325300001
+      "importAndTerrain": 9226.119046,
+      "baselineSector": 17963.927812,
+      "candidateSector": 18040.320043,
+      "reverseSector": 19765.309652000004
     },
     "physicalDeviceAcceptance": "NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION"
   },
@@ -74,7 +81,8 @@
     "type": "EXACT_GENERATED_MESH_SOFTWARE_RENDER",
     "actualProductScreenshot": false,
     "disposition": "PREVIEW_REQUIRED_BEFORE_REALISM_ACCEPTANCE",
-    "comparisonSha256": "1df209a01417ed67be347bdb5bab328ec7c193147538ea250c66ced9ef9f2dc6"
+    "comparisonSha256": "e2b1b146c220b1ae6cdc5fe2b57c669b58c8436fc012cb381f9e6cdef5f89b27",
+    "status": "OWNER_SPARSE_CROWN_DEFECT_REPAIRED_GEOMETRY_COMPARISON"
   },
   "browserQualification": {
     "status": "NOT_ESTABLISHED",
@@ -120,5 +128,216 @@
     "authorityCreated": false,
     "dependencyEdgeCreated": false,
     "classificationReason": "EXECUTION_SURFACE_FAILURE_DOES_NOT_INVALIDATE_CANDIDATE"
+  },
+  "previousSparseCandidate": {
+    "head": "eac3c453b4d63b5d0faaf4229f104fdbeaf803f3",
+    "codeHead": "287542083bc8eeed0784efc437e943ebae6013b1",
+    "qualification": {
+      "schema": "H_EARTH_ONE_TREE_REALISM_VERIFICATION_v1",
+      "status": "PASS",
+      "baseline": "ea294bfe896502031d142982f0c87c9b82febfec",
+      "candidateHead": "680dcb2da264b172f74ee8af5d6450d297f7bcf3",
+      "frozenSourceSha256": {
+        "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "741649dab4dcc4f796b70feb0c4a8a993cc5a359a2a1d2484c27c6e9811f2f2c",
+        "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "12ee15542da66cd32be36e11f717bcaf056737e739d36eace77ad108cc945760",
+        "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs": "467f270048c283a1118e84e45caae0e28f7c50a23f670cfe9a9dcc0402126d7b"
+      },
+      "workingTreeClean": true,
+      "changedPaths": [
+        "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+        "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+        "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs"
+      ],
+      "targetId": "P2_TREE_A_11",
+      "treeCount": 65,
+      "grassTuftCount": 1432,
+      "preservedTreeCount": 64,
+      "baselineTargetTriangles": 644,
+      "targetTriangles": 1796,
+      "maximumHorizontalExtent": 3.1359100156564885,
+      "acceptedCrownRadius": 3.5297488859854638,
+      "sectorTriangles": 62196,
+      "sectorCeiling": 64000,
+      "primitiveCount": 4,
+      "checkedTriangles": 1796,
+      "terrainSha256": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
+      "baselineSectorSha256": "b82e2b8aa0827af8a3ea75ed736f9e5d3adc35fd012bf59ed5a1b0ef539c64df",
+      "candidateSectorSha256": "c140e45a071e75846998997caf4f3ff9e830fef8a713f7338166e208b5903dcc",
+      "generationOrder": "FORWARD_EQUALS_REVERSED_AND_CHUNKED",
+      "timingsMs": {
+        "importAndTerrain": 8891.491511,
+        "baselineSector": 23142.334924000003,
+        "candidateSector": 17219.623233,
+        "reverseSector": 17087.11325300001
+      },
+      "physicalDeviceAcceptance": "NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION"
+    },
+    "supersededReason": "Owner requested fuller crown; first-six-crown-parts loop omitted two main sectors"
+  },
+  "ownerRepair": {
+    "instruction": "Very sparse; get that fixed",
+    "scope": "Same one-tree candidate, retained radius/root/ecology and existing opaque renderer",
+    "physicalAcceptance": false,
+    "ownerKeepDisposition": null
+  },
+  "crownCoverageComparison": {
+    "schema": "TREE_CROWN_ORTHOGRAPHIC_OCCUPANCY_COMPARISON_v1",
+    "measurement": "Projected canopy triangle union on fixed512x448 raster, same8x7m crown crop; eight horizontal azimuths; no live lighting or realism inference",
+    "sparseGeometryCommit": "287542083bc8eeed0784efc437e943ebae6013b1",
+    "criteria": {
+      "minimumViewIncreasePercent": 15,
+      "medianIncreasePercent": 30,
+      "interiorSkyGapFractionMinimum": 0.05
+    },
+    "views": [
+      {
+        "azimuthDegrees": 0,
+        "sparse": {
+          "occupiedPixels": 30228,
+          "interiorOpenFraction": 0.4718985307220601,
+          "upperBandPixels": 18,
+          "middleBandPixels": 21694,
+          "lowerBandPixels": 8516
+        },
+        "fuller": {
+          "occupiedPixels": 58790,
+          "interiorOpenFraction": 0.3945015553861684,
+          "upperBandPixels": 13885,
+          "middleBandPixels": 35805,
+          "lowerBandPixels": 9100
+        },
+        "areaIncreasePercent": 94.48855365885933
+      },
+      {
+        "azimuthDegrees": 45,
+        "sparse": {
+          "occupiedPixels": 26524,
+          "interiorOpenFraction": 0.32116807002277786,
+          "upperBandPixels": 70,
+          "middleBandPixels": 19160,
+          "lowerBandPixels": 7294
+        },
+        "fuller": {
+          "occupiedPixels": 58169,
+          "interiorOpenFraction": 0.3460777480495537,
+          "upperBandPixels": 13378,
+          "middleBandPixels": 36954,
+          "lowerBandPixels": 7837
+        },
+        "areaIncreasePercent": 119.30704267832905
+      },
+      {
+        "azimuthDegrees": 90,
+        "sparse": {
+          "occupiedPixels": 34305,
+          "interiorOpenFraction": 0.3553388206111174,
+          "upperBandPixels": 92,
+          "middleBandPixels": 24732,
+          "lowerBandPixels": 9481
+        },
+        "fuller": {
+          "occupiedPixels": 67391,
+          "interiorOpenFraction": 0.2733732276672597,
+          "upperBandPixels": 17608,
+          "middleBandPixels": 41140,
+          "lowerBandPixels": 8643
+        },
+        "areaIncreasePercent": 96.4465821308847
+      },
+      {
+        "azimuthDegrees": 135,
+        "sparse": {
+          "occupiedPixels": 34638,
+          "interiorOpenFraction": 0.45912774628753455,
+          "upperBandPixels": 66,
+          "middleBandPixels": 26531,
+          "lowerBandPixels": 8041
+        },
+        "fuller": {
+          "occupiedPixels": 66033,
+          "interiorOpenFraction": 0.3308099233856257,
+          "upperBandPixels": 16804,
+          "middleBandPixels": 38612,
+          "lowerBandPixels": 10617
+        },
+        "areaIncreasePercent": 90.6374501992032
+      },
+      {
+        "azimuthDegrees": 180,
+        "sparse": {
+          "occupiedPixels": 30228,
+          "interiorOpenFraction": 0.4718985307220601,
+          "upperBandPixels": 18,
+          "middleBandPixels": 21694,
+          "lowerBandPixels": 8516
+        },
+        "fuller": {
+          "occupiedPixels": 58787,
+          "interiorOpenFraction": 0.39453245709812323,
+          "upperBandPixels": 13885,
+          "middleBandPixels": 35802,
+          "lowerBandPixels": 9100
+        },
+        "areaIncreasePercent": 94.47862908561599
+      },
+      {
+        "azimuthDegrees": 225,
+        "sparse": {
+          "occupiedPixels": 26524,
+          "interiorOpenFraction": 0.32116807002277786,
+          "upperBandPixels": 70,
+          "middleBandPixels": 19161,
+          "lowerBandPixels": 7293
+        },
+        "fuller": {
+          "occupiedPixels": 58170,
+          "interiorOpenFraction": 0.34606650628414687,
+          "upperBandPixels": 13378,
+          "middleBandPixels": 36955,
+          "lowerBandPixels": 7837
+        },
+        "areaIncreasePercent": 119.31081284874074
+      },
+      {
+        "azimuthDegrees": 270,
+        "sparse": {
+          "occupiedPixels": 34305,
+          "interiorOpenFraction": 0.3553388206111174,
+          "upperBandPixels": 92,
+          "middleBandPixels": 24732,
+          "lowerBandPixels": 9481
+        },
+        "fuller": {
+          "occupiedPixels": 67393,
+          "interiorOpenFraction": 0.27335166316243464,
+          "upperBandPixels": 17608,
+          "middleBandPixels": 41143,
+          "lowerBandPixels": 8642
+        },
+        "areaIncreasePercent": 96.45241218481272
+      },
+      {
+        "azimuthDegrees": 315,
+        "sparse": {
+          "occupiedPixels": 34639,
+          "interiorOpenFraction": 0.4591121312908918,
+          "upperBandPixels": 66,
+          "middleBandPixels": 26532,
+          "lowerBandPixels": 8041
+        },
+        "fuller": {
+          "occupiedPixels": 66032,
+          "interiorOpenFraction": 0.3308200575621225,
+          "upperBandPixels": 16803,
+          "middleBandPixels": 38612,
+          "lowerBandPixels": 10617
+        },
+        "areaIncreasePercent": 90.62905973036173
+      }
+    ],
+    "minimumViewIncreasePercent": 90.62905973036173,
+    "medianIncreasePercent": 95.46756789487202,
+    "allViewsHaveSkyGaps": true,
+    "status": "PASS"
   }
 }

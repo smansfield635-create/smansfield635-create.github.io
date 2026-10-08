@@ -18,17 +18,20 @@
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "12ee15542da66cd32be36e11f717bcaf056737e739d36eace77ad108cc945760"
+      "sha256": "e5df0f0c84168647d7c55927fbbc04eed03bd0a777ded86c781d64b0346e457a"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
-      "sha256": "467f270048c283a1118e84e45caae0e28f7c50a23f670cfe9a9dcc0402126d7b"
+      "sha256": "da36512c0a4e20767cfeeced0f30f2a378b5971f78c77be0ae7e649df90bdbc4"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
-      "sha256": "a88a03fd166dfb115a1c98bdafa626c3182b5a7f0ed452f45fc2620f2ad1201e"
+      "sha256": "0967b3fe850b7ef6d0f0b7e19cd05a5d4c22c48ed0f152d923a10c06a13e8b28"
     }
   ],
   "automatedContinuitySupport": "Only one tree mesh changed; all other generated geometry, ecology, terrain and source navigation/renderer unchanged. This does not substitute physical/perceptual acceptance.",
-  "releaseEligible": false
+  "releaseEligible": false,
+  "candidateGeometryCommit": "e3135b44b93e3c23b4d77e6af8aa9fc174b3e49c",
+  "priorSparseCandidate": "eac3c453b4d63b5d0faaf4229f104fdbeaf803f3",
+  "ownerDirectedRepair": "Sparse crown repaired; software geometry review does not establish exact-candidate in-world or physical-device acceptance"
 }

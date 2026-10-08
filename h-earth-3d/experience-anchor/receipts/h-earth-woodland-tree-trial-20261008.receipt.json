@@ -5,7 +5,9 @@
   "operationId": "H_EARTH_ONE_TREE_REALISM_COMPARISON_20261008",
   "reviewedAgainstAnchor": false,
   "disposition": "PENDING_EXACT_CANDIDATE_PHYSICAL_REVIEW",
-  "visualEvidence": [],
+  "visualEvidence": [
+    "libfile_686de57ac14c8191bfeda79177f6382a: H-Earth-branch-hierarchy-in-world.png; actual landscape renderer, three candidate views and prior walking comparison; physical acceptance pending"
+  ],
   "interactionEvidence": [],
   "continuityEvidence": [
     "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
@@ -14,11 +16,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
-      "sha256": "741649dab4dcc4f796b70feb0c4a8a993cc5a359a2a1d2484c27c6e9811f2f2c"
+      "sha256": "08e2d219d8ffffccb6dc7bc348d01dc405ddc7125c93bbc46c20b565d1775e2a"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "e5df0f0c84168647d7c55927fbbc04eed03bd0a777ded86c781d64b0346e457a"
+      "sha256": "6b0f1e973f7ae10c3d972d28b6072b2b46f8334c7bdc2fbf9ade0bac955ad27c"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
@@ -26,12 +28,12 @@
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
-      "sha256": "0967b3fe850b7ef6d0f0b7e19cd05a5d4c22c48ed0f152d923a10c06a13e8b28"
+      "sha256": "2a72fa85fd79cda49b7d7508faed7ad15189fcf41ee15c1ca813bc8c342f8184"
     }
   ],
-  "automatedContinuitySupport": "Only one tree mesh changed; all other generated geometry, ecology, terrain and source navigation/renderer unchanged. This does not substitute physical/perceptual acceptance.",
+  "automatedContinuitySupport": "One tree geometry changed. Independent full verification preserves surrounding geometry, ecology, terrain and navigation/renderer source. Actual renderer captures support owner review but do not substitute physical-device acceptance.",
   "releaseEligible": false,
-  "candidateGeometryCommit": "e3135b44b93e3c23b4d77e6af8aa9fc174b3e49c",
+  "candidateGeometryCommit": "a2e7649121a19e255eec6521cc5651f97af96803",
   "priorSparseCandidate": "eac3c453b4d63b5d0faaf4229f104fdbeaf803f3",
-  "ownerDirectedRepair": "Sparse crown repaired; software geometry review does not establish exact-candidate in-world or physical-device acceptance"
+  "ownerDirectedRepair": "Trunk hierarchy rebuilt; real landscape captures available; no owner perceptual or physical-device acceptance inferred"
 }

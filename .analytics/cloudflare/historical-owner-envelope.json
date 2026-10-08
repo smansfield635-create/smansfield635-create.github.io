@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-08T13:39:03Z",
+  "generatedAt": "2026-10-08T14:37:01Z",
   "window": {
-    "start": "2026-07-10T13:39:03Z",
-    "end": "2026-10-08T13:39:03Z"
+    "start": "2026-07-10T14:37:01Z",
+    "end": "2026-10-08T14:37:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5062,
+    "pageLoads": 5052,
     "visits": 1311,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5062,
+        "pageLoads": 5052,
         "visits": 1311
       }
     },
     "byPath": {
-      "/nine-summits-of-love/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1051,
         "visits": 729
@@ -254,6 +250,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -267,10 +267,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -357,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3751,
+        "pageLoads": 3741,
         "visits": 0
       },
       "www.google.com": {

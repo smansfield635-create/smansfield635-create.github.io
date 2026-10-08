@@ -13,17 +13,30 @@ const unit=a=>{const n=Math.hypot(...a);return a.map(q=>q/n);};
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const vertex=(m,p,c)=>{m.vertices.push({x:p[0],y:p[1],z:p[2]});m.colors.push(c.map((q,i)=>i===3?255:Math.max(0,Math.min(255,Math.round(q)))));return m.vertices.length-1;};
 const face=(m,a,b,c)=>m.indices.push(a,b,c);
-// Four-sided tapered, capped limbs: twelve triangles each. Tangent-relative
-// cross sections keep narrow limbs narrow even when nearly horizontal.
-function limb(m,a,b,r0,r1,color){
- const d=unit(sub(b,a)),u=unit(cross(d,Math.abs(d[1])<.9?[0,1,0]:[1,0,0])),w=cross(d,u),start=m.vertices.length;
- for(let k=0;k<2;k++)for(let j=0;j<4;j++){
-  const angle=j*Math.PI/2,r=k?r1:r0,p=add(k?b:a,add(scale(u,r*Math.cos(angle)),scale(w,r*Math.sin(angle))));
-  vertex(m,p,color.map((q,i)=>i===3?q:q*(.80+.20*Math.cos(angle-.6))));
+// Each curved limb shares its ring vertices between successive segments.
+// Cross sections follow the local tangent; longitudinal ridges and color
+// variation provide opaque bark relief without a texture or another batch.
+function sweep(m,points,radii,sides,color,key,firstRing=null){
+ const rings=[];
+ for(let k=0;k<points.length;k++){
+  if(k===0&&firstRing){rings.push(firstRing);continue;}
+  const tangent=unit(sub(points[Math.min(k+1,points.length-1)],points[Math.max(0,k-1)]));
+  const u=unit(cross(tangent,Math.abs(tangent[1])<.9?[0,1,0]:[0,0,1])),w=cross(tangent,u),ring=[];
+  for(let j=0;j<sides;j++){
+   const angle=j*Math.PI*2/sides,relief=1+.095*Math.sin(j*2.7+hash(key,'ridge')*6.28)+.035*Math.sin(k*1.6+j);
+   const p=add(points[k],add(scale(u,radii[k]*relief*Math.cos(angle)),scale(w,radii[k]*relief*Math.sin(angle))));
+   const tint=.80+.15*Math.cos(angle-.6)+.09*hash(key,`bark-${k}-${j}`);
+   ring.push(vertex(m,p,color.map((q,i)=>i===3?q:q*tint)));
+  }
+  rings.push(ring);
  }
- for(let j=0;j<4;j++){const n=(j+1)%4;face(m,start+j,start+n,start+j+4);face(m,start+n,start+n+4,start+j+4);}
- face(m,start,start+2,start+1);face(m,start,start+3,start+2);face(m,start+4,start+5,start+6);face(m,start+4,start+6,start+7);
+ for(let k=0;k<rings.length-1;k++)for(let j=0;j<sides;j++){
+  const n=(j+1)%sides;face(m,rings[k][j],rings[k][n],rings[k+1][j]);face(m,rings[k][n],rings[k+1][n],rings[k+1][j]);
+ }
+ if(!firstRing)for(let j=1;j<sides-1;j++)face(m,rings[0][0],rings[0][j+1],rings[0][j]);
+ const last=rings.at(-1);for(let j=1;j<sides-1;j++)face(m,last[0],last[j],last[j+1]);
 }
+const onPath=(path,t)=>{const q=t*(path.length-1),i=Math.min(path.length-2,Math.floor(q));return mix(path[i],path[i+1],q-i);};
 // A closed, shallow folded blade. Its two broad faces and two narrow fold
 // faces stay opaque from either side, with no coplanar opposite-face normals.
 function leaf(m,root,direction,width,length,fold,color){
@@ -32,44 +45,63 @@ function leaf(m,root,direction,width,length,fold,color){
  for(const p of [root,add(root,scale(d,length)),add(middle,add(scale(side,width),scale(normal,fold))),add(middle,add(scale(side,-width),scale(normal,fold)))])vertex(m,p,color);
  face(m,start,start+1,start+2);face(m,start,start+3,start+1);face(m,start,start+2,start+3);face(m,start+1,start+3,start+2);
 }
-export function appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ,scaffold}){
+export function appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ}){
  if(p.id!==H_EARTH_WOODLAND_TREE_TRIAL_ID)throw new Error('WOODLAND_TREE_TRIAL_ID_OUT_OF_SCOPE');
  const before=bark.indices.length+foliage.indices.length,{id,x,z,anchor}=p,y=anchor.y;
- const fork=[x+leanX*.7,y+height*.30,z+leanZ*.7];
- // Retain the accepted floor-planning envelope while filling an irregular
- // rounded crown. Six lateral limbs support three higher interior leaders;
- // each limb carries four three-dimensional leafy twigs rather than a fan.
- const mainCrownIndices=[0,2,4,5,6,7],hubs=[];
- for(let j=0;j<9;j++){
-  const upper=j>=6,part=scaffold.crownParts[mainCrownIndices[j%6]];
-  const angle=Math.atan2(part.z-z,part.x-x)+(upper?.41:0);
-  const center=upper?[x+Math.cos(angle)*(.75+.38*hash(id,`leader-radius-${j}`)),y+height*(.84+.045*hash(id,`leader-height-${j}`)),z+Math.sin(angle)*(.75+.38*hash(id,`leader-radius-${j}`))]:[part.x,part.y,part.z];
-  const radial=[Math.cos(angle),0,Math.sin(angle)],base=upper?hubs[j-6]:fork;
-  const elbow=mix(base,center,upper?.53:.49);
-  elbow[0]+=radial[2]*(hash(id,`elbow-${j}`)-.5)*.32;elbow[2]-=radial[0]*(hash(id,`elbow-${j}`)-.5)*.32;
-  const hub=mix(elbow,center,.86);hubs.push(hub);
-  limb(bark,base,elbow,upper?.048:.19-j*.014,upper?.029:.095,[94,76,53,255]);
-  limb(bark,elbow,hub,upper?.029:.095,.025,[99,81,56,255]);
-  for(let k=0;k<4;k++){
-   const heading=angle+k*Math.PI*.5+(hash(id,`twig-heading-${j}-${k}`)-.5)*.75;
-   const rise=(k%2? .42:-.48)+(hash(id,`twig-rise-${j}-${k}`)-.5)*.72;
-   const reach=(upper?1.02:1.24)+.37*hash(id,`twig-reach-${j}-${k}`);
-   const twigDirection=unit([Math.cos(heading),rise,Math.sin(heading)]),end=add(hub,scale(twigDirection,reach));
-   // Reserve space for the longest blade inside the unchanged crown radius.
-   const radialDistance=Math.hypot(end[0]-x,end[2]-z),terminalLimit=p.radius-.92;
-   if(radialDistance>terminalLimit){end[0]=x+(end[0]-x)*terminalLimit/radialDistance;end[2]=z+(end[2]-z)*terminalLimit/radialDistance;}
-   limb(bark,hub,end,.025,.006,[109,89,59,255]);
-   const twig=unit(sub(end,hub)),across=unit(cross(twig,Math.abs(twig[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(twig,across));
-   for(let n=0;n<19;n++){
-    const channel=`leaf-${j}-${k}-${n}`,t=.09+.86*(n+.15+.70*hash(id,`${channel}-position`))/19,root=mix(hub,end,t);
-    const roll=hash(id,`${channel}-roll`)*Math.PI*2,spread=add(scale(across,Math.cos(roll)),scale(around,Math.sin(roll)));
-    const direction=add(scale(twig,.17+.38*hash(id,`${channel}-forward`)),add(scale(spread,.85+.22*hash(id,`${channel}-spread`)),[0,-.19+.38*hash(id,`${channel}-lift`),0]));
-    const tint=hash(id,`${channel}-tint`),length=.58+.32*hash(id,`${channel}-length`),width=.20+.09*hash(id,`${channel}-width`);
-    leaf(foliage,root,direction,width,length,.035,[54+tint*29,83+tint*32,28+tint*18,255]);
+ const first=[x+leanX*.7,y+height*.30,z+leanZ*.7],trunk=[first];
+ for(let k=1;k<=6;k++){
+  const t=k/6;trunk.push([first[0]+leanX*t*.4+.22*Math.sin(t*4.7),y+height*(.30+.60*t),first[2]+leanZ*t*.4+.18*Math.sin(t*5.1)]);
+ }
+ // Continue the accepted six-vertex top ring, preserving the caller's basal
+ // geometry. The central leader survives above every staggered lateral fork.
+ const retainedTop=Array.from({length:6},(_,j)=>bark.vertices.length-6+j);
+ sweep(bark,trunk,[.19,.18,.156,.129,.103,.067,.018],6,[99,78,52,255],`${id}:trunk`,retainedTop);
+ const forks=[],paths=[],leafPaths=[];
+ const boundCenter=p.radius-1.05;
+ const limit=point=>{
+  const d=Math.hypot(point[0]-x,point[2]-z);
+  if(d>boundCenter){point[0]=x+(point[0]-x)*boundCenter/d;point[2]=z+(point[2]-z)*boundCenter/d;}
+  return point;
+ };
+ for(let j=0;j<7;j++){
+  const level=.08+j*.124,base=onPath(trunk,level),heading=j*2.399+hash(id,'branch-heading')*6.28;
+  const radial=[Math.cos(heading),0,Math.sin(heading)],side=[-radial[2],0,radial[0]];
+  const reach=boundCenter*(j<4?.85:.60)*( .87+.13*hash(id,`reach-${j}`));
+  const end=limit(add(base,add(scale(radial,reach),[0,height*(.16+.045*hash(id,`rise-${j}`)),0])));
+  const elbow=add(mix(base,end,.34),scale(side,.24*(j%2?1:-1)));
+  const shoulder=add(mix(base,end,.72),add(scale(side,.14),[0,.20,0]));
+  const major=[base,elbow,shoulder,end];forks.push({heightFraction:(base[1]-y)/height,position:base});paths.push(major);
+  const r=.14-j*.011;sweep(bark,major,[r,r*.72,r*.37,.022],6,[99,79,52,255],`${id}:major-${j}`);
+  // Secondary forks originate part-way along the limb, rather than from
+  // a terminal hub. Their paired twigs diverge at different positions too.
+  for(let k=0;k<2;k++){
+   const attach=onPath(major,.34+k*.30),angle=heading+(k?-.85:.92),direction=[Math.cos(angle),.30,Math.sin(angle)];
+   const secondaryEnd=limit(add(attach,scale(direction,.92+.18*hash(id,`secondary-${j}-${k}`))));
+   const secondary=[attach,add(mix(attach,secondaryEnd,.52),[0,.17,0]),secondaryEnd];
+   sweep(bark,secondary,[r*(k?.32:.52),.026,.010],4,[106,84,54,255],`${id}:secondary-${j}-${k}`);paths.push(secondary);
+   leafPaths.push({path:secondary,count:10,key:`secondary-${j}-${k}`});
+   for(let n=0;n<2;n++){
+    const root=onPath(secondary,.40+n*.39),a=angle+(n?-.73:.80),rise=n?.32:-.13;
+    const tip=limit(add(root,[Math.cos(a)*.64,rise,Math.sin(a)*.64]));
+    const twig=[root,tip];sweep(bark,twig,[.018,.004],4,[112,89,57,255],`${id}:twig-${j}-${k}-${n}`);paths.push(twig);
+    leafPaths.push({path:twig,count:17,key:`twig-${j}-${k}-${n}`});
    }
   }
  }
- const triangles=(bark.indices.length+foliage.indices.length-before)/3+20; // retained basal branch
+ let leafCount=0;
+ for(const {path,count,key} of leafPaths){
+  for(let n=0;n<count;n++){
+   const channel=`${key}:leaf-${n}`,t=.07+.90*(n+.25+.5*hash(id,`${channel}-position`))/count,root=onPath(path,t);
+   const twig=unit(sub(path.at(-1),path[0])),across=unit(cross(twig,Math.abs(twig[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(twig,across));
+   const roll=hash(id,`${channel}-roll`)*Math.PI*2,spread=add(scale(across,Math.cos(roll)),scale(around,Math.sin(roll)));
+   const direction=add(scale(twig,.10+.27*hash(id,`${channel}-forward`)),add(scale(spread,.90),[0,-.22+.45*hash(id,`${channel}-lift`),0]));
+   const tint=hash(id,`${channel}-tint`),length=.66+.31*hash(id,`${channel}-length`),width=.24+.10*hash(id,`${channel}-width`);
+   // The centerline margin accommodates each blade's farthest possible
+   // vertex, so leaves stay inside the accepted horizontal crown footprint.
+   leaf(foliage,root,direction,width,length,.045,[46+tint*29,75+tint*35,24+tint*20,255]);leafCount++;
+  }
+ }
+ const triangles=(bark.indices.length+foliage.indices.length-before)/3+20;
  if(triangles>3600)throw new Error(`WOODLAND_TREE_TRIAL_BUDGET_EXCEEDED:${triangles}`);
- return {recipe:'OPAQUE_ATTACHED_FOLDED_LEAVES_v1',seed:SEED,leafCount:684,triangleCount:triangles};
+ return {recipe:'OPAQUE_CURVED_HIERARCHY_v2',seed:SEED,leafCount,triangleCount:triangles,woodTriangleCount:triangles-20-leafCount*4,structure:{trunk,majorForks:forks,branchPaths:paths,secondaryCount:14,twigCount:28}};
 }

@@ -1,0 +1,124 @@
+{
+  "schema": "H_EARTH_ONE_TREE_REALISM_COMPARISON_RECORD_v1",
+  "operationId": "H_EARTH_ONE_TREE_REALISM_COMPARISON_20261008",
+  "status": "AUTOMATED_GEOMETRY_PASS_REVIEW_PENDING",
+  "admission": {
+    "issue": 6044,
+    "sourceComment": 6064280217,
+    "workflowRun": 37808225185,
+    "callbackComment": 6064289768,
+    "lockGeneration": 2628,
+    "state": "ADMITTED_LOCKED"
+  },
+  "baseline": "ea294bfe896502031d142982f0c87c9b82febfec",
+  "immutableGeometryCommit": "287542083bc8eeed0784efc437e943ebae6013b1",
+  "localQualificationCommit": "680dcb2da264b172f74ee8af5d6450d297f7bcf3",
+  "identicalRepositoryTree": "d4c05e1a5ef15cbf6af1c498f21f32ef4b9bcf7c",
+  "targetId": "P2_TREE_A_11",
+  "recipe": {
+    "leaves": 336,
+    "materials": "EXISTING_OPAQUE_VERTEX_RGBA",
+    "texturesAdded": false,
+    "shadersChanged": false,
+    "triangleCount": 1796,
+    "seed": "WOODLAND_ONE_TREE_REALISM_20261008",
+    "scope": "ONE_TREE_ONLY"
+  },
+  "independentQualification": {
+    "schema": "H_EARTH_ONE_TREE_REALISM_VERIFICATION_v1",
+    "status": "PASS",
+    "baseline": "ea294bfe896502031d142982f0c87c9b82febfec",
+    "candidateHead": "680dcb2da264b172f74ee8af5d6450d297f7bcf3",
+    "frozenSourceSha256": {
+      "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "741649dab4dcc4f796b70feb0c4a8a993cc5a359a2a1d2484c27c6e9811f2f2c",
+      "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "12ee15542da66cd32be36e11f717bcaf056737e739d36eace77ad108cc945760",
+      "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs": "467f270048c283a1118e84e45caae0e28f7c50a23f670cfe9a9dcc0402126d7b"
+    },
+    "workingTreeClean": true,
+    "changedPaths": [
+      "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs"
+    ],
+    "targetId": "P2_TREE_A_11",
+    "treeCount": 65,
+    "grassTuftCount": 1432,
+    "preservedTreeCount": 64,
+    "baselineTargetTriangles": 644,
+    "targetTriangles": 1796,
+    "maximumHorizontalExtent": 3.1359100156564885,
+    "acceptedCrownRadius": 3.5297488859854638,
+    "sectorTriangles": 62196,
+    "sectorCeiling": 64000,
+    "primitiveCount": 4,
+    "checkedTriangles": 1796,
+    "terrainSha256": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
+    "baselineSectorSha256": "b82e2b8aa0827af8a3ea75ed736f9e5d3adc35fd012bf59ed5a1b0ef539c64df",
+    "candidateSectorSha256": "c140e45a071e75846998997caf4f3ff9e830fef8a713f7338166e208b5903dcc",
+    "generationOrder": "FORWARD_EQUALS_REVERSED_AND_CHUNKED",
+    "timingsMs": {
+      "importAndTerrain": 8891.491511,
+      "baselineSector": 23142.334924000003,
+      "candidateSector": 17219.623233,
+      "reverseSector": 17087.11325300001
+    },
+    "physicalDeviceAcceptance": "NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION"
+  },
+  "functionalSeparation": {
+    "N": "root admission and pinned baseline coordination",
+    "E": "/root/tree_analysis read-only analysis at baseline",
+    "S": "/root/tree_construction geometry construction and winding/crown correction",
+    "W": "/root/tree_verification independent frozen-source parity and determinism qualification"
+  },
+  "visualInspection": {
+    "type": "EXACT_GENERATED_MESH_SOFTWARE_RENDER",
+    "actualProductScreenshot": false,
+    "disposition": "PREVIEW_REQUIRED_BEFORE_REALISM_ACCEPTANCE",
+    "comparisonSha256": "1df209a01417ed67be347bdb5bab328ec7c193147538ea250c66ced9ef9f2dc6"
+  },
+  "browserQualification": {
+    "status": "NOT_ESTABLISHED",
+    "localFailure": "Chrome process singleton socket: Operation not permitted",
+    "readOnlySmokeRuns": [
+      37810680293,
+      37810758765
+    ],
+    "smokeTarget": "fac77e060affc9cfbae14da49297bdc077c1c522",
+    "smokeTargetSuperseded": true,
+    "smokeWorkflow": "h-earth-gen2-visual-qualification.yml",
+    "workflowSuccessDoesNotProveReady": true,
+    "observedScreenshot": "INITIALIZATION_46_PERCENT",
+    "finalDispatchTransport": 6049,
+    "finalDispatchFailure": "STALE_MAIN_PARENT_AFTER_ANALYTICS_UPDATE",
+    "realBrowserReady": false,
+    "startupAndFrameMetrics": null,
+    "physicalDeviceAcceptance": false
+  },
+  "ownerDisposition": null,
+  "nextRequired": "EXACT_SHA_FIRST_PARTY_OR_OWNER_CONTROLLED_IN_WORLD_PREVIEW_THEN_KEEP_ONE_REPAIR_OR_REJECT",
+  "mergePerformed": false,
+  "deploymentPerformed": false,
+  "originalMutationScopeRemainsActive": true,
+  "previewFailureDisposition": {
+    "schema": "FAILURE_DISPOSITION_RECEIPT_v1",
+    "result": "CLASSIFIED",
+    "failureClass": "EXECUTION_CAPABILITY_UNAVAILABLE",
+    "observationSource": "ROOM_LOCAL_EXECUTION",
+    "dependencyRelationship": "DECLARED_DIRECT_DEPENDENCY",
+    "authorityState": "VALID_UNCHANGED",
+    "selectedForOperation": true,
+    "candidateEffect": "PRESERVE",
+    "blockingScope": "CURRENT_EXECUTION_SURFACE_ONLY",
+    "blockingDisposition": "BLOCKED_LOCAL_NONPROPAGATING",
+    "recoveryDisposition": "NONE",
+    "retryBudget": 0,
+    "preserveCompletedEvidence": true,
+    "resumeFromCheckpoint": null,
+    "propagationAllowed": false,
+    "propagationScope": "NONE",
+    "notificationDisposition": "NOT_APPLICABLE",
+    "authorityCreated": false,
+    "dependencyEdgeCreated": false,
+    "classificationReason": "EXECUTION_SURFACE_FAILURE_DOES_NOT_INVALIDATE_CANDIDATE"
+  }
+}

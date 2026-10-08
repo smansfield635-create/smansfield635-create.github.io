@@ -1,0 +1,34 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_ONE_TREE_REALISM_COMPARISON_20261008",
+  "reviewedAgainstAnchor": false,
+  "disposition": "PENDING_EXACT_CANDIDATE_PHYSICAL_REVIEW",
+  "visualEvidence": [],
+  "interactionEvidence": [],
+  "continuityEvidence": [
+    "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
+  ],
+  "invariants": {},
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "741649dab4dcc4f796b70feb0c4a8a993cc5a359a2a1d2484c27c6e9811f2f2c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "sha256": "12ee15542da66cd32be36e11f717bcaf056737e739d36eace77ad108cc945760"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
+      "sha256": "467f270048c283a1118e84e45caae0e28f7c50a23f670cfe9a9dcc0402126d7b"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
+      "sha256": "a88a03fd166dfb115a1c98bdafa626c3182b5a7f0ed452f45fc2620f2ad1201e"
+    }
+  ],
+  "automatedContinuitySupport": "Only one tree mesh changed; all other generated geometry, ecology, terrain and source navigation/renderer unchanged. This does not substitute physical/perceptual acceptance.",
+  "releaseEligible": false
+}

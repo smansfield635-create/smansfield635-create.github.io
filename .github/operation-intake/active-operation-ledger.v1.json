@@ -12724,6 +12724,45 @@
       "scopeHash": "cb364a709d354c5404b783730dc68a76d2d8e4ba3d55b0d6292e2d9a1a449f18",
       "state": "ADMITTED_LOCKED"
     },
+    "cb63f221023bf24c231cd742c1d64283dcce48b48e78dd319065f718abd72793": {
+      "governingHead": "9bac83bf26907de3b4a56d72a08d973149502cf1",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9bac83bf26907de3b4a56d72a08d973149502cf1",
+          "lockGeneration": 2616,
+          "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_REGION_ATLAS",
+          "operationId": "BOOK_GEOGRAPHIC_REGION_ATLAS_20261008_001",
+          "procedureLocatorDigest": "f518c793eddf0450aca440304ea17f71547b5873dae2b1432e87b1d3246de403",
+          "requestDigest": "8f7ef3719361d8e86d5d83c74bc0161e54dcfe040e7d98e2d34ed6e64c3a76ff",
+          "scopeHash": "cb63f221023bf24c231cd742c1d64283dcce48b48e78dd319065f718abd72793"
+        },
+        "bindingDigest": "f10015d31acb3db0a58d50b345758166c9b48f22d3ef058f6749d068f70731c0",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "f4559acfaae8e462ace85a9eeb45d25e31ccbfbe",
+          "observedLockRefHead": "1c27b5688d1578cb1c40ee2c143954a5e22b4f2f"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "b779f2a6d93fa94f3ba2802d29c931955afabed54faccd444638e34afbc335c0",
+          "commentId": 6050168016,
+          "issueNumber": 6021,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2616,
+      "lockScope": "BOOK_PUBLIC_PAGE_GEOGRAPHIC_REGION_ATLAS",
+      "operationId": "BOOK_GEOGRAPHIC_REGION_ATLAS_20261008_001",
+      "procedureLocatorDigest": "f518c793eddf0450aca440304ea17f71547b5873dae2b1432e87b1d3246de403",
+      "released": false,
+      "requestDigest": "8f7ef3719361d8e86d5d83c74bc0161e54dcfe040e7d98e2d34ed6e64c3a76ff",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cb63f221023bf24c231cd742c1d64283dcce48b48e78dd319065f718abd72793",
+      "state": "ADMITTED_LOCKED"
+    },
     "cbabcd980e40a4d6abdfbebf6c3729764f021b7471309ed46c1432d5641e7170": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -16036,7 +16075,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2615,
+  "lockGeneration": 2616,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

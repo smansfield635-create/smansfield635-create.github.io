@@ -28,12 +28,20 @@
   },
   "experienceFiles": [
     {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "sha256": "9a04f56868cf875894b75915c4ce99d710c46afb40a1448f32ac27d5a93bd9a7"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.mesh-shell-index-parity.v1.mjs",
+      "sha256": "60e533b5c532477ac95f1aa59a4bd01ec5d3f4e3535f603f18c2aa4c18e52e2f"
+    },
+    {
       "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
       "sha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb"
     }
   ],
   "candidateCommit": "941bb141a89db941e11605f36115febab38077c4",
-  "acceptanceBasis": "Owner KEEP on matched views; exact source closure and preserved baseline geometry establish unchanged interaction and world continuity. No new physical-device performance claim.",
+  "acceptanceBasis": "Owner KEEP on matched views; exact source closure and preserved baseline geometry establish unchanged interaction and world continuity. No new physical-device performance claim. The mesh-shell index preserves the entire canonical deferred package except its observational constructionMilliseconds field, verified by deep equality and 140 shell parity cases. Owner visual acceptance inherited; no new browser, GPU, READY or device-performance acceptance.",
   "reviewEvidence": {
     "schema": "H_EARTH_CONNECTED_COVER_ANCHOR_REVIEW_EVIDENCE_v1",
     "candidateCommit": "941bb141a89db941e11605f36115febab38077c4",
@@ -372,5 +380,66 @@
     "packageComparison": "assert.deepStrictEqual of complete serialized package; only observational construction clock fixed to zero for both builds",
     "timingQualification": "Local elapsed measurements ran with overlapping qualification work; release startup remains subject to exact-head preflight.",
     "boundaryReview": "Retain original 16m bins and triangle scan arithmetic. Exact Number-pair cache; null results cached; nonfinite and zero coordinates bypass cache; fresh object on hits."
+  },
+  "meshShellIndexOptimization": {
+    "result": "PASS",
+    "deepStrictEqual": true,
+    "excludedObservationalField": "constructionMilliseconds",
+    "contentDigest": "fnv1a32:e4a0f62c",
+    "timings": {
+      "baseline": {
+        "moduleMs": 5923.831824,
+        "buildMs": 73115.418311,
+        "totalMs": 79039.250135,
+        "eligible": true,
+        "issues": []
+      },
+      "indexed": {
+        "moduleMs": 5390.0622109999995,
+        "buildMs": 17438.685829,
+        "totalMs": 22828.74804,
+        "eligible": true,
+        "issues": []
+      }
+    },
+    "substrate": "Node CPU construction; browser/GPU/first frame/READY unmeasured",
+    "schema": "H_EARTH_MESH_SHELL_INDEX_QUALIFICATION_v1",
+    "operationId": "H_EARTH_MESH_SHELL_EDGE_INDEX_20261008_001",
+    "operationGeneration": 2618,
+    "governingHead": "d2517b489eb5751b3ef19f0f177ad20b51addc21",
+    "baselineCandidate": "3e343c8a8db53e358ab2cfb6c1f407cb53b4f626",
+    "admissionCommit": "8e1ebee867e0da0c8f7ad90941297b849c9e20a3",
+    "parityCases": 140,
+    "independentVerification": {
+      "North": "PASS",
+      "East": "PASS",
+      "West": "PASS"
+    },
+    "exactTestCommand": "node h-earth-3d/validation/h-earth.mesh-shell-index-parity.v1.mjs",
+    "pairedTiming": {
+      "baselineTotalMs": 79039.250135,
+      "indexedTotalMs": 23919.592702,
+      "baselineBuildMs": 73115.418311,
+      "indexedBuildMs": 18396.183628
+    },
+    "timingQualification": "Single local native Node CPU samples, not statistical device performance; paired comparison followed by isolated indexed package parity rerun. Construction time observation excluded from full-package equality; every other field deepStrictEqual.",
+    "provenanceGate": "Only canonical immutable extractor records enter index; all caller-provided topology records use original traversal.",
+    "browserGPUFirstFrameReadyMeasured": false,
+    "publicationAuthorized": false,
+    "sourceFiles": [
+      {
+        "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "sha256": "9a04f56868cf875894b75915c4ce99d710c46afb40a1448f32ac27d5a93bd9a7"
+      },
+      {
+        "path": "h-earth-3d/validation/h-earth.mesh-shell-index-parity.v1.mjs",
+        "sha256": "60e533b5c532477ac95f1aa59a4bd01ec5d3f4e3535f603f18c2aa4c18e52e2f"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+        "sha256": "eb5ee4d2d6d8241f91da14659422b5554f69d24ec3fd2262db45c9e43301fbdb"
+      }
+    ],
+    "qualificationPath": "h-earth-3d/evidence/mesh-shell-index-20261008/qualification.json"
   }
 }

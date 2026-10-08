@@ -1,0 +1,25 @@
+name: Build Companion v4 Qualification
+on:
+  pull_request:
+    paths:
+      - 'assets/build/build-companion.js'
+      - 'assets/build/build-engine.v3.mjs'
+      - 'tools/build-companion-v4-browser.test.mjs'
+      - '.github/workflows/build-companion-v4-qualification.yml'
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Require v4 contact and conversation behavior
+        shell: bash
+        run: |
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          node tools/build-companion-v4-browser.test.mjs\n          node tools/build-companion-v4-sufficiency-browser.test.mjs

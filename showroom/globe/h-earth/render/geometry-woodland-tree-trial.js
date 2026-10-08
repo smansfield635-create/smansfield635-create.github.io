@@ -46,13 +46,17 @@ export function appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ
   limb(bark,elbow,hub,.095,.036,[99,81,56,255]);
   for(let k=0;k<4;k++){
    const angle=Math.atan2(radial[2],radial[0])+(k-1.5)*1.12,reach=part.radius*(.63+.20*hash(id,`twig-reach-${j}-${k}`));
-   const end=[center[0]+Math.cos(angle)*reach,center[1]+part.heightRadius*(.15+.72*hash(id,`twig-height-${j}-${k}`)-.36),center[2]+Math.sin(angle)*reach];
+   const end=[center[0]+Math.cos(angle)*reach,center[1]+part.heightRadius*(-.8+1.7*hash(id,`twig-height-${j}-${k}`)),center[2]+Math.sin(angle)*reach];
+   // Leave room for the longest blade inside the retained crown-radius bound.
+   const radialDistance=Math.hypot(end[0]-x,end[2]-z),terminalLimit=p.radius-.97;
+   if(radialDistance>terminalLimit){end[0]=x+(end[0]-x)*terminalLimit/radialDistance;end[2]=z+(end[2]-z)*terminalLimit/radialDistance;}
    limb(bark,hub,end,.034,.006,[109,89,59,255]);
-   const twig=unit(sub(end,hub)),across=unit(cross(twig,Math.abs(twig[1])<.9?[0,1,0]:[1,0,0]));
+   const twig=unit(sub(end,hub)),across=unit(cross(twig,Math.abs(twig[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(twig,across));
    for(let pair=0;pair<7;pair++)for(let side=-1;side<=1;side+=2){
-    const channel=`leaf-${j}-${k}-${pair}-${side}`,t=.18+pair*.115+(hash(id,`${channel}-position`)-.5)*.05,root=mix(hub,end,t);
-    const direction=add(scale(twig,.38+.34*hash(id,`${channel}-forward`)),add(scale(across,side*(.70+.25*hash(id,`${channel}-spread`))),[0,.12+.55*hash(id,`${channel}-lift`),0]));
-    const tint=hash(id,`${channel}-tint`),length=.46+.22*hash(id,`${channel}-length`),width=.135+.065*hash(id,`${channel}-width`);
+    const channel=`leaf-${j}-${k}-${pair}-${side}`,t=Math.max(.08,Math.min(.96,.16+pair*.115+(hash(id,`${channel}-position`)-.5)*.15)),root=mix(hub,end,t);
+    const roll=hash(id,`${channel}-roll`)*Math.PI*2,spread=add(scale(across,Math.cos(roll)*side),scale(around,Math.sin(roll)*side));
+    const direction=add(scale(twig,.25+.40*hash(id,`${channel}-forward`)),add(scale(spread,.75+.25*hash(id,`${channel}-spread`)),[0,-.22+.44*hash(id,`${channel}-lift`),0]));
+    const tint=hash(id,`${channel}-tint`),length=.65+.30*hash(id,`${channel}-length`),width=.17+.08*hash(id,`${channel}-width`);
     leaf(foliage,root,direction,width,length,.035,[54+tint*29,83+tint*32,28+tint*18,255]);
    }
   }

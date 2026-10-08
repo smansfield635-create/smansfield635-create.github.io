@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-08T12:47:19Z",
+  "generatedAt": "2026-10-08T13:39:03Z",
   "window": {
-    "start": "2026-09-08T12:47:19Z",
-    "end": "2026-10-08T12:47:19Z"
+    "start": "2026-09-08T13:39:03Z",
+    "end": "2026-10-08T13:39:03Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1481,
-        "visits": 1102
+        "pageLoads": 1450,
+        "visits": 1080
       },
       {
         "value": "/mirror-manor-preview/",
@@ -19,18 +19,13 @@
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
-        "pageLoads": 712,
-        "visits": 22
+        "pageLoads": 710,
+        "visits": 20
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 426,
-        "visits": 336
-      },
-      {
-        "value": "/analytics/",
-        "pageLoads": 400,
-        "visits": 279
+        "pageLoads": 420,
+        "visits": 330
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -38,14 +33,14 @@
         "visits": 90
       },
       {
-        "value": "/products/education/",
-        "pageLoads": 301,
-        "visits": 111
+        "value": "/analytics/",
+        "pageLoads": 309,
+        "visits": 189
       },
       {
-        "value": "/showroom/globe/h-earth/",
-        "pageLoads": 274,
-        "visits": 250
+        "value": "/products/education/",
+        "pageLoads": 300,
+        "visits": 110
       },
       {
         "value": "/governance-bridge/",
@@ -53,9 +48,9 @@
         "visits": 130
       },
       {
-        "value": "/evidence/agentic-frontier/",
-        "pageLoads": 89,
-        "visits": 49
+        "value": "/showroom/globe/h-earth/",
+        "pageLoads": 87,
+        "visits": 65
       },
       {
         "value": "/products/archcoin/contract/",
@@ -68,14 +63,14 @@
         "visits": 60
       },
       {
+        "value": "/evidence/agentic-frontier/",
+        "pageLoads": 70,
+        "visits": 30
+      },
+      {
         "value": "/prototypes/evan-job-stage/",
         "pageLoads": 70,
         "visits": 70
-      },
-      {
-        "value": "/build/",
-        "pageLoads": 60,
-        "visits": 39
       },
       {
         "value": "/products/on-your-side-ai/native-chat/",
@@ -123,11 +118,6 @@
         "visits": 40
       },
       {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 39,
-        "visits": 21
-      },
-      {
         "value": "/door/",
         "pageLoads": 31,
         "visits": 11
@@ -143,6 +133,11 @@
         "visits": 10
       },
       {
+        "value": "/build/",
+        "pageLoads": 30,
+        "visits": 10
+      },
+      {
         "value": "/products/",
         "pageLoads": 30,
         "visits": 10
@@ -153,34 +148,9 @@
         "visits": 0
       },
       {
-        "value": "/about/",
-        "pageLoads": 26,
-        "visits": 6
-      },
-      {
-        "value": "/about-this-underdog/",
-        "pageLoads": 25,
-        "visits": 10
-      },
-      {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 25,
-        "visits": 22
-      },
-      {
         "value": "/door/canonical-object.html",
         "pageLoads": 22,
         "visits": 0
-      },
-      {
-        "value": "/campaigns/rob/",
-        "pageLoads": 21,
-        "visits": 11
-      },
-      {
-        "value": "/nine-summits/universe/",
-        "pageLoads": 21,
-        "visits": 21
       },
       {
         "value": "/explore/",
@@ -198,9 +168,19 @@
         "visits": 0
       },
       {
+        "value": "/about/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
         "value": "/showroom/globe/hearth/",
         "pageLoads": 20,
         "visits": 0
+      },
+      {
+        "value": "/campaigns/rob/",
+        "pageLoads": 20,
+        "visits": 10
       },
       {
         "value": "/products/archcoin/",
@@ -216,16 +196,6 @@
         "value": "/evidence/readiness/",
         "pageLoads": 20,
         "visits": 0
-      },
-      {
-        "value": "/gauges/",
-        "pageLoads": 14,
-        "visits": 0
-      },
-      {
-        "value": "/coherence-diagnostic/",
-        "pageLoads": 13,
-        "visits": 10
       },
       {
         "value": "/laws/research/methods-and-models/",
@@ -258,6 +228,16 @@
         "visits": 0
       },
       {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/coherence-diagnostic/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "/inspection/h-earth-t4-3-d8fca316/",
         "pageLoads": 10,
         "visits": 10
@@ -273,81 +253,31 @@
         "visits": 10
       },
       {
-        "value": "/products/auren/",
-        "pageLoads": 6,
-        "visits": 5
-      },
-      {
-        "value": "/products/nutrition/",
-        "pageLoads": 4,
-        "visits": 4
-      },
-      {
-        "value": "/five-flags/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/products/ssg/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/explore/frontier/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/explore/frontier/vision/",
-        "pageLoads": 1,
+        "value": "/about-this-underdog/",
+        "pageLoads": 10,
         "visits": 0
       },
       {
-        "value": "/laws/categories/structure/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/site-guide/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/showroom/globe/audralia/diagnostic/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/evidence/agentic-frontier/reproduction/can-the-agent-actually-do-the-work/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/build/index.html",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/build/intake/",
-        "pageLoads": 1,
-        "visits": 1
+        "value": "/products/auren/",
+        "pageLoads": 5,
+        "visits": 4
       }
     ],
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3338,
-        "visits": 3338
+        "pageLoads": 3118,
+        "visits": 3118
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2582,
+        "pageLoads": 2141,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 330,
-        "visits": 330
+        "pageLoads": 300,
+        "visits": 300
       },
       {
         "value": "m.facebook.com",
@@ -378,7 +308,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6256,
+        "pageLoads": 6255,
         "visits": 3674
       },
       {
@@ -420,7 +350,7 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1717,
+        "pageLoads": 1716,
         "visits": 595
       }
     ],
@@ -442,7 +372,7 @@
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 72,
+        "pageLoads": 71,
         "visits": 50
       },
       {
@@ -504,7 +434,7 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 82,
+        "pageLoads": 81,
         "visits": 60
       },
       {
@@ -516,7 +446,7 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3967,
+        "pageLoads": 3966,
         "visits": 1448
       },
       {
@@ -528,7 +458,7 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4412,
+        "pageLoads": 4411,
         "visits": 3431
       },
       {
@@ -560,7 +490,7 @@
       },
       {
         "value": "cache",
-        "pageLoads": 1280,
+        "pageLoads": 1279,
         "visits": 322
       },
       {
@@ -572,14 +502,14 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6303,
+        "pageLoads": 6302,
         "visits": 3721
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 6303,
+        "pageLoads": 6302,
         "visits": 3721
       }
     ]

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-08T04:39:33Z",
+  "generatedAt": "2026-10-08T05:35:17Z",
   "window": {
-    "start": "2026-09-08T04:39:33Z",
-    "end": "2026-10-08T04:39:33Z"
+    "start": "2026-09-08T05:35:17Z",
+    "end": "2026-10-08T05:35:17Z"
   },
   "dimensions": {
     "requestPath": [
@@ -44,8 +44,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 273,
-        "visits": 249
+        "pageLoads": 274,
+        "visits": 250
       },
       {
         "value": "/governance-bridge/",
@@ -308,6 +308,11 @@
         "visits": 1
       },
       {
+        "value": "/showroom/globe/audralia/diagnostic/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/evidence/agentic-frontier/reproduction/can-the-agent-actually-do-the-work/",
         "pageLoads": 1,
         "visits": 1
@@ -323,11 +328,6 @@
         "visits": 1
       },
       {
-        "value": "/showroom/globe/audralia/diagnostic/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/build/intake/",
         "pageLoads": 1,
         "visits": 1
@@ -336,8 +336,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3336,
-        "visits": 3336
+        "pageLoads": 3337,
+        "visits": 3337
       },
       {
         "value": "diamondgatebridge.com",
@@ -378,8 +378,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 6255,
-        "visits": 3673
+        "pageLoads": 6256,
+        "visits": 3674
       },
       {
         "value": "BR",
@@ -484,13 +484,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3438,
-        "visits": 967
+        "pageLoads": 3428,
+        "visits": 957
       },
       {
         "value": "Linux",
-        "pageLoads": 2409,
-        "visits": 2346
+        "pageLoads": 2479,
+        "visits": 2416
       },
       {
         "value": "MacOSX",
@@ -503,14 +503,14 @@
         "visits": 139
       },
       {
-        "value": "iOS",
-        "pageLoads": 82,
-        "visits": 60
-      },
-      {
         "value": "Unknown",
         "pageLoads": 53,
         "visits": 53
+      },
+      {
+        "value": "iOS",
+        "pageLoads": 52,
+        "visits": 50
       }
     ],
     "bot": [

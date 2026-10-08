@@ -1,0 +1,1009 @@
+{
+  "schema": "H_EARTH_WOODLAND_CLEARING_TRIAL_RECORD_v1",
+  "status": "TRIAL_REVIEW_COMPLETE_NOT_READY_FOR_ADOPTION",
+  "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+  "generation": 2629,
+  "issue": 6051,
+  "baseline": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+    "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+    "showroom/globe/h-earth/render/assets/woodland-clearing-leaf.png",
+    "showroom/globe/h-earth/render/assets/woodland-clearing-bark.png",
+    "showroom/globe/h-earth/render/assets/woodland-clearing-soil.png",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.verify.mjs",
+    "h-earth-3d/experience-anchor/receipts/h-earth-woodland-clearing-20261008.receipt.json"
+  ],
+  "frozenLimits": {
+    "schema": "H_EARTH_CLEARING_MEASURED_ENGINEERING_LIMITS_v1",
+    "status": "FROZEN_BEFORE_CONSTRUCTION",
+    "operation": 6051,
+    "generation": 2629,
+    "baseline": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+    "baselineReportSha256": "bbe6af20589ac3b1954ceb1f40ed0538a9ca38a4461a3aa848f4b770ed2b8f7c",
+    "baselineGeometry": {
+      "sectorTriangles": 63880,
+      "packageTriangles": 107050,
+      "residentInstances": 27585,
+      "residentBatches": 108,
+      "globalCoverInstances": 61094,
+      "baseGpuUploadedBytes": 6931215,
+      "globalCoverGpuBytes": 4889376,
+      "persistentObjects": {
+        "contexts": 1,
+        "programs": 3,
+        "shaders": 5,
+        "vertexArrays": 110,
+        "gpuBuffers": 1204,
+        "textures": 5,
+        "framebuffers": 2
+      }
+    },
+    "baselineViews": {
+      "walking": {
+        "raf": {
+          "count": 95,
+          "medianMs": 466.6000000000349,
+          "p95Ms": 1116.6999999999534,
+          "maxMs": 1800,
+          "over50Ms": 95
+        },
+        "presentationApiWall": {
+          "count": 96,
+          "medianMs": 305.5,
+          "p95Ms": 818.3999999985099,
+          "maxMs": 1430.800000000745,
+          "over50Ms": 96
+        },
+        "redrawCount": 96
+      },
+      "close": {
+        "raf": {
+          "count": 95,
+          "medianMs": 383.29999999998836,
+          "p95Ms": 1049.899999999965,
+          "maxMs": 1350.100000000035,
+          "over50Ms": 95
+        },
+        "presentationApiWall": {
+          "count": 96,
+          "medianMs": 259.80000000074506,
+          "p95Ms": 621.8000000007451,
+          "maxMs": 766.9000000022352,
+          "over50Ms": 96
+        },
+        "redrawCount": 96
+      },
+      "side": {
+        "raf": {
+          "count": 95,
+          "medianMs": 300,
+          "p95Ms": 1016.6000000000349,
+          "maxMs": 1649.899999999965,
+          "over50Ms": 95
+        },
+        "presentationApiWall": {
+          "count": 96,
+          "medianMs": 237.5,
+          "p95Ms": 495,
+          "maxMs": 1012.5,
+          "over50Ms": 96
+        },
+        "redrawCount": 96
+      },
+      "distant": {
+        "raf": {
+          "count": 95,
+          "medianMs": 316.70000000006985,
+          "p95Ms": 1066.5999999999767,
+          "maxMs": 1483.1999999999534,
+          "over50Ms": 95
+        },
+        "presentationApiWall": {
+          "count": 96,
+          "medianMs": 219.89999999850988,
+          "p95Ms": 681.1999999992549,
+          "maxMs": 1038.8999999985099,
+          "over50Ms": 96
+        },
+        "redrawCount": 96
+      }
+    },
+    "constructionLimits": {
+      "sectorTriangles": 105000,
+      "addedGpuStorageBytes": 6291456,
+      "textureCountAdded": 4,
+      "colorTextureDimensions": [
+        256,
+        256
+      ],
+      "colorTextureCount": 3,
+      "depthShadowDimensions": [
+        512,
+        512
+      ],
+      "programsAdded": 1,
+      "framebuffersAdded": 1,
+      "staticCasterIndexBuffersAdded": 1,
+      "mainDrawCallsAdded": 0,
+      "perCameraResourceCreation": 0,
+      "staticShadowRefresh": "ONCE_AFTER_ASSETS_READY;NO_CAMERA_REFRESH"
+    },
+    "comparisonReviewThresholds": {
+      "rafMedianRatio": 1.25,
+      "rafP95Ratio": 1.35,
+      "perCameraSame96RedrawRoute": true,
+      "startupClaim": "NO_COMPARABLE_STARTUP_CLAIM_HOST_VARIATION",
+      "physicalDeviceLimits": "UNKNOWN_REQUIRES_PHONE_TABLET_BASELINE"
+    },
+    "allocationRationale": "Measured existing package upload6.93MB plus4.89MB globalcover and108resident batches support explicit local mesh/material allocation. Additional positions/colors/normals/material/index arrays estimated3MiB,3textures withmips1MiB,512depthmap1MiB,castersindex+reserve1MiB. This is trial engineering allocation, not hardware capacity or visual acceptance.",
+    "preservation": {
+      "eligibleTrees": [
+        "P2_TREE_A_03",
+        "P2_TREE_A_06",
+        "P2_TREE_A_08",
+        "P2_TREE_A_11"
+      ],
+      "A13AndBoundaryStraddlers": "PRESERVE",
+      "canonicalTerrain": "EXACT",
+      "targetWoodHierarchy": "EXACT",
+      "outsideGeometryAndEcology": "EXACT"
+    },
+    "measurementLimits": "95RAF gaps and96CPU-side presentation API durations percamera. No GPUtiming or physical-deviceperformance. Baseline slowSwiftShader; ratios are engineering review gates only.",
+    "failedMeasurementPreserved": "/dev/shm/clearing-route-baseline/browser.json;FAIL_CAMERA_CUSTODY;EXCLUDED",
+    "referencePixelAccess": "UNAVAILABLE_IN_THIS_ROOM;RECORDED_SIX_QUALITY_CRITERIA_GOVERN"
+  },
+  "baselineArtifact": {
+    "libraryFileId": "libfile_371e5ab890b081919b22154bcda3ad7a",
+    "filename": "H-Earth-clearing-review.zip"
+  },
+  "previousTreeTrial": {
+    "pr": 6048,
+    "head": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+    "geometryCommit": "a2e7649121a19e255eec6521cc5651f97af96803"
+  },
+  "physicalAcceptance": false,
+  "ownerDisposition": null,
+  "mergePerformed": false,
+  "deploymentPerformed": false,
+  "recipe": {
+    "eligibleTrees": [
+      "P2_TREE_A_03",
+      "P2_TREE_A_06",
+      "P2_TREE_A_08",
+      "P2_TREE_A_11"
+    ],
+    "leafCountPerTree": 1848,
+    "sectorTriangles": 83536,
+    "packageTriangles": 126706,
+    "packageVertices": 114631,
+    "grassClumpsAdded": 362,
+    "insideGrassRemoved": 240,
+    "rocksAdded": 14,
+    "understoryAdded": 16,
+    "fallenLeavesAdded": 55,
+    "colorTextures": [
+      256,
+      256
+    ],
+    "shadowMap": [
+      512,
+      512
+    ],
+    "shadowType": "STATIC_GEOMETRIC_DEPTH_MAP",
+    "targetWoodPreserved": true,
+    "terrainGeometryModified": false,
+    "leafFaces": 2,
+    "leafRecipe": "BOUNDED_FINE_THIN_FOLDED_LEAF_CURVED_HIERARCHY_v4"
+  },
+  "baselineViews": {
+    "walking": {
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+      "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "stateId": "H_EARTH_NAVIGATION_STATE_0005",
+      "sequence": 5,
+      "action": "PITCH_UP",
+      "accepted": true,
+      "recovered": false,
+      "rejectionReason": null,
+      "position": {
+        "x": -139.40267987050615,
+        "y": 8.044800570064606,
+        "z": -194.5
+      },
+      "yawDegrees": 0,
+      "pitchDegrees": 16,
+      "verticalFovDegrees": 56,
+      "terrainElevation": 4.409410835682403,
+      "visibleTerrainElevation": 4.409410835682403,
+      "clearanceReferenceElevation": 5.794800570064606,
+      "canonicalTerrainElevation": 4.10279055914363,
+      "minimumCameraY": 7.394800570064605,
+      "targetCameraY": 8.044800570064606,
+      "clearance": 3.635389734382203,
+      "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+      "verticalDelta": 0,
+      "verticalAcceleration": 0,
+      "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+      "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+      "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C01_C04",
+      "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+      "formationIds": [
+        "H_EARTH_COASTAL_BERM_001",
+        "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+        "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+        "H_EARTH_GRATITUDE_WESTERN_PENINSULA_001",
+        "H_EARTH_LOWLAND_001"
+      ],
+      "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R05:C04",
+      "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+      "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0005",
+      "terrainSupported": true,
+      "sweptTerrainSupportSampleCount": 0,
+      "canonicalCameraStateAuthority": false,
+      "collisionOrPhysicsClaim": false,
+      "geographyAuthorityCreated": false,
+      "topologyAuthorityCreated": false,
+      "navigationScaleAuthorityCreated": false
+    },
+    "close": {
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+      "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "stateId": "H_EARTH_NAVIGATION_STATE_0007",
+      "sequence": 7,
+      "action": "PITCH_UP",
+      "accepted": true,
+      "recovered": false,
+      "rejectionReason": null,
+      "position": {
+        "x": -139.40267987050615,
+        "y": 8.434438018667295,
+        "z": -200
+      },
+      "yawDegrees": 0,
+      "pitchDegrees": 26,
+      "verticalFovDegrees": 56,
+      "terrainElevation": 5.030500138753736,
+      "visibleTerrainElevation": 5.030500138753736,
+      "clearanceReferenceElevation": 6.184438018667295,
+      "canonicalTerrainElevation": 4.60596480042212,
+      "minimumCameraY": 7.784438018667295,
+      "targetCameraY": 8.434438018667295,
+      "clearance": 3.40393787991356,
+      "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+      "verticalDelta": 0,
+      "verticalAcceleration": 0,
+      "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+      "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+      "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C01_C04",
+      "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+      "formationIds": [
+        "H_EARTH_COASTAL_BERM_001",
+        "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+        "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+        "H_EARTH_GRATITUDE_WESTERN_PENINSULA_001",
+        "H_EARTH_LOWLAND_001"
+      ],
+      "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R05:C04",
+      "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+      "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0007",
+      "terrainSupported": true,
+      "sweptTerrainSupportSampleCount": 0,
+      "canonicalCameraStateAuthority": false,
+      "collisionOrPhysicsClaim": false,
+      "geographyAuthorityCreated": false,
+      "topologyAuthorityCreated": false,
+      "navigationScaleAuthorityCreated": false
+    },
+    "side": {
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+      "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "stateId": "H_EARTH_NAVIGATION_STATE_0018",
+      "sequence": 18,
+      "action": "PITCH_UP",
+      "accepted": true,
+      "recovered": false,
+      "rejectionReason": null,
+      "position": {
+        "x": -129,
+        "y": 9.744638165978971,
+        "z": -210.74616902099837
+      },
+      "yawDegrees": -90,
+      "pitchDegrees": 23,
+      "verticalFovDegrees": 56,
+      "terrainElevation": 7.291415830710494,
+      "visibleTerrainElevation": 7.291415830710494,
+      "clearanceReferenceElevation": 7.494638165978971,
+      "canonicalTerrainElevation": 6.651195519434107,
+      "minimumCameraY": 9.541415830710495,
+      "targetCameraY": 9.744638165978971,
+      "clearance": 2.453222335268477,
+      "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+      "verticalDelta": 0,
+      "verticalAcceleration": 0,
+      "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+      "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+      "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C01_C04",
+      "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+      "formationIds": [
+        "H_EARTH_COASTAL_BERM_001",
+        "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+        "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+        "H_EARTH_GRATITUDE_WESTERN_PENINSULA_001",
+        "H_EARTH_LOWLAND_001"
+      ],
+      "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R05:C04",
+      "selectionProjectionModel": "EXTENDED_GROUND_NEAREST_EXISTING_TERRAIN_MEMBER",
+      "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0018",
+      "terrainSupported": true,
+      "sweptTerrainSupportSampleCount": 0,
+      "canonicalCameraStateAuthority": false,
+      "collisionOrPhysicsClaim": false,
+      "geographyAuthorityCreated": false,
+      "topologyAuthorityCreated": false,
+      "navigationScaleAuthorityCreated": false
+    },
+    "distant": {
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+      "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+      "stateId": "H_EARTH_NAVIGATION_STATE_0005",
+      "sequence": 5,
+      "action": "PITCH_UP",
+      "accepted": true,
+      "recovered": false,
+      "rejectionReason": null,
+      "position": {
+        "x": -139.40267987050615,
+        "y": 6.0095732536732145,
+        "z": -178.5
+      },
+      "yawDegrees": 0,
+      "pitchDegrees": 9,
+      "verticalFovDegrees": 56,
+      "terrainElevation": 2.0916663553910833,
+      "visibleTerrainElevation": 2.0916663553910833,
+      "clearanceReferenceElevation": 3.7595732536732145,
+      "canonicalTerrainElevation": 2.19753868816143,
+      "minimumCameraY": 5.359573253673215,
+      "targetCameraY": 6.0095732536732145,
+      "clearance": 3.9179068982821312,
+      "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+      "verticalDelta": 0,
+      "verticalAcceleration": 0,
+      "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+      "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+      "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C01_C04",
+      "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+      "formationIds": [
+        "H_EARTH_COASTAL_BERM_001",
+        "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+        "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+        "H_EARTH_GRATITUDE_WESTERN_PENINSULA_001",
+        "H_EARTH_LOWLAND_001"
+      ],
+      "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C04",
+      "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+      "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0005",
+      "terrainSupported": true,
+      "sweptTerrainSupportSampleCount": 0,
+      "canonicalCameraStateAuthority": false,
+      "collisionOrPhysicsClaim": false,
+      "geographyAuthorityCreated": false,
+      "topologyAuthorityCreated": false,
+      "navigationScaleAuthorityCreated": false
+    }
+  },
+  "functionalSeparation": {
+    "N": "root continuation/admission/camera baseline and source custody",
+    "E": "tree_analysis read-only renderer and topology analysis",
+    "S": "tree_construction and its renderer helper",
+    "W": "tree_verification independent geometry and baseline audit"
+  },
+  "reference": {
+    "file": "28196.jpg",
+    "libraryFileId": "libfile_20cf4fcb29088191b081425ef63a2481",
+    "currentRoomPixelsAvailable": false,
+    "governingCriteria": "Six explicit qualities in issue6051"
+  },
+  "nextRequired": "BOUNDED_VISUAL_AND_TIMING_REPAIR_THEN_EXACT_CANDIDATE_PHYSICAL_REVIEW",
+  "failedQualificationAttempts": [
+    {
+      "candidate": "00b75ceb6134caab1f214964f9e82f5c5de61207",
+      "sourceTree": "cb1bfa7673e4df80a18b77632723f7288fa0b0cf",
+      "reportSha256": "4a2bd681376d37823b5f2da15d7df6bc0a140ad65d45735a2a32e6662f9bea2a",
+      "fullVegetation": true,
+      "browserErrors": 0,
+      "cameraMatricesMatchBaseline": true,
+      "geometryFailure": "OUTSIDE_OR_TREE_OBJECT_REMOVED:CONNECTED_COVER_13_31",
+      "resourceReceiptFailure": "packageUploadedOnce false: total includes authorized clearing index upload",
+      "performanceDisposition": "FAIL_FROZEN_SOFTWARE_ROUTE_THRESHOLDS",
+      "metrics": {
+        "walking": {
+          "medianMs": 616.6000000000349,
+          "p95Ms": 1300,
+          "medianRatio": 1.3214744963565983,
+          "p95Ratio": 1.164144353899932
+        },
+        "close": {
+          "medianMs": 716.7000000000116,
+          "p95Ms": 2100,
+          "medianRatio": 1.8698147665015221,
+          "p95Ratio": 2.0001904943328603
+        },
+        "side": {
+          "medianMs": 500.0999999999767,
+          "p95Ms": 1266.7000000000698,
+          "medianRatio": 1.6669999999999223,
+          "p95Ratio": 1.2460161322054164
+        },
+        "distant": {
+          "medianMs": 466.70000000006985,
+          "p95Ms": 1499.9000000000233,
+          "medianRatio": 1.4736343542783925,
+          "p95Ratio": 1.4062441402588186
+        }
+      },
+      "visualDisposition": "PARTIAL_IMPROVEMENT;NOT_CONVINCING_REALISM_ACCEPTANCE"
+    },
+    {
+      "candidate": "a720d4ab8a70789f8e2f83de569a54c2f76e534e",
+      "geometryFailure": "ADDED_ROOT_SUPPORT:CLEARING_LITTER_0",
+      "independentFailureReceipt": "clearing-west-failure-a720.json",
+      "repair": "Sample actual litter contact corners and each basal understory corner against rendered terrain; record actual coordinates. No verifier relaxation.",
+      "browserComplete": true,
+      "browserErrors": 0,
+      "syntheticTouchReleaseAndCancel": "PASS",
+      "resourceReceipt": "PASS_CORE11_CLEARING1_TOTAL12_ONCE",
+      "reportSha256": "fe2b0782bc68f39f5c284b91301716b6f71851eb8fef5617ce4e38b127c42609",
+      "softwareTimingDisposition": "FAIL_FROZEN_THRESHOLDS",
+      "metrics": {
+        "walking": {
+          "medianMs": 700,
+          "p95Ms": 1516.5999999999767,
+          "medianRatio": 1.5002143163307922,
+          "p95Ratio": 1.358108713172777
+        },
+        "close": {
+          "medianMs": 733.2999999999302,
+          "p95Ms": 1949.8000000000466,
+          "medianRatio": 1.9131228802503324,
+          "p95Ratio": 1.8571292504049066
+        },
+        "side": {
+          "medianMs": 550,
+          "p95Ms": 1016.5999999999767,
+          "medianRatio": 1.8333333333333333,
+          "p95Ratio": 0.9999999999999427
+        },
+        "distant": {
+          "medianMs": 483.29999999993015,
+          "p95Ms": 1049.8999999999069,
+          "medianRatio": 1.5260498894847603,
+          "p95Ratio": 0.9843427714231481
+        }
+      }
+    },
+    {
+      "schema": "H_EARTH_CLEARING_FINAL_REVIEW_v1",
+      "testedCandidate": "b3862f81ec4bd54aa7797cecb284287ac9f210c1",
+      "testedTree": "35a4e3a65f7b760023ee4239926126ae63990310",
+      "baseline": "08407ace913d5d7efcd47364e1b88c74a318ee4a",
+      "cameraMatrixParity": {
+        "walking": true,
+        "close": true,
+        "side": true,
+        "distant": true
+      },
+      "metrics": {
+        "walking": {
+          "count": 95,
+          "medianMs": 566.7000000000116,
+          "p95Ms": 1033.3000000000466,
+          "medianRatio": 1.2145306472352533,
+          "p95Ratio": 0.9253156622191185,
+          "apiMedianMs": 226.55000000074506,
+          "apiP95Ms": 724.3999999985099,
+          "withinFrozenThresholds": true
+        },
+        "close": {
+          "count": 95,
+          "medianMs": 583.2999999999884,
+          "p95Ms": 1133.2999999999884,
+          "medianRatio": 1.5217845030002768,
+          "p95Ratio": 1.0794361367749559,
+          "apiMedianMs": 228.75,
+          "apiP95Ms": 683.4000000022352,
+          "withinFrozenThresholds": false
+        },
+        "side": {
+          "count": 95,
+          "medianMs": 350,
+          "p95Ms": 1016.5999999999767,
+          "medianRatio": 1.1666666666666667,
+          "p95Ratio": 0.9999999999999427,
+          "apiMedianMs": 241.80000000074506,
+          "apiP95Ms": 624.1999999992549,
+          "withinFrozenThresholds": true
+        },
+        "distant": {
+          "count": 95,
+          "medianMs": 500,
+          "p95Ms": 1316.5,
+          "medianRatio": 1.578781180927975,
+          "p95Ratio": 1.2342958934933703,
+          "apiMedianMs": 213.34999999962747,
+          "apiP95Ms": 753.8999999985099,
+          "withinFrozenThresholds": false
+        }
+      },
+      "softwareTimingDisposition": "FAIL_FROZEN_THRESHOLDS",
+      "addedObservableGpuStorageBytes": 6325768,
+      "storageWithinFrozenLimit": false,
+      "resources": {
+        "packageUploadedOnce": true,
+        "coreUploads": 11,
+        "clearingUploads": 1,
+        "totalUploads": 12,
+        "shadowDrawCount": 1,
+        "persistentObjects": {
+          "contexts": 1,
+          "programs": 4,
+          "shaders": 7,
+          "vertexArrays": 110,
+          "gpuBuffers": 1205,
+          "textures": 9,
+          "framebuffers": 3
+        }
+      },
+      "touch": "PASS_SYNTHETIC_TOUCH_ONLY",
+      "physicalAcceptance": false,
+      "gpu": "HEADLESS_SWIFTSHADER",
+      "referencePixelsReviewed": true,
+      "storageMeasurementLimit": "Observable buffer lengths plus configured texture storage estimate; actual driver GPU memory unknown",
+      "mergePerformed": false,
+      "deploymentPerformed": false,
+      "publication": "NOT_MERGED_OR_DEPLOYED"
+    }
+  ],
+  "repairs": [
+    "Retain boundary-straddling grass using both actual mesh and declared crown radius.",
+    "Separate 11 core uploads, one clearing index upload, and true total12; require zero later uploads.",
+    "Conservative projected coordinate guard skips inverse atan outside clearing; final strict classification unchanged.",
+    "Ground two actual litter contact corners by 2mm while retaining 7mm fold; sample each understory basal corner and bury22mm.",
+    "Clearing-only thin folded leaves use two broad faces; disable-cull pipeline preserves both sides; all leaves, positions, colors, UV and wood retained. Removes14784 triangles.",
+    "Redistributed foliage along major, secondary and twig branches; target wood unchanged.",
+    "Broader folded clearing grass with higher patch density; terrain and outside objects exact.",
+    "Corrected clearing sunlight/depth orientation and used hardware depth comparison.",
+    "Reduced redundant bark and interior soil shader work; kept original outside-clearing shader path."
+  ],
+  "guardIndependentVerification": {
+    "status": "PASS",
+    "cases": 447174,
+    "excludedInsidePoints": 0,
+    "reportSha256": "5c0f8aaca684a94313971f94aa9116537bc04028229d0c49c8ac013bac8c70ed"
+  },
+  "testedCandidate": "3ad884a5a02367da0520178acb36fd295ae8148d",
+  "testedTree": "d3105e66c3adea155ee01600c2c616f4247901f0",
+  "finalReview": {
+    "schema": "H_EARTH_CLEARING_FINAL_REVIEW_v1",
+    "testedCandidate": "3ad884a5a02367da0520178acb36fd295ae8148d",
+    "testedTree": "d3105e66c3adea155ee01600c2c616f4247901f0",
+    "baseline": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+    "observedBaselineCommit": "08407ace913d5d7efcd47364e1b88c74a318ee4a",
+    "baselineTree": "82c77585ba739a256c4887dd5fcbddad4a0a14c3",
+    "cameraMatrixParity": {
+      "walking": true,
+      "close": true,
+      "side": true,
+      "distant": true
+    },
+    "metrics": {
+      "walking": {
+        "count": 95,
+        "medianMs": 500,
+        "p95Ms": 1799.899999999965,
+        "medianRatio": 1.0715816545219943,
+        "p95Ratio": 1.611802632757267,
+        "apiMedianMs": 261.9500000011176,
+        "apiP95Ms": 1177.699999999255,
+        "withinFrozenThresholds": false
+      },
+      "close": {
+        "count": 95,
+        "medianMs": 533.2999999999884,
+        "p95Ms": 1083.2999999999884,
+        "medianRatio": 1.3913383772502075,
+        "p95Ratio": 1.0318125535765543,
+        "apiMedianMs": 236.5,
+        "apiP95Ms": 679.7000000029802,
+        "withinFrozenThresholds": false
+      },
+      "side": {
+        "count": 95,
+        "medianMs": 250,
+        "p95Ms": 666.5999999999767,
+        "medianRatio": 0.8333333333333334,
+        "p95Ratio": 0.6557151288608635,
+        "apiMedianMs": 211.7000000011176,
+        "apiP95Ms": 550.3000000007451,
+        "withinFrozenThresholds": true
+      },
+      "distant": {
+        "count": 95,
+        "medianMs": 450,
+        "p95Ms": 933.2000000000698,
+        "medianRatio": 1.4209030628351775,
+        "p95Ratio": 0.8749296831052786,
+        "apiMedianMs": 206.5,
+        "apiP95Ms": 617.6000000014901,
+        "withinFrozenThresholds": false
+      }
+    },
+    "softwareTimingDisposition": "FAIL_FROZEN_THRESHOLDS",
+    "addedObservableGpuStorageBytes": 6253192,
+    "storageWithinFrozenLimit": true,
+    "resources": {
+      "packageUploadedOnce": true,
+      "coreUploads": 11,
+      "clearingUploads": 1,
+      "totalUploads": 12,
+      "shadowDrawCount": 1,
+      "persistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 7,
+        "vertexArrays": 110,
+        "gpuBuffers": 1205,
+        "textures": 9,
+        "framebuffers": 3
+      }
+    },
+    "touch": "PASS_SYNTHETIC_TOUCH_ONLY",
+    "physicalAcceptance": false,
+    "gpu": "HEADLESS_SWIFTSHADER",
+    "referencePixelsReviewed": true,
+    "storageMeasurementLimit": "Observable buffer lengths plus configured texture storage estimate; actual driver GPU memory unknown",
+    "mergePerformed": false,
+    "deploymentPerformed": false,
+    "publication": "NOT_MERGED_OR_DEPLOYED",
+    "geometryVerification": "PASS",
+    "visualAssessment": {
+      "schema": "H_EARTH_CLEARING_INDEPENDENT_WEST_FINAL_RECOVERY_REVIEW_v1",
+      "candidate": "3ad884a5a02367da0520178acb36fd295ae8148d",
+      "browserReportSha256": "8e16095c8d3fdf5e2e6e4a6cb8128ae8d49047ee8aec09ab2feeb2fc2179f13c",
+      "status": "PARTIAL_VISUAL_PROGRESS_PERFORMANCE_FAILED",
+      "fixedViews": [
+        {
+          "id": "walking",
+          "actualRedrawCounterDeltas": {
+            "navigationStateAcceptanceCount": 96,
+            "renderFrameCallCount": 96,
+            "gpuFramebufferPresentationCount": 96
+          },
+          "rafSamples": 95,
+          "apiWallSamples": 96,
+          "medianRatio": 1.0715816545219943,
+          "p95Ratio": 1.611802632757267,
+          "medianPass": true,
+          "p95Pass": false
+        },
+        {
+          "id": "close",
+          "actualRedrawCounterDeltas": {
+            "navigationStateAcceptanceCount": 96,
+            "renderFrameCallCount": 96,
+            "gpuFramebufferPresentationCount": 96
+          },
+          "rafSamples": 95,
+          "apiWallSamples": 96,
+          "medianRatio": 1.3913383772502075,
+          "p95Ratio": 1.0318125535765543,
+          "medianPass": false,
+          "p95Pass": true
+        },
+        {
+          "id": "side",
+          "actualRedrawCounterDeltas": {
+            "navigationStateAcceptanceCount": 96,
+            "renderFrameCallCount": 96,
+            "gpuFramebufferPresentationCount": 96
+          },
+          "rafSamples": 95,
+          "apiWallSamples": 96,
+          "medianRatio": 0.8333333333333334,
+          "p95Ratio": 0.6557151288608635,
+          "medianPass": true,
+          "p95Pass": true
+        },
+        {
+          "id": "distant",
+          "actualRedrawCounterDeltas": {
+            "navigationStateAcceptanceCount": 96,
+            "renderFrameCallCount": 96,
+            "gpuFramebufferPresentationCount": 96
+          },
+          "rafSamples": 95,
+          "apiWallSamples": 96,
+          "medianRatio": 1.4209030628351775,
+          "p95Ratio": 0.8749296831052786,
+          "medianPass": false,
+          "p95Pass": true
+        }
+      ],
+      "performanceStatus": "FAIL_FROZEN_WALKING_P95_CLOSE_AND_DISTANT_MEDIAN",
+      "limitsRelaxed": false,
+      "fullyLoaded": {
+        "instances": 27585,
+        "batches": 108,
+        "drops": 0
+      },
+      "resources": {
+        "persistentObjectCounts": {
+          "contexts": 1,
+          "programs": 4,
+          "shaders": 7,
+          "vertexArrays": 110,
+          "gpuBuffers": 1205,
+          "textures": 9,
+          "framebuffers": 3
+        },
+        "stableFlags": {
+          "resourceIdentityStable": true,
+          "packageUploadedOnce": true,
+          "noUnauthorizedPostInitializationResourceCreation": true,
+          "noUnauthorizedPostInitializationBufferUpload": true
+        },
+        "shadowDrawCount": 1,
+        "indexUploadCount": 1,
+        "geometryDrawCallsPerFrame": 8.0,
+        "addedGpuBytes": 6253192,
+        "addedGpuLimit": 6291456,
+        "gpuStoragePass": true
+      },
+      "syntheticTouch": {
+        "status": "PASS",
+        "travelProposals": 7,
+        "displacementMeters": 1.4434258524983055,
+        "releaseAndCancelTermination": "PASS",
+        "scope": "Arrival navigation state, not clearing navigation state; no physical-device acceptance."
+      },
+      "qualities": {
+        "FOLIAGE_AND_GAPS": {
+          "status": "PARTIAL",
+          "evidence": "Fuller crowns and natural gaps along limbs, yet many sprays read as angular fern fronds, especially in close and side views."
+        },
+        "BARK_AND_JOINS": {
+          "status": "PARTIAL",
+          "evidence": "Trunk has stronger shaded contour; fine bark detail remains subtle and fork transitions abrupt."
+        },
+        "LIGHTING_AND_SHADOWS": {
+          "status": "PARTIAL",
+          "evidence": "Readable ground cast shadow at walking distance and brighter/shaded trunk sides. Foliage volume remains dark and visually shallow."
+        },
+        "GRASS_AND_UNDERSTORY": {
+          "status": "PARTIAL",
+          "evidence": "More thin blades, low plants and litter, but foreground remains sparse relative to reference; distant view strongly exposes spacing."
+        },
+        "SOIL_AND_ROCKS": {
+          "status": "PARTIAL",
+          "evidence": "Brown soil texture and ground contacts read better at walking distance. Distant view reveals a straight rectangular clearing edge; rocks remain cone-like and exposed earth dominates."
+        },
+        "ATMOSPHERIC_DEPTH": {
+          "status": "UNRESOLVED",
+          "evidence": "Side/distant views have flat-colored distant vegetation and horizon; reference-like soft atmospheric recession is not established."
+        }
+      },
+      "reviewedImages": [
+        "/dev/shm/clearing-recovery-final-evidence/revision-walking.png",
+        "/dev/shm/clearing-recovery-final-evidence/revision-close.png",
+        "/dev/shm/clearing-recovery-final-evidence/revision-side.png",
+        "/dev/shm/clearing-recovery-final-evidence/revision-distant.png"
+      ],
+      "baselineAndPriorCompared": true,
+      "physicalAcceptance": false,
+      "shadowProjectionFrustumContainment": "NOT_NUMERICALLY_QUALIFIED",
+      "engineeringGeometryReports": [
+        "/dev/shm/clearing-west-final-repair-portable.json",
+        "/dev/shm/clearing-west-final-repair-extra.json"
+      ]
+    },
+    "adoptionDisposition": "NOT_READY_FOR_ADOPTION",
+    "phoneTabletPerformance": "UNMEASURED",
+    "twoFingerTravel": "PASS_SYNTHETIC_TRAVEL_RELEASE_AND_CANCEL"
+  },
+  "evidenceArtifact": {
+    "libraryFileId": "libfile_b3e23c9d6e8c8191ad3cc676f7d29973",
+    "bundle": "H-Earth-clearing-repair-review.zip",
+    "walkingComparison": "libfile_1c15cab85b788191b99cb6ee37cba428",
+    "browserReportSha256": "8e16095c8d3fdf5e2e6e4a6cb8128ae8d49047ee8aec09ab2feeb2fc2179f13c"
+  },
+  "releaseEligible": false,
+  "publication": "CANDIDATE_BRANCH_PUSH_AUTHORIZED_BY_OWNER;NO_MERGE_OR_DEPLOYMENT",
+  "preservedReviews": [
+    {
+      "finalReview": {
+        "schema": "H_EARTH_CLEARING_FINAL_REVIEW_v1",
+        "testedCandidate": "34b857520506c65a15df7eb5212bb4a07b17848f",
+        "testedTree": "4c982283a468939c34bb418456397dfd28af490c",
+        "baseline": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+        "cameraMatrixParity": {
+          "walking": true,
+          "close": true,
+          "side": true,
+          "distant": true
+        },
+        "metrics": {
+          "walking": {
+            "count": 95,
+            "medianMs": 583.2999999999884,
+            "p95Ms": 2033.2000000000116,
+            "medianRatio": 1.2501071581653338,
+            "p95Ratio": 1.8207217694995044,
+            "apiMedianMs": 241.09999999962747,
+            "apiP95Ms": 640.5,
+            "withinFrozenThresholds": false
+          },
+          "close": {
+            "count": 95,
+            "medianMs": 716.6999999999534,
+            "p95Ms": 2199.79999999993,
+            "medianRatio": 1.8698147665013702,
+            "p95Ratio": 2.095247166396803,
+            "apiMedianMs": 288.80000000074506,
+            "apiP95Ms": 1705.300000000745,
+            "withinFrozenThresholds": false
+          },
+          "side": {
+            "count": 95,
+            "medianMs": 450,
+            "p95Ms": 1433.2000000000698,
+            "medianRatio": 1.5,
+            "p95Ratio": 1.4097973637615784,
+            "apiMedianMs": 245.80000000074506,
+            "apiP95Ms": 888.5,
+            "withinFrozenThresholds": false
+          },
+          "distant": {
+            "count": 95,
+            "medianMs": 483.30000000004657,
+            "p95Ms": 1799.9000000000233,
+            "medianRatio": 1.5260498894851278,
+            "p95Ratio": 1.6875117194825264,
+            "apiMedianMs": 191.0,
+            "apiP95Ms": 957.5999999977648,
+            "withinFrozenThresholds": false
+          }
+        },
+        "softwareTimingDisposition": "FAIL_FROZEN_THRESHOLDS",
+        "addedObservableGpuStorageBytes": 4961656,
+        "storageWithinFrozenLimit": true,
+        "resources": {
+          "packageUploadedOnce": true,
+          "coreUploads": 11,
+          "clearingUploads": 1,
+          "totalUploads": 12,
+          "shadowDrawCount": 1,
+          "persistentObjects": {
+            "contexts": 1,
+            "programs": 4,
+            "shaders": 7,
+            "vertexArrays": 110,
+            "gpuBuffers": 1205,
+            "textures": 9,
+            "framebuffers": 3
+          }
+        },
+        "touch": "PASS_ONE_FINGER_LOOK_RELEASE_AND_CANCEL",
+        "physicalAcceptance": false,
+        "gpu": "HEADLESS_SWIFTSHADER",
+        "referencePixelsReviewed": false,
+        "storageMeasurementLimit": "Observable buffer lengths plus configured texture storage estimate; actual driver GPU memory unknown",
+        "mergePerformed": false,
+        "deploymentPerformed": false,
+        "publication": "PENDING_EXPLICIT_APPROVAL_AFTER_AUTOMATIC_REVIEW_REJECTION",
+        "observedBaselineCommit": "08407ace913d5d7efcd47364e1b88c74a318ee4a",
+        "baselineTree": "82c77585ba739a256c4887dd5fcbddad4a0a14c3",
+        "baselineCustody": "Both commits have identical repository tree; all49 render source blobs independently matched.",
+        "twoFingerTravel": "NOT_EXERCISED_IN_FINAL_BROWSER;NAVIGATION_SOURCE_UNCHANGED",
+        "geometryVerification": "PASS",
+        "geometryReportSha256": "1c288c132db5743c0a0ea114478b5b95682934d3ec96466d289d1c9f903970bb",
+        "visualDispositions": {
+          "FOLIAGE_AND_GAPS": {
+            "status": "PARTIAL",
+            "finding": "Smaller detailed leaves improve scale; separated radial rosettes and long bare branches leave crown volume incomplete. Side view exposes very long bare limbs; distant clearing trees retain separated leaf masses."
+          },
+          "BARK_AND_JOINS": {
+            "status": "PARTIAL",
+            "finding": "Subtle bark bands improve surface variation; trunks remain smooth tapered columns and forks join abruptly without visible collars."
+          },
+          "LIGHTING_AND_SHADOWS": {
+            "status": "UNRESOLVED",
+            "finding": "No clearly readable ground cast shadow in walking capture; foliage still appears comparatively flat. Static shadow resource execution is separately observed."
+          },
+          "GRASS_AND_UNDERSTORY": {
+            "status": "PARTIAL",
+            "finding": "Varied local ground plants are visible; foreground remains mostly bare with small sparse blades. Distant view confirms reduced clearing ground density relative to the baseline."
+          },
+          "SOIL_AND_ROCKS": {
+            "status": "PARTIAL",
+            "finding": "Added rocks are visible but read as pale angular mounds on a broad flat soil field."
+          },
+          "ATMOSPHERIC_DEPTH": {
+            "status": "UNRESOLVED",
+            "finding": "Distant reviewed view shows flat green tree silhouettes without a clearly stronger depth gradient; the boundary of upgraded and unchanged trees remains visually conspicuous."
+          }
+        },
+        "adoptionDisposition": "NOT_READY_FOR_ADOPTION"
+      },
+      "evidenceArtifact": {
+        "libraryFileId": "libfile_371e5ab890b081919b22154bcda3ad7a",
+        "bundle": "H-Earth-clearing-review.zip",
+        "browserReportSha256": "f0c4f04969fdb5d60ddf47d29544771c05814a5a33c25369f8e11dd5ae93c2a6"
+      },
+      "publication": "AUTOMATIC_REVIEW_REJECTED_PUSH;EXPLICIT_APPROVAL_PENDING"
+    }
+  ],
+  "recoveryQualification": {
+    "testedCandidate": "3ad884a5a02367da0520178acb36fd295ae8148d",
+    "extraGeometry": {
+      "status": "PASS",
+      "head": "3ad884a5a02367da0520178acb36fd295ae8148d",
+      "vertices": 107866,
+      "faces": 87808,
+      "flagged": 60712,
+      "outsideUnflagged": 45746,
+      "leafUvs": 31196,
+      "outsideObjectsWithZeroMaterialFlags": 1267,
+      "minDoubleTriangleArea": 2.8753845200026646e-05,
+      "maxNormalError": 4.440892098500626e-16,
+      "shadow": {
+        "nearerCasterSmallerDepth": true,
+        "receiverDepth": 0.5,
+        "casterDepth": 0.4166666666666667,
+        "comparison": "LEQUAL_HARDWARE_DEPTH"
+      },
+      "limitations": [
+        "Runtime packed GPU attributes, visual shadow visibility, fixed route timing and touch checked separately."
+      ]
+    },
+    "browserReportSha256": "8e16095c8d3fdf5e2e6e4a6cb8128ae8d49047ee8aec09ab2feeb2fc2179f13c",
+    "memoryLimitBytes": 6291456,
+    "physicalAcceptance": false
+  },
+  "recoveryCheckpoint": {
+    "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+    "generation": 2629,
+    "branch": "h-earth-reference-clearing-20261008",
+    "qualifiedCandidate": "3ad884a5a02367da0520178acb36fd295ae8148d",
+    "qualifiedTree": "d3105e66c3adea155ee01600c2c616f4247901f0",
+    "nextAction": "Profile the clearing-only render cost at the frozen walking, close and distant cameras; identify the dominant measured cost before one bounded repair. Retain the frozen memory and timing limits, unchanged target wood/terrain/outside objects, and the existing candidate as comparison evidence.",
+    "requiredVerifier": "woodland-clearing-trial.verify.mjs plus independent outside-object material parity and the same four-camera 96-redraw browser route after a source change",
+    "stopCondition": "Stop before adoption, merge or deployment; retain exact-head evidence and require owner physical phone/tablet review.",
+    "authorityEffect": "NONE_CHECKPOINT_ONLY",
+    "failedChecks": [
+      "walking P95 ratio1.611802632757267 >1.35",
+      "close median ratio1.3913383772502075 >1.25",
+      "distant median ratio1.4209030628351775 >1.25",
+      "five visual qualities PARTIAL; atmospheric depth UNRESOLVED"
+    ],
+    "phoneTabletPerformance": "UNMEASURED",
+    "evidenceBundle": {
+      "libraryFileId": "libfile_cb305c77f3948191a86b9fb09d46735c",
+      "filename": "H-Earth-clearing-checkpoint.zip",
+      "sha256": "6c72f78f71e891430c03baba6986f5ea4e79957c7ee3f81e2dd0adb3cf43d57d"
+    }
+  }
+}

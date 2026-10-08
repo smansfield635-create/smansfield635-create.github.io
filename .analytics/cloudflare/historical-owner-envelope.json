@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-08T16:39:27Z",
+  "generatedAt": "2026-10-08T17:32:09Z",
   "window": {
-    "start": "2026-07-10T16:39:27Z",
-    "end": "2026-10-08T16:39:27Z"
+    "start": "2026-07-10T17:32:09Z",
+    "end": "2026-10-08T17:32:09Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -50,19 +50,23 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/": {
-        "pageLoads": 140,
-        "visits": 10
-      },
       "/coherence-diagnostic/": {
         "pageLoads": 30,
         "visits": 0
+      },
+      "/showroom/": {
+        "pageLoads": 140,
+        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/reality/battery-heldout-study/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/frontier/energy/battery-coherence-study/": {
         "pageLoads": 20,
         "visits": 0
       },
@@ -81,10 +85,6 @@
       "/products/": {
         "pageLoads": 80,
         "visits": 10
-      },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/products/archcoin/": {
         "pageLoads": 40,
@@ -106,12 +106,12 @@
         "pageLoads": 230,
         "visits": 20
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
         "visits": 0
       },
       "/products/education/": {
@@ -170,6 +170,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -177,10 +181,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,

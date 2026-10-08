@@ -1,21 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-08T07:45:10Z",
+  "generatedAt": "2026-10-08T08:44:02Z",
   "window": {
-    "start": "2026-09-08T07:45:10Z",
-    "end": "2026-10-08T07:45:10Z"
+    "start": "2026-09-08T08:44:02Z",
+    "end": "2026-10-08T08:44:02Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1480,
-        "visits": 1101
+        "pageLoads": 1340,
+        "visits": 971
       },
       {
-        "value": "/mirror-manor-preview/",
-        "pageLoads": 770,
-        "visits": 770
+        "value": "/prelude/",
+        "pageLoads": 1040,
+        "visits": 30
+      },
+      {
+        "value": "/characters/",
+        "pageLoads": 1020,
+        "visits": 10
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
@@ -23,9 +28,9 @@
         "visits": 22
       },
       {
-        "value": "/showroom/globe/audralia/",
-        "pageLoads": 426,
-        "visits": 336
+        "value": "/mirror-manor-preview/",
+        "pageLoads": 700,
+        "visits": 700
       },
       {
         "value": "/analytics/",
@@ -33,9 +38,9 @@
         "visits": 279
       },
       {
-        "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 340,
-        "visits": 90
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 386,
+        "visits": 296
       },
       {
         "value": "/products/education/",
@@ -43,8 +48,13 @@
         "visits": 111
       },
       {
+        "value": "/campaigns/consider-the-energy/",
+        "pageLoads": 300,
+        "visits": 60
+      },
+      {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 274,
+        "pageLoads": 264,
         "visits": 250
       },
       {
@@ -83,17 +93,7 @@
         "visits": 50
       },
       {
-        "value": "/prelude/",
-        "pageLoads": 50,
-        "visits": 30
-      },
-      {
         "value": "/evidence/",
-        "pageLoads": 50,
-        "visits": 0
-      },
-      {
-        "value": "/showroom/globe/h-earth/diagnostic/",
         "pageLoads": 50,
         "visits": 0
       },
@@ -128,19 +128,9 @@
         "visits": 21
       },
       {
-        "value": "/door/",
-        "pageLoads": 31,
-        "visits": 11
-      },
-      {
-        "value": "/characters/",
+        "value": "/showroom/globe/h-earth/diagnostic/",
         "pageLoads": 30,
-        "visits": 10
-      },
-      {
-        "value": "/home/",
-        "pageLoads": 30,
-        "visits": 10
+        "visits": 0
       },
       {
         "value": "/products/",
@@ -168,11 +158,6 @@
         "visits": 22
       },
       {
-        "value": "/door/canonical-object.html",
-        "pageLoads": 22,
-        "visits": 0
-      },
-      {
         "value": "/campaigns/rob/",
         "pageLoads": 21,
         "visits": 11
@@ -183,22 +168,7 @@
         "visits": 21
       },
       {
-        "value": "/explore/",
-        "pageLoads": 20,
-        "visits": 10
-      },
-      {
-        "value": "/governance/",
-        "pageLoads": 20,
-        "visits": 0
-      },
-      {
         "value": "/showroom/story/invitation/",
-        "pageLoads": 20,
-        "visits": 0
-      },
-      {
-        "value": "/showroom/globe/hearth/",
         "pageLoads": 20,
         "visits": 0
       },
@@ -228,6 +198,11 @@
         "visits": 10
       },
       {
+        "value": "/door/",
+        "pageLoads": 11,
+        "visits": 1
+      },
+      {
         "value": "/laws/research/methods-and-models/",
         "pageLoads": 10,
         "visits": 0
@@ -248,19 +223,24 @@
         "visits": 0
       },
       {
-        "value": "/showroom/globe/hearth/diagnostic/",
-        "pageLoads": 10,
-        "visits": 0
-      },
-      {
         "value": "/products/archcoin/allocation/",
         "pageLoads": 10,
         "visits": 0
       },
       {
+        "value": "/home/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "/inspection/h-earth-t4-3-d8fca316/",
         "pageLoads": 10,
         "visits": 10
+      },
+      {
+        "value": "/governance/",
+        "pageLoads": 10,
+        "visits": 0
       },
       {
         "value": "/governance-bridge/collaboration/",
@@ -281,6 +261,11 @@
         "value": "/products/nutrition/",
         "pageLoads": 4,
         "visits": 4
+      },
+      {
+        "value": "/door/canonical-object.html",
+        "pageLoads": 2,
+        "visits": 0
       },
       {
         "value": "/five-flags/",
@@ -516,13 +501,13 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3966,
-        "visits": 1447
+        "pageLoads": 3886,
+        "visits": 1457
       },
       {
         "value": "1",
-        "pageLoads": 2336,
-        "visits": 2273
+        "pageLoads": 2396,
+        "visits": 2333
       }
     ],
     "navigationType": [
@@ -572,8 +557,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 6302,
-        "visits": 3720
+        "pageLoads": 6312,
+        "visits": 3730
       }
     ],
     "siteTag": [

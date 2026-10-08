@@ -1,22 +1,22 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-08T07:45:10Z",
+  "generatedAt": "2026-10-08T08:44:02Z",
   "window30d": {
-    "start": "2026-09-08T07:45:10Z",
-    "end": "2026-10-08T07:45:10Z"
+    "start": "2026-09-08T08:44:02Z",
+    "end": "2026-10-08T08:44:02Z"
   },
   "daily": [
     {
       "date": "2026-09-09",
-      "pageLoads": 410
+      "pageLoads": 280
     },
     {
       "date": "2026-09-10",
-      "pageLoads": 160
+      "pageLoads": 40
     },
     {
       "date": "2026-09-11",
-      "pageLoads": 520
+      "pageLoads": 400
     },
     {
       "date": "2026-09-12",
@@ -56,11 +56,11 @@
     },
     {
       "date": "2026-09-21",
-      "pageLoads": 820
+      "pageLoads": 1210
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 250
+      "pageLoads": 370
     },
     {
       "date": "2026-09-23",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-01",
-      "pageLoads": 72
+      "pageLoads": 71
     },
     {
       "date": "2026-10-02",
@@ -104,15 +104,15 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 29
+      "pageLoads": 14
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 77
+      "pageLoads": 40
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 169
+      "pageLoads": 187
     },
     {
       "date": "2026-10-06",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 45
+      "pageLoads": 46
     }
   ],
   "summary": {
-    "pageLoads": 6302,
-    "botPageLoads": 2336,
-    "nonBotPageLoads": 3966
+    "pageLoads": 6282,
+    "botPageLoads": 2396,
+    "nonBotPageLoads": 3886
   },
   "referrers": [
     {
@@ -177,13 +177,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1480,
-      "visits": 1101
+      "pageLoads": 1340,
+      "visits": 971
     },
     {
-      "path": "/mirror-manor-preview/",
-      "pageLoads": 770,
-      "visits": 770
+      "path": "/prelude/",
+      "pageLoads": 1040,
+      "visits": 30
+    },
+    {
+      "path": "/characters/",
+      "pageLoads": 1020,
+      "visits": 10
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -191,9 +196,9 @@
       "visits": 22
     },
     {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 426,
-      "visits": 336
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 700,
+      "visits": 700
     },
     {
       "path": "/analytics/",
@@ -201,19 +206,14 @@
       "visits": 279
     },
     {
-      "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 340,
-      "visits": 90
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 386,
+      "visits": 296
     },
     {
       "path": "/products/education/",
       "pageLoads": 301,
       "visits": 111
-    },
-    {
-      "path": "/showroom/globe/h-earth/",
-      "pageLoads": 274,
-      "visits": 250
     }
   ],
   "ownerMeasurement": {

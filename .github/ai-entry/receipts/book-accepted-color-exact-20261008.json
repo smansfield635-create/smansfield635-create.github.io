@@ -1,0 +1,22 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "book-accepted-color-exact-20261008",
+  "capabilityId": "BOOK_PERCEPTUAL_TERRAIN_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6017,
+  "requestBranch": "ai-dispatch-request-book-accepted-color-exact-20261008",
+  "requestCommit": "04d71a412ab9e644878f667fe9a0a2bedd851311",
+  "requestCommitParent": "44025e19d66cff81d2e518006e4153cffaf142bb",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "44025e19d66cff81d2e518006e4153cffaf142bb",
+  "workflow": "book-perceptual-terrain-qualification.yml",
+  "ref": "main",
+  "inputs": {},
+  "bridgeRunId": "37707825570",
+  "dispatchedRunId": 37707838448,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/37707838448",
+  "dispatchedRunHeadSha": "44025e19d66cff81d2e518006e4153cffaf142bb",
+  "dispatchedAt": "2026-10-08T00:27:08.957Z",
+  "resolvedAt": "2026-10-08T00:27:12.628Z"
+}

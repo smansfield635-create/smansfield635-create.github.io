@@ -192,45 +192,6 @@
       "scopeHash": "029a87c8c3e0b3adb728e17626292417f98b26cf0244768e7d94dcb5af07d3d2",
       "state": "ADMITTED_LOCKED"
     },
-    "02add0fd1c16c8e025d2c865dab2a635de068c446a9a07679ef86d1fb62e189f": {
-      "governingHead": "d972997ff01333bf68c0416cc805590f5841ef14",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "d972997ff01333bf68c0416cc805590f5841ef14",
-          "lockGeneration": 2625,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDARY_GATE:HARNESS_REPAIR",
-          "operationId": "PUBLIC_PRIVATE_BOUNDARY_HARNESS_REPAIR_20261008_001",
-          "procedureLocatorDigest": "30f0db4e3b47feed198a569b6249ede51a3ed7f64cd3e3d2f601443242d13bc0",
-          "requestDigest": "0078ae03fe280818bb36aba3e86b9a48044ae6460c2cff6fa00686927f787753",
-          "scopeHash": "02add0fd1c16c8e025d2c865dab2a635de068c446a9a07679ef86d1fb62e189f"
-        },
-        "bindingDigest": "fdeadebec8a1afe43ca5a5d09911e00c2cf9cf0abf97165274209fa457370f6e",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "82e228e37b2daa37bb2b6117950ccd56da676303",
-          "observedLockRefHead": "efa5e3ccaefe4ce447a2b78a144fb1507116084a"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "28f873bf6a8bb6b79649e1edc26b16ebb5c64d9f0f2ba2f6bea8bd1efb062ee8",
-          "commentId": 6052896741,
-          "issueNumber": 6038,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2625,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDARY_GATE:HARNESS_REPAIR",
-      "operationId": "PUBLIC_PRIVATE_BOUNDARY_HARNESS_REPAIR_20261008_001",
-      "procedureLocatorDigest": "30f0db4e3b47feed198a569b6249ede51a3ed7f64cd3e3d2f601443242d13bc0",
-      "released": false,
-      "requestDigest": "0078ae03fe280818bb36aba3e86b9a48044ae6460c2cff6fa00686927f787753",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "02add0fd1c16c8e025d2c865dab2a635de068c446a9a07679ef86d1fb62e189f",
-      "state": "ADMITTED_LOCKED"
-    },
     "02ca5f62227a02a7d233eb0923bf2f11b44d3ea30cd692499df324a076711157": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -73435,6 +73396,83 @@
       "requestDigest": "86d7780006b3d70d8bfa84464d3bce2b91e36da5192fe298c74c9f2912debdc0",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "25fa8c071ddd9fa896f30c729755616a81bbc1d64ada626336aae9b079fc8bb0",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "d972997ff01333bf68c0416cc805590f5841ef14",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d972997ff01333bf68c0416cc805590f5841ef14",
+          "lockGeneration": 2625,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDARY_GATE:HARNESS_REPAIR",
+          "operationId": "PUBLIC_PRIVATE_BOUNDARY_HARNESS_REPAIR_20261008_001",
+          "procedureLocatorDigest": "30f0db4e3b47feed198a569b6249ede51a3ed7f64cd3e3d2f601443242d13bc0",
+          "requestDigest": "0078ae03fe280818bb36aba3e86b9a48044ae6460c2cff6fa00686927f787753",
+          "scopeHash": "02add0fd1c16c8e025d2c865dab2a635de068c446a9a07679ef86d1fb62e189f"
+        },
+        "bindingDigest": "fdeadebec8a1afe43ca5a5d09911e00c2cf9cf0abf97165274209fa457370f6e",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "82e228e37b2daa37bb2b6117950ccd56da676303",
+          "observedLockRefHead": "efa5e3ccaefe4ce447a2b78a144fb1507116084a"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "28f873bf6a8bb6b79649e1edc26b16ebb5c64d9f0f2ba2f6bea8bd1efb062ee8",
+          "commentId": 6052896741,
+          "issueNumber": 6038,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d972997ff01333bf68c0416cc805590f5841ef14",
+          "lockGeneration": 2625,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDARY_GATE:HARNESS_REPAIR",
+          "operationId": "PUBLIC_PRIVATE_BOUNDARY_HARNESS_REPAIR_20261008_001",
+          "procedureLocatorDigest": "30f0db4e3b47feed198a569b6249ede51a3ed7f64cd3e3d2f601443242d13bc0",
+          "requestDigest": "0078ae03fe280818bb36aba3e86b9a48044ae6460c2cff6fa00686927f787753",
+          "scopeHash": "02add0fd1c16c8e025d2c865dab2a635de068c446a9a07679ef86d1fb62e189f"
+        },
+        "bindingDigest": "9f035b7beb03c7fed204482ac59ada0770ef2aa79fd84a24aa9a4f6a1d33c717",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "1535468e388e783adaa67c6013ccd7a711cca36d",
+          "observedLockRefHead": "52b39a6aa8268382dd1f08e2a02c2b3a99e82424"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "5f636a9abd2efbdbf30ff14648255c31a13fa9a4da9c89fcb5c57b9793fb9fa7",
+          "commentId": 6053002542,
+          "issueNumber": 6038,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "d972997ff01333bf68c0416cc805590f5841ef14",
+          "lockGeneration": 2625,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDARY_GATE:HARNESS_REPAIR",
+          "operationId": "PUBLIC_PRIVATE_BOUNDARY_HARNESS_REPAIR_20261008_001",
+          "released": true,
+          "scopeHash": "02add0fd1c16c8e025d2c865dab2a635de068c446a9a07679ef86d1fb62e189f",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2625,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDARY_GATE:HARNESS_REPAIR",
+      "operationId": "PUBLIC_PRIVATE_BOUNDARY_HARNESS_REPAIR_20261008_001",
+      "procedureLocatorDigest": "30f0db4e3b47feed198a569b6249ede51a3ed7f64cd3e3d2f601443242d13bc0",
+      "released": true,
+      "requestDigest": "0078ae03fe280818bb36aba3e86b9a48044ae6460c2cff6fa00686927f787753",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "02add0fd1c16c8e025d2c865dab2a635de068c446a9a07679ef86d1fb62e189f",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

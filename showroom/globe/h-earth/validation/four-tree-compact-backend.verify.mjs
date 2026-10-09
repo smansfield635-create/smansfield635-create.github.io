@@ -57,6 +57,20 @@ check('DRAW_VIEW_ALLOCATION_AND_CLEANUP',()=>{
  assert.deepEqual(uploads,[[gl.ELEMENT_ARRAY_BUFFER,12]]);
  view.dispose();view.dispose();assert.equal(deleted.length,2);
 });
+check('INSTANCED_DRAW',()=>{
+ const draws=[];
+ const gl={ELEMENT_ARRAY_BUFFER:34963,ARRAY_BUFFER:34962,STATIC_DRAW:35044,UNSIGNED_INT:5125,TRIANGLES:4,
+ createVertexArray:()=>({}),createBuffer:()=>({}),bindVertexArray:()=>{},bindBuffer:()=>{},
+ bufferData:()=>{},enableVertexAttribArray:()=>{},vertexAttribIPointer:()=>{},vertexAttribDivisor:()=>{},
+ useProgram:()=>{},drawElementsInstanced:(...args)=>draws.push(args),deleteBuffer:()=>{},deleteVertexArray:()=>{}};
+ const view=createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},
+ indexData:new Uint32Array([0,1,2,2,1,3]),program:{}});
+ assert.equal(view.draw(7168).submittedTriangles,14336);
+ assert.deepEqual(draws,[[4,6,5125,0,7168]]);
+ assert.throws(()=>view.draw(7169),/INSTANCE_COUNT/);
+ view.dispose();
+ assert.throws(()=>view.draw(),/VIEW_DISPOSED/);
+});
 const outstanding=['INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
 const receipt={schema:'H_EARTH_FOUR_TREE_COMPACT_BACKEND_VERIFICATION_v1',result:'INCOMPLETE_NOT_QUALIFIED',checks,outstanding,qualificationEstablished:false};
 const index=process.argv.indexOf('--output');
